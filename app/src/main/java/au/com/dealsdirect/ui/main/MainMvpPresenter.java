@@ -1,0 +1,24 @@
+package au.com.dealsdirect.ui.main;
+/*
+ * Created by CodeineBot on 5/15/17.
+ */
+
+
+import au.com.dealsdirect.di.PerActivity;
+import au.com.dealsdirect.ui.base.MvpPresenter;
+
+@PerActivity
+public interface MainMvpPresenter<V extends MainMvpView> extends MvpPresenter<V> {
+
+    //Samples
+//    void onDrawerOptionAboutClick();
+//
+//    void onDrawerOptionLogoutClick();
+//
+//    void onViewInitialized();
+//
+//    void onCardExhausted();
+//
+//    void onNavMenuCreated();
+
+}
