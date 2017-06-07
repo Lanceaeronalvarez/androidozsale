@@ -106,4 +106,64 @@ public class DateUtils {
         return HH+":"+mm+" "+a;
     }
 
+    public static Date gmtDateFromServerDateString(String dateString) {
+        Date date = new Date(getUTCFromServerDateString(dateString));
+
+        return date;
+    }
+
+    public static long getUTCFromServerDateString(String dateString) {
+        String longString = "";
+        try {
+            longString = (String) dateString.subSequence(dateString.indexOf("(") + 1, dateString.indexOf("+"));
+        } catch (Exception e) {
+            longString = (String) dateString.subSequence(dateString.indexOf("(") + 1, dateString.indexOf(")"));
+        }
+
+        Long ms = Long.parseLong(longString, 10);
+
+        return ms;
+    }
+
+
+    public static String getDayOfWeekFromDateString(String dateString) {
+        if (null != dateString
+            && !dateString.equalsIgnoreCase("null")
+            && dateString.length() > 0) {
+            Date date = DateUtils.gmtDateFromServerDateString(dateString);
+
+            Calendar c = Calendar.getInstance();
+            //Get current date
+            Date dateNow = c.getTime();
+            int weekNow = c.get(Calendar.WEEK_OF_YEAR);
+
+            //Get date after 6 days
+            c.add(Calendar.DATE, 6);
+            Date dateFromNow = c.getTime();
+
+            //Get sale week
+            c.setTime(date);
+            int weekOfSale = c.get(Calendar.WEEK_OF_YEAR);
+
+            if (weekNow == weekOfSale || (date.after(dateNow) && date.before(dateFromNow)))
+                return (String) android.text.format.DateFormat.format("EEEE", date);
+            else
+                return (String) android.text.format.DateFormat.format("d MMMM", date);
+        } else {
+            return "";
+        }
+    }
+
+    public static String getTimeFromDateString(String dateString) {
+
+        if (null != dateString
+            && !dateString.equalsIgnoreCase("null")
+            && dateString.length() > 0) {
+            Date date = DateUtils.gmtDateFromServerDateString(dateString);
+            return (String) android.text.format.DateFormat.format("hh:mm AA", date).toString();//(String) date.toString().subSequence(4, date.toString().indexOf("GMT"));
+        } else {
+            return "";
+        }
+    }
+
 }

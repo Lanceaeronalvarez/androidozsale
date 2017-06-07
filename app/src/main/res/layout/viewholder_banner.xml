@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:orientation="vertical"
+              android:layout_width="match_parent"
+              android:layout_height="wrap_content"
+              android:layout_marginTop="5dp"
+              android:layout_marginBottom="5dp"
+              android:background="@color/white">
+
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp">
+
+        <ImageView
+            android:id="@+id/viewholder_banner_image"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:adjustViewBounds="true"/>
+
+        <RelativeLayout
+            android:layout_below="@+id/viewholder_banner_image"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <TextView
+                android:id="@+id/viewholder_banner_title"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Atom Pro Compression"
+                android:textColor="@color/colorAccent"
+                android:textSize="18sp"
+                android:textStyle="bold"/>
+
+            <TextView
+                android:layout_below="@+id/viewholder_banner_title"
+                android:id="@+id/viewholder_banner_description"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Started Today at 1:00 PM"
+                android:paddingBottom="5dp"/>
+
+        </RelativeLayout>
+
+
+    </RelativeLayout>
+
+
+
+</LinearLayout>

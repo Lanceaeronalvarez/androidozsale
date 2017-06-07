@@ -1,6 +1,8 @@
 package au.com.dealsdirect.ui.controller.shops;
 
 import android.support.annotation.NonNull;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -12,6 +14,8 @@ import au.com.dealsdirect.R;
 import au.com.dealsdirect.data.network.model.banner.BannerRequest;
 import au.com.dealsdirect.data.network.model.banner.BannerResponse;
 import au.com.dealsdirect.ui.base.BaseController;
+import au.com.dealsdirect.ui.controller.shops.adapter.BannersAdapter;
+import butterknife.BindView;
 
 
 /**
@@ -25,6 +29,10 @@ public class ShopsController extends BaseController implements ShopsMvpView {
     @Inject
     ShopsMvpPresenter<ShopsMvpView> mPresenter;
 
+    @BindView(R.id.controller_shop_banner_recycler)
+    RecyclerView shopsControllerBannerRecyclerView;
+
+    private BannersAdapter bannersAdapter;
 
     @Override
     protected View inflateView(@NonNull LayoutInflater inflater, @NonNull ViewGroup container) {
@@ -58,8 +66,15 @@ public class ShopsController extends BaseController implements ShopsMvpView {
     }
 
     @Override public void showShopBanners(BannerResponse bannerResponse) {
+        bannersAdapter
+                = new BannersAdapter(
+                        getActivity(),
+                        bannerResponse.getBanner().getList().get(0).getSales());
+
+        shopsControllerBannerRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
+        shopsControllerBannerRecyclerView.setAdapter(bannersAdapter);
+
         int listSize = bannerResponse.getBanner().getList().size();
-        Log.d("ShopsController", bannerResponse.getBanner().getList().get(0).getSales().size()
-                                 +"");
+        Log.d("ShopsController", bannerResponse.getBanner().getList().get(0).getSales().size() +"");
     }
 }
