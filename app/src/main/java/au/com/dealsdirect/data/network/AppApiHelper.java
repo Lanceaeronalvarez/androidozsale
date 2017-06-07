@@ -9,6 +9,8 @@ import au.com.dealsdirect.data.network.model.SampleRequest;
 import au.com.dealsdirect.data.network.model.SampleResponse;
 import au.com.dealsdirect.data.network.model.banner.BannerRequest;
 import au.com.dealsdirect.data.network.model.banner.BannerResponse;
+import au.com.dealsdirect.data.network.model.publicsalescategories.GetPublicSalesCategoriesRequest;
+import au.com.dealsdirect.data.network.model.publicsalescategories.GetPublicSalesCategoriesResponse;
 import io.reactivex.Observable;
 
 @Singleton
@@ -37,12 +39,22 @@ public class AppApiHelper implements ApiHelper {
                 .getObjectObservable(SampleResponse.class);
     }
 
-    @Override public Observable<BannerResponse> getPublicSalesBanner(BannerRequest bannerRequest) {
+    @Override
+    public Observable<BannerResponse> getPublicSalesBanner(BannerRequest bannerRequest) {
         return Rx2AndroidNetworking.get(ApiEndPoint.GET_SHOP_BANNERS)
-                                   .addHeaders(mApiHeader.getPublicApiHeader())
-                                   .addQueryParameter(bannerRequest)
-                                   .build()
-                                   .getObjectObservable(BannerResponse.class);
+                .addHeaders(mApiHeader.getPublicApiHeader())
+                .addQueryParameter(bannerRequest)
+                .build()
+                .getObjectObservable(BannerResponse.class);
+    }
+
+    @Override
+    public Observable<GetPublicSalesCategoriesResponse> doGetPublicSalesCategoriesApiCall(GetPublicSalesCategoriesRequest request){
+        return Rx2AndroidNetworking.get(ApiEndPoint.GET_SHOP_CATEGORIES)
+                .addHeaders(mApiHeader.getPublicApiHeader())
+                .addQueryParameter(request)
+                .build()
+                .getObjectObservable(GetPublicSalesCategoriesResponse.class);
     }
 }
 
