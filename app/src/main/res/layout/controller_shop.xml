@@ -43,39 +43,17 @@
 
         </RelativeLayout>
 
+
+        <android.support.v7.widget.RecyclerView
+            android:layout_below="@+id/partial_toolbar_search_bar_container"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+        </android.support.v7.widget.RecyclerView>
+
     </RelativeLayout>
 
 
 
-    <!--<RelativeLayout-->
-        <!--android:layout_width="match_parent"-->
-        <!--android:layout_height="match_parent">-->
-
-        <!--<include-->
-            <!--android:id="@+id/controller_shop_toolbar"-->
-            <!--layout="@layout/partial_toolbar"/>-->
-
-        <!--<android.support.v4.view.ViewPager-->
-            <!--android:id="@+id/controller_shop_view_pager"-->
-            <!--android:layout_width="match_parent"-->
-            <!--android:layout_height="match_parent"-->
-            <!--android:layout_above="@+id/controller_shop_bottom_navigation"-->
-            <!--android:layout_below="@+id/controller_shop_toolbar"/>-->
-
-        <!--<android.support.design.widget.BottomNavigationView-->
-            <!--android:id="@+id/controller_shop_bottom_navigation"-->
-            <!--android:layout_width="match_parent"-->
-            <!--android:layout_height="wrap_content"-->
-            <!--android:layout_alignParentBottom="true"-->
-            <!--android:background="@color/tab_bar_background"-->
-            <!--app:itemBackground="@color/tab_bar_background"-->
-            <!--app:itemIconTint="@color/nav_icon_selector"-->
-            <!--app:itemTextColor="@color/nav_text_selector"-->
-            <!--app:menu="@menu/bottom_navigation_menu">-->
-
-        <!--</android.support.design.widget.BottomNavigationView>-->
-
-
-    <!--</RelativeLayout>-->
 
 </android.support.design.widget.CoordinatorLayout>

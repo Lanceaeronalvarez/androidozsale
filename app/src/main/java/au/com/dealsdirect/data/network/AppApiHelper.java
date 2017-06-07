@@ -7,6 +7,8 @@ import javax.inject.Singleton;
 
 import au.com.dealsdirect.data.network.model.SampleRequest;
 import au.com.dealsdirect.data.network.model.SampleResponse;
+import au.com.dealsdirect.data.network.model.banner.BannerRequest;
+import au.com.dealsdirect.data.network.model.banner.BannerResponse;
 import io.reactivex.Observable;
 
 @Singleton
@@ -33,6 +35,14 @@ public class AppApiHelper implements ApiHelper {
                 .addBodyParameter(request)
                 .build()
                 .getObjectObservable(SampleResponse.class);
+    }
+
+    @Override public Observable<BannerResponse> getPublicSalesBanner(BannerRequest bannerRequest) {
+        return Rx2AndroidNetworking.get(ApiEndPoint.GET_SHOP_BANNERS)
+                                   .addHeaders(mApiHeader.getPublicApiHeader())
+                                   .addQueryParameter(bannerRequest)
+                                   .build()
+                                   .getObjectObservable(BannerResponse.class);
     }
 }
 

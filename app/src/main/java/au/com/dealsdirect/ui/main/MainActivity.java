@@ -10,13 +10,14 @@ import com.bluelinelabs.conductor.Conductor;
 import com.bluelinelabs.conductor.Controller;
 import com.bluelinelabs.conductor.Router;
 import com.bluelinelabs.conductor.RouterTransaction;
+import com.bluelinelabs.conductor.changehandler.FadeChangeHandler;
 
 import javax.inject.Inject;
 
 import au.com.dealsdirect.R;
 import au.com.dealsdirect.ui.base.BaseActivity;
 import au.com.dealsdirect.ui.categories.CategoriesController;
-import au.com.dealsdirect.ui.controller.shop.ShopController;
+import au.com.dealsdirect.ui.controller.shops.ShopsController;
 import au.com.dealsdirect.ui.custom.BottomNavigationViewHelper;
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -29,6 +30,7 @@ public class MainActivity extends BaseActivity implements MainMvpView {
 
     @BindView(R.id.controller_container)
     ViewGroup mContainer;
+
 
     @BindView(R.id.controller_shop_bottom_navigation)
     BottomNavigationView mBottomNavigationView;
@@ -52,7 +54,7 @@ public class MainActivity extends BaseActivity implements MainMvpView {
 
         mRouter = Conductor.attachRouter(this, mContainer, savedInstanceState);
         if (!mRouter.hasRootController()) {
-            mRouter.setRoot(RouterTransaction.with(new ShopController()));
+            mRouter.setRoot(RouterTransaction.with(new ShopsController()));
 
         }
 
@@ -116,38 +118,43 @@ public class MainActivity extends BaseActivity implements MainMvpView {
         }
     }
 
-    // test push 2
     @Override public void showCategoryController() {
-        mRouter.setRoot(RouterTransaction.with(new CategoriesController()));
+
+        mRouter.setRoot(RouterTransaction.with(
+                        new CategoriesController())
+                                 .pushChangeHandler(new FadeChangeHandler())
+                                 .popChangeHandler(new FadeChangeHandler()));
+
     }
 
     @Override public void showShopController() {
-        mRouter.setRoot(RouterTransaction.with(new ShopController()));
+        mRouter.setRoot(RouterTransaction.with(new ShopsController()));
     }
 
     @Override public void showAccountController() {
-        mRouter.setRoot(RouterTransaction.with(new ShopController()));
+        mRouter.setRoot(RouterTransaction.with(new ShopsController()));
     }
 
     @Override public void showContactController() {
-        mRouter.setRoot(RouterTransaction.with(new ShopController()));
+        mRouter.setRoot(RouterTransaction.with(new ShopsController()));
     }
 
     @Override public void showInviteController() {
-        mRouter.setRoot(RouterTransaction.with(new ShopController()));
+        mRouter.setRoot(RouterTransaction.with(new ShopsController()));
     }
 
     @Override public void showCheckoutController() {
-        mRouter.setRoot(RouterTransaction.with(new ShopController()));
+        mRouter.setRoot(RouterTransaction.with(new ShopsController()));
     }
 
     @Override public void showController(Controller controller) {
-        mRouter.setRoot(RouterTransaction.with(new ShopController()));
+        mRouter.setRoot(RouterTransaction.with(new CategoriesController()));
     }
 
     @OnClick(R.id.provide_toolbar_nav_icon)
     void userClicked(){
         showCategoryController();
+
     }
 
 }

@@ -1,4 +1,4 @@
-package au.com.dealsdirect.ui.controller.shop;
+package au.com.dealsdirect.ui.controller.shops;
 
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -18,7 +18,7 @@ import butterknife.BindView;
  * dp Created by Admin on 6/6/17.
  */
 
-public class ShopChildController extends BaseController {
+public class ShopsChildController extends BaseController {
 
     private static final String KEY_TITLE = "ChildController.title";
     private static final String KEY_BG_COLOR = "ChildController.bgColor";
@@ -27,7 +27,7 @@ public class ShopChildController extends BaseController {
     @BindView(R.id.controller_shop_title)
     TextView shopChildTitle;
 
-    public ShopChildController(String title, int backgroundColor, boolean colorIsResId) {
+    public ShopsChildController(String title, int backgroundColor, boolean colorIsResId) {
         this(new BundleBuilder(new Bundle())
                      .putString(KEY_TITLE, title)
                      .putInt(KEY_BG_COLOR, backgroundColor)
@@ -35,7 +35,7 @@ public class ShopChildController extends BaseController {
                      .build());
     }
 
-    public ShopChildController(Bundle args) {
+    public ShopsChildController(Bundle args) {
         super(args);
     }
 

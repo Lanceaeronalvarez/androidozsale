@@ -13,7 +13,7 @@ import com.bluelinelabs.conductor.support.RouterPagerAdapter;
 import au.com.dealsdirect.R;
 import au.com.dealsdirect.ui.base.BaseController;
 import au.com.dealsdirect.ui.categories.CategoriesController;
-import au.com.dealsdirect.ui.controller.shop.ShopController;
+import au.com.dealsdirect.ui.controller.shops.ShopsController;
 
 import javax.inject.Inject;
 
@@ -48,7 +48,7 @@ public class HomeController extends BaseController implements HomeMvpView {
                         router.setRoot(RouterTransaction.with(firstView));
 
                     }if (position==1){
-                        Controller page = new ShopController();
+                        Controller page = new ShopsController();
                         router.setRoot(RouterTransaction.with(page));
                     }
 

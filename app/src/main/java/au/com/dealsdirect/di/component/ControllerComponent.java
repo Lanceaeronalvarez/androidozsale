@@ -8,7 +8,7 @@ import au.com.dealsdirect.ui.controller.account.AccountController;
 import au.com.dealsdirect.ui.controller.checkout.CheckoutController;
 import au.com.dealsdirect.ui.controller.contact.ContactController;
 import au.com.dealsdirect.ui.controller.home.HomeController;
-import au.com.dealsdirect.ui.controller.shop.ShopController;
+import au.com.dealsdirect.ui.controller.shops.ShopsController;
 import au.com.dealsdirect.ui.sample.SampleController;
 import dagger.Component;
 
@@ -24,7 +24,7 @@ public interface ControllerComponent {
 
     void inject(CategoriesController categoriesController);
 
-    void inject(ShopController shopController);
+    void inject(ShopsController shopsController);
 
     void inject(HomeController homeController);
 

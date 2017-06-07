@@ -9,6 +9,8 @@ import au.com.dealsdirect.data.network.ApiHeader;
 import au.com.dealsdirect.data.network.ApiHelper;
 import au.com.dealsdirect.data.network.model.SampleRequest;
 import au.com.dealsdirect.data.network.model.SampleResponse;
+import au.com.dealsdirect.data.network.model.banner.BannerRequest;
+import au.com.dealsdirect.data.network.model.banner.BannerResponse;
 import au.com.dealsdirect.data.pref.PreferencesHelper;
 import au.com.dealsdirect.di.ApplicationContext;
 import io.reactivex.Observable;
@@ -40,6 +42,10 @@ public class AppDataManager implements DataManager {
     @Override
     public Observable<SampleResponse> doSampleApiCall(SampleRequest request) {
         return mApiHelper.doSampleApiCall(request);
+    }
+
+    @Override public Observable<BannerResponse> getPublicSalesBanner(BannerRequest bannerRequest) {
+        return mApiHelper.getPublicSalesBanner(bannerRequest);
     }
 
     @Override

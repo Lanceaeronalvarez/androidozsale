@@ -5,7 +5,7 @@ package au.com.dealsdirect.data.network;
 public final class ApiEndPoint {
 
     /* API Constants */
-    private static final String API_HOST = "https://www.dealsdirect.com.au";
+    private static final String API_HOST = "https://www.dealsdirect.com.au/";
     private static final String API_VERSION = "api/v1/";
 
     private static final String HANDLER_PREFIX = "handler.ashx/";

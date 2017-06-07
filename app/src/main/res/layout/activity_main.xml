@@ -21,8 +21,11 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             app:layout_behavior="@string/appbar_scrolling_view_behavior"
-            android:layout_above="@+id/controller_shop_bottom_navigation"
-            android:layout_below="@+id/controller_shop_toolbar"/>
+            android:layout_below="@+id/controller_shop_toolbar">
+
+
+        </com.bluelinelabs.conductor.ChangeHandlerFrameLayout>
+
 
         <android.support.design.widget.BottomNavigationView
             android:id="@+id/controller_shop_bottom_navigation"
@@ -36,6 +39,7 @@
             app:menu="@menu/bottom_navigation_menu">
 
         </android.support.design.widget.BottomNavigationView>
+
 
     </RelativeLayout>
 
