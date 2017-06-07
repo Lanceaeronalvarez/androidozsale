@@ -3,6 +3,12 @@ package au.com.dealsdirect.di.component;
 
 import au.com.dealsdirect.di.PerController;
 import au.com.dealsdirect.di.module.ControllerModule;
+import au.com.dealsdirect.ui.categories.CategoriesController;
+import au.com.dealsdirect.ui.controller.account.AccountController;
+import au.com.dealsdirect.ui.controller.checkout.CheckoutController;
+import au.com.dealsdirect.ui.controller.contact.ContactController;
+import au.com.dealsdirect.ui.controller.home.HomeController;
+import au.com.dealsdirect.ui.controller.shop.ShopController;
 import au.com.dealsdirect.ui.sample.SampleController;
 import dagger.Component;
 
@@ -15,4 +21,16 @@ import dagger.Component;
 public interface ControllerComponent {
 
     void inject(SampleController controller);
+
+    void inject(CategoriesController categoriesController);
+
+    void inject(ShopController shopController);
+
+    void inject(HomeController homeController);
+
+    void inject(AccountController accountController);
+
+    void inject(ContactController contactController);
+
+    void inject(CheckoutController checkoutController);
 }

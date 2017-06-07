@@ -4,9 +4,26 @@ package au.com.dealsdirect.ui.main;
  */
 
 
+import com.bluelinelabs.conductor.Controller;
+
 import au.com.dealsdirect.ui.base.MvpView;
 
 public interface MainMvpView extends MvpView {
+
+
+    void showCategoryController();
+
+    void showShopController();
+
+    void showAccountController();
+
+    void showContactController();
+
+    void showInviteController();
+
+    void showCheckoutController();
+
+    void showController(Controller controller);
 
     //Samples
 //    void openLoginActivity();

@@ -1,10 +1,13 @@
 package au.com.dealsdirect.ui.main;
 
 import android.os.Bundle;
+import android.support.annotation.NonNull;
+import android.support.design.widget.BottomNavigationView;
+import android.view.MenuItem;
 import android.view.ViewGroup;
 
-
 import com.bluelinelabs.conductor.Conductor;
+import com.bluelinelabs.conductor.Controller;
 import com.bluelinelabs.conductor.Router;
 import com.bluelinelabs.conductor.RouterTransaction;
 
@@ -12,9 +15,12 @@ import javax.inject.Inject;
 
 import au.com.dealsdirect.R;
 import au.com.dealsdirect.ui.base.BaseActivity;
-import au.com.dealsdirect.ui.sample.SampleController;
+import au.com.dealsdirect.ui.categories.CategoriesController;
+import au.com.dealsdirect.ui.controller.shop.ShopController;
+import au.com.dealsdirect.ui.custom.BottomNavigationViewHelper;
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import butterknife.OnClick;
 
 public class MainActivity extends BaseActivity implements MainMvpView {
 
@@ -23,6 +29,12 @@ public class MainActivity extends BaseActivity implements MainMvpView {
 
     @BindView(R.id.controller_container)
     ViewGroup mContainer;
+
+    @BindView(R.id.controller_shop_bottom_navigation)
+    BottomNavigationView mBottomNavigationView;
+
+    private int mPreviousTab = R.id.action_shop;
+    private int mCurrentTab = R.id.action_shop;
 
     private Router mRouter;
 
@@ -40,7 +52,8 @@ public class MainActivity extends BaseActivity implements MainMvpView {
 
         mRouter = Conductor.attachRouter(this, mContainer, savedInstanceState);
         if (!mRouter.hasRootController()) {
-            mRouter.setRoot(RouterTransaction.with(SampleController.newInstance("Hello World!")));
+            mRouter.setRoot(RouterTransaction.with(new ShopController()));
+
         }
 
         setUp();
@@ -48,7 +61,45 @@ public class MainActivity extends BaseActivity implements MainMvpView {
 
     @Override
     protected void setUp() {
+        BottomNavigationViewHelper.disableShiftMode(mBottomNavigationView);
 
+        mBottomNavigationView.setOnNavigationItemSelectedListener(
+                new BottomNavigationView.OnNavigationItemSelectedListener() {
+                    @Override
+                    public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+
+                        if (mBottomNavigationView.getSelectedItemId() == item.getItemId()) {
+                            return true;
+                        }
+
+                        mPreviousTab = mCurrentTab;
+                        mCurrentTab = item.getItemId();
+
+                        switch (item.getItemId()) {
+
+                            case R.id.action_shop:
+                                showShopController();
+                                break;
+
+                            case R.id.action_account:
+                                showAccountController();
+                                break;
+
+                            case R.id.action_contact:
+                                showContactController();
+                                break;
+
+                            case R.id.action_invite:
+                                showInviteController();
+                                break;
+
+                            case R.id.action_checkout:
+                                showCheckoutController();
+                                break;
+                        }
+                        return true;
+                    }
+                });
     }
 
     @Override
@@ -56,4 +107,47 @@ public class MainActivity extends BaseActivity implements MainMvpView {
         mPresenter.onDetach();
         super.onDestroy();
     }
+
+
+    @Override
+    public void onBackPressed() {
+        if (!mRouter.handleBack()) {
+            super.onBackPressed();
+        }
+    }
+
+    // test push 2
+    @Override public void showCategoryController() {
+        mRouter.setRoot(RouterTransaction.with(new CategoriesController()));
+    }
+
+    @Override public void showShopController() {
+        mRouter.setRoot(RouterTransaction.with(new ShopController()));
+    }
+
+    @Override public void showAccountController() {
+        mRouter.setRoot(RouterTransaction.with(new ShopController()));
+    }
+
+    @Override public void showContactController() {
+        mRouter.setRoot(RouterTransaction.with(new ShopController()));
+    }
+
+    @Override public void showInviteController() {
+        mRouter.setRoot(RouterTransaction.with(new ShopController()));
+    }
+
+    @Override public void showCheckoutController() {
+        mRouter.setRoot(RouterTransaction.with(new ShopController()));
+    }
+
+    @Override public void showController(Controller controller) {
+        mRouter.setRoot(RouterTransaction.with(new ShopController()));
+    }
+
+    @OnClick(R.id.provide_toolbar_nav_icon)
+    void userClicked(){
+        showCategoryController();
+    }
+
 }

@@ -68,6 +68,7 @@ dependencies {
 
     // conductor
     compile "com.bluelinelabs:conductor:$rootProject.conductorVersion"
+    compile 'com.bluelinelabs:conductor-support:2.1.3'
 
     // leak canary
     compile "com.squareup.leakcanary:leakcanary-android:$rootProject.leakCanaryVersion"

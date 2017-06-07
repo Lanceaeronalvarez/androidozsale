@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+      xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <item
+        android:id="@+id/action_shop"
+        android:enabled="true"
+        android:icon="@drawable/ic_tab_shop"
+        android:title="Shop"
+        app:showAsAction="collapseActionView" />
+
+    <item
+        android:id="@+id/action_account"
+        android:enabled="true"
+        android:icon="@drawable/ic_tab_account"
+        android:title="My Account"
+        app:showAsAction="collapseActionView" />
+
+    <item
+        android:id="@+id/action_contact"
+        android:enabled="true"
+        android:icon="@drawable/ic_tab_contact"
+        android:title="Contact Us"
+        app:showAsAction="collapseActionView" />
+
+    <item
+        android:id="@+id/action_invite"
+        android:enabled="true"
+        android:icon="@drawable/ic_tab_invite"
+        android:title="Invite"
+        app:showAsAction="collapseActionView" />
+
+    <item
+        android:id="@+id/action_checkout"
+        android:enabled="true"
+        android:icon="@drawable/ic_tab_checkout"
+        android:title="Checkout"
+        app:showAsAction="collapseActionView" />
+
+</menu>
