@@ -1,5 +1,6 @@
 package au.com.dealsdirect.ui.categories;
 
+import au.com.dealsdirect.data.network.model.publicsalescategories.GetPublicSalesCategoriesRequest;
 import au.com.dealsdirect.ui.base.MvpPresenter;
 import au.com.dealsdirect.ui.base.MvpView;
 
@@ -8,5 +9,5 @@ import au.com.dealsdirect.ui.base.MvpView;
  */
 
 public interface CategoriesMvpPresenter <V extends MvpView> extends MvpPresenter<V>{
-
+    void loadPublicSalesCategories(GetPublicSalesCategoriesRequest request);
 }

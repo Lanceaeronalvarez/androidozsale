@@ -3,6 +3,8 @@ package au.com.dealsdirect.data.network;
 
 import au.com.dealsdirect.data.network.model.SampleRequest;
 import au.com.dealsdirect.data.network.model.SampleResponse;
+import au.com.dealsdirect.data.network.model.publicsalescategories.GetPublicSalesCategoriesRequest;
+import au.com.dealsdirect.data.network.model.publicsalescategories.GetPublicSalesCategoriesResponse;
 import au.com.dealsdirect.data.network.model.banner.BannerRequest;
 import au.com.dealsdirect.data.network.model.banner.BannerResponse;
 import io.reactivex.Observable;
@@ -17,4 +19,5 @@ public interface ApiHelper {
 
     Observable<BannerResponse> getPublicSalesBanner(BannerRequest bannerRequest);
 
+    Observable<GetPublicSalesCategoriesResponse> doGetPublicSalesCategoriesApiCall(GetPublicSalesCategoriesRequest request);
 }
