@@ -17,6 +17,7 @@ import au.com.dealsdirect.di.component.ApplicationComponent;
 import au.com.dealsdirect.di.component.DaggerApplicationComponent;
 import au.com.dealsdirect.di.module.ApplicationModule;
 import au.com.dealsdirect.utils.AppLogger;
+import uk.co.chrisjenx.calligraphy.CalligraphyConfig;
 
 public class DDApplication extends Application {
 
@@ -44,6 +45,8 @@ public class DDApplication extends Application {
         if (BuildConfig.DEBUG) {
             AndroidNetworking.enableLogging(HttpLoggingInterceptor.Level.BODY);
         }
+
+        initFonts();
     }
 
     public ApplicationComponent getComponent() {
@@ -53,6 +56,14 @@ public class DDApplication extends Application {
     // Needed to replace the component with a test specific one
     public void setComponent(ApplicationComponent applicationComponent) {
         mApplicationComponent = applicationComponent;
+    }
+
+    private void initFonts() {
+        CalligraphyConfig.initDefault(new CalligraphyConfig.Builder()
+                .setDefaultFontPath("fonts/Lato-Regular.ttf")
+                .setFontAttrId(R.attr.fontPath)
+                .build()
+        );
     }
 
 }
