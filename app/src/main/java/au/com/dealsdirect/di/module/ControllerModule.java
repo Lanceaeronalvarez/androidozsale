@@ -20,6 +20,9 @@ import au.com.dealsdirect.ui.controller.home.HomePresenter;
 import au.com.dealsdirect.ui.controller.invite.InviteMvpPresenter;
 import au.com.dealsdirect.ui.controller.invite.InviteMvpView;
 import au.com.dealsdirect.ui.controller.invite.InvitePresenter;
+import au.com.dealsdirect.ui.controller.salecategories.SaleCategoriesMvpPresenter;
+import au.com.dealsdirect.ui.controller.salecategories.SaleCategoriesMvpView;
+import au.com.dealsdirect.ui.controller.salecategories.SaleCategoriesPresenter;
 import au.com.dealsdirect.ui.controller.shops.ShopsMvpPresenter;
 import au.com.dealsdirect.ui.controller.shops.ShopsMvpView;
 import au.com.dealsdirect.ui.controller.shops.ShopsPresenter;
@@ -39,6 +42,7 @@ public class ControllerModule {
     private Controller mController;
 
     public ControllerModule(Controller controller) {
+
         this.mController = controller;
     }
 
@@ -79,6 +83,11 @@ public class ControllerModule {
 
     @Provides CheckoutMvpPresenter<CheckoutMvpView> provideCheckoutPresenter
             (CheckoutPresenter<CheckoutMvpView> presenter) {
+        return presenter;
+    }
+
+    @Provides SaleCategoriesMvpPresenter<SaleCategoriesMvpView> provideSaleCategoriesPresenter
+            (SaleCategoriesPresenter<SaleCategoriesMvpView> presenter) {
         return presenter;
     }
 
