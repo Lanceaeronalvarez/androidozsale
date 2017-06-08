@@ -8,13 +8,24 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.bluelinelabs.conductor.RouterTransaction;
+import com.bluelinelabs.conductor.changehandler.FadeChangeHandler;
+import com.bluelinelabs.conductor.changehandler.TransitionChangeHandlerCompat;
+
+import java.util.ArrayList;
+import java.util.LinkedList;
+import java.util.List;
+
 import javax.inject.Inject;
 
 import au.com.dealsdirect.R;
 import au.com.dealsdirect.data.network.model.banner.BannerRequest;
 import au.com.dealsdirect.data.network.model.banner.BannerResponse;
 import au.com.dealsdirect.ui.base.BaseController;
+import au.com.dealsdirect.ui.controller.salecategories.SaleCategoriesController;
 import au.com.dealsdirect.ui.controller.shops.adapter.BannersAdapter;
+import au.com.dealsdirect.ui.controller.shops.changehandler.SharedElementTransitionChangehandler;
+import au.com.dealsdirect.ui.controller.shops.listener.BannerClickListener;
 import butterknife.BindView;
 
 
@@ -22,7 +33,8 @@ import butterknife.BindView;
  * dp Created by Admin on 6/6/17.
  */
 
-public class ShopsController extends BaseController implements ShopsMvpView {
+public class ShopsController extends BaseController
+        implements ShopsMvpView, BannerClickListener {
 
     private static final String KEY_TEXT = "ShopController.KEY_TEXT";
 
@@ -32,7 +44,10 @@ public class ShopsController extends BaseController implements ShopsMvpView {
     @BindView(R.id.controller_shop_banner_recycler)
     RecyclerView shopsControllerBannerRecyclerView;
 
-    private BannersAdapter bannersAdapter;
+    private BannersAdapter mBannersAdapter;
+    private BannerClickListener mBannerClickListener;
+
+    private List<BannerResponse.Sale> sales = new LinkedList<>();
 
     @Override
     protected View inflateView(@NonNull LayoutInflater inflater, @NonNull ViewGroup container) {
@@ -49,10 +64,24 @@ public class ShopsController extends BaseController implements ShopsMvpView {
         super.onViewBound(view);
 
         BannerRequest bannerRequest
-                = new BannerRequest("40f80218-a9e1-43c4-96ff-4c046d192a21",100,false,true,-1,
+                = new BannerRequest(
+                        "40f80218-a9e1-43c4-96ff-4c046d192a21",100,false,true,-1,
                                     "en","DA","");
 
-        mPresenter.loadShopsBanner(bannerRequest);
+        if (sales.size()==0){
+            Log.d("shopscontroller", "sales size == 0");
+            mPresenter.loadShopsBanner(bannerRequest);
+        }else{
+            Log.d("shopscontroller", "sales size != 0");
+            mBannersAdapter
+                    = new BannersAdapter(
+                    getActivity(),
+                    sales,
+                    mBannerClickListener);
+
+            shopsControllerBannerRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
+            shopsControllerBannerRecyclerView.setAdapter(mBannersAdapter);
+        }
     }
 
 
@@ -66,15 +95,33 @@ public class ShopsController extends BaseController implements ShopsMvpView {
     }
 
     @Override public void showShopBanners(BannerResponse bannerResponse) {
-        bannersAdapter
+
+        sales = bannerResponse.getBanner().getList().get(0).getSales();
+
+        mBannerClickListener = this;
+
+        mBannersAdapter
                 = new BannersAdapter(
                         getActivity(),
-                        bannerResponse.getBanner().getList().get(0).getSales());
+                        sales,
+                        mBannerClickListener);
 
         shopsControllerBannerRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
-        shopsControllerBannerRecyclerView.setAdapter(bannersAdapter);
+        shopsControllerBannerRecyclerView.setAdapter(mBannersAdapter);
 
         int listSize = bannerResponse.getBanner().getList().size();
-        Log.d("ShopsController", bannerResponse.getBanner().getList().get(0).getSales().size() +"");
+    }
+
+
+    @Override public void onBannerClicked(String bannerId, int position) {
+
+        List<String> names = new ArrayList<>();
+        names.add(bannerId+position);
+
+        getRouter().pushController(
+                RouterTransaction.with(
+                        new SaleCategoriesController(bannerId,position))
+                                 .pushChangeHandler(new TransitionChangeHandlerCompat(new SharedElementTransitionChangehandler(names), new FadeChangeHandler()))
+                                 .popChangeHandler(new TransitionChangeHandlerCompat(new SharedElementTransitionChangehandler(names), new FadeChangeHandler())));
     }
 }

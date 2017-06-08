@@ -4,8 +4,6 @@ package au.com.dealsdirect.ui.controller.shops;
  */
 
 
-import android.util.Log;
-
 import com.androidnetworking.error.ANError;
 
 import javax.inject.Inject;
@@ -22,9 +20,14 @@ public class ShopsPresenter<V extends ShopsMvpView> extends BasePresenter<V> imp
         ShopsMvpPresenter<V> {
 
     @Inject
-    public ShopsPresenter(DataManager dataManager, SchedulerProvider schedulerProvider, CompositeDisposable compositeDisposable) {
+    public ShopsPresenter(
+            DataManager dataManager,
+            SchedulerProvider schedulerProvider,
+            CompositeDisposable compositeDisposable) {
+
         super(dataManager, schedulerProvider, compositeDisposable);
     }
+
 
     @Override public void loadShopsBanner(BannerRequest request) {
         getMvpView().showLoading();
@@ -47,30 +50,31 @@ public class ShopsPresenter<V extends ShopsMvpView> extends BasePresenter<V> imp
 
                                   if (response.getBanner().getList().isEmpty()) {
 //                                      getMvpView().showNoResultsLayout();
-                                      Log.d("ShopsPresenter", "size empty");
+
                                   } else {
                                       getMvpView().showShopBanners(response);
                                   }
 
                                  }
                              }, new Consumer<Throwable>() {
-                                                 @Override
-                                                 public void accept(Throwable throwable)
-                                                         throws Exception {
 
-                                  if (!isViewAttached()) {
-                                      return;
-                                  }
 
-                                  getMvpView().hideLoading();
-                                  getMvpView().onError(throwable.getMessage());
+                                 @Override
+                                 public void accept(Throwable throwable) throws Exception {
 
-                                  // handle load accounts error here
-                                  if (throwable instanceof ANError) {
-                                      ANError anError = (ANError) throwable;
-                                      handleApiError(anError);
-                                  }
-                                                 }
+                                      if (!isViewAttached()) {
+                                          return;
+                                      }
+
+                                      getMvpView().hideLoading();
+                                      getMvpView().onError(throwable.getMessage());
+
+                                      // handle load accounts error here
+                                      if (throwable instanceof ANError) {
+                                          ANError anError = (ANError) throwable;
+                                          handleApiError(anError);
+                                      }
+                                 }
                              }));
     }
 }

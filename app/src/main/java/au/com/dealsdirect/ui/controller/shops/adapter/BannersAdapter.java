@@ -11,6 +11,7 @@ import java.util.List;
 
 import au.com.dealsdirect.R;
 import au.com.dealsdirect.data.network.model.banner.BannerResponse;
+import au.com.dealsdirect.ui.controller.shops.listener.BannerClickListener;
 import au.com.dealsdirect.ui.controller.shops.viewholder.BannersViewHolder;
 import au.com.dealsdirect.utils.DateUtils;
 import au.com.dealsdirect.utils.ImageUtils;
@@ -24,23 +25,27 @@ public class BannersAdapter extends RecyclerView.Adapter<BannersViewHolder>{
 
     private List<BannerResponse.Sale> mSales;
     private Context mContext;
+    private BannerClickListener mBannerClickListener;
 
-    public BannersAdapter(Context context, List<BannerResponse.Sale> sales) {
+    public BannersAdapter(
+            Context context,
+            List<BannerResponse.Sale> sales,
+            BannerClickListener bannerClickListener) {
+
         this.mSales = sales;
         this.mContext = context;
+        this.mBannerClickListener = bannerClickListener;
     }
 
     @Override public BannersViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View v = LayoutInflater.from(parent.getContext())
                                .inflate(R.layout.viewholder_banner, parent, false);
 
-
-
         return new BannersViewHolder(v);
 
     }
 
-    @Override public void onBindViewHolder(BannersViewHolder holder, int position) {
+    @Override public void onBindViewHolder(BannersViewHolder holder, final int position) {
 
         holder.bannerTitle.setText(mSales.get(position).getName());
         Date startDate = DateUtils.gmtDateFromServerDateString(mSales.get(position).getStart());
@@ -53,6 +58,14 @@ public class BannersAdapter extends RecyclerView.Adapter<BannersViewHolder>{
         ImageUtils.loadImage(mContext,url,holder.bannerImage);
 
         holder.bannerDescription.setText(formatted);
+        holder.bannerImage.setTransitionName(mSales.get(position).getID()+position);
+        holder.bannerImage.setOnClickListener(new View.OnClickListener() {
+            @Override public void onClick(View view) {
+
+                mBannerClickListener.onBannerClicked(mSales.get(position).getID(),position);
+
+            }
+        });
     }
 
     @Override public int getItemCount() {
