@@ -79,6 +79,11 @@ dependencies {
     // leak canary
     compile "com.squareup.leakcanary:leakcanary-android:$rootProject.leakCanaryVersion"
 
+    // recycler view pager
+    compile 'com.github.lsjwzh.RecyclerViewPager:lib:v1.1.2@aar'
+    //flowlayout
+    compile 'com.zhy:flowlayout-lib:1.0.3'
+
     // glide
     compile "com.github.bumptech.glide:glide:4.0.0-RC0"
     annotationProcessor "com.github.bumptech.glide:compiler:4.0.0-RC0"
@@ -95,6 +100,8 @@ dependencies {
     androidTestAnnotationProcessor "com.google.dagger:dagger-compiler:$rootProject.dagger2Version"
 
     compile 'com.android.support.constraint:constraint-layout:1.0.1'
+
+
 }
 
 configurations.all {

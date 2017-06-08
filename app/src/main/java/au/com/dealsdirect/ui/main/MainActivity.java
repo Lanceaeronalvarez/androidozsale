@@ -18,6 +18,7 @@ import au.com.dealsdirect.R;
 import au.com.dealsdirect.ui.base.BaseActivity;
 import au.com.dealsdirect.ui.categories.CategoriesController;
 import au.com.dealsdirect.ui.controller.shops.ShopsController;
+import au.com.dealsdirect.ui.controller.shops.changehandler.SharedElementTransitionChangehandler;
 import au.com.dealsdirect.ui.custom.BottomNavigationViewHelper;
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -120,9 +121,9 @@ public class MainActivity extends BaseActivity implements MainMvpView {
 
     @Override public void showCategoryController() {
 
-        mRouter.setRoot(RouterTransaction.with(
+        mRouter.pushController(RouterTransaction.with(
                         new CategoriesController())
-                                 .pushChangeHandler(new FadeChangeHandler())
+                                 .pushChangeHandler(new SharedElementTransitionChangehandler())
                                  .popChangeHandler(new FadeChangeHandler()));
 
     }

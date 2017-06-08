@@ -334,7 +334,7 @@
                         android:layout_marginTop="5dp"
                         android:textColor="@color/gray_field_text"
                         android:textSize="@dimen/text_size_medium"
-                        fontPath="@string/font_lato" />
+                        fontPath="@string/font_lato_black" />
 
                 </LinearLayout>
 
@@ -470,7 +470,7 @@
                         android:layout_marginTop="10dp"
                         android:text="@string/return_policy"
                         android:textSize="@dimen/text_size_small"
-                        fontPath="@string/font_lato" />
+                        fontPath="@string/font_lato_black" />
                 </LinearLayout>
 
                 <ImageView
