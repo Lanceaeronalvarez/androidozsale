@@ -9,6 +9,8 @@ import au.com.dealsdirect.data.network.ApiHeader;
 import au.com.dealsdirect.data.network.ApiHelper;
 import au.com.dealsdirect.data.network.model.SampleRequest;
 import au.com.dealsdirect.data.network.model.SampleResponse;
+import au.com.dealsdirect.data.network.model.productdetails.GetPublicItemDetailsRequest;
+import au.com.dealsdirect.data.network.model.productdetails.GetPublicItemDetailsResponse;
 import au.com.dealsdirect.data.network.model.publicsalescategories.GetPublicSalesCategoriesRequest;
 import au.com.dealsdirect.data.network.model.publicsalescategories.GetPublicSalesCategoriesResponse;
 import au.com.dealsdirect.data.network.model.banner.BannerRequest;
@@ -53,6 +55,11 @@ public class AppDataManager implements DataManager {
     @Override
     public Observable<GetPublicSalesCategoriesResponse> doGetPublicSalesCategoriesApiCall(GetPublicSalesCategoriesRequest request) {
         return mApiHelper.doGetPublicSalesCategoriesApiCall(request);
+    }
+
+    @Override
+    public Observable<GetPublicItemDetailsResponse> doGetPublicItemDetailsApiCall(GetPublicItemDetailsRequest request) {
+        return mApiHelper.doGetPublicItemDetailsApiCall(request);
     }
 
     @Override

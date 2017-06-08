@@ -20,4 +20,8 @@
     <string name="font_lato_semibold_italic">fonts/Lato-SemiboldItalic.ttf</string>
     <string name="font_lato_thin">fonts/Lato-Thin.ttf</string>
     <string name="font_lato_thin_italic">fonts/Lato-ThinItalic.ttf</string>
+
+    <string name="return_policy">
+        This item is final sale and non-returnable. Please refer to our Terms and Conditions.
+    </string>
 </resources>

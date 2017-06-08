@@ -11,48 +11,28 @@ public class GetPublicSalesCategoriesRequest {
     private String userGroup;
     private String countryID;
 
-    public GetPublicSalesCategoriesRequest(String modificatorVal, String languageIDVal, String getSalesVal, String userGroupVal, String countryIDVal){
+    public GetPublicSalesCategoriesRequest(String modificatorVal, String languageIDVal, boolean getSalesVal, String userGroupVal, String countryIDVal){
         modificator = modificatorVal;
         languageID = languageIDVal;
-        getSales = getSalesVal;
+        getSales = String.valueOf(getSalesVal);
         userGroup = userGroupVal;
         countryID = countryIDVal;
-    }
-
-    public String getModificator() {
-        return modificator;
     }
 
     public void setModificator(String modificator) {
         this.modificator = modificator;
     }
 
-    public String getLanguageID() {
-        return languageID;
-    }
-
     public void setLanguageID(String languageID) {
         this.languageID = languageID;
     }
 
-    public String getGetSales() {
-        return getSales;
-    }
-
     public void setGetSales(String getSales) {
-        this.getSales = getSales;
-    }
-
-    public String getUserGroup() {
-        return userGroup;
+        this.getSales = String.valueOf(getSales);
     }
 
     public void setUserGroup(String userGroup) {
         this.userGroup = userGroup;
-    }
-
-    public String getCountryID() {
-        return countryID;
     }
 
     public void setCountryID(String countryID) {

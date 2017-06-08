@@ -12,15 +12,21 @@
     <color name="filter_text_active">#00A6B4</color>
     <color name="filter_text_inactive">#5F5F5F</color>
 
+    <color name="gray_title_text">#5F5F5F</color>
+    <color name="gray_field_text">#868686</color>
+    <color name="gray_field_label">#87939D</color>
     <color name="gray_description_text">#9E9E9E</color>
+    <color name="gray_generic_icon">#9E9E9E</color>
+    <color name="gray_hint_text">#CACACA</color>
     <color name="gray_border">#E7E7E7</color>
-
+    <color name="gray_filter_background">#FBFBFB</color>
+    <color name="gray_background">#FFFFFF</color>
+    <color name="gray_toolbar_border">#F2F2F2</color>
 
     <color name="tab_bar_background">#e7e7e7</color>
     <color name="tab_bar_icon_inactive">#87939D</color>
     <color name="tab_bar_icon_active">#ff207e</color>
     <color name="tab_bar_icon_hovered">#F00065</color>
 
-    <color name="gray_field_text">#868686</color>
     <color name="app_skin">#FAFAF9</color>
 </resources>
