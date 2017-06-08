@@ -9,16 +9,17 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-        <ImageView
-            android:id="@+id/controller_sale_categories_image"
-            android:layout_width="match_parent"
-            android:layout_height="200dp"/>
+        <!--<ImageView-->
+            <!--android:id="@+id/controller_sale_items_image"-->
+            <!--android:layout_width="match_parent"-->
+            <!--android:layout_height="200dp"/>-->
 
 
         <android.support.v7.widget.RecyclerView
+            android:id="@+id/controller_sale_items_grid_view"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_below="@+id/controller_sale_categories_image">
+            android:background="#FFFFFF">
 
         </android.support.v7.widget.RecyclerView>
     </RelativeLayout>

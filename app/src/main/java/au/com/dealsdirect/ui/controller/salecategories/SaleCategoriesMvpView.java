@@ -1,6 +1,6 @@
 package au.com.dealsdirect.ui.controller.salecategories;
 
-import au.com.dealsdirect.data.network.model.banner.BannerResponse;
+import au.com.dealsdirect.data.network.model.banner.GetPublicSalesBannerResponse;
 import au.com.dealsdirect.ui.base.MvpView;
 
 /**
@@ -9,6 +9,6 @@ import au.com.dealsdirect.ui.base.MvpView;
 
 public interface SaleCategoriesMvpView extends MvpView {
 
-    void showSaleCategories(BannerResponse bannerResponse);
+    void showSaleCategories(GetPublicSalesBannerResponse getPublicSalesBannerResponse);
 
 }

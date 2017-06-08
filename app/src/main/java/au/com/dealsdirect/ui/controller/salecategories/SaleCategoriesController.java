@@ -10,8 +10,9 @@ import android.widget.ImageView;
 import javax.inject.Inject;
 
 import au.com.dealsdirect.R;
-import au.com.dealsdirect.data.network.model.banner.BannerResponse;
+import au.com.dealsdirect.data.network.model.banner.GetPublicSalesBannerResponse;
 import au.com.dealsdirect.ui.base.BaseController;
+import au.com.dealsdirect.ui.main.MainActivity;
 import au.com.dealsdirect.utils.BundleBuilder;
 import butterknife.BindView;
 
@@ -24,6 +25,7 @@ public class SaleCategoriesController extends BaseController implements SaleCate
     private static final String KEY_TEXT = "SaleCategoriesController.KEY_TEXT";
 
     private static final String KEY_TITLE = "SaleCategoriesController.title";
+    private static final String KEY_HEADER_IMAGE = "SaleCategoriesController.header_image_url";
     private static final String KEY_FROM_POSITION = "SaleCategoriesController.position";
 
     private String title;
@@ -35,7 +37,7 @@ public class SaleCategoriesController extends BaseController implements SaleCate
     @Inject
     SaleCategoriesMvpPresenter<SaleCategoriesMvpView> mPresenter;
 
-    public SaleCategoriesController(String title, int fromPosition) {
+    public SaleCategoriesController(String title, int fromPosition, String headerImageUrl) {
 
         this(new BundleBuilder(new Bundle())
                      .putString(KEY_TITLE, title)
@@ -64,14 +66,14 @@ public class SaleCategoriesController extends BaseController implements SaleCate
     @Override protected void onViewBound(@NonNull View view) {
         super.onViewBound(view);
         mSaleCategoriesImage.setTransitionName(title+fromPosition);
-
+        ((MainActivity) getActivity()).setHeaderTitle("Item Detail");
     }
 
     @Override protected void setUp(View view) {
 
     }
 
-    @Override public void showSaleCategories(BannerResponse bannerResponse) {
+    @Override public void showSaleCategories(GetPublicSalesBannerResponse getPublicSalesBannerResponse) {
 
     }
 }

@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.v7.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+                                    xmlns:app="http://schemas.android.com/apk/res-auto"
+                                    xmlns:tools="http://schemas.android.com/tools"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:layout_margin="5dp"
+                                    app:cardElevation="0dp"
+                                    tools:ignore="MissingPrefix">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/cell_height"
+        android:background="@drawable/bg_sale_item"
+        android:orientation="vertical">
+
+        <ImageView
+            android:id="@+id/cell_product_image"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/cell_image_height" />
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="0.5dp"
+            android:background="@color/gray_border" />
+
+        <TextView
+            android:id="@+id/cell_product_name"
+            fontPath="@string/font_lato_medium"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:ellipsize="end"
+            android:maxLines="2"
+            android:padding="5dp"
+            android:textColor="@color/gray_description_text"
+            android:textSize="@dimen/text_size_medium"
+            tools:text="Sports-Edge-Wirefree-Black-12C" />
+
+    </LinearLayout>
+
+</android.support.v7.widget.CardView>

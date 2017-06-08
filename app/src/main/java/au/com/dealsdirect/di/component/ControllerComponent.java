@@ -10,6 +10,7 @@ import au.com.dealsdirect.ui.controller.contact.ContactController;
 import au.com.dealsdirect.ui.controller.home.HomeController;
 import au.com.dealsdirect.ui.controller.productdetails.ProductDetailsController;
 import au.com.dealsdirect.ui.controller.salecategories.SaleCategoriesController;
+import au.com.dealsdirect.ui.controller.saleitems.SaleItemsController;
 import au.com.dealsdirect.ui.controller.shops.ShopsController;
 import au.com.dealsdirect.ui.sample.SampleController;
 import dagger.Component;
@@ -39,4 +40,6 @@ public interface ControllerComponent {
     void inject(ProductDetailsController productDetailsController);
     
     void inject(SaleCategoriesController saleCategoriesController);
+
+    void inject(SaleItemsController saleItemsController);
 }

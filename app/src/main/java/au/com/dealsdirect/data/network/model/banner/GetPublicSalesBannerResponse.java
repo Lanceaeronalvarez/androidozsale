@@ -7,7 +7,7 @@ import com.google.gson.annotations.SerializedName;
  * dp Created by Admin on 6/7/17.
  */
 
-public class BannerResponse {
+public class GetPublicSalesBannerResponse {
 
     @SerializedName("d")
     @Expose

@@ -13,8 +13,10 @@ import au.com.dealsdirect.data.network.model.productdetails.GetPublicItemDetails
 import au.com.dealsdirect.data.network.model.productdetails.GetPublicItemDetailsResponse;
 import au.com.dealsdirect.data.network.model.publicsalescategories.GetPublicSalesCategoriesRequest;
 import au.com.dealsdirect.data.network.model.publicsalescategories.GetPublicSalesCategoriesResponse;
-import au.com.dealsdirect.data.network.model.banner.BannerRequest;
-import au.com.dealsdirect.data.network.model.banner.BannerResponse;
+import au.com.dealsdirect.data.network.model.banner.GetPublicSalesBannerRequest;
+import au.com.dealsdirect.data.network.model.banner.GetPublicSalesBannerResponse;
+import au.com.dealsdirect.data.network.model.saleitems.GetPublicSaleItemsRequest;
+import au.com.dealsdirect.data.network.model.saleitems.GetPublicSaleItemsResponse;
 import au.com.dealsdirect.data.pref.PreferencesHelper;
 import au.com.dealsdirect.di.ApplicationContext;
 import io.reactivex.Observable;
@@ -48,13 +50,18 @@ public class AppDataManager implements DataManager {
         return mApiHelper.doSampleApiCall(request);
     }
 
-    @Override public Observable<BannerResponse> getPublicSalesBanner(BannerRequest bannerRequest) {
-        return mApiHelper.getPublicSalesBanner(bannerRequest);
+    @Override public Observable<GetPublicSalesBannerResponse> getPublicSalesBannerApiCall(GetPublicSalesBannerRequest getPublicSalesBannerRequest) {
+        return mApiHelper.getPublicSalesBannerApiCall(getPublicSalesBannerRequest);
     }
 
     @Override
     public Observable<GetPublicSalesCategoriesResponse> doGetPublicSalesCategoriesApiCall(GetPublicSalesCategoriesRequest request) {
         return mApiHelper.doGetPublicSalesCategoriesApiCall(request);
+    }
+
+    @Override public Observable<GetPublicSaleItemsResponse> getPublicSaleItemsApiCall(
+            GetPublicSaleItemsRequest getPublicSaleItemsRequest) {
+        return mApiHelper.getPublicSaleItemsApiCall(getPublicSaleItemsRequest);
     }
 
     @Override

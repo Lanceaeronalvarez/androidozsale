@@ -7,8 +7,10 @@ import au.com.dealsdirect.data.network.model.productdetails.GetPublicItemDetails
 import au.com.dealsdirect.data.network.model.productdetails.GetPublicItemDetailsResponse;
 import au.com.dealsdirect.data.network.model.publicsalescategories.GetPublicSalesCategoriesRequest;
 import au.com.dealsdirect.data.network.model.publicsalescategories.GetPublicSalesCategoriesResponse;
-import au.com.dealsdirect.data.network.model.banner.BannerRequest;
-import au.com.dealsdirect.data.network.model.banner.BannerResponse;
+import au.com.dealsdirect.data.network.model.banner.GetPublicSalesBannerRequest;
+import au.com.dealsdirect.data.network.model.banner.GetPublicSalesBannerResponse;
+import au.com.dealsdirect.data.network.model.saleitems.GetPublicSaleItemsRequest;
+import au.com.dealsdirect.data.network.model.saleitems.GetPublicSaleItemsResponse;
 import io.reactivex.Observable;
 
 public interface ApiHelper {
@@ -19,9 +21,13 @@ public interface ApiHelper {
 
     Observable<SampleResponse> doSampleApiCall(SampleRequest request);
 
-    Observable<BannerResponse> getPublicSalesBanner(BannerRequest bannerRequest);
+    Observable<GetPublicSalesBannerResponse> getPublicSalesBannerApiCall
+            (GetPublicSalesBannerRequest getPublicSalesBannerRequest);
 
     Observable<GetPublicSalesCategoriesResponse> doGetPublicSalesCategoriesApiCall(GetPublicSalesCategoriesRequest request);
 
     Observable<GetPublicItemDetailsResponse> doGetPublicItemDetailsApiCall(GetPublicItemDetailsRequest request);
+  
+  Observable<GetPublicSaleItemsResponse> getPublicSaleItemsApiCall(GetPublicSaleItemsRequest
+            getPublicSaleItemsRequest);
 }

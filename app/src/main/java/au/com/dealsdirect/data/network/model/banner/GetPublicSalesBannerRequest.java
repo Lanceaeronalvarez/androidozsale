@@ -7,7 +7,7 @@ import com.google.gson.annotations.SerializedName;
  * dp Created by Admin on 6/7/17.
  */
 
-public class BannerRequest {
+public class GetPublicSalesBannerRequest {
 
     @Expose
     @SerializedName("saleCategoryID")
@@ -42,11 +42,11 @@ public class BannerRequest {
     private String userGroup;
 
 
-    private BannerRequest() {
+    private GetPublicSalesBannerRequest() {
         // This class is not publicly instantiable
     }
 
-    public BannerRequest(String saleCategoryID, int topSalesCount, boolean useOzsaleSize,
+    public GetPublicSalesBannerRequest(String saleCategoryID, int topSalesCount, boolean useOzsaleSize,
             boolean getPromotion, int groupNo, String languageID, String countryID,
             String userGroup) {
 

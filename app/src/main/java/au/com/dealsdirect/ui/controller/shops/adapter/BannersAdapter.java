@@ -10,7 +10,7 @@ import java.util.Date;
 import java.util.List;
 
 import au.com.dealsdirect.R;
-import au.com.dealsdirect.data.network.model.banner.BannerResponse;
+import au.com.dealsdirect.data.network.model.banner.GetPublicSalesBannerResponse;
 import au.com.dealsdirect.ui.controller.shops.listener.BannerClickListener;
 import au.com.dealsdirect.ui.controller.shops.viewholder.BannersViewHolder;
 import au.com.dealsdirect.utils.DateUtils;
@@ -23,13 +23,13 @@ import au.com.dealsdirect.utils.LegacyStringImageUtils;
 
 public class BannersAdapter extends RecyclerView.Adapter<BannersViewHolder>{
 
-    private List<BannerResponse.Sale> mSales;
+    private List<GetPublicSalesBannerResponse.Sale> mSales;
     private Context mContext;
     private BannerClickListener mBannerClickListener;
 
     public BannersAdapter(
             Context context,
-            List<BannerResponse.Sale> sales,
+            List<GetPublicSalesBannerResponse.Sale> sales,
             BannerClickListener bannerClickListener) {
 
         this.mSales = sales;
@@ -62,7 +62,10 @@ public class BannersAdapter extends RecyclerView.Adapter<BannersViewHolder>{
         holder.bannerImage.setOnClickListener(new View.OnClickListener() {
             @Override public void onClick(View view) {
 
-                mBannerClickListener.onBannerClicked(mSales.get(position).getID(),position);
+                mBannerClickListener.onBannerClicked(
+                        mSales.get(position).getID(),
+                        position,
+                        url);
 
             }
         });

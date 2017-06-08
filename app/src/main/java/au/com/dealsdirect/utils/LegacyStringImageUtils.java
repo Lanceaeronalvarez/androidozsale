@@ -3,13 +3,11 @@ package au.com.dealsdirect.utils;
 import android.os.Handler;
 import android.util.Log;
 
-import org.json.JSONException;
-import org.json.JSONObject;
-
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 
-import au.com.dealsdirect.data.network.model.banner.BannerResponse;
+import au.com.dealsdirect.data.network.model.banner.GetPublicSalesBannerResponse;
+import au.com.dealsdirect.data.network.model.saleitems.GetPublicSaleItemsResponse;
 
 /**
  * Created by Admin on 6/7/17.
@@ -24,7 +22,7 @@ public class LegacyStringImageUtils {
 
     public static String saleImageURLString(Object sale) {
 
-        BannerResponse.Sale mSale = (BannerResponse.Sale) sale;
+        GetPublicSalesBannerResponse.Sale mSale = (GetPublicSalesBannerResponse.Sale) sale;
         String saleId = "";
         String imageFilename = "";
         String imageId = "";
@@ -33,9 +31,9 @@ public class LegacyStringImageUtils {
         saleId = mSale.getID();
 
         //Image ID
-        imageId = ((BannerResponse.Sale) sale).getImageID();
+        imageId = ((GetPublicSalesBannerResponse.Sale) sale).getImageID();
 
-        imageFilename = ((BannerResponse.Sale) sale).getFile();
+        imageFilename = ((GetPublicSalesBannerResponse.Sale) sale).getFile();
 
 
         try {
@@ -59,47 +57,26 @@ public class LegacyStringImageUtils {
 
     }
 
-    public static String productImageURLString(JSONObject item) {
+    public static String itemImageURLString(GetPublicSaleItemsResponse.Item item) {
         String brandId = "";
         String imageFilename = "";
         String imageId = "";
         String encodedImageFilename = "";
 
+        brandId = item.getBrandID();
+        imageId = item.getImageID();
+
+        imageFilename = item.getFile();
         try {
-            brandId = item.getString("BrandID");
-            imageId = item.getString("ImageID");
-
-            imageFilename = item.getString("File");
-            try {
-                encodedImageFilename = URLEncoder.encode(imageFilename, "UTF-8");
-            } catch (UnsupportedEncodingException e) {
-                e.printStackTrace();
-                encodedImageFilename = "";
-            }
-            //			encodedImageFilename = URIEncoder.encodeURI(imageFilename);
-            encodedImageFilename = encodedImageFilename.replace("+", "%20");
-            //			encodedImageFilename = encodedImageFilename.replace("%0B", "%5B");
-            //			encodedImageFilename = encodedImageFilename.replace("%0D", "%5D");
-
-        } catch (JSONException e) {
-
-            try {
-                imageFilename = item.getString("FileName");
-            } catch (JSONException e1) {
-                e1.printStackTrace();
-            }
-            try {
-                encodedImageFilename = URLEncoder.encode(imageFilename, "UTF-8");
-            } catch (UnsupportedEncodingException e1) {
-                e1.printStackTrace();
-                encodedImageFilename = "";
-            }
-
-            //			encodedImageFilename = URIEncoder.encodeURI(imageFilename);
-            encodedImageFilename = encodedImageFilename.replace("+", "%20");
-            //			encodedImageFilename = encodedImageFilename.replace("%0B", "%5B");
-            //			encodedImageFilename = encodedImageFilename.replace("%0D", "%5D");
+            encodedImageFilename = URLEncoder.encode(imageFilename, "UTF-8");
+        } catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
+            encodedImageFilename = "";
         }
+        //			encodedImageFilename = URIEncoder.encodeURI(imageFilename);
+        encodedImageFilename = encodedImageFilename.replace("+", "%20");
+        //			encodedImageFilename = encodedImageFilename.replace("%0B", "%5B");
+        //			encodedImageFilename = encodedImageFilename.replace("%0D", "%5D");
 
         String urlString = OEngineProductImageBaseURL + "/"
                            + brandId + "/"

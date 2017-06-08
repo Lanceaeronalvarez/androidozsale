@@ -27,7 +27,7 @@
             android:layout_marginTop="10dp">
 
             <ImageView
-                android:id="@+id/provide_toolbar_nav_icon"
+                android:id="@+id/partial_toolbar_nav_icon"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:src="@drawable/ic_action_menu"

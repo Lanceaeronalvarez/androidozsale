@@ -4,7 +4,10 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
 import android.view.MenuItem;
+import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
+import android.widget.TextView;
 
 import com.bluelinelabs.conductor.Conductor;
 import com.bluelinelabs.conductor.Controller;
@@ -22,7 +25,6 @@ import au.com.dealsdirect.ui.controller.shops.changehandler.SharedElementTransit
 import au.com.dealsdirect.ui.custom.BottomNavigationViewHelper;
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import butterknife.OnClick;
 
 public class MainActivity extends BaseActivity implements MainMvpView {
 
@@ -32,6 +34,11 @@ public class MainActivity extends BaseActivity implements MainMvpView {
     @BindView(R.id.controller_container)
     ViewGroup mContainer;
 
+    @BindView(R.id.partial_toolbar_header_text)
+    TextView mHeaderTitle;
+
+    @BindView(R.id.partial_toolbar_logo)
+    ImageView mHeaderLogo;
 
     @BindView(R.id.controller_shop_bottom_navigation)
     BottomNavigationView mBottomNavigationView;
@@ -152,10 +159,15 @@ public class MainActivity extends BaseActivity implements MainMvpView {
         mRouter.setRoot(RouterTransaction.with(new CategoriesController()));
     }
 
-    @OnClick(R.id.provide_toolbar_nav_icon)
-    void userClicked(){
-        showCategoryController();
-
+    @Override public void setHeaderTitle(String title) {
+        mHeaderTitle.setText(title);
+        mHeaderLogo.setVisibility(View.GONE);
     }
+
+//    @OnClick(R.id.provide_toolbar_nav_icon)
+//    void userClicked(){
+//        showCategoryController();
+//
+//    }
 
 }

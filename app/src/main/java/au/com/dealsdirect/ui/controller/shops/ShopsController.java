@@ -10,7 +10,6 @@ import android.view.ViewGroup;
 
 import com.bluelinelabs.conductor.RouterTransaction;
 import com.bluelinelabs.conductor.changehandler.FadeChangeHandler;
-import com.bluelinelabs.conductor.changehandler.TransitionChangeHandlerCompat;
 
 import java.util.ArrayList;
 import java.util.LinkedList;
@@ -19,12 +18,11 @@ import java.util.List;
 import javax.inject.Inject;
 
 import au.com.dealsdirect.R;
-import au.com.dealsdirect.data.network.model.banner.BannerRequest;
-import au.com.dealsdirect.data.network.model.banner.BannerResponse;
+import au.com.dealsdirect.data.network.model.banner.GetPublicSalesBannerRequest;
+import au.com.dealsdirect.data.network.model.banner.GetPublicSalesBannerResponse;
 import au.com.dealsdirect.ui.base.BaseController;
-import au.com.dealsdirect.ui.controller.salecategories.SaleCategoriesController;
+import au.com.dealsdirect.ui.controller.saleitems.SaleItemsController;
 import au.com.dealsdirect.ui.controller.shops.adapter.BannersAdapter;
-import au.com.dealsdirect.ui.controller.shops.changehandler.SharedElementTransitionChangehandler;
 import au.com.dealsdirect.ui.controller.shops.listener.BannerClickListener;
 import butterknife.BindView;
 
@@ -47,7 +45,7 @@ public class ShopsController extends BaseController
     private BannersAdapter mBannersAdapter;
     private BannerClickListener mBannerClickListener;
 
-    private List<BannerResponse.Sale> sales = new LinkedList<>();
+    private List<GetPublicSalesBannerResponse.Sale> sales = new LinkedList<>();
 
     @Override
     protected View inflateView(@NonNull LayoutInflater inflater, @NonNull ViewGroup container) {
@@ -63,14 +61,14 @@ public class ShopsController extends BaseController
     protected void onViewBound(@NonNull View view) {
         super.onViewBound(view);
 
-        BannerRequest bannerRequest
-                = new BannerRequest(
+        GetPublicSalesBannerRequest getPublicSalesBannerRequest
+                = new GetPublicSalesBannerRequest(
                         "40f80218-a9e1-43c4-96ff-4c046d192a21",100,false,true,-1,
-                                    "en","DA","");
+                                    "EN","DA","");
 
         if (sales.size()==0){
             Log.d("shopscontroller", "sales size == 0");
-            mPresenter.loadShopsBanner(bannerRequest);
+            mPresenter.loadShopsBanner(getPublicSalesBannerRequest);
         }else{
             Log.d("shopscontroller", "sales size != 0");
             mBannersAdapter
@@ -94,9 +92,9 @@ public class ShopsController extends BaseController
 
     }
 
-    @Override public void showShopBanners(BannerResponse bannerResponse) {
+    @Override public void showShopBanners(GetPublicSalesBannerResponse getPublicSalesBannerResponse) {
 
-        sales = bannerResponse.getBanner().getList().get(0).getSales();
+        sales = getPublicSalesBannerResponse.getBanner().getList().get(0).getSales();
 
         mBannerClickListener = this;
 
@@ -109,19 +107,19 @@ public class ShopsController extends BaseController
         shopsControllerBannerRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
         shopsControllerBannerRecyclerView.setAdapter(mBannersAdapter);
 
-        int listSize = bannerResponse.getBanner().getList().size();
+        int listSize = getPublicSalesBannerResponse.getBanner().getList().size();
     }
 
 
-    @Override public void onBannerClicked(String bannerId, int position) {
+    @Override public void onBannerClicked(String bannerId, int position, String imageUrl) {
 
         List<String> names = new ArrayList<>();
         names.add(bannerId+position);
 
         getRouter().pushController(
                 RouterTransaction.with(
-                        new SaleCategoriesController(bannerId,position))
-                                 .pushChangeHandler(new TransitionChangeHandlerCompat(new SharedElementTransitionChangehandler(names), new FadeChangeHandler()))
-                                 .popChangeHandler(new TransitionChangeHandlerCompat(new SharedElementTransitionChangehandler(names), new FadeChangeHandler())));
+                        new SaleItemsController(bannerId, position, imageUrl))
+                                 .pushChangeHandler( new FadeChangeHandler())
+                                 .popChangeHandler( new FadeChangeHandler()));
     }
 }

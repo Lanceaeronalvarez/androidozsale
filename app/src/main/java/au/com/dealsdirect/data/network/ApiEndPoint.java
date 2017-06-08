@@ -17,6 +17,8 @@ public final class ApiEndPoint {
     public static final String GET_SHOP_BANNERS = BASE_URL + "GetPublicSalesBanners";
     public static final String GET_SALES_CATEGORIES = BASE_URL + "GetSaleCategories";
 
+    /* Sale Items Controller */
+    public static final String GET_PUBLIC_SALE_ITEMS = BASE_URL+"GetPublicSaleItems";
 
     /* Categories Controller */
     public static final String GET_SHOP_CATEGORIES = BASE_URL + "GetPublicSalesCategories";
