@@ -7,8 +7,10 @@ import javax.inject.Singleton;
 
 import au.com.dealsdirect.data.network.model.SampleRequest;
 import au.com.dealsdirect.data.network.model.SampleResponse;
-import au.com.dealsdirect.data.network.model.banner.BannerRequest;
-import au.com.dealsdirect.data.network.model.banner.BannerResponse;
+import au.com.dealsdirect.data.network.model.banner.GetPublicSalesBannerRequest;
+import au.com.dealsdirect.data.network.model.banner.GetPublicSalesBannerResponse;
+import au.com.dealsdirect.data.network.model.productdetails.GetPublicItemDetailsRequest;
+import au.com.dealsdirect.data.network.model.productdetails.GetPublicItemDetailsResponse;
 import au.com.dealsdirect.data.network.model.publicsalescategories.GetPublicSalesCategoriesRequest;
 import au.com.dealsdirect.data.network.model.publicsalescategories.GetPublicSalesCategoriesResponse;
 import au.com.dealsdirect.data.network.model.saleitems.GetPublicSaleItemsRequest;
@@ -67,10 +69,12 @@ public class AppApiHelper implements ApiHelper {
                 .addQueryParameter(request)
                 .build()
                 .getObjectObservable(GetPublicItemDetailsResponse.class);
- 
 
 
-   @Override public Observable<GetPublicSaleItemsResponse> getPublicSaleItemsApiCall(
+
+    }
+
+    @Override public Observable<GetPublicSaleItemsResponse> getPublicSaleItemsApiCall(
             GetPublicSaleItemsRequest getPublicSaleItemsRequest) {
 
         return Rx2AndroidNetworking.get(ApiEndPoint.GET_PUBLIC_SALE_ITEMS)

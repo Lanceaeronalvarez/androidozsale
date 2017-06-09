@@ -9,7 +9,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.bluelinelabs.conductor.RouterTransaction;
-import com.bluelinelabs.conductor.changehandler.FadeChangeHandler;
+import com.bluelinelabs.conductor.changehandler.HorizontalChangeHandler;
 
 import java.util.ArrayList;
 import java.util.LinkedList;
@@ -107,7 +107,6 @@ public class ShopsController extends BaseController
         shopsControllerBannerRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
         shopsControllerBannerRecyclerView.setAdapter(mBannersAdapter);
 
-        int listSize = getPublicSalesBannerResponse.getBanner().getList().size();
     }
 
 
@@ -119,7 +118,7 @@ public class ShopsController extends BaseController
         getRouter().pushController(
                 RouterTransaction.with(
                         new SaleItemsController(bannerId, position, imageUrl))
-                                 .pushChangeHandler( new FadeChangeHandler())
-                                 .popChangeHandler( new FadeChangeHandler()));
+                                 .pushChangeHandler( new HorizontalChangeHandler())
+                                 .popChangeHandler( new HorizontalChangeHandler()));
     }
 }

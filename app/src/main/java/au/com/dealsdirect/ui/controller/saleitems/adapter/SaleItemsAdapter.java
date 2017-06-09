@@ -1,6 +1,7 @@
 package au.com.dealsdirect.ui.controller.saleitems.adapter;
 
 import android.content.Context;
+import android.graphics.Paint;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -14,6 +15,7 @@ import au.com.dealsdirect.R;
 import au.com.dealsdirect.data.network.model.saleitems.GetPublicSaleItemsResponse;
 import au.com.dealsdirect.utils.ImageUtils;
 import au.com.dealsdirect.utils.LegacyStringImageUtils;
+import au.com.dealsdirect.utils.PriceUtils;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
@@ -34,10 +36,19 @@ public class SaleItemsAdapter extends RecyclerView.Adapter<SaleItemsAdapter.View
     public static class ViewHolder extends RecyclerView.ViewHolder {
 
         @BindView(R.id.cell_product_image)
-        ImageView image;
+        ImageView mSaleItemImage;
 
-        @BindView(R.id.cell_product_name)
-        TextView name;
+        @BindView(R.id.sale_item_name)
+        TextView mSaleItemName;
+
+        @BindView(R.id.sale_item_brand)
+        TextView mSaleBrand;
+
+        @BindView(R.id.sale_item_price)
+        TextView mSalePrice;
+
+        @BindView(R.id.sale_item_old_price)
+        TextView mOldPrice;
 
         ViewHolder(View view) {
             super(view);
@@ -59,11 +70,21 @@ public class SaleItemsAdapter extends RecyclerView.Adapter<SaleItemsAdapter.View
     @Override
     public void onBindViewHolder(ViewHolder holder, final int position) {
         GetPublicSaleItemsResponse.Item saleItem = mData.get(position);
-        holder.name.setText(saleItem.getName());
+        holder.mSaleItemName.setText(saleItem.getName());
 
         String url = LegacyStringImageUtils.itemImageURLString(saleItem);
+        String saleItemBrand = mData.get(position).getBrandName();
+        String saleItemPrice =  PriceUtils.convertDoubleToSaleString(mData.get(position).getPrice());
+        String saleItemOldPrice = PriceUtils.convertDoubleToSaleString(mData.get(position).getRP());
 
-        ImageUtils.loadImageWithImageViewDimens(mContext,url, holder.image);
+        ImageUtils.loadImageWithImageViewDimens(mContext,url, holder.mSaleItemImage);
+
+        holder.mSaleBrand.setText(saleItemBrand);
+        holder.mSalePrice.setText(saleItemPrice);
+        holder.mOldPrice.setText(saleItemOldPrice);
+        holder.mOldPrice.setPaintFlags(
+                holder.mOldPrice.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);
+
 
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override

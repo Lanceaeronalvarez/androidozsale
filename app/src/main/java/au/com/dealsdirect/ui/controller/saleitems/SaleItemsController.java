@@ -4,7 +4,6 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -22,6 +21,7 @@ import au.com.dealsdirect.data.network.model.saleitems.GetPublicSaleItemsRespons
 import au.com.dealsdirect.ui.base.BaseController;
 import au.com.dealsdirect.ui.controller.saleitems.adapter.SaleItemsAdapter;
 import au.com.dealsdirect.utils.BundleBuilder;
+import au.com.dealsdirect.utils.PaginateUtils;
 import butterknife.BindView;
 
 /**
@@ -88,15 +88,14 @@ public class SaleItemsController  extends BaseController implements SaleItemsMvp
 
     @Override protected void onViewBound(@NonNull View view) {
         super.onViewBound(view);
-
-//        mSaleItemsImage.setTransitionName(title+fromPosition);
-//        ImageUtils.loadImage(getActivity(), imageHeaderUrl, mSaleItemsImage);
+        setUp(view);
 
 
         GetPublicSaleItemsRequest getPublicSaleItemsRequest
                 = new GetPublicSaleItemsRequest(title,
                         100, "en", "DA", "");
         mPresenter.loadSaleItems(getPublicSaleItemsRequest);
+
     }
 
     @Override protected void setUp(View view) {
@@ -132,42 +131,30 @@ public class SaleItemsController  extends BaseController implements SaleItemsMvp
 
         for (int x=0;x<tempList.size();x++){
 
-            Log.d("saleItems", "entered loop = "+tempList.get(x).getName()+ " , "+tempList.get(x)
-                                                                                          .getHtmlName()+ "  , "+tempList.get(x).getID());
-            List<GetPublicSaleItemsResponse.SubCategory> tempSubCategories = new LinkedList<>();
+            List<GetPublicSaleItemsResponse.SubCategory> tempSubCategories;
             tempSubCategories = tempList.get(x).getSubCategories();
 
             for (int y = 0; y<tempSubCategories.size();y++){
-                Log.d("saleitems", "size = "+allItems.size());
 
-                List<GetPublicSaleItemsResponse.Item> tempItems = new LinkedList<>();
+                List<GetPublicSaleItemsResponse.Item> tempItems;
                 tempItems = tempSubCategories.get(y).getItems();
 
                 for (int z = 0; z < tempItems.size(); z++){
                     allItems.add(tempItems.get(z));
-                    Log.d("saleitems", "size = "+allItems.size());
 
                 }
             }
         }
 
-        Log.d("saleitems", "size = "+allItems.size());
-        mSaleItemsAdapter = new SaleItemsAdapter(allItems);
-        RecyclerView.LayoutManager layoutManager = new GridLayoutManager(getActivity(), 3);
-        mSaleItemsRecyclerview.setLayoutManager(layoutManager);
-        mSaleItemsRecyclerview.setAdapter(mSaleItemsAdapter);
-//        mPaginateManager = PaginateUtils.init(mSaleItemsRecyclerview, mPaginateCallbacks);
-
-
-//        if(page != 0) {
-//            mSaleItemsAdapter.addData(allItems);
-//        } else {
-//            mSaleItemsAdapter = new SaleItemsAdapter(allItems);
-//            RecyclerView.LayoutManager layoutManager = new GridLayoutManager(getActivity(), 3);
-//            mSaleItemsRecyclerview.setLayoutManager(layoutManager);
-//            mSaleItemsRecyclerview.setAdapter(mSaleItemsAdapter);
-//            mPaginateManager = PaginateUtils.init(mSaleItemsRecyclerview, mPaginateCallbacks);
-//        }
+        if(page != 0) {
+            mSaleItemsAdapter.addData(allItems);
+        } else {
+            mSaleItemsAdapter = new SaleItemsAdapter(allItems);
+            RecyclerView.LayoutManager layoutManager = new GridLayoutManager(getActivity(), 2);
+            mSaleItemsRecyclerview.setLayoutManager(layoutManager);
+            mSaleItemsRecyclerview.setAdapter(mSaleItemsAdapter);
+            mPaginateManager = PaginateUtils.init(mSaleItemsRecyclerview, mPaginateCallbacks);
+        }
 
         loadingInProgress = false;
         hasLoadedAllItems = true;
