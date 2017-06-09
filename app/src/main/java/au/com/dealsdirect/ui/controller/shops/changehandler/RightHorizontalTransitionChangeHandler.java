@@ -16,19 +16,19 @@ import com.bluelinelabs.conductor.changehandler.HorizontalChangeHandler;
  * dp Created by Admin on 6/5/17.
  */
 
-public class HorizontalTransitionChangeHandler extends AnimatorChangeHandler{
+public class RightHorizontalTransitionChangeHandler extends AnimatorChangeHandler{
 
-    public HorizontalTransitionChangeHandler() { }
+    public RightHorizontalTransitionChangeHandler() { }
 
-    public HorizontalTransitionChangeHandler(boolean removesFromViewOnPush) {
+    public RightHorizontalTransitionChangeHandler(boolean removesFromViewOnPush) {
         super(removesFromViewOnPush);
     }
 
-    public HorizontalTransitionChangeHandler(long duration) {
+    public RightHorizontalTransitionChangeHandler(long duration) {
         super(duration);
     }
 
-    public HorizontalTransitionChangeHandler(long duration, boolean removesFromViewOnPush) {
+    public RightHorizontalTransitionChangeHandler(long duration, boolean removesFromViewOnPush) {
         super(duration, removesFromViewOnPush);
     }
 

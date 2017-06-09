@@ -3,6 +3,7 @@ package au.com.dealsdirect.ui.main;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
+import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,7 +14,6 @@ import com.bluelinelabs.conductor.Conductor;
 import com.bluelinelabs.conductor.Controller;
 import com.bluelinelabs.conductor.Router;
 import com.bluelinelabs.conductor.RouterTransaction;
-import com.bluelinelabs.conductor.changehandler.FadeChangeHandler;
 
 import javax.inject.Inject;
 
@@ -21,7 +21,7 @@ import au.com.dealsdirect.R;
 import au.com.dealsdirect.ui.base.BaseActivity;
 import au.com.dealsdirect.ui.categories.CategoriesController;
 import au.com.dealsdirect.ui.controller.shops.ShopsController;
-import au.com.dealsdirect.ui.controller.shops.changehandler.SharedElementTransitionChangehandler;
+import au.com.dealsdirect.ui.controller.shops.changehandler.LeftHorizontalTransitionChangeHandler;
 import au.com.dealsdirect.ui.custom.BottomNavigationViewHelper;
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -42,6 +42,9 @@ public class MainActivity extends BaseActivity implements MainMvpView {
 
     @BindView(R.id.controller_shop_bottom_navigation)
     BottomNavigationView mBottomNavigationView;
+
+    @BindView(R.id.partial_toolbar_nav_icon)
+    ImageView mToolbarNavIcon;
 
     private int mPreviousTab = R.id.action_shop;
     private int mCurrentTab = R.id.action_shop;
@@ -110,6 +113,13 @@ public class MainActivity extends BaseActivity implements MainMvpView {
                         return true;
                     }
                 });
+
+        mToolbarNavIcon.setOnClickListener(new View.OnClickListener() {
+            @Override public void onClick(View view) {
+                showCategoryController();
+                Log.d("MainActivity", "shows category controller");
+            }
+        });
     }
 
     @Override
@@ -130,8 +140,8 @@ public class MainActivity extends BaseActivity implements MainMvpView {
 
         mRouter.pushController(RouterTransaction.with(
                         new CategoriesController())
-                                 .pushChangeHandler(new SharedElementTransitionChangehandler())
-                                 .popChangeHandler(new FadeChangeHandler()));
+                                 .pushChangeHandler(new LeftHorizontalTransitionChangeHandler())
+                                 .popChangeHandler(new LeftHorizontalTransitionChangeHandler()));
 
     }
 
