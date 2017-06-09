@@ -2,14 +2,19 @@ package au.com.dealsdirect.ui.base;
 
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.annotation.StringRes;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
+import android.widget.TextView;
 
+import au.com.dealsdirect.R;
 import au.com.dealsdirect.di.component.ControllerComponent;
 import au.com.dealsdirect.di.component.DaggerControllerComponent;
 import au.com.dealsdirect.di.module.ControllerModule;
+import butterknife.BindView;
 
 
 public abstract class BaseController extends RefWatchingController implements MvpView {

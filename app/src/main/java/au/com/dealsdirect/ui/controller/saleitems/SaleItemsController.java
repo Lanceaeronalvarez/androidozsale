@@ -18,6 +18,7 @@ import javax.inject.Inject;
 import au.com.dealsdirect.R;
 import au.com.dealsdirect.data.network.model.saleitems.GetPublicSaleItemsRequest;
 import au.com.dealsdirect.data.network.model.saleitems.GetPublicSaleItemsResponse;
+import au.com.dealsdirect.ui.base.BaseActivity;
 import au.com.dealsdirect.ui.base.BaseController;
 import au.com.dealsdirect.ui.controller.saleitems.adapter.SaleItemsAdapter;
 import au.com.dealsdirect.utils.BundleBuilder;
@@ -31,12 +32,13 @@ import butterknife.BindView;
 public class SaleItemsController  extends BaseController implements SaleItemsMvpView {
 
     private static final String KEY_TEXT = "SaleItemsController.KEY_TEXT";
-
     private static final String KEY_TITLE = "SaleItemsController.title";
+    private static final String KEY_ID = "SaleItemsController.id";
     private static final String KEY_HEADER_IMAGE = "SaleItemsController.header_image_url";
     private static final String KEY_FROM_POSITION = "SaleItemsController.position";
 
-    private String title;
+    private String mId;
+    private String mTitle;
     private int fromPosition;
     private String imageHeaderUrl;
 
@@ -53,25 +55,27 @@ public class SaleItemsController  extends BaseController implements SaleItemsMvp
     private Paginate.Callbacks mPaginateCallbacks;
 
     int page = 0;
-    boolean loadingInProgress = false;
-    boolean hasLoadedAllItems = false;
+    private boolean loadingInProgress = false;
+    private boolean hasLoadedAllItems = false;
 
     @Inject
     SaleItemsMvpPresenter<SaleItemsMvpView> mPresenter;
 
-    public SaleItemsController(String title, int fromPosition, String imageUrl) {
+    public SaleItemsController(String bannerTitle, String id, int fromPosition, String imageUrl) {
 
         this(new BundleBuilder(new Bundle())
-                     .putString(KEY_TITLE, title)
-                     .putString(KEY_HEADER_IMAGE, imageUrl)
-                     .putInt(KEY_FROM_POSITION, fromPosition)
-                     .build());
+                .putString(KEY_ID, id)
+                .putString(KEY_TITLE, bannerTitle)
+                .putString(KEY_HEADER_IMAGE, imageUrl)
+                .putInt(KEY_FROM_POSITION, fromPosition)
+                .build());
     }
 
 
     public SaleItemsController(Bundle args) {
         super(args);
-        title = getArgs().getString(KEY_TITLE);
+        mId = getArgs().getString(KEY_ID);
+        mTitle = getArgs().getString(KEY_TITLE);
         fromPosition = getArgs().getInt(KEY_FROM_POSITION);
         imageHeaderUrl = getArgs().getString(KEY_HEADER_IMAGE);
 
@@ -90,11 +94,13 @@ public class SaleItemsController  extends BaseController implements SaleItemsMvp
         super.onViewBound(view);
         setUp(view);
 
-
         GetPublicSaleItemsRequest getPublicSaleItemsRequest
-                = new GetPublicSaleItemsRequest(title,
-                        100, "en", "DA", "");
+                = new GetPublicSaleItemsRequest(mId, 100, "en", "DA", "");
+
         mPresenter.loadSaleItems(getPublicSaleItemsRequest);
+
+        assert (getActivity()) != null;
+        ((BaseActivity) getActivity()).setHeaderTitle(mTitle);
 
     }
 

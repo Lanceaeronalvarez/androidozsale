@@ -12,7 +12,6 @@ import javax.inject.Inject;
 import au.com.dealsdirect.R;
 import au.com.dealsdirect.data.network.model.banner.GetPublicSalesBannerResponse;
 import au.com.dealsdirect.ui.base.BaseController;
-import au.com.dealsdirect.ui.main.MainActivity;
 import au.com.dealsdirect.utils.BundleBuilder;
 import butterknife.BindView;
 
@@ -66,7 +65,6 @@ public class SaleCategoriesController extends BaseController implements SaleCate
     @Override protected void onViewBound(@NonNull View view) {
         super.onViewBound(view);
         mSaleCategoriesImage.setTransitionName(title+fromPosition);
-        ((MainActivity) getActivity()).setHeaderTitle("Item Detail");
     }
 
     @Override protected void setUp(View view) {

@@ -8,7 +8,6 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
-import android.widget.TextView;
 
 import com.bluelinelabs.conductor.Conductor;
 import com.bluelinelabs.conductor.Controller;
@@ -21,7 +20,7 @@ import au.com.dealsdirect.R;
 import au.com.dealsdirect.ui.base.BaseActivity;
 import au.com.dealsdirect.ui.categories.CategoriesController;
 import au.com.dealsdirect.ui.controller.shops.ShopsController;
-import au.com.dealsdirect.ui.controller.shops.changehandler.LeftHorizontalTransitionChangeHandler;
+import au.com.dealsdirect.ui.controller.shops.changehandler.HorizontalNavTransitionChangeHandler;
 import au.com.dealsdirect.ui.custom.BottomNavigationViewHelper;
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -33,12 +32,6 @@ public class MainActivity extends BaseActivity implements MainMvpView {
 
     @BindView(R.id.controller_container)
     ViewGroup mContainer;
-
-    @BindView(R.id.partial_toolbar_header_text)
-    TextView mHeaderTitle;
-
-    @BindView(R.id.partial_toolbar_logo)
-    ImageView mHeaderLogo;
 
     @BindView(R.id.controller_shop_bottom_navigation)
     BottomNavigationView mBottomNavigationView;
@@ -140,8 +133,8 @@ public class MainActivity extends BaseActivity implements MainMvpView {
 
         mRouter.pushController(RouterTransaction.with(
                         new CategoriesController())
-                                 .pushChangeHandler(new LeftHorizontalTransitionChangeHandler())
-                                 .popChangeHandler(new LeftHorizontalTransitionChangeHandler()));
+                                 .pushChangeHandler(new HorizontalNavTransitionChangeHandler())
+                                 .popChangeHandler(new HorizontalNavTransitionChangeHandler()));
 
     }
 
@@ -169,10 +162,7 @@ public class MainActivity extends BaseActivity implements MainMvpView {
         mRouter.setRoot(RouterTransaction.with(new CategoriesController()));
     }
 
-    @Override public void setHeaderTitle(String title) {
-        mHeaderTitle.setText(title);
-        mHeaderLogo.setVisibility(View.GONE);
-    }
+
 
 //    @OnClick(R.id.provide_toolbar_nav_icon)
 //    void userClicked(){

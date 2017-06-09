@@ -11,6 +11,7 @@
     <dimen name="text_size_xlarge">16sp</dimen>
     <dimen name="text_size_xxlarge">18sp</dimen>
     <dimen name="text_size_xxxlarge">21sp</dimen>
+    <dimen name="text_size_xxxxlarge">24sp</dimen>
 
     <dimen name="toolbar_height">64dp</dimen>
     <dimen name="filter_bar_height">42dp</dimen>

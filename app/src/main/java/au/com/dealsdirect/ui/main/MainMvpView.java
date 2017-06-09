@@ -25,7 +25,6 @@ public interface MainMvpView extends MvpView {
 
     void showController(Controller controller);
 
-    void setHeaderTitle(String title);
 
     //Samples
 //    void openLoginActivity();

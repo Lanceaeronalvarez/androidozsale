@@ -20,6 +20,7 @@ import javax.inject.Inject;
 import au.com.dealsdirect.R;
 import au.com.dealsdirect.data.network.model.banner.GetPublicSalesBannerRequest;
 import au.com.dealsdirect.data.network.model.banner.GetPublicSalesBannerResponse;
+import au.com.dealsdirect.ui.base.BaseActivity;
 import au.com.dealsdirect.ui.base.BaseController;
 import au.com.dealsdirect.ui.controller.saleitems.SaleItemsController;
 import au.com.dealsdirect.ui.controller.shops.adapter.BannersAdapter;
@@ -80,6 +81,9 @@ public class ShopsController extends BaseController
             shopsControllerBannerRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
             shopsControllerBannerRecyclerView.setAdapter(mBannersAdapter);
         }
+
+        assert (getActivity()) != null;
+        ((BaseActivity)getActivity()).showHeaderLogo();
     }
 
 
@@ -110,14 +114,18 @@ public class ShopsController extends BaseController
     }
 
 
-    @Override public void onBannerClicked(String bannerId, int position, String imageUrl) {
+    @Override public void onBannerClicked(
+            String bannerTitle,
+            String bannerId,
+            int position,
+            String imageUrl) {
 
         List<String> names = new ArrayList<>();
         names.add(bannerId+position);
 
         getRouter().pushController(
                 RouterTransaction.with(
-                        new SaleItemsController(bannerId, position, imageUrl))
+                        new SaleItemsController(bannerTitle, bannerId, position, imageUrl))
                                  .pushChangeHandler( new HorizontalChangeHandler())
                                  .popChangeHandler( new HorizontalChangeHandler()));
     }

@@ -20,7 +20,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
-        <RelativeLayout
+        <LinearLayout
             android:id="@+id/partial_toolbar_header_container"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -30,45 +30,45 @@
                 android:id="@+id/partial_toolbar_nav_icon"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:src="@drawable/ic_action_menu"
-                android:padding="10dp" android:layout_alignParentTop="true"
-                android:layout_alignParentStart="true"/>
+                android:layout_alignParentStart="true"
+                android:layout_alignParentTop="true"
+                android:layout_weight="20dp" android:padding="10dp"
+                android:src="@drawable/ic_action_menu"/>
 
-            <TextView
-                android:id="@+id/partial_toolbar_header_text"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text=""
-                android:textStyle="bold"
-                android:textSize="18sp"
-                android:textColor="@color/cardview_dark_background"
-                android:layout_centerHorizontal="true"
-                android:layout_centerVertical="true"/>
 
             <ImageView
                 android:id="@+id/partial_toolbar_logo"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_centerHorizontal="true"
-                android:layout_centerVertical="true"
-                android:visibility="visible"
-                android:background="@drawable/logo_deals_direct"/>
-
-            <TextView
-                android:id="@+id/provide_toolbar_title"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="DealsDirect"
-                android:textColor="#FFFFFF"
-                android:gravity="center"
+                android:layout_gravity="center"
+                android:background="@drawable/logo_deals_direct"
                 android:visibility="gone"/>
 
+            <TextView
+                android:id="@+id/partial_toolbar_header_text"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="60"
+                android:gravity="center"
+                android:text="DealsDirect"
+                android:textColor="#000000"
+                android:textSize="@dimen/text_size_xxxxlarge"
+                android:textStyle="bold"
+                android:visibility="visible"/>
 
-        </RelativeLayout>
+
+            <ImageView
+                android:id="@+id/partial_toolbar_filter_icon"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="20dp"
+                android:padding="10dp"
+                android:src="@drawable/ic_action_menu"/>
+
+        </LinearLayout>
 
 
     </LinearLayout>
-
 
 
 </android.support.v7.widget.Toolbar>

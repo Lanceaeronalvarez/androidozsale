@@ -31,7 +31,9 @@ public abstract class ButterKnifeController extends Controller {
         return view;
     }
 
-    protected void onViewBound(@NonNull View view) { }
+    protected void onViewBound(@NonNull View view) {
+
+    }
 
     @Override
     protected void onDestroyView(@NonNull View view) {

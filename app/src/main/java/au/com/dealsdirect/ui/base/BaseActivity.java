@@ -13,6 +13,7 @@ import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import au.com.dealsdirect.DDApplication;
@@ -22,11 +23,21 @@ import au.com.dealsdirect.di.component.DaggerActivityComponent;
 import au.com.dealsdirect.di.module.ActivityModule;
 import au.com.dealsdirect.utils.CommonUtils;
 import au.com.dealsdirect.utils.NetworkUtils;
+import butterknife.BindView;
 import butterknife.Unbinder;
 import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper;
 
 public abstract class BaseActivity extends AppCompatActivity
         implements MvpView {
+
+    @Nullable
+    @BindView(R.id.partial_toolbar_header_text)
+    TextView mHeaderTitle;
+
+    @Nullable
+    @BindView(R.id.partial_toolbar_logo)
+    ImageView mHeaderLogo;
+
 
     private ProgressDialog mProgressDialog;
 
@@ -131,4 +142,16 @@ public abstract class BaseActivity extends AppCompatActivity
     }
 
     protected abstract void setUp();
+
+    public void setHeaderTitle(String title) {
+        mHeaderTitle.setText(title);
+        mHeaderTitle.setVisibility(View.VISIBLE);
+        mHeaderLogo.setVisibility(View.GONE);
+    }
+
+    public void showHeaderLogo(){
+        mHeaderTitle.setVisibility(View.GONE);
+        mHeaderLogo.setVisibility(View.VISIBLE);
+    }
+
 }
