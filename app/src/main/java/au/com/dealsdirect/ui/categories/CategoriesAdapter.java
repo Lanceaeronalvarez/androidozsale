@@ -11,22 +11,28 @@ import java.util.List;
 
 import au.com.dealsdirect.R;
 import au.com.dealsdirect.data.network.model.publicsalescategories.GetPublicSalesCategoriesResponse;
-import au.com.dealsdirect.utils.AppLogger;
+import au.com.dealsdirect.ui.categories.listener.CategoryClickListener;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
 /**
- * Created by smartwave on 08/06/2017.
+ * jp Created by smartwave on 08/06/2017.
  */
 
 public class CategoriesAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
     private List<GetPublicSalesCategoriesResponse.SaleList> mData = new ArrayList<>();
     private CategoriesMvpPresenter mPresenter;
+    private CategoryClickListener mCategoryAdapterClickListener;
 
-    public CategoriesAdapter(List<GetPublicSalesCategoriesResponse.SaleList> data, CategoriesMvpPresenter presenter) {
+    public CategoriesAdapter(
+            List<GetPublicSalesCategoriesResponse.SaleList> data,
+            CategoriesMvpPresenter presenter,
+            CategoryClickListener categoryClickListener) {
+
         mData = data;
         mPresenter = presenter;
+        mCategoryAdapterClickListener = categoryClickListener;
     }
 
     @Override
@@ -39,6 +45,10 @@ public class CategoriesAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
     @Override
     public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
         ((CategoriesViewHolder) holder).categoryText.setText(mData.get(position).name);
+        ((CategoriesViewHolder) holder).itemView.setOnClickListener(view -> {
+            mCategoryAdapterClickListener.onCategoryClicked(mData.get(position).iD);
+        });
+
     }
 
     @Override

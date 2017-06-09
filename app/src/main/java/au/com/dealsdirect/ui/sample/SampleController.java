@@ -59,7 +59,6 @@ public class SampleController extends BaseController implements SampleMvpView {
     @Override
     public void onViewBound(@NonNull View view) {
         super.onViewBound(view);
-
         setUp(view);
     }
 

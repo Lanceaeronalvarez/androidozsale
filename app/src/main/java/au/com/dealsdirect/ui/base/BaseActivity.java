@@ -182,6 +182,7 @@ public abstract class BaseActivity extends AppCompatActivity
     }
 
     public void showToolbarLeftOption(Drawable drawable, View.OnClickListener onClickListener){
+        mHeaderLeftOption.setVisibility(View.VISIBLE);
         mHeaderLeftOption.setImageDrawable(drawable);
         mHeaderLeftOption.setOnClickListener(onClickListener);
     }

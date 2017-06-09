@@ -3,9 +3,7 @@ package au.com.dealsdirect.ui.main;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
-import android.util.Log;
 import android.view.MenuItem;
-import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 
@@ -41,6 +39,8 @@ public class MainActivity extends BaseActivity implements MainMvpView {
 
     private int mPreviousTab = R.id.action_shop;
     private int mCurrentTab = R.id.action_shop;
+
+    private boolean isCategoriesVisible = false;
 
     private Router mRouter;
 
@@ -107,10 +107,12 @@ public class MainActivity extends BaseActivity implements MainMvpView {
                     }
                 });
 
-        mToolbarNavIcon.setOnClickListener(new View.OnClickListener() {
-            @Override public void onClick(View view) {
+        mToolbarNavIcon.setOnClickListener(view -> {
+            if (!isCategoriesVisible){
                 showCategoryController();
-                Log.d("MainActivity", "shows category controller");
+            }else{
+                onBackPressed();
+                isCategoriesVisible = false;
             }
         });
     }
@@ -131,11 +133,14 @@ public class MainActivity extends BaseActivity implements MainMvpView {
 
     @Override public void showCategoryController() {
 
-        mRouter.pushController(RouterTransaction.with(
-                        new CategoriesController())
-                                 .pushChangeHandler(new HorizontalNavTransitionChangeHandler())
-                                 .popChangeHandler(new HorizontalNavTransitionChangeHandler()));
+        if (!isCategoriesVisible){
+            mRouter.pushController(RouterTransaction.with(
+                    new CategoriesController())
+                        .pushChangeHandler(new HorizontalNavTransitionChangeHandler())
+                        .popChangeHandler(new HorizontalNavTransitionChangeHandler()));
+        }
 
+        isCategoriesVisible = true;
     }
 
     @Override public void showShopController() {
@@ -162,12 +167,5 @@ public class MainActivity extends BaseActivity implements MainMvpView {
         mRouter.setRoot(RouterTransaction.with(new CategoriesController()));
     }
 
-
-
-//    @OnClick(R.id.provide_toolbar_nav_icon)
-//    void userClicked(){
-//        showCategoryController();
-//
-//    }
 
 }

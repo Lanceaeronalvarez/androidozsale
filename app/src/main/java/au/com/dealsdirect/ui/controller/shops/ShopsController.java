@@ -1,5 +1,6 @@
 package au.com.dealsdirect.ui.controller.shops;
 
+import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -22,9 +23,12 @@ import au.com.dealsdirect.data.network.model.banner.GetPublicSalesBannerRequest;
 import au.com.dealsdirect.data.network.model.banner.GetPublicSalesBannerResponse;
 import au.com.dealsdirect.ui.base.BaseActivity;
 import au.com.dealsdirect.ui.base.BaseController;
+import au.com.dealsdirect.ui.categories.CategoriesController;
 import au.com.dealsdirect.ui.controller.saleitems.SaleItemsController;
 import au.com.dealsdirect.ui.controller.shops.adapter.BannersAdapter;
+import au.com.dealsdirect.ui.controller.shops.changehandler.HorizontalNavTransitionChangeHandler;
 import au.com.dealsdirect.ui.controller.shops.listener.BannerClickListener;
+import au.com.dealsdirect.utils.BundleBuilder;
 import butterknife.BindView;
 
 
@@ -36,6 +40,7 @@ public class ShopsController extends BaseController
         implements ShopsMvpView, BannerClickListener {
 
     private static final String KEY_TEXT = "ShopController.KEY_TEXT";
+    private static final String KEY_CATEGORY_ID = "ShopController.KEY_CATEGORY_ID";
 
     @Inject
     ShopsMvpPresenter<ShopsMvpView> mPresenter;
@@ -45,9 +50,26 @@ public class ShopsController extends BaseController
 
     private BannersAdapter mBannersAdapter;
     private BannerClickListener mBannerClickListener;
+    private String mCategoryID;
 
     private List<GetPublicSalesBannerResponse.Sale> sales = new LinkedList<>();
 
+    public ShopsController(String categoryID) {
+
+        this(new BundleBuilder(new Bundle())
+                     .putString(KEY_CATEGORY_ID, categoryID)
+                     .build());
+    }
+
+    public ShopsController() {
+
+    }
+
+    public ShopsController(Bundle args) {
+        super(args);
+        mCategoryID = getArgs().getString(KEY_CATEGORY_ID);
+
+    }
     @Override
     protected View inflateView(@NonNull LayoutInflater inflater, @NonNull ViewGroup container) {
 
@@ -62,10 +84,21 @@ public class ShopsController extends BaseController
     protected void onViewBound(@NonNull View view) {
         super.onViewBound(view);
 
-        GetPublicSalesBannerRequest getPublicSalesBannerRequest
-                = new GetPublicSalesBannerRequest(
-                        "40f80218-a9e1-43c4-96ff-4c046d192a21",100,false,true,-1,
-                                    "EN","DA","");
+        GetPublicSalesBannerRequest getPublicSalesBannerRequest;
+
+        if (mCategoryID==null){
+
+            getPublicSalesBannerRequest
+                    = new GetPublicSalesBannerRequest(
+                    "40f80218-a9e1-43c4-96ff-4c046d192a21",100,false,true,-1,
+                    "EN","DA","");
+        }else{
+            getPublicSalesBannerRequest
+                    = new GetPublicSalesBannerRequest(
+                    mCategoryID,100,false,true,-1,
+                    "EN","DA","");
+        }
+
 
         if (sales.size()==0){
             Log.d("shopscontroller", "sales size == 0");
@@ -83,6 +116,17 @@ public class ShopsController extends BaseController
         }
 
         assert (getActivity()) != null;
+        ((BaseActivity)getActivity())
+                .showToolbarLeftOption(
+                        getActivity().getDrawable(R.drawable.ic_action_menu),
+                        view1 -> {
+                            getRouter()
+                                    .pushController(RouterTransaction.with(
+                                    new CategoriesController())
+                                             .pushChangeHandler(new HorizontalNavTransitionChangeHandler())
+                                             .popChangeHandler(new HorizontalNavTransitionChangeHandler()));
+                        });
+
         ((BaseActivity)getActivity()).showHeaderLogo();
         ((BaseActivity)getActivity()).hideToolbarRightOption();
 
@@ -112,6 +156,7 @@ public class ShopsController extends BaseController
 
         shopsControllerBannerRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
         shopsControllerBannerRecyclerView.setAdapter(mBannersAdapter);
+        mBannersAdapter.notifyDataSetChanged();
 
     }
 
