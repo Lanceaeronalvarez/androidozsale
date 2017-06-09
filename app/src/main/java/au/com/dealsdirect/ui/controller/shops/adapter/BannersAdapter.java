@@ -2,6 +2,7 @@ package au.com.dealsdirect.ui.controller.shops.adapter;
 
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;
+import android.util.DisplayMetrics;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -22,6 +23,8 @@ import au.com.dealsdirect.utils.LegacyStringImageUtils;
  */
 
 public class BannersAdapter extends RecyclerView.Adapter<BannersViewHolder>{
+
+    public static DisplayMetrics DISPLAY_METRICS;
 
     private List<GetPublicSalesBannerResponse.Sale> mSales;
     private Context mContext;
@@ -56,6 +59,9 @@ public class BannersAdapter extends RecyclerView.Adapter<BannersViewHolder>{
 
         String url = LegacyStringImageUtils.saleImageURLString(mSales.get(position));
         ImageUtils.loadImage(mContext,url,holder.bannerImage);
+//
+//        holder.bannerImage.getLayoutParams().height=400;
+//        holder.bannerImage.getLayoutParams().width=1000;
 
         holder.bannerDescription.setText(formatted);
         holder.bannerImage.setTransitionName(mSales.get(position).getID()+position);
