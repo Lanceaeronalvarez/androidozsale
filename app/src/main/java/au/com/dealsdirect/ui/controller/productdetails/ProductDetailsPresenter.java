@@ -2,16 +2,21 @@ package au.com.dealsdirect.ui.controller.productdetails;
 
 import com.androidnetworking.error.ANError;
 
+import org.reactivestreams.Subscription;
+
 import javax.inject.Inject;
 
 import au.com.dealsdirect.data.DataManager;
 import au.com.dealsdirect.data.network.model.productdetails.GetPublicItemDetailsRequest;
 import au.com.dealsdirect.data.network.model.productdetails.GetPublicItemDetailsResponse;
+import au.com.dealsdirect.data.network.model.productdetails.GetPublicSaleDetailsRequest;
+import au.com.dealsdirect.data.network.model.productdetails.GetPublicSaleDetailsResponse;
 import au.com.dealsdirect.data.network.model.publicsalescategories.GetPublicSalesCategoriesResponse;
 import au.com.dealsdirect.ui.base.BasePresenter;
 import au.com.dealsdirect.utils.rx.SchedulerProvider;
 import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.functions.Consumer;
+import io.reactivex.subjects.PublishSubject;
 
 /**
  * Created by smartwave on 08/06/2017.
@@ -26,9 +31,9 @@ public class ProductDetailsPresenter<V extends ProductDetailsMvpView> extends Ba
     }
 
     @Override
-    public void loadProductDetails(GetPublicItemDetailsRequest request) {
+    public void loadProductDetails(GetPublicItemDetailsRequest publicItemDetailsRequest, GetPublicSaleDetailsRequest publicSaleDetailsRequest) {
         getCompositeDisposable().add(getDataManager()
-                .doGetPublicItemDetailsApiCall(request)
+                .doGetPublicItemDetailsApiCall(publicItemDetailsRequest)
                 .subscribeOn(getSchedulerProvider().io())
                 .observeOn(getSchedulerProvider().ui())
                 .subscribe(new Consumer<GetPublicItemDetailsResponse>() {
@@ -64,5 +69,44 @@ public class ProductDetailsPresenter<V extends ProductDetailsMvpView> extends Ba
                         }
                     }
                 }));
+
+        getCompositeDisposable().add(getDataManager()
+                .doGetPublicSaleDetailsApiCall(publicSaleDetailsRequest)
+                .subscribeOn(getSchedulerProvider().io())
+                .observeOn(getSchedulerProvider().ui())
+                .subscribe(new Consumer<GetPublicSaleDetailsResponse>() {
+                    @Override
+                    public void accept(GetPublicSaleDetailsResponse response) throws Exception {
+
+                        if (!isViewAttached()) {
+                            return;
+                        }
+
+                        getMvpView().hideLoading();
+                        if(response.getD().getResult() && response.getD().getValue() != null){
+                            getMvpView().showSaleDetails(response.getD().getValue());
+                        }
+
+
+                    }
+                }, new Consumer<Throwable>() {
+                    @Override
+                    public void accept(Throwable throwable) throws Exception {
+
+                        if (!isViewAttached()) {
+                            return;
+                        }
+
+                        getMvpView().hideLoading();
+                        getMvpView().onError(throwable.getMessage());
+
+                        // handle load accounts error here
+                        if (throwable instanceof ANError) {
+                            ANError anError = (ANError) throwable;
+                            handleApiError(anError);
+                        }
+                    }
+                }));
     }
+
 }

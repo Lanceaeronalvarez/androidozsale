@@ -1,6 +1,8 @@
 package au.com.dealsdirect.ui.controller.productdetails;
 
 import au.com.dealsdirect.data.network.model.productdetails.GetPublicItemDetailsResponse;
+import au.com.dealsdirect.data.network.model.productdetails.GetPublicSaleDetailsRequest;
+import au.com.dealsdirect.data.network.model.productdetails.GetPublicSaleDetailsResponse;
 import au.com.dealsdirect.ui.base.MvpView;
 
 /**
@@ -10,4 +12,6 @@ import au.com.dealsdirect.ui.base.MvpView;
 public interface ProductDetailsMvpView extends MvpView {
 
     void showProductDetails(GetPublicItemDetailsResponse.Value productDetail);
+
+    void showSaleDetails(GetPublicSaleDetailsResponse.Value saleDetail);
 }

@@ -22,6 +22,7 @@ import io.reactivex.functions.Consumer;
 public class SaleItemsPresenter<V extends SaleItemsMvpView> extends BasePresenter<V>
         implements SaleItemsMvpPresenter<V> {
 
+    String mSaleId="";
     @Inject
     public SaleItemsPresenter(DataManager dataManager, SchedulerProvider schedulerProvider,
             CompositeDisposable compositeDisposable) {
@@ -76,4 +77,10 @@ public class SaleItemsPresenter<V extends SaleItemsMvpView> extends BasePresente
                                  }
                              }));
     }
+
+    @Override
+    public void loadProductDetails(String itemId, String saleId){
+        getMvpView().showProductDetails(itemId,saleId);
+    }
+
 }

@@ -7,6 +7,7 @@ import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 
 import au.com.dealsdirect.data.network.model.banner.GetPublicSalesBannerResponse;
+import au.com.dealsdirect.data.network.model.productdetails.GetPublicItemDetailsResponse;
 import au.com.dealsdirect.data.network.model.saleitems.GetPublicSaleItemsResponse;
 
 /**
@@ -17,6 +18,7 @@ public class LegacyStringImageUtils {
 
     private static String OEngineSaleImageBaseURL = "https://c1.mysalec.com/sales";
     private static String OEngineProductImageBaseURL = "https://cdn1.apacsale.com/brands";
+    private static String OEngineProductDetailsImageBaseURL = "https://c1.mysalec.com/brands";
 
     private static Handler h = new Handler();
 
@@ -87,5 +89,30 @@ public class LegacyStringImageUtils {
         //Log.d("ImageURL", urlString.toString());
 
         return urlString;
+    }
+
+    public static String productDetailsImageURLString(String brandId, String imageId, String previewPath) {
+
+        String encodedImageFilename = "";
+
+        try {
+            encodedImageFilename = URLEncoder.encode(previewPath, "UTF-8");
+        } catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
+            encodedImageFilename = "";
+        }
+
+        encodedImageFilename = encodedImageFilename.replace("+", "%20");
+
+
+        String urlString = OEngineProductDetailsImageBaseURL + "/"
+                + brandId + "/"
+                + imageId + "/"
+                + encodedImageFilename;
+
+        Log.d("LegacyString", urlString);
+
+        return urlString;
+
     }
 }

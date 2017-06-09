@@ -11,6 +11,8 @@ import au.com.dealsdirect.data.network.model.banner.GetPublicSalesBannerRequest;
 import au.com.dealsdirect.data.network.model.banner.GetPublicSalesBannerResponse;
 import au.com.dealsdirect.data.network.model.productdetails.GetPublicItemDetailsRequest;
 import au.com.dealsdirect.data.network.model.productdetails.GetPublicItemDetailsResponse;
+import au.com.dealsdirect.data.network.model.productdetails.GetPublicSaleDetailsRequest;
+import au.com.dealsdirect.data.network.model.productdetails.GetPublicSaleDetailsResponse;
 import au.com.dealsdirect.data.network.model.publicsalescategories.GetPublicSalesCategoriesRequest;
 import au.com.dealsdirect.data.network.model.publicsalescategories.GetPublicSalesCategoriesResponse;
 import au.com.dealsdirect.data.network.model.saleitems.GetPublicSaleItemsRequest;
@@ -70,11 +72,19 @@ public class AppApiHelper implements ApiHelper {
                 .build()
                 .getObjectObservable(GetPublicItemDetailsResponse.class);
 
-
-
     }
 
-    @Override public Observable<GetPublicSaleItemsResponse> getPublicSaleItemsApiCall(
+    @Override
+    public Observable<GetPublicSaleDetailsResponse> doGetPublicSaleDetailsApiCall(GetPublicSaleDetailsRequest request) {
+        return Rx2AndroidNetworking.get(ApiEndPoint.GET_SALES_ITEM_SALE_DETAILS)
+                .addHeaders(mApiHeader.getPublicApiHeader())
+                .addQueryParameter(request)
+                .build()
+                .getObjectObservable(GetPublicSaleDetailsResponse.class);
+    }
+
+
+   @Override public Observable<GetPublicSaleItemsResponse> getPublicSaleItemsApiCall(
             GetPublicSaleItemsRequest getPublicSaleItemsRequest) {
 
         return Rx2AndroidNetworking.get(ApiEndPoint.GET_PUBLIC_SALE_ITEMS)
@@ -83,5 +93,6 @@ public class AppApiHelper implements ApiHelper {
                                    .build()
                                    .getObjectObservable(GetPublicSaleItemsResponse.class);
     }
+
 }
 

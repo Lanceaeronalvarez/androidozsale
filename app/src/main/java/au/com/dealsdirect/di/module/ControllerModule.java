@@ -92,7 +92,8 @@ public class ControllerModule {
         return presenter;
     }
 
-    @Provides ProductDetailsMvpPresenter<ProductDetailsMvpView> provideProductDetailsPresenter
+    @Provides
+    ProductDetailsMvpPresenter<ProductDetailsMvpView> provideProductDetailsPresenter
             (ProductDetailsPresenter<ProductDetailsMvpView> presenter) {
         return presenter;
     }
@@ -102,7 +103,8 @@ public class ControllerModule {
         return presenter;
     }
 
-    @Provides SaleItemsMvpPresenter<SaleItemsMvpView> provideSaleItemsPresenter
+    @Provides
+    SaleItemsMvpPresenter<SaleItemsMvpView> provideSaleItemsPresenter
             (SaleItemsPresenter<SaleItemsMvpView> presenter) {
         return presenter;
     }

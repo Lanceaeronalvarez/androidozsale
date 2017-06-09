@@ -9,6 +9,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.bluelinelabs.conductor.RouterTransaction;
+import com.bluelinelabs.conductor.changehandler.FadeChangeHandler;
 import com.paginate.Paginate;
 
 import java.util.LinkedList;
@@ -21,6 +23,7 @@ import au.com.dealsdirect.data.network.model.saleitems.GetPublicSaleItemsRequest
 import au.com.dealsdirect.data.network.model.saleitems.GetPublicSaleItemsResponse;
 import au.com.dealsdirect.ui.base.BaseActivity;
 import au.com.dealsdirect.ui.base.BaseController;
+import au.com.dealsdirect.ui.controller.productdetails.ProductDetailsController;
 import au.com.dealsdirect.ui.controller.saleitems.adapter.SaleItemsAdapter;
 import au.com.dealsdirect.utils.BundleBuilder;
 import au.com.dealsdirect.utils.PaginateUtils;
@@ -32,14 +35,11 @@ import butterknife.BindView;
 
 public class SaleItemsController  extends BaseController implements SaleItemsMvpView {
 
-    private static final String KEY_TEXT = "SaleItemsController.KEY_TEXT";
-    private static final String KEY_TITLE = "SaleItemsController.title";
-    private static final String KEY_ID = "SaleItemsController.id";
+    private static final String KEY_SALE_ID = "SaleItemsController.KEY_SALE_ID";
     private static final String KEY_HEADER_IMAGE = "SaleItemsController.header_image_url";
     private static final String KEY_FROM_POSITION = "SaleItemsController.position";
 
-    private String mId;
-    private String mTitle;
+    private String mSaleId;
     private int fromPosition;
     private String imageHeaderUrl;
 
@@ -62,11 +62,12 @@ public class SaleItemsController  extends BaseController implements SaleItemsMvp
     @Inject
     SaleItemsMvpPresenter<SaleItemsMvpView> mPresenter;
 
-    public SaleItemsController(String bannerTitle, String id, int fromPosition, String imageUrl) {
+    public SaleItemsController(String saleId, int fromPosition, String imageUrl) {
 
         this(new BundleBuilder(new Bundle())
                 .putString(KEY_ID, id)
                 .putString(KEY_TITLE, bannerTitle)
+		.putString(KEY_SALE_ID, saleId)
                 .putString(KEY_HEADER_IMAGE, imageUrl)
                 .putInt(KEY_FROM_POSITION, fromPosition)
                 .build());
@@ -75,8 +76,7 @@ public class SaleItemsController  extends BaseController implements SaleItemsMvp
 
     public SaleItemsController(Bundle args) {
         super(args);
-        mId = getArgs().getString(KEY_ID);
-        mTitle = getArgs().getString(KEY_TITLE);
+        mSaleId = getArgs().getString(KEY_SALE_ID);
         fromPosition = getArgs().getInt(KEY_FROM_POSITION);
         imageHeaderUrl = getArgs().getString(KEY_HEADER_IMAGE);
 
@@ -93,11 +93,14 @@ public class SaleItemsController  extends BaseController implements SaleItemsMvp
 
     @Override protected void onViewBound(@NonNull View view) {
         super.onViewBound(view);
-        setUp(view);
+
+//        mSaleItemsImage.setTransitionName(title+fromPosition);
+//        ImageUtils.loadImage(getActivity(), imageHeaderUrl, mSaleItemsImage);
+
 
         GetPublicSaleItemsRequest getPublicSaleItemsRequest
-                = new GetPublicSaleItemsRequest(mId, 100, "en", "DA", "");
-
+                = new GetPublicSaleItemsRequest(mSaleId,
+                        100, "en", "DA", "");
         mPresenter.loadSaleItems(getPublicSaleItemsRequest);
 
         assert (getActivity()) != null;
@@ -143,30 +146,42 @@ public class SaleItemsController  extends BaseController implements SaleItemsMvp
 
         for (int x=0;x<tempList.size();x++){
 
-            List<GetPublicSaleItemsResponse.SubCategory> tempSubCategories;
+            Log.d("saleItems", "entered loop = "+tempList.get(x).getName()+ " , "+tempList.get(x)
+                                                                                          .getHtmlName()+ "  , "+tempList.get(x).getID());
+            List<GetPublicSaleItemsResponse.SubCategory> tempSubCategories = new LinkedList<>();
             tempSubCategories = tempList.get(x).getSubCategories();
 
             for (int y = 0; y<tempSubCategories.size();y++){
+                Log.d("saleitems", "size = "+allItems.size());
 
                 List<GetPublicSaleItemsResponse.Item> tempItems;
                 tempItems = tempSubCategories.get(y).getItems();
 
                 for (int z = 0; z < tempItems.size(); z++){
                     allItems.add(tempItems.get(z));
+                    Log.d("saleitems", "size = "+allItems.size());
 
                 }
             }
         }
 
-        if(page != 0) {
-            mSaleItemsAdapter.addData(allItems);
-        } else {
-            mSaleItemsAdapter = new SaleItemsAdapter(allItems);
-            RecyclerView.LayoutManager layoutManager = new GridLayoutManager(getActivity(), 2);
-            mSaleItemsRecyclerview.setLayoutManager(layoutManager);
-            mSaleItemsRecyclerview.setAdapter(mSaleItemsAdapter);
-            mPaginateManager = PaginateUtils.init(mSaleItemsRecyclerview, mPaginateCallbacks);
-        }
+        Log.d("saleitems", "size = "+allItems.size());
+        mSaleItemsAdapter = new SaleItemsAdapter(allItems);
+        RecyclerView.LayoutManager layoutManager = new GridLayoutManager(getActivity(), 3);
+        mSaleItemsRecyclerview.setLayoutManager(layoutManager);
+        mSaleItemsRecyclerview.setAdapter(mSaleItemsAdapter);
+//        mPaginateManager = PaginateUtils.init(mSaleItemsRecyclerview, mPaginateCallbacks);
+
+
+//        if(page != 0) {
+//            mSaleItemsAdapter.addData(allItems);
+//        } else {
+//            mSaleItemsAdapter = new SaleItemsAdapter(allItems);
+//            RecyclerView.LayoutManager layoutManager = new GridLayoutManager(getActivity(), 3);
+//            mSaleItemsRecyclerview.setLayoutManager(layoutManager);
+//            mSaleItemsRecyclerview.setAdapter(mSaleItemsAdapter);
+//            mPaginateManager = PaginateUtils.init(mSaleItemsRecyclerview, mPaginateCallbacks);
+//        }
 
         loadingInProgress = false;
         hasLoadedAllItems = true;
@@ -178,5 +193,12 @@ public class SaleItemsController  extends BaseController implements SaleItemsMvp
        // showFilterBar();
         loadingInProgress = true;
 //        mPresenter.searchProducts(page, mToolbarEditText.getText().toString(), FilterSingleton.getSelectedFilters(mFilterMode));
+    }
+
+    @Override
+    public void showProductDetails(String itemId, String saleId) {
+        getRouter().pushController(RouterTransaction.with(new ProductDetailsController(itemId,saleId))
+                .popChangeHandler(new FadeChangeHandler())
+                .pushChangeHandler(new FadeChangeHandler()));
     }
 }

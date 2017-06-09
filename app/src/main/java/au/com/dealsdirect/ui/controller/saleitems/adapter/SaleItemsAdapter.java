@@ -13,6 +13,7 @@ import java.util.List;
 
 import au.com.dealsdirect.R;
 import au.com.dealsdirect.data.network.model.saleitems.GetPublicSaleItemsResponse;
+import au.com.dealsdirect.ui.controller.saleitems.SaleItemsMvpPresenter;
 import au.com.dealsdirect.utils.ImageUtils;
 import au.com.dealsdirect.utils.LegacyStringImageUtils;
 import au.com.dealsdirect.utils.PriceUtils;
@@ -27,6 +28,8 @@ public class SaleItemsAdapter extends RecyclerView.Adapter<SaleItemsAdapter.View
 
     List<GetPublicSaleItemsResponse.Item> mData;
     Context mContext;
+    SaleItemsMvpPresenter mPresenter;
+    String mSaleId;
 
     public void addData(List<GetPublicSaleItemsResponse.Item> saleItems) {
         mData.addAll(saleItems);
@@ -56,8 +59,10 @@ public class SaleItemsAdapter extends RecyclerView.Adapter<SaleItemsAdapter.View
         }
     }
 
-    public SaleItemsAdapter( List<GetPublicSaleItemsResponse.Item> saleItem) {
+    public SaleItemsAdapter( List<GetPublicSaleItemsResponse.Item> saleItem, SaleItemsMvpPresenter presenter,String saleId) {
         this.mData = saleItem;
+        this.mPresenter = presenter;
+        this.mSaleId = saleId;
     }
 
     @Override
@@ -86,11 +91,8 @@ public class SaleItemsAdapter extends RecyclerView.Adapter<SaleItemsAdapter.View
                 holder.mOldPrice.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);
 
 
-        holder.itemView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-//                mFragment.showProductDetailsFragment(mData.get(position));
-            }
+        holder.itemView.setOnClickListener(v-> {
+                mPresenter.loadProductDetails(mData.get(position).getID(),mSaleId);
         });
     }
 
