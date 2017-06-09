@@ -2,7 +2,7 @@
 <android.support.v7.widget.Toolbar
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content" xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_height="50dp" xmlns:app="http://schemas.android.com/apk/res-auto"
     android:background="@color/app_skin"
     android:contentInsetLeft="0dp"
     android:contentInsetStart="0dp"
@@ -20,55 +20,61 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
-        <LinearLayout
+        <RelativeLayout
             android:id="@+id/partial_toolbar_header_container"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="10dp">
 
             <ImageView
-                android:id="@+id/partial_toolbar_nav_icon"
+                android:id="@+id/partial_toolbar_left_option"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_alignParentStart="true"
-                android:layout_alignParentTop="true"
-                android:layout_weight="20dp" android:padding="10dp"
-                android:src="@drawable/ic_action_menu"/>
+                android:src="@drawable/ic_action_menu"
+                android:padding="10dp" android:layout_alignParentTop="true"
+                android:layout_alignParentStart="true"/>
 
 
             <ImageView
                 android:id="@+id/partial_toolbar_logo"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:background="@drawable/logo_deals_direct"
-                android:visibility="gone"/>
+                android:layout_height="30dp"
+                android:layout_centerHorizontal="true"
+                android:layout_centerVertical="true"
+                android:layout_marginLeft="60dp"
+                android:layout_marginRight="60dp"
+                android:layout_toRightOf="@+id/partial_toolbar_left_option"
+                android:layout_toLeftOf="@+id/partial_toolbar_right_option"
+                android:visibility="visible"
+                android:background="@drawable/logo_deals_direct"/>
 
             <TextView
                 android:id="@+id/partial_toolbar_header_text"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_weight="60"
-                android:gravity="center"
+                android:layout_width="match_parent"
+                android:layout_height="30dp"
                 android:text="DealsDirect"
-                android:textColor="#000000"
-                android:textSize="@dimen/text_size_xxxxlarge"
                 android:textStyle="bold"
+                android:singleLine="true"
+                android:layout_toRightOf="@+id/partial_toolbar_left_option"
+                android:layout_toLeftOf="@+id/partial_toolbar_right_option"
+                android:textSize="@dimen/text_size_xlarge"
+                android:textColor="#000000"
+                android:gravity="center"
                 android:visibility="visible"/>
 
-
             <ImageView
-                android:id="@+id/partial_toolbar_filter_icon"
+                android:id="@+id/partial_toolbar_right_option"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_weight="20dp"
+                android:src="@drawable/ic_toolbar_filter"
                 android:padding="10dp"
-                android:src="@drawable/ic_action_menu"/>
-
-        </LinearLayout>
+                android:layout_alignParentTop="true"
+                android:layout_alignParentRight="true"/>
+        </RelativeLayout>
 
 
     </LinearLayout>
+
 
 
 </android.support.v7.widget.Toolbar>

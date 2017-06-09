@@ -84,6 +84,8 @@ public class ShopsController extends BaseController
 
         assert (getActivity()) != null;
         ((BaseActivity)getActivity()).showHeaderLogo();
+        ((BaseActivity)getActivity()).hideToolbarRightOption();
+
     }
 
 

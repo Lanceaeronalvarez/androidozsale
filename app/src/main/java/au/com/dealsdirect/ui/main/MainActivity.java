@@ -36,7 +36,7 @@ public class MainActivity extends BaseActivity implements MainMvpView {
     @BindView(R.id.controller_shop_bottom_navigation)
     BottomNavigationView mBottomNavigationView;
 
-    @BindView(R.id.partial_toolbar_nav_icon)
+    @BindView(R.id.partial_toolbar_left_option)
     ImageView mToolbarNavIcon;
 
     private int mPreviousTab = R.id.action_shop;

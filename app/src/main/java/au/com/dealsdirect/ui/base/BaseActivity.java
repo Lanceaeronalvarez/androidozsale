@@ -4,6 +4,7 @@ import android.annotation.TargetApi;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.pm.PackageManager;
+import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -30,14 +31,17 @@ import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper;
 public abstract class BaseActivity extends AppCompatActivity
         implements MvpView {
 
-    @Nullable
     @BindView(R.id.partial_toolbar_header_text)
     TextView mHeaderTitle;
 
-    @Nullable
     @BindView(R.id.partial_toolbar_logo)
     ImageView mHeaderLogo;
 
+    @BindView(R.id.partial_toolbar_right_option)
+    ImageView mHeaderRightOption;
+
+    @BindView(R.id.partial_toolbar_left_option)
+    ImageView mHeaderLeftOption;
 
     private ProgressDialog mProgressDialog;
 
@@ -152,6 +156,40 @@ public abstract class BaseActivity extends AppCompatActivity
     public void showHeaderLogo(){
         mHeaderTitle.setVisibility(View.GONE);
         mHeaderLogo.setVisibility(View.VISIBLE);
+    }
+
+    public void showToolbarFilterOption(){
+        mHeaderRightOption.setVisibility(View.VISIBLE);
+        mHeaderRightOption.setImageDrawable(this.getDrawable(R.drawable.ic_toolbar_filter));
+    }
+
+    public void hideToolbarRightOption(){
+        mHeaderRightOption.setVisibility(View.INVISIBLE);
+        setToolbarRightOptionClickable(false);
+    }
+
+    public void hideToolbarLeftOption(){
+        mHeaderLeftOption.setVisibility(View.INVISIBLE);
+        setToolbarLeftOptionClickable(false);
+    }
+
+    public void setToolbarLeftOptionClickable(boolean isClickable){
+        mHeaderLeftOption.setClickable(isClickable);
+    }
+
+    public void setToolbarRightOptionClickable(boolean isClickable){
+        mHeaderRightOption.setClickable(isClickable);
+    }
+
+    public void showToolbarLeftOption(Drawable drawable, View.OnClickListener onClickListener){
+        mHeaderLeftOption.setImageDrawable(drawable);
+        mHeaderLeftOption.setOnClickListener(onClickListener);
+    }
+
+    public void showToolbarRightOption(Drawable drawable, View.OnClickListener onClickListener){
+        mHeaderRightOption.setVisibility(View.VISIBLE);
+        mHeaderRightOption.setImageDrawable(drawable);
+        mHeaderRightOption.setOnClickListener(onClickListener);
     }
 
 }
