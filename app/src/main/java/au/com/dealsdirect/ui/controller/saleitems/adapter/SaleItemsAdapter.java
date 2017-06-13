@@ -79,8 +79,8 @@ public class SaleItemsAdapter extends RecyclerView.Adapter<SaleItemsAdapter.View
 
         String url = LegacyStringImageUtils.itemImageURLString(saleItem);
         String saleItemBrand = mData.get(position).getBrandName();
-        String saleItemPrice =  PriceUtils.convertDoubleToSaleString(mData.get(position).getPrice());
-        String saleItemOldPrice = PriceUtils.convertDoubleToSaleString(mData.get(position).getRP());
+        String saleItemPrice =  PriceUtils.getPriceStringValue(mData.get(position).getPrice());
+        String saleItemOldPrice = PriceUtils.getRpStringValue(mData.get(position).getRP());
 
         ImageUtils.loadImageWithImageViewDimens(mContext,url, holder.mSaleItemImage);
 

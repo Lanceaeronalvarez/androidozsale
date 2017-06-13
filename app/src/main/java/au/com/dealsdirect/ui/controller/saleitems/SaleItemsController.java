@@ -36,10 +36,12 @@ import butterknife.BindView;
 public class SaleItemsController  extends BaseController implements SaleItemsMvpView {
 
     private static final String KEY_SALE_ID = "SaleItemsController.KEY_SALE_ID";
+    private static final String KEY_TITLE = "SaleItemsController.KEY_TITLE";
     private static final String KEY_HEADER_IMAGE = "SaleItemsController.header_image_url";
     private static final String KEY_FROM_POSITION = "SaleItemsController.position";
 
     private String mSaleId;
+    private String mTitle;
     private int fromPosition;
     private String imageHeaderUrl;
 
@@ -62,10 +64,10 @@ public class SaleItemsController  extends BaseController implements SaleItemsMvp
     @Inject
     SaleItemsMvpPresenter<SaleItemsMvpView> mPresenter;
 
-    public SaleItemsController(String saleId, int fromPosition, String imageUrl) {
+    public SaleItemsController(String bannerTitle, String saleId, int fromPosition, String imageUrl) {
 
         this(new BundleBuilder(new Bundle())
-                .putString(KEY_ID, id)
+                .putString(KEY_SALE_ID, saleId)
                 .putString(KEY_TITLE, bannerTitle)
 		.putString(KEY_SALE_ID, saleId)
                 .putString(KEY_HEADER_IMAGE, imageUrl)
@@ -76,6 +78,7 @@ public class SaleItemsController  extends BaseController implements SaleItemsMvp
 
     public SaleItemsController(Bundle args) {
         super(args);
+        mTitle = getArgs().getString(KEY_TITLE);
         mSaleId = getArgs().getString(KEY_SALE_ID);
         fromPosition = getArgs().getInt(KEY_FROM_POSITION);
         imageHeaderUrl = getArgs().getString(KEY_HEADER_IMAGE);
@@ -166,7 +169,7 @@ public class SaleItemsController  extends BaseController implements SaleItemsMvp
         }
 
         Log.d("saleitems", "size = "+allItems.size());
-        mSaleItemsAdapter = new SaleItemsAdapter(allItems);
+        mSaleItemsAdapter = new SaleItemsAdapter(allItems,mPresenter,mSaleId);
         RecyclerView.LayoutManager layoutManager = new GridLayoutManager(getActivity(), 3);
         mSaleItemsRecyclerview.setLayoutManager(layoutManager);
         mSaleItemsRecyclerview.setAdapter(mSaleItemsAdapter);
