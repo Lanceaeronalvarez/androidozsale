@@ -320,7 +320,7 @@ public class GetPublicItemDetailsResponse {
         private PaymentConditions paymentConditions;
         @SerializedName("MyPayAmount")
         @Expose
-        private Integer myPayAmount;
+        private Double myPayAmount;
         @SerializedName("MyPayDetails")
         @Expose
         private Object myPayDetails;
@@ -557,11 +557,11 @@ public class GetPublicItemDetailsResponse {
             this.paymentConditions = paymentConditions;
         }
 
-        public Integer getMyPayAmount() {
+        public Double getMyPayAmount() {
             return myPayAmount;
         }
 
-        public void setMyPayAmount(Integer myPayAmount) {
+        public void setMyPayAmount(Double myPayAmount) {
             this.myPayAmount = myPayAmount;
         }
 

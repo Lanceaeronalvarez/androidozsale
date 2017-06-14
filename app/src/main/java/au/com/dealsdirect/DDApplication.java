@@ -4,11 +4,11 @@ package au.com.dealsdirect;
  */
 
 import android.app.Application;
-
 import com.androidnetworking.AndroidNetworking;
 import com.androidnetworking.interceptors.HttpLoggingInterceptor;
 import com.squareup.leakcanary.LeakCanary;
 import com.squareup.leakcanary.RefWatcher;
+
 
 import javax.inject.Inject;
 
@@ -17,6 +17,8 @@ import au.com.dealsdirect.di.component.ApplicationComponent;
 import au.com.dealsdirect.di.component.DaggerApplicationComponent;
 import au.com.dealsdirect.di.module.ApplicationModule;
 import au.com.dealsdirect.utils.AppLogger;
+import au.com.dealsdirect.utils.NetworkUtils;
+import okhttp3.OkHttpClient;
 import uk.co.chrisjenx.calligraphy.CalligraphyConfig;
 
 public class DDApplication extends Application {
@@ -41,13 +43,20 @@ public class DDApplication extends Application {
 
         AppLogger.init();
 
-        AndroidNetworking.initialize(getApplicationContext());
+        OkHttpClient customClient = null;
+
+//        AndroidNetworking.initialize(getApplicationContext());
         if (BuildConfig.DEBUG) {
-            AndroidNetworking.enableLogging(HttpLoggingInterceptor.Level.BODY);
+            customClient = NetworkUtils.provideOkHttpClientResponseCaching(this, HttpLoggingInterceptor.Level.HEADERS);
+        }else{
+            customClient = NetworkUtils.provideOkHttpClientResponseCaching(this);
         }
+
+        AndroidNetworking.initialize(this,customClient);
 
         initFonts();
     }
+
 
     public ApplicationComponent getComponent() {
         return mApplicationComponent;

@@ -173,7 +173,7 @@ public class SaleItemsController  extends BaseController implements SaleItemsMvp
         RecyclerView.LayoutManager layoutManager = new GridLayoutManager(getActivity(), 3);
         mSaleItemsRecyclerview.setLayoutManager(layoutManager);
         mSaleItemsRecyclerview.setAdapter(mSaleItemsAdapter);
-//        mPaginateManager = PaginateUtils.init(mSaleItemsRecyclerview, mPaginateCallbacks);
+        mPaginateManager = PaginateUtils.init(mSaleItemsRecyclerview, mPaginateCallbacks);
 
 
 //        if(page != 0) {

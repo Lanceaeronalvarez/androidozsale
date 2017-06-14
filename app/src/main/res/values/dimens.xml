@@ -2,7 +2,7 @@
 <resources>
     <dimen name="activity_horizontal_margin">16dp</dimen>
     <dimen name="activity_vertical_margin">16dp</dimen>
-    <dimen name="product_details_image_layout_height">470dp</dimen>
+    <dimen name="product_details_image_layout_height">420dp</dimen>
 
 
     <dimen name="text_size_small">10sp</dimen>

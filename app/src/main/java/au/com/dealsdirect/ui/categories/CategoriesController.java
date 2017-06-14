@@ -83,11 +83,6 @@ public class CategoriesController extends BaseController
     }
 
     @Override
-    public void onError(String message) {
-        super.onError(message);
-    }
-
-    @Override
     public void onCategoryClicked(String categoryID) {
         getRouter().setRoot(
                 RouterTransaction.with(new ShopsController(categoryID))

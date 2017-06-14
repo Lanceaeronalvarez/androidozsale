@@ -54,8 +54,7 @@ public class SaleItemsPresenter<V extends SaleItemsMvpView> extends BasePresente
                                                 .getList().isEmpty()){
                                          Log.d("saleitems","okay");
 
-                                         getMvpView()
-                                                 .showSaleItems(getPublicSaleItemsResponse);
+                                         getMvpView().showSaleItems(getPublicSaleItemsResponse);
                                      }
                                  }
 

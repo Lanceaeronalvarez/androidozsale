@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.util.Pair;
 import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -22,7 +23,6 @@ import com.zhy.view.flowlayout.TagAdapter;
 import com.zhy.view.flowlayout.TagFlowLayout;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.Set;
 
 import javax.inject.Inject;
@@ -71,10 +71,10 @@ public class ProductDetailsController extends BaseController implements ProductD
     TextView mDiscountLabel;
     @BindView(R.id.productImageRecyclerView)
     RecyclerViewPager mProductImagesRv;
+    @BindView(R.id.otherImagesRecyclerView)
+    RecyclerView mOtherImagesRv;
     @BindView(R.id.productName)
     TextView mProductName;
-    @BindView(R.id.productCategory)
-    TextView mProductCategory;
     @BindView(R.id.productPrice)
     TextView mProductPrice;
     @BindView(R.id.productPreviousPrice)
@@ -97,6 +97,7 @@ public class ProductDetailsController extends BaseController implements ProductD
 
     LinearLayoutManager mProductImagesRvLayoutManager;
     ProductDetailsImageAdapter mProductImagesAdapter;
+    ProductDetailsImageAdapter mOtherImagesAdapter;
     TagAdapter<Pair<String,String>> mSizesAdapter;
     ArrayList<Pair<String,String>> mProductSizes = new ArrayList<>();
 
@@ -150,10 +151,28 @@ public class ProductDetailsController extends BaseController implements ProductD
 
         mPresenter.loadProductDetails(itemDetailsRequest,saleDetailsRequest);
 
+        mOtherImagesRv.setLayoutManager(new LinearLayoutManager(getActivity(),LinearLayoutManager.HORIZONTAL,false));
+        mOtherImagesAdapter = new ProductDetailsImageAdapter(null,mSaleId,2);
+        mOtherImagesRv.setAdapter(mOtherImagesAdapter);
+
         mProductImagesRvLayoutManager = new LinearLayoutManager(getActivity(), LinearLayoutManager.HORIZONTAL, false);
         mProductImagesRv.setLayoutManager(mProductImagesRvLayoutManager);
-        mProductImagesAdapter = new ProductDetailsImageAdapter(null,mSaleId);
+        mProductImagesAdapter = new ProductDetailsImageAdapter(null,mSaleId,1);
         mProductImagesRv.setAdapter(mProductImagesAdapter);
+        mProductImagesRv.addOnPageChangedListener(new RecyclerViewPager.OnPageChangedListener() {
+            @Override
+            public void OnPageChanged(int i, int i1) {
+                RecyclerView.ViewHolder vhNew = mOtherImagesRv.findViewHolderForLayoutPosition(i1);
+                vhNew.itemView.animate().alpha(1f).setDuration(200).start();
+//                        otherImagesAdapter.setActiveCircleIndicator(newPos);
+
+
+                RecyclerView.ViewHolder vhOld = mOtherImagesRv.findViewHolderForLayoutPosition(i);
+                vhOld.itemView.animate().alpha(0.40f).setDuration(200).start();
+
+//                ProductImageRecyclerViewAdapter.selectedPosition = i1;
+            }
+        });
 
         mHtmlHeader = getActivity().getResources().getString(R.string.base_html_template_header);
         mHtmlFooter = getActivity().getResources().getString(R.string.base_html_template_footer);
@@ -174,7 +193,11 @@ public class ProductDetailsController extends BaseController implements ProductD
     public void showProductDetails(GetPublicItemDetailsResponse.Value product) {
 
         mProductImagesAdapter.replaceData(product);
+        mOtherImagesAdapter.replaceData(product);
 
+        if(product.getImages().size()!=0){
+            mOtherImagesRv.setVisibility(View.VISIBLE);
+        }
         //bind UI values here
 
         //product info
