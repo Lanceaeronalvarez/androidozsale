@@ -61,6 +61,15 @@
                             <!--android:background="@drawable/gradient"-->
                             <!--android:layout_height="50dp"/>-->
 
+                            <ImageView
+                                android:id="@+id/product_details_shared_image"
+                                android:layout_width="match_parent"
+                                android:layout_height="match_parent"
+                                android:layout_margin="5dp"
+                                android:layout_alignTop="@+id/image_container"
+                                android:layout_below="@+id/image_container"
+                                android:layout_alignBottom="@+id/image_container" />
+
                             <FrameLayout
                                 android:id="@+id/image_container"
                                 android:layout_width="match_parent"

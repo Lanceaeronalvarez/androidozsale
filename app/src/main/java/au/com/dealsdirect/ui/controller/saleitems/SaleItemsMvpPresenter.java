@@ -11,6 +11,6 @@ public interface SaleItemsMvpPresenter<V extends SaleItemsMvpView> extends MvpPr
 
     void loadSaleItems(GetPublicSaleItemsRequest getPublicSaleItemsRequest);
 
-    void loadProductDetails(String itemId, String saleId);
+    void loadProductDetails(String imageUrl, String itemId, String saleId);
 
 }

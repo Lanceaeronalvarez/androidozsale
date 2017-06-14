@@ -21,11 +21,12 @@ import butterknife.ButterKnife;
  * Created by smartwave on 09/06/2017.
  */
 
-public class ProductDetailsImageAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>{
+public class ProductDetailsImageAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
     GetPublicItemDetailsResponse.Value mData;
     Context mContext;
     String mSaleId;
+    ProductDetailsController mProductDetailsController;
     int mViewType;
 
     public void replaceData(GetPublicItemDetailsResponse.Value data) {
@@ -44,48 +45,69 @@ public class ProductDetailsImageAdapter extends RecyclerView.Adapter<RecyclerVie
         }
     }
 
-    public ProductDetailsImageAdapter(GetPublicItemDetailsResponse.Value data, String saleId, int viewType) {
+    public ProductDetailsImageAdapter(
+            ProductDetailsController productDetailsController,
+            GetPublicItemDetailsResponse.Value data,
+            String saleId,
+            int viewType) {
+        this.mProductDetailsController = productDetailsController;
         this.mData = data;
         this.mSaleId = saleId;
         this.mViewType = viewType;
     }
 
-    @Override
-    public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+    @Override public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         mContext = parent.getContext();
         View view = null;
 
-        if(viewType == 1) {
-            view = LayoutInflater.from(parent.getContext()).inflate(R.layout.product_details_image_row, parent, false);
-        }else if(viewType == 2){
-            view = LayoutInflater.from(parent.getContext()).inflate(R.layout.circle_indicator_image_layout, parent, false);
+        if (viewType == 1) {
+            view = LayoutInflater.from(parent.getContext())
+                                 .inflate(R.layout.product_details_image_row, parent, false);
+        } else if (viewType == 2) {
+            view = LayoutInflater.from(parent.getContext())
+                                 .inflate(R.layout.circle_indicator_image_layout, parent, false);
         }
 
         ProductDetailsImageAdapter.ViewHolder vh = new ProductDetailsImageAdapter.ViewHolder(view);
-        if(vh.image instanceof ScalableImageView){
+        if (vh.image instanceof ScalableImageView) {
             //pass presenter in the future
             ((ScalableImageView) vh.image).init();
         }
         return vh;
     }
 
-    @Override
-    public void onBindViewHolder(RecyclerView.ViewHolder holder, final int position) {
+    @Override public void onBindViewHolder(RecyclerView.ViewHolder holder, final int position) {
         ProductDetailsImageAdapter.ViewHolder vh = (ProductDetailsImageAdapter.ViewHolder) holder;
 
-        switch (mViewType){
+        switch (mViewType) {
             case 1:
-                if(mData.getImages().size()!=0){
-                    String url = LegacyStringImageUtils.productDetailsImageURLString(mData.getBrandID(),mData.getImages().get(position).getID(),mData.getImages().get(position).getPreview());
+                if (mData.getImages()
+                         .size() != 0) {
+                    String url =
+                            LegacyStringImageUtils.productDetailsImageURLString(mData.getBrandID(),
+                                                                                mData.getImages()
+                                                                                     .get(position)
+                                                                                     .getID(),
+                                                                                mData.getImages()
+                                                                                     .get(position)
+                                                                                     .getPreview());
+
+
                     ImageUtils.loadImage(mContext, url, vh.image);
+//                    if (position == 0) {
+//                        vh.image.setTransitionName(mData.getID());
+//                    } else {
+//                        vh.image.setTransitionName(mData.getID() + position);
+//                    }
                 }
                 break;
             case 2:
-                if(position != 0){
+                if (position != 0) {
                     vh.itemView.setAlpha(0.40f);
                 }
 
-                vh.image.setImageDrawable(ContextCompat.getDrawable(vh.image.getContext(), R.drawable.circle_indicator_active));
+                vh.image.setImageDrawable(ContextCompat.getDrawable(vh.image.getContext(),
+                                                                    R.drawable.circle_indicator_active));
                 break;
             default:
                 break;
@@ -94,17 +116,17 @@ public class ProductDetailsImageAdapter extends RecyclerView.Adapter<RecyclerVie
 
     }
 
-    @Override
-    public int getItemViewType(int position) {
+    @Override public int getItemViewType(int position) {
         return mViewType;
     }
 
-    @Override
-    public int getItemCount() {
-        if(mData!=null) {
-            return mData.getImages().size();
-        }else{
+    @Override public int getItemCount() {
+        if (mData != null) {
+            return mData.getImages()
+                        .size();
+        } else {
             return 0;
         }
     }
+
 }

@@ -7,6 +7,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import java.util.List;
@@ -24,7 +25,7 @@ import butterknife.ButterKnife;
  * dp Created by Admin on 6/8/17.
  */
 
-public class SaleItemsAdapter extends RecyclerView.Adapter<SaleItemsAdapter.ViewHolder>{
+public class SaleItemsAdapter extends RecyclerView.Adapter<SaleItemsAdapter.ViewHolder> {
 
     List<GetPublicSaleItemsResponse.Item> mData;
     Context mContext;
@@ -53,50 +54,58 @@ public class SaleItemsAdapter extends RecyclerView.Adapter<SaleItemsAdapter.View
         @BindView(R.id.sale_item_old_price)
         TextView mOldPrice;
 
+        @BindView(R.id.sale_item_container)
+        RelativeLayout mCardView;
+
         ViewHolder(View view) {
             super(view);
             ButterKnife.bind(this, view);
         }
     }
 
-    public SaleItemsAdapter( List<GetPublicSaleItemsResponse.Item> saleItem, SaleItemsMvpPresenter presenter,String saleId) {
+    public SaleItemsAdapter(List<GetPublicSaleItemsResponse.Item> saleItem,
+            SaleItemsMvpPresenter presenter, String saleId) {
         this.mData = saleItem;
         this.mPresenter = presenter;
         this.mSaleId = saleId;
     }
 
-    @Override
-    public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+    @Override public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         mContext = parent.getContext();
-        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.viewholder_sale_item, parent, false);
+        View view = LayoutInflater.from(parent.getContext())
+                                  .inflate(R.layout.viewholder_sale_item, parent, false);
         return new ViewHolder(view);
     }
 
-    @Override
-    public void onBindViewHolder(ViewHolder holder, final int position) {
+    @Override public void onBindViewHolder(ViewHolder holder, final int position) {
         GetPublicSaleItemsResponse.Item saleItem = mData.get(position);
         holder.mSaleItemName.setText(saleItem.getName());
+        holder.mSaleItemImage.setTransitionName(mData.get(position)
+                                                     .getID());
 
         String url = LegacyStringImageUtils.itemImageURLString(saleItem);
-        String saleItemBrand = mData.get(position).getBrandName();
-        String saleItemPrice =  PriceUtils.getPriceStringValue(mData.get(position).getPrice());
-        String saleItemOldPrice = PriceUtils.getRpStringValue(mData.get(position).getRP());
+        String saleItemBrand = mData.get(position)
+                                    .getBrandName();
+        String saleItemPrice = PriceUtils.getPriceStringValue(mData.get(position)
+                                                                   .getPrice());
+        String saleItemOldPrice = PriceUtils.getRpStringValue(mData.get(position)
+                                                                   .getRP());
 
-        ImageUtils.loadImageWithImageViewDimens(mContext,url, holder.mSaleItemImage);
+        ImageUtils.loadImageWithImageViewDimens(mContext, url, holder.mSaleItemImage);
 
         holder.mSaleBrand.setText(saleItemBrand);
         holder.mSalePrice.setText(saleItemPrice);
         holder.mOldPrice.setText(saleItemOldPrice);
-        holder.mOldPrice.setPaintFlags(holder.mOldPrice.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);
+        holder.mOldPrice.setPaintFlags(
+                holder.mOldPrice.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);
 
 
-        holder.itemView.setOnClickListener(v-> {
-                mPresenter.loadProductDetails(mData.get(position).getID(),mSaleId);
+        holder.itemView.setOnClickListener(v -> {
+            mPresenter.loadProductDetails(url, mData.get(position).getID(), mSaleId);
         });
     }
 
-    @Override
-    public int getItemCount() {
+    @Override public int getItemCount() {
         return mData.size();
     }
 }

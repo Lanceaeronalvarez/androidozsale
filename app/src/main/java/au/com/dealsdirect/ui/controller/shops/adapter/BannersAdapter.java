@@ -59,12 +59,7 @@ public class BannersAdapter extends RecyclerView.Adapter<BannersViewHolder>{
 
         String url = LegacyStringImageUtils.saleImageURLString(mSales.get(position));
         ImageUtils.loadImage(mContext,url,holder.bannerImage);
-//
-//        holder.bannerImage.getLayoutParams().height=400;
-//        holder.bannerImage.getLayoutParams().width=1000;
-
         holder.bannerDescription.setText(formatted);
-        holder.bannerImage.setTransitionName(mSales.get(position).getID()+position);
         holder.bannerImage.setOnClickListener(new View.OnClickListener() {
             @Override public void onClick(View view) {
 

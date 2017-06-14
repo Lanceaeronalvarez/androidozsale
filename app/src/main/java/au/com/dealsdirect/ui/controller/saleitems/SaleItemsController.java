@@ -11,8 +11,10 @@ import android.view.ViewGroup;
 
 import com.bluelinelabs.conductor.RouterTransaction;
 import com.bluelinelabs.conductor.changehandler.FadeChangeHandler;
+import com.bluelinelabs.conductor.changehandler.TransitionChangeHandlerCompat;
 import com.paginate.Paginate;
 
+import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -25,6 +27,7 @@ import au.com.dealsdirect.ui.base.BaseActivity;
 import au.com.dealsdirect.ui.base.BaseController;
 import au.com.dealsdirect.ui.controller.productdetails.ProductDetailsController;
 import au.com.dealsdirect.ui.controller.saleitems.adapter.SaleItemsAdapter;
+import au.com.dealsdirect.ui.controller.shops.changehandler.SharedElementTransitionChangehandler;
 import au.com.dealsdirect.utils.BundleBuilder;
 import au.com.dealsdirect.utils.PaginateUtils;
 import butterknife.BindView;
@@ -33,7 +36,7 @@ import butterknife.BindView;
  * dp Created by Admin on 6/8/17.
  */
 
-public class SaleItemsController  extends BaseController implements SaleItemsMvpView {
+public class SaleItemsController extends BaseController implements SaleItemsMvpView {
 
     private static final String KEY_SALE_ID = "SaleItemsController.KEY_SALE_ID";
     private static final String KEY_TITLE = "SaleItemsController.KEY_TITLE";
@@ -45,8 +48,8 @@ public class SaleItemsController  extends BaseController implements SaleItemsMvp
     private int fromPosition;
     private String imageHeaderUrl;
 
-//    @BindView(R.id.controller_sale_items_image)
-//    ImageView mSaleItemsImage;
+    private List<GetPublicSaleItemsResponse.Item> saleItems = new LinkedList<>();
+
 
     @BindView(R.id.controller_sale_items_grid_view)
     RecyclerView mSaleItemsRecyclerview;
@@ -64,15 +67,15 @@ public class SaleItemsController  extends BaseController implements SaleItemsMvp
     @Inject
     SaleItemsMvpPresenter<SaleItemsMvpView> mPresenter;
 
-    public SaleItemsController(String bannerTitle, String saleId, int fromPosition, String imageUrl) {
+    public SaleItemsController(String bannerTitle, String saleId, int fromPosition,
+            String imageUrl) {
 
-        this(new BundleBuilder(new Bundle())
-                .putString(KEY_SALE_ID, saleId)
-                .putString(KEY_TITLE, bannerTitle)
-		.putString(KEY_SALE_ID, saleId)
-                .putString(KEY_HEADER_IMAGE, imageUrl)
-                .putInt(KEY_FROM_POSITION, fromPosition)
-                .build());
+        this(new BundleBuilder(new Bundle()).putString(KEY_SALE_ID, saleId)
+                                            .putString(KEY_TITLE, bannerTitle)
+                                            .putString(KEY_SALE_ID, saleId)
+                                            .putString(KEY_HEADER_IMAGE, imageUrl)
+                                            .putInt(KEY_FROM_POSITION, fromPosition)
+                                            .build());
     }
 
 
@@ -97,43 +100,48 @@ public class SaleItemsController  extends BaseController implements SaleItemsMvp
     @Override protected void onViewBound(@NonNull View view) {
         super.onViewBound(view);
 
-//        mSaleItemsImage.setTransitionName(title+fromPosition);
-//        ImageUtils.loadImage(getActivity(), imageHeaderUrl, mSaleItemsImage);
+        setUp(view);
+
+        GetPublicSaleItemsRequest getPublicSaleItemsRequest =
+                new GetPublicSaleItemsRequest(mSaleId, 100, "en", "DA", "");
 
 
-        GetPublicSaleItemsRequest getPublicSaleItemsRequest
-                = new GetPublicSaleItemsRequest(mSaleId,
-                        100, "en", "DA", "");
-        mPresenter.loadSaleItems(getPublicSaleItemsRequest);
+        if (saleItems.size() == 0) {
+            mPresenter.loadSaleItems(getPublicSaleItemsRequest);
+        } else {
+            mSaleItemsAdapter = new SaleItemsAdapter(saleItems, mPresenter, mSaleId);
+            RecyclerView.LayoutManager layoutManager = new GridLayoutManager(getActivity(), 2);
+            mSaleItemsRecyclerview.setLayoutManager(layoutManager);
+            mSaleItemsRecyclerview.setAdapter(mSaleItemsAdapter);
+            mPaginateManager = PaginateUtils.init(mSaleItemsRecyclerview, mPaginateCallbacks);
+
+        }
 
         assert (getActivity()) != null;
-
         ((BaseActivity) getActivity()).setHeaderTitle(mTitle);
         ((BaseActivity) getActivity()).showToolbarRightOption(
                 getActivity().getDrawable(R.drawable.ic_toolbar_filter),
                 view1 -> {
-                    Log.d("saleitems", "clicked filter");
+                    Log.d("saleitems",
+                          "clicked filter");
                 });
     }
 
     @Override protected void setUp(View view) {
 
         mPaginateCallbacks = new Paginate.Callbacks() {
-            @Override
-            public void onLoadMore() {
+            @Override public void onLoadMore() {
                 // Load next page of data (e.g. network or database)
                 refresh();
                 page++;
             }
 
-            @Override
-            public boolean isLoading() {
+            @Override public boolean isLoading() {
                 // Indicate whether new page loading is in progress or not
                 return loadingInProgress;
             }
 
-            @Override
-            public boolean hasLoadedAllItems() {
+            @Override public boolean hasLoadedAllItems() {
                 // Indicate whether all data (pages) are loaded or not
                 return hasLoadedAllItems;
             }
@@ -142,66 +150,65 @@ public class SaleItemsController  extends BaseController implements SaleItemsMvp
     }
 
     @Override public void showSaleItems(GetPublicSaleItemsResponse getPublicSaleItemsResponse) {
-        List<GetPublicSaleItemsResponse.List> tempList = getPublicSaleItemsResponse
-                .getGetPublicSaleItemsObject().getList();
+
+        List<GetPublicSaleItemsResponse.List> tempList =
+                getPublicSaleItemsResponse.getGetPublicSaleItemsObject()
+                                          .getList();
 
         List<GetPublicSaleItemsResponse.Item> allItems = new LinkedList<>();
 
-        for (int x=0;x<tempList.size();x++){
+        for (int x = 0; x < tempList.size(); x++) {
 
-            Log.d("saleItems", "entered loop = "+tempList.get(x).getName()+ " , "+tempList.get(x)
-                                                                                          .getHtmlName()+ "  , "+tempList.get(x).getID());
             List<GetPublicSaleItemsResponse.SubCategory> tempSubCategories = new LinkedList<>();
-            tempSubCategories = tempList.get(x).getSubCategories();
+            tempSubCategories = tempList.get(x)
+                                        .getSubCategories();
 
-            for (int y = 0; y<tempSubCategories.size();y++){
-                Log.d("saleitems", "size = "+allItems.size());
+            for (int y = 0; y < tempSubCategories.size(); y++) {
 
                 List<GetPublicSaleItemsResponse.Item> tempItems;
-                tempItems = tempSubCategories.get(y).getItems();
+                tempItems = tempSubCategories.get(y)
+                                             .getItems();
 
-                for (int z = 0; z < tempItems.size(); z++){
+                for (int z = 0; z < tempItems.size(); z++) {
                     allItems.add(tempItems.get(z));
-                    Log.d("saleitems", "size = "+allItems.size());
 
                 }
             }
         }
 
-        Log.d("saleitems", "size = "+allItems.size());
-        mSaleItemsAdapter = new SaleItemsAdapter(allItems,mPresenter,mSaleId);
-        RecyclerView.LayoutManager layoutManager = new GridLayoutManager(getActivity(), 3);
+        saleItems = allItems;
+        mSaleItemsAdapter = new SaleItemsAdapter(allItems, mPresenter, mSaleId);
+        RecyclerView.LayoutManager layoutManager = new GridLayoutManager(getActivity(), 2);
         mSaleItemsRecyclerview.setLayoutManager(layoutManager);
         mSaleItemsRecyclerview.setAdapter(mSaleItemsAdapter);
         mPaginateManager = PaginateUtils.init(mSaleItemsRecyclerview, mPaginateCallbacks);
-
-
-//        if(page != 0) {
-//            mSaleItemsAdapter.addData(allItems);
-//        } else {
-//            mSaleItemsAdapter = new SaleItemsAdapter(allItems);
-//            RecyclerView.LayoutManager layoutManager = new GridLayoutManager(getActivity(), 3);
-//            mSaleItemsRecyclerview.setLayoutManager(layoutManager);
-//            mSaleItemsRecyclerview.setAdapter(mSaleItemsAdapter);
-//            mPaginateManager = PaginateUtils.init(mSaleItemsRecyclerview, mPaginateCallbacks);
-//        }
 
         loadingInProgress = false;
         hasLoadedAllItems = true;
         mPaginateManager.setHasMoreDataToLoad(!hasLoadedAllItems);
     }
 
-    @Override
-    public void refresh() {
-       // showFilterBar();
+    @Override public void refresh() {
+        // showFilterBar();
         loadingInProgress = true;
-//        mPresenter.searchProducts(page, mToolbarEditText.getText().toString(), FilterSingleton.getSelectedFilters(mFilterMode));
+        //        mPresenter.searchProducts(page, mToolbarEditText.getText().toString(), FilterSingleton.getSelectedFilters(mFilterMode));
     }
 
-    @Override
-    public void showProductDetails(String itemId, String saleId) {
-        getRouter().pushController(RouterTransaction.with(new ProductDetailsController(itemId,saleId))
-                .popChangeHandler(new FadeChangeHandler())
-                .pushChangeHandler(new FadeChangeHandler()));
+    @Override public void showProductDetails(String imageUrl, String itemId, String saleId) {
+        String imageTransitionName = itemId;
+
+        List<String> names = new ArrayList<>();
+        names.add(imageTransitionName);
+
+        getRouter().pushController(RouterTransaction.with(new ProductDetailsController(imageUrl, itemId, saleId))
+                                                    .pushChangeHandler(
+                                                            new TransitionChangeHandlerCompat(
+                                                            new SharedElementTransitionChangehandler(names),
+                                                            new FadeChangeHandler()))
+                                                    .popChangeHandler(
+                                                            new TransitionChangeHandlerCompat(
+                                                            new SharedElementTransitionChangehandler(names),
+                                                            new FadeChangeHandler())));
+
     }
 }

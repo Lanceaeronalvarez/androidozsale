@@ -8,11 +8,13 @@ import android.support.annotation.NonNull;
 import android.support.v4.util.Pair;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -34,6 +36,7 @@ import au.com.dealsdirect.data.network.model.productdetails.GetPublicSaleDetails
 import au.com.dealsdirect.data.network.model.productdetails.GetPublicSaleDetailsResponse;
 import au.com.dealsdirect.ui.base.BaseController;
 import au.com.dealsdirect.utils.BundleBuilder;
+import au.com.dealsdirect.utils.ImageUtils;
 import au.com.dealsdirect.utils.PriceUtils;
 import butterknife.BindView;
 
@@ -45,6 +48,7 @@ public class ProductDetailsController extends BaseController implements ProductD
 
     private final String KEY_ITEM_ID = "KEY_ITEM_ID";
     private final String KEY_SALE_ID = "KEY_SALE_ID";
+    private final String KEY_ITEM_IMAGE_ID = "KEY_IMAGE_ID";
     private final String KEY_COUNTRY_ID = "KEY_COUNTRY_ID";
     private final String KEY_LANGUAGE_ID = "KEY_LANGUAGE_ID";
     private final String KEY_USER_GROUP = "KEY_USER_GROUP";
@@ -58,6 +62,8 @@ public class ProductDetailsController extends BaseController implements ProductD
 
     private String mSaleId;
     private String mItemId;
+    private String mItemImageUrl;
+
     private String mCountryId = "DA";
     private String mLanguageId = "EN";
     private String mUserGroup = "";
@@ -91,6 +97,8 @@ public class ProductDetailsController extends BaseController implements ProductD
     WebView mProductDescriptionText;
     @BindView(R.id.product_about_pricing)
     WebView mProductAboutPricing;
+    @BindView(R.id.product_details_shared_image)
+    ImageView mProductSharedImage;
 
     String mHtmlHeader = "";
     String mHtmlFooter = "";
@@ -98,25 +106,27 @@ public class ProductDetailsController extends BaseController implements ProductD
     LinearLayoutManager mProductImagesRvLayoutManager;
     ProductDetailsImageAdapter mProductImagesAdapter;
     ProductDetailsImageAdapter mOtherImagesAdapter;
-    TagAdapter<Pair<String,String>> mSizesAdapter;
-    ArrayList<Pair<String,String>> mProductSizes = new ArrayList<>();
+    TagAdapter<Pair<String, String>> mSizesAdapter;
+    ArrayList<Pair<String, String>> mProductSizes = new ArrayList<>();
 
     boolean hasSizes = false;
     boolean didSelectSize = false;
     String selectedSkuId = "";
 
 
-    public ProductDetailsController(String itemId, String saleId){
+    public ProductDetailsController(String imageUrl, String itemId, String saleId) {
         this(new BundleBuilder(new Bundle())
-                .putString("KEY_ITEM_ID",itemId)
-                .putString("KEY_SALE_ID",saleId).build()
-        );
+                     .putString("KEY_IMAGE_ID", imageUrl)
+                     .putString("KEY_ITEM_ID", itemId)
+                     .putString("KEY_SALE_ID", saleId)
+                     .build());
     }
 
     public ProductDetailsController(Bundle args) {
         super(args);
         mSaleId = args.getString(KEY_SALE_ID);
         mItemId = args.getString(KEY_ITEM_ID);
+        mItemImageUrl = args.getString(KEY_ITEM_IMAGE_ID);
     }
 
 
@@ -128,99 +138,135 @@ public class ProductDetailsController extends BaseController implements ProductD
         return view;
     }
 
-    @Override
-    protected void onViewBound(@NonNull View view) {
+    @Override protected void onViewBound(@NonNull View view) {
         super.onViewBound(view);
+
+        mProductSharedImage.setTransitionName(mItemId);
+        ImageUtils.loadImage(getActivity(), mItemImageUrl, mProductSharedImage);
+
+
         //init api call
-        GetPublicItemDetailsRequest itemDetailsRequest = new GetPublicItemDetailsRequest(
-                mItemId,
-                mSaleId,
-                mGetBigImages,
-                mIncludePrices,
-                mLanguageId,
-                mCountryId,
-                mUserGroup
-        );
+        GetPublicItemDetailsRequest itemDetailsRequest = new GetPublicItemDetailsRequest(mItemId,
+                                                                                         mSaleId,
+                                                                                         mGetBigImages,
+                                                                                         mIncludePrices,
+                                                                                         mLanguageId,
+                                                                                         mCountryId,
+                                                                                         mUserGroup);
 
-        GetPublicSaleDetailsRequest saleDetailsRequest = new GetPublicSaleDetailsRequest(
-                mSaleId,
-                mCountryId,
-                mUserGroup,
-                mLanguageId
-        );
+        GetPublicSaleDetailsRequest saleDetailsRequest =
+                new GetPublicSaleDetailsRequest(mSaleId, mCountryId, mUserGroup, mLanguageId);
 
-        mPresenter.loadProductDetails(itemDetailsRequest,saleDetailsRequest);
+        mPresenter.loadProductDetails(itemDetailsRequest, saleDetailsRequest);
 
-        mOtherImagesRv.setLayoutManager(new LinearLayoutManager(getActivity(),LinearLayoutManager.HORIZONTAL,false));
-        mOtherImagesAdapter = new ProductDetailsImageAdapter(null,mSaleId,2);
+        mOtherImagesRv.setLayoutManager(new LinearLayoutManager(getActivity(),
+                                                                LinearLayoutManager.HORIZONTAL,
+                                                                false));
+        //        mOtherImagesRv.setTransitionName(mItemId);
+
+        mOtherImagesAdapter = new ProductDetailsImageAdapter(this,null, mSaleId, 2);
         mOtherImagesRv.setAdapter(mOtherImagesAdapter);
 
-        mProductImagesRvLayoutManager = new LinearLayoutManager(getActivity(), LinearLayoutManager.HORIZONTAL, false);
+        mProductImagesRvLayoutManager =
+                new LinearLayoutManager(getActivity(), LinearLayoutManager.HORIZONTAL, false);
         mProductImagesRv.setLayoutManager(mProductImagesRvLayoutManager);
-        mProductImagesAdapter = new ProductDetailsImageAdapter(null,mSaleId,1);
+        mProductImagesAdapter = new ProductDetailsImageAdapter(this,null, mSaleId, 1);
         mProductImagesRv.setAdapter(mProductImagesAdapter);
+
         mProductImagesRv.addOnPageChangedListener(new RecyclerViewPager.OnPageChangedListener() {
-            @Override
-            public void OnPageChanged(int i, int i1) {
+            @Override public void OnPageChanged(int i, int i1) {
                 RecyclerView.ViewHolder vhNew = mOtherImagesRv.findViewHolderForLayoutPosition(i1);
-                vhNew.itemView.animate().alpha(1f).setDuration(200).start();
-//                        otherImagesAdapter.setActiveCircleIndicator(newPos);
+                vhNew.itemView.animate()
+                              .alpha(1f)
+                              .setDuration(200)
+                              .start();
+                //                        otherImagesAdapter.setActiveCircleIndicator(newPos);
 
 
                 RecyclerView.ViewHolder vhOld = mOtherImagesRv.findViewHolderForLayoutPosition(i);
-                vhOld.itemView.animate().alpha(0.40f).setDuration(200).start();
+                vhOld.itemView.animate()
+                              .alpha(0.40f)
+                              .setDuration(200)
+                              .start();
 
-//                ProductImageRecyclerViewAdapter.selectedPosition = i1;
+                //                ProductImageRecyclerViewAdapter.selectedPosition = i1;
             }
         });
 
-        mHtmlHeader = getActivity().getResources().getString(R.string.base_html_template_header);
-        mHtmlFooter = getActivity().getResources().getString(R.string.base_html_template_footer);
+        mHtmlHeader = getActivity().getResources()
+                                   .getString(R.string.base_html_template_header);
+        mHtmlFooter = getActivity().getResources()
+                                   .getString(R.string.base_html_template_footer);
 
     }
 
-    @Override
-    protected void setUp(View view) {
+    @Override protected void setUp(View view) {
+        Log.d("productdetail","setup");
+        mProductSharedImage.setVisibility(View.VISIBLE);
 
     }
 
-    @Override
-    protected void onDestroyView(@NonNull View view) {
+    @Override public void onDetach(View view) {
+        Log.d("productdetails", "ondetache");
+        mProductSharedImage.setVisibility(View.VISIBLE);
+//        super.onDetach(view);
+
+    }
+
+    @Override protected void onDestroyView(@NonNull View view) {
+
         super.onDestroyView(view);
     }
 
-    @Override
-    public void showProductDetails(GetPublicItemDetailsResponse.Value product) {
+    @Override public void showProductDetails(GetPublicItemDetailsResponse.Value product) {
+
+        final android.os.Handler handler = new android.os.Handler();
+        handler.postDelayed(() -> {
+            if (mProductSharedImage!=null){
+
+                ImageUtils.clearImage(getActivity(),mProductSharedImage);
+//                mProductSharedImage.setVisibility(View.GONE);
+
+            }
+        }, 1000);
+
+
 
         mProductImagesAdapter.replaceData(product);
         mOtherImagesAdapter.replaceData(product);
 
-        if(product.getImages().size()!=0){
+        if (product.getImages()
+                   .size() != 0) {
             mOtherImagesRv.setVisibility(View.VISIBLE);
         }
         //bind UI values here
 
         //product info
         mProductName.setText(product.getName());
-//        mProductCategory.setText(productDetail.getBrandName());
+        //        mProductCategory.setText(productDetail.getBrandName());
         mProductPrice.setText(PriceUtils.getPriceStringValue(product.getUserPrice()));
         mProductPreviousPrice.setText(PriceUtils.getPriceStringValue(product.getRegularPrice()));
 
-        if (product.getRegularPrice().equals(0d)) {
+        if (product.getRegularPrice()
+                   .equals(0d)) {
             mProductPreviousPrice.setVisibility(View.GONE);
         } else {
             mProductPreviousPrice.setText(PriceUtils.getRpStringValue(product.getRegularPrice()));
-            mProductPreviousPrice.setPaintFlags(mProductPreviousPrice.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);
+            mProductPreviousPrice.setPaintFlags(
+                    mProductPreviousPrice.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);
         }
 
-        mProductDescriptionText.loadData(mHtmlHeader + product.getDescription() + mHtmlFooter, "text/html; charset=UTF-8", null);
+        mProductDescriptionText.loadData(mHtmlHeader + product.getDescription() + mHtmlFooter,
+                                         "text/html; charset=UTF-8",
+                                         null);
 
-        mProductDescriptionText.getSettings().setJavaScriptEnabled(true);
-        mProductDescriptionText.getSettings().setDomStorageEnabled(true);
+        mProductDescriptionText.getSettings()
+                               .setJavaScriptEnabled(true);
+        mProductDescriptionText.getSettings()
+                               .setDomStorageEnabled(true);
 
         mProductDescriptionText.setWebViewClient(new WebViewClient() {
-            @Override
-            public boolean shouldOverrideUrlLoading(WebView view, String url) {
+            @Override public boolean shouldOverrideUrlLoading(WebView view, String url) {
                 Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(url));
                 startActivity(browserIntent);
                 return true;
@@ -229,21 +275,25 @@ public class ProductDetailsController extends BaseController implements ProductD
         });
 
         //sizes
-        if (product.getSizes().size() != 0){
+        if (product.getSizes()
+                   .size() != 0) {
             mSizesContainer.setVisibility(View.VISIBLE);
             hasSizes = true;
         }
 
 
         for (GetPublicItemDetailsResponse.Size size : product.getSizes()) {
-            mProductSizes.add(new Pair<>(size.getName(),size.getID()));
+            mProductSizes.add(new Pair<>(size.getName(), size.getID()));
         }
 
         if (!(mProductSizes.get(0) == null)) {
-            mSizesAdapter = new TagAdapter<Pair<String,String>>(mProductSizes) {
+            mSizesAdapter = new TagAdapter<Pair<String, String>>(mProductSizes) {
                 @Override
-                public View getView(FlowLayout parent, int position, Pair<String,String> data) {
-                    TextView tv = (TextView) getActivity().getLayoutInflater().inflate(R.layout.sizes_chips_layout, parent, false);
+                public View getView(FlowLayout parent, int position, Pair<String, String> data) {
+                    TextView tv = (TextView) getActivity().getLayoutInflater()
+                                                          .inflate(R.layout.sizes_chips_layout,
+                                                                   parent,
+                                                                   false);
                     tv.setText(data.first);
                     return tv;
                 }
@@ -252,10 +302,10 @@ public class ProductDetailsController extends BaseController implements ProductD
         }
 
         mSizesFlowLayout.setOnSelectListener(new TagFlowLayout.OnSelectListener() {
-            @Override
-            public void onSelected(Set<Integer> selectPosSet) {
+            @Override public void onSelected(Set<Integer> selectPosSet) {
                 if (selectPosSet.size() != 0) {
-                    selectedSkuId = mProductSizes.get(selectPosSet.iterator().next()).second;
+                    selectedSkuId = mProductSizes.get(selectPosSet.iterator()
+                                                                  .next()).second;
                     didSelectSize = true;
                 } else {
                     didSelectSize = false;
@@ -264,24 +314,34 @@ public class ProductDetailsController extends BaseController implements ProductD
         });
 
 
-
-
     }
 
-    @Override
-    public void showSaleDetails(GetPublicSaleDetailsResponse.Value saleDetail) {
+    @Override public void showSaleDetails(GetPublicSaleDetailsResponse.Value saleDetail) {
 
-        String shippingInformation =  saleDetail.getShipping();
+        String shippingInformation = saleDetail.getShipping();
 
-        mProductAboutPricing.loadData(mHtmlHeader + saleDetail.getPricing() + mHtmlFooter, "text/html; charset=UTF-8", null);
+        mProductAboutPricing.loadData(mHtmlHeader + saleDetail.getPricing() + mHtmlFooter,
+                                      "text/html; charset=UTF-8",
+                                      null);
         mProductAboutPricing.setLayerType(View.LAYER_TYPE_SOFTWARE, null);
 
-        if (shippingInformation!=null){
-            mShippingDescText.loadData(mHtmlHeader + shippingInformation + mHtmlFooter, "text/html; charset=UTF-8", null);
+        if (shippingInformation != null) {
+            mShippingDescText.loadData(mHtmlHeader + shippingInformation + mHtmlFooter,
+                                       "text/html; charset=UTF-8",
+                                       null);
 
-        }else{
+        } else {
             mShippingContainer.setVisibility(View.GONE);
         }
 
     }
+
+    public void hideSharedImage(){
+        Log.d("entered", "hide shared element ");
+        mProductSharedImage.setVisibility(View.GONE);
+        mProductSharedImage.setTransitionName("gone");
+        Log.d("entered", "hide shared element = "+mProductSharedImage.getTransitionName());
+
+    }
+
 }

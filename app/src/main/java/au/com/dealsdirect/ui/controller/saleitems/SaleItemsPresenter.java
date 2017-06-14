@@ -78,8 +78,8 @@ public class SaleItemsPresenter<V extends SaleItemsMvpView> extends BasePresente
     }
 
     @Override
-    public void loadProductDetails(String itemId, String saleId){
-        getMvpView().showProductDetails(itemId,saleId);
+    public void loadProductDetails(String imageUrl, String itemId, String saleId){
+        getMvpView().showProductDetails(imageUrl,itemId,saleId);
     }
 
 }
