@@ -2,8 +2,6 @@ package au.com.dealsdirect.ui.controller.productdetails;
 
 import com.androidnetworking.error.ANError;
 
-import org.reactivestreams.Subscription;
-
 import javax.inject.Inject;
 
 import au.com.dealsdirect.data.DataManager;
@@ -11,12 +9,10 @@ import au.com.dealsdirect.data.network.model.productdetails.GetPublicItemDetails
 import au.com.dealsdirect.data.network.model.productdetails.GetPublicItemDetailsResponse;
 import au.com.dealsdirect.data.network.model.productdetails.GetPublicSaleDetailsRequest;
 import au.com.dealsdirect.data.network.model.productdetails.GetPublicSaleDetailsResponse;
-import au.com.dealsdirect.data.network.model.publicsalescategories.GetPublicSalesCategoriesResponse;
 import au.com.dealsdirect.ui.base.BasePresenter;
 import au.com.dealsdirect.utils.rx.SchedulerProvider;
 import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.functions.Consumer;
-import io.reactivex.subjects.PublishSubject;
 
 /**
  * Created by smartwave on 08/06/2017.
@@ -60,7 +56,7 @@ public class ProductDetailsPresenter<V extends ProductDetailsMvpView> extends Ba
                         }
 
                         getMvpView().hideLoading();
-                        getMvpView().onError(throwable.getMessage());
+//                        getMvpView().onError(throwable.getMessage());
 
                         // handle load accounts error here
                         if (throwable instanceof ANError) {
@@ -98,7 +94,7 @@ public class ProductDetailsPresenter<V extends ProductDetailsMvpView> extends Ba
                         }
 
                         getMvpView().hideLoading();
-                        getMvpView().onError(throwable.getMessage());
+//                        getMvpView().onError(throwable.getMessage());
 
                         // handle load accounts error here
                         if (throwable instanceof ANError) {

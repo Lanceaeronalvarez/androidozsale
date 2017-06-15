@@ -2,19 +2,14 @@ package au.com.dealsdirect.ui.base;
 
 import android.os.Bundle;
 import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
 import android.support.annotation.StringRes;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
-import android.widget.TextView;
 
-import au.com.dealsdirect.R;
 import au.com.dealsdirect.di.component.ControllerComponent;
 import au.com.dealsdirect.di.component.DaggerControllerComponent;
 import au.com.dealsdirect.di.module.ControllerModule;
-import butterknife.BindView;
 
 
 public abstract class BaseController extends RefWatchingController implements MvpView {
@@ -34,6 +29,12 @@ public abstract class BaseController extends RefWatchingController implements Mv
     @Override
     protected View onCreateView(@NonNull LayoutInflater inflater, @NonNull ViewGroup container) {
         setHasOptionsMenu(false);
+
+        if (getActivity() instanceof BaseActivity) {
+            BaseActivity activity = (BaseActivity) getActivity();
+            this.mActivity = activity;
+        }
+
         mControllerComponent = DaggerControllerComponent.builder()
                 .controllerModule(new ControllerModule(this))
                 .activityComponent(((BaseActivity) getActivity()).getActivityComponent())
@@ -43,11 +44,8 @@ public abstract class BaseController extends RefWatchingController implements Mv
 
     @Override
     protected void onAttach(@NonNull View view) {
-        if (getActivity() instanceof BaseActivity) {
-            BaseActivity activity = (BaseActivity) getActivity();
-            this.mActivity = activity;
-        }
         super.onAttach(view);
+
     }
 
     public ControllerComponent getControllerComponent() {
@@ -58,7 +56,9 @@ public abstract class BaseController extends RefWatchingController implements Mv
 
     @Override
     public void showLoading() {
+
         if (mActivity != null) {
+
             mActivity.showLoading();
         }
     }

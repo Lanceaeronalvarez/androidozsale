@@ -195,6 +195,7 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
     }
 
     @Override public void showProductDetails(String imageUrl, String itemId, String saleId) {
+
         String imageTransitionName = itemId;
 
         List<String> names = new ArrayList<>();

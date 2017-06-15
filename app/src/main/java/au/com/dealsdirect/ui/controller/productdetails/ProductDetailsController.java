@@ -209,6 +209,8 @@ public class ProductDetailsController extends BaseController implements ProductD
     @Override public void onDetach(View view) {
         Log.d("productdetails", "ondetache");
         mProductSharedImage.setVisibility(View.VISIBLE);
+        mProductImagesRv.setVisibility(View.GONE);
+        mOtherImagesRv.setVisibility(View.GONE);
 //        super.onDetach(view);
 
     }
@@ -220,6 +222,7 @@ public class ProductDetailsController extends BaseController implements ProductD
 
     @Override public void showProductDetails(GetPublicItemDetailsResponse.Value product) {
 
+        mProductImagesRv.setVisibility(View.VISIBLE);
         final android.os.Handler handler = new android.os.Handler();
         handler.postDelayed(() -> {
             if (mProductSharedImage!=null){
