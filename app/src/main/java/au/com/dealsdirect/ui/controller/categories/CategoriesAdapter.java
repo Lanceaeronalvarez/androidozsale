@@ -1,4 +1,4 @@
-package au.com.dealsdirect.ui.categories;
+package au.com.dealsdirect.ui.controller.categories;
 
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -11,7 +11,7 @@ import java.util.List;
 
 import au.com.dealsdirect.R;
 import au.com.dealsdirect.data.network.model.publicsalescategories.GetPublicSalesCategoriesResponse;
-import au.com.dealsdirect.ui.categories.listener.CategoryClickListener;
+import au.com.dealsdirect.ui.controller.categories.listener.CategoryClickListener;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 

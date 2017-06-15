@@ -1,4 +1,4 @@
-package au.com.dealsdirect.ui.controller.shops.changehandler;
+package au.com.dealsdirect.ui.custom.transitions;
 
 import android.animation.Animator;
 import android.animation.AnimatorSet;

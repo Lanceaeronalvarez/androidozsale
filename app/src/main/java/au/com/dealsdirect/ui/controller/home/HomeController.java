@@ -18,7 +18,7 @@ import au.com.dealsdirect.ui.base.BaseController;
 
 import javax.inject.Inject;
 
-import au.com.dealsdirect.ui.categories.CategoriesController;
+import au.com.dealsdirect.ui.controller.categories.CategoriesController;
 import au.com.dealsdirect.ui.controller.shops.ShopsController;
 import au.com.dealsdirect.ui.custom.BottomNavigationViewHelper;
 import au.com.dealsdirect.utils.BundleBuilder;

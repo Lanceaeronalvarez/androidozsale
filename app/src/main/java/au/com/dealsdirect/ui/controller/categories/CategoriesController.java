@@ -1,4 +1,4 @@
-package au.com.dealsdirect.ui.categories;
+package au.com.dealsdirect.ui.controller.categories;
 
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -20,9 +20,9 @@ import au.com.dealsdirect.R;
 import au.com.dealsdirect.data.network.model.publicsalescategories.GetPublicSalesCategoriesRequest;
 import au.com.dealsdirect.data.network.model.publicsalescategories.GetPublicSalesCategoriesResponse;
 import au.com.dealsdirect.ui.base.BaseController;
-import au.com.dealsdirect.ui.categories.listener.CategoryClickListener;
+import au.com.dealsdirect.ui.controller.categories.listener.CategoryClickListener;
 import au.com.dealsdirect.ui.controller.shops.ShopsController;
-import au.com.dealsdirect.ui.controller.shops.changehandler.RightHorizontalTransitionChangeHandler;
+import au.com.dealsdirect.ui.custom.transitions.RightHorizontalTransitionChangeHandler;
 import au.com.dealsdirect.utils.BundleBuilder;
 import butterknife.BindView;
 

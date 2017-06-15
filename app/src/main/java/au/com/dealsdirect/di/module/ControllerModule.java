@@ -2,9 +2,9 @@ package au.com.dealsdirect.di.module;
 
 import com.bluelinelabs.conductor.Controller;
 
-import au.com.dealsdirect.ui.categories.CategoriesMvpPresenter;
-import au.com.dealsdirect.ui.categories.CategoriesMvpView;
-import au.com.dealsdirect.ui.categories.CategoriesPresenter;
+import au.com.dealsdirect.ui.controller.categories.CategoriesMvpPresenter;
+import au.com.dealsdirect.ui.controller.categories.CategoriesMvpView;
+import au.com.dealsdirect.ui.controller.categories.CategoriesPresenter;
 import au.com.dealsdirect.ui.controller.account.AccountMvpPresenter;
 import au.com.dealsdirect.ui.controller.account.AccountMvpView;
 import au.com.dealsdirect.ui.controller.account.AccountPresenter;

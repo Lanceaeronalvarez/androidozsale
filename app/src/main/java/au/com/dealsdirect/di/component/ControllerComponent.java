@@ -3,7 +3,7 @@ package au.com.dealsdirect.di.component;
 
 import au.com.dealsdirect.di.PerController;
 import au.com.dealsdirect.di.module.ControllerModule;
-import au.com.dealsdirect.ui.categories.CategoriesController;
+import au.com.dealsdirect.ui.controller.categories.CategoriesController;
 import au.com.dealsdirect.ui.controller.account.AccountController;
 import au.com.dealsdirect.ui.controller.checkout.CheckoutController;
 import au.com.dealsdirect.ui.controller.contact.ContactController;

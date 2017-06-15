@@ -26,7 +26,7 @@ import au.com.dealsdirect.data.network.model.saleitems.GetPublicSaleItemsRespons
 import au.com.dealsdirect.ui.base.BaseController;
 import au.com.dealsdirect.ui.controller.productdetails.ProductDetailsController;
 import au.com.dealsdirect.ui.controller.saleitems.adapter.SaleItemsAdapter;
-import au.com.dealsdirect.ui.controller.shops.changehandler.SharedElementTransitionChangehandler;
+import au.com.dealsdirect.ui.custom.transitions.SharedElementTransitionChangehandler;
 import au.com.dealsdirect.utils.BundleBuilder;
 import au.com.dealsdirect.utils.PaginateUtils;
 import butterknife.BindView;

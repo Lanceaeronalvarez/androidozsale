@@ -1,8 +1,6 @@
-package au.com.dealsdirect.ui.categories;
+package au.com.dealsdirect.ui.controller.categories;
 
 import com.androidnetworking.error.ANError;
-
-import java.util.List;
 
 import javax.inject.Inject;
 

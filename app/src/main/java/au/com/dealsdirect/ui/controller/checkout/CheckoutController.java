@@ -11,7 +11,7 @@ import com.bluelinelabs.conductor.RouterTransaction;
 import com.bluelinelabs.conductor.support.RouterPagerAdapter;
 import au.com.dealsdirect.R;
 import au.com.dealsdirect.ui.base.BaseController;
-import au.com.dealsdirect.ui.categories.CategoriesController;
+import au.com.dealsdirect.ui.controller.categories.CategoriesController;
 import au.com.dealsdirect.ui.controller.shops.ShopsController;
 
 import javax.inject.Inject;

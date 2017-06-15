@@ -1,8 +1,7 @@
-package au.com.dealsdirect.ui.categories;
+package au.com.dealsdirect.ui.controller.categories;
 
 import java.util.List;
 
-import au.com.dealsdirect.data.network.model.publicsalescategories.GetPublicSalesCategoriesRequest;
 import au.com.dealsdirect.data.network.model.publicsalescategories.GetPublicSalesCategoriesResponse;
 import au.com.dealsdirect.ui.base.MvpView;
 
