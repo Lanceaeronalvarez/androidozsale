@@ -1,22 +1,27 @@
 package au.com.dealsdirect.ui.controller.home;
 
+import android.os.Bundle;
 import android.support.annotation.NonNull;
-import android.support.v4.view.ViewPager;
+import android.support.design.widget.BottomNavigationView;
 import android.view.LayoutInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.FrameLayout;
 
-import com.bluelinelabs.conductor.Controller;
 import com.bluelinelabs.conductor.Router;
 import com.bluelinelabs.conductor.RouterTransaction;
-import com.bluelinelabs.conductor.support.RouterPagerAdapter;
+import com.bluelinelabs.conductor.changehandler.HorizontalChangeHandler;
+
 import au.com.dealsdirect.R;
 import au.com.dealsdirect.ui.base.BaseController;
-import au.com.dealsdirect.ui.categories.CategoriesController;
-import au.com.dealsdirect.ui.controller.shops.ShopsController;
 
 import javax.inject.Inject;
 
+import au.com.dealsdirect.ui.categories.CategoriesController;
+import au.com.dealsdirect.ui.controller.shops.ShopsController;
+import au.com.dealsdirect.ui.custom.BottomNavigationViewHelper;
+import au.com.dealsdirect.utils.BundleBuilder;
 import butterknife.BindView;
 
 /**
@@ -25,46 +30,34 @@ import butterknife.BindView;
 
 public class HomeController extends BaseController implements HomeMvpView {
 
-    private int[] PAGE_COLORS = new int[]{R.color.white, R.color.white};
+    public static final String TAG = "HomeController";
 
     private static final String KEY_TEXT = "HomeController.KEY_TEXT";
 
     @Inject
     HomeMvpPresenter<HomeMvpView> mPresenter;
 
-    @BindView(R.id.controller_home_view_pager)
-    ViewPager homeViewPager;
+    @BindView(R.id.controller_home_frame)
+    FrameLayout mFrameLayout;
 
-    private final RouterPagerAdapter pagerAdapter;
+    @BindView(R.id.controller_home_bottom_nav)
+    BottomNavigationView mBottomNavigationView;
 
-    public HomeController() {
-        pagerAdapter = new RouterPagerAdapter(this) {
-            @Override
-            public void configureRouter(@NonNull Router router, int position) {
-                if (!router.hasRootController()) {
+    private int mPreviousTab = R.id.action_shop;
+    private int mCurrentTab = R.id.action_shop;
 
-                    if (position==0){
-                        Controller firstView = new CategoriesController();
-                        router.setRoot(RouterTransaction.with(firstView));
+    private Router mChildRouter;
 
-                    }if (position==1){
-                        Controller page = new ShopsController();
-                        router.setRoot(RouterTransaction.with(page));
-                    }
 
-                }
-            }
+    public static HomeController newInstance() {
 
-            @Override
-            public int getCount() {
-                return PAGE_COLORS.length;
-            }
+        return new HomeController(
+                new BundleBuilder(new Bundle())
+                        .build());
+    }
 
-            @Override
-            public CharSequence getPageTitle(int position) {
-                return "Page " + position;
-            }
-        };
+    public HomeController(Bundle args) {
+        super(args);
     }
 
     @Override
@@ -80,21 +73,97 @@ public class HomeController extends BaseController implements HomeMvpView {
     @Override
     protected void onViewBound(@NonNull View view) {
         super.onViewBound(view);
-        homeViewPager.setAdapter(pagerAdapter);
-        homeViewPager.setCurrentItem(1);
+
+        setUp(view);
     }
-
-
 
     @Override
     protected void onDestroyView(@NonNull View view) {
-        if (!getActivity().isChangingConfigurations()) {
-            homeViewPager.setAdapter(null);
-        }
+        mPresenter.onDetach();
         super.onDestroyView(view);
     }
 
-    @Override protected void setUp(View view) {
+    @Override
+    protected void setUp(View view) {
+
+        mChildRouter = getChildRouter(mFrameLayout).setPopsLastView(false);
+        if (!mChildRouter.hasRootController()) {
+            mChildRouter.setRoot(RouterTransaction.with(new ShopsController()));
+        }
+
+        BottomNavigationViewHelper.disableShiftMode(mBottomNavigationView);
+
+        mBottomNavigationView.setOnNavigationItemSelectedListener(
+                new BottomNavigationView.OnNavigationItemSelectedListener() {
+                    @Override
+                    public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+
+                        if (mBottomNavigationView.getSelectedItemId() == item.getItemId()) {
+                            return true;
+                        }
+
+                        mPreviousTab = mCurrentTab;
+                        mCurrentTab = item.getItemId();
+
+                        switch (item.getItemId()) {
+
+                            case R.id.action_shop:
+                                showShopController();
+                                break;
+
+                            case R.id.action_account:
+                                showAccountController();
+                                break;
+
+                            case R.id.action_contact:
+                                showContactController();
+                                break;
+
+                            case R.id.action_invite:
+                                showInviteController();
+                                break;
+
+                            case R.id.action_checkout:
+                                showCheckoutController();
+                                break;
+                        }
+                        return true;
+                    }
+                });
+    }
+
+
+    @Override
+    public void showCategoryController() {
+        getChildRouter(mFrameLayout).pushController(RouterTransaction.with(CategoriesController.newInstance())
+                .pushChangeHandler(new HorizontalChangeHandler())
+                .popChangeHandler(new HorizontalChangeHandler()));
+    }
+
+    @Override
+    public void showShopController() {
+        getChildRouter(mFrameLayout).pushController(RouterTransaction.with(new ShopsController())
+                .pushChangeHandler(new HorizontalChangeHandler())
+                .popChangeHandler(new HorizontalChangeHandler()));
+    }
+
+    @Override
+    public void showAccountController() {
+
+    }
+
+    @Override
+    public void showContactController() {
+
+    }
+
+    @Override
+    public void showInviteController() {
+
+    }
+
+    @Override
+    public void showCheckoutController() {
 
     }
 }

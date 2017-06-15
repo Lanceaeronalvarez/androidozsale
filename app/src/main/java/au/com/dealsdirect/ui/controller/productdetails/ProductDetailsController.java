@@ -40,7 +40,7 @@ import au.com.dealsdirect.utils.ImageUtils;
 import au.com.dealsdirect.utils.PriceUtils;
 import butterknife.BindView;
 
-/**
+/*
  * Created by smartwave on 08/06/2017.
  */
 
@@ -54,8 +54,6 @@ public class ProductDetailsController extends BaseController implements ProductD
     private final String KEY_USER_GROUP = "KEY_USER_GROUP";
     private final String KEY_GET_BIG_IMAGES = "KEY_GET_BIG_IMAGES";
     private final String KEY_INCLUDE_PRICES = "KEY_INCLUDE_PRICES";
-
-    RecyclerViewPager mRecyclerView;
 
     @Inject
     ProductDetailsMvpPresenter<ProductDetailsMvpView> mPresenter;
@@ -116,10 +114,10 @@ public class ProductDetailsController extends BaseController implements ProductD
 
     public ProductDetailsController(String imageUrl, String itemId, String saleId) {
         this(new BundleBuilder(new Bundle())
-                     .putString("KEY_IMAGE_ID", imageUrl)
-                     .putString("KEY_ITEM_ID", itemId)
-                     .putString("KEY_SALE_ID", saleId)
-                     .build());
+                .putString("KEY_IMAGE_ID", imageUrl)
+                .putString("KEY_ITEM_ID", itemId)
+                .putString("KEY_SALE_ID", saleId)
+                .build());
     }
 
     public ProductDetailsController(Bundle args) {
@@ -138,7 +136,8 @@ public class ProductDetailsController extends BaseController implements ProductD
         return view;
     }
 
-    @Override protected void onViewBound(@NonNull View view) {
+    @Override
+    protected void onViewBound(@NonNull View view) {
         super.onViewBound(view);
 
         mProductSharedImage.setTransitionName(mItemId);
@@ -147,12 +146,12 @@ public class ProductDetailsController extends BaseController implements ProductD
 
         //init api call
         GetPublicItemDetailsRequest itemDetailsRequest = new GetPublicItemDetailsRequest(mItemId,
-                                                                                         mSaleId,
-                                                                                         mGetBigImages,
-                                                                                         mIncludePrices,
-                                                                                         mLanguageId,
-                                                                                         mCountryId,
-                                                                                         mUserGroup);
+                mSaleId,
+                mGetBigImages,
+                mIncludePrices,
+                mLanguageId,
+                mCountryId,
+                mUserGroup);
 
         GetPublicSaleDetailsRequest saleDetailsRequest =
                 new GetPublicSaleDetailsRequest(mSaleId, mCountryId, mUserGroup, mLanguageId);
@@ -160,53 +159,56 @@ public class ProductDetailsController extends BaseController implements ProductD
         mPresenter.loadProductDetails(itemDetailsRequest, saleDetailsRequest);
 
         mOtherImagesRv.setLayoutManager(new LinearLayoutManager(getActivity(),
-                                                                LinearLayoutManager.HORIZONTAL,
-                                                                false));
+                LinearLayoutManager.HORIZONTAL,
+                false));
         //        mOtherImagesRv.setTransitionName(mItemId);
 
-        mOtherImagesAdapter = new ProductDetailsImageAdapter(this,null, mSaleId, 2);
+        mOtherImagesAdapter = new ProductDetailsImageAdapter(this, null, mSaleId, 2);
         mOtherImagesRv.setAdapter(mOtherImagesAdapter);
 
         mProductImagesRvLayoutManager =
                 new LinearLayoutManager(getActivity(), LinearLayoutManager.HORIZONTAL, false);
         mProductImagesRv.setLayoutManager(mProductImagesRvLayoutManager);
-        mProductImagesAdapter = new ProductDetailsImageAdapter(this,null, mSaleId, 1);
+        mProductImagesAdapter = new ProductDetailsImageAdapter(this, null, mSaleId, 1);
         mProductImagesRv.setAdapter(mProductImagesAdapter);
 
         mProductImagesRv.addOnPageChangedListener(new RecyclerViewPager.OnPageChangedListener() {
-            @Override public void OnPageChanged(int i, int i1) {
+            @Override
+            public void OnPageChanged(int i, int i1) {
                 RecyclerView.ViewHolder vhNew = mOtherImagesRv.findViewHolderForLayoutPosition(i1);
                 vhNew.itemView.animate()
-                              .alpha(1f)
-                              .setDuration(200)
-                              .start();
+                        .alpha(1f)
+                        .setDuration(200)
+                        .start();
                 //                        otherImagesAdapter.setActiveCircleIndicator(newPos);
 
 
                 RecyclerView.ViewHolder vhOld = mOtherImagesRv.findViewHolderForLayoutPosition(i);
                 vhOld.itemView.animate()
-                              .alpha(0.40f)
-                              .setDuration(200)
-                              .start();
+                        .alpha(0.40f)
+                        .setDuration(200)
+                        .start();
 
                 //                ProductImageRecyclerViewAdapter.selectedPosition = i1;
             }
         });
 
         mHtmlHeader = getActivity().getResources()
-                                   .getString(R.string.base_html_template_header);
+                .getString(R.string.base_html_template_header);
         mHtmlFooter = getActivity().getResources()
-                                   .getString(R.string.base_html_template_footer);
+                .getString(R.string.base_html_template_footer);
 
     }
 
-    @Override protected void setUp(View view) {
-        Log.d("productdetail","setup");
+    @Override
+    protected void setUp(View view) {
+        Log.d("productdetail", "setup");
         mProductSharedImage.setVisibility(View.VISIBLE);
 
     }
 
-    @Override public void onDetach(View view) {
+    @Override
+    public void onDetach(View view) {
         Log.d("productdetails", "ondetache");
         mProductSharedImage.setVisibility(View.VISIBLE);
         mProductImagesRv.setVisibility(View.GONE);
@@ -215,31 +217,32 @@ public class ProductDetailsController extends BaseController implements ProductD
 
     }
 
-    @Override protected void onDestroyView(@NonNull View view) {
-
+    @Override
+    protected void onDestroyView(@NonNull View view) {
+        mPresenter.onDetach();
         super.onDestroyView(view);
     }
 
-    @Override public void showProductDetails(GetPublicItemDetailsResponse.Value product) {
+    @Override
+    public void showProductDetails(GetPublicItemDetailsResponse.Value product) {
 
         mProductImagesRv.setVisibility(View.VISIBLE);
         final android.os.Handler handler = new android.os.Handler();
         handler.postDelayed(() -> {
-            if (mProductSharedImage!=null){
+            if (mProductSharedImage != null) {
 
-                ImageUtils.clearImage(getActivity(),mProductSharedImage);
+                ImageUtils.clearImage(getActivity(), mProductSharedImage);
 //                mProductSharedImage.setVisibility(View.GONE);
 
             }
         }, 1000);
 
 
-
         mProductImagesAdapter.replaceData(product);
         mOtherImagesAdapter.replaceData(product);
 
         if (product.getImages()
-                   .size() != 0) {
+                .size() != 0) {
             mOtherImagesRv.setVisibility(View.VISIBLE);
         }
         //bind UI values here
@@ -251,7 +254,7 @@ public class ProductDetailsController extends BaseController implements ProductD
         mProductPreviousPrice.setText(PriceUtils.getPriceStringValue(product.getRegularPrice()));
 
         if (product.getRegularPrice()
-                   .equals(0d)) {
+                .equals(0d)) {
             mProductPreviousPrice.setVisibility(View.GONE);
         } else {
             mProductPreviousPrice.setText(PriceUtils.getRpStringValue(product.getRegularPrice()));
@@ -260,16 +263,17 @@ public class ProductDetailsController extends BaseController implements ProductD
         }
 
         mProductDescriptionText.loadData(mHtmlHeader + product.getDescription() + mHtmlFooter,
-                                         "text/html; charset=UTF-8",
-                                         null);
+                "text/html; charset=UTF-8",
+                null);
 
         mProductDescriptionText.getSettings()
-                               .setJavaScriptEnabled(true);
+                .setJavaScriptEnabled(true);
         mProductDescriptionText.getSettings()
-                               .setDomStorageEnabled(true);
+                .setDomStorageEnabled(true);
 
         mProductDescriptionText.setWebViewClient(new WebViewClient() {
-            @Override public boolean shouldOverrideUrlLoading(WebView view, String url) {
+            @Override
+            public boolean shouldOverrideUrlLoading(WebView view, String url) {
                 Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(url));
                 startActivity(browserIntent);
                 return true;
@@ -279,7 +283,7 @@ public class ProductDetailsController extends BaseController implements ProductD
 
         //sizes
         if (product.getSizes()
-                   .size() != 0) {
+                .size() != 0) {
             mSizesContainer.setVisibility(View.VISIBLE);
             hasSizes = true;
         }
@@ -294,9 +298,9 @@ public class ProductDetailsController extends BaseController implements ProductD
                 @Override
                 public View getView(FlowLayout parent, int position, Pair<String, String> data) {
                     TextView tv = (TextView) getActivity().getLayoutInflater()
-                                                          .inflate(R.layout.sizes_chips_layout,
-                                                                   parent,
-                                                                   false);
+                            .inflate(R.layout.sizes_chips_layout,
+                                    parent,
+                                    false);
                     tv.setText(data.first);
                     return tv;
                 }
@@ -305,10 +309,11 @@ public class ProductDetailsController extends BaseController implements ProductD
         }
 
         mSizesFlowLayout.setOnSelectListener(new TagFlowLayout.OnSelectListener() {
-            @Override public void onSelected(Set<Integer> selectPosSet) {
+            @Override
+            public void onSelected(Set<Integer> selectPosSet) {
                 if (selectPosSet.size() != 0) {
                     selectedSkuId = mProductSizes.get(selectPosSet.iterator()
-                                                                  .next()).second;
+                            .next()).second;
                     didSelectSize = true;
                 } else {
                     didSelectSize = false;
@@ -319,19 +324,20 @@ public class ProductDetailsController extends BaseController implements ProductD
 
     }
 
-    @Override public void showSaleDetails(GetPublicSaleDetailsResponse.Value saleDetail) {
+    @Override
+    public void showSaleDetails(GetPublicSaleDetailsResponse.Value saleDetail) {
 
         String shippingInformation = saleDetail.getShipping();
 
         mProductAboutPricing.loadData(mHtmlHeader + saleDetail.getPricing() + mHtmlFooter,
-                                      "text/html; charset=UTF-8",
-                                      null);
+                "text/html; charset=UTF-8",
+                null);
         mProductAboutPricing.setLayerType(View.LAYER_TYPE_SOFTWARE, null);
 
         if (shippingInformation != null) {
             mShippingDescText.loadData(mHtmlHeader + shippingInformation + mHtmlFooter,
-                                       "text/html; charset=UTF-8",
-                                       null);
+                    "text/html; charset=UTF-8",
+                    null);
 
         } else {
             mShippingContainer.setVisibility(View.GONE);
@@ -339,11 +345,11 @@ public class ProductDetailsController extends BaseController implements ProductD
 
     }
 
-    public void hideSharedImage(){
+    public void hideSharedImage() {
         Log.d("entered", "hide shared element ");
         mProductSharedImage.setVisibility(View.GONE);
         mProductSharedImage.setTransitionName("gone");
-        Log.d("entered", "hide shared element = "+mProductSharedImage.getTransitionName());
+        Log.d("entered", "hide shared element = " + mProductSharedImage.getTransitionName());
 
     }
 

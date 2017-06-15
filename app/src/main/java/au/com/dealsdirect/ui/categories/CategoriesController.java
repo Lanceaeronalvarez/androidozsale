@@ -1,11 +1,13 @@
 package au.com.dealsdirect.ui.categories;
 
+import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
 import com.bluelinelabs.conductor.RouterTransaction;
 
@@ -17,11 +19,11 @@ import javax.inject.Inject;
 import au.com.dealsdirect.R;
 import au.com.dealsdirect.data.network.model.publicsalescategories.GetPublicSalesCategoriesRequest;
 import au.com.dealsdirect.data.network.model.publicsalescategories.GetPublicSalesCategoriesResponse;
-import au.com.dealsdirect.ui.base.BaseActivity;
 import au.com.dealsdirect.ui.base.BaseController;
 import au.com.dealsdirect.ui.categories.listener.CategoryClickListener;
 import au.com.dealsdirect.ui.controller.shops.ShopsController;
 import au.com.dealsdirect.ui.controller.shops.changehandler.RightHorizontalTransitionChangeHandler;
+import au.com.dealsdirect.utils.BundleBuilder;
 import butterknife.BindView;
 
 /**
@@ -37,8 +39,22 @@ public class CategoriesController extends BaseController
     @BindView(R.id.categories_recyclerview)
     RecyclerView mRecyclerView;
 
+    @BindView(R.id.partial_toolbar_title_view)
+    TextView mTitleTextView;
+
     private CategoriesAdapter mAdapter;
     private CategoryClickListener mCategoryClickListener;
+
+    public static CategoriesController newInstance() {
+
+        return new CategoriesController(
+                new BundleBuilder(new Bundle())
+                        .build());
+    }
+
+    public CategoriesController(Bundle args) {
+        super(args);
+    }
 
     @Override
     protected View inflateView(@NonNull LayoutInflater inflater, @NonNull ViewGroup container) {
@@ -52,41 +68,42 @@ public class CategoriesController extends BaseController
     @Override
     protected void onViewBound(View view) {
         super.onViewBound(view);
-        setUp(view);
 
-        assert (getActivity()) != null;
-        ((BaseActivity) getActivity()).hideToolbarLeftOption();
-        ((BaseActivity) getActivity()).setHeaderTitle("Categories");
+        setUp(view);
     }
 
 
     @Override
     protected void onDestroyView(@NonNull View view) {
+        mPresenter.onDetach();
         super.onDestroyView(view);
     }
 
+    @Override
+    protected void setUp(View view) {
+
+        mTitleTextView.setText("Categories");
+
+        mCategoryClickListener = this;
+        mAdapter = new CategoriesAdapter(new ArrayList<>(), mPresenter, mCategoryClickListener);
+        mRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity(), LinearLayoutManager.VERTICAL, false));
+        mRecyclerView.setAdapter(mAdapter);
+
+        GetPublicSalesCategoriesRequest request = new GetPublicSalesCategoriesRequest("0", "en", false, "Member", "DA");
+        mPresenter.loadPublicSalesCategories(request);
+    }
 
     @Override
     public void showPublicSalesCategories(List<GetPublicSalesCategoriesResponse.SaleList> saleList) {
         mAdapter.replaceData(saleList);
     }
 
-    @Override
-    protected void setUp(View view) {
-        mCategoryClickListener = this;
-        mAdapter = new CategoriesAdapter(new ArrayList<>(),mPresenter,mCategoryClickListener);
-        mRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity(),LinearLayoutManager.VERTICAL,false));
-        mRecyclerView.setAdapter(mAdapter);
-
-        GetPublicSalesCategoriesRequest request = new GetPublicSalesCategoriesRequest("0","en",false,"Member","DA");
-        mPresenter.loadPublicSalesCategories(request);
-    }
 
     @Override
     public void onCategoryClicked(String categoryID) {
         getRouter().setRoot(
                 RouterTransaction.with(new ShopsController(categoryID))
-                                 .pushChangeHandler(new RightHorizontalTransitionChangeHandler())
-                                 .popChangeHandler(new RightHorizontalTransitionChangeHandler()));
+                        .pushChangeHandler(new RightHorizontalTransitionChangeHandler())
+                        .popChangeHandler(new RightHorizontalTransitionChangeHandler()));
     }
 }

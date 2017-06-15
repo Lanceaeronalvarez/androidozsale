@@ -4,10 +4,10 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
 import com.bluelinelabs.conductor.RouterTransaction;
 import com.bluelinelabs.conductor.changehandler.FadeChangeHandler;
@@ -23,7 +23,6 @@ import javax.inject.Inject;
 import au.com.dealsdirect.R;
 import au.com.dealsdirect.data.network.model.saleitems.GetPublicSaleItemsRequest;
 import au.com.dealsdirect.data.network.model.saleitems.GetPublicSaleItemsResponse;
-import au.com.dealsdirect.ui.base.BaseActivity;
 import au.com.dealsdirect.ui.base.BaseController;
 import au.com.dealsdirect.ui.controller.productdetails.ProductDetailsController;
 import au.com.dealsdirect.ui.controller.saleitems.adapter.SaleItemsAdapter;
@@ -31,6 +30,7 @@ import au.com.dealsdirect.ui.controller.shops.changehandler.SharedElementTransit
 import au.com.dealsdirect.utils.BundleBuilder;
 import au.com.dealsdirect.utils.PaginateUtils;
 import butterknife.BindView;
+import butterknife.OnClick;
 
 /**
  * dp Created by Admin on 6/8/17.
@@ -52,7 +52,10 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
 
 
     @BindView(R.id.controller_sale_items_grid_view)
-    RecyclerView mSaleItemsRecyclerview;
+    RecyclerView mSaleItemsRecyclerView;
+
+    @BindView(R.id.partial_toolbar_arrow_title)
+    TextView mTitleTextView;
 
     private SaleItemsAdapter mSaleItemsAdapter;
 
@@ -68,14 +71,14 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
     SaleItemsMvpPresenter<SaleItemsMvpView> mPresenter;
 
     public SaleItemsController(String bannerTitle, String saleId, int fromPosition,
-            String imageUrl) {
+                               String imageUrl) {
 
         this(new BundleBuilder(new Bundle()).putString(KEY_SALE_ID, saleId)
-                                            .putString(KEY_TITLE, bannerTitle)
-                                            .putString(KEY_SALE_ID, saleId)
-                                            .putString(KEY_HEADER_IMAGE, imageUrl)
-                                            .putInt(KEY_FROM_POSITION, fromPosition)
-                                            .build());
+                .putString(KEY_TITLE, bannerTitle)
+                .putString(KEY_SALE_ID, saleId)
+                .putString(KEY_HEADER_IMAGE, imageUrl)
+                .putInt(KEY_FROM_POSITION, fromPosition)
+                .build());
     }
 
 
@@ -97,7 +100,8 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
         return view;
     }
 
-    @Override protected void onViewBound(@NonNull View view) {
+    @Override
+    protected void onViewBound(@NonNull View view) {
         super.onViewBound(view);
 
         setUp(view);
@@ -111,37 +115,40 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
         } else {
             mSaleItemsAdapter = new SaleItemsAdapter(saleItems, mPresenter, mSaleId);
             RecyclerView.LayoutManager layoutManager = new GridLayoutManager(getActivity(), 2);
-            mSaleItemsRecyclerview.setLayoutManager(layoutManager);
-            mSaleItemsRecyclerview.setAdapter(mSaleItemsAdapter);
-            mPaginateManager = PaginateUtils.init(mSaleItemsRecyclerview, mPaginateCallbacks);
+            mSaleItemsRecyclerView.setLayoutManager(layoutManager);
+            mSaleItemsRecyclerView.setAdapter(mSaleItemsAdapter);
+            mPaginateManager = PaginateUtils.init(mSaleItemsRecyclerView, mPaginateCallbacks);
 
         }
-
-        assert (getActivity()) != null;
-        ((BaseActivity) getActivity()).setHeaderTitle(mTitle);
-        ((BaseActivity) getActivity()).showToolbarRightOption(
-                getActivity().getDrawable(R.drawable.ic_toolbar_filter),
-                view1 -> {
-                    Log.d("saleitems",
-                          "clicked filter");
-                });
     }
 
-    @Override protected void setUp(View view) {
+    @Override
+    protected void onDestroyView(@NonNull View view) {
+        mPresenter.onDetach();
+        super.onDestroyView(view);
+    }
+
+    @Override
+    protected void setUp(View view) {
+
+        mTitleTextView.setText(mTitle);
 
         mPaginateCallbacks = new Paginate.Callbacks() {
-            @Override public void onLoadMore() {
+            @Override
+            public void onLoadMore() {
                 // Load next page of data (e.g. network or database)
                 refresh();
                 page++;
             }
 
-            @Override public boolean isLoading() {
+            @Override
+            public boolean isLoading() {
                 // Indicate whether new page loading is in progress or not
                 return loadingInProgress;
             }
 
-            @Override public boolean hasLoadedAllItems() {
+            @Override
+            public boolean hasLoadedAllItems() {
                 // Indicate whether all data (pages) are loaded or not
                 return hasLoadedAllItems;
             }
@@ -149,11 +156,12 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
 
     }
 
-    @Override public void showSaleItems(GetPublicSaleItemsResponse getPublicSaleItemsResponse) {
+    @Override
+    public void showSaleItems(GetPublicSaleItemsResponse getPublicSaleItemsResponse) {
 
         List<GetPublicSaleItemsResponse.List> tempList =
                 getPublicSaleItemsResponse.getGetPublicSaleItemsObject()
-                                          .getList();
+                        .getList();
 
         List<GetPublicSaleItemsResponse.Item> allItems = new LinkedList<>();
 
@@ -161,13 +169,13 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
 
             List<GetPublicSaleItemsResponse.SubCategory> tempSubCategories = new LinkedList<>();
             tempSubCategories = tempList.get(x)
-                                        .getSubCategories();
+                    .getSubCategories();
 
             for (int y = 0; y < tempSubCategories.size(); y++) {
 
                 List<GetPublicSaleItemsResponse.Item> tempItems;
                 tempItems = tempSubCategories.get(y)
-                                             .getItems();
+                        .getItems();
 
                 for (int z = 0; z < tempItems.size(); z++) {
                     allItems.add(tempItems.get(z));
@@ -179,22 +187,24 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
         saleItems = allItems;
         mSaleItemsAdapter = new SaleItemsAdapter(allItems, mPresenter, mSaleId);
         RecyclerView.LayoutManager layoutManager = new GridLayoutManager(getActivity(), 2);
-        mSaleItemsRecyclerview.setLayoutManager(layoutManager);
-        mSaleItemsRecyclerview.setAdapter(mSaleItemsAdapter);
-        mPaginateManager = PaginateUtils.init(mSaleItemsRecyclerview, mPaginateCallbacks);
+        mSaleItemsRecyclerView.setLayoutManager(layoutManager);
+        mSaleItemsRecyclerView.setAdapter(mSaleItemsAdapter);
+        mPaginateManager = PaginateUtils.init(mSaleItemsRecyclerView, mPaginateCallbacks);
 
         loadingInProgress = false;
         hasLoadedAllItems = true;
         mPaginateManager.setHasMoreDataToLoad(!hasLoadedAllItems);
     }
 
-    @Override public void refresh() {
+    @Override
+    public void refresh() {
         // showFilterBar();
         loadingInProgress = true;
         //        mPresenter.searchProducts(page, mToolbarEditText.getText().toString(), FilterSingleton.getSelectedFilters(mFilterMode));
     }
 
-    @Override public void showProductDetails(String imageUrl, String itemId, String saleId) {
+    @Override
+    public void showProductDetails(String imageUrl, String itemId, String saleId) {
 
         String imageTransitionName = itemId;
 
@@ -202,14 +212,19 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
         names.add(imageTransitionName);
 
         getRouter().pushController(RouterTransaction.with(new ProductDetailsController(imageUrl, itemId, saleId))
-                                                    .pushChangeHandler(
-                                                            new TransitionChangeHandlerCompat(
-                                                            new SharedElementTransitionChangehandler(names),
-                                                            new FadeChangeHandler()))
-                                                    .popChangeHandler(
-                                                            new TransitionChangeHandlerCompat(
-                                                            new SharedElementTransitionChangehandler(names),
-                                                            new FadeChangeHandler())));
+                .pushChangeHandler(
+                        new TransitionChangeHandlerCompat(
+                                new SharedElementTransitionChangehandler(names),
+                                new FadeChangeHandler()))
+                .popChangeHandler(
+                        new TransitionChangeHandlerCompat(
+                                new SharedElementTransitionChangehandler(names),
+                                new FadeChangeHandler())));
 
+    }
+
+    @OnClick(R.id.partial_toolbar_arrow_view)
+    public void onBackClick() {
+        getActivity().onBackPressed();
     }
 }

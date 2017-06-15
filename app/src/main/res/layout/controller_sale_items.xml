@@ -1,30 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:orientation="vertical">
 
-    <RelativeLayout
+    <include layout="@layout/partial_toolbar_arrow"/>
+
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/controller_sale_items_grid_view"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
-
-        <!--<ImageView-->
-            <!--android:id="@+id/controller_sale_items_image"-->
-            <!--android:layout_width="match_parent"-->
-            <!--android:layout_height="200dp"/>-->
-
-
-        <android.support.v7.widget.RecyclerView
-            android:id="@+id/controller_sale_items_grid_view"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:background="#FFFFFF">
-
-        </android.support.v7.widget.RecyclerView>
-    </RelativeLayout>
-
-
+        android:layout_height="match_parent"
+        android:background="#FFFFFF"/>
 
 
 </LinearLayout>

@@ -1,7 +1,6 @@
 package au.com.dealsdirect.ui.controller.checkout;
 
 import android.support.annotation.NonNull;
-import android.support.v4.view.ViewPager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -17,7 +16,6 @@ import au.com.dealsdirect.ui.controller.shops.ShopsController;
 
 import javax.inject.Inject;
 
-import butterknife.BindView;
 
 /**
  * dp Created by Admin on 6/6/17.
@@ -32,9 +30,6 @@ public class CheckoutController extends BaseController implements CheckoutMvpVie
     @Inject
     CheckoutMvpPresenter<CheckoutMvpView> mPresenter;
 
-    @BindView(R.id.controller_home_view_pager)
-    ViewPager homeViewPager;
-
     private final RouterPagerAdapter pagerAdapter;
 
     public CheckoutController() {
@@ -44,7 +39,7 @@ public class CheckoutController extends BaseController implements CheckoutMvpVie
                 if (!router.hasRootController()) {
 
                     if (position==0){
-                        Controller firstView = new CategoriesController();
+                        Controller firstView = CategoriesController.newInstance();
                         router.setRoot(RouterTransaction.with(firstView));
 
                     }if (position==1){
@@ -80,19 +75,10 @@ public class CheckoutController extends BaseController implements CheckoutMvpVie
     @Override
     protected void onViewBound(@NonNull View view) {
         super.onViewBound(view);
-        homeViewPager.setAdapter(pagerAdapter);
-        homeViewPager.setCurrentItem(1);
     }
 
 
 
-    @Override
-    protected void onDestroyView(@NonNull View view) {
-        if (!getActivity().isChangingConfigurations()) {
-            homeViewPager.setAdapter(null);
-        }
-        super.onDestroyView(view);
-    }
 
     @Override protected void setUp(View view) {
 

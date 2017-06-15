@@ -20,7 +20,6 @@ import javax.inject.Inject;
 import au.com.dealsdirect.R;
 import au.com.dealsdirect.data.network.model.banner.GetPublicSalesBannerRequest;
 import au.com.dealsdirect.data.network.model.banner.GetPublicSalesBannerResponse;
-import au.com.dealsdirect.ui.base.BaseActivity;
 import au.com.dealsdirect.ui.base.BaseController;
 import au.com.dealsdirect.ui.categories.CategoriesController;
 import au.com.dealsdirect.ui.controller.saleitems.SaleItemsController;
@@ -29,6 +28,7 @@ import au.com.dealsdirect.ui.controller.shops.changehandler.HorizontalNavTransit
 import au.com.dealsdirect.ui.controller.shops.listener.BannerClickListener;
 import au.com.dealsdirect.utils.BundleBuilder;
 import butterknife.BindView;
+import butterknife.OnClick;
 
 
 /**
@@ -55,7 +55,7 @@ public class ShopsController extends BaseController implements ShopsMvpView, Ban
     public ShopsController(String categoryID) {
 
         this(new BundleBuilder(new Bundle()).putString(KEY_CATEGORY_ID, categoryID)
-                                            .build());
+                .build());
     }
 
     public ShopsController() {
@@ -78,9 +78,22 @@ public class ShopsController extends BaseController implements ShopsMvpView, Ban
         return view;
     }
 
-    @Override protected void onViewBound(@NonNull View view) {
+    @Override
+    protected void onViewBound(@NonNull View view) {
         super.onViewBound(view);
 
+        setUp(view);
+    }
+
+
+    @Override
+    protected void onDestroyView(@NonNull View view) {
+        mPresenter.onDetach();
+        super.onDestroyView(view);
+    }
+
+    @Override
+    protected void setUp(View view) {
         GetPublicSalesBannerRequest getPublicSalesBannerRequest;
 
         if (mCategoryID == null) {
@@ -101,40 +114,15 @@ public class ShopsController extends BaseController implements ShopsMvpView, Ban
             shopsControllerBannerRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
             shopsControllerBannerRecyclerView.setAdapter(mBannersAdapter);
         }
-
-        assert (getActivity()) != null;
-        ((BaseActivity) getActivity()).showToolbarLeftOption(
-                getActivity().getDrawable(R.drawable.ic_action_menu),
-                view1 -> {
-                    getRouter().pushController(
-                            RouterTransaction.with(new CategoriesController())
-                                             .pushChangeHandler(
-                                                     new HorizontalNavTransitionChangeHandler())
-                                             .popChangeHandler(
-                                                     new HorizontalNavTransitionChangeHandler()));
-                });
-
-        ((BaseActivity) getActivity()).showHeaderLogo();
-        ((BaseActivity) getActivity()).hideToolbarRightOption();
-
-    }
-
-
-    @Override protected void onDestroyView(@NonNull View view) {
-        super.onDestroyView(view);
-    }
-
-    @Override protected void setUp(View view) {
-
     }
 
     @Override
     public void showShopBanners(GetPublicSalesBannerResponse getPublicSalesBannerResponse) {
 
         sales = getPublicSalesBannerResponse.getBanner()
-                                            .getList()
-                                            .get(0)
-                                            .getSales();
+                .getList()
+                .get(0)
+                .getSales();
 
         mBannerClickListener = this;
 
@@ -149,17 +137,25 @@ public class ShopsController extends BaseController implements ShopsMvpView, Ban
     }
 
 
-    @Override public void onBannerClicked(String bannerTitle, String bannerId, int position,
-            String imageUrl) {
+    @Override
+    public void onBannerClicked(String bannerTitle, String bannerId, int position,
+                                String imageUrl) {
 
         List<String> names = new ArrayList<>();
         names.add(bannerId + position);
 
         getRouter().pushController(RouterTransaction.with(new SaleItemsController(bannerTitle,
-                                                                                  bannerId,
-                                                                                  position,
-                                                                                  imageUrl))
-                                                    .pushChangeHandler(new HorizontalChangeHandler())
-                                                    .popChangeHandler(new HorizontalChangeHandler()));
+                bannerId,
+                position,
+                imageUrl))
+                .pushChangeHandler(new HorizontalChangeHandler())
+                .popChangeHandler(new HorizontalChangeHandler()));
+    }
+
+    @OnClick(R.id.partial_toolbar_hamburger)
+    public void onClickHamburger() {
+        getRouter().pushController(RouterTransaction.with(CategoriesController.newInstance())
+                .pushChangeHandler(new HorizontalNavTransitionChangeHandler())
+                .popChangeHandler(new HorizontalNavTransitionChangeHandler()));
     }
 }

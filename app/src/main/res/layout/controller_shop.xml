@@ -13,7 +13,12 @@
         android:background="@color/app_skin"
         android:layout_marginBottom="15dp">
 
+
+        <include android:id="@+id/controller_shop_toolbar"
+                 layout="@layout/partial_toolbar_logo" />
+
         <RelativeLayout
+            android:layout_below="@+id/controller_shop_toolbar"
             android:id="@+id/partial_toolbar_search_bar_container"
             android:layout_width="match_parent"
             android:layout_height="45dp"

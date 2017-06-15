@@ -4,7 +4,6 @@ import android.annotation.TargetApi;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.pm.PackageManager;
-import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -12,10 +11,11 @@ import android.support.annotation.StringRes;
 import android.support.design.widget.Snackbar;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
-import android.widget.ImageView;
 import android.widget.TextView;
+
 
 import au.com.dealsdirect.DDApplication;
 import au.com.dealsdirect.R;
@@ -24,24 +24,11 @@ import au.com.dealsdirect.di.component.DaggerActivityComponent;
 import au.com.dealsdirect.di.module.ActivityModule;
 import au.com.dealsdirect.utils.CommonUtils;
 import au.com.dealsdirect.utils.NetworkUtils;
-import butterknife.BindView;
 import butterknife.Unbinder;
 import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper;
 
 public abstract class BaseActivity extends AppCompatActivity
         implements MvpView {
-
-    @BindView(R.id.partial_toolbar_header_text)
-    TextView mHeaderTitle;
-
-    @BindView(R.id.partial_toolbar_logo)
-    ImageView mHeaderLogo;
-
-    @BindView(R.id.partial_toolbar_right_option)
-    ImageView mHeaderRightOption;
-
-    @BindView(R.id.partial_toolbar_left_option)
-    ImageView mHeaderLeftOption;
 
     private ProgressDialog mProgressDialog;
 
@@ -96,6 +83,7 @@ public abstract class BaseActivity extends AppCompatActivity
 
     @Override
     public void onError(String message) {
+        Log.i("SnackbarError", message+"");
         if (message != null) {
             showSnackBar(message);
         } else {
@@ -146,51 +134,4 @@ public abstract class BaseActivity extends AppCompatActivity
     }
 
     protected abstract void setUp();
-
-    public void setHeaderTitle(String title) {
-        mHeaderTitle.setText(title);
-        mHeaderTitle.setVisibility(View.VISIBLE);
-        mHeaderLogo.setVisibility(View.GONE);
-    }
-
-    public void showHeaderLogo(){
-        mHeaderTitle.setVisibility(View.GONE);
-        mHeaderLogo.setVisibility(View.VISIBLE);
-    }
-
-    public void showToolbarFilterOption(){
-        mHeaderRightOption.setVisibility(View.VISIBLE);
-        mHeaderRightOption.setImageDrawable(this.getDrawable(R.drawable.ic_toolbar_filter));
-    }
-
-    public void hideToolbarRightOption(){
-        mHeaderRightOption.setVisibility(View.INVISIBLE);
-        setToolbarRightOptionClickable(false);
-    }
-
-    public void hideToolbarLeftOption(){
-        mHeaderLeftOption.setVisibility(View.INVISIBLE);
-        setToolbarLeftOptionClickable(false);
-    }
-
-    public void setToolbarLeftOptionClickable(boolean isClickable){
-        mHeaderLeftOption.setClickable(isClickable);
-    }
-
-    public void setToolbarRightOptionClickable(boolean isClickable){
-        mHeaderRightOption.setClickable(isClickable);
-    }
-
-    public void showToolbarLeftOption(Drawable drawable, View.OnClickListener onClickListener){
-        mHeaderLeftOption.setVisibility(View.VISIBLE);
-        mHeaderLeftOption.setImageDrawable(drawable);
-        mHeaderLeftOption.setOnClickListener(onClickListener);
-    }
-
-    public void showToolbarRightOption(Drawable drawable, View.OnClickListener onClickListener){
-        mHeaderRightOption.setVisibility(View.VISIBLE);
-        mHeaderRightOption.setImageDrawable(drawable);
-        mHeaderRightOption.setOnClickListener(onClickListener);
-    }
-
 }
