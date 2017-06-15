@@ -20,6 +20,9 @@ import au.com.dealsdirect.ui.controller.home.HomePresenter;
 import au.com.dealsdirect.ui.controller.invite.InviteMvpPresenter;
 import au.com.dealsdirect.ui.controller.invite.InviteMvpView;
 import au.com.dealsdirect.ui.controller.invite.InvitePresenter;
+import au.com.dealsdirect.ui.controller.login.LoginMvpPresenter;
+import au.com.dealsdirect.ui.controller.login.LoginMvpView;
+import au.com.dealsdirect.ui.controller.login.LoginPresenter;
 import au.com.dealsdirect.ui.controller.productdetails.ProductDetailsMvpPresenter;
 import au.com.dealsdirect.ui.controller.productdetails.ProductDetailsMvpView;
 import au.com.dealsdirect.ui.controller.productdetails.ProductDetailsPresenter;
@@ -57,56 +60,58 @@ public class ControllerModule {
         return presenter;
     }
 
-    @Provides CategoriesMvpPresenter<CategoriesMvpView> provideCategoriesPresenter
-            (CategoriesPresenter<CategoriesMvpView> presenter) {
-        return presenter;
-    }
-
-    @Provides ShopsMvpPresenter<ShopsMvpView> provideShopPresenter
-            (ShopsPresenter<ShopsMvpView> presenter) {
-        return presenter;
-    }
-
-    @Provides HomeMvpPresenter<HomeMvpView> provideHomePresenter
-            (HomePresenter<HomeMvpView> presenter) {
-        return presenter;
-    }
-
-    @Provides AccountMvpPresenter<AccountMvpView> provideAccountPresenter
-            (AccountPresenter<AccountMvpView> presenter) {
-        return presenter;
-    }
-
-    @Provides ContactMvpPresenter<ContactMvpView> provideContactPresenter
-            (ContactPresenter<ContactMvpView> presenter) {
-        return presenter;
-    }
-
-    @Provides InviteMvpPresenter<InviteMvpView> provideInvitePresenter
-            (InvitePresenter<InviteMvpView> presenter) {
-        return presenter;
-    }
-
-    @Provides CheckoutMvpPresenter<CheckoutMvpView> provideCheckoutPresenter
-            (CheckoutPresenter<CheckoutMvpView> presenter) {
+    @Provides
+    CategoriesMvpPresenter<CategoriesMvpView> provideCategoriesPresenter(CategoriesPresenter<CategoriesMvpView> presenter) {
         return presenter;
     }
 
     @Provides
-    ProductDetailsMvpPresenter<ProductDetailsMvpView> provideProductDetailsPresenter
-            (ProductDetailsPresenter<ProductDetailsMvpView> presenter) {
-        return presenter;
-    }
-
-    @Provides SaleCategoriesMvpPresenter<SaleCategoriesMvpView> provideSaleCategoriesPresenter
-            (SaleCategoriesPresenter<SaleCategoriesMvpView> presenter) {
+    ShopsMvpPresenter<ShopsMvpView> provideShopPresenter(ShopsPresenter<ShopsMvpView> presenter) {
         return presenter;
     }
 
     @Provides
-    SaleItemsMvpPresenter<SaleItemsMvpView> provideSaleItemsPresenter
-            (SaleItemsPresenter<SaleItemsMvpView> presenter) {
+    HomeMvpPresenter<HomeMvpView> provideHomePresenter(HomePresenter<HomeMvpView> presenter) {
         return presenter;
     }
 
+    @Provides
+    AccountMvpPresenter<AccountMvpView> provideAccountPresenter(AccountPresenter<AccountMvpView> presenter) {
+        return presenter;
+    }
+
+    @Provides
+    ContactMvpPresenter<ContactMvpView> provideContactPresenter(ContactPresenter<ContactMvpView> presenter) {
+        return presenter;
+    }
+
+    @Provides
+    InviteMvpPresenter<InviteMvpView> provideInvitePresenter(InvitePresenter<InviteMvpView> presenter) {
+        return presenter;
+    }
+
+    @Provides
+    CheckoutMvpPresenter<CheckoutMvpView> provideCheckoutPresenter(CheckoutPresenter<CheckoutMvpView> presenter) {
+        return presenter;
+    }
+
+    @Provides
+    ProductDetailsMvpPresenter<ProductDetailsMvpView> provideProductDetailsPresenter(ProductDetailsPresenter<ProductDetailsMvpView> presenter) {
+        return presenter;
+    }
+
+    @Provides
+    SaleCategoriesMvpPresenter<SaleCategoriesMvpView> provideSaleCategoriesPresenter(SaleCategoriesPresenter<SaleCategoriesMvpView> presenter) {
+        return presenter;
+    }
+
+    @Provides
+    SaleItemsMvpPresenter<SaleItemsMvpView> provideSaleItemsPresenter(SaleItemsPresenter<SaleItemsMvpView> presenter) {
+        return presenter;
+    }
+
+    @Provides
+    LoginMvpPresenter<LoginMvpView> provideLoginPresenter(LoginPresenter<LoginMvpView> presenter) {
+        return presenter;
+    }
 }
