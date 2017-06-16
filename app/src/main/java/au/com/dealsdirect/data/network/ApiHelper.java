@@ -1,6 +1,12 @@
 package au.com.dealsdirect.data.network;
 
 
+import android.content.Context;
+
+import com.mysale.genie.utility.config.api.GetAppSettings;
+import com.mysale.genie.utility.config.api.GetAppSettingsSection;
+import com.mysale.genie.utility.config.api.GetServerSettings;
+
 import au.com.dealsdirect.data.network.model.SampleRequest;
 import au.com.dealsdirect.data.network.model.SampleResponse;
 import au.com.dealsdirect.data.network.model.productdetails.GetPublicItemDetailsRequest;
@@ -34,4 +40,12 @@ public interface ApiHelper {
 
     Observable<GetPublicSaleItemsResponse> getPublicSaleItemsApiCall(GetPublicSaleItemsRequest
             getPublicSaleItemsRequest);
+
+    Observable<GetServerSettings.ResponseValue> callGetServerSettings(Context context, String countryId);
+
+    Observable<GetAppSettings.ResponseValue> callGetPublicAppSettings(Context context, String countryId);
+
+    Observable<GetAppSettings.ResponseValue> callGetAppSettings(Context context, String countryId);
+
+    Observable<GetAppSettingsSection.ResponseValue> callGetAppSettingsSection(Context context, String countryId);
 }

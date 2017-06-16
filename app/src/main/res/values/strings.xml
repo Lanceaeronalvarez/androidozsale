@@ -1,5 +1,10 @@
 <resources>
     <string name="app_name">DealsDirect</string>
+    <string name="facebook_app_id">test</string>
+    <string name="facebook_app_secret">test</string>
+    <string name="default_country_id">DA</string>
+    <string name="default_language_id">EN</string>
+    <bool name="debug_mode">true</bool>
     <string name="error">error</string>
 
     <string name="font_lato_black">fonts/Lato-Black.ttf</string>
