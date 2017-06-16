@@ -1,1 +1,2 @@
-include ':app'
+include ':app', ':genie-utility'
+project(':genie-utility').projectDir = new File('sw_o_android.genieandroid/genie-utility')
