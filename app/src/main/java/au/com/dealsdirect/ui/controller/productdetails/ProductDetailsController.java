@@ -244,7 +244,10 @@ public class ProductDetailsController extends BaseController implements ProductD
 
         final android.os.Handler handler = new android.os.Handler();
         handler.postDelayed(() -> {
-            mProductImagesRv.setVisibility(View.VISIBLE);
+            if(mProductImagesRv!=null){
+                mProductImagesRv.setVisibility(View.VISIBLE);
+
+            }
 
             if (mProductSharedImage != null) {
 
