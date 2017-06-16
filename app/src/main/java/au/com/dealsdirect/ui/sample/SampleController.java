@@ -85,4 +85,5 @@ public class SampleController extends BaseController implements SampleMvpView {
     public void showSample(SampleResponse response) {
 
     }
+
 }

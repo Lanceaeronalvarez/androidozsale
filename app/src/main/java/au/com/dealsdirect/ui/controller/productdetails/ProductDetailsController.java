@@ -35,9 +35,11 @@ import au.com.dealsdirect.data.network.model.productdetails.GetPublicItemDetails
 import au.com.dealsdirect.data.network.model.productdetails.GetPublicSaleDetailsRequest;
 import au.com.dealsdirect.data.network.model.productdetails.GetPublicSaleDetailsResponse;
 import au.com.dealsdirect.ui.base.BaseController;
+import au.com.dealsdirect.ui.controller.shops.changehandler.ScaleFadeChangeHandler;
 import au.com.dealsdirect.utils.BundleBuilder;
 import au.com.dealsdirect.utils.ImageUtils;
 import au.com.dealsdirect.utils.PriceUtils;
+import au.com.dealsdirect.widget.ElasticDragDismissFrameLayout;
 import butterknife.BindView;
 
 /*
@@ -111,6 +113,14 @@ public class ProductDetailsController extends BaseController implements ProductD
     boolean didSelectSize = false;
     String selectedSkuId = "";
 
+    private final ElasticDragDismissFrameLayout.ElasticDragDismissCallback dragDismissListener
+            = new ElasticDragDismissFrameLayout.ElasticDragDismissCallback() {
+        @Override
+        public void onDragDismissed() {
+            overridePopHandler(new ScaleFadeChangeHandler());
+            getRouter().popController(ProductDetailsController.this);
+        }
+    };
 
     public ProductDetailsController(String imageUrl, String itemId, String saleId) {
         this(new BundleBuilder(new Bundle())
@@ -130,7 +140,7 @@ public class ProductDetailsController extends BaseController implements ProductD
 
     @Override
     protected View inflateView(@NonNull LayoutInflater inflater, @NonNull ViewGroup container) {
-        View view = inflater.inflate(R.layout.controller_product_details, container, false);
+        ProductDetailsView view = (ProductDetailsView) inflater.inflate(R.layout.controller_product_details, container, false);
         getControllerComponent().inject(this);
         mPresenter.onAttach(this);
         return view;
@@ -139,6 +149,8 @@ public class ProductDetailsController extends BaseController implements ProductD
     @Override
     protected void onViewBound(@NonNull View view) {
         super.onViewBound(view);
+        setRetainViewMode(RetainViewMode.RELEASE_DETACH);
+        ((ElasticDragDismissFrameLayout)view).addListener(dragDismissListener);
 
         mProductSharedImage.setTransitionName(mItemId);
         ImageUtils.loadImage(getActivity(), mItemImageUrl, mProductSharedImage);
@@ -185,9 +197,9 @@ public class ProductDetailsController extends BaseController implements ProductD
 
                 RecyclerView.ViewHolder vhOld = mOtherImagesRv.findViewHolderForLayoutPosition(i);
                 vhOld.itemView.animate()
-                        .alpha(0.40f)
-                        .setDuration(200)
-                        .start();
+                              .alpha(0.40f)
+                              .setDuration(200)
+                              .start();
 
                 //                ProductImageRecyclerViewAdapter.selectedPosition = i1;
             }
@@ -197,6 +209,9 @@ public class ProductDetailsController extends BaseController implements ProductD
                 .getString(R.string.base_html_template_header);
         mHtmlFooter = getActivity().getResources()
                 .getString(R.string.base_html_template_footer);
+
+//        ((BaseActivity) getActivity()).hideToolbarRightOption();
+//        ((BaseActivity) getActivity()).hideToolbarLeftOption();
 
     }
 
@@ -226,9 +241,11 @@ public class ProductDetailsController extends BaseController implements ProductD
     @Override
     public void showProductDetails(GetPublicItemDetailsResponse.Value product) {
 
-        mProductImagesRv.setVisibility(View.VISIBLE);
+
         final android.os.Handler handler = new android.os.Handler();
         handler.postDelayed(() -> {
+            mProductImagesRv.setVisibility(View.VISIBLE);
+
             if (mProductSharedImage != null) {
 
                 ImageUtils.clearImage(getActivity(), mProductSharedImage);
@@ -345,11 +362,11 @@ public class ProductDetailsController extends BaseController implements ProductD
 
     }
 
-    public void hideSharedImage() {
+    public void hideSharedImage(){
         Log.d("entered", "hide shared element ");
         mProductSharedImage.setVisibility(View.GONE);
         mProductSharedImage.setTransitionName("gone");
-        Log.d("entered", "hide shared element = " + mProductSharedImage.getTransitionName());
+        Log.d("entered", "hide shared element = "+mProductSharedImage.getTransitionName());
 
     }
 

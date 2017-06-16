@@ -1,7 +1,5 @@
 package au.com.dealsdirect.ui.controller.saleitems;
 
-import android.util.Log;
-
 import com.androidnetworking.error.ANError;
 
 import javax.inject.Inject;
@@ -32,8 +30,8 @@ public class SaleItemsPresenter<V extends SaleItemsMvpView> extends BasePresente
     @Override
     public void loadSaleItems(GetPublicSaleItemsRequest getPublicSaleItemsRequest) {
 
-        Log.d("saleitems", "load");
         getMvpView().showLoading();
+
         getCompositeDisposable()
                 .add(getDataManager()
                              .getPublicSaleItemsApiCall(getPublicSaleItemsRequest)
@@ -47,12 +45,9 @@ public class SaleItemsPresenter<V extends SaleItemsMvpView> extends BasePresente
                                      if (!isViewAttached()) {
                                          return;
                                      }
-
-                                     Log.d("saleitems","hmm");
                                      getMvpView().hideLoading();
                                      if(!getPublicSaleItemsResponse.getGetPublicSaleItemsObject()
                                                 .getList().isEmpty()){
-                                         Log.d("saleitems","okay");
 
                                          getMvpView().showSaleItems(getPublicSaleItemsResponse);
                                      }

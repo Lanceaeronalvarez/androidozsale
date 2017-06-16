@@ -203,8 +203,7 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
         //        mPresenter.searchProducts(page, mToolbarEditText.getText().toString(), FilterSingleton.getSelectedFilters(mFilterMode));
     }
 
-    @Override
-    public void showProductDetails(String imageUrl, String itemId, String saleId) {
+    @Override public void showProductDetails(String imageUrl, String itemId, String saleId) {
 
         String imageTransitionName = itemId;
 
@@ -212,15 +211,27 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
         names.add(imageTransitionName);
 
         getRouter().pushController(RouterTransaction.with(new ProductDetailsController(imageUrl, itemId, saleId))
-                .pushChangeHandler(
+                                                    .pushChangeHandler(
                         new TransitionChangeHandlerCompat(
                                 new SharedElementTransitionChangehandler(names),
-                                new FadeChangeHandler()))
-                .popChangeHandler(
+                                new FadeChangeHandler(false)))
+                                                    .popChangeHandler(
                         new TransitionChangeHandlerCompat(
                                 new SharedElementTransitionChangehandler(names),
                                 new FadeChangeHandler())));
 
+//
+//        ControllerChangeHandler pushHandler
+//                = new TransitionChangeHandlerCompat(new DetailPushTransitionHandler(itemId),
+//                                                    new DetailPushAnimChangeHandler());
+//
+//        ControllerChangeHandler popHandler
+//                = new TransitionChangeHandlerCompat(new DetailPopTransitionChangeHandler(itemId),
+//                                                    new DetailPopAnimChangeHandler());
+//
+//        getRouter().pushController(RouterTransaction.with(new ProductDetailsController(imageUrl, itemId, saleId))
+//                                                    .pushChangeHandler(pushHandler)
+//                                                    .popChangeHandler(popHandler));
     }
 
     @OnClick(R.id.partial_toolbar_arrow_view)

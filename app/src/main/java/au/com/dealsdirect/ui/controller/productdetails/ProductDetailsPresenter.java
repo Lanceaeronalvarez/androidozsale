@@ -28,6 +28,8 @@ public class ProductDetailsPresenter<V extends ProductDetailsMvpView> extends Ba
 
     @Override
     public void loadProductDetails(GetPublicItemDetailsRequest publicItemDetailsRequest, GetPublicSaleDetailsRequest publicSaleDetailsRequest) {
+        getMvpView().showLoading();
+
         getCompositeDisposable().add(getDataManager()
                 .doGetPublicItemDetailsApiCall(publicItemDetailsRequest)
                 .subscribeOn(getSchedulerProvider().io())
