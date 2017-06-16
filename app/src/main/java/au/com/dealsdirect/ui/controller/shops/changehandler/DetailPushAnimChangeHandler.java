@@ -62,10 +62,10 @@ public class DetailPushAnimChangeHandler extends AnimatorChangeHandler {
         // Scale up the favourite fab
         PropertyValuesHolder fabScaleX = PropertyValuesHolder.ofFloat(View.SCALE_X, 0, 1);
         PropertyValuesHolder fabScaleY = PropertyValuesHolder.ofFloat(View.SCALE_Y, 0, 1);
-//        Animator favouriteAnim = ObjectAnimator.ofPropertyValuesHolder(detailView.favouriteFab, fabScaleX, fabScaleY)
-//                                               .setDuration(200);
+        Animator favouriteAnim = ObjectAnimator.ofPropertyValuesHolder(detailView.mProductDetailsView, fabScaleX, fabScaleY)
+                                               .setDuration(200);
 
-        animatorSet.playSequentially(flagAndDetailAnim);
+        animatorSet.playSequentially(flagAndDetailAnim,favouriteAnim);
 
         animatorSet.start();
 

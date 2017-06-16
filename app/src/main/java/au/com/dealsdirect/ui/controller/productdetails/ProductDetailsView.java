@@ -24,6 +24,9 @@ import butterknife.ButterKnife;
 
 public class ProductDetailsView extends ElasticDragDismissFrameLayout {
 
+    @BindView(R.id.product_details_container)
+    public ProductDetailsView mProductDetailsView;
+
     @BindView(R.id.discountLabel)
     public TextView mDiscountLabel;
     @BindView(R.id.productImageRecyclerView)

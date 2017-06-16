@@ -9,8 +9,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import com.bluelinelabs.conductor.ControllerChangeHandler;
 import com.bluelinelabs.conductor.RouterTransaction;
-import com.bluelinelabs.conductor.changehandler.FadeChangeHandler;
 import com.bluelinelabs.conductor.changehandler.TransitionChangeHandlerCompat;
 import com.paginate.Paginate;
 
@@ -26,6 +26,9 @@ import au.com.dealsdirect.data.network.model.saleitems.GetPublicSaleItemsRespons
 import au.com.dealsdirect.ui.base.BaseController;
 import au.com.dealsdirect.ui.controller.productdetails.ProductDetailsController;
 import au.com.dealsdirect.ui.controller.saleitems.adapter.SaleItemsAdapter;
+import au.com.dealsdirect.ui.controller.shops.changehandler.DetailPopAnimChangeHandler;
+import au.com.dealsdirect.ui.controller.shops.changehandler.DetailPopTransitionChangeHandler;
+import au.com.dealsdirect.ui.controller.shops.changehandler.DetailPushAnimChangeHandler;
 import au.com.dealsdirect.ui.custom.transitions.SharedElementTransitionChangehandler;
 import au.com.dealsdirect.utils.BundleBuilder;
 import au.com.dealsdirect.utils.PaginateUtils;
@@ -210,25 +213,26 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
         List<String> names = new ArrayList<>();
         names.add(imageTransitionName);
 
-        getRouter().pushController(RouterTransaction.with(new ProductDetailsController(imageUrl, itemId, saleId))
-                                                    .pushChangeHandler(
-                        new TransitionChangeHandlerCompat(
-                                new SharedElementTransitionChangehandler(names),
-                                new FadeChangeHandler(false)))
-                                                    .popChangeHandler(
-                        new TransitionChangeHandlerCompat(
-                                new SharedElementTransitionChangehandler(names),
-                                new FadeChangeHandler())));
 
-//
-//        ControllerChangeHandler pushHandler
-//                = new TransitionChangeHandlerCompat(new DetailPushTransitionHandler(itemId),
-//                                                    new DetailPushAnimChangeHandler());
-//
-//        ControllerChangeHandler popHandler
-//                = new TransitionChangeHandlerCompat(new DetailPopTransitionChangeHandler(itemId),
-//                                                    new DetailPopAnimChangeHandler());
-//
+        SharedElementTransitionChangehandler sharedElementTransitionChangehandler = new
+                SharedElementTransitionChangehandler(names);
+        sharedElementTransitionChangehandler.setForceRemoveViewOnPush(false);
+
+        ControllerChangeHandler pushHandler
+                        = new TransitionChangeHandlerCompat(sharedElementTransitionChangehandler,
+                                                            new DetailPushAnimChangeHandler());
+
+        ControllerChangeHandler popHandler
+                        = new TransitionChangeHandlerCompat(new DetailPopTransitionChangeHandler(itemId),
+                                                            new DetailPopAnimChangeHandler());
+
+
+        getRouter().pushController(RouterTransaction.with(new ProductDetailsController(imageUrl, itemId, saleId))
+                                                    .pushChangeHandler(pushHandler)
+                                                    .popChangeHandler(popHandler));
+
+
+
 //        getRouter().pushController(RouterTransaction.with(new ProductDetailsController(imageUrl, itemId, saleId))
 //                                                    .pushChangeHandler(pushHandler)
 //                                                    .popChangeHandler(popHandler));

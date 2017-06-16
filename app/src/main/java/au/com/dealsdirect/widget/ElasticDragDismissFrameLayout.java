@@ -36,16 +36,18 @@ public class ElasticDragDismissFrameLayout extends FrameLayout implements Nested
         /**
          * Called when dragging is released and has exceeded the threshold dismiss distance.
          */
-        public void onDragDismissed() { }
+        public void onDragDismissed() {
+
+        }
 
     }
 
     // configurable attribs
     private float dragDismissDistance = Float.MAX_VALUE;
-    private float dragDismissFraction = -1f;
-    private float dragDismissScale = 1f;
+    private float dragDismissFraction = -2f;
+    private float dragDismissScale = 2f;
     private boolean shouldScale = false;
-    private float dragElacticity = 0.8f;
+    private float dragElacticity = 2f;
 
     // state
     private float totalDrag;
@@ -69,7 +71,7 @@ public class ElasticDragDismissFrameLayout extends FrameLayout implements Nested
         dragDismissDistance = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 80, getResources().getDisplayMetrics());
         dragDismissFraction = 0.7f;
         dragDismissScale = 0.8f;
-        shouldScale = true;
+        shouldScale = false;
     }
 
     @Override

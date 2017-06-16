@@ -7,6 +7,7 @@ import android.transition.ChangeBounds;
 import android.transition.ChangeClipBounds;
 import android.transition.ChangeImageTransform;
 import android.transition.ChangeTransform;
+import android.transition.Slide;
 import android.transition.Transition;
 import android.transition.TransitionSet;
 import android.view.View;
@@ -63,7 +64,8 @@ public class DetailPopTransitionChangeHandler extends TransitionChangeHandler {
                                        .addTransition(new ChangeBounds())
                                        .addTransition(new ChangeClipBounds())
                                        .addTransition(new ChangeTransform())
-                                       .addTransition(new ChangeImageTransform()));
+                                       .addTransition(new ChangeImageTransform())
+                                       .addTransition(new Slide()).addTarget(itemImage.mProductDetailsView));
     }
 
     protected void getTransitionImage(@NonNull ViewGroup container,

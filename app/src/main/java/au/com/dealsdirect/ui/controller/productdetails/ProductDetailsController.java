@@ -35,7 +35,7 @@ import au.com.dealsdirect.data.network.model.productdetails.GetPublicItemDetails
 import au.com.dealsdirect.data.network.model.productdetails.GetPublicSaleDetailsRequest;
 import au.com.dealsdirect.data.network.model.productdetails.GetPublicSaleDetailsResponse;
 import au.com.dealsdirect.ui.base.BaseController;
-import au.com.dealsdirect.ui.controller.shops.changehandler.ScaleFadeChangeHandler;
+import au.com.dealsdirect.ui.controller.shops.changehandler.DetailPopTransitionChangeHandler;
 import au.com.dealsdirect.utils.BundleBuilder;
 import au.com.dealsdirect.utils.ImageUtils;
 import au.com.dealsdirect.utils.PriceUtils;
@@ -117,7 +117,7 @@ public class ProductDetailsController extends BaseController implements ProductD
             = new ElasticDragDismissFrameLayout.ElasticDragDismissCallback() {
         @Override
         public void onDragDismissed() {
-            overridePopHandler(new ScaleFadeChangeHandler());
+            overridePopHandler(new DetailPopTransitionChangeHandler());
             getRouter().popController(ProductDetailsController.this);
         }
     };
@@ -173,7 +173,6 @@ public class ProductDetailsController extends BaseController implements ProductD
         mOtherImagesRv.setLayoutManager(new LinearLayoutManager(getActivity(),
                 LinearLayoutManager.HORIZONTAL,
                 false));
-        //        mOtherImagesRv.setTransitionName(mItemId);
 
         mOtherImagesAdapter = new ProductDetailsImageAdapter(this, null, mSaleId, 2);
         mOtherImagesRv.setAdapter(mOtherImagesAdapter);
@@ -192,16 +191,12 @@ public class ProductDetailsController extends BaseController implements ProductD
                         .alpha(1f)
                         .setDuration(200)
                         .start();
-                //                        otherImagesAdapter.setActiveCircleIndicator(newPos);
-
 
                 RecyclerView.ViewHolder vhOld = mOtherImagesRv.findViewHolderForLayoutPosition(i);
                 vhOld.itemView.animate()
                               .alpha(0.40f)
                               .setDuration(200)
                               .start();
-
-                //                ProductImageRecyclerViewAdapter.selectedPosition = i1;
             }
         });
 
@@ -210,21 +205,16 @@ public class ProductDetailsController extends BaseController implements ProductD
         mHtmlFooter = getActivity().getResources()
                 .getString(R.string.base_html_template_footer);
 
-//        ((BaseActivity) getActivity()).hideToolbarRightOption();
-//        ((BaseActivity) getActivity()).hideToolbarLeftOption();
-
     }
 
     @Override
     protected void setUp(View view) {
-        Log.d("productdetail", "setup");
         mProductSharedImage.setVisibility(View.VISIBLE);
 
     }
 
     @Override
     public void onDetach(View view) {
-        Log.d("productdetails", "ondetache");
         mProductSharedImage.setVisibility(View.VISIBLE);
         mProductImagesRv.setVisibility(View.GONE);
         mOtherImagesRv.setVisibility(View.GONE);
@@ -252,8 +242,6 @@ public class ProductDetailsController extends BaseController implements ProductD
             if (mProductSharedImage != null) {
 
                 ImageUtils.clearImage(getActivity(), mProductSharedImage);
-//                mProductSharedImage.setVisibility(View.GONE);
-
             }
         }, 1000);
 

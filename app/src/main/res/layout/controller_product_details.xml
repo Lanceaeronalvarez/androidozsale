@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <au.com.dealsdirect.ui.controller.productdetails.ProductDetailsView
+    android:id="@+id/product_details_container"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     xmlns:android="http://schemas.android.com/apk/res/android"

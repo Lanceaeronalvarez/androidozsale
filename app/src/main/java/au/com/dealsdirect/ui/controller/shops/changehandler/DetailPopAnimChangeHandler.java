@@ -46,17 +46,15 @@ public class DetailPopAnimChangeHandler extends AnimatorChangeHandler {
 //        PropertyValuesHolder fabScaleY = PropertyValuesHolder.ofFloat(View.SCALE_Y, 0);
 //        Animator hideFabButtonAnimator = ObjectAnimator.ofPropertyValuesHolder(detailView.favouriteFab, fabScaleX, fabScaleY);
 
-        // Slide up the flag
-        Animator flagAnimator = ObjectAnimator.ofFloat(detailView.mProductSharedImage, View.TRANSLATION_Y, 0,
-                                                       -detailView.mProductSharedImage.getHeight());
 
 //        // Slide down the details
-//        Animator detailAnimator = ObjectAnimator.ofFloat(detailView.detailGroup, View.TRANSLATION_Y, 0, detailView.detailGroup.getHeight());
+        Animator detailAnimator = ObjectAnimator.ofFloat(detailView.mProductDetailsView, View.TRANSLATION_Y, 0,
+                                                         detailView.mProductDetailsView.getHeight());
 
         // Show the new view
         Animator showToViewAnimator = ObjectAnimator.ofFloat(to, View.ALPHA, 0, 1);
 
-        animatorSet.playTogether(flagAnimator, showToViewAnimator);
+        animatorSet.playTogether(showToViewAnimator,detailAnimator);
         animatorSet.setDuration(300);
         animatorSet.setInterpolator(new FastOutLinearInInterpolator());
 
@@ -71,7 +69,6 @@ public class DetailPopAnimChangeHandler extends AnimatorChangeHandler {
         ProductDetailsView detailView = (ProductDetailsView) from;
 //        detailView.favouriteFab.setScaleX(1);
 //        detailView.favouriteFab.setScaleY(1);
-        detailView.mProductSharedImage.setTranslationY(0);
 //        detailView.detailGroup.setTranslationY(0);
     }
 }
