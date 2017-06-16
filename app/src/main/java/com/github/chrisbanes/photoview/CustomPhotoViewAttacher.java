@@ -316,7 +316,6 @@ public class CustomPhotoViewAttacher implements View.OnTouchListener,
         boolean handled = false;
 
         if (mZoomEnabled && Util.hasDrawable((ImageView) v)) {
-
             //disallow parent intercept if multitouch(zoom/scaling)
             if(ev.getPointerCount() > 1){
                 ViewParent parent = v.getParent();
@@ -329,7 +328,6 @@ public class CustomPhotoViewAttacher implements View.OnTouchListener,
 
             switch (ev.getAction()) {
                 case MotionEvent.ACTION_DOWN:
-
                     // If we're flinging, and the user presses down, cancel
                     // fling
                     cancelFling();
@@ -351,7 +349,7 @@ public class CustomPhotoViewAttacher implements View.OnTouchListener,
             }
 
             // Try the Scale/Drag detector
-            if (mScaleDragDetector != null) {
+            if (mScaleDragDetector != null && !handled) {
                 boolean wasScaling = mScaleDragDetector.isScaling();
                 boolean wasDragging = mScaleDragDetector.isDragging();
 

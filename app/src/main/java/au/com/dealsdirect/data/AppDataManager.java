@@ -2,6 +2,13 @@ package au.com.dealsdirect.data;
 
 import android.content.Context;
 
+import com.mysale.genie.utility.config.api.GetAppSettings;
+import com.mysale.genie.utility.config.api.GetAppSettingsSection;
+import com.mysale.genie.utility.config.api.GetServerSettings;
+import com.mysale.genie.utility.config.model.getserversettings.Language;
+
+import java.util.List;
+
 import javax.inject.Inject;
 import javax.inject.Singleton;
 
@@ -67,6 +74,27 @@ public class AppDataManager implements DataManager {
     }
 
     @Override
+    public Observable<GetServerSettings.ResponseValue> callGetServerSettings(Context context, String countryId) {
+        return mApiHelper.callGetServerSettings(context,countryId);
+    }
+
+    @Override
+    public Observable<GetAppSettings.ResponseValue> callGetPublicAppSettings(Context context, String countryId) {
+        return mApiHelper.callGetPublicAppSettings(context,countryId);
+    }
+
+    @Override
+    public Observable<GetAppSettings.ResponseValue> callGetAppSettings(Context context, String countryId) {
+        return mApiHelper.callGetAppSettings(context,countryId);
+    }
+
+    @Override
+    public Observable<GetAppSettingsSection.ResponseValue> callGetAppSettingsSection(Context context, String countryId) {
+        return mApiHelper.callGetAppSettingsSection(context,countryId);
+    }
+
+
+    @Override
     public Observable<GetPublicItemDetailsResponse> doGetPublicItemDetailsApiCall(GetPublicItemDetailsRequest request) {
         return mApiHelper.doGetPublicItemDetailsApiCall(request);
     }
@@ -79,6 +107,76 @@ public class AppDataManager implements DataManager {
     @Override
     public int getCurrentUserLoggedInMode() {
         return 0;
+    }
+
+    @Override
+    public String getCountryId() {
+        return null;
+    }
+
+    @Override
+    public String getLanguageId() {
+        return null;
+    }
+
+    @Override
+    public List<Language> getLanguages() {
+        return null;
+    }
+
+    @Override
+    public String getCurrency() {
+        return null;
+    }
+
+    @Override
+    public String getCurrencySign() {
+        return null;
+    }
+
+    @Override
+    public String getFollowUsFbLink() {
+        return null;
+    }
+
+    @Override
+    public String getFollowUsTwitterLink() {
+        return null;
+    }
+
+    @Override
+    public boolean isPaypalEnabled() {
+        return false;
+    }
+
+    @Override
+    public boolean isAmexEnabled() {
+        return false;
+    }
+
+    @Override
+    public boolean isMasterpassEnabled() {
+        return false;
+    }
+
+    @Override
+    public boolean isKountEnabled() {
+        return false;
+    }
+
+    @Override
+    public String getKountMerchantId() {
+        return null;
+    }
+
+    @Override
+    public boolean isDebugMode() {
+        return false;
+    }
+
+    @Override
+    public String getFbSecret() {
+        return null;
     }
 
     @Override

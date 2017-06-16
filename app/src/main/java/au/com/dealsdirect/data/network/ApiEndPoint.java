@@ -9,9 +9,17 @@ public final class ApiEndPoint {
     private static final String API_VERSION = "api/v1/";
 
     private static final String HANDLER_PREFIX = "handler.ashx/";
+    private static final String HANDLER_ASMX_PREFIX = "handler.ashx/";
     private static final String BASE_URL = API_HOST + HANDLER_PREFIX;
+    private static final String BASE_URL_ASMX = API_HOST + HANDLER_ASMX_PREFIX;
 
     public static final String SAMPLE_API = "";
+
+    /*CONFIG CALLS*/
+    public static final String GET_SERVER_SETTING = BASE_URL_ASMX + "GetServerSettings";
+    public static final String GET_PUBLIC_APP_SETTINGS = BASE_URL_ASMX + "GetPublicAppSettings";
+    public static final String GET_APP_SETTINGS = BASE_URL_ASMX + "GetAppSettings";
+    public static final String GET_APP_SETTINGS_SECTION = BASE_URL_ASMX + "GetAppSettingsSection";
 
     /* Shops Controller */
     public static final String GET_SHOP_BANNERS = BASE_URL + "GetPublicSalesBanners";

@@ -1,5 +1,10 @@
 package au.com.dealsdirect.data.network;
 
+import android.content.Context;
+
+import com.mysale.genie.utility.config.api.GetAppSettings;
+import com.mysale.genie.utility.config.api.GetAppSettingsSection;
+import com.mysale.genie.utility.config.api.GetServerSettings;
 import com.rx2androidnetworking.Rx2AndroidNetworking;
 
 import javax.inject.Inject;
@@ -93,6 +98,43 @@ public class AppApiHelper implements ApiHelper {
                                    .build()
                                    .getObjectObservable(GetPublicSaleItemsResponse.class);
     }
+
+    @Override
+    public Observable<GetServerSettings.ResponseValue> callGetServerSettings(Context context, String countryId) {
+        return Rx2AndroidNetworking.post(ApiEndPoint.SAMPLE_API)
+                .addHeaders(mApiHeader.getPublicApiHeader())
+                .addBodyParameter(new GetServerSettings.RequestValue(countryId))
+                .build()
+                .getObjectObservable(GetServerSettings.ResponseValue.class);
+    }
+
+    @Override
+    public Observable<GetAppSettings.ResponseValue> callGetPublicAppSettings(Context context, String countryId) {
+        return Rx2AndroidNetworking.post(ApiEndPoint.GET_PUBLIC_APP_SETTINGS)
+                .addHeaders(mApiHeader.getPublicApiHeader())
+                .addBodyParameter(new GetAppSettings.RequestValue(countryId))
+                .build()
+                .getObjectObservable(GetAppSettings.ResponseValue.class);
+    }
+
+    @Override
+    public Observable<GetAppSettings.ResponseValue> callGetAppSettings(Context context, String countryId) {
+        return Rx2AndroidNetworking.post(ApiEndPoint.GET_APP_SETTINGS)
+                .addHeaders(mApiHeader.getPublicApiHeader())
+                .addBodyParameter(new GetAppSettings.RequestValue(countryId))
+                .build()
+                .getObjectObservable(GetAppSettings.ResponseValue.class);
+    }
+
+    @Override
+    public Observable<GetAppSettingsSection.ResponseValue> callGetAppSettingsSection(Context context, String countryId) {
+        return Rx2AndroidNetworking.post(ApiEndPoint.GET_APP_SETTINGS_SECTION)
+                .addHeaders(mApiHeader.getPublicApiHeader())
+                .addBodyParameter(new GetAppSettingsSection.RequestValue(countryId))
+                .build()
+                .getObjectObservable(GetAppSettingsSection.ResponseValue.class);
+    }
+
 
 }
 
