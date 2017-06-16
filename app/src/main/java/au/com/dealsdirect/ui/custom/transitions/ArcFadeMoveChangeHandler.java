@@ -30,7 +30,7 @@ public class ArcFadeMoveChangeHandler extends TransitionChangeHandler {
         // Shared elements (the flag view in this case) are drawn in the window's view overlay during the transition by default.
         // That causes the favourite fab being drawn behind the flag when it is scaled up.
         // Setting the change transform not using overlay addresses this issue.
-        changeTransform.setReparentWithOverlay(false);
+//        changeTransform.setReparentWithOverlay(false);
 
 
         TransitionSet transition = new TransitionSet()
