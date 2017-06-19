@@ -2,7 +2,6 @@ package au.com.dealsdirect.data.pref;
 
 import android.content.Context;
 import android.content.ContextWrapper;
-import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.os.Build;
 
@@ -15,6 +14,7 @@ import java.util.List;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 
+import au.com.dealsdirect.R;
 import au.com.dealsdirect.di.ApplicationContext;
 import au.com.dealsdirect.di.PreferenceInfo;
 

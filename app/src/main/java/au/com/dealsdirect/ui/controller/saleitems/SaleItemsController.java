@@ -108,7 +108,6 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
         super.onViewBound(view);
 
         setUp(view);
-
         GetPublicSaleItemsRequest getPublicSaleItemsRequest =
                 new GetPublicSaleItemsRequest(mSaleId, 100, "en", "DA", "");
 

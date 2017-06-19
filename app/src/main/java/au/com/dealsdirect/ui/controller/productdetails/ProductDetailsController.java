@@ -34,6 +34,7 @@ import au.com.dealsdirect.data.network.model.productdetails.GetPublicItemDetails
 import au.com.dealsdirect.data.network.model.productdetails.GetPublicItemDetailsResponse;
 import au.com.dealsdirect.data.network.model.productdetails.GetPublicSaleDetailsRequest;
 import au.com.dealsdirect.data.network.model.productdetails.GetPublicSaleDetailsResponse;
+import au.com.dealsdirect.ui.base.BaseActivity;
 import au.com.dealsdirect.ui.base.BaseController;
 import au.com.dealsdirect.ui.controller.shops.changehandler.DetailPopTransitionChangeHandler;
 import au.com.dealsdirect.utils.BundleBuilder;
@@ -41,6 +42,7 @@ import au.com.dealsdirect.utils.ImageUtils;
 import au.com.dealsdirect.utils.PriceUtils;
 import au.com.dealsdirect.widget.ElasticDragDismissFrameLayout;
 import butterknife.BindView;
+import butterknife.OnClick;
 
 /*
  * Created by smartwave on 08/06/2017.
@@ -156,6 +158,7 @@ public class ProductDetailsController extends BaseController implements ProductD
         ImageUtils.loadImage(getActivity(), mItemImageUrl, mProductSharedImage);
 
 
+        ((BaseActivity) getActivity()).hideBottomNavigationView();
         //init api call
         GetPublicItemDetailsRequest itemDetailsRequest = new GetPublicItemDetailsRequest(mItemId,
                 mSaleId,
@@ -215,16 +218,17 @@ public class ProductDetailsController extends BaseController implements ProductD
 
     @Override
     public void onDetach(View view) {
-        mProductSharedImage.setVisibility(View.VISIBLE);
-        mProductImagesRv.setVisibility(View.GONE);
-        mOtherImagesRv.setVisibility(View.GONE);
-//        super.onDetach(view);
 
+        assert (getActivity()) != null;
+        ((BaseActivity) getActivity()).showBottomNavigationView();
     }
 
     @Override
     protected void onDestroyView(@NonNull View view) {
         mPresenter.onDetach();
+//        mProductSharedImage.setVisibility(View.VISIBLE);
+//        mProductImagesRv.setVisibility(View.GONE);
+//        mOtherImagesRv.setVisibility(View.GONE);
         super.onDestroyView(view);
     }
 
@@ -361,4 +365,9 @@ public class ProductDetailsController extends BaseController implements ProductD
 
     }
 
+    @OnClick(R.id.product_details_add_to_basket)
+    public void addToBasket(){
+
+
+    }
 }

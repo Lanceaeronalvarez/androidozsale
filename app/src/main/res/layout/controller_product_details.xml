@@ -488,6 +488,20 @@
                                 android:layout_gravity="center"
                                 android:background="#23000000" />
 
+
+                            <Button
+                                android:id="@+id/product_details_add_to_basket"
+                                android:layout_width="match_parent"
+                                android:layout_height="45dp"
+                                android:layout_margin="16dp"
+                                fontPath="@string/font_lato_medium"
+                                android:text="Add to Basket"
+                                android:textColor="#FFFFFF"
+                                android:textStyle="normal"
+                                android:textAllCaps="false"
+                                android:background="@drawable/sizes_chips_checked"/>
+
+
                             <LinearLayout
                                 android:id="@+id/relatedItemsContainer"
                                 android:layout_width="match_parent"

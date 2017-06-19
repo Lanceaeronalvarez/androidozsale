@@ -24,8 +24,8 @@ import au.com.dealsdirect.ui.base.BaseController;
 import au.com.dealsdirect.ui.controller.categories.CategoriesController;
 import au.com.dealsdirect.ui.controller.saleitems.SaleItemsController;
 import au.com.dealsdirect.ui.controller.shops.adapter.BannersAdapter;
-import au.com.dealsdirect.ui.custom.transitions.HorizontalNavTransitionChangeHandler;
 import au.com.dealsdirect.ui.controller.shops.listener.BannerClickListener;
+import au.com.dealsdirect.ui.custom.transitions.HorizontalNavTransitionChangeHandler;
 import au.com.dealsdirect.utils.BundleBuilder;
 import butterknife.BindView;
 import butterknife.OnClick;
@@ -45,6 +45,7 @@ public class ShopsController extends BaseController implements ShopsMvpView, Ban
 
     @BindView(R.id.controller_shop_banner_recycler)
     RecyclerView shopsControllerBannerRecyclerView;
+
 
     private BannersAdapter mBannersAdapter;
     private BannerClickListener mBannerClickListener;
@@ -157,5 +158,7 @@ public class ShopsController extends BaseController implements ShopsMvpView, Ban
         getRouter().pushController(RouterTransaction.with(CategoriesController.newInstance())
                 .pushChangeHandler(new HorizontalNavTransitionChangeHandler())
                 .popChangeHandler(new HorizontalNavTransitionChangeHandler()));
+
+//        ((MainActivity) getActivity()).hideBottomNav();
     }
 }

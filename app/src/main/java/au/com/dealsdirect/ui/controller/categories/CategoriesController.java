@@ -19,6 +19,7 @@ import javax.inject.Inject;
 import au.com.dealsdirect.R;
 import au.com.dealsdirect.data.network.model.publicsalescategories.GetPublicSalesCategoriesRequest;
 import au.com.dealsdirect.data.network.model.publicsalescategories.GetPublicSalesCategoriesResponse;
+import au.com.dealsdirect.ui.base.BaseActivity;
 import au.com.dealsdirect.ui.base.BaseController;
 import au.com.dealsdirect.ui.controller.categories.listener.CategoryClickListener;
 import au.com.dealsdirect.ui.controller.shops.ShopsController;
@@ -69,6 +70,9 @@ public class CategoriesController extends BaseController
     protected void onViewBound(View view) {
         super.onViewBound(view);
 
+        assert (getActivity()) != null;
+        ((BaseActivity)getActivity()).hideBottomNavigationView();
+
         setUp(view);
     }
 
@@ -91,6 +95,13 @@ public class CategoriesController extends BaseController
 
         GetPublicSalesCategoriesRequest request = new GetPublicSalesCategoriesRequest("0", "en", false, "Member", "DA");
         mPresenter.loadPublicSalesCategories(request);
+    }
+
+    @Override public void onDetach(View view) {
+        super.onDetach(view);
+
+        assert (getActivity()) != null;
+        ((BaseActivity)getActivity()).showBottomNavigationView();
     }
 
     @Override
