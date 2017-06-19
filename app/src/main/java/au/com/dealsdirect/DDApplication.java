@@ -47,7 +47,7 @@ public class DDApplication extends Application {
 
 //        AndroidNetworking.initialize(getApplicationContext());
         if (BuildConfig.DEBUG) {
-            customClient = NetworkUtils.provideOkHttpClientResponseCaching(this, HttpLoggingInterceptor.Level.HEADERS);
+            customClient = NetworkUtils.provideOkHttpClientResponseCaching(this, HttpLoggingInterceptor.Level.BODY);
         }else{
             customClient = NetworkUtils.provideOkHttpClientResponseCaching(this);
         }

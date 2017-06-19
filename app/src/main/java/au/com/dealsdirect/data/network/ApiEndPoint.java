@@ -1,11 +1,17 @@
 package au.com.dealsdirect.data.network;
 
 
+import au.com.dealsdirect.BuildConfig;
 
 public final class ApiEndPoint {
 
+    public static final int TEST_API = 0;
+    public static final int LIVE_API = 1;
+
     /* API Constants */
     private static final String API_HOST = "https://www.dealsdirect.com.au/";
+    private static final String TEST_API_LEGACY = "http://api.mysaledev.com/Public/V3.18/api.asmx/";
+    private static final String LIVE_API_LEGACY = "";
     private static final String API_VERSION = "api/v1/";
 
     private static final String HANDLER_PREFIX = "handler.ashx/";
@@ -20,6 +26,11 @@ public final class ApiEndPoint {
     public static final String GET_PUBLIC_APP_SETTINGS = BASE_URL_ASMX + "GetPublicAppSettings";
     public static final String GET_APP_SETTINGS = BASE_URL_ASMX + "GetAppSettings";
     public static final String GET_APP_SETTINGS_SECTION = BASE_URL_ASMX + "GetAppSettingsSection";
+
+    public static final String GET_SERVER_SETTING_TEST = TEST_API_LEGACY + "GetServerSettings";
+    public static final String GET_PUBLIC_APP_SETTINGS_TEST = TEST_API_LEGACY + "GetPublicAppSettings";
+    public static final String GET_APP_SETTINGS_TEST = TEST_API_LEGACY + "GetAppSettings";
+    public static final String GET_APP_SETTINGS_SECTION_TEST = TEST_API_LEGACY + "GetAppSettingsSection";
 
     /* Shops Controller */
     public static final String GET_SHOP_BANNERS = BASE_URL + "GetPublicSalesBanners";
@@ -95,5 +106,19 @@ public final class ApiEndPoint {
 
     private ApiEndPoint() {
 //         This class is not publicly instantiable
+    }
+
+    public static String getBaseUrl(int apiCode){
+        switch (apiCode) {
+            case TEST_API:
+                if (BuildConfig.DEBUG) {
+                    return TEST_API_LEGACY;
+                } else {
+                    return LIVE_API_LEGACY;
+                }
+            default:
+                return API_HOST;
+        }
+
     }
 }

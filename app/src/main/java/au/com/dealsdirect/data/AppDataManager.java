@@ -2,6 +2,13 @@ package au.com.dealsdirect.data;
 
 import android.content.Context;
 
+import com.mysale.genie.utility.config.api.GetAppSettings;
+import com.mysale.genie.utility.config.api.GetAppSettingsSection;
+import com.mysale.genie.utility.config.api.GetServerSettings;
+import com.mysale.genie.utility.config.model.getserversettings.Language;
+
+import java.util.List;
+
 import javax.inject.Inject;
 import javax.inject.Singleton;
 
@@ -52,7 +59,8 @@ public class AppDataManager implements DataManager {
         return mApiHelper.doSampleApiCall(request);
     }
 
-    @Override public Observable<GetPublicSalesBannerResponse> getPublicSalesBannerApiCall(GetPublicSalesBannerRequest getPublicSalesBannerRequest) {
+    @Override
+    public Observable<GetPublicSalesBannerResponse> getPublicSalesBannerApiCall(GetPublicSalesBannerRequest getPublicSalesBannerRequest) {
         return mApiHelper.getPublicSalesBannerApiCall(getPublicSalesBannerRequest);
     }
 
@@ -61,11 +69,31 @@ public class AppDataManager implements DataManager {
         return mApiHelper.doGetPublicSalesCategoriesApiCall(request);
     }
 
-    @Override public Observable<GetPublicSaleItemsResponse> getPublicSaleItemsApiCall(
+    @Override
+    public Observable<GetPublicSaleItemsResponse> getPublicSaleItemsApiCall(
             GetPublicSaleItemsRequest getPublicSaleItemsRequest) {
         return mApiHelper.getPublicSaleItemsApiCall(getPublicSaleItemsRequest);
     }
 
+    @Override
+    public Observable<GetServerSettings.ResponseValue> callGetServerSettings(Context context, String countryId) {
+        return mApiHelper.callGetServerSettings(context,countryId);
+    }
+
+    @Override
+    public Observable<GetAppSettings.ResponseValue> callGetPublicAppSettings(Context context, String countryId) {
+        return mApiHelper.callGetPublicAppSettings(context,countryId);
+    }
+
+    @Override
+    public Observable<GetAppSettings.ResponseValue> callGetAppSettings(Context context, String countryId) {
+        return mApiHelper.callGetAppSettings(context,countryId);
+    }
+
+    @Override
+    public Observable<GetAppSettingsSection.ResponseValue> callGetAppSettingsSection(Context context, String countryId) {
+        return mApiHelper.callGetAppSettingsSection(context,countryId);
+    }
 
 
     @Override
@@ -77,76 +105,201 @@ public class AppDataManager implements DataManager {
     public Observable<GetPublicSaleDetailsResponse> doGetPublicSaleDetailsApiCall(GetPublicSaleDetailsRequest request) {
         return mApiHelper.doGetPublicSaleDetailsApiCall(request);
     }
-//
-//    @Override
-//    public int getCurrentUserLoggedInMode() {
-//        return 0;
-//    }
-//
-//    @Override
-//    public String getCountryId() {
-//        return null;
-//    }
-//
-//    @Override
-//    public String getLanguageId() {
-//        return null;
-//    }
-//
-//    @Override
-//    public String getCurrency() {
-//        return null;
-//    }
-//
-//    @Override
-//    public String getCurrencySign() {
-//        return null;
-//    }
-//
-//    @Override
-//    public String getFollowUsFbLink() {
-//        return null;
-//    }
-//
-//    @Override
-//    public String getFollowUsTwitterLink() {
-//        return null;
-//    }
-//
-//    @Override
-//    public boolean isPaypalEnabled() {
-//        return false;
-//    }
-//
-//    @Override
-//    public boolean isAmexEnabled() {
-//        return false;
-//    }
-//
-//    @Override
-//    public boolean isMasterpassEnabled() {
-//        return false;
-//    }
-//
-//    @Override
-//    public boolean isKountEnabled() {
-//        return false;
-//    }
-//
-//    @Override
-//    public String getKountMerchantId() {
-//        return null;
-//    }
-//
-//    @Override
-//    public boolean isDebugMode() {
-//        return false;
-//    }
-//
-//    @Override
-//    public String getFbSecret() {
-//        return null;
-//    }
+
+    @Override
+    public int getCurrentUserLoggedInMode() {
+        return 0;
+    }
+
+
+    /*
+    CONFIG PREFS METHODS
+     */
+    @Override
+    public void setUserAgent() {
+        mPreferencesHelper.setUserAgent();
+    }
+
+    @Override
+    public String getUserAgent() {
+        return mPreferencesHelper.getUserAgent();
+    }
+
+    @Override
+    public void setCountryId(String countryId) {
+        mPreferencesHelper.setCountryId(countryId);
+    }
+
+    @Override
+    public String getCountryId() {
+        return mPreferencesHelper.getCountryId();
+    }
+
+    @Override
+    public void setLanguageId(String languageId) {
+        mPreferencesHelper.setLanguageId(languageId);
+    }
+
+    @Override
+    public String getLanguageId() {
+        return mPreferencesHelper.getLanguageId();
+    }
+
+    @Override
+    public void setLanguages(List<Language> languages) {
+        mPreferencesHelper.setLanguages(languages);
+    }
+
+    @Override
+    public List<Language> getLanguages() {
+        return mPreferencesHelper.getLanguages();
+    }
+
+    @Override
+    public void setSiteName(String siteName) {
+        mPreferencesHelper.setSiteName(siteName);
+    }
+
+    @Override
+    public String getSiteName() {
+        return mPreferencesHelper.getSiteName();
+    }
+
+    @Override
+    public void setCurrency(String currency) {
+        mPreferencesHelper.setCurrency(currency);
+    }
+
+    @Override
+    public String getCurrency() {
+        return mPreferencesHelper.getCurrency();
+    }
+
+    @Override
+    public void setCurrencySign(String currencySign) {
+        mPreferencesHelper.setCurrencySign(currencySign);
+    }
+
+    @Override
+    public String getCurrencySign() {
+        return mPreferencesHelper.getCurrencySign();
+    }
+
+    @Override
+    public void setFollowUsFbLink(String followUsFbLink) {
+        mPreferencesHelper.setFollowUsFbLink(followUsFbLink);
+    }
+
+    @Override
+    public String getFollowUsFbLink() {
+        return mPreferencesHelper.getFollowUsFbLink();
+    }
+
+    @Override
+    public void setFollowUsTwitterLink(String followUsTwitterLink) {
+        mPreferencesHelper.setFollowUsTwitterLink(followUsTwitterLink);
+    }
+
+    @Override
+    public String getFollowUsTwitterLink() {
+        return mPreferencesHelper.getFollowUsTwitterLink();
+    }
+
+    @Override
+    public void setImageServerUrl(String imageServerUrl) {
+        mPreferencesHelper.setImageServerUrl(imageServerUrl);
+    }
+
+    @Override
+    public String getImageServerUrl() {
+        return mPreferencesHelper.getImageServerUrl();
+    }
+
+    @Override
+    public void setIsPaypalEnabled(boolean val) {
+        mPreferencesHelper.setIsPaypalEnabled(val);
+    }
+
+    @Override
+    public boolean isPaypalEnabled() {
+        return mPreferencesHelper.isPaypalEnabled();
+    }
+
+    @Override
+    public void setIsMasterpassEnabled(boolean val) {
+        mPreferencesHelper.setIsPaypalEnabled(val);
+    }
+
+    @Override
+    public boolean isMasterpassEnabled() {
+        return mPreferencesHelper.isMasterpassEnabled();
+    }
+
+    @Override
+    public void setIsAmexEnabled(boolean val) {
+        mPreferencesHelper.setIsAmexEnabled(val);
+    }
+
+    @Override
+    public boolean isAmexEnabled() {
+        return mPreferencesHelper.isAmexEnabled();
+    }
+
+    @Override
+    public void setIsKountEnabled(boolean val) {
+        mPreferencesHelper.setIsKountEnabled(val);
+    }
+
+    @Override
+    public boolean isKountEnabled() {
+        return mPreferencesHelper.isKountEnabled();
+    }
+
+    @Override
+    public void setKountMerchantId(String kountMerchantId) {
+        mPreferencesHelper.setKountMerchantId(kountMerchantId);
+    }
+
+    @Override
+    public String getKountMerchantId() {
+        return mPreferencesHelper.getKountMerchantId();
+    }
+
+    @Override
+    public void setSearchMaxPrice(int searchMaxPrice) {
+        mPreferencesHelper.setSearchMaxPrice(searchMaxPrice);
+    }
+
+    @Override
+    public int getSearchMaxPrice() {
+        return mPreferencesHelper.getSearchMaxPrice();
+    }
+
+    @Override
+    public void setAccessAnonymousEnabled(boolean accessAnonymousEnabled) {
+        mPreferencesHelper.setAccessAnonymousEnabled(accessAnonymousEnabled);
+    }
+
+    @Override
+    public boolean getAccessAnonymousEnabled() {
+        return mPreferencesHelper.getAccessAnonymousEnabled();
+    }
+
+    @Override
+    public void setFbSecret(String fbSecret) {
+        mPreferencesHelper.setFbSecret(fbSecret);
+    }
+
+    @Override
+    public String getFbSecret() {
+        return mPreferencesHelper.getFbSecret();
+    }
+
+    @Override
+    public boolean isDebugMode() {
+        return mPreferencesHelper.isDebugMode();
+    }
+
 
     @Override
     public void updateApiHeader(Long userId, String accessToken) {

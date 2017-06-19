@@ -47,7 +47,8 @@ public class MainActivity extends BaseActivity implements MainMvpView {
 
     @Override
     protected void setUp() {
-
+        mPresenter.initServerSettings(this,((MainPresenter)mPresenter).getDataManager().getCountryId());
+        mPresenter.callGetAppSettingsSection(this,((MainPresenter)mPresenter).getDataManager().getCountryId());
     }
 
     @Override

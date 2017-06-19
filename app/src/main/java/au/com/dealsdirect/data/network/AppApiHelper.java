@@ -1,5 +1,10 @@
 package au.com.dealsdirect.data.network;
 
+import android.content.Context;
+
+import com.mysale.genie.utility.config.api.GetAppSettings;
+import com.mysale.genie.utility.config.api.GetAppSettingsSection;
+import com.mysale.genie.utility.config.api.GetServerSettings;
 import com.rx2androidnetworking.Rx2AndroidNetworking;
 
 import javax.inject.Inject;
@@ -17,6 +22,7 @@ import au.com.dealsdirect.data.network.model.publicsalescategories.GetPublicSale
 import au.com.dealsdirect.data.network.model.publicsalescategories.GetPublicSalesCategoriesResponse;
 import au.com.dealsdirect.data.network.model.saleitems.GetPublicSaleItemsRequest;
 import au.com.dealsdirect.data.network.model.saleitems.GetPublicSaleItemsResponse;
+import au.com.dealsdirect.utils.JsonUtils;
 import io.reactivex.Observable;
 
 @Singleton
@@ -93,6 +99,43 @@ public class AppApiHelper implements ApiHelper {
                                    .build()
                                    .getObjectObservable(GetPublicSaleItemsResponse.class);
     }
+
+    @Override
+    public Observable<GetServerSettings.ResponseValue> callGetServerSettings(Context context, String countryId) {
+        return Rx2AndroidNetworking.post(ApiEndPoint.GET_SERVER_SETTING_TEST)
+                .addHeaders(mApiHeader.getPublicApiHeader())
+                .addJSONObjectBody(JsonUtils.convertToJsonObject(new GetServerSettings.RequestValue(countryId)))
+                .build()
+                .getObjectObservable(GetServerSettings.ResponseValue.class);
+    }
+
+    @Override
+    public Observable<GetAppSettings.ResponseValue> callGetPublicAppSettings(Context context, String countryId) {
+        return Rx2AndroidNetworking.post(ApiEndPoint.GET_PUBLIC_APP_SETTINGS_TEST)
+                .addHeaders(mApiHeader.getPublicApiHeader())
+                .addJSONObjectBody(JsonUtils.convertToJsonObject(new GetAppSettings.RequestValue(countryId)))
+                .build()
+                .getObjectObservable(GetAppSettings.ResponseValue.class);
+    }
+
+    @Override
+    public Observable<GetAppSettings.ResponseValue> callGetAppSettings(Context context, String countryId) {
+        return Rx2AndroidNetworking.post(ApiEndPoint.GET_APP_SETTINGS_TEST)
+                .addHeaders(mApiHeader.getPublicApiHeader())
+                .addJSONObjectBody(JsonUtils.convertToJsonObject(new GetAppSettings.RequestValue(countryId)))
+                .build()
+                .getObjectObservable(GetAppSettings.ResponseValue.class);
+    }
+
+    @Override
+    public Observable<GetAppSettingsSection.ResponseValue> callGetAppSettingsSection(Context context, String countryId) {
+        return Rx2AndroidNetworking.post(ApiEndPoint.GET_APP_SETTINGS_SECTION_TEST)
+                .addHeaders(mApiHeader.getPublicApiHeader())
+                .addJSONObjectBody(JsonUtils.convertToJsonObject(new GetAppSettingsSection.RequestValue(countryId)))
+                .build()
+                .getObjectObservable(GetAppSettingsSection.ResponseValue.class);
+    }
+
 
 }
 
