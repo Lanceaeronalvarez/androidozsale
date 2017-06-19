@@ -44,12 +44,6 @@ public class ArcFadeMoveChangeHandler extends TransitionChangeHandler {
         // Setting the change transform not using overlay addresses this issue.
 //        changeTransform.setReparentWithOverlay(false);
 
-        int[] location = new int[2];
-        (from.findViewById(R.id.cell_product_image)).getLocationOnScreen(location);
-
-        int x = location[0];
-        int y = location[1];
-
         TransitionSet transition = new TransitionSet()
                 .addTransition(new TransitionSet()
                                        .addTransition(new ChangeBounds())
@@ -76,8 +70,6 @@ public class ArcFadeMoveChangeHandler extends TransitionChangeHandler {
         }
         if (to != null && to.getParent() == null) {
             from.findViewById(R.id.cell_product_image).setTransitionName("none");
-            container.addView(from);
-
             container.addView(to);
         }
     }

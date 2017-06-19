@@ -1,19 +1,10 @@
 package au.com.dealsdirect.data.pref;
 
 import android.content.Context;
-import android.content.ContextWrapper;
-import android.content.SharedPreferences;
-
-import com.mysale.genie.utility.Prefs;
-import com.mysale.genie.utility.config.model.getserversettings.Language;
-
-import java.util.ArrayList;
-import java.util.List;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
 
-import au.com.dealsdirect.R;
 import au.com.dealsdirect.di.ApplicationContext;
 import au.com.dealsdirect.di.PreferenceInfo;
 
@@ -55,108 +46,108 @@ public class AppPreferencesHelper implements PreferencesHelper {
     public AppPreferencesHelper(@ApplicationContext Context context,
                                 @PreferenceInfo String prefFileName) {
         mContext = context;
-        new Prefs.Builder()
-                .setContext(context)
-                .setMode(ContextWrapper.MODE_PRIVATE)
-                .setPrefsName(prefFileName)
-                .setUseDefaultSharedPreference(true)
-                .build();
-
-        //Set default settings here
-        Prefs.putString(FB_SECRET, context.getResources().getString(R.string.facebook_app_secret));
-        Prefs.putString(COUNTRY_ID, context.getResources().getString(R.string.default_country_id));
-        Prefs.putString(LANGUAGE_ID, context.getResources().getString(R.string.default_language_id));
-        Prefs.putBoolean(DEBUG_MODE, context.getResources().getBoolean(R.bool.debug_mode));
+//        new Prefs.Builder()
+//                .setContext(context)
+//                .setMode(ContextWrapper.MODE_PRIVATE)
+//                .setPrefsName(prefFileName)
+//                .setUseDefaultSharedPreference(true)
+//                .build();
+//
+//        //Set default settings here
+//        Prefs.putString(FB_SECRET, context.getResources().getString(R.string.facebook_app_secret));
+//        Prefs.putString(COUNTRY_ID, context.getResources().getString(R.string.default_country_id));
+//        Prefs.putString(LANGUAGE_ID, context.getResources().getString(R.string.default_language_id));
+//        Prefs.putBoolean(DEBUG_MODE, context.getResources().getBoolean(R.bool.debug_mode));
 
     }
 
     //Elv - Override exposed methods from Preference Helper here
 
-    @Override
-    public int getCurrentUserLoggedInMode() {
-//        return mPrefs.getInt(PREF_KEY_USER_LOGGED_IN_MODE,
-//                DataManager.LoggedInMode.LOGGED_IN_MODE_LOGGED_OUT.getType());
-
-        return 0;
-    }
-
-    @Override
-    public String getCountryId() {
-        return Prefs.getString(COUNTRY_ID, "");
-    }
-
-    @Override
-    public String getLanguageId() {
-        return Prefs.getString(LANGUAGE_ID, "");
-    }
-
-    @Override
-    public List<Language> getLanguages() {
-        List<Language> languageList = new ArrayList<>();
-        return Prefs.getObject(LANGUAGE_LIST, languageList.getClass());
-    }
-
-    @Override
-    public String getCurrency() {
-        return Prefs.getString(CURRENCY, "");
-    }
-
-    @Override
-    public String getCurrencySign() {
-        return Prefs.getString(CURRENCY_SIGN, "");
-    }
-
-    @Override
-    public String getFollowUsTwitterLink() {
-        return Prefs.getString(FOLLOW_US_LINK_TWITTER, "");
-    }
-
-    @Override
-    public String getFollowUsFbLink() {
-        String FACEBOOK_URL = Prefs.getString(FOLLOW_US_LINK_FB, "");
-        String FACEBOOK_PAGE_ID = "47143367223";      //  http://findmyfbid.com/
-        try {
-            mContext.getPackageManager().getPackageInfo("com.facebook.katana", 0);
-            return "fb://page/" + FACEBOOK_PAGE_ID;
-        } catch (Exception e) {
-            return FACEBOOK_URL; //normal web url
-        }
-    }
-
-    @Override
-    public boolean isPaypalEnabled() {
-        return Prefs.getBoolean(PAYMENT_PAYPAL_ENABLED, false);
-    }
-
-    @Override
-    public boolean isAmexEnabled() {
-        return Prefs.getBoolean(PAYMENT_AMEX_ENABLED, false);
-    }
-
-    @Override
-    public boolean isMasterpassEnabled() {
-        return Prefs.getBoolean(PAYMENT_MASTERPASS_ENABLED, false);
-    }
-
-    @Override
-    public boolean isKountEnabled() {
-        return Prefs.getBoolean(PAYMENT_KOUNT_ENABLED, false);
-    }
-
-    @Override
-    public String getKountMerchantId() {
-        return Prefs.getString(PAYMENT_KOUNT_MERCHANT_ID, "");
-    }
-
-    @Override
-    public boolean isDebugMode() {
-        return Prefs.getBoolean(DEBUG_MODE, true);
-    }
-
-    @Override
-    public String getFbSecret() {
-        return Prefs.getString(FB_SECRET, "");
-    }
+//    @Override
+//    public int getCurrentUserLoggedInMode() {
+////        return mPrefs.getInt(PREF_KEY_USER_LOGGED_IN_MODE,
+////                DataManager.LoggedInMode.LOGGED_IN_MODE_LOGGED_OUT.getType());
+//
+//        return 0;
+//    }
+//
+//    @Override
+//    public String getCountryId() {
+//        return Prefs.getString(COUNTRY_ID, "");
+//    }
+//
+//    @Override
+//    public String getLanguageId() {
+//        return Prefs.getString(LANGUAGE_ID, "");
+//    }
+//
+//    @Override
+//    public List<Language> getLanguages() {
+//        List<Language> languageList = new ArrayList<>();
+//        return Prefs.getObject(LANGUAGE_LIST, languageList.getClass());
+//    }
+//
+//    @Override
+//    public String getCurrency() {
+//        return Prefs.getString(CURRENCY, "");
+//    }
+//
+//    @Override
+//    public String getCurrencySign() {
+//        return Prefs.getString(CURRENCY_SIGN, "");
+//    }
+//
+//    @Override
+//    public String getFollowUsTwitterLink() {
+//        return Prefs.getString(FOLLOW_US_LINK_TWITTER, "");
+//    }
+//
+//    @Override
+//    public String getFollowUsFbLink() {
+//        String FACEBOOK_URL = Prefs.getString(FOLLOW_US_LINK_FB, "");
+//        String FACEBOOK_PAGE_ID = "47143367223";      //  http://findmyfbid.com/
+//        try {
+//            mContext.getPackageManager().getPackageInfo("com.facebook.katana", 0);
+//            return "fb://page/" + FACEBOOK_PAGE_ID;
+//        } catch (Exception e) {
+//            return FACEBOOK_URL; //normal web url
+//        }
+//    }
+//
+//    @Override
+//    public boolean isPaypalEnabled() {
+//        return Prefs.getBoolean(PAYMENT_PAYPAL_ENABLED, false);
+//    }
+//
+//    @Override
+//    public boolean isAmexEnabled() {
+//        return Prefs.getBoolean(PAYMENT_AMEX_ENABLED, false);
+//    }
+//
+//    @Override
+//    public boolean isMasterpassEnabled() {
+//        return Prefs.getBoolean(PAYMENT_MASTERPASS_ENABLED, false);
+//    }
+//
+//    @Override
+//    public boolean isKountEnabled() {
+//        return Prefs.getBoolean(PAYMENT_KOUNT_ENABLED, false);
+//    }
+//
+//    @Override
+//    public String getKountMerchantId() {
+//        return Prefs.getString(PAYMENT_KOUNT_MERCHANT_ID, "");
+//    }
+//
+//    @Override
+//    public boolean isDebugMode() {
+//        return Prefs.getBoolean(DEBUG_MODE, true);
+//    }
+//
+//    @Override
+//    public String getFbSecret() {
+//        return Prefs.getString(FB_SECRET, "");
+//    }
 
 
 }

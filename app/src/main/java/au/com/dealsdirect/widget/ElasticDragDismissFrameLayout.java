@@ -180,7 +180,7 @@ public class ElasticDragDismissFrameLayout extends FrameLayout implements Nested
         if (draggingUp) {
             // as we use the absolute magnitude when calculating the drag fraction, need to
             // re-apply the drag direction
-            dragTo *= -1;
+            dragTo *= 0;
         }
         setTranslationY(dragTo);
 
