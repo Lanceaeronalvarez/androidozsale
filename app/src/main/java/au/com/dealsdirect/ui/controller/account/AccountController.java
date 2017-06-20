@@ -39,7 +39,7 @@ public class AccountController extends BaseController implements AccountMvpView 
     AccountMvpPresenter<AccountMvpView> mPresenter;
 
     public static AccountController newInstance() {
-i
+
         return new AccountController(
                 new BundleBuilder(new Bundle())
                         .build());

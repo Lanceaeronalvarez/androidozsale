@@ -5,7 +5,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="?attr/actionBarSize"
-    android:background="@color/app_skin"
+    android:background="@color/toolbar_skin"
     android:contentInsetEnd="0dp"
     android:contentInsetLeft="0dp"
     android:contentInsetRight="0dp"
@@ -35,7 +35,7 @@
 
         <TextView
             android:id="@+id/partial_toolbar_arrow_title"
-            fontPath="@string/font_lato_bold"
+            fontPath="@string/font_lato_light"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerInParent="true"
@@ -43,7 +43,7 @@
             android:singleLine="true"
             android:layout_toRightOf="@+id/partial_toolbar_arrow_view"
             android:layout_toLeftOf="@+id/partial_toolbar_filter_view"
-            android:textColor="@android:color/black"
+            android:textColor="@android:color/white"
             android:textSize="@dimen/text_size_xxlarge"
             tools:text="Title"/>
 

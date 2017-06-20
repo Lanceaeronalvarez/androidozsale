@@ -14,7 +14,6 @@
         android:id="@+id/account_recycler_view"
         android:descendantFocusability="blocksDescendants"
         android:overScrollMode="never"
-        android:layout_marginTop="10dp"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:clickable="true"
