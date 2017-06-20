@@ -128,13 +128,13 @@ public class MainActivity extends BaseActivity implements MainMvpView {
     }
 
     @Override public void showShopController() {
-        mRouter.pushController(RouterTransaction.with(new ShopsController())
+        mRouter.setRoot(RouterTransaction.with(new ShopsController())
                                                 .pushChangeHandler(new FadeChangeHandler())
                                                 .popChangeHandler(new FadeChangeHandler()));
     }
 
     @Override public void showAccountController() {
-        mRouter.pushController(RouterTransaction.with(AccountController.newInstance())
+        mRouter.setRoot(RouterTransaction.with(AccountController.newInstance())
                 .pushChangeHandler(new FadeChangeHandler())
                 .popChangeHandler(new FadeChangeHandler()));
 
