@@ -22,6 +22,7 @@ import au.com.dealsdirect.data.network.model.publicsalescategories.GetPublicSale
 import au.com.dealsdirect.data.network.model.publicsalescategories.GetPublicSalesCategoriesResponse;
 import au.com.dealsdirect.data.network.model.saleitems.GetPublicSaleItemsRequest;
 import au.com.dealsdirect.data.network.model.saleitems.GetPublicSaleItemsResponse;
+import au.com.dealsdirect.data.network.model.viewcontactitem.GetContactsResponse;
 import au.com.dealsdirect.utils.JsonUtils;
 import io.reactivex.Observable;
 
@@ -136,6 +137,15 @@ public class AppApiHelper implements ApiHelper {
                 .getObjectObservable(GetAppSettingsSection.ResponseValue.class);
     }
 
+
+    @Override
+    public Observable<GetContactsResponse.Response> callGetContacts(String languageId) {
+        return Rx2AndroidNetworking.post(ApiEndPoint.GET_CONTACTS)
+                .addHeaders(mApiHeader.getPublicApiHeader())
+                .addJSONObjectBody(JsonUtils.convertToJsonObject(new GetAppSettingsSection.RequestValue(languageId)))
+                .build()
+                .getObjectObservable(GetContactsResponse.Response.class);
+    }
 
 }
 

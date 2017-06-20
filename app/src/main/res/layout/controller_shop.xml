@@ -13,46 +13,12 @@
         android:background="@color/app_skin"
         android:layout_marginBottom="15dp">
 
-
         <include android:id="@+id/controller_shop_toolbar"
                  layout="@layout/partial_toolbar_logo" />
 
-        <RelativeLayout
-            android:layout_below="@+id/controller_shop_toolbar"
-            android:id="@+id/partial_toolbar_search_bar_container"
-            android:layout_width="match_parent"
-            android:layout_height="45dp"
-            android:background="@drawable/bg_search_bar"
-            android:layout_marginTop="10dp"
-            android:layout_marginLeft="15dp"
-            android:layout_marginRight="15dp"
-            android:paddingRight="15dp"
-            android:layout_marginBottom="5dp">
-
-            <ImageView
-                android:id="@+id/partial_toolbar_search_icon"
-                android:layout_width="25dp"
-                android:layout_height="25dp"
-                android:layout_margin="10dp"
-                android:layout_alignParentLeft="true"
-                android:background="@drawable/ic_search"/>
-
-            <EditText
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="5dp"
-                android:layout_marginRight="10dp"
-                android:textColor="#000000"
-                android:backgroundTint="#00000000"
-                android:hint="What would you like to find?"
-                android:layout_toRightOf="@+id/partial_toolbar_search_icon"/>
-
-        </RelativeLayout>
-
-
         <android.support.v7.widget.RecyclerView
             android:id="@+id/controller_shop_banner_recycler"
-            android:layout_below="@+id/partial_toolbar_search_bar_container"
+            android:layout_below="@+id/controller_shop_toolbar"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:background="#e9e9e9">
@@ -60,8 +26,6 @@
         </android.support.v7.widget.RecyclerView>
 
     </RelativeLayout>
-
-
 
 
 </android.support.design.widget.CoordinatorLayout>

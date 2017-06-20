@@ -2,7 +2,7 @@
 <resources>
     <color name="colorPrimary">#3F51B5</color>
     <color name="colorPrimaryDark">#303F9F</color>
-    <color name="colorAccent">#FF4081</color>
+    <color name="colorAccent">#F00065</color>
 
     <color name="white">#FFFF</color>
 
@@ -25,9 +25,9 @@
 
     <color name="tab_bar_background">#e7e7e7</color>
     <color name="tab_bar_icon_inactive">#87939D</color>
-    <color name="tab_bar_icon_active">#ff207e</color>
+    <color name="tab_bar_icon_active">#F00065</color>
     <color name="tab_bar_icon_hovered">#F00065</color>
 
     <color name="app_skin">#FAFAF9</color>
-    <color name="toolbar_skin">#ff207e</color>
+    <color name="toolbar_skin">#F00065</color>
 </resources>

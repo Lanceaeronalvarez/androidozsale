@@ -10,6 +10,9 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import com.bluelinelabs.conductor.RouterTransaction;
+import com.bluelinelabs.conductor.changehandler.HorizontalChangeHandler;
+
 import java.util.List;
 
 import javax.inject.Inject;
@@ -17,6 +20,8 @@ import javax.inject.Inject;
 import au.com.dealsdirect.R;
 import au.com.dealsdirect.ui.base.BaseController;
 import au.com.dealsdirect.ui.controller.account.adapter.AccountItemAdapter;
+import au.com.dealsdirect.ui.controller.account.listener.AccountItemClickListener;
+import au.com.dealsdirect.ui.controller.contact.viewcontacts.ViewContactsController;
 import au.com.dealsdirect.utils.BundleBuilder;
 import butterknife.BindView;
 
@@ -24,10 +29,12 @@ import butterknife.BindView;
  * dp Created by Admin on 6/6/17.
  */
 
-public class AccountController extends BaseController implements AccountMvpView {
+public class AccountController extends BaseController implements AccountMvpView, AccountItemClickListener {
 
     public static final String TAG = "AccountController";
     private static final String KEY_TEXT = "AccountController.KEY_TEXT";
+
+    private AccountItemClickListener accountItemClickListener;
 
     @BindView(R.id.partial_toolbar_title_view)
     TextView mTitleTextView;
@@ -65,12 +72,13 @@ public class AccountController extends BaseController implements AccountMvpView 
     public void onViewBound(@NonNull View view) {
         super.onViewBound(view);
         setUp(view);
+
     }
 
     @Override
     protected void setUp(View view) {
         // Setup views here
-
+        accountItemClickListener = this;
         mPresenter.loadAccountItems();
         mTitleTextView.setText("My Account");
     }
@@ -82,11 +90,45 @@ public class AccountController extends BaseController implements AccountMvpView 
     }
 
     @Override
+    protected void onSaveViewState(@NonNull View view, @NonNull Bundle outState) {
+        super.onSaveViewState(view, outState);
+
+    }
+
+    @Override
     public void showAccountItems(List<String> accountItems) {
-        AccountItemAdapter accountItemAdapter = new AccountItemAdapter(accountItems, getActivity());
+        AccountItemAdapter accountItemAdapter
+                = new AccountItemAdapter(accountItems, getActivity(), accountItemClickListener);
         mAccountRecyclerView.setAdapter(accountItemAdapter);
         mAccountRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
         mAccountRecyclerView.setItemAnimator(new DefaultItemAnimator());
 
+    }
+
+    @Override
+    public void onAccountItemClickListener(String option) {
+        switch (option){
+
+            case "My Details":
+                break;
+            case "My Addresses":
+                break;
+            case "My Orders":
+                break;
+            case "My Vouchers":
+                break;
+            case "My Returns":
+                break;
+            case "Contact Us":
+                getRouter().pushController(RouterTransaction.with(ViewContactsController.newInstance())
+                        .pushChangeHandler(new HorizontalChangeHandler())
+                        .popChangeHandler(new HorizontalChangeHandler()));
+
+                break;
+            case "Language":
+                break;
+            default:
+                break;
+        }
     }
 }

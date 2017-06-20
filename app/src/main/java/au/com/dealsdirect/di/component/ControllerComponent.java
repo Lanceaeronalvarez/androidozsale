@@ -6,7 +6,8 @@ import au.com.dealsdirect.di.module.ControllerModule;
 import au.com.dealsdirect.ui.controller.categories.CategoriesController;
 import au.com.dealsdirect.ui.controller.account.AccountController;
 import au.com.dealsdirect.ui.controller.checkout.CheckoutController;
-import au.com.dealsdirect.ui.controller.contact.ContactController;
+import au.com.dealsdirect.ui.controller.contact.addcontact.AddContactController;
+import au.com.dealsdirect.ui.controller.contact.viewcontacts.ViewContactsController;
 import au.com.dealsdirect.ui.controller.home.HomeController;
 import au.com.dealsdirect.ui.controller.login.LoginController;
 import au.com.dealsdirect.ui.controller.productdetails.ProductDetailsController;
@@ -34,7 +35,7 @@ public interface ControllerComponent {
 
     void inject(AccountController controller);
 
-    void inject(ContactController controller);
+    void inject(ViewContactsController controller);
 
     void inject(CheckoutController controller);
 
@@ -45,4 +46,6 @@ public interface ControllerComponent {
     void inject(SaleItemsController controller);
 
     void inject(LoginController controller);
+
+    void inject(AddContactController controller);
 }

@@ -34,7 +34,6 @@ public class AccountPresenter<V extends AccountMvpView> extends BasePresenter<V>
                         "My Orders",
                         "My Vouchers",
                         "My Returns",
-                        "my vouchers",
                         "Contact Us",
                         "Language")));
 

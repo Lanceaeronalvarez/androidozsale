@@ -19,6 +19,7 @@ import au.com.dealsdirect.data.network.model.publicsalescategories.GetPublicSale
 import au.com.dealsdirect.data.network.model.publicsalescategories.GetPublicSalesCategoriesResponse;
 import au.com.dealsdirect.data.network.model.saleitems.GetPublicSaleItemsRequest;
 import au.com.dealsdirect.data.network.model.saleitems.GetPublicSaleItemsResponse;
+import au.com.dealsdirect.data.network.model.viewcontactitem.GetContactsResponse;
 import io.reactivex.Observable;
 
 public interface ApiHelper {
@@ -48,4 +49,7 @@ public interface ApiHelper {
     Observable<GetAppSettings.ResponseValue> callGetAppSettings(Context context, String countryId);
 
     Observable<GetAppSettingsSection.ResponseValue> callGetAppSettingsSection(Context context, String countryId);
+
+    Observable<GetContactsResponse.Response> callGetContacts(String languageId);
+
 }

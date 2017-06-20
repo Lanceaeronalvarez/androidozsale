@@ -18,6 +18,7 @@ public final class ApiEndPoint {
     private static final String HANDLER_ASMX_PREFIX = "handler.ashx/";
     private static final String BASE_URL = API_HOST + HANDLER_PREFIX;
     private static final String BASE_URL_ASMX = API_HOST + HANDLER_ASMX_PREFIX;
+    private static final String COCOSA_SERVICE = "CocosaService.asmx/";
 
     public static final String SAMPLE_API = "";
 
@@ -65,7 +66,7 @@ public final class ApiEndPoint {
     public static final String CREATE_CONTACT = "CreateContact";
     public static final String GET_CONTACT = "GetContact";
     public static final String GET_CONTACT_INVOICES = "GetContactInvoices";
-    public static final String GET_CONTACTS = "GetContacts";
+    public static final String GET_CONTACTS = BASE_URL+ COCOSA_SERVICE + "GetContacts";
     public static final String GET_CONTACT_SUBJECTS = "GetContactSubjects";
 
 

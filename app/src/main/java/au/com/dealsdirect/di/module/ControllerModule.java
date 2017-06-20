@@ -11,9 +11,12 @@ import au.com.dealsdirect.ui.controller.account.AccountPresenter;
 import au.com.dealsdirect.ui.controller.checkout.CheckoutMvpPresenter;
 import au.com.dealsdirect.ui.controller.checkout.CheckoutMvpView;
 import au.com.dealsdirect.ui.controller.checkout.CheckoutPresenter;
-import au.com.dealsdirect.ui.controller.contact.ContactMvpPresenter;
-import au.com.dealsdirect.ui.controller.contact.ContactMvpView;
-import au.com.dealsdirect.ui.controller.contact.ContactPresenter;
+import au.com.dealsdirect.ui.controller.contact.addcontact.AddContactMvpPresenter;
+import au.com.dealsdirect.ui.controller.contact.addcontact.AddContactMvpView;
+import au.com.dealsdirect.ui.controller.contact.addcontact.AddContactpresenter;
+import au.com.dealsdirect.ui.controller.contact.viewcontacts.ViewContactsMvpPresenter;
+import au.com.dealsdirect.ui.controller.contact.viewcontacts.ViewContactsMvpView;
+import au.com.dealsdirect.ui.controller.contact.viewcontacts.ViewContactsPresenter;
 import au.com.dealsdirect.ui.controller.home.HomeMvpPresenter;
 import au.com.dealsdirect.ui.controller.home.HomeMvpView;
 import au.com.dealsdirect.ui.controller.home.HomePresenter;
@@ -81,7 +84,7 @@ public class ControllerModule {
     }
 
     @Provides
-    ContactMvpPresenter<ContactMvpView> provideContactPresenter(ContactPresenter<ContactMvpView> presenter) {
+    ViewContactsMvpPresenter<ViewContactsMvpView> provideContactPresenter(ViewContactsPresenter<ViewContactsMvpView> presenter) {
         return presenter;
     }
 
@@ -112,6 +115,11 @@ public class ControllerModule {
 
     @Provides
     LoginMvpPresenter<LoginMvpView> provideLoginPresenter(LoginPresenter<LoginMvpView> presenter) {
+        return presenter;
+    }
+
+    @Provides
+    AddContactMvpPresenter<AddContactMvpView> provideAddContactPresenter(AddContactpresenter<AddContactMvpView> presenter){
         return presenter;
     }
 }

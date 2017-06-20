@@ -26,6 +26,7 @@ import au.com.dealsdirect.data.network.model.publicsalescategories.GetPublicSale
 import au.com.dealsdirect.data.network.model.publicsalescategories.GetPublicSalesCategoriesResponse;
 import au.com.dealsdirect.data.network.model.saleitems.GetPublicSaleItemsRequest;
 import au.com.dealsdirect.data.network.model.saleitems.GetPublicSaleItemsResponse;
+import au.com.dealsdirect.data.network.model.viewcontactitem.GetContactsResponse;
 import au.com.dealsdirect.data.pref.PreferencesHelper;
 import au.com.dealsdirect.di.ApplicationContext;
 import io.reactivex.Observable;
@@ -93,6 +94,12 @@ public class AppDataManager implements DataManager {
     @Override
     public Observable<GetAppSettingsSection.ResponseValue> callGetAppSettingsSection(Context context, String countryId) {
         return mApiHelper.callGetAppSettingsSection(context,countryId);
+    }
+
+    @Override
+    public Observable<GetContactsResponse.Response> callGetContacts(String languageId) {
+        return mApiHelper.callGetContacts(languageId);
+
     }
 
 
