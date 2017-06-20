@@ -13,8 +13,6 @@ import android.widget.EditText;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import com.mysale.genie.utility.RxBus;
-
 import java.util.regex.Pattern;
 
 import javax.inject.Inject;
@@ -39,8 +37,8 @@ public class LoginController extends BaseController implements LoginMvpView {
     Button mLoginButton;
     @BindView(R.id.facebook_login_button)
     RelativeLayout mFacebookButton;
-    @BindView(R.id.fragment_forgot_text)
-    TextView mForgotPassword;
+//    @BindView(R.id.fragment_forgot_text)
+//    TextView mForgotPassword;
     @BindView(R.id.fragment_login_signup_text)
     TextView mSignupTextView;
 

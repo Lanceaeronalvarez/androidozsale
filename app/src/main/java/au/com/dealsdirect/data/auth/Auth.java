@@ -4,9 +4,7 @@ import com.mysale.genie.utility.Prefs;
 
 import javax.inject.Inject;
 
-import au.com.dealsdirect.data.pref.PreferencesHelper;
 import au.com.dealsdirect.utils.CookieUtils;
-import okhttp3.Cookie;
 
 /**
  * Created by smartwave on 20/06/2017.
@@ -16,6 +14,11 @@ public class Auth implements AuthHelper {
 
     private final String IS_LOGGED_IN = "KEY_IS_LOGGED_IN";
     private final String LOGIN_TICKET = "KEY_LOGIN_TICKET";
+
+    @Inject
+    public Auth(){
+
+    }
 
     @Override
     public void acknowledgeAuth(String loginTicket) {

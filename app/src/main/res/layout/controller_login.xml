@@ -5,8 +5,8 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:fillViewport="true"
-    android:overScrollMode="never"
-    android:orientation="vertical">
+    android:orientation="vertical"
+    android:overScrollMode="never">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -36,7 +36,7 @@
                     android:layout_width="30dp"
                     android:layout_height="30dp"
                     android:src="@drawable/facebook"
-                    tools:ignore="ContentDescription"/>
+                    tools:ignore="ContentDescription" />
 
                 <TextView
                     android:layout_width="wrap_content"
@@ -44,8 +44,7 @@
                     android:gravity="center"
                     android:text="@string/log_in_with_facebook"
                     android:textColor="@android:color/white"
-                    android:textSize="@dimen/text_size_large"
-                    />
+                    android:textSize="@dimen/text_size_large" />
             </LinearLayout>
         </RelativeLayout>
 
@@ -62,7 +61,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="1dp"
                 android:layout_marginTop="10dp"
-                android:background="#e4e3e3"/>
+                android:background="#e4e3e3" />
 
 
             <TextView
@@ -73,10 +72,9 @@
                 android:background="#FFFFFF"
                 android:paddingLeft="10dp"
                 android:paddingRight="10dp"
-                android:textSize="@dimen/text_size_small"
                 android:text="@string/or_text"
                 android:textColor="#aeaeae"
-                />
+                android:textSize="@dimen/text_size_small" />
 
         </RelativeLayout>
 
@@ -90,8 +88,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="@string/email_address"
-                android:textSize="@dimen/text_size_medium"
-                android:textColor="@color/gray_field_label" />
+                android:textColor="@color/gray_field_label"
+                android:textSize="@dimen/text_size_medium" />
 
             <android.support.design.widget.TextInputLayout
                 android:id="@+id/fragment_login_layout_email"
@@ -110,10 +108,9 @@
                     android:inputType="textEmailAddress"
                     android:maxLines="1"
                     android:padding="15dp"
-                    android:textSize="@dimen/text_size_medium"
                     android:textColor="#919191"
                     android:textColorHint="#c1c1c1"
-                    />
+                    android:textSize="@dimen/text_size_medium" />
 
             </android.support.design.widget.TextInputLayout>
 
@@ -122,9 +119,8 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="5dp"
                 android:text="@string/password"
-                android:textSize="@dimen/text_size_medium"
                 android:textColor="@color/gray_field_label"
-                />
+                android:textSize="@dimen/text_size_medium" />
 
             <android.support.design.widget.TextInputLayout
                 android:id="@+id/fragment_login_layout_password"
@@ -143,10 +139,9 @@
                     android:hint="@string/password_hint"
                     android:inputType="textPassword"
                     android:padding="15dp"
-                    android:textSize="@dimen/text_size_medium"
                     android:textColor="#919191"
                     android:textColorHint="#c1c1c1"
-                    />
+                    android:textSize="@dimen/text_size_medium" />
 
             </android.support.design.widget.TextInputLayout>
 
@@ -156,8 +151,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="@string/log_in"
-                android:textSize="@dimen/text_size_large"
-                />
+                android:textSize="@dimen/text_size_large" />
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -171,8 +165,8 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="@string/not_a_member_yet_text"
-                    android:textSize="@dimen/text_size_medium"
-                    android:textColor="#919191"/>
+                    android:textColor="#919191"
+                    android:textSize="@dimen/text_size_medium" />
 
                 <TextView
                     android:id="@+id/fragment_login_signup_text"
@@ -182,9 +176,9 @@
                     android:paddingLeft="5dp"
                     android:paddingRight="0dp"
                     android:paddingStart="5dp"
-                    android:textSize="@dimen/text_size_medium"
                     android:text="@string/sign_up"
-                    android:textColor="#00B1B5"/>
+                    android:textColor="#00B1B5"
+                    android:textSize="@dimen/text_size_medium" />
 
                 <TextView
                     android:layout_width="wrap_content"
@@ -193,8 +187,11 @@
                     android:paddingLeft="5dp"
                     android:paddingRight="0dp"
                     android:paddingStart="5dp"
-                    android:textSize="@dimen/text_size_normal"
                     android:text="@string/now"
-                    android:textColor="#919191"/>
+                    android:textColor="#919191"
+                    android:textSize="@dimen/text_size_xlarge" />
 
-</LinearLayout>
+            </LinearLayout>
+        </LinearLayout>
+    </LinearLayout>
+</android.support.v4.widget.NestedScrollView>

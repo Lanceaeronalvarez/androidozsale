@@ -6,7 +6,6 @@ import java.util.Arrays;
 import javax.inject.Inject;
 
 import au.com.dealsdirect.data.DataManager;
-import au.com.dealsdirect.data.auth.Auth;
 import au.com.dealsdirect.ui.base.BasePresenter;
 import au.com.dealsdirect.utils.rx.SchedulerProvider;
 import io.reactivex.disposables.CompositeDisposable;
@@ -41,10 +40,10 @@ public class AccountPresenter<V extends AccountMvpView> extends BasePresenter<V>
 
     public void loadAccountItems(ArrayList<String> items) {
 
-        if (Auth.isLoggedIn()){
-            items.add("logout");
-
-        }
-        getMvpView().showAccountItems(items);
+//        if (Auth.isLoggedIn()){
+//            items.add("logout");
+//
+//        }
+//        getMvpView().showAccountItems(items);
     }
 }

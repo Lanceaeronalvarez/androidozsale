@@ -19,7 +19,6 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import com.bluelinelabs.conductor.RouterTransaction;
 import com.lsjwzh.widget.recyclerviewpager.RecyclerViewPager;
 import com.zhy.view.flowlayout.FlowLayout;
 import com.zhy.view.flowlayout.TagAdapter;
@@ -31,14 +30,12 @@ import java.util.Set;
 import javax.inject.Inject;
 
 import au.com.dealsdirect.R;
-import au.com.dealsdirect.data.auth.Auth;
 import au.com.dealsdirect.data.network.model.productdetails.GetPublicItemDetailsRequest;
 import au.com.dealsdirect.data.network.model.productdetails.GetPublicItemDetailsResponse;
 import au.com.dealsdirect.data.network.model.productdetails.GetPublicSaleDetailsRequest;
 import au.com.dealsdirect.data.network.model.productdetails.GetPublicSaleDetailsResponse;
 import au.com.dealsdirect.ui.base.BaseActivity;
 import au.com.dealsdirect.ui.base.BaseController;
-import au.com.dealsdirect.ui.controller.login.LoginController;
 import au.com.dealsdirect.ui.controller.shops.changehandler.DetailPopTransitionChangeHandler;
 import au.com.dealsdirect.utils.BundleBuilder;
 import au.com.dealsdirect.utils.ImageUtils;
@@ -371,12 +368,12 @@ public class ProductDetailsController extends BaseController implements ProductD
     @OnClick(R.id.product_details_add_to_basket)
     public void addToBasket(){
 
-        if (Auth.isLoggedIn()){
-            Log.d("productdetail", "add to basket");
-        }else{
-            getRouter().setRoot(RouterTransaction.with(LoginController.newInstance()));
-
-            Log.d("productdetail", "no logged in");
-        }
+//        if (Auth.isLoggedIn()){
+//            Log.d("productdetail", "add to basket");
+//        }else{
+//            getRouter().setRoot(RouterTransaction.with(LoginController.newInstance()));
+//
+//            Log.d("productdetail", "no logged in");
+//        }
     }
 }
