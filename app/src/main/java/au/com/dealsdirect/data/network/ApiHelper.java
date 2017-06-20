@@ -11,6 +11,10 @@ import au.com.dealsdirect.data.network.model.SampleRequest;
 import au.com.dealsdirect.data.network.model.SampleResponse;
 import au.com.dealsdirect.data.network.model.banner.GetPublicSalesBannerRequest;
 import au.com.dealsdirect.data.network.model.banner.GetPublicSalesBannerResponse;
+import au.com.dealsdirect.data.network.model.login.LoginEmail;
+import au.com.dealsdirect.data.network.model.login.LoginFacebook;
+import au.com.dealsdirect.data.network.model.login.LoginTicket;
+import au.com.dealsdirect.data.network.model.login.Logout;
 import au.com.dealsdirect.data.network.model.productdetails.GetPublicItemDetailsRequest;
 import au.com.dealsdirect.data.network.model.productdetails.GetPublicItemDetailsResponse;
 import au.com.dealsdirect.data.network.model.productdetails.GetPublicSaleDetailsRequest;
@@ -42,6 +46,7 @@ public interface ApiHelper {
     Observable<GetPublicSaleItemsResponse> getPublicSaleItemsApiCall(GetPublicSaleItemsRequest
             getPublicSaleItemsRequest);
 
+//  CONFIG API CALLS
     Observable<GetServerSettings.ResponseValue> callGetServerSettings(Context context, String countryId);
 
     Observable<GetAppSettings.ResponseValue> callGetPublicAppSettings(Context context, String countryId);
@@ -51,5 +56,13 @@ public interface ApiHelper {
     Observable<GetAppSettingsSection.ResponseValue> callGetAppSettingsSection(Context context, String countryId);
 
     Observable<GetContactsResponse.Response> callGetContacts(String languageId);
+//  LOGIN API CALLS
 
+    Observable<LoginEmail.ResponseValue> callLoginViaEmail(LoginEmail.RequestValue requestValue);
+
+    Observable<LoginFacebook.ResponseValue> callLoginViaFacebook(LoginFacebook.RequestValue requestValue);
+
+    Observable<LoginEmail.ResponseValue> callLoginTicket(LoginTicket.RequestValue requestValue);
+
+    Observable<Logout.ResponseValue> callLogout(Logout.RequestValue requestValue);
 }

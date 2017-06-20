@@ -105,4 +105,30 @@
     <string name="base_html_template_footer" formatted="false">
         <![CDATA["</body></html>"]]>
     </string>
+
+    <!--LOGIN STRINGS-->
+    <string name="or_text">or</string>
+    <string name="not_a_member_yet_text">not a member yet?</string>
+    <string name="log_in_with_facebook">log in with facebook</string>
+
+    <string name="sign_up">sign up</string>
+    <string name="already_a_member">already a member?</string>
+    <string name="log_in">log in</string>
+    <string name="forgot_password_guide">to reset your account password, enter the email address and
+        we will send you the instruction
+    </string>
+    <string name="send">send</string>
+    <string name="email_address">email address</string>
+    <string name="password_hint">******</string>
+    <string name="email_hint">example@email.com</string>
+    <string name="password">password</string>
+    <string name="first_name">first name</string>
+    <string name="last_name">last name</string>
+    <string name="now">now</string>
+    <string name="forgot_password">forgot password</string>
+    <string name="request_sent">Request sent.</string>
+    <string name="okay">okay</string>
+    <string name="input_email_address">Input email address</string>
+    <string name="registration_success">Registration Successful!</string>
+    <string name="logged_in">Logged In</string>
 </resources>

@@ -13,6 +13,7 @@ import java.io.IOException;
 import java.util.concurrent.TimeUnit;
 
 import okhttp3.CacheControl;
+import okhttp3.Cookie;
 import okhttp3.Interceptor;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
@@ -42,7 +43,8 @@ public final class NetworkUtils {
                 .cache(Utils.getCache(ctx, ANConstants.MAX_CACHE_SIZE, ANConstants.CACHE_DIR_NAME))
                 .connectTimeout(60, TimeUnit.SECONDS)
                 .readTimeout(60, TimeUnit.SECONDS)
-                .writeTimeout(60, TimeUnit.SECONDS);
+                .writeTimeout(60, TimeUnit.SECONDS)
+                .cookieJar(CookieUtils.getInstance());
 
         if(level != null) {
             builder.addInterceptor(new HttpLoggingInterceptor().setLevel(level));

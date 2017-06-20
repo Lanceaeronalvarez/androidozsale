@@ -10,8 +10,10 @@ public final class ApiEndPoint {
 
     /* API Constants */
     private static final String API_HOST = "https://www.dealsdirect.com.au/";
-    private static final String TEST_API_LEGACY = "http://api.mysaledev.com/Public/V3.18/api.asmx/";
-    private static final String LIVE_API_LEGACY = "";
+
+    private static final String TEST_API_LEGACY = "https://sbx-mob-api.mysaledev.com/public/v3.17/api.asmx/";
+    private static final String LIVE_API_LEGACY = "https://api.apacsale.com/public/v3.17/api.asmx/";
+
     private static final String API_VERSION = "api/v1/";
 
     private static final String HANDLER_PREFIX = "handler.ashx/";
@@ -87,6 +89,11 @@ public final class ApiEndPoint {
 
     /* Login Controller */
     public static String FORGOT_PASSWORD = "ForgotPassword"; //
+    public static String LOGIN_EMAIL = TEST_API_LEGACY + "Login";
+    public static String LOGIN_FB = TEST_API_LEGACY + "LoginFacebook";
+    public static String LOGIN_TICKET = TEST_API_LEGACY + "LoginTicket";
+    public static String LOGOUT = TEST_API_LEGACY + "Logout";
+    public static String REGISTRATION = TEST_API_LEGACY + "Registration";
 
 
     /* Summary */

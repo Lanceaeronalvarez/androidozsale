@@ -6,4 +6,12 @@ package au.com.dealsdirect.ui.controller.login;
 import au.com.dealsdirect.ui.base.MvpView;
 
 public interface LoginMvpView extends MvpView {
+
+    void showLoginSuccessful(String loginTicket);
+
+    void showLoginError(String message);
+
+    void showRegistration();
+
+    void logoutResult();
 }

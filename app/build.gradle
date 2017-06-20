@@ -49,6 +49,9 @@ dependencies {
     // database
     compile "org.greenrobot:greendao:$rootProject.greenDaoVersion"
 
+    //cookiejar
+    compile 'com.github.franmontiel:PersistentCookieJar:v1.0.1'
+
     // debug database
     debugCompile "com.amitshekhar.android:debug-db:$rootProject.debugDBVersion"
 

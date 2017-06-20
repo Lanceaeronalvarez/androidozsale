@@ -12,12 +12,18 @@ import java.util.List;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 
+import au.com.dealsdirect.data.auth.Auth;
+import au.com.dealsdirect.data.auth.AuthHelper;
 import au.com.dealsdirect.data.network.ApiHeader;
 import au.com.dealsdirect.data.network.ApiHelper;
 import au.com.dealsdirect.data.network.model.SampleRequest;
 import au.com.dealsdirect.data.network.model.SampleResponse;
 import au.com.dealsdirect.data.network.model.banner.GetPublicSalesBannerRequest;
 import au.com.dealsdirect.data.network.model.banner.GetPublicSalesBannerResponse;
+import au.com.dealsdirect.data.network.model.login.LoginEmail;
+import au.com.dealsdirect.data.network.model.login.LoginFacebook;
+import au.com.dealsdirect.data.network.model.login.LoginTicket;
+import au.com.dealsdirect.data.network.model.login.Logout;
 import au.com.dealsdirect.data.network.model.productdetails.GetPublicItemDetailsRequest;
 import au.com.dealsdirect.data.network.model.productdetails.GetPublicItemDetailsResponse;
 import au.com.dealsdirect.data.network.model.productdetails.GetPublicSaleDetailsRequest;
@@ -40,14 +46,17 @@ public class AppDataManager implements DataManager {
     private final Context mContext;
     private final PreferencesHelper mPreferencesHelper;
     private final ApiHelper mApiHelper;
+    private final AuthHelper mAuthHelper;
 
     @Inject
     public AppDataManager(@ApplicationContext Context context,
                           PreferencesHelper preferencesHelper,
-                          ApiHelper apiHelper) {
+                          ApiHelper apiHelper,
+                          AuthHelper authHelper) {
         mContext = context;
         mPreferencesHelper = preferencesHelper;
         mApiHelper = apiHelper;
+        mAuthHelper = authHelper;
     }
 
     @Override
@@ -99,7 +108,26 @@ public class AppDataManager implements DataManager {
     @Override
     public Observable<GetContactsResponse.Response> callGetContacts(String languageId) {
         return mApiHelper.callGetContacts(languageId);
+    }
 
+    @Override
+    public Observable<LoginEmail.ResponseValue> callLoginViaEmail(LoginEmail.RequestValue requestValue) {
+        return mApiHelper.callLoginViaEmail(requestValue);
+    }
+
+    @Override
+    public Observable<LoginFacebook.ResponseValue> callLoginViaFacebook(LoginFacebook.RequestValue requestValue) {
+        return mApiHelper.callLoginViaFacebook(requestValue);
+    }
+
+    @Override
+    public Observable<LoginEmail.ResponseValue> callLoginTicket(LoginTicket.RequestValue requestValue) {
+        return mApiHelper.callLoginTicket(requestValue);
+    }
+
+    @Override
+    public Observable<Logout.ResponseValue> callLogout(Logout.RequestValue requestValue) {
+        return mApiHelper.callLogout(requestValue);
     }
 
 
@@ -331,5 +359,30 @@ public class AppDataManager implements DataManager {
     @Override
     public void updateUserInfo(String accessToken, Long userId, LoggedInMode loggedInMode, String userName, String email, String profilePicPath) {
 
+    }
+
+    @Override
+    public void acknowledgeAuth(String loginTicket) {
+        mAuthHelper.acknowledgeAuth(loginTicket);
+    }
+
+    @Override
+    public void revokeAuth() {
+        mAuthHelper.revokeAuth();
+    }
+
+    @Override
+    public void setLoginTicket(String loginTicket) {
+        mAuthHelper.setLoginTicket(loginTicket);
+    }
+
+    @Override
+    public String getLoginTicket() {
+        return mAuthHelper.getLoginTicket();
+    }
+
+    @Override
+    public boolean isAuthorized() {
+        return mAuthHelper.isAuthorized();
     }
 }

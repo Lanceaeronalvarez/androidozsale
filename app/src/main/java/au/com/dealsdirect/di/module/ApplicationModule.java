@@ -7,6 +7,8 @@ import javax.inject.Singleton;
 
 import au.com.dealsdirect.data.AppDataManager;
 import au.com.dealsdirect.data.DataManager;
+import au.com.dealsdirect.data.auth.Auth;
+import au.com.dealsdirect.data.auth.AuthHelper;
 import au.com.dealsdirect.data.network.ApiHeader;
 import au.com.dealsdirect.data.network.ApiHelper;
 import au.com.dealsdirect.data.network.AppApiHelper;
@@ -81,6 +83,12 @@ public class ApplicationModule {
     @Singleton
     ApiHelper provideApiHelper(AppApiHelper appApiHelper) {
         return appApiHelper;
+    }
+
+    @Provides
+    @Singleton
+    AuthHelper provideAuthHelper(Auth auth){
+        return auth;
     }
 
     @Provides

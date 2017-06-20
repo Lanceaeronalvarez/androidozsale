@@ -16,6 +16,7 @@ import au.com.dealsdirect.R;
 import au.com.dealsdirect.ui.base.BaseActivity;
 import au.com.dealsdirect.ui.controller.account.AccountController;
 import au.com.dealsdirect.ui.controller.categories.CategoriesController;
+import au.com.dealsdirect.ui.controller.checkout.CheckoutController;
 import au.com.dealsdirect.ui.controller.home.HomeController;
 import au.com.dealsdirect.ui.controller.shops.ShopsController;
 import au.com.dealsdirect.ui.custom.BottomNavigationViewHelper;
@@ -148,8 +149,11 @@ public class MainActivity extends BaseActivity implements MainMvpView {
 
     }
 
-    @Override public void showCheckoutController() {
-
+    @Override
+    public void showCheckoutController() {
+        mRouter.pushController(RouterTransaction.with(new CheckoutController())
+                .pushChangeHandler(new HorizontalChangeHandler())
+                .popChangeHandler(new HorizontalChangeHandler()));
     }
 
 }

@@ -8,4 +8,13 @@
         <item name="colorAccent">@color/colorAccent</item>
     </style>
 
+    <style name="default_button">
+        <item name="android:layout_height">@dimen/default_button_height</item>
+        <item name="android:textColor">#ffffff</item>
+        <item name="android:background">@drawable/default_button</item>
+        <item name="android:textAllCaps">false</item>
+        <item name="android:padding">10dp</item>
+        <item name="android:textSize">20sp</item>
+    </style>
+
 </resources>

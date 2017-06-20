@@ -1,10 +1,12 @@
 package au.com.dealsdirect.data;
 
+//import au.com.dealsdirect.data.auth.Auth;
+import au.com.dealsdirect.data.auth.AuthHelper;
 import au.com.dealsdirect.data.network.ApiHelper;
 import au.com.dealsdirect.data.pref.PreferencesHelper;
 import io.reactivex.Observable;
 
-public interface DataManager extends PreferencesHelper, ApiHelper {
+public interface DataManager extends PreferencesHelper, ApiHelper, AuthHelper {
 
     void updateApiHeader(Long userId, String accessToken);
 

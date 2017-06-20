@@ -30,36 +30,36 @@ public class CheckoutController extends BaseController implements CheckoutMvpVie
     @Inject
     CheckoutMvpPresenter<CheckoutMvpView> mPresenter;
 
-    private final RouterPagerAdapter pagerAdapter;
+//    private final RouterPagerAdapter pagerAdapter = new RouterPagerAdapter(this) {
+//        @Override
+//        public void configureRouter(@NonNull Router router, int position) {
+//            if (!router.hasRootController()) {
+//
+//                if (position==0){
+//                    Controller firstView = CategoriesController.newInstance();
+//                    router.setRoot(RouterTransaction.with(firstView));
+//
+//                }if (position==1){
+//                    Controller page = new ShopsController();
+//                    router.setRoot(RouterTransaction.with(page));
+//                }
+//
+//            }
+//        }
+//
+//        @Override
+//        public int getCount() {
+//            return PAGE_COLORS.length;
+//        }
+//
+//        @Override
+//        public CharSequence getPageTitle(int position) {
+//            return "Page " + position;
+//        }
+//    };
 
     public CheckoutController() {
-        pagerAdapter = new RouterPagerAdapter(this) {
-            @Override
-            public void configureRouter(@NonNull Router router, int position) {
-                if (!router.hasRootController()) {
 
-                    if (position==0){
-                        Controller firstView = CategoriesController.newInstance();
-                        router.setRoot(RouterTransaction.with(firstView));
-
-                    }if (position==1){
-                        Controller page = new ShopsController();
-                        router.setRoot(RouterTransaction.with(page));
-                    }
-
-                }
-            }
-
-            @Override
-            public int getCount() {
-                return PAGE_COLORS.length;
-            }
-
-            @Override
-            public CharSequence getPageTitle(int position) {
-                return "Page " + position;
-            }
-        };
     }
 
     @Override
@@ -80,7 +80,8 @@ public class CheckoutController extends BaseController implements CheckoutMvpVie
 
 
 
-    @Override protected void setUp(View view) {
+    @Override
+    protected void setUp(View view) {
 
     }
 }

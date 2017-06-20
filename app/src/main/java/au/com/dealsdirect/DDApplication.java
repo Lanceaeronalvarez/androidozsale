@@ -17,6 +17,7 @@ import au.com.dealsdirect.di.component.ApplicationComponent;
 import au.com.dealsdirect.di.component.DaggerApplicationComponent;
 import au.com.dealsdirect.di.module.ApplicationModule;
 import au.com.dealsdirect.utils.AppLogger;
+import au.com.dealsdirect.utils.CookieUtils;
 import au.com.dealsdirect.utils.NetworkUtils;
 import okhttp3.OkHttpClient;
 import uk.co.chrisjenx.calligraphy.CalligraphyConfig;
@@ -45,6 +46,7 @@ public class DDApplication extends Application {
 
         OkHttpClient customClient = null;
 
+        CookieUtils.initCookieJar(this);
 //        AndroidNetworking.initialize(getApplicationContext());
         if (BuildConfig.DEBUG) {
             customClient = NetworkUtils.provideOkHttpClientResponseCaching(this, HttpLoggingInterceptor.Level.BODY);

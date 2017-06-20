@@ -14,6 +14,10 @@ import au.com.dealsdirect.data.network.model.SampleRequest;
 import au.com.dealsdirect.data.network.model.SampleResponse;
 import au.com.dealsdirect.data.network.model.banner.GetPublicSalesBannerRequest;
 import au.com.dealsdirect.data.network.model.banner.GetPublicSalesBannerResponse;
+import au.com.dealsdirect.data.network.model.login.LoginEmail;
+import au.com.dealsdirect.data.network.model.login.LoginFacebook;
+import au.com.dealsdirect.data.network.model.login.LoginTicket;
+import au.com.dealsdirect.data.network.model.login.Logout;
 import au.com.dealsdirect.data.network.model.productdetails.GetPublicItemDetailsRequest;
 import au.com.dealsdirect.data.network.model.productdetails.GetPublicItemDetailsResponse;
 import au.com.dealsdirect.data.network.model.productdetails.GetPublicSaleDetailsRequest;
@@ -135,6 +139,38 @@ public class AppApiHelper implements ApiHelper {
                 .addJSONObjectBody(JsonUtils.convertToJsonObject(new GetAppSettingsSection.RequestValue(countryId)))
                 .build()
                 .getObjectObservable(GetAppSettingsSection.ResponseValue.class);
+    }
+
+    @Override
+    public Observable<LoginEmail.ResponseValue> callLoginViaEmail(LoginEmail.RequestValue requestValue) {
+        return Rx2AndroidNetworking.post(ApiEndPoint.LOGIN_EMAIL)
+                .addHeaders(mApiHeader.getPublicApiHeader())
+                .addJSONObjectBody(JsonUtils.convertToJsonObject(requestValue))
+                .build()
+                .getObjectObservable(LoginEmail.ResponseValue.class);
+    }
+
+    @Override
+    public Observable<LoginFacebook.ResponseValue> callLoginViaFacebook(LoginFacebook.RequestValue requestValue) {
+        return null;
+    }
+
+    @Override
+    public Observable<LoginEmail.ResponseValue> callLoginTicket(LoginTicket.RequestValue requestValue) {
+        return Rx2AndroidNetworking.post(ApiEndPoint.LOGIN_TICKET)
+                .addHeaders(mApiHeader.getPublicApiHeader())
+                .addJSONObjectBody(JsonUtils.convertToJsonObject(requestValue))
+                .build()
+                .getObjectObservable(LoginEmail.ResponseValue.class);
+    }
+
+    @Override
+    public Observable<Logout.ResponseValue> callLogout(Logout.RequestValue requestValue) {
+        return Rx2AndroidNetworking.post(ApiEndPoint.LOGOUT)
+                .addHeaders(mApiHeader.getPublicApiHeader())
+                .addJSONObjectBody(JsonUtils.convertToJsonObject(requestValue))
+                .build()
+                .getObjectObservable(Logout.ResponseValue.class);
     }
 
 
