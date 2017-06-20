@@ -5,6 +5,10 @@ import android.content.Context;
 import com.mysale.genie.utility.Prefs;
 import com.mysale.genie.utility.RxBus;
 
+import javax.inject.Inject;
+
+import au.com.dealsdirect.data.AppDataManager;
+
 /**
  * dp Created by Admin on 6/19/17.
  */
@@ -20,12 +24,15 @@ public class Auth {
     public static final String LOGIN_TICKET = "auth_login_ticket";
     public static final String IS_LOGGED_IN = "auth_is_logged_in";
 
-    public static void didLogin(Context context, String ticket) {
+    @Inject
+    AppDataManager appDataManager;
+
+    public void didLogin(Context context, String ticket) {
         Prefs.putBoolean(IS_LOGGED_IN, true);
 
         setLoginTicket(ticket);
 
-//        AppPreferencesHelper.callGetAppSettings(context, AppDataManager.getCountryId());
+        appDataManager.callGetAppSettings(context, appDataManager.getCountryId());
         RxBus.instance().post(EVENT_LOGIN_END);
     }
 

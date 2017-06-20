@@ -1,23 +1,92 @@
 package au.com.dealsdirect.ui.controller.account;
 
+import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.v7.widget.DefaultItemAnimator;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
+import java.util.List;
+
+import javax.inject.Inject;
+
+import au.com.dealsdirect.R;
 import au.com.dealsdirect.ui.base.BaseController;
+import au.com.dealsdirect.ui.controller.account.adapter.AccountItemAdapter;
+import au.com.dealsdirect.utils.BundleBuilder;
+import butterknife.BindView;
 
 /**
  * dp Created by Admin on 6/6/17.
  */
 
 public class AccountController extends BaseController implements AccountMvpView {
-    @Override
-    protected View inflateView(@NonNull LayoutInflater inflater, @NonNull ViewGroup container) {
-        return null;
+
+    public static final String TAG = "AccountController";
+    private static final String KEY_TEXT = "AccountController.KEY_TEXT";
+
+    @BindView(R.id.partial_toolbar_title_view)
+    TextView mTitleTextView;
+
+    @BindView(R.id.account_recycler_view)
+    RecyclerView mAccountRecyclerView;
+
+    @Inject
+    AccountMvpPresenter<AccountMvpView> mPresenter;
+
+    public static AccountController newInstance() {
+i
+        return new AccountController(
+                new BundleBuilder(new Bundle())
+                        .build());
     }
 
-    @Override protected void setUp(View view) {
+    public AccountController(Bundle args) {
+        super(args);
+    }
+
+    @NonNull
+    @Override
+    protected View inflateView(@NonNull LayoutInflater inflater, @NonNull ViewGroup container) {
+        View view = inflater.inflate(R.layout.controller_account, container, false);
+
+        getControllerComponent().inject(this);
+
+        mPresenter.onAttach(this);
+
+        return view;
+    }
+
+    @Override
+    public void onViewBound(@NonNull View view) {
+        super.onViewBound(view);
+        setUp(view);
+    }
+
+    @Override
+    protected void setUp(View view) {
+        // Setup views here
+
+        mPresenter.loadAccountItems();
+        mTitleTextView.setText("My Account");
+    }
+
+    @Override
+    public void onDestroyView(@NonNull View view) {
+        mPresenter.onDetach();
+        super.onDestroyView(view);
+    }
+
+    @Override
+    public void showAccountItems(List<String> accountItems) {
+        AccountItemAdapter accountItemAdapter = new AccountItemAdapter(accountItems, getActivity());
+        mAccountRecyclerView.setAdapter(accountItemAdapter);
+        mAccountRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
+        mAccountRecyclerView.setItemAnimator(new DefaultItemAnimator());
 
     }
 }

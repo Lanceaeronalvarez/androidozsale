@@ -1,20 +1,20 @@
 package au.com.dealsdirect.ui.main;
 
 import android.os.Bundle;
-import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
-import android.view.MenuItem;
 import android.view.ViewGroup;
 
 import com.bluelinelabs.conductor.Conductor;
 import com.bluelinelabs.conductor.Router;
 import com.bluelinelabs.conductor.RouterTransaction;
+import com.bluelinelabs.conductor.changehandler.FadeChangeHandler;
 import com.bluelinelabs.conductor.changehandler.HorizontalChangeHandler;
 
 import javax.inject.Inject;
 
 import au.com.dealsdirect.R;
 import au.com.dealsdirect.ui.base.BaseActivity;
+import au.com.dealsdirect.ui.controller.account.AccountController;
 import au.com.dealsdirect.ui.controller.categories.CategoriesController;
 import au.com.dealsdirect.ui.controller.home.HomeController;
 import au.com.dealsdirect.ui.controller.shops.ShopsController;
@@ -39,8 +39,7 @@ public class MainActivity extends BaseActivity implements MainMvpView {
 
     private Router mRouter;
 
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    @Override protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
         setContentView(R.layout.activity_main);
@@ -53,117 +52,104 @@ public class MainActivity extends BaseActivity implements MainMvpView {
 
         mRouter = Conductor.attachRouter(this, mContainer, savedInstanceState);
         if (!mRouter.hasRootController()) {
-            mRouter.setRoot(RouterTransaction.with(HomeController.newInstance()).tag("Home"));
+            mRouter.setRoot(RouterTransaction.with(HomeController.newInstance())
+                                             .tag("Home"));
         }
 
         setUp();
     }
 
-    @Override
-    protected void setUp() {
+    @Override protected void setUp() {
 
 
-        mPresenter.initServerSettings(this,((MainPresenter)mPresenter).getDataManager().getCountryId());
-        mPresenter.callGetAppSettingsSection(this,((MainPresenter)mPresenter).getDataManager().getCountryId());
+        mPresenter.initServerSettings(this,
+                                      ((MainPresenter) mPresenter).getDataManager()
+                                                                  .getCountryId());
+        mPresenter.callGetAppSettingsSection(this,
+                                             ((MainPresenter) mPresenter).getDataManager()
+                                                                         .getCountryId());
 
         BottomNavigationViewHelper.disableShiftMode(mBottomNavigationView);
 
-        mBottomNavigationView.setOnNavigationItemSelectedListener(
-                new BottomNavigationView.OnNavigationItemSelectedListener() {
-                    @Override
-                    public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+        mBottomNavigationView.setOnNavigationItemSelectedListener(item -> {
 
-                        if (mBottomNavigationView.getSelectedItemId() == item.getItemId()) {
-                            return true;
-                        }
+            if (mBottomNavigationView.getSelectedItemId() == item.getItemId()) {
+                return true;
+            }
 
-                        mPreviousTab = mCurrentTab;
-                        mCurrentTab = item.getItemId();
+            mPreviousTab = mCurrentTab;
+            mCurrentTab = item.getItemId();
 
-                        switch (item.getItemId()) {
+            switch (item.getItemId()) {
 
-                            case R.id.action_shop:
-                                showShopController();
-                                break;
+                case R.id.action_shop:
+                    showShopController();
+                    break;
 
-                            case R.id.action_account:
-                                showAccountController();
-                                break;
+                case R.id.action_account:
+                    showAccountController();
+                    break;
 
-                            case R.id.action_contact:
-                                showContactController();
-                                break;
+                case R.id.action_contact:
+                    showContactController();
+                    break;
 
-                            case R.id.action_invite:
-                                showInviteController();
-                                break;
+                case R.id.action_invite:
+                    showInviteController();
+                    break;
 
-                            case R.id.action_checkout:
-                                showCheckoutController();
-                                break;
-                        }
-                        return true;
-                    }
-                });
+                case R.id.action_checkout:
+                    showCheckoutController();
+                    break;
+            }
+            return true;
+        });
     }
 
-    @Override
-    protected void onDestroy() {
+    @Override protected void onDestroy() {
         mPresenter.onDetach();
         super.onDestroy();
     }
 
 
-    @Override
-    public void onBackPressed() {
+    @Override public void onBackPressed() {
         if (!mRouter.handleBack()) {
             super.onBackPressed();
         }
     }
 
 
-
-    @Override
-    public void showCategoryController() {
+    @Override public void showCategoryController() {
 
         mRouter.pushController(RouterTransaction.with(CategoriesController.newInstance())
-                                                                     .pushChangeHandler(new HorizontalChangeHandler())
-                                                                     .popChangeHandler(new HorizontalChangeHandler()));
+                                                .pushChangeHandler(new HorizontalChangeHandler())
+                                                .popChangeHandler(new HorizontalChangeHandler()));
 
     }
 
-    @Override
-    public void showShopController() {
+    @Override public void showShopController() {
         mRouter.pushController(RouterTransaction.with(new ShopsController())
-                                                                     .pushChangeHandler(new HorizontalChangeHandler())
-                                                                     .popChangeHandler(new HorizontalChangeHandler()));
+                                                .pushChangeHandler(new FadeChangeHandler())
+                                                .popChangeHandler(new FadeChangeHandler()));
     }
 
-    @Override
-    public void showAccountController() {
-
-    }
-
-    @Override
-    public void showContactController() {
+    @Override public void showAccountController() {
+        mRouter.pushController(RouterTransaction.with(AccountController.newInstance())
+                .pushChangeHandler(new FadeChangeHandler())
+                .popChangeHandler(new FadeChangeHandler()));
 
     }
 
-    @Override
-    public void showInviteController() {
+    @Override public void showContactController() {
 
     }
 
-    @Override
-    public void showCheckoutController() {
+    @Override public void showInviteController() {
 
     }
-//
-//    public void hideBottomNav(){
-//        mHomeBottomNav.setVisibility(View.GONE);
-//    }
-//
-//    public void showBottomNav(){
-//        mHomeBottomNav.setVisibility(View.VISIBLE);
-//    }
+
+    @Override public void showCheckoutController() {
+
+    }
+
 }

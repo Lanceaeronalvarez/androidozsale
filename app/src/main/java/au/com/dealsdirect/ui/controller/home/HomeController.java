@@ -66,7 +66,6 @@ public class HomeController extends BaseController implements HomeMvpView {
     protected void onViewBound(@NonNull View view) {
         super.onViewBound(view);
 
-//        ((MainActivity) getActivity()).showBottomNav();
         setUp(view);
     }
 
@@ -83,8 +82,6 @@ public class HomeController extends BaseController implements HomeMvpView {
         if (!mChildRouter.hasRootController()) {
             mChildRouter.setRoot(RouterTransaction.with(new ShopsController()));
         }
-
-
     }
 
 }

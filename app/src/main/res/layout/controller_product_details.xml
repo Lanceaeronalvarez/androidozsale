@@ -496,6 +496,7 @@
                                 android:layout_margin="16dp"
                                 fontPath="@string/font_lato_medium"
                                 android:text="Add to Basket"
+                                android:clickable="true"
                                 android:textColor="#FFFFFF"
                                 android:textStyle="normal"
                                 android:textAllCaps="false"
