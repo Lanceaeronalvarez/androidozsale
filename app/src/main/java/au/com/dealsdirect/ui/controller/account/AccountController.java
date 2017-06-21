@@ -24,6 +24,7 @@ import au.com.dealsdirect.ui.base.BaseController;
 import au.com.dealsdirect.ui.controller.account.adapter.AccountItemAdapter;
 import au.com.dealsdirect.ui.controller.account.listener.AccountItemClickListener;
 import au.com.dealsdirect.ui.controller.contact.viewcontacts.ViewContactsController;
+import au.com.dealsdirect.ui.controller.details.DetailsController;
 import au.com.dealsdirect.utils.BundleBuilder;
 import butterknife.BindView;
 
@@ -109,7 +110,9 @@ public class AccountController extends BaseController implements AccountMvpView,
 
     @Override
     public void showMyDetailsController() {
-
+        getRouter().pushController(RouterTransaction.with(DetailsController.newInstance())
+                .pushChangeHandler(new HorizontalChangeHandler())
+                .popChangeHandler(new HorizontalChangeHandler()));
     }
 
     @Override
@@ -150,6 +153,7 @@ public class AccountController extends BaseController implements AccountMvpView,
         switch (option) {
 
             case "My Details":
+                showMyDetailsController();
                 break;
             case "My Addresses":
                 break;
@@ -170,13 +174,7 @@ public class AccountController extends BaseController implements AccountMvpView,
                         }
                     });
                 }
-                break;
-            case "Language":
-                break;
 
-            default:
-                    break;
-            }
-
+        }
     }
 }
