@@ -171,7 +171,7 @@ public class AddNewAddressController extends BaseController implements AddNewAdd
 
     @Override
     public void setFieldErrorState(View view) {
-        view.setBackgroundResource(R.drawable.rounded_edittext_error);
+        //view.setBackgroundResource(R.drawable.rounded_edittext_error);
     }
 
     @Override

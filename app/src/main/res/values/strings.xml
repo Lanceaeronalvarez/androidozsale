@@ -151,4 +151,5 @@
     <string name="welcome_to_my_address">welcome to my address</string>
     <string name="delivery_address_added">delivery address added</string>
     <string name="remove_string">remove</string>
+    <string name="add_to_basket">Add to Basket</string>
 </resources>

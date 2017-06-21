@@ -42,4 +42,11 @@
     <color name="bg_edit_text_ripple">#FFFFFF</color>
     <color name="bg_edit_text_default">#ECECEC</color>
     <color name="bg_edit_text_focused">#1A9DE9</color>
+
+    <!-- Chips Theme -->
+    <color name="bg_chips_ripple">#FFFFFF</color>
+    <color name="bg_chips_default">#F8FAFD</color>
+    <color name="bg_chips_default_border">#EDF0F5</color>
+    <color name="bg_chips_checked">#ED1167</color>
+    <color name="bg_chips_text">#FFFFFF</color>
 </resources>

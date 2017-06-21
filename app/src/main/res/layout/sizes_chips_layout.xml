@@ -4,7 +4,7 @@
     android:id="@+id/filter_text"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
-    android:background="@drawable/sizes_chips_states"
+    android:background="@drawable/bg_chips_rounded"
     fontPath="@string/font_lato_black"
     tools:text="test"
     android:layout_marginTop="5dp"
