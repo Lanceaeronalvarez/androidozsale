@@ -56,8 +56,7 @@ public class ViewContactsPresenter<V extends ViewContactsMvpView> extends BasePr
                                 }
 
                                 getMvpView().hideLoading();
-                                getMvpView().onError(throwable.getMessage());
-
+//                                getMvpView().onError(throwable.getMessage());
                                 // handle load accounts error here
                                 if (throwable instanceof ANError) {
                                     ANError anError = (ANError) throwable;

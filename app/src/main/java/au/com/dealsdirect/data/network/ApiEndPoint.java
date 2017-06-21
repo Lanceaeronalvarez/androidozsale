@@ -68,7 +68,7 @@ public final class ApiEndPoint {
     public static final String CREATE_CONTACT = "CreateContact";
     public static final String GET_CONTACT = "GetContact";
     public static final String GET_CONTACT_INVOICES = "GetContactInvoices";
-    public static final String GET_CONTACTS = BASE_URL+ COCOSA_SERVICE + "GetContacts";
+    public static final String GET_CONTACTS = API_HOST + COCOSA_SERVICE + "GetContacts";
     public static final String GET_CONTACT_SUBJECTS = "GetContactSubjects";
 
 
@@ -90,7 +90,7 @@ public final class ApiEndPoint {
 
     /* Login Controller */
     public static String FORGOT_PASSWORD = "ForgotPassword"; //
-    public static String LOGIN_EMAIL = TEST_API_LEGACY + "Login";
+    public static String LOGIN_EMAIL = API_HOST + COCOSA_SERVICE + "Login";
     public static String LOGIN_FB = TEST_API_LEGACY + "LoginFacebook";
     public static String LOGIN_TICKET = TEST_API_LEGACY + "LoginTicket";
     public static String LOGOUT = TEST_API_LEGACY + "Logout";

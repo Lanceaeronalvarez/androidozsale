@@ -11,4 +11,18 @@ import au.com.dealsdirect.ui.base.MvpView;
 public interface AccountMvpView extends MvpView {
 
     void showAccountItems(List<String> accountItems);
+
+    void showMyDetailsController();
+
+    void showMyAddressesController();
+
+    void showMyOrders();
+
+    void showMyVouchers();
+
+    void showMyReturns();
+
+    void showViewContactUsController();
+
+    void showLanguage();
 }

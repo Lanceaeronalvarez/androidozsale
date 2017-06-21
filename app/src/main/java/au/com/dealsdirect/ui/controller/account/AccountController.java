@@ -11,7 +11,7 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.bluelinelabs.conductor.RouterTransaction;
-import com.bluelinelabs.conductor.changehandler.VerticalChangeHandler;
+import com.bluelinelabs.conductor.changehandler.HorizontalChangeHandler;
 
 import java.util.List;
 
@@ -108,44 +108,75 @@ public class AccountController extends BaseController implements AccountMvpView,
     }
 
     @Override
+    public void showMyDetailsController() {
+
+    }
+
+    @Override
+    public void showMyAddressesController() {
+
+    }
+
+    @Override
+    public void showMyOrders() {
+
+    }
+
+    @Override
+    public void showMyVouchers() {
+
+    }
+
+    @Override
+    public void showMyReturns() {
+
+    }
+
+    @Override
+    public void showViewContactUsController() {
+        getRouter().pushController(RouterTransaction.with(ViewContactsController.newInstance())
+                .pushChangeHandler(new HorizontalChangeHandler())
+                .popChangeHandler(new HorizontalChangeHandler()));
+    }
+
+    @Override
+    public void showLanguage() {
+
+    }
+
+    @Override
     public void onAccountItemClickListener(String option) {
 
-        if(new Auth().isAuthorized()){
+        switch (option) {
 
+            case "My Details":
+                break;
+            case "My Addresses":
+                break;
+            case "My Orders":
+                break;
+            case "My Vouchers":
+                break;
+            case "My Returns":
+                break;
+            case "Contact Us":
+                if (new Auth().isAuthorized()) {
+                    showViewContactUsController();
+                } else {
+                    new Auth().invokeLogin(getRouter(), new AuthHandler() {
+                        @Override
+                        public void success() {
+                            showViewContactUsController();
+                        }
+                    });
+                }
+                break;
+            case "Language":
+                break;
 
-            switch (option){
-
-                case "My Details":
-                    break;
-                case "My Addresses":
-                    break;
-                case "My Orders":
-                    break;
-                case "My Vouchers":
-                    break;
-                case "My Returns":
-                    break;
-                case "Contact Us":
-                    getRouter().pushController(RouterTransaction.with(ViewContactsController.newInstance())
-                            .pushChangeHandler(new VerticalChangeHandler())
-                            .popChangeHandler(new VerticalChangeHandler()));
-
-                    break;
-                case "Language":
-                    break;
-                default:
+            default:
                     break;
             }
-        }else{
-
-            new Auth().invokeLogin(getRouter(), new AuthHandler() {
-                @Override
-                public void success() {
-                    onAccountItemClickListener(option);
-                }
-            });
-        }
-
 
     }
 }

@@ -18,6 +18,7 @@ import java.util.regex.Pattern;
 import javax.inject.Inject;
 
 import au.com.dealsdirect.R;
+import au.com.dealsdirect.data.auth.Auth;
 import au.com.dealsdirect.ui.base.BaseController;
 import au.com.dealsdirect.utils.BundleBuilder;
 import butterknife.BindView;
@@ -132,10 +133,10 @@ public class LoginController extends BaseController implements LoginMvpView {
     @Override
     public void showLoginSuccessful(String loginTicket) {
         if (!loginTicket.isEmpty()) {
-//            Auth.didLogin(getBaseActivity(), loginTicket);
-//            RxBus.instance().post(GVersion.EVENT_LOGIN);
-//            getBaseActivity().finish();
-//            authHandler.success();
+            new Auth().acknowledgeAuth(loginTicket);
+            getActivity().onBackPressed();
+            new Auth().onAuthHandlerSuccess();
+
         }
     }
 

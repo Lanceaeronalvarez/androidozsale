@@ -1,7 +1,5 @@
 package au.com.dealsdirect.data.auth;
 
-import android.util.Log;
-
 import com.bluelinelabs.conductor.Router;
 import com.bluelinelabs.conductor.RouterTransaction;
 import com.bluelinelabs.conductor.changehandler.VerticalChangeHandler;
@@ -62,5 +60,11 @@ public class Auth implements AuthHelper {
                 .popChangeHandler(new VerticalChangeHandler()));
 
         Auth.sAuthHandler = handler;
+    }
+
+    public void onAuthHandlerSuccess(){
+        if (sAuthHandler!=null){
+            sAuthHandler.success();
+        }
     }
 }
