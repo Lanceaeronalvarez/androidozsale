@@ -30,6 +30,8 @@ import au.com.dealsdirect.data.network.model.publicsalescategories.GetPublicSale
 import au.com.dealsdirect.data.network.model.saleitems.GetPublicSaleItemsRequest;
 import au.com.dealsdirect.data.network.model.saleitems.GetPublicSaleItemsResponse;
 import au.com.dealsdirect.data.network.model.viewcontactitem.GetContactsResponse;
+import au.com.dealsdirect.data.network.model.userdetails.GetUserDetailsResponse;
+import au.com.dealsdirect.data.network.model.userdetails.SetUserDetailsRequest;
 import io.reactivex.Observable;
 
 public interface ApiHelper {
@@ -79,4 +81,9 @@ public interface ApiHelper {
     Observable<ApplyAddressResponse> callApplyDeliveryAddress(ApplyAddressRequest requestValues);
 
     Observable<DeleteUserAddress.ResponseValue> callDeleteUserDeliveryAddress(DeleteUserAddress.RequestValues requestValues);
+
+    Observable<GetUserDetailsResponse.Response> getSaveUserDetailsApiCall(SetUserDetailsRequest setUserDetailsRequest);
+
+    Observable<GetUserDetailsResponse> getLoadUserDetailsApiCall();
+
 }

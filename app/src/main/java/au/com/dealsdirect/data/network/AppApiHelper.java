@@ -7,6 +7,8 @@ import com.mysale.genie.utility.config.api.GetAppSettingsSection;
 import com.mysale.genie.utility.config.api.GetServerSettings;
 import com.rx2androidnetworking.Rx2AndroidNetworking;
 
+import java.lang.reflect.TypeVariable;
+
 import javax.inject.Inject;
 import javax.inject.Singleton;
 
@@ -32,6 +34,8 @@ import au.com.dealsdirect.data.network.model.publicsalescategories.GetPublicSale
 import au.com.dealsdirect.data.network.model.saleitems.GetPublicSaleItemsRequest;
 import au.com.dealsdirect.data.network.model.saleitems.GetPublicSaleItemsResponse;
 import au.com.dealsdirect.data.network.model.viewcontactitem.GetContactsResponse;
+import au.com.dealsdirect.data.network.model.userdetails.GetUserDetailsResponse;
+import au.com.dealsdirect.data.network.model.userdetails.SetUserDetailsRequest;
 import au.com.dealsdirect.utils.JsonUtils;
 import io.reactivex.Observable;
 
@@ -224,5 +228,22 @@ public class AppApiHelper implements ApiHelper {
                 .getObjectObservable(GetContactsResponse.Response.class);
     }
 
+    @Override
+    public Observable<GetUserDetailsResponse.Response> getSaveUserDetailsApiCall(SetUserDetailsRequest setUserDetailsRequest) {
+        return Rx2AndroidNetworking.post(ApiEndPoint.SAVE_USER_DETAILS)
+                .addHeaders(mApiHeader.getPublicApiHeader())
+                .addJSONObjectBody(JsonUtils.convertToJsonObject(setUserDetailsRequest))
+                .build()
+                .getObjectObservable(GetUserDetailsResponse.Response.class);
+    }
+
+    @Override
+    public Observable<GetUserDetailsResponse> getLoadUserDetailsApiCall() {
+        return Rx2AndroidNetworking.post(ApiEndPoint.LOAD_USER_DETAILS)
+                .addHeaders(mApiHeader.getPublicApiHeader())
+                .addJSONObjectBody(JsonUtils.convertToJsonObject(null))
+                .build()
+                .getObjectObservable(GetUserDetailsResponse.class);
+    }
 }
 

@@ -35,6 +35,8 @@ public final class ApiEndPoint {
     public static final String GET_APP_SETTINGS_TEST = TEST_API_LEGACY + "GetAppSettings";
     public static final String GET_APP_SETTINGS_SECTION_TEST = TEST_API_LEGACY + "GetAppSettingsSection";
 
+    public static final String GET_USER_LANGUAGES = BASE_URL + "GetUserLanguages";
+
     /* Shops Controller */
     public static final String GET_SHOP_BANNERS = BASE_URL + "GetPublicSalesBanners";
     public static final String GET_SALES_CATEGORIES = BASE_URL + "GetSaleCategories";
@@ -95,6 +97,8 @@ public final class ApiEndPoint {
     public static String LOGIN_TICKET = TEST_API_LEGACY + "LoginTicket";
     public static String LOGOUT = TEST_API_LEGACY + "Logout";
     public static String REGISTRATION = TEST_API_LEGACY + "Registration";
+    public static String SAVE_USER_DETAILS = TEST_API_LEGACY + "SetUserDetails";
+    public static String LOAD_USER_DETAILS = TEST_API_LEGACY + "GetUserDetails";
 
 
     /* Summary */
