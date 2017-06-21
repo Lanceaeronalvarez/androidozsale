@@ -85,10 +85,10 @@ public final class ApiEndPoint {
     public static String CREATE_RETURN = "CreateReturn";
 
     /* Address Controller */
-    public static final String DELETE_USER_DELIVERY_ADDRESS = "DeleteUserDeliveryAddress";
-    public static final String GET_USER_ADDRESSES = "GetUserAddresses";
-    public static final String SET_USER_DELIVERY_ADDRESS = "SetUserDeliveryAddress";
-    public static final String APPLY_DELIVERY_ADDRESS = "ApplyDeliveryAddress";
+    public static final String DELETE_USER_DELIVERY_ADDRESS = TEST_API_LEGACY + "DeleteUserDeliveryAddress";
+    public static final String GET_USER_ADDRESSES = TEST_API_LEGACY + "GetUserAddresses";
+    public static final String SET_USER_DELIVERY_ADDRESS = TEST_API_LEGACY + "SetUserDeliveryAddress";
+    public static final String APPLY_DELIVERY_ADDRESS = TEST_API_LEGACY + "ApplyDeliveryAddress";
 
     /* Login Controller */
     public static String FORGOT_PASSWORD = "ForgotPassword"; //

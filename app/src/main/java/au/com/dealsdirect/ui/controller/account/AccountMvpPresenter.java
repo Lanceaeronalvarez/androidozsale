@@ -10,4 +10,6 @@ import au.com.dealsdirect.ui.base.MvpView;
 public interface AccountMvpPresenter <V extends MvpView> extends MvpPresenter<V> {
 
     void loadAccountItems();
+
+    void onAccountItemClick(String option);
 }

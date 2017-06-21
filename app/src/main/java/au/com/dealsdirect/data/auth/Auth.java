@@ -55,9 +55,9 @@ public class Auth implements AuthHelper {
     }
 
     public void invokeLogin(Router router, AuthHandler handler) {
-        router.pushController(RouterTransaction.with(LoginController.newInstance())
-                .pushChangeHandler(new VerticalChangeHandler())
-                .popChangeHandler(new VerticalChangeHandler()));
+//        router.pushController(RouterTransaction.with(LoginController.newInstance())
+//                .pushChangeHandler(new VerticalChangeHandler())
+//                .popChangeHandler(new VerticalChangeHandler()));
 
         Auth.sAuthHandler = handler;
     }

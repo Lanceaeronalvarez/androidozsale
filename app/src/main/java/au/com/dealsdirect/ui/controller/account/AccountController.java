@@ -18,13 +18,14 @@ import java.util.List;
 import javax.inject.Inject;
 
 import au.com.dealsdirect.R;
-import au.com.dealsdirect.data.auth.Auth;
 import au.com.dealsdirect.data.auth.AuthHandler;
 import au.com.dealsdirect.ui.base.BaseController;
 import au.com.dealsdirect.ui.controller.account.adapter.AccountItemAdapter;
 import au.com.dealsdirect.ui.controller.account.listener.AccountItemClickListener;
+import au.com.dealsdirect.ui.controller.address.viewaddress.ViewAddressController;
 import au.com.dealsdirect.ui.controller.contact.viewcontacts.ViewContactsController;
 import au.com.dealsdirect.ui.controller.details.DetailsController;
+import au.com.dealsdirect.ui.main.MainMvpView;
 import au.com.dealsdirect.utils.BundleBuilder;
 import butterknife.BindView;
 
@@ -32,7 +33,7 @@ import butterknife.BindView;
  * dp Created by Admin on 6/6/17.
  */
 
-public class AccountController extends BaseController implements AccountMvpView, AccountItemClickListener {
+public class AccountController extends BaseController implements AccountMvpView {
 
     public static final String TAG = "AccountController";
     private static final String KEY_TEXT = "AccountController.KEY_TEXT";
@@ -81,7 +82,7 @@ public class AccountController extends BaseController implements AccountMvpView,
     @Override
     protected void setUp(View view) {
         // Setup views here
-        accountItemClickListener = this;
+
         mPresenter.loadAccountItems();
         mTitleTextView.setText("My Account");
     }
@@ -101,7 +102,7 @@ public class AccountController extends BaseController implements AccountMvpView,
     @Override
     public void showAccountItems(List<String> accountItems) {
         AccountItemAdapter accountItemAdapter
-                = new AccountItemAdapter(accountItems, getActivity(), accountItemClickListener);
+                = new AccountItemAdapter(accountItems, getActivity(), mPresenter);
         mAccountRecyclerView.setAdapter(accountItemAdapter);
         mAccountRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
         mAccountRecyclerView.setItemAnimator(new DefaultItemAnimator());
@@ -117,7 +118,9 @@ public class AccountController extends BaseController implements AccountMvpView,
 
     @Override
     public void showMyAddressesController() {
-
+        getRouter().pushController(RouterTransaction.with(new ViewAddressController())
+                .pushChangeHandler(new HorizontalChangeHandler())
+                .popChangeHandler(new HorizontalChangeHandler()));
     }
 
     @Override
@@ -148,33 +151,20 @@ public class AccountController extends BaseController implements AccountMvpView,
     }
 
     @Override
-    public void onAccountItemClickListener(String option) {
+    public void triggerLogin(String option) {
 
-        switch (option) {
+        ((MainMvpView)getActivity()).showLoginController(getRouter(),new AuthHandler() {
+            @Override
+            public void success() {
+                mPresenter.onAccountItemClick(option);
+            }
 
-            case "My Details":
-                showMyDetailsController();
-                break;
-            case "My Addresses":
-                break;
-            case "My Orders":
-                break;
-            case "My Vouchers":
-                break;
-            case "My Returns":
-                break;
-            case "Contact Us":
-                if (new Auth().isAuthorized()) {
-                    showViewContactUsController();
-                } else {
-                    new Auth().invokeLogin(getRouter(), new AuthHandler() {
-                        @Override
-                        public void success() {
-                            showViewContactUsController();
-                        }
-                    });
-                }
+            @Override
+            public void error() {
 
-        }
+            }
+        });
     }
+
 }
+

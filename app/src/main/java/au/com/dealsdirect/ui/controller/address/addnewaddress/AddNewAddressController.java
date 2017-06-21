@@ -5,19 +5,17 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.text.InputFilter;
 import android.text.InputType;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.Spinner;
 import android.widget.TextView;
 
-import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
-import com.mysale.genie.utility.RxBus;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -29,6 +27,8 @@ import au.com.dealsdirect.data.network.model.address.DecorationInfoList;
 import au.com.dealsdirect.ui.base.BaseController;
 import au.com.dealsdirect.utils.BundleBuilder;
 import au.com.dealsdirect.utils.JsonUtils;
+import butterknife.BindView;
+import butterknife.OnClick;
 import timber.log.Timber;
 
 /**
@@ -41,6 +41,12 @@ public class AddNewAddressController extends BaseController implements AddNewAdd
 
     private ArrayList<DecorationInfoList> mDecorationInfoList;
     private HashMap<DecorationInfoList, View> mViewMap = new HashMap<>();
+
+    @BindView(R.id.partial_toolbar_arrow_title)
+    TextView mAddNewAddressToolarTitle;
+    @BindView(R.id.partial_toolbar_filter_view)
+    ImageView mAddNewAddressRightOption;
+
 
     @Inject
     AddNewAddressMvpPresenter<AddNewAddressMvpView> mPresenter;
@@ -68,20 +74,14 @@ public class AddNewAddressController extends BaseController implements AddNewAdd
 
     @Override
     protected void setUp(View view) {
-//        setupDefaultBottomButton(getString(R.string.use_this_address), new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//
-//                GDebug.log("addnewaddress", "mpresenter addnewddress");
-//                mPresenter.addNewAddress(mViewMap);
-//            }
-//        });
-//        call mpresenter add new address.
+
+        mAddNewAddressToolarTitle.setText("Add New Address");
+        mAddNewAddressRightOption.setImageDrawable(getApplicationContext().getDrawable(R.drawable.ic_check));
     }
 
     @Override
     protected View inflateView(@NonNull LayoutInflater inflater, @NonNull ViewGroup container) {
-        View view = inflater.inflate(R.layout.controller_addnewaddress, container, false);
+        View view = inflater.inflate(R.layout.controller_add_new_address, container, false);
         getControllerComponent().inject(this);
         mPresenter.onAttach(this);
 
@@ -167,6 +167,16 @@ public class AddNewAddressController extends BaseController implements AddNewAdd
 ////            getBaseActivity().popBackToFragment("class au.com.topbuy.checkoutmodule.checkout.CheckoutFragment");
 //        }
 //        getBaseActivity().callPopBackStack();
+    }
+
+    @OnClick(R.id.partial_toolbar_arrow_view)
+    public void onBackClick() {
+        getActivity().onBackPressed();
+    }
+
+    @OnClick(R.id.partial_toolbar_filter_view)
+    public void callAddNewAddress(){
+        mPresenter.addNewAddress(mViewMap);
     }
 
     @Override

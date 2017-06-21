@@ -7,7 +7,13 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.RelativeLayout;
+import android.widget.TextView;
+
+import com.bluelinelabs.conductor.RouterTransaction;
+import com.bluelinelabs.conductor.changehandler.HorizontalChangeHandler;
+import com.google.gson.Gson;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -16,11 +22,14 @@ import javax.inject.Inject;
 
 import au.com.dealsdirect.R;
 import au.com.dealsdirect.data.network.model.address.AddressesItem;
+import au.com.dealsdirect.data.network.model.address.DecorationInfoList;
 import au.com.dealsdirect.data.network.model.address.DeleteUserAddress;
 import au.com.dealsdirect.data.network.model.address.GetAddresses;
 import au.com.dealsdirect.ui.base.BaseController;
 import au.com.dealsdirect.ui.controller.address.RecyclerOnTouchListener;
+import au.com.dealsdirect.ui.controller.address.addnewaddress.AddNewAddressController;
 import butterknife.BindView;
+import butterknife.OnClick;
 import timber.log.Timber;
 
 /**
@@ -29,19 +38,22 @@ import timber.log.Timber;
 
 public class ViewAddressController extends BaseController implements ViewAddressMvpView {
 
-    @BindView(R.id.view_addresses_layout)
-    RelativeLayout mAddressRootLayout;
     @BindView(R.id.no_addresses_layout)
     RelativeLayout mAddressPlaceHolder;
     @BindView(R.id.view_addresses_recyclerView)
     RecyclerView mRecyclerView;
+
+    @BindView(R.id.partial_toolbar_arrow_title)
+    TextView mViewAddressToolarTitle;
+    @BindView(R.id.partial_toolbar_filter_view)
+    ImageView mViewAddressRightOption;
 
     private List<AddressesItem> mAddressList;
     boolean mCalledFromCart;
     private int recyclerTempItemPosition;
     private int recyclerTempItemsSize;
     private ViewAddressRecyclerViewAdapter mRecyclerViewAdapter;
-    private GetAddresses.ResponseValue mGetUserAddressesResponseValue;
+    private List<DecorationInfoList> mDecorationInfoList;
     private boolean mAddressesLoaded = false;
 
     @Inject
@@ -55,6 +67,11 @@ public class ViewAddressController extends BaseController implements ViewAddress
 
     @Override
     protected void setUp(View view) {
+        mPresenter.loadAddresses();
+
+        mViewAddressToolarTitle.setText("My Addresses");
+        mViewAddressRightOption.setImageDrawable(getApplicationContext().getDrawable(R.drawable.ic_add));
+
         mAddressList = new ArrayList<>();
         mRecyclerViewAdapter = new ViewAddressRecyclerViewAdapter(mCalledFromCart, this, mAddressList, getActivity());
 
@@ -66,7 +83,7 @@ public class ViewAddressController extends BaseController implements ViewAddress
         itemAnimator.setRemoveDuration(1000);
         mRecyclerView.setItemAnimator(itemAnimator);
 
-        if (mCalledFromCart){
+        if (mCalledFromCart) {
             mRecyclerView.addOnItemTouchListener(
                     new RecyclerOnTouchListener(
                             getActivity(),
@@ -87,12 +104,11 @@ public class ViewAddressController extends BaseController implements ViewAddress
                             }));
         }
 
-        mPresenter.loadAddresses();
     }
 
     @Override
     protected View inflateView(@NonNull LayoutInflater inflater, @NonNull ViewGroup container) {
-        View view = inflater.inflate(R.layout.controller_addnewaddress, container, false);
+        View view = inflater.inflate(R.layout.controller_view_address, container, false);
         getControllerComponent().inject(this);
         mPresenter.onAttach(this);
 
@@ -108,19 +124,19 @@ public class ViewAddressController extends BaseController implements ViewAddress
 
             //If status 0, not valid Address
             if (mAddressList != null) {
-                ArrayList<AddressesItem> addressesItems = responseValue.d.Value.AddressesList;
-                for (int i = addressesItems.size()-1; i >= 0; i--) {
+                List<AddressesItem> addressesItems = responseValue.d.Value.AddressesList;
+                for (int i = addressesItems.size() - 1; i >= 0; i--) {
                     AddressesItem addressesItem = addressesItems.get(i);
                     if (addressesItem.Status != 0) {
                         mAddressList.add(addressesItem);
                     }
                 }
-                if (mAddressList.size() == 0){
+                if (mAddressList.size() == 0) {
                     Timber.d("ViewAddressController", "mAddressList size is zero");
                     mRecyclerView.setVisibility(View.GONE);
                     mAddressPlaceHolder.setVisibility(View.VISIBLE);
                 }
-                mGetUserAddressesResponseValue = responseValue;
+                mDecorationInfoList = responseValue.d.Value.DecorationInfoList;
                 mRecyclerViewAdapter.replaceData(mAddressList);
                 mAddressesLoaded = true;
 
@@ -134,12 +150,12 @@ public class ViewAddressController extends BaseController implements ViewAddress
 //                            }
 //                        });
 
-            }else{
+            } else {
                 Timber.d("ViewAddressController", "mAddressList is null)");
                 mRecyclerView.setVisibility(View.GONE);
                 mAddressPlaceHolder.setVisibility(View.VISIBLE);
             }
-        }else{
+        } else {
             Timber.d("ViewAddressController", "response.d.Value is null) error");
         }
     }
@@ -159,25 +175,33 @@ public class ViewAddressController extends BaseController implements ViewAddress
 
         mRecyclerViewAdapter.removeItemAtPosition(recyclerTempItemPosition);
         mRecyclerViewAdapter.notifyItemChanged(recyclerTempItemPosition);
-        mRecyclerViewAdapter.notifyItemRangeChanged(recyclerTempItemPosition,recyclerTempItemsSize);
+        mRecyclerViewAdapter.notifyItemRangeChanged(recyclerTempItemPosition, recyclerTempItemsSize);
     }
 
     @Override
-    public void onDeleteItemClicked(
-            DeleteUserAddress.RequestValues deleteUserAddressRequest,
-            int position,
-            int itemRange) {
-
+    public void onDeleteItemClicked(DeleteUserAddress.RequestValues deleteUserAddressRequest, int position, int itemRange) {
         recyclerTempItemPosition = position;
         recyclerTempItemsSize = itemRange;
 
         mPresenter.deleteUserDeliveryAddress(deleteUserAddressRequest.getAddressID());
     }
 
-    private void showAddNewAddress() {
+
+    @OnClick(R.id.partial_toolbar_arrow_view)
+    public void onBackClick() {
+        getActivity().onBackPressed();
+    }
+
+    @OnClick(R.id.partial_toolbar_filter_view)
+    public void showAddNewAddress() {
 //        AddNewAddressFragment fragment = AddNewAddressFragment
 //                .newInstance(mActivity, mGetUserAddressesResponse.d.Value.DecorationInfoList, mCalledFromCart);
 //        push router to addnewaddress
+        Gson gson = new Gson();
+        getRouter().pushController(RouterTransaction.with(new AddNewAddressController(gson.toJson(mDecorationInfoList), false))
+                .pushChangeHandler(new HorizontalChangeHandler())
+                .popChangeHandler(new HorizontalChangeHandler()));
+
 
     }
 }
