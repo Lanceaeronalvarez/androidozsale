@@ -37,10 +37,11 @@ public class LoginController extends BaseController implements LoginMvpView {
     Button mLoginButton;
     @BindView(R.id.facebook_login_button)
     RelativeLayout mFacebookButton;
-//    @BindView(R.id.fragment_forgot_text)
-//    TextView mForgotPassword;
     @BindView(R.id.fragment_login_signup_text)
     TextView mSignupTextView;
+
+    @BindView(R.id.partial_toolbar_title_view)
+    TextView mLoginToolbarTitle;
 
     private boolean isLoginTapped = false;
 
@@ -50,6 +51,7 @@ public class LoginController extends BaseController implements LoginMvpView {
                 new BundleBuilder(new Bundle())
                         .build());
     }
+
 
     private static final String EMAIL_PATTERN =
             "^[a-zA-Z0-9#_~!$&'()*+,;=:.\"(),:;<>@\\[\\]\\\\]+@[a-zA-Z0-9-]+(\\.[a-zA-Z0-9-]+)*$";
@@ -87,6 +89,8 @@ public class LoginController extends BaseController implements LoginMvpView {
 
     @Override
     protected void setUp(View view) {
+
+        mLoginToolbarTitle.setText("Login");
         mLoginButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -162,4 +166,5 @@ public class LoginController extends BaseController implements LoginMvpView {
         String password = mPasswordEditText.getText().toString();
         mPresenter.loginViaEmail(email, password);
     }
+
 }

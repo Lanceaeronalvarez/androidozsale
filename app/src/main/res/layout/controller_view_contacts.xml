@@ -24,9 +24,6 @@
         android:layout_margin="@dimen/activity_horizontal_margin"
         android:text="Create Contact"
         android:clickable="true"
-        android:textColor="#FFFFFF"
-        android:textStyle="normal"
-        android:textAllCaps="false"
         android:layout_gravity="bottom"
         style="@style/DefaultButtonTheme"/>
 

@@ -11,13 +11,15 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.bluelinelabs.conductor.RouterTransaction;
-import com.bluelinelabs.conductor.changehandler.HorizontalChangeHandler;
+import com.bluelinelabs.conductor.changehandler.VerticalChangeHandler;
 
 import java.util.List;
 
 import javax.inject.Inject;
 
 import au.com.dealsdirect.R;
+import au.com.dealsdirect.data.auth.Auth;
+import au.com.dealsdirect.data.auth.AuthHandler;
 import au.com.dealsdirect.ui.base.BaseController;
 import au.com.dealsdirect.ui.controller.account.adapter.AccountItemAdapter;
 import au.com.dealsdirect.ui.controller.account.listener.AccountItemClickListener;
@@ -107,28 +109,43 @@ public class AccountController extends BaseController implements AccountMvpView,
 
     @Override
     public void onAccountItemClickListener(String option) {
-        switch (option){
 
-            case "My Details":
-                break;
-            case "My Addresses":
-                break;
-            case "My Orders":
-                break;
-            case "My Vouchers":
-                break;
-            case "My Returns":
-                break;
-            case "Contact Us":
-                getRouter().pushController(RouterTransaction.with(ViewContactsController.newInstance())
-                        .pushChangeHandler(new HorizontalChangeHandler())
-                        .popChangeHandler(new HorizontalChangeHandler()));
+        if(new Auth().isAuthorized()){
 
-                break;
-            case "Language":
-                break;
-            default:
-                break;
+
+            switch (option){
+
+                case "My Details":
+                    break;
+                case "My Addresses":
+                    break;
+                case "My Orders":
+                    break;
+                case "My Vouchers":
+                    break;
+                case "My Returns":
+                    break;
+                case "Contact Us":
+                    getRouter().pushController(RouterTransaction.with(ViewContactsController.newInstance())
+                            .pushChangeHandler(new VerticalChangeHandler())
+                            .popChangeHandler(new VerticalChangeHandler()));
+
+                    break;
+                case "Language":
+                    break;
+                default:
+                    break;
+            }
+        }else{
+
+            new Auth().invokeLogin(getRouter(), new AuthHandler() {
+                @Override
+                public void success() {
+                    onAccountItemClickListener(option);
+                }
+            });
         }
+
+
     }
 }

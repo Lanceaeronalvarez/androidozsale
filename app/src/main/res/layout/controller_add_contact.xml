@@ -80,14 +80,13 @@
                 android:textSize="@dimen/text_size_large"
                 android:textColor="#616161"/>
 
-
-
             <EditText
                 style="@style/Widget.AppCompat.Spinner.Underlined"
                 android:layout_width="match_parent"
                 android:layout_height="140dp"
                 android:background="@drawable/bg_add_contact_message"
                 android:padding="10dp"
+                android:gravity="top"
                 android:layout_marginTop="10dp"/>
 
         </LinearLayout>

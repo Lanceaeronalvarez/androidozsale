@@ -14,6 +14,12 @@
         android:background="@android:color/white"
         android:orientation="vertical">
 
+
+        <include
+            android:id="@+id/view_contacts_toolbar"
+            layout="@layout/partial_toolbar_title" />
+
+
         <RelativeLayout
             android:id="@+id/facebook_login_button"
             android:layout_width="match_parent"
@@ -99,7 +105,7 @@
                 android:layout_marginTop="10dp"
                 app:hintEnabled="false">
 
-                <com.mysale.genie.views.custom.GenieEditText
+                <EditText
                     android:id="@+id/email"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
