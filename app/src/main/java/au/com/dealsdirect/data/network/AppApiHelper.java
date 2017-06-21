@@ -12,6 +12,11 @@ import javax.inject.Singleton;
 
 import au.com.dealsdirect.data.network.model.SampleRequest;
 import au.com.dealsdirect.data.network.model.SampleResponse;
+import au.com.dealsdirect.data.network.model.address.AddAddress;
+import au.com.dealsdirect.data.network.model.address.ApplyAddressRequest;
+import au.com.dealsdirect.data.network.model.address.ApplyAddressResponse;
+import au.com.dealsdirect.data.network.model.address.DeleteUserAddress;
+import au.com.dealsdirect.data.network.model.address.GetAddresses;
 import au.com.dealsdirect.data.network.model.banner.GetPublicSalesBannerRequest;
 import au.com.dealsdirect.data.network.model.banner.GetPublicSalesBannerResponse;
 import au.com.dealsdirect.data.network.model.login.LoginEmail;
@@ -171,6 +176,42 @@ public class AppApiHelper implements ApiHelper {
                 .addJSONObjectBody(JsonUtils.convertToJsonObject(requestValue))
                 .build()
                 .getObjectObservable(Logout.ResponseValue.class);
+    }
+
+    @Override
+    public Observable<GetAddresses.ResponseValue> callGetUserAddresses(GetAddresses.RequestValues requestValues) {
+        return Rx2AndroidNetworking.post(ApiEndPoint.GET_USER_ADDRESSES)
+                .addHeaders(mApiHeader.getPublicApiHeader())
+                .addJSONObjectBody(JsonUtils.convertToJsonObject(requestValues))
+                .build()
+                .getObjectObservable(GetAddresses.ResponseValue.class);
+    }
+
+    @Override
+    public Observable<AddAddress.ResponseValue> callSetUserDeliveryAddress(AddAddress.RequestValues requestValues) {
+        return Rx2AndroidNetworking.post(ApiEndPoint.SET_USER_DELIVERY_ADDRESS)
+                .addHeaders(mApiHeader.getPublicApiHeader())
+                .addJSONObjectBody(JsonUtils.convertToJsonObject(requestValues))
+                .build()
+                .getObjectObservable(AddAddress.ResponseValue.class);
+    }
+
+    @Override
+    public Observable<ApplyAddressResponse> callApplyDeliveryAddress(ApplyAddressRequest requestValues) {
+        return Rx2AndroidNetworking.post(ApiEndPoint.APPLY_DELIVERY_ADDRESS)
+                .addHeaders(mApiHeader.getPublicApiHeader())
+                .addJSONObjectBody(JsonUtils.convertToJsonObject(requestValues))
+                .build()
+                .getObjectObservable(ApplyAddressResponse.class);
+    }
+
+    @Override
+    public Observable<DeleteUserAddress.ResponseValue> callDeleteUserDeliveryAddress(DeleteUserAddress.RequestValues requestValues) {
+        return Rx2AndroidNetworking.post(ApiEndPoint.DELETE_USER_DELIVERY_ADDRESS)
+                .addHeaders(mApiHeader.getPublicApiHeader())
+                .addJSONObjectBody(JsonUtils.convertToJsonObject(requestValues))
+                .build()
+                .getObjectObservable(DeleteUserAddress.ResponseValue.class);
     }
 
 

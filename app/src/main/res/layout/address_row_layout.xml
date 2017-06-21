@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:ignore="MissingPrefix">
+
+    <ImageView
+        android:id="@+id/home_logo"
+        android:layout_width="20dp"
+        android:layout_height="20dp"
+        android:layout_alignParentLeft="true"
+        android:src="@drawable/ic_home_delivery"
+        android:layout_marginTop="15dp"/>
+
+    <LinearLayout
+        android:id="@+id/view_my_addresses_row_layout"
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:layout_marginLeft="20dp"
+        android:layout_toRightOf="@id/home_logo">
+
+        <TextView
+            android:id="@+id/view_my_address_row_item_name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="20sp"
+            android:text="Address 1"
+            android:textColor="@color/gray_field_label"/>
+
+        <TextView
+            android:id="@+id/view_my_address_row_item_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="some address"
+            android:textColor="@color/gray_title_text"/>
+
+        <!-- remove text and express delivery layout below, uncomment to implement-->
+        <!--<TextView-->
+            <!--android:id="@+id/remove_address_text"-->
+            <!--android:layout_width="wrap_content"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--app:font="@string/fontname_lato"-->
+            <!--android:layout_marginTop="10dp"-->
+            <!--android:text="remove"-->
+            <!--android:textColor="@color/activeteal" />-->
+
+        <!--<LinearLayout-->
+            <!--android:id="@+id/express_delivery_layout"-->
+            <!--android:layout_width="wrap_content"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:orientation="vertical"-->
+            <!--android:layout_marginTop="15dp"-->
+            <!--android:visibility="gone">-->
+            <!--<TextView-->
+                <!--android:id="@+id/view_my_address_row_express_delivery"-->
+                <!--app:font="@string/fontname_lato_bold"-->
+                <!--android:layout_width="wrap_content"-->
+                <!--android:layout_height="wrap_content"-->
+                <!--android:textSize="16sp"-->
+                <!--android:text="express delivery $(15)"-->
+                <!--android:textColor="@color/go_to_top_gray"/>-->
+
+            <!--<TextView-->
+                <!--android:id="@+id/view_my_address_row_item_delivery_hint"-->
+                <!--app:font="@string/fontname_lato_bold_italic"-->
+                <!--android:layout_width="wrap_content"-->
+                <!--android:layout_height="wrap_content"-->
+                <!--android:layout_marginTop="5dp"-->
+                <!--android:textSize="12sp"-->
+                <!--android:text="Pickup your order when and where it's convenient"-->
+                <!--android:textColor="@color/hint_gray"/>-->
+        <!--</LinearLayout>-->
+
+    </LinearLayout>
+
+
+    <TextView
+        android:id="@+id/remove_address_text"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="15dp"
+        android:layout_alignLeft="@+id/view_my_addresses_row_layout"
+        android:layout_below="@+id/view_my_addresses_row_layout"
+        android:clickable="true"
+        android:textColor="@drawable/remove_address_text_selector"
+        android:textSize="16sp"
+        android:text="@string/remove_string"/>
+
+    <View android:layout_width="match_parent"
+          android:layout_height="0.5dp"
+          android:layout_marginTop="20dp"
+          android:layout_below="@+id/remove_address_text"
+          android:background="@color/border_gray"/>
+
+</RelativeLayout>

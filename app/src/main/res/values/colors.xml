@@ -12,6 +12,8 @@
     <color name="filter_text_active">#00A6B4</color>
     <color name="filter_text_inactive">#5F5F5F</color>
 
+    <color name="border_gray">#E4E4E4</color>
+
     <color name="gray_title_text">#5F5F5F</color>
     <color name="gray_field_text">#868686</color>
     <color name="gray_field_label">#87939D</color>

@@ -2,6 +2,12 @@ package au.com.dealsdirect.di.module;
 
 import com.bluelinelabs.conductor.Controller;
 
+import au.com.dealsdirect.ui.controller.address.addnewaddress.AddNewAddressMvpPresenter;
+import au.com.dealsdirect.ui.controller.address.addnewaddress.AddNewAddressMvpView;
+import au.com.dealsdirect.ui.controller.address.addnewaddress.AddNewAddressPresenter;
+import au.com.dealsdirect.ui.controller.address.viewaddress.ViewAddressMvpPresenter;
+import au.com.dealsdirect.ui.controller.address.viewaddress.ViewAddressMvpView;
+import au.com.dealsdirect.ui.controller.address.viewaddress.ViewAddressPresenter;
 import au.com.dealsdirect.ui.controller.categories.CategoriesMvpPresenter;
 import au.com.dealsdirect.ui.controller.categories.CategoriesMvpView;
 import au.com.dealsdirect.ui.controller.categories.CategoriesPresenter;
@@ -120,6 +126,16 @@ public class ControllerModule {
 
     @Provides
     AddContactMvpPresenter<AddContactMvpView> provideAddContactPresenter(AddContactpresenter<AddContactMvpView> presenter){
+        return presenter;
+    }
+
+    @Provides
+    ViewAddressMvpPresenter<ViewAddressMvpView> provideViewAddressPresenter(ViewAddressPresenter<ViewAddressMvpView> presenter){
+        return presenter;
+    }
+
+    @Provides
+    AddNewAddressMvpPresenter<AddNewAddressMvpView> provideAddNewAddressPresenter(AddNewAddressPresenter<AddNewAddressMvpView> presenter){
         return presenter;
     }
 }

@@ -131,4 +131,24 @@
     <string name="input_email_address">Input email address</string>
     <string name="registration_success">Registration Successful!</string>
     <string name="logged_in">Logged In</string>
+
+    <!--ADDRESS STRINGS-->
+    <string name="signature_on_delivery_note">*Your order will be left unattended. Please specify your preference
+        or Turn Back if you need signature on Delivery or you disagree with Terms &amp; Conditions
+    </string>
+    <string name="my_addresses">my addresses</string>
+    <string name="add_delivery_address">add delivery address</string>
+    <string name="use_this_address">use this address</string>
+    <string name="new_address">new address</string>
+    <string name="need_signature_on_delivery">Need Signature On Delivery</string>
+    <string name="write_your_instructions_here">write your instructions here</string>
+    <string name="delivery_instructions_are_limited_to_90_characters">*Delivery instructions are
+        limited to 90 characters
+    </string>
+    <string name="delivery_instructions">Delivery instructions</string>
+    <string name="you_currently_do_not_have_any_addresses">you currently do not have any addresses
+    </string>
+    <string name="welcome_to_my_address">welcome to my address</string>
+    <string name="delivery_address_added">delivery address added</string>
+    <string name="remove_string">remove</string>
 </resources>

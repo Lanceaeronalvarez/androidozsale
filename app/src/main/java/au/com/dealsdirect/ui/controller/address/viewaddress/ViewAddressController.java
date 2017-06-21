@@ -1,0 +1,183 @@
+package au.com.dealsdirect.ui.controller.address.viewaddress;
+
+import android.support.annotation.NonNull;
+import android.support.v7.widget.DefaultItemAnimator;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.RelativeLayout;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import javax.inject.Inject;
+
+import au.com.dealsdirect.R;
+import au.com.dealsdirect.data.network.model.address.AddressesItem;
+import au.com.dealsdirect.data.network.model.address.DeleteUserAddress;
+import au.com.dealsdirect.data.network.model.address.GetAddresses;
+import au.com.dealsdirect.ui.base.BaseController;
+import au.com.dealsdirect.ui.controller.address.RecyclerOnTouchListener;
+import butterknife.BindView;
+import timber.log.Timber;
+
+/**
+ * Created by smartwave on 21/06/2017.
+ */
+
+public class ViewAddressController extends BaseController implements ViewAddressMvpView {
+
+    @BindView(R.id.view_addresses_layout)
+    RelativeLayout mAddressRootLayout;
+    @BindView(R.id.no_addresses_layout)
+    RelativeLayout mAddressPlaceHolder;
+    @BindView(R.id.view_addresses_recyclerView)
+    RecyclerView mRecyclerView;
+
+    private List<AddressesItem> mAddressList;
+    boolean mCalledFromCart;
+    private int recyclerTempItemPosition;
+    private int recyclerTempItemsSize;
+    private ViewAddressRecyclerViewAdapter mRecyclerViewAdapter;
+    private GetAddresses.ResponseValue mGetUserAddressesResponseValue;
+    private boolean mAddressesLoaded = false;
+
+    @Inject
+    ViewAddressMvpPresenter<ViewAddressMvpView> mPresenter;
+
+    @Override
+    protected void onViewBound(@NonNull View view) {
+        super.onViewBound(view);
+        setUp(view);
+    }
+
+    @Override
+    protected void setUp(View view) {
+        mAddressList = new ArrayList<>();
+        mRecyclerViewAdapter = new ViewAddressRecyclerViewAdapter(mCalledFromCart, this, mAddressList, getActivity());
+
+        mRecyclerView.setAdapter(mRecyclerViewAdapter);
+        mRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
+
+        RecyclerView.ItemAnimator itemAnimator = new DefaultItemAnimator();
+        itemAnimator.setAddDuration(1000);
+        itemAnimator.setRemoveDuration(1000);
+        mRecyclerView.setItemAnimator(itemAnimator);
+
+        if (mCalledFromCart){
+            mRecyclerView.addOnItemTouchListener(
+                    new RecyclerOnTouchListener(
+                            getActivity(),
+                            new RecyclerOnTouchListener.OnItemClickListener() {
+                                @Override
+                                public void onItemClick(
+                                        View v,
+                                        int position) {
+                                    if (mAddressesLoaded) {
+                                        //showAddNewAddressFragment();
+                                        AddressesItem item = mAddressList.get(position);
+
+//                                        getBaseActivity().showProgressDialog("Setting address. Please wait.");
+                                        mPresenter.applyDeliveryAddress(item.ID);
+
+                                    }
+                                }
+                            }));
+        }
+
+        mPresenter.loadAddresses();
+    }
+
+    @Override
+    protected View inflateView(@NonNull LayoutInflater inflater, @NonNull ViewGroup container) {
+        View view = inflater.inflate(R.layout.controller_addnewaddress, container, false);
+        getControllerComponent().inject(this);
+        mPresenter.onAttach(this);
+
+        return view;
+    }
+
+    @Override
+    public void showAddresses(GetAddresses.ResponseValue responseValue) {
+        Timber.d("ViewAddressController", "addresses response");
+        if (responseValue.d.Value != null) {
+            mRecyclerView.setVisibility(View.VISIBLE);
+            mAddressPlaceHolder.setVisibility(View.GONE);
+
+            //If status 0, not valid Address
+            if (mAddressList != null) {
+                ArrayList<AddressesItem> addressesItems = responseValue.d.Value.AddressesList;
+                for (int i = addressesItems.size()-1; i >= 0; i--) {
+                    AddressesItem addressesItem = addressesItems.get(i);
+                    if (addressesItem.Status != 0) {
+                        mAddressList.add(addressesItem);
+                    }
+                }
+                if (mAddressList.size() == 0){
+                    Timber.d("ViewAddressController", "mAddressList size is zero");
+                    mRecyclerView.setVisibility(View.GONE);
+                    mAddressPlaceHolder.setVisibility(View.VISIBLE);
+                }
+                mGetUserAddressesResponseValue = responseValue;
+                mRecyclerViewAdapter.replaceData(mAddressList);
+                mAddressesLoaded = true;
+
+//                setupDefaultBottomButton(getString(R.string.add_delivery_address),
+//                        new View.OnClickListener() {
+//                            @Override
+//                            public void onClick(View v) {
+//                                if (mAddressesLoaded) {
+//                                    showAddNewAddressFragment();
+//                                }
+//                            }
+//                        });
+
+            }else{
+                Timber.d("ViewAddressController", "mAddressList is null)");
+                mRecyclerView.setVisibility(View.GONE);
+                mAddressPlaceHolder.setVisibility(View.VISIBLE);
+            }
+        }else{
+            Timber.d("ViewAddressController", "response.d.Value is null) error");
+        }
+    }
+
+    @Override
+    public void onUserDeliveryAddressDeleted(DeleteUserAddress.ResponseValue responseValue) {
+        //        GDebug.log("remove address", "FROM VIEW MY ADDRESS - on user Delivery address deleted = "+
+//                responseValue
+//                        .getDeleteAddressResponseValue().getDeleteUserDeliveryAddressResponseValue().getMessage()+" ," +
+//                " "+responseValue
+//                .getDeleteAddressResponseValue()
+//                .getDeleteUserDeliveryAddressResponseValue().getType());
+//
+//        CustomAlertDialog.showCustomAlertDialog(mActivity,
+//                CustomAlertDialog.CustomDialogIconState.POSITIVE,
+//                "Removed address");
+
+        mRecyclerViewAdapter.removeItemAtPosition(recyclerTempItemPosition);
+        mRecyclerViewAdapter.notifyItemChanged(recyclerTempItemPosition);
+        mRecyclerViewAdapter.notifyItemRangeChanged(recyclerTempItemPosition,recyclerTempItemsSize);
+    }
+
+    @Override
+    public void onDeleteItemClicked(
+            DeleteUserAddress.RequestValues deleteUserAddressRequest,
+            int position,
+            int itemRange) {
+
+        recyclerTempItemPosition = position;
+        recyclerTempItemsSize = itemRange;
+
+        mPresenter.deleteUserDeliveryAddress(deleteUserAddressRequest.getAddressID());
+    }
+
+    private void showAddNewAddress() {
+//        AddNewAddressFragment fragment = AddNewAddressFragment
+//                .newInstance(mActivity, mGetUserAddressesResponse.d.Value.DecorationInfoList, mCalledFromCart);
+//        push router to addnewaddress
+
+    }
+}

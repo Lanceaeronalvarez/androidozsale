@@ -18,6 +18,11 @@ import au.com.dealsdirect.data.network.ApiHeader;
 import au.com.dealsdirect.data.network.ApiHelper;
 import au.com.dealsdirect.data.network.model.SampleRequest;
 import au.com.dealsdirect.data.network.model.SampleResponse;
+import au.com.dealsdirect.data.network.model.address.AddAddress;
+import au.com.dealsdirect.data.network.model.address.ApplyAddressRequest;
+import au.com.dealsdirect.data.network.model.address.ApplyAddressResponse;
+import au.com.dealsdirect.data.network.model.address.DeleteUserAddress;
+import au.com.dealsdirect.data.network.model.address.GetAddresses;
 import au.com.dealsdirect.data.network.model.banner.GetPublicSalesBannerRequest;
 import au.com.dealsdirect.data.network.model.banner.GetPublicSalesBannerResponse;
 import au.com.dealsdirect.data.network.model.login.LoginEmail;
@@ -128,6 +133,26 @@ public class AppDataManager implements DataManager {
     @Override
     public Observable<Logout.ResponseValue> callLogout(Logout.RequestValue requestValue) {
         return mApiHelper.callLogout(requestValue);
+    }
+
+    @Override
+    public Observable<GetAddresses.ResponseValue> callGetUserAddresses(GetAddresses.RequestValues requestValues) {
+        return mApiHelper.callGetUserAddresses(requestValues);
+    }
+
+    @Override
+    public Observable<AddAddress.ResponseValue> callSetUserDeliveryAddress(AddAddress.RequestValues requestValues) {
+        return mApiHelper.callSetUserDeliveryAddress(requestValues);
+    }
+
+    @Override
+    public Observable<ApplyAddressResponse> callApplyDeliveryAddress(ApplyAddressRequest requestValues) {
+        return mApiHelper.callApplyDeliveryAddress(requestValues);
+    }
+
+    @Override
+    public Observable<DeleteUserAddress.ResponseValue> callDeleteUserDeliveryAddress(DeleteUserAddress.RequestValues requestValues) {
+        return mApiHelper.callDeleteUserDeliveryAddress(requestValues);
     }
 
 

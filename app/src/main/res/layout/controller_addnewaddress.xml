@@ -1,0 +1,26 @@
+<android.support.v4.widget.NestedScrollView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/scrollView"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@android:color/white"
+    android:paddingBottom="20dp"
+    android:fitsSystemWindows="true">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="16dp"
+        android:orientation="vertical">
+
+        <LinearLayout
+            android:id="@+id/deliveryInfoPlaceholder"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginLeft="@dimen/screen_padding"
+            android:layout_marginRight="@dimen/screen_padding"
+            android:layout_marginTop="@dimen/screen_padding"
+            android:orientation="vertical"/>
+    </RelativeLayout>
+</android.support.v4.widget.NestedScrollView>

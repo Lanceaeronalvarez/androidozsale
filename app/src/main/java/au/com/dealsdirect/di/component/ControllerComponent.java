@@ -3,6 +3,8 @@ package au.com.dealsdirect.di.component;
 
 import au.com.dealsdirect.di.PerController;
 import au.com.dealsdirect.di.module.ControllerModule;
+import au.com.dealsdirect.ui.controller.address.addnewaddress.AddNewAddressController;
+import au.com.dealsdirect.ui.controller.address.viewaddress.ViewAddressController;
 import au.com.dealsdirect.ui.controller.categories.CategoriesController;
 import au.com.dealsdirect.ui.controller.account.AccountController;
 import au.com.dealsdirect.ui.controller.checkout.CheckoutController;
@@ -46,6 +48,10 @@ public interface ControllerComponent {
     void inject(SaleItemsController controller);
 
     void inject(LoginController controller);
+
+    void inject(ViewAddressController controller);
+
+    void inject(AddNewAddressController controller);
 
     void inject(AddContactController controller);
 }

@@ -79,13 +79,14 @@ public final class ApiEndPoint {
     public static final String GET_CURRENT_ORDER = "GetCurrentOrder";
     public static final String GET_ORDER_DETAILS = "GetOrderDetails";
 
-
     /* Return Controller */
     public static String CREATE_RETURN = "CreateReturn";
 
-
     /* Address Controller */
     public static final String DELETE_USER_DELIVERY_ADDRESS = "DeleteUserDeliveryAddress";
+    public static final String GET_USER_ADDRESSES = "GetUserAddresses";
+    public static final String SET_USER_DELIVERY_ADDRESS = "SetUserDeliveryAddress";
+    public static final String APPLY_DELIVERY_ADDRESS = "ApplyDeliveryAddress";
 
     /* Login Controller */
     public static String FORGOT_PASSWORD = "ForgotPassword"; //

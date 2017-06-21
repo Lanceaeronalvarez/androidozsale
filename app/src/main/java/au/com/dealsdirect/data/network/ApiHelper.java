@@ -9,6 +9,12 @@ import com.mysale.genie.utility.config.api.GetServerSettings;
 
 import au.com.dealsdirect.data.network.model.SampleRequest;
 import au.com.dealsdirect.data.network.model.SampleResponse;
+import au.com.dealsdirect.data.network.model.address.AddAddress;
+import au.com.dealsdirect.data.network.model.address.ApplyAddress;
+import au.com.dealsdirect.data.network.model.address.ApplyAddressRequest;
+import au.com.dealsdirect.data.network.model.address.ApplyAddressResponse;
+import au.com.dealsdirect.data.network.model.address.DeleteUserAddress;
+import au.com.dealsdirect.data.network.model.address.GetAddresses;
 import au.com.dealsdirect.data.network.model.banner.GetPublicSalesBannerRequest;
 import au.com.dealsdirect.data.network.model.banner.GetPublicSalesBannerResponse;
 import au.com.dealsdirect.data.network.model.login.LoginEmail;
@@ -65,4 +71,12 @@ public interface ApiHelper {
     Observable<LoginEmail.ResponseValue> callLoginTicket(LoginTicket.RequestValue requestValue);
 
     Observable<Logout.ResponseValue> callLogout(Logout.RequestValue requestValue);
+
+    Observable<GetAddresses.ResponseValue> callGetUserAddresses(GetAddresses.RequestValues requestValues);
+
+    Observable<AddAddress.ResponseValue> callSetUserDeliveryAddress(AddAddress.RequestValues requestValues);
+
+    Observable<ApplyAddressResponse> callApplyDeliveryAddress(ApplyAddressRequest requestValues);
+
+    Observable<DeleteUserAddress.ResponseValue> callDeleteUserDeliveryAddress(DeleteUserAddress.RequestValues requestValues);
 }
