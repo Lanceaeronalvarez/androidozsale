@@ -1,7 +1,9 @@
 package au.com.dealsdirect.data.network.model.address;
 
 import com.mysale.genie.utility.LegacyBaseResponseValue;
+
 import java.util.ArrayList;
+import java.util.List;
 
 /**
  * dp Created by Admin on 11/9/16.
@@ -12,7 +14,7 @@ public class GetAddresses {
 
         public String languageID;
 
-        public String getLanguageID(){
+        public String getLanguageID() {
             return languageID;
         }
 
@@ -26,13 +28,13 @@ public class GetAddresses {
 
         public Response d;
 
-        public static class Response extends LegacyBaseResponseValue{
+        public static class Response extends LegacyBaseResponseValue {
             public Value Value;
         }
 
         public static class Value {
-            public ArrayList<AddressesItem> AddressesList;
-            public ArrayList<DecorationInfoList> DecorationInfoList;
+            public List<AddressesItem> AddressesList;
+            public List<DecorationInfoList> DecorationInfoList;
         }
     }
 

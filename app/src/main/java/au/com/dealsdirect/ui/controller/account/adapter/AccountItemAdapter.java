@@ -10,7 +10,7 @@ import java.util.Collections;
 import java.util.List;
 
 import au.com.dealsdirect.R;
-import au.com.dealsdirect.ui.controller.account.listener.AccountItemClickListener;
+import au.com.dealsdirect.ui.controller.account.AccountMvpPresenter;
 import au.com.dealsdirect.ui.controller.account.viewholder.AccountItemViewHolder;
 
 /**
@@ -21,16 +21,17 @@ public class AccountItemAdapter extends RecyclerView.Adapter<AccountItemViewHold
 
     private List<String> mAccountItems = Collections.emptyList();
     private Context mContext;
-    private AccountItemClickListener mAccountItemClickListener;
+    private AccountMvpPresenter mPresenter;
+
 
     public AccountItemAdapter(
             List<String> mAccountItems,
             Context mContext,
-            AccountItemClickListener accountItemClickListener) {
+            AccountMvpPresenter presenter) {
 
         this.mAccountItems = mAccountItems;
         this.mContext = mContext;
-        this.mAccountItemClickListener = accountItemClickListener;
+        this.mPresenter = presenter;
     }
 
     @Override
@@ -49,7 +50,7 @@ public class AccountItemAdapter extends RecyclerView.Adapter<AccountItemViewHold
         holder.mAccountItemName
                 .setText(mAccountItems.get(position));
         holder.itemView.setOnClickListener(view ->
-                mAccountItemClickListener.onAccountItemClickListener(mAccountItems.get(position)));
+                mPresenter.onAccountItemClick(mAccountItems.get(position)));
     }
 
     @Override

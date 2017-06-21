@@ -19,6 +19,7 @@ import javax.inject.Inject;
 
 import au.com.dealsdirect.R;
 import au.com.dealsdirect.data.auth.Auth;
+import au.com.dealsdirect.data.auth.AuthHandler;
 import au.com.dealsdirect.ui.base.BaseController;
 import au.com.dealsdirect.utils.BundleBuilder;
 import butterknife.BindView;
@@ -26,6 +27,7 @@ import butterknife.BindView;
 public class LoginController extends BaseController implements LoginMvpView {
 
     public static final String TAG = "LoginController";
+    public static final String AUTH_HANDLER = "AUTH_HANDLER";
 
     @Inject
     LoginMvpPresenter<LoginMvpView> mPresenter;
@@ -46,10 +48,13 @@ public class LoginController extends BaseController implements LoginMvpView {
 
     private boolean isLoginTapped = false;
 
-    public static LoginController newInstance() {
+    AuthHandler mAuthHandler;
+
+    public static LoginController newInstance(AuthHandler handler) {
 
         return new LoginController(
                 new BundleBuilder(new Bundle())
+                        .putSerializable(AUTH_HANDLER,handler)
                         .build());
     }
 
@@ -62,6 +67,7 @@ public class LoginController extends BaseController implements LoginMvpView {
 
     public LoginController(Bundle args) {
         super(args);
+        mAuthHandler = (AuthHandler) args.getSerializable(AUTH_HANDLER);
     }
 
     @NonNull
@@ -96,7 +102,7 @@ public class LoginController extends BaseController implements LoginMvpView {
             @Override
             public void onClick(View view) {
 
-                if (!isLoginTapped){
+                if (!isLoginTapped) {
                     callLoginApi();
                 }
 
@@ -132,16 +138,17 @@ public class LoginController extends BaseController implements LoginMvpView {
 
     @Override
     public void showLoginSuccessful(String loginTicket) {
-        if (!loginTicket.isEmpty()) {
-            new Auth().acknowledgeAuth(loginTicket);
-            getActivity().onBackPressed();
-            new Auth().onAuthHandlerSuccess();
+        mAuthHandler.success();
+//            Auth.didLogin(getBaseActivity(), loginTicket);
+//            RxBus.instance().post(GVersion.EVENT_LOGIN);
+//            getBaseActivity().finish();
+//            authHandler.success();
 
-        }
     }
 
     @Override
     public void showLoginError(String message) {
+        mAuthHandler.error();
 //        CustomAlertDialog.showCustomAlertDialog(
 //                activity,
 //                CustomAlertDialog.CustomDialogIconState.NEGATIVE,
@@ -162,7 +169,7 @@ public class LoginController extends BaseController implements LoginMvpView {
 
     }
 
-    private void callLoginApi(){
+    private void callLoginApi() {
         String email = mEmailEditText.getText().toString();
         String password = mPasswordEditText.getText().toString();
         mPresenter.loginViaEmail(email, password);

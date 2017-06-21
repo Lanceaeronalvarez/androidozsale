@@ -17,6 +17,7 @@
     <EditText
         android:id="@+id/add_address_value"
         android:layout_width="match_parent"
+        android:background="@drawable/bg_edit_text_rounded"
         android:layout_height="55dp"
         android:maxLines="1"
         android:paddingLeft="@dimen/screen_padding"

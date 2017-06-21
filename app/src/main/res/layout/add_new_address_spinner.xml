@@ -19,5 +19,6 @@
         android:id="@+id/add_address_spinner"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:background="@drawable/bg_button_rounded"
         android:layout_marginTop="10dp"/>
 </LinearLayout>

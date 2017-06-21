@@ -25,4 +25,6 @@ public interface AccountMvpView extends MvpView {
     void showViewContactUsController();
 
     void showLanguage();
+
+    void triggerLogin(String option);
 }

@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#FFFFFF"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:ignore="MissingPrefix"
+    android:orientation="vertical">
+    <include
+        android:id="@+id/view_address_toolbar_layout"
+        layout="@layout/partial_toolbar_arrow" />
+
+    <RelativeLayout
+        android:id="@+id/view_addresses_layout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <TextView
+            android:id="@+id/address_office_delivery_subtitle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/activity_vertical_margin"
+            android:layout_marginLeft="@dimen/activity_horizontal_margin"
+            android:layout_marginRight="@dimen/activity_horizontal_margin"
+            android:layout_marginBottom="20dp"
+            android:textSize="@dimen/text_size_xlarge"
+            android:textColor="@color/gray_title_text"
+            android:text="home/office delivery"/>
+
+
+        <FrameLayout android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_below="@+id/address_office_delivery_subtitle">
+
+            <android.support.v7.widget.RecyclerView
+                xmlns:android="http://schemas.android.com/apk/res/android"
+                android:id="@+id/view_addresses_recyclerView"
+                android:overScrollMode="never"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginLeft="@dimen/activity_horizontal_margin"
+                android:layout_marginRight="@dimen/activity_horizontal_margin"/>
+        </FrameLayout>
+
+        <include layout="@layout/view_address_placeholder_layout"></include>
+
+
+    </RelativeLayout>
+</LinearLayout>

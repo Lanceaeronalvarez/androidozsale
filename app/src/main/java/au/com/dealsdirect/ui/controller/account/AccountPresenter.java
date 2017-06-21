@@ -6,6 +6,8 @@ import java.util.Arrays;
 import javax.inject.Inject;
 
 import au.com.dealsdirect.data.DataManager;
+import au.com.dealsdirect.data.auth.Auth;
+import au.com.dealsdirect.data.auth.AuthHandler;
 import au.com.dealsdirect.ui.base.BasePresenter;
 import au.com.dealsdirect.utils.rx.SchedulerProvider;
 import io.reactivex.disposables.CompositeDisposable;
@@ -35,6 +37,36 @@ public class AccountPresenter<V extends AccountMvpView> extends BasePresenter<V>
                         "My Returns",
                         "Contact Us",
                         "Language")));
+    }
+
+    @Override
+    public void onAccountItemClick(String option) {
+        if (getDataManager().isAuthorized()) {
+            switch (option) {
+
+                case "My Details":
+                    break;
+                case "My Addresses":
+                    getMvpView().showMyAddressesController();
+                    break;
+                case "My Orders":
+                    break;
+                case "My Vouchers":
+                    break;
+                case "My Returns":
+                    break;
+                case "Contact Us":
+                    getMvpView().showViewContactUsController();
+                    break;
+                case "Language":
+                    break;
+                default:
+                    break;
+
+            }
+        } else {
+            getMvpView().triggerLogin(option);
+        }
     }
 
     public void loadAccountItems(ArrayList<String> items) {

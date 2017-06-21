@@ -40,6 +40,7 @@ public class LoginPresenter<V extends LoginMvpView> extends BasePresenter<V> imp
                         }
 
                         if(responseValue.isSuccess()){
+                            getDataManager().acknowledgeAuth(responseValue.getTicket());
                             getMvpView().showLoginSuccessful(responseValue.getTicket());
                         } else{
                             getMvpView().showLoginError(responseValue.getMessage());
