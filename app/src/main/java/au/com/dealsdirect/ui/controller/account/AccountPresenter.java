@@ -35,7 +35,6 @@ public class AccountPresenter<V extends AccountMvpView> extends BasePresenter<V>
                         "My Returns",
                         "Contact Us",
                         "Language")));
-
     }
 
     public void loadAccountItems(ArrayList<String> items) {
@@ -44,6 +43,6 @@ public class AccountPresenter<V extends AccountMvpView> extends BasePresenter<V>
 //            items.add("logout");
 //
 //        }
-//        getMvpView().showAccountItems(items);
+        getMvpView().showAccountItems(items);
     }
 }
