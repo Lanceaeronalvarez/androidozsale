@@ -1,0 +1,90 @@
+package au.com.dealsdirect.ui.controller.orders.orders;
+
+import android.support.annotation.NonNull;
+import android.support.v7.widget.LinearLayoutManager;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.RelativeLayout;
+
+import com.bluelinelabs.conductor.RouterTransaction;
+import com.bluelinelabs.conductor.changehandler.HorizontalChangeHandler;
+import com.bluelinelabs.conductor.changehandler.VerticalChangeHandler;
+import com.google.gson.Gson;
+import com.lsjwzh.widget.recyclerviewpager.RecyclerViewPager;
+
+import java.util.ArrayList;
+
+import javax.inject.Inject;
+
+import au.com.dealsdirect.R;
+import au.com.dealsdirect.data.network.model.orders.GetPaymentsList;
+import au.com.dealsdirect.ui.base.BaseController;
+import au.com.dealsdirect.ui.controller.orders.orderdetails.OrderDetailsController;
+import au.com.dealsdirect.ui.custom.RecyclerOnTouchListener;
+import au.com.dealsdirect.utils.JsonUtils;
+import butterknife.BindView;
+
+/**
+ * Created by smartwave on 22/06/2017.
+ */
+
+public class OrdersController extends BaseController implements OrdersMvpView {
+
+    @Inject
+    OrdersMvpPresenter<OrdersMvpView> mPresenter;
+
+    @BindView(R.id.order_details_recyclerview)
+    RecyclerViewPager mRecyclerView;
+    @BindView(R.id.no_orders_layout)
+    RelativeLayout mPlaceholderLayout;
+
+    OrdersRecyclerViewAdapter mAdapter;
+    ArrayList<GetPaymentsList.ResponseValue.PaymentItem> mOrders = new ArrayList<>();
+
+    @Override
+    protected View inflateView(@NonNull LayoutInflater inflater, @NonNull ViewGroup container) {
+        View view = inflater.inflate(R.layout.controller_orders,container,false);
+        getControllerComponent().inject(this);
+        mPresenter.onAttach(this);
+        return view;
+    }
+
+    @Override
+    protected void onViewBound(@NonNull View view) {
+        super.onViewBound(view);
+        setUp(view);
+    }
+
+    @Override
+    protected void setUp(View view) {
+        mRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity(),LinearLayoutManager.HORIZONTAL,false));
+        mRecyclerView.addOnItemTouchListener(new RecyclerOnTouchListener(getActivity(), (v, position) -> mPresenter.loadOrderDetails(position)));
+        mPresenter.loadOrders();
+    }
+
+
+    @Override
+    public void showOrders(ArrayList<GetPaymentsList.ResponseValue.PaymentItem> orders) {
+        if(orders.size()>0) {
+            mOrders = orders;
+            mAdapter = new OrdersRecyclerViewAdapter(orders,getActivity());
+            mRecyclerView.setAdapter(mAdapter);
+            mRecyclerView.setVisibility(View.VISIBLE);
+            mPlaceholderLayout.setVisibility(View.GONE);
+
+        }else{
+            mRecyclerView.setVisibility(View.GONE);
+            mPlaceholderLayout.setVisibility(View.VISIBLE);
+        }
+    }
+
+    @Override
+    public void showOrderDetails(int position) {
+        String paymentRefNo = String.valueOf(mOrders.get(position).getPaymentReferenceNo());
+        String jsonData = new Gson().toJson(mOrders.get(position));
+        getRouter().pushController(RouterTransaction.with(new OrderDetailsController(jsonData,paymentRefNo,position))
+                .pushChangeHandler(new HorizontalChangeHandler())
+                .popChangeHandler(new HorizontalChangeHandler()));
+    }
+}

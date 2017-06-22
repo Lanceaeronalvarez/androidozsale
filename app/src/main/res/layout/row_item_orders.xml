@@ -1,0 +1,407 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    xmlns:card_view="http://schemas.android.com/apk/res-auto">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <RelativeLayout
+            android:id="@+id/my_order_number_container"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <RelativeLayout
+                android:id="@+id/my_order_information_header"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:layout_marginBottom="10dp"
+                android:layout_marginLeft="10dp"
+                android:layout_marginRight="10dp">
+
+                <TextView
+                    android:id="@+id/order_number_text_identifier"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/colorAccent"
+                    android:text="Order #:"
+                    android:textSize="18sp"
+                    tools:ignore="HardcodedText"/>
+
+
+                <TextView
+                    android:id="@+id/order_number_text_value"
+                    android:layout_toRightOf="@id/order_number_text_identifier"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="5dp"
+                    android:layout_marginStart="5dp"
+                    android:textColor="@color/colorAccent"
+                    android:text="204400890"
+                    android:textSize="18sp"
+                    tools:ignore="HardcodedText" android:layout_alignParentTop="true"/>
+
+
+
+            </RelativeLayout>
+
+
+            <View
+                android:layout_width="wrap_content"
+                android:layout_height="0.5dp"
+                android:layout_below="@+id/my_order_information_header"
+                android:layout_marginTop="20dp"
+                android:paddingBottom="20dp"
+                android:background="#dedede"/>
+
+        </RelativeLayout>
+
+
+        <RelativeLayout
+            android:id="@+id/my_order_information_text_content"
+            android:layout_below="@+id/my_order_number_container"
+            android:layout_marginTop="5dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp">
+
+            <LinearLayout
+                android:id="@+id/item_header_container"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+                <TextView
+                    
+                    android:id="@+id/my_order_product_name"
+                    android:layout_width="wrap_content"
+                    android:layout_weight="4"
+                    android:layout_height="wrap_content"
+                    android:textColor="#878787"
+                    android:text=""
+                    android:textSize="@dimen/text_size_xlarge"
+                    tools:ignore="HardcodedText"/>
+
+                <TextView
+                    android:id="@+id/my_order_product_items_amount"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="end"
+                    android:singleLine="true"
+                    android:gravity="end"
+                    android:textColor="@color/gray_field_label"
+                    android:text=""
+                    android:textSize="@dimen/text_size_large"
+                    tools:ignore="HardcodedText"/>
+
+            </LinearLayout>
+
+
+            <TextView
+                
+                android:id="@+id/productQuantityTextView"
+                android:layout_below="@+id/item_header_container"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="#b7b7b7"
+                android:text="1 item"
+                android:textSize="14sp"
+                tools:ignore="HardcodedText"/>
+
+        </RelativeLayout>
+
+
+        <RelativeLayout
+            android:id="@+id/my_order_information_graph_content"
+            android:layout_below="@+id/my_order_information_text_content"
+            android:layout_marginTop="25dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp">
+
+            <LinearLayout
+                android:id="@+id/my_order_graph_container"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="15dp"
+                android:layout_marginRight="15dp"
+                android:orientation="horizontal"
+                tools:ignore="UselessParent" android:layout_marginTop="15dp"
+                android:layout_marginBottom="15dp">
+
+                <!--<View-->
+                <!--android:layout_width="0dp"-->
+                <!--android:layout_height="0dp"-->
+                <!--android:layout_weight=".05"-->
+                <!--android:layout_gravity="center_vertical"/>-->
+
+                <TextView
+                    android:id="@+id/approved_date_graph_node"
+                    android:layout_width="25dp"
+                    android:layout_height="25dp"
+                    
+                    android:text=""
+                    android:textColor="@android:color/white"
+                    android:gravity="center"
+                    android:background="@drawable/bg_orders_graph_active_state"
+                    tools:ignore="ContentDescription"/>
+
+                <!--<ImageView-->
+                <!--android:id="@+id/approved_date_graph_node"-->
+                <!--android:layout_width="25dp"-->
+                <!--android:layout_height="25dp"-->
+                <!--android:src="@drawable/bg_orders_graph_active_state"-->
+                <!--tools:ignore="ContentDescription"/>-->
+
+                <View
+                    android:id="@+id/my_order_product_order_date_graph_check_connector"
+                    android:layout_marginLeft="3dp"
+                    android:layout_marginRight="3dp"
+                    android:layout_gravity="center_vertical"
+                    android:layout_width="0dp"
+                    android:layout_weight=".33"
+                    android:layout_height="0.5dp"
+                    android:background="#d9d9d9"/>
+
+
+                <TextView
+                    android:id="@+id/stock_date_graph_node"
+                    android:layout_width="25dp"
+                    android:layout_height="25dp"
+                    
+                    android:text="2"
+                    android:textColor="@android:color/white"
+                    android:gravity="center"
+                    android:background="@drawable/bg_orders_graph_empty_state"
+                    tools:ignore="ContentDescription"/>
+
+                <View
+                    android:id="@+id/my_order_product_stocked_arrived_graph_check_connector"
+                    android:layout_marginLeft="3dp"
+                    android:layout_marginRight="3dp"
+                    android:layout_width="0dp"
+                    android:layout_weight=".33"
+                    android:layout_height="0.5dp"
+                    android:layout_gravity="center_vertical"
+                    android:background="#d9d9d9"/>
+
+                <TextView
+                    android:id="@+id/dispatched_date_graph_node"
+                    android:layout_width="25dp"
+                    android:layout_height="25dp"
+                    
+                    android:text="3"
+                    android:textColor="@android:color/white"
+                    android:gravity="center"
+                    android:background="@drawable/bg_orders_graph_empty_state"
+                    tools:ignore="ContentDescription"/>
+
+                <View
+                    android:id="@+id/my_order_product_packed_graph_check_connector"
+                    android:layout_marginLeft="3dp"
+                    android:layout_marginRight="3dp"
+                    android:layout_width="0dp"
+                    android:layout_weight=".33"
+                    android:layout_height="0.5dp"
+                    android:layout_gravity="center_vertical"
+                    android:background="#d9d9d9"/>
+
+                <TextView
+                    android:id="@+id/closed_date_graph_node"
+                    android:layout_width="25dp"
+                    android:layout_height="25dp"
+                    
+                    android:text="4"
+                    android:textColor="@android:color/white"
+                    android:gravity="center"
+                    android:background="@drawable/bg_orders_graph_empty_state"
+                    tools:ignore="ContentDescription"/>
+
+                <!--<View-->
+                <!--android:layout_width="0dp"-->
+                <!--android:layout_height="0dp"-->
+                <!--android:layout_weight=".05"-->
+                <!--android:layout_gravity="center_vertical"/>-->
+
+            </LinearLayout>
+
+
+            <LinearLayout
+                android:id="@+id/my_order_graph_progress_states"
+                android:layout_below="@+id/my_order_graph_container"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:orientation="horizontal">
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:paddingRight="5dp"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:id="@+id/tracker_first_node"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_horizontal"
+                        android:text="Order Date"
+                        android:textSize="12sp"
+                        android:textColor="@color/gray_field_text"
+                        tools:ignore="HardcodedText"/>
+
+                    <TextView
+                        
+                        android:id="@+id/approved_date_value"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_horizontal"
+                        android:textSize="12sp"
+                        android:text="05 Sep"
+                        android:textColor="#b1b1b1"
+                        tools:ignore="HardcodedText"/>
+
+                </LinearLayout>
+
+                <View
+                    android:layout_width="0dp"
+                    android:layout_height="0dp"
+                    android:layout_weight=".33"/>
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:paddingLeft="5dp"
+                    android:paddingRight="5dp"
+                    android:orientation="vertical">
+
+                    <TextView
+                        
+                        android:id="@+id/tracker_second_node"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_horizontal"
+                        android:text="Stock Arrived"
+                        android:textSize="12sp"
+                        android:textColor="#b1b1b1"
+                        tools:ignore="HardcodedText"/>
+
+                    <TextView
+                        
+                        android:id="@+id/stock_date_value"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_horizontal"
+                        android:textSize="12sp"
+                        android:text="05 Sep"
+                        android:textColor="#b1b1b1"
+                        tools:ignore="HardcodedText"/>
+                </LinearLayout>
+
+                <View
+                    android:layout_width="0dp"
+                    android:layout_height="0dp"
+                    android:layout_weight=".25"/>
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:paddingLeft="5dp"
+                    android:paddingRight="5dp"
+                    android:orientation="vertical">
+
+                    <TextView
+                        
+                        android:id="@+id/tracker_third_node"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_horizontal"
+                        android:text="Order Packed"
+                        android:textSize="12sp"
+                        android:textColor="#b1b1b1"
+                        tools:ignore="HardcodedText"/>
+
+                    <TextView
+                        
+                        android:id="@+id/closed_date_value"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_horizontal"
+                        android:textSize="12sp"
+                        android:text="05 Sep"
+                        android:textColor="#b1b1b1"
+                        tools:ignore="HardcodedText"/>
+                </LinearLayout>
+
+                <View
+                    android:layout_width="0dp"
+                    android:layout_height="0dp"
+                    android:layout_weight=".33"/>
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:paddingLeft="5dp"
+                    android:orientation="vertical">
+                    <TextView
+                        
+                        android:id="@+id/tracker_fourth_node"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_horizontal"
+                        android:text="Dispatched"
+                        android:textSize="12sp"
+                        android:textColor="#b1b1b1"
+                        tools:ignore="HardcodedText"/>
+
+                    <TextView
+                        
+                        android:id="@+id/dispatched_date_value"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_horizontal"
+                        android:textSize="12sp"
+                        android:text="05 Sep"
+                        android:textColor="#b1b1b1"
+                        tools:ignore="HardcodedText"/>
+                </LinearLayout>
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_below="@id/my_order_graph_progress_states"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="20dp"
+                android:orientation="vertical">
+
+                <View
+                    android:layout_width="wrap_content"
+                    android:layout_height="0.5dp"
+                    android:background="#f4f4f4"/>
+
+                <Button
+                    android:id="@+id/trackHereButton"
+                    style="@style/DDButtonStyle"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textSize="15sp"
+                    android:text="track here"
+                    android:textAllCaps="false"
+                    android:layout_alignParentBottom="true"/>
+
+
+                <View
+                    android:layout_width="wrap_content"
+                    android:layout_height="0.5dp"
+                    android:layout_marginTop="20dp"
+                    android:background="#dedede"/>
+            </LinearLayout>
+        </RelativeLayout>
+    </RelativeLayout>
+
+</LinearLayout>

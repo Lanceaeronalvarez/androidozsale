@@ -32,6 +32,12 @@ import au.com.dealsdirect.ui.controller.invite.InvitePresenter;
 import au.com.dealsdirect.ui.controller.login.LoginMvpPresenter;
 import au.com.dealsdirect.ui.controller.login.LoginMvpView;
 import au.com.dealsdirect.ui.controller.login.LoginPresenter;
+import au.com.dealsdirect.ui.controller.orders.orderdetails.OrderDetailsMvpPresenter;
+import au.com.dealsdirect.ui.controller.orders.orderdetails.OrderDetailsMvpView;
+import au.com.dealsdirect.ui.controller.orders.orderdetails.OrderDetailsPresenter;
+import au.com.dealsdirect.ui.controller.orders.orders.OrdersMvpPresenter;
+import au.com.dealsdirect.ui.controller.orders.orders.OrdersMvpView;
+import au.com.dealsdirect.ui.controller.orders.orders.OrdersPresenter;
 import au.com.dealsdirect.ui.controller.productdetails.ProductDetailsMvpPresenter;
 import au.com.dealsdirect.ui.controller.productdetails.ProductDetailsMvpView;
 import au.com.dealsdirect.ui.controller.productdetails.ProductDetailsPresenter;
@@ -138,4 +144,16 @@ public class ControllerModule {
     AddNewAddressMvpPresenter<AddNewAddressMvpView> provideAddNewAddressPresenter(AddNewAddressPresenter<AddNewAddressMvpView> presenter){
         return presenter;
     }
+
+    @Provides
+    OrdersMvpPresenter<OrdersMvpView> provideOrdersPresenter(OrdersPresenter<OrdersMvpView> presenter){
+        return presenter;
+    }
+
+    @Provides
+    OrderDetailsMvpPresenter<OrderDetailsMvpView> provideOrderDetailPresenter(OrderDetailsPresenter<OrderDetailsMvpView> presenter){
+        return presenter;
+    }
+
+
 }

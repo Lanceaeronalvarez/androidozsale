@@ -1,4 +1,4 @@
-package au.com.dealsdirect.ui.controller.address;
+package au.com.dealsdirect.ui.custom;
 
 /**
  * Created by smartwave on 21/06/2017.

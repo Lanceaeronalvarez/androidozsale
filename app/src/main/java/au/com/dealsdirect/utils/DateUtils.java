@@ -1,6 +1,7 @@
 package au.com.dealsdirect.utils;
 
 import android.annotation.SuppressLint;
+import android.text.format.DateFormat;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -149,6 +150,48 @@ public class DateUtils {
                 return (String) android.text.format.DateFormat.format("EEEE", date);
             else
                 return (String) android.text.format.DateFormat.format("d MMMM", date);
+        } else {
+            return "";
+        }
+    }
+
+    public static Date dateFromServerDateString(String dateString) {
+
+        String longString = "";
+        try {
+            longString = (String) dateString.subSequence(dateString.indexOf("(") + 1, dateString.indexOf("+"));
+        } catch (Exception e) {
+            longString = (String) dateString.subSequence(dateString.indexOf("(") + 1, dateString.indexOf(")"));
+        }
+
+        Long ms = Long.parseLong(longString, 10);
+
+        Calendar cal = Calendar.getInstance();
+        cal.setTimeInMillis(ms);
+
+        return cal.getTime();
+    }
+
+    public static String getTrimmedServerDateString(String dateString) {
+        if (null != dateString
+                && !dateString.equalsIgnoreCase("null")
+                && dateString.length() > 0) {
+            Date date = dateFromServerDateString(dateString);
+            android.text.format.DateFormat.format("MM dd, yyyy", date);
+
+            return (String) DateFormat.format("MMMM dd, yyyy", date);//(String) date.toString().subSequence(4, date.toString().indexOf("GMT"));
+        } else {
+            return "";
+        }
+    }
+
+    public static String getDateForOrderProgress(String dateString){
+        if (null != dateString
+                && !dateString.equalsIgnoreCase("null")
+                && dateString.length() > 0) {
+            Date date = dateFromServerDateString(dateString);
+
+            return (String) DateFormat.format("dd MMM", date);//(String) date.toString().subSequence(4, date.toString().indexOf("GMT"));
         } else {
             return "";
         }
