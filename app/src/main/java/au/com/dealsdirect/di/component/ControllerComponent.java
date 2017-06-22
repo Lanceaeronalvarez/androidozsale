@@ -13,6 +13,7 @@ import au.com.dealsdirect.ui.controller.contact.viewcontacts.ViewContactsControl
 //import au.com.dealsdirect.ui.controller.contact.ContactController;
 import au.com.dealsdirect.ui.controller.details.DetailsController;
 import au.com.dealsdirect.ui.controller.home.HomeController;
+import au.com.dealsdirect.ui.controller.language.LanguageController;
 import au.com.dealsdirect.ui.controller.login.LoginController;
 import au.com.dealsdirect.ui.controller.productdetails.ProductDetailsController;
 import au.com.dealsdirect.ui.controller.salecategories.SaleCategoriesController;
@@ -58,4 +59,6 @@ public interface ControllerComponent {
     void inject(AddContactController controller);
 
     void inject(DetailsController controller);
+
+    void inject(LanguageController controller);
 }

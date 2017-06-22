@@ -32,6 +32,9 @@ import au.com.dealsdirect.ui.controller.home.HomePresenter;
 import au.com.dealsdirect.ui.controller.invite.InviteMvpPresenter;
 import au.com.dealsdirect.ui.controller.invite.InviteMvpView;
 import au.com.dealsdirect.ui.controller.invite.InvitePresenter;
+import au.com.dealsdirect.ui.controller.language.LanguageMvpPresenter;
+import au.com.dealsdirect.ui.controller.language.LanguageMvpView;
+import au.com.dealsdirect.ui.controller.language.LanguagePresenter;
 import au.com.dealsdirect.ui.controller.login.LoginMvpPresenter;
 import au.com.dealsdirect.ui.controller.login.LoginMvpView;
 import au.com.dealsdirect.ui.controller.login.LoginPresenter;
@@ -145,5 +148,10 @@ public class ControllerModule {
     @Provides
     AddNewAddressMvpPresenter<AddNewAddressMvpView> provideAddNewAddressPresenter(AddNewAddressPresenter<AddNewAddressMvpView> presenter){
         return presenter;
+    }
+
+    @Provides
+    LanguageMvpPresenter<LanguageMvpView> provideLanguagePresenter(LanguagePresenter<LanguageMvpView> presenter) {
+        return  presenter;
     }
 }
