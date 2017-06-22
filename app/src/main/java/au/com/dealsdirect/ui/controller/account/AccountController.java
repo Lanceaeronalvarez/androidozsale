@@ -25,6 +25,7 @@ import au.com.dealsdirect.ui.controller.account.listener.AccountItemClickListene
 import au.com.dealsdirect.ui.controller.address.viewaddress.ViewAddressController;
 import au.com.dealsdirect.ui.controller.contact.viewcontacts.ViewContactsController;
 import au.com.dealsdirect.ui.controller.details.DetailsController;
+import au.com.dealsdirect.ui.controller.language.LanguageController;
 import au.com.dealsdirect.ui.main.MainMvpView;
 import au.com.dealsdirect.utils.BundleBuilder;
 import butterknife.BindView;
@@ -147,6 +148,9 @@ public class AccountController extends BaseController implements AccountMvpView 
 
     @Override
     public void showLanguage() {
+        getRouter().pushController(RouterTransaction.with(LanguageController.newInstance())
+                .pushChangeHandler(new HorizontalChangeHandler())
+                .popChangeHandler(new HorizontalChangeHandler()));
 
     }
 

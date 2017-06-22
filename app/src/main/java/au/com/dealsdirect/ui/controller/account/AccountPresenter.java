@@ -60,6 +60,7 @@ public class AccountPresenter<V extends AccountMvpView> extends BasePresenter<V>
                     getMvpView().showViewContactUsController();
                     break;
                 case "Language":
+                    getMvpView().showLanguage();
                     break;
                 default:
                     break;
