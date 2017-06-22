@@ -7,8 +7,6 @@ import com.mysale.genie.utility.config.api.GetAppSettingsSection;
 import com.mysale.genie.utility.config.api.GetServerSettings;
 import com.rx2androidnetworking.Rx2AndroidNetworking;
 
-import java.lang.reflect.TypeVariable;
-
 import javax.inject.Inject;
 import javax.inject.Singleton;
 
@@ -21,6 +19,9 @@ import au.com.dealsdirect.data.network.model.address.DeleteUserAddress;
 import au.com.dealsdirect.data.network.model.address.GetAddresses;
 import au.com.dealsdirect.data.network.model.banner.GetPublicSalesBannerRequest;
 import au.com.dealsdirect.data.network.model.banner.GetPublicSalesBannerResponse;
+import au.com.dealsdirect.data.network.model.language.GetUserLanguageRequest;
+import au.com.dealsdirect.data.network.model.language.GetUserLanguageResponse;
+import au.com.dealsdirect.data.network.model.language.SetUserLanguageRequest;
 import au.com.dealsdirect.data.network.model.login.LoginEmail;
 import au.com.dealsdirect.data.network.model.login.LoginFacebook;
 import au.com.dealsdirect.data.network.model.login.LoginTicket;
@@ -244,6 +245,24 @@ public class AppApiHelper implements ApiHelper {
                 .addJSONObjectBody(JsonUtils.convertToJsonObject(null))
                 .build()
                 .getObjectObservable(GetUserDetailsResponse.class);
+    }
+
+    @Override
+    public Observable<GetUserLanguageResponse> getUserLanguagesApiCall(GetUserLanguageRequest request) {
+        return Rx2AndroidNetworking.post(ApiEndPoint.GET_USER_LANGUAGES)
+                .addHeaders(mApiHeader.getPublicApiHeader())
+                .addJSONObjectBody(JsonUtils.convertToJsonObject(request))
+                .build()
+                .getObjectObservable(GetUserLanguageResponse.class);
+    }
+
+    @Override
+    public Observable<SetUserLanguageRequest> doSetUserLanguageApiCall(SetUserLanguageRequest setUserLanguageRequest) {
+        return Rx2AndroidNetworking.post(ApiEndPoint.SET_USER_LANGUAGES)
+                .addHeaders(mApiHeader.getPublicApiHeader())
+                .addJSONObjectBody(JsonUtils.convertToJsonObject(setUserLanguageRequest))
+                .build()
+                .getObjectObservable(SetUserLanguageRequest.class);
     }
 }
 

@@ -35,7 +35,8 @@ public final class ApiEndPoint {
     public static final String GET_APP_SETTINGS_TEST = TEST_API_LEGACY + "GetAppSettings";
     public static final String GET_APP_SETTINGS_SECTION_TEST = TEST_API_LEGACY + "GetAppSettingsSection";
 
-    public static final String GET_USER_LANGUAGES = BASE_URL + "GetUserLanguages";
+    public static final String GET_USER_LANGUAGES = TEST_API_LEGACY + "GetUserLanguages";
+    public static final String SET_USER_LANGUAGES = TEST_API_LEGACY + "SetUserLanguage";
 
     /* Shops Controller */
     public static final String GET_SHOP_BANNERS = BASE_URL + "GetPublicSalesBanners";
