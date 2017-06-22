@@ -1,4 +1,4 @@
-package au.com.dealsdirect.data.network.model.viewcontactitem;
+package au.com.dealsdirect.data.network.model.contactitem;
 
 /**
  * dp Created by Admin on 1/9/17.

@@ -1,4 +1,4 @@
-package au.com.dealsdirect.ui.controller.contact.viewcontacts.viewcontactitem;
+package au.com.dealsdirect.ui.controller.contact.viewcontacts.contacts;
 
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;
@@ -12,26 +12,31 @@ import java.util.Collections;
 import java.util.List;
 
 import au.com.dealsdirect.R;
-import au.com.dealsdirect.data.network.model.viewcontactitem.GetContactsResponse;
+import au.com.dealsdirect.data.network.model.contactitem.GetContactsResponse;
 import au.com.dealsdirect.utils.DateUtils;
 
 /**
  * dp Created by Admin on 6/20/17.
  */
 
-public class ViewContactItemAdapter
-        extends RecyclerView.Adapter<ViewContactItemAdapter.ViewContactsItemViewHolder>  {
+public class ContactsAdapter
+        extends RecyclerView.Adapter<ContactsAdapter.ViewContactsItemViewHolder>  {
 
     List<GetContactsResponse.ContactList> mCurrentContactsList = Collections.emptyList();
+    private ContactsClickListener mContactClickListener;
     Context mContext;
 
 
-    public ViewContactItemAdapter(
+    public ContactsAdapter(
             List<GetContactsResponse.ContactList> contactitemsList,
-            Context context) {
+            Context context,
+            ContactsClickListener contactsClickListener) {
+
 
         this.mCurrentContactsList = contactitemsList;
+        this.mContactClickListener = contactsClickListener;
         this.mContext = context;
+
     }
 
     @Override
@@ -86,12 +91,11 @@ public class ViewContactItemAdapter
             holder.contactUsDivider.setVisibility(View.GONE);
         }
 
-//        holder.contactItem.setOnClickListener(new View.OnClickListener() {
-//            @Override public void onClick(View view) {
-//                mMyContactsContactUsItemClickListener.onContactUsItemClicked(mCurrentContactsList
-//                                                                                     .get(position));
-//            }
-//        });
+        holder.contactItem.setOnClickListener(new View.OnClickListener() {
+            @Override public void onClick(View view) {
+                mContactClickListener.onContactClicked(mCurrentContactsList.get(position));
+            }
+        });
     }
 
     @Override

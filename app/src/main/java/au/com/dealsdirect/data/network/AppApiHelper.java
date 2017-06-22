@@ -19,6 +19,9 @@ import au.com.dealsdirect.data.network.model.address.DeleteUserAddress;
 import au.com.dealsdirect.data.network.model.address.GetAddresses;
 import au.com.dealsdirect.data.network.model.banner.GetPublicSalesBannerRequest;
 import au.com.dealsdirect.data.network.model.banner.GetPublicSalesBannerResponse;
+import au.com.dealsdirect.data.network.model.contacthistory.GetContactHistoryRequest;
+import au.com.dealsdirect.data.network.model.contacthistory.GetContactHistoryResponse;
+import au.com.dealsdirect.data.network.model.contactitem.GetContactsResponse;
 import au.com.dealsdirect.data.network.model.login.LoginEmail;
 import au.com.dealsdirect.data.network.model.login.LoginFacebook;
 import au.com.dealsdirect.data.network.model.login.LoginTicket;
@@ -31,7 +34,6 @@ import au.com.dealsdirect.data.network.model.publicsalescategories.GetPublicSale
 import au.com.dealsdirect.data.network.model.publicsalescategories.GetPublicSalesCategoriesResponse;
 import au.com.dealsdirect.data.network.model.saleitems.GetPublicSaleItemsRequest;
 import au.com.dealsdirect.data.network.model.saleitems.GetPublicSaleItemsResponse;
-import au.com.dealsdirect.data.network.model.viewcontactitem.GetContactsResponse;
 import au.com.dealsdirect.utils.JsonUtils;
 import io.reactivex.Observable;
 
@@ -216,12 +218,22 @@ public class AppApiHelper implements ApiHelper {
 
 
     @Override
-    public Observable<GetContactsResponse.Response> callGetContacts(String languageId) {
+    public Observable<GetContactsResponse> callGetContacts(String languageId) {
         return Rx2AndroidNetworking.post(ApiEndPoint.GET_CONTACTS)
                 .addHeaders(mApiHeader.getPublicApiHeader())
                 .addJSONObjectBody(JsonUtils.convertToJsonObject(new GetAppSettingsSection.RequestValue(languageId)))
                 .build()
-                .getObjectObservable(GetContactsResponse.Response.class);
+                .getObjectObservable(GetContactsResponse.class);
+    }
+
+    @Override
+    public Observable<GetContactHistoryResponse> callGetContactHistory(GetContactHistoryRequest request) {
+        return Rx2AndroidNetworking.post(ApiEndPoint.GET_CONTACT)
+                .addHeaders(mApiHeader.getPublicApiHeader())
+                .addJSONObjectBody(JsonUtils.convertToJsonObject(request))
+                .build()
+                .getObjectObservable(GetContactHistoryResponse.class);
+
     }
 
 }

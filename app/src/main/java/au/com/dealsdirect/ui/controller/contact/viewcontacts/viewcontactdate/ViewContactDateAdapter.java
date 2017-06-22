@@ -4,7 +4,6 @@ import android.content.Context;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
@@ -13,9 +12,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 import au.com.dealsdirect.R;
-import au.com.dealsdirect.data.network.model.viewcontactitem.ContactItemByDate;
-import au.com.dealsdirect.data.network.model.viewcontactitem.GetContactsResponse;
-import au.com.dealsdirect.ui.controller.contact.viewcontacts.viewcontactitem.ViewContactItemAdapter;
+import au.com.dealsdirect.data.network.model.contactitem.ContactItemByDate;
+import au.com.dealsdirect.data.network.model.contactitem.GetContactsResponse;
+import au.com.dealsdirect.ui.controller.contact.viewcontacts.contacts.ContactsAdapter;
+import au.com.dealsdirect.ui.controller.contact.viewcontacts.contacts.ContactsClickListener;
 
 /**
  * dp Created by Admin on 6/20/17.
@@ -26,11 +26,16 @@ public class ViewContactDateAdapter extends
 
     ArrayList<ContactItemByDate> mDateSet;
     Context mContext;
+    private ContactsClickListener mContactClickListener;
 
-    public ViewContactDateAdapter(ArrayList<ContactItemByDate> dateSet, Context context) {
+    public ViewContactDateAdapter(
+            ArrayList<ContactItemByDate> dateSet,
+            Context context,
+            ContactsClickListener contactsClickListener) {
 
         this.mDateSet = dateSet;
         this.mContext = context;
+        this.mContactClickListener = contactsClickListener;
     }
 
     @Override
@@ -57,27 +62,11 @@ public class ViewContactDateAdapter extends
 
         final List<GetContactsResponse.ContactList> contactItems = mDateSet.get(position).getContactItemList();
 
-        final ViewContactItemAdapter adapter
-                = new ViewContactItemAdapter(contactItems , mContext);
-
+        final ContactsAdapter adapter
+                = new ContactsAdapter(contactItems , mContext, mContactClickListener);
         holder.mContactDateItemRecyclerView.setAdapter(adapter);
         holder.mContactDateItemRecyclerView.setLayoutManager(new LinearLayoutManager(mContext));
-        holder.mContactDateItemRecyclerView.addOnItemTouchListener(new RecyclerView.OnItemTouchListener() {
-            @Override
-            public boolean onInterceptTouchEvent(RecyclerView rv, MotionEvent e) {
-                return false;
-            }
 
-            @Override
-            public void onTouchEvent(RecyclerView rv, MotionEvent e) {
-
-            }
-
-            @Override
-            public void onRequestDisallowInterceptTouchEvent(boolean disallowIntercept) {
-
-            }
-        });
     }
 
     @Override

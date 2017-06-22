@@ -3,6 +3,7 @@
     android:id="@+id/my_contact_us_recycler_row_item_layout"
     android:orientation="vertical"
     android:layout_width="match_parent"
+    android:background="@color/white"
     android:layout_height="wrap_content">
 
     <RelativeLayout
@@ -20,6 +21,16 @@
             android:text=""
             android:textColor="#b9b9b9" />
 
+        <View
+            android:layout_width="50dp"
+            android:layout_height="0.5dp"
+            android:layout_marginLeft="20dp"
+            android:layout_marginTop="5dp"
+            android:layout_marginRight="20dp"
+            android:background="@color/gray_description_text"
+            android:layout_below="@+id/viewholder_contact_date_text"/>
+
+
         <android.support.v7.widget.RecyclerView
             android:id="@+id/viewholder_contact_date_items_recycler_view"
             android:layout_below="@+id/viewholder_contact_date_text"
@@ -32,7 +43,6 @@
 
     <View
         android:id="@+id/viewholder_contact_date_item_divider"
-        android:layout_marginTop="20dp"
         android:layout_width="match_parent"
         android:layout_height="0.5dp"
         android:background="#e9e9e9"/>

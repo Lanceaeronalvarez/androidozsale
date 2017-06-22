@@ -7,6 +7,7 @@
 
     <include layout="@layout/partial_toolbar_title"/>
 
+
     <android.support.v7.widget.RecyclerView
         android:id="@+id/categories_recyclerview"
         android:layout_width="match_parent"

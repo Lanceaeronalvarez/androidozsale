@@ -10,13 +10,15 @@ import com.mysale.genie.utility.config.api.GetServerSettings;
 import au.com.dealsdirect.data.network.model.SampleRequest;
 import au.com.dealsdirect.data.network.model.SampleResponse;
 import au.com.dealsdirect.data.network.model.address.AddAddress;
-import au.com.dealsdirect.data.network.model.address.ApplyAddress;
 import au.com.dealsdirect.data.network.model.address.ApplyAddressRequest;
 import au.com.dealsdirect.data.network.model.address.ApplyAddressResponse;
 import au.com.dealsdirect.data.network.model.address.DeleteUserAddress;
 import au.com.dealsdirect.data.network.model.address.GetAddresses;
 import au.com.dealsdirect.data.network.model.banner.GetPublicSalesBannerRequest;
 import au.com.dealsdirect.data.network.model.banner.GetPublicSalesBannerResponse;
+import au.com.dealsdirect.data.network.model.contacthistory.GetContactHistoryRequest;
+import au.com.dealsdirect.data.network.model.contacthistory.GetContactHistoryResponse;
+import au.com.dealsdirect.data.network.model.contactitem.GetContactsResponse;
 import au.com.dealsdirect.data.network.model.login.LoginEmail;
 import au.com.dealsdirect.data.network.model.login.LoginFacebook;
 import au.com.dealsdirect.data.network.model.login.LoginTicket;
@@ -29,7 +31,6 @@ import au.com.dealsdirect.data.network.model.publicsalescategories.GetPublicSale
 import au.com.dealsdirect.data.network.model.publicsalescategories.GetPublicSalesCategoriesResponse;
 import au.com.dealsdirect.data.network.model.saleitems.GetPublicSaleItemsRequest;
 import au.com.dealsdirect.data.network.model.saleitems.GetPublicSaleItemsResponse;
-import au.com.dealsdirect.data.network.model.viewcontactitem.GetContactsResponse;
 import io.reactivex.Observable;
 
 public interface ApiHelper {
@@ -61,7 +62,10 @@ public interface ApiHelper {
 
     Observable<GetAppSettingsSection.ResponseValue> callGetAppSettingsSection(Context context, String countryId);
 
-    Observable<GetContactsResponse.Response> callGetContacts(String languageId);
+    Observable<GetContactsResponse> callGetContacts(String languageId);
+
+    Observable<GetContactHistoryResponse> callGetContactHistory(GetContactHistoryRequest getContactHistoryRequest);
+
 //  LOGIN API CALLS
 
     Observable<LoginEmail.ResponseValue> callLoginViaEmail(LoginEmail.RequestValue requestValue);

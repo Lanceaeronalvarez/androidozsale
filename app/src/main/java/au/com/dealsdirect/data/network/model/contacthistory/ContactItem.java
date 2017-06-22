@@ -1,4 +1,4 @@
-package au.com.dealsdirect.data.network.model.viewcontactitem;
+package au.com.dealsdirect.data.network.model.contacthistory;
 
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;

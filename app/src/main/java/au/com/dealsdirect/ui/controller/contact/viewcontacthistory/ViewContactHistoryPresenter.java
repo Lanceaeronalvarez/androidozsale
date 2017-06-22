@@ -1,60 +1,65 @@
-package au.com.dealsdirect.ui.controller.contact.viewcontacts;
+package au.com.dealsdirect.ui.controller.contact.viewcontacthistory;
 
 import android.util.Log;
 
 import com.androidnetworking.error.ANError;
 
+import java.util.List;
+
 import javax.inject.Inject;
 
 import au.com.dealsdirect.data.DataManager;
+import au.com.dealsdirect.data.network.model.contacthistory.GetContactHistoryRequest;
 import au.com.dealsdirect.ui.base.BasePresenter;
 import au.com.dealsdirect.utils.rx.SchedulerProvider;
 import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.functions.Consumer;
 
 /**
- * dp Created by Admin on 6/6/17.
+ * dp Created by Admin on 6/21/17.
  */
 
-public class ViewContactsPresenter<V extends ViewContactsMvpView> extends BasePresenter<V> implements
-        ViewContactsMvpPresenter<V> {
+public class ViewContactHistoryPresenter<V extends ViewContactHistoryMvpView>
+        extends BasePresenter<V> implements ViewContactHistoryMvpPresenter<V>{
 
     @Inject
-    public ViewContactsPresenter(DataManager dataManager, SchedulerProvider schedulerProvider,
-                                 CompositeDisposable compositeDisposable) {
+    public ViewContactHistoryPresenter(DataManager dataManager, SchedulerProvider schedulerProvider, CompositeDisposable compositeDisposable) {
         super(dataManager, schedulerProvider, compositeDisposable);
     }
 
     @Override
-    public void loadContacts() {
+    public void loadContactHistory(int contactId) {
         getMvpView().showLoading();
+
+        GetContactHistoryRequest getContactHistoryRequest = new GetContactHistoryRequest();
+        getContactHistoryRequest.contactNo = contactId;
 
         getCompositeDisposable()
                 .add(getDataManager()
-                        .callGetContacts(getDataManager().getLanguageId())
+                        .callGetContactHistory(getContactHistoryRequest)
                         .subscribeOn(getSchedulerProvider().io())
                         .observeOn(getSchedulerProvider().ui())
                         .subscribe(response -> {
 
                             if (!isViewAttached()) {
-                                Log.d("viewcontacts","list is not attached");
+                                Log.d("viewcontactshistory","list is not attached");
 
                                 return;
                             }
                             getMvpView().hideLoading();
-                            if (response.getD().getList()!=null){
-                                Log.d("viewcontacts","list is null empty");
+                            if (response.getGetContactHistoryResponseBody().getList()!=null){
+                                Log.d("viewcontactshistory","list is null empty");
+                                List<au.com.dealsdirect.data.network.model.contacthistory.List> myContactItems = response.getGetContactHistoryResponseBody().getList();
 
-                                if(!response.getD().getList().isEmpty()){
+                                if(myContactItems!=null && !myContactItems.isEmpty()){
 
-                                    Log.d("viewcontacts","list is not empty");
-                                    getMvpView().showContactItems(response.getD());
+                                    Log.d("viewcontactshistory","list is not empty");
+                                    getMvpView().showContactHistory(myContactItems);
+
                                 }else{
-                                    Log.d("viewcontacts","list is empty");
+                                    Log.d("viewcontactshistory","list is empty");
 
                                 }
-                            }else {
-//                                Log.d("viewcontacts", "list  = "+response.getMessage() + " , "+response.getResult());
                             }
 
                         }, new Consumer<Throwable>() {
@@ -74,4 +79,5 @@ public class ViewContactsPresenter<V extends ViewContactsMvpView> extends BasePr
                             }
                         }));
     }
+
 }

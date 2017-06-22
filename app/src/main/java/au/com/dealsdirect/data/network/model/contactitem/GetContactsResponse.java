@@ -1,5 +1,5 @@
 
-package au.com.dealsdirect.data.network.model.viewcontactitem;
+package au.com.dealsdirect.data.network.model.contactitem;
 
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;

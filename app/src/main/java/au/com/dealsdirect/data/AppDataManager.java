@@ -12,7 +12,6 @@ import java.util.List;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 
-import au.com.dealsdirect.data.auth.Auth;
 import au.com.dealsdirect.data.auth.AuthHelper;
 import au.com.dealsdirect.data.network.ApiHeader;
 import au.com.dealsdirect.data.network.ApiHelper;
@@ -25,6 +24,8 @@ import au.com.dealsdirect.data.network.model.address.DeleteUserAddress;
 import au.com.dealsdirect.data.network.model.address.GetAddresses;
 import au.com.dealsdirect.data.network.model.banner.GetPublicSalesBannerRequest;
 import au.com.dealsdirect.data.network.model.banner.GetPublicSalesBannerResponse;
+import au.com.dealsdirect.data.network.model.contacthistory.GetContactHistoryRequest;
+import au.com.dealsdirect.data.network.model.contacthistory.GetContactHistoryResponse;
 import au.com.dealsdirect.data.network.model.login.LoginEmail;
 import au.com.dealsdirect.data.network.model.login.LoginFacebook;
 import au.com.dealsdirect.data.network.model.login.LoginTicket;
@@ -37,7 +38,7 @@ import au.com.dealsdirect.data.network.model.publicsalescategories.GetPublicSale
 import au.com.dealsdirect.data.network.model.publicsalescategories.GetPublicSalesCategoriesResponse;
 import au.com.dealsdirect.data.network.model.saleitems.GetPublicSaleItemsRequest;
 import au.com.dealsdirect.data.network.model.saleitems.GetPublicSaleItemsResponse;
-import au.com.dealsdirect.data.network.model.viewcontactitem.GetContactsResponse;
+import au.com.dealsdirect.data.network.model.contactitem.GetContactsResponse;
 import au.com.dealsdirect.data.pref.PreferencesHelper;
 import au.com.dealsdirect.di.ApplicationContext;
 import io.reactivex.Observable;
@@ -111,8 +112,13 @@ public class AppDataManager implements DataManager {
     }
 
     @Override
-    public Observable<GetContactsResponse.Response> callGetContacts(String languageId) {
+    public Observable<GetContactsResponse> callGetContacts(String languageId) {
         return mApiHelper.callGetContacts(languageId);
+    }
+
+    @Override
+    public Observable<GetContactHistoryResponse> callGetContactHistory(GetContactHistoryRequest getContactHistoryRequest) {
+        return mApiHelper.callGetContactHistory(getContactHistoryRequest);
     }
 
     @Override
