@@ -2,11 +2,13 @@ package au.com.dealsdirect.ui.controller.saleitems;
 
 import com.androidnetworking.error.ANError;
 
+import org.json.JSONObject;
+
 import javax.inject.Inject;
 
 import au.com.dealsdirect.data.DataManager;
-import au.com.dealsdirect.data.network.model.saleitems.GetPublicSaleItemsRequest;
-import au.com.dealsdirect.data.network.model.saleitems.GetPublicSaleItemsResponse;
+import au.com.dealsdirect.data.network.model.saleitems.GetSaleItemsRequest;
+import au.com.dealsdirect.data.network.model.saleitems.GetSaleItemsResponse;
 import au.com.dealsdirect.ui.base.BasePresenter;
 import au.com.dealsdirect.utils.rx.SchedulerProvider;
 import io.reactivex.annotations.NonNull;
@@ -28,48 +30,54 @@ public class SaleItemsPresenter<V extends SaleItemsMvpView> extends BasePresente
     }
 
     @Override
-    public void loadSaleItems(GetPublicSaleItemsRequest getPublicSaleItemsRequest) {
-
+    public void loadSaleItems(String categoryKey, JSONObject facetFilter) {
         getMvpView().showLoading();
+
+        GetSaleItemsRequest getSaleItemsRequest = new GetSaleItemsRequest();
+        getSaleItemsRequest.setFacetFilter(facetFilter);
+        getSaleItemsRequest.setCategoryKey(categoryKey);
+        getSaleItemsRequest.setLanguageID(getDataManager().getLanguageId());
+        getSaleItemsRequest.setPageNumber(String.valueOf(10));
+        getSaleItemsRequest.setQuery("");
+        getSaleItemsRequest.setPageSize("");
 
         getCompositeDisposable()
                 .add(getDataManager()
-                             .getPublicSaleItemsApiCall(getPublicSaleItemsRequest)
-                             .subscribeOn(getSchedulerProvider().io())
-                             .observeOn(getSchedulerProvider().ui())
-                             .subscribe(new Consumer<GetPublicSaleItemsResponse>() {
-                                 @Override public void accept(@NonNull
-                                         GetPublicSaleItemsResponse getPublicSaleItemsResponse)
-                                         throws Exception {
+                        .getSaleItemsRequest(getSaleItemsRequest)
+                        .subscribeOn(getSchedulerProvider().io())
+                        .observeOn(getSchedulerProvider().ui())
+                        .subscribe(new Consumer<GetSaleItemsResponse>() {
+                            @Override public void accept(
+                                    @NonNull GetSaleItemsResponse getSaleItemsResponse)
+                                    throws Exception {
 
-                                     if (!isViewAttached()) {
-                                         return;
-                                     }
-                                     getMvpView().hideLoading();
-                                     if(!getPublicSaleItemsResponse.getGetPublicSaleItemsObject()
-                                                .getList().isEmpty()){
+                                if (!isViewAttached()) {
+                                    return;
+                                }
+                                getMvpView().hideLoading();
+                                if(!getSaleItemsResponse.products.isEmpty()){
 
-                                         getMvpView().showSaleItems(getPublicSaleItemsResponse);
-                                     }
-                                 }
+                                    getMvpView().showSaleItems(getSaleItemsResponse);
+                                }
+                            }
 
-                             }, new Consumer<Throwable>() {
-                                 @Override
-                                 public void accept(Throwable throwable) throws Exception {
-                                     if (!isViewAttached()) {
-                                         return;
-                                     }
+                        }, new Consumer<Throwable>() {
+                            @Override
+                            public void accept(Throwable throwable) throws Exception {
+                                if (!isViewAttached()) {
+                                    return;
+                                }
 
-                                     getMvpView().hideLoading();
-                                     getMvpView().onError(throwable.getMessage());
+                                getMvpView().hideLoading();
+                                getMvpView().onError(throwable.getMessage());
 
-                                     // handle load accounts error here
-                                     if (throwable instanceof ANError) {
-                                         ANError anError = (ANError) throwable;
-                                         handleApiError(anError);
-                                     }
-                                 }
-                             }));
+                                // handle load accounts error here
+                                if (throwable instanceof ANError) {
+                                    ANError anError = (ANError) throwable;
+                                    handleApiError(anError);
+                                }
+                            }
+                        }));
     }
 
     @Override

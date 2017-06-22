@@ -8,6 +8,18 @@ public final class ApiEndPoint {
     public static final int TEST_API = 0;
     public static final int LIVE_API = 1;
 
+    private static final String GENIE_SHOP = "https://www.dealsdirect.com.au/api/shop/shop/";
+    private static final String GENIE_SALE = "https://www.dealsdirect.com.au/api/sale/sale/";
+
+
+    private static final String CATEGORY_TREE = "v1/accounts/A56B0D62-AEF6-4653-848E-2ECDDB6E9B8C/categorytree/";
+    private static final String SALES = "v1/accounts/A56B0D62-AEF6-4653-848E-2ECDDB6E9B8C/banners/";
+    private static final String PRODUCTS = "v1/accounts/A56B0D62-AEF6-4653-848E-2ECDDB6E9B8C/products";
+
+    public static final String GET_CATEGORY_TREE = GENIE_SHOP + CATEGORY_TREE;
+    public static final String GET_SALES = GENIE_SALE + SALES;
+    public static final String GET_PRODUCTS = GENIE_SHOP + PRODUCTS;
+
     /* API Constants */
     private static final String API_HOST = "https://www.dealsdirect.com.au/";
 
@@ -39,6 +51,8 @@ public final class ApiEndPoint {
     public static final String GET_SHOP_BANNERS = BASE_URL + "GetPublicSalesBanners";
     public static final String GET_SALES_CATEGORIES = BASE_URL + "GetSaleCategories";
 
+
+
     /* Sale Items Controller */
     public static final String GET_PUBLIC_SALE_ITEMS = BASE_URL+"GetPublicSaleItems";
 
@@ -66,7 +80,7 @@ public final class ApiEndPoint {
     /* Contact Controller */
     public static final String ANSWER_CONTACT = "AnswerContact";
     public static final String CREATE_CONTACT = "CreateContact";
-    public static final String GET_CONTACT = "GetContact";
+    public static final String GET_CONTACT =  API_HOST + COCOSA_SERVICE +"GetContact";
     public static final String GET_CONTACT_INVOICES = "GetContactInvoices";
     public static final String GET_CONTACTS = API_HOST + COCOSA_SERVICE + "GetContacts";
     public static final String GET_CONTACT_SUBJECTS = "GetContactSubjects";
@@ -90,7 +104,7 @@ public final class ApiEndPoint {
 
     /* Login Controller */
     public static String FORGOT_PASSWORD = "ForgotPassword"; //
-    public static String LOGIN_EMAIL = TEST_API_LEGACY + "Login";
+    public static String LOGIN_EMAIL = API_HOST + COCOSA_SERVICE + "Login";
     public static String LOGIN_FB = TEST_API_LEGACY + "LoginFacebook";
     public static String LOGIN_TICKET = TEST_API_LEGACY + "LoginTicket";
     public static String LOGOUT = TEST_API_LEGACY + "Logout";

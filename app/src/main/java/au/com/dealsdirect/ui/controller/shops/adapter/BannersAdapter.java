@@ -11,7 +11,7 @@ import java.util.Date;
 import java.util.List;
 
 import au.com.dealsdirect.R;
-import au.com.dealsdirect.data.network.model.banner.GetPublicSalesBannerResponse;
+import au.com.dealsdirect.data.network.model.banner.GetBannerResponse;
 import au.com.dealsdirect.ui.controller.shops.listener.BannerClickListener;
 import au.com.dealsdirect.ui.controller.shops.viewholder.BannersViewHolder;
 import au.com.dealsdirect.utils.DateUtils;
@@ -22,17 +22,17 @@ import au.com.dealsdirect.utils.LegacyStringImageUtils;
  * dp Created by Admin on 6/7/17.
  */
 
-public class BannersAdapter extends RecyclerView.Adapter<BannersViewHolder>{
+public class BannersAdapter extends RecyclerView.Adapter<BannersViewHolder> {
 
     public static DisplayMetrics DISPLAY_METRICS;
 
-    private List<GetPublicSalesBannerResponse.Sale> mSales;
+    private List<GetBannerResponse> mSales;
     private Context mContext;
     private BannerClickListener mBannerClickListener;
 
     public BannersAdapter(
             Context context,
-            List<GetPublicSalesBannerResponse.Sale> sales,
+            List<GetBannerResponse> sales,
             BannerClickListener bannerClickListener) {
 
         this.mSales = sales;
@@ -40,32 +40,31 @@ public class BannersAdapter extends RecyclerView.Adapter<BannersViewHolder>{
         this.mBannerClickListener = bannerClickListener;
     }
 
-    @Override public BannersViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+    @Override
+    public BannersViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View v = LayoutInflater.from(parent.getContext())
-                               .inflate(R.layout.viewholder_banner, parent, false);
+                .inflate(R.layout.viewholder_banner, parent, false);
 
         return new BannersViewHolder(v);
 
     }
 
-    @Override public void onBindViewHolder(BannersViewHolder holder, final int position) {
+    @Override
+    public void onBindViewHolder(BannersViewHolder holder, final int position) {
 
-        holder.bannerTitle.setText(mSales.get(position).getName());
-        Date startDate = DateUtils.gmtDateFromServerDateString(mSales.get(position).getStart());
-        String startDateString = mSales.get(position).getStart();
-        String endDateString = mSales.get(position).getEnd();
-        Long startDateUTC = DateUtils.getUTCFromServerDateString(startDateString);
-        String formatted = getFormattedText(startDate,startDateUTC,startDateString,endDateString);
+        holder.bannerTitle.setText(mSales.get(position).getDescription());
+        String startDate = DateUtils.convertApiDateToDateString(mSales.get(position).getStartDate());
 
         String url = LegacyStringImageUtils.saleImageURLString(mSales.get(position));
-        ImageUtils.loadImage(mContext,url,holder.bannerImage);
-        holder.bannerDescription.setText(formatted);
+        ImageUtils.loadImage(mContext, url, holder.bannerImage);
+        holder.bannerDescription.setText(startDate);
         holder.bannerImage.setOnClickListener(new View.OnClickListener() {
-            @Override public void onClick(View view) {
+            @Override
+            public void onClick(View view) {
 
                 mBannerClickListener.onBannerClicked(
-                        mSales.get(position).getName(),
-                        mSales.get(position).getID(),
+                        mSales.get(position).getBannerText(),
+                        mSales.get(position).getId(),
                         position,
                         url);
 
@@ -73,7 +72,8 @@ public class BannersAdapter extends RecyclerView.Adapter<BannersViewHolder>{
         });
     }
 
-    @Override public int getItemCount() {
+    @Override
+    public int getItemCount() {
         return mSales.size();
     }
 
@@ -81,7 +81,7 @@ public class BannersAdapter extends RecyclerView.Adapter<BannersViewHolder>{
             Date startDate,
             Long startDateUTC,
             String startDateString,
-            String endDateString){
+            String endDateString) {
 
         Date now = new Date();
         String formatted = "";

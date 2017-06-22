@@ -10,7 +10,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import au.com.dealsdirect.R;
-import au.com.dealsdirect.data.network.model.publicsalescategories.GetPublicSalesCategoriesResponse;
+import au.com.dealsdirect.data.network.model.category.GetCategoryTreeResponse;
 import au.com.dealsdirect.ui.controller.categories.listener.CategoryClickListener;
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -21,12 +21,12 @@ import butterknife.ButterKnife;
 
 public class CategoriesAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
-    private List<GetPublicSalesCategoriesResponse.SaleList> mData = new ArrayList<>();
+    private List<GetCategoryTreeResponse> mData = new ArrayList<>();
     private CategoriesMvpPresenter mPresenter;
     private CategoryClickListener mCategoryAdapterClickListener;
 
     public CategoriesAdapter(
-            List<GetPublicSalesCategoriesResponse.SaleList> data,
+            List<GetCategoryTreeResponse> data,
             CategoriesMvpPresenter presenter,
             CategoryClickListener categoryClickListener) {
 
@@ -37,17 +37,29 @@ public class CategoriesAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
 
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.sales_categories_row, parent, false);
+        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.view_holder_sales_category, parent, false);
         CategoriesViewHolder vh = new CategoriesViewHolder(view,mPresenter);
         return vh;
     }
 
     @Override
     public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
-        ((CategoriesViewHolder) holder).categoryText.setText(mData.get(position).name);
-        ((CategoriesViewHolder) holder).itemView.setOnClickListener(view -> {
-            mCategoryAdapterClickListener.onCategoryClicked(mData.get(position).iD);
-        });
+
+        if (!mData.isEmpty()){
+            if (!mData.get(position).getName().isEmpty()){
+                char first = mData.get(position).getName().charAt(0);
+                ((CategoriesViewHolder) holder).categoryIndicator.setText(String.valueOf(first));
+            }
+
+            ((CategoriesViewHolder) holder).categoryText.setText(mData.get(position).getName());
+            ((CategoriesViewHolder) holder).itemView.setOnClickListener(view -> {
+                mCategoryAdapterClickListener.onCategoryClicked(
+                        mData.get(position).getId(),
+                        mData.get(position).getName(),
+                        mData.get(position).getKey());
+            });
+
+        }
 
     }
 
@@ -56,8 +68,8 @@ public class CategoriesAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
         return mData.size();
     }
 
-    public void replaceData(List<GetPublicSalesCategoriesResponse.SaleList> saleList){
-        mData = new ArrayList<>(saleList);
+    public void replaceData(List<GetCategoryTreeResponse> getCategoryTreeResponses){
+        mData = new ArrayList<>(getCategoryTreeResponses);
         notifyDataSetChanged();
     }
 
@@ -65,6 +77,9 @@ public class CategoriesAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
 
         @BindView(R.id.row_category_name)
         TextView categoryText;
+
+        @BindView(R.id.row_category_indicator)
+        TextView categoryIndicator;
 
         CategoriesMvpPresenter mPresenter;
 

@@ -6,8 +6,8 @@ import android.util.Log;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 
+import au.com.dealsdirect.data.network.model.banner.GetBannerResponse;
 import au.com.dealsdirect.data.network.model.banner.GetPublicSalesBannerResponse;
-import au.com.dealsdirect.data.network.model.productdetails.GetPublicItemDetailsResponse;
 import au.com.dealsdirect.data.network.model.saleitems.GetPublicSaleItemsResponse;
 
 /**
@@ -22,7 +22,7 @@ public class LegacyStringImageUtils {
 
     private static Handler h = new Handler();
 
-    public static String saleImageURLString(Object sale) {
+    public static String legacySaleImageURLString(Object sale) {
 
         GetPublicSalesBannerResponse.Sale mSale = (GetPublicSalesBannerResponse.Sale) sale;
         String saleId = "";
@@ -56,6 +56,15 @@ public class LegacyStringImageUtils {
         Log.d("LegacyString", urlString);
 
         return urlString;
+
+    }
+
+    public static String saleImageURLString(Object sale) {
+
+        //Image ID
+        String imageId = ((GetBannerResponse) sale).getImage();
+
+        return imageId;
 
     }
 

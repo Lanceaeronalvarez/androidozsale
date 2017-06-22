@@ -13,10 +13,9 @@ import android.widget.TextView;
 import java.util.List;
 
 import au.com.dealsdirect.R;
-import au.com.dealsdirect.data.network.model.saleitems.GetPublicSaleItemsResponse;
+import au.com.dealsdirect.data.network.model.saleitems.GetSaleItemsResponse;
 import au.com.dealsdirect.ui.controller.saleitems.SaleItemsMvpPresenter;
 import au.com.dealsdirect.utils.ImageUtils;
-import au.com.dealsdirect.utils.LegacyStringImageUtils;
 import au.com.dealsdirect.utils.PriceUtils;
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -27,12 +26,12 @@ import butterknife.ButterKnife;
 
 public class SaleItemsAdapter extends RecyclerView.Adapter<SaleItemsAdapter.ViewHolder> {
 
-    List<GetPublicSaleItemsResponse.Item> mData;
+    List<GetSaleItemsResponse.Products> mData;
     Context mContext;
     SaleItemsMvpPresenter mPresenter;
     String mSaleId;
 
-    public void addData(List<GetPublicSaleItemsResponse.Item> saleItems) {
+    public void addData(List<GetSaleItemsResponse.Products> saleItems) {
         mData.addAll(saleItems);
         notifyDataSetChanged();
     }
@@ -63,9 +62,9 @@ public class SaleItemsAdapter extends RecyclerView.Adapter<SaleItemsAdapter.View
         }
     }
 
-    public SaleItemsAdapter(List<GetPublicSaleItemsResponse.Item> saleItem,
+    public SaleItemsAdapter(List<GetSaleItemsResponse.Products> saleItems,
             SaleItemsMvpPresenter presenter, String saleId) {
-        this.mData = saleItem;
+        this.mData = saleItems;
         this.mPresenter = presenter;
         this.mSaleId = saleId;
     }
@@ -78,18 +77,16 @@ public class SaleItemsAdapter extends RecyclerView.Adapter<SaleItemsAdapter.View
     }
 
     @Override public void onBindViewHolder(ViewHolder holder, final int position) {
-        GetPublicSaleItemsResponse.Item saleItem = mData.get(position);
-        holder.mSaleItemName.setText(saleItem.getName());
-        holder.mSaleItemImage.setTransitionName(mData.get(position)
-                                                     .getID());
+        GetSaleItemsResponse.Products saleItem = mData.get(position);
+        String url = mData.get(position).getImages().get(0);
 
-        String url = LegacyStringImageUtils.itemImageURLString(saleItem);
-        String saleItemBrand = mData.get(position)
-                                    .getBrandName();
-        String saleItemPrice = PriceUtils.getPriceStringValue(mData.get(position)
-                                                                   .getPrice());
-        String saleItemOldPrice = PriceUtils.getRpStringValue(mData.get(position)
-                                                                   .getRP());
+        holder.mSaleItemName.setText(saleItem.getDescription());
+        holder.mSaleItemImage.setTransitionName(mData.get(position).getProductId());
+
+//        String url = LegacyStringImageUtils.itemImageURLString(saleItem);
+        String saleItemBrand = mData.get(position).getLabelText();
+        String saleItemPrice = PriceUtils.getPriceStringValue(mData.get(position).getPrice().getValue());
+        String saleItemOldPrice = PriceUtils.getRpStringValue(mData.get(position).getOriginalPrice().getValue());
 
         ImageUtils.loadImageWithImageViewDimens(mContext, url, holder.mSaleItemImage);
 
@@ -101,7 +98,7 @@ public class SaleItemsAdapter extends RecyclerView.Adapter<SaleItemsAdapter.View
 
 
         holder.itemView.setOnClickListener(v -> {
-            mPresenter.loadProductDetails(url, mData.get(position).getID(), mSaleId);
+            mPresenter.loadProductDetails(url, mData.get(position).getProductId(), mSaleId);
         });
     }
 

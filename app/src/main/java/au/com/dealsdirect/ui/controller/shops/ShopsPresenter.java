@@ -9,12 +9,10 @@ import com.androidnetworking.error.ANError;
 import javax.inject.Inject;
 
 import au.com.dealsdirect.data.DataManager;
-import au.com.dealsdirect.data.network.model.banner.GetPublicSalesBannerRequest;
-import au.com.dealsdirect.data.network.model.banner.GetPublicSalesBannerResponse;
+import au.com.dealsdirect.data.network.model.banner.GetBannerRequest;
 import au.com.dealsdirect.ui.base.BasePresenter;
 import au.com.dealsdirect.utils.rx.SchedulerProvider;
 import io.reactivex.disposables.CompositeDisposable;
-import io.reactivex.functions.Consumer;
 
 public class ShopsPresenter<V extends ShopsMvpView> extends BasePresenter<V> implements
         ShopsMvpPresenter<V> {
@@ -28,54 +26,45 @@ public class ShopsPresenter<V extends ShopsMvpView> extends BasePresenter<V> imp
         super(dataManager, schedulerProvider, compositeDisposable);
     }
 
-
-    @Override public void loadShopsBanner(GetPublicSalesBannerRequest request) {
+    @Override
+    public void loadShopsBanner(GetBannerRequest request) {
         getMvpView().showLoading();
 
         getCompositeDisposable()
                 .add(getDataManager()
-                             .getPublicSalesBannerApiCall(request)
-                             .subscribeOn(getSchedulerProvider().io())
-                             .observeOn(getSchedulerProvider().ui())
-                             .subscribe(new Consumer<GetPublicSalesBannerResponse>() {
+                        .doGetBannersApiCall(request)
+                        .subscribeOn(getSchedulerProvider().io())
+                        .observeOn(getSchedulerProvider().ui())
+                        .subscribe(response -> {
 
-                                 @Override
-                                 public void accept(GetPublicSalesBannerResponse response) throws Exception {
+                            if (!isViewAttached()) {
+                                return;
+                            }
 
-                                  if (!isViewAttached()) {
-                                      return;
-                                  }
+                            getMvpView().hideLoading();
 
-                                  getMvpView().hideLoading();
+                            if (response.isEmpty()) {
+//                             getMvpView().showNoResultsLayout();
 
-                                  if (response.getBanner().getList().isEmpty()) {
-//                                      getMvpView().showNoResultsLayout();
+                            } else {
+                                getMvpView().showShopBanners(response);
+                            }
 
-                                  } else {
-                                      getMvpView().showShopBanners(response);
-                                  }
+                        }, throwable -> {
 
-                                 }
-                             }, new Consumer<Throwable>() {
+                            if (!isViewAttached()) {
+                                return;
+                            }
 
+                            getMvpView().hideLoading();
+                            getMvpView().onError(throwable.getMessage());
 
-                                 @Override
-                                 public void accept(Throwable throwable) throws Exception {
-
-                                      if (!isViewAttached()) {
-                                          return;
-                                      }
-
-                                      getMvpView().hideLoading();
-                                      getMvpView().onError(throwable.getMessage());
-
-                                      // handle load accounts error here
-                                      if (throwable instanceof ANError) {
-                                          ANError anError = (ANError) throwable;
-                                          handleApiError(anError);
-                                      }
-                                 }
-                             }));
+                            // handle load accounts error here
+                            if (throwable instanceof ANError) {
+                                ANError anError = (ANError) throwable;
+                                handleApiError(anError);
+                            }
+                        }));
     }
 }
 

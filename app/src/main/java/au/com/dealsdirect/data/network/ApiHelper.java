@@ -7,6 +7,8 @@ import com.mysale.genie.utility.config.api.GetAppSettings;
 import com.mysale.genie.utility.config.api.GetAppSettingsSection;
 import com.mysale.genie.utility.config.api.GetServerSettings;
 
+import java.util.List;
+
 import au.com.dealsdirect.data.network.model.SampleRequest;
 import au.com.dealsdirect.data.network.model.SampleResponse;
 import au.com.dealsdirect.data.network.model.address.AddAddress;
@@ -14,8 +16,9 @@ import au.com.dealsdirect.data.network.model.address.ApplyAddressRequest;
 import au.com.dealsdirect.data.network.model.address.ApplyAddressResponse;
 import au.com.dealsdirect.data.network.model.address.DeleteUserAddress;
 import au.com.dealsdirect.data.network.model.address.GetAddresses;
-import au.com.dealsdirect.data.network.model.banner.GetPublicSalesBannerRequest;
-import au.com.dealsdirect.data.network.model.banner.GetPublicSalesBannerResponse;
+import au.com.dealsdirect.data.network.model.banner.GetBannerRequest;
+import au.com.dealsdirect.data.network.model.banner.GetBannerResponse;
+import au.com.dealsdirect.data.network.model.category.GetCategoryTreeResponse;
 import au.com.dealsdirect.data.network.model.contacthistory.GetContactHistoryRequest;
 import au.com.dealsdirect.data.network.model.contacthistory.GetContactHistoryResponse;
 import au.com.dealsdirect.data.network.model.contactitem.GetContactsResponse;
@@ -31,6 +34,8 @@ import au.com.dealsdirect.data.network.model.publicsalescategories.GetPublicSale
 import au.com.dealsdirect.data.network.model.publicsalescategories.GetPublicSalesCategoriesResponse;
 import au.com.dealsdirect.data.network.model.saleitems.GetPublicSaleItemsRequest;
 import au.com.dealsdirect.data.network.model.saleitems.GetPublicSaleItemsResponse;
+import au.com.dealsdirect.data.network.model.saleitems.GetSaleItemsRequest;
+import au.com.dealsdirect.data.network.model.saleitems.GetSaleItemsResponse;
 import io.reactivex.Observable;
 
 public interface ApiHelper {
@@ -41,10 +46,11 @@ public interface ApiHelper {
 
     Observable<SampleResponse> doSampleApiCall(SampleRequest request);
 
-    Observable<GetPublicSalesBannerResponse> getPublicSalesBannerApiCall
-            (GetPublicSalesBannerRequest getPublicSalesBannerRequest);
+    Observable<List<GetBannerResponse>> doGetBannersApiCall(GetBannerRequest getBannersRequest);
 
     Observable<GetPublicSalesCategoriesResponse> doGetPublicSalesCategoriesApiCall(GetPublicSalesCategoriesRequest request);
+
+    Observable<List<GetCategoryTreeResponse>> doGetGetCategoriesApiCall();
 
     Observable<GetPublicItemDetailsResponse> doGetPublicItemDetailsApiCall(GetPublicItemDetailsRequest request);
 
@@ -52,6 +58,9 @@ public interface ApiHelper {
 
     Observable<GetPublicSaleItemsResponse> getPublicSaleItemsApiCall(GetPublicSaleItemsRequest
             getPublicSaleItemsRequest);
+
+    Observable<GetSaleItemsResponse> getSaleItemsRequest(GetSaleItemsRequest getSaleItemsRequest);
+
 
 //  CONFIG API CALLS
     Observable<GetServerSettings.ResponseValue> callGetServerSettings(Context context, String countryId);

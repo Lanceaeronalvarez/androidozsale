@@ -21,8 +21,7 @@ import java.util.List;
 import javax.inject.Inject;
 
 import au.com.dealsdirect.R;
-import au.com.dealsdirect.data.network.model.saleitems.GetPublicSaleItemsRequest;
-import au.com.dealsdirect.data.network.model.saleitems.GetPublicSaleItemsResponse;
+import au.com.dealsdirect.data.network.model.saleitems.GetSaleItemsResponse;
 import au.com.dealsdirect.ui.base.BaseController;
 import au.com.dealsdirect.ui.controller.productdetails.ProductDetailsController;
 import au.com.dealsdirect.ui.controller.saleitems.adapter.SaleItemsAdapter;
@@ -51,7 +50,7 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
     private int fromPosition;
     private String imageHeaderUrl;
 
-    private List<GetPublicSaleItemsResponse.Item> saleItems = new LinkedList<>();
+    private List<GetSaleItemsResponse.Products> saleItems = new LinkedList<>();
 
 
     @BindView(R.id.controller_sale_items_grid_view)
@@ -108,12 +107,9 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
         super.onViewBound(view);
 
         setUp(view);
-        GetPublicSaleItemsRequest getPublicSaleItemsRequest =
-                new GetPublicSaleItemsRequest(mSaleId, 100, "en", "DA", "");
-
 
         if (saleItems.size() == 0) {
-            mPresenter.loadSaleItems(getPublicSaleItemsRequest);
+//            mPresenter.loadSaleItems();
         } else {
             mSaleItemsAdapter = new SaleItemsAdapter(saleItems, mPresenter, mSaleId);
             RecyclerView.LayoutManager layoutManager = new GridLayoutManager(getActivity(), 2);
@@ -159,35 +155,10 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
     }
 
     @Override
-    public void showSaleItems(GetPublicSaleItemsResponse getPublicSaleItemsResponse) {
+    public void showSaleItems(GetSaleItemsResponse getSaleItemsResponse) {
 
-        List<GetPublicSaleItemsResponse.List> tempList =
-                getPublicSaleItemsResponse.getGetPublicSaleItemsObject()
-                        .getList();
-
-        List<GetPublicSaleItemsResponse.Item> allItems = new LinkedList<>();
-
-        for (int x = 0; x < tempList.size(); x++) {
-
-            List<GetPublicSaleItemsResponse.SubCategory> tempSubCategories = new LinkedList<>();
-            tempSubCategories = tempList.get(x)
-                    .getSubCategories();
-
-            for (int y = 0; y < tempSubCategories.size(); y++) {
-
-                List<GetPublicSaleItemsResponse.Item> tempItems;
-                tempItems = tempSubCategories.get(y)
-                        .getItems();
-
-                for (int z = 0; z < tempItems.size(); z++) {
-                    allItems.add(tempItems.get(z));
-
-                }
-            }
-        }
-
-        saleItems = allItems;
-        mSaleItemsAdapter = new SaleItemsAdapter(allItems, mPresenter, mSaleId);
+        List<GetSaleItemsResponse.Products> tempList = getSaleItemsResponse.products;
+        mSaleItemsAdapter = new SaleItemsAdapter(tempList, mPresenter, mSaleId);
         RecyclerView.LayoutManager layoutManager = new GridLayoutManager(getActivity(), 2);
         mSaleItemsRecyclerView.setLayoutManager(layoutManager);
         mSaleItemsRecyclerView.setAdapter(mSaleItemsAdapter);
@@ -205,7 +176,8 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
         //        mPresenter.searchProducts(page, mToolbarEditText.getText().toString(), FilterSingleton.getSelectedFilters(mFilterMode));
     }
 
-    @Override public void showProductDetails(String imageUrl, String itemId, String saleId) {
+    @Override
+    public void showProductDetails(String imageUrl, String itemId, String saleId) {
 
         String imageTransitionName = itemId;
 
@@ -218,27 +190,43 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
         sharedElementTransitionChangehandler.setForceRemoveViewOnPush(false);
 
         ControllerChangeHandler pushHandler
-                        = new TransitionChangeHandlerCompat(sharedElementTransitionChangehandler,
-                                                            new DetailPushAnimChangeHandler());
+                = new TransitionChangeHandlerCompat(sharedElementTransitionChangehandler,
+                new DetailPushAnimChangeHandler());
 
         ControllerChangeHandler popHandler
-                        = new TransitionChangeHandlerCompat(new DetailPopTransitionChangeHandler(itemId),
-                                                            new DetailPopAnimChangeHandler());
+                = new TransitionChangeHandlerCompat(new DetailPopTransitionChangeHandler(itemId),
+                new DetailPopAnimChangeHandler());
 
 
         getRouter().pushController(RouterTransaction.with(new ProductDetailsController(imageUrl, itemId, saleId))
-                                                    .pushChangeHandler(pushHandler)
-                                                    .popChangeHandler(popHandler));
+                .pushChangeHandler(pushHandler)
+                .popChangeHandler(popHandler));
 
-
-
-//        getRouter().pushController(RouterTransaction.with(new ProductDetailsController(imageUrl, itemId, saleId))
-//                                                    .pushChangeHandler(pushHandler)
-//                                                    .popChangeHandler(popHandler));
     }
 
     @OnClick(R.id.partial_toolbar_arrow_view)
     public void onBackClick() {
         getActivity().onBackPressed();
     }
+
+    /*
+        for (int x = 0; x < tempList.size(); x++) {
+
+            List<GetPublicSaleItemsResponse.SubCategory> tempSubCategories = new LinkedList<>();
+            tempSubCategories = tempList.get(x).getSubCategories();
+
+            for (int y = 0; y < tempSubCategories.size(); y++) {
+
+                List<GetPublicSaleItemsResponse.Item> tempItems;
+                tempItems = tempSubCategories.get(y)
+                        .getItems();
+
+                for (int z = 0; z < tempItems.size(); z++) {
+                    allItems.add(tempItems.get(z));
+
+                }
+            }
+        }
+
+     */
 }

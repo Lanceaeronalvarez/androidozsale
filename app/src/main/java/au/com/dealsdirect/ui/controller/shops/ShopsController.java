@@ -18,8 +18,9 @@ import java.util.List;
 import javax.inject.Inject;
 
 import au.com.dealsdirect.R;
+import au.com.dealsdirect.data.network.model.banner.GetBannerRequest;
+import au.com.dealsdirect.data.network.model.banner.GetBannerResponse;
 import au.com.dealsdirect.data.network.model.banner.GetPublicSalesBannerRequest;
-import au.com.dealsdirect.data.network.model.banner.GetPublicSalesBannerResponse;
 import au.com.dealsdirect.ui.base.BaseController;
 import au.com.dealsdirect.ui.controller.categories.CategoriesController;
 import au.com.dealsdirect.ui.controller.saleitems.SaleItemsController;
@@ -39,6 +40,7 @@ public class ShopsController extends BaseController implements ShopsMvpView, Ban
 
     private static final String KEY_TEXT = "ShopController.KEY_TEXT";
     private static final String KEY_CATEGORY_ID = "ShopController.KEY_CATEGORY_ID";
+    private static final String KEY_CATEGORY_NAME= "ShopController.KEY_CATEGORY_NAME";
 
     @Inject
     ShopsMvpPresenter<ShopsMvpView> mPresenter;
@@ -49,13 +51,17 @@ public class ShopsController extends BaseController implements ShopsMvpView, Ban
 
     private BannersAdapter mBannersAdapter;
     private BannerClickListener mBannerClickListener;
+
     private String mCategoryID;
+    private String mCategoryName;
 
-    private List<GetPublicSalesBannerResponse.Sale> sales = new LinkedList<>();
+    private List<GetBannerResponse> sales = new LinkedList<>();
 
-    public ShopsController(String categoryID) {
+    public ShopsController(String categoryID, String categoryName) {
 
-        this(new BundleBuilder(new Bundle()).putString(KEY_CATEGORY_ID, categoryID)
+        this(new BundleBuilder(new Bundle())
+                .putString(KEY_CATEGORY_ID, categoryID)
+                .putString(KEY_CATEGORY_NAME, categoryName)
                 .build());
     }
 
@@ -66,7 +72,7 @@ public class ShopsController extends BaseController implements ShopsMvpView, Ban
     public ShopsController(Bundle args) {
         super(args);
         mCategoryID = getArgs().getString(KEY_CATEGORY_ID);
-
+        mCategoryName = getArgs().getString(KEY_CATEGORY_NAME);
     }
 
     @Override
@@ -97,44 +103,22 @@ public class ShopsController extends BaseController implements ShopsMvpView, Ban
     protected void setUp(View view) {
         GetPublicSalesBannerRequest getPublicSalesBannerRequest;
 
-        if (mCategoryID == null) {
+        GetBannerRequest getBannerRequest = new GetBannerRequest();
+        getBannerRequest.setOffset(String.valueOf(0));
+        getBannerRequest.setLimit(String.valueOf(10));
+        getBannerRequest.setCategory(mCategoryName);
+        getBannerRequest.setCategoryId(mCategoryID);
 
-            getPublicSalesBannerRequest = new GetPublicSalesBannerRequest(
-                    "40f80218-a9e1-43c4-96ff-4c046d192a21", 100, false, true, -1, "EN", "DA", "");
-        } else {
-            getPublicSalesBannerRequest = new GetPublicSalesBannerRequest(
-                    mCategoryID, 100, false, true, -1, "EN", "DA", "");
-        }
 
 
         if (sales.size() == 0) {
-            mPresenter.loadShopsBanner(getPublicSalesBannerRequest);
+            mPresenter.loadShopsBanner(getBannerRequest);
         } else {
             mBannersAdapter = new BannersAdapter(getActivity(), sales, mBannerClickListener);
 
             shopsControllerBannerRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
             shopsControllerBannerRecyclerView.setAdapter(mBannersAdapter);
         }
-    }
-
-    @Override
-    public void showShopBanners(GetPublicSalesBannerResponse getPublicSalesBannerResponse) {
-
-        sales = getPublicSalesBannerResponse.getBanner()
-                .getList()
-                .get(0)
-                .getSales();
-
-        mBannerClickListener = this;
-
-        mBannersAdapter = new BannersAdapter(getActivity(), sales, mBannerClickListener);
-
-        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getActivity());
-        linearLayoutManager.setAutoMeasureEnabled(false);
-        shopsControllerBannerRecyclerView.setLayoutManager(linearLayoutManager);
-        shopsControllerBannerRecyclerView.setAdapter(mBannersAdapter);
-        mBannersAdapter.notifyDataSetChanged();
-
     }
 
 
@@ -160,5 +144,23 @@ public class ShopsController extends BaseController implements ShopsMvpView, Ban
                 .popChangeHandler(new HorizontalNavTransitionChangeHandler()));
 
 //        ((MainActivity) getActivity()).hideBottomNav();
+    }
+
+    @Override
+    public void showShopBanners(List<GetBannerResponse> getBannerResponses) {
+
+
+        sales = getBannerResponses;
+
+        mBannerClickListener = this;
+
+        mBannersAdapter = new BannersAdapter(getActivity(), sales, mBannerClickListener);
+
+        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getActivity());
+        linearLayoutManager.setAutoMeasureEnabled(false);
+        shopsControllerBannerRecyclerView.setLayoutManager(linearLayoutManager);
+        shopsControllerBannerRecyclerView.setAdapter(mBannersAdapter);
+        mBannersAdapter.notifyDataSetChanged();
+
     }
 }

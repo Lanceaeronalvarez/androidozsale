@@ -56,7 +56,7 @@ public class DateUtils {
         @SuppressLint("SimpleDateFormat")
         SimpleDateFormat apiDateFormat = new SimpleDateFormat(AppConstants.API_DATE_FORMAT);
         @SuppressLint("SimpleDateFormat")
-        SimpleDateFormat displayDateFormat = new SimpleDateFormat(AppConstants.MP_DATE_FORMAT);
+        SimpleDateFormat displayDateFormat = new SimpleDateFormat(AppConstants.DD_DATE_FORMAT);
 
         try {
             return displayDateFormat.format(apiDateFormat.parse(dateString));
