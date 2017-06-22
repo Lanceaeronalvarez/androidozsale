@@ -13,9 +13,7 @@
         android:layout_height="match_parent"
         android:orientation="vertical">
 
-        <include
-            android:id="@+id/my_details_toolbar"
-            layout="@layout/partial_toolbar_arrow" />
+        <include layout="@layout/partial_toolbar_arrow" />
 
         <android.support.v4.widget.NestedScrollView
             android:layout_width="match_parent"

@@ -89,7 +89,6 @@ public class DetailsController extends BaseController implements DetailsMvpView 
     @Override
     protected void onViewBound(@NonNull View view) {
         super.onViewBound(view);
-
         setUp(view);
     }
 

@@ -47,7 +47,6 @@ public class DetailsPresenter<V extends DetailsMvpView> extends BasePresenter<V>
                             return;
                         }
 
-                        getMvpView().hideLoading();
                         getMvpView().onError(throwable.getMessage());
 
                         // handle load accounts error here
@@ -93,7 +92,6 @@ public class DetailsPresenter<V extends DetailsMvpView> extends BasePresenter<V>
                             return;
                         }
 
-                        getMvpView().hideLoading();
                         getMvpView().onError(throwable.getMessage());
 
                         // handle load accounts error here
