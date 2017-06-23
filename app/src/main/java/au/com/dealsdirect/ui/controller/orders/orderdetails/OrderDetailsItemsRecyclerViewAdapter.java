@@ -179,7 +179,7 @@ public class OrderDetailsItemsRecyclerViewAdapter extends RecyclerView.Adapter<R
             productSize = (TextView) itemView.findViewById(R.id.product_size);
 
             orderImage = (ImageView) itemView.findViewById(R.id.order_image);
-            orderNumberContainerLayout = (RelativeLayout) itemView.findViewById(R.id.order_number_container);
+//            orderNumberContainerLayout = (RelativeLayout) itemView.findViewById(R.id.order_number_container);
             orderDetailLayout = (LinearLayout) itemView.findViewById(R.id.product_list_order_detail);
 
             orderNumberValueTextView = (TextView) itemView.findViewById(R.id.order_number_text_value);

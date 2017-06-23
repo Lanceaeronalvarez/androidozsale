@@ -91,13 +91,13 @@ public class OrderDetailsRecyclerViewAdapter extends RecyclerView.Adapter<Recycl
         OrdersViewHolder holder = (OrdersViewHolder) vh;
         
         String orderItemCount = item.getSubTotal().getItemsCount()+"";
-        String orderNumber = Integer.toString(paymentReferenceNo);
+//        String orderNumber = Integer.toString(paymentReferenceNo);
         
-        if (position != 0){
-            holder.orderNumberContainerLayout.setVisibility(View.GONE);
-        }else{
-            holder.orderNumberValueTextView.setText(orderNumber);
-        }
+//        if (position != 0){
+//            holder.orderNumberContainerLayout.setVisibility(View.GONE);
+//        }else{
+//            holder.orderNumberValueTextView.setText(orderNumber);
+//        }
 
         if (position == orderList.size()-1){
             holder.orderDetailLayout.setVisibility(View.VISIBLE);
@@ -344,7 +344,7 @@ public class OrderDetailsRecyclerViewAdapter extends RecyclerView.Adapter<Recycl
             productPrice = (TextView) itemView.findViewById(R.id.product_price);
             productSubtotal = (TextView) itemView.findViewById(R.id.product_subtotal);
 
-            orderNumberContainerLayout = (RelativeLayout) itemView.findViewById(R.id.order_number_container);
+//            orderNumberContainerLayout = (RelativeLayout) itemView.findViewById(R.id.order_number_container);
             orderDetailLayout = (LinearLayout) itemView.findViewById(R.id.product_list_order_detail);
 
             orderNumberValueTextView = (TextView) itemView.findViewById(R.id.order_number_text_value);

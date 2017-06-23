@@ -464,6 +464,7 @@
                 android:layout_toRightOf="@id/delivery_amount_label"
                 android:textSize="@dimen/text_size_xlarge"
                 android:paddingTop="10dp"
+                android:gravity="right"
                 android:layout_marginLeft="5dp"
                 android:text=""/>
 
@@ -487,6 +488,7 @@
                 android:textSize="@dimen/text_size_xlarge"
                 android:layout_marginLeft="5dp"
                 android:paddingTop="10dp"
+                android:gravity="right"
                 android:text=""/>
 
 
@@ -508,6 +510,7 @@
                 android:layout_below="@+id/discount_value"
                 android:textSize="@dimen/text_size_xlarge"
                 android:paddingTop="10dp"
+                android:gravity="right"
                 android:layout_marginLeft="5dp"
                 android:text=""/>
         </RelativeLayout>
@@ -539,6 +542,7 @@
                 android:layout_height="wrap_content"
                 android:textColor="@color/gray_field_text"
                 android:layout_toRightOf="@id/total_label"
+                android:gravity="right"
                 android:text=""
                 android:textSize="@dimen/text_size_xxlarge"/>
         </RelativeLayout>
