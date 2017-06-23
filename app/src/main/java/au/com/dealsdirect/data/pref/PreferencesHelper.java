@@ -24,9 +24,9 @@ public interface PreferencesHelper {
 
     String getLanguageId();
 
-    void setLanguages(List<Language> languages);
+    void setLanguages(String languagesJsonString);
 
-    List<Language> getLanguages();
+    String getLanguages();
 
     void setSiteName(String siteName);
 

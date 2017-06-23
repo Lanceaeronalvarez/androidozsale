@@ -5,6 +5,7 @@ import android.content.ContextWrapper;
 import android.content.pm.PackageManager;
 import android.os.Build;
 
+import com.google.gson.Gson;
 import com.mysale.genie.utility.Prefs;
 import com.mysale.genie.utility.config.model.getserversettings.Language;
 
@@ -17,6 +18,7 @@ import javax.inject.Singleton;
 import au.com.dealsdirect.R;
 import au.com.dealsdirect.di.ApplicationContext;
 import au.com.dealsdirect.di.PreferenceInfo;
+import au.com.dealsdirect.utils.JsonUtils;
 
 
 @Singleton
@@ -146,14 +148,13 @@ public class AppPreferencesHelper implements PreferencesHelper {
     }
 
     @Override
-    public void setLanguages(List<Language> languages) {
-        Prefs.putObject(LANGUAGE_LIST,languages);
+    public void setLanguages(String languagesString) {
+        Prefs.putString(LANGUAGE_LIST, languagesString);
     }
 
     @Override
-    public List<Language> getLanguages() {
-        List<Language> languageList = new ArrayList<>();
-        return Prefs.getObject(LANGUAGE_LIST, languageList.getClass());
+    public String getLanguages() {
+        return Prefs.getString(LANGUAGE_LIST, "");
     }
 
     @Override

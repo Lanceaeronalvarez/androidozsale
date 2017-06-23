@@ -8,6 +8,7 @@ import android.content.Context;
 import android.content.SharedPreferences;
 
 import com.androidnetworking.error.ANError;
+import com.google.gson.Gson;
 import com.mysale.genie.utility.Prefs;
 import com.mysale.genie.utility.RxBus;
 import com.mysale.genie.utility.config.api.GetAppSettings;
@@ -57,7 +58,8 @@ public class MainPresenter<V extends MainMvpView> extends BasePresenter<V> imple
                         if(value != null) {
                             getDataManager().setCountryId(responseValue.getCountryId());
                             getDataManager().setLanguageId(responseValue.getLanguages().get(0).getID());
-                            getDataManager().setLanguages(responseValue.getLanguages());
+                            Gson gson = new Gson();
+                            getDataManager().setLanguages(gson.toJson(responseValue.getLanguages()));
                             getDataManager().setSiteName(responseValue.getSiteFullname());
                             getDataManager().setCurrency(responseValue.getCurrency());
                             getDataManager().setCurrencySign(responseValue.getCurrencySign());

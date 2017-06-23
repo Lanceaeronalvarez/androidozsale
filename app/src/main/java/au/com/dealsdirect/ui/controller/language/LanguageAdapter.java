@@ -22,7 +22,7 @@ import butterknife.ButterKnife;
 
 public class LanguageAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
-    private List<Language> mLanguages = Collections.emptyList();
+    private List<Language> mLanguages;
     private LanguageMvpPresenter mPresenter;
 
     public LanguageAdapter(ArrayList<Language> languages, LanguageMvpPresenter presenter) {
