@@ -2,10 +2,13 @@ package au.com.dealsdirect.ui.controller.orders.orders;
 
 import android.support.annotation.NonNull;
 import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.RelativeLayout;
+import android.widget.TextView;
 
 import com.bluelinelabs.conductor.RouterTransaction;
 import com.bluelinelabs.conductor.changehandler.HorizontalChangeHandler;
@@ -22,20 +25,26 @@ import au.com.dealsdirect.data.network.model.orders.GetPaymentsList;
 import au.com.dealsdirect.ui.base.BaseController;
 import au.com.dealsdirect.ui.controller.orders.orderdetails.OrderDetailsController;
 import au.com.dealsdirect.ui.custom.RecyclerOnTouchListener;
+import au.com.dealsdirect.ui.custom.SimpleDividerItemDecoration;
 import au.com.dealsdirect.utils.JsonUtils;
 import butterknife.BindView;
+import butterknife.OnClick;
 
 /**
  * Created by smartwave on 22/06/2017.
  */
 
 public class OrdersController extends BaseController implements OrdersMvpView {
-
     @Inject
     OrdersMvpPresenter<OrdersMvpView> mPresenter;
 
-    @BindView(R.id.order_details_recyclerview)
-    RecyclerViewPager mRecyclerView;
+    @BindView(R.id.partial_toolbar_arrow_title)
+    TextView mOrdersToolarTitle;
+    @BindView(R.id.partial_toolbar_filter_view)
+    ImageView mOrdersRightOption;
+
+    @BindView(R.id.orders_recycler_view)
+    RecyclerView mRecyclerView;
     @BindView(R.id.no_orders_layout)
     RelativeLayout mPlaceholderLayout;
 
@@ -58,8 +67,13 @@ public class OrdersController extends BaseController implements OrdersMvpView {
 
     @Override
     protected void setUp(View view) {
-        mRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity(),LinearLayoutManager.HORIZONTAL,false));
+
+        mOrdersToolarTitle.setText("My Orders");
+        mOrdersRightOption.setImageDrawable(null);
+
+        mRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity(),LinearLayoutManager.VERTICAL,false));
         mRecyclerView.addOnItemTouchListener(new RecyclerOnTouchListener(getActivity(), (v, position) -> mPresenter.loadOrderDetails(position)));
+        mRecyclerView.addItemDecoration(new SimpleDividerItemDecoration(getActivity()));
         mPresenter.loadOrders();
     }
 
@@ -86,5 +100,10 @@ public class OrdersController extends BaseController implements OrdersMvpView {
         getRouter().pushController(RouterTransaction.with(new OrderDetailsController(jsonData,paymentRefNo,position))
                 .pushChangeHandler(new HorizontalChangeHandler())
                 .popChangeHandler(new HorizontalChangeHandler()));
+    }
+
+    @OnClick(R.id.partial_toolbar_arrow_view)
+    public void onBackClick() {
+        getActivity().onBackPressed();
     }
 }

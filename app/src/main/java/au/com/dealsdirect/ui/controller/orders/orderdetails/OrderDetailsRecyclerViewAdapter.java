@@ -368,19 +368,19 @@ public class OrderDetailsRecyclerViewAdapter extends RecyclerView.Adapter<Recycl
             deliveryTextValue = (TextView) itemView.findViewById(R.id.delivery_text_view);
             deliveryTotalItemPayment = (TextView) itemView.findViewById(R.id.total_item_payment_value);
 
-            orderStatusTextView = (TextView) itemView.findViewById(R.id.statusTextView);
-            orderDateTextView = (TextView) itemView.findViewById(R.id.orderDateTextView);
-            orderEstimatedDeliveryDateTextView = (TextView) itemView.findViewById(R.id.estimatedDeliveryDateTextView);
+            orderStatusTextView = (TextView) itemView.findViewById(R.id.status_text_view);
+            orderDateTextView = (TextView) itemView.findViewById(R.id.order_date_text_view);
+            orderEstimatedDeliveryDateTextView = (TextView) itemView.findViewById(R.id.estimated_delivery_date_text_view);
 
-            orderCreditCardPayment = (TextView) itemView.findViewById(R.id.creditCardPaymentValue);
-            orderDiscount = (TextView) itemView.findViewById(R.id.discountValue);
-            orderGrandTotal = (TextView) itemView.findViewById(R.id.grandTotalValue);
+            orderCreditCardPayment = (TextView) itemView.findViewById(R.id.credit_card_payment_value);
+            orderDiscount = (TextView) itemView.findViewById(R.id.discount_value);
+            orderGrandTotal = (TextView) itemView.findViewById(R.id.grand_total_value);
 
 
             orderFirstNodeStatus = (TextView) itemView.findViewById(R.id.tracker_first_node);
             orderSecondNodeStatus = (TextView) itemView.findViewById(R.id.tracker_second_node);
-            orderThirdNodeStatus = (TextView) itemView.findViewById(R.id.my_order_graph_order_value_text);
-            orderFourthNodeStatus = (TextView) itemView.findViewById(R.id.my_order_graph_dispatched_value_text);
+            orderThirdNodeStatus = (TextView) itemView.findViewById(R.id.tracker_third_node);
+            orderFourthNodeStatus = (TextView) itemView.findViewById(R.id.tracker_fourth_node);
         }
     }
 }

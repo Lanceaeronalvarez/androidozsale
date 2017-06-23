@@ -8,4 +8,6 @@ import au.com.dealsdirect.ui.base.MvpView;
  */
 
 public interface OrderDetailsMvpPresenter<V extends MvpView> extends MvpPresenter<V> {
+
+    void loadOrderDetails(String invoiceNo);
 }

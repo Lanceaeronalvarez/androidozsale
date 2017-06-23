@@ -50,6 +50,7 @@ public class AccountPresenter<V extends AccountMvpView> extends BasePresenter<V>
                     getMvpView().showMyAddressesController();
                     break;
                 case "My Orders":
+                    getMvpView().showMyOrders();
                     break;
                 case "My Vouchers":
                     break;

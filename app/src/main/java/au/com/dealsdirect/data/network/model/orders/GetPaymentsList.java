@@ -17,7 +17,12 @@ public class GetPaymentsList {
 
 
     public static final class ResponseValue {
-        public Response d;
+
+        public Response getD() {
+            return d;
+        }
+
+        private Response d;
 
         public static class Response extends LegacyBaseResponseValue{
 
@@ -39,7 +44,7 @@ public class GetPaymentsList {
             private Integer paymentReferenceNo;
             @SerializedName("Orders")
             @Expose
-            private ArrayList<Order> orders = null;
+            private ArrayList<Order> orders;
 
             @SerializedName("Total")
             @Expose

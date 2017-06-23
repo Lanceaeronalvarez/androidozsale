@@ -198,9 +198,9 @@ public class OrderDetailsItemsRecyclerViewAdapter extends RecyclerView.Adapter<R
             closedDateGraphNodeTextView = (TextView) itemView.findViewById(R.id.closed_date_graph_node);
             closedDateValueTextView = (TextView) itemView.findViewById(R.id.closed_date_value);
 
-            orderStatusTextView = (TextView) itemView.findViewById(R.id.statusTextView);
-            orderDateTextView = (TextView) itemView.findViewById(R.id.orderDateTextView);
-            orderEstimatedDeliveryDateTextView = (TextView) itemView.findViewById(R.id.estimatedDeliveryDateTextView);
+            orderStatusTextView = (TextView) itemView.findViewById(R.id.status_text_view);
+            orderDateTextView = (TextView) itemView.findViewById(R.id.order_date_text_view);
+            orderEstimatedDeliveryDateTextView = (TextView) itemView.findViewById(R.id.estimated_delivery_date_text_view);
 
 
         }

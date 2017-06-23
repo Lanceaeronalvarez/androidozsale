@@ -25,10 +25,6 @@ public class GetOrderPaymentDetails {
 
         private GetOrderPaymentDetailsResponse mOrderDetailsResponse;
 
-        public ResponseValue(GetOrderPaymentDetailsResponse orderDetailsResponse) {
-            mOrderDetailsResponse = orderDetailsResponse;
-        }
-
         public GetOrderPaymentDetailsResponse getOrderPaymentDetailsResponse() {
             return mOrderDetailsResponse;
         }

@@ -24,6 +24,7 @@ import au.com.dealsdirect.ui.controller.account.adapter.AccountItemAdapter;
 import au.com.dealsdirect.ui.controller.account.listener.AccountItemClickListener;
 import au.com.dealsdirect.ui.controller.address.viewaddress.ViewAddressController;
 import au.com.dealsdirect.ui.controller.contact.viewcontacts.ViewContactsController;
+import au.com.dealsdirect.ui.controller.orders.orders.OrdersController;
 import au.com.dealsdirect.ui.main.MainMvpView;
 import au.com.dealsdirect.utils.BundleBuilder;
 import butterknife.BindView;
@@ -122,7 +123,9 @@ public class AccountController extends BaseController implements AccountMvpView 
 
     @Override
     public void showMyOrders() {
-
+        getRouter().pushController(RouterTransaction.with(new OrdersController())
+                .pushChangeHandler(new HorizontalChangeHandler())
+                .popChangeHandler(new HorizontalChangeHandler()));
     }
 
     @Override

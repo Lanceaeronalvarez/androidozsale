@@ -44,9 +44,7 @@ public class OrdersItemRecyclerViewAdapter extends RecyclerView.Adapter<Recycler
 
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        View v = LayoutInflater.from(parent.getContext())
-                .inflate(R.layout.row_item_orders, parent,
-                        false);
+        View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.row_item_orders, parent, false);
         OrderItemsViewHolder holder = new OrderItemsViewHolder(v);
         //mView = v;
 
@@ -77,7 +75,7 @@ public class OrdersItemRecyclerViewAdapter extends RecyclerView.Adapter<Recycler
         holder.orderItemsAmount.setText(orderItemsAmount);
         holder.orderNumberValueTextView.setText(orderNumber);
         if (position != 0) {
-            holder.orderNumberContainerLayout.setVisibility(View.INVISIBLE);
+            holder.orderNumberContainerLayout.setVisibility(View.GONE);
         } else {
             holder.orderNumberValueTextView.setText(orderNumber);
         }
@@ -260,9 +258,9 @@ public class OrdersItemRecyclerViewAdapter extends RecyclerView.Adapter<Recycler
             closedDateGraphNodeTextView = (TextView) itemView.findViewById(R.id.closed_date_graph_node);
             closedDateValueTextView = (TextView) itemView.findViewById(R.id.closed_date_value);
 
-            orderStatusTextView = (TextView) itemView.findViewById(R.id.statusTextView);
-            orderDateTextView = (TextView) itemView.findViewById(R.id.orderDateTextView);
-            orderEstimatedDeliveryDateTextView = (TextView) itemView.findViewById(R.id.estimatedDeliveryDateTextView);
+            orderStatusTextView = (TextView) itemView.findViewById(R.id.status_text_view);
+            orderDateTextView = (TextView) itemView.findViewById(R.id.order_date_text_view);
+            orderEstimatedDeliveryDateTextView = (TextView) itemView.findViewById(R.id.estimated_delivery_date_text_view);
             orderItemsAmount = (TextView) itemView.findViewById(R.id.my_order_product_items_amount);
 
             orderFirstNodeStatus = (TextView) itemView.findViewById(R.id.tracker_first_node);

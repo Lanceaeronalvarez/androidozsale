@@ -3,6 +3,7 @@ package au.com.dealsdirect.data.network.model.orders;
 
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
+import com.mysale.genie.utility.LegacyBaseResponseValue;
 
 import java.util.List;
 
@@ -20,52 +21,14 @@ public class GetOrderPaymentDetailsResponse {
         this.d = d;
     }
 
-    public class D {
-
-        @SerializedName("Message")
-        @Expose
-        private String message;
-        @SerializedName("Result")
-        @Expose
-        private Boolean result;
-        @SerializedName("Value")
-        @Expose
-        private Value value;
-        @SerializedName("IsAuthenticated")
-        @Expose
-        private Boolean isAuthenticated;
-
-        public String getMessage() {
-            return message;
-        }
-
-        public void setMessage(String message) {
-            this.message = message;
-        }
-
-        public Boolean getResult() {
-            return result;
-        }
-
-        public void setResult(Boolean result) {
-            this.result = result;
-        }
-
+    public class D extends LegacyBaseResponseValue{
         public Value getValue() {
             return value;
         }
 
-        public void setValue(Value value) {
-            this.value = value;
-        }
-
-        public Boolean getIsAuthenticated() {
-            return isAuthenticated;
-        }
-
-        public void setIsAuthenticated(Boolean isAuthenticated) {
-            this.isAuthenticated = isAuthenticated;
-        }
+        @SerializedName("Value")
+        @Expose
+        private Value value;
 
     }
 

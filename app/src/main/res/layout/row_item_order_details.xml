@@ -8,7 +8,6 @@
         android:id="@+id/order_image"
         android:layout_width="85dp"
         android:layout_height="135dp"
-        android:layout_below="@+id/order_number_container"
         android:layout_marginLeft="@dimen/activity_horizontal_margin" />
 
     <LinearLayout
@@ -122,3 +121,4 @@
     </LinearLayout>
 
 </RelativeLayout>
+

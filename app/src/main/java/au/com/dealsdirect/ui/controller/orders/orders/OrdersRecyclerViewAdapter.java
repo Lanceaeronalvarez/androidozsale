@@ -14,6 +14,8 @@ import java.util.ArrayList;
 
 import au.com.dealsdirect.R;
 import au.com.dealsdirect.data.network.model.orders.GetPaymentsList;
+import butterknife.BindView;
+import butterknife.ButterKnife;
 
 /**
  * Created by smartwave on 22/06/2017.
@@ -83,54 +85,13 @@ public class OrdersRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView
 
     public static class OrdersViewHolder extends RecyclerView.ViewHolder {
 
-        TextView orderNumberValueTextView;
-        TextView orderProductNameTextView;
-        TextView orderProductQuantityTextView;
-
-        TextView approvedDateGraphNodeImageView;
-        TextView approvedDateValueTextView;
-
-        TextView stockDateGraphNodeTextView;
-        TextView stockDateValueTextView;
-
-        TextView dispatchedDateGraphNodeTextView;
-        TextView dispatchedDateValueTextView;
-
-        TextView closedDateGraphNodeTextView;
-        TextView closedDateValueTextView;
-
-        TextView orderStatusTextView;
-        TextView orderDateTextView;
-        TextView orderEstimatedDeliveryDateTextView;
-
+        @BindView(R.id.row_order_orders_recyclerview)
         RecyclerView orderItemsRecyclerView;
 
 
         public OrdersViewHolder(View itemView) {
             super(itemView);
-
-            orderItemsRecyclerView = (RecyclerView) itemView.findViewById(R.id.order_items_recyclerview);
-
-            orderNumberValueTextView = (TextView) itemView.findViewById(R.id.order_number_text_value);
-            orderProductNameTextView = (TextView) itemView.findViewById(R.id.my_order_product_name);
-            orderProductQuantityTextView = (TextView) itemView.findViewById(R.id.productQuantityTextView);
-
-            approvedDateGraphNodeImageView = (TextView) itemView.findViewById(R.id.approved_date_graph_node);
-            approvedDateValueTextView = (TextView) itemView.findViewById(R.id.approved_date_value);
-
-            stockDateGraphNodeTextView = (TextView) itemView.findViewById(R.id.stock_date_graph_node);
-            stockDateValueTextView = (TextView) itemView.findViewById(R.id.stock_date_value);
-
-            dispatchedDateGraphNodeTextView = (TextView) itemView.findViewById(R.id.dispatched_date_graph_node);
-            dispatchedDateValueTextView = (TextView) itemView.findViewById(R.id.dispatched_date_value);
-
-            closedDateGraphNodeTextView = (TextView) itemView.findViewById(R.id.closed_date_graph_node);
-            closedDateValueTextView = (TextView) itemView.findViewById(R.id.closed_date_value);
-
-            orderStatusTextView = (TextView) itemView.findViewById(R.id.statusTextView);
-            orderDateTextView = (TextView) itemView.findViewById(R.id.orderDateTextView);
-            orderEstimatedDeliveryDateTextView = (TextView) itemView.findViewById(R.id.estimatedDeliveryDateTextView);
-
+            ButterKnife.bind(this,itemView);
         }
     }
 }

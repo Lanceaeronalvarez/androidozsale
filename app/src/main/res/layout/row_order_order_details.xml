@@ -6,63 +6,13 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    tools:ignore="MissingPrefix">
-
-    <RelativeLayout
-        android:id="@+id/order_number_container"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="@dimen/activity_horizontal_margin">
-
-        <RelativeLayout
-            android:id="@+id/order_information_header"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="30dp"
-            android:layout_marginBottom="20dp"
-            android:layout_marginLeft="@dimen/activity_horizontal_margin"
-            android:layout_marginRight="@dimen/activity_horizontal_margin">
-
-            <TextView
-                android:id="@+id/order_number_text_label"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textColor="@color/colorAccent"
-                android:text="Order #:"
-                android:textSize="18sp"
-                tools:ignore="HardcodedText"/>
-
-            <TextView
-                android:id="@+id/order_number_text_value"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="5dp"
-                android:textColor="@color/colorAccent"
-                android:text="204400890"
-                android:textSize="18sp"
-                tools:ignore="HardcodedText"
-                android:layout_alignParentTop="true"
-                android:layout_toEndOf="@+id/order_number_text_label" />
-        </RelativeLayout>
-
-
-        <View
-            android:layout_width="wrap_content"
-            android:layout_height="0.5dp"
-            android:layout_below="@+id/order_information_header"
-            android:layout_marginTop="20dp"
-            android:background="#dedede"/>
-
-    </RelativeLayout>
+    tools:ignore="MissingPrefix"
+    android:layout_marginBottom="50dp">
 
     <android.support.v7.widget.RecyclerView
-        android:layout_below="@+id/order_number_container"
         android:id="@+id/order_items_recyclerview"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
-
-    </android.support.v7.widget.RecyclerView>
-
+        android:layout_height="wrap_content"/>
 
     <RelativeLayout
         android:layout_below="@+id/order_items_recyclerview"
@@ -240,7 +190,7 @@
                 android:orientation="vertical">
 
                 <TextView
-                    android:id="@+id/my_order_graph_order_value_text"
+                    android:id="@+id/tracker_third_node"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_horizontal"
@@ -270,7 +220,7 @@
                 android:layout_height="wrap_content"
                 android:orientation="vertical">
                 <TextView
-                    android:id="@+id/my_order_graph_dispatched_value_text"
+                    android:id="@+id/tracker_fourth_node"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_horizontal"
@@ -329,7 +279,7 @@
 
     <LinearLayout
         android:id="@+id/product_list_order_detail"
-        android:visibility="gone"
+        android:visibility="visible"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="20dp"
@@ -345,6 +295,7 @@
             android:layout_marginBottom="10dp">
 
             <TextView
+                android:id="@+id/delivery_address_label"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textSize="@dimen/text_size_xlarge"
@@ -352,13 +303,13 @@
 
             <TextView
                 android:id="@+id/delivery_text_view"
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:textSize="@dimen/text_size_xlarge"
-                android:textColor="#000000"
-                android:layout_alignParentRight="true"
-                
-                android:text=""/>
+                android:layout_marginLeft="5dp"
+                android:textColor="@color/gray_title_text"
+                android:layout_toRightOf="@id/delivery_address_label"
+                android:gravity="right" />
 
         </RelativeLayout>
 
@@ -377,19 +328,21 @@
             android:layout_marginBottom="10dp">
 
             <TextView
+                android:id="@+id/status_label"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textSize="@dimen/text_size_xlarge"
                 android:text="Status:"/>
 
             <TextView
-                android:id="@+id/statusTextView"
-                android:layout_width="wrap_content"
+                android:id="@+id/status_text_view"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:textSize="@dimen/text_size_xlarge"
-                android:textColor="#3d3a3a"
-                android:layout_alignParentRight="true"
-                
+                android:layout_marginLeft="5dp"
+                android:textColor="@color/gray_field_text"
+                android:layout_toRightOf="@id/status_label"
+                android:gravity="right"
                 android:text=""/>
 
         </RelativeLayout>
@@ -408,18 +361,21 @@
             android:layout_marginBottom="10dp">
 
             <TextView
+                android:id="@+id/order_date_label"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textSize="@dimen/text_size_xlarge"
                 android:text="Order Date:"/>
 
             <TextView
-                android:id="@+id/orderDateTextView"
-                android:layout_width="wrap_content"
+                android:id="@+id/order_date_text_view"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_alignParentRight="true"
-                android:textColor="#000000"
                 android:textSize="@dimen/text_size_xlarge"
+                android:layout_marginLeft="5dp"
+                android:textColor="@color/gray_field_text"
+                android:layout_toRightOf="@id/order_date_label"
+                android:gravity="right"
                 android:text=""/>
         </RelativeLayout>
 
@@ -437,21 +393,22 @@
             android:layout_marginBottom="10dp">
 
             <TextView
+                android:id="@+id/estimated_delivery_label"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                
                 android:text="Estimated Delivery:"
                 android:textSize="@dimen/text_size_xlarge"/>
 
             <TextView
-                android:id="@+id/estimatedDeliveryDateTextView"
-                android:layout_width="wrap_content"
+                android:id="@+id/estimated_delivery_date_text_view"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_alignParentRight="true"
-                android:textColor="#000000"
-                
                 android:textSize="@dimen/text_size_xlarge"
-                android:text=""
+                android:layout_marginLeft="5dp"
+                android:textColor="@color/gray_field_text"
+                android:layout_toRightOf="@id/estimated_delivery_label"
+                android:gravity="right"
+                android:text=""/>
                 />
         </RelativeLayout>
 
@@ -469,23 +426,23 @@
             android:layout_marginBottom="10dp">
 
             <TextView
-                android:id="@+id/creditCardPaymentLabel"
+                android:id="@+id/credit_card_payment_label"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textSize="@dimen/text_size_xlarge"
-                
                 android:paddingTop="10dp"
                 android:text="Credit Card Payment:"/>
 
             <TextView
-                android:id="@+id/creditCardPaymentValue"
-                android:layout_width="wrap_content"
+                android:id="@+id/credit_card_payment_value"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_alignParentRight="true"
-                android:textColor="#000000"
                 android:textSize="@dimen/text_size_xlarge"
+                android:layout_marginLeft="5dp"
                 android:paddingTop="10dp"
-                
+                android:textColor="@color/gray_field_text"
+                android:layout_toRightOf="@id/credit_card_payment_label"
+                android:gravity="right"
                 android:text=""/>
 
 
@@ -494,19 +451,20 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textSize="@dimen/text_size_xlarge"
-                android:layout_below="@id/creditCardPaymentLabel"
+                android:layout_below="@id/credit_card_payment_label"
                 android:paddingTop="10dp"
                 android:text="Delivery Payment:"/>
 
             <TextView
                 android:id="@+id/delivery_amount_value"
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:textColor="#000000"
-                android:layout_below="@id/creditCardPaymentValue"
-                android:layout_alignParentRight="true"
+                android:textColor="@color/gray_field_text"
+                android:layout_below="@id/credit_card_payment_value"
+                android:layout_toRightOf="@id/delivery_amount_label"
                 android:textSize="@dimen/text_size_xlarge"
                 android:paddingTop="10dp"
+                android:layout_marginLeft="5dp"
                 android:text=""/>
 
 
@@ -520,14 +478,14 @@
                 android:text="Discount:"/>
 
             <TextView
-                android:id="@+id/discountValue"
-                android:layout_width="wrap_content"
+                android:id="@+id/discount_value"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_alignParentRight="true"
-                android:textColor="#000000"
+                android:layout_toRightOf="@id/discount_label"
+                android:textColor="@color/gray_field_text"
                 android:layout_below="@+id/delivery_amount_value"
                 android:textSize="@dimen/text_size_xlarge"
-                
+                android:layout_marginLeft="5dp"
                 android:paddingTop="10dp"
                 android:text=""/>
 
@@ -543,14 +501,14 @@
 
             <TextView
                 android:id="@+id/total_item_payment_value"
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_alignParentRight="true"
-                android:textColor="#000000"
-                android:layout_below="@+id/discountValue"
+                android:layout_toRightOf="@id/total_item_payment_label"
+                android:textColor="@color/gray_field_text"
+                android:layout_below="@+id/discount_value"
                 android:textSize="@dimen/text_size_xlarge"
                 android:paddingTop="10dp"
-                
+                android:layout_marginLeft="5dp"
                 android:text=""/>
         </RelativeLayout>
 
@@ -568,19 +526,19 @@
             android:layout_marginBottom="10dp">
 
             <TextView
+                android:id="@+id/total_label"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                
                 android:text="Total:"
                 android:textSize="@dimen/text_size_xlarge"/>
 
             <TextView
-                android:id="@+id/grandTotalValue"
+                fontPath="@string/font_lato_bold"
+                android:id="@+id/grand_total_value"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:textColor="#2e2e2e"
-                android:layout_alignParentRight="true"
-                
+                android:textColor="@color/gray_field_text"
+                android:layout_toRightOf="@id/total_label"
                 android:text=""
                 android:textSize="@dimen/text_size_xxlarge"/>
         </RelativeLayout>

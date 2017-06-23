@@ -7,6 +7,8 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
+import android.widget.TextView;
 
 import com.google.gson.Gson;
 
@@ -18,6 +20,7 @@ import au.com.dealsdirect.data.network.model.orders.GetPaymentsList;
 import au.com.dealsdirect.ui.base.BaseController;
 import au.com.dealsdirect.utils.BundleBuilder;
 import butterknife.BindView;
+import butterknife.OnClick;
 
 /**
  * Created by smartwave on 22/06/2017.
@@ -31,6 +34,12 @@ public class OrderDetailsController extends BaseController implements OrderDetai
 
     @Inject
     OrderDetailsMvpPresenter<OrderDetailsMvpView> mPresenter;
+
+
+    @BindView(R.id.partial_toolbar_arrow_title)
+    TextView mOrderDetailsToolarTitle;
+    @BindView(R.id.partial_toolbar_filter_view)
+    ImageView mOrderDetailsRightOption;
 
     @BindView(R.id.order_details_recyclerview)
     RecyclerView mRecyclerView;
@@ -75,6 +84,10 @@ public class OrderDetailsController extends BaseController implements OrderDetai
 
     @Override
     protected void setUp(View view) {
+        mOrderDetailsToolarTitle.setText("Order #: " + mPaymentReferenceNo);
+        mOrderDetailsRightOption.setImageDrawable(null);
+
+        mPresenter.loadOrderDetails(mPaymentReferenceNo);
     }
 
 
@@ -86,7 +99,9 @@ public class OrderDetailsController extends BaseController implements OrderDetai
 
     @Override
     public void showOrderDetails(GetOrderPaymentDetailsResponse response) {
-        if (response != null) mOrderDetails = response.getD().getValue();
+        if (response != null) {
+            mOrderDetails = response.getD().getValue();
+        }
 
         if (mOrderItem != null) {
             mRecyclerView.setAdapter(new OrderDetailsRecyclerViewAdapter(
@@ -97,5 +112,10 @@ public class OrderDetailsController extends BaseController implements OrderDetai
                     getActivity()));
             mRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity(), LinearLayoutManager.VERTICAL, false));
         }
+    }
+
+    @OnClick(R.id.partial_toolbar_arrow_view)
+    public void onBackClick() {
+        getActivity().onBackPressed();
     }
 }

@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    xmlns:card_view="http://schemas.android.com/apk/res-auto">
+    tools:ignore="MissingPrefix">
 
     <RelativeLayout
         android:layout_width="match_parent"
@@ -77,7 +77,6 @@
                 android:orientation="horizontal">
 
                 <TextView
-                    
                     android:id="@+id/my_order_product_name"
                     android:layout_width="wrap_content"
                     android:layout_weight="4"
@@ -88,22 +87,23 @@
                     tools:ignore="HardcodedText"/>
 
                 <TextView
+                    fontPath="@string/font_lato_semibold"
                     android:id="@+id/my_order_product_items_amount"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="end"
-                    android:singleLine="true"
+                    android:maxLines="1"
                     android:gravity="end"
-                    android:textColor="@color/gray_field_label"
-                    android:text=""
-                    android:textSize="@dimen/text_size_large"
+                    android:textColor="@color/gray_field_text"
+                    android:text="hehe"
+                    android:textSize="@dimen/text_size_xxxlarge"
                     tools:ignore="HardcodedText"/>
 
             </LinearLayout>
 
 
             <TextView
-                
+
                 android:id="@+id/productQuantityTextView"
                 android:layout_below="@+id/item_header_container"
                 android:layout_width="wrap_content"
@@ -144,7 +144,7 @@
                     android:id="@+id/approved_date_graph_node"
                     android:layout_width="25dp"
                     android:layout_height="25dp"
-                    
+
                     android:text=""
                     android:textColor="@android:color/white"
                     android:gravity="center"
@@ -173,7 +173,7 @@
                     android:id="@+id/stock_date_graph_node"
                     android:layout_width="25dp"
                     android:layout_height="25dp"
-                    
+
                     android:text="2"
                     android:textColor="@android:color/white"
                     android:gravity="center"
@@ -194,7 +194,7 @@
                     android:id="@+id/dispatched_date_graph_node"
                     android:layout_width="25dp"
                     android:layout_height="25dp"
-                    
+
                     android:text="3"
                     android:textColor="@android:color/white"
                     android:gravity="center"
@@ -215,7 +215,7 @@
                     android:id="@+id/closed_date_graph_node"
                     android:layout_width="25dp"
                     android:layout_height="25dp"
-                    
+
                     android:text="4"
                     android:textColor="@android:color/white"
                     android:gravity="center"
@@ -256,7 +256,7 @@
                         tools:ignore="HardcodedText"/>
 
                     <TextView
-                        
+
                         android:id="@+id/approved_date_value"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
@@ -281,7 +281,7 @@
                     android:orientation="vertical">
 
                     <TextView
-                        
+
                         android:id="@+id/tracker_second_node"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
@@ -292,7 +292,7 @@
                         tools:ignore="HardcodedText"/>
 
                     <TextView
-                        
+
                         android:id="@+id/stock_date_value"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
@@ -316,7 +316,7 @@
                     android:orientation="vertical">
 
                     <TextView
-                        
+
                         android:id="@+id/tracker_third_node"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
@@ -327,7 +327,7 @@
                         tools:ignore="HardcodedText"/>
 
                     <TextView
-                        
+
                         android:id="@+id/closed_date_value"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
@@ -349,7 +349,7 @@
                     android:paddingLeft="5dp"
                     android:orientation="vertical">
                     <TextView
-                        
+
                         android:id="@+id/tracker_fourth_node"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
@@ -360,7 +360,7 @@
                         tools:ignore="HardcodedText"/>
 
                     <TextView
-                        
+
                         android:id="@+id/dispatched_date_value"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
