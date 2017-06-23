@@ -25,4 +25,13 @@
         <item name="android:textColorHint">@color/gray_field_label</item>
     </style>
 
+    <style name="DDSpinnerTextStyle">
+        <item name="android:textSize">@dimen/text_size_large</item>
+        <item name="android:height">@dimen/edit_text_height</item>
+        <item name="android:textColor">@color/gray_title_text</item>
+        <item name="android:padding">15dp</item>
+        <item name="android:background">@drawable/bg_drop_down_rounded</item>
+        <item name="android:textColorHint">@color/gray_field_label</item>
+    </style>
+
 </resources>
