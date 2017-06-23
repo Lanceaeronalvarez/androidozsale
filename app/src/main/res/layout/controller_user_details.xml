@@ -40,7 +40,6 @@
                     android:layout_height="wrap_content"
                     android:layout_marginBottom="16dp"
                     android:layout_marginTop="10dp"
-                    android:background="@drawable/bg_edit_text_rounded"
                     app:hintEnabled="false">
 
                     <EditText
@@ -68,7 +67,6 @@
                     android:layout_height="wrap_content"
                     android:layout_marginBottom="16dp"
                     android:layout_marginTop="10dp"
-                    android:background="@drawable/bg_edit_text_rounded"
                     app:hintEnabled="false">
 
                     <EditText
@@ -97,7 +95,6 @@
                     android:layout_height="wrap_content"
                     android:layout_marginBottom="16dp"
                     android:layout_marginTop="10dp"
-                    android:background="@drawable/bg_edit_text_rounded"
                     app:hintEnabled="false">
 
                     <EditText
@@ -124,7 +121,6 @@
                     android:layout_height="wrap_content"
                     android:layout_marginBottom="16dp"
                     android:layout_marginTop="10dp"
-                    android:background="@drawable/bg_edit_text_rounded"
                     app:hintEnabled="false">
 
                     <EditText
@@ -155,7 +151,6 @@
                     android:layout_height="wrap_content"
                     android:layout_marginBottom="16dp"
                     android:layout_marginTop="10dp"
-                    android:background="@drawable/bg_edit_text_rounded"
                     app:hintEnabled="false">
 
                     <Spinner
@@ -164,7 +159,6 @@
                         fontPath="@string/font_lato_medium"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:hint="Gender"
                         android:inputType="text" />
 
                 </android.support.design.widget.TextInputLayout>
@@ -182,7 +176,6 @@
                     android:layout_height="wrap_content"
                     android:layout_marginBottom="16dp"
                     android:layout_marginTop="10dp"
-                    android:background="@drawable/bg_edit_text_rounded"
                     app:hintEnabled="false">
 
                     <EditText
@@ -209,7 +202,6 @@
                     android:layout_height="wrap_content"
                     android:layout_marginBottom="16dp"
                     android:layout_marginTop="10dp"
-                    android:background="@drawable/bg_edit_text_rounded"
                     app:hintEnabled="false"
                     app:passwordToggleEnabled="true">
 
@@ -237,7 +229,6 @@
                     android:layout_height="wrap_content"
                     android:layout_marginBottom="16dp"
                     android:layout_marginTop="10dp"
-                    android:background="@drawable/bg_edit_text_rounded"
                     app:hintEnabled="false"
                     app:passwordToggleEnabled="true">
 
@@ -266,7 +257,6 @@
                     android:layout_height="wrap_content"
                     android:layout_marginBottom="16dp"
                     android:layout_marginTop="10dp"
-                    android:background="@drawable/bg_edit_text_rounded"
                     app:hintEnabled="false"
                     app:passwordToggleEnabled="true">
 
