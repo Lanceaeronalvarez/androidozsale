@@ -12,11 +12,13 @@ import java.text.DateFormatSymbols;
 
 public class GetUserDetailsResponse {
 
-    public Response d;
+    private Response d;
+
+    public Value getValue() {
+        return d.Value;
+    }
 
     public static class Response extends LegacyBaseResponseValue {
-        @SerializedName("Value")
-        @Expose
         public Value Value;
     }
 

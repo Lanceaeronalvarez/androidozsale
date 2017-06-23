@@ -7,6 +7,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.Spinner;
 import android.widget.TextView;
 
 import javax.inject.Inject;
@@ -42,11 +43,11 @@ public class DetailsController extends BaseController implements DetailsMvpView 
     @BindView(R.id.controller_details_text_lastname)
     EditText mLastNameText;
 
-    @BindView(R.id.controller_details_text_dateofbirth)
+    @BindView(R.id.controller_details_text_dateOfBirth)
     EditText mDateOfBirthText;
 
-    @BindView(R.id.controller_details_text_gender)
-    EditText mGenderText;
+    @BindView(R.id.controller_details_spinner_gender)
+    Spinner mGenderSpinner;
 
     @BindView(R.id.controller_details_text_emailaddress)
     EditText mEmailAddressText;
@@ -54,13 +55,11 @@ public class DetailsController extends BaseController implements DetailsMvpView 
     @BindView(R.id.controller_details_text_password)
     EditText mPasswordText;
 
-    @BindView(R.id.controller_details_text_newpassword)
+    @BindView(R.id.controller_details_text_newPassword)
     EditText mNewPasswordText;
 
-    @BindView(R.id.controller_details_text_confirmpassword)
+    @BindView(R.id.controller_details_text_confirmPassword)
     EditText mConfirmPasswordText;
-
-    private GetUserDetailsResponse mUserDetailsResponse;
 
 
     public DetailsController(Bundle args){
@@ -96,7 +95,7 @@ public class DetailsController extends BaseController implements DetailsMvpView 
     protected void setUp(View view) {
         mSaveUserDetailsButton.setImageDrawable(
                 getResources().getDrawable(R.drawable.ic_check));
-        mTitleTextView.setText("My Details");
+        mTitleTextView.setText("Personal Details");
         mPresenter.loadUser(0);
     }
 
@@ -108,16 +107,12 @@ public class DetailsController extends BaseController implements DetailsMvpView 
 
     @Override
     public void loadDetails(GetUserDetailsResponse userDetailsResponse) {
-        if (userDetailsResponse.d.isAuthenticated()) {
-            mUserDetailsResponse = userDetailsResponse;
-            mUserNameText.setText(userDetailsResponse.d.Value.getUsername());
-            mFirstNameText.setText(userDetailsResponse.d.Value.getForename());
-            mLastNameText.setText(userDetailsResponse.d.Value.getSurname());
-            mEmailAddressText.setText(userDetailsResponse.d.Value.getEmail());
-            if(userDetailsResponse.d.Value.getDateOfBirth() != null) mDateOfBirthText
-                    .setText(userDetailsResponse.d.Value.getDateOfBirth().toString());
-        }
-
+        GetUserDetailsResponse.Value details = userDetailsResponse.getValue();
+        mUserNameText.setText(details.getUsername());
+        mFirstNameText.setText(details.getForename());
+        mLastNameText.setText(details.getSurname());
+        mEmailAddressText.setText(details.getEmail());
+        mDateOfBirthText.setText(details.getDateOfBirth().toString());
     }
 
     @OnClick(R.id.partial_toolbar_filter_view)
