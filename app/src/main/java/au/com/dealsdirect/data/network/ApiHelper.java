@@ -16,9 +16,6 @@ import au.com.dealsdirect.data.network.model.address.DeleteUserAddress;
 import au.com.dealsdirect.data.network.model.address.GetAddresses;
 import au.com.dealsdirect.data.network.model.banner.GetPublicSalesBannerRequest;
 import au.com.dealsdirect.data.network.model.banner.GetPublicSalesBannerResponse;
-import au.com.dealsdirect.data.network.model.language.GetUserLanguageRequest;
-import au.com.dealsdirect.data.network.model.language.GetUserLanguageResponse;
-import au.com.dealsdirect.data.network.model.language.SetUserLanguageRequest;
 import au.com.dealsdirect.data.network.model.login.LoginEmail;
 import au.com.dealsdirect.data.network.model.login.LoginFacebook;
 import au.com.dealsdirect.data.network.model.login.LoginTicket;
@@ -87,9 +84,5 @@ public interface ApiHelper {
     Observable<GetUserDetailsResponse.Response> getSaveUserDetailsApiCall(SetUserDetailsRequest setUserDetailsRequest);
 
     Observable<GetUserDetailsResponse> getLoadUserDetailsApiCall();
-
-    Observable<GetUserLanguageResponse> getUserLanguagesApiCall(GetUserLanguageRequest getUserLanguageRequest);
-
-    Observable<SetUserLanguageRequest> doSetUserLanguageApiCall(SetUserLanguageRequest setUserLanguageRequest);
 
 }

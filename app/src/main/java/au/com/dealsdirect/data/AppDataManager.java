@@ -24,9 +24,6 @@ import au.com.dealsdirect.data.network.model.address.DeleteUserAddress;
 import au.com.dealsdirect.data.network.model.address.GetAddresses;
 import au.com.dealsdirect.data.network.model.banner.GetPublicSalesBannerRequest;
 import au.com.dealsdirect.data.network.model.banner.GetPublicSalesBannerResponse;
-import au.com.dealsdirect.data.network.model.language.GetUserLanguageRequest;
-import au.com.dealsdirect.data.network.model.language.GetUserLanguageResponse;
-import au.com.dealsdirect.data.network.model.language.SetUserLanguageRequest;
 import au.com.dealsdirect.data.network.model.login.LoginEmail;
 import au.com.dealsdirect.data.network.model.login.LoginFacebook;
 import au.com.dealsdirect.data.network.model.login.LoginTicket;
@@ -170,17 +167,6 @@ public class AppDataManager implements DataManager {
     }
 
     @Override
-    public Observable<GetUserLanguageResponse> getUserLanguagesApiCall(GetUserLanguageRequest getUserLanguageRequest) {
-        return mApiHelper.getUserLanguagesApiCall(getUserLanguageRequest);
-    }
-
-    @Override
-    public Observable<SetUserLanguageRequest> doSetUserLanguageApiCall(SetUserLanguageRequest setUserLanguageRequest) {
-        return mApiHelper.doSetUserLanguageApiCall(setUserLanguageRequest);
-    }
-
-
-    @Override
     public Observable<GetPublicItemDetailsResponse> doGetPublicItemDetailsApiCall(GetPublicItemDetailsRequest request) {
         return mApiHelper.doGetPublicItemDetailsApiCall(request);
     }
@@ -230,12 +216,12 @@ public class AppDataManager implements DataManager {
     }
 
     @Override
-    public void setLanguages(List<Language> languages) {
-        mPreferencesHelper.setLanguages(languages);
+    public void setLanguages(String languagesString) {
+        mPreferencesHelper.setLanguages(languagesString);
     }
 
     @Override
-    public List<Language> getLanguages() {
+    public String getLanguages() {
         return mPreferencesHelper.getLanguages();
     }
 
