@@ -9,6 +9,8 @@ import android.widget.TextView;
 import com.mysale.genie.utility.config.model.getserversettings.Language;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 
 import au.com.dealsdirect.R;
 import butterknife.BindView;
@@ -20,10 +22,10 @@ import butterknife.ButterKnife;
 
 public class LanguageAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
-    private ArrayList<String> mLanguages;
+    private List<Language> mLanguages = Collections.emptyList();
     private LanguageMvpPresenter mPresenter;
 
-    public LanguageAdapter(ArrayList<String> languages, LanguageMvpPresenter presenter) {
+    public LanguageAdapter(ArrayList<Language> languages, LanguageMvpPresenter presenter) {
         this.mLanguages = languages;
         this.mPresenter = presenter;
     }
@@ -37,7 +39,7 @@ public class LanguageAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
 
     @Override
     public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
-        ((LanguagesViewHolder) holder).mLanguageText.setText(mLanguages.get(position));
+        ((LanguagesViewHolder) holder).mLanguageText.setText(mLanguages.get(position).getName());
         ((LanguagesViewHolder) holder).itemView.setOnClickListener(v ->
                 mPresenter.onLanguageItemClick(mLanguages.get(position)));
     }
@@ -47,7 +49,7 @@ public class LanguageAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
         return mLanguages.size();
     }
 
-    public void replaceData(ArrayList<String> languages){
+    public void replaceData(List<Language> languages){
         mLanguages = languages;
     }
 

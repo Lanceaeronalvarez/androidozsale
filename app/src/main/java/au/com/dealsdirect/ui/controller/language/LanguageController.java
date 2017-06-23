@@ -13,6 +13,7 @@ import android.widget.TextView;
 import com.mysale.genie.utility.config.model.getserversettings.Language;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import javax.inject.Inject;
 
@@ -55,7 +56,7 @@ public class LanguageController extends BaseController implements LanguageMvpVie
     }
 
     @Override
-    public void showLanguages(ArrayList<String> languages) {
+    public void showLanguages(List<Language> languages) {
         mAdapter.replaceData(languages);
         mAdapter.notifyDataSetChanged();
     }

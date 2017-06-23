@@ -2,7 +2,7 @@ package au.com.dealsdirect.ui.controller.language;
 
 import com.mysale.genie.utility.config.model.getserversettings.Language;
 
-import java.util.ArrayList;
+import java.util.List;
 
 import au.com.dealsdirect.ui.base.MvpView;
 
@@ -11,7 +11,7 @@ import au.com.dealsdirect.ui.base.MvpView;
  */
 
 public interface LanguageMvpView extends MvpView {
-    void showLanguages(ArrayList<String> languages);
+    void showLanguages(List<Language> languages);
 
     void onBackPress();
 }
