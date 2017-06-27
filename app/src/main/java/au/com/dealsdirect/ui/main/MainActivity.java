@@ -177,15 +177,18 @@ public class MainActivity extends BaseActivity implements MainMvpView {
                 .pushChangeHandler(new FadeChangeHandler())
                 .popChangeHandler(new FadeChangeHandler()));
 
+
     }
 
     @Override
     public void showContactController() {
+
         showLoginController(mRouter,new AuthHandler() {
             @Override
             public void success() {
 
                 mRouter.setRoot(RouterTransaction.with(ViewContactsController.newInstance())
+                        .tag("Login")
                         .pushChangeHandler(new FadeChangeHandler())
                         .popChangeHandler(new FadeChangeHandler()));
 
@@ -216,6 +219,7 @@ public class MainActivity extends BaseActivity implements MainMvpView {
         //pinapasa yung router, para kahit childe router man siya ng kung ano mang view, pwedeng siya ang tumawag.
 
         router.pushController(RouterTransaction.with(LoginController.newInstance(handler))
+                .tag("Login")
                 .pushChangeHandler(new VerticalChangeHandler(false)) //false, para hindi mag onDestroyView yung view na nag trigger ng login
                 .popChangeHandler(new VerticalChangeHandler()));
     }

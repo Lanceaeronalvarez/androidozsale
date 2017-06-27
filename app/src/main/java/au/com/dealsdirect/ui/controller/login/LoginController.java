@@ -22,6 +22,7 @@ import javax.inject.Inject;
 
 import au.com.dealsdirect.R;
 import au.com.dealsdirect.data.auth.AuthHandler;
+import au.com.dealsdirect.ui.base.BaseActivity;
 import au.com.dealsdirect.ui.base.BaseController;
 import au.com.dealsdirect.ui.controller.register.RegisterController;
 import au.com.dealsdirect.utils.BundleBuilder;
@@ -90,14 +91,19 @@ public class LoginController extends BaseController implements LoginMvpView {
     @Override
     public void onViewBound(@NonNull View view) {
         super.onViewBound(view);
-
         setUp(view);
+
+        assert getActivity() != null;
+        ((BaseActivity) getActivity()).hideBottomNavigationView();
     }
 
     @Override
     public void onDestroyView(View view) {
         mPresenter.onDetach();
         super.onDestroyView(view);
+
+        assert getActivity() != null;
+        ((BaseActivity) getActivity()).showBottomNavigationView();
     }
 
     @Override
