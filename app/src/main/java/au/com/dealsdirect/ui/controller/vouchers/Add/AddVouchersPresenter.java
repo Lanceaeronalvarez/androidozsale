@@ -23,7 +23,6 @@ import io.reactivex.annotations.NonNull;
 import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.functions.Consumer;
 import io.reactivex.subjects.PublishSubject;
-
 /**
  * Created by Paul on 6/27/17.
  */
