@@ -16,7 +16,7 @@ import au.com.dealsdirect.ui.base.MvpView;
  * Created by Paul on 6/23/17.
  */
 
-public interface VouchersMvpView extends MvpView {
+public interface ViewVouchersMvpView extends MvpView {
 
     void updateVoucherList(Pair<List<GetUserVoucherResponse.Voucher>,GetVouchersResponse> pair);
 

@@ -7,18 +7,10 @@ import java.util.List;
 import javax.inject.Inject;
 
 import au.com.dealsdirect.data.DataManager;
-import au.com.dealsdirect.data.network.model.vouchers.AddAndApplyVoucherByKeyRequest;
-import au.com.dealsdirect.data.network.model.vouchers.AddAndApplyVoucherByKeyResponse;
-import au.com.dealsdirect.data.network.model.vouchers.ApplyVouchersRequest;
-import au.com.dealsdirect.data.network.model.vouchers.ApplyVouchersResponse;
-import au.com.dealsdirect.data.network.model.vouchers.ClearVouchersRequest;
-import au.com.dealsdirect.data.network.model.vouchers.ClearVouchersResponse;
 import au.com.dealsdirect.data.network.model.vouchers.GetUserVoucherResponse;
 import au.com.dealsdirect.data.network.model.vouchers.GetUserVouchersRequest;
 import au.com.dealsdirect.data.network.model.vouchers.GetVouchersResponse;
 import au.com.dealsdirect.ui.base.BasePresenter;
-import au.com.dealsdirect.ui.controller.vouchers.View.VouchersMvpPresenter;
-import au.com.dealsdirect.ui.controller.vouchers.View.VouchersMvpView;
 import au.com.dealsdirect.utils.rx.SchedulerProvider;
 import io.reactivex.Observable;
 import io.reactivex.annotations.NonNull;
@@ -30,12 +22,12 @@ import io.reactivex.subjects.PublishSubject;
  * Created by Paul on 6/23/17.
  */
 
-public class VouchersPresenter<V extends VouchersMvpView> extends BasePresenter<V> implements VouchersMvpPresenter<V> {
+public class ViewVouchersPresenter<V extends ViewVouchersMvpView> extends BasePresenter<V> implements ViewVouchersMvpPresenter<V> {
 
 
     @Inject
-    public VouchersPresenter(DataManager dataManager, SchedulerProvider schedulerProvider,
-                            CompositeDisposable compositeDisposable) {
+    public ViewVouchersPresenter(DataManager dataManager, SchedulerProvider schedulerProvider,
+                                 CompositeDisposable compositeDisposable) {
         super(dataManager, schedulerProvider, compositeDisposable);
     }
 

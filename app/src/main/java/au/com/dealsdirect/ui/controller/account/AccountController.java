@@ -26,7 +26,7 @@ import au.com.dealsdirect.ui.controller.address.viewaddress.ViewAddressControlle
 import au.com.dealsdirect.ui.controller.contact.viewcontacts.ViewContactsController;
 import au.com.dealsdirect.ui.controller.details.DetailsController;
 import au.com.dealsdirect.ui.controller.language.LanguageController;
-import au.com.dealsdirect.ui.controller.vouchers.View.ViewVouchersController;
+import au.com.dealsdirect.ui.controller.vouchers.View.ViewViewVouchersController;
 import au.com.dealsdirect.ui.main.MainMvpView;
 import au.com.dealsdirect.utils.BundleBuilder;
 import butterknife.BindView;
@@ -132,7 +132,7 @@ public class AccountController extends BaseController implements AccountMvpView 
 
     @Override
     public void showMyVouchers() {
-        getRouter().pushController(RouterTransaction.with(ViewVouchersController.newInstance())
+        getRouter().pushController(RouterTransaction.with(ViewViewVouchersController.newInstance())
                 .pushChangeHandler(new HorizontalChangeHandler())
                 .popChangeHandler(new HorizontalChangeHandler()));
     }
