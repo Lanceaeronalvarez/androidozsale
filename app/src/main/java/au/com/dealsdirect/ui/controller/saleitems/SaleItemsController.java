@@ -21,10 +21,9 @@ import java.util.List;
 import javax.inject.Inject;
 
 import au.com.dealsdirect.R;
-import au.com.dealsdirect.data.network.model.saleitems.GetPublicSaleItemsRequest;
-import au.com.dealsdirect.data.network.model.saleitems.GetPublicSaleItemsResponse;
+import au.com.dealsdirect.data.network.model.saleitems.GetSaleItemsResponse;
 import au.com.dealsdirect.ui.base.BaseController;
-import au.com.dealsdirect.ui.controller.productdetails.ProductDetailsController;
+import au.com.dealsdirect.ui.controller.saleitemdetails.SaleItemDetailsController;
 import au.com.dealsdirect.ui.controller.saleitems.adapter.SaleItemsAdapter;
 import au.com.dealsdirect.ui.controller.shops.changehandler.DetailPopAnimChangeHandler;
 import au.com.dealsdirect.ui.controller.shops.changehandler.DetailPopTransitionChangeHandler;
@@ -42,16 +41,22 @@ import butterknife.OnClick;
 public class SaleItemsController extends BaseController implements SaleItemsMvpView {
 
     private static final String KEY_SALE_ID = "SaleItemsController.KEY_SALE_ID";
+    private static final String KEY_BANNER_ID = "SaleItemsController.KEY_BANNER_ID";
     private static final String KEY_TITLE = "SaleItemsController.KEY_TITLE";
     private static final String KEY_HEADER_IMAGE = "SaleItemsController.header_image_url";
     private static final String KEY_FROM_POSITION = "SaleItemsController.position";
+    private static final String KEY_CATEGORY_MAP = "SaleItemsController.CATEGORY_KEY";
 
+//    private String mBannerId;
     private String mSaleId;
     private String mTitle;
-    private int fromPosition;
-    private String imageHeaderUrl;
+    private String mCategoryKey;
+//    private Attributes mAttributes;
 
-    private List<GetPublicSaleItemsResponse.Item> saleItems = new LinkedList<>();
+//    private int fromPosition;
+//    private String imageHeaderUrl;
+
+    private List<GetSaleItemsResponse.Products> saleItems = new LinkedList<>();
 
 
     @BindView(R.id.controller_sale_items_grid_view)
@@ -66,32 +71,42 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
 
     private Paginate.Callbacks mPaginateCallbacks;
 
-    int page = 0;
+//    private int page = 0;
     private boolean loadingInProgress = false;
     private boolean hasLoadedAllItems = false;
 
     @Inject
     SaleItemsMvpPresenter<SaleItemsMvpView> mPresenter;
 
-    public SaleItemsController(String bannerTitle, String saleId, int fromPosition,
-                               String imageUrl) {
+    public static SaleItemsController newInstance(
+            String saleId,
+            String bannerTitle,
+            String bannerId,
+            int fromPosition,
+            String imageUrl,
+            String categoryKey) {
 
-        this(new BundleBuilder(new Bundle()).putString(KEY_SALE_ID, saleId)
-                .putString(KEY_TITLE, bannerTitle)
-                .putString(KEY_SALE_ID, saleId)
-                .putString(KEY_HEADER_IMAGE, imageUrl)
-                .putInt(KEY_FROM_POSITION, fromPosition)
-                .build());
+
+        return new SaleItemsController(
+                new BundleBuilder(new Bundle())
+                            .putString(KEY_TITLE, bannerTitle)
+                        .putString(KEY_SALE_ID, saleId)
+                        .putString(KEY_BANNER_ID, bannerId)
+                        .putString(KEY_HEADER_IMAGE, imageUrl)
+                        .putInt(KEY_FROM_POSITION, fromPosition)
+                        .putString(KEY_CATEGORY_MAP, categoryKey)
+                        .build());
     }
-
 
     public SaleItemsController(Bundle args) {
         super(args);
+
+//        mBannerId = getArgs().getString(KEY_BANNER_ID);
         mTitle = getArgs().getString(KEY_TITLE);
         mSaleId = getArgs().getString(KEY_SALE_ID);
-        fromPosition = getArgs().getInt(KEY_FROM_POSITION);
-        imageHeaderUrl = getArgs().getString(KEY_HEADER_IMAGE);
-
+//        fromPosition = getArgs().getInt(KEY_FROM_POSITION);
+//        imageHeaderUrl = getArgs().getString(KEY_HEADER_IMAGE);
+        mCategoryKey = getArgs().getString(KEY_CATEGORY_MAP);
     }
 
     @Override
@@ -108,14 +123,13 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
         super.onViewBound(view);
 
         setUp(view);
-        GetPublicSaleItemsRequest getPublicSaleItemsRequest =
-                new GetPublicSaleItemsRequest(mSaleId, 100, "en", "DA", "");
 
 
         if (saleItems.size() == 0) {
-            mPresenter.loadSaleItems(getPublicSaleItemsRequest);
+            mPresenter.loadSaleItems(mCategoryKey,mSaleId);
+
         } else {
-            mSaleItemsAdapter = new SaleItemsAdapter(saleItems, mPresenter, mSaleId);
+            mSaleItemsAdapter = new SaleItemsAdapter(saleItems, mPresenter, mSaleId, mTitle);
             RecyclerView.LayoutManager layoutManager = new GridLayoutManager(getActivity(), 2);
             mSaleItemsRecyclerView.setLayoutManager(layoutManager);
             mSaleItemsRecyclerView.setAdapter(mSaleItemsAdapter);
@@ -140,7 +154,7 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
             public void onLoadMore() {
                 // Load next page of data (e.g. network or database)
                 refresh();
-                page++;
+//                page++;
             }
 
             @Override
@@ -155,39 +169,13 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
                 return hasLoadedAllItems;
             }
         };
-
     }
 
     @Override
-    public void showSaleItems(GetPublicSaleItemsResponse getPublicSaleItemsResponse) {
+    public void showSaleItems(GetSaleItemsResponse getSaleItemsResponse) {
 
-        List<GetPublicSaleItemsResponse.List> tempList =
-                getPublicSaleItemsResponse.getGetPublicSaleItemsObject()
-                        .getList();
-
-        List<GetPublicSaleItemsResponse.Item> allItems = new LinkedList<>();
-
-        for (int x = 0; x < tempList.size(); x++) {
-
-            List<GetPublicSaleItemsResponse.SubCategory> tempSubCategories = new LinkedList<>();
-            tempSubCategories = tempList.get(x)
-                    .getSubCategories();
-
-            for (int y = 0; y < tempSubCategories.size(); y++) {
-
-                List<GetPublicSaleItemsResponse.Item> tempItems;
-                tempItems = tempSubCategories.get(y)
-                        .getItems();
-
-                for (int z = 0; z < tempItems.size(); z++) {
-                    allItems.add(tempItems.get(z));
-
-                }
-            }
-        }
-
-        saleItems = allItems;
-        mSaleItemsAdapter = new SaleItemsAdapter(allItems, mPresenter, mSaleId);
+        List<GetSaleItemsResponse.Products> tempList = getSaleItemsResponse.products;
+        mSaleItemsAdapter = new SaleItemsAdapter(tempList, mPresenter, mSaleId, mTitle);
         RecyclerView.LayoutManager layoutManager = new GridLayoutManager(getActivity(), 2);
         mSaleItemsRecyclerView.setLayoutManager(layoutManager);
         mSaleItemsRecyclerView.setAdapter(mSaleItemsAdapter);
@@ -205,12 +193,11 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
         //        mPresenter.searchProducts(page, mToolbarEditText.getText().toString(), FilterSingleton.getSelectedFilters(mFilterMode));
     }
 
-    @Override public void showProductDetails(String imageUrl, String itemId, String saleId) {
-
-        String imageTransitionName = itemId;
+    @Override
+    public void showProductDetails(String seoIdentifierId, String imageUrl, String itemId, String saleId) {
 
         List<String> names = new ArrayList<>();
-        names.add(imageTransitionName);
+        names.add(itemId);
 
 
         SharedElementTransitionChangehandler sharedElementTransitionChangehandler = new
@@ -218,27 +205,45 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
         sharedElementTransitionChangehandler.setForceRemoveViewOnPush(false);
 
         ControllerChangeHandler pushHandler
-                        = new TransitionChangeHandlerCompat(sharedElementTransitionChangehandler,
-                                                            new DetailPushAnimChangeHandler());
+                = new TransitionChangeHandlerCompat(sharedElementTransitionChangehandler,
+                new DetailPushAnimChangeHandler());
 
         ControllerChangeHandler popHandler
-                        = new TransitionChangeHandlerCompat(new DetailPopTransitionChangeHandler(itemId),
-                                                            new DetailPopAnimChangeHandler());
+                = new TransitionChangeHandlerCompat(new DetailPopTransitionChangeHandler(itemId),
+                new DetailPopAnimChangeHandler());
 
+        getRouter().pushController(RouterTransaction.with(
+                new SaleItemDetailsController(seoIdentifierId,imageUrl, itemId, saleId))
+                .pushChangeHandler(pushHandler)
+                .popChangeHandler(popHandler));
 
-        getRouter().pushController(RouterTransaction.with(new ProductDetailsController(imageUrl, itemId, saleId))
-                                                    .pushChangeHandler(pushHandler)
-                                                    .popChangeHandler(popHandler));
-
-
-
-//        getRouter().pushController(RouterTransaction.with(new ProductDetailsController(imageUrl, itemId, saleId))
-//                                                    .pushChangeHandler(pushHandler)
-//                                                    .popChangeHandler(popHandler));
     }
 
+    @SuppressWarnings("ConstantConditions")
     @OnClick(R.id.partial_toolbar_arrow_view)
-    public void onBackClick() {
+    void onBackClick() {
+
         getActivity().onBackPressed();
     }
+
+    /*
+        for (int x = 0; x < tempList.size(); x++) {
+
+            List<GetPublicSaleItemsResponse.SubCategory> tempSubCategories = new LinkedList<>();
+            tempSubCategories = tempList.get(x).getSubCategories();
+
+            for (int y = 0; y < tempSubCategories.size(); y++) {
+
+                List<GetPublicSaleItemsResponse.Item> tempItems;
+                tempItems = tempSubCategories.get(y)
+                        .getItems();
+
+                for (int z = 0; z < tempItems.size(); z++) {
+                    allItems.add(tempItems.get(z));
+
+                }
+            }
+        }
+
+     */
 }

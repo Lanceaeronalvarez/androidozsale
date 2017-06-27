@@ -22,23 +22,32 @@ import au.com.dealsdirect.data.network.model.address.ApplyAddressRequest;
 import au.com.dealsdirect.data.network.model.address.ApplyAddressResponse;
 import au.com.dealsdirect.data.network.model.address.DeleteUserAddress;
 import au.com.dealsdirect.data.network.model.address.GetAddresses;
+import au.com.dealsdirect.data.network.model.banner.GetBannerRequest;
+import au.com.dealsdirect.data.network.model.banner.GetBannerResponse;
 import au.com.dealsdirect.data.network.model.banner.GetPublicSalesBannerRequest;
 import au.com.dealsdirect.data.network.model.banner.GetPublicSalesBannerResponse;
+import au.com.dealsdirect.data.network.model.category.GetCategoryTreeResponse;
+import au.com.dealsdirect.data.network.model.contacthistory.GetContactHistoryRequest;
+import au.com.dealsdirect.data.network.model.contacthistory.GetContactHistoryResponse;
+import au.com.dealsdirect.data.network.model.contactitem.GetContactsResponse;
 import au.com.dealsdirect.data.network.model.login.LoginEmail;
 import au.com.dealsdirect.data.network.model.login.LoginFacebook;
 import au.com.dealsdirect.data.network.model.login.LoginTicket;
 import au.com.dealsdirect.data.network.model.login.Logout;
-import au.com.dealsdirect.data.network.model.productdetails.GetPublicItemDetailsRequest;
-import au.com.dealsdirect.data.network.model.productdetails.GetPublicItemDetailsResponse;
+import au.com.dealsdirect.data.network.model.orders.GetOrderPaymentDetails;
+import au.com.dealsdirect.data.network.model.orders.GetPaymentsList;
 import au.com.dealsdirect.data.network.model.productdetails.GetPublicSaleDetailsRequest;
 import au.com.dealsdirect.data.network.model.productdetails.GetPublicSaleDetailsResponse;
 import au.com.dealsdirect.data.network.model.publicsalescategories.GetPublicSalesCategoriesRequest;
 import au.com.dealsdirect.data.network.model.publicsalescategories.GetPublicSalesCategoriesResponse;
+import au.com.dealsdirect.data.network.model.saleitemdetails.GetSaleItemDetailsResponse;
 import au.com.dealsdirect.data.network.model.saleitems.GetPublicSaleItemsRequest;
 import au.com.dealsdirect.data.network.model.saleitems.GetPublicSaleItemsResponse;
 import au.com.dealsdirect.data.network.model.viewcontactitem.GetContactsResponse;
 import au.com.dealsdirect.data.network.model.userdetails.GetUserDetailsResponse;
 import au.com.dealsdirect.data.network.model.userdetails.SetUserDetailsRequest;
+import au.com.dealsdirect.data.network.model.saleitems.GetSaleItemsRequest;
+import au.com.dealsdirect.data.network.model.saleitems.GetSaleItemsResponse;
 import au.com.dealsdirect.data.pref.PreferencesHelper;
 import au.com.dealsdirect.di.ApplicationContext;
 import io.reactivex.Observable;
@@ -76,8 +85,8 @@ public class AppDataManager implements DataManager {
     }
 
     @Override
-    public Observable<GetPublicSalesBannerResponse> getPublicSalesBannerApiCall(GetPublicSalesBannerRequest getPublicSalesBannerRequest) {
-        return mApiHelper.getPublicSalesBannerApiCall(getPublicSalesBannerRequest);
+    public Observable<List<GetBannerResponse>> doGetBannersApiCall(GetBannerRequest getBannerRequest) {
+        return mApiHelper.doGetBannersApiCall(getBannerRequest);
     }
 
     @Override
@@ -86,9 +95,26 @@ public class AppDataManager implements DataManager {
     }
 
     @Override
+    public Observable<List<GetCategoryTreeResponse>> doGetGetCategoriesApiCall() {
+        return mApiHelper.doGetGetCategoriesApiCall();
+    }
+
+    @Override
+    public Observable<GetSaleItemDetailsResponse> doGetSaleItemDetailsApiCall(String seoIdentifierId) {
+        return mApiHelper.doGetSaleItemDetailsApiCall(seoIdentifierId);
+
+    }
+
+    @Override
     public Observable<GetPublicSaleItemsResponse> getPublicSaleItemsApiCall(
             GetPublicSaleItemsRequest getPublicSaleItemsRequest) {
         return mApiHelper.getPublicSaleItemsApiCall(getPublicSaleItemsRequest);
+    }
+
+    @Override
+    public Observable<GetSaleItemsResponse> getSaleItemsRequest(GetSaleItemsRequest getSaleItemsRequest) {
+        return mApiHelper.getSaleItemsRequest(getSaleItemsRequest);
+
     }
 
     @Override
@@ -112,8 +138,13 @@ public class AppDataManager implements DataManager {
     }
 
     @Override
-    public Observable<GetContactsResponse.Response> callGetContacts(String languageId) {
+    public Observable<GetContactsResponse> callGetContacts(String languageId) {
         return mApiHelper.callGetContacts(languageId);
+    }
+
+    @Override
+    public Observable<GetContactHistoryResponse> callGetContactHistory(GetContactHistoryRequest getContactHistoryRequest) {
+        return mApiHelper.callGetContactHistory(getContactHistoryRequest);
     }
 
     @Override
@@ -167,9 +198,15 @@ public class AppDataManager implements DataManager {
     }
 
     @Override
-    public Observable<GetPublicItemDetailsResponse> doGetPublicItemDetailsApiCall(GetPublicItemDetailsRequest request) {
-        return mApiHelper.doGetPublicItemDetailsApiCall(request);
+    public Observable<GetPaymentsList.ResponseValue> callGetPaymentsList(GetPaymentsList.RequestValues requestValues) {
+        return mApiHelper.callGetPaymentsList(requestValues);
     }
+
+    @Override
+    public Observable<GetOrderPaymentDetails.ResponseValue> callGetOrderPaymentDetails(GetOrderPaymentDetails.RequestValues requestValues) {
+        return mApiHelper.callGetOrderPaymentDetails(requestValues);
+    }
+
 
     @Override
     public Observable<GetPublicSaleDetailsResponse> doGetPublicSaleDetailsApiCall(GetPublicSaleDetailsRequest request) {

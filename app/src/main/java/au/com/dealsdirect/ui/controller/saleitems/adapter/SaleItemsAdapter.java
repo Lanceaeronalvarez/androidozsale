@@ -13,10 +13,9 @@ import android.widget.TextView;
 import java.util.List;
 
 import au.com.dealsdirect.R;
-import au.com.dealsdirect.data.network.model.saleitems.GetPublicSaleItemsResponse;
+import au.com.dealsdirect.data.network.model.saleitems.GetSaleItemsResponse;
 import au.com.dealsdirect.ui.controller.saleitems.SaleItemsMvpPresenter;
 import au.com.dealsdirect.utils.ImageUtils;
-import au.com.dealsdirect.utils.LegacyStringImageUtils;
 import au.com.dealsdirect.utils.PriceUtils;
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -27,12 +26,13 @@ import butterknife.ButterKnife;
 
 public class SaleItemsAdapter extends RecyclerView.Adapter<SaleItemsAdapter.ViewHolder> {
 
-    List<GetPublicSaleItemsResponse.Item> mData;
-    Context mContext;
-    SaleItemsMvpPresenter mPresenter;
-    String mSaleId;
+    private List<GetSaleItemsResponse.Products> mData;
+    private Context mContext;
+    private SaleItemsMvpPresenter mPresenter;
+    private String mSaleId;
+    private String mSaleName;
 
-    public void addData(List<GetPublicSaleItemsResponse.Item> saleItems) {
+    public void addData(List<GetSaleItemsResponse.Products> saleItems) {
         mData.addAll(saleItems);
         notifyDataSetChanged();
     }
@@ -63,11 +63,16 @@ public class SaleItemsAdapter extends RecyclerView.Adapter<SaleItemsAdapter.View
         }
     }
 
-    public SaleItemsAdapter(List<GetPublicSaleItemsResponse.Item> saleItem,
-            SaleItemsMvpPresenter presenter, String saleId) {
-        this.mData = saleItem;
+    public SaleItemsAdapter(
+            List<GetSaleItemsResponse.Products> saleItems,
+            SaleItemsMvpPresenter presenter,
+            String saleId,
+            String saleName) {
+
+        this.mData = saleItems;
         this.mPresenter = presenter;
         this.mSaleId = saleId;
+        this.mSaleName = saleName;
     }
 
     @Override public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
@@ -78,18 +83,15 @@ public class SaleItemsAdapter extends RecyclerView.Adapter<SaleItemsAdapter.View
     }
 
     @Override public void onBindViewHolder(ViewHolder holder, final int position) {
-        GetPublicSaleItemsResponse.Item saleItem = mData.get(position);
-        holder.mSaleItemName.setText(saleItem.getName());
-        holder.mSaleItemImage.setTransitionName(mData.get(position)
-                                                     .getID());
+        GetSaleItemsResponse.Products saleItem = mData.get(position);
+        String url = mData.get(position).getImages().get(0);
 
-        String url = LegacyStringImageUtils.itemImageURLString(saleItem);
-        String saleItemBrand = mData.get(position)
-                                    .getBrandName();
-        String saleItemPrice = PriceUtils.getPriceStringValue(mData.get(position)
-                                                                   .getPrice());
-        String saleItemOldPrice = PriceUtils.getRpStringValue(mData.get(position)
-                                                                   .getRP());
+        holder.mSaleItemName.setText(saleItem.getProductName());
+        holder.mSaleItemImage.setTransitionName(mData.get(position).getProductId());
+
+        String saleItemBrand = mSaleName;
+        String saleItemPrice = PriceUtils.getPriceStringValue(mData.get(position).getPrice().getValue());
+        String saleItemOldPrice = PriceUtils.getRpStringValue(mData.get(position).getOriginalPrice().getValue());
 
         ImageUtils.loadImageWithImageViewDimens(mContext, url, holder.mSaleItemImage);
 
@@ -100,9 +102,11 @@ public class SaleItemsAdapter extends RecyclerView.Adapter<SaleItemsAdapter.View
                 holder.mOldPrice.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);
 
 
-        holder.itemView.setOnClickListener(v -> {
-            mPresenter.loadProductDetails(url, mData.get(position).getID(), mSaleId);
-        });
+        holder.itemView.setOnClickListener(v -> mPresenter.loadProductDetails(
+                mData.get(position).getSeoIdentifier(),
+                url,
+                mData.get(position).getProductId(),
+                mSaleId));
     }
 
     @Override public int getItemCount() {

@@ -26,7 +26,7 @@ import au.com.dealsdirect.data.network.model.address.DecorationInfoList;
 import au.com.dealsdirect.data.network.model.address.DeleteUserAddress;
 import au.com.dealsdirect.data.network.model.address.GetAddresses;
 import au.com.dealsdirect.ui.base.BaseController;
-import au.com.dealsdirect.ui.controller.address.RecyclerOnTouchListener;
+import au.com.dealsdirect.ui.custom.RecyclerOnTouchListener;
 import au.com.dealsdirect.ui.controller.address.addnewaddress.AddNewAddressController;
 import butterknife.BindView;
 import butterknife.OnClick;
@@ -186,6 +186,11 @@ public class ViewAddressController extends BaseController implements ViewAddress
         mPresenter.deleteUserDeliveryAddress(deleteUserAddressRequest.getAddressID());
     }
 
+    @Override
+    protected void onDestroyView(@NonNull View view) {
+        mPresenter.onDetach();
+        super.onDestroyView(view);
+    }
 
     @OnClick(R.id.partial_toolbar_arrow_view)
     public void onBackClick() {

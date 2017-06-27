@@ -8,6 +8,8 @@ import com.mysale.genie.utility.config.api.GetServerSettings;
 import com.rx2androidnetworking.Rx2AndroidNetworking;
 
 import org.json.JSONObject;
+import java.util.LinkedHashMap;
+import java.util.List;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
@@ -19,23 +21,31 @@ import au.com.dealsdirect.data.network.model.address.ApplyAddressRequest;
 import au.com.dealsdirect.data.network.model.address.ApplyAddressResponse;
 import au.com.dealsdirect.data.network.model.address.DeleteUserAddress;
 import au.com.dealsdirect.data.network.model.address.GetAddresses;
-import au.com.dealsdirect.data.network.model.banner.GetPublicSalesBannerRequest;
-import au.com.dealsdirect.data.network.model.banner.GetPublicSalesBannerResponse;
+import au.com.dealsdirect.data.network.model.banner.GetBannerRequest;
+import au.com.dealsdirect.data.network.model.banner.GetBannerResponse;
+import au.com.dealsdirect.data.network.model.category.GetCategoryTreeResponse;
+import au.com.dealsdirect.data.network.model.contacthistory.GetContactHistoryRequest;
+import au.com.dealsdirect.data.network.model.contacthistory.GetContactHistoryResponse;
+import au.com.dealsdirect.data.network.model.contactitem.GetContactsResponse;
 import au.com.dealsdirect.data.network.model.login.LoginEmail;
 import au.com.dealsdirect.data.network.model.login.LoginFacebook;
 import au.com.dealsdirect.data.network.model.login.LoginTicket;
 import au.com.dealsdirect.data.network.model.login.Logout;
-import au.com.dealsdirect.data.network.model.productdetails.GetPublicItemDetailsRequest;
-import au.com.dealsdirect.data.network.model.productdetails.GetPublicItemDetailsResponse;
+import au.com.dealsdirect.data.network.model.orders.GetOrderPaymentDetails;
+import au.com.dealsdirect.data.network.model.orders.GetPaymentsList;
 import au.com.dealsdirect.data.network.model.productdetails.GetPublicSaleDetailsRequest;
 import au.com.dealsdirect.data.network.model.productdetails.GetPublicSaleDetailsResponse;
 import au.com.dealsdirect.data.network.model.publicsalescategories.GetPublicSalesCategoriesRequest;
 import au.com.dealsdirect.data.network.model.publicsalescategories.GetPublicSalesCategoriesResponse;
+import au.com.dealsdirect.data.network.model.saleitemdetails.GetSaleItemDetailsResponse;
 import au.com.dealsdirect.data.network.model.saleitems.GetPublicSaleItemsRequest;
 import au.com.dealsdirect.data.network.model.saleitems.GetPublicSaleItemsResponse;
 import au.com.dealsdirect.data.network.model.viewcontactitem.GetContactsResponse;
 import au.com.dealsdirect.data.network.model.userdetails.GetUserDetailsResponse;
 import au.com.dealsdirect.data.network.model.userdetails.SetUserDetailsRequest;
+import au.com.dealsdirect.data.network.model.saleitems.GetSaleItemsRequest;
+import au.com.dealsdirect.data.network.model.saleitems.GetSaleItemsResponse;
+import au.com.dealsdirect.data.network.model.contactitem.GetContactsResponse.Response;
 import au.com.dealsdirect.utils.JsonUtils;
 import io.reactivex.Observable;
 
@@ -65,15 +75,15 @@ public class AppApiHelper implements ApiHelper {
                 .getObjectObservable(SampleResponse.class);
     }
 
-    @Override public Observable<GetPublicSalesBannerResponse> getPublicSalesBannerApiCall(
-            GetPublicSalesBannerRequest getPublicSalesBannerRequest) {
-        return Rx2AndroidNetworking.get(ApiEndPoint.GET_SHOP_BANNERS)
+    @Override
+    public Observable<List<GetBannerResponse>> doGetBannersApiCall(
+            GetBannerRequest getBannerRequest) {
+        return Rx2AndroidNetworking.get(ApiEndPoint.GET_SALES)
                                    .addHeaders(mApiHeader.getPublicApiHeader())
-                                   .addQueryParameter(getPublicSalesBannerRequest)
+                                   .addQueryParameter(getBannerRequest)
                                    .build()
-                                   .getObjectObservable(GetPublicSalesBannerResponse.class);
+                                   .getObjectListObservable(GetBannerResponse.class);
     }
-
 
     @Override
     public Observable<GetPublicSalesCategoriesResponse> doGetPublicSalesCategoriesApiCall(GetPublicSalesCategoriesRequest request){
@@ -85,13 +95,20 @@ public class AppApiHelper implements ApiHelper {
     }
 
     @Override
-    public Observable<GetPublicItemDetailsResponse> doGetPublicItemDetailsApiCall(GetPublicItemDetailsRequest request) {
-        return Rx2AndroidNetworking.get(ApiEndPoint.GET_SALES_ITEM_DETAILS)
+    public Observable<List<GetCategoryTreeResponse>> doGetGetCategoriesApiCall() {
+        return Rx2AndroidNetworking.get(ApiEndPoint.GET_CATEGORY_TREE)
                 .addHeaders(mApiHeader.getPublicApiHeader())
-                .addQueryParameter(request)
                 .build()
-                .getObjectObservable(GetPublicItemDetailsResponse.class);
+                .getObjectListObservable(GetCategoryTreeResponse.class);
+    }
 
+    @Override
+    public Observable<GetSaleItemDetailsResponse> doGetSaleItemDetailsApiCall(String seoIdentifierId) {
+        return Rx2AndroidNetworking.get(ApiEndPoint.GET_PRODUCT_DETAILS)
+                .addHeaders(mApiHeader.getPublicApiHeader())
+                .addPathParameter("seo_identifier", seoIdentifierId)
+                .build()
+                .getObjectObservable(GetSaleItemDetailsResponse.class);
     }
 
     @Override
@@ -112,6 +129,23 @@ public class AppApiHelper implements ApiHelper {
                                    .addQueryParameter(getPublicSaleItemsRequest)
                                    .build()
                                    .getObjectObservable(GetPublicSaleItemsResponse.class);
+    }
+
+    @Override
+    public Observable<GetSaleItemsResponse> getSaleItemsRequest(GetSaleItemsRequest getSaleItemsRequest) {
+        LinkedHashMap<String,String> linkedHashMap = new LinkedHashMap();
+        linkedHashMap.put("q", getSaleItemsRequest.getQuery());
+        linkedHashMap.put("pn", getSaleItemsRequest.getPageNumber());
+        linkedHashMap.put("ps", getSaleItemsRequest.getPageSize());
+        linkedHashMap.put("c", getSaleItemsRequest.getCategoryKey());
+        linkedHashMap.put("ff", getSaleItemsRequest.getFacetFilter());
+        linkedHashMap.put("sa", getSaleItemsRequest.getLanguageID());
+
+        return Rx2AndroidNetworking.get(ApiEndPoint.GET_PRODUCTS)
+                .addHeaders(mApiHeader.getPublicApiHeader())
+                .addQueryParameter(linkedHashMap)
+                .build()
+                .getObjectObservable(GetSaleItemsResponse.class);
     }
 
     @Override
@@ -218,14 +252,41 @@ public class AppApiHelper implements ApiHelper {
                 .getObjectObservable(DeleteUserAddress.ResponseValue.class);
     }
 
+    @Override
+    public Observable<GetPaymentsList.ResponseValue> callGetPaymentsList(GetPaymentsList.RequestValues requestValues) {
+        return Rx2AndroidNetworking.post(ApiEndPoint.GET_PAYMENTS_LIST)
+                .addHeaders(mApiHeader.getPublicApiHeader())
+                .addJSONObjectBody(JsonUtils.convertToJsonObject(requestValues))
+                .build()
+                .getObjectObservable(GetPaymentsList.ResponseValue.class);
+    }
 
     @Override
-    public Observable<GetContactsResponse.Response> callGetContacts(String languageId) {
+    public Observable<GetOrderPaymentDetails.ResponseValue> callGetOrderPaymentDetails(GetOrderPaymentDetails.RequestValues requestValues) {
+        return Rx2AndroidNetworking.post(ApiEndPoint.GET_ORDER_PAYMENT_DETAILS)
+                .addHeaders(mApiHeader.getPublicApiHeader())
+                .addJSONObjectBody(JsonUtils.convertToJsonObject(requestValues))
+                .build()
+                .getObjectObservable(GetOrderPaymentDetails.ResponseValue.class);
+    }
+
+
+    @Override
+    public Observable<GetContactsResponse> callGetContacts(String languageId) {
         return Rx2AndroidNetworking.post(ApiEndPoint.GET_CONTACTS)
                 .addHeaders(mApiHeader.getPublicApiHeader())
                 .addJSONObjectBody(JsonUtils.convertToJsonObject(new GetAppSettingsSection.RequestValue(languageId)))
                 .build()
-                .getObjectObservable(GetContactsResponse.Response.class);
+                .getObjectObservable(GetContactsResponse.class);
+    }
+
+    @Override
+    public Observable<GetContactHistoryResponse> callGetContactHistory(GetContactHistoryRequest request) {
+        return Rx2AndroidNetworking.post(ApiEndPoint.GET_CONTACT)
+                .addHeaders(mApiHeader.getPublicApiHeader())
+                .addJSONObjectBody(JsonUtils.convertToJsonObject(request))
+                .build()
+                .getObjectObservable(GetContactHistoryResponse.class);
     }
 
     @Override

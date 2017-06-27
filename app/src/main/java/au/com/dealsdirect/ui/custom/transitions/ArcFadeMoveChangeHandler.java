@@ -16,7 +16,7 @@ import android.view.ViewGroup;
 import com.bluelinelabs.conductor.changehandler.TransitionChangeHandler;
 
 import au.com.dealsdirect.R;
-import au.com.dealsdirect.ui.controller.productdetails.ProductDetailsView;
+import au.com.dealsdirect.ui.controller.saleitemdetails.SaleItemDetailsView;
 
 /**
  * dp Created by Admin on 6/8/17.
@@ -31,11 +31,11 @@ public class ArcFadeMoveChangeHandler extends TransitionChangeHandler {
     protected Transition getTransition(@NonNull ViewGroup container, View from, View to, boolean isPush) {
 
 
-        if (to == null || !(to instanceof ProductDetailsView)) {
+        if (to == null || !(to instanceof SaleItemDetailsView)) {
             throw new IllegalArgumentException("The to view must be a CountryDetailView");
         }
 
-        final ProductDetailsView detailView = (ProductDetailsView) to;
+        final SaleItemDetailsView detailView = (SaleItemDetailsView) to;
 
         ChangeTransform changeTransform = new ChangeTransform();
 
@@ -50,7 +50,7 @@ public class ArcFadeMoveChangeHandler extends TransitionChangeHandler {
                                        .addTransition(new ChangeClipBounds())
                                        .addTransition(changeTransform))
 //                                       .addTransition(new ChangeImageTransform())
-                .addTransition(new Slide().addTarget(detailView.mProductDetailsView).setStartDelay(150))
+                .addTransition(new Slide().addTarget(detailView.mSaleItemDetailsView).setStartDelay(150))
                 .addTransition(new Fade(Fade.IN));
 //
         transition.setPathMotion(new ArcMotion());

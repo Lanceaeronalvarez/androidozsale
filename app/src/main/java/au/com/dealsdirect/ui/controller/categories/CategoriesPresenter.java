@@ -1,10 +1,15 @@
 package au.com.dealsdirect.ui.controller.categories;
 
+import android.util.Log;
+
 import com.androidnetworking.error.ANError;
+
+import java.util.List;
 
 import javax.inject.Inject;
 
 import au.com.dealsdirect.data.DataManager;
+import au.com.dealsdirect.data.network.model.category.GetCategoryTreeResponse;
 import au.com.dealsdirect.data.network.model.publicsalescategories.GetPublicSalesCategoriesRequest;
 import au.com.dealsdirect.data.network.model.publicsalescategories.GetPublicSalesCategoriesResponse;
 import au.com.dealsdirect.ui.base.BasePresenter;
@@ -44,6 +49,50 @@ public class CategoriesPresenter<V extends CategoriesMvpView> extends BasePresen
                             getMvpView().showPublicSalesCategories(response.d.list);
                         }
 
+
+                    }
+                }, new Consumer<Throwable>() {
+                    @Override
+                    public void accept(Throwable throwable) throws Exception {
+
+                        if (!isViewAttached()) {
+                            return;
+                        }
+
+                        getMvpView().hideLoading();
+                        getMvpView().onError(throwable.getMessage());
+
+                        // handle load accounts error here
+                        if (throwable instanceof ANError) {
+                            ANError anError = (ANError) throwable;
+                            handleApiError(anError);
+                        }
+                    }
+                }));
+    }
+
+    @Override
+    public void loadCategoryTree() {
+        getCompositeDisposable().add(getDataManager()
+                .doGetGetCategoriesApiCall()
+                .subscribeOn(getSchedulerProvider().io())
+                .observeOn(getSchedulerProvider().ui())
+                .subscribe(new Consumer<List<GetCategoryTreeResponse>>() {
+                    @Override
+                    public void accept(List<GetCategoryTreeResponse> response) throws Exception {
+
+                        if (!isViewAttached()) {
+                            return;
+                        }
+
+                        Log.d("CategoryPresenter","success load category tree");
+
+                        if (response != null) {
+
+                            getMvpView().showCategories(response);
+                        }
+
+                        getMvpView().hideLoading();
 
                     }
                 }, new Consumer<Throwable>() {

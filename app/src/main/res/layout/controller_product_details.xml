@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<au.com.dealsdirect.ui.controller.productdetails.ProductDetailsView
+<au.com.dealsdirect.ui.controller.saleitemdetails.SaleItemDetailsView
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
@@ -493,6 +493,7 @@
                                     style="@style/DDButtonStyle"
                                     fontPath="@string/font_lato_medium"
                                     android:layout_width="match_parent"
+                                    android:layout_margin="@dimen/activity_horizontal_margin"
                                     android:text="@string/add_to_basket"/>
 
 
@@ -624,4 +625,4 @@
 
         </android.support.v4.widget.NestedScrollView>
     </android.support.design.widget.CoordinatorLayout>
-</au.com.dealsdirect.ui.controller.productdetails.ProductDetailsView>
+</au.com.dealsdirect.ui.controller.saleitemdetails.SaleItemDetailsView>

@@ -1,6 +1,6 @@
 package au.com.dealsdirect.ui.controller.contact.viewcontacts;
 
-import au.com.dealsdirect.data.network.model.viewcontactitem.GetContactsResponse;
+import au.com.dealsdirect.data.network.model.contactitem.GetContactsResponse;
 import au.com.dealsdirect.ui.base.MvpView;
 
 /**

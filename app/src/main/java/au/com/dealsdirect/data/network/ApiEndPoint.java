@@ -8,6 +8,31 @@ public final class ApiEndPoint {
     public static final int TEST_API = 0;
     public static final int LIVE_API = 1;
 
+    private static final String LEGACY_SHOP = "https://www.dealsdirect.com.au/api/shop/shop/";
+    private static final String LEGACY_SALE = "https://www.dealsdirect.com.au/api/sale/sale/";
+    private static final String LEGACY_PRODUCT = "https://www.dealsdirect.com.au/api/shop/product/";
+
+
+
+    private static final String GENIE_PRODUCT = "https://genie-ui-dealsdirect-pre.mysaledev.com/api/shop/product/";
+    private static final String GENIE_SHOP = "https://genie-ui-dealsdirect-pre.mysaledev.com/api/shop/shop/";
+    private static final String GENIE_SALE = "https://genie-ui-dealsdirect-pre.mysaledev.com/api/sale/sale/";
+
+    private static final String GENIE_TEST_SHOP = "https://genie-ui-dealsdirect-pre.mysaledev.com/api/shop/shop/";
+    private static final String GENIE_TEST_SALE = "https://genie-ui-dealsdirect-pre.mysaledev.com/api/sale/sale/";
+
+    private static final String CATEGORY_TREE = "v1/accounts/A56B0D62-AEF6-4653-848E-2ECDDB6E9B8C/categorytree/";
+    private static final String SALES = "v1/accounts/A56B0D62-AEF6-4653-848E-2ECDDB6E9B8C/banners/";
+    private static final String PRODUCTS = "v1/accounts/A56B0D62-AEF6-4653-848E-2ECDDB6E9B8C/products";
+    //https://www.dealsdirect.com.au/api/shop/product/v1/accounts/A56B0D62-AEF6-4653-848E-2ECDDB6E9B8C/products/Ou8uAvQuGkmLOTN3Qpzzyg
+    private static final String PRODUCT_DETAILS = "v1/accounts/A56B0D62-AEF6-4653-848E-2ECDDB6E9B8C/products/{seo_identifier}";
+
+
+    public static final String GET_CATEGORY_TREE = LEGACY_SHOP + CATEGORY_TREE;
+    public static final String GET_SALES = LEGACY_SALE + SALES;
+    public static final String GET_PRODUCTS = LEGACY_SHOP + PRODUCTS;
+    public static final String GET_PRODUCT_DETAILS = LEGACY_PRODUCT + PRODUCT_DETAILS;
+
     /* API Constants */
     private static final String API_HOST = "https://www.dealsdirect.com.au/";
 
@@ -42,6 +67,8 @@ public final class ApiEndPoint {
     public static final String GET_SHOP_BANNERS = BASE_URL + "GetPublicSalesBanners";
     public static final String GET_SALES_CATEGORIES = BASE_URL + "GetSaleCategories";
 
+
+
     /* Sale Items Controller */
     public static final String GET_PUBLIC_SALE_ITEMS = BASE_URL+"GetPublicSaleItems";
 
@@ -69,7 +96,7 @@ public final class ApiEndPoint {
     /* Contact Controller */
     public static final String ANSWER_CONTACT = "AnswerContact";
     public static final String CREATE_CONTACT = "CreateContact";
-    public static final String GET_CONTACT = "GetContact";
+    public static final String GET_CONTACT =  API_HOST + COCOSA_SERVICE +"GetContact";
     public static final String GET_CONTACT_INVOICES = "GetContactInvoices";
     public static final String GET_CONTACTS = API_HOST + COCOSA_SERVICE + "GetContacts";
     public static final String GET_CONTACT_SUBJECTS = "GetContactSubjects";
@@ -80,7 +107,6 @@ public final class ApiEndPoint {
     public static final String CLEAR_VOUCHERS = "ClearVouchers";
     public static final String DECREASE_ORDER_ITEM = "DecreaseOrderItem";
     public static final String GET_CURRENT_ORDER = "GetCurrentOrder";
-    public static final String GET_ORDER_DETAILS = "GetOrderDetails";
 
     /* Return Controller */
     public static String CREATE_RETURN = "CreateReturn";
@@ -90,6 +116,10 @@ public final class ApiEndPoint {
     public static final String GET_USER_ADDRESSES = TEST_API_LEGACY + "GetUserAddresses";
     public static final String SET_USER_DELIVERY_ADDRESS = TEST_API_LEGACY + "SetUserDeliveryAddress";
     public static final String APPLY_DELIVERY_ADDRESS = TEST_API_LEGACY + "ApplyDeliveryAddress";
+
+    /* Orders Controller*/
+    public static final String GET_PAYMENTS_LIST = TEST_API_LEGACY + "GetPaymentsList";
+    public static final String GET_ORDER_PAYMENT_DETAILS = TEST_API_LEGACY + "GetOrderPaymentDetails";
 
     /* Login Controller */
     public static String FORGOT_PASSWORD = "ForgotPassword"; //

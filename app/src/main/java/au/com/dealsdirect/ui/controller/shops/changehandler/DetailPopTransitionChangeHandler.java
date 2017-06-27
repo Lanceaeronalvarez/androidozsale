@@ -15,7 +15,7 @@ import android.view.ViewGroup;
 
 import com.bluelinelabs.conductor.changehandler.TransitionChangeHandler;
 
-import au.com.dealsdirect.ui.controller.productdetails.ProductDetailsView;
+import au.com.dealsdirect.ui.controller.saleitemdetails.SaleItemDetailsView;
 
 /**
  * dp Created by Admin on 6/15/17.
@@ -55,7 +55,7 @@ public class DetailPopTransitionChangeHandler extends TransitionChangeHandler {
         if (from == null || !(from instanceof View))
             throw new IllegalArgumentException("The from view must be a CountryDetailView");
 
-        ProductDetailsView itemImage = (ProductDetailsView) from;
+        SaleItemDetailsView itemImage = (SaleItemDetailsView) from;
         itemImage.mProductSharedImage.setTransitionName(flagViewTransitionName);
 
 
@@ -65,7 +65,7 @@ public class DetailPopTransitionChangeHandler extends TransitionChangeHandler {
                                        .addTransition(new ChangeClipBounds())
                                        .addTransition(new ChangeTransform())
                                        .addTransition(new ChangeImageTransform())
-                                       .addTransition(new Slide()).addTarget(itemImage.mProductDetailsView));
+                                       .addTransition(new Slide()).addTarget(itemImage.mSaleItemDetailsView));
     }
 
     protected void getTransitionImage(@NonNull ViewGroup container,

@@ -18,7 +18,7 @@ import android.view.ViewGroup;
 
 import com.bluelinelabs.conductor.changehandler.TransitionChangeHandler;
 
-import au.com.dealsdirect.ui.controller.productdetails.ProductDetailsView;
+import au.com.dealsdirect.ui.controller.saleitemdetails.SaleItemDetailsView;
 
 /**
  * dp Created by Admin on 6/15/17.
@@ -55,14 +55,14 @@ public class DetailPushTransitionHandler  extends TransitionChangeHandler {
             @Nullable View to,
             boolean isPush) {
 
-        if (to == null || !(to instanceof ProductDetailsView)) {
+        if (to == null || !(to instanceof SaleItemDetailsView)) {
             Log.d("test","null");
             throw new IllegalArgumentException("The to view must be a CountryDetailView");
         }
 
         Log.d("test","not null");
 
-        final ProductDetailsView detailView = (ProductDetailsView) to;
+        final SaleItemDetailsView detailView = (SaleItemDetailsView) to;
         detailView.mProductSharedImage.setTransitionName(flagViewTransitionName);
 
         ChangeTransform changeTransform = new ChangeTransform();

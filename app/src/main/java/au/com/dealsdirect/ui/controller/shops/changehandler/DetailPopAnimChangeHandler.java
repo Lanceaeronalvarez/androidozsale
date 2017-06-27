@@ -11,7 +11,7 @@ import android.view.ViewGroup;
 
 import com.bluelinelabs.conductor.changehandler.AnimatorChangeHandler;
 
-import au.com.dealsdirect.ui.controller.productdetails.ProductDetailsView;
+import au.com.dealsdirect.ui.controller.saleitemdetails.SaleItemDetailsView;
 
 /**
  * dp Created by Admin on 6/15/17.
@@ -28,13 +28,13 @@ public class DetailPopAnimChangeHandler extends AnimatorChangeHandler {
             boolean toAddedToContainer) {
 
         // Make sure the from view is a CountryDetailView
-        if (from == null || !(from instanceof ProductDetailsView))
+        if (from == null || !(from instanceof SaleItemDetailsView))
             throw new IllegalArgumentException("The from view must be a CountryDetailView");
 
         if (to == null)
             throw new IllegalArgumentException("The to view must not be null");
 
-        final ProductDetailsView detailView = (ProductDetailsView) from;
+        final SaleItemDetailsView detailView = (SaleItemDetailsView) from;
 
         AnimatorSet animatorSet = new AnimatorSet();
 
@@ -48,8 +48,8 @@ public class DetailPopAnimChangeHandler extends AnimatorChangeHandler {
 
 
 //        // Slide down the details
-        Animator detailAnimator = ObjectAnimator.ofFloat(detailView.mProductDetailsView, View.TRANSLATION_Y, 0,
-                                                         detailView.mProductDetailsView.getHeight());
+        Animator detailAnimator = ObjectAnimator.ofFloat(detailView.mSaleItemDetailsView, View.TRANSLATION_Y, 0,
+                                                         detailView.mSaleItemDetailsView.getHeight());
 
         // Show the new view
         Animator showToViewAnimator = ObjectAnimator.ofFloat(to, View.ALPHA, 0, 1);
@@ -66,7 +66,7 @@ public class DetailPopAnimChangeHandler extends AnimatorChangeHandler {
     @Override
     protected void resetFromView(@NonNull View from) {
 
-        ProductDetailsView detailView = (ProductDetailsView) from;
+        SaleItemDetailsView detailView = (SaleItemDetailsView) from;
 //        detailView.favouriteFab.setScaleX(1);
 //        detailView.favouriteFab.setScaleY(1);
 //        detailView.detailGroup.setTranslationY(0);

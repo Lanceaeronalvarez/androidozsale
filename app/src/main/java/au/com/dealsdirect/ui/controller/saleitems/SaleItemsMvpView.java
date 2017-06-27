@@ -1,6 +1,6 @@
 package au.com.dealsdirect.ui.controller.saleitems;
 
-import au.com.dealsdirect.data.network.model.saleitems.GetPublicSaleItemsResponse;
+import au.com.dealsdirect.data.network.model.saleitems.GetSaleItemsResponse;
 import au.com.dealsdirect.ui.base.MvpView;
 
 /**
@@ -9,10 +9,10 @@ import au.com.dealsdirect.ui.base.MvpView;
 
 public interface SaleItemsMvpView extends MvpView{
 
-    void showSaleItems(GetPublicSaleItemsResponse getPublicSaleItemsResponse);
+    void showSaleItems(GetSaleItemsResponse getSaleItemsResponse);
 
     void refresh();
 
-    void showProductDetails(String imageUrl, String itemId, String saleId);
+    void showProductDetails(String seoIdentifierId, String imageUrl, String itemId, String saleId);
 
 }

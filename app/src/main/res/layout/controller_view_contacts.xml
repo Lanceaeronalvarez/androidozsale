@@ -1,30 +1,37 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-              xmlns:app="http://schemas.android.com/apk/res-auto"
-              android:orientation="vertical"
-              android:layout_width="match_parent"
-              android:layout_height="match_parent">
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:layout_marginBottom="50dp">
 
 
     <include
         android:id="@+id/view_contacts_toolbar_layout"
         layout="@layout/partial_toolbar_arrow" />
 
-    <android.support.v7.widget.RecyclerView
-        android:id="@+id/view_contacts_recycler_view"
+    <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="match_parent">
 
-    </android.support.v7.widget.RecyclerView>
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/contacts_recycler_view"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:overScrollMode="never">
 
-    <Button
-        android:id="@+id/controller_view_contacts_add_button"
-        android:layout_width="match_parent"
-        android:layout_height="45dp"
-        android:layout_margin="@dimen/activity_horizontal_margin"
-        android:text="Create Contact"
-        android:clickable="true"
-        android:layout_gravity="bottom"
-        style="@style/DDButtonStyle"/>
+        </android.support.v7.widget.RecyclerView>
 
+        <Button
+            android:id="@+id/controller_view_contacts_add_button"
+            style="@style/DDButtonStyle"
+            android:layout_width="match_parent"
+            android:layout_height="45dp"
+            android:layout_alignParentBottom="true"
+            android:layout_margin="@dimen/activity_horizontal_margin"
+            android:clickable="true"
+            android:text="Create Contact"/>
+
+    </RelativeLayout>
 </LinearLayout>

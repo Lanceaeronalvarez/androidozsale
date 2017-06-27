@@ -12,7 +12,7 @@ import android.view.ViewGroup;
 
 import com.bluelinelabs.conductor.changehandler.AnimatorChangeHandler;
 
-import au.com.dealsdirect.ui.controller.productdetails.ProductDetailsView;
+import au.com.dealsdirect.ui.controller.saleitemdetails.SaleItemDetailsView;
 
 /**
  * dp Created by Admin on 6/15/17.
@@ -30,10 +30,10 @@ public class DetailPushAnimChangeHandler extends AnimatorChangeHandler {
 
 
         // Make sure the to view is a CountryDetailView
-        if (to == null || !(to instanceof ProductDetailsView))
+        if (to == null || !(to instanceof SaleItemDetailsView))
             throw new IllegalArgumentException("The to view must be a CountryDetailView");
 
-        ProductDetailsView detailView = (ProductDetailsView) to;
+        SaleItemDetailsView detailView = (SaleItemDetailsView) to;
 
         // Set the button scale to 0 to make it invisible at the beginning.
 //        detailView.favouriteFab.setScaleX(0);
@@ -62,7 +62,7 @@ public class DetailPushAnimChangeHandler extends AnimatorChangeHandler {
         // Scale up the favourite fab
         PropertyValuesHolder fabScaleX = PropertyValuesHolder.ofFloat(View.SCALE_X, 0, 1);
         PropertyValuesHolder fabScaleY = PropertyValuesHolder.ofFloat(View.SCALE_Y, 0, 1);
-        Animator favouriteAnim = ObjectAnimator.ofPropertyValuesHolder(detailView.mProductDetailsView, fabScaleX, fabScaleY)
+        Animator favouriteAnim = ObjectAnimator.ofPropertyValuesHolder(detailView.mSaleItemDetailsView, fabScaleX, fabScaleY)
                                                .setDuration(200);
 
         animatorSet.playSequentially(flagAndDetailAnim,favouriteAnim);

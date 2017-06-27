@@ -1,14 +1,14 @@
 package au.com.dealsdirect.ui.controller.contact.viewcontacts;
 
+import android.util.Log;
+
 import com.androidnetworking.error.ANError;
 
 import javax.inject.Inject;
 
 import au.com.dealsdirect.data.DataManager;
-import au.com.dealsdirect.data.network.model.viewcontactitem.GetContactsResponse;
 import au.com.dealsdirect.ui.base.BasePresenter;
 import au.com.dealsdirect.utils.rx.SchedulerProvider;
-import io.reactivex.annotations.NonNull;
 import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.functions.Consumer;
 
@@ -29,23 +29,32 @@ public class ViewContactsPresenter<V extends ViewContactsMvpView> extends BasePr
     public void loadContacts() {
         getMvpView().showLoading();
 
-
         getCompositeDisposable()
                 .add(getDataManager()
-                        .callGetContacts("EN")
+                        .callGetContacts(getDataManager().getLanguageId())
                         .subscribeOn(getSchedulerProvider().io())
                         .observeOn(getSchedulerProvider().ui())
-                        .subscribe(new Consumer<GetContactsResponse.Response>() {
-                            @Override
-                            public void accept(@NonNull GetContactsResponse.Response response) throws Exception {
-                                if (!isViewAttached()) {
-                                    return;
-                                }
-                                getMvpView().hideLoading();
-                                if(!response.getList().isEmpty()){
+                        .subscribe(response -> {
 
-                                    getMvpView().showContactItems(response);
+                            if (!isViewAttached()) {
+                                Log.d("viewcontacts","list is not attached");
+
+                                return;
+                            }
+                            getMvpView().hideLoading();
+                            if (response.getD().getList()!=null){
+                                Log.d("viewcontacts","list is null empty");
+
+                                if(!response.getD().getList().isEmpty()){
+
+                                    Log.d("viewcontacts","list is not empty");
+                                    getMvpView().showContactItems(response.getD());
+                                }else{
+                                    Log.d("viewcontacts","list is empty");
+
                                 }
+                            }else {
+//                                Log.d("viewcontacts", "list  = "+response.getMessage() + " , "+response.getResult());
                             }
 
                         }, new Consumer<Throwable>() {
@@ -56,7 +65,7 @@ public class ViewContactsPresenter<V extends ViewContactsMvpView> extends BasePr
                                 }
 
                                 getMvpView().hideLoading();
-//                                getMvpView().onError(throwable.getMessage());
+                                getMvpView().onError(throwable.getMessage());
                                 // handle load accounts error here
                                 if (throwable instanceof ANError) {
                                     ANError anError = (ANError) throwable;

@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:layout_width="match_parent"
+              android:layout_height="wrap_content"
+              android:background="#FFFFFF"
+              android:orientation="vertical">
+
+    <RelativeLayout
+        android:id="@+id/viewholder_subcategory_container"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_centerVertical="true"
+        android:layout_margin="10dp">
+
+        <TextView
+            android:id="@+id/viewholder_subcategory_title"
+            android:fontFamily="@string/font_lato_black"
+            android:layout_width="wrap_content"
+            android:textStyle="bold"
+            android:layout_height="wrap_content"
+            android:textSize="@dimen/text_size_xxxlarge"
+            android:textColor="@color/dark_icon"
+            android:text="Category"/>
+
+        <ImageView
+            android:id="@+id/viewholder_subcategory_dropdown_icon"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentEnd="true"
+            android:background="@drawable/ic_add_gray"/>
+    </RelativeLayout>
+
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/viewholder_subcategory_items_recyclerview"
+        android:layout_width="450dp"
+        android:layout_height="match_parent"
+        android:layout_weight="80"
+        android:layout_marginLeft="30dp"
+        xmlns:android="http://schemas.android.com/apk/res/android"/>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="0.5dp"
+        android:background="#acacac"
+        android:layout_marginTop="15dp"/>
+</LinearLayout>

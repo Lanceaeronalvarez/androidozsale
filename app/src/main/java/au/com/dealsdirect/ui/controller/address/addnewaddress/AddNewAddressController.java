@@ -153,6 +153,12 @@ public class AddNewAddressController extends BaseController implements AddNewAdd
     }
 
     @Override
+    protected void onDestroyView(@NonNull View view) {
+        mPresenter.onDetach();
+        super.onDestroyView(view);
+    }
+
+    @Override
     public void addNewAddressSuccessful() {
 //        Log.d("addnewaddress", " add new address successful popbackstack to fragment");
 //
