@@ -19,6 +19,10 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
+import android.support.annotation.NonNull;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
 
 import javax.inject.Inject;
 
@@ -32,6 +36,8 @@ import au.com.dealsdirect.data.network.model.vouchers.Voucher;
 import au.com.dealsdirect.ui.base.BaseController;
 import au.com.dealsdirect.utils.BundleBuilder;
 import butterknife.BindView;
+import au.com.dealsdirect.data.network.model.vouchers.AddVoucherByKeyResponse;
+
 
 /**
  * Created by Paul on 6/27/17.
@@ -85,16 +91,10 @@ public class AddVouchersController extends BaseController implements AddVouchers
     public AddVouchersController(Bundle args) {
         super(args);
     }
+
     @Override
     protected View inflateView(@NonNull LayoutInflater inflater, @NonNull ViewGroup container) {
-        View view = inflater.inflate(R.layout.controller_add_vouchers, container, false);
-
-        getControllerComponent().inject(this);
-        mPresenter.onAttach(this);
-
-        footerButtons = inflater.inflate(R.layout.controller_vouchers_buttons, null, false);
-
-        return view;
+        return null;
     }
 
     @Override
@@ -204,7 +204,7 @@ public class AddVouchersController extends BaseController implements AddVouchers
 //                    "on vouchers applied and response is not empty");
 
             String successResponse = "voucher applied";
-            if (voucherIds.size()>1){
+            if (voucherIds.size() > 1) {
                 successResponse = "vouchers applied";
             }
 
@@ -245,10 +245,14 @@ public class AddVouchersController extends BaseController implements AddVouchers
         }
     }
 
+    public void showAddedVoucherItem(AddVoucherByKeyResponse.Response addVoucherResponse) {
+
+    }
+
     @Override
     public void onVouchersCleared(ClearVouchersResponse clearVouchersResponse) {
         String responseMessage = "cleared voucher";
-        if (voucherIds.size() > 1){
+        if (voucherIds.size() > 1) {
             responseMessage = "cleared vouchers";
         }
 
@@ -261,6 +265,7 @@ public class AddVouchersController extends BaseController implements AddVouchers
         voucherIds.clear();
         tempVoucherIds.clear();
         getActivity().onBackPressed();
+
     }
 
     @Override
@@ -420,6 +425,6 @@ public class AddVouchersController extends BaseController implements AddVouchers
 
     private void clearAppliedVouchers() {
         mPresenter.clearVouchers(100);
-    }
 
+    }
 }

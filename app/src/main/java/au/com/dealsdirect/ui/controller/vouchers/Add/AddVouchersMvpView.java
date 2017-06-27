@@ -5,12 +5,8 @@ import android.widget.LinearLayout;
 
 import java.util.List;
 
-import au.com.dealsdirect.data.network.model.vouchers.AddAndApplyVoucherByKeyRequest;
 import au.com.dealsdirect.data.network.model.vouchers.AddAndApplyVoucherByKeyResponse;
-import au.com.dealsdirect.data.network.model.vouchers.AddVoucherByKeyResponse;
-import au.com.dealsdirect.data.network.model.vouchers.ApplyVouchersRequest;
 import au.com.dealsdirect.data.network.model.vouchers.ApplyVouchersResponse;
-import au.com.dealsdirect.data.network.model.vouchers.ClearVouchersRequest;
 import au.com.dealsdirect.data.network.model.vouchers.ClearVouchersResponse;
 import au.com.dealsdirect.data.network.model.vouchers.GetUserVoucherResponse;
 import au.com.dealsdirect.data.network.model.vouchers.GetVouchersResponse;
