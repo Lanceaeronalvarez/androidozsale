@@ -40,13 +40,15 @@ public class SaleItemsPresenter<V extends SaleItemsMvpView> extends BasePresente
         getMvpView().showLoading();
 
         List<String> saleIds = new LinkedList<>();
-        saleIds.add(saleId);
-
         LinkedHashMap<String, String> mSearchQueryModelFiltered = new LinkedHashMap<>();
-
-
         HashMap<String, List<String>> facetFilters = new HashMap<>();
-        facetFilters.put("attributes.saleId", saleIds);
+
+        if (!saleId.isEmpty()){
+            saleIds.add(saleId);
+            facetFilters.put("attributes.saleId", saleIds);
+
+        }
+
 
         String facetFiltersString = new Gson().toJson(facetFilters);
         GetSaleItemsRequest getSaleItemsRequest = new GetSaleItemsRequest();

@@ -10,6 +10,7 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.bluelinelabs.conductor.RouterTransaction;
+import com.bluelinelabs.conductor.changehandler.HorizontalChangeHandler;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -29,6 +30,7 @@ import au.com.dealsdirect.ui.controller.categories.adapter.SubCategoriesAdapter;
 import au.com.dealsdirect.ui.controller.categories.listener.CategoryClickListener;
 import au.com.dealsdirect.ui.controller.categories.listener.SubCategoryClickListener;
 import au.com.dealsdirect.ui.controller.categories.listener.SubCategoryItemClickListener;
+import au.com.dealsdirect.ui.controller.saleitems.SaleItemsController;
 import au.com.dealsdirect.ui.controller.shops.ShopsController;
 import au.com.dealsdirect.ui.custom.transitions.RightHorizontalTransitionChangeHandler;
 import au.com.dealsdirect.utils.BundleBuilder;
@@ -65,6 +67,9 @@ public class CategoriesController extends BaseController
     private static Map<String, List<GetCategoryTreeResponse>> mCategoryMap = new HashMap<>();
     private String mChosenCategory = "shop";
     private String mChosenCategoryKey;
+
+    private int categoryTapCounter = 1;
+    private String lastCategoryKey = "";
 
     private List<GetCategoryTreeResponse> mResultSubCategories;
 
@@ -151,15 +156,29 @@ public class CategoriesController extends BaseController
 
     @Override
     public void onCategoryClicked(int position, String categoryID, String categoryName, String categoryKey) {
-//        getRouter().setRoot(
-//                RouterTransaction.with(new ShopsController(categoryID, categoryName, categoryKey))
-//                        .pushChangeHandler(new RightHorizontalTransitionChangeHandler())
-//                        .popChangeHandler(new RightHorizontalTransitionChangeHandler()));
+
+
+        if (categoryTapCounter == 1 && categoryKey.equals(lastCategoryKey)){
+            getRouter().setRoot(
+                    RouterTransaction.with(new ShopsController(categoryID, categoryName, categoryKey))
+                            .pushChangeHandler(new RightHorizontalTransitionChangeHandler())
+                            .popChangeHandler(new RightHorizontalTransitionChangeHandler()));
+            categoryTapCounter = 1;
+        }
+
+
+        if (categoryKey.equals(lastCategoryKey))
+            categoryTapCounter = categoryTapCounter+1;
+        else
+            categoryTapCounter = 1;
+
 
         mSubCategoryAdapter.replaceData(mResultSubCategories.get(position).getChildren());
 
         mChosenCategory = categoryName;
         mChosenCategoryKey = categoryKey;
+        lastCategoryKey = categoryKey;
+
     }
 
     private void createCategoryMap(List<GetCategoryTreeResponse> categories) {
@@ -229,18 +248,19 @@ public class CategoriesController extends BaseController
 
     @Override
     public void onSubCategoryClicked(String categoryID, String categoryName, String categoryKey) {
-        getRouter().setRoot(
-                RouterTransaction.with(new ShopsController(categoryID, categoryName, categoryKey))
-                        .pushChangeHandler(new RightHorizontalTransitionChangeHandler())
-                        .popChangeHandler(new RightHorizontalTransitionChangeHandler()));
 
+        getRouter().pushController(RouterTransaction.with(
+                SaleItemsController.newInstance("", categoryName, "", 0, "", categoryKey))
+                .pushChangeHandler(new HorizontalChangeHandler())
+                .popChangeHandler(new HorizontalChangeHandler()));
     }
 
     @Override
     public void onSubCategoryItemClicked(String categoryID, String categoryName, String categoryKey) {
-        getRouter().setRoot(
-                RouterTransaction.with(new ShopsController(categoryID, categoryName, categoryKey))
-                        .pushChangeHandler(new RightHorizontalTransitionChangeHandler())
-                        .popChangeHandler(new RightHorizontalTransitionChangeHandler()));
+
+        getRouter().pushController(RouterTransaction.with(
+                SaleItemsController.newInstance("", categoryName, "", 0, "", categoryKey))
+                .pushChangeHandler(new HorizontalChangeHandler())
+                .popChangeHandler(new HorizontalChangeHandler()));
     }
 }
