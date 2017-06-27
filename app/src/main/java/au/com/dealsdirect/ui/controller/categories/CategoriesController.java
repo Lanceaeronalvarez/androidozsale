@@ -176,7 +176,7 @@ public class CategoriesController extends BaseController
         mSubCategoryAdapter.replaceData(mResultSubCategories.get(position).getChildren());
 
         mChosenCategory = categoryName;
-        mChosenCategoryKey = categoryKey;
+//        mChosenCategoryKey = categoryKey;
         lastCategoryKey = categoryKey;
 
     }
