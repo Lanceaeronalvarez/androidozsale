@@ -62,6 +62,9 @@ import au.com.dealsdirect.ui.controller.saleitems.SaleItemsPresenter;
 import au.com.dealsdirect.ui.controller.shops.ShopsMvpPresenter;
 import au.com.dealsdirect.ui.controller.shops.ShopsMvpView;
 import au.com.dealsdirect.ui.controller.shops.ShopsPresenter;
+import au.com.dealsdirect.ui.controller.vouchers.Add.AddVouchersMvpPresenter;
+import au.com.dealsdirect.ui.controller.vouchers.Add.AddVouchersMvpView;
+import au.com.dealsdirect.ui.controller.vouchers.Add.AddVouchersPresenter;
 import au.com.dealsdirect.ui.controller.vouchers.View.ViewVouchersMvpPresenter;
 import au.com.dealsdirect.ui.controller.vouchers.View.ViewVouchersMvpView;
 import au.com.dealsdirect.ui.controller.vouchers.View.ViewVouchersPresenter;
@@ -193,6 +196,11 @@ public class ControllerModule {
 
     @Provides
     RegisterMvpPresenter<RegisterMvpView> provideRegisterPresenter(RegisterPresenter<RegisterMvpView> presenter) {
+        return presenter;
+    }
+
+    @Provides
+    AddVouchersMvpPresenter<AddVouchersMvpView> provideAddVouchersPresenter(AddVouchersPresenter<AddVouchersMvpView> presenter) {
         return presenter;
     }
 
