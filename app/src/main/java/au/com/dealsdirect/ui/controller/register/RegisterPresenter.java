@@ -4,9 +4,15 @@ package au.com.dealsdirect.ui.controller.register;
  */
 
 
+import android.support.annotation.NonNull;
+
+import com.androidnetworking.error.ANError;
+
 import javax.inject.Inject;
 
 import au.com.dealsdirect.data.DataManager;
+import au.com.dealsdirect.data.network.model.register.RegisterUserRequest;
+import au.com.dealsdirect.data.network.model.register.RegisterUserResponse;
 import au.com.dealsdirect.ui.base.BasePresenter;
 import au.com.dealsdirect.utils.rx.SchedulerProvider;
 import io.reactivex.disposables.CompositeDisposable;
@@ -20,50 +26,60 @@ public class RegisterPresenter<V extends RegisterMvpView> extends BasePresenter<
 
 
     @Override
-    public void registerUser() {
-//
-//        RegisterUserRequest registerUserRequest
-//                = new RegisterUserRequest(getDataManager().getLanguageId(),);
-//
-//        getCompositeDisposable().add(getDataManager()
-//                .callRegiser()
-//                .subscribeOn(getSchedulerProvider().io())
-//                .observeOn(getSchedulerProvider().ui())
-//                .subscribe(new Consumer<LoginEmail.ResponseValue>() {
-//                    @Override
-//                    public void accept(@NonNull LoginEmail.ResponseValue responseValue) throws Exception {
-//
-//                        if (!isViewAttached()) {
-//                            return;
-//                        }
-//
-//                        if(responseValue.isSuccess()){
-//                            getDataManager().acknowledgeAuth(responseValue.getTicket());
-//                            getMvpView().showLoginSuccessful(responseValue.getTicket());
-//                        } else{
-//                            getMvpView().showLoginError(responseValue.getMessage());
-//                        }
-//                    }
-//                }, new Consumer<Throwable>() {
-//                    @Override
-//                    public void accept(@NonNull Throwable throwable) throws Exception {
-//                        if (!isViewAttached()) {
-//                            return;
-//                        }
-//
-//                        getMvpView().hideLoading();
-//                        getMvpView().onError(throwable.getMessage());
-//                        getMvpView().showLoginError(throwable.getMessage());
-//
-//                        // handle load accounts error here
-//                        if (throwable instanceof ANError) {
-//                            ANError anError = (ANError) throwable;
-//                            handleApiError(anError);
-//                        }
-//                    }
-//                }));
-//
-//        return true;
+    public void registerUser(String firstName, String lastName, String email, String password) {
+
+        RegisterUserRequest registerUserRequest
+                = new RegisterUserRequest(
+                        getDataManager().getLanguageId(),
+                        getDataManager().getCountryId(),
+                        1,
+                        firstName,
+                        lastName,
+                        email,
+                        password,
+                        "android",
+                        "",
+                        "00000000-0000-0000-0000-000000000000",
+                        false
+                        );
+
+        getCompositeDisposable().add(getDataManager()
+                .callRegiser(registerUserRequest)
+                .subscribeOn(getSchedulerProvider().io())
+                .observeOn(getSchedulerProvider().ui())
+                .subscribe(new io.reactivex.functions.Consumer<RegisterUserResponse>() {
+                    @Override
+                    public void accept(RegisterUserResponse registerUserResponse) {
+                        if (!isViewAttached()) {
+                            return;
+                        }
+
+                        if(registerUserResponse.isSuccess()){
+                            getDataManager().acknowledgeAuth(registerUserResponse.getTicket());
+                            getMvpView().showRegisterSuccessful(registerUserResponse.getTicket());
+                        } else{
+                            getMvpView().showRegisterError(registerUserResponse.getMessage());
+                        }
+                    }
+
+                }, new io.reactivex.functions.Consumer<Throwable>() {
+                    @Override
+                    public void accept(@NonNull Throwable throwable) {
+                        if (!isViewAttached()) {
+                            return;
+                        }
+
+                        getMvpView().hideLoading();
+                        getMvpView().onError(throwable.getMessage());
+                        getMvpView().showRegisterError(throwable.getMessage());
+
+                        // handle load accounts error here
+                        if (throwable instanceof ANError) {
+                            ANError anError = (ANError) throwable;
+                            handleApiError(anError);
+                        }
+                    }
+                }));
 
     }
 }

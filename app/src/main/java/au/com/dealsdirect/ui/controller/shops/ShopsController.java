@@ -125,6 +125,13 @@ public class ShopsController extends BaseController implements ShopsMvpView, Ban
         }
     }
 
+    @Override
+    public void onError(String message) {
+        super.onError(message);
+
+        mPresenter.loadShopsBanner(mCategoryName,mCategoryID);
+    }
+
 
     @Override
     public void onBannerClicked(
@@ -168,4 +175,5 @@ public class ShopsController extends BaseController implements ShopsMvpView, Ban
         mBannersAdapter.notifyDataSetChanged();
 
     }
+
 }

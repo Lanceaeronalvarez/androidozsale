@@ -178,7 +178,8 @@ public class AppDataManager implements DataManager {
 
     @Override
     public Observable<RegisterUserResponse> callRegiser(RegisterUserRequest requestValue) {
-        return null;
+        return mApiHelper.callRegiser(requestValue);
+
     }
 
     @Override

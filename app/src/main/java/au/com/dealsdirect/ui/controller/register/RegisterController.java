@@ -2,6 +2,7 @@ package au.com.dealsdirect.ui.controller.register;
 
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -30,6 +31,20 @@ public class RegisterController extends BaseController implements RegisterMvpVie
 
     @BindView(R.id.partial_toolbar_title_view)
     TextView mRegisterToolbarTitle;
+
+    @BindView(R.id.controller_register_forename_field)
+    TextView mRegisterForenameField;
+
+
+    @BindView(R.id.controller_register_surname_field)
+    TextView mRegisterSurnameField;
+
+
+    @BindView(R.id.controller_register_email_field)
+    TextView mRegisterEmailField;
+
+    @BindView(R.id.controller_register_password_field)
+    TextView mRegisterPasswordField;
 
     public static RegisterController newInstance() {
 
@@ -76,16 +91,21 @@ public class RegisterController extends BaseController implements RegisterMvpVie
 
     @OnClick(R.id.controller_register_sign_up_button)
     void onSignUpClick() {
-        mPresenter.registerUser();
+        mPresenter.registerUser(
+                mRegisterForenameField.getText().toString(),
+                mRegisterSurnameField.getText().toString(),
+                mRegisterEmailField.getText().toString(),
+                mRegisterPasswordField.getText().toString());
     }
 
     @Override
     public void showRegisterSuccessful(String loginTicket) {
-
+        getActivity().onBackPressed();
+        Log.d("Register", "Successful");
     }
 
     @Override
     public void showRegisterError(String message) {
-
+        Log.d("Register", "Error");
     }
 }

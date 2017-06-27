@@ -228,7 +228,11 @@ public class AppApiHelper implements ApiHelper {
 
     @Override
     public Observable<RegisterUserResponse> callRegiser(RegisterUserRequest requestValue) {
-        return null;
+        return Rx2AndroidNetworking.post(ApiEndPoint.REGISTRATION)
+                .addHeaders(mApiHeader.getPublicApiHeader())
+                .addJSONObjectBody(JsonUtils.convertToJsonObject(requestValue))
+                .build()
+                .getObjectObservable(RegisterUserResponse.class);
     }
 
     @Override
