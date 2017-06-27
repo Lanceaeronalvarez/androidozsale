@@ -14,7 +14,6 @@ import com.bluelinelabs.conductor.RouterTransaction;
 import com.bluelinelabs.conductor.changehandler.FadeChangeHandler;
 import com.bluelinelabs.conductor.changehandler.HorizontalChangeHandler;
 import com.bluelinelabs.conductor.changehandler.VerticalChangeHandler;
-import com.mysale.genie.utility.config.model.getappsettings.Shop;
 
 import javax.inject.Inject;
 
@@ -182,6 +181,21 @@ public class MainActivity extends BaseActivity implements MainMvpView {
 
     @Override
     public void showContactController() {
+        showLoginController(mRouter,new AuthHandler() {
+            @Override
+            public void success() {
+
+                mRouter.pushController(RouterTransaction.with(ViewContactsController.newInstance())
+                        .pushChangeHandler(new FadeChangeHandler())
+                        .popChangeHandler(new FadeChangeHandler()));
+
+            }
+
+            @Override
+            public void error() {
+
+            }
+        });
 
     }
 
