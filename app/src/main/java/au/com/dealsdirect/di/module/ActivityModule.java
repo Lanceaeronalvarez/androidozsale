@@ -3,6 +3,11 @@ package au.com.dealsdirect.di.module;
 import android.app.Activity;
 import android.content.Context;
 
+import com.braintreepayments.api.BraintreeFragment;
+import com.braintreepayments.api.exceptions.InvalidArgumentException;
+
+import javax.inject.Singleton;
+
 import au.com.dealsdirect.di.ActivityContext;
 import au.com.dealsdirect.di.PerActivity;
 import au.com.dealsdirect.ui.main.MainMvpPresenter;
@@ -48,5 +53,15 @@ public class ActivityModule {
     @PerActivity
     MainMvpPresenter<MainMvpView> provideMainPresenter(MainPresenter<MainMvpView> presenter) {
         return presenter;
+    }
+
+    @Provides
+    @Singleton
+    BraintreeFragment provideBrainTreeFragment(Activity activity, String authorization){
+        try {
+            return BraintreeFragment.newInstance(activity, authorization);
+        } catch (InvalidArgumentException e) {
+            return null;
+        }
     }
 }

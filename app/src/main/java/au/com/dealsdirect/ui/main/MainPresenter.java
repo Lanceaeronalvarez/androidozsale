@@ -8,7 +8,9 @@ import android.content.Context;
 import android.content.SharedPreferences;
 
 import com.androidnetworking.error.ANError;
-import com.google.gson.Gson;
+import com.braintreepayments.api.BraintreeFragment;
+import com.braintreepayments.api.DataCollector;
+import com.braintreepayments.api.interfaces.BraintreeResponseListener;
 import com.mysale.genie.utility.Prefs;
 import com.mysale.genie.utility.RxBus;
 import com.mysale.genie.utility.config.api.GetAppSettings;
@@ -25,6 +27,8 @@ import java.util.ArrayList;
 import javax.inject.Inject;
 
 import au.com.dealsdirect.data.DataManager;
+import au.com.dealsdirect.data.network.model.checkout.CreatePaymentMethod;
+import au.com.dealsdirect.data.network.model.checkout.GetPaymentToken;
 import au.com.dealsdirect.ui.base.BasePresenter;
 import au.com.dealsdirect.utils.rx.SchedulerProvider;
 import io.reactivex.annotations.NonNull;
@@ -229,4 +233,124 @@ public class MainPresenter<V extends MainMvpView> extends BasePresenter<V> imple
 
                 ));
     }
+
+    @Override
+    public void fetchBTAuthorization(FetchTokenHandler fetchTokenHandler) {
+        if (!getDataManager().isAuthorized()) return;
+
+        getCompositeDisposable().add(getDataManager()
+                .callGetPaymentToken(new GetPaymentToken.RequestValue(getDataManager().getLanguageId(),getDataManager().getCountryId()))
+                .subscribeOn(getSchedulerProvider().io())
+                .observeOn(getSchedulerProvider().ui())
+                .subscribe(new Consumer<GetPaymentToken.ResponseValue>() {
+                    @Override
+                    public void accept(@NonNull GetPaymentToken.ResponseValue responseValue) throws Exception {
+                        if (!isViewAttached()) {
+                            return;
+                        }
+
+                        if (responseValue.isResult() && responseValue.isAuthenticated()) {
+                            getMvpView().onAuthorizationFetched(responseValue.getPaymentToken(), responseValue.getPaymentType());
+
+                            if (fetchTokenHandler != null)
+                                fetchTokenHandler.onSuccess();
+                        } else {
+                            if (fetchTokenHandler != null)
+                                fetchTokenHandler.onFailure();
+                        }
+                    }
+                }, new Consumer<Throwable>() {
+                    @Override
+                    public void accept(@NonNull Throwable throwable) throws Exception {
+                        if (!isViewAttached()) {
+                            return;
+                        }
+
+                        getMvpView().hideLoading();
+                        if (fetchTokenHandler != null)
+                            fetchTokenHandler.onFailure();
+
+                        getMvpView().onError(throwable.getMessage());
+
+                        // handle load accounts error here
+                        if (throwable instanceof ANError) {
+                            ANError anError = (ANError) throwable;
+                            handleApiError(anError);
+                        }
+                    }
+                })
+        );
+
+    }
+
+    @Override
+    public void createPaymentMethod(BraintreeFragment braintreeFragment, String paymentNonce, String paymentType) {
+
+        BraintreeResponseListener<String> handler = new BraintreeResponseListener<String>() {
+            @Override
+            public void onResponse(String deviceData) {
+                String languageId = getDataManager().getLanguageId();
+                String countryId = getDataManager().getCountryId();
+                CreatePaymentMethod.RequestValue.Request requestValue = new CreatePaymentMethod.RequestValue.Request(paymentType, paymentNonce, deviceData);
+                getCompositeDisposable().add(getDataManager()
+                        .callCreatePaymentMethod(new CreatePaymentMethod.RequestValue(requestValue,countryId,languageId))
+                        .subscribeOn(getSchedulerProvider().io())
+                        .observeOn(getSchedulerProvider().ui())
+                        .subscribe(new Consumer<CreatePaymentMethod.ResponseValue>() {
+                            @Override
+                            public void accept(@NonNull CreatePaymentMethod.ResponseValue responseValue) throws Exception {
+                                if (!isViewAttached()) {
+                                    return;
+                                }
+
+                                    getMvpView().performResetWithAuthFetch();
+
+                                if ((responseValue.getResult() && responseValue.getIsAuthenticated())) {
+
+//                                    if ((getCurrentFragment().getClass() == AddPaymentFragment.class) && mAddPaymentFragment.isCalledFromAccounts()) {
+//                                        mAddPaymentFragment.showAddPaymentResult(true, "");
+//                                    } else {
+//                                        getMvpView().setPaymentMethodSelected(responseValue.getD().getValue().getLastPaymentMethod());
+//                                        popBackToFragment("main");
+//                                        mCheckoutFragment.loadCart();
+//                                    }
+
+                                }
+                                else {
+                                    getMvpView().onError(responseValue.getMessage());
+                                }
+//
+
+                            }
+                        }, new Consumer<Throwable>() {
+                            @Override
+                            public void accept(@NonNull Throwable throwable) throws Exception {
+                                if (!isViewAttached()) {
+                                    return;
+                                }
+
+                                getMvpView().hideLoading();
+
+                                getMvpView().onError(throwable.getMessage());
+
+                                // handle load accounts error here
+                                if (throwable instanceof ANError) {
+                                    ANError anError = (ANError) throwable;
+                                    handleApiError(anError);
+                                }
+                            }
+                        })
+                );
+
+            }
+        };
+
+        if (getDataManager().isKountEnabled()) {
+            DataCollector.collectDeviceData(braintreeFragment, getDataManager().getKountMerchantId(), handler);
+        } else {
+            DataCollector.collectDeviceData(braintreeFragment, handler);
+        }
+    }
+
+
 }

@@ -14,11 +14,25 @@ import com.bluelinelabs.conductor.RouterTransaction;
 import com.bluelinelabs.conductor.changehandler.FadeChangeHandler;
 import com.bluelinelabs.conductor.changehandler.HorizontalChangeHandler;
 import com.bluelinelabs.conductor.changehandler.VerticalChangeHandler;
+import com.braintreepayments.api.BraintreeFragment;
+import com.braintreepayments.api.PayPal;
+import com.braintreepayments.api.exceptions.AuthenticationException;
+import com.braintreepayments.api.exceptions.AuthorizationException;
+import com.braintreepayments.api.exceptions.ConfigurationException;
+import com.braintreepayments.api.exceptions.DownForMaintenanceException;
+import com.braintreepayments.api.exceptions.ErrorWithResponse;
+import com.braintreepayments.api.exceptions.InvalidArgumentException;
+import com.braintreepayments.api.exceptions.ServerException;
+import com.braintreepayments.api.exceptions.UnexpectedException;
+import com.braintreepayments.api.exceptions.UpgradeRequiredException;
+import com.braintreepayments.api.interfaces.BraintreeResponseListener;
+import com.braintreepayments.api.models.PaymentMethodNonce;
 
 import javax.inject.Inject;
 
 import au.com.dealsdirect.R;
 import au.com.dealsdirect.data.auth.AuthHandler;
+import au.com.dealsdirect.data.network.model.checkout.getuserpaymentmethods.PaymentMethod;
 import au.com.dealsdirect.ui.base.BaseActivity;
 import au.com.dealsdirect.ui.controller.account.AccountController;
 import au.com.dealsdirect.ui.controller.categories.CategoriesController;
@@ -34,6 +48,8 @@ import butterknife.ButterKnife;
 
 public class MainActivity extends BaseActivity implements MainMvpView {
 
+    private static final String TAG = "MainActivity";
+
     @Inject
     MainMvpPresenter<MainMvpView> mPresenter;
 
@@ -46,6 +62,11 @@ public class MainActivity extends BaseActivity implements MainMvpView {
     private int mPreviousTab = R.id.action_shop;
     private int mCurrentTab = R.id.action_shop;
 
+
+    private BraintreeFragment mBraintreeFragment;
+    private String mPaymentType;
+    private PaymentMethod mCurrentPaymentMethod;
+    private String mAuthorization;
 
     private Router mRouter;
 
@@ -223,6 +244,118 @@ public class MainActivity extends BaseActivity implements MainMvpView {
                 .pushChangeHandler(new VerticalChangeHandler(false)) //false, para hindi mag onDestroyView yung view na nag trigger ng login
                 .popChangeHandler(new VerticalChangeHandler()));
     }
+
+    @Override
+    public void onCancel(int requestCode) {
+
+    }
+
+    @Override
+    public void onError(Exception error) {
+        if (error instanceof ErrorWithResponse) {
+//            hideProgressDialog();
+//            CustomAlertDialog.showCustomAlertDialog(this, CustomAlertDialog.CustomDialogIconState.NEGATIVE, error.getMessage());
+        } else {
+
+            if (mBraintreeFragment != null) {
+                if (error instanceof AuthenticationException || error instanceof AuthorizationException ||
+                        error instanceof UpgradeRequiredException) {
+                    mBraintreeFragment.sendAnalyticsEvent("sdk.exit.developer-error");
+                } else if (error instanceof ConfigurationException) {
+                    mBraintreeFragment.sendAnalyticsEvent("sdk.exit.configuration-exception");
+                } else if (error instanceof ServerException || error instanceof UnexpectedException) {
+                    mBraintreeFragment.sendAnalyticsEvent("sdk.exit.server-error");
+                } else if (error instanceof DownForMaintenanceException) {
+                    mBraintreeFragment.sendAnalyticsEvent("sdk.exit.server-unavailable");
+                } else {
+                    mBraintreeFragment.sendAnalyticsEvent("sdk.exit.sdk-error");
+                }
+
+//                Crashlytics.log(error.getMessage());
+
+                //Call braintree client reset on error
+                performResetWithAuthFetch();
+            }
+        }
+    }
+
+    @Override
+    public void onPaymentMethodNonceCreated(PaymentMethodNonce paymentMethodNonce) {
+        mPresenter.createPaymentMethod(mBraintreeFragment,paymentMethodNonce.getNonce(),mPaymentType);
+    }
+
+    @Override
+    public void performResetWithAuthFetch() {
+        performReset();
+        fetchAuthorization(null);
+    }
+
+    @Override
+    public void performReset() {
+
+        setPaymentMethodSelected(null);
+        mAuthorization = null;
+        mPaymentType = null;
+
+        if (mBraintreeFragment != null && getFragmentManager().findFragmentByTag(BraintreeFragment.TAG) != null) {
+            getFragmentManager().beginTransaction().remove(mBraintreeFragment).commit();
+            mBraintreeFragment = null;
+        }
+    }
+
+    public void fetchAuthorization(FetchTokenHandler handler) {
+
+        //Don't proceed to call if not logged in
+        mPresenter.fetchBTAuthorization(handler);
+
+    }
+
+    @Override
+    public void onAuthorizationFetched(String paymentToken, String paymentMethod) {
+        mAuthorization = paymentToken;
+        mPaymentType = paymentMethod;
+
+        try {
+            mBraintreeFragment = BraintreeFragment.newInstance(this, mAuthorization);
+
+        } catch (InvalidArgumentException e) {
+            onError(e);
+        }
+    }
+
+    public void startPaypalPayment() {
+        PayPal.authorizeAccount(mBraintreeFragment);
+    }
+
+//    public void onPurchase(CardForm cardForm) {
+//        CardBuilder cardBuilder = new CardBuilder()
+//                .cardNumber(cardForm.getCardNumber())
+//                .expirationMonth(cardForm.getExpirationMonth())
+//                .expirationYear(cardForm.getExpirationYear())
+//                .cvv(cardForm.getCvv())
+//                .postalCode(cardForm.getPostalCode());
+//
+//        Timber.d(TAG, "BT_cardNumber: " + cardForm.getCardNumber());
+//        Timber.d(TAG, "BT_expirationMonth: " + cardForm.getExpirationMonth());
+//        Timber.d(TAG, "BT_expirationYear: " + cardForm.getExpirationYear());
+//        Timber.d(TAG, "BT_cvv: " + cardForm.getCvv());
+//
+//        Card.tokenize(mBraintreeFragment, cardBuilder);
+//    }
+
+    @Override
+    public void setPaymentMethodSelected(PaymentMethod paymentMethodSelected) {
+        this.mCurrentPaymentMethod = paymentMethodSelected;
+    }
+
+    public BraintreeFragment getBraintreeFragment() {
+        return mBraintreeFragment;
+    }
+
+    public boolean isBraintreeInitialized() {
+        return mBraintreeFragment != null;
+    }
+
 
 
 }

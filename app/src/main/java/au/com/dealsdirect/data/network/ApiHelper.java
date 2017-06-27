@@ -19,6 +19,16 @@ import au.com.dealsdirect.data.network.model.address.GetAddresses;
 import au.com.dealsdirect.data.network.model.banner.GetBannerRequest;
 import au.com.dealsdirect.data.network.model.banner.GetBannerResponse;
 import au.com.dealsdirect.data.network.model.category.GetCategoryTreeResponse;
+import au.com.dealsdirect.data.network.model.checkout.AdjustOrderItem;
+import au.com.dealsdirect.data.network.model.checkout.ApplyVouchers;
+import au.com.dealsdirect.data.network.model.checkout.ClearOrder;
+import au.com.dealsdirect.data.network.model.checkout.ClearVouchers;
+import au.com.dealsdirect.data.network.model.checkout.CreatePaymentMethod;
+import au.com.dealsdirect.data.network.model.checkout.CreatePaymentTransaction;
+import au.com.dealsdirect.data.network.model.checkout.GetCurrentOrder;
+import au.com.dealsdirect.data.network.model.checkout.GetPaymentToken;
+import au.com.dealsdirect.data.network.model.checkout.GetUserPaymentMethods;
+import au.com.dealsdirect.data.network.model.checkout.RemoveUserPaymentMethod;
 import au.com.dealsdirect.data.network.model.contacthistory.GetContactHistoryRequest;
 import au.com.dealsdirect.data.network.model.contacthistory.GetContactHistoryResponse;
 import au.com.dealsdirect.data.network.model.contactitem.GetContactsResponse;
@@ -127,9 +137,7 @@ public interface ApiHelper {
     Observable<GetOrderPaymentDetails.ResponseValue> callGetOrderPaymentDetails(GetOrderPaymentDetails.RequestValues requestValues);
 
     Observable<GetUserVoucherResponse> getUserVouchersApiCall(GetUserVouchersRequest getUserVouchersRequest);
-
-    Observable<GetVouchersResponse> getVouchersApiCall();
-
+    
     Observable<ClearVouchersResponse> getClearVouchersApiCall(ClearVouchersRequest clearVouchersRequest);
 
     Observable<ApplyVouchersResponse> getApplyVouchersApiCall(ApplyVouchersRequest applyVouchersRequest);
@@ -137,4 +145,25 @@ public interface ApiHelper {
     Observable<AddVoucherByKeyResponse> getAddVoucherByKeyApiCall(AddVoucherByKeyRequest addVoucherByKeyRequest);
 
     Observable<AddAndApplyVoucherByKeyResponse> getAddAndApplyVoucherByKeyApiCall(AddAndApplyVoucherByKeyRequest addAndApplyVoucherByKeyRequest);
+
+//    CHECKOUT API CALLS
+    Observable<GetCurrentOrder.ResponseValue> callGetCurrentOrder(GetCurrentOrder.RequestValue model);
+    
+    Observable<GetUserPaymentMethods.ResponseValue> callGetUserPaymentMethods(GetUserPaymentMethods.RequestValue model);
+    
+    Observable<GetCurrentOrder.ResponseValue> callAdjustQuantityOrderItem(String url, AdjustOrderItem.RequestValue model);
+    
+    Observable<CreatePaymentMethod.ResponseValue> callCreatePaymentMethod(CreatePaymentMethod.RequestValue model);
+    
+    Observable<GetPaymentToken.ResponseValue> callGetPaymentToken(GetPaymentToken.RequestValue model);
+    
+    Observable<GetCurrentOrder.ResponseValue> callApplyVouchers(ApplyVouchers.RequestValue model);
+    
+    Observable<GetCurrentOrder.ResponseValue> callClearVouchers(ClearVouchers.RequestValue model);
+
+    Observable<ClearOrder.ResponseValue> callClearOrder(ClearOrder.RequestValue model);
+    
+    Observable<CreatePaymentTransaction.ResponseValue> callCreatePaymentTransaction(CreatePaymentTransaction.RequestValue model);
+    
+    Observable<RemoveUserPaymentMethod.ResponseValue> callRemoveUserPaymentMethod(RemoveUserPaymentMethod.RequestValue model);
 }

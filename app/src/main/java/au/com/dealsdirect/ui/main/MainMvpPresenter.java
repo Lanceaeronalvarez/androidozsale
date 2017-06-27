@@ -6,6 +6,8 @@ package au.com.dealsdirect.ui.main;
 
 import android.content.Context;
 
+import com.braintreepayments.api.BraintreeFragment;
+
 import au.com.dealsdirect.di.PerActivity;
 import au.com.dealsdirect.ui.base.MvpPresenter;
 
@@ -26,5 +28,9 @@ public interface MainMvpPresenter<V extends MainMvpView> extends MvpPresenter<V>
     void initServerSettings(Context context, String countryId);
 
     void callGetAppSettingsSection(Context context, String countryId);
+
+    void fetchBTAuthorization(FetchTokenHandler fetchTokenHandler);
+
+    void createPaymentMethod(BraintreeFragment braintreeFragment, String paymentNonce, String paymentType);
 
 }

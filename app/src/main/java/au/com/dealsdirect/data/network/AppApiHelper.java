@@ -23,6 +23,16 @@ import au.com.dealsdirect.data.network.model.address.GetAddresses;
 import au.com.dealsdirect.data.network.model.banner.GetBannerRequest;
 import au.com.dealsdirect.data.network.model.banner.GetBannerResponse;
 import au.com.dealsdirect.data.network.model.category.GetCategoryTreeResponse;
+import au.com.dealsdirect.data.network.model.checkout.AdjustOrderItem;
+import au.com.dealsdirect.data.network.model.checkout.ApplyVouchers;
+import au.com.dealsdirect.data.network.model.checkout.ClearOrder;
+import au.com.dealsdirect.data.network.model.checkout.ClearVouchers;
+import au.com.dealsdirect.data.network.model.checkout.CreatePaymentMethod;
+import au.com.dealsdirect.data.network.model.checkout.CreatePaymentTransaction;
+import au.com.dealsdirect.data.network.model.checkout.GetCurrentOrder;
+import au.com.dealsdirect.data.network.model.checkout.GetPaymentToken;
+import au.com.dealsdirect.data.network.model.checkout.GetUserPaymentMethods;
+import au.com.dealsdirect.data.network.model.checkout.RemoveUserPaymentMethod;
 import au.com.dealsdirect.data.network.model.contacthistory.GetContactHistoryRequest;
 import au.com.dealsdirect.data.network.model.contacthistory.GetContactHistoryResponse;
 import au.com.dealsdirect.data.network.model.contactitem.GetContactsResponse;
@@ -287,6 +297,60 @@ public class AppApiHelper implements ApiHelper {
                 .addJSONObjectBody(JsonUtils.convertToJsonObject(requestValues))
                 .build()
                 .getObjectObservable(GetOrderPaymentDetails.ResponseValue.class);
+    }
+
+    @Override
+    public Observable<GetCurrentOrder.ResponseValue> callGetCurrentOrder(GetCurrentOrder.RequestValue requestValues) {
+        return null;
+    }
+
+    @Override
+    public Observable<GetUserPaymentMethods.ResponseValue> callGetUserPaymentMethods(GetUserPaymentMethods.RequestValue requestValues) {
+        return null;
+    }
+
+    @Override
+    public Observable<GetCurrentOrder.ResponseValue> callAdjustQuantityOrderItem(String url, AdjustOrderItem.RequestValue requestValues) {
+        return null;
+    }
+
+    @Override
+    public Observable<CreatePaymentMethod.ResponseValue> callCreatePaymentMethod(CreatePaymentMethod.RequestValue requestValues) {
+        return null;
+    }
+
+    @Override
+    public Observable<GetPaymentToken.ResponseValue> callGetPaymentToken(GetPaymentToken.RequestValue requestValues) {
+        return Rx2AndroidNetworking.post(ApiEndPoint.GET_PAYMENT_TOKEN)
+                .addHeaders(mApiHeader.getPublicApiHeader())
+                .addJSONObjectBody(JsonUtils.convertToJsonObject(requestValues))
+                .build()
+                .getObjectObservable(GetPaymentToken.ResponseValue.class);
+    }
+
+    @Override
+    public Observable<GetCurrentOrder.ResponseValue> callApplyVouchers(ApplyVouchers.RequestValue requestValues) {
+        return null;
+    }
+
+    @Override
+    public Observable<GetCurrentOrder.ResponseValue> callClearVouchers(ClearVouchers.RequestValue requestValues) {
+        return null;
+    }
+
+    @Override
+    public Observable<ClearOrder.ResponseValue> callClearOrder(ClearOrder.RequestValue requestValues) {
+        return null;
+    }
+
+    @Override
+    public Observable<CreatePaymentTransaction.ResponseValue> callCreatePaymentTransaction(CreatePaymentTransaction.RequestValue model) {
+        return null;
+    }
+
+    @Override
+    public Observable<RemoveUserPaymentMethod.ResponseValue> callRemoveUserPaymentMethod(RemoveUserPaymentMethod.RequestValue model) {
+        return null;
     }
 
 

@@ -105,13 +105,6 @@ public final class ApiEndPoint {
 
     public static final String GET_CONTACT_SUBJECTS = "GetContactSubjects";
 
-
-    /* Checkout Controller */
-    public static final String CLEAR_ORDER = "ClearOrder";
-    public static final String CLEAR_VOUCHERS = "ClearVouchers";
-    public static final String DECREASE_ORDER_ITEM = "DecreaseOrderItem";
-    public static final String GET_CURRENT_ORDER = "GetCurrentOrder";
-
     /* Return Controller */
     public static String CREATE_RETURN = "CreateReturn";
 
@@ -124,6 +117,21 @@ public final class ApiEndPoint {
     /* Orders Controller*/
     public static final String GET_PAYMENTS_LIST = TEST_API_LEGACY + "GetPaymentsList";
     public static final String GET_ORDER_PAYMENT_DETAILS = TEST_API_LEGACY + "GetOrderPaymentDetails";
+
+
+    /* Checkout Endpoints*/
+
+    public static final String GET_CURRENT_ORDER = TEST_API_LEGACY + "GetCurrentOrder";
+    public static final String GET_USER_PAYMENT_METHODS = TEST_API_LEGACY + "GetUserPaymentMethods";
+    public static final String CREATE_PAYMENT_METHOD = TEST_API_LEGACY + "CreatePaymentMethod";
+    public static final String GET_PAYMENT_TOKEN = TEST_API_LEGACY + "GetPaymentToken";
+    public static final String DECREASE_ORDER_ITEM = TEST_API_LEGACY+ "DecreaseOrderItem";
+    public static final String INCREASE_ORDER_ITEM = TEST_API_LEGACY + "IncreaseOrderItem";
+    public static final String APPLY_VOUCHERS = TEST_API_LEGACY + "ApplyVouchers";
+    public static final String CLEAR_VOUCHERS = TEST_API_LEGACY + "ClearVouchers";
+    public static final String CLEAR_ORDER = TEST_API_LEGACY + "ClearOrder";
+    public static final String CREATE_PAYMENT_TRANSACTION = TEST_API_LEGACY + "CreatePaymentTransaction";
+    public static final String REMOVE_USER_PAYMENT_METHOD = TEST_API_LEGACY + "RemoveUserPaymentMethod";
 
     /* Login Controller */
     public static String FORGOT_PASSWORD = "ForgotPassword"; //

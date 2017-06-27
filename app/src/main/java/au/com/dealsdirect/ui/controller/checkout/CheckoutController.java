@@ -5,14 +5,28 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.bluelinelabs.conductor.Controller;
-import com.bluelinelabs.conductor.Router;
-import com.bluelinelabs.conductor.RouterTransaction;
-import com.bluelinelabs.conductor.support.RouterPagerAdapter;
+import com.braintreepayments.api.BraintreeFragment;
+import com.braintreepayments.api.exceptions.AuthenticationException;
+import com.braintreepayments.api.exceptions.AuthorizationException;
+import com.braintreepayments.api.exceptions.ConfigurationException;
+import com.braintreepayments.api.exceptions.DownForMaintenanceException;
+import com.braintreepayments.api.exceptions.ErrorWithResponse;
+import com.braintreepayments.api.exceptions.ServerException;
+import com.braintreepayments.api.exceptions.UnexpectedException;
+import com.braintreepayments.api.exceptions.UpgradeRequiredException;
+import com.braintreepayments.api.models.PaymentMethodNonce;
+
+import java.util.List;
+
 import au.com.dealsdirect.R;
+import au.com.dealsdirect.data.network.model.address.DecorationInfoList;
+import au.com.dealsdirect.data.network.model.checkout.getcurrentorder.DeliveryAddress;
+import au.com.dealsdirect.data.network.model.checkout.getcurrentorder.Item;
+import au.com.dealsdirect.data.network.model.checkout.getcurrentorder.Summary;
+import au.com.dealsdirect.data.network.model.checkout.getcurrentorder.Voucher;
+import au.com.dealsdirect.data.network.model.checkout.getuserpaymentmethods.PaymentMethod;
 import au.com.dealsdirect.ui.base.BaseController;
-import au.com.dealsdirect.ui.controller.categories.CategoriesController;
-import au.com.dealsdirect.ui.controller.shops.ShopsController;
+import au.com.dealsdirect.ui.main.FetchTokenHandler;
 
 import javax.inject.Inject;
 
@@ -22,11 +36,6 @@ import javax.inject.Inject;
  */
 
 public class CheckoutController extends BaseController implements CheckoutMvpView {
-
-    private int[] PAGE_COLORS = new int[]{R.color.white, R.color.white};
-
-    private static final String KEY_TEXT = "HomeController.KEY_TEXT";
-
     @Inject
     CheckoutMvpPresenter<CheckoutMvpView> mPresenter;
 
@@ -82,6 +91,37 @@ public class CheckoutController extends BaseController implements CheckoutMvpVie
 
     @Override
     protected void setUp(View view) {
+
+    }
+
+
+    @Override
+    public void showCartDetails(List<Item> items) {
+
+    }
+
+    @Override
+    public void showAddressDetails(DeliveryAddress deliveryAddress, List<DecorationInfoList> decorationInfoList) {
+
+    }
+
+    @Override
+    public void showPaymentDetails(PaymentMethod paymentMethod) {
+
+    }
+
+    @Override
+    public void showVoucherDetails(List<Voucher> vouchers) {
+
+    }
+
+    @Override
+    public void showSummaryDetails(Summary summary) {
+
+    }
+
+    @Override
+    public void setPaymentList(List<PaymentMethod> paymentList) {
 
     }
 }
