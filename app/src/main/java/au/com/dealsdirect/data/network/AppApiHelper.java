@@ -46,6 +46,17 @@ import au.com.dealsdirect.data.network.model.userdetails.SetUserDetailsRequest;
 import au.com.dealsdirect.data.network.model.saleitems.GetSaleItemsRequest;
 import au.com.dealsdirect.data.network.model.saleitems.GetSaleItemsResponse;
 import au.com.dealsdirect.data.network.model.contactitem.GetContactsResponse.Response;
+import au.com.dealsdirect.data.network.model.vouchers.AddAndApplyVoucherByKeyRequest;
+import au.com.dealsdirect.data.network.model.vouchers.AddAndApplyVoucherByKeyResponse;
+import au.com.dealsdirect.data.network.model.vouchers.AddVoucherByKeyRequest;
+import au.com.dealsdirect.data.network.model.vouchers.AddVoucherByKeyResponse;
+import au.com.dealsdirect.data.network.model.vouchers.ApplyVouchersRequest;
+import au.com.dealsdirect.data.network.model.vouchers.ApplyVouchersResponse;
+import au.com.dealsdirect.data.network.model.vouchers.ClearVouchersRequest;
+import au.com.dealsdirect.data.network.model.vouchers.ClearVouchersResponse;
+import au.com.dealsdirect.data.network.model.vouchers.GetUserVoucherResponse;
+import au.com.dealsdirect.data.network.model.vouchers.GetUserVouchersRequest;
+import au.com.dealsdirect.data.network.model.vouchers.GetVouchersResponse;
 import au.com.dealsdirect.utils.JsonUtils;
 import io.reactivex.Observable;
 
@@ -305,6 +316,59 @@ public class AppApiHelper implements ApiHelper {
                 .addJSONObjectBody(JsonUtils.convertToJsonObject(null))
                 .build()
                 .getObjectObservable(GetUserDetailsResponse.class);
+    }
+
+    public Observable<GetUserVoucherResponse> getUserVouchersApiCall(GetUserVouchersRequest getUserVouchersRequest) {
+        return Rx2AndroidNetworking.post(ApiEndPoint.GET_USER_VOUCHERS)
+                .addHeaders(mApiHeader.getPublicApiHeader())
+                .addJSONObjectBody(JsonUtils.convertToJsonObject(getUserVouchersRequest))
+                .build()
+                .getObjectObservable(GetUserVoucherResponse.class);
+    }
+
+    @Override
+    public Observable<GetVouchersResponse> getVouchersApiCall() {
+        return Rx2AndroidNetworking.post(ApiEndPoint.GET_VOUCHERS)
+                .addHeaders(mApiHeader.getPublicApiHeader())
+                .addJSONObjectBody(JsonUtils.convertToJsonObject(null))
+                .build()
+                .getObjectObservable(GetVouchersResponse.class);
+    }
+
+    @Override
+    public Observable<ClearVouchersResponse> getClearVouchersApiCall(ClearVouchersRequest clearVouchersRequest) {
+        return Rx2AndroidNetworking.post(ApiEndPoint.GET_CLEAR_VOUCHERS)
+                .addHeaders(mApiHeader.getPublicApiHeader())
+                .addJSONObjectBody(JsonUtils.convertToJsonObject(clearVouchersRequest))
+                .build()
+                .getObjectObservable(ClearVouchersResponse.class);
+    }
+
+    @Override
+    public Observable<ApplyVouchersResponse> getApplyVouchersApiCall(ApplyVouchersRequest applyVouchersRequest) {
+        return Rx2AndroidNetworking.post(ApiEndPoint.APPLY_VOUCHERS)
+                .addHeaders(mApiHeader.getPublicApiHeader())
+                .addJSONObjectBody(JsonUtils.convertToJsonObject(applyVouchersRequest))
+                .build()
+                .getObjectObservable(ApplyVouchersResponse.class);
+    }
+
+    @Override
+    public Observable<AddVoucherByKeyResponse> getAddVoucherByKeyApiCall(AddVoucherByKeyRequest addVoucherByKeyRequest) {
+        return Rx2AndroidNetworking.post(ApiEndPoint.ADD_VOUCHER_BY_KEY)
+                .addHeaders(mApiHeader.getPublicApiHeader())
+                .addJSONObjectBody(JsonUtils.convertToJsonObject(addVoucherByKeyRequest))
+                .build()
+                .getObjectObservable(AddVoucherByKeyResponse.class);
+    }
+
+    @Override
+    public Observable<AddAndApplyVoucherByKeyResponse> getAddAndApplyVoucherByKeyApiCall(AddAndApplyVoucherByKeyRequest addAndApplyVoucherByKeyRequest) {
+        return Rx2AndroidNetworking.post(ApiEndPoint.ADD_AND_APPLY_VOUCHER)
+                .addHeaders(mApiHeader.getPublicApiHeader())
+                .addJSONObjectBody(JsonUtils.convertToJsonObject(addAndApplyVoucherByKeyRequest))
+                .build()
+                .getObjectObservable(AddAndApplyVoucherByKeyResponse.class);
     }
 }
 

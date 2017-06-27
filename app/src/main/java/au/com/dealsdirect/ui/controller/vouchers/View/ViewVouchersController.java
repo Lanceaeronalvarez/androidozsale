@@ -29,7 +29,7 @@ import butterknife.BindView;
  * Created by Paul on 6/23/17.
  */
 
-public class ViewViewVouchersController extends BaseController implements ViewVouchersMvpView {
+public class ViewVouchersController extends BaseController implements ViewVouchersMvpView {
 
     @Inject
     ViewVouchersMvpPresenter<ViewVouchersMvpView> mPresenter;
@@ -62,12 +62,12 @@ public class ViewViewVouchersController extends BaseController implements ViewVo
 
     private ViewVouchersRecyclerViewAdapter mUsedVouchersAdapter;
 
-    public ViewViewVouchersController(Bundle arg) {
+    public ViewVouchersController(Bundle arg) {
         super(arg);
     }
 
-    public static ViewViewVouchersController newInstance() {
-        return new ViewViewVouchersController(
+    public static ViewVouchersController newInstance() {
+        return new ViewVouchersController(
                 new BundleBuilder(new Bundle())
                     .build());
     }

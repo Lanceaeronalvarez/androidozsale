@@ -173,11 +173,6 @@ public class ControllerModule {
     }
 
     @Provides
-    ViewVouchersMvpPresenter<ViewVouchersMvpView> provideVouchersPresnter(ViewVouchersPresenter<ViewVouchersMvpView> presenter) {
-        return presenter;
-    }
-
-    @Provides
     OrderDetailsMvpPresenter<OrderDetailsMvpView> provideOrderDetailPresenter(OrderDetailsPresenter<OrderDetailsMvpView> presenter){
         return presenter;
     }
@@ -187,5 +182,8 @@ public class ControllerModule {
         return presenter;
     }
 
-
+    @Provides
+    ViewVouchersMvpPresenter<ViewVouchersMvpView> provideVouchersPresnter(ViewVouchersPresenter<ViewVouchersMvpView> presenter) {
+        return presenter;
+    }
 }

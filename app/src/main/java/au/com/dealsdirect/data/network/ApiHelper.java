@@ -42,6 +42,17 @@ import au.com.dealsdirect.data.network.model.userdetails.GetUserDetailsResponse;
 import au.com.dealsdirect.data.network.model.userdetails.SetUserDetailsRequest;
 import au.com.dealsdirect.data.network.model.saleitems.GetSaleItemsRequest;
 import au.com.dealsdirect.data.network.model.saleitems.GetSaleItemsResponse;
+import au.com.dealsdirect.data.network.model.vouchers.AddAndApplyVoucherByKeyRequest;
+import au.com.dealsdirect.data.network.model.vouchers.AddAndApplyVoucherByKeyResponse;
+import au.com.dealsdirect.data.network.model.vouchers.AddVoucherByKeyRequest;
+import au.com.dealsdirect.data.network.model.vouchers.AddVoucherByKeyResponse;
+import au.com.dealsdirect.data.network.model.vouchers.ApplyVouchersRequest;
+import au.com.dealsdirect.data.network.model.vouchers.ApplyVouchersResponse;
+import au.com.dealsdirect.data.network.model.vouchers.ClearVouchersRequest;
+import au.com.dealsdirect.data.network.model.vouchers.ClearVouchersResponse;
+import au.com.dealsdirect.data.network.model.vouchers.GetUserVoucherResponse;
+import au.com.dealsdirect.data.network.model.vouchers.GetUserVouchersRequest;
+import au.com.dealsdirect.data.network.model.vouchers.GetVouchersResponse;
 import io.reactivex.Observable;
 
 public interface ApiHelper {
@@ -110,4 +121,15 @@ public interface ApiHelper {
 
     Observable<GetOrderPaymentDetails.ResponseValue> callGetOrderPaymentDetails(GetOrderPaymentDetails.RequestValues requestValues);
 
+    Observable<GetUserVoucherResponse> getUserVouchersApiCall(GetUserVouchersRequest getUserVouchersRequest);
+
+    Observable<GetVouchersResponse> getVouchersApiCall();
+
+    Observable<ClearVouchersResponse> getClearVouchersApiCall(ClearVouchersRequest clearVouchersRequest);
+
+    Observable<ApplyVouchersResponse> getApplyVouchersApiCall(ApplyVouchersRequest applyVouchersRequest);
+
+    Observable<AddVoucherByKeyResponse> getAddVoucherByKeyApiCall(AddVoucherByKeyRequest addVoucherByKeyRequest);
+
+    Observable<AddAndApplyVoucherByKeyResponse> getAddAndApplyVoucherByKeyApiCall(AddAndApplyVoucherByKeyRequest addAndApplyVoucherByKeyRequest);
 }
