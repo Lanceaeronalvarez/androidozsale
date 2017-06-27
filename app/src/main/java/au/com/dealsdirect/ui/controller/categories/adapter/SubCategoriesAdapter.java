@@ -74,10 +74,8 @@ public class SubCategoriesAdapter extends RecyclerView.Adapter<RecyclerView.View
                 final boolean isExpanded = position==mExpandedPosition;
                 ((SubCategoriesViewHolder) holder)
                         .subCategoryItemsRecyclerView.setVisibility(isExpanded?View.VISIBLE:View.GONE);
-
                 ((SubCategoriesViewHolder) holder).subCategoryDropdownImage
-                        .setImageDrawable(holder.itemView.getResources().getDrawable(R.drawable.ic_add_gray));
-
+                        .setBackgroundDrawable(holder.itemView.getContext().getResources().getDrawable(isExpanded?R.drawable.ic_remove:R.drawable.ic_add_gray ));
 
 
                 holder.itemView.setActivated(isExpanded);
@@ -86,7 +84,7 @@ public class SubCategoriesAdapter extends RecyclerView.Adapter<RecyclerView.View
                         .setOnClickListener(view -> {
 
                             ((SubCategoriesViewHolder) holder).subCategoryDropdownImage
-                                    .setImageDrawable(holder.itemView.getResources()
+                                    .setBackgroundDrawable(holder.itemView.getContext().getResources()
                                             .getDrawable(R.drawable.ic_remove));
 
                             ((SubCategoriesViewHolder) holder)

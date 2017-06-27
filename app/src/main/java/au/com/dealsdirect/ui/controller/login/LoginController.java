@@ -52,6 +52,8 @@ public class LoginController extends BaseController implements LoginMvpView {
 
     private boolean isLoginTapped = false;
 
+
+
     AuthHandler mAuthHandler;
 
     public static LoginController newInstance(AuthHandler handler) {

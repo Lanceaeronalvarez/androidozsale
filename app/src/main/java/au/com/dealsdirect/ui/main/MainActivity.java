@@ -185,7 +185,7 @@ public class MainActivity extends BaseActivity implements MainMvpView {
             @Override
             public void success() {
 
-                mRouter.pushController(RouterTransaction.with(ViewContactsController.newInstance())
+                mRouter.setRoot(RouterTransaction.with(ViewContactsController.newInstance())
                         .pushChangeHandler(new FadeChangeHandler())
                         .popChangeHandler(new FadeChangeHandler()));
 
