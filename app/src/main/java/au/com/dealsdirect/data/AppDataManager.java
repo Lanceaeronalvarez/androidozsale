@@ -39,6 +39,17 @@ import au.com.dealsdirect.data.network.model.saleitems.GetPublicSaleItemsRespons
 import au.com.dealsdirect.data.network.model.viewcontactitem.GetContactsResponse;
 import au.com.dealsdirect.data.network.model.userdetails.GetUserDetailsResponse;
 import au.com.dealsdirect.data.network.model.userdetails.SetUserDetailsRequest;
+import au.com.dealsdirect.data.network.model.vouchers.AddAndApplyVoucherByKeyRequest;
+import au.com.dealsdirect.data.network.model.vouchers.AddAndApplyVoucherByKeyResponse;
+import au.com.dealsdirect.data.network.model.vouchers.AddVoucherByKeyRequest;
+import au.com.dealsdirect.data.network.model.vouchers.AddVoucherByKeyResponse;
+import au.com.dealsdirect.data.network.model.vouchers.ApplyVouchersRequest;
+import au.com.dealsdirect.data.network.model.vouchers.ApplyVouchersResponse;
+import au.com.dealsdirect.data.network.model.vouchers.ClearVouchersRequest;
+import au.com.dealsdirect.data.network.model.vouchers.ClearVouchersResponse;
+import au.com.dealsdirect.data.network.model.vouchers.GetUserVoucherResponse;
+import au.com.dealsdirect.data.network.model.vouchers.GetUserVouchersRequest;
+import au.com.dealsdirect.data.network.model.vouchers.GetVouchersResponse;
 import au.com.dealsdirect.data.pref.PreferencesHelper;
 import au.com.dealsdirect.di.ApplicationContext;
 import io.reactivex.Observable;
@@ -164,6 +175,36 @@ public class AppDataManager implements DataManager {
     @Override
     public Observable<GetUserDetailsResponse> getLoadUserDetailsApiCall() {
         return mApiHelper.getLoadUserDetailsApiCall();
+    }
+
+    @Override
+    public Observable<GetUserVoucherResponse> getUserVouchersApiCall(GetUserVouchersRequest getUserVouchersRequest) {
+        return mApiHelper.getUserVouchersApiCall(getUserVouchersRequest);
+    }
+
+    @Override
+    public Observable<GetVouchersResponse> getVouchersApiCall() {
+        return mApiHelper.getVouchersApiCall();
+    }
+
+    @Override
+    public Observable<ClearVouchersResponse> getClearVouchersApiCall(ClearVouchersRequest clearVouchersRequest) {
+        return mApiHelper.getClearVouchersApiCall(clearVouchersRequest);
+    }
+
+    @Override
+    public Observable<ApplyVouchersResponse> getApplyVouchersApiCall(ApplyVouchersRequest applyVouchersRequest) {
+        return mApiHelper.getApplyVouchersApiCall(applyVouchersRequest);
+    }
+
+    @Override
+    public Observable<AddVoucherByKeyResponse> getAddVoucherByKeyApiCall(AddVoucherByKeyRequest addVoucherByKeyRequest) {
+        return mApiHelper.getAddVoucherByKeyApiCall(addVoucherByKeyRequest);
+    }
+
+    @Override
+    public Observable<AddAndApplyVoucherByKeyResponse> getAddAndApplyVoucherByKeyApiCall(AddAndApplyVoucherByKeyRequest addAndApplyVoucherByKeyRequest) {
+        return mApiHelper.getAddAndApplyVoucherByKeyApiCall(addAndApplyVoucherByKeyRequest);
     }
 
     @Override

@@ -31,6 +31,17 @@ import au.com.dealsdirect.data.network.model.saleitems.GetPublicSaleItemsRespons
 import au.com.dealsdirect.data.network.model.viewcontactitem.GetContactsResponse;
 import au.com.dealsdirect.data.network.model.userdetails.GetUserDetailsResponse;
 import au.com.dealsdirect.data.network.model.userdetails.SetUserDetailsRequest;
+import au.com.dealsdirect.data.network.model.vouchers.AddAndApplyVoucherByKeyRequest;
+import au.com.dealsdirect.data.network.model.vouchers.AddAndApplyVoucherByKeyResponse;
+import au.com.dealsdirect.data.network.model.vouchers.AddVoucherByKeyRequest;
+import au.com.dealsdirect.data.network.model.vouchers.AddVoucherByKeyResponse;
+import au.com.dealsdirect.data.network.model.vouchers.ApplyVouchersRequest;
+import au.com.dealsdirect.data.network.model.vouchers.ApplyVouchersResponse;
+import au.com.dealsdirect.data.network.model.vouchers.ClearVouchersRequest;
+import au.com.dealsdirect.data.network.model.vouchers.ClearVouchersResponse;
+import au.com.dealsdirect.data.network.model.vouchers.GetUserVoucherResponse;
+import au.com.dealsdirect.data.network.model.vouchers.GetUserVouchersRequest;
+import au.com.dealsdirect.data.network.model.vouchers.GetVouchersResponse;
 import io.reactivex.Observable;
 
 public interface ApiHelper {
@@ -85,4 +96,15 @@ public interface ApiHelper {
 
     Observable<GetUserDetailsResponse> getLoadUserDetailsApiCall();
 
+    Observable<GetUserVoucherResponse> getUserVouchersApiCall(GetUserVouchersRequest getUserVouchersRequest);
+
+    Observable<GetVouchersResponse> getVouchersApiCall();
+
+    Observable<ClearVouchersResponse> getClearVouchersApiCall(ClearVouchersRequest clearVouchersRequest);
+
+    Observable<ApplyVouchersResponse> getApplyVouchersApiCall(ApplyVouchersRequest applyVouchersRequest);
+
+    Observable<AddVoucherByKeyResponse> getAddVoucherByKeyApiCall(AddVoucherByKeyRequest addVoucherByKeyRequest);
+
+    Observable<AddAndApplyVoucherByKeyResponse> getAddAndApplyVoucherByKeyApiCall(AddAndApplyVoucherByKeyRequest addAndApplyVoucherByKeyRequest);
 }
