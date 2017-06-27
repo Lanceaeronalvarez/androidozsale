@@ -98,6 +98,11 @@ public class RegisterController extends BaseController implements RegisterMvpVie
                 mRegisterPasswordField.getText().toString());
     }
 
+    @OnClick(R.id.controller_register_login_text)
+    void onLoginClick(){
+        getActivity().onBackPressed();
+    }
+
     @Override
     public void showRegisterSuccessful(String loginTicket) {
         getActivity().onBackPressed();

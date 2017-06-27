@@ -156,7 +156,7 @@
                     android:textSize="@dimen/text_size_medium"/>
 
                 <TextView
-                    android:id="@+id/login_text"
+                    android:id="@+id/controller_register_login_text"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:paddingEnd="0dp"
@@ -165,6 +165,7 @@
                     android:paddingStart="5dp"
                     android:text="@string/log_in"
                     android:textColor="#00B1B5"
+                    android:clickable="true"
                     android:textSize="@dimen/text_size_medium"/>
 
                 <TextView
