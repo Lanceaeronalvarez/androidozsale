@@ -7,7 +7,8 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.TextView;
+import android.widget.EditText;
+import android.widget.ImageButton;
 
 import com.bluelinelabs.conductor.RouterTransaction;
 import com.bluelinelabs.conductor.changehandler.HorizontalChangeHandler;
@@ -35,6 +36,7 @@ import au.com.dealsdirect.ui.controller.shops.ShopsController;
 import au.com.dealsdirect.ui.custom.transitions.RightHorizontalTransitionChangeHandler;
 import au.com.dealsdirect.utils.BundleBuilder;
 import butterknife.BindView;
+import butterknife.OnClick;
 
 /**
  * dp Created by Admin on 6/6/17.
@@ -52,8 +54,11 @@ public class CategoriesController extends BaseController
     @BindView(R.id.sub_categories_recyclerview)
     RecyclerView mSubCategoryRecyclerView;
 
-    @BindView(R.id.partial_toolbar_title_view)
-    TextView mTitleTextView;
+    @BindView(R.id.partial_toolbar_search_field)
+    EditText mSearchField;
+
+    @BindView(R.id.partial_toolbar_search_right_option)
+    ImageButton mToolbarRightOption;
 
 
     private CategoriesAdapter mAdapter;
@@ -101,8 +106,6 @@ public class CategoriesController extends BaseController
         ((BaseActivity) getActivity()).hideBottomNavigationView();
 
         setUp(view);
-
-
     }
 
 
@@ -114,8 +117,6 @@ public class CategoriesController extends BaseController
 
     @Override
     protected void setUp(View view) {
-
-        mTitleTextView.setText(R.string.category_title);
 
         mCategoryClickListener = this;
         mSubCategoryClickListener = this;
@@ -261,5 +262,10 @@ public class CategoriesController extends BaseController
                 SaleItemsController.newInstance("", categoryName, "", 0, "", categoryKey))
                 .pushChangeHandler(new HorizontalChangeHandler())
                 .popChangeHandler(new HorizontalChangeHandler()));
+    }
+
+    @OnClick(R.id.partial_toolbar_search_right_option)
+    public void onSearchOptionClicked(){
+        getActivity().onBackPressed();
     }
 }

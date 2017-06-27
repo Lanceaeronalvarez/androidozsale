@@ -160,5 +160,6 @@
     <string name="you_currently_do_no_have_any_orders">you currently do no have any orders.</string>
     <string name="welcome_to_my_orders">welcome to my orders!</string>
     <string name="no_network_connection">No Network Connection</string>
+    <string name="i_am_looking_for">I am looking for...</string>
 
 </resources>
