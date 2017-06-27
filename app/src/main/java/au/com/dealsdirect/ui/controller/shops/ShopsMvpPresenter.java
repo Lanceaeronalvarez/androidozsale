@@ -4,11 +4,10 @@ package au.com.dealsdirect.ui.controller.shops;
  */
 
 
-import au.com.dealsdirect.data.network.model.banner.GetPublicSalesBannerRequest;
 import au.com.dealsdirect.ui.base.MvpPresenter;
 
 public interface ShopsMvpPresenter<V extends ShopsMvpView> extends MvpPresenter<V> {
 
-    void loadShopsBanner(GetPublicSalesBannerRequest request);
+    void loadShopsBanner(String categoryName, String categoryId);
 
 }

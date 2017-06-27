@@ -56,7 +56,7 @@ public class DateUtils {
         @SuppressLint("SimpleDateFormat")
         SimpleDateFormat apiDateFormat = new SimpleDateFormat(AppConstants.API_DATE_FORMAT);
         @SuppressLint("SimpleDateFormat")
-        SimpleDateFormat displayDateFormat = new SimpleDateFormat(AppConstants.MP_DATE_FORMAT);
+        SimpleDateFormat displayDateFormat = new SimpleDateFormat(AppConstants.DD_DATE_FORMAT);
 
         try {
             return displayDateFormat.format(apiDateFormat.parse(dateString));
@@ -172,19 +172,6 @@ public class DateUtils {
         return cal.getTime();
     }
 
-    public static String getTrimmedServerDateString(String dateString) {
-        if (null != dateString
-                && !dateString.equalsIgnoreCase("null")
-                && dateString.length() > 0) {
-            Date date = dateFromServerDateString(dateString);
-            android.text.format.DateFormat.format("MM dd, yyyy", date);
-
-            return (String) DateFormat.format("MMMM dd, yyyy", date);//(String) date.toString().subSequence(4, date.toString().indexOf("GMT"));
-        } else {
-            return "";
-        }
-    }
-
     public static String getDateForOrderProgress(String dateString){
         if (null != dateString
                 && !dateString.equalsIgnoreCase("null")
@@ -208,5 +195,19 @@ public class DateUtils {
             return "";
         }
     }
+
+    public static String getTrimmedServerDateString(String dateString) {
+        if (null != dateString
+                && !dateString.equalsIgnoreCase("null")
+                && dateString.length() > 0) {
+            Date date = dateFromServerDateString(dateString);
+            android.text.format.DateFormat.format("MM dd, yyyy", date);
+
+            return (String) DateFormat.format("MMMM dd, yyyy", date);//(String) date.toString().subSequence(4, date.toString().indexOf("GMT"));
+        } else {
+            return "";
+        }
+    }
+
 
 }

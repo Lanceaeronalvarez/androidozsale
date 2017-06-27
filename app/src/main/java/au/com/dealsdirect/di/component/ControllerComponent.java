@@ -5,16 +5,18 @@ import au.com.dealsdirect.di.PerController;
 import au.com.dealsdirect.di.module.ControllerModule;
 import au.com.dealsdirect.ui.controller.address.addnewaddress.AddNewAddressController;
 import au.com.dealsdirect.ui.controller.address.viewaddress.ViewAddressController;
+import au.com.dealsdirect.ui.controller.cart.CartController;
 import au.com.dealsdirect.ui.controller.categories.CategoriesController;
 import au.com.dealsdirect.ui.controller.account.AccountController;
 import au.com.dealsdirect.ui.controller.checkout.CheckoutController;
 import au.com.dealsdirect.ui.controller.contact.addcontact.AddContactController;
+import au.com.dealsdirect.ui.controller.contact.viewcontacthistory.ViewContactHistoryController;
 import au.com.dealsdirect.ui.controller.contact.viewcontacts.ViewContactsController;
 import au.com.dealsdirect.ui.controller.home.HomeController;
 import au.com.dealsdirect.ui.controller.login.LoginController;
+import au.com.dealsdirect.ui.controller.saleitemdetails.SaleItemDetailsController;
 import au.com.dealsdirect.ui.controller.orders.orderdetails.OrderDetailsController;
 import au.com.dealsdirect.ui.controller.orders.orders.OrdersController;
-import au.com.dealsdirect.ui.controller.productdetails.ProductDetailsController;
 import au.com.dealsdirect.ui.controller.salecategories.SaleCategoriesController;
 import au.com.dealsdirect.ui.controller.saleitems.SaleItemsController;
 import au.com.dealsdirect.ui.controller.shops.ShopsController;
@@ -43,7 +45,7 @@ public interface ControllerComponent {
 
     void inject(CheckoutController controller);
 
-    void inject(ProductDetailsController controller);
+    void inject(SaleItemDetailsController controller);
     
     void inject(SaleCategoriesController controller);
 
@@ -58,7 +60,10 @@ public interface ControllerComponent {
     void inject(AddContactController controller);
 
     void inject(OrdersController controller);
-
+    
     void inject(OrderDetailsController controller);
 
+    void inject(ViewContactHistoryController controller);
+
+    void inject(CartController controller);
 }

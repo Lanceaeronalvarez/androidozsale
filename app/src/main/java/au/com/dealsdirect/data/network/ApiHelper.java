@@ -7,6 +7,8 @@ import com.mysale.genie.utility.config.api.GetAppSettings;
 import com.mysale.genie.utility.config.api.GetAppSettingsSection;
 import com.mysale.genie.utility.config.api.GetServerSettings;
 
+import java.util.List;
+
 import au.com.dealsdirect.data.network.model.SampleRequest;
 import au.com.dealsdirect.data.network.model.SampleResponse;
 import au.com.dealsdirect.data.network.model.address.AddAddress;
@@ -14,23 +16,29 @@ import au.com.dealsdirect.data.network.model.address.ApplyAddressRequest;
 import au.com.dealsdirect.data.network.model.address.ApplyAddressResponse;
 import au.com.dealsdirect.data.network.model.address.DeleteUserAddress;
 import au.com.dealsdirect.data.network.model.address.GetAddresses;
+import au.com.dealsdirect.data.network.model.banner.GetBannerRequest;
+import au.com.dealsdirect.data.network.model.banner.GetBannerResponse;
 import au.com.dealsdirect.data.network.model.banner.GetPublicSalesBannerRequest;
 import au.com.dealsdirect.data.network.model.banner.GetPublicSalesBannerResponse;
+import au.com.dealsdirect.data.network.model.category.GetCategoryTreeResponse;
+import au.com.dealsdirect.data.network.model.contacthistory.GetContactHistoryRequest;
+import au.com.dealsdirect.data.network.model.contacthistory.GetContactHistoryResponse;
+import au.com.dealsdirect.data.network.model.contactitem.GetContactsResponse;
 import au.com.dealsdirect.data.network.model.login.LoginEmail;
 import au.com.dealsdirect.data.network.model.login.LoginFacebook;
 import au.com.dealsdirect.data.network.model.login.LoginTicket;
 import au.com.dealsdirect.data.network.model.login.Logout;
 import au.com.dealsdirect.data.network.model.orders.GetOrderPaymentDetails;
 import au.com.dealsdirect.data.network.model.orders.GetPaymentsList;
-import au.com.dealsdirect.data.network.model.productdetails.GetPublicItemDetailsRequest;
-import au.com.dealsdirect.data.network.model.productdetails.GetPublicItemDetailsResponse;
 import au.com.dealsdirect.data.network.model.productdetails.GetPublicSaleDetailsRequest;
 import au.com.dealsdirect.data.network.model.productdetails.GetPublicSaleDetailsResponse;
 import au.com.dealsdirect.data.network.model.publicsalescategories.GetPublicSalesCategoriesRequest;
 import au.com.dealsdirect.data.network.model.publicsalescategories.GetPublicSalesCategoriesResponse;
+import au.com.dealsdirect.data.network.model.saleitemdetails.GetSaleItemDetailsResponse;
 import au.com.dealsdirect.data.network.model.saleitems.GetPublicSaleItemsRequest;
 import au.com.dealsdirect.data.network.model.saleitems.GetPublicSaleItemsResponse;
-import au.com.dealsdirect.data.network.model.viewcontactitem.GetContactsResponse;
+import au.com.dealsdirect.data.network.model.saleitems.GetSaleItemsRequest;
+import au.com.dealsdirect.data.network.model.saleitems.GetSaleItemsResponse;
 import io.reactivex.Observable;
 
 public interface ApiHelper {
@@ -41,17 +49,21 @@ public interface ApiHelper {
 
     Observable<SampleResponse> doSampleApiCall(SampleRequest request);
 
-    Observable<GetPublicSalesBannerResponse> getPublicSalesBannerApiCall
-            (GetPublicSalesBannerRequest getPublicSalesBannerRequest);
+    Observable<List<GetBannerResponse>> doGetBannersApiCall(GetBannerRequest getPublicSalesBannerRequest);
 
     Observable<GetPublicSalesCategoriesResponse> doGetPublicSalesCategoriesApiCall(GetPublicSalesCategoriesRequest request);
 
-    Observable<GetPublicItemDetailsResponse> doGetPublicItemDetailsApiCall(GetPublicItemDetailsRequest request);
+    Observable<List<GetCategoryTreeResponse>> doGetGetCategoriesApiCall();
+
+    Observable<GetSaleItemDetailsResponse> doGetSaleItemDetailsApiCall(String seoIdentifierId);
 
     Observable<GetPublicSaleDetailsResponse> doGetPublicSaleDetailsApiCall(GetPublicSaleDetailsRequest request);
 
     Observable<GetPublicSaleItemsResponse> getPublicSaleItemsApiCall(GetPublicSaleItemsRequest
             getPublicSaleItemsRequest);
+
+    Observable<GetSaleItemsResponse> getSaleItemsRequest(GetSaleItemsRequest getSaleItemsRequest);
+
 
 //  CONFIG API CALLS
     Observable<GetServerSettings.ResponseValue> callGetServerSettings(Context context, String countryId);
@@ -62,7 +74,10 @@ public interface ApiHelper {
 
     Observable<GetAppSettingsSection.ResponseValue> callGetAppSettingsSection(Context context, String countryId);
 
-    Observable<GetContactsResponse.Response> callGetContacts(String languageId);
+    Observable<GetContactsResponse> callGetContacts(String languageId);
+
+    Observable<GetContactHistoryResponse> callGetContactHistory(GetContactHistoryRequest getContactHistoryRequest);
+
 //  LOGIN API CALLS
 
     Observable<LoginEmail.ResponseValue> callLoginViaEmail(LoginEmail.RequestValue requestValue);

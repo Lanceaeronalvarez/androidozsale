@@ -6,5 +6,5 @@ package au.com.dealsdirect.ui.controller.categories.listener;
 
 public interface CategoryClickListener {
 
-    void onCategoryClicked(String categoryID);
+    void onCategoryClicked(int position, String categoryID, String categoryName, String categoryKey);
 }

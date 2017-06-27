@@ -6,5 +6,10 @@ package au.com.dealsdirect.ui.controller.shops.listener;
 
 public interface BannerClickListener {
 
-    void onBannerClicked(String bannerTitle, String bannerId, int position, String imageUrl);
+    void onBannerClicked(
+            String saleId,
+            String bannerTitle,
+            String bannerId,
+            int position,
+            String imageUrl);
 }

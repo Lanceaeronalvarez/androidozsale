@@ -8,6 +8,9 @@ import au.com.dealsdirect.ui.controller.address.addnewaddress.AddNewAddressPrese
 import au.com.dealsdirect.ui.controller.address.viewaddress.ViewAddressMvpPresenter;
 import au.com.dealsdirect.ui.controller.address.viewaddress.ViewAddressMvpView;
 import au.com.dealsdirect.ui.controller.address.viewaddress.ViewAddressPresenter;
+import au.com.dealsdirect.ui.controller.cart.CartMvpPresenter;
+import au.com.dealsdirect.ui.controller.cart.CartMvpView;
+import au.com.dealsdirect.ui.controller.cart.CartPresenter;
 import au.com.dealsdirect.ui.controller.categories.CategoriesMvpPresenter;
 import au.com.dealsdirect.ui.controller.categories.CategoriesMvpView;
 import au.com.dealsdirect.ui.controller.categories.CategoriesPresenter;
@@ -32,15 +35,15 @@ import au.com.dealsdirect.ui.controller.invite.InvitePresenter;
 import au.com.dealsdirect.ui.controller.login.LoginMvpPresenter;
 import au.com.dealsdirect.ui.controller.login.LoginMvpView;
 import au.com.dealsdirect.ui.controller.login.LoginPresenter;
+import au.com.dealsdirect.ui.controller.saleitemdetails.SaleItemDetailsMvpPresenter;
+import au.com.dealsdirect.ui.controller.saleitemdetails.SaleItemDetailsMvpView;
+import au.com.dealsdirect.ui.controller.saleitemdetails.SaleItemDetailsPresenter;
 import au.com.dealsdirect.ui.controller.orders.orderdetails.OrderDetailsMvpPresenter;
 import au.com.dealsdirect.ui.controller.orders.orderdetails.OrderDetailsMvpView;
 import au.com.dealsdirect.ui.controller.orders.orderdetails.OrderDetailsPresenter;
 import au.com.dealsdirect.ui.controller.orders.orders.OrdersMvpPresenter;
 import au.com.dealsdirect.ui.controller.orders.orders.OrdersMvpView;
 import au.com.dealsdirect.ui.controller.orders.orders.OrdersPresenter;
-import au.com.dealsdirect.ui.controller.productdetails.ProductDetailsMvpPresenter;
-import au.com.dealsdirect.ui.controller.productdetails.ProductDetailsMvpView;
-import au.com.dealsdirect.ui.controller.productdetails.ProductDetailsPresenter;
 import au.com.dealsdirect.ui.controller.salecategories.SaleCategoriesMvpPresenter;
 import au.com.dealsdirect.ui.controller.salecategories.SaleCategoriesMvpView;
 import au.com.dealsdirect.ui.controller.salecategories.SaleCategoriesPresenter;
@@ -111,7 +114,7 @@ public class ControllerModule {
     }
 
     @Provides
-    ProductDetailsMvpPresenter<ProductDetailsMvpView> provideProductDetailsPresenter(ProductDetailsPresenter<ProductDetailsMvpView> presenter) {
+    SaleItemDetailsMvpPresenter<SaleItemDetailsMvpView> provideProductDetailsPresenter(SaleItemDetailsPresenter<SaleItemDetailsMvpView> presenter) {
         return presenter;
     }
 
@@ -152,6 +155,11 @@ public class ControllerModule {
 
     @Provides
     OrderDetailsMvpPresenter<OrderDetailsMvpView> provideOrderDetailPresenter(OrderDetailsPresenter<OrderDetailsMvpView> presenter){
+        return presenter;
+    }
+
+    @Provides
+    CartMvpPresenter<CartMvpView> provideCartPresenter(CartPresenter<CartMvpView> presenter) {
         return presenter;
     }
 

@@ -18,8 +18,7 @@ import java.util.List;
 import javax.inject.Inject;
 
 import au.com.dealsdirect.R;
-import au.com.dealsdirect.data.network.model.banner.GetPublicSalesBannerRequest;
-import au.com.dealsdirect.data.network.model.banner.GetPublicSalesBannerResponse;
+import au.com.dealsdirect.data.network.model.banner.GetBannerResponse;
 import au.com.dealsdirect.ui.base.BaseController;
 import au.com.dealsdirect.ui.controller.categories.CategoriesController;
 import au.com.dealsdirect.ui.controller.saleitems.SaleItemsController;
@@ -39,6 +38,8 @@ public class ShopsController extends BaseController implements ShopsMvpView, Ban
 
     private static final String KEY_TEXT = "ShopController.KEY_TEXT";
     private static final String KEY_CATEGORY_ID = "ShopController.KEY_CATEGORY_ID";
+    private static final String KEY_CATEGORY_NAME = "ShopController.KEY_CATEGORY_NAME";
+    private static final String KEY_CATEGORY_MAP = "ShopController.KEY_CATEGORY_KEY";
 
     @Inject
     ShopsMvpPresenter<ShopsMvpView> mPresenter;
@@ -49,14 +50,31 @@ public class ShopsController extends BaseController implements ShopsMvpView, Ban
 
     private BannersAdapter mBannersAdapter;
     private BannerClickListener mBannerClickListener;
+
     private String mCategoryID;
+    private String mCategoryName;
+    private String mCategoryKey;
 
-    private List<GetPublicSalesBannerResponse.Sale> sales = new LinkedList<>();
+    private List<GetBannerResponse> sales = new LinkedList<>();
 
-    public ShopsController(String categoryID) {
+    public ShopsController(String categoryID, String categoryName, String categoryKey) {
 
-        this(new BundleBuilder(new Bundle()).putString(KEY_CATEGORY_ID, categoryID)
+        this(new BundleBuilder(new Bundle())
+                .putString(KEY_CATEGORY_ID, categoryID)
+                .putString(KEY_CATEGORY_NAME, categoryName)
+                .putString(KEY_CATEGORY_MAP, categoryKey)
                 .build());
+    }
+
+
+    public static ShopsController newInstance(String categoryID, String categoryName, String categoryKey) {
+
+        return new ShopsController(
+                new BundleBuilder(new Bundle())
+                        .putString(KEY_CATEGORY_ID, categoryID)
+                        .putString(KEY_CATEGORY_NAME, categoryName)
+                        .putString(KEY_CATEGORY_MAP, categoryKey)
+                        .build());
     }
 
     public ShopsController() {
@@ -66,7 +84,8 @@ public class ShopsController extends BaseController implements ShopsMvpView, Ban
     public ShopsController(Bundle args) {
         super(args);
         mCategoryID = getArgs().getString(KEY_CATEGORY_ID);
-
+        mCategoryName = getArgs().getString(KEY_CATEGORY_NAME);
+        mCategoryKey = getArgs().getString(KEY_CATEGORY_MAP);
     }
 
     @Override
@@ -95,20 +114,9 @@ public class ShopsController extends BaseController implements ShopsMvpView, Ban
 
     @Override
     protected void setUp(View view) {
-        GetPublicSalesBannerRequest getPublicSalesBannerRequest;
-
-        if (mCategoryID == null) {
-
-            getPublicSalesBannerRequest = new GetPublicSalesBannerRequest(
-                    "40f80218-a9e1-43c4-96ff-4c046d192a21", 100, false, true, -1, "EN", "DA", "");
-        } else {
-            getPublicSalesBannerRequest = new GetPublicSalesBannerRequest(
-                    mCategoryID, 100, false, true, -1, "EN", "DA", "");
-        }
-
 
         if (sales.size() == 0) {
-            mPresenter.loadShopsBanner(getPublicSalesBannerRequest);
+            mPresenter.loadShopsBanner(mCategoryName,mCategoryID);
         } else {
             mBannersAdapter = new BannersAdapter(getActivity(), sales, mBannerClickListener);
 
@@ -117,38 +125,20 @@ public class ShopsController extends BaseController implements ShopsMvpView, Ban
         }
     }
 
-    @Override
-    public void showShopBanners(GetPublicSalesBannerResponse getPublicSalesBannerResponse) {
-
-        sales = getPublicSalesBannerResponse.getBanner()
-                .getList()
-                .get(0)
-                .getSales();
-
-        mBannerClickListener = this;
-
-        mBannersAdapter = new BannersAdapter(getActivity(), sales, mBannerClickListener);
-
-        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getActivity());
-        linearLayoutManager.setAutoMeasureEnabled(false);
-        shopsControllerBannerRecyclerView.setLayoutManager(linearLayoutManager);
-        shopsControllerBannerRecyclerView.setAdapter(mBannersAdapter);
-        mBannersAdapter.notifyDataSetChanged();
-
-    }
-
 
     @Override
-    public void onBannerClicked(String bannerTitle, String bannerId, int position,
-                                String imageUrl) {
+    public void onBannerClicked(
+            String saleId,
+            String bannerTitle,
+            String bannerId,
+            int position,
+            String imageUrl) {
 
         List<String> names = new ArrayList<>();
         names.add(bannerId + position);
 
-        getRouter().pushController(RouterTransaction.with(new SaleItemsController(bannerTitle,
-                bannerId,
-                position,
-                imageUrl))
+        getRouter().pushController(RouterTransaction.with(
+                SaleItemsController.newInstance(saleId, bannerTitle, bannerId, position, imageUrl, mCategoryKey))
                 .pushChangeHandler(new HorizontalChangeHandler())
                 .popChangeHandler(new HorizontalChangeHandler()));
     }
@@ -160,5 +150,22 @@ public class ShopsController extends BaseController implements ShopsMvpView, Ban
                 .popChangeHandler(new HorizontalNavTransitionChangeHandler()));
 
 //        ((MainActivity) getActivity()).hideBottomNav();
+    }
+
+    @Override
+    public void showShopBanners(List<GetBannerResponse> getBannerResponses) {
+
+        sales = getBannerResponses;
+
+        mBannerClickListener = this;
+
+        mBannersAdapter = new BannersAdapter(getActivity(), sales, mBannerClickListener);
+
+        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getActivity());
+        linearLayoutManager.setAutoMeasureEnabled(false);
+        shopsControllerBannerRecyclerView.setLayoutManager(linearLayoutManager);
+        shopsControllerBannerRecyclerView.setAdapter(mBannersAdapter);
+        mBannersAdapter.notifyDataSetChanged();
+
     }
 }
