@@ -52,7 +52,7 @@
             android:id="@+id/partial_toolbar_search_right_option"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:src="@drawable/ic_chevron_right"
+            android:src="@drawable/ic_double_chevron"
             android:background="@null"
             android:padding="10dp"
             android:layout_alignParentEnd="true"/>
