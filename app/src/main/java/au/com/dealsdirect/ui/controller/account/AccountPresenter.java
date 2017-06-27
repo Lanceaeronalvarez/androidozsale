@@ -53,6 +53,7 @@ public class AccountPresenter<V extends AccountMvpView> extends BasePresenter<V>
                 case "My Orders":
                     break;
                 case "My Vouchers":
+                    getMvpView().showMyVouchers();
                     break;
                 case "My Returns":
                     break;
