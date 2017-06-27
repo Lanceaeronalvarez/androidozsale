@@ -3,7 +3,6 @@
               android:orientation="vertical"
               android:layout_width="match_parent"
               android:layout_height="wrap_content"
-              android:layout_marginBottom="5dp"
               android:background="@color/white">
 
     <RelativeLayout
@@ -25,7 +24,9 @@
             android:layout_below="@+id/viewholder_banner_image"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="-40dp">
+            android:layout_marginTop="-40dp"
+            android:padding="5dp"
+            android:layout_marginLeft="5dp">
 
             <TextView
                 android:id="@+id/viewholder_banner_title"
@@ -46,9 +47,5 @@
 
         </RelativeLayout>
 
-
     </RelativeLayout>
-
-
-
 </LinearLayout>
