@@ -19,10 +19,6 @@ import java.util.List;
 import javax.inject.Inject;
 
 import au.com.dealsdirect.R;
-import au.com.dealsdirect.data.network.model.vouchers.AddAndApplyVoucherByKeyResponse;
-import au.com.dealsdirect.data.network.model.vouchers.AddVoucherByKeyResponse;
-import au.com.dealsdirect.data.network.model.vouchers.ApplyVouchersResponse;
-import au.com.dealsdirect.data.network.model.vouchers.ClearVouchersResponse;
 import au.com.dealsdirect.data.network.model.vouchers.GetUserVoucherResponse;
 import au.com.dealsdirect.data.network.model.vouchers.GetVouchersResponse;
 import au.com.dealsdirect.ui.base.BaseController;
@@ -33,10 +29,10 @@ import butterknife.BindView;
  * Created by Paul on 6/23/17.
  */
 
-public class ViewVouchersController extends BaseController implements VouchersMvpView {
+public class ViewViewVouchersController extends BaseController implements ViewVouchersMvpView {
 
     @Inject
-    VouchersMvpPresenter<VouchersMvpView> mPresenter;
+    ViewVouchersMvpPresenter<ViewVouchersMvpView> mPresenter;
 
     @BindView(R.id.partial_toolbar_arrow_title)
     TextView mTitleText;
@@ -66,12 +62,12 @@ public class ViewVouchersController extends BaseController implements VouchersMv
 
     private ViewVouchersRecyclerViewAdapter mUsedVouchersAdapter;
 
-    public ViewVouchersController(Bundle arg) {
+    public ViewViewVouchersController(Bundle arg) {
         super(arg);
     }
 
-    public static ViewVouchersController newInstance() {
-        return new ViewVouchersController(
+    public static ViewViewVouchersController newInstance() {
+        return new ViewViewVouchersController(
                 new BundleBuilder(new Bundle())
                     .build());
     }

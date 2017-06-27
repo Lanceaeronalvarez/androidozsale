@@ -23,6 +23,7 @@ import au.com.dealsdirect.ui.controller.orders.orders.OrdersController;
 import au.com.dealsdirect.ui.controller.salecategories.SaleCategoriesController;
 import au.com.dealsdirect.ui.controller.saleitems.SaleItemsController;
 import au.com.dealsdirect.ui.controller.shops.ShopsController;
+import au.com.dealsdirect.ui.controller.vouchers.View.ViewViewVouchersController;
 import au.com.dealsdirect.ui.sample.SampleController;
 import dagger.Component;
 
@@ -73,4 +74,6 @@ public interface ControllerComponent {
     void inject(ViewContactHistoryController controller);
 
     void inject(CartController controller);
+
+    void inject(ViewViewVouchersController controller);
 }
