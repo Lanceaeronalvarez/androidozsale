@@ -12,8 +12,6 @@ public final class ApiEndPoint {
     private static final String LEGACY_SALE = "https://www.dealsdirect.com.au/api/sale/sale/";
     private static final String LEGACY_PRODUCT = "https://www.dealsdirect.com.au/api/shop/product/";
 
-
-
     private static final String GENIE_PRODUCT = "https://genie-ui-dealsdirect-pre.mysaledev.com/api/shop/product/";
     private static final String GENIE_SHOP = "https://genie-ui-dealsdirect-pre.mysaledev.com/api/shop/shop/";
     private static final String GENIE_SALE = "https://genie-ui-dealsdirect-pre.mysaledev.com/api/sale/sale/";
@@ -24,14 +22,13 @@ public final class ApiEndPoint {
     private static final String CATEGORY_TREE = "v1/accounts/A56B0D62-AEF6-4653-848E-2ECDDB6E9B8C/categorytree/";
     private static final String SALES = "v1/accounts/A56B0D62-AEF6-4653-848E-2ECDDB6E9B8C/banners/";
     private static final String PRODUCTS = "v1/accounts/A56B0D62-AEF6-4653-848E-2ECDDB6E9B8C/products";
-    //https://www.dealsdirect.com.au/api/shop/product/v1/accounts/A56B0D62-AEF6-4653-848E-2ECDDB6E9B8C/products/Ou8uAvQuGkmLOTN3Qpzzyg
     private static final String PRODUCT_DETAILS = "v1/accounts/A56B0D62-AEF6-4653-848E-2ECDDB6E9B8C/products/{seo_identifier}";
 
 
-    public static final String GET_CATEGORY_TREE = LEGACY_SHOP + CATEGORY_TREE;
-    public static final String GET_SALES = LEGACY_SALE + SALES;
-    public static final String GET_PRODUCTS = LEGACY_SHOP + PRODUCTS;
-    public static final String GET_PRODUCT_DETAILS = LEGACY_PRODUCT + PRODUCT_DETAILS;
+    public static final String GET_CATEGORY_TREE = GENIE_SHOP + CATEGORY_TREE;
+    public static final String GET_SALES = GENIE_SALE + SALES;
+    public static final String GET_PRODUCTS = GENIE_SHOP + PRODUCTS;
+    public static final String GET_PRODUCT_DETAILS = GENIE_PRODUCT + PRODUCT_DETAILS;
 
     /* API Constants */
     private static final String API_HOST = "https://www.dealsdirect.com.au/";

@@ -37,7 +37,6 @@ public class ViewContactsPresenter<V extends ViewContactsMvpView> extends BasePr
                         .subscribe(response -> {
 
                             if (!isViewAttached()) {
-                                Log.d("viewcontacts","list is not attached");
 
                                 return;
                             }

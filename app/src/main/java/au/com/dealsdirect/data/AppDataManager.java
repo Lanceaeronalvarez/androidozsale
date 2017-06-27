@@ -5,7 +5,6 @@ import android.content.Context;
 import com.mysale.genie.utility.config.api.GetAppSettings;
 import com.mysale.genie.utility.config.api.GetAppSettingsSection;
 import com.mysale.genie.utility.config.api.GetServerSettings;
-import com.mysale.genie.utility.config.model.getserversettings.Language;
 
 import java.util.List;
 
@@ -24,8 +23,6 @@ import au.com.dealsdirect.data.network.model.address.DeleteUserAddress;
 import au.com.dealsdirect.data.network.model.address.GetAddresses;
 import au.com.dealsdirect.data.network.model.banner.GetBannerRequest;
 import au.com.dealsdirect.data.network.model.banner.GetBannerResponse;
-import au.com.dealsdirect.data.network.model.banner.GetPublicSalesBannerRequest;
-import au.com.dealsdirect.data.network.model.banner.GetPublicSalesBannerResponse;
 import au.com.dealsdirect.data.network.model.category.GetCategoryTreeResponse;
 import au.com.dealsdirect.data.network.model.contacthistory.GetContactHistoryRequest;
 import au.com.dealsdirect.data.network.model.contacthistory.GetContactHistoryResponse;
@@ -40,14 +37,15 @@ import au.com.dealsdirect.data.network.model.productdetails.GetPublicSaleDetails
 import au.com.dealsdirect.data.network.model.productdetails.GetPublicSaleDetailsResponse;
 import au.com.dealsdirect.data.network.model.publicsalescategories.GetPublicSalesCategoriesRequest;
 import au.com.dealsdirect.data.network.model.publicsalescategories.GetPublicSalesCategoriesResponse;
+import au.com.dealsdirect.data.network.model.register.RegisterUserRequest;
+import au.com.dealsdirect.data.network.model.register.RegisterUserResponse;
 import au.com.dealsdirect.data.network.model.saleitemdetails.GetSaleItemDetailsResponse;
 import au.com.dealsdirect.data.network.model.saleitems.GetPublicSaleItemsRequest;
 import au.com.dealsdirect.data.network.model.saleitems.GetPublicSaleItemsResponse;
-import au.com.dealsdirect.data.network.model.viewcontactitem.GetContactsResponse;
-import au.com.dealsdirect.data.network.model.userdetails.GetUserDetailsResponse;
-import au.com.dealsdirect.data.network.model.userdetails.SetUserDetailsRequest;
 import au.com.dealsdirect.data.network.model.saleitems.GetSaleItemsRequest;
 import au.com.dealsdirect.data.network.model.saleitems.GetSaleItemsResponse;
+import au.com.dealsdirect.data.network.model.userdetails.GetUserDetailsResponse;
+import au.com.dealsdirect.data.network.model.userdetails.SetUserDetailsRequest;
 import au.com.dealsdirect.data.network.model.vouchers.AddAndApplyVoucherByKeyRequest;
 import au.com.dealsdirect.data.network.model.vouchers.AddAndApplyVoucherByKeyResponse;
 import au.com.dealsdirect.data.network.model.vouchers.AddVoucherByKeyRequest;
@@ -179,6 +177,11 @@ public class AppDataManager implements DataManager {
     }
 
     @Override
+    public Observable<RegisterUserResponse> callRegiser(RegisterUserRequest requestValue) {
+        return null;
+    }
+
+    @Override
     public Observable<GetAddresses.ResponseValue> callGetUserAddresses(GetAddresses.RequestValues requestValues) {
         return mApiHelper.callGetUserAddresses(requestValues);
     }
@@ -243,10 +246,6 @@ public class AppDataManager implements DataManager {
         return mApiHelper.getAddAndApplyVoucherByKeyApiCall(addAndApplyVoucherByKeyRequest);
     }
 
-    @Override
-    public Observable<GetPublicItemDetailsResponse> doGetPublicItemDetailsApiCall(GetPublicItemDetailsRequest request) {
-        return mApiHelper.doGetPublicItemDetailsApiCall(request);
-    }
 
     @Override
     public Observable<GetOrderPaymentDetails.ResponseValue> callGetOrderPaymentDetails(GetOrderPaymentDetails.RequestValues requestValues) {

@@ -2,6 +2,9 @@ package au.com.dealsdirect.di.module;
 
 import com.bluelinelabs.conductor.Controller;
 
+import au.com.dealsdirect.ui.controller.account.AccountMvpPresenter;
+import au.com.dealsdirect.ui.controller.account.AccountMvpView;
+import au.com.dealsdirect.ui.controller.account.AccountPresenter;
 import au.com.dealsdirect.ui.controller.address.addnewaddress.AddNewAddressMvpPresenter;
 import au.com.dealsdirect.ui.controller.address.addnewaddress.AddNewAddressMvpView;
 import au.com.dealsdirect.ui.controller.address.addnewaddress.AddNewAddressPresenter;
@@ -14,9 +17,6 @@ import au.com.dealsdirect.ui.controller.cart.CartPresenter;
 import au.com.dealsdirect.ui.controller.categories.CategoriesMvpPresenter;
 import au.com.dealsdirect.ui.controller.categories.CategoriesMvpView;
 import au.com.dealsdirect.ui.controller.categories.CategoriesPresenter;
-import au.com.dealsdirect.ui.controller.account.AccountMvpPresenter;
-import au.com.dealsdirect.ui.controller.account.AccountMvpView;
-import au.com.dealsdirect.ui.controller.account.AccountPresenter;
 import au.com.dealsdirect.ui.controller.checkout.CheckoutMvpPresenter;
 import au.com.dealsdirect.ui.controller.checkout.CheckoutMvpView;
 import au.com.dealsdirect.ui.controller.checkout.CheckoutPresenter;
@@ -41,18 +41,21 @@ import au.com.dealsdirect.ui.controller.language.LanguagePresenter;
 import au.com.dealsdirect.ui.controller.login.LoginMvpPresenter;
 import au.com.dealsdirect.ui.controller.login.LoginMvpView;
 import au.com.dealsdirect.ui.controller.login.LoginPresenter;
-import au.com.dealsdirect.ui.controller.saleitemdetails.SaleItemDetailsMvpPresenter;
-import au.com.dealsdirect.ui.controller.saleitemdetails.SaleItemDetailsMvpView;
-import au.com.dealsdirect.ui.controller.saleitemdetails.SaleItemDetailsPresenter;
 import au.com.dealsdirect.ui.controller.orders.orderdetails.OrderDetailsMvpPresenter;
 import au.com.dealsdirect.ui.controller.orders.orderdetails.OrderDetailsMvpView;
 import au.com.dealsdirect.ui.controller.orders.orderdetails.OrderDetailsPresenter;
 import au.com.dealsdirect.ui.controller.orders.orders.OrdersMvpPresenter;
 import au.com.dealsdirect.ui.controller.orders.orders.OrdersMvpView;
 import au.com.dealsdirect.ui.controller.orders.orders.OrdersPresenter;
+import au.com.dealsdirect.ui.controller.register.RegisterMvpPresenter;
+import au.com.dealsdirect.ui.controller.register.RegisterMvpView;
+import au.com.dealsdirect.ui.controller.register.RegisterPresenter;
 import au.com.dealsdirect.ui.controller.salecategories.SaleCategoriesMvpPresenter;
 import au.com.dealsdirect.ui.controller.salecategories.SaleCategoriesMvpView;
 import au.com.dealsdirect.ui.controller.salecategories.SaleCategoriesPresenter;
+import au.com.dealsdirect.ui.controller.saleitemdetails.SaleItemDetailsMvpPresenter;
+import au.com.dealsdirect.ui.controller.saleitemdetails.SaleItemDetailsMvpView;
+import au.com.dealsdirect.ui.controller.saleitemdetails.SaleItemDetailsPresenter;
 import au.com.dealsdirect.ui.controller.saleitems.SaleItemsMvpPresenter;
 import au.com.dealsdirect.ui.controller.saleitems.SaleItemsMvpView;
 import au.com.dealsdirect.ui.controller.saleitems.SaleItemsPresenter;
@@ -186,4 +189,11 @@ public class ControllerModule {
     ViewVouchersMvpPresenter<ViewVouchersMvpView> provideVouchersPresnter(ViewVouchersPresenter<ViewVouchersMvpView> presenter) {
         return presenter;
     }
+
+
+    @Provides
+    RegisterMvpPresenter<RegisterMvpView> provideRegisterPresenter(RegisterPresenter<RegisterMvpView> presenter) {
+        return presenter;
+    }
+
 }

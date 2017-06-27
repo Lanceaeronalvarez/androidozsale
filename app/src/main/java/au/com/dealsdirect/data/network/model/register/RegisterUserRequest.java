@@ -1,0 +1,128 @@
+package au.com.dealsdirect.data.network.model.register;
+
+/**
+ * dp Created by Admin on 6/27/17.
+ */
+
+public class RegisterUserRequest {
+
+    String languageID;
+    String countryID;
+    int clientType;
+    String foreName;
+    String surName;
+    String email;
+    String password;
+    String referredBy;
+    String invitedBy;
+    String voucherID;
+    boolean tcWasRead;
+
+    public RegisterUserRequest(
+            String languageID, String countryID, int clientType,
+            String foreName, String surName, String email, String password,
+            String referredBy, String invitedBy, String voucherID,
+            boolean tcWasRead) {
+
+        this.languageID = languageID;
+        this.countryID = countryID;
+        this.clientType = clientType;
+        this.foreName = foreName;
+        this.surName = surName;
+        this.email = email;
+        this.password = password;
+        this.referredBy = referredBy;
+        this.invitedBy = invitedBy;
+        this.voucherID = voucherID;
+        this.tcWasRead = tcWasRead;
+    }
+
+
+    public String getLanguageID() {
+        return languageID;
+    }
+
+    public void setLanguageID(String languageID) {
+        this.languageID = languageID;
+    }
+
+    public String getCountryID() {
+        return countryID;
+    }
+
+    public void setCountryID(String countryID) {
+        this.countryID = countryID;
+    }
+
+    public int getClientType() {
+        return clientType;
+    }
+
+    public void setClientType(int clientType) {
+        this.clientType = clientType;
+    }
+
+    public String getForeName() {
+        return foreName;
+    }
+
+    public void setForeName(String foreName) {
+        this.foreName = foreName;
+    }
+
+    public String getSurName() {
+        return surName;
+    }
+
+    public void setSurName(String surName) {
+        this.surName = surName;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
+    public String getPassword() {
+        return password;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
+    }
+
+    public String getReferredBy() {
+        return referredBy;
+    }
+
+    public void setReferredBy(String referredBy) {
+        this.referredBy = referredBy;
+    }
+
+    public String getInvitedBy() {
+        return invitedBy;
+    }
+
+    public void setInvitedBy(String invitedBy) {
+        this.invitedBy = invitedBy;
+    }
+
+    public String getVoucherID() {
+        return voucherID;
+    }
+
+    public void setVoucherID(String voucherID) {
+        this.voucherID = voucherID;
+    }
+
+    public boolean isTcWasRead() {
+        return tcWasRead;
+    }
+
+    public void setTcWasRead(boolean tcWasRead) {
+        this.tcWasRead = tcWasRead;
+    }
+}

@@ -13,16 +13,20 @@ import android.widget.EditText;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.bluelinelabs.conductor.RouterTransaction;
+import com.bluelinelabs.conductor.changehandler.HorizontalChangeHandler;
+
 import java.util.regex.Pattern;
 
 import javax.inject.Inject;
 
 import au.com.dealsdirect.R;
-import au.com.dealsdirect.data.auth.Auth;
 import au.com.dealsdirect.data.auth.AuthHandler;
 import au.com.dealsdirect.ui.base.BaseController;
+import au.com.dealsdirect.ui.controller.register.RegisterController;
 import au.com.dealsdirect.utils.BundleBuilder;
 import butterknife.BindView;
+import butterknife.OnClick;
 
 public class LoginController extends BaseController implements LoginMvpView {
 
@@ -175,4 +179,10 @@ public class LoginController extends BaseController implements LoginMvpView {
         mPresenter.loginViaEmail(email, password);
     }
 
+    @OnClick(R.id.fragment_login_signup_text)
+    public void onSignUpClick(){
+        getRouter().pushController(RouterTransaction.with(RegisterController.newInstance())
+                .pushChangeHandler(new HorizontalChangeHandler())
+                .popChangeHandler(new HorizontalChangeHandler()));
+    }
 }

@@ -162,42 +162,7 @@ public class AccountController extends BaseController implements AccountMvpView 
 
     @Override
     public void triggerLogin(String option) {
-//
-//        switch (option) {
-//
-//            case "My Details":
-//                break;
-//            case "My Addresses":
-//                break;
-//            case "My Orders":
-//                break;
-//            case "My Vouchers":
-//                break;
-//            case "My Returns":
-//                break;
-//            case "Contact Us":
-//                if (new Auth().isAuthorized()) {
-//                    showViewContactUsController();
-//                } else {
-//                    new Auth().invokeLogin(getRouter(), new AuthHandler() {
-//                        @Override
-//                        public void success() {
-//                            showViewContactUsController();
-//                        }
-//
-//                        @Override
-//                        public void error() {
-//
-//                        }
-//                    });
-//                }
-//                break;
-//            case "Language":
-//                break;
-//
-//   	    default:
-//                    break;
-//            }
+
 
         ((MainMvpView)getActivity()).showLoginController(getRouter(),new AuthHandler() {
             @Override

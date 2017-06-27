@@ -1,13 +1,13 @@
 package au.com.dealsdirect.ui.controller.account;
 
+import android.util.Log;
+
 import java.util.ArrayList;
 import java.util.Arrays;
 
 import javax.inject.Inject;
 
 import au.com.dealsdirect.data.DataManager;
-import au.com.dealsdirect.data.auth.Auth;
-import au.com.dealsdirect.data.auth.AuthHandler;
 import au.com.dealsdirect.ui.base.BasePresenter;
 import au.com.dealsdirect.utils.rx.SchedulerProvider;
 import io.reactivex.disposables.CompositeDisposable;
@@ -42,6 +42,8 @@ public class AccountPresenter<V extends AccountMvpView> extends BasePresenter<V>
     @Override
     public void onAccountItemClick(String option) {
         if (getDataManager().isAuthorized()) {
+
+            Log.d("AccountPresenter", "logged in");
             switch (option) {
 
                 case "My Details":

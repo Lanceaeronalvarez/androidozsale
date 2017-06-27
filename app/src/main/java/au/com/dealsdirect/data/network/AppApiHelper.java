@@ -7,7 +7,6 @@ import com.mysale.genie.utility.config.api.GetAppSettingsSection;
 import com.mysale.genie.utility.config.api.GetServerSettings;
 import com.rx2androidnetworking.Rx2AndroidNetworking;
 
-import org.json.JSONObject;
 import java.util.LinkedHashMap;
 import java.util.List;
 
@@ -37,15 +36,15 @@ import au.com.dealsdirect.data.network.model.productdetails.GetPublicSaleDetails
 import au.com.dealsdirect.data.network.model.productdetails.GetPublicSaleDetailsResponse;
 import au.com.dealsdirect.data.network.model.publicsalescategories.GetPublicSalesCategoriesRequest;
 import au.com.dealsdirect.data.network.model.publicsalescategories.GetPublicSalesCategoriesResponse;
+import au.com.dealsdirect.data.network.model.register.RegisterUserRequest;
+import au.com.dealsdirect.data.network.model.register.RegisterUserResponse;
 import au.com.dealsdirect.data.network.model.saleitemdetails.GetSaleItemDetailsResponse;
 import au.com.dealsdirect.data.network.model.saleitems.GetPublicSaleItemsRequest;
 import au.com.dealsdirect.data.network.model.saleitems.GetPublicSaleItemsResponse;
-import au.com.dealsdirect.data.network.model.viewcontactitem.GetContactsResponse;
-import au.com.dealsdirect.data.network.model.userdetails.GetUserDetailsResponse;
-import au.com.dealsdirect.data.network.model.userdetails.SetUserDetailsRequest;
 import au.com.dealsdirect.data.network.model.saleitems.GetSaleItemsRequest;
 import au.com.dealsdirect.data.network.model.saleitems.GetSaleItemsResponse;
-import au.com.dealsdirect.data.network.model.contactitem.GetContactsResponse.Response;
+import au.com.dealsdirect.data.network.model.userdetails.GetUserDetailsResponse;
+import au.com.dealsdirect.data.network.model.userdetails.SetUserDetailsRequest;
 import au.com.dealsdirect.data.network.model.vouchers.AddAndApplyVoucherByKeyRequest;
 import au.com.dealsdirect.data.network.model.vouchers.AddAndApplyVoucherByKeyResponse;
 import au.com.dealsdirect.data.network.model.vouchers.AddVoucherByKeyRequest;
@@ -225,6 +224,11 @@ public class AppApiHelper implements ApiHelper {
                 .addJSONObjectBody(JsonUtils.convertToJsonObject(requestValue))
                 .build()
                 .getObjectObservable(Logout.ResponseValue.class);
+    }
+
+    @Override
+    public Observable<RegisterUserResponse> callRegiser(RegisterUserRequest requestValue) {
+        return null;
     }
 
     @Override
