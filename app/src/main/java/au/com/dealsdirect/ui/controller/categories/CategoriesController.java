@@ -24,7 +24,11 @@ import au.com.dealsdirect.data.network.model.category.GetCategoryTreeResponse;
 import au.com.dealsdirect.data.network.model.publicsalescategories.GetPublicSalesCategoriesResponse;
 import au.com.dealsdirect.ui.base.BaseActivity;
 import au.com.dealsdirect.ui.base.BaseController;
+import au.com.dealsdirect.ui.controller.categories.adapter.CategoriesAdapter;
+import au.com.dealsdirect.ui.controller.categories.adapter.SubCategoriesAdapter;
 import au.com.dealsdirect.ui.controller.categories.listener.CategoryClickListener;
+import au.com.dealsdirect.ui.controller.categories.listener.SubCategoryClickListener;
+import au.com.dealsdirect.ui.controller.categories.listener.SubCategoryItemClickListener;
 import au.com.dealsdirect.ui.controller.shops.ShopsController;
 import au.com.dealsdirect.ui.custom.transitions.RightHorizontalTransitionChangeHandler;
 import au.com.dealsdirect.utils.BundleBuilder;
@@ -35,13 +39,16 @@ import butterknife.BindView;
  */
 
 public class CategoriesController extends BaseController
-        implements CategoriesMvpView, CategoryClickListener {
+        implements CategoriesMvpView, CategoryClickListener, SubCategoryClickListener, SubCategoryItemClickListener {
 
     @Inject
     CategoriesMvpPresenter<CategoriesMvpView> mPresenter;
 
     @BindView(R.id.categories_recyclerview)
     RecyclerView mRecyclerView;
+
+    @BindView(R.id.sub_categories_recyclerview)
+    RecyclerView mSubCategoryRecyclerView;
 
     @BindView(R.id.partial_toolbar_title_view)
     TextView mTitleTextView;
@@ -50,11 +57,16 @@ public class CategoriesController extends BaseController
     private CategoriesAdapter mAdapter;
     private CategoryClickListener mCategoryClickListener;
 
+    private SubCategoriesAdapter mSubCategoryAdapter;
+    private SubCategoryClickListener mSubCategoryClickListener;
+    private SubCategoryItemClickListener mSubCategoryItemClickListener;
 
     private List<GetCategoryTreeResponse> mCategories;
     private static Map<String, List<GetCategoryTreeResponse>> mCategoryMap = new HashMap<>();
     private String mChosenCategory = "shop";
     private String mChosenCategoryKey;
+
+    private List<GetCategoryTreeResponse> mResultSubCategories;
 
     public static CategoriesController newInstance() {
 
@@ -84,6 +96,8 @@ public class CategoriesController extends BaseController
         ((BaseActivity) getActivity()).hideBottomNavigationView();
 
         setUp(view);
+
+
     }
 
 
@@ -99,9 +113,18 @@ public class CategoriesController extends BaseController
         mTitleTextView.setText(R.string.category_title);
 
         mCategoryClickListener = this;
+        mSubCategoryClickListener = this;
+        mSubCategoryItemClickListener = this;
+
         mAdapter = new CategoriesAdapter(new ArrayList<>(), mPresenter, mCategoryClickListener);
         mRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity(), LinearLayoutManager.VERTICAL, false));
         mRecyclerView.setAdapter(mAdapter);
+
+        mSubCategoryAdapter = new SubCategoriesAdapter(
+                new ArrayList<>(), mPresenter, mSubCategoryClickListener, mSubCategoryItemClickListener, mCategoryMap);
+        mSubCategoryRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity(), LinearLayoutManager.VERTICAL, false));
+        mSubCategoryRecyclerView.setAdapter(mSubCategoryAdapter);
+
 
         mPresenter.loadCategoryTree();
     }
@@ -127,11 +150,13 @@ public class CategoriesController extends BaseController
 
 
     @Override
-    public void onCategoryClicked(String categoryID, String categoryName, String categoryKey) {
-        getRouter().setRoot(
-                RouterTransaction.with(new ShopsController(categoryID, categoryName))
-                        .pushChangeHandler(new RightHorizontalTransitionChangeHandler())
-                        .popChangeHandler(new RightHorizontalTransitionChangeHandler()));
+    public void onCategoryClicked(int position, String categoryID, String categoryName, String categoryKey) {
+//        getRouter().setRoot(
+//                RouterTransaction.with(new ShopsController(categoryID, categoryName, categoryKey))
+//                        .pushChangeHandler(new RightHorizontalTransitionChangeHandler())
+//                        .popChangeHandler(new RightHorizontalTransitionChangeHandler()));
+
+        mSubCategoryAdapter.replaceData(mResultSubCategories.get(position).getChildren());
 
         mChosenCategory = categoryName;
         mChosenCategoryKey = categoryKey;
@@ -151,8 +176,11 @@ public class CategoriesController extends BaseController
             mCategoryMap.put(i.getKey(), i.getChildren());
         }
 
-        List<GetCategoryTreeResponse> result = fillCategoryContent();
-        mAdapter.replaceData(result);
+        mResultSubCategories = fillCategoryContent();
+
+        mAdapter.replaceData(mResultSubCategories);
+
+        mSubCategoryAdapter.replaceData(mResultSubCategories.get(0).getChildren());
 
     }
 
@@ -195,4 +223,24 @@ public class CategoriesController extends BaseController
         }
     }
 
+    public void fillSubCategories() {
+
+    }
+
+    @Override
+    public void onSubCategoryClicked(String categoryID, String categoryName, String categoryKey) {
+        getRouter().setRoot(
+                RouterTransaction.with(new ShopsController(categoryID, categoryName, categoryKey))
+                        .pushChangeHandler(new RightHorizontalTransitionChangeHandler())
+                        .popChangeHandler(new RightHorizontalTransitionChangeHandler()));
+
+    }
+
+    @Override
+    public void onSubCategoryItemClicked(String categoryID, String categoryName, String categoryKey) {
+        getRouter().setRoot(
+                RouterTransaction.with(new ShopsController(categoryID, categoryName, categoryKey))
+                        .pushChangeHandler(new RightHorizontalTransitionChangeHandler())
+                        .popChangeHandler(new RightHorizontalTransitionChangeHandler()));
+    }
 }

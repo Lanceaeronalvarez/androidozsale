@@ -1,4 +1,4 @@
-package au.com.dealsdirect.ui.controller.productdetails;
+package au.com.dealsdirect.ui.controller.saleitemdetails;
 
 import android.content.Context;
 import android.support.annotation.Nullable;
@@ -22,10 +22,10 @@ import butterknife.ButterKnife;
  * dp Created by Admin on 6/16/17.
  */
 
-public class ProductDetailsView extends ElasticDragDismissFrameLayout {
+public class SaleItemDetailsView extends ElasticDragDismissFrameLayout {
 
     @BindView(R.id.product_details_container)
-    public ProductDetailsView mProductDetailsView;
+    public SaleItemDetailsView mSaleItemDetailsView;
 
     @BindView(R.id.discountLabel)
     public TextView mDiscountLabel;
@@ -55,7 +55,7 @@ public class ProductDetailsView extends ElasticDragDismissFrameLayout {
     public ImageView mProductSharedImage;
 
 
-    public ProductDetailsView(Context context, @Nullable AttributeSet attrs) {
+    public SaleItemDetailsView(Context context, @Nullable AttributeSet attrs) {
         super(context, attrs);
 
     }

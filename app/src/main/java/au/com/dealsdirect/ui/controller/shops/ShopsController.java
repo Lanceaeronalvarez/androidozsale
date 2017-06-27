@@ -18,9 +18,7 @@ import java.util.List;
 import javax.inject.Inject;
 
 import au.com.dealsdirect.R;
-import au.com.dealsdirect.data.network.model.banner.GetBannerRequest;
 import au.com.dealsdirect.data.network.model.banner.GetBannerResponse;
-import au.com.dealsdirect.data.network.model.banner.GetPublicSalesBannerRequest;
 import au.com.dealsdirect.ui.base.BaseController;
 import au.com.dealsdirect.ui.controller.categories.CategoriesController;
 import au.com.dealsdirect.ui.controller.saleitems.SaleItemsController;
@@ -40,7 +38,8 @@ public class ShopsController extends BaseController implements ShopsMvpView, Ban
 
     private static final String KEY_TEXT = "ShopController.KEY_TEXT";
     private static final String KEY_CATEGORY_ID = "ShopController.KEY_CATEGORY_ID";
-    private static final String KEY_CATEGORY_NAME= "ShopController.KEY_CATEGORY_NAME";
+    private static final String KEY_CATEGORY_NAME = "ShopController.KEY_CATEGORY_NAME";
+    private static final String KEY_CATEGORY_MAP = "ShopController.KEY_CATEGORY_KEY";
 
     @Inject
     ShopsMvpPresenter<ShopsMvpView> mPresenter;
@@ -54,15 +53,28 @@ public class ShopsController extends BaseController implements ShopsMvpView, Ban
 
     private String mCategoryID;
     private String mCategoryName;
+    private String mCategoryKey;
 
     private List<GetBannerResponse> sales = new LinkedList<>();
 
-    public ShopsController(String categoryID, String categoryName) {
+    public ShopsController(String categoryID, String categoryName, String categoryKey) {
 
         this(new BundleBuilder(new Bundle())
                 .putString(KEY_CATEGORY_ID, categoryID)
                 .putString(KEY_CATEGORY_NAME, categoryName)
+                .putString(KEY_CATEGORY_MAP, categoryKey)
                 .build());
+    }
+
+
+    public static ShopsController newInstance(String categoryID, String categoryName, String categoryKey) {
+
+        return new ShopsController(
+                new BundleBuilder(new Bundle())
+                        .putString(KEY_CATEGORY_ID, categoryID)
+                        .putString(KEY_CATEGORY_NAME, categoryName)
+                        .putString(KEY_CATEGORY_MAP, categoryKey)
+                        .build());
     }
 
     public ShopsController() {
@@ -73,6 +85,7 @@ public class ShopsController extends BaseController implements ShopsMvpView, Ban
         super(args);
         mCategoryID = getArgs().getString(KEY_CATEGORY_ID);
         mCategoryName = getArgs().getString(KEY_CATEGORY_NAME);
+        mCategoryKey = getArgs().getString(KEY_CATEGORY_MAP);
     }
 
     @Override
@@ -101,18 +114,9 @@ public class ShopsController extends BaseController implements ShopsMvpView, Ban
 
     @Override
     protected void setUp(View view) {
-        GetPublicSalesBannerRequest getPublicSalesBannerRequest;
-
-        GetBannerRequest getBannerRequest = new GetBannerRequest();
-        getBannerRequest.setOffset(String.valueOf(0));
-        getBannerRequest.setLimit(String.valueOf(10));
-        getBannerRequest.setCategory(mCategoryName);
-        getBannerRequest.setCategoryId(mCategoryID);
-
-
 
         if (sales.size() == 0) {
-            mPresenter.loadShopsBanner(getBannerRequest);
+            mPresenter.loadShopsBanner(mCategoryName,mCategoryID);
         } else {
             mBannersAdapter = new BannersAdapter(getActivity(), sales, mBannerClickListener);
 
@@ -123,16 +127,18 @@ public class ShopsController extends BaseController implements ShopsMvpView, Ban
 
 
     @Override
-    public void onBannerClicked(String bannerTitle, String bannerId, int position,
-                                String imageUrl) {
+    public void onBannerClicked(
+            String saleId,
+            String bannerTitle,
+            String bannerId,
+            int position,
+            String imageUrl) {
 
         List<String> names = new ArrayList<>();
         names.add(bannerId + position);
 
-        getRouter().pushController(RouterTransaction.with(new SaleItemsController(bannerTitle,
-                bannerId,
-                position,
-                imageUrl))
+        getRouter().pushController(RouterTransaction.with(
+                SaleItemsController.newInstance(saleId, bannerTitle, bannerId, position, imageUrl, mCategoryKey))
                 .pushChangeHandler(new HorizontalChangeHandler())
                 .popChangeHandler(new HorizontalChangeHandler()));
     }
@@ -148,7 +154,6 @@ public class ShopsController extends BaseController implements ShopsMvpView, Ban
 
     @Override
     public void showShopBanners(List<GetBannerResponse> getBannerResponses) {
-
 
         sales = getBannerResponses;
 

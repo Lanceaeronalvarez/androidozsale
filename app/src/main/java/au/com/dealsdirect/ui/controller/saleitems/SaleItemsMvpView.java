@@ -13,6 +13,6 @@ public interface SaleItemsMvpView extends MvpView{
 
     void refresh();
 
-    void showProductDetails(String imageUrl, String itemId, String saleId);
+    void showProductDetails(String seoIdentifierId, String imageUrl, String itemId, String saleId);
 
 }

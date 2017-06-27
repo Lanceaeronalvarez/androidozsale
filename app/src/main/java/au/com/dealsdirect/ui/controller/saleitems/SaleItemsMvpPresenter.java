@@ -1,7 +1,5 @@
 package au.com.dealsdirect.ui.controller.saleitems;
 
-import org.json.JSONObject;
-
 import au.com.dealsdirect.ui.base.MvpPresenter;
 
 /**
@@ -10,8 +8,8 @@ import au.com.dealsdirect.ui.base.MvpPresenter;
 
 public interface SaleItemsMvpPresenter<V extends SaleItemsMvpView> extends MvpPresenter<V> {
 
-    void loadSaleItems(String categoryKey, JSONObject faceFilter);
+    void loadSaleItems(String categoryKey, String saleId);
 
-    void loadProductDetails(String imageUrl, String itemId, String saleId);
+    void loadProductDetails(String seoIdentifierId, String imageUrl, String itemId, String saleId);
 
 }

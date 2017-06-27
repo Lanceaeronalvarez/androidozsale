@@ -1,8 +1,12 @@
 package au.com.dealsdirect.ui.controller.saleitems;
 
 import com.androidnetworking.error.ANError;
+import com.google.gson.Gson;
 
-import org.json.JSONObject;
+import java.util.HashMap;
+import java.util.LinkedHashMap;
+import java.util.LinkedList;
+import java.util.List;
 
 import javax.inject.Inject;
 
@@ -22,6 +26,8 @@ import io.reactivex.functions.Consumer;
 public class SaleItemsPresenter<V extends SaleItemsMvpView> extends BasePresenter<V>
         implements SaleItemsMvpPresenter<V> {
 
+    private static final String SEARCH_QUERY_TAG = "search_query";
+
     String mSaleId="";
     @Inject
     public SaleItemsPresenter(DataManager dataManager, SchedulerProvider schedulerProvider,
@@ -30,16 +36,32 @@ public class SaleItemsPresenter<V extends SaleItemsMvpView> extends BasePresente
     }
 
     @Override
-    public void loadSaleItems(String categoryKey, JSONObject facetFilter) {
+    public void loadSaleItems(String categoryKey, String saleId) {
         getMvpView().showLoading();
 
+        List<String> saleIds = new LinkedList<>();
+        saleIds.add(saleId);
+
+        LinkedHashMap<String, String> mSearchQueryModelFiltered = new LinkedHashMap<>();
+
+
+        HashMap<String, List<String>> facetFilters = new HashMap<>();
+        facetFilters.put("attributes.saleId", saleIds);
+
+        String facetFiltersString = new Gson().toJson(facetFilters);
         GetSaleItemsRequest getSaleItemsRequest = new GetSaleItemsRequest();
-        getSaleItemsRequest.setFacetFilter(facetFilter);
-        getSaleItemsRequest.setCategoryKey(categoryKey);
-        getSaleItemsRequest.setLanguageID(getDataManager().getLanguageId());
-        getSaleItemsRequest.setPageNumber(String.valueOf(10));
+        getSaleItemsRequest.setFacetFilter(facetFiltersString);
+
+        if (categoryKey!=null){
+            getSaleItemsRequest.setCategoryKey("[\"" + categoryKey + "\"]");
+        }else{
+            getSaleItemsRequest.setCategoryKey("[]");
+        }
+
+        getSaleItemsRequest.setLanguageID("");
+        getSaleItemsRequest.setPageNumber(String.valueOf(0));
         getSaleItemsRequest.setQuery("");
-        getSaleItemsRequest.setPageSize("");
+        getSaleItemsRequest.setPageSize("50");
 
         getCompositeDisposable()
                 .add(getDataManager()
@@ -81,8 +103,8 @@ public class SaleItemsPresenter<V extends SaleItemsMvpView> extends BasePresente
     }
 
     @Override
-    public void loadProductDetails(String imageUrl, String itemId, String saleId){
-        getMvpView().showProductDetails(imageUrl,itemId,saleId);
+    public void loadProductDetails(String seoIdentifierId, String imageUrl, String itemId, String saleId){
+        getMvpView().showProductDetails(seoIdentifierId,imageUrl,itemId,saleId);
     }
 
 }

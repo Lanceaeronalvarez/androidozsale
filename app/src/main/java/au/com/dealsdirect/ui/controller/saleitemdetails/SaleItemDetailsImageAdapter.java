@@ -1,4 +1,4 @@
-package au.com.dealsdirect.ui.controller.productdetails;
+package au.com.dealsdirect.ui.controller.saleitemdetails;
 
 import android.content.Context;
 import android.support.v4.content.ContextCompat;
@@ -10,26 +10,27 @@ import android.widget.ImageView;
 
 import com.github.chrisbanes.photoview.ScalableImageView;
 
+import java.util.LinkedList;
+import java.util.List;
+
 import au.com.dealsdirect.R;
-import au.com.dealsdirect.data.network.model.productdetails.GetPublicItemDetailsResponse;
 import au.com.dealsdirect.utils.ImageUtils;
-import au.com.dealsdirect.utils.LegacyStringImageUtils;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
 /**
- * Created by smartwave on 09/06/2017.
+ * dp Created by Admin on 6/25/17.
  */
 
-public class ProductDetailsImageAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
+public class SaleItemDetailsImageAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>  {
 
-    GetPublicItemDetailsResponse.Value mData;
+    List<String> mData = new LinkedList<>();
     Context mContext;
     String mSaleId;
-    ProductDetailsController mProductDetailsController;
+    SaleItemDetailsController mSaleItemDetailsController;
     int mViewType;
 
-    public void replaceData(GetPublicItemDetailsResponse.Value data) {
+    public void replaceData(List<String> data) {
         mData = data;
         notifyDataSetChanged();
     }
@@ -45,30 +46,32 @@ public class ProductDetailsImageAdapter extends RecyclerView.Adapter<RecyclerVie
         }
     }
 
-    public ProductDetailsImageAdapter(
-            ProductDetailsController productDetailsController,
-            GetPublicItemDetailsResponse.Value data,
+    public SaleItemDetailsImageAdapter(
+            SaleItemDetailsController saleItemDetailsController,
+            List<String> data,
             String saleId,
             int viewType) {
-        this.mProductDetailsController = productDetailsController;
+        this.mSaleItemDetailsController = saleItemDetailsController;
         this.mData = data;
         this.mSaleId = saleId;
         this.mViewType = viewType;
     }
 
-    @Override public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+
+    @Override
+    public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         mContext = parent.getContext();
         View view = null;
 
         if (viewType == 1) {
             view = LayoutInflater.from(parent.getContext())
-                                 .inflate(R.layout.product_details_image_row, parent, false);
+                    .inflate(R.layout.product_details_image_row, parent, false);
         } else if (viewType == 2) {
             view = LayoutInflater.from(parent.getContext())
-                                 .inflate(R.layout.circle_indicator_image_layout, parent, false);
+                    .inflate(R.layout.circle_indicator_image_layout, parent, false);
         }
 
-        ProductDetailsImageAdapter.ViewHolder vh = new ProductDetailsImageAdapter.ViewHolder(view);
+        SaleItemDetailsImageAdapter.ViewHolder vh = new SaleItemDetailsImageAdapter.ViewHolder(view);
         if (vh.image instanceof ScalableImageView) {
             //pass presenter in the future
             ((ScalableImageView) vh.image).init();
@@ -76,22 +79,14 @@ public class ProductDetailsImageAdapter extends RecyclerView.Adapter<RecyclerVie
         return vh;
     }
 
-    @Override public void onBindViewHolder(RecyclerView.ViewHolder holder, final int position) {
-        ProductDetailsImageAdapter.ViewHolder vh = (ProductDetailsImageAdapter.ViewHolder) holder;
+    @Override
+    public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
+        SaleItemDetailsImageAdapter.ViewHolder vh = (SaleItemDetailsImageAdapter.ViewHolder) holder;
 
         switch (mViewType) {
             case 1:
-                if (mData.getImages()
-                         .size() != 0) {
-                    String url =
-                            LegacyStringImageUtils.productDetailsImageURLString(mData.getBrandID(),
-                                                                                mData.getImages()
-                                                                                     .get(position)
-                                                                                     .getID(),
-                                                                                mData.getImages()
-                                                                                     .get(position)
-                                                                                     .getPreview());
-
+                if (mData.size() != 0) {
+                    String url = mData.get(position);
 
                     ImageUtils.loadImage(mContext, url, vh.image);
 //                    if (position == 0) {
@@ -107,7 +102,7 @@ public class ProductDetailsImageAdapter extends RecyclerView.Adapter<RecyclerVie
                 }
 
                 vh.image.setImageDrawable(ContextCompat.getDrawable(vh.image.getContext(),
-                                                                    R.drawable.circle_indicator_active));
+                        R.drawable.circle_indicator_active));
                 break;
             default:
                 break;
@@ -122,11 +117,9 @@ public class ProductDetailsImageAdapter extends RecyclerView.Adapter<RecyclerVie
 
     @Override public int getItemCount() {
         if (mData != null) {
-            return mData.getImages()
-                        .size();
+            return mData.size();
         } else {
             return 0;
         }
     }
-
 }

@@ -124,4 +124,11 @@ public class LegacyStringImageUtils {
         return urlString;
 
     }
+
+
+    public static String saleDetailsImageURLString(String imageId) {
+
+        return imageId;
+
+    }
 }

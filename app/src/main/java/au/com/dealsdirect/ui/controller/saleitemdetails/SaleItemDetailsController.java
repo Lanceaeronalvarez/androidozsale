@@ -1,5 +1,6 @@
-package au.com.dealsdirect.ui.controller.productdetails;
+package au.com.dealsdirect.ui.controller.saleitemdetails;
 
+import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.graphics.Paint;
 import android.net.Uri;
@@ -8,7 +9,6 @@ import android.support.annotation.NonNull;
 import android.support.v4.util.Pair;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -25,17 +25,17 @@ import com.zhy.view.flowlayout.TagAdapter;
 import com.zhy.view.flowlayout.TagFlowLayout;
 
 import java.util.ArrayList;
-import java.util.Set;
+import java.util.LinkedList;
+import java.util.List;
 
 import javax.inject.Inject;
 
 import au.com.dealsdirect.R;
-import au.com.dealsdirect.data.network.model.productdetails.GetPublicItemDetailsRequest;
-import au.com.dealsdirect.data.network.model.productdetails.GetPublicItemDetailsResponse;
-import au.com.dealsdirect.data.network.model.productdetails.GetPublicSaleDetailsRequest;
-import au.com.dealsdirect.data.network.model.productdetails.GetPublicSaleDetailsResponse;
+import au.com.dealsdirect.data.network.model.saleitemdetails.GetSaleItemDetailsResponse;
+import au.com.dealsdirect.data.network.model.saleitemdetails.SkuVariant;
 import au.com.dealsdirect.ui.base.BaseActivity;
 import au.com.dealsdirect.ui.base.BaseController;
+import au.com.dealsdirect.ui.controller.saleitems.SaleItemsController;
 import au.com.dealsdirect.ui.controller.shops.changehandler.DetailPopTransitionChangeHandler;
 import au.com.dealsdirect.utils.BundleBuilder;
 import au.com.dealsdirect.utils.ImageUtils;
@@ -48,11 +48,13 @@ import butterknife.OnClick;
  * Created by smartwave on 08/06/2017.
  */
 
-public class ProductDetailsController extends BaseController implements ProductDetailsMvpView {
+public class SaleItemDetailsController extends BaseController implements SaleItemDetailsMvpView {
 
     private final String KEY_ITEM_ID = "KEY_ITEM_ID";
     private final String KEY_SALE_ID = "KEY_SALE_ID";
     private final String KEY_ITEM_IMAGE_ID = "KEY_IMAGE_ID";
+    private final String KEY_SEO_IDENTIFIER_ID = "KEY_SEO_IDENTIFIER";
+
     private final String KEY_COUNTRY_ID = "KEY_COUNTRY_ID";
     private final String KEY_LANGUAGE_ID = "KEY_LANGUAGE_ID";
     private final String KEY_USER_GROUP = "KEY_USER_GROUP";
@@ -60,18 +62,13 @@ public class ProductDetailsController extends BaseController implements ProductD
     private final String KEY_INCLUDE_PRICES = "KEY_INCLUDE_PRICES";
 
     @Inject
-    ProductDetailsMvpPresenter<ProductDetailsMvpView> mPresenter;
+    SaleItemDetailsMvpPresenter<SaleItemDetailsMvpView> mPresenter;
 
     private String mSaleId;
     private String mItemId;
     private String mItemImageUrl;
 
-    private String mCountryId = "DA";
-    private String mLanguageId = "EN";
-    private String mUserGroup = "";
-    private boolean mGetBigImages = true;
-    private boolean mIncludePrices = true;
-
+    private String mSeoIdentifierId;
 
     //product details views
 
@@ -102,47 +99,67 @@ public class ProductDetailsController extends BaseController implements ProductD
     @BindView(R.id.product_details_shared_image)
     ImageView mProductSharedImage;
 
-    String mHtmlHeader = "";
-    String mHtmlFooter = "";
+    private String mHtmlHeader = "";
+    private String mHtmlFooter = "";
 
-    LinearLayoutManager mProductImagesRvLayoutManager;
-    ProductDetailsImageAdapter mProductImagesAdapter;
-    ProductDetailsImageAdapter mOtherImagesAdapter;
-    TagAdapter<Pair<String, String>> mSizesAdapter;
-    ArrayList<Pair<String, String>> mProductSizes = new ArrayList<>();
+    private SaleItemDetailsImageAdapter mSaleItemImagesAdapter;
+    private SaleItemDetailsImageAdapter mSaleItemImagesIndicatorAdapter;
 
-    boolean hasSizes = false;
-    boolean didSelectSize = false;
-    String selectedSkuId = "";
+    private TagAdapter<Pair<String, String>> mSizesAdapter;
+    private ArrayList<Pair<String, String>> mProductSizes = new ArrayList<>();
+
+    private boolean hasSizes = false;
+    private boolean didSelectSize = false;
+    private String selectedSkuId = "";
 
     private final ElasticDragDismissFrameLayout.ElasticDragDismissCallback dragDismissListener
             = new ElasticDragDismissFrameLayout.ElasticDragDismissCallback() {
         @Override
         public void onDragDismissed() {
             overridePopHandler(new DetailPopTransitionChangeHandler());
-            getRouter().popController(ProductDetailsController.this);
+            getRouter().popController(SaleItemDetailsController.this);
         }
     };
 
-    public ProductDetailsController(String imageUrl, String itemId, String saleId) {
+    public SaleItemDetailsController(
+            String seoIdentifierId, String imageUrl, String itemId, String saleId) {
         this(new BundleBuilder(new Bundle())
                 .putString("KEY_IMAGE_ID", imageUrl)
+                .putString("KEY_SEO_IDENTIFIER", seoIdentifierId)
                 .putString("KEY_ITEM_ID", itemId)
                 .putString("KEY_SALE_ID", saleId)
                 .build());
     }
 
-    public ProductDetailsController(Bundle args) {
+    public static SaleItemsController newInstance(
+            String seoIdentifierId,
+            String imageUrl,
+            String itemId,
+            String saleId) {
+
+        return new SaleItemsController(
+                new BundleBuilder(new Bundle())
+                        .putString("KEY_IMAGE_ID", imageUrl)
+                        .putString("KEY_SEO_IDENTIFIER", seoIdentifierId)
+                        .putString("KEY_ITEM_ID", itemId)
+                        .putString("KEY_SALE_ID", saleId)
+                        .build());
+    }
+
+    public SaleItemDetailsController(Bundle args) {
         super(args);
         mSaleId = args.getString(KEY_SALE_ID);
         mItemId = args.getString(KEY_ITEM_ID);
         mItemImageUrl = args.getString(KEY_ITEM_IMAGE_ID);
+        mSeoIdentifierId = args.getString(KEY_SEO_IDENTIFIER_ID);
     }
 
 
     @Override
     protected View inflateView(@NonNull LayoutInflater inflater, @NonNull ViewGroup container) {
-        ProductDetailsView view = (ProductDetailsView) inflater.inflate(R.layout.controller_product_details, container, false);
+        SaleItemDetailsView view = (SaleItemDetailsView)
+                inflater.inflate(R.layout.controller_product_details, container, false);
+
         getControllerComponent().inject(this);
         mPresenter.onAttach(this);
         return view;
@@ -152,55 +169,43 @@ public class ProductDetailsController extends BaseController implements ProductD
     protected void onViewBound(@NonNull View view) {
         super.onViewBound(view);
         setRetainViewMode(RetainViewMode.RELEASE_DETACH);
-        ((ElasticDragDismissFrameLayout)view).addListener(dragDismissListener);
+        ((ElasticDragDismissFrameLayout) view).addListener(dragDismissListener);
 
         mProductSharedImage.setTransitionName(mItemId);
         ImageUtils.loadImage(getActivity(), mItemImageUrl, mProductSharedImage);
 
 
+        assert getActivity() != null;
         ((BaseActivity) getActivity()).hideBottomNavigationView();
         //init api call
-        GetPublicItemDetailsRequest itemDetailsRequest = new GetPublicItemDetailsRequest(mItemId,
-                mSaleId,
-                mGetBigImages,
-                mIncludePrices,
-                mLanguageId,
-                mCountryId,
-                mUserGroup);
 
-        GetPublicSaleDetailsRequest saleDetailsRequest =
-                new GetPublicSaleDetailsRequest(mSaleId, mCountryId, mUserGroup, mLanguageId);
-
-        mPresenter.loadProductDetails(itemDetailsRequest, saleDetailsRequest);
+        mPresenter.loadSaleItemDetails(mSeoIdentifierId);
 
         mOtherImagesRv.setLayoutManager(new LinearLayoutManager(getActivity(),
                 LinearLayoutManager.HORIZONTAL,
                 false));
 
-        mOtherImagesAdapter = new ProductDetailsImageAdapter(this, null, mSaleId, 2);
-        mOtherImagesRv.setAdapter(mOtherImagesAdapter);
+        mSaleItemImagesIndicatorAdapter = new SaleItemDetailsImageAdapter(this, null, mSaleId, 2);
+        mOtherImagesRv.setAdapter(mSaleItemImagesIndicatorAdapter);
 
-        mProductImagesRvLayoutManager =
-                new LinearLayoutManager(getActivity(), LinearLayoutManager.HORIZONTAL, false);
+        LinearLayoutManager mProductImagesRvLayoutManager
+                = new LinearLayoutManager(getActivity(), LinearLayoutManager.HORIZONTAL, false);
         mProductImagesRv.setLayoutManager(mProductImagesRvLayoutManager);
-        mProductImagesAdapter = new ProductDetailsImageAdapter(this, null, mSaleId, 1);
-        mProductImagesRv.setAdapter(mProductImagesAdapter);
+        mSaleItemImagesAdapter = new SaleItemDetailsImageAdapter(this, null, mSaleId, 1);
+        mProductImagesRv.setAdapter(mSaleItemImagesAdapter);
 
-        mProductImagesRv.addOnPageChangedListener(new RecyclerViewPager.OnPageChangedListener() {
-            @Override
-            public void OnPageChanged(int i, int i1) {
-                RecyclerView.ViewHolder vhNew = mOtherImagesRv.findViewHolderForLayoutPosition(i1);
-                vhNew.itemView.animate()
-                        .alpha(1f)
-                        .setDuration(200)
-                        .start();
+        mProductImagesRv.addOnPageChangedListener((i, i1) -> {
+            RecyclerView.ViewHolder vhNew = mOtherImagesRv.findViewHolderForLayoutPosition(i1);
+            vhNew.itemView.animate()
+                    .alpha(1f)
+                    .setDuration(200)
+                    .start();
 
-                RecyclerView.ViewHolder vhOld = mOtherImagesRv.findViewHolderForLayoutPosition(i);
-                vhOld.itemView.animate()
-                              .alpha(0.40f)
-                              .setDuration(200)
-                              .start();
-            }
+            RecyclerView.ViewHolder vhOld = mOtherImagesRv.findViewHolderForLayoutPosition(i);
+            vhOld.itemView.animate()
+                    .alpha(0.40f)
+                    .setDuration(200)
+                    .start();
         });
 
         mHtmlHeader = getActivity().getResources()
@@ -232,114 +237,12 @@ public class ProductDetailsController extends BaseController implements ProductD
         super.onDestroyView(view);
     }
 
+
+    @SuppressLint("SetJavaScriptEnabled")
     @Override
-    public void showProductDetails(GetPublicItemDetailsResponse.Value product) {
+    public void showSaleDetails(GetSaleItemDetailsResponse saleDetail) {
 
-
-        final android.os.Handler handler = new android.os.Handler();
-        handler.postDelayed(() -> {
-            if(mProductImagesRv!=null){
-                mProductImagesRv.setVisibility(View.VISIBLE);
-
-            }
-
-            if (mProductSharedImage != null) {
-
-                ImageUtils.clearImage(getActivity(), mProductSharedImage);
-            }
-        }, 1000);
-
-
-        mProductImagesAdapter.replaceData(product);
-        mOtherImagesAdapter.replaceData(product);
-
-        if (product.getImages()
-                .size() != 0) {
-            mOtherImagesRv.setVisibility(View.VISIBLE);
-        }
-        //bind UI values here
-
-        //product info
-        mProductName.setText(product.getName());
-        //        mProductCategory.setText(productDetail.getBrandName());
-        mProductPrice.setText(PriceUtils.getPriceStringValue(product.getUserPrice()));
-        mProductPreviousPrice.setText(PriceUtils.getPriceStringValue(product.getRegularPrice()));
-
-        if (product.getRegularPrice()
-                .equals(0d)) {
-            mProductPreviousPrice.setVisibility(View.GONE);
-        } else {
-            mProductPreviousPrice.setText(PriceUtils.getRpStringValue(product.getRegularPrice()));
-            mProductPreviousPrice.setPaintFlags(
-                    mProductPreviousPrice.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);
-        }
-
-        mProductDescriptionText.loadData(mHtmlHeader + product.getDescription() + mHtmlFooter,
-                "text/html; charset=UTF-8",
-                null);
-
-        mProductDescriptionText.getSettings()
-                .setJavaScriptEnabled(true);
-        mProductDescriptionText.getSettings()
-                .setDomStorageEnabled(true);
-
-        mProductDescriptionText.setWebViewClient(new WebViewClient() {
-            @Override
-            public boolean shouldOverrideUrlLoading(WebView view, String url) {
-                Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(url));
-                startActivity(browserIntent);
-                return true;
-            }
-
-        });
-
-        //sizes
-        if (product.getSizes()
-                .size() != 0) {
-            mSizesContainer.setVisibility(View.VISIBLE);
-            hasSizes = true;
-        }
-
-
-        for (GetPublicItemDetailsResponse.Size size : product.getSizes()) {
-            mProductSizes.add(new Pair<>(size.getName(), size.getID()));
-        }
-
-        if (!(mProductSizes.get(0) == null)) {
-            mSizesAdapter = new TagAdapter<Pair<String, String>>(mProductSizes) {
-                @Override
-                public View getView(FlowLayout parent, int position, Pair<String, String> data) {
-                    TextView tv = (TextView) getActivity().getLayoutInflater()
-                            .inflate(R.layout.sizes_chips_layout,
-                                    parent,
-                                    false);
-                    tv.setText(data.first);
-                    return tv;
-                }
-            };
-            mSizesFlowLayout.setAdapter(mSizesAdapter);
-        }
-
-        mSizesFlowLayout.setOnSelectListener(new TagFlowLayout.OnSelectListener() {
-            @Override
-            public void onSelected(Set<Integer> selectPosSet) {
-                if (selectPosSet.size() != 0) {
-                    selectedSkuId = mProductSizes.get(selectPosSet.iterator()
-                            .next()).second;
-                    didSelectSize = true;
-                } else {
-                    didSelectSize = false;
-                }
-            }
-        });
-
-
-    }
-
-    @Override
-    public void showSaleDetails(GetPublicSaleDetailsResponse.Value saleDetail) {
-
-        String shippingInformation = saleDetail.getShipping();
+        String shippingInformation = saleDetail.getShippingInformation();
 
         mProductAboutPricing.loadData(mHtmlHeader + saleDetail.getPricing() + mHtmlFooter,
                 "text/html; charset=UTF-8",
@@ -355,25 +258,140 @@ public class ProductDetailsController extends BaseController implements ProductD
             mShippingContainer.setVisibility(View.GONE);
         }
 
+
+        final android.os.Handler handler = new android.os.Handler();
+        handler.postDelayed(() -> {
+            if (mProductImagesRv != null) {
+                mProductImagesRv.setVisibility(View.VISIBLE);
+
+            }
+
+            if (mProductSharedImage != null) {
+
+                ImageUtils.clearImage(getActivity(), mProductSharedImage);
+            }
+        }, 1000);
+
+        List<String> qualitySaleImages = getQualityImages(saleDetail.getImages());
+
+        mSaleItemImagesAdapter.replaceData(qualitySaleImages);
+        mSaleItemImagesIndicatorAdapter.replaceData(qualitySaleImages);
+
+        if (saleDetail.getImages()
+                .size() != 0) {
+            mOtherImagesRv.setVisibility(View.VISIBLE);
+        }
+        //bind UI values here
+
+        //product info
+        mProductName.setText(saleDetail.getName());
+        //        mProductCategory.setText(productDetail.getBrandName());
+        mProductPrice.setText(PriceUtils.getPriceStringValue(saleDetail.getPrice().getValue()));
+        mProductPreviousPrice.setText(PriceUtils.getPriceStringValue(saleDetail.getOriginalPrice().getValue()));
+
+        if (saleDetail.getOriginalPrice().getValue()
+                .equals(0d)) {
+            mProductPreviousPrice.setVisibility(View.GONE);
+        } else {
+            mProductPreviousPrice.setText(PriceUtils.getRpStringValue(saleDetail.getOriginalPrice().getValue()));
+            mProductPreviousPrice.setPaintFlags(
+                    mProductPreviousPrice.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);
+        }
+
+        mProductDescriptionText.loadData(mHtmlHeader + saleDetail.getDescription() + mHtmlFooter,
+                "text/html; charset=UTF-8",
+                null);
+
+        mProductDescriptionText.getSettings()
+                .setJavaScriptEnabled(true);
+
+        mProductDescriptionText.getSettings()
+                .setDomStorageEnabled(true);
+
+        mProductDescriptionText.setWebViewClient(new WebViewClient() {
+
+            @SuppressWarnings("deprecation")
+            @Override
+            public boolean shouldOverrideUrlLoading(WebView view, String url) {
+                Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(url));
+                startActivity(browserIntent);
+                return true;
+            }
+
+        });
+
+        //sizes
+        if (saleDetail.getSkuVariants().size() != 0) {
+            mSizesContainer.setVisibility(View.VISIBLE);
+            hasSizes = true;
+        }
+
+        if (!saleDetail.getSkuVariants().isEmpty())
+            for (SkuVariant skuVariant : saleDetail.getSkuVariants()) {
+                String skuId = skuVariant.getSkuId();
+                String size = skuVariant.getAttributes().getSize();
+                if (!size.isEmpty())
+                    mProductSizes.add(new Pair<>(size, skuId));
+            }
+
+        if (!(mProductSizes.get(0) == null)) {
+            mSizesAdapter = new TagAdapter<Pair<String, String>>(mProductSizes) {
+
+                @SuppressWarnings("ConstantConditions")
+                @Override
+                public View getView(FlowLayout parent, int position, Pair<String, String> data) {
+                    TextView tv = (TextView) getActivity().getLayoutInflater()
+                            .inflate(R.layout.sizes_chips_layout,
+                                    parent,
+                                    false);
+                    tv.setText(data.first);
+                    return tv;
+                }
+            };
+            mSizesFlowLayout.setAdapter(mSizesAdapter);
+        }
+
+        mSizesFlowLayout.setOnSelectListener(selectPosSet -> {
+            if (selectPosSet.size() != 0) {
+                selectedSkuId = mProductSizes.get(selectPosSet.iterator()
+                        .next()).second;
+                didSelectSize = true;
+            } else {
+                didSelectSize = false;
+            }
+        });
+
+
     }
 
-    public void hideSharedImage(){
-        Log.d("entered", "hide shared element ");
-        mProductSharedImage.setVisibility(View.GONE);
-        mProductSharedImage.setTransitionName("gone");
-        Log.d("entered", "hide shared element = "+mProductSharedImage.getTransitionName());
-
-    }
 
     @OnClick(R.id.product_details_add_to_basket)
-    public void addToBasket(){
+    void addToBasket() {
 
-//        if (Auth.isLoggedIn()){
-//            Log.d("productdetail", "add to basket");
-//        }else{
-//            getRouter().setRoot(RouterTransaction.with(LoginController.newInstance()));
-//
-//            Log.d("productdetail", "no logged in");
-//        }
+        /*
+        if (Auth.isLoggedIn()){
+            Log.d("productdetail", "add to basket");
+        }else{
+            getRouter().setRoot(RouterTransaction.with(LoginController.newInstance()));
+
+            Log.d("productdetail", "no logged in");
+        }*/
+    }
+
+
+    private List<String> getQualityImages(List<String> images) {
+        List<String> qualityImages = new LinkedList<>();
+        int x = 0;
+
+        for (int i = 0; i < images.size(); i++) {
+            if (x == 3) {
+
+                qualityImages.add(images.get(i));
+                x = -1;
+            }
+            x++;
+
+        }
+        return qualityImages;
     }
 }

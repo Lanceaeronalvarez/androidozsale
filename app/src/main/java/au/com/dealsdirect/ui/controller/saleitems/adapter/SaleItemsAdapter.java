@@ -26,10 +26,11 @@ import butterknife.ButterKnife;
 
 public class SaleItemsAdapter extends RecyclerView.Adapter<SaleItemsAdapter.ViewHolder> {
 
-    List<GetSaleItemsResponse.Products> mData;
-    Context mContext;
-    SaleItemsMvpPresenter mPresenter;
-    String mSaleId;
+    private List<GetSaleItemsResponse.Products> mData;
+    private Context mContext;
+    private SaleItemsMvpPresenter mPresenter;
+    private String mSaleId;
+    private String mSaleName;
 
     public void addData(List<GetSaleItemsResponse.Products> saleItems) {
         mData.addAll(saleItems);
@@ -62,11 +63,16 @@ public class SaleItemsAdapter extends RecyclerView.Adapter<SaleItemsAdapter.View
         }
     }
 
-    public SaleItemsAdapter(List<GetSaleItemsResponse.Products> saleItems,
-            SaleItemsMvpPresenter presenter, String saleId) {
+    public SaleItemsAdapter(
+            List<GetSaleItemsResponse.Products> saleItems,
+            SaleItemsMvpPresenter presenter,
+            String saleId,
+            String saleName) {
+
         this.mData = saleItems;
         this.mPresenter = presenter;
         this.mSaleId = saleId;
+        this.mSaleName = saleName;
     }
 
     @Override public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
@@ -80,11 +86,10 @@ public class SaleItemsAdapter extends RecyclerView.Adapter<SaleItemsAdapter.View
         GetSaleItemsResponse.Products saleItem = mData.get(position);
         String url = mData.get(position).getImages().get(0);
 
-        holder.mSaleItemName.setText(saleItem.getDescription());
+        holder.mSaleItemName.setText(saleItem.getProductName());
         holder.mSaleItemImage.setTransitionName(mData.get(position).getProductId());
 
-//        String url = LegacyStringImageUtils.itemImageURLString(saleItem);
-        String saleItemBrand = mData.get(position).getLabelText();
+        String saleItemBrand = mSaleName;
         String saleItemPrice = PriceUtils.getPriceStringValue(mData.get(position).getPrice().getValue());
         String saleItemOldPrice = PriceUtils.getRpStringValue(mData.get(position).getOriginalPrice().getValue());
 
@@ -97,9 +102,11 @@ public class SaleItemsAdapter extends RecyclerView.Adapter<SaleItemsAdapter.View
                 holder.mOldPrice.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);
 
 
-        holder.itemView.setOnClickListener(v -> {
-            mPresenter.loadProductDetails(url, mData.get(position).getProductId(), mSaleId);
-        });
+        holder.itemView.setOnClickListener(v -> mPresenter.loadProductDetails(
+                mData.get(position).getSeoIdentifier(),
+                url,
+                mData.get(position).getProductId(),
+                mSaleId));
     }
 
     @Override public int getItemCount() {

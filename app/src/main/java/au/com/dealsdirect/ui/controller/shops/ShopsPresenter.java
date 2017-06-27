@@ -27,12 +27,27 @@ public class ShopsPresenter<V extends ShopsMvpView> extends BasePresenter<V> imp
     }
 
     @Override
-    public void loadShopsBanner(GetBannerRequest request) {
+    public void loadShopsBanner(String categoryName, String categoryId) {
+
+        GetBannerRequest getBannerRequest = new GetBannerRequest();
+        getBannerRequest.setOffset(String.valueOf(0));
+        getBannerRequest.setLimit(String.valueOf(10));
+
+        getBannerRequest.setCategory(categoryName);
+        getBannerRequest.setCategoryId(categoryId);
+//
+//        if (categoryName==null)
+//            getBannerRequest.setCategory("");
+//        if (categoryId==null)
+//            getBannerRequest.setCategoryId("");
+
+
+
         getMvpView().showLoading();
 
         getCompositeDisposable()
                 .add(getDataManager()
-                        .doGetBannersApiCall(request)
+                        .doGetBannersApiCall(getBannerRequest)
                         .subscribeOn(getSchedulerProvider().io())
                         .observeOn(getSchedulerProvider().ui())
                         .subscribe(response -> {

@@ -26,12 +26,12 @@ import au.com.dealsdirect.data.network.model.login.LoginEmail;
 import au.com.dealsdirect.data.network.model.login.LoginFacebook;
 import au.com.dealsdirect.data.network.model.login.LoginTicket;
 import au.com.dealsdirect.data.network.model.login.Logout;
-import au.com.dealsdirect.data.network.model.productdetails.GetPublicItemDetailsRequest;
 import au.com.dealsdirect.data.network.model.productdetails.GetPublicItemDetailsResponse;
 import au.com.dealsdirect.data.network.model.productdetails.GetPublicSaleDetailsRequest;
 import au.com.dealsdirect.data.network.model.productdetails.GetPublicSaleDetailsResponse;
 import au.com.dealsdirect.data.network.model.publicsalescategories.GetPublicSalesCategoriesRequest;
 import au.com.dealsdirect.data.network.model.publicsalescategories.GetPublicSalesCategoriesResponse;
+import au.com.dealsdirect.data.network.model.saleitemdetails.GetSaleItemDetailsResponse;
 import au.com.dealsdirect.data.network.model.saleitems.GetPublicSaleItemsRequest;
 import au.com.dealsdirect.data.network.model.saleitems.GetPublicSaleItemsResponse;
 import au.com.dealsdirect.data.network.model.saleitems.GetSaleItemsRequest;
@@ -52,7 +52,9 @@ public interface ApiHelper {
 
     Observable<List<GetCategoryTreeResponse>> doGetGetCategoriesApiCall();
 
-    Observable<GetPublicItemDetailsResponse> doGetPublicItemDetailsApiCall(GetPublicItemDetailsRequest request);
+    Observable<GetSaleItemDetailsResponse> doGetSaleItemDetailsApiCall(String seoIdentifierId);
+
+    Observable<GetPublicItemDetailsResponse> doGetPublicItemDetailsApiCall(String seoIdentifierId);
 
     Observable<GetPublicSaleDetailsResponse> doGetPublicSaleDetailsApiCall(GetPublicSaleDetailsRequest request);
 

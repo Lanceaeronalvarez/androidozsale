@@ -63,7 +63,8 @@ public class BannersAdapter extends RecyclerView.Adapter<BannersViewHolder> {
             public void onClick(View view) {
 
                 mBannerClickListener.onBannerClicked(
-                        mSales.get(position).getBannerText(),
+                        mSales.get(position).getAttributes().getSaleExternalId(),
+                        mSales.get(position).getDescription(),
                         mSales.get(position).getId(),
                         position,
                         url);

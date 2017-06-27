@@ -3,8 +3,6 @@ package au.com.dealsdirect.data.network.model.saleitems;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
-import org.json.JSONObject;
-
 /**
  * dp  by Admin on 6/22/17.
  */
@@ -28,7 +26,7 @@ public class GetSaleItemsRequest {
 
     @Expose
     @SerializedName("ff")
-    private JSONObject facetFilter;
+    private String facetFilter;
 
     @Expose
     @SerializedName("sa")
@@ -66,11 +64,11 @@ public class GetSaleItemsRequest {
         this.categoryKey = categoryKey;
     }
 
-    public JSONObject getFacetFilter() {
+    public String getFacetFilter() {
         return facetFilter;
     }
 
-    public void setFacetFilter(JSONObject facetFilter) {
+    public void setFacetFilter(String facetFilter) {
         this.facetFilter = facetFilter;
     }
 

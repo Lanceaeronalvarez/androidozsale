@@ -46,11 +46,11 @@
             android:background="@color/gray_border"/>
 
         <android.support.v7.widget.RecyclerView
-            android:id="@+id/categories_filter_recyclerview"
+            android:id="@+id/sub_categories_recyclerview"
             android:layout_width="450dp"
-            android:layout_weight="80"
             android:layout_height="match_parent"
-            android:layout_marginLeft="10dp"/>
+            android:layout_marginLeft="10dp"
+            android:layout_weight="80"/>
 
     </LinearLayout>
 

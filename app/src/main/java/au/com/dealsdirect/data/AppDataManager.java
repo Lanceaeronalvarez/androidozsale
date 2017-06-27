@@ -32,12 +32,12 @@ import au.com.dealsdirect.data.network.model.login.LoginEmail;
 import au.com.dealsdirect.data.network.model.login.LoginFacebook;
 import au.com.dealsdirect.data.network.model.login.LoginTicket;
 import au.com.dealsdirect.data.network.model.login.Logout;
-import au.com.dealsdirect.data.network.model.productdetails.GetPublicItemDetailsRequest;
 import au.com.dealsdirect.data.network.model.productdetails.GetPublicItemDetailsResponse;
 import au.com.dealsdirect.data.network.model.productdetails.GetPublicSaleDetailsRequest;
 import au.com.dealsdirect.data.network.model.productdetails.GetPublicSaleDetailsResponse;
 import au.com.dealsdirect.data.network.model.publicsalescategories.GetPublicSalesCategoriesRequest;
 import au.com.dealsdirect.data.network.model.publicsalescategories.GetPublicSalesCategoriesResponse;
+import au.com.dealsdirect.data.network.model.saleitemdetails.GetSaleItemDetailsResponse;
 import au.com.dealsdirect.data.network.model.saleitems.GetPublicSaleItemsRequest;
 import au.com.dealsdirect.data.network.model.saleitems.GetPublicSaleItemsResponse;
 import au.com.dealsdirect.data.network.model.saleitems.GetSaleItemsRequest;
@@ -92,6 +92,19 @@ public class AppDataManager implements DataManager {
     @Override
     public Observable<List<GetCategoryTreeResponse>> doGetGetCategoriesApiCall() {
         return mApiHelper.doGetGetCategoriesApiCall();
+    }
+
+    @Override
+    public Observable<GetSaleItemDetailsResponse> doGetSaleItemDetailsApiCall(String seoIdentifierId) {
+        return mApiHelper.doGetSaleItemDetailsApiCall(seoIdentifierId);
+
+    }
+
+
+    @Override
+    public Observable<GetPublicItemDetailsResponse> doGetPublicItemDetailsApiCall(String seoIdentifierId) {
+        return mApiHelper.doGetPublicItemDetailsApiCall(seoIdentifierId);
+
     }
 
     @Override
@@ -176,11 +189,11 @@ public class AppDataManager implements DataManager {
         return mApiHelper.callDeleteUserDeliveryAddress(requestValues);
     }
 
-
-    @Override
-    public Observable<GetPublicItemDetailsResponse> doGetPublicItemDetailsApiCall(GetPublicItemDetailsRequest request) {
-        return mApiHelper.doGetPublicItemDetailsApiCall(request);
-    }
+//
+//    @Override
+//    public Observable<GetPublicItemDetailsResponse> doGetPublicItemDetailsApiCall(GetPublicItemDetailsRequest request) {
+//        return mApiHelper.doGetPublicItemDetailsApiCall(request);
+//    }
 
     @Override
     public Observable<GetPublicSaleDetailsResponse> doGetPublicSaleDetailsApiCall(GetPublicSaleDetailsRequest request) {

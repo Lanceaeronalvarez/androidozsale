@@ -35,9 +35,9 @@ import au.com.dealsdirect.ui.controller.invite.InvitePresenter;
 import au.com.dealsdirect.ui.controller.login.LoginMvpPresenter;
 import au.com.dealsdirect.ui.controller.login.LoginMvpView;
 import au.com.dealsdirect.ui.controller.login.LoginPresenter;
-import au.com.dealsdirect.ui.controller.productdetails.ProductDetailsMvpPresenter;
-import au.com.dealsdirect.ui.controller.productdetails.ProductDetailsMvpView;
-import au.com.dealsdirect.ui.controller.productdetails.ProductDetailsPresenter;
+import au.com.dealsdirect.ui.controller.saleitemdetails.SaleItemDetailsMvpPresenter;
+import au.com.dealsdirect.ui.controller.saleitemdetails.SaleItemDetailsMvpView;
+import au.com.dealsdirect.ui.controller.saleitemdetails.SaleItemDetailsPresenter;
 import au.com.dealsdirect.ui.controller.salecategories.SaleCategoriesMvpPresenter;
 import au.com.dealsdirect.ui.controller.salecategories.SaleCategoriesMvpView;
 import au.com.dealsdirect.ui.controller.salecategories.SaleCategoriesPresenter;
@@ -108,7 +108,7 @@ public class ControllerModule {
     }
 
     @Provides
-    ProductDetailsMvpPresenter<ProductDetailsMvpView> provideProductDetailsPresenter(ProductDetailsPresenter<ProductDetailsMvpView> presenter) {
+    SaleItemDetailsMvpPresenter<SaleItemDetailsMvpView> provideProductDetailsPresenter(SaleItemDetailsPresenter<SaleItemDetailsMvpView> presenter) {
         return presenter;
     }
 
