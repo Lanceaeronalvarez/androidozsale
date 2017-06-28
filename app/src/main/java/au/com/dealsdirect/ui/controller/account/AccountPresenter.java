@@ -42,7 +42,6 @@ public class AccountPresenter<V extends AccountMvpView> extends BasePresenter<V>
     @Override
     public void onAccountItemClick(String option) {
         if (getDataManager().isAuthorized()) {
-
             Log.d("AccountPresenter", "logged in");
             switch (option) {
 
@@ -69,7 +68,6 @@ public class AccountPresenter<V extends AccountMvpView> extends BasePresenter<V>
                     break;
                 default:
                     break;
-
             }
         } else {
             getMvpView().triggerLogin(option);

@@ -148,6 +148,11 @@ public class CheckoutPresenter<V extends CheckoutMvpView> extends BasePresenter<
         mFetchUserPaymentMethodsFinished = false;
     }
 
+    @Override
+    public boolean checkIsLoggedIn() {
+        return getDataManager().isAuthorized();
+    }
+
     private void updateCart(GetCurrentOrder.ResponseValue response) {
 
         if(!isViewAttached()){

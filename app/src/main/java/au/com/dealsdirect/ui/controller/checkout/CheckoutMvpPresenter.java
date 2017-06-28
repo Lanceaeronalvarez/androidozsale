@@ -20,4 +20,6 @@ public interface CheckoutMvpPresenter<V extends MvpView> extends MvpPresenter<V>
     boolean isCartAlreadyLoadedOnce();
 
     void resetIsCartAlreadyLoaded();
+
+    boolean checkIsLoggedIn();
 }

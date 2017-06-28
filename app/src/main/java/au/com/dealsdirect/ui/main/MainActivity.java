@@ -241,7 +241,7 @@ public class MainActivity extends BaseActivity implements MainMvpView {
 
         router.pushController(RouterTransaction.with(LoginController.newInstance(handler))
                 .tag("Login")
-                .pushChangeHandler(new VerticalChangeHandler(false)) //false, para hindi mag onDestroyView yung view na nag trigger ng login
+                .pushChangeHandler(new VerticalChangeHandler())
                 .popChangeHandler(new VerticalChangeHandler()));
     }
 

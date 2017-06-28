@@ -36,6 +36,7 @@ import au.com.dealsdirect.data.network.model.checkout.getuserpaymentmethods.Paym
 import au.com.dealsdirect.ui.base.BaseActivity;
 import au.com.dealsdirect.ui.base.BaseController;
 import au.com.dealsdirect.ui.main.FetchTokenHandler;
+import au.com.dealsdirect.ui.main.MainActivity;
 import au.com.dealsdirect.ui.main.MainMvpView;
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -55,35 +56,21 @@ public class CheckoutController extends BaseController implements CheckoutMvpVie
 
     @BindView(R.id.fragment_checkout_list)
     ListView mListView;
-    @BindView(R.id.partial_checkout_address_new_address)
+
     RelativeLayout mAddNewAddressLayout;
-    @BindView(R.id.partial_checkout_payment_new_payment)
     RelativeLayout mAddNewPaymentLayout;
-    @BindView(R.id.partial_checkout_voucher_new_code)
     RelativeLayout mAddNewVoucherLayout;
-    @BindView(R.id.partial_checkout_address_container)
     LinearLayout mAddressLayout;
-    @BindView(R.id.partial_checkout_payment_container)
     LinearLayout mPaymentLayout;
-    @BindView(R.id.partial_checkout_voucher_container)
     LinearLayout mVoucherLayout;
-    @BindView(R.id.partial_checkout_summary_container)
     LinearLayout mSummaryLayout;
 
-    @BindView(R.id.partial_checkout_address_change)
     TextView mAddressChangeText;
-    @BindView(R.id.partial_checkout_payment_change)
     TextView mPaymentChangeText;
-    @BindView(R.id.partial_checkout_voucher_change)
     TextView mVoucherChangeText;
-
-    @BindView(R.id.partial_checkout_bt_loading)
     View mBraintreeLoading;
-    @BindView(R.id.partial_checkout_button_holder)
     View mButtonHolder;
-    @BindView(R.id.partial_checkout_button_pay)
     Button mPayButton;
-    @BindView(R.id.partial_checkout_button_paypal)
     RelativeLayout mPaypalButton;
 
     @BindView(R.id.no_cart_items_layout)
@@ -151,8 +138,6 @@ public class CheckoutController extends BaseController implements CheckoutMvpVie
         getControllerComponent().inject(this);
         mPresenter.onAttach(this);
         mFooterView = inflater.inflate(R.layout.partial_checkout_footer, container, false);
-        ButterKnife.bind(this, mFooterView);
-
         return view;
     }
 
@@ -162,11 +147,38 @@ public class CheckoutController extends BaseController implements CheckoutMvpVie
 
         assert (getActivity()) != null;
         ((BaseActivity) getActivity()).hideBottomNavigationView();
+
+
+        mAddNewAddressLayout = (RelativeLayout) mFooterView.findViewById(R.id.partial_checkout_address_new_address);
+        mAddNewPaymentLayout = (RelativeLayout) mFooterView.findViewById(R.id.partial_checkout_payment_new_payment);
+        mAddNewVoucherLayout = (RelativeLayout) mFooterView.findViewById(R.id.partial_checkout_voucher_new_code);
+
+        mAddressLayout = (LinearLayout) mFooterView.findViewById(R.id.partial_checkout_address_container);
+        mPaymentLayout = (LinearLayout) mFooterView.findViewById(R.id.partial_checkout_payment_container);
+        mVoucherLayout = (LinearLayout) mFooterView.findViewById(R.id.partial_checkout_voucher_container);
+        mSummaryLayout = (LinearLayout) mFooterView.findViewById(R.id.partial_checkout_summary_container);
+
+        mAddressChangeText = (TextView) mFooterView.findViewById(R.id.partial_checkout_address_change);
+        mPaymentChangeText = (TextView) mFooterView.findViewById(R.id.partial_checkout_payment_change);
+        mVoucherChangeText = (TextView) mFooterView.findViewById(R.id.partial_checkout_voucher_change);
+
+        mBraintreeLoading = mFooterView.findViewById(R.id.partial_checkout_bt_loading);
+        mButtonHolder = mFooterView.findViewById(R.id.partial_checkout_button_holder);
+        mPayButton = (Button) mFooterView.findViewById(R.id.partial_checkout_button_pay);
+        mPaypalButton = (RelativeLayout) mFooterView.findViewById(R.id.partial_checkout_button_paypal);
+
+
         setUp(view);
     }
 
 
+    @Override
+    public void onDetach(View view) {
+        super.onDetach(view);
 
+        assert (getActivity()) != null;
+        ((BaseActivity) getActivity()).showBottomNavigationView();
+    }
 
     @Override
     protected void setUp(View view) {
@@ -177,6 +189,10 @@ public class CheckoutController extends BaseController implements CheckoutMvpVie
         mListView.setAdapter(mAdapter);
         mListView.addFooterView(mFooterView, null, false);
 
+        mAddNewAddressLayout.setOnClickListener(mChangeClickListener);
+        mAddNewPaymentLayout.setOnClickListener(mChangeClickListener);
+        mAddNewVoucherLayout.setOnClickListener(mChangeClickListener);
+
         mAddressChangeText.setOnClickListener(mChangeClickListener);
         mPaymentChangeText.setOnClickListener(mChangeClickListener);
         mVoucherChangeText.setOnClickListener(mChangeClickListener);
@@ -184,8 +200,34 @@ public class CheckoutController extends BaseController implements CheckoutMvpVie
         mPayButton.setOnClickListener(view1 -> onPayButtonClick());
         mPaypalButton.setOnClickListener(view2 -> onPaypalButtonClick());
 
+        loadCart();
+
     }
 
+    private void loadCart(){
+        if(mPresenter.checkIsLoggedIn() && !((MainActivity)getActivity()).isBraintreeInitialized()){
+            ((MainActivity)getActivity()).fetchAuthorization(new FetchTokenHandler() {
+                @Override
+                public void onSuccess() {
+                    mPresenter.start();
+                }
+
+                @Override
+                public void onFailure() {
+                    hidePaymentButtons();
+                }
+            });
+        }else if (mPresenter.checkIsLoggedIn() && ((MainActivity)getActivity()).isBraintreeInitialized()) {
+
+            mPresenter.start();
+
+        } else {
+
+
+            showNoCartItemsLayout();
+
+        }
+    }
 
     @Override
     public void showCartDetails(List<Item> items) {

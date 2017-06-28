@@ -128,6 +128,7 @@ public class AccountController extends BaseController implements AccountMvpView 
 
     @Override
     public void showMyOrders() {
+//        getRouter().popController(this);
         getRouter().pushController(RouterTransaction.with(new OrdersController())
                 .pushChangeHandler(new HorizontalChangeHandler())
                 .popChangeHandler(new HorizontalChangeHandler()));
@@ -167,6 +168,7 @@ public class AccountController extends BaseController implements AccountMvpView 
         ((MainMvpView)getActivity()).showLoginController(getRouter(),new AuthHandler() {
             @Override
             public void success() {
+                getRouter().popController(getRouter().getControllerWithTag("Login"));
                 mPresenter.onAccountItemClick(option);
             }
 
