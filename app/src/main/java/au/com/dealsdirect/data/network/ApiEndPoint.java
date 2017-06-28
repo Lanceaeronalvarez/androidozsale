@@ -87,7 +87,6 @@ public final class ApiEndPoint {
 
     /* Voucher Controller */
     public static final String ADD_VOUCHER_BY_KEY = TEST_API_LEGACY + "AddVoucherByKey";
-    public static final String APPLY_VOUCHERS = TEST_API_LEGACY + "ApplyVouchers";
     public static final String ADD_AND_APPLY_VOUCHER = TEST_API_LEGACY + "AddAndApplyVoucherByKey";
     public static final String GET_CLEAR_VOUCHERS = TEST_API_LEGACY + "ClearVouchers";
     public static final String GET_USER_VOUCHERS = TEST_API_LEGACY + "GetUserVouchers";

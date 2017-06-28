@@ -11,6 +11,7 @@ import com.androidnetworking.error.ANError;
 import com.braintreepayments.api.BraintreeFragment;
 import com.braintreepayments.api.DataCollector;
 import com.braintreepayments.api.interfaces.BraintreeResponseListener;
+import com.google.gson.Gson;
 import com.mysale.genie.utility.Prefs;
 import com.mysale.genie.utility.RxBus;
 import com.mysale.genie.utility.config.api.GetAppSettings;

@@ -104,35 +104,35 @@ public class AppDataManager implements DataManager {
     }
 
     @Override
-    public Observable<List<GetBannerResponse>> doGetBannersApiCall(GetBannerRequest getBannerRequest) {
-        return mApiHelper.doGetBannersApiCall(getBannerRequest);
+    public Observable<List<GetBannerResponse>> callGetBanners(GetBannerRequest getBannerRequest) {
+        return mApiHelper.callGetBanners(getBannerRequest);
     }
 
     @Override
-    public Observable<GetPublicSalesCategoriesResponse> doGetPublicSalesCategoriesApiCall(GetPublicSalesCategoriesRequest request) {
-        return mApiHelper.doGetPublicSalesCategoriesApiCall(request);
+    public Observable<GetPublicSalesCategoriesResponse> callGetPublicSalesCategories(GetPublicSalesCategoriesRequest request) {
+        return mApiHelper.callGetPublicSalesCategories(request);
     }
 
     @Override
-    public Observable<List<GetCategoryTreeResponse>> doGetGetCategoriesApiCall() {
-        return mApiHelper.doGetGetCategoriesApiCall();
+    public Observable<List<GetCategoryTreeResponse>> callGetGetCategories() {
+        return mApiHelper.callGetGetCategories();
     }
 
     @Override
-    public Observable<GetSaleItemDetailsResponse> doGetSaleItemDetailsApiCall(String seoIdentifierId) {
-        return mApiHelper.doGetSaleItemDetailsApiCall(seoIdentifierId);
+    public Observable<GetSaleItemDetailsResponse> callGetSaleItemDetails(String seoIdentifierId) {
+        return mApiHelper.callGetSaleItemDetails(seoIdentifierId);
 
     }
 
     @Override
-    public Observable<GetPublicSaleItemsResponse> getPublicSaleItemsApiCall(
+    public Observable<GetPublicSaleItemsResponse> callGetPublicSaleItems(
             GetPublicSaleItemsRequest getPublicSaleItemsRequest) {
-        return mApiHelper.getPublicSaleItemsApiCall(getPublicSaleItemsRequest);
+        return mApiHelper.callGetPublicSaleItems(getPublicSaleItemsRequest);
     }
 
     @Override
-    public Observable<GetSaleItemsResponse> getSaleItemsRequest(GetSaleItemsRequest getSaleItemsRequest) {
-        return mApiHelper.getSaleItemsRequest(getSaleItemsRequest);
+    public Observable<GetSaleItemsResponse> callGetSaleItemsRequest(GetSaleItemsRequest getSaleItemsRequest) {
+        return mApiHelper.callGetSaleItemsRequest(getSaleItemsRequest);
 
     }
 
@@ -228,33 +228,33 @@ public class AppDataManager implements DataManager {
     }
 
     @Override
-    public Observable<GetUserVoucherResponse> getUserVouchersApiCall(GetUserVouchersRequest getUserVouchersRequest) {
-        return mApiHelper.getUserVouchersApiCall(getUserVouchersRequest);
+    public Observable<GetUserVoucherResponse> callGetUserVouchers(GetUserVouchersRequest getUserVouchersRequest) {
+        return mApiHelper.callGetUserVouchers(getUserVouchersRequest);
     }
 
     @Override
-    public Observable<GetVouchersResponse> getVouchersApiCall() {
-        return mApiHelper.getVouchersApiCall();
+    public Observable<GetVouchersResponse> callGetVouchers() {
+        return mApiHelper.callGetVouchers();
     }
 
     @Override
-    public Observable<ClearVouchersResponse> getClearVouchersApiCall(ClearVouchersRequest clearVouchersRequest) {
-        return mApiHelper.getClearVouchersApiCall(clearVouchersRequest);
+    public Observable<ClearVouchersResponse> callGetClearVouchers(ClearVouchersRequest clearVouchersRequest) {
+        return mApiHelper.callGetClearVouchers(clearVouchersRequest);
     }
 
     @Override
-    public Observable<ApplyVouchersResponse> getApplyVouchersApiCall(ApplyVouchersRequest applyVouchersRequest) {
-        return mApiHelper.getApplyVouchersApiCall(applyVouchersRequest);
+    public Observable<ApplyVouchersResponse> callGetApplyVouchers(ApplyVouchersRequest applyVouchersRequest) {
+        return mApiHelper.callGetApplyVouchers(applyVouchersRequest);
     }
 
     @Override
-    public Observable<AddVoucherByKeyResponse> getAddVoucherByKeyApiCall(AddVoucherByKeyRequest addVoucherByKeyRequest) {
-        return mApiHelper.getAddVoucherByKeyApiCall(addVoucherByKeyRequest);
+    public Observable<AddVoucherByKeyResponse> callGetAddVoucherByKey(AddVoucherByKeyRequest addVoucherByKeyRequest) {
+        return mApiHelper.callGetAddVoucherByKey(addVoucherByKeyRequest);
     }
 
     @Override
-    public Observable<AddAndApplyVoucherByKeyResponse> getAddAndApplyVoucherByKeyApiCall(AddAndApplyVoucherByKeyRequest addAndApplyVoucherByKeyRequest) {
-        return mApiHelper.getAddAndApplyVoucherByKeyApiCall(addAndApplyVoucherByKeyRequest);
+    public Observable<AddAndApplyVoucherByKeyResponse> callGetAddAndApplyVoucherByKey(AddAndApplyVoucherByKeyRequest addAndApplyVoucherByKeyRequest) {
+        return mApiHelper.callGetAddAndApplyVoucherByKey(addAndApplyVoucherByKeyRequest);
     }
 
 
@@ -315,8 +315,8 @@ public class AppDataManager implements DataManager {
 
 
     @Override
-    public Observable<GetPublicSaleDetailsResponse> doGetPublicSaleDetailsApiCall(GetPublicSaleDetailsRequest request) {
-        return mApiHelper.doGetPublicSaleDetailsApiCall(request);
+    public Observable<GetPublicSaleDetailsResponse> callGetPublicSaleDetails(GetPublicSaleDetailsRequest request) {
+        return mApiHelper.callGetPublicSaleDetails(request);
     }
 
     @Override

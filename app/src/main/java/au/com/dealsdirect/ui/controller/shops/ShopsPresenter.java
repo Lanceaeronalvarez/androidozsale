@@ -10,7 +10,6 @@ import javax.inject.Inject;
 
 import au.com.dealsdirect.data.DataManager;
 import au.com.dealsdirect.data.network.model.banner.GetBannerRequest;
-import au.com.dealsdirect.data.network.model.banner.GetPublicSalesBannerRequest;
 import au.com.dealsdirect.ui.base.BasePresenter;
 import au.com.dealsdirect.utils.rx.SchedulerProvider;
 import io.reactivex.disposables.CompositeDisposable;
@@ -47,7 +46,7 @@ public class ShopsPresenter<V extends ShopsMvpView> extends BasePresenter<V> imp
 
         getCompositeDisposable()
                 .add(getDataManager()
-                        .doGetBannersApiCall(getBannerRequest)
+                        .callGetBanners(getBannerRequest)
                         .subscribeOn(getSchedulerProvider().io())
                         .observeOn(getSchedulerProvider().ui())
                         .subscribe(response -> {

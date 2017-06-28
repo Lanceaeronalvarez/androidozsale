@@ -96,7 +96,7 @@ public class AppApiHelper implements ApiHelper {
     }
 
     @Override
-    public Observable<List<GetBannerResponse>> doGetBannersApiCall(
+    public Observable<List<GetBannerResponse>> callGetBanners(
             GetBannerRequest getBannerRequest) {
         return Rx2AndroidNetworking.get(ApiEndPoint.GET_SALES)
                                    .addHeaders(mApiHeader.getPublicApiHeader())
@@ -106,7 +106,7 @@ public class AppApiHelper implements ApiHelper {
     }
 
     @Override
-    public Observable<GetPublicSalesCategoriesResponse> doGetPublicSalesCategoriesApiCall(GetPublicSalesCategoriesRequest request){
+    public Observable<GetPublicSalesCategoriesResponse> callGetPublicSalesCategories(GetPublicSalesCategoriesRequest request){
         return Rx2AndroidNetworking.get(ApiEndPoint.GET_SHOP_CATEGORIES)
                 .addHeaders(mApiHeader.getPublicApiHeader())
                 .addQueryParameter(request)
@@ -115,7 +115,7 @@ public class AppApiHelper implements ApiHelper {
     }
 
     @Override
-    public Observable<List<GetCategoryTreeResponse>> doGetGetCategoriesApiCall() {
+    public Observable<List<GetCategoryTreeResponse>> callGetGetCategories() {
         return Rx2AndroidNetworking.get(ApiEndPoint.GET_CATEGORY_TREE)
                 .addHeaders(mApiHeader.getPublicApiHeader())
                 .build()
@@ -123,7 +123,7 @@ public class AppApiHelper implements ApiHelper {
     }
 
     @Override
-    public Observable<GetSaleItemDetailsResponse> doGetSaleItemDetailsApiCall(String seoIdentifierId) {
+    public Observable<GetSaleItemDetailsResponse> callGetSaleItemDetails(String seoIdentifierId) {
         return Rx2AndroidNetworking.get(ApiEndPoint.GET_PRODUCT_DETAILS)
                 .addHeaders(mApiHeader.getPublicApiHeader())
                 .addPathParameter("seo_identifier", seoIdentifierId)
@@ -132,7 +132,7 @@ public class AppApiHelper implements ApiHelper {
     }
 
     @Override
-    public Observable<GetPublicSaleDetailsResponse> doGetPublicSaleDetailsApiCall(GetPublicSaleDetailsRequest request) {
+    public Observable<GetPublicSaleDetailsResponse> callGetPublicSaleDetails(GetPublicSaleDetailsRequest request) {
         return Rx2AndroidNetworking.get(ApiEndPoint.GET_SALES_ITEM_SALE_DETAILS)
                 .addHeaders(mApiHeader.getPublicApiHeader())
                 .addQueryParameter(request)
@@ -141,7 +141,7 @@ public class AppApiHelper implements ApiHelper {
     }
 
 
-   @Override public Observable<GetPublicSaleItemsResponse> getPublicSaleItemsApiCall(
+   @Override public Observable<GetPublicSaleItemsResponse> callGetPublicSaleItems(
             GetPublicSaleItemsRequest getPublicSaleItemsRequest) {
 
         return Rx2AndroidNetworking.get(ApiEndPoint.GET_PUBLIC_SALE_ITEMS)
@@ -152,7 +152,7 @@ public class AppApiHelper implements ApiHelper {
     }
 
     @Override
-    public Observable<GetSaleItemsResponse> getSaleItemsRequest(GetSaleItemsRequest getSaleItemsRequest) {
+    public Observable<GetSaleItemsResponse> callGetSaleItemsRequest(GetSaleItemsRequest getSaleItemsRequest) {
         LinkedHashMap<String,String> linkedHashMap = new LinkedHashMap();
         linkedHashMap.put("q", getSaleItemsRequest.getQuery());
         linkedHashMap.put("pn", getSaleItemsRequest.getPageNumber());
@@ -398,7 +398,7 @@ public class AppApiHelper implements ApiHelper {
                 .getObjectObservable(GetUserDetailsResponse.class);
     }
 
-    public Observable<GetUserVoucherResponse> getUserVouchersApiCall(GetUserVouchersRequest getUserVouchersRequest) {
+    public Observable<GetUserVoucherResponse> callGetUserVouchers(GetUserVouchersRequest getUserVouchersRequest) {
         return Rx2AndroidNetworking.post(ApiEndPoint.GET_USER_VOUCHERS)
                 .addHeaders(mApiHeader.getPublicApiHeader())
                 .addJSONObjectBody(JsonUtils.convertToJsonObject(getUserVouchersRequest))
@@ -407,7 +407,7 @@ public class AppApiHelper implements ApiHelper {
     }
 
     @Override
-    public Observable<GetVouchersResponse> getVouchersApiCall() {
+    public Observable<GetVouchersResponse> callGetVouchers() {
         return Rx2AndroidNetworking.post(ApiEndPoint.GET_VOUCHERS)
                 .addHeaders(mApiHeader.getPublicApiHeader())
                 .addJSONObjectBody(JsonUtils.convertToJsonObject(null))
@@ -416,7 +416,7 @@ public class AppApiHelper implements ApiHelper {
     }
 
     @Override
-    public Observable<ClearVouchersResponse> getClearVouchersApiCall(ClearVouchersRequest clearVouchersRequest) {
+    public Observable<ClearVouchersResponse> callGetClearVouchers(ClearVouchersRequest clearVouchersRequest) {
         return Rx2AndroidNetworking.post(ApiEndPoint.GET_CLEAR_VOUCHERS)
                 .addHeaders(mApiHeader.getPublicApiHeader())
                 .addJSONObjectBody(JsonUtils.convertToJsonObject(clearVouchersRequest))
@@ -425,7 +425,7 @@ public class AppApiHelper implements ApiHelper {
     }
 
     @Override
-    public Observable<ApplyVouchersResponse> getApplyVouchersApiCall(ApplyVouchersRequest applyVouchersRequest) {
+    public Observable<ApplyVouchersResponse> callGetApplyVouchers(ApplyVouchersRequest applyVouchersRequest) {
         return Rx2AndroidNetworking.post(ApiEndPoint.APPLY_VOUCHERS)
                 .addHeaders(mApiHeader.getPublicApiHeader())
                 .addJSONObjectBody(JsonUtils.convertToJsonObject(applyVouchersRequest))
@@ -434,7 +434,7 @@ public class AppApiHelper implements ApiHelper {
     }
 
     @Override
-    public Observable<AddVoucherByKeyResponse> getAddVoucherByKeyApiCall(AddVoucherByKeyRequest addVoucherByKeyRequest) {
+    public Observable<AddVoucherByKeyResponse> callGetAddVoucherByKey(AddVoucherByKeyRequest addVoucherByKeyRequest) {
         return Rx2AndroidNetworking.post(ApiEndPoint.ADD_VOUCHER_BY_KEY)
                 .addHeaders(mApiHeader.getPublicApiHeader())
                 .addJSONObjectBody(JsonUtils.convertToJsonObject(addVoucherByKeyRequest))
@@ -443,7 +443,7 @@ public class AppApiHelper implements ApiHelper {
     }
 
     @Override
-    public Observable<AddAndApplyVoucherByKeyResponse> getAddAndApplyVoucherByKeyApiCall(AddAndApplyVoucherByKeyRequest addAndApplyVoucherByKeyRequest) {
+    public Observable<AddAndApplyVoucherByKeyResponse> callGetAddAndApplyVoucherByKey(AddAndApplyVoucherByKeyRequest addAndApplyVoucherByKeyRequest) {
         return Rx2AndroidNetworking.post(ApiEndPoint.ADD_AND_APPLY_VOUCHER)
                 .addHeaders(mApiHeader.getPublicApiHeader())
                 .addJSONObjectBody(JsonUtils.convertToJsonObject(addAndApplyVoucherByKeyRequest))

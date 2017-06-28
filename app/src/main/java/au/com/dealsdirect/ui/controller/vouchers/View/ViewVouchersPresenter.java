@@ -46,7 +46,7 @@ public class ViewVouchersPresenter<V extends ViewVouchersMvpView> extends BasePr
         GetUserVouchersRequest getUserVouchersRequest =
                 new GetUserVouchersRequest(getDataManager().getLanguageId());
         getCompositeDisposable().add(getDataManager()
-                .getUserVouchersApiCall(getUserVouchersRequest)
+                .callGetUserVouchers(getUserVouchersRequest)
                 .subscribeOn(getSchedulerProvider().io())
                 .observeOn(getSchedulerProvider().ui())
                 .subscribe(new Consumer<GetUserVoucherResponse>() {
@@ -62,7 +62,7 @@ public class ViewVouchersPresenter<V extends ViewVouchersMvpView> extends BasePr
                 }));
 
         getCompositeDisposable().add(getDataManager()
-                .getVouchersApiCall()
+                .callGetVouchers()
                 .subscribeOn(getSchedulerProvider().io())
                 .observeOn(getSchedulerProvider().ui())
                 .subscribe(new Consumer<GetVouchersResponse>() {

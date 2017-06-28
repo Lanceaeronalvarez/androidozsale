@@ -33,7 +33,7 @@ public class CategoriesPresenter<V extends CategoriesMvpView> extends BasePresen
     @Override
     public void loadPublicSalesCategories(final GetPublicSalesCategoriesRequest request) {
         getCompositeDisposable().add(getDataManager()
-                .doGetPublicSalesCategoriesApiCall(request)
+                .callGetPublicSalesCategories(request)
                 .subscribeOn(getSchedulerProvider().io())
                 .observeOn(getSchedulerProvider().ui())
                 .subscribe(new Consumer<GetPublicSalesCategoriesResponse>() {
@@ -74,7 +74,7 @@ public class CategoriesPresenter<V extends CategoriesMvpView> extends BasePresen
     @Override
     public void loadCategoryTree() {
         getCompositeDisposable().add(getDataManager()
-                .doGetGetCategoriesApiCall()
+                .callGetGetCategories()
                 .subscribeOn(getSchedulerProvider().io())
                 .observeOn(getSchedulerProvider().ui())
                 .subscribe(new Consumer<List<GetCategoryTreeResponse>>() {

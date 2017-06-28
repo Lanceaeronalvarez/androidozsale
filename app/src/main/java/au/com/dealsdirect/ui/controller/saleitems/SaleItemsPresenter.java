@@ -67,7 +67,7 @@ public class SaleItemsPresenter<V extends SaleItemsMvpView> extends BasePresente
 
         getCompositeDisposable()
                 .add(getDataManager()
-                        .getSaleItemsRequest(getSaleItemsRequest)
+                        .callGetSaleItemsRequest(getSaleItemsRequest)
                         .subscribeOn(getSchedulerProvider().io())
                         .observeOn(getSchedulerProvider().ui())
                         .subscribe(new Consumer<GetSaleItemsResponse>() {

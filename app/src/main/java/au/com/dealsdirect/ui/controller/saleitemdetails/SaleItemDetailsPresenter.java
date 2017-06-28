@@ -26,7 +26,7 @@ public class SaleItemDetailsPresenter<V extends SaleItemDetailsMvpView> extends 
         getMvpView().showLoading();
 
         getCompositeDisposable().add(getDataManager()
-                .doGetSaleItemDetailsApiCall(seoIdentifierId)
+                .callGetSaleItemDetails(seoIdentifierId)
                 .subscribeOn(getSchedulerProvider().io())
                 .observeOn(getSchedulerProvider().ui())
                 .subscribe(response -> {
@@ -59,7 +59,7 @@ public class SaleItemDetailsPresenter<V extends SaleItemDetailsMvpView> extends 
                 }));
 
 //        getCompositeDisposable().add(getDataManager()
-//                .doGetPublicSaleDetailsApiCall(publicSaleDetailsRequest)
+//                .callGetPublicSaleDetails(publicSaleDetailsRequest)
 //                .subscribeOn(getSchedulerProvider().io())
 //                .observeOn(getSchedulerProvider().ui())
 //                .subscribe(new Consumer<GetPublicSaleDetailsResponse>() {
