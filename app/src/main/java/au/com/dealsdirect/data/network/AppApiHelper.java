@@ -301,12 +301,20 @@ public class AppApiHelper implements ApiHelper {
 
     @Override
     public Observable<GetCurrentOrder.ResponseValue> callGetCurrentOrder(GetCurrentOrder.RequestValue requestValues) {
-        return null;
+        return Rx2AndroidNetworking.post(ApiEndPoint.GET_CURRENT_ORDER)
+                .addHeaders(mApiHeader.getPublicApiHeader())
+                .addJSONObjectBody(JsonUtils.convertToJsonObject(requestValues))
+                .build()
+                .getObjectObservable(GetCurrentOrder.ResponseValue.class);
     }
 
     @Override
     public Observable<GetUserPaymentMethods.ResponseValue> callGetUserPaymentMethods(GetUserPaymentMethods.RequestValue requestValues) {
-        return null;
+        return Rx2AndroidNetworking.post(ApiEndPoint.GET_USER_PAYMENT_METHODS)
+                .addHeaders(mApiHeader.getPublicApiHeader())
+                .addJSONObjectBody(JsonUtils.convertToJsonObject(requestValues))
+                .build()
+                .getObjectObservable(GetUserPaymentMethods.ResponseValue.class);
     }
 
     @Override

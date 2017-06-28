@@ -162,10 +162,56 @@
     <string name="no_network_connection">No Network Connection</string>
     <string name="i_am_looking_for">I am looking for...</string>
 
+    <!--CHECKOUT-->
+    <string name="checkout_page_toolbar_title">my basket</string>
+    <string name="test_product_name">Philosophy (Runway) Cotton Sleeveless Plain</string>
+    <string name="test_category_name">Cache cache</string>
+
+    <string name="add_new_address_bottom_button">ADD</string>
+    <string name="color">Color:&#160;</string>
+    <string name="size">Size:&#160;</string>
+    <string name="your_current_delivery_address">your current delivery address</string>
+    <string name="add_new_address">add new address</string>
+    <string name="change">change</string>
+    <string name="payment_method">payment method</string>
+    <string name="add_new_payment_method">add new payment method</string>
+    <string name="voucher">Voucher</string>
+    <string name="tax">Tax</string>
+    <string name="add_voucher_code">add voucher code</string>
+    <string name="subtotal">Subtotal</string>
+    <string name="shipping_fee">Delivery</string>
+    <string name="grand_total">Grand Total</string>
+    <string name="pay">pay</string>
+    <string name="pay_with">pay with</string>
+    <string name="add_new_payment">Add New Payment</string>
+    <string name="card_number">card number</string>
+    <string name="ccv">ccv</string>
+    <string name="expiration_date">expiration date</string>
+    <string name="my_payment_methods">my payment methods</string>
+    <string name="your_payment_has_been_successful">your payment has been successful!</string>
+    <string name="your_order_will_arrive_within_14_28_working_days_after_the_sale_has_finished">your
+        order will arrive within 14-28 working days after the sale has finished.
     <!--VOUCHERS-->
     <string name="vouchers_view_detail">Invite your friends to join MYSALE. Once your friends have
         joined through your invitation and made their first purchase you will instantly receive a
         PHP400 MYSALE voucher to use towards any future purchase. \n\nYou can apply any vouchers
         currently in your account when you checkout your order. \n
     </string>
+    <string name="continue_shopping">continue shopping</string>
+    <string name="your_cart_is_currently_empty">your cart is currently empty</string>
+    <string name="you_have_not_added_any_items_in_your_shopping_cart">you have not added any items
+        in your shopping cart
+    </string>
+    <string name="add_payment_method">add payment method</string>
+    <string name="rate_us_message">We value your feedback, please let us know what do you feel
+        about this app.
+    </string>
+    <string name="total_payment">Total Payment</string>
+    <string name="order_number">Order Number</string>
+    <string name="address">Address</string>
+    <string name="total">Total</string>
+    <string name="remove">remove</string>
+    <string name="add_new_voucher">add new voucher</string>
+
+
 </resources>

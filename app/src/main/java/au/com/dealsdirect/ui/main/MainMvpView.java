@@ -36,4 +36,8 @@ public interface MainMvpView extends MvpView,BrainTreeListeners {
 
     void setPaymentMethodSelected(PaymentMethod paymentMethodSelected);
 
+    void callLoginTicket();
+
+    void callLogout();
+
 }

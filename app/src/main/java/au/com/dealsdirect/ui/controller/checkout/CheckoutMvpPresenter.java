@@ -8,9 +8,16 @@ import au.com.dealsdirect.ui.base.MvpView;
  */
 
 public interface CheckoutMvpPresenter<V extends MvpView> extends MvpPresenter<V> {
+
+    void start();
+
     void fetchCartDetails();
 
     void fetchUserPaymentMethods();
 
     void fetchAdjustItemQuantity(String url, String itemID);
+
+    boolean isCartAlreadyLoadedOnce();
+
+    void resetIsCartAlreadyLoaded();
 }

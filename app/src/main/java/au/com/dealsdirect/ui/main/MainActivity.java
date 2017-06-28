@@ -356,6 +356,13 @@ public class MainActivity extends BaseActivity implements MainMvpView {
         return mBraintreeFragment != null;
     }
 
+    @Override
+    public void callLoginTicket() {
+        mPresenter.callLoginTicket();
+    }
 
-
+    @Override
+    public void callLogout() {
+        mPresenter.callLogout();
+    }
 }

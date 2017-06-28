@@ -24,6 +24,16 @@ import au.com.dealsdirect.data.network.model.address.GetAddresses;
 import au.com.dealsdirect.data.network.model.banner.GetBannerRequest;
 import au.com.dealsdirect.data.network.model.banner.GetBannerResponse;
 import au.com.dealsdirect.data.network.model.category.GetCategoryTreeResponse;
+import au.com.dealsdirect.data.network.model.checkout.AdjustOrderItem;
+import au.com.dealsdirect.data.network.model.checkout.ApplyVouchers;
+import au.com.dealsdirect.data.network.model.checkout.ClearOrder;
+import au.com.dealsdirect.data.network.model.checkout.ClearVouchers;
+import au.com.dealsdirect.data.network.model.checkout.CreatePaymentMethod;
+import au.com.dealsdirect.data.network.model.checkout.CreatePaymentTransaction;
+import au.com.dealsdirect.data.network.model.checkout.GetCurrentOrder;
+import au.com.dealsdirect.data.network.model.checkout.GetPaymentToken;
+import au.com.dealsdirect.data.network.model.checkout.GetUserPaymentMethods;
+import au.com.dealsdirect.data.network.model.checkout.RemoveUserPaymentMethod;
 import au.com.dealsdirect.data.network.model.contacthistory.GetContactHistoryRequest;
 import au.com.dealsdirect.data.network.model.contacthistory.GetContactHistoryResponse;
 import au.com.dealsdirect.data.network.model.contactitem.GetContactsResponse;
@@ -251,6 +261,56 @@ public class AppDataManager implements DataManager {
     @Override
     public Observable<GetOrderPaymentDetails.ResponseValue> callGetOrderPaymentDetails(GetOrderPaymentDetails.RequestValues requestValues) {
         return mApiHelper.callGetOrderPaymentDetails(requestValues);
+    }
+
+    @Override
+    public Observable<GetCurrentOrder.ResponseValue> callGetCurrentOrder(GetCurrentOrder.RequestValue requestValue) {
+        return mApiHelper.callGetCurrentOrder(requestValue);
+    }
+
+    @Override
+    public Observable<GetUserPaymentMethods.ResponseValue> callGetUserPaymentMethods(GetUserPaymentMethods.RequestValue requestValue) {
+        return mApiHelper.callGetUserPaymentMethods(requestValue);
+    }
+
+    @Override
+    public Observable<GetCurrentOrder.ResponseValue> callAdjustQuantityOrderItem(String url, AdjustOrderItem.RequestValue requestValue) {
+        return mApiHelper.callAdjustQuantityOrderItem(url,requestValue);
+    }
+
+    @Override
+    public Observable<CreatePaymentMethod.ResponseValue> callCreatePaymentMethod(CreatePaymentMethod.RequestValue requestValue) {
+        return mApiHelper.callCreatePaymentMethod(requestValue);
+    }
+
+    @Override
+    public Observable<GetPaymentToken.ResponseValue> callGetPaymentToken(GetPaymentToken.RequestValue requestValue) {
+        return mApiHelper.callGetPaymentToken(requestValue);
+    }
+
+    @Override
+    public Observable<GetCurrentOrder.ResponseValue> callApplyVouchers(ApplyVouchers.RequestValue requestValue) {
+        return mApiHelper.callApplyVouchers(requestValue);
+    }
+
+    @Override
+    public Observable<GetCurrentOrder.ResponseValue> callClearVouchers(ClearVouchers.RequestValue requestValue) {
+        return mApiHelper.callClearVouchers(requestValue);
+    }
+
+    @Override
+    public Observable<ClearOrder.ResponseValue> callClearOrder(ClearOrder.RequestValue requestValue) {
+        return mApiHelper.callClearOrder(requestValue);
+    }
+
+    @Override
+    public Observable<CreatePaymentTransaction.ResponseValue> callCreatePaymentTransaction(CreatePaymentTransaction.RequestValue requestValue) {
+        return mApiHelper.callCreatePaymentTransaction(requestValue);
+    }
+
+    @Override
+    public Observable<RemoveUserPaymentMethod.ResponseValue> callRemoveUserPaymentMethod(RemoveUserPaymentMethod.RequestValue requestValue) {
+        return mApiHelper.callRemoveUserPaymentMethod(requestValue);
     }
 
 

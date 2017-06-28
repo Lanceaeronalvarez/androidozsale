@@ -33,4 +33,8 @@ public interface MainMvpPresenter<V extends MainMvpView> extends MvpPresenter<V>
 
     void createPaymentMethod(BraintreeFragment braintreeFragment, String paymentNonce, String paymentType);
 
+    void callLoginTicket();
+
+    void callLogout();
+
 }

@@ -29,6 +29,9 @@ import javax.inject.Inject;
 import au.com.dealsdirect.data.DataManager;
 import au.com.dealsdirect.data.network.model.checkout.CreatePaymentMethod;
 import au.com.dealsdirect.data.network.model.checkout.GetPaymentToken;
+import au.com.dealsdirect.data.network.model.login.LoginEmail;
+import au.com.dealsdirect.data.network.model.login.LoginTicket;
+import au.com.dealsdirect.data.network.model.login.Logout;
 import au.com.dealsdirect.ui.base.BasePresenter;
 import au.com.dealsdirect.utils.rx.SchedulerProvider;
 import io.reactivex.annotations.NonNull;
@@ -350,6 +353,91 @@ public class MainPresenter<V extends MainMvpView> extends BasePresenter<V> imple
         } else {
             DataCollector.collectDeviceData(braintreeFragment, handler);
         }
+    }
+
+    @Override
+    public void callLoginTicket() {
+        String loginTicket = getDataManager().getLoginTicket();
+        if(!loginTicket.isEmpty()){
+            getCompositeDisposable().add(getDataManager()
+                            .callLoginTicket(new LoginTicket.RequestValue(loginTicket,getDataManager().getCountryId()))
+                            .subscribeOn(getSchedulerProvider().io())
+                            .observeOn(getSchedulerProvider().ui())
+                            .subscribe(new Consumer<LoginEmail.ResponseValue>() {
+                                @Override
+                                public void accept(@NonNull LoginEmail.ResponseValue responseValue) throws Exception {
+                                    if (!isViewAttached()) {
+                                        return;
+                                    }
+
+                                    if(responseValue.isSuccess()){
+                                        getDataManager().acknowledgeAuth(responseValue.getTicket());
+                                    }else{
+                                        //On login ticket fail, call logout and go back to shop
+//                                RxBus.instance().post("shop_now");
+                                        callLogout();
+                                    }
+                                }
+                            }, new Consumer<Throwable>() {
+                                @Override
+                                public void accept(@NonNull Throwable throwable) throws Exception {
+                                    if (!isViewAttached()) {
+                                        return;
+                                    }
+
+                                    getMvpView().hideLoading();
+                                    getMvpView().onError(throwable.getMessage());
+
+                                    // handle load accounts error here
+                                    if (throwable instanceof ANError) {
+                                        ANError anError = (ANError) throwable;
+                                        handleApiError(anError);
+                                    }
+                                }
+                            })
+            );
+        }
+    }
+
+    @Override
+    public void callLogout() {
+
+//        GCartUtil.setValueToCart(0);
+//        RxBus.instance().post("update_cart_items_immediate");
+//        RxBus.instance().post(Auth.EVENT_PRE_LOGOUT);
+        getCompositeDisposable().add(getDataManager()
+                .callLogout(new Logout.RequestValue())
+                .subscribeOn(getSchedulerProvider().io())
+                .observeOn(getSchedulerProvider().ui())
+                .subscribe(new Consumer<Logout.ResponseValue>() {
+                    @Override
+                    public void accept(@NonNull Logout.ResponseValue responseValue) throws Exception {
+                        if (!isViewAttached()) {
+                            return;
+                        }
+
+                        getDataManager().revokeAuth();
+//                RxBus.instance().post(Auth.EVENT_LOGOUT);
+//                RxBus.instance().post(GVersion.EVENT_LOGOUT);
+                    }
+                }, new Consumer<Throwable>() {
+                    @Override
+                    public void accept(@NonNull Throwable throwable) throws Exception {
+                        if (!isViewAttached()) {
+                            return;
+                        }
+
+                        getMvpView().hideLoading();
+                        getMvpView().onError(throwable.getMessage());
+
+                        // handle load accounts error here
+                        if (throwable instanceof ANError) {
+                            ANError anError = (ANError) throwable;
+                            handleApiError(anError);
+                        }
+                    }
+                })
+        );
     }
 
 
