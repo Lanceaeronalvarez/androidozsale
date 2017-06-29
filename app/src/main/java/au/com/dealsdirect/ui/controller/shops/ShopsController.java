@@ -19,6 +19,7 @@ import javax.inject.Inject;
 
 import au.com.dealsdirect.R;
 import au.com.dealsdirect.data.network.model.banner.GetBannerResponse;
+import au.com.dealsdirect.data.network.model.category.GetCategoryTreeResponse;
 import au.com.dealsdirect.ui.base.BaseController;
 import au.com.dealsdirect.ui.controller.categories.CategoriesController;
 import au.com.dealsdirect.ui.controller.saleitems.SaleItemsController;
@@ -67,13 +68,13 @@ public class ShopsController extends BaseController implements ShopsMvpView, Ban
     }
 
 
-    public static ShopsController newInstance(String categoryID, String categoryName, String categoryKey) {
+    public static ShopsController newInstance(GetCategoryTreeResponse getCategoryTreeResponse) {
 
         return new ShopsController(
                 new BundleBuilder(new Bundle())
-                        .putString(KEY_CATEGORY_ID, categoryID)
-                        .putString(KEY_CATEGORY_NAME, categoryName)
-                        .putString(KEY_CATEGORY_MAP, categoryKey)
+                        .putString(KEY_CATEGORY_ID, getCategoryTreeResponse.getId())
+                        .putString(KEY_CATEGORY_NAME, getCategoryTreeResponse.getName())
+                        .putString(KEY_CATEGORY_MAP, getCategoryTreeResponse.getKey())
                         .build());
     }
 

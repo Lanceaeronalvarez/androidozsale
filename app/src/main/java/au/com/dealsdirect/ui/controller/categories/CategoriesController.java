@@ -156,50 +156,69 @@ public class CategoriesController extends BaseController
 
 
     @Override
-    public void onCategoryClicked(int position, String categoryID, String categoryName, String categoryKey) {
+    public void onCategoryClicked(int position, GetCategoryTreeResponse getCategoryTreeResponse) {
+
+        String categoryName = getCategoryTreeResponse.getName();
+        String categoryKey = getCategoryTreeResponse.getKey()!=null?getCategoryTreeResponse.getKey():categoryName;
 
 
-        if (categoryTapCounter == 1 && categoryKey.equals(lastCategoryKey)){
+        if (categoryKey!=null && categoryTapCounter == 1 &&
+                categoryKey.equals(lastCategoryKey)){
+
             getRouter().setRoot(
-                    RouterTransaction.with(new ShopsController(categoryID, categoryName, categoryKey))
+                    RouterTransaction.with(ShopsController.newInstance(getCategoryTreeResponse))
                             .pushChangeHandler(new RightHorizontalTransitionChangeHandler())
                             .popChangeHandler(new RightHorizontalTransitionChangeHandler()));
             categoryTapCounter = 1;
         }
-
 
         if (categoryKey.equals(lastCategoryKey))
             categoryTapCounter = categoryTapCounter+1;
         else
             categoryTapCounter = 1;
 
+        if (mResultSubCategories.get(position).getChildren()!=null) {
+            mSubCategoryAdapter.replaceData(mResultSubCategories.get(position).getChildren());
+        }
+        else {
+            ArrayList<GetCategoryTreeResponse> emptyChildren =  new ArrayList<>();
+            mSubCategoryAdapter.replaceData(emptyChildren);
+        }
 
-        mSubCategoryAdapter.replaceData(mResultSubCategories.get(position).getChildren());
-
-        mChosenCategoryKey = categoryKey;
-        lastCategoryKey = categoryKey;
+        mChosenCategoryKey = categoryKey!=null?categoryKey:categoryName;
+        lastCategoryKey = categoryKey!=null?categoryKey:categoryName;
 
     }
 
     private void createCategoryMap(List<GetCategoryTreeResponse> categories) {
-        mCategoryMap.put("shop", categories);
 
         for (GetCategoryTreeResponse i : categories) {
 
-            int childrenSize = i.getChildren().size();
-            if (childrenSize != 0) {
+            if (i.getChildren()!=null){
+                mCategoryMap.put("shop", categories);
 
-                addToMap(i.getChildren());
+                int childrenSize = i.getChildren().size();
+                if (childrenSize != 0) {
+
+                    addToMap(i.getChildren());
+                }
+                mCategoryMap.put(i.getKey(), i.getChildren());
+
             }
-
-            mCategoryMap.put(i.getKey(), i.getChildren());
         }
 
         mResultSubCategories = fillCategoryContent();
 
         mAdapter.replaceData(mResultSubCategories);
 
-        mSubCategoryAdapter.replaceData(mResultSubCategories.get(0).getChildren());
+        if (mResultSubCategories.get(0).getChildren()!=null){
+            mSubCategoryAdapter.replaceData(mResultSubCategories.get(0).getChildren());
+
+        }else{
+            ArrayList<GetCategoryTreeResponse> emptyChildren =  new ArrayList<>();
+            mSubCategoryAdapter.replaceData(emptyChildren);
+
+        }
 
     }
 

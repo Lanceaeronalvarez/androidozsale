@@ -33,14 +33,11 @@ public class ShopsPresenter<V extends ShopsMvpView> extends BasePresenter<V> imp
         getBannerRequest.setOffset(String.valueOf(0));
         getBannerRequest.setLimit(String.valueOf(10));
 
-        getBannerRequest.setCategory(categoryName);
-        getBannerRequest.setCategoryId(categoryId);
-//
-//        if (categoryName==null)
-//            getBannerRequest.setCategory("");
-//        if (categoryId==null)
-//            getBannerRequest.setCategoryId("");
+        if (categoryName!=null && !categoryName.isEmpty())
+            getBannerRequest.setCategory(categoryName);
 
+        if (categoryId!=null && !categoryId.isEmpty())
+            getBannerRequest.setCategoryId(categoryId);
 
         getMvpView().showLoading();
 

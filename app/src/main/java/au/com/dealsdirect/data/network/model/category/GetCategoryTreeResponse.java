@@ -4,23 +4,28 @@ import android.os.Parcel;
 import android.os.Parcelable;
 
 import java.util.ArrayList;
+import java.util.List;
 
 /**
  * dp Created by Admin on 1/3/17.
  */
 public class GetCategoryTreeResponse implements Parcelable{
 
+    String payload;
+    String nodeType;
     String id;
     String name;
     String key;
     int count;
-    ArrayList<GetCategoryTreeResponse> children;
+    List<GetCategoryTreeResponse> children;
 
     public GetCategoryTreeResponse(){
 
     }
 
     protected GetCategoryTreeResponse(Parcel in) {
+        payload = in.readString();
+        nodeType = in.readString();
         id = in.readString();
         name = in.readString();
         key = in.readString();
@@ -65,7 +70,7 @@ public class GetCategoryTreeResponse implements Parcelable{
         this.count = count;
     }
 
-    public ArrayList<GetCategoryTreeResponse> getChildren() {
+    public List<GetCategoryTreeResponse> getChildren() {
         return children;
     }
 
@@ -78,10 +83,32 @@ public class GetCategoryTreeResponse implements Parcelable{
     }
 
     @Override public void writeToParcel(Parcel parcel, int i) {
+        parcel.writeString(payload);
+        parcel.writeString(nodeType);
         parcel.writeString(id);
         parcel.writeString(name);
         parcel.writeString(key);
         parcel.writeInt(count);
         parcel.writeTypedList(children);
+    }
+
+    public String getPayload() {
+        return payload;
+    }
+
+    public void setPayload(String payload) {
+        this.payload = payload;
+    }
+
+    public String getNodeType() {
+        return nodeType;
+    }
+
+    public void setNodeType(String nodeType) {
+        this.nodeType = nodeType;
+    }
+
+    public static Creator<GetCategoryTreeResponse> getCREATOR() {
+        return CREATOR;
     }
 }
