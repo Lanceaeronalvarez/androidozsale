@@ -10,11 +10,17 @@ public class AdjustOrderItem {
         String languageID;
         String itemID;
         String imageSize = "100";
-        String urlEndPoint;
+//        String urlEndPoint;
 
         public RequestValue(String url, String itemID, String languageID) {
             this.itemID = itemID;
-            this.urlEndPoint = url;
+//            this.urlEndPoint = url;
+            this.languageID = languageID;
+        }
+
+        public RequestValue(String itemID, String languageID) {
+            this.itemID = itemID;
+//            this.urlEndPoint = url;
             this.languageID = languageID;
         }
     }

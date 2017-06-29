@@ -120,6 +120,7 @@ dependencies {
     androidTestAnnotationProcessor "com.google.dagger:dagger-compiler:$rootProject.dagger2Version"
 
     compile project(path: ':genie-utility')
+    compile project(path: ':CardForm')
 }
 
 configurations.all {

@@ -15,6 +15,7 @@ import com.bluelinelabs.conductor.changehandler.FadeChangeHandler;
 import com.bluelinelabs.conductor.changehandler.HorizontalChangeHandler;
 import com.bluelinelabs.conductor.changehandler.VerticalChangeHandler;
 import com.braintreepayments.api.BraintreeFragment;
+import com.braintreepayments.api.Card;
 import com.braintreepayments.api.PayPal;
 import com.braintreepayments.api.exceptions.AuthenticationException;
 import com.braintreepayments.api.exceptions.AuthorizationException;
@@ -25,18 +26,22 @@ import com.braintreepayments.api.exceptions.InvalidArgumentException;
 import com.braintreepayments.api.exceptions.ServerException;
 import com.braintreepayments.api.exceptions.UnexpectedException;
 import com.braintreepayments.api.exceptions.UpgradeRequiredException;
-import com.braintreepayments.api.interfaces.BraintreeResponseListener;
+import com.braintreepayments.api.models.CardBuilder;
 import com.braintreepayments.api.models.PaymentMethodNonce;
+import com.braintreepayments.cardform.view.CardForm;
 
 import javax.inject.Inject;
 
 import au.com.dealsdirect.R;
 import au.com.dealsdirect.data.auth.AuthHandler;
+import au.com.dealsdirect.data.network.model.checkout.CreatePaymentTransaction;
+import au.com.dealsdirect.data.network.model.checkout.createpaymenttransaction.Value;
 import au.com.dealsdirect.data.network.model.checkout.getuserpaymentmethods.PaymentMethod;
 import au.com.dealsdirect.ui.base.BaseActivity;
 import au.com.dealsdirect.ui.controller.account.AccountController;
 import au.com.dealsdirect.ui.controller.categories.CategoriesController;
-import au.com.dealsdirect.ui.controller.checkout.CheckoutController;
+import au.com.dealsdirect.ui.controller.checkout.addpayment.AddPaymentController;
+import au.com.dealsdirect.ui.controller.checkout.checkout.CheckoutController;
 import au.com.dealsdirect.ui.controller.contact.viewcontacts.ViewContactsController;
 import au.com.dealsdirect.ui.controller.home.HomeController;
 import au.com.dealsdirect.ui.controller.invite.InviteController;
@@ -45,6 +50,7 @@ import au.com.dealsdirect.ui.controller.shops.ShopsController;
 import au.com.dealsdirect.ui.custom.BottomNavigationViewHelper;
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import timber.log.Timber;
 
 public class MainActivity extends BaseActivity implements MainMvpView {
 
@@ -304,10 +310,13 @@ public class MainActivity extends BaseActivity implements MainMvpView {
     }
 
     public void fetchAuthorization(FetchTokenHandler handler) {
-
         //Don't proceed to call if not logged in
         mPresenter.fetchBTAuthorization(handler);
 
+    }
+
+    public void callCreatePaymentTransaction(String paymentNonce, String paymentToken){
+        mPresenter.callCreatePaymentTransaction(mBraintreeFragment,mPaymentType,paymentNonce,paymentToken);
     }
 
     @Override
@@ -327,21 +336,25 @@ public class MainActivity extends BaseActivity implements MainMvpView {
         PayPal.authorizeAccount(mBraintreeFragment);
     }
 
-//    public void onPurchase(CardForm cardForm) {
-//        CardBuilder cardBuilder = new CardBuilder()
-//                .cardNumber(cardForm.getCardNumber())
-//                .expirationMonth(cardForm.getExpirationMonth())
-//                .expirationYear(cardForm.getExpirationYear())
-//                .cvv(cardForm.getCvv())
-//                .postalCode(cardForm.getPostalCode());
-//
-//        Timber.d(TAG, "BT_cardNumber: " + cardForm.getCardNumber());
-//        Timber.d(TAG, "BT_expirationMonth: " + cardForm.getExpirationMonth());
-//        Timber.d(TAG, "BT_expirationYear: " + cardForm.getExpirationYear());
-//        Timber.d(TAG, "BT_cvv: " + cardForm.getCvv());
-//
-//        Card.tokenize(mBraintreeFragment, cardBuilder);
-//    }
+    public void onPurchase(CardForm cardForm) {
+        CardBuilder cardBuilder = new CardBuilder()
+                .cardNumber(cardForm.getCardNumber())
+                .expirationMonth(cardForm.getExpirationMonth())
+                .expirationYear(cardForm.getExpirationYear())
+                .cvv(cardForm.getCvv())
+                .postalCode(cardForm.getPostalCode());
+
+        Timber.d(TAG, "BT_cardNumber: " + cardForm.getCardNumber());
+        Timber.d(TAG, "BT_expirationMonth: " + cardForm.getExpirationMonth());
+        Timber.d(TAG, "BT_expirationYear: " + cardForm.getExpirationYear());
+        Timber.d(TAG, "BT_cvv: " + cardForm.getCvv());
+
+        Card.tokenize(mBraintreeFragment, cardBuilder);
+    }
+
+    public PaymentMethod getPaymentMethodSelected() {
+        return mCurrentPaymentMethod;
+    }
 
     @Override
     public void setPaymentMethodSelected(PaymentMethod paymentMethodSelected) {
@@ -364,5 +377,49 @@ public class MainActivity extends BaseActivity implements MainMvpView {
     @Override
     public void callLogout() {
         mPresenter.callLogout();
+    }
+
+    @Override
+    public void createPaymentMethodSuccess(PaymentMethod lastPaymentMethod) {
+        int backstackSize = mRouter.getBackstack().size();
+        Controller currentController = mRouter.getBackstack().get(backstackSize - 1).controller();
+
+        if ((currentController instanceof AddPaymentController) && ((AddPaymentController)currentController).isCalledFromAccounts()) {
+            ((AddPaymentController)currentController).showAddPaymentResult(true, "");
+        } else {
+            setPaymentMethodSelected(lastPaymentMethod);
+            mRouter.popCurrentController();
+//            mCheckoutFragment.loadCart();
+        }
+    }
+
+    @Override
+    public void createPaymentTransactionSuccess(CreatePaymentTransaction.ResponseValue responseValue) {
+        fetchAuthorization(null);
+
+        if (responseValue.isPaid()) {
+
+//            GCartUtil.setValueToCart(0);
+//            RxBus.instance().post("update_cart_items_immediate");
+
+            Value value = responseValue.getD().getValue();
+
+//            mRouter.pushController(RouterTransaction.with(new PaymentSuccessFragment())
+//                    .pushChangeHandler(new HorizontalChangeHandler())
+//                    .popChangeHandler(new HorizontalChangeHandler()));
+//            switchFragment(PaymentSuccessFragment.newInstance(activity,
+//                    value.getInvoiceNo(),
+//                    value.getAddressString(),
+//                    GPriceUtil.getPriceStringValue(value.getOrderInfoResult().getTotal()),
+//                    value.getOrderInfoResult().getEstimatedDeliveryText()));
+
+        } else {
+//            AlertDialogEngine.showDialog(activity, "error", response.body().d.getMessage(), "ok", null);
+//
+//            //Reload on false result
+//            if (!response.body().d.getResult()) {
+//                mCheckoutFragment.loadCart();
+//            }
+        }
     }
 }

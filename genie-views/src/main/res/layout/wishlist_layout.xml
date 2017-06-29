@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:background="@drawable/shareoptionsbg"
+    android:layout_margin="5dp"
+    android:padding="5dp"
+    android:clipChildren="false"
+    android:clipToPadding="false"
+    android:elevation="10dp">
+    <ImageView
+        android:id="@+id/wishlist1"
+        android:layout_height="40dp"
+        android:layout_width="40dp"
+        android:layout_alignParentLeft="true"
+        android:scaleType="fitCenter"
+        android:scaleX="0"
+        android:scaleY="0"
+        android:src="@drawable/heart"
+        />
+
+    <ImageView
+        android:id="@+id/wishlist2"
+        android:layout_height="40dp"
+        android:layout_width="40dp"
+        android:layout_toRightOf="@id/wishlist1"
+        android:scaleType="fitCenter"
+        android:scaleX="0"
+        android:scaleY="0"
+        android:src="@drawable/birthday"
+        />
+
+    <ImageView
+        android:id="@+id/wishlist3"
+        android:layout_height="40dp"
+        android:layout_width="40dp"
+        android:layout_toRightOf="@id/wishlist2"
+        android:scaleType="fitCenter"
+        android:scaleX="0"
+        android:scaleY="0"
+        android:src="@drawable/christmas"
+        />
+</RelativeLayout>
+
+
+

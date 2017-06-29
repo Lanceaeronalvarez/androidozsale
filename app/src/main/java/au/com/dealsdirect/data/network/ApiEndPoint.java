@@ -30,10 +30,12 @@ public final class ApiEndPoint {
     public static final String GET_PRODUCTS = LEGACY_SHOP + PRODUCTS;
     public static final String GET_PRODUCT_DETAILS = LEGACY_PRODUCT + PRODUCT_DETAILS;
 
+    private static final String COCOSA_SERVICE = "CocosaService.asmx/";
     /* API Constants */
     private static final String API_HOST = "https://www.dealsdirect.com.au/";
 
-    private static final String TEST_API_LEGACY = "https://sbx-mob-api.mysaledev.com/public/v3.17/api.asmx/";
+//    private static final String TEST_API_LEGACY = "https://sbx-mob-api.mysaledev.com/public/v3.17/api.asmx/";
+    private static final String TEST_API_LEGACY = "https://api.mysaledev.com/public/v3.17/api.asmx/";
     private static final String LIVE_API_LEGACY = "https://api.apacsale.com/public/v3.17/api.asmx/";
 
     private static final String API_VERSION = "api/v1/";
@@ -42,7 +44,7 @@ public final class ApiEndPoint {
     private static final String HANDLER_ASMX_PREFIX = "handler.ashx/";
     private static final String BASE_URL = API_HOST + HANDLER_PREFIX;
     private static final String BASE_URL_ASMX = API_HOST + HANDLER_ASMX_PREFIX;
-    private static final String COCOSA_SERVICE = "CocosaService.asmx/";
+
 
     public static final String SAMPLE_API = "";
 

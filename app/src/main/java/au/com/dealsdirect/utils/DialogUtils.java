@@ -10,11 +10,23 @@ import android.content.DialogInterface;
 
 public class DialogUtils {
 
-    public static void showYesNoDialog(Context context, String title, DialogInterface.OnClickListener onClickListener){
+    public static void showYesNoDialog(Context context, String title, String messageYes, String messageNo
+            ,DialogInterface.OnClickListener positiveOnClickListener
+            ,DialogInterface.OnClickListener negativeOnClickListener){
         AlertDialog.Builder builder = new AlertDialog.Builder(context);
         builder.setMessage(title)
-                .setPositiveButton("Yes", onClickListener)
-                .setNegativeButton("No", onClickListener)
+                .setCancelable(false)
+                .setPositiveButton("Yes", positiveOnClickListener)
+                .setNegativeButton("No", negativeOnClickListener)
+                .show();
+    }
+
+    public static void showYesDialog(Context context, String title, String message, String option1, DialogInterface.OnClickListener positiveOnClickListener){
+        AlertDialog.Builder builder = new AlertDialog.Builder(context);
+        builder.setTitle(title)
+                .setMessage(message)
+                .setCancelable(false)
+                .setPositiveButton(message, positiveOnClickListener)
                 .show();
     }
 

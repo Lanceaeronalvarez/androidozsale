@@ -319,12 +319,32 @@ public class AppApiHelper implements ApiHelper {
 
     @Override
     public Observable<GetCurrentOrder.ResponseValue> callAdjustQuantityOrderItem(String url, AdjustOrderItem.RequestValue requestValues) {
-        return null;
+        String endPoint;
+        switch (url){
+            case "IncreaseOrderItem":
+                endPoint = ApiEndPoint.INCREASE_ORDER_ITEM;
+                break;
+            case "DecreaseOrderItem":
+                endPoint = ApiEndPoint.DECREASE_ORDER_ITEM;
+                break;
+            default:
+                endPoint="";
+                break;
+        }
+        return Rx2AndroidNetworking.post(endPoint)
+                .addHeaders(mApiHeader.getPublicApiHeader())
+                .addJSONObjectBody(JsonUtils.convertToJsonObject(requestValues))
+                .build()
+                .getObjectObservable(GetCurrentOrder.ResponseValue.class);
     }
 
     @Override
     public Observable<CreatePaymentMethod.ResponseValue> callCreatePaymentMethod(CreatePaymentMethod.RequestValue requestValues) {
-        return null;
+        return Rx2AndroidNetworking.post(ApiEndPoint.CREATE_PAYMENT_METHOD)
+                .addHeaders(mApiHeader.getPublicApiHeader())
+                .addJSONObjectBody(JsonUtils.convertToJsonObject(requestValues))
+                .build()
+                .getObjectObservable(CreatePaymentMethod.ResponseValue.class);
     }
 
     @Override

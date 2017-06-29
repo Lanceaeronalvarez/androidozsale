@@ -29,6 +29,7 @@ import javax.inject.Inject;
 
 import au.com.dealsdirect.data.DataManager;
 import au.com.dealsdirect.data.network.model.checkout.CreatePaymentMethod;
+import au.com.dealsdirect.data.network.model.checkout.CreatePaymentTransaction;
 import au.com.dealsdirect.data.network.model.checkout.GetPaymentToken;
 import au.com.dealsdirect.data.network.model.login.LoginEmail;
 import au.com.dealsdirect.data.network.model.login.LoginTicket;
@@ -52,7 +53,7 @@ public class MainPresenter<V extends MainMvpView> extends BasePresenter<V> imple
     @Override
     public void initServerSettings(Context context, String countryId) {
         getCompositeDisposable().add(getDataManager()
-                .callGetServerSettings(context,countryId)
+                .callGetServerSettings(context, countryId)
                 .subscribeOn(getSchedulerProvider().io())
                 .observeOn(getSchedulerProvider().ui())
                 .subscribe(new Consumer<GetServerSettings.ResponseValue>() {
@@ -63,7 +64,7 @@ public class MainPresenter<V extends MainMvpView> extends BasePresenter<V> imple
                         }
 
                         com.mysale.genie.utility.config.model.getserversettings.Value value = responseValue.d.getValue();
-                        if(value != null) {
+                        if (value != null) {
                             getDataManager().setCountryId(responseValue.getCountryId());
                             getDataManager().setLanguageId(responseValue.getLanguages().get(0).getID());
                             Gson gson = new Gson();
@@ -78,7 +79,7 @@ public class MainPresenter<V extends MainMvpView> extends BasePresenter<V> imple
                             SharedPreferences test = Prefs.getPreferences();
 
                             //if auth is logged in, appsettings call, elsee publicapp settings
-                            callGetPublicAppSettings(context,countryId);
+                            callGetPublicAppSettings(context, countryId);
 
                         }
                     }
@@ -103,9 +104,9 @@ public class MainPresenter<V extends MainMvpView> extends BasePresenter<V> imple
                 }));
     }
 
-    private void doAppSettingsApiCall(Context context, String countryId){
+    private void doAppSettingsApiCall(Context context, String countryId) {
         getCompositeDisposable().add(getDataManager()
-                .callGetPublicAppSettings(context,countryId)
+                .callGetPublicAppSettings(context, countryId)
                 .subscribeOn(getSchedulerProvider().io())
                 .subscribeOn(getSchedulerProvider().ui())
                 .subscribe(new Consumer<GetAppSettings.ResponseValue>() {
@@ -147,17 +148,17 @@ public class MainPresenter<V extends MainMvpView> extends BasePresenter<V> imple
     }
 
     public void callGetPublicAppSettings(Context context, String countryId) {
-        doAppSettingsApiCall(context,countryId);
+        doAppSettingsApiCall(context, countryId);
     }
 
     private void callGetAppSettings(Context context, String countryId) {
-        doAppSettingsApiCall(context,countryId);
+        doAppSettingsApiCall(context, countryId);
     }
 
     @Override
     public void callGetAppSettingsSection(Context context, String countryId) {
         getCompositeDisposable().add(getDataManager()
-                .callGetAppSettingsSection(context,countryId)
+                .callGetAppSettingsSection(context, countryId)
                 .subscribeOn(getSchedulerProvider().io())
                 .observeOn(getSchedulerProvider().ui())
                 .subscribe(new Consumer<GetAppSettingsSection.ResponseValue>() {
@@ -243,7 +244,7 @@ public class MainPresenter<V extends MainMvpView> extends BasePresenter<V> imple
         if (!getDataManager().isAuthorized()) return;
 
         getCompositeDisposable().add(getDataManager()
-                .callGetPaymentToken(new GetPaymentToken.RequestValue(getDataManager().getLanguageId(),getDataManager().getCountryId()))
+                .callGetPaymentToken(new GetPaymentToken.RequestValue(getDataManager().getLanguageId(), getDataManager().getCountryId()))
                 .subscribeOn(getSchedulerProvider().io())
                 .observeOn(getSchedulerProvider().ui())
                 .subscribe(new Consumer<GetPaymentToken.ResponseValue>() {
@@ -252,6 +253,8 @@ public class MainPresenter<V extends MainMvpView> extends BasePresenter<V> imple
                         if (!isViewAttached()) {
                             return;
                         }
+
+                        getMvpView().showLoading();
 
                         if (responseValue.isResult() && responseValue.isAuthenticated()) {
                             getMvpView().onAuthorizationFetched(responseValue.getPaymentToken(), responseValue.getPaymentType());
@@ -271,6 +274,7 @@ public class MainPresenter<V extends MainMvpView> extends BasePresenter<V> imple
                         }
 
                         getMvpView().hideLoading();
+
                         if (fetchTokenHandler != null)
                             fetchTokenHandler.onFailure();
 
@@ -288,6 +292,66 @@ public class MainPresenter<V extends MainMvpView> extends BasePresenter<V> imple
     }
 
     @Override
+    public void callCreatePaymentTransaction(BraintreeFragment braintreeFragment, String paymentType, String paymentNonce, String paymentToken) {
+        BraintreeResponseListener<String> handler = new BraintreeResponseListener<String>() {
+            @Override
+            public void onResponse(String deviceData) {
+                String languageId = getDataManager().getLanguageId();
+                String countryId = getDataManager().getCountryId();
+                CreatePaymentTransaction.RequestValue.Request requestValue =
+                        new CreatePaymentTransaction.RequestValue.Request(paymentType, paymentNonce, paymentToken, deviceData);
+                getCompositeDisposable().add(getDataManager()
+                                .callCreatePaymentTransaction(new CreatePaymentTransaction.RequestValue(requestValue, countryId, languageId))
+                                .subscribeOn(getSchedulerProvider().io())
+                                .observeOn(getSchedulerProvider().ui())
+                                .subscribe(new Consumer<CreatePaymentTransaction.ResponseValue>() {
+                                    @Override
+                                    public void accept(@NonNull CreatePaymentTransaction.ResponseValue responseValue) throws Exception {
+                                        if (!isViewAttached()) {
+                                            return;
+                                        }
+
+                                        getMvpView().hideLoading();
+
+                                        if (responseValue.getD().getResult()) {
+                                            getMvpView().createPaymentTransactionSuccess(responseValue);
+                                        } else {
+                                            getMvpView().onError(responseValue.getD().getMessage());
+                                        }
+//
+
+                                    }
+                                }, new Consumer<Throwable>() {
+                                    @Override
+                                    public void accept(@NonNull Throwable throwable) throws Exception {
+                                        if (!isViewAttached()) {
+                                            return;
+                                        }
+
+                                        getMvpView().hideLoading();
+
+                                        getMvpView().onError(throwable.getMessage());
+
+                                        // handle load accounts error here
+                                        if (throwable instanceof ANError) {
+                                            ANError anError = (ANError) throwable;
+                                            handleApiError(anError);
+                                        }
+                                    }
+                                })
+                );
+
+            }
+        };
+
+        if (getDataManager().isKountEnabled()) {
+            DataCollector.collectDeviceData(braintreeFragment, getDataManager().getKountMerchantId(), handler);
+        } else {
+            DataCollector.collectDeviceData(braintreeFragment, handler);
+        }
+    }
+
+    @Override
     public void createPaymentMethod(BraintreeFragment braintreeFragment, String paymentNonce, String paymentType) {
 
         BraintreeResponseListener<String> handler = new BraintreeResponseListener<String>() {
@@ -295,55 +359,47 @@ public class MainPresenter<V extends MainMvpView> extends BasePresenter<V> imple
             public void onResponse(String deviceData) {
                 String languageId = getDataManager().getLanguageId();
                 String countryId = getDataManager().getCountryId();
+                SchedulerProvider test = getSchedulerProvider();
                 CreatePaymentMethod.RequestValue.Request requestValue = new CreatePaymentMethod.RequestValue.Request(paymentType, paymentNonce, deviceData);
                 getCompositeDisposable().add(getDataManager()
-                        .callCreatePaymentMethod(new CreatePaymentMethod.RequestValue(requestValue,countryId,languageId))
-                        .subscribeOn(getSchedulerProvider().io())
-                        .observeOn(getSchedulerProvider().ui())
-                        .subscribe(new Consumer<CreatePaymentMethod.ResponseValue>() {
-                            @Override
-                            public void accept(@NonNull CreatePaymentMethod.ResponseValue responseValue) throws Exception {
-                                if (!isViewAttached()) {
-                                    return;
-                                }
+                                .callCreatePaymentMethod(new CreatePaymentMethod.RequestValue(requestValue, countryId, languageId))
+                                .subscribeOn(getSchedulerProvider().io())
+                                .observeOn(getSchedulerProvider().ui())
+                                .subscribe(new Consumer<CreatePaymentMethod.ResponseValue>() {
+                                    @Override
+                                    public void accept(@NonNull CreatePaymentMethod.ResponseValue responseValue) throws Exception {
+                                        if (!isViewAttached()) {
+                                            return;
+                                        }
 
-                                    getMvpView().performResetWithAuthFetch();
+                                        getMvpView().performResetWithAuthFetch();
 
-                                if ((responseValue.getResult() && responseValue.getIsAuthenticated())) {
-
-//                                    if ((getCurrentFragment().getClass() == AddPaymentFragment.class) && mAddPaymentFragment.isCalledFromAccounts()) {
-//                                        mAddPaymentFragment.showAddPaymentResult(true, "");
-//                                    } else {
-//                                        getMvpView().setPaymentMethodSelected(responseValue.getD().getValue().getLastPaymentMethod());
-//                                        popBackToFragment("main");
-//                                        mCheckoutFragment.loadCart();
-//                                    }
-
-                                }
-                                else {
-                                    getMvpView().onError(responseValue.getMessage());
-                                }
+                                        if ((responseValue.getResult() && responseValue.getIsAuthenticated())) {
+                                            getMvpView().createPaymentMethodSuccess(responseValue.getD().getValue().getLastPaymentMethod());
+                                        } else {
+                                            getMvpView().onError(responseValue.getMessage());
+                                        }
 //
 
-                            }
-                        }, new Consumer<Throwable>() {
-                            @Override
-                            public void accept(@NonNull Throwable throwable) throws Exception {
-                                if (!isViewAttached()) {
-                                    return;
-                                }
+                                    }
+                                }, new Consumer<Throwable>() {
+                                    @Override
+                                    public void accept(@NonNull Throwable throwable) throws Exception {
+                                        if (!isViewAttached()) {
+                                            return;
+                                        }
 
-                                getMvpView().hideLoading();
+                                        getMvpView().hideLoading();
 
-                                getMvpView().onError(throwable.getMessage());
+                                        getMvpView().onError(throwable.getMessage());
 
-                                // handle load accounts error here
-                                if (throwable instanceof ANError) {
-                                    ANError anError = (ANError) throwable;
-                                    handleApiError(anError);
-                                }
-                            }
-                        })
+                                        // handle load accounts error here
+                                        if (throwable instanceof ANError) {
+                                            ANError anError = (ANError) throwable;
+                                            handleApiError(anError);
+                                        }
+                                    }
+                                })
                 );
 
             }
@@ -359,9 +415,9 @@ public class MainPresenter<V extends MainMvpView> extends BasePresenter<V> imple
     @Override
     public void callLoginTicket() {
         String loginTicket = getDataManager().getLoginTicket();
-        if(!loginTicket.isEmpty()){
+        if (!loginTicket.isEmpty()) {
             getCompositeDisposable().add(getDataManager()
-                            .callLoginTicket(new LoginTicket.RequestValue(loginTicket,getDataManager().getCountryId()))
+                            .callLoginTicket(new LoginTicket.RequestValue(loginTicket, getDataManager().getCountryId()))
                             .subscribeOn(getSchedulerProvider().io())
                             .observeOn(getSchedulerProvider().ui())
                             .subscribe(new Consumer<LoginEmail.ResponseValue>() {
@@ -371,9 +427,9 @@ public class MainPresenter<V extends MainMvpView> extends BasePresenter<V> imple
                                         return;
                                     }
 
-                                    if(responseValue.isSuccess()){
+                                    if (responseValue.isSuccess()) {
                                         getDataManager().acknowledgeAuth(responseValue.getTicket());
-                                    }else{
+                                    } else {
                                         //On login ticket fail, call logout and go back to shop
 //                                RxBus.instance().post("shop_now");
                                         callLogout();
@@ -407,37 +463,37 @@ public class MainPresenter<V extends MainMvpView> extends BasePresenter<V> imple
 //        RxBus.instance().post("update_cart_items_immediate");
 //        RxBus.instance().post(Auth.EVENT_PRE_LOGOUT);
         getCompositeDisposable().add(getDataManager()
-                .callLogout(new Logout.RequestValue())
-                .subscribeOn(getSchedulerProvider().io())
-                .observeOn(getSchedulerProvider().ui())
-                .subscribe(new Consumer<Logout.ResponseValue>() {
-                    @Override
-                    public void accept(@NonNull Logout.ResponseValue responseValue) throws Exception {
-                        if (!isViewAttached()) {
-                            return;
-                        }
+                        .callLogout(new Logout.RequestValue())
+                        .subscribeOn(getSchedulerProvider().io())
+                        .observeOn(getSchedulerProvider().ui())
+                        .subscribe(new Consumer<Logout.ResponseValue>() {
+                            @Override
+                            public void accept(@NonNull Logout.ResponseValue responseValue) throws Exception {
+                                if (!isViewAttached()) {
+                                    return;
+                                }
 
-                        getDataManager().revokeAuth();
+                                getDataManager().revokeAuth();
 //                RxBus.instance().post(Auth.EVENT_LOGOUT);
 //                RxBus.instance().post(GVersion.EVENT_LOGOUT);
-                    }
-                }, new Consumer<Throwable>() {
-                    @Override
-                    public void accept(@NonNull Throwable throwable) throws Exception {
-                        if (!isViewAttached()) {
-                            return;
-                        }
+                            }
+                        }, new Consumer<Throwable>() {
+                            @Override
+                            public void accept(@NonNull Throwable throwable) throws Exception {
+                                if (!isViewAttached()) {
+                                    return;
+                                }
 
-                        getMvpView().hideLoading();
-                        getMvpView().onError(throwable.getMessage());
+                                getMvpView().hideLoading();
+                                getMvpView().onError(throwable.getMessage());
 
-                        // handle load accounts error here
-                        if (throwable instanceof ANError) {
-                            ANError anError = (ANError) throwable;
-                            handleApiError(anError);
-                        }
-                    }
-                })
+                                // handle load accounts error here
+                                if (throwable instanceof ANError) {
+                                    ANError anError = (ANError) throwable;
+                                    handleApiError(anError);
+                                }
+                            }
+                        })
         );
     }
 

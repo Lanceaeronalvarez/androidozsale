@@ -1,2 +1,2 @@
-include ':app',':genie-utility'
+include ':app', ':genie-utility', ':CardForm'
 project(':genie-utility').projectDir = new File('sw_o_android.genieandroid/genie-utility')

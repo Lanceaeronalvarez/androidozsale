@@ -3,6 +3,8 @@ package au.com.dealsdirect.data.network.model.checkout;
  * Created by CodeineBot on 1/6/17.
  */
 
+import com.google.gson.annotations.Expose;
+import com.google.gson.annotations.SerializedName;
 import com.mysale.genie.utility.LegacyBaseResponseValue;
 
 import java.util.List;
@@ -34,6 +36,8 @@ public class GetCurrentOrder {
                 return value;
             }
 
+            @Expose
+            @SerializedName("Value")
             public Value value;
         }
 

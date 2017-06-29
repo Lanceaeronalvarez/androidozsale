@@ -1,13 +1,6 @@
 package au.com.dealsdirect.di.module;
 
-import android.app.Activity;
-
 import com.bluelinelabs.conductor.Controller;
-import com.braintreepayments.api.BraintreeFragment;
-import com.braintreepayments.api.exceptions.InvalidArgumentException;
-import com.mysale.genie.utility.config.model.getappsettings.BrainTree;
-
-import javax.inject.Singleton;
 
 import au.com.dealsdirect.ui.controller.account.AccountMvpPresenter;
 import au.com.dealsdirect.ui.controller.account.AccountMvpView;
@@ -24,12 +17,12 @@ import au.com.dealsdirect.ui.controller.cart.CartPresenter;
 import au.com.dealsdirect.ui.controller.categories.CategoriesMvpPresenter;
 import au.com.dealsdirect.ui.controller.categories.CategoriesMvpView;
 import au.com.dealsdirect.ui.controller.categories.CategoriesPresenter;
-import au.com.dealsdirect.ui.controller.account.AccountMvpPresenter;
-import au.com.dealsdirect.ui.controller.account.AccountMvpView;
-import au.com.dealsdirect.ui.controller.account.AccountPresenter;
-import au.com.dealsdirect.ui.controller.checkout.CheckoutMvpPresenter;
-import au.com.dealsdirect.ui.controller.checkout.CheckoutMvpView;
-import au.com.dealsdirect.ui.controller.checkout.CheckoutPresenter;
+import au.com.dealsdirect.ui.controller.checkout.addpayment.AddPaymentMvpPresenter;
+import au.com.dealsdirect.ui.controller.checkout.addpayment.AddPaymentMvpView;
+import au.com.dealsdirect.ui.controller.checkout.addpayment.AddPaymentPresenter;
+import au.com.dealsdirect.ui.controller.checkout.checkout.CheckoutMvpPresenter;
+import au.com.dealsdirect.ui.controller.checkout.checkout.CheckoutMvpView;
+import au.com.dealsdirect.ui.controller.checkout.checkout.CheckoutPresenter;
 import au.com.dealsdirect.ui.controller.contact.addcontact.AddContactMvpPresenter;
 import au.com.dealsdirect.ui.controller.contact.addcontact.AddContactMvpView;
 import au.com.dealsdirect.ui.controller.contact.addcontact.AddContactpresenter;
@@ -66,9 +59,6 @@ import au.com.dealsdirect.ui.controller.register.RegisterPresenter;
 import au.com.dealsdirect.ui.controller.salecategories.SaleCategoriesMvpPresenter;
 import au.com.dealsdirect.ui.controller.salecategories.SaleCategoriesMvpView;
 import au.com.dealsdirect.ui.controller.salecategories.SaleCategoriesPresenter;
-import au.com.dealsdirect.ui.controller.saleitemdetails.SaleItemDetailsMvpPresenter;
-import au.com.dealsdirect.ui.controller.saleitemdetails.SaleItemDetailsMvpView;
-import au.com.dealsdirect.ui.controller.saleitemdetails.SaleItemDetailsPresenter;
 import au.com.dealsdirect.ui.controller.saleitems.SaleItemsMvpPresenter;
 import au.com.dealsdirect.ui.controller.saleitems.SaleItemsMvpView;
 import au.com.dealsdirect.ui.controller.saleitems.SaleItemsPresenter;
@@ -206,6 +196,11 @@ public class ControllerModule {
 
     @Provides
     RegisterMvpPresenter<RegisterMvpView> provideRegisterPresenter(RegisterPresenter<RegisterMvpView> presenter) {
+        return presenter;
+    }
+
+    @Provides
+    AddPaymentMvpPresenter<AddPaymentMvpView> provideAddPaymentPresenter(AddPaymentPresenter<AddPaymentMvpView> presenter){
         return presenter;
     }
 
