@@ -94,9 +94,7 @@ public class CategoriesAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
 
                 mCategoryAdapterClickListener.onCategoryClicked(
                         position,
-                        mData.get(position).getId(),
-                        mData.get(position).getName(),
-                        mData.get(position).getKey());
+                        mData.get(position));
 
             });
 
@@ -116,7 +114,9 @@ public class CategoriesAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
 
     @Override
     public int getItemCount() {
-        return mData.size();
+        if(mData!=null)
+            return mData.size();
+        return 0;
     }
 
     public void replaceData(List<GetCategoryTreeResponse> getCategoryTreeResponses) {
