@@ -37,7 +37,7 @@ public class AddVouchersPresenter<V extends AddVouchersMvpView>  extends BasePre
     @Override
     public void applyVouchers(int imageSize, List<String> voucherIds) {
         ApplyVouchersRequest request = new ApplyVouchersRequest(voucherIds, imageSize, getDataManager().getLanguageId());
-        getCompositeDisposable().add(getDataManager().getApplyVouchersApiCall(request)
+        getCompositeDisposable().add(getDataManager().callGetApplyVouchers(request)
                 .subscribeOn(getSchedulerProvider().io())
                 .observeOn(getSchedulerProvider().ui())
                 .subscribe(new Consumer<ApplyVouchersResponse>() {
@@ -56,7 +56,7 @@ public class AddVouchersPresenter<V extends AddVouchersMvpView>  extends BasePre
     @Override
     public void clearVouchers(int imageSize) {
         ClearVouchersRequest request = new ClearVouchersRequest(imageSize, getDataManager().getLanguageId());
-        getCompositeDisposable().add(getDataManager().getClearVouchersApiCall(request)
+        getCompositeDisposable().add(getDataManager().callGetClearVouchers(request)
                 .subscribeOn(getSchedulerProvider().io())
                 .observeOn(getSchedulerProvider().ui())
                 .subscribe(new Consumer<ClearVouchersResponse>() {
@@ -75,7 +75,7 @@ public class AddVouchersPresenter<V extends AddVouchersMvpView>  extends BasePre
     @Override
     public void addAndApplyVoucherByKey(int imageSize, String key) {
         AddAndApplyVoucherByKeyRequest request = new AddAndApplyVoucherByKeyRequest(key, imageSize, getDataManager().getLanguageId());
-        getCompositeDisposable().add(getDataManager().getAddAndApplyVoucherByKeyApiCall(request)
+        getCompositeDisposable().add(getDataManager().callGetAddAndApplyVoucherByKey(request)
                 .subscribeOn(getSchedulerProvider().io())
                 .observeOn(getSchedulerProvider().ui())
                 .subscribe(new Consumer<AddAndApplyVoucherByKeyResponse>() {
@@ -106,7 +106,7 @@ public class AddVouchersPresenter<V extends AddVouchersMvpView>  extends BasePre
         GetUserVouchersRequest getUserVouchersRequest =
                 new GetUserVouchersRequest(getDataManager().getLanguageId());
         getCompositeDisposable().add(getDataManager()
-                .getUserVouchersApiCall(getUserVouchersRequest)
+                .callGetUserVouchers(getUserVouchersRequest)
                 .subscribeOn(getSchedulerProvider().io())
                 .observeOn(getSchedulerProvider().ui())
                 .subscribe(new Consumer<GetUserVoucherResponse>() {
@@ -122,7 +122,7 @@ public class AddVouchersPresenter<V extends AddVouchersMvpView>  extends BasePre
                 }));
 
         getCompositeDisposable().add(getDataManager()
-                .getVouchersApiCall()
+                .callGetVouchers()
                 .subscribeOn(getSchedulerProvider().io())
                 .observeOn(getSchedulerProvider().ui())
                 .subscribe(new Consumer<GetVouchersResponse>() {
