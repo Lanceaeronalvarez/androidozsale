@@ -114,7 +114,7 @@ public class ViewAddressRecyclerViewAdapter extends RecyclerView.Adapter<ViewAdd
 
         public MyAddressModuleViewHolder(View itemView) {
             super(itemView);
-            ButterKnife.bind(itemView);
+            ButterKnife.bind(this,itemView);
         }
     }
 

@@ -243,6 +243,8 @@ public class MainPresenter<V extends MainMvpView> extends BasePresenter<V> imple
     public void fetchBTAuthorization(FetchTokenHandler fetchTokenHandler) {
         if (!getDataManager().isAuthorized()) return;
 
+        getMvpView().showLoading();
+
         getCompositeDisposable().add(getDataManager()
                 .callGetPaymentToken(new GetPaymentToken.RequestValue(getDataManager().getLanguageId(), getDataManager().getCountryId()))
                 .subscribeOn(getSchedulerProvider().io())
@@ -254,7 +256,7 @@ public class MainPresenter<V extends MainMvpView> extends BasePresenter<V> imple
                             return;
                         }
 
-                        getMvpView().showLoading();
+                        getMvpView().hideLoading();
 
                         if (responseValue.isResult() && responseValue.isAuthenticated()) {
                             getMvpView().onAuthorizationFetched(responseValue.getPaymentToken(), responseValue.getPaymentType());
@@ -293,6 +295,8 @@ public class MainPresenter<V extends MainMvpView> extends BasePresenter<V> imple
 
     @Override
     public void callCreatePaymentTransaction(BraintreeFragment braintreeFragment, String paymentType, String paymentNonce, String paymentToken) {
+        getMvpView().showLoading();
+
         BraintreeResponseListener<String> handler = new BraintreeResponseListener<String>() {
             @Override
             public void onResponse(String deviceData) {
@@ -318,7 +322,6 @@ public class MainPresenter<V extends MainMvpView> extends BasePresenter<V> imple
                                         } else {
                                             getMvpView().onError(responseValue.getD().getMessage());
                                         }
-//
 
                                     }
                                 }, new Consumer<Throwable>() {

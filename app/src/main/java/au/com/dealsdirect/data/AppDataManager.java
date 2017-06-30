@@ -513,6 +513,16 @@ public class AppDataManager implements DataManager {
         return mPreferencesHelper.isDebugMode();
     }
 
+    @Override
+    public void setPaymentCount(int count) {
+        mPreferencesHelper.setPaymentCount(count);
+    }
+
+    @Override
+    public int getPaymentCount() {
+        return mPreferencesHelper.getPaymentCount();
+    }
+
 
     @Override
     public void updateApiHeader(Long userId, String accessToken) {

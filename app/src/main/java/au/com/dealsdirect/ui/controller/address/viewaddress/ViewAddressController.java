@@ -1,5 +1,6 @@
 package au.com.dealsdirect.ui.controller.address.viewaddress;
 
+import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
@@ -28,6 +29,7 @@ import au.com.dealsdirect.data.network.model.address.GetAddresses;
 import au.com.dealsdirect.ui.base.BaseController;
 import au.com.dealsdirect.ui.custom.RecyclerOnTouchListener;
 import au.com.dealsdirect.ui.controller.address.addnewaddress.AddNewAddressController;
+import au.com.dealsdirect.utils.BundleBuilder;
 import butterknife.BindView;
 import butterknife.OnClick;
 import timber.log.Timber;
@@ -37,6 +39,8 @@ import timber.log.Timber;
  */
 
 public class ViewAddressController extends BaseController implements ViewAddressMvpView {
+
+    private static final String CALLED_FROM_CART = "CalledFromCart";
 
     @BindView(R.id.no_addresses_layout)
     RelativeLayout mAddressPlaceHolder;
@@ -58,6 +62,17 @@ public class ViewAddressController extends BaseController implements ViewAddress
 
     @Inject
     ViewAddressMvpPresenter<ViewAddressMvpView> mPresenter;
+
+    public ViewAddressController(boolean mCalledFromCart) {
+        this(new BundleBuilder(new Bundle())
+                .putBoolean(CALLED_FROM_CART,mCalledFromCart)
+                .build());
+    }
+
+    public ViewAddressController(Bundle args) {
+        super(args);
+        mCalledFromCart = args.getBoolean(CALLED_FROM_CART,false);
+    }
 
     @Override
     protected void onViewBound(@NonNull View view) {
@@ -184,6 +199,13 @@ public class ViewAddressController extends BaseController implements ViewAddress
         recyclerTempItemsSize = itemRange;
 
         mPresenter.deleteUserDeliveryAddress(deleteUserAddressRequest.getAddressID());
+    }
+
+    @Override
+    public void backToCheckout() {
+        if(mCalledFromCart){
+            getActivity().onBackPressed();
+        }
     }
 
     @Override

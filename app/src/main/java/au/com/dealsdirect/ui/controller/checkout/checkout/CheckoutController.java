@@ -30,6 +30,7 @@ import au.com.dealsdirect.ui.base.BaseController;
 import au.com.dealsdirect.ui.controller.address.addnewaddress.AddNewAddressController;
 import au.com.dealsdirect.ui.controller.address.viewaddress.ViewAddressController;
 import au.com.dealsdirect.ui.controller.checkout.addpayment.AddPaymentController;
+import au.com.dealsdirect.ui.controller.checkout.paymentselect.PaymentSelectController;
 import au.com.dealsdirect.ui.main.FetchTokenHandler;
 import au.com.dealsdirect.ui.main.MainActivity;
 import au.com.dealsdirect.ui.main.MainMvpView;
@@ -106,7 +107,7 @@ public class CheckoutController extends BaseController implements CheckoutMvpVie
 
             } else if (view.getId() == mAddressChangeText.getId()) {
                 //push controller to view my address
-                getRouter().pushController(RouterTransaction.with(new ViewAddressController())
+                getRouter().pushController(RouterTransaction.with(new ViewAddressController(true))
                         .pushChangeHandler(new HorizontalChangeHandler())
                         .popChangeHandler(new HorizontalChangeHandler()));
 
@@ -114,7 +115,10 @@ public class CheckoutController extends BaseController implements CheckoutMvpVie
                     || view.getId() == mAddNewPaymentLayout.getId()) {
 
                 if (mPaymentList.size() > 1) {
-//                    fragment = PaymentSelectFragment.newInstance(activity, mPaymentList, true);
+//                  //push to payment select
+                    getRouter().pushController(RouterTransaction.with(new PaymentSelectController(new Gson().toJson(mPaymentList),true))
+                            .pushChangeHandler(new HorizontalChangeHandler())
+                            .popChangeHandler(new HorizontalChangeHandler()));
                 } else {
                     //push controller to add payment
                     getRouter().pushController(RouterTransaction.with(new AddPaymentController(true))
@@ -144,6 +148,7 @@ public class CheckoutController extends BaseController implements CheckoutMvpVie
         mFooterView = inflater.inflate(R.layout.partial_checkout_footer, container, false);
         return view;
     }
+
 
     @Override
     protected void onViewBound(@NonNull View view) {
@@ -201,11 +206,13 @@ public class CheckoutController extends BaseController implements CheckoutMvpVie
         mPaypalButton.setOnClickListener(view2 -> onPaypalButtonClick());
 
         loadCart();
-        showNoCartItemsLayout();
+        mListView.setVisibility(View.GONE);
+//        showNoCartItemsLayout();
 
     }
 
-    private void loadCart(){
+    public void loadCart(){
+        showLoading();
         if(mPresenter.checkIsLoggedIn() && !mActivity.isBraintreeInitialized()){
             mActivity.fetchAuthorization(new FetchTokenHandler() {
                 @Override

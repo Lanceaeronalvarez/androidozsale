@@ -26,6 +26,9 @@ import au.com.dealsdirect.ui.controller.checkout.checkout.CheckoutPresenter;
 import au.com.dealsdirect.ui.controller.checkout.paymentselect.PaymentSelectMvpPresenter;
 import au.com.dealsdirect.ui.controller.checkout.paymentselect.PaymentSelectMvpView;
 import au.com.dealsdirect.ui.controller.checkout.paymentselect.PaymentSelectPresenter;
+import au.com.dealsdirect.ui.controller.checkout.paymentsuccess.PaymentSuccessMvpPresenter;
+import au.com.dealsdirect.ui.controller.checkout.paymentsuccess.PaymentSuccessMvpView;
+import au.com.dealsdirect.ui.controller.checkout.paymentsuccess.PaymentSuccessPresenter;
 import au.com.dealsdirect.ui.controller.contact.addcontact.AddContactMvpPresenter;
 import au.com.dealsdirect.ui.controller.contact.addcontact.AddContactMvpView;
 import au.com.dealsdirect.ui.controller.contact.addcontact.AddContactpresenter;
@@ -209,6 +212,11 @@ public class ControllerModule {
 
     @Provides
     PaymentSelectMvpPresenter<PaymentSelectMvpView> providePaymentSelectPresenter(PaymentSelectPresenter<PaymentSelectMvpView> presenter){
+        return presenter;
+    }
+
+    @Provides
+    PaymentSuccessMvpPresenter<PaymentSuccessMvpView> providePaymentSuccessPresenter(PaymentSuccessPresenter<PaymentSuccessMvpView> presenter){
         return presenter;
     }
 

@@ -86,5 +86,9 @@ public interface PreferencesHelper {
 
     boolean isDebugMode();
 
+    void setPaymentCount(int count);
+
+    int getPaymentCount();
+
 
 }

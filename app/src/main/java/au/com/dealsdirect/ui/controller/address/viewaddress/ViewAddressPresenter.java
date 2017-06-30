@@ -91,9 +91,11 @@ public class ViewAddressPresenter<V extends ViewAddressMvpView> extends BasePres
                             return;
                         }
 
+                        getMvpView().hideLoading();
+
                         if(applyAddressResponse.d.getResult()){
 //                            GDebug.log("DEBUG", "ApplyDeliveryAddress success");
-//                            mViewMyAddresses.backToCheckoutFragment();
+                            getMvpView().backToCheckout();
                         }
                     }
                 }, new Consumer<Throwable>() {

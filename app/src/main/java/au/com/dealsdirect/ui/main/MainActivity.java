@@ -1,5 +1,6 @@
 package au.com.dealsdirect.ui.main;
 
+import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -42,12 +43,14 @@ import au.com.dealsdirect.ui.controller.account.AccountController;
 import au.com.dealsdirect.ui.controller.categories.CategoriesController;
 import au.com.dealsdirect.ui.controller.checkout.addpayment.AddPaymentController;
 import au.com.dealsdirect.ui.controller.checkout.checkout.CheckoutController;
+import au.com.dealsdirect.ui.controller.checkout.paymentsuccess.PaymentSuccessController;
 import au.com.dealsdirect.ui.controller.contact.viewcontacts.ViewContactsController;
 import au.com.dealsdirect.ui.controller.home.HomeController;
 import au.com.dealsdirect.ui.controller.invite.InviteController;
 import au.com.dealsdirect.ui.controller.login.LoginController;
 import au.com.dealsdirect.ui.controller.shops.ShopsController;
 import au.com.dealsdirect.ui.custom.BottomNavigationViewHelper;
+import au.com.dealsdirect.utils.DialogUtils;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import timber.log.Timber;
@@ -381,15 +384,13 @@ public class MainActivity extends BaseActivity implements MainMvpView {
 
     @Override
     public void createPaymentMethodSuccess(PaymentMethod lastPaymentMethod) {
-        int backstackSize = mRouter.getBackstack().size();
-        Controller currentController = mRouter.getBackstack().get(backstackSize - 1).controller();
+        Controller currentController = getMainRouterCurrentController();
 
         if ((currentController instanceof AddPaymentController) && ((AddPaymentController)currentController).isCalledFromAccounts()) {
             ((AddPaymentController)currentController).showAddPaymentResult(true, "");
         } else {
             setPaymentMethodSelected(lastPaymentMethod);
             mRouter.popCurrentController();
-//            mCheckoutFragment.loadCart();
         }
     }
 
@@ -402,24 +403,29 @@ public class MainActivity extends BaseActivity implements MainMvpView {
 //            GCartUtil.setValueToCart(0);
 //            RxBus.instance().post("update_cart_items_immediate");
 
-            Value value = responseValue.getD().getValue();
-
-//            mRouter.pushController(RouterTransaction.with(new PaymentSuccessFragment())
-//                    .pushChangeHandler(new HorizontalChangeHandler())
-//                    .popChangeHandler(new HorizontalChangeHandler()));
-//            switchFragment(PaymentSuccessFragment.newInstance(activity,
-//                    value.getInvoiceNo(),
-//                    value.getAddressString(),
-//                    GPriceUtil.getPriceStringValue(value.getOrderInfoResult().getTotal()),
-//                    value.getOrderInfoResult().getEstimatedDeliveryText()));
+            mRouter.pushController(RouterTransaction.with(new PaymentSuccessController(responseValue))
+                    .pushChangeHandler(new HorizontalChangeHandler())
+                    .popChangeHandler(new HorizontalChangeHandler()));
 
         } else {
-//            AlertDialogEngine.showDialog(activity, "error", response.body().d.getMessage(), "ok", null);
-//
-//            //Reload on false result
-//            if (!response.body().d.getResult()) {
-//                mCheckoutFragment.loadCart();
-//            }
+            DialogUtils.showYesDialog(this, "Error", responseValue.getD().getMessage(), "ok", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    dialog.dismiss();
+                }
+            });
+
+
+            if(getMainRouterCurrentController() instanceof CheckoutController){
+                CheckoutController checkoutController = (CheckoutController)getMainRouterCurrentController();
+                checkoutController.loadCart();
+            }
         }
+    }
+
+    public Controller getMainRouterCurrentController(){
+        int backstackSize = mRouter.getBackstack().size();
+        return mRouter.getBackstack().get(backstackSize - 1).controller();
+
     }
 }

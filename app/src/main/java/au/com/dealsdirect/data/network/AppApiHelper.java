@@ -373,7 +373,11 @@ public class AppApiHelper implements ApiHelper {
 
     @Override
     public Observable<CreatePaymentTransaction.ResponseValue> callCreatePaymentTransaction(CreatePaymentTransaction.RequestValue requestValues) {
-        return null;
+        return Rx2AndroidNetworking.post(ApiEndPoint.CREATE_PAYMENT_TRANSACTION)
+                .addHeaders(mApiHeader.getPublicApiHeader())
+                .addJSONObjectBody(JsonUtils.convertToJsonObject(requestValues))
+                .build()
+                .getObjectObservable(CreatePaymentTransaction.ResponseValue.class);
     }
 
     @Override

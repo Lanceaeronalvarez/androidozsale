@@ -13,6 +13,8 @@ import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import com.bluelinelabs.conductor.RouterTransaction;
+import com.bluelinelabs.conductor.changehandler.HorizontalChangeHandler;
 import com.google.gson.reflect.TypeToken;
 import com.mysale.genie.utility.RxBus;
 
@@ -24,12 +26,14 @@ import javax.inject.Inject;
 import au.com.dealsdirect.R;
 import au.com.dealsdirect.data.network.model.checkout.getuserpaymentmethods.PaymentMethod;
 import au.com.dealsdirect.ui.base.BaseController;
+import au.com.dealsdirect.ui.controller.checkout.addpayment.AddPaymentController;
 import au.com.dealsdirect.ui.custom.RecyclerOnTouchListener;
 import au.com.dealsdirect.ui.main.MainActivity;
 import au.com.dealsdirect.utils.BundleBuilder;
 import au.com.dealsdirect.utils.DialogUtils;
 import au.com.dealsdirect.utils.JsonUtils;
 import butterknife.BindView;
+import butterknife.OnClick;
 
 /**
  * Created by smartwave on 30/06/2017.
@@ -90,7 +94,7 @@ public class PaymentSelectController extends BaseController implements PaymentSe
     @Override
     protected void onAttach(@NonNull View view) {
         super.onAttach(view);
-        mPresenter.fetchUserPaymentMethods();
+//        mPresenter.fetchUserPaymentMethods();
     }
 
     @Override
@@ -134,15 +138,28 @@ public class PaymentSelectController extends BaseController implements PaymentSe
         mPaymentSelectRightOption.setImageDrawable(getApplicationContext().getDrawable(R.drawable.ic_add));
 
         mAdapter = new PaymentSelectAdapter(mActivity, mPaymentMethods, mPresenter, isFromCart);
+        mRecyclerView.setLayoutManager(new LinearLayoutManager(mActivity));
         mRecyclerView.setAdapter(mAdapter);
-        mRecyclerView.setLayoutManager(new LinearLayoutManager(mActivity,LinearLayoutManager.VERTICAL,false));
+
         mRecyclerView.addOnItemTouchListener(new RecyclerOnTouchListener(mActivity, new RecyclerOnTouchListener.OnItemClickListener() {
             @Override
             public void onItemClick(View v, int position) {
                 mActivity.setPaymentMethodSelected(mPaymentMethods.get(position));
-                getRouter().popCurrentController();
+                mActivity.onBackPressed();
             }
         }));
+    }
+
+    @OnClick(R.id.partial_toolbar_arrow_title)
+    public void onBackClick() {
+        getActivity().onBackPressed();
+    }
+
+    @OnClick(R.id.partial_toolbar_filter_view)
+    public void onAddPaymentMethod(){
+        getRouter().pushController(RouterTransaction.with(new AddPaymentController(true))
+                .pushChangeHandler(new HorizontalChangeHandler())
+                .popChangeHandler(new HorizontalChangeHandler()));
     }
 
 }

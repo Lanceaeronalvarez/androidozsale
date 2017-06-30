@@ -54,6 +54,7 @@ public class AppPreferencesHelper implements PreferencesHelper {
     private static final String SEARCH_MAX_PRICE = "app_search_max_price";
     private static final String ACCESS_ANONYMOUS_ENABLED = "app_anonymous_enabled";
     private static final String FB_SECRET = "fb_secret";
+    private static final String PAYMENT_COUNT = "payment_count";
 
     private Context mContext;
 
@@ -307,6 +308,16 @@ public class AppPreferencesHelper implements PreferencesHelper {
     @Override
     public boolean isDebugMode() {
         return Prefs.getBoolean(DEBUG_MODE, true);
+    }
+
+    @Override
+    public void setPaymentCount(int count) {
+        Prefs.putInt(PAYMENT_COUNT,count);
+    }
+
+    @Override
+    public int getPaymentCount() {
+        return Prefs.getInt(PAYMENT_COUNT,0);
     }
 
 }

@@ -15,4 +15,6 @@ public interface ViewAddressMvpView extends MvpView {
     void onUserDeliveryAddressDeleted(DeleteUserAddress.ResponseValue responseValue);
 
     void onDeleteItemClicked(DeleteUserAddress.RequestValues deleteUserAddressRequest, int position, int itemRange);
+
+    void backToCheckout();
 }

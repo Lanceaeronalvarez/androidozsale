@@ -1,6 +1,7 @@
 package au.com.dealsdirect.ui.controller.address.addnewaddress;
 
 import android.annotation.SuppressLint;
+import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.text.InputFilter;
@@ -26,6 +27,7 @@ import au.com.dealsdirect.R;
 import au.com.dealsdirect.data.network.model.address.DecorationInfoList;
 import au.com.dealsdirect.ui.base.BaseController;
 import au.com.dealsdirect.utils.BundleBuilder;
+import au.com.dealsdirect.utils.DialogUtils;
 import au.com.dealsdirect.utils.JsonUtils;
 import butterknife.BindView;
 import butterknife.OnClick;
@@ -160,8 +162,13 @@ public class AddNewAddressController extends BaseController implements AddNewAdd
 
     @Override
     public void addNewAddressSuccessful() {
-//        Log.d("addnewaddress", " add new address successful popbackstack to fragment");
-//
+        DialogUtils.showYesDialog(getActivity(), "Success!", "added new address.", "OK", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                getActivity().onBackPressed();
+                dialog.dismiss();
+            }
+        });
 //        CustomAlertDialog.showCustomAlertDialog(
 //                mActivity,
 //                CustomAlertDialog.CustomDialogIconState.POSITIVE,

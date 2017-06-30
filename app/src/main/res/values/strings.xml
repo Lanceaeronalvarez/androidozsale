@@ -201,6 +201,9 @@
     <string name="rate_us_message">We value your feedback, please let us know what do you feel
         about this app.
     </string>
+    <string name="rate_us_positive_text">RATE IT NOW</string>
+    <string name="rate_us_negative_text">LATER</string>
+    <string name="rate_us_dialog_title">Rate Us</string>
     <string name="total_payment">Total Payment</string>
     <string name="order_number">Order Number</string>
     <string name="address">Address</string>

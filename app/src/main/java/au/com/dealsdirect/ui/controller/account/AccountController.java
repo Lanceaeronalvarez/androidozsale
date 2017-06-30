@@ -121,7 +121,7 @@ public class AccountController extends BaseController implements AccountMvpView 
 
     @Override
     public void showMyAddressesController() {
-        getRouter().pushController(RouterTransaction.with(new ViewAddressController())
+        getRouter().pushController(RouterTransaction.with(new ViewAddressController(false))
                 .pushChangeHandler(new HorizontalChangeHandler())
                 .popChangeHandler(new HorizontalChangeHandler()));
     }
