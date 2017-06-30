@@ -1,13 +1,6 @@
 package au.com.dealsdirect.di.module;
 
-import android.app.Activity;
-
 import com.bluelinelabs.conductor.Controller;
-import com.braintreepayments.api.BraintreeFragment;
-import com.braintreepayments.api.exceptions.InvalidArgumentException;
-import com.mysale.genie.utility.config.model.getappsettings.BrainTree;
-
-import javax.inject.Singleton;
 
 import au.com.dealsdirect.ui.controller.account.AccountMvpPresenter;
 import au.com.dealsdirect.ui.controller.account.AccountMvpView;
@@ -24,9 +17,6 @@ import au.com.dealsdirect.ui.controller.cart.CartPresenter;
 import au.com.dealsdirect.ui.controller.categories.CategoriesMvpPresenter;
 import au.com.dealsdirect.ui.controller.categories.CategoriesMvpView;
 import au.com.dealsdirect.ui.controller.categories.CategoriesPresenter;
-import au.com.dealsdirect.ui.controller.account.AccountMvpPresenter;
-import au.com.dealsdirect.ui.controller.account.AccountMvpView;
-import au.com.dealsdirect.ui.controller.account.AccountPresenter;
 import au.com.dealsdirect.ui.controller.checkout.CheckoutMvpPresenter;
 import au.com.dealsdirect.ui.controller.checkout.CheckoutMvpView;
 import au.com.dealsdirect.ui.controller.checkout.CheckoutPresenter;
@@ -51,9 +41,6 @@ import au.com.dealsdirect.ui.controller.language.LanguagePresenter;
 import au.com.dealsdirect.ui.controller.login.LoginMvpPresenter;
 import au.com.dealsdirect.ui.controller.login.LoginMvpView;
 import au.com.dealsdirect.ui.controller.login.LoginPresenter;
-import au.com.dealsdirect.ui.controller.saleitemdetails.SaleItemDetailsMvpPresenter;
-import au.com.dealsdirect.ui.controller.saleitemdetails.SaleItemDetailsMvpView;
-import au.com.dealsdirect.ui.controller.saleitemdetails.SaleItemDetailsPresenter;
 import au.com.dealsdirect.ui.controller.orders.orderdetails.OrderDetailsMvpPresenter;
 import au.com.dealsdirect.ui.controller.orders.orderdetails.OrderDetailsMvpView;
 import au.com.dealsdirect.ui.controller.orders.orderdetails.OrderDetailsPresenter;
@@ -63,6 +50,15 @@ import au.com.dealsdirect.ui.controller.orders.orders.OrdersPresenter;
 import au.com.dealsdirect.ui.controller.register.RegisterMvpPresenter;
 import au.com.dealsdirect.ui.controller.register.RegisterMvpView;
 import au.com.dealsdirect.ui.controller.register.RegisterPresenter;
+import au.com.dealsdirect.ui.controller.returns.currentreturns.CurrentReturnsMvpPresenter;
+import au.com.dealsdirect.ui.controller.returns.currentreturns.CurrentReturnsMvpView;
+import au.com.dealsdirect.ui.controller.returns.currentreturns.CurrentReturnsPresenter;
+import au.com.dealsdirect.ui.controller.returns.returndetails.ReturnDetailsMvpPresenter;
+import au.com.dealsdirect.ui.controller.returns.returndetails.ReturnDetailsMvpView;
+import au.com.dealsdirect.ui.controller.returns.returndetails.ReturnDetailsPresenter;
+import au.com.dealsdirect.ui.controller.returns.returnorders.ReturnOrdersMvpPresenter;
+import au.com.dealsdirect.ui.controller.returns.returnorders.ReturnOrdersMvpView;
+import au.com.dealsdirect.ui.controller.returns.returnorders.ReturnOrdersPresenter;
 import au.com.dealsdirect.ui.controller.salecategories.SaleCategoriesMvpPresenter;
 import au.com.dealsdirect.ui.controller.salecategories.SaleCategoriesMvpView;
 import au.com.dealsdirect.ui.controller.salecategories.SaleCategoriesPresenter;
@@ -208,5 +204,21 @@ public class ControllerModule {
     RegisterMvpPresenter<RegisterMvpView> provideRegisterPresenter(RegisterPresenter<RegisterMvpView> presenter) {
         return presenter;
     }
+
+    @Provides
+    CurrentReturnsMvpPresenter<CurrentReturnsMvpView> provideCurrentReturnsPresenter(CurrentReturnsPresenter<CurrentReturnsMvpView> presenter) {
+        return presenter;
+    }
+
+    @Provides
+    ReturnDetailsMvpPresenter<ReturnDetailsMvpView> provideReturnDetailsPresenter(ReturnDetailsPresenter<ReturnDetailsMvpView> presenter) {
+        return presenter;
+    }
+
+    @Provides
+    ReturnOrdersMvpPresenter<ReturnOrdersMvpView> provideReturnOrdersPresenter(ReturnOrdersPresenter<ReturnOrdersMvpView> presenter) {
+        return presenter;
+    }
+
 
 }

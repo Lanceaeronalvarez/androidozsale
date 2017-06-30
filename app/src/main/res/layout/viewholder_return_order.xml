@@ -1,0 +1,210 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              xmlns:tools="http://schemas.android.com/tools"
+              android:id="@+id/new_returns_order_row_container"
+              android:orientation="vertical"
+              android:layout_width="match_parent"
+              android:layout_height="wrap_content"
+              android:background="@drawable/bg_card_view_states">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginTop="40dp"
+        android:layout_marginBottom="40dp"
+        android:paddingStart="20dp"
+        android:paddingLeft="20dp"
+        android:paddingEnd="20dp"
+        android:paddingRight="20dp"
+        android:orientation="horizontal">
+
+        <ImageView
+            android:visibility="gone"
+            android:id="@+id/new_return_order_item_image_view"
+            android:layout_width="83dp"
+            android:layout_height="135dp"
+            tools:ignore="ContentDescription"/>
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="10dp"
+            android:layout_marginStart="10dp"
+            android:layout_marginTop="0dp">
+
+
+            <RelativeLayout
+                android:id="@+id/new_returns_order_item_request_detail"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="2dp" >
+
+                <TextView
+                    android:fontFamily="@string/font_lato_medium"
+                    android:id="@+id/new_returns_order_item_requst_identifier"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textColor="#696969"
+                    android:text="request #:"
+                    android:textSize="@dimen/text_size_xlarge"
+                    tools:ignore="HardcodedText"/>
+
+                <TextView
+                    android:fontFamily="@string/font_lato_medium"
+                    android:id="@+id/new_returns_order_item_request_value"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/colorAccent"
+                    android:text="2014512"
+                    android:layout_marginLeft="2dp"
+                    android:textSize="@dimen/text_size_xlarge"
+                    android:layout_toRightOf="@+id/new_returns_order_item_requst_identifier"
+                    android:layout_toEndOf="@+id/new_returns_order_item_requst_identifier"
+                    android:layout_alignTop="@+id/new_returns_order_item_requst_identifier"
+                    tools:ignore="HardcodedText"/>
+
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:id="@+id/my_current_return_information_text_content"
+                android:layout_below="@+id/new_returns_order_item_request_detail"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <TextView
+                    android:fontFamily="@string/font_lato_medium"
+                    android:id="@+id/new_current_orders_item_name"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textColor="#a7a7a7"
+                    android:text="Philosophy Cotton Sleeveless Plain"
+                    android:textSize="@dimen/text_size_xlarge"
+                    tools:ignore="HardcodedText"/>
+
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="25dp"
+                    android:id="@+id/new_returns_order_item_count_detail"
+                    android:layout_below="@+id/new_current_orders_item_name">
+
+
+                    <TextView
+                        android:fontFamily="@string/font_lato_medium"
+                        android:id="@+id/new_returns_order_item_count_identifier"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textColor="#b7b7b7"
+                        android:text="Items:"
+                        android:textSize="@dimen/text_size_large"
+                        tools:ignore="HardcodedText"/>
+
+
+                    <TextView
+                        android:fontFamily="@string/font_lato_medium"
+                        android:id="@+id/new_returns_order_item_count_value"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textColor="#acacac"
+                        android:text="1"
+                        android:layout_marginLeft="2dp"
+                        android:textSize="@dimen/text_size_large"
+                        android:layout_toRightOf="@+id/new_returns_order_item_count_identifier"
+                        android:layout_toEndOf="@+id/new_returns_order_item_count_identifier"
+                        android:layout_alignTop="@+id/new_returns_order_item_count_identifier"
+                        tools:ignore="HardcodedText"/>
+
+                </RelativeLayout>
+
+                <RelativeLayout
+                    android:id="@+id/new_returns_order_item_total_cost_detail"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="2dp"
+                    android:layout_below="@+id/new_returns_order_item_count_detail">
+
+                    <TextView
+                        android:fontFamily="@string/font_lato_medium"
+                        android:id="@+id/new_returns_order_item_total_cost_identifier"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textColor="#b7b7b7"
+                        android:text="Total:"
+                        android:textSize="@dimen/text_size_large"
+                        tools:ignore="HardcodedText"/>
+
+
+                    <!--<com.mysale.genie.views.custom.GenieTextView-->
+                    <!--app:font="@string/fontname_lato_bold"-->
+                    <!--android:id="@+id/new_returns_order_item_total_cost_sign"-->
+                    <!--android:layout_width="wrap_content"-->
+                    <!--android:layout_height="wrap_content"-->
+                    <!--android:layout_marginLeft="10dp"-->
+                    <!--android:textColor="#aeaeae"-->
+                    <!--android:layout_toRightOf="@+id/new_returns_order_item_total_cost_identifier"-->
+                    <!--android:layout_toEndOf="@+id/new_returns_order_item_total_cost_identifier"-->
+                    <!--android:layout_alignTop="@+id/new_returns_order_item_total_cost_identifier"-->
+                    <!--android:text="$"-->
+                    <!--android:textSize="@dimen/text_size_normal"-->
+                    <!--tools:ignore="HardcodedText"/>-->
+
+
+
+                    <TextView
+                        android:fontFamily="@string/font_lato_medium"
+                        android:id="@+id/new_returns_order_item_total_cost_value"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textColor="#aeaeae"
+                        android:layout_toRightOf="@+id/new_returns_order_item_total_cost_identifier"
+                        android:layout_toEndOf="@+id/new_returns_order_item_total_cost_identifier"
+                        android:layout_alignTop="@+id/new_returns_order_item_total_cost_identifier"
+                        android:text="12.00"
+                        android:layout_marginLeft="2dp"
+                        android:textSize="@dimen/text_size_large"
+                        tools:ignore="HardcodedText"/>
+
+                </RelativeLayout>
+
+
+                <RelativeLayout
+                    android:id="@+id/new_returns_order_item_status_info"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="2dp"
+                    android:layout_below="@+id/new_returns_order_item_total_cost_detail">
+
+                    <TextView
+                        android:fontFamily="@string/font_lato_medium"
+                        android:id="@+id/new_returns_order_item_status_indentifier"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textColor="#b7b7b7"
+                        android:text="Status:"
+                        android:textSize="@dimen/text_size_large"
+                        tools:ignore="HardcodedText"/>
+
+
+                    <TextView
+                        android:fontFamily="@string/font_lato_medium"
+                        android:id="@+id/new_returns_order_item_status_value"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textColor="#9c9c9c"
+                        android:text="Dispatched"
+                        android:layout_marginLeft="2dp"
+                        android:textSize="@dimen/text_size_large"
+                        android:layout_toRightOf="@+id/new_returns_order_item_status_indentifier"
+                        android:layout_toEndOf="@+id/new_returns_order_item_status_indentifier"
+                        android:layout_alignTop="@+id/new_returns_order_item_status_indentifier"
+                        tools:ignore="HardcodedText"/>
+
+                </RelativeLayout>
+
+
+            </RelativeLayout>
+        </RelativeLayout>
+
+    </LinearLayout>
+</LinearLayout>
+
