@@ -50,6 +50,9 @@ public class ViewContactsController extends BaseController implements ViewContac
     @BindView(R.id.partial_toolbar_filter_view)
     ImageView mViewContactsToolbarRightOption;
 
+    @BindView(R.id.partial_toolbar_arrow_view)
+    ImageView mViewContactsToolbarLeftOption;
+
     @BindView(R.id.contacts_recycler_view)
     RecyclerView mViewContactsRecyclerView;
 
@@ -91,6 +94,7 @@ public class ViewContactsController extends BaseController implements ViewContac
     protected void setUp(View view) {
         mViewContactsToolarTitle.setText("Contact Us");
         mViewContactsToolbarRightOption.setVisibility(View.INVISIBLE);
+        mViewContactsToolbarLeftOption.setVisibility(View.INVISIBLE);
 
         mContactDateAdapter =
                 new ViewContactDateAdapter(new ArrayList<>(),getActivity(), mContactClickListener);
@@ -105,10 +109,10 @@ public class ViewContactsController extends BaseController implements ViewContac
         super.onDestroyView(view);
     }
 
-    @OnClick(R.id.partial_toolbar_arrow_view)
-    public void onBackClick() {
-        getActivity().onBackPressed();
-    }
+//    @OnClick(R.id.partial_toolbar_arrow_view)
+//    public void onBackClick() {
+//        getActivity().onBackPressed();
+//    }
 
 
     @Override

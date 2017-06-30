@@ -36,7 +36,6 @@ import javax.inject.Inject;
 import au.com.dealsdirect.R;
 import au.com.dealsdirect.data.auth.AuthHandler;
 import au.com.dealsdirect.data.network.model.checkout.CreatePaymentTransaction;
-import au.com.dealsdirect.data.network.model.checkout.createpaymenttransaction.Value;
 import au.com.dealsdirect.data.network.model.checkout.getuserpaymentmethods.PaymentMethod;
 import au.com.dealsdirect.ui.base.BaseActivity;
 import au.com.dealsdirect.ui.controller.account.AccountController;
@@ -213,22 +212,9 @@ public class MainActivity extends BaseActivity implements MainMvpView {
     @Override
     public void showContactController() {
 
-        showLoginController(mRouter,new AuthHandler() {
-            @Override
-            public void success() {
-
-                mRouter.setRoot(RouterTransaction.with(ViewContactsController.newInstance())
-                        .tag("Login")
-                        .pushChangeHandler(new FadeChangeHandler())
-                        .popChangeHandler(new FadeChangeHandler()));
-
-            }
-
-            @Override
-            public void error() {
-
-            }
-        });
+        mRouter.setRoot(RouterTransaction.with(ViewContactsController.newInstance())
+                .pushChangeHandler(new FadeChangeHandler())
+                .popChangeHandler(new FadeChangeHandler()));
 
     }
 
