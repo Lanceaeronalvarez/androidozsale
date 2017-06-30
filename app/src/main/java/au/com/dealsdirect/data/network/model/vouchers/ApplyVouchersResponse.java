@@ -16,7 +16,7 @@ public class ApplyVouchersResponse {
         public Value value;
     }
 
-    private Response getValue() {
+    public Response getValue() {
         return d;
     }
 }

@@ -1,5 +1,7 @@
 package au.com.dealsdirect.ui.controller.vouchers.Add;
 
+import java.util.List;
+
 import au.com.dealsdirect.data.network.model.vouchers.AddAndApplyVoucherByKeyRequest;
 import au.com.dealsdirect.data.network.model.vouchers.ApplyVouchersRequest;
 import au.com.dealsdirect.data.network.model.vouchers.ClearVouchersRequest;
@@ -11,9 +13,11 @@ import au.com.dealsdirect.ui.base.MvpPresenter;
 
 public interface AddVouchersMvpPresenter<V extends AddVouchersMvpView> extends MvpPresenter<V> {
 
-    void applyVouchers(ApplyVouchersRequest applyVouchersRequest);
+    void applyVouchers(int imageSize, List<String> voucherIds);
 
-    void clearVouchers(ClearVouchersRequest clearVouchersRequest);
+    void clearVouchers(int imageSize);
 
-    void addAndApplyVoucherByKey(AddAndApplyVoucherByKeyRequest request);
+    void addAndApplyVoucherByKey(int imageSize, String key);
+
+    void loadMyVouchers();
 }

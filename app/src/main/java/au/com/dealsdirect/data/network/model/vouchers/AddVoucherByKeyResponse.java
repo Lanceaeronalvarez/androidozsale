@@ -14,9 +14,13 @@ public class AddVoucherByKeyResponse {
         @SerializedName("Value")
         @Expose
         private Value value;
+
+        public Value getValue() {
+            return value;
+        }
     }
 
-    public Response getValue() {
+    public Response getResponseValue() {
         return d;
     }
 }

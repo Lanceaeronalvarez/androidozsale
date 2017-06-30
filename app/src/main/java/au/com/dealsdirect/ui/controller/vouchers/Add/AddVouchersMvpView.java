@@ -1,5 +1,10 @@
 package au.com.dealsdirect.ui.controller.vouchers.Add;
 
+import android.support.v4.util.Pair;
+import android.widget.LinearLayout;
+
+import java.util.List;
+
 import au.com.dealsdirect.data.network.model.vouchers.AddAndApplyVoucherByKeyRequest;
 import au.com.dealsdirect.data.network.model.vouchers.AddAndApplyVoucherByKeyResponse;
 import au.com.dealsdirect.data.network.model.vouchers.AddVoucherByKeyResponse;
@@ -7,6 +12,8 @@ import au.com.dealsdirect.data.network.model.vouchers.ApplyVouchersRequest;
 import au.com.dealsdirect.data.network.model.vouchers.ApplyVouchersResponse;
 import au.com.dealsdirect.data.network.model.vouchers.ClearVouchersRequest;
 import au.com.dealsdirect.data.network.model.vouchers.ClearVouchersResponse;
+import au.com.dealsdirect.data.network.model.vouchers.GetUserVoucherResponse;
+import au.com.dealsdirect.data.network.model.vouchers.GetVouchersResponse;
 import au.com.dealsdirect.ui.base.MvpView;
 
 /**
@@ -14,8 +21,6 @@ import au.com.dealsdirect.ui.base.MvpView;
  */
 
 public interface AddVouchersMvpView extends MvpView {
-
-    void showAddedVoucherItem(AddVoucherByKeyResponse.Response addVoucherResponse);
 
     void onVouchersApplied(ApplyVouchersResponse applyVouchersResponseBody);
 
@@ -25,5 +30,8 @@ public interface AddVouchersMvpView extends MvpView {
 
     void onAddAndAppliedVoucher(AddAndApplyVoucherByKeyResponse response);
 
-    boolean isActive();
+    void updateVoucherList(Pair<List<GetUserVoucherResponse.Voucher>, GetVouchersResponse> pair);
+
+    void onVoucherItemClicked(String voucherId, String voucherState, LinearLayout holder, int
+            position);
 }

@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
@@ -7,8 +7,9 @@
     android:animateLayoutChanges="true"
     android:background="#FFFFFF"
     android:orientation="vertical"
-    android:paddingTop="16dp"
-    tools:ignore="missingPrefix" >
+    tools:ignore="missingPrefix">
+
+    <include layout="@layout/partial_toolbar_arrow" />
 
     <ScrollView
         android:layout_width="match_parent"
@@ -33,11 +34,11 @@
 
                 <TextView
                     android:id="@+id/controller_text_voucher_code_title"
+                    fontPath="@string/font_lato_bold"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:text="Enter Promocode"
-                    android:textColor="#646464"
-                    fontPath="@string/font_lato_light"/>
+                    android:textColor="#646464" />
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -56,18 +57,18 @@
                         app:hintEnabled="false"
                         app:passwordToggleEnabled="true">
 
-                        <TextView
+                        <EditText
                             android:id="@+id/controller_edit_text_voucher"
+                            style="@style/DDEditTextStyle"
+                            fontPath="@string/font_lato_heavy"
                             android:layout_width="match_parent"
                             android:layout_height="@dimen/default_button_height"
                             android:layout_marginRight="5dp"
-                            style="@style/DDEditTextStyle"
                             android:hint="enter promo code"
                             android:maxLines="1"
                             android:padding="10dp"
                             android:textColor="#919191"
-                            android:textColorHint="#c1c1c1"
-                            fontPath="@string/font_lato_light"/>
+                            android:textColorHint="#c1c1c1" />
 
                     </android.support.design.widget.TextInputLayout>
 
@@ -77,9 +78,7 @@
                         android:layout_width="0dp"
                         android:layout_height="@dimen/default_button_height"
                         android:layout_weight="1"
-                        android:text="apply"
-                        android:textAllCaps="false"
-                        fontPath="@string/font_lato_light"/>
+                        android:text="apply" />
 
                 </LinearLayout>
 
@@ -103,18 +102,18 @@
 
                     <TextView
                         android:id="@+id/controller_text_contact_us"
+                        fontPath="@string/font_lato_light"
                         android:layout_width="wrap_content"
                         android:layout_height="@dimen/default_button_height"
                         android:textColor="#6c6c6c"
-                        android:textSize="30sp"
-                        fontPath="@string/font_lato_light"/>
+                        android:textSize="30sp" />
 
                     <View
                         android:id="@+id/controller_view_header_underline"
                         android:layout_width="35dp"
                         android:layout_height="2dp"
                         android:layout_below="@+id/controller_text_contact_us"
-                        android:background="#969595"/>
+                        android:background="#969595" />
 
 
                     <ImageView
@@ -128,7 +127,7 @@
                         android:animateLayoutChanges="true"
                         android:gravity="center"
                         android:textSize="18sp"
-                        android:visibility="invisible"/>
+                        android:visibility="invisible" />
 
                 </RelativeLayout>
 
@@ -137,7 +136,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="10dp"
-                    android:visibility="gone"/>
+                    android:visibility="gone" />
 
 
                 <LinearLayout
@@ -152,17 +151,18 @@
                     <ImageView
                         android:layout_width="60dp"
                         android:layout_height="60dp"
-                        android:layout_gravity="center_horizontal"/>
+                        android:layout_gravity="center_horizontal" />
 
                     <TextView
+                        fontPath="@string/font_lato_light"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_gravity="center"
                         android:text="welcome to my vouchers!"
-                        android:textSize="@dimen/text_size_xxxxlarge"
-                        fontPath="@string/font_lato_light"/>
+                        android:textSize="@dimen/text_size_xxxxlarge" />
 
                     <TextView
+                        fontPath="@string/font_lato_light"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_gravity="center"
@@ -170,8 +170,7 @@
                         android:layout_marginTop="10dp"
                         android:text="you currently do not have any vouchers."
                         android:textColor="#D0D0D0"
-                        android:textSize="@dimen/text_size_xxlarge"
-                        fontPath="@string/font_lato_light"/>
+                        android:textSize="@dimen/text_size_xxlarge" />
 
                 </LinearLayout>
 
@@ -179,4 +178,4 @@
 
         </LinearLayout>
     </ScrollView>
-</RelativeLayout>
+</LinearLayout>
