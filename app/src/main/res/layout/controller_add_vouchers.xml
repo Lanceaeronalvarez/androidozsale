@@ -1,0 +1,181 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:animateLayoutChanges="true"
+    android:background="#FFFFFF"
+    android:orientation="vertical"
+    tools:ignore="missingPrefix">
+
+    <include layout="@layout/partial_toolbar_arrow" />
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentTop="true"
+        android:overScrollMode="never">
+
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:padding="@dimen/screen_padding">
+
+                <TextView
+                    android:id="@+id/controller_text_voucher_code_title"
+                    fontPath="@string/font_lato_bold"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Enter Promocode"
+                    android:textColor="#646464" />
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:paddingBottom="15dp"
+                    android:paddingTop="5dp">
+
+                    <android.support.design.widget.TextInputLayout
+                        android:id="@+id/voucherWrapper"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="3"
+                        android:hint="enter"
+                        android:textColorHint="#8b8b8b"
+                        app:hintEnabled="false"
+                        app:passwordToggleEnabled="true">
+
+                        <EditText
+                            android:id="@+id/controller_edit_text_voucher"
+                            style="@style/DDEditTextStyle"
+                            fontPath="@string/font_lato_heavy"
+                            android:layout_width="match_parent"
+                            android:layout_height="@dimen/default_button_height"
+                            android:layout_marginRight="5dp"
+                            android:hint="enter promo code"
+                            android:maxLines="1"
+                            android:padding="10dp"
+                            android:textColor="#919191"
+                            android:textColorHint="#c1c1c1" />
+
+                    </android.support.design.widget.TextInputLayout>
+
+                    <Button
+                        android:id="@+id/controller_button_add_voucher"
+                        style="@style/DDButtonStyle"
+                        android:layout_width="0dp"
+                        android:layout_height="@dimen/default_button_height"
+                        android:layout_weight="1"
+                        android:text="apply" />
+
+                </LinearLayout>
+
+
+            </LinearLayout>
+
+
+            <LinearLayout
+                android:id="@+id/controller_voucher_placeholder"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:visibility="gone">
+
+                <RelativeLayout
+                    android:id="@+id/my_vouchers_us_header_view"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:paddingLeft="16dp"
+                    android:paddingRight="16dp">
+
+                    <TextView
+                        android:id="@+id/controller_text_contact_us"
+                        fontPath="@string/font_lato_light"
+                        android:layout_width="wrap_content"
+                        android:layout_height="@dimen/default_button_height"
+                        android:textColor="#6c6c6c"
+                        android:textSize="30sp" />
+
+                    <View
+                        android:id="@+id/controller_view_header_underline"
+                        android:layout_width="35dp"
+                        android:layout_height="2dp"
+                        android:layout_below="@+id/controller_text_contact_us"
+                        android:background="#969595" />
+
+
+                    <ImageView
+                        android:id="@+id/my_contact_bag_image_view"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignBottom="@+id/controller_text_contact_us"
+                        android:layout_alignParentEnd="true"
+                        android:layout_alignParentRight="true"
+                        android:layout_alignTop="@+id/controller_text_contact_us"
+                        android:animateLayoutChanges="true"
+                        android:gravity="center"
+                        android:textSize="18sp"
+                        android:visibility="invisible" />
+
+                </RelativeLayout>
+
+                <android.support.v7.widget.RecyclerView
+                    android:id="@+id/controller_recycler_view_promo_vouchers"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp"
+                    android:visibility="gone" />
+
+
+                <LinearLayout
+                    android:id="@+id/controller_view_add_promo_place_holder"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_gravity="center_vertical"
+                    android:layout_marginTop="@dimen/activity_horizontal_margin"
+                    android:orientation="vertical"
+                    android:visibility="gone">
+
+                    <ImageView
+                        android:layout_width="60dp"
+                        android:layout_height="60dp"
+                        android:layout_gravity="center_horizontal" />
+
+                    <TextView
+                        fontPath="@string/font_lato_light"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:text="welcome to my vouchers!"
+                        android:textSize="@dimen/text_size_xxxxlarge" />
+
+                    <TextView
+                        fontPath="@string/font_lato_light"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:layout_marginBottom="125dp"
+                        android:layout_marginTop="10dp"
+                        android:text="you currently do not have any vouchers."
+                        android:textColor="#D0D0D0"
+                        android:textSize="@dimen/text_size_xxlarge" />
+
+                </LinearLayout>
+
+            </LinearLayout>
+
+        </LinearLayout>
+    </ScrollView>
+</LinearLayout>

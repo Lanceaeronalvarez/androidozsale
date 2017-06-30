@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:ignore="MissingPrefix">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingLeft="16dp"
+        android:paddingRight="16dp"
+        android:paddingTop="16dp"
+        android:orientation="vertical">
+
+        <Button
+            android:id="@+id/partial_checkout_vouchers_button_clear"
+            style="@style/DDButtonStyle"
+            android:visibility="gone"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/default_button_height"
+            android:layout_marginBottom="10dp"
+            android:text="clear"
+            android:textSize="20sp"
+            fontPath="@string/font_lato_medium"/>
+
+        <Button
+            android:id="@+id/partial_checkout_vouchers_button_apply"
+            style="@style/DDButtonStyle"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/default_button_height"
+            android:layout_marginBottom="16dp"
+            android:text="apply"
+            android:textSize="20sp"
+            fontPath="@string/font_lato_medium"/>
+
+
+
+
+    </LinearLayout>
+</RelativeLayout>
