@@ -137,6 +137,12 @@ public class AddPaymentController extends BaseController implements AddPaymentMv
 
     }
 
+    @Override
+    public void onDetach(View view) {
+        mPresenter.onDetach();
+        super.onDetach(view);
+    }
+
     private void hidePaymentButtons() {
         mBraintreeLoading.setVisibility(View.VISIBLE);
         mButtonHolder.setVisibility(View.GONE);

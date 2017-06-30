@@ -27,6 +27,8 @@ import au.com.dealsdirect.data.network.model.checkout.getcurrentorder.Summary;
 import au.com.dealsdirect.data.network.model.checkout.getcurrentorder.Voucher;
 import au.com.dealsdirect.data.network.model.checkout.getuserpaymentmethods.PaymentMethod;
 import au.com.dealsdirect.ui.base.BaseController;
+import au.com.dealsdirect.ui.controller.address.addnewaddress.AddNewAddressController;
+import au.com.dealsdirect.ui.controller.address.viewaddress.ViewAddressController;
 import au.com.dealsdirect.ui.controller.checkout.addpayment.AddPaymentController;
 import au.com.dealsdirect.ui.main.FetchTokenHandler;
 import au.com.dealsdirect.ui.main.MainActivity;
@@ -96,19 +98,17 @@ public class CheckoutController extends BaseController implements CheckoutMvpVie
         public void onClick(View view) {
 
             if (view.getId() == mAddNewAddressLayout.getId()) {
-
-                //fragment = AddNewAddressFragment.newInstance(activity, mDecorationInfoList, true);
                 //push controller to add new address
+                getRouter().pushController(RouterTransaction.with(new AddNewAddressController(new Gson().toJson(mDecorationInfoList),true))
+                        .pushChangeHandler(new HorizontalChangeHandler())
+                        .popChangeHandler(new HorizontalChangeHandler()));
+
 
             } else if (view.getId() == mAddressChangeText.getId()) {
                 //push controller to view my address
-//                fragment = ViewMyAddressFragment.newInstance(activity, true);
-//                new ViewMyAddressPresenter(UseCaseHandler.getInstance(),
-//                        (ViewMyAddressFragment)fragment,
-//                        au.com.topbuy.deliveryaddressmodule.Injection.provideAddNewAddress(activity),
-//                        au.com.topbuy.deliveryaddressmodule.Injection.provideGetAddresses(activity),
-//                        au.com.topbuy.deliveryaddressmodule.Injection.provideApplyAddress(activity),
-//                        au.com.topbuy.deliveryaddressmodule.Injection.provideDeleteUserAddress(activity));
+                getRouter().pushController(RouterTransaction.with(new ViewAddressController())
+                        .pushChangeHandler(new HorizontalChangeHandler())
+                        .popChangeHandler(new HorizontalChangeHandler()));
 
             } else if (view.getId() == mPaymentChangeText.getId()
                     || view.getId() == mAddNewPaymentLayout.getId()) {
@@ -116,11 +116,10 @@ public class CheckoutController extends BaseController implements CheckoutMvpVie
                 if (mPaymentList.size() > 1) {
 //                    fragment = PaymentSelectFragment.newInstance(activity, mPaymentList, true);
                 } else {
+                    //push controller to add payment
                     getRouter().pushController(RouterTransaction.with(new AddPaymentController(true))
                             .pushChangeHandler(new HorizontalChangeHandler())
                             .popChangeHandler(new HorizontalChangeHandler()));
-//                    fragment = AddPaymentFragment.newInstance(activity, mPaymentList, true);
-//                    mCheckoutBaseActivity.setAddPaymentFragment((AddPaymentFragment) fragment);
                 }
 
             } else if (view.getId() == mVoucherChangeText.getId()
@@ -177,6 +176,7 @@ public class CheckoutController extends BaseController implements CheckoutMvpVie
 
     @Override
     public void onDetach(View view) {
+        mPresenter.onDetach();
         super.onDetach(view);
     }
 

@@ -1,0 +1,148 @@
+package au.com.dealsdirect.ui.controller.checkout.paymentselect;
+
+import android.content.DialogInterface;
+import android.os.Bundle;
+import android.support.annotation.NonNull;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.ImageView;
+import android.widget.ListView;
+import android.widget.TextView;
+
+import com.google.gson.reflect.TypeToken;
+import com.mysale.genie.utility.RxBus;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import javax.inject.Inject;
+
+import au.com.dealsdirect.R;
+import au.com.dealsdirect.data.network.model.checkout.getuserpaymentmethods.PaymentMethod;
+import au.com.dealsdirect.ui.base.BaseController;
+import au.com.dealsdirect.ui.custom.RecyclerOnTouchListener;
+import au.com.dealsdirect.ui.main.MainActivity;
+import au.com.dealsdirect.utils.BundleBuilder;
+import au.com.dealsdirect.utils.DialogUtils;
+import au.com.dealsdirect.utils.JsonUtils;
+import butterknife.BindView;
+
+/**
+ * Created by smartwave on 30/06/2017.
+ */
+
+public class PaymentSelectController extends BaseController implements PaymentSelectMvpView {
+
+    private static final String PAYMENT_METHODS = "PaymentMethods";
+    private final static String  IS_FROM_CART = "IsFromCart";
+
+    @Inject
+    PaymentSelectMvpPresenter<PaymentSelectMvpView> mPresenter;
+
+    @BindView(R.id.payment_select_recyclerview)
+    RecyclerView mRecyclerView;
+
+
+    @BindView(R.id.partial_toolbar_arrow_title)
+    TextView mPaymentSelectToolbarTitle;
+    @BindView(R.id.partial_toolbar_filter_view)
+    ImageView mPaymentSelectRightOption;
+
+    PaymentSelectAdapter mAdapter;
+    MainActivity mActivity;
+
+    private ArrayList<PaymentMethod> mPaymentMethods = new ArrayList<>();
+    private boolean isFromCart = false;
+
+
+    public PaymentSelectController(String paymentMethodsJsonString, boolean isFromCart) {
+        this(new BundleBuilder(new Bundle())
+                .putString(PAYMENT_METHODS,paymentMethodsJsonString)
+                .putBoolean(IS_FROM_CART,isFromCart)
+                .build());
+    }
+
+    public PaymentSelectController(Bundle args) {
+        super(args);
+        mPaymentMethods = JsonUtils.convertStringToObject(args.getString(PAYMENT_METHODS),new TypeToken<ArrayList<PaymentMethod>>(){}.getType());
+        isFromCart = args.getBoolean(IS_FROM_CART);
+    }
+
+    @Override
+    protected View inflateView(@NonNull LayoutInflater inflater, @NonNull ViewGroup container) {
+        View view = inflater.inflate(R.layout.controller_payment_select, container,false);
+        getControllerComponent().inject(this);
+        mPresenter.onAttach(this);
+        return view;
+    }
+
+    @Override
+    protected void onViewBound(@NonNull View view) {
+        super.onViewBound(view);
+        mActivity = ((MainActivity) getActivity());
+        setUp(view);
+    }
+
+    @Override
+    protected void onAttach(@NonNull View view) {
+        super.onAttach(view);
+        mPresenter.fetchUserPaymentMethods();
+    }
+
+    @Override
+    public void showPaymentList(List<PaymentMethod> paymentMethods){
+        if (paymentMethods != null) {
+            mPaymentMethods = new ArrayList<>(paymentMethods);
+            mAdapter.replaceData(mPaymentMethods);
+        }
+    }
+
+    @Override
+    public void showRemovePaymentMethodResult(PaymentMethod paymentMethod, boolean result, String message) {
+        mActivity.setPaymentMethodSelected(null);
+
+        if (result) {
+            mPaymentMethods.remove(paymentMethod);
+            mAdapter.notifyDataSetChanged();
+
+            DialogUtils.showYesDialog(mActivity, "Success", "Payment method removed!", "OK", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    dialog.dismiss();
+                }
+            });
+
+        } else {
+
+            DialogUtils.showYesDialog(mActivity, "Failed", "Please try again.", "OK", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    dialog.dismiss();
+                }
+            });
+        }
+    }
+
+    @Override
+    protected void setUp(View view) {
+
+        mPaymentSelectToolbarTitle.setText("Add Payment Method");
+        mPaymentSelectRightOption.setImageDrawable(getApplicationContext().getDrawable(R.drawable.ic_add));
+
+        mAdapter = new PaymentSelectAdapter(mActivity, mPaymentMethods, mPresenter, isFromCart);
+        mRecyclerView.setAdapter(mAdapter);
+        mRecyclerView.setLayoutManager(new LinearLayoutManager(mActivity,LinearLayoutManager.VERTICAL,false));
+        mRecyclerView.addOnItemTouchListener(new RecyclerOnTouchListener(mActivity, new RecyclerOnTouchListener.OnItemClickListener() {
+            @Override
+            public void onItemClick(View v, int position) {
+                mActivity.setPaymentMethodSelected(mPaymentMethods.get(position));
+                getRouter().popCurrentController();
+            }
+        }));
+    }
+
+}
