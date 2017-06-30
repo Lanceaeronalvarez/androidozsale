@@ -21,6 +21,9 @@ import au.com.dealsdirect.ui.controller.home.HomeController;
 import au.com.dealsdirect.ui.controller.language.LanguageController;
 import au.com.dealsdirect.ui.controller.login.LoginController;
 import au.com.dealsdirect.ui.controller.register.RegisterController;
+import au.com.dealsdirect.ui.controller.returns.currentreturns.CurrentReturnsController;
+import au.com.dealsdirect.ui.controller.returns.returndetails.ReturnDetailsController;
+import au.com.dealsdirect.ui.controller.returns.returnorders.ReturnOrdersController;
 import au.com.dealsdirect.ui.controller.saleitemdetails.SaleItemDetailsController;
 import au.com.dealsdirect.ui.controller.orders.orderdetails.OrderDetailsController;
 import au.com.dealsdirect.ui.controller.orders.orders.OrdersController;
@@ -83,10 +86,15 @@ public interface ControllerComponent {
 
     void inject(RegisterController controller);
 
+    void inject(CurrentReturnsController controller);
+
+    void inject(ReturnDetailsController controller);
+
+    void inject(ReturnOrdersController returnOrdersController);
+
     void inject(AddPaymentController controller);
 
     void inject(PaymentSelectController controller);
 
     void inject(PaymentSuccessController controller);
-
 }

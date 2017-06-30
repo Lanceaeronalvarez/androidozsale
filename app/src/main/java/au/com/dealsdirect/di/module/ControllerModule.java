@@ -50,9 +50,6 @@ import au.com.dealsdirect.ui.controller.language.LanguagePresenter;
 import au.com.dealsdirect.ui.controller.login.LoginMvpPresenter;
 import au.com.dealsdirect.ui.controller.login.LoginMvpView;
 import au.com.dealsdirect.ui.controller.login.LoginPresenter;
-import au.com.dealsdirect.ui.controller.saleitemdetails.SaleItemDetailsMvpPresenter;
-import au.com.dealsdirect.ui.controller.saleitemdetails.SaleItemDetailsMvpView;
-import au.com.dealsdirect.ui.controller.saleitemdetails.SaleItemDetailsPresenter;
 import au.com.dealsdirect.ui.controller.orders.orderdetails.OrderDetailsMvpPresenter;
 import au.com.dealsdirect.ui.controller.orders.orderdetails.OrderDetailsMvpView;
 import au.com.dealsdirect.ui.controller.orders.orderdetails.OrderDetailsPresenter;
@@ -62,9 +59,21 @@ import au.com.dealsdirect.ui.controller.orders.orders.OrdersPresenter;
 import au.com.dealsdirect.ui.controller.register.RegisterMvpPresenter;
 import au.com.dealsdirect.ui.controller.register.RegisterMvpView;
 import au.com.dealsdirect.ui.controller.register.RegisterPresenter;
+import au.com.dealsdirect.ui.controller.returns.currentreturns.CurrentReturnsMvpPresenter;
+import au.com.dealsdirect.ui.controller.returns.currentreturns.CurrentReturnsMvpView;
+import au.com.dealsdirect.ui.controller.returns.currentreturns.CurrentReturnsPresenter;
+import au.com.dealsdirect.ui.controller.returns.returndetails.ReturnDetailsMvpPresenter;
+import au.com.dealsdirect.ui.controller.returns.returndetails.ReturnDetailsMvpView;
+import au.com.dealsdirect.ui.controller.returns.returndetails.ReturnDetailsPresenter;
+import au.com.dealsdirect.ui.controller.returns.returnorders.ReturnOrdersMvpPresenter;
+import au.com.dealsdirect.ui.controller.returns.returnorders.ReturnOrdersMvpView;
+import au.com.dealsdirect.ui.controller.returns.returnorders.ReturnOrdersPresenter;
 import au.com.dealsdirect.ui.controller.salecategories.SaleCategoriesMvpPresenter;
 import au.com.dealsdirect.ui.controller.salecategories.SaleCategoriesMvpView;
 import au.com.dealsdirect.ui.controller.salecategories.SaleCategoriesPresenter;
+import au.com.dealsdirect.ui.controller.saleitemdetails.SaleItemDetailsMvpPresenter;
+import au.com.dealsdirect.ui.controller.saleitemdetails.SaleItemDetailsMvpView;
+import au.com.dealsdirect.ui.controller.saleitemdetails.SaleItemDetailsPresenter;
 import au.com.dealsdirect.ui.controller.saleitems.SaleItemsMvpPresenter;
 import au.com.dealsdirect.ui.controller.saleitems.SaleItemsMvpView;
 import au.com.dealsdirect.ui.controller.saleitems.SaleItemsPresenter;
@@ -206,6 +215,21 @@ public class ControllerModule {
     }
 
     @Provides
+    CurrentReturnsMvpPresenter<CurrentReturnsMvpView> provideCurrentReturnsPresenter(CurrentReturnsPresenter<CurrentReturnsMvpView> presenter) {
+        return presenter;
+    }
+
+    @Provides
+    ReturnDetailsMvpPresenter<ReturnDetailsMvpView> provideReturnDetailsPresenter(ReturnDetailsPresenter<ReturnDetailsMvpView> presenter) {
+        return presenter;
+    }
+
+    @Provides
+    ReturnOrdersMvpPresenter<ReturnOrdersMvpView> provideReturnOrdersPresenter(ReturnOrdersPresenter<ReturnOrdersMvpView> presenter) {
+        return presenter;
+    }
+
+    @Provides
     AddPaymentMvpPresenter<AddPaymentMvpView> provideAddPaymentPresenter(AddPaymentPresenter<AddPaymentMvpView> presenter){
         return presenter;
     }
@@ -219,5 +243,4 @@ public class ControllerModule {
     PaymentSuccessMvpPresenter<PaymentSuccessMvpView> providePaymentSuccessPresenter(PaymentSuccessPresenter<PaymentSuccessMvpView> presenter){
         return presenter;
     }
-
 }
