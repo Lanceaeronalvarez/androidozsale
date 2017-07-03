@@ -8,13 +8,13 @@ public class Voucher {
 
     @SerializedName("ID")
     @Expose
-    private String iD;
+    private String id;
     @SerializedName("Description")
     @Expose
     private String description;
 
-    public String getiD() {
-        return iD;
+    public String getID() {
+        return id;
     }
 
     public String getDescription() {

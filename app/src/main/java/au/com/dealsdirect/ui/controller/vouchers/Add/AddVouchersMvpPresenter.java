@@ -19,5 +19,4 @@ public interface AddVouchersMvpPresenter<V extends AddVouchersMvpView> extends M
 
     void addAndApplyVoucherByKey(int imageSize, String key);
 
-    void loadMyVouchers();
 }

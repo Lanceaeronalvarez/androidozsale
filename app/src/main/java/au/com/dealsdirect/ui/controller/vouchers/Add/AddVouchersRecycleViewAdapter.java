@@ -27,19 +27,25 @@ import butterknife.ButterKnife;
 
 public class AddVouchersRecycleViewAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
-    private HashMap<Integer,String> voucherColorStateCollection = new HashMap<>();
-//    private MyVouchersItemClickListener mListener;
+    private HashMap<Integer, String> voucherColorStateCollection = new HashMap<>();
+    private AddVouchersMvpView mView;
     private List<Voucher> mVoucherList;
     private Context context;
+    HashMap<Integer, Boolean> mVoucherOptionIndicator = new HashMap<>();
 
     public AddVouchersRecycleViewAdapter(
             List<Voucher> voucherList,
-            AddVouchersItemClickListener myVouchersItemClickListener,
-            Context context ) {
+            AddVouchersMvpView view,
+            Context context) {
 
         mVoucherList = voucherList;
         this.context = context;
-//        this.mListener = myVouchersItemClickListener;
+        this.mView = view;
+
+        //init hashmap for selected vouchers
+        for (int i = 0; i <= mVoucherList.size(); i++) {
+            mVoucherOptionIndicator.put(i, false);
+        }
     }
 
     @Override
@@ -65,87 +71,89 @@ public class AddVouchersRecycleViewAdapter extends RecyclerView.Adapter<Recycler
         vh.mVoucherItemExpiresOnText.setVisibility(View.INVISIBLE);
 
         String finalDescription = "";
-        if (!description.isEmpty()){
+        if (!description.isEmpty()) {
             String[] splitString = description.split(" ");
-            for (int i = 0; i < splitString.length; i++){
-                if (i!=0){
-                    finalDescription = finalDescription +" "+ splitString[i];
+            for (int i = 0; i < splitString.length; i++) {
+                if (i != 0) {
+                    finalDescription = finalDescription + " " + splitString[i];
                 }
             }
         }
 
         vh.mVoucherItemDescText.setText(finalDescription);
 
+        boolean isSelected = mVoucherOptionIndicator.get(position);
 
-        Log.d("voucherDescription", "description : "+description);
+        if (!isSelected) {
+            vh.mSelectedText.setText("NOT SELECTED!");
+            //load default bg.
+        } else {
+            vh.mSelectedText.setText("SELECTED!");
+        }
+
+        Log.d("voucherDescription", "description : " + description);
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
             int voucherValue = doubleValue.intValue();
 
-            if(0 <= voucherValue && voucherValue < 10) {
+            if (0 <= voucherValue && voucherValue < 10) {
 //                vh.mVoucherItemLayout.setBackground(context.getResources().getDrawable(R.drawable.voucher_container_red));
                 ticketState = "red";
-            }
-
-            else if(10 <= voucherValue && voucherValue < 15){
+            } else if (10 <= voucherValue && voucherValue < 15) {
 //                vh.mVoucherItemLayout.setBackground(context.getResources().getDrawable(R.drawable.voucher_container_blue));
                 ticketState = "blue";
-            }
-
-            else if(15 <= voucherValue && voucherValue < 20){
+            } else if (15 <= voucherValue && voucherValue < 20) {
 //                vh.mVoucherItemLayout.setBackground(context.getResources().getDrawable(R.drawable.voucher_container_yellow));
                 ticketState = "yellow";
-            }
-
-            else if(20 <= voucherValue && voucherValue < 25){
+            } else if (20 <= voucherValue && voucherValue < 25) {
 //                vh.mVoucherItemLayout.setBackground(context.getResources().getDrawable(R.drawable.voucher_container_green));
                 ticketState = "green";
-            }
-
-            else if(25 <= voucherValue && voucherValue < 50){
+            } else if (25 <= voucherValue && voucherValue < 50) {
 //                vh.mVoucherItemLayout.setBackground(context.getResources().getDrawable(R.drawable.voucher_container_violet));
                 ticketState = "violet";
-            }
-
-            else if(50 <= voucherValue && voucherValue < 125){
+            } else if (50 <= voucherValue && voucherValue < 125) {
 //                vh.mVoucherItemLayout.setBackground(context.getResources().getDrawable(R.drawable.voucher_container_aqua));
                 ticketState = "aqua";
-            }
-            else if(125 <= voucherValue && voucherValue < 500){
+            } else if (125 <= voucherValue && voucherValue < 500) {
 //                vh.mVoucherItemLayout.setBackground(context.getResources().getDrawable(R.drawable.voucher_container_orange));
                 ticketState = "orange";
-            }
-
-            else if(500 <= voucherValue && voucherValue <= 1000){
+            } else if (500 <= voucherValue && voucherValue <= 1000) {
 //                vh.mVoucherItemLayout.setBackground(context.getResources().getDrawable(R.drawable.voucher_container_darkblue));
                 ticketState = "darkblue";
-            }
-            else{
+            } else {
 //                vh.mVoucherItemLayout.setBackground(context.getResources().getDrawable(R.drawable.voucher_container_blue));
                 ticketState = "blue";
             }
         }
 
         voucherColorStateCollection.put(position, ticketState);
-        vh.mVoucherItemCostText.setText(PriceUtils.getPriceStringValue(doubleValue)+" value");
+        vh.mVoucherItemCostText.setText(PriceUtils.getPriceStringValue(doubleValue) + " value");
 
-        final String finalTicketState = voucherColorStateCollection.get(position);
 
         vh.mVoucherItemLayout.setOnClickListener(new View.OnClickListener() {
             public void onClick(View view) {
-
 //                GDebug.log(this.getClass().getSimpleName(), "voucher item is clicked");
-//                mListener.onVoucherItemClicked(
+
+                boolean isClicked =  mVoucherOptionIndicator.get(position);
+                if(isClicked){
+                    mVoucherOptionIndicator.put(position, false);
+                }else{
+                    mVoucherOptionIndicator.put(position, true);
+                }
+
+                notifyItemChanged(position);
+
+//                mView.onVoucherItemClicked(
 //                        voucher.getID(),
-//                        finalTicketState,
-//                        holder.voucherItemLayout,
+//                        voucherColorStateCollection.get(position),
+//                        vh.mVoucherItemLayout,
 //                        position);
             }
         });
     }
 
 
-    public void insert(int position, Voucher voucher){
+    public void insert(int position, Voucher voucher) {
         mVoucherList.add(position, voucher);
         notifyItemInserted(position);
     }
@@ -156,7 +164,7 @@ public class AddVouchersRecycleViewAdapter extends RecyclerView.Adapter<Recycler
         notifyItemRemoved(position);
     }
 
-    public void replace(List<Voucher> vouchers){
+    public void replace(List<Voucher> vouchers) {
         mVoucherList = vouchers;
         notifyDataSetChanged();
     }
@@ -178,6 +186,8 @@ public class AddVouchersRecycleViewAdapter extends RecyclerView.Adapter<Recycler
         public TextView mVoucherItemExpiresOnText;
         @BindView(R.id.row_add_vouchers_text_item_desc)
         public TextView mVoucherItemDescText;
+        @BindView(R.id.selected_placeholder)
+        public TextView mSelectedText;
 
         public AddVouchersViewHolder(View itemView) {
             super(itemView);

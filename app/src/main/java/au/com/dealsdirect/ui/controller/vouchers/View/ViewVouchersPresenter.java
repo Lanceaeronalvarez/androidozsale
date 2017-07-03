@@ -2,6 +2,8 @@ package au.com.dealsdirect.ui.controller.vouchers.View;
 
 import android.support.v4.util.Pair;
 
+import com.androidnetworking.error.ANError;
+
 import java.util.List;
 
 import javax.inject.Inject;
@@ -40,6 +42,9 @@ public class ViewVouchersPresenter<V extends ViewVouchersMvpView> extends BasePr
 
         Observable.zip(selectSubject, selectSubject2, Pair::new)
                 .subscribe(action->{
+                    if(!isViewAttached()){
+                        return;
+                    }
                     getMvpView().updateVoucherList(action);
                 });
 
@@ -57,7 +62,18 @@ public class ViewVouchersPresenter<V extends ViewVouchersMvpView> extends BasePr
                 }, new Consumer<Throwable>() {
                     @Override
                     public void accept(@NonNull Throwable throwable) throws Exception {
+                        if (!isViewAttached()) {
+                            return;
+                        }
 
+                        getMvpView().hideLoading();
+                        getMvpView().onError(throwable.getMessage());
+
+                        // handle load accounts error here
+                        if (throwable instanceof ANError) {
+                            ANError anError = (ANError) throwable;
+                            handleApiError(anError);
+                        }
                     }
                 }));
 
@@ -73,7 +89,18 @@ public class ViewVouchersPresenter<V extends ViewVouchersMvpView> extends BasePr
                 }, new Consumer<Throwable>() {
                     @Override
                     public void accept(@NonNull Throwable throwable) throws Exception {
+                        if (!isViewAttached()) {
+                            return;
+                        }
 
+                        getMvpView().hideLoading();
+                        getMvpView().onError(throwable.getMessage());
+
+                        // handle load accounts error here
+                        if (throwable instanceof ANError) {
+                            ANError anError = (ANError) throwable;
+                            handleApiError(anError);
+                        }
                     }
                 }));
     }

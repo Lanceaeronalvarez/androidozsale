@@ -20,7 +20,7 @@
             android:layout_height="wrap_content"
             android:padding="@dimen/activity_horizontal_margin"
             android:paddingTop="10dp"
-            android:text="@string/vouchers_view_detail"
+            android:text="@string/my_vouchers_view_detail"
             android:textColor="@color/gray_field_text"
             android:textSize="@dimen/text_size_xxlarge" />
 

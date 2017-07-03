@@ -2,7 +2,6 @@ package au.com.dealsdirect.ui.controller.vouchers.Add;
 
 import android.os.Bundle;
 import android.support.annotation.NonNull;
-import android.support.v4.util.Pair;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.PagerSnapHelper;
 import android.support.v7.widget.RecyclerView;
@@ -19,10 +18,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
-import android.support.annotation.NonNull;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
 
 import com.google.gson.reflect.TypeToken;
 
@@ -32,8 +27,6 @@ import au.com.dealsdirect.R;
 import au.com.dealsdirect.data.network.model.vouchers.AddAndApplyVoucherByKeyResponse;
 import au.com.dealsdirect.data.network.model.vouchers.ApplyVouchersResponse;
 import au.com.dealsdirect.data.network.model.vouchers.ClearVouchersResponse;
-import au.com.dealsdirect.data.network.model.vouchers.GetUserVoucherResponse;
-import au.com.dealsdirect.data.network.model.vouchers.GetVouchersResponse;
 import au.com.dealsdirect.data.network.model.vouchers.Voucher;
 import au.com.dealsdirect.ui.base.BaseController;
 import au.com.dealsdirect.utils.BundleBuilder;
@@ -46,8 +39,7 @@ import au.com.dealsdirect.data.network.model.vouchers.AddVoucherByKeyResponse;
  * Created by Paul on 6/27/17.
  */
 
-public class AddVouchersController extends BaseController implements AddVouchersMvpView,
-        AddVouchersItemClickListener{
+public class AddVouchersController extends BaseController implements AddVouchersMvpView {
     private static final String VOUCHERS="Vouchers";
 
     private static final String testVouchersString = "[{\n" +
@@ -118,14 +110,17 @@ public class AddVouchersController extends BaseController implements AddVouchers
     @BindView(R.id.controller_button_add_voucher)
     Button mAddVoucherButton;
 
+    @BindView(R.id.container_voucher_list)
+    LinearLayout mVoucherListContainerLayout;
+
     @BindView(R.id.controller_recycler_view_promo_vouchers)
     RecyclerView mRecyclerView;
 
     @BindView(R.id.controller_edit_text_voucher)
     TextView mPromoCodeText;
 
-    @BindView(R.id.controller_view_add_promo_place_holder)
-    LinearLayout vouchersPlaceHolder;
+    @BindView(R.id.no_vouchers_placeholder)
+    LinearLayout mNoVouchersPlaceHolder;
 
     @BindView(R.id.partial_checkout_vouchers_button_clear)
     Button mButtonClear;
@@ -133,16 +128,11 @@ public class AddVouchersController extends BaseController implements AddVouchers
     @BindView(R.id.partial_checkout_vouchers_button_apply)
     Button mButtonApply;
 
-    View footerButtons;
+    List<String> voucherIds = new LinkedList<>();
 
-    static List<String> voucherIds = new LinkedList<>();
-
-    List<String> tempVoucherIds = new LinkedList<>();
     private ArrayList<Voucher> mVouchers = new ArrayList<>();
 
     HashMap<Integer, Boolean> voucherOptionIndicator = new HashMap<>();
-    private String mTempVoucherKey;
-    int listSize;
 
     private  AddVouchersRecycleViewAdapter mAdapter;
 
@@ -180,6 +170,12 @@ public class AddVouchersController extends BaseController implements AddVouchers
         });
 
         mAdapter = new AddVouchersRecycleViewAdapter(mVouchers, this, getActivity());
+
+
+
+//        mAdapter.setVoucherOptionIndicator(voucherOptionIndicator);
+
+
         if (voucherIds.isEmpty()) {
             mButtonClear.setVisibility(View.GONE);
         } else {
@@ -188,7 +184,7 @@ public class AddVouchersController extends BaseController implements AddVouchers
         }
 
         mButtonApply.setOnClickListener(view2 -> {
-            if (voucherIds.size() != 0 && tempVoucherIds.size() != 0) {
+            if (voucherIds.size() != 0) {
                 mPresenter.applyVouchers(100, voucherIds);
 
             } else {
@@ -210,12 +206,13 @@ public class AddVouchersController extends BaseController implements AddVouchers
         helper.attachToRecyclerView(mRecyclerView);
 
         if (mVouchers.isEmpty()) {
+            mVoucherListContainerLayout.setVisibility(View.VISIBLE);
             mRecyclerView.setVisibility(View.GONE);
-            vouchersPlaceHolder.setVisibility(View.VISIBLE);
-
+            mNoVouchersPlaceHolder.setVisibility(View.VISIBLE);
         } else {
+            mVoucherListContainerLayout.setVisibility(View.VISIBLE);
             mRecyclerView.setVisibility(View.VISIBLE);
-            vouchersPlaceHolder.setVisibility(View.GONE);
+            mNoVouchersPlaceHolder.setVisibility(View.GONE);
         }
 
         mAddVoucherButton.setOnClickListener(action -> {
@@ -223,7 +220,7 @@ public class AddVouchersController extends BaseController implements AddVouchers
 
                 mPresenter.addAndApplyVoucherByKey(100, mPromoCodeText.getText().toString());
 
-                mTempVoucherKey = mPromoCodeText.getText().toString();
+//                mTempVoucherKey = mPromoCodeText.getText().toString();
 
                 mPromoCodeText.clearFocus();
                 hideKeyboard();
@@ -297,7 +294,6 @@ public class AddVouchersController extends BaseController implements AddVouchers
 
 //            mActivity.getSupportFragmentManager().popBackStack();
             voucherIds.clear();
-            tempVoucherIds.clear();
         }
     }
 
@@ -319,7 +315,6 @@ public class AddVouchersController extends BaseController implements AddVouchers
 //        );
 
         voucherIds.clear();
-        tempVoucherIds.clear();
         getActivity().onBackPressed();
 
     }
@@ -327,7 +322,6 @@ public class AddVouchersController extends BaseController implements AddVouchers
     @Override
     public void onApplyVouchersError() {
         voucherIds.clear();
-        tempVoucherIds.clear();
         getActivity().onBackPressed();
     }
 
@@ -341,8 +335,8 @@ public class AddVouchersController extends BaseController implements AddVouchers
 //                    mActivity.getString(R.string.promo_code_applied)
 //            );
 
-            voucherIds.add(mTempVoucherKey);
-            tempVoucherIds.add(mTempVoucherKey);
+//            voucherIds.add(mTempVoucherKey);
+//            tempVoucherIds.add(mTempVoucherKey);
             getActivity().onBackPressed();
         } else {
 //
@@ -355,22 +349,6 @@ public class AddVouchersController extends BaseController implements AddVouchers
 
 
     @Override
-    public void updateVoucherList(Pair<List<GetUserVoucherResponse.Voucher>, GetVouchersResponse> pair) {
-//        GDebug.log(MyVouchersFragment.class.getName(), "updateVoucherList2 called");
-
-        if (pair.first == null) {
-            listSize = 0;
-
-        } else {
-            listSize = pair.first.size();
-            RecyclerView.LayoutManager linearLayoutManager = mRecyclerView.getLayoutManager();
-            linearLayoutManager.scrollToPosition(0);
-
-            setVouchersHashMap();
-        }
-    }
-
-    @Override
     public void onVoucherItemClicked(String voucherId, String voucherState, LinearLayout holder, int position) {
         if (voucherOptionIndicator.get(position) != null) {
 
@@ -378,7 +356,6 @@ public class AddVouchersController extends BaseController implements AddVouchers
 
             if (isClicked) {
                 voucherIds.remove(voucherId);
-                tempVoucherIds.remove(voucherId);
 //                GDebug.log("vouchers", " ID = " + voucherId);
 
 //                switch (voucherState) {
@@ -426,7 +403,6 @@ public class AddVouchersController extends BaseController implements AddVouchers
 
 //                GDebug.log(this.getClass().getSimpleName(), " ID = " + voucherId);
                 voucherIds.add(voucherId);
-                tempVoucherIds.add(voucherId);
 
 //                switch (voucherState) {
 //                    case "red":
@@ -471,12 +447,6 @@ public class AddVouchersController extends BaseController implements AddVouchers
             }
         }
 //        GDebug.log("vouchers", "log the size of the listener list = " + voucherIds.size());
-    }
-
-    public void setVouchersHashMap() {
-        for (int i = 0; i <= listSize; i++) {
-            voucherOptionIndicator.put(i, false);
-        }
     }
 
     private void clearAppliedVouchers() {

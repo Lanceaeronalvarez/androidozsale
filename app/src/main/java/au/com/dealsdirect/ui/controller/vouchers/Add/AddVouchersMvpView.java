@@ -26,8 +26,6 @@ public interface AddVouchersMvpView extends MvpView {
 
     void onAddAndAppliedVoucher(AddAndApplyVoucherByKeyResponse response);
 
-    void updateVoucherList(Pair<List<GetUserVoucherResponse.Voucher>, GetVouchersResponse> pair);
-
     void onVoucherItemClicked(String voucherId, String voucherState, LinearLayout holder, int
             position);
 }

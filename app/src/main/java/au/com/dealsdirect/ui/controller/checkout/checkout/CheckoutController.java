@@ -92,6 +92,7 @@ public class CheckoutController extends BaseController implements CheckoutMvpVie
     private ArrayList<DecorationInfoList> mDecorationInfoList = new ArrayList<>();
     private ArrayList<Voucher> mVouchers = new ArrayList<>();
     private CheckoutOrderAdapter mAdapter;
+    private FetchTokenHandler mFetchTokenHandler;
 
     MainActivity mActivity;
 
@@ -207,6 +208,18 @@ public class CheckoutController extends BaseController implements CheckoutMvpVie
         mPayButton.setOnClickListener(view1 -> onPayButtonClick());
         mPaypalButton.setOnClickListener(view2 -> onPaypalButtonClick());
 
+        mFetchTokenHandler = new FetchTokenHandler() {
+            @Override
+            public void onSuccess() {
+                mPresenter.start();
+            }
+
+            @Override
+            public void onFailure() {
+                hidePaymentButtons();
+            }
+        };
+
         loadCart();
         mListView.setVisibility(View.GONE);
 //        showNoCartItemsLayout();
@@ -216,17 +229,7 @@ public class CheckoutController extends BaseController implements CheckoutMvpVie
     public void loadCart(){
         showLoading();
         if(mPresenter.checkIsLoggedIn() && !mActivity.isBraintreeInitialized()){
-            mActivity.fetchAuthorization(new FetchTokenHandler() {
-                @Override
-                public void onSuccess() {
-                    mPresenter.start();
-                }
-
-                @Override
-                public void onFailure() {
-                    hidePaymentButtons();
-                }
-            });
+            mActivity.fetchAuthorization(mFetchTokenHandler);
         }else if (mPresenter.checkIsLoggedIn() && ((MainActivity)getActivity()).isBraintreeInitialized()) {
 
             mPresenter.start();

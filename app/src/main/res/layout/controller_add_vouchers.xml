@@ -87,49 +87,34 @@
 
 
             <LinearLayout
-                android:id="@+id/controller_voucher_placeholder"
+                android:id="@+id/container_voucher_list"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
                 android:visibility="gone">
 
-                <RelativeLayout
+                <LinearLayout
                     android:id="@+id/my_vouchers_us_header_view"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:paddingLeft="16dp"
-                    android:paddingRight="16dp">
+                    android:paddingRight="16dp"
+                    android:orientation="vertical">
 
                     <TextView
-                        android:id="@+id/controller_text_contact_us"
                         fontPath="@string/font_lato_light"
                         android:layout_width="wrap_content"
                         android:layout_height="@dimen/default_button_height"
                         android:textColor="#6c6c6c"
+                        android:text="@string/my_voucher"
                         android:textSize="30sp" />
 
                     <View
-                        android:id="@+id/controller_view_header_underline"
                         android:layout_width="35dp"
                         android:layout_height="2dp"
-                        android:layout_below="@+id/controller_text_contact_us"
                         android:background="#969595" />
 
-
-                    <ImageView
-                        android:id="@+id/my_contact_bag_image_view"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_alignBottom="@+id/controller_text_contact_us"
-                        android:layout_alignParentEnd="true"
-                        android:layout_alignParentRight="true"
-                        android:layout_alignTop="@+id/controller_text_contact_us"
-                        android:animateLayoutChanges="true"
-                        android:gravity="center"
-                        android:textSize="18sp"
-                        android:visibility="invisible" />
-
-                </RelativeLayout>
+                </LinearLayout>
 
                 <android.support.v7.widget.RecyclerView
                     android:id="@+id/controller_recycler_view_promo_vouchers"
@@ -140,7 +125,7 @@
 
 
                 <LinearLayout
-                    android:id="@+id/controller_view_add_promo_place_holder"
+                    android:id="@+id/no_vouchers_placeholder"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:layout_gravity="center_vertical"
