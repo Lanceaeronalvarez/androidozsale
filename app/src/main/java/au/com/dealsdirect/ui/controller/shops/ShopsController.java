@@ -1,5 +1,6 @@
 package au.com.dealsdirect.ui.controller.shops;
 
+import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.LinearLayoutManager;
@@ -7,6 +8,14 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.WindowManager;
+import android.view.animation.AccelerateInterpolator;
+import android.view.animation.Animation;
+import android.view.animation.TranslateAnimation;
+import android.view.inputmethod.EditorInfo;
+import android.widget.EditText;
+import android.widget.ImageView;
+import android.widget.RelativeLayout;
 
 import com.bluelinelabs.conductor.RouterTransaction;
 import com.bluelinelabs.conductor.changehandler.HorizontalChangeHandler;
@@ -48,6 +57,14 @@ public class ShopsController extends BaseController implements ShopsMvpView, Ban
     @BindView(R.id.controller_shop_banner_recycler)
     RecyclerView shopsControllerBannerRecyclerView;
 
+    @BindView(R.id.partial_toolbar_search_icon)
+    ImageView shopsControllerSearchView;
+
+    @BindView(R.id.partial_toolbar_hamburger)
+    ImageView mShopsControllerHamburgerView;
+
+    @BindView(R.id.controller_shop_toolbar)
+    View mShopsControllerToolbar;
 
     private BannersAdapter mBannersAdapter;
     private BannerClickListener mBannerClickListener;
@@ -57,16 +74,6 @@ public class ShopsController extends BaseController implements ShopsMvpView, Ban
     private String mCategoryKey;
 
     private List<GetBannerResponse> sales = new LinkedList<>();
-
-    public ShopsController(String categoryID, String categoryName, String categoryKey) {
-
-        this(new BundleBuilder(new Bundle())
-                .putString(KEY_CATEGORY_ID, categoryID)
-                .putString(KEY_CATEGORY_NAME, categoryName)
-                .putString(KEY_CATEGORY_MAP, categoryKey)
-                .build());
-    }
-
 
     public static ShopsController newInstance(GetCategoryTreeResponse getCategoryTreeResponse) {
 
@@ -124,6 +131,7 @@ public class ShopsController extends BaseController implements ShopsMvpView, Ban
             shopsControllerBannerRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
             shopsControllerBannerRecyclerView.setAdapter(mBannersAdapter);
         }
+
     }
 
     @Override
@@ -152,12 +160,68 @@ public class ShopsController extends BaseController implements ShopsMvpView, Ban
     }
 
     @OnClick(R.id.partial_toolbar_hamburger)
-    public void onClickHamburger() {
+    void onClickHamburger() {
         getRouter().pushController(RouterTransaction.with(CategoriesController.newInstance())
                 .pushChangeHandler(new HorizontalNavTransitionChangeHandler())
                 .popChangeHandler(new HorizontalNavTransitionChangeHandler()));
 
 //        ((MainActivity) getActivity()).hideBottomNav();
+    }
+
+
+    @SuppressWarnings("ConstantConditions")
+    @OnClick(R.id.partial_toolbar_search_icon)
+    void onSearchClick(){
+
+        shopsControllerSearchView.setImageDrawable(getResources().getDrawable(R.drawable.ic_close));
+
+        mShopsControllerHamburgerView.animate().rotation(-90).setDuration(200).start();
+
+        RelativeLayout item = (RelativeLayout)getView().findViewById(R.id.controller_shop_toolbar_container);
+        View child = getActivity().getLayoutInflater().inflate(R.layout.partial_toolbar_search, null);
+        item.addView(child);
+
+        child.setBackgroundColor(getResources().getColor(R.color.toolbar_active_skin));
+        ImageView rightOption = (ImageView) child.findViewById(R.id.partial_toolbar_search_right_option);
+        rightOption.setBackgroundColor(getResources().getColor(R.color.toolbar_active_skin));
+
+        ImageView leftOption = (ImageView) child.findViewById(R.id.partial_toolbar_search_left_option);
+        EditText searchField = (EditText) child.findViewById(R.id.partial_toolbar_search_field);
+        searchField.setActivated(true);
+        searchField.setFocusable(true);
+
+        if(searchField.requestFocus()) {
+            getActivity().getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_VISIBLE);
+        }
+
+
+        rightOption.setImageDrawable(getResources().getDrawable(R.drawable.ic_close));
+        rightOption.animate().rotation(360).setDuration(200).start();
+
+        searchField.setOnEditorActionListener((v, actionId, event) -> {
+            if (actionId == EditorInfo.IME_ACTION_SEARCH) {
+                performSearch(searchField.getText().toString());
+                return true;
+            }
+            return false;
+        });
+
+
+        rightOption.setOnClickListener(view -> {
+            child.startAnimation(outToRightAnimation());
+            item.removeView(child);
+            shopsControllerSearchView.setImageDrawable(
+                    getResources().getDrawable(R.drawable.ic_search));
+            rightOption.animate().rotation(-360).setDuration(200).start();
+            mShopsControllerHamburgerView.animate().rotation(0).setDuration(200).start();
+
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+                getActivity().dismissKeyboardShortcutsHelper();
+            }
+
+        });
+
+        child.startAnimation(inFromRightAnimation());
     }
 
     @Override
@@ -174,6 +238,51 @@ public class ShopsController extends BaseController implements ShopsMvpView, Ban
         shopsControllerBannerRecyclerView.setLayoutManager(linearLayoutManager);
         shopsControllerBannerRecyclerView.setAdapter(mBannersAdapter);
         mBannersAdapter.notifyDataSetChanged();
+
+    }
+
+
+    private Animation inFromRightAnimation() {
+
+        Animation inFromRight = new TranslateAnimation(
+                Animation.RELATIVE_TO_PARENT, +1.0f,
+                Animation.RELATIVE_TO_PARENT, 0.0f,
+                Animation.RELATIVE_TO_PARENT, 0.0f,
+                Animation.RELATIVE_TO_PARENT, 0.0f);
+        inFromRight.setDuration(200);
+        inFromRight.setInterpolator(new AccelerateInterpolator());
+        return inFromRight;
+    }
+
+
+    private Animation outToRightAnimation() {
+        Animation outtoRight = new TranslateAnimation(
+                Animation.RELATIVE_TO_PARENT, 0.0f,
+                Animation.RELATIVE_TO_PARENT, +1.0f,
+                Animation.RELATIVE_TO_PARENT, 0.0f,
+                Animation.RELATIVE_TO_PARENT, 0.0f);
+        outtoRight.setDuration(200);
+        outtoRight.setInterpolator(new AccelerateInterpolator());
+        return outtoRight;
+    }
+
+    private void performSearch(String searchQuery){
+
+        Bundle saleItemBundle = new BundleBuilder(new Bundle())
+                .putString("SaleItemsController.KEY_TITLE", searchQuery)
+                .putString("SaleItemsController.SEARCH_KEY", searchQuery)
+                .build();
+
+        if (!searchQuery.isEmpty())
+            getRouter().pushController(RouterTransaction.with(
+                    SaleItemsController.newInstance(saleItemBundle))
+                    .pushChangeHandler(new HorizontalChangeHandler())
+                    .popChangeHandler(new HorizontalChangeHandler()));
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+            //noinspection ConstantConditions
+            getActivity().dismissKeyboardShortcutsHelper();
+        }
 
     }
 

@@ -13,12 +13,19 @@
         android:layout_height="wrap_content"
         android:background="@color/app_skin">
 
-        <include android:id="@+id/controller_shop_toolbar"
-                 layout="@layout/partial_toolbar_logo" />
+        <RelativeLayout
+            android:id="@+id/controller_shop_toolbar_container"
+            android:layout_width="match_parent"
+            android:layout_height="55dp">
+
+            <include android:id="@+id/controller_shop_toolbar"
+                     layout="@layout/partial_toolbar_logo" />
+        </RelativeLayout>
+
 
         <android.support.v7.widget.RecyclerView
             android:id="@+id/controller_shop_banner_recycler"
-            android:layout_below="@+id/controller_shop_toolbar"
+            android:layout_below="@+id/controller_shop_toolbar_container"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:background="#e9e9e9">

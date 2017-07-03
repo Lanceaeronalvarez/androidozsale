@@ -1,5 +1,6 @@
 package au.com.dealsdirect.ui.controller.categories;
 
+import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.LinearLayoutManager;
@@ -7,6 +8,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.EditorInfo;
 import android.widget.EditText;
 import android.widget.ImageButton;
 
@@ -135,8 +137,16 @@ public class CategoriesController extends BaseController
         mSubCategoryRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity(), LinearLayoutManager.VERTICAL, false));
         mSubCategoryRecyclerView.setAdapter(mSubCategoryAdapter);
 
-
         mPresenter.loadCategoryTree();
+
+        mSearchField.setOnEditorActionListener((v, actionId, event) -> {
+            if (actionId == EditorInfo.IME_ACTION_SEARCH) {
+                performSearch(mSearchField.getText().toString());
+                return true;
+            }
+            return false;
+        });
+
     }
 
     @Override
@@ -301,21 +311,43 @@ public class CategoriesController extends BaseController
 
         String searchQuery = mSearchField.getText().toString();
 
+        Bundle saleItemBundle = new BundleBuilder(new Bundle())
+                .putString("SaleItemsController.KEY_TITLE", searchQuery)
+                .putString("SaleItemsController.SEARCH_KEY", searchQuery)
+                .build();
+
+        if (!searchQuery.isEmpty())
+            getRouter().pushController(RouterTransaction.with(
+                SaleItemsController.newInstance(saleItemBundle))
+                .pushChangeHandler(new HorizontalChangeHandler())
+                .popChangeHandler(new HorizontalChangeHandler()));
+        else
+            getActivity().onBackPressed();
+    }
+
+    public void setupSaleItemsRequest(){
+
+    }
+
+    private void performSearch(String searchQuery){
 
         Bundle saleItemBundle = new BundleBuilder(new Bundle())
                 .putString("SaleItemsController.KEY_TITLE", searchQuery)
                 .putString("SaleItemsController.SEARCH_KEY", searchQuery)
                 .build();
 
+        if (!searchQuery.isEmpty())
+            getRouter().pushController(RouterTransaction.with(
+                    SaleItemsController.newInstance(saleItemBundle))
+                    .pushChangeHandler(new HorizontalChangeHandler())
+                    .popChangeHandler(new HorizontalChangeHandler()));
 
-        getRouter().pushController(RouterTransaction.with(
-                SaleItemsController.newInstance(saleItemBundle))
-                .pushChangeHandler(new HorizontalChangeHandler())
-                .popChangeHandler(new HorizontalChangeHandler()));
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+            //noinspection ConstantConditions
+            getActivity().dismissKeyboardShortcutsHelper();
+        }
 
     }
 
-    public void setupSaleItemsRequest(){
 
-    }
 }

@@ -38,6 +38,8 @@
 
     <color name="app_skin">#FAFAF9</color>
     <color name="toolbar_skin">#F00065</color>
+    <color name="toolbar_active_skin">#fd3187</color>
+
 
     <!-- Button Theme -->
     <color name="bg_button_ripple">#E4E4E4</color>
