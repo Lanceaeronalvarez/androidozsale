@@ -89,7 +89,13 @@ public class SaleItemsAdapter extends RecyclerView.Adapter<SaleItemsAdapter.View
         holder.mSaleItemName.setText(saleItem.getProductName());
         holder.mSaleItemImage.setTransitionName(mData.get(position).getProductId());
 
-        String saleItemBrand = mSaleName;
+        String saleItemBrand = saleItem.getProductName();
+
+        if (mData.get(position).getSkus()!=null)
+            if (!mData.get(position).getSkus().isEmpty())
+                if (mData.get(position).getSkus().get(0).getBrandName()!=null)
+                    saleItemBrand = mData.get(position).getSkus().get(0).getBrandName();
+
         String saleItemPrice = PriceUtils.getPriceStringValue(mData.get(position).getPrice().getValue());
         String saleItemOldPrice = PriceUtils.getRpStringValue(mData.get(position).getOriginalPrice().getValue());
 

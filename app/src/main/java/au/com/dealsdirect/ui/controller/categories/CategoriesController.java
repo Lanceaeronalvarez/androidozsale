@@ -45,6 +45,10 @@ import butterknife.OnClick;
 public class CategoriesController extends BaseController
         implements CategoriesMvpView, CategoryClickListener, SubCategoryClickListener, SubCategoryItemClickListener {
 
+    private static final String KEY_CATEGORY_ID = "CategoriesController.CATEGORY_KEY";
+    private static final String KEY_QUERY_ID = "CategoriesController.CATEGORY_QUERY";
+    private static final String KEY_REQUEST_FROM = "CategoriesController.REQUEST_FROM";
+
     @Inject
     CategoriesMvpPresenter<CategoriesMvpView> mPresenter;
 
@@ -219,7 +223,6 @@ public class CategoriesController extends BaseController
             mSubCategoryAdapter.replaceData(emptyChildren);
 
         }
-
     }
 
     private void addToMap(List<GetCategoryTreeResponse> list) {
@@ -268,8 +271,13 @@ public class CategoriesController extends BaseController
     @Override
     public void onSubCategoryClicked(String categoryID, String categoryName, String categoryKey) {
 
+        Bundle saleItemBundle = new BundleBuilder(new Bundle())
+                .putString("SaleItemsController.KEY_TITLE", categoryName)
+                .putString("SaleItemsController.CATEGORY_KEY", categoryKey)
+                .build();
+
         getRouter().pushController(RouterTransaction.with(
-                SaleItemsController.newInstance("", categoryName, "", 0, "", categoryKey))
+                SaleItemsController.newInstance(saleItemBundle))
                 .pushChangeHandler(new HorizontalChangeHandler())
                 .popChangeHandler(new HorizontalChangeHandler()));
     }
@@ -277,14 +285,37 @@ public class CategoriesController extends BaseController
     @Override
     public void onSubCategoryItemClicked(String categoryID, String categoryName, String categoryKey) {
 
+        Bundle saleItemBundle = new BundleBuilder(new Bundle())
+                .putString("SaleItemsController.KEY_TITLE", categoryName)
+                .putString("SaleItemsController.CATEGORY_KEY", categoryKey)
+                .build();
+
         getRouter().pushController(RouterTransaction.with(
-                SaleItemsController.newInstance("", categoryName, "", 0, "", categoryKey))
+                SaleItemsController.newInstance(saleItemBundle))
                 .pushChangeHandler(new HorizontalChangeHandler())
                 .popChangeHandler(new HorizontalChangeHandler()));
     }
 
     @OnClick(R.id.partial_toolbar_search_right_option)
-    public void onSearchOptionClicked(){
-        getActivity().onBackPressed();
+    void onSearchOptionClicked(){
+
+        String searchQuery = mSearchField.getText().toString();
+
+
+        Bundle saleItemBundle = new BundleBuilder(new Bundle())
+                .putString("SaleItemsController.KEY_TITLE", searchQuery)
+                .putString("SaleItemsController.SEARCH_KEY", searchQuery)
+                .build();
+
+
+        getRouter().pushController(RouterTransaction.with(
+                SaleItemsController.newInstance(saleItemBundle))
+                .pushChangeHandler(new HorizontalChangeHandler())
+                .popChangeHandler(new HorizontalChangeHandler()));
+
+    }
+
+    public void setupSaleItemsRequest(){
+
     }
 }

@@ -46,15 +46,13 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
     private static final String KEY_HEADER_IMAGE = "SaleItemsController.header_image_url";
     private static final String KEY_FROM_POSITION = "SaleItemsController.position";
     private static final String KEY_CATEGORY_MAP = "SaleItemsController.CATEGORY_KEY";
+    private static final String KEY_SEARCH_QUERY = "SaleItemsController.SEARCH_KEY";
+    private static final String KEY_REQUEST_FROM = "SaleITemsController.REQUEST_FROM";
 
-//    private String mBannerId;
     private String mSaleId;
     private String mTitle;
     private String mCategoryKey;
-//    private Attributes mAttributes;
-
-//    private int fromPosition;
-//    private String imageHeaderUrl;
+    private String mSearchQuery;
 
     private List<GetSaleItemsResponse.Products> saleItems = new LinkedList<>();
 
@@ -78,6 +76,11 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
     @Inject
     SaleItemsMvpPresenter<SaleItemsMvpView> mPresenter;
 
+    public static SaleItemsController newInstance(Bundle args){
+
+        return new SaleItemsController(args);
+    }
+
     public static SaleItemsController newInstance(
             String saleId,
             String bannerTitle,
@@ -98,15 +101,18 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
                         .build());
     }
 
+
     public SaleItemsController(Bundle args) {
         super(args);
 
-//        mBannerId = getArgs().getString(KEY_BANNER_ID);
-        mTitle = getArgs().getString(KEY_TITLE);
-        mSaleId = getArgs().getString(KEY_SALE_ID);
-//        fromPosition = getArgs().getInt(KEY_FROM_POSITION);
-//        imageHeaderUrl = getArgs().getString(KEY_HEADER_IMAGE);
-        mCategoryKey = getArgs().getString(KEY_CATEGORY_MAP);
+        if (args.containsKey(KEY_TITLE))
+            mTitle = getArgs().getString(KEY_TITLE);
+        if (args.containsKey(KEY_SALE_ID))
+            mSaleId = getArgs().getString(KEY_SALE_ID);
+        if (args.containsKey(KEY_CATEGORY_MAP))
+            mCategoryKey = getArgs().getString(KEY_CATEGORY_MAP);
+        if (args.containsKey(KEY_SEARCH_QUERY))
+            mSearchQuery = getArgs().getString(KEY_SEARCH_QUERY);
     }
 
     @Override
@@ -124,9 +130,8 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
 
         setUp(view);
 
-
         if (saleItems.size() == 0) {
-            mPresenter.loadSaleItems(mCategoryKey,mSaleId);
+            mPresenter.loadSaleItems(mCategoryKey,mSaleId,mSearchQuery);
 
         } else {
             mSaleItemsAdapter = new SaleItemsAdapter(saleItems, mPresenter, mSaleId, mTitle);
@@ -222,6 +227,7 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
     @SuppressWarnings("ConstantConditions")
     @OnClick(R.id.partial_toolbar_arrow_view)
     void onBackClick() {
+
 
         getActivity().onBackPressed();
     }

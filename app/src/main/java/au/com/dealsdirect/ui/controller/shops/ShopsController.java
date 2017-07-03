@@ -130,7 +130,7 @@ public class ShopsController extends BaseController implements ShopsMvpView, Ban
     public void onError(String message) {
         super.onError(message);
 
-        mPresenter.loadShopsBanner(mCategoryName,mCategoryID);
+//        mPresenter.loadShopsBanner(mCategoryName,mCategoryID);
     }
 
 

@@ -8,8 +8,7 @@ import au.com.dealsdirect.ui.base.MvpPresenter;
 
 public interface SaleItemsMvpPresenter<V extends SaleItemsMvpView> extends MvpPresenter<V> {
 
-    void loadSaleItems(String categoryKey, String saleId);
+    void loadSaleItems(String categoryKey, String saleId, String searchQuery);
 
     void loadProductDetails(String seoIdentifierId, String imageUrl, String itemId, String saleId);
-
 }
