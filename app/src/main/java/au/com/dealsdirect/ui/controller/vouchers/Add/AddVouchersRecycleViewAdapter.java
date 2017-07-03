@@ -1,11 +1,14 @@
 package au.com.dealsdirect.ui.controller.vouchers.Add;
 
 import android.content.Context;
+import android.os.Build;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.LinearLayout;
+import android.widget.TextView;
 
 import java.util.HashMap;
 import java.util.List;
@@ -14,12 +17,15 @@ import java.util.regex.Pattern;
 
 import au.com.dealsdirect.R;
 import au.com.dealsdirect.data.network.model.vouchers.Voucher;
+import au.com.dealsdirect.utils.PriceUtils;
+import butterknife.BindView;
+import butterknife.ButterKnife;
 
 /**
  * Created by Paul on 6/30/17.
  */
 
-public class AddVouchersRecycleViewAdapter extends RecyclerView.Adapter<AddVouchersViewHolder> {
+public class AddVouchersRecycleViewAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
     private HashMap<Integer,String> voucherColorStateCollection = new HashMap<>();
 //    private MyVouchersItemClickListener mListener;
@@ -37,14 +43,15 @@ public class AddVouchersRecycleViewAdapter extends RecyclerView.Adapter<AddVouch
     }
 
     @Override
-    public AddVouchersViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+    public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.row_add_vouchers, parent, false);
         AddVouchersViewHolder vh = new AddVouchersViewHolder(v);
         return vh;
     }
 
     @Override
-    public void onBindViewHolder(AddVouchersViewHolder holder, int position) {
+    public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
+        AddVouchersViewHolder vh = (AddVouchersViewHolder) holder;
         String ticketState = "red";
 
         Voucher voucher = mVoucherList.get(position);
@@ -55,7 +62,7 @@ public class AddVouchersRecycleViewAdapter extends RecyclerView.Adapter<AddVouch
         //noinspection ResultOfMethodCallIgnored
         m.find();
         Double doubleValue = Double.parseDouble(m.group(1));
-        holder.mVoucherItemExpiresOnText.setVisibility(View.INVISIBLE);
+        vh.mVoucherItemExpiresOnText.setVisibility(View.INVISIBLE);
 
         String finalDescription = "";
         if (!description.isEmpty()){
@@ -67,105 +74,64 @@ public class AddVouchersRecycleViewAdapter extends RecyclerView.Adapter<AddVouch
             }
         }
 
-        holder.mVoucherItemDescText.setText(finalDescription);
+        vh.mVoucherItemDescText.setText(finalDescription);
 
 
         Log.d("voucherDescription", "description : "+description);
 
-//        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
-//            int voucherValue = doubleValue.intValue();
-//
-//            if(0 <= voucherValue && voucherValue < 10) {
-//
-//                holder.mVoucherItemLayout.setBackground(
-//                        context.getResources()
-//                                .getDrawable(R.drawable.voucher_container_red));
-//
-//                ticketState = "red";
-//            }
-//
-//            else if(10 <= voucherValue && voucherValue < 15){
-//
-//                holder.mVoucherItemLayout.setBackground(
-//                        context.getResources()
-//                                .getDrawable(R.drawable.voucher_container_blue));
-//
-//                ticketState = "blue";
-//            }
-//
-//            else if(15 <= voucherValue && voucherValue < 20){
-//
-//                holder.mVoucherItemLayout.setBackground(
-//                        context.getResources()
-//                                .getDrawable(R.drawable.voucher_container_yellow));
-//
-//                ticketState = "yellow";
-//            }
-//
-//            else if(20 <= voucherValue && voucherValue < 25){
-//
-//                holder.mVoucherItemLayout.setBackground(
-//                        context.getResources()
-//                                .getDrawable(R.drawable.voucher_container_green));
-//
-//                ticketState = "green";
-//            }
-//
-//            else if(25 <= voucherValue && voucherValue < 50){
-//
-//                holder.mVoucherItemLayout.setBackground(
-//                        context.getResources()
-//                                .getDrawable(R.drawable.voucher_container_violet));
-//
-//                ticketState = "violet";
-//            }
-//
-//            else if(50 <= voucherValue && voucherValue < 125){
-//
-//                holder.mVoucherItemLayout.setBackground(
-//                        context.getResources()
-//                                .getDrawable(R.drawable.voucher_container_aqua));
-//
-//                ticketState = "aqua";
-//            }
-//
-//            else if(125 <= voucherValue && voucherValue < 500){
-//
-//                holder.mVoucherItemLayout.setBackground(
-//                        context.getResources()
-//                                .getDrawable(R.drawable.voucher_container_orange));
-//
-//                ticketState = "orange";
-//            }
-//
-//            else if(500 <= voucherValue && voucherValue <= 1000){
-//
-//                holder.mVoucherItemLayout.setBackground(
-//                        context.getResources()
-//                                .getDrawable(R.drawable.voucher_container_darkblue));
-//
-//                ticketState = "darkblue";
-//            }
-//
-//
-//            else{
-//
-//                holder.mVoucherItemLayout.setBackground(
-//                        context.getResources()
-//                                .getDrawable(R.drawable.voucher_container_blue));
-//
-//                ticketState = "blue";
-//            }
-//        }
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
+            int voucherValue = doubleValue.intValue();
+
+            if(0 <= voucherValue && voucherValue < 10) {
+//                vh.mVoucherItemLayout.setBackground(context.getResources().getDrawable(R.drawable.voucher_container_red));
+                ticketState = "red";
+            }
+
+            else if(10 <= voucherValue && voucherValue < 15){
+//                vh.mVoucherItemLayout.setBackground(context.getResources().getDrawable(R.drawable.voucher_container_blue));
+                ticketState = "blue";
+            }
+
+            else if(15 <= voucherValue && voucherValue < 20){
+//                vh.mVoucherItemLayout.setBackground(context.getResources().getDrawable(R.drawable.voucher_container_yellow));
+                ticketState = "yellow";
+            }
+
+            else if(20 <= voucherValue && voucherValue < 25){
+//                vh.mVoucherItemLayout.setBackground(context.getResources().getDrawable(R.drawable.voucher_container_green));
+                ticketState = "green";
+            }
+
+            else if(25 <= voucherValue && voucherValue < 50){
+//                vh.mVoucherItemLayout.setBackground(context.getResources().getDrawable(R.drawable.voucher_container_violet));
+                ticketState = "violet";
+            }
+
+            else if(50 <= voucherValue && voucherValue < 125){
+//                vh.mVoucherItemLayout.setBackground(context.getResources().getDrawable(R.drawable.voucher_container_aqua));
+                ticketState = "aqua";
+            }
+            else if(125 <= voucherValue && voucherValue < 500){
+//                vh.mVoucherItemLayout.setBackground(context.getResources().getDrawable(R.drawable.voucher_container_orange));
+                ticketState = "orange";
+            }
+
+            else if(500 <= voucherValue && voucherValue <= 1000){
+//                vh.mVoucherItemLayout.setBackground(context.getResources().getDrawable(R.drawable.voucher_container_darkblue));
+                ticketState = "darkblue";
+            }
+            else{
+//                vh.mVoucherItemLayout.setBackground(context.getResources().getDrawable(R.drawable.voucher_container_blue));
+                ticketState = "blue";
+            }
+        }
 
         voucherColorStateCollection.put(position, ticketState);
-//        holder.mVoucherItemCostText.setText(
-//                GPriceUtil.getPriceStringValue(doubleValue)+" value");
-        holder.mVoucherItemCostText.setText(String.valueOf(doubleValue)+" value");
+        vh.mVoucherItemCostText.setText(PriceUtils.getPriceStringValue(doubleValue)+" value");
 
         final String finalTicketState = voucherColorStateCollection.get(position);
 
-        holder.mVoucherItemLayout.setOnClickListener(new View.OnClickListener() {
+        vh.mVoucherItemLayout.setOnClickListener(new View.OnClickListener() {
             public void onClick(View view) {
 
 //                GDebug.log(this.getClass().getSimpleName(), "voucher item is clicked");
@@ -199,4 +165,24 @@ public class AddVouchersRecycleViewAdapter extends RecyclerView.Adapter<AddVouch
     public int getItemCount() {
         return mVoucherList.size();
     }
+
+
+    public static class AddVouchersViewHolder extends RecyclerView.ViewHolder {
+
+        @BindView(R.id.row_layout_add_vouchers)
+        public LinearLayout mVoucherItemLayout;
+
+        @BindView(R.id.row_add_vouchers_text_item_cost_value)
+        public TextView mVoucherItemCostText;
+        @BindView(R.id.row_add_vouchers_text_item_expires_on_value)
+        public TextView mVoucherItemExpiresOnText;
+        @BindView(R.id.row_add_vouchers_text_item_desc)
+        public TextView mVoucherItemDescText;
+
+        public AddVouchersViewHolder(View itemView) {
+            super(itemView);
+            ButterKnife.bind(this, itemView);
+        }
+    }
+
 }

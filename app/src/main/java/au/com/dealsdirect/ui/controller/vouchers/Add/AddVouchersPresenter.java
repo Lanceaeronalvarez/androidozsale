@@ -2,6 +2,8 @@ package au.com.dealsdirect.ui.controller.vouchers.Add;
 
 import android.support.v4.util.Pair;
 
+import com.androidnetworking.error.ANError;
+
 import java.util.List;
 
 import javax.inject.Inject;
@@ -43,11 +45,17 @@ public class AddVouchersPresenter<V extends AddVouchersMvpView>  extends BasePre
                 .subscribe(new Consumer<ApplyVouchersResponse>() {
                     @Override
                     public void accept(@NonNull ApplyVouchersResponse applyVouchersResponse) throws Exception {
+                        if (!isViewAttached()) {
+                            return;
+                        }
                         getMvpView().onVouchersApplied(applyVouchersResponse);
                     }
                 }, new Consumer<Throwable>() {
                     @Override
                     public void accept(@NonNull Throwable throwable) throws Exception {
+                        if (!isViewAttached()) {
+                            return;
+                        }
                         getMvpView().onApplyVouchersError();
                     }
                 }));
@@ -62,12 +70,28 @@ public class AddVouchersPresenter<V extends AddVouchersMvpView>  extends BasePre
                 .subscribe(new Consumer<ClearVouchersResponse>() {
                     @Override
                     public void accept(@NonNull ClearVouchersResponse clearVouchersResponse) throws Exception {
+
+                        if (!isViewAttached()) {
+                            return;
+                        }
+
                         getMvpView().onVouchersCleared(clearVouchersResponse);
                     }
                 }, new Consumer<Throwable>() {
                     @Override
                     public void accept(@NonNull Throwable throwable) throws Exception {
+                        if (!isViewAttached()) {
+                            return;
+                        }
 
+                        getMvpView().hideLoading();
+                        getMvpView().onError(throwable.getMessage());
+
+                        // handle load accounts error here
+                        if (throwable instanceof ANError) {
+                            ANError anError = (ANError) throwable;
+                            handleApiError(anError);
+                        }
                     }
                 }));
     }
@@ -86,7 +110,18 @@ public class AddVouchersPresenter<V extends AddVouchersMvpView>  extends BasePre
                 }, new Consumer<Throwable>() {
                     @Override
                     public void accept(@NonNull Throwable throwable) throws Exception {
+                        if (!isViewAttached()) {
+                            return;
+                        }
 
+                        getMvpView().hideLoading();
+                        getMvpView().onError(throwable.getMessage());
+
+                        // handle load accounts error here
+                        if (throwable instanceof ANError) {
+                            ANError anError = (ANError) throwable;
+                            handleApiError(anError);
+                        }
                     }
                 }));
     }
@@ -100,6 +135,9 @@ public class AddVouchersPresenter<V extends AddVouchersMvpView>  extends BasePre
 
         Observable.zip(selectSubject, selectSubject2, Pair::new)
                 .subscribe(action->{
+                    if(!isViewAttached()){
+                        return;
+                    }
                     getMvpView().updateVoucherList(action);
                 });
 
@@ -117,7 +155,18 @@ public class AddVouchersPresenter<V extends AddVouchersMvpView>  extends BasePre
                 }, new Consumer<Throwable>() {
                     @Override
                     public void accept(@NonNull Throwable throwable) throws Exception {
+                        if (!isViewAttached()) {
+                            return;
+                        }
 
+                        getMvpView().hideLoading();
+                        getMvpView().onError(throwable.getMessage());
+
+                        // handle load accounts error here
+                        if (throwable instanceof ANError) {
+                            ANError anError = (ANError) throwable;
+                            handleApiError(anError);
+                        }
                     }
                 }));
 
@@ -133,7 +182,18 @@ public class AddVouchersPresenter<V extends AddVouchersMvpView>  extends BasePre
                 }, new Consumer<Throwable>() {
                     @Override
                     public void accept(@NonNull Throwable throwable) throws Exception {
+                        if (!isViewAttached()) {
+                            return;
+                        }
 
+                        getMvpView().hideLoading();
+                        getMvpView().onError(throwable.getMessage());
+
+                        // handle load accounts error here
+                        if (throwable instanceof ANError) {
+                            ANError anError = (ANError) throwable;
+                            handleApiError(anError);
+                        }
                     }
                 }));
     }

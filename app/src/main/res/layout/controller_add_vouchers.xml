@@ -176,6 +176,7 @@
 
             </LinearLayout>
 
+            <include layout="@layout/partial_vouchers_buttons"/>
         </LinearLayout>
     </ScrollView>
 </LinearLayout>

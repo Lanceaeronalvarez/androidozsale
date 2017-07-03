@@ -35,8 +35,5 @@
             android:textSize="20sp"
             fontPath="@string/font_lato_medium"/>
 
-
-
-
     </LinearLayout>
 </RelativeLayout>
