@@ -38,5 +38,6 @@
     <dimen name="voucher_container_margin">20dp</dimen>
     <dimen name="voucher_container_padding">20dp</dimen>
 
-
+    <dimen name="invite_friends_padding">5dp</dimen>
+    <dimen name="invite_friends_image_width">20dp</dimen>
 </resources>

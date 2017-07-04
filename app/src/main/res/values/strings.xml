@@ -177,6 +177,7 @@
     <string name="add_new_payment_method">add new payment method</string>
     <string name="voucher">Voucher</string>
     <string name="tax">Tax</string>
+    <string name="add_voucher_code">add voucher code</string>
     <string name="subtotal">Subtotal</string>
     <string name="shipping_fee">Delivery</string>
     <string name="grand_total">Grand Total</string>
@@ -212,10 +213,10 @@
     <!--VOUCHERS-->
     <string name="my_vouchers">my vouchers</string>
     <string name="value">value</string>
-    <string name="my_vouchers_view_detail">Invite your friends to join DealsDirect. Once your friend have
-        joined through your invitation and made their first purchasee you will instantly receive a
-        PHP400 DealsDirect voucher to use towards any future purchase. \n\n You can apply any vouchers
-        currently in you account when you checkout your order. \n
+    <string name="vouchers_view_detail">Invite your friends to join DEALSDIRECT. Once your friends have
+        joined through your invitation and made their first purchase you will instantly receive a
+        PHP400 DEALSDIRECT voucher to use towards any future purchase. \n\nYou can apply any vouchers
+        currently in your account when you checkout your order. \n
     </string>
     <string name="apply">apply</string>
     <string name="add_voucher_code">add voucher code</string>
@@ -229,5 +230,15 @@
     <string name="unable_to_apply_voucher">Unable to apply voucher</string>
     <string name="add_new_voucher">add new voucher</string>
     <string name="enter_promo_code">enter promo code</string>
+
+
+    <!--INVITE-->
+
+    <string name="invite_friend_guide">Invite your friends to join DEALSDIRECT. Once your friends have
+        joined through your invitation and made their first purchase you will instantly receive a
+        $20 DEALSDIRECT voucher to use towards any future purchase.
+    </string>
+    <string name="send_personal_invite_text">send a personal invitation with this invite...</string>
+    <string name="write_a_message_here">write a message here...</string>
 
 </resources>

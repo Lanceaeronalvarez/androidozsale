@@ -18,6 +18,8 @@ import au.com.dealsdirect.ui.controller.contact.viewcontacts.ViewContactsControl
 //import au.com.dealsdirect.ui.controller.contact.ContactController;
 import au.com.dealsdirect.ui.controller.details.DetailsController;
 import au.com.dealsdirect.ui.controller.home.HomeController;
+import au.com.dealsdirect.ui.controller.invite.InviteController;
+import au.com.dealsdirect.ui.controller.invite.InviteSendController;
 import au.com.dealsdirect.ui.controller.language.LanguageController;
 import au.com.dealsdirect.ui.controller.login.LoginController;
 import au.com.dealsdirect.ui.controller.register.RegisterController;
@@ -100,4 +102,8 @@ public interface ControllerComponent {
     void inject(PaymentSelectController controller);
 
     void inject(PaymentSuccessController controller);
+
+    void inject(InviteController controller);
+
+    void inject(InviteSendController controller);
 }

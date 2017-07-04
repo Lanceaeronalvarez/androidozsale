@@ -220,6 +220,9 @@ public class MainActivity extends BaseActivity implements MainMvpView {
 
     @Override
     public void showInviteController() {
+        mRouter.setRoot(RouterTransaction.with(InviteController.newInstance())
+                .pushChangeHandler(new FadeChangeHandler())
+                .popChangeHandler(new FadeChangeHandler()));
 
     }
 

@@ -36,6 +36,10 @@ import au.com.dealsdirect.data.network.model.checkout.RemoveUserPaymentMethod;
 import au.com.dealsdirect.data.network.model.contacthistory.GetContactHistoryRequest;
 import au.com.dealsdirect.data.network.model.contacthistory.GetContactHistoryResponse;
 import au.com.dealsdirect.data.network.model.contactitem.GetContactsResponse;
+import au.com.dealsdirect.data.network.model.invite.GetInviteRequest;
+import au.com.dealsdirect.data.network.model.invite.GetInviteResponse;
+import au.com.dealsdirect.data.network.model.invite.SetInviteRequest;
+import au.com.dealsdirect.data.network.model.invite.SetInviteResponse;
 import au.com.dealsdirect.data.network.model.login.LoginEmail;
 import au.com.dealsdirect.data.network.model.login.LoginFacebook;
 import au.com.dealsdirect.data.network.model.login.LoginTicket;
@@ -389,6 +393,24 @@ public class AppApiHelper implements ApiHelper {
                 .getObjectObservable(RemoveUserPaymentMethod.ResponseValue.class);
     }
 
+    @Override
+    public Observable<GetInviteResponse> callGetInvite(GetInviteRequest request) {
+        return Rx2AndroidNetworking.post(ApiEndPoint.GET_INVITE)
+                .addHeaders(mApiHeader.getPublicApiHeader())
+                .addJSONObjectBody(JsonUtils.convertToJsonObject(request))
+                .build()
+                .getObjectObservable(GetInviteResponse.class);
+    }
+
+    @Override
+    public Observable<SetInviteResponse> callSetInvite(SetInviteRequest request) {
+        return Rx2AndroidNetworking.post(ApiEndPoint.SET_INVITE)
+                .addHeaders(mApiHeader.getPublicApiHeader())
+                .addJSONObjectBody(JsonUtils.convertToJsonObject(request))
+                .build()
+                .getObjectObservable(SetInviteResponse.class);
+    }
+
 
     @Override
     public Observable<GetContactsResponse> callGetContacts(String languageId) {
@@ -445,7 +467,7 @@ public class AppApiHelper implements ApiHelper {
 
     @Override
     public Observable<ClearVouchersResponse> callGetClearVouchers(ClearVouchersRequest clearVouchersRequest) {
-        return Rx2AndroidNetworking.post(ApiEndPoint.GET_CLEAR_VOUCHERS)
+        return Rx2AndroidNetworking.post(ApiEndPoint.CLEAR_VOUCHERS)
                 .addHeaders(mApiHeader.getPublicApiHeader())
                 .addJSONObjectBody(JsonUtils.convertToJsonObject(clearVouchersRequest))
                 .build()

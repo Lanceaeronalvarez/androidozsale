@@ -37,6 +37,10 @@ import au.com.dealsdirect.data.network.model.checkout.RemoveUserPaymentMethod;
 import au.com.dealsdirect.data.network.model.contacthistory.GetContactHistoryRequest;
 import au.com.dealsdirect.data.network.model.contacthistory.GetContactHistoryResponse;
 import au.com.dealsdirect.data.network.model.contactitem.GetContactsResponse;
+import au.com.dealsdirect.data.network.model.invite.GetInviteRequest;
+import au.com.dealsdirect.data.network.model.invite.GetInviteResponse;
+import au.com.dealsdirect.data.network.model.invite.SetInviteRequest;
+import au.com.dealsdirect.data.network.model.invite.SetInviteResponse;
 import au.com.dealsdirect.data.network.model.login.LoginEmail;
 import au.com.dealsdirect.data.network.model.login.LoginFacebook;
 import au.com.dealsdirect.data.network.model.login.LoginTicket;
@@ -311,6 +315,16 @@ public class AppDataManager implements DataManager {
     @Override
     public Observable<RemoveUserPaymentMethod.ResponseValue> callRemoveUserPaymentMethod(RemoveUserPaymentMethod.RequestValue requestValue) {
         return mApiHelper.callRemoveUserPaymentMethod(requestValue);
+    }
+
+    @Override
+    public Observable<GetInviteResponse> callGetInvite(GetInviteRequest request) {
+        return mApiHelper.callGetInvite(request);
+    }
+
+    @Override
+    public Observable<SetInviteResponse> callSetInvite(SetInviteRequest request) {
+        return mApiHelper.callSetInvite(request);
     }
 
 

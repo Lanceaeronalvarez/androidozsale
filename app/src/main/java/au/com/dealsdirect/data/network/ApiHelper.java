@@ -32,6 +32,10 @@ import au.com.dealsdirect.data.network.model.checkout.RemoveUserPaymentMethod;
 import au.com.dealsdirect.data.network.model.contacthistory.GetContactHistoryRequest;
 import au.com.dealsdirect.data.network.model.contacthistory.GetContactHistoryResponse;
 import au.com.dealsdirect.data.network.model.contactitem.GetContactsResponse;
+import au.com.dealsdirect.data.network.model.invite.GetInviteRequest;
+import au.com.dealsdirect.data.network.model.invite.GetInviteResponse;
+import au.com.dealsdirect.data.network.model.invite.SetInviteRequest;
+import au.com.dealsdirect.data.network.model.invite.SetInviteResponse;
 import au.com.dealsdirect.data.network.model.login.LoginEmail;
 import au.com.dealsdirect.data.network.model.login.LoginFacebook;
 import au.com.dealsdirect.data.network.model.login.LoginTicket;
@@ -170,4 +174,9 @@ public interface ApiHelper {
     Observable<CreatePaymentTransaction.ResponseValue> callCreatePaymentTransaction(CreatePaymentTransaction.RequestValue model);
     
     Observable<RemoveUserPaymentMethod.ResponseValue> callRemoveUserPaymentMethod(RemoveUserPaymentMethod.RequestValue model);
+
+//  INVITE API CALLS
+    Observable<GetInviteResponse> callGetInvite(GetInviteRequest request);
+
+    Observable<SetInviteResponse> callSetInvite(SetInviteRequest request);
 }
