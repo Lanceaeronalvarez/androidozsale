@@ -1,6 +1,5 @@
 package au.com.dealsdirect.ui.controller.account;
 
-import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.DefaultItemAnimator;
@@ -193,11 +192,8 @@ public class AccountController extends BaseController implements AccountMvpView 
         ((MainMvpView)getActivity()).callLogout();
         mPresenter.loadAccountItems();
         getRouter().setRoot(RouterTransaction.with(new ShopsController()));
-        DialogUtils.showYesDialog(getActivity(), "Logout", "Logout Successful", "ok", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialogInterface, int i) {
+        DialogUtils.showYesDialog(getActivity(), "Logout", "Logout Successful", "ok", (dialogInterface, i) -> {
 
-            }
         });
     }
 
