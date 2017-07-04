@@ -76,6 +76,13 @@ public class SubCategoryItemsAdapter extends RecyclerView.Adapter<RecyclerView.V
         return 0;
     }
 
+    @Override
+    public void onViewDetachedFromWindow(RecyclerView.ViewHolder holder) {
+        super.onViewDetachedFromWindow(holder);
+        Animation animation = AnimationUtils.loadAnimation(holder.itemView.getContext(), R.anim.slide_to_top);
+        holder.itemView.startAnimation(animation);
+    }
+
     public void replaceData(List<GetCategoryTreeResponse> getCategoryTreeResponses) {
         mData = new ArrayList<>(getCategoryTreeResponses);
         notifyDataSetChanged();
@@ -109,4 +116,5 @@ public class SubCategoryItemsAdapter extends RecyclerView.Adapter<RecyclerView.V
         mData.add(getCategoryTreeResponse);
         notifyDataSetChanged();
     }
+
 }

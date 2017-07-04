@@ -3,11 +3,10 @@ package au.com.dealsdirect.ui.controller.categories.adapter;
 import android.support.transition.TransitionManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.animation.Animation;
-import android.view.animation.AnimationUtils;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -36,7 +35,9 @@ public class SubCategoriesAdapter extends RecyclerView.Adapter<RecyclerView.View
     private SubCategoryItemClickListener mSubCategoryItemClickListener;
     private SubCategoryItemsAdapter mSubCategoryItemsAdapter;
     private Map<String, List<GetCategoryTreeResponse>> mCategoryMap = new HashMap<>();
+
     private int mExpandedPosition = -1;
+    private boolean mIsUpdate = false;
 
     public SubCategoriesAdapter(
             List<GetCategoryTreeResponse> data,
@@ -55,8 +56,7 @@ public class SubCategoriesAdapter extends RecyclerView.Adapter<RecyclerView.View
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.viewholder_subcategory, parent, false);
-        SubCategoriesAdapter.SubCategoriesViewHolder vh = new SubCategoriesAdapter.SubCategoriesViewHolder(view);
-        return vh;
+        return new SubCategoriesViewHolder(view);
     }
 
     @Override
@@ -68,10 +68,13 @@ public class SubCategoriesAdapter extends RecyclerView.Adapter<RecyclerView.View
                         .subCategoryTitle.setText(mData.get(position).getName());
             }
 
+
             List<GetCategoryTreeResponse> subCategoryItems = getSubCategoryItems(mData.get(position).getKey());
 
             if (subCategoryItems.isEmpty()){
+                Log.d("mIsUpdate", mIsUpdate+"");
                 ((SubCategoriesViewHolder) holder).subCategoryDropdownImage.setVisibility(View.GONE);
+
             }else{
                 final boolean isExpanded = position==mExpandedPosition;
                 ((SubCategoriesViewHolder) holder)
@@ -92,22 +95,13 @@ public class SubCategoriesAdapter extends RecyclerView.Adapter<RecyclerView.View
                             ((SubCategoriesViewHolder) holder)
                                     .subCategoryItemsRecyclerView.setVisibility(View.VISIBLE);
 
-                            View viewToAnimate = ((SubCategoriesViewHolder) holder)
-                                    .subCategoryItemsRecyclerView;
-
-                            Animation animation = AnimationUtils.loadAnimation(viewToAnimate.getContext(), R.anim.slide_to_bottom);
-                            animation.setDuration(300);
-                            viewToAnimate.startAnimation(animation);
-
                             mExpandedPosition = isExpanded ? -1:position;
                             TransitionManager.beginDelayedTransition(
                                         ((SubCategoriesViewHolder) holder)
                                                 .subCategoryItemsRecyclerView);
                             notifyDataSetChanged();
-
+                            mIsUpdate = true;
                         });
-
-
             }
             mSubCategoryItemsAdapter = new SubCategoryItemsAdapter(subCategoryItems, mPresenter, mSubCategoryItemClickListener);
             ((SubCategoriesViewHolder) holder).subCategoryItemsRecyclerView .setLayoutManager(new LinearLayoutManager(holder.itemView.getContext(), LinearLayoutManager.VERTICAL, false));
@@ -121,10 +115,18 @@ public class SubCategoriesAdapter extends RecyclerView.Adapter<RecyclerView.View
                         mData.get(position).getKey());
             });
 
-
-
         }
 
+    }
+
+    @Override
+    public int getItemViewType(int position) {
+        return super.getItemViewType(position);
+    }
+
+    @Override
+    public long getItemId(int position) {
+        return super.getItemId(position);
     }
 
     @Override
@@ -160,7 +162,7 @@ public class SubCategoriesAdapter extends RecyclerView.Adapter<RecyclerView.View
     }
 
     public List<GetCategoryTreeResponse> getSubCategoryItems(String categoryKey){
-
+        Log.d("categorykeyshift",categoryKey+ " , " +mCategoryMap.get(categoryKey).size());
         return mCategoryMap.get(categoryKey);
     }
 }

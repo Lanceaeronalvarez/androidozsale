@@ -66,6 +66,8 @@ public class AccountPresenter<V extends AccountMvpView> extends BasePresenter<V>
                 case "Language":
                     getMvpView().showLanguage();
                     break;
+                case "Logout":
+                    getMvpView().triggerLogout();
                 default:
                     break;
             }
@@ -76,10 +78,10 @@ public class AccountPresenter<V extends AccountMvpView> extends BasePresenter<V>
 
     public void loadAccountItems(ArrayList<String> items) {
 
-//        if (Auth.isLoggedIn()){
-//            items.add("logout");
-//
-//        }
+        if (getDataManager().isAuthorized()){
+            items.add("Logout");
+
+        }
         getMvpView().showAccountItems(items);
     }
 }

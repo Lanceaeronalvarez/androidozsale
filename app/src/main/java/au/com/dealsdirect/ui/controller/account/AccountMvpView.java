@@ -27,4 +27,6 @@ public interface AccountMvpView extends MvpView {
     void showLanguage();
 
     void triggerLogin(String option);
+
+    void triggerLogout();
 }

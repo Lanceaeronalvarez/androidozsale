@@ -1,5 +1,6 @@
 package au.com.dealsdirect.ui.controller.account;
 
+import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.DefaultItemAnimator;
@@ -28,9 +29,11 @@ import au.com.dealsdirect.ui.controller.details.DetailsController;
 import au.com.dealsdirect.ui.controller.language.LanguageController;
 import au.com.dealsdirect.ui.controller.orders.orders.OrdersController;
 import au.com.dealsdirect.ui.controller.returns.currentreturns.CurrentReturnsController;
+import au.com.dealsdirect.ui.controller.shops.ShopsController;
 import au.com.dealsdirect.ui.controller.vouchers.View.ViewVouchersController;
 import au.com.dealsdirect.ui.main.MainMvpView;
 import au.com.dealsdirect.utils.BundleBuilder;
+import au.com.dealsdirect.utils.DialogUtils;
 import butterknife.BindView;
 
 /**
@@ -110,7 +113,7 @@ public class AccountController extends BaseController implements AccountMvpView 
         mAccountRecyclerView.setAdapter(accountItemAdapter);
         mAccountRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
         mAccountRecyclerView.setItemAnimator(new DefaultItemAnimator());
-
+        accountItemAdapter.notifyDataSetChanged();
     }
 
     @Override
@@ -177,6 +180,19 @@ public class AccountController extends BaseController implements AccountMvpView 
 
             @Override
             public void error() {
+
+            }
+        });
+    }
+
+    @Override
+    public void triggerLogout() {
+        ((MainMvpView)getActivity()).callLogout();
+        mPresenter.loadAccountItems();
+        getRouter().setRoot(RouterTransaction.with(new ShopsController()));
+        DialogUtils.showYesDialog(getActivity(), "Logout", "Logout Successful", "ok", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
 
             }
         });
