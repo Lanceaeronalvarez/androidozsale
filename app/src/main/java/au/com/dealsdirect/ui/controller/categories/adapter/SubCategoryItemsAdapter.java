@@ -98,11 +98,15 @@ public class SubCategoryItemsAdapter extends RecyclerView.Adapter<RecyclerView.V
 
     private void setAnimation(View viewToAnimate, int position) {
         if (position > lastPosition) {
-            Animation animation = AnimationUtils.loadAnimation(viewToAnimate.getContext(), android.R.anim.slide_in_left);
+            Animation animation = AnimationUtils.loadAnimation(viewToAnimate.getContext(), R.anim.slide_to_bottom);
             viewToAnimate.startAnimation(animation);
             lastPosition = position;
         }
     }
 
 
+    public void addItem(GetCategoryTreeResponse getCategoryTreeResponse){
+        mData.add(getCategoryTreeResponse);
+        notifyDataSetChanged();
+    }
 }

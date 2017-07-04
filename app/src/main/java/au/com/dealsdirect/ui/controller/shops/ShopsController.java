@@ -154,7 +154,7 @@ public class ShopsController extends BaseController implements ShopsMvpView, Ban
         names.add(bannerId + position);
 
         getRouter().pushController(RouterTransaction.with(
-                SaleItemsController.newInstance(saleId, bannerTitle, bannerId, position, imageUrl, mCategoryKey))
+                SaleItemsController.newInstance(saleId, bannerTitle, bannerId, position, imageUrl, null))
                 .pushChangeHandler(new HorizontalChangeHandler())
                 .popChangeHandler(new HorizontalChangeHandler()));
     }

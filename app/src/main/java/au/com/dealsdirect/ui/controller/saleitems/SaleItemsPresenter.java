@@ -40,7 +40,7 @@ public class SaleItemsPresenter<V extends SaleItemsMvpView> extends BasePresente
 
         if (saleId!=null)
             saleIds.add(saleId);
-            facetFilters.put("attributes.saleId", saleIds);
+            facetFilters.put("saleId", saleIds);
 
 
         String facetFiltersString = new Gson().toJson(facetFilters);
