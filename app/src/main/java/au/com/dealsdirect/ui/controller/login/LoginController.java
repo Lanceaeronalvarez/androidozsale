@@ -26,6 +26,7 @@ import au.com.dealsdirect.ui.base.BaseActivity;
 import au.com.dealsdirect.ui.base.BaseController;
 import au.com.dealsdirect.ui.controller.register.RegisterController;
 import au.com.dealsdirect.utils.BundleBuilder;
+import au.com.dealsdirect.utils.DialogUtils;
 import butterknife.BindView;
 import butterknife.OnClick;
 
@@ -151,6 +152,7 @@ public class LoginController extends BaseController implements LoginMvpView {
     @Override
     public void showLoginSuccessful(String loginTicket) {
         mAuthHandler.success();
+        getActivity().onBackPressed();
 //            Auth.didLogin(getBaseActivity(), loginTicket);
 //            RxBus.instance().post(GVersion.EVENT_LOGIN);
 //            getBaseActivity().finish();
@@ -161,6 +163,12 @@ public class LoginController extends BaseController implements LoginMvpView {
     @Override
     public void showLoginError(String message) {
         mAuthHandler.error();
+
+        getActivity().onBackPressed();
+        DialogUtils.showYesDialog(getActivity(), "Login", message, "ok",
+                (dialogInterface, i) -> {
+
+        });
 //        CustomAlertDialog.showCustomAlertDialog(
 //                activity,
 //                CustomAlertDialog.CustomDialogIconState.NEGATIVE,

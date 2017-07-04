@@ -3,8 +3,9 @@ package au.com.dealsdirect.ui.controller.login;
  * Created by CodeineBot on 6/15/17.
  */
 
+import android.util.Log;
+
 import com.androidnetworking.error.ANError;
-import com.mysale.genie.utility.RxBus;
 
 import javax.inject.Inject;
 
@@ -21,47 +22,54 @@ import io.reactivex.functions.Consumer;
 public class LoginPresenter<V extends LoginMvpView> extends BasePresenter<V> implements LoginMvpPresenter<V> {
 
     @Inject
-    public LoginPresenter(DataManager dataManager, SchedulerProvider schedulerProvider, CompositeDisposable compositeDisposable) {
+    public LoginPresenter(
+            DataManager dataManager,
+            SchedulerProvider schedulerProvider,
+            CompositeDisposable compositeDisposable) {
+
         super(dataManager, schedulerProvider, compositeDisposable);
     }
 
     @Override
     public boolean loginViaEmail(String username, String password) {
         getCompositeDisposable().add(getDataManager()
-                .callLoginViaEmail(new LoginEmail.RequestValue(username,password,getDataManager().getCountryId(),getDataManager().getLanguageId()))
+                .callLoginViaEmail(
+                        new LoginEmail.RequestValue(
+                                username,
+                                password,
+                                getDataManager().getCountryId(),
+                                getDataManager().getLanguageId()))
                 .subscribeOn(getSchedulerProvider().io())
                 .observeOn(getSchedulerProvider().ui())
-                .subscribe(new Consumer<LoginEmail.ResponseValue>() {
-                    @Override
-                    public void accept(@NonNull LoginEmail.ResponseValue responseValue) throws Exception {
+                .subscribe(responseValue -> {
 
-                        if (!isViewAttached()) {
-                            return;
-                        }
-
-                        if(responseValue.isSuccess()){
-                            getDataManager().acknowledgeAuth(responseValue.getTicket());
-                            getMvpView().showLoginSuccessful(responseValue.getTicket());
-                        } else{
-                            getMvpView().showLoginError(responseValue.getMessage());
-                        }
+                    if (!isViewAttached()) {
+                        return;
                     }
-                }, new Consumer<Throwable>() {
-                    @Override
-                    public void accept(@NonNull Throwable throwable) throws Exception {
-                        if (!isViewAttached()) {
-                            return;
-                        }
 
-                        getMvpView().hideLoading();
-                        getMvpView().onError(throwable.getMessage());
-                        getMvpView().showLoginError(throwable.getMessage());
+                    if(responseValue.isSuccess()){
+                        Log.d("loginStatus", "success");
+                        getDataManager().acknowledgeAuth(responseValue.getTicket());
+                        getMvpView().showLoginSuccessful(responseValue.getTicket());
+                    } else{
+                        Log.d("loginStatus", "fail");
 
-                        // handle load accounts error here
-                        if (throwable instanceof ANError) {
-                            ANError anError = (ANError) throwable;
-                            handleApiError(anError);
-                        }
+                        getMvpView().showLoginError(responseValue.getMessage());
+                    }
+                }, throwable -> {
+
+                    if (!isViewAttached()) {
+                        return;
+                    }
+
+                    getMvpView().hideLoading();
+//                    getMvpView().onError(throwable.getMessage());
+                    getMvpView().showLoginError(throwable.getMessage());
+
+                    // handle load accounts error here
+                    if (throwable instanceof ANError) {
+                        ANError anError = (ANError) throwable;
+                        handleApiError(anError);
                     }
                 }));
 
@@ -69,7 +77,13 @@ public class LoginPresenter<V extends LoginMvpView> extends BasePresenter<V> imp
     }
 
     @Override
-    public boolean loginViaFacebook(String email, String firstName, String lastName, String facebookUserID, String facebookCookieValue) {
+    public boolean loginViaFacebook(
+            String email,
+            String firstName,
+            String lastName,
+            String facebookUserID,
+            String facebookCookieValue) {
+
         return true;
     }
 
@@ -83,34 +97,28 @@ public class LoginPresenter<V extends LoginMvpView> extends BasePresenter<V> imp
                 .callLogout(new Logout.RequestValue())
                 .subscribeOn(getSchedulerProvider().io())
                 .observeOn(getSchedulerProvider().ui())
-                .subscribe(new Consumer<Logout.ResponseValue>() {
-                    @Override
-                    public void accept(@NonNull Logout.ResponseValue responseValue) throws Exception {
-                        if (!isViewAttached()) {
-                            return;
-                        }
+                .subscribe(responseValue -> {
+                    if (!isViewAttached()) {
+                        return;
+                    }
 
-                        getDataManager().revokeAuth();
+                    getDataManager().revokeAuth();
 //                        RxBus.instance().post(Auth.EVENT_LOGOUT);
 //                        RxBus.instance().post(GVersion.EVENT_LOGOUT);
-                        getMvpView().logoutResult();
+                    getMvpView().logoutResult();
+                }, throwable -> {
+                    if (!isViewAttached()) {
+                        return;
                     }
-                }, new Consumer<Throwable>() {
-                    @Override
-                    public void accept(@NonNull Throwable throwable) throws Exception {
-                        if (!isViewAttached()) {
-                            return;
-                        }
 
-                        getMvpView().hideLoading();
-                        getMvpView().onError(throwable.getMessage());
-                        getMvpView().showLoginError(throwable.getMessage());
+                    getMvpView().hideLoading();
+                    getMvpView().onError(throwable.getMessage());
+                    getMvpView().showLoginError(throwable.getMessage());
 
-                        // handle load accounts error here
-                        if (throwable instanceof ANError) {
-                            ANError anError = (ANError) throwable;
-                            handleApiError(anError);
-                        }
+                    // handle load accounts error here
+                    if (throwable instanceof ANError) {
+                        ANError anError = (ANError) throwable;
+                        handleApiError(anError);
                     }
                 }));
 

@@ -44,6 +44,7 @@ public class AccountController extends BaseController implements AccountMvpView 
 
     public static final String TAG = "AccountController";
     private static final String KEY_TEXT = "AccountController.KEY_TEXT";
+    private AccountMvpView mAccountMvpView;
 
     private AccountItemClickListener accountItemClickListener;
 
@@ -75,6 +76,7 @@ public class AccountController extends BaseController implements AccountMvpView 
         getControllerComponent().inject(this);
 
         mPresenter.onAttach(this);
+        mAccountMvpView = this;
 
         return view;
     }
@@ -174,7 +176,8 @@ public class AccountController extends BaseController implements AccountMvpView 
         ((MainMvpView)getActivity()).showLoginController(getRouter(),new AuthHandler() {
             @Override
             public void success() {
-//                getRouter().popController(getRouter().getControllerWithTag("Login"));
+                getRouter().popController(getRouter().getControllerWithTag("Login"));
+                mPresenter.onAttach(mAccountMvpView);
                 mPresenter.onAccountItemClick(option);
             }
 
@@ -197,6 +200,7 @@ public class AccountController extends BaseController implements AccountMvpView 
             }
         });
     }
+
 
 }
 
