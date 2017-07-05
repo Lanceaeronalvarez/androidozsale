@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -8,15 +8,17 @@
     android:orientation="vertical"
     tools:ignore="MissingPrefix">
 
-    <include layout="@layout/partial_toolbar_title" />
+    <include android:id="@+id/controller_invite_layout_title"
+        layout="@layout/partial_toolbar_title" />
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="match_parent"
+        android:layout_below="@id/controller_invite_layout_title"
         android:layout_centerInParent="true"
         android:gravity="center_vertical|center_horizontal"
         android:orientation="vertical"
-        android:padding="30dp">
+        android:padding="@dimen/screen_padding">
 
         <ImageView
             android:layout_width="wrap_content"
@@ -36,9 +38,12 @@
         <Button
             android:id="@+id/controller_invite_friend_button_send_invite"
             style="@style/DDButtonStyle"
-            android:text="send an invite"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content" />
-
+            android:layout_height="45dp"
+            android:layout_alignParentBottom="true"
+            android:layout_marginBottom="20dp"
+            android:gravity="center"
+            android:text="send an invite"
+            android:textSize="@dimen/text_size_xxlarge" />
     </LinearLayout>
-</LinearLayout>
+</RelativeLayout>

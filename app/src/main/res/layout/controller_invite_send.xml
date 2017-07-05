@@ -45,7 +45,7 @@
                         android:layout_marginBottom="@dimen/invite_friends_padding"
                         android:text="@string/send_personal_invite_text"
                         android:textIsSelectable="false"
-                        android:textSize="@dimen/text_size_small" />
+                        android:textColor="@color/gray_title_text"/>
 
 
                     <EditText
@@ -56,7 +56,7 @@
                         android:layout_height="wrap_content"
                         android:hint="@string/write_a_message_here"
                         android:inputType="textNoSuggestions"
-                        android:textSize="@dimen/text_size_medium" />
+                        android:textSize="@dimen/text_size_xlarge" />
 
 
                 </LinearLayout>
@@ -84,8 +84,8 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="@dimen/invite_friends_padding"
-                        android:text="Invitation link"
-                        android:textSize="@dimen/text_size_small" />
+                        android:textColor="@color/gray_title_text"
+                        android:text="Invitation link" />
 
 
                     <RelativeLayout
@@ -111,7 +111,7 @@
                             android:singleLine="true"
                             android:textColor="@color/gray_title_text"
                             android:textColorHint="@color/gray_field_label"
-                            android:textSize="@dimen/text_size_large" />
+                            android:textSize="@dimen/text_size_xlarge" />
 
                         <TextView
                             android:id="@+id/controller_send_invite_text_invite_friend_link"
@@ -124,7 +124,7 @@
                             android:clickable="true"
                             android:text="edit"
                             android:textColor="@color/category_text_active"
-                            android:textSize="@dimen/text_size_large" />
+                            android:textSize="@dimen/text_size_xlarge" />
 
                     </RelativeLayout>
                 </LinearLayout>
@@ -151,8 +151,8 @@
                         android:layout_height="wrap_content"
                         android:layout_marginLeft="@dimen/screen_padding"
                         android:layout_marginTop="@dimen/invite_friends_padding"
-                        android:text="send invitation"
-                        android:textSize="@dimen/text_size_small" />
+                        android:text="Send Invitation"
+                        android:textColor="@color/gray_title_text" />
 
                     <LinearLayout
                         android:id="@+id/controller_send_invite_container"
@@ -259,8 +259,8 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginLeft="@dimen/screen_padding"
-                        android:text="social media account"
-                        android:textSize="@dimen/text_size_small" />
+                        android:text="Social Media Account"
+                        android:textColor="@color/gray_title_text" />
 
                     <LinearLayout
                         android:layout_width="match_parent"
