@@ -12,7 +12,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import java.util.ArrayList;
@@ -82,7 +81,7 @@ public class ViewVouchersController extends BaseController implements ViewVouche
 
     @Override
     protected View inflateView(@NonNull LayoutInflater inflater, @NonNull ViewGroup container) {
-        View view = inflater.inflate(R.layout.controller_vouchers, container, false);
+        View view = inflater.inflate(R.layout.controller_view_vouchers, container, false);
 
         getControllerComponent().inject(this);
         mPresenter.onAttach(this);
