@@ -8,6 +8,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.bluelinelabs.conductor.RouterTransaction;
@@ -60,6 +61,8 @@ public class CurrentReturnsController extends BaseController
     @BindView(R.id.controller_current_returns_recycler_viewpager)
     RecyclerViewPager mCurrentReturnsRecyclerView;
 
+    @BindView(R.id.no_returns_placeholder)
+    LinearLayout mPlaceholderLayout;
 
 
     @Inject
@@ -98,9 +101,13 @@ public class CurrentReturnsController extends BaseController
 
         if (mCurrentReturns == null || mCurrentReturns.size() == 0){
             mPresenter.loadCurrentReturns();
+//            mPlaceholderLayout.setVisibility(View.VISIBLE);
+//            mCurrentReturnsRecyclerView.setVisibility(View.GONE);
 
         }  else {
 
+//            mPlaceholderLayout.setVisibility(View.GONE);
+//            mCurrentReturnsRecyclerView.setVisibility(View.VISIBLE);
             mCurrentReturnsAdapter = new CurrentReturnAdapter(
                     mCurrentReturns,
                     returnDetailsResponseBodyList,

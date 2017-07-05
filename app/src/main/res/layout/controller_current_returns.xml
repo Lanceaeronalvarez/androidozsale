@@ -22,6 +22,9 @@
         app:rvp_flingFactor="0.15"
         android:paddingLeft="15dp"
         android:paddingRight="15dp"
-        app:rvp_singlePageFling="true"/>
+        app:rvp_singlePageFling="true"
+        android:visibility="gone" />
 
+    <include layout="@layout/partial_no_returns_placeholder_layout"
+        android:visibility="gone" />
 </LinearLayout>

@@ -32,5 +32,7 @@
             android:clickable="true"
             android:text="Create Contact"/>
 
+        <include layout="@layout/partial_no_contacts_placeholder_layout" />
+
     </RelativeLayout>
 </LinearLayout>

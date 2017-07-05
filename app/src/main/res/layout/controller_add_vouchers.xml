@@ -124,40 +124,7 @@
                     android:visibility="gone" />
 
 
-                <LinearLayout
-                    android:id="@+id/no_vouchers_placeholder"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:layout_gravity="center_vertical"
-                    android:layout_marginTop="@dimen/activity_horizontal_margin"
-                    android:orientation="vertical"
-                    android:visibility="gone">
-
-                    <ImageView
-                        android:layout_width="60dp"
-                        android:layout_height="60dp"
-                        android:layout_gravity="center_horizontal" />
-
-                    <TextView
-                        fontPath="@string/font_lato_light"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_gravity="center"
-                        android:text="welcome to my vouchers!"
-                        android:textSize="@dimen/text_size_xxxxlarge" />
-
-                    <TextView
-                        fontPath="@string/font_lato_light"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_gravity="center"
-                        android:layout_marginBottom="125dp"
-                        android:layout_marginTop="10dp"
-                        android:text="you currently do not have any vouchers."
-                        android:textColor="#D0D0D0"
-                        android:textSize="@dimen/text_size_xxlarge" />
-
-                </LinearLayout>
+                <include layout="@layout/partial_no_voucher_placeholder_layout"/>
 
             </LinearLayout>
 
