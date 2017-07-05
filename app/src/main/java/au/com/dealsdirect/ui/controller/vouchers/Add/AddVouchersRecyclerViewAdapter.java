@@ -25,7 +25,7 @@ import butterknife.ButterKnife;
  * Created by Paul on 6/30/17.
  */
 
-public class AddVouchersRecycleViewAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
+public class AddVouchersRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
     private HashMap<Integer, String> voucherColorStateCollection = new HashMap<>();
     private AddVouchersMvpView mView;
@@ -33,7 +33,7 @@ public class AddVouchersRecycleViewAdapter extends RecyclerView.Adapter<Recycler
     private Context context;
     HashMap<Integer, Boolean> mVoucherOptionIndicator = new HashMap<>();
 
-    public AddVouchersRecycleViewAdapter(
+    public AddVouchersRecyclerViewAdapter(
             List<Voucher> voucherList,
             AddVouchersMvpView view,
             Context context) {
@@ -82,15 +82,6 @@ public class AddVouchersRecycleViewAdapter extends RecyclerView.Adapter<Recycler
 
         vh.mVoucherItemDescText.setText(finalDescription);
 
-        boolean isSelected = mVoucherOptionIndicator.get(position);
-
-        if (!isSelected) {
-            vh.mSelectedText.setText("NOT SELECTED!");
-            //load default bg.
-        } else {
-            vh.mSelectedText.setText("SELECTED!");
-        }
-
         Log.d("voucherDescription", "description : " + description);
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
@@ -127,21 +118,19 @@ public class AddVouchersRecycleViewAdapter extends RecyclerView.Adapter<Recycler
         }
 
         voucherColorStateCollection.put(position, ticketState);
-        vh.mVoucherItemCostText.setText(PriceUtils.getPriceStringValue(doubleValue) + " value");
+        vh.mVoucherItemCostText.setText(PriceUtils.getPriceStringValue(doubleValue));
 
 
         vh.mVoucherItemLayout.setOnClickListener(new View.OnClickListener() {
             public void onClick(View view) {
-//                GDebug.log(this.getClass().getSimpleName(), "voucher item is clicked");
-
                 boolean isClicked =  mVoucherOptionIndicator.get(position);
                 if(isClicked){
                     mVoucherOptionIndicator.put(position, false);
+                    vh.mVoucherItemLayout.setSelected(false);
                 }else{
                     mVoucherOptionIndicator.put(position, true);
+                    vh.mVoucherItemLayout.setSelected(true);
                 }
-
-                notifyItemChanged(position);
 
 //                mView.onVoucherItemClicked(
 //                        voucher.getID(),
@@ -186,8 +175,6 @@ public class AddVouchersRecycleViewAdapter extends RecyclerView.Adapter<Recycler
         public TextView mVoucherItemExpiresOnText;
         @BindView(R.id.row_add_vouchers_text_item_desc)
         public TextView mVoucherItemDescText;
-        @BindView(R.id.selected_placeholder)
-        public TextView mSelectedText;
 
         public AddVouchersViewHolder(View itemView) {
             super(itemView);

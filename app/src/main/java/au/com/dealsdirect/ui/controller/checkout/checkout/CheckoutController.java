@@ -130,9 +130,10 @@ public class CheckoutController extends BaseController implements CheckoutMvpVie
 
             } else if (view.getId() == mVoucherChangeText.getId()
                     || view.getId() == mAddNewVoucherLayout.getId()) {
-//                fragment = MyVouchersFragment.newInstance(activity, new Gson().toJson(mVouchers));
-//                push controller ViewVouchers
-                getRouter().pushController(RouterTransaction.with(AddVouchersController.newInstance(new Gson().toJson(mVouchers))));
+
+                getRouter().pushController(RouterTransaction.with(AddVouchersController.newInstance(new Gson().toJson(mVouchers)))
+                        .pushChangeHandler(new HorizontalChangeHandler())
+                        .popChangeHandler(new HorizontalChangeHandler()));
             }
 
         }

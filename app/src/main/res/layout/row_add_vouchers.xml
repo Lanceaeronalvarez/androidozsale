@@ -1,63 +1,57 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.v7.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/view_voucher_card_container"
     android:layout_width="wrap_content"
-    android:layout_height="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_margin="@dimen/activity_horizontal_margin"
+    app:cardCornerRadius="5dp"
     tools:ignore="MissingPrefix">
 
     <LinearLayout
         android:id="@+id/row_layout_add_vouchers"
         android:layout_width="@dimen/voucher_container_width"
         android:layout_height="@dimen/voucher_container_height"
-        android:layout_centerInParent="true"
-        android:layout_margin="@dimen/activity_horizontal_margin"
+        android:background="@drawable/bg_voucher_item"
+        android:layout_margin="1dp"
         android:clickable="true"
+        android:gravity="center_vertical"
         android:orientation="vertical"
-        android:padding="@dimen/activity_horizontal_margin"
-        tools:ignore="UselessParent">
+        android:padding="@dimen/activity_horizontal_margin">
 
 
         <TextView
             android:id="@+id/row_add_vouchers_text_item_cost_value"
+            fontPath="@string/font_lato_bold"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:textSize="@dimen/text_size_large"
+            android:textColor="@color/white"
+            android:textSize="@dimen/text_size_xxxxlarge"
             android:textStyle="bold"
-            fontPath="@string/font_lato_medium"
-            tools:text="$10"/>
+            tools:text="$10" />
 
 
         <TextView
             android:id="@+id/row_add_vouchers_text_item_desc"
-            android:layout_width="wrap_content"
+            fontPath="@string/font_lato_medium"
+            android:layout_width="80dp"
             android:layout_height="wrap_content"
             android:layout_marginTop="5dp"
-            android:textColor="#999999"
+            android:textColor="@color/white"
             android:textSize="@dimen/text_size_small"
-            fontPath="@string/font_lato_medium"
-            tools:text="voucher good for use until,"/>
+            tools:text="voucher good for use until " />
 
 
         <TextView
             android:id="@+id/row_add_vouchers_text_item_expires_on_value"
+            fontPath="@string/font_lato_medium"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="2dp"
-            android:textColor="#999999"
+            android:textColor="@color/white"
             android:textSize="@dimen/text_size_small"
-            fontPath="@string/font_lato_medium"
-            tools:text="January 15"/>
-        <TextView
-            android:id="@+id/selected_placeholder"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="2dp"
-            android:textColor="#999999"
-            android:textSize="@dimen/text_size_small"
-            fontPath="@string/font_lato_medium"
-            tools:text="selected!"/>
+            tools:text="January 15" />
+
 
     </LinearLayout>
-</RelativeLayout>
+</android.support.v7.widget.CardView>

@@ -1,5 +1,6 @@
 package au.com.dealsdirect.ui.controller.vouchers.Add;
 
+import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.LinearLayoutManager;
@@ -30,6 +31,7 @@ import au.com.dealsdirect.data.network.model.vouchers.ClearVouchersResponse;
 import au.com.dealsdirect.data.network.model.vouchers.Voucher;
 import au.com.dealsdirect.ui.base.BaseController;
 import au.com.dealsdirect.utils.BundleBuilder;
+import au.com.dealsdirect.utils.DialogUtils;
 import au.com.dealsdirect.utils.JsonUtils;
 import butterknife.BindView;
 import au.com.dealsdirect.data.network.model.vouchers.AddVoucherByKeyResponse;
@@ -134,7 +136,7 @@ public class AddVouchersController extends BaseController implements AddVouchers
 
     HashMap<Integer, Boolean> voucherOptionIndicator = new HashMap<>();
 
-    private  AddVouchersRecycleViewAdapter mAdapter;
+    private AddVouchersRecyclerViewAdapter mAdapter;
 
     public static AddVouchersController newInstance(String vouchersJsonString) {
         return new AddVouchersController(new BundleBuilder(new Bundle())
@@ -169,9 +171,7 @@ public class AddVouchersController extends BaseController implements AddVouchers
             getActivity().onBackPressed();
         });
 
-        mAdapter = new AddVouchersRecycleViewAdapter(mVouchers, this, getActivity());
-
-
+        mAdapter = new AddVouchersRecyclerViewAdapter(mVouchers, this, getActivity());
 
 //        mAdapter.setVoucherOptionIndicator(voucherOptionIndicator);
 
@@ -189,6 +189,13 @@ public class AddVouchersController extends BaseController implements AddVouchers
 
             } else {
                 //TODO: put dialog here
+
+                DialogUtils.showYesDialog(getActivity(), "Invalid Operation", "No voucher selected.", "OK", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.dismiss();
+                    }
+                });
 //                CustomAlertDialog.showCustomAlertDialog(
 //                        mActivity,
 //                        CustomAlertDialog.CustomDialogIconState.NEGATIVE,
@@ -198,7 +205,7 @@ public class AddVouchersController extends BaseController implements AddVouchers
         });
 
 
-        mAdapter = new AddVouchersRecycleViewAdapter(mVouchers, this, getActivity());
+        mAdapter = new AddVouchersRecyclerViewAdapter(mVouchers, this, getActivity());
         mRecyclerView.setAdapter(mAdapter);
         mRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity(), LinearLayoutManager.HORIZONTAL, false));
 
@@ -233,6 +240,13 @@ public class AddVouchersController extends BaseController implements AddVouchers
 //                                mActivity,
 //                                CustomAlertDialog.CustomDialogIconState.NEGATIVE,
 //                                "Please input a promo code");
+
+                DialogUtils.showYesDialog(getActivity(), "Invalid Operation", "Please input a promo code.", "OK", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.dismiss();
+                    }
+                });
             }
         });
     }
@@ -247,7 +261,6 @@ public class AddVouchersController extends BaseController implements AddVouchers
     @Override
     public void onVouchersApplied(ApplyVouchersResponse applyVouchersResponseBody) {
 
-//        GDebug.log(this.getClass().getSimpleName(), "on vouchers applied");
         String responseMessage = applyVouchersResponseBody.getValue().getMessage();
         boolean responseResult = applyVouchersResponseBody.getValue().getResult();
         boolean responseIsAuthenticated = applyVouchersResponseBody.getValue().isAuthenticated();
