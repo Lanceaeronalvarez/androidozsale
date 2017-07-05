@@ -11,6 +11,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import java.util.ArrayList;
@@ -58,6 +60,12 @@ public class ViewVouchersController extends BaseController implements ViewVouche
     @BindView(R.id.voucher_recycler_divider)
     View mDivider;
 
+    @BindView(R.id.controller_vouchers_root_layout)
+    LinearLayout mRootLayout;
+
+    @BindView(R.id.no_vouchers_placeholder)
+    LinearLayout mNoVouchersLayout;
+
     private ViewVouchersRecyclerViewAdapter mUnusedVouchersAdapter;
 
     private ViewVouchersRecyclerViewAdapter mUsedVouchersAdapter;
@@ -90,6 +98,7 @@ public class ViewVouchersController extends BaseController implements ViewVouche
 
     @Override
     protected void setUp(View view) {
+        showLoading();
         mTitleText.setText("My Vouchers");
         mFilterView.setVisibility(View.INVISIBLE);
         mArrowImage.setOnClickListener(action -> {
@@ -153,12 +162,17 @@ public class ViewVouchersController extends BaseController implements ViewVouche
 
             if (!usedVouchers.isEmpty()) {
                 mUsedVouchersAdapter.replace(usedVouchers);
+                mRootLayout.setVisibility(View.GONE);
+                mNoVouchersLayout.setVisibility(View.VISIBLE);
             } else {
-
-
                 mDivider.setVisibility(View.GONE);
                 mUsedVoucherIndicatorText.setVisibility(View.GONE);
+                mRootLayout.setVisibility(View.VISIBLE);
+                mNoVouchersLayout.setVisibility(View.GONE);
             }
+        } else {
+            mRootLayout.setVisibility(View.GONE);
+            mNoVouchersLayout.setVisibility(View.VISIBLE);
         }
 
     }
