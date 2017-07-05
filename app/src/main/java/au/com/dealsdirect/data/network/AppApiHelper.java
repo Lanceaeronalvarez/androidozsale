@@ -411,7 +411,6 @@ public class AppApiHelper implements ApiHelper {
                 .getObjectObservable(SetInviteResponse.class);
     }
 
-
     @Override
     public Observable<GetContactsResponse> callGetContacts(String languageId) {
         return Rx2AndroidNetworking.post(ApiEndPoint.GET_CONTACTS)
@@ -457,10 +456,10 @@ public class AppApiHelper implements ApiHelper {
     }
 
     @Override
-    public Observable<GetVouchersResponse> callGetVouchers() {
+    public Observable<GetVouchersResponse> callGetVouchers(GetUserVouchersRequest getUserVouchersRequest) {
         return Rx2AndroidNetworking.post(ApiEndPoint.GET_VOUCHERS)
                 .addHeaders(mApiHeader.getPublicApiHeader())
-                .addJSONObjectBody(JsonUtils.convertToJsonObject(null))
+                .addJSONObjectBody(JsonUtils.convertToJsonObject(getUserVouchersRequest))
                 .build()
                 .getObjectObservable(GetVouchersResponse.class);
     }

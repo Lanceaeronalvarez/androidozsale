@@ -142,7 +142,7 @@ public interface ApiHelper {
 
 //    VOUCHERS API CALLS
 
-    Observable<GetVouchersResponse> callGetVouchers();
+    Observable<GetVouchersResponse> callGetVouchers(GetUserVouchersRequest getUserVouchersRequest);
 
     Observable<GetUserVoucherResponse> callGetUserVouchers(GetUserVouchersRequest getUserVouchersRequest);
     

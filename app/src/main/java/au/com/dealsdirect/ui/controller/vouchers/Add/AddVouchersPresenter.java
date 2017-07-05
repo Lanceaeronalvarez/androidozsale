@@ -110,21 +110,55 @@ public class AddVouchersPresenter<V extends AddVouchersMvpView>  extends BasePre
                 }, new Consumer<Throwable>() {
                     @Override
                     public void accept(@NonNull Throwable throwable) throws Exception {
-                        if (!isViewAttached()) {
-                            return;
-                        }
 
-                        getMvpView().hideLoading();
-                        getMvpView().onError(throwable.getMessage());
-
-                        // handle load accounts error here
-                        if (throwable instanceof ANError) {
-                            ANError anError = (ANError) throwable;
-                            handleApiError(anError);
-                        }
                     }
                 }));
     }
 
+    @Override
+    public void loadMyVouchers() {
+        final PublishSubject<List<GetUserVoucherResponse.Voucher>> selectSubject
+                = PublishSubject.create();
+        final PublishSubject<GetVouchersResponse> selectSubject2
+                = PublishSubject.create();
 
+        Observable.zip(selectSubject, selectSubject2, Pair::new)
+                .subscribe(action->{
+                    getMvpView().updateVoucherList(action);
+                });
+
+        GetUserVouchersRequest getUserVouchersRequest =
+                new GetUserVouchersRequest(getDataManager().getLanguageId());
+        getCompositeDisposable().add(getDataManager()
+                .callGetUserVouchers(getUserVouchersRequest)
+                .subscribeOn(getSchedulerProvider().io())
+                .observeOn(getSchedulerProvider().ui())
+                .subscribe(new Consumer<GetUserVoucherResponse>() {
+                    @Override
+                    public void accept(@NonNull GetUserVoucherResponse getUserVoucherResponse) throws Exception {
+                        selectSubject.onNext(getUserVoucherResponse.getValue().getList());
+                    }
+                }, new Consumer<Throwable>() {
+                    @Override
+                    public void accept(@NonNull Throwable throwable) throws Exception {
+
+                    }
+                }));
+
+        getCompositeDisposable().add(getDataManager()
+                .callGetVouchers(getUserVouchersRequest)
+                .subscribeOn(getSchedulerProvider().io())
+                .observeOn(getSchedulerProvider().ui())
+                .subscribe(new Consumer<GetVouchersResponse>() {
+                    @Override
+                    public void accept(@NonNull GetVouchersResponse getVouchersResponse) throws Exception {
+                        selectSubject2.onNext(getVouchersResponse);
+                    }
+                }, new Consumer<Throwable>() {
+                    @Override
+                    public void accept(@NonNull Throwable throwable) throws Exception {
+
+                    }
+                }));
+    }
 }
