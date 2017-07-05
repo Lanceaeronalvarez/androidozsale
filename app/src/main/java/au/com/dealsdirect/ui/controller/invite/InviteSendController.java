@@ -146,12 +146,9 @@ public class InviteSendController extends BaseController implements InviteMvpVie
                     SetInviteRequest setInviteLinkRequest = new SetInviteRequest();
                     setInviteLinkRequest.inviteLink = editedLink;
 
-                    mPresenter.setInviteLink(setInviteLinkRequest);
+                    showLoading();
 
-                    progress.setTitle("Loading");
-                    progress.setMessage("Wait while checking link...");
-                    progress.setCancelable(false);
-                    progress.show();
+                    mPresenter.setInviteLink(setInviteLinkRequest);
 
 
                 }else{

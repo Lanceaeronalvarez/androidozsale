@@ -36,12 +36,18 @@ public class InvitePresenter<V extends InviteMvpView> extends BasePresenter<V> i
                 .subscribe(new Consumer<GetInviteResponse>() {
                     @Override
                     public void accept(@NonNull GetInviteResponse response) throws Exception {
+                        if(!isViewAttached()) {
+                            return;
+                        }
                         getMvpView().showInviteLink(response);
                     }
                 }, new Consumer<Throwable>() {
                     @Override
                     public void accept(@NonNull Throwable throwable) throws Exception {
-
+                        if(!isViewAttached()) {
+                            return;
+                        }
+                        getMvpView().onError(throwable.getMessage());
                     }
                 }));
     }
@@ -55,12 +61,20 @@ public class InvitePresenter<V extends InviteMvpView> extends BasePresenter<V> i
                 .subscribe(new Consumer<SetInviteResponse>() {
                     @Override
                     public void accept(@NonNull SetInviteResponse response) throws Exception {
+                        if(!isViewAttached()) {
+                            return;
+                        }
+                        getMvpView().hideLoading();
                         getMvpView().onInviteLinkSet(response);
                     }
                 }, new Consumer<Throwable>() {
                     @Override
                     public void accept(@NonNull Throwable throwable) throws Exception {
-
+                        if(!isViewAttached()) {
+                            return;
+                        }
+                        getMvpView().hideLoading();
+                        getMvpView().onError(throwable.getMessage());
                     }
                 }));
     }
