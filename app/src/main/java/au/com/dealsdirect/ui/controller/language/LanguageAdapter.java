@@ -1,5 +1,6 @@
 package au.com.dealsdirect.ui.controller.language;
 
+import android.content.Context;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -24,10 +25,12 @@ public class LanguageAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
 
     private List<Language> mLanguages;
     private LanguageMvpPresenter mPresenter;
+    private Context context;
 
-    public LanguageAdapter(ArrayList<Language> languages, LanguageMvpPresenter presenter) {
+    public LanguageAdapter(ArrayList<Language> languages, Context context, LanguageMvpPresenter presenter) {
         this.mLanguages = languages;
         this.mPresenter = presenter;
+        this.context = context;
     }
 
     @Override
@@ -40,8 +43,10 @@ public class LanguageAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
     @Override
     public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
         ((LanguagesViewHolder) holder).mLanguageText.setText(mLanguages.get(position).getName());
-        ((LanguagesViewHolder) holder).itemView.setOnClickListener(v ->
-                mPresenter.onLanguageItemClick(mLanguages.get(position)));
+        ((LanguagesViewHolder) holder).itemView.setOnClickListener(v ->{
+            mPresenter.onLanguageItemClick(mLanguages.get(position));
+            ((LanguagesViewHolder) holder).mLanguageText.setTextColor(context.getResources().getColor(R.color.filter_text_active));
+        });
     }
 
     @Override

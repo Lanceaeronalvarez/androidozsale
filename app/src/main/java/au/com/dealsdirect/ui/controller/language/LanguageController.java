@@ -85,13 +85,13 @@ public class LanguageController extends BaseController implements LanguageMvpVie
 
     @Override
     protected void setUp(View view) {
-        mTitleText.setText("My Languages");
+        mTitleText.setText("Language");
         mFilterView.setVisibility(View.INVISIBLE);
         mArrowImage.setOnClickListener(v -> {
             onBackPress();
         });
 
-        mAdapter = new LanguageAdapter(new ArrayList<>(), mPresenter);
+        mAdapter = new LanguageAdapter(new ArrayList<>(), getActivity(), mPresenter);
         mRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity(), LinearLayoutManager.VERTICAL, false));
         mRecyclerView.setAdapter(mAdapter);
 
