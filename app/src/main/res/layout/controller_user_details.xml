@@ -50,7 +50,8 @@
                         android:layout_height="wrap_content"
                         android:hint="Username"
                         android:inputType="textPersonName"
-                        android:maxLines="1" />
+                        android:maxLines="1"
+                        android:textSize="@dimen/text_size_xlarge"/>
 
                 </android.support.design.widget.TextInputLayout>
 
@@ -77,7 +78,8 @@
                         android:layout_height="wrap_content"
                         android:hint="First Name"
                         android:inputType="textPersonName"
-                        android:maxLines="1" />
+                        android:maxLines="1"
+                        android:textSize="@dimen/text_size_xlarge"/>
 
                 </android.support.design.widget.TextInputLayout>
 
@@ -104,7 +106,8 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:hint="Last Name"
-                        android:inputType="textPersonName" />
+                        android:inputType="textPersonName"
+                        android:textSize="@dimen/text_size_xlarge"/>
 
                 </android.support.design.widget.TextInputLayout>
 
@@ -133,8 +136,8 @@
                         android:cursorVisible="false"
                         android:focusable="false"
                         android:focusableInTouchMode="false"
-                        android:hint="Date of Birth"
-                        android:inputType="date" />
+                        android:inputType="date"
+                        android:textSize="@dimen/text_size_xlarge"/>
 
                 </android.support.design.widget.TextInputLayout>
 
@@ -159,7 +162,8 @@
                         fontPath="@string/font_lato_medium"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:inputType="text" />
+                        android:inputType="text"
+                        android:textSize="@dimen/text_size_xlarge"/>
 
                 </android.support.design.widget.TextInputLayout>
 
@@ -185,7 +189,8 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:hint="Email Address"
-                        android:inputType="textEmailAddress" />
+                        android:inputType="textEmailAddress"
+                        android:textSize="@dimen/text_size_xlarge"/>
 
                 </android.support.design.widget.TextInputLayout>
 
@@ -212,7 +217,8 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:hint="Password"
-                        android:inputType="textPassword" />
+                        android:inputType="textPassword"
+                        android:textSize="@dimen/text_size_xlarge"/>
 
                 </android.support.design.widget.TextInputLayout>
 
@@ -239,12 +245,12 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:hint="New Password"
-                        android:inputType="textPassword" />
+                        android:inputType="textPassword"
+                        android:textSize="@dimen/text_size_xlarge"/>
 
                 </android.support.design.widget.TextInputLayout>
 
                 <TextView
-                    style="@style/DDEditTextStyle"
                     fontPath="@string/font_lato_medium"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -255,7 +261,7 @@
                     android:id="@+id/confirmPasswordWrapper"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginBottom="16dp"
+                    android:layout_marginBottom="26dp"
                     android:layout_marginTop="10dp"
                     app:hintEnabled="false"
                     app:passwordToggleEnabled="true">
@@ -267,7 +273,8 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:hint="Confirm Address"
-                        android:inputType="textPassword" />
+                        android:inputType="textPassword"
+                        android:textSize="@dimen/text_size_xlarge"/>
 
                 </android.support.design.widget.TextInputLayout>
 
