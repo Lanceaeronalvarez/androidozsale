@@ -1,5 +1,7 @@
 package au.com.dealsdirect.ui.controller.saleitems;
 
+import android.util.Log;
+
 import com.androidnetworking.error.ANError;
 import com.google.gson.Gson;
 
@@ -32,9 +34,7 @@ public class SaleItemsPresenter<V extends SaleItemsMvpView> extends BasePresente
     }
 
     @Override
-    public void loadSaleItems(String categoryKey, String saleId, String searchQuery) {
-        getMvpView().showLoading();
-
+    public void loadSaleItems(String categoryKey, String saleId, String searchQuery, int pageNumber) {
         List<String> saleIds = new LinkedList<>();
         HashMap<String, List<String>> facetFilters = new HashMap<>();
 
@@ -54,7 +54,7 @@ public class SaleItemsPresenter<V extends SaleItemsMvpView> extends BasePresente
 
 
         getSaleItemsRequest.setLanguageID("");
-        getSaleItemsRequest.setPageNumber(String.valueOf(0));
+        getSaleItemsRequest.setPageNumber(String.valueOf(pageNumber));
 
         if (searchQuery!=null)
             getSaleItemsRequest.setQuery(searchQuery);

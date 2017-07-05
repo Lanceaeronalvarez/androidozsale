@@ -32,11 +32,6 @@ public class SaleItemsAdapter extends RecyclerView.Adapter<SaleItemsAdapter.View
     private String mSaleId;
     private String mSaleName;
 
-    public void addData(List<GetSaleItemsResponse.Products> saleItems) {
-        mData.addAll(saleItems);
-        notifyDataSetChanged();
-    }
-
     public static class ViewHolder extends RecyclerView.ViewHolder {
 
         @BindView(R.id.cell_product_image)
@@ -75,14 +70,16 @@ public class SaleItemsAdapter extends RecyclerView.Adapter<SaleItemsAdapter.View
         this.mSaleName = saleName;
     }
 
-    @Override public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+    @Override
+    public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         mContext = parent.getContext();
         View view = LayoutInflater.from(parent.getContext())
-                                  .inflate(R.layout.viewholder_sale_item, parent, false);
+                .inflate(R.layout.viewholder_sale_item, parent, false);
         return new ViewHolder(view);
     }
 
-    @Override public void onBindViewHolder(ViewHolder holder, final int position) {
+    @Override
+    public void onBindViewHolder(ViewHolder holder, final int position) {
         GetSaleItemsResponse.Products saleItem = mData.get(position);
         String url = mData.get(position).getImages().get(0);
 
@@ -91,9 +88,9 @@ public class SaleItemsAdapter extends RecyclerView.Adapter<SaleItemsAdapter.View
 
         String saleItemBrand = saleItem.getProductName();
 
-        if (mData.get(position).getSkus()!=null)
+        if (mData.get(position).getSkus() != null)
             if (!mData.get(position).getSkus().isEmpty())
-                if (mData.get(position).getSkus().get(0).getBrandName()!=null)
+                if (mData.get(position).getSkus().get(0).getBrandName() != null)
                     saleItemBrand = mData.get(position).getSkus().get(0).getBrandName();
 
         String saleItemPrice = PriceUtils.getPriceStringValue(mData.get(position).getPrice().getValue());
@@ -115,7 +112,18 @@ public class SaleItemsAdapter extends RecyclerView.Adapter<SaleItemsAdapter.View
                 mSaleId));
     }
 
-    @Override public int getItemCount() {
+    public void replaceData(List<GetSaleItemsResponse.Products> saleItems){
+        mData = saleItems;
+        notifyDataSetChanged();
+    }
+
+    public void addData(List<GetSaleItemsResponse.Products> saleItems){
+        mData.addAll(saleItems);
+        notifyDataSetChanged();
+    }
+
+    @Override
+    public int getItemCount() {
         return mData.size();
     }
 }

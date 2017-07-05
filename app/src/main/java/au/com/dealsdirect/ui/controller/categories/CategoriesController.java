@@ -151,6 +151,7 @@ public class CategoriesController extends BaseController
 
     @Override
     public void onDetach(View view) {
+        mPresenter.onDetach();
         super.onDetach(view);
 
         assert (getActivity()) != null;
