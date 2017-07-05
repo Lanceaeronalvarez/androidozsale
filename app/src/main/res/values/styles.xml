@@ -34,4 +34,17 @@
         <item name="android:textColorHint">@color/gray_field_label</item>
     </style>
 
+    <style name="AppearDialog" parent="Base.Theme.AppCompat.Light.Dialog" >
+        <item name="android:background">#00000000</item>
+        <item name="android:dividerHeight">0dp</item>
+        <item name="android:footerDividersEnabled">false</item>
+        <item name="android:headerDividersEnabled">false</item>
+        <item name="android:windowEnterAnimation">@anim/fadeout</item>
+        <item name="android:windowExitAnimation">@anim/fadein</item>
+        <item name="android:windowIsTranslucent">true</item>
+        <item name="android:windowContentOverlay">@null</item>
+        <item name="android:windowNoTitle">false</item>
+        <item name="android:windowIsFloating">false</item>
+    </style>
+
 </resources>
