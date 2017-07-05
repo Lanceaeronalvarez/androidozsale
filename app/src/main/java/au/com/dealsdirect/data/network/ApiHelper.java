@@ -133,7 +133,7 @@ public interface ApiHelper {
 
     Observable<GetUserDetailsResponse.Response> getSaveUserDetailsApiCall(SetUserDetailsRequest setUserDetailsRequest);
 
-    Observable<GetUserDetailsResponse> getLoadUserDetailsApiCall();
+    Observable<GetUserDetailsResponse> getLoadUserDetailsApiCall(SetUserDetailsRequest setUserDetailsRequest);
 //  MY ORDERS API CALLS
 
     Observable<GetPaymentsList.ResponseValue> callGetPaymentsList(GetPaymentsList.RequestValues requestValues);

@@ -440,10 +440,10 @@ public class AppApiHelper implements ApiHelper {
     }
 
     @Override
-    public Observable<GetUserDetailsResponse> getLoadUserDetailsApiCall() {
+    public Observable<GetUserDetailsResponse> getLoadUserDetailsApiCall(SetUserDetailsRequest setUserDetailsRequest) {
         return Rx2AndroidNetworking.post(ApiEndPoint.LOAD_USER_DETAILS)
                 .addHeaders(mApiHeader.getPublicApiHeader())
-                .addJSONObjectBody(JsonUtils.convertToJsonObject(null))
+                .addJSONObjectBody(JsonUtils.convertToJsonObject(setUserDetailsRequest))
                 .build()
                 .getObjectObservable(GetUserDetailsResponse.class);
     }
