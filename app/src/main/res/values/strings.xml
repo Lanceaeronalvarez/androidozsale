@@ -242,5 +242,9 @@
     </string>
     <string name="send_personal_invite_text">Send a personal invitation with this invite...</string>
     <string name="write_a_message_here">Write a message here...</string>
+    <string name="dealsdirect">DealsDirect</string>
+    <string name="exit_app">Exit app?</string>
+    <string name="exit">exit</string>
+    <string name="no">no</string>
 
 </resources>

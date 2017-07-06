@@ -15,10 +15,10 @@ public class DialogUtils {
             ,DialogInterface.OnClickListener negativeOnClickListener){
         AlertDialog.Builder builder = new AlertDialog.Builder(context);
         builder.setTitle(title)
-                .setMessage(title)
+                .setMessage(message)
                 .setCancelable(false)
-                .setPositiveButton("Yes", positiveOnClickListener)
-                .setNegativeButton("No", negativeOnClickListener)
+                .setPositiveButton(messageYes, positiveOnClickListener)
+                .setNegativeButton(messageNo, negativeOnClickListener)
                 .show();
     }
 

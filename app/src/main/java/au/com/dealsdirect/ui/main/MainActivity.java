@@ -179,7 +179,25 @@ public class MainActivity extends BaseActivity implements MainMvpView {
     @Override
     public void onBackPressed() {
         if (!mRouter.handleBack()) {
-            super.onBackPressed();
+
+            if (mRouter.getBackstackSize()==0){
+                DialogUtils.showYesNoDialog(
+                        this,
+                        getString(R.string.dealsdirect),
+                        getString(R.string.exit_app),
+                        getString(R.string.exit),
+                        getString(R.string.no),
+                        (dialogInterface, i) -> {
+                            super.onBackPressed();
+
+                        },
+                        (dialogInterface, i) -> {
+
+                        });
+            }else{
+                super.onBackPressed();
+
+            }
         }
     }
 
