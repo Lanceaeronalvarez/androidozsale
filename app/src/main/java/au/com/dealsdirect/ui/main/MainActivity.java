@@ -1,6 +1,5 @@
 package au.com.dealsdirect.ui.main;
 
-import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -49,7 +48,7 @@ import au.com.dealsdirect.ui.controller.invite.InviteController;
 import au.com.dealsdirect.ui.controller.login.LoginController;
 import au.com.dealsdirect.ui.controller.shops.ShopsController;
 import au.com.dealsdirect.ui.custom.BottomNavigationViewHelper;
-import au.com.dealsdirect.utils.DialogUtils;
+import au.com.dealsdirect.ui.custom.CustomAlertDialog;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import timber.log.Timber;
@@ -321,14 +320,16 @@ public class MainActivity extends BaseActivity implements MainMvpView {
         }
     }
 
+    @Override
     public void fetchAuthorization(FetchTokenHandler handler) {
         //Don't proceed to call if not logged in
         mPresenter.fetchBTAuthorization(handler);
 
     }
 
-    public void callCreatePaymentTransaction(String paymentNonce, String paymentToken){
-        mPresenter.callCreatePaymentTransaction(mBraintreeFragment,mPaymentType,paymentNonce,paymentToken);
+    @Override
+    public void callCreatePaymentTransaction(String paymentNonce){
+        mPresenter.callCreatePaymentTransaction(mBraintreeFragment,mPaymentType,paymentNonce,getPaymentMethodSelected().getToken());
     }
 
     @Override
@@ -417,13 +418,8 @@ public class MainActivity extends BaseActivity implements MainMvpView {
                     .popChangeHandler(new HorizontalChangeHandler()));
 
         } else {
-            DialogUtils.showYesDialog(this, "Error", responseValue.getD().getMessage(), "ok", new DialogInterface.OnClickListener() {
-                @Override
-                public void onClick(DialogInterface dialog, int which) {
-                    dialog.dismiss();
-                }
-            });
 
+            CustomAlertDialog.showCustomAlertDialog(this, CustomAlertDialog.CustomDialogIconState.NEGATIVE, responseValue.getD().getMessage());
 
             if(getMainRouterCurrentController() instanceof CheckoutController){
                 CheckoutController checkoutController = (CheckoutController)getMainRouterCurrentController();

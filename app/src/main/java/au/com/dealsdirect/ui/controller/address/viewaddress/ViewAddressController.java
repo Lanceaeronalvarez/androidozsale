@@ -86,6 +86,7 @@ public class ViewAddressController extends BaseController implements ViewAddress
 
         mViewAddressToolarTitle.setText("My Addresses");
         mViewAddressRightOption.setImageDrawable(getApplicationContext().getDrawable(R.drawable.ic_add));
+        mViewAddressRightOption.setVisibility(View.INVISIBLE);
 
         mAddressList = new ArrayList<>();
         mRecyclerViewAdapter = new ViewAddressRecyclerViewAdapter(mCalledFromCart, this, mAddressList, getActivity());
@@ -133,13 +134,13 @@ public class ViewAddressController extends BaseController implements ViewAddress
     @Override
     public void showAddresses(GetAddresses.ResponseValue responseValue) {
         Timber.d("ViewAddressController", "addresses response");
-        if (responseValue.d.Value != null) {
+        if (responseValue.getD().getValue() != null) {
             mRecyclerView.setVisibility(View.VISIBLE);
             mAddressPlaceHolder.setVisibility(View.GONE);
 
             //If status 0, not valid Address
             if (mAddressList != null) {
-                List<AddressesItem> addressesItems = responseValue.d.Value.AddressesList;
+                List<AddressesItem> addressesItems = responseValue.getD().getValue().getAddressesList();
                 for (int i = addressesItems.size() - 1; i >= 0; i--) {
                     AddressesItem addressesItem = addressesItems.get(i);
                     if (addressesItem.Status != 0) {
@@ -151,9 +152,10 @@ public class ViewAddressController extends BaseController implements ViewAddress
                     mRecyclerView.setVisibility(View.GONE);
                     mAddressPlaceHolder.setVisibility(View.VISIBLE);
                 }
-                mDecorationInfoList = responseValue.d.Value.DecorationInfoList;
+                mDecorationInfoList = responseValue.getD().getValue().getDecorationInfoList();
                 mRecyclerViewAdapter.replaceData(mAddressList);
                 mAddressesLoaded = true;
+                mViewAddressRightOption.setVisibility(View.VISIBLE);
 
 //                setupDefaultBottomButton(getString(R.string.add_delivery_address),
 //                        new View.OnClickListener() {
@@ -191,6 +193,7 @@ public class ViewAddressController extends BaseController implements ViewAddress
         mRecyclerViewAdapter.removeItemAtPosition(recyclerTempItemPosition);
         mRecyclerViewAdapter.notifyItemChanged(recyclerTempItemPosition);
         mRecyclerViewAdapter.notifyItemRangeChanged(recyclerTempItemPosition, recyclerTempItemsSize);
+        mPresenter.loadAddresses();
     }
 
     @Override

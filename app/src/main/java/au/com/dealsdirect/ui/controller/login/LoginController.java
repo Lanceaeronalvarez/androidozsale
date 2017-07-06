@@ -25,6 +25,7 @@ import au.com.dealsdirect.data.auth.AuthHandler;
 import au.com.dealsdirect.ui.base.BaseActivity;
 import au.com.dealsdirect.ui.base.BaseController;
 import au.com.dealsdirect.ui.controller.register.RegisterController;
+import au.com.dealsdirect.ui.custom.CustomAlertDialog;
 import au.com.dealsdirect.utils.BundleBuilder;
 import au.com.dealsdirect.utils.DialogUtils;
 import butterknife.BindView;
@@ -162,15 +163,16 @@ public class LoginController extends BaseController implements LoginMvpView {
     public void showLoginError(String message) {
         mAuthHandler.error();
 
-        DialogUtils.showYesDialog(getActivity(), "Login", message, "ok",
-                (dialogInterface, i) -> {
-
-        });
-//        CustomAlertDialog.showCustomAlertDialog(
-//                activity,
-//                CustomAlertDialog.CustomDialogIconState.NEGATIVE,
-//                message
-//        );
+        getActivity().onBackPressed();
+//        DialogUtils.showYesDialog(getActivity(), "Login", message, "ok",
+//                (dialogInterface, i) -> {
+//
+//        });
+        CustomAlertDialog.showCustomAlertDialog(
+                getActivity(),
+                CustomAlertDialog.CustomDialogIconState.NEGATIVE,
+                message
+        );
 
         isLoginTapped = false;
     }

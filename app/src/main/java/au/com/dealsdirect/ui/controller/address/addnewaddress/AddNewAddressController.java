@@ -26,6 +26,7 @@ import javax.inject.Inject;
 import au.com.dealsdirect.R;
 import au.com.dealsdirect.data.network.model.address.DecorationInfoList;
 import au.com.dealsdirect.ui.base.BaseController;
+import au.com.dealsdirect.ui.custom.CustomAlertDialog;
 import au.com.dealsdirect.utils.BundleBuilder;
 import au.com.dealsdirect.utils.DialogUtils;
 import au.com.dealsdirect.utils.JsonUtils;
@@ -162,17 +163,18 @@ public class AddNewAddressController extends BaseController implements AddNewAdd
 
     @Override
     public void addNewAddressSuccessful() {
-        DialogUtils.showYesDialog(getActivity(), "Success!", "added new address.", "OK", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                getActivity().onBackPressed();
-                dialog.dismiss();
-            }
-        });
-//        CustomAlertDialog.showCustomAlertDialog(
-//                mActivity,
-//                CustomAlertDialog.CustomDialogIconState.POSITIVE,
-//                mActivity.getString(R.string.delivery_address_added));
+//        DialogUtils.showYesDialog(getActivity(), "Success!", "added new address.", "OK", new DialogInterface.OnClickListener() {
+//            @Override
+//            public void onClick(DialogInterface dialog, int which) {
+//                getActivity().onBackPressed();
+//                dialog.dismiss();
+//            }
+//        });
+        CustomAlertDialog.showCustomAlertDialog(
+                getActivity(),
+                CustomAlertDialog.CustomDialogIconState.POSITIVE,
+                getApplicationContext().getString(R.string.delivery_address_added));
+        getActivity().onBackPressed();
 //
 //        if(mCalledFromCart) {
 //            //Refresh cart

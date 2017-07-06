@@ -30,6 +30,7 @@ import au.com.dealsdirect.data.network.model.vouchers.ApplyVouchersResponse;
 import au.com.dealsdirect.data.network.model.vouchers.ClearVouchersResponse;
 import au.com.dealsdirect.data.network.model.vouchers.Voucher;
 import au.com.dealsdirect.ui.base.BaseController;
+import au.com.dealsdirect.ui.custom.CustomAlertDialog;
 import au.com.dealsdirect.utils.BundleBuilder;
 import au.com.dealsdirect.utils.DialogUtils;
 import au.com.dealsdirect.utils.JsonUtils;
@@ -190,16 +191,16 @@ public class AddVouchersController extends BaseController implements AddVouchers
             } else {
                 //TODO: put dialog here
 
-                DialogUtils.showYesDialog(getActivity(), "Invalid Operation", "No voucher selected.", "OK", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        dialog.dismiss();
-                    }
-                });
-//                CustomAlertDialog.showCustomAlertDialog(
-//                        mActivity,
-//                        CustomAlertDialog.CustomDialogIconState.NEGATIVE,
-//                        mActivity.getString("no voucher selected"));
+//                DialogUtils.showYesDialog(getActivity(), "Invalid Operation", "No voucher selected.", "OK", new DialogInterface.OnClickListener() {
+//                    @Override
+//                    public void onClick(DialogInterface dialog, int which) {
+//                        dialog.dismiss();
+//                    }
+//                });
+                CustomAlertDialog.showCustomAlertDialog(
+                        getActivity(),
+                        CustomAlertDialog.CustomDialogIconState.NEGATIVE,
+                        getApplicationContext().getString(R.string.no_voucher_selected));
 
             }
         });
@@ -234,19 +235,18 @@ public class AddVouchersController extends BaseController implements AddVouchers
 
             } else {
 
-                //TODO:CustomerAlertDialog
-//                CustomAlertDialog
-//                        .showCustomAlertDialog(
-//                                mActivity,
-//                                CustomAlertDialog.CustomDialogIconState.NEGATIVE,
-//                                "Please input a promo code");
+                CustomAlertDialog
+                        .showCustomAlertDialog(
+                                getActivity(),
+                                CustomAlertDialog.CustomDialogIconState.NEGATIVE,
+                                "Please input a promo code.");
 
-                DialogUtils.showYesDialog(getActivity(), "Invalid Operation", "Please input a promo code.", "OK", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        dialog.dismiss();
-                    }
-                });
+//                DialogUtils.showYesDialog(getActivity(), "Invalid Operation", "Please input a promo code.", "OK", new DialogInterface.OnClickListener() {
+//                    @Override
+//                    public void onClick(DialogInterface dialog, int which) {
+//                        dialog.dismiss();
+//                    }
+//                });
             }
         });
     }

@@ -26,6 +26,7 @@ import au.com.dealsdirect.R;
 import au.com.dealsdirect.data.network.model.address.DecorationInfoList;
 import au.com.dealsdirect.data.network.model.checkout.getuserpaymentmethods.PaymentMethod;
 import au.com.dealsdirect.ui.base.BaseController;
+import au.com.dealsdirect.ui.custom.CustomAlertDialog;
 import au.com.dealsdirect.ui.main.FetchTokenHandler;
 import au.com.dealsdirect.ui.main.MainActivity;
 import au.com.dealsdirect.ui.main.MainMvpView;
@@ -162,17 +163,17 @@ public class AddPaymentController extends BaseController implements AddPaymentMv
             showLoading();
             mActivity.onPurchase(mCardForm);
         } else if (mCardForm.isValid() && mActivity.getBraintreeFragment() == null) {
-//            CustomAlertDialog.showCustomAlertDialog(
-//                    activity, CustomAlertDialog.CustomDialogIconState.NEGATIVE,
-//                    "Please wait for payments to finish initializing");
-            DialogUtils.showYesDialog(mActivity, "Notification"
-                    , "Please wait for payments to finish initializing"
-                    , "ok", new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialog, int which) {
-                            dialog.dismiss();
-                        }
-                    });
+            CustomAlertDialog.showCustomAlertDialog(
+                    mActivity, CustomAlertDialog.CustomDialogIconState.NEGATIVE,
+                    "Please wait for payments to finish initializing");
+//            DialogUtils.showYesDialog(mActivity, "Notification"
+//                    , "Please wait for payments to finish initializing"
+//                    , "ok", new DialogInterface.OnClickListener() {
+//                        @Override
+//                        public void onClick(DialogInterface dialog, int which) {
+//                            dialog.dismiss();
+//                        }
+//                    });
         } else {
             mCardForm.validate();
         }

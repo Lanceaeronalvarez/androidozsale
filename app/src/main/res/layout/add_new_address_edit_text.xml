@@ -15,14 +15,10 @@
         android:textColor="#919191" />
 
     <EditText
+        style="@style/DDEditTextStyle"
         android:id="@+id/add_address_value"
         android:layout_width="match_parent"
-        android:background="@drawable/bg_edit_text_rounded"
-        android:layout_height="55dp"
+        android:layout_height="wrap_content"
         android:maxLines="1"
-        android:paddingLeft="@dimen/screen_padding"
-        android:paddingRight="@dimen/screen_padding"
-        android:tag="dynamicEditText"
-        android:textColor="#919191"
-        android:textColorHint="#c1c1c1"/>
+        android:tag="dynamicEditText" />
 </LinearLayout>

@@ -154,7 +154,7 @@ public class DetailsController extends BaseController implements DetailsMvpView 
         mFirstNameText.setText(details.getForename());
         mLastNameText.setText(details.getSurname());
         mEmailAddressText.setText(details.getEmail());
-        mDateOfBirthText.setText(details.getDateOfBirth().toString());
+        mDateOfBirthText.setText(details.getDateOfBirth() == null ? "" : details.getDateOfBirth().toString());
     }
 
     @OnClick(R.id.partial_toolbar_filter_view)

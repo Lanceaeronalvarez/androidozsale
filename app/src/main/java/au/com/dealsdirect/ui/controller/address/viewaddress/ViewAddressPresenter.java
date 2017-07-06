@@ -43,10 +43,10 @@ public class ViewAddressPresenter<V extends ViewAddressMvpView> extends BasePres
 
                         getMvpView().hideLoading();
 
-                        if (responseValue.d.getResult()) {
+                        if (responseValue.getD().getResult()) {
                             getMvpView().showAddresses(responseValue);
                         } else {
-                            getMvpView().onError(responseValue.d.getMessage());
+                            getMvpView().onError(responseValue.getD().getMessage());
                         }
                     }
                 }, new Consumer<Throwable>() {

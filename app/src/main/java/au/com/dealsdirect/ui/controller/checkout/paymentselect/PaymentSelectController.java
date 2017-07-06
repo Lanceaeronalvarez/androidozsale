@@ -27,6 +27,7 @@ import au.com.dealsdirect.R;
 import au.com.dealsdirect.data.network.model.checkout.getuserpaymentmethods.PaymentMethod;
 import au.com.dealsdirect.ui.base.BaseController;
 import au.com.dealsdirect.ui.controller.checkout.addpayment.AddPaymentController;
+import au.com.dealsdirect.ui.custom.CustomAlertDialog;
 import au.com.dealsdirect.ui.custom.RecyclerOnTouchListener;
 import au.com.dealsdirect.ui.main.MainActivity;
 import au.com.dealsdirect.utils.BundleBuilder;
@@ -113,21 +114,23 @@ public class PaymentSelectController extends BaseController implements PaymentSe
             mPaymentMethods.remove(paymentMethod);
             mAdapter.notifyDataSetChanged();
 
-            DialogUtils.showYesDialog(mActivity, "Success", "Payment method removed!", "OK", new DialogInterface.OnClickListener() {
-                @Override
-                public void onClick(DialogInterface dialog, int which) {
-                    dialog.dismiss();
-                }
-            });
+            CustomAlertDialog.showCustomAlertDialog(mActivity, CustomAlertDialog.CustomDialogIconState.POSITIVE, "Payment method removed!");
+//            DialogUtils.showYesDialog(mActivity, "Success", "Payment method removed!", "OK", new DialogInterface.OnClickListener() {
+//                @Override
+//                public void onClick(DialogInterface dialog, int which) {
+//                    dialog.dismiss();
+//                }
+//            });
 
         } else {
+            CustomAlertDialog.showCustomAlertDialog(mActivity, CustomAlertDialog.CustomDialogIconState.NEGATIVE, "An error occured.");
 
-            DialogUtils.showYesDialog(mActivity, "Failed", "Please try again.", "OK", new DialogInterface.OnClickListener() {
-                @Override
-                public void onClick(DialogInterface dialog, int which) {
-                    dialog.dismiss();
-                }
-            });
+//            DialogUtils.showYesDialog(mActivity, "Failed", "Please try again.", "OK", new DialogInterface.OnClickListener() {
+//                @Override
+//                public void onClick(DialogInterface dialog, int which) {
+//                    dialog.dismiss();
+//                }
+//            });
         }
     }
 

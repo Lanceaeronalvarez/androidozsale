@@ -30,6 +30,7 @@ import au.com.dealsdirect.ui.controller.orders.orders.OrdersController;
 import au.com.dealsdirect.ui.controller.returns.currentreturns.CurrentReturnsController;
 import au.com.dealsdirect.ui.controller.shops.ShopsController;
 import au.com.dealsdirect.ui.controller.vouchers.View.ViewVouchersController;
+import au.com.dealsdirect.ui.custom.CustomAlertDialog;
 import au.com.dealsdirect.ui.main.MainMvpView;
 import au.com.dealsdirect.utils.BundleBuilder;
 import au.com.dealsdirect.utils.DialogUtils;
@@ -192,9 +193,7 @@ public class AccountController extends BaseController implements AccountMvpView 
         ((MainMvpView)getActivity()).callLogout();
         mPresenter.loadAccountItems();
         getRouter().setRoot(RouterTransaction.with(new ShopsController()));
-        DialogUtils.showYesDialog(getActivity(), "Logout", "Logout Successful", "ok", (dialogInterface, i) -> {
-
-        });
+        CustomAlertDialog.showCustomAlertDialog(getActivity(), CustomAlertDialog.CustomDialogIconState.POSITIVE, "Logout Successful");
     }
 
 

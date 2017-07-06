@@ -42,14 +42,14 @@
 
 
     <!-- Button Theme -->
-    <color name="bg_button_ripple">#E4E4E4</color>
+    <color name="bg_button_ripple">#DBE1EA</color>
     <color name="bg_button_default">#F00065</color>
     <color name="bg_button_pressed">#FFB9004E</color>
 
     <!-- EditText Theme -->
     <color name="bg_edit_text_ripple">#FFFFFF</color>
     <color name="bg_edit_text_default">#ECECEC</color>
-    <color name="bg_edit_text_focused">#1A9DE9</color>
+    <color name="bg_edit_text_focused">#009BEC</color>
 
     <!-- Chips Theme -->
     <color name="bg_chips_ripple">#FFFFFF</color>

@@ -26,15 +26,31 @@ public class GetAddresses {
 
     public static final class ResponseValue {
 
-        public Response d;
+        public Response getD() {
+            return d;
+        }
+
+        private Response d;
 
         public static class Response extends LegacyBaseResponseValue {
-            public Value Value;
+            private Value Value;
+
+            public ResponseValue.Value getValue() {
+                return Value;
+            }
         }
 
         public static class Value {
-            public List<AddressesItem> AddressesList;
-            public List<DecorationInfoList> DecorationInfoList;
+            public List<AddressesItem> getAddressesList() {
+                return AddressesList;
+            }
+
+            public List<DecorationInfoList> getDecorationInfoList() {
+                return DecorationInfoList;
+            }
+
+            private List<AddressesItem> AddressesList;
+            private List<DecorationInfoList> DecorationInfoList;
         }
     }
 

@@ -35,6 +35,8 @@ public interface MainMvpView extends MvpView,BrainTreeListeners {
 
     void performResetWithAuthFetch();
 
+    void fetchAuthorization(FetchTokenHandler fetchTokenHandler);
+
     void setPaymentMethodSelected(PaymentMethod paymentMethodSelected);
 
     void callLoginTicket();
@@ -42,6 +44,8 @@ public interface MainMvpView extends MvpView,BrainTreeListeners {
     void callLogout();
 
     void createPaymentMethodSuccess(PaymentMethod lastPaymentMethod);
+
+    void callCreatePaymentTransaction(String paymentNonce);
 
     void createPaymentTransactionSuccess(CreatePaymentTransaction.ResponseValue responseValue);
 

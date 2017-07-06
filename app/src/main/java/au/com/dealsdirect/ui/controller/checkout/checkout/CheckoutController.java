@@ -36,7 +36,6 @@ import au.com.dealsdirect.ui.main.FetchTokenHandler;
 import au.com.dealsdirect.ui.main.MainActivity;
 import au.com.dealsdirect.ui.main.MainMvpView;
 import au.com.dealsdirect.utils.ImageUtils;
-import au.com.dealsdirect.utils.JsonUtils;
 import au.com.dealsdirect.utils.PriceUtils;
 import butterknife.BindView;
 import butterknife.OnClick;
@@ -230,9 +229,8 @@ public class CheckoutController extends BaseController implements CheckoutMvpVie
     public void loadCart(){
         showLoading();
         if(mPresenter.checkIsLoggedIn() && !mActivity.isBraintreeInitialized()){
-            mActivity.fetchAuthorization(mFetchTokenHandler);
-        }else if (mPresenter.checkIsLoggedIn() && ((MainActivity)getActivity()).isBraintreeInitialized()) {
-
+            ((MainMvpView)getActivity()).fetchAuthorization(mFetchTokenHandler);
+        }else if (mPresenter.checkIsLoggedIn() && mActivity.isBraintreeInitialized()) {
             mPresenter.start();
 
         } else {
@@ -389,7 +387,7 @@ public class CheckoutController extends BaseController implements CheckoutMvpVie
                         .popChangeHandler(new HorizontalChangeHandler()));
 
             } else {
-                mActivity.callCreatePaymentTransaction("", mActivity.getPaymentMethodSelected().getToken());
+                ((MainMvpView)mActivity).callCreatePaymentTransaction("");
             }
         }
     }
@@ -409,7 +407,7 @@ public class CheckoutController extends BaseController implements CheckoutMvpVie
             if (mActivity.getPaymentMethodSelected() == null) {
                 mActivity.startPaypalPayment();
             } else {
-                mActivity.callCreatePaymentTransaction("", mActivity.getPaymentMethodSelected().getToken());
+                ((MainMvpView)mActivity).callCreatePaymentTransaction("");
             }
         }
     }
