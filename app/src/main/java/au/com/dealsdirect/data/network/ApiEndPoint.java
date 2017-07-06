@@ -96,15 +96,15 @@ public final class ApiEndPoint {
 
 
     /* Contact Controller */
-    public static final String ANSWER_CONTACT = "AnswerContact";
-    public static final String CREATE_CONTACT = "CreateContact";
+    public static final String ANSWER_CONTACT = TEST_API_LEGACY + "AnswerContact";
+    public static final String CREATE_CONTACT = TEST_API_LEGACY + "CreateContact";
     //    public static final String GET_CONTACT =  API_HOST + COCOSA_SERVICE +"GetContact";
     //    public static final String GET_CONTACTS = API_HOST + COCOSA_SERVICE + "GetContacts";
-    public static final String GET_CONTACT_INVOICES = "GetContactInvoices";
-    public static final String GET_CONTACT =  TEST_API_LEGACY +"GetContact";
-    public static final String GET_CONTACTS =     TEST_API_LEGACY + "GetContacts";
+    public static final String GET_CONTACT_INVOICES = TEST_API_LEGACY + "GetContactInvoices";
+    public static final String GET_CONTACT =  TEST_API_LEGACY + "GetContact";
+    public static final String GET_CONTACTS = TEST_API_LEGACY + "GetContacts";
 
-    public static final String GET_CONTACT_SUBJECTS = "GetContactSubjects";
+    public static final String GET_CONTACT_SUBJECTS = TEST_API_LEGACY + "GetContactSubjects";
 
     /* Return Controller */
     public static String CREATE_RETURN = "CreateReturn";

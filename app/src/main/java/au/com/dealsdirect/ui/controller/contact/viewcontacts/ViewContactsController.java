@@ -59,6 +59,8 @@ public class ViewContactsController extends BaseController implements ViewContac
     @Inject
     ViewContactsMvpPresenter<ViewContactsMvpView> mPresenter;
 
+    static String mFromFragmentId;
+
     public static ViewContactsController newInstance() {
 
         return new ViewContactsController(
@@ -188,6 +190,7 @@ public class ViewContactsController extends BaseController implements ViewContac
         String saleName;
         int invoiceNo;
         String timeStampString;
+        String contactSubject = contactList.getSubject();
 
         if(saleNameObject != null){
 
@@ -215,6 +218,7 @@ public class ViewContactsController extends BaseController implements ViewContac
         }
 
         getRouter().pushController(RouterTransaction.with(ViewContactHistoryController.newInstance(
+                contactSubject,
                 saleName,
                 invoiceNo,
                 timeStampString,
@@ -222,4 +226,5 @@ public class ViewContactsController extends BaseController implements ViewContac
                 .pushChangeHandler(new HorizontalChangeHandler())
                 .popChangeHandler(new HorizontalChangeHandler()));
     }
+
 }

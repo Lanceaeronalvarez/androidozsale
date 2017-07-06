@@ -229,5 +229,8 @@
     <string name="unable_to_apply_voucher">Unable to apply voucher</string>
     <string name="add_new_voucher">add new voucher</string>
     <string name="enter_promo_code">enter promo code</string>
+    <string name="contact_history">Contact History</string>
+    <string name="no_order_number">No Order Number</string>
+    <string name="create_contact">Create Contact</string>
 
 </resources>

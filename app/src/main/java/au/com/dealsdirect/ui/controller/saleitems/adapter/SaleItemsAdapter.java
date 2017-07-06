@@ -107,7 +107,6 @@ public class SaleItemsAdapter extends RecyclerView.Adapter<SaleItemsAdapter.View
         holder.mOldPrice.setPaintFlags(
                 holder.mOldPrice.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);
 
-
         holder.itemView.setOnClickListener(v -> mPresenter.loadProductDetails(
                 mData.get(position).getSeoIdentifier(),
                 url,

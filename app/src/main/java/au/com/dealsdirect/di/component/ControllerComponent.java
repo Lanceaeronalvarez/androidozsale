@@ -13,6 +13,8 @@ import au.com.dealsdirect.ui.controller.checkout.checkout.CheckoutController;
 import au.com.dealsdirect.ui.controller.checkout.paymentselect.PaymentSelectController;
 import au.com.dealsdirect.ui.controller.checkout.paymentsuccess.PaymentSuccessController;
 import au.com.dealsdirect.ui.controller.contact.addcontact.AddContactController;
+import au.com.dealsdirect.ui.controller.contact.addcontact.selectorder.ContactSelectOrderController;
+import au.com.dealsdirect.ui.controller.contact.addcontact.selectsubject.ContactSelectSubjectController;
 import au.com.dealsdirect.ui.controller.contact.viewcontacthistory.ViewContactHistoryController;
 import au.com.dealsdirect.ui.controller.contact.viewcontacts.ViewContactsController;
 //import au.com.dealsdirect.ui.controller.contact.ContactController;
@@ -93,11 +95,15 @@ public interface ControllerComponent {
 
     void inject(ReturnDetailsController controller);
 
-    void inject(ReturnOrdersController returnOrdersController);
+    void inject(ReturnOrdersController controller);
 
     void inject(AddPaymentController controller);
 
     void inject(PaymentSelectController controller);
 
     void inject(PaymentSuccessController controller);
+
+    void inject(ContactSelectOrderController controller);
+
+    void inject(ContactSelectSubjectController controller);
 }

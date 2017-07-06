@@ -32,6 +32,13 @@ import au.com.dealsdirect.data.network.model.checkout.RemoveUserPaymentMethod;
 import au.com.dealsdirect.data.network.model.contacthistory.GetContactHistoryRequest;
 import au.com.dealsdirect.data.network.model.contacthistory.GetContactHistoryResponse;
 import au.com.dealsdirect.data.network.model.contactitem.GetContactsResponse;
+import au.com.dealsdirect.data.network.model.contactorder.ContactOrders;
+import au.com.dealsdirect.data.network.model.contactreply.ReplyContactRequest;
+import au.com.dealsdirect.data.network.model.contactreply.ReplyContactResponse;
+import au.com.dealsdirect.data.network.model.contactsubject.ContactSubjects;
+import au.com.dealsdirect.data.network.model.contactsubject.ContactSubjectsRequest;
+import au.com.dealsdirect.data.network.model.createcontact.CreateContactRequest;
+import au.com.dealsdirect.data.network.model.createcontact.CreateContactResponse;
 import au.com.dealsdirect.data.network.model.login.LoginEmail;
 import au.com.dealsdirect.data.network.model.login.LoginFacebook;
 import au.com.dealsdirect.data.network.model.login.LoginTicket;
@@ -130,6 +137,7 @@ public interface ApiHelper {
     Observable<GetUserDetailsResponse.Response> getSaveUserDetailsApiCall(SetUserDetailsRequest setUserDetailsRequest);
 
     Observable<GetUserDetailsResponse> getLoadUserDetailsApiCall();
+
 //  MY ORDERS API CALLS
 
     Observable<GetPaymentsList.ResponseValue> callGetPaymentsList(GetPaymentsList.RequestValues requestValues);
@@ -170,4 +178,16 @@ public interface ApiHelper {
     Observable<CreatePaymentTransaction.ResponseValue> callCreatePaymentTransaction(CreatePaymentTransaction.RequestValue model);
     
     Observable<RemoveUserPaymentMethod.ResponseValue> callRemoveUserPaymentMethod(RemoveUserPaymentMethod.RequestValue model);
+
+    // Contact Us Api Call
+    Observable<ContactOrders> callGetContactOrders();
+
+    Observable<ContactSubjects> callGetContactSubjects(ContactSubjectsRequest contactSubjectsRequest);
+
+    Observable<CreateContactResponse> callCreateContact(CreateContactRequest createContactRequest);
+
+    Observable<ReplyContactResponse> callReplyContact(ReplyContactRequest createContactRequest);
+
+
+
 }

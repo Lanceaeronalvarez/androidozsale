@@ -4,7 +4,13 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:animateLayoutChanges="true"
+                android:layout_marginBottom="50dp"
                 android:background="#FFFFFF">
+
+    <include
+        android:id="@+id/contact_select_order_toolbar"
+        layout="@layout/partial_toolbar_arrow" />
+
 
     <LinearLayout
         android:id="@+id/controller_view_contact_history_header"
@@ -14,7 +20,7 @@
         android:paddingTop="10dp"
         android:paddingRight="@dimen/activity_vertical_margin"
         android:orientation="horizontal"
-        android:layout_marginTop="10dp">
+        android:layout_below="@id/contact_select_order_toolbar">
 
         <ImageView
             android:visibility="invisible"
@@ -82,9 +88,19 @@
         android:id="@+id/contact_history_recycler_view"
         android:layout_below="@+id/controller_view_contact_history_header"
         android:overScrollMode="never"
-        android:layout_marginTop="15dp"
         android:layout_width="match_parent"
+        android:layout_above="@+id/controller_view_contacts_history_reply_button"
         android:layout_height="match_parent">
     </android.support.v7.widget.RecyclerView>
+
+    <Button
+        android:id="@+id/controller_view_contacts_history_reply_button"
+        style="@style/DDButtonStyle"
+        android:layout_width="match_parent"
+        android:layout_height="45dp"
+        android:layout_alignParentBottom="true"
+        android:layout_margin="@dimen/activity_horizontal_margin"
+        android:clickable="true"
+        android:text="Reply"/>
 
 </RelativeLayout>

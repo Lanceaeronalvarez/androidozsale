@@ -23,19 +23,22 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Select Subjejct"
+                android:text="Select Subject"
                 android:textSize="@dimen/text_size_large"
                 android:textColor="#616161"/>
 
 
 
-            <android.support.v7.widget.AppCompatSpinner
+            <TextView
                 style="@style/Widget.AppCompat.Spinner.Underlined"
                 android:layout_width="match_parent"
                 android:layout_height="40dp"
+                android:clickable="true"
+                android:id="@+id/controller_add_contact_subject_text"
                 android:background="@drawable/bg_add_contact_spinner"
                 android:padding="10dp"
-                android:layout_marginTop="10dp"/>
+                android:layout_marginTop="10dp"
+                android:textColor="#616161"/>
 
         </LinearLayout>
 
@@ -55,13 +58,15 @@
 
 
 
-            <android.support.v7.widget.AppCompatSpinner
+            <TextView
                 style="@style/Widget.AppCompat.Spinner.Underlined"
-                android:id="@+id/sprMyMessageOrderId"
+                android:id="@+id/controller_add_contact_order_text"
                 android:layout_width="match_parent"
                 android:layout_height="40dp"
                 android:background="@drawable/bg_add_contact_spinner"
                 android:padding="10dp"
+                android:clickable="true"
+                android:textColor="#616161"
                 android:layout_marginTop="10dp"/>
 
         </LinearLayout>
@@ -82,6 +87,7 @@
 
             <EditText
                 style="@style/Widget.AppCompat.Spinner.Underlined"
+                android:id="@+id/controller_add_contact_message_field"
                 android:layout_width="match_parent"
                 android:layout_height="140dp"
                 android:background="@drawable/bg_add_contact_message"

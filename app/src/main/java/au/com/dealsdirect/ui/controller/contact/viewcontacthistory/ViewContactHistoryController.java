@@ -8,16 +8,22 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
+
+import com.bluelinelabs.conductor.RouterTransaction;
+import com.bluelinelabs.conductor.changehandler.HorizontalChangeHandler;
 
 import javax.inject.Inject;
 
 import au.com.dealsdirect.R;
 import au.com.dealsdirect.data.network.model.contacthistory.List;
 import au.com.dealsdirect.ui.base.BaseController;
+import au.com.dealsdirect.ui.controller.contact.addcontact.AddContactController;
 import au.com.dealsdirect.ui.controller.contact.viewcontacthistory.contacthistory.ContactHistoryAdapter;
 import au.com.dealsdirect.utils.BundleBuilder;
 import butterknife.BindView;
+import butterknife.OnClick;
 
 /**
  * dp Created by Admin on 6/21/17.
@@ -31,6 +37,8 @@ public class ViewContactHistoryController extends BaseController implements View
     private static final String KEY_CONTACT_INVOICE_NO = "ContactHistoryInvoiceNo";
     private static final String KEY_CONTACT_TIMESTAMP = "ContactHistoryTimeStamp";
     private static final String KEY_CONTACT_NAME = "ContactHistoryName";
+    private static final String KEY_CONTACT_SUBJECT = "ContactSubject";
+    private static final String KEY_CONTACT_ORDER = "ContactOrder";
 
     @BindView(R.id.contact_history_recycler_view)
     RecyclerView contactHistoryRecyclerView;
@@ -44,10 +52,23 @@ public class ViewContactHistoryController extends BaseController implements View
     @BindView(R.id.contact_history_header_time_stamp)
     TextView contactHistoryTimeStamp;
 
+    @BindView(R.id.partial_toolbar_filter_view)
+    ImageView mContactHistoryRightOption;
+
+    @BindView(R.id.partial_toolbar_arrow_title)
+    TextView mContactHistoryTitle;
+
+    private String mSaleNameObject;
+    private String mTimeStamp;
+    private int mInvoiceNumber;
+    private int mContactNumber;
+    private String mContactSubject;
+
     @Inject
     ViewContactHistoryPresenter<ViewContactHistoryMvpView> mPresenter;
 
     public static ViewContactHistoryController newInstance(
+            String contactSubject,
             String saleName,
             int invoiceNo,
             String lastAnswer,
@@ -59,11 +80,18 @@ public class ViewContactHistoryController extends BaseController implements View
                         .putString(KEY_CONTACT_NAME, saleName)
                         .putInt(KEY_CONTACT_INVOICE_NO, invoiceNo)
                         .putString(KEY_CONTACT_TIMESTAMP,lastAnswer)
+                        .putString(KEY_CONTACT_SUBJECT, contactSubject)
                         .build());
     }
 
     public ViewContactHistoryController(Bundle args) {
         super(args);
+        mSaleNameObject = getArgs().getString(KEY_CONTACT_NAME);
+        mInvoiceNumber = getArgs().getInt(KEY_CONTACT_INVOICE_NO);
+        mTimeStamp = getArgs().getString(KEY_CONTACT_TIMESTAMP);
+        mContactNumber = getArgs().getInt(KEY_CONTACT_NO);
+        mContactSubject = getArgs().getString(KEY_CONTACT_SUBJECT);
+
     }
 
 
@@ -81,7 +109,7 @@ public class ViewContactHistoryController extends BaseController implements View
     @Override
     protected void onViewBound(@NonNull View view) {
         super.onViewBound(view);
-
+        setUp(view);
         mPresenter.loadContactHistory(getArgs().getInt(KEY_CONTACT_NO));
     }
 
@@ -89,13 +117,21 @@ public class ViewContactHistoryController extends BaseController implements View
     protected void setUp(View view) {
 
         // mContactList.getInvoiceNo()
-        String saleNameObject = getArgs().getString(KEY_CONTACT_NAME);
-        int invoiceNumber = getArgs().getInt(KEY_CONTACT_INVOICE_NO);
-        String timeStamp = getArgs().getString(KEY_CONTACT_TIMESTAMP);
 
-        contactHistoryHeaderTitle.setText(saleNameObject);
-        contactHistoryInvoiceText.setText(invoiceNumber);
-        contactHistoryTimeStamp.setText(timeStamp);
+        contactHistoryHeaderTitle.setText(mSaleNameObject);
+        contactHistoryInvoiceText.setText(mInvoiceNumber+"");
+        contactHistoryTimeStamp.setText(mTimeStamp);
+        mContactHistoryRightOption.setVisibility(View.INVISIBLE);
+        mContactHistoryTitle.setText(R.string.contact_history);
+        // mContactList.getInvoiceNo()
+
+        if(!mSaleNameObject.isEmpty()){
+
+            contactHistoryHeaderTitle.setText(mSaleNameObject);
+        }else{
+
+            contactHistoryHeaderTitle.setText(R.string.no_order_number);
+        }
 
     }
 
@@ -112,5 +148,24 @@ public class ViewContactHistoryController extends BaseController implements View
         contactHistoryRecyclerView
                 .setLayoutManager(new LinearLayoutManager(getActivity()));
 
+    }
+
+    @OnClick(R.id.partial_toolbar_arrow_view)
+    void onBackClick(){
+        getActivity().onBackPressed();
+    }
+
+    @OnClick(R.id.controller_view_contacts_history_reply_button)
+    void onReplyClick(){
+
+        Bundle bundle = new BundleBuilder(new Bundle())
+                .putInt("CONTACT_NUMBER",mContactNumber)
+                .putString("CONTACT_SUBJECT", mContactSubject)
+                .putInt("CONTACT_INVOICE_NUMBER", mInvoiceNumber)
+                .build();
+
+        getRouter().pushController(RouterTransaction.with(AddContactController.newInstance("CONTACT_HISTORY", bundle))
+                .pushChangeHandler(new HorizontalChangeHandler())
+                .popChangeHandler(new HorizontalChangeHandler()));
     }
 }

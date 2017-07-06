@@ -84,8 +84,11 @@ public class ContactHistoryAdapter
             String itemLastAnswerTimeFormat
                     = DateUtils.getTimeFromDateString(contactDate.toString());
 
+            String itemLastAnswerDateFormat
+                    = DateUtils.getTrimmedServerDateString(contactDate.toString());
+
             holder.contactHistoryItemDateStampTextView
-                    .setText(itemLastAnswerTimeFormat);
+                    .setText(itemLastAnswerDateFormat);
 
             holder.contactHistoryItemTimeStampTextView
                     .setText(itemLastAnswerTimeFormat);

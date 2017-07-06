@@ -13,7 +13,6 @@ import au.com.dealsdirect.data.network.model.contacthistory.GetContactHistoryReq
 import au.com.dealsdirect.ui.base.BasePresenter;
 import au.com.dealsdirect.utils.rx.SchedulerProvider;
 import io.reactivex.disposables.CompositeDisposable;
-import io.reactivex.functions.Consumer;
 
 /**
  * dp Created by Admin on 6/21/17.
@@ -62,20 +61,17 @@ public class ViewContactHistoryPresenter<V extends ViewContactHistoryMvpView>
                                 }
                             }
 
-                        }, new Consumer<Throwable>() {
-                            @Override
-                            public void accept(Throwable throwable) throws Exception {
-                                if (!isViewAttached()) {
-                                    return;
-                                }
+                        }, throwable -> {
+                            if (!isViewAttached()) {
+                                return;
+                            }
 
-                                getMvpView().hideLoading();
-                                getMvpView().onError(throwable.getMessage());
-                                // handle load accounts error here
-                                if (throwable instanceof ANError) {
-                                    ANError anError = (ANError) throwable;
-                                    handleApiError(anError);
-                                }
+                            getMvpView().hideLoading();
+                            getMvpView().onError(throwable.getMessage());
+                            // handle load accounts error here
+                            if (throwable instanceof ANError) {
+                                ANError anError = (ANError) throwable;
+                                handleApiError(anError);
                             }
                         }));
     }

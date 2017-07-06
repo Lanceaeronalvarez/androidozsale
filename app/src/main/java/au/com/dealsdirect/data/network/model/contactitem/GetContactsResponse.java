@@ -14,20 +14,20 @@ public class GetContactsResponse {
 
     private Response d;
 
-    public static class Response{
+    public class Response{
 
         @SerializedName("IsAuthenticated")
         @Expose
-        private Boolean isAuthenticated;
+        public Boolean isAuthenticated;
         @SerializedName("List")
         @Expose
-        private List<ContactList> list = null;
+        public List<ContactList> list = null;
         @SerializedName("Result")
         @Expose
-        private Boolean result;
+        public Boolean result;
         @SerializedName("Message")
         @Expose
-        private String message;
+        public String message;
 
         public Boolean getIsAuthenticated() {
             return isAuthenticated;

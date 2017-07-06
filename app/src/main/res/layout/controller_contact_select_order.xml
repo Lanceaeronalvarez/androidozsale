@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              xmlns:app="http://schemas.android.com/apk/res-auto"
+              android:orientation="vertical"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent"
+              android:animateLayoutChanges="true"
+              android:background="#FFFFFF" >
+
+    <include
+        android:id="@+id/contact_select_order_toolbar"
+        layout="@layout/partial_toolbar_arrow" />
+
+    <TextView
+        android:id="@+id/controller_contact_select_order_placeholder"
+        android:fontFamily="@string/font_lato_black"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:gravity="center_horizontal|center_vertical"
+        android:text="no orders"
+        android:textColor="@color/gray_description_text"
+        android:textSize="@dimen/text_size_xxxlarge"/>
+
+
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/my_contact_select_subject_recycler_view"
+        android:layout_below="@+id/contact_select_order_toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+    </android.support.v7.widget.RecyclerView>
+
+</RelativeLayout>

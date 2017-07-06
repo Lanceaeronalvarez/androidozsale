@@ -36,6 +36,13 @@ import au.com.dealsdirect.data.network.model.checkout.RemoveUserPaymentMethod;
 import au.com.dealsdirect.data.network.model.contacthistory.GetContactHistoryRequest;
 import au.com.dealsdirect.data.network.model.contacthistory.GetContactHistoryResponse;
 import au.com.dealsdirect.data.network.model.contactitem.GetContactsResponse;
+import au.com.dealsdirect.data.network.model.contactorder.ContactOrders;
+import au.com.dealsdirect.data.network.model.contactreply.ReplyContactRequest;
+import au.com.dealsdirect.data.network.model.contactreply.ReplyContactResponse;
+import au.com.dealsdirect.data.network.model.contactsubject.ContactSubjects;
+import au.com.dealsdirect.data.network.model.contactsubject.ContactSubjectsRequest;
+import au.com.dealsdirect.data.network.model.createcontact.CreateContactRequest;
+import au.com.dealsdirect.data.network.model.createcontact.CreateContactResponse;
 import au.com.dealsdirect.data.network.model.login.LoginEmail;
 import au.com.dealsdirect.data.network.model.login.LoginFacebook;
 import au.com.dealsdirect.data.network.model.login.LoginTicket;
@@ -387,6 +394,41 @@ public class AppApiHelper implements ApiHelper {
                 .addJSONObjectBody(JsonUtils.convertToJsonObject(requestValues))
                 .build()
                 .getObjectObservable(RemoveUserPaymentMethod.ResponseValue.class);
+    }
+
+    @Override
+    public Observable<ContactOrders> callGetContactOrders() {
+        return Rx2AndroidNetworking.post(ApiEndPoint.GET_CONTACT_INVOICES)
+                .addJSONObjectBody(JsonUtils.convertToJsonObject(null))
+                .build()
+                .getObjectObservable(ContactOrders.class);
+    }
+
+    @Override
+    public Observable<ContactSubjects> callGetContactSubjects(ContactSubjectsRequest contactSubjectsRequest) {
+        return Rx2AndroidNetworking.post(ApiEndPoint.GET_CONTACT_SUBJECTS)
+                .addHeaders(mApiHeader.getPublicApiHeader())
+                .addJSONObjectBody(JsonUtils.convertToJsonObject(contactSubjectsRequest))
+                .build()
+                .getObjectObservable(ContactSubjects.class);
+    }
+
+    @Override
+    public Observable<CreateContactResponse> callCreateContact(CreateContactRequest createContactRequest) {
+        return Rx2AndroidNetworking.post(ApiEndPoint.CREATE_CONTACT)
+                .addHeaders(mApiHeader.getPublicApiHeader())
+                .addJSONObjectBody(JsonUtils.convertToJsonObject(createContactRequest))
+                .build()
+                .getObjectObservable(CreateContactResponse.class);
+    }
+
+    @Override
+    public Observable<ReplyContactResponse> callReplyContact(ReplyContactRequest createContactRequest) {
+        return Rx2AndroidNetworking.post(ApiEndPoint.ANSWER_CONTACT)
+                .addHeaders(mApiHeader.getPublicApiHeader())
+                .addJSONObjectBody(JsonUtils.convertToJsonObject(createContactRequest))
+                .build()
+                .getObjectObservable(ReplyContactResponse.class);
     }
 
 

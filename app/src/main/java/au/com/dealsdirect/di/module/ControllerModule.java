@@ -32,6 +32,12 @@ import au.com.dealsdirect.ui.controller.checkout.paymentsuccess.PaymentSuccessPr
 import au.com.dealsdirect.ui.controller.contact.addcontact.AddContactMvpPresenter;
 import au.com.dealsdirect.ui.controller.contact.addcontact.AddContactMvpView;
 import au.com.dealsdirect.ui.controller.contact.addcontact.AddContactpresenter;
+import au.com.dealsdirect.ui.controller.contact.addcontact.selectorder.ContactSelectOrderMvpPresenter;
+import au.com.dealsdirect.ui.controller.contact.addcontact.selectorder.ContactSelectOrderMvpView;
+import au.com.dealsdirect.ui.controller.contact.addcontact.selectorder.ContactSelectOrderPresenter;
+import au.com.dealsdirect.ui.controller.contact.addcontact.selectsubject.ContactSelectSubjectMvpPresenter;
+import au.com.dealsdirect.ui.controller.contact.addcontact.selectsubject.ContactSelectSubjectMvpView;
+import au.com.dealsdirect.ui.controller.contact.addcontact.selectsubject.ContactSelectSubjectPresenter;
 import au.com.dealsdirect.ui.controller.contact.viewcontacts.ViewContactsMvpPresenter;
 import au.com.dealsdirect.ui.controller.contact.viewcontacts.ViewContactsMvpView;
 import au.com.dealsdirect.ui.controller.contact.viewcontacts.ViewContactsPresenter;
@@ -249,6 +255,16 @@ public class ControllerModule {
 
     @Provides
     AddVouchersMvpPresenter<AddVouchersMvpView> provideAddVouchersPresenter(AddVouchersPresenter<AddVouchersMvpView> presenter) {
+        return presenter;
+    }
+
+    @Provides
+    ContactSelectOrderMvpPresenter<ContactSelectOrderMvpView> provideContactOrderPresenter(ContactSelectOrderPresenter<ContactSelectOrderMvpView> presenter) {
+        return presenter;
+    }
+
+    @Provides
+    ContactSelectSubjectMvpPresenter<ContactSelectSubjectMvpView> provideContactSubjectPresenter(ContactSelectSubjectPresenter<ContactSelectSubjectMvpView> presenter) {
         return presenter;
     }
 }
