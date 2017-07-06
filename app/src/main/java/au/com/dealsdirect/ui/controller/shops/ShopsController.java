@@ -36,6 +36,7 @@ import au.com.dealsdirect.ui.controller.shops.adapter.BannersAdapter;
 import au.com.dealsdirect.ui.controller.shops.listener.BannerClickListener;
 import au.com.dealsdirect.ui.custom.transitions.HorizontalNavTransitionChangeHandler;
 import au.com.dealsdirect.utils.BundleBuilder;
+import au.com.dealsdirect.utils.KeyboardUtils;
 import butterknife.BindView;
 import butterknife.OnClick;
 
@@ -274,15 +275,13 @@ public class ShopsController extends BaseController implements ShopsMvpView, Ban
                 .build();
 
         if (!searchQuery.isEmpty())
+
+            KeyboardUtils.hideSoftInput(getActivity());
             getRouter().pushController(RouterTransaction.with(
                     SaleItemsController.newInstance(saleItemBundle))
                     .pushChangeHandler(new HorizontalChangeHandler())
                     .popChangeHandler(new HorizontalChangeHandler()));
 
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-            //noinspection ConstantConditions
-            getActivity().dismissKeyboardShortcutsHelper();
-        }
 
     }
 

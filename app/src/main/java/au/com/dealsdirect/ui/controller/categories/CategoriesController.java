@@ -37,6 +37,7 @@ import au.com.dealsdirect.ui.controller.saleitems.SaleItemsController;
 import au.com.dealsdirect.ui.controller.shops.ShopsController;
 import au.com.dealsdirect.ui.custom.transitions.RightHorizontalTransitionChangeHandler;
 import au.com.dealsdirect.utils.BundleBuilder;
+import au.com.dealsdirect.utils.KeyboardUtils;
 import butterknife.BindView;
 import butterknife.OnClick;
 
@@ -105,7 +106,7 @@ public class CategoriesController extends BaseController
     }
 
     @Override
-    protected void onViewBound(View view) {
+    protected void onViewBound(@NonNull View view) {
         super.onViewBound(view);
 
         assert (getActivity()) != null;
@@ -174,11 +175,11 @@ public class CategoriesController extends BaseController
     public void onCategoryClicked(int position, GetCategoryTreeResponse getCategoryTreeResponse) {
 
         String categoryName = getCategoryTreeResponse.getName();
-        String categoryKey = getCategoryTreeResponse.getKey()!=null?getCategoryTreeResponse.getKey():categoryName;
+        String categoryKey = getCategoryTreeResponse.getKey() != null ? getCategoryTreeResponse.getKey() : categoryName;
 
 
-        if (categoryKey!=null && categoryTapCounter == 1 &&
-                categoryKey.equals(lastCategoryKey)){
+        if (categoryKey != null && categoryTapCounter == 1 &&
+                categoryKey.equals(lastCategoryKey)) {
 
             getRouter().setRoot(
                     RouterTransaction.with(ShopsController.newInstance(getCategoryTreeResponse))
@@ -187,21 +188,21 @@ public class CategoriesController extends BaseController
             categoryTapCounter = 1;
         }
 
+        assert categoryKey != null;
         if (categoryKey.equals(lastCategoryKey))
-            categoryTapCounter = categoryTapCounter+1;
+            categoryTapCounter = categoryTapCounter + 1;
         else
             categoryTapCounter = 1;
 
-        if (mResultSubCategories.get(position).getChildren()!=null) {
+        if (mResultSubCategories.get(position).getChildren() != null) {
             mSubCategoryAdapter.replaceData(mResultSubCategories.get(position).getChildren());
-        }
-        else {
-            ArrayList<GetCategoryTreeResponse> emptyChildren =  new ArrayList<>();
+        } else {
+            ArrayList<GetCategoryTreeResponse> emptyChildren = new ArrayList<>();
             mSubCategoryAdapter.replaceData(emptyChildren);
         }
 
-        mChosenCategoryKey = categoryKey!=null?categoryKey:categoryName;
-        lastCategoryKey = categoryKey!=null?categoryKey:categoryName;
+        mChosenCategoryKey = categoryKey != null ? categoryKey : categoryName;
+        lastCategoryKey = categoryKey != null ? categoryKey : categoryName;
 
     }
 
@@ -209,7 +210,7 @@ public class CategoriesController extends BaseController
 
         for (GetCategoryTreeResponse i : categories) {
 
-            if (i.getChildren()!=null){
+            if (i.getChildren() != null) {
                 mCategoryMap.put("shop", categories);
 
                 int childrenSize = i.getChildren().size();
@@ -226,11 +227,11 @@ public class CategoriesController extends BaseController
 
         mAdapter.replaceData(mResultSubCategories);
 
-        if (mResultSubCategories.get(0).getChildren()!=null){
+        if (mResultSubCategories.get(0).getChildren() != null) {
             mSubCategoryAdapter.replaceData(mResultSubCategories.get(0).getChildren());
 
-        }else{
-            ArrayList<GetCategoryTreeResponse> emptyChildren =  new ArrayList<>();
+        } else {
+            ArrayList<GetCategoryTreeResponse> emptyChildren = new ArrayList<>();
             mSubCategoryAdapter.replaceData(emptyChildren);
 
         }
@@ -250,7 +251,7 @@ public class CategoriesController extends BaseController
         }
     }
 
-    public List<GetCategoryTreeResponse> fillCategoryContent() {
+    List<GetCategoryTreeResponse> fillCategoryContent() {
 
         if (mChosenCategory.equals("shop")) {
 
@@ -273,10 +274,6 @@ public class CategoriesController extends BaseController
 
             return listApi;
         }
-    }
-
-    public void fillSubCategories() {
-
     }
 
     @Override
@@ -307,8 +304,9 @@ public class CategoriesController extends BaseController
                 .popChangeHandler(new HorizontalChangeHandler()));
     }
 
+    @SuppressWarnings("ConstantConditions")
     @OnClick(R.id.partial_toolbar_search_right_option)
-    void onSearchOptionClicked(){
+    void onSearchOptionClicked() {
 
         String searchQuery = mSearchField.getText().toString();
 
@@ -319,18 +317,16 @@ public class CategoriesController extends BaseController
 
         if (!searchQuery.isEmpty())
             getRouter().pushController(RouterTransaction.with(
-                SaleItemsController.newInstance(saleItemBundle))
-                .pushChangeHandler(new HorizontalChangeHandler())
-                .popChangeHandler(new HorizontalChangeHandler()));
+                    SaleItemsController.newInstance(saleItemBundle))
+                    .pushChangeHandler(new HorizontalChangeHandler())
+                    .popChangeHandler(new HorizontalChangeHandler()));
         else
+
+            KeyboardUtils.hideSoftInput(getActivity());
             getActivity().onBackPressed();
     }
 
-    public void setupSaleItemsRequest(){
-
-    }
-
-    private void performSearch(String searchQuery){
+    private void performSearch(String searchQuery) {
 
         Bundle saleItemBundle = new BundleBuilder(new Bundle())
                 .putString("SaleItemsController.KEY_TITLE", searchQuery)
