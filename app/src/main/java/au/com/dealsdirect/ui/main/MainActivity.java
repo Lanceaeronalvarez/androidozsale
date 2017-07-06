@@ -2,6 +2,7 @@ package au.com.dealsdirect.ui.main;
 
 import android.content.DialogInterface;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.BottomNavigationView;
@@ -194,10 +195,13 @@ public class MainActivity extends BaseActivity implements MainMvpView {
                         (dialogInterface, i) -> {
 
                         });
-            }else{
-                super.onBackPressed();
-
             }
+        }else{
+            showBottomNavigationView();
+            final Handler handler = new Handler();
+            handler.postDelayed(() -> {
+            }, 500);
+
         }
     }
 

@@ -2,6 +2,7 @@ package au.com.dealsdirect.ui.controller.categories;
 
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -109,9 +110,6 @@ public class CategoriesController extends BaseController
     protected void onViewBound(@NonNull View view) {
         super.onViewBound(view);
 
-        assert (getActivity()) != null;
-        ((BaseActivity) getActivity()).hideBottomNavigationView();
-
         setUp(view);
     }
 
@@ -120,6 +118,9 @@ public class CategoriesController extends BaseController
     protected void onDestroyView(@NonNull View view) {
         mPresenter.onDetach();
         super.onDestroyView(view);
+
+        assert (getActivity()) != null;
+        ((BaseActivity) getActivity()).showBottomNavigationView();
     }
 
     @Override
@@ -148,6 +149,13 @@ public class CategoriesController extends BaseController
             return false;
         });
 
+        final Handler handler = new Handler();
+        handler.postDelayed(() -> {
+            // Do something after 5s = 5000ms
+
+            assert (getActivity()) != null;
+            ((BaseActivity) getActivity()).hideBottomNavigationView();
+        }, 100);
     }
 
     @Override
@@ -155,8 +163,6 @@ public class CategoriesController extends BaseController
         mPresenter.onDetach();
         super.onDetach(view);
 
-        assert (getActivity()) != null;
-        ((BaseActivity) getActivity()).showBottomNavigationView();
     }
 
     @Override

@@ -162,9 +162,11 @@ public class ShopsController extends BaseController implements ShopsMvpView, Ban
 
     @OnClick(R.id.partial_toolbar_hamburger)
     void onClickHamburger() {
+
         getRouter().pushController(RouterTransaction.with(CategoriesController.newInstance())
-                .pushChangeHandler(new HorizontalNavTransitionChangeHandler())
-                .popChangeHandler(new HorizontalNavTransitionChangeHandler()));
+                .tag("category")
+                .pushChangeHandler(new HorizontalNavTransitionChangeHandler(100))
+                .popChangeHandler(new HorizontalNavTransitionChangeHandler(100)));
 
 //        ((MainActivity) getActivity()).hideBottomNav();
     }

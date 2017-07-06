@@ -54,8 +54,6 @@ public class LoginController extends BaseController implements LoginMvpView {
 
     private boolean isLoginTapped = false;
 
-
-
     AuthHandler mAuthHandler;
 
     public static LoginController newInstance(AuthHandler handler) {
@@ -164,7 +162,6 @@ public class LoginController extends BaseController implements LoginMvpView {
     public void showLoginError(String message) {
         mAuthHandler.error();
 
-        getActivity().onBackPressed();
         DialogUtils.showYesDialog(getActivity(), "Login", message, "ok",
                 (dialogInterface, i) -> {
 

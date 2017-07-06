@@ -1,7 +1,5 @@
 package au.com.dealsdirect.ui.controller.account;
 
-import android.util.Log;
-
 import java.util.ArrayList;
 import java.util.Arrays;
 
@@ -42,7 +40,6 @@ public class AccountPresenter<V extends AccountMvpView> extends BasePresenter<V>
     @Override
     public void onAccountItemClick(String option) {
         if (getDataManager().isAuthorized()) {
-            Log.d("AccountPresenter", "logged in");
             switch (option) {
 
                 case "My Details":
