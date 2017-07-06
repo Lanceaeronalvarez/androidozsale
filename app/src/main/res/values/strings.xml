@@ -247,4 +247,9 @@
     <string name="exit">exit</string>
     <string name="no">no</string>
 
+    <string-array name="genders">
+        <item>Male</item>
+        <item>Female</item>
+    </string-array>
+
 </resources>

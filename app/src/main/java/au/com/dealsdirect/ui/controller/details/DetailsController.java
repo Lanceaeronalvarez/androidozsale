@@ -10,12 +10,17 @@ import android.widget.ImageView;
 import android.widget.Spinner;
 import android.widget.TextView;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+
 import javax.inject.Inject;
 
 import au.com.dealsdirect.R;
 import au.com.dealsdirect.data.network.model.userdetails.GetUserDetailsResponse;
 import au.com.dealsdirect.data.network.model.userdetails.SetUserDetailsRequest;
 import au.com.dealsdirect.ui.base.BaseController;
+import au.com.dealsdirect.ui.custom.transitions.CustomSpinnerAdapter;
 import au.com.dealsdirect.utils.BundleBuilder;
 import butterknife.BindView;
 import butterknife.OnClick;
@@ -97,6 +102,11 @@ public class DetailsController extends BaseController implements DetailsMvpView 
         mSaveUserDetailsButton.setImageDrawable(
                 getResources().getDrawable(R.drawable.ic_check));
         mTitleTextView.setText("Personal Details");
+        List<String> list = new ArrayList<String>(Arrays.asList(getResources().getStringArray(R.array.genders)));
+        CustomSpinnerAdapter customSpinnerAdapter = new CustomSpinnerAdapter(getActivity(),
+                R.layout.row_custom_spinner_drop_down,
+                list);
+        mGenderSpinner.setAdapter(customSpinnerAdapter);
         SetUserDetailsRequest setUserDetailsRequest = new SetUserDetailsRequest();
         mPresenter.loadUser(setUserDetailsRequest);
     }
