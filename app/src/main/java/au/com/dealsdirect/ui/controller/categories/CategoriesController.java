@@ -177,23 +177,6 @@ public class CategoriesController extends BaseController
         String categoryName = getCategoryTreeResponse.getName();
         String categoryKey = getCategoryTreeResponse.getKey() != null ? getCategoryTreeResponse.getKey() : categoryName;
 
-
-        if (categoryKey != null && categoryTapCounter == 1 &&
-                categoryKey.equals(lastCategoryKey)) {
-
-            getRouter().setRoot(
-                    RouterTransaction.with(ShopsController.newInstance(getCategoryTreeResponse))
-                            .pushChangeHandler(new RightHorizontalTransitionChangeHandler())
-                            .popChangeHandler(new RightHorizontalTransitionChangeHandler()));
-            categoryTapCounter = 1;
-        }
-
-        assert categoryKey != null;
-        if (categoryKey.equals(lastCategoryKey))
-            categoryTapCounter = categoryTapCounter + 1;
-        else
-            categoryTapCounter = 1;
-
         if (mResultSubCategories.get(position).getChildren() != null) {
             mSubCategoryAdapter.replaceData(mResultSubCategories.get(position).getChildren());
         } else {
@@ -204,6 +187,15 @@ public class CategoriesController extends BaseController
         mChosenCategoryKey = categoryKey != null ? categoryKey : categoryName;
         lastCategoryKey = categoryKey != null ? categoryKey : categoryName;
 
+    }
+
+    @Override
+    public void onCategoryDoubleTap(int position, GetCategoryTreeResponse getCategoryTreeResponse) {
+
+        getRouter().setRoot(
+                RouterTransaction.with(ShopsController.newInstance(getCategoryTreeResponse))
+                        .pushChangeHandler(new RightHorizontalTransitionChangeHandler())
+                        .popChangeHandler(new RightHorizontalTransitionChangeHandler()));
     }
 
     private void createCategoryMap(List<GetCategoryTreeResponse> categories) {
@@ -345,6 +337,4 @@ public class CategoriesController extends BaseController
         }
 
     }
-
-
 }

@@ -73,7 +73,7 @@ public class SubCategoriesAdapter extends RecyclerView.Adapter<RecyclerView.View
 
             if (subCategoryItems.isEmpty()){
                 Log.d("mIsUpdate", mIsUpdate+"");
-                ((SubCategoriesViewHolder) holder).subCategoryDropdownImage.setVisibility(View.GONE);
+//                ((SubCategoriesViewHolder) holder).subCategoryDropdownImage.setVisibility(View.GONE);
 
             }else{
                 final boolean isExpanded = position==mExpandedPosition;

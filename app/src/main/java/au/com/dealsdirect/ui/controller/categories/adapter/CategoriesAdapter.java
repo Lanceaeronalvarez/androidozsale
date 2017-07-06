@@ -1,7 +1,10 @@
 package au.com.dealsdirect.ui.controller.categories.adapter;
 
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
+import android.view.GestureDetector;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.Animation;
@@ -58,17 +61,36 @@ public class CategoriesAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                 char first = mData.get(position).getName().charAt(0);
                 ((CategoriesViewHolder) holder).categoryIndicator.setText(String.valueOf(first));
             }
+//
+//            if (position == 0 && mLastSelectedViewHolderImageView == null) {
+//                mLastSelectedViewHolderImageView = ((CategoriesViewHolder) holder).categoryTitleBackground;
+//                 mLastSelectedViewHolderImageView.setBackgroundDrawable(
+//                        holder.itemView.getContext().getResources()
+//                                .getDrawable(R.drawable.bg_category_item_active));
+//
+//            }
+            GestureDetector gestureDetector = new GestureDetector(
+                    holder.itemView.getContext(),
+                    new GestureDetector.SimpleOnGestureListener() {
 
-            if (position == 0) {
-                mLastSelectedViewHolderImageView = ((CategoriesViewHolder) holder).categoryTitleBackground;
-                mLastSelectedViewHolderImageView.setBackgroundDrawable(
-                        holder.itemView.getContext().getResources()
-                                .getDrawable(R.drawable.bg_category_item_active));
+                        @Override
+                        public boolean onDoubleTap(MotionEvent e) {
+                            Log.d("tapping", "double tap");
 
-            }
+                            mCategoryAdapterClickListener.onCategoryDoubleTap(
+                                    position,
+                                    mData.get(position));
+
+                            return super.onDoubleTap(e);
+                        }
+                    });
+
+            ((CategoriesViewHolder) holder).itemView.setOnTouchListener((view, motionEvent)
+                    -> gestureDetector.onTouchEvent(motionEvent));
 
             ((CategoriesViewHolder) holder).categoryText.setText(mData.get(position).getName());
             ((CategoriesViewHolder) holder).itemView.setOnClickListener(view -> {
+                Log.d("tapping", "single tap");
 
                 if (mLastSelectedViewHolderImageView == null) {
 
@@ -111,6 +133,7 @@ public class CategoriesAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
     public long getItemId(int position) {
         return super.getItemId(position);
     }
+
 
     @Override
     public int getItemCount() {
