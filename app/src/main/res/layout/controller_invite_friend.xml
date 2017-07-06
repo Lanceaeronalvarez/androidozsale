@@ -17,33 +17,36 @@
         android:layout_below="@id/controller_invite_layout_title"
         android:layout_centerInParent="true"
         android:gravity="center_vertical|center_horizontal"
-        android:orientation="vertical"
-        android:padding="@dimen/screen_padding">
+        android:orientation="vertical">
 
         <ImageView
             android:layout_width="wrap_content"
             android:layout_height="250dp"
-            android:layout_margin="30dp"
+            android:layout_marginLeft="@dimen/activity_horizontal_margin"
+            android:layout_marginRight="@dimen/activity_horizontal_margin"
             android:src="@drawable/invite_friend_vouchers_medium" />
 
         <TextView
             fontPath="@string/font_lato_medium"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="20dp"
-            android:layout_marginTop="10dp"
             android:text="@string/invite_friend_guide"
+            android:layout_margin="@dimen/activity_horizontal_margin"
+
             android:textSize="@dimen/text_size_large" />
 
-        <Button
-            android:id="@+id/controller_invite_friend_button_send_invite"
-            style="@style/DDButtonStyle"
-            android:layout_width="match_parent"
-            android:layout_height="45dp"
-            android:layout_alignParentBottom="true"
-            android:layout_marginBottom="20dp"
-            android:gravity="center"
-            android:text="send an invite"
-            android:textSize="@dimen/text_size_xxlarge" />
     </LinearLayout>
+
+
+    <Button
+        android:id="@+id/controller_invite_friend_button_send_invite"
+        style="@style/DDButtonStyle"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/default_button_height"
+        android:layout_alignParentBottom="true"
+        android:gravity="center"
+        android:layout_margin="@dimen/activity_horizontal_margin"
+        android:text="send an invite"
+        android:textSize="@dimen/text_size_xxlarge" />
+
 </RelativeLayout>

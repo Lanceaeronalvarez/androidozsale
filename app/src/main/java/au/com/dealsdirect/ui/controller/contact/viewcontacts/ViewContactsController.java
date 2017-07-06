@@ -144,8 +144,7 @@ public class ViewContactsController extends BaseController implements ViewContac
     }
 
 
-    public ArrayList<ContactItemByDate>
-    getDifferentDates(List<GetContactsResponse.ContactList> lists) {
+    public ArrayList<ContactItemByDate> getDifferentDates(List<GetContactsResponse.ContactList> lists) {
 
         List<String> dateSet = new LinkedList<>();
         String dateHeaderFormat;

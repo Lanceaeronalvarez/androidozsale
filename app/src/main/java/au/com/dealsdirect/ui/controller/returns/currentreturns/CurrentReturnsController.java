@@ -101,13 +101,13 @@ public class CurrentReturnsController extends BaseController
 
         if (mCurrentReturns == null || mCurrentReturns.size() == 0){
             mPresenter.loadCurrentReturns();
-//            mPlaceholderLayout.setVisibility(View.VISIBLE);
-//            mCurrentReturnsRecyclerView.setVisibility(View.GONE);
+            mPlaceholderLayout.setVisibility(View.VISIBLE);
+            mCurrentReturnsRecyclerView.setVisibility(View.GONE);
 
         }  else {
 
-//            mPlaceholderLayout.setVisibility(View.GONE);
-//            mCurrentReturnsRecyclerView.setVisibility(View.VISIBLE);
+            mPlaceholderLayout.setVisibility(View.GONE);
+            mCurrentReturnsRecyclerView.setVisibility(View.VISIBLE);
             mCurrentReturnsAdapter = new CurrentReturnAdapter(
                     mCurrentReturns,
                     returnDetailsResponseBodyList,
@@ -141,6 +141,9 @@ public class CurrentReturnsController extends BaseController
     public void showCurrentReturns(List<CurrentReturns> currentReturns) {
 
         if(currentReturns!=null && currentReturns.size() != 0) {
+            mPlaceholderLayout.setVisibility(View.GONE);
+            mCurrentReturnsRecyclerView.setVisibility(View.VISIBLE);
+
             mCurrentReturns = currentReturns;
 
             Log.d("showreturns","show");
@@ -156,6 +159,9 @@ public class CurrentReturnsController extends BaseController
 
 
         }else{
+
+            mPlaceholderLayout.setVisibility(View.VISIBLE);
+            mCurrentReturnsRecyclerView.setVisibility(View.GONE);
             Log.d("showreturns","nope");
 
         }
@@ -181,13 +187,11 @@ public class CurrentReturnsController extends BaseController
                 itemIterator = itemIterator + 1;
                 mPresenter.loadReturnDetails(mCurrentReturns.get(itemIterator).getID(), itemIterator);
             }
-
-        }
+    }
 
     public void getCurrentReturnItems(List<CurrentReturns> currentReturns){
 
         mPresenter.loadReturnDetails(currentReturns.get(itemIterator).getID(), itemIterator);
-
     }
 
     @Override

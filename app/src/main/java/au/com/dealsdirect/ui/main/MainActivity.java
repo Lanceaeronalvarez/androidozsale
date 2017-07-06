@@ -229,8 +229,8 @@ public class MainActivity extends BaseActivity implements MainMvpView {
     @Override
     public void showCheckoutController() {
         mRouter.pushController(RouterTransaction.with(new CheckoutController())
-                .pushChangeHandler(new HorizontalChangeHandler())
-                .popChangeHandler(new HorizontalChangeHandler()));
+                .pushChangeHandler(new FadeChangeHandler())
+                .popChangeHandler(new FadeChangeHandler()));
     }
 
     @Override
