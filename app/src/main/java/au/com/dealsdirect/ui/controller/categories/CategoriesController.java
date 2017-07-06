@@ -151,7 +151,6 @@ public class CategoriesController extends BaseController
 
         final Handler handler = new Handler();
         handler.postDelayed(() -> {
-            // Do something after 5s = 5000ms
 
             assert (getActivity()) != null;
             ((BaseActivity) getActivity()).hideBottomNavigationView();

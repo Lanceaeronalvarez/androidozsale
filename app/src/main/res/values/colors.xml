@@ -38,7 +38,7 @@
 
     <color name="app_skin">#FAFAF9</color>
     <color name="toolbar_skin">#F00065</color>
-    <color name="toolbar_active_skin">#fa1c7a</color>
+    <color name="toolbar_active_skin">#F00065</color>
 
 
     <!-- Button Theme -->

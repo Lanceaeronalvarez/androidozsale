@@ -4,10 +4,10 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.bluelinelabs.conductor.ControllerChangeHandler;
@@ -23,7 +23,6 @@ import javax.inject.Inject;
 
 import au.com.dealsdirect.R;
 import au.com.dealsdirect.data.network.model.saleitems.GetSaleItemsResponse;
-import au.com.dealsdirect.ui.base.BaseActivity;
 import au.com.dealsdirect.ui.base.BaseController;
 import au.com.dealsdirect.ui.controller.saleitemdetails.SaleItemDetailsController;
 import au.com.dealsdirect.ui.controller.saleitems.adapter.SaleItemsAdapter;
@@ -64,6 +63,9 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
 
     @BindView(R.id.partial_toolbar_arrow_title)
     TextView mTitleTextView;
+
+    @BindView(R.id.controller_sale_items_placeholder)
+    LinearLayout mPlaceholder;
 
     private SaleItemsAdapter mSaleItemsAdapter;
 
@@ -180,7 +182,13 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
 
         if(tempList == null || tempList.isEmpty()){
             hasLoadedAllItems = true;
+            mPlaceholder.setVisibility(View.VISIBLE);
+            mSaleItemsRecyclerView.setVisibility(View.GONE);
             return;
+        }else{
+
+            mPlaceholder.setVisibility(View.GONE);
+            mSaleItemsRecyclerView.setVisibility(View.VISIBLE);
         }
 
         if (page == 0) {

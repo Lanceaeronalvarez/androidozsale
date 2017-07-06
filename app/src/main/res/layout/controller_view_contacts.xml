@@ -33,7 +33,6 @@
             android:text="Create Contact"/>
 
         <include
-            android:visibility="gone"
             layout="@layout/partial_no_contacts_placeholder_layout"/>
 
     </RelativeLayout>

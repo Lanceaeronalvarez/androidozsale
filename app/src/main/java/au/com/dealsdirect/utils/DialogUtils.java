@@ -19,6 +19,7 @@ public class DialogUtils {
                 .setCancelable(false)
                 .setPositiveButton(messageYes, positiveOnClickListener)
                 .setNegativeButton(messageNo, negativeOnClickListener)
+                .setCancelable(true)
                 .show();
     }
 

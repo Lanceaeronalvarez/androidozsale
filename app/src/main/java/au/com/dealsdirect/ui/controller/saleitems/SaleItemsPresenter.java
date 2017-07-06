@@ -1,7 +1,5 @@
 package au.com.dealsdirect.ui.controller.saleitems;
 
-import android.util.Log;
-
 import com.androidnetworking.error.ANError;
 import com.google.gson.Gson;
 
@@ -74,10 +72,8 @@ public class SaleItemsPresenter<V extends SaleItemsMvpView> extends BasePresente
                                 return;
                             }
                             getMvpView().hideLoading();
-                            if(!getSaleItemsResponse.products.isEmpty()){
+                            getMvpView().showSaleItems(getSaleItemsResponse);
 
-                                getMvpView().showSaleItems(getSaleItemsResponse);
-                            }
                         }, throwable -> {
                             if (!isViewAttached()) {
                                 return;
