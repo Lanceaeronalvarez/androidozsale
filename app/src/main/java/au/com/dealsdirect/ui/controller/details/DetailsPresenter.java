@@ -29,9 +29,9 @@ public class DetailsPresenter<V extends DetailsMvpView> extends BasePresenter<V>
     }
 
     @Override
-    public void loadUser(int id) {
+    public void loadUser(SetUserDetailsRequest setUserDetailsRequest) {
         getCompositeDisposable().add(getDataManager()
-                .getLoadUserDetailsApiCall()
+                .getLoadUserDetailsApiCall(setUserDetailsRequest)
                 .subscribeOn(getSchedulerProvider().io())
                 .observeOn(getSchedulerProvider().ui())
                 .subscribe(new Consumer<GetUserDetailsResponse>() {

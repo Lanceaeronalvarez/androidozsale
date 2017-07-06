@@ -57,4 +57,7 @@
     <color name="bg_chips_default_border">#EDF0F5</color>
     <color name="bg_chips_checked">#ED1167</color>
     <color name="bg_chips_text">#FFFFFF</color>
+
+    <!-- Dialog Theme -->
+    <color name="bg_dialog_default">#FFFFFF</color>
 </resources>

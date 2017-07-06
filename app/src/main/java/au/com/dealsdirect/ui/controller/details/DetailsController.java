@@ -14,6 +14,7 @@ import javax.inject.Inject;
 
 import au.com.dealsdirect.R;
 import au.com.dealsdirect.data.network.model.userdetails.GetUserDetailsResponse;
+import au.com.dealsdirect.data.network.model.userdetails.SetUserDetailsRequest;
 import au.com.dealsdirect.ui.base.BaseController;
 import au.com.dealsdirect.utils.BundleBuilder;
 import butterknife.BindView;
@@ -96,7 +97,8 @@ public class DetailsController extends BaseController implements DetailsMvpView 
         mSaveUserDetailsButton.setImageDrawable(
                 getResources().getDrawable(R.drawable.ic_check));
         mTitleTextView.setText("Personal Details");
-        mPresenter.loadUser(0);
+        SetUserDetailsRequest setUserDetailsRequest = new SetUserDetailsRequest();
+        mPresenter.loadUser(setUserDetailsRequest);
     }
 
     @Override

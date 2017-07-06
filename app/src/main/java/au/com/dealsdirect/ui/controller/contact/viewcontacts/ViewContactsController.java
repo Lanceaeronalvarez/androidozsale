@@ -8,6 +8,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.bluelinelabs.conductor.RouterTransaction;
@@ -55,6 +56,9 @@ public class ViewContactsController extends BaseController implements ViewContac
 
     @BindView(R.id.contacts_recycler_view)
     RecyclerView mViewContactsRecyclerView;
+
+    @BindView(R.id.no_contacts_placeholder)
+    LinearLayout mPlaceholderLayout;
 
     @Inject
     ViewContactsMvpPresenter<ViewContactsMvpView> mPresenter;
@@ -124,9 +128,9 @@ public class ViewContactsController extends BaseController implements ViewContac
         if (items != null && items.size() != 0) {
             mContactDateAdapter.replace(getDifferentDates(items));
             mViewContactsRecyclerView.setVisibility(View.VISIBLE);
-//            mPlaceholderLayout.setVisibility(View.GONE);
+            mPlaceholderLayout.setVisibility(View.GONE);
         } else {
-//            mPlaceholderLayout.setVisibility(View.VISIBLE);
+            mPlaceholderLayout.setVisibility(View.VISIBLE);
             mViewContactsRecyclerView.setVisibility(View.GONE);
         }
     }

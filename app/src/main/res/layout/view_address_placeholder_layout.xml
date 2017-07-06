@@ -17,10 +17,10 @@
         android:orientation="vertical">
 
         <ImageView
-            android:layout_width="70dp"
-            android:layout_height="70dp"
+            android:layout_width="60dp"
+            android:layout_height="60dp"
             android:layout_gravity="center"
-            android:src="@drawable/view_address_placeholder"/>
+            android:src="@drawable/ic_address_placeholder"/>
         
         <TextView
             android:layout_width="wrap_content"

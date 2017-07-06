@@ -57,6 +57,10 @@ public class ViewVouchersPresenter<V extends ViewVouchersMvpView> extends BasePr
                 .subscribe(new Consumer<GetUserVoucherResponse>() {
                     @Override
                     public void accept(@NonNull GetUserVoucherResponse getUserVoucherResponse) throws Exception {
+                        if(!isViewAttached()) {
+                            return;
+                        }
+                        getMvpView().hideLoading();
                         selectSubject.onNext(getUserVoucherResponse.getValue().getList());
                     }
                 }, new Consumer<Throwable>() {
@@ -76,14 +80,16 @@ public class ViewVouchersPresenter<V extends ViewVouchersMvpView> extends BasePr
                         }
                     }
                 }));
-
         getCompositeDisposable().add(getDataManager()
-                .callGetVouchers()
+                .callGetVouchers(getUserVouchersRequest)
                 .subscribeOn(getSchedulerProvider().io())
                 .observeOn(getSchedulerProvider().ui())
                 .subscribe(new Consumer<GetVouchersResponse>() {
                     @Override
                     public void accept(@NonNull GetVouchersResponse getVouchersResponse) throws Exception {
+                        if(!isViewAttached()) {
+                            return;
+                        }
                         selectSubject2.onNext(getVouchersResponse);
                     }
                 }, new Consumer<Throwable>() {

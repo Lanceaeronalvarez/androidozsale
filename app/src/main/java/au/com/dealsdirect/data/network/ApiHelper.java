@@ -32,6 +32,11 @@ import au.com.dealsdirect.data.network.model.checkout.RemoveUserPaymentMethod;
 import au.com.dealsdirect.data.network.model.contacthistory.GetContactHistoryRequest;
 import au.com.dealsdirect.data.network.model.contacthistory.GetContactHistoryResponse;
 import au.com.dealsdirect.data.network.model.contactitem.GetContactsResponse;
+import au.com.dealsdirect.data.network.model.invite.GetInviteRequest;
+import au.com.dealsdirect.data.network.model.invite.GetInviteResponse;
+import au.com.dealsdirect.data.network.model.invite.SetInviteRequest;
+import au.com.dealsdirect.data.network.model.invite.SetInviteResponse;
+
 import au.com.dealsdirect.data.network.model.contactorder.ContactOrders;
 import au.com.dealsdirect.data.network.model.contactreply.ReplyContactRequest;
 import au.com.dealsdirect.data.network.model.contactreply.ReplyContactResponse;
@@ -39,6 +44,7 @@ import au.com.dealsdirect.data.network.model.contactsubject.ContactSubjects;
 import au.com.dealsdirect.data.network.model.contactsubject.ContactSubjectsRequest;
 import au.com.dealsdirect.data.network.model.createcontact.CreateContactRequest;
 import au.com.dealsdirect.data.network.model.createcontact.CreateContactResponse;
+
 import au.com.dealsdirect.data.network.model.login.LoginEmail;
 import au.com.dealsdirect.data.network.model.login.LoginFacebook;
 import au.com.dealsdirect.data.network.model.login.LoginTicket;
@@ -136,8 +142,7 @@ public interface ApiHelper {
 
     Observable<GetUserDetailsResponse.Response> getSaveUserDetailsApiCall(SetUserDetailsRequest setUserDetailsRequest);
 
-    Observable<GetUserDetailsResponse> getLoadUserDetailsApiCall();
-
+    Observable<GetUserDetailsResponse> getLoadUserDetailsApiCall(SetUserDetailsRequest setUserDetailsRequest);
 //  MY ORDERS API CALLS
 
     Observable<GetPaymentsList.ResponseValue> callGetPaymentsList(GetPaymentsList.RequestValues requestValues);
@@ -146,7 +151,7 @@ public interface ApiHelper {
 
 //    VOUCHERS API CALLS
 
-    Observable<GetVouchersResponse> callGetVouchers();
+    Observable<GetVouchersResponse> callGetVouchers(GetUserVouchersRequest getUserVouchersRequest);
 
     Observable<GetUserVoucherResponse> callGetUserVouchers(GetUserVouchersRequest getUserVouchersRequest);
     
@@ -179,6 +184,12 @@ public interface ApiHelper {
     
     Observable<RemoveUserPaymentMethod.ResponseValue> callRemoveUserPaymentMethod(RemoveUserPaymentMethod.RequestValue model);
 
+
+    //  INVITE API CALLS
+    Observable<GetInviteResponse> callGetInvite(GetInviteRequest request);
+    Observable<SetInviteResponse> callSetInvite(SetInviteRequest request);
+  
+
     // Contact Us Api Call
     Observable<ContactOrders> callGetContactOrders();
 
@@ -187,7 +198,4 @@ public interface ApiHelper {
     Observable<CreateContactResponse> callCreateContact(CreateContactRequest createContactRequest);
 
     Observable<ReplyContactResponse> callReplyContact(ReplyContactRequest createContactRequest);
-
-
-
 }

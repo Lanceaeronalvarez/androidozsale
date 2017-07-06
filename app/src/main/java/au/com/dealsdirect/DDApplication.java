@@ -49,7 +49,7 @@ public class DDApplication extends Application {
         CookieUtils.initCookieJar(this);
 //        AndroidNetworking.initialize(getApplicationContext());
         if (BuildConfig.DEBUG) {
-            customClient = NetworkUtils.provideOkHttpClientResponseCaching(this, HttpLoggingInterceptor.Level.BODY);
+            customClient = NetworkUtils.provideOkHttpClientResponseCaching(this, HttpLoggingInterceptor.Level.HEADERS);
         }else{
             customClient = NetworkUtils.provideOkHttpClientResponseCaching(this);
         }

@@ -38,6 +38,6 @@ public class LanguagePresenter<V extends LanguageMvpView> extends BasePresenter<
 
     @Override
     public void onLanguageItemClick(Language language) {
-        getMvpView().onBackPress();
+        //getMvpView().onBackPress();
     }
 }

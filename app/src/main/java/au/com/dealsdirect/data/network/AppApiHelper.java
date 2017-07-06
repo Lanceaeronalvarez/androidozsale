@@ -36,6 +36,11 @@ import au.com.dealsdirect.data.network.model.checkout.RemoveUserPaymentMethod;
 import au.com.dealsdirect.data.network.model.contacthistory.GetContactHistoryRequest;
 import au.com.dealsdirect.data.network.model.contacthistory.GetContactHistoryResponse;
 import au.com.dealsdirect.data.network.model.contactitem.GetContactsResponse;
+import au.com.dealsdirect.data.network.model.invite.GetInviteRequest;
+import au.com.dealsdirect.data.network.model.invite.GetInviteResponse;
+import au.com.dealsdirect.data.network.model.invite.SetInviteRequest;
+import au.com.dealsdirect.data.network.model.invite.SetInviteResponse;
+
 import au.com.dealsdirect.data.network.model.contactorder.ContactOrders;
 import au.com.dealsdirect.data.network.model.contactreply.ReplyContactRequest;
 import au.com.dealsdirect.data.network.model.contactreply.ReplyContactResponse;
@@ -43,6 +48,7 @@ import au.com.dealsdirect.data.network.model.contactsubject.ContactSubjects;
 import au.com.dealsdirect.data.network.model.contactsubject.ContactSubjectsRequest;
 import au.com.dealsdirect.data.network.model.createcontact.CreateContactRequest;
 import au.com.dealsdirect.data.network.model.createcontact.CreateContactResponse;
+
 import au.com.dealsdirect.data.network.model.login.LoginEmail;
 import au.com.dealsdirect.data.network.model.login.LoginFacebook;
 import au.com.dealsdirect.data.network.model.login.LoginTicket;
@@ -396,7 +402,27 @@ public class AppApiHelper implements ApiHelper {
                 .getObjectObservable(RemoveUserPaymentMethod.ResponseValue.class);
     }
 
+
     @Override
+    public Observable<GetInviteResponse> callGetInvite(GetInviteRequest request) {
+        return Rx2AndroidNetworking.post(ApiEndPoint.GET_INVITE)
+                .addHeaders(mApiHeader.getPublicApiHeader())
+                .addJSONObjectBody(JsonUtils.convertToJsonObject(request))
+                .build()
+                .getObjectObservable(GetInviteResponse.class);
+    }
+
+    @Override
+    public Observable<SetInviteResponse> callSetInvite(SetInviteRequest request) {
+        return Rx2AndroidNetworking.post(ApiEndPoint.SET_INVITE)
+                .addHeaders(mApiHeader.getPublicApiHeader())
+                .addJSONObjectBody(JsonUtils.convertToJsonObject(request))
+                .build()
+                .getObjectObservable(SetInviteResponse.class);
+    }
+
+
+  @Override
     public Observable<ContactOrders> callGetContactOrders() {
         return Rx2AndroidNetworking.post(ApiEndPoint.GET_CONTACT_INVOICES)
                 .addJSONObjectBody(JsonUtils.convertToJsonObject(null))
@@ -430,8 +456,6 @@ public class AppApiHelper implements ApiHelper {
                 .build()
                 .getObjectObservable(ReplyContactResponse.class);
     }
-
-
     @Override
     public Observable<GetContactsResponse> callGetContacts(String languageId) {
         return Rx2AndroidNetworking.post(ApiEndPoint.GET_CONTACTS)
@@ -460,10 +484,10 @@ public class AppApiHelper implements ApiHelper {
     }
 
     @Override
-    public Observable<GetUserDetailsResponse> getLoadUserDetailsApiCall() {
+    public Observable<GetUserDetailsResponse> getLoadUserDetailsApiCall(SetUserDetailsRequest setUserDetailsRequest) {
         return Rx2AndroidNetworking.post(ApiEndPoint.LOAD_USER_DETAILS)
                 .addHeaders(mApiHeader.getPublicApiHeader())
-                .addJSONObjectBody(JsonUtils.convertToJsonObject(null))
+                .addJSONObjectBody(JsonUtils.convertToJsonObject(setUserDetailsRequest))
                 .build()
                 .getObjectObservable(GetUserDetailsResponse.class);
     }
@@ -477,17 +501,17 @@ public class AppApiHelper implements ApiHelper {
     }
 
     @Override
-    public Observable<GetVouchersResponse> callGetVouchers() {
+    public Observable<GetVouchersResponse> callGetVouchers(GetUserVouchersRequest getUserVouchersRequest) {
         return Rx2AndroidNetworking.post(ApiEndPoint.GET_VOUCHERS)
                 .addHeaders(mApiHeader.getPublicApiHeader())
-                .addJSONObjectBody(JsonUtils.convertToJsonObject(null))
+                .addJSONObjectBody(JsonUtils.convertToJsonObject(getUserVouchersRequest))
                 .build()
                 .getObjectObservable(GetVouchersResponse.class);
     }
 
     @Override
     public Observable<ClearVouchersResponse> callGetClearVouchers(ClearVouchersRequest clearVouchersRequest) {
-        return Rx2AndroidNetworking.post(ApiEndPoint.GET_CLEAR_VOUCHERS)
+        return Rx2AndroidNetworking.post(ApiEndPoint.CLEAR_VOUCHERS)
                 .addHeaders(mApiHeader.getPublicApiHeader())
                 .addJSONObjectBody(JsonUtils.convertToJsonObject(clearVouchersRequest))
                 .build()
