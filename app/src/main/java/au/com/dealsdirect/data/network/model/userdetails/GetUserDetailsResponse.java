@@ -185,9 +185,13 @@ public class GetUserDetailsResponse {
 
         @Override
         public String toString() {
-            return months[month - 1] + " "
-                    + day + ", "
-                    + year;
+            if(months != null) {
+                return months[month - 1] + " "
+                        + day + ", "
+                        + year;
+            } else {
+                return "";
+            }
         }
     }
 }
