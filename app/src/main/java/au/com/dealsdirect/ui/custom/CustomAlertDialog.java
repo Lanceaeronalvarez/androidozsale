@@ -25,7 +25,7 @@ import au.com.dealsdirect.R;
 public class CustomAlertDialog {
 
     private static final int WINDOW_DIM_AMOUNT = 0;
-    private static final int DISMISS_DELAY = 300000;
+    private static final int DISMISS_DELAY = 2000;
 
     private static android.support.v7.app.AlertDialog alertDialog;
 
