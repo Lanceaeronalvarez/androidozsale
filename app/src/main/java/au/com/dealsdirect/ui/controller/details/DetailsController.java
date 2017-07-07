@@ -3,6 +3,7 @@ package au.com.dealsdirect.ui.controller.details;
 import android.app.DatePickerDialog;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -23,6 +24,7 @@ import au.com.dealsdirect.R;
 import au.com.dealsdirect.data.network.model.userdetails.GetUserDetailsResponse;
 import au.com.dealsdirect.data.network.model.userdetails.SetUserDetailsRequest;
 import au.com.dealsdirect.ui.base.BaseController;
+import au.com.dealsdirect.ui.custom.CustomAlertDialog;
 import au.com.dealsdirect.ui.custom.transitions.CustomSpinnerAdapter;
 import au.com.dealsdirect.utils.BundleBuilder;
 import au.com.dealsdirect.utils.DateUtils;
@@ -157,12 +159,28 @@ public class DetailsController extends BaseController implements DetailsMvpView 
         mDateOfBirthText.setText(details.getDateOfBirth().toString());
     }
 
+    @Override
+    public void saveUserDetailSuccess() {
+        CustomAlertDialog.showCustomAlertDialog(getActivity(),
+                CustomAlertDialog.CustomDialogIconState.POSITIVE,
+                "User details is saved");
+    }
+
     @OnClick(R.id.partial_toolbar_filter_view)
     public void saveUserDetails(){
+
+        if(mPasswordText.getText().toString().isEmpty()) {
+            CustomAlertDialog.showCustomAlertDialog(getActivity(),
+                    CustomAlertDialog.CustomDialogIconState.NEGATIVE,
+                    "Please enter your password");
+            return;
+        }
+
         String username = mUserNameText.getText().toString();
         String firstname = mFirstNameText.getText().toString();
         String lastname = mLastNameText.getText().toString();
-        boolean gender = true;
+        boolean gender = mGenderSpinner.getSelectedItem().toString().equals("Male") ? true : false;
+        Log.d("gender", gender+"");
         String dateofbirth = mDateOfBirthText.getText().toString();
         String email = mEmailAddressText.getText().toString();
         String password = mPasswordText.getText().toString();

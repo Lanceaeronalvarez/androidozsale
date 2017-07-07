@@ -10,6 +10,7 @@ import au.com.dealsdirect.data.DataManager;
 import au.com.dealsdirect.data.network.model.userdetails.GetUserDetailsResponse;
 import au.com.dealsdirect.data.network.model.userdetails.SetUserDetailsRequest;
 import au.com.dealsdirect.ui.base.BasePresenter;
+import au.com.dealsdirect.ui.custom.CustomAlertDialog;
 import au.com.dealsdirect.utils.rx.SchedulerProvider;
 import io.reactivex.annotations.NonNull;
 import io.reactivex.disposables.CompositeDisposable;
@@ -82,7 +83,7 @@ public class DetailsPresenter<V extends DetailsMvpView> extends BasePresenter<V>
                 .subscribe(new Consumer<GetUserDetailsResponse.Response>() {
                     @Override
                     public void accept(@NonNull GetUserDetailsResponse.Response response) throws Exception {
-
+                        getMvpView().saveUserDetailSuccess();
                     }
                 }, new Consumer<Throwable>() {
                     @Override
