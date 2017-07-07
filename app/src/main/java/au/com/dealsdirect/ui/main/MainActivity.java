@@ -226,8 +226,6 @@ public class MainActivity extends BaseActivity implements MainMvpView {
         mRouter.setRoot(RouterTransaction.with(AccountController.newInstance())
                 .pushChangeHandler(new FadeChangeHandler())
                 .popChangeHandler(new FadeChangeHandler()));
-
-
     }
 
     @Override
@@ -243,7 +241,6 @@ public class MainActivity extends BaseActivity implements MainMvpView {
         mRouter.setRoot(RouterTransaction.with(InviteController.newInstance())
                 .pushChangeHandler(new FadeChangeHandler())
                 .popChangeHandler(new FadeChangeHandler()));
-
     }
 
     @Override
