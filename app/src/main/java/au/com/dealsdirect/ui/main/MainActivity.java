@@ -259,9 +259,7 @@ public class MainActivity extends BaseActivity implements MainMvpView {
     @Override
     public void showLoginController(Router router, AuthHandler handler) {
         //pinapasa yung router, para kahit childe router man siya ng kung ano mang view, pwedeng siya ang tumawag.
-
         router.pushController(RouterTransaction.with(LoginController.newInstance(handler))
-                .tag("Login")
                 .pushChangeHandler(new VerticalChangeHandler())
                 .popChangeHandler(new VerticalChangeHandler()));
     }

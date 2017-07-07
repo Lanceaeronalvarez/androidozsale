@@ -172,12 +172,9 @@ public class AccountController extends BaseController implements AccountMvpView 
     @Override
     public void triggerLogin(String option) {
 
-
         ((MainMvpView)getActivity()).showLoginController(getRouter(),new AuthHandler() {
             @Override
             public void success() {
-//                getRouter().popController(getRouter().getControllerWithTag("Login"));
-                mPresenter.onAttach(mAccountMvpView);
                 mPresenter.onAccountItemClick(option);
             }
 

@@ -150,20 +150,16 @@ public class LoginController extends BaseController implements LoginMvpView {
 
     @Override
     public void showLoginSuccessful(String loginTicket) {
-        mAuthHandler.success();
         getActivity().onBackPressed();
-//            Auth.didLogin(getBaseActivity(), loginTicket);
-//            RxBus.instance().post(GVersion.EVENT_LOGIN);
-//            getBaseActivity().finish();
-//            authHandler.success();
+        mAuthHandler.success();
 
+//            RxBus.instance().post(GVersion.EVENT_LOGIN);
     }
 
     @Override
     public void showLoginError(String message) {
         mAuthHandler.error();
 
-        getActivity().onBackPressed();
 //        DialogUtils.showYesDialog(getActivity(), "Login", message, "ok",
 //                (dialogInterface, i) -> {
 //
