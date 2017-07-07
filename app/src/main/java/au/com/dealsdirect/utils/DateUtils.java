@@ -3,6 +3,7 @@ package au.com.dealsdirect.utils;
 import android.annotation.SuppressLint;
 import android.text.format.DateFormat;
 
+import java.text.DateFormatSymbols;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -13,6 +14,8 @@ import java.util.Date;
  */
 
 public class DateUtils {
+
+    public static String[] months = new DateFormatSymbols().getMonths();
 
     public static String convertStartEndDateToString(String startString, String endString) {
         @SuppressLint("SimpleDateFormat")
@@ -209,5 +212,10 @@ public class DateUtils {
         }
     }
 
+    public static String getDateStringFromCalendar(Calendar calendar) {
+        return months[calendar.get(Calendar.MONTH)] + " "
+                + calendar.get(Calendar.DAY_OF_MONTH) + ", "
+                + calendar.get(Calendar.YEAR);
+    }
 
 }

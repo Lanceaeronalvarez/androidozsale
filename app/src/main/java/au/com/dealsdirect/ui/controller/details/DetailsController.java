@@ -1,10 +1,12 @@
 package au.com.dealsdirect.ui.controller.details;
 
+import android.app.DatePickerDialog;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Spinner;
@@ -12,6 +14,7 @@ import android.widget.TextView;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Calendar;
 import java.util.List;
 
 import javax.inject.Inject;
@@ -22,6 +25,7 @@ import au.com.dealsdirect.data.network.model.userdetails.SetUserDetailsRequest;
 import au.com.dealsdirect.ui.base.BaseController;
 import au.com.dealsdirect.ui.custom.transitions.CustomSpinnerAdapter;
 import au.com.dealsdirect.utils.BundleBuilder;
+import au.com.dealsdirect.utils.DateUtils;
 import butterknife.BindView;
 import butterknife.OnClick;
 
@@ -67,6 +71,9 @@ public class DetailsController extends BaseController implements DetailsMvpView 
     @BindView(R.id.controller_details_text_confirmPassword)
     EditText mConfirmPasswordText;
 
+    private Calendar mCalendar;
+    private DatePickerDialog.OnDateSetListener onDateSetListener;
+
 
     public DetailsController(Bundle args){
         super(args);
@@ -102,11 +109,34 @@ public class DetailsController extends BaseController implements DetailsMvpView 
         mSaveUserDetailsButton.setImageDrawable(
                 getResources().getDrawable(R.drawable.ic_check));
         mTitleTextView.setText("Personal Details");
+
         List<String> list = new ArrayList<String>(Arrays.asList(getResources().getStringArray(R.array.genders)));
         CustomSpinnerAdapter customSpinnerAdapter = new CustomSpinnerAdapter(getActivity(),
                 R.layout.row_custom_spinner_drop_down,
                 list);
         mGenderSpinner.setAdapter(customSpinnerAdapter);
+
+        mCalendar = Calendar.getInstance();
+
+        onDateSetListener = new DatePickerDialog.OnDateSetListener() {
+            @Override
+            public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
+                mCalendar.set(Calendar.YEAR, year);
+                mCalendar.set(Calendar.MONTH, monthOfYear);
+                mCalendar.set(Calendar.DAY_OF_MONTH, dayOfMonth);
+
+                mDateOfBirthText.setText(DateUtils.getDateStringFromCalendar(mCalendar));
+            }
+        };
+
+        mDateOfBirthText.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                new DatePickerDialog(getActivity(), R.style.DatePickerTheme, onDateSetListener,
+                        mCalendar.get(Calendar.YEAR), mCalendar.get(Calendar.MONTH),
+                        mCalendar.get(Calendar.DAY_OF_MONTH)).show();
+            }
+        });
         SetUserDetailsRequest setUserDetailsRequest = new SetUserDetailsRequest();
         mPresenter.loadUser(setUserDetailsRequest);
     }
