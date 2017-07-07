@@ -227,7 +227,7 @@ public class AppDataManager implements DataManager {
     }
 
     @Override
-    public Observable<GetUserDetailsResponse.Response> getSaveUserDetailsApiCall(SetUserDetailsRequest setUserDetailsRequest) {
+    public Observable<GetUserDetailsResponse> getSaveUserDetailsApiCall(SetUserDetailsRequest setUserDetailsRequest) {
         return mApiHelper.getSaveUserDetailsApiCall(setUserDetailsRequest);
     }
 

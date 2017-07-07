@@ -10,7 +10,9 @@ import au.com.dealsdirect.ui.base.MvpView;
 public interface DetailsMvpView extends MvpView {
     void loadDetails(GetUserDetailsResponse userDetailsResponse);
 
-    void saveUserDetailSuccess();
+    void saveUserDetailsSuccess();
+
+    void saveUserDetailsFailed(String message);
 
     boolean isActive();
 }

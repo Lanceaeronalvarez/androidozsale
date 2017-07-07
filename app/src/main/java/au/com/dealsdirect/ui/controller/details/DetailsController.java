@@ -151,7 +151,7 @@ public class DetailsController extends BaseController implements DetailsMvpView 
 
     @Override
     public void loadDetails(GetUserDetailsResponse userDetailsResponse) {
-        GetUserDetailsResponse.Value details = userDetailsResponse.getValue();
+        GetUserDetailsResponse.Value details = userDetailsResponse.getResponse().getValue();
         mUserNameText.setText(details.getUsername());
         mFirstNameText.setText(details.getForename());
         mLastNameText.setText(details.getSurname());
@@ -160,16 +160,23 @@ public class DetailsController extends BaseController implements DetailsMvpView 
     }
 
     @Override
-    public void saveUserDetailSuccess() {
+    public void saveUserDetailsSuccess() {
         CustomAlertDialog.showCustomAlertDialog(getActivity(),
                 CustomAlertDialog.CustomDialogIconState.POSITIVE,
                 "User details is saved");
     }
 
+    @Override
+    public void saveUserDetailsFailed(String message) {
+        CustomAlertDialog.showCustomAlertDialog(getActivity(),
+                CustomAlertDialog.CustomDialogIconState.NEGATIVE,
+                message);
+    }
+
     @OnClick(R.id.partial_toolbar_filter_view)
     public void saveUserDetails(){
 
-        if(mPasswordText.getText().toString().isEmpty()) {
+        if(mPasswordText.getText().toString().isEmpty() || mPasswordText.getText().toString() == "") {
             CustomAlertDialog.showCustomAlertDialog(getActivity(),
                     CustomAlertDialog.CustomDialogIconState.NEGATIVE,
                     "Please enter your password");
@@ -180,7 +187,6 @@ public class DetailsController extends BaseController implements DetailsMvpView 
         String firstname = mFirstNameText.getText().toString();
         String lastname = mLastNameText.getText().toString();
         boolean gender = mGenderSpinner.getSelectedItem().toString().equals("Male") ? true : false;
-        Log.d("gender", gender+"");
         String dateofbirth = mDateOfBirthText.getText().toString();
         String email = mEmailAddressText.getText().toString();
         String password = mPasswordText.getText().toString();

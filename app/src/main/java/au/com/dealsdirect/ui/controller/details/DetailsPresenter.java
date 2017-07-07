@@ -2,15 +2,12 @@ package au.com.dealsdirect.ui.controller.details;
 
 import com.androidnetworking.error.ANError;
 
-import java.util.Set;
-
 import javax.inject.Inject;
 
 import au.com.dealsdirect.data.DataManager;
 import au.com.dealsdirect.data.network.model.userdetails.GetUserDetailsResponse;
 import au.com.dealsdirect.data.network.model.userdetails.SetUserDetailsRequest;
 import au.com.dealsdirect.ui.base.BasePresenter;
-import au.com.dealsdirect.ui.custom.CustomAlertDialog;
 import au.com.dealsdirect.utils.rx.SchedulerProvider;
 import io.reactivex.annotations.NonNull;
 import io.reactivex.disposables.CompositeDisposable;
@@ -80,10 +77,14 @@ public class DetailsPresenter<V extends DetailsMvpView> extends BasePresenter<V>
                 .getSaveUserDetailsApiCall(setUserDetailsRequest)
                 .subscribeOn(getSchedulerProvider().io())
                 .observeOn(getSchedulerProvider().ui())
-                .subscribe(new Consumer<GetUserDetailsResponse.Response>() {
+                .subscribe(new Consumer<GetUserDetailsResponse>() {
                     @Override
-                    public void accept(@NonNull GetUserDetailsResponse.Response response) throws Exception {
-                        getMvpView().saveUserDetailSuccess();
+                    public void accept(@NonNull GetUserDetailsResponse response) throws Exception {
+                        if(response.getResponse().getResult()) {
+                            getMvpView().saveUserDetailsSuccess();
+                        } else {
+                            getMvpView().saveUserDetailsFailed(response.getResponse().getMessage());
+                        }
                     }
                 }, new Consumer<Throwable>() {
                     @Override

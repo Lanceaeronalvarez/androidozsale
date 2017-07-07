@@ -14,12 +14,16 @@ public class GetUserDetailsResponse {
 
     private Response d;
 
-    public Value getValue() {
-        return d.Value;
+    public Response getResponse() {
+        return d;
     }
 
     public static class Response extends LegacyBaseResponseValue {
         public Value Value;
+
+        public Value getValue() {
+            return Value;
+        }
     }
 
     public static class Value {
