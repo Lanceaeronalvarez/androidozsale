@@ -77,11 +77,8 @@ public class HomeController extends BaseController implements HomeMvpView {
 
     @Override
     protected void setUp(View view) {
+        getRouter().setRoot(RouterTransaction.with(new ShopsController()));
 
-        mChildRouter = getChildRouter(mFrameLayout).setPopsLastView(false);
-        if (!mChildRouter.hasRootController()) {
-            mChildRouter.setRoot(RouterTransaction.with(new ShopsController()));
-        }
     }
 
 }

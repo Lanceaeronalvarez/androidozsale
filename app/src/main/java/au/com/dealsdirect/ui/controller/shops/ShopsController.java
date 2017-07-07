@@ -164,7 +164,6 @@ public class ShopsController extends BaseController implements ShopsMvpView, Ban
     void onClickHamburger() {
 
         getRouter().pushController(RouterTransaction.with(CategoriesController.newInstance())
-                .tag("category")
                 .pushChangeHandler(new HorizontalNavTransitionChangeHandler(100))
                 .popChangeHandler(new HorizontalNavTransitionChangeHandler(100)));
 

@@ -109,7 +109,6 @@ public class CategoriesController extends BaseController
     @Override
     protected void onViewBound(@NonNull View view) {
         super.onViewBound(view);
-
         setUp(view);
     }
 

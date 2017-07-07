@@ -2,6 +2,7 @@ package au.com.dealsdirect.ui.main;
 
 import android.content.DialogInterface;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.BottomNavigationView;
@@ -75,7 +76,6 @@ public class MainActivity extends BaseActivity implements MainMvpView {
     private String mPaymentType;
     private PaymentMethod mCurrentPaymentMethod;
     private String mAuthorization;
-
     private Router mRouter;
 
     @Override
@@ -178,39 +178,37 @@ public class MainActivity extends BaseActivity implements MainMvpView {
 
     @Override
     public void onBackPressed() {
-        if (!mRouter.handleBack()) {
-            super.onBackPressed();
-//            if (mRouter.getBackstackSize()==0){
-//                DialogUtils.showYesNoDialog(
-//                        this,
-//                        getString(R.string.dealsdirect),
-//                        getString(R.string.exit_app),
-//                        getString(R.string.exit),
-//                        getString(R.string.no),
-//                        (dialogInterface, i) -> {
-//                            finish();
-//
-//                        },
-//                        (dialogInterface, i) -> {
-//                        });
-//            }
-        }else{
-//            showBottomNavigationView();
-//            final Handler handler = new Handler();
-//            handler.postDelayed(() -> {
-//            }, 500);
+        if (mRouter.getBackstackSize()==1){
+            DialogUtils.showYesNoDialog(
+                    this,
+                    getString(R.string.dealsdirect),
+                    getString(R.string.exit_app),
+                    getString(R.string.exit),
+                    getString(R.string.no),
+                    (dialogInterface, i) -> {
+                        finish();
+                    },
+                    (dialogInterface, i) -> {
 
+                    });
+        }else{
+            if (!mRouter.handleBack()) {
+
+            }else{
+                showBottomNavigationView();
+                final Handler handler = new Handler();
+                handler.postDelayed(() -> {
+                }, 500);
+            }
         }
     }
 
 
     @Override
     public void showCategoryController() {
-
         mRouter.pushController(RouterTransaction.with(CategoriesController.newInstance())
                 .pushChangeHandler(new HorizontalChangeHandler())
                 .popChangeHandler(new HorizontalChangeHandler()));
-
     }
 
     @Override
@@ -222,7 +220,7 @@ public class MainActivity extends BaseActivity implements MainMvpView {
 
     @Override
     public void showAccountController() {
-        mRouter.pushController(RouterTransaction.with(AccountController.newInstance())
+        mRouter.setRoot(RouterTransaction.with(AccountController.newInstance())
                 .pushChangeHandler(new FadeChangeHandler())
                 .popChangeHandler(new FadeChangeHandler()));
 
@@ -231,7 +229,6 @@ public class MainActivity extends BaseActivity implements MainMvpView {
 
     @Override
     public void showContactController() {
-
         mRouter.setRoot(RouterTransaction.with(ViewContactsController.newInstance())
                 .pushChangeHandler(new FadeChangeHandler())
                 .popChangeHandler(new FadeChangeHandler()));
@@ -248,7 +245,7 @@ public class MainActivity extends BaseActivity implements MainMvpView {
 
     @Override
     public void showCheckoutController() {
-        mRouter.pushController(RouterTransaction.with(new CheckoutController())
+        mRouter.setRoot(RouterTransaction.with(new CheckoutController())
                 .pushChangeHandler(new FadeChangeHandler())
                 .popChangeHandler(new FadeChangeHandler()));
     }
