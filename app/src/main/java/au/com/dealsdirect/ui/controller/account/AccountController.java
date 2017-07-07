@@ -23,6 +23,7 @@ import au.com.dealsdirect.ui.base.BaseController;
 import au.com.dealsdirect.ui.controller.account.adapter.AccountItemAdapter;
 import au.com.dealsdirect.ui.controller.account.listener.AccountItemClickListener;
 import au.com.dealsdirect.ui.controller.address.viewaddress.ViewAddressController;
+import au.com.dealsdirect.ui.controller.checkout.paymentselect.PaymentSelectController;
 import au.com.dealsdirect.ui.controller.contact.viewcontacts.ViewContactsController;
 import au.com.dealsdirect.ui.controller.details.DetailsController;
 import au.com.dealsdirect.ui.controller.language.LanguageController;
@@ -155,8 +156,8 @@ public class AccountController extends BaseController implements AccountMvpView 
     }
 
     @Override
-    public void showViewContactUsController() {
-        getRouter().pushController(RouterTransaction.with(ViewContactsController.newInstance())
+    public void showMyPaymentsController() {
+        getRouter().pushController(RouterTransaction.with(new PaymentSelectController("",false))
                 .pushChangeHandler(new HorizontalChangeHandler())
                 .popChangeHandler(new HorizontalChangeHandler()));
     }

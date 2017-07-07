@@ -110,15 +110,15 @@ public class ShopsController extends BaseController implements ShopsMvpView, Ban
     @Override
     protected void onViewBound(@NonNull View view) {
         super.onViewBound(view);
-
         setUp(view);
     }
 
 
     @Override
-    protected void onDestroyView(@NonNull View view) {
+    public void onDetach(View view) {
         mPresenter.onDetach();
-        super.onDestroyView(view);
+        hideLoading();
+        super.onDetach(view);
     }
 
     @Override
@@ -133,13 +133,6 @@ public class ShopsController extends BaseController implements ShopsMvpView, Ban
             shopsControllerBannerRecyclerView.setAdapter(mBannersAdapter);
         }
 
-    }
-
-    @Override
-    public void onError(String message) {
-        super.onError(message);
-
-//        mPresenter.loadShopsBanner(mCategoryName,mCategoryID);
     }
 
 

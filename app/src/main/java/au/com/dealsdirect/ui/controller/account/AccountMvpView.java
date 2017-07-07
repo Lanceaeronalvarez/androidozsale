@@ -22,7 +22,7 @@ public interface AccountMvpView extends MvpView {
 
     void showMyReturns();
 
-    void showViewContactUsController();
+    void showMyPaymentsController();
 
     void showLanguage();
 

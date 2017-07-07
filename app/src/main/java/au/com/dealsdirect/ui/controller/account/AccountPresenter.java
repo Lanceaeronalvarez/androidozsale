@@ -33,7 +33,7 @@ public class AccountPresenter<V extends AccountMvpView> extends BasePresenter<V>
                         "My Orders",
                         "My Vouchers",
                         "My Returns",
-                        "Contact Us",
+                        "My Payments",
                         "Language")));
     }
 
@@ -57,8 +57,8 @@ public class AccountPresenter<V extends AccountMvpView> extends BasePresenter<V>
                 case "My Returns":
                     getMvpView().showMyReturns();
                     break;
-                case "Contact Us":
-                    getMvpView().showViewContactUsController();
+                case "My Payments":
+                    getMvpView().showMyPaymentsController();
                     break;
                 case "Language":
                     getMvpView().showLanguage();

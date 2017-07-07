@@ -110,12 +110,13 @@ public class ViewContactsController extends BaseController implements ViewContac
     }
 
     @Override
-    public void onDestroyView(View view) {
+    public void onDetach(View view) {
         mPresenter.onDetach();
-        super.onDestroyView(view);
+        hideLoading();
+        super.onDetach(view);
     }
 
-//    @OnClick(R.id.partial_toolbar_arrow_view)
+    //    @OnClick(R.id.partial_toolbar_arrow_view)
 //    public void onBackClick() {
 //        getActivity().onBackPressed();
 //    }

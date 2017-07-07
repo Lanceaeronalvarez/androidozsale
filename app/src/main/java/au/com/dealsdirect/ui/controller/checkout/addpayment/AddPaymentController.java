@@ -17,6 +17,7 @@ import com.braintreepayments.cardform.view.CardEditText;
 import com.braintreepayments.cardform.view.CardForm;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
+import com.mindorks.placeholderview.annotations.Click;
 
 import java.util.ArrayList;
 
@@ -34,6 +35,7 @@ import au.com.dealsdirect.utils.BundleBuilder;
 import au.com.dealsdirect.utils.DialogUtils;
 import au.com.dealsdirect.utils.JsonUtils;
 import butterknife.BindView;
+import butterknife.OnClick;
 
 /**
  * Created by smartwave on 29/06/2017.
@@ -214,5 +216,10 @@ public class AddPaymentController extends BaseController implements AddPaymentMv
 
     public boolean isCalledFromAccounts() {
         return !isFromCart;
+    }
+
+    @OnClick(R.id.partial_toolbar_arrow_title)
+    void onBackPressed(){
+        getActivity().onBackPressed();
     }
 }

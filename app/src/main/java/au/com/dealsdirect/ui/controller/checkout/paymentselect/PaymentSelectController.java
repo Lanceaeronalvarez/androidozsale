@@ -74,6 +74,9 @@ public class PaymentSelectController extends BaseController implements PaymentSe
     public PaymentSelectController(Bundle args) {
         super(args);
         mPaymentMethods = JsonUtils.convertStringToObject(args.getString(PAYMENT_METHODS),new TypeToken<ArrayList<PaymentMethod>>(){}.getType());
+        if(mPaymentMethods == null){
+            mPaymentMethods = new ArrayList<>();
+        }
         isFromCart = args.getBoolean(IS_FROM_CART);
     }
 
@@ -95,7 +98,6 @@ public class PaymentSelectController extends BaseController implements PaymentSe
     @Override
     protected void onAttach(@NonNull View view) {
         super.onAttach(view);
-//        mPresenter.fetchUserPaymentMethods();
     }
 
     @Override
@@ -136,6 +138,10 @@ public class PaymentSelectController extends BaseController implements PaymentSe
 
     @Override
     protected void setUp(View view) {
+
+        if(!isFromCart){
+            mPresenter.fetchUserPaymentMethods();
+        }
 
         mPaymentSelectToolbarTitle.setText("Add Payment Method");
         mPaymentSelectRightOption.setImageDrawable(getApplicationContext().getDrawable(R.drawable.ic_add));
