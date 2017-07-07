@@ -140,7 +140,7 @@ public interface ApiHelper {
 
     Observable<DeleteUserAddress.ResponseValue> callDeleteUserDeliveryAddress(DeleteUserAddress.RequestValues requestValues);
 
-    Observable<GetUserDetailsResponse.Response> getSaveUserDetailsApiCall(SetUserDetailsRequest setUserDetailsRequest);
+    Observable<GetUserDetailsResponse> getSaveUserDetailsApiCall(SetUserDetailsRequest setUserDetailsRequest);
 
     Observable<GetUserDetailsResponse> getLoadUserDetailsApiCall(SetUserDetailsRequest setUserDetailsRequest);
 //  MY ORDERS API CALLS
@@ -187,8 +187,8 @@ public interface ApiHelper {
 
     //  INVITE API CALLS
     Observable<GetInviteResponse> callGetInvite(GetInviteRequest request);
+
     Observable<SetInviteResponse> callSetInvite(SetInviteRequest request);
-  
 
     // Contact Us Api Call
     Observable<ContactOrders> callGetContactOrders();
