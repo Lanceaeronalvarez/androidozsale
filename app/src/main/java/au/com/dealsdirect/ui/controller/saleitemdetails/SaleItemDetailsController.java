@@ -9,6 +9,7 @@ import android.support.annotation.NonNull;
 import android.support.v4.util.Pair;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -194,6 +195,7 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
         mSaleItemImagesAdapter = new SaleItemDetailsImageAdapter(this, null, mSaleId, 1);
         mProductImagesRv.setAdapter(mSaleItemImagesAdapter);
 
+
         mProductImagesRv.addOnPageChangedListener((i, i1) -> {
             RecyclerView.ViewHolder vhNew = mOtherImagesRv.findViewHolderForLayoutPosition(i1);
             vhNew.itemView.animate()
@@ -202,10 +204,7 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
                     .start();
 
             RecyclerView.ViewHolder vhOld = mOtherImagesRv.findViewHolderForLayoutPosition(i);
-            vhOld.itemView.animate()
-                    .alpha(0.40f)
-                    .setDuration(200)
-                    .start();
+            vhOld.itemView.setAlpha(0.4f);
         });
 
         mHtmlHeader = getActivity().getResources()

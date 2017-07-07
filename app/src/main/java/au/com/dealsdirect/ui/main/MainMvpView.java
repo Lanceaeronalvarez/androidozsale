@@ -39,6 +39,8 @@ public interface MainMvpView extends MvpView,BrainTreeListeners {
 
     void setPaymentMethodSelected(PaymentMethod paymentMethodSelected);
 
+    FetchTokenHandler getFetchTokenHandler();
+
     void callLoginTicket();
 
     void callLogout();

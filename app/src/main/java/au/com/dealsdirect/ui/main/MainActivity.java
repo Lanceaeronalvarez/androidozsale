@@ -4,6 +4,7 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.BottomNavigationView;
+import android.util.Log;
 import android.view.ViewGroup;
 
 import com.bluelinelabs.conductor.Conductor;
@@ -16,6 +17,7 @@ import com.bluelinelabs.conductor.changehandler.HorizontalChangeHandler;
 import com.bluelinelabs.conductor.changehandler.VerticalChangeHandler;
 import com.braintreepayments.api.BraintreeFragment;
 import com.braintreepayments.api.Card;
+import com.braintreepayments.api.DataCollector;
 import com.braintreepayments.api.PayPal;
 import com.braintreepayments.api.exceptions.AuthenticationException;
 import com.braintreepayments.api.exceptions.AuthorizationException;
@@ -26,6 +28,7 @@ import com.braintreepayments.api.exceptions.InvalidArgumentException;
 import com.braintreepayments.api.exceptions.ServerException;
 import com.braintreepayments.api.exceptions.UnexpectedException;
 import com.braintreepayments.api.exceptions.UpgradeRequiredException;
+import com.braintreepayments.api.interfaces.BraintreeResponseListener;
 import com.braintreepayments.api.models.CardBuilder;
 import com.braintreepayments.api.models.PaymentMethodNonce;
 import com.braintreepayments.cardform.view.CardForm;
@@ -76,6 +79,7 @@ public class MainActivity extends BaseActivity implements MainMvpView {
     private String mAuthorization;
 
     private Router mRouter;
+    private FetchTokenHandler mFetchTokenHandler;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -264,7 +268,8 @@ public class MainActivity extends BaseActivity implements MainMvpView {
 
     @Override
     public void onCancel(int requestCode) {
-
+        mFetchTokenHandler = null;
+        Log.d("onCancel", "im cancelling");
     }
 
     @Override
@@ -298,7 +303,20 @@ public class MainActivity extends BaseActivity implements MainMvpView {
 
     @Override
     public void onPaymentMethodNonceCreated(PaymentMethodNonce paymentMethodNonce) {
-        mPresenter.createPaymentMethod(mBraintreeFragment,paymentMethodNonce.getNonce(),mPaymentType);
+
+        BraintreeResponseListener<String> handler = new BraintreeResponseListener<String>() {
+            @Override
+            public void onResponse(String deviceData) {
+                mPresenter.createPaymentMethod(deviceData,paymentMethodNonce.getNonce(),mPaymentType);
+            }
+        };
+
+        if (!mPresenter.getKountMerchantId().isEmpty()) {
+            DataCollector.collectDeviceData(mBraintreeFragment, mPresenter.getKountMerchantId(), handler);
+        } else {
+            DataCollector.collectDeviceData(mBraintreeFragment, handler);
+        }
+
     }
 
     @Override
@@ -321,15 +339,34 @@ public class MainActivity extends BaseActivity implements MainMvpView {
     }
 
     @Override
+    public FetchTokenHandler getFetchTokenHandler(){
+        return mFetchTokenHandler;
+    }
+
+    @Override
     public void fetchAuthorization(FetchTokenHandler handler) {
+        mFetchTokenHandler = handler;
         //Don't proceed to call if not logged in
-        mPresenter.fetchBTAuthorization(handler);
+        mPresenter.fetchBTAuthorization();
 
     }
 
     @Override
     public void callCreatePaymentTransaction(String paymentNonce){
-        mPresenter.callCreatePaymentTransaction(mBraintreeFragment,mPaymentType,paymentNonce,getPaymentMethodSelected().getToken());
+
+        BraintreeResponseListener<String> handler = new BraintreeResponseListener<String>() {
+            @Override
+            public void onResponse(String deviceData) {
+                mPresenter.callCreatePaymentTransaction(deviceData,mPaymentType,paymentNonce,getPaymentMethodSelected().getToken());
+            }
+        };
+
+        if (!mPresenter.getKountMerchantId().isEmpty()) {
+            DataCollector.collectDeviceData(mBraintreeFragment, mPresenter.getKountMerchantId(), handler);
+        } else {
+            DataCollector.collectDeviceData(mBraintreeFragment, handler);
+        }
+
     }
 
     @Override

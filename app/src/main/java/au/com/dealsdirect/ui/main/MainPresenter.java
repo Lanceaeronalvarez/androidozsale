@@ -8,7 +8,6 @@ import android.content.Context;
 import android.content.SharedPreferences;
 
 import com.androidnetworking.error.ANError;
-import com.braintreepayments.api.BraintreeFragment;
 import com.braintreepayments.api.DataCollector;
 import com.braintreepayments.api.interfaces.BraintreeResponseListener;
 import com.google.gson.Gson;
@@ -240,7 +239,7 @@ public class MainPresenter<V extends MainMvpView> extends BasePresenter<V> imple
     }
 
     @Override
-    public void fetchBTAuthorization(FetchTokenHandler fetchTokenHandler) {
+    public void fetchBTAuthorization() {
         if (!getDataManager().isAuthorized()) return;
 
         getMvpView().showLoading();
@@ -261,11 +260,11 @@ public class MainPresenter<V extends MainMvpView> extends BasePresenter<V> imple
                         if (responseValue.isResult() && responseValue.isAuthenticated()) {
                             getMvpView().onAuthorizationFetched(responseValue.getPaymentToken(), responseValue.getPaymentType());
 
-                            if (fetchTokenHandler != null)
-                                fetchTokenHandler.onSuccess();
+                            if (getMvpView().getFetchTokenHandler() != null)
+                                getMvpView().getFetchTokenHandler().onSuccess();
                         } else {
-                            if (fetchTokenHandler != null)
-                                fetchTokenHandler.onFailure();
+                            if (getMvpView().getFetchTokenHandler() != null)
+                                getMvpView().getFetchTokenHandler().onFailure();
                         }
                     }
                 }, new Consumer<Throwable>() {
@@ -277,8 +276,8 @@ public class MainPresenter<V extends MainMvpView> extends BasePresenter<V> imple
 
                         getMvpView().hideLoading();
 
-                        if (fetchTokenHandler != null)
-                            fetchTokenHandler.onFailure();
+                        if (getMvpView().getFetchTokenHandler() != null)
+                            getMvpView().getFetchTokenHandler().onFailure();
 
                         getMvpView().onError(throwable.getMessage());
 
@@ -294,125 +293,106 @@ public class MainPresenter<V extends MainMvpView> extends BasePresenter<V> imple
     }
 
     @Override
-    public void callCreatePaymentTransaction(BraintreeFragment braintreeFragment, String paymentType, String paymentNonce, String paymentToken) {
+    public void callCreatePaymentTransaction(String deviceData, String paymentType, String paymentNonce, String paymentToken) {
         getMvpView().showLoading();
 
-        BraintreeResponseListener<String> handler = new BraintreeResponseListener<String>() {
-            @Override
-            public void onResponse(String deviceData) {
-                String languageId = getDataManager().getLanguageId();
-                String countryId = getDataManager().getCountryId();
-                CreatePaymentTransaction.RequestValue.Request requestValue =
-                        new CreatePaymentTransaction.RequestValue.Request(paymentType, paymentNonce, paymentToken, deviceData);
-                getCompositeDisposable().add(getDataManager()
-                                .callCreatePaymentTransaction(new CreatePaymentTransaction.RequestValue(requestValue, countryId, languageId))
-                                .subscribeOn(getSchedulerProvider().io())
-                                .observeOn(getSchedulerProvider().ui())
-                                .subscribe(new Consumer<CreatePaymentTransaction.ResponseValue>() {
-                                    @Override
-                                    public void accept(@NonNull CreatePaymentTransaction.ResponseValue responseValue) throws Exception {
-                                        if (!isViewAttached()) {
-                                            return;
-                                        }
+        String languageId = getDataManager().getLanguageId();
+        String countryId = getDataManager().getCountryId();
+        CreatePaymentTransaction.RequestValue.Request requestValue =
+                new CreatePaymentTransaction.RequestValue.Request(paymentType, paymentNonce, paymentToken, deviceData);
+        getCompositeDisposable().add(getDataManager()
+                .callCreatePaymentTransaction(new CreatePaymentTransaction.RequestValue(requestValue, countryId, languageId))
+                .subscribeOn(getSchedulerProvider().io())
+                .observeOn(getSchedulerProvider().ui())
+                .subscribe(new Consumer<CreatePaymentTransaction.ResponseValue>() {
+                    @Override
+                    public void accept(@NonNull CreatePaymentTransaction.ResponseValue responseValue) throws Exception {
+                        if (!isViewAttached()) {
+                            return;
+                        }
 
-                                        getMvpView().hideLoading();
+                        getMvpView().hideLoading();
 
-                                        if (responseValue.getD().getResult()) {
-                                            getMvpView().createPaymentTransactionSuccess(responseValue);
-                                        } else {
-                                            getMvpView().onError(responseValue.getD().getMessage());
-                                        }
+                        if (responseValue.getD().getResult()) {
+                            getMvpView().createPaymentTransactionSuccess(responseValue);
+                        } else {
+                            getMvpView().onError(responseValue.getD().getMessage());
+                        }
 
-                                    }
-                                }, new Consumer<Throwable>() {
-                                    @Override
-                                    public void accept(@NonNull Throwable throwable) throws Exception {
-                                        if (!isViewAttached()) {
-                                            return;
-                                        }
+                    }
+                }, new Consumer<Throwable>() {
+                    @Override
+                    public void accept(@NonNull Throwable throwable) throws Exception {
+                        if (!isViewAttached()) {
+                            return;
+                        }
 
-                                        getMvpView().hideLoading();
+                        getMvpView().hideLoading();
 
-                                        getMvpView().onError(throwable.getMessage());
+                        getMvpView().onError(throwable.getMessage());
 
-                                        // handle load accounts error here
-                                        if (throwable instanceof ANError) {
-                                            ANError anError = (ANError) throwable;
-                                            handleApiError(anError);
-                                        }
-                                    }
-                                })
-                );
+                        // handle load accounts error here
+                        if (throwable instanceof ANError) {
+                            ANError anError = (ANError) throwable;
+                            handleApiError(anError);
+                        }
+                    }
+                })
+        );
 
-            }
-        };
 
-        if (getDataManager().isKountEnabled()) {
-            DataCollector.collectDeviceData(braintreeFragment, getDataManager().getKountMerchantId(), handler);
-        } else {
-            DataCollector.collectDeviceData(braintreeFragment, handler);
-        }
     }
 
     @Override
-    public void createPaymentMethod(BraintreeFragment braintreeFragment, String paymentNonce, String paymentType) {
+    public void createPaymentMethod(String deviceData, String paymentNonce, String paymentType) {
 
-        BraintreeResponseListener<String> handler = new BraintreeResponseListener<String>() {
-            @Override
-            public void onResponse(String deviceData) {
-                String languageId = getDataManager().getLanguageId();
-                String countryId = getDataManager().getCountryId();
-                SchedulerProvider test = getSchedulerProvider();
-                CreatePaymentMethod.RequestValue.Request requestValue = new CreatePaymentMethod.RequestValue.Request(paymentType, paymentNonce, deviceData);
-                getCompositeDisposable().add(getDataManager()
-                                .callCreatePaymentMethod(new CreatePaymentMethod.RequestValue(requestValue, countryId, languageId))
-                                .subscribeOn(getSchedulerProvider().io())
-                                .observeOn(getSchedulerProvider().ui())
-                                .subscribe(new Consumer<CreatePaymentMethod.ResponseValue>() {
-                                    @Override
-                                    public void accept(@NonNull CreatePaymentMethod.ResponseValue responseValue) throws Exception {
-                                        if (!isViewAttached()) {
-                                            return;
-                                        }
+        getMvpView().showLoading();
 
-                                        getMvpView().performResetWithAuthFetch();
+        String languageId = getDataManager().getLanguageId();
+        String countryId = getDataManager().getCountryId();
+        CreatePaymentMethod.RequestValue.Request requestValue = new CreatePaymentMethod.RequestValue.Request(paymentType, paymentNonce, deviceData);
+        getCompositeDisposable().add(getDataManager()
+                        .callCreatePaymentMethod(new CreatePaymentMethod.RequestValue(requestValue, countryId, languageId))
+                        .subscribeOn(getSchedulerProvider().io())
+                        .observeOn(getSchedulerProvider().ui())
+                        .subscribe(new Consumer<CreatePaymentMethod.ResponseValue>() {
+                            @Override
+                            public void accept(@NonNull CreatePaymentMethod.ResponseValue responseValue) throws Exception {
+                                if (!isViewAttached()) {
+                                    return;
+                                }
 
-                                        if ((responseValue.getResult() && responseValue.getIsAuthenticated())) {
-                                            getMvpView().createPaymentMethodSuccess(responseValue.getD().getValue().getLastPaymentMethod());
-                                        } else {
-                                            getMvpView().onError(responseValue.getMessage());
-                                        }
+                                getMvpView().hideLoading();
+
+                                getMvpView().performResetWithAuthFetch();
+
+                                if ((responseValue.getResult() && responseValue.getIsAuthenticated())) {
+                                    getMvpView().createPaymentMethodSuccess(responseValue.getD().getValue().getLastPaymentMethod());
+                                } else {
+                                    getMvpView().onError(responseValue.getMessage());
+                                }
 //
 
-                                    }
-                                }, new Consumer<Throwable>() {
-                                    @Override
-                                    public void accept(@NonNull Throwable throwable) throws Exception {
-                                        if (!isViewAttached()) {
-                                            return;
-                                        }
+                            }
+                        }, new Consumer<Throwable>() {
+                            @Override
+                            public void accept(@NonNull Throwable throwable) throws Exception {
+                                if (!isViewAttached()) {
+                                    return;
+                                }
 
-                                        getMvpView().hideLoading();
+                                getMvpView().hideLoading();
 
-                                        getMvpView().onError(throwable.getMessage());
+                                getMvpView().onError(throwable.getMessage());
 
-                                        // handle load accounts error here
-                                        if (throwable instanceof ANError) {
-                                            ANError anError = (ANError) throwable;
-                                            handleApiError(anError);
-                                        }
-                                    }
-                                })
-                );
-
-            }
-        };
-
-        if (getDataManager().isKountEnabled()) {
-            DataCollector.collectDeviceData(braintreeFragment, getDataManager().getKountMerchantId(), handler);
-        } else {
-            DataCollector.collectDeviceData(braintreeFragment, handler);
-        }
+                                // handle load accounts error here
+                                if (throwable instanceof ANError) {
+                                    ANError anError = (ANError) throwable;
+                                    handleApiError(anError);
+                                }
+                            }
+                        })
+        );
     }
 
     @Override
@@ -498,6 +478,11 @@ public class MainPresenter<V extends MainMvpView> extends BasePresenter<V> imple
                             }
                         })
         );
+    }
+
+    @Override
+    public String getKountMerchantId() {
+        return getDataManager().isKountEnabled() ? getDataManager().getKountMerchantId() : "";
     }
 
 }

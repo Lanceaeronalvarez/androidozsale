@@ -15,7 +15,9 @@ import android.widget.TextView;
 import com.bluelinelabs.conductor.RouterTransaction;
 import com.bluelinelabs.conductor.changehandler.HorizontalChangeHandler;
 import com.google.gson.Gson;
+import com.google.j2objc.annotations.Weak;
 
+import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -91,7 +93,19 @@ public class CheckoutController extends BaseController implements CheckoutMvpVie
     private ArrayList<DecorationInfoList> mDecorationInfoList = new ArrayList<>();
     private ArrayList<Voucher> mVouchers = new ArrayList<>();
     private CheckoutOrderAdapter mAdapter;
-    private FetchTokenHandler mFetchTokenHandler;
+    private FetchTokenHandler mFetchTokenHandler = new FetchTokenHandler() {
+        @Override
+        public void onSuccess() {
+            if(!isAttached()) return;
+            mPresenter.start();
+        }
+
+        @Override
+        public void onFailure() {
+            if(!isAttached()) return;
+            hidePaymentButtons();
+        }
+    };
 
     MainActivity mActivity;
 
@@ -185,6 +199,7 @@ public class CheckoutController extends BaseController implements CheckoutMvpVie
     @Override
     public void onDetach(View view) {
         mPresenter.onDetach();
+        mFetchTokenHandler = null;
         super.onDetach(view);
     }
 
@@ -208,18 +223,6 @@ public class CheckoutController extends BaseController implements CheckoutMvpVie
         mPayButton.setOnClickListener(view1 -> onPayButtonClick());
         mPaypalButton.setOnClickListener(view2 -> onPaypalButtonClick());
 
-        mFetchTokenHandler = new FetchTokenHandler() {
-            @Override
-            public void onSuccess() {
-                mPresenter.start();
-            }
-
-            @Override
-            public void onFailure() {
-                hidePaymentButtons();
-            }
-        };
-
         loadCart();
         mListView.setVisibility(View.GONE);
 //        showNoCartItemsLayout();
@@ -229,7 +232,7 @@ public class CheckoutController extends BaseController implements CheckoutMvpVie
     public void loadCart(){
         showLoading();
         if(mPresenter.checkIsLoggedIn() && !mActivity.isBraintreeInitialized()){
-            ((MainMvpView)getActivity()).fetchAuthorization(mFetchTokenHandler);
+            ((MainMvpView)getActivity()).fetchAuthorization(new CheckoutFetchTokenHandler(mFetchTokenHandler));
         }else if (mPresenter.checkIsLoggedIn() && mActivity.isBraintreeInitialized()) {
             mPresenter.start();
 
@@ -446,5 +449,24 @@ public class CheckoutController extends BaseController implements CheckoutMvpVie
         mBraintreeLoading.setVisibility(View.GONE);
         mButtonHolder.setVisibility(View.VISIBLE);
 
+    }
+
+    private static class CheckoutFetchTokenHandler implements FetchTokenHandler{
+
+        WeakReference<FetchTokenHandler> fetchTokenHandler;
+
+        public CheckoutFetchTokenHandler(FetchTokenHandler handler) {
+            fetchTokenHandler = new WeakReference<FetchTokenHandler>(handler);
+        }
+
+        @Override
+        public void onSuccess() {
+            fetchTokenHandler.get().onSuccess();
+        }
+
+        @Override
+        public void onFailure() {
+            fetchTokenHandler.get().onFailure();
+        }
     }
 }
