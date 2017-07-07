@@ -66,5 +66,5 @@ ext {
     photoViewVersion = '2.0.0'
 
     flowLayoutVersion = '1.0.3'
-    recyclerViewPagerVersion = 'v1.1.2@aar'
+    recyclerViewPagerVersion = 'v1.1.1'
 }
