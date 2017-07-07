@@ -13,9 +13,10 @@
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="wrap_content"
         android:layout_below="@id/controller_invite_layout_title"
         android:layout_centerInParent="true"
+        android:layout_above="@+id/controller_invite_friend_button_send_invite"
         android:gravity="center_vertical|center_horizontal"
         android:orientation="vertical">
 

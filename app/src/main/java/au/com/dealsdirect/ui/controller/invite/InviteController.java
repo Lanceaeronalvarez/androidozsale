@@ -6,17 +6,12 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.bluelinelabs.conductor.RouterTransaction;
-import com.bluelinelabs.conductor.changehandler.FadeChangeHandler;
-
-import javax.inject.Inject;
+import com.bluelinelabs.conductor.changehandler.HorizontalChangeHandler;
 
 import au.com.dealsdirect.R;
-import au.com.dealsdirect.data.network.model.invite.GetInviteResponse;
-import au.com.dealsdirect.data.network.model.invite.SetInviteResponse;
 import au.com.dealsdirect.ui.base.BaseController;
 import au.com.dealsdirect.utils.BundleBuilder;
 import butterknife.BindView;
@@ -61,8 +56,8 @@ public class InviteController extends BaseController {
         mTitleText.setText("Invite Friends");
         mSendInviteButton.setOnClickListener(action -> {
             getRouter().pushController(RouterTransaction.with(InviteSendController.newInstance())
-                        .pushChangeHandler(new FadeChangeHandler())
-                        .popChangeHandler(new FadeChangeHandler()));
+                        .pushChangeHandler(new HorizontalChangeHandler())
+                        .popChangeHandler(new HorizontalChangeHandler()));
         });
     }
 }
