@@ -53,6 +53,7 @@ import au.com.dealsdirect.ui.controller.login.LoginController;
 import au.com.dealsdirect.ui.controller.shops.ShopsController;
 import au.com.dealsdirect.ui.custom.BottomNavigationViewHelper;
 import au.com.dealsdirect.ui.custom.CustomAlertDialog;
+import au.com.dealsdirect.utils.DialogUtils;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import timber.log.Timber;
