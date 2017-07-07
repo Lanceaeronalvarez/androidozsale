@@ -1,12 +1,20 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.v4.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    xmlns:android="http://schemas.android.com/apk/res/android">
+
+
+    <include layout="@layout/partial_toolbar_arrow" />
+
+    <android.support.v4.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
     android:background="#FFFFFF"
     android:overScrollMode="never"
-    app:layout_behavior="@string/appbar_scrolling_view_behavior"
     tools:ignore="MissingPrefix">
 
     <LinearLayout
@@ -14,7 +22,6 @@
         android:layout_height="match_parent"
         android:orientation="vertical">
 
-        <include layout="@layout/partial_toolbar_arrow" />
 
         <RelativeLayout
             android:layout_width="match_parent"
@@ -252,6 +259,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="@dimen/screen_padding"
+                    android:paddingBottom="@dimen/screen_padding"
                     android:orientation="vertical">
 
                     <TextView
@@ -285,14 +293,16 @@
                                 android:layout_height="wrap_content"
                                 android:layout_centerInParent="true"
                                 android:orientation="horizontal"
-                                tools:ignore="UselessParent">
+                                tools:ignore="UselessParent"
+                                android:weightSum="1">
 
                                 <ImageView
                                     android:id="@+id/twitter_icon_image_view"
                                     android:layout_width="@dimen/invite_friends_image_width"
                                     android:layout_height="@dimen/invite_friends_image_width"
                                     android:src="@drawable/ic_invite_friends_follow_on_twitter"
-                                    tools:ignore="ContentDescription" />
+                                    tools:ignore="ContentDescription"
+                                    android:layout_weight="0.50"/>
 
                                 <TextView
                                     fontPath="@string/font_lato_medium"
@@ -351,3 +361,4 @@
         </RelativeLayout>
     </LinearLayout>
 </android.support.v4.widget.NestedScrollView>
+</LinearLayout>

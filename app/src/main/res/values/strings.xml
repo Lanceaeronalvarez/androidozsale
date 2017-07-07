@@ -163,7 +163,7 @@
     <string name="i_am_looking_for">I am looking for...</string>
 
     <!--CHECKOUT-->
-    <string name="checkout_page_toolbar_title">my basket</string>
+    <string name="checkout_page_toolbar_title">My Basket</string>
     <string name="test_product_name">Philosophy (Runway) Cotton Sleeveless Plain</string>
     <string name="test_category_name">Cache cache</string>
 
