@@ -1,10 +1,12 @@
 package au.com.dealsdirect.ui.controller.account;
 
+import android.app.Activity;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -100,6 +102,15 @@ public class AccountController extends BaseController implements AccountMvpView,
     }
 
     @Override
+    protected void onActivityResumed(@NonNull Activity activity) {
+        super.onActivityResumed(activity);
+        Log.d("accountController", "onActivityResumed");
+        mPresenter.onAttach(this);
+        mAccountMvpView = this;
+
+    }
+
+    @Override
     public void showAccountItems(List<String> accountItems) {
         AccountItemAdapter accountItemAdapter
                 = new AccountItemAdapter(accountItems, getActivity(), mPresenter);
@@ -183,8 +194,6 @@ public class AccountController extends BaseController implements AccountMvpView,
         getRouter().setRoot(RouterTransaction.with(new ShopsController()));
         CustomAlertDialog.showCustomAlertDialog(getActivity(), CustomAlertDialog.CustomDialogIconState.POSITIVE, "Logout Successful");
     }
-
-
 }
 
          
