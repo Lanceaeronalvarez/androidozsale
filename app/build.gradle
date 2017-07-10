@@ -10,7 +10,7 @@ android {
         targetSdkVersion rootProject.ext.targetSdkVersion
         multiDexEnabled true
         versionCode 1
-        versionName "1.0"
+        versionName "0.9"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
         vectorDrawables.useSupportLibrary = true
     }
@@ -102,11 +102,14 @@ dependencies {
     annotationProcessor "com.github.bumptech.glide:compiler:$rootProject.glideVersion"
 
     // guava
-    compile 'com.google.guava:guava:22.0-android'
+    compile "com.google.guava:guava:$rootProject.guavaVersion"
 
-    //braintree
-    compile 'com.braintreepayments.api:braintree:2.5.2'
-    compile 'com.braintreepayments.api:data-collector:2.5.2'
+    // braintree
+    compile "com.braintreepayments.api:braintree:$rootProject.braintreeVersion"
+    compile "com.braintreepayments.api:data-collector:$rootProject.braintreeVersion"
+
+    // facebook
+    compile "com.facebook.android:facebook-android-sdk:$rootProject.facebookVersion"
 
     // dependencies for local unit tests
     testCompile "junit:junit:$rootProject.ext.junitVersion"

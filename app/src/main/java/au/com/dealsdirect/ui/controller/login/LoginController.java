@@ -152,18 +152,12 @@ public class LoginController extends BaseController implements LoginMvpView {
     public void showLoginSuccessful(String loginTicket) {
         getActivity().onBackPressed();
         mAuthHandler.success();
-
-//            RxBus.instance().post(GVersion.EVENT_LOGIN);
     }
 
     @Override
     public void showLoginError(String message) {
         mAuthHandler.error();
 
-//        DialogUtils.showYesDialog(getActivity(), "Login", message, "ok",
-//                (dialogInterface, i) -> {
-//
-//        });
         CustomAlertDialog.showCustomAlertDialog(
                 getActivity(),
                 CustomAlertDialog.CustomDialogIconState.NEGATIVE,
@@ -175,8 +169,9 @@ public class LoginController extends BaseController implements LoginMvpView {
 
     @Override
     public void showRegistration() {
-        //push registerfragmentcontroller
-//        activity.switchFragment(RegisterFragment.newInstance(activity, authHandler));
+        getRouter().pushController(RouterTransaction.with(RegisterController.newInstance())
+                .pushChangeHandler(new HorizontalChangeHandler())
+                .popChangeHandler(new HorizontalChangeHandler()));
     }
 
     @Override
@@ -192,8 +187,6 @@ public class LoginController extends BaseController implements LoginMvpView {
 
     @OnClick(R.id.fragment_login_signup_text)
     public void onSignUpClick(){
-        getRouter().pushController(RouterTransaction.with(RegisterController.newInstance())
-                .pushChangeHandler(new HorizontalChangeHandler())
-                .popChangeHandler(new HorizontalChangeHandler()));
+        showRegistration();
     }
 }
