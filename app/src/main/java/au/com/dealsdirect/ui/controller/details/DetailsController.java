@@ -173,20 +173,6 @@ public class DetailsController extends BaseController implements DetailsMvpView 
                 message);
     }
 
-    @Override
-    public void saveUserDetailsSuccess() {
-        CustomAlertDialog.showCustomAlertDialog(getActivity(),
-                CustomAlertDialog.CustomDialogIconState.POSITIVE,
-                "User details is saved");
-    }
-
-    @Override
-    public void saveUserDetailsFailed(String message) {
-        CustomAlertDialog.showCustomAlertDialog(getActivity(),
-                CustomAlertDialog.CustomDialogIconState.NEGATIVE,
-                message);
-    }
-
     @OnClick(R.id.partial_toolbar_filter_view)
     public void saveUserDetails(){
 
