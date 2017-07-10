@@ -6,7 +6,6 @@ import android.support.annotation.NonNull;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -191,7 +190,9 @@ public class AccountController extends BaseController implements AccountMvpView,
         ((MainMvpView)getActivity()).callLogout();
         mPresenter.loadAccountItems();
         getRouter().setRoot(RouterTransaction.with(new ShopsController()));
-        CustomAlertDialog.showCustomAlertDialog(getActivity(), CustomAlertDialog.CustomDialogIconState.POSITIVE, "Logout Successful");
+        CustomAlertDialog.showCustomAlertDialog(getActivity(),
+                CustomAlertDialog.CustomDialogIconState.POSITIVE,
+                "Logout Successful");
     }
 }
 

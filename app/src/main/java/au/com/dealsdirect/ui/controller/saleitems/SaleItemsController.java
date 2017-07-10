@@ -23,7 +23,6 @@ import javax.inject.Inject;
 
 import au.com.dealsdirect.R;
 import au.com.dealsdirect.data.network.model.saleitems.GetSaleItemsResponse;
-import au.com.dealsdirect.ui.base.BaseActivity;
 import au.com.dealsdirect.ui.base.BaseController;
 import au.com.dealsdirect.ui.controller.saleitemdetails.SaleItemDetailsController;
 import au.com.dealsdirect.ui.controller.saleitems.adapter.SaleItemsAdapter;
@@ -55,6 +54,7 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
     private String mTitle;
     private String mCategoryKey;
     private String mSearchQuery;
+    private boolean hasShowedItems = false;
 
     private List<GetSaleItemsResponse.Products> saleItems = new LinkedList<>();
 
@@ -182,12 +182,15 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
         loadingInProgress = false;
 
         if(tempList == null || tempList.isEmpty()){
-            hasLoadedAllItems = true;
-            mPlaceholder.setVisibility(View.VISIBLE);
-            mSaleItemsRecyclerView.setVisibility(View.GONE);
-            return;
+            if (!hasLoadedAllItems){
+                hasLoadedAllItems = true;
+                mPlaceholder.setVisibility(View.VISIBLE);
+                mSaleItemsRecyclerView.setVisibility(View.GONE);
+                return;
+            }
         }else{
 
+            hasLoadedAllItems = true;
             mPlaceholder.setVisibility(View.GONE);
             mSaleItemsRecyclerView.setVisibility(View.VISIBLE);
         }
@@ -198,7 +201,6 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
         } else {
             mSaleItemsAdapter.addData(tempList);
         }
-
     }
 
     @Override

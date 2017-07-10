@@ -1,7 +1,6 @@
 package au.com.dealsdirect.ui.main;
 
 import android.os.Bundle;
-import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.BottomNavigationView;
@@ -199,10 +198,9 @@ public class MainActivity extends BaseActivity implements MainMvpView {
             if (!mRouter.handleBack()) {
 
             }else{
-                showBottomNavigationView();
-                final Handler handler = new Handler();
-                handler.postDelayed(() -> {
-                }, 500);
+                if(mRouter.getBackstackSize()==1){
+                    showBottomNavigationView();
+                }
             }
         }
     }

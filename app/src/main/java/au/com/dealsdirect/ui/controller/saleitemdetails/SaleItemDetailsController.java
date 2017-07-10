@@ -5,11 +5,11 @@ import android.content.Intent;
 import android.graphics.Paint;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.support.v4.util.Pair;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -38,6 +38,7 @@ import au.com.dealsdirect.ui.base.BaseActivity;
 import au.com.dealsdirect.ui.base.BaseController;
 import au.com.dealsdirect.ui.controller.saleitems.SaleItemsController;
 import au.com.dealsdirect.ui.controller.shops.changehandler.DetailPopTransitionChangeHandler;
+import au.com.dealsdirect.ui.main.MainActivity;
 import au.com.dealsdirect.utils.BundleBuilder;
 import au.com.dealsdirect.utils.ImageUtils;
 import au.com.dealsdirect.utils.PriceUtils;
@@ -223,17 +224,23 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
     @Override
     public void onDetach(View view) {
 
-        assert (getActivity()) != null;
-        ((BaseActivity) getActivity()).showBottomNavigationView();
     }
 
     @Override
     protected void onDestroyView(@NonNull View view) {
         mPresenter.onDetach();
+
+        final Handler handler = new Handler();
+        handler.postDelayed(() -> {
+            ((MainActivity) getActivity()).showBottomNavigationView();
+
+            super.onDestroyView(view);
+
+        }, 300);
+
 //        mProductSharedImage.setVisibility(View.VISIBLE);
 //        mProductImagesRv.setVisibility(View.GONE);
 //        mOtherImagesRv.setVisibility(View.GONE);
-        super.onDestroyView(view);
     }
 
 

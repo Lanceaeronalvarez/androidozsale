@@ -4,6 +4,7 @@ import android.content.Context;
 import android.support.v4.view.NestedScrollingParent;
 import android.support.v4.view.animation.FastOutSlowInInterpolator;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.util.TypedValue;
 import android.view.View;
 import android.widget.FrameLayout;
@@ -44,10 +45,10 @@ public class ElasticDragDismissFrameLayout extends FrameLayout implements Nested
 
     // configurable attribs
     private float dragDismissDistance = Float.MAX_VALUE;
-    private float dragDismissFraction = -2f;
-    private float dragDismissScale = 2f;
+    private float dragDismissFraction = -1f;
+    private float dragDismissScale = 1f;
     private boolean shouldScale = false;
-    private float dragElacticity = 2f;
+    private float dragElacticity = 1f;
 
     // state
     private float totalDrag;
@@ -69,7 +70,9 @@ public class ElasticDragDismissFrameLayout extends FrameLayout implements Nested
         super(context, attrs, defStyleAttr);
 
         dragDismissDistance = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 80, getResources().getDisplayMetrics());
-        dragDismissFraction = 0.7f;
+        Log.d("condition", "onStopNestedScroll: "+dragDismissDistance);
+
+        dragDismissFraction = 0.2f;
         dragDismissScale = 0.8f;
         shouldScale = false;
     }
@@ -96,6 +99,7 @@ public class ElasticDragDismissFrameLayout extends FrameLayout implements Nested
 
     @Override
     public void onStopNestedScroll(View child) {
+        Log.d("condition", "onStopNestedScroll: "+Math.abs(totalDrag)+" >= "+dragDismissDistance);
         if (Math.abs(totalDrag) >= dragDismissDistance) {
             dispatchDismissCallback();
         } else { // settle back to natural position
@@ -135,7 +139,10 @@ public class ElasticDragDismissFrameLayout extends FrameLayout implements Nested
     protected void onSizeChanged(int w, int h, int oldw, int oldh) {
         super.onSizeChanged(w, h, oldw, oldh);
         if (dragDismissFraction > 0f) {
+            Log.d("condition", "first: "+dragDismissDistance + " h = "+h+", dragdismissfraction = "+dragDismissFraction);
+
             dragDismissDistance = h * dragDismissFraction;
+            Log.d("condition", "second: "+dragDismissDistance);
         }
     }
 
@@ -221,5 +228,4 @@ public class ElasticDragDismissFrameLayout extends FrameLayout implements Nested
             }
         }
     }
-
 }
