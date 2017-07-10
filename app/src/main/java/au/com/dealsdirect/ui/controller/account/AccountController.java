@@ -104,7 +104,6 @@ public class AccountController extends BaseController implements AccountMvpView,
     @Override
     protected void onActivityResumed(@NonNull Activity activity) {
         super.onActivityResumed(activity);
-        Log.d("accountController", "onActivityResumed");
         mPresenter.onAttach(this);
         mAccountMvpView = this;
 
