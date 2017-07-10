@@ -1,5 +1,6 @@
 package au.com.dealsdirect.ui.controller.account;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Arrays;
 
@@ -15,7 +16,7 @@ import io.reactivex.disposables.CompositeDisposable;
  */
 
 public class AccountPresenter<V extends AccountMvpView> extends BasePresenter<V> implements
-        AccountMvpPresenter<V> {
+        AccountMvpPresenter<V>,Serializable {
 
     @Inject
     public AccountPresenter(DataManager dataManager, SchedulerProvider schedulerProvider,

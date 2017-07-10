@@ -13,6 +13,7 @@ import android.widget.TextView;
 import com.bluelinelabs.conductor.RouterTransaction;
 import com.bluelinelabs.conductor.changehandler.HorizontalChangeHandler;
 
+import java.io.Serializable;
 import java.util.List;
 
 import javax.inject.Inject;
@@ -21,10 +22,8 @@ import au.com.dealsdirect.R;
 import au.com.dealsdirect.data.auth.AuthHandler;
 import au.com.dealsdirect.ui.base.BaseController;
 import au.com.dealsdirect.ui.controller.account.adapter.AccountItemAdapter;
-import au.com.dealsdirect.ui.controller.account.listener.AccountItemClickListener;
 import au.com.dealsdirect.ui.controller.address.viewaddress.ViewAddressController;
 import au.com.dealsdirect.ui.controller.checkout.paymentselect.PaymentSelectController;
-import au.com.dealsdirect.ui.controller.contact.viewcontacts.ViewContactsController;
 import au.com.dealsdirect.ui.controller.details.DetailsController;
 import au.com.dealsdirect.ui.controller.language.LanguageController;
 import au.com.dealsdirect.ui.controller.orders.orders.OrdersController;
@@ -34,20 +33,17 @@ import au.com.dealsdirect.ui.controller.vouchers.View.ViewVouchersController;
 import au.com.dealsdirect.ui.custom.CustomAlertDialog;
 import au.com.dealsdirect.ui.main.MainMvpView;
 import au.com.dealsdirect.utils.BundleBuilder;
-import au.com.dealsdirect.utils.DialogUtils;
 import butterknife.BindView;
 
 /**
  * dp Created by Admin on 6/6/17.
  */
 
-public class AccountController extends BaseController implements AccountMvpView {
+public class AccountController extends BaseController implements AccountMvpView, Serializable{
 
     public static final String TAG = "AccountController";
     private static final String KEY_TEXT = "AccountController.KEY_TEXT";
     private AccountMvpView mAccountMvpView;
-
-    private AccountItemClickListener accountItemClickListener;
 
     @BindView(R.id.partial_toolbar_title_view)
     TextView mTitleTextView;
@@ -98,15 +94,9 @@ public class AccountController extends BaseController implements AccountMvpView 
     }
 
     @Override
-    public void onDestroyView(@NonNull View view) {
+    public void onDetach(View view) {
         mPresenter.onDetach();
-        super.onDestroyView(view);
-    }
-
-    @Override
-    protected void onSaveViewState(@NonNull View view, @NonNull Bundle outState) {
-        super.onSaveViewState(view, outState);
-
+        super.onDetach(view);
     }
 
     @Override

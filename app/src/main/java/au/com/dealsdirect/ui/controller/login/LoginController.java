@@ -27,7 +27,6 @@ import au.com.dealsdirect.ui.base.BaseController;
 import au.com.dealsdirect.ui.controller.register.RegisterController;
 import au.com.dealsdirect.ui.custom.CustomAlertDialog;
 import au.com.dealsdirect.utils.BundleBuilder;
-import au.com.dealsdirect.utils.DialogUtils;
 import butterknife.BindView;
 import butterknife.OnClick;
 
@@ -55,7 +54,7 @@ public class LoginController extends BaseController implements LoginMvpView {
 
     private boolean isLoginTapped = false;
 
-    AuthHandler mAuthHandler;
+    private transient AuthHandler mAuthHandler;
 
     public static LoginController newInstance(AuthHandler handler) {
 
@@ -99,7 +98,6 @@ public class LoginController extends BaseController implements LoginMvpView {
 
     @Override
     public void onDestroyView(View view) {
-        mPresenter.onDetach();
         super.onDestroyView(view);
 
         assert getActivity() != null;
@@ -146,6 +144,12 @@ public class LoginController extends BaseController implements LoginMvpView {
 //                });
 //            }
 //        });
+    }
+
+    @Override
+    public void onDetach(View view) {
+        mPresenter.onDetach();
+        super.onDetach(view);
     }
 
     @Override

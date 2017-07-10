@@ -46,7 +46,6 @@ public class BannersAdapter extends RecyclerView.Adapter<BannersViewHolder> {
                 .inflate(R.layout.viewholder_banner, parent, false);
 
         return new BannersViewHolder(v);
-
     }
 
     @Override
@@ -69,7 +68,6 @@ public class BannersAdapter extends RecyclerView.Adapter<BannersViewHolder> {
                         mSales.get(position).getId(),
                         position,
                         url);
-
             }
         });
     }
@@ -123,4 +121,3 @@ public class BannersAdapter extends RecyclerView.Adapter<BannersViewHolder> {
         return formatted;
     }
 }
-

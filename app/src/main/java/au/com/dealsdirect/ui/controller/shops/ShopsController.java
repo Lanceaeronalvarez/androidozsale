@@ -3,8 +3,10 @@ package au.com.dealsdirect.ui.controller.shops;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -74,6 +76,9 @@ public class ShopsController extends BaseController implements ShopsMvpView, Ban
     private String mCategoryName;
     private String mCategoryKey;
 
+    private GridLayoutManager mLayoutManager;
+
+
     private List<GetBannerResponse> sales = new LinkedList<>();
 
     public static ShopsController newInstance(GetCategoryTreeResponse getCategoryTreeResponse) {
@@ -129,12 +134,18 @@ public class ShopsController extends BaseController implements ShopsMvpView, Ban
         } else {
             mBannersAdapter = new BannersAdapter(getActivity(), sales, mBannerClickListener);
 
-            shopsControllerBannerRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
+            if (getResources().getBoolean(R.bool.is_tablet)) {
+                mLayoutManager = new GridLayoutManager(getActivity(), 2, GridLayoutManager.VERTICAL, false);
+                Log.d("boolean", "is tablet");
+            } else {
+                mLayoutManager = new GridLayoutManager(getActivity(), 1, GridLayoutManager.VERTICAL, false);
+                Log.d("boolean", "not tablet");
+            }
+
+            shopsControllerBannerRecyclerView.setLayoutManager(mLayoutManager);
             shopsControllerBannerRecyclerView.setAdapter(mBannersAdapter);
         }
-
     }
-
 
     @Override
     public void onBannerClicked(
@@ -230,10 +241,18 @@ public class ShopsController extends BaseController implements ShopsMvpView, Ban
 
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getActivity());
         linearLayoutManager.setAutoMeasureEnabled(false);
-        shopsControllerBannerRecyclerView.setLayoutManager(linearLayoutManager);
+
+        if (getResources().getBoolean(R.bool.is_tablet)) {
+            mLayoutManager = new GridLayoutManager(getActivity(), 2, GridLayoutManager.VERTICAL, false);
+            Log.d("boolean", "is tablet");
+        } else {
+            mLayoutManager = new GridLayoutManager(getActivity(), 1, GridLayoutManager.VERTICAL, false);
+            Log.d("boolean", "not tablet");
+        }
+
+        shopsControllerBannerRecyclerView.setLayoutManager(mLayoutManager);
         shopsControllerBannerRecyclerView.setAdapter(mBannersAdapter);
         mBannersAdapter.notifyDataSetChanged();
-
     }
 
 
@@ -275,8 +294,5 @@ public class ShopsController extends BaseController implements ShopsMvpView, Ban
                     SaleItemsController.newInstance(saleItemBundle))
                     .pushChangeHandler(new HorizontalChangeHandler())
                     .popChangeHandler(new HorizontalChangeHandler()));
-
-
     }
-
 }
