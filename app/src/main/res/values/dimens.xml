@@ -41,4 +41,5 @@
     <dimen name="invite_friends_padding">5dp</dimen>
     <dimen name="invite_friends_image_width">20dp</dimen>
 
+    <dimen name="category_background_size">70dp</dimen>
 </resources>

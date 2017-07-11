@@ -60,7 +60,7 @@ public class CategoriesAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                 char first = mData.get(position).getName().charAt(0);
                 ((CategoriesViewHolder) holder).categoryIndicator.setText(String.valueOf(first));
             }
-//
+
 //            if (position == 0 && mLastSelectedViewHolderImageView == null) {
 //                mLastSelectedViewHolderImageView = ((CategoriesViewHolder) holder).categoryTitleBackground;
 //                 mLastSelectedViewHolderImageView.setBackgroundDrawable(
