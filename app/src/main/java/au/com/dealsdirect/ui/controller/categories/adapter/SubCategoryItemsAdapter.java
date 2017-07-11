@@ -1,6 +1,7 @@
 package au.com.dealsdirect.ui.controller.categories.adapter;
 
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -51,7 +52,7 @@ public class SubCategoryItemsAdapter extends RecyclerView.Adapter<RecyclerView.V
     @Override
     public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
         setAnimation(holder.itemView, position);
-
+        Log.d("subcategoryitem", "animate");
         if (!mData.isEmpty()) {
             if (!mData.get(position).getName().isEmpty()) {
                 ((SubCategoryItemsAdapter.SubCategoryItemViewHolder) holder)
@@ -79,8 +80,8 @@ public class SubCategoryItemsAdapter extends RecyclerView.Adapter<RecyclerView.V
     @Override
     public void onViewDetachedFromWindow(RecyclerView.ViewHolder holder) {
         super.onViewDetachedFromWindow(holder);
-        Animation animation = AnimationUtils.loadAnimation(holder.itemView.getContext(), R.anim.slide_to_top);
-        holder.itemView.startAnimation(animation);
+//        Animation animation = AnimationUtils.loadAnimation(holder.itemView.getContext(), R.anim.slide_to_top);
+//        holder.itemView.startAnimation(animation);
     }
 
     public void replaceData(List<GetCategoryTreeResponse> getCategoryTreeResponses) {
@@ -96,9 +97,7 @@ public class SubCategoryItemsAdapter extends RecyclerView.Adapter<RecyclerView.V
         public SubCategoryItemViewHolder(View itemView) {
             super(itemView);
             ButterKnife.bind(this, itemView);
-            itemView.setOnClickListener((v) -> {
-                //do public sales banner api call
-            });
+
         }
     }
 

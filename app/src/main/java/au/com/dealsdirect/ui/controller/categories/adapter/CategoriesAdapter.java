@@ -1,7 +1,6 @@
 package au.com.dealsdirect.ui.controller.categories.adapter;
 
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.GestureDetector;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
@@ -75,7 +74,6 @@ public class CategoriesAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
 
                         @Override
                         public boolean onDoubleTap(MotionEvent e) {
-                            Log.d("tapping", "double tap");
 
                             mCategoryAdapterClickListener.onCategoryDoubleTap(
                                     position,
@@ -90,7 +88,6 @@ public class CategoriesAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
 
             ((CategoriesViewHolder) holder).categoryText.setText(mData.get(position).getName());
             ((CategoriesViewHolder) holder).itemView.setOnClickListener(view -> {
-                Log.d("tapping", "single tap");
 
                 if (mLastSelectedViewHolderImageView == null) {
 
@@ -113,11 +110,9 @@ public class CategoriesAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
 
                 }
 
-
                 mCategoryAdapterClickListener.onCategoryClicked(
                         position,
                         mData.get(position));
-
             });
 
         }
@@ -164,9 +159,7 @@ public class CategoriesAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
             super(itemView);
             mPresenter = presenter;
             ButterKnife.bind(this, itemView);
-            itemView.setOnClickListener((v) -> {
-                //do public sales banner api call
-            });
+
         }
 
 

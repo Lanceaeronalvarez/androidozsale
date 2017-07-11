@@ -182,7 +182,14 @@ public class CategoriesController extends BaseController
         String categoryKey = getCategoryTreeResponse.getKey() != null ? getCategoryTreeResponse.getKey() : categoryName;
 
         if (mResultSubCategories.get(position).getChildren() != null) {
-            mSubCategoryAdapter.replaceData(mResultSubCategories.get(position).getChildren());
+//            mSubCategoryAdapter.replaceData();
+
+            mSubCategoryAdapter = new SubCategoriesAdapter(
+                    mResultSubCategories.get(position).getChildren(), mPresenter, mSubCategoryClickListener, mSubCategoryItemClickListener, mCategoryMap);
+            mSubCategoryRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity(), LinearLayoutManager.VERTICAL, false));
+            mSubCategoryRecyclerView.setAdapter(mSubCategoryAdapter);
+
+
         } else {
             ArrayList<GetCategoryTreeResponse> emptyChildren = new ArrayList<>();
             mSubCategoryAdapter.replaceData(emptyChildren);
@@ -317,7 +324,6 @@ public class CategoriesController extends BaseController
                     .pushChangeHandler(new HorizontalChangeHandler())
                     .popChangeHandler(new HorizontalChangeHandler()));
         else
-
             KeyboardUtils.hideSoftInput(getActivity());
             getActivity().onBackPressed();
     }
