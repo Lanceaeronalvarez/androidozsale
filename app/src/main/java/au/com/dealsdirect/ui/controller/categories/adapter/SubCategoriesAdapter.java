@@ -62,65 +62,72 @@ public class SubCategoriesAdapter extends RecyclerView.Adapter<RecyclerView.View
     public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
 
         if (!mData.isEmpty()){
-            if (!mData.get(position).getName().isEmpty()){
-                ((SubCategoriesViewHolder) holder)
-                        .subCategoryTitle.setText(mData.get(position).getName());
-            }
 
-            List<GetCategoryTreeResponse> subCategoryItems = getSubCategoryItems(mData.get(position).getKey());
+            if (mData.get(position).getName().equals("empty")){
 
-            mSubCategoryItemsAdapter = new SubCategoryItemsAdapter(subCategoryItems, mPresenter, mSubCategoryItemClickListener);
-            ((SubCategoriesViewHolder) holder).subCategoryItemsRecyclerView .setLayoutManager(new LinearLayoutManager(holder.itemView.getContext(), LinearLayoutManager.VERTICAL, false));
-            ((SubCategoriesViewHolder) holder).subCategoryItemsRecyclerView .setAdapter(mSubCategoryItemsAdapter);
-
-
-            if (subCategoryItems.isEmpty()){
-                ((SubCategoriesViewHolder) holder).subCategoryDropdownImage.setVisibility(View.GONE);
 
             }else{
-                holder.itemView.setActivated(false);
-                ((SubCategoriesViewHolder) holder)
-                        .subCategoryItemsRecyclerView.setVisibility(View.GONE);
-                ((SubCategoriesViewHolder) holder).subCategoryDropdownImage
-                        .setBackgroundDrawable(holder.itemView.getContext().getResources().getDrawable(R.drawable.ic_add_gray));
-                ((SubCategoriesViewHolder) holder).subCategoryDropdownImage
-                        .setOnClickListener(view -> {
+                if (!mData.get(position).getName().isEmpty()){
+                    ((SubCategoriesViewHolder) holder)
+                            .subCategoryTitle.setText(mData.get(position).getName());
+                }
 
-                            if (holder.itemView.isActivated()){
-                                holder.itemView.setActivated(false);
-                                ((SubCategoriesViewHolder) holder)
-                                   .subCategoryItemsRecyclerView.setVisibility(View.GONE);
-                                ((SubCategoriesViewHolder) holder).subCategoryDropdownImage
-                                   .setBackgroundDrawable(holder.itemView.getContext().getResources().getDrawable(R.drawable.ic_add_gray ));
-                            }
-                            else{
-                                holder.itemView.setActivated(true);
-                                ((SubCategoriesViewHolder) holder).subCategoryDropdownImage
-                                        .setBackgroundDrawable(holder.itemView.getContext().getResources()
-                                                .getDrawable(R.drawable.ic_remove));
-                                ((SubCategoriesViewHolder) holder)
-                                        .subCategoryItemsRecyclerView.setVisibility(View.VISIBLE);
-                                mSubCategoryItemsAdapter = new SubCategoryItemsAdapter(subCategoryItems, mPresenter, mSubCategoryItemClickListener);
-                                ((SubCategoriesViewHolder) holder).subCategoryItemsRecyclerView .setLayoutManager(new LinearLayoutManager(holder.itemView.getContext(), LinearLayoutManager.VERTICAL, false));
-                                ((SubCategoriesViewHolder) holder).subCategoryItemsRecyclerView .setAdapter(mSubCategoryItemsAdapter);
+                List<GetCategoryTreeResponse> subCategoryItems = getSubCategoryItems(mData.get(position).getKey());
 
-                            }
+                mSubCategoryItemsAdapter = new SubCategoryItemsAdapter(subCategoryItems, mPresenter, mSubCategoryItemClickListener);
+                ((SubCategoriesViewHolder) holder).subCategoryItemsRecyclerView .setLayoutManager(new LinearLayoutManager(holder.itemView.getContext(), LinearLayoutManager.VERTICAL, false));
+                ((SubCategoriesViewHolder) holder).subCategoryItemsRecyclerView .setAdapter(mSubCategoryItemsAdapter);
+
+
+                if (subCategoryItems.isEmpty()){
+                    ((SubCategoriesViewHolder) holder).subCategoryDropdownImage.setVisibility(View.GONE);
+
+                }else{
+                    holder.itemView.setActivated(false);
+                    ((SubCategoriesViewHolder) holder)
+                            .subCategoryItemsRecyclerView.setVisibility(View.GONE);
+                    ((SubCategoriesViewHolder) holder).subCategoryDropdownImage
+                            .setBackgroundDrawable(holder.itemView.getContext().getResources().getDrawable(R.drawable.ic_add_gray));
+                    ((SubCategoriesViewHolder) holder).subCategoryDropdownImage
+                            .setOnClickListener(view -> {
+
+                                if (holder.itemView.isActivated()){
+                                    holder.itemView.setActivated(false);
+                                    ((SubCategoriesViewHolder) holder)
+                                            .subCategoryItemsRecyclerView.setVisibility(View.GONE);
+                                    ((SubCategoriesViewHolder) holder).subCategoryDropdownImage
+                                            .setBackgroundDrawable(holder.itemView.getContext().getResources().getDrawable(R.drawable.ic_add_gray ));
+                                }
+                                else{
+                                    holder.itemView.setActivated(true);
+                                    ((SubCategoriesViewHolder) holder).subCategoryDropdownImage
+                                            .setBackgroundDrawable(holder.itemView.getContext().getResources()
+                                                    .getDrawable(R.drawable.ic_remove));
+                                    ((SubCategoriesViewHolder) holder)
+                                            .subCategoryItemsRecyclerView.setVisibility(View.VISIBLE);
+                                    mSubCategoryItemsAdapter = new SubCategoryItemsAdapter(subCategoryItems, mPresenter, mSubCategoryItemClickListener);
+                                    ((SubCategoriesViewHolder) holder).subCategoryItemsRecyclerView .setLayoutManager(new LinearLayoutManager(holder.itemView.getContext(), LinearLayoutManager.VERTICAL, false));
+                                    ((SubCategoriesViewHolder) holder).subCategoryItemsRecyclerView .setAdapter(mSubCategoryItemsAdapter);
+
+                                }
 
 ////                          mExpandedPosition = isExpanded ? -1:position;
 //                            TransitionManager.beginDelayedTransition(
 //                                    ((SubCategoriesViewHolder) holder)
 //                                            .subCategoryItemsRecyclerView);
 //                            notifyDataSetChanged();
-                            mIsUpdate = true;
-                        });
-            }
+                                mIsUpdate = true;
+                            });
+                }
 
-            ((SubCategoriesViewHolder) holder).subCategoryTitle.setOnClickListener(view -> {
-                mSubCategoryAdapterClickListener.onSubCategoryClicked(
-                        mData.get(position).getId(),
-                        mData.get(position).getName(),
-                        mData.get(position).getKey());
-            });
+                ((SubCategoriesViewHolder) holder).subCategoryTitle.setOnClickListener(view -> {
+                    mSubCategoryAdapterClickListener.onSubCategoryClicked(
+                            mData.get(position).getId(),
+                            mData.get(position).getName(),
+                            mData.get(position).getKey());
+                });
+
+            }
 
         }
 

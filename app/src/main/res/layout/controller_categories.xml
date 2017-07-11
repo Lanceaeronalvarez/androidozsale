@@ -8,14 +8,15 @@
     <include layout="@layout/partial_toolbar_search"/>
 
     <LinearLayout
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:weightSum="100"
         android:orientation="horizontal">
 
         <LinearLayout
-            android:layout_width="140dp"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_weight="20"
+            android:animateLayoutChanges="false"
             android:orientation="vertical">
 
             <TextView
@@ -32,7 +33,6 @@
                 android:id="@+id/categories_recyclerview"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
-                android:layout_weight="10"
                 android:layout_gravity="center"
                 android:overScrollMode="never"
                 android:layout_marginLeft="10dp"
@@ -47,10 +47,9 @@
 
         <android.support.v7.widget.RecyclerView
             android:id="@+id/sub_categories_recyclerview"
-            android:layout_width="450dp"
+            android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_marginLeft="10dp"
-            android:layout_weight="80"/>
+            android:layout_marginLeft="10dp" />
 
     </LinearLayout>
 

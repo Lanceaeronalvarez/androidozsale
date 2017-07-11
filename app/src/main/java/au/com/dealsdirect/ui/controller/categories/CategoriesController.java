@@ -192,7 +192,10 @@ public class CategoriesController extends BaseController
 
         } else {
             ArrayList<GetCategoryTreeResponse> emptyChildren = new ArrayList<>();
-            mSubCategoryAdapter.replaceData(emptyChildren);
+//            mSubCategoryAdapter.replaceData(emptyChildren);
+            mSubCategoryAdapter = new SubCategoriesAdapter(emptyChildren, mPresenter, mSubCategoryClickListener, mSubCategoryItemClickListener, mCategoryMap);
+            mSubCategoryRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity(), LinearLayoutManager.VERTICAL, false));
+            mSubCategoryRecyclerView.setAdapter(mSubCategoryAdapter);
         }
 
         mChosenCategoryKey = categoryKey != null ? categoryKey : categoryName;
