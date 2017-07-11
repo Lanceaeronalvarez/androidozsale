@@ -5,6 +5,7 @@ import com.androidnetworking.error.ANError;
 import javax.inject.Inject;
 
 import au.com.dealsdirect.data.DataManager;
+import au.com.dealsdirect.data.network.model.saleitemdetails.AddToCartRequest;
 import au.com.dealsdirect.ui.base.BasePresenter;
 import au.com.dealsdirect.utils.rx.SchedulerProvider;
 import io.reactivex.disposables.CompositeDisposable;
@@ -35,11 +36,10 @@ public class SaleItemDetailsPresenter<V extends SaleItemDetailsMvpView> extends 
                         return;
                     }
 
-                    if (response!=null)
+                    if (response != null)
                         getMvpView().showSaleDetails(response);
 
                     getMvpView().hideLoading();
-
 
 
                 }, throwable -> {
@@ -95,5 +95,43 @@ public class SaleItemDetailsPresenter<V extends SaleItemDetailsMvpView> extends 
 //                        }
 //                    }
 //                }));
+    }
+
+    @Override
+    public void addToCart(AddToCartRequest requestValues) {
+        getMvpView().showLoading();
+
+        getCompositeDisposable().add(getDataManager()
+                .callAddItemToCart(requestValues)
+                .subscribeOn(getSchedulerProvider().io())
+                .observeOn(getSchedulerProvider().ui())
+                .subscribe(response -> {
+
+                    if (!isViewAttached()) {
+                        return;
+                    }
+
+                    getMvpView().hideLoading();
+
+                    if (response != null) {
+                        getMvpView().showAddToCartResponse(response.getResult());
+                    }
+
+                }, throwable -> {
+
+                    if (!isViewAttached()) {
+                        return;
+                    }
+
+                    getMvpView().hideLoading();
+                    getMvpView().onError(throwable.getMessage());
+
+                    // handle load accounts error here
+                    if (throwable instanceof ANError) {
+                        ANError anError = (ANError) throwable;
+                        handleApiError(anError);
+                    }
+                }));
+
     }
 }

@@ -80,7 +80,6 @@ public class ViewContactsController extends BaseController implements ViewContac
     @Override
     protected View inflateView(@NonNull LayoutInflater inflater, @NonNull ViewGroup container) {
         View view = inflater.inflate(R.layout.controller_view_contacts, container, false);
-
         getControllerComponent().inject(this);
         mPresenter.onAttach(this);
         return view;
@@ -143,7 +142,6 @@ public class ViewContactsController extends BaseController implements ViewContac
                 .popChangeHandler(new HorizontalChangeHandler()));
 
     }
-
 
     public ArrayList<ContactItemByDate> getDifferentDates(List<GetContactsResponse.ContactList> lists) {
 

@@ -27,7 +27,9 @@ public class ViewContactsPresenter<V extends ViewContactsMvpView> extends BasePr
 
     @Override
     public void loadContacts() {
-        getMvpView().showLoading();
+        if(isViewAttached()) {
+            getMvpView().showLoading();
+        }
 
         getCompositeDisposable()
                 .add(getDataManager()

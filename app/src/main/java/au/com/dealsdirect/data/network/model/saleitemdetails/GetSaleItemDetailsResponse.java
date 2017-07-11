@@ -10,13 +10,13 @@ public class GetSaleItemDetailsResponse {
 
     @SerializedName("skuVariants")
     @Expose
-    private List<SkuVariant> skuVariants = null;
+    private List<GetSaleItemDetailsResponse> skuVariants = null;
     @SerializedName("skuId")
     @Expose
     private String skuId;
     @SerializedName("attributes")
     @Expose
-    private Attributes_ attributes;
+    private Attributes attributes;
     @SerializedName("name")
     @Expose
     private String name;
@@ -28,10 +28,10 @@ public class GetSaleItemDetailsResponse {
     private String labelText;
     @SerializedName("price")
     @Expose
-    private Price_ price;
+    private Price price;
     @SerializedName("originalPrice")
     @Expose
-    private OriginalPrice_ originalPrice;
+    private OriginalPrice originalPrice;
     @SerializedName("quantity")
     @Expose
     private Integer quantity;
@@ -60,11 +60,11 @@ public class GetSaleItemDetailsResponse {
     @Expose
     private String seoIdentifier;
 
-    public List<SkuVariant> getSkuVariants() {
+    public List<GetSaleItemDetailsResponse> getSkuVariants() {
         return skuVariants;
     }
 
-    public void setSkuVariants(List<SkuVariant> skuVariants) {
+    public void setSkuVariants(List<GetSaleItemDetailsResponse> skuVariants) {
         this.skuVariants = skuVariants;
     }
 
@@ -76,11 +76,11 @@ public class GetSaleItemDetailsResponse {
         this.skuId = skuId;
     }
 
-    public Attributes_ getAttributes() {
+    public Attributes getAttributes() {
         return attributes;
     }
 
-    public void setAttributes(Attributes_ attributes) {
+    public void setAttributes(Attributes attributes) {
         this.attributes = attributes;
     }
 
@@ -108,19 +108,19 @@ public class GetSaleItemDetailsResponse {
         this.labelText = labelText;
     }
 
-    public Price_ getPrice() {
+    public Price getPrice() {
         return price;
     }
 
-    public void setPrice(Price_ price) {
+    public void setPrice(Price price) {
         this.price = price;
     }
 
-    public OriginalPrice_ getOriginalPrice() {
+    public OriginalPrice getOriginalPrice() {
         return originalPrice;
     }
 
-    public void setOriginalPrice(OriginalPrice_ originalPrice) {
+    public void setOriginalPrice(OriginalPrice originalPrice) {
         this.originalPrice = originalPrice;
     }
 

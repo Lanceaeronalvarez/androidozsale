@@ -10,4 +10,6 @@ import au.com.dealsdirect.ui.base.MvpView;
 public interface SaleItemDetailsMvpView extends MvpView {
 
     void showSaleDetails(GetSaleItemDetailsResponse saleDetail);
+
+    void showAddToCartResponse(boolean val);
 }

@@ -8,8 +8,6 @@ import android.content.Context;
 import android.content.SharedPreferences;
 
 import com.androidnetworking.error.ANError;
-import com.braintreepayments.api.DataCollector;
-import com.braintreepayments.api.interfaces.BraintreeResponseListener;
 import com.google.gson.Gson;
 import com.mysale.genie.utility.Prefs;
 import com.mysale.genie.utility.RxBus;
@@ -483,6 +481,11 @@ public class MainPresenter<V extends MainMvpView> extends BasePresenter<V> imple
     @Override
     public String getKountMerchantId() {
         return getDataManager().isKountEnabled() ? getDataManager().getKountMerchantId() : "";
+    }
+
+    @Override
+    public boolean isAuthorized() {
+        return getDataManager().isAuthorized();
     }
 
 }
