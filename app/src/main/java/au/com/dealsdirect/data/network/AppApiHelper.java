@@ -61,6 +61,8 @@ import au.com.dealsdirect.data.network.model.publicsalescategories.GetPublicSale
 import au.com.dealsdirect.data.network.model.publicsalescategories.GetPublicSalesCategoriesResponse;
 import au.com.dealsdirect.data.network.model.register.RegisterUserRequest;
 import au.com.dealsdirect.data.network.model.register.RegisterUserResponse;
+import au.com.dealsdirect.data.network.model.saleitemdetails.AddToCartRequest;
+import au.com.dealsdirect.data.network.model.saleitemdetails.AddToCartResponse;
 import au.com.dealsdirect.data.network.model.saleitemdetails.GetSaleItemDetailsResponse;
 import au.com.dealsdirect.data.network.model.saleitems.GetPublicSaleItemsRequest;
 import au.com.dealsdirect.data.network.model.saleitems.GetPublicSaleItemsResponse;
@@ -179,6 +181,15 @@ public class AppApiHelper implements ApiHelper {
                 .addQueryParameter(linkedHashMap)
                 .build()
                 .getObjectObservable(GetSaleItemsResponse.class);
+    }
+
+    @Override
+    public Observable<AddToCartResponse> callAddItemToCart(AddToCartRequest requestValues) {
+        return Rx2AndroidNetworking.post(ApiEndPoint.ADD_TO_CART)
+                .addHeaders(mApiHeader.getPublicApiHeader())
+                .addJSONObjectBody(JsonUtils.convertToJsonObject(requestValues))
+                .build()
+                .getObjectObservable(AddToCartResponse.class);
     }
 
     @Override

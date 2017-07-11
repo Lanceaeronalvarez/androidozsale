@@ -28,6 +28,7 @@ import java.util.List;
 import javax.inject.Inject;
 
 import au.com.dealsdirect.R;
+import au.com.dealsdirect.data.auth.AuthHandler;
 import au.com.dealsdirect.data.network.model.banner.GetBannerResponse;
 import au.com.dealsdirect.data.network.model.category.GetCategoryTreeResponse;
 import au.com.dealsdirect.ui.base.BaseController;
@@ -36,6 +37,8 @@ import au.com.dealsdirect.ui.controller.saleitems.SaleItemsController;
 import au.com.dealsdirect.ui.controller.shops.adapter.BannersAdapter;
 import au.com.dealsdirect.ui.controller.shops.listener.BannerClickListener;
 import au.com.dealsdirect.ui.custom.transitions.HorizontalNavTransitionChangeHandler;
+import au.com.dealsdirect.ui.main.FetchTokenHandler;
+import au.com.dealsdirect.ui.main.MainMvpView;
 import au.com.dealsdirect.utils.BundleBuilder;
 import au.com.dealsdirect.utils.KeyboardUtils;
 import butterknife.BindView;
@@ -129,7 +132,7 @@ public class ShopsController extends BaseController implements ShopsMvpView, Ban
     protected void setUp(View view) {
 
         if (sales.size() == 0) {
-            mPresenter.loadShopsBanner(mCategoryName,mCategoryID);
+            mPresenter.loadShopsBanner(mCategoryName, mCategoryID);
         } else {
             mBannersAdapter = new BannersAdapter(getActivity(), sales, mBannerClickListener);
 
@@ -155,10 +158,27 @@ public class ShopsController extends BaseController implements ShopsMvpView, Ban
         List<String> names = new ArrayList<>();
         names.add(bannerId + position);
 
-        getRouter().pushController(RouterTransaction.with(
-                SaleItemsController.newInstance(saleId, bannerTitle, bannerId, position, imageUrl, null))
-                .pushChangeHandler(new HorizontalChangeHandler())
-                .popChangeHandler(new HorizontalChangeHandler()));
+        if (!mPresenter.isAccessAnonymousEnabled() && !mPresenter.isAuthorized()) {
+            ((MainMvpView) getActivity()).showLoginController(getRouter(), new AuthHandler() {
+                @Override
+                public void success() {
+                    getRouter().pushController(RouterTransaction.with(
+                            SaleItemsController.newInstance(saleId, bannerTitle, bannerId, position, imageUrl, null))
+                            .pushChangeHandler(new HorizontalChangeHandler())
+                            .popChangeHandler(new HorizontalChangeHandler()));
+                }
+
+                @Override
+                public void error() {
+
+                }
+            });
+        } else {
+            getRouter().pushController(RouterTransaction.with(
+                    SaleItemsController.newInstance(saleId, bannerTitle, bannerId, position, imageUrl, null))
+                    .pushChangeHandler(new HorizontalChangeHandler())
+                    .popChangeHandler(new HorizontalChangeHandler()));
+        }
     }
 
     @OnClick(R.id.partial_toolbar_hamburger)
@@ -174,13 +194,13 @@ public class ShopsController extends BaseController implements ShopsMvpView, Ban
 
     @SuppressWarnings("ConstantConditions")
     @OnClick(R.id.partial_toolbar_search_icon)
-    void onSearchClick(){
+    void onSearchClick() {
 
         shopsControllerSearchView.setImageDrawable(getResources().getDrawable(R.drawable.ic_close));
 
         mShopsControllerHamburgerView.animate().rotation(-90).setDuration(200).start();
 
-        RelativeLayout item = (RelativeLayout)getView().findViewById(R.id.controller_shop_toolbar_container);
+        RelativeLayout item = (RelativeLayout) getView().findViewById(R.id.controller_shop_toolbar_container);
         View child = getActivity().getLayoutInflater().inflate(R.layout.partial_toolbar_search, null);
         item.addView(child);
 
@@ -193,7 +213,7 @@ public class ShopsController extends BaseController implements ShopsMvpView, Ban
         searchField.setActivated(true);
         searchField.setFocusable(true);
 
-        if(searchField.requestFocus()) {
+        if (searchField.requestFocus()) {
             getActivity().getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_VISIBLE);
         }
 
@@ -275,7 +295,7 @@ public class ShopsController extends BaseController implements ShopsMvpView, Ban
         return outtoRight;
     }
 
-    private void performSearch(String searchQuery){
+    private void performSearch(String searchQuery) {
 
         Bundle saleItemBundle = new BundleBuilder(new Bundle())
                 .putString("SaleItemsController.KEY_TITLE", searchQuery)
@@ -285,9 +305,9 @@ public class ShopsController extends BaseController implements ShopsMvpView, Ban
         if (!searchQuery.isEmpty())
 
             KeyboardUtils.hideSoftInput(getActivity());
-            getRouter().pushController(RouterTransaction.with(
-                    SaleItemsController.newInstance(saleItemBundle))
-                    .pushChangeHandler(new HorizontalChangeHandler())
-                    .popChangeHandler(new HorizontalChangeHandler()));
+        getRouter().pushController(RouterTransaction.with(
+                SaleItemsController.newInstance(saleItemBundle))
+                .pushChangeHandler(new HorizontalChangeHandler())
+                .popChangeHandler(new HorizontalChangeHandler()));
     }
 }

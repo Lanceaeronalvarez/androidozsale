@@ -10,4 +10,8 @@ public interface ShopsMvpPresenter<V extends ShopsMvpView> extends MvpPresenter<
 
     void loadShopsBanner(String categoryName, String categoryId);
 
+    boolean isAccessAnonymousEnabled();
+
+    boolean isAuthorized();
+
 }

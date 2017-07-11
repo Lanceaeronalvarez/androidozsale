@@ -57,6 +57,8 @@ import au.com.dealsdirect.data.network.model.publicsalescategories.GetPublicSale
 import au.com.dealsdirect.data.network.model.publicsalescategories.GetPublicSalesCategoriesResponse;
 import au.com.dealsdirect.data.network.model.register.RegisterUserRequest;
 import au.com.dealsdirect.data.network.model.register.RegisterUserResponse;
+import au.com.dealsdirect.data.network.model.saleitemdetails.AddToCartRequest;
+import au.com.dealsdirect.data.network.model.saleitemdetails.AddToCartResponse;
 import au.com.dealsdirect.data.network.model.saleitemdetails.GetSaleItemDetailsResponse;
 import au.com.dealsdirect.data.network.model.saleitems.GetPublicSaleItemsRequest;
 import au.com.dealsdirect.data.network.model.saleitems.GetPublicSaleItemsResponse;
@@ -99,6 +101,8 @@ public interface ApiHelper {
             getPublicSaleItemsRequest);
 
     Observable<GetSaleItemsResponse> callGetSaleItemsRequest(GetSaleItemsRequest getSaleItemsRequest);
+
+    Observable<AddToCartResponse> callAddItemToCart(AddToCartRequest requestValues);
 
 
 //  CONFIG API CALLS

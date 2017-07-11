@@ -32,6 +32,7 @@ import java.util.List;
 import javax.inject.Inject;
 
 import au.com.dealsdirect.R;
+import au.com.dealsdirect.data.network.model.saleitemdetails.AddToCartRequest;
 import au.com.dealsdirect.data.network.model.saleitemdetails.GetSaleItemDetailsResponse;
 import au.com.dealsdirect.data.network.model.saleitemdetails.SkuVariant;
 import au.com.dealsdirect.ui.base.BaseActivity;
@@ -113,6 +114,8 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
     private boolean hasSizes = false;
     private boolean didSelectSize = false;
     private String selectedSkuId = "";
+
+    private GetSaleItemDetailsResponse mProductDetailsItem;
 
     private final ElasticDragDismissFrameLayout.ElasticDragDismissCallback dragDismissListener
             = new ElasticDragDismissFrameLayout.ElasticDragDismissCallback() {
@@ -333,7 +336,7 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
         }
 
         if (!saleDetail.getSkuVariants().isEmpty())
-            for (SkuVariant skuVariant : saleDetail.getSkuVariants()) {
+            for (GetSaleItemDetailsResponse skuVariant : saleDetail.getSkuVariants()) {
                 String skuId = skuVariant.getSkuId();
                 String size = skuVariant.getAttributes().getSize();
                 if (!size.isEmpty())
@@ -370,10 +373,15 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
 
     }
 
+    @Override
+    public void showAddToCartResponse(boolean val) {
+
+    }
+
 
     @OnClick(R.id.product_details_add_to_basket)
     void addToBasket() {
-
+        //call add to cart presenter here.
         /*
         if (Auth.isLoggedIn()){
             Log.d("productdetail", "add to basket");

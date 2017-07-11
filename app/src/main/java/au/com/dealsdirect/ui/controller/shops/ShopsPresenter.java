@@ -77,5 +77,15 @@ public class ShopsPresenter<V extends ShopsMvpView> extends BasePresenter<V> imp
                             }
                         }));
     }
+
+    @Override
+    public boolean isAccessAnonymousEnabled() {
+        return getDataManager().getAccessAnonymousEnabled();
+    }
+
+    @Override
+    public boolean isAuthorized() {
+        return getDataManager().isAuthorized();
+    }
 }
 

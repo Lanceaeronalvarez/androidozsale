@@ -1,5 +1,6 @@
 package au.com.dealsdirect.ui.controller.saleitemdetails;
 
+import au.com.dealsdirect.data.network.model.saleitemdetails.AddToCartRequest;
 import au.com.dealsdirect.ui.base.MvpPresenter;
 import au.com.dealsdirect.ui.base.MvpView;
 
@@ -12,4 +13,5 @@ public interface SaleItemDetailsMvpPresenter<V extends MvpView> extends MvpPrese
 //    void loadProductDetails(GetPublicItemDetailsRequest publicItemDetailsRequest, GetPublicSaleDetailsRequest publicSaleDetailsRequest);
     void loadSaleItemDetails(String seoIdentifierId);
 
+    void addToCart(AddToCartRequest requestValues);
 }

@@ -126,11 +126,11 @@ public class MainActivity extends BaseActivity implements MainMvpView {
                     mBottomNavigationView.setSelectedItemId(R.id.action_shop);
                 } else if (to instanceof AccountController) {
                     mBottomNavigationView.setSelectedItemId(R.id.action_account);
-                }else if (to instanceof ViewContactsController) {
+                } else if (to instanceof ViewContactsController) {
                     mBottomNavigationView.setSelectedItemId(R.id.action_contact);
-                }else if (to instanceof InviteController) {
+                } else if (to instanceof InviteController) {
                     mBottomNavigationView.setSelectedItemId(R.id.action_invite);
-                }else if (to instanceof CheckoutController) {
+                } else if (to instanceof CheckoutController) {
                     mBottomNavigationView.setSelectedItemId(R.id.action_checkout);
                 }
             }
@@ -155,12 +155,23 @@ public class MainActivity extends BaseActivity implements MainMvpView {
                     showAccountController();
                     break;
 
-                case R.id.action_contact:
-                    showContactController();
-                    break;
-
                 case R.id.action_invite:
-                    showInviteController();
+                case R.id.action_contact:
+                    if (!mPresenter.isAuthorized()) {
+                        showLoginController(mRouter, new AuthHandler() {
+                            @Override
+                            public void success() {
+                                proceedToController(item.getItemId());
+                            }
+
+                            @Override
+                            public void error() {
+
+                            }
+                        });
+                    } else {
+                        proceedToController(item.getItemId());
+                    }
                     break;
 
                 case R.id.action_checkout:
@@ -172,6 +183,14 @@ public class MainActivity extends BaseActivity implements MainMvpView {
 
     }
 
+    private void proceedToController(int id){
+        if(id == R.id.action_invite) {
+            showInviteController();
+        }else if(id == R.id.action_contact){
+            showContactController();
+        }
+    }
+
     @Override
     protected void onDestroy() {
         mPresenter.onDetach();
@@ -181,6 +200,30 @@ public class MainActivity extends BaseActivity implements MainMvpView {
 
     @Override
     public void onBackPressed() {
+//        if (!mRouter.handleBack()) {
+//            return;
+//        }
+//
+//        Controller test = getMainRouterCurrentController();
+//        if (getMainRouterCurrentController() instanceof HomeController ||
+//                getMainRouterCurrentController() instanceof ShopsController) {
+//            showBottomNavigationView();
+//            DialogUtils.showYesNoDialog(
+//                    this,
+//                    getString(R.string.dealsdirect),
+//                    getString(R.string.exit_app),
+//                    getString(R.string.exit),
+//                    getString(R.string.no),
+//                    (dialogInterface, i) -> {
+//                        finish();
+//                    },
+//                    (dialogInterface, i) -> {
+//
+//                    });
+//        }
+
+
+
         if (mRouter.getBackstackSize()==1){
             DialogUtils.showYesNoDialog(
                     this,
@@ -222,36 +265,37 @@ public class MainActivity extends BaseActivity implements MainMvpView {
 
     @Override
     public void showAccountController() {
-        mRouter.setRoot(RouterTransaction.with(AccountController.newInstance())
+        mRouter.pushController(RouterTransaction.with(AccountController.newInstance())
                 .pushChangeHandler(new FadeChangeHandler())
                 .popChangeHandler(new FadeChangeHandler()));
     }
 
     @Override
     public void showContactController() {
-        mRouter.setRoot(RouterTransaction.with(ViewContactsController.newInstance())
+        mRouter.pushController(RouterTransaction.with(ViewContactsController.newInstance())
                 .pushChangeHandler(new FadeChangeHandler())
                 .popChangeHandler(new FadeChangeHandler()));
+
 
     }
 
     @Override
     public void showInviteController() {
-        mRouter.setRoot(RouterTransaction.with(InviteController.newInstance())
+        mRouter.pushController(RouterTransaction.with(InviteController.newInstance())
                 .pushChangeHandler(new FadeChangeHandler())
                 .popChangeHandler(new FadeChangeHandler()));
     }
 
     @Override
     public void showCheckoutController() {
-        mRouter.setRoot(RouterTransaction.with(new CheckoutController())
+        mRouter.pushController(RouterTransaction.with(new CheckoutController())
                 .pushChangeHandler(new FadeChangeHandler())
                 .popChangeHandler(new FadeChangeHandler()));
     }
 
     @Override
     public void showLoginController(Router router, AuthHandler handler) {
-        //pinapasa yung router, para kahit childe router man siya ng kung ano mang view, pwedeng siya ang tumawag.
+        //pinapasa yung router, para kahit child router man siya ng kung ano mang view, pwedeng siya ang tumawag.
         router.pushController(RouterTransaction.with(LoginController.newInstance(handler))
                 .pushChangeHandler(new VerticalChangeHandler())
                 .popChangeHandler(new VerticalChangeHandler()));
@@ -298,7 +342,7 @@ public class MainActivity extends BaseActivity implements MainMvpView {
         BraintreeResponseListener<String> handler = new BraintreeResponseListener<String>() {
             @Override
             public void onResponse(String deviceData) {
-                mPresenter.createPaymentMethod(deviceData,paymentMethodNonce.getNonce(),mPaymentType);
+                mPresenter.createPaymentMethod(deviceData, paymentMethodNonce.getNonce(), mPaymentType);
             }
         };
 
@@ -330,7 +374,7 @@ public class MainActivity extends BaseActivity implements MainMvpView {
     }
 
     @Override
-    public FetchTokenHandler getFetchTokenHandler(){
+    public FetchTokenHandler getFetchTokenHandler() {
         return mFetchTokenHandler;
     }
 
@@ -343,12 +387,12 @@ public class MainActivity extends BaseActivity implements MainMvpView {
     }
 
     @Override
-    public void callCreatePaymentTransaction(String paymentNonce){
+    public void callCreatePaymentTransaction(String paymentNonce) {
 
         BraintreeResponseListener<String> handler = new BraintreeResponseListener<String>() {
             @Override
             public void onResponse(String deviceData) {
-                mPresenter.callCreatePaymentTransaction(deviceData,mPaymentType,paymentNonce,getPaymentMethodSelected().getToken());
+                mPresenter.callCreatePaymentTransaction(deviceData, mPaymentType, paymentNonce, getPaymentMethodSelected().getToken());
             }
         };
 
@@ -424,8 +468,8 @@ public class MainActivity extends BaseActivity implements MainMvpView {
     public void createPaymentMethodSuccess(PaymentMethod lastPaymentMethod) {
         Controller currentController = getMainRouterCurrentController();
 
-        if ((currentController instanceof AddPaymentController) && ((AddPaymentController)currentController).isCalledFromAccounts()) {
-            ((AddPaymentController)currentController).showAddPaymentResult(true, "");
+        if ((currentController instanceof AddPaymentController) && ((AddPaymentController) currentController).isCalledFromAccounts()) {
+            ((AddPaymentController) currentController).showAddPaymentResult(true, "");
         } else {
             setPaymentMethodSelected(lastPaymentMethod);
             mRouter.popCurrentController();
@@ -449,16 +493,20 @@ public class MainActivity extends BaseActivity implements MainMvpView {
 
             CustomAlertDialog.showCustomAlertDialog(this, CustomAlertDialog.CustomDialogIconState.NEGATIVE, responseValue.getD().getMessage());
 
-            if(getMainRouterCurrentController() instanceof CheckoutController){
-                CheckoutController checkoutController = (CheckoutController)getMainRouterCurrentController();
+            if (getMainRouterCurrentController() instanceof CheckoutController) {
+                CheckoutController checkoutController = (CheckoutController) getMainRouterCurrentController();
                 checkoutController.loadCart();
             }
         }
     }
 
-    public Controller getMainRouterCurrentController(){
+    public Controller getMainRouterCurrentController() {
         int backstackSize = mRouter.getBackstack().size();
-        return mRouter.getBackstack().get(backstackSize - 1).controller();
+        if (backstackSize > 0) {
+            return mRouter.getBackstack().get(backstackSize - 1).controller();
+        } else {
+            return null;
+        }
 
     }
 }

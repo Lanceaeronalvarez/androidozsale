@@ -42,7 +42,6 @@ public class AccountPresenter<V extends AccountMvpView> extends BasePresenter<V>
     public void onAccountItemClick(String option) {
         if (getDataManager().isAuthorized()) {
             switch (option) {
-
                 case "My Details":
                     getMvpView().showMyDetailsController();
                     break;
@@ -78,8 +77,8 @@ public class AccountPresenter<V extends AccountMvpView> extends BasePresenter<V>
 
         if (getDataManager().isAuthorized()){
             items.add("Logout");
-
         }
+
         getMvpView().showAccountItems(items);
     }
 }
