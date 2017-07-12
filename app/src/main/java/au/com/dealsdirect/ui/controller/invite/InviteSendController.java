@@ -23,6 +23,7 @@ import au.com.dealsdirect.data.network.model.invite.GetInviteResponse;
 import au.com.dealsdirect.data.network.model.invite.SetInviteRequest;
 import au.com.dealsdirect.data.network.model.invite.SetInviteResponse;
 import au.com.dealsdirect.ui.base.BaseController;
+import au.com.dealsdirect.ui.custom.CustomAlertDialog;
 import au.com.dealsdirect.utils.BundleBuilder;
 import butterknife.BindView;
 
@@ -194,10 +195,10 @@ public class InviteSendController extends BaseController implements InviteMvpVie
                     }
                     catch (Exception e)
                     {
-//                        CustomAlertDialog.showCustomAlertDialog(
-//                                mActivity,
-//                                CustomAlertDialog.CustomDialogIconState.NEGATIVE,
-//                                mActivity.getString(R.string.twitter_not_installed));
+                        CustomAlertDialog.showCustomAlertDialog(
+                                getActivity(),
+                                CustomAlertDialog.CustomDialogIconState.NEGATIVE,
+                                "Twitter is not installed on this device");
                     }
 
                 } else {
@@ -302,10 +303,10 @@ public class InviteSendController extends BaseController implements InviteMvpVie
                     Intent intent = new Intent(Intent.ACTION_VIEW, uri);
                     getActivity().startActivity(intent);
                 } else {
-//                    CustomAlertDialog.showCustomAlertDialog(
-//                            mActivity,
-//                            CustomAlertDialog.CustomDialogIconState.NEGATIVE,
-//                            mActivity.getString(R.string.facebook_link_missing));
+                    CustomAlertDialog.showCustomAlertDialog(
+                            getActivity(),
+                            CustomAlertDialog.CustomDialogIconState.NEGATIVE,
+                            "facebook link missing");
                 }
             }
         });
@@ -322,10 +323,10 @@ public class InviteSendController extends BaseController implements InviteMvpVie
 
                 } else {
 
-//                    CustomAlertDialog.showCustomAlertDialog(
-//                            mActivity,
-//                            CustomAlertDialog.CustomDialogIconState.NEGATIVE,
-//                            mActivity.getString(R.string.twitter_link_missing));
+                    CustomAlertDialog.showCustomAlertDialog(
+                            getActivity(),
+                            CustomAlertDialog.CustomDialogIconState.NEGATIVE,
+                            "twitter link missing");
                 }
 
 
@@ -358,6 +359,7 @@ public class InviteSendController extends BaseController implements InviteMvpVie
     @Override
     public void onInviteLinkSet(SetInviteResponse setInviteLinkResponseBody) {
         Boolean isEditLinkSuccessful = setInviteLinkResponseBody.getValue().getResult();
+        String editLinkResponse = setInviteLinkResponseBody.getValue().getMessage();
 
         if (isEditLinkSuccessful) {
             mPersonalInvitationLinkEditText.setEnabled(false);
@@ -368,10 +370,10 @@ public class InviteSendController extends BaseController implements InviteMvpVie
 
             progress.dismiss();
 
-//            CustomAlertDialog.showCustomAlertDialog(
-//                    mActivity,
-//                    CustomAlertDialog.CustomDialogIconState.POSITIVE,
-//                    mActivity.getString(R.string.edit_successful));
+            CustomAlertDialog.showCustomAlertDialog(
+                    getActivity(),
+                    CustomAlertDialog.CustomDialogIconState.POSITIVE,
+                    "Edit Successful");
 
         } else {
             mPersonalInvitationLinkEditText.setText(inviteLink);
@@ -383,11 +385,11 @@ public class InviteSendController extends BaseController implements InviteMvpVie
             mInviteFriendEditLinkButton.setText("edit");
             progress.dismiss();
 
-//            CustomAlertDialog.showCustomAlertDialog(
-//                    mActivity,
-//                    CustomAlertDialog.CustomDialogIconState.NEGATIVE,
-//                    editLinkResponse
-//            );
+            CustomAlertDialog.showCustomAlertDialog(
+                    getActivity(),
+                    CustomAlertDialog.CustomDialogIconState.NEGATIVE,
+                    editLinkResponse
+            );
         }
     }
 }

@@ -189,14 +189,6 @@ public class AddVouchersController extends BaseController implements AddVouchers
                 mPresenter.applyVouchers(100, voucherIds);
 
             } else {
-                //TODO: put dialog here
-
-//                DialogUtils.showYesDialog(getActivity(), "Invalid Operation", "No voucher selected.", "OK", new DialogInterface.OnClickListener() {
-//                    @Override
-//                    public void onClick(DialogInterface dialog, int which) {
-//                        dialog.dismiss();
-//                    }
-//                });
                 CustomAlertDialog.showCustomAlertDialog(
                         getActivity(),
                         CustomAlertDialog.CustomDialogIconState.NEGATIVE,
@@ -240,13 +232,6 @@ public class AddVouchersController extends BaseController implements AddVouchers
                                 getActivity(),
                                 CustomAlertDialog.CustomDialogIconState.NEGATIVE,
                                 "Please input a promo code.");
-
-//                DialogUtils.showYesDialog(getActivity(), "Invalid Operation", "Please input a promo code.", "OK", new DialogInterface.OnClickListener() {
-//                    @Override
-//                    public void onClick(DialogInterface dialog, int which) {
-//                        dialog.dismiss();
-//                    }
-//                });
             }
         });
     }
@@ -274,11 +259,11 @@ public class AddVouchersController extends BaseController implements AddVouchers
                 successResponse = "vouchers applied";
             }
 
-//            CustomAlertDialog.showCustomAlertDialog(
-//                    mActivity,
-//                    CustomAlertDialog.CustomDialogIconState.POSITIVE,
-//                    successResponse
-//            );
+            CustomAlertDialog.showCustomAlertDialog(
+                    getActivity(),
+                    CustomAlertDialog.CustomDialogIconState.POSITIVE,
+                    successResponse
+            );
 
 
             getActivity().onBackPressed();
@@ -291,18 +276,18 @@ public class AddVouchersController extends BaseController implements AddVouchers
 
 
             if (responseMessage.isEmpty()) {
-//                CustomAlertDialog.showCustomAlertDialog(
-//                        mActivity,
-//                        CustomAlertDialog.CustomDialogIconState.NEGATIVE,
-//                        mActivity.getString(R.string.unable_to_apply_voucher)
-//                );
+                CustomAlertDialog.showCustomAlertDialog(
+                        getActivity(),
+                        CustomAlertDialog.CustomDialogIconState.NEGATIVE,
+                        getActivity().getString(R.string.unable_to_apply_voucher)
+                );
 
             } else {
-//                CustomAlertDialog.showCustomAlertDialog(
-//                        mActivity,
-//                        CustomAlertDialog.CustomDialogIconState.NEGATIVE,
-//                        responseMessage
-//                );
+                CustomAlertDialog.showCustomAlertDialog(
+                        getActivity(),
+                        CustomAlertDialog.CustomDialogIconState.NEGATIVE,
+                        responseMessage
+                );
             }
 
 //            mActivity.getSupportFragmentManager().popBackStack();
@@ -321,11 +306,11 @@ public class AddVouchersController extends BaseController implements AddVouchers
             responseMessage = "cleared vouchers";
         }
 
-//        CustomAlertDialog.showCustomAlertDialog(
-//                mActivity,
-//                CustomAlertDialog.CustomDialogIconState.POSITIVE,
-//                responseMessage
-//        );
+        CustomAlertDialog.showCustomAlertDialog(
+                getActivity(),
+                CustomAlertDialog.CustomDialogIconState.POSITIVE,
+                responseMessage
+        );
 
         voucherIds.clear();
         getActivity().onBackPressed();
@@ -342,21 +327,21 @@ public class AddVouchersController extends BaseController implements AddVouchers
     public void onAddAndAppliedVoucher(AddAndApplyVoucherByKeyResponse response) {
 //        GDebug.log(ViewMyVouchersPresenter.class.getName(), "onAddAndAppliedVoucher");
         if (response.getValue().getResult()) {
-//            CustomAlertDialog.showCustomAlertDialog(
-//                    mActivity,
-//                    CustomAlertDialog.CustomDialogIconState.POSITIVE,
-//                    mActivity.getString(R.string.promo_code_applied)
-//            );
+            CustomAlertDialog.showCustomAlertDialog(
+                    getActivity(),
+                    CustomAlertDialog.CustomDialogIconState.POSITIVE,
+                    getActivity().getString(R.string.promo_code_applied)
+            );
 
 //            voucherIds.add(mTempVoucherKey);
 //            tempVoucherIds.add(mTempVoucherKey);
             getActivity().onBackPressed();
         } else {
-//
-//            CustomAlertDialog.showCustomAlertDialog(
-//                    mActivity,
-//                    CustomAlertDialog.CustomDialogIconState.NEGATIVE,
-//                    response.getD().getMessage());
+
+            CustomAlertDialog.showCustomAlertDialog(
+                    getActivity(),
+                    CustomAlertDialog.CustomDialogIconState.NEGATIVE,
+                    response.getValue().getMessage());
         }
     }
 
