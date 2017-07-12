@@ -27,6 +27,7 @@ import au.com.dealsdirect.data.network.model.address.DecorationInfoList;
 import au.com.dealsdirect.data.network.model.address.DeleteUserAddress;
 import au.com.dealsdirect.data.network.model.address.GetAddresses;
 import au.com.dealsdirect.ui.base.BaseController;
+import au.com.dealsdirect.ui.custom.CustomAlertDialog;
 import au.com.dealsdirect.ui.custom.RecyclerOnTouchListener;
 import au.com.dealsdirect.ui.controller.address.addnewaddress.AddNewAddressController;
 import au.com.dealsdirect.utils.BundleBuilder;
@@ -186,9 +187,9 @@ public class ViewAddressController extends BaseController implements ViewAddress
 //                .getDeleteAddressResponseValue()
 //                .getDeleteUserDeliveryAddressResponseValue().getType());
 //
-//        CustomAlertDialog.showCustomAlertDialog(mActivity,
-//                CustomAlertDialog.CustomDialogIconState.POSITIVE,
-//                "Removed address");
+        CustomAlertDialog.showCustomAlertDialog(getActivity(),
+                CustomAlertDialog.CustomDialogIconState.POSITIVE,
+                "Removed address");
 
         mRecyclerViewAdapter.removeItemAtPosition(recyclerTempItemPosition);
         mRecyclerViewAdapter.notifyItemChanged(recyclerTempItemPosition);

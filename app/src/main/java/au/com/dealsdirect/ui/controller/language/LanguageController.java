@@ -19,6 +19,7 @@ import javax.inject.Inject;
 
 import au.com.dealsdirect.R;
 import au.com.dealsdirect.ui.base.BaseController;
+import au.com.dealsdirect.ui.custom.CustomAlertDialog;
 import au.com.dealsdirect.utils.BundleBuilder;
 import butterknife.BindView;
 
@@ -59,6 +60,13 @@ public class LanguageController extends BaseController implements LanguageMvpVie
     public void showLanguages(List<Language> languages) {
         mAdapter.replaceData(languages);
         mAdapter.notifyDataSetChanged();
+    }
+
+    @Override
+    public void showLanguageLanguageDialog(String language) {
+        CustomAlertDialog.showCustomAlertDialog(getActivity(),
+                CustomAlertDialog.CustomDialogIconState.POSITIVE,
+                language);
     }
 
     @Override
