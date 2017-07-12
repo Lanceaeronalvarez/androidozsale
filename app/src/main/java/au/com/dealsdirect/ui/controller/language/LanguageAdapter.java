@@ -24,13 +24,14 @@ import butterknife.ButterKnife;
 public class LanguageAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
     private List<Language> mLanguages;
+    private String mSelectedLanguage;
     private LanguageMvpPresenter mPresenter;
     private Context context;
 
     public LanguageAdapter(ArrayList<Language> languages, Context context, LanguageMvpPresenter presenter) {
         this.mLanguages = languages;
-        this.mPresenter = presenter;
         this.context = context;
+        this.mPresenter = presenter;
     }
 
     @Override
@@ -42,7 +43,11 @@ public class LanguageAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
 
     @Override
     public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
+        if(mSelectedLanguage.equals(mLanguages.get(position).getID()) || mSelectedLanguage == mLanguages.get(position).getID()) {
+            ((LanguagesViewHolder) holder).mLanguageText.setTextColor(context.getResources().getColor(R.color.filter_text_active));
+        }
         ((LanguagesViewHolder) holder).mLanguageText.setText(mLanguages.get(position).getName());
+
         ((LanguagesViewHolder) holder).itemView.setOnClickListener(v ->{
             mPresenter.onLanguageItemClick(mLanguages.get(position));
             ((LanguagesViewHolder) holder).mLanguageText.setTextColor(context.getResources().getColor(R.color.filter_text_active));
@@ -54,8 +59,9 @@ public class LanguageAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
         return mLanguages.size();
     }
 
-    public void replaceData(List<Language> languages){
+    public void replaceData(List<Language> languages, String selectedLanguage){
         mLanguages = languages;
+        mSelectedLanguage = selectedLanguage;
     }
 
     static class LanguagesViewHolder extends RecyclerView.ViewHolder {

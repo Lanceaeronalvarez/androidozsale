@@ -11,7 +11,9 @@ import au.com.dealsdirect.ui.base.MvpView;
  */
 
 public interface LanguageMvpView extends MvpView {
-    void showLanguages(List<Language> languages);
+    void showLanguages(List<Language> languages, String selectedLanguage);
+
+    void showLanguageLanguageDialog(String language);
 
     void onBackPress();
 }
