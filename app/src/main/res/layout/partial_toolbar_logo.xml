@@ -22,12 +22,12 @@
 
         <ImageButton
             android:id="@+id/partial_toolbar_hamburger"
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
             android:layout_alignParentStart="true"
             android:layout_centerVertical="true"
             android:padding="10dp"
-            android:background="@null"
+            android:background="@drawable/bg_toolbar_button"
             android:src="@drawable/ic_action_menu"/>
 
 
@@ -42,11 +42,11 @@
         <ImageButton
             android:id="@+id/partial_toolbar_search_icon"
             android:layout_width="wrap_content"
-            android:layout_height="match_parent"
+            android:layout_height="wrap_content"
             android:layout_alignParentEnd="true"
             android:layout_centerVertical="true"
             android:padding="10dp"
-            android:background="@drawable/bg_ripple_icon"
+            android:background="@drawable/bg_toolbar_button"
             android:src="@drawable/ic_search"/>
 
     </RelativeLayout>
