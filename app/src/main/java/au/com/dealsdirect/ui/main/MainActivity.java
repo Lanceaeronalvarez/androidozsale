@@ -265,14 +265,14 @@ public class MainActivity extends BaseActivity implements MainMvpView {
 
     @Override
     public void showAccountController() {
-        mRouter.pushController(RouterTransaction.with(AccountController.newInstance())
+        mRouter.setRoot(RouterTransaction.with(AccountController.newInstance())
                 .pushChangeHandler(new FadeChangeHandler())
                 .popChangeHandler(new FadeChangeHandler()));
     }
 
     @Override
     public void showContactController() {
-        mRouter.pushController(RouterTransaction.with(ViewContactsController.newInstance())
+        mRouter.setRoot(RouterTransaction.with(ViewContactsController.newInstance())
                 .pushChangeHandler(new FadeChangeHandler())
                 .popChangeHandler(new FadeChangeHandler()));
 
@@ -281,14 +281,14 @@ public class MainActivity extends BaseActivity implements MainMvpView {
 
     @Override
     public void showInviteController() {
-        mRouter.pushController(RouterTransaction.with(InviteController.newInstance())
+        mRouter.setRoot(RouterTransaction.with(InviteController.newInstance())
                 .pushChangeHandler(new FadeChangeHandler())
                 .popChangeHandler(new FadeChangeHandler()));
     }
 
     @Override
     public void showCheckoutController() {
-        mRouter.pushController(RouterTransaction.with(new CheckoutController())
+        mRouter.setRoot(RouterTransaction.with(new CheckoutController())
                 .pushChangeHandler(new FadeChangeHandler())
                 .popChangeHandler(new FadeChangeHandler()));
     }
