@@ -57,8 +57,8 @@ public class LanguageController extends BaseController implements LanguageMvpVie
     }
 
     @Override
-    public void showLanguages(List<Language> languages) {
-        mAdapter.replaceData(languages);
+    public void showLanguages(List<Language> languages, String selectedLanguage) {
+        mAdapter.replaceData(languages, selectedLanguage);
         mAdapter.notifyDataSetChanged();
     }
 
