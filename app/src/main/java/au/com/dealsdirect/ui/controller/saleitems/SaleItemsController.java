@@ -182,15 +182,12 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
         loadingInProgress = false;
 
         if(tempList == null || tempList.isEmpty()){
-            if (!hasLoadedAllItems){
-                hasLoadedAllItems = true;
                 mPlaceholder.setVisibility(View.VISIBLE);
                 mSaleItemsRecyclerView.setVisibility(View.GONE);
                 return;
-            }
+
         }else{
 
-            hasLoadedAllItems = true;
             mPlaceholder.setVisibility(View.GONE);
             mSaleItemsRecyclerView.setVisibility(View.VISIBLE);
         }
@@ -207,6 +204,14 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
     public void refresh() {
         loadingInProgress = true;
         mPresenter.loadSaleItems(mCategoryKey, mSaleId, mSearchQuery, page);
+    }
+
+    @Override
+    public void onError(String message) {
+        super.onError(message);
+        page--;
+        mSaleItemsAdapter.notifyDataSetChanged();
+
     }
 
     @Override

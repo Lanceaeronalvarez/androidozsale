@@ -12,4 +12,5 @@ public interface ShopsMvpView extends MvpView {
 
     void showShopBanners(List<GetBannerResponse> getBannerResponses);
 
+    void refresh();
 }

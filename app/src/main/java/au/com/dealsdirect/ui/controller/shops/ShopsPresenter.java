@@ -27,11 +27,11 @@ public class ShopsPresenter<V extends ShopsMvpView> extends BasePresenter<V> imp
     }
 
     @Override
-    public void loadShopsBanner(String categoryName, String categoryId) {
+    public void loadShopsBanner(String categoryName, String categoryId, int bannerOffset, int bannerLimit) {
 
         GetBannerRequest getBannerRequest = new GetBannerRequest();
-        getBannerRequest.setOffset(String.valueOf(0));
-        getBannerRequest.setLimit(String.valueOf(10));
+        getBannerRequest.setOffset(String.valueOf(bannerOffset));
+        getBannerRequest.setLimit(String.valueOf(bannerLimit));
 
         if (categoryName!=null && !categoryName.isEmpty())
             getBannerRequest.setCategory(categoryName);
@@ -39,8 +39,10 @@ public class ShopsPresenter<V extends ShopsMvpView> extends BasePresenter<V> imp
         if (categoryId!=null && !categoryId.isEmpty())
             getBannerRequest.setCategoryId(categoryId);
 
-        getMvpView().showLoading();
-
+        if(bannerOffset == 0){
+            getMvpView().showLoading();
+        }
+        
         getCompositeDisposable()
                 .add(getDataManager()
                         .callGetBanners(getBannerRequest)
