@@ -6,15 +6,18 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.bluelinelabs.conductor.RouterTransaction;
 import com.bluelinelabs.conductor.changehandler.HorizontalChangeHandler;
+import com.bumptech.glide.Glide;
 
 import au.com.dealsdirect.R;
 import au.com.dealsdirect.ui.base.BaseController;
 import au.com.dealsdirect.utils.BundleBuilder;
 import butterknife.BindView;
+import butterknife.OnClick;
 
 /**
  * dp Created by Admin on 6/6/17.
@@ -25,8 +28,8 @@ public class InviteController extends BaseController {
     @BindView(R.id.partial_toolbar_title_view)
     TextView mTitleText;
 
-    @BindView(R.id.controller_invite_friend_button_send_invite)
-    Button mSendInviteButton;
+    @BindView(R.id.controller_invite_image_vouchers)
+    ImageView mImageView;
 
     public InviteController (Bundle args) {
         super(args);
@@ -54,10 +57,15 @@ public class InviteController extends BaseController {
     @Override
     protected void setUp(View view) {
         mTitleText.setText("Invite Friends");
-        mSendInviteButton.setOnClickListener(action -> {
-            getRouter().pushController(RouterTransaction.with(InviteSendController.newInstance())
-                        .pushChangeHandler(new HorizontalChangeHandler())
-                        .popChangeHandler(new HorizontalChangeHandler()));
-        });
+        Glide.with(getActivity())
+                .load(R.drawable.invite_friend_vouchers_medium)
+                .into(mImageView);
+    }
+
+    @OnClick(R.id.controller_invite_friend_button_send_invite)
+    public void showSendInvite() {
+        getRouter().pushController(RouterTransaction.with(InviteSendController.newInstance())
+                .pushChangeHandler(new HorizontalChangeHandler())
+                .popChangeHandler(new HorizontalChangeHandler()));
     }
 }
