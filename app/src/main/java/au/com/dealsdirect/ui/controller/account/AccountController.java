@@ -121,7 +121,8 @@ public class AccountController extends BaseController implements AccountMvpView,
     @Override
     public void showMyDetailsController() {
         getRouter().pushController(RouterTransaction.with(DetailsController.newInstance())
-                .pushChangeHandler(new HorizontalChangeHandler(false)));
+                .pushChangeHandler(new HorizontalChangeHandler(false))
+                .popChangeHandler(new HorizontalChangeHandler(false)));
     }
 
     @Override

@@ -28,7 +28,6 @@ import au.com.dealsdirect.ui.custom.CustomAlertDialog;
 import au.com.dealsdirect.ui.custom.transitions.CustomSpinnerAdapter;
 import au.com.dealsdirect.utils.BundleBuilder;
 import au.com.dealsdirect.utils.DateUtils;
-import au.com.dealsdirect.widget.ElasticHorizontalDragDismissFrameLayout;
 import butterknife.BindView;
 import butterknife.OnClick;
 
@@ -79,14 +78,14 @@ public class DetailsController extends BaseController implements DetailsMvpView 
 
     private Calendar mCalendar;
     private DatePickerDialog.OnDateSetListener onDateSetListener;
-    private ElasticHorizontalDragDismissFrameLayout.ElasticHorizontalDragDismissCallback mDragDismissCallback
-            = new ElasticHorizontalDragDismissFrameLayout.ElasticHorizontalDragDismissCallback() {
-        @Override
-        public void onDragDismissed() {
-            super.onDragDismissed();
-            getRouter().popController(DetailsController.this);
-        }
-    };
+//    private ElasticHorizontalDragDismissFrameLayout.ElasticHorizontalDragDismissCallback mDragDismissCallback
+//            = new ElasticHorizontalDragDismissFrameLayout.ElasticHorizontalDragDismissCallback() {
+//        @Override
+//        public void onDragDismissed() {
+//            super.onDragDismissed();
+//            getRouter().popController(DetailsController.this);
+//        }
+//    };
 
 
     public DetailsController(Bundle args){
@@ -124,7 +123,7 @@ public class DetailsController extends BaseController implements DetailsMvpView 
                 getResources().getDrawable(R.drawable.ic_check));
         mTitleTextView.setText("Personal Details");
 
-        ((ElasticHorizontalDragDismissFrameLayout)view).addListener(mDragDismissCallback);
+//        ((ElasticHorizontalDragDismissFrameLayout)view).addListener(mDragDismissCallback);
 
 
         List<String> list = new ArrayList<String>(Arrays.asList(getResources().getStringArray(R.array.genders)));
