@@ -7,6 +7,43 @@
     <dimen name="fab_margin">16dp</dimen>
     <dimen name="text_margin">16dp</dimen>
 
+    <dimen name="screen_padding">16dp</dimen>
+    <dimen name="default_button_height">48dp</dimen>
+
+    <dimen name="text_size_small">14sp</dimen>
+    <dimen name="text_size_medium">16sp</dimen>
+    <dimen name="text_size_large">18sp</dimen>
+    <dimen name="text_size_xlarge">20sp</dimen>
+    <dimen name="text_size_xxlarge">24sp</dimen>
+    <dimen name="text_size_xxxlarge">26sp</dimen>
+    <dimen name="text_size_xxxxlarge">28sp</dimen>
+
+    <dimen name="toolbar_height">64dp</dimen>
+    <dimen name="filter_bar_height">42dp</dimen>
+    <dimen name="bottom_nav_height">49dp</dimen>
+
+    <dimen name="cell_height">380dp</dimen>
+    <dimen name="cell_image_height">200dp</dimen>
+    <dimen name="row_account_height">75dp</dimen>
+
+    <dimen name="item_image_height">270dp</dimen>
+    <dimen name="item_list_row_height">40dp</dimen>
+
+    <dimen name="edit_text_height">48dp</dimen>
+    <dimen name="tall_edit_text_height">144dp</dimen>
+
+    <dimen name="placeholder_imageview_margin"> 100dp </dimen>
+    <dimen name="voucher_container_width">240dp</dimen>
+    <dimen name="voucher_container_height">150dp</dimen>
+
+    <dimen name="voucher_container_margin">20dp</dimen>
+    <dimen name="voucher_container_padding">20dp</dimen>
+
+    <dimen name="invite_friends_padding">5dp</dimen>
+    <dimen name="invite_friends_image_width">20dp</dimen>
+
+
+
     <dimen name="header_height">200dp</dimen>
     <dimen name="thumbnail_height">770dp</dimen>
     <dimen name="card_width">700dp</dimen>

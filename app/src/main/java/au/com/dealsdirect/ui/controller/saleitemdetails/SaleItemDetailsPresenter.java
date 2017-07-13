@@ -23,7 +23,7 @@ public class SaleItemDetailsPresenter<V extends SaleItemDetailsMvpView> extends 
 
     @Override
     public void loadSaleItemDetails(String seoIdentifierId) {
-        getMvpView().showLoading();
+        getMvpView().hideLoading();
 
         getCompositeDisposable().add(getDataManager()
                 .callGetSaleItemDetails(seoIdentifierId)

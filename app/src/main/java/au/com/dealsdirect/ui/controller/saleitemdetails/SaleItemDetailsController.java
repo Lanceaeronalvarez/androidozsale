@@ -10,6 +10,7 @@ import android.support.annotation.NonNull;
 import android.support.v4.util.Pair;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -34,11 +35,9 @@ import javax.inject.Inject;
 import au.com.dealsdirect.R;
 import au.com.dealsdirect.data.network.model.saleitemdetails.GetSaleItemDetailsResponse;
 import au.com.dealsdirect.data.network.model.saleitemdetails.SkuVariant;
-import au.com.dealsdirect.ui.base.BaseActivity;
 import au.com.dealsdirect.ui.base.BaseController;
+import au.com.dealsdirect.ui.controller.saleitemdetails.listener.LoadImagesListener;
 import au.com.dealsdirect.ui.controller.saleitems.SaleItemsController;
-import au.com.dealsdirect.ui.controller.shops.changehandler.DetailPopTransitionChangeHandler;
-import au.com.dealsdirect.ui.main.MainActivity;
 import au.com.dealsdirect.utils.BundleBuilder;
 import au.com.dealsdirect.utils.ImageUtils;
 import au.com.dealsdirect.utils.PriceUtils;
@@ -46,11 +45,13 @@ import au.com.dealsdirect.widget.ElasticDragDismissFrameLayout;
 import butterknife.BindView;
 import butterknife.OnClick;
 
+import static android.app.Activity.RESULT_OK;
+
 /*
  * Created by smartwave on 08/06/2017.
  */
 
-public class SaleItemDetailsController extends BaseController implements SaleItemDetailsMvpView {
+public class SaleItemDetailsController extends BaseController implements SaleItemDetailsMvpView, LoadImagesListener {
 
     private final String KEY_ITEM_ID = "KEY_ITEM_ID";
     private final String KEY_SALE_ID = "KEY_SALE_ID";
@@ -62,6 +63,8 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
     private final String KEY_USER_GROUP = "KEY_USER_GROUP";
     private final String KEY_GET_BIG_IMAGES = "KEY_GET_BIG_IMAGES";
     private final String KEY_INCLUDE_PRICES = "KEY_INCLUDE_PRICES";
+
+    public final static String RESULT_EXTRA_CONTROLLER_ID = "SALE_ITEM_DETAILS_ID";
 
     @Inject
     SaleItemDetailsMvpPresenter<SaleItemDetailsMvpView> mPresenter;
@@ -100,12 +103,16 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
     WebView mProductAboutPricing;
     @BindView(R.id.product_details_shared_image)
     ImageView mProductSharedImage;
+    @BindView(R.id.product_details_coordinator)
+    RelativeLayout mProductCoordinatorLayout;
 
     private String mHtmlHeader = "";
     private String mHtmlFooter = "";
 
     private SaleItemDetailsImageAdapter mSaleItemImagesAdapter;
     private SaleItemDetailsImageAdapter mSaleItemImagesIndicatorAdapter;
+
+    private LoadImagesListener loadImagesListener;
 
     private TagAdapter<Pair<String, String>> mSizesAdapter;
     private ArrayList<Pair<String, String>> mProductSizes = new ArrayList<>();
@@ -118,8 +125,7 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
             = new ElasticDragDismissFrameLayout.ElasticDragDismissCallback() {
         @Override
         public void onDragDismissed() {
-            overridePopHandler(new DetailPopTransitionChangeHandler());
-            getRouter().popController(SaleItemDetailsController.this);
+            setResultAndFinish();
         }
     };
 
@@ -131,6 +137,10 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
                 .putString("KEY_ITEM_ID", itemId)
                 .putString("KEY_SALE_ID", saleId)
                 .build());
+    }
+
+    public static SaleItemDetailsController newInstance(Bundle bundle){
+        return new SaleItemDetailsController(bundle);
     }
 
     public static SaleItemsController newInstance(
@@ -170,16 +180,13 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
     @Override
     protected void onViewBound(@NonNull View view) {
         super.onViewBound(view);
-        setRetainViewMode(RetainViewMode.RELEASE_DETACH);
+
+        //noinspection ConstantConditions
         ((ElasticDragDismissFrameLayout) view).addListener(dragDismissListener);
 
-        mProductSharedImage.setTransitionName(mItemId);
-        ImageUtils.loadImage(getActivity(), mItemImageUrl, mProductSharedImage);
-
-
-        assert getActivity() != null;
-        ((BaseActivity) getActivity()).hideBottomNavigationView();
-        //init api call
+        loadImagesListener = this;
+        mProductSharedImage.setTransitionName("transition");
+        ImageUtils.loadImageImmediate(getActivity(), mItemImageUrl, mProductSharedImage);
 
         mPresenter.loadSaleItemDetails(mSeoIdentifierId);
 
@@ -187,15 +194,14 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
                 LinearLayoutManager.HORIZONTAL,
                 false));
 
-        mSaleItemImagesIndicatorAdapter = new SaleItemDetailsImageAdapter(this, null, mSaleId, 2);
+        mSaleItemImagesIndicatorAdapter = new SaleItemDetailsImageAdapter(this, loadImagesListener, null, mSaleId, 2);
         mOtherImagesRv.setAdapter(mSaleItemImagesIndicatorAdapter);
 
         LinearLayoutManager mProductImagesRvLayoutManager
                 = new LinearLayoutManager(getActivity(), LinearLayoutManager.HORIZONTAL, false);
         mProductImagesRv.setLayoutManager(mProductImagesRvLayoutManager);
-        mSaleItemImagesAdapter = new SaleItemDetailsImageAdapter(this, null, mSaleId, 1);
+        mSaleItemImagesAdapter = new SaleItemDetailsImageAdapter(this, loadImagesListener, null, mSaleId, 1);
         mProductImagesRv.setAdapter(mSaleItemImagesAdapter);
-
 
         mProductImagesRv.addOnPageChangedListener((i, i1) -> {
             RecyclerView.ViewHolder vhNew = mOtherImagesRv.findViewHolderForLayoutPosition(i1);
@@ -212,35 +218,25 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
                 .getString(R.string.base_html_template_header);
         mHtmlFooter = getActivity().getResources()
                 .getString(R.string.base_html_template_footer);
-
     }
 
     @Override
     protected void setUp(View view) {
         mProductSharedImage.setVisibility(View.VISIBLE);
-
     }
 
     @Override
     public void onDetach(View view) {
 
+        mPresenter.onDetach();
+        super.onDetach(view);
     }
 
     @Override
     protected void onDestroyView(@NonNull View view) {
-        mPresenter.onDetach();
+        Log.d("saleitemdeteails", "onDestroy");
 
-        final Handler handler = new Handler();
-        handler.postDelayed(() -> {
-            ((MainActivity) getActivity()).showBottomNavigationView();
-
-            super.onDestroyView(view);
-
-        }, 300);
-
-//        mProductSharedImage.setVisibility(View.VISIBLE);
-//        mProductImagesRv.setVisibility(View.GONE);
-//        mOtherImagesRv.setVisibility(View.GONE);
+        super.onDestroyView(view);
     }
 
 
@@ -264,24 +260,11 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
             mShippingContainer.setVisibility(View.GONE);
         }
 
-
-        final android.os.Handler handler = new android.os.Handler();
-        handler.postDelayed(() -> {
-            if (mProductImagesRv != null) {
-                mProductImagesRv.setVisibility(View.VISIBLE);
-
-            }
-
-            if (mProductSharedImage != null) {
-
-                ImageUtils.clearImage(getActivity(), mProductSharedImage);
-            }
-        }, 1000);
-
         List<String> qualitySaleImages = getQualityImages(saleDetail.getImages());
 
         mSaleItemImagesAdapter.replaceData(qualitySaleImages);
         mSaleItemImagesIndicatorAdapter.replaceData(qualitySaleImages);
+
 
         if (saleDetail.getImages()
                 .size() != 0) {
@@ -354,6 +337,7 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
                     return tv;
                 }
             };
+
             mSizesFlowLayout.setAdapter(mSizesAdapter);
         }
 
@@ -366,8 +350,6 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
                 didSelectSize = false;
             }
         });
-
-
     }
 
 
@@ -399,5 +381,47 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
 
         }
         return qualityImages;
+    }
+
+    private void setResultAndFinish() {
+        ImageUtils.loadImageImmediate(getActivity(), mItemImageUrl, mProductSharedImage);
+        mProductSharedImage.setVisibility(View.VISIBLE);
+        mProductImagesRv.setVisibility(View.INVISIBLE);
+        mOtherImagesRv.setVisibility(View.INVISIBLE);
+
+
+        final Handler handler = new Handler();
+        handler.postDelayed(() -> {
+
+            final Intent resultData = new Intent();
+            resultData.putExtra(RESULT_EXTRA_CONTROLLER_ID, getInstanceId());
+            getActivity().setResult(RESULT_OK, resultData);
+            getActivity().finishAfterTransition();
+
+        }, 200);
+    }
+
+    @Override
+    public void imagesLoaded() {
+        if (mProductSharedImage != null) {
+            final Handler handler = new Handler();
+            handler.postDelayed(() -> {
+                if (getActivity()!=null){
+                    ImageUtils.clearImage(getActivity(), mProductSharedImage);
+                    if (mProductImagesRv != null) {
+                        mProductImagesRv.setVisibility(View.VISIBLE);
+                    }
+                }
+            },500);
+        }
+    }
+
+
+    public void readyViewsForTransition(){
+
+        ImageUtils.loadImageImmediate(getActivity(), mItemImageUrl, mProductSharedImage);
+        mProductSharedImage.setVisibility(View.VISIBLE);
+        mProductImagesRv.setVisibility(View.INVISIBLE);
+        mOtherImagesRv.setVisibility(View.INVISIBLE);
     }
 }

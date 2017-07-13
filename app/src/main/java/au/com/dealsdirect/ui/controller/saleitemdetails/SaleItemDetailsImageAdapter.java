@@ -14,6 +14,7 @@ import java.util.LinkedList;
 import java.util.List;
 
 import au.com.dealsdirect.R;
+import au.com.dealsdirect.ui.controller.saleitemdetails.listener.LoadImagesListener;
 import au.com.dealsdirect.utils.ImageUtils;
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -28,6 +29,7 @@ public class SaleItemDetailsImageAdapter extends RecyclerView.Adapter<RecyclerVi
     Context mContext;
     String mSaleId;
     SaleItemDetailsController mSaleItemDetailsController;
+    LoadImagesListener mLoadImagesListener;
     int mViewType;
 
     public void replaceData(List<String> data) {
@@ -48,10 +50,13 @@ public class SaleItemDetailsImageAdapter extends RecyclerView.Adapter<RecyclerVi
 
     public SaleItemDetailsImageAdapter(
             SaleItemDetailsController saleItemDetailsController,
+            LoadImagesListener loadImagesListener,
             List<String> data,
             String saleId,
             int viewType) {
+
         this.mSaleItemDetailsController = saleItemDetailsController;
+        this.mLoadImagesListener = loadImagesListener;
         this.mData = data;
         this.mSaleId = saleId;
         this.mViewType = viewType;
@@ -87,8 +92,12 @@ public class SaleItemDetailsImageAdapter extends RecyclerView.Adapter<RecyclerVi
             case 1:
                 if (mData.size() != 0) {
                     String url = mData.get(position);
-
                     ImageUtils.loadImage(mContext, url, vh.image);
+
+                    if (position==0){
+                        mLoadImagesListener.imagesLoaded();
+
+                    }
 //                    if (position == 0) {
 //                        vh.image.setTransitionName(mData.getID());
 //                    } else {
@@ -122,4 +131,5 @@ public class SaleItemDetailsImageAdapter extends RecyclerView.Adapter<RecyclerVi
             return 0;
         }
     }
+
 }

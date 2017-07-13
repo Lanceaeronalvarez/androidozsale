@@ -31,6 +31,7 @@ import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper;
 public abstract class BaseActivity extends AppCompatActivity
         implements MvpView {
 
+    @Nullable
     @BindView(R.id.controller_home_bottom_nav)
     BottomNavigationView bottomNavigationView;
 

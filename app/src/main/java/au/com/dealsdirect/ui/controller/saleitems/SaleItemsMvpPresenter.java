@@ -1,5 +1,7 @@
 package au.com.dealsdirect.ui.controller.saleitems;
 
+import android.support.v7.widget.RecyclerView;
+
 import au.com.dealsdirect.ui.base.MvpPresenter;
 
 /**
@@ -10,5 +12,5 @@ public interface SaleItemsMvpPresenter<V extends SaleItemsMvpView> extends MvpPr
 
     void loadSaleItems(String categoryKey, String saleId, String searchQuery, int pageNumber);
 
-    void loadProductDetails(String seoIdentifierId, String imageUrl, String itemId, String saleId);
+    void loadProductDetails(RecyclerView.ViewHolder viewHolder, int position, String seoIdentifierId, String imageUrl, String itemId, String saleId);
 }

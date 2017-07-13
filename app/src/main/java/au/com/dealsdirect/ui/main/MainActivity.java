@@ -105,7 +105,6 @@ public class MainActivity extends BaseActivity implements MainMvpView {
     @Override
     protected void setUp() {
 
-
         mPresenter.initServerSettings(this,
                 ((MainPresenter) mPresenter).getDataManager()
                         .getCountryId());

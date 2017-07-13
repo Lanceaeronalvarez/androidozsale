@@ -1,5 +1,7 @@
 package au.com.dealsdirect.ui.controller.saleitems;
 
+import android.support.v7.widget.RecyclerView;
+
 import com.androidnetworking.error.ANError;
 import com.google.gson.Gson;
 
@@ -91,8 +93,8 @@ public class SaleItemsPresenter<V extends SaleItemsMvpView> extends BasePresente
     }
 
     @Override
-    public void loadProductDetails(String seoIdentifierId, String imageUrl, String itemId, String saleId){
-        getMvpView().showProductDetails(seoIdentifierId,imageUrl,itemId,saleId);
+    public void loadProductDetails(RecyclerView.ViewHolder viewHolder, int position, String seoIdentifierId, String imageUrl, String itemId, String saleId){
+        getMvpView().showProductDetails(viewHolder, position,seoIdentifierId,imageUrl,itemId,saleId);
     }
 
 }

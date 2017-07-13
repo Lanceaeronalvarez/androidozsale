@@ -10,6 +10,7 @@ import android.view.ViewTreeObserver;
 import android.widget.ImageView;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.Priority;
 import com.bumptech.glide.load.DecodeFormat;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bumptech.glide.request.RequestOptions;
@@ -30,6 +31,19 @@ public class ImageUtils {
              .load(url)
              .apply(options)
              .into(imageView);
+    }
+
+    public static void loadImageImmediate(Context context, String url, ImageView imageView) {
+        RequestOptions options = new RequestOptions().encodeQuality(50)
+                .encodeFormat(Bitmap.CompressFormat.JPEG)
+                .diskCacheStrategy(DiskCacheStrategy.ALL)
+                .priority(Priority.IMMEDIATE)
+                .format(DecodeFormat.PREFER_RGB_565);
+
+        Glide.with(context)
+                .load(url)
+                .apply(options)
+                .into(imageView);
     }
 
     public static void loadImage(Context context, String url, ImageView imageView, int width,

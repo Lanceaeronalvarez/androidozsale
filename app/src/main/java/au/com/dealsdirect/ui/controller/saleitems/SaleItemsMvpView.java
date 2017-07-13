@@ -1,5 +1,7 @@
 package au.com.dealsdirect.ui.controller.saleitems;
 
+import android.support.v7.widget.RecyclerView;
+
 import au.com.dealsdirect.data.network.model.saleitems.GetSaleItemsResponse;
 import au.com.dealsdirect.ui.base.MvpView;
 
@@ -13,6 +15,6 @@ public interface SaleItemsMvpView extends MvpView{
 
     void refresh();
 
-    void showProductDetails(String seoIdentifierId, String imageUrl, String itemId, String saleId);
+    void showProductDetails(RecyclerView.ViewHolder viewHolder,int position, String seoIdentifierId, String imageUrl, String itemId, String saleId);
 
 }

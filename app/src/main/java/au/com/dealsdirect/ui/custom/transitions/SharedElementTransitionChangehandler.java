@@ -4,6 +4,7 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.transition.Transition;
+import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewTreeObserver;
@@ -19,7 +20,7 @@ import java.util.List;
  * dp Created by Admin on 6/8/17.
  */
 
-public class SharedElementTransitionChangehandler extends ArcFadeMoveChangeHandler{
+public class SharedElementTransitionChangehandler extends SharedArcFadeMoveChangeHandler{
 
 
     private static final String KEY_WAIT_FOR_TRANSITION_NAMES = "SharedElementDelayingChangeHandler.waitForTransitionNames";
@@ -86,13 +87,18 @@ public class SharedElementTransitionChangehandler extends ArcFadeMoveChangeHandl
             to.getViewTreeObserver().addOnPreDrawListener(onPreDrawListener);
 
             container.addView(to);
+            Log.d("transition","if process");
+
         } else {
+            Log.d("transition","else process");
+
             onTransitionPreparedListener.onPrepared();
         }
     }
 
     @Override
     public void executePropertyChanges(@NonNull ViewGroup container, @Nullable View from, @Nullable View to, @Nullable Transition transition, boolean isPush) {
+
         if (to != null) {
             to.setVisibility(View.VISIBLE);
 

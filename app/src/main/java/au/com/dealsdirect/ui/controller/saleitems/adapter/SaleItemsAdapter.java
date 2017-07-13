@@ -35,22 +35,22 @@ public class SaleItemsAdapter extends RecyclerView.Adapter<SaleItemsAdapter.View
     public static class ViewHolder extends RecyclerView.ViewHolder {
 
         @BindView(R.id.cell_product_image)
-        ImageView mSaleItemImage;
+        public ImageView mSaleItemImage;
 
         @BindView(R.id.sale_item_name)
-        TextView mSaleItemName;
+        public TextView mSaleItemName;
 
         @BindView(R.id.sale_item_brand)
-        TextView mSaleBrand;
+        public TextView mSaleBrand;
 
         @BindView(R.id.sale_item_price)
-        TextView mSalePrice;
+        public TextView mSalePrice;
 
         @BindView(R.id.sale_item_old_price)
-        TextView mOldPrice;
+        public TextView mOldPrice;
 
         @BindView(R.id.sale_item_container)
-        RelativeLayout mCardView;
+        public RelativeLayout mCardView;
 
         ViewHolder(View view) {
             super(view);
@@ -84,7 +84,6 @@ public class SaleItemsAdapter extends RecyclerView.Adapter<SaleItemsAdapter.View
         String url = mData.get(position).getImages().get(0);
 
         holder.mSaleItemName.setText(saleItem.getProductName());
-        holder.mSaleItemImage.setTransitionName(mData.get(position).getProductId());
 
         String saleItemBrand = saleItem.getProductName();
 
@@ -96,7 +95,7 @@ public class SaleItemsAdapter extends RecyclerView.Adapter<SaleItemsAdapter.View
         String saleItemPrice = PriceUtils.getPriceStringValue(mData.get(position).getPrice().getValue());
         String saleItemOldPrice = PriceUtils.getRpStringValue(mData.get(position).getOriginalPrice().getValue());
 
-        ImageUtils.loadImageWithImageViewDimens(mContext, url, holder.mSaleItemImage);
+        ImageUtils.loadImage(mContext, url, holder.mSaleItemImage);
 
         holder.mSaleBrand.setText(saleItemBrand);
         holder.mSalePrice.setText(saleItemPrice);
@@ -105,6 +104,8 @@ public class SaleItemsAdapter extends RecyclerView.Adapter<SaleItemsAdapter.View
                 holder.mOldPrice.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);
 
         holder.itemView.setOnClickListener(v -> mPresenter.loadProductDetails(
+                holder,
+                position,
                 mData.get(position).getSeoIdentifier(),
                 url,
                 mData.get(position).getProductId(),
