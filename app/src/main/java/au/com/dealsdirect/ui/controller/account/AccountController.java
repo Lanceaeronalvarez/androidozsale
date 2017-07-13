@@ -10,11 +10,9 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-import com.bluelinelabs.conductor.ControllerChangeHandler;
 import com.bluelinelabs.conductor.RouterTransaction;
 import com.bluelinelabs.conductor.changehandler.HorizontalChangeHandler;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import javax.inject.Inject;
@@ -26,7 +24,6 @@ import au.com.dealsdirect.ui.controller.account.adapter.AccountItemAdapter;
 import au.com.dealsdirect.ui.controller.account.listener.AccountItemClickListener;
 import au.com.dealsdirect.ui.controller.address.viewaddress.ViewAddressController;
 import au.com.dealsdirect.ui.controller.checkout.paymentselect.PaymentSelectController;
-import au.com.dealsdirect.ui.controller.contact.viewcontacts.ViewContactsController;
 import au.com.dealsdirect.ui.controller.details.DetailsController;
 import au.com.dealsdirect.ui.controller.language.LanguageController;
 import au.com.dealsdirect.ui.controller.orders.orders.OrdersController;
@@ -34,10 +31,8 @@ import au.com.dealsdirect.ui.controller.returns.currentreturns.CurrentReturnsCon
 import au.com.dealsdirect.ui.controller.shops.ShopsController;
 import au.com.dealsdirect.ui.controller.vouchers.View.ViewVouchersController;
 import au.com.dealsdirect.ui.custom.CustomAlertDialog;
-import au.com.dealsdirect.ui.custom.transitions.SharedElementTransitionChangehandler;
 import au.com.dealsdirect.ui.main.MainMvpView;
 import au.com.dealsdirect.utils.BundleBuilder;
-import au.com.dealsdirect.utils.DialogUtils;
 import butterknife.BindView;
 
 /**
@@ -125,7 +120,8 @@ public class AccountController extends BaseController implements AccountMvpView 
     @Override
     public void showMyDetailsController() {
         getRouter().pushController(RouterTransaction.with(DetailsController.newInstance())
-                .pushChangeHandler(new HorizontalChangeHandler(false)));
+                .pushChangeHandler(new HorizontalChangeHandler(false))
+                .popChangeHandler(new HorizontalChangeHandler(false)));
     }
 
     @Override
