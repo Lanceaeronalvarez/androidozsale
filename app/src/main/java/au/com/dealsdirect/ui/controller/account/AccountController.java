@@ -40,7 +40,7 @@ import butterknife.BindView;
  * dp Created by Admin on 6/6/17.
  */
 
-public class AccountController extends BaseController implements AccountMvpView, Serializable{
+public class AccountController extends BaseController implements AccountMvpView, Serializable {
 
     public static final String TAG = "AccountController";
     private static final String KEY_TEXT = "AccountController.KEY_TEXT";
@@ -121,8 +121,7 @@ public class AccountController extends BaseController implements AccountMvpView,
     @Override
     public void showMyDetailsController() {
         getRouter().pushController(RouterTransaction.with(DetailsController.newInstance())
-                .pushChangeHandler(new HorizontalChangeHandler())
-                .popChangeHandler(new HorizontalChangeHandler()));
+                .pushChangeHandler(new HorizontalChangeHandler(false)));
     }
 
     @Override

@@ -9,6 +9,7 @@ import android.view.ViewGroup;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.Spinner;
 import android.widget.TextView;
 
@@ -27,6 +28,7 @@ import au.com.dealsdirect.ui.custom.CustomAlertDialog;
 import au.com.dealsdirect.ui.custom.transitions.CustomSpinnerAdapter;
 import au.com.dealsdirect.utils.BundleBuilder;
 import au.com.dealsdirect.utils.DateUtils;
+import au.com.dealsdirect.widget.ElasticHorizontalDragDismissFrameLayout;
 import butterknife.BindView;
 import butterknife.OnClick;
 
@@ -72,8 +74,19 @@ public class DetailsController extends BaseController implements DetailsMvpView 
     @BindView(R.id.controller_details_text_confirmPassword)
     EditText mConfirmPasswordText;
 
+    @BindView(R.id.controller_details_background)
+    LinearLayout background;
+
     private Calendar mCalendar;
     private DatePickerDialog.OnDateSetListener onDateSetListener;
+    private ElasticHorizontalDragDismissFrameLayout.ElasticHorizontalDragDismissCallback mDragDismissCallback
+            = new ElasticHorizontalDragDismissFrameLayout.ElasticHorizontalDragDismissCallback() {
+        @Override
+        public void onDragDismissed() {
+            super.onDragDismissed();
+            getRouter().popController(DetailsController.this);
+        }
+    };
 
 
     public DetailsController(Bundle args){
@@ -110,6 +123,9 @@ public class DetailsController extends BaseController implements DetailsMvpView 
         mSaveUserDetailsButton.setImageDrawable(
                 getResources().getDrawable(R.drawable.ic_check));
         mTitleTextView.setText("Personal Details");
+
+        ((ElasticHorizontalDragDismissFrameLayout)view).addListener(mDragDismissCallback);
+
 
         List<String> list = new ArrayList<String>(Arrays.asList(getResources().getStringArray(R.array.genders)));
         CustomSpinnerAdapter customSpinnerAdapter = new CustomSpinnerAdapter(getActivity(),
