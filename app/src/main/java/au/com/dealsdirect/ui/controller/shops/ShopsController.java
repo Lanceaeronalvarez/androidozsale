@@ -4,8 +4,8 @@ import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.GridLayoutManager;
-import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -20,6 +20,7 @@ import android.widget.RelativeLayout;
 
 import com.bluelinelabs.conductor.RouterTransaction;
 import com.bluelinelabs.conductor.changehandler.HorizontalChangeHandler;
+import com.paginate.Paginate;
 
 import java.util.ArrayList;
 import java.util.LinkedList;
@@ -37,10 +38,10 @@ import au.com.dealsdirect.ui.controller.saleitems.SaleItemsController;
 import au.com.dealsdirect.ui.controller.shops.adapter.BannersAdapter;
 import au.com.dealsdirect.ui.controller.shops.listener.BannerClickListener;
 import au.com.dealsdirect.ui.custom.transitions.HorizontalNavTransitionChangeHandler;
-import au.com.dealsdirect.ui.main.FetchTokenHandler;
 import au.com.dealsdirect.ui.main.MainMvpView;
 import au.com.dealsdirect.utils.BundleBuilder;
 import au.com.dealsdirect.utils.KeyboardUtils;
+import au.com.dealsdirect.utils.PaginateUtils;
 import butterknife.BindView;
 import butterknife.OnClick;
 
@@ -73,6 +74,16 @@ public class ShopsController extends BaseController implements ShopsMvpView, Ban
 
     private BannersAdapter mBannersAdapter;
     private BannerClickListener mBannerClickListener;
+    private Paginate.Callbacks mPaginateCallbacks;
+    private Paginate mPaginateManager;
+
+    private int page = 0;
+    private boolean loadingInProgress = false;
+    private boolean hasLoadedAllItems = false;
+
+    private int newBannerCount = 10;
+    private int bannerOffset = 0;
+    private int bannerLimit = bannerOffset + newBannerCount;
 
     private String mCategoryID;
     private String mCategoryName;
@@ -131,20 +142,63 @@ public class ShopsController extends BaseController implements ShopsMvpView, Ban
     @Override
     protected void setUp(View view) {
 
-        if (sales.size() == 0) {
-            mPresenter.loadShopsBanner(mCategoryName, mCategoryID);
-        } else {
-            mBannersAdapter = new BannersAdapter(getActivity(), sales, mBannerClickListener);
+        mPaginateCallbacks = new Paginate.Callbacks() {
+            @Override
+            public void onLoadMore() {
+                // Load next page of data (e.g. network or database)
+                page++;
+                bannerOffset += newBannerCount; //load 10 banners every page
+                bannerLimit += newBannerCount;
+                refresh();
 
-            if (getResources().getBoolean(R.bool.is_tablet)) {
-                mLayoutManager = new GridLayoutManager(getActivity(), 2, GridLayoutManager.VERTICAL, false);
-            } else {
-                mLayoutManager = new GridLayoutManager(getActivity(), 1, GridLayoutManager.VERTICAL, false);
             }
 
-            shopsControllerBannerRecyclerView.setLayoutManager(mLayoutManager);
-            shopsControllerBannerRecyclerView.setAdapter(mBannersAdapter);
+            @Override
+            public boolean isLoading() {
+                // Indicate whether new page loading is in progress or not
+                return loadingInProgress;
+            }
+
+            @Override
+            public boolean hasLoadedAllItems() {
+                // Indicate whether all data (pages) are loaded or not
+                return hasLoadedAllItems;
+            }
+        };
+
+        mBannerClickListener = this;
+
+        mBannersAdapter = new BannersAdapter(getActivity(), new ArrayList(), mBannerClickListener);
+
+        if (getResources().getBoolean(R.bool.is_tablet)) {
+            mLayoutManager = new GridLayoutManager(getActivity(), 2, GridLayoutManager.VERTICAL, false);
+        } else {
+            mLayoutManager = new GridLayoutManager(getActivity(), 1, GridLayoutManager.VERTICAL, false);
         }
+
+        shopsControllerBannerRecyclerView.setLayoutManager(mLayoutManager);
+        shopsControllerBannerRecyclerView.setAdapter(mBannersAdapter);
+
+        mPresenter.loadShopsBanner(mCategoryName, mCategoryID, bannerOffset, bannerLimit);
+//        if (sales.size() == 0) {
+//            mPresenter.loadShopsBanner(mCategoryName, mCategoryID);
+//        } else {
+//            mBannersAdapter = new BannersAdapter(getActivity(), sales, mBannerClickListener);
+//
+//            if (getResources().getBoolean(R.bool.is_tablet)) {
+//                mLayoutManager = new GridLayoutManager(getActivity(), 2, GridLayoutManager.VERTICAL, false);
+//            } else {
+//                mLayoutManager = new GridLayoutManager(getActivity(), 1, GridLayoutManager.VERTICAL, false);
+//            }
+//
+//
+//        }
+    }
+
+    @Override
+    public void refresh() {
+        loadingInProgress = true;
+        mPresenter.loadShopsBanner(mCategoryName, mCategoryID, bannerOffset, bannerLimit);
     }
 
     @Override
@@ -249,25 +303,17 @@ public class ShopsController extends BaseController implements ShopsMvpView, Ban
 
     @Override
     public void showShopBanners(List<GetBannerResponse> getBannerResponses) {
-
         sales = getBannerResponses;
+        loadingInProgress = false;
 
-        mBannerClickListener = this;
-
-        mBannersAdapter = new BannersAdapter(getActivity(), sales, mBannerClickListener);
-
-        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getActivity());
-        linearLayoutManager.setAutoMeasureEnabled(false);
-
-        if (getResources().getBoolean(R.bool.is_tablet)) {
-            mLayoutManager = new GridLayoutManager(getActivity(), 2, GridLayoutManager.VERTICAL, false);
+        if (page == 0) {
+            Log.d("items","replaced");
+            mBannersAdapter.replace(getBannerResponses);
+            mPaginateManager = PaginateUtils.init(shopsControllerBannerRecyclerView, mPaginateCallbacks);
         } else {
-            mLayoutManager = new GridLayoutManager(getActivity(), 1, GridLayoutManager.VERTICAL, false);
+            Log.d("items","added");
+            mBannersAdapter.addAll(getBannerResponses);
         }
-
-        shopsControllerBannerRecyclerView.setLayoutManager(mLayoutManager);
-        shopsControllerBannerRecyclerView.setAdapter(mBannersAdapter);
-        mBannersAdapter.notifyDataSetChanged();
     }
 
 
@@ -309,5 +355,17 @@ public class ShopsController extends BaseController implements ShopsMvpView, Ban
                 SaleItemsController.newInstance(saleItemBundle))
                 .pushChangeHandler(new HorizontalChangeHandler())
                 .popChangeHandler(new HorizontalChangeHandler()));
+    }
+
+    @Override
+    public void onError(String message) {
+        super.onError(message);
+
+        bannerOffset -= newBannerCount;
+        bannerLimit -= newBannerCount;
+        page--;
+
+        loadingInProgress = false;
+        mBannersAdapter.notifyDataSetChanged();
     }
 }

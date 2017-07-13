@@ -7,10 +7,12 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
 import au.com.dealsdirect.R;
+import au.com.dealsdirect.data.network.model.banner.GetBannerRequest;
 import au.com.dealsdirect.data.network.model.banner.GetBannerResponse;
 import au.com.dealsdirect.ui.controller.shops.listener.BannerClickListener;
 import au.com.dealsdirect.ui.controller.shops.viewholder.BannersViewHolder;
@@ -70,6 +72,16 @@ public class BannersAdapter extends RecyclerView.Adapter<BannersViewHolder> {
                         url);
             }
         });
+    }
+
+    public void replace(List<GetBannerResponse> bannerResponses){
+        mSales = new ArrayList<>(bannerResponses);
+        notifyDataSetChanged();
+    }
+
+    public void addAll(List<GetBannerResponse> bannerResponses){
+        mSales.addAll(bannerResponses);
+        notifyDataSetChanged();
     }
 
     @Override
