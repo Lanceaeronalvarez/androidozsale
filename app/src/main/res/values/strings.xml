@@ -1,7 +1,7 @@
 <resources>
     <string name="app_name">DealsDirect</string>
-    <string name="facebook_app_id">test</string>
-    <string name="facebook_app_secret">test</string>
+    <string name="facebook_app_id">1650094968544406</string>
+    <string name="facebook_app_secret">94da0f48bd2ffea25981e52c56f9260a</string>
     <string name="default_country_id">DA</string>
     <string name="default_language_id">EN</string>
     <bool name="debug_mode">true</bool>
@@ -108,24 +108,24 @@
 
     <!--LOGIN STRINGS-->
     <string name="or_text">or</string>
-    <string name="not_a_member_yet_text">not a member yet?</string>
-    <string name="log_in_with_facebook">log in with facebook</string>
+    <string name="not_a_member_yet_text">Not a member yet?</string>
+    <string name="log_in_with_facebook">Log in with facebook</string>
 
-    <string name="sign_up">sign up</string>
-    <string name="already_a_member">already a member?</string>
-    <string name="log_in">log in</string>
+    <string name="sign_up">Sign Up</string>
+    <string name="already_a_member">Already a member?</string>
+    <string name="log_in">Log In</string>
     <string name="forgot_password_guide">to reset your account password, enter the email address and
         we will send you the instruction
     </string>
     <string name="send">send</string>
-    <string name="email_address">email address</string>
+    <string name="email_address">Email Address</string>
     <string name="password_hint">******</string>
     <string name="email_hint">example@email.com</string>
-    <string name="password">password</string>
-    <string name="first_name">first name</string>
-    <string name="last_name">last name</string>
-    <string name="now">now</string>
-    <string name="forgot_password">forgot password</string>
+    <string name="password">Password</string>
+    <string name="first_name">First Name</string>
+    <string name="last_name">Last Name</string>
+    <string name="here">here</string>
+    <string name="forgot_password">Forgot Password</string>
     <string name="request_sent">Request sent.</string>
     <string name="okay">okay</string>
     <string name="input_email_address">Input email address</string>
@@ -246,6 +246,7 @@
     <string name="exit_app">Exit app?</string>
     <string name="exit">exit</string>
     <string name="no">no</string>
+    <string name="now">now</string>
 
     <string-array name="genders">
         <item>Male</item>

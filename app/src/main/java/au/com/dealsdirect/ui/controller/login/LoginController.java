@@ -49,9 +49,6 @@ public class LoginController extends BaseController implements LoginMvpView {
     @BindView(R.id.fragment_login_signup_text)
     TextView mSignupTextView;
 
-    @BindView(R.id.partial_toolbar_title_view)
-    TextView mLoginToolbarTitle;
-
     private boolean isLoginTapped = false;
 
     private transient AuthHandler mAuthHandler;
@@ -107,7 +104,6 @@ public class LoginController extends BaseController implements LoginMvpView {
     @Override
     protected void setUp(View view) {
 
-        mLoginToolbarTitle.setText("Login");
         mLoginButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {

@@ -29,6 +29,19 @@ android {
     configurations.all {
         resolutionStrategy.force 'com.google.code.findbugs:jsr305:1.3.9'
     }
+
+    productFlavors {
+        dealsDirectRC {
+            applicationId "au.com.dealsdirect"
+            resValue "string", "authority", "com.facebook.app.FacebookContentProvider1650094968544406"
+        }
+
+        dealsDirectTest {
+            applicationId "au.com.dealsdirect.dev"
+            resValue "string", "authority", "com.facebook.app.FacebookContentProvider1650094968544123"
+            // No FB test app
+        }
+    }
 }
 
 dependencies {

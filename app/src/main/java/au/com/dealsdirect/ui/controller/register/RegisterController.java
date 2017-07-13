@@ -29,9 +29,6 @@ public class RegisterController extends BaseController implements RegisterMvpVie
     @Inject
     RegisterMvpPresenter<RegisterMvpView> mPresenter;
 
-    @BindView(R.id.partial_toolbar_title_view)
-    TextView mRegisterToolbarTitle;
-
     @BindView(R.id.controller_register_forename_field)
     TextView mRegisterForenameField;
 
@@ -73,7 +70,6 @@ public class RegisterController extends BaseController implements RegisterMvpVie
     public void onViewBound(@NonNull View view) {
         super.onViewBound(view);
         setUp(view);
-        mRegisterToolbarTitle.setText("Sign up");
     }
 
     @Override
