@@ -96,6 +96,8 @@ dependencies {
     compile "com.zhy:flowlayout-lib:$rootProject.flowLayoutVersion"
     // photo view
     compile "com.github.chrisbanes:PhotoView:$rootProject.photoViewVersion"
+    // bottom navigation
+    compile 'com.aurelhubert:ahbottomnavigation:2.0.6'
 
     // glide
     compile "com.github.bumptech.glide:glide:$rootProject.glideVersion"

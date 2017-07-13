@@ -20,19 +20,12 @@
             app:layout_behavior="@string/appbar_scrolling_view_behavior"/>
 
 
-
-        <android.support.design.widget.BottomNavigationView
+        <com.aurelhubert.ahbottomnavigation.AHBottomNavigation
             android:id="@+id/controller_home_bottom_nav"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_alignParentBottom="true"
-            android:background="@color/app_skin"
-            app:itemBackground="@color/app_skin"
-            app:itemIconTint="@color/nav_icon_selector"
-            app:itemTextColor="@color/nav_text_selector"
-            app:menu="@menu/bottom_navigation_menu">
-
-        </android.support.design.widget.BottomNavigationView>
+            android:layout_alignParentBottom="true" />
+        
 
     </RelativeLayout>
 
