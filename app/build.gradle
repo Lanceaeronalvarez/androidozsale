@@ -32,12 +32,12 @@ android {
 
     productFlavors {
         dealsDirectRC {
-            applicationId "au.com.dealsdirect"
+            applicationId "au.com.dealsdirect.rc"
             resValue "string", "authority", "com.facebook.app.FacebookContentProvider1650094968544406"
         }
 
         dealsDirectTest {
-            applicationId "au.com.dealsdirect.dev"
+            applicationId "au.com.dealsdirect.test"
             resValue "string", "authority", "com.facebook.app.FacebookContentProvider1650094968544123"
             // No FB test app
         }
