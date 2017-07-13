@@ -1,6 +1,5 @@
 package au.com.dealsdirect.ui.controller.checkout.paymentselect;
 
-import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.LinearLayoutManager;
@@ -8,15 +7,12 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
 import android.widget.ImageView;
-import android.widget.ListView;
 import android.widget.TextView;
 
 import com.bluelinelabs.conductor.RouterTransaction;
 import com.bluelinelabs.conductor.changehandler.HorizontalChangeHandler;
 import com.google.gson.reflect.TypeToken;
-import com.mysale.genie.utility.RxBus;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -31,7 +27,6 @@ import au.com.dealsdirect.ui.custom.CustomAlertDialog;
 import au.com.dealsdirect.ui.custom.RecyclerOnTouchListener;
 import au.com.dealsdirect.ui.main.MainActivity;
 import au.com.dealsdirect.utils.BundleBuilder;
-import au.com.dealsdirect.utils.DialogUtils;
 import au.com.dealsdirect.utils.JsonUtils;
 import butterknife.BindView;
 import butterknife.OnClick;
@@ -159,7 +154,7 @@ public class PaymentSelectController extends BaseController implements PaymentSe
         }));
     }
 
-    @OnClick(R.id.partial_toolbar_arrow_title)
+    @OnClick(R.id.partial_toolbar_arrow_view)
     public void onBackClick() {
         getActivity().onBackPressed();
     }
