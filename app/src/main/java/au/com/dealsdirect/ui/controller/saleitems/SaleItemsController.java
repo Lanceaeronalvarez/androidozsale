@@ -181,18 +181,19 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
 
         loadingInProgress = false;
 
-        if (saleItems == null || saleItems.isEmpty()) {
-            if (!hasLoadedAllItems) {
+        if(saleItems == null || saleItems.isEmpty()){
+            if (!hasLoadedAllItems){
                 hasLoadedAllItems = true;
                 mPlaceholder.setVisibility(View.VISIBLE);
                 mSaleItemsRecyclerView.setVisibility(View.GONE);
                 return;
-
-            } else {
-
-                mPlaceholder.setVisibility(View.GONE);
-                mSaleItemsRecyclerView.setVisibility(View.VISIBLE);
             }
+        }else{
+
+            hasLoadedAllItems = true;
+            mPlaceholder.setVisibility(View.GONE);
+            mSaleItemsRecyclerView.setVisibility(View.VISIBLE);
+        }
 
             if (page == 0) {
                 mSaleItemsAdapter = new SaleItemsAdapter(saleItems, mPresenter, mSaleId, mTitle);
@@ -203,17 +204,8 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
             } else {
                 mSaleItemsAdapter.addData(saleItems);
             }
-        }
     }
 
-
-    @Override
-    public void onError (String message){
-        super.onError(message);
-        page--;
-        mSaleItemsAdapter.notifyDataSetChanged();
-
-    }
 
     @SuppressWarnings("ConstantConditions")
     @OnClick(R.id.partial_toolbar_arrow_view)
