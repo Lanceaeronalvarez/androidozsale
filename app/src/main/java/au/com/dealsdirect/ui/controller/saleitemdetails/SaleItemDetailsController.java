@@ -104,6 +104,8 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
     ImageView mProductSharedImage;
     @BindView(R.id.product_details_coordinator)
     RelativeLayout mProductCoordinatorLayout;
+    @BindView(R.id.controller_product_details_title_description)
+    LinearLayout mProductHeaderDescriptionLayout;
 
     private String mHtmlHeader = "";
     private String mHtmlFooter = "";

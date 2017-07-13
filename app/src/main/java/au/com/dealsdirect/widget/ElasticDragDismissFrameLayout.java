@@ -47,7 +47,7 @@ public class ElasticDragDismissFrameLayout extends FrameLayout implements Nested
     private float dragDismissDistance = Float.MAX_VALUE;
     private float dragDismissFraction = -1f;
     private float dragDismissScale = 1f;
-    private boolean shouldScale = false;
+    private boolean shouldScale = true;
     private float dragElacticity = 1f;
 
     // state
@@ -74,7 +74,7 @@ public class ElasticDragDismissFrameLayout extends FrameLayout implements Nested
 
         dragDismissFraction = 0.2f;
         dragDismissScale = 0.8f;
-        shouldScale = false;
+        shouldScale = true;
     }
 
     @Override
