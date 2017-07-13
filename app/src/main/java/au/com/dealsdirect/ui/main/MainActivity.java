@@ -7,6 +7,9 @@ import android.support.design.widget.BottomNavigationView;
 import android.util.Log;
 import android.view.ViewGroup;
 
+import com.aurelhubert.ahbottomnavigation.AHBottomNavigation;
+import com.aurelhubert.ahbottomnavigation.AHBottomNavigationAdapter;
+import com.aurelhubert.ahbottomnavigation.AHBottomNavigationItem;
 import com.bluelinelabs.conductor.Conductor;
 import com.bluelinelabs.conductor.Controller;
 import com.bluelinelabs.conductor.ControllerChangeHandler;
@@ -67,8 +70,10 @@ public class MainActivity extends BaseActivity implements MainMvpView {
     @BindView(R.id.activity_main_frame)
     ViewGroup mContainer;
 
+//    @BindView(R.id.controller_home_bottom_nav)
+//    BottomNavigationView mBottomNavigationView;]
     @BindView(R.id.controller_home_bottom_nav)
-    BottomNavigationView mBottomNavigationView;
+    AHBottomNavigation mBottomNavigationView;
 
     private int mPreviousTab = R.id.action_shop;
     private int mCurrentTab = R.id.action_shop;
@@ -112,7 +117,6 @@ public class MainActivity extends BaseActivity implements MainMvpView {
                 ((MainPresenter) mPresenter).getDataManager()
                         .getCountryId());
 
-        BottomNavigationViewHelper.disableShiftMode(mBottomNavigationView);
         mRouter.addChangeListener(new ControllerChangeHandler.ControllerChangeListener() {
             @Override
             public void onChangeStarted(@Nullable Controller to, @Nullable Controller from, boolean isPush, @NonNull ViewGroup container, @NonNull ControllerChangeHandler handler) {
@@ -122,71 +126,79 @@ public class MainActivity extends BaseActivity implements MainMvpView {
             @Override
             public void onChangeCompleted(@Nullable Controller to, @Nullable Controller from, boolean isPush, @NonNull ViewGroup container, @NonNull ControllerChangeHandler handler) {
                 if (to instanceof HomeController || to instanceof ShopsController) {
-                    mBottomNavigationView.setSelectedItemId(R.id.action_shop);
+                    mBottomNavigationView.setCurrentItem(0);
                 } else if (to instanceof AccountController) {
-                    mBottomNavigationView.setSelectedItemId(R.id.action_account);
+                    mBottomNavigationView.setCurrentItem(1);
                 } else if (to instanceof ViewContactsController) {
-                    mBottomNavigationView.setSelectedItemId(R.id.action_contact);
+                    mBottomNavigationView.setCurrentItem(2);
                 } else if (to instanceof InviteController) {
-                    mBottomNavigationView.setSelectedItemId(R.id.action_invite);
+                    mBottomNavigationView.setCurrentItem(3);
                 } else if (to instanceof CheckoutController) {
-                    mBottomNavigationView.setSelectedItemId(R.id.action_checkout);
+                    mBottomNavigationView.setCurrentItem(4);
                 }
             }
         });
 
-        mBottomNavigationView.setOnNavigationItemSelectedListener(item -> {
+        mBottomNavigationView.setOnTabSelectedListener(new AHBottomNavigation.OnTabSelectedListener() {
+            @Override
+            public boolean onTabSelected(int position, boolean wasSelected) {
 
-            if (mBottomNavigationView.getSelectedItemId() == item.getItemId()) {
+                if(!wasSelected) {
+                    mPreviousTab = mCurrentTab;
+                    mCurrentTab = position;
+
+                    switch (position) {
+
+                        case 0:
+                            showShopController();
+                            break;
+
+                        case 1:
+                            showAccountController();
+                            break;
+
+                        case 2:
+                        case 3:
+                            if (!mPresenter.isAuthorized()) {
+                                showLoginController(mRouter, new AuthHandler() {
+                                    @Override
+                                    public void success() {
+                                        proceedToController(position);
+                                    }
+
+                                    @Override
+                                    public void error() {
+
+                                    }
+                                });
+                            } else {
+                                proceedToController(position);
+                            }
+                            break;
+
+                        case 4:
+                            showCheckoutController();
+                            break;
+                    }
+                }
                 return true;
             }
-
-            mPreviousTab = mCurrentTab;
-            mCurrentTab = item.getItemId();
-
-            switch (item.getItemId()) {
-
-                case R.id.action_shop:
-                    showShopController();
-                    break;
-
-                case R.id.action_account:
-                    showAccountController();
-                    break;
-
-                case R.id.action_invite:
-                case R.id.action_contact:
-                    if (!mPresenter.isAuthorized()) {
-                        showLoginController(mRouter, new AuthHandler() {
-                            @Override
-                            public void success() {
-                                proceedToController(item.getItemId());
-                            }
-
-                            @Override
-                            public void error() {
-
-                            }
-                        });
-                    } else {
-                        proceedToController(item.getItemId());
-                    }
-                    break;
-
-                case R.id.action_checkout:
-                    showCheckoutController();
-                    break;
-            }
-            return true;
         });
 
+        AHBottomNavigationAdapter navigationAdapter = new AHBottomNavigationAdapter(this, R.menu.bottom_navigation_menu);
+        navigationAdapter.setupWithBottomNavigation(mBottomNavigationView);
+        mBottomNavigationView.setTitleState(AHBottomNavigation.TitleState.ALWAYS_SHOW);
+        mBottomNavigationView.setCurrentItem(0);
+
+//        test notification value
+//        mBottomNavigationView.setNotification("3",4);
     }
 
     private void proceedToController(int id){
-        if(id == R.id.action_invite) {
-            showInviteController();
-        }else if(id == R.id.action_contact){
+        if(id == 2) {
             showContactController();
+        }else if(id == 3){
+            showInviteController();
         }
     }
 

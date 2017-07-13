@@ -17,6 +17,8 @@ import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.TextView;
 
+import com.aurelhubert.ahbottomnavigation.AHBottomNavigation;
+
 import au.com.dealsdirect.DDApplication;
 import au.com.dealsdirect.R;
 import au.com.dealsdirect.di.component.ActivityComponent;
@@ -33,7 +35,7 @@ public abstract class BaseActivity extends AppCompatActivity
 
     @Nullable
     @BindView(R.id.controller_home_bottom_nav)
-    BottomNavigationView bottomNavigationView;
+    protected AHBottomNavigation bottomNavigationView;
 
     private ProgressDialog mProgressDialog;
 
