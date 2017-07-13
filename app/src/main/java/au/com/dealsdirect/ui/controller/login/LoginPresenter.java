@@ -3,17 +3,40 @@ package au.com.dealsdirect.ui.controller.login;
  * Created by CodeineBot on 6/15/17.
  */
 
+import android.app.Activity;
+import android.os.Bundle;
+import android.util.Base64;
 import android.util.Log;
 
 import com.androidnetworking.error.ANError;
+import com.facebook.AccessToken;
+import com.facebook.CallbackManager;
+import com.facebook.FacebookCallback;
+import com.facebook.FacebookException;
+import com.facebook.GraphRequest;
+import com.facebook.GraphResponse;
+import com.facebook.login.LoginManager;
+import com.facebook.login.LoginResult;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.text.Normalizer;
+import java.util.Arrays;
+import java.util.Date;
+import java.util.List;
+
+import javax.crypto.Mac;
+import javax.crypto.spec.SecretKeySpec;
 import javax.inject.Inject;
 
 import au.com.dealsdirect.data.DataManager;
 import au.com.dealsdirect.data.network.model.login.LoginEmail;
+import au.com.dealsdirect.data.network.model.login.LoginFacebook;
 import au.com.dealsdirect.data.network.model.login.LoginTicket;
 import au.com.dealsdirect.data.network.model.login.Logout;
 import au.com.dealsdirect.ui.base.BasePresenter;
+import au.com.dealsdirect.utils.AppLogger;
 import au.com.dealsdirect.utils.rx.SchedulerProvider;
 import io.reactivex.annotations.NonNull;
 import io.reactivex.disposables.CompositeDisposable;
@@ -47,12 +70,10 @@ public class LoginPresenter<V extends LoginMvpView> extends BasePresenter<V> imp
                         return;
                     }
 
-                    if(responseValue.isSuccess()){
-                        Log.d("loginStatus", "success");
+                    if (responseValue.isSuccess()) {
                         getDataManager().acknowledgeAuth(responseValue.getTicket());
                         getMvpView().showLoginSuccessful(responseValue.getTicket());
-                    } else{
-                        Log.d("loginStatus", "fail");
+                    } else {
 
                         getMvpView().showLoginError(responseValue.getMessage());
                     }
@@ -63,7 +84,6 @@ public class LoginPresenter<V extends LoginMvpView> extends BasePresenter<V> imp
                     }
 
                     getMvpView().hideLoading();
-//                    getMvpView().onError(throwable.getMessage());
                     getMvpView().showLoginError(throwable.getMessage());
 
                     // handle load accounts error here
@@ -83,6 +103,47 @@ public class LoginPresenter<V extends LoginMvpView> extends BasePresenter<V> imp
             String lastName,
             String facebookUserID,
             String facebookCookieValue) {
+
+        getCompositeDisposable().add(getDataManager().callLoginViaFacebook(
+                new LoginFacebook.RequestValue(
+                        email,
+                        firstName,
+                        lastName,
+                        getDataManager().getCountryId(),
+                        getDataManager().getLanguageId(),
+                        facebookUserID,
+                        facebookCookieValue))
+
+                .subscribeOn(getSchedulerProvider().io())
+                .observeOn(getSchedulerProvider().ui())
+                .subscribe(responseValue -> {
+
+                    if (!isViewAttached()) {
+                        return;
+                    }
+
+                    if (responseValue.isSuccess()) {
+                        getDataManager().acknowledgeAuth(responseValue.getTicket());
+                        getMvpView().showLoginSuccessful(responseValue.getTicket());
+                    } else {
+
+                        getMvpView().showLoginError(responseValue.getMessage());
+                    }
+                }, throwable -> {
+
+                    if (!isViewAttached()) {
+                        return;
+                    }
+
+                    getMvpView().hideLoading();
+                    getMvpView().showLoginError(throwable.getMessage());
+
+                    // handle load accounts error here
+                    if (throwable instanceof ANError) {
+                        ANError anError = (ANError) throwable;
+                        handleApiError(anError);
+                    }
+                }));
 
         return true;
     }
@@ -105,7 +166,7 @@ public class LoginPresenter<V extends LoginMvpView> extends BasePresenter<V> imp
                     getDataManager().revokeAuth();
 //                        RxBus.instance().post(Auth.EVENT_LOGOUT);
 //                        RxBus.instance().post(GVersion.EVENT_LOGOUT);
-                    getMvpView().logoutResult();
+//                    getMvpView().logoutResult();
                 }, throwable -> {
                     if (!isViewAttached()) {
                         return;
@@ -128,7 +189,7 @@ public class LoginPresenter<V extends LoginMvpView> extends BasePresenter<V> imp
     @Override
     public boolean loginTicket(String ticket, String countryId) {
         getCompositeDisposable().add(getDataManager()
-                .callLoginTicket(new LoginTicket.RequestValue(ticket,countryId))
+                .callLoginTicket(new LoginTicket.RequestValue(ticket, countryId))
                 .subscribeOn(getSchedulerProvider().io())
                 .observeOn(getSchedulerProvider().ui())
                 .subscribe(new Consumer<LoginEmail.ResponseValue>() {
@@ -138,9 +199,9 @@ public class LoginPresenter<V extends LoginMvpView> extends BasePresenter<V> imp
                             return;
                         }
 
-                        if(responseValue.isSuccess()){
+                        if (responseValue.isSuccess()) {
                             getDataManager().acknowledgeAuth(responseValue.getTicket());
-                        }else{
+                        } else {
                             //On login ticket fail, call logout and go back to shop
 //                            RxBus.instance().post("shop_now");
                             logout();
@@ -166,5 +227,134 @@ public class LoginPresenter<V extends LoginMvpView> extends BasePresenter<V> imp
                 }));
 
         return true;
+    }
+
+    private final List<String> permissions = Arrays.asList("public_profile", "email");
+
+    private String strEmail = "";
+    private String strFirstName;
+    private String strLastName;
+    private String strFBUserID;
+    private String strFBSignedRequest;
+
+    @Override
+    public void onFacebookLogin(Activity activity, CallbackManager callbackManager) {
+
+        LoginManager loginManager = LoginManager.getInstance();
+        loginManager.logInWithReadPermissions(activity, permissions);
+        loginManager.registerCallback(callbackManager, new FacebookCallback<LoginResult>() {
+            @Override
+            public void onSuccess(LoginResult loginResult) {
+                Log.d("FB", "onSuccess: " + loginResult.getAccessToken());
+                fetchUserInfo(loginResult.getAccessToken());
+            }
+
+            @Override
+            public void onCancel() {
+                //TODO: Handle cancel
+            }
+
+            @Override
+            public void onError(FacebookException error) {
+                Log.d("FB", "onError: " + error.getMessage());
+            }
+        });
+    }
+
+    private void fetchUserInfo(final AccessToken accessToken) {
+
+        GraphRequest request = GraphRequest.newMeRequest(
+                accessToken,
+                new GraphRequest.GraphJSONObjectCallback() {
+                    @Override
+                    public void onCompleted(JSONObject object, GraphResponse response) {
+                        // Application code
+                        try {
+                            if(object != null) {
+                                strEmail = object.getString("email");
+                                strFirstName = object.getString("first_name");
+                                strLastName = object.getString("last_name");
+                                strFBUserID = object.getString("id");
+
+                                generateFBSignedRequest(accessToken);
+
+                                validateFBLogin();
+
+                                LoginManager.getInstance().logOut();
+                            }
+
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                });
+        Bundle parameters = new Bundle();
+        parameters.putString("fields", "id,email,last_name,first_name");
+        request.setParameters(parameters);
+        request.executeAsync();
+    }
+
+    private void validateFBLogin() {
+        if (isFacebookDetailsComplete()) {
+            loginViaFacebook(strEmail, strFirstName, strLastName, strFBUserID, strFBSignedRequest);
+        } else {
+            getMvpView().showLoginError("Missing info from Facebook");
+        }
+    }
+
+    private boolean isFacebookDetailsComplete() {
+        return strEmail != null
+                && strFirstName != null
+                && strLastName != null
+                && strFBUserID != null
+                && !this.strEmail.isEmpty()
+                && !this.strFirstName.isEmpty()
+                && !this.strLastName.isEmpty()
+                && !this.strFBUserID.isEmpty();
+    }
+
+    private void generateFBSignedRequest(AccessToken accessToken) {
+
+        try {
+            String secret = getDataManager().getFbSecret();
+
+            Date date = accessToken.getExpires();
+
+            JSONObject jObj = new JSONObject();
+            jObj.put("user_id", this.strFBUserID);
+            jObj.put("oauth_token", accessToken);
+            jObj.put("expires",date.getTime()/1000L);
+            jObj.put("algorithm", "HMAC-SHA256");
+
+            byte[] jsonData = jObj.toString(1).getBytes("UTF-8");
+
+            String payloadString = new String(jsonData, "UTF-8");
+            byte[] payloadData = payloadString.getBytes("US-ASCII");
+            String payloadBase64URLString = Base64.encodeToString(payloadData, 0);
+
+            payloadBase64URLString = payloadBase64URLString.replace("\n", "");
+            payloadBase64URLString = payloadBase64URLString.replace("=", "");
+            payloadBase64URLString = payloadBase64URLString.replace("+", "-");
+            payloadBase64URLString = payloadBase64URLString.replace("/", "_");
+
+            String key = Normalizer.normalize(secret, Normalizer.Form.NFD).replaceAll("[^\\p{ASCII}]", "");
+            String data = Normalizer.normalize(payloadBase64URLString, Normalizer.Form.NFD).replaceAll("[^\\p{ASCII}]", "");
+
+            Mac sha256_HMAC = Mac.getInstance("HmacSHA256");
+            SecretKeySpec secret_key = new SecretKeySpec(key.getBytes(), "HmacSHA256");
+            sha256_HMAC.init(secret_key);
+            byte[] hmacData = sha256_HMAC.doFinal(data.getBytes());
+            String hash = Base64.encodeToString(hmacData, 0);
+
+            hash = hash.replace("\n", "");
+            hash = hash.replace("=", "");
+            hash = hash.replace("+", "-");
+            hash = hash.replace("/", "_");
+
+            strFBSignedRequest = hash + "." + payloadBase64URLString;
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 }

@@ -1,15 +1,13 @@
 package au.com.dealsdirect.ui.main;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.support.design.widget.BottomNavigationView;
-import android.util.Log;
 import android.view.ViewGroup;
 
 import com.aurelhubert.ahbottomnavigation.AHBottomNavigation;
 import com.aurelhubert.ahbottomnavigation.AHBottomNavigationAdapter;
-import com.aurelhubert.ahbottomnavigation.AHBottomNavigationItem;
 import com.bluelinelabs.conductor.Conductor;
 import com.bluelinelabs.conductor.Controller;
 import com.bluelinelabs.conductor.ControllerChangeHandler;
@@ -53,7 +51,6 @@ import au.com.dealsdirect.ui.controller.home.HomeController;
 import au.com.dealsdirect.ui.controller.invite.InviteController;
 import au.com.dealsdirect.ui.controller.login.LoginController;
 import au.com.dealsdirect.ui.controller.shops.ShopsController;
-import au.com.dealsdirect.ui.custom.BottomNavigationViewHelper;
 import au.com.dealsdirect.ui.custom.CustomAlertDialog;
 import au.com.dealsdirect.utils.DialogUtils;
 import butterknife.BindView;
@@ -70,8 +67,6 @@ public class MainActivity extends BaseActivity implements MainMvpView {
     @BindView(R.id.activity_main_frame)
     ViewGroup mContainer;
 
-//    @BindView(R.id.controller_home_bottom_nav)
-//    BottomNavigationView mBottomNavigationView;]
     @BindView(R.id.controller_home_bottom_nav)
     AHBottomNavigation mBottomNavigationView;
 
@@ -143,7 +138,7 @@ public class MainActivity extends BaseActivity implements MainMvpView {
             @Override
             public boolean onTabSelected(int position, boolean wasSelected) {
 
-                if(!wasSelected) {
+                if (!wasSelected) {
                     mPreviousTab = mCurrentTab;
                     mCurrentTab = position;
 
@@ -190,14 +185,12 @@ public class MainActivity extends BaseActivity implements MainMvpView {
         mBottomNavigationView.setTitleState(AHBottomNavigation.TitleState.ALWAYS_SHOW);
         mBottomNavigationView.setCurrentItem(0);
 
-//        test notification value
-//        mBottomNavigationView.setNotification("3",4);
     }
 
-    private void proceedToController(int id){
-        if(id == 2) {
+    private void proceedToController(int id) {
+        if (id == 2) {
             showContactController();
-        }else if(id == 3){
+        } else if (id == 3) {
             showInviteController();
         }
     }
@@ -208,6 +201,12 @@ public class MainActivity extends BaseActivity implements MainMvpView {
         super.onDestroy();
     }
 
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+
+        // Call router for callbacks after going out the app and back inside
+        mRouter.onActivityResult(requestCode, resultCode, data);
+    }
 
     @Override
     public void onBackPressed() {
@@ -234,8 +233,7 @@ public class MainActivity extends BaseActivity implements MainMvpView {
 //        }
 
 
-
-        if (mRouter.getBackstackSize()==1){
+        if (mRouter.getBackstackSize() == 1) {
             DialogUtils.showYesNoDialog(
                     this,
                     getString(R.string.dealsdirect),
@@ -248,11 +246,11 @@ public class MainActivity extends BaseActivity implements MainMvpView {
                     (dialogInterface, i) -> {
 
                     });
-        }else{
+        } else {
             if (!mRouter.handleBack()) {
 
-            }else{
-                if(mRouter.getBackstackSize()==1){
+            } else {
+                if (mRouter.getBackstackSize() == 1) {
                     showBottomNavigationView();
                 }
             }
@@ -315,7 +313,6 @@ public class MainActivity extends BaseActivity implements MainMvpView {
     @Override
     public void onCancel(int requestCode) {
         mFetchTokenHandler = null;
-        Log.d("onCancel", "im cancelling");
     }
 
     @Override

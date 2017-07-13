@@ -7,31 +7,6 @@ import com.mysale.genie.utility.LegacyBaseResponseValue;
 
 public class LoginFacebook {
 
-
-//    @Override
-//    protected void executeUseCase(RequestValue requestValues) {
-//
-//        Gson gson = new GsonBuilder().registerTypeAdapter(LoginFacebook.ResponseValue.class, new BaseDeserializer<LoginFacebook.ResponseValue>()).create();
-//        LoginApiService service = GServiceGenerator.createService(mContext, LoginApiService.class, GServiceGenerator.API_LEGACY, gson);
-//        service.loginFacebook(requestValues).enqueue(new GCallback<LoginFacebook.ResponseValue>() {
-//            @Override
-//            public void onResponse(Call<LoginFacebook.ResponseValue> call, Response<LoginFacebook.ResponseValue> response) {
-//                super.onResponse(call, response);
-//
-//                if (response.isSuccessful() && response.body() != null) {
-//                    getUseCaseCallback().onSuccess(response.body());
-//
-//                }
-//            }
-//
-//            @Override
-//            public void onFailure(Call<LoginFacebook.ResponseValue> call, Throwable t) {
-//                super.onFailure(call, t);
-//                getUseCaseCallback().onError();
-//            }
-//        });
-//    }
-
     public static class RequestValue {
 
         private String email;
@@ -62,7 +37,7 @@ public class LoginFacebook {
 
         public Response d;
 
-        public static class Response extends LegacyBaseResponseValue{
+        public static class Response extends LegacyBaseResponseValue {
             public Value Value;
         }
 

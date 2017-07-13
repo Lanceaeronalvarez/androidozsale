@@ -93,7 +93,7 @@
             android:textSize="@dimen/text_size_xlarge"/>
 
         <RelativeLayout
-            android:id="@+id/facebook_login_button"
+            android:id="@+id/controller_login_fb_layout"
             android:layout_width="match_parent"
             android:layout_height="@dimen/default_button_height"
             android:layout_marginTop="10dp"

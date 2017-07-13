@@ -3,18 +3,22 @@ package au.com.dealsdirect.ui.controller.login;
  * Created by CodeineBot on 6/15/17.
  */
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.bluelinelabs.conductor.RouterTransaction;
 import com.bluelinelabs.conductor.changehandler.HorizontalChangeHandler;
+import com.facebook.CallbackManager;
+import com.facebook.internal.CallbackManagerImpl;
 
 import java.util.regex.Pattern;
 
@@ -44,20 +48,20 @@ public class LoginController extends BaseController implements LoginMvpView {
     EditText mPasswordEditText;
     @BindView(R.id.login_button)
     Button mLoginButton;
-    @BindView(R.id.facebook_login_button)
-    RelativeLayout mFacebookButton;
     @BindView(R.id.fragment_login_signup_text)
-    TextView mSignupTextView;
+    TextView mSignUpTextView;
 
     private boolean isLoginTapped = false;
 
     private transient AuthHandler mAuthHandler;
 
+    private CallbackManager mCallbackManager = CallbackManager.Factory.create();
+
     public static LoginController newInstance(AuthHandler handler) {
 
         return new LoginController(
                 new BundleBuilder(new Bundle())
-                        .putSerializable(AUTH_HANDLER,handler)
+                        //.putSerializable(AUTH_HANDLER, handler)
                         .build());
     }
 
@@ -78,6 +82,10 @@ public class LoginController extends BaseController implements LoginMvpView {
     protected View inflateView(@NonNull LayoutInflater inflater, @NonNull ViewGroup container) {
         View view = inflater.inflate(R.layout.controller_login, container, false);
         getControllerComponent().inject(this);
+
+        // Init facebook callback
+        registerForActivityResult(CallbackManagerImpl.RequestCodeOffset.Login.toRequestCode());
+        mCallbackManager = CallbackManager.Factory.create();
 
         mPresenter.onAttach(this);
 
@@ -101,6 +109,7 @@ public class LoginController extends BaseController implements LoginMvpView {
         ((BaseActivity) getActivity()).showBottomNavigationView();
     }
 
+
     @Override
     protected void setUp(View view) {
 
@@ -116,30 +125,6 @@ public class LoginController extends BaseController implements LoginMvpView {
             }
         });
 
-//        initializeFacebookLogin();
-
-//        mFacebookButton.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View view) {
-//
-//                onFacebookLogin(new FacebookFetchHandler() {
-//
-//                    @Override
-//                    public void onSuccess(String email, String firstName,
-//                                          String lastName, String facebookUserID,
-//                                          String facebookCookieValue) {
-//
-//                        mPresenter.loginViaFacebook(email, firstName,
-//                                lastName, facebookUserID, facebookCookieValue);
-//                    }
-//
-//                    @Override
-//                    public void onFailure(String errorMessage) {
-//
-//                    }
-//                });
-//            }
-//        });
     }
 
     @Override
@@ -174,11 +159,6 @@ public class LoginController extends BaseController implements LoginMvpView {
                 .popChangeHandler(new HorizontalChangeHandler()));
     }
 
-    @Override
-    public void logoutResult() {
-
-    }
-
     private void callLoginApi() {
         String email = mEmailEditText.getText().toString();
         String password = mPasswordEditText.getText().toString();
@@ -186,7 +166,20 @@ public class LoginController extends BaseController implements LoginMvpView {
     }
 
     @OnClick(R.id.fragment_login_signup_text)
-    public void onSignUpClick(){
+    void onSignUpClick() {
         showRegistration();
     }
+
+    @OnClick(R.id.controller_login_fb_layout)
+    void onFacebookButtonClick() {
+        Log.d("FB", "FB button clicked");
+        mPresenter.onFacebookLogin(getActivity(), mCallbackManager);
+
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        mCallbackManager.onActivityResult(requestCode, resultCode, data);
+    }
+
 }

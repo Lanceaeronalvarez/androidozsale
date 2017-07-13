@@ -3,6 +3,10 @@ package au.com.dealsdirect.ui.controller.login;
  * Created by CodeineBot on 6/15/17.
  */
 
+import android.app.Activity;
+
+import com.facebook.CallbackManager;
+
 import au.com.dealsdirect.ui.base.MvpPresenter;
 
 public interface LoginMvpPresenter<V extends LoginMvpView> extends MvpPresenter<V> {
@@ -16,4 +20,6 @@ public interface LoginMvpPresenter<V extends LoginMvpView> extends MvpPresenter<
     boolean logout();
 
     boolean loginTicket(String ticket, String countryId);
+
+    void onFacebookLogin(Activity activity, CallbackManager callbackManager);
 }
