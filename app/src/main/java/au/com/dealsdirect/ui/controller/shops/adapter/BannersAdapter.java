@@ -3,6 +3,7 @@ package au.com.dealsdirect.ui.controller.shops.adapter;
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;
 import android.util.DisplayMetrics;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -84,7 +85,9 @@ public class BannersAdapter extends RecyclerView.Adapter<BannersAdapter.ViewHold
         GetBannerResponse item = mSales.get(position);
         holder.name.setText(item.getDescription());
 
-        ImageUtils.loadImage(mContext, item.getImage(), holder.image);
+        Log.d("IMG", item.getImage());
+
+        ImageUtils.loadImage(mContext, ImageUtils.getBannerMobileSize(item.getImage()), holder.image);
 
         holder.layout.setOnClickListener(view -> mBannerClickListener.onBannerClicked(
                 mSales.get(position).getDestinationID(),

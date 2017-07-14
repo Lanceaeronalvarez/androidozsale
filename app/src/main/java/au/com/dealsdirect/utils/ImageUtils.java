@@ -92,10 +92,16 @@ public class ImageUtils {
     }
 
     private static String appendBannerSizeUrl(String url, String bannerSize) {
-        String[] urlSplit = url.split("."); //Assume only 1 coma will occur in every url
-        url = String.format("%s%s.%s", urlSplit[0], bannerSize, urlSplit[1]);
 
-        AppLogger.d(url);
+        String removedExtension = url.substring(0, url.lastIndexOf('.'));
+
+        String extension = "";
+        int i = url.lastIndexOf('.');
+        if (i > 0) {
+            extension = url.substring(i+1);
+        }
+
+        url = String.format("%s%s.%s", removedExtension, bannerSize, extension);
 
         return url;
     }
