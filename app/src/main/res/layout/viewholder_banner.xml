@@ -28,7 +28,7 @@
 
         <TextView
             android:id="@+id/viewholder_banner_name"
-            fontPath="@string/font_lato_light"
+            fontPath="@string/font_lato_medium"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_alignParentBottom="true"

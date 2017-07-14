@@ -105,10 +105,9 @@ public class BannersAdapter extends RecyclerView.Adapter<BannersAdapter.ViewHold
         GetBannerResponse item = mSales.get(position);
         holder.name.setText(item.getDescription());
 
-        AppLogger.d("IMG " + ImageUtils.getBannerMobileSize(item.getImage()));
-
         if (mPresenter.isTablet()) {
             ImageUtils.loadImage(mContext, ImageUtils.getBannerTabletSize(item.getImage()), holder.image);
+            //AppLogger.d("IMG " + ImageUtils.getBannerTabletSize(item.getImage()));
         } else {
             ImageUtils.loadImage(mContext, ImageUtils.getBannerMobileSize(item.getImage()), holder.image);
         }
