@@ -63,6 +63,7 @@ public class SaleItemsPresenter<V extends SaleItemsMvpView> extends BasePresente
 
         getSaleItemsRequest.setPageSize("50");
 
+        getMvpView().showLoading();
         getCompositeDisposable()
                 .add(getDataManager()
                         .callGetSaleItemsRequest(getSaleItemsRequest)

@@ -49,7 +49,7 @@ import javax.inject.Inject;
  * dp Created by Admin on 6/6/17.
  */
 
-public class CheckoutController extends BaseController implements CheckoutMvpView {
+public class CheckoutController extends BaseController implements CheckoutMvpView,FetchTokenHandler {
     public static final String CARD_PAYPAL = "Paypal";
     public static final String CARD_MASTERPASS = "Masterpass";
     public static final String CARD_MASTERCARD = "MasterCard";
@@ -93,19 +93,6 @@ public class CheckoutController extends BaseController implements CheckoutMvpVie
     private ArrayList<DecorationInfoList> mDecorationInfoList = new ArrayList<>();
     private ArrayList<Voucher> mVouchers = new ArrayList<>();
     private CheckoutOrderAdapter mAdapter;
-    private FetchTokenHandler mFetchTokenHandler = new FetchTokenHandler() {
-        @Override
-        public void onSuccess() {
-            if (!isAttached()) return;
-            mPresenter.start();
-        }
-
-        @Override
-        public void onFailure() {
-            if (!isAttached()) return;
-            hidePaymentButtons();
-        }
-    };
 
     MainActivity mActivity;
 
@@ -200,7 +187,6 @@ public class CheckoutController extends BaseController implements CheckoutMvpVie
     public void onDetach(View view) {
         mPresenter.onDetach();
         hideLoading();
-        mFetchTokenHandler = null;
         super.onDetach(view);
     }
 
@@ -231,13 +217,15 @@ public class CheckoutController extends BaseController implements CheckoutMvpVie
     }
 
     public void loadCart() {
-        showLoading();
-        if (mPresenter.checkIsLoggedIn() && !mActivity.isBraintreeInitialized()) {
-            ((MainMvpView) getActivity()).fetchAuthorization(new CheckoutFetchTokenHandler(mFetchTokenHandler));
-        } else if (mPresenter.checkIsLoggedIn() && mActivity.isBraintreeInitialized()) {
-            mPresenter.start();
 
-        } else {
+        if(mPresenter.checkIsLoggedIn()){
+            showLoading();
+            if(!mActivity.isBraintreeInitialized()){
+                ((MainMvpView) getActivity()).fetchAuthorization(this);
+            }else{
+                mPresenter.start();
+            }
+        }else{
             showNoCartItemsLayout();
         }
     }
@@ -283,7 +271,7 @@ public class CheckoutController extends BaseController implements CheckoutMvpVie
     @Override
     public void showPaymentDetails(PaymentMethod paymentMethod) {
 
-        if (((MainActivity) getActivity()).getPaymentMethodSelected() == null && paymentMethod == null) {
+        if (paymentMethod == null) {
             mAddNewPaymentLayout.setVisibility(View.VISIBLE);
             mPaymentLayout.setVisibility(View.GONE);
             mPaymentChangeText.setVisibility(View.GONE);
@@ -452,26 +440,16 @@ public class CheckoutController extends BaseController implements CheckoutMvpVie
 
     }
 
-    private static class CheckoutFetchTokenHandler implements FetchTokenHandler {
-
-        WeakReference<FetchTokenHandler> fetchTokenHandler;
-
-        public CheckoutFetchTokenHandler(FetchTokenHandler handler) {
-            fetchTokenHandler = new WeakReference<FetchTokenHandler>(handler);
-        }
-
-        @Override
-        public void onSuccess() {
-            if (fetchTokenHandler.get() != null) {
-                fetchTokenHandler.get().onSuccess();
-            }
-        }
-
-        @Override
-        public void onFailure() {
-            if (fetchTokenHandler.get() != null) {
-                fetchTokenHandler.get().onFailure();
-            }
-        }
+    @Override
+    public void onSuccess() {
+        if (!isAttached()) return;
+        mPresenter.start();
     }
+
+    @Override
+    public void onFailure() {
+        if (!isAttached()) return;
+        hidePaymentButtons();
+    }
+
 }

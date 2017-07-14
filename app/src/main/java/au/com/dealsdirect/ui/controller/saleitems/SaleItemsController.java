@@ -164,53 +164,47 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
             }
         };
 
+        mSaleItemsAdapter = new SaleItemsAdapter(saleItems, mPresenter, mSaleId, mTitle);
+        mSaleItemsRecyclerView.setLayoutManager(new GridLayoutManager(getActivity(), 2));
+        mSaleItemsRecyclerView.setAdapter(mSaleItemsAdapter);
 
         if (saleItems.isEmpty()) {
-            showLoading();
             mPresenter.loadSaleItems(mCategoryKey, mSaleId, mSearchQuery, page);
-
         } else {
-            mSaleItemsAdapter = new SaleItemsAdapter(saleItems, mPresenter, mSaleId, mTitle);
-            mSaleItemsRecyclerView.setLayoutManager(new GridLayoutManager(getActivity(), 2));
-            mSaleItemsRecyclerView.setAdapter(mSaleItemsAdapter);
+            mPaginateManager = PaginateUtils.init(mSaleItemsRecyclerView, mPaginateCallbacks);
         }
+
+
     }
 
     @Override
     public void showSaleItems(GetSaleItemsResponse getSaleItemsResponse) {
-        saleItems = getSaleItemsResponse.products;
+        List<GetSaleItemsResponse.Products> items = getSaleItemsResponse.products;
 
         loadingInProgress = false;
 
-        if(saleItems == null || saleItems.isEmpty()){
-            if (!hasLoadedAllItems){
-                hasLoadedAllItems = true;
-                mPlaceholder.setVisibility(View.VISIBLE);
-                mSaleItemsRecyclerView.setVisibility(View.GONE);
-                return;
-            }
-        }else{
-
-            hasLoadedAllItems = true;
+        if (items == null || items.isEmpty()) {
+            mPlaceholder.setVisibility(View.VISIBLE);
+            mSaleItemsRecyclerView.setVisibility(View.GONE);
+        } else {
             mPlaceholder.setVisibility(View.GONE);
             mSaleItemsRecyclerView.setVisibility(View.VISIBLE);
         }
 
         if (page == 0) {
-            mSaleItemsAdapter = new SaleItemsAdapter(saleItems, mPresenter, mSaleId, mTitle);
-            mSaleItemsRecyclerView.setLayoutManager(new GridLayoutManager(getActivity(), 2));
-            mSaleItemsRecyclerView.setAdapter(mSaleItemsAdapter);
-
+            mSaleItemsAdapter.replaceData(items);
             mPaginateManager = PaginateUtils.init(mSaleItemsRecyclerView, mPaginateCallbacks);
         } else {
-            mSaleItemsAdapter.addData(saleItems);
+            mSaleItemsAdapter.addData(items);
         }
+
+        saleItems = mSaleItemsAdapter.getData();
     }
 
 
     @SuppressWarnings("ConstantConditions")
     @OnClick(R.id.partial_toolbar_arrow_view)
-    void onBackClick () {
+    void onBackClick() {
         getActivity().onBackPressed();
     }
 

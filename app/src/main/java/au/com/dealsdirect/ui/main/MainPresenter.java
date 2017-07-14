@@ -344,8 +344,6 @@ public class MainPresenter<V extends MainMvpView> extends BasePresenter<V> imple
     @Override
     public void createPaymentMethod(String deviceData, String paymentNonce, String paymentType) {
 
-        getMvpView().showLoading();
-
         String languageId = getDataManager().getLanguageId();
         String countryId = getDataManager().getCountryId();
         CreatePaymentMethod.RequestValue.Request requestValue = new CreatePaymentMethod.RequestValue.Request(paymentType, paymentNonce, deviceData);

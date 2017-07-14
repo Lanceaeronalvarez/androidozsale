@@ -284,8 +284,6 @@ public class MainActivity extends BaseActivity implements MainMvpView {
         mRouter.setRoot(RouterTransaction.with(ViewContactsController.newInstance())
                 .pushChangeHandler(new FadeChangeHandler())
                 .popChangeHandler(new FadeChangeHandler()));
-
-
     }
 
     @Override
@@ -298,6 +296,7 @@ public class MainActivity extends BaseActivity implements MainMvpView {
     @Override
     public void showCheckoutController() {
         mRouter.setRoot(RouterTransaction.with(new CheckoutController())
+                .tag("checkout")
                 .pushChangeHandler(new FadeChangeHandler())
                 .popChangeHandler(new FadeChangeHandler()));
     }
@@ -346,7 +345,7 @@ public class MainActivity extends BaseActivity implements MainMvpView {
 
     @Override
     public void onPaymentMethodNonceCreated(PaymentMethodNonce paymentMethodNonce) {
-
+        showLoading();
         BraintreeResponseListener<String> handler = new BraintreeResponseListener<String>() {
             @Override
             public void onResponse(String deviceData) {
@@ -480,7 +479,8 @@ public class MainActivity extends BaseActivity implements MainMvpView {
             ((AddPaymentController) currentController).showAddPaymentResult(true, "");
         } else {
             setPaymentMethodSelected(lastPaymentMethod);
-            mRouter.popCurrentController();
+            mRouter.popToTag("checkout");
+//            mRouter.popCurrentController();
         }
     }
 

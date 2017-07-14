@@ -61,7 +61,7 @@ public class LoginController extends BaseController implements LoginMvpView {
 
         return new LoginController(
                 new BundleBuilder(new Bundle())
-                        //.putSerializable(AUTH_HANDLER, handler)
+                        .putSerializable(AUTH_HANDLER, handler)
                         .build());
     }
 

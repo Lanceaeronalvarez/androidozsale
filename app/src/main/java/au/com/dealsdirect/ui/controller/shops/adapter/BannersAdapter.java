@@ -89,6 +89,10 @@ public class BannersAdapter extends RecyclerView.Adapter<BannersViewHolder> {
         return mSales.size();
     }
 
+    public List<GetBannerResponse> getData(){
+        return mSales;
+    }
+
     public String getFormattedText(
             Date startDate,
             Long startDateUTC,

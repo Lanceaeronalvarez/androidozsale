@@ -1,8 +1,11 @@
 package au.com.dealsdirect.ui.controller.checkout.addpayment;
 
+import android.app.Activity;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -137,12 +140,12 @@ public class AddPaymentController extends BaseController implements AddPaymentMv
                 }
             });
         }
-
     }
 
     @Override
     public void onDetach(View view) {
         mPresenter.onDetach();
+        hideLoading();
         super.onDetach(view);
     }
 
@@ -190,6 +193,18 @@ public class AddPaymentController extends BaseController implements AddPaymentMv
     public void onPaypalSubmit() {
         mActivity.startPaypalPayment();
     }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        showLoading();
+    }
+
+    @Override
+    protected void onActivityResumed(@NonNull Activity activity) {
+        super.onActivityResumed(activity);
+    }
+
 
     @Override
     public void showAddPaymentResult(boolean result, String message) {

@@ -126,4 +126,8 @@ public class SaleItemsAdapter extends RecyclerView.Adapter<SaleItemsAdapter.View
     public int getItemCount() {
         return mData.size();
     }
+
+    public List<GetSaleItemsResponse.Products> getData(){
+        return mData;
+    }
 }

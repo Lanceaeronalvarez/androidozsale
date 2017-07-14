@@ -92,7 +92,7 @@ public class ShopsController extends BaseController implements ShopsMvpView, Ban
     private GridLayoutManager mLayoutManager;
 
 
-    private List<GetBannerResponse> mSaleBanners = new LinkedList<>();
+    private List<GetBannerResponse> mSaleBanners = new ArrayList<>();
 
     public static ShopsController newInstance(GetCategoryTreeResponse getCategoryTreeResponse) {
 
@@ -173,13 +173,17 @@ public class ShopsController extends BaseController implements ShopsMvpView, Ban
             mLayoutManager = new GridLayoutManager(getActivity(), 1, GridLayoutManager.VERTICAL, false);
         }
 
-        if(mSaleBanners.isEmpty()){
+        mBannersAdapter = new BannersAdapter(getActivity(), mSaleBanners, mBannerClickListener);
+        shopsControllerBannerRecyclerView.setLayoutManager(mLayoutManager);
+        shopsControllerBannerRecyclerView.setAdapter(mBannersAdapter);
+
+        if (mSaleBanners.isEmpty()) {
             mPresenter.loadShopsBanner(mCategoryName, mCategoryID, bannerOffset, bannerLimit);
-        } else{
-            mBannersAdapter = new BannersAdapter(getActivity(), mSaleBanners, mBannerClickListener);
-            shopsControllerBannerRecyclerView.setLayoutManager(mLayoutManager);
-            shopsControllerBannerRecyclerView.setAdapter(mBannersAdapter);
+        } else {
+            //reinstall pagination on getting back.
+            mPaginateManager = PaginateUtils.init(shopsControllerBannerRecyclerView, mPaginateCallbacks);
         }
+
 
 //        mBannersAdapter = new BannersAdapter(getActivity(), mSaleBanners, mBannerClickListener);
 //
@@ -307,19 +311,18 @@ public class ShopsController extends BaseController implements ShopsMvpView, Ban
 
     @Override
     public void showShopBanners(List<GetBannerResponse> getBannerResponses) {
-        mSaleBanners = getBannerResponses;
         loadingInProgress = false;
 
         if (page == 0) {
-            Log.d("items","replaced");
-            mBannersAdapter = new BannersAdapter(getActivity(), mSaleBanners, mBannerClickListener);
-            shopsControllerBannerRecyclerView.setLayoutManager(mLayoutManager);
-            shopsControllerBannerRecyclerView.setAdapter(mBannersAdapter);
+            Log.d("items", "replaced");
+            mBannersAdapter.replace(getBannerResponses);
             mPaginateManager = PaginateUtils.init(shopsControllerBannerRecyclerView, mPaginateCallbacks);
         } else {
-            Log.d("items","added");
+            Log.d("items", "added");
             mBannersAdapter.addAll(getBannerResponses);
         }
+
+        mSaleBanners = mBannersAdapter.getData();
     }
 
 
@@ -372,6 +375,8 @@ public class ShopsController extends BaseController implements ShopsMvpView, Ban
         page--;
 
         loadingInProgress = false;
-        mBannersAdapter.notifyDataSetChanged();
+        if (mBannersAdapter != null) {
+            mBannersAdapter.notifyDataSetChanged();
+        }
     }
 }
