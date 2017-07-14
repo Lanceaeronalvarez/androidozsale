@@ -14,7 +14,7 @@ import au.com.dealsdirect.ui.base.BaseController;
 import au.com.dealsdirect.utils.BundleBuilder;
 
 /*
- * Created by Ayi on 05/06/2017.
+ * Created by DP on 07/14/2017.
  */
 
 public class ForgotPasswordController extends BaseController implements ForgotPasswordMvpView {

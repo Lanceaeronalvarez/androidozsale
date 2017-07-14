@@ -44,6 +44,9 @@ import au.com.dealsdirect.ui.controller.contact.viewcontacts.ViewContactsPresent
 import au.com.dealsdirect.ui.controller.details.DetailsMvpPresenter;
 import au.com.dealsdirect.ui.controller.details.DetailsMvpView;
 import au.com.dealsdirect.ui.controller.details.DetailsPresenter;
+import au.com.dealsdirect.ui.controller.forgotpassword.ForgotPasswordMvpPresenter;
+import au.com.dealsdirect.ui.controller.forgotpassword.ForgotPasswordMvpView;
+import au.com.dealsdirect.ui.controller.forgotpassword.ForgotPasswordPresenter;
 import au.com.dealsdirect.ui.controller.home.HomeMvpPresenter;
 import au.com.dealsdirect.ui.controller.home.HomeMvpView;
 import au.com.dealsdirect.ui.controller.home.HomePresenter;
@@ -265,6 +268,11 @@ public class ControllerModule {
 
     @Provides
     ContactSelectSubjectMvpPresenter<ContactSelectSubjectMvpView> provideContactSubjectPresenter(ContactSelectSubjectPresenter<ContactSelectSubjectMvpView> presenter) {
+        return presenter;
+    }
+
+    @Provides
+    ForgotPasswordMvpPresenter<ForgotPasswordMvpView> provideForgotPasswordPresenter(ForgotPasswordPresenter<ForgotPasswordMvpView> presenter) {
         return presenter;
     }
 }

@@ -1,5 +1,6 @@
 package au.com.dealsdirect.ui.controller.shops;
 
+import android.annotation.SuppressLint;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -174,7 +175,7 @@ public class ShopsController extends BaseController implements ShopsMvpView, Ban
 
         mBannersAdapter = new BannersAdapter(getActivity(), mPresenter, new ArrayList(), mBannerClickListener);
 
-        if (mPresenter.isTablet()) {
+        if (getResources().getBoolean(R.bool.is_tablet)) {
             mLayoutManager = new GridLayoutManager(getActivity(), 2, GridLayoutManager.VERTICAL, false);
         } else {
             mLayoutManager = new GridLayoutManager(getActivity(), 1, GridLayoutManager.VERTICAL, false);
@@ -184,7 +185,7 @@ public class ShopsController extends BaseController implements ShopsMvpView, Ban
         shopsControllerBannerRecyclerView.setAdapter(mBannersAdapter);
 
         if (sales.size() == 0) {
-            mPresenter.loadShopsBanner(mCategoryName, mCategoryID,0,0);
+            mPresenter.loadShopsBanner(mCategoryName, mCategoryID, 0, 0);
 
         } else {
             shopsControllerBannerRecyclerView.setAdapter(mBannersAdapter);
@@ -195,7 +196,7 @@ public class ShopsController extends BaseController implements ShopsMvpView, Ban
         }
 
 
-        if (mPreLoadedCategories.size() == 0){
+        if (mPreLoadedCategories.size() == 0) {
             mPresenter.loadCategoryTree();
         }
     }
@@ -214,15 +215,19 @@ public class ShopsController extends BaseController implements ShopsMvpView, Ban
             int position,
             String imageUrl) {
 
-        List<String> names = new ArrayList<>();
-        names.add(bannerId + position);
-
         if (!mPresenter.isAccessAnonymousEnabled() && !mPresenter.isAuthorized()) {
+
+            assert (getActivity()) != null;
             ((MainMvpView) getActivity()).showLoginController(getRouter(), new AuthHandler() {
                 @Override
                 public void success() {
                     getRouter().pushController(RouterTransaction.with(
-                            SaleItemsController.newInstance(saleId, bannerTitle, bannerId, position, imageUrl, null))
+                            SaleItemsController.newInstance(
+                                    saleId,
+                                    bannerTitle,
+                                    bannerId,
+                                    position,
+                                    imageUrl, null))
                             .pushChangeHandler(new HorizontalChangeHandler())
                             .popChangeHandler(new HorizontalChangeHandler()));
                 }
@@ -251,7 +256,7 @@ public class ShopsController extends BaseController implements ShopsMvpView, Ban
     }
 
 
-    @SuppressWarnings("ConstantConditions")
+    @SuppressWarnings({"ConstantConditions", "deprecation"})
     @OnClick(R.id.partial_toolbar_search_icon)
     void onSearchClick() {
 
@@ -260,6 +265,8 @@ public class ShopsController extends BaseController implements ShopsMvpView, Ban
         mShopsControllerHamburgerView.animate().rotation(-90).setDuration(200).start();
 
         RelativeLayout item = (RelativeLayout) getView().findViewById(R.id.controller_shop_toolbar_container);
+
+        @SuppressLint("InflateParams")
         View child = getActivity().getLayoutInflater().inflate(R.layout.partial_toolbar_search, null);
         item.addView(child);
 
@@ -267,7 +274,6 @@ public class ShopsController extends BaseController implements ShopsMvpView, Ban
         ImageView rightOption = (ImageView) child.findViewById(R.id.partial_toolbar_search_right_option);
         rightOption.setBackgroundColor(getResources().getColor(R.color.toolbar_active_skin));
 
-        ImageView leftOption = (ImageView) child.findViewById(R.id.partial_toolbar_search_left_option);
         EditText searchField = (EditText) child.findViewById(R.id.partial_toolbar_search_field);
         searchField.setActivated(true);
         searchField.setFocusable(true);
@@ -292,6 +298,8 @@ public class ShopsController extends BaseController implements ShopsMvpView, Ban
         rightOption.setOnClickListener(view -> {
             child.startAnimation(outToRightAnimation());
             item.removeView(child);
+
+            //noinspection deprecation
             shopsControllerSearchView.setImageDrawable(
                     getResources().getDrawable(R.drawable.ic_search));
             rightOption.animate().rotation(-360).setDuration(200).start();
@@ -312,11 +320,11 @@ public class ShopsController extends BaseController implements ShopsMvpView, Ban
         loadingInProgress = false;
 
         if (page == 0) {
-            Log.d("items","replaced");
+            Log.d("items", "replaced");
             mBannersAdapter.replace(getBannerResponses);
             mPaginateManager = PaginateUtils.init(shopsControllerBannerRecyclerView, mPaginateCallbacks);
         } else {
-            Log.d("items","added");
+            Log.d("items", "added");
             mBannersAdapter.addAll(getBannerResponses);
         }
     }
@@ -398,17 +406,6 @@ public class ShopsController extends BaseController implements ShopsMvpView, Ban
         }
 
         mPreLoadedCategories = fillCategoryContent();
-
-//        mAdapter.replaceData(mResultSubCategories);
-
-//        if (mResultSubCategories.get(0).getChildren() != null) {
-//            mSubCategoryAdapter.replaceData(mResultSubCategories.get(0).getChildren());
-//
-//        } else {
-//            ArrayList<GetCategoryTreeResponse> emptyChildren = new ArrayList<>();
-//            mSubCategoryAdapter.replaceData(emptyChildren);
-//
-//        }
     }
 
     private void addToMap(List<GetCategoryTreeResponse> list) {
@@ -425,7 +422,7 @@ public class ShopsController extends BaseController implements ShopsMvpView, Ban
         }
     }
 
-    List<GetCategoryTreeResponse> fillCategoryContent() {
+    private List<GetCategoryTreeResponse> fillCategoryContent() {
         return mCategoryMap.get("shop");
 
 
