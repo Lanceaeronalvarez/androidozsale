@@ -23,8 +23,10 @@ import com.bluelinelabs.conductor.changehandler.HorizontalChangeHandler;
 import com.paginate.Paginate;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 
 import javax.inject.Inject;
 
@@ -91,8 +93,10 @@ public class ShopsController extends BaseController implements ShopsMvpView, Ban
 
     private GridLayoutManager mLayoutManager;
 
-
+    private List<GetCategoryTreeResponse> mPreLoadedCategories = new LinkedList<>();
     private List<GetBannerResponse> sales = new LinkedList<>();
+    private Map<String, List<GetCategoryTreeResponse>> mCategoryMap = new HashMap<>();
+
 
     public static ShopsController newInstance(GetCategoryTreeResponse getCategoryTreeResponse) {
 
@@ -178,17 +182,21 @@ public class ShopsController extends BaseController implements ShopsMvpView, Ban
 
         shopsControllerBannerRecyclerView.setLayoutManager(mLayoutManager);
         shopsControllerBannerRecyclerView.setAdapter(mBannersAdapter);
-//        mPresenter.loadShopsBanner(mCategoryName, mCategoryID, bannerOffset, bannerLimit);
+
         if (sales.size() == 0) {
             mPresenter.loadShopsBanner(mCategoryName, mCategoryID,0,0);
 
         } else {
-//            mBannersAdapter = new BannersAdapter(getActivity(), sales, mBannerClickListener);
             shopsControllerBannerRecyclerView.setAdapter(mBannersAdapter);
 
             mBannersAdapter.replace(sales);
             mPaginateManager = PaginateUtils.init(shopsControllerBannerRecyclerView, mPaginateCallbacks);
 
+        }
+
+
+        if (mPreLoadedCategories.size() == 0){
+            mPresenter.loadCategoryTree();
         }
     }
 
@@ -235,7 +243,7 @@ public class ShopsController extends BaseController implements ShopsMvpView, Ban
     @OnClick(R.id.partial_toolbar_hamburger)
     void onClickHamburger() {
 
-        getRouter().pushController(RouterTransaction.with(CategoriesController.newInstance())
+        getRouter().pushController(RouterTransaction.with(CategoriesController.newInstance(mCategoryMap, mPreLoadedCategories))
                 .pushChangeHandler(new HorizontalNavTransitionChangeHandler(100))
                 .popChangeHandler(new HorizontalNavTransitionChangeHandler(100)));
 
@@ -313,6 +321,12 @@ public class ShopsController extends BaseController implements ShopsMvpView, Ban
         }
     }
 
+    @Override
+    public void storeCategories(List<GetCategoryTreeResponse> categories) {
+        mPreLoadedCategories = categories;
+        createCategoryMap(mPreLoadedCategories);
+    }
+
 
     private Animation inFromRightAnimation() {
 
@@ -365,4 +379,57 @@ public class ShopsController extends BaseController implements ShopsMvpView, Ban
         loadingInProgress = false;
         mBannersAdapter.notifyDataSetChanged();
     }
+
+    private void createCategoryMap(List<GetCategoryTreeResponse> categories) {
+
+        for (GetCategoryTreeResponse i : categories) {
+
+            if (i.getChildren() != null) {
+                mCategoryMap.put("shop", categories);
+
+                int childrenSize = i.getChildren().size();
+                if (childrenSize != 0) {
+
+                    addToMap(i.getChildren());
+                }
+                mCategoryMap.put(i.getKey(), i.getChildren());
+
+            }
+        }
+
+        mPreLoadedCategories = fillCategoryContent();
+
+//        mAdapter.replaceData(mResultSubCategories);
+
+//        if (mResultSubCategories.get(0).getChildren() != null) {
+//            mSubCategoryAdapter.replaceData(mResultSubCategories.get(0).getChildren());
+//
+//        } else {
+//            ArrayList<GetCategoryTreeResponse> emptyChildren = new ArrayList<>();
+//            mSubCategoryAdapter.replaceData(emptyChildren);
+//
+//        }
+    }
+
+    private void addToMap(List<GetCategoryTreeResponse> list) {
+
+        for (GetCategoryTreeResponse i : list) {
+
+            int childrenSize = i.getChildren().size();
+            if (childrenSize != 0) {
+                addToMap(i.getChildren());
+            }
+
+            mCategoryMap.put(i.getKey(), i.getChildren());
+
+        }
+    }
+
+    List<GetCategoryTreeResponse> fillCategoryContent() {
+        return mCategoryMap.get("shop");
+
+
+    }
+
+
 }

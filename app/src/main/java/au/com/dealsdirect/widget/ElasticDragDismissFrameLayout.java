@@ -70,7 +70,6 @@ public class ElasticDragDismissFrameLayout extends FrameLayout implements Nested
         super(context, attrs, defStyleAttr);
 
         dragDismissDistance = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 80, getResources().getDisplayMetrics());
-        Log.d("condition", "onStopNestedScroll: "+dragDismissDistance);
 
         dragDismissFraction = 0.2f;
         dragDismissScale = 0.8f;
@@ -85,7 +84,7 @@ public class ElasticDragDismissFrameLayout extends FrameLayout implements Nested
     @Override
     public void onNestedPreScroll(View target, int dx, int dy, int[] consumed) {
         // if we're in a drag gesture and the user reverses up the we should take those events
-        if (draggingDown && dy > 0 || draggingUp && dy < 0) {
+        if (draggingDown && dy > 0) {
             dragScale(dy);
             consumed[1] = dy;
         }
@@ -94,12 +93,19 @@ public class ElasticDragDismissFrameLayout extends FrameLayout implements Nested
     @Override
     public void onNestedScroll(View target, int dxConsumed, int dyConsumed,
             int dxUnconsumed, int dyUnconsumed) {
-        dragScale(dyUnconsumed);
+
+        if (dyUnconsumed < 0 && !draggingUp && !draggingDown) {
+            draggingDown = true;
+        } else if (dyUnconsumed > 0 && !draggingDown && !draggingUp) {
+            draggingUp = true;
+        }
+
+        if (draggingDown)
+            dragScale(dyUnconsumed);
     }
 
     @Override
     public void onStopNestedScroll(View child) {
-        Log.d("condition", "onStopNestedScroll: "+Math.abs(totalDrag)+" >= "+dragDismissDistance);
         if (Math.abs(totalDrag) >= dragDismissDistance) {
             dispatchDismissCallback();
         } else { // settle back to natural position

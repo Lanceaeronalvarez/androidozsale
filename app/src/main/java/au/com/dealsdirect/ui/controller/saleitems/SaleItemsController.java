@@ -7,6 +7,7 @@ import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.util.Pair;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -237,6 +238,13 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
             intent.putExtra("KEY_SEO_IDENTIFIER", seoIdentifierId);
             intent.putExtra("KEY_ITEM_ID", itemId);
             intent.putExtra("KEY_SALE_ID", saleId);
+            intent.putExtra("KEY_SALE_NAME", ((SaleItemsAdapter.ViewHolder) viewHolder).mSaleItemName.getText());
+            intent.putExtra("KEY_SALE_PRICE",((SaleItemsAdapter.ViewHolder) viewHolder).mSalePrice.getText());
+            intent.putExtra("KEY_SALE_OLD_PRICE",((SaleItemsAdapter.ViewHolder) viewHolder).mOldPrice.getText());
+            Log.d("LogBundle", ((SaleItemsAdapter.ViewHolder) viewHolder).mSaleItemName.getText()+" , "+
+                    ((SaleItemsAdapter.ViewHolder) viewHolder).mSalePrice.getText()+" , "+
+                    ((SaleItemsAdapter.ViewHolder) viewHolder).mOldPrice.getText());
+
 
             ActivityOptions options =
                     ActivityOptions.makeSceneTransitionAnimation(getActivity(),

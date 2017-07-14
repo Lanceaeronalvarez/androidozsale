@@ -4,6 +4,8 @@
 
     <translate android:fromYDelta="0" android:toYDelta="-50%p"
                android:duration="@android:integer/config_mediumAnimTime"/>
-    <alpha android:fromAlpha="0.0" android:toAlpha="1.0"
+    <alpha android:fromAlpha="1.0" android:toAlpha="0"
            android:duration="@android:integer/config_mediumAnimTime" />
+    <scale android:fromYScale="1.0" android:toYScale="0"
+        android:duration="@android:integer/config_mediumAnimTime"/>
 </set>
