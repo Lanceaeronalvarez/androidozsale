@@ -6,25 +6,28 @@ import android.util.DisplayMetrics;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
+import android.widget.TextView;
 
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 import au.com.dealsdirect.R;
-import au.com.dealsdirect.data.network.model.banner.GetBannerRequest;
 import au.com.dealsdirect.data.network.model.banner.GetBannerResponse;
 import au.com.dealsdirect.ui.controller.shops.listener.BannerClickListener;
-import au.com.dealsdirect.ui.controller.shops.viewholder.BannersViewHolder;
 import au.com.dealsdirect.utils.DateUtils;
 import au.com.dealsdirect.utils.ImageUtils;
 import au.com.dealsdirect.utils.LegacyStringImageUtils;
+import butterknife.BindView;
+import butterknife.ButterKnife;
 
 /**
  * dp Created by Admin on 6/7/17.
  */
 
-public class BannersAdapter extends RecyclerView.Adapter<BannersViewHolder> {
+public class BannersAdapter extends RecyclerView.Adapter<BannersAdapter.ViewHolder> {
 
     public static DisplayMetrics DISPLAY_METRICS;
 
@@ -42,36 +45,21 @@ public class BannersAdapter extends RecyclerView.Adapter<BannersViewHolder> {
         this.mBannerClickListener = bannerClickListener;
     }
 
-    @Override
-    public BannersViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        View v = LayoutInflater.from(parent.getContext())
-                .inflate(R.layout.viewholder_banner, parent, false);
+    static class ViewHolder extends RecyclerView.ViewHolder {
 
-        return new BannersViewHolder(v);
-    }
+        @BindView(R.id.viewholder_banner_layout)
+        LinearLayout layout;
 
-    @Override
-    public void onBindViewHolder(BannersViewHolder holder, final int position) {
+        @BindView(R.id.viewholder_banner_image)
+        ImageView image;
 
-        holder.bannerTitle.setText(mSales.get(position).getDescription());
-        String startDate = DateUtils.convertApiDateToDateString(mSales.get(position).getStartDate());
+        @BindView(R.id.viewholder_banner_name)
+        TextView name;
 
-        String url = LegacyStringImageUtils.saleImageURLString(mSales.get(position));
-        ImageUtils.loadImage(mContext, url, holder.bannerImage);
-
-        holder.bannerDescription.setText(startDate);
-        holder.bannerImage.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-
-                mBannerClickListener.onBannerClicked(
-                        mSales.get(position).getDestinationID(),
-                        mSales.get(position).getDescription(),
-                        mSales.get(position).getId(),
-                        position,
-                        url);
-            }
-        });
+        ViewHolder(View view) {
+            super(view);
+            ButterKnife.bind(this, view);
+        }
     }
 
     public void replace(List<GetBannerResponse> bannerResponses){
@@ -85,51 +73,30 @@ public class BannersAdapter extends RecyclerView.Adapter<BannersViewHolder> {
     }
 
     @Override
+    public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.viewholder_banner, parent, false);
+        return new ViewHolder(view);
+    }
+
+    @Override
+    public void onBindViewHolder(ViewHolder holder, int position) {
+
+        GetBannerResponse item = mSales.get(position);
+        holder.name.setText(item.getDescription());
+
+        ImageUtils.loadImage(mContext, item.getImage(), holder.image);
+
+        holder.layout.setOnClickListener(view -> mBannerClickListener.onBannerClicked(
+                mSales.get(position).getDestinationID(),
+                mSales.get(position).getDescription(),
+                mSales.get(position).getId(),
+                position,
+                item.getImage()));
+    }
+
+    @Override
     public int getItemCount() {
         return mSales.size();
     }
 
-    public String getFormattedText(
-            Date startDate,
-            Long startDateUTC,
-            String startDateString,
-            String endDateString) {
-
-        Date now = new Date();
-        String formatted = "";
-
-        if (startDate.compareTo(now) < 0) // sale has started
-        {
-            // If sale started earlier today, then group by start date
-            if (android.text.format.DateUtils.isToday(startDateUTC)) {
-
-                String day = DateUtils.getDayOfWeekFromDateString(startDateString);
-                String time = DateUtils.getTimeFromDateString(startDateString);
-                formatted = "Started today at " + time;
-            } else {
-                // Group by end date
-
-                String day = DateUtils.getDayOfWeekFromDateString(endDateString);
-                String time = DateUtils.getTimeFromDateString(endDateString);
-                formatted = "Ends " + day + " at " + time;
-            }
-
-        } else {
-
-            if (android.text.format.DateUtils.isToday(startDateUTC)) {
-                // Sale hasn't started yet and will start later today (group by start date)
-
-                String day = DateUtils.getDayOfWeekFromDateString(startDateString);
-                String time = DateUtils.getTimeFromDateString(startDateString);
-                formatted = "Starting today" + day + " at " + time;
-            } else {
-                // Sale hasn't started yet and won't start later today (group by start date)
-
-                String day = DateUtils.getDayOfWeekFromDateString(startDateString);
-                String time = DateUtils.getTimeFromDateString(startDateString);
-                formatted = "starts " + day + " at " + time;
-            }
-        }
-        return formatted;
-    }
 }

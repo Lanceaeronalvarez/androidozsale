@@ -1,51 +1,41 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-              android:orientation="vertical"
-              android:layout_width="match_parent"
-              android:layout_height="wrap_content"
-              android:background="@color/white">
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/viewholder_banner_layout"
+    android:layout_width="match_parent"
+    android:layout_height="150dp"
+    android:background="@color/white"
+    android:clickable="true"
+    android:orientation="vertical"
+    tools:ignore="MissingPrefix">
 
     <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="match_parent">
 
         <ImageView
             android:id="@+id/viewholder_banner_image"
             android:layout_width="match_parent"
-            android:layout_alignParentLeft="true"
-            android:layout_alignParentTop="true"
-            android:transitionName="image"
-            android:layout_height="150dp"
-            android:scaleType="fitXY"
-            android:adjustViewBounds="true"
-            android:cropToPadding="true"/>
+            android:layout_height="match_parent"
+            android:transitionName="image"/>
 
-        <RelativeLayout
-            android:layout_below="@+id/viewholder_banner_image"
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@drawable/bg_banner_selector"/>
+
+        <TextView
+            android:id="@+id/viewholder_banner_name"
+            fontPath="@string/font_lato_semibold"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="-40dp"
-            android:padding="5dp"
-            android:layout_marginLeft="5dp">
-
-            <TextView
-                android:id="@+id/viewholder_banner_title"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Atom Pro Compression"
-                android:textColor="@color/colorAccent"
-                android:textSize="18sp"
-                android:textStyle="bold"/>
-
-            <TextView
-                android:layout_below="@+id/viewholder_banner_title"
-                android:id="@+id/viewholder_banner_description"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Started Today at 1:00 PM"
-                android:paddingBottom="5dp"/>
-
-        </RelativeLayout>
+            android:layout_alignParentBottom="true"
+            android:layout_alignParentStart="true"
+            android:padding="16dp"
+            android:textColor="@color/white"
+            android:textSize="@dimen/text_size_xlarge"
+            tools:text="Atom Pro Compression"/>
 
     </RelativeLayout>
 </LinearLayout>
