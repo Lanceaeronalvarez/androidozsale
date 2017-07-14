@@ -91,5 +91,20 @@ public class ImageUtils {
              .clear(imageView);
     }
 
+    private static String appendBannerSizeUrl(String url, String bannerSize) {
+        String[] urlSplit = url.split("."); //Assume only 1 coma will occur in every url
+        url = String.format("%s%s.%s", urlSplit[0], bannerSize, urlSplit[1]);
 
+        AppLogger.d(url);
+
+        return url;
+    }
+
+    public static String getBannerMobileSize(String url) {
+        return appendBannerSizeUrl(url, AppConstants.BANNER_SIZE_MOBILE);
+    }
+
+    public static String getBannerTabletSize(String url) {
+        return appendBannerSizeUrl(url, AppConstants.BANNER_SIZE_TABLET);
+    }
 }

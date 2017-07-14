@@ -26,6 +26,11 @@ public final class AppConstants {
 
     public static final String MP_TIME_FORMAT = "hh:mm a";
 
+    // Banners postfix
+    public static final String BANNER_SIZE_MOBILE = "_423x143";
+    public static final String BANNER_SIZE_TABLET = "_313x294";
+    public static final String BANNER_SIZE_TABLET_FEATURED = "_642x603";
+
 
     private AppConstants() {
         // This utility class is not publicly instantiable
