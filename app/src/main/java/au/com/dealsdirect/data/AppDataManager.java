@@ -52,6 +52,8 @@ import au.com.dealsdirect.data.network.model.createcontact.CreateContactRequest;
 import au.com.dealsdirect.data.network.model.createcontact.CreateContactResponse;
 
 
+import au.com.dealsdirect.data.network.model.legalities.GetTemplateTextRequest;
+import au.com.dealsdirect.data.network.model.legalities.GetTemplateTextResponse;
 import au.com.dealsdirect.data.network.model.login.LoginEmail;
 import au.com.dealsdirect.data.network.model.login.LoginFacebook;
 import au.com.dealsdirect.data.network.model.login.LoginTicket;
@@ -367,6 +369,11 @@ public class AppDataManager implements DataManager {
     public Observable<ReplyContactResponse> callReplyContact(ReplyContactRequest createContactRequest) {
         return mApiHelper.callReplyContact(createContactRequest);
 
+    }
+
+    @Override
+    public Observable<GetTemplateTextResponse> callGetTemplateText(GetTemplateTextRequest templateTextRequest) {
+        return mApiHelper.callGetTemplateText(templateTextRequest);
     }
 
 

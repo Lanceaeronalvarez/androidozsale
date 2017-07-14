@@ -35,7 +35,10 @@ public class AccountPresenter<V extends AccountMvpView> extends BasePresenter<V>
                         "My Vouchers",
                         "My Returns",
                         "My Payments",
-                        "Language")));
+                        "Language",
+                        "About Us",
+                        "Privacy Policy",
+                        "Terms & Conditions")));
     }
 
     @Override
@@ -65,6 +68,16 @@ public class AccountPresenter<V extends AccountMvpView> extends BasePresenter<V>
                     break;
                 case "Logout":
                     getMvpView().triggerLogout();
+                    break;
+                case "About Us":
+                    getMvpView().showLegalities("aboutus", option);
+                    break;
+                case "Privacy Policy":
+                    getMvpView().showLegalities("PrivacyPolicy_Text", option);
+                    break;
+                case "Terms & Conditions":
+                    getMvpView().showLegalities("TermsAndConditions_Text", option);
+                    break;
                 default:
                     break;
             }

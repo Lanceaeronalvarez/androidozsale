@@ -27,6 +27,7 @@ import au.com.dealsdirect.ui.controller.address.viewaddress.ViewAddressControlle
 import au.com.dealsdirect.ui.controller.checkout.paymentselect.PaymentSelectController;
 import au.com.dealsdirect.ui.controller.details.DetailsController;
 import au.com.dealsdirect.ui.controller.language.LanguageController;
+import au.com.dealsdirect.ui.controller.legalities.LegalitiesController;
 import au.com.dealsdirect.ui.controller.orders.orders.OrdersController;
 import au.com.dealsdirect.ui.controller.returns.currentreturns.CurrentReturnsController;
 import au.com.dealsdirect.ui.controller.shops.ShopsController;
@@ -168,6 +169,14 @@ public class AccountController extends BaseController implements AccountMvpView,
                 .popChangeHandler(new HorizontalChangeHandler()));
 
     }
+
+    @Override
+    public void showLegalities(String key, String title) {
+        getRouter().pushController(RouterTransaction.with(new LegalitiesController(key, title))
+                .pushChangeHandler(new HorizontalChangeHandler())
+                .popChangeHandler(new HorizontalChangeHandler()));
+    }
+
 
     @Override
     public void triggerLogin(String option) {
