@@ -116,5 +116,4 @@ public class SharedActivity extends BaseActivity {
             e.printStackTrace();
         }
     }
-
 }

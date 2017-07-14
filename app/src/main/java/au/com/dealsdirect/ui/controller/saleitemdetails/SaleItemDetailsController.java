@@ -10,10 +10,11 @@ import android.support.annotation.NonNull;
 import android.support.v4.util.Pair;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.widget.ImageView;
@@ -75,7 +76,6 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
     private String mSeoIdentifierId;
 
     //product details views
-
     @BindView(R.id.discountLabel)
     TextView mDiscountLabel;
     @BindView(R.id.productImageRecyclerView)
@@ -104,8 +104,13 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
     ImageView mProductSharedImage;
     @BindView(R.id.product_details_coordinator)
     RelativeLayout mProductCoordinatorLayout;
-    @BindView(R.id.controller_product_details_title_description)
-    LinearLayout mProductHeaderDescriptionLayout;
+    @BindView(R.id.bottom_card)
+    LinearLayout mProductDetailBottomCard;
+    @BindView(R.id.name_price_category)
+    LinearLayout mProductPriceCategory;
+    @BindView(R.id.aboutPricing)
+    LinearLayout mProductPricing;
+
 
     private String mHtmlHeader = "";
     private String mHtmlFooter = "";
@@ -184,6 +189,12 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
     protected void onViewBound(@NonNull View view) {
         super.onViewBound(view);
 
+
+        Animation anim = AnimationUtils.loadAnimation(getActivity(), R.anim.slide_to_bottom);
+        anim.setDuration(200);
+        mProductDetailBottomCard.setVisibility(View.VISIBLE);
+        mProductDetailBottomCard.startAnimation(anim);
+
         //noinspection ConstantConditions
         ((ElasticDragDismissFrameLayout) view).addListener(dragDismissListener);
 
@@ -230,35 +241,48 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
 
     @Override
     public void onDetach(View view) {
-
         mPresenter.onDetach();
+        mProductDetailBottomCard.setVisibility(View.GONE);
+        mProductPriceCategory.setVisibility(View.GONE);
         super.onDetach(view);
     }
 
     @Override
     protected void onDestroyView(@NonNull View view) {
-        Log.d("saleitemdeteails", "onDestroy");
-
         super.onDestroyView(view);
     }
-
 
     @SuppressLint("SetJavaScriptEnabled")
     @Override
     public void showSaleDetails(GetSaleItemDetailsResponse saleDetail) {
 
-        String shippingInformation = saleDetail.getShippingInformation();
+        Animation anim = AnimationUtils.loadAnimation(getActivity(), R.anim.slide_to_bottom);
+        anim.setDuration(200);
+//        mProductDescriptionText.setVisibility(View.VISIBLE);
+//        mProductDescriptionText.setAlpha(0f);
+//        mProductDescriptionText.animate().translationY(mProductDescriptionText.getHeight()).alpha(1f).setDuration(200).start();
 
-        mProductAboutPricing.loadData(mHtmlHeader + saleDetail.getPricing() + mHtmlFooter,
-                "text/html; charset=UTF-8",
-                null);
-        mProductAboutPricing.setLayerType(View.LAYER_TYPE_SOFTWARE, null);
+        String shippingInformation = saleDetail.getShippingInformation();
+        String shippingPricing = saleDetail.getPricing();
 
         if (shippingInformation != null) {
-            mShippingDescText.loadData(mHtmlHeader + shippingInformation + mHtmlFooter,
+            mProductPricing.setVisibility(View.VISIBLE);
+            mProductAboutPricing.startAnimation(anim);
+            mProductAboutPricing.loadData(mHtmlHeader + shippingPricing + mHtmlFooter,
                     "text/html; charset=UTF-8",
                     null);
 
+        }else{
+            mProductPricing.setVisibility(View.GONE);
+
+        }
+
+        if (shippingInformation != null) {
+            mShippingDescText.setVisibility(View.VISIBLE);
+            mShippingDescText.startAnimation(anim);
+            mShippingDescText.loadData(mHtmlHeader + shippingInformation + mHtmlFooter,
+                    "text/html; charset=UTF-8",
+                    null);
         } else {
             mShippingContainer.setVisibility(View.GONE);
         }
@@ -268,7 +292,6 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
         mSaleItemImagesAdapter.replaceData(qualitySaleImages);
         mSaleItemImagesIndicatorAdapter.replaceData(qualitySaleImages);
 
-
         if (saleDetail.getImages()
                 .size() != 0) {
             mOtherImagesRv.setVisibility(View.VISIBLE);
@@ -277,7 +300,10 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
 
         //product info
         mProductName.setText(saleDetail.getName());
+        mProductName.startAnimation(anim);
+
         //        mProductCategory.setText(productDetail.getBrandName());
+        mProductPrice.startAnimation(anim);
         mProductPrice.setText(PriceUtils.getPriceStringValue(saleDetail.getPrice().getValue()));
         mProductPreviousPrice.setText(PriceUtils.getPriceStringValue(saleDetail.getOriginalPrice().getValue()));
 
@@ -285,11 +311,13 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
                 .equals(0d)) {
             mProductPreviousPrice.setVisibility(View.GONE);
         } else {
+            mProductPreviousPrice.startAnimation(anim);
             mProductPreviousPrice.setText(PriceUtils.getRpStringValue(saleDetail.getOriginalPrice().getValue()));
             mProductPreviousPrice.setPaintFlags(
                     mProductPreviousPrice.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);
         }
 
+        mProductDescriptionText.startAnimation(anim);
         mProductDescriptionText.loadData(mHtmlHeader + saleDetail.getDescription() + mHtmlFooter,
                 "text/html; charset=UTF-8",
                 null);
@@ -312,11 +340,7 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
 
         });
 
-        //sizes
-        if (saleDetail.getSkuVariants().size() != 0) {
-            mSizesContainer.setVisibility(View.VISIBLE);
-            hasSizes = true;
-        }
+
 
         if (!saleDetail.getSkuVariants().isEmpty())
             for (GetSaleItemDetailsResponse skuVariant : saleDetail.getSkuVariants()) {
@@ -327,6 +351,10 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
             }
 
         if (!(mProductSizes.get(0) == null)) {
+
+            mSizesContainer.setVisibility(View.VISIBLE);
+            hasSizes = true;
+
             mSizesAdapter = new TagAdapter<Pair<String, String>>(mProductSizes) {
 
                 @SuppressWarnings("ConstantConditions")
@@ -386,7 +414,6 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
                 x = -1;
             }
             x++;
-
         }
         return qualityImages;
     }

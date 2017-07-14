@@ -105,8 +105,6 @@ public class LoginController extends BaseController implements LoginMvpView {
     public void onDestroyView(View view) {
         super.onDestroyView(view);
 
-        assert getActivity() != null;
-        ((BaseActivity) getActivity()).showBottomNavigationView();
     }
 
 

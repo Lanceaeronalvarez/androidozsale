@@ -140,6 +140,7 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
     @Override
     protected void setUp(View view) {
 
+        hideKeyboard();
         mTitleTextView.setText(mTitle);
         mPaginateCallbacks = new Paginate.Callbacks() {
             @Override
@@ -240,7 +241,7 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
             ActivityOptions options =
                     ActivityOptions.makeSceneTransitionAnimation(getActivity(),
                             Pair.create(((SaleItemsAdapter.ViewHolder) viewHolder).mSaleItemImage, "transition"),
-                            Pair.create(((SaleItemsAdapter.ViewHolder) viewHolder).mSaleItemImage, "detailsSharedBackground"));
+                            Pair.create(((SaleItemsAdapter.ViewHolder) viewHolder).mSaleItemImage, "cardbackground"));
 
             //noinspection ConstantConditions
             getActivity().startActivityForResult(intent, getActivity().getTaskId(), options.toBundle());

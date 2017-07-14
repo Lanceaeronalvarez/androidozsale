@@ -178,21 +178,18 @@ public class ShopsController extends BaseController implements ShopsMvpView, Ban
 
         shopsControllerBannerRecyclerView.setLayoutManager(mLayoutManager);
         shopsControllerBannerRecyclerView.setAdapter(mBannersAdapter);
+//        mPresenter.loadShopsBanner(mCategoryName, mCategoryID, bannerOffset, bannerLimit);
+        if (sales.size() == 0) {
+            mPresenter.loadShopsBanner(mCategoryName, mCategoryID,0,0);
 
-        mPresenter.loadShopsBanner(mCategoryName, mCategoryID, bannerOffset, bannerLimit);
-//        if (sales.size() == 0) {
-//            mPresenter.loadShopsBanner(mCategoryName, mCategoryID);
-//        } else {
+        } else {
 //            mBannersAdapter = new BannersAdapter(getActivity(), sales, mBannerClickListener);
-//
-//            if (getResources().getBoolean(R.bool.is_tablet)) {
-//                mLayoutManager = new GridLayoutManager(getActivity(), 2, GridLayoutManager.VERTICAL, false);
-//            } else {
-//                mLayoutManager = new GridLayoutManager(getActivity(), 1, GridLayoutManager.VERTICAL, false);
-//            }
-//
-//
-//        }
+            shopsControllerBannerRecyclerView.setAdapter(mBannersAdapter);
+
+            mBannersAdapter.replace(sales);
+            mPaginateManager = PaginateUtils.init(shopsControllerBannerRecyclerView, mPaginateCallbacks);
+
+        }
     }
 
     @Override

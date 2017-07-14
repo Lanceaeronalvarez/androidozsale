@@ -89,7 +89,8 @@
                                     <RelativeLayout
                                         android:layout_width="wrap_content"
                                         android:layout_height="wrap_content"
-                                        android:layout_margin="10dp">
+                                        android:layout_margin="10dp"
+                                        android:transitionName="cardbackground">
 
 
                                         <ImageView
@@ -268,6 +269,7 @@
                                 android:id="@+id/bottom_card"
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
+                                android:visibility="gone"
                                 android:orientation="vertical">
 
                                 <RelativeLayout
@@ -465,6 +467,7 @@
                                     android:layout_width="match_parent"
                                     android:layout_height="match_parent"
                                     android:layout_margin="@dimen/activity_horizontal_margin"
+                                    android:visibility="gone"
                                     android:orientation="vertical">
 
                                     <TextView

@@ -53,6 +53,8 @@ public class SaleItemDetailsView extends ElasticDragDismissFrameLayout {
     public WebView mProductAboutPricing;
     @BindView(R.id.product_details_shared_image)
     public ImageView mProductSharedImage;
+    @BindView(R.id.controller_product_details_title_description)
+    public LinearLayout titleDescription;
 
 
     public SaleItemDetailsView(Context context, @Nullable AttributeSet attrs) {
