@@ -11,6 +11,7 @@ import java.util.List;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 
+import au.com.dealsdirect.R;
 import au.com.dealsdirect.data.auth.AuthHelper;
 import au.com.dealsdirect.data.network.ApiHeader;
 import au.com.dealsdirect.data.network.ApiHelper;
@@ -597,6 +598,11 @@ public class AppDataManager implements DataManager {
     @Override
     public Observable<Boolean> seedDatabaseOptions() {
         return null;
+    }
+
+    @Override
+    public boolean isTablet() {
+        return mContext.getResources().getBoolean(R.bool.is_tablet);
     }
 
     @Override

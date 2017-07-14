@@ -121,6 +121,11 @@ public class BasePresenter<V extends MvpView> implements MvpPresenter<V> {
     }
 
     @Override
+    public boolean isTablet() {
+        return getDataManager().isTablet();
+    }
+
+    @Override
     public void setUserAsLoggedOut() {
         //getDataManager().setAccessToken(null);
     }

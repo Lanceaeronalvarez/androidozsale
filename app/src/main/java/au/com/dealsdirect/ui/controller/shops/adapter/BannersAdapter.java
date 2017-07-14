@@ -9,7 +9,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import java.util.ArrayList;
@@ -17,10 +16,9 @@ import java.util.List;
 
 import au.com.dealsdirect.R;
 import au.com.dealsdirect.data.network.model.banner.GetBannerResponse;
+import au.com.dealsdirect.ui.controller.shops.ShopsMvpPresenter;
 import au.com.dealsdirect.ui.controller.shops.listener.BannerClickListener;
-import au.com.dealsdirect.utils.DateUtils;
 import au.com.dealsdirect.utils.ImageUtils;
-import au.com.dealsdirect.utils.LegacyStringImageUtils;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
@@ -34,15 +32,18 @@ public class BannersAdapter extends RecyclerView.Adapter<BannersAdapter.ViewHold
 
     private List<GetBannerResponse> mSales;
     private Context mContext;
+    private ShopsMvpPresenter mPresenter;
     private BannerClickListener mBannerClickListener;
 
     public BannersAdapter(
             Context context,
+            ShopsMvpPresenter presenter,
             List<GetBannerResponse> sales,
             BannerClickListener bannerClickListener) {
 
         this.mSales = sales;
         this.mContext = context;
+        this.mPresenter = presenter;
         this.mBannerClickListener = bannerClickListener;
     }
 
@@ -87,7 +88,11 @@ public class BannersAdapter extends RecyclerView.Adapter<BannersAdapter.ViewHold
 
         Log.d("IMG", item.getImage());
 
-        ImageUtils.loadImage(mContext, ImageUtils.getBannerMobileSize(item.getImage()), holder.image);
+//        if (mPresenter.isTablet()) {
+//            ImageUtils.loadImage(mContext, ImageUtils.getBannerTabletSize(item.getImage()), holder.image);
+//        } else {
+            ImageUtils.loadImage(mContext, ImageUtils.getBannerMobileSize(item.getImage()), holder.image);
+//        }
 
         holder.layout.setOnClickListener(view -> mBannerClickListener.onBannerClicked(
                 mSales.get(position).getDestinationID(),

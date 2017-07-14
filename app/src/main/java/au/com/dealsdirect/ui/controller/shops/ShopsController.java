@@ -172,9 +172,9 @@ public class ShopsController extends BaseController implements ShopsMvpView, Ban
 
         mBannerClickListener = this;
 
-        mBannersAdapter = new BannersAdapter(getActivity(), new ArrayList(), mBannerClickListener);
+        mBannersAdapter = new BannersAdapter(getActivity(), mPresenter, new ArrayList(), mBannerClickListener);
 
-        if (getResources().getBoolean(R.bool.is_tablet)) {
+        if (mPresenter.isTablet()) {
             mLayoutManager = new GridLayoutManager(getActivity(), 2, GridLayoutManager.VERTICAL, false);
         } else {
             mLayoutManager = new GridLayoutManager(getActivity(), 1, GridLayoutManager.VERTICAL, false);
