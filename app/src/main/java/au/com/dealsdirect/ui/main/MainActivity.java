@@ -311,7 +311,7 @@ public class MainActivity extends BaseActivity implements MainMvpView {
 
     @Override
     public void onCancel(int requestCode) {
-        mFetchTokenHandler = null;
+
     }
 
     @Override
