@@ -194,17 +194,6 @@ public class AddPaymentController extends BaseController implements AddPaymentMv
         mActivity.startPaypalPayment();
     }
 
-    @Override
-    public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        showLoading();
-    }
-
-    @Override
-    protected void onActivityResumed(@NonNull Activity activity) {
-        super.onActivityResumed(activity);
-    }
-
 
     @Override
     public void showAddPaymentResult(boolean result, String message) {
