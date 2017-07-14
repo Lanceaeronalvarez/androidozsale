@@ -3,7 +3,6 @@ package au.com.dealsdirect.ui.controller.shops.adapter;
 import android.content.Context;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -18,6 +17,7 @@ import au.com.dealsdirect.R;
 import au.com.dealsdirect.data.network.model.banner.GetBannerResponse;
 import au.com.dealsdirect.ui.controller.shops.ShopsMvpPresenter;
 import au.com.dealsdirect.ui.controller.shops.listener.BannerClickListener;
+import au.com.dealsdirect.utils.AppLogger;
 import au.com.dealsdirect.utils.ImageUtils;
 import au.com.dealsdirect.utils.AppConstants;
 import au.com.dealsdirect.utils.ScreenUtils;
@@ -105,7 +105,7 @@ public class BannersAdapter extends RecyclerView.Adapter<BannersAdapter.ViewHold
         GetBannerResponse item = mSales.get(position);
         holder.name.setText(item.getDescription());
 
-        Log.d("IMG", ImageUtils.getBannerMobileSize(item.getImage()));
+        AppLogger.d("IMG " + ImageUtils.getBannerMobileSize(item.getImage()));
 
         if (mPresenter.isTablet()) {
             ImageUtils.loadImage(mContext, ImageUtils.getBannerTabletSize(item.getImage()), holder.image);
