@@ -19,6 +19,7 @@ import au.com.dealsdirect.ui.controller.contact.viewcontacthistory.ViewContactHi
 import au.com.dealsdirect.ui.controller.contact.viewcontacts.ViewContactsController;
 //import au.com.dealsdirect.ui.controller.contact.ContactController;
 import au.com.dealsdirect.ui.controller.details.DetailsController;
+import au.com.dealsdirect.ui.controller.forgotpassword.ForgotPasswordController;
 import au.com.dealsdirect.ui.controller.home.HomeController;
 import au.com.dealsdirect.ui.controller.invite.InviteController;
 import au.com.dealsdirect.ui.controller.invite.InviteSendController;
@@ -112,6 +113,8 @@ public interface ControllerComponent {
     void inject(ContactSelectOrderController controller);
 
     void inject(ContactSelectSubjectController controller);
+
+    void inject(ForgotPasswordController controller);
 
 
 }
