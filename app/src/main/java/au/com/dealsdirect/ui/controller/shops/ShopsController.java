@@ -92,7 +92,7 @@ public class ShopsController extends BaseController implements ShopsMvpView, Ban
     private GridLayoutManager mLayoutManager;
 
 
-    private List<GetBannerResponse> sales = new LinkedList<>();
+    private List<GetBannerResponse> mSaleBanners = new LinkedList<>();
 
     public static ShopsController newInstance(GetCategoryTreeResponse getCategoryTreeResponse) {
 
@@ -167,29 +167,36 @@ public class ShopsController extends BaseController implements ShopsMvpView, Ban
         };
 
         mBannerClickListener = this;
-
-        mBannersAdapter = new BannersAdapter(getActivity(), new ArrayList(), mBannerClickListener);
-
         if (getResources().getBoolean(R.bool.is_tablet)) {
             mLayoutManager = new GridLayoutManager(getActivity(), 2, GridLayoutManager.VERTICAL, false);
         } else {
             mLayoutManager = new GridLayoutManager(getActivity(), 1, GridLayoutManager.VERTICAL, false);
         }
 
-        shopsControllerBannerRecyclerView.setLayoutManager(mLayoutManager);
-        shopsControllerBannerRecyclerView.setAdapter(mBannersAdapter);
-//        mPresenter.loadShopsBanner(mCategoryName, mCategoryID, bannerOffset, bannerLimit);
-        if (sales.size() == 0) {
-            mPresenter.loadShopsBanner(mCategoryName, mCategoryID,0,0);
-
-        } else {
-//            mBannersAdapter = new BannersAdapter(getActivity(), sales, mBannerClickListener);
+        if(mSaleBanners.isEmpty()){
+            mPresenter.loadShopsBanner(mCategoryName, mCategoryID, bannerOffset, bannerLimit);
+        } else{
+            mBannersAdapter = new BannersAdapter(getActivity(), mSaleBanners, mBannerClickListener);
+            shopsControllerBannerRecyclerView.setLayoutManager(mLayoutManager);
             shopsControllerBannerRecyclerView.setAdapter(mBannersAdapter);
-
-            mBannersAdapter.replace(sales);
-            mPaginateManager = PaginateUtils.init(shopsControllerBannerRecyclerView, mPaginateCallbacks);
-
         }
+
+//        mBannersAdapter = new BannersAdapter(getActivity(), mSaleBanners, mBannerClickListener);
+//
+//        shopsControllerBannerRecyclerView.setLayoutManager(mLayoutManager);
+//        shopsControllerBannerRecyclerView.setAdapter(mBannersAdapter);
+//        mPresenter.loadShopsBanner(mCategoryName, mCategoryID, bannerOffset, bannerLimit);
+//        if (mSaleBanners.size() == 0) {
+////            mPresenter.loadShopsBanner(mCategoryName, mCategoryID);
+//
+//        } else {
+////            mBannersAdapter = new BannersAdapter(getActivity(), mSaleBanners, mBannerClickListener);
+//            shopsControllerBannerRecyclerView.setAdapter(mBannersAdapter);
+//
+//            mBannersAdapter.replace(mSaleBanners);
+//            mPaginateManager = PaginateUtils.init(shopsControllerBannerRecyclerView, mPaginateCallbacks);
+//
+//        }
     }
 
     @Override
@@ -300,12 +307,14 @@ public class ShopsController extends BaseController implements ShopsMvpView, Ban
 
     @Override
     public void showShopBanners(List<GetBannerResponse> getBannerResponses) {
-        sales = getBannerResponses;
+        mSaleBanners = getBannerResponses;
         loadingInProgress = false;
 
         if (page == 0) {
             Log.d("items","replaced");
-            mBannersAdapter.replace(getBannerResponses);
+            mBannersAdapter = new BannersAdapter(getActivity(), mSaleBanners, mBannerClickListener);
+            shopsControllerBannerRecyclerView.setLayoutManager(mLayoutManager);
+            shopsControllerBannerRecyclerView.setAdapter(mBannersAdapter);
             mPaginateManager = PaginateUtils.init(shopsControllerBannerRecyclerView, mPaginateCallbacks);
         } else {
             Log.d("items","added");

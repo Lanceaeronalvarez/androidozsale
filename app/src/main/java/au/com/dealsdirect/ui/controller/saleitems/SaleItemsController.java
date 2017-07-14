@@ -196,15 +196,15 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
             mSaleItemsRecyclerView.setVisibility(View.VISIBLE);
         }
 
-            if (page == 0) {
-                mSaleItemsAdapter = new SaleItemsAdapter(saleItems, mPresenter, mSaleId, mTitle);
-                mSaleItemsRecyclerView.setLayoutManager(new GridLayoutManager(getActivity(), 2));
-                mSaleItemsRecyclerView.setAdapter(mSaleItemsAdapter);
+        if (page == 0) {
+            mSaleItemsAdapter = new SaleItemsAdapter(saleItems, mPresenter, mSaleId, mTitle);
+            mSaleItemsRecyclerView.setLayoutManager(new GridLayoutManager(getActivity(), 2));
+            mSaleItemsRecyclerView.setAdapter(mSaleItemsAdapter);
 
-                mPaginateManager = PaginateUtils.init(mSaleItemsRecyclerView, mPaginateCallbacks);
-            } else {
-                mSaleItemsAdapter.addData(saleItems);
-            }
+            mPaginateManager = PaginateUtils.init(mSaleItemsRecyclerView, mPaginateCallbacks);
+        } else {
+            mSaleItemsAdapter.addData(saleItems);
+        }
     }
 
 
