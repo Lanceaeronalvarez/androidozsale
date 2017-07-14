@@ -51,6 +51,8 @@ import au.com.dealsdirect.data.network.model.contactsubject.ContactSubjectsReque
 import au.com.dealsdirect.data.network.model.createcontact.CreateContactRequest;
 import au.com.dealsdirect.data.network.model.createcontact.CreateContactResponse;
 
+import au.com.dealsdirect.data.network.model.legalities.GetTemplateTextRequest;
+import au.com.dealsdirect.data.network.model.legalities.GetTemplateTextResponse;
 import au.com.dealsdirect.data.network.model.login.LoginEmail;
 import au.com.dealsdirect.data.network.model.login.LoginFacebook;
 import au.com.dealsdirect.data.network.model.login.LoginTicket;
@@ -478,6 +480,16 @@ public class AppApiHelper implements ApiHelper {
                 .build()
                 .getObjectObservable(ReplyContactResponse.class);
     }
+
+    @Override
+    public Observable<GetTemplateTextResponse> callGetTemplateText(GetTemplateTextRequest templateTextRequest) {
+        return Rx2AndroidNetworking.post(ApiEndPoint.GET_LEGALITIES_TEXT)
+                .addHeaders(mApiHeader.getPublicApiHeader())
+                .addJSONObjectBody(JsonUtils.convertToJsonObject(templateTextRequest))
+                .build()
+                .getObjectObservable(GetTemplateTextResponse.class);
+    }
+
     @Override
     public Observable<GetContactsResponse> callGetContacts(String languageId) {
         return Rx2AndroidNetworking.post(ApiEndPoint.GET_CONTACTS)

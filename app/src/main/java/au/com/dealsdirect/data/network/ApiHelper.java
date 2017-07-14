@@ -47,6 +47,8 @@ import au.com.dealsdirect.data.network.model.contactsubject.ContactSubjectsReque
 import au.com.dealsdirect.data.network.model.createcontact.CreateContactRequest;
 import au.com.dealsdirect.data.network.model.createcontact.CreateContactResponse;
 
+import au.com.dealsdirect.data.network.model.legalities.GetTemplateTextRequest;
+import au.com.dealsdirect.data.network.model.legalities.GetTemplateTextResponse;
 import au.com.dealsdirect.data.network.model.login.LoginEmail;
 import au.com.dealsdirect.data.network.model.login.LoginFacebook;
 import au.com.dealsdirect.data.network.model.login.LoginTicket;
@@ -207,4 +209,7 @@ public interface ApiHelper {
     Observable<CreateContactResponse> callCreateContact(CreateContactRequest createContactRequest);
 
     Observable<ReplyContactResponse> callReplyContact(ReplyContactRequest createContactRequest);
+
+    // LEGALITIES API CALLS
+    Observable<GetTemplateTextResponse> callGetTemplateText(GetTemplateTextRequest templateTextRequest);
 }

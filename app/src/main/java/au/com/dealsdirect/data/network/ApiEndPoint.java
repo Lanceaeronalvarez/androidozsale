@@ -136,6 +136,10 @@ public final class ApiEndPoint {
     public static final String CREATE_PAYMENT_TRANSACTION = TEST_API_LEGACY + "CreatePaymentTransaction";
     public static final String REMOVE_USER_PAYMENT_METHOD = TEST_API_LEGACY + "RemoveUserPaymentMethod";
 
+    /* Legalities Endpoint*/
+    public static final String GET_LEGALITIES_TEXT = TEST_API_LEGACY + "GetTemplateText";
+
+
     /* Login Controller */
     public static String FORGOT_PASSWORD =  TEST_API_LEGACY + "ForgotPassword"; //
     public static String LOGIN_EMAIL = TEST_API_LEGACY + "Login";

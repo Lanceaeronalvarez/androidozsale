@@ -56,6 +56,9 @@ import au.com.dealsdirect.ui.controller.invite.InvitePresenter;
 import au.com.dealsdirect.ui.controller.language.LanguageMvpPresenter;
 import au.com.dealsdirect.ui.controller.language.LanguageMvpView;
 import au.com.dealsdirect.ui.controller.language.LanguagePresenter;
+import au.com.dealsdirect.ui.controller.legalities.LegalitiesMvpPresenter;
+import au.com.dealsdirect.ui.controller.legalities.LegalitiesMvpView;
+import au.com.dealsdirect.ui.controller.legalities.LegalitiesPresenter;
 import au.com.dealsdirect.ui.controller.login.LoginMvpPresenter;
 import au.com.dealsdirect.ui.controller.login.LoginMvpView;
 import au.com.dealsdirect.ui.controller.login.LoginPresenter;
@@ -273,6 +276,11 @@ public class ControllerModule {
 
     @Provides
     ForgotPasswordMvpPresenter<ForgotPasswordMvpView> provideForgotPasswordPresenter(ForgotPasswordPresenter<ForgotPasswordMvpView> presenter) {
+        return presenter;
+    }
+
+    @Provides
+    LegalitiesMvpPresenter<LegalitiesMvpView> provideLegalitiesPresenter(LegalitiesPresenter<LegalitiesMvpView> presenter) {
         return presenter;
     }
 }
