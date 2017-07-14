@@ -1,8 +1,8 @@
 package au.com.dealsdirect.ui.controller.shops.adapter;
 
 import android.content.Context;
+import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -19,6 +19,8 @@ import au.com.dealsdirect.data.network.model.banner.GetBannerResponse;
 import au.com.dealsdirect.ui.controller.shops.ShopsMvpPresenter;
 import au.com.dealsdirect.ui.controller.shops.listener.BannerClickListener;
 import au.com.dealsdirect.utils.ImageUtils;
+import au.com.dealsdirect.utils.AppConstants;
+import au.com.dealsdirect.utils.ScreenUtils;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
@@ -28,8 +30,7 @@ import butterknife.ButterKnife;
 
 public class BannersAdapter extends RecyclerView.Adapter<BannersAdapter.ViewHolder> {
 
-    public static DisplayMetrics DISPLAY_METRICS;
-
+    private int mComputedHeight = 0;
     private List<GetBannerResponse> mSales;
     private Context mContext;
     private ShopsMvpPresenter mPresenter;
@@ -45,6 +46,20 @@ public class BannersAdapter extends RecyclerView.Adapter<BannersAdapter.ViewHold
         this.mContext = context;
         this.mPresenter = presenter;
         this.mBannerClickListener = bannerClickListener;
+
+        if (mPresenter.isTablet()) {
+
+            int screenWidth = ScreenUtils.getScreenWidth(mContext) / 2;
+
+            mComputedHeight = ImageUtils.getComputedBannerHeight(AppConstants.BANNER_TABLET_WIDTH,
+                    AppConstants.BANNER_TABLET_HEIGHT, screenWidth);
+        } else {
+
+            int screenWidth = ScreenUtils.getScreenWidth(mContext);
+
+            mComputedHeight = ImageUtils.getComputedBannerHeight(AppConstants.BANNER_MOBILE_WIDTH,
+                    AppConstants.BANNER_MOBILE_HEIGHT, screenWidth);
+        }
     }
 
     static class ViewHolder extends RecyclerView.ViewHolder {
@@ -58,18 +73,22 @@ public class BannersAdapter extends RecyclerView.Adapter<BannersAdapter.ViewHold
         @BindView(R.id.viewholder_banner_name)
         TextView name;
 
-        ViewHolder(View view) {
+        ViewHolder(View view, int height) {
             super(view);
             ButterKnife.bind(this, view);
+
+            GridLayoutManager.LayoutParams params = (GridLayoutManager.LayoutParams) layout.getLayoutParams();
+            params.height = height;
+            layout.setLayoutParams(params);
         }
     }
 
-    public void replace(List<GetBannerResponse> bannerResponses){
+    public void replace(List<GetBannerResponse> bannerResponses) {
         mSales = new ArrayList<>(bannerResponses);
         notifyDataSetChanged();
     }
 
-    public void addAll(List<GetBannerResponse> bannerResponses){
+    public void addAll(List<GetBannerResponse> bannerResponses) {
         mSales.addAll(bannerResponses);
         notifyDataSetChanged();
     }
@@ -77,7 +96,7 @@ public class BannersAdapter extends RecyclerView.Adapter<BannersAdapter.ViewHold
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.viewholder_banner, parent, false);
-        return new ViewHolder(view);
+        return new ViewHolder(view, mComputedHeight);
     }
 
     @Override
@@ -86,13 +105,13 @@ public class BannersAdapter extends RecyclerView.Adapter<BannersAdapter.ViewHold
         GetBannerResponse item = mSales.get(position);
         holder.name.setText(item.getDescription());
 
-        Log.d("IMG", item.getImage());
+        Log.d("IMG", ImageUtils.getBannerMobileSize(item.getImage()));
 
-//        if (mPresenter.isTablet()) {
-//            ImageUtils.loadImage(mContext, ImageUtils.getBannerTabletSize(item.getImage()), holder.image);
-//        } else {
+        if (mPresenter.isTablet()) {
+            ImageUtils.loadImage(mContext, ImageUtils.getBannerTabletSize(item.getImage()), holder.image);
+        } else {
             ImageUtils.loadImage(mContext, ImageUtils.getBannerMobileSize(item.getImage()), holder.image);
-//        }
+        }
 
         holder.layout.setOnClickListener(view -> mBannerClickListener.onBannerClicked(
                 mSales.get(position).getDestinationID(),

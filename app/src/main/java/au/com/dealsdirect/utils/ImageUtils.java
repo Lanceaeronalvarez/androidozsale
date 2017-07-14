@@ -147,4 +147,11 @@ public class ImageUtils {
     public static String getBannerTabletSize(String url) {
         return appendBannerSizeUrl(url, AppConstants.BANNER_SIZE_TABLET);
     }
+
+    public static int getComputedBannerHeight(int width, int height, int screenWidth) {
+
+        float scale = (float) screenWidth / width;
+
+        return (int) (height * scale);
+    }
 }
