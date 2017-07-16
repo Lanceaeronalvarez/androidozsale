@@ -12,4 +12,6 @@ public interface LoginMvpView extends MvpView {
     void showLoginError(String message);
 
     void showRegistration();
+
+    void showForgotPassword();
 }

@@ -5,19 +5,33 @@ import android.support.annotation.NonNull;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.EditText;
+import android.widget.ImageButton;
+import android.widget.TextView;
 
 import javax.inject.Inject;
 
 import au.com.dealsdirect.R;
-import au.com.dealsdirect.data.network.model.SampleResponse;
+import au.com.dealsdirect.data.network.model.forgotpassword.ForgotPasswordResponseBody;
 import au.com.dealsdirect.ui.base.BaseController;
 import au.com.dealsdirect.utils.BundleBuilder;
+import butterknife.BindView;
+import butterknife.OnClick;
 
 /*
  * Created by DP on 07/14/2017.
  */
 
 public class ForgotPasswordController extends BaseController implements ForgotPasswordMvpView {
+
+    @BindView(R.id.partial_toolbar_arrow_title)
+    TextView mForgotPasswordTitle;
+
+    @BindView(R.id.partial_toolbar_filter_view)
+    ImageButton mForgotPasswordRightOptionView;
+
+    @BindView(R.id.controller_forgot_password_email_edittext)
+    EditText mForgotPasswordEmailForm;
 
     public static final String TAG = "ForgotPasswordController";
 
@@ -26,11 +40,10 @@ public class ForgotPasswordController extends BaseController implements ForgotPa
     @Inject
     ForgotPasswordMvpPresenter<ForgotPasswordMvpView> mPresenter;
 
-    public static ForgotPasswordController newInstance(String arg) {
+    public static ForgotPasswordController newInstance() {
 
         return new ForgotPasswordController(
                 new BundleBuilder(new Bundle())
-                        .putString(KEY_TEXT, arg)
                         .build());
     }
 
@@ -41,12 +54,10 @@ public class ForgotPasswordController extends BaseController implements ForgotPa
     @NonNull
     @Override
     protected View inflateView(@NonNull LayoutInflater inflater, @NonNull ViewGroup container) {
-        View view = inflater.inflate(R.layout.controller_sample, container, false);
+        View view = inflater.inflate(R.layout.controller_forgot_password, container, false);
 
         getControllerComponent().inject(this);
-
         mPresenter.onAttach(this);
-
         return view;
     }
 
@@ -61,6 +72,8 @@ public class ForgotPasswordController extends BaseController implements ForgotPa
         // Setup views here
         //mPresenter.loadSample(new SampleRequest());
 
+        mForgotPasswordRightOptionView.setVisibility(View.INVISIBLE);
+        mForgotPasswordTitle.setText(getResources().getText(R.string.forgot_password));
     }
 
     @Override
@@ -69,9 +82,25 @@ public class ForgotPasswordController extends BaseController implements ForgotPa
         super.onDestroyView(view);
     }
 
-    @Override
-    public void showSample(SampleResponse response) {
-
+    @OnClick(R.id.partial_toolbar_arrow_view)
+    void onBackClick(){
+        getActivity().onBackPressed();
     }
 
+    @OnClick(R.id.controller_forgot_password_send_button)
+    void onForgotPasswordClick(){
+        mPresenter.forgotPassword(mForgotPasswordEmailForm.getText().toString());
+    }
+
+    @Override
+    public void showForgotPasswordResponse(ForgotPasswordResponseBody response) {
+        //noinspection ConstantConditions
+        getActivity().onBackPressed();
+    }
+
+    @Override
+    public void showForgotPasswordError() {
+        //noinspection ConstantConditions
+        getActivity().onBackPressed();
+    }
 }

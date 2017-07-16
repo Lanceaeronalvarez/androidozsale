@@ -4,10 +4,12 @@ package au.com.dealsdirect.ui.controller.forgotpassword;
  */
 
 
-import au.com.dealsdirect.data.network.model.SampleResponse;
+import au.com.dealsdirect.data.network.model.forgotpassword.ForgotPasswordResponseBody;
 import au.com.dealsdirect.ui.base.MvpView;
 
 public interface ForgotPasswordMvpView extends MvpView {
 
-    void showSample(SampleResponse response);
+    void showForgotPasswordResponse(ForgotPasswordResponseBody forgotPasswordResponseBody);
+
+    void showForgotPasswordError();
 }

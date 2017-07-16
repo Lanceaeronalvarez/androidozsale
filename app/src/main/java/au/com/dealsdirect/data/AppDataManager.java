@@ -38,6 +38,8 @@ import au.com.dealsdirect.data.network.model.checkout.RemoveUserPaymentMethod;
 import au.com.dealsdirect.data.network.model.contacthistory.GetContactHistoryRequest;
 import au.com.dealsdirect.data.network.model.contacthistory.GetContactHistoryResponse;
 import au.com.dealsdirect.data.network.model.contactitem.GetContactsResponse;
+import au.com.dealsdirect.data.network.model.forgotpassword.ForgotPasswordRequest;
+import au.com.dealsdirect.data.network.model.forgotpassword.ForgotPasswordResponseBody;
 import au.com.dealsdirect.data.network.model.invite.GetInviteRequest;
 import au.com.dealsdirect.data.network.model.invite.GetInviteResponse;
 import au.com.dealsdirect.data.network.model.invite.SetInviteRequest;
@@ -211,6 +213,12 @@ public class AppDataManager implements DataManager {
     @Override
     public Observable<RegisterUserResponse> callRegiser(RegisterUserRequest requestValue) {
         return mApiHelper.callRegiser(requestValue);
+
+    }
+
+    @Override
+    public Observable<ForgotPasswordResponseBody> callForgotPassword(ForgotPasswordRequest requestValue) {
+        return mApiHelper.callForgotPassword(requestValue);
 
     }
 

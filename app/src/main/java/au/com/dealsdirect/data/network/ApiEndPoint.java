@@ -137,7 +137,7 @@ public final class ApiEndPoint {
     public static final String REMOVE_USER_PAYMENT_METHOD = TEST_API_LEGACY + "RemoveUserPaymentMethod";
 
     /* Login Controller */
-    public static String FORGOT_PASSWORD = "ForgotPassword"; //
+    public static String FORGOT_PASSWORD =  TEST_API_LEGACY + "ForgotPassword"; //
     public static String LOGIN_EMAIL = TEST_API_LEGACY + "Login";
     public static String LOGIN_FB = TEST_API_LEGACY + "LoginFacebook";
     public static String LOGIN_TICKET = TEST_API_LEGACY + "LoginTicket";

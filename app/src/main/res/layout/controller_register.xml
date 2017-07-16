@@ -30,7 +30,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="@string/first_name"
-            android:textColor="@color/gray_field_label"
+            android:textColor="@color/dark_text"
             android:textSize="@dimen/text_size_medium"/>
 
         <android.support.design.widget.TextInputLayout
@@ -57,7 +57,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="@string/last_name"
-            android:textColor="@color/gray_field_label"
+            android:textColor="@color/dark_text"
             android:textSize="@dimen/text_size_medium"/>
 
         <android.support.design.widget.TextInputLayout
@@ -85,7 +85,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="@string/email_address"
-            android:textColor="@color/gray_field_label"
+            android:textColor="@color/dark_text"
             android:textSize="@dimen/text_size_medium"/>
 
         <android.support.design.widget.TextInputLayout
@@ -114,7 +114,7 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="5dp"
             android:text="@string/password"
-            android:textColor="@color/gray_field_label"
+            android:textColor="@color/dark_text"
             android:textSize="@dimen/text_size_medium"/>
 
         <android.support.design.widget.TextInputLayout
@@ -195,7 +195,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/already_a_member"
-                android:textColor="#919191"
+                android:textColor="@color/dark_text"
                 android:textSize="@dimen/text_size_medium"/>
 
             <TextView
@@ -218,7 +218,7 @@
                 android:paddingEnd="0dp"
                 android:paddingStart="5dp"
                 android:text="@string/here"
-                android:textColor="#919191"
+                android:textColor="@color/dark_text"
                 android:textSize="@dimen/text_size_medium"/>
 
         </LinearLayout>

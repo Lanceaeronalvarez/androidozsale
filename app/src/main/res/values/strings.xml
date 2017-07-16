@@ -115,7 +115,7 @@
     <string name="sign_up">Sign Up</string>
     <string name="already_a_member">Already a member?</string>
     <string name="log_in">Log In</string>
-    <string name="forgot_password_guide">to reset your account password, enter the email address and
+    <string name="forgot_password_guide">To reset your account password, enter the email address and
         we will send you the instruction
     </string>
     <string name="send">send</string>
@@ -248,6 +248,7 @@
     <string name="exit">exit</string>
     <string name="no">no</string>
     <string name="now">now</string>
+    <string name="send_to_email">Send to Email</string>
 
     <string-array name="genders">
         <item>Male</item>
