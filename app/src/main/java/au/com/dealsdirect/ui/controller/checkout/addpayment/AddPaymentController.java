@@ -222,7 +222,7 @@ public class AddPaymentController extends BaseController implements AddPaymentMv
         return !isFromCart;
     }
 
-    @OnClick(R.id.partial_toolbar_arrow_title)
+    @OnClick(R.id.partial_toolbar_arrow_view)
     void onBackPressed(){
         getActivity().onBackPressed();
     }
