@@ -33,7 +33,7 @@ public final class ApiEndPoint {
     /* API Constants */
     private static final String API_HOST = "https://www.dealsdirect.com.au/";
 
-//    private static final String TEST_API_LEGACY = "https://sbx-mob-api.mysaledev.com/public/v3.17/api.asmx/";
+    //    private static final String TEST_API_LEGACY = "https://sbx-mob-api.mysaledev.com/public/v3.17/api.asmx/";
     private static final String TEST_API_LEGACY = "https://api.mysaledev.com/public/v3.17/api.asmx/";
     private static final String LIVE_API_LEGACY = "https://api.apacsale.com/public/v3.17/api.asmx/";
 
@@ -53,22 +53,21 @@ public final class ApiEndPoint {
     public static final String GET_APP_SETTINGS = BASE_URL_ASMX + "GetAppSettings";
     public static final String GET_APP_SETTINGS_SECTION = BASE_URL_ASMX + "GetAppSettingsSection";
 
-    public static final String GET_SERVER_SETTING_TEST = TEST_API_LEGACY + "GetServerSettings";
-    public static final String GET_PUBLIC_APP_SETTINGS_TEST = TEST_API_LEGACY + "GetPublicAppSettings";
-    public static final String GET_APP_SETTINGS_TEST = TEST_API_LEGACY + "GetAppSettings";
-    public static final String GET_APP_SETTINGS_SECTION_TEST = TEST_API_LEGACY + "GetAppSettingsSection";
+    public static final String GET_SERVER_SETTING_TEST = getBaseApiLegacy() + "GetServerSettings";
+    public static final String GET_PUBLIC_APP_SETTINGS_TEST = getBaseApiLegacy() + "GetPublicAppSettings";
+    public static final String GET_APP_SETTINGS_TEST = getBaseApiLegacy() + "GetAppSettings";
+    public static final String GET_APP_SETTINGS_SECTION_TEST = getBaseApiLegacy() + "GetAppSettingsSection";
 
-    public static final String GET_USER_LANGUAGES = TEST_API_LEGACY + "GetUserLanguages";
-    public static final String SET_USER_LANGUAGES = TEST_API_LEGACY + "SetUserLanguage";
+    public static final String GET_USER_LANGUAGES = getBaseApiLegacy() + "GetUserLanguages";
+    public static final String SET_USER_LANGUAGES = getBaseApiLegacy() + "SetUserLanguage";
 
     /* Shops Controller */
     public static final String GET_SHOP_BANNERS = BASE_URL + "GetPublicSalesBanners";
     public static final String GET_SALES_CATEGORIES = BASE_URL + "GetSaleCategories";
 
 
-
     /* Sale Items Controller */
-    public static final String GET_PUBLIC_SALE_ITEMS = BASE_URL+"GetPublicSaleItems";
+    public static final String GET_PUBLIC_SALE_ITEMS = BASE_URL + "GetPublicSaleItems";
 
     /* Categories Controller */
     public static final String GET_SHOP_CATEGORIES = BASE_URL + "GetPublicSalesCategories";
@@ -76,7 +75,7 @@ public final class ApiEndPoint {
     /* Sales Controller */
     public static final String GET_SALE_ITEMS = BASE_URL + "GetSaleItems";
     public static final String GET_SALE_DETAILS = BASE_URL + "GetSaleDetails";
-    public static final String GET_sALE_CATEGORIES = BASE_URL+ "GetSaleCategories";
+    public static final String GET_sALE_CATEGORIES = BASE_URL + "GetSaleCategories";
 
 
     /* Sale Detail Controller */
@@ -87,68 +86,68 @@ public final class ApiEndPoint {
 
 
     /* Voucher Controller */
-    public static final String ADD_VOUCHER_BY_KEY = TEST_API_LEGACY + "AddVoucherByKey";
-    public static final String ADD_AND_APPLY_VOUCHER = TEST_API_LEGACY + "AddAndApplyVoucherByKey";
-    public static final String GET_USER_VOUCHERS = TEST_API_LEGACY + "GetUserVouchers";
-    public static final String GET_VOUCHERS = TEST_API_LEGACY + "GetVouchers";
+    public static final String ADD_VOUCHER_BY_KEY = getBaseApiLegacy() + "AddVoucherByKey";
+    public static final String ADD_AND_APPLY_VOUCHER = getBaseApiLegacy() + "AddAndApplyVoucherByKey";
+    public static final String GET_USER_VOUCHERS = getBaseApiLegacy() + "GetUserVouchers";
+    public static final String GET_VOUCHERS = getBaseApiLegacy() + "GetVouchers";
 
     /* Invite Controller */
-    public static final String SET_INVITE = TEST_API_LEGACY + "SetInviteLink";
-    public static final String GET_INVITE = TEST_API_LEGACY + "GetInviteLink";
+    public static final String SET_INVITE = getBaseApiLegacy() + "SetInviteLink";
+    public static final String GET_INVITE = getBaseApiLegacy() + "GetInviteLink";
 
 
     /* Contact Controller */
-    public static final String ANSWER_CONTACT = TEST_API_LEGACY + "AnswerContact";
-    public static final String CREATE_CONTACT = TEST_API_LEGACY + "CreateContact";
+    public static final String ANSWER_CONTACT = getBaseApiLegacy() + "AnswerContact";
+    public static final String CREATE_CONTACT = getBaseApiLegacy() + "CreateContact";
     //    public static final String GET_CONTACT =  API_HOST + COCOSA_SERVICE +"GetContact";
     //    public static final String GET_CONTACTS = API_HOST + COCOSA_SERVICE + "GetContacts";
-    public static final String GET_CONTACT_INVOICES = TEST_API_LEGACY + "GetContactInvoices";
-    public static final String GET_CONTACT =  TEST_API_LEGACY + "GetContact";
-    public static final String GET_CONTACTS = TEST_API_LEGACY + "GetContacts";
+    public static final String GET_CONTACT_INVOICES = getBaseApiLegacy() + "GetContactInvoices";
+    public static final String GET_CONTACT = getBaseApiLegacy() + "GetContact";
+    public static final String GET_CONTACTS = getBaseApiLegacy() + "GetContacts";
 
-    public static final String GET_CONTACT_SUBJECTS = TEST_API_LEGACY + "GetContactSubjects";
+    public static final String GET_CONTACT_SUBJECTS = getBaseApiLegacy() + "GetContactSubjects";
 
     /* Return Controller */
     public static String CREATE_RETURN = "CreateReturn";
 
     /* Address Controller */
-    public static final String DELETE_USER_DELIVERY_ADDRESS = TEST_API_LEGACY + "DeleteUserDeliveryAddress";
-    public static final String GET_USER_ADDRESSES = TEST_API_LEGACY + "GetUserAddresses";
-    public static final String SET_USER_DELIVERY_ADDRESS = TEST_API_LEGACY + "SetUserDeliveryAddress";
-    public static final String APPLY_DELIVERY_ADDRESS = TEST_API_LEGACY + "ApplyDeliveryAddress";
+    public static final String DELETE_USER_DELIVERY_ADDRESS = getBaseApiLegacy() + "DeleteUserDeliveryAddress";
+    public static final String GET_USER_ADDRESSES = getBaseApiLegacy() + "GetUserAddresses";
+    public static final String SET_USER_DELIVERY_ADDRESS = getBaseApiLegacy() + "SetUserDeliveryAddress";
+    public static final String APPLY_DELIVERY_ADDRESS = getBaseApiLegacy() + "ApplyDeliveryAddress";
 
     /* Orders Controller*/
-    public static final String GET_PAYMENTS_LIST = TEST_API_LEGACY + "GetPaymentsList";
-    public static final String GET_ORDER_PAYMENT_DETAILS = TEST_API_LEGACY + "GetOrderPaymentDetails";
+    public static final String GET_PAYMENTS_LIST = getBaseApiLegacy() + "GetPaymentsList";
+    public static final String GET_ORDER_PAYMENT_DETAILS = getBaseApiLegacy() + "GetOrderPaymentDetails";
 
 
     /* Checkout Endpoints*/
 
-    public static final String GET_CURRENT_ORDER = TEST_API_LEGACY + "GetCurrentOrder";
-    public static final String GET_USER_PAYMENT_METHODS = TEST_API_LEGACY + "GetUserPaymentMethods";
-    public static final String CREATE_PAYMENT_METHOD = TEST_API_LEGACY + "CreatePaymentMethod";
-    public static final String GET_PAYMENT_TOKEN = TEST_API_LEGACY + "GetPaymentToken";
-    public static final String DECREASE_ORDER_ITEM = TEST_API_LEGACY+ "DecreaseOrderItem";
-    public static final String INCREASE_ORDER_ITEM = TEST_API_LEGACY + "IncreaseOrderItem";
-    public static final String APPLY_VOUCHERS = TEST_API_LEGACY + "ApplyVouchers";
-    public static final String CLEAR_VOUCHERS = TEST_API_LEGACY + "ClearVouchers";
-    public static final String CLEAR_ORDER = TEST_API_LEGACY + "ClearOrder";
-    public static final String CREATE_PAYMENT_TRANSACTION = TEST_API_LEGACY + "CreatePaymentTransaction";
-    public static final String REMOVE_USER_PAYMENT_METHOD = TEST_API_LEGACY + "RemoveUserPaymentMethod";
+    public static final String GET_CURRENT_ORDER = getBaseApiLegacy() + "GetCurrentOrder";
+    public static final String GET_USER_PAYMENT_METHODS = getBaseApiLegacy() + "GetUserPaymentMethods";
+    public static final String CREATE_PAYMENT_METHOD = getBaseApiLegacy() + "CreatePaymentMethod";
+    public static final String GET_PAYMENT_TOKEN = getBaseApiLegacy() + "GetPaymentToken";
+    public static final String DECREASE_ORDER_ITEM = getBaseApiLegacy() + "DecreaseOrderItem";
+    public static final String INCREASE_ORDER_ITEM = getBaseApiLegacy() + "IncreaseOrderItem";
+    public static final String APPLY_VOUCHERS = getBaseApiLegacy() + "ApplyVouchers";
+    public static final String CLEAR_VOUCHERS = getBaseApiLegacy() + "ClearVouchers";
+    public static final String CLEAR_ORDER = getBaseApiLegacy() + "ClearOrder";
+    public static final String CREATE_PAYMENT_TRANSACTION = getBaseApiLegacy() + "CreatePaymentTransaction";
+    public static final String REMOVE_USER_PAYMENT_METHOD = getBaseApiLegacy() + "RemoveUserPaymentMethod";
 
     /* Legalities Endpoint*/
-    public static final String GET_LEGALITIES_TEXT = TEST_API_LEGACY + "GetTemplateText";
+    public static final String GET_LEGALITIES_TEXT = getBaseApiLegacy() + "GetTemplateText";
 
 
     /* Login Controller */
-    public static String FORGOT_PASSWORD =  TEST_API_LEGACY + "ForgotPassword"; //
-    public static String LOGIN_EMAIL = TEST_API_LEGACY + "Login";
-    public static String LOGIN_FB = TEST_API_LEGACY + "LoginFacebook";
-    public static String LOGIN_TICKET = TEST_API_LEGACY + "LoginTicket";
-    public static String LOGOUT = TEST_API_LEGACY + "Logout";
-    public static String REGISTRATION = TEST_API_LEGACY + "Registration";
-    public static String SAVE_USER_DETAILS = TEST_API_LEGACY + "SetUserDetails";
-    public static String LOAD_USER_DETAILS = TEST_API_LEGACY + "GetUserDetails";
+    public static String FORGOT_PASSWORD = getBaseApiLegacy() + "ForgotPassword"; //
+    public static String LOGIN_EMAIL = getBaseApiLegacy() + "Login";
+    public static String LOGIN_FB = getBaseApiLegacy() + "LoginFacebook";
+    public static String LOGIN_TICKET = getBaseApiLegacy() + "LoginTicket";
+    public static String LOGOUT = getBaseApiLegacy() + "Logout";
+    public static String REGISTRATION = getBaseApiLegacy() + "Registration";
+    public static String SAVE_USER_DETAILS = getBaseApiLegacy() + "SetUserDetails";
+    public static String LOAD_USER_DETAILS = getBaseApiLegacy() + "GetUserDetails";
 
 
     /* Summary */
@@ -171,17 +170,11 @@ public final class ApiEndPoint {
 //         This class is not publicly instantiable
     }
 
-    public static String getBaseUrl(int apiCode){
-        switch (apiCode) {
-            case TEST_API:
-                if (BuildConfig.DEBUG) {
-                    return TEST_API_LEGACY;
-                } else {
-                    return LIVE_API_LEGACY;
-                }
-            default:
-                return API_HOST;
+    public static String getBaseApiLegacy() {
+        if (BuildConfig.DEBUG) {
+            return TEST_API_LEGACY;
+        } else {
+            return LIVE_API_LEGACY;
         }
-
     }
 }
