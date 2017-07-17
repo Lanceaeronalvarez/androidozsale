@@ -14,4 +14,6 @@ public interface SaleItemDetailsMvpPresenter<V extends MvpView> extends MvpPrese
     void loadSaleItemDetails(String seoIdentifierId);
 
     void addToCart(AddToCartRequest requestValues);
+
+    boolean isAuthorized();
 }

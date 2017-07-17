@@ -36,10 +36,14 @@ import java.util.List;
 import javax.inject.Inject;
 
 import au.com.dealsdirect.R;
+import au.com.dealsdirect.data.auth.AuthHandler;
+import au.com.dealsdirect.data.network.model.saleitemdetails.AddToCartRequest;
 import au.com.dealsdirect.data.network.model.saleitemdetails.GetSaleItemDetailsResponse;
 import au.com.dealsdirect.ui.base.BaseController;
 import au.com.dealsdirect.ui.controller.saleitemdetails.listener.LoadImagesListener;
 import au.com.dealsdirect.ui.controller.saleitems.SaleItemsController;
+import au.com.dealsdirect.ui.custom.CustomAlertDialog;
+import au.com.dealsdirect.ui.main.MainMvpView;
 import au.com.dealsdirect.utils.BundleBuilder;
 import au.com.dealsdirect.utils.ImageUtils;
 import au.com.dealsdirect.widget.ElasticDragDismissFrameLayout;
@@ -172,7 +176,7 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
                 .build());
     }
 
-    public static SaleItemDetailsController newInstance(Bundle bundle){
+    public static SaleItemDetailsController newInstance(Bundle bundle) {
         return new SaleItemDetailsController(bundle);
     }
 
@@ -195,13 +199,14 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
         super(args);
         mSaleId = args.getString(KEY_SALE_ID);
         mItemId = args.getString(KEY_ITEM_ID);
+        selectedSkuId = mItemId;
         mItemImageUrl = args.getString(KEY_ITEM_IMAGE_ID);
         mSeoIdentifierId = args.getString(KEY_SEO_IDENTIFIER_ID);
         mSaleName = args.getString(KEY_ITEM_NAME);
         mSalePrice = args.getString(KEY_ITEM_PRICE);
         mSaleOldPrice = args.getString(KEY_ITEM_OLD_PRICE);
 
-        Log.d("LogBundle", mSaleName+" , "+mSalePrice+" , "+mSaleOldPrice);
+        Log.d("LogBundle", mSaleName + " , " + mSalePrice + " , " + mSaleOldPrice);
     }
 
 
@@ -325,7 +330,7 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
                     "text/html; charset=UTF-8",
                     null);
 
-        }else{
+        } else {
             mProductPricing.setVisibility(View.GONE);
 
         }
@@ -375,15 +380,15 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
 
         });
 
-
-
-        if (!saleDetail.getSkuVariants().isEmpty())
+        if (!saleDetail.getSkuVariants().isEmpty()) {
             for (GetSaleItemDetailsResponse skuVariant : saleDetail.getSkuVariants()) {
                 String skuId = skuVariant.getSkuId();
                 String size = skuVariant.getAttributes().getSize();
-                if (!size.isEmpty())
+                if (!size.isEmpty()) {
                     mProductSizes.add(new Pair<>(size, skuId));
+                }
             }
+        }
 
         if (!(mProductSizes.get(0) == null)) {
 
@@ -416,27 +421,52 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
                 didSelectSize = false;
             }
         });
+
     }
 
     @Override
     public void showAddToCartResponse(boolean val) {
-
+        //notify bottom navigation view(checkout) with success.
     }
 
 
     @OnClick(R.id.product_details_add_to_basket)
     void addToBasket() {
-        //call add to cart presenter here.
-        /*
-        if (Auth.isLoggedIn()){
-            Log.d("productdetail", "add to basket");
-        }else{
-            getRouter().setRoot(RouterTransaction.with(LoginController.newInstance()));
 
-            Log.d("productdetail", "no logged in");
-        }*/
+        if (!mPresenter.isAuthorized()) {
+            ((MainMvpView) getActivity()).showLoginController(getRouter(), new AuthHandler() {
+                @Override
+                public void success() {
+                    verifyAddToCart();
+                }
+
+                @Override
+                public void error() {
+
+                }
+            });
+        } else {
+            verifyAddToCart();
+        }
+
     }
 
+    private void verifyAddToCart() {
+        AddToCartRequest request = new AddToCartRequest(selectedSkuId);
+
+        if (hasSizes) {
+            if (!didSelectSize) {
+                CustomAlertDialog.showCustomAlertDialog(
+                        getActivity(),
+                        CustomAlertDialog.CustomDialogIconState.NEGATIVE,
+                        getActivity().getString(R.string.please_select_size));
+            } else {
+                mPresenter.addToCart(request);
+            }
+        } else {
+            mPresenter.addToCart(request);
+        }
+    }
 
     private List<String> getQualityImages(List<String> images) {
         List<String> qualityImages = new LinkedList<>();
@@ -455,7 +485,7 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
 
     private void setResultAndFinish() {
 
-        mProductDetailScrollView.scrollTo(0,0);
+        mProductDetailScrollView.scrollTo(0, 0);
         ImageUtils.loadImageImmediate(getActivity(), mItemImageUrl, mProductSharedImage, onGlideLoadedOnBackListener);
 //        mProductSharedImage.setVisibility(View.VISIBLE);
 //        mProductImagesRv.setVisibility(View.INVISIBLE);
@@ -478,18 +508,18 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
         if (mProductSharedImage != null) {
             final Handler handler = new Handler();
             handler.postDelayed(() -> {
-                if (getActivity()!=null){
+                if (getActivity() != null) {
                     ImageUtils.clearImage(getActivity(), mProductSharedImage);
                     if (mProductImagesRv != null) {
                         mProductImagesRv.setVisibility(View.VISIBLE);
                     }
                 }
-            },500);
+            }, 500);
         }
     }
 
 
-    public void readyViewsForTransition(){
+    public void readyViewsForTransition() {
 
         ImageUtils.loadImageImmediate(getActivity(), mItemImageUrl, mProductSharedImage, null);
 

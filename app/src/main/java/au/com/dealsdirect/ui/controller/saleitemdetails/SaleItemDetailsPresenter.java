@@ -134,4 +134,9 @@ public class SaleItemDetailsPresenter<V extends SaleItemDetailsMvpView> extends 
                 }));
 
     }
+
+    @Override
+    public boolean isAuthorized() {
+        return getDataManager().isAuthorized();
+    }
 }
