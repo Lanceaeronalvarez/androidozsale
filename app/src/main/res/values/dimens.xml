@@ -21,7 +21,7 @@
     <dimen name="filter_bar_height">42dp</dimen>
     <dimen name="bottom_nav_height">49dp</dimen>
 
-    <dimen name="cell_height">380dp</dimen>
+    <dimen name="cell_height">285dp</dimen>
     <dimen name="cell_image_height">200dp</dimen>
     <dimen name="row_account_height">75dp</dimen>
 
