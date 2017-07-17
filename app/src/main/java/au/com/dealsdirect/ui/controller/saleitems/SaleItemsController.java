@@ -53,7 +53,7 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
     private String mSearchQuery;
     private boolean hasShowedItems = false;
 
-    private List<GetSaleItemsResponse.Products> saleItems = new LinkedList<>();
+    private List<GetSaleItemsResponse.Products> mSaleItems = new LinkedList<>();
 
 
     @BindView(R.id.controller_sale_items_grid_view)
@@ -74,6 +74,9 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
     private int page = 0;
     private boolean loadingInProgress = false;
     private boolean hasLoadedAllItems = false;
+
+
+    boolean initialLoad = false;
 
     @Inject
     SaleItemsMvpPresenter<SaleItemsMvpView> mPresenter;
@@ -132,14 +135,13 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
     }
 
     @Override
-    protected void onDestroyView(@NonNull View view) {
+    public void onDetach(View view) {
         mPresenter.onDetach();
-        super.onDestroyView(view);
+        super.onDetach(view);
     }
 
     @Override
     protected void setUp(View view) {
-
         hideKeyboard();
         mTitleTextView.setText(mTitle);
         mPaginateCallbacks = new Paginate.Callbacks() {
@@ -164,16 +166,16 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
             }
         };
 
-        mSaleItemsAdapter = new SaleItemsAdapter(saleItems, mPresenter, mSaleId, mTitle);
+        mSaleItemsAdapter = new SaleItemsAdapter(mSaleItems, mPresenter, mSaleId, mTitle);
         mSaleItemsRecyclerView.setLayoutManager(new GridLayoutManager(getActivity(), 2));
         mSaleItemsRecyclerView.setAdapter(mSaleItemsAdapter);
 
-        if (saleItems.isEmpty()) {
+        if (mSaleItems.isEmpty()) {
+            showLoading();
             mPresenter.loadSaleItems(mCategoryKey, mSaleId, mSearchQuery, page);
         } else {
             mPaginateManager = PaginateUtils.init(mSaleItemsRecyclerView, mPaginateCallbacks);
         }
-
 
     }
 
@@ -183,22 +185,29 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
 
         loadingInProgress = false;
 
-        if (items == null || items.isEmpty()) {
+        if (!initialLoad) {
+            mSaleItemsAdapter.replaceData(items);
+            mPaginateManager = PaginateUtils.init(mSaleItemsRecyclerView, mPaginateCallbacks);
+            initialLoad = true;
+        } else {
+            mSaleItemsAdapter.addData(items);
+
+            if (items.size() == 0) {
+                hasLoadedAllItems = true;
+            }
+        }
+
+        mSaleItems = mSaleItemsAdapter.getData();
+
+        if (mSaleItems == null || mSaleItems.isEmpty()) {
             mPlaceholder.setVisibility(View.VISIBLE);
             mSaleItemsRecyclerView.setVisibility(View.GONE);
+            mPaginateManager.unbind();
         } else {
             mPlaceholder.setVisibility(View.GONE);
             mSaleItemsRecyclerView.setVisibility(View.VISIBLE);
         }
 
-        if (page == 0) {
-            mSaleItemsAdapter.replaceData(items);
-            mPaginateManager = PaginateUtils.init(mSaleItemsRecyclerView, mPaginateCallbacks);
-        } else {
-            mSaleItemsAdapter.addData(items);
-        }
-
-        saleItems = mSaleItemsAdapter.getData();
     }
 
 
