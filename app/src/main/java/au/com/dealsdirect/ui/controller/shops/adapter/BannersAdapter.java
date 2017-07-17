@@ -1,87 +1,123 @@
 package au.com.dealsdirect.ui.controller.shops.adapter;
 
 import android.content.Context;
+import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.DisplayMetrics;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.TextView;
 
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 import au.com.dealsdirect.R;
-import au.com.dealsdirect.data.network.model.banner.GetBannerRequest;
 import au.com.dealsdirect.data.network.model.banner.GetBannerResponse;
+import au.com.dealsdirect.ui.controller.shops.ShopsMvpPresenter;
 import au.com.dealsdirect.ui.controller.shops.listener.BannerClickListener;
-import au.com.dealsdirect.ui.controller.shops.viewholder.BannersViewHolder;
-import au.com.dealsdirect.utils.DateUtils;
+import au.com.dealsdirect.utils.AppLogger;
 import au.com.dealsdirect.utils.ImageUtils;
-import au.com.dealsdirect.utils.LegacyStringImageUtils;
+import au.com.dealsdirect.utils.AppConstants;
+import au.com.dealsdirect.utils.ScreenUtils;
+import butterknife.BindView;
+import butterknife.ButterKnife;
 
 /**
  * dp Created by Admin on 6/7/17.
  */
 
-public class BannersAdapter extends RecyclerView.Adapter<BannersViewHolder> {
+public class BannersAdapter extends RecyclerView.Adapter<BannersAdapter.ViewHolder> {
 
-    public static DisplayMetrics DISPLAY_METRICS;
-
+    private int mComputedHeight = 0;
     private List<GetBannerResponse> mSales;
     private Context mContext;
+    private ShopsMvpPresenter mPresenter;
     private BannerClickListener mBannerClickListener;
 
     public BannersAdapter(
             Context context,
+            ShopsMvpPresenter presenter,
             List<GetBannerResponse> sales,
             BannerClickListener bannerClickListener) {
 
         this.mSales = sales;
         this.mContext = context;
+        this.mPresenter = presenter;
         this.mBannerClickListener = bannerClickListener;
+
+        if (mPresenter.isTablet()) {
+
+            int screenWidth = ScreenUtils.getScreenWidth(mContext) / 2;
+
+            mComputedHeight = ImageUtils.getComputedBannerHeight(AppConstants.BANNER_TABLET_WIDTH,
+                    AppConstants.BANNER_TABLET_HEIGHT, screenWidth);
+        } else {
+
+            int screenWidth = ScreenUtils.getScreenWidth(mContext);
+
+            mComputedHeight = ImageUtils.getComputedBannerHeight(AppConstants.BANNER_MOBILE_WIDTH,
+                    AppConstants.BANNER_MOBILE_HEIGHT, screenWidth);
+        }
     }
 
-    @Override
-    public BannersViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        View v = LayoutInflater.from(parent.getContext())
-                .inflate(R.layout.viewholder_banner, parent, false);
+    static class ViewHolder extends RecyclerView.ViewHolder {
 
-        return new BannersViewHolder(v);
+        @BindView(R.id.viewholder_banner_layout)
+        LinearLayout layout;
+
+        @BindView(R.id.viewholder_banner_image)
+        ImageView image;
+
+        @BindView(R.id.viewholder_banner_name)
+        TextView name;
+
+        ViewHolder(View view, int height) {
+            super(view);
+            ButterKnife.bind(this, view);
+
+            GridLayoutManager.LayoutParams params = (GridLayoutManager.LayoutParams) layout.getLayoutParams();
+            params.height = height;
+            layout.setLayoutParams(params);
+        }
     }
 
-    @Override
-    public void onBindViewHolder(BannersViewHolder holder, final int position) {
-
-        holder.bannerTitle.setText(mSales.get(position).getDescription());
-        String startDate = DateUtils.convertApiDateToDateString(mSales.get(position).getStartDate());
-
-        String url = LegacyStringImageUtils.saleImageURLString(mSales.get(position));
-        ImageUtils.loadImage(mContext, url, holder.bannerImage);
-
-        holder.bannerDescription.setText(startDate);
-        holder.bannerImage.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-
-                mBannerClickListener.onBannerClicked(
-                        mSales.get(position).getDestinationID(),
-                        mSales.get(position).getDescription(),
-                        mSales.get(position).getId(),
-                        position,
-                        url);
-            }
-        });
-    }
-
-    public void replace(List<GetBannerResponse> bannerResponses){
+    public void replace(List<GetBannerResponse> bannerResponses) {
         mSales = new ArrayList<>(bannerResponses);
         notifyDataSetChanged();
     }
 
-    public void addAll(List<GetBannerResponse> bannerResponses){
+    public void addAll(List<GetBannerResponse> bannerResponses) {
         mSales.addAll(bannerResponses);
         notifyDataSetChanged();
+    }
+
+    @Override
+    public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.viewholder_banner, parent, false);
+        return new ViewHolder(view, mComputedHeight);
+    }
+
+    @Override
+    public void onBindViewHolder(ViewHolder holder, int position) {
+
+        GetBannerResponse item = mSales.get(position);
+        holder.name.setText(item.getDescription());
+
+        if (mPresenter.isTablet()) {
+            ImageUtils.loadImage(mContext, ImageUtils.getBannerTabletSize(item.getImage()), holder.image);
+            //AppLogger.d("IMG " + ImageUtils.getBannerTabletSize(item.getImage()));
+        } else {
+            ImageUtils.loadImage(mContext, ImageUtils.getBannerMobileSize(item.getImage()), holder.image);
+        }
+
+        holder.layout.setOnClickListener(view -> mBannerClickListener.onBannerClicked(
+                mSales.get(position).getDestinationID(),
+                mSales.get(position).getDescription(),
+                mSales.get(position).getId(),
+                position,
+                item.getImage()));
     }
 
     @Override
@@ -89,51 +125,8 @@ public class BannersAdapter extends RecyclerView.Adapter<BannersViewHolder> {
         return mSales.size();
     }
 
+
     public List<GetBannerResponse> getData(){
         return mSales;
-    }
-
-    public String getFormattedText(
-            Date startDate,
-            Long startDateUTC,
-            String startDateString,
-            String endDateString) {
-
-        Date now = new Date();
-        String formatted = "";
-
-        if (startDate.compareTo(now) < 0) // sale has started
-        {
-            // If sale started earlier today, then group by start date
-            if (android.text.format.DateUtils.isToday(startDateUTC)) {
-
-                String day = DateUtils.getDayOfWeekFromDateString(startDateString);
-                String time = DateUtils.getTimeFromDateString(startDateString);
-                formatted = "Started today at " + time;
-            } else {
-                // Group by end date
-
-                String day = DateUtils.getDayOfWeekFromDateString(endDateString);
-                String time = DateUtils.getTimeFromDateString(endDateString);
-                formatted = "Ends " + day + " at " + time;
-            }
-
-        } else {
-
-            if (android.text.format.DateUtils.isToday(startDateUTC)) {
-                // Sale hasn't started yet and will start later today (group by start date)
-
-                String day = DateUtils.getDayOfWeekFromDateString(startDateString);
-                String time = DateUtils.getTimeFromDateString(startDateString);
-                formatted = "Starting today" + day + " at " + time;
-            } else {
-                // Sale hasn't started yet and won't start later today (group by start date)
-
-                String day = DateUtils.getDayOfWeekFromDateString(startDateString);
-                String time = DateUtils.getTimeFromDateString(startDateString);
-                formatted = "starts " + day + " at " + time;
-            }
-        }
-        return formatted;
     }
 }

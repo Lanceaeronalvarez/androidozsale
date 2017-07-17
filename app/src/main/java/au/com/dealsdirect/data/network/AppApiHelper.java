@@ -36,6 +36,8 @@ import au.com.dealsdirect.data.network.model.checkout.RemoveUserPaymentMethod;
 import au.com.dealsdirect.data.network.model.contacthistory.GetContactHistoryRequest;
 import au.com.dealsdirect.data.network.model.contacthistory.GetContactHistoryResponse;
 import au.com.dealsdirect.data.network.model.contactitem.GetContactsResponse;
+import au.com.dealsdirect.data.network.model.forgotpassword.ForgotPasswordRequest;
+import au.com.dealsdirect.data.network.model.forgotpassword.ForgotPasswordResponseBody;
 import au.com.dealsdirect.data.network.model.invite.GetInviteRequest;
 import au.com.dealsdirect.data.network.model.invite.GetInviteResponse;
 import au.com.dealsdirect.data.network.model.invite.SetInviteRequest;
@@ -49,6 +51,8 @@ import au.com.dealsdirect.data.network.model.contactsubject.ContactSubjectsReque
 import au.com.dealsdirect.data.network.model.createcontact.CreateContactRequest;
 import au.com.dealsdirect.data.network.model.createcontact.CreateContactResponse;
 
+import au.com.dealsdirect.data.network.model.legalities.GetTemplateTextRequest;
+import au.com.dealsdirect.data.network.model.legalities.GetTemplateTextResponse;
 import au.com.dealsdirect.data.network.model.login.LoginEmail;
 import au.com.dealsdirect.data.network.model.login.LoginFacebook;
 import au.com.dealsdirect.data.network.model.login.LoginTicket;
@@ -270,6 +274,15 @@ public class AppApiHelper implements ApiHelper {
     }
 
     @Override
+    public Observable<ForgotPasswordResponseBody> callForgotPassword(ForgotPasswordRequest forgotPasswordRequest) {
+        return Rx2AndroidNetworking.post(ApiEndPoint.FORGOT_PASSWORD)
+                .addHeaders(mApiHeader.getPublicApiHeader())
+                .addJSONObjectBody(JsonUtils.convertToJsonObject(forgotPasswordRequest))
+                .build()
+                .getObjectObservable(ForgotPasswordResponseBody.class);
+    }
+
+    @Override
     public Observable<GetAddresses.ResponseValue> callGetUserAddresses(GetAddresses.RequestValues requestValues) {
         return Rx2AndroidNetworking.post(ApiEndPoint.GET_USER_ADDRESSES)
                 .addHeaders(mApiHeader.getPublicApiHeader())
@@ -467,6 +480,16 @@ public class AppApiHelper implements ApiHelper {
                 .build()
                 .getObjectObservable(ReplyContactResponse.class);
     }
+
+    @Override
+    public Observable<GetTemplateTextResponse> callGetTemplateText(GetTemplateTextRequest templateTextRequest) {
+        return Rx2AndroidNetworking.post(ApiEndPoint.GET_LEGALITIES_TEXT)
+                .addHeaders(mApiHeader.getPublicApiHeader())
+                .addJSONObjectBody(JsonUtils.convertToJsonObject(templateTextRequest))
+                .build()
+                .getObjectObservable(GetTemplateTextResponse.class);
+    }
+
     @Override
     public Observable<GetContactsResponse> callGetContacts(String languageId) {
         return Rx2AndroidNetworking.post(ApiEndPoint.GET_CONTACTS)

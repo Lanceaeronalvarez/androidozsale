@@ -11,6 +11,7 @@ import java.util.List;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 
+import au.com.dealsdirect.R;
 import au.com.dealsdirect.data.auth.AuthHelper;
 import au.com.dealsdirect.data.network.ApiHeader;
 import au.com.dealsdirect.data.network.ApiHelper;
@@ -37,6 +38,8 @@ import au.com.dealsdirect.data.network.model.checkout.RemoveUserPaymentMethod;
 import au.com.dealsdirect.data.network.model.contacthistory.GetContactHistoryRequest;
 import au.com.dealsdirect.data.network.model.contacthistory.GetContactHistoryResponse;
 import au.com.dealsdirect.data.network.model.contactitem.GetContactsResponse;
+import au.com.dealsdirect.data.network.model.forgotpassword.ForgotPasswordRequest;
+import au.com.dealsdirect.data.network.model.forgotpassword.ForgotPasswordResponseBody;
 import au.com.dealsdirect.data.network.model.invite.GetInviteRequest;
 import au.com.dealsdirect.data.network.model.invite.GetInviteResponse;
 import au.com.dealsdirect.data.network.model.invite.SetInviteRequest;
@@ -51,6 +54,8 @@ import au.com.dealsdirect.data.network.model.createcontact.CreateContactRequest;
 import au.com.dealsdirect.data.network.model.createcontact.CreateContactResponse;
 
 
+import au.com.dealsdirect.data.network.model.legalities.GetTemplateTextRequest;
+import au.com.dealsdirect.data.network.model.legalities.GetTemplateTextResponse;
 import au.com.dealsdirect.data.network.model.login.LoginEmail;
 import au.com.dealsdirect.data.network.model.login.LoginFacebook;
 import au.com.dealsdirect.data.network.model.login.LoginTicket;
@@ -214,6 +219,12 @@ public class AppDataManager implements DataManager {
     }
 
     @Override
+    public Observable<ForgotPasswordResponseBody> callForgotPassword(ForgotPasswordRequest requestValue) {
+        return mApiHelper.callForgotPassword(requestValue);
+
+    }
+
+    @Override
     public Observable<GetAddresses.ResponseValue> callGetUserAddresses(GetAddresses.RequestValues requestValues) {
         return mApiHelper.callGetUserAddresses(requestValues);
     }
@@ -366,6 +377,11 @@ public class AppDataManager implements DataManager {
     public Observable<ReplyContactResponse> callReplyContact(ReplyContactRequest createContactRequest) {
         return mApiHelper.callReplyContact(createContactRequest);
 
+    }
+
+    @Override
+    public Observable<GetTemplateTextResponse> callGetTemplateText(GetTemplateTextRequest templateTextRequest) {
+        return mApiHelper.callGetTemplateText(templateTextRequest);
     }
 
 
@@ -597,6 +613,11 @@ public class AppDataManager implements DataManager {
     @Override
     public Observable<Boolean> seedDatabaseOptions() {
         return null;
+    }
+
+    @Override
+    public boolean isTablet() {
+        return mContext.getResources().getBoolean(R.bool.is_tablet);
     }
 
     @Override

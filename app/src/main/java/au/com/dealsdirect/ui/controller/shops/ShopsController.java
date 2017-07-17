@@ -1,5 +1,6 @@
 package au.com.dealsdirect.ui.controller.shops;
 
+import android.annotation.SuppressLint;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -23,8 +24,10 @@ import com.bluelinelabs.conductor.changehandler.HorizontalChangeHandler;
 import com.paginate.Paginate;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 
 import javax.inject.Inject;
 
@@ -91,8 +94,10 @@ public class ShopsController extends BaseController implements ShopsMvpView, Ban
 
     private GridLayoutManager mLayoutManager;
 
+    private List<GetCategoryTreeResponse> mPreLoadedCategories = new LinkedList<>();
+    private List<GetBannerResponse> sales = new LinkedList<>();
+    private Map<String, List<GetCategoryTreeResponse>> mCategoryMap = new HashMap<>();
 
-    private List<GetBannerResponse> mSaleBanners = new ArrayList<>();
 
     public static ShopsController newInstance(GetCategoryTreeResponse getCategoryTreeResponse) {
 
@@ -167,40 +172,32 @@ public class ShopsController extends BaseController implements ShopsMvpView, Ban
         };
 
         mBannerClickListener = this;
+
+        mBannersAdapter = new BannersAdapter(getActivity(), mPresenter, sales, mBannerClickListener);
+
         if (getResources().getBoolean(R.bool.is_tablet)) {
             mLayoutManager = new GridLayoutManager(getActivity(), 2, GridLayoutManager.VERTICAL, false);
         } else {
             mLayoutManager = new GridLayoutManager(getActivity(), 1, GridLayoutManager.VERTICAL, false);
         }
 
-        mBannersAdapter = new BannersAdapter(getActivity(), mSaleBanners, mBannerClickListener);
+        mBannersAdapter = new BannersAdapter(getActivity(), mPresenter, sales, mBannerClickListener);
         shopsControllerBannerRecyclerView.setLayoutManager(mLayoutManager);
         shopsControllerBannerRecyclerView.setAdapter(mBannersAdapter);
 
-        if (mSaleBanners.isEmpty()) {
+        if (sales.isEmpty()) {
             mPresenter.loadShopsBanner(mCategoryName, mCategoryID, bannerOffset, bannerLimit);
         } else {
-            //reinstall pagination on getting back.
+            shopsControllerBannerRecyclerView.setAdapter(mBannersAdapter);
+
+            mBannersAdapter.replace(sales);
             mPaginateManager = PaginateUtils.init(shopsControllerBannerRecyclerView, mPaginateCallbacks);
         }
 
 
-//        mBannersAdapter = new BannersAdapter(getActivity(), mSaleBanners, mBannerClickListener);
-//
-//        shopsControllerBannerRecyclerView.setLayoutManager(mLayoutManager);
-//        shopsControllerBannerRecyclerView.setAdapter(mBannersAdapter);
-//        mPresenter.loadShopsBanner(mCategoryName, mCategoryID, bannerOffset, bannerLimit);
-//        if (mSaleBanners.size() == 0) {
-////            mPresenter.loadShopsBanner(mCategoryName, mCategoryID);
-//
-//        } else {
-////            mBannersAdapter = new BannersAdapter(getActivity(), mSaleBanners, mBannerClickListener);
-//            shopsControllerBannerRecyclerView.setAdapter(mBannersAdapter);
-//
-//            mBannersAdapter.replace(mSaleBanners);
-//            mPaginateManager = PaginateUtils.init(shopsControllerBannerRecyclerView, mPaginateCallbacks);
-//
-//        }
+        if (mPreLoadedCategories.size() == 0) {
+            mPresenter.loadCategoryTree();
+        }
     }
 
     @Override
@@ -219,13 +216,19 @@ public class ShopsController extends BaseController implements ShopsMvpView, Ban
 
         List<String> names = new ArrayList<>();
         names.add(bannerId + position);
-
         if (!mPresenter.isAccessAnonymousEnabled() && !mPresenter.isAuthorized()) {
+
+            assert (getActivity()) != null;
             ((MainMvpView) getActivity()).showLoginController(getRouter(), new AuthHandler() {
                 @Override
                 public void success() {
                     getRouter().pushController(RouterTransaction.with(
-                            SaleItemsController.newInstance(saleId, bannerTitle, bannerId, position, imageUrl, null))
+                            SaleItemsController.newInstance(
+                                    saleId,
+                                    bannerTitle,
+                                    bannerId,
+                                    position,
+                                    imageUrl, null))
                             .pushChangeHandler(new HorizontalChangeHandler())
                             .popChangeHandler(new HorizontalChangeHandler()));
                 }
@@ -246,7 +249,7 @@ public class ShopsController extends BaseController implements ShopsMvpView, Ban
     @OnClick(R.id.partial_toolbar_hamburger)
     void onClickHamburger() {
 
-        getRouter().pushController(RouterTransaction.with(CategoriesController.newInstance())
+        getRouter().pushController(RouterTransaction.with(CategoriesController.newInstance(mCategoryMap, mPreLoadedCategories))
                 .pushChangeHandler(new HorizontalNavTransitionChangeHandler(100))
                 .popChangeHandler(new HorizontalNavTransitionChangeHandler(100)));
 
@@ -254,7 +257,7 @@ public class ShopsController extends BaseController implements ShopsMvpView, Ban
     }
 
 
-    @SuppressWarnings("ConstantConditions")
+    @SuppressWarnings({"ConstantConditions", "deprecation"})
     @OnClick(R.id.partial_toolbar_search_icon)
     void onSearchClick() {
 
@@ -263,6 +266,8 @@ public class ShopsController extends BaseController implements ShopsMvpView, Ban
         mShopsControllerHamburgerView.animate().rotation(-90).setDuration(200).start();
 
         RelativeLayout item = (RelativeLayout) getView().findViewById(R.id.controller_shop_toolbar_container);
+
+        @SuppressLint("InflateParams")
         View child = getActivity().getLayoutInflater().inflate(R.layout.partial_toolbar_search, null);
         item.addView(child);
 
@@ -295,6 +300,8 @@ public class ShopsController extends BaseController implements ShopsMvpView, Ban
         rightOption.setOnClickListener(view -> {
             child.startAnimation(outToRightAnimation());
             item.removeView(child);
+
+            //noinspection deprecation
             shopsControllerSearchView.setImageDrawable(
                     getResources().getDrawable(R.drawable.ic_search));
             rightOption.animate().rotation(-360).setDuration(200).start();
@@ -322,7 +329,13 @@ public class ShopsController extends BaseController implements ShopsMvpView, Ban
             mBannersAdapter.addAll(getBannerResponses);
         }
 
-        mSaleBanners = mBannersAdapter.getData();
+        sales = mBannersAdapter.getData();
+    }
+
+    @Override
+    public void storeCategories(List<GetCategoryTreeResponse> categories) {
+        mPreLoadedCategories = categories;
+        createCategoryMap(mPreLoadedCategories);
     }
 
 
@@ -379,4 +392,46 @@ public class ShopsController extends BaseController implements ShopsMvpView, Ban
             mBannersAdapter.notifyDataSetChanged();
         }
     }
+
+    private void createCategoryMap(List<GetCategoryTreeResponse> categories) {
+
+        for (GetCategoryTreeResponse i : categories) {
+
+            if (i.getChildren() != null) {
+                mCategoryMap.put("shop", categories);
+
+                int childrenSize = i.getChildren().size();
+                if (childrenSize != 0) {
+
+                    addToMap(i.getChildren());
+                }
+                mCategoryMap.put(i.getKey(), i.getChildren());
+
+            }
+        }
+
+        mPreLoadedCategories = fillCategoryContent();
+    }
+
+    private void addToMap(List<GetCategoryTreeResponse> list) {
+
+        for (GetCategoryTreeResponse i : list) {
+
+            int childrenSize = i.getChildren().size();
+            if (childrenSize != 0) {
+                addToMap(i.getChildren());
+            }
+
+            mCategoryMap.put(i.getKey(), i.getChildren());
+
+        }
+    }
+
+    private List<GetCategoryTreeResponse> fillCategoryContent() {
+        return mCategoryMap.get("shop");
+
+
+    }
+
+
 }

@@ -1,0 +1,106 @@
+package au.com.dealsdirect.ui.controller.forgotpassword;
+
+import android.os.Bundle;
+import android.support.annotation.NonNull;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.EditText;
+import android.widget.ImageButton;
+import android.widget.TextView;
+
+import javax.inject.Inject;
+
+import au.com.dealsdirect.R;
+import au.com.dealsdirect.data.network.model.forgotpassword.ForgotPasswordResponseBody;
+import au.com.dealsdirect.ui.base.BaseController;
+import au.com.dealsdirect.utils.BundleBuilder;
+import butterknife.BindView;
+import butterknife.OnClick;
+
+/*
+ * Created by DP on 07/14/2017.
+ */
+
+public class ForgotPasswordController extends BaseController implements ForgotPasswordMvpView {
+
+    @BindView(R.id.partial_toolbar_arrow_title)
+    TextView mForgotPasswordTitle;
+
+    @BindView(R.id.partial_toolbar_filter_view)
+    ImageButton mForgotPasswordRightOptionView;
+
+    @BindView(R.id.controller_forgot_password_email_edittext)
+    EditText mForgotPasswordEmailForm;
+
+    public static final String TAG = "ForgotPasswordController";
+
+    private static final String KEY_TEXT = "ForgotPassword.KEY_TEXT";
+
+    @Inject
+    ForgotPasswordMvpPresenter<ForgotPasswordMvpView> mPresenter;
+
+    public static ForgotPasswordController newInstance() {
+
+        return new ForgotPasswordController(
+                new BundleBuilder(new Bundle())
+                        .build());
+    }
+
+    public ForgotPasswordController(Bundle args) {
+        super(args);
+    }
+
+    @NonNull
+    @Override
+    protected View inflateView(@NonNull LayoutInflater inflater, @NonNull ViewGroup container) {
+        View view = inflater.inflate(R.layout.controller_forgot_password, container, false);
+
+        getControllerComponent().inject(this);
+        mPresenter.onAttach(this);
+        return view;
+    }
+
+    @Override
+    public void onViewBound(@NonNull View view) {
+        super.onViewBound(view);
+        setUp(view);
+    }
+
+    @Override
+    protected void setUp(View view) {
+        // Setup views here
+        //mPresenter.loadSample(new SampleRequest());
+
+        mForgotPasswordRightOptionView.setVisibility(View.INVISIBLE);
+        mForgotPasswordTitle.setText(getResources().getText(R.string.forgot_password));
+    }
+
+    @Override
+    public void onDestroyView(View view) {
+        mPresenter.onDetach();
+        super.onDestroyView(view);
+    }
+
+    @OnClick(R.id.partial_toolbar_arrow_view)
+    void onBackClick(){
+        getActivity().onBackPressed();
+    }
+
+    @OnClick(R.id.controller_forgot_password_send_button)
+    void onForgotPasswordClick(){
+        mPresenter.forgotPassword(mForgotPasswordEmailForm.getText().toString());
+    }
+
+    @Override
+    public void showForgotPasswordResponse(ForgotPasswordResponseBody response) {
+        //noinspection ConstantConditions
+        getActivity().onBackPressed();
+    }
+
+    @Override
+    public void showForgotPasswordError() {
+        //noinspection ConstantConditions
+        getActivity().onBackPressed();
+    }
+}

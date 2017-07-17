@@ -59,15 +59,6 @@ public class LegacyStringImageUtils {
 
     }
 
-    public static String saleImageURLString(Object sale) {
-
-        //Image ID
-        String imageId = ((GetBannerResponse) sale).getImage();
-
-        return imageId;
-
-    }
-
     public static String itemImageURLString(GetPublicSaleItemsResponse.Item item) {
         String brandId = "";
         String imageFilename = "";

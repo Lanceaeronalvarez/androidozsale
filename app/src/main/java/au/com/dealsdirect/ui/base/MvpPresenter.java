@@ -18,6 +18,8 @@ public interface MvpPresenter<V extends MvpView> {
 
     void handleApiError(ANError error);
 
+    boolean isTablet();
+
     void setUserAsLoggedOut();
 
     void doApiCallForObjectResponse(Observable observable, ApiCallback callback);

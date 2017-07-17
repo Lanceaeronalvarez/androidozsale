@@ -29,6 +29,8 @@ public class CategoriesPresenter<V extends CategoriesMvpView> extends BasePresen
 
     @Override
     public void loadPublicSalesCategories(final GetPublicSalesCategoriesRequest request) {
+        Log.d("categories", "controller presenter load public sales category");
+
         getCompositeDisposable().add(getDataManager()
                 .callGetPublicSalesCategories(request)
                 .subscribeOn(getSchedulerProvider().io())
@@ -48,47 +50,6 @@ public class CategoriesPresenter<V extends CategoriesMvpView> extends BasePresen
 
 
                     }
-                }, new Consumer<Throwable>() {
-                    @Override
-                    public void accept(Throwable throwable) throws Exception {
-
-                        if (!isViewAttached()) {
-                            return;
-                        }
-
-                        getMvpView().hideLoading();
-                        getMvpView().onError(throwable.getMessage());
-
-                        // handle load accounts error here
-                        if (throwable instanceof ANError) {
-                            ANError anError = (ANError) throwable;
-                            handleApiError(anError);
-                        }
-                    }
-                }));
-    }
-
-    @Override
-    public void loadCategoryTree() {
-        getCompositeDisposable().add(getDataManager()
-                .callGetGetCategories()
-                .subscribeOn(getSchedulerProvider().io())
-                .observeOn(getSchedulerProvider().ui())
-                .subscribe(response -> {
-
-                    if (!isViewAttached()) {
-                        return;
-                    }
-
-                    Log.d("CategoryPresenter","success load category tree");
-
-                    if (response != null) {
-
-                        getMvpView().showCategories(response);
-                    }
-
-                    getMvpView().hideLoading();
-
                 }, new Consumer<Throwable>() {
                     @Override
                     public void accept(Throwable throwable) throws Exception {

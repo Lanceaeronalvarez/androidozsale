@@ -8,8 +8,10 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.support.v4.util.Pair;
+import android.support.v4.widget.NestedScrollView;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -40,7 +42,6 @@ import au.com.dealsdirect.ui.controller.saleitemdetails.listener.LoadImagesListe
 import au.com.dealsdirect.ui.controller.saleitems.SaleItemsController;
 import au.com.dealsdirect.utils.BundleBuilder;
 import au.com.dealsdirect.utils.ImageUtils;
-import au.com.dealsdirect.utils.PriceUtils;
 import au.com.dealsdirect.widget.ElasticDragDismissFrameLayout;
 import butterknife.BindView;
 import butterknife.OnClick;
@@ -57,6 +58,9 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
     private final String KEY_SALE_ID = "KEY_SALE_ID";
     private final String KEY_ITEM_IMAGE_ID = "KEY_IMAGE_ID";
     private final String KEY_SEO_IDENTIFIER_ID = "KEY_SEO_IDENTIFIER";
+    private final String KEY_ITEM_NAME = "KEY_SALE_NAME";
+    private final String KEY_ITEM_PRICE = "KEY_SALE_PRICE";
+    private final String KEY_ITEM_OLD_PRICE = "KEY_SALE_OLD_PRICE";
 
     private final String KEY_COUNTRY_ID = "KEY_COUNTRY_ID";
     private final String KEY_LANGUAGE_ID = "KEY_LANGUAGE_ID";
@@ -72,8 +76,10 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
     private String mSaleId;
     private String mItemId;
     private String mItemImageUrl;
-
     private String mSeoIdentifierId;
+    private String mSaleName;
+    private String mSalePrice;
+    private String mSaleOldPrice;
 
     //product details views
     @BindView(R.id.discountLabel)
@@ -110,6 +116,8 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
     LinearLayout mProductPriceCategory;
     @BindView(R.id.aboutPricing)
     LinearLayout mProductPricing;
+    @BindView(R.id.controller_sale_item_detail_scrollview)
+    NestedScrollView mProductDetailScrollView;
 
 
     private String mHtmlHeader = "";
@@ -134,6 +142,23 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
         @Override
         public void onDragDismissed() {
             setResultAndFinish();
+        }
+    };
+
+    private final ImageUtils.ImageLoadedCallback onGlideLoadedOnBackListener
+            = new ImageUtils.ImageLoadedCallback() {
+        @Override
+        public void onImageResourceReady() {
+            super.onImageResourceReady();
+
+            mProductSharedImage.setVisibility(View.VISIBLE);
+            mProductImagesRv.setVisibility(View.INVISIBLE);
+            mOtherImagesRv.setVisibility(View.INVISIBLE);
+
+            final Intent resultData = new Intent();
+            resultData.putExtra(RESULT_EXTRA_CONTROLLER_ID, getInstanceId());
+            getActivity().setResult(RESULT_OK, resultData);
+            getActivity().finishAfterTransition();
         }
     };
 
@@ -172,6 +197,11 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
         mItemId = args.getString(KEY_ITEM_ID);
         mItemImageUrl = args.getString(KEY_ITEM_IMAGE_ID);
         mSeoIdentifierId = args.getString(KEY_SEO_IDENTIFIER_ID);
+        mSaleName = args.getString(KEY_ITEM_NAME);
+        mSalePrice = args.getString(KEY_ITEM_PRICE);
+        mSaleOldPrice = args.getString(KEY_ITEM_OLD_PRICE);
+
+        Log.d("LogBundle", mSaleName+" , "+mSalePrice+" , "+mSaleOldPrice);
     }
 
 
@@ -189,18 +219,37 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
     protected void onViewBound(@NonNull View view) {
         super.onViewBound(view);
 
-
         Animation anim = AnimationUtils.loadAnimation(getActivity(), R.anim.slide_to_bottom);
         anim.setDuration(200);
+
+        //product info
+        mProductName.setText(mSaleName);
+        mProductName.startAnimation(anim);
+
+        //        mProductCategory.setText(productDetail.getBrandName());
+        mProductPrice.startAnimation(anim);
+        mProductPrice.setText(mSalePrice);
+        mProductPreviousPrice.setText(mSaleOldPrice);
+        mProductPreviousPrice.startAnimation(anim);
+        mProductPreviousPrice.setPaintFlags(
+                mProductPreviousPrice.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);
+
+        mProductSharedImage.setVisibility(View.VISIBLE);
+
         mProductDetailBottomCard.setVisibility(View.VISIBLE);
         mProductDetailBottomCard.startAnimation(anim);
+        mProductSharedImage.setVisibility(View.VISIBLE);
+
+        mProductDetailBottomCard.setVisibility(View.VISIBLE);
+        mProductDetailBottomCard.startAnimation(anim);
+
 
         //noinspection ConstantConditions
         ((ElasticDragDismissFrameLayout) view).addListener(dragDismissListener);
 
         loadImagesListener = this;
         mProductSharedImage.setTransitionName("transition");
-        ImageUtils.loadImageImmediate(getActivity(), mItemImageUrl, mProductSharedImage);
+        ImageUtils.loadImageImmediate(getActivity(), mItemImageUrl, mProductSharedImage, null);
 
         mPresenter.loadSaleItemDetails(mSeoIdentifierId);
 
@@ -232,11 +281,18 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
                 .getString(R.string.base_html_template_header);
         mHtmlFooter = getActivity().getResources()
                 .getString(R.string.base_html_template_footer);
+
+
     }
 
     @Override
     protected void setUp(View view) {
-        mProductSharedImage.setVisibility(View.VISIBLE);
+
+
+        Animation anim = AnimationUtils.loadAnimation(getActivity(), R.anim.slide_to_bottom);
+        anim.setDuration(200);
+
+
     }
 
     @Override
@@ -258,9 +314,6 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
 
         Animation anim = AnimationUtils.loadAnimation(getActivity(), R.anim.slide_to_bottom);
         anim.setDuration(200);
-//        mProductDescriptionText.setVisibility(View.VISIBLE);
-//        mProductDescriptionText.setAlpha(0f);
-//        mProductDescriptionText.animate().translationY(mProductDescriptionText.getHeight()).alpha(1f).setDuration(200).start();
 
         String shippingInformation = saleDetail.getShippingInformation();
         String shippingPricing = saleDetail.getPricing();
@@ -298,24 +351,6 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
         }
         //bind UI values here
 
-        //product info
-        mProductName.setText(saleDetail.getName());
-        mProductName.startAnimation(anim);
-
-        //        mProductCategory.setText(productDetail.getBrandName());
-        mProductPrice.startAnimation(anim);
-        mProductPrice.setText(PriceUtils.getPriceStringValue(saleDetail.getPrice().getValue()));
-        mProductPreviousPrice.setText(PriceUtils.getPriceStringValue(saleDetail.getOriginalPrice().getValue()));
-
-        if (saleDetail.getOriginalPrice().getValue()
-                .equals(0d)) {
-            mProductPreviousPrice.setVisibility(View.GONE);
-        } else {
-            mProductPreviousPrice.startAnimation(anim);
-            mProductPreviousPrice.setText(PriceUtils.getRpStringValue(saleDetail.getOriginalPrice().getValue()));
-            mProductPreviousPrice.setPaintFlags(
-                    mProductPreviousPrice.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);
-        }
 
         mProductDescriptionText.startAnimation(anim);
         mProductDescriptionText.loadData(mHtmlHeader + saleDetail.getDescription() + mHtmlFooter,
@@ -419,21 +454,23 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
     }
 
     private void setResultAndFinish() {
-        ImageUtils.loadImageImmediate(getActivity(), mItemImageUrl, mProductSharedImage);
-        mProductSharedImage.setVisibility(View.VISIBLE);
-        mProductImagesRv.setVisibility(View.INVISIBLE);
-        mOtherImagesRv.setVisibility(View.INVISIBLE);
+
+        mProductDetailScrollView.scrollTo(0,0);
+        ImageUtils.loadImageImmediate(getActivity(), mItemImageUrl, mProductSharedImage, onGlideLoadedOnBackListener);
+//        mProductSharedImage.setVisibility(View.VISIBLE);
+//        mProductImagesRv.setVisibility(View.INVISIBLE);
+//        mOtherImagesRv.setVisibility(View.INVISIBLE);
 
 
-        final Handler handler = new Handler();
-        handler.postDelayed(() -> {
-
-            final Intent resultData = new Intent();
-            resultData.putExtra(RESULT_EXTRA_CONTROLLER_ID, getInstanceId());
-            getActivity().setResult(RESULT_OK, resultData);
-            getActivity().finishAfterTransition();
-
-        }, 200);
+//        final Handler handler = new Handler();
+//        handler.postDelayed(() -> {
+//
+//            final Intent resultData = new Intent();
+//            resultData.putExtra(RESULT_EXTRA_CONTROLLER_ID, getInstanceId());
+//            getActivity().setResult(RESULT_OK, resultData);
+//            getActivity().finishAfterTransition();
+//
+//        }, 200);
     }
 
     @Override
@@ -454,9 +491,7 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
 
     public void readyViewsForTransition(){
 
-        ImageUtils.loadImageImmediate(getActivity(), mItemImageUrl, mProductSharedImage);
-        mProductSharedImage.setVisibility(View.VISIBLE);
-        mProductImagesRv.setVisibility(View.INVISIBLE);
-        mOtherImagesRv.setVisibility(View.INVISIBLE);
+        ImageUtils.loadImageImmediate(getActivity(), mItemImageUrl, mProductSharedImage, null);
+
     }
 }

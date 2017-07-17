@@ -28,6 +28,7 @@ import au.com.dealsdirect.R;
 import au.com.dealsdirect.data.auth.AuthHandler;
 import au.com.dealsdirect.ui.base.BaseActivity;
 import au.com.dealsdirect.ui.base.BaseController;
+import au.com.dealsdirect.ui.controller.forgotpassword.ForgotPasswordController;
 import au.com.dealsdirect.ui.controller.register.RegisterController;
 import au.com.dealsdirect.ui.custom.CustomAlertDialog;
 import au.com.dealsdirect.utils.BundleBuilder;
@@ -50,6 +51,8 @@ public class LoginController extends BaseController implements LoginMvpView {
     Button mLoginButton;
     @BindView(R.id.fragment_login_signup_text)
     TextView mSignUpTextView;
+    @BindView(R.id.controller_login_forgot_password_text)
+    TextView mForgotPasswordTextView;
 
     private boolean isLoginTapped = false;
 
@@ -157,6 +160,13 @@ public class LoginController extends BaseController implements LoginMvpView {
                 .popChangeHandler(new HorizontalChangeHandler()));
     }
 
+    @Override
+    public void showForgotPassword() {
+        getRouter().pushController(RouterTransaction.with(ForgotPasswordController.newInstance())
+                .pushChangeHandler(new HorizontalChangeHandler())
+                .popChangeHandler(new HorizontalChangeHandler()));
+    }
+
     private void callLoginApi() {
         String email = mEmailEditText.getText().toString();
         String password = mPasswordEditText.getText().toString();
@@ -173,6 +183,11 @@ public class LoginController extends BaseController implements LoginMvpView {
         Log.d("FB", "FB button clicked");
         mPresenter.onFacebookLogin(getActivity(), mCallbackManager);
 
+    }
+
+    @OnClick(R.id.controller_login_forgot_password_text)
+    void onForgotPasswordClick(){
+        showForgotPassword();
     }
 
     @Override

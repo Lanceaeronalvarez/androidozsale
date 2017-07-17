@@ -14,8 +14,6 @@ import au.com.dealsdirect.ui.base.MvpView;
 public interface MainMvpView extends MvpView, BrainTreeListeners {
 
 
-    void showCategoryController();
-
     void showShopController();
 
     void showAccountController();

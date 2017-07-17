@@ -44,6 +44,9 @@ import au.com.dealsdirect.ui.controller.contact.viewcontacts.ViewContactsPresent
 import au.com.dealsdirect.ui.controller.details.DetailsMvpPresenter;
 import au.com.dealsdirect.ui.controller.details.DetailsMvpView;
 import au.com.dealsdirect.ui.controller.details.DetailsPresenter;
+import au.com.dealsdirect.ui.controller.forgotpassword.ForgotPasswordMvpPresenter;
+import au.com.dealsdirect.ui.controller.forgotpassword.ForgotPasswordMvpView;
+import au.com.dealsdirect.ui.controller.forgotpassword.ForgotPasswordPresenter;
 import au.com.dealsdirect.ui.controller.home.HomeMvpPresenter;
 import au.com.dealsdirect.ui.controller.home.HomeMvpView;
 import au.com.dealsdirect.ui.controller.home.HomePresenter;
@@ -53,6 +56,9 @@ import au.com.dealsdirect.ui.controller.invite.InvitePresenter;
 import au.com.dealsdirect.ui.controller.language.LanguageMvpPresenter;
 import au.com.dealsdirect.ui.controller.language.LanguageMvpView;
 import au.com.dealsdirect.ui.controller.language.LanguagePresenter;
+import au.com.dealsdirect.ui.controller.legalities.LegalitiesMvpPresenter;
+import au.com.dealsdirect.ui.controller.legalities.LegalitiesMvpView;
+import au.com.dealsdirect.ui.controller.legalities.LegalitiesPresenter;
 import au.com.dealsdirect.ui.controller.login.LoginMvpPresenter;
 import au.com.dealsdirect.ui.controller.login.LoginMvpView;
 import au.com.dealsdirect.ui.controller.login.LoginPresenter;
@@ -265,6 +271,16 @@ public class ControllerModule {
 
     @Provides
     ContactSelectSubjectMvpPresenter<ContactSelectSubjectMvpView> provideContactSubjectPresenter(ContactSelectSubjectPresenter<ContactSelectSubjectMvpView> presenter) {
+        return presenter;
+    }
+
+    @Provides
+    ForgotPasswordMvpPresenter<ForgotPasswordMvpView> provideForgotPasswordPresenter(ForgotPasswordPresenter<ForgotPasswordMvpView> presenter) {
+        return presenter;
+    }
+
+    @Provides
+    LegalitiesMvpPresenter<LegalitiesMvpView> provideLegalitiesPresenter(LegalitiesPresenter<LegalitiesMvpView> presenter) {
         return presenter;
     }
 }

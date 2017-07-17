@@ -31,7 +31,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="@string/email_address"
-            android:textColor="@color/gray_field_label"
+            android:textColor="@color/dark_text"
             android:textSize="@dimen/text_size_medium"/>
 
         <android.support.design.widget.TextInputLayout
@@ -60,7 +60,7 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="5dp"
             android:text="@string/password"
-            android:textColor="@color/gray_field_label"
+            android:textColor="@color/dark_text"
             android:textSize="@dimen/text_size_medium"/>
 
         <android.support.design.widget.TextInputLayout
@@ -128,44 +128,65 @@
             </LinearLayout>
         </RelativeLayout>
 
+
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="20dp"
-            android:gravity="center"
-            android:orientation="horizontal"
-            android:padding="10dp">
+            android:orientation="vertical">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="20dp"
+                android:gravity="center"
+                android:orientation="horizontal"
+                android:padding="10dp">
+
+                <TextView
+                    fontPath="@string/font_lato_medium"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/not_a_member_yet_text"
+                    android:textColor="@color/dark_text"
+                    android:textSize="@dimen/text_size_medium"/>
+
+                <TextView
+                    android:id="@+id/fragment_login_signup_text"
+                    fontPath="@string/font_lato_semibold"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:paddingEnd="0dp"
+                    android:paddingStart="5dp"
+                    android:text="@string/sign_up"
+                    android:textAllCaps="true"
+                    android:textColor="@color/bg_button_default"
+                    android:textSize="@dimen/text_size_medium"/>
+
+                <TextView
+                    fontPath="@string/font_lato_medium"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:paddingEnd="0dp"
+                    android:paddingStart="5dp"
+                    android:text="@string/now"
+                    android:textColor="@color/dark_text"
+                    android:textSize="@dimen/text_size_medium"/>
+
+            </LinearLayout>
+
 
             <TextView
+                android:id="@+id/controller_login_forgot_password_text"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_marginTop="20dp"
                 fontPath="@string/font_lato_medium"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/not_a_member_yet_text"
-                android:textColor="#919191"
-                android:textSize="@dimen/text_size_medium"/>
-
-            <TextView
-                android:id="@+id/fragment_login_signup_text"
-                fontPath="@string/font_lato_semibold"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:paddingEnd="0dp"
-                android:paddingStart="5dp"
-                android:text="@string/sign_up"
-                android:textAllCaps="true"
+                android:textSize="@dimen/text_size_medium"
                 android:textColor="@color/bg_button_default"
-                android:textSize="@dimen/text_size_medium"/>
-
-            <TextView
-                fontPath="@string/font_lato_medium"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:paddingEnd="0dp"
-                android:paddingStart="5dp"
-                android:text="@string/now"
-                android:textColor="#919191"
-                android:textSize="@dimen/text_size_medium"/>
+                android:text="@string/forgot_password"/>
 
         </LinearLayout>
+
     </LinearLayout>
 </android.support.v4.widget.NestedScrollView>

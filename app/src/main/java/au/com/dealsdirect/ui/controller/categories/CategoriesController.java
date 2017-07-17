@@ -76,7 +76,7 @@ public class CategoriesController extends BaseController
     private SubCategoryClickListener mSubCategoryClickListener;
     private SubCategoryItemClickListener mSubCategoryItemClickListener;
 
-    private List<GetCategoryTreeResponse> mCategories;
+    private static List<GetCategoryTreeResponse> mCategories;
     private static Map<String, List<GetCategoryTreeResponse>> mCategoryMap = new HashMap<>();
     private String mChosenCategory = "shop";
     private String mChosenCategoryKey;
@@ -86,7 +86,12 @@ public class CategoriesController extends BaseController
 
     private List<GetCategoryTreeResponse> mResultSubCategories;
 
-    public static CategoriesController newInstance() {
+    public static CategoriesController newInstance(
+            Map<String, List<GetCategoryTreeResponse>> categoryMap,
+            List<GetCategoryTreeResponse> categoryTree) {
+
+        mCategories = categoryTree;
+        mCategoryMap = categoryMap;
 
         return new CategoriesController(
                 new BundleBuilder(new Bundle())
@@ -109,9 +114,9 @@ public class CategoriesController extends BaseController
     @Override
     protected void onViewBound(@NonNull View view) {
         super.onViewBound(view);
+ 
         setUp(view);
     }
-
 
     @Override
     protected void onDestroyView(@NonNull View view) {
@@ -129,16 +134,22 @@ public class CategoriesController extends BaseController
         mSubCategoryClickListener = this;
         mSubCategoryItemClickListener = this;
 
-        mAdapter = new CategoriesAdapter(new ArrayList<>(), mPresenter, mCategoryClickListener);
+        mAdapter = new CategoriesAdapter(mCategories, mPresenter, mCategoryClickListener);
         mRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity(), LinearLayoutManager.VERTICAL, false));
         mRecyclerView.setAdapter(mAdapter);
 
-        mSubCategoryAdapter = new SubCategoriesAdapter(
-                new ArrayList<>(), mPresenter, mSubCategoryClickListener, mSubCategoryItemClickListener, mCategoryMap);
+        if (mCategories.get(0).getChildren() != null){
+            mSubCategoryAdapter = new SubCategoriesAdapter(
+                    new ArrayList<>(), mPresenter, mSubCategoryClickListener, mSubCategoryItemClickListener, mCategoryMap);
+        }else{
+            mSubCategoryAdapter = new SubCategoriesAdapter(
+                    mCategories.get(0).getChildren(), mPresenter, mSubCategoryClickListener, mSubCategoryItemClickListener, mCategoryMap);
+        }
+
         mSubCategoryRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity(), LinearLayoutManager.VERTICAL, false));
         mSubCategoryRecyclerView.setAdapter(mSubCategoryAdapter);
 
-        mPresenter.loadCategoryTree();
+//        mPresenter.loadCategoryTree();
 
         mSearchField.setOnEditorActionListener((v, actionId, event) -> {
             if (actionId == EditorInfo.IME_ACTION_SEARCH) {
@@ -169,23 +180,16 @@ public class CategoriesController extends BaseController
     }
 
     @Override
-    public void showCategories(List<GetCategoryTreeResponse> categories) {
-        mCategories = categories;
-        createCategoryMap(mCategories);
-    }
-
-
-    @Override
     public void onCategoryClicked(int position, GetCategoryTreeResponse getCategoryTreeResponse) {
 
         String categoryName = getCategoryTreeResponse.getName();
         String categoryKey = getCategoryTreeResponse.getKey() != null ? getCategoryTreeResponse.getKey() : categoryName;
 
-        if (mResultSubCategories.get(position).getChildren() != null) {
+        if (mCategories.get(position).getChildren() != null) {
 //            mSubCategoryAdapter.replaceData();
 
             mSubCategoryAdapter = new SubCategoriesAdapter(
-                    mResultSubCategories.get(position).getChildren(), mPresenter, mSubCategoryClickListener, mSubCategoryItemClickListener, mCategoryMap);
+                    mCategories.get(position).getChildren(), mPresenter, mSubCategoryClickListener, mSubCategoryItemClickListener, mCategoryMap);
             mSubCategoryRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity(), LinearLayoutManager.VERTICAL, false));
             mSubCategoryRecyclerView.setAdapter(mSubCategoryAdapter);
 
@@ -230,17 +234,6 @@ public class CategoriesController extends BaseController
         }
 
         mResultSubCategories = fillCategoryContent();
-
-        mAdapter.replaceData(mResultSubCategories);
-
-        if (mResultSubCategories.get(0).getChildren() != null) {
-            mSubCategoryAdapter.replaceData(mResultSubCategories.get(0).getChildren());
-
-        } else {
-            ArrayList<GetCategoryTreeResponse> emptyChildren = new ArrayList<>();
-            mSubCategoryAdapter.replaceData(emptyChildren);
-
-        }
     }
 
     private void addToMap(List<GetCategoryTreeResponse> list) {

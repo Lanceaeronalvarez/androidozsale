@@ -1,6 +1,8 @@
 package au.com.dealsdirect.utils;
 
 
+import android.annotation.SuppressLint;
+
 public final class AppConstants {
 
     public static final String STATUS_CODE_SUCCESS = "success";
@@ -25,6 +27,25 @@ public final class AppConstants {
     public static final String DD_DATE_FORMAT = "MMMM dd, yyyy";
 
     public static final String MP_TIME_FORMAT = "hh:mm a";
+
+    // Banners postfix
+    public static final int BANNER_MOBILE_WIDTH = 423;
+    public static final int BANNER_MOBILE_HEIGHT = 143;
+
+    public static final int BANNER_TABLET_WIDTH = 313;
+    public static final int BANNER_TABLET_HEIGHT = 294;
+
+    public static final int BANNER_TABLET_FEATURED_WIDTH = 642;
+    public static final int BANNER_TABLEt_FEATURED_HEIGHT = 603;
+
+    @SuppressLint("DefaultLocale")
+    public static final String BANNER_SIZE_MOBILE = String.format("_%dx%d", BANNER_MOBILE_WIDTH, BANNER_MOBILE_HEIGHT);
+    @SuppressLint("DefaultLocale")
+    public static final String BANNER_SIZE_TABLET = String.format("_%dx%d", BANNER_TABLET_WIDTH, BANNER_TABLET_HEIGHT);
+    @SuppressLint("DefaultLocale")
+    public static final String BANNER_SIZE_TABLET_FEATURE = String.format("_%dx%d", BANNER_TABLET_FEATURED_WIDTH, BANNER_TABLEt_FEATURED_HEIGHT);
+
+
 
 
     private AppConstants() {

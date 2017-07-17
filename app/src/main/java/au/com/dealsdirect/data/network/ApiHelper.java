@@ -32,6 +32,8 @@ import au.com.dealsdirect.data.network.model.checkout.RemoveUserPaymentMethod;
 import au.com.dealsdirect.data.network.model.contacthistory.GetContactHistoryRequest;
 import au.com.dealsdirect.data.network.model.contacthistory.GetContactHistoryResponse;
 import au.com.dealsdirect.data.network.model.contactitem.GetContactsResponse;
+import au.com.dealsdirect.data.network.model.forgotpassword.ForgotPasswordRequest;
+import au.com.dealsdirect.data.network.model.forgotpassword.ForgotPasswordResponseBody;
 import au.com.dealsdirect.data.network.model.invite.GetInviteRequest;
 import au.com.dealsdirect.data.network.model.invite.GetInviteResponse;
 import au.com.dealsdirect.data.network.model.invite.SetInviteRequest;
@@ -45,6 +47,8 @@ import au.com.dealsdirect.data.network.model.contactsubject.ContactSubjectsReque
 import au.com.dealsdirect.data.network.model.createcontact.CreateContactRequest;
 import au.com.dealsdirect.data.network.model.createcontact.CreateContactResponse;
 
+import au.com.dealsdirect.data.network.model.legalities.GetTemplateTextRequest;
+import au.com.dealsdirect.data.network.model.legalities.GetTemplateTextResponse;
 import au.com.dealsdirect.data.network.model.login.LoginEmail;
 import au.com.dealsdirect.data.network.model.login.LoginFacebook;
 import au.com.dealsdirect.data.network.model.login.LoginTicket;
@@ -133,6 +137,9 @@ public interface ApiHelper {
 
     Observable<RegisterUserResponse> callRegiser(RegisterUserRequest requestValue);
 
+// FORGOT PASSWORD API CALL
+
+    Observable<ForgotPasswordResponseBody> callForgotPassword(ForgotPasswordRequest forgotPasswordRequest);
 
 //   ADDRESSES API CALLS
 
@@ -202,4 +209,7 @@ public interface ApiHelper {
     Observable<CreateContactResponse> callCreateContact(CreateContactRequest createContactRequest);
 
     Observable<ReplyContactResponse> callReplyContact(ReplyContactRequest createContactRequest);
+
+    // LEGALITIES API CALLS
+    Observable<GetTemplateTextResponse> callGetTemplateText(GetTemplateTextRequest templateTextRequest);
 }

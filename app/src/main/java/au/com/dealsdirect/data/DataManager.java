@@ -16,6 +16,8 @@ public interface DataManager extends PreferencesHelper, ApiHelper, AuthHelper {
 
     Observable<Boolean> seedDatabaseOptions();
 
+    boolean isTablet();
+
     void updateUserInfo(
             String accessToken,
             Long userId,

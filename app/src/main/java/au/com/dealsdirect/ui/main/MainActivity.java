@@ -42,7 +42,6 @@ import au.com.dealsdirect.data.network.model.checkout.CreatePaymentTransaction;
 import au.com.dealsdirect.data.network.model.checkout.getuserpaymentmethods.PaymentMethod;
 import au.com.dealsdirect.ui.base.BaseActivity;
 import au.com.dealsdirect.ui.controller.account.AccountController;
-import au.com.dealsdirect.ui.controller.categories.CategoriesController;
 import au.com.dealsdirect.ui.controller.checkout.addpayment.AddPaymentController;
 import au.com.dealsdirect.ui.controller.checkout.checkout.CheckoutController;
 import au.com.dealsdirect.ui.controller.checkout.paymentsuccess.PaymentSuccessController;
@@ -257,13 +256,6 @@ public class MainActivity extends BaseActivity implements MainMvpView {
         }
     }
 
-
-    @Override
-    public void showCategoryController() {
-        mRouter.pushController(RouterTransaction.with(CategoriesController.newInstance())
-                .pushChangeHandler(new HorizontalChangeHandler())
-                .popChangeHandler(new HorizontalChangeHandler()));
-    }
 
     @Override
     public void showShopController() {

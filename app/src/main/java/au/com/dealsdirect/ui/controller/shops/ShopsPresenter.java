@@ -4,6 +4,8 @@ package au.com.dealsdirect.ui.controller.shops;
  */
 
 
+import android.util.Log;
+
 import com.androidnetworking.error.ANError;
 
 import javax.inject.Inject;
@@ -13,6 +15,7 @@ import au.com.dealsdirect.data.network.model.banner.GetBannerRequest;
 import au.com.dealsdirect.ui.base.BasePresenter;
 import au.com.dealsdirect.utils.rx.SchedulerProvider;
 import io.reactivex.disposables.CompositeDisposable;
+import io.reactivex.functions.Consumer;
 
 public class ShopsPresenter<V extends ShopsMvpView> extends BasePresenter<V> implements
         ShopsMvpPresenter<V> {
@@ -81,6 +84,47 @@ public class ShopsPresenter<V extends ShopsMvpView> extends BasePresenter<V> imp
     }
 
     @Override
+    public void loadCategoryTree() {
+        getCompositeDisposable().add(getDataManager()
+                .callGetGetCategories()
+                .subscribeOn(getSchedulerProvider().io())
+                .observeOn(getSchedulerProvider().ui())
+                .subscribe(response -> {
+
+                    if (!isViewAttached()) {
+                        return;
+                    }
+
+                    Log.d("CategoryPresenter","success load category tree");
+
+                    if (response != null) {
+
+                        getMvpView().storeCategories(response);
+                    }
+
+                    getMvpView().hideLoading();
+
+                }, new Consumer<Throwable>() {
+                    @Override
+                    public void accept(Throwable throwable) throws Exception {
+
+                        if (!isViewAttached()) {
+                            return;
+                        }
+
+                        getMvpView().hideLoading();
+                        getMvpView().onError(throwable.getMessage());
+
+                        // handle load accounts error here
+                        if (throwable instanceof ANError) {
+                            ANError anError = (ANError) throwable;
+                            handleApiError(anError);
+                        }
+                    }
+                }));
+    }
+
+    @Override
     public boolean isAccessAnonymousEnabled() {
         return getDataManager().getAccessAnonymousEnabled();
     }
@@ -89,5 +133,6 @@ public class ShopsPresenter<V extends ShopsMvpView> extends BasePresenter<V> imp
     public boolean isAuthorized() {
         return getDataManager().isAuthorized();
     }
+
 }
 
