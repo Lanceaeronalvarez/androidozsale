@@ -110,13 +110,13 @@ public interface ApiHelper {
 
 
 //  CONFIG API CALLS
-    Observable<GetServerSettings.ResponseValue> callGetServerSettings(Context context, String countryId);
+    Observable<GetServerSettings.ResponseValue> callGetServerSettings(String countryId);
 
-    Observable<GetAppSettings.ResponseValue> callGetPublicAppSettings(Context context, String countryId);
+    Observable<GetAppSettings.ResponseValue> callGetPublicAppSettings(String countryId);
 
-    Observable<GetAppSettings.ResponseValue> callGetAppSettings(Context context, String countryId);
+    Observable<GetAppSettings.ResponseValue> callGetAppSettings(String countryId);
 
-    Observable<GetAppSettingsSection.ResponseValue> callGetAppSettingsSection(Context context, String countryId);
+    Observable<GetAppSettingsSection.ResponseValue> callGetAppSettingsSection(String countryId);
 
     Observable<GetContactsResponse> callGetContacts(String languageId);
 

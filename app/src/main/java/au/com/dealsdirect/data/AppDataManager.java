@@ -163,23 +163,23 @@ public class AppDataManager implements DataManager {
     }
 
     @Override
-    public Observable<GetServerSettings.ResponseValue> callGetServerSettings(Context context, String countryId) {
-        return mApiHelper.callGetServerSettings(context,countryId);
+    public Observable<GetServerSettings.ResponseValue> callGetServerSettings(String countryId) {
+        return mApiHelper.callGetServerSettings(countryId);
     }
 
     @Override
-    public Observable<GetAppSettings.ResponseValue> callGetPublicAppSettings(Context context, String countryId) {
-        return mApiHelper.callGetPublicAppSettings(context,countryId);
+    public Observable<GetAppSettings.ResponseValue> callGetPublicAppSettings(String countryId) {
+        return mApiHelper.callGetPublicAppSettings(countryId);
     }
 
     @Override
-    public Observable<GetAppSettings.ResponseValue> callGetAppSettings(Context context, String countryId) {
-        return mApiHelper.callGetAppSettings(context,countryId);
+    public Observable<GetAppSettings.ResponseValue> callGetAppSettings(String countryId) {
+        return mApiHelper.callGetAppSettings(countryId);
     }
 
     @Override
-    public Observable<GetAppSettingsSection.ResponseValue> callGetAppSettingsSection(Context context, String countryId) {
-        return mApiHelper.callGetAppSettingsSection(context,countryId);
+    public Observable<GetAppSettingsSection.ResponseValue> callGetAppSettingsSection(String countryId) {
+        return mApiHelper.callGetAppSettingsSection(countryId);
     }
 
     @Override

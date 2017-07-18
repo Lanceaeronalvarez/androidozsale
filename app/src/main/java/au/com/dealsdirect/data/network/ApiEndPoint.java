@@ -48,15 +48,10 @@ public final class ApiEndPoint {
     public static final String SAMPLE_API = "";
 
     /*CONFIG CALLS*/
-    public static final String GET_SERVER_SETTING = BASE_URL_ASMX + "GetServerSettings";
-    public static final String GET_PUBLIC_APP_SETTINGS = BASE_URL_ASMX + "GetPublicAppSettings";
-    public static final String GET_APP_SETTINGS = BASE_URL_ASMX + "GetAppSettings";
-    public static final String GET_APP_SETTINGS_SECTION = BASE_URL_ASMX + "GetAppSettingsSection";
-
-    public static final String GET_SERVER_SETTING_TEST = getBaseApiLegacy() + "GetServerSettings";
-    public static final String GET_PUBLIC_APP_SETTINGS_TEST = getBaseApiLegacy() + "GetPublicAppSettings";
-    public static final String GET_APP_SETTINGS_TEST = getBaseApiLegacy() + "GetAppSettings";
-    public static final String GET_APP_SETTINGS_SECTION_TEST = getBaseApiLegacy() + "GetAppSettingsSection";
+    public static final String GET_SERVER_SETTINGS = getBaseApiLegacy() + "GetServerSettings";
+    public static final String GET_PUBLIC_APP_SETTINGS = getBaseApiLegacy() + "GetPublicAppSettings";
+    public static final String GET_APP_SETTINGS = getBaseApiLegacy() + "GetAppSettings";
+    public static final String GET_APP_SETTINGS_SECTION = getBaseApiLegacy() + "GetAppSettingsSection";
 
     public static final String GET_USER_LANGUAGES = getBaseApiLegacy() + "GetUserLanguages";
     public static final String SET_USER_LANGUAGES = getBaseApiLegacy() + "SetUserLanguage";

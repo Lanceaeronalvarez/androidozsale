@@ -4,13 +4,8 @@ package au.com.dealsdirect.ui.main;
  */
 
 
-import android.content.Context;
-import android.content.SharedPreferences;
-
 import com.androidnetworking.error.ANError;
 import com.google.gson.Gson;
-import com.mysale.genie.utility.Prefs;
-import com.mysale.genie.utility.RxBus;
 import com.mysale.genie.utility.config.api.GetAppSettings;
 import com.mysale.genie.utility.config.api.GetAppSettingsSection;
 import com.mysale.genie.utility.config.api.GetServerSettings;
@@ -48,9 +43,9 @@ public class MainPresenter<V extends MainMvpView> extends BasePresenter<V> imple
     }
 
     @Override
-    public void initServerSettings(Context context, String countryId) {
+    public void callGetServerSettings() {
         getCompositeDisposable().add(getDataManager()
-                .callGetServerSettings(context, countryId)
+                .callGetServerSettings(getDataManager().getCountryId())
                 .subscribeOn(getSchedulerProvider().io())
                 .observeOn(getSchedulerProvider().ui())
                 .subscribe(new Consumer<GetServerSettings.ResponseValue>() {
@@ -73,10 +68,13 @@ public class MainPresenter<V extends MainMvpView> extends BasePresenter<V> imple
                             getDataManager().setFollowUsTwitterLink(responseValue.getFollowUsTwitterLink());
                             getDataManager().setImageServerUrl(responseValue.getImageServerUrl());
 
-                            SharedPreferences test = Prefs.getPreferences();
 
-                            //if auth is logged in, appsettings call, elsee publicapp settings
-                            callGetPublicAppSettings(context, countryId);
+                            //if auth is logged in, app settings call, else public app settings
+                            if (isAuthorized()) {
+                                callGetAppSettings();
+                            } else {
+                                callGetPublicAppSettings();
+                            }
 
                         }
                     }
@@ -99,63 +97,69 @@ public class MainPresenter<V extends MainMvpView> extends BasePresenter<V> imple
                         }
                     }
                 }));
-    }
-
-    private void doAppSettingsApiCall(Context context, String countryId) {
-        getCompositeDisposable().add(getDataManager()
-                .callGetPublicAppSettings(context, countryId)
-                .subscribeOn(getSchedulerProvider().io())
-                .subscribeOn(getSchedulerProvider().ui())
-                .subscribe(new Consumer<GetAppSettings.ResponseValue>() {
-                    @Override
-                    public void accept(@NonNull GetAppSettings.ResponseValue responseValue) throws Exception {
-                        if (!isViewAttached()) {
-                            return;
-                        }
-
-                        com.mysale.genie.utility.config.model.getappsettings.Value value = responseValue.d.getValue();
-                        if (value != null) {
-                            getDataManager().setIsPaypalEnabled(value.getPayments().getPayPal().getEnabled());
-                            getDataManager().setIsMasterpassEnabled(value.getPayments().getMasterPass().getEnabled());
-                            getDataManager().setIsAmexEnabled(value.getPayments().getAmExpress().getEnabled());
-                            getDataManager().setIsKountEnabled(value.getPayments().getKount().getEnabled());
-                            getDataManager().setKountMerchantId(value.getPayments().getKount().getMerchantID());
-                            getDataManager().setSearchMaxPrice(value.getSearch().getMaxPrice());
-                            getDataManager().setAccessAnonymousEnabled(value.getAccess().getAnonymousEnabled());
-                        }
-                        RxBus.instance().post("FinishSplashActivity");
-                    }
-                }, new Consumer<Throwable>() {
-                    @Override
-                    public void accept(@NonNull Throwable throwable) throws Exception {
-                        if (!isViewAttached()) {
-                            return;
-                        }
-
-                        getMvpView().hideLoading();
-                        getMvpView().onError(throwable.getMessage());
-
-                        // handle load accounts error here
-                        if (throwable instanceof ANError) {
-                            ANError anError = (ANError) throwable;
-                            handleApiError(anError);
-                        }
-                    }
-                }));
-    }
-
-    public void callGetPublicAppSettings(Context context, String countryId) {
-        doAppSettingsApiCall(context, countryId);
-    }
-
-    private void callGetAppSettings(Context context, String countryId) {
-        doAppSettingsApiCall(context, countryId);
     }
 
     @Override
-    public void callGetAppSettingsSection(Context context, String countryId) {
+    public void callGetAppSettings() {
         getCompositeDisposable().add(getDataManager()
-                .callGetAppSettingsSection(context, countryId)
+                .callGetAppSettings(getDataManager().getCountryId())
+                .subscribeOn(getSchedulerProvider().io())
+                .subscribeOn(getSchedulerProvider().ui())
+                .subscribe(mAppSettingsAcceptCallback, mAppSettingsThrowableCallback));
+    }
+
+    @Override
+    public void callGetPublicAppSettings() {
+        getCompositeDisposable().add(getDataManager()
+                .callGetPublicAppSettings(getDataManager().getCountryId())
+                .subscribeOn(getSchedulerProvider().io())
+                .subscribeOn(getSchedulerProvider().ui())
+                .subscribe(mAppSettingsAcceptCallback, mAppSettingsThrowableCallback));
+    }
+
+    private Consumer<GetAppSettings.ResponseValue> mAppSettingsAcceptCallback = new Consumer<GetAppSettings.ResponseValue>() {
+        @Override
+        public void accept(@NonNull GetAppSettings.ResponseValue responseValue) throws Exception {
+            if (!isViewAttached()) {
+                return;
+            }
+
+            com.mysale.genie.utility.config.model.getappsettings.Value value = responseValue.d.getValue();
+            if (value != null) {
+                getDataManager().setIsPaypalEnabled(value.getPayments().getPayPal().getEnabled());
+                getDataManager().setIsMasterpassEnabled(value.getPayments().getMasterPass().getEnabled());
+                getDataManager().setIsAmexEnabled(value.getPayments().getAmExpress().getEnabled());
+                getDataManager().setIsKountEnabled(value.getPayments().getKount().getEnabled());
+                getDataManager().setKountMerchantId(value.getPayments().getKount().getMerchantID());
+                getDataManager().setSearchMaxPrice(value.getSearch().getMaxPrice());
+                getDataManager().setAccessAnonymousEnabled(value.getAccess().getAnonymousEnabled());
+            }
+        }
+    };
+
+    private Consumer<Throwable> mAppSettingsThrowableCallback = new Consumer<Throwable>() {
+        @Override
+        public void accept(@NonNull Throwable throwable) throws Exception {
+            if (!isViewAttached()) {
+                return;
+            }
+
+            getMvpView().hideLoading();
+            getMvpView().onError(throwable.getMessage());
+
+            // handle load accounts error here
+            if (throwable instanceof ANError) {
+                ANError anError = (ANError) throwable;
+                handleApiError(anError);
+            }
+        }
+    };
+
+
+    @Override
+    public void callGetAppSettingsSection() {
+        getCompositeDisposable().add(getDataManager()
+                .callGetAppSettingsSection(getDataManager().getCountryId())
                 .subscribeOn(getSchedulerProvider().io())
                 .observeOn(getSchedulerProvider().ui())
                 .subscribe(new Consumer<GetAppSettingsSection.ResponseValue>() {

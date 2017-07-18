@@ -197,8 +197,8 @@ public class AppApiHelper implements ApiHelper {
     }
 
     @Override
-    public Observable<GetServerSettings.ResponseValue> callGetServerSettings(Context context, String countryId) {
-        return Rx2AndroidNetworking.post(ApiEndPoint.GET_SERVER_SETTING_TEST)
+    public Observable<GetServerSettings.ResponseValue> callGetServerSettings(String countryId) {
+        return Rx2AndroidNetworking.post(ApiEndPoint.GET_SERVER_SETTINGS)
                 .addHeaders(mApiHeader.getPublicApiHeader())
                 .addJSONObjectBody(JsonUtils.convertToJsonObject(new GetServerSettings.RequestValue(countryId)))
                 .build()
@@ -206,8 +206,8 @@ public class AppApiHelper implements ApiHelper {
     }
 
     @Override
-    public Observable<GetAppSettings.ResponseValue> callGetPublicAppSettings(Context context, String countryId) {
-        return Rx2AndroidNetworking.post(ApiEndPoint.GET_PUBLIC_APP_SETTINGS_TEST)
+    public Observable<GetAppSettings.ResponseValue> callGetPublicAppSettings(String countryId) {
+        return Rx2AndroidNetworking.post(ApiEndPoint.GET_PUBLIC_APP_SETTINGS)
                 .addHeaders(mApiHeader.getPublicApiHeader())
                 .addJSONObjectBody(JsonUtils.convertToJsonObject(new GetAppSettings.RequestValue(countryId)))
                 .build()
@@ -215,8 +215,8 @@ public class AppApiHelper implements ApiHelper {
     }
 
     @Override
-    public Observable<GetAppSettings.ResponseValue> callGetAppSettings(Context context, String countryId) {
-        return Rx2AndroidNetworking.post(ApiEndPoint.GET_APP_SETTINGS_TEST)
+    public Observable<GetAppSettings.ResponseValue> callGetAppSettings(String countryId) {
+        return Rx2AndroidNetworking.post(ApiEndPoint.GET_APP_SETTINGS)
                 .addHeaders(mApiHeader.getPublicApiHeader())
                 .addJSONObjectBody(JsonUtils.convertToJsonObject(new GetAppSettings.RequestValue(countryId)))
                 .build()
@@ -224,8 +224,8 @@ public class AppApiHelper implements ApiHelper {
     }
 
     @Override
-    public Observable<GetAppSettingsSection.ResponseValue> callGetAppSettingsSection(Context context, String countryId) {
-        return Rx2AndroidNetworking.post(ApiEndPoint.GET_APP_SETTINGS_SECTION_TEST)
+    public Observable<GetAppSettingsSection.ResponseValue> callGetAppSettingsSection(String countryId) {
+        return Rx2AndroidNetworking.post(ApiEndPoint.GET_APP_SETTINGS_SECTION)
                 .addHeaders(mApiHeader.getPublicApiHeader())
                 .addJSONObjectBody(JsonUtils.convertToJsonObject(new GetAppSettingsSection.RequestValue(countryId)))
                 .build()

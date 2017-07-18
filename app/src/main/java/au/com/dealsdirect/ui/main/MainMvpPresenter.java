@@ -4,28 +4,19 @@ package au.com.dealsdirect.ui.main;
  */
 
 
-import android.content.Context;
-
 import au.com.dealsdirect.di.PerActivity;
 import au.com.dealsdirect.ui.base.MvpPresenter;
 
 @PerActivity
 public interface MainMvpPresenter<V extends MainMvpView> extends MvpPresenter<V> {
 
-    //Samples
-//    void onDrawerOptionAboutClick();
-//
-//    void onDrawerOptionLogoutClick();
-//
-//    void onViewInitialized();
-//
-//    void onCardExhausted();
-//
-//    void onNavMenuCreated();
+    void callGetServerSettings();
 
-    void initServerSettings(Context context, String countryId);
+    void callGetAppSettings();
 
-    void callGetAppSettingsSection(Context context, String countryId);
+    void callGetPublicAppSettings();
+
+    void callGetAppSettingsSection();
 
     void fetchBTAuthorization();
 
