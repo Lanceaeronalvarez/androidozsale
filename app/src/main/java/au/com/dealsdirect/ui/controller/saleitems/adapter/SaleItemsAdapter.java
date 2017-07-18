@@ -37,6 +37,9 @@ public class SaleItemsAdapter extends RecyclerView.Adapter<SaleItemsAdapter.View
         @BindView(R.id.cell_product_image)
         public ImageView mSaleItemImage;
 
+        @BindView(R.id.sale_item_sold_out)
+        public TextView mSaleItemSoldOut;
+
         @BindView(R.id.sale_item_name)
         public TextView mSaleItemName;
 
@@ -97,6 +100,10 @@ public class SaleItemsAdapter extends RecyclerView.Adapter<SaleItemsAdapter.View
 
         ImageUtils.loadImage(mContext, url, holder.mSaleItemImage);
 
+        if (!saleItem.isAvailable()) {
+            holder.mSaleItemSoldOut.setVisibility(View.VISIBLE);
+        }
+
         holder.mSaleBrand.setText(saleItemBrand);
         holder.mSalePrice.setText(saleItemPrice);
         holder.mOldPrice.setText(saleItemOldPrice);
@@ -112,12 +119,12 @@ public class SaleItemsAdapter extends RecyclerView.Adapter<SaleItemsAdapter.View
                 mSaleId));
     }
 
-    public void replaceData(List<GetSaleItemsResponse.Products> saleItems){
+    public void replaceData(List<GetSaleItemsResponse.Products> saleItems) {
         mData = saleItems;
         notifyDataSetChanged();
     }
 
-    public void addData(List<GetSaleItemsResponse.Products> saleItems){
+    public void addData(List<GetSaleItemsResponse.Products> saleItems) {
         mData.addAll(saleItems);
         notifyDataSetChanged();
     }
@@ -127,7 +134,7 @@ public class SaleItemsAdapter extends RecyclerView.Adapter<SaleItemsAdapter.View
         return mData.size();
     }
 
-    public List<GetSaleItemsResponse.Products> getData(){
+    public List<GetSaleItemsResponse.Products> getData() {
         return mData;
     }
 }
