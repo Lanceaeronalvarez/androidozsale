@@ -94,6 +94,8 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
     RecyclerView mOtherImagesRv;
     @BindView(R.id.productName)
     TextView mProductName;
+    @BindView(R.id.productBrand)
+    TextView mProductBrand;
     @BindView(R.id.productPrice)
     TextView mProductPrice;
     @BindView(R.id.productPreviousPrice)
@@ -231,7 +233,6 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
         mProductName.setText(mSaleName);
         mProductName.startAnimation(anim);
 
-        //        mProductCategory.setText(productDetail.getBrandName());
         mProductPrice.startAnimation(anim);
         mProductPrice.setText(mSalePrice);
         mProductPreviousPrice.setText(mSaleOldPrice);
@@ -272,14 +273,11 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
         mProductImagesRv.setAdapter(mSaleItemImagesAdapter);
 
         mProductImagesRv.addOnPageChangedListener((i, i1) -> {
-            RecyclerView.ViewHolder vhNew = mOtherImagesRv.findViewHolderForLayoutPosition(i1);
-            vhNew.itemView.animate()
-                    .alpha(1f)
-                    .setDuration(200)
-                    .start();
+            SaleItemDetailsImageAdapter.ViewHolder vhNew = (SaleItemDetailsImageAdapter.ViewHolder) mOtherImagesRv.findViewHolderForLayoutPosition(i1);
+            vhNew.image.setImageResource(R.drawable.circle_indicator_active);
 
-            RecyclerView.ViewHolder vhOld = mOtherImagesRv.findViewHolderForLayoutPosition(i);
-            vhOld.itemView.setAlpha(0.4f);
+            SaleItemDetailsImageAdapter.ViewHolder vhOld = (SaleItemDetailsImageAdapter.ViewHolder) mOtherImagesRv.findViewHolderForLayoutPosition(i);
+            vhOld.image.setImageResource(R.drawable.circle_indicator_inactive);
         });
 
         mHtmlHeader = getActivity().getResources()
@@ -322,6 +320,8 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
 
         String shippingInformation = saleDetail.getShippingInformation();
         String shippingPricing = saleDetail.getPricing();
+
+        mProductBrand.setText(saleDetail.getBrandName());
 
         if (shippingInformation != null) {
             mProductPricing.setVisibility(View.VISIBLE);

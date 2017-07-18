@@ -107,11 +107,10 @@ public class SaleItemDetailsImageAdapter extends RecyclerView.Adapter<RecyclerVi
                 break;
             case 2:
                 if (position != 0) {
-                    vh.itemView.setAlpha(0.40f);
+                    vh.image.setImageResource(R.drawable.circle_indicator_inactive);
+                } else {
+                    vh.image.setImageResource(R.drawable.circle_indicator_active);
                 }
-
-                vh.image.setImageDrawable(ContextCompat.getDrawable(vh.image.getContext(),
-                        R.drawable.circle_indicator_active));
                 break;
             default:
                 break;
