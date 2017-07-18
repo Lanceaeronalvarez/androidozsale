@@ -11,10 +11,9 @@
     <RelativeLayout
         android:id="@+id/sale_item_container"
         android:layout_width="match_parent"
-        android:layout_height="@dimen/cell_height"
+        android:layout_height="wrap_content"
         android:background="@drawable/bg_sale_item"
         android:orientation="vertical">
-
 
         <ImageView
             android:id="@+id/cell_product_image"
@@ -26,9 +25,12 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_below="@+id/cell_product_image"
-            android:gravity="center"
-            android:maxLines="2"
             android:layout_marginTop="5dp"
+            android:gravity="center"
+            android:lines="1"
+            android:paddingLeft="5dp"
+            android:paddingRight="5dp"
+            android:singleLine="true"
             android:text=""
             android:textColor="#068ab1"
             android:textSize="@dimen/text_size_large"
@@ -41,10 +43,10 @@
             android:layout_height="wrap_content"
             android:layout_below="@+id/sale_item_brand"
             android:ellipsize="end"
-            android:paddingLeft="5dp"
-            android:paddingRight="5dp"
             android:gravity="center"
             android:lines="2"
+            android:paddingLeft="5dp"
+            android:paddingRight="5dp"
             android:textColor="#000000"
             android:textSize="@dimen/text_size_medium"
             tools:text="" />
@@ -63,6 +65,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginEnd="5dp"
+                android:lines="1"
                 android:singleLine="true"
                 android:text=""
                 android:textColor="@color/colorAccent"
@@ -73,10 +76,12 @@
                 android:id="@+id/sale_item_old_price"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:lines="1"
                 android:singleLine="true"
                 android:text=""
                 android:textColor="@color/gray_description_text"
                 android:textSize="@dimen/text_size_medium" />
+
         </LinearLayout>
 
     </RelativeLayout>
