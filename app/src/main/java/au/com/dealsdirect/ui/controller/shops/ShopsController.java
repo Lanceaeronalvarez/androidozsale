@@ -256,6 +256,11 @@ public class ShopsController extends BaseController implements ShopsMvpView, Ban
 //        ((MainActivity) getActivity()).hideBottomNav();
     }
 
+    @OnClick(R.id.partial_toolbar_logo)
+    void onClickLogo() {
+        shopsControllerBannerRecyclerView.smoothScrollToPosition(0);
+        shopsControllerBannerRecyclerView.postDelayed(() -> shopsControllerBannerRecyclerView.scrollToPosition(0), 500);
+    }
 
     @SuppressWarnings({"ConstantConditions", "deprecation"})
     @OnClick(R.id.partial_toolbar_search_icon)
