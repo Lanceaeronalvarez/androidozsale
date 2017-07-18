@@ -5,7 +5,7 @@
     tools:targetApi="lollipop">
     <item>
         <shape xmlns:android="http://schemas.android.com/apk/res/android">
-            <corners android:radius="25dp" />
+            <corners android:radius="5dp" />
             <solid android:color="#FED151" />
         </shape>
     </item>
