@@ -12,7 +12,7 @@
             android:translateY="293">
             <group
                 android:translateX="307"
-                android:translateY="26">
+                android:translateY="29">
                 <group
                     android:rotation="-90"
                     android:translateX="-0.299976"
