@@ -11,5 +11,6 @@ public interface BannerClickListener {
             String bannerTitle,
             String bannerId,
             int position,
-            String imageUrl);
+            String imageUrl,
+            boolean isAvailable);
 }

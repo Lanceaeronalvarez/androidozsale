@@ -119,12 +119,14 @@ public class BannersAdapter extends RecyclerView.Adapter<BannersAdapter.ViewHold
             holder.overlay.setEnabled(false);
         }
 
-        holder.layout.setOnClickListener(view -> mBannerClickListener.onBannerClicked(
-                mSales.get(position).getDestinationID(),
-                mSales.get(position).getDescription(),
-                mSales.get(position).getId(),
-                position,
-                item.getImage()));
+        holder.layout.setOnClickListener(view ->
+                mBannerClickListener.onBannerClicked(
+                        item.getDestinationID(),
+                        item.getDescription(),
+                        item.getId(),
+                        position,
+                        item.getImage(),
+                        item.getIsAvailable()));
     }
 
     @Override

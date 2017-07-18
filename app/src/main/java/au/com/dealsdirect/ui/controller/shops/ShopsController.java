@@ -1,6 +1,7 @@
 package au.com.dealsdirect.ui.controller.shops;
 
 import android.annotation.SuppressLint;
+import android.content.DialogInterface;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -43,6 +44,7 @@ import au.com.dealsdirect.ui.controller.shops.listener.BannerClickListener;
 import au.com.dealsdirect.ui.custom.transitions.HorizontalNavTransitionChangeHandler;
 import au.com.dealsdirect.ui.main.MainMvpView;
 import au.com.dealsdirect.utils.BundleBuilder;
+import au.com.dealsdirect.utils.DialogUtils;
 import au.com.dealsdirect.utils.KeyboardUtils;
 import au.com.dealsdirect.utils.PaginateUtils;
 import butterknife.BindView;
@@ -76,7 +78,6 @@ public class ShopsController extends BaseController implements ShopsMvpView, Ban
     View mShopsControllerToolbar;
 
     private BannersAdapter mBannersAdapter;
-    private BannerClickListener mBannerClickListener;
     private Paginate.Callbacks mPaginateCallbacks;
     private Paginate mPaginateManager;
 
@@ -171,17 +172,13 @@ public class ShopsController extends BaseController implements ShopsMvpView, Ban
             }
         };
 
-        mBannerClickListener = this;
-
-        mBannersAdapter = new BannersAdapter(getActivity(), mPresenter, sales, mBannerClickListener);
-
-        if (getResources().getBoolean(R.bool.is_tablet)) {
+        if (mPresenter.isTablet()) {
             mLayoutManager = new GridLayoutManager(getActivity(), 2, GridLayoutManager.VERTICAL, false);
         } else {
             mLayoutManager = new GridLayoutManager(getActivity(), 1, GridLayoutManager.VERTICAL, false);
         }
 
-        mBannersAdapter = new BannersAdapter(getActivity(), mPresenter, sales, mBannerClickListener);
+        mBannersAdapter = new BannersAdapter(getActivity(), mPresenter, sales, this);
         shopsControllerBannerRecyclerView.setLayoutManager(mLayoutManager);
         shopsControllerBannerRecyclerView.setAdapter(mBannersAdapter);
 
@@ -212,23 +209,20 @@ public class ShopsController extends BaseController implements ShopsMvpView, Ban
             String bannerTitle,
             String bannerId,
             int position,
-            String imageUrl) {
+            String imageUrl,
+            boolean isAvailable) {
 
         List<String> names = new ArrayList<>();
         names.add(bannerId + position);
         if (!mPresenter.isAccessAnonymousEnabled() && !mPresenter.isAuthorized()) {
 
+            // Invoke login if no auth or not an open app
             assert (getActivity()) != null;
             ((MainMvpView) getActivity()).showLoginController(getRouter(), new AuthHandler() {
                 @Override
                 public void success() {
                     getRouter().pushController(RouterTransaction.with(
-                            SaleItemsController.newInstance(
-                                    saleId,
-                                    bannerTitle,
-                                    bannerId,
-                                    position,
-                                    imageUrl, null))
+                            SaleItemsController.newInstance(saleId, bannerTitle, bannerId, position, imageUrl, null))
                             .pushChangeHandler(new HorizontalChangeHandler())
                             .popChangeHandler(new HorizontalChangeHandler()));
                 }
@@ -239,10 +233,17 @@ public class ShopsController extends BaseController implements ShopsMvpView, Ban
                 }
             });
         } else {
-            getRouter().pushController(RouterTransaction.with(
-                    SaleItemsController.newInstance(saleId, bannerTitle, bannerId, position, imageUrl, null))
-                    .pushChangeHandler(new HorizontalChangeHandler())
-                    .popChangeHandler(new HorizontalChangeHandler()));
+
+            // Check if sale is available
+            //TODO: Need computation for date and time when sale response is cached
+            if (isAvailable) {
+                getRouter().pushController(RouterTransaction.with(
+                        SaleItemsController.newInstance(saleId, bannerTitle, bannerId, position, imageUrl, null))
+                        .pushChangeHandler(new HorizontalChangeHandler())
+                        .popChangeHandler(new HorizontalChangeHandler()));
+            } else {
+                DialogUtils.showYesDialog(getActivity(), "", "Sale is currently closed", "OK", (dialogInterface, i) -> dialogInterface.dismiss());
+            }
         }
     }
 
