@@ -70,6 +70,9 @@ public class BannersAdapter extends RecyclerView.Adapter<BannersAdapter.ViewHold
         @BindView(R.id.viewholder_banner_image)
         ImageView image;
 
+        @BindView(R.id.viewholder_banner_overlay)
+        View overlay;
+
         @BindView(R.id.viewholder_banner_name)
         TextView name;
 
@@ -112,6 +115,10 @@ public class BannersAdapter extends RecyclerView.Adapter<BannersAdapter.ViewHold
             ImageUtils.loadImage(mContext, ImageUtils.getBannerMobileSize(item.getImage()), holder.image);
         }
 
+        if (!item.getIsAvailable()) {
+            holder.overlay.setEnabled(false);
+        }
+
         holder.layout.setOnClickListener(view -> mBannerClickListener.onBannerClicked(
                 mSales.get(position).getDestinationID(),
                 mSales.get(position).getDescription(),
@@ -126,7 +133,7 @@ public class BannersAdapter extends RecyclerView.Adapter<BannersAdapter.ViewHold
     }
 
 
-    public List<GetBannerResponse> getData(){
+    public List<GetBannerResponse> getData() {
         return mSales;
     }
 }
