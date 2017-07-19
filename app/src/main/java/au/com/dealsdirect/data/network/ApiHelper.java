@@ -32,6 +32,8 @@ import au.com.dealsdirect.data.network.model.checkout.RemoveUserPaymentMethod;
 import au.com.dealsdirect.data.network.model.contacthistory.GetContactHistoryRequest;
 import au.com.dealsdirect.data.network.model.contacthistory.GetContactHistoryResponse;
 import au.com.dealsdirect.data.network.model.contactitem.GetContactsResponse;
+import au.com.dealsdirect.data.network.model.fcm.NotificationEvent;
+import au.com.dealsdirect.data.network.model.fcm.RegisterDevice;
 import au.com.dealsdirect.data.network.model.forgotpassword.ForgotPasswordRequest;
 import au.com.dealsdirect.data.network.model.forgotpassword.ForgotPasswordResponseBody;
 import au.com.dealsdirect.data.network.model.invite.GetInviteRequest;
@@ -212,4 +214,9 @@ public interface ApiHelper {
 
     // LEGALITIES API CALLS
     Observable<GetTemplateTextResponse> callGetTemplateText(GetTemplateTextRequest templateTextRequest);
+
+    //GCM api calls
+    Observable<RegisterDevice.ResponseValue> callRegisterDevice(RegisterDevice.RequestValue requestValue);
+
+    Observable<NotificationEvent.ResponseValue> callNotificationEvent(NotificationEvent.RequestValue requestValue);
 }

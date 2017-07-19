@@ -90,5 +90,17 @@ public interface PreferencesHelper {
 
     int getPaymentCount();
 
+    void setIsGCMRegistered(int val);
+
+    int getIsGCMRegistered();
+
+    void setGCMRegistrationId(String registrationId);
+
+    String getGCMRegistrationId();
+
+    void setGCMAppVersion(int appVersion);
+
+    int getGCMAppVersion();
+
 
 }

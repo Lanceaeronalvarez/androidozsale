@@ -36,6 +36,8 @@ import au.com.dealsdirect.data.network.model.checkout.RemoveUserPaymentMethod;
 import au.com.dealsdirect.data.network.model.contacthistory.GetContactHistoryRequest;
 import au.com.dealsdirect.data.network.model.contacthistory.GetContactHistoryResponse;
 import au.com.dealsdirect.data.network.model.contactitem.GetContactsResponse;
+import au.com.dealsdirect.data.network.model.fcm.NotificationEvent;
+import au.com.dealsdirect.data.network.model.fcm.RegisterDevice;
 import au.com.dealsdirect.data.network.model.forgotpassword.ForgotPasswordRequest;
 import au.com.dealsdirect.data.network.model.forgotpassword.ForgotPasswordResponseBody;
 import au.com.dealsdirect.data.network.model.invite.GetInviteRequest;
@@ -488,6 +490,24 @@ public class AppApiHelper implements ApiHelper {
                 .addJSONObjectBody(JsonUtils.convertToJsonObject(templateTextRequest))
                 .build()
                 .getObjectObservable(GetTemplateTextResponse.class);
+    }
+
+    @Override
+    public Observable<RegisterDevice.ResponseValue> callRegisterDevice(RegisterDevice.RequestValue requestValue) {
+        return  Rx2AndroidNetworking.get(ApiEndPoint.GCM_REGISTER_DEVICE)
+                .addHeaders(mApiHeader.getPublicApiHeader())
+                .addQueryParameter(requestValue)
+                .build()
+                .getObjectObservable(RegisterDevice.ResponseValue.class);
+    }
+
+    @Override
+    public Observable<NotificationEvent.ResponseValue> callNotificationEvent(NotificationEvent.RequestValue requestValue) {
+        return Rx2AndroidNetworking.post(ApiEndPoint.GCM_NOTIFICATION_EVENT)
+                .addHeaders(mApiHeader.getPublicApiHeader())
+                .addJSONObjectBody(JsonUtils.convertToJsonObject(requestValue))
+                .build()
+                .getObjectObservable(NotificationEvent.ResponseValue.class);
     }
 
     @Override

@@ -44,6 +44,7 @@ import au.com.dealsdirect.R;
 import au.com.dealsdirect.data.auth.AuthHandler;
 import au.com.dealsdirect.data.network.model.checkout.CreatePaymentTransaction;
 import au.com.dealsdirect.data.network.model.checkout.getuserpaymentmethods.PaymentMethod;
+import au.com.dealsdirect.service.fcm.GNotification;
 import au.com.dealsdirect.ui.base.BaseActivity;
 import au.com.dealsdirect.ui.controller.account.AccountController;
 import au.com.dealsdirect.ui.controller.checkout.addpayment.AddPaymentController;
@@ -70,6 +71,8 @@ public class MainActivity extends BaseActivity implements MainMvpView {
 
     @Inject
     MainMvpPresenter<MainMvpView> mPresenter;
+    @Inject
+    GNotification gNotification;
 
     @BindView(R.id.activity_main_frame)
     ViewGroup mContainer;
@@ -106,14 +109,29 @@ public class MainActivity extends BaseActivity implements MainMvpView {
                     .tag("Home"));
         }
 
-        Intent intent = getIntent();
-        String action = intent.getAction();
-        Uri data = intent.getData();
-        if (data != null) {
-            Bundle bundle = GDeepLinkUtil.generateExtraFromDeepLink(data);
-            intent.putExtras(bundle);
-            if (intent.hasExtra(GDeepLinkUtil.DEEP_LINK_INTENT_LAUNCHED)) {
+         /* Initialize FireBase notifications */
+        gNotification.registerDeviceForNotification(getApplicationContext());
 
+        Intent intent = getIntent();
+
+        if (intent != null) {
+
+            Uri data = intent.getData();
+
+            if (data != null) {
+                Bundle bundle = GDeepLinkUtil.generateExtraFromDeepLink(data);
+                intent.putExtras(bundle);
+            }
+
+            // If activity was launched from notification0
+            if (intent.hasExtra(GNotification.FCM_INTENT_LAUNCHED)) {
+                boolean isOpenedFromNotifications = intent.getExtras().getBoolean(GNotification.FCM_INTENT_LAUNCHED);
+                if (isOpenedFromNotifications) {
+                    gNotification.callNotificationEvent(this);
+                }
+            }
+            //If activity was launched via deep link
+            else if (intent.hasExtra(GDeepLinkUtil.DEEP_LINK_INTENT_LAUNCHED)) {
                 Intent next = new Intent();
                 next.setClass(this, SharedActivity.class);
 

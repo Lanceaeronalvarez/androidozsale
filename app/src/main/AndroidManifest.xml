@@ -5,7 +5,18 @@
           android:installLocation="auto">
 
     <uses-permission android:name="android.permission.INTERNET"/>
+    <uses-permission android:name="android.permission.WAKE_LOCK"/>
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
+
+
+    <!-- [START gcm_permissions] -->
+    <permission
+        android:name="${applicationId}.permission.C2D_MESSAGE"
+        android:protectionLevel="signature"/>
+
+    <uses-permission android:name="${applicationId}.permission.C2D_MESSAGE"/>
+
+    <!-- [END gcm_permissions] -->
 
     <application
         android:name=".DDApplication"
@@ -71,6 +82,25 @@
 
             </intent-filter>
         </activity>
+
+
+        <!-- [START gcm_service] -->
+        <meta-data
+            android:name="com.google.android.gms.version"
+            android:value="@integer/google_play_services_version"/>
+
+        <receiver
+            android:name=".service.fcm.GcmBroadcastReceiver"
+            android:permission="com.google.android.c2dm.permission.SEND">
+            <intent-filter>
+                <action android:name="com.google.android.c2dm.intent.RECEIVE"/>
+
+                <category android:name="${applicationId}"/>
+            </intent-filter>
+        </receiver>
+
+        <service android:name=".service.fcm.GcmIntentService"/>
+        <!-- [END gcm_service] -->
 
         <!-- [START facebook] -->
         <meta-data android:name="com.facebook.sdk.ApplicationId"

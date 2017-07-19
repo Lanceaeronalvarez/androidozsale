@@ -1,0 +1,73 @@
+{
+  "project_info": {
+    "project_number": "506012601270",
+    "firebase_url": "https://dealsdirect-4d830.firebaseio.com",
+    "project_id": "dealsdirect-4d830",
+    "storage_bucket": "dealsdirect-4d830.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:506012601270:android:d1712d1f61e17b08",
+        "android_client_info": {
+          "package_name": "au.com.dealsdirect"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "506012601270-25pssartsntdo7paomqvpudnuprqtglk.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDaYEYj2nLt09L0JPCPbXc4-t5HR-AmhLA"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 1,
+          "other_platform_oauth_client": []
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:506012601270:android:4c9f8b476601fda2",
+        "android_client_info": {
+          "package_name": "au.com.dealsdirect.test"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "506012601270-25pssartsntdo7paomqvpudnuprqtglk.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDaYEYj2nLt09L0JPCPbXc4-t5HR-AmhLA"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 1,
+          "other_platform_oauth_client": []
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

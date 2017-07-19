@@ -38,6 +38,8 @@ import au.com.dealsdirect.data.network.model.checkout.RemoveUserPaymentMethod;
 import au.com.dealsdirect.data.network.model.contacthistory.GetContactHistoryRequest;
 import au.com.dealsdirect.data.network.model.contacthistory.GetContactHistoryResponse;
 import au.com.dealsdirect.data.network.model.contactitem.GetContactsResponse;
+import au.com.dealsdirect.data.network.model.fcm.NotificationEvent;
+import au.com.dealsdirect.data.network.model.fcm.RegisterDevice;
 import au.com.dealsdirect.data.network.model.forgotpassword.ForgotPasswordRequest;
 import au.com.dealsdirect.data.network.model.forgotpassword.ForgotPasswordResponseBody;
 import au.com.dealsdirect.data.network.model.invite.GetInviteRequest;
@@ -384,6 +386,16 @@ public class AppDataManager implements DataManager {
         return mApiHelper.callGetTemplateText(templateTextRequest);
     }
 
+    @Override
+    public Observable<RegisterDevice.ResponseValue> callRegisterDevice(RegisterDevice.RequestValue requestValue) {
+        return mApiHelper.callRegisterDevice(requestValue);
+    }
+
+    @Override
+    public Observable<NotificationEvent.ResponseValue> callNotificationEvent(NotificationEvent.RequestValue requestValue) {
+        return mApiHelper.callNotificationEvent(requestValue);
+    }
+
 
     @Override
     public Observable<GetPublicSaleDetailsResponse> callGetPublicSaleDetails(GetPublicSaleDetailsRequest request) {
@@ -592,6 +604,36 @@ public class AppDataManager implements DataManager {
     @Override
     public int getPaymentCount() {
         return mPreferencesHelper.getPaymentCount();
+    }
+
+    @Override
+    public void setIsGCMRegistered(int val) {
+        mPreferencesHelper.setIsGCMRegistered(val);
+    }
+
+    @Override
+    public int getIsGCMRegistered() {
+        return mPreferencesHelper.getIsGCMRegistered();
+    }
+
+    @Override
+    public void setGCMRegistrationId(String registrationId) {
+        mPreferencesHelper.setGCMRegistrationId(registrationId);
+    }
+
+    @Override
+    public String getGCMRegistrationId() {
+        return mPreferencesHelper.getGCMRegistrationId();
+    }
+
+    @Override
+    public void setGCMAppVersion(int appVersion) {
+        mPreferencesHelper.setGCMAppVersion(appVersion);
+    }
+
+    @Override
+    public int getGCMAppVersion() {
+        return mPreferencesHelper.getGCMAppVersion();
     }
 
 

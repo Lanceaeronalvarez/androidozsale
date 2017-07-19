@@ -1,5 +1,7 @@
 package au.com.dealsdirect.di.component;
 
+import android.app.IntentService;
+
 import au.com.dealsdirect.di.PerService;
 import au.com.dealsdirect.di.module.ServiceModule;
 import au.com.dealsdirect.service.SyncService;
@@ -11,5 +13,7 @@ import dagger.Component;
 public interface ServiceComponent {
 
     void inject(SyncService service);
+
+    void inject(IntentService service);
 
 }

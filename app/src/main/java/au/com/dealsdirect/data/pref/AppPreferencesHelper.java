@@ -18,6 +18,7 @@ import javax.inject.Singleton;
 import au.com.dealsdirect.R;
 import au.com.dealsdirect.di.ApplicationContext;
 import au.com.dealsdirect.di.PreferenceInfo;
+import au.com.dealsdirect.service.fcm.GNotification;
 import au.com.dealsdirect.utils.JsonUtils;
 
 
@@ -318,6 +319,36 @@ public class AppPreferencesHelper implements PreferencesHelper {
     @Override
     public int getPaymentCount() {
         return Prefs.getInt(PAYMENT_COUNT,0);
+    }
+
+    @Override
+    public void setIsGCMRegistered(int val) {
+        Prefs.putInt(GNotification.PROPERTY_REGISTERED,val);
+    }
+
+    @Override
+    public int getIsGCMRegistered() {
+        return Prefs.getInt(GNotification.PROPERTY_REGISTERED,-1);
+    }
+
+    @Override
+    public void setGCMRegistrationId(String registrationId) {
+        Prefs.putString(GNotification.PROPERTY_REG_ID, registrationId);
+    }
+
+    @Override
+    public String getGCMRegistrationId() {
+        return Prefs.getString(GNotification.PROPERTY_REG_ID,"");
+    }
+
+    @Override
+    public void setGCMAppVersion(int appVersion) {
+        Prefs.putInt(GNotification.PROPERTY_APP_VERSION, appVersion);
+    }
+
+    @Override
+    public int getGCMAppVersion() {
+        return Prefs.getInt(GNotification.PROPERTY_APP_VERSION,Integer.MIN_VALUE);
     }
 
 }

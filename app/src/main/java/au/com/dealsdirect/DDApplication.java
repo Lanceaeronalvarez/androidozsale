@@ -15,7 +15,10 @@ import javax.inject.Inject;
 import au.com.dealsdirect.data.DataManager;
 import au.com.dealsdirect.di.component.ApplicationComponent;
 import au.com.dealsdirect.di.component.DaggerApplicationComponent;
+import au.com.dealsdirect.di.component.DaggerServiceComponent;
+import au.com.dealsdirect.di.component.ServiceComponent;
 import au.com.dealsdirect.di.module.ApplicationModule;
+import au.com.dealsdirect.di.module.ServiceModule;
 import au.com.dealsdirect.utils.AppLogger;
 import au.com.dealsdirect.utils.CookieUtils;
 import au.com.dealsdirect.utils.NetworkUtils;
@@ -39,8 +42,9 @@ public class DDApplication extends Application {
 
         mApplicationComponent = DaggerApplicationComponent.builder()
                 .applicationModule(new ApplicationModule(this)).build();
-
         mApplicationComponent.inject(this);
+
+
 
         AppLogger.init();
 

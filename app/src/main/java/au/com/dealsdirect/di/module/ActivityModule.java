@@ -10,6 +10,7 @@ import javax.inject.Singleton;
 
 import au.com.dealsdirect.di.ActivityContext;
 import au.com.dealsdirect.di.PerActivity;
+import au.com.dealsdirect.service.fcm.GNotification;
 import au.com.dealsdirect.ui.main.MainMvpPresenter;
 import au.com.dealsdirect.ui.main.MainMvpView;
 import au.com.dealsdirect.ui.main.MainPresenter;
@@ -47,6 +48,12 @@ public class ActivityModule {
     @Provides
     SchedulerProvider provideSchedulerProvider() {
         return new AppSchedulerProvider();
+    }
+
+    @Provides
+    @PerActivity
+    GNotification provideGNotification(){
+        return new GNotification();
     }
 
     @Provides
