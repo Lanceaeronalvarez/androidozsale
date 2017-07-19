@@ -57,7 +57,6 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
 
     private List<GetSaleItemsResponse.Products> saleItems = new LinkedList<>();
 
-
     @BindView(R.id.controller_sale_items_grid_view)
     RecyclerView mSaleItemsRecyclerView;
 
@@ -145,13 +144,11 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
                 if (!getChar.equals(String.valueOf(c))){
                     newString = newString + mCategoryKey.charAt(i);
 
-                    Log.d("saletitle", " string = "+newString);
                 }else{
                     if (charCount==2){
                         newString = newString + " • ";
                         charCount = 0;
                     }
-                    Log.d("saletitle", " string = "+newString+ " , "+charCount);
                     charCount++;
                 }
             }

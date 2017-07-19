@@ -37,6 +37,7 @@
             fontPath="@string/font_lato_medium"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:clickable="true"
             android:layout_centerInParent="true"
             android:singleLine="true"
             android:hint="@string/i_am_looking_for"

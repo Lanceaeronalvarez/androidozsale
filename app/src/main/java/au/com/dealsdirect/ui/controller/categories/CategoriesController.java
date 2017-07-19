@@ -14,6 +14,7 @@ import android.widget.EditText;
 import android.widget.ImageButton;
 
 import com.bluelinelabs.conductor.RouterTransaction;
+import com.bluelinelabs.conductor.changehandler.FadeChangeHandler;
 import com.bluelinelabs.conductor.changehandler.HorizontalChangeHandler;
 
 import java.util.ArrayList;
@@ -35,6 +36,7 @@ import au.com.dealsdirect.ui.controller.categories.listener.CategoryClickListene
 import au.com.dealsdirect.ui.controller.categories.listener.SubCategoryClickListener;
 import au.com.dealsdirect.ui.controller.categories.listener.SubCategoryItemClickListener;
 import au.com.dealsdirect.ui.controller.saleitems.SaleItemsController;
+import au.com.dealsdirect.ui.controller.search.SearchController;
 import au.com.dealsdirect.ui.controller.shops.ShopsController;
 import au.com.dealsdirect.ui.custom.transitions.RightHorizontalTransitionChangeHandler;
 import au.com.dealsdirect.ui.main.MainActivity;
@@ -81,7 +83,7 @@ public class CategoriesController extends BaseController
     private String mChosenCategory = "shop";
     private String mChosenCategoryKey;
 
-    private int categoryTapCounter = 1;
+    private int searchTapCounter = 0;
     private String lastCategoryKey = "";
 
     private List<GetCategoryTreeResponse> mResultSubCategories;
@@ -114,7 +116,9 @@ public class CategoriesController extends BaseController
     @Override
     protected void onViewBound(@NonNull View view) {
         super.onViewBound(view);
- 
+
+        assert (getActivity()) != null;
+        ((MainActivity)getActivity()).setCategoriesRouter(getRouter());
         setUp(view);
     }
 
@@ -129,6 +133,13 @@ public class CategoriesController extends BaseController
 
     @Override
     protected void setUp(View view) {
+
+        mSearchField.setOnTouchListener((view1, motionEvent) -> {
+            searchTapCounter += 1;
+            if (searchTapCounter == 1)
+                onSearchFieldClick();
+            return false;
+        });
 
         //noinspection ConstantConditions
         mToolbarRightOption.setImageDrawable(getResources().getDrawable(R.drawable.ic_tab_shop_white));
@@ -383,5 +394,18 @@ public class CategoriesController extends BaseController
             }
         }
         return newList;
+    }
+
+    private void onSearchFieldClick(){
+
+        ((MainActivity)getActivity()).getCategoriesRouter().pushController(
+                RouterTransaction.with(SearchController.newInstance())
+                        .pushChangeHandler(new FadeChangeHandler())
+                        .popChangeHandler(new FadeChangeHandler()));
+
+        Handler handler = new Handler();
+        handler.postDelayed(() -> {
+            searchTapCounter = 0;
+        },500);
     }
 }

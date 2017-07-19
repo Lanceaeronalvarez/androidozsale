@@ -40,6 +40,7 @@
             android:id="@+id/sub_categories_recyclerview"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+            android:overScrollMode="never"
             android:layout_marginLeft="10dp" />
 
     </LinearLayout>

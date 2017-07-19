@@ -3,7 +3,6 @@ package au.com.dealsdirect.ui.main;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
-import android.util.Log;
 import android.view.ViewGroup;
 
 import com.bluelinelabs.conductor.Conductor;
@@ -78,6 +77,7 @@ public class MainActivity extends BaseActivity implements MainMvpView {
 
     private Router mHomeRouter;
     private Router mMainRouter;
+    private Router mCategoriesRouter;
 
     private int mViewPagerCurrentItem;
 
@@ -235,10 +235,9 @@ public class MainActivity extends BaseActivity implements MainMvpView {
 //                    });
 //        }
 
-        Log.d("MainActivity", mRouter.getBackstackSize() + " < size ");
         switch (mViewPagerCurrentItem){
             case 0:
-                if (mRouter.getBackstackSize() == 1) {
+                if (mCategoriesRouter.getBackstackSize() == 1) {
                     DialogUtils.showYesNoDialog(
                             this,
                             getString(R.string.dealsdirect),
@@ -567,6 +566,14 @@ public class MainActivity extends BaseActivity implements MainMvpView {
 
     public Router getMainRouter(){
         return mMainRouter;
+    }
+
+    public Router getCategoriesRouter(){
+        return mCategoriesRouter;
+    }
+
+    public void setCategoriesRouter(Router router){
+        mCategoriesRouter = router;;
     }
 
     public Router getActivityRouter(){

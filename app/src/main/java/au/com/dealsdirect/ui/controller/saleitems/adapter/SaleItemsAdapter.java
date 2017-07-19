@@ -15,6 +15,7 @@ import java.util.List;
 import au.com.dealsdirect.R;
 import au.com.dealsdirect.data.network.model.saleitems.GetSaleItemsResponse;
 import au.com.dealsdirect.ui.controller.saleitems.SaleItemsMvpPresenter;
+import au.com.dealsdirect.ui.controller.search.SearchMvpPresenter;
 import au.com.dealsdirect.utils.ImageUtils;
 import au.com.dealsdirect.utils.PriceUtils;
 import butterknife.BindView;
@@ -29,6 +30,7 @@ public class SaleItemsAdapter extends RecyclerView.Adapter<SaleItemsAdapter.View
     private List<GetSaleItemsResponse.Products> mData;
     private Context mContext;
     private SaleItemsMvpPresenter mPresenter;
+    private SearchMvpPresenter mSearchPresenter;
     private String mSaleId;
     private String mSaleName;
 
@@ -70,6 +72,19 @@ public class SaleItemsAdapter extends RecyclerView.Adapter<SaleItemsAdapter.View
         this.mSaleName = saleName;
     }
 
+    public SaleItemsAdapter(
+            List<GetSaleItemsResponse.Products> saleItems,
+            SearchMvpPresenter presenter,
+            String saleId,
+            String saleName) {
+
+        this.mData = saleItems;
+        this.mSearchPresenter = presenter;
+        this.mSaleId = saleId;
+        this.mSaleName = saleName;
+    }
+
+
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         mContext = parent.getContext();
@@ -103,13 +118,25 @@ public class SaleItemsAdapter extends RecyclerView.Adapter<SaleItemsAdapter.View
         holder.mOldPrice.setPaintFlags(
                 holder.mOldPrice.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);
 
-        holder.itemView.setOnClickListener(v -> mPresenter.loadProductDetails(
-                holder,
-                position,
-                mData.get(position).getSeoIdentifier(),
-                url,
-                mData.get(position).getProductId(),
-                mSaleId));
+        if (mPresenter!=null){
+            holder.itemView.setOnClickListener(v -> mPresenter.loadProductDetails(
+                    holder,
+                    position,
+                    mData.get(position).getSeoIdentifier(),
+                    url,
+                    mData.get(position).getProductId(),
+                    mSaleId));
+        }else{
+            holder.itemView.setOnClickListener(v -> mSearchPresenter.loadProductDetails(
+                    holder,
+                    position,
+                    mData.get(position).getSeoIdentifier(),
+                    url,
+                    mData.get(position).getProductId(),
+                    mSaleId));
+        }
+
+
     }
 
     public void replaceData(List<GetSaleItemsResponse.Products> saleItems){
