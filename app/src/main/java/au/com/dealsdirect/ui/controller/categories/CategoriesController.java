@@ -333,22 +333,6 @@ public class CategoriesController extends BaseController
     void onSearchOptionClicked() {
 
         ((MainActivity) getActivity()).setRootViewpagerItem(1);
-
-//        String searchQuery = mSearchField.getText().toString();
-//
-//        Bundle saleItemBundle = new BundleBuilder(new Bundle())
-//                .putString("SaleItemsController.KEY_TITLE", searchQuery)
-//                .putString("SaleItemsController.SEARCH_KEY", searchQuery)
-//                .build();
-//
-//        if (!searchQuery.isEmpty())
-//            getRouter().pushController(RouterTransaction.with(
-//                    SaleItemsController.newInstance(saleItemBundle))
-//                    .pushChangeHandler(new HorizontalChangeHandler())
-//                    .popChangeHandler(new HorizontalChangeHandler()));
-//        else
-//            KeyboardUtils.hideSoftInput(getActivity());
-//            getActivity().onBackPressed();
     }
 
     private void performSearch(String searchQuery) {
@@ -368,7 +352,6 @@ public class CategoriesController extends BaseController
             //noinspection ConstantConditions
             getActivity().dismissKeyboardShortcutsHelper();
         }
-
     }
 
 

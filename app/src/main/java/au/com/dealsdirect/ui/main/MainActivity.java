@@ -39,7 +39,6 @@ import au.com.dealsdirect.data.network.model.checkout.CreatePaymentTransaction;
 import au.com.dealsdirect.data.network.model.checkout.getuserpaymentmethods.PaymentMethod;
 import au.com.dealsdirect.ui.base.BaseActivity;
 import au.com.dealsdirect.ui.controller.account.AccountController;
-import au.com.dealsdirect.ui.controller.categories.CategoriesController;
 import au.com.dealsdirect.ui.controller.checkout.addpayment.AddPaymentController;
 import au.com.dealsdirect.ui.controller.checkout.checkout.CheckoutController;
 import au.com.dealsdirect.ui.controller.checkout.paymentsuccess.PaymentSuccessController;
@@ -73,10 +72,8 @@ public class MainActivity extends BaseActivity implements MainMvpView {
 
     private MainController mainController;
     private ShopsController mShopController;
-    private CategoriesController mCategoriesController;
 
     private Router mHomeRouter;
-    private Router mMainRouter;
     private Router mCategoriesRouter;
 
     private int mViewPagerCurrentItem;
@@ -190,13 +187,13 @@ public class MainActivity extends BaseActivity implements MainMvpView {
 
     }
 
-    private void proceedToController(int id) {
-        if (id == 2) {
-            showContactController();
-        } else if (id == 3) {
-            showInviteController();
-        }
-    }
+//    private void proceedToController(int id) {
+//        if (id == 2) {
+//            showContactController();
+//        } else if (id == 3) {
+//            showInviteController();
+//        }
+//    }
 
     @Override
     protected void onDestroy() {
@@ -244,9 +241,7 @@ public class MainActivity extends BaseActivity implements MainMvpView {
                             getString(R.string.exit_app),
                             getString(R.string.exit),
                             getString(R.string.no),
-                            (dialogInterface, i) -> {
-                                finish();
-                            },
+                            (dialogInterface, i) -> finish(),
                             (dialogInterface, i) -> {
 
                             });
@@ -262,15 +257,26 @@ public class MainActivity extends BaseActivity implements MainMvpView {
                             getString(R.string.exit_app),
                             getString(R.string.exit),
                             getString(R.string.no),
-                            (dialogInterface, i) -> {
-                                finish();
-                            },
+                            (dialogInterface, i) -> finish(),
                             (dialogInterface, i) -> {
 
                             });
                 } else {
-                    mHomeRouter.handleBack();
+                    int backstackSize = mHomeRouter.getBackstackSize()-1;
+                    String tag = mHomeRouter.getBackstack().get(backstackSize).tag();
+
+                    if(tag!=null && tag.equals(getString(R.string.search_tag))){
+                        mHomeRouter.handleBack();
+                        mShopController.showSearchToolbar();
+
+                        Handler handler = new Handler();
+                        handler.postDelayed(() ->
+                                mShopController.hideSearchToolbar(),200);
+                    }else{
+                        mHomeRouter.handleBack();
+                    }
                 }
+
                 break;
         }
     }
@@ -358,12 +364,8 @@ public class MainActivity extends BaseActivity implements MainMvpView {
     @Override
     public void onPaymentMethodNonceCreated(PaymentMethodNonce paymentMethodNonce) {
 
-        BraintreeResponseListener<String> handler = new BraintreeResponseListener<String>() {
-            @Override
-            public void onResponse(String deviceData) {
+        BraintreeResponseListener<String> handler = deviceData ->
                 mPresenter.createPaymentMethod(deviceData, paymentMethodNonce.getNonce(), mPaymentType);
-            }
-        };
 
         if (!mPresenter.getKountMerchantId().isEmpty()) {
             DataCollector.collectDeviceData(mBraintreeFragment, mPresenter.getKountMerchantId(), handler);
@@ -408,12 +410,8 @@ public class MainActivity extends BaseActivity implements MainMvpView {
     @Override
     public void callCreatePaymentTransaction(String paymentNonce) {
 
-        BraintreeResponseListener<String> handler = new BraintreeResponseListener<String>() {
-            @Override
-            public void onResponse(String deviceData) {
+        BraintreeResponseListener<String> handler = deviceData ->
                 mPresenter.callCreatePaymentTransaction(deviceData, mPaymentType, paymentNonce, getPaymentMethodSelected().getToken());
-            }
-        };
 
         if (!mPresenter.getKountMerchantId().isEmpty()) {
             DataCollector.collectDeviceData(mBraintreeFragment, mPresenter.getKountMerchantId(), handler);
@@ -526,7 +524,6 @@ public class MainActivity extends BaseActivity implements MainMvpView {
         } else {
             return null;
         }
-
     }
 
     public void setRootViewpagerItem(int item){
@@ -552,10 +549,6 @@ public class MainActivity extends BaseActivity implements MainMvpView {
         mHomeRouter = router;
     }
 
-    public void setMainRouter(Router router) {
-        mMainRouter = router;
-    }
-
     public boolean isAuthorized(){
         return mPresenter.isAuthorized();
     }
@@ -564,20 +557,12 @@ public class MainActivity extends BaseActivity implements MainMvpView {
         return mHomeRouter;
     }
 
-    public Router getMainRouter(){
-        return mMainRouter;
-    }
-
     public Router getCategoriesRouter(){
         return mCategoriesRouter;
     }
 
     public void setCategoriesRouter(Router router){
-        mCategoriesRouter = router;;
-    }
-
-    public Router getActivityRouter(){
-        return mRouter;
+        mCategoriesRouter = router;
     }
 
     public void setCurrentItem(int position){
@@ -598,17 +583,5 @@ public class MainActivity extends BaseActivity implements MainMvpView {
 
     public void setShopController(ShopsController shopsController){
         mShopController = shopsController;
-    }
-
-    public void setCategoriesController(CategoriesController categoriesController){
-        mCategoriesController = categoriesController;
-    }
-
-    public CategoriesController getCategoriesController(){
-        return mCategoriesController;
-    }
-
-    public ShopsController getShopController(){
-        return mShopController;
     }
 }

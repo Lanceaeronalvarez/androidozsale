@@ -164,16 +164,10 @@ public class MainController extends BaseController implements MainMvpView {
                 if (!router.hasRootController()) {
 
                     mHomeController = HomeController.newInstance();
-                    assert (getActivity()) != null;
-
-                    ((MainActivity)getActivity()).setMainRouter(router);
-
                     if (mPreLoadedCategories.size()!=0) {
                         mCategoriesController = CategoriesController.newInstance(
                                 mCategoryMap,
                                 mPreLoadedCategories);
-
-                        ((MainActivity)getActivity()).setCategoriesController(mCategoriesController);
 
                         switch (position) {
                             case 0:

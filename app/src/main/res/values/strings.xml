@@ -252,6 +252,7 @@
     <string name="sumbit">Sumbit</string>
     <string name="write_us_a_message">Write us a message</string>
     <string name="shop_category">Shop</string>
+    <string name="search_tag">Search</string>
 
     <string-array name="genders">
         <item>Male</item>
