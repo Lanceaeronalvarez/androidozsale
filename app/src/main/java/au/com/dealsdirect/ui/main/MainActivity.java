@@ -9,7 +9,6 @@ import com.bluelinelabs.conductor.Conductor;
 import com.bluelinelabs.conductor.Controller;
 import com.bluelinelabs.conductor.Router;
 import com.bluelinelabs.conductor.RouterTransaction;
-import com.bluelinelabs.conductor.changehandler.FadeChangeHandler;
 import com.bluelinelabs.conductor.changehandler.HorizontalChangeHandler;
 import com.bluelinelabs.conductor.changehandler.VerticalChangeHandler;
 import com.braintreepayments.api.BraintreeFragment;
@@ -38,12 +37,9 @@ import au.com.dealsdirect.data.network.model.category.GetCategoryTreeResponse;
 import au.com.dealsdirect.data.network.model.checkout.CreatePaymentTransaction;
 import au.com.dealsdirect.data.network.model.checkout.getuserpaymentmethods.PaymentMethod;
 import au.com.dealsdirect.ui.base.BaseActivity;
-import au.com.dealsdirect.ui.controller.account.AccountController;
 import au.com.dealsdirect.ui.controller.checkout.addpayment.AddPaymentController;
 import au.com.dealsdirect.ui.controller.checkout.checkout.CheckoutController;
 import au.com.dealsdirect.ui.controller.checkout.paymentsuccess.PaymentSuccessController;
-import au.com.dealsdirect.ui.controller.contact.viewcontacts.ViewContactsController;
-import au.com.dealsdirect.ui.controller.invite.InviteController;
 import au.com.dealsdirect.ui.controller.login.LoginController;
 import au.com.dealsdirect.ui.controller.main.MainController;
 import au.com.dealsdirect.ui.controller.shops.ShopsController;
@@ -210,27 +206,6 @@ public class MainActivity extends BaseActivity implements MainMvpView {
 
     @Override
     public void onBackPressed() {
-//        if (!mRouter.handleBack()) {
-//            return;
-//        }
-//
-//        Controller test = getMainRouterCurrentController();
-//        if (getMainRouterCurrentController() instanceof HomeController ||
-//                getMainRouterCurrentController() instanceof ShopsController) {
-//            showBottomNavigationView();
-//            DialogUtils.showYesNoDialog(
-//                    this,
-//                    getString(R.string.dealsdirect),
-//                    getString(R.string.exit_app),
-//                    getString(R.string.exit),
-//                    getString(R.string.no),
-//                    (dialogInterface, i) -> {
-//                        finish();
-//                    },
-//                    (dialogInterface, i) -> {
-//
-//                    });
-//        }
 
         switch (mViewPagerCurrentItem){
             case 0:
@@ -281,44 +256,6 @@ public class MainActivity extends BaseActivity implements MainMvpView {
         }
     }
 
-
-    @Override
-    public void showShopController() {
-        mRouter.setRoot(RouterTransaction.with(new ShopsController())
-                .pushChangeHandler(new FadeChangeHandler())
-                .popChangeHandler(new FadeChangeHandler()));
-    }
-
-    @Override
-    public void showAccountController() {
-        mRouter.setRoot(RouterTransaction.with(AccountController.newInstance())
-                .pushChangeHandler(new FadeChangeHandler())
-                .popChangeHandler(new FadeChangeHandler()));
-    }
-
-    @Override
-    public void showContactController() {
-        mRouter.setRoot(RouterTransaction.with(ViewContactsController.newInstance())
-                .pushChangeHandler(new FadeChangeHandler())
-                .popChangeHandler(new FadeChangeHandler()));
-
-
-    }
-
-    @Override
-    public void showInviteController() {
-        mRouter.setRoot(RouterTransaction.with(InviteController.newInstance())
-                .pushChangeHandler(new FadeChangeHandler())
-                .popChangeHandler(new FadeChangeHandler()));
-    }
-
-    @Override
-    public void showCheckoutController() {
-        mRouter.setRoot(RouterTransaction.with(new CheckoutController())
-                .pushChangeHandler(new FadeChangeHandler())
-                .popChangeHandler(new FadeChangeHandler()));
-    }
-
     @Override
     public void showLoginController(Router router, AuthHandler handler) {
         //pinapasa yung router, para kahit child router man siya ng kung ano mang view, pwedeng siya ang tumawag.
@@ -354,7 +291,6 @@ public class MainActivity extends BaseActivity implements MainMvpView {
                 }
 
 //                Crashlytics.log(error.getMessage());
-
                 //Call braintree client reset on error
                 performResetWithAuthFetch();
             }
