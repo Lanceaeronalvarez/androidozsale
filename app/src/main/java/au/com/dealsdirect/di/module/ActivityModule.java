@@ -8,6 +8,8 @@ import com.braintreepayments.api.exceptions.InvalidArgumentException;
 
 import javax.inject.Singleton;
 
+import au.com.dealsdirect.data.AppDataManager;
+import au.com.dealsdirect.data.DataManager;
 import au.com.dealsdirect.di.ActivityContext;
 import au.com.dealsdirect.di.PerActivity;
 import au.com.dealsdirect.service.fcm.GNotification;
@@ -48,12 +50,6 @@ public class ActivityModule {
     @Provides
     SchedulerProvider provideSchedulerProvider() {
         return new AppSchedulerProvider();
-    }
-
-    @Provides
-    @PerActivity
-    GNotification provideGNotification(){
-        return new GNotification();
     }
 
     @Provides

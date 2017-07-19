@@ -41,15 +41,15 @@ public class GNotification {
 
     public static final String FCM_INTENT_LAUNCHED = "fcm_intent_launched";
 
-    @Inject
     DataManager mDataManager;
-    @Inject
     SchedulerProvider mSchedulerProvider;
-    @Inject
     CompositeDisposable mCompositeDisposable;
 
-    public GNotification(){
-
+    @Inject
+    public GNotification(DataManager dataManager, SchedulerProvider schedulerProvider, CompositeDisposable compositeDisposable){
+        mDataManager = dataManager;
+        mSchedulerProvider = schedulerProvider;
+        mCompositeDisposable = compositeDisposable;
     }
 
     public void callRegisterDevice(Context context, String token) {
@@ -70,9 +70,14 @@ public class GNotification {
                     @Override
                     public void accept(@NonNull RegisterDevice.ResponseValue responseValue) throws Exception {
 
-                    mDataManager.setIsGCMRegistered(responseValue.getD().getValue().getRegistered());
-                    AppLogger.d(TAG, "Device Registered to FCM and APAC Server: " + responseValue.getD().getValue().getRegistered());
+                        mDataManager.setIsGCMRegistered(responseValue.getD().getValue().getRegistered());
+                        AppLogger.d(TAG, "Device Registered to FCM and APAC Server: " + responseValue.getD().getValue().getRegistered());
 
+                    }
+                }, new Consumer<Throwable>() {
+                    @Override
+                    public void accept(@NonNull Throwable throwable) throws Exception {
+                        AppLogger.d(TAG, "Register Device Error");
                     }
                 })
         );
@@ -92,6 +97,11 @@ public class GNotification {
                     @Override
                     public void accept(@NonNull NotificationEvent.ResponseValue responseValue) throws Exception {
                         AppLogger.d(TAG, "Notification Event Called");
+                    }
+                }, new Consumer<Throwable>() {
+                    @Override
+                    public void accept(@NonNull Throwable throwable) throws Exception {
+                        AppLogger.d(TAG, "Notification Event Error");
                     }
                 })
         );
