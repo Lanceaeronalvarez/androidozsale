@@ -6,7 +6,6 @@ import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -184,7 +183,6 @@ public class CategoriesController extends BaseController
 
     @Override
     public void onCategoryClicked(int position, GetCategoryTreeResponse getCategoryTreeResponse) {
-        Log.d("CategoriesController", getCategoryTreeResponse.getName());
 
         String categoryName = getCategoryTreeResponse.getName();
         String categoryKey = getCategoryTreeResponse.getKey() != null ? getCategoryTreeResponse.getKey() : categoryName;

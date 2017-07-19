@@ -24,6 +24,7 @@
             android:layout_height="match_parent"
             android:gravity="center"
             android:visibility="gone"
+            android:layout_margin="@dimen/activity_horizontal_margin"
             android:background="#FFFFFF"
             android:orientation="vertical">
 
@@ -32,7 +33,7 @@
                 android:layout_height="wrap_content"
                 android:text="Sorry, today we can't find anything by your request."
                 android:fontFamily="@string/font_lato_bold"
-                android:textSize="@dimen/text_size_xlarge"
+                android:textSize="@dimen/text_size_large"
                 android:textColor="#3e3e3e"/>
 
             <TextView
