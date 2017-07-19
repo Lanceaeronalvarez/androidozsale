@@ -4,6 +4,8 @@ package au.com.dealsdirect.ui.main;
  */
 
 
+import android.content.Context;
+
 import com.androidnetworking.error.ANError;
 import com.google.gson.Gson;
 import com.mysale.genie.utility.config.api.GetAppSettings;
@@ -27,6 +29,7 @@ import au.com.dealsdirect.data.network.model.login.LoginEmail;
 import au.com.dealsdirect.data.network.model.login.LoginTicket;
 import au.com.dealsdirect.data.network.model.login.Logout;
 import au.com.dealsdirect.ui.base.BasePresenter;
+import au.com.dealsdirect.utils.IntrospectionUtils;
 import au.com.dealsdirect.utils.rx.SchedulerProvider;
 import io.reactivex.annotations.NonNull;
 import io.reactivex.disposables.CompositeDisposable;
@@ -69,12 +72,7 @@ public class MainPresenter<V extends MainMvpView> extends BasePresenter<V> imple
                             getDataManager().setImageServerUrl(responseValue.getImageServerUrl());
 
 
-                            //if auth is logged in, app settings call, else public app settings
-                            if (isAuthorized()) {
-                                callGetAppSettings();
-                            } else {
-                                callGetPublicAppSettings();
-                            }
+                            callAppSettingsWithAuthCheck();
 
                         }
                     }
@@ -157,7 +155,7 @@ public class MainPresenter<V extends MainMvpView> extends BasePresenter<V> imple
 
 
     @Override
-    public void callGetAppSettingsSection() {
+    public void callGetAppSettingsSection(Context context) {
         getCompositeDisposable().add(getDataManager()
                 .callGetAppSettingsSection(getDataManager().getCountryId())
                 .subscribeOn(getSchedulerProvider().io())
@@ -212,7 +210,7 @@ public class MainPresenter<V extends MainMvpView> extends BasePresenter<V> imple
                                            }
 
                                            if (!androidArrayList.isEmpty()) {
-//                                               GVersion.checkVersion(context, androidArrayList);
+                                               IntrospectionUtils.checkVersion(context, androidArrayList);
                                            }
                                        } catch (JSONException e) {
                                            e.printStackTrace();
@@ -478,6 +476,16 @@ public class MainPresenter<V extends MainMvpView> extends BasePresenter<V> imple
                             }
                         })
         );
+    }
+
+    @Override
+    public void callAppSettingsWithAuthCheck() {
+        //if auth is logged in, app settings call, else public app settings
+        if (isAuthorized()) {
+            callGetAppSettings();
+        } else {
+            callGetPublicAppSettings();
+        }
     }
 
     @Override

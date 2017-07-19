@@ -36,7 +36,6 @@ import au.com.dealsdirect.data.network.model.login.LoginFacebook;
 import au.com.dealsdirect.data.network.model.login.LoginTicket;
 import au.com.dealsdirect.data.network.model.login.Logout;
 import au.com.dealsdirect.ui.base.BasePresenter;
-import au.com.dealsdirect.utils.AppLogger;
 import au.com.dealsdirect.utils.rx.SchedulerProvider;
 import io.reactivex.annotations.NonNull;
 import io.reactivex.disposables.CompositeDisposable;
@@ -64,34 +63,11 @@ public class LoginPresenter<V extends LoginMvpView> extends BasePresenter<V> imp
                                 getDataManager().getLanguageId()))
                 .subscribeOn(getSchedulerProvider().io())
                 .observeOn(getSchedulerProvider().ui())
-                .subscribe(responseValue -> {
-
-                    if (!isViewAttached()) {
-                        return;
-                    }
-
-                    if (responseValue.isSuccess()) {
-                        getDataManager().acknowledgeAuth(responseValue.getTicket());
-                        getMvpView().showLoginSuccessful(responseValue.getTicket());
-                    } else {
-
-                        getMvpView().showLoginError(responseValue.getMessage());
-                    }
-                }, throwable -> {
-
-                    if (!isViewAttached()) {
-                        return;
-                    }
-
-                    getMvpView().hideLoading();
-                    getMvpView().showLoginError(throwable.getMessage());
-
-                    // handle load accounts error here
-                    if (throwable instanceof ANError) {
-                        ANError anError = (ANError) throwable;
-                        handleApiError(anError);
-                    }
-                }));
+                .subscribe(responseValue -> onAuthSuccess(
+                        responseValue.isSuccess(),
+                        responseValue.getTicket(),
+                        responseValue.getMessage()),
+                        throwable -> onAuthFailure(throwable)));
 
         return true;
     }
@@ -116,36 +92,41 @@ public class LoginPresenter<V extends LoginMvpView> extends BasePresenter<V> imp
 
                 .subscribeOn(getSchedulerProvider().io())
                 .observeOn(getSchedulerProvider().ui())
-                .subscribe(responseValue -> {
-
-                    if (!isViewAttached()) {
-                        return;
-                    }
-
-                    if (responseValue.isSuccess()) {
-                        getDataManager().acknowledgeAuth(responseValue.getTicket());
-                        getMvpView().showLoginSuccessful(responseValue.getTicket());
-                    } else {
-
-                        getMvpView().showLoginError(responseValue.getMessage());
-                    }
-                }, throwable -> {
-
-                    if (!isViewAttached()) {
-                        return;
-                    }
-
-                    getMvpView().hideLoading();
-                    getMvpView().showLoginError(throwable.getMessage());
-
-                    // handle load accounts error here
-                    if (throwable instanceof ANError) {
-                        ANError anError = (ANError) throwable;
-                        handleApiError(anError);
-                    }
-                }));
+                .subscribe(responseValue -> onAuthSuccess(
+                        responseValue.isSuccess(),
+                        responseValue.getTicket(),
+                        responseValue.getMessage()),
+                        throwable -> onAuthFailure(throwable)));
 
         return true;
+    }
+
+    private void onAuthSuccess(boolean isSuccess, String ticket, String errorMessage) {
+        if (!isViewAttached()) {
+            return;
+        }
+
+        if (isSuccess) {
+            getDataManager().acknowledgeAuth(ticket);
+            getMvpView().showLoginSuccessful(ticket);
+        } else {
+            getMvpView().showLoginError(errorMessage);
+        }
+    }
+
+    private void onAuthFailure(Throwable throwable) {
+        if (!isViewAttached()) {
+            return;
+        }
+
+        getMvpView().hideLoading();
+        getMvpView().showLoginError(throwable.getMessage());
+
+        // handle load accounts error here
+        if (throwable instanceof ANError) {
+            ANError anError = (ANError) throwable;
+            handleApiError(anError);
+        }
     }
 
     @Override
@@ -270,7 +251,7 @@ public class LoginPresenter<V extends LoginMvpView> extends BasePresenter<V> imp
                     public void onCompleted(JSONObject object, GraphResponse response) {
                         // Application code
                         try {
-                            if(object != null) {
+                            if (object != null) {
                                 strEmail = object.getString("email");
                                 strFirstName = object.getString("first_name");
                                 strLastName = object.getString("last_name");
@@ -323,7 +304,7 @@ public class LoginPresenter<V extends LoginMvpView> extends BasePresenter<V> imp
             JSONObject jObj = new JSONObject();
             jObj.put("user_id", this.strFBUserID);
             jObj.put("oauth_token", accessToken);
-            jObj.put("expires",date.getTime()/1000L);
+            jObj.put("expires", date.getTime() / 1000L);
             jObj.put("algorithm", "HMAC-SHA256");
 
             byte[] jsonData = jObj.toString(1).getBytes("UTF-8");

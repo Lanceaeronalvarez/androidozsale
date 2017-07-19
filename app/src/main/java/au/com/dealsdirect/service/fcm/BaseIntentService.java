@@ -8,7 +8,7 @@ import au.com.dealsdirect.di.component.DaggerServiceComponent;
 import au.com.dealsdirect.di.component.ServiceComponent;
 import au.com.dealsdirect.di.module.ServiceModule;
 
-/**
+/*
  * Created by smartwave on 19/07/2017.
  */
 

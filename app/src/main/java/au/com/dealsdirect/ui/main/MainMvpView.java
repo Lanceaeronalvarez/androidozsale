@@ -48,4 +48,6 @@ public interface MainMvpView extends MvpView, BrainTreeListeners {
 
     void createPaymentTransactionSuccess(CreatePaymentTransaction.ResponseValue responseValue);
 
+    void callGetAppSettings();
+
 }

@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                xmlns:app="http://schemas.android.com/apk/res-auto"
+                xmlns:tools="http://schemas.android.com/tools"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@android:color/white">
+
+    <LinearLayout
+        android:id="@+id/dialog_version_placeholder"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="16dp">
+
+        <TextView
+            android:id="@+id/dialog_version_title"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingTop="5dp"
+            android:textColor="@color/dark_text"
+            android:textSize="@dimen/text_size_xlarge"
+            tools:text="Title"/>
+
+        <TextView
+            android:id="@+id/dialog_version_message"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingBottom="5dp"
+            android:paddingTop="5dp"
+            android:textColor="@color/dark_text"
+            android:textSize="@dimen/text_size_large"
+            tools:text="Message"/>
+
+        <WebView
+            android:id="@+id/dialog_version_webview"
+            android:layout_width="match_parent"
+            android:layout_height="250dp"
+            android:visibility="gone"/>
+
+        <Button
+            android:id="@+id/dialog_version_button"
+            style="@style/DDButtonStyle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
+            android:text="@string/dismiss"
+            android:visibility="gone"/>
+
+    </LinearLayout>
+
+
+</RelativeLayout>

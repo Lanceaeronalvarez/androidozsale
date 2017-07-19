@@ -46,7 +46,7 @@ public class GNotification {
     CompositeDisposable mCompositeDisposable;
 
     @Inject
-    public GNotification(DataManager dataManager, SchedulerProvider schedulerProvider, CompositeDisposable compositeDisposable){
+    public GNotification(DataManager dataManager, SchedulerProvider schedulerProvider, CompositeDisposable compositeDisposable) {
         mDataManager = dataManager;
         mSchedulerProvider = schedulerProvider;
         mCompositeDisposable = compositeDisposable;
@@ -223,7 +223,7 @@ public class GNotification {
 
     }
 
-    public void detach(){
+    public void detach() {
         mCompositeDisposable.dispose();
     }
 }

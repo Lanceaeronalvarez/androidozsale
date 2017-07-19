@@ -16,7 +16,6 @@
 
 package au.com.dealsdirect.service.fcm;
 
-import android.app.IntentService;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Context;

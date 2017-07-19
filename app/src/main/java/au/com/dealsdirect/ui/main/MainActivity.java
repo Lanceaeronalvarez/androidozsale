@@ -1,13 +1,10 @@
 package au.com.dealsdirect.ui.main;
 
-import android.app.ActivityOptions;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.util.Log;
-import android.util.Pair;
 import android.view.ViewGroup;
 
 import com.aurelhubert.ahbottomnavigation.AHBottomNavigation;
@@ -54,11 +51,8 @@ import au.com.dealsdirect.ui.controller.contact.viewcontacts.ViewContactsControl
 import au.com.dealsdirect.ui.controller.home.HomeController;
 import au.com.dealsdirect.ui.controller.invite.InviteController;
 import au.com.dealsdirect.ui.controller.login.LoginController;
-import au.com.dealsdirect.ui.controller.saleitemdetails.SaleItemDetailsController;
-import au.com.dealsdirect.ui.controller.saleitems.adapter.SaleItemsAdapter;
 import au.com.dealsdirect.ui.controller.shops.ShopsController;
 import au.com.dealsdirect.ui.custom.CustomAlertDialog;
-import au.com.dealsdirect.ui.custom.transitions.HorizontalNavTransitionChangeHandler;
 import au.com.dealsdirect.utils.DialogUtils;
 import au.com.dealsdirect.utils.GDeepLinkUtil;
 import butterknife.BindView;
@@ -154,7 +148,7 @@ public class MainActivity extends BaseActivity implements MainMvpView {
     protected void setUp() {
 
         mPresenter.callGetServerSettings();
-        mPresenter.callGetAppSettingsSection();
+        mPresenter.callGetAppSettingsSection(getApplicationContext());
 
         mRouter.addChangeListener(new ControllerChangeHandler.ControllerChangeListener() {
             @Override
@@ -543,6 +537,11 @@ public class MainActivity extends BaseActivity implements MainMvpView {
                 checkoutController.loadCart();
             }
         }
+    }
+
+    @Override
+    public void callGetAppSettings() {
+        mPresenter.callAppSettingsWithAuthCheck();
     }
 
     public Controller getMainRouterCurrentController() {

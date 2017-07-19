@@ -10,29 +10,6 @@ import com.mysale.genie.utility.LegacyBaseResponseValue;
 
 public class LoginEmail {
 
-//    @Override
-//    protected void executeUseCase(RequestValue requestValues) {
-//        Gson gson = new GsonBuilder().registerTypeAdapter(ResponseValue.class, new BaseDeserializer<ResponseValue>())
-//                .create();
-//        LoginApiService service = GServiceGenerator.createService(mContext, LoginApiService.class, GServiceGenerator.API_LEGACY, gson);
-//        service.login(requestValues).enqueue(new GCallback<ResponseValue>() {
-//            @Override
-//            public void onResponse(Call<ResponseValue> call, Response<ResponseValue> response) {
-//                super.onResponse(call, response);
-//
-//                if (response.isSuccessful() && response.body() != null) {
-//                    getUseCaseCallback().onSuccess(response.body());
-//                }
-//            }
-//
-//            @Override
-//            public void onFailure(Call<ResponseValue> call, Throwable t) {
-//                super.onFailure(call, t);
-//                getUseCaseCallback().onError();
-//            }
-//        });
-//    }
-
     public static class RequestValue {
 
         private String countryID;
@@ -52,7 +29,7 @@ public class LoginEmail {
     public static class ResponseValue {
         public Response d;
 
-        public static class Response extends LegacyBaseResponseValue{
+        public static class Response extends LegacyBaseResponseValue {
             public Value Value;
         }
 
