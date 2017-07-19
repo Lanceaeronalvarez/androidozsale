@@ -46,6 +46,7 @@ import au.com.dealsdirect.ui.custom.CustomAlertDialog;
 import au.com.dealsdirect.ui.main.MainMvpView;
 import au.com.dealsdirect.utils.BundleBuilder;
 import au.com.dealsdirect.utils.ImageUtils;
+import au.com.dealsdirect.utils.PriceUtils;
 import au.com.dealsdirect.widget.ElasticDragDismissFrameLayout;
 import butterknife.BindView;
 import butterknife.OnClick;
@@ -321,7 +322,10 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
         String shippingInformation = saleDetail.getShippingInformation();
         String shippingPricing = saleDetail.getPricing();
 
+        mProductName.setText(saleDetail.getName());
         mProductBrand.setText(saleDetail.getBrandName());
+        mProductPrice.setText(PriceUtils.getPriceStringValue(saleDetail.getPrice().getValue()));
+        mProductPreviousPrice.setText(PriceUtils.getRpStringValue(saleDetail.getOriginalPrice().getValue()));
 
         if (shippingInformation != null) {
             mProductPricing.setVisibility(View.VISIBLE);

@@ -1,9 +1,13 @@
 package au.com.dealsdirect.ui.main;
 
+import android.app.ActivityOptions;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.util.Log;
+import android.util.Pair;
 import android.view.ViewGroup;
 
 import com.aurelhubert.ahbottomnavigation.AHBottomNavigation;
@@ -49,9 +53,13 @@ import au.com.dealsdirect.ui.controller.contact.viewcontacts.ViewContactsControl
 import au.com.dealsdirect.ui.controller.home.HomeController;
 import au.com.dealsdirect.ui.controller.invite.InviteController;
 import au.com.dealsdirect.ui.controller.login.LoginController;
+import au.com.dealsdirect.ui.controller.saleitemdetails.SaleItemDetailsController;
+import au.com.dealsdirect.ui.controller.saleitems.adapter.SaleItemsAdapter;
 import au.com.dealsdirect.ui.controller.shops.ShopsController;
 import au.com.dealsdirect.ui.custom.CustomAlertDialog;
+import au.com.dealsdirect.ui.custom.transitions.HorizontalNavTransitionChangeHandler;
 import au.com.dealsdirect.utils.DialogUtils;
+import au.com.dealsdirect.utils.GDeepLinkUtil;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import timber.log.Timber;
@@ -96,6 +104,29 @@ public class MainActivity extends BaseActivity implements MainMvpView {
         if (!mRouter.hasRootController()) {
             mRouter.setRoot(RouterTransaction.with(HomeController.newInstance())
                     .tag("Home"));
+        }
+
+        Intent intent = getIntent();
+        String action = intent.getAction();
+        Uri data = intent.getData();
+        if (data != null) {
+            Bundle bundle = GDeepLinkUtil.generateExtraFromDeepLink(data);
+            intent.putExtras(bundle);
+            if (intent.hasExtra(GDeepLinkUtil.DEEP_LINK_INTENT_LAUNCHED)) {
+
+                Intent next = new Intent();
+                next.setClass(this, SharedActivity.class);
+
+                next.putExtra("KEY_IMAGE_ID", "");
+                next.putExtra("KEY_SEO_IDENTIFIER", intent.getStringExtra(GDeepLinkUtil.KEY_DEEP_LINK_SEOIDENTIFIER));
+                next.putExtra("KEY_ITEM_ID", "");
+                next.putExtra("KEY_SALE_ID", "");
+                next.putExtra("KEY_SALE_NAME", "");
+                next.putExtra("KEY_SALE_PRICE", "");
+                next.putExtra("KEY_SALE_OLD_PRICE", "");
+
+                startActivityForResult(next, getTaskId());
+            }
         }
 
         setUp();
