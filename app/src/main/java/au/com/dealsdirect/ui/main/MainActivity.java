@@ -2,15 +2,12 @@ package au.com.dealsdirect.ui.main;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
+import android.os.Handler;
+import android.util.Log;
 import android.view.ViewGroup;
 
-import com.aurelhubert.ahbottomnavigation.AHBottomNavigation;
-import com.aurelhubert.ahbottomnavigation.AHBottomNavigationAdapter;
 import com.bluelinelabs.conductor.Conductor;
 import com.bluelinelabs.conductor.Controller;
-import com.bluelinelabs.conductor.ControllerChangeHandler;
 import com.bluelinelabs.conductor.Router;
 import com.bluelinelabs.conductor.RouterTransaction;
 import com.bluelinelabs.conductor.changehandler.FadeChangeHandler;
@@ -38,17 +35,19 @@ import javax.inject.Inject;
 
 import au.com.dealsdirect.R;
 import au.com.dealsdirect.data.auth.AuthHandler;
+import au.com.dealsdirect.data.network.model.category.GetCategoryTreeResponse;
 import au.com.dealsdirect.data.network.model.checkout.CreatePaymentTransaction;
 import au.com.dealsdirect.data.network.model.checkout.getuserpaymentmethods.PaymentMethod;
 import au.com.dealsdirect.ui.base.BaseActivity;
 import au.com.dealsdirect.ui.controller.account.AccountController;
+import au.com.dealsdirect.ui.controller.categories.CategoriesController;
 import au.com.dealsdirect.ui.controller.checkout.addpayment.AddPaymentController;
 import au.com.dealsdirect.ui.controller.checkout.checkout.CheckoutController;
 import au.com.dealsdirect.ui.controller.checkout.paymentsuccess.PaymentSuccessController;
 import au.com.dealsdirect.ui.controller.contact.viewcontacts.ViewContactsController;
-import au.com.dealsdirect.ui.controller.home.HomeController;
 import au.com.dealsdirect.ui.controller.invite.InviteController;
 import au.com.dealsdirect.ui.controller.login.LoginController;
+import au.com.dealsdirect.ui.controller.main.MainController;
 import au.com.dealsdirect.ui.controller.shops.ShopsController;
 import au.com.dealsdirect.ui.custom.CustomAlertDialog;
 import au.com.dealsdirect.utils.DialogUtils;
@@ -66,19 +65,22 @@ public class MainActivity extends BaseActivity implements MainMvpView {
     @BindView(R.id.activity_main_frame)
     ViewGroup mContainer;
 
-    @BindView(R.id.controller_home_bottom_nav)
-    AHBottomNavigation mBottomNavigationView;
-
-    private int mPreviousTab = R.id.action_shop;
-    private int mCurrentTab = R.id.action_shop;
-
-
     private BraintreeFragment mBraintreeFragment;
     private String mPaymentType;
     private PaymentMethod mCurrentPaymentMethod;
     private String mAuthorization;
     private Router mRouter;
     private FetchTokenHandler mFetchTokenHandler;
+
+    private MainController mainController;
+    private ShopsController mShopController;
+    private CategoriesController mCategoriesController;
+
+    private Router mHomeRouter;
+    private Router mMainRouter;
+
+    private int mViewPagerCurrentItem;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -92,11 +94,13 @@ public class MainActivity extends BaseActivity implements MainMvpView {
 
         mPresenter.onAttach(this);
 
+        mainController = MainController.newInstance();
         mRouter = Conductor.attachRouter(this, mContainer, savedInstanceState);
         if (!mRouter.hasRootController()) {
-            mRouter.setRoot(RouterTransaction.with(HomeController.newInstance())
+            mRouter.setRoot(RouterTransaction.with(mainController)
                     .tag("Home"));
         }
+
 
         setUp();
     }
@@ -111,78 +115,78 @@ public class MainActivity extends BaseActivity implements MainMvpView {
                 ((MainPresenter) mPresenter).getDataManager()
                         .getCountryId());
 
-        mRouter.addChangeListener(new ControllerChangeHandler.ControllerChangeListener() {
-            @Override
-            public void onChangeStarted(@Nullable Controller to, @Nullable Controller from, boolean isPush, @NonNull ViewGroup container, @NonNull ControllerChangeHandler handler) {
+//        mRouter.addChangeListener(new ControllerChangeHandler.ControllerChangeListener() {
+//            @Override
+//            public void onChangeStarted(@Nullable Controller to, @Nullable Controller from, boolean isPush, @NonNull ViewGroup container, @NonNull ControllerChangeHandler handler) {
+//
+//            }
+//
+//            @Override
+//            public void onChangeCompleted(@Nullable Controller to, @Nullable Controller from, boolean isPush, @NonNull ViewGroup container, @NonNull ControllerChangeHandler handler) {
+//                if (to instanceof HomeController || to instanceof ShopsController) {
+//                    mBottomNavigationView.setCurrentItem(0);
+//                } else if (to instanceof AccountController) {
+//                    mBottomNavigationView.setCurrentItem(1);
+//                } else if (to instanceof ViewContactsController) {
+//                    mBottomNavigationView.setCurrentItem(2);
+//                } else if (to instanceof InviteController) {
+//                    mBottomNavigationView.setCurrentItem(3);
+//                } else if (to instanceof CheckoutController) {
+//                    mBottomNavigationView.setCurrentItem(4);
+//                }
+//            }
+//        });
 
-            }
-
-            @Override
-            public void onChangeCompleted(@Nullable Controller to, @Nullable Controller from, boolean isPush, @NonNull ViewGroup container, @NonNull ControllerChangeHandler handler) {
-                if (to instanceof HomeController || to instanceof ShopsController) {
-                    mBottomNavigationView.setCurrentItem(0);
-                } else if (to instanceof AccountController) {
-                    mBottomNavigationView.setCurrentItem(1);
-                } else if (to instanceof ViewContactsController) {
-                    mBottomNavigationView.setCurrentItem(2);
-                } else if (to instanceof InviteController) {
-                    mBottomNavigationView.setCurrentItem(3);
-                } else if (to instanceof CheckoutController) {
-                    mBottomNavigationView.setCurrentItem(4);
-                }
-            }
-        });
-
-        mBottomNavigationView.setOnTabSelectedListener(new AHBottomNavigation.OnTabSelectedListener() {
-            @Override
-            public boolean onTabSelected(int position, boolean wasSelected) {
-
-                if (!wasSelected) {
-                    mPreviousTab = mCurrentTab;
-                    mCurrentTab = position;
-
-                    switch (position) {
-
-                        case 0:
-                            showShopController();
-                            break;
-
-                        case 1:
-                            showAccountController();
-                            break;
-
-                        case 2:
-                        case 3:
-                            if (!mPresenter.isAuthorized()) {
-                                showLoginController(mRouter, new AuthHandler() {
-                                    @Override
-                                    public void success() {
-                                        proceedToController(position);
-                                    }
-
-                                    @Override
-                                    public void error() {
-
-                                    }
-                                });
-                            } else {
-                                proceedToController(position);
-                            }
-                            break;
-
-                        case 4:
-                            showCheckoutController();
-                            break;
-                    }
-                }
-                return true;
-            }
-        });
-
-        AHBottomNavigationAdapter navigationAdapter = new AHBottomNavigationAdapter(this, R.menu.bottom_navigation_menu);
-        navigationAdapter.setupWithBottomNavigation(mBottomNavigationView);
-        mBottomNavigationView.setTitleState(AHBottomNavigation.TitleState.ALWAYS_SHOW);
-        mBottomNavigationView.setCurrentItem(0);
+//        mBottomNavigationView.setOnTabSelectedListener(new AHBottomNavigation.OnTabSelectedListener() {
+//            @Override
+//            public boolean onTabSelected(int position, boolean wasSelected) {
+//
+//                if (!wasSelected) {
+//                    mPreviousTab = mCurrentTab;
+//                    mCurrentTab = position;
+//
+//                    switch (position) {
+//
+//                        case 0:
+//                            showShopController();
+//                            break;
+//
+//                        case 1:
+//                            showAccountController();
+//                            break;
+//
+//                        case 2:
+//                        case 3:
+//                            if (!mPresenter.isAuthorized()) {
+//                                showLoginController(mRouter, new AuthHandler() {
+//                                    @Override
+//                                    public void success() {
+//                                        proceedToController(position);
+//                                    }
+//
+//                                    @Override
+//                                    public void error() {
+//
+//                                    }
+//                                });
+//                            } else {
+//                                proceedToController(position);
+//                            }
+//                            break;
+//
+//                        case 4:
+//                            showCheckoutController();
+//                            break;
+//                    }
+//                }
+//                return true;
+//            }
+//        });
+//
+//        AHBottomNavigationAdapter navigationAdapter = new AHBottomNavigationAdapter(this, R.menu.bottom_navigation_menu);
+//        navigationAdapter.setupWithBottomNavigation(mBottomNavigationView);
+//        mBottomNavigationView.setTitleState(AHBottomNavigation.TitleState.ALWAYS_SHOW);
+//        mBottomNavigationView.setCurrentItem(0);
 
     }
 
@@ -231,28 +235,44 @@ public class MainActivity extends BaseActivity implements MainMvpView {
 //                    });
 //        }
 
-
-        if (mRouter.getBackstackSize() == 1) {
-            DialogUtils.showYesNoDialog(
-                    this,
-                    getString(R.string.dealsdirect),
-                    getString(R.string.exit_app),
-                    getString(R.string.exit),
-                    getString(R.string.no),
-                    (dialogInterface, i) -> {
-                        finish();
-                    },
-                    (dialogInterface, i) -> {
-
-                    });
-        } else {
-            if (!mRouter.handleBack()) {
-
-            } else {
+        Log.d("MainActivity", mRouter.getBackstackSize() + " < size ");
+        switch (mViewPagerCurrentItem){
+            case 0:
                 if (mRouter.getBackstackSize() == 1) {
-                    showBottomNavigationView();
+                    DialogUtils.showYesNoDialog(
+                            this,
+                            getString(R.string.dealsdirect),
+                            getString(R.string.exit_app),
+                            getString(R.string.exit),
+                            getString(R.string.no),
+                            (dialogInterface, i) -> {
+                                finish();
+                            },
+                            (dialogInterface, i) -> {
+
+                            });
+                } else {
+                    mRouter.handleBack();
                 }
-            }
+                break;
+            case 1:
+                if (mHomeRouter.getBackstackSize() == 1) {
+                    DialogUtils.showYesNoDialog(
+                            this,
+                            getString(R.string.dealsdirect),
+                            getString(R.string.exit_app),
+                            getString(R.string.exit),
+                            getString(R.string.no),
+                            (dialogInterface, i) -> {
+                                finish();
+                            },
+                            (dialogInterface, i) -> {
+
+                            });
+                } else {
+                    mHomeRouter.handleBack();
+                }
+                break;
         }
     }
 
@@ -508,5 +528,80 @@ public class MainActivity extends BaseActivity implements MainMvpView {
             return null;
         }
 
+    }
+
+    public void setRootViewpagerItem(int item){
+
+        switch (item){
+            case 0:
+                mainController.goToCategories();
+                break;
+            case 1:
+                mainController.goToShops();
+                break;
+            default:
+                mainController.goToShops();
+                break;
+        }
+    }
+
+    public void setDraggableViewPager(boolean isDraggable){
+        mainController.setViewpagerDraggable(isDraggable);
+    }
+
+    public void setHomeRouter(Router router){
+        mHomeRouter = router;
+    }
+
+    public void setMainRouter(Router router) {
+        mMainRouter = router;
+    }
+
+    public boolean isAuthorized(){
+        return mPresenter.isAuthorized();
+    }
+
+    public Router getHomeRouter(){
+        return mHomeRouter;
+    }
+
+    public Router getMainRouter(){
+        return mMainRouter;
+    }
+
+    public Router getActivityRouter(){
+        return mRouter;
+    }
+
+    public void setCurrentItem(int position){
+        mViewPagerCurrentItem = position;
+    }
+
+    public void goToSaleItemsFromCategory(Bundle bundle){
+        mShopController.goToItemsFromCategories(bundle);
+
+        final Handler handler = new Handler();
+        handler.postDelayed(() -> mainController.goToShops(), 400);
+    }
+
+    public void goToSalesFromCategory(GetCategoryTreeResponse getCategoryTreeResponse){
+        mShopController.goToSalesFromCategories(getCategoryTreeResponse);
+        mainController.goToShops();
+    }
+
+    public void setShopController(ShopsController shopsController){
+        mShopController = shopsController;
+    }
+
+    public void setCategoriesController(CategoriesController categoriesController){
+        mCategoriesController = categoriesController;
+    }
+
+    public CategoriesController getCategoriesController(){
+        return mCategoriesController;
+    }
+
+    public ShopsController getShopController(){
+        return mShopController;
     }
 }

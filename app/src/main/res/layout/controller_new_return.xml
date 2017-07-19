@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                xmlns:app="http://schemas.android.com/apk/res-auto"
+                xmlns:tools="http://schemas.android.com/tools"
+                android:id="@+id/new_return_order_request_set_details_fragment"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="#FFFFFF"
+                tools:ignore="MissingPrefix">
+
+    <include
+        android:id="@+id/controller_new_return_toolbar"
+        layout="@layout/partial_toolbar_arrow" />
+
+
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/new_returns_set_detail_recyclerview"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@+id/controller_new_return_toolbar"
+        android:layout_marginRight="@dimen/activity_horizontal_margin"
+        android:layout_marginLeft="@dimen/activity_horizontal_margin"
+        android:overScrollMode="never"
+        android:layout_above="@+id/controller_new_return_bottom_container"
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        android:orientation="vertical"/>
+
+    <RelativeLayout
+        android:id="@+id/controller_new_return_bottom_container"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="@dimen/activity_horizontal_margin"
+        android:layout_alignParentBottom="true">
+
+        <TextView
+            android:id="@+id/controller_new_return_reason_header"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="reason"
+            android:textColor="@color/dark_text"/>
+
+        <EditText
+            android:id="@+id/controller_new_return_field"
+            android:layout_width="match_parent"
+            android:layout_height="140dp"
+            android:layout_below="@+id/controller_new_return_reason_header"
+            style="@style/DDEditTextStyle"
+            android:inputType="textNoSuggestions|textMultiLine"
+            android:gravity="top"
+            android:hint="@string/write_us_a_message"
+            android:layout_marginBottom="10dp"
+            fontPath="@string/font_lato_medium"/>
+
+        <Button
+            android:id="@+id/new_return_create_button"
+            style="@style/DDButtonStyle"
+            fontPath="@string/font_lato_semibold"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/controller_new_return_field"
+            android:text="@string/sumbit"
+            android:textSize="@dimen/text_size_xlarge"/>
+
+    </RelativeLayout>
+
+</RelativeLayout>

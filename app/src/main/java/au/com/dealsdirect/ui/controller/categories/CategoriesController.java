@@ -6,6 +6,7 @@ import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -37,8 +38,8 @@ import au.com.dealsdirect.ui.controller.categories.listener.SubCategoryItemClick
 import au.com.dealsdirect.ui.controller.saleitems.SaleItemsController;
 import au.com.dealsdirect.ui.controller.shops.ShopsController;
 import au.com.dealsdirect.ui.custom.transitions.RightHorizontalTransitionChangeHandler;
+import au.com.dealsdirect.ui.main.MainActivity;
 import au.com.dealsdirect.utils.BundleBuilder;
-import au.com.dealsdirect.utils.KeyboardUtils;
 import butterknife.BindView;
 import butterknife.OnClick;
 
@@ -130,6 +131,8 @@ public class CategoriesController extends BaseController
     @Override
     protected void setUp(View view) {
 
+        //noinspection ConstantConditions
+        mToolbarRightOption.setImageDrawable(getResources().getDrawable(R.drawable.ic_tab_shop_white));
         mCategoryClickListener = this;
         mSubCategoryClickListener = this;
         mSubCategoryItemClickListener = this;
@@ -181,30 +184,43 @@ public class CategoriesController extends BaseController
 
     @Override
     public void onCategoryClicked(int position, GetCategoryTreeResponse getCategoryTreeResponse) {
+        Log.d("CategoriesController", getCategoryTreeResponse.getName());
 
         String categoryName = getCategoryTreeResponse.getName();
         String categoryKey = getCategoryTreeResponse.getKey() != null ? getCategoryTreeResponse.getKey() : categoryName;
 
-        if (mCategories.get(position).getChildren() != null) {
-//            mSubCategoryAdapter.replaceData();
+        //noinspection ConstantConditions
+        if (categoryName.equals(getActivity().getResources().getString(R.string.shop_category))){
 
-            mSubCategoryAdapter = new SubCategoriesAdapter(
-                    mCategories.get(position).getChildren(), mPresenter, mSubCategoryClickListener, mSubCategoryItemClickListener, mCategoryMap);
-            mSubCategoryRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity(), LinearLayoutManager.VERTICAL, false));
-            mSubCategoryRecyclerView.setAdapter(mSubCategoryAdapter);
-
-
-        } else {
             ArrayList<GetCategoryTreeResponse> emptyChildren = new ArrayList<>();
-//            mSubCategoryAdapter.replaceData(emptyChildren);
             mSubCategoryAdapter = new SubCategoriesAdapter(emptyChildren, mPresenter, mSubCategoryClickListener, mSubCategoryItemClickListener, mCategoryMap);
             mSubCategoryRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity(), LinearLayoutManager.VERTICAL, false));
             mSubCategoryRecyclerView.setAdapter(mSubCategoryAdapter);
-        }
 
+            GetCategoryTreeResponse shopCategory = new GetCategoryTreeResponse();
+
+            assert (getActivity()) != null;
+            ((MainActivity)getActivity()).goToSalesFromCategory(shopCategory);
+
+        }else{
+            if (mCategories.get(position).getChildren() != null) {
+                List<GetCategoryTreeResponse> newList = updateCategoryChildren(mCategories.get(position));
+                mSubCategoryAdapter = new SubCategoriesAdapter(
+                        newList, mPresenter, mSubCategoryClickListener, mSubCategoryItemClickListener, mCategoryMap);
+                mSubCategoryRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity(), LinearLayoutManager.VERTICAL, false));
+                mSubCategoryRecyclerView.setAdapter(mSubCategoryAdapter);
+
+
+            } else {
+                ArrayList<GetCategoryTreeResponse> emptyChildren = new ArrayList<>();
+                mSubCategoryAdapter = new SubCategoriesAdapter(emptyChildren, mPresenter, mSubCategoryClickListener, mSubCategoryItemClickListener, mCategoryMap);
+                mSubCategoryRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity(), LinearLayoutManager.VERTICAL, false));
+                mSubCategoryRecyclerView.setAdapter(mSubCategoryAdapter);
+            }
+
+        }
         mChosenCategoryKey = categoryKey != null ? categoryKey : categoryName;
         lastCategoryKey = categoryKey != null ? categoryKey : categoryName;
-
     }
 
     @Override
@@ -246,11 +262,10 @@ public class CategoriesController extends BaseController
             }
 
             mCategoryMap.put(i.getKey(), i.getChildren());
-
         }
     }
 
-    List<GetCategoryTreeResponse> fillCategoryContent() {
+    private List<GetCategoryTreeResponse> fillCategoryContent() {
 
         if (mChosenCategory.equals("shop")) {
 
@@ -276,17 +291,13 @@ public class CategoriesController extends BaseController
     }
 
     @Override
-    public void onSubCategoryClicked(String categoryID, String categoryName, String categoryKey) {
+    public void onSubCategoryClicked(GetCategoryTreeResponse getCategoryTreeResponse) {
 
-        Bundle saleItemBundle = new BundleBuilder(new Bundle())
-                .putString("SaleItemsController.KEY_TITLE", categoryName)
-                .putString("SaleItemsController.CATEGORY_KEY", categoryKey)
-                .build();
+        if (getCategoryTreeResponse.getName().equals("All")){
 
-        getRouter().pushController(RouterTransaction.with(
-                SaleItemsController.newInstance(saleItemBundle))
-                .pushChangeHandler(new HorizontalChangeHandler())
-                .popChangeHandler(new HorizontalChangeHandler()));
+            assert (getActivity()) != null;
+            ((MainActivity)getActivity()).goToSalesFromCategory(getCategoryTreeResponse);
+        }
     }
 
     @Override
@@ -295,33 +306,40 @@ public class CategoriesController extends BaseController
         Bundle saleItemBundle = new BundleBuilder(new Bundle())
                 .putString("SaleItemsController.KEY_TITLE", categoryName)
                 .putString("SaleItemsController.CATEGORY_KEY", categoryKey)
+                .putString("SaleItemsController.KEY_SALE_ID", categoryID)
                 .build();
 
-        getRouter().pushController(RouterTransaction.with(
-                SaleItemsController.newInstance(saleItemBundle))
-                .pushChangeHandler(new HorizontalChangeHandler())
-                .popChangeHandler(new HorizontalChangeHandler()));
+
+        assert (getActivity()) != null;
+        ((MainActivity)getActivity()).goToSaleItemsFromCategory(saleItemBundle);
+
+//        getRouter().pushController(RouterTransaction.with(
+//                SaleItemsController.newInstance(saleItemBundle))
+//                .pushChangeHandler(new HorizontalChangeHandler())
+//                .popChangeHandler(new HorizontalChangeHandler()));
     }
 
     @SuppressWarnings("ConstantConditions")
     @OnClick(R.id.partial_toolbar_search_right_option)
     void onSearchOptionClicked() {
 
-        String searchQuery = mSearchField.getText().toString();
+        ((MainActivity) getActivity()).setRootViewpagerItem(1);
 
-        Bundle saleItemBundle = new BundleBuilder(new Bundle())
-                .putString("SaleItemsController.KEY_TITLE", searchQuery)
-                .putString("SaleItemsController.SEARCH_KEY", searchQuery)
-                .build();
-
-        if (!searchQuery.isEmpty())
-            getRouter().pushController(RouterTransaction.with(
-                    SaleItemsController.newInstance(saleItemBundle))
-                    .pushChangeHandler(new HorizontalChangeHandler())
-                    .popChangeHandler(new HorizontalChangeHandler()));
-        else
-            KeyboardUtils.hideSoftInput(getActivity());
-            getActivity().onBackPressed();
+//        String searchQuery = mSearchField.getText().toString();
+//
+//        Bundle saleItemBundle = new BundleBuilder(new Bundle())
+//                .putString("SaleItemsController.KEY_TITLE", searchQuery)
+//                .putString("SaleItemsController.SEARCH_KEY", searchQuery)
+//                .build();
+//
+//        if (!searchQuery.isEmpty())
+//            getRouter().pushController(RouterTransaction.with(
+//                    SaleItemsController.newInstance(saleItemBundle))
+//                    .pushChangeHandler(new HorizontalChangeHandler())
+//                    .popChangeHandler(new HorizontalChangeHandler()));
+//        else
+//            KeyboardUtils.hideSoftInput(getActivity());
+//            getActivity().onBackPressed();
     }
 
     private void performSearch(String searchQuery) {
@@ -342,5 +360,30 @@ public class CategoriesController extends BaseController
             getActivity().dismissKeyboardShortcutsHelper();
         }
 
+    }
+
+
+    private List<GetCategoryTreeResponse> updateCategoryChildren(GetCategoryTreeResponse categoryTree){
+        GetCategoryTreeResponse getCategoryTreeResponse = new GetCategoryTreeResponse();
+        getCategoryTreeResponse.setName("All");
+        getCategoryTreeResponse.setKey(categoryTree.getKey());
+        getCategoryTreeResponse.setChildren(new ArrayList<>());
+        getCategoryTreeResponse.setNodeType("usual");
+        getCategoryTreeResponse.setId(categoryTree.getId());
+
+        List<GetCategoryTreeResponse> newList = new ArrayList<>();
+
+        if (categoryTree.getChildren()!=null){
+            for (int i=0;i <categoryTree.getChildren().size()+1;i++){
+
+                if (i==0) {
+                    newList.add(getCategoryTreeResponse);
+
+                } else{
+                    newList.add(categoryTree.getChildren().get(i-1));
+                }
+            }
+        }
+        return newList;
     }
 }

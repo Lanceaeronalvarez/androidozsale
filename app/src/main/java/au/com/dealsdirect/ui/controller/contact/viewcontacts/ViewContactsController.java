@@ -28,6 +28,7 @@ import au.com.dealsdirect.ui.controller.contact.addcontact.AddContactController;
 import au.com.dealsdirect.ui.controller.contact.viewcontacthistory.ViewContactHistoryController;
 import au.com.dealsdirect.ui.controller.contact.viewcontacts.contacts.ContactsClickListener;
 import au.com.dealsdirect.ui.controller.contact.viewcontacts.viewcontactdate.ViewContactDateAdapter;
+import au.com.dealsdirect.ui.main.MainActivity;
 import au.com.dealsdirect.utils.BundleBuilder;
 import au.com.dealsdirect.utils.DateUtils;
 import butterknife.BindView;
@@ -97,6 +98,10 @@ public class ViewContactsController extends BaseController implements ViewContac
 
     @Override
     protected void setUp(View view) {
+
+        assert (getActivity()) != null;
+        ((MainActivity)getActivity()).setDraggableViewPager(false);
+
         mViewContactsToolarTitle.setText("Contact Us");
         mViewContactsToolbarRightOption.setVisibility(View.INVISIBLE);
         mViewContactsToolbarLeftOption.setVisibility(View.INVISIBLE);

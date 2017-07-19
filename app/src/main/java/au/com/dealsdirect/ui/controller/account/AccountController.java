@@ -33,6 +33,7 @@ import au.com.dealsdirect.ui.controller.returns.currentreturns.CurrentReturnsCon
 import au.com.dealsdirect.ui.controller.shops.ShopsController;
 import au.com.dealsdirect.ui.controller.vouchers.View.ViewVouchersController;
 import au.com.dealsdirect.ui.custom.CustomAlertDialog;
+import au.com.dealsdirect.ui.main.MainActivity;
 import au.com.dealsdirect.ui.main.MainMvpView;
 import au.com.dealsdirect.utils.BundleBuilder;
 import butterknife.BindView;
@@ -90,6 +91,9 @@ public class AccountController extends BaseController implements AccountMvpView,
     @Override
     protected void setUp(View view) {
         // Setup views here
+
+        assert (getActivity()) != null;
+        ((MainActivity)getActivity()).setDraggableViewPager(false);
 
         mPresenter.loadAccountItems();
         mTitleTextView.setText("My Account");

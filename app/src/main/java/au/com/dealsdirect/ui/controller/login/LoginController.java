@@ -142,7 +142,8 @@ public class LoginController extends BaseController implements LoginMvpView {
 
     @Override
     public void showLoginError(String message) {
-        mAuthHandler.error();
+        if (mAuthHandler!=null)
+            mAuthHandler.error();
 
         CustomAlertDialog.showCustomAlertDialog(
                 getActivity(),

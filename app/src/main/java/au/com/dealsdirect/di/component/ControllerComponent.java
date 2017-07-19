@@ -20,6 +20,7 @@ import au.com.dealsdirect.ui.controller.contact.viewcontacts.ViewContactsControl
 import au.com.dealsdirect.ui.controller.details.DetailsController;
 import au.com.dealsdirect.ui.controller.forgotpassword.ForgotPasswordController;
 import au.com.dealsdirect.ui.controller.home.HomeController;
+import au.com.dealsdirect.ui.controller.main.MainController;
 import au.com.dealsdirect.ui.controller.invite.InviteController;
 import au.com.dealsdirect.ui.controller.invite.InviteSendController;
 import au.com.dealsdirect.ui.controller.language.LanguageController;
@@ -29,6 +30,7 @@ import au.com.dealsdirect.ui.controller.orders.orderdetails.OrderDetailsControll
 import au.com.dealsdirect.ui.controller.orders.orders.OrdersController;
 import au.com.dealsdirect.ui.controller.register.RegisterController;
 import au.com.dealsdirect.ui.controller.returns.currentreturns.CurrentReturnsController;
+import au.com.dealsdirect.ui.controller.returns.newreturn.NewReturnController;
 import au.com.dealsdirect.ui.controller.returns.returndetails.ReturnDetailsController;
 import au.com.dealsdirect.ui.controller.returns.returnorders.ReturnOrdersController;
 import au.com.dealsdirect.ui.controller.salecategories.SaleCategoriesController;
@@ -55,6 +57,8 @@ public interface ControllerComponent {
     void inject(CategoriesController controller);
 
     void inject(ShopsController controller);
+
+    void inject(MainController controller);
 
     void inject(HomeController controller);
 
@@ -119,4 +123,7 @@ public interface ControllerComponent {
     void inject(ForgotPasswordController controller);
 
     void inject(LegalitiesController controller);
+
+    void inject(NewReturnController controller);
+
 }

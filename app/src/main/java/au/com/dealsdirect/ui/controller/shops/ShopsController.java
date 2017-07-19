@@ -36,11 +36,10 @@ import au.com.dealsdirect.data.auth.AuthHandler;
 import au.com.dealsdirect.data.network.model.banner.GetBannerResponse;
 import au.com.dealsdirect.data.network.model.category.GetCategoryTreeResponse;
 import au.com.dealsdirect.ui.base.BaseController;
-import au.com.dealsdirect.ui.controller.categories.CategoriesController;
 import au.com.dealsdirect.ui.controller.saleitems.SaleItemsController;
 import au.com.dealsdirect.ui.controller.shops.adapter.BannersAdapter;
 import au.com.dealsdirect.ui.controller.shops.listener.BannerClickListener;
-import au.com.dealsdirect.ui.custom.transitions.HorizontalNavTransitionChangeHandler;
+import au.com.dealsdirect.ui.main.MainActivity;
 import au.com.dealsdirect.ui.main.MainMvpView;
 import au.com.dealsdirect.utils.BundleBuilder;
 import au.com.dealsdirect.utils.KeyboardUtils;
@@ -147,6 +146,9 @@ public class ShopsController extends BaseController implements ShopsMvpView, Ban
     @Override
     protected void setUp(View view) {
 
+        assert (getActivity()) != null;
+        ((MainActivity)getActivity()).setDraggableViewPager(true);
+
         mPaginateCallbacks = new Paginate.Callbacks() {
             @Override
             public void onLoadMore() {
@@ -221,7 +223,8 @@ public class ShopsController extends BaseController implements ShopsMvpView, Ban
             ((MainMvpView) getActivity()).showLoginController(getRouter(), new AuthHandler() {
                 @Override
                 public void success() {
-                    getRouter().pushController(RouterTransaction.with(
+                    ((MainActivity)getActivity()).getHomeRouter()
+                            .pushController(RouterTransaction.with(
                             SaleItemsController.newInstance(
                                     saleId,
                                     bannerTitle,
@@ -238,8 +241,18 @@ public class ShopsController extends BaseController implements ShopsMvpView, Ban
                 }
             });
         } else {
-            getRouter().pushController(RouterTransaction.with(
-                    SaleItemsController.newInstance(saleId, bannerTitle, bannerId, position, imageUrl, null))
+
+            assert (getActivity()) != null;
+            ((MainActivity)getActivity())
+                    .getHomeRouter()
+                    .pushController(RouterTransaction.with(
+                            SaleItemsController.newInstance(
+                                    saleId,
+                                    bannerTitle,
+                                    bannerId,
+                                    position,
+                                    imageUrl,
+                                    null))
                     .pushChangeHandler(new HorizontalChangeHandler())
                     .popChangeHandler(new HorizontalChangeHandler()));
         }
@@ -248,11 +261,8 @@ public class ShopsController extends BaseController implements ShopsMvpView, Ban
     @OnClick(R.id.partial_toolbar_hamburger)
     void onClickHamburger() {
 
-        getRouter().pushController(RouterTransaction.with(CategoriesController.newInstance(mCategoryMap, mPreLoadedCategories))
-                .pushChangeHandler(new HorizontalNavTransitionChangeHandler(100))
-                .popChangeHandler(new HorizontalNavTransitionChangeHandler(100)));
-
-//        ((MainActivity) getActivity()).hideBottomNav();
+        assert (getActivity()) != null;
+        ((MainActivity)getActivity()).setRootViewpagerItem(0);
     }
 
 
@@ -368,12 +378,15 @@ public class ShopsController extends BaseController implements ShopsMvpView, Ban
                 .build();
 
         if (!searchQuery.isEmpty())
-
             KeyboardUtils.hideSoftInput(getActivity());
-        getRouter().pushController(RouterTransaction.with(
-                SaleItemsController.newInstance(saleItemBundle))
-                .pushChangeHandler(new HorizontalChangeHandler())
-                .popChangeHandler(new HorizontalChangeHandler()));
+
+        assert (getActivity()) != null;
+        ((MainActivity)getActivity())
+                .getHomeRouter()
+                .pushController(
+                        RouterTransaction.with(SaleItemsController.newInstance(saleItemBundle))
+                                .pushChangeHandler(new HorizontalChangeHandler())
+                                .popChangeHandler(new HorizontalChangeHandler()));
     }
 
     @Override
@@ -424,9 +437,17 @@ public class ShopsController extends BaseController implements ShopsMvpView, Ban
 
     private List<GetCategoryTreeResponse> fillCategoryContent() {
         return mCategoryMap.get("shop");
-
-
     }
 
+    public void goToItemsFromCategories(Bundle bundle){
+        getRouter().pushController(RouterTransaction.with(
+                SaleItemsController.newInstance(bundle))
+                .pushChangeHandler(new HorizontalChangeHandler())
+                .popChangeHandler(new HorizontalChangeHandler()));
+    }
+
+    public void goToSalesFromCategories(GetCategoryTreeResponse getCategoryTreeResponse){
+        mPresenter.loadShopsBanner(getCategoryTreeResponse.getName(), getCategoryTreeResponse.getId(), 0, 0);
+    }
 
 }

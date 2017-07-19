@@ -27,6 +27,7 @@ import au.com.dealsdirect.R;
 import au.com.dealsdirect.data.network.model.saleitems.GetSaleItemsResponse;
 import au.com.dealsdirect.ui.base.BaseController;
 import au.com.dealsdirect.ui.controller.saleitems.adapter.SaleItemsAdapter;
+import au.com.dealsdirect.ui.main.MainActivity;
 import au.com.dealsdirect.ui.main.SharedActivity;
 import au.com.dealsdirect.utils.BundleBuilder;
 import au.com.dealsdirect.utils.PaginateUtils;
@@ -50,7 +51,7 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
 
     private String mSaleId;
     private String mTitle;
-    private String mCategoryKey;
+    private String mCategoryKey = "";
     private String mSearchQuery;
     private boolean hasShowedItems = false;
 
@@ -129,6 +130,38 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
     @Override
     protected void onViewBound(@NonNull View view) {
         super.onViewBound(view);
+
+        assert (getActivity()) != null;
+        ((MainActivity)getActivity()).setDraggableViewPager(false);
+
+        if (mCategoryKey!=null && !mCategoryKey.isEmpty()){
+            Log.d("saletitle", "with category "+mCategoryKey);
+
+            char c = '>';
+            int charCount = 0;
+            String newString = "";
+            for (int i = 0; i < mCategoryKey.length(); i++){
+                String getChar = String.valueOf(mCategoryKey.charAt(i));
+                if (!getChar.equals(String.valueOf(c))){
+                    newString = newString + mCategoryKey.charAt(i);
+
+                    Log.d("saletitle", " string = "+newString);
+                }else{
+                    if (charCount==2){
+                        newString = newString + " • ";
+                        charCount = 0;
+                    }
+                    Log.d("saletitle", " string = "+newString+ " , "+charCount);
+                    charCount++;
+                }
+            }
+            mTitleTextView.setText(newString);
+
+        }
+        else{
+            Log.d("saletitle", "without category ");
+            mTitleTextView.setText(mTitle);
+        }
         setUp(view);
     }
 
@@ -142,7 +175,6 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
     protected void setUp(View view) {
 
         hideKeyboard();
-        mTitleTextView.setText(mTitle);
         mPaginateCallbacks = new Paginate.Callbacks() {
             @Override
             public void onLoadMore() {
@@ -167,7 +199,7 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
 
 
         if (saleItems.isEmpty()) {
-            showLoading();
+//            showLoading();
             mPresenter.loadSaleItems(mCategoryKey, mSaleId, mSearchQuery, page);
 
         } else {

@@ -16,7 +16,8 @@ public class HomePresenter<V extends HomeMvpView> extends BasePresenter<V> imple
 
     @Inject
     public HomePresenter(DataManager dataManager, SchedulerProvider schedulerProvider,
-            CompositeDisposable compositeDisposable) {
+                         CompositeDisposable compositeDisposable) {
         super(dataManager, schedulerProvider, compositeDisposable);
     }
+
 }
