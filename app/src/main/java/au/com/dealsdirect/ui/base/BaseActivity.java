@@ -8,7 +8,6 @@ import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.annotation.StringRes;
-import android.support.design.widget.BottomNavigationView;
 import android.support.design.widget.Snackbar;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
@@ -17,8 +16,6 @@ import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.TextView;
 
-import com.aurelhubert.ahbottomnavigation.AHBottomNavigation;
-
 import au.com.dealsdirect.DDApplication;
 import au.com.dealsdirect.R;
 import au.com.dealsdirect.di.component.ActivityComponent;
@@ -26,16 +23,15 @@ import au.com.dealsdirect.di.component.DaggerActivityComponent;
 import au.com.dealsdirect.di.module.ActivityModule;
 import au.com.dealsdirect.utils.CommonUtils;
 import au.com.dealsdirect.utils.NetworkUtils;
-import butterknife.BindView;
 import butterknife.Unbinder;
 import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper;
 
 public abstract class BaseActivity extends AppCompatActivity
         implements MvpView {
-
-    @Nullable
-    @BindView(R.id.controller_home_bottom_nav)
-    protected AHBottomNavigation bottomNavigationView;
+//
+//    @Nullable
+//    @BindView(R.id.controller_home_bottom_nav)
+//    protected AHBottomNavigation bottomNavigationView;
 
     private ProgressDialog mProgressDialog;
 
@@ -142,15 +138,5 @@ public abstract class BaseActivity extends AppCompatActivity
     }
 
     protected abstract void setUp();
-
-    public void showBottomNavigationView(){
-//        bottomNavigationView.animate().translationY(0).setDuration(500).start();
-        bottomNavigationView.setVisibility(View.VISIBLE);
-    }
-
-    public void hideBottomNavigationView(){
-//        bottomNavigationView.animate().translationY(500).setDuration(500).start();
-        bottomNavigationView.setVisibility(View.GONE);
-    }
 
 }

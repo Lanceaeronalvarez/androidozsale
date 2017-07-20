@@ -11,12 +11,16 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.bluelinelabs.conductor.RouterTransaction;
+import com.bluelinelabs.conductor.changehandler.HorizontalChangeHandler;
+
 import java.util.List;
 
 import javax.inject.Inject;
 
 import au.com.dealsdirect.R;
 import au.com.dealsdirect.ui.base.BaseController;
+import au.com.dealsdirect.ui.controller.returns.newreturn.NewReturnController;
 import au.com.dealsdirect.ui.controller.returns.returnorders.adapter.ReturnOrdersAdapter;
 import au.com.dealsdirect.ui.controller.returns.returnorders.listener.ReturnOrderClickListener;
 import au.com.dealsdirect.utils.BundleBuilder;
@@ -128,6 +132,8 @@ public class ReturnOrdersController extends BaseController
 
     @Override
     public void onReturnOrderItemClicked(au.com.dealsdirect.data.network.model.returns.returnorders.List newReturnsOrder) {
-
+        getRouter().pushController(RouterTransaction.with(NewReturnController.newInstance(newReturnsOrder))
+                .pushChangeHandler(new HorizontalChangeHandler())
+                .popChangeHandler(new HorizontalChangeHandler()));
     }
 }

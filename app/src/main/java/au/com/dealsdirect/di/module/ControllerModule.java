@@ -62,6 +62,9 @@ import au.com.dealsdirect.ui.controller.legalities.LegalitiesPresenter;
 import au.com.dealsdirect.ui.controller.login.LoginMvpPresenter;
 import au.com.dealsdirect.ui.controller.login.LoginMvpView;
 import au.com.dealsdirect.ui.controller.login.LoginPresenter;
+import au.com.dealsdirect.ui.controller.main.MainMvpPresenter;
+import au.com.dealsdirect.ui.controller.main.MainMvpView;
+import au.com.dealsdirect.ui.controller.main.MainPresenter;
 import au.com.dealsdirect.ui.controller.orders.orderdetails.OrderDetailsMvpPresenter;
 import au.com.dealsdirect.ui.controller.orders.orderdetails.OrderDetailsMvpView;
 import au.com.dealsdirect.ui.controller.orders.orderdetails.OrderDetailsPresenter;
@@ -74,6 +77,9 @@ import au.com.dealsdirect.ui.controller.register.RegisterPresenter;
 import au.com.dealsdirect.ui.controller.returns.currentreturns.CurrentReturnsMvpPresenter;
 import au.com.dealsdirect.ui.controller.returns.currentreturns.CurrentReturnsMvpView;
 import au.com.dealsdirect.ui.controller.returns.currentreturns.CurrentReturnsPresenter;
+import au.com.dealsdirect.ui.controller.returns.newreturn.NewReturnMvpPresenter;
+import au.com.dealsdirect.ui.controller.returns.newreturn.NewReturnMvpView;
+import au.com.dealsdirect.ui.controller.returns.newreturn.NewReturnPresenter;
 import au.com.dealsdirect.ui.controller.returns.returndetails.ReturnDetailsMvpPresenter;
 import au.com.dealsdirect.ui.controller.returns.returndetails.ReturnDetailsMvpView;
 import au.com.dealsdirect.ui.controller.returns.returndetails.ReturnDetailsPresenter;
@@ -89,6 +95,9 @@ import au.com.dealsdirect.ui.controller.saleitemdetails.SaleItemDetailsPresenter
 import au.com.dealsdirect.ui.controller.saleitems.SaleItemsMvpPresenter;
 import au.com.dealsdirect.ui.controller.saleitems.SaleItemsMvpView;
 import au.com.dealsdirect.ui.controller.saleitems.SaleItemsPresenter;
+import au.com.dealsdirect.ui.controller.search.SearchMvpPresenter;
+import au.com.dealsdirect.ui.controller.search.SearchMvpView;
+import au.com.dealsdirect.ui.controller.search.SearchPresenter;
 import au.com.dealsdirect.ui.controller.shops.ShopsMvpPresenter;
 import au.com.dealsdirect.ui.controller.shops.ShopsMvpView;
 import au.com.dealsdirect.ui.controller.shops.ShopsPresenter;
@@ -134,7 +143,7 @@ public class ControllerModule {
     }
 
     @Provides
-    HomeMvpPresenter<HomeMvpView> provideHomePresenter(HomePresenter<HomeMvpView> presenter) {
+    MainMvpPresenter<MainMvpView> provideMainPresenter(MainPresenter<MainMvpView> presenter) {
         return presenter;
     }
 
@@ -281,6 +290,21 @@ public class ControllerModule {
 
     @Provides
     LegalitiesMvpPresenter<LegalitiesMvpView> provideLegalitiesPresenter(LegalitiesPresenter<LegalitiesMvpView> presenter) {
+        return presenter;
+    }
+
+    @Provides
+    NewReturnMvpPresenter<NewReturnMvpView> provideNewReturnPresenter(NewReturnPresenter<NewReturnMvpView> presenter) {
+        return presenter;
+    }
+
+    @Provides
+    HomeMvpPresenter<HomeMvpView> provideHomePresenter(HomePresenter<HomeMvpView> presenter) {
+        return presenter;
+    }
+
+    @Provides
+    SearchMvpPresenter<SearchMvpView> provideSearchPresenter(SearchPresenter<SearchMvpView> presenter) {
         return presenter;
     }
 }

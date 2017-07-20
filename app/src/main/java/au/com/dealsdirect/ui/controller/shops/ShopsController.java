@@ -1,9 +1,9 @@
 package au.com.dealsdirect.ui.controller.shops;
 
 import android.annotation.SuppressLint;
-import android.content.DialogInterface;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -17,10 +17,12 @@ import android.view.animation.Animation;
 import android.view.animation.TranslateAnimation;
 import android.view.inputmethod.EditorInfo;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 
 import com.bluelinelabs.conductor.RouterTransaction;
+import com.bluelinelabs.conductor.changehandler.FadeChangeHandler;
 import com.bluelinelabs.conductor.changehandler.HorizontalChangeHandler;
 import com.paginate.Paginate;
 
@@ -37,11 +39,11 @@ import au.com.dealsdirect.data.auth.AuthHandler;
 import au.com.dealsdirect.data.network.model.banner.GetBannerResponse;
 import au.com.dealsdirect.data.network.model.category.GetCategoryTreeResponse;
 import au.com.dealsdirect.ui.base.BaseController;
-import au.com.dealsdirect.ui.controller.categories.CategoriesController;
 import au.com.dealsdirect.ui.controller.saleitems.SaleItemsController;
+import au.com.dealsdirect.ui.controller.search.SearchController;
 import au.com.dealsdirect.ui.controller.shops.adapter.BannersAdapter;
 import au.com.dealsdirect.ui.controller.shops.listener.BannerClickListener;
-import au.com.dealsdirect.ui.custom.transitions.HorizontalNavTransitionChangeHandler;
+import au.com.dealsdirect.ui.main.MainActivity;
 import au.com.dealsdirect.ui.main.MainMvpView;
 import au.com.dealsdirect.utils.BundleBuilder;
 import au.com.dealsdirect.utils.DialogUtils;
@@ -69,13 +71,13 @@ public class ShopsController extends BaseController implements ShopsMvpView, Ban
     RecyclerView shopsControllerBannerRecyclerView;
 
     @BindView(R.id.partial_toolbar_search_icon)
-    ImageView shopsControllerSearchView;
+    ImageButton shopsControllerSearchView;
 
     @BindView(R.id.partial_toolbar_hamburger)
-    ImageView mShopsControllerHamburgerView;
+    ImageButton mShopsControllerHamburgerView;
 
-    @BindView(R.id.controller_shop_toolbar)
-    View mShopsControllerToolbar;
+    @BindView(R.id.partial_toolbar_logo)
+    ImageView mShopsControllerToolbarLogo;
 
     private BannersAdapter mBannersAdapter;
     private Paginate.Callbacks mPaginateCallbacks;
@@ -99,6 +101,17 @@ public class ShopsController extends BaseController implements ShopsMvpView, Ban
     private List<GetBannerResponse> sales = new LinkedList<>();
     private Map<String, List<GetCategoryTreeResponse>> mCategoryMap = new HashMap<>();
 
+    private View child;
+    private RelativeLayout item;
+    private ImageView rightOption;
+
+    BannerClickListener mBannerClickListener;
+
+    @Override
+    protected void onAttach(@NonNull View view) {
+        mPresenter.onAttach(this);
+        super.onAttach(view);
+    }
 
     public static ShopsController newInstance(GetCategoryTreeResponse getCategoryTreeResponse) {
 
@@ -148,6 +161,10 @@ public class ShopsController extends BaseController implements ShopsMvpView, Ban
     @Override
     protected void setUp(View view) {
 
+        assert (getActivity()) != null;
+        ((MainActivity)getActivity()).getMainController().showBottomNav();
+        ((MainActivity)getActivity()).setDraggableViewPager(true);
+
         mPaginateCallbacks = new Paginate.Callbacks() {
             @Override
             public void onLoadMore() {
@@ -172,7 +189,11 @@ public class ShopsController extends BaseController implements ShopsMvpView, Ban
             }
         };
 
-        if (mPresenter.isTablet()) {
+        mBannerClickListener = this;
+
+        mBannersAdapter = new BannersAdapter(getActivity(), mPresenter, new ArrayList(), mBannerClickListener);
+
+        if (getResources().getBoolean(R.bool.is_tablet)) {
             mLayoutManager = new GridLayoutManager(getActivity(), 2, GridLayoutManager.VERTICAL, false);
         } else {
             mLayoutManager = new GridLayoutManager(getActivity(), 1, GridLayoutManager.VERTICAL, false);
@@ -221,8 +242,14 @@ public class ShopsController extends BaseController implements ShopsMvpView, Ban
             ((MainMvpView) getActivity()).showLoginController(getRouter(), new AuthHandler() {
                 @Override
                 public void success() {
-                    getRouter().pushController(RouterTransaction.with(
-                            SaleItemsController.newInstance(saleId, bannerTitle, bannerId, position, imageUrl, null))
+                    ((MainActivity)getActivity()).getHomeRouter()
+                            .pushController(RouterTransaction.with(
+                            SaleItemsController.newInstance(
+                                    saleId,
+                                    bannerTitle,
+                                    bannerId,
+                                    position,
+                                    imageUrl, null))
                             .pushChangeHandler(new HorizontalChangeHandler())
                             .popChangeHandler(new HorizontalChangeHandler()));
                 }
@@ -234,27 +261,32 @@ public class ShopsController extends BaseController implements ShopsMvpView, Ban
             });
         } else {
 
-            // Check if sale is available
+// Check if sale is available
             //TODO: Need computation for date and time when sale response is cached
             if (isAvailable) {
-                getRouter().pushController(RouterTransaction.with(
-                        SaleItemsController.newInstance(saleId, bannerTitle, bannerId, position, imageUrl, null))
-                        .pushChangeHandler(new HorizontalChangeHandler())
-                        .popChangeHandler(new HorizontalChangeHandler()));
+            assert (getActivity()) != null;
+            ((MainActivity)getActivity())
+                    .getHomeRouter()
+                    .pushController(RouterTransaction.with(
+                            SaleItemsController.newInstance(
+                                    saleId,
+                                    bannerTitle,
+                                    bannerId,
+                                    position,
+                                    imageUrl,
+                                    null))
+                    .pushChangeHandler(new HorizontalChangeHandler())
+                    .popChangeHandler(new HorizontalChangeHandler()));
             } else {
                 DialogUtils.showYesDialog(getActivity(), "", "Sale is currently closed", "OK", (dialogInterface, i) -> dialogInterface.dismiss());
-            }
-        }
+            }        }
     }
 
     @OnClick(R.id.partial_toolbar_hamburger)
     void onClickHamburger() {
 
-        getRouter().pushController(RouterTransaction.with(CategoriesController.newInstance(mCategoryMap, mPreLoadedCategories))
-                .pushChangeHandler(new HorizontalNavTransitionChangeHandler(100))
-                .popChangeHandler(new HorizontalNavTransitionChangeHandler(100)));
-
-//        ((MainActivity) getActivity()).hideBottomNav();
+        assert (getActivity()) != null;
+        ((MainActivity)getActivity()).setRootViewpagerItem(0);
     }
 
     @OnClick(R.id.partial_toolbar_logo)
@@ -267,59 +299,15 @@ public class ShopsController extends BaseController implements ShopsMvpView, Ban
     @OnClick(R.id.partial_toolbar_search_icon)
     void onSearchClick() {
 
-        shopsControllerSearchView.setImageDrawable(getResources().getDrawable(R.drawable.ic_close));
-
-        mShopsControllerHamburgerView.animate().rotation(-90).setDuration(200).start();
-
-        RelativeLayout item = (RelativeLayout) getView().findViewById(R.id.controller_shop_toolbar_container);
-
-        @SuppressLint("InflateParams")
-        View child = getActivity().getLayoutInflater().inflate(R.layout.partial_toolbar_search, null);
-        item.addView(child);
-
-        child.setBackgroundColor(getResources().getColor(R.color.toolbar_active_skin));
-        ImageView rightOption = (ImageView) child.findViewById(R.id.partial_toolbar_search_right_option);
-        rightOption.setBackgroundColor(getResources().getColor(R.color.toolbar_active_skin));
-
-        ImageView leftOption = (ImageView) child.findViewById(R.id.partial_toolbar_search_left_option);
-        EditText searchField = (EditText) child.findViewById(R.id.partial_toolbar_search_field);
-        searchField.setActivated(true);
-        searchField.setFocusable(true);
-
-        if (searchField.requestFocus()) {
-            getActivity().getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_VISIBLE);
-        }
-
-
-        rightOption.setImageDrawable(getResources().getDrawable(R.drawable.ic_close));
-        rightOption.animate().rotation(360).setDuration(200).start();
-
-        searchField.setOnEditorActionListener((v, actionId, event) -> {
-            if (actionId == EditorInfo.IME_ACTION_SEARCH) {
-                performSearch(searchField.getText().toString());
-                return true;
-            }
-            return false;
-        });
-
-
-        rightOption.setOnClickListener(view -> {
-            child.startAnimation(outToRightAnimation());
-            item.removeView(child);
-
-            //noinspection deprecation
-            shopsControllerSearchView.setImageDrawable(
-                    getResources().getDrawable(R.drawable.ic_search));
-            rightOption.animate().rotation(-360).setDuration(200).start();
-            mShopsControllerHamburgerView.animate().rotation(0).setDuration(200).start();
-
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-                getActivity().dismissKeyboardShortcutsHelper();
-            }
-
-        });
+        showSearchToolbar();
 
         child.startAnimation(inFromRightAnimation());
+        android.os.Handler handler = new android.os.Handler();
+        handler.postDelayed(() -> ((MainActivity)getActivity()).getHomeRouter().pushController(RouterTransaction.with(
+                SearchController.newInstance())
+                .tag("Search")
+                .pushChangeHandler(new FadeChangeHandler())
+                .popChangeHandler(new FadeChangeHandler())),500);
     }
 
     @Override
@@ -377,12 +365,15 @@ public class ShopsController extends BaseController implements ShopsMvpView, Ban
                 .build();
 
         if (!searchQuery.isEmpty())
-
             KeyboardUtils.hideSoftInput(getActivity());
-        getRouter().pushController(RouterTransaction.with(
-                SaleItemsController.newInstance(saleItemBundle))
-                .pushChangeHandler(new HorizontalChangeHandler())
-                .popChangeHandler(new HorizontalChangeHandler()));
+
+        assert (getActivity()) != null;
+        ((MainActivity)getActivity())
+                .getHomeRouter()
+                .pushController(
+                        RouterTransaction.with(SaleItemsController.newInstance(saleItemBundle))
+                                .pushChangeHandler(new HorizontalChangeHandler())
+                                .popChangeHandler(new HorizontalChangeHandler()));
     }
 
     @Override
@@ -435,9 +426,78 @@ public class ShopsController extends BaseController implements ShopsMvpView, Ban
 
     private List<GetCategoryTreeResponse> fillCategoryContent() {
         return mCategoryMap.get("shop");
-
-
     }
 
+    public void goToItemsFromCategories(Bundle bundle){
+        getRouter().pushController(RouterTransaction.with(
+                SaleItemsController.newInstance(bundle))
+                .pushChangeHandler(new HorizontalChangeHandler())
+                .popChangeHandler(new HorizontalChangeHandler()));
+    }
 
+    public void goToSalesFromCategories(GetCategoryTreeResponse getCategoryTreeResponse){
+        mPresenter.onAttach(this);
+        mPresenter.loadShopsBanner(getCategoryTreeResponse.getName(), getCategoryTreeResponse.getId(), 0, 0);
+    }
+
+    @SuppressWarnings({"deprecation", "ConstantConditions"})
+    public void showSearchToolbar(){
+        if (shopsControllerSearchView!=null)
+            shopsControllerSearchView.setImageDrawable(getResources().getDrawable(R.drawable.ic_close));
+
+        mShopsControllerHamburgerView.animate().rotation(-90).setDuration(200).start();
+
+        //noinspection ConstantConditions
+        item = (RelativeLayout) getView().findViewById(R.id.controller_shop_toolbar_container);
+
+        //noinspection ConstantConditions
+        child = getActivity().getLayoutInflater().inflate(R.layout.partial_toolbar_search, null);
+        item.addView(child);
+
+        child.setBackgroundColor(getResources().getColor(R.color.toolbar_active_skin));
+        rightOption = (ImageView) child.findViewById(R.id.partial_toolbar_search_right_option);
+        rightOption.setBackgroundColor(getResources().getColor(R.color.toolbar_active_skin));
+
+        EditText searchField = (EditText) child.findViewById(R.id.partial_toolbar_search_field);
+        searchField.setActivated(true);
+        searchField.setFocusable(true);
+
+        if (searchField.requestFocus()) {
+            getActivity().getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_VISIBLE);
+        }
+
+        //noinspection deprecation
+        rightOption.setImageDrawable(getResources().getDrawable(R.drawable.ic_close));
+        rightOption.animate().rotation(360).setDuration(200).start();
+
+        searchField.setOnEditorActionListener((v, actionId, event) -> {
+            if (actionId == EditorInfo.IME_ACTION_SEARCH) {
+                performSearch(searchField.getText().toString());
+                return true;
+            }
+            return false;
+        });
+
+        mShopsControllerToolbarLogo.setVisibility(View.GONE);
+    }
+
+    public void hideSearchToolbar(){
+
+        child.startAnimation(outToRightAnimation());
+        item.removeView(child);
+
+        //noinspection deprecation,ConstantConditions
+        shopsControllerSearchView.setImageDrawable(
+                getResources().getDrawable(R.drawable.ic_search));
+        rightOption.animate().rotation(-360).setDuration(200).start();
+        mShopsControllerHamburgerView.animate().rotation(0).setDuration(200).start();
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+            //noinspection ConstantConditions
+            getActivity().dismissKeyboardShortcutsHelper();
+        }
+
+        Handler handler = new Handler();
+        handler.postDelayed(() -> mShopsControllerToolbarLogo.setVisibility(View.VISIBLE),300);
+    }
 }

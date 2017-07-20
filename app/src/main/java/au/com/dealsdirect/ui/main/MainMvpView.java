@@ -13,17 +13,6 @@ import au.com.dealsdirect.ui.base.MvpView;
 
 public interface MainMvpView extends MvpView, BrainTreeListeners {
 
-
-    void showShopController();
-
-    void showAccountController();
-
-    void showContactController();
-
-    void showInviteController();
-
-    void showCheckoutController();
-
     void showLoginController(Router router, AuthHandler handler);
 
     void onAuthorizationFetched(String paymentToken, String paymentMethod);
@@ -48,6 +37,5 @@ public interface MainMvpView extends MvpView, BrainTreeListeners {
 
     void createPaymentTransactionSuccess(CreatePaymentTransaction.ResponseValue responseValue);
 
-    void callGetAppSettings();
 
 }

@@ -26,11 +26,11 @@ import javax.inject.Inject;
 
 import au.com.dealsdirect.R;
 import au.com.dealsdirect.data.auth.AuthHandler;
-import au.com.dealsdirect.ui.base.BaseActivity;
 import au.com.dealsdirect.ui.base.BaseController;
 import au.com.dealsdirect.ui.controller.forgotpassword.ForgotPasswordController;
 import au.com.dealsdirect.ui.controller.register.RegisterController;
 import au.com.dealsdirect.ui.custom.CustomAlertDialog;
+import au.com.dealsdirect.ui.main.MainActivity;
 import au.com.dealsdirect.utils.BundleBuilder;
 import butterknife.BindView;
 import butterknife.OnClick;
@@ -80,6 +80,13 @@ public class LoginController extends BaseController implements LoginMvpView {
         mAuthHandler = (AuthHandler) args.getSerializable(AUTH_HANDLER);
     }
 
+    @Override
+    protected void onAttach(@NonNull View view) {
+        assert (getActivity()) != null;
+        ((MainActivity)getActivity()).getMainController().hideBottomNav();
+        super.onAttach(view);
+    }
+
     @NonNull
     @Override
     protected View inflateView(@NonNull LayoutInflater inflater, @NonNull ViewGroup container) {
@@ -99,9 +106,6 @@ public class LoginController extends BaseController implements LoginMvpView {
     public void onViewBound(@NonNull View view) {
         super.onViewBound(view);
         setUp(view);
-
-        assert getActivity() != null;
-        ((BaseActivity) getActivity()).hideBottomNavigationView();
     }
 
     @Override
@@ -142,7 +146,8 @@ public class LoginController extends BaseController implements LoginMvpView {
 
     @Override
     public void showLoginError(String message) {
-        mAuthHandler.error();
+        if (mAuthHandler!=null)
+            mAuthHandler.error();
 
         CustomAlertDialog.showCustomAlertDialog(
                 getActivity(),

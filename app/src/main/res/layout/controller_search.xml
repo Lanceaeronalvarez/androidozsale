@@ -1,26 +1,24 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:orientation="vertical"
-    android:background="@color/white">
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:orientation="vertical"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent">
 
-    <include layout="@layout/partial_toolbar_arrow"/>
+    <include layout="@layout/partial_toolbar_search"/>
 
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
         <android.support.v7.widget.RecyclerView
-            android:id="@+id/controller_sale_items_grid_view"
+            android:id="@+id/controller_search_sale_items_grid_view"
             android:padding="5dp"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:background="#FFFFFF"/>
 
         <LinearLayout
-            android:id="@+id/controller_sale_items_placeholder"
+            android:id="@+id/controller_search_sale_items_placeholder"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:gravity="center"

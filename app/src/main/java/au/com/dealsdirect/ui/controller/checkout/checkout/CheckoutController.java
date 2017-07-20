@@ -11,15 +11,15 @@ import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-
 import com.bluelinelabs.conductor.RouterTransaction;
 import com.bluelinelabs.conductor.changehandler.HorizontalChangeHandler;
 import com.google.gson.Gson;
-import com.google.j2objc.annotations.Weak;
 
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.List;
+
+import javax.inject.Inject;
 
 import au.com.dealsdirect.R;
 import au.com.dealsdirect.data.network.model.address.DecorationInfoList;
@@ -41,8 +41,6 @@ import au.com.dealsdirect.utils.ImageUtils;
 import au.com.dealsdirect.utils.PriceUtils;
 import butterknife.BindView;
 import butterknife.OnClick;
-
-import javax.inject.Inject;
 
 
 /**
@@ -192,6 +190,10 @@ public class CheckoutController extends BaseController implements CheckoutMvpVie
 
     @Override
     protected void setUp(View view) {
+
+        assert (getActivity()) != null;
+        ((MainActivity)getActivity()).getMainController().showBottomNav();
+        ((MainActivity)getActivity()).setDraggableViewPager(false);
 
         mTitleTextView.setText(R.string.checkout_page_toolbar_title);
 

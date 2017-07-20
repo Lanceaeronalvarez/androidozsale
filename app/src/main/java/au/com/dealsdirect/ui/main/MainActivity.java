@@ -1,20 +1,14 @@
 package au.com.dealsdirect.ui.main;
 
 import android.content.Intent;
-import android.net.Uri;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
+import android.os.Handler;
 import android.view.ViewGroup;
 
-import com.aurelhubert.ahbottomnavigation.AHBottomNavigation;
-import com.aurelhubert.ahbottomnavigation.AHBottomNavigationAdapter;
 import com.bluelinelabs.conductor.Conductor;
 import com.bluelinelabs.conductor.Controller;
-import com.bluelinelabs.conductor.ControllerChangeHandler;
 import com.bluelinelabs.conductor.Router;
 import com.bluelinelabs.conductor.RouterTransaction;
-import com.bluelinelabs.conductor.changehandler.FadeChangeHandler;
 import com.bluelinelabs.conductor.changehandler.HorizontalChangeHandler;
 import com.bluelinelabs.conductor.changehandler.VerticalChangeHandler;
 import com.braintreepayments.api.BraintreeFragment;
@@ -39,22 +33,18 @@ import javax.inject.Inject;
 
 import au.com.dealsdirect.R;
 import au.com.dealsdirect.data.auth.AuthHandler;
+import au.com.dealsdirect.data.network.model.category.GetCategoryTreeResponse;
 import au.com.dealsdirect.data.network.model.checkout.CreatePaymentTransaction;
 import au.com.dealsdirect.data.network.model.checkout.getuserpaymentmethods.PaymentMethod;
-import au.com.dealsdirect.service.fcm.GNotification;
 import au.com.dealsdirect.ui.base.BaseActivity;
-import au.com.dealsdirect.ui.controller.account.AccountController;
 import au.com.dealsdirect.ui.controller.checkout.addpayment.AddPaymentController;
 import au.com.dealsdirect.ui.controller.checkout.checkout.CheckoutController;
 import au.com.dealsdirect.ui.controller.checkout.paymentsuccess.PaymentSuccessController;
-import au.com.dealsdirect.ui.controller.contact.viewcontacts.ViewContactsController;
-import au.com.dealsdirect.ui.controller.home.HomeController;
-import au.com.dealsdirect.ui.controller.invite.InviteController;
 import au.com.dealsdirect.ui.controller.login.LoginController;
+import au.com.dealsdirect.ui.controller.main.MainController;
 import au.com.dealsdirect.ui.controller.shops.ShopsController;
 import au.com.dealsdirect.ui.custom.CustomAlertDialog;
 import au.com.dealsdirect.utils.DialogUtils;
-import au.com.dealsdirect.utils.GDeepLinkUtil;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import timber.log.Timber;
@@ -65,18 +55,9 @@ public class MainActivity extends BaseActivity implements MainMvpView {
 
     @Inject
     MainMvpPresenter<MainMvpView> mPresenter;
-    @Inject
-    GNotification gNotification;
 
     @BindView(R.id.activity_main_frame)
     ViewGroup mContainer;
-
-    @BindView(R.id.controller_home_bottom_nav)
-    AHBottomNavigation mBottomNavigationView;
-
-    private int mPreviousTab = R.id.action_shop;
-    private int mCurrentTab = R.id.action_shop;
-
 
     private BraintreeFragment mBraintreeFragment;
     private String mPaymentType;
@@ -84,6 +65,15 @@ public class MainActivity extends BaseActivity implements MainMvpView {
     private String mAuthorization;
     private Router mRouter;
     private FetchTokenHandler mFetchTokenHandler;
+
+    private MainController mMainController;
+    private ShopsController mShopController;
+
+    private Router mHomeRouter;
+    private Router mCategoriesRouter;
+
+    private int mViewPagerCurrentItem;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -97,49 +87,13 @@ public class MainActivity extends BaseActivity implements MainMvpView {
 
         mPresenter.onAttach(this);
 
+        mMainController = MainController.newInstance();
         mRouter = Conductor.attachRouter(this, mContainer, savedInstanceState);
         if (!mRouter.hasRootController()) {
-            mRouter.setRoot(RouterTransaction.with(HomeController.newInstance())
+            mRouter.setRoot(RouterTransaction.with(mMainController)
                     .tag("Home"));
         }
 
-         /* Initialize FireBase notifications */
-        gNotification.registerDeviceForNotification(getApplicationContext());
-
-        Intent intent = getIntent();
-
-        if (intent != null) {
-
-            Uri data = intent.getData();
-
-            if (data != null) {
-                Bundle bundle = GDeepLinkUtil.generateExtraFromDeepLink(data);
-                intent.putExtras(bundle);
-            }
-
-            // If activity was launched from notification0
-            if (intent.hasExtra(GNotification.FCM_INTENT_LAUNCHED)) {
-                boolean isOpenedFromNotifications = intent.getExtras().getBoolean(GNotification.FCM_INTENT_LAUNCHED);
-                if (isOpenedFromNotifications) {
-                    gNotification.callNotificationEvent(this);
-                }
-            }
-            //If activity was launched via deep link
-            else if (intent.hasExtra(GDeepLinkUtil.DEEP_LINK_INTENT_LAUNCHED)) {
-                Intent next = new Intent();
-                next.setClass(this, SharedActivity.class);
-
-                next.putExtra("KEY_IMAGE_ID", "");
-                next.putExtra("KEY_SEO_IDENTIFIER", intent.getStringExtra(GDeepLinkUtil.KEY_DEEP_LINK_SEOIDENTIFIER));
-                next.putExtra("KEY_ITEM_ID", "");
-                next.putExtra("KEY_SALE_ID", "");
-                next.putExtra("KEY_SALE_NAME", "");
-                next.putExtra("KEY_SALE_PRICE", "");
-                next.putExtra("KEY_SALE_OLD_PRICE", "");
-
-                startActivityForResult(next, getTaskId());
-            }
-        }
 
         setUp();
     }
@@ -148,90 +102,90 @@ public class MainActivity extends BaseActivity implements MainMvpView {
     protected void setUp() {
 
         mPresenter.callGetServerSettings();
-        mPresenter.callGetAppSettingsSection(getApplicationContext());
+        mPresenter.callGetAppSettingsSection(this);
 
-        mRouter.addChangeListener(new ControllerChangeHandler.ControllerChangeListener() {
-            @Override
-            public void onChangeStarted(@Nullable Controller to, @Nullable Controller from, boolean isPush, @NonNull ViewGroup container, @NonNull ControllerChangeHandler handler) {
+//        mRouter.addChangeListener(new ControllerChangeHandler.ControllerChangeListener() {
+//            @Override
+//            public void onChangeStarted(@Nullable Controller to, @Nullable Controller from, boolean isPush, @NonNull ViewGroup container, @NonNull ControllerChangeHandler handler) {
+//
+//            }
+//
+//            @Override
+//            public void onChangeCompleted(@Nullable Controller to, @Nullable Controller from, boolean isPush, @NonNull ViewGroup container, @NonNull ControllerChangeHandler handler) {
+//                if (to instanceof HomeController || to instanceof ShopsController) {
+//                    mBottomNavigationView.setCurrentItem(0);
+//                } else if (to instanceof AccountController) {
+//                    mBottomNavigationView.setCurrentItem(1);
+//                } else if (to instanceof ViewContactsController) {
+//                    mBottomNavigationView.setCurrentItem(2);
+//                } else if (to instanceof InviteController) {
+//                    mBottomNavigationView.setCurrentItem(3);
+//                } else if (to instanceof CheckoutController) {
+//                    mBottomNavigationView.setCurrentItem(4);
+//                }
+//            }
+//        });
 
-            }
-
-            @Override
-            public void onChangeCompleted(@Nullable Controller to, @Nullable Controller from, boolean isPush, @NonNull ViewGroup container, @NonNull ControllerChangeHandler handler) {
-                if (to instanceof HomeController || to instanceof ShopsController) {
-                    mBottomNavigationView.setCurrentItem(0);
-                } else if (to instanceof AccountController) {
-                    mBottomNavigationView.setCurrentItem(1);
-                } else if (to instanceof ViewContactsController) {
-                    mBottomNavigationView.setCurrentItem(2);
-                } else if (to instanceof InviteController) {
-                    mBottomNavigationView.setCurrentItem(3);
-                } else if (to instanceof CheckoutController) {
-                    mBottomNavigationView.setCurrentItem(4);
-                }
-            }
-        });
-
-        mBottomNavigationView.setOnTabSelectedListener(new AHBottomNavigation.OnTabSelectedListener() {
-            @Override
-            public boolean onTabSelected(int position, boolean wasSelected) {
-
-                if (!wasSelected) {
-                    mPreviousTab = mCurrentTab;
-                    mCurrentTab = position;
-
-                    switch (position) {
-
-                        case 0:
-                            showShopController();
-                            break;
-
-                        case 1:
-                            showAccountController();
-                            break;
-
-                        case 2:
-                        case 3:
-                            if (!mPresenter.isAuthorized()) {
-                                showLoginController(mRouter, new AuthHandler() {
-                                    @Override
-                                    public void success() {
-                                        proceedToController(position);
-                                    }
-
-                                    @Override
-                                    public void error() {
-
-                                    }
-                                });
-                            } else {
-                                proceedToController(position);
-                            }
-                            break;
-
-                        case 4:
-                            showCheckoutController();
-                            break;
-                    }
-                }
-                return true;
-            }
-        });
-
-        AHBottomNavigationAdapter navigationAdapter = new AHBottomNavigationAdapter(this, R.menu.bottom_navigation_menu);
-        navigationAdapter.setupWithBottomNavigation(mBottomNavigationView);
-        mBottomNavigationView.setTitleState(AHBottomNavigation.TitleState.ALWAYS_SHOW);
-        mBottomNavigationView.setCurrentItem(0);
+//        mBottomNavigationView.setOnTabSelectedListener(new AHBottomNavigation.OnTabSelectedListener() {
+//            @Override
+//            public boolean onTabSelected(int position, boolean wasSelected) {
+//
+//                if (!wasSelected) {
+//                    mPreviousTab = mCurrentTab;
+//                    mCurrentTab = position;
+//
+//                    switch (position) {
+//
+//                        case 0:
+//                            showShopController();
+//                            break;
+//
+//                        case 1:
+//                            showAccountController();
+//                            break;
+//
+//                        case 2:
+//                        case 3:
+//                            if (!mPresenter.isAuthorized()) {
+//                                showLoginController(mRouter, new AuthHandler() {
+//                                    @Override
+//                                    public void success() {
+//                                        proceedToController(position);
+//                                    }
+//
+//                                    @Override
+//                                    public void error() {
+//
+//                                    }
+//                                });
+//                            } else {
+//                                proceedToController(position);
+//                            }
+//                            break;
+//
+//                        case 4:
+//                            showCheckoutController();
+//                            break;
+//                    }
+//                }
+//                return true;
+//            }
+//        });
+//
+//        AHBottomNavigationAdapter navigationAdapter = new AHBottomNavigationAdapter(this, R.menu.bottom_navigation_menu);
+//        navigationAdapter.setupWithBottomNavigation(mBottomNavigationView);
+//        mBottomNavigationView.setTitleState(AHBottomNavigation.TitleState.ALWAYS_SHOW);
+//        mBottomNavigationView.setCurrentItem(0);
 
     }
 
-    private void proceedToController(int id) {
-        if (id == 2) {
-            showContactController();
-        } else if (id == 3) {
-            showInviteController();
-        }
-    }
+//    private void proceedToController(int id) {
+//        if (id == 2) {
+//            showContactController();
+//        } else if (id == 3) {
+//            showInviteController();
+//        }
+//    }
 
     @Override
     protected void onDestroy() {
@@ -248,88 +202,54 @@ public class MainActivity extends BaseActivity implements MainMvpView {
 
     @Override
     public void onBackPressed() {
-//        if (!mRouter.handleBack()) {
-//            return;
-//        }
-//
-//        Controller test = getMainRouterCurrentController();
-//        if (getMainRouterCurrentController() instanceof HomeController ||
-//                getMainRouterCurrentController() instanceof ShopsController) {
-//            showBottomNavigationView();
-//            DialogUtils.showYesNoDialog(
-//                    this,
-//                    getString(R.string.dealsdirect),
-//                    getString(R.string.exit_app),
-//                    getString(R.string.exit),
-//                    getString(R.string.no),
-//                    (dialogInterface, i) -> {
-//                        finish();
-//                    },
-//                    (dialogInterface, i) -> {
-//
-//                    });
-//        }
 
+        switch (mViewPagerCurrentItem){
+            case 0:
+                if (mCategoriesRouter.getBackstackSize() == 1) {
+                    DialogUtils.showYesNoDialog(
+                            this,
+                            getString(R.string.dealsdirect),
+                            getString(R.string.exit_app),
+                            getString(R.string.exit),
+                            getString(R.string.no),
+                            (dialogInterface, i) -> finish(),
+                            (dialogInterface, i) -> {
 
-        if (mRouter.getBackstackSize() == 1) {
-            DialogUtils.showYesNoDialog(
-                    this,
-                    getString(R.string.dealsdirect),
-                    getString(R.string.exit_app),
-                    getString(R.string.exit),
-                    getString(R.string.no),
-                    (dialogInterface, i) -> {
-                        finish();
-                    },
-                    (dialogInterface, i) -> {
-
-                    });
-        } else {
-            if (!mRouter.handleBack()) {
-
-            } else {
-                if (mRouter.getBackstackSize() == 1) {
-                    showBottomNavigationView();
+                            });
+                } else {
+                    mRouter.handleBack();
                 }
-            }
+                break;
+            case 1:
+                if (mHomeRouter.getBackstackSize() == 1) {
+                    DialogUtils.showYesNoDialog(
+                            this,
+                            getString(R.string.dealsdirect),
+                            getString(R.string.exit_app),
+                            getString(R.string.exit),
+                            getString(R.string.no),
+                            (dialogInterface, i) -> finish(),
+                            (dialogInterface, i) -> {
+
+                            });
+                } else {
+                    int backstackSize = mHomeRouter.getBackstackSize()-1;
+                    String tag = mHomeRouter.getBackstack().get(backstackSize).tag();
+
+                    if(tag!=null && tag.equals(getString(R.string.search_tag))){
+                        mHomeRouter.handleBack();
+                        mShopController.showSearchToolbar();
+
+                        Handler handler = new Handler();
+                        handler.postDelayed(() ->
+                                mShopController.hideSearchToolbar(),200);
+                    }else{
+                        mHomeRouter.handleBack();
+                    }
+                }
+
+                break;
         }
-    }
-
-
-    @Override
-    public void showShopController() {
-        mRouter.setRoot(RouterTransaction.with(new ShopsController())
-                .pushChangeHandler(new FadeChangeHandler())
-                .popChangeHandler(new FadeChangeHandler()));
-    }
-
-    @Override
-    public void showAccountController() {
-        mRouter.setRoot(RouterTransaction.with(AccountController.newInstance())
-                .pushChangeHandler(new FadeChangeHandler())
-                .popChangeHandler(new FadeChangeHandler()));
-    }
-
-    @Override
-    public void showContactController() {
-        mRouter.setRoot(RouterTransaction.with(ViewContactsController.newInstance())
-                .pushChangeHandler(new FadeChangeHandler())
-                .popChangeHandler(new FadeChangeHandler()));
-    }
-
-    @Override
-    public void showInviteController() {
-        mRouter.setRoot(RouterTransaction.with(InviteController.newInstance())
-                .pushChangeHandler(new FadeChangeHandler())
-                .popChangeHandler(new FadeChangeHandler()));
-    }
-
-    @Override
-    public void showCheckoutController() {
-        mRouter.setRoot(RouterTransaction.with(new CheckoutController())
-                .tag("checkout")
-                .pushChangeHandler(new FadeChangeHandler())
-                .popChangeHandler(new FadeChangeHandler()));
     }
 
     @Override
@@ -342,7 +262,7 @@ public class MainActivity extends BaseActivity implements MainMvpView {
 
     @Override
     public void onCancel(int requestCode) {
-
+        mFetchTokenHandler = null;
     }
 
     @Override
@@ -367,7 +287,6 @@ public class MainActivity extends BaseActivity implements MainMvpView {
                 }
 
 //                Crashlytics.log(error.getMessage());
-
                 //Call braintree client reset on error
                 performResetWithAuthFetch();
             }
@@ -376,13 +295,9 @@ public class MainActivity extends BaseActivity implements MainMvpView {
 
     @Override
     public void onPaymentMethodNonceCreated(PaymentMethodNonce paymentMethodNonce) {
-        showLoading();
-        BraintreeResponseListener<String> handler = new BraintreeResponseListener<String>() {
-            @Override
-            public void onResponse(String deviceData) {
+
+        BraintreeResponseListener<String> handler = deviceData ->
                 mPresenter.createPaymentMethod(deviceData, paymentMethodNonce.getNonce(), mPaymentType);
-            }
-        };
 
         if (!mPresenter.getKountMerchantId().isEmpty()) {
             DataCollector.collectDeviceData(mBraintreeFragment, mPresenter.getKountMerchantId(), handler);
@@ -427,12 +342,8 @@ public class MainActivity extends BaseActivity implements MainMvpView {
     @Override
     public void callCreatePaymentTransaction(String paymentNonce) {
 
-        BraintreeResponseListener<String> handler = new BraintreeResponseListener<String>() {
-            @Override
-            public void onResponse(String deviceData) {
+        BraintreeResponseListener<String> handler = deviceData ->
                 mPresenter.callCreatePaymentTransaction(deviceData, mPaymentType, paymentNonce, getPaymentMethodSelected().getToken());
-            }
-        };
 
         if (!mPresenter.getKountMerchantId().isEmpty()) {
             DataCollector.collectDeviceData(mBraintreeFragment, mPresenter.getKountMerchantId(), handler);
@@ -510,8 +421,7 @@ public class MainActivity extends BaseActivity implements MainMvpView {
             ((AddPaymentController) currentController).showAddPaymentResult(true, "");
         } else {
             setPaymentMethodSelected(lastPaymentMethod);
-            mRouter.popToTag("checkout");
-//            mRouter.popCurrentController();
+            mRouter.popCurrentController();
         }
     }
 
@@ -539,11 +449,6 @@ public class MainActivity extends BaseActivity implements MainMvpView {
         }
     }
 
-    @Override
-    public void callGetAppSettings() {
-        mPresenter.callAppSettingsWithAuthCheck();
-    }
-
     public Controller getMainRouterCurrentController() {
         int backstackSize = mRouter.getBackstack().size();
         if (backstackSize > 0) {
@@ -551,6 +456,68 @@ public class MainActivity extends BaseActivity implements MainMvpView {
         } else {
             return null;
         }
+    }
 
+    public void setRootViewpagerItem(int item){
+
+        switch (item){
+            case 0:
+                mMainController.goToCategories();
+                break;
+            case 1:
+                mMainController.goToShops();
+                break;
+            default:
+                mMainController.goToShops();
+                break;
+        }
+    }
+
+    public void setDraggableViewPager(boolean isDraggable){
+        mMainController.setViewpagerDraggable(isDraggable);
+    }
+
+    public void setHomeRouter(Router router){
+        mHomeRouter = router;
+    }
+
+    public boolean isAuthorized(){
+        return mPresenter.isAuthorized();
+    }
+
+    public Router getHomeRouter(){
+        return mHomeRouter;
+    }
+
+    public Router getCategoriesRouter(){
+        return mCategoriesRouter;
+    }
+
+    public void setCategoriesRouter(Router router){
+        mCategoriesRouter = router;
+    }
+
+    public void setCurrentItem(int position){
+        mViewPagerCurrentItem = position;
+    }
+
+    public void goToSaleItemsFromCategory(Bundle bundle){
+        mShopController.goToItemsFromCategories(bundle);
+
+        final Handler handler = new Handler();
+        handler.postDelayed(() -> mMainController.goToShops(), 400);
+    }
+
+    public void goToSalesFromCategory(GetCategoryTreeResponse getCategoryTreeResponse){
+        mShopController.goToSalesFromCategories(getCategoryTreeResponse);
+        mMainController.goToShops();
+    }
+
+    public void setShopController(ShopsController shopsController){
+        mShopController = shopsController;
+    }
+
+    public MainController getMainController(){
+        return mMainController;
     }
 }

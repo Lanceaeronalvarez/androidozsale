@@ -5,7 +5,6 @@ import android.support.annotation.NonNull;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -15,6 +14,7 @@ import com.bumptech.glide.Glide;
 
 import au.com.dealsdirect.R;
 import au.com.dealsdirect.ui.base.BaseController;
+import au.com.dealsdirect.ui.main.MainActivity;
 import au.com.dealsdirect.utils.BundleBuilder;
 import butterknife.BindView;
 import butterknife.OnClick;
@@ -56,6 +56,10 @@ public class InviteController extends BaseController {
 
     @Override
     protected void setUp(View view) {
+
+        assert (getActivity()) != null;
+        ((MainActivity)getActivity()).setDraggableViewPager(false);
+
         mTitleText.setText("Invite Friends");
         Glide.with(getActivity())
                 .load(R.drawable.invite_friend_vouchers_medium)

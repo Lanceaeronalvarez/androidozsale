@@ -1,9 +1,7 @@
 package au.com.dealsdirect.ui.controller.categories.adapter;
 
 import android.support.v7.widget.RecyclerView;
-import android.view.GestureDetector;
 import android.view.LayoutInflater;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.Animation;
@@ -68,23 +66,23 @@ public class CategoriesAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
 //                                .getDrawable(R.drawable.bg_category_item_active));
 //
 //            }
-            GestureDetector gestureDetector = new GestureDetector(
-                    holder.itemView.getContext(),
-                    new GestureDetector.SimpleOnGestureListener() {
+//            GestureDetector gestureDetector = new GestureDetector(
+//                    holder.itemView.getContext(),
+//                    new GestureDetector.SimpleOnGestureListener() {
+//
+//                        @Override
+//                        public boolean onDoubleTap(MotionEvent e) {
+//
+//                            mCategoryAdapterClickListener.onCategoryDoubleTap(
+//                                    position,
+//                                    mData.get(position));
+//
+//                            return super.onDoubleTap(e);
+//                        }
+//                    });
 
-                        @Override
-                        public boolean onDoubleTap(MotionEvent e) {
-
-                            mCategoryAdapterClickListener.onCategoryDoubleTap(
-                                    position,
-                                    mData.get(position));
-
-                            return super.onDoubleTap(e);
-                        }
-                    });
-
-            ((CategoriesViewHolder) holder).itemView.setOnTouchListener((view, motionEvent)
-                    -> gestureDetector.onTouchEvent(motionEvent));
+//            ((CategoriesViewHolder) holder).itemView.setOnTouchListener((view, motionEvent)
+//                    -> gestureDetector.onTouchEvent(motionEvent));
 
             ((CategoriesViewHolder) holder).categoryText.setText(mData.get(position).getName());
             ((CategoriesViewHolder) holder).itemView.setOnClickListener(view -> {
@@ -107,7 +105,6 @@ public class CategoriesAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                     mLastSelectedViewHolderImageView.setBackgroundDrawable(
                             holder.itemView.getContext().getResources()
                                     .getDrawable(R.drawable.bg_category_item_active));
-
                 }
 
                 mCategoryAdapterClickListener.onCategoryClicked(
@@ -116,7 +113,6 @@ public class CategoriesAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
             });
 
         }
-
     }
 
     @Override

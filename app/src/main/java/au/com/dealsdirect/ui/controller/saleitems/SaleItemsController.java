@@ -27,6 +27,7 @@ import au.com.dealsdirect.R;
 import au.com.dealsdirect.data.network.model.saleitems.GetSaleItemsResponse;
 import au.com.dealsdirect.ui.base.BaseController;
 import au.com.dealsdirect.ui.controller.saleitems.adapter.SaleItemsAdapter;
+import au.com.dealsdirect.ui.main.MainActivity;
 import au.com.dealsdirect.ui.main.SharedActivity;
 import au.com.dealsdirect.utils.BundleBuilder;
 import au.com.dealsdirect.utils.PaginateUtils;
@@ -47,15 +48,15 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
     private static final String KEY_CATEGORY_MAP = "SaleItemsController.CATEGORY_KEY";
     private static final String KEY_SEARCH_QUERY = "SaleItemsController.SEARCH_KEY";
     private static final String KEY_REQUEST_FROM = "SaleITemsController.REQUEST_FROM";
+    private static final String KEY_FROM_CATEGORIES = "SaleItemsController.IS_FROM_CATEGORY";
 
     private String mSaleId;
     private String mTitle;
-    private String mCategoryKey;
+    private String mCategoryKey = "";
     private String mSearchQuery;
     private boolean hasShowedItems = false;
 
     private List<GetSaleItemsResponse.Products> mSaleItems = new LinkedList<>();
-
 
     @BindView(R.id.controller_sale_items_grid_view)
     RecyclerView mSaleItemsRecyclerView;
@@ -75,6 +76,7 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
     private int page = 0;
     private boolean loadingInProgress = false;
     private boolean hasLoadedAllItems = false;
+    private boolean mIsFromCategory = false;
 
 
     boolean initialLoad = false;
@@ -132,6 +134,36 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
     @Override
     protected void onViewBound(@NonNull View view) {
         super.onViewBound(view);
+
+        assert (getActivity()) != null;
+        ((MainActivity)getActivity()).setDraggableViewPager(false);
+
+        if (mCategoryKey!=null && !mCategoryKey.isEmpty()){
+            Log.d("saletitle", "with category "+mCategoryKey);
+
+            char c = '>';
+            int charCount = 0;
+            String newString = "";
+            for (int i = 0; i < mCategoryKey.length(); i++){
+                String getChar = String.valueOf(mCategoryKey.charAt(i));
+                if (!getChar.equals(String.valueOf(c))){
+                    newString = newString + mCategoryKey.charAt(i);
+
+                }else{
+                    if (charCount==2){
+                        newString = newString + " • ";
+                        charCount = 0;
+                    }
+                    charCount++;
+                }
+            }
+            mTitleTextView.setText(newString);
+
+        }
+        else{
+            Log.d("saletitle", "without category ");
+            mTitleTextView.setText(mTitle);
+        }
         setUp(view);
     }
 
@@ -144,7 +176,6 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
     @Override
     protected void setUp(View view) {
         hideKeyboard();
-        mTitleTextView.setText(mTitle);
         mPaginateCallbacks = new Paginate.Callbacks() {
             @Override
             public void onLoadMore() {
@@ -209,6 +240,15 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
             mSaleItemsRecyclerView.setVisibility(View.VISIBLE);
         }
 
+            if (page == 0) {
+                mSaleItemsAdapter = new SaleItemsAdapter(mSaleItems, mPresenter, mSaleId, mTitle);
+                mSaleItemsRecyclerView.setLayoutManager(new GridLayoutManager(getActivity(), 2));
+                mSaleItemsRecyclerView.setAdapter(mSaleItemsAdapter);
+
+                mPaginateManager = PaginateUtils.init(mSaleItemsRecyclerView, mPaginateCallbacks);
+            } else {
+                mSaleItemsAdapter.addData(mSaleItems);
+            }
     }
 
 
