@@ -124,6 +124,12 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
     }
 
     @Override
+    protected void onAttach(@NonNull View view) {
+        mPresenter.onAttach(this);
+        super.onAttach(view);
+    }
+
+    @Override
     protected View inflateView(@NonNull LayoutInflater inflater, @NonNull ViewGroup container) {
         View view = inflater.inflate(R.layout.controller_sale_items, container, false);
         getControllerComponent().inject(this);
