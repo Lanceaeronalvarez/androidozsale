@@ -10,6 +10,6 @@
     android:layout_marginTop="5dp"
     android:layout_marginRight="5dp"
     android:layout_marginBottom="5dp"
-    android:textColor="@color/text_color_selector"
+    android:textColor="@color/sizes_text_color_selector"
     android:padding="10dp"
     tools:ignore="MissingPrefix"/>

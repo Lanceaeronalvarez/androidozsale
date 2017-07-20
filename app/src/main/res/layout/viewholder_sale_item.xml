@@ -67,10 +67,10 @@
             android:layout_below="@+id/sale_item_brand"
             android:ellipsize="end"
             android:gravity="center"
-            android:lines="2"
+            android:lines="1"
             android:paddingLeft="5dp"
             android:paddingRight="5dp"
-            android:textColor="#000000"
+            android:textColor="#616161"
             android:textSize="@dimen/text_size_medium"
             tools:text="" />
 
@@ -78,7 +78,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_below="@+id/sale_item_name"
-            android:layout_marginBottom="8dp"
+            android:layout_marginBottom="19dp"
             android:gravity="center"
             android:orientation="horizontal">
 

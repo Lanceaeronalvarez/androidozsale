@@ -252,7 +252,7 @@
                                                 android:layout_gravity="end"
                                                 android:maxLines="1"
                                                 android:text=""
-                                                android:textColor="@color/gray_description_text"
+                                                android:textColor="@color/gray_sale_price"
                                                 android:textSize="@dimen/text_size_large" />
 
                                         </LinearLayout>

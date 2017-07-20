@@ -21,12 +21,13 @@
 
     <color name="border_gray">#E4E4E4</color>
 
-    <color name="gray_item_details">#466e86</color>
+    <color name="gray_item_details">#466e87</color>
     <color name="gray_title_text">#5F5F5F</color>
     <color name="gray_field_text">#868686</color>
     <color name="gray_field_label">#87939D</color>
     <color name="gray_description_text">#9E9E9E</color>
     <color name="gray_generic_icon">#9E9E9E</color>
+    <color name="gray_sale_price">#919191</color>
     <color name="gray_hint_text">#CACACA</color>
     <color name="gray_border">#E7E7E7</color>
     <color name="gray_filter_background">#FBFBFB</color>
@@ -55,7 +56,7 @@
 
     <!-- Chips Theme -->
     <color name="bg_chips_ripple">#FFFFFF</color>
-    <color name="bg_chips_default">#F8FAFD</color>
+    <color name="bg_chips_default">#DBE1EA</color>
     <color name="bg_chips_default_border">#EDF0F5</color>
     <color name="bg_chips_checked">#ED1167</color>
     <color name="bg_chips_text">#FFFFFF</color>
