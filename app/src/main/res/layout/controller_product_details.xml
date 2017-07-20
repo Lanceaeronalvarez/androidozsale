@@ -281,13 +281,6 @@
                                         android:layout_marginTop="10dp"
                                         android:visibility="gone">
 
-                                        <View
-                                            android:layout_width="match_parent"
-                                            android:layout_height="1px"
-                                            android:layout_alignParentTop="true"
-                                            android:layout_gravity="center"
-                                            android:background="#23000000" />
-
                                         <RelativeLayout
                                             android:id="@+id/sizeLabel"
                                             android:layout_width="match_parent"
@@ -297,12 +290,11 @@
                                                 fontPath="@string/font_lato_bold"
                                                 android:layout_width="wrap_content"
                                                 android:layout_height="wrap_content"
-                                                android:paddingLeft="16dp"
-                                                android:paddingRight="16dp"
-                                                android:paddingTop="10dp"
-                                                android:text="sizes"
-                                                android:textColor="@color/gray_field_label"
-                                                android:textSize="@dimen/text_size_medium" />
+                                                android:paddingLeft="10dp"
+                                                android:paddingRight="10dp"
+                                                android:text="@string/choose_your_size"
+                                                android:textColor="@color/gray_item_details"
+                                                android:textSize="@dimen/text_size_large" />
 
                                             <ImageView
                                                 android:id="@+id/question_mark"
@@ -476,9 +468,9 @@
                                             fontPath="@string/font_lato_bold"
                                             android:layout_width="wrap_content"
                                             android:layout_height="wrap_content"
-                                            android:text="pricing"
-                                            android:textColor="@color/gray_field_text"
-                                            android:textSize="@dimen/text_size_medium" />
+                                            android:text="@string/pricing"
+                                            android:textColor="@color/gray_item_details"
+                                            android:textSize="@dimen/text_size_large" />
 
 
                                         <WebView

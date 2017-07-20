@@ -30,6 +30,7 @@ import au.com.dealsdirect.ui.custom.CustomAlertDialog;
 import au.com.dealsdirect.utils.BundleBuilder;
 import au.com.dealsdirect.utils.DialogUtils;
 import au.com.dealsdirect.utils.JsonUtils;
+import au.com.dealsdirect.utils.StringUtils;
 import butterknife.BindView;
 import butterknife.OnClick;
 import timber.log.Timber;
@@ -126,7 +127,7 @@ public class AddNewAddressController extends BaseController implements AddNewAdd
                     editTextValue.setInputType(InputType.TYPE_CLASS_TEXT);
                 }
                 //Set label
-                textViewLabel.setText(infoList.Label.toLowerCase());
+                textViewLabel.setText(StringUtils.toTitleCase(infoList.Label));
                 editTextValue.setFilters(new InputFilter[]{new InputFilter.LengthFilter(infoList.MaxLength)});
 
                 //Add asterisk to required fields
@@ -137,7 +138,7 @@ public class AddNewAddressController extends BaseController implements AddNewAdd
                 break;
             case "select":
                 TextView textViewLabel2 = (TextView) dynamicView.findViewById(R.id.add_address_label);
-                textViewLabel2.setText(infoList.Label.toLowerCase());
+                textViewLabel2.setText(StringUtils.toTitleCase(infoList.Label));
 
                 ArrayAdapter<String> signatureOnDeliveryAdapter = new ArrayAdapter<>(getActivity(), android.R.layout.simple_list_item_activated_1, infoList.Options);
 

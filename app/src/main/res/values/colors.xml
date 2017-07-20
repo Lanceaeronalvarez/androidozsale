@@ -56,7 +56,7 @@
 
     <!-- Chips Theme -->
     <color name="bg_chips_ripple">#FFFFFF</color>
-    <color name="bg_chips_default">#DBE1EA</color>
+    <color name="bg_chips_default">#F8FAFD</color>
     <color name="bg_chips_default_border">#EDF0F5</color>
     <color name="bg_chips_checked">#ED1167</color>
     <color name="bg_chips_text">#FFFFFF</color>

@@ -54,6 +54,7 @@
             android:layout_alignParentEnd="true"
             android:layout_centerVertical="true"
             android:background="@drawable/bg_toolbar_button"
+            android:scaleType="fitCenter"
             android:padding="10dp"
             android:src="@drawable/ic_toolbar_filter" />
 

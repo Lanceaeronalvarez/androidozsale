@@ -26,12 +26,12 @@
             android:layout_marginRight="@dimen/activity_horizontal_margin" />
 
         <TextView
-            fontPath="@string/font_lato_medium"
+            fontPath="@string/font_lato_light"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="@string/invite_friend_guide"
             android:layout_margin="@dimen/activity_horizontal_margin"
-
+            android:lineSpacingExtra="5dp"
             android:textSize="@dimen/text_size_large" />
 
     </LinearLayout>

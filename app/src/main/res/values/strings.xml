@@ -58,7 +58,7 @@
 
                     b {
                         font-family: Lato;
-                        color: #6E6868;
+                        color: #466e87;
                     }
 
                     br {
@@ -257,6 +257,8 @@
     <string name="search_tag">Search</string>
     <string name="sale_items_from_category">SaleItemFromCategory</string>
     <string name="bottom_nav_sale_top_from_sale_items">BottomNavSaleTapFromSaleItems</string>
+    <string name="choose_your_size">Choose your size:</string>
+    <string name="pricing">Pricing</string>
 
     <string-array name="genders">
         <item>Male</item>
