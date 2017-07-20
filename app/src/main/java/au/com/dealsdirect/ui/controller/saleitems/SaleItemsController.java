@@ -48,6 +48,7 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
     private static final String KEY_CATEGORY_MAP = "SaleItemsController.CATEGORY_KEY";
     private static final String KEY_SEARCH_QUERY = "SaleItemsController.SEARCH_KEY";
     private static final String KEY_REQUEST_FROM = "SaleITemsController.REQUEST_FROM";
+    private static final String KEY_FROM_CATEGORIES = "SaleItemsController.IS_FROM_CATEGORY";
 
     private String mSaleId;
     private String mTitle;
@@ -75,6 +76,7 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
     private int page = 0;
     private boolean loadingInProgress = false;
     private boolean hasLoadedAllItems = false;
+    private boolean mIsFromCategory = false;
 
     @Inject
     SaleItemsMvpPresenter<SaleItemsMvpView> mPresenter;

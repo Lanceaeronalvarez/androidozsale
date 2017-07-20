@@ -235,6 +235,7 @@ public class CategoriesController extends BaseController
         Bundle saleItemBundle = new BundleBuilder(new Bundle())
                 .putString("SaleItemsController.KEY_TITLE", categoryName)
                 .putString("SaleItemsController.CATEGORY_KEY", categoryKey)
+                .putBoolean("SaleItemsController.IS_FROM_CATEGORY", true)
                 .build();
 
         Log.d("subcategoryitem", " on click = "+categoryID+" , "+categoryName + " , "+categoryKey);
