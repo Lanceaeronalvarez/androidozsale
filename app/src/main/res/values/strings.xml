@@ -256,6 +256,7 @@
     <string name="shop_category">Shop</string>
     <string name="search_tag">Search</string>
     <string name="sale_items_from_category">SaleItemFromCategory</string>
+    <string name="bottom_nav_sale_top_from_sale_items">BottomNavSaleTapFromSaleItems</string>
 
     <string-array name="genders">
         <item>Male</item>

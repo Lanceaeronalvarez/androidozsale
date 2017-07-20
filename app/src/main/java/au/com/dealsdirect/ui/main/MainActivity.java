@@ -168,7 +168,6 @@ public class MainActivity extends BaseActivity implements MainMvpView {
                         mHomeRouter.handleBack();
                     }
                 }
-
                 break;
         }
     }
@@ -436,14 +435,12 @@ public class MainActivity extends BaseActivity implements MainMvpView {
 
     public void goToCategoriesFromSaleItems(){
         Handler handler = new Handler();
-        handler.postDelayed(() -> {
-            mHomeRouter.handleBack();
-
-        }, 500);
+        handler.postDelayed(() -> mHomeRouter.handleBack(), 500);
 
         mMainController.goToCategories();
         mMainController.setViewpagerDraggable(true);
     }
+
 
     public void setShopController(ShopsController shopsController){
         mShopController = shopsController;
@@ -453,4 +450,12 @@ public class MainActivity extends BaseActivity implements MainMvpView {
         return mMainController;
     }
 
+    public void bottomNavSalesClick(){
+        int backstackSize = mHomeRouter.getBackstackSize()-1;
+        String tag = mHomeRouter.getBackstack().get(backstackSize).tag();
+
+        if ((tag!=null) && tag.equals(getString(R.string.sale_items_from_category))){
+            mHomeRouter.handleBack();
+        }
+    }
 }

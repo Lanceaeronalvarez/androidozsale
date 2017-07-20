@@ -176,7 +176,8 @@ public class HomeController extends BaseController implements HomeMvpView {
             } else {
                 if (position == 0 && mBottomNavItemSelectCounter==2) {
                     mBottomNavItemSelectCounter=0;
-                    showShopController();
+                    //noinspection ConstantConditions
+                    ((MainActivity)getActivity()).bottomNavSalesClick();
                 }
             }
             return true;

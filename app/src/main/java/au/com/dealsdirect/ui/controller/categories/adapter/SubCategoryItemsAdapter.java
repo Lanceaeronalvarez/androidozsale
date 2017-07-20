@@ -1,7 +1,6 @@
 package au.com.dealsdirect.ui.controller.categories.adapter;
 
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -30,6 +29,7 @@ public class SubCategoryItemsAdapter extends RecyclerView.Adapter<RecyclerView.V
     private CategoriesMvpPresenter mPresenter;
     private SubCategoryItemClickListener mCategoryAdapterClickListener;
     private int lastPosition = -1;
+    private TextView mCategorySubItem = null;
 
     public SubCategoryItemsAdapter(
             List<GetCategoryTreeResponse> data,
@@ -52,14 +52,23 @@ public class SubCategoryItemsAdapter extends RecyclerView.Adapter<RecyclerView.V
     @Override
     public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
         setAnimation(holder.itemView, position);
-        Log.d("subcategoryitem", "animate");
+
         if (!mData.isEmpty()) {
+
             if (!mData.get(position).getName().isEmpty()) {
                 ((SubCategoryItemsAdapter.SubCategoryItemViewHolder) holder)
                         .subCategoryTitle.setText(mData.get(position).getName());
+                if (mCategorySubItem != null){
+
+                    ((SubCategoryItemViewHolder) holder).subCategoryTitle.setBackgroundColor(
+                            holder.itemView.getResources().getColor(R.color.category_text_active));
+
+                }
             }
 
             ((SubCategoryItemViewHolder) holder).subCategoryTitle.setOnClickListener(view -> {
+                mCategorySubItem = ((SubCategoryItemViewHolder) holder).subCategoryTitle;
+
                 ((SubCategoryItemViewHolder) holder).subCategoryTitle.setEnabled(true);
                 mCategoryAdapterClickListener.onSubCategoryItemClicked(
                         mData.get(position).getId(),
