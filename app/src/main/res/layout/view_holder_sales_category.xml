@@ -3,7 +3,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_marginBottom="10dp"
+    android:layout_marginTop="5dp"
+    android:layout_marginBottom="5dp"
     android:orientation="vertical"
     tools:ignore="MissingPrefix">
 
@@ -22,18 +23,18 @@
                 android:id="@+id/row_category_image"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
+                android:layout_centerInParent="true"
                 android:background="@drawable/bg_category_item_inactive"/>
 
             <TextView
+                fontPath="@string/font_lato_light"
                 android:id="@+id/row_category_indicator"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:text="A"
                 android:textSize="50sp"
                 android:gravity="center"
-                android:textColor="#7c7c7c"
-                android:layout_alignTop="@+id/row_category_image"
-                android:layout_alignBottom="@+id/row_category_image"/>
+                android:textColor="@color/gray_title_text" />
         </RelativeLayout>
 
 
@@ -44,9 +45,10 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:gravity="center_horizontal"
-            android:textColor="#7c7c7c"
+            android:textColor="@color/gray_field_text"
             android:textSize="@dimen/text_size_large"
-            tools:text="Mens" />
+            tools:text="Mens"
+            android:layout_marginTop="5dp"/>
 
     </LinearLayout>
     <!--<RelativeLayout-->
