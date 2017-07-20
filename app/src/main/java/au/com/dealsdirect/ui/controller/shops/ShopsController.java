@@ -104,6 +104,12 @@ public class ShopsController extends BaseController implements ShopsMvpView, Ban
     private RelativeLayout item;
     private ImageView rightOption;
 
+    @Override
+    protected void onAttach(@NonNull View view) {
+        mPresenter.onAttach(this);
+        super.onAttach(view);
+    }
+
     public static ShopsController newInstance(GetCategoryTreeResponse getCategoryTreeResponse) {
 
         return new ShopsController(
@@ -183,6 +189,7 @@ public class ShopsController extends BaseController implements ShopsMvpView, Ban
 
         mBannersAdapter = new BannersAdapter(getActivity(), mPresenter, new ArrayList(), mBannerClickListener);
 
+        //noinspection ConstantConditions
         if (getResources().getBoolean(R.bool.is_tablet)) {
             mLayoutManager = new GridLayoutManager(getActivity(), 2, GridLayoutManager.VERTICAL, false);
         } else {
@@ -426,16 +433,20 @@ public class ShopsController extends BaseController implements ShopsMvpView, Ban
     }
 
     public void goToSalesFromCategories(GetCategoryTreeResponse getCategoryTreeResponse){
+        mPresenter.onAttach(this);
         mPresenter.loadShopsBanner(getCategoryTreeResponse.getName(), getCategoryTreeResponse.getId(), 0, 0);
     }
 
+    @SuppressWarnings({"deprecation", "ConstantConditions"})
     public void showSearchToolbar(){
         shopsControllerSearchView.setImageDrawable(getResources().getDrawable(R.drawable.ic_close));
 
         mShopsControllerHamburgerView.animate().rotation(-90).setDuration(200).start();
 
+        //noinspection ConstantConditions
         item = (RelativeLayout) getView().findViewById(R.id.controller_shop_toolbar_container);
 
+        //noinspection ConstantConditions
         child = getActivity().getLayoutInflater().inflate(R.layout.partial_toolbar_search, null);
         item.addView(child);
 
@@ -451,7 +462,7 @@ public class ShopsController extends BaseController implements ShopsMvpView, Ban
             getActivity().getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_VISIBLE);
         }
 
-
+        //noinspection deprecation
         rightOption.setImageDrawable(getResources().getDrawable(R.drawable.ic_close));
         rightOption.animate().rotation(360).setDuration(200).start();
 
@@ -477,7 +488,6 @@ public class ShopsController extends BaseController implements ShopsMvpView, Ban
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
                 getActivity().dismissKeyboardShortcutsHelper();
             }
-
         });
 
         mShopsControllerToolbarLogo.setVisibility(View.GONE);
@@ -488,13 +498,14 @@ public class ShopsController extends BaseController implements ShopsMvpView, Ban
         child.startAnimation(outToRightAnimation());
         item.removeView(child);
 
-        //noinspection deprecation
+        //noinspection deprecation,ConstantConditions
         shopsControllerSearchView.setImageDrawable(
                 getResources().getDrawable(R.drawable.ic_search));
         rightOption.animate().rotation(-360).setDuration(200).start();
         mShopsControllerHamburgerView.animate().rotation(0).setDuration(200).start();
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+            //noinspection ConstantConditions
             getActivity().dismissKeyboardShortcutsHelper();
         }
 

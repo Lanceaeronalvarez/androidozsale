@@ -6,6 +6,7 @@ import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -19,7 +20,6 @@ import com.bluelinelabs.conductor.changehandler.HorizontalChangeHandler;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
@@ -51,9 +51,6 @@ import butterknife.OnClick;
 public class CategoriesController extends BaseController
         implements CategoriesMvpView, CategoryClickListener, SubCategoryClickListener, SubCategoryItemClickListener {
 
-    private static final String KEY_CATEGORY_ID = "CategoriesController.CATEGORY_KEY";
-    private static final String KEY_QUERY_ID = "CategoriesController.CATEGORY_QUERY";
-    private static final String KEY_REQUEST_FROM = "CategoriesController.REQUEST_FROM";
 
     @Inject
     CategoriesMvpPresenter<CategoriesMvpView> mPresenter;
@@ -71,22 +68,14 @@ public class CategoriesController extends BaseController
     ImageButton mToolbarRightOption;
 
 
-    private CategoriesAdapter mAdapter;
-    private CategoryClickListener mCategoryClickListener;
-
     private SubCategoriesAdapter mSubCategoryAdapter;
     private SubCategoryClickListener mSubCategoryClickListener;
     private SubCategoryItemClickListener mSubCategoryItemClickListener;
 
     private static List<GetCategoryTreeResponse> mCategories;
     private static Map<String, List<GetCategoryTreeResponse>> mCategoryMap = new HashMap<>();
-    private String mChosenCategory = "shop";
-    private String mChosenCategoryKey;
 
     private int searchTapCounter = 0;
-    private String lastCategoryKey = "";
-
-    private List<GetCategoryTreeResponse> mResultSubCategories;
 
     public static CategoriesController newInstance(
             Map<String, List<GetCategoryTreeResponse>> categoryMap,
@@ -141,13 +130,13 @@ public class CategoriesController extends BaseController
             return false;
         });
 
-        //noinspection ConstantConditions
+        //noinspection ConstantConditions,deprecation
         mToolbarRightOption.setImageDrawable(getResources().getDrawable(R.drawable.ic_tab_shop_white));
-        mCategoryClickListener = this;
+        CategoryClickListener mCategoryClickListener = this;
         mSubCategoryClickListener = this;
         mSubCategoryItemClickListener = this;
 
-        mAdapter = new CategoriesAdapter(mCategories, mPresenter, mCategoryClickListener);
+        CategoriesAdapter mAdapter = new CategoriesAdapter(mCategories, mPresenter, mCategoryClickListener);
         mRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity(), LinearLayoutManager.VERTICAL, false));
         mRecyclerView.setAdapter(mAdapter);
 
@@ -196,7 +185,7 @@ public class CategoriesController extends BaseController
     public void onCategoryClicked(int position, GetCategoryTreeResponse getCategoryTreeResponse) {
 
         String categoryName = getCategoryTreeResponse.getName();
-        String categoryKey = getCategoryTreeResponse.getKey() != null ? getCategoryTreeResponse.getKey() : categoryName;
+//        String categoryKey = getCategoryTreeResponse.getKey() != null ? getCategoryTreeResponse.getKey() : categoryName;
 
         //noinspection ConstantConditions
         if (categoryName.equals(getActivity().getResources().getString(R.string.shop_category))){
@@ -228,8 +217,6 @@ public class CategoriesController extends BaseController
             }
 
         }
-        mChosenCategoryKey = categoryKey != null ? categoryKey : categoryName;
-        lastCategoryKey = categoryKey != null ? categoryKey : categoryName;
     }
 
     @Override
@@ -239,64 +226,6 @@ public class CategoriesController extends BaseController
                 RouterTransaction.with(ShopsController.newInstance(getCategoryTreeResponse))
                         .pushChangeHandler(new RightHorizontalTransitionChangeHandler())
                         .popChangeHandler(new RightHorizontalTransitionChangeHandler()));
-    }
-
-    private void createCategoryMap(List<GetCategoryTreeResponse> categories) {
-
-        for (GetCategoryTreeResponse i : categories) {
-
-            if (i.getChildren() != null) {
-                mCategoryMap.put("shop", categories);
-
-                int childrenSize = i.getChildren().size();
-                if (childrenSize != 0) {
-
-                    addToMap(i.getChildren());
-                }
-                mCategoryMap.put(i.getKey(), i.getChildren());
-
-            }
-        }
-
-        mResultSubCategories = fillCategoryContent();
-    }
-
-    private void addToMap(List<GetCategoryTreeResponse> list) {
-
-        for (GetCategoryTreeResponse i : list) {
-
-            int childrenSize = i.getChildren().size();
-            if (childrenSize != 0) {
-                addToMap(i.getChildren());
-            }
-
-            mCategoryMap.put(i.getKey(), i.getChildren());
-        }
-    }
-
-    private List<GetCategoryTreeResponse> fillCategoryContent() {
-
-        if (mChosenCategory.equals("shop")) {
-
-            return mCategoryMap.get(mChosenCategory);
-
-        } else if (mCategoryMap.get(mChosenCategory) != null) {
-
-            return mCategoryMap.get(mChosenCategoryKey);
-
-        } else {
-
-            List<GetCategoryTreeResponse> listApi = new LinkedList<>();
-            GetCategoryTreeResponse apiCategoryModel = new GetCategoryTreeResponse();
-            apiCategoryModel.setName("");
-            apiCategoryModel.setCount(0);
-            apiCategoryModel.setKey("");
-            apiCategoryModel.setChildren(null);
-
-            listApi.add(apiCategoryModel);
-
-            return listApi;
-        }
     }
 
     @Override
@@ -315,17 +244,12 @@ public class CategoriesController extends BaseController
         Bundle saleItemBundle = new BundleBuilder(new Bundle())
                 .putString("SaleItemsController.KEY_TITLE", categoryName)
                 .putString("SaleItemsController.CATEGORY_KEY", categoryKey)
-                .putString("SaleItemsController.KEY_SALE_ID", categoryID)
                 .build();
 
-
+        Log.d("subcategoryitem", " on click = "+categoryID+" , "+categoryName + " , "+categoryKey);
         assert (getActivity()) != null;
         ((MainActivity)getActivity()).goToSaleItemsFromCategory(saleItemBundle);
 
-//        getRouter().pushController(RouterTransaction.with(
-//                SaleItemsController.newInstance(saleItemBundle))
-//                .pushChangeHandler(new HorizontalChangeHandler())
-//                .popChangeHandler(new HorizontalChangeHandler()));
     }
 
     @SuppressWarnings("ConstantConditions")
@@ -381,14 +305,13 @@ public class CategoriesController extends BaseController
 
     private void onSearchFieldClick(){
 
+        assert (getActivity()) != null;
         ((MainActivity)getActivity()).getCategoriesRouter().pushController(
                 RouterTransaction.with(SearchController.newInstance())
                         .pushChangeHandler(new FadeChangeHandler())
                         .popChangeHandler(new FadeChangeHandler()));
 
         Handler handler = new Handler();
-        handler.postDelayed(() -> {
-            searchTapCounter = 0;
-        },500);
+        handler.postDelayed(() -> searchTapCounter = 0,500);
     }
 }

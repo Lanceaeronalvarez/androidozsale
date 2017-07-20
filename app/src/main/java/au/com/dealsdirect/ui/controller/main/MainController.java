@@ -110,7 +110,7 @@ public class MainController extends BaseController implements MainMvpView {
 
     private void createCategoryMap(List<GetCategoryTreeResponse> categories) {
 
-        List<GetCategoryTreeResponse> newList = new ArrayList<>();
+        List<GetCategoryTreeResponse> newList;
         mCategoryMap.put("shop", categories);
 
         for (GetCategoryTreeResponse i : categories) {
@@ -125,9 +125,7 @@ public class MainController extends BaseController implements MainMvpView {
                     addToMap(newList);
                 }
 
-//                Log.d("maincontroller", "key = "+i.getKey() + " list size = "+newList.size());
                 mCategoryMap.put(i.getKey(), newList);
-
             }
         }
 
@@ -136,7 +134,7 @@ public class MainController extends BaseController implements MainMvpView {
     }
 
     private void addToMap(List<GetCategoryTreeResponse> list) {
-        List<GetCategoryTreeResponse> newList2 = new ArrayList<>();
+        List<GetCategoryTreeResponse> newList2;
 
         for (GetCategoryTreeResponse i : list) {
             newList2 = updateCategoryChildren(i);
@@ -208,6 +206,7 @@ public class MainController extends BaseController implements MainMvpView {
         mHomeViewPager.setAdapter(mViewPagerAdapter);
         mHomeViewPager.setCurrentItem(1);
         mHomeViewPager.setMyScroller();
+        //noinspection deprecation
         mHomeViewPager.setOnPageChangeListener(new ViewPager.OnPageChangeListener() {
             @Override
             public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
