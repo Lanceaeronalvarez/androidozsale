@@ -28,7 +28,6 @@ import javax.inject.Inject;
 import au.com.dealsdirect.R;
 import au.com.dealsdirect.data.network.model.category.GetCategoryTreeResponse;
 import au.com.dealsdirect.data.network.model.publicsalescategories.GetPublicSalesCategoriesResponse;
-import au.com.dealsdirect.ui.base.BaseActivity;
 import au.com.dealsdirect.ui.base.BaseController;
 import au.com.dealsdirect.ui.controller.categories.adapter.CategoriesAdapter;
 import au.com.dealsdirect.ui.controller.categories.adapter.SubCategoriesAdapter;
@@ -116,8 +115,6 @@ public class CategoriesController extends BaseController
         mPresenter.onDetach();
         super.onDestroyView(view);
 
-        assert (getActivity()) != null;
-        ((BaseActivity) getActivity()).showBottomNavigationView();
     }
 
     @Override
@@ -161,12 +158,6 @@ public class CategoriesController extends BaseController
             return false;
         });
 
-        final Handler handler = new Handler();
-        handler.postDelayed(() -> {
-
-            assert (getActivity()) != null;
-            ((BaseActivity) getActivity()).hideBottomNavigationView();
-        }, 100);
     }
 
     @Override

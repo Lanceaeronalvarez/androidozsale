@@ -90,6 +90,9 @@ public class ViewContactsController extends BaseController implements ViewContac
     public void onViewBound(@NonNull View view) {
         super.onViewBound(view);
 
+        assert (getActivity()) != null;
+        ((MainActivity)getActivity()).getMainController().showBottomNav();
+
         mContactClickListener = this;
         setUp(view);
         mPresenter.loadContacts();

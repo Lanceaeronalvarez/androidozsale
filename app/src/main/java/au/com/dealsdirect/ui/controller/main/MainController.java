@@ -38,8 +38,8 @@ import butterknife.BindView;
 
 public class MainController extends BaseController implements MainMvpView {
 
-    public static final String TAG = "HomeController";
-    private static final String KEY_TEXT = "HomeController.KEY_TEXT";
+    public static final String TAG = "MainController";
+    private static final String KEY_TEXT = "MainController.KEY_TEXT";
 
     @Inject
     MainMvpPresenter<MainMvpView> mPresenter;
@@ -273,5 +273,13 @@ public class MainController extends BaseController implements MainMvpView {
             return newList;
         }
         return categoryTree.getChildren();
+    }
+
+    public void hideBottomNav(){
+        mHomeController.hideBottomNav();
+    }
+
+    public void showBottomNav(){
+        mHomeController.showBottomNav();
     }
 }

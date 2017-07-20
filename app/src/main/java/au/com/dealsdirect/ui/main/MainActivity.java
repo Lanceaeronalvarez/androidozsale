@@ -66,7 +66,7 @@ public class MainActivity extends BaseActivity implements MainMvpView {
     private Router mRouter;
     private FetchTokenHandler mFetchTokenHandler;
 
-    private MainController mainController;
+    private MainController mMainController;
     private ShopsController mShopController;
 
     private Router mHomeRouter;
@@ -87,10 +87,10 @@ public class MainActivity extends BaseActivity implements MainMvpView {
 
         mPresenter.onAttach(this);
 
-        mainController = MainController.newInstance();
+        mMainController = MainController.newInstance();
         mRouter = Conductor.attachRouter(this, mContainer, savedInstanceState);
         if (!mRouter.hasRootController()) {
-            mRouter.setRoot(RouterTransaction.with(mainController)
+            mRouter.setRoot(RouterTransaction.with(mMainController)
                     .tag("Home"));
         }
 
@@ -466,19 +466,19 @@ public class MainActivity extends BaseActivity implements MainMvpView {
 
         switch (item){
             case 0:
-                mainController.goToCategories();
+                mMainController.goToCategories();
                 break;
             case 1:
-                mainController.goToShops();
+                mMainController.goToShops();
                 break;
             default:
-                mainController.goToShops();
+                mMainController.goToShops();
                 break;
         }
     }
 
     public void setDraggableViewPager(boolean isDraggable){
-        mainController.setViewpagerDraggable(isDraggable);
+        mMainController.setViewpagerDraggable(isDraggable);
     }
 
     public void setHomeRouter(Router router){
@@ -509,15 +509,19 @@ public class MainActivity extends BaseActivity implements MainMvpView {
         mShopController.goToItemsFromCategories(bundle);
 
         final Handler handler = new Handler();
-        handler.postDelayed(() -> mainController.goToShops(), 400);
+        handler.postDelayed(() -> mMainController.goToShops(), 400);
     }
 
     public void goToSalesFromCategory(GetCategoryTreeResponse getCategoryTreeResponse){
         mShopController.goToSalesFromCategories(getCategoryTreeResponse);
-        mainController.goToShops();
+        mMainController.goToShops();
     }
 
     public void setShopController(ShopsController shopsController){
         mShopController = shopsController;
+    }
+
+    public MainController getMainController(){
+        return mMainController;
     }
 }

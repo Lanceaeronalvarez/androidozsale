@@ -206,6 +206,7 @@ public class CheckoutController extends BaseController implements CheckoutMvpVie
     protected void setUp(View view) {
 
         assert (getActivity()) != null;
+        ((MainActivity)getActivity()).getMainController().showBottomNav();
         ((MainActivity)getActivity()).setDraggableViewPager(false);
 
         mTitleTextView.setText(R.string.checkout_page_toolbar_title);

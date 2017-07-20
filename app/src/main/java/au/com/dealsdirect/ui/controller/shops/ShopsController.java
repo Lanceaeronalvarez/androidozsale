@@ -159,6 +159,7 @@ public class ShopsController extends BaseController implements ShopsMvpView, Ban
     protected void setUp(View view) {
 
         assert (getActivity()) != null;
+        ((MainActivity)getActivity()).getMainController().showBottomNav();
         ((MainActivity)getActivity()).setDraggableViewPager(true);
 
         mPaginateCallbacks = new Paginate.Callbacks() {
@@ -439,7 +440,8 @@ public class ShopsController extends BaseController implements ShopsMvpView, Ban
 
     @SuppressWarnings({"deprecation", "ConstantConditions"})
     public void showSearchToolbar(){
-        shopsControllerSearchView.setImageDrawable(getResources().getDrawable(R.drawable.ic_close));
+        if (shopsControllerSearchView!=null)
+            shopsControllerSearchView.setImageDrawable(getResources().getDrawable(R.drawable.ic_close));
 
         mShopsControllerHamburgerView.animate().rotation(-90).setDuration(200).start();
 
@@ -472,22 +474,6 @@ public class ShopsController extends BaseController implements ShopsMvpView, Ban
                 return true;
             }
             return false;
-        });
-
-
-        rightOption.setOnClickListener(view -> {
-            child.startAnimation(outToRightAnimation());
-            item.removeView(child);
-
-            //noinspection deprecation
-            shopsControllerSearchView.setImageDrawable(
-                    getResources().getDrawable(R.drawable.ic_search));
-            rightOption.animate().rotation(-360).setDuration(200).start();
-            mShopsControllerHamburgerView.animate().rotation(0).setDuration(200).start();
-
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-                getActivity().dismissKeyboardShortcutsHelper();
-            }
         });
 
         mShopsControllerToolbarLogo.setVisibility(View.GONE);

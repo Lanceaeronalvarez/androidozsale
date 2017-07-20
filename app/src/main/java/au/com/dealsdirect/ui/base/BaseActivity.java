@@ -139,15 +139,4 @@ public abstract class BaseActivity extends AppCompatActivity
 
     protected abstract void setUp();
 
-    public void showBottomNavigationView(){
-//        bottomNavigationView.animate().translationY(0).setDuration(500).start();
-//        bottomNavigationView.setVisibility(View.VISIBLE);
-    }
-
-    public void hideBottomNavigationView(){
-//        bottomNavigationView.animate().translationY(500).setDuration(500).start();
-//        bottomNavigationView.setVisibility(View.GONE);
-    }
-
-
 }

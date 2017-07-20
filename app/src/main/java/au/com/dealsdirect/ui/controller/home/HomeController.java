@@ -228,4 +228,14 @@ public class HomeController extends BaseController implements HomeMvpView {
             showInviteController();
         }
     }
+
+    public void hideBottomNav(){
+        if (mBottomNavigationView!=null)
+            mBottomNavigationView.setVisibility(View.GONE);
+    }
+
+    public void showBottomNav(){
+        if (mBottomNavigationView!=null)
+            mBottomNavigationView.setVisibility(View.VISIBLE);
+    }
 }

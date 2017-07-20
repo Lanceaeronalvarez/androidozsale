@@ -93,6 +93,7 @@ public class AccountController extends BaseController implements AccountMvpView,
         // Setup views here
 
         assert (getActivity()) != null;
+        ((MainActivity)getActivity()).getMainController().showBottomNav();
         ((MainActivity)getActivity()).setDraggableViewPager(false);
 
         mPresenter.loadAccountItems();

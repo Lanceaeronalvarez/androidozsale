@@ -12,6 +12,7 @@ import javax.inject.Inject;
 
 import au.com.dealsdirect.R;
 import au.com.dealsdirect.ui.base.BaseController;
+import au.com.dealsdirect.ui.custom.CustomAlertDialog;
 import au.com.dealsdirect.utils.BundleBuilder;
 import butterknife.BindView;
 import butterknife.OnClick;
@@ -50,8 +51,14 @@ public class RegisterController extends BaseController implements RegisterMvpVie
                         .build());
     }
 
+
     public RegisterController(Bundle args) {
         super(args);
+    }
+
+    @Override
+    protected void onAttach(@NonNull View view) {
+        super.onAttach(view);
     }
 
     @NonNull
@@ -69,6 +76,7 @@ public class RegisterController extends BaseController implements RegisterMvpVie
     @Override
     public void onViewBound(@NonNull View view) {
         super.onViewBound(view);
+
         setUp(view);
     }
 
@@ -77,6 +85,11 @@ public class RegisterController extends BaseController implements RegisterMvpVie
         // Setup views here
         //mPresenter.loadSample(new SampleRequest());
 
+    }
+
+    @Override
+    public void onDetach(View view) {
+        super.onDetach(view);
     }
 
     @Override
@@ -102,11 +115,16 @@ public class RegisterController extends BaseController implements RegisterMvpVie
     @Override
     public void showRegisterSuccessful(String loginTicket) {
         getActivity().onBackPressed();
+
+        CustomAlertDialog.showCustomAlertDialog(getActivity(),
+                CustomAlertDialog.CustomDialogIconState.POSITIVE,"register successful");
         Log.d("Register", "Successful");
     }
 
     @Override
     public void showRegisterError(String message) {
-        Log.d("Register", "Error");
+        Log.d("Register", "Error message = "+message);
+        CustomAlertDialog.showCustomAlertDialog(getActivity(),
+                CustomAlertDialog.CustomDialogIconState.NEGATIVE,message);
     }
 }
