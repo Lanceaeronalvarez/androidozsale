@@ -1,9 +1,8 @@
 package au.com.dealsdirect.ui.controller.searchfilter.adapter;
 
+import android.content.Context;
 import android.support.v7.widget.RecyclerView;
-import android.view.GestureDetector;
 import android.view.LayoutInflater;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.Animation;
@@ -11,12 +10,9 @@ import android.view.animation.AnimationUtils;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import au.com.dealsdirect.R;
-import au.com.dealsdirect.data.network.model.category.GetCategoryTreeResponse;
-import au.com.dealsdirect.ui.controller.categories.listener.CategoryClickListener;
 import au.com.dealsdirect.ui.controller.searchfilter.SearchFilterMvpPresenter;
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -24,26 +20,21 @@ import butterknife.ButterKnife;
 
 public class FacetsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
-    private List<GetCategoryTreeResponse> mData = new ArrayList<>();
+    private List<String> mData;
     private SearchFilterMvpPresenter mPresenter;
-    private CategoryClickListener mCategoryAdapterClickListener;
     private int mLastPosition = -1;
-    private int mLastSelectedCategory = 0;
     private ImageView mLastSelectedViewHolderImageView = null;
+    private Context mContext;
 
-    public FacetsAdapter(
-            List<GetCategoryTreeResponse> data,
-            SearchFilterMvpPresenter presenter,
-            CategoryClickListener categoryClickListener) {
-
+    public FacetsAdapter(Context context, List<String> data, SearchFilterMvpPresenter presenter) {
+        mContext = context;
         mData = data;
         mPresenter = presenter;
-        mCategoryAdapterClickListener = categoryClickListener;
     }
 
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.view_holder_facets, parent, false);
+        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.viewholder_facets, parent, false);
         FacetsViewHolder vh = new FacetsViewHolder(view, mPresenter);
         return vh;
     }
@@ -55,42 +46,15 @@ public class FacetsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
         setAnimation(holder.itemView, position);
 
         if (!mData.isEmpty()) {
-            if (!mData.get(position).getName().isEmpty()) {
-                char first = mData.get(position).getName().charAt(0);
-                vh.mFacetIndicator.setText(String.valueOf(first));
-            }
 
-//            if (position == 0 && mLastSelectedViewHolderImageView == null) {
-//                mLastSelectedViewHolderImageView = ((FacetsViewHolder) holder).categoryTitleBackground;
-//                 mLastSelectedViewHolderImageView.setBackgroundDrawable(
-//                        holder.itemView.getContext().getResources()
-//                                .getDrawable(R.drawable.bg_category_item_active));
-//
-//            }
-            GestureDetector gestureDetector = new GestureDetector(
-                    holder.itemView.getContext(),
-                    new GestureDetector.SimpleOnGestureListener() {
+            vh.mFacetName.setText(mData.get(position));
+            vh.mFacetBackground.setImageDrawable(mContext.getDrawable(mapDrawable(position)));
 
-                        @Override
-                        public boolean onDoubleTap(MotionEvent e) {
-
-                            mCategoryAdapterClickListener.onCategoryDoubleTap(
-                                    position,
-                                    mData.get(position));
-
-                            return super.onDoubleTap(e);
-                        }
-                    });
-
-            ((FacetsViewHolder) holder).itemView.setOnTouchListener((view, motionEvent)
-                    -> gestureDetector.onTouchEvent(motionEvent));
-
-            ((FacetsViewHolder) holder).mFacetName.setText(mData.get(position).getName());
-            ((au.com.dealsdirect.ui.controller.categories.adapter.CategoriesAdapter.CategoriesViewHolder) holder).itemView.setOnClickListener(view -> {
+            vh.itemView.setOnClickListener(view -> {
 
                 if (mLastSelectedViewHolderImageView == null) {
 
-                    mLastSelectedViewHolderImageView = ((au.com.dealsdirect.ui.controller.categories.adapter.CategoriesAdapter.CategoriesViewHolder) holder).categoryTitleBackground;
+                    mLastSelectedViewHolderImageView = vh.mFacetBackground;
                     mLastSelectedViewHolderImageView.setBackgroundDrawable(
                             holder.itemView.getContext().getResources()
                                     .getDrawable(R.drawable.bg_category_item_active));
@@ -101,7 +65,7 @@ public class FacetsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
                             holder.itemView.getContext().getResources()
                                     .getDrawable(R.drawable.bg_category_item_inactive));
 
-                    mLastSelectedViewHolderImageView = ((au.com.dealsdirect.ui.controller.categories.adapter.CategoriesAdapter.CategoriesViewHolder) holder).categoryTitleBackground;
+                    mLastSelectedViewHolderImageView = vh.mFacetBackground;
 
                     mLastSelectedViewHolderImageView.setBackgroundDrawable(
                             holder.itemView.getContext().getResources()
@@ -109,11 +73,30 @@ public class FacetsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
 
                 }
 
-                mCategoryAdapterClickListener.onCategoryClicked(
-                        position,
-                        mData.get(position));
+                mPresenter.onFacetClicked(position);
+
             });
 
+        }
+
+    }
+
+    private int mapDrawable(int position){
+        switch (position){
+            case 0:
+                return R.drawable.bg_filter_sort_icon;
+            case 1:
+                return R.drawable.bg_filter_categories_icon;
+            case 2:
+                return R.drawable.bg_filter_brand_icon;
+            case 3:
+                return R.drawable.bg_filter_size_icon;
+            case 4:
+                return R.drawable.bg_filter_color_icon;
+            case 5:
+                return R.drawable.bg_filter_price_icon;
+            default:
+                return -1;
         }
 
     }
@@ -131,26 +114,20 @@ public class FacetsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
 
     @Override
     public int getItemCount() {
-        if(mData!=null)
+        if (mData != null) {
             return mData.size();
+        }
         return 0;
-    }
-
-    public void replaceData(List<GetCategoryTreeResponse> getCategoryTreeResponses) {
-        mData = new ArrayList<>(getCategoryTreeResponses);
-        notifyDataSetChanged();
     }
 
     public static class FacetsViewHolder extends RecyclerView.ViewHolder {
 
         @BindView(R.id.row_facets_image)
-        public ImageView categoryTitleBackground;
+        public ImageView mFacetBackground;
 
         @BindView(R.id.row_facets_name)
         public TextView mFacetName;
 
-        @BindView(R.id.row_facets_indicator)
-        public TextView mFacetIndicator;
 
         public SearchFilterMvpPresenter mPresenter;
 
@@ -173,7 +150,7 @@ public class FacetsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
         }
     }
 
-    public GetCategoryTreeResponse getItem(int position) {
+    public String getItemAt(int position) {
         return mData.get(position);
     }
 

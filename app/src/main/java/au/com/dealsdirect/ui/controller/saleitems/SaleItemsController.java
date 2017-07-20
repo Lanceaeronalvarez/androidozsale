@@ -12,9 +12,13 @@ import android.util.Pair;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.bluelinelabs.conductor.RouterTransaction;
+import com.bluelinelabs.conductor.changehandler.VerticalChangeHandler;
+import com.google.gson.Gson;
 import com.paginate.Paginate;
 
 import java.util.ArrayList;
@@ -27,12 +31,15 @@ import au.com.dealsdirect.R;
 import au.com.dealsdirect.data.network.model.saleitems.GetSaleItemsResponse;
 import au.com.dealsdirect.ui.base.BaseController;
 import au.com.dealsdirect.ui.controller.saleitems.adapter.SaleItemsAdapter;
+import au.com.dealsdirect.ui.controller.searchfilter.SearchFilterController;
 import au.com.dealsdirect.ui.main.MainActivity;
 import au.com.dealsdirect.ui.main.SharedActivity;
 import au.com.dealsdirect.utils.BundleBuilder;
+import au.com.dealsdirect.utils.JsonUtils;
 import au.com.dealsdirect.utils.PaginateUtils;
 import butterknife.BindView;
 import butterknife.OnClick;
+import okhttp3.Route;
 
 /**
  * dp Created by Admin on 6/8/17.
@@ -57,6 +64,7 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
     private boolean hasShowedItems = false;
 
     private List<GetSaleItemsResponse.Products> mSaleItems = new LinkedList<>();
+    private List<GetSaleItemsResponse.Facets> mFacets = new ArrayList<>();
 
     @BindView(R.id.controller_sale_items_grid_view)
     RecyclerView mSaleItemsRecyclerView;
@@ -214,6 +222,7 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
     @Override
     public void showSaleItems(GetSaleItemsResponse getSaleItemsResponse) {
         List<GetSaleItemsResponse.Products> items = getSaleItemsResponse.products;
+        mFacets = getSaleItemsResponse.facets;
 
         loadingInProgress = false;
 
@@ -256,6 +265,13 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
     @OnClick(R.id.partial_toolbar_arrow_view)
     void onBackClick() {
         getActivity().onBackPressed();
+    }
+
+    @OnClick(R.id.partial_toolbar_filter_view)
+    void showFIlters(){
+        getRouter().pushController(RouterTransaction.with(SearchFilterController.newInstance(new Gson().toJson(mFacets)))
+                .pushChangeHandler(new VerticalChangeHandler())
+                .popChangeHandler(new VerticalChangeHandler()));
     }
 
     @Override

@@ -8,7 +8,7 @@ import au.com.dealsdirect.ui.base.MvpPresenter;
 
 public interface SearchFilterMvpPresenter<V extends SearchFilterMvpView> extends MvpPresenter<V> {
 
-    void onFacetClicked();
+    void onFacetClicked(int position);
 
     void onFacetItemClicked();
 }

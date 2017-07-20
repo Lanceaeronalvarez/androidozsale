@@ -104,88 +104,7 @@ public class MainActivity extends BaseActivity implements MainMvpView {
         mPresenter.callGetServerSettings();
         mPresenter.callGetAppSettingsSection(this);
 
-//        mRouter.addChangeListener(new ControllerChangeHandler.ControllerChangeListener() {
-//            @Override
-//            public void onChangeStarted(@Nullable Controller to, @Nullable Controller from, boolean isPush, @NonNull ViewGroup container, @NonNull ControllerChangeHandler handler) {
-//
-//            }
-//
-//            @Override
-//            public void onChangeCompleted(@Nullable Controller to, @Nullable Controller from, boolean isPush, @NonNull ViewGroup container, @NonNull ControllerChangeHandler handler) {
-//                if (to instanceof HomeController || to instanceof ShopsController) {
-//                    mBottomNavigationView.setCurrentItem(0);
-//                } else if (to instanceof AccountController) {
-//                    mBottomNavigationView.setCurrentItem(1);
-//                } else if (to instanceof ViewContactsController) {
-//                    mBottomNavigationView.setCurrentItem(2);
-//                } else if (to instanceof InviteController) {
-//                    mBottomNavigationView.setCurrentItem(3);
-//                } else if (to instanceof CheckoutController) {
-//                    mBottomNavigationView.setCurrentItem(4);
-//                }
-//            }
-//        });
-
-//        mBottomNavigationView.setOnTabSelectedListener(new AHBottomNavigation.OnTabSelectedListener() {
-//            @Override
-//            public boolean onTabSelected(int position, boolean wasSelected) {
-//
-//                if (!wasSelected) {
-//                    mPreviousTab = mCurrentTab;
-//                    mCurrentTab = position;
-//
-//                    switch (position) {
-//
-//                        case 0:
-//                            showShopController();
-//                            break;
-//
-//                        case 1:
-//                            showAccountController();
-//                            break;
-//
-//                        case 2:
-//                        case 3:
-//                            if (!mPresenter.isAuthorized()) {
-//                                showLoginController(mRouter, new AuthHandler() {
-//                                    @Override
-//                                    public void success() {
-//                                        proceedToController(position);
-//                                    }
-//
-//                                    @Override
-//                                    public void error() {
-//
-//                                    }
-//                                });
-//                            } else {
-//                                proceedToController(position);
-//                            }
-//                            break;
-//
-//                        case 4:
-//                            showCheckoutController();
-//                            break;
-//                    }
-//                }
-//                return true;
-//            }
-//        });
-//
-//        AHBottomNavigationAdapter navigationAdapter = new AHBottomNavigationAdapter(this, R.menu.bottom_navigation_menu);
-//        navigationAdapter.setupWithBottomNavigation(mBottomNavigationView);
-//        mBottomNavigationView.setTitleState(AHBottomNavigation.TitleState.ALWAYS_SHOW);
-//        mBottomNavigationView.setCurrentItem(0);
-
     }
-
-//    private void proceedToController(int id) {
-//        if (id == 2) {
-//            showContactController();
-//        } else if (id == 3) {
-//            showInviteController();
-//        }
-//    }
 
     @Override
     protected void onDestroy() {
@@ -195,7 +114,6 @@ public class MainActivity extends BaseActivity implements MainMvpView {
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-
         // Call router for callbacks after going out the app and back inside
         mRouter.onActivityResult(requestCode, resultCode, data);
     }

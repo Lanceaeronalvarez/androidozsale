@@ -19,12 +19,12 @@ public class SearchFilterPresenter<V extends SearchFilterMvpView> extends BasePr
     }
 
     @Override
-    public void onFacetClicked() {
-
+    public void onFacetClicked(int position) {
+        getMvpView().showFacetItem(position);
     }
 
     @Override
     public void onFacetItemClicked() {
-
+        //do api call
     }
 }

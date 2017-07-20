@@ -8,7 +8,7 @@ import au.com.dealsdirect.ui.base.MvpView;
 
 public interface SearchFilterMvpView extends MvpView{
 
-    void showFacetItem();
+    void showFacetItem(int position);
 
     void includeFacetItemToFilters();
 }
