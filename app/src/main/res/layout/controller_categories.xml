@@ -32,9 +32,9 @@
         </LinearLayout>
 
         <View
-            android:layout_width="1dp"
+            android:layout_width="1.3dp"
             android:layout_height="match_parent"
-            android:background="@color/gray_border"/>
+            android:background="#d1d1d1"/>
 
         <android.support.v7.widget.RecyclerView
             android:id="@+id/sub_categories_recyclerview"
