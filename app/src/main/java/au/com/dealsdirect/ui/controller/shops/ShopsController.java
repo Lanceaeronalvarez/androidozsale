@@ -1,6 +1,5 @@
 package au.com.dealsdirect.ui.controller.shops;
 
-import android.annotation.SuppressLint;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
@@ -429,8 +428,10 @@ public class ShopsController extends BaseController implements ShopsMvpView, Ban
     }
 
     public void goToItemsFromCategories(Bundle bundle){
+        //noinspection ConstantConditions
         getRouter().pushController(RouterTransaction.with(
                 SaleItemsController.newInstance(bundle))
+                .tag(getActivity().getResources().getString(R.string.sale_items_from_category))
                 .pushChangeHandler(new HorizontalChangeHandler())
                 .popChangeHandler(new HorizontalChangeHandler()));
     }

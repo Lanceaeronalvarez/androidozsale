@@ -255,6 +255,7 @@
     <string name="write_us_a_message">Write us a message</string>
     <string name="shop_category">Shop</string>
     <string name="search_tag">Search</string>
+    <string name="sale_items_from_category">SaleItemFromCategory</string>
 
     <string-array name="genders">
         <item>Male</item>

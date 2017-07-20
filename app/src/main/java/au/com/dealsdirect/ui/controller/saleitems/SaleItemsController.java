@@ -12,6 +12,7 @@ import android.util.Pair;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
@@ -32,7 +33,6 @@ import au.com.dealsdirect.ui.main.SharedActivity;
 import au.com.dealsdirect.utils.BundleBuilder;
 import au.com.dealsdirect.utils.PaginateUtils;
 import butterknife.BindView;
-import butterknife.OnClick;
 
 /**
  * dp Created by Admin on 6/8/17.
@@ -66,6 +66,9 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
 
     @BindView(R.id.controller_sale_items_placeholder)
     LinearLayout mPlaceholder;
+
+    @BindView(R.id.partial_toolbar_arrow_view)
+    ImageButton mCategoriesBackIcon;
 
     private SaleItemsAdapter mSaleItemsAdapter;
 
@@ -121,6 +124,8 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
             mCategoryKey = getArgs().getString(KEY_CATEGORY_MAP);
         if (args.containsKey(KEY_SEARCH_QUERY))
             mSearchQuery = getArgs().getString(KEY_SEARCH_QUERY);
+        if (args.containsKey(KEY_FROM_CATEGORIES))
+            mIsFromCategory = getArgs().getBoolean(KEY_FROM_CATEGORIES);
     }
 
     @Override
@@ -143,6 +148,24 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
 
         assert (getActivity()) != null;
         ((MainActivity)getActivity()).setDraggableViewPager(false);
+
+
+        if (mIsFromCategory){
+            mCategoriesBackIcon.setOnClickListener(view1 -> {
+                mCategoriesBackIcon.setOnClickListener(view2 -> {
+                    getActivity().onBackPressed();
+
+                });
+                ((MainActivity)getActivity()).goToCategoriesFromSaleItems();
+            });
+        }
+        else{
+            mCategoriesBackIcon.setOnClickListener(view12 -> {
+                getActivity().onBackPressed();
+            });
+        }
+
+
 
         if (mCategoryKey!=null && !mCategoryKey.isEmpty()){
             Log.d("saletitle", "with category "+mCategoryKey);
@@ -255,13 +278,6 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
             } else {
                 mSaleItemsAdapter.addData(mSaleItems);
             }
-    }
-
-
-    @SuppressWarnings("ConstantConditions")
-    @OnClick(R.id.partial_toolbar_arrow_view)
-    void onBackClick() {
-        getActivity().onBackPressed();
     }
 
     @Override
