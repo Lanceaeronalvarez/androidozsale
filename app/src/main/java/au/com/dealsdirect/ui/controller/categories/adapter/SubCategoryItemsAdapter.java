@@ -60,14 +60,13 @@ public class SubCategoryItemsAdapter extends RecyclerView.Adapter<RecyclerView.V
             }
 
             ((SubCategoryItemViewHolder) holder).subCategoryTitle.setOnClickListener(view -> {
+                ((SubCategoryItemViewHolder) holder).subCategoryTitle.setEnabled(true);
                 mCategoryAdapterClickListener.onSubCategoryItemClicked(
                         mData.get(position).getId(),
                         mData.get(position).getName(),
                         mData.get(position).getKey());
             });
-
         }
-
     }
 
     @Override

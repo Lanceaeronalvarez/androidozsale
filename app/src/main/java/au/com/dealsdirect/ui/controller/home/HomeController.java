@@ -3,6 +3,7 @@ package au.com.dealsdirect.ui.controller.home;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -59,6 +60,7 @@ public class HomeController extends BaseController implements HomeMvpView {
     private int mCurrentTab = R.id.action_shop;
 
 
+    private int mBottomNavItemSelectCounter = 0;
     public static HomeController newInstance() {
 
         return new HomeController(
@@ -127,50 +129,57 @@ public class HomeController extends BaseController implements HomeMvpView {
             }
         });
 
-        mBottomNavigationView.setOnTabSelectedListener(new AHBottomNavigation.OnTabSelectedListener() {
-            @Override
-            public boolean onTabSelected(int position, boolean wasSelected) {
+        mBottomNavigationView.setOnTabSelectedListener((position, wasSelected) -> {
+            Log.d("bottomnav", "clicked counter = "+mBottomNavItemSelectCounter);
+            mBottomNavItemSelectCounter++;
+            if (!wasSelected) {
+                mPreviousTab = mCurrentTab;
+                mCurrentTab = position;
 
-                if (!wasSelected) {
-                    mPreviousTab = mCurrentTab;
-                    mCurrentTab = position;
+                switch (position) {
 
-                    switch (position) {
+                    case 0:
+                        mBottomNavItemSelectCounter=0;
+                        showShopController();
+                        break;
 
-                        case 0:
-                            showShopController();
-                            break;
+                    case 1:
+                        mBottomNavItemSelectCounter=0;
+                        showAccountController();
+                        break;
 
-                        case 1:
-                            showAccountController();
-                            break;
+                    case 2:
+                    case 3:
+                        mBottomNavItemSelectCounter=0;
+                        if (!((MainActivity)getActivity()).isAuthorized()) {
+                            showLoginController(mRouter, new AuthHandler() {
+                                @Override
+                                public void success() {
+                                    proceedToController(position);
+                                }
 
-                        case 2:
-                        case 3:
-                            if (!((MainActivity)getActivity()).isAuthorized()) {
-                                showLoginController(mRouter, new AuthHandler() {
-                                    @Override
-                                    public void success() {
-                                        proceedToController(position);
-                                    }
+                                @Override
+                                public void error() {
 
-                                    @Override
-                                    public void error() {
+                                }
+                            });
+                        } else {
+                            proceedToController(position);
+                        }
+                        break;
 
-                                    }
-                                });
-                            } else {
-                                proceedToController(position);
-                            }
-                            break;
-
-                        case 4:
-                            showCheckoutController();
-                            break;
-                    }
+                    case 4:
+                        mBottomNavItemSelectCounter=0;
+                        showCheckoutController();
+                        break;
                 }
-                return true;
+            } else {
+                if (position == 0 && mBottomNavItemSelectCounter==2) {
+                    mBottomNavItemSelectCounter=0;
+                    showShopController();
+                }
             }
+            return true;
         });
 
         AHBottomNavigationAdapter navigationAdapter = new AHBottomNavigationAdapter(getActivity(), R.menu.bottom_navigation_menu);
