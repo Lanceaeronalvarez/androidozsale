@@ -1,0 +1,14 @@
+package au.com.dealsdirect.ui.controller.searchfilter;
+
+import au.com.dealsdirect.ui.base.MvpPresenter;
+
+/**
+ * Created by smartwave on 20/07/2017.
+ */
+
+public interface SearchFilterMvpPresenter<V extends SearchFilterMvpView> extends MvpPresenter<V> {
+
+    void onFacetClicked();
+
+    void onFacetItemClicked();
+}
