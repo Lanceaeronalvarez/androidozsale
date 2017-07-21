@@ -97,6 +97,7 @@ public class CurrentReturnsController extends BaseController
         setUp(view);
         mCurrentReturnsListener = this;
         mCurrentReturnsToolarTitle.setText("My Returns");
+        mCurrentReturnsRightOption.setPadding(20, 20, 20, 20);
         mCurrentReturnsRightOption.setImageDrawable(getResources().getDrawable(R.drawable.ic_add));
 
         if (mCurrentReturns == null || mCurrentReturns.size() == 0){
