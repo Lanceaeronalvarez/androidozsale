@@ -1,20 +1,20 @@
 package au.com.dealsdirect.ui.controller.splash;
 
+import android.graphics.Color;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.Window;
+import android.view.WindowManager;
 import android.widget.ImageView;
-
-import com.bluelinelabs.conductor.RouterTransaction;
-import com.bumptech.glide.Glide;
 
 import au.com.dealsdirect.R;
 import au.com.dealsdirect.ui.base.BaseController;
-import au.com.dealsdirect.ui.controller.home.HomeController;
-import au.com.dealsdirect.ui.controller.main.MainController;
+import au.com.dealsdirect.ui.main.MainActivity;
 import au.com.dealsdirect.utils.AppLogger;
 import au.com.dealsdirect.utils.BundleBuilder;
 import butterknife.BindView;
@@ -45,6 +45,12 @@ public class SplashScreenController extends BaseController {
     protected void onViewBound(@NonNull View view) {
         super.onViewBound(view);
 
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            Window window = getActivity().getWindow();
+            window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
+            window.setStatusBarColor(Color.WHITE);
+        }
+
         setUp(view);
     }
 
@@ -57,9 +63,9 @@ public class SplashScreenController extends BaseController {
             @Override
             public void run() {
                 AppLogger.d("splash"+"popcontroller");
-                getRouter().popController(SplashScreenController.this);
+                ((MainActivity)getActivity()).splashShownCallback();
 
             }
-        }, 5000);
+        }, 3000);
     }
 }

@@ -1,11 +1,14 @@
 package au.com.dealsdirect.ui.controller.main;
 
+import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.view.ViewPager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.Window;
+import android.view.WindowManager;
 import android.widget.LinearLayout;
 
 import com.bluelinelabs.conductor.Router;
@@ -100,6 +103,12 @@ public class MainController extends BaseController implements MainMvpView {
     @Override
     protected void setUp(View view) {
 //        getRouter().setRoot(RouterTransaction.with(new ShopsController()));
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            Window window = getActivity().getWindow();
+            window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
+            window.setStatusBarColor(getActivity().getResources().getColor(R.color.colorAccent));
+        }
+
         setupViewPager();
     }
 

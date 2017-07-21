@@ -10,7 +10,6 @@ import com.bluelinelabs.conductor.Conductor;
 import com.bluelinelabs.conductor.Controller;
 import com.bluelinelabs.conductor.Router;
 import com.bluelinelabs.conductor.RouterTransaction;
-import com.bluelinelabs.conductor.changehandler.FadeChangeHandler;
 import com.bluelinelabs.conductor.changehandler.HorizontalChangeHandler;
 import com.bluelinelabs.conductor.changehandler.VerticalChangeHandler;
 import com.braintreepayments.api.BraintreeFragment;
@@ -97,12 +96,8 @@ public class MainActivity extends BaseActivity implements MainMvpView {
         mRouter = Conductor.attachRouter(this, mContainer, savedInstanceState);
         if (!mRouter.hasRootController()) {
             mRouter.setRoot(RouterTransaction.with(SplashScreenController.newInstance())
-                    .popChangeHandler(new FadeChangeHandler()));
+                    .popChangeHandler(new VerticalChangeHandler()));
         }
-
-        mRouter.pushController(RouterTransaction.with(mMainController)
-                .tag("Home"));
-
 
         setUp();
     }
@@ -502,5 +497,11 @@ public class MainActivity extends BaseActivity implements MainMvpView {
 
     public void isFromCategories(boolean isFromCategories){
         mIsFromCategories = isFromCategories;
+    }
+
+    public void splashShownCallback(){
+        mRouter.setRoot(RouterTransaction.with(mMainController)
+                .tag("Home"));
+
     }
 }
