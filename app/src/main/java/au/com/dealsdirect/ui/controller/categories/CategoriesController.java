@@ -50,7 +50,6 @@ import butterknife.OnClick;
 public class CategoriesController extends BaseController
         implements CategoriesMvpView, CategoryClickListener, SubCategoryClickListener, SubCategoryItemClickListener {
 
-
     @Inject
     CategoriesMvpPresenter<CategoriesMvpView> mPresenter;
 
@@ -232,16 +231,20 @@ public class CategoriesController extends BaseController
     @Override
     public void onSubCategoryItemClicked(String categoryID, String categoryName, String categoryKey) {
 
+        assert (getActivity()) != null;
+        ((MainActivity)getActivity()).getMainController().setChosenCategoryItemKey(categoryKey);
+
         Bundle saleItemBundle = new BundleBuilder(new Bundle())
                 .putString("SaleItemsController.KEY_TITLE", categoryName)
                 .putString("SaleItemsController.CATEGORY_KEY", categoryKey)
                 .putBoolean("SaleItemsController.IS_FROM_CATEGORY", true)
                 .build();
-
         Log.d("subcategoryitem", " on click = "+categoryID+" , "+categoryName + " , "+categoryKey);
         assert (getActivity()) != null;
         ((MainActivity)getActivity()).goToSaleItemsFromCategory(saleItemBundle);
 
+        Handler handler = new Handler();
+        handler.postDelayed(() -> mSubCategoryAdapter.notifyDataSetChanged(), 500);
     }
 
     @SuppressWarnings("ConstantConditions")
@@ -305,5 +308,9 @@ public class CategoriesController extends BaseController
 
         Handler handler = new Handler();
         handler.postDelayed(() -> searchTapCounter = 0,500);
+    }
+
+    public void updateSubCategoryItemState(){
+        mSubCategoryAdapter.notifyDataSetChanged();
     }
 }

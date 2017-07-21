@@ -37,6 +37,7 @@ import au.com.dealsdirect.data.network.model.category.GetCategoryTreeResponse;
 import au.com.dealsdirect.data.network.model.checkout.CreatePaymentTransaction;
 import au.com.dealsdirect.data.network.model.checkout.getuserpaymentmethods.PaymentMethod;
 import au.com.dealsdirect.ui.base.BaseActivity;
+import au.com.dealsdirect.ui.controller.categories.CategoriesController;
 import au.com.dealsdirect.ui.controller.checkout.addpayment.AddPaymentController;
 import au.com.dealsdirect.ui.controller.checkout.checkout.CheckoutController;
 import au.com.dealsdirect.ui.controller.checkout.paymentsuccess.PaymentSuccessController;
@@ -68,6 +69,7 @@ public class MainActivity extends BaseActivity implements MainMvpView {
 
     private MainController mMainController;
     private ShopsController mShopController;
+    private CategoriesController mCategoriesController;
 
     private Router mHomeRouter;
     private Router mCategoriesRouter;
@@ -161,8 +163,9 @@ public class MainActivity extends BaseActivity implements MainMvpView {
 
                         Handler handler = new Handler();
                         handler.postDelayed(() ->
-                                mShopController.hideSearchToolbar(),200);
-                    }if ((tag!=null) && tag.equals(getString(R.string.sale_items_from_category))){
+                                mShopController.hideSearchToolbar(),500);
+
+                    }else if ((tag!=null) && tag.equals(getString(R.string.sale_items_from_category))){
                         goToCategoriesFromSaleItems();
                     }else{
                         mHomeRouter.handleBack();
@@ -452,10 +455,20 @@ public class MainActivity extends BaseActivity implements MainMvpView {
 
     public void bottomNavSalesClick(){
         int backstackSize = mHomeRouter.getBackstackSize()-1;
-        String tag = mHomeRouter.getBackstack().get(backstackSize).tag();
+        if(backstackSize!=-1){
+            String tag = mHomeRouter.getBackstack().get(backstackSize).tag();
 
-        if ((tag!=null) && tag.equals(getString(R.string.sale_items_from_category))){
-            mHomeRouter.handleBack();
+            if ((tag!=null) && tag.equals(getString(R.string.sale_items_from_category))){
+                mHomeRouter.handleBack();
+            }
         }
+    }
+
+    public void setCategoriesController(CategoriesController categoriesController){
+        mCategoriesController = categoriesController;
+    }
+
+    public CategoriesController getCategoriesController(){
+        return mCategoriesController;
     }
 }

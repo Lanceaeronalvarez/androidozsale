@@ -108,7 +108,10 @@ public class ShopsController extends BaseController implements ShopsMvpView, Ban
 
     @Override
     protected void onAttach(@NonNull View view) {
+        Log.d("shops", "on attach");
         mPresenter.onAttach(this);
+        shopsControllerSearchView = (ImageButton) view.findViewById(R.id.partial_toolbar_search_icon);
+        mShopsControllerHamburgerView = (ImageButton) view.findViewById(R.id.partial_toolbar_hamburger);
         super.onAttach(view);
     }
 
@@ -479,11 +482,10 @@ public class ShopsController extends BaseController implements ShopsMvpView, Ban
             return false;
         });
 
-        mShopsControllerToolbarLogo.setVisibility(View.GONE);
+//        mShopsControllerToolbarLogo.setVisibility(View.GONE);
     }
 
     public void hideSearchToolbar(){
-
         child.startAnimation(outToRightAnimation());
         item.removeView(child);
 
