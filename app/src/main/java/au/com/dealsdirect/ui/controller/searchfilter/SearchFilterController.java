@@ -166,6 +166,7 @@ public class SearchFilterController extends BaseController implements SearchFilt
 
         if(mPreviousSelectedFacetIndices.get(position) != null){
             mFacetItemsAdapter.updateSelectedFacets(mPreviousSelectedFacetIndices.get(position));
+            origSelectedSet = mPreviousSelectedFacetIndices.get(position);
         }
 
         mFacetItemsAdapter.setFilterType(mFacetFilters.get(position));

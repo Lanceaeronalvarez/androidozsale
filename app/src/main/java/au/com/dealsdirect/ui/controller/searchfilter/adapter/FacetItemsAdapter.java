@@ -94,6 +94,9 @@ public class FacetItemsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
         if(mSelectedFacets.contains(position)){
             vh.isSelected = true;
             vh.itemView.setSelected(true);
+        } else {
+            vh.isSelected = false;
+            vh.itemView.setSelected(false);
         }
     }
 
