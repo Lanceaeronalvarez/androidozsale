@@ -1,5 +1,7 @@
 package au.com.dealsdirect.ui.controller.searchfilter;
 
+import java.util.Set;
+
 import javax.inject.Inject;
 
 import au.com.dealsdirect.data.DataManager;
@@ -24,7 +26,7 @@ public class SearchFilterPresenter<V extends SearchFilterMvpView> extends BasePr
     }
 
     @Override
-    public void onFacetItemClicked() {
-        //do api call
+    public void onFacetItemClicked(Set<Integer> selectPosSet) {
+        getMvpView().updateFacetItemToFilters(selectPosSet);
     }
 }

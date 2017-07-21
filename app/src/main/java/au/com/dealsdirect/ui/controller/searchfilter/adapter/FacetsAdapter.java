@@ -8,6 +8,7 @@ import android.view.ViewGroup;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import java.util.List;
@@ -23,7 +24,7 @@ public class FacetsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
     private List<String> mData;
     private SearchFilterMvpPresenter mPresenter;
     private int mLastPosition = -1;
-    private ImageView mLastSelectedViewHolderImageView = null;
+    private RecyclerView.ViewHolder mLastSelectedViewHolder = null;
     private Context mContext;
 
     public FacetsAdapter(Context context, List<String> data, SearchFilterMvpPresenter presenter) {
@@ -51,30 +52,19 @@ public class FacetsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
             vh.mFacetBackground.setImageDrawable(mContext.getDrawable(mapDrawable(position)));
 
             vh.itemView.setOnClickListener(view -> {
-
-                if (mLastSelectedViewHolderImageView == null) {
-
-                    mLastSelectedViewHolderImageView = vh.mFacetBackground;
-                    mLastSelectedViewHolderImageView.setBackgroundDrawable(
-                            holder.itemView.getContext().getResources()
-                                    .getDrawable(R.drawable.bg_category_item_active));
+                if (mLastSelectedViewHolder == null) {
+                    mLastSelectedViewHolder = vh;
+                    vh.itemView.setActivated(true);
+                    mPresenter.onFacetClicked(position);
 
                 } else {
-
-                    mLastSelectedViewHolderImageView.setBackgroundDrawable(
-                            holder.itemView.getContext().getResources()
-                                    .getDrawable(R.drawable.bg_category_item_inactive));
-
-                    mLastSelectedViewHolderImageView = vh.mFacetBackground;
-
-                    mLastSelectedViewHolderImageView.setBackgroundDrawable(
-                            holder.itemView.getContext().getResources()
-                                    .getDrawable(R.drawable.bg_category_item_active));
-
+                    if(mLastSelectedViewHolder != vh) {
+                        mLastSelectedViewHolder.itemView.setActivated(false);
+                        mLastSelectedViewHolder = vh;
+                        mLastSelectedViewHolder.itemView.setActivated(true);
+                        mPresenter.onFacetClicked(position);
+                    }
                 }
-
-                mPresenter.onFacetClicked(position);
-
             });
 
         }
@@ -121,13 +111,11 @@ public class FacetsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
     }
 
     public static class FacetsViewHolder extends RecyclerView.ViewHolder {
-
         @BindView(R.id.row_facets_image)
         public ImageView mFacetBackground;
 
         @BindView(R.id.row_facets_name)
         public TextView mFacetName;
-
 
         public SearchFilterMvpPresenter mPresenter;
 
@@ -135,7 +123,6 @@ public class FacetsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
             super(itemView);
             mPresenter = presenter;
             ButterKnife.bind(this, itemView);
-
         }
 
 

@@ -23,18 +23,29 @@ import butterknife.ButterKnife;
 
 public class FacetItemsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
+    public List<String> getData() {
+        return mData;
+    }
+
     private List<String> mData = new ArrayList<>();
     private SearchFilterMvpPresenter mPresenter;
+
+    public Set<Integer> getSelectedFacets() {
+        return mSelectedFacets;
+    }
+
     private Set<Integer> mSelectedFacets = new HashSet<Integer>();
     private OnSelectListener mOnSelectListener;
+    private String mFilterType = "";
 
     public static interface OnSelectListener {
         void onSelected(Set<Integer> selectPosSet);
     }
 
-    public FacetItemsAdapter(List<String> data, SearchFilterMvpPresenter presenter) {
+    public FacetItemsAdapter(List<String> data, SearchFilterMvpPresenter presenter, Set<Integer> selectedFacets) {
         mData = data;
         mPresenter = presenter;
+        mSelectedFacets = selectedFacets;
     }
 
     @Override
@@ -67,16 +78,41 @@ public class FacetItemsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                 }
             }
         });
+
+        applySelection(vh,position);
     }
 
     public void setOnSelectListener(OnSelectListener onSelectListener) {
         mOnSelectListener = onSelectListener;
     }
 
+    public void updateSelectedFacets(Set<Integer> selectedFacets){
+        mSelectedFacets = new HashSet<Integer>(selectedFacets);
+    }
+
+    private void applySelection(FacetItemsViewHolder vh, int position){
+        if(mSelectedFacets.contains(position)){
+            vh.isSelected = true;
+            vh.itemView.setSelected(true);
+        }
+    }
+
+    public void clearSelectedFacets(){
+        mSelectedFacets.clear();
+    }
+
 
     public void replaceData(List<String> data) {
-        mData = data;
+        mData = new ArrayList<>(data);
         notifyDataSetChanged();
+    }
+
+    public void setFilterType(String type){
+        mFilterType = type;
+    }
+
+    public String getFilterType(){
+        return mFilterType;
     }
 
     @Override

@@ -8,22 +8,22 @@
     android:orientation="vertical"
     tools:ignore="MissingPrefix">
 
-
     <LinearLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="vertical">
 
         <RelativeLayout
+            android:id="@+id/row_facets_image_container"
             android:layout_width="@dimen/category_background_size"
             android:layout_height="@dimen/category_background_size"
-            android:background="@drawable/bg_category_item_inactive">
+            android:background="@drawable/bg_facet_selector">
 
             <ImageView
                 android:id="@+id/row_facets_image"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:background="@drawable/bg_category_item_inactive"/>
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:layout_centerInParent="true"/>
 
         </RelativeLayout>
 
