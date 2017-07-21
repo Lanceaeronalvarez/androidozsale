@@ -65,6 +65,7 @@ public class CategoriesController extends BaseController
     ImageButton mToolbarRightOption;
 
 
+    private GetCategoryTreeResponse mChosenSubCategoryTreeResponse = new GetCategoryTreeResponse();
     private SubCategoriesAdapter mSubCategoryAdapter;
     private SubCategoryClickListener mSubCategoryClickListener;
     private SubCategoryItemClickListener mSubCategoryItemClickListener;
@@ -127,7 +128,7 @@ public class CategoriesController extends BaseController
         });
 
         //noinspection ConstantConditions,deprecation
-        mToolbarRightOption.setImageDrawable(getResources().getDrawable(R.drawable.ic_tab_shop_white));
+        mToolbarRightOption.setImageDrawable(getResources().getDrawable(R.drawable.ic_double_chevron));
         CategoryClickListener mCategoryClickListener = this;
         mSubCategoryClickListener = this;
         mSubCategoryItemClickListener = this;
@@ -173,6 +174,7 @@ public class CategoriesController extends BaseController
 
     @Override
     public void onCategoryClicked(int position, GetCategoryTreeResponse getCategoryTreeResponse) {
+        mChosenSubCategoryTreeResponse = getCategoryTreeResponse;
 
         String categoryName = getCategoryTreeResponse.getName();
 //        String categoryKey = getCategoryTreeResponse.getKey() != null ? getCategoryTreeResponse.getKey() : categoryName;
@@ -192,9 +194,9 @@ public class CategoriesController extends BaseController
 
         }else{
             if (mCategories.get(position).getChildren() != null) {
-                List<GetCategoryTreeResponse> newList = updateCategoryChildren(mCategories.get(position));
+//                List<GetCategoryTreeResponse> newList = updateCategoryChildren(mCategories.get(position));
                 mSubCategoryAdapter = new SubCategoriesAdapter(
-                        newList, mPresenter, mSubCategoryClickListener, mSubCategoryItemClickListener, mCategoryMap);
+                        (mCategories.get(position).getChildren()), mPresenter, mSubCategoryClickListener, mSubCategoryItemClickListener, mCategoryMap);
                 mSubCategoryRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity(), LinearLayoutManager.VERTICAL, false));
                 mSubCategoryRecyclerView.setAdapter(mSubCategoryAdapter);
 
@@ -205,7 +207,6 @@ public class CategoriesController extends BaseController
                 mSubCategoryRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity(), LinearLayoutManager.VERTICAL, false));
                 mSubCategoryRecyclerView.setAdapter(mSubCategoryAdapter);
             }
-
         }
     }
 
@@ -220,9 +221,7 @@ public class CategoriesController extends BaseController
 
     @Override
     public void onSubCategoryClicked(GetCategoryTreeResponse getCategoryTreeResponse) {
-
         if (getCategoryTreeResponse.getName().equals("All")){
-
             assert (getActivity()) != null;
             ((MainActivity)getActivity()).goToSalesFromCategory(getCategoryTreeResponse);
         }
@@ -250,8 +249,9 @@ public class CategoriesController extends BaseController
     @SuppressWarnings("ConstantConditions")
     @OnClick(R.id.partial_toolbar_search_right_option)
     void onSearchOptionClicked() {
+        ((MainActivity)getActivity()).goToSalesFromCategory(mChosenSubCategoryTreeResponse);
 
-        ((MainActivity) getActivity()).setRootViewpagerItem(1);
+//        ((MainActivity) getActivity()).setRootViewpagerItem(1);
     }
 
     private void performSearch(String searchQuery) {

@@ -152,7 +152,6 @@ public class ShopsController extends BaseController implements ShopsMvpView, Ban
         setUp(view);
     }
 
-
     @Override
     public void onDetach(View view) {
         mPresenter.onDetach();
@@ -175,7 +174,6 @@ public class ShopsController extends BaseController implements ShopsMvpView, Ban
                 bannerOffset += newBannerCount; //load 10 banners every page
                 bannerLimit += newBannerCount;
                 refresh();
-
             }
 
             @Override
@@ -192,7 +190,6 @@ public class ShopsController extends BaseController implements ShopsMvpView, Ban
         };
 
         mBannerClickListener = this;
-
         mBannersAdapter = new BannersAdapter(getActivity(), mPresenter, new ArrayList(), mBannerClickListener);
 
         if (getResources().getBoolean(R.bool.is_tablet)) {
@@ -213,7 +210,6 @@ public class ShopsController extends BaseController implements ShopsMvpView, Ban
             mBannersAdapter.replace(sales);
             mPaginateManager = PaginateUtils.init(shopsControllerBannerRecyclerView, mPaginateCallbacks);
         }
-
 
         if (mPreLoadedCategories.size() == 0) {
             mPresenter.loadCategoryTree();
@@ -263,7 +259,7 @@ public class ShopsController extends BaseController implements ShopsMvpView, Ban
             });
         } else {
 
-// Check if sale is available
+        // Check if sale is available
             //TODO: Need computation for date and time when sale response is cached
             if (isAvailable) {
             assert (getActivity()) != null;
