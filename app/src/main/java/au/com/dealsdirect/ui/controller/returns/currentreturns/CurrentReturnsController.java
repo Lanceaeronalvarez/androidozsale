@@ -13,7 +13,7 @@ import android.widget.TextView;
 
 import com.bluelinelabs.conductor.RouterTransaction;
 import com.bluelinelabs.conductor.changehandler.HorizontalChangeHandler;
-import com.bluelinelabs.conductor.changehandler.SimpleSwapChangeHandler;
+import com.bluelinelabs.conductor.changehandler.VerticalChangeHandler;
 import com.lsjwzh.widget.recyclerviewpager.RecyclerViewPager;
 
 import java.util.ArrayList;
@@ -211,8 +211,8 @@ public class CurrentReturnsController extends BaseController
                         isRequestApproved,
                         productRequestStatus,
                         productRAN))
-                .pushChangeHandler(new SimpleSwapChangeHandler())
-                .popChangeHandler(new SimpleSwapChangeHandler()));
+                .pushChangeHandler(new VerticalChangeHandler())
+                .popChangeHandler(new VerticalChangeHandler()));
 
     }
 
