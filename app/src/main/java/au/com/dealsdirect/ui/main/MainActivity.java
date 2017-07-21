@@ -3,6 +3,7 @@ package au.com.dealsdirect.ui.main;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
+import android.util.Log;
 import android.view.ViewGroup;
 
 import com.bluelinelabs.conductor.Conductor;
@@ -77,6 +78,7 @@ public class MainActivity extends BaseActivity implements MainMvpView {
     private Router mCategoriesRouter;
 
     private int mViewPagerCurrentItem;
+    private boolean mIsFromCategories = false;
 
 
     @Override
@@ -147,7 +149,13 @@ public class MainActivity extends BaseActivity implements MainMvpView {
                 }
                 break;
             case 1:
-                if (mHomeRouter.getBackstackSize() == 1) {
+                if(mIsFromCategories && mHomeRouter.getBackstackSize() == 1){
+                    Log.d("MainBack", "mIsFromCategories && mHomeRouter.getBackstackSize() == 1");
+                    goToCategoriesFromSales();
+                    mIsFromCategories = false;
+                }else if (mHomeRouter.getBackstackSize() == 1) {
+                    Log.d("MainBack", "mHomeRouter.getBackstackSize() == 1");
+
                     DialogUtils.showYesNoDialog(
                             this,
                             getString(R.string.dealsdirect),
@@ -159,10 +167,13 @@ public class MainActivity extends BaseActivity implements MainMvpView {
 
                             });
                 } else {
+
                     int backstackSize = mHomeRouter.getBackstackSize()-1;
                     String tag = mHomeRouter.getBackstack().get(backstackSize).tag();
 
                     if(tag!=null && tag.equals(getString(R.string.search_tag))){
+                        Log.d("MainBack", "tag!=null && tag.equals(getString(R.string.search_tag))");
+
                         mHomeRouter.handleBack();
                         mShopController.showSearchToolbar();
 
@@ -171,8 +182,12 @@ public class MainActivity extends BaseActivity implements MainMvpView {
                                 mShopController.hideSearchToolbar(),500);
 
                     }else if ((tag!=null) && tag.equals(getString(R.string.sale_items_from_category))){
+                        Log.d("MainBack", "(tag!=null) && tag.equals(getString(R.string.sale_items_from_category))");
+
                         goToCategoriesFromSaleItems();
                     }else{
+                        Log.d("MainBack", "else");
+
                         mHomeRouter.handleBack();
                     }
                 }
@@ -437,6 +452,7 @@ public class MainActivity extends BaseActivity implements MainMvpView {
     }
 
     public void goToSalesFromCategory(GetCategoryTreeResponse getCategoryTreeResponse){
+        mIsFromCategories = true;
         mShopController.goToSalesFromCategories(getCategoryTreeResponse);
         mMainController.goToShops();
     }
@@ -449,6 +465,11 @@ public class MainActivity extends BaseActivity implements MainMvpView {
         mMainController.setViewpagerDraggable(true);
     }
 
+    public void goToCategoriesFromSales(){
+        mMainController.goToCategories();
+        mShopController.loadShopBanners();
+
+    }
 
     public void setShopController(ShopsController shopsController){
         mShopController = shopsController;
@@ -464,6 +485,8 @@ public class MainActivity extends BaseActivity implements MainMvpView {
             String tag = mHomeRouter.getBackstack().get(backstackSize).tag();
 
             if ((tag!=null) && tag.equals(getString(R.string.sale_items_from_category))){
+                Log.d("MainBack", "(tag!=null) && tag.equals(getString(R.string.sale_items_from_category))");
+
                 mHomeRouter.handleBack();
             }
         }
@@ -475,5 +498,9 @@ public class MainActivity extends BaseActivity implements MainMvpView {
 
     public CategoriesController getCategoriesController(){
         return mCategoriesController;
+    }
+
+    public void isFromCategories(boolean isFromCategories){
+        mIsFromCategories = isFromCategories;
     }
 }

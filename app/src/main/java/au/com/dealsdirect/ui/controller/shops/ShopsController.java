@@ -19,6 +19,7 @@ import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
+import android.widget.TextView;
 
 import com.bluelinelabs.conductor.RouterTransaction;
 import com.bluelinelabs.conductor.changehandler.FadeChangeHandler;
@@ -78,6 +79,9 @@ public class ShopsController extends BaseController implements ShopsMvpView, Ban
     @BindView(R.id.partial_toolbar_logo)
     ImageView mShopsControllerToolbarLogo;
 
+    @BindView(R.id.partial_toolbar_logo_title_view)
+    TextView mShopsControllerToolbarTextView;
+
     private BannersAdapter mBannersAdapter;
     private Paginate.Callbacks mPaginateCallbacks;
     private Paginate mPaginateManager;
@@ -108,10 +112,9 @@ public class ShopsController extends BaseController implements ShopsMvpView, Ban
 
     @Override
     protected void onAttach(@NonNull View view) {
-        Log.d("shops", "on attach");
         mPresenter.onAttach(this);
-        shopsControllerSearchView = (ImageButton) view.findViewById(R.id.partial_toolbar_search_icon);
-        mShopsControllerHamburgerView = (ImageButton) view.findViewById(R.id.partial_toolbar_hamburger);
+        assert (getActivity()) != null;
+        ((MainActivity)getActivity()).setShopController(this);
         super.onAttach(view);
     }
 
@@ -418,7 +421,6 @@ public class ShopsController extends BaseController implements ShopsMvpView, Ban
             }
 
             mCategoryMap.put(i.getKey(), i.getChildren());
-
         }
     }
 
@@ -437,7 +439,21 @@ public class ShopsController extends BaseController implements ShopsMvpView, Ban
 
     public void goToSalesFromCategories(GetCategoryTreeResponse getCategoryTreeResponse){
         mPresenter.onAttach(this);
-        mPresenter.loadShopsBanner(getCategoryTreeResponse.getKey(), getCategoryTreeResponse.getId(), 0, 0);
+
+        if (getCategoryTreeResponse.getKey()!=null){
+
+            mPresenter.loadShopsBanner(getCategoryTreeResponse.getKey(), getCategoryTreeResponse.getId(), 0, 0);
+            if (mShopsControllerToolbarLogo!=null)
+                mShopsControllerToolbarLogo.setVisibility(View.GONE);
+            mShopsControllerToolbarTextView.setVisibility(View.VISIBLE);
+            mShopsControllerToolbarTextView.setText(getCategoryParentKey(getCategoryTreeResponse.getKey()));
+            mShopsControllerHamburgerView.setImageDrawable(getActivity().getDrawable(R.drawable.ic_pink_chevron));
+            shopsControllerSearchView.setVisibility(View.INVISIBLE);
+        }else{
+            assert (getActivity()) != null;
+            ((MainActivity)getActivity()).isFromCategories(false);
+            loadShopBanners();
+        }
     }
 
     @SuppressWarnings({"deprecation", "ConstantConditions"})
@@ -498,5 +514,19 @@ public class ShopsController extends BaseController implements ShopsMvpView, Ban
 
         Handler handler = new Handler();
         handler.postDelayed(() -> mShopsControllerToolbarLogo.setVisibility(View.VISIBLE),300);
+    }
+
+    public String getCategoryParentKey(String saleCategoryKey){
+        return saleCategoryKey +  " • All";
+    }
+
+    public void loadShopBanners(){
+        mShopsControllerToolbarLogo.setVisibility(View.VISIBLE);
+        mShopsControllerToolbarTextView.setVisibility(View.GONE);
+        mShopsControllerHamburgerView.setImageDrawable(getActivity().getDrawable(R.drawable.ic_action_menu));
+        shopsControllerSearchView.setVisibility(View.VISIBLE);
+
+        GetCategoryTreeResponse shopCategory = new GetCategoryTreeResponse();
+        mPresenter.loadShopsBanner(shopCategory.getKey(), shopCategory.getId(), 0, 0);
     }
 }
