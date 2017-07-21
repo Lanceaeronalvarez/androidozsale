@@ -107,14 +107,16 @@ public class BannersAdapter extends RecyclerView.Adapter<BannersAdapter.ViewHold
 
         GetBannerResponse item = mSales.get(position);
         holder.name.setText(item.getDescription());
+        String imgUrl;
 
         if (mPresenter.isTablet()) {
-            ImageUtils.loadImage(mContext, ImageUtils.getBannerTabletSize(item.getImage()), holder.image);
+            imgUrl = ImageUtils.getBannerTabletSize(item.getImage());
             //AppLogger.d("IMG " + ImageUtils.getBannerTabletSize(item.getImage()));
         } else {
-            ImageUtils.loadImage(mContext, ImageUtils.getBannerMobileSize(item.getImage()), holder.image);
+            imgUrl = ImageUtils.getBannerMobileSize(item.getImage());
         }
 
+        ImageUtils.loadImage(mContext, imgUrl, holder.image);
         if (!item.getIsAvailable()) {
             holder.overlay.setEnabled(false);
         }
@@ -125,7 +127,7 @@ public class BannersAdapter extends RecyclerView.Adapter<BannersAdapter.ViewHold
                         item.getDescription(),
                         item.getId(),
                         position,
-                        item.getImage(),
+                        ImageUtils.getBannerMobileSize(item.getImage()),
                         item.getIsAvailable()));
     }
 

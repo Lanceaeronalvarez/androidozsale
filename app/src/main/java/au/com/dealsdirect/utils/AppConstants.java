@@ -32,8 +32,11 @@ public final class AppConstants {
     public static final int BANNER_MOBILE_WIDTH = 423;
     public static final int BANNER_MOBILE_HEIGHT = 143;
 
-    public static final int BANNER_TABLET_WIDTH = 313;
-    public static final int BANNER_TABLET_HEIGHT = 294;
+//    public static final int BANNER_TABLET_WIDTH = 313;
+//    public static final int BANNER_TABLET_HEIGHT = 294;
+
+    public static final int BANNER_TABLET_WIDTH = 320;
+    public static final int BANNER_TABLET_HEIGHT = 193;
 
     public static final int BANNER_TABLET_FEATURED_WIDTH = 642;
     public static final int BANNER_TABLEt_FEATURED_HEIGHT = 603;
