@@ -55,7 +55,7 @@
             android:paddingRight="5dp"
             android:singleLine="true"
             android:text=""
-            android:textColor="#068ab1"
+            android:textColor="@color/gray_item_details"
             android:textSize="@dimen/text_size_large"
             android:textStyle="bold" />
 

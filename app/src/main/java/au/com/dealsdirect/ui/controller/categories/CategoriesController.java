@@ -127,7 +127,6 @@ public class CategoriesController extends BaseController
         });
 
         //noinspection ConstantConditions,deprecation
-        mToolbarRightOption.setImageDrawable(getResources().getDrawable(R.drawable.ic_tab_shop_white));
         CategoryClickListener mCategoryClickListener = this;
         mSubCategoryClickListener = this;
         mSubCategoryItemClickListener = this;

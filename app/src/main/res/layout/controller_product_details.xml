@@ -211,9 +211,10 @@
 
                                             <TextView
                                                 android:id="@+id/productName"
+                                                fontPath="@string/font_lato_semibold"
                                                 android:layout_width="wrap_content"
                                                 android:layout_height="wrap_content"
-                                                android:layout_gravity="left"
+                                                android:layout_gravity="start"
                                                 android:ellipsize="end"
                                                 android:text=""
                                                 android:textColor="@color/gray_item_details"
@@ -242,11 +243,12 @@
                                                 android:layout_gravity="end"
                                                 android:maxLines="1"
                                                 android:text=""
-                                                android:textColor="@android:color/black"
+                                                android:textColor="#454545"
                                                 android:textSize="@dimen/text_size_xxxxlarge" />
 
                                             <TextView
                                                 android:id="@+id/productPreviousPrice"
+                                                fontPath="@string/font_lato_light"
                                                 android:layout_width="wrap_content"
                                                 android:layout_height="wrap_content"
                                                 android:layout_gravity="end"
@@ -323,8 +325,8 @@
                                             android:layout_below="@+id/sizeLabel"
                                             android:layout_marginBottom="10dp"
                                             android:layout_marginTop="5dp"
-                                            android:paddingLeft="16dp"
-                                            android:paddingRight="16dp"
+                                            android:paddingLeft="10dp"
+                                            android:paddingRight="10dp"
                                             app:max_select="1" />
 
                                         <ImageView
