@@ -3,6 +3,7 @@ package au.com.dealsdirect.ui.controller.categories.adapter;
 import android.content.Context;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -75,11 +76,10 @@ public class SubCategoriesAdapter extends RecyclerView.Adapter<RecyclerView.View
 
 
                 if (!subCategoryItems.isEmpty()){
-//                    ((SubCategoriesViewHolder) holder).subCategoryDropdownImage.setVisibility(View.GONE);
                     holder.itemView.setActivated(false);
                     ((SubCategoriesViewHolder) holder)
                             .subCategoryItemsRecyclerView.setVisibility(View.GONE);
-//
+
                     Context context = holder.itemView.getContext();
                     String chosenSubCategory = ((MainActivity)context).getMainController().getCategoryParentKey();
 
@@ -95,6 +95,7 @@ public class SubCategoriesAdapter extends RecyclerView.Adapter<RecyclerView.View
 
                                 if (mData.get(position).getName().equals("All")){
                                     mSubCategoryAdapterClickListener.onSubCategoryClicked(mData.get(position));
+                                    Log.d("subcategory", "clicked = "+mData.get(position).getKey()+ " , "+mData.get(position).getName());
                                 }else{
                                     if (holder.itemView.isActivated()){
                                         holder.itemView.setActivated(false);

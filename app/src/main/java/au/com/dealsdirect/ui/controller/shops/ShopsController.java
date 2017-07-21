@@ -441,7 +441,7 @@ public class ShopsController extends BaseController implements ShopsMvpView, Ban
 
     public void goToSalesFromCategories(GetCategoryTreeResponse getCategoryTreeResponse){
         mPresenter.onAttach(this);
-        mPresenter.loadShopsBanner(getCategoryTreeResponse.getName(), getCategoryTreeResponse.getId(), 0, 0);
+        mPresenter.loadShopsBanner(getCategoryTreeResponse.getKey(), getCategoryTreeResponse.getId(), 0, 0);
     }
 
     @SuppressWarnings({"deprecation", "ConstantConditions"})
