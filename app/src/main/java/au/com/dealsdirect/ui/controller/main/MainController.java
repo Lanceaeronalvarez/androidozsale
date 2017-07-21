@@ -3,7 +3,6 @@ package au.com.dealsdirect.ui.controller.main;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.view.ViewPager;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -43,8 +42,6 @@ public class MainController extends BaseController implements MainMvpView {
     private static final String KEY_TEXT = "MainController.KEY_TEXT";
 
     private String mChosenSubCategoryItemKey = "";
-    private String mChosenSubCategoryKey = "";
-
 
     @Inject
     MainMvpPresenter<MainMvpView> mPresenter;
@@ -292,21 +289,13 @@ public class MainController extends BaseController implements MainMvpView {
         mChosenSubCategoryItemKey = key;
     }
 
-    public void setChosenSubCategoryKey(String subCategoryKey){
-        mChosenSubCategoryKey = subCategoryKey;
-
-    }
-
     public String getChosenCategoryItemKey(){
         return mChosenSubCategoryItemKey;
     }
 
-    public String getChosenSubCategoryKey(){ return mChosenSubCategoryKey; }
-
     public String getCategoryParentKey(){
         char c = '>';
         int charCount = 0;
-        int keyCount = 0;
         String newString = "";
         for (int i = 0; i < mChosenSubCategoryItemKey.length(); i++){
             String getChar = String.valueOf(mChosenSubCategoryItemKey.charAt(i));
@@ -314,7 +303,6 @@ public class MainController extends BaseController implements MainMvpView {
                 newString = newString + mChosenSubCategoryItemKey.charAt(i);
 
             } else{
-
                 charCount++;
                 if (charCount>3){
                     break;
@@ -323,7 +311,6 @@ public class MainController extends BaseController implements MainMvpView {
 
             }
         }
-        Log.d("MainController", "Parent key = "+ newString);
         return newString;
     }
 }

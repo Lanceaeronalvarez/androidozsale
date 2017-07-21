@@ -2,7 +2,6 @@ package au.com.dealsdirect.ui.controller.categories.adapter;
 
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -54,7 +53,6 @@ public class SubCategoryItemsAdapter extends RecyclerView.Adapter<RecyclerView.V
     @Override
     public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
         setAnimation(holder.itemView, position);
-        Log.d("subcategoryitem", "onBind");
         Context context = holder.itemView.getContext();
 
         if (!mData.isEmpty()) {
@@ -65,10 +63,8 @@ public class SubCategoryItemsAdapter extends RecyclerView.Adapter<RecyclerView.V
                         .subCategoryTitle.setText(mData.get(position).getName());
 
                 String chosenKey =((MainActivity)context).getMainController().getChosenCategoryItemKey();
-                Log.d("subcategoryitem", " outside chosen key = "+chosenKey);
 
                 if (mData.get(position).getKey().equals(chosenKey)){
-                    Log.d("subcategoryitem", "chosen key = "+chosenKey);
 
                     ((SubCategoryItemsAdapter.SubCategoryItemViewHolder) holder)
                             .subCategoryTitle.setTextColor(context.getResources().getColor(R.color.category_text_active));

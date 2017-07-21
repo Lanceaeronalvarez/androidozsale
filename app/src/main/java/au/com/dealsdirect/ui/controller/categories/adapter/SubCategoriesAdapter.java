@@ -92,7 +92,6 @@ public class SubCategoriesAdapter extends RecyclerView.Adapter<RecyclerView.View
 
                     ((SubCategoriesViewHolder) holder).mViewholder_subcategory_container
                             .setOnClickListener(view -> {
-                                ((MainActivity)context).getMainController().setChosenSubCategoryKey(mData.get(position).getKey());
 
                                 if (mData.get(position).getName().equals("All")){
                                     mSubCategoryAdapterClickListener.onSubCategoryClicked(mData.get(position));
@@ -109,7 +108,6 @@ public class SubCategoriesAdapter extends RecyclerView.Adapter<RecyclerView.View
                                         mSubCategoryItemsAdapter = new SubCategoryItemsAdapter(subCategoryItems, mPresenter, mSubCategoryItemClickListener);
                                         ((SubCategoriesViewHolder) holder).subCategoryItemsRecyclerView .setLayoutManager(new LinearLayoutManager(holder.itemView.getContext(), LinearLayoutManager.VERTICAL, false));
                                         ((SubCategoriesViewHolder) holder).subCategoryItemsRecyclerView .setAdapter(mSubCategoryItemsAdapter);
-
                                     }
                                 }
                             });

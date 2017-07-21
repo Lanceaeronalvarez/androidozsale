@@ -6,7 +6,6 @@ import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -105,6 +104,7 @@ public class CategoriesController extends BaseController
         super.onViewBound(view);
 
         assert (getActivity()) != null;
+        ((MainActivity)getActivity()).setDraggableViewPager(true);
         ((MainActivity)getActivity()).setCategoriesRouter(getRouter());
         setUp(view);
     }
@@ -239,7 +239,7 @@ public class CategoriesController extends BaseController
                 .putString("SaleItemsController.CATEGORY_KEY", categoryKey)
                 .putBoolean("SaleItemsController.IS_FROM_CATEGORY", true)
                 .build();
-        Log.d("subcategoryitem", " on click = "+categoryID+" , "+categoryName + " , "+categoryKey);
+
         assert (getActivity()) != null;
         ((MainActivity)getActivity()).goToSaleItemsFromCategory(saleItemBundle);
 
