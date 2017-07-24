@@ -10,35 +10,27 @@ import java.util.Collections;
 import java.util.List;
 
 import au.com.dealsdirect.R;
+import au.com.dealsdirect.utils.ColorUtils;
 import au.com.dealsdirect.utils.DateUtils;
 
 /**
  * dp Created by Admin on 6/22/17.
  */
 
-public class ContactHistoryAdapter
-        extends RecyclerView.Adapter<ContactHistoryViewHolder>{
+public class ContactHistoryAdapter extends RecyclerView.Adapter<ContactHistoryViewHolder> {
 
-    List<au.com.dealsdirect.data.network.model.contacthistory.List>
-            mCurrentContactsHistoryList = Collections.emptyList();
-
+    List<au.com.dealsdirect.data.network.model.contacthistory.List> mCurrentContactsHistoryList = Collections.emptyList();
     Context mContext;
 
-    public ContactHistoryAdapter(
-            List<au.com.dealsdirect.data.network.model.contacthistory.List> contactitemsList,
-            Context context) {
-
+    public ContactHistoryAdapter(List<au.com.dealsdirect.data.network.model.contacthistory.List> contactitemsList, Context context) {
+        Collections.reverse(contactitemsList);
         this.mCurrentContactsHistoryList = contactitemsList;
         this.mContext = context;
     }
 
     @Override
-    public ContactHistoryViewHolder onCreateViewHolder(ViewGroup parent, int
-            viewType) {
-        View v = LayoutInflater.from(parent.getContext())
-                .inflate(R.layout.viewholder_contact_history,
-                        parent,
-                        false);
+    public ContactHistoryViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+        View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.viewholder_contact_history, parent, false);
 
         return new ContactHistoryViewHolder(v);
     }
@@ -53,55 +45,26 @@ public class ContactHistoryAdapter
 
         String contactSubject = mCurrentContactsHistoryList.get(position).getSubject();
 
-
 //        String dateHeaderFormatOfItem = DateUtils.getTrimmedServerDateString(contactDate.toString());
 
-        if (userName != null){
-            holder.contactHistoryItemUserNameTextView
-                    .setText(userName.toString());
-        }else{
-            holder.contactHistoryItemUserNameTextView
-                    .setText("unknown");
+        holder.contactHistoryItemCircularTextView.setSolidColor(ColorUtils.getOvalColor(position));
+
+        if (userName != null) {
+            holder.contactHistoryItemCircularTextView.setText(userName.toString());
+        } else {
+            holder.contactHistoryItemCircularTextView.setText("JD");
         }
 
-        if (contactSubject != null){
-
-            holder.contactHistoryDescriptionTextView
-                    .setText(contactSubject.toString());
-        }else{
-
-            holder.contactHistoryDescriptionTextView.setText("");
-        }
-
-
-        if (contactMessage != null){
+        if (contactMessage != null) {
             holder.contactHistoryMessageTextView.setText(contactMessage.toString());
-        }else{
+        } else {
             holder.contactHistoryMessageTextView.setText("Nothing to display");
         }
-
-        if (contactDate != null){
-            String itemLastAnswerTimeFormat
-                    = DateUtils.getTimeFromDateString(contactDate.toString());
-
-            String itemLastAnswerDateFormat
-                    = DateUtils.getTrimmedServerDateString(contactDate.toString());
-
-            holder.contactHistoryItemDateStampTextView
-                    .setText(itemLastAnswerDateFormat);
-
-            holder.contactHistoryItemTimeStampTextView
-                    .setText(itemLastAnswerTimeFormat);
-
-        }else{
-            holder.contactHistoryItemDateStampTextView.setText("");
-        }
-
     }
 
     @Override
     public int getItemCount() {
-        if (mCurrentContactsHistoryList == null){
+        if (mCurrentContactsHistoryList == null) {
             return 0;
         }
         return mCurrentContactsHistoryList.size();

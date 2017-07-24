@@ -8,6 +8,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -18,10 +19,16 @@ import javax.inject.Inject;
 
 import au.com.dealsdirect.R;
 import au.com.dealsdirect.data.network.model.contacthistory.List;
+import au.com.dealsdirect.data.network.model.contactreply.ReplyContact;
+import au.com.dealsdirect.data.network.model.contactreply.ReplyContactRequest;
 import au.com.dealsdirect.ui.base.BaseController;
 import au.com.dealsdirect.ui.controller.contact.addcontact.AddContactController;
 import au.com.dealsdirect.ui.controller.contact.viewcontacthistory.contacthistory.ContactHistoryAdapter;
+import au.com.dealsdirect.ui.custom.CustomAlertDialog;
+import au.com.dealsdirect.ui.main.MainActivity;
 import au.com.dealsdirect.utils.BundleBuilder;
+import au.com.dealsdirect.utils.KeyboardUtils;
+import au.com.dealsdirect.utils.StringUtils;
 import butterknife.BindView;
 import butterknife.OnClick;
 
@@ -29,7 +36,7 @@ import butterknife.OnClick;
  * dp Created by Admin on 6/21/17.
  */
 
-public class ViewContactHistoryController extends BaseController implements ViewContactHistoryMvpView{
+public class ViewContactHistoryController extends BaseController implements ViewContactHistoryMvpView {
 
     public static final String TAG = "ViewContactHistoryController";
     private static final String KEY_TEXT = "ViewContactHistoryController.KEY_TEXT";
@@ -43,20 +50,23 @@ public class ViewContactHistoryController extends BaseController implements View
     @BindView(R.id.contact_history_recycler_view)
     RecyclerView contactHistoryRecyclerView;
 
-    @BindView(R.id.controller_view_contact_history_header_title)
-    TextView contactHistoryHeaderTitle;
+    @BindView(R.id.controller_view_contact_history_header_subject)
+    TextView mContactHistorySubject;
 
-    @BindView(R.id.contact_history_header_invoice_value)
-    TextView contactHistoryInvoiceText;
+    @BindView(R.id.controller_view_contact_history_header_sale)
+    TextView mContactHistorySale;
 
     @BindView(R.id.contact_history_header_time_stamp)
-    TextView contactHistoryTimeStamp;
+    TextView mContactHistoryTimeStamp;
 
     @BindView(R.id.partial_toolbar_filter_view)
     ImageView mContactHistoryRightOption;
 
     @BindView(R.id.partial_toolbar_arrow_title)
     TextView mContactHistoryTitle;
+
+    @BindView(R.id.controller_view_contacts_history_message_field)
+    EditText mContactHistoryMessageField;
 
     private String mSaleNameObject;
     private String mTimeStamp;
@@ -76,10 +86,10 @@ public class ViewContactHistoryController extends BaseController implements View
 
         return new ViewContactHistoryController(
                 new BundleBuilder(new Bundle())
-                        .putInt(KEY_CONTACT_NO,contactNo)
+                        .putInt(KEY_CONTACT_NO, contactNo)
                         .putString(KEY_CONTACT_NAME, saleName)
                         .putInt(KEY_CONTACT_INVOICE_NO, invoiceNo)
-                        .putString(KEY_CONTACT_TIMESTAMP,lastAnswer)
+                        .putString(KEY_CONTACT_TIMESTAMP, lastAnswer)
                         .putString(KEY_CONTACT_SUBJECT, contactSubject)
                         .build());
     }
@@ -91,7 +101,6 @@ public class ViewContactHistoryController extends BaseController implements View
         mTimeStamp = getArgs().getString(KEY_CONTACT_TIMESTAMP);
         mContactNumber = getArgs().getInt(KEY_CONTACT_NO);
         mContactSubject = getArgs().getString(KEY_CONTACT_SUBJECT);
-
     }
 
 
@@ -116,56 +125,92 @@ public class ViewContactHistoryController extends BaseController implements View
     @Override
     protected void setUp(View view) {
 
-        // mContactList.getInvoiceNo()
+        KeyboardUtils.setKeyboardAdjustResize(getActivity());
+        ((MainActivity) getActivity()).getMainController().hideBottomNav();
 
-        contactHistoryHeaderTitle.setText(mSaleNameObject);
-        contactHistoryInvoiceText.setText(mInvoiceNumber+"");
-        contactHistoryTimeStamp.setText(mTimeStamp);
+        mContactHistorySubject.setText(StringUtils.toTitleCase(mContactSubject));
+        mContactHistoryTimeStamp.setText(mTimeStamp);
         mContactHistoryRightOption.setVisibility(View.INVISIBLE);
         mContactHistoryTitle.setText(R.string.contact_history);
-        // mContactList.getInvoiceNo()
 
-        if(!mSaleNameObject.isEmpty()){
-
-            contactHistoryHeaderTitle.setText(mSaleNameObject);
-        }else{
-
-            contactHistoryHeaderTitle.setText(R.string.no_order_number);
+        if (!mSaleNameObject.isEmpty()) {
+            mContactHistorySale.setText(mSaleNameObject);
+        } else {
+            mContactHistorySale.setText(R.string.no_order_number);
         }
+    }
 
+    @Override
+    protected void onDestroyView(@NonNull View view) {
+        KeyboardUtils.setKeyboardAdjustPan(getActivity());
+        mPresenter.onDetach();
+        super.onDestroyView(view);
     }
 
     @Override
     public void showContactHistory(java.util.List<List> myContactItems) {
 
-        Log.d("contacts" , myContactItems.size()+ " ");
-        final ContactHistoryAdapter adapter
-                = new ContactHistoryAdapter
-                (myContactItems,getActivity());
+        Log.d("contacts", myContactItems.size() + " ");
+        ContactHistoryAdapter adapter = new ContactHistoryAdapter(myContactItems, getActivity());
 
-        contactHistoryRecyclerView
-                .setAdapter(adapter);
-        contactHistoryRecyclerView
-                .setLayoutManager(new LinearLayoutManager(getActivity()));
+        LinearLayoutManager layoutManager = new LinearLayoutManager(getActivity());
+        layoutManager.setStackFromEnd(true);
 
+        contactHistoryRecyclerView.setAdapter(adapter);
+        contactHistoryRecyclerView.setLayoutManager(layoutManager);
     }
 
     @OnClick(R.id.partial_toolbar_arrow_view)
-    void onBackClick(){
+    void onBackClick() {
         getActivity().onBackPressed();
     }
 
     @OnClick(R.id.controller_view_contacts_history_reply_button)
-    void onReplyClick(){
+    void onReplyClick() {
 
-        Bundle bundle = new BundleBuilder(new Bundle())
-                .putInt("CONTACT_NUMBER",mContactNumber)
-                .putString("CONTACT_SUBJECT", mContactSubject)
-                .putInt("CONTACT_INVOICE_NUMBER", mInvoiceNumber)
-                .build();
+//        Bundle bundle = new BundleBuilder(new Bundle())
+//                .putInt("CONTACT_NUMBER", mContactNumber)
+//                .putString("CONTACT_SUBJECT", mContactSubject)
+//                .putInt("CONTACT_INVOICE_NUMBER", mInvoiceNumber)
+//                .build();
+//
+//        getRouter().pushController(RouterTransaction.with(AddContactController.newInstance("CONTACT_HISTORY", bundle))
+//                .pushChangeHandler(new HorizontalChangeHandler())
+//                .popChangeHandler(new HorizontalChangeHandler()));
 
-        getRouter().pushController(RouterTransaction.with(AddContactController.newInstance("CONTACT_HISTORY", bundle))
-                .pushChangeHandler(new HorizontalChangeHandler())
-                .popChangeHandler(new HorizontalChangeHandler()));
+        KeyboardUtils.hideSoftInput(getActivity());
+
+        String replyMessage = mContactHistoryMessageField.getText().toString();
+        int contactId = mContactNumber;
+
+        ReplyContactRequest replyContactRequest = new ReplyContactRequest();
+        replyContactRequest.comments = replyMessage;
+        replyContactRequest.contactNo = contactId;
+
+        if (replyContactRequest.comments.isEmpty()) {
+
+            //                CustomAlertDialog.showCustomAlertDialog(
+            //                        mBaseActivity,
+            //                        CustomAlertDialog.CustomDialogIconState.NEGATIVE,
+            //                        mBaseActivity.getString(R.string.please_input_message)
+            //                );
+
+        } else {
+            mPresenter.replyContact(replyContactRequest);
+        }
+    }
+
+    @Override
+    public void repliedContactSwitchView(ReplyContact replyContact) {
+        if (replyContact.getResult()) {
+            CustomAlertDialog.showCustomAlertDialog(
+                    getActivity(), CustomAlertDialog.CustomDialogIconState.POSITIVE,
+                    getActivity().getString(R.string.message_submitted));
+            getActivity().onBackPressed();
+        } else {
+            CustomAlertDialog.showCustomAlertDialog(
+                    getActivity(), CustomAlertDialog.CustomDialogIconState.POSITIVE,
+                    getActivity().getString(R.string.error_creating_message));
+        }
     }
 }

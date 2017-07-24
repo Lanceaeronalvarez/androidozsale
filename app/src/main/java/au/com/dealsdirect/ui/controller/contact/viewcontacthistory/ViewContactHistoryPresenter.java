@@ -10,6 +10,8 @@ import javax.inject.Inject;
 
 import au.com.dealsdirect.data.DataManager;
 import au.com.dealsdirect.data.network.model.contacthistory.GetContactHistoryRequest;
+import au.com.dealsdirect.data.network.model.contactreply.ReplyContactRequest;
+import au.com.dealsdirect.data.network.model.contactreply.ReplyContactResponse;
 import au.com.dealsdirect.ui.base.BasePresenter;
 import au.com.dealsdirect.utils.rx.SchedulerProvider;
 import io.reactivex.disposables.CompositeDisposable;
@@ -19,7 +21,7 @@ import io.reactivex.disposables.CompositeDisposable;
  */
 
 public class ViewContactHistoryPresenter<V extends ViewContactHistoryMvpView>
-        extends BasePresenter<V> implements ViewContactHistoryMvpPresenter<V>{
+        extends BasePresenter<V> implements ViewContactHistoryMvpPresenter<V> {
 
     @Inject
     public ViewContactHistoryPresenter(DataManager dataManager, SchedulerProvider schedulerProvider, CompositeDisposable compositeDisposable) {
@@ -41,22 +43,22 @@ public class ViewContactHistoryPresenter<V extends ViewContactHistoryMvpView>
                         .subscribe(response -> {
 
                             if (!isViewAttached()) {
-                                Log.d("viewcontactshistory","list is not attached");
+                                Log.d("viewcontactshistory", "list is not attached");
 
                                 return;
                             }
                             getMvpView().hideLoading();
-                            if (response.getGetContactHistoryResponseBody().getList()!=null){
-                                Log.d("viewcontactshistory","list is null empty");
+                            if (response.getGetContactHistoryResponseBody().getList() != null) {
+                                Log.d("viewcontactshistory", "list is null empty");
                                 List<au.com.dealsdirect.data.network.model.contacthistory.List> myContactItems = response.getGetContactHistoryResponseBody().getList();
 
-                                if(myContactItems!=null && !myContactItems.isEmpty()){
+                                if (myContactItems != null && !myContactItems.isEmpty()) {
 
-                                    Log.d("viewcontactshistory","list is not empty");
+                                    Log.d("viewcontactshistory", "list is not empty");
                                     getMvpView().showContactHistory(myContactItems);
 
-                                }else{
-                                    Log.d("viewcontactshistory","list is empty");
+                                } else {
+                                    Log.d("viewcontactshistory", "list is empty");
 
                                 }
                             }
@@ -76,4 +78,43 @@ public class ViewContactHistoryPresenter<V extends ViewContactHistoryMvpView>
                         }));
     }
 
+    @Override
+    public void replyContact(ReplyContactRequest replyContactRequest) {
+        getMvpView().showLoading();
+
+        getCompositeDisposable()
+                .add(getDataManager()
+                        .callReplyContact(replyContactRequest)
+                        .subscribeOn(getSchedulerProvider().io())
+                        .observeOn(getSchedulerProvider().ui())
+                        .subscribe(response -> {
+
+                            if (!isViewAttached()) {
+                                return;
+                            }
+
+                            getMvpView().hideLoading();
+
+                            ReplyContactResponse replyReponse = response;
+                            //   mViewMyContactContactUs.onLoadEnd();
+                            getMvpView().repliedContactSwitchView(replyReponse.getReplyContact());
+//                            getMvpView().showContactFirstOrder(myContactOrder);
+
+
+                        }, throwable -> {
+
+                            if (!isViewAttached()) {
+                                return;
+                            }
+
+                            getMvpView().hideLoading();
+                            getMvpView().onError(throwable.getMessage());
+
+                            // handle load accounts error here
+                            if (throwable instanceof ANError) {
+                                ANError anError = (ANError) throwable;
+                                handleApiError(anError);
+                            }
+                        }));
+    }
 }

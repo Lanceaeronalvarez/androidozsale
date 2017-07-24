@@ -265,6 +265,8 @@
     <string name="select_a_sale">Select a Sale</string>
     <string name="no_orders">no orders</string>
     <string name="select_a_subject">Select a Subject</string>
+    <string name="message_submitted">Message submitted</string>
+    <string name="error_creating_message">Error creating message</string>
 
     <string-array name="genders">
         <item>Male</item>

@@ -8,6 +8,7 @@ import android.content.Context;
 
 import com.androidnetworking.AndroidNetworking;
 import com.androidnetworking.interceptors.HttpLoggingInterceptor;
+import com.squareup.leakcanary.LeakCanary;
 import com.squareup.leakcanary.RefWatcher;
 
 import java.io.File;
@@ -28,7 +29,7 @@ import uk.co.chrisjenx.calligraphy.CalligraphyConfig;
 
 public class DDApplication extends Application {
 
-//    public static RefWatcher refWatcher;
+    public static RefWatcher refWatcher;
 
     @Inject
     DataManager mDataManager;

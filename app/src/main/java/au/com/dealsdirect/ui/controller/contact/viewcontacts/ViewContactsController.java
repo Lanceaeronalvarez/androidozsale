@@ -7,6 +7,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -27,6 +28,7 @@ import au.com.dealsdirect.data.network.model.contactitem.GetContactsResponse;
 import au.com.dealsdirect.ui.base.BaseController;
 import au.com.dealsdirect.ui.controller.contact.addcontact.AddContactController;
 import au.com.dealsdirect.ui.controller.contact.viewcontacthistory.ViewContactHistoryController;
+import au.com.dealsdirect.ui.controller.contact.viewcontacts.contacts.ContactsAdapter;
 import au.com.dealsdirect.ui.controller.contact.viewcontacts.contacts.ContactsClickListener;
 import au.com.dealsdirect.ui.controller.contact.viewcontacts.viewcontactdate.ViewContactDateAdapter;
 import au.com.dealsdirect.ui.main.MainActivity;
@@ -45,7 +47,7 @@ public class ViewContactsController extends BaseController implements ViewContac
     public static final String TAG = "ContactController";
     private static final String KEY_TEXT = "ContactController.KEY_TEXT";
 
-    private ViewContactDateAdapter mContactDateAdapter;
+    private ContactsAdapter mContactAdapter;
     private ContactsClickListener mContactClickListener;
 
     @BindView(R.id.partial_toolbar_arrow_title)
@@ -62,6 +64,9 @@ public class ViewContactsController extends BaseController implements ViewContac
 
     @BindView(R.id.no_contacts_placeholder)
     LinearLayout mPlaceholderLayout;
+
+    @BindView(R.id.controller_view_contacts_add_button)
+    Button mViewContactsNewMessage;
 
     @Inject
     ViewContactsMvpPresenter<ViewContactsMvpView> mPresenter;
@@ -93,7 +98,7 @@ public class ViewContactsController extends BaseController implements ViewContac
         super.onViewBound(view);
 
         assert (getActivity()) != null;
-        ((MainActivity)getActivity()).getMainController().showBottomNav();
+        ((MainActivity) getActivity()).getMainController().showBottomNav();
 
         mContactClickListener = this;
         setUp(view);
@@ -105,16 +110,14 @@ public class ViewContactsController extends BaseController implements ViewContac
     protected void setUp(View view) {
 
         assert (getActivity()) != null;
-        ((MainActivity)getActivity()).setDraggableViewPager(false);
+        ((MainActivity) getActivity()).setDraggableViewPager(false);
 
         mViewContactsToolarTitle.setText("Contact Us");
-        mViewContactsToolbarRightOption.setVisibility(View.INVISIBLE);
         mViewContactsToolbarLeftOption.setVisibility(View.INVISIBLE);
 
-        mContactDateAdapter =
-                new ViewContactDateAdapter(new ArrayList<>(),getActivity(), mContactClickListener);
+        mContactAdapter = new ContactsAdapter(new ArrayList<>(), getActivity(), mContactClickListener);
 
-        mViewContactsRecyclerView.setAdapter(mContactDateAdapter);
+        mViewContactsRecyclerView.setAdapter(mContactAdapter);
         mViewContactsRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
     }
 
@@ -136,11 +139,12 @@ public class ViewContactsController extends BaseController implements ViewContac
 
         List<GetContactsResponse.ContactList> items = myContacts.getList();
         if (items != null && items.size() != 0) {
-            mContactDateAdapter.replace(getDifferentDates(items));
+            mContactAdapter.replace(myContacts.getList());
             mViewContactsRecyclerView.setVisibility(View.VISIBLE);
             mPlaceholderLayout.setVisibility(View.GONE);
             mViewContactsToolbarRightOption.setVisibility(View.VISIBLE);
             mViewContactsToolbarRightOption.setImageResource(R.drawable.ic_add);
+            mViewContactsNewMessage.setVisibility(View.GONE);
         } else {
             mPlaceholderLayout.setVisibility(View.VISIBLE);
             mViewContactsRecyclerView.setVisibility(View.GONE);
@@ -148,7 +152,7 @@ public class ViewContactsController extends BaseController implements ViewContac
     }
 
     @OnClick({R.id.controller_view_contacts_add_button, R.id.partial_toolbar_filter_view})
-    void addContact(){
+    void addContact() {
         getRouter().pushController(RouterTransaction.with(AddContactController.newInstance())
                 .pushChangeHandler(new VerticalChangeHandler())
                 .popChangeHandler(new VerticalChangeHandler()));
@@ -206,27 +210,27 @@ public class ViewContactsController extends BaseController implements ViewContac
         String timeStampString;
         String contactSubject = contactList.getSubject();
 
-        if(saleNameObject != null){
+        if (saleNameObject != null) {
 
             saleName = saleNameObject.toString();
-        }else{
+        } else {
 
             saleName = "No Order Number";
         }
 
-        if (invoiceNumber != null){
+        if (invoiceNumber != null) {
 
             invoiceNo = (int) invoiceNumber;
-        }else{
+        } else {
 
             invoiceNo = 0;
         }
 
-        if (timeStamp != null){
+        if (timeStamp != null) {
 
-            timeStampString = DateUtils.getTimeFromDateString(timeStamp.toString());
+            timeStampString = DateUtils.getDateForContactMessages(timeStamp.toString());
 
-        }else{
+        } else {
 
             timeStampString = "";
         }
