@@ -114,7 +114,6 @@ public class ShopsController extends BaseController implements ShopsMvpView, Ban
     protected void onAttach(@NonNull View view) {
         mPresenter.onAttach(this);
         assert (getActivity()) != null;
-        ((MainActivity)getActivity()).showLoading();
         ((MainActivity)getActivity()).setShopController(this);
         super.onAttach(view);
     }
