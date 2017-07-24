@@ -1,7 +1,5 @@
 package au.com.dealsdirect.data.network;
 
-import android.content.Context;
-
 import com.mysale.genie.utility.config.api.GetAppSettings;
 import com.mysale.genie.utility.config.api.GetAppSettingsSection;
 import com.mysale.genie.utility.config.api.GetServerSettings;
@@ -36,6 +34,13 @@ import au.com.dealsdirect.data.network.model.checkout.RemoveUserPaymentMethod;
 import au.com.dealsdirect.data.network.model.contacthistory.GetContactHistoryRequest;
 import au.com.dealsdirect.data.network.model.contacthistory.GetContactHistoryResponse;
 import au.com.dealsdirect.data.network.model.contactitem.GetContactsResponse;
+import au.com.dealsdirect.data.network.model.contactorder.ContactOrders;
+import au.com.dealsdirect.data.network.model.contactreply.ReplyContactRequest;
+import au.com.dealsdirect.data.network.model.contactreply.ReplyContactResponse;
+import au.com.dealsdirect.data.network.model.contactsubject.ContactSubjects;
+import au.com.dealsdirect.data.network.model.contactsubject.ContactSubjectsRequest;
+import au.com.dealsdirect.data.network.model.createcontact.CreateContactRequest;
+import au.com.dealsdirect.data.network.model.createcontact.CreateContactResponse;
 import au.com.dealsdirect.data.network.model.fcm.NotificationEvent;
 import au.com.dealsdirect.data.network.model.fcm.RegisterDevice;
 import au.com.dealsdirect.data.network.model.forgotpassword.ForgotPasswordRequest;
@@ -44,15 +49,6 @@ import au.com.dealsdirect.data.network.model.invite.GetInviteRequest;
 import au.com.dealsdirect.data.network.model.invite.GetInviteResponse;
 import au.com.dealsdirect.data.network.model.invite.SetInviteRequest;
 import au.com.dealsdirect.data.network.model.invite.SetInviteResponse;
-
-import au.com.dealsdirect.data.network.model.contactorder.ContactOrders;
-import au.com.dealsdirect.data.network.model.contactreply.ReplyContactRequest;
-import au.com.dealsdirect.data.network.model.contactreply.ReplyContactResponse;
-import au.com.dealsdirect.data.network.model.contactsubject.ContactSubjects;
-import au.com.dealsdirect.data.network.model.contactsubject.ContactSubjectsRequest;
-import au.com.dealsdirect.data.network.model.createcontact.CreateContactRequest;
-import au.com.dealsdirect.data.network.model.createcontact.CreateContactResponse;
-
 import au.com.dealsdirect.data.network.model.legalities.GetTemplateTextRequest;
 import au.com.dealsdirect.data.network.model.legalities.GetTemplateTextResponse;
 import au.com.dealsdirect.data.network.model.login.LoginEmail;
@@ -67,6 +63,10 @@ import au.com.dealsdirect.data.network.model.publicsalescategories.GetPublicSale
 import au.com.dealsdirect.data.network.model.publicsalescategories.GetPublicSalesCategoriesResponse;
 import au.com.dealsdirect.data.network.model.register.RegisterUserRequest;
 import au.com.dealsdirect.data.network.model.register.RegisterUserResponse;
+import au.com.dealsdirect.data.network.model.returns.currentreturn.CurrentReturnResponseBody;
+import au.com.dealsdirect.data.network.model.returns.returndetails.GetReturnDetailRequest;
+import au.com.dealsdirect.data.network.model.returns.returndetails.GetReturnDetailsResponse;
+import au.com.dealsdirect.data.network.model.returns.returnorders.GetReturnOrders;
 import au.com.dealsdirect.data.network.model.saleitemdetails.AddToCartRequest;
 import au.com.dealsdirect.data.network.model.saleitemdetails.AddToCartResponse;
 import au.com.dealsdirect.data.network.model.saleitemdetails.GetSaleItemDetailsResponse;
@@ -597,6 +597,30 @@ public class AppApiHelper implements ApiHelper {
                 .addJSONObjectBody(JsonUtils.convertToJsonObject(addAndApplyVoucherByKeyRequest))
                 .build()
                 .getObjectObservable(AddAndApplyVoucherByKeyResponse.class);
+    }
+
+    @Override
+    public Observable<CurrentReturnResponseBody> callGetCurrentReturns() {
+        return Rx2AndroidNetworking.post(ApiEndPoint.GET_RETURNS)
+                .addJSONObjectBody(JsonUtils.convertToJsonObject(null))
+                .build()
+                .getObjectObservable(CurrentReturnResponseBody.class);
+    }
+
+    @Override
+    public Observable<GetReturnOrders> callGetReturnOrders() {
+        return Rx2AndroidNetworking.post(ApiEndPoint.GET_RETURN_ORDERS)
+                .addJSONObjectBody(JsonUtils.convertToJsonObject(null))
+                .build()
+                .getObjectObservable(GetReturnOrders.class);
+    }
+
+    @Override
+    public Observable<GetReturnDetailsResponse> callGetReturnDetails(GetReturnDetailRequest getReturnDetailRequest) {
+        return Rx2AndroidNetworking.post(ApiEndPoint.GET_RETURN_DETAILS)
+                .addJSONObjectBody(JsonUtils.convertToJsonObject(getReturnDetailRequest))
+                .build()
+                .getObjectObservable(GetReturnDetailsResponse.class);
     }
 }
 

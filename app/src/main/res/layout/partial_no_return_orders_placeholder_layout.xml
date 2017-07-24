@@ -19,7 +19,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
-        android:text="welcome to my returns!"
+        android:text="welcome to my orders for returns!"
         android:textSize="@dimen/text_size_xxxlarge" />
 
     <TextView
@@ -30,7 +30,7 @@
         android:layout_marginBottom="@dimen/default_button_height"
         android:layout_marginTop="10dp"
         android:paddingBottom="@dimen/default_button_height"
-        android:text="you currently do not have any returns."
+        android:text="you currently do no have any orders."
         android:textColor="#D0D0D0"
         android:textSize="@dimen/text_size_xxlarge" />
 

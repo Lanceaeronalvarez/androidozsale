@@ -17,6 +17,8 @@ import au.com.dealsdirect.data.network.model.returns.returndetails.GetReturnDeta
 import au.com.dealsdirect.data.network.model.returns.returndetails.Item;
 import au.com.dealsdirect.ui.controller.returns.currentreturns.listener.CurrentReturnClickListener;
 import au.com.dealsdirect.ui.controller.returns.currentreturns.viewholder.CurrentReturnViewHolder;
+import au.com.dealsdirect.ui.controller.returns.returndetails.adapter.ReturnDetailsAdapter;
+import au.com.dealsdirect.utils.DateUtils;
 
 /**
  * dp Created by Admin on 6/29/17.
@@ -64,11 +66,11 @@ public class CurrentReturnAdapter extends RecyclerView.Adapter<CurrentReturnView
         mCurrentReturnsHolder = holder;
         currentPosition = position;
 
-        String productName = mCurrentReturnList.get(position).getRan();
+        String productName = mCurrentReturnList.get(position).getDescription();
 
-//        int productRequestNumber = mCurrentReturnList.get(position).getOrderNumber();
-//        String productRequestDate = mCurrentReturnList.get(position).getLastSavedDate();
-//        String returnRequestDateFormat = DateUtils.getTrimmedServerDateString(productRequestDate);
+        int productRequestNumber = mCurrentReturnList.get(position).getOrderNumber();
+        String productRequestDate = mCurrentReturnList.get(position).getLastSavedDate();
+        String returnRequestDateFormat = DateUtils.getTrimmedServerDateString(productRequestDate);
         String isRequestApproved;
 
         boolean isProductReturnRequestApprovedBoolean;
@@ -86,9 +88,9 @@ public class CurrentReturnAdapter extends RecyclerView.Adapter<CurrentReturnView
         String productRequestStatus = mCurrentReturnList.get(position).getReturnStatus();
         String productRAN = mCurrentReturnList.get(position).getRan();
 
-//        holder.currentReturnsRequestNumberValueTextView.setText(productRequestNumber+"");
+        holder.currentReturnsRequestNumberValueTextView.setText(productRequestNumber+"");
         holder.currentReturnsRequestProductNameValueTextView.setText(productName);
-//        holder.currentReturnsRequestDateValueTextView.setText(returnRequestDateFormat);
+        holder.currentReturnsRequestDateValueTextView.setText(returnRequestDateFormat);
 
         holder.currentReturnsRequestIsApprovedValueTextView.setText(isRequestApproved);
 
@@ -104,7 +106,7 @@ public class CurrentReturnAdapter extends RecyclerView.Adapter<CurrentReturnView
                 position,
                 productRequestStatus,
                 productRAN,
-                "22",
+                returnRequestDateFormat,
                 isRequestApproved,
                 mCurrentReturnList.get(position).getID()));
 
@@ -141,11 +143,11 @@ public class CurrentReturnAdapter extends RecyclerView.Adapter<CurrentReturnView
                     .getValue()
                     .getTotal();
 
-//            final MyReturnDetailsRecyclerViewAdapter adapter =
-//                    new MyReturnDetailsRecyclerViewAdapter(items, subTotal, mContext);
+            final ReturnDetailsAdapter adapter =
+                    new ReturnDetailsAdapter(items, subTotal, mContext);
 //
 //
-//            holder.currentReturnItemsRecyclerView.setAdapter(adapter);
+            holder.currentReturnItemsRecyclerView.setAdapter(adapter);
 //
             LinearLayoutManager linearLayoutManager = new LinearLayoutManager(mContext) {
                 @Override

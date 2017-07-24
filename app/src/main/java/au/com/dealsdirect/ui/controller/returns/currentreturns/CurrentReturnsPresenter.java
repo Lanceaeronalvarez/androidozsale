@@ -4,15 +4,14 @@ package au.com.dealsdirect.ui.controller.returns.currentreturns;
  */
 
 
+import com.androidnetworking.error.ANError;
+
 import java.util.LinkedList;
 import java.util.List;
 
 import javax.inject.Inject;
 
 import au.com.dealsdirect.data.DataManager;
-import au.com.dealsdirect.data.network.model.returns.currentreturn.CurrentReturnResponse;
-import au.com.dealsdirect.data.network.model.returns.currentreturn.CurrentReturnResponseBody;
-import au.com.dealsdirect.data.network.model.returns.currentreturn.CurrentReturns;
 import au.com.dealsdirect.data.network.model.returns.returndetails.GetReturnDetailsResponse;
 import au.com.dealsdirect.data.network.model.returns.returndetails.GetReturnDetailsResponseBody;
 import au.com.dealsdirect.data.network.model.returns.returndetails.Item;
@@ -33,70 +32,98 @@ public class CurrentReturnsPresenter<V extends CurrentReturnsMvpView> extends Ba
 
         /* mock */
 
-        List<CurrentReturns> currentReturns = new LinkedList<>();
-        CurrentReturns currentReturns1 = new CurrentReturns();
+//        List<CurrentReturns> currentReturns = new LinkedList<>();
+//        CurrentReturns currentReturns1 = new CurrentReturns();
+//
+//        currentReturns1.setID("0");
+//        currentReturns1.setDescription("Current Return 1");
+//        currentReturns1.setApprovedDate("1/11/11");
+//        currentReturns1.setInvoiceNo(1);
+//        currentReturns1.setInvoiceNoRef(010110);
+//        currentReturns1.setOrderNumber(1);
+//        currentReturns1.setLastSavedDate("1/11/11");
+//        currentReturns1.setRan("102");
+//        currentReturns1.setReturnStatus("progress");
+//
+//        CurrentReturns currentReturns2 = new CurrentReturns();
+//
+//        currentReturns2.setID("1");
+//        currentReturns2.setDescription("Current Return 2");
+//        currentReturns2.setApprovedDate("1/11/11");
+//        currentReturns2.setInvoiceNo(2);
+//        currentReturns2.setInvoiceNoRef(010112);
+//        currentReturns2.setOrderNumber(2);
+//        currentReturns2.setLastSavedDate("1/11/11");
+//        currentReturns2.setRan("102");
+//        currentReturns2.setReturnStatus("progress");
+//
+//        CurrentReturns currentReturns3 = new CurrentReturns();
+//
+//        currentReturns3.setID("2");
+//        currentReturns3.setDescription("Current Return 3");
+//        currentReturns3.setApprovedDate("1/11/11");
+//        currentReturns3.setInvoiceNo(3);
+//        currentReturns3.setInvoiceNoRef(010113);
+//        currentReturns3.setOrderNumber(03);
+//        currentReturns3.setLastSavedDate("1/11/11");
+//        currentReturns3.setRan("103");
+//        currentReturns3.setReturnStatus("progress");
+//
+//        CurrentReturns currentReturns4 = new CurrentReturns();
+//
+//        currentReturns4.setID("3");
+//        currentReturns4.setDescription("Current Return 1");
+//        currentReturns4.setApprovedDate("1/11/11");
+//        currentReturns4.setInvoiceNo(0104);
+//        currentReturns4.setInvoiceNoRef(010114);
+//        currentReturns4.setOrderNumber(4);
+//        currentReturns4.setLastSavedDate("1/11/11");
+//        currentReturns4.setRan("104");
+//        currentReturns4.setReturnStatus("progress");
+//
+//        currentReturns.add(currentReturns1);
+//        currentReturns.add(currentReturns2);
+//        currentReturns.add(currentReturns3);
+//        currentReturns.add(currentReturns4);
+//
+//        CurrentReturnResponse currentReturnResponse = new CurrentReturnResponse();
+//        currentReturnResponse.setMessage("ok");
+//        currentReturnResponse.setIsAuthenticated(true);
+//        currentReturnResponse.setResult(true);
+//        currentReturnResponse.setCurrentReturns(currentReturns);
+//
+//        CurrentReturnResponseBody currentReturnResponseBody  = new CurrentReturnResponseBody();
+//        currentReturnResponseBody.setCurrentReturnResponse(currentReturnResponse);
+//        getMvpView().showCurrentReturns(currentReturns);
 
-        currentReturns1.setID("0");
-        currentReturns1.setDescription("Current Return 1");
-        currentReturns1.setApprovedDate("1/11/11");
-        currentReturns1.setInvoiceNo(1);
-        currentReturns1.setInvoiceNoRef(010110);
-        currentReturns1.setOrderNumber(1);
-        currentReturns1.setLastSavedDate("1/11/11");
-        currentReturns1.setRan("102");
-        currentReturns1.setReturnStatus("progress");
+        getCompositeDisposable()
+                .add(getDataManager()
+                        .callGetCurrentReturns()
+                        .subscribeOn(getSchedulerProvider().io())
+                        .observeOn(getSchedulerProvider().ui())
+                        .subscribe(getCurrentReturnsResponse -> {
 
-        CurrentReturns currentReturns2 = new CurrentReturns();
+                            if (!isViewAttached()) {
+                                return;
+                            }
+                            getMvpView().hideLoading();
+                            getMvpView().showCurrentReturns(getCurrentReturnsResponse);
 
-        currentReturns2.setID("1");
-        currentReturns2.setDescription("Current Return 2");
-        currentReturns2.setApprovedDate("1/11/11");
-        currentReturns2.setInvoiceNo(2);
-        currentReturns2.setInvoiceNoRef(010112);
-        currentReturns2.setOrderNumber(2);
-        currentReturns2.setLastSavedDate("1/11/11");
-        currentReturns2.setRan("102");
-        currentReturns2.setReturnStatus("progress");
+                        }, throwable -> {
 
-        CurrentReturns currentReturns3 = new CurrentReturns();
+                            if (!isViewAttached()) {
+                                return;
+                            }
 
-        currentReturns3.setID("2");
-        currentReturns3.setDescription("Current Return 3");
-        currentReturns3.setApprovedDate("1/11/11");
-        currentReturns3.setInvoiceNo(3);
-        currentReturns3.setInvoiceNoRef(010113);
-        currentReturns3.setOrderNumber(03);
-        currentReturns3.setLastSavedDate("1/11/11");
-        currentReturns3.setRan("103");
-        currentReturns3.setReturnStatus("progress");
+                            getMvpView().hideLoading();
+                            getMvpView().onError(throwable.getMessage());
 
-        CurrentReturns currentReturns4 = new CurrentReturns();
-
-        currentReturns4.setID("3");
-        currentReturns4.setDescription("Current Return 1");
-        currentReturns4.setApprovedDate("1/11/11");
-        currentReturns4.setInvoiceNo(0104);
-        currentReturns4.setInvoiceNoRef(010114);
-        currentReturns4.setOrderNumber(4);
-        currentReturns4.setLastSavedDate("1/11/11");
-        currentReturns4.setRan("104");
-        currentReturns4.setReturnStatus("progress");
-
-        currentReturns.add(currentReturns1);
-        currentReturns.add(currentReturns2);
-        currentReturns.add(currentReturns3);
-        currentReturns.add(currentReturns4);
-
-        CurrentReturnResponse currentReturnResponse = new CurrentReturnResponse();
-        currentReturnResponse.setMessage("ok");
-        currentReturnResponse.setIsAuthenticated(true);
-        currentReturnResponse.setResult(true);
-        currentReturnResponse.setCurrentReturns(currentReturns);
-
-        CurrentReturnResponseBody currentReturnResponseBody  = new CurrentReturnResponseBody();
-        currentReturnResponseBody.setCurrentReturnResponse(currentReturnResponse);
-        getMvpView().showCurrentReturns(currentReturns);
-
+                            // handle load accounts error here
+                            if (throwable instanceof ANError) {
+                                ANError anError = (ANError) throwable;
+                                handleApiError(anError);
+                            }
+                        }));
     }
 
     @Override

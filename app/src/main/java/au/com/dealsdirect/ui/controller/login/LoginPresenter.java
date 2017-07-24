@@ -6,17 +6,13 @@ package au.com.dealsdirect.ui.controller.login;
 import android.app.Activity;
 import android.os.Bundle;
 import android.util.Base64;
-import android.util.Log;
 
 import com.androidnetworking.error.ANError;
 import com.facebook.AccessToken;
 import com.facebook.CallbackManager;
-import com.facebook.FacebookCallback;
-import com.facebook.FacebookException;
 import com.facebook.GraphRequest;
 import com.facebook.GraphResponse;
 import com.facebook.login.LoginManager;
-import com.facebook.login.LoginResult;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -221,25 +217,32 @@ public class LoginPresenter<V extends LoginMvpView> extends BasePresenter<V> imp
     @Override
     public void onFacebookLogin(Activity activity, CallbackManager callbackManager) {
 
-        LoginManager loginManager = LoginManager.getInstance();
-        loginManager.logInWithReadPermissions(activity, permissions);
-        loginManager.registerCallback(callbackManager, new FacebookCallback<LoginResult>() {
-            @Override
-            public void onSuccess(LoginResult loginResult) {
-                Log.d("FB", "onSuccess: " + loginResult.getAccessToken());
-                fetchUserInfo(loginResult.getAccessToken());
-            }
 
-            @Override
-            public void onCancel() {
-                //TODO: Handle cancel
-            }
+//
+//        LoginManager loginManager = LoginManager.getInstance();
+//        loginManager.logInWithReadPermissions(activity, permissions);
+//        loginManager.registerCallback(callbackManager, new FacebookCallback<LoginResult>() {
+//            @Override
+//            public void onSuccess(LoginResult loginResult) {
+//                Log.d("FB", "onSuccess: " + loginResult.getAccessToken());
+//                fetchUserInfo(loginResult.getAccessToken());
+//            }
+//
+//            @Override
+//            public void onCancel() {
+//                //TODO: Handle cancel
+//            }
+//
+//            @Override
+//            public void onError(FacebookException error) {
+//                Log.d("FB", "onError: " + error.getMessage());
+//            }
+//        });
+    }
 
-            @Override
-            public void onError(FacebookException error) {
-                Log.d("FB", "onError: " + error.getMessage());
-            }
-        });
+    @Override
+    public void onFacebookLogin(AccessToken accessToken) {
+        fetchUserInfo(accessToken);
     }
 
     private void fetchUserInfo(final AccessToken accessToken) {
@@ -276,6 +279,7 @@ public class LoginPresenter<V extends LoginMvpView> extends BasePresenter<V> imp
     }
 
     private void validateFBLogin() {
+
         if (isFacebookDetailsComplete()) {
             loginViaFacebook(strEmail, strFirstName, strLastName, strFBUserID, strFBSignedRequest);
         } else {

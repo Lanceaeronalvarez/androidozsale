@@ -6,8 +6,6 @@ import android.support.annotation.NonNull;
 import com.bluelinelabs.conductor.ControllerChangeHandler;
 import com.bluelinelabs.conductor.ControllerChangeType;
 
-import au.com.dealsdirect.DDApplication;
-
 public abstract class RefWatchingController extends ButterKnifeController {
 
     protected RefWatchingController() { }
@@ -22,7 +20,7 @@ public abstract class RefWatchingController extends ButterKnifeController {
         super.onDestroy();
 
         if (hasExited) {
-            DDApplication.refWatcher.watch(this);
+//            DDApplication.refWatcher.watch(this);
         }
     }
 
@@ -32,7 +30,7 @@ public abstract class RefWatchingController extends ButterKnifeController {
 
         hasExited = !changeType.isEnter;
         if (isDestroyed()) {
-            DDApplication.refWatcher.watch(this);
+//            DDApplication.refWatcher.watch(this);
         }
     }
 }

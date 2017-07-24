@@ -18,8 +18,14 @@ import android.widget.TextView;
 import com.bluelinelabs.conductor.RouterTransaction;
 import com.bluelinelabs.conductor.changehandler.HorizontalChangeHandler;
 import com.facebook.CallbackManager;
+import com.facebook.FacebookCallback;
+import com.facebook.FacebookException;
 import com.facebook.internal.CallbackManagerImpl;
+import com.facebook.login.LoginManager;
+import com.facebook.login.LoginResult;
 
+import java.util.Arrays;
+import java.util.List;
 import java.util.regex.Pattern;
 
 import javax.inject.Inject;
@@ -83,7 +89,8 @@ public class LoginController extends BaseController implements LoginMvpView {
     @Override
     protected void onAttach(@NonNull View view) {
         assert (getActivity()) != null;
-        ((MainActivity)getActivity()).getMainController().hideBottomNav();
+        if (getActivity() instanceof MainActivity)
+            ((MainActivity)getActivity()).getMainController().hideBottomNav();
         super.onAttach(view);
     }
 
@@ -108,12 +115,6 @@ public class LoginController extends BaseController implements LoginMvpView {
         setUp(view);
     }
 
-    @Override
-    public void onDestroyView(View view) {
-        super.onDestroyView(view);
-
-    }
-
 
     @Override
     protected void setUp(View view) {
@@ -132,11 +133,6 @@ public class LoginController extends BaseController implements LoginMvpView {
 
     }
 
-    @Override
-    public void onDetach(View view) {
-        mPresenter.onDetach();
-        super.onDetach(view);
-    }
 
     @Override
     public void showLoginSuccessful(String loginTicket) {
@@ -186,7 +182,29 @@ public class LoginController extends BaseController implements LoginMvpView {
     @OnClick(R.id.controller_login_fb_layout)
     void onFacebookButtonClick() {
         Log.d("FB", "FB button clicked");
-        mPresenter.onFacebookLogin(getActivity(), mCallbackManager);
+        final List<String> permissions = Arrays.asList("public_profile", "email");
+
+//        mPresenter.onFacebookLogin(getActivity(), mCallbackManager);
+        LoginManager loginManager = LoginManager.getInstance();
+        loginManager.logInWithReadPermissions(getActivity(), permissions);
+        loginManager.registerCallback(mCallbackManager, new FacebookCallback<LoginResult>() {
+            @Override
+            public void onSuccess(LoginResult loginResult) {
+                Log.d("FB", "onSuccess: " + loginResult.getAccessToken());
+//                fetchUserInfo(loginResult.getAccessToken());
+                mPresenter.onFacebookLogin(loginResult.getAccessToken());
+            }
+
+            @Override
+            public void onCancel() {
+                //TODO: Handle cancel
+            }
+
+            @Override
+            public void onError(FacebookException error) {
+                Log.d("FB", "onError: " + error.getMessage());
+            }
+        });
 
     }
 

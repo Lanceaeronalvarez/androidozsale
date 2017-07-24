@@ -9,6 +9,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.bluelinelabs.conductor.RouterTransaction;
@@ -49,6 +51,12 @@ public class ReturnOrdersController extends BaseController
 
     @BindView(R.id.controller_returns_select_orders_recyclerview)
     RecyclerView mReturnOrdersRecyclerView;
+
+    @BindView(R.id.no_returns_placeholder)
+    LinearLayout mPlaceholderLayout;
+
+    @BindView(R.id.controller_return_orders_list_container)
+    RelativeLayout mReturnOrdersListContainer;
 
     @Inject
     ReturnOrdersMvpPresenter<ReturnOrdersMvpView> mPresenter;
@@ -108,7 +116,9 @@ public class ReturnOrdersController extends BaseController
 
     @Override
     public void showOrders(List<au.com.dealsdirect.data.network.model.returns.returnorders.List> newReturnsOrders) {
-        if(newReturnsOrders.size() == 0){
+        if(newReturnsOrders==null){
+            mPlaceholderLayout.setVisibility(View.VISIBLE);
+            mReturnOrdersListContainer.setVisibility(View.GONE);
 //            newReturnsSubTitle.setVisibility(View.GONE);
 //            newReturnsSelectOrderRecyclerView.setVisibility(View.GONE);
 //            mPlaceholderLayout.setVisibility(View.VISIBLE);

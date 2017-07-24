@@ -206,6 +206,7 @@ public class ShopsController extends BaseController implements ShopsMvpView, Ban
         shopsControllerBannerRecyclerView.setAdapter(mBannersAdapter);
 
         if (sales.isEmpty()) {
+            shopsControllerBannerRecyclerView.setVisibility(View.GONE);
             mPresenter.loadShopsBanner(mCategoryName, mCategoryID, bannerOffset, bannerLimit);
         } else {
             shopsControllerBannerRecyclerView.setAdapter(mBannersAdapter);
@@ -313,6 +314,8 @@ public class ShopsController extends BaseController implements ShopsMvpView, Ban
 
     @Override
     public void showShopBanners(List<GetBannerResponse> getBannerResponses) {
+        shopsControllerBannerRecyclerView.setVisibility(View.VISIBLE);
+
         loadingInProgress = false;
 
         if (page == 0) {
@@ -439,6 +442,7 @@ public class ShopsController extends BaseController implements ShopsMvpView, Ban
 
     public void goToSalesFromCategories(GetCategoryTreeResponse getCategoryTreeResponse){
         mPresenter.onAttach(this);
+        shopsControllerBannerRecyclerView.setVisibility(View.GONE);
 
         if (getCategoryTreeResponse.getKey()!=null){
 
@@ -521,6 +525,7 @@ public class ShopsController extends BaseController implements ShopsMvpView, Ban
     }
 
     public void loadShopBanners(){
+
         mShopsControllerToolbarLogo.setVisibility(View.VISIBLE);
         mShopsControllerToolbarTextView.setVisibility(View.GONE);
         mShopsControllerHamburgerView.setImageDrawable(getActivity().getDrawable(R.drawable.ic_action_menu));

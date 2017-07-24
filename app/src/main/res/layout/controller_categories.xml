@@ -5,7 +5,7 @@
               android:background="#FFFFFF"
               android:orientation="vertical">
 
-    <include layout="@layout/partial_toolbar_search"/>
+    <include layout="@layout/partial_toolbar_disabled_search"/>
 
     <LinearLayout
         android:layout_width="match_parent"

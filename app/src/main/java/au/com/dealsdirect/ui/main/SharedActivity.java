@@ -17,13 +17,16 @@ import com.bluelinelabs.conductor.Conductor;
 import com.bluelinelabs.conductor.Controller;
 import com.bluelinelabs.conductor.Router;
 import com.bluelinelabs.conductor.RouterTransaction;
+import com.bluelinelabs.conductor.changehandler.VerticalChangeHandler;
 
 import java.lang.ref.WeakReference;
 import java.lang.reflect.Field;
 import java.util.ArrayList;
 
 import au.com.dealsdirect.R;
+import au.com.dealsdirect.data.auth.AuthHandler;
 import au.com.dealsdirect.ui.base.BaseActivity;
+import au.com.dealsdirect.ui.controller.login.LoginController;
 import au.com.dealsdirect.ui.controller.saleitemdetails.SaleItemDetailsController;
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -115,5 +118,12 @@ public class SharedActivity extends BaseActivity {
         } catch (IllegalAccessException e) {
             e.printStackTrace();
         }
+    }
+
+    public void showLoginController(Router router, AuthHandler handler) {
+        //pinapasa yung router, para kahit child router man siya ng kung ano mang view, pwedeng siya ang tumawag.
+        router.pushController(RouterTransaction.with(LoginController.newInstance(handler))
+                .pushChangeHandler(new VerticalChangeHandler())
+                .popChangeHandler(new VerticalChangeHandler()));
     }
 }

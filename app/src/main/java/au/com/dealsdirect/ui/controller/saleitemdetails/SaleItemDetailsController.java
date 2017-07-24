@@ -36,14 +36,12 @@ import java.util.List;
 import javax.inject.Inject;
 
 import au.com.dealsdirect.R;
-import au.com.dealsdirect.data.auth.AuthHandler;
 import au.com.dealsdirect.data.network.model.saleitemdetails.AddToCartRequest;
 import au.com.dealsdirect.data.network.model.saleitemdetails.GetSaleItemDetailsResponse;
 import au.com.dealsdirect.ui.base.BaseController;
 import au.com.dealsdirect.ui.controller.saleitemdetails.listener.LoadImagesListener;
 import au.com.dealsdirect.ui.controller.saleitems.SaleItemsController;
 import au.com.dealsdirect.ui.custom.CustomAlertDialog;
-import au.com.dealsdirect.ui.main.MainMvpView;
 import au.com.dealsdirect.utils.BundleBuilder;
 import au.com.dealsdirect.utils.ImageUtils;
 import au.com.dealsdirect.utils.PriceUtils;
@@ -436,22 +434,23 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
 
     @OnClick(R.id.product_details_add_to_basket)
     void addToBasket() {
+//        verifyAddToCart();
 
-        if (!mPresenter.isAuthorized()) {
-            ((MainMvpView) getActivity()).showLoginController(getRouter(), new AuthHandler() {
-                @Override
-                public void success() {
-                    verifyAddToCart();
-                }
-
-                @Override
-                public void error() {
-
-                }
-            });
-        } else {
-            verifyAddToCart();
-        }
+//        if (!mPresenter.isAuthorized()) {
+//            ((SharedActivity)getActivity()).showLoginController(getRouter(), new AuthHandler() {
+//                @Override
+//                public void success() {
+//                    verifyAddToCart();
+//                }
+//
+//                @Override
+//                public void error() {
+//
+//                }
+//            });
+//        } else {
+//            verifyAddToCart();
+//        }
 
     }
 

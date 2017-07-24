@@ -23,6 +23,7 @@ import java.util.List;
 import javax.inject.Inject;
 
 import au.com.dealsdirect.R;
+import au.com.dealsdirect.data.network.model.returns.currentreturn.CurrentReturnResponseBody;
 import au.com.dealsdirect.data.network.model.returns.currentreturn.CurrentReturns;
 import au.com.dealsdirect.data.network.model.returns.returndetails.GetReturnDetailsResponseBody;
 import au.com.dealsdirect.ui.base.BaseController;
@@ -139,7 +140,9 @@ public class CurrentReturnsController extends BaseController
 
 
     @Override
-    public void showCurrentReturns(List<CurrentReturns> currentReturns) {
+    public void showCurrentReturns(CurrentReturnResponseBody currentReturnResponseBody) {
+        List<CurrentReturns> currentReturns =
+                currentReturnResponseBody.getCurrentReturnResponse().getCurrentReturns();
 
         if(currentReturns!=null && currentReturns.size() != 0) {
             mPlaceholderLayout.setVisibility(View.GONE);
@@ -163,8 +166,6 @@ public class CurrentReturnsController extends BaseController
 
             mPlaceholderLayout.setVisibility(View.VISIBLE);
             mCurrentReturnsRecyclerView.setVisibility(View.GONE);
-            Log.d("showreturns","nope");
-
         }
     }
 
@@ -191,8 +192,9 @@ public class CurrentReturnsController extends BaseController
     }
 
     public void getCurrentReturnItems(List<CurrentReturns> currentReturns){
-
-        mPresenter.loadReturnDetails(currentReturns.get(itemIterator).getID(), itemIterator);
+        for (int i = 0; i < currentReturns.size(); i++){
+            mPresenter.loadReturnDetails(currentReturns.get(itemIterator).getID(), itemIterator);
+        }
     }
 
     @Override

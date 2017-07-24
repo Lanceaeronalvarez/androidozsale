@@ -9,6 +9,7 @@ import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.provider.Settings;
 import android.util.DisplayMetrics;
+import android.view.WindowManager;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -33,6 +34,7 @@ public final class CommonUtils {
         progressDialog.show();
         if (progressDialog.getWindow() != null) {
             progressDialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+            progressDialog.getWindow().clearFlags(WindowManager.LayoutParams.FLAG_DIM_BEHIND);
         }
         progressDialog.setContentView(R.layout.progress_dialog);
         progressDialog.setIndeterminate(true);

@@ -37,7 +37,7 @@ import butterknife.BindView;
  * dp Created by Admin on 6/6/17.
  */
 
-public class HomeController extends BaseController implements HomeMvpView {
+public class  HomeController extends BaseController implements HomeMvpView {
 
     public static final String TAG = "HomeController";
 
