@@ -242,7 +242,7 @@
         $20 DEALSDIRECT voucher to use towards any future purchase.
     </string>
     <string name="send_personal_invite_text">Personal Invitation</string>
-    <string name="write_a_message_here">Write a message here...</string>
+    <string name="write_a_message_here">write a message here</string>
     <string name="dealsdirect">DealsDirect</string>
     <string name="exit_app">Exit app?</string>
     <string name="exit">exit</string>
