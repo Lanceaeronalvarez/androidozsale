@@ -5,7 +5,6 @@ package au.com.dealsdirect.ui.controller.login;
 
 import android.app.Activity;
 
-import com.facebook.AccessToken;
 import com.facebook.CallbackManager;
 
 import au.com.dealsdirect.ui.base.MvpPresenter;
@@ -24,5 +23,4 @@ public interface LoginMvpPresenter<V extends LoginMvpView> extends MvpPresenter<
 
     void onFacebookLogin(Activity activity, CallbackManager callbackManager);
 
-    void onFacebookLogin(AccessToken accessToken);
 }

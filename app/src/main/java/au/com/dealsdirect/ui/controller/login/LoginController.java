@@ -7,7 +7,6 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -18,14 +17,8 @@ import android.widget.TextView;
 import com.bluelinelabs.conductor.RouterTransaction;
 import com.bluelinelabs.conductor.changehandler.HorizontalChangeHandler;
 import com.facebook.CallbackManager;
-import com.facebook.FacebookCallback;
-import com.facebook.FacebookException;
 import com.facebook.internal.CallbackManagerImpl;
-import com.facebook.login.LoginManager;
-import com.facebook.login.LoginResult;
 
-import java.util.Arrays;
-import java.util.List;
 import java.util.regex.Pattern;
 
 import javax.inject.Inject;
@@ -142,13 +135,14 @@ public class LoginController extends BaseController implements LoginMvpView {
 
     @Override
     public void showLoginError(String message) {
+
         if (mAuthHandler!=null)
             mAuthHandler.error();
 
         CustomAlertDialog.showCustomAlertDialog(
                 getActivity(),
                 CustomAlertDialog.CustomDialogIconState.NEGATIVE,
-                message
+                "Login incorrect"
         );
 
         isLoginTapped = false;
@@ -181,30 +175,7 @@ public class LoginController extends BaseController implements LoginMvpView {
 
     @OnClick(R.id.controller_login_fb_layout)
     void onFacebookButtonClick() {
-        Log.d("FB", "FB button clicked");
-        final List<String> permissions = Arrays.asList("public_profile", "email");
-
-//        mPresenter.onFacebookLogin(getActivity(), mCallbackManager);
-        LoginManager loginManager = LoginManager.getInstance();
-        loginManager.logInWithReadPermissions(getActivity(), permissions);
-        loginManager.registerCallback(mCallbackManager, new FacebookCallback<LoginResult>() {
-            @Override
-            public void onSuccess(LoginResult loginResult) {
-                Log.d("FB", "onSuccess: " + loginResult.getAccessToken());
-//                fetchUserInfo(loginResult.getAccessToken());
-                mPresenter.onFacebookLogin(loginResult.getAccessToken());
-            }
-
-            @Override
-            public void onCancel() {
-                //TODO: Handle cancel
-            }
-
-            @Override
-            public void onError(FacebookException error) {
-                Log.d("FB", "onError: " + error.getMessage());
-            }
-        });
+        mPresenter.onFacebookLogin(getActivity(), mCallbackManager);
 
     }
 

@@ -245,7 +245,11 @@ public class AppApiHelper implements ApiHelper {
 
     @Override
     public Observable<LoginFacebook.ResponseValue> callLoginViaFacebook(LoginFacebook.RequestValue requestValue) {
-        return null;
+        return Rx2AndroidNetworking.post(ApiEndPoint.LOGIN_FB)
+                .addHeaders(mApiHeader.getPublicApiHeader())
+                .addJSONObjectBody(JsonUtils.convertToJsonObject(requestValue))
+                .build()
+                .getObjectObservable(LoginFacebook.ResponseValue.class);
     }
 
     @Override
