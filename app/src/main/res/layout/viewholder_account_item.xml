@@ -2,40 +2,34 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="@drawable/bg_account_item"
-    android:clickable="true"
-    android:focusable="true"
-    android:focusableInTouchMode="true"
-    android:orientation="vertical">
+    android:gravity="center">
 
-    <TextView
-        android:id="@+id/viewholder_account_item_name"
+    <LinearLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_centerVertical="true"
-        android:layout_marginBottom="16dp"
-        android:layout_marginStart="16dp"
-        android:layout_marginTop="16dp"
-        android:fontFamily="@string/font_lato_light"
-        android:text="My Detail"
-        android:textSize="@dimen/text_size_xxlarge" />
+        android:orientation="vertical"
+        android:layout_marginTop="15dp">
 
-    <ImageView
-        android:layout_width="22dp"
-        android:layout_height="22dp"
-        android:layout_alignParentEnd="true"
-        android:layout_centerVertical="true"
-        android:layout_marginEnd="16dp"
-        android:layout_marginBottom="16dp"
-        android:layout_marginTop="16dp"
-        android:src="@drawable/ic_gray_chevron" />
+        <ImageButton
+            android:id="@+id/row_account_image"
+            android:layout_width="110dp"
+            android:layout_height="110dp"
+            android:scaleType="fitXY"
+            android:background="@color/white"
+            android:layout_centerInParent="true" />
 
-    <View
-        android:layout_width="match_parent"
-        android:layout_height="1dp"
-        android:layout_alignParentBottom="true"
-        android:layout_marginEnd="5dp"
-        android:layout_marginStart="16dp"
-        android:background="@color/gray_border" />
+        <TextView
+            android:id="@+id/row_account_text"
+            fontPath="@string/font_lato_medium"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_below="@+id/row_account_image"
+            android:layout_marginTop="5dp"
+            android:gravity="center_horizontal"
+            android:layout_marginBottom="15dp"
+            android:text="Mens"
+            android:textColor="@color/category_text_selector"
+            android:textSize="@dimen/text_size_large" />
 
+    </LinearLayout>
 </RelativeLayout>

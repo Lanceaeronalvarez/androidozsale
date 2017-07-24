@@ -26,6 +26,7 @@ import au.com.dealsdirect.ui.controller.account.AccountController;
 import au.com.dealsdirect.ui.controller.checkout.checkout.CheckoutController;
 import au.com.dealsdirect.ui.controller.contact.viewcontacts.ViewContactsController;
 import au.com.dealsdirect.ui.controller.invite.InviteController;
+import au.com.dealsdirect.ui.controller.invite.InviteSendController;
 import au.com.dealsdirect.ui.controller.login.LoginController;
 import au.com.dealsdirect.ui.controller.shops.ShopsController;
 import au.com.dealsdirect.ui.main.MainActivity;
@@ -213,7 +214,7 @@ public class HomeController extends BaseController implements HomeMvpView {
 
     @Override
     public void showInviteController() {
-        mRouter.setRoot(RouterTransaction.with(InviteController.newInstance())
+        mRouter.setRoot(RouterTransaction.with(InviteSendController.newInstance())
                 .pushChangeHandler(new FadeChangeHandler())
                 .popChangeHandler(new FadeChangeHandler()));
     }

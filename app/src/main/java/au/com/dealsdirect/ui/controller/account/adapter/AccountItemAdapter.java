@@ -1,7 +1,10 @@
 package au.com.dealsdirect.ui.controller.account.adapter;
 
 import android.content.Context;
+import android.content.res.ColorStateList;
+import android.graphics.PorterDuff;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -20,16 +23,19 @@ import au.com.dealsdirect.ui.controller.account.viewholder.AccountItemViewHolder
 public class AccountItemAdapter extends RecyclerView.Adapter<AccountItemViewHolder>{
 
     private List<String> mAccountItems = Collections.emptyList();
+    private int[] mAccountImages;
     private Context mContext;
     private AccountMvpPresenter mPresenter;
 
 
     public AccountItemAdapter(
             List<String> mAccountItems,
+            int[] accountImages,
             Context mContext,
             AccountMvpPresenter presenter) {
 
         this.mAccountItems = mAccountItems;
+        this.mAccountImages = accountImages;
         this.mContext = mContext;
         this.mPresenter = presenter;
     }
@@ -47,10 +53,14 @@ public class AccountItemAdapter extends RecyclerView.Adapter<AccountItemViewHold
     @Override
     public void onBindViewHolder(AccountItemViewHolder holder, int position) {
 
+        Log.d("log", position +" position");
+
+        holder.mAccountItemImage.setImageResource(mAccountImages[position]);
         holder.mAccountItemName
                 .setText(mAccountItems.get(position));
-        holder.itemView.setOnClickListener(view ->
-                mPresenter.onAccountItemClick(mAccountItems.get(position)));
+        holder.itemView.setOnClickListener(view -> {
+                mPresenter.onAccountItemClick(mAccountItems.get(position));
+        });
     }
 
     @Override
@@ -58,6 +68,7 @@ public class AccountItemAdapter extends RecyclerView.Adapter<AccountItemViewHold
         if (mAccountItems == null) {
             return 0;
         }
+        Log.d("log", mAccountItems.size() +" items");
         return mAccountItems.size();
     }
 

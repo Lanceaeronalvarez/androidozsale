@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.DefaultItemAnimator;
+import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -115,11 +116,12 @@ public class AccountController extends BaseController implements AccountMvpView,
     }
 
     @Override
-    public void showAccountItems(List<String> accountItems) {
+    public void showAccountItems(List<String> accountItems, int[] accountImages) {
+
         AccountItemAdapter accountItemAdapter
-                = new AccountItemAdapter(accountItems, getActivity(), mPresenter);
+                = new AccountItemAdapter(accountItems, accountImages, getActivity(), mPresenter);
         mAccountRecyclerView.setAdapter(accountItemAdapter);
-        mAccountRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
+        mAccountRecyclerView.setLayoutManager(new GridLayoutManager(getActivity(), 3));
         mAccountRecyclerView.setItemAnimator(new DefaultItemAnimator());
         accountItemAdapter.notifyDataSetChanged();
     }
