@@ -20,11 +20,13 @@ public final class ApiEndPoint {
     private static final String GENIE_TEST_SALE = "https://genie-ui-dealsdirect-pre.mysaledev.com/api/sale/sale/";
 
     private static final String CATEGORY_TREE = "v1/accounts/A56B0D62-AEF6-4653-848E-2ECDDB6E9B8C/categorytree/";
+    private static final String SORTING = "v1/accounts/A56B0D62-AEF6-4653-848E-2ECDDB6E9B8C/sorting/";
     private static final String SALES = "v1/accounts/A56B0D62-AEF6-4653-848E-2ECDDB6E9B8C/banners/";
     private static final String PRODUCTS = "v1/accounts/A56B0D62-AEF6-4653-848E-2ECDDB6E9B8C/products";
     private static final String PRODUCT_DETAILS = "v1/accounts/A56B0D62-AEF6-4653-848E-2ECDDB6E9B8C/products/{seo_identifier}";
 
     public static final String GET_CATEGORY_TREE = LEGACY_SHOP + CATEGORY_TREE;
+    public static final String GET_SORTING = LEGACY_SHOP + SORTING;
     public static final String GET_SALES = LEGACY_SALE + SALES;
     public static final String GET_PRODUCTS = LEGACY_SHOP + PRODUCTS;
     public static final String GET_PRODUCT_DETAILS = LEGACY_PRODUCT + PRODUCT_DETAILS;

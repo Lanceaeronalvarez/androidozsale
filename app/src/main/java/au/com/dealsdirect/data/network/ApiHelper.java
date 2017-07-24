@@ -7,6 +7,7 @@ import com.mysale.genie.utility.config.api.GetAppSettings;
 import com.mysale.genie.utility.config.api.GetAppSettingsSection;
 import com.mysale.genie.utility.config.api.GetServerSettings;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import au.com.dealsdirect.data.network.model.SampleRequest;
@@ -70,6 +71,7 @@ import au.com.dealsdirect.data.network.model.saleitems.GetPublicSaleItemsRequest
 import au.com.dealsdirect.data.network.model.saleitems.GetPublicSaleItemsResponse;
 import au.com.dealsdirect.data.network.model.saleitems.GetSaleItemsRequest;
 import au.com.dealsdirect.data.network.model.saleitems.GetSaleItemsResponse;
+import au.com.dealsdirect.data.network.model.sorting.SortingResponse;
 import au.com.dealsdirect.data.network.model.userdetails.GetUserDetailsResponse;
 import au.com.dealsdirect.data.network.model.userdetails.SetUserDetailsRequest;
 import au.com.dealsdirect.data.network.model.vouchers.AddAndApplyVoucherByKeyRequest;
@@ -219,4 +221,7 @@ public interface ApiHelper {
     Observable<RegisterDevice.ResponseValue> callRegisterDevice(RegisterDevice.RequestValue requestValue);
 
     Observable<NotificationEvent.ResponseValue> callNotificationEvent(NotificationEvent.RequestValue requestValue);
+
+    //SORTING Facet Api Call
+    Observable<List<SortingResponse>> callSortingFacets();
 }

@@ -1,8 +1,10 @@
 package au.com.dealsdirect.ui.controller.searchfilter;
 
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
+import au.com.dealsdirect.data.network.model.sorting.SortingResponse;
 import au.com.dealsdirect.ui.base.MvpView;
 
 /**
@@ -16,4 +18,6 @@ public interface SearchFilterMvpView extends MvpView{
     void updateFacetItemToFilters(Set<Integer> selectPosSet);
 
     Set<Integer> getOriginalSelectedSet();
+
+    void onResetPriceRange();
 }

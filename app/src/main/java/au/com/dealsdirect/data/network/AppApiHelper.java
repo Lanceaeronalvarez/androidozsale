@@ -7,6 +7,7 @@ import com.mysale.genie.utility.config.api.GetAppSettingsSection;
 import com.mysale.genie.utility.config.api.GetServerSettings;
 import com.rx2androidnetworking.Rx2AndroidNetworking;
 
+import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
 
@@ -74,6 +75,7 @@ import au.com.dealsdirect.data.network.model.saleitems.GetPublicSaleItemsRequest
 import au.com.dealsdirect.data.network.model.saleitems.GetPublicSaleItemsResponse;
 import au.com.dealsdirect.data.network.model.saleitems.GetSaleItemsRequest;
 import au.com.dealsdirect.data.network.model.saleitems.GetSaleItemsResponse;
+import au.com.dealsdirect.data.network.model.sorting.SortingResponse;
 import au.com.dealsdirect.data.network.model.userdetails.GetUserDetailsResponse;
 import au.com.dealsdirect.data.network.model.userdetails.SetUserDetailsRequest;
 import au.com.dealsdirect.data.network.model.vouchers.AddAndApplyVoucherByKeyRequest;
@@ -508,6 +510,14 @@ public class AppApiHelper implements ApiHelper {
                 .addJSONObjectBody(JsonUtils.convertToJsonObject(requestValue))
                 .build()
                 .getObjectObservable(NotificationEvent.ResponseValue.class);
+    }
+
+    @Override
+    public Observable<List<SortingResponse>> callSortingFacets() {
+        return Rx2AndroidNetworking.get(ApiEndPoint.GET_SORTING)
+                .addHeaders(mApiHeader.getPublicApiHeader())
+                .build()
+                .getObjectListObservable(SortingResponse.class);
     }
 
     @Override

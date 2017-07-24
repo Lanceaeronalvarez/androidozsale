@@ -16,4 +16,8 @@ public interface SearchFilterMvpPresenter<V extends SearchFilterMvpView> extends
     void onFacetItemClicked(Set<Integer> selectPosSet);
 
     Set<Integer> getOriginalSelectedSet();
+
+    int getSearchMaxPrice();
+
+    void resetPriceRange();
 }

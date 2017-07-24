@@ -29,13 +29,13 @@ import javax.inject.Inject;
 
 import au.com.dealsdirect.R;
 import au.com.dealsdirect.data.network.model.saleitems.GetSaleItemsResponse;
+import au.com.dealsdirect.data.network.model.sorting.SortingResponse;
 import au.com.dealsdirect.ui.base.BaseController;
 import au.com.dealsdirect.ui.controller.saleitems.SaleItemsMvpPresenter;
 import au.com.dealsdirect.ui.controller.saleitems.SaleItemsMvpView;
 import au.com.dealsdirect.ui.controller.saleitems.adapter.SaleItemsAdapter;
 import au.com.dealsdirect.ui.main.SharedActivity;
 import au.com.dealsdirect.utils.BundleBuilder;
-import au.com.dealsdirect.utils.KeyboardUtils;
 import au.com.dealsdirect.utils.PaginateUtils;
 import butterknife.BindView;
 import butterknife.OnClick;
@@ -112,7 +112,7 @@ public class SearchController extends BaseController implements SaleItemsMvpView
     @Override
     protected void setUp(View view) {
         // Setup views here
-        mPresenter.loadSaleItems(null,null,"" ,0);
+        mPresenter.loadSaleItems(null,null,"" ,0, new ArrayList());
 
         mSearchToolbarSearchField.addTextChangedListener(new TextWatcher() {
             @Override
@@ -122,7 +122,7 @@ public class SearchController extends BaseController implements SaleItemsMvpView
 
             @Override
             public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-                mPresenter.loadSaleItems(null,null,charSequence.toString(),0);
+                mPresenter.loadSaleItems(null,null,charSequence.toString(),0, new ArrayList());
             }
 
             @Override
@@ -177,6 +177,11 @@ public class SearchController extends BaseController implements SaleItemsMvpView
         super.onDestroyView(view);
     }
 
+
+    @Override
+    public void onLoadSortingFacetsFinished(List<SortingResponse> responseList) {
+
+    }
 
     @Override
     public void showSaleItems(GetSaleItemsResponse getSaleItemsResponse) {

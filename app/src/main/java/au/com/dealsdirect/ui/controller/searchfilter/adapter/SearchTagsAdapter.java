@@ -154,10 +154,16 @@ public class SearchTagsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                 if (dataSize != 0) {
                     getData().remove(chipToBeRemoved);
                     notifyItemRemoved(dataSize - 1);
+
                     mPresenter.getOriginalSelectedSet().remove(chipToBeRemoved.getIndex());
 //                    mLayoutManager.scrollToPosition(dataSize - 1);
 //                    mShopPresenter.updateShopFilters();
                     mFacetItemsAdapter.notifyItemChanged(chipToBeRemoved.getIndex());
+
+                    if(chipToBeRemoved.getFilterType() == SearchFilterController.PRICE_FACETFILTER_NAME) {
+                        mPresenter.resetPriceRange();
+                    }
+
                 }
             });
         }

@@ -77,6 +77,7 @@ import au.com.dealsdirect.data.network.model.saleitems.GetPublicSaleItemsRequest
 import au.com.dealsdirect.data.network.model.saleitems.GetPublicSaleItemsResponse;
 import au.com.dealsdirect.data.network.model.saleitems.GetSaleItemsRequest;
 import au.com.dealsdirect.data.network.model.saleitems.GetSaleItemsResponse;
+import au.com.dealsdirect.data.network.model.sorting.SortingResponse;
 import au.com.dealsdirect.data.network.model.userdetails.GetUserDetailsResponse;
 import au.com.dealsdirect.data.network.model.userdetails.SetUserDetailsRequest;
 import au.com.dealsdirect.data.network.model.vouchers.AddAndApplyVoucherByKeyRequest;
@@ -394,6 +395,11 @@ public class AppDataManager implements DataManager {
     @Override
     public Observable<NotificationEvent.ResponseValue> callNotificationEvent(NotificationEvent.RequestValue requestValue) {
         return mApiHelper.callNotificationEvent(requestValue);
+    }
+
+    @Override
+    public Observable<List<SortingResponse>> callSortingFacets() {
+        return mApiHelper.callSortingFacets();
     }
 
 

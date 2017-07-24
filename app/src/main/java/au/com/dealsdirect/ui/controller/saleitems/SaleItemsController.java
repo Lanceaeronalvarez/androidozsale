@@ -12,7 +12,6 @@ import android.util.Pair;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
@@ -29,17 +28,16 @@ import javax.inject.Inject;
 
 import au.com.dealsdirect.R;
 import au.com.dealsdirect.data.network.model.saleitems.GetSaleItemsResponse;
+import au.com.dealsdirect.data.network.model.sorting.SortingResponse;
 import au.com.dealsdirect.ui.base.BaseController;
 import au.com.dealsdirect.ui.controller.saleitems.adapter.SaleItemsAdapter;
 import au.com.dealsdirect.ui.controller.searchfilter.SearchFilterController;
 import au.com.dealsdirect.ui.main.MainActivity;
 import au.com.dealsdirect.ui.main.SharedActivity;
 import au.com.dealsdirect.utils.BundleBuilder;
-import au.com.dealsdirect.utils.JsonUtils;
 import au.com.dealsdirect.utils.PaginateUtils;
 import butterknife.BindView;
 import butterknife.OnClick;
-import okhttp3.Route;
 
 /**
  * dp Created by Admin on 6/8/17.
@@ -47,13 +45,13 @@ import okhttp3.Route;
 
 public class SaleItemsController extends BaseController implements SaleItemsMvpView {
 
-    private static final String KEY_SALE_ID = "SaleItemsController.KEY_SALE_ID";
-    private static final String KEY_BANNER_ID = "SaleItemsController.KEY_BANNER_ID";
-    private static final String KEY_TITLE = "SaleItemsController.KEY_TITLE";
-    private static final String KEY_HEADER_IMAGE = "SaleItemsController.header_image_url";
-    private static final String KEY_FROM_POSITION = "SaleItemsController.position";
-    private static final String KEY_CATEGORY_MAP = "SaleItemsController.CATEGORY_KEY";
-    private static final String KEY_SEARCH_QUERY = "SaleItemsController.SEARCH_KEY";
+    public static final String KEY_SALE_ID = "SaleItemsController.KEY_SALE_ID";
+    public static final String KEY_BANNER_ID = "SaleItemsController.KEY_BANNER_ID";
+    public static final String KEY_TITLE = "SaleItemsController.KEY_TITLE";
+    public static final String KEY_HEADER_IMAGE = "SaleItemsController.header_image_url";
+    public static final String KEY_FROM_POSITION = "SaleItemsController.position";
+    public static final String KEY_CATEGORY_MAP = "SaleItemsController.CATEGORY_KEY";
+    public static final String KEY_SEARCH_QUERY = "SaleItemsController.SEARCH_KEY";
     private static final String KEY_REQUEST_FROM = "SaleITemsController.REQUEST_FROM";
     private static final String KEY_FROM_CATEGORIES = "SaleItemsController.IS_FROM_CATEGORY";
 
@@ -65,6 +63,7 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
 
     private List<GetSaleItemsResponse.Products> mSaleItems = new LinkedList<>();
     private List<GetSaleItemsResponse.Facets> mFacets = new ArrayList<>();
+    private String mSortingListJsonString = "";
 
     @BindView(R.id.controller_sale_items_grid_view)
     RecyclerView mSaleItemsRecyclerView;
@@ -184,6 +183,9 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
     @Override
     protected void setUp(View view) {
         hideKeyboard();
+
+        mPresenter.loadSortingFacets();
+
         mPaginateCallbacks = new Paginate.Callbacks() {
             @Override
             public void onLoadMore() {
@@ -212,11 +214,16 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
 
         if (mSaleItems.isEmpty()) {
             showLoading();
-            mPresenter.loadSaleItems(mCategoryKey, mSaleId, mSearchQuery, page);
+            mPresenter.loadSaleItems(mCategoryKey, mSaleId, mSearchQuery, page, new ArrayList());
         } else {
             mPaginateManager = PaginateUtils.init(mSaleItemsRecyclerView, mPaginateCallbacks);
         }
 
+    }
+
+    @Override
+    public void onLoadSortingFacetsFinished(List<SortingResponse> responseList) {
+        mSortingListJsonString = new Gson().toJson(responseList);
     }
 
     @Override
@@ -269,7 +276,7 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
 
     @OnClick(R.id.partial_toolbar_filter_view)
     void showFIlters(){
-        getRouter().pushController(RouterTransaction.with(SearchFilterController.newInstance(new Gson().toJson(mFacets)))
+        getRouter().pushController(RouterTransaction.with(SearchFilterController.newInstance(new Gson().toJson(mFacets),mSortingListJsonString))
                 .pushChangeHandler(new VerticalChangeHandler())
                 .popChangeHandler(new VerticalChangeHandler()));
     }
@@ -277,7 +284,7 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
     @Override
     public void refresh() {
         loadingInProgress = true;
-        mPresenter.loadSaleItems(mCategoryKey, mSaleId, mSearchQuery, page);
+        mPresenter.loadSaleItems(mCategoryKey, mSaleId, mSearchQuery, page, new ArrayList());
     }
 
     @Override

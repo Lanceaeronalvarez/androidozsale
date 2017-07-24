@@ -13,7 +13,14 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.ImageButton;
+import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
+import android.widget.TextView;
 
+import com.bluelinelabs.conductor.RouterTransaction;
+import com.crystal.crystalrangeseekbar.interfaces.OnRangeSeekbarChangeListener;
+import com.crystal.crystalrangeseekbar.interfaces.OnRangeSeekbarFinalValueListener;
+import com.google.errorprone.annotations.Var;
 import com.google.gson.reflect.TypeToken;
 
 import java.util.ArrayList;
@@ -28,14 +35,18 @@ import javax.inject.Inject;
 
 import au.com.dealsdirect.R;
 import au.com.dealsdirect.data.network.model.saleitems.GetSaleItemsResponse;
+import au.com.dealsdirect.data.network.model.sorting.SortingResponse;
 import au.com.dealsdirect.ui.base.BaseController;
+import au.com.dealsdirect.ui.controller.saleitems.SaleItemsController;
 import au.com.dealsdirect.ui.controller.searchfilter.adapter.FacetItemsAdapter;
 import au.com.dealsdirect.ui.controller.searchfilter.adapter.FacetsAdapter;
 import au.com.dealsdirect.ui.controller.searchfilter.adapter.SearchChipModel;
 import au.com.dealsdirect.ui.controller.searchfilter.adapter.SearchTagsAdapter;
+import au.com.dealsdirect.ui.custom.CustomRangeSeekbar;
 import au.com.dealsdirect.utils.BundleBuilder;
 import au.com.dealsdirect.utils.JsonUtils;
 import butterknife.BindView;
+import butterknife.OnClick;
 
 /**
  * Created by smartwave on 20/07/2017.
@@ -48,7 +59,10 @@ public class SearchFilterController extends BaseController implements SearchFilt
     public static final String COLORS_FACETFILTER_NAME = "color";
     public static final String PRICE_FACETFILTER_NAME = "skus.attributesForFaceting.aud";
     public static final String SEARCH_QUERY_NAME = "search_query";
+    public static final String SORT_FACETFILTER_NAME = "sort";
+
     private static final String KEY_FACET_STRING = "KEY_FACET_STRING";
+    private static final String KEY_SORTING_STRING = "KEY_SORTING_STRING";
 
     @Inject
     SearchFilterMvpPresenter<SearchFilterMvpView> mPresenter;
@@ -60,10 +74,29 @@ public class SearchFilterController extends BaseController implements SearchFilt
     @BindView(R.id.partial_filters_search_tags_recyclerview)
     RecyclerView mSearchTagsRecyclerView;
 
+    //Seekbar bindings
+    @BindView(R.id.price_facet_range_seekbar)
+    CustomRangeSeekbar mSeekbar;
+    @BindView(R.id.seekbar_main_layout)
+    RelativeLayout mSeekbarLayout;
+    @BindView(R.id.clearText)
+    TextView mClearText;
+    @BindView(R.id.movingMaxPriceLayout)
+    LinearLayout mMaxPriceMovingLayout;
+    @BindView(R.id.movingMinPriceLayout)
+    LinearLayout mMinPriceMovingLayout;
+    @BindView(R.id.movingMaxPrice)
+    TextView mMaxPrice;
+    @BindView(R.id.movingMinPrice)
+    TextView mMinPrice;
+
+
+
     @BindView(R.id.partial_toolbar_search_right_option)
     ImageButton mSearchApplyButton;
 
     List<GetSaleItemsResponse.Facets> mFacets;
+    List<SortingResponse> mSortingFacets = new ArrayList<>();
 
     FacetsAdapter mFacetsAdapter;
     FacetItemsAdapter mFacetItemsAdapter;
@@ -73,9 +106,14 @@ public class SearchFilterController extends BaseController implements SearchFilt
     ArrayList<String> mBrandList = new ArrayList<>();
     ArrayList<String> mSizeList = new ArrayList<>();
     ArrayList<String> mColorList = new ArrayList<>();
+    ArrayList<String> mSortingList = new ArrayList<>();
+
+    private int origMinValue = -1;
+    private int origMaxValue = -1;
+    private boolean isSeekbarReset = false;
+
 
     private Set<Integer> origSelectedSet = new HashSet<Integer>();
-    private Set<Integer> selectedItemsIndex = new HashSet<Integer>();
 
     private int mPreviousSelectedFacetIndex = -1;
 
@@ -84,20 +122,23 @@ public class SearchFilterController extends BaseController implements SearchFilt
     List<String> mFacetFilters = Arrays.asList
             ("Sort",
                     "Category",
-                    "Brand",
-                    "Size",
-                    "Color",
+                    "Brands",
+                    "Sizes",
+                    "Colors",
                     "Price");
 
-    public static SearchFilterController newInstance(String jsonFacetString) {
+    public static SearchFilterController newInstance(String jsonFacetString, String sortingFacetString) {
         return new SearchFilterController(new BundleBuilder(new Bundle())
                 .putString(KEY_FACET_STRING, jsonFacetString)
+                .putString(KEY_SORTING_STRING, sortingFacetString)
                 .build());
     }
 
     public SearchFilterController(Bundle args) {
         super(args);
         mFacets = JsonUtils.convertStringToObject(args.getString(KEY_FACET_STRING, ""), new TypeToken<ArrayList<GetSaleItemsResponse.Facets>>() {
+        }.getType());
+        mSortingFacets = JsonUtils.convertStringToObject(args.getString(KEY_SORTING_STRING, ""), new TypeToken<ArrayList<SortingResponse>>() {
         }.getType());
     }
 
@@ -118,6 +159,59 @@ public class SearchFilterController extends BaseController implements SearchFilt
 
     @Override
     protected void setUp(View view) {
+        origMaxValue = mPresenter.getSearchMaxPrice();
+        origMinValue = mSeekbar.getSelectedMinValue().intValue();
+
+        mSeekbar.setMaxValue(origMaxValue);
+        mSeekbar.setMaxStartValue(origMaxValue);
+        mClearText.setOnClickListener((v)->{
+            if(!isSeekbarReset) {
+                //remove previously selected price range
+                for (SearchChipModel chip : mSearchTagsAdapter.getData()) {
+                    if (chip.getFilterType() == PRICE_FACETFILTER_NAME) {
+                        mSearchTagsAdapter.remove(chip);
+                        break;
+                    }
+                }
+
+                onResetPriceRange();
+            }
+        });
+        mSeekbar.setMinPriceMovingLayout(mMinPriceMovingLayout);
+        mSeekbar.setMaxPriceMovingLayout(mMaxPriceMovingLayout);
+        mSeekbar.setOnRangeSeekbarChangeListener(new OnRangeSeekbarChangeListener() {
+            @Override
+            public void valueChanged(Number minValue, Number maxValue) {
+                mMinPrice.setText("$"+minValue.intValue());
+                mMaxPrice.setText("$"+maxValue.intValue());
+                if(maxValue.intValue() == origMaxValue){
+                    mMaxPrice.setText("$"+maxValue.intValue()+"+");
+                }
+
+            }
+        });
+        mSeekbar.setOnRangeSeekbarFinalValueListener(new OnRangeSeekbarFinalValueListener() {
+            @Override
+            public void finalValue(Number minValue, Number maxValue) {
+
+                //remove previously selected price range
+                for (SearchChipModel chip : mSearchTagsAdapter.getData()) {
+                    if(chip.getFilterType() == PRICE_FACETFILTER_NAME){
+                        mSearchTagsAdapter.remove(chip);
+                        break;
+                    }
+                }
+
+                //add newly selected price range
+                if(origMinValue!=minValue.intValue() || origMaxValue!=maxValue.intValue()){
+                    mSearchTagsAdapter.add(new SearchChipModel(PRICE_FACETFILTER_NAME, minValue.intValue() + " to " + maxValue.intValue(),-1));
+                }
+
+                isSeekbarReset=false;
+            }
+        });
+
+
         mSearchApplyButton.setImageDrawable(getResources().getDrawable(R.drawable.ic_check));
 
         mFacetsAdapter = new FacetsAdapter(getActivity(), mFacetFilters, mPresenter);
@@ -130,7 +224,6 @@ public class SearchFilterController extends BaseController implements SearchFilt
         mFacetItemsAdapter.setOnSelectListener(new FacetItemsAdapter.OnSelectListener() {
             @Override
             public void onSelected(Set<Integer> selectPosSet) {
-                Log.d("testest","onSelected");
                 mPresenter.onFacetItemClicked(selectPosSet);
             }
         });
@@ -147,6 +240,10 @@ public class SearchFilterController extends BaseController implements SearchFilt
             parseFacets(mFacets);
         }
 
+        if(mSortingFacets != null){
+            parseSortingFacets(mSortingFacets);
+        }
+
 
     }
 
@@ -156,27 +253,62 @@ public class SearchFilterController extends BaseController implements SearchFilt
         super.onDetach(view);
     }
 
+    private void parseSortingFacets(List<SortingResponse> sortingList) {
+        for (SortingResponse response: sortingList) {
+            mSortingList.add(response.getTitle());
+        }
+    }
+
     @Override
     public void showFacetItem(int position) {
 
-        if (mPreviousSelectedFacetIndex != -1) {
-            mPreviousSelectedFacetIndices.put(mFacetFilters.get(mPreviousSelectedFacetIndex), new HashSet<>(mFacetItemsAdapter.getSelectedFacets()));
+        if(mapFacetFilterType(position) != PRICE_FACETFILTER_NAME) { //only do this logic if facet clicked != price
+
+            mFacetItemsRecyclerView.setVisibility(View.VISIBLE);
+            mSeekbarLayout.setVisibility(View.GONE);
+
+            if (mPreviousSelectedFacetIndex != -1) {
+                mPreviousSelectedFacetIndices.put(mapFacetFilterType(mPreviousSelectedFacetIndex), new HashSet<>(mFacetItemsAdapter.getSelectedFacets()));
+            }
+
+            if (position != mPreviousSelectedFacetIndex) {
+                mFacetItemsAdapter.clearSelectedFacets();
+                origSelectedSet.clear();
+            }
+
+            if (mPreviousSelectedFacetIndices.get(mapFacetFilterType(position)) != null) {
+                mFacetItemsAdapter.updateSelectedFacets(mPreviousSelectedFacetIndices.get(mapFacetFilterType(position)));
+                origSelectedSet = mPreviousSelectedFacetIndices.get(mapFacetFilterType(position));
+            }
+        } else { //price is clicked
+            mFacetItemsRecyclerView.setVisibility(View.GONE);
+            mSeekbarLayout.setVisibility(View.VISIBLE);
         }
 
-        if (position != mPreviousSelectedFacetIndex) {
-            mFacetItemsAdapter.clearSelectedFacets();
-            origSelectedSet.clear();
-        }
-
-        if (mPreviousSelectedFacetIndices.get(mFacetFilters.get(position)) != null) {
-            mFacetItemsAdapter.updateSelectedFacets(mPreviousSelectedFacetIndices.get(mFacetFilters.get(position)));
-            origSelectedSet = mPreviousSelectedFacetIndices.get(mFacetFilters.get(position));
-        }
-
-        mFacetItemsAdapter.setFilterType(mFacetFilters.get(position));
+        mFacetItemsAdapter.setFilterType(mapFacetFilterType(position));
         mFacetItemsAdapter.replaceData(mapFacetItemClicked(position));
 
         mPreviousSelectedFacetIndex = position;
+    }
+
+
+    private String mapFacetFilterType(int position){
+        switch (position) {
+            case 0:
+                return SORT_FACETFILTER_NAME;
+            case 1:
+                return "";
+            case 2:
+                return BRANDS_FACETFILTER_NAME;
+            case 3:
+                return SIZES_FACETFILTER_NAME;
+            case 4:
+                return COLORS_FACETFILTER_NAME;
+            case 5:
+                return PRICE_FACETFILTER_NAME;
+            default:
+                return "";
+        }
     }
 
     @Override
@@ -202,19 +334,12 @@ public class SearchFilterController extends BaseController implements SearchFilt
                     chipToRemove = chip;
                 }
             }
-//            SearchChipModel newPair = new SearchChipModel(mFacetItemsAdapter.getFilterType(), mFacetItemsAdapter.getData().get(temp.get(0)), temp.get(0));
+
             if (chipToRemove != null) {
                 mSearchTagsAdapter.remove(chipToRemove);
             }
         }
 
-        //                if(selectPosSet.size()!=0) {
-//                    mFilterIndicatorTextView.setText(mFilterFragmentType + "(" + selectPosSet.size() + ")");
-//                    mPresenter.setActiveTabIndicatorIcons(mFilterFragmentType);
-//                }else{
-//                    mFilterIndicatorTextView.setText(mFilterFragmentType);
-//                    mPresenter.setActiveDefaultTabIcons(mFilterFragmentType);
-//                }
     }
 
     @Override
@@ -222,10 +347,23 @@ public class SearchFilterController extends BaseController implements SearchFilt
         return origSelectedSet;
     }
 
+    @Override
+    public void onResetPriceRange() {
+        mSeekbar.setMinValue(origMinValue);
+        mSeekbar.setMaxValue(origMaxValue);
+
+        mSeekbar.apply();
+        mMinPriceMovingLayout.setTranslationX(0);
+        RelativeLayout.LayoutParams lp = (RelativeLayout.LayoutParams) mSeekbar.getLayoutParams();
+        mMaxPriceMovingLayout.setX(mSeekbar.getWidth() - (lp.rightMargin));
+
+        isSeekbarReset = true;
+    }
+
     private List<String> mapFacetItemClicked(int position) {
         switch (position) {
             case 0:
-                return new ArrayList<>();
+                return mSortingList;
             case 1:
                 return new ArrayList<>();
             case 2:
@@ -273,5 +411,15 @@ public class SearchFilterController extends BaseController implements SearchFilt
                 }
             }
         }
+    }
+
+    @OnClick(R.id.partial_toolbar_search_right_option)
+    void applyFilters(){
+
+//        Bundle saleItemBundle = new BundleBuilder(new Bundle())
+//                .putString(, searchQuery)
+//                .putString("SaleItemsController.SEARCH_KEY", searchQuery)
+//                .build();
+//        getRouter().replaceTopController(RouterTransaction.with(new SaleItemsController()));
     }
 }
