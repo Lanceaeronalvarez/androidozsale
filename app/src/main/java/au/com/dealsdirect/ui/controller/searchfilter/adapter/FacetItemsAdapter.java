@@ -1,6 +1,7 @@
 package au.com.dealsdirect.ui.controller.searchfilter.adapter;
 
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -90,7 +91,7 @@ public class FacetItemsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
         mSelectedFacets = new HashSet<Integer>(selectedFacets);
     }
 
-    private void applySelection(FacetItemsViewHolder vh, int position){
+    public void applySelection(FacetItemsViewHolder vh, int position){
         if(mSelectedFacets.contains(position)){
             vh.isSelected = true;
             vh.itemView.setSelected(true);

@@ -31,6 +31,7 @@ import au.com.dealsdirect.data.network.model.saleitems.GetSaleItemsResponse;
 import au.com.dealsdirect.ui.base.BaseController;
 import au.com.dealsdirect.ui.controller.searchfilter.adapter.FacetItemsAdapter;
 import au.com.dealsdirect.ui.controller.searchfilter.adapter.FacetsAdapter;
+import au.com.dealsdirect.ui.controller.searchfilter.adapter.SearchChipModel;
 import au.com.dealsdirect.ui.controller.searchfilter.adapter.SearchTagsAdapter;
 import au.com.dealsdirect.utils.BundleBuilder;
 import au.com.dealsdirect.utils.JsonUtils;
@@ -40,7 +41,7 @@ import butterknife.BindView;
  * Created by smartwave on 20/07/2017.
  */
 
-public class SearchFilterController extends BaseController implements SearchFilterMvpView{
+public class SearchFilterController extends BaseController implements SearchFilterMvpView {
 
     public static final String BRANDS_FACETFILTER_NAME = "skus.brandName";
     public static final String SIZES_FACETFILTER_NAME = "skus.attributes.size";
@@ -78,31 +79,32 @@ public class SearchFilterController extends BaseController implements SearchFilt
 
     private int mPreviousSelectedFacetIndex = -1;
 
-    private HashMap<Integer,Set<Integer>> mPreviousSelectedFacetIndices = new HashMap<>();
+    private HashMap<String, Set<Integer>> mPreviousSelectedFacetIndices = new HashMap<>();
 
     List<String> mFacetFilters = Arrays.asList
             ("Sort",
-            "Category",
-            "Brand",
-            "Size",
-            "Color",
-            "Price");
+                    "Category",
+                    "Brand",
+                    "Size",
+                    "Color",
+                    "Price");
 
     public static SearchFilterController newInstance(String jsonFacetString) {
         return new SearchFilterController(new BundleBuilder(new Bundle())
-                .putString(KEY_FACET_STRING,jsonFacetString)
+                .putString(KEY_FACET_STRING, jsonFacetString)
                 .build());
     }
 
     public SearchFilterController(Bundle args) {
         super(args);
-        mFacets = JsonUtils.convertStringToObject(args.getString(KEY_FACET_STRING,""), new TypeToken<ArrayList<GetSaleItemsResponse.Facets>>(){}.getType());
+        mFacets = JsonUtils.convertStringToObject(args.getString(KEY_FACET_STRING, ""), new TypeToken<ArrayList<GetSaleItemsResponse.Facets>>() {
+        }.getType());
     }
 
 
     @Override
     protected View inflateView(@NonNull LayoutInflater inflater, @NonNull ViewGroup container) {
-        View view = inflater.inflate(R.layout.controller_search_filter,container,false);
+        View view = inflater.inflate(R.layout.controller_search_filter, container, false);
         getControllerComponent().inject(this);
         mPresenter.onAttach(this);
         return view;
@@ -118,32 +120,33 @@ public class SearchFilterController extends BaseController implements SearchFilt
     protected void setUp(View view) {
         mSearchApplyButton.setImageDrawable(getResources().getDrawable(R.drawable.ic_check));
 
-        mFacetsAdapter = new FacetsAdapter(getActivity(),mFacetFilters,mPresenter);
-        mFacetsRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity(),LinearLayoutManager.VERTICAL,false));
+        mFacetsAdapter = new FacetsAdapter(getActivity(), mFacetFilters, mPresenter);
+        mFacetsRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity(), LinearLayoutManager.VERTICAL, false));
         mFacetsRecyclerView.setAdapter(mFacetsAdapter);
 
-        mFacetItemsAdapter = new FacetItemsAdapter(new ArrayList<>(),mPresenter,new HashSet<Integer>());
-        mFacetItemsRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity(),LinearLayoutManager.VERTICAL,false));
+        mFacetItemsAdapter = new FacetItemsAdapter(new ArrayList<>(), mPresenter, new HashSet<Integer>());
+        mFacetItemsRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity(), LinearLayoutManager.VERTICAL, false));
         mFacetItemsRecyclerView.setAdapter(mFacetItemsAdapter);
         mFacetItemsAdapter.setOnSelectListener(new FacetItemsAdapter.OnSelectListener() {
             @Override
             public void onSelected(Set<Integer> selectPosSet) {
+                Log.d("testest","onSelected");
                 mPresenter.onFacetItemClicked(selectPosSet);
             }
         });
 
-
-        if(mFacets != null) {
-            parseFacets(mFacets);
-        }
-
-
         mSearchTagsLayoutManager = new LinearLayoutManager(getActivity(), LinearLayoutManager.HORIZONTAL, false);
         mSearchTagsRecyclerView.setLayoutManager(mSearchTagsLayoutManager);
-        mSearchTagsAdapter = new SearchTagsAdapter(getActivity(), mSearchTagsLayoutManager, new ArrayList<Pair<String, String>>(),mPresenter);
+        mSearchTagsAdapter = new SearchTagsAdapter(getActivity(), mSearchTagsLayoutManager, new ArrayList<SearchChipModel>(), mPresenter, mFacetItemsAdapter, mPreviousSelectedFacetIndices);
 
         mSearchTagsRecyclerView.setAdapter(mSearchTagsAdapter);
         mSearchTagsRecyclerView.setVisibility(View.VISIBLE);
+
+
+        if (mFacets != null) {
+            parseFacets(mFacets);
+        }
+
 
     }
 
@@ -156,17 +159,18 @@ public class SearchFilterController extends BaseController implements SearchFilt
     @Override
     public void showFacetItem(int position) {
 
-        if(mPreviousSelectedFacetIndex != -1){
-            mPreviousSelectedFacetIndices.put(mPreviousSelectedFacetIndex,new HashSet<>(mFacetItemsAdapter.getSelectedFacets()));
+        if (mPreviousSelectedFacetIndex != -1) {
+            mPreviousSelectedFacetIndices.put(mFacetFilters.get(mPreviousSelectedFacetIndex), new HashSet<>(mFacetItemsAdapter.getSelectedFacets()));
         }
 
-        if(position != mPreviousSelectedFacetIndex){
+        if (position != mPreviousSelectedFacetIndex) {
             mFacetItemsAdapter.clearSelectedFacets();
+            origSelectedSet.clear();
         }
 
-        if(mPreviousSelectedFacetIndices.get(position) != null){
-            mFacetItemsAdapter.updateSelectedFacets(mPreviousSelectedFacetIndices.get(position));
-            origSelectedSet = mPreviousSelectedFacetIndices.get(position);
+        if (mPreviousSelectedFacetIndices.get(mFacetFilters.get(position)) != null) {
+            mFacetItemsAdapter.updateSelectedFacets(mPreviousSelectedFacetIndices.get(mFacetFilters.get(position)));
+            origSelectedSet = mPreviousSelectedFacetIndices.get(mFacetFilters.get(position));
         }
 
         mFacetItemsAdapter.setFilterType(mFacetFilters.get(position));
@@ -177,24 +181,31 @@ public class SearchFilterController extends BaseController implements SearchFilt
 
     @Override
     public void updateFacetItemToFilters(Set<Integer> selectPosSet) {
-        Log.d("test", selectPosSet.toString());
+        Log.d("selectPosSet", selectPosSet.toString());
 
         Set<Integer> oldSet = origSelectedSet;
         Set<Integer> newSet = new HashSet<Integer>(selectPosSet);
-        origSelectedSet =  new HashSet<Integer>(selectPosSet);
+        origSelectedSet = new HashSet<Integer>(selectPosSet);
         newSet.removeAll(oldSet);
         oldSet.removeAll(origSelectedSet);
 
-        if(!newSet.isEmpty()){
+        if (!newSet.isEmpty()) {
+            Log.d("selectPosSet", "added");
             List<Integer> temp = new ArrayList(newSet);
-            Pair<String,String> newPair = new Pair(mFacetItemsAdapter.getFilterType(), mFacetItemsAdapter.getData().get(temp.get(0)));
-            mSearchTagsAdapter.add(newPair);
-            selectedItemsIndex.add(temp.get(0));
-        }else if(!oldSet.isEmpty()){
+            SearchChipModel newChip = new SearchChipModel(mFacetItemsAdapter.getFilterType(), mFacetItemsAdapter.getData().get(temp.get(0)), temp.get(0));
+            mSearchTagsAdapter.add(newChip);
+        } else if (!oldSet.isEmpty()) {
             List<Integer> temp = new ArrayList(oldSet);
-            Pair<String,String> newPair = new Pair(mFacetItemsAdapter.getFilterType(), mFacetItemsAdapter.getData().get(temp.get(0)));
-            mSearchTagsAdapter.remove(newPair);
-            selectedItemsIndex.remove(temp.get(0));
+            SearchChipModel chipToRemove = null;
+            for (SearchChipModel chip : mSearchTagsAdapter.getData()) {
+                if (chip.getChipTitle() == mFacetItemsAdapter.getData().get(temp.get(0))) {
+                    chipToRemove = chip;
+                }
+            }
+//            SearchChipModel newPair = new SearchChipModel(mFacetItemsAdapter.getFilterType(), mFacetItemsAdapter.getData().get(temp.get(0)), temp.get(0));
+            if (chipToRemove != null) {
+                mSearchTagsAdapter.remove(chipToRemove);
+            }
         }
 
         //                if(selectPosSet.size()!=0) {
@@ -206,8 +217,13 @@ public class SearchFilterController extends BaseController implements SearchFilt
 //                }
     }
 
-    private List<String> mapFacetItemClicked(int position){
-        switch (position){
+    @Override
+    public Set<Integer> getOriginalSelectedSet() {
+        return origSelectedSet;
+    }
+
+    private List<String> mapFacetItemClicked(int position) {
+        switch (position) {
             case 0:
                 return new ArrayList<>();
             case 1:
@@ -225,7 +241,7 @@ public class SearchFilterController extends BaseController implements SearchFilt
         }
     }
 
-    private void parseFacets(List<GetSaleItemsResponse.Facets> facets){
+    private void parseFacets(List<GetSaleItemsResponse.Facets> facets) {
         if (facets.size() != 0) {
             mBrandList = new ArrayList<>();
             mSizeList = new ArrayList<>();

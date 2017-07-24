@@ -1,5 +1,6 @@
 package au.com.dealsdirect.ui.controller.searchfilter;
 
+import java.util.HashSet;
 import java.util.Set;
 
 import au.com.dealsdirect.ui.base.MvpView;
@@ -13,4 +14,6 @@ public interface SearchFilterMvpView extends MvpView{
     void showFacetItem(int position);
 
     void updateFacetItemToFilters(Set<Integer> selectPosSet);
+
+    Set<Integer> getOriginalSelectedSet();
 }
