@@ -13,6 +13,7 @@ import android.widget.TextView;
 
 import com.bluelinelabs.conductor.RouterTransaction;
 import com.bluelinelabs.conductor.changehandler.HorizontalChangeHandler;
+import com.bluelinelabs.conductor.changehandler.VerticalChangeHandler;
 
 import java.util.ArrayList;
 import java.util.LinkedList;
@@ -31,6 +32,7 @@ import au.com.dealsdirect.ui.controller.contact.viewcontacts.viewcontactdate.Vie
 import au.com.dealsdirect.ui.main.MainActivity;
 import au.com.dealsdirect.utils.BundleBuilder;
 import au.com.dealsdirect.utils.DateUtils;
+import au.com.dealsdirect.utils.KeyboardUtils;
 import butterknife.BindView;
 import butterknife.OnClick;
 
@@ -137,17 +139,19 @@ public class ViewContactsController extends BaseController implements ViewContac
             mContactDateAdapter.replace(getDifferentDates(items));
             mViewContactsRecyclerView.setVisibility(View.VISIBLE);
             mPlaceholderLayout.setVisibility(View.GONE);
+            mViewContactsToolbarRightOption.setVisibility(View.VISIBLE);
+            mViewContactsToolbarRightOption.setImageResource(R.drawable.ic_add);
         } else {
             mPlaceholderLayout.setVisibility(View.VISIBLE);
             mViewContactsRecyclerView.setVisibility(View.GONE);
         }
     }
 
-    @OnClick(R.id.controller_view_contacts_add_button)
+    @OnClick({R.id.controller_view_contacts_add_button, R.id.partial_toolbar_filter_view})
     void addContact(){
         getRouter().pushController(RouterTransaction.with(AddContactController.newInstance())
-                .pushChangeHandler(new HorizontalChangeHandler())
-                .popChangeHandler(new HorizontalChangeHandler()));
+                .pushChangeHandler(new VerticalChangeHandler())
+                .popChangeHandler(new VerticalChangeHandler()));
 
     }
 

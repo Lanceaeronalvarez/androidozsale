@@ -30,7 +30,7 @@
             android:layout_alignParentBottom="true"
             android:layout_margin="@dimen/activity_horizontal_margin"
             android:clickable="true"
-            android:text="Create Contact"/>
+            android:text="@string/write_us_a_message"/>
 
         <include
             layout="@layout/partial_no_contacts_placeholder_layout"/>

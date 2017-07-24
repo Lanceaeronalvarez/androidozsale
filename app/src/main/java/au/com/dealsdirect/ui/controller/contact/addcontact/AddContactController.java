@@ -2,16 +2,20 @@ package au.com.dealsdirect.ui.controller.contact.addcontact;
 
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
+import android.widget.FrameLayout;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.bluelinelabs.conductor.Controller;
+import com.bluelinelabs.conductor.ControllerChangeHandler;
 import com.bluelinelabs.conductor.RouterTransaction;
 import com.bluelinelabs.conductor.changehandler.FadeChangeHandler;
-import com.bluelinelabs.conductor.changehandler.HorizontalChangeHandler;
 import com.mysale.genie.utility.Prefs;
 
 import java.util.List;
@@ -28,7 +32,10 @@ import au.com.dealsdirect.ui.base.BaseController;
 import au.com.dealsdirect.ui.controller.account.AccountController;
 import au.com.dealsdirect.ui.controller.contact.addcontact.selectorder.ContactSelectOrderController;
 import au.com.dealsdirect.ui.controller.contact.addcontact.selectsubject.ContactSelectSubjectController;
+import au.com.dealsdirect.ui.custom.transitions.ReverseVerticalChangeHandler;
+import au.com.dealsdirect.ui.main.MainActivity;
 import au.com.dealsdirect.utils.BundleBuilder;
+import au.com.dealsdirect.utils.KeyboardUtils;
 import butterknife.BindView;
 import butterknife.OnClick;
 
@@ -53,6 +60,12 @@ public class AddContactController extends BaseController implements AddContactMv
     @BindView(R.id.partial_toolbar_arrow_title)
     TextView mAddContactToolbarTitle;
 
+    @BindView(R.id.controller_add_contact_subject_title)
+    TextView mAddContactSubjectTitle;
+
+    @BindView(R.id.controller_add_contact_order_title)
+    TextView mAddContactOrderTitle;
+
     @BindView(R.id.controller_add_contact_subject_text)
     TextView mAddContactSubjectText;
 
@@ -61,6 +74,12 @@ public class AddContactController extends BaseController implements AddContactMv
 
     @BindView(R.id.controller_add_contact_message_field)
     EditText mAddContactMessageField;
+
+    @BindView(R.id.controller_add_contact_message_send)
+    ImageButton mAddContactMessageSend;
+
+    @BindView(R.id.controller_add_contact_selector_container)
+    FrameLayout mAddContactSelectorContainer;
 
     @Inject
     AddContactMvpPresenter<AddContactMvpView> mPresenter;
@@ -72,7 +91,7 @@ public class AddContactController extends BaseController implements AddContactMv
     boolean hasLoadedSubjects = false;
     boolean hasLoadedOrders = false;
 
-//    static GetContactsResponse.ContactList mContactUsObject;
+    //    static GetContactsResponse.ContactList mContactUsObject;
     private static int mContactNumber;
     private int mInvoiceNumber;
     private String mChosenOptionInvoice;
@@ -90,7 +109,7 @@ public class AddContactController extends BaseController implements AddContactMv
     }
 
     public static AddContactController newInstance() {
-        Prefs.putBoolean("isSubjectsLoaded",false);
+        Prefs.putBoolean("isSubjectsLoaded", false);
 
         return new AddContactController(
                 new BundleBuilder(new Bundle())
@@ -101,20 +120,20 @@ public class AddContactController extends BaseController implements AddContactMv
 
     public AddContactController(Bundle args) {
         super(args);
-        if (!args.isEmpty()){
-            if (args.containsKey(KEY_FROM_FRAGMENT_ID)){
+        if (!args.isEmpty()) {
+            if (args.containsKey(KEY_FROM_FRAGMENT_ID)) {
                 mFromFragmentId = args.getString(KEY_FROM_FRAGMENT_ID);
             }
 
-            if (args.containsKey(KEY_CONTACT_SUBJECT)){
+            if (args.containsKey(KEY_CONTACT_SUBJECT)) {
                 mContactHistoryChosenSubject = args.getString(KEY_CONTACT_SUBJECT);
             }
 
-            if (args.containsKey(KEY_CONTACT_NUMBER)){
+            if (args.containsKey(KEY_CONTACT_NUMBER)) {
                 mContactNumber = args.getInt(KEY_CONTACT_NUMBER);
             }
 
-            if (args.containsKey(KEY_INVOICE_NUMBER)){
+            if (args.containsKey(KEY_INVOICE_NUMBER)) {
                 mInvoiceNumber = args.getInt(KEY_INVOICE_NUMBER);
             }
         }
@@ -140,20 +159,37 @@ public class AddContactController extends BaseController implements AddContactMv
 
     @Override
     protected void setUp(View view) {
-        // Setup views here
-        //mPresenter.loadSample(new SampleRequest());
-        mAddContactToolbarRightOption.setImageDrawable(
-                getResources().getDrawable(R.drawable.ic_check));
+
+        KeyboardUtils.setKeyboardAdjustResize(getActivity());
+        ((MainActivity) getActivity()).getMainController().hideBottomNav();
+
+        getChildRouter(mAddContactSelectorContainer).addChangeListener(new ControllerChangeHandler.ControllerChangeListener() {
+            @Override
+            public void onChangeStarted(@Nullable Controller to, @Nullable Controller from, boolean isPush, @NonNull ViewGroup container, @NonNull ControllerChangeHandler handler) {
+
+            }
+
+            @Override
+            public void onChangeCompleted(@Nullable Controller to, @Nullable Controller from, boolean isPush, @NonNull ViewGroup container, @NonNull ControllerChangeHandler handler) {
+                mAddContactSubjectText.setText(ContactPreferenceHelper.getChosenSubject(getActivity()));
+                mAddContactOrderText.setText(ContactPreferenceHelper.getChosenOrder(getActivity()));
+                if (!isPush) {
+                    mAddContactSubjectTitle.setSelected(false);
+                    mAddContactOrderTitle.setSelected(false);
+                }
+            }
+        });
+
+        mAddContactToolbarRightOption.setVisibility(View.INVISIBLE);
         mAddContactToolbarTitle.setText(R.string.create_contact);
 
-        boolean isSubjectsLoaded = Prefs.getBoolean("isSubjectsLoaded",false);
+        boolean isSubjectsLoaded = Prefs.getBoolean("isSubjectsLoaded", false);
 
-        if (!isSubjectsLoaded){
+        if (!isSubjectsLoaded) {
 
             mPresenter.loadContactUsSubjects();
             Prefs.putBoolean("isSubjectsLoaded", true);
-        }
-        else{
+        } else {
 //            setupDefaultBottomButton(mBaseActivity.getString(R.string.submit), onClickListener);
         }
 
@@ -162,7 +198,7 @@ public class AddContactController extends BaseController implements AddContactMv
 
         if (mFromFragmentId.equals("CONTACT_HISTORY")) {
 
-            if (mInvoiceNumber==0)
+            if (mInvoiceNumber == 0)
                 mAddContactOrderText.setText(String.valueOf("None"));
             else
                 mAddContactOrderText.setText(String.valueOf(mInvoiceNumber));
@@ -176,25 +212,25 @@ public class AddContactController extends BaseController implements AddContactMv
                 String replyMessage = mAddContactMessageField.getText().toString();
                 int contactId = mContactNumber;
 
-            ReplyContactRequest replyContactRequest = new ReplyContactRequest();
-            replyContactRequest.comments = replyMessage;
-            replyContactRequest.contactNo = contactId;
+                ReplyContactRequest replyContactRequest = new ReplyContactRequest();
+                replyContactRequest.comments = replyMessage;
+                replyContactRequest.contactNo = contactId;
 
-                if (replyContactRequest.comments.isEmpty()){
+                if (replyContactRequest.comments.isEmpty()) {
 
-    //                CustomAlertDialog.showCustomAlertDialog(
-    //                        mBaseActivity,
-    //                        CustomAlertDialog.CustomDialogIconState.NEGATIVE,
-    //                        mBaseActivity.getString(R.string.please_input_message)
-    //                );
+                    //                CustomAlertDialog.showCustomAlertDialog(
+                    //                        mBaseActivity,
+                    //                        CustomAlertDialog.CustomDialogIconState.NEGATIVE,
+                    //                        mBaseActivity.getString(R.string.please_input_message)
+                    //                );
 
-                }else{
+                } else {
                     mPresenter.replyContact(replyContactRequest);
                 }
             };
 
-            mAddContactToolbarRightOption.setOnClickListener(onClickListener);
-        } else if(mFromFragmentId.equals("CONTACT_US")){
+            mAddContactMessageSend.setOnClickListener(onClickListener);
+        } else if (mFromFragmentId.equals("CONTACT_US")) {
 
             String currentSubject = ContactPreferenceHelper.getChosenSubject(getActivity());
             String currentOrder = ContactPreferenceHelper.getChosenOrder(getActivity());
@@ -232,7 +268,7 @@ public class AddContactController extends BaseController implements AddContactMv
 //
                 CreateContactRequest createContactRequest = new CreateContactRequest();
 
-                if (mChosenOptionInvoice != ""){
+                if (mChosenOptionInvoice != "") {
                     createContactRequest.invoiceNo = Integer.valueOf(mChosenOptionInvoice);
                 } else {
                     createContactRequest.invoiceNo = 0;
@@ -240,15 +276,14 @@ public class AddContactController extends BaseController implements AddContactMv
 
                 createContactRequest.subj = mAddContactSubjectText.getText().toString();
 
-                if (mAddContactMessageField.getText().toString().isEmpty()){
-
+                if (mAddContactMessageField.getText().toString().isEmpty()) {
 
 //                    CustomAlertDialog.showCustomAlertDialog(
 //                            mBaseActivity,
 //                            CustomAlertDialog.CustomDialogIconState.NEGATIVE,
 //                            mBaseActivity.getString(R.string.please_write_a_message));
 
-                }  else {
+                } else {
 
                     createContactRequest.msg = mAddContactMessageField.getText().toString();
 
@@ -256,25 +291,26 @@ public class AddContactController extends BaseController implements AddContactMv
 
                 }
             };
-            mAddContactToolbarRightOption.setOnClickListener(onClickListener);
+            mAddContactMessageSend.setOnClickListener(onClickListener);
 
         }
     }
 
     @Override
     public void onDestroyView(View view) {
+        KeyboardUtils.setKeyboardAdjustPan(getActivity());
         mPresenter.onDetach();
         super.onDestroyView(view);
     }
 
 
     @OnClick(R.id.partial_toolbar_arrow_view)
-    void onBack(){
+    void onBack() {
         getActivity().onBackPressed();
     }
 
     @OnClick(R.id.partial_toolbar_filter_view)
-    void onCreate(){
+    void onCreate() {
 
         getRouter().setRoot(RouterTransaction.with(AccountController.newInstance())
                 .pushChangeHandler(new FadeChangeHandler())
@@ -283,13 +319,15 @@ public class AddContactController extends BaseController implements AddContactMv
     }
 
     @OnClick(R.id.controller_add_contact_subject_text)
-    void onClickSubjectText(){
+    void onClickSubjectText() {
 
-        if (hasLoadedSubjects)
-            getRouter().pushController(RouterTransaction.with(ContactSelectSubjectController.newInstance(mContactSubjects))
-                    .pushChangeHandler(new HorizontalChangeHandler())
-                    .popChangeHandler(new HorizontalChangeHandler()));
-        else {
+        if (hasLoadedSubjects) {
+            getChildRouter(mAddContactSelectorContainer).setPopsLastView(true).setRoot(RouterTransaction.with(ContactSelectSubjectController.newInstance(mContactSubjects))
+                    .pushChangeHandler(new ReverseVerticalChangeHandler())
+                    .popChangeHandler(new ReverseVerticalChangeHandler()));
+            mAddContactSubjectTitle.setSelected(true);
+            mAddContactOrderTitle.setSelected(false);
+        } else {
 
 //            CustomAlertDialog.showCustomAlertDialog(
 //                    mBaseActivity,
@@ -299,15 +337,15 @@ public class AddContactController extends BaseController implements AddContactMv
     }
 
     @OnClick(R.id.controller_add_contact_order_text)
-    void onClickOrderText(){
+    void onClickOrderText() {
 
-        if(hasLoadedOrders){
-
-            getRouter().pushController(RouterTransaction.with(ContactSelectOrderController.newInstance(mContactOrders))
-                    .pushChangeHandler(new HorizontalChangeHandler())
-                    .popChangeHandler(new HorizontalChangeHandler()));
-
-        } else if (hasLoadedOrders && mContactOrders != null && mContactOrders.size() == 0){
+        if (hasLoadedOrders) {
+            getChildRouter(mAddContactSelectorContainer).setPopsLastView(true).setRoot(RouterTransaction.with(ContactSelectOrderController.newInstance(mContactOrders))
+                    .pushChangeHandler(new ReverseVerticalChangeHandler())
+                    .popChangeHandler(new ReverseVerticalChangeHandler()));
+            mAddContactSubjectTitle.setSelected(false);
+            mAddContactOrderTitle.setSelected(true);
+        } else if (hasLoadedOrders && mContactOrders != null && mContactOrders.size() == 0) {
 
 //            CustomAlertDialog.showCustomAlertDialog(
 //                    mBaseActivity,
@@ -336,14 +374,14 @@ public class AddContactController extends BaseController implements AddContactMv
 
     @Override
     public void contactCreatedSwitchView(CreateContactResponse createContactResponse) {
-        if (createContactResponse.getCreateContact().getResult()){
+        if (createContactResponse.getCreateContact().getResult()) {
 
 //            CustomAlertDialog.showCustomAlertDialog(
 //                    mBaseActivity, CustomAlertDialog.CustomDialogIconState.POSITIVE,
 //                    mBaseActivity.getString(R.string.message_submitted));
 
             getActivity().onBackPressed();
-        }else{
+        } else {
 //            CustomAlertDialog.showCustomAlertDialog(
 //                    mBaseActivity, CustomAlertDialog.CustomDialogIconState.POSITIVE,
 //                    mBaseActivity.getString(R.string.error_creating_message));
@@ -353,25 +391,25 @@ public class AddContactController extends BaseController implements AddContactMv
     @Override
     public void repliedContactSwitchView(ReplyContact replyContact) {
 
-        if (replyContact.getResult()){
+        if (replyContact.getResult()) {
 //
 //            CustomAlertDialog.showCustomAlertDialog(
 //                    mBaseActivity, CustomAlertDialog.CustomDialogIconState.POSITIVE,
 //                    mBaseActivity.getString(R.string.message_submitted));
             getActivity().onBackPressed();
-        }else{
+        } else {
 //            CustomAlertDialog.showCustomAlertDialog(
 //                    mBaseActivity, CustomAlertDialog.CustomDialogIconState.POSITIVE,
 //                    mBaseActivity.getString(R.string.error_creating_message));
         }
     }
 
-    public void showContactFirstSubjectFromPreference(String subject){
+    public void showContactFirstSubjectFromPreference(String subject) {
 
         mAddContactSubjectText.setText(subject);
     }
 
-    public void showContactFirstOrderFromPreference(String order){
+    public void showContactFirstOrderFromPreference(String order) {
 
         mAddContactOrderText.setText(order);
     }
