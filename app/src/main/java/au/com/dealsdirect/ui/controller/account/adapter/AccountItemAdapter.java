@@ -1,8 +1,6 @@
 package au.com.dealsdirect.ui.controller.account.adapter;
 
 import android.content.Context;
-import android.content.res.ColorStateList;
-import android.graphics.PorterDuff;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -56,6 +54,10 @@ public class AccountItemAdapter extends RecyclerView.Adapter<AccountItemViewHold
         Log.d("log", position +" position");
 
         holder.mAccountItemImage.setImageResource(mAccountImages[position]);
+        holder.mAccountItemImage.setOnClickListener(view -> {
+            mPresenter.onAccountItemClick(mAccountItems.get(position));
+        });
+
         holder.mAccountItemName
                 .setText(mAccountItems.get(position));
         holder.itemView.setOnClickListener(view -> {
