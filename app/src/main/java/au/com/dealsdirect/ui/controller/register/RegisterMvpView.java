@@ -4,9 +4,9 @@ package au.com.dealsdirect.ui.controller.register;
  */
 
 
-import au.com.dealsdirect.ui.base.MvpView;
+import au.com.dealsdirect.ui.base.AuthenticationMvpView;
 
-public interface RegisterMvpView extends MvpView {
+public interface RegisterMvpView extends AuthenticationMvpView{
 
     void showRegisterSuccessful(String loginTicket);
 

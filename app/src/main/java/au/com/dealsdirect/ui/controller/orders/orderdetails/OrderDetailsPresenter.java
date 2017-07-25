@@ -132,7 +132,7 @@ public class OrderDetailsPresenter<V extends OrderDetailsMvpView> extends BasePr
 //                            return;
 //                        }
 //
-//                        if(responseValue.getOrderPaymentDetailsResponse().getD().getResult()){
+//                        if(responseValue.getOrderPaymentDetailsResponse().getNewReturnOrderDetailResponse().getResult()){
 //                            getMvpView().showOrderDetails(responseValue.getOrderPaymentDetailsResponse());
 //                        }
 //                    }

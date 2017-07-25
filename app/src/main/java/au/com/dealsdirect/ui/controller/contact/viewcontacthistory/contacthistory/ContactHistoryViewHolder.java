@@ -1,5 +1,6 @@
 package au.com.dealsdirect.ui.controller.contact.viewcontacthistory.contacthistory;
 
+import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.widget.ImageView;
@@ -16,18 +17,22 @@ import au.com.dealsdirect.ui.custom.CircularTextView;
 
 public class ContactHistoryViewHolder extends RecyclerView.ViewHolder{
 
-    RelativeLayout contactHistoryItem;
-    CircularTextView contactHistoryItemCircularTextView;
+    LinearLayout contactHistoryItem;
+    CircularTextView contactHistoryItemCircularTextViewLeft;
+    CircularTextView contactHistoryItemCircularTextViewRight;
     TextView contactHistoryMessageTextView;
 
     public ContactHistoryViewHolder(View itemView) {
         super(itemView);
 
-        contactHistoryItem = (RelativeLayout) itemView
+        contactHistoryItem = (LinearLayout) itemView
                 .findViewById(R.id.my_contact_history_recycler_row_item_layout);
 
-        contactHistoryItemCircularTextView = (CircularTextView) itemView
-                .findViewById(R.id.my_contact_history_row_message_acronym);
+        contactHistoryItemCircularTextViewLeft = (CircularTextView) itemView
+                .findViewById(R.id.my_contact_history_row_message_acronym_left);
+
+        contactHistoryItemCircularTextViewRight = (CircularTextView) itemView
+                .findViewById(R.id.my_contact_history_row_message_acronym_right);
 
         contactHistoryMessageTextView = (TextView) itemView
                 .findViewById(R.id.my_contact_history_row_message_text_view);

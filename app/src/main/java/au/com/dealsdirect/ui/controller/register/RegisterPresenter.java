@@ -13,11 +13,11 @@ import javax.inject.Inject;
 import au.com.dealsdirect.data.DataManager;
 import au.com.dealsdirect.data.network.model.register.RegisterUserRequest;
 import au.com.dealsdirect.data.network.model.register.RegisterUserResponse;
-import au.com.dealsdirect.ui.base.BasePresenter;
+import au.com.dealsdirect.ui.base.AuthenticationBasePresenter;
 import au.com.dealsdirect.utils.rx.SchedulerProvider;
 import io.reactivex.disposables.CompositeDisposable;
 
-public class RegisterPresenter<V extends RegisterMvpView> extends BasePresenter<V> implements RegisterMvpPresenter<V> {
+public class RegisterPresenter<V extends RegisterMvpView> extends AuthenticationBasePresenter<V> implements RegisterMvpPresenter<V> {
 
     @Inject
     public RegisterPresenter(DataManager dataManager, SchedulerProvider schedulerProvider, CompositeDisposable compositeDisposable) {

@@ -2,6 +2,7 @@ package au.com.dealsdirect.ui.controller.returns.returndetails.adapter;
 
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -55,11 +56,13 @@ public class ReturnDetailsAdapter extends RecyclerView.Adapter<ReturnDetailsView
         String itemCost = PriceUtils.getPriceStringValue(mReturnDetailsList.get(position).getPrice());
         String itemSubTotal = PriceUtils.getPriceStringValue(mReturnDetailsList.get(position).getSubTotal());
 
+        Log.d("itemiterator", "position = "+position );
         String itemSize = mReturnDetailsList.get(position).getSize();
         String brandId = mReturnDetailsList.get(position).getBrandID();
         String imageId = mReturnDetailsList.get(position).getImageID();
         String fileName = mReturnDetailsList.get(position).getFile();
         int itemReturnCount = mReturnDetailsList.get(position).getCount();
+        Log.d("itemiterator", "position = "+position+ "itemssize  = "+itemSize +" , brandid = "+brandId+" , imageid = "+imageId );
 
 //
         String imageUrl = ImageUtils.generateImageUrl(brandId,imageId,fileName);
@@ -105,4 +108,5 @@ public class ReturnDetailsAdapter extends RecyclerView.Adapter<ReturnDetailsView
             lastPosition = position;
         }
     }
+
 }

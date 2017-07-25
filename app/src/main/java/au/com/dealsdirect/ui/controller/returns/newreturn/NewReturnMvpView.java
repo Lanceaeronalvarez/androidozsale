@@ -4,10 +4,13 @@ package au.com.dealsdirect.ui.controller.returns.newreturn;
  */
 
 
-import au.com.dealsdirect.data.network.model.SampleResponse;
+import au.com.dealsdirect.data.network.model.returns.createreturn.CreateReturnRequestResponseBody;
+import au.com.dealsdirect.data.network.model.returns.newreturn.NewReturnOrderDetailResponse;
 import au.com.dealsdirect.ui.base.MvpView;
 
 public interface NewReturnMvpView extends MvpView {
 
-    void showSample(SampleResponse response);
+    void finishCreateReturnRequest(CreateReturnRequestResponseBody createReturnRequest);
+
+    void loadReturnOrderDetail(NewReturnOrderDetailResponse newReturnsOrderDetail);
 }

@@ -114,6 +114,7 @@ public class ViewContactsController extends BaseController implements ViewContac
 
         mViewContactsToolarTitle.setText("Contact Us");
         mViewContactsToolbarLeftOption.setVisibility(View.INVISIBLE);
+        mViewContactsToolbarRightOption.setVisibility(View.INVISIBLE);
 
         mContactAdapter = new ContactsAdapter(new ArrayList<>(), getActivity(), mContactClickListener);
 
@@ -147,6 +148,7 @@ public class ViewContactsController extends BaseController implements ViewContac
             mViewContactsNewMessage.setVisibility(View.GONE);
         } else {
             mPlaceholderLayout.setVisibility(View.VISIBLE);
+            mViewContactsNewMessage.setVisibility(View.VISIBLE);
             mViewContactsRecyclerView.setVisibility(View.GONE);
         }
     }

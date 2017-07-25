@@ -214,6 +214,7 @@ public class BasePresenter<V extends MvpView> implements MvpPresenter<V> {
                 }));
     }
 
+
     public static class MvpViewNotAttachedException extends RuntimeException {
         public MvpViewNotAttachedException() {
             super("Please call Presenter.onAttach(MvpView) before" +
