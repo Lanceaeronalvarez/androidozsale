@@ -47,7 +47,7 @@ public class ContactHistoryAdapter extends RecyclerView.Adapter<ContactHistoryVi
 
         String contactSubject = mCurrentContactsHistoryList.get(position).getSubject();
 
-        if (position % 2 == 0) {
+        if (mCurrentContactsHistoryList.get(position).getIsStaff()) {
             holder.contactHistoryMessageTextView.setBackgroundResource(R.drawable.bg_message_incoming);
             holder.contactHistoryItemCircularTextViewLeft.setText("DD");
             holder.contactHistoryItemCircularTextViewLeft.setVisibility(View.VISIBLE);
