@@ -117,7 +117,7 @@ public class CurrentReturnsController extends BaseController
                     mCurrentReturnsListener);
 
             mCurrentReturnsRecyclerView.setAdapter(mCurrentReturnsAdapter);
-            getCurrentReturnItems(mCurrentReturns);
+//            getCurrentReturnItems(mCurrentReturns);
 
 
         }
@@ -171,9 +171,12 @@ public class CurrentReturnsController extends BaseController
 
     @Override
     public void showCurrentReturnDetails(GetReturnDetailsResponseBody getReturnDetailsResponseBody) {
+        Log.d("itemiterator", "count ="+itemIterator);
+        Log.d("itemiterators", "count ="+getReturnDetailsResponseBody.getValue().getItems()+" , "+getReturnDetailsResponseBody.getValue().getItems().get(0).getPrice());
 
-            returnItemsMap.put(itemIterator,getReturnDetailsResponseBody);
+        returnItemsMap.put(itemIterator,getReturnDetailsResponseBody);
             if (returnItemsMap.size() == mCurrentReturns.size()){
+                Log.d("itemiterator", "done");
 
                 returnDetailsResponseBodyList.clear();
 
@@ -192,9 +195,12 @@ public class CurrentReturnsController extends BaseController
     }
 
     public void getCurrentReturnItems(List<CurrentReturns> currentReturns){
-        for (int i = 0; i < currentReturns.size(); i++){
-            mPresenter.loadReturnDetails(currentReturns.get(itemIterator).getID(), itemIterator);
-        }
+//        Log.d("itemiterator", " this value ="+itemIterator);
+        mPresenter.loadReturnDetails(currentReturns.get(itemIterator).getID(), itemIterator);
+
+//        for (int i = 0; i < currentReturns.size(); i++){
+//            mPresenter.loadReturnDetails(currentReturns.get(itemIterator).getID(), itemIterator);
+//        }
     }
 
     @Override
@@ -231,6 +237,5 @@ public class CurrentReturnsController extends BaseController
                 ReturnOrdersController.newInstance())
                 .pushChangeHandler(new HorizontalChangeHandler())
                 .popChangeHandler(new HorizontalChangeHandler()));
-
     }
 }

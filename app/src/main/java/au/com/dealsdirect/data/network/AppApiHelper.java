@@ -63,7 +63,11 @@ import au.com.dealsdirect.data.network.model.publicsalescategories.GetPublicSale
 import au.com.dealsdirect.data.network.model.publicsalescategories.GetPublicSalesCategoriesResponse;
 import au.com.dealsdirect.data.network.model.register.RegisterUserRequest;
 import au.com.dealsdirect.data.network.model.register.RegisterUserResponse;
+import au.com.dealsdirect.data.network.model.returns.createreturn.CreateReturnRequest;
+import au.com.dealsdirect.data.network.model.returns.createreturn.CreateReturnRequestResponseBody;
 import au.com.dealsdirect.data.network.model.returns.currentreturn.CurrentReturnResponseBody;
+import au.com.dealsdirect.data.network.model.returns.newreturn.NewReturnOrderDetailRequest;
+import au.com.dealsdirect.data.network.model.returns.newreturn.NewReturnOrderDetailResponseBody;
 import au.com.dealsdirect.data.network.model.returns.returndetails.GetReturnDetailRequest;
 import au.com.dealsdirect.data.network.model.returns.returndetails.GetReturnDetailsResponse;
 import au.com.dealsdirect.data.network.model.returns.returnorders.GetReturnOrders;
@@ -625,6 +629,22 @@ public class AppApiHelper implements ApiHelper {
                 .addJSONObjectBody(JsonUtils.convertToJsonObject(getReturnDetailRequest))
                 .build()
                 .getObjectObservable(GetReturnDetailsResponse.class);
+    }
+
+    @Override
+    public Observable<NewReturnOrderDetailResponseBody> callGetNewReturnOrderDetail(NewReturnOrderDetailRequest newReturnOrderDetailRequest) {
+        return Rx2AndroidNetworking.post(ApiEndPoint.GET_RETURN_ORDER_DETAIL)
+                .addJSONObjectBody(JsonUtils.convertToJsonObject(newReturnOrderDetailRequest))
+                .build()
+                .getObjectObservable(NewReturnOrderDetailResponseBody.class);
+    }
+
+    @Override
+    public Observable<CreateReturnRequestResponseBody> callCreateReturnRequest(CreateReturnRequest createReturnRequest) {
+        return Rx2AndroidNetworking.post(ApiEndPoint.CREATE_RETURN)
+                .addJSONObjectBody(JsonUtils.convertToJsonObject(createReturnRequest))
+                .build()
+                .getObjectObservable(CreateReturnRequestResponseBody.class);
     }
 }
 

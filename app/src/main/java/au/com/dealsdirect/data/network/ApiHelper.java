@@ -59,7 +59,11 @@ import au.com.dealsdirect.data.network.model.publicsalescategories.GetPublicSale
 import au.com.dealsdirect.data.network.model.publicsalescategories.GetPublicSalesCategoriesResponse;
 import au.com.dealsdirect.data.network.model.register.RegisterUserRequest;
 import au.com.dealsdirect.data.network.model.register.RegisterUserResponse;
+import au.com.dealsdirect.data.network.model.returns.createreturn.CreateReturnRequest;
+import au.com.dealsdirect.data.network.model.returns.createreturn.CreateReturnRequestResponseBody;
 import au.com.dealsdirect.data.network.model.returns.currentreturn.CurrentReturnResponseBody;
+import au.com.dealsdirect.data.network.model.returns.newreturn.NewReturnOrderDetailRequest;
+import au.com.dealsdirect.data.network.model.returns.newreturn.NewReturnOrderDetailResponseBody;
 import au.com.dealsdirect.data.network.model.returns.returndetails.GetReturnDetailRequest;
 import au.com.dealsdirect.data.network.model.returns.returndetails.GetReturnDetailsResponse;
 import au.com.dealsdirect.data.network.model.returns.returnorders.GetReturnOrders;
@@ -227,5 +231,9 @@ public interface ApiHelper {
     Observable<GetReturnOrders> callGetReturnOrders();
 
     Observable<GetReturnDetailsResponse> callGetReturnDetails(GetReturnDetailRequest getReturnDetailRequest);
+
+    Observable<NewReturnOrderDetailResponseBody> callGetNewReturnOrderDetail(NewReturnOrderDetailRequest newReturnOrderDetailRequest);
+
+    Observable<CreateReturnRequestResponseBody> callCreateReturnRequest(CreateReturnRequest createReturnRequest);
 
 }

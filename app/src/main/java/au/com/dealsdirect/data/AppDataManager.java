@@ -67,7 +67,11 @@ import au.com.dealsdirect.data.network.model.publicsalescategories.GetPublicSale
 import au.com.dealsdirect.data.network.model.publicsalescategories.GetPublicSalesCategoriesResponse;
 import au.com.dealsdirect.data.network.model.register.RegisterUserRequest;
 import au.com.dealsdirect.data.network.model.register.RegisterUserResponse;
+import au.com.dealsdirect.data.network.model.returns.createreturn.CreateReturnRequest;
+import au.com.dealsdirect.data.network.model.returns.createreturn.CreateReturnRequestResponseBody;
 import au.com.dealsdirect.data.network.model.returns.currentreturn.CurrentReturnResponseBody;
+import au.com.dealsdirect.data.network.model.returns.newreturn.NewReturnOrderDetailRequest;
+import au.com.dealsdirect.data.network.model.returns.newreturn.NewReturnOrderDetailResponseBody;
 import au.com.dealsdirect.data.network.model.returns.returndetails.GetReturnDetailRequest;
 import au.com.dealsdirect.data.network.model.returns.returndetails.GetReturnDetailsResponse;
 import au.com.dealsdirect.data.network.model.returns.returnorders.GetReturnOrders;
@@ -396,6 +400,18 @@ public class AppDataManager implements DataManager {
     @Override
     public Observable<GetReturnDetailsResponse> callGetReturnDetails(GetReturnDetailRequest getReturnDetailRequest) {
         return mApiHelper.callGetReturnDetails(getReturnDetailRequest);
+
+    }
+
+    @Override
+    public Observable<NewReturnOrderDetailResponseBody> callGetNewReturnOrderDetail(NewReturnOrderDetailRequest newReturnOrderDetailRequest) {
+        return mApiHelper.callGetNewReturnOrderDetail(newReturnOrderDetailRequest);
+
+    }
+
+    @Override
+    public Observable<CreateReturnRequestResponseBody> callCreateReturnRequest(CreateReturnRequest createReturnRequest) {
+        return mApiHelper.callCreateReturnRequest(createReturnRequest);
 
     }
 

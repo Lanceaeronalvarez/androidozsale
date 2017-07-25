@@ -1,12 +1,16 @@
 package au.com.dealsdirect.ui.controller.register;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+
+import com.facebook.CallbackManager;
 
 import javax.inject.Inject;
 
@@ -26,6 +30,8 @@ public class RegisterController extends BaseController implements RegisterMvpVie
     public static final String TAG = "RegisterController";
 
     private static final String KEY_TEXT = "RegisterController.KEY_TEXT";
+
+    private CallbackManager mCallbackManager = CallbackManager.Factory.create();
 
     @Inject
     RegisterMvpPresenter<RegisterMvpView> mPresenter;
@@ -67,6 +73,7 @@ public class RegisterController extends BaseController implements RegisterMvpVie
         View view = inflater.inflate(R.layout.controller_register, container, false);
 
         getControllerComponent().inject(this);
+        mCallbackManager = CallbackManager.Factory.create();
 
         mPresenter.onAttach(this);
 
@@ -93,6 +100,11 @@ public class RegisterController extends BaseController implements RegisterMvpVie
     }
 
     @Override
+    public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        mCallbackManager.onActivityResult(requestCode, resultCode, data);
+    }
+
+    @Override
     public void onDestroyView(View view) {
         mPresenter.onDetach();
         super.onDestroyView(view);
@@ -112,6 +124,12 @@ public class RegisterController extends BaseController implements RegisterMvpVie
         getActivity().onBackPressed();
     }
 
+
+    @OnClick(R.id.facebook_login_button)
+    void onFacebookLoginClick(){
+        mPresenter.onFacebookLogin(getActivity(), mCallbackManager);
+    }
+
     @Override
     public void showRegisterSuccessful(String loginTicket) {
         getActivity().onBackPressed();
@@ -126,5 +144,16 @@ public class RegisterController extends BaseController implements RegisterMvpVie
         Log.d("Register", "Error message = "+message);
         CustomAlertDialog.showCustomAlertDialog(getActivity(),
                 CustomAlertDialog.CustomDialogIconState.NEGATIVE,message);
+    }
+
+    @Override
+    public void showLoginSuccessful(String loginTicket) {
+        getActivity().onBackPressed();
+
+    }
+
+    @Override
+    public void showLoginError(String message) {
+
     }
 }

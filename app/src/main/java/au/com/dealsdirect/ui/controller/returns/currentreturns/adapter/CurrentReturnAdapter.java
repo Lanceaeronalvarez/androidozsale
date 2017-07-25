@@ -3,6 +3,7 @@ package au.com.dealsdirect.ui.controller.returns.currentreturns.adapter;
 import android.content.Context;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -143,12 +144,12 @@ public class CurrentReturnAdapter extends RecyclerView.Adapter<CurrentReturnView
                     .getValue()
                     .getTotal();
 
+            Log.d("itemiterator", "items = "+items.size() + " , subtotal = "+subTotal + " content = "+items.get(0).getCount()+" , "+items.get(0).getPrice());
+
             final ReturnDetailsAdapter adapter =
                     new ReturnDetailsAdapter(items, subTotal, mContext);
 //
-//
-            holder.currentReturnItemsRecyclerView.setAdapter(adapter);
-//
+
             LinearLayoutManager linearLayoutManager = new LinearLayoutManager(mContext) {
                 @Override
                 public boolean canScrollVertically() {
@@ -165,6 +166,8 @@ public class CurrentReturnAdapter extends RecyclerView.Adapter<CurrentReturnView
 
             holder.currentReturnItemsRecyclerView.setLayoutManager(linearLayoutManager);
             holder.currentReturnItemsRecyclerView.setNestedScrollingEnabled(false);
+
+            holder.currentReturnItemsRecyclerView.setAdapter(adapter);
         }
     }
 

@@ -129,7 +129,6 @@ public class LoginController extends BaseController implements LoginMvpView {
 
     @Override
     public void showLoginSuccessful(String loginTicket) {
-        getActivity().onBackPressed();
         mAuthHandler.success();
     }
 

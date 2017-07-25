@@ -4,9 +4,9 @@ package au.com.dealsdirect.ui.controller.register;
  */
 
 
-import au.com.dealsdirect.ui.base.MvpPresenter;
+import au.com.dealsdirect.ui.base.AuthenticationMvpPresenter;
 
-public interface RegisterMvpPresenter<V extends RegisterMvpView> extends MvpPresenter<V> {
+public interface RegisterMvpPresenter<V extends RegisterMvpView> extends AuthenticationMvpPresenter<V> {
 
     void registerUser(String firstName, String lastName, String email, String password);
 

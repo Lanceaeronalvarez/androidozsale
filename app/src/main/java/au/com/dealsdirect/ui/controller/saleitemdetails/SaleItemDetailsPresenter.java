@@ -71,8 +71,8 @@ public class SaleItemDetailsPresenter<V extends SaleItemDetailsMvpView> extends 
 //                        }
 //
 //                        getMvpView().hideLoading();
-//                        if(response.getD().getResult() && response.getD().getValue() != null){
-//                            getMvpView().showSaleDetails(response.getD().getValue());
+//                        if(response.getNewReturnOrderDetailResponse().getResult() && response.getNewReturnOrderDetailResponse().getValue() != null){
+//                            getMvpView().showSaleDetails(response.getNewReturnOrderDetailResponse().getValue());
 //                        }
 //
 //

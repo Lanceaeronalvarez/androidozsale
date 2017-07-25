@@ -6,16 +6,10 @@ package au.com.dealsdirect.ui.controller.returns.currentreturns;
 
 import com.androidnetworking.error.ANError;
 
-import java.util.LinkedList;
-import java.util.List;
-
 import javax.inject.Inject;
 
 import au.com.dealsdirect.data.DataManager;
-import au.com.dealsdirect.data.network.model.returns.returndetails.GetReturnDetailsResponse;
-import au.com.dealsdirect.data.network.model.returns.returndetails.GetReturnDetailsResponseBody;
-import au.com.dealsdirect.data.network.model.returns.returndetails.Item;
-import au.com.dealsdirect.data.network.model.returns.returndetails.Value;
+import au.com.dealsdirect.data.network.model.returns.returndetails.GetReturnDetailRequest;
 import au.com.dealsdirect.ui.base.BasePresenter;
 import au.com.dealsdirect.utils.rx.SchedulerProvider;
 import io.reactivex.disposables.CompositeDisposable;
@@ -129,33 +123,36 @@ public class CurrentReturnsPresenter<V extends CurrentReturnsMvpView> extends Ba
     @Override
     public void loadReturnDetails(String returnID, int position) {
 
+        GetReturnDetailRequest getReturnDetailRequest = new GetReturnDetailRequest();
+        getReturnDetailRequest.returnID = returnID;
 
-        List<Item> items = new LinkedList<>();
-        Item item = new Item();
-        item.setBrandID("ee");
-        item.setCount(2);
-        item.setFile("ee");
-        item.setImageID("ee");
-        item.setPrice(Double.valueOf(50));
-        item.setItemID("001");
-        item.setSize("Large");
-        item.setSubTotal(Double.valueOf(50));
+        getCompositeDisposable()
+                .add(getDataManager()
+                        .callGetReturnDetails(getReturnDetailRequest)
+                        .subscribeOn(getSchedulerProvider().io())
+                        .observeOn(getSchedulerProvider().ui())
+                        .subscribe(getCurrentReturnDetailResponse -> {
 
-        items.add(item);
+                            if (!isViewAttached()) {
+                                return;
+                            }
+                            getMvpView().hideLoading();
+                            getMvpView().showCurrentReturnDetails(getCurrentReturnDetailResponse.getGetReturnDetailsResponseBody());
 
-        Value value = new Value();
-        value.setTotal(Double.valueOf(100));
-        value.setItems(items);
+                        }, throwable -> {
 
-        GetReturnDetailsResponseBody getReturnDetailsResponseBody = new GetReturnDetailsResponseBody();
-        getReturnDetailsResponseBody.setIsAuthenticated(true);
-        getReturnDetailsResponseBody.setMessage("ok");
-        getReturnDetailsResponseBody.setResult(true);
-        getReturnDetailsResponseBody.setValue(value);
+                            if (!isViewAttached()) {
+                                return;
+                            }
 
-        GetReturnDetailsResponse getReturnDetailsResponse = new GetReturnDetailsResponse();
-        getReturnDetailsResponse.setGetReturnDetailsResponseBody(getReturnDetailsResponseBody);
+                            getMvpView().hideLoading();
+                            getMvpView().onError(throwable.getMessage());
 
-        getMvpView().showCurrentReturnDetails(getReturnDetailsResponseBody);
+                            // handle load accounts error here
+                            if (throwable instanceof ANError) {
+                                ANError anError = (ANError) throwable;
+                                handleApiError(anError);
+                            }
+                        }));
     }
 }

@@ -23,50 +23,6 @@ public class ReturnOrdersPresenter<V extends ReturnOrdersMvpView> extends BasePr
     @Override
     public void loadOrders() {
 
-//        String mockCall = "{\n" +
-//                "\t\"d\": {\n" +
-//                "\t\t\"IsAuthenticated\": true,\n" +
-//                "\t\t\"List\": [{\n" +
-//                "\t\t\t\"InvoiceNo\": 23883356,\n" +
-//                "\t\t\t\"OrderNumber\": 21655447,\n" +
-//                "\t\t\t\"InvoiceNoRef\": 23883356,\n" +
-//                "\t\t\t\"ItemsCount\": 2,\n" +
-//                "\t\t\t\"Total\": 178.0000,\n" +
-//                "\t\t\t\"Status\": \"Dispatched\",\n" +
-//                "\t\t\t\"ConsignmentNo\": \".\",\n" +
-//                "\t\t\t\"ReturnRequested\": false,\n" +
-//                "\t\t\t\"Description\": \"Bolle \\u0026 Serengeti Eyewear\"\n" +
-//                "\t\t}, {\n" +
-//                "\t\t\t\"InvoiceNo\": 23883357,\n" +
-//                "\t\t\t\"OrderNumber\": 21655448,\n" +
-//                "\t\t\t\"InvoiceNoRef\": 23883357,\n" +
-//                "\t\t\t\"ItemsCount\": 1,\n" +
-//                "\t\t\t\"Total\": 49.2500,\n" +
-//                "\t\t\t\"Status\": \"Dispatched\",\n" +
-//                "\t\t\t\"ConsignmentNo\": \"3432432432\",\n" +
-//                "\t\t\t\"ReturnRequested\": false,\n" +
-//                "\t\t\t\"Description\": \"Fendi Frames \\u0026 Sunglasses\"\n" +
-//                "\t\t}, {\n" +
-//                "\t\t\t\"InvoiceNo\": 23883359,\n" +
-//                "\t\t\t\"OrderNumber\": 21655450,\n" +
-//                "\t\t\t\"InvoiceNoRef\": 23883359,\n" +
-//                "\t\t\t\"ItemsCount\": 3,\n" +
-//                "\t\t\t\"Total\": 147.2500,\n" +
-//                "\t\t\t\"Status\": \"Dispatched\",\n" +
-//                "\t\t\t\"ConsignmentNo\": \".\",\n" +
-//                "\t\t\t\"ReturnRequested\": false,\n" +
-//                "\t\t\t\"Description\": \"Fendi Frames \\u0026 Sunglasses\"\n" +
-//                "\t\t}],\n" +
-//                "\t\t\"Result\": true,\n" +
-//                "\t\t\"Message\": \"\"\n" +
-//                "\t}\n" +
-//                "}";
-//
-//        GetReturnOrders responseValue = new Gson().fromJson(mockCall,GetReturnOrders.class);
-//        java.util.List<List> testOrders
-//                = responseValue.getGetReturnOrdersBody().getList();
-//        getMvpView().showOrders(testOrders);
-//
         getCompositeDisposable()
                 .add(getDataManager()
                         .callGetReturnOrders()
