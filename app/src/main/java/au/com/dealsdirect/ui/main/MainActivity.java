@@ -113,6 +113,9 @@ public class MainActivity extends BaseActivity implements MainMvpView {
     @Override
     protected void onDestroy() {
         mPresenter.onDetach();
+        mMainController = null;
+        mShopController = null;
+        mCategoriesController = null;
         super.onDestroy();
     }
 

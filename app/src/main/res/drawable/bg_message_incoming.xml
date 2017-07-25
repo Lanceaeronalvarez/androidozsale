@@ -1,26 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
-    <item android:top="215dp">
-        <rotate
-            android:fromDegrees="-45"
-            android:pivotX="0%"
-            android:pivotY="0%"
-            android:toDegrees="0">
-            <shape android:shape="rectangle">
-                <solid android:color="@color/gray_border" />
-                <size
-                    android:width="20dp"
-                    android:height="20dp" />
-            </shape>
-        </rotate>
-    </item>
-    <item android:left="20dp">
-        <shape android:shape="rectangle">
-            <solid android:color="@color/gray_border" />
-            <corners android:radius="30dp" />
-            <size
-                android:width="100dp"
-                android:height="260dp" />
-        </shape>
-    </item>
-</layer-list>
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:viewportWidth="292"
+    android:viewportHeight="184"
+    android:width="292dp"
+    android:height="184dp">
+    <path
+        android:pathData="M20.727274 170.14493c6.978005 6.55777 16.371206 10.5751 26.702706 10.5751l199.05214 0c21.53911 0 39 -17.4609 39 -39l0 -98.72003c0 -21.539105 -17.46089 -39 -39 -39l-199.05214 0 0 0C25.890875 4 8.4299804 21.460895 8.4299804 43l0 0 0 98.72003c0 3.3274 0.416698 6.55748 1.2007565 9.64089L7 167.97074l13.727274 2.17419z"
+        android:fillColor="#d9d9d9" />
+</vector>
