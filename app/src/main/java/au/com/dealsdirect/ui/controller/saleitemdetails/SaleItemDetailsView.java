@@ -31,8 +31,6 @@ public class SaleItemDetailsView extends ElasticDragDismissFrameLayout {
     public TextView mDiscountLabel;
     @BindView(R.id.productImageRecyclerView)
     public RecyclerViewPager mProductImagesRv;
-    @BindView(R.id.otherImagesRecyclerView)
-    public RecyclerView mOtherImagesRv;
     @BindView(R.id.productName)
     public TextView mProductName;
     @BindView(R.id.productPrice)
