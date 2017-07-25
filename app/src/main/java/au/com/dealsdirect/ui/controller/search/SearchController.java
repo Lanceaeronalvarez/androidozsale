@@ -112,7 +112,7 @@ public class SearchController extends BaseController implements SaleItemsMvpView
     @Override
     protected void setUp(View view) {
         // Setup views here
-        mPresenter.loadSaleItems(null,null,"" ,0, new ArrayList());
+        mPresenter.loadSaleItems("","","" ,0, new ArrayList());
 
         mSearchToolbarSearchField.addTextChangedListener(new TextWatcher() {
             @Override
@@ -122,7 +122,7 @@ public class SearchController extends BaseController implements SaleItemsMvpView
 
             @Override
             public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-                mPresenter.loadSaleItems(null,null,charSequence.toString(),0, new ArrayList());
+                mPresenter.loadSaleItems("","",charSequence.toString(),0, new ArrayList());
             }
 
             @Override

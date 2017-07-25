@@ -16,7 +16,6 @@ import au.com.dealsdirect.data.DataManager;
 import au.com.dealsdirect.data.network.model.saleitems.GetSaleItemsRequest;
 import au.com.dealsdirect.data.network.model.sorting.SortingResponse;
 import au.com.dealsdirect.ui.base.BasePresenter;
-import au.com.dealsdirect.ui.controller.searchfilter.SearchFilterController;
 import au.com.dealsdirect.ui.controller.searchfilter.adapter.SearchChipModel;
 import au.com.dealsdirect.utils.rx.SchedulerProvider;
 import io.reactivex.annotations.NonNull;
@@ -47,13 +46,13 @@ public class SaleItemsPresenter<V extends SaleItemsMvpView> extends BasePresente
     }
 
     @Override
-    public void loadSaleItems(String categoryKey, String saleId, String searchQuery, int pageNumber, ArrayList<SearchChipModel> chipsList) {
+    public void loadSaleItems(String categoryKey, String saleId, String searchQuery, int pageNumber, List<SearchChipModel> chipsList) {
         List<String> saleIds = new LinkedList<>();
         HashMap<String, List<String>> facetFilters = new HashMap<>();
 
         GetSaleItemsRequest getSaleItemsRequest = new GetSaleItemsRequest();
 
-        if (categoryKey != null)
+        if (!categoryKey.isEmpty())
             getSaleItemsRequest.setCategoryKey("[\"" + categoryKey + "\"]");
         else
             getSaleItemsRequest.setCategoryKey("[]");
@@ -69,7 +68,7 @@ public class SaleItemsPresenter<V extends SaleItemsMvpView> extends BasePresente
 
         getSaleItemsRequest.setPageSize("50");
 
-        if (saleId != null)
+        if (!saleId.isEmpty())
             saleIds.add(saleId);
         facetFilters.put("saleId", saleIds);
 
@@ -83,15 +82,15 @@ public class SaleItemsPresenter<V extends SaleItemsMvpView> extends BasePresente
 
             for (SearchChipModel chip : chipsList) {
                 String facetName = chip.getFilterType();
-                if (facetName == BRANDS_FACETFILTER_NAME) {
+                if (facetName.equals(BRANDS_FACETFILTER_NAME)) {
                     brandNameFacetFilters.add(chip.getChipTitle());
-                } else if (facetName == COLORS_FACETFILTER_NAME) {
+                } else if (facetName.equals(COLORS_FACETFILTER_NAME)) {
                     colorFacetFilters.add(chip.getChipTitle());
-                } else if (facetName == SIZES_FACETFILTER_NAME) {
+                } else if (facetName.equals(SIZES_FACETFILTER_NAME)) {
                     sizesFacetFilters.add(chip.getChipTitle());
-                } else if (facetName == PRICE_FACETFILTER_NAME) {
+                } else if (facetName.equals(PRICE_FACETFILTER_NAME)) {
                     priceFacetFilters.add(chip.getChipTitle());
-                } else if (facetName == SEARCH_QUERY_NAME) {
+                } else if (facetName.equals(SEARCH_QUERY_NAME)) {
                     searchQueryFilters.add(chip.getChipTitle());
                 }
             }
@@ -101,7 +100,6 @@ public class SaleItemsPresenter<V extends SaleItemsMvpView> extends BasePresente
             facetFilters.put(SIZES_FACETFILTER_NAME, sizesFacetFilters);
             facetFilters.put(PRICE_FACETFILTER_NAME, priceFacetFilters);
 
-            String facetFiltersString = new Gson().toJson(facetFilters);
 
             StringBuilder result = new StringBuilder();
             for (int i = 0; i < searchQueryFilters.size(); i++) {

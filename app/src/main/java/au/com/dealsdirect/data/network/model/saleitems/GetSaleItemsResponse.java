@@ -7,6 +7,7 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
+import au.com.dealsdirect.data.network.model.category.GetCategoryTreeResponse;
 import au.com.dealsdirect.data.network.model.saleitemdetails.Attributes;
 import au.com.dealsdirect.data.network.model.saleitemdetails.OriginalPrice;
 
@@ -16,6 +17,7 @@ import au.com.dealsdirect.data.network.model.saleitemdetails.OriginalPrice;
 
 public class GetSaleItemsResponse implements Serializable {
 
+    public List<GetCategoryTreeResponse> categories;
     public int count;
     public int page;
     public int pages;
@@ -23,6 +25,10 @@ public class GetSaleItemsResponse implements Serializable {
     public String query;
     public ArrayList<Products> products = new ArrayList<>();
     public ArrayList<Facets> facets = new ArrayList<>();
+
+    public List<GetCategoryTreeResponse> getCategories() {
+        return categories;
+    }
 
     public GetSaleItemsResponse() {
 
@@ -90,6 +96,7 @@ public class GetSaleItemsResponse implements Serializable {
         public String getLabelText() {
             return labelText;
         }
+
     }
 
     public class Facets {

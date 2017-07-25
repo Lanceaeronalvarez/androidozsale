@@ -18,11 +18,15 @@ import android.widget.TextView;
 import com.bluelinelabs.conductor.RouterTransaction;
 import com.bluelinelabs.conductor.changehandler.VerticalChangeHandler;
 import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 import com.paginate.Paginate;
 
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Set;
 
 import javax.inject.Inject;
 
@@ -32,12 +36,17 @@ import au.com.dealsdirect.data.network.model.sorting.SortingResponse;
 import au.com.dealsdirect.ui.base.BaseController;
 import au.com.dealsdirect.ui.controller.saleitems.adapter.SaleItemsAdapter;
 import au.com.dealsdirect.ui.controller.searchfilter.SearchFilterController;
+import au.com.dealsdirect.ui.controller.searchfilter.adapter.SearchChipModel;
 import au.com.dealsdirect.ui.main.MainActivity;
 import au.com.dealsdirect.ui.main.SharedActivity;
 import au.com.dealsdirect.utils.BundleBuilder;
+import au.com.dealsdirect.utils.JsonUtils;
 import au.com.dealsdirect.utils.PaginateUtils;
 import butterknife.BindView;
 import butterknife.OnClick;
+
+import static au.com.dealsdirect.ui.controller.searchfilter.SearchFilterController.KEY_ORIG_SELECTED;
+import static au.com.dealsdirect.ui.controller.searchfilter.SearchFilterController.KEY_SELECTED_FACETS;
 
 /**
  * dp Created by Admin on 6/8/17.
@@ -52,6 +61,7 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
     public static final String KEY_FROM_POSITION = "SaleItemsController.position";
     public static final String KEY_CATEGORY_MAP = "SaleItemsController.CATEGORY_KEY";
     public static final String KEY_SEARCH_QUERY = "SaleItemsController.SEARCH_KEY";
+    public static final String KEY_CHIPS_FILTER = "SaleItemsController.CHIPS_FILTER";
     private static final String KEY_REQUEST_FROM = "SaleITemsController.REQUEST_FROM";
     private static final String KEY_FROM_CATEGORIES = "SaleItemsController.IS_FROM_CATEGORY";
 
@@ -83,8 +93,12 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
     private int page = 0;
     private boolean loadingInProgress = false;
     private boolean hasLoadedAllItems = false;
-    private boolean mIsFromCategory = false;
+    private boolean isFiltered = false;
 
+    private List<SearchChipModel> mChipFilters = new ArrayList<>();
+
+    //store state of selection from filters
+    private String mPreviousSelectedFacetIndicesJsonString = "";
 
     boolean initialLoad = false;
 
@@ -121,13 +135,37 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
         super(args);
 
         if (args.containsKey(KEY_TITLE))
-            mTitle = getArgs().getString(KEY_TITLE);
+            mTitle = getArgs().getString(KEY_TITLE, "");
         if (args.containsKey(KEY_SALE_ID))
-            mSaleId = getArgs().getString(KEY_SALE_ID);
+            mSaleId = getArgs().getString(KEY_SALE_ID, "");
         if (args.containsKey(KEY_CATEGORY_MAP))
-            mCategoryKey = getArgs().getString(KEY_CATEGORY_MAP);
+            mCategoryKey = getArgs().getString(KEY_CATEGORY_MAP, "");
         if (args.containsKey(KEY_SEARCH_QUERY))
-            mSearchQuery = getArgs().getString(KEY_SEARCH_QUERY);
+            mSearchQuery = getArgs().getString(KEY_SEARCH_QUERY, "");
+        if (args.containsKey(KEY_CHIPS_FILTER))
+            mChipFilters = JsonUtils.convertStringToObject(getArgs().getString(KEY_CHIPS_FILTER, ""), new TypeToken<ArrayList<SearchChipModel>>() {
+            }.getType());
+
+    }
+
+    public void onPassFiltersData(Bundle args) {
+        if (args.containsKey(KEY_TITLE))
+            mTitle = args.getString(KEY_TITLE, "");
+        if (args.containsKey(KEY_SALE_ID))
+            mSaleId = args.getString(KEY_SALE_ID, "");
+        if (args.containsKey(KEY_CATEGORY_MAP))
+            mCategoryKey = args.getString(KEY_CATEGORY_MAP, "");
+        if (args.containsKey(KEY_SEARCH_QUERY))
+            mSearchQuery = args.getString(KEY_SEARCH_QUERY, "");
+        if (args.containsKey(KEY_CHIPS_FILTER)) {
+            mChipFilters = JsonUtils.convertStringToObject(args.getString(KEY_CHIPS_FILTER, ""), new TypeToken<ArrayList<SearchChipModel>>() {
+            }.getType());
+        }
+        if (args.containsKey(KEY_SELECTED_FACETS))
+            mPreviousSelectedFacetIndicesJsonString = args.getString(KEY_SELECTED_FACETS,"");
+
+        isFiltered = true;
+        page = 0;
     }
 
     @Override
@@ -143,21 +181,21 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
         super.onViewBound(view);
 
         assert (getActivity()) != null;
-        ((MainActivity)getActivity()).setDraggableViewPager(false);
+        ((MainActivity) getActivity()).setDraggableViewPager(false);
 
-        if (mCategoryKey!=null && !mCategoryKey.isEmpty()){
-            Log.d("saletitle", "with category "+mCategoryKey);
+        if (mCategoryKey != null && !mCategoryKey.isEmpty()) {
+            Log.d("saletitle", "with category " + mCategoryKey);
 
             char c = '>';
             int charCount = 0;
             String newString = "";
-            for (int i = 0; i < mCategoryKey.length(); i++){
+            for (int i = 0; i < mCategoryKey.length(); i++) {
                 String getChar = String.valueOf(mCategoryKey.charAt(i));
-                if (!getChar.equals(String.valueOf(c))){
+                if (!getChar.equals(String.valueOf(c))) {
                     newString = newString + mCategoryKey.charAt(i);
 
-                }else{
-                    if (charCount==2){
+                } else {
+                    if (charCount == 2) {
                         newString = newString + " • ";
                         charCount = 0;
                     }
@@ -166,8 +204,7 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
             }
             mTitleTextView.setText(newString);
 
-        }
-        else{
+        } else {
             Log.d("saletitle", "without category ");
             mTitleTextView.setText(mTitle);
         }
@@ -212,10 +249,11 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
         mSaleItemsRecyclerView.setLayoutManager(new GridLayoutManager(getActivity(), 2));
         mSaleItemsRecyclerView.setAdapter(mSaleItemsAdapter);
 
-        if (mSaleItems.isEmpty()) {
-            showLoading();
-            mPresenter.loadSaleItems(mCategoryKey, mSaleId, mSearchQuery, page, new ArrayList());
-        } else {
+
+        showLoading();
+        mPresenter.loadSaleItems(mCategoryKey, mSaleId, mSearchQuery, page, mChipFilters);
+
+        if(!mSaleItems.isEmpty()){
             mPaginateManager = PaginateUtils.init(mSaleItemsRecyclerView, mPaginateCallbacks);
         }
 
@@ -237,13 +275,17 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
             mSaleItemsAdapter.replaceData(items);
             mPaginateManager = PaginateUtils.init(mSaleItemsRecyclerView, mPaginateCallbacks);
             initialLoad = true;
+        } else if(isFiltered){
+            mSaleItemsAdapter.replaceData(items);
+            isFiltered = false;
         } else {
             mSaleItemsAdapter.addData(items);
-
             if (items.size() == 0) {
                 hasLoadedAllItems = true;
             }
         }
+
+
 
         mSaleItems = mSaleItemsAdapter.getData();
 
@@ -256,17 +298,29 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
             mSaleItemsRecyclerView.setVisibility(View.VISIBLE);
         }
 
-            if (page == 0) {
-                mSaleItemsAdapter = new SaleItemsAdapter(mSaleItems, mPresenter, mSaleId, mTitle);
-                mSaleItemsRecyclerView.setLayoutManager(new GridLayoutManager(getActivity(), 2));
-                mSaleItemsRecyclerView.setAdapter(mSaleItemsAdapter);
-
-                mPaginateManager = PaginateUtils.init(mSaleItemsRecyclerView, mPaginateCallbacks);
-            } else {
-                mSaleItemsAdapter.addData(mSaleItems);
-            }
+//        if (page == 0) {
+//            mSaleItemsAdapter = new SaleItemsAdapter(mSaleItems, mPresenter, mSaleId, mTitle);
+//            mSaleItemsRecyclerView.setLayoutManager(new GridLayoutManager(getActivity(), 2));
+//            mSaleItemsRecyclerView.setAdapter(mSaleItemsAdapter);
+//
+//            mPaginateManager = PaginateUtils.init(mSaleItemsRecyclerView, mPaginateCallbacks);
+//        } else {
+//            mSaleItemsAdapter.addData(mSaleItems);
+//        }
     }
 
+
+    @Override
+    protected void onSaveViewState(@NonNull View view, @NonNull Bundle outState) {
+        super.onSaveViewState(view, outState);
+        Log.d("flowTesting", "onSaveViewState");
+    }
+
+    @Override
+    protected void onRestoreViewState(@NonNull View view, @NonNull Bundle savedViewState) {
+        super.onRestoreViewState(view, savedViewState);
+        Log.d("flowTesting", "onRestoreViewState");
+    }
 
     @SuppressWarnings("ConstantConditions")
     @OnClick(R.id.partial_toolbar_arrow_view)
@@ -275,8 +329,13 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
     }
 
     @OnClick(R.id.partial_toolbar_filter_view)
-    void showFIlters(){
-        getRouter().pushController(RouterTransaction.with(SearchFilterController.newInstance(new Gson().toJson(mFacets),mSortingListJsonString))
+    void showFilters() {
+        getRouter().pushController(RouterTransaction.with(SearchFilterController.newInstance(new Gson().toJson(mFacets)
+                , mSortingListJsonString
+                , mSaleId
+                , mCategoryKey
+                ,mPreviousSelectedFacetIndicesJsonString
+                ,new Gson().toJson(mChipFilters)))
                 .pushChangeHandler(new VerticalChangeHandler())
                 .popChangeHandler(new VerticalChangeHandler()));
     }
@@ -284,7 +343,7 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
     @Override
     public void refresh() {
         loadingInProgress = true;
-        mPresenter.loadSaleItems(mCategoryKey, mSaleId, mSearchQuery, page, new ArrayList());
+        mPresenter.loadSaleItems(mCategoryKey, mSaleId, mSearchQuery, page, mChipFilters);
     }
 
     @Override
@@ -305,10 +364,10 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
             intent.putExtra("KEY_ITEM_ID", itemId);
             intent.putExtra("KEY_SALE_ID", saleId);
             intent.putExtra("KEY_SALE_NAME", ((SaleItemsAdapter.ViewHolder) viewHolder).mSaleItemName.getText());
-            intent.putExtra("KEY_SALE_PRICE",((SaleItemsAdapter.ViewHolder) viewHolder).mSalePrice.getText());
-            intent.putExtra("KEY_SALE_OLD_PRICE",((SaleItemsAdapter.ViewHolder) viewHolder).mOldPrice.getText());
-            Log.d("LogBundle", ((SaleItemsAdapter.ViewHolder) viewHolder).mSaleItemName.getText()+" , "+
-                    ((SaleItemsAdapter.ViewHolder) viewHolder).mSalePrice.getText()+" , "+
+            intent.putExtra("KEY_SALE_PRICE", ((SaleItemsAdapter.ViewHolder) viewHolder).mSalePrice.getText());
+            intent.putExtra("KEY_SALE_OLD_PRICE", ((SaleItemsAdapter.ViewHolder) viewHolder).mOldPrice.getText());
+            Log.d("LogBundle", ((SaleItemsAdapter.ViewHolder) viewHolder).mSaleItemName.getText() + " , " +
+                    ((SaleItemsAdapter.ViewHolder) viewHolder).mSalePrice.getText() + " , " +
                     ((SaleItemsAdapter.ViewHolder) viewHolder).mOldPrice.getText());
 
 

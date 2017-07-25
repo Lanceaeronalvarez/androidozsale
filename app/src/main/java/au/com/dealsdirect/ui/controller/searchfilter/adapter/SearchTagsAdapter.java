@@ -84,6 +84,11 @@ public class SearchTagsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
         }
     }
 
+    public void replaceData(ArrayList<SearchChipModel> chips){
+        mData = chips;
+        notifyDataSetChanged();
+    }
+
     public ArrayList<SearchChipModel> getData() {
         return mData;
     }
@@ -113,15 +118,15 @@ public class SearchTagsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
 
         if(holder instanceof EditTextViewHolder) {
             EditTextViewHolder vh = (EditTextViewHolder) holder;
-            if (mData.size() == 0) {
-//                vh.placeholder.setVisibility(View.VISIBLE);
-//                vh.et.setVisibility(View.GONE);
-                vh.toggleEditTextVisibility(true);
-            } else {
-                vh.toggleEditTextVisibility(false);
-//                vh.placeholder.setVisibility(View.GONE);
-//                vh.et.setVisibility(View.VISIBLE);
-            }
+//            if (mData.size() == 0) {
+////                vh.placeholder.setVisibility(View.VISIBLE);
+////                vh.et.setVisibility(View.GONE);
+//                vh.toggleEditTextVisibility(true);
+//            } else {
+//                vh.toggleEditTextVisibility(false);
+////                vh.placeholder.setVisibility(View.GONE);
+////                vh.et.setVisibility(View.VISIBLE);
+//            }
 
             vh.et.setOnEditorActionListener(new TextView.OnEditorActionListener() {
                 @Override

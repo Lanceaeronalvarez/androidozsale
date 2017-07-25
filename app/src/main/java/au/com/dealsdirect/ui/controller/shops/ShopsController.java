@@ -275,6 +275,7 @@ public class ShopsController extends BaseController implements ShopsMvpView, Ban
                                     position,
                                     imageUrl,
                                     null))
+                            .tag("SaleItemsController")
                     .pushChangeHandler(new HorizontalChangeHandler())
                     .popChangeHandler(new HorizontalChangeHandler()));
             } else {

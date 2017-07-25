@@ -99,7 +99,7 @@ public class SaleItemsAdapter extends RecyclerView.Adapter<SaleItemsAdapter.View
     @Override
     public void onBindViewHolder(ViewHolder holder, final int position) {
         GetSaleItemsResponse.Products saleItem = mData.get(position);
-        String url = mData.get(position).getImages().get(0);
+        String url = mData.get(position).getImages().isEmpty() ? "" : mData.get(position).getImages().get(0);
 
         holder.mSaleItemName.setText(saleItem.getProductName());
 

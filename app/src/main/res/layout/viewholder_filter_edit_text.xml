@@ -34,5 +34,6 @@
         android:layout_margin="5dp"
         android:textColor="@color/gray_field_text"
         android:textSize="@dimen/text_size_xxlarge"
+        android:visibility="gone"
         />
 </FrameLayout>

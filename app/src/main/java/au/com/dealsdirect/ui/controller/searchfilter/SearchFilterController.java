@@ -2,6 +2,7 @@ package au.com.dealsdirect.ui.controller.searchfilter;
 
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.v4.util.Pair;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -17,10 +18,15 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.bluelinelabs.conductor.Controller;
+import com.bluelinelabs.conductor.ControllerChangeHandler;
 import com.bluelinelabs.conductor.RouterTransaction;
+import com.bluelinelabs.conductor.changehandler.HorizontalChangeHandler;
+import com.bluelinelabs.conductor.changehandler.VerticalChangeHandler;
 import com.crystal.crystalrangeseekbar.interfaces.OnRangeSeekbarChangeListener;
 import com.crystal.crystalrangeseekbar.interfaces.OnRangeSeekbarFinalValueListener;
 import com.google.errorprone.annotations.Var;
+import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
 import java.util.ArrayList;
@@ -48,6 +54,10 @@ import au.com.dealsdirect.utils.JsonUtils;
 import butterknife.BindView;
 import butterknife.OnClick;
 
+import static au.com.dealsdirect.ui.controller.saleitems.SaleItemsController.KEY_CATEGORY_MAP;
+import static au.com.dealsdirect.ui.controller.saleitems.SaleItemsController.KEY_CHIPS_FILTER;
+import static au.com.dealsdirect.ui.controller.saleitems.SaleItemsController.KEY_SALE_ID;
+
 /**
  * Created by smartwave on 20/07/2017.
  */
@@ -60,6 +70,8 @@ public class SearchFilterController extends BaseController implements SearchFilt
     public static final String PRICE_FACETFILTER_NAME = "skus.attributesForFaceting.aud";
     public static final String SEARCH_QUERY_NAME = "search_query";
     public static final String SORT_FACETFILTER_NAME = "sort";
+    public static final String KEY_SELECTED_FACETS = "KEY_SELECTED_FACETS";
+    public static final String KEY_ORIG_SELECTED = "KEY_ORIG_SELECTED";
 
     private static final String KEY_FACET_STRING = "KEY_FACET_STRING";
     private static final String KEY_SORTING_STRING = "KEY_SORTING_STRING";
@@ -112,12 +124,16 @@ public class SearchFilterController extends BaseController implements SearchFilt
     private int origMaxValue = -1;
     private boolean isSeekbarReset = false;
 
+    String mCategoryKey = "";
+    String mSaleId = "";
+
 
     private Set<Integer> origSelectedSet = new HashSet<Integer>();
 
     private int mPreviousSelectedFacetIndex = -1;
 
     private HashMap<String, Set<Integer>> mPreviousSelectedFacetIndices = new HashMap<>();
+    private ArrayList<SearchChipModel> mPreviousSearchChips = new ArrayList<>();
 
     List<String> mFacetFilters = Arrays.asList
             ("Sort",
@@ -127,10 +143,14 @@ public class SearchFilterController extends BaseController implements SearchFilt
                     "Colors",
                     "Price");
 
-    public static SearchFilterController newInstance(String jsonFacetString, String sortingFacetString) {
+    public static SearchFilterController newInstance(String jsonFacetString, String sortingFacetString, String saleId, String categoryKey, String previouslySelectedFacetIndices, String previousChipFilters) {
         return new SearchFilterController(new BundleBuilder(new Bundle())
                 .putString(KEY_FACET_STRING, jsonFacetString)
                 .putString(KEY_SORTING_STRING, sortingFacetString)
+                .putString(KEY_CATEGORY_MAP, categoryKey)
+                .putString(KEY_SALE_ID,saleId)
+                .putString(KEY_SELECTED_FACETS,previouslySelectedFacetIndices)
+                .putString(KEY_CHIPS_FILTER,previousChipFilters)
                 .build());
     }
 
@@ -140,8 +160,30 @@ public class SearchFilterController extends BaseController implements SearchFilt
         }.getType());
         mSortingFacets = JsonUtils.convertStringToObject(args.getString(KEY_SORTING_STRING, ""), new TypeToken<ArrayList<SortingResponse>>() {
         }.getType());
+        mSaleId = args.getString(KEY_SALE_ID,"");
+        mCategoryKey = args.getString(KEY_CATEGORY_MAP,"");
+
+        restoreStateSelection(args);
+
+
     }
 
+
+    private void restoreStateSelection(Bundle args){
+        String selectedFacetItemsString = args.getString(KEY_SELECTED_FACETS,"");
+        if(!selectedFacetItemsString.isEmpty()) {
+            mPreviousSelectedFacetIndices = JsonUtils.convertStringToObject(selectedFacetItemsString, new TypeToken<HashMap<String,Set<Integer>>>(){}.getType());
+        } else{
+            mPreviousSelectedFacetIndices = new HashMap<>();
+        }
+
+        String previousChipsString = args.getString(KEY_CHIPS_FILTER,"");
+        if(!previousChipsString.isEmpty()) {
+            mPreviousSearchChips = JsonUtils.convertStringToObject(previousChipsString, new TypeToken<ArrayList<SearchChipModel>>(){}.getType());
+        } else{
+            mPreviousSearchChips = new ArrayList<>();
+        }
+    }
 
     @Override
     protected View inflateView(@NonNull LayoutInflater inflater, @NonNull ViewGroup container) {
@@ -235,6 +277,10 @@ public class SearchFilterController extends BaseController implements SearchFilt
         mSearchTagsRecyclerView.setAdapter(mSearchTagsAdapter);
         mSearchTagsRecyclerView.setVisibility(View.VISIBLE);
 
+        if(!mPreviousSearchChips.isEmpty()) {
+            mSearchTagsAdapter.replaceData(mPreviousSearchChips);
+        }
+
 
         if (mFacets != null) {
             parseFacets(mFacets);
@@ -280,6 +326,7 @@ public class SearchFilterController extends BaseController implements SearchFilt
                 mFacetItemsAdapter.updateSelectedFacets(mPreviousSelectedFacetIndices.get(mapFacetFilterType(position)));
                 origSelectedSet = mPreviousSelectedFacetIndices.get(mapFacetFilterType(position));
             }
+
         } else { //price is clicked
             mFacetItemsRecyclerView.setVisibility(View.GONE);
             mSeekbarLayout.setVisibility(View.VISIBLE);
@@ -289,6 +336,10 @@ public class SearchFilterController extends BaseController implements SearchFilt
         mFacetItemsAdapter.replaceData(mapFacetItemClicked(position));
 
         mPreviousSelectedFacetIndex = position;
+    }
+
+    private void trackLastSelectedFacet(){
+        mPreviousSelectedFacetIndices.put(mapFacetFilterType(mPreviousSelectedFacetIndex), new HashSet<>(mFacetItemsAdapter.getSelectedFacets()));
     }
 
 
@@ -330,7 +381,7 @@ public class SearchFilterController extends BaseController implements SearchFilt
             List<Integer> temp = new ArrayList(oldSet);
             SearchChipModel chipToRemove = null;
             for (SearchChipModel chip : mSearchTagsAdapter.getData()) {
-                if (chip.getChipTitle() == mFacetItemsAdapter.getData().get(temp.get(0))) {
+                if (chip.getChipTitle().equals(mFacetItemsAdapter.getData().get(temp.get(0)))) {
                     chipToRemove = chip;
                 }
             }
@@ -416,10 +467,19 @@ public class SearchFilterController extends BaseController implements SearchFilt
     @OnClick(R.id.partial_toolbar_search_right_option)
     void applyFilters(){
 
-//        Bundle saleItemBundle = new BundleBuilder(new Bundle())
-//                .putString(, searchQuery)
-//                .putString("SaleItemsController.SEARCH_KEY", searchQuery)
-//                .build();
-//        getRouter().replaceTopController(RouterTransaction.with(new SaleItemsController()));
+        trackLastSelectedFacet();
+
+        Bundle saleItemBundle = new BundleBuilder(new Bundle())
+                .putString(KEY_CATEGORY_MAP, mCategoryKey)
+                .putString(KEY_SALE_ID,mSaleId)
+                .putString(KEY_CHIPS_FILTER,new Gson().toJson(mSearchTagsAdapter.getData()))
+                .putString(KEY_SELECTED_FACETS, new Gson().toJson(mPreviousSelectedFacetIndices))
+                .build();
+
+        SaleItemsController saleItemsController = (SaleItemsController) getRouter().getControllerWithTag("SaleItemsController");
+        saleItemsController.onPassFiltersData(saleItemBundle);
+
+        getActivity().onBackPressed();
+
     }
 }
