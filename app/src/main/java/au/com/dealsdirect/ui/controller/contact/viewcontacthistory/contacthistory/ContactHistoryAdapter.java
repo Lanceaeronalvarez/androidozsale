@@ -2,6 +2,7 @@ package au.com.dealsdirect.ui.controller.contact.viewcontacthistory.contacthisto
 
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,6 +13,7 @@ import java.util.List;
 import au.com.dealsdirect.R;
 import au.com.dealsdirect.utils.ColorUtils;
 import au.com.dealsdirect.utils.DateUtils;
+import au.com.dealsdirect.utils.StringUtils;
 
 /**
  * dp Created by Admin on 6/22/17.
@@ -45,15 +47,24 @@ public class ContactHistoryAdapter extends RecyclerView.Adapter<ContactHistoryVi
 
         String contactSubject = mCurrentContactsHistoryList.get(position).getSubject();
 
-//        String dateHeaderFormatOfItem = DateUtils.getTrimmedServerDateString(contactDate.toString());
-
-        holder.contactHistoryItemCircularTextView.setSolidColor(ColorUtils.getOvalColor(position));
-
-        if (userName != null) {
-            holder.contactHistoryItemCircularTextView.setText(userName.toString());
+        if (position % 2 == 0) {
+            holder.contactHistoryMessageTextView.setBackgroundResource(R.drawable.bg_message_incoming);
+            holder.contactHistoryItemCircularTextViewLeft.setText("DD");
+            holder.contactHistoryItemCircularTextViewLeft.setVisibility(View.VISIBLE);
+            holder.contactHistoryItemCircularTextViewLeft.setSolidColor(ColorUtils.getOvalColor(position));
+            holder.contactHistoryItemCircularTextViewRight.setVisibility(View.GONE);
         } else {
-            holder.contactHistoryItemCircularTextView.setText("JD");
+            holder.contactHistoryItemCircularTextViewLeft.setVisibility(View.GONE);
+            holder.contactHistoryItemCircularTextViewRight.setVisibility(View.VISIBLE);
+            holder.contactHistoryItemCircularTextViewRight.setSolidColor("#CACACA");
+            if (userName != null) {
+                holder.contactHistoryItemCircularTextViewRight.setText(StringUtils.getInitials(userName.toString()));
+            } else {
+                holder.contactHistoryItemCircularTextViewRight.setText("JD");
+            }
         }
+
+//        String dateHeaderFormatOfItem = DateUtils.getTrimmedServerDateString(contactDate.toString());
 
         if (contactMessage != null) {
             holder.contactHistoryMessageTextView.setText(contactMessage.toString());

@@ -55,5 +55,12 @@ public class StringUtils {
         return builder.toString();
     }
 
-
+    public static String getInitials(String text) {
+        String initialLetters = "";
+        text = text.replaceAll("[.,]", " "); // Replace dots, etc (optional)
+        for (String s : text.split(" ")) {
+            if (!s.equals("")) initialLetters += s.charAt(0);
+        }
+        return initialLetters;
+    }
 }

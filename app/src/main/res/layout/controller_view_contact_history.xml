@@ -93,7 +93,9 @@
         android:layout_height="match_parent"
         android:layout_above="@id/controller_add_contact_message_container"
         android:layout_below="@id/controller_add_contact_subject_container"
-        android:overScrollMode="never" />
+        android:overScrollMode="never"
+        android:paddingBottom="10dp"
+        android:paddingTop="10dp" />
 
 </RelativeLayout>
 
