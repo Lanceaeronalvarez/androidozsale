@@ -140,7 +140,11 @@ public class PaymentSelectController extends BaseController implements PaymentSe
         }
 
         mPaymentSelectToolbarTitle.setText("Add Payment Method");
-        mPaymentSelectRightOption.setPadding(20, 20, 20, 20);
+        if(mPresenter.isTablet()){
+            mPaymentSelectRightOption.setPadding(5, 5, 5, 5);
+        } else {
+            mPaymentSelectRightOption.setPadding(20, 20, 20, 20);
+        }
         mPaymentSelectRightOption.setImageDrawable(getApplicationContext().getDrawable(R.drawable.ic_add));
 
         mAdapter = new PaymentSelectAdapter(mActivity, mPaymentMethods, mPresenter, isFromCart);

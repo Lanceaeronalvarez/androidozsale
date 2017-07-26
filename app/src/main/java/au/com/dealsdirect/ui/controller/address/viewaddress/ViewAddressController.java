@@ -86,7 +86,11 @@ public class ViewAddressController extends BaseController implements ViewAddress
         mPresenter.loadAddresses();
 
         mViewAddressToolarTitle.setText("My Addresses");
-        mViewAddressRightOption.setPadding(20, 20, 20, 20);
+        if(mPresenter.isTablet()){
+            mViewAddressRightOption.setPadding(5, 5, 5, 5);
+        } else {
+            mViewAddressRightOption.setPadding(20, 20, 20, 20);
+        }
         mViewAddressRightOption.setImageDrawable(getApplicationContext().getDrawable(R.drawable.ic_add));
         mViewAddressRightOption.setVisibility(View.INVISIBLE);
 

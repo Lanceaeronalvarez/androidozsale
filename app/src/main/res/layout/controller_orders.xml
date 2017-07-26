@@ -3,12 +3,11 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/white"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical">
 
     <include
         android:id="@+id/order_details_toolbar_layout"
-        layout="@layout/partial_toolbar_arrow"/>
+        layout="@layout/partial_toolbar_arrow" />
 
     <RelativeLayout
         android:id="@+id/contentFrame"
@@ -19,13 +18,12 @@
             android:id="@+id/orders_recycler_view"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+            android:background="@color/white"
             android:clipToPadding="false"
             android:overScrollMode="never" />
 
         <include layout="@layout/orders_no_items_placeholder_layout" />
 
     </RelativeLayout>
-
-
 
 </LinearLayout>
