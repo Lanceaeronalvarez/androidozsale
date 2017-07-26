@@ -205,6 +205,11 @@ public class AddNewAddressController extends BaseController implements AddNewAdd
 
         Timber.d("addnewaddress", " error " + message);
 
+        CustomAlertDialog.showCustomAlertDialog(
+                getActivity(),
+                CustomAlertDialog.CustomDialogIconState.NEGATIVE,
+                message);
+
 //        AlertDialogEngine.showDialog(getBaseActivity(), "error", message, "ok", (dialog, which) -> dialog.dismiss());
 
     }
