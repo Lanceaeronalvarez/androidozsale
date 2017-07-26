@@ -56,7 +56,7 @@ public class AccountPresenter<V extends AccountMvpView> extends BasePresenter<V>
 
     @Override
     public void onAccountItemClick(String option) {
-        if (getDataManager().isAuthorized()) {
+        if (getDataManager().isAuthorized() || (option.equalsIgnoreCase("Privacy Policy") || option.equalsIgnoreCase("Terms & Conditions"))) {
             switch (option) {
                 case "My Details":
                     getMvpView().showMyDetailsController();
