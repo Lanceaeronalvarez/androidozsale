@@ -108,12 +108,16 @@ public class ShopsController extends BaseController implements ShopsMvpView, Ban
     private RelativeLayout item;
     private ImageView rightOption;
 
+    private int mBannerClickCounter = 0;
+
     BannerClickListener mBannerClickListener;
 
     @Override
     protected void onAttach(@NonNull View view) {
         mPresenter.onAttach(this);
         assert (getActivity()) != null;
+
+        mBannerClickCounter = 0;
         ((MainActivity)getActivity()).setShopController(this);
         super.onAttach(view);
     }
@@ -235,53 +239,60 @@ public class ShopsController extends BaseController implements ShopsMvpView, Ban
             String imageUrl,
             boolean isAvailable) {
 
-        List<String> names = new ArrayList<>();
-        names.add(bannerId + position);
-        if (!mPresenter.isAccessAnonymousEnabled() && !mPresenter.isAuthorized()) {
+        if (mBannerClickCounter!=1){
+            mBannerClickCounter =+ 1;
+            Log.d("onBannerClick", " clicked");
 
-            // Invoke login if no auth or not an open app
-            assert (getActivity()) != null;
-            ((MainMvpView) getActivity()).showLoginController(getRouter(), new AuthHandler() {
-                @Override
-                public void success() {
-                    ((MainActivity)getActivity()).getHomeRouter()
-                            .pushController(RouterTransaction.with(
-                            SaleItemsController.newInstance(
-                                    saleId,
-                                    bannerTitle,
-                                    bannerId,
-                                    position,
-                                    imageUrl, null))
-                            .pushChangeHandler(new HorizontalChangeHandler())
-                            .popChangeHandler(new HorizontalChangeHandler()));
-                }
 
-                @Override
-                public void error() {
+            List<String> names = new ArrayList<>();
+            names.add(bannerId + position);
+            if (!mPresenter.isAccessAnonymousEnabled() && !mPresenter.isAuthorized()) {
 
-                }
-            });
-        } else {
+                // Invoke login if no auth or not an open app
+                assert (getActivity()) != null;
+                ((MainMvpView) getActivity()).showLoginController(getRouter(), new AuthHandler() {
+                    @Override
+                    public void success() {
+                        ((MainActivity)getActivity()).getHomeRouter()
+                                .pushController(RouterTransaction.with(
+                                        SaleItemsController.newInstance(
+                                                saleId,
+                                                bannerTitle,
+                                                bannerId,
+                                                position,
+                                                imageUrl, null))
+                                        .pushChangeHandler(new HorizontalChangeHandler())
+                                        .popChangeHandler(new HorizontalChangeHandler()));
+                    }
 
-        // Check if sale is available
-            //TODO: Need computation for date and time when sale response is cached
-            if (isAvailable) {
-            assert (getActivity()) != null;
-            ((MainActivity)getActivity())
-                    .getHomeRouter()
-                    .pushController(RouterTransaction.with(
-                            SaleItemsController.newInstance(
-                                    saleId,
-                                    bannerTitle,
-                                    bannerId,
-                                    position,
-                                    imageUrl,
-                                    null))
-                    .pushChangeHandler(new HorizontalChangeHandler())
-                    .popChangeHandler(new HorizontalChangeHandler()));
+                    @Override
+                    public void error() {
+
+                    }
+                });
             } else {
-                DialogUtils.showYesDialog(getActivity(), "", "Sale is currently closed", "OK", (dialogInterface, i) -> dialogInterface.dismiss());
-            }        }
+
+                // Check if sale is available
+                //TODO: Need computation for date and time when sale response is cached
+                if (isAvailable) {
+                    assert (getActivity()) != null;
+                    ((MainActivity)getActivity())
+                            .getHomeRouter()
+                            .pushController(RouterTransaction.with(
+                                    SaleItemsController.newInstance(
+                                            saleId,
+                                            bannerTitle,
+                                            bannerId,
+                                            position,
+                                            imageUrl,
+                                            null))
+                                    .pushChangeHandler(new HorizontalChangeHandler())
+                                    .popChangeHandler(new HorizontalChangeHandler()));
+                } else {
+                    DialogUtils.showYesDialog(getActivity(), "", "Sale is currently closed", "OK", (dialogInterface, i) -> dialogInterface.dismiss());
+                }
+            }
+        }
     }
 
     @OnClick(R.id.partial_toolbar_hamburger)
