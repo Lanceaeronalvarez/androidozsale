@@ -194,6 +194,7 @@ public class  HomeController extends BaseController implements HomeMvpView {
     @Override
     public void showShopController() {
         mRouter.setRoot(RouterTransaction.with(new ShopsController())
+                .tag(getActivity().getResources().getString(R.string.search_tag))
                 .pushChangeHandler(new FadeChangeHandler())
                 .popChangeHandler(new FadeChangeHandler()));
     }
@@ -215,6 +216,7 @@ public class  HomeController extends BaseController implements HomeMvpView {
     @Override
     public void showInviteController() {
         mRouter.setRoot(RouterTransaction.with(InviteSendController.newInstance())
+                .tag(getActivity().getResources().getString(R.string.invite_friends_tag))
                 .pushChangeHandler(new FadeChangeHandler())
                 .popChangeHandler(new FadeChangeHandler()));
     }

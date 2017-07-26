@@ -147,12 +147,19 @@ public class MainActivity extends BaseActivity implements MainMvpView {
                 }
                 break;
             case 1:
+                int backstackSize = mHomeRouter.getBackstackSize()-1;
+                String tag = mHomeRouter.getBackstack().get(backstackSize).tag();
                 if(mIsFromCategories && mHomeRouter.getBackstackSize() == 1){
                     Log.d("MainBack", "mIsFromCategories && mHomeRouter.getBackstackSize() == 1");
                     goToCategoriesFromSales();
                     mIsFromCategories = false;
                 }else if (mHomeRouter.getBackstackSize() == 1) {
                     Log.d("MainBack", "mHomeRouter.getBackstackSize() == 1");
+
+                    if((tag != null) && tag.equals(getString(R.string.invite_friends_tag))) {
+                        goToShops();
+                        break;
+                    }
 
                     DialogUtils.showYesNoDialog(
                             this,
@@ -165,9 +172,6 @@ public class MainActivity extends BaseActivity implements MainMvpView {
 
                             });
                 } else {
-
-                    int backstackSize = mHomeRouter.getBackstackSize()-1;
-                    String tag = mHomeRouter.getBackstack().get(backstackSize).tag();
 
                     if(tag!=null && tag.equals(getString(R.string.search_tag))){
                         Log.d("MainBack", "tag!=null && tag.equals(getString(R.string.search_tag))");
@@ -183,7 +187,7 @@ public class MainActivity extends BaseActivity implements MainMvpView {
                         Log.d("MainBack", "(tag!=null) && tag.equals(getString(R.string.sale_items_from_category))");
 
                         goToCategoriesFromSaleItems();
-                    }else{
+                    } else {
                         Log.d("MainBack", "else");
                         mHomeRouter.handleBack();
                     }

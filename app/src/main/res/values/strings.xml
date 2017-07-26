@@ -267,6 +267,7 @@
     <string name="select_a_subject">Select a Subject</string>
     <string name="message_submitted">Message submitted</string>
     <string name="error_creating_message">Error creating message</string>
+    <string name="invite_friends_tag">InviteFriendsController</string>
 
     <string-array name="genders">
         <item>Male</item>
