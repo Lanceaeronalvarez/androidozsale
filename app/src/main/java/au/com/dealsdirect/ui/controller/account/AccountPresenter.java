@@ -17,7 +17,7 @@ import io.reactivex.disposables.CompositeDisposable;
  */
 
 public class AccountPresenter<V extends AccountMvpView> extends BasePresenter<V> implements
-        AccountMvpPresenter<V>,Serializable {
+        AccountMvpPresenter<V>, Serializable {
 
     private int[] accountImages = new int[]{
             R.drawable.bg_account_details,
@@ -34,7 +34,7 @@ public class AccountPresenter<V extends AccountMvpView> extends BasePresenter<V>
 
     @Inject
     public AccountPresenter(DataManager dataManager, SchedulerProvider schedulerProvider,
-            CompositeDisposable compositeDisposable) {
+                            CompositeDisposable compositeDisposable) {
         super(dataManager, schedulerProvider, compositeDisposable);
     }
 
@@ -56,7 +56,9 @@ public class AccountPresenter<V extends AccountMvpView> extends BasePresenter<V>
 
     @Override
     public void onAccountItemClick(String option) {
-        if (getDataManager().isAuthorized() || (option.equalsIgnoreCase("Privacy Policy") || option.equalsIgnoreCase("Terms & Conditions"))) {
+        if (getDataManager().isAuthorized() || (option.equalsIgnoreCase("Language") ||
+                option.equalsIgnoreCase("Privacy Policy") ||
+                option.equalsIgnoreCase("Terms & Conditions"))) {
             switch (option) {
                 case "My Details":
                     getMvpView().showMyDetailsController();
@@ -101,7 +103,7 @@ public class AccountPresenter<V extends AccountMvpView> extends BasePresenter<V>
 
     public void loadAccountItems(ArrayList<String> items, int[] images) {
 
-        if (getDataManager().isAuthorized()){
+        if (getDataManager().isAuthorized()) {
             items.add("Logout");
         }
 
