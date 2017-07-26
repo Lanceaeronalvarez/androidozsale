@@ -1,26 +1,22 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/white">
+    android:background="@color/white"
+    android:orientation="vertical">
 
     <include
         android:id="@+id/account_header"
-        layout="@layout/partial_toolbar_title"/>
+        layout="@layout/partial_toolbar_title" />
 
     <android.support.v7.widget.RecyclerView
         android:id="@+id/account_recycler_view"
-        android:descendantFocusability="blocksDescendants"
-        android:overScrollMode="never"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="match_parent"
         android:clickable="true"
+        android:descendantFocusability="blocksDescendants"
+        android:focusable="true"
         android:focusableInTouchMode="true"
-        android:focusable="true">
-
-    </android.support.v7.widget.RecyclerView>
-
+        android:overScrollMode="never" />
 
 </LinearLayout>
