@@ -13,6 +13,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.WindowManager;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -20,6 +21,8 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
+import com.facebook.share.model.ShareLinkContent;
+import com.facebook.share.widget.ShareDialog;
 
 import javax.inject.Inject;
 
@@ -231,16 +234,16 @@ public class InviteSendController extends BaseController implements InviteMvpVie
 
                     Log.d("sendinvitefriend", bannerImageUrl);
 
-//                    ShareLinkContent content =
-//                            new ShareLinkContent.Builder()
-//                                    .setContentUrl(Uri.parse(invitationLink))
-//                                    .setContentTitle(inviteSubject)
-//                                    .setImageUrl(Uri.parse(bannerImageUrl))
-//                                    .setContentDescription(inviteMessage)
-//                                    .setQuote(personalInvitation)
-//                                    .build();
-//                    ShareDialog shareDialog = new ShareDialog(getActivity());
-//                    shareDialog.show(content, ShareDialog.Mode.AUTOMATIC);
+                    ShareLinkContent content =
+                            new ShareLinkContent.Builder()
+                                    .setContentUrl(Uri.parse(invitationLink))
+                                    .setContentTitle(inviteSubject)
+                                    .setImageUrl(Uri.parse(bannerImageUrl))
+                                    .setContentDescription(inviteMessage)
+                                    .setQuote(personalInvitation)
+                                    .build();
+                    ShareDialog shareDialog = new ShareDialog(getActivity());
+                    shareDialog.show(content, ShareDialog.Mode.AUTOMATIC);
 
                 } catch (Exception e) {
 //                    GDebug.log("facebookSendInvite",e.getMessage());
