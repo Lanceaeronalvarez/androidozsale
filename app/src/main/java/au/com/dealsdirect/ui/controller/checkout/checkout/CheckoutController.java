@@ -106,7 +106,7 @@ public class CheckoutController extends BaseController implements CheckoutMvpVie
 
             } else if (view.getId() == mAddressChangeText.getId()) {
                 //push controller to view my address
-                getRouter().pushController(RouterTransaction.with(new ViewAddressController(true))
+                getRouter().pushController(RouterTransaction.with(new ViewAddressController(true, mDeliveryAddress))
                         .pushChangeHandler(new HorizontalChangeHandler())
                         .popChangeHandler(new HorizontalChangeHandler()));
 

@@ -209,7 +209,7 @@
     <string name="order_number">Order Number</string>
     <string name="address">Address</string>
     <string name="total">Total</string>
-    <string name="remove">remove</string>
+    <string name="remove">Remove</string>
 
     <!--VOUCHERS-->
     <string name="my_vouchers">my vouchers</string>
