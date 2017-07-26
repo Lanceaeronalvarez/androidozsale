@@ -144,6 +144,11 @@ public class ViewContactsController extends BaseController implements ViewContac
             mViewContactsRecyclerView.setVisibility(View.VISIBLE);
             mPlaceholderLayout.setVisibility(View.GONE);
             mViewContactsToolbarRightOption.setVisibility(View.VISIBLE);
+            if(mPresenter.isTablet()){
+                mViewContactsToolbarRightOption.setPadding(5, 5, 5, 5);
+            } else {
+                mViewContactsToolbarRightOption.setPadding(20, 20, 20, 20);
+            }
             mViewContactsToolbarRightOption.setImageResource(R.drawable.ic_add);
             mViewContactsNewMessage.setVisibility(View.GONE);
         } else {
