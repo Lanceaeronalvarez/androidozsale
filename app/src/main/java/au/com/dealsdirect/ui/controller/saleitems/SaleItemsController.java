@@ -80,7 +80,7 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
     private boolean loadingInProgress = false;
     private boolean hasLoadedAllItems = false;
     private boolean mIsFromCategory = false;
-
+    private int mSaleItemClickCounter = 0;
 
     boolean initialLoad = false;
 
@@ -131,6 +131,7 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
     @Override
     protected void onAttach(@NonNull View view) {
         mPresenter.onAttach(this);
+        mSaleItemClickCounter = 0;
 
         super.onAttach(view);
     }
@@ -291,36 +292,46 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
     @Override
     public void showProductDetails(RecyclerView.ViewHolder viewHolder, int position, String seoIdentifierId, String imageUrl, String itemId, String saleId) {
 
-        List<String> names = new ArrayList<>();
-        names.add(itemId);
-        mSaleItemsRecyclerView.smoothScrollToPosition(position);
+        if (mSaleItemClickCounter!=1){
+            mSaleItemClickCounter =+1;
 
-        final Handler handler = new Handler();
-        handler.postDelayed(() -> {
+            Handler clickHandler = new Handler();
+            clickHandler.postDelayed(() -> {
+                mSaleItemClickCounter = 0;
+            }, 2000);
 
-            Intent intent = new Intent();
-            intent.setClass(getActivity(), SharedActivity.class);
+            List<String> names = new ArrayList<>();
+            names.add(itemId);
+            mSaleItemsRecyclerView.smoothScrollToPosition(position);
 
-            intent.putExtra("KEY_IMAGE_ID", imageUrl);
-            intent.putExtra("KEY_SEO_IDENTIFIER", seoIdentifierId);
-            intent.putExtra("KEY_ITEM_ID", itemId);
-            intent.putExtra("KEY_SALE_ID", saleId);
-            intent.putExtra("KEY_SALE_NAME", ((SaleItemsAdapter.ViewHolder) viewHolder).mSaleItemName.getText());
-            intent.putExtra("KEY_SALE_PRICE",((SaleItemsAdapter.ViewHolder) viewHolder).mSalePrice.getText());
-            intent.putExtra("KEY_SALE_OLD_PRICE",((SaleItemsAdapter.ViewHolder) viewHolder).mOldPrice.getText());
-            Log.d("LogBundle", ((SaleItemsAdapter.ViewHolder) viewHolder).mSaleItemName.getText()+" , "+
-                    ((SaleItemsAdapter.ViewHolder) viewHolder).mSalePrice.getText()+" , "+
-                    ((SaleItemsAdapter.ViewHolder) viewHolder).mOldPrice.getText());
+            final Handler handler = new Handler();
+            handler.postDelayed(() -> {
+
+                Intent intent = new Intent();
+                intent.setClass(getActivity(), SharedActivity.class);
+
+                intent.putExtra("KEY_IMAGE_ID", imageUrl);
+                intent.putExtra("KEY_SEO_IDENTIFIER", seoIdentifierId);
+                intent.putExtra("KEY_ITEM_ID", itemId);
+                intent.putExtra("KEY_SALE_ID", saleId);
+                intent.putExtra("KEY_SALE_NAME", ((SaleItemsAdapter.ViewHolder) viewHolder).mSaleItemName.getText());
+                intent.putExtra("KEY_SALE_PRICE",((SaleItemsAdapter.ViewHolder) viewHolder).mSalePrice.getText());
+                intent.putExtra("KEY_SALE_OLD_PRICE",((SaleItemsAdapter.ViewHolder) viewHolder).mOldPrice.getText());
+                Log.d("LogBundle", ((SaleItemsAdapter.ViewHolder) viewHolder).mSaleItemName.getText()+" , "+
+                        ((SaleItemsAdapter.ViewHolder) viewHolder).mSalePrice.getText()+" , "+
+                        ((SaleItemsAdapter.ViewHolder) viewHolder).mOldPrice.getText());
 
 
-            ActivityOptions options =
-                    ActivityOptions.makeSceneTransitionAnimation(getActivity(),
-                            Pair.create(((SaleItemsAdapter.ViewHolder) viewHolder).mSaleItemImage, "transition"),
-                            Pair.create(((SaleItemsAdapter.ViewHolder) viewHolder).mSaleItemImage, "cardbackground"));
+                ActivityOptions options =
+                        ActivityOptions.makeSceneTransitionAnimation(getActivity(),
+                                Pair.create(((SaleItemsAdapter.ViewHolder) viewHolder).mSaleItemImage, "transition"),
+                                Pair.create(((SaleItemsAdapter.ViewHolder) viewHolder).mSaleItemImage, "cardbackground"));
 
-            //noinspection ConstantConditions
-            getActivity().startActivityForResult(intent, getActivity().getTaskId(), options.toBundle());
+                //noinspection ConstantConditions
+                getActivity().startActivityForResult(intent, getActivity().getTaskId(), options.toBundle());
 
-        }, 200);
+            }, 200);
+        }
+
     }
 }
