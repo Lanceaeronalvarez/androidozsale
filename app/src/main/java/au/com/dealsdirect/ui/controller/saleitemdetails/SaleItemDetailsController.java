@@ -36,12 +36,14 @@ import java.util.List;
 import javax.inject.Inject;
 
 import au.com.dealsdirect.R;
+import au.com.dealsdirect.data.auth.AuthHandler;
 import au.com.dealsdirect.data.network.model.saleitemdetails.AddToCartRequest;
 import au.com.dealsdirect.data.network.model.saleitemdetails.GetSaleItemDetailsResponse;
 import au.com.dealsdirect.ui.base.BaseController;
 import au.com.dealsdirect.ui.controller.saleitemdetails.listener.LoadImagesListener;
 import au.com.dealsdirect.ui.controller.saleitems.SaleItemsController;
 import au.com.dealsdirect.ui.custom.CustomAlertDialog;
+import au.com.dealsdirect.ui.main.SharedActivity;
 import au.com.dealsdirect.utils.BundleBuilder;
 import au.com.dealsdirect.utils.ImageUtils;
 import au.com.dealsdirect.utils.PriceUtils;
@@ -267,10 +269,10 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
 
         mProductImagesRv.addOnPageChangedListener((i, i1) -> {
 
-            if(mProductImagesRv.getCurrentPosition() + 1 == mSaleItemImagesAdapter.getItemCount()) {
+            if (mProductImagesRv.getCurrentPosition() + 1 == mSaleItemImagesAdapter.getItemCount()) {
                 mLeftArrowImage.setVisibility(View.VISIBLE);
                 mRightArrowImage.setVisibility(View.INVISIBLE);
-            } else if(mProductImagesRv.getCurrentPosition() == 0) {
+            } else if (mProductImagesRv.getCurrentPosition() == 0) {
                 mLeftArrowImage.setVisibility(View.INVISIBLE);
                 mRightArrowImage.setVisibility(View.VISIBLE);
             } else {
@@ -287,14 +289,14 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
         mLeftArrowImage.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                mProductImagesRv.smoothScrollToPosition(mProductImagesRv.getCurrentPosition()-1);
+                mProductImagesRv.smoothScrollToPosition(mProductImagesRv.getCurrentPosition() - 1);
             }
         });
 
         mRightArrowImage.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                mProductImagesRv.smoothScrollToPosition(mProductImagesRv.getCurrentPosition()+1);
+                mProductImagesRv.smoothScrollToPosition(mProductImagesRv.getCurrentPosition() + 1);
             }
         });
     }
@@ -363,8 +365,8 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
 
         mSaleItemImagesAdapter.replaceData(qualitySaleImages);
 
-        Log.d("itemcount",mSaleItemImagesAdapter.getItemCount()+"");
-        if(qualitySaleImages.size() > 0) {
+        Log.d("itemcount", mSaleItemImagesAdapter.getItemCount() + "");
+        if (qualitySaleImages.size() > 0) {
             mLeftArrowImage.setVisibility(View.INVISIBLE);
             mRightArrowImage.setVisibility(View.VISIBLE);
         } else {
@@ -451,21 +453,21 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
     void addToBasket() {
 //        verifyAddToCart();
 
-//        if (!mPresenter.isAuthorized()) {
-//            ((SharedActivity)getActivity()).showLoginController(getRouter(), new AuthHandler() {
-//                @Override
-//                public void success() {
+        if (!mPresenter.isAuthorized()) {
+            ((SharedActivity) getActivity()).showLoginController(getRouter(), new AuthHandler() {
+                @Override
+                public void success() {
 //                    verifyAddToCart();
-//                }
-//
-//                @Override
-//                public void error() {
-//
-//                }
-//            });
-//        } else {
+                }
+
+                @Override
+                public void error() {
+
+                }
+            });
+        } else {
 //            verifyAddToCart();
-//        }
+        }
 
     }
 
