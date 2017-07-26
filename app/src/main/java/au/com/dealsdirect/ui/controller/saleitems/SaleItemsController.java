@@ -131,6 +131,7 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
     @Override
     protected void onAttach(@NonNull View view) {
         mPresenter.onAttach(this);
+
         super.onAttach(view);
     }
 
@@ -205,6 +206,7 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
     @Override
     protected void setUp(View view) {
         hideKeyboard();
+
         mPaginateCallbacks = new Paginate.Callbacks() {
             @Override
             public void onLoadMore() {

@@ -72,22 +72,32 @@ public class CategoriesAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
 
                 if (mLastSelectedViewHolderImageView == null) {
 
-                    mLastSelectedViewHolderImageView = ((CategoriesViewHolder) holder).categoryTitleBackground;
-                    mLastSelectedViewHolderImageView.setBackgroundDrawable(
-                            holder.itemView.getContext().getResources()
-                                    .getDrawable(R.drawable.bg_category_item_active));
-
+                    if (position!=0){
+                        mLastSelectedViewHolderImageView = ((CategoriesViewHolder) holder).categoryTitleBackground;
+                        mLastSelectedViewHolderImageView.setBackgroundDrawable(
+                                holder.itemView.getContext().getResources()
+                                        .getDrawable(R.drawable.bg_category_item_active));
+                    }
                 } else {
 
-                    mLastSelectedViewHolderImageView.setBackgroundDrawable(
-                            holder.itemView.getContext().getResources()
-                                    .getDrawable(R.drawable.bg_category_item_inactive));
+                    if (position!=0){
+                        mLastSelectedViewHolderImageView.setBackgroundDrawable(
+                                holder.itemView.getContext().getResources()
+                                        .getDrawable(R.drawable.bg_category_item_inactive));
 
-                    mLastSelectedViewHolderImageView = ((CategoriesViewHolder) holder).categoryTitleBackground;
+                        mLastSelectedViewHolderImageView = ((CategoriesViewHolder) holder).categoryTitleBackground;
 
-                    mLastSelectedViewHolderImageView.setBackgroundDrawable(
-                            holder.itemView.getContext().getResources()
-                                    .getDrawable(R.drawable.bg_category_item_active));
+                        mLastSelectedViewHolderImageView.setBackgroundDrawable(
+                                holder.itemView.getContext().getResources()
+                                        .getDrawable(R.drawable.bg_category_item_active));
+                    }else{
+
+                        mLastSelectedViewHolderImageView.setBackgroundDrawable(
+                                holder.itemView.getContext().getResources()
+                                        .getDrawable(R.drawable.bg_category_item_inactive));
+
+                    }
+
                 }
 
                 mCategoryAdapterClickListener.onCategoryClicked(

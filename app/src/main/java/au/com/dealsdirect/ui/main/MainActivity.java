@@ -185,7 +185,6 @@ public class MainActivity extends BaseActivity implements MainMvpView {
                         goToCategoriesFromSaleItems();
                     }else{
                         Log.d("MainBack", "else");
-
                         mHomeRouter.handleBack();
                     }
                 }

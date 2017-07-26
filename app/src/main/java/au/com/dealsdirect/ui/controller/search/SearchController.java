@@ -90,6 +90,14 @@ public class SearchController extends BaseController implements SaleItemsMvpView
         super(args);
     }
 
+    @Override
+    protected void onAttach(@NonNull View view) {
+        super.onAttach(view);
+
+        assert (getActivity()) != null;
+        ((MainActivity)getActivity()).hideKeyboard();
+    }
+
     @NonNull
     @Override
     protected View inflateView(@NonNull LayoutInflater inflater, @NonNull ViewGroup container) {
@@ -171,6 +179,8 @@ public class SearchController extends BaseController implements SaleItemsMvpView
     @Override
     public void onDestroyView(View view) {
         mPresenter.onDetach();
+        getActivity().getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN);
+
         super.onDestroyView(view);
     }
 
@@ -246,7 +256,8 @@ public class SearchController extends BaseController implements SaleItemsMvpView
 
     @OnClick(R.id.partial_toolbar_search_right_option)
     void onBackClick(){
-        //noinspection ConstantConditions
+        assert (getActivity()) != null;
+        ((MainActivity)getActivity()).hideKeyboard();
         getActivity().onBackPressed();
     }
 }

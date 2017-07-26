@@ -66,6 +66,7 @@ public class CategoriesController extends BaseController
 
     private GetCategoryTreeResponse mChosenSubCategoryTreeResponse = new GetCategoryTreeResponse();
     private SubCategoriesAdapter mSubCategoryAdapter;
+    private CategoriesAdapter mAdapter;
     private SubCategoryClickListener mSubCategoryClickListener;
     private SubCategoryItemClickListener mSubCategoryItemClickListener;
 
@@ -125,7 +126,7 @@ public class CategoriesController extends BaseController
         mSubCategoryClickListener = this;
         mSubCategoryItemClickListener = this;
 
-        CategoriesAdapter mAdapter = new CategoriesAdapter(mCategories, mPresenter, mCategoryClickListener);
+        mAdapter = new CategoriesAdapter(mCategories, mPresenter, mCategoryClickListener);
         mRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity(), LinearLayoutManager.VERTICAL, false));
         mRecyclerView.setAdapter(mAdapter);
 
@@ -171,6 +172,8 @@ public class CategoriesController extends BaseController
             mSubCategoryRecyclerView.setAdapter(mSubCategoryAdapter);
 
             GetCategoryTreeResponse shopCategory = new GetCategoryTreeResponse();
+            mSubCategoryAdapter.notifyDataSetChanged();
+            mAdapter.notifyDataSetChanged();
 
             assert (getActivity()) != null;
             ((MainActivity)getActivity()).goToSalesFromCategory(shopCategory);
