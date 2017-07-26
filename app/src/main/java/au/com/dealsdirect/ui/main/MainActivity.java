@@ -507,4 +507,8 @@ public class MainActivity extends BaseActivity implements MainMvpView {
                 .tag("Home"));
 
     }
+
+    public void goToShops(){
+        getMainController().getHomeController().showShopController();
+    }
 }

@@ -5,7 +5,6 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.GridLayoutManager;
-import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -158,6 +157,7 @@ public class AccountController extends BaseController implements AccountMvpView,
     @Override
     public void showMyReturns() {
         getRouter().pushController(RouterTransaction.with(CurrentReturnsController.newInstance())
+                .tag("CurrentReturnController")
                 .pushChangeHandler(new HorizontalChangeHandler())
                 .popChangeHandler(new HorizontalChangeHandler()));
     }
@@ -187,10 +187,12 @@ public class AccountController extends BaseController implements AccountMvpView,
 
     @Override
     public void triggerLogin(String option) {
+        AccountMvpView mvpView = this;
 
         ((MainMvpView)getActivity()).showLoginController(getRouter(),new AuthHandler() {
             @Override
             public void success() {
+                mPresenter.onAttach(mvpView);
                 mPresenter.onAccountItemClick(option);
             }
 

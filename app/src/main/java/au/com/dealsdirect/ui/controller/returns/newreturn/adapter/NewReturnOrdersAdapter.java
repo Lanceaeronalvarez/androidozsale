@@ -3,6 +3,7 @@ package au.com.dealsdirect.ui.controller.returns.newreturn.adapter;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -42,7 +43,7 @@ public class NewReturnOrdersAdapter extends RecyclerView.Adapter<NewReturnOrderV
 
     @Override
     public NewReturnOrderViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        View v = LayoutInflater.from(parent.getContext())
+        View v = LayoutInflater.from(mContext)
                 .inflate(R.layout.viewholder_new_return_order, parent,
                         false);
         NewReturnOrderViewHolder holder = new NewReturnOrderViewHolder(v);
@@ -51,6 +52,8 @@ public class NewReturnOrdersAdapter extends RecyclerView.Adapter<NewReturnOrderV
 
     @Override
     public void onBindViewHolder(NewReturnOrderViewHolder holder, int position) {
+
+        Log.d("NewReturnOrder", "entered position = "+position);
 
         if (position == mCurrentReturnList.size()-1){
             holder.newReturnItemViewDivider.setVisibility(View.GONE);
@@ -71,7 +74,6 @@ public class NewReturnOrdersAdapter extends RecyclerView.Adapter<NewReturnOrderV
             String productItemId = "";
             String productItemCount = "1";
             String productPrice = "";
-
 
 
             if (productId!= null){
@@ -175,6 +177,6 @@ public class NewReturnOrdersAdapter extends RecyclerView.Adapter<NewReturnOrderV
 
     @Override
     public int getItemCount() {
-        return 0;
+        return mCurrentReturnList.size();
     }
 }

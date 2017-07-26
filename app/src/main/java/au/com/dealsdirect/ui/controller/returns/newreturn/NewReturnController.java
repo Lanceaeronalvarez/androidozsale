@@ -262,19 +262,7 @@ public class NewReturnController extends BaseController implements NewReturnMvpV
                     "Return request submitted");
         }
 
-//        MyCurrentReturnsFragment myCurrentReturnsFragment
-//                = MyCurrentReturnsFragment.newInstance(mBaseActivity);
-//
-//        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-//            Slide slideTransition = new Slide();
-//            slideTransition.setSlideEdge(Gravity.LEFT);
-//            slideTransition.setDuration(200);
-//            myCurrentReturnsFragment.setEnterTransition(slideTransition);
-//            setExitTransition(new Fade());
-//        }
-//
-//
-//        getBaseActivity().popBackToFragment(MyCurrentReturnsFragment.class.toString());
+        getRouter().popToTag("CurrentReturnController");
 
     }
 
@@ -289,8 +277,9 @@ public class NewReturnController extends BaseController implements NewReturnMvpV
                 = new NewReturnOrdersAdapter
                 (newReturnsOrderDetail.getList(),getActivity(),this);
 
-        mNewReturnOrderRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
         mNewReturnOrderRecyclerView.setAdapter(adapter);
+        mNewReturnOrderRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
+
     }
 
     @Override
@@ -311,4 +300,6 @@ public class NewReturnController extends BaseController implements NewReturnMvpV
 
         }
     }
+
+
 }

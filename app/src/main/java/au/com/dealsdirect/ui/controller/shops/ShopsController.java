@@ -318,6 +318,10 @@ public class ShopsController extends BaseController implements ShopsMvpView, Ban
 
         loadingInProgress = false;
 
+        if(getBannerResponses.isEmpty()){
+            hasLoadedAllItems = true;
+        }
+
         if (page == 0) {
             Log.d("items", "replaced");
             mBannersAdapter.replace(getBannerResponses);

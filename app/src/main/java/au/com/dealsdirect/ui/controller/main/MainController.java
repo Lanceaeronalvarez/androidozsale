@@ -322,4 +322,8 @@ public class MainController extends BaseController implements MainMvpView {
         }
         return newString;
     }
+
+    public HomeController getHomeController(){
+        return mHomeController;
+    }
 }

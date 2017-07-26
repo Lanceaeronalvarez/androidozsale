@@ -15,7 +15,6 @@ import com.bluelinelabs.conductor.RouterTransaction;
 import com.bluelinelabs.conductor.changehandler.HorizontalChangeHandler;
 import com.google.gson.Gson;
 
-import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -412,7 +411,9 @@ public class CheckoutController extends BaseController implements CheckoutMvpVie
 
     @OnClick(R.id.partial_checkout_empty_button)
     void shopNow() {
-        getRouter().popController(this);
+
+        assert (getActivity()) != null;
+        ((MainActivity)getActivity()).goToShops();
     }
 
     private String formAddressDetails(DeliveryAddress deliveryAddress) {
