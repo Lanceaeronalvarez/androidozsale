@@ -12,10 +12,8 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginBottom="20dp"
+        android:overScrollMode="never"
         android:paddingLeft="15dp"
-        android:paddingRight="15dp"
-        android:overScrollMode="never">
-
-    </android.support.v7.widget.RecyclerView>
+        android:paddingRight="15dp" />
 
 </LinearLayout>
