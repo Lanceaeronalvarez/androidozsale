@@ -1,5 +1,9 @@
 package au.com.dealsdirect.ui.controller.saleitemdetails;
 
+import android.animation.Animator;
+import android.animation.AnimatorSet;
+import android.animation.ObjectAnimator;
+import android.animation.ValueAnimator;
 import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.graphics.Paint;
@@ -15,16 +19,24 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.AlphaAnimation;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
+import android.view.animation.ScaleAnimation;
+import android.view.animation.TranslateAnimation;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
+import android.widget.FrameLayout;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.facebook.rebound.SimpleSpringListener;
+import com.facebook.rebound.Spring;
+import com.facebook.rebound.SpringConfig;
+import com.facebook.rebound.SpringSystem;
 import com.lsjwzh.widget.recyclerviewpager.RecyclerViewPager;
 import com.zhy.view.flowlayout.FlowLayout;
 import com.zhy.view.flowlayout.TagAdapter;
@@ -41,9 +53,13 @@ import au.com.dealsdirect.data.auth.AuthHandler;
 import au.com.dealsdirect.data.network.model.saleitemdetails.AddToCartRequest;
 import au.com.dealsdirect.data.network.model.saleitemdetails.GetSaleItemDetailsResponse;
 import au.com.dealsdirect.ui.base.BaseController;
+import au.com.dealsdirect.ui.controller.home.HomeController;
 import au.com.dealsdirect.ui.controller.saleitemdetails.listener.LoadImagesListener;
 import au.com.dealsdirect.ui.controller.saleitems.SaleItemsController;
+import au.com.dealsdirect.ui.controller.saleitems.SaleItemsMvpView;
 import au.com.dealsdirect.ui.custom.CustomAlertDialog;
+import au.com.dealsdirect.ui.main.MainMvpView;
+import au.com.dealsdirect.utils.AnimationEngine;
 import au.com.dealsdirect.ui.main.SharedActivity;
 import au.com.dealsdirect.utils.BundleBuilder;
 import au.com.dealsdirect.utils.ImageUtils;
@@ -131,6 +147,12 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
     @BindView(R.id.product_details_add_to_basket)
     Button mAddButton;
 
+    @BindView(R.id.image_container)
+    FrameLayout mImageContainerViewGroup;
+    @BindView(R.id.imageViewToAnimate)
+    ImageView mImageViewToAnimate;
+
+    LinearLayoutManager mProductImagesRvLayoutManager;
 
     private String mHtmlHeader = "";
     private String mHtmlFooter = "";
@@ -148,6 +170,9 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
     private String selectedSkuId = "";
 
     private GetSaleItemDetailsResponse mProductDetailsItem;
+
+    private SpringSystem mSpringSystem;
+    private Spring addToCartAnimSpring;
 
     private final ElasticDragDismissFrameLayout.ElasticDragDismissCallback dragDismissListener
             = new ElasticDragDismissFrameLayout.ElasticDragDismissCallback() {
@@ -264,6 +289,13 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
 
         mPresenter.loadSaleItemDetails(mSeoIdentifierId);
 
+        mOtherImagesRv.setLayoutManager(new LinearLayoutManager(getActivity(),
+                LinearLayoutManager.HORIZONTAL,
+                false));
+
+        mSaleItemImagesIndicatorAdapter = new SaleItemDetailsImageAdapter(this, loadImagesListener, null, mSaleId, 2);
+        mOtherImagesRv.setAdapter(mSaleItemImagesIndicatorAdapter);
+
         LinearLayoutManager mProductImagesRvLayoutManager
                 = new LinearLayoutManager(getActivity(), LinearLayoutManager.HORIZONTAL, false);
         mProductImagesRv.setLayoutManager(mProductImagesRvLayoutManager);
@@ -302,7 +334,7 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
                 mProductImagesRv.smoothScrollToPosition(mProductImagesRv.getCurrentPosition() + 1);
             }
         });
-        mAddButton.setVisibility(View.INVISIBLE);
+        initSprings();
     }
 
     @Override
@@ -506,6 +538,19 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
         }
     }
 
+    private void animateAddToCart(){
+        SaleItemDetailsImageAdapter.ViewHolder vh = (SaleItemDetailsImageAdapter.ViewHolder) mProductImagesRv
+                .findViewHolderForLayoutPosition(mProductImagesRvLayoutManager.findLastVisibleItemPosition());
+
+        mImageViewToAnimate.setImageDrawable(vh.image.getDrawable());
+        mImageViewToAnimate.bringToFront();
+        mImageViewToAnimate.invalidate();
+
+        addToCartAnimSpring.setEndValue(1);
+
+
+    }
+
     private List<String> getQualityImages(List<String> images) {
         List<String> qualityImages = new LinkedList<>();
         int x = 0;
@@ -556,10 +601,64 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
         }
     }
 
-
     public void readyViewsForTransition() {
 
         ImageUtils.loadImageImmediate(getActivity(), mItemImageUrl, mProductSharedImage, null);
 
+    }
+
+    @Override
+    public void initSprings(){
+        mSpringSystem = SpringSystem.create();
+
+        int location[] = new int[2];
+        HomeController.mCheckoutMenuView.getLocationOnScreen(location);
+
+        addToCartAnimSpring = mSpringSystem.createSpring();
+        addToCartAnimSpring.addListener(new FirstSimpleStringListener(this,mImageViewToAnimate,location));
+        addToCartAnimSpring.setSpringConfig(SpringConfig.fromOrigamiTensionAndFriction(70,5));
+
+
+    }
+
+    public static class FirstSimpleStringListener extends SimpleSpringListener {
+        private ImageView mImageView;
+        private int[] mLocationCoords;
+        private SaleItemDetailsMvpView mSaleItemsMvpView;
+
+        public FirstSimpleStringListener(SaleItemDetailsMvpView saleItemsMvpView, ImageView imageView, int[] locationCoords) {
+            mSaleItemsMvpView = saleItemsMvpView;
+            mImageView = imageView;
+            mLocationCoords = locationCoords;
+        }
+
+        @Override
+        public void onSpringActivate(Spring spring) {
+            super.onSpringActivate(spring);
+        }
+
+        @Override
+        public void onSpringAtRest(Spring spring) {
+            super.onSpringAtRest(spring);
+            if (spring.getEndValue() == 1f) {
+                AnimationEngine.Builder.animate(mImageView)
+                        .scales(0)
+                        .translate(mLocationCoords[0], mLocationCoords[1])
+                        .setDuration(200)
+                        .withEndAction(() -> {
+                            mSaleItemsMvpView.initSprings();
+                        })
+                        .build()
+                        .start();
+            }
+        }
+
+        @Override
+        public void onSpringUpdate(Spring spring) {
+            float value = (float) spring.getCurrentValue();
+            float scale = 1f - (value * 0.8f);
+            mImageView.setScaleX(scale);
+            mImageView.setScaleY(scale);
+        }
     }
 }

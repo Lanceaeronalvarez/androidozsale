@@ -52,6 +52,8 @@ public class  HomeController extends BaseController implements HomeMvpView {
     @BindView(R.id.controller_home_bottom_nav)
     AHBottomNavigation mBottomNavigationView;
 
+    public static View mCheckoutMenuView;
+
     private Router mRouter;
 
     private Router mChildRouter;
@@ -189,6 +191,7 @@ public class  HomeController extends BaseController implements HomeMvpView {
         navigationAdapter.setupWithBottomNavigation(mBottomNavigationView);
         mBottomNavigationView.setTitleState(AHBottomNavigation.TitleState.ALWAYS_SHOW);
         mBottomNavigationView.setCurrentItem(0);
+        mCheckoutMenuView = mBottomNavigationView.getChildAt(mBottomNavigationView.getChildCount()-1);
     }
 
     @Override

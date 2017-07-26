@@ -150,8 +150,6 @@ public class CategoriesAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
             ButterKnife.bind(this, itemView);
 
         }
-
-
     }
 
     private void setAnimation(View viewToAnimate, int position) {

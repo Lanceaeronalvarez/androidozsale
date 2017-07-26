@@ -149,6 +149,9 @@ dependencies {
     // Crystal Range Seekbar
     compile 'com.crystal:crystalrangeseekbar:1.1.1'
 
+    //rebound
+    compile 'com.facebook.rebound:rebound:0.3.8'
+
     // dependencies for local unit tests
     testCompile "junit:junit:$rootProject.ext.junitVersion"
     testCompile "org.mockito:mockito-core:$rootProject.mockitoVersion"
