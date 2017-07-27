@@ -101,7 +101,7 @@ public class ViewAddressController extends BaseController implements ViewAddress
         mViewAddressRightOption.setVisibility(View.INVISIBLE);
 
         mAddressList = new ArrayList<>();
-        mRecyclerViewAdapter = new ViewAddressRecyclerViewAdapter(mCalledFromCart, this, mAddressList, getActivity(), mDeliveryAddress);
+        mRecyclerViewAdapter = new ViewAddressRecyclerViewAdapter(mCalledFromCart, this, mAddressList, getActivity(), mDeliveryAddress, mPresenter);
 
         mRecyclerView.setAdapter(mRecyclerViewAdapter);
         mRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
