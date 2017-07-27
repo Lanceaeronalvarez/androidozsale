@@ -226,6 +226,7 @@ public class  HomeController extends BaseController implements HomeMvpView {
     public void showCheckoutController() {
 
         mRouter.setRoot(RouterTransaction.with(new CheckoutController())
+                .tag(getActivity().getResources().getString(R.string.checkout_controller))
                 .pushChangeHandler(new FadeChangeHandler())
                 .popChangeHandler(new FadeChangeHandler()));
     }

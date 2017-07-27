@@ -41,12 +41,18 @@ public class ViewVouchersRecyclerViewAdapter extends RecyclerView.Adapter<ViewVo
 
     @Override
     public void onBindViewHolder(ViewVouchersViewHolder holder, int position) {
-        GetUserVoucherResponse.Voucher voucher =vouchersList.get(0);
+        GetUserVoucherResponse.Voucher voucher =vouchersList.get(position);
         Matcher m = Pattern.compile("(?!=\\d\\.\\d\\.)([\\d.]+)").matcher(voucher.getDiscountLeft());
         if(m.find()) {
             Double doubleValue = Double.parseDouble(m.group(1));
+            String mUseBefore = voucher.getExpired();
+
+
             String voucherCostWithCurrency = '$'+String.valueOf(doubleValue);
             holder.mVouchersItemCostText.setText(voucherCostWithCurrency);
+            holder.mVouchersItemDescText.setText(mUseBefore);
+            holder.mVouchersLayout.setBackground(holder.mVouchersLayout.getContext().getDrawable(R.drawable.bg_voucher_item));
+
         } else {
 
             holder.mVouchersItemExpiresOnText.setText(voucher.getExpired());

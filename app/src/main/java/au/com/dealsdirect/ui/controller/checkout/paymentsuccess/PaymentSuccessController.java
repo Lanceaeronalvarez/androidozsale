@@ -12,8 +12,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-import com.google.gson.Gson;
-
 import javax.inject.Inject;
 
 import au.com.dealsdirect.R;
@@ -24,6 +22,7 @@ import au.com.dealsdirect.utils.BundleBuilder;
 import au.com.dealsdirect.utils.DialogUtils;
 import au.com.dealsdirect.utils.PriceUtils;
 import butterknife.BindView;
+import butterknife.OnClick;
 import timber.log.Timber;
 
 /**
@@ -171,4 +170,10 @@ public class PaymentSuccessController extends BaseController implements PaymentS
 
     }
 
+
+    @OnClick(R.id.partial_continue_shopping_button)
+    void onContinueShoppingClick(){
+        getRouter().popToTag("CheckoutController");
+        ((MainActivity)getActivity()).goToShops();
+    }
 }

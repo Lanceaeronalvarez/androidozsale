@@ -35,6 +35,7 @@
         android:background="@drawable/bg_success_rounded"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginBottom="20dp"
         android:orientation="vertical">
 
         <LinearLayout
@@ -156,4 +157,15 @@
 
     </LinearLayout>
 
+
+    <Button
+        android:id="@+id/partial_continue_shopping_button"
+        style="@style/DDButtonStyle"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/default_button_height"
+        android:layout_alignParentBottom="true"
+        android:layout_margin="@dimen/activity_horizontal_margin"
+        android:gravity="center"
+        android:text="@string/continue_shopping"
+        android:textSize="@dimen/text_size_xxlarge" />
 </LinearLayout>

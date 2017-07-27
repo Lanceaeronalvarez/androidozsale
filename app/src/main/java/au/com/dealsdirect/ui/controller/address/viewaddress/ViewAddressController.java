@@ -201,11 +201,11 @@ public class ViewAddressController extends BaseController implements ViewAddress
         CustomAlertDialog.showCustomAlertDialog(getActivity(),
                 CustomAlertDialog.CustomDialogIconState.POSITIVE,
                 "Removed address");
-
+//
         mRecyclerViewAdapter.removeItemAtPosition(recyclerTempItemPosition);
         mRecyclerViewAdapter.notifyItemChanged(recyclerTempItemPosition);
         mRecyclerViewAdapter.notifyItemRangeChanged(recyclerTempItemPosition, recyclerTempItemsSize);
-        mPresenter.loadAddresses();
+//        mPresenter.loadAddresses();
     }
 
     @Override

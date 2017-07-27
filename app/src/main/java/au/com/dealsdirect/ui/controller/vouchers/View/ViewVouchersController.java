@@ -7,6 +7,7 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.PagerSnapHelper;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.SnapHelper;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -128,7 +129,6 @@ public class ViewVouchersController extends BaseController implements ViewVouche
         usedVoucherHelper.attachToRecyclerView(mUsedVouchersRecyclerView);
 
         mPresenter.loadMyVouchers();
-
     }
 
     @Override
@@ -146,6 +146,7 @@ public class ViewVouchersController extends BaseController implements ViewVouche
             List<GetUserVoucherResponse.Voucher> currentVouchers = new ArrayList<>();
 
             for (int i = 0; i < pair.first.size(); i++) {
+                Log.d("viewvouchers","discount  = "+pair.first.get(i).getDiscountLeft());
 
                 String discountLeft = pair.first.get(i).getDiscountLeft();
 
