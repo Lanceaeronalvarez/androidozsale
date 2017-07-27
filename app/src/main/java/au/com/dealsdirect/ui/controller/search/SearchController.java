@@ -13,7 +13,6 @@ import android.util.Pair;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.WindowManager;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
@@ -172,15 +171,15 @@ public class SearchController extends BaseController implements SaleItemsMvpView
         mSearchToolbarSearchField.setActivated(true);
         mSearchToolbarSearchField.setFocusable(true);
 
-        if (mSearchToolbarSearchField.requestFocus()) {
-            getActivity().getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_VISIBLE);
-        }
+//        if (mSearchToolbarSearchField.requestFocus()) {
+//            getActivity().getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_VISIBLE);
+//        }
     }
 
     @Override
     public void onDestroyView(View view) {
         mPresenter.onDetach();
-        getActivity().getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN);
+//        getActivity().getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN);
 
         super.onDestroyView(view);
     }

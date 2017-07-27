@@ -328,10 +328,6 @@ public class ShopsController extends BaseController implements ShopsMvpView, Ban
 
         loadingInProgress = false;
 
-        if(getBannerResponses.isEmpty()){
-            hasLoadedAllItems = true;
-        }
-
         if (page == 0) {
             Log.d("items", "replaced");
             mBannersAdapter.replace(getBannerResponses);
@@ -339,6 +335,11 @@ public class ShopsController extends BaseController implements ShopsMvpView, Ban
         } else {
             Log.d("items", "added");
             mBannersAdapter.addAll(getBannerResponses);
+
+            if(getBannerResponses.isEmpty()){
+                hasLoadedAllItems = true;
+                Log.d("LoadBanners", "has loaded items");
+            }
         }
 
         sales = mBannersAdapter.getData();

@@ -9,8 +9,8 @@
 
     <LinearLayout
         android:id="@+id/row_layout_vouchers"
-        android:layout_width="240dp"
-        android:layout_height="150dp"
+        android:layout_width="@dimen/voucher_container_width"
+        android:layout_height="@dimen/voucher_container_height"
         android:layout_centerInParent="true"
         android:layout_margin="@dimen/activity_horizontal_margin"
         android:clickable="true"
@@ -21,32 +21,33 @@
 
         <TextView
             android:id="@+id/row_text_vouchers_item_cost_value"
-            fontPath="@string/font_lato_light"
+            android:fontFamily="@string/font_lato_light"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:textSize="@dimen/text_size_large"
             android:textStyle="bold"
+            android:textColor="@color/white"
             tools:text="$10" />
 
 
         <TextView
             android:id="@+id/row_text_vouchers_item_desc"
-            fontPath="@string/font_lato_light"
+            android:fontFamily="@string/font_lato_light"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="5dp"
-            android:textColor="#999999"
+            android:textColor="@color/white"
             android:textSize="@dimen/text_size_small"
             tools:text="voucher good for use until," />
 
 
         <TextView
             android:id="@+id/row_text_vouchers_item_expires_on_value"
-            fontPath="@string/font_lato_light"
+            android:fontFamily="@string/font_lato_light"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="2dp"
-            android:textColor="#999999"
+            android:textColor="@color/white"
             android:textSize="@dimen/text_size_small"
             tools:text="January 15" />
 

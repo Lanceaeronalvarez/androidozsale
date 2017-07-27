@@ -60,6 +60,8 @@ public class ShopsPresenter<V extends ShopsMvpView> extends BasePresenter<V> imp
                             getMvpView().hideLoading();
 
                             if (response.isEmpty()) {
+                                getMvpView().showShopBanners(response);
+
 //                             getMvpView().showNoResultsLayout();
 
                             } else {
