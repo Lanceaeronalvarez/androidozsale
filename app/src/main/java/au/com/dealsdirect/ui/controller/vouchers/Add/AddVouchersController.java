@@ -141,7 +141,7 @@ public class AddVouchersController extends BaseController implements AddVouchers
 
     public static AddVouchersController newInstance(String vouchersJsonString) {
         return new AddVouchersController(new BundleBuilder(new Bundle())
-                .putString(VOUCHERS, testVouchersString)
+                .putString(VOUCHERS, vouchersJsonString)
                 .build());
     }
 
