@@ -172,9 +172,7 @@ public class InviteSendController extends BaseController implements InviteMvpVie
     protected void setUp(View view) {
         mTitleText.setText("Invite Friends");
         mFilterView.setVisibility(View.INVISIBLE);
-        mArrowImage.setOnClickListener(action -> {
-            getActivity().onBackPressed();
-        });
+        mArrowImage.setVisibility(View.INVISIBLE);
 
 
         Glide.with(getActivity())
