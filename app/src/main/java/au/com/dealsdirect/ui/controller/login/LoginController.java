@@ -130,6 +130,7 @@ public class LoginController extends BaseController implements LoginMvpView {
 
     @Override
     public void showLoginSuccessful(String loginTicket) {
+        getActivity().onBackPressed();
         mAuthHandler.success();
     }
 
@@ -152,7 +153,7 @@ public class LoginController extends BaseController implements LoginMvpView {
 
     @Override
     public void showRegistration() {
-        getRouter().pushController(RouterTransaction.with(RegisterController.newInstance())
+        getRouter().pushController(RouterTransaction.with(RegisterController.newInstance(mAuthHandler))
                 .pushChangeHandler(new HorizontalChangeHandler())
                 .popChangeHandler(new HorizontalChangeHandler()));
     }

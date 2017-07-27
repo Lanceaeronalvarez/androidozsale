@@ -202,6 +202,7 @@ public class  HomeController extends BaseController implements HomeMvpView {
     @Override
     public void showAccountController() {
         mRouter.setRoot(RouterTransaction.with(AccountController.newInstance())
+                .tag("AccountController")
                 .pushChangeHandler(new FadeChangeHandler())
                 .popChangeHandler(new FadeChangeHandler()));
     }
@@ -223,6 +224,7 @@ public class  HomeController extends BaseController implements HomeMvpView {
 
     @Override
     public void showCheckoutController() {
+
         mRouter.setRoot(RouterTransaction.with(new CheckoutController())
                 .pushChangeHandler(new FadeChangeHandler())
                 .popChangeHandler(new FadeChangeHandler()));
@@ -230,7 +232,7 @@ public class  HomeController extends BaseController implements HomeMvpView {
 
     @Override
     public void showLoginController(Router router, AuthHandler handler) {
-        router.pushController(RouterTransaction.with(LoginController.newInstance(handler))
+        mRouter.pushController(RouterTransaction.with(LoginController.newInstance(handler))
                 .pushChangeHandler(new VerticalChangeHandler())
                 .popChangeHandler(new VerticalChangeHandler()));
     }

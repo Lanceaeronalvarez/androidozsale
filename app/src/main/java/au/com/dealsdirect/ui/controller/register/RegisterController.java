@@ -15,6 +15,7 @@ import com.facebook.CallbackManager;
 import javax.inject.Inject;
 
 import au.com.dealsdirect.R;
+import au.com.dealsdirect.data.auth.AuthHandler;
 import au.com.dealsdirect.ui.base.BaseController;
 import au.com.dealsdirect.ui.custom.CustomAlertDialog;
 import au.com.dealsdirect.utils.BundleBuilder;
@@ -43,12 +44,13 @@ public class RegisterController extends BaseController implements RegisterMvpVie
     @BindView(R.id.controller_register_surname_field)
     TextView mRegisterSurnameField;
 
-
     @BindView(R.id.controller_register_email_field)
     TextView mRegisterEmailField;
 
     @BindView(R.id.controller_register_password_field)
     TextView mRegisterPasswordField;
+
+    private static AuthHandler mAuthHandler;
 
     public static RegisterController newInstance() {
 
@@ -57,6 +59,13 @@ public class RegisterController extends BaseController implements RegisterMvpVie
                         .build());
     }
 
+
+    public static RegisterController newInstance(AuthHandler authHandler){
+        mAuthHandler = authHandler;
+        return new RegisterController(
+                new BundleBuilder(new Bundle())
+                        .build());
+    }
 
     public RegisterController(Bundle args) {
         super(args);
@@ -132,7 +141,8 @@ public class RegisterController extends BaseController implements RegisterMvpVie
 
     @Override
     public void showRegisterSuccessful(String loginTicket) {
-        getActivity().onBackPressed();
+        getRouter().popToTag("AccountController");
+        mAuthHandler.success();
 
         CustomAlertDialog.showCustomAlertDialog(getActivity(),
                 CustomAlertDialog.CustomDialogIconState.POSITIVE,"register successful");
