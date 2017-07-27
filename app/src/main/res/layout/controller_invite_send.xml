@@ -50,7 +50,8 @@
                         android:layout_marginTop="10dp"
                         android:layout_marginBottom="10dp"
                         android:layout_marginLeft="@dimen/activity_horizontal_margin"
-                        android:layout_marginRight="@dimen/activity_horizontal_margin" />
+                        android:layout_marginRight="@dimen/activity_horizontal_margin"
+                        android:focusable="true" />
 
                     <TextView
                         fontPath="@string/font_lato_medium"
@@ -214,14 +215,16 @@
 
                     <RelativeLayout
                         android:id="@+id/controller_send_invite_layout_select_order_option"
+                        android:focusable="false"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
+                        android:descendantFocusability="beforeDescendants"
+                        android:focusableInTouchMode="true"
                         android:background="@drawable/bg_edit_text_rounded">
 
                         <EditText
                             android:id="@+id/controller_send_invite_edit_text_deals_direct_link"
                             fontPath="@string/font_lato_medium"
-                            android:focusable="false"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:background="@drawable/bg_edit_text_rounded"
@@ -326,10 +329,8 @@
                             <LinearLayout
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:layout_centerInParent="true"
-                                android:orientation="horizontal"
-                                android:weightSum="1"
-                                tools:ignore="UselessParent">
+                                android:paddingLeft="38dp"
+                                android:orientation="horizontal">
 
                                 <ImageView
                                     android:layout_width="@dimen/invite_friends_image_width"
@@ -343,6 +344,7 @@
                                     android:layout_width="wrap_content"
                                     android:layout_height="match_parent"
                                     android:layout_marginLeft="@dimen/invite_friends_padding"
+                                    android:layout_weight="1"
                                     android:paddingLeft="@dimen/invite_friends_padding"
                                     android:paddingRight="@dimen/invite_friends_padding"
                                     android:text="Invite your friends on Facebook"
@@ -366,8 +368,8 @@
                             <LinearLayout
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:layout_centerInParent="true"
                                 android:orientation="horizontal"
+                                android:paddingLeft="38dp"
                                 android:weightSum="1"
                                 tools:ignore="UselessParent">
 
@@ -407,8 +409,8 @@
                             <LinearLayout
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:layout_centerInParent="true"
                                 android:orientation="horizontal"
+                                android:paddingLeft="38dp"
                                 android:weightSum="1"
                                 tools:ignore="UselessParent">
 
@@ -447,8 +449,8 @@
                             <LinearLayout
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:layout_centerInParent="true"
                                 android:orientation="horizontal"
+                                android:paddingLeft="38dp"
                                 android:weightSum="1"
                                 tools:ignore="UselessParent">
 

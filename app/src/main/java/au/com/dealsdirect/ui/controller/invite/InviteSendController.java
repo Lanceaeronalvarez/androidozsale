@@ -5,10 +5,13 @@ import android.content.ClipData;
 import android.content.ClipboardManager;
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.NonNull;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -89,11 +92,11 @@ public class InviteSendController extends BaseController implements InviteMvpVie
     @BindView(R.id.invite_friend_clipboard_image)
     ImageView mClipboardImage;
 
-    @BindView(R.id.controller_send_invite_layout_select_order_option)
-    RelativeLayout mEditLinkLayout;
-
     @BindView(R.id.controller_invite_image_vouchers)
     ImageView mImageView;
+
+    @BindView(R.id.controller_send_invite_layout_select_order_option)
+    RelativeLayout mSendInviteLinkLayout;
 
     GetInviteResponse.Value inviteBody;
     String inviteSubject;
@@ -104,6 +107,30 @@ public class InviteSendController extends BaseController implements InviteMvpVie
     String twitterComposerClass = "com.twitter.android.composer.ComposerActivity";
 
     ProgressDialog progress;
+
+    private TextWatcher mTextWatcher = new TextWatcher() {
+        @Override
+        public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+        }
+
+        @Override
+        public void onTextChanged(CharSequence s, int start, int before, int count) {
+            mPersonalInvitationMessageEditText.setEnabled(false);
+
+            mPersonalInvitationLinkEditText.setActivated(true);
+            mPersonalInvitationLinkEditText.setPressed(true);
+            mPersonalInvitationLinkEditText.setClickable(true);
+            mPersonalInvitationLinkEditText.setEnabled(true);
+
+            mClipboardImage.setVisibility(View.GONE);
+            mClipboardText.setText("Save Changes");
+        }
+
+        @Override
+        public void afterTextChanged(Editable s) {
+
+        }};
 
     public InviteSendController(Bundle args) {
         super(args);
@@ -160,22 +187,11 @@ public class InviteSendController extends BaseController implements InviteMvpVie
             mFacebookLikeUsContainer.setVisibility(View.VISIBLE);
         }
 
-        mPersonalInvitationLinkEditText.setOnClickListener(new View.OnClickListener() {
-            @Override public void onClick(View view) {
-                if (!mClipboardText.getText().toString().equals("Save Changes")){
-                    mPersonalInvitationMessageEditText.setClickable(false);
-                    mPersonalInvitationMessageEditText.setFocusable(false);
-
-                    mPersonalInvitationLinkEditText.setActivated(true);
-                    mPersonalInvitationLinkEditText.setPressed(true);
-                    mPersonalInvitationLinkEditText.setClickable(true);
-                    mPersonalInvitationLinkEditText.setEnabled(true);
-                    mPersonalInvitationLinkEditText.setFocusable(true);
-                    mPersonalInvitationLinkEditText.setFocusableInTouchMode(true);
-                    mPersonalInvitationLinkEditText.requestFocus();
-                    mClipboardImage.setVisibility(View.GONE);
-                    mClipboardText.setText("Save Changes");
-                }
+        mSendInviteLinkLayout.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mClipboardImage.setVisibility(View.GONE);
+                mClipboardText.setText("Save Changes");
             }
         });
 
@@ -206,6 +222,7 @@ public class InviteSendController extends BaseController implements InviteMvpVie
                     }
                     catch (Exception e)
                     {
+                        e.printStackTrace();
                         CustomAlertDialog.showCustomAlertDialog(
                                 getActivity(),
                                 CustomAlertDialog.CustomDialogIconState.NEGATIVE,
@@ -328,7 +345,7 @@ public class InviteSendController extends BaseController implements InviteMvpVie
                 String link = mPresenter.getFollowUsTwitterLink();
 
                 if (!link.isEmpty()) {
-                    Uri uri = Uri.parse(link);
+                        Uri uri = Uri.parse(link);
                     Intent intent = new Intent(Intent.ACTION_VIEW, uri);
                     getActivity().startActivity(intent);
 
@@ -348,10 +365,11 @@ public class InviteSendController extends BaseController implements InviteMvpVie
             @Override
             public void onClick(View v) {
 
-                if(mClipboardText.equals("Save Changes") || mClipboardText.getText().toString() == "Save Changes") {
+                hideKeyboard();
+                mSendInviteLinkLayout.requestFocus();
 
-                    mPersonalInvitationMessageEditText.setClickable(true);
-                    mPersonalInvitationMessageEditText.setFocusable(true);
+                if(mClipboardText.equals("Save Changes") || mClipboardText.getText().toString() == "Save Changes") {
+                    mPersonalInvitationMessageEditText.setEnabled(true);
 
                     String editedLink = mPersonalInvitationLinkEditText.getText().toString();
                     SetInviteRequest setInviteLinkRequest = new SetInviteRequest();
@@ -399,6 +417,7 @@ public class InviteSendController extends BaseController implements InviteMvpVie
 
         mPersonalInvitationLinkEditText.setText(inviteLink);
         mSendInvitationContainer.setVisibility(View.VISIBLE);
+        mPersonalInvitationLinkEditText.addTextChangedListener(mTextWatcher);
     }
 
     @Override
@@ -407,13 +426,12 @@ public class InviteSendController extends BaseController implements InviteMvpVie
         String editLinkResponse = setInviteLinkResponseBody.getValue().getMessage();
 
         if (isEditLinkSuccessful) {
-            mPersonalInvitationLinkEditText.setEnabled(false);
-            mPersonalInvitationLinkEditText.setFocusable(false);
-            mPersonalInvitationLinkEditText.setFocusableInTouchMode(false);
+            mPersonalInvitationLinkEditText.setPressed(false);
 
             mClipboardText.setText("Copy link to clipboard");
             mClipboardImage.setVisibility(View.VISIBLE);
 
+            mSendInviteLinkLayout.requestFocus();
 
             progress.dismiss();
 
@@ -423,11 +441,10 @@ public class InviteSendController extends BaseController implements InviteMvpVie
                     "Edit Successful");
 
         } else {
-            mPersonalInvitationLinkEditText.setText(inviteLink);
-
-            mPersonalInvitationLinkEditText.setEnabled(false);
             mPersonalInvitationLinkEditText.setFocusable(false);
             mPersonalInvitationLinkEditText.setFocusableInTouchMode(false);
+
+            mPersonalInvitationLinkEditText.setText(inviteLink);
 
             mClipboardText.setText("Copy link to clipboard");
             mClipboardImage.setVisibility(View.VISIBLE);
