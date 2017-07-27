@@ -31,19 +31,22 @@ public class ViewAddressRecyclerViewAdapter extends RecyclerView.Adapter<ViewAdd
     Boolean isCalledFromCart;
     ViewAddressMvpView mView;
     DeliveryAddress mDeliveryAddress;
+    ViewAddressMvpPresenter mPresenter;
 
     public ViewAddressRecyclerViewAdapter(
             Boolean calledFromCart,
             ViewAddressMvpView view,
             List<AddressesItem> addressList,
             Context context,
-            DeliveryAddress deliveryAddress) {
+            DeliveryAddress deliveryAddress,
+            ViewAddressMvpPresenter presenter) {
 
         this.isCalledFromCart = calledFromCart;
         this.mView = view;
         this.addressList = addressList;
         this.context = context;
         this.mDeliveryAddress = deliveryAddress;
+        this.mPresenter = presenter;
     }
 
     @Override
@@ -67,11 +70,16 @@ public class ViewAddressRecyclerViewAdapter extends RecyclerView.Adapter<ViewAdd
 
             holder.removeAddressText.setVisibility(View.GONE);
 
-            if (mDeliveryAddress != null && mDeliveryAddress.equalsAddressItem(addressList.get(position))) {
-                holder.itemView.setBackgroundResource(R.color.dialog_background);
-                holder.addressNumber.setSelected(true);
-            }
+            holder.itemView.setBackgroundResource(R.drawable.bg_ripple_gray);
+            holder.itemView.setSelected(mDeliveryAddress != null && mDeliveryAddress.equalsAddressItem(addressList.get(position)));
+            holder.addressNumber.setSelected(mDeliveryAddress != null && mDeliveryAddress.equalsAddressItem(addressList.get(position)));
 
+            holder.itemView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    mPresenter.applyDeliveryAddress(addressId);
+                }
+            });
         } else {
 
             holder.removeAddressText.setOnClickListener(view -> {
