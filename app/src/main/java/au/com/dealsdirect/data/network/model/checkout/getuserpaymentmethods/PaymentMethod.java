@@ -53,4 +53,12 @@ public class PaymentMethod implements Serializable {
         this.imageUrl = imageUrl;
     }
 
+    @Override
+    public boolean equals(Object obj) {
+        return obj instanceof PaymentMethod &&
+                ((PaymentMethod) obj).getPaymentType().equals(paymentType) &&
+                ((PaymentMethod) obj).getDescription().equals(description) &&
+                ((PaymentMethod) obj).getToken().equals(token) &&
+                ((PaymentMethod) obj).getImageUrl().equals(imageUrl);
+    }
 }

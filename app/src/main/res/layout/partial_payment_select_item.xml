@@ -1,16 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:background="@android:color/white"
-    android:orientation="horizontal">
+    android:gravity="center">
 
     <ImageView
         android:id="@+id/partial_checkout_payment_image"
         android:layout_width="30dp"
         android:layout_height="30dp"
-        android:layout_marginLeft="16dp"
+        android:layout_marginStart="16dp"
         android:layout_marginTop="18dp"
         android:paddingBottom="5dp"
         android:paddingLeft="5dp"
@@ -21,8 +21,9 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginBottom="16dp"
-        android:layout_marginLeft="10dp"
+        android:layout_marginStart="10dp"
         android:layout_marginTop="16dp"
+        android:layout_toEndOf="@id/partial_checkout_payment_image"
         android:orientation="vertical"
         android:paddingTop="2dp">
 
@@ -30,8 +31,8 @@
             android:id="@+id/partial_checkout_payment_name"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginRight="16dp"
-            android:textColor="@color/gray_field_text"
+            android:layout_marginEnd="16dp"
+            android:textColor="@color/address_text_selector"
             android:textSize="@dimen/text_size_xxlarge"
             tools:text="Master Card" />
 
@@ -40,7 +41,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginBottom="10dp"
-            android:layout_marginRight="@dimen/text_size_xlarge"
+            android:layout_marginEnd="@dimen/text_size_xlarge"
             android:textColor="@color/gray_field_text"
             tools:text="card ending in 02/16" />
 
@@ -53,14 +54,14 @@
             android:textSize="@dimen/text_size_xlarge"
             android:visibility="gone" />
 
-        <View
-            android:id="@+id/item_payment_select_divider"
-            android:layout_width="match_parent"
-            android:layout_height="1dp"
-            android:layout_marginTop="10dp"
-            android:background="#ECECEC"
-            android:visibility="gone" />
-
     </LinearLayout>
 
-</LinearLayout>
+    <View
+        android:id="@+id/item_payment_select_divider"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_alignParentBottom="true"
+        android:layout_marginTop="10dp"
+        android:background="#ECECEC" />
+
+</RelativeLayout>

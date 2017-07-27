@@ -12,7 +12,7 @@
         android:id="@+id/home_logo"
         android:layout_width="20dp"
         android:layout_height="20dp"
-        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
         android:layout_marginTop="15dp"
         android:src="@drawable/ic_home_delivery" />
 
@@ -20,25 +20,25 @@
         android:id="@+id/view_my_addresses_row_layout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginLeft="20dp"
+        android:layout_marginStart="20dp"
         android:layout_marginTop="10dp"
-        android:layout_toRightOf="@id/home_logo"
+        android:layout_toEndOf="@id/home_logo"
         android:orientation="vertical">
 
         <TextView
             android:id="@+id/view_my_address_row_item_name"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Address 1"
             android:textColor="@color/address_text_selector"
-            android:textSize="20sp" />
+            android:textSize="20sp"
+            tools:text="Address 1" />
 
         <TextView
             android:id="@+id/view_my_address_row_item_text"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="some address"
-            android:textColor="@color/gray_title_text" />
+            android:textColor="@color/gray_title_text"
+            tools:text="some address" />
 
         <!-- remove text and express delivery layout below, uncomment to implement-->
         <!--<TextView-->
@@ -84,7 +84,7 @@
         android:id="@+id/remove_address_text"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignLeft="@+id/view_my_addresses_row_layout"
+        android:layout_alignStart="@+id/view_my_addresses_row_layout"
         android:layout_below="@+id/view_my_addresses_row_layout"
         android:layout_marginTop="15dp"
         android:clickable="true"
