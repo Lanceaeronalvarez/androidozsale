@@ -17,6 +17,7 @@ import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
 
+import com.bumptech.glide.load.Key;
 import com.paginate.Paginate;
 
 import java.util.ArrayList;
@@ -35,6 +36,7 @@ import au.com.dealsdirect.ui.controller.saleitems.adapter.SaleItemsAdapter;
 import au.com.dealsdirect.ui.main.MainActivity;
 import au.com.dealsdirect.ui.main.SharedActivity;
 import au.com.dealsdirect.utils.BundleBuilder;
+import au.com.dealsdirect.utils.KeyboardUtils;
 import au.com.dealsdirect.utils.PaginateUtils;
 import butterknife.BindView;
 import butterknife.OnClick;
@@ -218,6 +220,10 @@ public class SearchController extends BaseController implements SaleItemsMvpView
             mPaginateManager = PaginateUtils.init(mSearchSaleItemsRecyclerView, mPaginateCallbacks);
         } else {
             mSaleItemsAdapter.addData(saleItems);
+        }
+
+        if (mSearchToolbarSearchField.requestFocus()) {
+            KeyboardUtils.showSoftInput(mSearchToolbarSearchField, getActivity());
         }
     }
 

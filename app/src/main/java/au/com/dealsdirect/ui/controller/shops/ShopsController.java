@@ -499,9 +499,9 @@ public class ShopsController extends BaseController implements ShopsMvpView, Ban
         searchField.setActivated(true);
         searchField.setFocusable(true);
 
-        if (searchField.requestFocus()) {
-            getActivity().getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_VISIBLE);
-        }
+//        if (searchField.requestFocus()) {
+//            KeyboardUtils.showSoftInput(searchField, getActivity());
+//        }
 
         //noinspection deprecation
         rightOption.setImageDrawable(getResources().getDrawable(R.drawable.ic_close));
