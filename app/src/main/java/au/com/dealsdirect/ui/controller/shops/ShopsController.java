@@ -239,8 +239,8 @@ public class ShopsController extends BaseController implements ShopsMvpView, Ban
             String imageUrl,
             boolean isAvailable) {
 
-        if (mBannerClickCounter!=1){
-            mBannerClickCounter =+ 1;
+        if (mBannerClickCounter != 1) {
+            mBannerClickCounter = +1;
             Log.d("onBannerClick", " clicked");
 
 
@@ -253,7 +253,7 @@ public class ShopsController extends BaseController implements ShopsMvpView, Ban
                 ((MainMvpView) getActivity()).showLoginController(getRouter(), new AuthHandler() {
                     @Override
                     public void success() {
-                        ((MainActivity)getActivity()).getHomeRouter()
+                        ((MainActivity) getActivity()).getHomeRouter()
                                 .pushController(RouterTransaction.with(
                                         SaleItemsController.newInstance(
                                                 saleId,
@@ -273,25 +273,27 @@ public class ShopsController extends BaseController implements ShopsMvpView, Ban
             } else {
 
 // Check if sale is available
-            //TODO: Need computation for date and time when sale response is cached
-            if (isAvailable) {
-            assert (getActivity()) != null;
-            ((MainActivity)getActivity())
-                    .getHomeRouter()
-                    .pushController(RouterTransaction.with(
-                            SaleItemsController.newInstance(
-                                    saleId,
-                                    bannerTitle,
-                                    bannerId,
-                                    position,
-                                    imageUrl,
-                                    null))
-                            .tag("SaleItemsController")
-                    .pushChangeHandler(new HorizontalChangeHandler())
-                    .popChangeHandler(new HorizontalChangeHandler()));
-            } else {
-                DialogUtils.showYesDialog(getActivity(), "", "Sale is currently closed", "OK", (dialogInterface, i) -> dialogInterface.dismiss());
-            }        }
+                //TODO: Need computation for date and time when sale response is cached
+                if (isAvailable) {
+                    assert (getActivity()) != null;
+                    ((MainActivity) getActivity())
+                            .getHomeRouter()
+                            .pushController(RouterTransaction.with(
+                                    SaleItemsController.newInstance(
+                                            saleId,
+                                            bannerTitle,
+                                            bannerId,
+                                            position,
+                                            imageUrl,
+                                            null))
+                                    .tag("SaleItemsController")
+                                    .pushChangeHandler(new HorizontalChangeHandler())
+                                    .popChangeHandler(new HorizontalChangeHandler()));
+                } else {
+                    DialogUtils.showYesDialog(getActivity(), "", "Sale is currently closed", "OK", (dialogInterface, i) -> dialogInterface.dismiss());
+                }
+            }
+        }
     }
 
     @OnClick(R.id.partial_toolbar_hamburger)

@@ -6,6 +6,7 @@ import android.content.ClipboardManager;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.content.pm.ResolveInfo;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
@@ -16,7 +17,6 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.WindowManager;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -26,6 +26,10 @@ import android.widget.TextView;
 import com.bumptech.glide.Glide;
 import com.facebook.share.model.ShareLinkContent;
 import com.facebook.share.widget.ShareDialog;
+
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
+import java.util.List;
 
 import javax.inject.Inject;
 
@@ -103,8 +107,6 @@ public class InviteSendController extends BaseController implements InviteMvpVie
     String inviteLink;
     String inviteMessage;
     String bannerImageUrl;
-    String twitter = "com.twitter.android";
-    String twitterComposerClass = "com.twitter.android.composer.ComposerActivity";
 
     ProgressDialog progress;
 
@@ -157,6 +159,15 @@ public class InviteSendController extends BaseController implements InviteMvpVie
         setUp(view);
     }
 
+    private String urlEncode(String s) {
+        try {
+            return URLEncoder.encode(s, "UTF-8");
+        }catch (UnsupportedEncodingException e) {
+            Log.wtf("Tag", "UTF-8 should always be supported", e);
+            return "null";
+        }
+    }
+
     @Override
     protected void setUp(View view) {
         mTitleText.setText("Invite Friends");
@@ -195,48 +206,45 @@ public class InviteSendController extends BaseController implements InviteMvpVie
             }
         });
 
-
         mTwitterSendInvitationLayout.setOnClickListener(new View.OnClickListener() {
-            @Override public void onClick(View view) {
+            @Override
+            public void onClick(View view) {
 
-                String personalInvitation = mPersonalInvitationMessageEditText.getText().toString()+" , ";
+                String personalInvitation = mPersonalInvitationMessageEditText.getText().toString() + " , ";
                 String invitationLink = mPersonalInvitationLinkEditText.getText().toString();
-                String messageWithInvite = personalInvitation+invitationLink;
+                String messageWithInvite = personalInvitation + invitationLink;
 
-                Intent twitterIntent
-                        = getActivity().getPackageManager().getLaunchIntentForPackage(twitter);
-                if (twitterIntent != null) {
 
-                    try
-                    {
-                        // Check if the Twitter app is installed on the phone.
-                        getActivity().getPackageManager().getPackageInfo(twitter, 0);
-                        Intent intent = new Intent(Intent.ACTION_SEND);
-                        intent.setClassName(twitter, twitterComposerClass);
-                        intent.setType("text/plain");
-                        intent.putExtra(Intent.EXTRA_TEXT, messageWithInvite);
-                        intent.putExtra(Intent.EXTRA_STREAM, invitationLink);
-                        intent.setData(Uri.parse(bannerImageUrl));
-                        startActivity(intent);
+                Intent tweetIntent = new Intent(Intent.ACTION_SEND);
+                tweetIntent.putExtra(Intent.EXTRA_TEXT, messageWithInvite);
+                tweetIntent.putExtra(Intent.EXTRA_STREAM, Uri.parse(bannerImageUrl));
+                tweetIntent.setType("text/plain");
 
+                PackageManager packManager = getActivity().getPackageManager();
+                List<ResolveInfo> resolvedInfoList = packManager.queryIntentActivities(tweetIntent, PackageManager.MATCH_DEFAULT_ONLY);
+
+                boolean resolved = false;
+                for (ResolveInfo resolveInfo : resolvedInfoList) {
+                    if (resolveInfo.activityInfo.packageName.startsWith("com.twitter.android")) {
+                        tweetIntent.setClassName(
+                                resolveInfo.activityInfo.packageName,
+                                resolveInfo.activityInfo.name);
+                        resolved = true;
+                        break;
                     }
-                    catch (Exception e)
-                    {
-                        e.printStackTrace();
-                        CustomAlertDialog.showCustomAlertDialog(
-                                getActivity(),
-                                CustomAlertDialog.CustomDialogIconState.NEGATIVE,
-                                "Twitter is not installed on this device");
-                    }
-
+                }
+                if (resolved) {
+                    startActivity(tweetIntent);
                 } else {
-
-                    String url = "http://www.twitter.com/intent/tweet?url=YOURURL&text=";
-                    String sendUrl = url + personalInvitation;
-                    Intent i = new Intent(Intent.ACTION_VIEW);
-                    i.setData(Uri.parse(sendUrl));
+                    Intent i = new Intent();
+                    i.putExtra(Intent.EXTRA_TEXT, messageWithInvite);
+                    i.setAction(Intent.ACTION_VIEW);
+                    i.setData(Uri.parse("https://twitter.com/intent/tweet?text=" + urlEncode(messageWithInvite)));
                     startActivity(i);
-
+                    CustomAlertDialog.showCustomAlertDialog(
+                            getActivity(),
+                            CustomAlertDialog.CustomDialogIconState.NEGATIVE,
+                            "Twitter is not installed on this device");
                 }
             }
         });
@@ -344,9 +352,17 @@ public class InviteSendController extends BaseController implements InviteMvpVie
             public void onClick(View view) {
                 String link = mPresenter.getFollowUsTwitterLink();
 
+                Intent intent;
                 if (!link.isEmpty()) {
+                    try {
+                        getActivity().getPackageManager().getPackageInfo("com.twitter.android",0);
+                        Uri uri = Uri.parse("twitter://user?user_id=37405859");
+                        intent = new Intent(Intent.ACTION_VIEW, uri);
+                    } catch (PackageManager.NameNotFoundException e) {
+                        e.printStackTrace();
                         Uri uri = Uri.parse(link);
-                    Intent intent = new Intent(Intent.ACTION_VIEW, uri);
+                        intent = new Intent(Intent.ACTION_VIEW, uri);
+                    }
                     getActivity().startActivity(intent);
 
                 } else {
@@ -413,7 +429,7 @@ public class InviteSendController extends BaseController implements InviteMvpVie
         inviteLink = inviteBody.getLink();
         inviteMessage = inviteBody.getInviteMessage();
         inviteSubject = inviteBody.getInviteSubject();
-        bannerImageUrl = inviteBody.getBannerUrl();
+        bannerImageUrl = "https://ibb.co/mipKAQ";
 
         mPersonalInvitationLinkEditText.setText(inviteLink);
         mSendInvitationContainer.setVisibility(View.VISIBLE);
