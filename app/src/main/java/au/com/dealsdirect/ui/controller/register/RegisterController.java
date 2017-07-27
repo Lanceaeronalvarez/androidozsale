@@ -1,16 +1,21 @@
 package au.com.dealsdirect.ui.controller.register;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import com.facebook.CallbackManager;
+
 import javax.inject.Inject;
 
 import au.com.dealsdirect.R;
+import au.com.dealsdirect.data.auth.AuthHandler;
 import au.com.dealsdirect.ui.base.BaseController;
 import au.com.dealsdirect.ui.custom.CustomAlertDialog;
 import au.com.dealsdirect.utils.BundleBuilder;
@@ -27,6 +32,8 @@ public class RegisterController extends BaseController implements RegisterMvpVie
 
     private static final String KEY_TEXT = "RegisterController.KEY_TEXT";
 
+    private CallbackManager mCallbackManager = CallbackManager.Factory.create();
+
     @Inject
     RegisterMvpPresenter<RegisterMvpView> mPresenter;
 
@@ -37,12 +44,13 @@ public class RegisterController extends BaseController implements RegisterMvpVie
     @BindView(R.id.controller_register_surname_field)
     TextView mRegisterSurnameField;
 
-
     @BindView(R.id.controller_register_email_field)
     TextView mRegisterEmailField;
 
     @BindView(R.id.controller_register_password_field)
     TextView mRegisterPasswordField;
+
+    private static AuthHandler mAuthHandler;
 
     public static RegisterController newInstance() {
 
@@ -51,6 +59,13 @@ public class RegisterController extends BaseController implements RegisterMvpVie
                         .build());
     }
 
+
+    public static RegisterController newInstance(AuthHandler authHandler){
+        mAuthHandler = authHandler;
+        return new RegisterController(
+                new BundleBuilder(new Bundle())
+                        .build());
+    }
 
     public RegisterController(Bundle args) {
         super(args);
@@ -67,6 +82,7 @@ public class RegisterController extends BaseController implements RegisterMvpVie
         View view = inflater.inflate(R.layout.controller_register, container, false);
 
         getControllerComponent().inject(this);
+        mCallbackManager = CallbackManager.Factory.create();
 
         mPresenter.onAttach(this);
 
@@ -93,6 +109,11 @@ public class RegisterController extends BaseController implements RegisterMvpVie
     }
 
     @Override
+    public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        mCallbackManager.onActivityResult(requestCode, resultCode, data);
+    }
+
+    @Override
     public void onDestroyView(View view) {
         mPresenter.onDetach();
         super.onDestroyView(view);
@@ -112,9 +133,16 @@ public class RegisterController extends BaseController implements RegisterMvpVie
         getActivity().onBackPressed();
     }
 
+
+    @OnClick(R.id.facebook_login_button)
+    void onFacebookLoginClick(){
+        mPresenter.onFacebookLogin(getActivity(), mCallbackManager);
+    }
+
     @Override
     public void showRegisterSuccessful(String loginTicket) {
-        getActivity().onBackPressed();
+        getRouter().popToTag("AccountController");
+        mAuthHandler.success();
 
         CustomAlertDialog.showCustomAlertDialog(getActivity(),
                 CustomAlertDialog.CustomDialogIconState.POSITIVE,"register successful");
@@ -126,5 +154,16 @@ public class RegisterController extends BaseController implements RegisterMvpVie
         Log.d("Register", "Error message = "+message);
         CustomAlertDialog.showCustomAlertDialog(getActivity(),
                 CustomAlertDialog.CustomDialogIconState.NEGATIVE,message);
+    }
+
+    @Override
+    public void showLoginSuccessful(String loginTicket) {
+        getActivity().onBackPressed();
+
+    }
+
+    @Override
+    public void showLoginError(String message) {
+
     }
 }

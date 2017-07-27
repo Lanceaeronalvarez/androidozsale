@@ -21,10 +21,14 @@ import com.bumptech.glide.request.RequestListener;
 import com.bumptech.glide.request.RequestOptions;
 import com.bumptech.glide.request.target.Target;
 
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
+
 
 public class ImageUtils {
 
     public static final String TAG = ImageUtils.class.getSimpleName();
+    public static String IMAGE_SERVER_URL = "server_image_server_url";
 
     public static abstract class ImageLoadedCallback {
 
@@ -72,10 +76,12 @@ public class ImageUtils {
                     .into(imageView);
         }else{
 
-            Glide.with(context)
-                    .load(url)
-                    .apply(options)
-                    .into(imageView);
+            if (imageView!=null){
+                Glide.with(context)
+                        .load(url)
+                        .apply(options)
+                        .into(imageView);
+            }
         }
 
     }
@@ -157,4 +163,28 @@ public class ImageUtils {
 
         return computedHeight;
     }
+
+    public static String generateImageUrl(String brandId, String imageId, String imageFilename) {
+        String encodedImageFilename;
+
+        try {
+            encodedImageFilename = URLEncoder.encode(imageFilename, "UTF-8");
+        } catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
+            encodedImageFilename = "";
+        }
+        encodedImageFilename = encodedImageFilename.replace("+", "%20");
+
+//        String urlString =  Prefs.getString(IMAGE_SERVER_URL, "https://c1.mysalec.com/brands/")
+        String urlString = "https://c1.mysalec.com/"
+                + "brands/"
+                + brandId + "/"
+                + imageId + "/"
+                + encodedImageFilename;
+
+
+        return urlString;
+    }
+
+
 }

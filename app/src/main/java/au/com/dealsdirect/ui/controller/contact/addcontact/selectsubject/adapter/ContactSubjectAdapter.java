@@ -11,6 +11,7 @@ import java.util.Collections;
 import java.util.List;
 
 import au.com.dealsdirect.R;
+import au.com.dealsdirect.ui.controller.contact.addcontact.ContactPreferenceHelper;
 import au.com.dealsdirect.ui.controller.contact.addcontact.selectsubject.listener.ContactSubjectClickListener;
 import au.com.dealsdirect.ui.controller.contact.addcontact.selectsubject.viewholder.ContactSubjectViewHolder;
 
@@ -18,8 +19,7 @@ import au.com.dealsdirect.ui.controller.contact.addcontact.selectsubject.viewhol
  * dp Created by Admin on 7/5/17.
  */
 
-public class ContactSubjectAdapter
-        extends RecyclerView.Adapter<ContactSubjectViewHolder>  {
+public class ContactSubjectAdapter extends RecyclerView.Adapter<ContactSubjectViewHolder> {
 
     List<String> mCurrentContactSubjectList = Collections.emptyList();
     Context mContext;
@@ -52,11 +52,9 @@ public class ContactSubjectAdapter
     public void onBindViewHolder(final ContactSubjectViewHolder holder, final int position) {
 
 
-        holder.contactSubjectRowLayout.setOnClickListener(new View.OnClickListener()
-        {
+        holder.contactSubjectRowLayout.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View v)
-            {
+            public void onClick(View v) {
 
                 myContactSubjectItemClickListener.onContactSubjectItemClicked
                         (mCurrentContactSubjectList.get(position));
@@ -67,12 +65,13 @@ public class ContactSubjectAdapter
         holder.contactSubjectTitleRowTextView
                 .setText(mCurrentContactSubjectList.get(position));
 
+        holder.contactSubjectTitleRowTextView.setSelected(ContactPreferenceHelper.getChosenSubject(mContext).equalsIgnoreCase(mCurrentContactSubjectList.get(position)));
     }
 
 
     @Override
     public int getItemCount() {
-        if (mCurrentContactSubjectList == null){
+        if (mCurrentContactSubjectList == null) {
             return 0;
         }
         return mCurrentContactSubjectList.size();

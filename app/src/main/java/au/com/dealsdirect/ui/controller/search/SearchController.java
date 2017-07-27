@@ -9,7 +9,6 @@ import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.Editable;
 import android.text.TextWatcher;
-import android.util.Log;
 import android.util.Pair;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -34,6 +33,7 @@ import au.com.dealsdirect.ui.base.BaseController;
 import au.com.dealsdirect.ui.controller.saleitems.SaleItemsMvpPresenter;
 import au.com.dealsdirect.ui.controller.saleitems.SaleItemsMvpView;
 import au.com.dealsdirect.ui.controller.saleitems.adapter.SaleItemsAdapter;
+import au.com.dealsdirect.ui.main.MainActivity;
 import au.com.dealsdirect.ui.main.SharedActivity;
 import au.com.dealsdirect.utils.BundleBuilder;
 import au.com.dealsdirect.utils.PaginateUtils;
@@ -91,6 +91,14 @@ public class SearchController extends BaseController implements SaleItemsMvpView
         super(args);
     }
 
+    @Override
+    protected void onAttach(@NonNull View view) {
+        super.onAttach(view);
+
+        assert (getActivity()) != null;
+        ((MainActivity)getActivity()).hideKeyboard();
+    }
+
     @NonNull
     @Override
     protected View inflateView(@NonNull LayoutInflater inflater, @NonNull ViewGroup container) {
@@ -113,6 +121,9 @@ public class SearchController extends BaseController implements SaleItemsMvpView
     protected void setUp(View view) {
         // Setup views here
         mPresenter.loadSaleItems("","","" ,0, new ArrayList());
+
+        assert (getActivity()) != null;
+        ((MainActivity)getActivity()).setDraggableViewPager(false);
 
         mSearchToolbarSearchField.addTextChangedListener(new TextWatcher() {
             @Override
@@ -154,9 +165,6 @@ public class SearchController extends BaseController implements SaleItemsMvpView
         };
 
 
-
-
-
         //noinspection ConstantConditions
         mSearchToolbarRightOption.setImageDrawable(
                 getActivity().getResources().getDrawable(R.drawable.ic_close));
@@ -167,13 +175,13 @@ public class SearchController extends BaseController implements SaleItemsMvpView
         if (mSearchToolbarSearchField.requestFocus()) {
             getActivity().getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_VISIBLE);
         }
-        //mPresenter.loadSample(new SampleRequest());
-
     }
 
     @Override
     public void onDestroyView(View view) {
         mPresenter.onDetach();
+        getActivity().getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN);
+
         super.onDestroyView(view);
     }
 
@@ -239,9 +247,6 @@ public class SearchController extends BaseController implements SaleItemsMvpView
             intent.putExtra("KEY_SALE_NAME", ((SaleItemsAdapter.ViewHolder) viewHolder).mSaleItemName.getText());
             intent.putExtra("KEY_SALE_PRICE",((SaleItemsAdapter.ViewHolder) viewHolder).mSalePrice.getText());
             intent.putExtra("KEY_SALE_OLD_PRICE",((SaleItemsAdapter.ViewHolder) viewHolder).mOldPrice.getText());
-            Log.d("LogBundle", ((SaleItemsAdapter.ViewHolder) viewHolder).mSaleItemName.getText()+" , "+
-                    ((SaleItemsAdapter.ViewHolder) viewHolder).mSalePrice.getText()+" , "+
-                    ((SaleItemsAdapter.ViewHolder) viewHolder).mOldPrice.getText());
 
 
             ActivityOptions options =
@@ -257,7 +262,8 @@ public class SearchController extends BaseController implements SaleItemsMvpView
 
     @OnClick(R.id.partial_toolbar_search_right_option)
     void onBackClick(){
-        //noinspection ConstantConditions
+        assert (getActivity()) != null;
+        ((MainActivity)getActivity()).hideKeyboard();
         getActivity().onBackPressed();
     }
 }

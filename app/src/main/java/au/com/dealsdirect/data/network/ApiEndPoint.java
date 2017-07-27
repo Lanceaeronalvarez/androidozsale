@@ -115,7 +115,12 @@ public final class ApiEndPoint {
     public static final String GET_CONTACT_SUBJECTS = getBaseApiLegacy() + "GetContactSubjects";
 
     /* Return Controller */
-    public static String CREATE_RETURN = "CreateReturn";
+    public static String GET_RETURNS = getBaseApiLegacy() + "GetReturns";
+    public static String GET_RETURN_ORDERS = getBaseApiLegacy() + "GetReturnOrders";
+    public static String GET_RETURN_ORDER_DETAIL = getBaseApiLegacy() + "GetReturnOrderDetail";
+    public static String GET_RETURN_DETAILS = getBaseApiLegacy() + "GetReturnDetails";
+    public static String CREATE_RETURN = getBaseApiLegacy() + "CreateReturn";
+
 
     /* Address Controller */
     public static final String DELETE_USER_DELIVERY_ADDRESS = getBaseApiLegacy() + "DeleteUserDeliveryAddress";

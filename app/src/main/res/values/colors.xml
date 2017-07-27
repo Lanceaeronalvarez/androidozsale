@@ -21,7 +21,7 @@
 
     <color name="border_gray">#E4E4E4</color>
 
-    <color name="gray_item_details">#466e87</color>
+    <color name="gray_item_details">#466E87</color>
     <color name="gray_title_text">#5F5F5F</color>
     <color name="gray_field_text">#868686</color>
     <color name="gray_field_label">#87939D</color>
@@ -56,7 +56,7 @@
 
     <!-- Chips Theme -->
     <color name="bg_chips_ripple">#FFFFFF</color>
-    <color name="bg_chips_default">#DBE1EA</color>
+    <color name="bg_chips_default">#F8FAFD</color>
     <color name="bg_chips_default_border">#EDF0F5</color>
     <color name="bg_chips_checked">#ED1167</color>
     <color name="bg_chips_text">#FFFFFF</color>

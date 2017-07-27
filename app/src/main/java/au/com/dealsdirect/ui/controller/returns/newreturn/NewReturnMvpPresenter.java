@@ -4,11 +4,13 @@ package au.com.dealsdirect.ui.controller.returns.newreturn;
  */
 
 
-import au.com.dealsdirect.data.network.model.SampleRequest;
+import au.com.dealsdirect.data.network.model.returns.createreturn.CreateReturnRequest;
 import au.com.dealsdirect.ui.base.MvpPresenter;
 
 public interface NewReturnMvpPresenter<V extends NewReturnMvpView> extends MvpPresenter<V> {
 
-    void loadSample(SampleRequest request);
+    boolean addNewReturnOrderRequest(CreateReturnRequest createReturnRequest);
+
+    void getReturnOrderDetail(int invoiceNo);
 
 }

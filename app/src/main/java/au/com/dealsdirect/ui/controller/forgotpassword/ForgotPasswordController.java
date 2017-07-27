@@ -2,6 +2,7 @@ package au.com.dealsdirect.ui.controller.forgotpassword;
 
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,6 +15,7 @@ import javax.inject.Inject;
 import au.com.dealsdirect.R;
 import au.com.dealsdirect.data.network.model.forgotpassword.ForgotPasswordResponseBody;
 import au.com.dealsdirect.ui.base.BaseController;
+import au.com.dealsdirect.ui.custom.CustomAlertDialog;
 import au.com.dealsdirect.utils.BundleBuilder;
 import butterknife.BindView;
 import butterknife.OnClick;
@@ -89,18 +91,56 @@ public class ForgotPasswordController extends BaseController implements ForgotPa
 
     @OnClick(R.id.controller_forgot_password_send_button)
     void onForgotPasswordClick(){
-        mPresenter.forgotPassword(mForgotPasswordEmailForm.getText().toString());
+
+        String inputEmail = mForgotPasswordEmailForm.getText().toString();
+        if (inputEmail.isEmpty()){
+            CustomAlertDialog.showCustomAlertDialog(
+                    getActivity(),
+                    CustomAlertDialog.CustomDialogIconState.NEGATIVE,
+                    "Input email address");
+
+        }else{
+
+            mPresenter.forgotPassword(inputEmail);
+        }
+
     }
 
     @Override
     public void showForgotPasswordResponse(ForgotPasswordResponseBody response) {
         //noinspection ConstantConditions
-        getActivity().onBackPressed();
+        Log.d("forgotpassword", response.getForgotPasswordResponse().getMessage());
+
+        if (response.getForgotPasswordResponse().getResult()) {
+
+            getActivity().onBackPressed();
+
+            CustomAlertDialog.showCustomAlertDialog(
+                    getActivity(),
+                    CustomAlertDialog.CustomDialogIconState.POSITIVE,
+                    getActivity().getString(R.string.request_sent)
+            );
+
+        } else {
+
+            CustomAlertDialog.showCustomAlertDialog(
+                    getActivity(),
+                    CustomAlertDialog.CustomDialogIconState.NEGATIVE,
+                    response.getForgotPasswordResponse().getMessage()
+            );
+
+        }
+
+//        getActivity().onBackPressed();
     }
 
     @Override
     public void showForgotPasswordError() {
         //noinspection ConstantConditions
-        getActivity().onBackPressed();
+        CustomAlertDialog.showCustomAlertDialog(
+                getActivity(),
+                CustomAlertDialog.CustomDialogIconState.NEGATIVE,
+                "please try again");
+//        getActivity().onBackPressed();
     }
 }

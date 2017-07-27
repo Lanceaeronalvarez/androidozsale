@@ -83,7 +83,8 @@ public class LoginController extends BaseController implements LoginMvpView {
     @Override
     protected void onAttach(@NonNull View view) {
         assert (getActivity()) != null;
-        ((MainActivity)getActivity()).getMainController().hideBottomNav();
+        if (getActivity() instanceof MainActivity)
+            ((MainActivity)getActivity()).getMainController().hideBottomNav();
         super.onAttach(view);
     }
 
@@ -108,12 +109,6 @@ public class LoginController extends BaseController implements LoginMvpView {
         setUp(view);
     }
 
-    @Override
-    public void onDestroyView(View view) {
-        super.onDestroyView(view);
-
-    }
-
 
     @Override
     protected void setUp(View view) {
@@ -132,11 +127,6 @@ public class LoginController extends BaseController implements LoginMvpView {
 
     }
 
-    @Override
-    public void onDetach(View view) {
-        mPresenter.onDetach();
-        super.onDetach(view);
-    }
 
     @Override
     public void showLoginSuccessful(String loginTicket) {
@@ -146,13 +136,16 @@ public class LoginController extends BaseController implements LoginMvpView {
 
     @Override
     public void showLoginError(String message) {
+
+        Log.d("logincontroller", message.toString());
+
         if (mAuthHandler!=null)
             mAuthHandler.error();
 
         CustomAlertDialog.showCustomAlertDialog(
                 getActivity(),
                 CustomAlertDialog.CustomDialogIconState.NEGATIVE,
-                message
+                "Login incorrect"
         );
 
         isLoginTapped = false;
@@ -160,7 +153,7 @@ public class LoginController extends BaseController implements LoginMvpView {
 
     @Override
     public void showRegistration() {
-        getRouter().pushController(RouterTransaction.with(RegisterController.newInstance())
+        getRouter().pushController(RouterTransaction.with(RegisterController.newInstance(mAuthHandler))
                 .pushChangeHandler(new HorizontalChangeHandler())
                 .popChangeHandler(new HorizontalChangeHandler()));
     }
@@ -185,7 +178,6 @@ public class LoginController extends BaseController implements LoginMvpView {
 
     @OnClick(R.id.controller_login_fb_layout)
     void onFacebookButtonClick() {
-        Log.d("FB", "FB button clicked");
         mPresenter.onFacebookLogin(getActivity(), mCallbackManager);
 
     }

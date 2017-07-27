@@ -7,9 +7,9 @@ import android.app.Activity;
 
 import com.facebook.CallbackManager;
 
-import au.com.dealsdirect.ui.base.MvpPresenter;
+import au.com.dealsdirect.ui.base.AuthenticationMvpPresenter;
 
-public interface LoginMvpPresenter<V extends LoginMvpView> extends MvpPresenter<V> {
+public interface LoginMvpPresenter<V extends LoginMvpView> extends AuthenticationMvpPresenter<V> {
 
     boolean loginViaEmail(String username, String password);
 
@@ -22,4 +22,5 @@ public interface LoginMvpPresenter<V extends LoginMvpView> extends MvpPresenter<
     boolean loginTicket(String ticket, String countryId);
 
     void onFacebookLogin(Activity activity, CallbackManager callbackManager);
+
 }

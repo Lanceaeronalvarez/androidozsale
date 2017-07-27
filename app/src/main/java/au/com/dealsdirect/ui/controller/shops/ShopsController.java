@@ -1,6 +1,5 @@
 package au.com.dealsdirect.ui.controller.shops;
 
-import android.annotation.SuppressLint;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
@@ -20,6 +19,7 @@ import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
+import android.widget.TextView;
 
 import com.bluelinelabs.conductor.RouterTransaction;
 import com.bluelinelabs.conductor.changehandler.FadeChangeHandler;
@@ -79,6 +79,9 @@ public class ShopsController extends BaseController implements ShopsMvpView, Ban
     @BindView(R.id.partial_toolbar_logo)
     ImageView mShopsControllerToolbarLogo;
 
+    @BindView(R.id.partial_toolbar_logo_title_view)
+    TextView mShopsControllerToolbarTextView;
+
     private BannersAdapter mBannersAdapter;
     private Paginate.Callbacks mPaginateCallbacks;
     private Paginate mPaginateManager;
@@ -105,11 +108,17 @@ public class ShopsController extends BaseController implements ShopsMvpView, Ban
     private RelativeLayout item;
     private ImageView rightOption;
 
+    private int mBannerClickCounter = 0;
+
     BannerClickListener mBannerClickListener;
 
     @Override
     protected void onAttach(@NonNull View view) {
         mPresenter.onAttach(this);
+        assert (getActivity()) != null;
+
+        mBannerClickCounter = 0;
+        ((MainActivity)getActivity()).setShopController(this);
         super.onAttach(view);
     }
 
@@ -150,7 +159,6 @@ public class ShopsController extends BaseController implements ShopsMvpView, Ban
         setUp(view);
     }
 
-
     @Override
     public void onDetach(View view) {
         mPresenter.onDetach();
@@ -173,7 +181,6 @@ public class ShopsController extends BaseController implements ShopsMvpView, Ban
                 bannerOffset += newBannerCount; //load 10 banners every page
                 bannerLimit += newBannerCount;
                 refresh();
-
             }
 
             @Override
@@ -190,7 +197,6 @@ public class ShopsController extends BaseController implements ShopsMvpView, Ban
         };
 
         mBannerClickListener = this;
-
         mBannersAdapter = new BannersAdapter(getActivity(), mPresenter, new ArrayList(), mBannerClickListener);
 
         if (getResources().getBoolean(R.bool.is_tablet)) {
@@ -204,6 +210,7 @@ public class ShopsController extends BaseController implements ShopsMvpView, Ban
         shopsControllerBannerRecyclerView.setAdapter(mBannersAdapter);
 
         if (sales.isEmpty()) {
+            shopsControllerBannerRecyclerView.setVisibility(View.GONE);
             mPresenter.loadShopsBanner(mCategoryName, mCategoryID, bannerOffset, bannerLimit);
         } else {
             shopsControllerBannerRecyclerView.setAdapter(mBannersAdapter);
@@ -211,7 +218,6 @@ public class ShopsController extends BaseController implements ShopsMvpView, Ban
             mBannersAdapter.replace(sales);
             mPaginateManager = PaginateUtils.init(shopsControllerBannerRecyclerView, mPaginateCallbacks);
         }
-
 
         if (mPreLoadedCategories.size() == 0) {
             mPresenter.loadCategoryTree();
@@ -233,33 +239,38 @@ public class ShopsController extends BaseController implements ShopsMvpView, Ban
             String imageUrl,
             boolean isAvailable) {
 
-        List<String> names = new ArrayList<>();
-        names.add(bannerId + position);
-        if (!mPresenter.isAccessAnonymousEnabled() && !mPresenter.isAuthorized()) {
+        if (mBannerClickCounter!=1){
+            mBannerClickCounter =+ 1;
+            Log.d("onBannerClick", " clicked");
 
-            // Invoke login if no auth or not an open app
-            assert (getActivity()) != null;
-            ((MainMvpView) getActivity()).showLoginController(getRouter(), new AuthHandler() {
-                @Override
-                public void success() {
-                    ((MainActivity)getActivity()).getHomeRouter()
-                            .pushController(RouterTransaction.with(
-                            SaleItemsController.newInstance(
-                                    saleId,
-                                    bannerTitle,
-                                    bannerId,
-                                    position,
-                                    imageUrl, null))
-                            .pushChangeHandler(new HorizontalChangeHandler())
-                            .popChangeHandler(new HorizontalChangeHandler()));
-                }
 
-                @Override
-                public void error() {
+            List<String> names = new ArrayList<>();
+            names.add(bannerId + position);
+            if (!mPresenter.isAccessAnonymousEnabled() && !mPresenter.isAuthorized()) {
 
-                }
-            });
-        } else {
+                // Invoke login if no auth or not an open app
+                assert (getActivity()) != null;
+                ((MainMvpView) getActivity()).showLoginController(getRouter(), new AuthHandler() {
+                    @Override
+                    public void success() {
+                        ((MainActivity)getActivity()).getHomeRouter()
+                                .pushController(RouterTransaction.with(
+                                        SaleItemsController.newInstance(
+                                                saleId,
+                                                bannerTitle,
+                                                bannerId,
+                                                position,
+                                                imageUrl, null))
+                                        .pushChangeHandler(new HorizontalChangeHandler())
+                                        .popChangeHandler(new HorizontalChangeHandler()));
+                    }
+
+                    @Override
+                    public void error() {
+
+                    }
+                });
+            } else {
 
 // Check if sale is available
             //TODO: Need computation for date and time when sale response is cached
@@ -313,7 +324,13 @@ public class ShopsController extends BaseController implements ShopsMvpView, Ban
 
     @Override
     public void showShopBanners(List<GetBannerResponse> getBannerResponses) {
+        shopsControllerBannerRecyclerView.setVisibility(View.VISIBLE);
+
         loadingInProgress = false;
+
+        if(getBannerResponses.isEmpty()){
+            hasLoadedAllItems = true;
+        }
 
         if (page == 0) {
             Log.d("items", "replaced");
@@ -421,7 +438,6 @@ public class ShopsController extends BaseController implements ShopsMvpView, Ban
             }
 
             mCategoryMap.put(i.getKey(), i.getChildren());
-
         }
     }
 
@@ -430,15 +446,32 @@ public class ShopsController extends BaseController implements ShopsMvpView, Ban
     }
 
     public void goToItemsFromCategories(Bundle bundle){
+        //noinspection ConstantConditions
         getRouter().pushController(RouterTransaction.with(
                 SaleItemsController.newInstance(bundle))
+                .tag(getActivity().getResources().getString(R.string.sale_items_from_category))
                 .pushChangeHandler(new HorizontalChangeHandler())
                 .popChangeHandler(new HorizontalChangeHandler()));
     }
 
     public void goToSalesFromCategories(GetCategoryTreeResponse getCategoryTreeResponse){
         mPresenter.onAttach(this);
-        mPresenter.loadShopsBanner(getCategoryTreeResponse.getName(), getCategoryTreeResponse.getId(), 0, 0);
+        shopsControllerBannerRecyclerView.setVisibility(View.GONE);
+
+        if (getCategoryTreeResponse.getKey()!=null){
+
+            mPresenter.loadShopsBanner(getCategoryTreeResponse.getKey(), getCategoryTreeResponse.getId(), 0, 0);
+            if (mShopsControllerToolbarLogo!=null)
+                mShopsControllerToolbarLogo.setVisibility(View.GONE);
+            mShopsControllerToolbarTextView.setVisibility(View.VISIBLE);
+            mShopsControllerToolbarTextView.setText(getCategoryParentKey(getCategoryTreeResponse.getKey()));
+            mShopsControllerHamburgerView.setImageDrawable(getActivity().getDrawable(R.drawable.ic_pink_chevron));
+            shopsControllerSearchView.setVisibility(View.INVISIBLE);
+        }else{
+            assert (getActivity()) != null;
+            ((MainActivity)getActivity()).isFromCategories(false);
+            loadShopBanners();
+        }
     }
 
     @SuppressWarnings({"deprecation", "ConstantConditions"})
@@ -479,11 +512,10 @@ public class ShopsController extends BaseController implements ShopsMvpView, Ban
             return false;
         });
 
-        mShopsControllerToolbarLogo.setVisibility(View.GONE);
+//        mShopsControllerToolbarLogo.setVisibility(View.GONE);
     }
 
     public void hideSearchToolbar(){
-
         child.startAnimation(outToRightAnimation());
         item.removeView(child);
 
@@ -500,5 +532,20 @@ public class ShopsController extends BaseController implements ShopsMvpView, Ban
 
         Handler handler = new Handler();
         handler.postDelayed(() -> mShopsControllerToolbarLogo.setVisibility(View.VISIBLE),300);
+    }
+
+    public String getCategoryParentKey(String saleCategoryKey){
+        return saleCategoryKey +  " • All";
+    }
+
+    public void loadShopBanners(){
+
+        mShopsControllerToolbarLogo.setVisibility(View.VISIBLE);
+        mShopsControllerToolbarTextView.setVisibility(View.GONE);
+        mShopsControllerHamburgerView.setImageDrawable(getActivity().getDrawable(R.drawable.ic_action_menu));
+        shopsControllerSearchView.setVisibility(View.VISIBLE);
+
+        GetCategoryTreeResponse shopCategory = new GetCategoryTreeResponse();
+        mPresenter.loadShopsBanner(shopCategory.getKey(), shopCategory.getId(), 0, 0);
     }
 }

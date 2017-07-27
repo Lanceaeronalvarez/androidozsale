@@ -172,8 +172,8 @@ public class OrdersPresenter<V extends OrdersMvpView> extends BasePresenter<V> i
 //                            return;
 //                        }
 //
-//                        if(responseValue.getD().getResult()){
-//                            getMvpView().showOrders(responseValue.getD().getList());
+//                        if(responseValue.getNewReturnOrderDetailResponse().getResult()){
+//                            getMvpView().showOrders(responseValue.getNewReturnOrderDetailResponse().getList());
 //                        }
 //                    }
 //                }, new Consumer<Throwable>() {

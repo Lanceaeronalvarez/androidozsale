@@ -25,4 +25,6 @@ public interface MvpPresenter<V extends MvpView> {
     void doApiCallForObjectResponse(Observable observable, ApiCallback callback);
 
     void doApiCallForListResponse(Observable observable, ApiCallback callback);
+
+
 }

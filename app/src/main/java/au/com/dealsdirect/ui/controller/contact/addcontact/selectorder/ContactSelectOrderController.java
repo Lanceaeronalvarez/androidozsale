@@ -40,14 +40,11 @@ public class ContactSelectOrderController extends BaseController
     @Inject
     ContactSelectOrderMvpPresenter<ContactSelectOrderMvpView> mPresenter;
 
-    @BindView(R.id.my_contact_select_subject_recycler_view)
+    @BindView(R.id.controller_contact_select_order_header)
+    TextView mContactOrdersHeader;
+
+    @BindView(R.id.my_contact_select_order_recycler_view)
     RecyclerView mContactOrdersRecyclerView;
-
-    @BindView(R.id.partial_toolbar_arrow_title)
-    TextView mContactSelectOrderTitle;
-
-    @BindView(R.id.partial_toolbar_filter_view)
-    ImageView mContactSelectOrderRightOption;
 
     @BindView(R.id.controller_contact_select_order_placeholder)
     TextView mContactSelectOrderPlaceholder;
@@ -92,29 +89,22 @@ public class ContactSelectOrderController extends BaseController
 
     @Override
     protected void setUp(View view) {
-        // Setup views here
-        //mPresenter.loadSample(new SampleRequest());
-        mContactSelectOrderTitle.setText("Message Order");
-        mContactSelectOrderRightOption.setVisibility(View.INVISIBLE);
-        mContactOrdersRecyclerView =
-                (RecyclerView) view.findViewById(R.id.my_contact_select_subject_recycler_view);
-
-        if (mContactOrders.isEmpty()){
+        if (mContactOrders.isEmpty()) {
+            mContactOrdersHeader.setVisibility(View.GONE);
             mContactOrdersRecyclerView.setVisibility(View.GONE);
             mContactSelectOrderPlaceholder.setVisibility(View.VISIBLE);
-        }else{
+            mContactSelectOrderPlaceholder.setOnClickListener(v -> getActivity().onBackPressed());
+        } else {
             mContactSelectOrderPlaceholder.setVisibility(View.GONE);
             mContactOrdersRecyclerView.setVisibility(View.VISIBLE);
 
             final ContactOrderAdapter adapter
                     = new ContactOrderAdapter
-                    (mContactOrders,getActivity(), mContactOrderItemListener);
+                    (mContactOrders, getActivity(), mContactOrderItemListener);
 
             mContactOrdersRecyclerView.setAdapter(adapter);
             mContactOrdersRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
         }
-
-
     }
 
     @Override
@@ -139,10 +129,5 @@ public class ContactSelectOrderController extends BaseController
     @Override
     public void showContactOrders(List<ContactOrderList> contacOrderList) {
 
-    }
-
-    @OnClick(R.id.partial_toolbar_arrow_view)
-    void onBackClick(){
-        getActivity().onBackPressed();
     }
 }

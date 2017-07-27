@@ -43,7 +43,7 @@ import au.com.dealsdirect.ui.base.BaseController;
 import au.com.dealsdirect.ui.controller.saleitemdetails.listener.LoadImagesListener;
 import au.com.dealsdirect.ui.controller.saleitems.SaleItemsController;
 import au.com.dealsdirect.ui.custom.CustomAlertDialog;
-import au.com.dealsdirect.ui.main.MainMvpView;
+import au.com.dealsdirect.ui.main.SharedActivity;
 import au.com.dealsdirect.utils.BundleBuilder;
 import au.com.dealsdirect.utils.ImageUtils;
 import au.com.dealsdirect.utils.PriceUtils;
@@ -91,8 +91,6 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
     TextView mDiscountLabel;
     @BindView(R.id.productImageRecyclerView)
     RecyclerViewPager mProductImagesRv;
-    @BindView(R.id.otherImagesRecyclerView)
-    RecyclerView mOtherImagesRv;
     @BindView(R.id.productName)
     TextView mProductName;
     @BindView(R.id.productBrand)
@@ -125,6 +123,10 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
     LinearLayout mProductPricing;
     @BindView(R.id.controller_sale_item_detail_scrollview)
     NestedScrollView mProductDetailScrollView;
+    @BindView(R.id.left_arrow_image)
+    ImageView mLeftArrowImage;
+    @BindView(R.id.right_arrow_image)
+    ImageView mRightArrowImage;
 
 
     private String mHtmlHeader = "";
@@ -160,7 +162,6 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
 
             mProductSharedImage.setVisibility(View.VISIBLE);
             mProductImagesRv.setVisibility(View.INVISIBLE);
-            mOtherImagesRv.setVisibility(View.INVISIBLE);
 
             final Intent resultData = new Intent();
             resultData.putExtra(RESULT_EXTRA_CONTROLLER_ID, getInstanceId());
@@ -260,13 +261,6 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
 
         mPresenter.loadSaleItemDetails(mSeoIdentifierId);
 
-        mOtherImagesRv.setLayoutManager(new LinearLayoutManager(getActivity(),
-                LinearLayoutManager.HORIZONTAL,
-                false));
-
-        mSaleItemImagesIndicatorAdapter = new SaleItemDetailsImageAdapter(this, loadImagesListener, null, mSaleId, 2);
-        mOtherImagesRv.setAdapter(mSaleItemImagesIndicatorAdapter);
-
         LinearLayoutManager mProductImagesRvLayoutManager
                 = new LinearLayoutManager(getActivity(), LinearLayoutManager.HORIZONTAL, false);
         mProductImagesRv.setLayoutManager(mProductImagesRvLayoutManager);
@@ -274,11 +268,17 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
         mProductImagesRv.setAdapter(mSaleItemImagesAdapter);
 
         mProductImagesRv.addOnPageChangedListener((i, i1) -> {
-            SaleItemDetailsImageAdapter.ViewHolder vhNew = (SaleItemDetailsImageAdapter.ViewHolder) mOtherImagesRv.findViewHolderForLayoutPosition(i1);
-            vhNew.image.setImageResource(R.drawable.circle_indicator_active);
 
-            SaleItemDetailsImageAdapter.ViewHolder vhOld = (SaleItemDetailsImageAdapter.ViewHolder) mOtherImagesRv.findViewHolderForLayoutPosition(i);
-            vhOld.image.setImageResource(R.drawable.circle_indicator_inactive);
+            if (mProductImagesRv.getCurrentPosition() + 1 == mSaleItemImagesAdapter.getItemCount()) {
+                mLeftArrowImage.setVisibility(View.VISIBLE);
+                mRightArrowImage.setVisibility(View.INVISIBLE);
+            } else if (mProductImagesRv.getCurrentPosition() == 0) {
+                mLeftArrowImage.setVisibility(View.INVISIBLE);
+                mRightArrowImage.setVisibility(View.VISIBLE);
+            } else {
+                mLeftArrowImage.setVisibility(View.VISIBLE);
+                mRightArrowImage.setVisibility(View.VISIBLE);
+            }
         });
 
         mHtmlHeader = getActivity().getResources()
@@ -286,7 +286,19 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
         mHtmlFooter = getActivity().getResources()
                 .getString(R.string.base_html_template_footer);
 
+        mLeftArrowImage.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mProductImagesRv.smoothScrollToPosition(mProductImagesRv.getCurrentPosition() - 1);
+            }
+        });
 
+        mRightArrowImage.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mProductImagesRv.smoothScrollToPosition(mProductImagesRv.getCurrentPosition() + 1);
+            }
+        });
     }
 
     @Override
@@ -352,14 +364,17 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
         List<String> qualitySaleImages = getQualityImages(saleDetail.getImages());
 
         mSaleItemImagesAdapter.replaceData(qualitySaleImages);
-        mSaleItemImagesIndicatorAdapter.replaceData(qualitySaleImages);
 
-        if (saleDetail.getImages()
-                .size() != 0) {
-            mOtherImagesRv.setVisibility(View.VISIBLE);
+        Log.d("itemcount", mSaleItemImagesAdapter.getItemCount() + "");
+        if (qualitySaleImages.size() > 0) {
+            mLeftArrowImage.setVisibility(View.INVISIBLE);
+            mRightArrowImage.setVisibility(View.VISIBLE);
+        } else {
+            mLeftArrowImage.setVisibility(View.INVISIBLE);
+            mRightArrowImage.setVisibility(View.INVISIBLE);
         }
-        //bind UI values here
 
+        //bind UI values here
 
         mProductDescriptionText.startAnimation(anim);
         mProductDescriptionText.loadData(mHtmlHeader + saleDetail.getDescription() + mHtmlFooter,
@@ -436,12 +451,13 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
 
     @OnClick(R.id.product_details_add_to_basket)
     void addToBasket() {
+//        verifyAddToCart();
 
         if (!mPresenter.isAuthorized()) {
-            ((MainMvpView) getActivity()).showLoginController(getRouter(), new AuthHandler() {
+            ((SharedActivity) getActivity()).showLoginController(getRouter(), new AuthHandler() {
                 @Override
                 public void success() {
-                    verifyAddToCart();
+//                    verifyAddToCart();
                 }
 
                 @Override
@@ -450,7 +466,7 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
                 }
             });
         } else {
-            verifyAddToCart();
+//            verifyAddToCart();
         }
 
     }

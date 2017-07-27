@@ -1,7 +1,7 @@
 package au.com.dealsdirect.ui.controller.categories.adapter;
 
+import android.content.Context;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,6 +16,7 @@ import au.com.dealsdirect.R;
 import au.com.dealsdirect.data.network.model.category.GetCategoryTreeResponse;
 import au.com.dealsdirect.ui.controller.categories.CategoriesMvpPresenter;
 import au.com.dealsdirect.ui.controller.categories.listener.SubCategoryItemClickListener;
+import au.com.dealsdirect.ui.main.MainActivity;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
@@ -52,22 +53,33 @@ public class SubCategoryItemsAdapter extends RecyclerView.Adapter<RecyclerView.V
     @Override
     public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
         setAnimation(holder.itemView, position);
-        Log.d("subcategoryitem", "animate");
+        Context context = holder.itemView.getContext();
+
         if (!mData.isEmpty()) {
+
             if (!mData.get(position).getName().isEmpty()) {
+
                 ((SubCategoryItemsAdapter.SubCategoryItemViewHolder) holder)
                         .subCategoryTitle.setText(mData.get(position).getName());
+
+                String chosenKey =((MainActivity)context).getMainController().getChosenCategoryItemKey();
+
+                if (mData.get(position).getKey().equals(chosenKey)){
+
+                    ((SubCategoryItemsAdapter.SubCategoryItemViewHolder) holder)
+                            .subCategoryTitle.setTextColor(context.getResources().getColor(R.color.category_text_active));
+                }
             }
 
             ((SubCategoryItemViewHolder) holder).subCategoryTitle.setOnClickListener(view -> {
+
+                ((SubCategoryItemViewHolder) holder).subCategoryTitle.setEnabled(true);
                 mCategoryAdapterClickListener.onSubCategoryItemClicked(
                         mData.get(position).getId(),
                         mData.get(position).getName(),
                         mData.get(position).getKey());
             });
-
         }
-
     }
 
     @Override
@@ -115,5 +127,4 @@ public class SubCategoryItemsAdapter extends RecyclerView.Adapter<RecyclerView.V
         mData.add(getCategoryTreeResponse);
         notifyDataSetChanged();
     }
-
 }

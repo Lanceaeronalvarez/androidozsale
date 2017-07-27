@@ -2,6 +2,7 @@ package au.com.dealsdirect.ui.controller.returns.returndetails.adapter;
 
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,6 +15,7 @@ import java.util.List;
 import au.com.dealsdirect.R;
 import au.com.dealsdirect.data.network.model.returns.returndetails.Item;
 import au.com.dealsdirect.ui.controller.returns.returndetails.viewholder.ReturnDetailsViewHolder;
+import au.com.dealsdirect.utils.ImageUtils;
 import au.com.dealsdirect.utils.PriceUtils;
 
 /**
@@ -54,19 +56,19 @@ public class ReturnDetailsAdapter extends RecyclerView.Adapter<ReturnDetailsView
         String itemCost = PriceUtils.getPriceStringValue(mReturnDetailsList.get(position).getPrice());
         String itemSubTotal = PriceUtils.getPriceStringValue(mReturnDetailsList.get(position).getSubTotal());
 
+        Log.d("itemiterator", "position = "+position );
         String itemSize = mReturnDetailsList.get(position).getSize();
         String brandId = mReturnDetailsList.get(position).getBrandID();
         String imageId = mReturnDetailsList.get(position).getImageID();
         String fileName = mReturnDetailsList.get(position).getFile();
         int itemReturnCount = mReturnDetailsList.get(position).getCount();
+        Log.d("itemiterator", "position = "+position+ "itemssize  = "+itemSize +" , brandid = "+brandId+" , imageid = "+imageId );
 
+//
+        String imageUrl = ImageUtils.generateImageUrl(brandId,imageId,fileName);
+        ImageUtils.loadImage(holder.myReturnsDetailsProductImageView.getContext(),imageUrl,holder.myReturnsDetailsProductImageView
+        );
 
-//        String imageUrl = GImageUrlUtil.generateImageUrl(brandId,imageId,fileName);
-//        Glide.with(mContext).load(imageUrl)
-//                .skipMemoryCache(true)
-//                .diskCacheStrategy(DiskCacheStrategy.RESULT)
-//                .fitCenter()
-//                .into(holder.myReturnsDetailsProductImageView);
 
         holder.myReturnsDetailsProductNameValueTextView.setText(mReturnDetailsList.get(position).getItem());
         holder.myReturnsDetailsPriceValueTextView.setText(itemCost);
@@ -106,4 +108,5 @@ public class ReturnDetailsAdapter extends RecyclerView.Adapter<ReturnDetailsView
             lastPosition = position;
         }
     }
+
 }

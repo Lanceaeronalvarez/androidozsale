@@ -1,33 +1,42 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-              xmlns:app="http://schemas.android.com/apk/res-auto"
-              android:orientation="vertical"
-              android:layout_width="match_parent"
-              android:layout_height="match_parent"
-              android:animateLayoutChanges="true"
-              android:background="#FFFFFF" >
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:animateLayoutChanges="true"
+    android:background="#FFFFFF"
+    android:orientation="vertical">
 
-    <include
-        android:id="@+id/contact_select_order_toolbar"
-        layout="@layout/partial_toolbar_arrow" />
+    <TextView
+        android:id="@+id/controller_contact_select_order_header"
+        fontPath="@string/font_lato_light"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="10dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="10dp"
+        android:fontFamily="@string/font_lato_black"
+        android:gravity="center_vertical"
+        android:text="@string/select_a_sale"
+        android:textColor="@color/gray_description_text"
+        android:textSize="@dimen/text_size_xxlarge"
+        tools:ignore="MissingPrefix" />
 
     <TextView
         android:id="@+id/controller_contact_select_order_placeholder"
-        android:fontFamily="@string/font_lato_black"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:fontFamily="@string/font_lato_black"
         android:gravity="center_horizontal|center_vertical"
-        android:text="no orders"
+        android:text="@string/no_orders"
         android:textColor="@color/gray_description_text"
-        android:textSize="@dimen/text_size_xxxlarge"/>
-
+        android:textSize="@dimen/text_size_xxxlarge" />
 
     <android.support.v7.widget.RecyclerView
-        android:id="@+id/my_contact_select_subject_recycler_view"
-        android:layout_below="@+id/contact_select_order_toolbar"
+        android:id="@+id/my_contact_select_order_recycler_view"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
-
-    </android.support.v7.widget.RecyclerView>
+        android:layout_height="match_parent"
+        android:layout_below="@+id/controller_contact_select_order_header"
+        android:overScrollMode="never" />
 
 </RelativeLayout>

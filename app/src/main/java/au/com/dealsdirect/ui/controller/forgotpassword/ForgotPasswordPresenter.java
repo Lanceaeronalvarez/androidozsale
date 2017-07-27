@@ -27,6 +27,7 @@ public class ForgotPasswordPresenter<V extends ForgotPasswordMvpView> extends Ba
         ForgotPasswordRequest forgotPasswordRequest = new ForgotPasswordRequest();
         forgotPasswordRequest.countryID = getDataManager().getCountryId();
         forgotPasswordRequest.languageID = getDataManager().getLanguageId();
+        forgotPasswordRequest.userEmail = email;
 
         getCompositeDisposable().add(getDataManager()
                 .callForgotPassword(forgotPasswordRequest)

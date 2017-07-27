@@ -38,7 +38,7 @@ import butterknife.OnClick;
 public class PaymentSelectController extends BaseController implements PaymentSelectMvpView {
 
     private static final String PAYMENT_METHODS = "PaymentMethods";
-    private final static String  IS_FROM_CART = "IsFromCart";
+    private final static String IS_FROM_CART = "IsFromCart";
 
     @Inject
     PaymentSelectMvpPresenter<PaymentSelectMvpView> mPresenter;
@@ -61,15 +61,16 @@ public class PaymentSelectController extends BaseController implements PaymentSe
 
     public PaymentSelectController(String paymentMethodsJsonString, boolean isFromCart) {
         this(new BundleBuilder(new Bundle())
-                .putString(PAYMENT_METHODS,paymentMethodsJsonString)
-                .putBoolean(IS_FROM_CART,isFromCart)
+                .putString(PAYMENT_METHODS, paymentMethodsJsonString)
+                .putBoolean(IS_FROM_CART, isFromCart)
                 .build());
     }
 
     public PaymentSelectController(Bundle args) {
         super(args);
-        mPaymentMethods = JsonUtils.convertStringToObject(args.getString(PAYMENT_METHODS),new TypeToken<ArrayList<PaymentMethod>>(){}.getType());
-        if(mPaymentMethods == null){
+        mPaymentMethods = JsonUtils.convertStringToObject(args.getString(PAYMENT_METHODS), new TypeToken<ArrayList<PaymentMethod>>() {
+        }.getType());
+        if (mPaymentMethods == null) {
             mPaymentMethods = new ArrayList<>();
         }
         isFromCart = args.getBoolean(IS_FROM_CART);
@@ -77,7 +78,7 @@ public class PaymentSelectController extends BaseController implements PaymentSe
 
     @Override
     protected View inflateView(@NonNull LayoutInflater inflater, @NonNull ViewGroup container) {
-        View view = inflater.inflate(R.layout.controller_payment_select, container,false);
+        View view = inflater.inflate(R.layout.controller_payment_select, container, false);
         getControllerComponent().inject(this);
         mPresenter.onAttach(this);
         return view;
@@ -96,7 +97,7 @@ public class PaymentSelectController extends BaseController implements PaymentSe
     }
 
     @Override
-    public void showPaymentList(List<PaymentMethod> paymentMethods){
+    public void showPaymentList(List<PaymentMethod> paymentMethods) {
         if (paymentMethods != null) {
             mPaymentMethods = new ArrayList<>(paymentMethods);
             mAdapter.replaceData(mPaymentMethods);
@@ -134,11 +135,16 @@ public class PaymentSelectController extends BaseController implements PaymentSe
     @Override
     protected void setUp(View view) {
 
-        if(!isFromCart){
+        if (!isFromCart) {
             mPresenter.fetchUserPaymentMethods();
         }
 
         mPaymentSelectToolbarTitle.setText("Add Payment Method");
+        if(mPresenter.isTablet()){
+            mPaymentSelectRightOption.setPadding(5, 5, 5, 5);
+        } else {
+            mPaymentSelectRightOption.setPadding(20, 20, 20, 20);
+        }
         mPaymentSelectRightOption.setImageDrawable(getApplicationContext().getDrawable(R.drawable.ic_add));
 
         mAdapter = new PaymentSelectAdapter(mActivity, mPaymentMethods, mPresenter, isFromCart);
@@ -148,8 +154,12 @@ public class PaymentSelectController extends BaseController implements PaymentSe
         mRecyclerView.addOnItemTouchListener(new RecyclerOnTouchListener(mActivity, new RecyclerOnTouchListener.OnItemClickListener() {
             @Override
             public void onItemClick(View v, int position) {
-                mActivity.setPaymentMethodSelected(mPaymentMethods.get(position));
-                mActivity.onBackPressed();
+                if (isFromCart) {
+                    mActivity.setPaymentMethodSelected(mPaymentMethods.get(position));
+                    mActivity.onBackPressed();
+                } else {
+                    mPresenter.removeUserPaymentMethod(mPaymentMethods.get(position));
+                }
             }
         }));
     }
@@ -160,7 +170,7 @@ public class PaymentSelectController extends BaseController implements PaymentSe
     }
 
     @OnClick(R.id.partial_toolbar_filter_view)
-    public void onAddPaymentMethod(){
+    public void onAddPaymentMethod() {
         getRouter().pushController(RouterTransaction.with(new AddPaymentController(true))
                 .pushChangeHandler(new HorizontalChangeHandler())
                 .popChangeHandler(new HorizontalChangeHandler()));

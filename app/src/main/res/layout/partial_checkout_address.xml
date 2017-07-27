@@ -29,8 +29,8 @@
             android:layout_weight="1"
             android:gravity="end"
             android:text="@string/change"
-            android:textColor="@color/gray_field_label"
-            android:textSize="@dimen/text_size_xlarge"
+            android:textColor="@color/gray_field_text"
+            android:textSize="@dimen/text_size_medium"
             android:visibility="gone" />
 
     </LinearLayout>

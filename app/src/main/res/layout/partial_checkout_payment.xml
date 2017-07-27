@@ -29,7 +29,7 @@
             android:gravity="end"
             android:text="@string/change"
             android:textColor="@color/gray_field_text"
-            android:textSize="16sp"
+            android:textSize="@dimen/text_size_medium"
             android:visibility="gone" />
 
     </LinearLayout>

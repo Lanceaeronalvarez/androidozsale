@@ -11,7 +11,6 @@ import com.androidnetworking.interceptors.HttpLoggingInterceptor;
 import com.squareup.leakcanary.LeakCanary;
 import com.squareup.leakcanary.RefWatcher;
 
-
 import java.io.File;
 
 import javax.inject.Inject;

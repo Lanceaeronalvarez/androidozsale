@@ -18,6 +18,7 @@ import javax.inject.Inject;
 
 import au.com.dealsdirect.R;
 import au.com.dealsdirect.ui.base.BaseController;
+import au.com.dealsdirect.ui.controller.contact.addcontact.AddContactController;
 import au.com.dealsdirect.ui.controller.contact.addcontact.ContactPreferenceHelper;
 import au.com.dealsdirect.ui.controller.contact.addcontact.selectsubject.adapter.ContactSubjectAdapter;
 import au.com.dealsdirect.ui.controller.contact.addcontact.selectsubject.listener.ContactSubjectClickListener;
@@ -42,13 +43,6 @@ public class ContactSelectSubjectController extends BaseController
 
     @Inject
     ContactSelectSubjectMvpPresenter<ContactSelectSubjectMvpView> mPresenter;
-
-    @BindView(R.id.partial_toolbar_arrow_title)
-    TextView mContactSelectSubjectControllerTitle;
-
-    @BindView(R.id.partial_toolbar_filter_view)
-    ImageView mContactSelectSubjectControllerFilter;
-
 
     @BindView(R.id.my_contact_select_subject_recycler_view)
     RecyclerView mContactSelectSubjectControllerRecyclerView;
@@ -94,14 +88,7 @@ public class ContactSelectSubjectController extends BaseController
 
     @Override
     protected void setUp(View view) {
-        // Setup views here
-        //mPresenter.loadSample(new SampleRequest());
-
-        mContactSelectSubjectControllerTitle.setText("Message Subject");
-
         mContactSubjectItemListener = this;
-        mContactSelectSubjectControllerRecyclerView =
-                (RecyclerView) view.findViewById(R.id.my_contact_select_subject_recycler_view);
 
         final ContactSubjectAdapter adapter
                 = new ContactSubjectAdapter
@@ -109,7 +96,6 @@ public class ContactSelectSubjectController extends BaseController
 
         mContactSelectSubjectControllerRecyclerView.setAdapter(adapter);
         mContactSelectSubjectControllerRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
-        mContactSelectSubjectControllerFilter.setVisibility(View.INVISIBLE);
     }
 
     @Override
@@ -125,11 +111,6 @@ public class ContactSelectSubjectController extends BaseController
                 getActivity(),
                 contactSubject);
 
-        getActivity().onBackPressed();
-    }
-
-    @OnClick(R.id.partial_toolbar_arrow_view)
-    void onBackClicked(){
         getActivity().onBackPressed();
     }
 }

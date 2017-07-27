@@ -20,21 +20,22 @@ import java.util.List;
 import au.com.dealsdirect.R;
 import au.com.dealsdirect.data.network.model.address.AddressesItem;
 import au.com.dealsdirect.data.network.model.checkout.getuserpaymentmethods.PaymentMethod;
+import au.com.dealsdirect.ui.main.MainActivity;
 import au.com.dealsdirect.utils.ImageUtils;
 
 public class PaymentSelectAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
-    private Context mContext;
+    private MainActivity mActivity;
     private ArrayList<PaymentMethod> mData;
     private PaymentSelectMvpPresenter<PaymentSelectMvpView> mPresenter;
     private boolean isFromCart = false;
 
 
-    public PaymentSelectAdapter(Context context, ArrayList<PaymentMethod> data,
+    public PaymentSelectAdapter(MainActivity activity, ArrayList<PaymentMethod> data,
                                 PaymentSelectMvpPresenter<PaymentSelectMvpView> presenter,
                                 boolean fromCart) {
 
-        this.mContext = context;
+        this.mActivity = activity;
         this.mData = data;
         this.mPresenter = presenter;
         this.isFromCart = fromCart;
@@ -52,16 +53,17 @@ public class PaymentSelectAdapter extends RecyclerView.Adapter<RecyclerView.View
 
         PaymentMethod item = mData.get(position);
 
-        ImageUtils.loadImage(mContext,item.getImageUrl(),vh.image);
+        ImageUtils.loadImage(mActivity, item.getImageUrl(), vh.image);
 
         vh.name.setText(item.getPaymentType());
         vh.details.setText(item.getDescription());
         vh.divider.setVisibility(View.VISIBLE);
 
-        vh.remove.setVisibility(isFromCart? View.GONE: View.VISIBLE);
+        vh.remove.setVisibility(isFromCart ? View.GONE : View.VISIBLE);
 
-        if(!isFromCart) {
-            vh.remove.setOnClickListener(view1 -> mPresenter.removeUserPaymentMethod(item));
+        if (isFromCart && mActivity.getPaymentMethodSelected().equals(item)) {
+            vh.itemView.setBackgroundResource(R.color.dialog_background);
+            vh.name.setSelected(true);
         }
     }
 
@@ -70,12 +72,12 @@ public class PaymentSelectAdapter extends RecyclerView.Adapter<RecyclerView.View
         return mData.size();
     }
 
-    public void replaceData(ArrayList<PaymentMethod> items){
+    public void replaceData(ArrayList<PaymentMethod> items) {
         mData = items;
         notifyDataSetChanged();
     }
 
-    public static class PaymentSelectViewHolder extends RecyclerView.ViewHolder{
+    public static class PaymentSelectViewHolder extends RecyclerView.ViewHolder {
         TextView name;
         TextView details;
         ImageView image;

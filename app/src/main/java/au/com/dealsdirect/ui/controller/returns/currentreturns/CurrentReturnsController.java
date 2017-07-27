@@ -13,7 +13,7 @@ import android.widget.TextView;
 
 import com.bluelinelabs.conductor.RouterTransaction;
 import com.bluelinelabs.conductor.changehandler.HorizontalChangeHandler;
-import com.bluelinelabs.conductor.changehandler.SimpleSwapChangeHandler;
+import com.bluelinelabs.conductor.changehandler.VerticalChangeHandler;
 import com.lsjwzh.widget.recyclerviewpager.RecyclerViewPager;
 
 import java.util.ArrayList;
@@ -23,6 +23,7 @@ import java.util.List;
 import javax.inject.Inject;
 
 import au.com.dealsdirect.R;
+import au.com.dealsdirect.data.network.model.returns.currentreturn.CurrentReturnResponseBody;
 import au.com.dealsdirect.data.network.model.returns.currentreturn.CurrentReturns;
 import au.com.dealsdirect.data.network.model.returns.returndetails.GetReturnDetailsResponseBody;
 import au.com.dealsdirect.ui.base.BaseController;
@@ -97,6 +98,11 @@ public class CurrentReturnsController extends BaseController
         setUp(view);
         mCurrentReturnsListener = this;
         mCurrentReturnsToolarTitle.setText("My Returns");
+        if(mPresenter.isTablet()){
+            mCurrentReturnsRightOption.setPadding(5, 5, 5, 5);
+        } else {
+            mCurrentReturnsRightOption.setPadding(20, 20, 20, 20);
+        }
         mCurrentReturnsRightOption.setImageDrawable(getResources().getDrawable(R.drawable.ic_add));
 
         if (mCurrentReturns == null || mCurrentReturns.size() == 0){
@@ -115,7 +121,7 @@ public class CurrentReturnsController extends BaseController
                     mCurrentReturnsListener);
 
             mCurrentReturnsRecyclerView.setAdapter(mCurrentReturnsAdapter);
-            getCurrentReturnItems(mCurrentReturns);
+//            getCurrentReturnItems(mCurrentReturns);
 
 
         }
@@ -138,7 +144,9 @@ public class CurrentReturnsController extends BaseController
 
 
     @Override
-    public void showCurrentReturns(List<CurrentReturns> currentReturns) {
+    public void showCurrentReturns(CurrentReturnResponseBody currentReturnResponseBody) {
+        List<CurrentReturns> currentReturns =
+                currentReturnResponseBody.getCurrentReturnResponse().getCurrentReturns();
 
         if(currentReturns!=null && currentReturns.size() != 0) {
             mPlaceholderLayout.setVisibility(View.GONE);
@@ -162,16 +170,17 @@ public class CurrentReturnsController extends BaseController
 
             mPlaceholderLayout.setVisibility(View.VISIBLE);
             mCurrentReturnsRecyclerView.setVisibility(View.GONE);
-            Log.d("showreturns","nope");
-
         }
     }
 
     @Override
     public void showCurrentReturnDetails(GetReturnDetailsResponseBody getReturnDetailsResponseBody) {
+        Log.d("itemiterator", "count ="+itemIterator);
+        Log.d("itemiterators", "count ="+getReturnDetailsResponseBody.getValue().getItems()+" , "+getReturnDetailsResponseBody.getValue().getItems().get(0).getPrice());
 
-            returnItemsMap.put(itemIterator,getReturnDetailsResponseBody);
+        returnItemsMap.put(itemIterator,getReturnDetailsResponseBody);
             if (returnItemsMap.size() == mCurrentReturns.size()){
+                Log.d("itemiterator", "done");
 
                 returnDetailsResponseBodyList.clear();
 
@@ -190,8 +199,12 @@ public class CurrentReturnsController extends BaseController
     }
 
     public void getCurrentReturnItems(List<CurrentReturns> currentReturns){
-
+//        Log.d("itemiterator", " this value ="+itemIterator);
         mPresenter.loadReturnDetails(currentReturns.get(itemIterator).getID(), itemIterator);
+
+//        for (int i = 0; i < currentReturns.size(); i++){
+//            mPresenter.loadReturnDetails(currentReturns.get(itemIterator).getID(), itemIterator);
+//        }
     }
 
     @Override
@@ -211,8 +224,8 @@ public class CurrentReturnsController extends BaseController
                         isRequestApproved,
                         productRequestStatus,
                         productRAN))
-                .pushChangeHandler(new SimpleSwapChangeHandler())
-                .popChangeHandler(new SimpleSwapChangeHandler()));
+                .pushChangeHandler(new VerticalChangeHandler())
+                .popChangeHandler(new VerticalChangeHandler()));
 
     }
 
@@ -228,6 +241,5 @@ public class CurrentReturnsController extends BaseController
                 ReturnOrdersController.newInstance())
                 .pushChangeHandler(new HorizontalChangeHandler())
                 .popChangeHandler(new HorizontalChangeHandler()));
-
     }
 }

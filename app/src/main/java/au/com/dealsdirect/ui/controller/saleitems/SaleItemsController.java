@@ -12,6 +12,7 @@ import android.util.Pair;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
@@ -84,6 +85,9 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
     @BindView(R.id.controller_sale_items_placeholder)
     LinearLayout mPlaceholder;
 
+    @BindView(R.id.partial_toolbar_arrow_view)
+    ImageButton mCategoriesBackIcon;
+
     private SaleItemsAdapter mSaleItemsAdapter;
 
     private Paginate mPaginateManager;
@@ -93,6 +97,8 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
     private int page = 0;
     private boolean loadingInProgress = false;
     private boolean hasLoadedAllItems = false;
+    private boolean mIsFromCategory = false;
+    private int mSaleItemClickCounter = 0;
     private boolean isFiltered = false;
 
     private List<SearchChipModel> mChipFilters = new ArrayList<>();
@@ -169,6 +175,14 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
     }
 
     @Override
+    protected void onAttach(@NonNull View view) {
+        mPresenter.onAttach(this);
+        mSaleItemClickCounter = 0;
+
+        super.onAttach(view);
+    }
+
+    @Override
     protected View inflateView(@NonNull LayoutInflater inflater, @NonNull ViewGroup container) {
         View view = inflater.inflate(R.layout.controller_sale_items, container, false);
         getControllerComponent().inject(this);
@@ -183,8 +197,26 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
         assert (getActivity()) != null;
         ((MainActivity) getActivity()).setDraggableViewPager(false);
 
-        if (mCategoryKey != null && !mCategoryKey.isEmpty()) {
-            Log.d("saletitle", "with category " + mCategoryKey);
+
+        if (mIsFromCategory){
+            mCategoriesBackIcon.setOnClickListener(view1 -> {
+                mCategoriesBackIcon.setOnClickListener(view2 -> {
+                    getActivity().onBackPressed();
+
+                });
+                ((MainActivity)getActivity()).goToCategoriesFromSaleItems();
+            });
+        }
+        else{
+            mCategoriesBackIcon.setOnClickListener(view12 -> {
+                getActivity().onBackPressed();
+            });
+        }
+
+
+
+        if (mCategoryKey!=null && !mCategoryKey.isEmpty()){
+            Log.d("saletitle", "with category "+mCategoryKey);
 
             char c = '>';
             int charCount = 0;
@@ -322,6 +354,7 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
         Log.d("flowTesting", "onRestoreViewState");
     }
 
+
     @SuppressWarnings("ConstantConditions")
     @OnClick(R.id.partial_toolbar_arrow_view)
     void onBackClick() {
@@ -349,36 +382,46 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
     @Override
     public void showProductDetails(RecyclerView.ViewHolder viewHolder, int position, String seoIdentifierId, String imageUrl, String itemId, String saleId) {
 
-        List<String> names = new ArrayList<>();
-        names.add(itemId);
-        mSaleItemsRecyclerView.smoothScrollToPosition(position);
+        if (mSaleItemClickCounter!=1){
+            mSaleItemClickCounter =+1;
 
-        final Handler handler = new Handler();
-        handler.postDelayed(() -> {
+            Handler clickHandler = new Handler();
+            clickHandler.postDelayed(() -> {
+                mSaleItemClickCounter = 0;
+            }, 2000);
 
-            Intent intent = new Intent();
-            intent.setClass(getActivity(), SharedActivity.class);
+            List<String> names = new ArrayList<>();
+            names.add(itemId);
+            mSaleItemsRecyclerView.smoothScrollToPosition(position);
+
+            final Handler handler = new Handler();
+            handler.postDelayed(() -> {
+
+                Intent intent = new Intent();
+                intent.setClass(getActivity(), SharedActivity.class);
 
             intent.putExtra("KEY_IMAGE_ID", imageUrl);
             intent.putExtra("KEY_SEO_IDENTIFIER", seoIdentifierId);
             intent.putExtra("KEY_ITEM_ID", itemId);
             intent.putExtra("KEY_SALE_ID", saleId);
             intent.putExtra("KEY_SALE_NAME", ((SaleItemsAdapter.ViewHolder) viewHolder).mSaleItemName.getText());
-            intent.putExtra("KEY_SALE_PRICE", ((SaleItemsAdapter.ViewHolder) viewHolder).mSalePrice.getText());
-            intent.putExtra("KEY_SALE_OLD_PRICE", ((SaleItemsAdapter.ViewHolder) viewHolder).mOldPrice.getText());
-            Log.d("LogBundle", ((SaleItemsAdapter.ViewHolder) viewHolder).mSaleItemName.getText() + " , " +
-                    ((SaleItemsAdapter.ViewHolder) viewHolder).mSalePrice.getText() + " , " +
+            intent.putExtra("KEY_SALE_PRICE",((SaleItemsAdapter.ViewHolder) viewHolder).mSalePrice.getText());
+            intent.putExtra("KEY_SALE_OLD_PRICE",((SaleItemsAdapter.ViewHolder) viewHolder).mOldPrice.getText());
+            Log.d("LogBundle", ((SaleItemsAdapter.ViewHolder) viewHolder).mSaleItemName.getText()+" , "+
+                    ((SaleItemsAdapter.ViewHolder) viewHolder).mSalePrice.getText()+" , "+
                     ((SaleItemsAdapter.ViewHolder) viewHolder).mOldPrice.getText());
 
 
-            ActivityOptions options =
-                    ActivityOptions.makeSceneTransitionAnimation(getActivity(),
-                            Pair.create(((SaleItemsAdapter.ViewHolder) viewHolder).mSaleItemImage, "transition"),
-                            Pair.create(((SaleItemsAdapter.ViewHolder) viewHolder).mSaleItemImage, "cardbackground"));
+                ActivityOptions options =
+                        ActivityOptions.makeSceneTransitionAnimation(getActivity(),
+                                Pair.create(((SaleItemsAdapter.ViewHolder) viewHolder).mSaleItemImage, "transition"),
+                                Pair.create(((SaleItemsAdapter.ViewHolder) viewHolder).mSaleItemImage, "cardbackground"));
 
-            //noinspection ConstantConditions
-            getActivity().startActivityForResult(intent, getActivity().getTaskId(), options.toBundle());
+                //noinspection ConstantConditions
+                getActivity().startActivityForResult(intent, getActivity().getTaskId(), options.toBundle());
 
-        }, 200);
+            }, 200);
+        }
+
     }
 }

@@ -26,6 +26,7 @@ import au.com.dealsdirect.data.network.model.address.AddressesItem;
 import au.com.dealsdirect.data.network.model.address.DecorationInfoList;
 import au.com.dealsdirect.data.network.model.address.DeleteUserAddress;
 import au.com.dealsdirect.data.network.model.address.GetAddresses;
+import au.com.dealsdirect.data.network.model.checkout.getcurrentorder.DeliveryAddress;
 import au.com.dealsdirect.ui.base.BaseController;
 import au.com.dealsdirect.ui.custom.CustomAlertDialog;
 import au.com.dealsdirect.ui.custom.RecyclerOnTouchListener;
@@ -42,6 +43,8 @@ import timber.log.Timber;
 public class ViewAddressController extends BaseController implements ViewAddressMvpView {
 
     private static final String CALLED_FROM_CART = "CalledFromCart";
+
+    private static final String DELIVERY_ADDRESS = "ViewAddressController.DELIVERY_ADDRESS";
 
     @BindView(R.id.no_addresses_layout)
     RelativeLayout mAddressPlaceHolder;
@@ -60,19 +63,22 @@ public class ViewAddressController extends BaseController implements ViewAddress
     private ViewAddressRecyclerViewAdapter mRecyclerViewAdapter;
     private List<DecorationInfoList> mDecorationInfoList;
     private boolean mAddressesLoaded = false;
+    private DeliveryAddress mDeliveryAddress;
 
     @Inject
     ViewAddressMvpPresenter<ViewAddressMvpView> mPresenter;
 
-    public ViewAddressController(boolean mCalledFromCart) {
+    public ViewAddressController(boolean mCalledFromCart, DeliveryAddress deliveryAddress) {
         this(new BundleBuilder(new Bundle())
-                .putBoolean(CALLED_FROM_CART,mCalledFromCart)
+                .putBoolean(CALLED_FROM_CART, mCalledFromCart)
+                .putParcelable(DELIVERY_ADDRESS, deliveryAddress)
                 .build());
     }
 
     public ViewAddressController(Bundle args) {
         super(args);
-        mCalledFromCart = args.getBoolean(CALLED_FROM_CART,false);
+        mCalledFromCart = args.getBoolean(CALLED_FROM_CART, false);
+        mDeliveryAddress = args.getParcelable(DELIVERY_ADDRESS);
     }
 
     @Override
@@ -86,11 +92,16 @@ public class ViewAddressController extends BaseController implements ViewAddress
         mPresenter.loadAddresses();
 
         mViewAddressToolarTitle.setText("My Addresses");
+        if (mPresenter.isTablet()) {
+            mViewAddressRightOption.setPadding(5, 5, 5, 5);
+        } else {
+            mViewAddressRightOption.setPadding(20, 20, 20, 20);
+        }
         mViewAddressRightOption.setImageDrawable(getApplicationContext().getDrawable(R.drawable.ic_add));
         mViewAddressRightOption.setVisibility(View.INVISIBLE);
 
         mAddressList = new ArrayList<>();
-        mRecyclerViewAdapter = new ViewAddressRecyclerViewAdapter(mCalledFromCart, this, mAddressList, getActivity());
+        mRecyclerViewAdapter = new ViewAddressRecyclerViewAdapter(mCalledFromCart, this, mAddressList, getActivity(), mDeliveryAddress);
 
         mRecyclerView.setAdapter(mRecyclerViewAdapter);
         mRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
@@ -207,7 +218,7 @@ public class ViewAddressController extends BaseController implements ViewAddress
 
     @Override
     public void backToCheckout() {
-        if(mCalledFromCart){
+        if (mCalledFromCart) {
             getActivity().onBackPressed();
         }
     }

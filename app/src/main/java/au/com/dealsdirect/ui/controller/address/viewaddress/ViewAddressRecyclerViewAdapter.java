@@ -14,6 +14,7 @@ import au.com.dealsdirect.R;
 import au.com.dealsdirect.data.network.model.address.Address;
 import au.com.dealsdirect.data.network.model.address.AddressesItem;
 import au.com.dealsdirect.data.network.model.address.DeleteUserAddress;
+import au.com.dealsdirect.data.network.model.checkout.getcurrentorder.DeliveryAddress;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import timber.log.Timber;
@@ -29,28 +30,31 @@ public class ViewAddressRecyclerViewAdapter extends RecyclerView.Adapter<ViewAdd
     Context context;
     Boolean isCalledFromCart;
     ViewAddressMvpView mView;
+    DeliveryAddress mDeliveryAddress;
 
     public ViewAddressRecyclerViewAdapter(
             Boolean calledFromCart,
             ViewAddressMvpView view,
-            List<AddressesItem> addressList, Context
-                    context){
+            List<AddressesItem> addressList,
+            Context context,
+            DeliveryAddress deliveryAddress) {
 
         this.isCalledFromCart = calledFromCart;
         this.mView = view;
         this.addressList = addressList;
         this.context = context;
+        this.mDeliveryAddress = deliveryAddress;
     }
 
-    @Override public MyAddressModuleViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        View v = LayoutInflater.from(parent.getContext())
-                .inflate(R.layout.address_row_layout, parent,
-                        false);
+    @Override
+    public MyAddressModuleViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+        View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.address_row_layout, parent, false);
         MyAddressModuleViewHolder holder = new MyAddressModuleViewHolder(v);
         return holder;
     }
 
-    @Override public void onBindViewHolder(MyAddressModuleViewHolder holder, int position) {
+    @Override
+    public void onBindViewHolder(MyAddressModuleViewHolder holder, int position) {
 
         String newAddress = addressList.get(position).getFullAddress();
         String addressName = addressList.get(position).getAddressName();
@@ -59,9 +63,16 @@ public class ViewAddressRecyclerViewAdapter extends RecyclerView.Adapter<ViewAdd
         holder.addressNumber.setText(addressName);
         holder.addressText.setText(String.valueOf(newAddress));
 
-        if (isCalledFromCart){
+        if (isCalledFromCart) {
+
             holder.removeAddressText.setVisibility(View.GONE);
-        }else{
+
+            if (mDeliveryAddress != null && mDeliveryAddress.equalsAddressItem(addressList.get(position))) {
+                holder.itemView.setBackgroundResource(R.color.dialog_background);
+                holder.addressNumber.setSelected(true);
+            }
+
+        } else {
 
             holder.removeAddressText.setOnClickListener(view -> {
 
@@ -69,26 +80,28 @@ public class ViewAddressRecyclerViewAdapter extends RecyclerView.Adapter<ViewAdd
                 DeleteUserAddress.RequestValues deleteAddressRequest = new DeleteUserAddress
                         .RequestValues(addressId);
 
-                mView.onDeleteItemClicked(deleteAddressRequest,position, addressList.size());
+                mView.onDeleteItemClicked(deleteAddressRequest, position, addressList.size());
             });
         }
 
 
     }
 
-    @Override public int getItemCount() {
-        if (addressList == null){
+    @Override
+    public int getItemCount() {
+        if (addressList == null) {
             return 0;
         }
         return addressList.size();
     }
 
-    @Override public void onAttachedToRecyclerView(RecyclerView recyclerView){
+    @Override
+    public void onAttachedToRecyclerView(RecyclerView recyclerView) {
         super.onAttachedToRecyclerView(recyclerView);
     }
 
-    public void insert(int position, AddressesItem data){
-        addressList.add(position,data);
+    public void insert(int position, AddressesItem data) {
+        addressList.add(position, data);
         notifyItemInserted(position);
     }
 
@@ -98,7 +111,7 @@ public class ViewAddressRecyclerViewAdapter extends RecyclerView.Adapter<ViewAdd
         notifyItemRemoved(position);
     }
 
-    public void replaceData(List<AddressesItem> items){
+    public void replaceData(List<AddressesItem> items) {
         addressList = items;
         notifyDataSetChanged();
     }
@@ -114,7 +127,7 @@ public class ViewAddressRecyclerViewAdapter extends RecyclerView.Adapter<ViewAdd
 
         public MyAddressModuleViewHolder(View itemView) {
             super(itemView);
-            ButterKnife.bind(this,itemView);
+            ButterKnife.bind(this, itemView);
         }
     }
 

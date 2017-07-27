@@ -33,7 +33,131 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="vertical">
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/controller_invite_layout_title"
+                    android:layout_centerInParent="true"
+                    android:layout_above="@+id/controller_invite_friend_button_send_invite"
+                    android:gravity="center_vertical|center_horizontal"
+                    android:layout_marginTop="10dp"
+                    android:orientation="vertical">
 
+                    <ImageView
+                        android:id="@+id/controller_invite_image_vouchers"
+                        android:layout_width="wrap_content"
+                        android:layout_height="250dp"
+                        android:layout_marginTop="10dp"
+                        android:layout_marginBottom="10dp"
+                        android:layout_marginLeft="@dimen/activity_horizontal_margin"
+                        android:layout_marginRight="@dimen/activity_horizontal_margin" />
+
+                    <TextView
+                        fontPath="@string/font_lato_medium"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="@string/invite_friend_guide"
+                        android:layout_marginBottom="10dp"
+                        android:layout_marginLeft="@dimen/activity_horizontal_margin"
+                        android:layout_marginRight="@dimen/activity_horizontal_margin"
+                        android:textSize="@dimen/text_size_large" />
+
+                </LinearLayout>
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical" >
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="@dimen/screen_padding"
+                        android:layout_marginRight="@dimen/screen_padding"
+                        android:orientation="horizontal">
+
+                        <RelativeLayout
+                            android:id="@+id/invite_friend_twitter_follow_us_button_layout"
+                            style="@style/DDEditTextStyle"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:background="@drawable/bg_invite_twitter"
+                            android:layout_marginRight="5dp"
+                            android:layout_weight="1"
+                            android:clickable="true"
+                            android:padding="15dp">
+
+                            <LinearLayout
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_centerInParent="true"
+                                android:orientation="horizontal"
+                                android:weightSum="1"
+                                tools:ignore="UselessParent">
+
+                                <ImageView
+                                    android:id="@+id/twitter_icon_image_view"
+                                    android:layout_width="@dimen/invite_friends_image_width"
+                                    android:layout_height="@dimen/invite_friends_image_width"
+                                    android:layout_weight="0.50"
+                                    android:src="@drawable/ic_twitter"
+                                    tools:ignore="ContentDescription" />
+
+                                <TextView
+                                    fontPath="@string/font_lato_medium"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="match_parent"
+                                    android:layout_marginLeft="@dimen/invite_friends_padding"
+                                    android:gravity="center"
+                                    android:paddingLeft="@dimen/invite_friends_padding"
+                                    android:paddingRight="@dimen/invite_friends_padding"
+                                    android:text="Follow us"
+                                    android:textColor="@color/white"
+                                    android:textSize="@dimen/text_size_large" />
+
+                            </LinearLayout>
+                        </RelativeLayout>
+
+                        <RelativeLayout
+                            android:id="@+id/invite_friend_facebook_like_us_on_facebook_button_layout"
+                            style="@style/DDEditTextStyle"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_marginLeft="5dp"
+                            android:layout_weight="1"
+                            android:background="@drawable/bg_invite_facebook"
+                            android:clickable="true"
+                            android:padding="15dp">
+
+                            <LinearLayout
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_centerInParent="true"
+                                android:orientation="horizontal"
+                                tools:ignore="UselessParent">
+
+                                <ImageView
+                                    android:id="@+id/facebook_icon_image_view"
+                                    android:layout_width="@dimen/invite_friends_image_width"
+                                    android:layout_height="@dimen/invite_friends_image_width"
+                                    android:src="@drawable/ic_fb"
+                                    tools:ignore="ContentDescription" />
+
+                                <TextView
+                                    fontPath="@string/font_lato_medium"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="match_parent"
+                                    android:gravity="center"
+                                    android:paddingLeft="@dimen/invite_friends_padding"
+                                    android:paddingRight="@dimen/invite_friends_padding"
+                                    android:singleLine="true"
+                                    android:text="Like us"
+                                    android:textColor="@color/white"
+                                    android:textSize="@dimen/text_size_large" />
+
+                            </LinearLayout>
+                        </RelativeLayout>
+                    </LinearLayout>
+                </LinearLayout>
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -63,7 +187,10 @@
                         android:layout_height="wrap_content"
                         android:textColor="@color/gray_title_text"
                         android:hint="@string/write_a_message_here"
-                        android:inputType="textNoSuggestions"
+                        android:gravity="top|left"
+                        android:minLines="4"
+                        android:maxLines="4"
+                        android:inputType="textMultiLine"
                         android:textSize="@dimen/text_size_xlarge" />
 
 
@@ -94,12 +221,14 @@
                         <EditText
                             android:id="@+id/controller_send_invite_edit_text_deals_direct_link"
                             fontPath="@string/font_lato_medium"
+                            android:focusable="false"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:background="@drawable/bg_edit_text_rounded"
-                            android:enabled="false"
-                            android:focusable="false"
-                            android:inputType="none"
+                            android:gravity="top|left"
+                            android:minLines="2"
+                            android:maxLines="2"
+                            android:inputType="textMultiLine"
                             android:paddingBottom="15dp"
                             android:paddingLeft="15dp"
                             android:paddingRight="43dp"
@@ -108,44 +237,13 @@
                             android:textColor="@color/gray_title_text"
                             android:textColorHint="@color/gray_title_text"
                             android:textSize="@dimen/text_size_xlarge" />
-
-                        <TextView
-                            android:id="@+id/controller_send_invite_text_invite_friend_link"
-                            fontPath="@string/font_lato_medium"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_alignParentRight="true"
-                            android:layout_centerVertical="true"
-                            android:layout_marginRight="14dp"
-                            android:clickable="true"
-                            android:text="edit"
-                            android:textColor="@color/category_text_active"
-                            android:textSize="@dimen/text_size_xlarge" />
-
                     </RelativeLayout>
                 </LinearLayout>
-
-                <View
-                    android:id="@+id/controller_send_invite_container_link_divider"
-                    android:layout_width="match_parent"
-                    android:layout_height="1dp"
-                    android:layout_marginTop="@dimen/invite_friends_padding"
-                    android:background="#e9e9e9" />
 
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="10dp"
                     android:orientation="vertical">
-
-                    <TextView
-                        fontPath="@string/font_lato_light"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginLeft="@dimen/screen_padding"
-                        android:layout_marginTop="@dimen/invite_friends_padding"
-                        android:text="Send Invitation"
-                        android:textColor="@color/gray_title_text" />
 
                     <LinearLayout
                         android:id="@+id/controller_send_invite_container"
@@ -156,169 +254,16 @@
                         android:layout_marginRight="@dimen/screen_padding"
                         android:layout_marginLeft="@dimen/screen_padding"
                         android:gravity="center"
-                        android:orientation="horizontal"
+                        android:orientation="vertical"
                         android:visibility="visible">
 
                         <RelativeLayout
-                            android:id="@+id/controller_send_invite_container_messages"
-                            android:layout_width="match_parent"
-                            android:layout_height="match_parent"
-                            android:layout_weight="1"
-                            android:clickable="true"
-                            android:paddingLeft="@dimen/invite_friends_padding"
-                            android:paddingRight="@dimen/invite_friends_padding">
-
-                            <ImageView
-                                android:id="@+id/controller_invites_send_icon_message"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:layout_centerHorizontal="true"
-                                android:src="@drawable/ic_invite_friends_logo_message" />
-
-                            <TextView
-                                fontPath="@string/font_lato_medium"
-                                android:layout_width="match_parent"
-                                android:layout_height="wrap_content"
-                                android:layout_below="@id/controller_invites_send_icon_message"
-                                android:layout_marginTop="@dimen/invite_friends_padding"
-                                android:gravity="center"
-                                android:text="Message"
-                                android:textColor="@color/gray_title_text"
-                                android:textSize="@dimen/text_size_medium" />
-
-                        </RelativeLayout>
-
-                        <RelativeLayout
-                            android:id="@+id/controller_send_invite_container_mail"
-                            android:layout_width="match_parent"
-                            android:layout_height="match_parent"
-                            android:layout_weight="1"
-                            android:clickable="true"
-                            android:paddingLeft="@dimen/invite_friends_padding"
-                            android:paddingRight="@dimen/invite_friends_padding">
-
-                            <ImageView
-                                android:id="@+id/controller_invites_send_icon_mail"
-                                android:layout_width="55dp"
-                                android:layout_height="55dp"
-                                android:scaleType="fitCenter"
-                                android:layout_centerHorizontal="true"
-                                android:src="@drawable/ic_invite_friends_logo_gmail" />
-
-                            <TextView
-                                fontPath="@string/font_lato_medium"
-                                android:layout_width="match_parent"
-                                android:layout_height="wrap_content"
-                                android:layout_below="@id/controller_invites_send_icon_mail"
-                                android:layout_marginTop="@dimen/invite_friends_padding"
-                                android:gravity="center"
-                                android:text="Mail"
-                                android:textColor="@color/gray_title_text"
-                                android:textSize="@dimen/text_size_medium" />
-
-
-                        </RelativeLayout>
-
-
-                        <RelativeLayout
-                            android:id="@+id/controller_send_invite_container_twitter"
-                            android:layout_width="match_parent"
-                            android:layout_height="match_parent"
-                            android:layout_weight="1"
-                            android:clickable="true"
-                            android:paddingLeft="@dimen/invite_friends_padding"
-                            android:paddingRight="@dimen/invite_friends_padding">
-
-                            <ImageView
-                                android:id="@+id/controller_invites_send_icon_twitter"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:layout_centerHorizontal="true"
-                                android:src="@drawable/ic_invite_friends_logo_twitter" />
-
-                            <TextView
-                                fontPath="@string/font_lato_medium"
-                                android:layout_width="match_parent"
-                                android:layout_height="wrap_content"
-                                android:layout_below="@id/controller_invites_send_icon_twitter"
-                                android:layout_marginTop="@dimen/invite_friends_padding"
-                                android:gravity="center"
-                                android:text="Twitter"
-                                android:textColor="@color/gray_title_text"
-                                android:textSize="@dimen/text_size_medium" />
-
-
-                        </RelativeLayout>
-
-                        <RelativeLayout
-                            android:id="@+id/controller_send_invite_container_facebook"
-                            android:layout_width="match_parent"
-                            android:layout_height="match_parent"
-                            android:layout_weight="1"
-                            android:clickable="true"
-                            android:paddingLeft="@dimen/invite_friends_padding"
-                            android:paddingRight="@dimen/invite_friends_padding"
-                            tools:ignore="RtlHardcoded">
-
-                            <ImageView
-                                android:id="@+id/controller_invites_send_icon_facebook"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:layout_centerHorizontal="true"
-                                android:src="@drawable/ic_invite_friends_logo_facebook" />
-
-                            <TextView
-                                fontPath="@string/font_lato_medium"
-                                android:layout_width="match_parent"
-                                android:layout_height="wrap_content"
-                                android:layout_below="@id/controller_invites_send_icon_facebook"
-                                android:layout_marginTop="@dimen/invite_friends_padding"
-                                android:gravity="center"
-                                android:text="Facebook"
-                                android:textColor="@color/gray_title_text"
-                                android:textSize="@dimen/text_size_medium" />
-                        </RelativeLayout>
-
-                    </LinearLayout>
-
-                </LinearLayout>
-
-                <View
-                    android:id="@+id/controller_send_invite_container_container_divider"
-                    android:layout_width="match_parent"
-                    android:layout_height="1dp"
-                    android:layout_marginTop="@dimen/invite_friends_padding"
-                    android:background="#e9e9e9" />
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="@dimen/screen_padding"
-                    android:paddingBottom="@dimen/screen_padding"
-                    android:orientation="vertical">
-
-                    <TextView
-                        fontPath="@string/font_lato_light"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginLeft="@dimen/screen_padding"
-                        android:text="Social Media Account"
-                        android:textColor="@color/gray_title_text" />
-
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginLeft="@dimen/screen_padding"
-                        android:layout_marginRight="@dimen/screen_padding"
-                        android:layout_marginTop="10dp"
-                        android:orientation="horizontal">
-
-                        <RelativeLayout
-                            android:id="@+id/invite_friend_twitter_follow_us_button_layout"
+                            android:id="@+id/invite_friend_clipboard_button"
                             style="@style/DDEditTextStyle"
-                            android:layout_width="0dp"
+                            android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:layout_marginRight="5dp"
+                            android:background="@drawable/bg_invite_clipboard"
+                            android:layout_marginTop="5dp"
                             android:layout_weight="1"
                             android:clickable="true"
                             android:padding="15dp">
@@ -328,38 +273,52 @@
                                 android:layout_height="wrap_content"
                                 android:layout_centerInParent="true"
                                 android:orientation="horizontal"
-                                tools:ignore="UselessParent"
-                                android:weightSum="1">
+                                android:weightSum="1"
+                                tools:ignore="UselessParent">
 
                                 <ImageView
-                                    android:id="@+id/twitter_icon_image_view"
+                                    android:id="@+id/invite_friend_clipboard_image"
                                     android:layout_width="@dimen/invite_friends_image_width"
                                     android:layout_height="@dimen/invite_friends_image_width"
-                                    android:src="@drawable/ic_invite_friends_follow_on_twitter"
-                                    tools:ignore="ContentDescription"
-                                    android:layout_weight="0.50"/>
+                                    android:layout_weight="0.50"
+                                    android:src="@drawable/ic_clipboard"
+                                    tools:ignore="ContentDescription" />
 
                                 <TextView
                                     fontPath="@string/font_lato_medium"
+                                    android:id="@+id/invite_friend_clipboard_text"
                                     android:layout_width="wrap_content"
                                     android:layout_height="match_parent"
                                     android:layout_marginLeft="@dimen/invite_friends_padding"
-                                    android:gravity="center"
                                     android:paddingLeft="@dimen/invite_friends_padding"
                                     android:paddingRight="@dimen/invite_friends_padding"
-                                    android:text="Follow us"
-                                    android:textColor="@color/gray_title_text"
-                                    android:textSize="@dimen/text_size_small" />
+                                    android:text="Copy link to clipboard"
+                                    android:textColor="@color/white"
+                                    android:textSize="@dimen/text_size_large" />
 
                             </LinearLayout>
                         </RelativeLayout>
 
+                        <TextView
+                            fontPath="@string/font_lato_medium"
+                            android:layout_width="wrap_content"
+                            android:layout_height="match_parent"
+                            android:layout_marginLeft="@dimen/invite_friends_padding"
+                            android:gravity="center"
+                            android:layout_marginTop="5dp"
+                            android:paddingLeft="@dimen/invite_friends_padding"
+                            android:paddingRight="@dimen/invite_friends_padding"
+                            android:text="or"
+                            android:textColor="@color/gray_title_text"
+                            android:textSize="@dimen/text_size_large" />
+
                         <RelativeLayout
-                            android:id="@+id/invite_friend_facebook_like_us_on_facebook_button_layout"
+                            android:id="@+id/invite_friend_facebook_button"
                             style="@style/DDEditTextStyle"
-                            android:layout_width="0dp"
+                            android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:layout_marginLeft="5dp"
+                            android:background="@drawable/bg_invite_facebook"
+                            android:layout_marginTop="10dp"
                             android:layout_weight="1"
                             android:clickable="true"
                             android:padding="15dp">
@@ -369,30 +328,153 @@
                                 android:layout_height="wrap_content"
                                 android:layout_centerInParent="true"
                                 android:orientation="horizontal"
+                                android:weightSum="1"
                                 tools:ignore="UselessParent">
 
                                 <ImageView
-                                    android:id="@+id/facebook_icon_image_view"
                                     android:layout_width="@dimen/invite_friends_image_width"
                                     android:layout_height="@dimen/invite_friends_image_width"
-                                    android:src="@drawable/ic_invite_friends_like_on_facebook"
+                                    android:layout_weight="0.50"
+                                    android:src="@drawable/ic_fb"
                                     tools:ignore="ContentDescription" />
 
                                 <TextView
                                     fontPath="@string/font_lato_medium"
                                     android:layout_width="wrap_content"
                                     android:layout_height="match_parent"
-                                    android:gravity="center"
+                                    android:layout_marginLeft="@dimen/invite_friends_padding"
                                     android:paddingLeft="@dimen/invite_friends_padding"
                                     android:paddingRight="@dimen/invite_friends_padding"
-                                    android:singleLine="true"
-                                    android:text="Like us on Facebook"
-                                    android:textColor="@color/gray_title_text"
-                                    android:textSize="@dimen/text_size_small" />
+                                    android:text="Invite your friends on Facebook"
+                                    android:textColor="@color/white"
+                                    android:textSize="@dimen/text_size_large" />
 
                             </LinearLayout>
                         </RelativeLayout>
+
+                        <RelativeLayout
+                            android:id="@+id/invite_friend_twitter_button"
+                            style="@style/DDEditTextStyle"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:background="@drawable/bg_invite_twitter"
+                            android:layout_marginTop="10dp"
+                            android:layout_weight="1"
+                            android:clickable="true"
+                            android:padding="15dp">
+
+                            <LinearLayout
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_centerInParent="true"
+                                android:orientation="horizontal"
+                                android:weightSum="1"
+                                tools:ignore="UselessParent">
+
+                                <ImageView
+                                    android:layout_width="@dimen/invite_friends_image_width"
+                                    android:layout_height="@dimen/invite_friends_image_width"
+                                    android:layout_weight="0.50"
+                                    android:src="@drawable/ic_twitter"
+                                    tools:ignore="ContentDescription" />
+
+                                <TextView
+                                    fontPath="@string/font_lato_medium"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="match_parent"
+                                    android:layout_marginLeft="@dimen/invite_friends_padding"
+                                    android:paddingLeft="@dimen/invite_friends_padding"
+                                    android:paddingRight="@dimen/invite_friends_padding"
+                                    android:text="Invite your friends on Twitter"
+                                    android:textColor="@color/white"
+                                    android:textSize="@dimen/text_size_large" />
+
+                            </LinearLayout>
+                        </RelativeLayout>
+
+
+                        <RelativeLayout
+                            android:id="@+id/invite_friends_email_button"
+                            style="@style/DDEditTextStyle"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:background="@drawable/bg_invite_mail"
+                            android:layout_marginTop="10dp"
+                            android:layout_weight="1"
+                            android:clickable="true"
+                            android:padding="15dp">
+
+                            <LinearLayout
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_centerInParent="true"
+                                android:orientation="horizontal"
+                                android:weightSum="1"
+                                tools:ignore="UselessParent">
+
+                                <ImageView
+                                    android:layout_width="@dimen/invite_friends_image_width"
+                                    android:layout_height="@dimen/invite_friends_image_width"
+                                    android:layout_weight="0.50"
+                                    android:src="@drawable/ic_email"
+                                    tools:ignore="ContentDescription" />
+
+                                <TextView
+                                    fontPath="@string/font_lato_medium"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="match_parent"
+                                    android:layout_marginLeft="@dimen/invite_friends_padding"
+                                    android:paddingLeft="@dimen/invite_friends_padding"
+                                    android:paddingRight="@dimen/invite_friends_padding"
+                                    android:text="Invite your friends on Email"
+                                    android:textColor="@color/white"
+                                    android:textSize="@dimen/text_size_large" />
+
+                            </LinearLayout>
+                        </RelativeLayout>
+
+                        <RelativeLayout
+                            android:id="@+id/invite_friends_sms_button"
+                            style="@style/DDEditTextStyle"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:background="@drawable/bg_invite_sms"
+                            android:layout_marginTop="10dp"
+                            android:layout_weight="1"
+                            android:clickable="true"
+                            android:padding="15dp">
+
+                            <LinearLayout
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_centerInParent="true"
+                                android:orientation="horizontal"
+                                android:weightSum="1"
+                                tools:ignore="UselessParent">
+
+                                <ImageView
+                                    android:layout_width="@dimen/invite_friends_image_width"
+                                    android:layout_height="@dimen/invite_friends_image_width"
+                                    android:layout_weight="0.50"
+                                    android:src="@drawable/ic_message"
+                                    tools:ignore="ContentDescription" />
+
+                                <TextView
+                                    fontPath="@string/font_lato_medium"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="match_parent"
+                                    android:layout_marginLeft="@dimen/invite_friends_padding"
+                                    android:paddingLeft="@dimen/invite_friends_padding"
+                                    android:paddingRight="@dimen/invite_friends_padding"
+                                    android:text="Invite your friends on SMS"
+                                    android:textColor="@color/white"
+                                    android:textSize="@dimen/text_size_large" />
+
+                            </LinearLayout>
+                        </RelativeLayout>
+
                     </LinearLayout>
+
                 </LinearLayout>
             </LinearLayout>
         </RelativeLayout>

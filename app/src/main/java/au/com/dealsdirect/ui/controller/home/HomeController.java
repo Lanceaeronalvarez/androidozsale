@@ -26,6 +26,7 @@ import au.com.dealsdirect.ui.controller.account.AccountController;
 import au.com.dealsdirect.ui.controller.checkout.checkout.CheckoutController;
 import au.com.dealsdirect.ui.controller.contact.viewcontacts.ViewContactsController;
 import au.com.dealsdirect.ui.controller.invite.InviteController;
+import au.com.dealsdirect.ui.controller.invite.InviteSendController;
 import au.com.dealsdirect.ui.controller.login.LoginController;
 import au.com.dealsdirect.ui.controller.shops.ShopsController;
 import au.com.dealsdirect.ui.main.MainActivity;
@@ -36,7 +37,7 @@ import butterknife.BindView;
  * dp Created by Admin on 6/6/17.
  */
 
-public class HomeController extends BaseController implements HomeMvpView {
+public class  HomeController extends BaseController implements HomeMvpView {
 
     public static final String TAG = "HomeController";
 
@@ -59,6 +60,7 @@ public class HomeController extends BaseController implements HomeMvpView {
     private int mCurrentTab = R.id.action_shop;
 
 
+    private int mBottomNavItemSelectCounter = 0;
     public static HomeController newInstance() {
 
         return new HomeController(
@@ -127,50 +129,60 @@ public class HomeController extends BaseController implements HomeMvpView {
             }
         });
 
-        mBottomNavigationView.setOnTabSelectedListener(new AHBottomNavigation.OnTabSelectedListener() {
-            @Override
-            public boolean onTabSelected(int position, boolean wasSelected) {
+        mBottomNavigationView.setOnTabSelectedListener((position, wasSelected) -> {
+            mBottomNavItemSelectCounter++;
+            assert (getActivity()) != null;
+            ((MainActivity)getActivity()).isFromCategories(false);
 
-                if (!wasSelected) {
-                    mPreviousTab = mCurrentTab;
-                    mCurrentTab = position;
+            if (!wasSelected) {
+                mPreviousTab = mCurrentTab;
+                mCurrentTab = position;
 
-                    switch (position) {
+                switch (position) {
 
-                        case 0:
-                            showShopController();
-                            break;
+                    case 0:
+                        mBottomNavItemSelectCounter=0;
+                        showShopController();
+                        break;
 
-                        case 1:
-                            showAccountController();
-                            break;
+                    case 1:
+                        mBottomNavItemSelectCounter=0;
+                        showAccountController();
+                        break;
 
-                        case 2:
-                        case 3:
-                            if (!((MainActivity)getActivity()).isAuthorized()) {
-                                showLoginController(mRouter, new AuthHandler() {
-                                    @Override
-                                    public void success() {
-                                        proceedToController(position);
-                                    }
+                    case 2:
+                    case 3:
+                        mBottomNavItemSelectCounter=0;
+                        if (!((MainActivity)getActivity()).isAuthorized()) {
+                            showLoginController(mRouter, new AuthHandler() {
+                                @Override
+                                public void success() {
+                                    proceedToController(position);
+                                }
 
-                                    @Override
-                                    public void error() {
+                                @Override
+                                public void error() {
 
-                                    }
-                                });
-                            } else {
-                                proceedToController(position);
-                            }
-                            break;
+                                }
+                            });
+                        } else {
+                            proceedToController(position);
+                        }
+                        break;
 
-                        case 4:
-                            showCheckoutController();
-                            break;
-                    }
+                    case 4:
+                        mBottomNavItemSelectCounter=0;
+                        showCheckoutController();
+                        break;
                 }
-                return true;
+            } else {
+                if (position == 0 && mBottomNavItemSelectCounter==2) {
+                    mBottomNavItemSelectCounter=0;
+                    //noinspection ConstantConditions
+                    ((MainActivity)getActivity()).bottomNavSalesClick();
+                }
             }
+            return true;
         });
 
         AHBottomNavigationAdapter navigationAdapter = new AHBottomNavigationAdapter(getActivity(), R.menu.bottom_navigation_menu);
@@ -182,6 +194,7 @@ public class HomeController extends BaseController implements HomeMvpView {
     @Override
     public void showShopController() {
         mRouter.setRoot(RouterTransaction.with(new ShopsController())
+                .tag(getActivity().getResources().getString(R.string.search_tag))
                 .pushChangeHandler(new FadeChangeHandler())
                 .popChangeHandler(new FadeChangeHandler()));
     }
@@ -189,6 +202,7 @@ public class HomeController extends BaseController implements HomeMvpView {
     @Override
     public void showAccountController() {
         mRouter.setRoot(RouterTransaction.with(AccountController.newInstance())
+                .tag("AccountController")
                 .pushChangeHandler(new FadeChangeHandler())
                 .popChangeHandler(new FadeChangeHandler()));
     }
@@ -202,13 +216,15 @@ public class HomeController extends BaseController implements HomeMvpView {
 
     @Override
     public void showInviteController() {
-        mRouter.setRoot(RouterTransaction.with(InviteController.newInstance())
+        mRouter.setRoot(RouterTransaction.with(InviteSendController.newInstance())
+                .tag(getActivity().getResources().getString(R.string.invite_friends_tag))
                 .pushChangeHandler(new FadeChangeHandler())
                 .popChangeHandler(new FadeChangeHandler()));
     }
 
     @Override
     public void showCheckoutController() {
+
         mRouter.setRoot(RouterTransaction.with(new CheckoutController())
                 .pushChangeHandler(new FadeChangeHandler())
                 .popChangeHandler(new FadeChangeHandler()));
@@ -216,7 +232,7 @@ public class HomeController extends BaseController implements HomeMvpView {
 
     @Override
     public void showLoginController(Router router, AuthHandler handler) {
-        router.pushController(RouterTransaction.with(LoginController.newInstance(handler))
+        mRouter.pushController(RouterTransaction.with(LoginController.newInstance(handler))
                 .pushChangeHandler(new VerticalChangeHandler())
                 .popChangeHandler(new VerticalChangeHandler()));
     }

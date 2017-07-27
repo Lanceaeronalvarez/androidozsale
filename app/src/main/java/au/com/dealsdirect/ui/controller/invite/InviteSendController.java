@@ -1,6 +1,9 @@
 package au.com.dealsdirect.ui.controller.invite;
 
 import android.app.ProgressDialog;
+import android.content.ClipData;
+import android.content.ClipboardManager;
+import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
@@ -10,11 +13,16 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.WindowManager;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+
+import com.bumptech.glide.Glide;
+import com.facebook.share.model.ShareLinkContent;
+import com.facebook.share.widget.ShareDialog;
 
 import javax.inject.Inject;
 
@@ -48,16 +56,16 @@ public class InviteSendController extends BaseController implements InviteMvpVie
     @BindView(R.id.controller_send_invite_container)
     LinearLayout mSendInvitationContainer;
 
-    @BindView(R.id.controller_send_invite_container_messages)
+    @BindView(R.id.invite_friends_sms_button)
     RelativeLayout mMessageSendInvitationLayout;
 
-    @BindView(R.id.controller_send_invite_container_mail)
+    @BindView(R.id.invite_friends_email_button)
     RelativeLayout mMailSendInvitationLayout;
 
-    @BindView(R.id.controller_send_invite_container_twitter)
+    @BindView(R.id.invite_friend_twitter_button)
     RelativeLayout mTwitterSendInvitationLayout;
 
-    @BindView(R.id.controller_send_invite_container_facebook)
+    @BindView(R.id.invite_friend_facebook_button)
     RelativeLayout mFacebookSendInvitationLayout;
 
     @BindView(R.id.invite_friend_twitter_follow_us_button_layout)
@@ -72,8 +80,20 @@ public class InviteSendController extends BaseController implements InviteMvpVie
     @BindView(R.id.controller_send_invite_edit_text_deals_direct_link)
     EditText mPersonalInvitationLinkEditText;
 
-    @BindView(R.id.controller_send_invite_text_invite_friend_link)
-    TextView mInviteFriendEditLinkButton;
+    @BindView(R.id.invite_friend_clipboard_button)
+    RelativeLayout mClipboardButton;
+
+    @BindView(R.id.invite_friend_clipboard_text)
+    TextView mClipboardText;
+
+    @BindView(R.id.invite_friend_clipboard_image)
+    ImageView mClipboardImage;
+
+    @BindView(R.id.controller_send_invite_layout_select_order_option)
+    RelativeLayout mEditLinkLayout;
+
+    @BindView(R.id.controller_invite_image_vouchers)
+    ImageView mImageView;
 
     GetInviteResponse.Value inviteBody;
     String inviteSubject;
@@ -118,6 +138,11 @@ public class InviteSendController extends BaseController implements InviteMvpVie
             getActivity().onBackPressed();
         });
 
+
+        Glide.with(getActivity())
+                .load(R.drawable.invite_friend_vouchers_medium)
+                .into(mImageView);
+
         String twitterLink = mPresenter.getFollowUsTwitterLink();
         String facebookLink = mPresenter.getFollowUsFbLink();
 
@@ -135,24 +160,9 @@ public class InviteSendController extends BaseController implements InviteMvpVie
             mFacebookLikeUsContainer.setVisibility(View.VISIBLE);
         }
 
-        mInviteFriendEditLinkButton.setOnClickListener(new View.OnClickListener() {
+        mPersonalInvitationLinkEditText.setOnClickListener(new View.OnClickListener() {
             @Override public void onClick(View view) {
-                String textValue = mInviteFriendEditLinkButton.getText().toString();
-                if (textValue.equals("ok")){
-                    mPersonalInvitationMessageEditText.setClickable(true);
-                    mPersonalInvitationMessageEditText.setFocusable(true);
-
-                    mInviteFriendEditLinkButton.setText("...");
-                    String editedLink = mPersonalInvitationLinkEditText.getText().toString();
-                    SetInviteRequest setInviteLinkRequest = new SetInviteRequest();
-                    setInviteLinkRequest.inviteLink = editedLink;
-
-                    showLoading();
-
-                    mPresenter.setInviteLink(setInviteLinkRequest);
-
-
-                }else{
+                if (!mClipboardText.getText().toString().equals("Save Changes")){
                     mPersonalInvitationMessageEditText.setClickable(false);
                     mPersonalInvitationMessageEditText.setFocusable(false);
 
@@ -163,7 +173,8 @@ public class InviteSendController extends BaseController implements InviteMvpVie
                     mPersonalInvitationLinkEditText.setFocusable(true);
                     mPersonalInvitationLinkEditText.setFocusableInTouchMode(true);
                     mPersonalInvitationLinkEditText.requestFocus();
-                    mInviteFriendEditLinkButton.setText("ok");
+                    mClipboardImage.setVisibility(View.GONE);
+                    mClipboardText.setText("Save Changes");
                 }
             }
         });
@@ -223,16 +234,16 @@ public class InviteSendController extends BaseController implements InviteMvpVie
 
                     Log.d("sendinvitefriend", bannerImageUrl);
 
-//                    ShareLinkContent content =
-//                            new ShareLinkContent.Builder()
-//                                    .setContentUrl(Uri.parse(invitationLink))
-//                                    .setContentTitle(inviteSubject)
-//                                    .setImageUrl(Uri.parse(bannerImageUrl))
-//                                    .setContentDescription(inviteMessage)
-//                                    .setQuote(personalInvitation)
-//                                    .build();
-//                    ShareDialog shareDialog = new ShareDialog(getActivity());
-//                    shareDialog.show(content, ShareDialog.Mode.AUTOMATIC);
+                    ShareLinkContent content =
+                            new ShareLinkContent.Builder()
+                                    .setContentUrl(Uri.parse(invitationLink))
+                                    .setContentTitle(inviteSubject)
+                                    .setImageUrl(Uri.parse(bannerImageUrl))
+                                    .setContentDescription(inviteMessage)
+                                    .setQuote(personalInvitation)
+                                    .build();
+                    ShareDialog shareDialog = new ShareDialog(getActivity());
+                    shareDialog.show(content, ShareDialog.Mode.AUTOMATIC);
 
                 } catch (Exception e) {
 //                    GDebug.log("facebookSendInvite",e.getMessage());
@@ -332,6 +343,40 @@ public class InviteSendController extends BaseController implements InviteMvpVie
 
             }
         });
+
+        mClipboardButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                if(mClipboardText.equals("Save Changes") || mClipboardText.getText().toString() == "Save Changes") {
+
+                    mPersonalInvitationMessageEditText.setClickable(true);
+                    mPersonalInvitationMessageEditText.setFocusable(true);
+
+                    String editedLink = mPersonalInvitationLinkEditText.getText().toString();
+                    SetInviteRequest setInviteLinkRequest = new SetInviteRequest();
+                    setInviteLinkRequest.inviteLink = editedLink;
+
+
+                    showLoading();
+
+                    mPresenter.setInviteLink(setInviteLinkRequest);
+                } else {
+
+                    ClipboardManager clipboard = (ClipboardManager) getActivity().getApplicationContext()
+                            .getSystemService(Context.CLIPBOARD_SERVICE);
+                    ClipData clipData = ClipData.newPlainText("Text", mPersonalInvitationLinkEditText.getText().toString());
+                    clipboard.setPrimaryClip(clipData);
+
+                    Log.d("text ", clipboard.getPrimaryClip().getItemAt(0).getText() + "");
+
+                    CustomAlertDialog.showCustomAlertDialog(getActivity(), CustomAlertDialog.CustomDialogIconState.POSITIVE,
+                            "Link Copied to Clipboard");
+                }
+            }
+        });
+
+
         mPresenter.start();
     }
 
@@ -366,7 +411,9 @@ public class InviteSendController extends BaseController implements InviteMvpVie
             mPersonalInvitationLinkEditText.setFocusable(false);
             mPersonalInvitationLinkEditText.setFocusableInTouchMode(false);
 
-            mInviteFriendEditLinkButton.setText("edit");
+            mClipboardText.setText("Copy link to clipboard");
+            mClipboardImage.setVisibility(View.VISIBLE);
+
 
             progress.dismiss();
 
@@ -382,7 +429,10 @@ public class InviteSendController extends BaseController implements InviteMvpVie
             mPersonalInvitationLinkEditText.setFocusable(false);
             mPersonalInvitationLinkEditText.setFocusableInTouchMode(false);
 
-            mInviteFriendEditLinkButton.setText("edit");
+            mClipboardText.setText("Copy link to clipboard");
+            mClipboardImage.setVisibility(View.VISIBLE);
+
+
             progress.dismiss();
 
             CustomAlertDialog.showCustomAlertDialog(

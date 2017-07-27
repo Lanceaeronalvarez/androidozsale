@@ -12,6 +12,7 @@ import java.util.List;
 
 import au.com.dealsdirect.R;
 import au.com.dealsdirect.data.network.model.contactorder.ContactOrderList;
+import au.com.dealsdirect.ui.controller.contact.addcontact.ContactPreferenceHelper;
 import au.com.dealsdirect.ui.controller.contact.addcontact.selectorder.listener.ContactOrderClickListener;
 import au.com.dealsdirect.ui.controller.contact.addcontact.selectorder.viewholder.ContactOrderViewHolder;
 
@@ -56,6 +57,10 @@ public class ContactOrderAdapter extends RecyclerView.Adapter<ContactOrderViewHo
         holder.contactOrderTitleRowTextView
                 .setText(mCurrentContactOrderList.get(position).getDescription() + " ("
                         + mCurrentContactOrderList.get(position).getInvoiceNo() + ")");
+
+        if (ContactPreferenceHelper.getChosenInvoice(mContext).equalsIgnoreCase(mCurrentContactOrderList.get(position).getInvoiceNo())) {
+
+        }
 
         holder.contactOrderRowLayout.setOnClickListener(new View.OnClickListener() {
             @Override public void onClick(View view) {

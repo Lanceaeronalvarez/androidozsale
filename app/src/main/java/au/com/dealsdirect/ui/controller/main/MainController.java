@@ -1,11 +1,14 @@
 package au.com.dealsdirect.ui.controller.main;
 
+import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.view.ViewPager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.Window;
+import android.view.WindowManager;
 import android.widget.LinearLayout;
 
 import com.bluelinelabs.conductor.Router;
@@ -40,6 +43,8 @@ public class MainController extends BaseController implements MainMvpView {
 
     public static final String TAG = "MainController";
     private static final String KEY_TEXT = "MainController.KEY_TEXT";
+
+    private String mChosenSubCategoryItemKey = "";
 
     @Inject
     MainMvpPresenter<MainMvpView> mPresenter;
@@ -98,6 +103,12 @@ public class MainController extends BaseController implements MainMvpView {
     @Override
     protected void setUp(View view) {
 //        getRouter().setRoot(RouterTransaction.with(new ShopsController()));
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            Window window = getActivity().getWindow();
+            window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
+            window.setStatusBarColor(getActivity().getResources().getColor(R.color.colorAccent));
+        }
+
         setupViewPager();
     }
 
@@ -281,5 +292,38 @@ public class MainController extends BaseController implements MainMvpView {
 
     public void showBottomNav(){
         mHomeController.showBottomNav();
+    }
+
+    public void setChosenCategoryItemKey(String key){
+        mChosenSubCategoryItemKey = key;
+    }
+
+    public String getChosenCategoryItemKey(){
+        return mChosenSubCategoryItemKey;
+    }
+
+    public String getCategoryParentKey(){
+        char c = '>';
+        int charCount = 0;
+        String newString = "";
+        for (int i = 0; i < mChosenSubCategoryItemKey.length(); i++){
+            String getChar = String.valueOf(mChosenSubCategoryItemKey.charAt(i));
+            if (!getChar.equals(String.valueOf(c))){
+                newString = newString + mChosenSubCategoryItemKey.charAt(i);
+
+            } else{
+                charCount++;
+                if (charCount>3){
+                    break;
+                }
+                newString = newString + mChosenSubCategoryItemKey.charAt(i);
+
+            }
+        }
+        return newString;
+    }
+
+    public HomeController getHomeController(){
+        return mHomeController;
     }
 }

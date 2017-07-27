@@ -58,7 +58,7 @@
 
                     b {
                         font-family: Lato;
-                        color: #6E6868;
+                        color: #466e87;
                     }
 
                     br {
@@ -74,8 +74,8 @@
                         font-size: 10pt;
                         background-color: #FFFFFF;
                         word-wrap: break-word;
-                        padding-left: 5px;
-                        padding-right: 5px;
+                        padding-left: 0px;
+                        padding-right: 0px;
                         padding-top: 0px;
                     }
 
@@ -209,7 +209,7 @@
     <string name="order_number">Order Number</string>
     <string name="address">Address</string>
     <string name="total">Total</string>
-    <string name="remove">remove</string>
+    <string name="remove">Remove</string>
 
     <!--VOUCHERS-->
     <string name="my_vouchers">my vouchers</string>
@@ -242,7 +242,7 @@
         $20 DEALSDIRECT voucher to use towards any future purchase.
     </string>
     <string name="send_personal_invite_text">Personal Invitation</string>
-    <string name="write_a_message_here">Write a message here...</string>
+    <string name="write_a_message_here">write a message here</string>
     <string name="dealsdirect">DealsDirect</string>
     <string name="exit_app">Exit app?</string>
     <string name="exit">exit</string>
@@ -255,6 +255,19 @@
     <string name="write_us_a_message">Write us a message</string>
     <string name="shop_category">Shop</string>
     <string name="search_tag">Search</string>
+    <string name="sale_items_from_category">SaleItemFromCategory</string>
+    <string name="bottom_nav_sale_top_from_sale_items">BottomNavSaleTapFromSaleItems</string>
+    <string name="choose_your_size">Choose your size:</string>
+    <string name="pricing">Pricing</string>
+    <string name="subject">Subject:</string>
+    <string name="sale">Sale:</string>
+    <string name="write_a_message">Write a message...</string>
+    <string name="select_a_sale">Select a Sale</string>
+    <string name="no_orders">no orders</string>
+    <string name="select_a_subject">Select a Subject</string>
+    <string name="message_submitted">Message submitted</string>
+    <string name="error_creating_message">Error creating message</string>
+    <string name="invite_friends_tag">InviteFriendsController</string>
 
     <string-array name="genders">
         <item>Male</item>

@@ -15,7 +15,6 @@ import com.bluelinelabs.conductor.RouterTransaction;
 import com.bluelinelabs.conductor.changehandler.HorizontalChangeHandler;
 import com.google.gson.Gson;
 
-import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -107,7 +106,7 @@ public class CheckoutController extends BaseController implements CheckoutMvpVie
 
             } else if (view.getId() == mAddressChangeText.getId()) {
                 //push controller to view my address
-                getRouter().pushController(RouterTransaction.with(new ViewAddressController(true))
+                getRouter().pushController(RouterTransaction.with(new ViewAddressController(true, mDeliveryAddress))
                         .pushChangeHandler(new HorizontalChangeHandler())
                         .popChangeHandler(new HorizontalChangeHandler()));
 
@@ -412,7 +411,9 @@ public class CheckoutController extends BaseController implements CheckoutMvpVie
 
     @OnClick(R.id.partial_checkout_empty_button)
     void shopNow() {
-        getRouter().popController(this);
+
+        assert (getActivity()) != null;
+        ((MainActivity)getActivity()).goToShops();
     }
 
     private String formAddressDetails(DeliveryAddress deliveryAddress) {

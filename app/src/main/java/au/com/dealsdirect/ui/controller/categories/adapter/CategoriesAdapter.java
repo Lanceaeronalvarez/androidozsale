@@ -59,52 +59,45 @@ public class CategoriesAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                 ((CategoriesViewHolder) holder).categoryIndicator.setText(String.valueOf(first));
             }
 
-//            if (position == 0 && mLastSelectedViewHolderImageView == null) {
-//                mLastSelectedViewHolderImageView = ((CategoriesViewHolder) holder).categoryTitleBackground;
-//                 mLastSelectedViewHolderImageView.setBackgroundDrawable(
-//                        holder.itemView.getContext().getResources()
-//                                .getDrawable(R.drawable.bg_category_item_active));
-//
-//            }
-//            GestureDetector gestureDetector = new GestureDetector(
-//                    holder.itemView.getContext(),
-//                    new GestureDetector.SimpleOnGestureListener() {
-//
-//                        @Override
-//                        public boolean onDoubleTap(MotionEvent e) {
-//
-//                            mCategoryAdapterClickListener.onCategoryDoubleTap(
-//                                    position,
-//                                    mData.get(position));
-//
-//                            return super.onDoubleTap(e);
-//                        }
-//                    });
-
-//            ((CategoriesViewHolder) holder).itemView.setOnTouchListener((view, motionEvent)
-//                    -> gestureDetector.onTouchEvent(motionEvent));
+            if (position==1){
+                mCategoryAdapterClickListener.onCategoryClicked(position,mData.get(position));
+                mLastSelectedViewHolderImageView = ((CategoriesViewHolder) holder).categoryTitleBackground;
+                mLastSelectedViewHolderImageView.setBackgroundDrawable(
+                        holder.itemView.getContext().getResources()
+                                .getDrawable(R.drawable.bg_category_item_active));
+            }
 
             ((CategoriesViewHolder) holder).categoryText.setText(mData.get(position).getName());
             ((CategoriesViewHolder) holder).itemView.setOnClickListener(view -> {
 
                 if (mLastSelectedViewHolderImageView == null) {
 
-                    mLastSelectedViewHolderImageView = ((CategoriesViewHolder) holder).categoryTitleBackground;
-                    mLastSelectedViewHolderImageView.setBackgroundDrawable(
-                            holder.itemView.getContext().getResources()
-                                    .getDrawable(R.drawable.bg_category_item_active));
-
+                    if (position!=0){
+                        mLastSelectedViewHolderImageView = ((CategoriesViewHolder) holder).categoryTitleBackground;
+                        mLastSelectedViewHolderImageView.setBackgroundDrawable(
+                                holder.itemView.getContext().getResources()
+                                        .getDrawable(R.drawable.bg_category_item_active));
+                    }
                 } else {
 
-                    mLastSelectedViewHolderImageView.setBackgroundDrawable(
-                            holder.itemView.getContext().getResources()
-                                    .getDrawable(R.drawable.bg_category_item_inactive));
+                    if (position!=0){
+                        mLastSelectedViewHolderImageView.setBackgroundDrawable(
+                                holder.itemView.getContext().getResources()
+                                        .getDrawable(R.drawable.bg_category_item_inactive));
 
-                    mLastSelectedViewHolderImageView = ((CategoriesViewHolder) holder).categoryTitleBackground;
+                        mLastSelectedViewHolderImageView = ((CategoriesViewHolder) holder).categoryTitleBackground;
 
-                    mLastSelectedViewHolderImageView.setBackgroundDrawable(
-                            holder.itemView.getContext().getResources()
-                                    .getDrawable(R.drawable.bg_category_item_active));
+                        mLastSelectedViewHolderImageView.setBackgroundDrawable(
+                                holder.itemView.getContext().getResources()
+                                        .getDrawable(R.drawable.bg_category_item_active));
+                    }else{
+
+                        mLastSelectedViewHolderImageView.setBackgroundDrawable(
+                                holder.itemView.getContext().getResources()
+                                        .getDrawable(R.drawable.bg_category_item_inactive));
+
+                    }
+
                 }
 
                 mCategoryAdapterClickListener.onCategoryClicked(

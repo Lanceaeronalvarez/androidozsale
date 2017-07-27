@@ -3,6 +3,7 @@ package au.com.dealsdirect.ui.main;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
+import android.util.Log;
 import android.view.ViewGroup;
 
 import com.bluelinelabs.conductor.Conductor;
@@ -37,12 +38,14 @@ import au.com.dealsdirect.data.network.model.category.GetCategoryTreeResponse;
 import au.com.dealsdirect.data.network.model.checkout.CreatePaymentTransaction;
 import au.com.dealsdirect.data.network.model.checkout.getuserpaymentmethods.PaymentMethod;
 import au.com.dealsdirect.ui.base.BaseActivity;
+import au.com.dealsdirect.ui.controller.categories.CategoriesController;
 import au.com.dealsdirect.ui.controller.checkout.addpayment.AddPaymentController;
 import au.com.dealsdirect.ui.controller.checkout.checkout.CheckoutController;
 import au.com.dealsdirect.ui.controller.checkout.paymentsuccess.PaymentSuccessController;
 import au.com.dealsdirect.ui.controller.login.LoginController;
 import au.com.dealsdirect.ui.controller.main.MainController;
 import au.com.dealsdirect.ui.controller.shops.ShopsController;
+import au.com.dealsdirect.ui.controller.splash.SplashScreenController;
 import au.com.dealsdirect.ui.custom.CustomAlertDialog;
 import au.com.dealsdirect.utils.DialogUtils;
 import butterknife.BindView;
@@ -68,11 +71,13 @@ public class MainActivity extends BaseActivity implements MainMvpView {
 
     private MainController mMainController;
     private ShopsController mShopController;
+    private CategoriesController mCategoriesController;
 
     private Router mHomeRouter;
     private Router mCategoriesRouter;
 
     private int mViewPagerCurrentItem;
+    private boolean mIsFromCategories = false;
 
 
     @Override
@@ -90,10 +95,9 @@ public class MainActivity extends BaseActivity implements MainMvpView {
         mMainController = MainController.newInstance();
         mRouter = Conductor.attachRouter(this, mContainer, savedInstanceState);
         if (!mRouter.hasRootController()) {
-            mRouter.setRoot(RouterTransaction.with(mMainController)
-                    .tag("Home"));
+            mRouter.setRoot(RouterTransaction.with(SplashScreenController.newInstance())
+                    .popChangeHandler(new VerticalChangeHandler()));
         }
-
 
         setUp();
     }
@@ -109,6 +113,9 @@ public class MainActivity extends BaseActivity implements MainMvpView {
     @Override
     protected void onDestroy() {
         mPresenter.onDetach();
+        mMainController = null;
+        mShopController = null;
+        mCategoriesController = null;
         super.onDestroy();
     }
 
@@ -139,7 +146,20 @@ public class MainActivity extends BaseActivity implements MainMvpView {
                 }
                 break;
             case 1:
-                if (mHomeRouter.getBackstackSize() == 1) {
+                int backstackSize = mHomeRouter.getBackstackSize()-1;
+                String tag = mHomeRouter.getBackstack().get(backstackSize).tag();
+                if(mIsFromCategories && mHomeRouter.getBackstackSize() == 1){
+                    Log.d("MainBack", "mIsFromCategories && mHomeRouter.getBackstackSize() == 1");
+                    goToCategoriesFromSales();
+                    mIsFromCategories = false;
+                }else if (mHomeRouter.getBackstackSize() == 1) {
+                    Log.d("MainBack", "mHomeRouter.getBackstackSize() == 1");
+
+                    if((tag != null) && tag.equals(getString(R.string.invite_friends_tag))) {
+                        goToShops();
+                        break;
+                    }
+
                     DialogUtils.showYesNoDialog(
                             this,
                             getString(R.string.dealsdirect),
@@ -151,21 +171,26 @@ public class MainActivity extends BaseActivity implements MainMvpView {
 
                             });
                 } else {
-                    int backstackSize = mHomeRouter.getBackstackSize()-1;
-                    String tag = mHomeRouter.getBackstack().get(backstackSize).tag();
 
                     if(tag!=null && tag.equals(getString(R.string.search_tag))){
+                        Log.d("MainBack", "tag!=null && tag.equals(getString(R.string.search_tag))");
+
                         mHomeRouter.handleBack();
                         mShopController.showSearchToolbar();
 
                         Handler handler = new Handler();
                         handler.postDelayed(() ->
-                                mShopController.hideSearchToolbar(),200);
-                    }else{
+                                mShopController.hideSearchToolbar(),500);
+
+                    }else if ((tag!=null) && tag.equals(getString(R.string.sale_items_from_category))){
+                        Log.d("MainBack", "(tag!=null) && tag.equals(getString(R.string.sale_items_from_category))");
+
+                        goToCategoriesFromSaleItems();
+                    } else {
+                        Log.d("MainBack", "else");
                         mHomeRouter.handleBack();
                     }
                 }
-
                 break;
         }
     }
@@ -427,8 +452,23 @@ public class MainActivity extends BaseActivity implements MainMvpView {
     }
 
     public void goToSalesFromCategory(GetCategoryTreeResponse getCategoryTreeResponse){
+        mIsFromCategories = true;
         mShopController.goToSalesFromCategories(getCategoryTreeResponse);
         mMainController.goToShops();
+    }
+
+    public void goToCategoriesFromSaleItems(){
+        Handler handler = new Handler();
+        handler.postDelayed(() -> mHomeRouter.handleBack(), 500);
+
+        mMainController.goToCategories();
+        mMainController.setViewpagerDraggable(true);
+    }
+
+    public void goToCategoriesFromSales(){
+        mMainController.goToCategories();
+        mShopController.loadShopBanners();
+
     }
 
     public void setShopController(ShopsController shopsController){
@@ -437,5 +477,40 @@ public class MainActivity extends BaseActivity implements MainMvpView {
 
     public MainController getMainController(){
         return mMainController;
+    }
+
+    public void bottomNavSalesClick(){
+        int backstackSize = mHomeRouter.getBackstackSize()-1;
+        if(backstackSize!=-1){
+            String tag = mHomeRouter.getBackstack().get(backstackSize).tag();
+
+            if ((tag!=null) && tag.equals(getString(R.string.sale_items_from_category))){
+                Log.d("MainBack", "(tag!=null) && tag.equals(getString(R.string.sale_items_from_category))");
+
+                mHomeRouter.handleBack();
+            }
+        }
+    }
+
+    public void setCategoriesController(CategoriesController categoriesController){
+        mCategoriesController = categoriesController;
+    }
+
+    public CategoriesController getCategoriesController(){
+        return mCategoriesController;
+    }
+
+    public void isFromCategories(boolean isFromCategories){
+        mIsFromCategories = isFromCategories;
+    }
+
+    public void splashShownCallback(){
+        mRouter.setRoot(RouterTransaction.with(mMainController)
+                .tag("Home"));
+
+    }
+
+    public void goToShops(){
+        getMainController().getHomeController().showShopController();
     }
 }

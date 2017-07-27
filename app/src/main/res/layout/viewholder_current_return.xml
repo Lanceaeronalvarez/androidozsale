@@ -54,7 +54,7 @@
                 android:layout_marginTop="20dp"
                 android:text="Philosophy Cotton Sleeveless Plain"
                 android:textColor="#878787"
-                android:textSize="@dimen/text_size_medium"
+                android:textSize="@dimen/text_size_xlarge"
                 android:fontFamily="@string/font_lato_bold"
                 tools:ignore="HardcodedText"/>
 
@@ -76,6 +76,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_below="@+id/return_header_divider"
+            android:layout_above="@+id/my_current_return_information_text_content"
             android:clickable="true"
             android:isScrollContainer="false"
             android:nestedScrollingEnabled="false"
@@ -89,7 +90,7 @@
             android:id="@+id/my_current_return_information_text_content"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_below="@+id/current_return_items_recyclerview"
+            android:layout_alignParentBottom="true"
             android:layout_marginTop="4dp">
 
 
