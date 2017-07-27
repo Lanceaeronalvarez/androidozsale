@@ -118,7 +118,7 @@ public class ShopsController extends BaseController implements ShopsMvpView, Ban
         assert (getActivity()) != null;
 
         mBannerClickCounter = 0;
-        ((MainActivity)getActivity()).setShopController(this);
+        ((MainActivity) getActivity()).setShopController(this);
         super.onAttach(view);
     }
 
@@ -170,8 +170,8 @@ public class ShopsController extends BaseController implements ShopsMvpView, Ban
     protected void setUp(View view) {
 
         assert (getActivity()) != null;
-        ((MainActivity)getActivity()).getMainController().showBottomNav();
-        ((MainActivity)getActivity()).setDraggableViewPager(true);
+        ((MainActivity) getActivity()).getMainController().showBottomNav();
+        ((MainActivity) getActivity()).setDraggableViewPager(true);
 
         mPaginateCallbacks = new Paginate.Callbacks() {
             @Override
@@ -239,8 +239,8 @@ public class ShopsController extends BaseController implements ShopsMvpView, Ban
             String imageUrl,
             boolean isAvailable) {
 
-        if (mBannerClickCounter!=1){
-            mBannerClickCounter =+ 1;
+        if (mBannerClickCounter != 1) {
+            mBannerClickCounter = +1;
             Log.d("onBannerClick", " clicked");
 
 
@@ -253,7 +253,7 @@ public class ShopsController extends BaseController implements ShopsMvpView, Ban
                 ((MainMvpView) getActivity()).showLoginController(getRouter(), new AuthHandler() {
                     @Override
                     public void success() {
-                        ((MainActivity)getActivity()).getHomeRouter()
+                        ((MainActivity) getActivity()).getHomeRouter()
                                 .pushController(RouterTransaction.with(
                                         SaleItemsController.newInstance(
                                                 saleId,
@@ -273,32 +273,34 @@ public class ShopsController extends BaseController implements ShopsMvpView, Ban
             } else {
 
 // Check if sale is available
-            //TODO: Need computation for date and time when sale response is cached
-            if (isAvailable) {
-            assert (getActivity()) != null;
-            ((MainActivity)getActivity())
-                    .getHomeRouter()
-                    .pushController(RouterTransaction.with(
-                            SaleItemsController.newInstance(
-                                    saleId,
-                                    bannerTitle,
-                                    bannerId,
-                                    position,
-                                    imageUrl,
-                                    null))
-                            .tag("SaleItemsController")
-                    .pushChangeHandler(new HorizontalChangeHandler())
-                    .popChangeHandler(new HorizontalChangeHandler()));
-            } else {
-                DialogUtils.showYesDialog(getActivity(), "", "Sale is currently closed", "OK", (dialogInterface, i) -> dialogInterface.dismiss());
-            }        }
+                //TODO: Need computation for date and time when sale response is cached
+                if (isAvailable) {
+                    assert (getActivity()) != null;
+                    ((MainActivity) getActivity())
+                            .getHomeRouter()
+                            .pushController(RouterTransaction.with(
+                                    SaleItemsController.newInstance(
+                                            saleId,
+                                            bannerTitle,
+                                            bannerId,
+                                            position,
+                                            imageUrl,
+                                            null))
+                                    .tag("SaleItemsController")
+                                    .pushChangeHandler(new HorizontalChangeHandler())
+                                    .popChangeHandler(new HorizontalChangeHandler()));
+                } else {
+                    DialogUtils.showYesDialog(getActivity(), "", "Sale is currently closed", "OK", (dialogInterface, i) -> dialogInterface.dismiss());
+                }
+            }
+        }
     }
 
     @OnClick(R.id.partial_toolbar_hamburger)
     void onClickHamburger() {
 
         assert (getActivity()) != null;
-        ((MainActivity)getActivity()).setRootViewpagerItem(0);
+        ((MainActivity) getActivity()).setRootViewpagerItem(0);
     }
 
     @OnClick(R.id.partial_toolbar_logo)
@@ -315,11 +317,11 @@ public class ShopsController extends BaseController implements ShopsMvpView, Ban
 
         child.startAnimation(inFromRightAnimation());
         android.os.Handler handler = new android.os.Handler();
-        handler.postDelayed(() -> ((MainActivity)getActivity()).getHomeRouter().pushController(RouterTransaction.with(
+        handler.postDelayed(() -> ((MainActivity) getActivity()).getHomeRouter().pushController(RouterTransaction.with(
                 SearchController.newInstance())
                 .tag("Search")
                 .pushChangeHandler(new FadeChangeHandler())
-                .popChangeHandler(new FadeChangeHandler())),500);
+                .popChangeHandler(new FadeChangeHandler())), 500);
     }
 
     @Override
@@ -336,7 +338,7 @@ public class ShopsController extends BaseController implements ShopsMvpView, Ban
             Log.d("items", "added");
             mBannersAdapter.addAll(getBannerResponses);
 
-            if(getBannerResponses.isEmpty()){
+            if (getBannerResponses.isEmpty()) {
                 hasLoadedAllItems = true;
                 Log.d("LoadBanners", "has loaded items");
             }
@@ -387,7 +389,7 @@ public class ShopsController extends BaseController implements ShopsMvpView, Ban
             KeyboardUtils.hideSoftInput(getActivity());
 
         assert (getActivity()) != null;
-        ((MainActivity)getActivity())
+        ((MainActivity) getActivity())
                 .getHomeRouter()
                 .pushController(
                         RouterTransaction.with(SaleItemsController.newInstance(saleItemBundle))
@@ -446,7 +448,7 @@ public class ShopsController extends BaseController implements ShopsMvpView, Ban
         return mCategoryMap.get("shop");
     }
 
-    public void goToItemsFromCategories(Bundle bundle){
+    public void goToItemsFromCategories(Bundle bundle) {
         //noinspection ConstantConditions
         getRouter().pushController(RouterTransaction.with(
                 SaleItemsController.newInstance(bundle))
@@ -455,29 +457,29 @@ public class ShopsController extends BaseController implements ShopsMvpView, Ban
                 .popChangeHandler(new HorizontalChangeHandler()));
     }
 
-    public void goToSalesFromCategories(GetCategoryTreeResponse getCategoryTreeResponse){
+    public void goToSalesFromCategories(GetCategoryTreeResponse getCategoryTreeResponse) {
         mPresenter.onAttach(this);
         shopsControllerBannerRecyclerView.setVisibility(View.GONE);
 
-        if (getCategoryTreeResponse.getKey()!=null){
+        if (getCategoryTreeResponse.getKey() != null) {
 
             mPresenter.loadShopsBanner(getCategoryTreeResponse.getKey(), getCategoryTreeResponse.getId(), 0, 0);
-            if (mShopsControllerToolbarLogo!=null)
+            if (mShopsControllerToolbarLogo != null)
                 mShopsControllerToolbarLogo.setVisibility(View.GONE);
             mShopsControllerToolbarTextView.setVisibility(View.VISIBLE);
             mShopsControllerToolbarTextView.setText(getCategoryParentKey(getCategoryTreeResponse.getKey()));
             mShopsControllerHamburgerView.setImageDrawable(getActivity().getDrawable(R.drawable.ic_pink_chevron));
             shopsControllerSearchView.setVisibility(View.INVISIBLE);
-        }else{
+        } else {
             assert (getActivity()) != null;
-            ((MainActivity)getActivity()).isFromCategories(false);
+            ((MainActivity) getActivity()).isFromCategories(false);
             loadShopBanners();
         }
     }
 
     @SuppressWarnings({"deprecation", "ConstantConditions"})
-    public void showSearchToolbar(){
-        if (shopsControllerSearchView!=null)
+    public void showSearchToolbar() {
+        if (shopsControllerSearchView != null)
             shopsControllerSearchView.setImageDrawable(getResources().getDrawable(R.drawable.ic_close));
 
         mShopsControllerHamburgerView.animate().rotation(-90).setDuration(200).start();
@@ -516,7 +518,7 @@ public class ShopsController extends BaseController implements ShopsMvpView, Ban
 //        mShopsControllerToolbarLogo.setVisibility(View.GONE);
     }
 
-    public void hideSearchToolbar(){
+    public void hideSearchToolbar() {
         child.startAnimation(outToRightAnimation());
         item.removeView(child);
 
@@ -532,14 +534,14 @@ public class ShopsController extends BaseController implements ShopsMvpView, Ban
         }
 
         Handler handler = new Handler();
-        handler.postDelayed(() -> mShopsControllerToolbarLogo.setVisibility(View.VISIBLE),300);
+        handler.postDelayed(() -> mShopsControllerToolbarLogo.setVisibility(View.VISIBLE), 300);
     }
 
-    public String getCategoryParentKey(String saleCategoryKey){
-        return saleCategoryKey +  " • All";
+    public String getCategoryParentKey(String saleCategoryKey) {
+        return saleCategoryKey + " • All";
     }
 
-    public void loadShopBanners(){
+    public void loadShopBanners() {
 
         mShopsControllerToolbarLogo.setVisibility(View.VISIBLE);
         mShopsControllerToolbarTextView.setVisibility(View.GONE);
