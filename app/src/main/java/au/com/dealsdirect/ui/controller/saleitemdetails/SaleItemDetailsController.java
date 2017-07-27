@@ -19,6 +19,7 @@ import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
@@ -127,6 +128,8 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
     ImageView mLeftArrowImage;
     @BindView(R.id.right_arrow_image)
     ImageView mRightArrowImage;
+    @BindView(R.id.product_details_add_to_basket)
+    Button mAddButton;
 
 
     private String mHtmlHeader = "";
@@ -299,6 +302,7 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
                 mProductImagesRv.smoothScrollToPosition(mProductImagesRv.getCurrentPosition() + 1);
             }
         });
+        mAddButton.setVisibility(View.INVISIBLE);
     }
 
     @Override
@@ -366,10 +370,10 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
         mSaleItemImagesAdapter.replaceData(qualitySaleImages);
 
         Log.d("itemcount", mSaleItemImagesAdapter.getItemCount() + "");
-        if (qualitySaleImages.size() > 0) {
+        if (qualitySaleImages.size() > 1) {
             mLeftArrowImage.setVisibility(View.INVISIBLE);
             mRightArrowImage.setVisibility(View.VISIBLE);
-        } else {
+        } else if (qualitySaleImages.size() == 1) {
             mLeftArrowImage.setVisibility(View.INVISIBLE);
             mRightArrowImage.setVisibility(View.INVISIBLE);
         }
@@ -403,8 +407,10 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
             for (GetSaleItemDetailsResponse skuVariant : saleDetail.getSkuVariants()) {
                 String skuId = skuVariant.getSkuId();
                 String size = skuVariant.getAttributes().getSize();
-                if (!size.isEmpty()) {
+                if (size != null && !size.isEmpty()) {
                     mProductSizes.add(new Pair<>(size, skuId));
+                } else {
+                    mProductSizes.add(null);
                 }
             }
         }
@@ -441,6 +447,18 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
             }
         });
 
+
+        if(saleDetail.getQuantity() <= 0) {
+            mAddButton.setEnabled(false);
+            mAddButton.setText("Sold Out");
+        }
+        mAddButton.setVisibility(View.VISIBLE);
+
+        if(saleDetail.getOriginalPrice().getValue() <= 0) {
+            mProductPreviousPrice.setVisibility(View.GONE);
+        } else {
+            mProductPreviousPrice.setVisibility(View.VISIBLE);
+        }
     }
 
     @Override

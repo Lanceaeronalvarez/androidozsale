@@ -126,7 +126,7 @@
                                                 android:layout_alignParentLeft="true"
                                                 android:layout_centerVertical="true"
                                                 android:src="@drawable/ic_left_arrow"
-                                                android:visibility="visible" />
+                                                android:visibility="gone" />
 
                                             <ImageView
                                                 android:id="@+id/right_arrow_image"
@@ -135,7 +135,7 @@
                                                 android:layout_alignParentRight="true"
                                                 android:layout_centerVertical="true"
                                                 android:src="@drawable/ic_right_arrow"
-                                                android:visibility="visible" />
+                                                android:visibility="gone" />
 
 
                                         </RelativeLayout>
@@ -602,6 +602,7 @@
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
                             android:layout_marginTop="10dp"
+                            android:layout_marginBottom="10dp"
                             android:layout_gravity="right"
                             android:layout_marginRight="-5dp"
                             android:paddingRight="10dp"
