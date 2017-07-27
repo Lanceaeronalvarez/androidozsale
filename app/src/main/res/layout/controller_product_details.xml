@@ -86,17 +86,21 @@
                                         android:clipChildren="false"
                                         android:clipToPadding="false">
 
-                                        <ImageView
-                                            android:id="@+id/imageViewToAnimate"
-                                            android:layout_width="match_parent"
-                                            android:layout_height="match_parent"
-                                            android:layout_margin="10dp" />
-
                                         <RelativeLayout
                                             android:layout_width="wrap_content"
                                             android:layout_height="wrap_content"
                                             android:layout_marginTop="55dp"
                                             android:transitionName="cardbackground">
+
+                                            <ImageView
+                                                android:id="@+id/imageViewToAnimate"
+                                                android:layout_width="match_parent"
+                                                android:layout_height="300dp"
+                                                android:layout_alignParentTop="true"
+                                                android:layout_gravity="center"
+                                                android:layout_margin="10dp"
+                                                android:padding="5dp"
+                                                android:visibility="visible"/>
 
                                             <ImageView
                                                 android:id="@+id/product_details_shared_image"

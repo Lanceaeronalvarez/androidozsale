@@ -17,6 +17,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.bluelinelabs.conductor.RouterTransaction;
+import com.bluelinelabs.conductor.changehandler.FadeChangeHandler;
 import com.bluelinelabs.conductor.changehandler.VerticalChangeHandler;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
@@ -35,6 +36,7 @@ import au.com.dealsdirect.R;
 import au.com.dealsdirect.data.network.model.saleitems.GetSaleItemsResponse;
 import au.com.dealsdirect.data.network.model.sorting.SortingResponse;
 import au.com.dealsdirect.ui.base.BaseController;
+import au.com.dealsdirect.ui.controller.saleitemdetails.SaleItemDetailsController;
 import au.com.dealsdirect.ui.controller.saleitems.adapter.SaleItemsAdapter;
 import au.com.dealsdirect.ui.controller.searchfilter.SearchFilterController;
 import au.com.dealsdirect.ui.controller.searchfilter.adapter.SearchChipModel;
@@ -394,33 +396,46 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
             names.add(itemId);
             mSaleItemsRecyclerView.smoothScrollToPosition(position);
 
-            final Handler handler = new Handler();
-            handler.postDelayed(() -> {
+//            final Handler handler = new Handler();
+//            handler.postDelayed(() -> {
+//
+//                Intent intent = new Intent();
+//                intent.setClass(getActivity(), SharedActivity.class);
+//
+//            intent.putExtra("KEY_IMAGE_ID", imageUrl);
+//            intent.putExtra("KEY_SEO_IDENTIFIER", seoIdentifierId);
+//            intent.putExtra("KEY_ITEM_ID", itemId);
+//            intent.putExtra("KEY_SALE_ID", saleId);
+//            intent.putExtra("KEY_SALE_NAME", ((SaleItemsAdapter.ViewHolder) viewHolder).mSaleItemName.getText());
+//            intent.putExtra("KEY_SALE_PRICE",((SaleItemsAdapter.ViewHolder) viewHolder).mSalePrice.getText());
+//            intent.putExtra("KEY_SALE_OLD_PRICE",((SaleItemsAdapter.ViewHolder) viewHolder).mOldPrice.getText());
+//            Log.d("LogBundle", ((SaleItemsAdapter.ViewHolder) viewHolder).mSaleItemName.getText()+" , "+
+//                    ((SaleItemsAdapter.ViewHolder) viewHolder).mSalePrice.getText()+" , "+
+//                    ((SaleItemsAdapter.ViewHolder) viewHolder).mOldPrice.getText());
+//
+//
+//                ActivityOptions options =
+//                        ActivityOptions.makeSceneTransitionAnimation(getActivity(),
+//                                Pair.create(((SaleItemsAdapter.ViewHolder) viewHolder).mSaleItemImage, "transition"),
+//                                Pair.create(((SaleItemsAdapter.ViewHolder) viewHolder).mSaleItemImage, "cardbackground"));
+//
+//                //noinspection ConstantConditions
+//                getActivity().startActivityForResult(intent, getActivity().getTaskId(), options.toBundle());
+//
+//            }, 200);
+            
+            Bundle bundle = new Bundle();
+            bundle.putString("KEY_IMAGE_ID", imageUrl);
+            bundle.putString("KEY_SEO_IDENTIFIER", seoIdentifierId);
+            bundle.putString("KEY_ITEM_ID", itemId);
+            bundle.putString("KEY_SALE_ID", saleId);
+            bundle.putString("KEY_SALE_NAME", ((SaleItemsAdapter.ViewHolder) viewHolder).mSaleItemName.getText().toString());
+            bundle.putString("KEY_SALE_PRICE",((SaleItemsAdapter.ViewHolder) viewHolder).mSalePrice.getText().toString());
+            bundle.putString("KEY_SALE_OLD_PRICE",((SaleItemsAdapter.ViewHolder) viewHolder).mOldPrice.getText().toString());
 
-                Intent intent = new Intent();
-                intent.setClass(getActivity(), SharedActivity.class);
-
-            intent.putExtra("KEY_IMAGE_ID", imageUrl);
-            intent.putExtra("KEY_SEO_IDENTIFIER", seoIdentifierId);
-            intent.putExtra("KEY_ITEM_ID", itemId);
-            intent.putExtra("KEY_SALE_ID", saleId);
-            intent.putExtra("KEY_SALE_NAME", ((SaleItemsAdapter.ViewHolder) viewHolder).mSaleItemName.getText());
-            intent.putExtra("KEY_SALE_PRICE",((SaleItemsAdapter.ViewHolder) viewHolder).mSalePrice.getText());
-            intent.putExtra("KEY_SALE_OLD_PRICE",((SaleItemsAdapter.ViewHolder) viewHolder).mOldPrice.getText());
-            Log.d("LogBundle", ((SaleItemsAdapter.ViewHolder) viewHolder).mSaleItemName.getText()+" , "+
-                    ((SaleItemsAdapter.ViewHolder) viewHolder).mSalePrice.getText()+" , "+
-                    ((SaleItemsAdapter.ViewHolder) viewHolder).mOldPrice.getText());
-
-
-                ActivityOptions options =
-                        ActivityOptions.makeSceneTransitionAnimation(getActivity(),
-                                Pair.create(((SaleItemsAdapter.ViewHolder) viewHolder).mSaleItemImage, "transition"),
-                                Pair.create(((SaleItemsAdapter.ViewHolder) viewHolder).mSaleItemImage, "cardbackground"));
-
-                //noinspection ConstantConditions
-                getActivity().startActivityForResult(intent, getActivity().getTaskId(), options.toBundle());
-
-            }, 200);
+            getRouter().pushController(RouterTransaction.with(SaleItemDetailsController.newInstance(bundle))
+                    .pushChangeHandler(new FadeChangeHandler())
+                    .popChangeHandler(new FadeChangeHandler()));
         }
 
     }

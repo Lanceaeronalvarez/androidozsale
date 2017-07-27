@@ -49,10 +49,12 @@ public class  HomeController extends BaseController implements HomeMvpView {
     @BindView(R.id.controller_home_frame)
     ViewGroup mContainer;
 
+    public AHBottomNavigation getBottomNavigationView() {
+        return mBottomNavigationView;
+    }
+
     @BindView(R.id.controller_home_bottom_nav)
     AHBottomNavigation mBottomNavigationView;
-
-    public static View mCheckoutMenuView;
 
     private Router mRouter;
 
@@ -97,6 +99,10 @@ public class  HomeController extends BaseController implements HomeMvpView {
         }
 
         ((MainActivity)getActivity()).setHomeRouter(mRouter);
+        AHBottomNavigationAdapter navigationAdapter = new AHBottomNavigationAdapter(getActivity(), R.menu.bottom_navigation_menu);
+        navigationAdapter.setupWithBottomNavigation(mBottomNavigationView);
+        mBottomNavigationView.setTitleState(AHBottomNavigation.TitleState.ALWAYS_SHOW);
+        mBottomNavigationView.setCurrentItem(0);
         setUp(view);
     }
 
@@ -187,11 +193,6 @@ public class  HomeController extends BaseController implements HomeMvpView {
             return true;
         });
 
-        AHBottomNavigationAdapter navigationAdapter = new AHBottomNavigationAdapter(getActivity(), R.menu.bottom_navigation_menu);
-        navigationAdapter.setupWithBottomNavigation(mBottomNavigationView);
-        mBottomNavigationView.setTitleState(AHBottomNavigation.TitleState.ALWAYS_SHOW);
-        mBottomNavigationView.setCurrentItem(0);
-        mCheckoutMenuView = mBottomNavigationView.getChildAt(mBottomNavigationView.getChildCount()-1);
     }
 
     @Override
