@@ -23,6 +23,7 @@ import au.com.dealsdirect.ui.base.BaseController;
 import au.com.dealsdirect.ui.controller.legalities.LegalitiesController;
 import au.com.dealsdirect.ui.custom.CustomAlertDialog;
 import au.com.dealsdirect.ui.custom.transitions.RightHorizontalTransitionChangeHandler;
+import au.com.dealsdirect.ui.main.MainActivity;
 import au.com.dealsdirect.utils.BundleBuilder;
 import butterknife.BindView;
 import butterknife.OnClick;
@@ -110,6 +111,7 @@ public class RegisterController extends BaseController implements RegisterMvpVie
     protected void setUp(View view) {
         // Setup views here
         //mPresenter.loadSample(new SampleRequest());
+        ((MainActivity)getActivity()).setDraggableViewPager(false);
 
         mTermsLink.setOnClickListener(action -> {
             getRouter().pushController(RouterTransaction.with(

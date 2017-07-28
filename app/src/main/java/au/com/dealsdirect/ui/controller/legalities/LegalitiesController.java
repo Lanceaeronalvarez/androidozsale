@@ -13,6 +13,7 @@ import javax.inject.Inject;
 
 import au.com.dealsdirect.R;
 import au.com.dealsdirect.ui.base.BaseController;
+import au.com.dealsdirect.ui.main.MainActivity;
 import au.com.dealsdirect.utils.BundleBuilder;
 import butterknife.BindView;
 import butterknife.OnClick;
@@ -75,6 +76,8 @@ public class LegalitiesController extends BaseController implements LegalitiesMv
 
     @Override
     protected void setUp(View view) {
+        ((MainActivity)getActivity()).setDraggableViewPager(false);
+
         mTitleText.setText(title);
         mFilterButton.setVisibility(View.INVISIBLE);
         mPresenter.loadText(key);
