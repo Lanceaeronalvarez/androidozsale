@@ -8,8 +8,11 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.CheckBox;
 import android.widget.TextView;
 
+import com.bluelinelabs.conductor.RouterTransaction;
+import com.bluelinelabs.conductor.changehandler.HorizontalChangeHandler;
 import com.facebook.CallbackManager;
 
 import javax.inject.Inject;
@@ -17,7 +20,9 @@ import javax.inject.Inject;
 import au.com.dealsdirect.R;
 import au.com.dealsdirect.data.auth.AuthHandler;
 import au.com.dealsdirect.ui.base.BaseController;
+import au.com.dealsdirect.ui.controller.legalities.LegalitiesController;
 import au.com.dealsdirect.ui.custom.CustomAlertDialog;
+import au.com.dealsdirect.ui.custom.transitions.RightHorizontalTransitionChangeHandler;
 import au.com.dealsdirect.utils.BundleBuilder;
 import butterknife.BindView;
 import butterknife.OnClick;
@@ -40,7 +45,6 @@ public class RegisterController extends BaseController implements RegisterMvpVie
     @BindView(R.id.controller_register_forename_field)
     TextView mRegisterForenameField;
 
-
     @BindView(R.id.controller_register_surname_field)
     TextView mRegisterSurnameField;
 
@@ -49,6 +53,12 @@ public class RegisterController extends BaseController implements RegisterMvpVie
 
     @BindView(R.id.controller_register_password_field)
     TextView mRegisterPasswordField;
+
+    @BindView(R.id.controller_register_terms_conditions_check)
+    CheckBox mTermsCheck;
+
+    @BindView(R.id.controller_register_terms_link)
+    TextView mTermsLink;
 
     private static AuthHandler mAuthHandler;
 
@@ -101,6 +111,13 @@ public class RegisterController extends BaseController implements RegisterMvpVie
         // Setup views here
         //mPresenter.loadSample(new SampleRequest());
 
+        mTermsLink.setOnClickListener(action -> {
+            getRouter().pushController(RouterTransaction.with(
+                    new LegalitiesController("TermsAndConditions_Text", "Terms and Conditions"))
+                    .popChangeHandler(new HorizontalChangeHandler())
+                    .pushChangeHandler(new HorizontalChangeHandler()));
+        });
+
     }
 
     @Override
@@ -125,7 +142,8 @@ public class RegisterController extends BaseController implements RegisterMvpVie
                 mRegisterForenameField.getText().toString(),
                 mRegisterSurnameField.getText().toString(),
                 mRegisterEmailField.getText().toString(),
-                mRegisterPasswordField.getText().toString());
+                mRegisterPasswordField.getText().toString(),
+                mTermsCheck.isChecked());
     }
 
     @OnClick(R.id.controller_register_login_text)

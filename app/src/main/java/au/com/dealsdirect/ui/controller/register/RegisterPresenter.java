@@ -26,7 +26,8 @@ public class RegisterPresenter<V extends RegisterMvpView> extends Authentication
 
 
     @Override
-    public void registerUser(String firstName, String lastName, String email, String password) {
+    public void registerUser(String firstName, String lastName, String email, String password,
+                             boolean hasReadTermsAndCondition) {
 
         RegisterUserRequest registerUserRequest
                 = new RegisterUserRequest(
@@ -40,8 +41,7 @@ public class RegisterPresenter<V extends RegisterMvpView> extends Authentication
                         "android",
                         "",
                         "00000000-0000-0000-0000-000000000000",
-                        false
-                        );
+                        hasReadTermsAndCondition);
 
         getCompositeDisposable().add(getDataManager()
                 .callRegiser(registerUserRequest)

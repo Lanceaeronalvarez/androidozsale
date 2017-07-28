@@ -8,6 +8,7 @@ import au.com.dealsdirect.ui.base.AuthenticationMvpPresenter;
 
 public interface RegisterMvpPresenter<V extends RegisterMvpView> extends AuthenticationMvpPresenter<V> {
 
-    void registerUser(String firstName, String lastName, String email, String password);
+    void registerUser(String firstName, String lastName, String email, String password,
+                      boolean hasReadTermsAndConditions);
 
 }
