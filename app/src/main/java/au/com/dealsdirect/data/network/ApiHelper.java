@@ -5,6 +5,8 @@ import com.mysale.genie.utility.config.api.GetAppSettings;
 import com.mysale.genie.utility.config.api.GetAppSettingsSection;
 import com.mysale.genie.utility.config.api.GetServerSettings;
 
+import org.json.JSONObject;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -134,7 +136,7 @@ public interface ApiHelper {
 
     Observable<LoginEmail.ResponseValue> callLoginViaEmail(LoginEmail.RequestValue requestValue);
 
-    Observable<LoginFacebook.ResponseValue> callLoginViaFacebook(LoginFacebook.RequestValue requestValue);
+    Observable<JSONObject> callLoginViaFacebook(LoginFacebook.RequestValue requestValue);
 
     Observable<LoginEmail.ResponseValue> callLoginTicket(LoginTicket.RequestValue requestValue);
 

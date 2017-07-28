@@ -23,3 +23,67 @@
 # If you keep the line number information, uncomment this to
 # hide the original source file name.
 #-renamesourcefileattribute SourceFile
+
+# Facebook
+-keep class com.facebook.** { *; }
+
+# Javascript
+-keepattributes JavascriptInterface
+-keepclassmembers class * {
+    @android.webkit.JavascriptInterface <methods>;
+}
+
+# GMS
+-keep class com.google.android.gms.** { *; }
+-dontwarn com.google.android.gms.**
+
+# Newrelic
+-keep class com.newrelic.** { *; }
+-dontwarn com.newrelic.**
+-keepattributes Exceptions, Signature, InnerClasses, LineNumberTable, EnclosingMethod
+
+# Crashlytics
+-keep class com.crashlytics.** { *; }
+-keep class com.crashlytics.android.**
+-keepattributes SourceFile,LineNumberTable
+
+# Braintree
+-dontwarn com.devicecollector.**
+-dontwarn com.braintreepayments.**
+
+# support design
+-dontwarn android.support.design.**
+
+# AppCompat
+-dontwarn android.support.v7.**
+
+#OkHttp3
+-keep class okhttp3.** { *; }
+-dontwarn okhttp3.**
+-dontwarn okio.**
+
+-keep class * {
+    public <fields>;
+    private <fields>;
+    protected <fields>;
+    <fields>;
+}
+
+#RetroLambda
+-dontwarn java.lang.invoke.*
+
+#Google classes
+-keep class com.google.**
+-dontwarn com.google.**
+
+#GreenDao
+-keepattributes *Annotation*
+-keepclassmembers class * extends org.greenrobot.greendao.AbstractDao {
+    public static java.lang.String TABLENAME;
+}
+-keep class **$Properties
+
+# If you do not use SQLCipher:
+-dontwarn org.greenrobot.greendao.database.**
+# If you do not use Rx:
+-dontwarn rx.**

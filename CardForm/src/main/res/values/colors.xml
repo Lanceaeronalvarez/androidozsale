@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <!-- Button Theme -->
-    <color name="bg_edit_text_ripple">#FFFFFF</color>
-    <color name="bg_edit_text_default">#ECECEC</color>
-    <color name="bg_edit_text_focused">#1A9DE9</color>
+    <color name="bt_bg_edit_text_ripple">#FFFFFF</color>
+    <color name="bt_bg_edit_text_default">#ECECEC</color>
+    <color name="bt_bg_edit_text_focused">#1A9DE9</color>
 
     <color name="bt_white">#ffffff</color>
     <color name="bt_black">#001129</color>

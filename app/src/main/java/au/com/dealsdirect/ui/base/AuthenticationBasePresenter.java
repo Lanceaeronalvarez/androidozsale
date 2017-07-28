@@ -4,7 +4,6 @@ package au.com.dealsdirect.ui.base;
 import android.app.Activity;
 import android.os.Bundle;
 import android.util.Base64;
-import android.util.Log;
 
 import com.androidnetworking.error.ANError;
 import com.facebook.AccessToken;
@@ -260,7 +259,6 @@ public class AuthenticationBasePresenter<V extends AuthenticationMvpView> implem
             String facebookUserID,
             String facebookCookieValue) {
 
-        Log.d("loginPresenter"," value = "+email+" , "+firstName+", " +lastName+" , "+facebookUserID+" , "+facebookCookieValue);
         getCompositeDisposable().add(getDataManager().callLoginViaFacebook(
                 new LoginFacebook.RequestValue(
                         email,
@@ -273,11 +271,18 @@ public class AuthenticationBasePresenter<V extends AuthenticationMvpView> implem
 
                 .subscribeOn(getSchedulerProvider().io())
                 .observeOn(getSchedulerProvider().ui())
-                .subscribe(responseValue -> onAuthSuccess(
-                        responseValue.isSuccess(),
-                        responseValue.getTicket(),
-                        responseValue.getMessage()),
-                        throwable -> onAuthFailure(throwable)));
+                .subscribe(
+                        //Elv - Changed to JSON to determine changing json structure
+                        jsonObject -> {
+                            JSONObject resObj = jsonObject.getJSONObject("d");
+                            boolean isSuccess = (resObj.getBoolean("IsAuthenticated") && resObj.getBoolean("Result"));
+                            onAuthSuccess(isSuccess, isSuccess? resObj.getJSONObject("Value").getString("Ticket"): "", resObj.getString("Message"));
+                        },
+
+                        throwable -> {
+                            onAuthFailure(throwable);
+                        }
+                ));
 
         return true;
     }
@@ -292,7 +297,6 @@ public class AuthenticationBasePresenter<V extends AuthenticationMvpView> implem
         loginManager.registerCallback(callbackManager, new FacebookCallback<LoginResult>() {
             @Override
             public void onSuccess(LoginResult loginResult) {
-                Log.d("FB", "onSuccess: " + loginResult.getAccessToken());
                 fetchUserInfo(loginResult.getAccessToken());
             }
 
@@ -303,7 +307,6 @@ public class AuthenticationBasePresenter<V extends AuthenticationMvpView> implem
 
             @Override
             public void onError(FacebookException error) {
-                Log.d("FB", "onError: " + error.getMessage());
             }
         });
     }
@@ -415,6 +418,7 @@ public class AuthenticationBasePresenter<V extends AuthenticationMvpView> implem
             getDataManager().acknowledgeAuth(ticket);
             getMvpView().showLoginSuccessful(ticket);
         } else {
+            getDataManager().revokeAuth();
             getMvpView().showLoginError(errorMessage);
         }
     }

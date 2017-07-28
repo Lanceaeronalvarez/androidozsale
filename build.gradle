@@ -71,5 +71,5 @@ ext {
     recyclerViewPagerVersion = 'v1.1.1'
 
     braintreeVersion = '2.5.4'
-    facebookVersion = '[4,5)'
+    facebookVersion = '4.23.+'
 }

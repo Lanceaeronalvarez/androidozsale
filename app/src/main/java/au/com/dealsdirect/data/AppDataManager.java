@@ -6,6 +6,8 @@ import com.mysale.genie.utility.config.api.GetAppSettings;
 import com.mysale.genie.utility.config.api.GetAppSettingsSection;
 import com.mysale.genie.utility.config.api.GetServerSettings;
 
+import org.json.JSONObject;
+
 import java.util.List;
 
 import javax.inject.Inject;
@@ -206,7 +208,7 @@ public class AppDataManager implements DataManager {
     }
 
     @Override
-    public Observable<LoginFacebook.ResponseValue> callLoginViaFacebook(LoginFacebook.RequestValue requestValue) {
+    public Observable<JSONObject> callLoginViaFacebook(LoginFacebook.RequestValue requestValue) {
         return mApiHelper.callLoginViaFacebook(requestValue);
     }
 

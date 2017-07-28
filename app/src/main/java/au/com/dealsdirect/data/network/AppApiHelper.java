@@ -1,9 +1,13 @@
 package au.com.dealsdirect.data.network;
 
+import com.androidnetworking.error.ANError;
+import com.androidnetworking.interfaces.JSONObjectRequestListener;
 import com.mysale.genie.utility.config.api.GetAppSettings;
 import com.mysale.genie.utility.config.api.GetAppSettingsSection;
 import com.mysale.genie.utility.config.api.GetServerSettings;
 import com.rx2androidnetworking.Rx2AndroidNetworking;
+
+import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
@@ -126,14 +130,14 @@ public class AppApiHelper implements ApiHelper {
     public Observable<List<GetBannerResponse>> callGetBanners(
             GetBannerRequest getBannerRequest) {
         return Rx2AndroidNetworking.get(ApiEndPoint.GET_SALES)
-                                   .addHeaders(mApiHeader.getPublicApiHeader())
-                                   .addQueryParameter(getBannerRequest)
-                                   .build()
-                                   .getObjectListObservable(GetBannerResponse.class);
+                .addHeaders(mApiHeader.getPublicApiHeader())
+                .addQueryParameter(getBannerRequest)
+                .build()
+                .getObjectListObservable(GetBannerResponse.class);
     }
 
     @Override
-    public Observable<GetPublicSalesCategoriesResponse> callGetPublicSalesCategories(GetPublicSalesCategoriesRequest request){
+    public Observable<GetPublicSalesCategoriesResponse> callGetPublicSalesCategories(GetPublicSalesCategoriesRequest request) {
         return Rx2AndroidNetworking.get(ApiEndPoint.GET_SHOP_CATEGORIES)
                 .addHeaders(mApiHeader.getPublicApiHeader())
                 .addQueryParameter(request)
@@ -168,19 +172,20 @@ public class AppApiHelper implements ApiHelper {
     }
 
 
-   @Override public Observable<GetPublicSaleItemsResponse> callGetPublicSaleItems(
+    @Override
+    public Observable<GetPublicSaleItemsResponse> callGetPublicSaleItems(
             GetPublicSaleItemsRequest getPublicSaleItemsRequest) {
 
         return Rx2AndroidNetworking.get(ApiEndPoint.GET_PUBLIC_SALE_ITEMS)
-                                   .addHeaders(mApiHeader.getPublicApiHeader())
-                                   .addQueryParameter(getPublicSaleItemsRequest)
-                                   .build()
-                                   .getObjectObservable(GetPublicSaleItemsResponse.class);
+                .addHeaders(mApiHeader.getPublicApiHeader())
+                .addQueryParameter(getPublicSaleItemsRequest)
+                .build()
+                .getObjectObservable(GetPublicSaleItemsResponse.class);
     }
 
     @Override
     public Observable<GetSaleItemsResponse> callGetSaleItemsRequest(GetSaleItemsRequest getSaleItemsRequest) {
-        LinkedHashMap<String,String> linkedHashMap = new LinkedHashMap();
+        LinkedHashMap<String, String> linkedHashMap = new LinkedHashMap();
         linkedHashMap.put("q", getSaleItemsRequest.getQuery());
         linkedHashMap.put("pn", getSaleItemsRequest.getPageNumber());
         linkedHashMap.put("ps", getSaleItemsRequest.getPageSize());
@@ -250,12 +255,12 @@ public class AppApiHelper implements ApiHelper {
     }
 
     @Override
-    public Observable<LoginFacebook.ResponseValue> callLoginViaFacebook(LoginFacebook.RequestValue requestValue) {
+    public Observable<JSONObject> callLoginViaFacebook(LoginFacebook.RequestValue requestValue) {
         return Rx2AndroidNetworking.post(ApiEndPoint.LOGIN_FB)
                 .addHeaders(mApiHeader.getPublicApiHeader())
                 .addJSONObjectBody(JsonUtils.convertToJsonObject(requestValue))
                 .build()
-                .getObjectObservable(LoginFacebook.ResponseValue.class);
+                .getJSONObjectObservable();
     }
 
     @Override
@@ -369,7 +374,7 @@ public class AppApiHelper implements ApiHelper {
     @Override
     public Observable<GetCurrentOrder.ResponseValue> callAdjustQuantityOrderItem(String url, AdjustOrderItem.RequestValue requestValues) {
         String endPoint;
-        switch (url){
+        switch (url) {
             case "IncreaseOrderItem":
                 endPoint = ApiEndPoint.INCREASE_ORDER_ITEM;
                 break;
@@ -377,7 +382,7 @@ public class AppApiHelper implements ApiHelper {
                 endPoint = ApiEndPoint.DECREASE_ORDER_ITEM;
                 break;
             default:
-                endPoint="";
+                endPoint = "";
                 break;
         }
         return Rx2AndroidNetworking.post(endPoint)
@@ -458,7 +463,7 @@ public class AppApiHelper implements ApiHelper {
     }
 
 
-  @Override
+    @Override
     public Observable<ContactOrders> callGetContactOrders() {
         return Rx2AndroidNetworking.post(ApiEndPoint.GET_CONTACT_INVOICES)
                 .addJSONObjectBody(JsonUtils.convertToJsonObject(null))
@@ -504,7 +509,7 @@ public class AppApiHelper implements ApiHelper {
 
     @Override
     public Observable<RegisterDevice.ResponseValue> callRegisterDevice(RegisterDevice.RequestValue requestValue) {
-        return  Rx2AndroidNetworking.get(ApiEndPoint.GCM_REGISTER_DEVICE)
+        return Rx2AndroidNetworking.get(ApiEndPoint.GCM_REGISTER_DEVICE)
                 .addHeaders(mApiHeader.getPublicApiHeader())
                 .addQueryParameter(requestValue)
                 .build()
