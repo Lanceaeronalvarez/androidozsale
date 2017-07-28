@@ -34,7 +34,6 @@ public final class ApiEndPoint {
     public static final String API_LEGACY_AKAMAI = "https://www.dealsdirect.com.au/papi/public/v3.17/api.ashx/";
 
 
-
     private static final String COCOSA_SERVICE = "CocosaService.asmx/";
     /* API Constants */
     private static final String API_HOST = "https://www.dealsdirect.com.au/";
@@ -183,7 +182,7 @@ public final class ApiEndPoint {
     }
 
     public static String getBaseApiLegacy() {
-        if (BuildConfig.DEBUG) {
+        if (BuildConfig.FLAVOR.contains("Test")) {
             return TEST_API_LEGACY;
         } else {
             return LIVE_API_LEGACY;
