@@ -13,7 +13,6 @@ import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.text.Editable;
 import android.text.TextWatcher;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -163,7 +162,7 @@ public class InviteSendController extends BaseController implements InviteMvpVie
         try {
             return URLEncoder.encode(s, "UTF-8");
         }catch (UnsupportedEncodingException e) {
-            Log.wtf("Tag", "UTF-8 should always be supported", e);
+            e.printStackTrace();
             return "null";
         }
     }
@@ -254,8 +253,6 @@ public class InviteSendController extends BaseController implements InviteMvpVie
                 String invitationLink = mPersonalInvitationLinkEditText.getText().toString();
 
                 try {
-
-                    Log.d("sendinvitefriend", bannerImageUrl);
 
                     ShareLinkContent content =
                             new ShareLinkContent.Builder()
@@ -399,8 +396,6 @@ public class InviteSendController extends BaseController implements InviteMvpVie
                             .getSystemService(Context.CLIPBOARD_SERVICE);
                     ClipData clipData = ClipData.newPlainText("Text", mPersonalInvitationLinkEditText.getText().toString());
                     clipboard.setPrimaryClip(clipData);
-
-                    Log.d("text ", clipboard.getPrimaryClip().getItemAt(0).getText() + "");
 
                     CustomAlertDialog.showCustomAlertDialog(getActivity(), CustomAlertDialog.CustomDialogIconState.POSITIVE,
                             "Link Copied to Clipboard");

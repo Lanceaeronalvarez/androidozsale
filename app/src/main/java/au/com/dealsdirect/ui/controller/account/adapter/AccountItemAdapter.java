@@ -2,7 +2,6 @@ package au.com.dealsdirect.ui.controller.account.adapter;
 
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -51,8 +50,6 @@ public class AccountItemAdapter extends RecyclerView.Adapter<AccountItemViewHold
     @Override
     public void onBindViewHolder(AccountItemViewHolder holder, int position) {
 
-        Log.d("log", position +" position");
-
         holder.mAccountItemImage.setImageResource(mAccountImages[position]);
         holder.mAccountItemImage.setOnClickListener(view -> {
             mPresenter.onAccountItemClick(mAccountItems.get(position));
@@ -70,7 +67,6 @@ public class AccountItemAdapter extends RecyclerView.Adapter<AccountItemViewHold
         if (mAccountItems == null) {
             return 0;
         }
-        Log.d("log", mAccountItems.size() +" items");
         return mAccountItems.size();
     }
 
