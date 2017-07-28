@@ -170,7 +170,7 @@
             fontPath="@string/font_lato_semibold"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="@string/sign_up"
+            android:text="@string/join_now"
             android:textSize="@dimen/text_size_xlarge"/>
 
         <RelativeLayout
@@ -207,7 +207,7 @@
                     android:layout_height="match_parent"
                     android:gravity="center"
                     android:layout_toRightOf="@+id/controller_login_facebook_image_view"
-                    android:text="@string/log_in_with_facebook"
+                    android:text="@string/sign_in_with_facebook"
                     android:layout_marginLeft="10dp"
                     android:textColor="@android:color/white"
                     android:textSize="@dimen/text_size_xlarge"/>

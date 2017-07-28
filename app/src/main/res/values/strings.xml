@@ -110,9 +110,10 @@
     <!--LOGIN STRINGS-->
     <string name="or_text">or</string>
     <string name="not_a_member_yet_text">Not a member yet?</string>
-    <string name="log_in_with_facebook">Log in with facebook</string>
+    <string name="sign_in_with_facebook">Sign in with Facebook</string>
 
     <string name="sign_up">Sign Up</string>
+    <string name="join_now">Join Now</string>
     <string name="already_a_member">Already a member?</string>
     <string name="log_in">Log In</string>
     <string name="forgot_password_guide">To reset your account password, enter the email address and
