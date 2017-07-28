@@ -113,7 +113,11 @@ public class SaleItemsAdapter extends RecyclerView.Adapter<SaleItemsAdapter.View
         String saleItemPrice = PriceUtils.getPriceStringValue(mData.get(position).getPrice().getValue());
         String saleItemOldPrice = PriceUtils.getRpStringValue(mData.get(position).getOriginalPrice().getValue());
 
+//        ImageUtils.clearImage(mContext,holder.mSaleItemImage);
+
         ImageUtils.loadImage(mContext, url, holder.mSaleItemImage);
+
+        holder.mSaleItemImage.setTransitionName(mContext.getString(R.string.transition_sale_image_indexed,position));
 
         if (!saleItem.isAvailable()) {
             holder.mSaleItemSoldOut.setVisibility(View.VISIBLE);

@@ -20,7 +20,7 @@ import java.util.List;
  * dp Created by Admin on 6/8/17.
  */
 
-public class SharedElementTransitionChangehandler extends SharedArcFadeMoveChangeHandler{
+public class SharedElementTransitionChangehandler extends SharedArcFadePushChangeHandler {
 
 
     private static final String KEY_WAIT_FOR_TRANSITION_NAMES = "SharedElementDelayingChangeHandler.waitForTransitionNames";

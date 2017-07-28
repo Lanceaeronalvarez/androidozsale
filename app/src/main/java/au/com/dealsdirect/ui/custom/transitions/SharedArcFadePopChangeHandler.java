@@ -14,13 +14,15 @@ import android.view.ViewGroup;
 
 import com.bluelinelabs.conductor.changehandler.TransitionChangeHandler;
 
+import au.com.dealsdirect.R;
+
 /**
- * dp Created by Admin on 7/12/17.
+ * Created by smartwave on 28/07/2017.
  */
 
-public class SharedArcFadeMoveChangeHandler extends TransitionChangeHandler {
+public class SharedArcFadePopChangeHandler extends TransitionChangeHandler {
 
-    public SharedArcFadeMoveChangeHandler() { }
+    public SharedArcFadePopChangeHandler() { }
 
     @Override
     public void setForceRemoveViewOnPush(boolean force) {
@@ -30,6 +32,7 @@ public class SharedArcFadeMoveChangeHandler extends TransitionChangeHandler {
     @Override
     @NonNull
     protected Transition getTransition(@NonNull ViewGroup container, View from, View to, boolean isPush) {
+        View test = from.findViewById(R.id.product_details_shared_image);
 
         TransitionSet transition = new TransitionSet()
                 .setOrdering(TransitionSet.ORDERING_SEQUENTIAL)

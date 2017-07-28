@@ -6,6 +6,7 @@ import android.animation.ObjectAnimator;
 import android.animation.ValueAnimator;
 import android.annotation.SuppressLint;
 import android.content.Intent;
+import android.graphics.Bitmap;
 import android.graphics.Paint;
 import android.net.Uri;
 import android.os.Bundle;
@@ -35,6 +36,12 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.aurelhubert.ahbottomnavigation.notification.AHNotification;
+import com.bluelinelabs.conductor.Router;
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.Priority;
+import com.bumptech.glide.load.DecodeFormat;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
+import com.bumptech.glide.request.RequestOptions;
 import com.facebook.rebound.SimpleSpringListener;
 import com.facebook.rebound.Spring;
 import com.facebook.rebound.SpringConfig;
@@ -82,6 +89,7 @@ import static android.app.Activity.RESULT_OK;
 
 public class SaleItemDetailsController extends BaseController implements SaleItemDetailsMvpView, LoadImagesListener {
 
+    private final String KEY_POSITION = "KEY_POSITION";
     private final String KEY_ITEM_ID = "KEY_ITEM_ID";
     private final String KEY_SALE_ID = "KEY_SALE_ID";
     private final String KEY_ITEM_IMAGE_ID = "KEY_IMAGE_ID";
@@ -174,6 +182,7 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
     private boolean hasSizes = false;
     private boolean didSelectSize = false;
     private String selectedSkuId = "";
+    private int mFromPosition = -1;
 
     private GetSaleItemDetailsResponse mProductDetailsItem;
 
@@ -182,11 +191,14 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
 
     int[] checkoutLocation = new int[2];
 
+    ElasticDragDismissFrameLayout mRootView;
+
     private final ElasticDragDismissFrameLayout.ElasticDragDismissCallback dragDismissListener
             = new ElasticDragDismissFrameLayout.ElasticDragDismissCallback() {
         @Override
         public void onDragDismissed() {
-            setResultAndFinish();
+            mProductDetailScrollView.scrollTo(0, 0);
+            getActivity().onBackPressed();
         }
     };
 
@@ -245,13 +257,13 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
         mSaleName = args.getString(KEY_ITEM_NAME);
         mSalePrice = args.getString(KEY_ITEM_PRICE);
         mSaleOldPrice = args.getString(KEY_ITEM_OLD_PRICE);
-
-        Log.d("LogBundle", mSaleName + " , " + mSalePrice + " , " + mSaleOldPrice);
+        mFromPosition = args.getInt(KEY_POSITION);
     }
 
 
     @Override
     protected View inflateView(@NonNull LayoutInflater inflater, @NonNull ViewGroup container) {
+
         SaleItemDetailsView view = (SaleItemDetailsView)
                 inflater.inflate(R.layout.controller_product_details, container, false);
 
@@ -263,36 +275,37 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
     @Override
     protected void onViewBound(@NonNull View view) {
         super.onViewBound(view);
-
-        Animation anim = AnimationUtils.loadAnimation(getActivity(), R.anim.slide_to_bottom);
-        anim.setDuration(200);
+        mRootView = ((ElasticDragDismissFrameLayout) view);
 
         //product info
         mProductName.setText(mSaleName);
-        mProductName.startAnimation(anim);
 
-        mProductPrice.startAnimation(anim);
         mProductPrice.setText(mSalePrice);
         mProductPreviousPrice.setText(mSaleOldPrice);
-        mProductPreviousPrice.startAnimation(anim);
         mProductPreviousPrice.setPaintFlags(
                 mProductPreviousPrice.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);
 
-        mProductSharedImage.setVisibility(View.VISIBLE);
-
         mProductDetailBottomCard.setVisibility(View.VISIBLE);
-        mProductDetailBottomCard.startAnimation(anim);
-        mProductSharedImage.setVisibility(View.VISIBLE);
-
         mProductDetailBottomCard.setVisibility(View.VISIBLE);
-        mProductDetailBottomCard.startAnimation(anim);
-
 
         //noinspection ConstantConditions
-        ((ElasticDragDismissFrameLayout) view).addListener(dragDismissListener);
+        mRootView.addListener(dragDismissListener);
 
         loadImagesListener = this;
-        mProductSharedImage.setTransitionName("transition");
+        mProductSharedImage.setTransitionName(getResources().getString(R.string.transition_sale_image_indexed, mFromPosition));
+
+//        RequestOptions options = new RequestOptions().encodeQuality(50)
+//                .encodeFormat(Bitmap.CompressFormat.JPEG)
+//                .diskCacheStrategy(DiskCacheStrategy.ALL)
+//                .priority(Priority.IMMEDIATE)
+//                .dontAnimate()
+//                .format(DecodeFormat.PREFER_RGB_565);
+//
+//        Glide.with(getActivity())
+//                .load(mItemImageUrl)
+//                .apply(options)
+//                .into(mProductSharedImage);
+
         ImageUtils.loadImageImmediate(getActivity(), mItemImageUrl, mProductSharedImage, null);
 
         mPresenter.loadSaleItemDetails(mSeoIdentifierId);
@@ -338,7 +351,7 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
         });
         initSprings();
 
-        View checkoutView = ((MainActivity)getActivity()).getMainController().getHomeController().getBottomNavigationView().getViewAtPosition(4);
+        View checkoutView = ((MainActivity) getActivity()).getMainController().getHomeController().getBottomNavigationView().getViewAtPosition(4);
         checkoutView.getLocationOnScreen(checkoutLocation);
     }
 
@@ -503,12 +516,19 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
         //notify bottom navigation view(checkout) with success.
     }
 
+    @Override
+    public boolean handleBack() {
+
+        ImageUtils.loadImageImmediate(getActivity(), mItemImageUrl, mProductSharedImage, null);
+        mProductImagesRv.setVisibility(View.GONE);
+        mRootView.removeListener(dragDismissListener);
+        return false;
+    }
 
     @OnClick(R.id.product_details_add_to_basket)
     void addToBasket() {
-//        verifyAddToCart();
-
         animateAddToCart();
+        //commented login check temporarily.
 //        if (!mPresenter.isAuthorized()) {
 //            ((SharedActivity) getActivity()).showLoginController(getRouter(), new AuthHandler() {
 //                @Override
@@ -544,7 +564,7 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
         }
     }
 
-    private void animateAddToCart(){
+    private void animateAddToCart() {
         SaleItemDetailsImageAdapter.ViewHolder vh = (SaleItemDetailsImageAdapter.ViewHolder) mProductImagesRv
                 .findViewHolderForLayoutPosition(mProductImagesRvLayoutManager.findLastVisibleItemPosition());
 
@@ -555,16 +575,15 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
         addToCartAnimSpring.setEndValue(1);
 
 
-
         HomeController homeController = ((MainActivity) getActivity()).getMainController().getHomeController();
         CartUtil.addValueToCart(1);
 
         AHNotification notification = new AHNotification.Builder()
-                .setText(CartUtil.getCartValue()+"")
-                .setBackgroundColor(ContextCompat.getColor(getActivity(),android.R.color.holo_red_dark))
+                .setText(CartUtil.getCartValue() + "")
+                .setBackgroundColor(ContextCompat.getColor(getActivity(), android.R.color.holo_red_dark))
                 .setTextColor(ContextCompat.getColor(getActivity(), R.color.white))
                 .build();
-        homeController.getBottomNavigationView().setNotification(notification,4);
+        homeController.getBottomNavigationView().setNotification(notification, 4);
 
     }
 
@@ -583,39 +602,9 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
         return qualityImages;
     }
 
-    private void setResultAndFinish() {
-
-        mProductDetailScrollView.scrollTo(0, 0);
-        ImageUtils.loadImageImmediate(getActivity(), mItemImageUrl, mProductSharedImage, onGlideLoadedOnBackListener);
-//        mProductSharedImage.setVisibility(View.VISIBLE);
-//        mProductImagesRv.setVisibility(View.INVISIBLE);
-//        mOtherImagesRv.setVisibility(View.INVISIBLE);
-
-
-//        final Handler handler = new Handler();
-//        handler.postDelayed(() -> {
-//
-//            final Intent resultData = new Intent();
-//            resultData.putExtra(RESULT_EXTRA_CONTROLLER_ID, getInstanceId());
-//            getActivity().setResult(RESULT_OK, resultData);
-//            getActivity().finishAfterTransition();
-//
-//        }, 200);
-    }
-
     @Override
     public void imagesLoaded() {
-        if (mProductSharedImage != null) {
-            final Handler handler = new Handler();
-            handler.postDelayed(() -> {
-                if (getActivity() != null) {
-                    ImageUtils.clearImage(getActivity(), mProductSharedImage);
-                    if (mProductImagesRv != null) {
-                        mProductImagesRv.setVisibility(View.VISIBLE);
-                    }
-                }
-            }, 500);
-        }
+        ImageUtils.clearImage(getActivity(), mProductSharedImage);
     }
 
     public void readyViewsForTransition() {
@@ -625,12 +614,12 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
     }
 
     @Override
-    public void initSprings(){
+    public void initSprings() {
         mSpringSystem = SpringSystem.create();
 
         addToCartAnimSpring = mSpringSystem.createSpring();
-        addToCartAnimSpring.addListener(new FirstSimpleStringListener(this,addToCartAnimSpring,mImageViewToAnimate,checkoutLocation));
-        addToCartAnimSpring.setSpringConfig(SpringConfig.fromBouncinessAndSpeed(10,30));
+        addToCartAnimSpring.addListener(new FirstSimpleStringListener(this, addToCartAnimSpring, mImageViewToAnimate, checkoutLocation));
+        addToCartAnimSpring.setSpringConfig(SpringConfig.fromBouncinessAndSpeed(0, 30));
 
 
     }
@@ -678,7 +667,7 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
         @Override
         public void onSpringUpdate(Spring spring) {
             float value = (float) spring.getCurrentValue();
-            float scale = 1f - (value * 0.8f);
+            float scale = 1f - (value * 0.6f);
             mImageView.setScaleX(scale);
             mImageView.setScaleY(scale);
         }

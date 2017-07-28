@@ -275,4 +275,8 @@
         <item>Male</item>
         <item>Female</item>
     </string-array>
+
+    <string name="transition_sale_image_indexed">transition.image%1$d</string>
+
+
 </resources>

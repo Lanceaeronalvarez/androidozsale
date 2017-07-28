@@ -1,14 +1,11 @@
 package au.com.dealsdirect.ui.controller.saleitems;
 
-import android.app.ActivityOptions;
-import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
-import android.util.Pair;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -17,18 +14,14 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.bluelinelabs.conductor.RouterTransaction;
-import com.bluelinelabs.conductor.changehandler.FadeChangeHandler;
 import com.bluelinelabs.conductor.changehandler.VerticalChangeHandler;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.paginate.Paginate;
 
 import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Set;
 
 import javax.inject.Inject;
 
@@ -40,15 +33,16 @@ import au.com.dealsdirect.ui.controller.saleitemdetails.SaleItemDetailsControlle
 import au.com.dealsdirect.ui.controller.saleitems.adapter.SaleItemsAdapter;
 import au.com.dealsdirect.ui.controller.searchfilter.SearchFilterController;
 import au.com.dealsdirect.ui.controller.searchfilter.adapter.SearchChipModel;
+import au.com.dealsdirect.ui.custom.transitions.SharedArcFadePopChangeHandler;
+import au.com.dealsdirect.ui.custom.transitions.SharedArcFadePushChangeHandler;
+import au.com.dealsdirect.ui.custom.transitions.SharedElementTransitionChangehandler;
 import au.com.dealsdirect.ui.main.MainActivity;
-import au.com.dealsdirect.ui.main.SharedActivity;
 import au.com.dealsdirect.utils.BundleBuilder;
 import au.com.dealsdirect.utils.JsonUtils;
 import au.com.dealsdirect.utils.PaginateUtils;
 import butterknife.BindView;
 import butterknife.OnClick;
 
-import static au.com.dealsdirect.ui.controller.searchfilter.SearchFilterController.KEY_ORIG_SELECTED;
 import static au.com.dealsdirect.ui.controller.searchfilter.SearchFilterController.KEY_SELECTED_FACETS;
 
 /**
@@ -283,12 +277,12 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
         mSaleItemsRecyclerView.setLayoutManager(new GridLayoutManager(getActivity(), 2));
         mSaleItemsRecyclerView.setAdapter(mSaleItemsAdapter);
 
-
-        showLoading();
-        mPresenter.loadSaleItems(mCategoryKey, mSaleId, mSearchQuery, page, mChipFilters);
-
         if(!mSaleItems.isEmpty()){
             mPaginateManager = PaginateUtils.init(mSaleItemsRecyclerView, mPaginateCallbacks);
+        } else {
+            showLoading();
+            mPresenter.loadSaleItems(mCategoryKey, mSaleId, mSearchQuery, page, mChipFilters);
+
         }
 
     }
@@ -393,7 +387,7 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
             }, 2000);
 
             List<String> names = new ArrayList<>();
-            names.add(itemId);
+            names.add(getResources().getString(R.string.transition_sale_image_indexed,position));
             mSaleItemsRecyclerView.smoothScrollToPosition(position);
 
 //            final Handler handler = new Handler();
@@ -425,6 +419,7 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
 //            }, 200);
             
             Bundle bundle = new Bundle();
+            bundle.putInt("KEY_POSITION",position);
             bundle.putString("KEY_IMAGE_ID", imageUrl);
             bundle.putString("KEY_SEO_IDENTIFIER", seoIdentifierId);
             bundle.putString("KEY_ITEM_ID", itemId);
@@ -434,8 +429,8 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
             bundle.putString("KEY_SALE_OLD_PRICE",((SaleItemsAdapter.ViewHolder) viewHolder).mOldPrice.getText().toString());
 
             getRouter().pushController(RouterTransaction.with(SaleItemDetailsController.newInstance(bundle))
-                    .pushChangeHandler(new FadeChangeHandler())
-                    .popChangeHandler(new FadeChangeHandler()));
+                    .pushChangeHandler(new SharedArcFadePushChangeHandler())
+                    .popChangeHandler(new SharedArcFadePopChangeHandler()));
         }
 
     }
