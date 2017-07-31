@@ -136,6 +136,7 @@ public class PaymentSelectController extends BaseController implements PaymentSe
     protected void setUp(View view) {
 
         if (!isFromCart) {
+            showLoading();
             mPresenter.fetchUserPaymentMethods();
         }
 

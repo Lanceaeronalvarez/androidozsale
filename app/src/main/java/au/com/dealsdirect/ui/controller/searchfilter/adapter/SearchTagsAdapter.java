@@ -143,7 +143,7 @@ public class SearchTagsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
             vh.et.setDeleteListener(() -> {
                 //remove search tags
                 int dataSize = getData().size();
-                
+
                 if (dataSize > 0) {
                     SearchChipModel chipToBeRemoved = getData().get(dataSize-1);
 

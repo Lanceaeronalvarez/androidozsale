@@ -143,8 +143,8 @@ public class  HomeController extends BaseController implements HomeMvpView {
 
         mBottomNavigationView.setOnTabSelectedListener((position, wasSelected) -> {
             mBottomNavItemSelectCounter++;
-            assert (getActivity()) != null;
-            ((MainActivity)getActivity()).isFromCategories(false);
+            if(isAttached())
+                ((MainActivity)getActivity()).isFromCategories(false);
 
             if (!wasSelected) {
                 mPreviousTab = mCurrentTab;
