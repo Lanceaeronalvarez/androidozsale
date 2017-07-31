@@ -76,6 +76,13 @@ public class MainController extends BaseController implements MainMvpView {
     }
 
     @Override
+    protected void onAttach(@NonNull View view) {
+        super.onAttach(view);
+        mPresenter.onAttach(this);
+        setupViewPager();
+    }
+
+    @Override
     protected View inflateView(@NonNull LayoutInflater inflater, @NonNull ViewGroup container) {
 
         View view = inflater.inflate(R.layout.controller_main, container, false);

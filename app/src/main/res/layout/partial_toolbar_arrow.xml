@@ -47,6 +47,8 @@
             android:textSize="@dimen/text_size_xxlarge"
             tools:text="Title" />
 
+
+
         <ImageButton
             android:id="@+id/partial_toolbar_filter_view"
             android:layout_width="40dp"

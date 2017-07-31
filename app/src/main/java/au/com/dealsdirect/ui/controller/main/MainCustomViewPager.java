@@ -35,7 +35,11 @@ public class MainCustomViewPager extends ViewPager {
     public boolean onInterceptTouchEvent(MotionEvent event) {
         // Never allow swiping to switch between pages
         if (this.isAllowSwiping) {
-            return super.onInterceptTouchEvent(event);
+            try {
+                return super.onInterceptTouchEvent(event);
+            } catch (IllegalArgumentException ex) {
+                ex.printStackTrace();
+            }
         }
 
         return false;
@@ -45,7 +49,12 @@ public class MainCustomViewPager extends ViewPager {
     public boolean onTouchEvent(MotionEvent event) {
         // Never allow swiping to switch between pages
         if (this.isAllowSwiping) {
-            return super.onTouchEvent(event);
+            try {
+                return super.onTouchEvent(event);
+
+            } catch (IllegalArgumentException ex) {
+                ex.printStackTrace();
+            }
         }
 
         return false;

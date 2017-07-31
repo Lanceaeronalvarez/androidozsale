@@ -5,10 +5,14 @@ import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.EditorInfo;
+import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -36,7 +40,6 @@ import au.com.dealsdirect.ui.controller.searchfilter.SearchFilterController;
 import au.com.dealsdirect.ui.controller.searchfilter.adapter.SearchChipModel;
 import au.com.dealsdirect.ui.custom.transitions.SharedArcFadePopChangeHandler;
 import au.com.dealsdirect.ui.custom.transitions.SharedArcFadePushChangeHandler;
-import au.com.dealsdirect.ui.custom.transitions.SharedElementTransitionChangehandler;
 import au.com.dealsdirect.ui.main.MainActivity;
 import au.com.dealsdirect.utils.BundleBuilder;
 import au.com.dealsdirect.utils.JsonUtils;
@@ -78,14 +81,20 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
     @BindView(R.id.controller_sale_items_grid_view)
     RecyclerView mSaleItemsRecyclerView;
 
-    @BindView(R.id.partial_toolbar_arrow_title)
-    TextView mTitleTextView;
+    @BindView(R.id.partial_toolbar_field_title_edittext)
+    EditText mSaleItemsToolbarField;
+
+    @BindView(R.id.partial_toolbar_field_title_textview)
+    TextView mSaleItemsToolbarTitle;
 
     @BindView(R.id.controller_sale_items_placeholder)
     LinearLayout mPlaceholder;
 
-    @BindView(R.id.partial_toolbar_arrow_view)
-    ImageButton mCategoriesBackIcon;
+    @BindView(R.id.partial_toolbar_field_title_left_option)
+    ImageButton mSaleItemsBackIcon;
+
+    @BindView(R.id.partial_toolbar_field_title_right_option)
+    ImageButton mSaleItemsFilterIcon;
 
     private SaleItemsAdapter mSaleItemsAdapter;
 
@@ -198,8 +207,8 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
 
 
         if (mIsFromCategory){
-            mCategoriesBackIcon.setOnClickListener(view1 -> {
-                mCategoriesBackIcon.setOnClickListener(view2 -> {
+            mSaleItemsBackIcon.setOnClickListener(view1 -> {
+                mSaleItemsBackIcon.setOnClickListener(view2 -> {
                     getActivity().onBackPressed();
 
                 });
@@ -207,7 +216,7 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
             });
         }
         else{
-            mCategoriesBackIcon.setOnClickListener(view12 -> {
+            mSaleItemsBackIcon.setOnClickListener(view12 -> {
                 getActivity().onBackPressed();
             });
         }
@@ -215,7 +224,6 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
 
 
         if (mCategoryKey!=null && !mCategoryKey.isEmpty()){
-            Log.d("saletitle", "with category "+mCategoryKey);
 
             char c = '>';
             int charCount = 0;
@@ -233,11 +241,12 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
                     charCount++;
                 }
             }
-            mTitleTextView.setText(newString);
+            mSaleItemsToolbarField.setText(newString);
+            mSaleItemsToolbarTitle.setText(newString);
 
         } else {
-            Log.d("saletitle", "without category ");
-            mTitleTextView.setText(mTitle);
+            mSaleItemsToolbarField.setText(mTitle);
+            mSaleItemsToolbarTitle.setText(mTitle);
         }
         setUp(view);
     }
@@ -285,9 +294,7 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
         } else {
             showLoading();
             mPresenter.loadSaleItems(mCategoryKey, mSaleId, mSearchQuery, page, mChipFilters);
-
         }
-
     }
 
     @Override
@@ -301,7 +308,6 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
         mFacets = getSaleItemsResponse.facets;
         mCategoryTreeResponse =  getSaleItemsResponse.getCategories();
 
-        Log.d("SaleItemsCategories", "size = " +getSaleItemsResponse.getCategories().size());
         loadingInProgress = false;
 
         if (!initialLoad) {
@@ -346,23 +352,21 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
     @Override
     protected void onSaveViewState(@NonNull View view, @NonNull Bundle outState) {
         super.onSaveViewState(view, outState);
-        Log.d("flowTesting", "onSaveViewState");
     }
 
     @Override
     protected void onRestoreViewState(@NonNull View view, @NonNull Bundle savedViewState) {
         super.onRestoreViewState(view, savedViewState);
-        Log.d("flowTesting", "onRestoreViewState");
     }
 
 
     @SuppressWarnings("ConstantConditions")
-    @OnClick(R.id.partial_toolbar_arrow_view)
+    @OnClick(R.id.partial_toolbar_field_title_left_option)
     void onBackClick() {
         getActivity().onBackPressed();
     }
 
-    @OnClick(R.id.partial_toolbar_filter_view)
+    @OnClick(R.id.partial_toolbar_field_title_right_option)
     void showFilters() {
         getRouter().pushController(RouterTransaction.with(SearchFilterController.newInstance(
                 new Gson().toJson(mCategoryTreeResponse),
@@ -440,5 +444,38 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
                     .popChangeHandler(new SharedArcFadePopChangeHandler()));
         }
 
+    }
+
+    @OnClick(R.id.partial_toolbar_field_title_textview)
+    void onViewSearch(){
+        mSaleItemsToolbarField.setVisibility(View.VISIBLE);
+        mSaleItemsToolbarTitle.setVisibility(View.GONE);
+
+        mSaleItemsToolbarField.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+                mPresenter.loadSaleItems("","",charSequence.toString(),0, new ArrayList());
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable editable) {
+
+            }
+        });
+
+        mSaleItemsToolbarField.setOnEditorActionListener((textView, i, keyEvent) -> {
+            if (i == EditorInfo.IME_ACTION_SEARCH) {
+                mPresenter.loadSaleItems("","",textView.getText().toString(),0, new ArrayList());
+
+            }
+
+            return false;
+        });
     }
 }

@@ -37,7 +37,7 @@ import butterknife.BindView;
  * dp Created by Admin on 6/6/17.
  */
 
-public class  HomeController extends BaseController implements HomeMvpView {
+public class HomeController extends BaseController implements HomeMvpView {
 
     public static final String TAG = "HomeController";
 
@@ -74,6 +74,12 @@ public class  HomeController extends BaseController implements HomeMvpView {
 
     public HomeController(Bundle args) {
         super(args);
+    }
+
+    @Override
+    protected void onAttach(@NonNull View view) {
+        super.onAttach(view);
+        mPresenter.onAttach(this);
     }
 
     @Override

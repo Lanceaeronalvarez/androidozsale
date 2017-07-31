@@ -10,7 +10,6 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.WindowManager;
 import android.view.animation.AccelerateInterpolator;
 import android.view.animation.Animation;
 import android.view.animation.TranslateAnimation;
@@ -110,6 +109,7 @@ public class ShopsController extends BaseController implements ShopsMvpView, Ban
     private ImageView rightOption;
 
     private int mBannerClickCounter = 0;
+    private boolean mCanViewSearch = true;
 
     BannerClickListener mBannerClickListener;
 
@@ -314,15 +314,18 @@ public class ShopsController extends BaseController implements ShopsMvpView, Ban
     @OnClick(R.id.partial_toolbar_search_icon)
     void onSearchClick() {
 
-        showSearchToolbar();
+        if (mCanViewSearch){
+            mCanViewSearch = false;
+            showSearchToolbar();
 
-        child.startAnimation(inFromRightAnimation());
-        android.os.Handler handler = new android.os.Handler();
-        handler.postDelayed(() -> ((MainActivity) getActivity()).getHomeRouter().pushController(RouterTransaction.with(
-                SearchController.newInstance())
-                .tag("Search")
-                .pushChangeHandler(new FadeChangeHandler())
-                .popChangeHandler(new FadeChangeHandler())), 500);
+            child.startAnimation(inFromRightAnimation());
+            android.os.Handler handler = new android.os.Handler();
+            handler.postDelayed(() -> ((MainActivity) getActivity()).getHomeRouter().pushController(RouterTransaction.with(
+                    SearchController.newInstance())
+                    .tag("Search")
+                    .pushChangeHandler(new FadeChangeHandler())
+                    .popChangeHandler(new FadeChangeHandler())), 500);
+        }
     }
 
     @Override
@@ -535,7 +538,10 @@ public class ShopsController extends BaseController implements ShopsMvpView, Ban
         }
 
         Handler handler = new Handler();
-        handler.postDelayed(() -> mShopsControllerToolbarLogo.setVisibility(View.VISIBLE), 300);
+        handler.postDelayed(() -> {
+                    mShopsControllerToolbarLogo.setVisibility(View.VISIBLE);
+                    mCanViewSearch = true;
+                }, 300);
     }
 
     public String getCategoryParentKey(String saleCategoryKey) {

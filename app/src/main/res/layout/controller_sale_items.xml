@@ -6,7 +6,7 @@
     android:orientation="vertical"
     android:background="@color/white">
 
-    <include layout="@layout/partial_toolbar_arrow"/>
+    <include layout="@layout/partial_toolbar_field_title"/>
 
     <RelativeLayout
         android:layout_width="match_parent"

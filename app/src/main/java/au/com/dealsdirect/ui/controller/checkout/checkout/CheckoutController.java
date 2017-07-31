@@ -141,6 +141,12 @@ public class CheckoutController extends BaseController implements CheckoutMvpVie
     }
 
     @Override
+    protected void onAttach(@NonNull View view) {
+        super.onAttach(view);
+        mPresenter.onAttach(this);
+    }
+
+    @Override
     protected View inflateView(@NonNull LayoutInflater inflater, @NonNull ViewGroup container) {
 
         View view = inflater.inflate(R.layout.controller_checkout, container, false);
@@ -192,7 +198,7 @@ public class CheckoutController extends BaseController implements CheckoutMvpVie
 
         assert (getActivity()) != null;
         ((MainActivity)getActivity()).getMainController().showBottomNav();
-        ((MainActivity)getActivity()).setDraggableViewPager(false);
+        ((MainActivity)getActivity()).getMainController().setViewpagerDraggable(false);
 
         mTitleTextView.setText(R.string.checkout_page_toolbar_title);
 

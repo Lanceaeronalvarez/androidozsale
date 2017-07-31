@@ -38,7 +38,6 @@ import au.com.dealsdirect.data.network.model.category.GetCategoryTreeResponse;
 import au.com.dealsdirect.data.network.model.checkout.CreatePaymentTransaction;
 import au.com.dealsdirect.data.network.model.checkout.getuserpaymentmethods.PaymentMethod;
 import au.com.dealsdirect.ui.base.BaseActivity;
-import au.com.dealsdirect.ui.controller.account.AccountController;
 import au.com.dealsdirect.ui.controller.categories.CategoriesController;
 import au.com.dealsdirect.ui.controller.checkout.addpayment.AddPaymentController;
 import au.com.dealsdirect.ui.controller.checkout.checkout.CheckoutController;
@@ -118,6 +117,14 @@ public class MainActivity extends BaseActivity implements MainMvpView {
         mShopController = null;
         mCategoriesController = null;
         super.onDestroy();
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        Log.d("MainActivityResume", "onResume");
+        mPresenter.onAttach(this);
+
     }
 
     @Override
@@ -320,6 +327,7 @@ public class MainActivity extends BaseActivity implements MainMvpView {
         Timber.d(TAG, "BT_cvv: " + cardForm.getCvv());
 
         Card.tokenize(mBraintreeFragment, cardBuilder);
+
     }
 
     public PaymentMethod getPaymentMethodSelected() {

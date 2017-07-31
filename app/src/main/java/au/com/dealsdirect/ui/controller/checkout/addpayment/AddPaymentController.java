@@ -1,11 +1,8 @@
 package au.com.dealsdirect.ui.controller.checkout.addpayment;
 
-import android.app.Activity;
 import android.content.DialogInterface;
-import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,29 +11,23 @@ import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.bluelinelabs.conductor.RouterTransaction;
+import com.bluelinelabs.conductor.changehandler.FadeChangeHandler;
 import com.braintreepayments.cardform.OnCardFormSubmitListener;
 import com.braintreepayments.cardform.utils.CardType;
 import com.braintreepayments.cardform.view.CardEditText;
 import com.braintreepayments.cardform.view.CardForm;
-import com.google.gson.Gson;
-import com.google.gson.reflect.TypeToken;
-import com.mindorks.placeholderview.annotations.Click;
-
-import java.util.ArrayList;
 
 import javax.inject.Inject;
 
 import au.com.dealsdirect.R;
-import au.com.dealsdirect.data.network.model.address.DecorationInfoList;
-import au.com.dealsdirect.data.network.model.checkout.getuserpaymentmethods.PaymentMethod;
 import au.com.dealsdirect.ui.base.BaseController;
+import au.com.dealsdirect.ui.controller.checkout.checkout.CheckoutController;
 import au.com.dealsdirect.ui.custom.CustomAlertDialog;
 import au.com.dealsdirect.ui.main.FetchTokenHandler;
 import au.com.dealsdirect.ui.main.MainActivity;
-import au.com.dealsdirect.ui.main.MainMvpView;
 import au.com.dealsdirect.utils.BundleBuilder;
 import au.com.dealsdirect.utils.DialogUtils;
-import au.com.dealsdirect.utils.JsonUtils;
 import butterknife.BindView;
 import butterknife.OnClick;
 
@@ -167,6 +158,7 @@ public class AddPaymentController extends BaseController implements AddPaymentMv
 //            mActivity.showProgressDialog("Verifying payment method");
             showLoading();
             mActivity.onPurchase(mCardForm);
+
         } else if (mCardForm.isValid() && mActivity.getBraintreeFragment() == null) {
             CustomAlertDialog.showCustomAlertDialog(
                     mActivity, CustomAlertDialog.CustomDialogIconState.NEGATIVE,
@@ -225,5 +217,12 @@ public class AddPaymentController extends BaseController implements AddPaymentMv
     @OnClick(R.id.partial_toolbar_arrow_view)
     void onBackPressed(){
         getActivity().onBackPressed();
+    }
+
+    public void goToCheckout(){
+        getRouter().setRoot(RouterTransaction.with(new CheckoutController())
+                .tag(getActivity().getResources().getString(R.string.checkout_controller))
+                .pushChangeHandler(new FadeChangeHandler())
+                .popChangeHandler(new FadeChangeHandler()));
     }
 }
