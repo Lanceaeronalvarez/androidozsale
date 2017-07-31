@@ -131,14 +131,10 @@ public class MainActivity extends BaseActivity implements MainMvpView {
 
         switch (mViewPagerCurrentItem){
             case 0:
-                if (mCategoriesController!=null){
-                    if (mCategoriesRouter.getBackstackSize() == 1) {
-                        setRootViewpagerItem(1);
-                    } else {
-                        mRouter.handleBack();
-                    }
-                }else{
+                if (mCategoriesRouter.getBackstackSize() == 1) {
                     setRootViewpagerItem(1);
+                } else {
+                    mRouter.handleBack();
                 }
                 break;
             case 1:

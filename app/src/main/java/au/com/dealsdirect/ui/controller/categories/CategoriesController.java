@@ -202,7 +202,7 @@ public class CategoriesController extends BaseController
 
         getRouter().setRoot(
                 RouterTransaction.with(ShopsController.newInstance(getCategoryTreeResponse))
-                        .tag(CategoriesController.TAG)
+                        .tag("Search")
                         .pushChangeHandler(new RightHorizontalTransitionChangeHandler())
                         .popChangeHandler(new RightHorizontalTransitionChangeHandler()));
     }
