@@ -1,7 +1,6 @@
 package au.com.dealsdirect.ui.controller.searchfilter.adapter;
 
 import android.content.Context;
-import android.support.v4.util.Pair;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.DisplayMetrics;
@@ -165,15 +164,16 @@ public class SearchTagsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
 //                    mShopPresenter.updateShopFilters();
                     mFacetItemsAdapter.notifyItemChanged(chipToBeRemoved.getIndex());
 
-                    if(chipToBeRemoved.getFilterType() == SearchFilterController.PRICE_FACETFILTER_NAME) {
+                    if(chipToBeRemoved.getFilterType().equals(SearchFilterController.PRICE_FACETFILTER_NAME)){
                         mPresenter.resetPriceRange();
                     }
 
+                    if (chipToBeRemoved.getFilterType().equals(SearchFilterController.CATEGORY_TREE_FACET)){
+                        mPresenter.onCategoryChipRemoved();
+                    }
                 }
             });
         }
-
-
     }
 
     @Override

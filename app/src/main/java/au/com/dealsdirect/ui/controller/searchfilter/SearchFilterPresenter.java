@@ -44,4 +44,9 @@ public class SearchFilterPresenter<V extends SearchFilterMvpView> extends BasePr
     public void resetPriceRange() {
         getMvpView().onResetPriceRange();
     }
+
+    @Override
+    public void onCategoryChipRemoved() {
+        getMvpView().categoryChipRemoved();
+    }
 }

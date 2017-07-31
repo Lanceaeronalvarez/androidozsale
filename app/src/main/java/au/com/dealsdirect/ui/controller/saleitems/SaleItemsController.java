@@ -26,6 +26,7 @@ import java.util.List;
 import javax.inject.Inject;
 
 import au.com.dealsdirect.R;
+import au.com.dealsdirect.data.network.model.category.GetCategoryTreeResponse;
 import au.com.dealsdirect.data.network.model.saleitems.GetSaleItemsResponse;
 import au.com.dealsdirect.data.network.model.sorting.SortingResponse;
 import au.com.dealsdirect.ui.base.BaseController;
@@ -70,6 +71,8 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
 
     private List<GetSaleItemsResponse.Products> mSaleItems = new LinkedList<>();
     private List<GetSaleItemsResponse.Facets> mFacets = new ArrayList<>();
+    private List<GetCategoryTreeResponse> mCategoryTreeResponse = new LinkedList<>();
+
     private String mSortingListJsonString = "";
 
     @BindView(R.id.controller_sale_items_grid_view)
@@ -296,7 +299,9 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
     public void showSaleItems(GetSaleItemsResponse getSaleItemsResponse) {
         List<GetSaleItemsResponse.Products> items = getSaleItemsResponse.products;
         mFacets = getSaleItemsResponse.facets;
+        mCategoryTreeResponse =  getSaleItemsResponse.getCategories();
 
+        Log.d("SaleItemsCategories", "size = " +getSaleItemsResponse.getCategories().size());
         loadingInProgress = false;
 
         if (!initialLoad) {
@@ -359,7 +364,9 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
 
     @OnClick(R.id.partial_toolbar_filter_view)
     void showFilters() {
-        getRouter().pushController(RouterTransaction.with(SearchFilterController.newInstance(new Gson().toJson(mFacets)
+        getRouter().pushController(RouterTransaction.with(SearchFilterController.newInstance(
+                new Gson().toJson(mCategoryTreeResponse),
+                new Gson().toJson(mFacets)
                 , mSortingListJsonString
                 , mSaleId
                 , mCategoryKey

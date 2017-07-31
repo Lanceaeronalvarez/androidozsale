@@ -130,19 +130,23 @@ public class MainActivity extends BaseActivity implements MainMvpView {
 
         switch (mViewPagerCurrentItem){
             case 0:
-                if (mCategoriesRouter.getBackstackSize() == 1) {
-                    DialogUtils.showYesNoDialog(
-                            this,
-                            getString(R.string.dealsdirect),
-                            getString(R.string.exit_app),
-                            getString(R.string.exit),
-                            getString(R.string.no),
-                            (dialogInterface, i) -> finish(),
-                            (dialogInterface, i) -> {
+                if (mCategoriesController!=null){
+                    if (mCategoriesRouter.getBackstackSize() == 1) {
+                        DialogUtils.showYesNoDialog(
+                                this,
+                                getString(R.string.dealsdirect),
+                                getString(R.string.exit_app),
+                                getString(R.string.exit),
+                                getString(R.string.no),
+                                (dialogInterface, i) -> finish(),
+                                (dialogInterface, i) -> {
 
-                            });
-                } else {
-                    mRouter.handleBack();
+                                });
+                    } else {
+                        mRouter.handleBack();
+                    }
+                }else{
+                    onBackPressed();
                 }
                 break;
             case 1:

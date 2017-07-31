@@ -119,7 +119,7 @@ public class MainController extends BaseController implements MainMvpView {
         createCategoryMap(mPreLoadedCategories);
     }
 
-    private void createCategoryMap(List<GetCategoryTreeResponse> categories) {
+     private void createCategoryMap(List<GetCategoryTreeResponse> categories) {
 
         List<GetCategoryTreeResponse> newList;
         mCategoryMap.put("shop", categories);
