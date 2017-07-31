@@ -61,8 +61,7 @@
                                 android:layout_height="wrap_content"
                                 android:clipChildren="false"
                                 android:clipToPadding="false"
-                                android:orientation="vertical"
-                                android:paddingBottom="@dimen/default_button_height">
+                                android:orientation="vertical">
 
                                 <RelativeLayout
                                     android:id="@+id/uppercard"
@@ -78,7 +77,6 @@
                                     <!--android:background="@drawable/gradient"-->
                                     <!--android:layout_height="50dp"/>-->
 
-
                                     <FrameLayout
                                         android:id="@+id/image_container"
                                         android:layout_width="match_parent"
@@ -88,14 +86,13 @@
 
                                         <RelativeLayout
                                             android:layout_width="wrap_content"
-                                            android:layout_height="wrap_content"
-                                            android:layout_marginTop="55dp"
+                                            android:layout_height="390dp"
                                             android:transitionName="cardbackground">
 
                                             <ImageView
                                                 android:id="@+id/imageViewToAnimate"
                                                 android:layout_width="match_parent"
-                                                android:layout_height="300dp"
+                                                android:layout_height="match_parent"
                                                 android:layout_alignParentTop="true"
                                                 android:layout_gravity="center"
                                                 android:layout_margin="10dp"
@@ -105,7 +102,7 @@
                                             <ImageView
                                                 android:id="@+id/product_details_shared_image"
                                                 android:layout_width="match_parent"
-                                                android:layout_height="300dp"
+                                                android:layout_height="match_parent"
                                                 android:layout_alignParentTop="true"
                                                 android:layout_gravity="center"
                                                 android:layout_margin="10dp"
@@ -116,7 +113,7 @@
                                             <com.lsjwzh.widget.recyclerviewpager.RecyclerViewPager
                                                 android:id="@+id/productImageRecyclerView"
                                                 android:layout_width="match_parent"
-                                                android:layout_height="300dp"
+                                                android:layout_height="match_parent"
                                                 android:layout_alignTop="@+id/product_details_shared_image"
                                                 android:layout_gravity="center"
                                                 android:layout_margin="10dp"
@@ -127,6 +124,15 @@
                                                 app:rvp_triggerOffset="0.05" />
 
                                         </RelativeLayout>
+
+                                        <android.support.v7.widget.RecyclerView
+                                            android:id="@+id/otherImagesRecyclerView"
+                                            android:layout_width="wrap_content"
+                                            android:layout_height="wrap_content"
+                                            android:layout_gravity="top|center"
+                                            android:isScrollContainer="true"
+                                            android:overScrollMode="never"
+                                            android:paddingTop="20dp" />
 
                                     </FrameLayout>
 
@@ -181,7 +187,7 @@
                                         android:layout_width="match_parent"
                                         android:layout_height="wrap_content"
                                         android:layout_below="@id/image_container"
-                                        android:layout_marginTop="-30dp"
+                                        android:layout_marginTop="-50dp"
                                         android:background="#67ffffff"
                                         android:orientation="vertical">
 
@@ -300,6 +306,15 @@
                                             android:background="#23000000" />
 
                                     </RelativeLayout>
+
+                                    <Button
+                                        android:id="@+id/product_details_add_to_basket"
+                                        style="@style/DDButtonStyle"
+                                        fontPath="@string/font_lato_medium"
+                                        android:layout_width="match_parent"
+                                        android:layout_gravity="bottom"
+                                        android:layout_margin="@dimen/activity_horizontal_margin"
+                                        android:text="@string/add_to_cart" />
 
                                     <LinearLayout
                                         android:id="@+id/product_description_container"
@@ -591,7 +606,7 @@
                             android:layout_gravity="right"
                             android:layout_marginBottom="10dp"
                             android:layout_marginRight="-5dp"
-                            android:layout_marginTop="10dp"
+                            android:layout_marginTop="40dp"
                             android:layout_weight="1"
                             android:background="@drawable/bg_sale_details_price_background"
                             android:clickable="false"
@@ -626,20 +641,13 @@
                         </LinearLayout>
 
                     </FrameLayout>
+
                 </LinearLayout>
 
             </android.support.v4.widget.NestedScrollView>
 
-            <Button
-                android:id="@+id/product_details_add_to_basket"
-                style="@style/DDButtonStyle"
-                fontPath="@string/font_lato_medium"
-                android:layout_width="match_parent"
-                android:layout_gravity="bottom"
-                android:layout_margin="@dimen/activity_horizontal_margin"
-                android:text="@string/add_to_cart" />
-
         </android.support.design.widget.CoordinatorLayout>
 
     </RelativeLayout>
+
 </au.com.dealsdirect.ui.controller.saleitemdetails.SaleItemDetailsView>

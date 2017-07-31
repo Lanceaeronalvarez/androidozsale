@@ -101,6 +101,10 @@ public class PaymentSelectController extends BaseController implements PaymentSe
         if (paymentMethods != null) {
             mPaymentMethods = new ArrayList<>(paymentMethods);
             mAdapter.replaceData(mPaymentMethods);
+        } else {
+            getRouter().pushController(RouterTransaction.with(new AddPaymentController(false))
+                    .pushChangeHandler(new HorizontalChangeHandler())
+                    .popChangeHandler(new HorizontalChangeHandler()));
         }
     }
 

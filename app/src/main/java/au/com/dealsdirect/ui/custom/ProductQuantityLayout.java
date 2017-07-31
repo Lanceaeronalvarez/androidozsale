@@ -75,6 +75,7 @@ public class ProductQuantityLayout extends LinearLayout {
                 quantity.setText(String.valueOf(quantityValue));
             }
 
+            plus.setClickable(false);
             minus.setVisibility(View.GONE);
             mMinusLoader.setVisibility(View.VISIBLE);
             listener.onQuantityDecrease(this, quantityValue);
@@ -88,6 +89,7 @@ public class ProductQuantityLayout extends LinearLayout {
                 quantity.setText(String.valueOf(quantityValue));
             }
 
+            minus.setClickable(false);
             plus.setVisibility(View.GONE);
             mPlusLoader.setVisibility(View.VISIBLE);
             listener.onQuantityIncrease(this, quantityValue);
@@ -95,8 +97,10 @@ public class ProductQuantityLayout extends LinearLayout {
     }
 
     public void resetLoaders(){
+        minus.setClickable(true);
         minus.setVisibility(View.VISIBLE);
         mMinusLoader.setVisibility(View.GONE);
+        plus.setClickable(true);
         plus.setVisibility(View.VISIBLE);
         mPlusLoader.setVisibility(View.GONE);
     }

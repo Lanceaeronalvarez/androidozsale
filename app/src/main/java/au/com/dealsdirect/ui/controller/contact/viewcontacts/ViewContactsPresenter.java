@@ -27,7 +27,7 @@ public class ViewContactsPresenter<V extends ViewContactsMvpView> extends BasePr
 
     @Override
     public void loadContacts() {
-        if(isViewAttached()) {
+        if (isViewAttached()) {
             getMvpView().showLoading();
         }
 
@@ -39,39 +39,23 @@ public class ViewContactsPresenter<V extends ViewContactsMvpView> extends BasePr
                         .subscribe(response -> {
 
                             if (!isViewAttached()) {
-
                                 return;
                             }
+
                             getMvpView().hideLoading();
-                            if (response.getD().getList()!=null){
-                                Log.d("viewcontacts","list is null empty");
+                            getMvpView().showContactItems(response.getD());
 
-                                if(!response.getD().getList().isEmpty()){
-
-                                    Log.d("viewcontacts","list is not empty");
-                                    getMvpView().showContactItems(response.getD());
-                                }else{
-                                    Log.d("viewcontacts","list is empty");
-
-                                }
-                            }else {
-//                                Log.d("viewcontacts", "list  = "+response.getMessage() + " , "+response.getResult());
+                        }, throwable -> {
+                            if (!isViewAttached()) {
+                                return;
                             }
 
-                        }, new Consumer<Throwable>() {
-                            @Override
-                            public void accept(Throwable throwable) throws Exception {
-                                if (!isViewAttached()) {
-                                    return;
-                                }
-
-                                getMvpView().hideLoading();
-                                getMvpView().onError(throwable.getMessage());
-                                // handle load accounts error here
-                                if (throwable instanceof ANError) {
-                                    ANError anError = (ANError) throwable;
-                                    handleApiError(anError);
-                                }
+                            getMvpView().hideLoading();
+                            getMvpView().onError(throwable.getMessage());
+                            // handle load accounts error here
+                            if (throwable instanceof ANError) {
+                                ANError anError = (ANError) throwable;
+                                handleApiError(anError);
                             }
                         }));
     }

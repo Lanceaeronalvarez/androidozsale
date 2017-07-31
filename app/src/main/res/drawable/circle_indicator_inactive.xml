@@ -12,9 +12,7 @@
     <!--android:width="120dp"-->
     <!--android:height="120dp"/>-->
 
-    <stroke
-        android:width="10dp"
-        android:color="@color/gray_generic_icon" />
+    <solid android:color="@color/gray_generic_icon" />
 
     <size
         android:width="120dp"
