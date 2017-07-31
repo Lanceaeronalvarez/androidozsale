@@ -59,6 +59,9 @@ public class ViewContactHistoryController extends BaseController implements View
     @BindView(R.id.contact_history_header_time_stamp)
     TextView mContactHistoryTimeStamp;
 
+    @BindView(R.id.contact_history_list_time_stamp)
+    TextView mContactHistoryListTimeStamp;
+
     @BindView(R.id.partial_toolbar_filter_view)
     ImageView mContactHistoryRightOption;
 
@@ -130,6 +133,7 @@ public class ViewContactHistoryController extends BaseController implements View
 
         mContactHistorySubject.setText(StringUtils.toTitleCase(mContactSubject));
         mContactHistoryTimeStamp.setText(mTimeStamp);
+        mContactHistoryListTimeStamp.setText(mTimeStamp);
         mContactHistoryRightOption.setVisibility(View.INVISIBLE);
         mContactHistoryTitle.setText(R.string.contact_history);
 

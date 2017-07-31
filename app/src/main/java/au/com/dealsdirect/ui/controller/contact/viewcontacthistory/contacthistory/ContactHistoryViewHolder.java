@@ -18,8 +18,7 @@ import au.com.dealsdirect.ui.custom.CircularTextView;
 public class ContactHistoryViewHolder extends RecyclerView.ViewHolder{
 
     LinearLayout contactHistoryItem;
-    CircularTextView contactHistoryItemCircularTextViewLeft;
-    CircularTextView contactHistoryItemCircularTextViewRight;
+    CircularTextView contactHistoryItemCircularTextView;
     TextView contactHistoryMessageTextView;
 
     public ContactHistoryViewHolder(View itemView) {
@@ -28,11 +27,8 @@ public class ContactHistoryViewHolder extends RecyclerView.ViewHolder{
         contactHistoryItem = (LinearLayout) itemView
                 .findViewById(R.id.my_contact_history_recycler_row_item_layout);
 
-        contactHistoryItemCircularTextViewLeft = (CircularTextView) itemView
-                .findViewById(R.id.my_contact_history_row_message_acronym_left);
-
-        contactHistoryItemCircularTextViewRight = (CircularTextView) itemView
-                .findViewById(R.id.my_contact_history_row_message_acronym_right);
+        contactHistoryItemCircularTextView = (CircularTextView) itemView
+                .findViewById(R.id.my_contact_history_row_message_acronym);
 
         contactHistoryMessageTextView = (TextView) itemView
                 .findViewById(R.id.my_contact_history_row_message_text_view);

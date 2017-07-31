@@ -48,20 +48,13 @@ public class ContactHistoryAdapter extends RecyclerView.Adapter<ContactHistoryVi
         String contactSubject = mCurrentContactsHistoryList.get(position).getSubject();
 
         if (mCurrentContactsHistoryList.get(position).getIsStaff()) {
+            holder.contactHistoryMessageTextView.setSelected(true);
             holder.contactHistoryMessageTextView.setBackgroundResource(R.drawable.bg_message_incoming);
-            holder.contactHistoryItemCircularTextViewLeft.setText("DD");
-            holder.contactHistoryItemCircularTextViewLeft.setVisibility(View.VISIBLE);
-            holder.contactHistoryItemCircularTextViewLeft.setSolidColor(ColorUtils.getOvalColor(position));
-            holder.contactHistoryItemCircularTextViewRight.setVisibility(View.GONE);
+            holder.contactHistoryItemCircularTextView.setText("DD");
+            holder.contactHistoryItemCircularTextView.setVisibility(View.VISIBLE);
+            holder.contactHistoryItemCircularTextView.setSolidColor("#EDC7D5");
         } else {
-            holder.contactHistoryItemCircularTextViewLeft.setVisibility(View.GONE);
-            holder.contactHistoryItemCircularTextViewRight.setVisibility(View.VISIBLE);
-            holder.contactHistoryItemCircularTextViewRight.setSolidColor("#CACACA");
-            if (userName != null) {
-                holder.contactHistoryItemCircularTextViewRight.setText(StringUtils.getInitials(userName.toString()));
-            } else {
-                holder.contactHistoryItemCircularTextViewRight.setText("JD");
-            }
+            holder.contactHistoryItemCircularTextView.setVisibility(View.INVISIBLE);
         }
 
 //        String dateHeaderFormatOfItem = DateUtils.getTrimmedServerDateString(contactDate.toString());
