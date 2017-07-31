@@ -95,7 +95,7 @@ public class  HomeController extends BaseController implements HomeMvpView {
             ShopsController shopsController = new ShopsController();
             ((MainActivity)getActivity()).setShopController(shopsController);
             mRouter.setRoot(RouterTransaction.with(shopsController)
-                    .tag("Shop"));
+                    .tag(ShopsController.TAG));
         }
 
         ((MainActivity)getActivity()).setHomeRouter(mRouter);
@@ -206,7 +206,7 @@ public class  HomeController extends BaseController implements HomeMvpView {
     @Override
     public void showAccountController() {
         mRouter.setRoot(RouterTransaction.with(AccountController.newInstance())
-                .tag("AccountController")
+                .tag(AccountController.TAG)
                 .pushChangeHandler(new FadeChangeHandler())
                 .popChangeHandler(new FadeChangeHandler()));
     }
@@ -214,6 +214,7 @@ public class  HomeController extends BaseController implements HomeMvpView {
     @Override
     public void showContactController() {
         mRouter.setRoot(RouterTransaction.with(ViewContactsController.newInstance())
+                .tag(ViewContactsController.TAG)
                 .pushChangeHandler(new FadeChangeHandler())
                 .popChangeHandler(new FadeChangeHandler()));
     }

@@ -192,7 +192,8 @@ public class MainController extends BaseController implements MainMvpView {
                                 break;
                         }
                     }else{
-                        router.setRoot(RouterTransaction.with(new ShopsController()));
+                        router.setRoot(RouterTransaction.with(new ShopsController())
+                                .tag(ShopsController.TAG));
 
                     }
                 }

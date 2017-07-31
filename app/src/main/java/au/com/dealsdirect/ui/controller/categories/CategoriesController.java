@@ -200,6 +200,7 @@ public class CategoriesController extends BaseController
 
         getRouter().setRoot(
                 RouterTransaction.with(ShopsController.newInstance(getCategoryTreeResponse))
+                        .tag(ShopsController.TAG)
                         .pushChangeHandler(new RightHorizontalTransitionChangeHandler())
                         .popChangeHandler(new RightHorizontalTransitionChangeHandler()));
     }

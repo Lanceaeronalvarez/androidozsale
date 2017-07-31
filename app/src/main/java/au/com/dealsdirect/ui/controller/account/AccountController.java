@@ -207,7 +207,7 @@ public class AccountController extends BaseController implements AccountMvpView,
     public void triggerLogout() {
         ((MainMvpView)getActivity()).callLogout();
         mPresenter.loadAccountItems();
-        getRouter().setRoot(RouterTransaction.with(new ShopsController()));
+        getRouter().setRoot(RouterTransaction.with(new ShopsController()).tag(ShopsController.TAG));
         CustomAlertDialog.showCustomAlertDialog(getActivity(),
                 CustomAlertDialog.CustomDialogIconState.POSITIVE,
                 "Logout Successful");

@@ -59,6 +59,7 @@ import butterknife.OnClick;
 
 public class ShopsController extends BaseController implements ShopsMvpView, BannerClickListener {
 
+    public static final String TAG = "ShopsController";
     private static final String KEY_TEXT = "ShopController.KEY_TEXT";
     private static final String KEY_CATEGORY_ID = "ShopController.KEY_CATEGORY_ID";
     private static final String KEY_CATEGORY_NAME = "ShopController.KEY_CATEGORY_NAME";

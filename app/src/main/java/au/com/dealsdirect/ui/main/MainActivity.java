@@ -38,6 +38,7 @@ import au.com.dealsdirect.data.network.model.category.GetCategoryTreeResponse;
 import au.com.dealsdirect.data.network.model.checkout.CreatePaymentTransaction;
 import au.com.dealsdirect.data.network.model.checkout.getuserpaymentmethods.PaymentMethod;
 import au.com.dealsdirect.ui.base.BaseActivity;
+import au.com.dealsdirect.ui.controller.account.AccountController;
 import au.com.dealsdirect.ui.controller.categories.CategoriesController;
 import au.com.dealsdirect.ui.controller.checkout.addpayment.AddPaymentController;
 import au.com.dealsdirect.ui.controller.checkout.checkout.CheckoutController;
@@ -132,16 +133,7 @@ public class MainActivity extends BaseActivity implements MainMvpView {
             case 0:
                 if (mCategoriesController!=null){
                     if (mCategoriesRouter.getBackstackSize() == 1) {
-                        DialogUtils.showYesNoDialog(
-                                this,
-                                getString(R.string.dealsdirect),
-                                getString(R.string.exit_app),
-                                getString(R.string.exit),
-                                getString(R.string.no),
-                                (dialogInterface, i) -> finish(),
-                                (dialogInterface, i) -> {
-
-                                });
+                    	setRootViewpagerItem(1);                        
                     } else {
                         mRouter.handleBack();
                     }
@@ -159,7 +151,7 @@ public class MainActivity extends BaseActivity implements MainMvpView {
                 }else if (mHomeRouter.getBackstackSize() == 1) {
                     Log.d("MainBack", "mHomeRouter.getBackstackSize() == 1");
 
-                    if((tag != null) && tag.equals(getString(R.string.invite_friends_tag))) {
+                    if((tag != null) && !tag.equals(ShopsController.TAG) && !tag.equals("Search")) {
                         goToShops();
                         break;
                     }
