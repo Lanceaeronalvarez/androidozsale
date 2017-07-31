@@ -135,7 +135,7 @@ public class SaleItemsAdapter extends RecyclerView.Adapter<SaleItemsAdapter.View
                     position,
                     mData.get(position).getSeoIdentifier(),
                     url,
-                    mData.get(position).getProductId(),
+                    mData.get(position).getSkus().get(0).getId(),
                     mSaleId));
         }else{
             holder.itemView.setOnClickListener(v -> mSearchPresenter.loadProductDetails(
@@ -143,7 +143,7 @@ public class SaleItemsAdapter extends RecyclerView.Adapter<SaleItemsAdapter.View
                     position,
                     mData.get(position).getSeoIdentifier(),
                     url,
-                    mData.get(position).getProductId(),
+                    mData.get(position).getSkus().get(0).getId(),
                     mSaleId));
         }
 

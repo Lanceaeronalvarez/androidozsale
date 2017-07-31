@@ -11,6 +11,7 @@ import au.com.dealsdirect.data.network.model.checkout.AdjustOrderItem;
 import au.com.dealsdirect.data.network.model.checkout.GetCurrentOrder;
 import au.com.dealsdirect.data.network.model.checkout.GetUserPaymentMethods;
 import au.com.dealsdirect.ui.base.BasePresenter;
+import au.com.dealsdirect.utils.CartUtil;
 import au.com.dealsdirect.utils.rx.SchedulerProvider;
 import io.reactivex.annotations.NonNull;
 import io.reactivex.disposables.CompositeDisposable;
@@ -145,10 +146,12 @@ public class CheckoutPresenter<V extends CheckoutMvpView> extends BasePresenter<
 
                         if(responseValue.getD().getResult()) {
                             if (url.equalsIgnoreCase("IncreaseOrderItem")) {
-//                                GCartUtil.addValueToCart(1);
+                                CartUtil.addValueToCart(1);
                             } else {
-//                                GCartUtil.addValueToCart(-1);
+                                CartUtil.addValueToCart(-1);
                             }
+
+                            getMvpView().updateCheckoutBadge();
                         }
                         updateCart(responseValue);
                     }

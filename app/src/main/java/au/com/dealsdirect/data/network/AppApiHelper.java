@@ -2,6 +2,8 @@ package au.com.dealsdirect.data.network;
 
 import com.androidnetworking.error.ANError;
 import com.androidnetworking.interfaces.JSONObjectRequestListener;
+import com.androidnetworking.interfaces.OkHttpResponseListener;
+import com.google.gson.reflect.TypeToken;
 import com.mysale.genie.utility.config.api.GetAppSettings;
 import com.mysale.genie.utility.config.api.GetAppSettingsSection;
 import com.mysale.genie.utility.config.api.GetServerSettings;
@@ -9,6 +11,7 @@ import com.rx2androidnetworking.Rx2AndroidNetworking;
 
 import org.json.JSONObject;
 
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -28,6 +31,7 @@ import au.com.dealsdirect.data.network.model.banner.GetBannerResponse;
 import au.com.dealsdirect.data.network.model.category.GetCategoryTreeResponse;
 import au.com.dealsdirect.data.network.model.checkout.AdjustOrderItem;
 import au.com.dealsdirect.data.network.model.checkout.ApplyVouchers;
+import au.com.dealsdirect.data.network.model.checkout.BasketQuantityResponse;
 import au.com.dealsdirect.data.network.model.checkout.ClearOrder;
 import au.com.dealsdirect.data.network.model.checkout.ClearVouchers;
 import au.com.dealsdirect.data.network.model.checkout.CreatePaymentMethod;
@@ -99,6 +103,7 @@ import au.com.dealsdirect.data.network.model.vouchers.GetUserVouchersRequest;
 import au.com.dealsdirect.data.network.model.vouchers.GetVouchersResponse;
 import au.com.dealsdirect.utils.JsonUtils;
 import io.reactivex.Observable;
+import okhttp3.Response;
 
 @Singleton
 public class AppApiHelper implements ApiHelper {
@@ -201,12 +206,12 @@ public class AppApiHelper implements ApiHelper {
     }
 
     @Override
-    public Observable<AddToCartResponse> callAddItemToCart(AddToCartRequest requestValues) {
-        return Rx2AndroidNetworking.post(ApiEndPoint.ADD_TO_CART)
+    public Observable<String> callAddItemToCart(AddToCartRequest requestValues) {
+//        final Observable<Object> returnObservable;
+         return Rx2AndroidNetworking.post(ApiEndPoint.ADD_TO_CART)
                 .addHeaders(mApiHeader.getPublicApiHeader())
                 .addJSONObjectBody(JsonUtils.convertToJsonObject(requestValues))
-                .build()
-                .getObjectObservable(AddToCartResponse.class);
+                .build().getStringObservable();
     }
 
     @Override
@@ -441,6 +446,14 @@ public class AppApiHelper implements ApiHelper {
                 .addJSONObjectBody(JsonUtils.convertToJsonObject(requestValues))
                 .build()
                 .getObjectObservable(RemoveUserPaymentMethod.ResponseValue.class);
+    }
+
+    @Override
+    public Observable<BasketQuantityResponse> callGetBasketItemsQuantity() {
+        return Rx2AndroidNetworking.get(ApiEndPoint.GET_BASKET_QUANTITY)
+                .addHeaders(mApiHeader.getPublicApiHeader())
+                .build()
+                .getObjectObservable(BasketQuantityResponse.class);
     }
 
 

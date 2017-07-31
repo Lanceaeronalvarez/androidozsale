@@ -32,10 +32,12 @@ import au.com.dealsdirect.ui.controller.address.addnewaddress.AddNewAddressContr
 import au.com.dealsdirect.ui.controller.address.viewaddress.ViewAddressController;
 import au.com.dealsdirect.ui.controller.checkout.addpayment.AddPaymentController;
 import au.com.dealsdirect.ui.controller.checkout.paymentselect.PaymentSelectController;
+import au.com.dealsdirect.ui.controller.home.HomeController;
 import au.com.dealsdirect.ui.controller.vouchers.Add.AddVouchersController;
 import au.com.dealsdirect.ui.main.FetchTokenHandler;
 import au.com.dealsdirect.ui.main.MainActivity;
 import au.com.dealsdirect.ui.main.MainMvpView;
+import au.com.dealsdirect.utils.CartUtil;
 import au.com.dealsdirect.utils.ImageUtils;
 import au.com.dealsdirect.utils.PriceUtils;
 import butterknife.BindView;
@@ -360,6 +362,12 @@ public class CheckoutController extends BaseController implements CheckoutMvpVie
     @Override
     public void triggerLoginTicket() {
         ((MainMvpView) getActivity()).callLoginTicket();
+    }
+
+    @Override
+    public void updateCheckoutBadge() {
+        HomeController homeController = ((MainActivity) getActivity()).getMainController().getHomeController();
+        homeController.updateBasketItemCount();
     }
 
     public void onPayButtonClick() {

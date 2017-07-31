@@ -113,9 +113,8 @@ public class SaleItemDetailsPresenter<V extends SaleItemDetailsMvpView> extends 
 
                     getMvpView().hideLoading();
 
-                    if (response != null) {
-                        getMvpView().showAddToCartResponse(response.getResult());
-                    }
+                    getMvpView().showAddToCartResponse(true);
+
 
                 }, throwable -> {
 

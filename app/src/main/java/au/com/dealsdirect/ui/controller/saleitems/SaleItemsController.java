@@ -36,7 +36,6 @@ import au.com.dealsdirect.ui.controller.searchfilter.SearchFilterController;
 import au.com.dealsdirect.ui.controller.searchfilter.adapter.SearchChipModel;
 import au.com.dealsdirect.ui.custom.transitions.SharedArcFadePopChangeHandler;
 import au.com.dealsdirect.ui.custom.transitions.SharedArcFadePushChangeHandler;
-import au.com.dealsdirect.ui.custom.transitions.SharedElementTransitionChangehandler;
 import au.com.dealsdirect.ui.main.MainActivity;
 import au.com.dealsdirect.utils.BundleBuilder;
 import au.com.dealsdirect.utils.JsonUtils;
@@ -383,7 +382,7 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
     }
 
     @Override
-    public void showProductDetails(RecyclerView.ViewHolder viewHolder, int position, String seoIdentifierId, String imageUrl, String itemId, String saleId) {
+    public void showProductDetails(RecyclerView.ViewHolder viewHolder, int position, String seoIdentifierId, String imageUrl, String skuId, String saleId) {
 
         if (mSaleItemClickCounter!=1){
             mSaleItemClickCounter =+1;
@@ -429,7 +428,7 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
             bundle.putInt("KEY_POSITION",position);
             bundle.putString("KEY_IMAGE_ID", imageUrl);
             bundle.putString("KEY_SEO_IDENTIFIER", seoIdentifierId);
-            bundle.putString("KEY_ITEM_ID", itemId);
+            bundle.putString("KEY_SKU_ID", skuId);
             bundle.putString("KEY_SALE_ID", saleId);
             bundle.putString("KEY_SALE_NAME", ((SaleItemsAdapter.ViewHolder) viewHolder).mSaleItemName.getText().toString());
             bundle.putString("KEY_SALE_PRICE",((SaleItemsAdapter.ViewHolder) viewHolder).mSalePrice.getText().toString());

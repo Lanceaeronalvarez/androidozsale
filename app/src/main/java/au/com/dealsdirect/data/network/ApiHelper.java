@@ -1,6 +1,8 @@
 package au.com.dealsdirect.data.network;
 
 
+import android.support.annotation.Nullable;
+
 import com.mysale.genie.utility.config.api.GetAppSettings;
 import com.mysale.genie.utility.config.api.GetAppSettingsSection;
 import com.mysale.genie.utility.config.api.GetServerSettings;
@@ -22,6 +24,7 @@ import au.com.dealsdirect.data.network.model.banner.GetBannerResponse;
 import au.com.dealsdirect.data.network.model.category.GetCategoryTreeResponse;
 import au.com.dealsdirect.data.network.model.checkout.AdjustOrderItem;
 import au.com.dealsdirect.data.network.model.checkout.ApplyVouchers;
+import au.com.dealsdirect.data.network.model.checkout.BasketQuantityResponse;
 import au.com.dealsdirect.data.network.model.checkout.ClearOrder;
 import au.com.dealsdirect.data.network.model.checkout.ClearVouchers;
 import au.com.dealsdirect.data.network.model.checkout.CreatePaymentMethod;
@@ -116,7 +119,7 @@ public interface ApiHelper {
 
     Observable<GetSaleItemsResponse> callGetSaleItemsRequest(GetSaleItemsRequest getSaleItemsRequest);
 
-    Observable<AddToCartResponse> callAddItemToCart(AddToCartRequest requestValues);
+    Observable<String> callAddItemToCart(AddToCartRequest requestValues);
 
 
 //  CONFIG API CALLS
@@ -205,6 +208,7 @@ public interface ApiHelper {
     
     Observable<RemoveUserPaymentMethod.ResponseValue> callRemoveUserPaymentMethod(RemoveUserPaymentMethod.RequestValue model);
 
+    Observable<BasketQuantityResponse> callGetBasketItemsQuantity();
 
     //  INVITE API CALLS
     Observable<GetInviteResponse> callGetInvite(GetInviteRequest request);

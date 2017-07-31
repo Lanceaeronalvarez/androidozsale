@@ -3,12 +3,14 @@ package au.com.dealsdirect.ui.controller.home;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.v4.content.ContextCompat;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
 import com.aurelhubert.ahbottomnavigation.AHBottomNavigation;
 import com.aurelhubert.ahbottomnavigation.AHBottomNavigationAdapter;
+import com.aurelhubert.ahbottomnavigation.notification.AHNotification;
 import com.bluelinelabs.conductor.Conductor;
 import com.bluelinelabs.conductor.Controller;
 import com.bluelinelabs.conductor.ControllerChangeHandler;
@@ -31,6 +33,7 @@ import au.com.dealsdirect.ui.controller.login.LoginController;
 import au.com.dealsdirect.ui.controller.shops.ShopsController;
 import au.com.dealsdirect.ui.main.MainActivity;
 import au.com.dealsdirect.utils.BundleBuilder;
+import au.com.dealsdirect.utils.CartUtil;
 import butterknife.BindView;
 
 /**
@@ -115,6 +118,7 @@ public class  HomeController extends BaseController implements HomeMvpView {
     @Override
     protected void setUp(View view) {
 //        getRouter().setRoot(RouterTransaction.with(new ShopsController()));
+        mPresenter.callGetBasketItemsQuantity();
         mRouter.addChangeListener(new ControllerChangeHandler.ControllerChangeListener() {
             @Override
             public void onChangeStarted(@Nullable Controller to, @Nullable Controller from, boolean isPush, @NonNull ViewGroup container, @NonNull ControllerChangeHandler handler) {
@@ -241,6 +245,16 @@ public class  HomeController extends BaseController implements HomeMvpView {
         mRouter.pushController(RouterTransaction.with(LoginController.newInstance(handler))
                 .pushChangeHandler(new VerticalChangeHandler())
                 .popChangeHandler(new VerticalChangeHandler()));
+    }
+
+    @Override
+    public void updateBasketItemCount() {
+        AHNotification notification = new AHNotification.Builder()
+                .setText(CartUtil.getCartValue() + "")
+                .setBackgroundColor(ContextCompat.getColor(getActivity(), android.R.color.holo_red_dark))
+                .setTextColor(ContextCompat.getColor(getActivity(), R.color.white))
+                .build();
+        getBottomNavigationView().setNotification(notification, 4);
     }
 
     private void proceedToController(int id) {

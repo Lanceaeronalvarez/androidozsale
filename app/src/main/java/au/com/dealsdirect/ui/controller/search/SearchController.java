@@ -17,7 +17,6 @@ import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
 
-import com.bumptech.glide.load.Key;
 import com.paginate.Paginate;
 
 import java.util.ArrayList;
@@ -233,10 +232,10 @@ public class SearchController extends BaseController implements SaleItemsMvpView
     }
 
     @Override
-    public void showProductDetails(RecyclerView.ViewHolder viewHolder, int position, String seoIdentifierId, String imageUrl, String itemId, String saleId) {
+    public void showProductDetails(RecyclerView.ViewHolder viewHolder, int position, String seoIdentifierId, String imageUrl, String skuId, String saleId) {
 
         List<String> names = new ArrayList<>();
-        names.add(itemId);
+        names.add(skuId);
         mSearchSaleItemsRecyclerView.smoothScrollToPosition(position);
 
         final Handler handler = new Handler();
@@ -247,7 +246,7 @@ public class SearchController extends BaseController implements SaleItemsMvpView
 
             intent.putExtra("KEY_IMAGE_ID", imageUrl);
             intent.putExtra("KEY_SEO_IDENTIFIER", seoIdentifierId);
-            intent.putExtra("KEY_ITEM_ID", itemId);
+            intent.putExtra("KEY_ITEM_ID", skuId);
             intent.putExtra("KEY_SALE_ID", saleId);
             intent.putExtra("KEY_SALE_NAME", ((SaleItemsAdapter.ViewHolder) viewHolder).mSaleItemName.getText());
             intent.putExtra("KEY_SALE_PRICE",((SaleItemsAdapter.ViewHolder) viewHolder).mSalePrice.getText());
