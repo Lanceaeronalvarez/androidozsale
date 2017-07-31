@@ -29,4 +29,6 @@ public interface CheckoutMvpView extends MvpView {
     void setPaymentList(List<PaymentMethod> paymentList);
 
     void triggerLoginTicket();
+
+     void updateCheckoutBadge();
 }

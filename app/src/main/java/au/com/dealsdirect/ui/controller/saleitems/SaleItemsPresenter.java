@@ -151,8 +151,8 @@ public class SaleItemsPresenter<V extends SaleItemsMvpView> extends BasePresente
     }
 
     @Override
-    public void loadProductDetails(RecyclerView.ViewHolder viewHolder, int position, String seoIdentifierId, String imageUrl, String itemId, String saleId) {
-        getMvpView().showProductDetails(viewHolder, position, seoIdentifierId, imageUrl, itemId, saleId);
+    public void loadProductDetails(RecyclerView.ViewHolder viewHolder, int position, String seoIdentifierId, String imageUrl, String skuId, String saleId) {
+        getMvpView().showProductDetails(viewHolder, position, seoIdentifierId, imageUrl, skuId, saleId);
     }
 
     @Override

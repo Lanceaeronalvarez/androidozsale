@@ -29,6 +29,7 @@ import au.com.dealsdirect.data.network.model.banner.GetBannerResponse;
 import au.com.dealsdirect.data.network.model.category.GetCategoryTreeResponse;
 import au.com.dealsdirect.data.network.model.checkout.AdjustOrderItem;
 import au.com.dealsdirect.data.network.model.checkout.ApplyVouchers;
+import au.com.dealsdirect.data.network.model.checkout.BasketQuantityResponse;
 import au.com.dealsdirect.data.network.model.checkout.ClearOrder;
 import au.com.dealsdirect.data.network.model.checkout.ClearVouchers;
 import au.com.dealsdirect.data.network.model.checkout.CreatePaymentMethod;
@@ -168,7 +169,7 @@ public class AppDataManager implements DataManager {
     }
 
     @Override
-    public Observable<AddToCartResponse> callAddItemToCart(AddToCartRequest requestValues) {
+    public Observable<String> callAddItemToCart(AddToCartRequest requestValues) {
         return mApiHelper.callAddItemToCart(requestValues);
     }
 
@@ -353,6 +354,11 @@ public class AppDataManager implements DataManager {
     @Override
     public Observable<RemoveUserPaymentMethod.ResponseValue> callRemoveUserPaymentMethod(RemoveUserPaymentMethod.RequestValue requestValue) {
         return mApiHelper.callRemoveUserPaymentMethod(requestValue);
+    }
+
+    @Override
+    public Observable<BasketQuantityResponse> callGetBasketItemsQuantity() {
+        return mApiHelper.callGetBasketItemsQuantity();
     }
 
     @Override

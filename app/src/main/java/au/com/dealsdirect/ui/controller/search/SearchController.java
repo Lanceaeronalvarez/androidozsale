@@ -13,7 +13,7 @@ import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
 
-import com.bluelinelabs.conductor.RouterTransaction;
+import com.bumptech.glide.load.Key;
 import com.paginate.Paginate;
 
 import java.util.ArrayList;
@@ -233,10 +233,10 @@ public class SearchController extends BaseController implements SaleItemsMvpView
     }
 
     @Override
-    public void showProductDetails(RecyclerView.ViewHolder viewHolder, int position, String seoIdentifierId, String imageUrl, String itemId, String saleId) {
+    public void showProductDetails(RecyclerView.ViewHolder viewHolder, int position, String seoIdentifierId, String imageUrl, String skuId, String saleId) {
 
         List<String> names = new ArrayList<>();
-        names.add(itemId);
+        names.add(skuId);
         mSearchSaleItemsRecyclerView.smoothScrollToPosition(position);
 //
 //        final Handler handler = new Handler();

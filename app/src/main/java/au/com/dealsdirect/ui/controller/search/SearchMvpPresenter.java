@@ -12,5 +12,5 @@ public interface SearchMvpPresenter<V extends SearchMvpView> extends MvpPresente
 
     void loadSaleItems(String categoryKey, String saleId, String searchQuery, int pageNumber);
 
-    void loadProductDetails(RecyclerView.ViewHolder viewHolder, int position, String seoIdentifierId, String imageUrl, String itemId, String saleId);
+    void loadProductDetails(RecyclerView.ViewHolder viewHolder, int position, String seoIdentifierId, String imageUrl, String skuId, String saleId);
 }

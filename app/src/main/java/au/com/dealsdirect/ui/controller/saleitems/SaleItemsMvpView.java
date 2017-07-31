@@ -20,6 +20,6 @@ public interface SaleItemsMvpView extends MvpView{
 
     void refresh();
 
-    void showProductDetails(RecyclerView.ViewHolder viewHolder,int position, String seoIdentifierId, String imageUrl, String itemId, String saleId);
+    void showProductDetails(RecyclerView.ViewHolder viewHolder, int position, String seoIdentifierId, String imageUrl, String skuId, String saleId);
 
 }
