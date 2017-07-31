@@ -359,13 +359,13 @@ public class MainActivity extends BaseActivity implements MainMvpView {
 
     @Override
     public void createPaymentMethodSuccess(PaymentMethod lastPaymentMethod) {
-        Controller currentController = getMainRouterCurrentController();
+        Controller currentController = getHomeRouterCurrentController();
 
         if ((currentController instanceof AddPaymentController) && ((AddPaymentController) currentController).isCalledFromAccounts()) {
             ((AddPaymentController) currentController).showAddPaymentResult(true, "");
         } else {
             setPaymentMethodSelected(lastPaymentMethod);
-            mRouter.popCurrentController();
+            mHomeRouter.popCurrentController();
         }
     }
 
@@ -378,7 +378,7 @@ public class MainActivity extends BaseActivity implements MainMvpView {
 //            GCartUtil.setValueToCart(0);
 //            RxBus.instance().post("update_cart_items_immediate");
 
-            mRouter.pushController(RouterTransaction.with(new PaymentSuccessController(responseValue))
+            mHomeRouter.pushController(RouterTransaction.with(new PaymentSuccessController(responseValue))
                     .pushChangeHandler(new HorizontalChangeHandler())
                     .popChangeHandler(new HorizontalChangeHandler()));
 
@@ -386,17 +386,17 @@ public class MainActivity extends BaseActivity implements MainMvpView {
 
             CustomAlertDialog.showCustomAlertDialog(this, CustomAlertDialog.CustomDialogIconState.NEGATIVE, responseValue.getD().getMessage());
 
-            if (getMainRouterCurrentController() instanceof CheckoutController) {
-                CheckoutController checkoutController = (CheckoutController) getMainRouterCurrentController();
+            if (getHomeRouterCurrentController() instanceof CheckoutController) {
+                CheckoutController checkoutController = (CheckoutController) getHomeRouterCurrentController();
                 checkoutController.loadCart();
             }
         }
     }
 
-    public Controller getMainRouterCurrentController() {
-        int backstackSize = mRouter.getBackstack().size();
+    public Controller getHomeRouterCurrentController() {
+        int backstackSize = mHomeRouter.getBackstack().size();
         if (backstackSize > 0) {
-            return mRouter.getBackstack().get(backstackSize - 1).controller();
+            return mHomeRouter.getBackstack().get(backstackSize - 1).controller();
         } else {
             return null;
         }
