@@ -2,9 +2,11 @@ package au.com.dealsdirect.ui.custom;
 
 import android.content.Context;
 import android.util.AttributeSet;
+import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
+import android.widget.ProgressBar;
 
 import au.com.dealsdirect.R;
 
@@ -18,6 +20,8 @@ public class ProductQuantityLayout extends LinearLayout {
 
     private Button minus;
     private Button plus;
+    private ProgressBar mMinusLoader;
+    private ProgressBar mPlusLoader;
     private EditText quantity;
     private static int max;
     private boolean auto_update = true;
@@ -46,12 +50,14 @@ public class ProductQuantityLayout extends LinearLayout {
         ProductQuantityLayout.max = max;
     }
 
-    private void init(Context context){
-        inflate(context, R.layout.quantity_widget,this);
+    private void init(Context context) {
+        inflate(context, R.layout.quantity_widget, this);
 
         minus = (Button) findViewById(R.id.minus);
         plus = (Button) findViewById(R.id.plus);
         quantity = (EditText) findViewById(R.id.quantity_text);
+        mMinusLoader = (ProgressBar) findViewById(R.id.minus_loader);
+        mPlusLoader = (ProgressBar) findViewById(R.id.plus_loader);
 
 //
 //        RxTextView.afterTextChangeEvents(quantity).subscribe(action->{
@@ -60,31 +66,42 @@ public class ProductQuantityLayout extends LinearLayout {
 //            }
 //        });
 
-        minus.setOnClickListener(action->{
+        minus.setOnClickListener(action -> {
 
             String val = quantity.getText().toString();
             int quantityValue = Integer.parseInt(val);
-            if(auto_update && quantityValue>0) {
+            if (auto_update && quantityValue > 0) {
                 quantityValue--;
                 quantity.setText(String.valueOf(quantityValue));
             }
 
+            minus.setVisibility(View.GONE);
+            mMinusLoader.setVisibility(View.VISIBLE);
             listener.onQuantityDecrease(this, quantityValue);
         });
 
-        plus.setOnClickListener(action->{
+        plus.setOnClickListener(action -> {
             String val = quantity.getText().toString();
             int quantityValue = Integer.parseInt(val);
-            if(auto_update && quantityValue<max) {
+            if (auto_update && quantityValue < max) {
                 quantityValue++;
                 quantity.setText(String.valueOf(quantityValue));
             }
 
-                listener.onQuantityIncrease(this, quantityValue);
+            plus.setVisibility(View.GONE);
+            mPlusLoader.setVisibility(View.VISIBLE);
+            listener.onQuantityIncrease(this, quantityValue);
         });
     }
 
-    public void setAutoUpdateQuantity(boolean enabled){
+    public void resetLoaders(){
+        minus.setVisibility(View.VISIBLE);
+        mMinusLoader.setVisibility(View.GONE);
+        plus.setVisibility(View.VISIBLE);
+        mPlusLoader.setVisibility(View.GONE);
+    }
+
+    public void setAutoUpdateQuantity(boolean enabled) {
         this.auto_update = enabled;
     }
 
@@ -93,10 +110,11 @@ public class ProductQuantityLayout extends LinearLayout {
     }
 
     public void setQuantity(int count) {
+        resetLoaders();
         quantity.setText(String.format("%d", count));
-    };
+    }
 
-    public String getQuantity(){
+    public String getQuantity() {
         return quantity.getText().toString();
     }
 
@@ -104,12 +122,13 @@ public class ProductQuantityLayout extends LinearLayout {
         this.quantity = quantity;
     }
 
-    public void setEditTextToNonEditable(){
+    public void setEditTextToNonEditable() {
         this.quantity.setEnabled(false);
     }
 
     public interface onQuantityChangeListener<T> {
         void onQuantityIncrease(ProductQuantityLayout view, int value);
+
         void onQuantityDecrease(ProductQuantityLayout view, int value);
     }
 }

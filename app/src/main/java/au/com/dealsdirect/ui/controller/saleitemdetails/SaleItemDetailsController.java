@@ -365,10 +365,7 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
         if (shippingInformation != null) {
             mProductPricing.setVisibility(View.VISIBLE);
             mProductAboutPricing.startAnimation(anim);
-            mProductAboutPricing.loadData(mHtmlHeader + shippingPricing + mHtmlFooter,
-                    "text/html; charset=UTF-8",
-                    null);
-
+            mProductAboutPricing.loadData(mHtmlHeader + shippingPricing + mHtmlFooter, "text/html; charset=UTF-8", null);
         } else {
             mProductPricing.setVisibility(View.GONE);
         }
@@ -376,9 +373,7 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
         if (shippingInformation != null) {
             mShippingDescText.setVisibility(View.VISIBLE);
             mShippingDescText.startAnimation(anim);
-            mShippingDescText.loadData(mHtmlHeader + shippingInformation + mHtmlFooter,
-                    "text/html; charset=UTF-8",
-                    null);
+            mShippingDescText.loadData(mHtmlHeader + shippingInformation + mHtmlFooter, "text/html; charset=UTF-8", null);
         } else {
             mShippingContainer.setVisibility(View.GONE);
         }

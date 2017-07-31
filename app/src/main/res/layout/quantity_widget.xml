@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
-    xmlns:tools="http://schemas.android.com/tools"
     android:background="@drawable/bg_quantity_widget">
 
     <Button
@@ -11,10 +11,16 @@
         android:layout_width="40dp"
         android:layout_height="wrap_content"
         android:clickable="true"
-        android:text="-"
+        android:text="@string/minus"
         android:textColor="@color/gray_generic_icon"
-        android:textSize="@dimen/text_size_xxxlarge"/>
+        android:textSize="@dimen/text_size_xxxlarge" />
 
+    <ProgressBar
+        android:id="@+id/minus_loader"
+        android:layout_width="40dp"
+        android:layout_height="15dp"
+        android:layout_gravity="center_vertical"
+        android:visibility="gone" />
 
     <EditText
         android:id="@+id/quantity_text"
@@ -23,12 +29,19 @@
         android:layout_marginLeft="0dp"
         android:layout_marginRight="0dp"
         android:background="@android:color/transparent"
+        android:gravity="center"
         android:inputType="number"
         android:maxLength="2"
         android:maxLines="1"
-        tools:text="0"
         android:textSize="@dimen/text_size_xxxxlarge"
-        android:gravity="center" />
+        tools:text="0" />
+
+    <ProgressBar
+        android:id="@+id/plus_loader"
+        android:layout_width="40dp"
+        android:layout_height="15dp"
+        android:layout_gravity="center_vertical"
+        android:visibility="gone" />
 
     <Button
         android:id="@+id/plus"
@@ -36,8 +49,7 @@
         android:layout_width="40dp"
         android:layout_height="wrap_content"
         android:clickable="true"
-        android:text="+"
+        android:text="@string/plus"
         android:textColor="@color/gray_generic_icon"
-        android:textSize="@dimen/text_size_xxxlarge"
-        />
+        android:textSize="@dimen/text_size_xxxlarge" />
 </LinearLayout>
