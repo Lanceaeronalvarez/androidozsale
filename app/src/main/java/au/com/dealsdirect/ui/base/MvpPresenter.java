@@ -20,11 +20,6 @@ public interface MvpPresenter<V extends MvpView> {
 
     boolean isTablet();
 
-    void setUserAsLoggedOut();
-
-    void doApiCallForObjectResponse(Observable observable, ApiCallback callback);
-
-    void doApiCallForListResponse(Observable observable, ApiCallback callback);
-
+    void doApiCallForResponse(Observable observable, ApiCallback callback);
 
 }

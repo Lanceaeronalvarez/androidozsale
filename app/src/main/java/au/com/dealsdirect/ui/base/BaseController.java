@@ -56,9 +56,7 @@ public abstract class BaseController extends RefWatchingController implements Mv
 
     @Override
     public void showLoading() {
-
         if (mActivity != null) {
-
             mActivity.showLoading();
         }
     }
@@ -103,5 +101,13 @@ public abstract class BaseController extends RefWatchingController implements Mv
         if (mActivity != null) {
             mActivity.hideKeyboard();
         }
+    }
+
+    @Override
+    public void onRefreshEnd() {
+    }
+
+    @Override
+    public void onRefreshStart() {
     }
 }

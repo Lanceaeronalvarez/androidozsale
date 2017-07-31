@@ -126,12 +126,7 @@ public class BasePresenter<V extends MvpView> implements MvpPresenter<V> {
     }
 
     @Override
-    public void setUserAsLoggedOut() {
-        //getDataManager().setAccessToken(null);
-    }
-
-    @Override
-    public void doApiCallForObjectResponse(Observable observable, final ApiCallback callback) {
+    public void doApiCallForResponse(Observable observable, final ApiCallback callback) {
         getMvpView().showLoading();
 
         getCompositeDisposable().add(observable
@@ -147,7 +142,13 @@ public class BasePresenter<V extends MvpView> implements MvpPresenter<V> {
 
                         getMvpView().hideLoading();
 
-                        callback.onSuccess(response);
+                        if (response instanceof List) {
+                            callback.onSuccess((List) response);
+                        } else if (response != null) {
+                            callback.onSuccess(response);
+                        } else {
+                            callback.onSuccess();
+                        }
 
                     }
                 }, new Consumer<Throwable>() {
@@ -159,7 +160,6 @@ public class BasePresenter<V extends MvpView> implements MvpPresenter<V> {
                         }
 
                         getMvpView().hideLoading();
-                        getMvpView().onError(throwable.getMessage());
 
                         callback.onFailure();
 
@@ -167,53 +167,13 @@ public class BasePresenter<V extends MvpView> implements MvpPresenter<V> {
                         if (throwable instanceof ANError) {
                             ANError anError = (ANError) throwable;
                             handleApiError(anError);
+                            if (((ANError) throwable).getResponse() != null) {
+                                getMvpView().onError(((ANError) throwable).getResponse().code() + " " + ((ANError) throwable).getResponse().message());
+                            }
                         }
                     }
                 }));
     }
-
-    @Override
-    public void doApiCallForListResponse(Observable observable, final ApiCallback callback) {
-        getMvpView().showLoading();
-
-        getCompositeDisposable().add(observable
-                .subscribeOn(getSchedulerProvider().io())
-                .observeOn(getSchedulerProvider().ui())
-                .subscribe(new Consumer<List<Object>>() {
-                    @Override
-                    public void accept(List<Object> response) throws Exception {
-
-                        if (!isViewAttached()) {
-                            return;
-                        }
-
-                        getMvpView().hideLoading();
-
-                        callback.onSuccess(response);
-
-                    }
-                }, new Consumer<Throwable>() {
-                    @Override
-                    public void accept(Throwable throwable) throws Exception {
-
-                        if (!isViewAttached()) {
-                            return;
-                        }
-
-                        getMvpView().hideLoading();
-                        getMvpView().onError(throwable.getMessage());
-
-                        callback.onFailure();
-
-                        // handle load accounts error here
-                        if (throwable instanceof ANError) {
-                            ANError anError = (ANError) throwable;
-                            handleApiError(anError);
-                        }
-                    }
-                }));
-    }
-
 
     public static class MvpViewNotAttachedException extends RuntimeException {
         public MvpViewNotAttachedException() {

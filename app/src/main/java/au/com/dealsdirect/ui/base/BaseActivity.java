@@ -26,12 +26,7 @@ import au.com.dealsdirect.utils.NetworkUtils;
 import butterknife.Unbinder;
 import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper;
 
-public abstract class BaseActivity extends AppCompatActivity
-        implements MvpView {
-//
-//    @Nullable
-//    @BindView(R.id.controller_home_bottom_nav)
-//    protected AHBottomNavigation bottomNavigationView;
+public abstract class BaseActivity extends AppCompatActivity implements MvpView {
 
     private ProgressDialog mProgressDialog;
 
@@ -87,7 +82,7 @@ public abstract class BaseActivity extends AppCompatActivity
 
     @Override
     public void onError(String message) {
-        Log.i("SnackbarError", message+"");
+        Log.i("SnackbarError", message + "");
         if (message != null) {
             showSnackBar(message);
         } else {
@@ -122,6 +117,14 @@ public abstract class BaseActivity extends AppCompatActivity
                     getSystemService(Context.INPUT_METHOD_SERVICE);
             imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
         }
+    }
+
+    @Override
+    public void onRefreshStart() {
+    }
+
+    @Override
+    public void onRefreshEnd() {
     }
 
     public void setUnBinder(Unbinder unBinder) {

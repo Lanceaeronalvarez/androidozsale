@@ -23,10 +23,16 @@ public class SamplePresenter<V extends SampleMvpView> extends BasePresenter<V> i
 
     @Override
     public void loadSample(SampleRequest request) {
-        doApiCallForObjectResponse(getDataManager().doSampleApiCall(request), new AppApiCallback() {
+        doApiCallForResponse(getDataManager().callGetServerSettings("DA"), new AppApiCallback() {
             @Override
             public void onSuccess(Object o) {
+                super.onSuccess();
                 getMvpView().showSample((SampleResponse) o);
+            }
+
+            @Override
+            public void onFailure() {
+                super.onFailure();
             }
         });
     }
