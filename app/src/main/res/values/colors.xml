@@ -64,4 +64,6 @@
     <!-- Dialog Theme -->
     <color name="bg_dialog_default">#FFFFFF</color>
     <color name="semi_transparent">#99323232</color>
+
+    <color name="search_gray_opaque">#7e404040</color>
 </resources>

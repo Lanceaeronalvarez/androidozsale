@@ -121,6 +121,8 @@ public class SearchController extends BaseController implements SaleItemsMvpView
     @Override
     protected void setUp(View view) {
         // Setup views here
+
+        ((MainActivity) getActivity()).getMainController().getHomeController().hideBottomNav();
         mPresenter.loadSaleItems("","","" ,0, new ArrayList());
 
         assert (getActivity()) != null;
