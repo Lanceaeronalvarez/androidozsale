@@ -133,12 +133,12 @@ public class MainActivity extends BaseActivity implements MainMvpView {
             case 0:
                 if (mCategoriesController!=null){
                     if (mCategoriesRouter.getBackstackSize() == 1) {
-                    	setRootViewpagerItem(1);                        
+                        setRootViewpagerItem(1);
                     } else {
                         mRouter.handleBack();
                     }
                 }else{
-                    onBackPressed();
+                    setRootViewpagerItem(1);
                 }
                 break;
             case 1:
@@ -195,6 +195,7 @@ public class MainActivity extends BaseActivity implements MainMvpView {
     public void showLoginController(Router router, AuthHandler handler) {
         //pinapasa yung router, para kahit child router man siya ng kung ano mang view, pwedeng siya ang tumawag.
         router.pushController(RouterTransaction.with(LoginController.newInstance(handler))
+                .tag(LoginController.TAG)
                 .pushChangeHandler(new VerticalChangeHandler())
                 .popChangeHandler(new VerticalChangeHandler()));
     }
