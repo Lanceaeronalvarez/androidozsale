@@ -173,6 +173,7 @@ public class ShopsController extends BaseController implements ShopsMvpView, Ban
         assert (getActivity()) != null;
         ((MainActivity) getActivity()).getMainController().showBottomNav();
         ((MainActivity) getActivity()).setDraggableViewPager(true);
+        hideKeyboard();
 
         mPaginateCallbacks = new Paginate.Callbacks() {
             @Override

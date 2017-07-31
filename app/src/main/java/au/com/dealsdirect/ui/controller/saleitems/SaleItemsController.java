@@ -7,7 +7,6 @@ import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.Editable;
 import android.text.TextWatcher;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -472,7 +471,9 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
         mSaleItemsToolbarField.setOnEditorActionListener((textView, i, keyEvent) -> {
             if (i == EditorInfo.IME_ACTION_SEARCH) {
                 mPresenter.loadSaleItems("","",textView.getText().toString(),0, new ArrayList());
-
+                mSaleItemsToolbarField.setVisibility(View.GONE);
+                mSaleItemsToolbarTitle.setVisibility(View.VISIBLE);
+                mSaleItemsToolbarTitle.setText(textView.getText().toString());
             }
 
             return false;

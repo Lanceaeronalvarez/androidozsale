@@ -1,15 +1,11 @@
 package au.com.dealsdirect.ui.controller.search;
 
-import android.app.ActivityOptions;
-import android.content.Intent;
 import android.os.Bundle;
-import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.Editable;
 import android.text.TextWatcher;
-import android.util.Pair;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -17,7 +13,7 @@ import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
 
-import com.bumptech.glide.load.Key;
+import com.bluelinelabs.conductor.RouterTransaction;
 import com.paginate.Paginate;
 
 import java.util.ArrayList;
@@ -30,11 +26,13 @@ import au.com.dealsdirect.R;
 import au.com.dealsdirect.data.network.model.saleitems.GetSaleItemsResponse;
 import au.com.dealsdirect.data.network.model.sorting.SortingResponse;
 import au.com.dealsdirect.ui.base.BaseController;
+import au.com.dealsdirect.ui.controller.saleitemdetails.SaleItemDetailsController;
 import au.com.dealsdirect.ui.controller.saleitems.SaleItemsMvpPresenter;
 import au.com.dealsdirect.ui.controller.saleitems.SaleItemsMvpView;
 import au.com.dealsdirect.ui.controller.saleitems.adapter.SaleItemsAdapter;
+import au.com.dealsdirect.ui.custom.transitions.SharedArcFadePopChangeHandler;
+import au.com.dealsdirect.ui.custom.transitions.SharedArcFadePushChangeHandler;
 import au.com.dealsdirect.ui.main.MainActivity;
-import au.com.dealsdirect.ui.main.SharedActivity;
 import au.com.dealsdirect.utils.BundleBuilder;
 import au.com.dealsdirect.utils.KeyboardUtils;
 import au.com.dealsdirect.utils.PaginateUtils;
@@ -240,31 +238,34 @@ public class SearchController extends BaseController implements SaleItemsMvpView
         List<String> names = new ArrayList<>();
         names.add(itemId);
         mSearchSaleItemsRecyclerView.smoothScrollToPosition(position);
+//
+//        final Handler handler = new Handler();
+//        handler.postDelayed(() -> {
+//
 
-        final Handler handler = new Handler();
-        handler.postDelayed(() -> {
+//
+//            ActivityOptions options =
+//                    ActivityOptions.makeSceneTransitionAnimation(getActivity(),
+//                            Pair.create(((SaleItemsAdapter.ViewHolder) viewHolder).mSaleItemImage, "transition"),
+//                            Pair.create(((SaleItemsAdapter.ViewHolder) viewHolder).mSaleItemImage, "cardbackground"));
+//
+//            //noinspection ConstantConditions
+//            getActivity().startActivityForResult(intent, getActivity().getTaskId(), options.toBundle());
+//
+//        }, 200);
+        Bundle bundle = new Bundle();
+        bundle.putString("KEY_IMAGE_ID", imageUrl);
+        bundle.putString("KEY_SEO_IDENTIFIER", seoIdentifierId);
+        bundle.putString("KEY_ITEM_ID", itemId);
+        bundle.putString("KEY_SALE_ID", saleId);
+        bundle.putString("KEY_SALE_NAME", ((SaleItemsAdapter.ViewHolder) viewHolder).mSaleItemName.getText().toString());
+        bundle.putString("KEY_SALE_PRICE",((SaleItemsAdapter.ViewHolder) viewHolder).mSalePrice.getText().toString());
+        bundle.putString("KEY_SALE_OLD_PRICE",((SaleItemsAdapter.ViewHolder) viewHolder).mOldPrice.getText().toString());
 
-            Intent intent = new Intent();
-            intent.setClass(getActivity(), SharedActivity.class);
 
-            intent.putExtra("KEY_IMAGE_ID", imageUrl);
-            intent.putExtra("KEY_SEO_IDENTIFIER", seoIdentifierId);
-            intent.putExtra("KEY_ITEM_ID", itemId);
-            intent.putExtra("KEY_SALE_ID", saleId);
-            intent.putExtra("KEY_SALE_NAME", ((SaleItemsAdapter.ViewHolder) viewHolder).mSaleItemName.getText());
-            intent.putExtra("KEY_SALE_PRICE",((SaleItemsAdapter.ViewHolder) viewHolder).mSalePrice.getText());
-            intent.putExtra("KEY_SALE_OLD_PRICE",((SaleItemsAdapter.ViewHolder) viewHolder).mOldPrice.getText());
-
-
-            ActivityOptions options =
-                    ActivityOptions.makeSceneTransitionAnimation(getActivity(),
-                            Pair.create(((SaleItemsAdapter.ViewHolder) viewHolder).mSaleItemImage, "transition"),
-                            Pair.create(((SaleItemsAdapter.ViewHolder) viewHolder).mSaleItemImage, "cardbackground"));
-
-            //noinspection ConstantConditions
-            getActivity().startActivityForResult(intent, getActivity().getTaskId(), options.toBundle());
-
-        }, 200);
+        getRouter().pushController(RouterTransaction.with(SaleItemDetailsController.newInstance(bundle))
+                .pushChangeHandler(new SharedArcFadePushChangeHandler())
+                .popChangeHandler(new SharedArcFadePopChangeHandler()));
     }
 
     @OnClick(R.id.partial_toolbar_search_right_option)
