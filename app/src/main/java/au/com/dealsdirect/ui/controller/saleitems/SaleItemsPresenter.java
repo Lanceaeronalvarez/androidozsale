@@ -68,8 +68,9 @@ public class SaleItemsPresenter<V extends SaleItemsMvpView> extends BasePresente
 
         getSaleItemsRequest.setPageSize("50");
 
-        if (!saleId.isEmpty())
+        if (saleId != null && !saleId.isEmpty())
             saleIds.add(saleId);
+
         facetFilters.put("saleId", saleIds);
 
 

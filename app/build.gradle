@@ -144,13 +144,16 @@ dependencies {
     compile "com.facebook.android:facebook-android-sdk:$rootProject.facebookVersion"
 
     // GCM
-    compile "com.google.android.gms:play-services-gcm:11.0.2"
+    compile "com.google.android.gms:play-services-gcm:$rootProject.gcmVersion"
 
     // Crystal Range Seekbar
-    compile 'com.crystal:crystalrangeseekbar:1.1.1'
+    compile "com.crystal:crystalrangeseekbar:$rootProject.crystalRangeSeekbarVersion"
 
     //rebound
-    compile 'com.facebook.rebound:rebound:0.3.8'
+    compile "com.facebook.rebound:rebound:$rootProject.facebookReboundVersion"
+
+    //ultra ptr
+    compile "in.srain.cube:ultra-ptr:$rootProject.ultraPtrVersion"
 
     // dependencies for local unit tests
     testCompile "junit:junit:$rootProject.ext.junitVersion"
