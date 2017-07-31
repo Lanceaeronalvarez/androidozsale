@@ -105,14 +105,14 @@ public class OrdersItemRecyclerViewAdapter extends RecyclerView.Adapter<Recycler
         switch (currentStep) {
             case 1:
                 holder.orderFirstNodeStatus.setText(orderStatus);
-                holder.approvedDateGraphNodeImageView.setBackgroundResource(R.drawable.bg_orders_graph_active_state);
-                holder.approvedDateGraphNodeImageView.setText("");
+                holder.approvedDateGraphNodeTextView.setBackgroundResource(R.drawable.bg_orders_graph_active_state);
+                holder.approvedDateGraphNodeTextView.setText("");
                 break;
 
             case -1:
                 holder.orderFirstNodeStatus.setText(orderStatus);
-                holder.approvedDateGraphNodeImageView.setBackgroundResource(R.drawable.bg_orders_negative_state);
-                holder.approvedDateGraphNodeImageView.setText("");
+                holder.approvedDateGraphNodeTextView.setBackgroundResource(R.drawable.bg_orders_negative_state);
+                holder.approvedDateGraphNodeTextView.setText("");
                 break;
             case 2:
                 holder.stockDateGraphNodeTextView.setBackgroundResource(R.drawable.bg_orders_graph_active_state);
@@ -210,7 +210,7 @@ public class OrdersItemRecyclerViewAdapter extends RecyclerView.Adapter<Recycler
         TextView orderProductNameTextView;
         TextView orderProductQuantityTextView;
 
-        TextView approvedDateGraphNodeImageView;
+        TextView approvedDateGraphNodeTextView;
         TextView approvedDateValueTextView;
 
         TextView stockDateGraphNodeTextView;
@@ -245,7 +245,7 @@ public class OrdersItemRecyclerViewAdapter extends RecyclerView.Adapter<Recycler
             orderProductNameTextView = (TextView) itemView.findViewById(R.id.my_order_product_name);
             orderProductQuantityTextView = (TextView) itemView.findViewById(R.id.productQuantityTextView);
 
-            approvedDateGraphNodeImageView = (TextView) itemView.findViewById(R.id
+            approvedDateGraphNodeTextView = (TextView) itemView.findViewById(R.id
                     .approved_date_graph_node);
             approvedDateValueTextView = (TextView) itemView.findViewById(R.id.approved_date_value);
 
