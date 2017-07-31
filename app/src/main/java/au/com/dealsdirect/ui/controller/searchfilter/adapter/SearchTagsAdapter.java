@@ -143,19 +143,19 @@ public class SearchTagsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
             vh.et.setDeleteListener(() -> {
                 //remove search tags
                 int dataSize = getData().size();
+                
+                if (dataSize > 0) {
+                    SearchChipModel chipToBeRemoved = getData().get(dataSize-1);
 
-                SearchChipModel chipToBeRemoved = getData().get(dataSize-1);
+                    if(mFacetItemsAdapter.getSelectedFacets().contains(chipToBeRemoved.getIndex())){
+                        mFacetItemsAdapter.getSelectedFacets().remove(chipToBeRemoved.getIndex());
+                    }
 
-                if(mFacetItemsAdapter.getSelectedFacets().contains(chipToBeRemoved.getIndex())){
-                    mFacetItemsAdapter.getSelectedFacets().remove(chipToBeRemoved.getIndex());
-                }
+                    if(mPreviousSelectedFacetIndices.get(chipToBeRemoved.getFilterType()) != null){
+                        Set<Integer> selectedIndices = mPreviousSelectedFacetIndices.get(chipToBeRemoved.getFilterType());
+                        selectedIndices.remove(chipToBeRemoved.getIndex());
+                    }
 
-                if(mPreviousSelectedFacetIndices.get(chipToBeRemoved.getFilterType()) != null){
-                    Set<Integer> selectedIndices = mPreviousSelectedFacetIndices.get(chipToBeRemoved.getFilterType());
-                    selectedIndices.remove(chipToBeRemoved.getIndex());
-                }
-
-                if (dataSize != 0) {
                     getData().remove(chipToBeRemoved);
                     notifyItemRemoved(dataSize - 1);
 
