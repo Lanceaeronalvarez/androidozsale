@@ -63,6 +63,8 @@ public class CategoriesController extends BaseController
     @BindView(R.id.partial_toolbar_disabled_search_right_option)
     ImageButton mToolbarRightOption;
 
+    public static final String TAG = "CategoriesController";
+
 
     private GetCategoryTreeResponse mChosenSubCategoryTreeResponse = new GetCategoryTreeResponse();
     private SubCategoriesAdapter mSubCategoryAdapter;
@@ -200,7 +202,7 @@ public class CategoriesController extends BaseController
 
         getRouter().setRoot(
                 RouterTransaction.with(ShopsController.newInstance(getCategoryTreeResponse))
-                        .tag(ShopsController.TAG)
+                        .tag(CategoriesController.TAG)
                         .pushChangeHandler(new RightHorizontalTransitionChangeHandler())
                         .popChangeHandler(new RightHorizontalTransitionChangeHandler()));
     }
