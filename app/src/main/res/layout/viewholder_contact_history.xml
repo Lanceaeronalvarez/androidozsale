@@ -21,13 +21,15 @@
 
     <TextView
         android:id="@+id/my_contact_history_row_message_text_view"
+        fontPath="@string/font_lato_light"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_weight="1"
         android:background="@drawable/bg_message_outgoing"
-        android:fontFamily="@string/font_lato_medium"
         android:padding="30dp"
-        android:textColor="@color/gray_title_text" />
+        android:textColor="@color/gray_title_text"
+        android:textSize="@dimen/text_size_large"
+        tools:ignore="MissingPrefix" />
 
     <au.com.dealsdirect.ui.custom.CircularTextView
         android:id="@+id/my_contact_history_row_message_acronym_right"

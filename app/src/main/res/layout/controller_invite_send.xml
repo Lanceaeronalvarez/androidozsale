@@ -54,14 +54,15 @@
                         android:focusable="true" />
 
                     <TextView
-                        fontPath="@string/font_lato_medium"
+                        fontPath="@string/font_lato_regular"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
+                        android:textAlignment="center"
+                        android:gravity="center"
                         android:text="@string/invite_friend_guide"
-                        android:layout_marginBottom="10dp"
-                        android:layout_marginLeft="@dimen/activity_horizontal_margin"
-                        android:layout_marginRight="@dimen/activity_horizontal_margin"
-                        android:textSize="@dimen/text_size_large" />
+                        android:layout_margin="@dimen/screen_padding"
+                        android:lineSpacingExtra="5dp"
+                        android:textSize="@dimen/text_size_medium" />
 
                 </LinearLayout>
                 <LinearLayout

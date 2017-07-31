@@ -154,10 +154,6 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
     LinearLayout mProductPricing;
     @BindView(R.id.controller_sale_item_detail_scrollview)
     NestedScrollView mProductDetailScrollView;
-    @BindView(R.id.left_arrow_image)
-    ImageView mLeftArrowImage;
-    @BindView(R.id.right_arrow_image)
-    ImageView mRightArrowImage;
     @BindView(R.id.product_details_add_to_basket)
     Button mAddButton;
 
@@ -317,38 +313,11 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
         mSaleItemImagesAdapter = new SaleItemDetailsImageAdapter(this, loadImagesListener, null, mSaleId, 1);
         mProductImagesRv.setAdapter(mSaleItemImagesAdapter);
 
-        mProductImagesRv.addOnPageChangedListener((i, i1) -> {
-
-            if (mProductImagesRv.getCurrentPosition() + 1 == mSaleItemImagesAdapter.getItemCount()) {
-                mLeftArrowImage.setVisibility(View.VISIBLE);
-                mRightArrowImage.setVisibility(View.INVISIBLE);
-            } else if (mProductImagesRv.getCurrentPosition() == 0) {
-                mLeftArrowImage.setVisibility(View.INVISIBLE);
-                mRightArrowImage.setVisibility(View.VISIBLE);
-            } else {
-                mLeftArrowImage.setVisibility(View.VISIBLE);
-                mRightArrowImage.setVisibility(View.VISIBLE);
-            }
-        });
-
         mHtmlHeader = getActivity().getResources()
                 .getString(R.string.base_html_template_header);
         mHtmlFooter = getActivity().getResources()
                 .getString(R.string.base_html_template_footer);
 
-        mLeftArrowImage.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                mProductImagesRv.smoothScrollToPosition(mProductImagesRv.getCurrentPosition() - 1);
-            }
-        });
-
-        mRightArrowImage.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                mProductImagesRv.smoothScrollToPosition(mProductImagesRv.getCurrentPosition() + 1);
-            }
-        });
         initSprings();
 
         View checkoutView = ((MainActivity) getActivity()).getMainController().getHomeController().getBottomNavigationView().getViewAtPosition(4);
@@ -388,8 +357,8 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
         String shippingInformation = saleDetail.getShippingInformation();
         String shippingPricing = saleDetail.getPricing();
 
-        mProductName.setText(saleDetail.getName());
-        mProductBrand.setText(saleDetail.getBrandName());
+        mProductName.setText(saleDetail.getName().trim());
+        mProductBrand.setText(saleDetail.getBrandName().trim());
         mProductPrice.setText(PriceUtils.getPriceStringValue(saleDetail.getPrice().getValue()));
         mProductPreviousPrice.setText(PriceUtils.getRpStringValue(saleDetail.getOriginalPrice().getValue()));
 
@@ -402,7 +371,6 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
 
         } else {
             mProductPricing.setVisibility(View.GONE);
-
         }
 
         if (shippingInformation != null) {
@@ -420,13 +388,6 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
         mSaleItemImagesAdapter.replaceData(qualitySaleImages);
 
         Log.d("itemcount", mSaleItemImagesAdapter.getItemCount() + "");
-        if (qualitySaleImages.size() > 1) {
-            mLeftArrowImage.setVisibility(View.INVISIBLE);
-            mRightArrowImage.setVisibility(View.VISIBLE);
-        } else if (qualitySaleImages.size() == 1) {
-            mLeftArrowImage.setVisibility(View.INVISIBLE);
-            mRightArrowImage.setVisibility(View.INVISIBLE);
-        }
 
         //bind UI values here
 
@@ -498,13 +459,13 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
         });
 
 
-        if(saleDetail.getQuantity() <= 0) {
+        if (saleDetail.getQuantity() <= 0) {
             mAddButton.setEnabled(false);
             mAddButton.setText("Sold Out");
         }
         mAddButton.setVisibility(View.VISIBLE);
 
-        if(saleDetail.getOriginalPrice().getValue() <= 0) {
+        if (saleDetail.getOriginalPrice().getValue() <= 0) {
             mProductPreviousPrice.setVisibility(View.GONE);
         } else {
             mProductPreviousPrice.setVisibility(View.VISIBLE);

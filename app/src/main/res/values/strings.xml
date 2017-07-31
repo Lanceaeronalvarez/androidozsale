@@ -153,7 +153,7 @@
     <string name="welcome_to_my_address">welcome to my address</string>
     <string name="delivery_address_added">delivery address added</string>
     <string name="remove_string">remove</string>
-    <string name="add_to_basket">Add to Basket</string>
+    <string name="add_to_cart">Add to Cart</string>
     <string name="category_title">Categories</string>
 
     <!--ORDERS-->
@@ -238,9 +238,9 @@
 
     <!--INVITE-->
 
-    <string name="invite_friend_guide">Invite your friends to join DEALSDIRECT. Once your friends have
+    <string name="invite_friend_guide">Invite your friends to join Deals Direct. Once your friends have
         joined through your invitation and made their first purchase you will instantly receive a
-        $20 DEALSDIRECT voucher to use towards any future purchase.
+        $20 Deals Direct voucher to use towards any future purchase.
     </string>
     <string name="send_personal_invite_text">Personal Invitation</string>
     <string name="write_a_message_here">write a message here</string>
@@ -277,6 +277,5 @@
     </string-array>
 
     <string name="transition_sale_image_indexed">transition.image%1$d</string>
-
-
+    <string name="you_currently_do_not_have_any_returns">you currently do not have any returns</string>
 </resources>

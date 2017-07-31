@@ -100,7 +100,7 @@
                                                 android:layout_gravity="center"
                                                 android:layout_margin="10dp"
                                                 android:padding="5dp"
-                                                android:visibility="visible"/>
+                                                android:visibility="visible" />
 
                                             <ImageView
                                                 android:id="@+id/product_details_shared_image"
@@ -119,32 +119,12 @@
                                                 android:layout_height="300dp"
                                                 android:layout_alignTop="@+id/product_details_shared_image"
                                                 android:layout_gravity="center"
+                                                android:layout_margin="10dp"
                                                 android:clipChildren="false"
                                                 android:clipToPadding="false"
-                                                android:layout_margin="10dp"
                                                 android:padding="5dp"
                                                 app:rvp_singlePageFling="true"
                                                 app:rvp_triggerOffset="0.05" />
-
-
-                                            <ImageView
-                                                android:id="@+id/left_arrow_image"
-                                                android:layout_width="50dp"
-                                                android:layout_height="40dp"
-                                                android:layout_alignParentLeft="true"
-                                                android:layout_centerVertical="true"
-                                                android:src="@drawable/ic_left_arrow"
-                                                android:visibility="gone" />
-
-                                            <ImageView
-                                                android:id="@+id/right_arrow_image"
-                                                android:layout_width="50dp"
-                                                android:layout_height="40dp"
-                                                android:layout_alignParentRight="true"
-                                                android:layout_centerVertical="true"
-                                                android:src="@drawable/ic_right_arrow"
-                                                android:visibility="gone" />
-
 
                                         </RelativeLayout>
 
@@ -161,40 +141,40 @@
                                     <!--android:visibility="gone" />-->
 
                                     <!--<FrameLayout-->
-                                        <!--android:id="@+id/wishlist_frame"-->
-                                        <!--android:layout_width="match_parent"-->
-                                        <!--android:layout_height="wrap_content"-->
-                                        <!--android:layout_below="@id/image_container"-->
-                                        <!--android:visibility="gone"-->
-                                        <!--app:layout_anchor="@id/image_container"-->
-                                        <!--app:layout_anchorGravity="bottom|right|end">-->
+                                    <!--android:id="@+id/wishlist_frame"-->
+                                    <!--android:layout_width="match_parent"-->
+                                    <!--android:layout_height="wrap_content"-->
+                                    <!--android:layout_below="@id/image_container"-->
+                                    <!--android:visibility="gone"-->
+                                    <!--app:layout_anchor="@id/image_container"-->
+                                    <!--app:layout_anchorGravity="bottom|right|end">-->
 
-                                        <!--<ImageView-->
-                                            <!--android:layout_width="match_parent"-->
-                                            <!--android:layout_height="1px"-->
-                                            <!--android:layout_gravity="center"-->
-                                            <!--android:background="#23000000" />-->
+                                    <!--<ImageView-->
+                                    <!--android:layout_width="match_parent"-->
+                                    <!--android:layout_height="1px"-->
+                                    <!--android:layout_gravity="center"-->
+                                    <!--android:background="#23000000" />-->
 
-                                        <!--<LinearLayout-->
-                                            <!--android:layout_width="wrap_content"-->
-                                            <!--android:layout_height="wrap_content"-->
-                                            <!--android:layout_gravity="right"-->
-                                            <!--android:layout_marginRight="3dp"-->
-                                            <!--android:orientation="horizontal">-->
+                                    <!--<LinearLayout-->
+                                    <!--android:layout_width="wrap_content"-->
+                                    <!--android:layout_height="wrap_content"-->
+                                    <!--android:layout_gravity="right"-->
+                                    <!--android:layout_marginRight="3dp"-->
+                                    <!--android:orientation="horizontal">-->
 
-                                            <!--<ImageView-->
-                                                <!--android:id="@+id/share_fab"-->
-                                                <!--android:layout_width="50dp"-->
-                                                <!--android:layout_height="50dp" />-->
+                                    <!--<ImageView-->
+                                    <!--android:id="@+id/share_fab"-->
+                                    <!--android:layout_width="50dp"-->
+                                    <!--android:layout_height="50dp" />-->
 
-                                            <!--<ImageView-->
-                                                <!--android:id="@+id/wishlist_fab"-->
-                                                <!--android:layout_width="50dp"-->
-                                                <!--android:layout_height="50dp"-->
-                                                <!--android:layout_marginBottom="5dp"-->
-                                                <!--android:layout_marginRight="10dp"-->
-                                                <!--android:clickable="true" />-->
-                                        <!--</LinearLayout>-->
+                                    <!--<ImageView-->
+                                    <!--android:id="@+id/wishlist_fab"-->
+                                    <!--android:layout_width="50dp"-->
+                                    <!--android:layout_height="50dp"-->
+                                    <!--android:layout_marginBottom="5dp"-->
+                                    <!--android:layout_marginRight="10dp"-->
+                                    <!--android:clickable="true" />-->
+                                    <!--</LinearLayout>-->
                                     <!--</FrameLayout>-->
                                     <LinearLayout
                                         android:id="@+id/name_price_category"
@@ -221,7 +201,7 @@
                                                 android:orientation="vertical">
 
                                                 <TextView
-                                                    android:id="@+id/productName"
+                                                    android:id="@+id/productBrand"
                                                     fontPath="@string/font_lato_semibold"
                                                     android:layout_width="wrap_content"
                                                     android:layout_height="wrap_content"
@@ -232,7 +212,7 @@
                                                     android:textSize="@dimen/text_size_xxxlarge" />
 
                                                 <TextView
-                                                    android:id="@+id/productBrand"
+                                                    android:id="@+id/productName"
                                                     android:layout_width="wrap_content"
                                                     android:layout_height="wrap_content"
                                                     android:text=""
@@ -608,25 +588,25 @@
                         <LinearLayout
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:layout_weight="1"
-                            android:layout_marginTop="10dp"
-                            android:layout_marginBottom="10dp"
                             android:layout_gravity="right"
+                            android:layout_marginBottom="10dp"
                             android:layout_marginRight="-5dp"
-                            android:paddingRight="10dp"
+                            android:layout_marginTop="10dp"
+                            android:layout_weight="1"
+                            android:background="@drawable/bg_sale_details_price_background"
                             android:clickable="false"
                             android:focusable="false"
-                            android:paddingLeft="10dp"
-                            android:paddingTop="5dp"
+                            android:orientation="vertical"
                             android:paddingBottom="5dp"
-                            android:background="@drawable/bg_sale_details_price_background"
-                            android:orientation="vertical">
+                            android:paddingLeft="10dp"
+                            android:paddingRight="10dp"
+                            android:paddingTop="5dp">
 
                             <TextView
                                 android:id="@+id/productPrice"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:layout_gravity="center_horizontal"
+                                android:layout_gravity="end|fill_vertical"
                                 android:maxLines="1"
                                 android:text=""
                                 android:textColor="@color/white"
@@ -637,7 +617,7 @@
                                 fontPath="@string/font_lato_light"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:layout_gravity="center_horizontal"
+                                android:layout_gravity="end"
                                 android:maxLines="1"
                                 android:text=""
                                 android:textColor="#FBFBFB"
@@ -657,7 +637,7 @@
                 android:layout_width="match_parent"
                 android:layout_gravity="bottom"
                 android:layout_margin="@dimen/activity_horizontal_margin"
-                android:text="@string/add_to_basket" />
+                android:text="@string/add_to_cart" />
 
         </android.support.design.widget.CoordinatorLayout>
 

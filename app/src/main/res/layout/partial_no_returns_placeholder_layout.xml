@@ -30,7 +30,7 @@
         android:layout_marginBottom="@dimen/default_button_height"
         android:layout_marginTop="10dp"
         android:paddingBottom="@dimen/default_button_height"
-        android:text="you currently do not have any returns."
+        android:text="@string/you_currently_do_not_have_any_returns"
         android:textColor="#D0D0D0"
         android:textSize="@dimen/text_size_xxlarge" />
 
