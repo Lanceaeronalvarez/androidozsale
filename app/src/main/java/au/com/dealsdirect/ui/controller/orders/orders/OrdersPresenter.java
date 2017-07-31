@@ -160,44 +160,44 @@ public class OrdersPresenter<V extends OrdersMvpView> extends BasePresenter<V> i
     @Override
     public void loadOrders() {
 //        TRUE API CALL
-//        GetPaymentsList.RequestValues requestValues = new GetPaymentsList.RequestValues();
-//        getCompositeDisposable().add(getDataManager()
-//                .callGetPaymentsList(requestValues)
-//                .subscribeOn(getSchedulerProvider().io())
-//                .observeOn(getSchedulerProvider().ui())
-//                .subscribe(new Consumer<GetPaymentsList.ResponseValue>() {
-//                    @Override
-//                    public void accept(@NonNull GetPaymentsList.ResponseValue responseValue) throws Exception {
-//                        if (!isViewAttached()) {
-//                            return;
-//                        }
-//
-//                        if(responseValue.getNewReturnOrderDetailResponse().getResult()){
-//                            getMvpView().showOrders(responseValue.getNewReturnOrderDetailResponse().getList());
-//                        }
-//                    }
-//                }, new Consumer<Throwable>() {
-//                    @Override
-//                    public void accept(@NonNull Throwable throwable) throws Exception {
-//                        if (!isViewAttached()) {
-//                            return;
-//                        }
-//
-//                        getMvpView().hideLoading();
-//                        getMvpView().onError(throwable.getMessage());
-//
-//                        // handle load accounts error here
-//                        if (throwable instanceof ANError) {
-//                            ANError anError = (ANError) throwable;
-//                            handleApiError(anError);
-//                        }
-//                    }
-//                })
-//        );
+        GetPaymentsList.RequestValues requestValues = new GetPaymentsList.RequestValues();
+        getCompositeDisposable().add(getDataManager()
+                .callGetPaymentsList(requestValues)
+                .subscribeOn(getSchedulerProvider().io())
+                .observeOn(getSchedulerProvider().ui())
+                .subscribe(new Consumer<GetPaymentsList.ResponseValue>() {
+                    @Override
+                    public void accept(@NonNull GetPaymentsList.ResponseValue responseValue) throws Exception {
+                        if (!isViewAttached()) {
+                            return;
+                        }
+
+                        if(responseValue.getD().getResult()){
+                            getMvpView().showOrders(responseValue.getD().getList());
+                        }
+                    }
+                }, new Consumer<Throwable>() {
+                    @Override
+                    public void accept(@NonNull Throwable throwable) throws Exception {
+                        if (!isViewAttached()) {
+                            return;
+                        }
+
+                        getMvpView().hideLoading();
+                        getMvpView().onError(throwable.getMessage());
+
+                        // handle load accounts error here
+                        if (throwable instanceof ANError) {
+                            ANError anError = (ANError) throwable;
+                            handleApiError(anError);
+                        }
+                    }
+                })
+        );
 //
 //        MOCK CALL
-        GetPaymentsList.ResponseValue responseValue = new Gson().fromJson(mockCall,GetPaymentsList.ResponseValue.class);
-        ArrayList<GetPaymentsList.ResponseValue.PaymentItem> testOrders = responseValue.getD().getList();
-        getMvpView().showOrders(testOrders);
+//        GetPaymentsList.ResponseValue responseValue = new Gson().fromJson(mockCall,GetPaymentsList.ResponseValue.class);
+//        ArrayList<GetPaymentsList.ResponseValue.PaymentItem> testOrders = responseValue.getD().getList();
+//        getMvpView().showOrders(testOrders);
     }
 }
