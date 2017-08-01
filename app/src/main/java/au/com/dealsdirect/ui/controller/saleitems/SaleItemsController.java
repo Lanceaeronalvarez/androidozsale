@@ -69,7 +69,7 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
     private String mSaleId;
     private String mTitle;
     private String mCategoryKey = "";
-    private String mSearchQuery;
+    private String mSearchQuery = "";
     private boolean hasShowedItems = false;
 
     private List<GetSaleItemsResponse.Products> mSaleItems = new LinkedList<>();
@@ -108,6 +108,7 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
     private boolean mIsFromCategory = false;
     private int mSaleItemClickCounter = 0;
     private boolean isFiltered = false;
+    private boolean mIsSearch  = false;
 
     private List<SearchChipModel> mChipFilters = new ArrayList<>();
 
@@ -295,7 +296,6 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
         } else if (!mSaleItems.isEmpty()) {
             mPaginateManager = PaginateUtils.init(mSaleItemsRecyclerView, mPaginateCallbacks);
         }
-
     }
 
     @Override
@@ -316,9 +316,10 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
             mSaleItemsAdapter.replaceData(items);
             mPaginateManager = PaginateUtils.init(mSaleItemsRecyclerView, mPaginateCallbacks);
             initialLoad = true;
-        } else if (isFiltered) {
+        } else if (isFiltered || mIsSearch) {
             mSaleItemsAdapter.replaceData(items);
             isFiltered = false;
+            mIsSearch = false;
         } else {
             mSaleItemsAdapter.addData(items);
             if (items.size() == 0) {
@@ -460,7 +461,10 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
 
             @Override
             public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-                mPresenter.loadSaleItems("","",charSequence.toString(),0, new ArrayList());
+                String searchTerm = charSequence.toString();
+                mSearchQuery = searchTerm;
+                mIsSearch = true;
+                mPresenter.loadSaleItems("",mSaleId,searchTerm,0, new ArrayList());
 
             }
 
@@ -472,7 +476,10 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
 
         mSaleItemsToolbarField.setOnEditorActionListener((textView, i, keyEvent) -> {
             if (i == EditorInfo.IME_ACTION_SEARCH) {
-                mPresenter.loadSaleItems("","",textView.getText().toString(),0, new ArrayList());
+                String seartTerm = textView.getText().toString();
+                mSearchQuery = seartTerm;
+                mIsSearch = true;
+                mPresenter.loadSaleItems("",mSaleId,mSearchQuery,0, new ArrayList());
                 mSaleItemsToolbarField.setVisibility(View.GONE);
                 mSaleItemsToolbarTitle.setVisibility(View.VISIBLE);
                 mSaleItemsToolbarTitle.setText(textView.getText().toString());
