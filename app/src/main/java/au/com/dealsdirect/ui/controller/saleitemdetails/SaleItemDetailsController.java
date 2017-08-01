@@ -6,7 +6,6 @@ import android.animation.ObjectAnimator;
 import android.animation.ValueAnimator;
 import android.annotation.SuppressLint;
 import android.content.Intent;
-import android.graphics.Bitmap;
 import android.graphics.Paint;
 import android.net.Uri;
 import android.os.Bundle;
@@ -21,11 +20,9 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.animation.AlphaAnimation;
+import android.view.ViewTreeObserver;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
-import android.view.animation.ScaleAnimation;
-import android.view.animation.TranslateAnimation;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.widget.FrameLayout;
@@ -37,12 +34,6 @@ import android.widget.TextView;
 
 import com.aurelhubert.ahbottomnavigation.AHBottomNavigation;
 import com.aurelhubert.ahbottomnavigation.notification.AHNotification;
-import com.bluelinelabs.conductor.Router;
-import com.bumptech.glide.Glide;
-import com.bumptech.glide.Priority;
-import com.bumptech.glide.load.DecodeFormat;
-import com.bumptech.glide.load.engine.DiskCacheStrategy;
-import com.bumptech.glide.request.RequestOptions;
 import com.facebook.rebound.SimpleSpringListener;
 import com.facebook.rebound.Spring;
 import com.facebook.rebound.SpringConfig;
@@ -64,20 +55,16 @@ import au.com.dealsdirect.data.network.model.saleitemdetails.AddToCartRequest;
 import au.com.dealsdirect.data.network.model.saleitemdetails.GetSaleItemDetailsResponse;
 import au.com.dealsdirect.ui.base.BaseController;
 import au.com.dealsdirect.ui.controller.home.HomeController;
-import au.com.dealsdirect.ui.controller.main.MainController;
 import au.com.dealsdirect.ui.controller.saleitemdetails.listener.LoadImagesListener;
 import au.com.dealsdirect.ui.controller.saleitems.SaleItemsController;
-import au.com.dealsdirect.ui.controller.saleitems.SaleItemsMvpView;
 import au.com.dealsdirect.ui.custom.CustomAlertDialog;
 import au.com.dealsdirect.ui.main.MainActivity;
-import au.com.dealsdirect.ui.main.MainMvpView;
 import au.com.dealsdirect.utils.AnimationEngine;
 import au.com.dealsdirect.ui.main.SharedActivity;
 import au.com.dealsdirect.utils.BundleBuilder;
 import au.com.dealsdirect.utils.CartUtil;
 import au.com.dealsdirect.utils.ImageUtils;
 import au.com.dealsdirect.utils.PriceUtils;
-import au.com.dealsdirect.utils.ScreenUtils;
 import au.com.dealsdirect.widget.ElasticDragDismissFrameLayout;
 import butterknife.BindView;
 import butterknife.OnClick;
@@ -178,7 +165,6 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
 
     private boolean hasSizes = false;
     private boolean didSelectSize = false;
-    private String selectedSkuId = "";
     private int mFromPosition = -1;
 
     boolean checkOutLocated = false;
@@ -424,8 +410,6 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
                 String size = skuVariant.getAttributes().getSize();
                 if (size != null && !size.isEmpty()) {
                     mProductSizes.add(new Pair<>(size, skuId));
-                } else {
-                    mProductSizes.add(null);
                 }
             }
         }
@@ -450,7 +434,6 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
             };
 
             mSizesFlowLayout.setAdapter(mSizesAdapter);
-        }
 
             mSizesFlowLayout.setOnSelectListener(selectPosSet -> {
                 if (selectPosSet.size() != 0) {
@@ -517,7 +500,7 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
     }
 
     private void verifyAddToCart() {
-        AddToCartRequest request = new AddToCartRequest(selectedSkuId);
+        AddToCartRequest request = new AddToCartRequest(mSkuId);
 
         if (hasSizes) {
             if (!didSelectSize) {
@@ -536,6 +519,7 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
     }
 
     private void animateAddToCart() {
+
         SaleItemDetailsImageAdapter.ViewHolder vh = (SaleItemDetailsImageAdapter.ViewHolder) mProductImagesRv
                 .findViewHolderForLayoutPosition(mProductImagesRvLayoutManager.findLastVisibleItemPosition());
 

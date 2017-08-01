@@ -222,9 +222,8 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
         }
 
 
-
-        if (mCategoryKey!=null && !mCategoryKey.isEmpty()){
-            Log.d("saletitle", "with category "+mCategoryKey);
+        if (mCategoryKey != null && !mCategoryKey.isEmpty()) {
+            Log.d("saletitle", "with category " + mCategoryKey);
 
             char c = '>';
             int charCount = 0;
@@ -310,7 +309,7 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
         mFacets = getSaleItemsResponse.facets;
         mCategoryTreeResponse = getSaleItemsResponse.getCategories();
 
-        Log.d("SaleItemsCategories", "size = " +getSaleItemsResponse.getCategories().size());
+        Log.d("SaleItemsCategories", "size = " + getSaleItemsResponse.getCategories().size());
         loadingInProgress = false;
 
         if (!initialLoad) {
