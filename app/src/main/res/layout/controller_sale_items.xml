@@ -14,7 +14,8 @@
 
         <android.support.v7.widget.RecyclerView
             android:id="@+id/controller_sale_items_grid_view"
-            android:padding="5dp"
+            android:paddingLeft="5dp"
+            android:paddingRight="5dp"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:background="#FFFFFF"/>
