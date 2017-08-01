@@ -88,4 +88,14 @@ public class DeliveryAddress implements Parcelable {
                 postcode.equalsIgnoreCase(item.Postcode != null ? item.Postcode : "") &&
                 phone.equalsIgnoreCase(item.Phone != null ? item.Phone : "");
     }
+
+    public void resetDataFromAddressItem(AddressesItem addressesItem){
+        this.name = addressesItem.Name != null ? addressesItem.Name : "";
+        this.addressLines = addressesItem.AddressLines != null ? addressesItem.AddressLines : "";
+        this.suburb = addressesItem.Suburb != null ? addressesItem.Suburb : "";
+        this.city = addressesItem.City != null ? addressesItem.City : "";
+        this.state = addressesItem.State != null ? addressesItem.State : "";
+        this.postcode = addressesItem.Postcode != null ? addressesItem.Postcode : "";
+        this.phone = addressesItem.Phone != null ? addressesItem.Phone : "";
+    }
 }

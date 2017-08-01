@@ -127,6 +127,7 @@ public class ViewAddressController extends BaseController implements ViewAddress
 //                                        getBaseActivity().showProgressDialog("Setting address. Please wait.");
                                         mPresenter.applyDeliveryAddress(item.ID);
 
+                                        mRecyclerViewAdapter.updateDeliveryAddress(item);
                                     }
                                 }
                             }));

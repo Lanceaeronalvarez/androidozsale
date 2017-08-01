@@ -49,6 +49,11 @@ public class ViewAddressRecyclerViewAdapter extends RecyclerView.Adapter<ViewAdd
         this.mPresenter = presenter;
     }
 
+    void updateDeliveryAddress(AddressesItem addressesItem){
+        mDeliveryAddress.resetDataFromAddressItem(addressesItem);
+        notifyDataSetChanged();
+    }
+
     @Override
     public MyAddressModuleViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.address_row_layout, parent, false);
@@ -67,19 +72,10 @@ public class ViewAddressRecyclerViewAdapter extends RecyclerView.Adapter<ViewAdd
         holder.addressText.setText(String.valueOf(newAddress));
 
         if (isCalledFromCart) {
-
             holder.removeAddressText.setVisibility(View.GONE);
 
-            holder.itemView.setBackgroundResource(R.drawable.bg_ripple_gray);
             holder.itemView.setSelected(mDeliveryAddress != null && mDeliveryAddress.equalsAddressItem(addressList.get(position)));
             holder.addressNumber.setSelected(mDeliveryAddress != null && mDeliveryAddress.equalsAddressItem(addressList.get(position)));
-
-            holder.itemView.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    mPresenter.applyDeliveryAddress(addressId);
-                }
-            });
         } else {
 
             holder.removeAddressText.setOnClickListener(view -> {

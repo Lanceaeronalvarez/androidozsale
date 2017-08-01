@@ -161,6 +161,7 @@ public class PaymentSelectController extends BaseController implements PaymentSe
             public void onItemClick(View v, int position) {
                 if (isFromCart) {
                     mActivity.setPaymentMethodSelected(mPaymentMethods.get(position));
+                    mAdapter.notifyDataSetChanged();
                     mActivity.onBackPressed();
                 } else {
                     mPresenter.removeUserPaymentMethod(mPaymentMethods.get(position));
