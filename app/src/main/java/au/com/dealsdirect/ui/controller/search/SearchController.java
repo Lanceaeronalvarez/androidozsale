@@ -13,6 +13,7 @@ import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
 
+import com.bluelinelabs.conductor.RouterTransaction;
 import com.paginate.Paginate;
 
 import java.util.ArrayList;
@@ -255,7 +256,7 @@ public class SearchController extends BaseController implements SaleItemsMvpView
         Bundle bundle = new Bundle();
         bundle.putString("KEY_IMAGE_ID", imageUrl);
         bundle.putString("KEY_SEO_IDENTIFIER", seoIdentifierId);
-        bundle.putString("KEY_ITEM_ID", itemId);
+        bundle.putString("KEY_ITEM_ID", skuId);
         bundle.putString("KEY_SALE_ID", saleId);
         bundle.putString("KEY_SALE_NAME", ((SaleItemsAdapter.ViewHolder) viewHolder).mSaleItemName.getText().toString());
         bundle.putString("KEY_SALE_PRICE",((SaleItemsAdapter.ViewHolder) viewHolder).mSalePrice.getText().toString());
