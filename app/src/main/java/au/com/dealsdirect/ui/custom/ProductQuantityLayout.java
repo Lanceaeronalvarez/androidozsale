@@ -89,14 +89,16 @@ public class ProductQuantityLayout extends LinearLayout {
                 quantity.setText(String.valueOf(quantityValue));
             }
 
-            minus.setClickable(false);
-            plus.setVisibility(View.GONE);
-            mPlusLoader.setVisibility(View.VISIBLE);
+            if (quantityValue < max) {
+                minus.setClickable(false);
+                plus.setVisibility(View.GONE);
+                mPlusLoader.setVisibility(View.VISIBLE);
+            }
             listener.onQuantityIncrease(this, quantityValue);
         });
     }
 
-    public void resetLoaders(){
+    public void resetLoaders() {
         minus.setClickable(true);
         minus.setVisibility(View.VISIBLE);
         mMinusLoader.setVisibility(View.GONE);

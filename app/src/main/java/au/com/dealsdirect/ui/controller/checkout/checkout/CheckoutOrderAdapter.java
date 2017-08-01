@@ -100,6 +100,7 @@ public class CheckoutOrderAdapter extends ArrayAdapter<Item> {
         view.colorText.setVisibility(View.INVISIBLE);
 
         view.price.setText(PriceUtils.getPriceStringValue(item.price));
+        view.quantityLayout.setMax(5);
         view.quantityLayout.setQuantity(item.qty);
         view.quantityLayout.setAutoUpdateQuantity(false);
         view.quantityLayout.setEditTextToNonEditable();
