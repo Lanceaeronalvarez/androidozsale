@@ -59,7 +59,6 @@ public class ViewAddressController extends BaseController implements ViewAddress
     private List<AddressesItem> mAddressList;
     boolean mCalledFromCart;
     private int recyclerTempItemPosition;
-    private int recyclerTempItemsSize;
     private ViewAddressRecyclerViewAdapter mRecyclerViewAdapter;
     private List<DecorationInfoList> mDecorationInfoList;
     private boolean mAddressesLoaded = false;
@@ -202,17 +201,16 @@ public class ViewAddressController extends BaseController implements ViewAddress
         CustomAlertDialog.showCustomAlertDialog(getActivity(),
                 CustomAlertDialog.CustomDialogIconState.POSITIVE,
                 "Removed address");
-//
+
+
+        mRecyclerViewAdapter.notifyItemRemoved(recyclerTempItemPosition);
         mRecyclerViewAdapter.removeItemAtPosition(recyclerTempItemPosition);
         mRecyclerViewAdapter.notifyItemChanged(recyclerTempItemPosition);
-        mRecyclerViewAdapter.notifyItemRangeChanged(recyclerTempItemPosition, recyclerTempItemsSize);
-//        mPresenter.loadAddresses();
     }
 
     @Override
-    public void onDeleteItemClicked(DeleteUserAddress.RequestValues deleteUserAddressRequest, int position, int itemRange) {
+    public void onDeleteItemClicked(DeleteUserAddress.RequestValues deleteUserAddressRequest, int position) {
         recyclerTempItemPosition = position;
-        recyclerTempItemsSize = itemRange;
 
         mPresenter.deleteUserDeliveryAddress(deleteUserAddressRequest.getAddressID());
     }
