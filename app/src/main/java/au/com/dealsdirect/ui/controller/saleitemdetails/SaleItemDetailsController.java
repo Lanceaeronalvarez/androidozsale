@@ -110,6 +110,8 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
     TextView mDiscountLabel;
     @BindView(R.id.productImageRecyclerView)
     RecyclerViewPager mProductImagesRv;
+    @BindView(R.id.otherImagesRecyclerView)
+    public RecyclerView mOtherImagesRv;
     @BindView(R.id.productName)
     TextView mProductName;
     @BindView(R.id.productBrand)
@@ -193,6 +195,7 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
 
             mProductSharedImage.setVisibility(View.VISIBLE);
             mProductImagesRv.setVisibility(View.INVISIBLE);
+            mOtherImagesRv.setVisibility(View.INVISIBLE);
 
             final Intent resultData = new Intent();
             resultData.putExtra(RESULT_EXTRA_CONTROLLER_ID, getInstanceId());
@@ -292,12 +295,22 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
 
         mPresenter.loadSaleItemDetails(mSeoIdentifierId);
 
+        mOtherImagesRv.setLayoutManager(new LinearLayoutManager(getActivity(), LinearLayoutManager.HORIZONTAL, false));
         mSaleItemImagesIndicatorAdapter = new SaleItemDetailsImageAdapter(this, loadImagesListener, null, mSaleId, 2);
+        mOtherImagesRv.setAdapter(mSaleItemImagesIndicatorAdapter);
 
         mProductImagesRvLayoutManager = new LinearLayoutManager(getActivity(), LinearLayoutManager.HORIZONTAL, false);
         mProductImagesRv.setLayoutManager(mProductImagesRvLayoutManager);
         mSaleItemImagesAdapter = new SaleItemDetailsImageAdapter(this, loadImagesListener, null, mSaleId, 1);
         mProductImagesRv.setAdapter(mSaleItemImagesAdapter);
+
+        mProductImagesRv.addOnPageChangedListener((i, i1) -> {
+            SaleItemDetailsImageAdapter.ViewHolder vhNew = (SaleItemDetailsImageAdapter.ViewHolder) mOtherImagesRv.findViewHolderForLayoutPosition(i1);
+            vhNew.image.setImageResource(R.drawable.circle_indicator_active);
+
+            SaleItemDetailsImageAdapter.ViewHolder vhOld = (SaleItemDetailsImageAdapter.ViewHolder) mOtherImagesRv.findViewHolderForLayoutPosition(i);
+            vhOld.image.setImageResource(R.drawable.circle_indicator_inactive);
+        });
 
         mHtmlHeader = getActivity().getResources()
                 .getString(R.string.base_html_template_header);
@@ -380,6 +393,7 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
         List<String> qualitySaleImages = getQualityImages(saleDetail.getImages());
 
         mSaleItemImagesAdapter.replaceData(qualitySaleImages);
+        mSaleItemImagesIndicatorAdapter.replaceData(qualitySaleImages);
 
         mProductDescriptionText.startAnimation(anim);
         mProductDescriptionText.loadData(mHtmlHeader + saleDetail.getDescription() + mHtmlFooter,

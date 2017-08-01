@@ -12,7 +12,7 @@
     <!--android:width="120dp"-->
     <!--android:height="120dp"/>-->
 
-    <solid android:color="@color/gray_generic_icon" />
+    <solid android:color="#CCCCCC" />
 
     <size
         android:width="120dp"
