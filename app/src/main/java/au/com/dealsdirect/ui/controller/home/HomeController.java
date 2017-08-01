@@ -68,6 +68,7 @@ public class HomeController extends BaseController implements HomeMvpView {
 
 
     private int mBottomNavItemSelectCounter = 0;
+
     public static HomeController newInstance() {
 
         return new HomeController(
@@ -102,12 +103,12 @@ public class HomeController extends BaseController implements HomeMvpView {
         mRouter = Conductor.attachRouter(getActivity(), mContainer, null);
         if (!mRouter.hasRootController()) {
             ShopsController shopsController = new ShopsController();
-            ((MainActivity)getActivity()).setShopController(shopsController);
+            ((MainActivity) getActivity()).setShopController(shopsController);
             mRouter.setRoot(RouterTransaction.with(shopsController)
                     .tag(ShopsController.TAG));
         }
 
-        ((MainActivity)getActivity()).setHomeRouter(mRouter);
+        ((MainActivity) getActivity()).setHomeRouter(mRouter);
         AHBottomNavigationAdapter navigationAdapter = new AHBottomNavigationAdapter(getActivity(), R.menu.bottom_navigation_menu);
         navigationAdapter.setupWithBottomNavigation(mBottomNavigationView);
         mBottomNavigationView.setTitleState(AHBottomNavigation.TitleState.ALWAYS_SHOW);
@@ -149,8 +150,8 @@ public class HomeController extends BaseController implements HomeMvpView {
 
         mBottomNavigationView.setOnTabSelectedListener((position, wasSelected) -> {
             mBottomNavItemSelectCounter++;
-            if(isAttached())
-                ((MainActivity)getActivity()).isFromCategories(false);
+            if (isAttached())
+                ((MainActivity) getActivity()).isFromCategories(false);
 
             if (!wasSelected) {
                 mPreviousTab = mCurrentTab;
@@ -159,19 +160,19 @@ public class HomeController extends BaseController implements HomeMvpView {
                 switch (position) {
 
                     case 0:
-                        mBottomNavItemSelectCounter=0;
+                        mBottomNavItemSelectCounter = 0;
                         showShopController();
                         break;
 
                     case 1:
-                        mBottomNavItemSelectCounter=0;
+                        mBottomNavItemSelectCounter = 0;
                         showAccountController();
                         break;
 
                     case 2:
                     case 3:
-                        mBottomNavItemSelectCounter=0;
-                        if (!((MainActivity)getActivity()).isAuthorized()) {
+                        mBottomNavItemSelectCounter = 0;
+                        if (!((MainActivity) getActivity()).isAuthorized()) {
                             showLoginController(mRouter, new AuthHandler() {
                                 @Override
                                 public void success() {
@@ -189,15 +190,20 @@ public class HomeController extends BaseController implements HomeMvpView {
                         break;
 
                     case 4:
-                        mBottomNavItemSelectCounter=0;
+                        mBottomNavItemSelectCounter = 0;
                         showCheckoutController();
                         break;
                 }
             } else {
-                if (position == 0 && mBottomNavItemSelectCounter==2) {
-                    mBottomNavItemSelectCounter=0;
+                if (position == 0 && mBottomNavItemSelectCounter == 2) {
+                    mBottomNavItemSelectCounter = 0;
                     //noinspection ConstantConditions
-                    ((MainActivity)getActivity()).bottomNavSalesClick();
+                    ((MainActivity) getActivity()).bottomNavSalesClick();
+                }
+
+                if(position == 1) {
+                    mBottomNavItemSelectCounter = 0;
+                    mRouter.popToRoot();
                 }
             }
             return true;
@@ -271,13 +277,13 @@ public class HomeController extends BaseController implements HomeMvpView {
         }
     }
 
-    public void hideBottomNav(){
-        if (mBottomNavigationView!=null)
+    public void hideBottomNav() {
+        if (mBottomNavigationView != null)
             mBottomNavigationView.setVisibility(View.GONE);
     }
 
-    public void showBottomNav(){
-        if (mBottomNavigationView!=null)
+    public void showBottomNav() {
+        if (mBottomNavigationView != null)
             mBottomNavigationView.setVisibility(View.VISIBLE);
     }
 }
