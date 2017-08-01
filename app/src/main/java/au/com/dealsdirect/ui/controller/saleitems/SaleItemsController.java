@@ -7,6 +7,7 @@ import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -175,7 +176,7 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
             }.getType());
         }
         if (args.containsKey(KEY_SELECTED_FACETS))
-            mPreviousSelectedFacetIndicesJsonString = args.getString(KEY_SELECTED_FACETS,"");
+            mPreviousSelectedFacetIndicesJsonString = args.getString(KEY_SELECTED_FACETS, "");
 
         isFiltered = true;
         page = 0;
@@ -211,7 +212,7 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
                     getActivity().onBackPressed();
 
                 });
-                ((MainActivity)getActivity()).goToCategoriesFromSaleItems();
+                ((MainActivity) getActivity()).goToCategoriesFromSaleItems();
             });
         }
         else{
@@ -223,6 +224,7 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
 
 
         if (mCategoryKey!=null && !mCategoryKey.isEmpty()){
+            Log.d("saletitle", "with category "+mCategoryKey);
 
             char c = '>';
             int charCount = 0;
@@ -288,12 +290,13 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
         mSaleItemsRecyclerView.setLayoutManager(new GridLayoutManager(getActivity(), 2));
         mSaleItemsRecyclerView.setAdapter(mSaleItemsAdapter);
 
-        if(!mSaleItems.isEmpty()){
-            mPaginateManager = PaginateUtils.init(mSaleItemsRecyclerView, mPaginateCallbacks);
-        } else {
+        if (isFiltered || mSaleItems.isEmpty()) {
             showLoading();
             mPresenter.loadSaleItems(mCategoryKey, mSaleId, mSearchQuery, page, mChipFilters);
+        } else if (!mSaleItems.isEmpty()) {
+            mPaginateManager = PaginateUtils.init(mSaleItemsRecyclerView, mPaginateCallbacks);
         }
+
     }
 
     @Override
@@ -305,15 +308,16 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
     public void showSaleItems(GetSaleItemsResponse getSaleItemsResponse) {
         List<GetSaleItemsResponse.Products> items = getSaleItemsResponse.products;
         mFacets = getSaleItemsResponse.facets;
-        mCategoryTreeResponse =  getSaleItemsResponse.getCategories();
+        mCategoryTreeResponse = getSaleItemsResponse.getCategories();
 
+        Log.d("SaleItemsCategories", "size = " +getSaleItemsResponse.getCategories().size());
         loadingInProgress = false;
 
         if (!initialLoad) {
             mSaleItemsAdapter.replaceData(items);
             mPaginateManager = PaginateUtils.init(mSaleItemsRecyclerView, mPaginateCallbacks);
             initialLoad = true;
-        } else if(isFiltered){
+        } else if (isFiltered) {
             mSaleItemsAdapter.replaceData(items);
             isFiltered = false;
         } else {
@@ -322,7 +326,6 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
                 hasLoadedAllItems = true;
             }
         }
-
 
 
         mSaleItems = mSaleItemsAdapter.getData();
@@ -373,8 +376,8 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
                 , mSortingListJsonString
                 , mSaleId
                 , mCategoryKey
-                ,mPreviousSelectedFacetIndicesJsonString
-                ,new Gson().toJson(mChipFilters)))
+                , mPreviousSelectedFacetIndicesJsonString
+                , new Gson().toJson(mChipFilters)))
                 .pushChangeHandler(new VerticalChangeHandler())
                 .popChangeHandler(new VerticalChangeHandler()));
     }
@@ -388,8 +391,8 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
     @Override
     public void showProductDetails(RecyclerView.ViewHolder viewHolder, int position, String seoIdentifierId, String imageUrl, String skuId, String saleId) {
 
-        if (mSaleItemClickCounter!=1){
-            mSaleItemClickCounter =+1;
+        if (mSaleItemClickCounter != 1) {
+            mSaleItemClickCounter = +1;
 
             Handler clickHandler = new Handler();
             clickHandler.postDelayed(() -> {
@@ -397,7 +400,7 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
             }, 2000);
 
             List<String> names = new ArrayList<>();
-            names.add(getResources().getString(R.string.transition_sale_image_indexed,position));
+            names.add(getResources().getString(R.string.transition_sale_image_indexed, position));
             mSaleItemsRecyclerView.smoothScrollToPosition(position);
 
 //            final Handler handler = new Handler();
@@ -427,16 +430,16 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
 //                getActivity().startActivityForResult(intent, getActivity().getTaskId(), options.toBundle());
 //
 //            }, 200);
-            
+
             Bundle bundle = new Bundle();
-            bundle.putInt("KEY_POSITION",position);
+            bundle.putInt("KEY_POSITION", position);
             bundle.putString("KEY_IMAGE_ID", imageUrl);
             bundle.putString("KEY_SEO_IDENTIFIER", seoIdentifierId);
             bundle.putString("KEY_SKU_ID", skuId);
             bundle.putString("KEY_SALE_ID", saleId);
             bundle.putString("KEY_SALE_NAME", ((SaleItemsAdapter.ViewHolder) viewHolder).mSaleItemName.getText().toString());
-            bundle.putString("KEY_SALE_PRICE",((SaleItemsAdapter.ViewHolder) viewHolder).mSalePrice.getText().toString());
-            bundle.putString("KEY_SALE_OLD_PRICE",((SaleItemsAdapter.ViewHolder) viewHolder).mOldPrice.getText().toString());
+            bundle.putString("KEY_SALE_PRICE", ((SaleItemsAdapter.ViewHolder) viewHolder).mSalePrice.getText().toString());
+            bundle.putString("KEY_SALE_OLD_PRICE", ((SaleItemsAdapter.ViewHolder) viewHolder).mOldPrice.getText().toString());
 
             getRouter().pushController(RouterTransaction.with(SaleItemDetailsController.newInstance(bundle))
                     .pushChangeHandler(new SharedArcFadePushChangeHandler())

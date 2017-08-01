@@ -50,7 +50,8 @@ public class SubCategoryItemsAdapter extends RecyclerView.Adapter<RecyclerView.V
 
     @Override
     public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
-        setAnimation(holder.itemView, position);
+//        setAnimation(holder.itemView, position);
+
         Context context = holder.itemView.getContext();
 
         if (!mData.isEmpty()) {
