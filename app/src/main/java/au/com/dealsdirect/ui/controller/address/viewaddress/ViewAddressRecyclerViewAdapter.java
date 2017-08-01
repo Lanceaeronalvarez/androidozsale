@@ -85,7 +85,6 @@ public class ViewAddressRecyclerViewAdapter extends RecyclerView.Adapter<ViewAdd
                         .RequestValues(addressId);
 
                 mView.onDeleteItemClicked(deleteAddressRequest, position);
-                Log.d("delete", position + " position" + addressList.size() + " size");
             });
         }
 
