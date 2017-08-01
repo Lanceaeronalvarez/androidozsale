@@ -207,7 +207,7 @@ public class InviteSendController extends BaseController implements InviteMvpVie
             @Override
             public void onClick(View view) {
 
-                String personalInvitation = mPersonalInvitationMessageEditText.getText().toString() + " , ";
+                String personalInvitation = mPersonalInvitationMessageEditText.getText().toString();
                 String invitationLink = mPersonalInvitationLinkEditText.getText().toString();
                 String messageWithInvite = personalInvitation + invitationLink;
 
@@ -277,7 +277,7 @@ public class InviteSendController extends BaseController implements InviteMvpVie
 
                 String message = mPersonalInvitationMessageEditText.getText().toString();
                 String invitationLink = mPersonalInvitationLinkEditText.getText().toString();
-                String messageWithInvite = message +", "+invitationLink;
+                String messageWithInvite = message + invitationLink;
 
                 Intent smsIntent = new Intent(android.content.Intent.ACTION_VIEW);
                 smsIntent.setType("vnd.android-dir/mms-sms");
@@ -293,7 +293,7 @@ public class InviteSendController extends BaseController implements InviteMvpVie
 
                 String message = mPersonalInvitationMessageEditText.getText().toString();
                 String invitationLink = mPersonalInvitationLinkEditText.getText().toString();
-                String messageWithInvite = message +", "+invitationLink;
+                String messageWithInvite = message +invitationLink;
 
                 if(invitationLink.isEmpty() || invitationLink.equals("")){
 
@@ -303,7 +303,7 @@ public class InviteSendController extends BaseController implements InviteMvpVie
 
                             String message = mPersonalInvitationMessageEditText.getText().toString();
                             String invitationLink = mPersonalInvitationLinkEditText.getText().toString();
-                            String messageWithInvite = message +", "+invitationLink;
+                            String messageWithInvite = message + invitationLink;
 
                             Intent emailIntent = new Intent(Intent.ACTION_SENDTO, Uri.fromParts("mailto", " ", null));
                             emailIntent.putExtra(Intent.EXTRA_SUBJECT, inviteSubject);
@@ -422,7 +422,7 @@ public class InviteSendController extends BaseController implements InviteMvpVie
         inviteLink = inviteBody.getLink();
         inviteMessage = inviteBody.getInviteMessage();
         inviteSubject = inviteBody.getInviteSubject();
-        bannerImageUrl = "https://ibb.co/mipKAQ";
+        bannerImageUrl = inviteBody.getBannerUrl();
 
         mPersonalInvitationLinkEditText.setText(inviteLink);
         mSendInvitationContainer.setVisibility(View.VISIBLE);
