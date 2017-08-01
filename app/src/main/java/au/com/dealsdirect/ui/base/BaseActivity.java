@@ -21,6 +21,7 @@ import au.com.dealsdirect.R;
 import au.com.dealsdirect.di.component.ActivityComponent;
 import au.com.dealsdirect.di.component.DaggerActivityComponent;
 import au.com.dealsdirect.di.module.ActivityModule;
+import au.com.dealsdirect.ui.custom.CustomAlertDialog;
 import au.com.dealsdirect.utils.CommonUtils;
 import au.com.dealsdirect.utils.NetworkUtils;
 import butterknife.Unbinder;
@@ -83,10 +84,12 @@ public abstract class BaseActivity extends AppCompatActivity implements MvpView 
     @Override
     public void onError(String message) {
         Log.i("SnackbarError", message + "");
-        if (message != null) {
-            showSnackBar(message);
+        if (message != null && !message.contains("UnknownHostException")) {
+            CustomAlertDialog.showCustomAlertDialog(this, CustomAlertDialog.CustomDialogIconState.NEGATIVE, message);
+        } else if (message != null && message.contains("UnknownHostException")) {
+            CustomAlertDialog.showCustomAlertDialog(this, CustomAlertDialog.CustomDialogIconState.NEGATIVE, getString(R.string.no_network_connection));
         } else {
-            showSnackBar(getString(R.string.error));
+            CustomAlertDialog.showCustomAlertDialog(this, CustomAlertDialog.CustomDialogIconState.NEGATIVE, getString(R.string.error));
         }
     }
 
