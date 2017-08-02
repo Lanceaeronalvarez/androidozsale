@@ -1,5 +1,6 @@
 package au.com.dealsdirect.ui.controller.search;
 
+import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.GridLayoutManager;
@@ -9,9 +10,11 @@ import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.EditText;
+import android.view.inputmethod.EditorInfo;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 
 import com.bluelinelabs.conductor.RouterTransaction;
 import com.paginate.Paginate;
@@ -30,11 +33,11 @@ import au.com.dealsdirect.ui.controller.saleitemdetails.SaleItemDetailsControlle
 import au.com.dealsdirect.ui.controller.saleitems.SaleItemsMvpPresenter;
 import au.com.dealsdirect.ui.controller.saleitems.SaleItemsMvpView;
 import au.com.dealsdirect.ui.controller.saleitems.adapter.SaleItemsAdapter;
+import au.com.dealsdirect.ui.custom.SearchEditText;
 import au.com.dealsdirect.ui.custom.transitions.SharedArcFadePopChangeHandler;
 import au.com.dealsdirect.ui.custom.transitions.SharedArcFadePushChangeHandler;
 import au.com.dealsdirect.ui.main.MainActivity;
 import au.com.dealsdirect.utils.BundleBuilder;
-import au.com.dealsdirect.utils.KeyboardUtils;
 import au.com.dealsdirect.utils.PaginateUtils;
 import butterknife.BindView;
 import butterknife.OnClick;
@@ -55,13 +58,16 @@ public class SearchController extends BaseController implements SaleItemsMvpView
     ImageButton mSearchToolbarLeftOption;
 
     @BindView(R.id.partial_toolbar_search_field)
-    EditText mSearchToolbarSearchField;
+    SearchEditText mSearchToolbarSearchField;
 
     @BindView(R.id.controller_search_sale_items_placeholder)
     LinearLayout mSearchPlaceholder;
 
     @BindView(R.id.controller_search_sale_items_grid_view)
     RecyclerView mSearchSaleItemsRecyclerView;
+
+    @BindView(R.id.controller_search_opaque_view)
+    RelativeLayout mOpaqueLayoutCover;
 
     @Inject
     SaleItemsMvpPresenter<SaleItemsMvpView> mPresenter;
@@ -94,8 +100,6 @@ public class SearchController extends BaseController implements SaleItemsMvpView
     protected void onAttach(@NonNull View view) {
         super.onAttach(view);
 
-        assert (getActivity()) != null;
-        ((MainActivity)getActivity()).hideKeyboard();
     }
 
     @NonNull
@@ -113,6 +117,9 @@ public class SearchController extends BaseController implements SaleItemsMvpView
     @Override
     public void onViewBound(@NonNull View view) {
         super.onViewBound(view);
+
+
+
         setUp(view);
     }
 
@@ -122,6 +129,7 @@ public class SearchController extends BaseController implements SaleItemsMvpView
 
         ((MainActivity) getActivity()).getMainController().getHomeController().hideBottomNav();
         mPresenter.loadSaleItems("","","" ,0, new ArrayList());
+
 
         assert (getActivity()) != null;
         ((MainActivity)getActivity()).setDraggableViewPager(false);
@@ -134,6 +142,7 @@ public class SearchController extends BaseController implements SaleItemsMvpView
 
             @Override
             public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+                mOpaqueLayoutCover.setVisibility(View.VISIBLE);
                 mPresenter.loadSaleItems("","",charSequence.toString(),0, new ArrayList());
             }
 
@@ -142,6 +151,17 @@ public class SearchController extends BaseController implements SaleItemsMvpView
 
             }
         });
+
+        mSearchToolbarSearchField.setOnEditorActionListener((textView, i, keyEvent) -> {
+            if (i == EditorInfo.IME_ACTION_SEARCH) {
+//                hideKeyboard();
+                mPresenter.loadSaleItems("","",textView.toString(),0, new ArrayList());
+                mOpaqueLayoutCover.setVisibility(View.GONE);
+
+            }
+                return false;
+        });
+
 
         mPaginateCallbacks = new Paginate.Callbacks() {
             @Override
@@ -170,19 +190,30 @@ public class SearchController extends BaseController implements SaleItemsMvpView
         mSearchToolbarRightOption.setImageDrawable(
                 getActivity().getResources().getDrawable(R.drawable.ic_close));
 
-        mSearchToolbarSearchField.setActivated(true);
-        mSearchToolbarSearchField.setFocusable(true);
 
-//        if (mSearchToolbarSearchField.requestFocus()) {
-//            getActivity().getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_VISIBLE);
-//        }
+        mSearchToolbarSearchField.setOnKeyboardListener((keyboardEditText, showing) -> {
+            if (!showing){
+                mOpaqueLayoutCover.setVisibility(View.GONE);
+
+            }
+        });
+
+        android.os.Handler handler = new android.os.Handler();
+        handler.postDelayed(() -> {
+            if (mSearchToolbarSearchField.requestFocus()) {
+                InputMethodManager inputMethodManager =
+                        (InputMethodManager)getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
+
+                inputMethodManager.toggleSoftInputFromWindow(
+                        mSearchToolbarSearchField.getApplicationWindowToken(),
+                        InputMethodManager.SHOW_FORCED, 0);
+            }
+        },200);
     }
 
     @Override
     public void onDestroyView(View view) {
         mPresenter.onDetach();
-//        getActivity().getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN);
-
         super.onDestroyView(view);
     }
 
@@ -222,9 +253,6 @@ public class SearchController extends BaseController implements SaleItemsMvpView
             mSaleItemsAdapter.addData(saleItems);
         }
 
-        if (mSearchToolbarSearchField.requestFocus()) {
-            KeyboardUtils.showSoftInput(mSearchToolbarSearchField, getActivity());
-        }
     }
 
     @Override
@@ -271,7 +299,21 @@ public class SearchController extends BaseController implements SaleItemsMvpView
     @OnClick(R.id.partial_toolbar_search_right_option)
     void onBackClick(){
         assert (getActivity()) != null;
-        ((MainActivity)getActivity()).hideKeyboard();
         getActivity().onBackPressed();
+    }
+
+    @OnClick(R.id.controller_search_opaque_view)
+    void onItemsCoverClick(){
+        deActivateSearch();
+    }
+
+    @OnClick(R.id.partial_toolbar_search_field)
+    void onSearchFieldClick(){
+        mOpaqueLayoutCover.setVisibility(View.VISIBLE);
+    }
+
+    public void deActivateSearch(){
+        mOpaqueLayoutCover.setVisibility(View.GONE);
+        hideKeyboard();
     }
 }

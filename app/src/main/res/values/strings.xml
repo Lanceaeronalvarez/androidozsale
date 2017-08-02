@@ -280,4 +280,5 @@
     <string name="you_currently_do_not_have_any_returns">you currently do not have any returns</string>
     <string name="plus">+</string>
     <string name="minus">-</string>
+    <string name="sale_items_controller_tag">SaleItemsController</string>
 </resources>

@@ -45,7 +45,7 @@
             android:singleLine="true"
             android:textSize="@dimen/text_size_xxlarge"/>
 
-        <EditText
+        <au.com.dealsdirect.ui.custom.SearchEditText
             android:id="@+id/partial_toolbar_field_title_edittext"
             fontPath="@string/font_lato_medium"
             android:layout_width="match_parent"

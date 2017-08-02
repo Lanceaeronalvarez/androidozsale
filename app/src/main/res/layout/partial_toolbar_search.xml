@@ -32,7 +32,7 @@
             android:scaleType="fitCenter"
             android:src="@drawable/ic_search" />
 
-        <EditText
+        <au.com.dealsdirect.ui.custom.SearchEditText
             android:id="@+id/partial_toolbar_search_field"
             fontPath="@string/font_lato_medium"
             android:layout_width="match_parent"

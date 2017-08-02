@@ -52,6 +52,13 @@
         </LinearLayout>
 
 
+        <RelativeLayout
+            android:id="@+id/controller_sale_items_opaque_view"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:visibility="gone"
+            android:background="@color/search_gray_opaque"/>
+
     </RelativeLayout>
 
 

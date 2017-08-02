@@ -263,6 +263,7 @@ public class ShopsController extends BaseController implements ShopsMvpView, Ban
                                                 bannerId,
                                                 position,
                                                 imageUrl, null))
+                                        .tag(getActivity().getString(R.string.sale_items_controller_tag))
                                         .pushChangeHandler(new HorizontalChangeHandler())
                                         .popChangeHandler(new HorizontalChangeHandler()));
                     }
@@ -288,7 +289,7 @@ public class ShopsController extends BaseController implements ShopsMvpView, Ban
                                             position,
                                             imageUrl,
                                             null))
-                                    .tag("SaleItemsController")
+                                    .tag(getActivity().getString(R.string.sale_items_controller_tag))
                                     .pushChangeHandler(new HorizontalChangeHandler())
                                     .popChangeHandler(new HorizontalChangeHandler()));
                 } else {
@@ -398,6 +399,7 @@ public class ShopsController extends BaseController implements ShopsMvpView, Ban
                 .getHomeRouter()
                 .pushController(
                         RouterTransaction.with(SaleItemsController.newInstance(saleItemBundle))
+                                .tag(getActivity().getString(R.string.sale_items_controller_tag))
                                 .pushChangeHandler(new HorizontalChangeHandler())
                                 .popChangeHandler(new HorizontalChangeHandler()));
     }

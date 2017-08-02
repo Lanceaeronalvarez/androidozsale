@@ -258,6 +258,7 @@ public class CategoriesController extends BaseController
         if (!searchQuery.isEmpty())
             getRouter().pushController(RouterTransaction.with(
                     SaleItemsController.newInstance(saleItemBundle))
+                    .tag(getActivity().getString(R.string.sale_items_controller_tag))
                     .pushChangeHandler(new HorizontalChangeHandler())
                     .popChangeHandler(new HorizontalChangeHandler()));
 

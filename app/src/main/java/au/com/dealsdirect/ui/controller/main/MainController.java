@@ -79,7 +79,6 @@ public class MainController extends BaseController implements MainMvpView {
     protected void onAttach(@NonNull View view) {
         super.onAttach(view);
         mPresenter.onAttach(this);
-        setupViewPager();
     }
 
     @Override
@@ -95,6 +94,8 @@ public class MainController extends BaseController implements MainMvpView {
     @Override
     protected void onViewBound(@NonNull View view) {
         super.onViewBound(view);
+        setupViewPager();
+
         if (mPreLoadedCategories.size() == 0) {
             mPresenter.loadCategoryTree();
         }

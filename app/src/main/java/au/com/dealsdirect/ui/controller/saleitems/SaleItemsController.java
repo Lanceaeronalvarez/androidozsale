@@ -1,5 +1,6 @@
 package au.com.dealsdirect.ui.controller.saleitems;
 
+import android.content.Context;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.NonNull;
@@ -12,9 +13,10 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.EditorInfo;
-import android.widget.EditText;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.bluelinelabs.conductor.RouterTransaction;
@@ -38,6 +40,7 @@ import au.com.dealsdirect.ui.controller.saleitemdetails.SaleItemDetailsControlle
 import au.com.dealsdirect.ui.controller.saleitems.adapter.SaleItemsAdapter;
 import au.com.dealsdirect.ui.controller.searchfilter.SearchFilterController;
 import au.com.dealsdirect.ui.controller.searchfilter.adapter.SearchChipModel;
+import au.com.dealsdirect.ui.custom.SearchEditText;
 import au.com.dealsdirect.ui.custom.transitions.SharedArcFadePopChangeHandler;
 import au.com.dealsdirect.ui.custom.transitions.SharedArcFadePushChangeHandler;
 import au.com.dealsdirect.ui.main.MainActivity;
@@ -82,7 +85,7 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
     RecyclerView mSaleItemsRecyclerView;
 
     @BindView(R.id.partial_toolbar_field_title_edittext)
-    EditText mSaleItemsToolbarField;
+    SearchEditText mSaleItemsToolbarField;
 
     @BindView(R.id.partial_toolbar_field_title_textview)
     TextView mSaleItemsToolbarTitle;
@@ -95,6 +98,9 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
 
     @BindView(R.id.partial_toolbar_field_title_right_option)
     ImageButton mSaleItemsFilterIcon;
+
+    @BindView(R.id.controller_sale_items_opaque_view)
+    RelativeLayout mSaleItemsOpaqueCover;
 
     private SaleItemsAdapter mSaleItemsAdapter;
 
@@ -206,7 +212,6 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
         assert (getActivity()) != null;
         ((MainActivity) getActivity()).setDraggableViewPager(false);
 
-
         if (mIsFromCategory){
             mSaleItemsBackIcon.setOnClickListener(view1 -> {
                 mSaleItemsBackIcon.setOnClickListener(view2 -> {
@@ -242,12 +247,20 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
                     charCount++;
                 }
             }
+
             mSaleItemsToolbarField.setText(newString);
             mSaleItemsToolbarTitle.setText(newString);
 
         } else {
-            mSaleItemsToolbarField.setText(mTitle);
-            mSaleItemsToolbarTitle.setText(mTitle);
+           Log.d("saleitems","search query name = "+mSearchQuery);
+            if (!mSearchQuery.isEmpty() && !mSearchQuery.equals(mTitle)){
+                mSaleItemsToolbarField.setText(mSearchQuery);
+                mSaleItemsToolbarTitle.setText(mSearchQuery);
+            }else{
+                mSaleItemsToolbarField.setText(mTitle);
+                mSaleItemsToolbarTitle.setText(mTitle);
+            }
+
         }
         setUp(view);
     }
@@ -296,6 +309,14 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
         } else if (!mSaleItems.isEmpty()) {
             mPaginateManager = PaginateUtils.init(mSaleItemsRecyclerView, mPaginateCallbacks);
         }
+
+        mSaleItemsToolbarField.setOnKeyboardListener((keyboardEditText, showing) -> {
+            if (!showing){
+                deActivateSearch();
+            }else{
+
+            }
+        });
     }
 
     @Override
@@ -403,34 +424,6 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
             names.add(getResources().getString(R.string.transition_sale_image_indexed, position));
             mSaleItemsRecyclerView.smoothScrollToPosition(position);
 
-//            final Handler handler = new Handler();
-//            handler.postDelayed(() -> {
-//
-//                Intent intent = new Intent();
-//                intent.setClass(getActivity(), SharedActivity.class);
-//
-//            intent.putExtra("KEY_IMAGE_ID", imageUrl);
-//            intent.putExtra("KEY_SEO_IDENTIFIER", seoIdentifierId);
-//            intent.putExtra("KEY_ITEM_ID", itemId);
-//            intent.putExtra("KEY_SALE_ID", saleId);
-//            intent.putExtra("KEY_SALE_NAME", ((SaleItemsAdapter.ViewHolder) viewHolder).mSaleItemName.getText());
-//            intent.putExtra("KEY_SALE_PRICE",((SaleItemsAdapter.ViewHolder) viewHolder).mSalePrice.getText());
-//            intent.putExtra("KEY_SALE_OLD_PRICE",((SaleItemsAdapter.ViewHolder) viewHolder).mOldPrice.getText());
-//            Log.d("LogBundle", ((SaleItemsAdapter.ViewHolder) viewHolder).mSaleItemName.getText()+" , "+
-//                    ((SaleItemsAdapter.ViewHolder) viewHolder).mSalePrice.getText()+" , "+
-//                    ((SaleItemsAdapter.ViewHolder) viewHolder).mOldPrice.getText());
-//
-//
-//                ActivityOptions options =
-//                        ActivityOptions.makeSceneTransitionAnimation(getActivity(),
-//                                Pair.create(((SaleItemsAdapter.ViewHolder) viewHolder).mSaleItemImage, "transition"),
-//                                Pair.create(((SaleItemsAdapter.ViewHolder) viewHolder).mSaleItemImage, "cardbackground"));
-//
-//                //noinspection ConstantConditions
-//                getActivity().startActivityForResult(intent, getActivity().getTaskId(), options.toBundle());
-//
-//            }, 200);
-
             Bundle bundle = new Bundle();
             bundle.putInt("KEY_POSITION", position);
             bundle.putString("KEY_IMAGE_ID", imageUrl);
@@ -450,8 +443,44 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
 
     @OnClick(R.id.partial_toolbar_field_title_textview)
     void onViewSearch(){
+        activateSearch();
+    }
+
+    @OnClick(R.id.controller_sale_items_opaque_view)
+    void onClickCover(){
+        mSaleItemsOpaqueCover.setVisibility(View.GONE);
+        hideKeyboard();
+    }
+
+    @OnClick(R.id.partial_toolbar_field_title_edittext)
+    void onToolbarFieldClick(){
+        mSaleItemsOpaqueCover.setVisibility(View.VISIBLE);
+    }
+
+    public void deActivateSearch(){
+        mSaleItemsOpaqueCover.setVisibility(View.GONE);
+        mSaleItemsToolbarField.setActivated(false);
+        mSaleItemsToolbarField.setVisibility(View.GONE);
+        mSaleItemsToolbarTitle.setVisibility(View.VISIBLE);
+
+    }
+
+    public void activateSearch(){
+
+        mSaleItemsOpaqueCover.setVisibility(View.VISIBLE);
         mSaleItemsToolbarField.setVisibility(View.VISIBLE);
+
+        mSaleItemsToolbarField.setActivated(true);
         mSaleItemsToolbarTitle.setVisibility(View.GONE);
+
+        if (mSaleItemsToolbarField.requestFocus()) {
+            InputMethodManager inputMethodManager =
+                    (InputMethodManager)getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
+
+            inputMethodManager.toggleSoftInputFromWindow(
+                    mSaleItemsToolbarField.getApplicationWindowToken(),
+                    InputMethodManager.SHOW_FORCED, 0);
+        }
 
         mSaleItemsToolbarField.addTextChangedListener(new TextWatcher() {
             @Override
@@ -461,10 +490,11 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
 
             @Override
             public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-                String searchTerm = charSequence.toString();
-                mSearchQuery = searchTerm;
+                mSearchQuery = charSequence.toString();
                 mIsSearch = true;
-                mPresenter.loadSaleItems("",mSaleId,searchTerm,0, new ArrayList());
+                mPresenter.loadSaleItems("",mSaleId,charSequence.toString(),0, new ArrayList());
+                mSaleItemsToolbarTitle.setText(charSequence.toString());
+                mSaleItemsOpaqueCover.setVisibility(View.VISIBLE);
 
             }
 
@@ -476,13 +506,14 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
 
         mSaleItemsToolbarField.setOnEditorActionListener((textView, i, keyEvent) -> {
             if (i == EditorInfo.IME_ACTION_SEARCH) {
-                String seartTerm = textView.getText().toString();
-                mSearchQuery = seartTerm;
+                hideKeyboard();
+                mSearchQuery = textView.getText().toString();
                 mIsSearch = true;
                 mPresenter.loadSaleItems("",mSaleId,mSearchQuery,0, new ArrayList());
                 mSaleItemsToolbarField.setVisibility(View.GONE);
                 mSaleItemsToolbarTitle.setVisibility(View.VISIBLE);
                 mSaleItemsToolbarTitle.setText(textView.getText().toString());
+                mSaleItemsOpaqueCover.setVisibility(View.GONE);
             }
 
             return false;

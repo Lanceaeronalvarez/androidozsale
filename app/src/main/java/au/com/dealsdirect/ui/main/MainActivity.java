@@ -78,6 +78,7 @@ public class MainActivity extends BaseActivity implements MainMvpView {
 
     private int mViewPagerCurrentItem;
     private boolean mIsFromCategories = false;
+    private boolean isSearchActive = false;
 
 
     @Override
@@ -148,11 +149,9 @@ public class MainActivity extends BaseActivity implements MainMvpView {
                 int backstackSize = mHomeRouter.getBackstackSize()-1;
                 String tag = mHomeRouter.getBackstack().get(backstackSize).tag();
                 if(mIsFromCategories && mHomeRouter.getBackstackSize() == 1){
-                    Log.d("MainBack", "mIsFromCategories && mHomeRouter.getBackstackSize() == 1");
                     goToCategoriesFromSales();
                     mIsFromCategories = false;
                 }else if (mHomeRouter.getBackstackSize() == 1) {
-                    Log.d("MainBack", "mHomeRouter.getBackstackSize() == 1");
 
                     if((tag != null) && !tag.equals(ShopsController.TAG) && !tag.equals("Search")) {
                         goToShops();
@@ -172,7 +171,6 @@ public class MainActivity extends BaseActivity implements MainMvpView {
                 } else {
 
                     if(tag!=null && tag.equals(getString(R.string.search_tag))){
-                        Log.d("MainBack", "tag!=null && tag.equals(getString(R.string.search_tag))");
 
                         mHomeRouter.handleBack();
                         mShopController.showSearchToolbar();
@@ -182,11 +180,9 @@ public class MainActivity extends BaseActivity implements MainMvpView {
                                 mShopController.hideSearchToolbar(),500);
 
                     }else if ((tag!=null) && tag.equals(getString(R.string.sale_items_from_category))){
-                        Log.d("MainBack", "(tag!=null) && tag.equals(getString(R.string.sale_items_from_category))");
 
                         goToCategoriesFromSaleItems();
                     } else {
-                        Log.d("MainBack", "else");
                         mHomeRouter.handleBack();
                     }
                 }
@@ -514,4 +510,5 @@ public class MainActivity extends BaseActivity implements MainMvpView {
     public void goToShops(){
         getMainController().getHomeController().showShopController();
     }
+
 }
