@@ -20,7 +20,7 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:orientation="vertical"
-            android:visibility="gone">
+            android:visibility="visible">
 
 
         <TextView
@@ -78,7 +78,8 @@
 
         </LinearLayout>
 
-        <include layout="@layout/partial_no_voucher_placeholder_layout" />
+        <include layout="@layout/partial_no_voucher_placeholder_layout"
+            android:visibility="gone"/>
     </RelativeLayout>
 
 
