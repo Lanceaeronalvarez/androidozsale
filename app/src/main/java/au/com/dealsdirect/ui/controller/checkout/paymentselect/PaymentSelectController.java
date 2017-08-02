@@ -8,6 +8,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.bluelinelabs.conductor.RouterTransaction;
@@ -51,6 +52,8 @@ public class PaymentSelectController extends BaseController implements PaymentSe
     TextView mPaymentSelectToolbarTitle;
     @BindView(R.id.partial_toolbar_filter_view)
     ImageView mPaymentSelectRightOption;
+    @BindView(R.id.no_payment_method_placeholder)
+    LinearLayout mNoPaymentPlaceholder;
 
     PaymentSelectAdapter mAdapter;
     MainActivity mActivity;
@@ -99,9 +102,14 @@ public class PaymentSelectController extends BaseController implements PaymentSe
     @Override
     public void showPaymentList(List<PaymentMethod> paymentMethods) {
         if (paymentMethods != null) {
+            mNoPaymentPlaceholder.setVisibility(View.VISIBLE);
             mPaymentMethods = new ArrayList<>(paymentMethods);
             mAdapter.replaceData(mPaymentMethods);
+            mRecyclerView.setVisibility(View.GONE);
         } else {
+            mNoPaymentPlaceholder.setVisibility(View.GONE);
+            mRecyclerView.setVisibility(View.VISIBLE);
+
             getRouter().pushController(RouterTransaction.with(new AddPaymentController(false))
                     .pushChangeHandler(new HorizontalChangeHandler())
                     .popChangeHandler(new HorizontalChangeHandler()));

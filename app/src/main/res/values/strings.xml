@@ -148,9 +148,9 @@
         limited to 90 characters
     </string>
     <string name="delivery_instructions">Delivery instructions</string>
-    <string name="you_currently_do_not_have_any_addresses">you currently do not have any addresses
+    <string name="you_currently_do_not_have_any_addresses">you do not currently have any address
     </string>
-    <string name="welcome_to_my_address">welcome to my address</string>
+    <string name="welcome_to_my_address">welcome to my address!</string>
     <string name="delivery_address_added">delivery address added</string>
     <string name="remove_string">remove</string>
     <string name="add_to_cart">Add to Cart</string>
@@ -159,7 +159,7 @@
     <!--ORDERS-->
     <string name="shop_now">shop now</string>
     <string name="my_orders">my orders</string>
-    <string name="you_currently_do_no_have_any_orders">you currently do no have any orders.</string>
+    <string name="you_currently_do_no_have_any_orders">you do not currently have any orders.</string>
     <string name="welcome_to_my_orders">welcome to my orders!</string>
     <string name="no_network_connection">No Network Connection</string>
     <string name="i_am_looking_for">I am looking for...</string>

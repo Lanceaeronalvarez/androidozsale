@@ -140,6 +140,7 @@ public class ViewVouchersController extends BaseController implements ViewVouche
     @Override
     public void updateVoucherList(Pair<List<GetUserVoucherResponse.Voucher>, GetVouchersResponse> pair) {
         if (pair.first != null && pair.first.size() != 0) {
+            mRootLayout.setVisibility(View.VISIBLE);
             mUnusedVouchersRecyclerView.getLayoutManager().scrollToPosition(0);
 
             List<GetUserVoucherResponse.Voucher> usedVouchers = new ArrayList<>();
@@ -162,13 +163,9 @@ public class ViewVouchersController extends BaseController implements ViewVouche
 
             if (!usedVouchers.isEmpty()) {
                 mUsedVouchersAdapter.replace(usedVouchers);
-                mRootLayout.setVisibility(View.GONE);
-                mNoVouchersLayout.setVisibility(View.VISIBLE);
             } else {
                 mDivider.setVisibility(View.GONE);
                 mUsedVoucherIndicatorText.setVisibility(View.GONE);
-                mRootLayout.setVisibility(View.VISIBLE);
-                mNoVouchersLayout.setVisibility(View.GONE);
             }
         } else {
             mRootLayout.setVisibility(View.GONE);
