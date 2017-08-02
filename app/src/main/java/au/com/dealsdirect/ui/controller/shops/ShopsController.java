@@ -20,6 +20,7 @@ import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.bluelinelabs.conductor.Router;
 import com.bluelinelabs.conductor.RouterTransaction;
 import com.bluelinelabs.conductor.changehandler.FadeChangeHandler;
 import com.bluelinelabs.conductor.changehandler.HorizontalChangeHandler;
@@ -484,7 +485,7 @@ public class ShopsController extends BaseController implements ShopsMvpView, Ban
             shopsControllerSearchView.setVisibility(View.INVISIBLE);
         } else {
             assert (getActivity()) != null;
-            ((MainActivity) getActivity()).isFromCategories(false);
+            ((MainActivity) getActivity()).setIsFromCategories(false);
             loadShopBanners();
         }
     }

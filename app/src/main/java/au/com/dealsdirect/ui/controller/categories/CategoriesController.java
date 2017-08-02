@@ -12,6 +12,7 @@ import android.view.ViewGroup;
 import android.widget.ImageButton;
 import android.widget.TextView;
 
+import com.bluelinelabs.conductor.Router;
 import com.bluelinelabs.conductor.RouterTransaction;
 import com.bluelinelabs.conductor.changehandler.HorizontalChangeHandler;
 
@@ -75,6 +76,8 @@ public class CategoriesController extends BaseController
 
     private int searchTapCounter = 0;
 
+    private MainActivity mActivity;
+
     public static CategoriesController newInstance(
             Map<String, List<GetCategoryTreeResponse>> categoryMap,
             List<GetCategoryTreeResponse> categoryTree) {
@@ -105,8 +108,9 @@ public class CategoriesController extends BaseController
         super.onViewBound(view);
 
         assert (getActivity()) != null;
-        ((MainActivity)getActivity()).setDraggableViewPager(true);
-        ((MainActivity)getActivity()).setCategoriesRouter(getRouter());
+        mActivity = (MainActivity) getActivity();
+        mActivity.setDraggableViewPager(true);
+        mActivity.setCategoriesRouter(getRouter());
         setUp(view);
     }
 
@@ -196,16 +200,6 @@ public class CategoriesController extends BaseController
     }
 
     @Override
-    public void onCategoryDoubleTap(int position, GetCategoryTreeResponse getCategoryTreeResponse) {
-
-        getRouter().setRoot(
-                RouterTransaction.with(ShopsController.newInstance(getCategoryTreeResponse))
-                        .tag("Search")
-                        .pushChangeHandler(new RightHorizontalTransitionChangeHandler())
-                        .popChangeHandler(new RightHorizontalTransitionChangeHandler()));
-    }
-
-    @Override
     public void onSubCategoryClicked(GetCategoryTreeResponse getCategoryTreeResponse) {
         if (getCategoryTreeResponse.getName().equals("All")){
             assert (getActivity()) != null;
@@ -217,7 +211,7 @@ public class CategoriesController extends BaseController
     public void onSubCategoryItemClicked(String categoryID, String categoryName, String categoryKey) {
 
         assert (getActivity()) != null;
-        ((MainActivity)getActivity()).getMainController().setChosenCategoryItemKey(categoryKey);
+        mActivity.getMainController().setChosenCategoryItemKey(categoryKey);
 
         Bundle saleItemBundle = new BundleBuilder(new Bundle())
                 .putString("SaleItemsController.KEY_TITLE", categoryName)
@@ -225,11 +219,19 @@ public class CategoriesController extends BaseController
                 .putBoolean("SaleItemsController.IS_FROM_CATEGORY", true)
                 .build();
 
-        assert (getActivity()) != null;
-        ((MainActivity)getActivity()).goToSaleItemsFromCategory(saleItemBundle);
+        mActivity.getHomeRouter().pushController(RouterTransaction.with(
+                SaleItemsController.newInstance(saleItemBundle))
+                .tag("SaleItemsController")
+                .pushChangeHandler(new HorizontalChangeHandler())
+                .popChangeHandler(new HorizontalChangeHandler()));
 
-        Handler handler = new Handler();
-        handler.postDelayed(() -> mSubCategoryAdapter.notifyDataSetChanged(), 500);
+        new Handler().postDelayed(()->{
+            ((MainActivity)getActivity()).getMainController().goToShops();
+            mSubCategoryAdapter.notifyDataSetChanged();
+        },400);
+
+        mActivity.setIsFromCategories(true);
+
     }
 
     @SuppressWarnings("ConstantConditions")
@@ -256,7 +258,7 @@ public class CategoriesController extends BaseController
         if (!searchQuery.isEmpty())
             getRouter().pushController(RouterTransaction.with(
                     SaleItemsController.newInstance(saleItemBundle))
-                    .tag(getActivity().getString(R.string.sale_items_controller_tag))
+                    .tag("SaleItemsController")
                     .pushChangeHandler(new HorizontalChangeHandler())
                     .popChangeHandler(new HorizontalChangeHandler()));
 

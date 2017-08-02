@@ -3,6 +3,7 @@ package au.com.dealsdirect.ui.main;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
+import android.util.Log;
 import android.view.ViewGroup;
 
 import com.bluelinelabs.conductor.Conductor;
@@ -44,6 +45,8 @@ import au.com.dealsdirect.ui.controller.checkout.checkout.CheckoutController;
 import au.com.dealsdirect.ui.controller.checkout.paymentsuccess.PaymentSuccessController;
 import au.com.dealsdirect.ui.controller.login.LoginController;
 import au.com.dealsdirect.ui.controller.main.MainController;
+import au.com.dealsdirect.ui.controller.saleitems.SaleItemsController;
+import au.com.dealsdirect.ui.controller.searchfilter.SearchFilterController;
 import au.com.dealsdirect.ui.controller.shops.ShopsController;
 import au.com.dealsdirect.ui.controller.splash.SplashScreenController;
 import au.com.dealsdirect.ui.custom.CustomAlertDialog;
@@ -77,7 +80,6 @@ public class MainActivity extends BaseActivity implements MainMvpView {
     private Router mHomeRouter;
     private Router mCategoriesRouter;
 
-    private int mViewPagerCurrentItem;
     private boolean mIsFromCategories = false;
     private boolean isSearchActive = false;
 
@@ -141,69 +143,96 @@ public class MainActivity extends BaseActivity implements MainMvpView {
     @Override
     public void onBackPressed() {
 
-        switch (mViewPagerCurrentItem) {
+        switch (mViewPagerCurrentItem){
             case 0:
                 if (mCategoriesRouter.getBackstackSize() == 1) {
-                    setRootViewpagerItem(1);
+                    getMainController().goToShops();
+                    mIsFromCategories = false;
                 } else {
                     mRouter.handleBack();
                 }
                 break;
             case 1:
-                int backstackSize = mHomeRouter.getBackstackSize() - 1;
-                String tag = mHomeRouter.getBackstack().get(backstackSize).tag();
+                int topControllerIndex = mHomeRouter.getBackstackSize() - 1;
+                if (topControllerIndex >= 0) {
+                    String tag = mHomeRouter.getBackstack().get(topControllerIndex).tag();
 
-                if (getMainController().getHomeController().getIsAccountControllerActive()){
-                    Router accountRouter = getMainController().getHomeController().getAccountsRouter();
-                    int accountBackstackSize = accountRouter.getBackstackSize()-1;
-                    String accountTag = accountRouter.getBackstack().get(accountBackstackSize).tag();
-                    if ((accountTag != null) && accountTag.equals(getString(R.string.account_controller_tag))){
-
-                        goToShops();
-                        break;
-                    }else{
-                        getMainController().getHomeController().getAccountsRouter().handleBack();
-
+                    if(getHomeRouterCurrentController() instanceof SearchFilterController){
+                        mHomeRouter.handleBack();
+                        return;
                     }
-                }else{
-                    if(mIsFromCategories && mHomeRouter.getBackstackSize() == 1){
-                        goToCategoriesFromSales();
+
+                    if (mIsFromCategories) {
+                        getMainController().goToCategories();
                         mIsFromCategories = false;
-                    }else if (mHomeRouter.getBackstackSize() == 1) {
-
-                        if((tag != null) && !tag.equals(ShopsController.TAG) && !tag.equals("Search")) {
-                            goToShops();
-                            break;
-                        }
-
-                    DialogUtils.showYesNoDialog(
-                            this,
-                            getString(R.string.dealsdirect),
-                            getString(R.string.exit_app),
-                            getString(R.string.exit),
-                            getString(R.string.no),
-                            (dialogInterface, i) -> finish(),
-                            (dialogInterface, i) -> {
-
-                            });
-                } else {
-
-                        if(tag!=null && tag.equals(getString(R.string.search_tag))){
-
-                        mHomeRouter.handleBack();
-                        mShopController.showSearchToolbar();
-
-                            Handler handler = new Handler();
-                            handler.postDelayed(() ->
-                                    mShopController.hideSearchToolbar(),500);
-
-                        } else if ((tag != null) && tag.equals(getString(R.string.sale_items_from_category))) {
-
-                        goToCategoriesFromSaleItems();
                     } else {
-                        mHomeRouter.handleBack();
+
+                        if (mHomeRouter.getBackstackSize() == 1) {
+                            DialogUtils.showYesNoDialog(
+                                    this,
+                                    getString(R.string.dealsdirect),
+                                    getString(R.string.exit_app),
+                                    getString(R.string.exit),
+                                    getString(R.string.no),
+                                    (dialogInterface, i) -> finish(),
+                                    (dialogInterface, i) -> {
+
+                                    });
+                        } else {
+                            mHomeRouter.handleBack();
+
+                            //animation of returning toolbar
+                            if (getHomeRouterCurrentController() instanceof ShopsController){
+                                mShopController.showSearchToolbar();
+                                new Handler().postDelayed(() -> mShopController.hideSearchToolbar(),500);
+                            }
+                        }
                     }
                 }
+//                if(mIsFromCategories && mHomeRouter.getBackstackSize() == 1){
+//                    Log.d("MainBack", "mIsFromCategories && mHomeRouter.getBackstackSize() == 1");
+//                    goToCategoriesFromSales();
+//                    mIsFromCategories = false;
+//                }else if (mHomeRouter.getBackstackSize() == 1) {
+//                    Log.d("MainBack", "mHomeRouter.getBackstackSize() == 1");
+//
+//                    if((tag != null) && !tag.equals(ShopsController.TAG) && !tag.equals("Search")) {
+//                        goToShops();
+//                        break;
+//                    }
+//
+//                    DialogUtils.showYesNoDialog(
+//                            this,
+//                            getString(R.string.dealsdirect),
+//                            getString(R.string.exit_app),
+//                            getString(R.string.exit),
+//                            getString(R.string.no),
+//                            (dialogInterface, i) -> finish(),
+//                            (dialogInterface, i) -> {
+//
+//                            });
+//                } else {
+//
+//                    if(tag!=null && tag.equals(getString(R.string.search_tag))){
+//                        Log.d("MainBack", "tag!=null && tag.equals(getString(R.string.search_tag))");
+//
+//                        mHomeRouter.handleBack();
+//                        mShopController.showSearchToolbar();
+//
+//                        Handler handler = new Handler();
+//                        handler.postDelayed(() ->
+//                                mShopController.hideSearchToolbar(),500);
+//
+//                    }
+//                    else if ((tag!=null) && tag.equals(getString(R.string.sale_items_from_category))){
+//                        Log.d("MainBack", "(tag!=null) && tag.equals(getString(R.string.sale_items_from_category))");
+//
+//                        goToCategoriesFromSaleItems();
+//                    } else {
+//                        Log.d("MainBack", "else");
+//                        mHomeRouter.handleBack();
+//                    }
+//                }
                 break;
         }
     }
@@ -464,9 +493,6 @@ public class MainActivity extends BaseActivity implements MainMvpView {
         mCategoriesRouter = router;
     }
 
-    public void setCurrentItem(int position) {
-        mViewPagerCurrentItem = position;
-    }
 
     public void goToSaleItemsFromCategory(Bundle bundle) {
         mShopController.goToItemsFromCategories(bundle);
@@ -530,7 +556,7 @@ public class MainActivity extends BaseActivity implements MainMvpView {
         return mCategoriesController;
     }
 
-    public void isFromCategories(boolean isFromCategories) {
+    public void setIsFromCategories(boolean isFromCategories) {
         mIsFromCategories = isFromCategories;
     }
 
@@ -544,7 +570,4 @@ public class MainActivity extends BaseActivity implements MainMvpView {
         getMainController().getHomeController().showShopController();
     }
 
-//    public DataManager getDataManager(){
-//        return mPresenter.getMainDataManager();
-//    }
 }

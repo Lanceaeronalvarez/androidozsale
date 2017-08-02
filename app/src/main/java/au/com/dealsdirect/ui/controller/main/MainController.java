@@ -49,6 +49,10 @@ public class MainController extends BaseController implements MainMvpView {
     @Inject
     MainMvpPresenter<MainMvpView> mPresenter;
 
+    public MainCustomViewPager getHomeViewPager() {
+        return mHomeViewPager;
+    }
+
     @BindView(R.id.home_viewpager)
     MainCustomViewPager mHomeViewPager;
 
@@ -94,11 +98,9 @@ public class MainController extends BaseController implements MainMvpView {
     @Override
     protected void onViewBound(@NonNull View view) {
         super.onViewBound(view);
-        setupViewPager();
-
-        if (mPreLoadedCategories.size() == 0) {
+//        if (mPreLoadedCategories.size() == 0) {
             mPresenter.loadCategoryTree();
-        }
+//        }
         setUp(view);
     }
 
@@ -117,7 +119,7 @@ public class MainController extends BaseController implements MainMvpView {
             window.setStatusBarColor(getActivity().getResources().getColor(R.color.colorAccent));
         }
 
-        setupViewPager();
+//        setupViewPager();
     }
 
 
@@ -181,10 +183,9 @@ public class MainController extends BaseController implements MainMvpView {
                 if (!router.hasRootController()) {
 
                     mHomeController = HomeController.newInstance();
-                    if (mPreLoadedCategories.size()!=0) {
-                        mCategoriesController = CategoriesController.newInstance(
-                                mCategoryMap,
-                                mPreLoadedCategories);
+                    mCategoriesController = CategoriesController.newInstance(mCategoryMap, mPreLoadedCategories);
+//                    if (mPreLoadedCategories.size()!=0) {
+//
 
                         switch (position) {
                             case 0:
@@ -199,11 +200,11 @@ public class MainController extends BaseController implements MainMvpView {
                                 router.setRoot(RouterTransaction.with(mHomeController));
                                 break;
                         }
-                    }else{
-                        router.setRoot(RouterTransaction.with(new ShopsController())
-                                .tag(ShopsController.TAG));
-
-                    }
+//                    }else{
+//                        router.setRoot(RouterTransaction.with(new ShopsController())
+//                                .tag(ShopsController.TAG));
+//
+//                    }
                 }
             }
 
@@ -227,23 +228,6 @@ public class MainController extends BaseController implements MainMvpView {
         mHomeViewPager.setCurrentItem(1);
         mHomeViewPager.setMyScroller();
         //noinspection deprecation
-        mHomeViewPager.setOnPageChangeListener(new ViewPager.OnPageChangeListener() {
-            @Override
-            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
-
-            }
-
-            @Override
-            public void onPageSelected(int position) {
-                assert (getActivity()) != null;
-                ((MainActivity)getActivity()).setCurrentItem(position);
-            }
-
-            @Override
-            public void onPageScrollStateChanged(int state) {
-
-            }
-        });
 
     }
 
