@@ -13,6 +13,8 @@ import android.widget.LinearLayout;
 import android.widget.Spinner;
 import android.widget.TextView;
 
+import com.google.gson.internal.LinkedTreeMap;
+
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
@@ -28,6 +30,7 @@ import au.com.dealsdirect.ui.custom.CustomAlertDialog;
 import au.com.dealsdirect.ui.custom.transitions.CustomSpinnerAdapter;
 import au.com.dealsdirect.utils.BundleBuilder;
 import au.com.dealsdirect.utils.DateUtils;
+import au.com.dealsdirect.utils.JsonUtils;
 import butterknife.BindView;
 import butterknife.OnClick;
 
@@ -45,9 +48,6 @@ public class DetailsController extends BaseController implements DetailsMvpView 
 
     @BindView(R.id.partial_toolbar_filter_view)
     ImageView mSaveUserDetailsButton;
-
-    @BindView(R.id.controller_details_text_username)
-    EditText mUserNameText;
 
     @BindView(R.id.controller_details_text_firstname)
     EditText mFirstNameText;
@@ -88,7 +88,7 @@ public class DetailsController extends BaseController implements DetailsMvpView 
 //    };
 
 
-    public DetailsController(Bundle args){
+    public DetailsController(Bundle args) {
         super(args);
     }
 
@@ -165,12 +165,11 @@ public class DetailsController extends BaseController implements DetailsMvpView 
 
     @Override
     public void loadDetails(GetUserDetailsResponse userDetailsResponse) {
-        GetUserDetailsResponse.Value details = userDetailsResponse.getResponse().getValue();
-        mUserNameText.setText(details.getUsername());
-        mFirstNameText.setText(details.getForename());
-        mLastNameText.setText(details.getSurname());
-        mEmailAddressText.setText(details.getEmail());
-        mDateOfBirthText.setText(details.getDateOfBirth() == null ? "" : details.getDateOfBirth().toString());
+        LinkedTreeMap details = (LinkedTreeMap) userDetailsResponse.getResponse().getValue();
+        mFirstNameText.setText(JsonUtils.getStringFromLinkedTreeMap(details, "Forename"));
+        mLastNameText.setText(JsonUtils.getStringFromLinkedTreeMap(details, "Surname"));
+        mEmailAddressText.setText(JsonUtils.getStringFromLinkedTreeMap(details, "Email"));
+        mDateOfBirthText.setText(JsonUtils.getStringDateFromLinkedTreeMap(details, "DateOfBirth"));
     }
 
     @Override
@@ -188,16 +187,15 @@ public class DetailsController extends BaseController implements DetailsMvpView 
     }
 
     @OnClick(R.id.partial_toolbar_filter_view)
-    public void saveUserDetails(){
+    public void saveUserDetails() {
 
-        if(mPasswordText.getText().toString().isEmpty() || mPasswordText.getText().toString() == "") {
+        if (mPasswordText.getText().toString().isEmpty() || mPasswordText.getText().toString() == "") {
             CustomAlertDialog.showCustomAlertDialog(getActivity(),
                     CustomAlertDialog.CustomDialogIconState.NEGATIVE,
                     "Please enter your password");
             return;
         }
 
-        String username = mUserNameText.getText().toString();
         String firstname = mFirstNameText.getText().toString();
         String lastname = mLastNameText.getText().toString();
         boolean gender = mGenderSpinner.getSelectedItem().toString().equals("Male") ? true : false;
@@ -207,7 +205,7 @@ public class DetailsController extends BaseController implements DetailsMvpView 
         String newpassword = mNewPasswordText.getText().toString();
         String confirmpassword = mConfirmPasswordText.getText().toString();
 
-        mPresenter.sendUserDetails(username, firstname, lastname, dateofbirth, gender, email,
+        mPresenter.sendUserDetails(email, firstname, lastname, dateofbirth, gender, email,
                 password, newpassword, confirmpassword);
     }
 
