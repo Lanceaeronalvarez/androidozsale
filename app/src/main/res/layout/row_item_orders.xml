@@ -144,7 +144,6 @@
                     android:id="@+id/approved_date_graph_node"
                     android:layout_width="25dp"
                     android:layout_height="25dp"
-
                     android:background="@drawable/bg_orders_graph_active_state"
                     android:gravity="center"
                     android:text=""
@@ -173,7 +172,6 @@
                     android:id="@+id/stock_date_graph_node"
                     android:layout_width="25dp"
                     android:layout_height="25dp"
-
                     android:background="@drawable/bg_orders_graph_empty_state"
                     android:gravity="center"
                     android:text="2"
@@ -194,7 +192,6 @@
                     android:id="@+id/dispatched_date_graph_node"
                     android:layout_width="25dp"
                     android:layout_height="25dp"
-
                     android:background="@drawable/bg_orders_graph_empty_state"
                     android:gravity="center"
                     android:text="3"
@@ -215,7 +212,6 @@
                     android:id="@+id/closed_date_graph_node"
                     android:layout_width="25dp"
                     android:layout_height="25dp"
-
                     android:background="@drawable/bg_orders_graph_empty_state"
                     android:gravity="center"
                     android:text="4"

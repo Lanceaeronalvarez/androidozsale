@@ -155,8 +155,7 @@ public class OrderDetailsRecyclerViewAdapter extends RecyclerView.Adapter<Recycl
 
             case -1:
                 holder.orderFirstNodeStatus.setText(item.getStatus());
-                holder.approvedDateGraphNodeImageView.setBackgroundResource(R.drawable
-                        .bg_orders_negative_state);
+                holder.approvedDateGraphNodeImageView.setBackgroundResource(R.drawable.bg_orders_negative_state);
                 holder.approvedDateGraphNodeImageView.setText("");
                 break;
 

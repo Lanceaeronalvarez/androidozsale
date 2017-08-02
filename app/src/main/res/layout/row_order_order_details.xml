@@ -34,7 +34,7 @@
                 android:id="@+id/approved_date_graph_node"
                 android:layout_width="25dp"
                 android:layout_height="25dp"
-                android:text="1"
+                android:text=""
                 android:textColor="@android:color/white"
                 android:gravity="center"
                 android:background="@drawable/bg_orders_graph_active_state"
@@ -94,7 +94,6 @@
                 android:id="@+id/closed_date_graph_node"
                 android:layout_width="25dp"
                 android:layout_height="25dp"
-                
                 android:text="4"
                 android:textColor="@android:color/white"
                 android:gravity="center"
