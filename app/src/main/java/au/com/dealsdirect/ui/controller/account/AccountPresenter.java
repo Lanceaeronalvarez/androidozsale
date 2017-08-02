@@ -27,8 +27,9 @@ public class AccountPresenter<V extends AccountMvpView> extends BasePresenter<V>
             R.drawable.bg_account_vouchers,
             R.drawable.bg_account_returns,
             R.drawable.bg_account_languages,
-            R.drawable.bg_account_privacy_policy,
             R.drawable.bg_account_terms_and_conditions,
+            R.drawable.bg_account_privacy_policy,
+            R.drawable.bg_account_about_us,
             R.drawable.bg_account_privacy_policy
     };
 
@@ -50,15 +51,17 @@ public class AccountPresenter<V extends AccountMvpView> extends BasePresenter<V>
                         "My Vouchers",
                         "My Returns",
                         "Language",
+                        "Terms & Conditions",
                         "Privacy Policy",
-                        "Terms & Conditions")), accountImages);
+                        "About Us" )), accountImages);
     }
 
     @Override
     public void onAccountItemClick(String option) {
         if (getDataManager().isAuthorized() || (option.equalsIgnoreCase("Language") ||
                 option.equalsIgnoreCase("Privacy Policy") ||
-                option.equalsIgnoreCase("Terms & Conditions"))) {
+                option.equalsIgnoreCase("Terms & Conditions") ||
+                option.equalsIgnoreCase("About Us"))) {
             switch (option) {
                 case "My Details":
                     getMvpView().showMyDetailsController();
@@ -84,9 +87,9 @@ public class AccountPresenter<V extends AccountMvpView> extends BasePresenter<V>
                 case "Logout":
                     getMvpView().triggerLogout();
                     break;
-//                case "About Us":
-//                    getMvpView().showLegalities("aboutus", option);
-//                    break;
+                case "About Us":
+                    getMvpView().showLegalities("aboutus", option);
+                    break;
                 case "Privacy Policy":
                     getMvpView().showLegalities("PrivacyPolicy_Text", option);
                     break;
