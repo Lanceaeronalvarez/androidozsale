@@ -206,6 +206,7 @@ public class InviteSendController extends BaseController implements InviteMvpVie
         mTwitterSendInvitationLayout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                onSaveInstanceState(getArgs());
 
                 String personalInvitation = mPersonalInvitationMessageEditText.getText().toString();
                 String invitationLink = mPersonalInvitationLinkEditText.getText().toString();
@@ -248,6 +249,7 @@ public class InviteSendController extends BaseController implements InviteMvpVie
 
         mFacebookSendInvitationLayout.setOnClickListener(new View.OnClickListener(){
             @Override public void onClick(View view) {
+                onSaveInstanceState(getArgs());
 
                 String personalInvitation = mPersonalInvitationMessageEditText.getText().toString();
                 String invitationLink = mPersonalInvitationLinkEditText.getText().toString();
@@ -274,6 +276,7 @@ public class InviteSendController extends BaseController implements InviteMvpVie
 
         mMessageSendInvitationLayout.setOnClickListener(new View.OnClickListener() {
             @Override public void onClick(View view) {
+                onSaveInstanceState(getArgs());
 
                 String message = mPersonalInvitationMessageEditText.getText().toString();
                 String invitationLink = mPersonalInvitationLinkEditText.getText().toString();
@@ -289,6 +292,7 @@ public class InviteSendController extends BaseController implements InviteMvpVie
 
         mMailSendInvitationLayout.setOnClickListener(new View.OnClickListener() {
             @Override public void onClick(View view) {
+                onSaveInstanceState(getArgs());
 
 
                 String message = mPersonalInvitationMessageEditText.getText().toString();
@@ -327,6 +331,7 @@ public class InviteSendController extends BaseController implements InviteMvpVie
         mFacebookLikeUsContainer.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                onSaveInstanceState(getArgs());
 
                 String link = mPresenter.getFollowUsFbLink();
                 if (!link.isEmpty()) {
@@ -345,6 +350,7 @@ public class InviteSendController extends BaseController implements InviteMvpVie
         mTwitterFollowUsContainer.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                onSaveInstanceState(getArgs());
                 String link = mPresenter.getFollowUsTwitterLink();
 
                 Intent intent;
