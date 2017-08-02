@@ -38,6 +38,7 @@ import au.com.dealsdirect.utils.BundleBuilder;
 import au.com.dealsdirect.utils.KeyboardUtils;
 import butterknife.BindView;
 import butterknife.OnClick;
+import butterknife.OnFocusChange;
 
 /**
  * dp Created by Admin on 6/20/17.
@@ -311,22 +312,37 @@ public class AddContactController extends BaseController implements AddContactMv
 
     @OnClick(R.id.partial_toolbar_filter_view)
     void onCreate() {
-
         getRouter().setRoot(RouterTransaction.with(AccountController.newInstance())
                 .pushChangeHandler(new FadeChangeHandler())
                 .popChangeHandler(new FadeChangeHandler()));
 
     }
 
-    @OnClick(R.id.controller_add_contact_subject_text)
-    void onClickSubjectText() {
+    @OnFocusChange(R.id.controller_add_contact_message_field)
+    void onMessageFieldFocusChange(View view, boolean hasFocus) {
+        if (hasFocus && getChildRouter(mAddContactSelectorContainer).getBackstackSize() > 0) {
+            getChildRouter(mAddContactSelectorContainer).popCurrentController();
+        }
+    }
+
+    @OnClick(R.id.controller_add_contact_subject_container)
+    void onClickSubjectContainer() {
+
+        mAddContactMessageField.clearFocus();
+        mAddContactSubjectTitle.requestFocus();
+        hideKeyboard();
 
         if (hasLoadedSubjects) {
-            getChildRouter(mAddContactSelectorContainer).setPopsLastView(true).setRoot(RouterTransaction.with(ContactSelectSubjectController.newInstance(mContactSubjects))
-                    .pushChangeHandler(new ReverseVerticalChangeHandler())
-                    .popChangeHandler(new ReverseVerticalChangeHandler()));
-            mAddContactSubjectTitle.setSelected(true);
-            mAddContactOrderTitle.setSelected(false);
+            if (mAddContactSubjectTitle.isSelected()) {
+                getChildRouter(mAddContactSelectorContainer).popCurrentController();
+                mAddContactSubjectTitle.setSelected(false);
+            } else {
+                getChildRouter(mAddContactSelectorContainer).setPopsLastView(true).setRoot(RouterTransaction.with(ContactSelectSubjectController.newInstance(mContactSubjects))
+                        .pushChangeHandler(new ReverseVerticalChangeHandler())
+                        .popChangeHandler(new ReverseVerticalChangeHandler()));
+                mAddContactSubjectTitle.setSelected(true);
+                mAddContactOrderTitle.setSelected(false);
+            }
         } else {
 
 //            CustomAlertDialog.showCustomAlertDialog(
@@ -336,15 +352,24 @@ public class AddContactController extends BaseController implements AddContactMv
         }
     }
 
-    @OnClick(R.id.controller_add_contact_order_text)
-    void onClickOrderText() {
+    @OnClick(R.id.controller_add_contact_order_container)
+    void onClickOrderContainer() {
+
+        mAddContactMessageField.clearFocus();
+        mAddContactSubjectTitle.requestFocus();
+        hideKeyboard();
 
         if (hasLoadedOrders) {
-            getChildRouter(mAddContactSelectorContainer).setPopsLastView(true).setRoot(RouterTransaction.with(ContactSelectOrderController.newInstance(mContactOrders))
-                    .pushChangeHandler(new ReverseVerticalChangeHandler())
-                    .popChangeHandler(new ReverseVerticalChangeHandler()));
-            mAddContactSubjectTitle.setSelected(false);
-            mAddContactOrderTitle.setSelected(true);
+            if (mAddContactOrderTitle.isSelected()) {
+                getChildRouter(mAddContactSelectorContainer).popCurrentController();
+                mAddContactOrderTitle.setSelected(false);
+            } else {
+                getChildRouter(mAddContactSelectorContainer).setPopsLastView(true).setRoot(RouterTransaction.with(ContactSelectOrderController.newInstance(mContactOrders))
+                        .pushChangeHandler(new ReverseVerticalChangeHandler())
+                        .popChangeHandler(new ReverseVerticalChangeHandler()));
+                mAddContactSubjectTitle.setSelected(false);
+                mAddContactOrderTitle.setSelected(true);
+            }
         } else if (hasLoadedOrders && mContactOrders != null && mContactOrders.size() == 0) {
 
 //            CustomAlertDialog.showCustomAlertDialog(

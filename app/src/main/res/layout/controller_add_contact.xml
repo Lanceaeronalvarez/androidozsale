@@ -10,16 +10,18 @@
         layout="@layout/partial_toolbar_arrow" />
 
     <LinearLayout
-        android:id="@+id/controller_add_contact_subject_container"
+        android:id="@+id/controller_add_contact_header_container"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@id/view_contacts_toolbar"
         android:orientation="vertical">
 
         <LinearLayout
+            android:id="@+id/controller_add_contact_subject_container"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
+            android:clickable="true"
             android:padding="16dp">
 
             <TextView
@@ -28,6 +30,8 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_vertical"
                 android:layout_marginEnd="16dp"
+                android:focusable="true"
+                android:focusableInTouchMode="true"
                 android:text="@string/subject"
                 android:textColor="@color/contact_us_text_selector"
                 android:textSize="@dimen/text_size_large" />
@@ -36,7 +40,6 @@
                 android:id="@+id/controller_add_contact_subject_text"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:clickable="true"
                 android:textColor="#616161" />
 
         </LinearLayout>
@@ -47,9 +50,11 @@
             android:background="@color/gray_border" />
 
         <LinearLayout
+            android:id="@+id/controller_add_contact_order_container"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
+            android:clickable="true"
             android:padding="16dp">
 
             <TextView
@@ -58,6 +63,8 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_vertical"
                 android:layout_marginEnd="16dp"
+                android:focusable="true"
+                android:focusableInTouchMode="true"
                 android:text="@string/sale"
                 android:textColor="@color/contact_us_text_selector"
                 android:textSize="@dimen/text_size_large" />
@@ -66,7 +73,6 @@
                 android:id="@+id/controller_add_contact_order_text"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:clickable="true"
                 android:textColor="#616161" />
 
         </LinearLayout>
@@ -120,6 +126,6 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_above="@id/controller_add_contact_message_container"
-        android:layout_below="@id/controller_add_contact_subject_container" />
+        android:layout_below="@id/controller_add_contact_header_container" />
 
 </RelativeLayout>

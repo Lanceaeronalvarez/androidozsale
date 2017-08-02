@@ -143,19 +143,20 @@ public class ViewContactsController extends BaseController implements ViewContac
             mContactAdapter.replace(myContacts.getList());
             mViewContactsRecyclerView.setVisibility(View.VISIBLE);
             mPlaceholderLayout.setVisibility(View.GONE);
-            mViewContactsToolbarRightOption.setVisibility(View.VISIBLE);
-            if(mPresenter.isTablet()){
-                mViewContactsToolbarRightOption.setPadding(5, 5, 5, 5);
-            } else {
-                mViewContactsToolbarRightOption.setPadding(20, 20, 20, 20);
-            }
-            mViewContactsToolbarRightOption.setImageResource(R.drawable.ic_add);
             mViewContactsNewMessage.setVisibility(View.GONE);
         } else {
             mPlaceholderLayout.setVisibility(View.VISIBLE);
             mViewContactsNewMessage.setVisibility(View.VISIBLE);
             mViewContactsRecyclerView.setVisibility(View.GONE);
         }
+
+        mViewContactsToolbarRightOption.setVisibility(View.VISIBLE);
+        if(mPresenter.isTablet()){
+            mViewContactsToolbarRightOption.setPadding(5, 5, 5, 5);
+        } else {
+            mViewContactsToolbarRightOption.setPadding(20, 20, 20, 20);
+        }
+        mViewContactsToolbarRightOption.setImageResource(R.drawable.ic_add);
     }
 
     @OnClick({R.id.controller_view_contacts_add_button, R.id.partial_toolbar_filter_view})
