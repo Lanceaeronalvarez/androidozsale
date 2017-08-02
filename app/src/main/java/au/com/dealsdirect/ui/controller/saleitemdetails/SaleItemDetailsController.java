@@ -496,7 +496,7 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
     @OnClick(R.id.product_details_add_to_basket)
     void addToBasket() {
         if (!mPresenter.isAuthorized()) {
-            ((SharedActivity) getActivity()).showLoginController(getRouter(), new AuthHandler() {
+            ((MainActivity) getActivity()).showLoginController(getRouter(), new AuthHandler() {
                 @Override
                 public void success() {
                     verifyAddToCart();
