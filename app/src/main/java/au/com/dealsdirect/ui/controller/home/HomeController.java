@@ -16,7 +16,6 @@ import com.bluelinelabs.conductor.Controller;
 import com.bluelinelabs.conductor.ControllerChangeHandler;
 import com.bluelinelabs.conductor.Router;
 import com.bluelinelabs.conductor.RouterTransaction;
-import com.bluelinelabs.conductor.changehandler.FadeChangeHandler;
 import com.bluelinelabs.conductor.changehandler.VerticalChangeHandler;
 
 import javax.inject.Inject;
@@ -31,6 +30,7 @@ import au.com.dealsdirect.ui.controller.invite.InviteController;
 import au.com.dealsdirect.ui.controller.invite.InviteSendController;
 import au.com.dealsdirect.ui.controller.login.LoginController;
 import au.com.dealsdirect.ui.controller.shops.ShopsController;
+import au.com.dealsdirect.ui.custom.transitions.SimpleChangeHandler;
 import au.com.dealsdirect.ui.main.MainActivity;
 import au.com.dealsdirect.utils.BundleBuilder;
 import au.com.dealsdirect.utils.CartUtil;
@@ -217,32 +217,32 @@ public class HomeController extends BaseController implements HomeMvpView {
     public void showShopController() {
         mRouter.setRoot(RouterTransaction.with(new ShopsController())
                 .tag(getActivity().getResources().getString(R.string.search_tag))
-                .pushChangeHandler(new FadeChangeHandler())
-                .popChangeHandler(new FadeChangeHandler()));
+                .pushChangeHandler(new SimpleChangeHandler())
+                .popChangeHandler(new SimpleChangeHandler()));
     }
 
     @Override
     public void showAccountController() {
         mRouter.setRoot(RouterTransaction.with(AccountController.newInstance())
                 .tag(AccountController.TAG)
-                .pushChangeHandler(new FadeChangeHandler())
-                .popChangeHandler(new FadeChangeHandler()));
+                .pushChangeHandler(new SimpleChangeHandler())
+                .popChangeHandler(new SimpleChangeHandler()));
     }
 
     @Override
     public void showContactController() {
         mRouter.setRoot(RouterTransaction.with(ViewContactsController.newInstance())
                 .tag(ViewContactsController.TAG)
-                .pushChangeHandler(new FadeChangeHandler())
-                .popChangeHandler(new FadeChangeHandler()));
+                .pushChangeHandler(new SimpleChangeHandler())
+                .popChangeHandler(new SimpleChangeHandler()));
     }
 
     @Override
     public void showInviteController() {
         mRouter.setRoot(RouterTransaction.with(InviteSendController.newInstance())
                 .tag(getActivity().getResources().getString(R.string.invite_friends_tag))
-                .pushChangeHandler(new FadeChangeHandler())
-                .popChangeHandler(new FadeChangeHandler()));
+                .pushChangeHandler(new SimpleChangeHandler())
+                .popChangeHandler(new SimpleChangeHandler()));
     }
 
     @Override
@@ -250,8 +250,8 @@ public class HomeController extends BaseController implements HomeMvpView {
 
         mRouter.setRoot(RouterTransaction.with(new CheckoutController())
                 .tag(getActivity().getResources().getString(R.string.checkout_controller))
-                .pushChangeHandler(new FadeChangeHandler())
-                .popChangeHandler(new FadeChangeHandler()));
+                .pushChangeHandler(new SimpleChangeHandler())
+                .popChangeHandler(new SimpleChangeHandler()));
     }
 
     @Override

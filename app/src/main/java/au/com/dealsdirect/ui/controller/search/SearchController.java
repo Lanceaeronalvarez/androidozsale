@@ -7,6 +7,7 @@ import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,6 +16,7 @@ import android.view.inputmethod.InputMethodManager;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
+import android.widget.TextView;
 
 import com.bluelinelabs.conductor.RouterTransaction;
 import com.paginate.Paginate;
@@ -69,6 +71,9 @@ public class SearchController extends BaseController implements SaleItemsMvpView
     @BindView(R.id.controller_search_opaque_view)
     RelativeLayout mOpaqueLayoutCover;
 
+    @BindView(R.id.controller_search_popular_subheader)
+    TextView mPopularSubHeaderText;
+
     @Inject
     SaleItemsMvpPresenter<SaleItemsMvpView> mPresenter;
 
@@ -80,6 +85,7 @@ public class SearchController extends BaseController implements SaleItemsMvpView
     private int page = 0;
     private boolean loadingInProgress = false;
     private boolean hasLoadedAllItems = false;
+    private boolean isSearchKeyPressed = false;
 
     private List<GetSaleItemsResponse.Products> saleItems = new LinkedList<>();
 
@@ -129,7 +135,7 @@ public class SearchController extends BaseController implements SaleItemsMvpView
 
         ((MainActivity) getActivity()).getMainController().getHomeController().hideBottomNav();
         mPresenter.loadSaleItems("","","" ,0, new ArrayList());
-
+        mPopularSubHeaderText.setVisibility(View.VISIBLE);
 
         assert (getActivity()) != null;
         ((MainActivity)getActivity()).setDraggableViewPager(false);
@@ -142,7 +148,15 @@ public class SearchController extends BaseController implements SaleItemsMvpView
 
             @Override
             public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-                mOpaqueLayoutCover.setVisibility(View.VISIBLE);
+                Log.d("searchcontroller", "onSearchFieldClick");
+
+                checkViewPopularSubHeader(charSequence.toString());
+
+                if (!isSearchKeyPressed)
+                    mOpaqueLayoutCover.setVisibility(View.VISIBLE);
+                else
+                    isSearchKeyPressed = false;
+
                 mPresenter.loadSaleItems("","",charSequence.toString(),0, new ArrayList());
             }
 
@@ -155,9 +169,11 @@ public class SearchController extends BaseController implements SaleItemsMvpView
         mSearchToolbarSearchField.setOnEditorActionListener((textView, i, keyEvent) -> {
             if (i == EditorInfo.IME_ACTION_SEARCH) {
 //                hideKeyboard();
-                mPresenter.loadSaleItems("","",textView.toString(),0, new ArrayList());
+                checkViewPopularSubHeader(textView.getText().toString());
+                mPresenter.loadSaleItems("","",textView.getText().toString(),0, new ArrayList());
+                isSearchKeyPressed = true;
                 mOpaqueLayoutCover.setVisibility(View.GONE);
-
+                hideKeyboard();
             }
                 return false;
         });
@@ -309,11 +325,24 @@ public class SearchController extends BaseController implements SaleItemsMvpView
 
     @OnClick(R.id.partial_toolbar_search_field)
     void onSearchFieldClick(){
-        mOpaqueLayoutCover.setVisibility(View.VISIBLE);
+        Log.d("searchcontroller", "onSearchFieldClick");
+        if (!isSearchKeyPressed)
+            mOpaqueLayoutCover.setVisibility(View.VISIBLE);
+        else
+            isSearchKeyPressed = false;
     }
 
     public void deActivateSearch(){
         mOpaqueLayoutCover.setVisibility(View.GONE);
         hideKeyboard();
+    }
+
+    public void checkViewPopularSubHeader(String searchQuery){
+
+        if (searchQuery.isEmpty()){
+            mPopularSubHeaderText.setVisibility(View.VISIBLE);
+        }else{
+            mPopularSubHeaderText.setVisibility(View.GONE);
+        }
     }
 }
