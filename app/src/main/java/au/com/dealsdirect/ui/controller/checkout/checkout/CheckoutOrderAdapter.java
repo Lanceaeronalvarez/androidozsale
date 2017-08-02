@@ -79,7 +79,7 @@ public class CheckoutOrderAdapter extends ArrayAdapter<Item> {
 
 //   (1) fix when item.fileName is null
         if(item.fileName!=null){
-            ImageUtils.clearImage(mContext,view.image);
+            ImageUtils.clearImage(view.image);
             if (!item.fileName.isEmpty() && view.image.getDrawable() == null){
                 ImageUtils.loadImage(mContext,LegacyStringImageUtils.productDetailsImageURLString(item.brandID, item.imageID, item.fileName),view.image);
             }

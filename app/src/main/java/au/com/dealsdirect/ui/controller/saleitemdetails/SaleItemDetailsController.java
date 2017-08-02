@@ -562,7 +562,7 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
 
     @Override
     public void imagesLoaded() {
-        ImageUtils.clearImage(getActivity(), mProductSharedImage);
+        ImageUtils.clearImage(mProductSharedImage);
     }
 
     public void readyViewsForTransition() {

@@ -6,21 +6,20 @@ package au.com.dealsdirect.utils;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.graphics.Bitmap;
-import android.graphics.drawable.Drawable;
-import android.support.annotation.Nullable;
 import android.view.ViewTreeObserver;
 import android.widget.ImageView;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.Priority;
-import com.bumptech.glide.load.DataSource;
 import com.bumptech.glide.load.DecodeFormat;
+import com.bumptech.glide.load.ResourceEncoder;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
-import com.bumptech.glide.load.engine.GlideException;
+import com.bumptech.glide.load.engine.Resource;
+import com.bumptech.glide.load.resource.bitmap.BitmapEncoder;
 import com.bumptech.glide.request.RequestListener;
-import com.bumptech.glide.request.RequestOptions;
 import com.bumptech.glide.request.target.Target;
 
+import java.io.OutputStream;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 
@@ -38,48 +37,48 @@ public class ImageUtils {
     }
 
     public static void loadImage(Context context, String url, ImageView imageView) {
-        RequestOptions options = new RequestOptions().encodeQuality(50)
-                                                     .encodeFormat(Bitmap.CompressFormat.JPEG)
-                                                     .diskCacheStrategy(DiskCacheStrategy.RESOURCE)
-                                                     .skipMemoryCache(true)
-                                                     .format(DecodeFormat.PREFER_RGB_565);
-
         Glide.with(context)
-             .load(url)
-             .apply(options)
-             .into(imageView);
+                .load(url)
+                .asBitmap()
+                .encoder(new BitmapEncoder(Bitmap.CompressFormat.JPEG, 50))
+                .diskCacheStrategy(DiskCacheStrategy.SOURCE)
+                .skipMemoryCache(true)
+                .format(DecodeFormat.PREFER_RGB_565)
+                .into(imageView);
     }
 
     public static void loadImageImmediate(Context context, String url, ImageView imageView, ImageLoadedCallback callback) {
-        RequestOptions options = new RequestOptions().encodeQuality(50)
-                .encodeFormat(Bitmap.CompressFormat.JPEG)
-                .diskCacheStrategy(DiskCacheStrategy.ALL)
-                .priority(Priority.IMMEDIATE)
-                .format(DecodeFormat.PREFER_RGB_565);
-
-        if (callback!=null){
+        if (callback != null) {
             Glide.with(context)
                     .load(url)
-                    .listener(new RequestListener<Drawable>() {
+                    .asBitmap()
+                    .listener(new RequestListener<String, Bitmap>() {
                         @Override
-                        public boolean onLoadFailed(@Nullable GlideException e, Object model, Target<Drawable> target, boolean isFirstResource) {
+                        public boolean onException(Exception e, String model, Target<Bitmap> target, boolean isFirstResource) {
                             return false;
                         }
 
                         @Override
-                        public boolean onResourceReady(Drawable resource, Object model, Target<Drawable> target, DataSource dataSource, boolean isFirstResource) {
+                        public boolean onResourceReady(Bitmap resource, String model, Target<Bitmap> target, boolean isFromMemoryCache, boolean isFirstResource) {
                             callback.onImageResourceReady();
                             return false;
                         }
                     })
-                    .apply(options)
+                    .encoder(new BitmapEncoder(Bitmap.CompressFormat.JPEG, 50))
+                    .diskCacheStrategy(DiskCacheStrategy.ALL)
+                    .priority(Priority.IMMEDIATE)
+                    .format(DecodeFormat.PREFER_RGB_565)
                     .into(imageView);
-        }else{
+        } else {
 
-            if (imageView!=null){
+            if (imageView != null) {
                 Glide.with(context)
                         .load(url)
-                        .apply(options)
+                        .asBitmap()
+                        .encoder(new BitmapEncoder(Bitmap.CompressFormat.JPEG, 50))
+                        .diskCacheStrategy(DiskCacheStrategy.ALL)
+                        .priority(Priority.IMMEDIATE)
+                        .format(DecodeFormat.PREFER_RGB_565)
                         .into(imageView);
             }
         }
@@ -87,7 +86,7 @@ public class ImageUtils {
     }
 
     public static void loadImage(Context context, String url, ImageView imageView, int width,
-            int height) {
+                                 int height) {
         if (url != null && !url.equals("")) {
             @SuppressLint("DefaultLocale") String sizeFormat =
                     String.format("?width=%d&height=%d", width, height);
@@ -98,37 +97,36 @@ public class ImageUtils {
     }
 
     public static void loadImageWithImageViewDimens(final Context context, final String url,
-            final ImageView imageView) {
+                                                    final ImageView imageView) {
         if (imageView.getMeasuredWidth() != 0 && imageView.getMeasuredHeight() != 0) {
 
             loadImage(context,
-                      url,
-                      imageView,
-                      imageView.getMeasuredWidth(),
-                      imageView.getMeasuredHeight());
+                    url,
+                    imageView,
+                    imageView.getMeasuredWidth(),
+                    imageView.getMeasuredHeight());
 
         } else {
 
             imageView.getViewTreeObserver()
-                     .addOnPreDrawListener(new ViewTreeObserver.OnPreDrawListener() {
-                         public boolean onPreDraw() {
-                             imageView.getViewTreeObserver()
-                                      .removeOnPreDrawListener(this);
-                             loadImage(context,
-                                       url,
-                                       imageView,
-                                       imageView.getMeasuredWidth(),
-                                       imageView.getMeasuredHeight());
-                             return true;
-                         }
-                     });
+                    .addOnPreDrawListener(new ViewTreeObserver.OnPreDrawListener() {
+                        public boolean onPreDraw() {
+                            imageView.getViewTreeObserver()
+                                    .removeOnPreDrawListener(this);
+                            loadImage(context,
+                                    url,
+                                    imageView,
+                                    imageView.getMeasuredWidth(),
+                                    imageView.getMeasuredHeight());
+                            return true;
+                        }
+                    });
 
         }
     }
 
-    public static void clearImage(Context context, ImageView imageView) {
-        Glide.with(context)
-             .clear(imageView);
+    public static void clearImage(ImageView imageView) {
+        Glide.clear(imageView);
     }
 
     private static String appendBannerSizeUrl(String url, String bannerSize) {
@@ -138,7 +136,7 @@ public class ImageUtils {
         String extension = "";
         int i = url.lastIndexOf('.');
         if (i > 0) {
-            extension = url.substring(i+1);
+            extension = url.substring(i + 1);
         }
 
         url = String.format("%s%s.%s", removedExtension, bannerSize, extension);
@@ -158,8 +156,7 @@ public class ImageUtils {
 
         float scale = (float) screenWidth / width;
         int computedHeight = (int) (height * scale);
-        AppLogger.d("IMG " +  String.format("width: %d height: %d screenWidth: %d scale: %f computedHeight: %d", width, height, screenWidth, scale, computedHeight));
-
+        AppLogger.d("IMG " + String.format("width: %d height: %d screenWidth: %d scale: %f computedHeight: %d", width, height, screenWidth, scale, computedHeight));
 
         return computedHeight;
     }
@@ -182,9 +179,6 @@ public class ImageUtils {
                 + imageId + "/"
                 + encodedImageFilename;
 
-
         return urlString;
     }
-
-
 }

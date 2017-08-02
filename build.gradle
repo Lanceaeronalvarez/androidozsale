@@ -64,7 +64,7 @@ ext {
     paginateVersion = '0.5.1'
 
     //Image Loading
-    glideVersion = '4.0.0-RC1'
+    glideVersion = '3.8.0'
     photoViewVersion = '2.0.0'
 
     flowLayoutVersion = '1.0.3'
