@@ -3,22 +3,16 @@ package au.com.dealsdirect.ui.controller.checkout.paymentselect;
  * Created by CodeineBot on 1/11/17.
  */
 
-import android.app.Activity;
-import android.content.Context;
-import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 import java.util.ArrayList;
-import java.util.List;
 
 import au.com.dealsdirect.R;
-import au.com.dealsdirect.data.network.model.address.AddressesItem;
 import au.com.dealsdirect.data.network.model.checkout.getuserpaymentmethods.PaymentMethod;
 import au.com.dealsdirect.ui.main.MainActivity;
 import au.com.dealsdirect.utils.ImageUtils;
@@ -64,6 +58,10 @@ public class PaymentSelectAdapter extends RecyclerView.Adapter<RecyclerView.View
         if (isFromCart) {
             vh.itemView.setSelected(isFromCart && mActivity.getPaymentMethodSelected().equals(item));
             vh.name.setSelected(isFromCart && mActivity.getPaymentMethodSelected().equals(item));
+        } else {
+            ((PaymentSelectViewHolder) holder).remove.setOnClickListener(view -> {
+                mPresenter.removeUserPaymentMethod(mData.get(position));
+            });
         }
     }
 

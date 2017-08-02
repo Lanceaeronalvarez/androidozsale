@@ -145,7 +145,7 @@ public class PaymentSelectController extends BaseController implements PaymentSe
         }
 
         mPaymentSelectToolbarTitle.setText("Add Payment Method");
-        if(mPresenter.isTablet()){
+        if (mPresenter.isTablet()) {
             mPaymentSelectRightOption.setPadding(5, 5, 5, 5);
         } else {
             mPaymentSelectRightOption.setPadding(20, 20, 20, 20);
@@ -156,18 +156,13 @@ public class PaymentSelectController extends BaseController implements PaymentSe
         mRecyclerView.setLayoutManager(new LinearLayoutManager(mActivity));
         mRecyclerView.setAdapter(mAdapter);
 
-        mRecyclerView.addOnItemTouchListener(new RecyclerOnTouchListener(mActivity, new RecyclerOnTouchListener.OnItemClickListener() {
-            @Override
-            public void onItemClick(View v, int position) {
-                if (isFromCart) {
-                    mActivity.setPaymentMethodSelected(mPaymentMethods.get(position));
-                    mAdapter.notifyDataSetChanged();
-                    mActivity.onBackPressed();
-                } else {
-                    mPresenter.removeUserPaymentMethod(mPaymentMethods.get(position));
-                }
-            }
-        }));
+        if (isFromCart) {
+            mRecyclerView.addOnItemTouchListener(new RecyclerOnTouchListener(mActivity, (v, position) -> {
+                mActivity.setPaymentMethodSelected(mPaymentMethods.get(position));
+                mAdapter.notifyDataSetChanged();
+                mActivity.onBackPressed();
+            }));
+        }
     }
 
     @OnClick(R.id.partial_toolbar_arrow_view)

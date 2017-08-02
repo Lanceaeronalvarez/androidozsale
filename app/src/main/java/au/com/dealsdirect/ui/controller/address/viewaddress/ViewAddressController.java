@@ -111,25 +111,17 @@ public class ViewAddressController extends BaseController implements ViewAddress
         mRecyclerView.setItemAnimator(itemAnimator);
 
         if (mCalledFromCart) {
-            mRecyclerView.addOnItemTouchListener(
-                    new RecyclerOnTouchListener(
-                            getActivity(),
-                            new RecyclerOnTouchListener.OnItemClickListener() {
-                                @Override
-                                public void onItemClick(
-                                        View v,
-                                        int position) {
-                                    if (mAddressesLoaded) {
-                                        //showAddNewAddressFragment();
-                                        AddressesItem item = mAddressList.get(position);
+            mRecyclerView.addOnItemTouchListener(new RecyclerOnTouchListener(getActivity(), (v, position) -> {
+                if (mAddressesLoaded) {
+                    //showAddNewAddressFragment();
+                    AddressesItem item = mAddressList.get(position);
 
 //                                        getBaseActivity().showProgressDialog("Setting address. Please wait.");
-                                        mPresenter.applyDeliveryAddress(item.ID);
+                    mPresenter.applyDeliveryAddress(item.ID);
 
-                                        mRecyclerViewAdapter.updateDeliveryAddress(item);
-                                    }
-                                }
-                            }));
+                    mRecyclerViewAdapter.updateDeliveryAddress(item);
+                }
+            }));
         }
 
     }
