@@ -381,8 +381,10 @@ public class CheckoutController extends BaseController implements CheckoutMvpVie
         if (!isAddressValid()) {
 
             //push add new address fragment.
-//            getBaseActivity().switchFragment(AddNewAddressFragment.newInstance(getBaseActivity(), mDecorationInfoList, true));
-//            return;
+            getRouter().pushController(RouterTransaction.with(new AddNewAddressController(new Gson().toJson(mDecorationInfoList), true))
+                    .pushChangeHandler(new HorizontalChangeHandler())
+                    .popChangeHandler(new HorizontalChangeHandler()));
+            return;
         }
 
 //        RxBus.instance().post(GVersion.EVENT_PAY);
@@ -403,8 +405,10 @@ public class CheckoutController extends BaseController implements CheckoutMvpVie
 
         if (!isAddressValid()) {
             //push add new address fragment
-//            getBaseActivity().switchFragment(AddNewAddressFragment.newInstance(getBaseActivity(), mDecorationInfoList, true));
-//            return;
+            getRouter().pushController(RouterTransaction.with(new AddNewAddressController(new Gson().toJson(mDecorationInfoList), true))
+                    .pushChangeHandler(new HorizontalChangeHandler())
+                    .popChangeHandler(new HorizontalChangeHandler()));
+            return;
         }
 //
 //        RxBus.instance().post(GVersion.EVENT_PAY);
