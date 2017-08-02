@@ -55,15 +55,14 @@ public class LoginController extends BaseController implements LoginMvpView {
 
     private boolean isLoginTapped = false;
 
-    private transient AuthHandler mAuthHandler;
+    public static AuthHandler mAuthHandler;
 
     private CallbackManager mCallbackManager = CallbackManager.Factory.create();
 
     public static LoginController newInstance(AuthHandler handler) {
-
+        mAuthHandler = handler;
         return new LoginController(
                 new BundleBuilder(new Bundle())
-                        .putSerializable(AUTH_HANDLER, handler)
                         .build());
     }
 
@@ -76,7 +75,7 @@ public class LoginController extends BaseController implements LoginMvpView {
 
     public LoginController(Bundle args) {
         super(args);
-        mAuthHandler = (AuthHandler) args.getSerializable(AUTH_HANDLER);
+//        mAuthHandler = (AuthHandler) args.getSerializable(AUTH_HANDLER);
     }
 
     @Override
@@ -125,6 +124,12 @@ public class LoginController extends BaseController implements LoginMvpView {
             }
         });
 
+    }
+
+    @Override
+    public void onDetach(View view) {
+        super.onDetach(view);
+        mAuthHandler = null;
     }
 
 
