@@ -17,6 +17,20 @@
         android:orientation="vertical"
         android:padding="@dimen/screen_padding">
 
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <ImageView
+                android:id="@+id/controller_login_close_icon"
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:rotation="180"
+                android:layout_alignParentEnd="true"
+                android:src="@drawable/ic_close"
+                android:tint="#959595"/>
+
+        </RelativeLayout>
 
         <ImageView
             android:id="@+id/imageView"

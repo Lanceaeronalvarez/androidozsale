@@ -132,6 +132,10 @@ public class LoginController extends BaseController implements LoginMvpView {
         mAuthHandler = null;
     }
 
+    @OnClick(R.id.controller_login_close_icon)
+    void onCloseIconClick(){
+        getActivity().onBackPressed();
+    }
 
     @Override
     public void showLoginSuccessful(String loginTicket) {

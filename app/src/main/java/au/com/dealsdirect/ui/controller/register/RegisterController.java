@@ -13,6 +13,7 @@ import android.widget.TextView;
 
 import com.bluelinelabs.conductor.RouterTransaction;
 import com.bluelinelabs.conductor.changehandler.HorizontalChangeHandler;
+import com.bluelinelabs.conductor.changehandler.VerticalChangeHandler;
 import com.facebook.CallbackManager;
 
 import javax.inject.Inject;
@@ -136,6 +137,16 @@ public class RegisterController extends BaseController implements RegisterMvpVie
     public void onDestroyView(View view) {
         mPresenter.onDetach();
         super.onDestroyView(view);
+    }
+
+    @OnClick(R.id.controller_register_close_icon)
+    void onCloseIconClick(){
+        getRouter().popToRoot(new VerticalChangeHandler());
+    }
+
+    @OnClick(R.id.controller_register_back_icon)
+    void onBackIconClick(){
+        getActivity().onBackPressed();
     }
 
     @OnClick(R.id.controller_register_sign_up_button)
