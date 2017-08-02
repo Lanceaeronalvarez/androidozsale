@@ -109,7 +109,7 @@
                                     <TextView
                                         fontPath="@string/font_lato_medium"
                                         android:layout_width="wrap_content"
-                                        android:layout_height="match_parent"
+                                        android:layout_height="wrap_content"
                                         android:layout_marginLeft="@dimen/invite_friends_padding"
                                         android:gravity="center"
                                         android:paddingLeft="@dimen/invite_friends_padding"
@@ -150,7 +150,7 @@
                                     <TextView
                                         fontPath="@string/font_lato_medium"
                                         android:layout_width="wrap_content"
-                                        android:layout_height="match_parent"
+                                        android:layout_height="wrap_content"
                                         android:gravity="center"
                                         android:paddingLeft="@dimen/invite_friends_padding"
                                         android:paddingRight="@dimen/invite_friends_padding"
@@ -287,6 +287,7 @@
                                         android:id="@+id/invite_friend_clipboard_image"
                                         android:layout_width="@dimen/invite_friends_image_width"
                                         android:layout_height="@dimen/invite_friends_image_height"
+                                        android:layout_gravity="center_horizontal"
                                         android:layout_weight="0.50"
                                         android:src="@drawable/ic_clipboard"
                                         tools:ignore="ContentDescription" />
@@ -295,7 +296,7 @@
                                         android:id="@+id/invite_friend_clipboard_text"
                                         fontPath="@string/font_lato_medium"
                                         android:layout_width="wrap_content"
-                                        android:layout_height="match_parent"
+                                        android:layout_height="wrap_content"
                                         android:layout_marginLeft="@dimen/invite_friends_padding"
                                         android:paddingLeft="@dimen/invite_friends_padding"
                                         android:paddingRight="@dimen/invite_friends_padding"
@@ -331,25 +332,27 @@
                                 android:padding="15dp">
 
                                 <LinearLayout
-                                    android:layout_width="wrap_content"
+                                    android:layout_width="match_parent"
                                     android:layout_height="wrap_content"
                                     android:orientation="horizontal"
-                                    android:paddingLeft="38dp">
+                                    android:weightSum="1"
+                                    tools:ignore="UselessParent">
 
                                     <ImageView
                                         android:layout_width="@dimen/invite_friends_image_width"
-                                        android:layout_height="@dimen/invite_friends_image_height"
-                                        android:layout_weight="0.50"
-                                        android:scaleType="fitXY"
+                                        android:layout_height="20dp"
+                                        android:layout_gravity="center_vertical"
+                                        android:layout_weight="0.5"
+                                        android:scaleType="fitEnd"
                                         android:src="@drawable/ic_fb"
                                         tools:ignore="ContentDescription" />
 
                                     <TextView
                                         fontPath="@string/font_lato_medium"
                                         android:layout_width="wrap_content"
-                                        android:layout_height="match_parent"
+                                        android:layout_height="wrap_content"
                                         android:layout_marginLeft="@dimen/invite_friends_padding"
-                                        android:layout_weight="1"
+                                        android:layout_weight="0.5"
                                         android:paddingLeft="@dimen/invite_friends_padding"
                                         android:paddingRight="@dimen/invite_friends_padding"
                                         android:text="Invite your friends on Facebook"
@@ -371,26 +374,27 @@
                                 android:padding="15dp">
 
                                 <LinearLayout
-                                    android:layout_width="wrap_content"
+                                    android:layout_width="match_parent"
                                     android:layout_height="wrap_content"
                                     android:orientation="horizontal"
-                                    android:paddingLeft="38dp"
                                     android:weightSum="1"
                                     tools:ignore="UselessParent">
 
                                     <ImageView
                                         android:layout_width="@dimen/invite_friends_image_width"
-                                        android:layout_height="@dimen/invite_friends_image_height"
-                                        android:layout_weight="0.50"
-                                        android:scaleType="fitXY"
+                                        android:layout_height="20dp"
+                                        android:layout_gravity="center_vertical"
+                                        android:layout_weight="0.5"
+                                        android:scaleType="fitEnd"
                                         android:src="@drawable/ic_twitter"
                                         tools:ignore="ContentDescription" />
 
                                     <TextView
                                         fontPath="@string/font_lato_medium"
                                         android:layout_width="wrap_content"
-                                        android:layout_height="match_parent"
+                                        android:layout_height="wrap_content"
                                         android:layout_marginLeft="@dimen/invite_friends_padding"
+                                        android:layout_weight="0.5"
                                         android:paddingLeft="@dimen/invite_friends_padding"
                                         android:paddingRight="@dimen/invite_friends_padding"
                                         android:text="Invite your friends on Twitter"
@@ -413,25 +417,25 @@
                                 android:padding="15dp">
 
                                 <LinearLayout
-                                    android:layout_width="wrap_content"
+                                    android:layout_width="match_parent"
                                     android:layout_height="wrap_content"
                                     android:orientation="horizontal"
-                                    android:paddingLeft="38dp"
                                     android:weightSum="1"
                                     tools:ignore="UselessParent">
 
                                     <ImageView
                                         android:layout_width="@dimen/invite_friends_image_width"
                                         android:layout_height="@dimen/invite_friends_image_height"
-                                        android:layout_weight="0.50"
-                                        android:scaleType="fitXY"
+                                        android:layout_gravity="center_vertical"
+                                        android:layout_weight="0.5"
+                                        android:scaleType="fitEnd"
                                         android:src="@drawable/ic_email"
                                         tools:ignore="ContentDescription" />
 
                                     <TextView
                                         fontPath="@string/font_lato_medium"
                                         android:layout_width="wrap_content"
-                                        android:layout_height="match_parent"
+                                        android:layout_height="wrap_content"
                                         android:layout_marginLeft="@dimen/invite_friends_padding"
                                         android:paddingLeft="@dimen/invite_friends_padding"
                                         android:paddingRight="@dimen/invite_friends_padding"
@@ -454,18 +458,18 @@
                                 android:padding="15dp">
 
                                 <LinearLayout
-                                    android:layout_width="wrap_content"
+                                    android:layout_width="match_parent"
                                     android:layout_height="wrap_content"
                                     android:orientation="horizontal"
-                                    android:paddingLeft="38dp"
                                     android:weightSum="1"
                                     tools:ignore="UselessParent">
 
                                     <ImageView
                                         android:layout_width="@dimen/invite_friends_image_width"
-                                        android:layout_height="@dimen/invite_friends_image_height"
-                                        android:layout_weight="0.50"
-                                        android:scaleType="fitXY"
+                                        android:layout_height="@dimen/invite_friends_image_width"
+                                        android:layout_gravity="center_vertical"
+                                        android:layout_weight="0.5"
+                                        android:scaleType="fitEnd"
                                         android:src="@drawable/ic_message"
                                         tools:ignore="ContentDescription" />
 
@@ -474,6 +478,7 @@
                                         android:layout_width="wrap_content"
                                         android:layout_height="match_parent"
                                         android:layout_marginLeft="@dimen/invite_friends_padding"
+                                        android:gravity="center_vertical"
                                         android:paddingLeft="@dimen/invite_friends_padding"
                                         android:paddingRight="@dimen/invite_friends_padding"
                                         android:text="Invite your friends on SMS"
