@@ -30,9 +30,7 @@ import au.com.dealsdirect.ui.controller.language.LanguageController;
 import au.com.dealsdirect.ui.controller.legalities.LegalitiesController;
 import au.com.dealsdirect.ui.controller.orders.orders.OrdersController;
 import au.com.dealsdirect.ui.controller.returns.currentreturns.CurrentReturnsController;
-import au.com.dealsdirect.ui.controller.shops.ShopsController;
 import au.com.dealsdirect.ui.controller.vouchers.View.ViewVouchersController;
-import au.com.dealsdirect.ui.custom.CustomAlertDialog;
 import au.com.dealsdirect.ui.main.MainActivity;
 import au.com.dealsdirect.ui.main.MainMvpView;
 import au.com.dealsdirect.utils.BundleBuilder;
@@ -47,6 +45,7 @@ public class AccountController extends BaseController implements AccountMvpView,
     public static final String TAG = "AccountController";
     private static final String KEY_TEXT = "AccountController.KEY_TEXT";
     private AccountMvpView mAccountMvpView;
+    AccountItemAdapter accountItemAdapter;
 
     @BindView(R.id.partial_toolbar_title_view)
     TextView mTitleTextView;
@@ -117,8 +116,8 @@ public class AccountController extends BaseController implements AccountMvpView,
     @Override
     public void showAccountItems(List<String> accountItems, int[] accountImages) {
 
-        AccountItemAdapter accountItemAdapter
-                = new AccountItemAdapter(accountItems, accountImages, getActivity(), mPresenter);
+
+        accountItemAdapter = new AccountItemAdapter(accountItems, accountImages, getActivity(), mPresenter);
         mAccountRecyclerView.setAdapter(accountItemAdapter);
         mAccountRecyclerView.setLayoutManager(new GridLayoutManager(getActivity(), 3));
         mAccountRecyclerView.setItemAnimator(new DefaultItemAnimator());
@@ -206,11 +205,12 @@ public class AccountController extends BaseController implements AccountMvpView,
     @Override
     public void triggerLogout() {
         ((MainMvpView)getActivity()).callLogout();
+
+    }
+
+    public void resetAccounts(){
         mPresenter.loadAccountItems();
-        getRouter().setRoot(RouterTransaction.with(new ShopsController()).tag(ShopsController.TAG));
-        CustomAlertDialog.showCustomAlertDialog(getActivity(),
-                CustomAlertDialog.CustomDialogIconState.POSITIVE,
-                "Logout Successful");
+        ((MainActivity)getActivity()).getMainController().getHomeController().showShopController();
     }
 }
 

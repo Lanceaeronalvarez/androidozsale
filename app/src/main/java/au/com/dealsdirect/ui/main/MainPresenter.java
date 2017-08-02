@@ -439,7 +439,7 @@ public class MainPresenter<V extends MainMvpView> extends BasePresenter<V> imple
 
     @Override
     public void callLogout() {
-
+        getMvpView().hideLoading();
 //        GCartUtil.setValueToCart(0);
 //        RxBus.instance().post("update_cart_items_immediate");
 //        RxBus.instance().post(Auth.EVENT_PRE_LOGOUT);
@@ -455,6 +455,7 @@ public class MainPresenter<V extends MainMvpView> extends BasePresenter<V> imple
                                 }
 
                                 getDataManager().revokeAuth();
+                                getMvpView().logoutSuccessful();
 //                RxBus.instance().post(Auth.EVENT_LOGOUT);
 //                RxBus.instance().post(GVersion.EVENT_LOGOUT);
                             }
@@ -465,7 +466,7 @@ public class MainPresenter<V extends MainMvpView> extends BasePresenter<V> imple
                                     return;
                                 }
 
-                                getMvpView().hideLoading();
+
                                 getMvpView().onError(throwable.getMessage());
 
                                 // handle load accounts error here

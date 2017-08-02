@@ -282,4 +282,6 @@
     <string name="minus">-</string>
     <string name="sale_items_controller_tag">SaleItemsController</string>
     <string name="popular_products">POPULAR PRODUCTS</string>
+    <string name="shop_controller_tag">ShopController</string>
+    <string name="account_controller_tag">AccountController</string>
 </resources>
