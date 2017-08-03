@@ -76,6 +76,4 @@ ext {
     gcmVersion = '11.0.2'
     crystalRangeSeekbarVersion = '1.1.1'
     facebookReboundVersion = '0.3.8'
-    ultraPtrVersion = '1.0.11'
-
 }
