@@ -212,6 +212,7 @@ public class SearchFilterController extends BaseController
     protected void onViewBound(@NonNull View view) {
         super.onViewBound(view);
         setUp(view);
+
     }
 
     @Override
@@ -294,10 +295,10 @@ public class SearchFilterController extends BaseController
             }
         });
 
+
         mSearchTagsLayoutManager = new LinearLayoutManager(getActivity(), LinearLayoutManager.HORIZONTAL, false);
         mSearchTagsRecyclerView.setLayoutManager(mSearchTagsLayoutManager);
-        mSearchTagsAdapter = new SearchTagsAdapter(getActivity(), mSearchTagsLayoutManager, new ArrayList<SearchChipModel>(), mPresenter, mFacetItemsAdapter, mPreviousSelectedFacetIndices);
-
+        mSearchTagsAdapter = new SearchTagsAdapter(getActivity(), mSearchTagsRecyclerView, mSearchTagsLayoutManager, new ArrayList<SearchChipModel>(), mPresenter, mFacetItemsAdapter, mPreviousSelectedFacetIndices);
         mSearchTagsRecyclerView.setAdapter(mSearchTagsAdapter);
         mSearchTagsRecyclerView.setVisibility(View.VISIBLE);
 

@@ -1,10 +1,10 @@
 package au.com.dealsdirect.ui.controller.searchfilter.adapter;
 
 import android.content.Context;
+import android.os.Handler;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.DisplayMetrics;
-import android.util.TypedValue;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -35,6 +35,7 @@ public class SearchTagsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
     private SearchFilterMvpPresenter mPresenter;
     private FacetItemsAdapter mFacetItemsAdapter;
     private HashMap<String, Set<Integer>> mPreviousSelectedFacetIndices;
+    private RecyclerView mRecyclerView;
 
     public EditTextViewHolder getEditTextViewHolder() {
         return editTextViewHolder;
@@ -42,12 +43,13 @@ public class SearchTagsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
 
     public EditTextViewHolder editTextViewHolder;
 
-    public SearchTagsAdapter(Context ctx, LinearLayoutManager llm, ArrayList<SearchChipModel> items, SearchFilterMvpPresenter presenter
+    public SearchTagsAdapter(Context ctx,RecyclerView recyclerView, LinearLayoutManager llm, ArrayList<SearchChipModel> items, SearchFilterMvpPresenter presenter
             , FacetItemsAdapter adapter
             , HashMap<String, Set<Integer>> selectedIndices){
         mContext=ctx;
         mDisplayMetrics = ctx.getResources().getDisplayMetrics();
         mLayoutManager = llm;
+        mRecyclerView = recyclerView;
         mData = items;
         mPresenter = presenter;
         mFacetItemsAdapter = adapter;
@@ -58,14 +60,19 @@ public class SearchTagsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
     public void add(SearchChipModel chip){
         if(mData!=null){
             mData.add(chip);
-            int addedItemIndex = mData.indexOf(chip);
-            notifyItemInserted(mData.indexOf(chip));
+            notifyItemInserted(mData.size()-1);
 
-            int offsetAmount = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 135, mDisplayMetrics);
-            int currentLastItem = getItemCount()-1;
+            mRecyclerView.scrollToPosition(mData.size()-1);
+            new Handler().postDelayed(()->{
+                int editTextIndex = mLayoutManager.getItemCount() - 1;
+                int lastVisibleItemPosition = mLayoutManager.findLastVisibleItemPosition();
 
-            mLayoutManager.scrollToPosition(addedItemIndex);
-            mLayoutManager.scrollToPositionWithOffset(currentLastItem, offsetAmount);
+                if(editTextIndex != lastVisibleItemPosition){ //meaning edittext is not visible on screen anymore
+                    mRecyclerView.smoothScrollToPosition(editTextIndex);
+                }
+
+            },500);
+
         }
     }
 
@@ -201,8 +208,6 @@ public class SearchTagsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
 
     public static class EditTextViewHolder extends RecyclerView.ViewHolder {
         public ChipsEditText et;
-        public TextView placeholder;
-        public boolean isFinishedTyping = false;
 
         public EditText getEditText() {
             return et;
@@ -211,14 +216,8 @@ public class SearchTagsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
         public EditTextViewHolder(View itemView) {
             super(itemView);
             et = (ChipsEditText) itemView.findViewById(R.id.search_edit_text);
-            placeholder = (TextView) itemView.findViewById(R.id.search_text_view_placeholder);
         }
 
-        //switching between an edittext or the textview to be visible.
-        public void toggleEditTextVisibility(boolean val) {
-            et.setVisibility(val ? View.VISIBLE : View.GONE);
-            placeholder.setVisibility(val ? View.GONE : View.VISIBLE);
-        }
 
         public void setVisibility(boolean isVisible) {
             if (isVisible) {
