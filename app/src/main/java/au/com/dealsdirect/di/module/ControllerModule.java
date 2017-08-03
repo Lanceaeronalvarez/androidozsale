@@ -65,6 +65,9 @@ import au.com.dealsdirect.ui.controller.login.LoginPresenter;
 import au.com.dealsdirect.ui.controller.main.MainMvpPresenter;
 import au.com.dealsdirect.ui.controller.main.MainMvpView;
 import au.com.dealsdirect.ui.controller.main.MainPresenter;
+import au.com.dealsdirect.ui.controller.masterpass.MasterpassMvpPresenter;
+import au.com.dealsdirect.ui.controller.masterpass.MasterpassMvpView;
+import au.com.dealsdirect.ui.controller.masterpass.MasterpassPresenter;
 import au.com.dealsdirect.ui.controller.orders.orderdetails.OrderDetailsMvpPresenter;
 import au.com.dealsdirect.ui.controller.orders.orderdetails.OrderDetailsMvpView;
 import au.com.dealsdirect.ui.controller.orders.orderdetails.OrderDetailsPresenter;
@@ -313,6 +316,11 @@ public class ControllerModule {
 
     @Provides
     SearchMvpPresenter<SearchMvpView> provideSearchPresenter(SearchPresenter<SearchMvpView> presenter) {
+        return presenter;
+    }
+
+    @Provides
+    MasterpassMvpPresenter<MasterpassMvpView> provideMasterpassPresenter(MasterpassPresenter<MasterpassMvpView> presenter) {
         return presenter;
     }
 }
