@@ -15,6 +15,8 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.lsjwzh.widget.recyclerviewpager.RecyclerViewPager;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -55,7 +57,7 @@ public class ViewVouchersController extends BaseController implements ViewVouche
     RecyclerView mUsedVouchersRecyclerView;
 
     @BindView(R.id.controller_recycler_view_unused_vouchers)
-    RecyclerView mUnusedVouchersRecyclerView;
+    RecyclerViewPager mUnusedVouchersRecyclerView;
 
     @BindView(R.id.voucher_recycler_divider)
     View mDivider;
@@ -105,9 +107,7 @@ public class ViewVouchersController extends BaseController implements ViewVouche
             getActivity().onBackPressed();
         });
 
-        mUnusedVouchersAdapter = new ViewVouchersRecyclerViewAdapter
-                (new ArrayList<>(), getActivity());
-
+        mUnusedVouchersAdapter = new ViewVouchersRecyclerViewAdapter(new ArrayList<>(), getActivity());
         mUsedVouchersAdapter = new ViewVouchersRecyclerViewAdapter
                 (new ArrayList<>(), getActivity());
 

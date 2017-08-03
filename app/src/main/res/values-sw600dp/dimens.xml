@@ -33,8 +33,9 @@
     <dimen name="tall_edit_text_height">144dp</dimen>
 
     <dimen name="placeholder_imageview_margin"> 100dp </dimen>
-    <dimen name="voucher_container_width">240dp</dimen>
-    <dimen name="voucher_container_height">150dp</dimen>
+    <dimen name="voucher_container_width">420dp</dimen>
+    <dimen name="voucher_container_height">260dp</dimen>
+    <dimen name="voucher_padding">100dp</dimen>
 
     <dimen name="voucher_container_margin">20dp</dimen>
     <dimen name="voucher_container_padding">20dp</dimen>
