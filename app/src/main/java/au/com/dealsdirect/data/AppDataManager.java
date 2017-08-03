@@ -424,6 +424,16 @@ public class AppDataManager implements DataManager {
 
     }
 
+    @Override
+    public Observable<JSONObject> callMasterpassPayment(HashMap<String, Object> param) {
+        return mApiHelper.callMasterpassPayment(param);
+    }
+
+    @Override
+    public Observable<JSONObject> callMasterpassPostTransaction(HashMap<String, Object> param) {
+        return mApiHelper.callMasterpassPostTransaction(param);
+    }
+
 
     @Override
     public Observable<GetTemplateTextResponse> callGetTemplateText(GetTemplateTextRequest templateTextRequest) {

@@ -245,4 +245,9 @@ public interface ApiHelper {
 
     Observable<CreateReturnRequestResponseBody> callCreateReturnRequest(CreateReturnRequest createReturnRequest);
 
+    // MASTERPASS CALLS
+    Observable<JSONObject> callMasterpassPayment(HashMap<String, Object> param);
+
+    Observable<JSONObject> callMasterpassPostTransaction(HashMap<String, Object> param);
+
 }
