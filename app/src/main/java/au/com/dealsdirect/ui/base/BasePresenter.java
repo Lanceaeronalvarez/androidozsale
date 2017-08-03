@@ -132,38 +132,41 @@ public class BasePresenter<V extends MvpView> implements MvpPresenter<V> {
         getCompositeDisposable().add(observable
                 .subscribeOn(getSchedulerProvider().io())
                 .observeOn(getSchedulerProvider().ui())
-                .subscribe(response -> {
+                .subscribe(new Consumer<Object>() {
+                    @Override
+                    public void accept(Object response) throws Exception {
 
-                    if (!isViewAttached()) {
-                        return;
+                        if (!isViewAttached()) {
+                            return;
+                        }
+
+                        getMvpView().hideLoading();
+
+                        if (response instanceof List) {
+                            callback.onSuccess((List) response);
+                        } else if (response != null) {
+                            callback.onSuccess(response);
+                        } else {
+                            callback.onSuccess();
+                        }
                     }
+                }, new Consumer<Throwable>() {
+                    @Override
+                    public void accept(Throwable throwable) throws Exception {
 
-                    getMvpView().hideLoading();
+                        if (!isViewAttached()) {
+                            return;
+                        }
 
-                    if (response instanceof List) {
-                        callback.onSuccess((List) response);
-                    } else if (response != null) {
-                        callback.onSuccess(response);
-                    } else {
-                        callback.onSuccess();
-                    }
+                        getMvpView().hideLoading();
+                        getMvpView().onError(throwable.getMessage());
 
-                }, throwable -> {
+                        callback.onFailure();
 
-                    if (!isViewAttached()) {
-                        return;
-                    }
-
-                    getMvpView().hideLoading();
-
-                    callback.onFailure();
-
-                    // handle load accounts error here
-                    if (throwable instanceof ANError) {
-                        ANError anError = (ANError) throwable;
-                        handleApiError(anError);
-                        if(((ANError) throwable).getResponse() != null) {
-                            getMvpView().onError(((ANError) throwable).getResponse().code() + " " + ((ANError) throwable).getResponse().message());
+                        // handle load accounts error here
+                        if (throwable instanceof ANError) {
+                            ANError anError = (ANError) throwable;
+                            handleApiError(anError);
                         }
                     }
                 }));
