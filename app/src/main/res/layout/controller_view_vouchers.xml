@@ -1,8 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:background="@color/white"
     tools:ignore="MissingPrefix">
 
@@ -34,12 +35,16 @@
             android:textColor="@color/gray_field_text"
             android:textSize="@dimen/text_size_xxlarge" />
 
-            <android.support.v7.widget.RecyclerView
+            <com.lsjwzh.widget.recyclerviewpager.RecyclerViewPager
                 android:id="@+id/controller_recycler_view_unused_vouchers"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:paddingLeft="@dimen/voucher_padding"
+                android:paddingRight="@dimen/voucher_padding"
+                app:rvp_triggerOffset="0.1"
+                app:rvp_singlePageFling="true"
                 android:layout_below="@+id/vouchers_view_detail_text_view"
-                android:layout_marginTop="-15dp"></android.support.v7.widget.RecyclerView>
+                android:clipToPadding="false"></com.lsjwzh.widget.recyclerviewpager.RecyclerViewPager>
 
             <LinearLayout
                 android:id="@+id/voucher_recycler_divider"
