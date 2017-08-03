@@ -5,12 +5,7 @@ import android.content.ContextWrapper;
 import android.content.pm.PackageManager;
 import android.os.Build;
 
-import com.google.gson.Gson;
 import com.mysale.genie.utility.Prefs;
-import com.mysale.genie.utility.config.model.getserversettings.Language;
-
-import java.util.ArrayList;
-import java.util.List;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
@@ -19,7 +14,6 @@ import au.com.dealsdirect.R;
 import au.com.dealsdirect.di.ApplicationContext;
 import au.com.dealsdirect.di.PreferenceInfo;
 import au.com.dealsdirect.service.fcm.GNotification;
-import au.com.dealsdirect.utils.JsonUtils;
 
 
 @Singleton
@@ -319,16 +313,6 @@ public class AppPreferencesHelper implements PreferencesHelper {
     @Override
     public int getPaymentCount() {
         return Prefs.getInt(PAYMENT_COUNT,0);
-    }
-
-    @Override
-    public void setIsGCMRegistered(int val) {
-        Prefs.putInt(GNotification.PROPERTY_REGISTERED,val);
-    }
-
-    @Override
-    public int getIsGCMRegistered() {
-        return Prefs.getInt(GNotification.PROPERTY_REGISTERED,-1);
     }
 
     @Override

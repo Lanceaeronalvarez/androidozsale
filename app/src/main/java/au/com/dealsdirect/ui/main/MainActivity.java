@@ -3,7 +3,6 @@ package au.com.dealsdirect.ui.main;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
-import android.util.Log;
 import android.view.ViewGroup;
 
 import com.bluelinelabs.conductor.Conductor;
@@ -38,6 +37,7 @@ import au.com.dealsdirect.data.network.model.category.GetCategoryTreeResponse;
 import au.com.dealsdirect.data.network.model.checkout.CreatePaymentTransaction;
 import au.com.dealsdirect.data.network.model.checkout.getuserpaymentmethods.PaymentMethod;
 import au.com.dealsdirect.ui.base.BaseActivity;
+import au.com.dealsdirect.ui.controller.account.AccountController;
 import au.com.dealsdirect.ui.controller.categories.CategoriesController;
 import au.com.dealsdirect.ui.controller.checkout.addpayment.AddPaymentController;
 import au.com.dealsdirect.ui.controller.checkout.checkout.CheckoutController;
@@ -47,6 +47,7 @@ import au.com.dealsdirect.ui.controller.main.MainController;
 import au.com.dealsdirect.ui.controller.shops.ShopsController;
 import au.com.dealsdirect.ui.controller.splash.SplashScreenController;
 import au.com.dealsdirect.ui.custom.CustomAlertDialog;
+import au.com.dealsdirect.utils.AppLogger;
 import au.com.dealsdirect.utils.DialogUtils;
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -106,6 +107,10 @@ public class MainActivity extends BaseActivity implements MainMvpView {
     @Override
     protected void setUp() {
 
+        // Initialize GCM
+        mPresenter.initializeNotifications(getApplicationContext());
+
+        // Call API settings
         mPresenter.callGetServerSettings();
         mPresenter.callGetAppSettingsSection(this);
 
@@ -123,7 +128,6 @@ public class MainActivity extends BaseActivity implements MainMvpView {
     @Override
     protected void onResume() {
         super.onResume();
-        Log.d("MainActivityResume", "onResume");
         mPresenter.onAttach(this);
 
     }
@@ -137,7 +141,7 @@ public class MainActivity extends BaseActivity implements MainMvpView {
     @Override
     public void onBackPressed() {
 
-        switch (mViewPagerCurrentItem){
+        switch (mViewPagerCurrentItem) {
             case 0:
                 if (mCategoriesRouter.getBackstackSize() == 1) {
                     setRootViewpagerItem(1);
@@ -146,17 +150,31 @@ public class MainActivity extends BaseActivity implements MainMvpView {
                 }
                 break;
             case 1:
-                int backstackSize = mHomeRouter.getBackstackSize()-1;
+                int backstackSize = mHomeRouter.getBackstackSize() - 1;
                 String tag = mHomeRouter.getBackstack().get(backstackSize).tag();
-                if(mIsFromCategories && mHomeRouter.getBackstackSize() == 1){
-                    goToCategoriesFromSales();
-                    mIsFromCategories = false;
-                }else if (mHomeRouter.getBackstackSize() == 1) {
 
-                    if((tag != null) && !tag.equals(ShopsController.TAG) && !tag.equals("Search")) {
+                if (getMainController().getHomeController().getIsAccountControllerActive()){
+                    Router accountRouter = getMainController().getHomeController().getAccountsRouter();
+                    int accountBackstackSize = accountRouter.getBackstackSize()-1;
+                    String accountTag = accountRouter.getBackstack().get(accountBackstackSize).tag();
+                    if ((accountTag != null) && accountTag.equals(getString(R.string.account_controller_tag))){
+
                         goToShops();
                         break;
+                    }else{
+                        getMainController().getHomeController().getAccountsRouter().handleBack();
+
                     }
+                }else{
+                    if(mIsFromCategories && mHomeRouter.getBackstackSize() == 1){
+                        goToCategoriesFromSales();
+                        mIsFromCategories = false;
+                    }else if (mHomeRouter.getBackstackSize() == 1) {
+
+                        if((tag != null) && !tag.equals(ShopsController.TAG) && !tag.equals("Search")) {
+                            goToShops();
+                            break;
+                        }
 
                     DialogUtils.showYesNoDialog(
                             this,
@@ -170,16 +188,16 @@ public class MainActivity extends BaseActivity implements MainMvpView {
                             });
                 } else {
 
-                    if(tag!=null && tag.equals(getString(R.string.search_tag))){
+                        if(tag!=null && tag.equals(getString(R.string.search_tag))){
 
                         mHomeRouter.handleBack();
                         mShopController.showSearchToolbar();
 
-                        Handler handler = new Handler();
-                        handler.postDelayed(() ->
-                                mShopController.hideSearchToolbar(),500);
+                            Handler handler = new Handler();
+                            handler.postDelayed(() ->
+                                    mShopController.hideSearchToolbar(),500);
 
-                    }else if ((tag!=null) && tag.equals(getString(R.string.sale_items_from_category))){
+                        }else if ((tag!=null) && tag.equals(getString(R.string.sale_items_from_category))){
 
                         goToCategoriesFromSaleItems();
                     } else {
@@ -354,6 +372,15 @@ public class MainActivity extends BaseActivity implements MainMvpView {
     }
 
     @Override
+    public void logoutSuccessful() {
+
+        CustomAlertDialog.showCustomAlertDialog(this,
+                CustomAlertDialog.CustomDialogIconState.POSITIVE,
+                "Logout Successful");
+        ((AccountController)getMainController().getHomeController().getAccountsRouter().getControllerWithTag("AccountController")).resetAccounts();
+    }
+
+    @Override
     public void createPaymentMethodSuccess(PaymentMethod lastPaymentMethod) {
         Controller currentController = getHomeRouterCurrentController();
 
@@ -398,9 +425,9 @@ public class MainActivity extends BaseActivity implements MainMvpView {
         }
     }
 
-    public void setRootViewpagerItem(int item){
+    public void setRootViewpagerItem(int item) {
 
-        switch (item){
+        switch (item) {
             case 0:
                 mMainController.goToCategories();
                 break;
@@ -413,48 +440,48 @@ public class MainActivity extends BaseActivity implements MainMvpView {
         }
     }
 
-    public void setDraggableViewPager(boolean isDraggable){
+    public void setDraggableViewPager(boolean isDraggable) {
         mMainController.setViewpagerDraggable(isDraggable);
     }
 
-    public void setHomeRouter(Router router){
+    public void setHomeRouter(Router router) {
         mHomeRouter = router;
     }
 
-    public boolean isAuthorized(){
+    public boolean isAuthorized() {
         return mPresenter.isAuthorized();
     }
 
-    public Router getHomeRouter(){
+    public Router getHomeRouter() {
         return mHomeRouter;
     }
 
-    public Router getCategoriesRouter(){
+    public Router getCategoriesRouter() {
         return mCategoriesRouter;
     }
 
-    public void setCategoriesRouter(Router router){
+    public void setCategoriesRouter(Router router) {
         mCategoriesRouter = router;
     }
 
-    public void setCurrentItem(int position){
+    public void setCurrentItem(int position) {
         mViewPagerCurrentItem = position;
     }
 
-    public void goToSaleItemsFromCategory(Bundle bundle){
+    public void goToSaleItemsFromCategory(Bundle bundle) {
         mShopController.goToItemsFromCategories(bundle);
 
         final Handler handler = new Handler();
         handler.postDelayed(() -> mMainController.goToShops(), 400);
     }
 
-    public void goToSalesFromCategory(GetCategoryTreeResponse getCategoryTreeResponse){
+    public void goToSalesFromCategory(GetCategoryTreeResponse getCategoryTreeResponse) {
         mIsFromCategories = true;
         mShopController.goToSalesFromCategories(getCategoryTreeResponse);
         mMainController.goToShops();
     }
 
-    public void goToCategoriesFromSaleItems(){
+    public void goToCategoriesFromSaleItems() {
         Handler handler = new Handler();
         handler.postDelayed(() -> mHomeRouter.handleBack(), 500);
 
@@ -462,52 +489,52 @@ public class MainActivity extends BaseActivity implements MainMvpView {
         mMainController.setViewpagerDraggable(true);
     }
 
-    public void goToCategoriesFromSales(){
+    public void goToCategoriesFromSales() {
         mMainController.goToCategories();
         mShopController.loadShopBanners();
 
     }
 
-    public void setShopController(ShopsController shopsController){
+    public void setShopController(ShopsController shopsController) {
         mShopController = shopsController;
     }
 
-    public MainController getMainController(){
+    public MainController getMainController() {
         return mMainController;
     }
 
-    public void bottomNavSalesClick(){
-        int backstackSize = mHomeRouter.getBackstackSize()-1;
-        if(backstackSize!=-1){
+    public void bottomNavSalesClick() {
+        int backstackSize = mHomeRouter.getBackstackSize() - 1;
+        if (backstackSize != -1) {
             String tag = mHomeRouter.getBackstack().get(backstackSize).tag();
 
-            if ((tag!=null) && tag.equals(getString(R.string.sale_items_from_category))){
-                Log.d("MainBack", "(tag!=null) && tag.equals(getString(R.string.sale_items_from_category))");
+            if ((tag != null) && tag.equals(getString(R.string.sale_items_from_category))) {
+                AppLogger.d(TAG, "(tag!=null) && tag.equals(getString(R.string.sale_items_from_category))");
 
                 mHomeRouter.handleBack();
             }
         }
     }
 
-    public void setCategoriesController(CategoriesController categoriesController){
+    public void setCategoriesController(CategoriesController categoriesController) {
         mCategoriesController = categoriesController;
     }
 
-    public CategoriesController getCategoriesController(){
+    public CategoriesController getCategoriesController() {
         return mCategoriesController;
     }
 
-    public void isFromCategories(boolean isFromCategories){
+    public void isFromCategories(boolean isFromCategories) {
         mIsFromCategories = isFromCategories;
     }
 
-    public void splashShownCallback(){
+    public void splashShownCallback() {
         mRouter.setRoot(RouterTransaction.with(mMainController)
                 .tag("Home"));
 
     }
 
-    public void goToShops(){
+    public void goToShops() {
         getMainController().getHomeController().showShopController();
     }
 

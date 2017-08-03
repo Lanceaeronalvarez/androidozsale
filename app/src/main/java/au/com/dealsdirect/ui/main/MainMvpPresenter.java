@@ -32,6 +32,8 @@ public interface MainMvpPresenter<V extends MainMvpView> extends MvpPresenter<V>
 
     void callLogout();
 
+    void initializeNotifications(Context context);
+
     String getKountMerchantId();
 
     boolean isAuthorized();

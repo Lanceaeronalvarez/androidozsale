@@ -230,4 +230,11 @@ public class DateUtils {
                 + calendar.get(Calendar.YEAR);
     }
 
+    public static String getDateStringWithTimeZone(Date date) {
+        @SuppressLint("SimpleDateFormat")
+        SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss Z");
+
+        return df.format(date);
+    }
+
 }

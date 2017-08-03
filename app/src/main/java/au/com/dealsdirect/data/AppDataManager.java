@@ -8,6 +8,7 @@ import com.mysale.genie.utility.config.api.GetServerSettings;
 
 import org.json.JSONObject;
 
+import java.util.HashMap;
 import java.util.List;
 
 import javax.inject.Inject;
@@ -79,7 +80,6 @@ import au.com.dealsdirect.data.network.model.returns.returndetails.GetReturnDeta
 import au.com.dealsdirect.data.network.model.returns.returndetails.GetReturnDetailsResponse;
 import au.com.dealsdirect.data.network.model.returns.returnorders.GetReturnOrders;
 import au.com.dealsdirect.data.network.model.saleitemdetails.AddToCartRequest;
-import au.com.dealsdirect.data.network.model.saleitemdetails.AddToCartResponse;
 import au.com.dealsdirect.data.network.model.saleitemdetails.GetSaleItemDetailsResponse;
 import au.com.dealsdirect.data.network.model.saleitems.GetPublicSaleItemsRequest;
 import au.com.dealsdirect.data.network.model.saleitems.GetPublicSaleItemsResponse;
@@ -441,6 +441,12 @@ public class AppDataManager implements DataManager {
     }
 
     @Override
+    public Observable<JSONObject> callRegisterSubscriber(HashMap<String, Object> param) {
+        return mApiHelper.callRegisterSubscriber(param);
+    }
+
+
+    @Override
     public Observable<List<SortingResponse>> callSortingFacets() {
         return mApiHelper.callSortingFacets();
     }
@@ -653,16 +659,6 @@ public class AppDataManager implements DataManager {
     @Override
     public int getPaymentCount() {
         return mPreferencesHelper.getPaymentCount();
-    }
-
-    @Override
-    public void setIsGCMRegistered(int val) {
-        mPreferencesHelper.setIsGCMRegistered(val);
-    }
-
-    @Override
-    public int getIsGCMRegistered() {
-        return mPreferencesHelper.getIsGCMRegistered();
     }
 
     @Override

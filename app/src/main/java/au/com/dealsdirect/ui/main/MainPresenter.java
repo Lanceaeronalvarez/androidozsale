@@ -28,6 +28,7 @@ import au.com.dealsdirect.data.network.model.checkout.GetPaymentToken;
 import au.com.dealsdirect.data.network.model.login.LoginEmail;
 import au.com.dealsdirect.data.network.model.login.LoginTicket;
 import au.com.dealsdirect.data.network.model.login.Logout;
+import au.com.dealsdirect.service.fcm.GNotification;
 import au.com.dealsdirect.ui.base.BasePresenter;
 import au.com.dealsdirect.utils.IntrospectionUtils;
 import au.com.dealsdirect.utils.rx.SchedulerProvider;
@@ -476,6 +477,13 @@ public class MainPresenter<V extends MainMvpView> extends BasePresenter<V> imple
                             }
                         })
         );
+    }
+
+    @Override
+    public void initializeNotifications(Context context) {
+        GNotification gNotification = new GNotification(getDataManager(), getSchedulerProvider(), getCompositeDisposable());
+        gNotification.registerDeviceForNotification(context);
+
     }
 
     @Override
