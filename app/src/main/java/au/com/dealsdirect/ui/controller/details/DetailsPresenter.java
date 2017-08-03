@@ -5,6 +5,7 @@ import com.androidnetworking.error.ANError;
 import javax.inject.Inject;
 
 import au.com.dealsdirect.data.DataManager;
+import au.com.dealsdirect.data.network.AppApiCallback;
 import au.com.dealsdirect.data.network.model.userdetails.GetUserDetailsResponse;
 import au.com.dealsdirect.data.network.model.userdetails.SetUserDetailsRequest;
 import au.com.dealsdirect.ui.base.BasePresenter;
@@ -28,32 +29,13 @@ public class DetailsPresenter<V extends DetailsMvpView> extends BasePresenter<V>
 
     @Override
     public void loadUser(SetUserDetailsRequest setUserDetailsRequest) {
-        getCompositeDisposable().add(getDataManager()
-                .getLoadUserDetailsApiCall(setUserDetailsRequest)
-                .subscribeOn(getSchedulerProvider().io())
-                .observeOn(getSchedulerProvider().ui())
-                .subscribe(new Consumer<GetUserDetailsResponse>() {
-                    @Override
-                    public void accept(@NonNull GetUserDetailsResponse response) throws Exception {
-                        getMvpView().loadDetails(response);
-                    }
-                }, new Consumer<Throwable>() {
-                    @Override
-                    public void accept(Throwable throwable) throws Exception {
-
-                        if (!isViewAttached()) {
-                            return;
-                        }
-
-                        getMvpView().onError(throwable.getMessage());
-
-                        // handle load accounts error here
-                        if (throwable instanceof ANError) {
-                            ANError anError = (ANError) throwable;
-                            handleApiError(anError);
-                        }
-                    }
-                }));
+        doApiCallForResponse(getDataManager().getLoadUserDetailsApiCall(setUserDetailsRequest), new AppApiCallback(){
+            @Override
+            public void onSuccess(Object response) {
+                super.onSuccess(response);
+                getMvpView().loadDetails((GetUserDetailsResponse) response);
+            }
+        });
     }
 
     @Override

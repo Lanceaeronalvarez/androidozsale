@@ -14,12 +14,12 @@ public class AppApiCallback implements ApiCallback {
     }
 
     @Override
-    public void onSuccess(Object o) {
+    public void onSuccess(Object response) {
 
     }
 
     @Override
-    public void onSuccess(List<?> list) {
+    public void onSuccess(List<?> response) {
 
     }
 
