@@ -198,6 +198,11 @@ public class ViewAddressController extends BaseController implements ViewAddress
         mRecyclerViewAdapter.notifyItemRemoved(recyclerTempItemPosition);
         mRecyclerViewAdapter.removeItemAtPosition(recyclerTempItemPosition);
         mRecyclerViewAdapter.notifyItemChanged(recyclerTempItemPosition);
+
+        if (mRecyclerViewAdapter.addressList.size() == 0) {
+            mRecyclerView.setVisibility(View.GONE);
+            mAddressPlaceHolder.setVisibility(View.VISIBLE);
+        }
     }
 
     @Override
