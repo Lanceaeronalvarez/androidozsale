@@ -7,12 +7,14 @@ import android.animation.ValueAnimator;
 import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.graphics.Paint;
+import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.util.Pair;
+import android.support.v4.view.animation.FastOutSlowInInterpolator;
 import android.support.v4.widget.NestedScrollView;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -21,8 +23,10 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewTreeObserver;
+import android.view.animation.AccelerateInterpolator;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
+import android.view.animation.LinearInterpolator;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.widget.FrameLayout;
@@ -34,6 +38,8 @@ import android.widget.TextView;
 
 import com.aurelhubert.ahbottomnavigation.AHBottomNavigation;
 import com.aurelhubert.ahbottomnavigation.notification.AHNotification;
+import com.daasuu.ei.Ease;
+import com.daasuu.ei.EasingInterpolator;
 import com.facebook.rebound.SimpleSpringListener;
 import com.facebook.rebound.Spring;
 import com.facebook.rebound.SpringConfig;
@@ -161,6 +167,7 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
     private SaleItemDetailsImageAdapter mSaleItemImagesIndicatorAdapter;
 
     private LoadImagesListener loadImagesListener;
+    private boolean imagesLoaded = false;
 
     private TagAdapter<Pair<String, String>> mSizesAdapter;
     private ArrayList<Pair<String, String>> mProductSizes = new ArrayList<>();
@@ -177,6 +184,7 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
     int[] checkoutLocation = new int[2];
 
     ElasticDragDismissFrameLayout mRootView;
+    View mCheckoutView;
 
     private final ElasticDragDismissFrameLayout.ElasticDragDismissCallback dragDismissListener
             = new ElasticDragDismissFrameLayout.ElasticDragDismissCallback() {
@@ -319,20 +327,9 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
 
 
         AHBottomNavigation bottomNavView = ((MainActivity) getActivity()).getMainController().getHomeController().getBottomNavigationView();
-        bottomNavView.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
-            @Override
-            public void onGlobalLayout() {
-                View checkoutView = bottomNavView.getViewAtPosition(4);
-                if(checkoutView!=null && !checkOutLocated) {
-                    checkoutView.getLocationOnScreen(checkoutLocation);
-                    initSprings();
-                    checkOutLocated = true;
-                }
-            }
-        });
-
-
-
+        ArrayList<View> potentialViews = new ArrayList<View>();
+        bottomNavView.findViewsWithText(potentialViews,"checkout", View.FIND_VIEWS_WITH_TEXT);
+        mCheckoutView = !potentialViews.isEmpty() ? potentialViews.get(0) : null;
 
     }
 
@@ -495,21 +492,22 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
 
     @OnClick(R.id.product_details_add_to_basket)
     void addToBasket() {
-        if (!mPresenter.isAuthorized()) {
-            ((MainActivity) getActivity()).showLoginController(getRouter(), new AuthHandler() {
-                @Override
-                public void success() {
-                    verifyAddToCart();
-                }
-
-                @Override
-                public void error() {
-
-                }
-            });
-        } else {
-            verifyAddToCart();
-        }
+//        if (!mPresenter.isAuthorized()) {
+//            ((MainActivity) getActivity()).showLoginController(getRouter(), new AuthHandler() {
+//                @Override
+//                public void success() {
+//                    verifyAddToCart();
+//                }
+//
+//                @Override
+//                public void error() {
+//
+//                }
+//            });
+//        } else {
+//            verifyAddToCart();
+//        }
+        animateAddToCart();
 
     }
 
@@ -534,14 +532,102 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
 
     private void animateAddToCart() {
 
+        int[] imageToAnimateLocation = new int[2];
+
+        mImageViewToAnimate.getLocationInWindow(imageToAnimateLocation);
+        int imageCenterX = (imageToAnimateLocation[0] + mImageViewToAnimate.getWidth()) / 2;
+        int imageCenterY = (imageToAnimateLocation[1] + mImageViewToAnimate.getHeight()) / 2;
+
+        mCheckoutView.getLocationOnScreen(checkoutLocation);
+
+        int xDiff = checkoutLocation[0] - imageCenterX;
+
+
         SaleItemDetailsImageAdapter.ViewHolder vh = (SaleItemDetailsImageAdapter.ViewHolder) mProductImagesRv
                 .findViewHolderForLayoutPosition(mProductImagesRvLayoutManager.findLastVisibleItemPosition());
 
-        mImageViewToAnimate.setImageDrawable(vh.image.getDrawable());
+        mImageViewToAnimate.setVisibility(View.VISIBLE);
+        if(imagesLoaded) {
+            mImageViewToAnimate.setImageDrawable(vh.image.getDrawable());
+        } else {
+            mImageViewToAnimate.setImageDrawable(mProductSharedImage.getDrawable());
+        }
         mImageViewToAnimate.bringToFront();
         mImageViewToAnimate.invalidate();
 
-        addToCartAnimSpring.setEndValue(1);
+// 3
+//        ObjectAnimator rotationAnimator = ObjectAnimator.ofFloat(mRocket, "rotation", 0, 180f);
+// 4
+
+        ObjectAnimator rotateAnimation = AnimationEngine.Builder.animate(mImageViewToAnimate)
+                .rotate(45f)
+                .setInterpolator(new EasingInterpolator(Ease.CUBIC_OUT))
+                .build().getAnimation();
+
+//        ValueAnimator transLateXAnimation = ValueAnimator.ofFloat(imageCenterX,checkoutLocation[0]);
+//        transLateXAnimation.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
+//            @Override
+//            public void onAnimationUpdate(ValueAnimator animation) {
+//                mImageViewToAnimate.setTranslationX((float)animation.getAnimatedValue());
+//            }
+//        });
+//        ValueAnimator transLateYAnimation = ValueAnimator.ofFloat(imageToAnimateLocation[1],checkoutLocation[1]);
+//        transLateXAnimation.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
+//            @Override
+//            public void onAnimationUpdate(ValueAnimator animation) {
+//                mImageViewToAnimate.setY((float)animation.getAnimatedValue());
+//            }
+//        });
+
+//        AnimatorSet transLateAnimation = new AnimatorSet();
+//        transLateAnimation.playTogether(transLateXAnimation,transLateYAnimation);
+//        transLateAnimation.setInterpolator(new LinearInterpolator());
+//        transLateAnimation.setDuration(1000);
+//        transLateAnimation.start();
+        ObjectAnimator transLateAnimation = AnimationEngine.Builder.animate(mImageViewToAnimate)
+                .translate(checkoutLocation[0],checkoutLocation[1] - imageToAnimateLocation[1])
+                .setInterpolator(new LinearInterpolator())
+                .build().getAnimation();
+
+
+        ObjectAnimator scaleAnimation = AnimationEngine.Builder.animate(mImageViewToAnimate)
+                .scales(0f)
+                .setInterpolator(new EasingInterpolator(Ease.CUBIC_OUT))
+                .build().getAnimation();
+        AnimatorSet animatorSet = new AnimatorSet();
+        animatorSet.playTogether(rotateAnimation,transLateAnimation,scaleAnimation);
+        animatorSet.setDuration(1000);
+        animatorSet.addListener(new Animator.AnimatorListener() {
+            @Override
+            public void onAnimationStart(Animator animation) {
+
+            }
+
+            @Override
+            public void onAnimationEnd(Animator animation) {
+                mImageViewToAnimate.setRotation(0f);
+                mImageViewToAnimate.setVisibility(View.INVISIBLE);
+                mImageViewToAnimate.setScaleX(1);
+                mImageViewToAnimate.setScaleY(1);
+                mImageViewToAnimate.setTranslationX(0);
+                mImageViewToAnimate.setTranslationY(0);
+
+//                addToCartAnimSpring.setEndValue(1);
+            }
+
+            @Override
+            public void onAnimationCancel(Animator animation) {
+
+            }
+
+            @Override
+            public void onAnimationRepeat(Animator animation) {
+
+            }
+        });
+        animatorSet.start();
+
+
 
     }
 
@@ -563,6 +649,7 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
     @Override
     public void imagesLoaded() {
         ImageUtils.clearImage(mProductSharedImage);
+        imagesLoaded = true;
     }
 
     public void readyViewsForTransition() {

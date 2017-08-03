@@ -6,6 +6,7 @@ import android.animation.AnimatorSet;
 import android.animation.ArgbEvaluator;
 import android.animation.ObjectAnimator;
 import android.animation.PropertyValuesHolder;
+import android.animation.TimeInterpolator;
 import android.animation.ValueAnimator;
 import android.annotation.SuppressLint;
 import android.graphics.drawable.Drawable;
@@ -71,7 +72,7 @@ public class AnimationEngine {
         private long mDuration = -1;
         private long mStartDelay = -1;
         private boolean mWithLayer = false;
-        private Interpolator mInterpolator;
+        private TimeInterpolator mInterpolator;
         private List<Animator.AnimatorListener> mListeners = new ArrayList<>();
         private List<ValueAnimator.AnimatorUpdateListener> mUpdateListeners = new ArrayList<>();
         private List<Animator.AnimatorPauseListener> mPauseListeners = new ArrayList<>();
@@ -330,7 +331,7 @@ public class AnimationEngine {
             return this;
         }
 
-        public Builder setInterpolator(Interpolator interpolator) {
+        public Builder setInterpolator(TimeInterpolator interpolator) {
             mInterpolator = interpolator;
             return this;
         }
