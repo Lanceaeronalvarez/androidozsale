@@ -1,10 +1,6 @@
 package au.com.dealsdirect.data.pref;
 
 
-import com.mysale.genie.utility.config.model.getserversettings.Language;
-
-import java.util.List;
-
 public interface PreferencesHelper {
 
 
@@ -89,10 +85,6 @@ public interface PreferencesHelper {
     void setPaymentCount(int count);
 
     int getPaymentCount();
-
-    void setIsGCMRegistered(int val);
-
-    int getIsGCMRegistered();
 
     void setGCMRegistrationId(String registrationId);
 

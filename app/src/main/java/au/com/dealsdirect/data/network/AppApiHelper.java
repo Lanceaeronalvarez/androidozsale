@@ -1,9 +1,5 @@
 package au.com.dealsdirect.data.network;
 
-import com.androidnetworking.error.ANError;
-import com.androidnetworking.interfaces.JSONObjectRequestListener;
-import com.androidnetworking.interfaces.OkHttpResponseListener;
-import com.google.gson.reflect.TypeToken;
 import com.mysale.genie.utility.config.api.GetAppSettings;
 import com.mysale.genie.utility.config.api.GetAppSettingsSection;
 import com.mysale.genie.utility.config.api.GetServerSettings;
@@ -11,8 +7,7 @@ import com.rx2androidnetworking.Rx2AndroidNetworking;
 
 import org.json.JSONObject;
 
-import java.lang.reflect.Array;
-import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 
@@ -536,6 +531,15 @@ public class AppApiHelper implements ApiHelper {
                 .addJSONObjectBody(JsonUtils.convertToJsonObject(requestValue))
                 .build()
                 .getObjectObservable(NotificationEvent.ResponseValue.class);
+    }
+
+    @Override
+    public Observable<JSONObject> callRegisterSubscriber(HashMap<String, Object> param) {
+        return Rx2AndroidNetworking.get(ApiEndPoint.GCM_REGISTER_SUBSCRIBER)
+                .addHeaders(mApiHeader.getPublicApiHeader())
+                .addQueryParameter(param)
+                .build()
+                .getJSONObjectObservable();
     }
 
     @Override

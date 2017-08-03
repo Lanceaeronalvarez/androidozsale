@@ -34,16 +34,16 @@ public final class ApiEndPoint {
     public static final String GET_PRODUCT_DETAILS = LEGACY_PRODUCT + PRODUCT_DETAILS;
     public static final String GET_BASKET_QUANTITY = LEGACY_PRODUCT + BASKET_QUANTITY;
 
-    public static final String API_LEGACY_AKAMAI = "https://www.dealsdirect.com.au/papi/public/v3.17/api.ashx/";
+    public static final String API_LEGACY_AKAMAI = "https://www.dealsdirect.com.au/papi/public/v3.18/api.ashx/";
 
 
     private static final String COCOSA_SERVICE = "CocosaService.asmx/";
     /* API Constants */
     private static final String API_HOST = "https://www.dealsdirect.com.au/";
 
-    //    private static final String TEST_API_LEGACY = "https://sbx-mob-api.mysaledev.com/public/v3.17/api.asmx/";
-    private static final String TEST_API_LEGACY = "https://api.mysaledev.com/public/v3.17/api.asmx/";
-    private static final String LIVE_API_LEGACY = "https://www.dealsdirect.com.au/papi/public/v3.17/api.asmx/";
+    //    private static final String TEST_API_LEGACY = "https://sbx-mob-api.mysaledev.com/public/v3.18/api.asmx/";
+    private static final String TEST_API_LEGACY = "https://api.mysaledev.com/public/v3.18/api.asmx/";
+    private static final String LIVE_API_LEGACY = "https://api.apacsale.com/public/v3.18/api.asmx/";
 
 
     private static final String API_VERSION = "api/v1/";
@@ -59,6 +59,7 @@ public final class ApiEndPoint {
     /*GCM CALLS*/
     public static final String GCM_REGISTER_DEVICE = getBaseApiLegacy() + "RegisterDevice";
     public static final String GCM_NOTIFICATION_EVENT = API_LEGACY_AKAMAI + "NotificationEvent";
+    public static final String GCM_REGISTER_SUBSCRIBER = API_LEGACY_AKAMAI + "RegisterSubscriber";
 
 
     /*CONFIG CALLS*/

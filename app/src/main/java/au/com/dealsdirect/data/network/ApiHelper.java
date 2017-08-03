@@ -1,15 +1,13 @@
 package au.com.dealsdirect.data.network;
 
 
-import android.support.annotation.Nullable;
-
 import com.mysale.genie.utility.config.api.GetAppSettings;
 import com.mysale.genie.utility.config.api.GetAppSettingsSection;
 import com.mysale.genie.utility.config.api.GetServerSettings;
 
 import org.json.JSONObject;
 
-import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 import au.com.dealsdirect.data.network.model.SampleRequest;
@@ -74,7 +72,6 @@ import au.com.dealsdirect.data.network.model.returns.returndetails.GetReturnDeta
 import au.com.dealsdirect.data.network.model.returns.returndetails.GetReturnDetailsResponse;
 import au.com.dealsdirect.data.network.model.returns.returnorders.GetReturnOrders;
 import au.com.dealsdirect.data.network.model.saleitemdetails.AddToCartRequest;
-import au.com.dealsdirect.data.network.model.saleitemdetails.AddToCartResponse;
 import au.com.dealsdirect.data.network.model.saleitemdetails.GetSaleItemDetailsResponse;
 import au.com.dealsdirect.data.network.model.saleitems.GetPublicSaleItemsRequest;
 import au.com.dealsdirect.data.network.model.saleitems.GetPublicSaleItemsResponse;
@@ -122,7 +119,7 @@ public interface ApiHelper {
     Observable<String> callAddItemToCart(AddToCartRequest requestValues);
 
 
-//  CONFIG API CALLS
+    // CONFIG API CALLS
     Observable<GetServerSettings.ResponseValue> callGetServerSettings(String countryId);
 
     Observable<GetAppSettings.ResponseValue> callGetPublicAppSettings(String countryId);
@@ -135,7 +132,7 @@ public interface ApiHelper {
 
     Observable<GetContactHistoryResponse> callGetContactHistory(GetContactHistoryRequest getContactHistoryRequest);
 
-//  LOGIN API CALLS
+    // LOGIN API CALLS
 
     Observable<LoginEmail.ResponseValue> callLoginViaEmail(LoginEmail.RequestValue requestValue);
 
@@ -145,15 +142,15 @@ public interface ApiHelper {
 
     Observable<Logout.ResponseValue> callLogout(Logout.RequestValue requestValue);
 
-//  REGISTER API CALLS
+    // REGISTER API CALLS
 
     Observable<RegisterUserResponse> callRegiser(RegisterUserRequest requestValue);
 
-// FORGOT PASSWORD API CALL
+    // FORGOT PASSWORD API CALL
 
     Observable<ForgotPasswordResponseBody> callForgotPassword(ForgotPasswordRequest forgotPasswordRequest);
 
-//   ADDRESSES API CALLS
+    // ADDRESSES API CALLS
 
     Observable<GetAddresses.ResponseValue> callGetUserAddresses(GetAddresses.RequestValues requestValues);
 
@@ -167,13 +164,13 @@ public interface ApiHelper {
 
     Observable<GetUserDetailsResponse> getLoadUserDetailsApiCall(SetUserDetailsRequest setUserDetailsRequest);
 
-//  MY ORDERS API CALLS
+    // MY ORDERS API CALLS
 
     Observable<GetPaymentsList.ResponseValue> callGetPaymentsList(GetPaymentsList.RequestValues requestValues);
 
     Observable<GetOrderPaymentDetails.ResponseValue> callGetOrderPaymentDetails(GetOrderPaymentDetails.RequestValues requestValues);
 
-//    VOUCHERS API CALLS
+    // VOUCHERS API CALLS
 
     Observable<GetVouchersResponse> callGetVouchers(GetUserVouchersRequest getUserVouchersRequest);
 
@@ -187,7 +184,7 @@ public interface ApiHelper {
 
     Observable<AddAndApplyVoucherByKeyResponse> callGetAddAndApplyVoucherByKey(AddAndApplyVoucherByKeyRequest addAndApplyVoucherByKeyRequest);
 
-//    CHECKOUT API CALLS
+    // CHECKOUT API CALLS
     Observable<GetCurrentOrder.ResponseValue> callGetCurrentOrder(GetCurrentOrder.RequestValue model);
     
     Observable<GetUserPaymentMethods.ResponseValue> callGetUserPaymentMethods(GetUserPaymentMethods.RequestValue model);
@@ -232,10 +229,12 @@ public interface ApiHelper {
 
     Observable<NotificationEvent.ResponseValue> callNotificationEvent(NotificationEvent.RequestValue requestValue);
 
+    Observable<JSONObject> callRegisterSubscriber(HashMap<String, Object> param);
+
     //SORTING Facet Api Call
     Observable<List<SortingResponse>> callSortingFacets();
 
-//  RETURN API CALLS
+    // RETURN API CALLS
     Observable<CurrentReturnResponseBody> callGetCurrentReturns();
 
     Observable<GetReturnOrders> callGetReturnOrders();
