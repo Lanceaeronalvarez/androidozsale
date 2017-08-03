@@ -180,6 +180,10 @@ public final class ApiEndPoint {
     public static final String GET_OVERVIEW_DATA = BASE_URL + "revenue/overview/data";
     public static final String GET_OVERVIEW_DATA_FILTERS = BASE_URL + "revenue/overview/data?{period}{&filters}";
 
+    /* Masterpass */
+    public static final String MASTERPASS_PAYMENT = getBaseApiLegacy() + "MasterPassPayment";
+    public static final String MASTERPASS_POST_TRANSACTION = getBaseApiLegacy() + "MasterPassPostTransaction";
+
 
     private ApiEndPoint() {
 //         This class is not publicly instantiable

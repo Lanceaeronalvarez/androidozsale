@@ -76,7 +76,6 @@ import au.com.dealsdirect.data.network.model.returns.returndetails.GetReturnDeta
 import au.com.dealsdirect.data.network.model.returns.returndetails.GetReturnDetailsResponse;
 import au.com.dealsdirect.data.network.model.returns.returnorders.GetReturnOrders;
 import au.com.dealsdirect.data.network.model.saleitemdetails.AddToCartRequest;
-import au.com.dealsdirect.data.network.model.saleitemdetails.AddToCartResponse;
 import au.com.dealsdirect.data.network.model.saleitemdetails.GetSaleItemDetailsResponse;
 import au.com.dealsdirect.data.network.model.saleitems.GetPublicSaleItemsRequest;
 import au.com.dealsdirect.data.network.model.saleitems.GetPublicSaleItemsResponse;
@@ -98,7 +97,6 @@ import au.com.dealsdirect.data.network.model.vouchers.GetUserVouchersRequest;
 import au.com.dealsdirect.data.network.model.vouchers.GetVouchersResponse;
 import au.com.dealsdirect.utils.JsonUtils;
 import io.reactivex.Observable;
-import okhttp3.Response;
 
 @Singleton
 public class AppApiHelper implements ApiHelper {
@@ -677,6 +675,24 @@ public class AppApiHelper implements ApiHelper {
                 .addJSONObjectBody(JsonUtils.convertToJsonObject(createReturnRequest))
                 .build()
                 .getObjectObservable(CreateReturnRequestResponseBody.class);
+    }
+
+    @Override
+    public Observable<JSONObject> callMasterpassPayment(HashMap<String, Object> param) {
+        return Rx2AndroidNetworking.post(ApiEndPoint.MASTERPASS_PAYMENT)
+                .addHeaders(mApiHeader.getPublicApiHeader())
+                .addPathParameter(param)
+                .build()
+                .getJSONObjectObservable();
+    }
+
+    @Override
+    public Observable<JSONObject> callMasterpassPostTransaction(HashMap<String, Object> param) {
+        return Rx2AndroidNetworking.post(ApiEndPoint.MASTERPASS_POST_TRANSACTION)
+                .addHeaders(mApiHeader.getPublicApiHeader())
+                .addPathParameter(param)
+                .build()
+                .getJSONObjectObservable();
     }
 }
 
