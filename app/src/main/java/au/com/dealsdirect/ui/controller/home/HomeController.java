@@ -197,6 +197,10 @@ public class HomeController extends BaseController implements HomeMvpView {
                             showLoginController(mRouter, new AuthHandler() {
                                 @Override
                                 public void success() {
+                                    // Reset Accounts to contain Logout
+                                    mAccountsRouter.setRoot(RouterTransaction.with(AccountController.newInstance())
+                                            .tag(getActivity().getString(R.string.account_controller_tag)));
+
                                     proceedToController(position);
                                 }
 
