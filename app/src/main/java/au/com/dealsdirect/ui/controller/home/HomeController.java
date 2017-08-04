@@ -200,8 +200,6 @@ public class HomeController extends BaseController implements HomeMvpView {
                                     // Reset Accounts to contain Logout
                                     mAccountsRouter.setRoot(RouterTransaction.with(AccountController.newInstance())
                                             .tag(getActivity().getString(R.string.account_controller_tag)));
-
-                                    proceedToController(position);
                                 }
 
                                 @Override
@@ -259,7 +257,6 @@ public class HomeController extends BaseController implements HomeMvpView {
 
     @Override
     public void showContactController() {
-
         mRouter.setRoot(RouterTransaction.with(ViewContactsController.newInstance())
                 .tag(ViewContactsController.TAG)
                 .pushChangeHandler(new SimpleChangeHandler())
