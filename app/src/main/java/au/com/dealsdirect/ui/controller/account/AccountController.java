@@ -13,6 +13,7 @@ import android.widget.TextView;
 
 import com.bluelinelabs.conductor.RouterTransaction;
 import com.bluelinelabs.conductor.changehandler.HorizontalChangeHandler;
+import com.squareup.haha.perflib.Main;
 
 import java.io.Serializable;
 import java.util.List;
@@ -47,6 +48,7 @@ public class AccountController extends BaseController implements AccountMvpView,
     public static final String TAG = "AccountController";
     private static final String KEY_TEXT = "AccountController.KEY_TEXT";
     private AccountMvpView mAccountMvpView;
+    AccountItemAdapter accountItemAdapter;
 
     @BindView(R.id.partial_toolbar_title_view)
     TextView mTitleTextView;
@@ -94,8 +96,8 @@ public class AccountController extends BaseController implements AccountMvpView,
         // Setup views here
 
         assert (getActivity()) != null;
-        ((MainActivity)getActivity()).getMainController().showBottomNav();
-        ((MainActivity)getActivity()).setDraggableViewPager(false);
+        ((MainActivity) getActivity()).getMainController().showBottomNav();
+        ((MainActivity) getActivity()).setDraggableViewPager(false);
 
         mPresenter.loadAccountItems();
         mTitleTextView.setText("My Account");
@@ -118,8 +120,8 @@ public class AccountController extends BaseController implements AccountMvpView,
     @Override
     public void showAccountItems(List<String> accountItems, int[] accountImages) {
 
-        AccountItemAdapter accountItemAdapter
-                = new AccountItemAdapter(accountItems, accountImages, getActivity(), mPresenter);
+
+        accountItemAdapter = new AccountItemAdapter(accountItems, accountImages, getActivity(), mPresenter);
         mAccountRecyclerView.setAdapter(accountItemAdapter);
         mAccountRecyclerView.setLayoutManager(new GridLayoutManager(getActivity(), 3));
         mAccountRecyclerView.setItemAnimator(new DefaultItemAnimator());
@@ -165,7 +167,7 @@ public class AccountController extends BaseController implements AccountMvpView,
 
     @Override
     public void showMyPaymentsController() {
-        getRouter().pushController(RouterTransaction.with(new PaymentSelectController("",false))
+        getRouter().pushController(RouterTransaction.with(new PaymentSelectController("", false))
                 .pushChangeHandler(new HorizontalChangeHandler())
                 .popChangeHandler(new HorizontalChangeHandler()));
     }
@@ -190,7 +192,7 @@ public class AccountController extends BaseController implements AccountMvpView,
     public void triggerLogin(String option) {
         AccountMvpView mvpView = this;
 
-        ((MainMvpView)getActivity()).showLoginController(getRouter(),new AuthHandler() {
+        ((MainMvpView) getActivity()).showLoginController(getRouter(), new AuthHandler() {
             @Override
             public void success() {
                 mPresenter.onAttach(mvpView);
@@ -206,9 +208,18 @@ public class AccountController extends BaseController implements AccountMvpView,
 
     @Override
     public void triggerLogout() {
-        ((MainMvpView)getActivity()).callLogout();
-        mPresenter.loadAccountItems();
-        getRouter().setRoot(RouterTransaction.with(new ShopsController()).tag(ShopsController.TAG));
+        ((MainMvpView) getActivity()).callLogout(new AuthHandler() {
+            @Override
+            public void success() {
+                mPresenter.loadAccountItems();
+            }
+
+            @Override
+            public void error() {
+            }
+        });
+
+        ((MainActivity) getActivity()).getMainController().getHomeController().showShopController();
         CustomAlertDialog.showCustomAlertDialog(getActivity(),
                 CustomAlertDialog.CustomDialogIconState.POSITIVE,
                 "Logout Successful");

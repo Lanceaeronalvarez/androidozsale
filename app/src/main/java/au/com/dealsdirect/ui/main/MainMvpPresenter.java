@@ -6,6 +6,7 @@ package au.com.dealsdirect.ui.main;
 
 import android.content.Context;
 
+import au.com.dealsdirect.data.auth.AuthHandler;
 import au.com.dealsdirect.di.PerActivity;
 import au.com.dealsdirect.ui.base.MvpPresenter;
 
@@ -30,7 +31,7 @@ public interface MainMvpPresenter<V extends MainMvpView> extends MvpPresenter<V>
 
     void callLoginTicket();
 
-    void callLogout();
+    void callLogout(AuthHandler handler);
 
     void initializeNotifications(Context context);
 

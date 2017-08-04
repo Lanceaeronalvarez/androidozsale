@@ -45,7 +45,6 @@ import au.com.dealsdirect.ui.controller.checkout.checkout.CheckoutController;
 import au.com.dealsdirect.ui.controller.checkout.paymentsuccess.PaymentSuccessController;
 import au.com.dealsdirect.ui.controller.login.LoginController;
 import au.com.dealsdirect.ui.controller.main.MainController;
-import au.com.dealsdirect.ui.controller.saleitems.SaleItemsController;
 import au.com.dealsdirect.ui.controller.searchfilter.SearchFilterController;
 import au.com.dealsdirect.ui.controller.shops.ShopsController;
 import au.com.dealsdirect.ui.controller.splash.SplashScreenController;
@@ -79,6 +78,7 @@ public class MainActivity extends BaseActivity implements MainMvpView {
 
     private Router mHomeRouter;
     private Router mCategoriesRouter;
+    private Router mAccountsRouter;
 
     private boolean mIsFromCategories = false;
     private boolean isSearchActive = false;
@@ -143,7 +143,7 @@ public class MainActivity extends BaseActivity implements MainMvpView {
     @Override
     public void onBackPressed() {
 
-        switch (mViewPagerCurrentItem){
+        switch (getMainController().getHomeViewPager().getCurrentItem()) {
             case 0:
                 if (mCategoriesRouter.getBackstackSize() == 1) {
                     getMainController().goToShops();
@@ -153,38 +153,46 @@ public class MainActivity extends BaseActivity implements MainMvpView {
                 }
                 break;
             case 1:
-                int topControllerIndex = mHomeRouter.getBackstackSize() - 1;
-                if (topControllerIndex >= 0) {
-                    String tag = mHomeRouter.getBackstack().get(topControllerIndex).tag();
 
-                    if(getHomeRouterCurrentController() instanceof SearchFilterController){
-                        mHomeRouter.handleBack();
-                        return;
-                    }
-
-                    if (mIsFromCategories) {
-                        getMainController().goToCategories();
-                        mIsFromCategories = false;
+                if (getMainController().getHomeController().isAccountsActive()) {
+                    if (mAccountsRouter.getBackstackSize() == 1) {
+                        goToShops();
                     } else {
+                        mAccountsRouter.handleBack();
+                    }
+                } else {
 
-                        if (mHomeRouter.getBackstackSize() == 1) {
-                            DialogUtils.showYesNoDialog(
-                                    this,
-                                    getString(R.string.dealsdirect),
-                                    getString(R.string.exit_app),
-                                    getString(R.string.exit),
-                                    getString(R.string.no),
-                                    (dialogInterface, i) -> finish(),
-                                    (dialogInterface, i) -> {
-
-                                    });
-                        } else {
+                    int topControllerIndex = mHomeRouter.getBackstackSize() - 1;
+                    if (topControllerIndex >= 0) {
+                        if (getHomeRouterCurrentController() instanceof SearchFilterController) {
                             mHomeRouter.handleBack();
+                            return;
+                        }
 
-                            //animation of returning toolbar
-                            if (getHomeRouterCurrentController() instanceof ShopsController){
-                                mShopController.showSearchToolbar();
-                                new Handler().postDelayed(() -> mShopController.hideSearchToolbar(),500);
+                        if (mIsFromCategories) {
+                            getMainController().goToCategories();
+                            mIsFromCategories = false;
+                        } else {
+
+                            if (mHomeRouter.getBackstackSize() == 1) {
+                                DialogUtils.showYesNoDialog(
+                                        this,
+                                        getString(R.string.dealsdirect),
+                                        getString(R.string.exit_app),
+                                        getString(R.string.exit),
+                                        getString(R.string.no),
+                                        (dialogInterface, i) -> finish(),
+                                        (dialogInterface, i) -> {
+
+                                        });
+                            } else {
+                                mHomeRouter.handleBack();
+
+                                //animation of returning toolbar
+                                if (getHomeRouterCurrentController() instanceof ShopsController) {
+                                    mShopController.showSearchToolbar();
+                                    new Handler().postDelayed(() -> mShopController.hideSearchToolbar(), 500);
+                                }
                             }
                         }
                     }
@@ -396,8 +404,8 @@ public class MainActivity extends BaseActivity implements MainMvpView {
     }
 
     @Override
-    public void callLogout() {
-        mPresenter.callLogout();
+    public void callLogout(AuthHandler handler) {
+        mPresenter.callLogout(handler);
     }
 
     @Override
@@ -406,7 +414,7 @@ public class MainActivity extends BaseActivity implements MainMvpView {
         CustomAlertDialog.showCustomAlertDialog(this,
                 CustomAlertDialog.CustomDialogIconState.POSITIVE,
                 "Logout Successful");
-        ((AccountController)getMainController().getHomeController().getAccountsRouter().getControllerWithTag("AccountController")).resetAccounts();
+        ((AccountController) getMainController().getHomeController().getAccountsRouter().getControllerWithTag("AccountController")).resetAccounts();
     }
 
     @Override
@@ -493,6 +501,10 @@ public class MainActivity extends BaseActivity implements MainMvpView {
         mCategoriesRouter = router;
     }
 
+    public void setAccountsRouter(Router router) {
+        mAccountsRouter = router;
+    }
+
 
     public void goToSaleItemsFromCategory(Bundle bundle) {
         mShopController.goToItemsFromCategories(bundle);
@@ -530,6 +542,7 @@ public class MainActivity extends BaseActivity implements MainMvpView {
     public void setShopController(ShopsController shopsController) {
         mShopController = shopsController;
     }
+
 
     public MainController getMainController() {
         return mMainController;
