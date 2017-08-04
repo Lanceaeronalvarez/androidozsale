@@ -1,7 +1,6 @@
 package au.com.dealsdirect.ui.controller.address.addnewaddress;
 
 import android.annotation.SuppressLint;
-import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.text.InputFilter;
@@ -28,7 +27,6 @@ import au.com.dealsdirect.data.network.model.address.DecorationInfoList;
 import au.com.dealsdirect.ui.base.BaseController;
 import au.com.dealsdirect.ui.custom.CustomAlertDialog;
 import au.com.dealsdirect.utils.BundleBuilder;
-import au.com.dealsdirect.utils.DialogUtils;
 import au.com.dealsdirect.utils.JsonUtils;
 import au.com.dealsdirect.utils.StringUtils;
 import butterknife.BindView;
@@ -187,11 +185,13 @@ public class AddNewAddressController extends BaseController implements AddNewAdd
 
     @OnClick(R.id.partial_toolbar_arrow_view)
     public void onBackClick() {
+        hideKeyboard();
         getActivity().onBackPressed();
     }
 
     @OnClick(R.id.partial_toolbar_filter_view)
     public void callAddNewAddress(){
+        hideKeyboard();
         mPresenter.addNewAddress(mViewMap);
     }
 

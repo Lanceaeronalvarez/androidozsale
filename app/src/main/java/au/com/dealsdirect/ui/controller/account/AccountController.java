@@ -85,6 +85,7 @@ public class AccountController extends BaseController implements AccountMvpView,
     public void onViewBound(@NonNull View view) {
         super.onViewBound(view);
         setUp(view);
+        hideKeyboard();
     }
 
 

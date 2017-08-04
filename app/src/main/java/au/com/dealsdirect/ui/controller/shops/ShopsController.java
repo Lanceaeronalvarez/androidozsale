@@ -39,7 +39,6 @@ import au.com.dealsdirect.data.network.model.banner.GetBannerResponse;
 import au.com.dealsdirect.data.network.model.category.GetCategoryTreeResponse;
 import au.com.dealsdirect.ui.base.BaseController;
 import au.com.dealsdirect.ui.controller.saleitems.SaleItemsController;
-import au.com.dealsdirect.ui.controller.search.SearchController;
 import au.com.dealsdirect.ui.controller.shops.adapter.BannersAdapter;
 import au.com.dealsdirect.ui.controller.shops.listener.BannerClickListener;
 import au.com.dealsdirect.ui.main.MainActivity;
@@ -316,17 +315,23 @@ public class ShopsController extends BaseController implements ShopsMvpView, Ban
     @OnClick(R.id.partial_toolbar_search_icon)
     void onSearchClick() {
 
+        Bundle saleItemBundle = new BundleBuilder(new Bundle())
+                .putString("SaleItemsController.KEY_TITLE", "")
+                .putString("SaleItemsController.SEARCH_KEY", "")
+                .putBoolean("SaleItemsController.FROM_SHOP_SEARCH",true)
+                .build();
+        ((MainActivity) getActivity()).getHomeRouter().pushController(RouterTransaction.with(
+                SaleItemsController.newInstance(saleItemBundle))
+                .tag(getActivity().getString(R.string.sale_items_controller_tag))
+                .pushChangeHandler(new FadeChangeHandler())
+                .popChangeHandler(new FadeChangeHandler()));
+
         if (mCanViewSearch){
             mCanViewSearch = false;
-            showSearchToolbar();
-
-            child.startAnimation(inFromRightAnimation());
-            android.os.Handler handler = new android.os.Handler();
-            handler.postDelayed(() -> ((MainActivity) getActivity()).getHomeRouter().pushController(RouterTransaction.with(
-                    SearchController.newInstance())
-                    .tag("Search")
-                    .pushChangeHandler(new FadeChangeHandler())
-                    .popChangeHandler(new FadeChangeHandler())), 500);
+//            showSearchToolbar();
+//            child.startAnimation(inFromRightAnimation());
+//            android.os.Handler handler = new android.os.Handler();
+//            handler.postDelayed(() -> , 500);
         }
     }
 
@@ -560,5 +565,21 @@ public class ShopsController extends BaseController implements ShopsMvpView, Ban
 
         GetCategoryTreeResponse shopCategory = new GetCategoryTreeResponse();
         mPresenter.loadShopsBanner(shopCategory.getKey(), shopCategory.getId(), 0, 0);
+    }
+
+    public void goToSaleItemsFromCategorySearch(){
+
+        Bundle saleItemBundle = new BundleBuilder(new Bundle())
+                .putString("SaleItemsController.KEY_TITLE", "")
+                .putString("SaleItemsController.SEARCH_KEY", "")
+                .putBoolean("SaleItemsController.FROM_CATEGORY_SEARCH",true)
+                .build();
+
+        ((MainActivity) getActivity()).getHomeRouter().pushController(RouterTransaction.with(
+                SaleItemsController.newInstance(saleItemBundle))
+                .tag(getActivity().getResources().getString(R.string.sale_item_from_search_category))
+                .pushChangeHandler(new FadeChangeHandler())
+                .popChangeHandler(new FadeChangeHandler()));
+
     }
 }

@@ -13,7 +13,6 @@ import android.widget.ImageButton;
 import android.widget.TextView;
 
 import com.bluelinelabs.conductor.RouterTransaction;
-import com.bluelinelabs.conductor.changehandler.FadeChangeHandler;
 import com.bluelinelabs.conductor.changehandler.HorizontalChangeHandler;
 
 import java.util.ArrayList;
@@ -33,7 +32,6 @@ import au.com.dealsdirect.ui.controller.categories.listener.CategoryClickListene
 import au.com.dealsdirect.ui.controller.categories.listener.SubCategoryClickListener;
 import au.com.dealsdirect.ui.controller.categories.listener.SubCategoryItemClickListener;
 import au.com.dealsdirect.ui.controller.saleitems.SaleItemsController;
-import au.com.dealsdirect.ui.controller.search.SearchController;
 import au.com.dealsdirect.ui.controller.shops.ShopsController;
 import au.com.dealsdirect.ui.custom.transitions.RightHorizontalTransitionChangeHandler;
 import au.com.dealsdirect.ui.main.MainActivity;
@@ -294,13 +292,15 @@ public class CategoriesController extends BaseController
     }
 
     private void onSearchFieldClick(){
-
-        assert (getActivity()) != null;
-        ((MainActivity)getActivity()).getCategoriesRouter().pushController(
-                RouterTransaction.with(SearchController.newInstance())
-                        .pushChangeHandler(new FadeChangeHandler())
-                        .popChangeHandler(new FadeChangeHandler()));
-
+        if ((getActivity()) != null) {
+            ((MainActivity)getActivity()).goToSaleItemsFromSearchCategory();
+        }
+//        assert (getActivity()) != null;
+//        ((MainActivity)getActivity()).getCategoriesRouter().pushController(
+//                RouterTransaction.with(SearchController.newInstance())
+//                        .pushChangeHandler(new FadeChangeHandler())
+//                        .popChangeHandler(new FadeChangeHandler()));
+//
         Handler handler = new Handler();
         handler.postDelayed(() -> searchTapCounter = 0,500);
     }
