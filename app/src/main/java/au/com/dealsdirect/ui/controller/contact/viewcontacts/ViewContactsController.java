@@ -30,11 +30,9 @@ import au.com.dealsdirect.ui.controller.contact.addcontact.AddContactController;
 import au.com.dealsdirect.ui.controller.contact.viewcontacthistory.ViewContactHistoryController;
 import au.com.dealsdirect.ui.controller.contact.viewcontacts.contacts.ContactsAdapter;
 import au.com.dealsdirect.ui.controller.contact.viewcontacts.contacts.ContactsClickListener;
-import au.com.dealsdirect.ui.controller.contact.viewcontacts.viewcontactdate.ViewContactDateAdapter;
 import au.com.dealsdirect.ui.main.MainActivity;
 import au.com.dealsdirect.utils.BundleBuilder;
 import au.com.dealsdirect.utils.DateUtils;
-import au.com.dealsdirect.utils.KeyboardUtils;
 import butterknife.BindView;
 import butterknife.OnClick;
 
@@ -120,6 +118,7 @@ public class ViewContactsController extends BaseController implements ViewContac
 
         mViewContactsRecyclerView.setAdapter(mContactAdapter);
         mViewContactsRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
+        hideKeyboard();
     }
 
     @Override

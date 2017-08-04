@@ -197,7 +197,7 @@ public class MainActivity extends BaseActivity implements MainMvpView {
                             handler.postDelayed(() ->
                                     mShopController.hideSearchToolbar(), 500);
 
-                        } else if ((tag != null) && tag.equals(getString(R.string.sale_items_from_category))) {
+                        } else if ((tag != null) && (tag.equals(getString(R.string.sale_items_from_category)) || tag.equals(getResources().getString(R.string.sale_item_from_search_category)))) {
 
                             goToCategoriesFromSaleItems();
                         } else {
@@ -478,6 +478,12 @@ public class MainActivity extends BaseActivity implements MainMvpView {
         handler.postDelayed(() -> mMainController.goToShops(), 400);
     }
 
+    public void goToSaleItemsFromSearchCategory(){
+        mShopController.goToSaleItemsFromCategorySearch();
+        final Handler handler = new Handler();
+        handler.postDelayed(() -> mMainController.goToShops(), 400);
+    }
+
     public void goToSalesFromCategory(GetCategoryTreeResponse getCategoryTreeResponse) {
         mIsFromCategories = true;
         mShopController.goToSalesFromCategories(getCategoryTreeResponse);
@@ -541,4 +547,7 @@ public class MainActivity extends BaseActivity implements MainMvpView {
         getMainController().getHomeController().showShopController();
     }
 
+//    public DataManager getDataManager(){
+//        return mPresenter.getMainDataManager();
+//    }
 }

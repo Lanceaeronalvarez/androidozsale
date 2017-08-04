@@ -188,6 +188,7 @@ public class DetailsController extends BaseController implements DetailsMvpView 
 
     @OnClick(R.id.partial_toolbar_filter_view)
     public void saveUserDetails() {
+        hideKeyboard();
 
         if (mPasswordText.getText().toString().isEmpty() || mPasswordText.getText().toString() == "") {
             CustomAlertDialog.showCustomAlertDialog(getActivity(),
@@ -211,6 +212,7 @@ public class DetailsController extends BaseController implements DetailsMvpView 
 
     @OnClick(R.id.partial_toolbar_arrow_view)
     public void onBackClick() {
+        hideKeyboard();
         getActivity().onBackPressed();
     }
 
