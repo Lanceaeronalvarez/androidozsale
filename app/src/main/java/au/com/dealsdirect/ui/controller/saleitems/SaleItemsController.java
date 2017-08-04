@@ -547,7 +547,7 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
 
             mSaleItemsToolbarField.setOnEditorActionListener((textView, i, keyEvent) -> {
                 if (i == EditorInfo.IME_ACTION_SEARCH) {
-//                    hideKeyboard();
+                    hideKeyboard();
                     mSearchQuery = textView.getText().toString();
                     mIsSearch = true;
                     mPresenter.loadSaleItems("", mSaleId, mSearchQuery, 0, new ArrayList());
