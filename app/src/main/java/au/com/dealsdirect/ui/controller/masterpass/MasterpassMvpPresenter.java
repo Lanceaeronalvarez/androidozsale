@@ -9,5 +9,5 @@ public interface MasterpassMvpPresenter<V extends MasterpassMvpView> extends Mvp
 
     void getMasterpassPayment();
 
-    void confirmPayment();
+    void confirmPayment(String oAuthToken, String oAuthVerifier, String checkoutResourceUrl);
 }

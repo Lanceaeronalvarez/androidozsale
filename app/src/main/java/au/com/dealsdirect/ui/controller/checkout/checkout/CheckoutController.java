@@ -33,6 +33,7 @@ import au.com.dealsdirect.ui.controller.address.viewaddress.ViewAddressControlle
 import au.com.dealsdirect.ui.controller.checkout.addpayment.AddPaymentController;
 import au.com.dealsdirect.ui.controller.checkout.paymentselect.PaymentSelectController;
 import au.com.dealsdirect.ui.controller.home.HomeController;
+import au.com.dealsdirect.ui.controller.masterpass.MasterpassController;
 import au.com.dealsdirect.ui.controller.vouchers.Add.AddVouchersController;
 import au.com.dealsdirect.ui.main.FetchTokenHandler;
 import au.com.dealsdirect.ui.main.MainActivity;
@@ -77,6 +78,7 @@ public class CheckoutController extends BaseController implements CheckoutMvpVie
     View mButtonHolder;
     Button mPayButton;
     RelativeLayout mPaypalButton;
+    RelativeLayout mMasterpassButton;
 
     @BindView(R.id.no_cart_items_layout)
     RelativeLayout mNoCartItemsLayout;
@@ -182,7 +184,7 @@ public class CheckoutController extends BaseController implements CheckoutMvpVie
         mButtonHolder = mFooterView.findViewById(R.id.partial_checkout_button_holder);
         mPayButton = (Button) mFooterView.findViewById(R.id.partial_checkout_button_pay);
         mPaypalButton = (RelativeLayout) mFooterView.findViewById(R.id.partial_checkout_button_paypal);
-
+        mMasterpassButton = (RelativeLayout) mFooterView.findViewById(R.id.partial_checkout_button_masterpass);
 
         setUp(view);
     }
@@ -218,6 +220,7 @@ public class CheckoutController extends BaseController implements CheckoutMvpVie
 
         mPayButton.setOnClickListener(view1 -> onPayButtonClick());
         mPaypalButton.setOnClickListener(view2 -> onPaypalButtonClick());
+        mMasterpassButton.setOnClickListener(view3 -> onMasterpassButtonClick());
 
         loadCart();
         mListView.setVisibility(View.GONE);
@@ -421,6 +424,12 @@ public class CheckoutController extends BaseController implements CheckoutMvpVie
                 ((MainMvpView) mActivity).callCreatePaymentTransaction("");
             }
         }
+    }
+
+    public void onMasterpassButtonClick() {
+        getRouter().pushController(RouterTransaction.with(MasterpassController.newInstance())
+                .pushChangeHandler(new HorizontalChangeHandler())
+                .popChangeHandler(new HorizontalChangeHandler()));
     }
 
     private boolean isAddressValid() {

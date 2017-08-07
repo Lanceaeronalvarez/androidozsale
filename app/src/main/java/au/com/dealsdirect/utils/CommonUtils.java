@@ -2,6 +2,7 @@
 package au.com.dealsdirect.utils;
 
 import android.annotation.SuppressLint;
+import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.res.AssetManager;
@@ -9,7 +10,9 @@ import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.provider.Settings;
 import android.util.DisplayMetrics;
+import android.view.Window;
 import android.view.WindowManager;
+import android.widget.TextView;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -41,6 +44,19 @@ public final class CommonUtils {
         progressDialog.setCancelable(true);
         progressDialog.setCanceledOnTouchOutside(false);
         return progressDialog;
+    }
+
+
+    public static Dialog showLoadingDialog(Context context, String message, boolean cancelable) {
+        Dialog dialog = new Dialog(context);
+        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        dialog.setContentView(R.layout.progress_dialog_modal);
+
+        ((TextView)dialog.findViewById(R.id.progress_dialog_modal_text)).setText(message);
+        dialog.setCancelable(cancelable);
+        dialog.setCanceledOnTouchOutside(cancelable);
+
+        return dialog;
     }
 
     @SuppressLint("all")

@@ -69,6 +69,20 @@ public abstract class BaseController extends RefWatchingController implements Mv
     }
 
     @Override
+    public void showLoadingDialog(String message, boolean cancelable) {
+        if (mActivity != null) {
+            mActivity.showLoadingDialog(message, cancelable);
+        }
+    }
+
+    @Override
+    public void hideLoadingDialog() {
+        if (mActivity != null) {
+            mActivity.hideLoadingDialog();
+        }
+    }
+
+    @Override
     public void onError(String message) {
         if (mActivity != null) {
             mActivity.onError(message);

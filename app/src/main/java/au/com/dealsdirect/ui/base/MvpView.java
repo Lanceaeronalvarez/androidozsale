@@ -25,4 +25,8 @@ public interface MvpView {
 
     void onRefreshEnd();
 
+    void showLoadingDialog(String message, boolean cancelable);
+
+    void hideLoadingDialog();
+
 }

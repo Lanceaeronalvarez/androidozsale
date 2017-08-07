@@ -42,5 +42,4 @@ public class DialogUtils {
                 .setOnDismissListener(onDismissListener)
                 .show();
     }
-
 }

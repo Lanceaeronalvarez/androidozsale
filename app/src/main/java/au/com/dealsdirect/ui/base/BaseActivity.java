@@ -1,6 +1,7 @@
 package au.com.dealsdirect.ui.base;
 
 import android.annotation.TargetApi;
+import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.pm.PackageManager;
@@ -30,6 +31,8 @@ import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper;
 public abstract class BaseActivity extends AppCompatActivity implements MvpView {
 
     private ProgressDialog mProgressDialog;
+
+    private Dialog mLoadingDialog;
 
     private ActivityComponent mActivityComponent;
 
@@ -78,6 +81,20 @@ public abstract class BaseActivity extends AppCompatActivity implements MvpView 
     public void hideLoading() {
         if (mProgressDialog != null && mProgressDialog.isShowing()) {
             mProgressDialog.cancel();
+        }
+    }
+
+    @Override
+    public void showLoadingDialog(String message, boolean cancelable) {
+        hideLoadingDialog();
+        mLoadingDialog = CommonUtils.showLoadingDialog(this, message ,cancelable);
+    }
+
+    @Override
+    public void hideLoadingDialog() {
+        if (mLoadingDialog != null && mLoadingDialog.isShowing()) {
+            mLoadingDialog.dismiss();
+            mLoadingDialog = null;
         }
     }
 

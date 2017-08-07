@@ -17,6 +17,7 @@ import javax.inject.Inject;
 import au.com.dealsdirect.R;
 import au.com.dealsdirect.data.network.model.checkout.CreatePaymentTransaction;
 import au.com.dealsdirect.ui.base.BaseController;
+import au.com.dealsdirect.ui.controller.masterpass.MasterpassController;
 import au.com.dealsdirect.ui.main.MainActivity;
 import au.com.dealsdirect.utils.BundleBuilder;
 import au.com.dealsdirect.utils.DialogUtils;
@@ -63,7 +64,16 @@ public class PaymentSuccessController extends BaseController implements PaymentS
     private String mInvoiceString;
     private String mEstimatedDeliveryString;
 
+    public static PaymentSuccessController newInstance(String address, String price, String invoice, String delivery) {
 
+        return new PaymentSuccessController(
+                new BundleBuilder(new Bundle())
+                        .putString(KEY_ADDRESS, address)
+                        .putString(KEY_PRICE, price)
+                        .putString(KEY_INVOICE, invoice)
+                        .putString(KEY_ESTIMATED_DELIVERY, delivery)
+                        .build());
+    }
 
     public PaymentSuccessController(CreatePaymentTransaction.ResponseValue responseValue) {
         this(new BundleBuilder(new Bundle())
@@ -76,10 +86,10 @@ public class PaymentSuccessController extends BaseController implements PaymentS
 
     public PaymentSuccessController(Bundle args) {
         super(args);
-        mAddressString = args.getString(KEY_ADDRESS,"");
-        mPriceString = args.getString(KEY_PRICE,"");
-        mInvoiceString = args.getString(KEY_INVOICE,"");
-        mEstimatedDeliveryString = args.getString(KEY_ESTIMATED_DELIVERY,"");
+        mAddressString = args.getString(KEY_ADDRESS, "");
+        mPriceString = args.getString(KEY_PRICE, "");
+        mInvoiceString = args.getString(KEY_INVOICE, "");
+        mEstimatedDeliveryString = args.getString(KEY_ESTIMATED_DELIVERY, "");
     }
 
     @Override
@@ -148,7 +158,7 @@ public class PaymentSuccessController extends BaseController implements PaymentS
     }
 
     @Override
-    public void showRatePopUp(){
+    public void showRatePopUp() {
 
         DialogUtils.showYesNoDialog(getActivity()
                 , getApplicationContext().getString(R.string.rate_us_dialog_title)
@@ -172,8 +182,8 @@ public class PaymentSuccessController extends BaseController implements PaymentS
 
 
     @OnClick(R.id.partial_continue_shopping_button)
-    void onContinueShoppingClick(){
+    void onContinueShoppingClick() {
         getRouter().popToTag("CheckoutController");
-        ((MainActivity)getActivity()).goToShops();
+        ((MainActivity) getActivity()).goToShops();
     }
 }

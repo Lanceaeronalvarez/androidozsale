@@ -6,4 +6,10 @@ package au.com.dealsdirect.ui.controller.masterpass;
 import au.com.dealsdirect.ui.base.MvpView;
 
 public interface MasterpassMvpView extends MvpView {
+
+    void loadMasterpassUrl(String url, String host);
+
+    void showError(String message);
+
+    void showPaymentSuccess(String address, String price, String invoice, String delivery);
 }
