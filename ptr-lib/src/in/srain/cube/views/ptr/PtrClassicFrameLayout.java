@@ -53,4 +53,9 @@ public class PtrClassicFrameLayout extends PtrFrameLayout {
             mPtrClassicHeader.setLastUpdateTimeRelateObject(object);
         }
     }
+
+    @Override
+    public void setIsChildScrollingEnabled(boolean mIsChildScrolling) {
+        super.setIsChildScrollingEnabled(mIsChildScrolling);
+    }
 }
