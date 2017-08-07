@@ -38,6 +38,7 @@ import au.com.dealsdirect.data.auth.AuthHandler;
 import au.com.dealsdirect.data.network.model.banner.GetBannerResponse;
 import au.com.dealsdirect.data.network.model.category.GetCategoryTreeResponse;
 import au.com.dealsdirect.ui.base.BaseController;
+import au.com.dealsdirect.ui.base.BasePullToRefreshController;
 import au.com.dealsdirect.ui.controller.saleitems.SaleItemsController;
 import au.com.dealsdirect.ui.controller.shops.adapter.BannersAdapter;
 import au.com.dealsdirect.ui.controller.shops.listener.BannerClickListener;
@@ -55,7 +56,7 @@ import butterknife.OnClick;
  * dp Created by Admin on 6/6/17.
  */
 
-public class ShopsController extends BaseController implements ShopsMvpView, BannerClickListener {
+public class ShopsController extends BasePullToRefreshController implements ShopsMvpView, BannerClickListener {
 
     public static final String TAG = "ShopsController";
     private static final String KEY_TEXT = "ShopController.KEY_TEXT";
@@ -146,7 +147,11 @@ public class ShopsController extends BaseController implements ShopsMvpView, Ban
     @Override
     protected View inflateView(@NonNull LayoutInflater inflater, @NonNull ViewGroup container) {
 
-        View view = inflater.inflate(R.layout.controller_shop, container, false);
+        View view = super.inflateView(inflater, container);
+
+        fillToolbar(inflater.inflate(R.layout.partial_toolbar_logo, container, false));
+        fillContent(inflater.inflate(R.layout.controller_shop, container, false));
+
         getControllerComponent().inject(this);
         mPresenter.onAttach(this);
 
@@ -497,7 +502,7 @@ public class ShopsController extends BaseController implements ShopsMvpView, Ban
         mShopsControllerHamburgerView.animate().rotation(-90).setDuration(200).start();
 
         //noinspection ConstantConditions
-        item = (RelativeLayout) getView().findViewById(R.id.controller_shop_toolbar_container);
+        item = (RelativeLayout) getToolbar();
 
         //noinspection ConstantConditions
         child = getActivity().getLayoutInflater().inflate(R.layout.partial_toolbar_search, null);
@@ -581,5 +586,12 @@ public class ShopsController extends BaseController implements ShopsMvpView, Ban
                 .pushChangeHandler(new FadeChangeHandler())
                 .popChangeHandler(new FadeChangeHandler()));
 
+    }
+
+    @Override
+    public void onRefreshStart() {
+        super.onRefreshStart();
+
+        mPresenter.loadShopsBanner(mCategoryName, mCategoryID, bannerOffset, bannerLimit);
     }
 }

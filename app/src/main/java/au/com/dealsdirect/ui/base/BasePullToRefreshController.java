@@ -60,6 +60,10 @@ public abstract class BasePullToRefreshController extends BaseController impleme
         mToolbarFrameLayout.addView(view);
     }
 
+    protected View getToolbar() {
+        return mToolbarFrameLayout.getChildAt(0).getRootView();
+    }
+
     @Override
     public void hideLoading() {
         super.hideLoading();
