@@ -483,6 +483,7 @@ public class ShopsController extends BaseController implements ShopsMvpView, Ban
             mShopsControllerToolbarTextView.setText(getCategoryParentKey(getCategoryTreeResponse.getKey()));
             mShopsControllerHamburgerView.setImageDrawable(getActivity().getDrawable(R.drawable.ic_pink_chevron));
             shopsControllerSearchView.setVisibility(View.INVISIBLE);
+            ((MainActivity) getActivity()).setIsFromCategories(true);
         } else {
             assert (getActivity()) != null;
             ((MainActivity) getActivity()).setIsFromCategories(false);

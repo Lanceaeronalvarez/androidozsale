@@ -75,8 +75,6 @@ public class HomeController extends BaseController implements HomeMvpView {
         return mAccountsRouter;
     }
 
-    private Router mAccountsRouter;
-
     private int mPreviousTab = R.id.action_shop;
     private int mCurrentTab = R.id.action_shop;
 

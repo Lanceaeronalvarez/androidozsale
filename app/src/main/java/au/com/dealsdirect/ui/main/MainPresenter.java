@@ -440,7 +440,7 @@ public class MainPresenter<V extends MainMvpView> extends BasePresenter<V> imple
     }
 
     @Override
-    public void callLogout() {
+    public void callLogout(AuthHandler handler) {
 
 //        GCartUtil.setValueToCart(0);
 //        RxBus.instance().post("update_cart_items_immediate");
