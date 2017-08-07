@@ -92,7 +92,6 @@ public abstract class BasePullToRefreshController extends BaseController impleme
     private void addOverScrollListener(ViewGroup vg) {
         for (int i = 0; i < vg.getChildCount(); i++){
             View child = vg.getChildAt(i);
-            Log.d("PullToRefresh",child+" ");
             if (child instanceof ViewGroup){
                 if(child instanceof RecyclerView) {
                     recyclerViewEnablePullToRefresh(child);

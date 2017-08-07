@@ -54,7 +54,7 @@ public class PtrFrameLayout extends ViewGroup {
     // disable when detect moving horizontally
     private boolean mPreventForHorizontal = false;
 
-    private boolean mIsChildScrollingEnabled = false;
+    private boolean mIsChildScrollingEnabled = true;
 
     private MotionEvent mLastMoveEvent;
 
