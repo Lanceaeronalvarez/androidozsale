@@ -117,7 +117,7 @@ public class AppApiHelper implements ApiHelper {
 
     @Override
     public Observable<SampleResponse> doSampleApiCall(SampleRequest request) {
-        return Rx2AndroidNetworking.post(ApiEndPoint.SAMPLE_API)
+        return Rx2AndroidNetworking.post(ApiEndPoint.GET_APP_SETTINGS)
                 .addHeaders(mApiHeader.getPublicApiHeader())
                 .addBodyParameter(request)
                 .build()

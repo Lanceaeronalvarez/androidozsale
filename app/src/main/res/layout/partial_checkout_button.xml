@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content">
+                xmlns:app="http://schemas.android.com/apk/res-auto"
+                xmlns:tools="http://schemas.android.com/tools"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -23,9 +23,9 @@
             android:paddingBottom="16dp">
 
             <ProgressBar
-                android:layout_width="50dp"
+                android:layout_width="51dp"
                 android:layout_height="50dp"
-                android:padding="10dp" />
+                android:padding="10dp"/>
 
             <TextView
                 android:layout_width="wrap_content"
@@ -33,7 +33,7 @@
                 android:gravity="center_vertical"
                 android:text="Loading payments"
                 android:textColor="@color/colorAccent"
-                android:textSize="@dimen/text_size_large" />
+                android:textSize="@dimen/text_size_large"/>
 
         </LinearLayout>
 
@@ -51,7 +51,7 @@
                 android:layout_height="@dimen/default_button_height"
                 android:layout_marginBottom="10dp"
                 android:text="@string/pay"
-                android:textSize="20sp" />
+                android:textSize="20sp"/>
 
             <RelativeLayout
                 android:id="@+id/partial_checkout_button_paypal"
@@ -79,15 +79,40 @@
                         android:paddingRight="5dp"
                         android:text="@string/pay_with"
                         android:textColor="#254181"
-                        android:textSize="@dimen/text_size_xxxlarge" />
+                        android:textSize="@dimen/text_size_xxxlarge"/>
 
                     <ImageView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:src="@drawable/paypal_logo"
-                        tools:ignore="ContentDescription" />
+                        tools:ignore="ContentDescription"/>
 
                 </LinearLayout>
+
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:id="@+id/partial_checkout_button_masterpass"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/default_button_height"
+                android:layout_marginBottom="16dp"
+                android:background="@drawable/bg_masterpass_button"
+                android:clickable="true"
+                android:elevation="1.5dp">
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerInParent="true"
+                    android:src="@drawable/ic_logo_masterpass"/>
+
+                <ImageView
+                    android:layout_width="40dp"
+                    android:layout_height="match_parent"
+                    android:layout_alignParentEnd="true"
+                    android:background="@drawable/bg_masterpass_button_side"
+                    android:src="@drawable/ic_chevron_right"/>
+
             </RelativeLayout>
 
         </LinearLayout>
