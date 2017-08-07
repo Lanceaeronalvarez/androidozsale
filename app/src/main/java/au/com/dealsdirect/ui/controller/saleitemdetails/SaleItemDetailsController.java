@@ -181,9 +181,6 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
     boolean checkOutLocated = false;
     private MainActivity mActivity;
 
-    private SpringSystem mSpringSystem;
-    private Spring addToCartAnimSpring;
-
     int[] checkoutLocation = new int[2];
 
     ElasticDragDismissFrameLayout mRootView;
@@ -499,22 +496,21 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
 
     @OnClick(R.id.product_details_add_to_basket)
     void addToBasket() {
-//        if (!mPresenter.isAuthorized()) {
-//            ((MainActivity) getActivity()).showLoginController(getRouter(), new AuthHandler() {
-//                @Override
-//                public void success() {
-//                    verifyAddToCart();
-//                }
-//
-//                @Override
-//                public void error() {
-//
-//                }
-//            });
-//        } else {
-//            verifyAddToCart();
-//        }
-        animateAddToCart();
+        if (!mPresenter.isAuthorized()) {
+            ((MainActivity) getActivity()).showLoginController(getRouter(), new AuthHandler() {
+                @Override
+                public void success() {
+                    verifyAddToCart();
+                }
+
+                @Override
+                public void error() {
+
+                }
+            });
+        } else {
+            verifyAddToCart();
+        }
 
     }
 
@@ -559,130 +555,16 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
         mCheckoutView.getLocationOnScreen(checkoutLocation);
 
         ArcTranslateAnimation anim = new ArcTranslateAnimation(
-                1000, Animation.ABSOLUTE,
+                700, Animation.ABSOLUTE,
                 imageToAnimateLocation[0],
                 Animation.ABSOLUTE,
-                checkoutLocation[0] * 1.5f,
+                checkoutLocation[0],
                 Animation.ABSOLUTE,
-                -checkoutLocation[1]);
-        anim.setInterpolator(new FastOutLinearInInterpolator());
-        anim.setAnimationListener(new Animation.AnimationListener() {
-            @Override
-            public void onAnimationStart(Animation animation) {
-                Log.d("anim","start");
-            }
+                checkoutLocation[1]);
 
-            @Override
-            public void onAnimationEnd(Animation animation) {
-                Log.d("anim","end");
-            }
-
-            @Override
-            public void onAnimationRepeat(Animation animation) {
-
-            }
-        });
+        anim.setInterpolator(new LinearInterpolator());
 
         mImageViewToAnimate.startAnimation(anim);
-
-//        new Handler().postDelayed(()->{
-//            int[] imageToAnimateLocation = new int[2];
-//
-////                    mImageViewToAnimate.setTranslationX(0);
-////                    mImageViewToAnimate.setTranslationY(0);
-////
-////            mImageViewToAnimate.getLocationInWindow(imageToAnimateLocation);
-////            int imageCenterX = (imageToAnimateLocation[0] + mImageViewToAnimate.getWidth()) / 2;
-////            int imageCenterY = (imageToAnimateLocation[1] + mImageViewToAnimate.getHeight()) / 2;
-////
-////            mCheckoutView.getLocationOnScreen(checkoutLocation);
-////
-////            mBottomNavView.setVisibility(View.GONE);
-////
-////            int xDiff = checkoutLocation[0] - imageCenterX;
-////
-////            SaleItemDetailsImageAdapter.ViewHolder vh = (SaleItemDetailsImageAdapter.ViewHolder) mProductImagesRv
-////                    .findViewHolderForLayoutPosition(mProductImagesRvLayoutManager.findLastVisibleItemPosition());
-////
-////            mImageViewToAnimate.setVisibility(View.VISIBLE);
-////            if(imagesLoaded) {
-////                mImageViewToAnimate.setImageDrawable(vh.image.getDrawable());
-////            } else {
-////                mImageViewToAnimate.setImageDrawable(mProductSharedImage.getDrawable());
-////            }
-////            mImageViewToAnimate.bringToFront();
-////            mImageViewToAnimate.invalidate();
-////
-////            ObjectAnimator rotateAnimation = AnimationEngine.Builder.animate(mImageViewToAnimate)
-////                    .rotate(45f)
-////                    .setInterpolator(new EasingInterpolator(Ease.CUBIC_OUT))
-////                    .build().getAnimation();
-////
-//////        ValueAnimator transLateXAnimation = ValueAnimator.ofFloat(imageCenterX,checkoutLocation[0]);
-//////        transLateXAnimation.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
-//////            @Override
-//////            public void onAnimationUpdate(ValueAnimator animation) {
-//////                mImageViewToAnimate.setTranslationX((float)animation.getAnimatedValue());
-//////            }
-//////        });
-//////        ValueAnimator transLateYAnimation = ValueAnimator.ofFloat(imageToAnimateLocation[1],checkoutLocation[1]);
-//////        transLateXAnimation.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
-//////            @Override
-//////            public void onAnimationUpdate(ValueAnimator animation) {
-//////                mImageViewToAnimate.setY((float)animation.getAnimatedValue());
-//////            }
-//////        });
-////
-//////        AnimatorSet transLateAnimation = new AnimatorSet();
-//////        transLateAnimation.playTogether(transLateXAnimation,transLateYAnimation);
-//////        transLateAnimation.setInterpolator(new LinearInterpolator());
-//////        transLateAnimation.setDuration(1000);
-//////        transLateAnimation.start();
-////            ObjectAnimator transLateAnimation = AnimationEngine.Builder.animate(mImageViewToAnimate)
-////                    .translate(checkoutLocation[0],checkoutLocation[1])
-////                    .setInterpolator(new LinearInterpolator())
-////                    .build().getAnimation();
-////
-////
-////            ObjectAnimator scaleAnimation = AnimationEngine.Builder.animate(mImageViewToAnimate)
-////                    .scales(0f)
-////                    .setInterpolator(new EasingInterpolator(Ease.CUBIC_OUT))
-////                    .build().getAnimation();
-////
-////            AnimatorSet animatorSet = new AnimatorSet();
-////            animatorSet.play(transLateAnimation);
-////            animatorSet.setDuration(1000);
-////            animatorSet.addListener(new Animator.AnimatorListener() {
-////                @Override
-////                public void onAnimationStart(Animator animation) {
-////
-////                }
-////
-////                @Override
-////                public void onAnimationEnd(Animator animation) {
-////                    mImageViewToAnimate.setRotation(0f);
-//////                    mImageViewToAnimate.setVisibility(View.INVISIBLE);
-////                    mImageViewToAnimate.setScaleX(1);
-////                    mImageViewToAnimate.setScaleY(1);
-////                    mBottomNavView.setVisibility(View.VISIBLE);
-//////                    mImageViewToAnimate.setTranslationX(0);
-//////                    mImageViewToAnimate.setTranslationY(0);
-////
-//////                addToCartAnimSpring.setEndValue(1);
-////                }
-////
-////                @Override
-////                public void onAnimationCancel(Animator animation) {
-////
-////                }
-////
-////                @Override
-////                public void onAnimationRepeat(Animator animation) {
-////
-////                }
-////            });
-////            animatorSet.start();
-//        },200);
 
     }
 
@@ -713,63 +595,5 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
 
     }
 
-    @Override
-    public void initSprings() {
-        mSpringSystem = SpringSystem.create();
 
-        addToCartAnimSpring = mSpringSystem.createSpring();
-        addToCartAnimSpring.addListener(new FirstSimpleStringListener(this, addToCartAnimSpring, mImageViewToAnimate, checkoutLocation));
-        addToCartAnimSpring.setSpringConfig(SpringConfig.fromBouncinessAndSpeed(0, 30));
-
-
-    }
-
-    public static class FirstSimpleStringListener extends SimpleSpringListener {
-        private ImageView mImageView;
-        private int[] mLocationCoords;
-        private SaleItemDetailsMvpView mSaleItemsMvpView;
-        private Spring mSpring;
-
-        public FirstSimpleStringListener(SaleItemDetailsMvpView saleItemsMvpView, Spring thisSpring, ImageView imageView, int[] locationCoords) {
-            mSaleItemsMvpView = saleItemsMvpView;
-            mImageView = imageView;
-            mLocationCoords = locationCoords;
-            mSpring = thisSpring;
-        }
-
-        @Override
-        public void onSpringActivate(Spring spring) {
-            super.onSpringActivate(spring);
-            mImageView.setVisibility(View.VISIBLE);
-        }
-
-        @Override
-        public void onSpringAtRest(Spring spring) {
-            super.onSpringAtRest(spring);
-            if (spring.getEndValue() == 1f) {
-                AnimationEngine.Builder.animate(mImageView)
-                        .scales(0)
-                        .translate(mLocationCoords[0], mLocationCoords[1])
-                        .setDuration(200)
-                        .withEndAction(() -> {
-                            mImageView.setVisibility(View.INVISIBLE);
-                            mImageView.setScaleX(1);
-                            mImageView.setScaleY(1);
-                            mImageView.setTranslationX(0);
-                            mImageView.setTranslationY(0);
-                            mSaleItemsMvpView.initSprings();
-                        })
-                        .build()
-                        .start();
-            }
-        }
-
-        @Override
-        public void onSpringUpdate(Spring spring) {
-            float value = (float) spring.getCurrentValue();
-            float scale = 1f - (value * 0.6f);
-            mImageView.setScaleX(scale);
-            mImageView.setScaleY(scale);
-        }
-    }
 }

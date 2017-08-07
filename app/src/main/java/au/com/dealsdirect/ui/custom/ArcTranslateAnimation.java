@@ -64,10 +64,9 @@ public class ArcTranslateAnimation extends Animation {
         float dy = calcBezier(interpolatedTime, start.y, middle.y, end.y);
         Log.d("dx,dy", dx+","+dy);
 
+        t.getMatrix().setScale(1 - interpolatedTime,1 - interpolatedTime);
         t.getMatrix().postRotate(interpolatedTime * 45, 100, 100);
         t.getMatrix().postTranslate(dx, dy);
-        t.getMatrix().postScale(1 - interpolatedTime * 0.3f, 1 - interpolatedTime * 0.3f);
-//        t.setAlpha(1 - interpolatedTime * 0.5f);
     }
 
     @Override
@@ -78,8 +77,8 @@ public class ArcTranslateAnimation extends Animation {
         float middleY = resolveSize(mYType, mYValue, width, parentWidth);
         float middleX = startX + ((endX-startX)/2);
         start = new OPoint(startX, 0);
-        end = new OPoint(endX, -middleY * 5.0f);
-        middle = new OPoint(middleX, middleY);
+        end = new OPoint(endX, middleY * 1.2f);
+        middle = new OPoint(middleX, 0);
     }
 
     public class OPoint

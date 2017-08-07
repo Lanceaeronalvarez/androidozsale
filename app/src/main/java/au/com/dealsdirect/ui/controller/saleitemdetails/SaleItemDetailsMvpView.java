@@ -13,5 +13,4 @@ public interface SaleItemDetailsMvpView extends MvpView {
 
     void showAddToCartResponse(boolean val);
 
-    void initSprings();
 }
