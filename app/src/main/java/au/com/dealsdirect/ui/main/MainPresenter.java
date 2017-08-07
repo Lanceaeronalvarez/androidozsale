@@ -170,7 +170,6 @@ public class MainPresenter<V extends MainMvpView> extends BasePresenter<V> imple
 
                                    GetAppSettingsSection.ResponseValue.Value value = responseValue.d.getValue();
                                    if (value != null) {
-
                                        String version = value.getMobileApp().getVersionRules();
                                        version = version.replace("/", "");
 

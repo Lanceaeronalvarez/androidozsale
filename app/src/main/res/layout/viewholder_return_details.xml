@@ -39,17 +39,19 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="5dp"
-                android:orientation="vertical" android:layout_marginLeft="5dp">
+                android:orientation="vertical"
+                android:layout_marginLeft="5dp">
 
                 <TextView
                     android:fontFamily="@string/font_lato_medium"
                     android:id="@+id/viewholder_return_details_item_name"
-                    android:layout_width="match_parent"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:textColor="@color/gray_field_label"
-                    android:layout_marginLeft="0dp"
-                    android:text="Philosophy Cotton Sleeveless Plain"
+                    android:text=""
+                    android:gravity="start"
                     android:textSize="@dimen/text_size_large"
+                    android:maxLines="3"
                     tools:ignore="HardcodedText"/>
 
 

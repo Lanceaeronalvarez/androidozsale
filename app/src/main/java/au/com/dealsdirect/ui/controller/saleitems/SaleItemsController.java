@@ -237,6 +237,8 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
             }
 
         } else{
+            mSaleItemsFilterIcon.setOnClickListener(view12 -> showFilters());
+
             mSaleItemsBackIcon.setOnClickListener(view12 -> {
                 getActivity().onBackPressed();
             });
@@ -513,6 +515,7 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
             mSaleItemsBackIcon.setOnClickListener(null);
             mSaleItemsFilterIcon.setOnClickListener(view -> {
                 deActivateSearch();
+                hideKeyboard();
 
             });
 

@@ -6,7 +6,7 @@
     android:id="@+id/view_holder_my_current_returns_row_container"
     android:layout_margin="5dp"
     android:layout_width="match_parent"
-    android:layout_height="450dp"
+    android:layout_height="@dimen/return_card_height"
     android:background="@drawable/bg_card_view_states">
 
     <RelativeLayout
@@ -55,6 +55,7 @@
                 android:text="Philosophy Cotton Sleeveless Plain"
                 android:textColor="#878787"
                 android:textSize="@dimen/text_size_xlarge"
+                android:maxLines="2"
                 android:fontFamily="@string/font_lato_bold"
                 tools:ignore="HardcodedText"/>
 
@@ -71,6 +72,17 @@
         </View>
 
 
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:clickable="true"
+            android:id="@+id/current_return_clickable_container"
+            android:layout_alignTop="@+id/current_return_items_recyclerview"
+            android:layout_alignBottom="@+id/current_return_items_recyclerview"
+            android:orientation="horizontal">
+
+        </LinearLayout>
+
         <android.support.v7.widget.RecyclerView
             android:id="@+id/current_return_items_recyclerview"
             android:layout_width="match_parent"
@@ -78,10 +90,9 @@
             android:layout_below="@+id/return_header_divider"
             android:layout_above="@+id/my_current_return_information_text_content"
             android:clickable="true"
-            android:isScrollContainer="false"
-            android:nestedScrollingEnabled="false"
             android:orientation="vertical"
-            android:padding="10dp">
+            android:paddingLeft="10dp"
+            android:paddingRight="10dp">
 
         </android.support.v7.widget.RecyclerView>
 

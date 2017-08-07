@@ -3,7 +3,6 @@ package au.com.dealsdirect.ui.controller.returns.currentreturns;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.LinearLayoutManager;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -154,8 +153,6 @@ public class CurrentReturnsController extends BaseController
 
             mCurrentReturns = currentReturns;
 
-            Log.d("showreturns","show");
-
             mCurrentReturnsAdapter = new CurrentReturnAdapter(
                     currentReturns,
                     returnDetailsResponseBodyList,
@@ -175,13 +172,9 @@ public class CurrentReturnsController extends BaseController
 
     @Override
     public void showCurrentReturnDetails(GetReturnDetailsResponseBody getReturnDetailsResponseBody) {
-        Log.d("itemiterator", "count ="+itemIterator);
-        Log.d("itemiterators", "count ="+getReturnDetailsResponseBody.getValue().getItems()+" , "+getReturnDetailsResponseBody.getValue().getItems().get(0).getPrice());
 
         returnItemsMap.put(itemIterator,getReturnDetailsResponseBody);
             if (returnItemsMap.size() == mCurrentReturns.size()){
-                Log.d("itemiterator", "done");
-
                 returnDetailsResponseBodyList.clear();
 
                 for (int i = 0; i < returnItemsMap.size(); i++){
@@ -191,7 +184,6 @@ public class CurrentReturnsController extends BaseController
 
             }else{
                 returnDetailsResponseBodyList.add(returnItemsMap.get(itemIterator));
-                mCurrentReturnsAdapter.updateReturnDetailsResponseBody(returnDetailsResponseBodyList);
 
                 itemIterator = itemIterator + 1;
                 mPresenter.loadReturnDetails(mCurrentReturns.get(itemIterator).getID(), itemIterator);
@@ -199,7 +191,6 @@ public class CurrentReturnsController extends BaseController
     }
 
     public void getCurrentReturnItems(List<CurrentReturns> currentReturns){
-//        Log.d("itemiterator", " this value ="+itemIterator);
         mPresenter.loadReturnDetails(currentReturns.get(itemIterator).getID(), itemIterator);
 
 //        for (int i = 0; i < currentReturns.size(); i++){

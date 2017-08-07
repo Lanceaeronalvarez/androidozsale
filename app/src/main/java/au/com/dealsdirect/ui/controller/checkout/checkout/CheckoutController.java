@@ -38,7 +38,6 @@ import au.com.dealsdirect.ui.controller.vouchers.Add.AddVouchersController;
 import au.com.dealsdirect.ui.main.FetchTokenHandler;
 import au.com.dealsdirect.ui.main.MainActivity;
 import au.com.dealsdirect.ui.main.MainMvpView;
-import au.com.dealsdirect.utils.CartUtil;
 import au.com.dealsdirect.utils.ImageUtils;
 import au.com.dealsdirect.utils.PriceUtils;
 import butterknife.BindView;
@@ -95,6 +94,8 @@ public class CheckoutController extends BaseController implements CheckoutMvpVie
     private ArrayList<Voucher> mVouchers = new ArrayList<>();
     private CheckoutOrderAdapter mAdapter;
 
+    private boolean mIsVoucherAdded = false;
+
     MainActivity mActivity;
 
     private View.OnClickListener mChangeClickListener = new View.OnClickListener() {
@@ -132,7 +133,7 @@ public class CheckoutController extends BaseController implements CheckoutMvpVie
             } else if (view.getId() == mVoucherChangeText.getId()
                     || view.getId() == mAddNewVoucherLayout.getId()) {
 
-                getRouter().pushController(RouterTransaction.with(AddVouchersController.newInstance(new Gson().toJson(mVouchers)))
+                getRouter().pushController(RouterTransaction.with(AddVouchersController.newInstance(new Gson().toJson(mVouchers), mIsVoucherAdded))
                         .pushChangeHandler(new HorizontalChangeHandler())
                         .popChangeHandler(new HorizontalChangeHandler()));
             }
@@ -354,8 +355,10 @@ public class CheckoutController extends BaseController implements CheckoutMvpVie
 
             if (summary.discount > 0) {
                 ((TextView) mSummaryLayout.findViewById(R.id.partial_checkout_summary_voucher)).setText(PriceUtils.getPriceStringValue(summary.discount));
+                mIsVoucherAdded = true;
                 mSummaryLayout.findViewById(R.id.partial_checkout_summary_voucher_container).setVisibility(View.VISIBLE);
             } else {
+                mIsVoucherAdded = false;
                 mSummaryLayout.findViewById(R.id.partial_checkout_summary_voucher_container).setVisibility(View.GONE);
             }
             ((TextView) mSummaryLayout.findViewById(R.id.partial_checkout_summary_total)).setText(PriceUtils.getPriceStringValue(summary.total));

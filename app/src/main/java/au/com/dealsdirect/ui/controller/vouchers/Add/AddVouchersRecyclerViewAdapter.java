@@ -132,11 +132,11 @@ public class AddVouchersRecyclerViewAdapter extends RecyclerView.Adapter<Recycle
                     vh.mVoucherItemLayout.setSelected(true);
                 }
 
-//                mView.onVoucherItemClicked(
-//                        voucher.getID(),
-//                        voucherColorStateCollection.get(position),
-//                        vh.mVoucherItemLayout,
-//                        position);
+                mView.onVoucherItemClicked(
+                        voucher.getID(),
+                        voucherColorStateCollection.get(position),
+                        vh.mVoucherItemLayout,
+                        position);
             }
         });
     }

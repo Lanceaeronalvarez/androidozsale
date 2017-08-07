@@ -1,7 +1,6 @@
 package au.com.dealsdirect.ui.controller.returns.newreturn.adapter;
 
 import android.content.Context;
-import android.graphics.Bitmap;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -88,11 +87,7 @@ public class NewReturnOrdersAdapter extends RecyclerView.Adapter<NewReturnOrderV
             if (productItemCountObject != null){
                 //  productItemCount = productItemCountObject;
                 //int productItemCountInt =  (Integer) productItemCountObject;
-//                GDebug.log("setdetail", " set detail count  = "+productItemCount + " , "+productItemCount.toString());
                 productItemCount = productItemCountObject.toString();
-//                GDebug.log("setdetailadapter", " set detail count  = "+productItemCount + " , " +
-//                        ""+productItemCount.toString() + "product item count int = " +
-//                        ""+productItemCount);
                 holder.productQuantityLayout.setMax(productItemCountInt);
                 holder.productQuantityLayout.setQuantity(Integer.parseInt("1"));
                 holder.productQuantityLayout.setEditTextToNonEditable();
@@ -103,19 +98,15 @@ public class NewReturnOrdersAdapter extends RecyclerView.Adapter<NewReturnOrderV
 
                 holder.productQuantityLayout.setOnQuantityChangeListener(new ProductQuantityLayout.onQuantityChangeListener() {
                     @Override public void onQuantityIncrease(ProductQuantityLayout view, int value) {
-//                        GDebug.log("return", " quantity is increased");
 
-//                        GDebug.log("returnsetdetail", "value =" + value);
                         String stringIterateValue = holder.productQuantityLayout.getQuantity();
                         int iterateValue = Integer.parseInt(stringIterateValue);
                         mUpateListener.onReturnValueUpdated(
                                 holder, position, mCurrentReturnList.get(position).getID(), true, iterateValue);
+                        holder.productQuantityLayout.resetLoaders();
                     }
 
                     @Override public void onQuantityDecrease(ProductQuantityLayout view, int value) {
-//                        GDebug.log("return", " quantity is decreased");
-//                        GDebug.log("returnsetdetail", "from decrease value =" + value);
-//                        GDebug.log("returnsetdetail", "value =" + value);
 
                         String stringIterateValue = holder.productQuantityLayout.getQuantity();
                         int iterateValue = Integer.parseInt(stringIterateValue);
@@ -123,6 +114,8 @@ public class NewReturnOrdersAdapter extends RecyclerView.Adapter<NewReturnOrderV
                         mUpateListener.onReturnValueUpdated(
                                 holder, position, mCurrentReturnList.get(position).getID(),
                                 false, iterateValue);
+                        holder.productQuantityLayout.resetLoaders();
+
                     }
                 });
                 holder.productQuantityLayout.setOnClickListener(view -> {
@@ -150,21 +143,10 @@ public class NewReturnOrdersAdapter extends RecyclerView.Adapter<NewReturnOrderV
 
             String imageUrl = ImageUtils.generateImageUrl(imageBrandId,imageId,imageFileName);
 
-//            GDebug.log("returns", imageBrandId+","+imageId+","+imageFileName);
-
-            Bitmap mIcon_val = null;
-//
-//            Glide.with(mContext).load(imageUrl)
-//                    .skipMemoryCache(true)
-//                    .diskCacheStrategy(DiskCacheStrategy.RESULT)
-//                    .fitCenter().into(holder.newReturnItemImageView);
-
             ImageUtils.loadImage(mContext,imageUrl,holder.newReturnItemImageView);
             mUpateListener.onReturnValueUpdated(
                     holder, position, mCurrentReturnList.get(position).getID(), true, 1);
 
-            //holder.newReturnItemImageView.setImageBitmap(mIcon_val);
-//
 //        holder.newReturnItemImageView.setImageDrawable(
 //                mContext.getResources()
 //                        .getDrawable(R.drawable.girl));

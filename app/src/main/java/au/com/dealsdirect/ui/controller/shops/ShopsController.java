@@ -42,6 +42,7 @@ import au.com.dealsdirect.ui.base.BasePullToRefreshController;
 import au.com.dealsdirect.ui.controller.saleitems.SaleItemsController;
 import au.com.dealsdirect.ui.controller.shops.adapter.BannersAdapter;
 import au.com.dealsdirect.ui.controller.shops.listener.BannerClickListener;
+import au.com.dealsdirect.ui.custom.transitions.SimpleChangeHandler;
 import au.com.dealsdirect.ui.main.MainActivity;
 import au.com.dealsdirect.ui.main.MainMvpView;
 import au.com.dealsdirect.utils.BundleBuilder;
@@ -328,7 +329,7 @@ public class ShopsController extends BasePullToRefreshController implements Shop
         ((MainActivity) getActivity()).getHomeRouter().pushController(RouterTransaction.with(
                 SaleItemsController.newInstance(saleItemBundle))
                 .tag(getActivity().getString(R.string.sale_items_controller_tag))
-                .pushChangeHandler(new FadeChangeHandler())
+                .pushChangeHandler(new SimpleChangeHandler())
                 .popChangeHandler(new FadeChangeHandler()));
 
         if (mCanViewSearch){
@@ -583,7 +584,7 @@ public class ShopsController extends BasePullToRefreshController implements Shop
         ((MainActivity) getActivity()).getHomeRouter().pushController(RouterTransaction.with(
                 SaleItemsController.newInstance(saleItemBundle))
                 .tag(getActivity().getResources().getString(R.string.sale_item_from_search_category))
-                .pushChangeHandler(new FadeChangeHandler())
+                .pushChangeHandler(new SimpleChangeHandler())
                 .popChangeHandler(new FadeChangeHandler()));
 
     }

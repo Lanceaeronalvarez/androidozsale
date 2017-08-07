@@ -1,12 +1,14 @@
 package au.com.dealsdirect.ui.controller.vouchers.Add;
 
-import android.content.DialogInterface;
+import android.content.Context;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.PagerSnapHelper;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.SnapHelper;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,27 +17,28 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.google.gson.reflect.TypeToken;
+
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
-
-import com.google.gson.reflect.TypeToken;
+import java.util.Set;
 
 import javax.inject.Inject;
 
 import au.com.dealsdirect.R;
 import au.com.dealsdirect.data.network.model.vouchers.AddAndApplyVoucherByKeyResponse;
+import au.com.dealsdirect.data.network.model.vouchers.AddVoucherByKeyResponse;
 import au.com.dealsdirect.data.network.model.vouchers.ApplyVouchersResponse;
 import au.com.dealsdirect.data.network.model.vouchers.ClearVouchersResponse;
 import au.com.dealsdirect.data.network.model.vouchers.Voucher;
 import au.com.dealsdirect.ui.base.BaseController;
 import au.com.dealsdirect.ui.custom.CustomAlertDialog;
 import au.com.dealsdirect.utils.BundleBuilder;
-import au.com.dealsdirect.utils.DialogUtils;
 import au.com.dealsdirect.utils.JsonUtils;
 import butterknife.BindView;
-import au.com.dealsdirect.data.network.model.vouchers.AddVoucherByKeyResponse;
 
 
 /**
@@ -43,7 +46,9 @@ import au.com.dealsdirect.data.network.model.vouchers.AddVoucherByKeyResponse;
  */
 
 public class AddVouchersController extends BaseController implements AddVouchersMvpView {
+
     private static final String VOUCHERS="Vouchers";
+    private static final String IS_VOUCHER_ADDED = "IS_VOUCHER_ADDED_KEY";
 
     private static final String testVouchersString = "[{\n" +
             "\t\t\t\t\"ID\": \"ba41e1d8-0a3d-4868-81ba-2f139f0827fa\",\n" +
@@ -132,22 +137,30 @@ public class AddVouchersController extends BaseController implements AddVouchers
     Button mButtonApply;
 
     List<String> voucherIds = new LinkedList<>();
+    List<String> tempVoucherIds = new LinkedList<>();
+
+    int listSize = 0;
+    private String mTempVoucherPromoKey;
 
     private ArrayList<Voucher> mVouchers = new ArrayList<>();
+    SharedPreferences mSharedPreference;
 
     HashMap<Integer, Boolean> voucherOptionIndicator = new HashMap<>();
 
     private AddVouchersRecyclerViewAdapter mAdapter;
+    private boolean mIsVoucherAdded = false;
 
-    public static AddVouchersController newInstance(String vouchersJsonString) {
+    public static AddVouchersController newInstance(String vouchersJsonString, boolean isVoucherAdded) {
         return new AddVouchersController(new BundleBuilder(new Bundle())
                 .putString(VOUCHERS, vouchersJsonString)
+                .putBoolean(IS_VOUCHER_ADDED, isVoucherAdded)
                 .build());
     }
 
     public AddVouchersController(Bundle args) {
         super(args);
         mVouchers = JsonUtils.convertStringToObject(args.getString(VOUCHERS,""), new TypeToken<ArrayList<Voucher>>(){}.getType());
+        mIsVoucherAdded = args.getBoolean(IS_VOUCHER_ADDED);
     }
 
     @Override
@@ -161,6 +174,15 @@ public class AddVouchersController extends BaseController implements AddVouchers
     @Override
     protected void onViewBound(@NonNull View view) {
         super.onViewBound(view);
+
+        mSharedPreference = getActivity().getSharedPreferences("Voucher_Preference", Context.MODE_PRIVATE);
+        Set<String> voucherSet = mSharedPreference.getStringSet("VOUCHER_SET", null);
+        voucherIds.addAll(voucherSet);
+
+        if (mVouchers != null) {
+            listSize = mVouchers.size();
+        }
+        setVouchersHashMap();
         setUp(view);
     }
 
@@ -177,7 +199,7 @@ public class AddVouchersController extends BaseController implements AddVouchers
 //        mAdapter.setVoucherOptionIndicator(voucherOptionIndicator);
 
 
-        if (voucherIds.isEmpty()) {
+        if (!mIsVoucherAdded) {
             mButtonClear.setVisibility(View.GONE);
         } else {
             mButtonClear.setVisibility(View.VISIBLE);
@@ -185,15 +207,15 @@ public class AddVouchersController extends BaseController implements AddVouchers
         }
 
         mButtonApply.setOnClickListener(view2 -> {
-            if (voucherIds.size() != 0) {
+            if (voucherIds.size() != 0 && tempVoucherIds.size() != 0) {
                 mPresenter.applyVouchers(100, voucherIds);
+
 
             } else {
                 CustomAlertDialog.showCustomAlertDialog(
                         getActivity(),
                         CustomAlertDialog.CustomDialogIconState.NEGATIVE,
                         getApplicationContext().getString(R.string.no_voucher_selected));
-
             }
         });
 
@@ -220,7 +242,7 @@ public class AddVouchersController extends BaseController implements AddVouchers
 
                 mPresenter.addAndApplyVoucherByKey(100, mPromoCodeText.getText().toString());
 
-//                mTempVoucherKey = mPromoCodeText.getText().toString();
+                mTempVoucherPromoKey = mPromoCodeText.getText().toString();
 
                 mPromoCodeText.clearFocus();
                 hideKeyboard();
@@ -265,15 +287,15 @@ public class AddVouchersController extends BaseController implements AddVouchers
                     successResponse
             );
 
-
+            SharedPreferences.Editor editor = mSharedPreference.edit();
+            Set<String> voucherSet = new HashSet<String>();
+            voucherSet.addAll(voucherIds);
+            editor.putStringSet("VOUCHER_SET", voucherSet);
+            editor.apply();
             getActivity().onBackPressed();
 
 
         } else {
-
-//            GDebug.log(this.getClass().getSimpleName(),
-//                    "on vouchers applied and response is empty");
-
 
             if (responseMessage.isEmpty()) {
                 CustomAlertDialog.showCustomAlertDialog(
@@ -291,7 +313,9 @@ public class AddVouchersController extends BaseController implements AddVouchers
             }
 
 //            mActivity.getSupportFragmentManager().popBackStack();
+            getActivity().onBackPressed();
             voucherIds.clear();
+            tempVoucherIds.clear();
         }
     }
 
@@ -313,6 +337,7 @@ public class AddVouchersController extends BaseController implements AddVouchers
         );
 
         voucherIds.clear();
+        tempVoucherIds.clear();
         getActivity().onBackPressed();
 
     }
@@ -325,7 +350,7 @@ public class AddVouchersController extends BaseController implements AddVouchers
 
     @Override
     public void onAddAndAppliedVoucher(AddAndApplyVoucherByKeyResponse response) {
-//        GDebug.log(ViewMyVouchersPresenter.class.getName(), "onAddAndAppliedVoucher");
+
         if (response.getValue().getResult()) {
             CustomAlertDialog.showCustomAlertDialog(
                     getActivity(),
@@ -333,8 +358,8 @@ public class AddVouchersController extends BaseController implements AddVouchers
                     getActivity().getString(R.string.promo_code_applied)
             );
 
-//            voucherIds.add(mTempVoucherKey);
-//            tempVoucherIds.add(mTempVoucherKey);
+            voucherIds.add(mTempVoucherPromoKey);
+            tempVoucherIds.add(mTempVoucherPromoKey);
             getActivity().onBackPressed();
         } else {
 
@@ -346,105 +371,38 @@ public class AddVouchersController extends BaseController implements AddVouchers
     }
 
 
+    public void setVouchersHashMap() {
+
+        Log.d(this.getClass().getSimpleName(), "voucher size = " + listSize);
+
+        for (int i = 0; i <= listSize; i++) {
+            voucherOptionIndicator.put(i, false);
+        }
+    }
+
     @Override
     public void onVoucherItemClicked(String voucherId, String voucherState, LinearLayout holder, int position) {
+        Log.d("AddVoucher", " voucher  clicked");
+
         if (voucherOptionIndicator.get(position) != null) {
 
             boolean isClicked = voucherOptionIndicator.get(position);
 
             if (isClicked) {
                 voucherIds.remove(voucherId);
-//                GDebug.log("vouchers", " ID = " + voucherId);
+                tempVoucherIds.add(voucherId);
 
-//                switch (voucherState) {
-//                    case "red":
-//
-//                        holder.setBackgroundResource(R.drawable.voucher_container_red);
-//                        break;
-//                    case "blue":
-//
-//                        holder.setBackgroundResource(R.drawable.voucher_container_blue);
-//                        break;
-//                    case "yellow":
-//
-//                        holder.setBackgroundResource(R.drawable.voucher_container_yellow);
-//                        break;
-//                    case "green":
-//
-//                        holder.setBackgroundResource(R.drawable.voucher_container_green);
-//                        break;
-//                    case "violet":
-//
-//                        holder.setBackgroundResource(R.drawable.voucher_container_violet);
-//                        break;
-//                    case "aqua":
-//
-//                        holder.setBackgroundResource(R.drawable.voucher_container_aqua);
-//                        break;
-//                    case "orange":
-//
-//                        holder.setBackgroundResource(R.drawable.voucher_container_orange);
-//                        break;
-//                    case "darkblue":
-//
-//                        holder.setBackgroundResource(R.drawable.voucher_container_darkblue);
-//                        break;
-//                    default:
-//
-//                        holder.setBackgroundResource(R.drawable.voucher_container_darkblue);
-//                        break;
-//                }
-//
                 voucherOptionIndicator.put(position, false);
 
             } else {
 
-//                GDebug.log(this.getClass().getSimpleName(), " ID = " + voucherId);
+                Log.d("AddVoucher", " ID = " + voucherId);
                 voucherIds.add(voucherId);
+                tempVoucherIds.add(voucherId);
 
-//                switch (voucherState) {
-//                    case "red":
-//
-//                        holder.setBackgroundResource(R.drawable.voucher_container_red_active);
-//                        break;
-//                    case "blue":
-//
-//                        holder.setBackgroundResource(R.drawable.voucher_container_blue_active);
-//                        break;
-//                    case "yellow":
-//
-//                        holder.setBackgroundResource(R.drawable.voucher_container_yellow_active);
-//                        break;
-//                    case "green":
-//
-//                        holder.setBackgroundResource(R.drawable.voucher_container_green_active);
-//                        break;
-//                    case "violet":
-//
-//                        holder.setBackgroundResource(R.drawable.voucher_container_violet_active);
-//                        break;
-//                    case "aqua":
-//
-//                        holder.setBackgroundResource(R.drawable.voucher_container_aqua_active);
-//                        break;
-//                    case "orange":
-//
-//                        holder.setBackgroundResource(R.drawable.voucher_container_orange_active);
-//                        break;
-//                    case "darkblue":
-//
-//                        holder.setBackgroundResource(R.drawable.voucher_container_darkblue_active);
-//                        break;
-//                    default:
-//
-//                        holder.setBackgroundResource(R.drawable.voucher_container_darkblue_active);
-//                        break;
-//                }
-//
                 voucherOptionIndicator.put(position, true);
             }
         }
-//        GDebug.log("vouchers", "log the size of the listener list = " + voucherIds.size());
     }
 
     private void clearAppliedVouchers() {

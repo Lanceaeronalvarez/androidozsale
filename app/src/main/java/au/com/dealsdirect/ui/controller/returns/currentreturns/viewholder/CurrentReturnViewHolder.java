@@ -3,6 +3,7 @@ package au.com.dealsdirect.ui.controller.returns.currentreturns.viewholder;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
+import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
@@ -25,6 +26,7 @@ public class CurrentReturnViewHolder extends RecyclerView.ViewHolder {
     public TextView currentReturnsRequestRANValueTextView;
     public RelativeLayout currentReturnsCardContentContainer;
 
+    public LinearLayout currentReturnsRecyclerViewContainer;
     public RecyclerView currentReturnItemsRecyclerView;
 
     public CurrentReturnViewHolder(View itemView) {
@@ -57,5 +59,7 @@ public class CurrentReturnViewHolder extends RecyclerView.ViewHolder {
         currentReturnsRequestRANValueTextView = (TextView) itemView.
                 findViewById(R.id.my_current_return_item_RAN_value);
 
+        currentReturnsRecyclerViewContainer = (LinearLayout) itemView.
+                findViewById(R.id.current_return_clickable_container);
     }
 }

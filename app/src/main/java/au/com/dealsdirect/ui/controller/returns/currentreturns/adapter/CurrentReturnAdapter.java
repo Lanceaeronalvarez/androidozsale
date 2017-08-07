@@ -5,6 +5,7 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 
@@ -101,7 +102,7 @@ public class CurrentReturnAdapter extends RecyclerView.Adapter<CurrentReturnView
         if (mReturnDetailsResponseBodyList.size()!=0){
             updateHolderReturnItems(holder, position);
         }
-//
+//ee
         holder.currentReturnProductItem.setOnClickListener(view -> mListener.onCurrentReturnClickListener(
                 holder,
                 position,
@@ -111,15 +112,29 @@ public class CurrentReturnAdapter extends RecyclerView.Adapter<CurrentReturnView
                 isRequestApproved,
                 mCurrentReturnList.get(position).getID()));
 
-//        holder.currentReturnItemsRecyclerView.setOnClickListener(view -> mListener.onCurrentReturnClickListener(
-//                holder,
-//                position,
-//                productRequestStatus,
-//                productRAN,
-//                "33",
-//                isRequestApproved,
-//                mCurrentReturnList.get(position).getID()));
+        holder.currentReturnItemsRecyclerView.addOnItemTouchListener(new RecyclerView.OnItemTouchListener() {
+            @Override
+            public boolean onInterceptTouchEvent(RecyclerView rv, MotionEvent e) {
+                return false;
+            }
 
+            @Override
+            public void onTouchEvent(RecyclerView rv, MotionEvent e) {
+                mListener.onCurrentReturnClickListener(
+                        holder,
+                        position,
+                        productRequestStatus,
+                        productRAN,
+                        returnRequestDateFormat,
+                        isRequestApproved,
+                        mCurrentReturnList.get(position).getID());
+            }
+
+            @Override
+            public void onRequestDisallowInterceptTouchEvent(boolean disallowIntercept) {
+
+            }
+        });
         //setAnimation(holder.currentReturnProductItem, position);
     }
 
@@ -168,6 +183,7 @@ public class CurrentReturnAdapter extends RecyclerView.Adapter<CurrentReturnView
             holder.currentReturnItemsRecyclerView.setNestedScrollingEnabled(false);
 
             holder.currentReturnItemsRecyclerView.setAdapter(adapter);
+
         }
     }
 

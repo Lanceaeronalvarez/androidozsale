@@ -44,8 +44,6 @@
     <dimen name="invite_friends_image_width">22.5dp</dimen>
     <dimen name="invite_friends_image_height">20dp</dimen>
 
-
-
     <dimen name="header_height">200dp</dimen>
     <dimen name="thumbnail_height">770dp</dimen>
     <dimen name="card_width">700dp</dimen>
@@ -62,6 +60,6 @@
     <dimen name="category_background_size">120dp</dimen>
     <dimen name="category_container_width">150dp</dimen>
 
-
+    <dimen name="return_card_height">500dp</dimen>
 
 </resources>

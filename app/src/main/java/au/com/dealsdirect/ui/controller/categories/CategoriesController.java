@@ -107,6 +107,7 @@ public class CategoriesController extends BaseController
         assert (getActivity()) != null;
         ((MainActivity)getActivity()).setDraggableViewPager(true);
         ((MainActivity)getActivity()).setCategoriesRouter(getRouter());
+        hideKeyboard();
         setUp(view);
     }
 
