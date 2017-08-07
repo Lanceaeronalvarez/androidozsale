@@ -153,7 +153,7 @@ public class MainActivity extends BaseActivity implements MainMvpView {
                 }
                 break;
             case 1:
-
+                //check accounts first
                 if (getMainController().getHomeController().isAccountsActive()) {
                     if (mAccountsRouter.getBackstackSize() == 1) {
                         goToShops();
@@ -162,8 +162,23 @@ public class MainActivity extends BaseActivity implements MainMvpView {
                     }
                 } else {
 
+                    if(getHomeRouterCurrentController() instanceof ShopsController){
+                        DialogUtils.showYesNoDialog(
+                                this,
+                                getString(R.string.dealsdirect),
+                                getString(R.string.exit_app),
+                                getString(R.string.exit),
+                                getString(R.string.no),
+                                (dialogInterface, i) -> finish(),
+                                (dialogInterface, i) -> {
+
+                                });
+                        return;
+                    }
+
                     int topControllerIndex = mHomeRouter.getBackstackSize() - 1;
                     if (topControllerIndex >= 0) {
+
                         if (getHomeRouterCurrentController() instanceof SearchFilterController) {
                             mHomeRouter.handleBack();
                             return;
@@ -173,18 +188,8 @@ public class MainActivity extends BaseActivity implements MainMvpView {
                             getMainController().goToCategories();
                             mIsFromCategories = false;
                         } else {
-
                             if (mHomeRouter.getBackstackSize() == 1) {
-                                DialogUtils.showYesNoDialog(
-                                        this,
-                                        getString(R.string.dealsdirect),
-                                        getString(R.string.exit_app),
-                                        getString(R.string.exit),
-                                        getString(R.string.no),
-                                        (dialogInterface, i) -> finish(),
-                                        (dialogInterface, i) -> {
-
-                                        });
+                                goToShops();
                             } else {
                                 mHomeRouter.handleBack();
 
