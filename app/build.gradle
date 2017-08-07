@@ -156,7 +156,7 @@ dependencies {
     compile 'com.daasuu:EasingInterpolator:1.0.0'
 
     //ultra ptr
-    compile "in.srain.cube:ultra-ptr:$rootProject.ultraPtrVersion"
+//    compile "in.srain.cube:ultra-ptr:$rootProject.ultraPtrVersion"
 
     // dependencies for local unit tests
     testCompile "junit:junit:$rootProject.ext.junitVersion"
