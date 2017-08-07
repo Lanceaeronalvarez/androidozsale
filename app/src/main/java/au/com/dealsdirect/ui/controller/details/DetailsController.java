@@ -26,6 +26,7 @@ import au.com.dealsdirect.R;
 import au.com.dealsdirect.data.network.model.userdetails.GetUserDetailsResponse;
 import au.com.dealsdirect.data.network.model.userdetails.SetUserDetailsRequest;
 import au.com.dealsdirect.ui.base.BaseController;
+import au.com.dealsdirect.ui.base.BasePullToRefreshController;
 import au.com.dealsdirect.ui.custom.CustomAlertDialog;
 import au.com.dealsdirect.ui.custom.transitions.CustomSpinnerAdapter;
 import au.com.dealsdirect.utils.BundleBuilder;
@@ -38,7 +39,7 @@ import butterknife.OnClick;
  * Created by Paul on 6/20/17.
  */
 
-public class DetailsController extends BaseController implements DetailsMvpView {
+public class DetailsController extends BasePullToRefreshController implements DetailsMvpView {
 
     @Inject
     DetailsMvpPresenter<DetailsMvpView> mPresenter;
@@ -105,7 +106,11 @@ public class DetailsController extends BaseController implements DetailsMvpView 
 
     @Override
     protected View inflateView(@NonNull LayoutInflater inflater, @NonNull ViewGroup container) {
-        View view = inflater.inflate(R.layout.controller_user_details, container, false);
+
+
+        View view = super.inflateView(inflater, container);
+        fillToolbar(inflater.inflate(R.layout.partial_toolbar_arrow, container, false));
+        fillContent(inflater.inflate(R.layout.controller_user_details, container, false));
         getControllerComponent().inject(this);
         mPresenter.onAttach(this);
         return view;
@@ -216,4 +221,11 @@ public class DetailsController extends BaseController implements DetailsMvpView 
         getActivity().onBackPressed();
     }
 
+    @Override
+    public void onRefreshStart() {
+        super.onRefreshStart();
+
+        SetUserDetailsRequest setUserDetailsRequest = new SetUserDetailsRequest();
+        mPresenter.loadUser(setUserDetailsRequest);
+    }
 }
