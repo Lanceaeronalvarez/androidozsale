@@ -500,31 +500,12 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
         handler.postDelayed(() -> {
             if (mSaleItemsToolbarField.requestFocus()) {
                 InputMethodManager inputMethodManager =
-                        (InputMethodManager)getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
+                        (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
 
                 inputMethodManager.toggleSoftInputFromWindow(
                         mSaleItemsToolbarField.getApplicationWindowToken(),
                         InputMethodManager.SHOW_FORCED, 0);
             }
-        },200);
-
-            mSaleItemsToolbarTitle.setText(getActivity().getResources().getString(R.string.i_am_looking_for));
-            mSaleItemsBackIcon.setImageDrawable(getActivity().getDrawable(R.drawable.ic_search));
-            mSaleItemsFilterIcon.setImageDrawable(getActivity().getDrawable(R.drawable.ic_close));
-
-            mSaleItemsBackIcon.setOnClickListener(null);
-            mSaleItemsFilterIcon.setOnClickListener(view -> {
-                deActivateSearch();
-                hideKeyboard();
-
-            });
-
-            mSaleItemsOpaqueCover.setVisibility(View.VISIBLE);
-            mSaleItemsToolbarField.setVisibility(View.VISIBLE);
-
-            mSaleItemsToolbarField.setActivated(true);
-            mSaleItemsToolbarTitle.setVisibility(View.GONE);
-
 
             mSaleItemsToolbarField.addTextChangedListener(new TextWatcher() {
                 @Override
@@ -559,6 +540,7 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
 
                 return false;
             });
+        },200);
     }
 
 }

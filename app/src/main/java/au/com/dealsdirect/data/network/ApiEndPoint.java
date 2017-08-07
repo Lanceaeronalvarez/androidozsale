@@ -27,8 +27,7 @@ public final class ApiEndPoint {
     public static final String GET_PRODUCT_DETAILS = getBaseApiGenie() + PRODUCT_DETAILS;
     public static final String GET_BASKET_QUANTITY = getBaseApiGenie() + BASKET_QUANTITY;
 
-    public static final String API_LEGACY_AKAMAI = "https://www.dealsdirect.com.au/papi/public/v3.18/api.ashx/";
-
+    public static final String API_LEGACY_AKAMAI = "https://www.dealsdirect.com.au/papi/public/v3.17/api.ashx/";
 
     private static final String COCOSA_SERVICE = "CocosaService.asmx/";
     /* API Constants */

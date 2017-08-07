@@ -22,6 +22,7 @@ import java.util.ArrayList;
 import javax.inject.Inject;
 
 import au.com.dealsdirect.data.DataManager;
+import au.com.dealsdirect.data.auth.AuthHandler;
 import au.com.dealsdirect.data.network.model.checkout.CreatePaymentMethod;
 import au.com.dealsdirect.data.network.model.checkout.CreatePaymentTransaction;
 import au.com.dealsdirect.data.network.model.checkout.GetPaymentToken;
@@ -413,7 +414,7 @@ public class MainPresenter<V extends MainMvpView> extends BasePresenter<V> imple
                                     } else {
                                         //On login ticket fail, call logout and go back to shop
 //                                RxBus.instance().post("shop_now");
-                                        callLogout();
+                                        callLogout(null);
                                     }
                                 }
                             }, new Consumer<Throwable>() {
@@ -438,8 +439,8 @@ public class MainPresenter<V extends MainMvpView> extends BasePresenter<V> imple
     }
 
     @Override
-    public void callLogout() {
-        getMvpView().hideLoading();
+    public void callLogout(AuthHandler handler) {
+
 //        GCartUtil.setValueToCart(0);
 //        RxBus.instance().post("update_cart_items_immediate");
 //        RxBus.instance().post(Auth.EVENT_PRE_LOGOUT);
@@ -455,7 +456,9 @@ public class MainPresenter<V extends MainMvpView> extends BasePresenter<V> imple
                                 }
 
                                 getDataManager().revokeAuth();
-                                getMvpView().logoutSuccessful();
+                                if (handler != null) {
+                                    handler.success();
+                                }
 //                RxBus.instance().post(Auth.EVENT_LOGOUT);
 //                RxBus.instance().post(GVersion.EVENT_LOGOUT);
                             }
@@ -466,7 +469,7 @@ public class MainPresenter<V extends MainMvpView> extends BasePresenter<V> imple
                                     return;
                                 }
 
-
+                                getMvpView().hideLoading();
                                 getMvpView().onError(throwable.getMessage());
 
                                 // handle load accounts error here

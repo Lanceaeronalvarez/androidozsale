@@ -4,6 +4,8 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.transition.Fade;
+import android.support.transition.TransitionManager;
 import android.support.v4.content.ContextCompat;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -69,16 +71,15 @@ public class HomeController extends BaseController implements HomeMvpView {
     private Router mRouter;
     private Router mAccountsRouter;
 
-    private Router mChildRouter;
+    public Router getAccountsRouter() {
+        return mAccountsRouter;
+    }
 
     private int mPreviousTab = R.id.action_shop;
     private int mCurrentTab = R.id.action_shop;
 
 
     private int mBottomNavItemSelectCounter = 0;
-    private List<RouterTransaction> mAccountRouterTransactionList = new LinkedList<>();
-
-    private boolean mIsFromAccountsController = false;
 
     public static HomeController newInstance() {
 
@@ -121,10 +122,13 @@ public class HomeController extends BaseController implements HomeMvpView {
                     .tag(ShopsController.TAG));
         }
 
-        if (!mAccountsRouter.hasRootController()){
-            mAccountsRouter.setRoot(RouterTransaction.with(AccountController.newInstance())
-                    .tag(getActivity().getString(R.string.account_controller_tag)));
+        mAccountsRouter = getChildRouter(mAccountsContainer);
+
+        if(!mAccountsRouter.hasRootController()){
+            mAccountsRouter.setRoot(RouterTransaction.with(AccountController.newInstance()));
+            ((MainActivity) getActivity()).setAccountsRouter(mAccountsRouter);
         }
+
 
         ((MainActivity) getActivity()).setHomeRouter(mRouter);
         AHBottomNavigationAdapter navigationAdapter = new AHBottomNavigationAdapter(getActivity(), R.menu.bottom_navigation_menu);
@@ -171,7 +175,7 @@ public class HomeController extends BaseController implements HomeMvpView {
         mBottomNavigationView.setOnTabSelectedListener((position, wasSelected) -> {
             mBottomNavItemSelectCounter++;
             if (isAttached())
-                ((MainActivity) getActivity()).isFromCategories(false);
+                ((MainActivity) getActivity()).setIsFromCategories(false);
 
             if (!wasSelected) {
                 mPreviousTab = mCurrentTab;
@@ -192,14 +196,11 @@ public class HomeController extends BaseController implements HomeMvpView {
                     case 2:
                     case 3:
                         mBottomNavItemSelectCounter = 0;
-                        hideAccountsContainer();
                         if (!((MainActivity) getActivity()).isAuthorized()) {
                             showLoginController(mRouter, new AuthHandler() {
                                 @Override
                                 public void success() {
-                                    // Reset Accounts to contain Logout
-                                    mAccountsRouter.setRoot(RouterTransaction.with(AccountController.newInstance())
-                                            .tag(getActivity().getString(R.string.account_controller_tag)));
+                                    proceedToController(position);
                                 }
 
                                 @Override
@@ -236,27 +237,28 @@ public class HomeController extends BaseController implements HomeMvpView {
 
     @Override
     public void showShopController() {
-        hideAccountsContainer();
+        showHomeContainer();
         mRouter.setRoot(RouterTransaction.with(new ShopsController())
-                .tag(getActivity().getString(R.string.shop_controller_tag))
+                .tag(getActivity().getResources().getString(R.string.search_tag))
                 .pushChangeHandler(new SimpleChangeHandler())
                 .popChangeHandler(new SimpleChangeHandler()));
-        mContainer.setVisibility(View.VISIBLE);
     }
 
     @Override
     public void showAccountController() {
-        mContainer.setVisibility(View.GONE);
-        mAccountsContainer.setVisibility(View.VISIBLE);
 //        mRouter.setRoot(RouterTransaction.with(AccountController.newInstance())
 //                .tag(AccountController.TAG)
 //                .pushChangeHandler(new SimpleChangeHandler())
 //                .popChangeHandler(new SimpleChangeHandler()));
-        mIsFromAccountsController = true;
+        TransitionManager.beginDelayedTransition(mContainer,new Fade(Fade.OUT));
+        TransitionManager.beginDelayedTransition(mAccountsContainer,new Fade(Fade.IN));
+        mAccountsContainer.setVisibility(View.VISIBLE);
+        mContainer.setVisibility(View.GONE);
     }
 
     @Override
     public void showContactController() {
+        showHomeContainer();
         mRouter.setRoot(RouterTransaction.with(ViewContactsController.newInstance())
                 .tag(ViewContactsController.TAG)
                 .pushChangeHandler(new SimpleChangeHandler())
@@ -265,6 +267,7 @@ public class HomeController extends BaseController implements HomeMvpView {
 
     @Override
     public void showInviteController() {
+        showHomeContainer();
         mRouter.setRoot(RouterTransaction.with(InviteSendController.newInstance())
                 .tag(getActivity().getResources().getString(R.string.invite_friends_tag))
                 .pushChangeHandler(new SimpleChangeHandler())
@@ -273,7 +276,7 @@ public class HomeController extends BaseController implements HomeMvpView {
 
     @Override
     public void showCheckoutController() {
-        hideAccountsContainer();
+        showHomeContainer();
         mRouter.setRoot(RouterTransaction.with(new CheckoutController())
                 .tag(getActivity().getResources().getString(R.string.checkout_controller))
                 .pushChangeHandler(new SimpleChangeHandler())
@@ -286,6 +289,18 @@ public class HomeController extends BaseController implements HomeMvpView {
                 .pushChangeHandler(new VerticalChangeHandler())
                 .popChangeHandler(new VerticalChangeHandler()));
     }
+
+    private void showHomeContainer(){
+        TransitionManager.beginDelayedTransition(mContainer,new Fade(Fade.IN).setDuration(200));
+        TransitionManager.beginDelayedTransition(mAccountsContainer,new Fade(Fade.OUT).setStartDelay(200));
+        mAccountsContainer.setVisibility(View.GONE);
+        mContainer.setVisibility(View.VISIBLE);
+    }
+
+    public boolean isAccountsActive(){
+        return mAccountsContainer.isShown();
+    }
+
 
     @Override
     public void updateBasketItemCount() {
@@ -313,26 +328,5 @@ public class HomeController extends BaseController implements HomeMvpView {
     public void showBottomNav() {
         if (mBottomNavigationView != null)
             mBottomNavigationView.setVisibility(View.VISIBLE);
-    }
-
-    public void setAccountBackStack(List<RouterTransaction> routerTransactions){
-        mAccountRouterTransactionList = routerTransactions;
-    }
-
-    public boolean getIsAccountControllerActive(){
-        return mAccountsContainer.isShown();
-    }
-
-    public Router getAccountsRouter(){
-        return mAccountsRouter;
-    }
-
-    public void hideAccountsContainer(){
-        mContainer.setVisibility(View.VISIBLE);
-
-        Handler handler = new Handler();
-        handler.postDelayed(() -> {
-            mAccountsContainer.setVisibility(View.GONE);
-        }, 200);
     }
 }

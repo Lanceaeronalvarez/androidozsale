@@ -13,6 +13,7 @@ import android.widget.TextView;
 
 import com.bluelinelabs.conductor.RouterTransaction;
 import com.bluelinelabs.conductor.changehandler.HorizontalChangeHandler;
+import com.squareup.haha.perflib.Main;
 
 import java.io.Serializable;
 import java.util.List;
@@ -30,7 +31,9 @@ import au.com.dealsdirect.ui.controller.language.LanguageController;
 import au.com.dealsdirect.ui.controller.legalities.LegalitiesController;
 import au.com.dealsdirect.ui.controller.orders.orders.OrdersController;
 import au.com.dealsdirect.ui.controller.returns.currentreturns.CurrentReturnsController;
+import au.com.dealsdirect.ui.controller.shops.ShopsController;
 import au.com.dealsdirect.ui.controller.vouchers.View.ViewVouchersController;
+import au.com.dealsdirect.ui.custom.CustomAlertDialog;
 import au.com.dealsdirect.ui.main.MainActivity;
 import au.com.dealsdirect.ui.main.MainMvpView;
 import au.com.dealsdirect.utils.BundleBuilder;
@@ -93,8 +96,8 @@ public class AccountController extends BaseController implements AccountMvpView,
         // Setup views here
 
         assert (getActivity()) != null;
-        ((MainActivity)getActivity()).getMainController().showBottomNav();
-        ((MainActivity)getActivity()).setDraggableViewPager(false);
+        ((MainActivity) getActivity()).getMainController().showBottomNav();
+        ((MainActivity) getActivity()).setDraggableViewPager(false);
 
         mPresenter.loadAccountItems();
         mTitleTextView.setText("My Account");
@@ -164,7 +167,7 @@ public class AccountController extends BaseController implements AccountMvpView,
 
     @Override
     public void showMyPaymentsController() {
-        getRouter().pushController(RouterTransaction.with(new PaymentSelectController("",false))
+        getRouter().pushController(RouterTransaction.with(new PaymentSelectController("", false))
                 .pushChangeHandler(new HorizontalChangeHandler())
                 .popChangeHandler(new HorizontalChangeHandler()));
     }
@@ -189,7 +192,7 @@ public class AccountController extends BaseController implements AccountMvpView,
     public void triggerLogin(String option) {
         AccountMvpView mvpView = this;
 
-        ((MainMvpView)getActivity()).showLoginController(getRouter(),new AuthHandler() {
+        ((MainMvpView) getActivity()).showLoginController(getRouter(), new AuthHandler() {
             @Override
             public void success() {
                 mPresenter.onAttach(mvpView);
@@ -205,13 +208,21 @@ public class AccountController extends BaseController implements AccountMvpView,
 
     @Override
     public void triggerLogout() {
-        ((MainMvpView)getActivity()).callLogout();
+        ((MainMvpView) getActivity()).callLogout(new AuthHandler() {
+            @Override
+            public void success() {
+                mPresenter.loadAccountItems();
+            }
 
-    }
+            @Override
+            public void error() {
+            }
+        });
 
-    public void resetAccounts(){
-        mPresenter.loadAccountItems();
-        ((MainActivity)getActivity()).getMainController().getHomeController().showShopController();
+        ((MainActivity) getActivity()).getMainController().getHomeController().showShopController();
+        CustomAlertDialog.showCustomAlertDialog(getActivity(),
+                CustomAlertDialog.CustomDialogIconState.POSITIVE,
+                "Logout Successful");
     }
 }
 

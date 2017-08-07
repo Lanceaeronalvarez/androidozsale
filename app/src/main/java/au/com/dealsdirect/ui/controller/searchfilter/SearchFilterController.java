@@ -44,6 +44,7 @@ import au.com.dealsdirect.ui.controller.searchfilter.adapter.SearchTagsAdapter;
 import au.com.dealsdirect.ui.controller.searchfilter.adapter.SubCategoriesAdapter;
 import au.com.dealsdirect.ui.controller.searchfilter.adapter.SubCategoryItemsAdapter;
 import au.com.dealsdirect.ui.custom.CustomRangeSeekbar;
+import au.com.dealsdirect.ui.main.MainActivity;
 import au.com.dealsdirect.utils.BundleBuilder;
 import au.com.dealsdirect.utils.JsonUtils;
 import butterknife.BindView;
@@ -513,7 +514,7 @@ public class SearchFilterController extends BaseController
                 .putString(KEY_CHIPS_FILTER,new Gson().toJson(mSearchTagsAdapter.getData()))
                 .putString(KEY_SELECTED_FACETS, new Gson().toJson(mPreviousSelectedFacetIndices))
                 .build();
-
+        
         SaleItemsController saleItemsController = (SaleItemsController) getRouter().getControllerWithTag("SaleItemsController");
         saleItemsController.onPassFiltersData(saleItemBundle);
 

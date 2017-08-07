@@ -29,9 +29,7 @@ public interface MainMvpView extends MvpView, BrainTreeListeners {
 
     void callLoginTicket();
 
-    void callLogout();
-
-    void logoutSuccessful();
+    void callLogout(AuthHandler handler);
 
     void createPaymentMethodSuccess(PaymentMethod lastPaymentMethod);
 
