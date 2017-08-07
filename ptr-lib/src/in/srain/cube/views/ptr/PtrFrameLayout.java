@@ -54,6 +54,8 @@ public class PtrFrameLayout extends ViewGroup {
     // disable when detect moving horizontally
     private boolean mPreventForHorizontal = false;
 
+    private boolean mIsChildScrollingEnabled = false;
+
     private MotionEvent mLastMoveEvent;
 
     private PtrUIHandlerHook mRefreshCompleteHook;
@@ -310,6 +312,11 @@ public class PtrFrameLayout extends ViewGroup {
 
             case MotionEvent.ACTION_MOVE:
                 mLastMoveEvent = e;
+
+                if(!mIsChildScrollingEnabled) {
+                    return dispatchTouchEventSupper(e);
+                }
+
                 mPtrIndicator.onMove(e.getX(), e.getY());
                 float offsetX = mPtrIndicator.getOffsetX();
                 float offsetY = mPtrIndicator.getOffsetY();
@@ -935,6 +942,11 @@ public class PtrFrameLayout extends ViewGroup {
         final MotionEvent last = mLastMoveEvent;
         MotionEvent e = MotionEvent.obtain(last.getDownTime(), last.getEventTime(), MotionEvent.ACTION_DOWN, last.getX(), last.getY(), last.getMetaState());
         dispatchTouchEventSupper(e);
+    }
+
+
+    public void setIsChildScrollingEnabled(boolean isChildScrollingEnabled) {
+        this.mIsChildScrollingEnabled = isChildScrollingEnabled;
     }
 
     public static class LayoutParams extends MarginLayoutParams {
