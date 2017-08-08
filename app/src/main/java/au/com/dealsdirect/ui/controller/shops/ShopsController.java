@@ -20,7 +20,6 @@ import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import com.bluelinelabs.conductor.Router;
 import com.bluelinelabs.conductor.RouterTransaction;
 import com.bluelinelabs.conductor.changehandler.FadeChangeHandler;
 import com.bluelinelabs.conductor.changehandler.HorizontalChangeHandler;
@@ -38,7 +37,6 @@ import au.com.dealsdirect.R;
 import au.com.dealsdirect.data.auth.AuthHandler;
 import au.com.dealsdirect.data.network.model.banner.GetBannerResponse;
 import au.com.dealsdirect.data.network.model.category.GetCategoryTreeResponse;
-import au.com.dealsdirect.ui.base.BaseController;
 import au.com.dealsdirect.ui.base.BasePullToRefreshController;
 import au.com.dealsdirect.ui.controller.saleitems.SaleItemsController;
 import au.com.dealsdirect.ui.controller.shops.adapter.BannersAdapter;
@@ -155,6 +153,7 @@ public class ShopsController extends BasePullToRefreshController implements Shop
         fillContent(inflater.inflate(R.layout.controller_shop, container, false));
 
         getControllerComponent().inject(this);
+
         mPresenter.onAttach(this);
 
         return view;

@@ -286,4 +286,5 @@
     <string name="account_controller_tag">AccountController</string>
     <string name="i_am_looking_For">I am looking for...</string>
     <string name="sale_item_from_search_category">SaleItemFromSearchCategory</string>
+    <string name="no_internet_connection_ntap_to_retry">No internet connection.\nTap to retry</string>
 </resources>

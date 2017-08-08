@@ -45,7 +45,7 @@ public class ShopsPresenter<V extends ShopsMvpView> extends BasePresenter<V> imp
         if(bannerOffset == 0){
             getMvpView().showLoading();
         }
-        
+
         getCompositeDisposable()
                 .add(getDataManager()
                         .callGetBanners(getBannerRequest)

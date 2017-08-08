@@ -326,7 +326,9 @@ public class HomeController extends BaseController implements HomeMvpView {
     }
 
     public void showBottomNav() {
-        if (mBottomNavigationView != null)
+        if (mBottomNavigationView != null) {
             mBottomNavigationView.setVisibility(View.VISIBLE);
+            mBottomNavigationView.bringToFront();
+        }
     }
 }
