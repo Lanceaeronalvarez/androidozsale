@@ -113,14 +113,13 @@ public class PaymentSelectController extends BasePullToRefreshController impleme
     @Override
     public void showPaymentList(List<PaymentMethod> paymentMethods) {
         if (paymentMethods != null) {
-            mNoPaymentPlaceholder.setVisibility(View.VISIBLE);
+            mNoPaymentPlaceholder.setVisibility(View.INVISIBLE);
+            mRecyclerView.setVisibility(View.VISIBLE);
             mPaymentMethods = new ArrayList<>(paymentMethods);
             mAdapter.replaceData(mPaymentMethods);
-            mRecyclerView.setVisibility(View.GONE);
         } else {
-            mNoPaymentPlaceholder.setVisibility(View.GONE);
-            mRecyclerView.setVisibility(View.VISIBLE);
-
+            mNoPaymentPlaceholder.setVisibility(View.VISIBLE);
+            mRecyclerView.setVisibility(View.INVISIBLE);
             getRouter().pushController(RouterTransaction.with(new AddPaymentController(false))
                     .pushChangeHandler(new HorizontalChangeHandler())
                     .popChangeHandler(new HorizontalChangeHandler()));

@@ -8,8 +8,9 @@
     <android.support.v7.widget.RecyclerView
         android:id="@+id/payment_select_recyclerview"
         android:layout_width="match_parent"
-        android:layout_height="match_parent" />
+        android:layout_height="match_parent"
+        android:visibility="gone"/>
 
     <include layout="@layout/partial_no_payment_method_placeholder_layout"
-             android:visibility="visible" />
+             android:visibility="gone" />
 </LinearLayout>
