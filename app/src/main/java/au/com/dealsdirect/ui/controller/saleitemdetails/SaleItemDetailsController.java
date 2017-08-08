@@ -496,25 +496,7 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
 
     @OnClick(R.id.product_details_add_to_basket)
     void addToBasket() {
-        if (!mPresenter.isAuthorized()) {
-            ((MainActivity) getActivity()).showLoginController(getRouter(), new AuthHandler() {
-                @Override
-                public void success() {
-                    verifyAddToCart();
-                }
 
-                @Override
-                public void error() {
-
-                }
-            });
-        } else {
-            verifyAddToCart();
-        }
-
-    }
-
-    private void verifyAddToCart() {
         AddToCartRequest request = new AddToCartRequest(mSkuId);
 
         if (hasSizes) {
@@ -524,9 +506,28 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
                         CustomAlertDialog.CustomDialogIconState.NEGATIVE,
                         getActivity().getString(R.string.please_select_size));
             } else {
-                mPresenter.addToCart(request);
-                animateAddToCart();
+                verifyAddToCart(request);
             }
+        } else {
+            verifyAddToCart(request);
+        }
+
+    }
+
+    private void verifyAddToCart(AddToCartRequest request) {
+        if (!mPresenter.isAuthorized()) {
+            ((MainActivity) getActivity()).showLoginController(getRouter(), new AuthHandler() {
+                @Override
+                public void success() {
+                    mPresenter.addToCart(request);
+                    new Handler().postDelayed(()-> animateAddToCart(), 400);
+                }
+
+                @Override
+                public void error() {
+
+                }
+            });
         } else {
             mPresenter.addToCart(request);
             animateAddToCart();

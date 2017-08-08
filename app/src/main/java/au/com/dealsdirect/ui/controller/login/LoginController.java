@@ -56,6 +56,7 @@ public class LoginController extends BaseController implements LoginMvpView {
     private boolean isLoginTapped = false;
 
     public static AuthHandler mAuthHandler;
+    private MainActivity mActivity;
 
     private CallbackManager mCallbackManager = CallbackManager.Factory.create();
 
@@ -81,8 +82,7 @@ public class LoginController extends BaseController implements LoginMvpView {
     @Override
     protected void onAttach(@NonNull View view) {
         assert (getActivity()) != null;
-        if (getActivity() instanceof MainActivity)
-            ((MainActivity)getActivity()).getMainController().hideBottomNav();
+        mActivity.getMainController().hideBottomNav();
         super.onAttach(view);
     }
 
@@ -95,7 +95,7 @@ public class LoginController extends BaseController implements LoginMvpView {
         // Init facebook callback
         registerForActivityResult(CallbackManagerImpl.RequestCodeOffset.Login.toRequestCode());
         mCallbackManager = CallbackManager.Factory.create();
-
+        mActivity = (MainActivity) getActivity();
         mPresenter.onAttach(this);
 
         return view;
@@ -142,6 +142,7 @@ public class LoginController extends BaseController implements LoginMvpView {
         getActivity().onBackPressed();
         hideKeyboard();
         mAuthHandler.success();
+        mActivity.getMainController().showBottomNav();
     }
 
     @Override
@@ -153,10 +154,10 @@ public class LoginController extends BaseController implements LoginMvpView {
         CustomAlertDialog.showCustomAlertDialog(
                 getActivity(),
                 CustomAlertDialog.CustomDialogIconState.NEGATIVE,
-                "Login incorrect"
-        );
+                "Login incorrect");
 
         isLoginTapped = false;
+        mActivity.getMainController().showBottomNav();
     }
 
     @Override

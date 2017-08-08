@@ -425,6 +425,8 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
                 , new Gson().toJson(mChipFilters)))
                 .pushChangeHandler(new VerticalChangeHandler())
                 .popChangeHandler(new VerticalChangeHandler()));
+        mFromShopSearch = false;
+        mFromCategorySearch = false;
     }
 
 

@@ -147,8 +147,12 @@ public class HomeController extends BaseController implements HomeMvpView {
 
     @Override
     protected void setUp(View view) {
-//        getRouter().setRoot(RouterTransaction.with(new ShopsController()));
-        mPresenter.callGetBasketItemsQuantity();
+        if(mPresenter.isAuthorized()) {
+            mPresenter.callGetBasketItemsQuantity();
+        }else{
+            updateBasketItemCount();
+        }
+
         mRouter.addChangeListener(new ControllerChangeHandler.ControllerChangeListener() {
             @Override
             public void onChangeStarted(@Nullable Controller to, @Nullable Controller from, boolean isPush, @NonNull ViewGroup container, @NonNull ControllerChangeHandler handler) {
@@ -179,11 +183,8 @@ public class HomeController extends BaseController implements HomeMvpView {
                 ((MainActivity) getActivity()).setIsFromCategories(false);
 
             if (!wasSelected) {
-                mPreviousTab = mCurrentTab;
-                mCurrentTab = position;
 
                 switch (position) {
-
                     case 0:
                         mBottomNavItemSelectCounter = 0;
                         showShopController();
@@ -223,14 +224,7 @@ public class HomeController extends BaseController implements HomeMvpView {
                         break;
                 }
             } else {
-                if (position == 0 && mBottomNavItemSelectCounter == 2) {
-                    mBottomNavItemSelectCounter = 0;
-                    //noinspection ConstantConditions
-                    ((MainActivity) getActivity()).bottomNavSalesClick();
-                }
-
-                if(position == 1) {
-                    mBottomNavItemSelectCounter = 0;
+                if(position == 0){
                     mRouter.popToRoot();
                 }
             }
