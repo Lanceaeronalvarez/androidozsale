@@ -1,6 +1,7 @@
 package au.com.dealsdirect.ui.controller.searchfilter;
 
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -8,6 +9,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.ViewTreeObserver;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
@@ -218,63 +220,11 @@ public class SearchFilterController extends BaseController
 
     @Override
     protected void setUp(View view) {
-        origMaxValue = mPresenter.getSearchMaxPrice();
-        origMinValue = mSeekbar.getSelectedMinValue().intValue();
 
         mSubCategoryClickListener = this;
         mSubCategoryItemClickListener = this;
 
         createCategoryMap(mCategoryTree);
-
-        mSeekbar.setMaxValue(origMaxValue);
-        mSeekbar.setMaxStartValue(origMaxValue);
-        mClearText.setOnClickListener((v)->{
-            if(!isSeekbarReset) {
-                //remove previously selected price range
-                for (SearchChipModel chip : mSearchTagsAdapter.getData()) {
-                    if (chip.getFilterType() == PRICE_FACETFILTER_NAME) {
-                        mSearchTagsAdapter.remove(chip);
-                        break;
-                    }
-                }
-
-                onResetPriceRange();
-            }
-        });
-        mSeekbar.setMinPriceMovingLayout(mMinPriceMovingLayout);
-        mSeekbar.setMaxPriceMovingLayout(mMaxPriceMovingLayout);
-        mSeekbar.setOnRangeSeekbarChangeListener(new OnRangeSeekbarChangeListener() {
-            @Override
-            public void valueChanged(Number minValue, Number maxValue) {
-                mMinPrice.setText("$"+minValue.intValue());
-                mMaxPrice.setText("$"+maxValue.intValue());
-                if(maxValue.intValue() == origMaxValue){
-                    mMaxPrice.setText("$"+maxValue.intValue()+"+");
-                }
-
-            }
-        });
-        mSeekbar.setOnRangeSeekbarFinalValueListener(new OnRangeSeekbarFinalValueListener() {
-            @Override
-            public void finalValue(Number minValue, Number maxValue) {
-
-                //remove previously selected price range
-                for (SearchChipModel chip : mSearchTagsAdapter.getData()) {
-                    if(chip.getFilterType() == PRICE_FACETFILTER_NAME){
-                        mSearchTagsAdapter.remove(chip);
-                        break;
-                    }
-                }
-
-                //add newly selected price range
-                if(origMinValue!=minValue.intValue() || origMaxValue!=maxValue.intValue()){
-                    mSearchTagsAdapter.add(new SearchChipModel(PRICE_FACETFILTER_NAME, minValue.intValue() + " to " + maxValue.intValue(),-1));
-                }
-
-                isSeekbarReset=false;
-            }
-        });
-
 
         mSearchApplyButton.setImageDrawable(getResources().getDrawable(R.drawable.ic_check));
 
@@ -315,6 +265,74 @@ public class SearchFilterController extends BaseController
             parseSortingFacets(mSortingFacets);
         }
 
+        setupPriceFacet();
+
+    }
+
+    private void setupPriceFacet(){
+        origMaxValue = mPresenter.getSearchMaxPrice();
+        origMinValue = mSeekbar.getSelectedMinValue().intValue();
+
+        mSeekbar.setMaxValue(origMaxValue);
+
+        mClearText.setOnClickListener((v)->{
+            if(!isSeekbarReset) {
+                //remove previously selected price range
+                for (SearchChipModel chip : mSearchTagsAdapter.getData()) {
+                    if (chip.getFilterType().equals(PRICE_FACETFILTER_NAME)) {
+                        mSearchTagsAdapter.remove(chip);
+                        break;
+                    }
+                }
+
+                onResetPriceRange();
+            }
+        });
+        mSeekbar.setMinPriceMovingLayout(mMinPriceMovingLayout);
+        mSeekbar.setMaxPriceMovingLayout(mMaxPriceMovingLayout);
+        mSeekbar.setOnRangeSeekbarChangeListener(new OnRangeSeekbarChangeListener() {
+            @Override
+            public void valueChanged(Number minValue, Number maxValue) {
+                mMinPrice.setText("$"+minValue.intValue());
+                mMaxPrice.setText("$"+maxValue.intValue());
+                if(maxValue.intValue() == origMaxValue){
+                    mMaxPrice.setText("$"+maxValue.intValue()+"+");
+                }
+
+            }
+        });
+        mSeekbar.setOnRangeSeekbarFinalValueListener(new OnRangeSeekbarFinalValueListener() {
+            @Override
+            public void finalValue(Number minValue, Number maxValue) {
+
+                //remove previously selected price range
+                for (SearchChipModel chip : mSearchTagsAdapter.getData()) {
+                    if(chip.getFilterType().equals(PRICE_FACETFILTER_NAME)){
+                        mSearchTagsAdapter.remove(chip);
+                        break;
+                    }
+                }
+
+                //add newly selected price range
+                if(origMinValue!=minValue.intValue() || origMaxValue!=maxValue.intValue()){
+                    SearchChipModel priceChip = new SearchChipModel(PRICE_FACETFILTER_NAME, minValue.intValue() + " to " + maxValue.intValue(),-1);
+                    priceChip.setMaxValue(maxValue.intValue());
+                    priceChip.setMinValue(minValue.intValue());
+                    mSearchTagsAdapter.add(priceChip);
+                }
+
+                isSeekbarReset=false;
+            }
+        });
+
+        SearchChipModel priceChip = findPriceChip();
+
+        if(priceChip != null){
+            mSeekbar.setMinStartValue(priceChip.getMinValue()).apply();
+            mSeekbar.setMaxStartValue(priceChip.getMaxValue()).apply();
+
+
+        }
     }
 
     @Override
@@ -362,6 +380,7 @@ public class SearchFilterController extends BaseController
             }
 
         } else { //price is clicked
+            mFilterCategoriesRecyclerView.setVisibility(View.GONE);
             mFacetItemsRecyclerView.setVisibility(View.GONE);
             mSeekbarLayout.setVisibility(View.VISIBLE);
         }
@@ -624,5 +643,15 @@ public class SearchFilterController extends BaseController
             searchTagsAdapter.add(categoryChip);
             mChosenCategory = categoryKey;
         }
+    }
+
+    private SearchChipModel findPriceChip(){
+        for (SearchChipModel chip : mSearchTagsAdapter.getData()) {
+            if (chip.getFilterType().equals(PRICE_FACETFILTER_NAME)) {
+                return chip;
+            }
+        }
+
+        return null;
     }
 }

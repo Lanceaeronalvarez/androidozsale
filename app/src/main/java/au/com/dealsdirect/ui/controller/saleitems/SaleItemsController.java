@@ -511,7 +511,9 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
             }
         },200);
 
-        mSaleItemsToolbarTitle.setText(getActivity().getResources().getString(R.string.i_am_looking_for));
+        if(mCategoryKey.isEmpty() && mTitle.isEmpty() && mSearchQuery.isEmpty()) {
+            mSaleItemsToolbarTitle.setText(getActivity().getResources().getString(R.string.i_am_looking_for));
+        }
         mSaleItemsBackIcon.setImageDrawable(getActivity().getDrawable(R.drawable.ic_search));
         mSaleItemsFilterIcon.setImageDrawable(getActivity().getDrawable(R.drawable.ic_close));
 

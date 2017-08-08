@@ -197,18 +197,21 @@ public class HomeController extends BaseController implements HomeMvpView {
                     case 2:
                     case 3:
                         mBottomNavItemSelectCounter = 0;
+                        showHomeContainer();
                         if (!((MainActivity) getActivity()).isAuthorized()) {
-                            showLoginController(mRouter, new AuthHandler() {
-                                @Override
-                                public void success() {
-                                    proceedToController(position);
-                                }
+                            new Handler().postDelayed(()-> {
+                                showLoginController(mRouter, new AuthHandler() {
+                                    @Override
+                                    public void success() {
+                                        proceedToController(position);
+                                    }
 
-                                @Override
-                                public void error() {
+                                    @Override
+                                    public void error() {
 
-                                }
-                            });
+                                    }
+                                });
+                            },500);
                         } else {
                             proceedToController(position);
                         }
@@ -260,7 +263,6 @@ public class HomeController extends BaseController implements HomeMvpView {
 
     @Override
     public void showContactController() {
-        showHomeContainer();
         mRouter.setRoot(RouterTransaction.with(ViewContactsController.newInstance())
                 .tag(ViewContactsController.TAG)
                 .pushChangeHandler(new SimpleChangeHandler())
@@ -269,7 +271,6 @@ public class HomeController extends BaseController implements HomeMvpView {
 
     @Override
     public void showInviteController() {
-        showHomeContainer();
         mRouter.setRoot(RouterTransaction.with(InviteSendController.newInstance())
                 .tag(getActivity().getResources().getString(R.string.invite_friends_tag))
                 .pushChangeHandler(new SimpleChangeHandler())
