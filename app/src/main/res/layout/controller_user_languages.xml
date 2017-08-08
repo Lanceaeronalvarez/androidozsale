@@ -12,8 +12,6 @@
         android:layout_height="match_parent"
         android:orientation="vertical">
 
-        <include layout="@layout/partial_toolbar_arrow" />
-
         <TextView
             fontPath="@string/font_lato_medium"
             android:layout_width="match_parent"

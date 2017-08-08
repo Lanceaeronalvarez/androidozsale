@@ -1,8 +1,10 @@
+
 package au.com.dealsdirect.ui.controller.legalities;
 
 import javax.inject.Inject;
 
 import au.com.dealsdirect.data.DataManager;
+import au.com.dealsdirect.data.network.AppApiCallback;
 import au.com.dealsdirect.data.network.model.legalities.GetTemplateTextRequest;
 import au.com.dealsdirect.data.network.model.legalities.GetTemplateTextResponse;
 import au.com.dealsdirect.ui.base.BasePresenter;
@@ -29,19 +31,12 @@ public class LegalitiesPresenter<V extends LegalitiesMvpView> extends BasePresen
         getTemplateTextRequest.templateKey = key;
         getTemplateTextRequest.countryId = getDataManager().getCountryId();
         getTemplateTextRequest.languageId = getDataManager().getLanguageId();
-        getCompositeDisposable().add(getDataManager().callGetTemplateText(getTemplateTextRequest)
-                .subscribeOn(getSchedulerProvider().io())
-                .observeOn(getSchedulerProvider().ui())
-                .subscribe(new Consumer<GetTemplateTextResponse>() {
-                    @Override
-                    public void accept(@NonNull GetTemplateTextResponse getTemplateTextResponse) throws Exception {
-                        getMvpView().displayFetchedText(getTemplateTextResponse.getResponse().getValue());
-                    }
-                }, new Consumer<Throwable>() {
-                    @Override
-                    public void accept(@NonNull Throwable throwable) throws Exception {
-
-                    }
-                }));
+        doApiCallForResponse(getDataManager().callGetTemplateText(getTemplateTextRequest), new AppApiCallback(){
+            @Override
+            public void onSuccess(Object response) {
+                super.onSuccess(response);
+                getMvpView().displayFetchedText(((GetTemplateTextResponse) response).getResponse().getValue());
+            }
+        });
     }
 }
