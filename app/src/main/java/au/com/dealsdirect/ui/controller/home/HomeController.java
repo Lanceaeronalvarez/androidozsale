@@ -257,7 +257,9 @@ public class HomeController extends BaseController implements HomeMvpView {
         TransitionManager.beginDelayedTransition(mContainer,new Fade(Fade.OUT));
         TransitionManager.beginDelayedTransition(mAccountsContainer,new Fade(Fade.IN));
         mAccountsContainer.setVisibility(View.VISIBLE);
-        ((AccountMvpView) mAccountsRouter.getBackstack().get(0).controller()).initLoginDrawable();
+        int size = mAccountsRouter.getBackstack().size();
+        if(mAccountsRouter.getBackstack().get(size - 1).controller() instanceof AccountMvpView)
+            ((AccountMvpView) mAccountsRouter.getBackstack().get(size - 1).controller()).initLoginDrawable();
         mContainer.setVisibility(View.GONE);
     }
 
