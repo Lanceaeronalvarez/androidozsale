@@ -42,7 +42,7 @@
             android:layout_toRightOf="@+id/partial_toolbar_field_title_left_option"
             android:textColor="@android:color/white"
             android:gravity="center"
-            android:singleLine="true"
+            android:maxLines="1"
             android:textSize="@dimen/text_size_xxlarge"/>
 
         <au.com.dealsdirect.ui.custom.SearchEditText

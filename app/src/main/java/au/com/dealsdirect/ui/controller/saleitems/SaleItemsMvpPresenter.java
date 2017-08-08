@@ -4,6 +4,7 @@ import android.support.v7.widget.RecyclerView;
 
 import java.util.List;
 
+import au.com.dealsdirect.data.network.model.saleitems.GetSaleItemsRequest;
 import au.com.dealsdirect.ui.base.MvpPresenter;
 import au.com.dealsdirect.ui.controller.searchfilter.adapter.SearchChipModel;
 
@@ -13,7 +14,7 @@ import au.com.dealsdirect.ui.controller.searchfilter.adapter.SearchChipModel;
 
 public interface SaleItemsMvpPresenter<V extends SaleItemsMvpView> extends MvpPresenter<V> {
 
-    void loadSaleItems(String categoryKey, String saleId, String searchQuery, int pageNumber, List<SearchChipModel> chipsList);
+    void loadSaleItems(GetSaleItemsRequest getSaleItemsRequest);
 
     void loadProductDetails(RecyclerView.ViewHolder viewHolder, int position, String seoIdentifierId, String imageUrl, String skuId, String saleId);
 

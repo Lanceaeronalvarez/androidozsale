@@ -98,9 +98,6 @@ import au.com.dealsdirect.ui.controller.saleitemdetails.SaleItemDetailsPresenter
 import au.com.dealsdirect.ui.controller.saleitems.SaleItemsMvpPresenter;
 import au.com.dealsdirect.ui.controller.saleitems.SaleItemsMvpView;
 import au.com.dealsdirect.ui.controller.saleitems.SaleItemsPresenter;
-import au.com.dealsdirect.ui.controller.search.SearchMvpPresenter;
-import au.com.dealsdirect.ui.controller.search.SearchMvpView;
-import au.com.dealsdirect.ui.controller.search.SearchPresenter;
 import au.com.dealsdirect.ui.controller.searchfilter.SearchFilterMvpPresenter;
 import au.com.dealsdirect.ui.controller.searchfilter.SearchFilterMvpView;
 import au.com.dealsdirect.ui.controller.searchfilter.SearchFilterPresenter;
@@ -311,11 +308,6 @@ public class ControllerModule {
 
     @Provides
     HomeMvpPresenter<HomeMvpView> provideHomePresenter(HomePresenter<HomeMvpView> presenter) {
-        return presenter;
-    }
-
-    @Provides
-    SearchMvpPresenter<SearchMvpView> provideSearchPresenter(SearchPresenter<SearchMvpView> presenter) {
         return presenter;
     }
 

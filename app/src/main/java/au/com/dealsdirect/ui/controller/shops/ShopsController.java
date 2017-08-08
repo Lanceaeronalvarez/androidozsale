@@ -109,7 +109,6 @@ public class ShopsController extends BasePullToRefreshController implements Shop
     private ImageView rightOption;
 
     private int mBannerClickCounter = 0;
-    private boolean mCanViewSearch = true;
 
     BannerClickListener mBannerClickListener;
 
@@ -326,19 +325,11 @@ public class ShopsController extends BasePullToRefreshController implements Shop
                 .putString("SaleItemsController.SEARCH_KEY", "")
                 .putBoolean("SaleItemsController.FROM_SHOP_SEARCH",true)
                 .build();
-        ((MainActivity) getActivity()).getHomeRouter().pushController(RouterTransaction.with(
+        getRouter().pushController(RouterTransaction.with(
                 SaleItemsController.newInstance(saleItemBundle))
                 .tag(getActivity().getString(R.string.sale_items_controller_tag))
                 .pushChangeHandler(new SimpleChangeHandler())
                 .popChangeHandler(new FadeChangeHandler()));
-
-        if (mCanViewSearch){
-            mCanViewSearch = false;
-//            showSearchToolbar();
-//            child.startAnimation(inFromRightAnimation());
-//            android.os.Handler handler = new android.os.Handler();
-//            handler.postDelayed(() -> , 500);
-        }
     }
 
     @Override
@@ -395,25 +386,6 @@ public class ShopsController extends BasePullToRefreshController implements Shop
         return outtoRight;
     }
 
-    private void performSearch(String searchQuery) {
-
-        Bundle saleItemBundle = new BundleBuilder(new Bundle())
-                .putString("SaleItemsController.KEY_TITLE", searchQuery)
-                .putString("SaleItemsController.SEARCH_KEY", searchQuery)
-                .build();
-
-        if (!searchQuery.isEmpty())
-            KeyboardUtils.hideSoftInput(getActivity());
-
-        assert (getActivity()) != null;
-        ((MainActivity) getActivity())
-                .getHomeRouter()
-                .pushController(
-                        RouterTransaction.with(SaleItemsController.newInstance(saleItemBundle))
-                                .tag(getActivity().getString(R.string.sale_items_controller_tag))
-                                .pushChangeHandler(new HorizontalChangeHandler())
-                                .popChangeHandler(new HorizontalChangeHandler()));
-    }
 
     @Override
     public void onError(String message) {
@@ -470,7 +442,7 @@ public class ShopsController extends BasePullToRefreshController implements Shop
         //noinspection ConstantConditions
         getRouter().pushController(RouterTransaction.with(
                 SaleItemsController.newInstance(bundle))
-                .tag(getActivity().getResources().getString(R.string.sale_items_from_category))
+                .tag(getResources().getString(R.string.sale_items_controller_tag))
                 .pushChangeHandler(new HorizontalChangeHandler())
                 .popChangeHandler(new HorizontalChangeHandler()));
     }
@@ -495,69 +467,68 @@ public class ShopsController extends BasePullToRefreshController implements Shop
             loadShopBanners();
         }
     }
-
-    @SuppressWarnings({"deprecation", "ConstantConditions"})
-    public void showSearchToolbar() {
-        if (shopsControllerSearchView != null)
-            shopsControllerSearchView.setImageDrawable(getResources().getDrawable(R.drawable.ic_close));
-
-        mShopsControllerHamburgerView.animate().rotation(-90).setDuration(200).start();
-
-        //noinspection ConstantConditions
-        item = (RelativeLayout) getToolbar();
-
-        //noinspection ConstantConditions
-        child = getActivity().getLayoutInflater().inflate(R.layout.partial_toolbar_search, null);
-        item.addView(child);
-
-        child.setBackgroundColor(getResources().getColor(R.color.toolbar_active_skin));
-        rightOption = (ImageView) child.findViewById(R.id.partial_toolbar_search_right_option);
-        rightOption.setBackgroundColor(getResources().getColor(R.color.toolbar_active_skin));
-
-        EditText searchField = (EditText) child.findViewById(R.id.partial_toolbar_search_field);
-        searchField.setActivated(true);
-        searchField.setFocusable(true);
-
-//        if (searchField.requestFocus()) {
-//            KeyboardUtils.showSoftInput(searchField, getActivity());
-//        }
-
-        //noinspection deprecation
-        rightOption.setImageDrawable(getResources().getDrawable(R.drawable.ic_close));
-        rightOption.animate().rotation(360).setDuration(200).start();
-
-        searchField.setOnEditorActionListener((v, actionId, event) -> {
-            if (actionId == EditorInfo.IME_ACTION_SEARCH) {
-                performSearch(searchField.getText().toString());
-                return true;
-            }
-            return false;
-        });
+//
+//    @SuppressWarnings({"deprecation", "ConstantConditions"})
+//    public void showSearchToolbar() {
+//        if (shopsControllerSearchView != null)
+//            shopsControllerSearchView.setImageDrawable(getResources().getDrawable(R.drawable.ic_close));
+//
+//        mShopsControllerHamburgerView.animate().rotation(-90).setDuration(200).start();
+//
+//        //noinspection ConstantConditions
+//        item = (RelativeLayout) getToolbar();
+//
+//        //noinspection ConstantConditions
+//        child = getActivity().getLayoutInflater().inflate(R.layout.partial_toolbar_search, null);
+//        item.addView(child);
+//
+//        child.setBackgroundColor(getResources().getColor(R.color.toolbar_active_skin));
+//        rightOption = (ImageView) child.findViewById(R.id.partial_toolbar_search_right_option);
+//        rightOption.setBackgroundColor(getResources().getColor(R.color.toolbar_active_skin));
+//
+//        EditText searchField = (EditText) child.findViewById(R.id.partial_toolbar_search_field);
+//        searchField.setActivated(true);
+//        searchField.setFocusable(true);
+//
+////        if (searchField.requestFocus()) {
+////            KeyboardUtils.showSoftInput(searchField, getActivity());
+////        }
+//
+//        //noinspection deprecation
+//        rightOption.setImageDrawable(getResources().getDrawable(R.drawable.ic_close));
+//        rightOption.animate().rotation(360).setDuration(200).start();
+//
+//        searchField.setOnEditorActionListener((v, actionId, event) -> {
+//            if (actionId == EditorInfo.IME_ACTION_SEARCH) {
+//                performSearch(searchField.getText().toString());
+//                return true;
+//            }
+//            return false;
+//        });
 
 //        mShopsControllerToolbarLogo.setVisibility(View.GONE);
-    }
+//    }
 
-    public void hideSearchToolbar() {
-        child.startAnimation(outToRightAnimation());
-        item.removeView(child);
-
-        //noinspection deprecation,ConstantConditions
-        shopsControllerSearchView.setImageDrawable(
-                getResources().getDrawable(R.drawable.ic_search));
-        rightOption.animate().rotation(-360).setDuration(200).start();
-        mShopsControllerHamburgerView.animate().rotation(0).setDuration(200).start();
-
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-            //noinspection ConstantConditions
-            getActivity().dismissKeyboardShortcutsHelper();
-        }
-
-        Handler handler = new Handler();
-        handler.postDelayed(() -> {
-                    mShopsControllerToolbarLogo.setVisibility(View.VISIBLE);
-                    mCanViewSearch = true;
-                }, 300);
-    }
+//    public void hideSearchToolbar() {
+//        child.startAnimation(outToRightAnimation());
+//        item.removeView(child);
+//
+//        //noinspection deprecation,ConstantConditions
+//        shopsControllerSearchView.setImageDrawable(
+//                getResources().getDrawable(R.drawable.ic_search));
+//        rightOption.animate().rotation(-360).setDuration(200).start();
+//        mShopsControllerHamburgerView.animate().rotation(0).setDuration(200).start();
+//
+//        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+//            //noinspection ConstantConditions
+//            getActivity().dismissKeyboardShortcutsHelper();
+//        }
+//
+//        Handler handler = new Handler();
+//        handler.postDelayed(() -> {
+//                    mShopsControllerToolbarLogo.setVisibility(View.VISIBLE);
+//                }, 300);
+//    }
 
     public String getCategoryParentKey(String saleCategoryKey) {
         return saleCategoryKey + " • All";
@@ -582,9 +553,9 @@ public class ShopsController extends BasePullToRefreshController implements Shop
                 .putBoolean("SaleItemsController.FROM_CATEGORY_SEARCH",true)
                 .build();
 
-        ((MainActivity) getActivity()).getHomeRouter().pushController(RouterTransaction.with(
+        getRouter().pushController(RouterTransaction.with(
                 SaleItemsController.newInstance(saleItemBundle))
-                .tag(getActivity().getResources().getString(R.string.sale_item_from_search_category))
+                .tag(getResources().getString(R.string.sale_items_controller_tag))
                 .pushChangeHandler(new SimpleChangeHandler())
                 .popChangeHandler(new FadeChangeHandler()));
 

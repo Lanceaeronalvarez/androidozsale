@@ -222,7 +222,7 @@ public class CategoriesController extends BaseController
 
         mActivity.getHomeRouter().pushController(RouterTransaction.with(
                 SaleItemsController.newInstance(saleItemBundle))
-                .tag("SaleItemsController")
+                .tag(getResources().getString(R.string.sale_items_controller_tag))
                 .pushChangeHandler(new HorizontalChangeHandler())
                 .popChangeHandler(new HorizontalChangeHandler()));
 
@@ -247,26 +247,6 @@ public class CategoriesController extends BaseController
         searchTapCounter += 1;
         if (searchTapCounter == 1)
             onSearchFieldClick();
-    }
-
-    private void performSearch(String searchQuery) {
-
-        Bundle saleItemBundle = new BundleBuilder(new Bundle())
-                .putString("SaleItemsController.KEY_TITLE", searchQuery)
-                .putString("SaleItemsController.SEARCH_KEY", searchQuery)
-                .build();
-
-        if (!searchQuery.isEmpty())
-            getRouter().pushController(RouterTransaction.with(
-                    SaleItemsController.newInstance(saleItemBundle))
-                    .tag("SaleItemsController")
-                    .pushChangeHandler(new HorizontalChangeHandler())
-                    .popChangeHandler(new HorizontalChangeHandler()));
-
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-            //noinspection ConstantConditions
-            getActivity().dismissKeyboardShortcutsHelper();
-        }
     }
 
 

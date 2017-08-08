@@ -26,6 +26,7 @@ import com.google.gson.reflect.TypeToken;
 import com.paginate.Paginate;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -33,6 +34,7 @@ import javax.inject.Inject;
 
 import au.com.dealsdirect.R;
 import au.com.dealsdirect.data.network.model.category.GetCategoryTreeResponse;
+import au.com.dealsdirect.data.network.model.saleitems.GetSaleItemsRequest;
 import au.com.dealsdirect.data.network.model.saleitems.GetSaleItemsResponse;
 import au.com.dealsdirect.data.network.model.sorting.SortingResponse;
 import au.com.dealsdirect.ui.base.BaseController;
@@ -50,7 +52,13 @@ import au.com.dealsdirect.utils.PaginateUtils;
 import butterknife.BindView;
 import butterknife.OnClick;
 
+import static au.com.dealsdirect.ui.controller.searchfilter.SearchFilterController.BRANDS_FACETFILTER_NAME;
+import static au.com.dealsdirect.ui.controller.searchfilter.SearchFilterController.COLORS_FACETFILTER_NAME;
 import static au.com.dealsdirect.ui.controller.searchfilter.SearchFilterController.KEY_SELECTED_FACETS;
+import static au.com.dealsdirect.ui.controller.searchfilter.SearchFilterController.PRICE_FACETFILTER_NAME;
+import static au.com.dealsdirect.ui.controller.searchfilter.SearchFilterController.SEARCH_QUERY_NAME;
+import static au.com.dealsdirect.ui.controller.searchfilter.SearchFilterController.SIZES_FACETFILTER_NAME;
+import static au.com.dealsdirect.ui.controller.searchfilter.SearchFilterController.SORT_FACETFILTER_NAME;
 
 /**
  * dp Created by Admin on 6/8/17.
@@ -76,12 +84,11 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
     private String mTitle;
     private String mCategoryKey = "";
     private String mSearchQuery = "";
-    private boolean hasShowedItems = false;
 
     private List<GetSaleItemsResponse.Products> mSaleItems = new LinkedList<>();
     private List<GetSaleItemsResponse.Facets> mFacets = new ArrayList<>();
     private List<GetCategoryTreeResponse> mCategoryTreeResponse = new LinkedList<>();
-
+    private List<SortingResponse> mSortingResponse = new ArrayList<>();
     private String mSortingListJsonString = "";
 
     @BindView(R.id.controller_sale_items_grid_view)
@@ -230,10 +237,10 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
                 ((MainActivity) getActivity()).goToCategoriesFromSaleItems();
             });
         }else if (mFromShopSearch||mFromCategorySearch){
-            if (mSaleItemsToolbarTitle.getText().toString().isEmpty() && mSearchQuery.isEmpty()){
+            if (mSaleItemsToolbarTitle.getText().toString().isEmpty() && mSearchQuery.isEmpty()  && !isFiltered){
                 activateSearch();
             }else{
-                deActivateSearch();
+                deactivateSearch();
             }
 
         } else{
@@ -268,17 +275,17 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
             mSaleItemsToolbarField.setText(newString);
             mSaleItemsToolbarTitle.setText(newString);
 
-        } else {
-           Log.d("saleitems","search query name = "+mSearchQuery);
-            if (!mSearchQuery.isEmpty() && !mSearchQuery.equals(mTitle)){
+        } else if (!mSearchQuery.isEmpty()){
                 mSaleItemsToolbarField.setText(mSearchQuery);
                 mSaleItemsToolbarTitle.setText(mSearchQuery);
-            }else{
-                mSaleItemsToolbarField.setText(mTitle);
-                mSaleItemsToolbarTitle.setText(mTitle);
-            }
-
+        } else if (!mTitle.isEmpty()){
+            mSaleItemsToolbarField.setText(mTitle);
+            mSaleItemsToolbarTitle.setText(mTitle);
+        } else{
+            mSaleItemsToolbarTitle.setText(getActivity().getResources().getString(R.string.i_am_looking_for));
         }
+
+
         setUp(view);
     }
 
@@ -322,14 +329,14 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
 
         if (isFiltered || mSaleItems.isEmpty()) {
             showLoading();
-            mPresenter.loadSaleItems(mCategoryKey, mSaleId, mSearchQuery, page, mChipFilters);
+            mPresenter.loadSaleItems(createSaleItemsRequest(mCategoryKey, mSaleId, mSearchQuery, page, mChipFilters));
         } else if (!mSaleItems.isEmpty()) {
             mPaginateManager = PaginateUtils.init(mSaleItemsRecyclerView, mPaginateCallbacks);
         }
 
         mSaleItemsToolbarField.setOnKeyboardListener((keyboardEditText, showing) -> {
             if (!showing){
-                deActivateSearch();
+                deactivateSearch();
             }else{
 
             }
@@ -338,6 +345,7 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
 
     @Override
     public void onLoadSortingFacetsFinished(List<SortingResponse> responseList) {
+        mSortingResponse = responseList;
         mSortingListJsonString = new Gson().toJson(responseList);
     }
 
@@ -425,7 +433,7 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
     @Override
     public void refresh() {
         loadingInProgress = true;
-        mPresenter.loadSaleItems(mCategoryKey, mSaleId, mSearchQuery, page, mChipFilters);
+        mPresenter.loadSaleItems(createSaleItemsRequest(mCategoryKey, mSaleId, mSearchQuery, page, mChipFilters));
     }
 
     @Override
@@ -467,10 +475,7 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
 
     @OnClick(R.id.controller_sale_items_opaque_view)
     void onClickCover(){
-        Log.d("saleitems", " hide keyboard");
-        deActivateSearch();
-        hideKeyboard();
-
+        deactivateSearch();
     }
 
     @OnClick(R.id.partial_toolbar_field_title_edittext)
@@ -478,7 +483,7 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
         mSaleItemsOpaqueCover.setVisibility(View.VISIBLE);
     }
 
-    public void deActivateSearch(){
+    public void deactivateSearch(){
 
         mSaleItemsBackIcon.setImageDrawable(getActivity().getDrawable(R.drawable.ic_pink_chevron));
         mSaleItemsFilterIcon.setImageDrawable(getActivity().getDrawable(R.drawable.ic_toolbar_filter));
@@ -487,12 +492,10 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
         mSaleItemsToolbarField.setActivated(false);
         mSaleItemsToolbarField.setVisibility(View.GONE);
         mSaleItemsToolbarTitle.setVisibility(View.VISIBLE);
-        mSaleItemsToolbarTitle.setText(mSearchQuery);
-        if (mSearchQuery.isEmpty())
-            mSaleItemsToolbarTitle.setText(getActivity().getResources().getString(R.string.i_am_looking_for));
 
         mSaleItemsBackIcon.setOnClickListener(view -> onBackClick());
         mSaleItemsFilterIcon.setOnClickListener(view12 -> showFilters());
+        hideKeyboard();
     }
 
     public void activateSearch() {
@@ -514,7 +517,7 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
 
         mSaleItemsBackIcon.setOnClickListener(null);
         mSaleItemsFilterIcon.setOnClickListener(view -> {
-            deActivateSearch();
+            deactivateSearch();
         });
 
         mSaleItemsOpaqueCover.setVisibility(View.VISIBLE);
@@ -534,7 +537,7 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
             public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
                 mSearchQuery = charSequence.toString();
                 mIsSearch = true;
-                mPresenter.loadSaleItems("", mSaleId, charSequence.toString(), 0, new ArrayList());
+                mPresenter.loadSaleItems(createSaleItemsRequest("", mSaleId, charSequence.toString(), 0, new ArrayList()));
                 mSaleItemsToolbarTitle.setText(charSequence.toString());
                 mSaleItemsOpaqueCover.setVisibility(View.VISIBLE);
 
@@ -551,13 +554,103 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
 //                    hideKeyboard();
                 mSearchQuery = textView.getText().toString();
                 mIsSearch = true;
-                mPresenter.loadSaleItems("", mSaleId, mSearchQuery, 0, new ArrayList());
-                deActivateSearch();
+                mPresenter.loadSaleItems(createSaleItemsRequest("", mSaleId, mSearchQuery, 0, new ArrayList()));
+                deactivateSearch();
             }
 
             return false;
         });
 
+    }
+
+    private GetSaleItemsRequest createSaleItemsRequest(String categoryKey, String saleId, String searchQuery, int pageNumber, List<SearchChipModel> chipsList){
+        List<String> saleIds = new LinkedList<>();
+        HashMap<String, List<String>> facetFilters = new HashMap<>();
+
+        GetSaleItemsRequest getSaleItemsRequest = new GetSaleItemsRequest();
+
+        if (!categoryKey.isEmpty())
+            getSaleItemsRequest.setCategoryKey("[\"" + categoryKey + "\"]");
+        else
+            getSaleItemsRequest.setCategoryKey("[]");
+
+
+        getSaleItemsRequest.setSorting("");
+        getSaleItemsRequest.setPageNumber(String.valueOf(pageNumber));
+
+        if (searchQuery != null)
+            getSaleItemsRequest.setQuery(searchQuery);
+        else
+            getSaleItemsRequest.setQuery("");
+
+        getSaleItemsRequest.setPageSize("50");
+
+        if (saleId!=null){
+
+            if (!saleId.isEmpty())
+                saleIds.add(saleId);
+        }
+
+
+        facetFilters.put("saleId", saleIds);
+
+
+        if (chipsList != null && chipsList.size() != 0) {
+            ArrayList<String> searchQueryFilters = new ArrayList<>();
+            ArrayList<String> brandNameFacetFilters = new ArrayList<>();
+            ArrayList<String> colorFacetFilters = new ArrayList<>();
+            ArrayList<String> sizesFacetFilters = new ArrayList<>();
+            ArrayList<String> priceFacetFilters = new ArrayList<>();
+
+            for (SearchChipModel chip : chipsList) {
+                String facetName = chip.getFilterType();
+                if (facetName.equals(BRANDS_FACETFILTER_NAME)) {
+                    brandNameFacetFilters.add(chip.getChipTitle());
+                } else if (facetName.equals(COLORS_FACETFILTER_NAME)) {
+                    colorFacetFilters.add(chip.getChipTitle());
+                } else if (facetName.equals(SIZES_FACETFILTER_NAME)) {
+                    sizesFacetFilters.add(chip.getChipTitle());
+                } else if (facetName.equals(PRICE_FACETFILTER_NAME)) {
+                    priceFacetFilters.add(chip.getChipTitle());
+                } else if (facetName.equals(SEARCH_QUERY_NAME)) {
+                    searchQueryFilters.add(chip.getChipTitle());
+                } else if (facetName.equals(SORT_FACETFILTER_NAME)){
+                    getSaleItemsRequest.setSorting(mapSortingTitleToKey(chip.getChipTitle()));
+                }
+            }
+
+            facetFilters.put(BRANDS_FACETFILTER_NAME, brandNameFacetFilters);
+            facetFilters.put(COLORS_FACETFILTER_NAME, colorFacetFilters);
+            facetFilters.put(SIZES_FACETFILTER_NAME, sizesFacetFilters);
+            facetFilters.put(PRICE_FACETFILTER_NAME, priceFacetFilters);
+
+
+            StringBuilder result = new StringBuilder();
+            for (int i = 0; i < searchQueryFilters.size(); i++) {
+                if (i > 0) {
+                    result.append(" ");
+                }
+                result.append(searchQueryFilters.get(i));
+            }
+
+            getSaleItemsRequest.setQuery(result.toString());
+        }
+
+        String facetFiltersString = new Gson().toJson(facetFilters);
+
+        getSaleItemsRequest.setFacetFilter(facetFiltersString);
+
+        return getSaleItemsRequest;
+    }
+
+    private String mapSortingTitleToKey(String title){
+        for (SortingResponse response : mSortingResponse) {
+            if(response.getTitle().equalsIgnoreCase(title)){
+                return response.getKey();
+            }
+        }
+
+        return "";
     }
 
 }

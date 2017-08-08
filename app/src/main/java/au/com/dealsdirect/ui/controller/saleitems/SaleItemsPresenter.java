@@ -27,6 +27,7 @@ import static au.com.dealsdirect.ui.controller.searchfilter.SearchFilterControll
 import static au.com.dealsdirect.ui.controller.searchfilter.SearchFilterController.PRICE_FACETFILTER_NAME;
 import static au.com.dealsdirect.ui.controller.searchfilter.SearchFilterController.SEARCH_QUERY_NAME;
 import static au.com.dealsdirect.ui.controller.searchfilter.SearchFilterController.SIZES_FACETFILTER_NAME;
+import static au.com.dealsdirect.ui.controller.searchfilter.SearchFilterController.SORT_FACETFILTER_NAME;
 
 /**
  * dp Created by Admin on 6/8/17.
@@ -46,82 +47,10 @@ public class SaleItemsPresenter<V extends SaleItemsMvpView> extends BasePresente
     }
 
     @Override
-    public void loadSaleItems(String categoryKey, String saleId, String searchQuery, int pageNumber, List<SearchChipModel> chipsList) {
-        List<String> saleIds = new LinkedList<>();
-        HashMap<String, List<String>> facetFilters = new HashMap<>();
-
-        GetSaleItemsRequest getSaleItemsRequest = new GetSaleItemsRequest();
-
-        if (!categoryKey.isEmpty())
-            getSaleItemsRequest.setCategoryKey("[\"" + categoryKey + "\"]");
-        else
-            getSaleItemsRequest.setCategoryKey("[]");
+    public void loadSaleItems(GetSaleItemsRequest getSaleItemsRequest) {
 
 
-        getSaleItemsRequest.setLanguageID("");
-        getSaleItemsRequest.setPageNumber(String.valueOf(pageNumber));
-
-        if (searchQuery != null)
-            getSaleItemsRequest.setQuery(searchQuery);
-        else
-            getSaleItemsRequest.setQuery("");
-
-        getSaleItemsRequest.setPageSize("50");
-
-        if (saleId!=null){
-
-            if (!saleId.isEmpty())
-                saleIds.add(saleId);
-        }
-
-
-        facetFilters.put("saleId", saleIds);
-
-
-        if (chipsList != null && chipsList.size() != 0) {
-            ArrayList<String> searchQueryFilters = new ArrayList<>();
-            ArrayList<String> brandNameFacetFilters = new ArrayList<>();
-            ArrayList<String> colorFacetFilters = new ArrayList<>();
-            ArrayList<String> sizesFacetFilters = new ArrayList<>();
-            ArrayList<String> priceFacetFilters = new ArrayList<>();
-
-            for (SearchChipModel chip : chipsList) {
-                String facetName = chip.getFilterType();
-                if (facetName.equals(BRANDS_FACETFILTER_NAME)) {
-                    brandNameFacetFilters.add(chip.getChipTitle());
-                } else if (facetName.equals(COLORS_FACETFILTER_NAME)) {
-                    colorFacetFilters.add(chip.getChipTitle());
-                } else if (facetName.equals(SIZES_FACETFILTER_NAME)) {
-                    sizesFacetFilters.add(chip.getChipTitle());
-                } else if (facetName.equals(PRICE_FACETFILTER_NAME)) {
-                    priceFacetFilters.add(chip.getChipTitle());
-                } else if (facetName.equals(SEARCH_QUERY_NAME)) {
-                    searchQueryFilters.add(chip.getChipTitle());
-                }
-            }
-
-            facetFilters.put(BRANDS_FACETFILTER_NAME, brandNameFacetFilters);
-            facetFilters.put(COLORS_FACETFILTER_NAME, colorFacetFilters);
-            facetFilters.put(SIZES_FACETFILTER_NAME, sizesFacetFilters);
-            facetFilters.put(PRICE_FACETFILTER_NAME, priceFacetFilters);
-
-
-            StringBuilder result = new StringBuilder();
-            for (int i = 0; i < searchQueryFilters.size(); i++) {
-                if (i > 0) {
-                    result.append(" ");
-                }
-                result.append(searchQueryFilters.get(i));
-            }
-
-            getSaleItemsRequest.setQuery(result.toString());
-        }
-
-        String facetFiltersString = new Gson().toJson(facetFilters);
-
-        getSaleItemsRequest.setFacetFilter(facetFiltersString);
-
-        getCompositeDisposable()
+            getCompositeDisposable()
                 .add(getDataManager()
                         .callGetSaleItemsRequest(getSaleItemsRequest)
                         .subscribeOn(getSchedulerProvider().io())

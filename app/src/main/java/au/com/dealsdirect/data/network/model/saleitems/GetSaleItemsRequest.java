@@ -30,7 +30,7 @@ public class GetSaleItemsRequest {
 
     @Expose
     @SerializedName("sa")
-    private String languageID;
+    private String sorting;
 
     public String getQuery() {
         return query;
@@ -72,11 +72,11 @@ public class GetSaleItemsRequest {
         this.facetFilter = facetFilter;
     }
 
-    public String getLanguageID() {
-        return languageID;
+    public String getSorting() {
+        return sorting;
     }
 
-    public void setLanguageID(String languageID) {
-        this.languageID = languageID;
+    public void setSorting(String sorting) {
+        this.sorting = sorting;
     }
 }

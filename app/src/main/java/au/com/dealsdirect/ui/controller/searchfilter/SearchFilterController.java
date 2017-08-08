@@ -515,7 +515,7 @@ public class SearchFilterController extends BaseController
                 .putString(KEY_SELECTED_FACETS, new Gson().toJson(mPreviousSelectedFacetIndices))
                 .build();
         
-        SaleItemsController saleItemsController = (SaleItemsController) getRouter().getControllerWithTag("SaleItemsController");
+        SaleItemsController saleItemsController = (SaleItemsController) getRouter().getControllerWithTag(getActivity().getString(R.string.sale_items_controller_tag));
         saleItemsController.onPassFiltersData(saleItemBundle);
 
         //noinspection ConstantConditions
