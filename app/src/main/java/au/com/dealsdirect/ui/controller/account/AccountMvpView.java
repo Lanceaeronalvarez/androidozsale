@@ -31,4 +31,6 @@ public interface AccountMvpView extends MvpView {
     void triggerLogin(String option);
 
     void triggerLogout();
+
+    void initLoginDrawable();
 }

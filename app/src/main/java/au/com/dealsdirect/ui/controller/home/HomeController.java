@@ -30,6 +30,7 @@ import au.com.dealsdirect.R;
 import au.com.dealsdirect.data.auth.AuthHandler;
 import au.com.dealsdirect.ui.base.BaseController;
 import au.com.dealsdirect.ui.controller.account.AccountController;
+import au.com.dealsdirect.ui.controller.account.AccountMvpView;
 import au.com.dealsdirect.ui.controller.checkout.checkout.CheckoutController;
 import au.com.dealsdirect.ui.controller.contact.viewcontacts.ViewContactsController;
 import au.com.dealsdirect.ui.controller.invite.InviteController;
@@ -253,6 +254,7 @@ public class HomeController extends BaseController implements HomeMvpView {
         TransitionManager.beginDelayedTransition(mContainer,new Fade(Fade.OUT));
         TransitionManager.beginDelayedTransition(mAccountsContainer,new Fade(Fade.IN));
         mAccountsContainer.setVisibility(View.VISIBLE);
+        ((AccountMvpView) mAccountsRouter.getBackstack().get(0).controller()).initLoginDrawable();
         mContainer.setVisibility(View.GONE);
     }
 

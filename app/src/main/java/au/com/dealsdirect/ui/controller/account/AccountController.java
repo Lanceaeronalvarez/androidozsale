@@ -111,12 +111,7 @@ public class AccountController extends BaseController implements AccountMvpView,
         mTitleTextView.setText("My Account");
         mArrowButton.setVisibility(View.INVISIBLE);
 
-        if(mPresenter.getIsAuthorized()) {
-            mFilterButton.setImageDrawable(getActivity().getResources().getDrawable(R.drawable.ic_logout));
-
-        } else {
-            mFilterButton.setImageDrawable(getActivity().getResources().getDrawable(R.drawable.ic_login));
-        }
+        initLoginDrawable();
     }
 
     @Override
@@ -240,6 +235,16 @@ public class AccountController extends BaseController implements AccountMvpView,
         CustomAlertDialog.showCustomAlertDialog(getActivity(),
                 CustomAlertDialog.CustomDialogIconState.POSITIVE,
                 "Logout Successful");
+    }
+
+    @Override
+    public void initLoginDrawable() {
+        if(mPresenter.getIsAuthorized()) {
+            mFilterButton.setImageDrawable(getActivity().getResources().getDrawable(R.drawable.ic_logout));
+
+        } else {
+            mFilterButton.setImageDrawable(getActivity().getResources().getDrawable(R.drawable.ic_login));
+        }
     }
 
     @OnClick(R.id.partial_toolbar_filter_view)
