@@ -133,7 +133,7 @@ public class SearchFilterController extends BaseController
     private int origMinValue = -1;
     private int origMaxValue = -1;
     private boolean isSeekbarReset = false;
-
+    private MainActivity mActivity;
     private String mChosenCategory = "";
 
     String mCategoryKey = "";
@@ -208,12 +208,14 @@ public class SearchFilterController extends BaseController
         View view = inflater.inflate(R.layout.controller_search_filter, container, false);
         getControllerComponent().inject(this);
         mPresenter.onAttach(this);
+        mActivity = (MainActivity) getActivity();
         return view;
     }
 
     @Override
     protected void onViewBound(@NonNull View view) {
         super.onViewBound(view);
+        mActivity.getMainController().hideBottomNav();
         setUp(view);
 
     }
@@ -537,9 +539,10 @@ public class SearchFilterController extends BaseController
         
         SaleItemsController saleItemsController = (SaleItemsController) getRouter().getControllerWithTag(getActivity().getString(R.string.sale_items_controller_tag));
         saleItemsController.onPassFiltersData(saleItemBundle);
-
+        mActivity.getMainController().showBottomNav();
         //noinspection ConstantConditions
         getActivity().onBackPressed();
+
     }
 
 
