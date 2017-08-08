@@ -33,11 +33,13 @@
                 android:id="@+id/view_addresses_recyclerView"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
+                android:visibility="gone"
                 android:overScrollMode="never" />
 
         </FrameLayout>
 
-        <include layout="@layout/view_address_placeholder_layout"></include>
+        <include layout="@layout/view_address_placeholder_layout"
+            android:visibility="gone"/>
 
     </RelativeLayout>
 

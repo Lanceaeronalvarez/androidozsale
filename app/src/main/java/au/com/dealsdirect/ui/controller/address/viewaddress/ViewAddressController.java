@@ -151,11 +151,11 @@ public class ViewAddressController extends BasePullToRefreshController implement
     public void showAddresses(GetAddresses.ResponseValue responseValue) {
         Timber.d("ViewAddressController", "addresses response");
         if (responseValue.getD().getValue() != null) {
-            mRecyclerView.setVisibility(View.VISIBLE);
-            mAddressPlaceHolder.setVisibility(View.GONE);
 
             //If status 0, not valid Address
             if (mAddressList != null) {
+                mRecyclerView.setVisibility(View.VISIBLE);
+                mAddressPlaceHolder.setVisibility(View.GONE);
                 for (AddressesItem addressesItem : responseValue.getD().getValue().getAddressesList()) {
                     if (addressesItem.Status != 0 && !mAddressList.contains(addressesItem)) {
                         mAddressList.add(addressesItem);
