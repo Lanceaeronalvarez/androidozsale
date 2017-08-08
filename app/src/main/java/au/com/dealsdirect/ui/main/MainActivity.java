@@ -531,4 +531,5 @@ public class MainActivity extends BaseActivity implements MainMvpView {
         getMainController().getHomeController().showShopController();
     }
 
+
 }

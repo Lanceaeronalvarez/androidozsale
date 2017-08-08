@@ -10,6 +10,11 @@ import au.com.dealsdirect.data.DataManager;
 import au.com.dealsdirect.data.network.model.checkout.AdjustOrderItem;
 import au.com.dealsdirect.data.network.model.checkout.GetCurrentOrder;
 import au.com.dealsdirect.data.network.model.checkout.GetUserPaymentMethods;
+import au.com.dealsdirect.data.network.model.checkout.getcurrentorder.Value;
+import au.com.dealsdirect.ourpay.Ourpay;
+import au.com.dealsdirect.ourpay.OurpayPhoneVerification;
+import au.com.dealsdirect.ourpay.OurpayState;
+import au.com.dealsdirect.ourpay.OurpayUtils;
 import au.com.dealsdirect.ui.base.BasePresenter;
 import au.com.dealsdirect.utils.CartUtil;
 import au.com.dealsdirect.utils.rx.SchedulerProvider;
@@ -26,6 +31,8 @@ public class CheckoutPresenter<V extends CheckoutMvpView> extends BasePresenter<
 
     private boolean mFetchCartFinished = false;
     private boolean mFetchUserPaymentMethodsFinished = false;
+    private Ourpay ourpay;
+    private Value mValue;
 
     @Inject
     public CheckoutPresenter(DataManager dataManager, SchedulerProvider schedulerProvider,
@@ -105,6 +112,8 @@ public class CheckoutPresenter<V extends CheckoutMvpView> extends BasePresenter<
                             getMvpView().setPaymentList(responseValue.getUserPaymentMethods());
                             getMvpView().showPaymentDetails(responseValue.getD().getValue().getLastPaymentMethod());
                             mFetchUserPaymentMethodsFinished = true;
+                            getMvpView().showMyPayDetails(mValue, ourpay);
+
                         } else {
                             getMvpView().onError(responseValue.getD().getMessage());
                         }
@@ -191,6 +200,64 @@ public class CheckoutPresenter<V extends CheckoutMvpView> extends BasePresenter<
         return getDataManager().isAuthorized();
     }
 
+    @Override
+    public void generateOurpay() {
+        ourpay = new Ourpay();
+        Value value = mValue;
+        try {
+
+            ourpay.setUserAmount(value.getSummary().total);
+
+            /* default */
+            ourpay.setCanUse(value.getMyPayDetails().enabled);
+            ourpay.setErrorCode(value.getMyPayDetails().reasonCode);
+            ourpay.setTermsAndConditionsCheckboxState(value.getMyPayDetails().getTermsAndConditions());
+            ourpay.setMinAmount(value.getMyPayDetails().getPaymentConditions().minAmountThreshold);
+            ourpay.setMaxAmount(value.getMyPayDetails().getPaymentConditions().maxAmountThreshold);
+            ourpay.setDetails(value.getMyPayDetails().getPaymentSchemeDescription());
+
+            /* specifics */
+            try {
+                ourpay.setAmount(value.myPayDetails.getAmount());
+            } catch (Exception e){
+                ourpay.setAmount(0);
+            }
+
+            try {
+                ourpay.setBillingPeriod(OurpayUtils.convertDaysToWeeks(value.getMyPayDetails().getBillingPeriod().getDays()));
+            } catch (Exception e){
+                ourpay.setBillingPeriod(0);
+            }
+
+            try {
+                ourpay.setTransactionCount(value.myPayDetails.getTransactionCount());
+            } catch (Exception e){
+                ourpay.setTransactionCount(0);
+            }
+
+            try {
+                ourpay.setPlannedTransactions(value.getMyPayDetails().getBillingAgreement().getPlannedTransactions());
+                ourpay.setState(OurpayState.ONCART);
+            } catch (Exception e){
+                ourpay.setPlannedTransactions(null);
+                ourpay.setState(ourpay.getState() | OurpayState.ERROR);
+            }
+
+            try {
+                OurpayPhoneVerification ourpayPhoneVerification = new OurpayPhoneVerification();
+                ourpayPhoneVerification.setRequired(value.getPhoneVerification().isRequired);
+                ourpay.setOurpayPhoneVerification(value.getPhoneVerification());
+            } catch (Exception e){
+                e.printStackTrace();
+            }
+
+
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
     private void updateCart(GetCurrentOrder.ResponseValue response) {
 
         if(!isViewAttached()){
@@ -211,6 +278,8 @@ public class CheckoutPresenter<V extends CheckoutMvpView> extends BasePresenter<
 //                    e.printStackTrace();
 //                }
 
+                mValue = response.getD().getValue();
+
                 getMvpView().showCartDetails(response.getD().getValue().getItems());
 
                 getMvpView().showAddressDetails(response.getD().getValue().getDeliveryAddress(), response.getD().getValue().getDecorationInfoList());
@@ -218,6 +287,7 @@ public class CheckoutPresenter<V extends CheckoutMvpView> extends BasePresenter<
                 getMvpView().showVoucherDetails(response.getD().getValue().getVouchers());
 
                 getMvpView().showSummaryDetails(response.getD().getValue().getSummary());
+
             } else {
 //                GCartUtil.setValueToCart(0);
 

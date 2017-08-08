@@ -9,6 +9,7 @@ import au.com.dealsdirect.data.network.model.checkout.getcurrentorder.Summary;
 import au.com.dealsdirect.data.network.model.checkout.getcurrentorder.Value;
 import au.com.dealsdirect.data.network.model.checkout.getcurrentorder.Voucher;
 import au.com.dealsdirect.data.network.model.checkout.getuserpaymentmethods.PaymentMethod;
+import au.com.dealsdirect.ourpay.Ourpay;
 import au.com.dealsdirect.ui.base.MvpView;
 
 /**
@@ -17,7 +18,7 @@ import au.com.dealsdirect.ui.base.MvpView;
 
 public interface CheckoutMvpView extends MvpView {
 
-    void showMyPayDetails(Value value);
+    void showMyPayDetails(Value value, Ourpay ourpay);
 
     void showCartDetails(List<Item> items);
 
@@ -33,5 +34,5 @@ public interface CheckoutMvpView extends MvpView {
 
     void triggerLoginTicket();
 
-     void updateCheckoutBadge();
+    void updateCheckoutBadge();
 }

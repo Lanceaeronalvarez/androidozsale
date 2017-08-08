@@ -22,4 +22,8 @@ public class PriceUtils {
         return HIDECENTS ? TEMP_CURRENCY_SIGN + String.format("%.0f", value) : TEMP_CURRENCY_SIGN + String.format("%.2f", value);
     }
 
+    public static String getProductRpStringValue(Double value) {
+        return HIDECENTS ? TEMP_CURRENCY_SIGN + String.format("%.0f", value) : TEMP_CURRENCY_SIGN + String.format("%.2f", value);
+    }
+
 }

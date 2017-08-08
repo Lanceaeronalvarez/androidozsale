@@ -46,6 +46,8 @@ public class AppPreferencesHelper implements PreferencesHelper {
     private static final String PAYMENT_AMEX_ENABLED = "app_amex_enabled";
     private static final String PAYMENT_KOUNT_ENABLED = "app_kount_enabled";
     private static final String PAYMENT_KOUNT_MERCHANT_ID = "app_kount_merchant_id";
+    private static final String PAYMENT_MYPAY_ENABLED = "app_mypay_enabled";
+
     private static final String SEARCH_MAX_PRICE = "app_search_max_price";
     private static final String ACCESS_ANONYMOUS_ENABLED = "app_anonymous_enabled";
     private static final String FB_SECRET = "fb_secret";
@@ -333,6 +335,16 @@ public class AppPreferencesHelper implements PreferencesHelper {
     @Override
     public int getGCMAppVersion() {
         return Prefs.getInt(GNotification.PROPERTY_APP_VERSION,Integer.MIN_VALUE);
+    }
+
+    @Override
+    public void setIsMyPayEnabled(boolean isMyPayEnabled) {
+        Prefs.putBoolean(PAYMENT_MYPAY_ENABLED, isMyPayEnabled);
+    }
+
+    @Override
+    public boolean getIsMyPayEnabled() {
+        return Prefs.getBoolean(PAYMENT_MYPAY_ENABLED, true);
     }
 
 }

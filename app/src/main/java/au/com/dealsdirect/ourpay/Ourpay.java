@@ -5,6 +5,7 @@ import com.braintreepayments.api.models.PaymentMethodNonce;
 import java.util.List;
 
 import au.com.dealsdirect.data.network.model.checkout.getcurrentorder.MyPayDetails;
+import au.com.dealsdirect.data.network.model.checkout.getcurrentorder.PhoneVerification;
 
 
 /*
@@ -27,7 +28,7 @@ public class Ourpay {
     private int state = 0;
     private PaymentMethodNonce paymentMethodNonce;
     private String termsAndConditionsText = "";
-    private OurpayPhoneVerification ourpayPhoneVerification;
+    private PhoneVerification ourpayPhoneVerification;
 
     public Ourpay() {
 
@@ -163,15 +164,15 @@ public class Ourpay {
         this.termsAndConditionsText = termsAndConditionsText;
     }
 
-    public OurpayPhoneVerification getOurpayPhoneVerification() {
+    public PhoneVerification getOurpayPhoneVerification() {
         return ourpayPhoneVerification;
     }
 
-    public void setOurpayPhoneVerification(OurpayPhoneVerification ourpayPhoneVerification) {
+    public void setOurpayPhoneVerification(PhoneVerification ourpayPhoneVerification) {
         this.ourpayPhoneVerification = ourpayPhoneVerification;
     }
 
     public boolean isPhoneVerificationRequired() {
-        return (ourpayPhoneVerification != null && ourpayPhoneVerification.isRequired());
+        return (ourpayPhoneVerification != null && ourpayPhoneVerification.getRequired());
     }
 }

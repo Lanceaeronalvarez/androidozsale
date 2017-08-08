@@ -44,20 +44,10 @@ public class OurpayTemplateText {
             KEY_PAYMENT_SCHEDULE //9
     };
 
-    public static  String getTemplateText(BaseActivity baseActivity, Ourpay ourpay){
-//        DataManager dataManager = ((MainActivity) baseActivity).getDataManager();
-//        try {
-//            JSONObject jsonObject = new JSONObject(pref.getMyPayTemplateTexts());
-//
-//            String details = jsonObject.getString(ourpay.getDetails());
-//
-//            return parseTextSymbolsInString(details, ourpay);
-//
-//        } catch (JSONException e) {
-//
-//            return "";
-//        }
-        return "";
+    public static String getTemplateText(BaseActivity baseActivity, Ourpay ourpay){
+
+        String details = ourpay.getDetails();
+        return parseTextSymbolsInString(details, ourpay);
     }
 
     public static String getText(BaseActivity baseActivity, String key) {

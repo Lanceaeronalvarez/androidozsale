@@ -22,4 +22,6 @@ public interface CheckoutMvpPresenter<V extends MvpView> extends MvpPresenter<V>
     void resetIsCartAlreadyLoaded();
 
     boolean checkIsLoggedIn();
+
+    void generateOurpay();
 }

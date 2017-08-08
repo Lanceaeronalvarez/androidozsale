@@ -27,8 +27,10 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import au.com.dealsdirect.R;
+import au.com.dealsdirect.data.network.model.checkout.getcurrentorder.MyPayDetails;
 
 import static android.view.ViewTreeObserver.OnGlobalLayoutListener;
 
@@ -155,7 +157,7 @@ public class OurpayGraph {
      */
 
     public View generateGraph(final Context context,
-                              final ArrayList<OurpayTransaction> ourpayTransactions) {
+                              final List<MyPayDetails.PlannedTransaction> ourpayTransactions) {
         final LinearLayout layPayViewId;
         int circleTempSize;
         int circleTempTextSize;
@@ -2028,14 +2030,14 @@ public class OurpayGraph {
 
 
             if (ourpayTransactions.get(i).getState() == 0) {
-                tempPay.setText(ourpayTransactions.get(i).getAmount());
+                tempPay.setText(ourpayTransactions.get(i).getAmount().toString());
                 checkImage.setVisibility(View.GONE);
             } else if (ourpayTransactions.get(i).getState() == 2) {
                 tempPay.setText("Paid");
                 checkImage.setVisibility(View.VISIBLE);
             }
 
-            tempDate.setText(ourpayTransactions.get(i).getPlannedDate());
+            tempDate.setText(OurpayUtils.convertDateToTrimmedString(ourpayTransactions.get(i).getPlannedDate()));
 
             if (i != tempView.length) {
                 a.setId(i);

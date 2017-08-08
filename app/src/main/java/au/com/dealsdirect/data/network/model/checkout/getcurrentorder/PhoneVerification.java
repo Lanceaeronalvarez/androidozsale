@@ -10,4 +10,20 @@ public class PhoneVerification {
     public Boolean isRequired;
     @SerializedName("Fields")
     public Fields fields;
+
+    public Boolean getRequired() {
+        return isRequired;
+    }
+
+    public void setRequired(Boolean required) {
+        isRequired = required;
+    }
+
+    public Fields getFields() {
+        return fields;
+    }
+
+    public void setFields(Fields fields) {
+        this.fields = fields;
+    }
 }

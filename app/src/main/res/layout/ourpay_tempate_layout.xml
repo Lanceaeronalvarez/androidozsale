@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<au.com.ozsale.utils.TextViewWithImages
+<au.com.dealsdirect.utils.TextViewWithImages
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/textView_template"
@@ -11,4 +11,4 @@
     android:lineSpacingExtra="5dp"
     tools:text="4 interest free payment over 6 weeks.">
 
-</au.com.ozsale.utils.TextViewWithImages>
+</au.com.dealsdirect.utils.TextViewWithImages>

@@ -120,7 +120,7 @@ public class MyPayDetails {
     public class BillingPeriod {
 
         @SerializedName("Ticks")
-        private Integer ticks;
+        private Long ticks;
 
         @SerializedName("Days")
         private Integer days;
@@ -129,12 +129,12 @@ public class MyPayDetails {
         private Integer hours;
 
         @SerializedName("Milliseconds")
-        private Integer milliseconds;
+        private Long milliseconds;
         @SerializedName("Minutes")
-        private Integer minutes;
+        private Long minutes;
 
         @SerializedName("Seconds")
-        private Integer seconds;
+        private Long seconds;
 
         @SerializedName("TotalDays")
         private Integer totalDays;
@@ -151,15 +151,15 @@ public class MyPayDetails {
         @SerializedName("TotalSeconds")
         private Integer totalSeconds;
 
-        public Integer getTicks() {
+        public Long getTicks() {
             return ticks;
         }
 
-        public void setTicks(Integer ticks) {
+        public void setTicks(Long ticks) {
             this.ticks = ticks;
         }
 
-        public Integer getDays() {
+        public int getDays() {
             return days;
         }
 
@@ -175,27 +175,27 @@ public class MyPayDetails {
             this.hours = hours;
         }
 
-        public Integer getMilliseconds() {
+        public Long getMilliseconds() {
             return milliseconds;
         }
 
-        public void setMilliseconds(Integer milliseconds) {
+        public void setMilliseconds(Long milliseconds) {
             this.milliseconds = milliseconds;
         }
 
-        public Integer getMinutes() {
+        public Long getMinutes() {
             return minutes;
         }
 
-        public void setMinutes(Integer minutes) {
+        public void setMinutes(Long minutes) {
             this.minutes = minutes;
         }
 
-        public Integer getSeconds() {
+        public Long getSeconds() {
             return seconds;
         }
 
-        public void setSeconds(Integer seconds) {
+        public void setSeconds(Long seconds) {
             this.seconds = seconds;
         }
 

@@ -691,6 +691,15 @@ public class AppDataManager implements DataManager {
         return mPreferencesHelper.getGCMAppVersion();
     }
 
+    @Override
+    public void setIsMyPayEnabled(boolean isMyPayEnabled) {
+        mPreferencesHelper.setIsMyPayEnabled(isMyPayEnabled);
+    }
+
+    @Override
+    public boolean getIsMyPayEnabled() {
+        return mPreferencesHelper.getIsMyPayEnabled();
+    }
 
     @Override
     public void updateApiHeader(Long userId, String accessToken) {

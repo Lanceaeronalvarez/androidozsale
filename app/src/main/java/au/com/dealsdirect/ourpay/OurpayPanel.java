@@ -1,17 +1,20 @@
 package au.com.dealsdirect.ourpay;
 
 import android.graphics.Color;
+import android.os.Build;
 import android.os.Bundle;
 import android.text.Html;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
 import android.widget.CheckBox;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import java.util.ArrayList;
+import java.util.List;
 
 import au.com.dealsdirect.R;
+import au.com.dealsdirect.data.network.model.checkout.getcurrentorder.MyPayDetails;
 import au.com.dealsdirect.ui.base.BaseActivity;
 import au.com.dealsdirect.utils.PriceUtils;
 
@@ -33,10 +36,11 @@ public class OurpayPanel {
     }
 
     public View generatePanel(Ourpay ourpay){
-
+        Log.d("ourpay", "generating ourpay with state = "+ourpay.getState());
         if (0 != (ourpay.getState() & OurpayState.PRECART)){
+
             if (0 != (ourpay.getState() & OurpayState.ERROR)){
-//                mHolderInBorder.addView(getTemplateText(OurPay));
+                mHolderInBorder.addView(getTemplateText(ourpay.getDetails()));
             }else{
 
 
@@ -54,16 +58,14 @@ public class OurpayPanel {
                 templateView.setVisibility(View.GONE);
                 panelRows.setVisibility(View.GONE);
 
-                header.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View view) {
-                        panelRows.setVisibility(panelRows.getVisibility() == View.GONE ? View.VISIBLE : View.GONE);
-                        templateView.setVisibility(templateView.getVisibility() == View.GONE ? View.VISIBLE : View.GONE);
-                    }
+                header.setOnClickListener(view -> {
+                    panelRows.setVisibility(panelRows.getVisibility() == View.GONE ? View.VISIBLE : View.GONE);
+                    templateView.setVisibility(templateView.getVisibility() == View.GONE ? View.VISIBLE : View.GONE);
                 });
 
             }
         }else if (0 != (ourpay.getState() & OurpayState.ONCART)) {
+
             if (0 != (ourpay.getState() & OurpayState.ERROR)) {
                 mHolderInBorder.addView(getTemplateText(
                         OurpayTemplateText.getTemplateText(mBaseActivity, ourpay)));
@@ -71,11 +73,15 @@ public class OurpayPanel {
             } else {
                 mPanelHolder.addView(getButton(), 0);
 
+                View header = getPanelHeader(ourpay);
+                mHolderInBorder.addView(header);
+
                 if (ourpay.getTermsAndConditionsCheckboxState() != 0) {
-                    mPanelHolder.addView(getTermsAndConditions(ourpay), 0);
+                    mPanelHolder.addView(getTermsAndConditions(ourpay), 1);
                 }
                 mPanelHolder.addView(getTemplateText(
                         OurpayTemplateText.getTemplateText(mBaseActivity, ourpay)), 0);
+
                 mPanelHolder.addView(getCartAmountHeader(PriceUtils.getPriceStringValue(ourpay.getAmount())), 0);
                 mHolderInBorder.addView(getPanelRows(ourpay.getPlannedTransactions()));
                 mHolderInBorder.addView(getPanelTotalRow(PriceUtils.getPriceStringValue(ourpay.getUserAmount())));
@@ -98,7 +104,11 @@ public class OurpayPanel {
 
         View view = mBaseActivity.getLayoutInflater().inflate(R.layout.ourpay_tempate_layout, null, false);
         TextView textView = (TextView) view.findViewById(R.id.textView_template);
-        textView.setText(message);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+            textView.setText(Html.fromHtml(message, Html.FROM_HTML_MODE_COMPACT));
+        }else{
+            textView.setText(Html.fromHtml(message));
+        }
 
         return view;
     }
@@ -110,13 +120,13 @@ public class OurpayPanel {
         TextView textViewPrice = (TextView) header.findViewById(R.id.ourpay_panel_header_price);
         TextView textViewCount = (TextView) header.findViewById(R.id.ourpay_panel_header_transaction);
 
-//        textViewPrice.setText(PriceUtils.getProductRpStringValue(ourpay.getAmount()));
+        textViewPrice.setText(PriceUtils.getProductRpStringValue(ourpay.getAmount()));
         textViewCount.setText(Integer.toString(ourpay.getTransactionCount()));
 
         return header;
     }
 
-    private View getPanelRows(ArrayList<OurpayTransaction> transactions) {
+    private View getPanelRows(List<MyPayDetails.PlannedTransaction> transactions) {
 
         OurpayGraph ourpayGraph = new OurpayGraph();
         return ourpayGraph.generateGraph(mBaseActivity, transactions);
@@ -148,20 +158,16 @@ public class OurpayPanel {
         CheckBox cb = (CheckBox) view.findViewById(R.id.ourpay_checkbox_tc);
         TextView textViewTC = (TextView) view.findViewById(R.id.ourpay_text_tc);
 
-        textViewTC.setText(Html.fromHtml(OurpayTemplateText.getText(mBaseActivity, ourpay.getTermsAndConditionsText())));
-        textViewTC.setOnClickListener(new View.OnClickListener() {
+        textViewTC.setText(Html.fromHtml(ourpay.getTermsAndConditionsText()));
+        textViewTC.setOnClickListener(view1 -> {
 
-            @Override
-            public void onClick(View view) {
-
-                Bundle bundle = new Bundle();
-                bundle.putString("templateKey", "OurPayTermsAndConditions_Text");
+            Bundle bundle = new Bundle();
+            bundle.putString("templateKey", "OurPayTermsAndConditions_Text");
 //                HTMLViewFragment fragment = new HTMLViewFragment();
 //                fragment.setArguments(bundle);
 //
 //                baseActivity.switchContent(fragment, R.id.contentBody);
 
-            }
         });
 
 

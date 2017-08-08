@@ -94,5 +94,7 @@ public interface PreferencesHelper {
 
     int getGCMAppVersion();
 
+    void setIsMyPayEnabled(boolean isMyPayEnabled);
 
+    boolean getIsMyPayEnabled();
 }

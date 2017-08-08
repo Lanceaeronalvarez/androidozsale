@@ -133,6 +133,7 @@ public class MainPresenter<V extends MainMvpView> extends BasePresenter<V> imple
                 getDataManager().setKountMerchantId(value.getPayments().getKount().getMerchantID());
                 getDataManager().setSearchMaxPrice(value.getSearch().getMaxPrice());
                 getDataManager().setAccessAnonymousEnabled(value.getAccess().getAnonymousEnabled());
+                getDataManager().setIsMyPayEnabled(value.getPayments().getMyPay().getEnabled());
             }
         }
     };
