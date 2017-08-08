@@ -15,6 +15,8 @@ import com.bluelinelabs.conductor.RouterTransaction;
 import com.bluelinelabs.conductor.changehandler.HorizontalChangeHandler;
 import com.google.gson.Gson;
 
+import org.json.JSONException;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -24,9 +26,15 @@ import au.com.dealsdirect.R;
 import au.com.dealsdirect.data.network.model.address.DecorationInfoList;
 import au.com.dealsdirect.data.network.model.checkout.getcurrentorder.DeliveryAddress;
 import au.com.dealsdirect.data.network.model.checkout.getcurrentorder.Item;
+import au.com.dealsdirect.data.network.model.checkout.getcurrentorder.MyPayDetails;
 import au.com.dealsdirect.data.network.model.checkout.getcurrentorder.Summary;
+import au.com.dealsdirect.data.network.model.checkout.getcurrentorder.Value;
 import au.com.dealsdirect.data.network.model.checkout.getcurrentorder.Voucher;
 import au.com.dealsdirect.data.network.model.checkout.getuserpaymentmethods.PaymentMethod;
+import au.com.dealsdirect.ourpay.Ourpay;
+import au.com.dealsdirect.ourpay.OurpayPanel;
+import au.com.dealsdirect.ourpay.OurpayUtils;
+import au.com.dealsdirect.ui.base.BaseActivity;
 import au.com.dealsdirect.ui.base.BaseController;
 import au.com.dealsdirect.ui.controller.address.addnewaddress.AddNewAddressController;
 import au.com.dealsdirect.ui.controller.address.viewaddress.ViewAddressController;
@@ -78,6 +86,9 @@ public class CheckoutController extends BaseController implements CheckoutMvpVie
     Button mPayButton;
     RelativeLayout mPaypalButton;
     RelativeLayout mMasterpassButton;
+    LinearLayout mOurpayHolder;
+
+    private Ourpay mOurpay;
 
     @BindView(R.id.no_cart_items_layout)
     RelativeLayout mNoCartItemsLayout;
@@ -186,6 +197,7 @@ public class CheckoutController extends BaseController implements CheckoutMvpVie
         mPayButton = (Button) mFooterView.findViewById(R.id.partial_checkout_button_pay);
         mPaypalButton = (RelativeLayout) mFooterView.findViewById(R.id.partial_checkout_button_paypal);
         mMasterpassButton = (RelativeLayout) mFooterView.findViewById(R.id.partial_checkout_button_masterpass);
+        mOurpayHolder = (LinearLayout) mFooterView.findViewById(R.id.partial_checkout_ourpay_panel_holder);
 
         setUp(view);
     }
@@ -244,7 +256,18 @@ public class CheckoutController extends BaseController implements CheckoutMvpVie
     }
 
     @Override
+    public void showMyPayDetails(Value value) {
+        if(value.getMyPayDetails().getEnabled()){
+            OurpayPanel ourpayPanel = new OurpayPanel((BaseActivity)getActivity());
+
+            mOurpayHolder.removeAllViews();
+//            mOurpayHolder.addView(ourpayPanel.generatePanel(myPayDetails));
+        }
+    }
+
+    @Override
     public void showCartDetails(List<Item> items) {
+
         if (items == null || items.isEmpty()) {
 
             //no items
@@ -485,4 +508,47 @@ public class CheckoutController extends BaseController implements CheckoutMvpVie
         hidePaymentButtons();
     }
 
+    private void initOurpay(){
+
+    }
+
+    private void generateOurpay(Value value){
+
+        Ourpay ourpay = new Ourpay();
+        ourpay.setUserAmount(value.getSummary().total);
+
+        /* default */
+        ourpay.setCanUse(value.getMyPayDetails().enabled);
+        ourpay.setErrorCode(value.getMyPayDetails().reasonCode);
+        ourpay.setTermsAndConditionsCheckboxState(value.getMyPayDetails().getTermsAndConditions());
+        ourpay.setMinAmount(value.getMyPayDetails().getPaymentConditions().minAmountThreshold);
+        ourpay.setMaxAmount(value.getMyPayDetails().getPaymentConditions().maxAmountThreshold);
+
+        /* specifics */
+        try {
+            ourpay.setAmount(value.myPayDetails.getAmount());
+        } catch (Exception e){
+            ourpay.setAmount(0);
+        }
+
+        try {
+           ourpay.setBillingPeriod(OurpayUtils.convertDaysToWeeks(value.getMyPayDetails().getBillingPeriod().getDays()));
+        } catch (Exception e){
+            ourpay.setBillingPeriod(0);
+        }
+
+        try {
+            ourpay.setTransactionCount(value.myPayDetails.getTransactionCount());
+        } catch (Exception e){
+            ourpay.setTransactionCount(0);
+        }
+
+        try {
+            ourpay.setPlannedTransactions(value.getMyPayDetails().getBillingAgreement().getPlannedTransactions());
+        } catch (Exception e){
+            ourpay.setPlannedTransactions(null);
+        }
+
+        if (OurpaySta)
+    }
 }

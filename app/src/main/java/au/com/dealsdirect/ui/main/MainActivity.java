@@ -37,7 +37,6 @@ import au.com.dealsdirect.data.network.model.category.GetCategoryTreeResponse;
 import au.com.dealsdirect.data.network.model.checkout.CreatePaymentTransaction;
 import au.com.dealsdirect.data.network.model.checkout.getuserpaymentmethods.PaymentMethod;
 import au.com.dealsdirect.ui.base.BaseActivity;
-import au.com.dealsdirect.ui.controller.account.AccountController;
 import au.com.dealsdirect.ui.controller.categories.CategoriesController;
 import au.com.dealsdirect.ui.controller.checkout.addpayment.AddPaymentController;
 import au.com.dealsdirect.ui.controller.checkout.checkout.CheckoutController;
@@ -81,7 +80,6 @@ public class MainActivity extends BaseActivity implements MainMvpView {
 
     private boolean mIsFromCategories = false;
     private boolean isSearchActive = false;
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

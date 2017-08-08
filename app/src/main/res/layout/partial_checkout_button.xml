@@ -117,5 +117,13 @@
 
         </LinearLayout>
 
+        <LinearLayout
+            android:id="@+id/partial_checkout_ourpay_panel_holder"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="10dp"
+            android:orientation="vertical"/>
+
+
     </LinearLayout>
 </RelativeLayout>

@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              xmlns:tools="http://schemas.android.com/tools"
+              android:id="@+id/additional_row"
+              android:layout_width="wrap_content"
+              android:layout_height="wrap_content"
+              android:background="@drawable/ourpay_layout_border"
+              android:orientation="vertical"
+              android:paddingBottom="15dp"
+              android:paddingLeft="10dp"
+              android:paddingRight="10dp"
+              android:paddingTop="15dp">
+
+    <RelativeLayout
+        android:id="@+id/balance_status_content"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content">
+
+        <TextView
+            android:id="@+id/textView_amount_label"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="TOTAL"
+            android:textColor="#FF6F7070"
+            android:textSize="@dimen/text_size_large"/>
+
+        <TextView
+            android:id="@+id/textView_amount_total"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentRight="true"
+            android:textColor="#FF6F7070"
+            android:textSize="@dimen/text_size_large"
+            android:textStyle="bold"
+            tools:text="$25.00"/>
+
+    </RelativeLayout>
+</LinearLayout>
