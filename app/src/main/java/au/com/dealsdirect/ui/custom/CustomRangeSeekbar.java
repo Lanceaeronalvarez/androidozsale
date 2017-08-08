@@ -78,11 +78,18 @@ public class CustomRangeSeekbar extends CrystalRangeSeekbar {
     protected synchronized void onDraw(Canvas canvas) {
         super.onDraw(canvas);
         if (minPriceMovingLayout != null) {
-            minPriceMovingLayout.setX((getLeftThumbRect().left+getRightThumbRect().right)/2);
+            minPriceMovingLayout.setX(getLeftThumbRect().left);
         }
 
         if (maxPriceMovingLayout != null) {
-            maxPriceMovingLayout.setX((getRightThumbRect().left+getRightThumbRect().right)/2);
+            maxPriceMovingLayout.setX(getRightThumbRect().left);
+        }
+    }
+
+    public void resetMovingLayoutVisibility(){
+        if(maxPriceMovingLayout!=null && minPriceMovingLayout!=null) {
+            maxPriceMovingLayout.setVisibility(VISIBLE);
+            minPriceMovingLayout.setVisibility(VISIBLE);
         }
     }
 

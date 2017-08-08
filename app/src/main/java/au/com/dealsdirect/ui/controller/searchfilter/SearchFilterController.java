@@ -452,8 +452,8 @@ public class SearchFilterController extends BaseController
 
     @Override
     public void onResetPriceRange() {
-        mSeekbar.setMinValue(origMinValue);
-        mSeekbar.setMaxValue(origMaxValue);
+        mSeekbar.setMinStartValue(origMinValue);
+        mSeekbar.setMaxStartValue(origMaxValue);
 
         mSeekbar.apply();
         mMinPriceMovingLayout.setTranslationX(0);
@@ -461,6 +461,7 @@ public class SearchFilterController extends BaseController
         mMaxPriceMovingLayout.setX(mSeekbar.getWidth() - (lp.rightMargin));
 
         isSeekbarReset = true;
+        mSeekbar.resetMovingLayoutVisibility();
     }
 
     @Override
