@@ -7,14 +7,9 @@
     android:background="@color/white"
     tools:ignore="MissingPrefix">
 
-    <include
-        android:id="@+id/controller_view_vouchers_toolbar_title_layout"
-        layout="@layout/partial_toolbar_arrow" />
-
     <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_below="@id/controller_view_vouchers_toolbar_title_layout" >
+        android:layout_height="match_parent">
 
         <LinearLayout
             android:id="@+id/controller_vouchers_root_layout"
