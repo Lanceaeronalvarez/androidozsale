@@ -30,7 +30,6 @@ public class AccountPresenter<V extends AccountMvpView> extends BasePresenter<V>
             R.drawable.bg_account_terms_and_conditions,
             R.drawable.bg_account_privacy_policy,
             R.drawable.bg_account_about_us,
-            R.drawable.bg_account_privacy_policy
     };
 
     @Inject
@@ -104,11 +103,12 @@ public class AccountPresenter<V extends AccountMvpView> extends BasePresenter<V>
         }
     }
 
-    public void loadAccountItems(ArrayList<String> items, int[] images) {
+    @Override
+    public boolean getIsAuthorized() {
+        return getDataManager().isAuthorized();
+    }
 
-        if (getDataManager().isAuthorized()) {
-            items.add("Logout");
-        }
+    public void loadAccountItems(ArrayList<String> items, int[] images) {
 
         getMvpView().showAccountItems(items, images);
     }

@@ -9,6 +9,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageButton;
 import android.widget.TextView;
 
 import com.bluelinelabs.conductor.RouterTransaction;
@@ -38,6 +39,7 @@ import au.com.dealsdirect.ui.main.MainActivity;
 import au.com.dealsdirect.ui.main.MainMvpView;
 import au.com.dealsdirect.utils.BundleBuilder;
 import butterknife.BindView;
+import butterknife.OnClick;
 
 /**
  * dp Created by Admin on 6/6/17.
@@ -50,8 +52,14 @@ public class AccountController extends BaseController implements AccountMvpView,
     private AccountMvpView mAccountMvpView;
     AccountItemAdapter accountItemAdapter;
 
-    @BindView(R.id.partial_toolbar_title_view)
+    @BindView(R.id.partial_toolbar_arrow_title)
     TextView mTitleTextView;
+
+    @BindView(R.id.partial_toolbar_arrow_view)
+    ImageButton mArrowButton;
+
+    @BindView(R.id.partial_toolbar_filter_view)
+    ImageButton mFilterButton;
 
     @BindView(R.id.account_recycler_view)
     RecyclerView mAccountRecyclerView;
@@ -101,6 +109,14 @@ public class AccountController extends BaseController implements AccountMvpView,
 
         mPresenter.loadAccountItems();
         mTitleTextView.setText("My Account");
+        mArrowButton.setVisibility(View.INVISIBLE);
+
+        if(mPresenter.getIsAuthorized()) {
+            mFilterButton.setImageDrawable(getActivity().getResources().getDrawable(R.drawable.ic_logout));
+
+        } else {
+            mFilterButton.setImageDrawable(getActivity().getResources().getDrawable(R.drawable.ic_login));
+        }
     }
 
     @Override
@@ -197,11 +213,12 @@ public class AccountController extends BaseController implements AccountMvpView,
             public void success() {
                 mPresenter.onAttach(mvpView);
                 mPresenter.onAccountItemClick(option);
+                mFilterButton.setImageDrawable(getActivity().getResources().getDrawable(R.drawable.ic_logout));
             }
 
             @Override
             public void error() {
-
+                mFilterButton.setImageDrawable(getActivity().getResources().getDrawable(R.drawable.ic_login));
             }
         });
     }
@@ -223,6 +240,27 @@ public class AccountController extends BaseController implements AccountMvpView,
         CustomAlertDialog.showCustomAlertDialog(getActivity(),
                 CustomAlertDialog.CustomDialogIconState.POSITIVE,
                 "Logout Successful");
+    }
+
+    @OnClick(R.id.partial_toolbar_filter_view)
+    public void promptLogin(){
+        if(mPresenter.getIsAuthorized()) {
+            mFilterButton.setImageDrawable(getActivity().getResources().getDrawable(R.drawable.ic_login));
+            triggerLogout();
+        } else {
+            ((MainMvpView)getActivity()).showLoginController(getRouter(),new AuthHandler() {
+                @Override
+                public void success() {
+                    mPresenter.onAttach(AccountController.this);
+                    mFilterButton.setImageDrawable(getActivity().getResources().getDrawable(R.drawable.ic_logout));
+                }
+
+                @Override
+                public void error() {
+                    mFilterButton.setImageDrawable(getActivity().getResources().getDrawable(R.drawable.ic_login));
+                }
+            });
+        }
     }
 }
 
