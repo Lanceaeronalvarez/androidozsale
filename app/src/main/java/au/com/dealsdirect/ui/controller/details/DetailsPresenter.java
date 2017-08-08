@@ -1,7 +1,5 @@
 package au.com.dealsdirect.ui.controller.details;
 
-import com.androidnetworking.error.ANError;
-
 import javax.inject.Inject;
 
 import au.com.dealsdirect.data.DataManager;
@@ -10,9 +8,7 @@ import au.com.dealsdirect.data.network.model.userdetails.GetUserDetailsResponse;
 import au.com.dealsdirect.data.network.model.userdetails.SetUserDetailsRequest;
 import au.com.dealsdirect.ui.base.BasePresenter;
 import au.com.dealsdirect.utils.rx.SchedulerProvider;
-import io.reactivex.annotations.NonNull;
 import io.reactivex.disposables.CompositeDisposable;
-import io.reactivex.functions.Consumer;
 
 /**
  * Created by Paul on 6/20/17.
@@ -29,7 +25,7 @@ public class DetailsPresenter<V extends DetailsMvpView> extends BasePresenter<V>
 
     @Override
     public void loadUser(SetUserDetailsRequest setUserDetailsRequest) {
-        doApiCallForResponse(getDataManager().getLoadUserDetailsApiCall(setUserDetailsRequest), new AppApiCallback(){
+        doApiCallForResponse(getDataManager().getLoadUserDetailsApiCall(setUserDetailsRequest), new AppApiCallback() {
             @Override
             public void onSuccess(Object response) {
                 super.onSuccess(response);
@@ -55,36 +51,17 @@ public class DetailsPresenter<V extends DetailsMvpView> extends BasePresenter<V>
         setUserDetailsRequest.setConfirmPassword(confirmpassword);
         setUserDetailsRequest.setLanguageID(getDataManager().getLanguageId());
 
-        getCompositeDisposable().add(getDataManager()
-                .getSaveUserDetailsApiCall(setUserDetailsRequest)
-                .subscribeOn(getSchedulerProvider().io())
-                .observeOn(getSchedulerProvider().ui())
-                .subscribe(new Consumer<GetUserDetailsResponse>() {
-                    @Override
-                    public void accept(@NonNull GetUserDetailsResponse response) throws Exception {
-                        if(response.getResponse().getResult()) {
-                            getMvpView().saveUserDetailsSuccess();
-                        } else {
-                            getMvpView().saveUserDetailsFailed(response.getResponse().getMessage());
-                        }
-                    }
-                }, new Consumer<Throwable>() {
-                    @Override
-                    public void accept(Throwable throwable) throws Exception {
-
-                        if (!isViewAttached()) {
-                            return;
-                        }
-
-                        getMvpView().onError(throwable.getMessage());
-
-                        // handle load accounts error here
-                        if (throwable instanceof ANError) {
-                            ANError anError = (ANError) throwable;
-                            handleApiError(anError);
-                        }
-                    }
-                }));
+        doApiCallForResponse(getDataManager().getSaveUserDetailsApiCall(setUserDetailsRequest), new AppApiCallback() {
+            @Override
+            public void onSuccess(Object response) {
+                super.onSuccess(response);
+                if (((GetUserDetailsResponse) response).getResponse().getResult()) {
+                    getMvpView().saveUserDetailsSuccess();
+                } else {
+                    getMvpView().saveUserDetailsFailed(((GetUserDetailsResponse) response).getResponse().getMessage());
+                }
+            }
+        });
     }
 
     @Override

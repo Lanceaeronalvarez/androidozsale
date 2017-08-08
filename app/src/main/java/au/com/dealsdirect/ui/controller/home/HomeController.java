@@ -298,7 +298,7 @@ public class HomeController extends BaseController implements HomeMvpView {
     }
 
     public boolean isAccountsActive(){
-        return mAccountsContainer.isShown();
+        return mAccountsContainer != null && mAccountsContainer.isShown();
     }
 
 

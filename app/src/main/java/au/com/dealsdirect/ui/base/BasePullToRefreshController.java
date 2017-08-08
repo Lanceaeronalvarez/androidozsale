@@ -114,8 +114,10 @@ public abstract class BasePullToRefreshController extends BaseController impleme
 
     @Override
     public void hideNoNetworkLayout() {
-        mContentLayout.setVisibility(View.VISIBLE);
-        mNoNetworkLayout.setVisibility(View.GONE);
+        if (mContentLayout != null && mNoNetworkLayout != null) {
+            mContentLayout.setVisibility(View.VISIBLE);
+            mNoNetworkLayout.setVisibility(View.GONE);
+        }
     }
 
     @Override

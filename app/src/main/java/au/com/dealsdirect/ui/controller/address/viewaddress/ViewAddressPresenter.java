@@ -5,6 +5,7 @@ import com.androidnetworking.error.ANError;
 import javax.inject.Inject;
 
 import au.com.dealsdirect.data.DataManager;
+import au.com.dealsdirect.data.network.AppApiCallback;
 import au.com.dealsdirect.data.network.model.address.ApplyAddress;
 import au.com.dealsdirect.data.network.model.address.ApplyAddressRequest;
 import au.com.dealsdirect.data.network.model.address.ApplyAddressResponse;
@@ -29,46 +30,18 @@ public class ViewAddressPresenter<V extends ViewAddressMvpView> extends BasePres
 
     @Override
     public void loadAddresses() {
-        GetAddresses.RequestValues requestValue = new GetAddresses.RequestValues(getDataManager().getLanguageId());
-        getCompositeDisposable().add(getDataManager()
-                .callGetUserAddresses(requestValue)
-                .subscribeOn(getSchedulerProvider().io())
-                .observeOn(getSchedulerProvider().ui())
-                .subscribe(new Consumer<GetAddresses.ResponseValue>() {
-                    @Override
-                    public void accept(@NonNull GetAddresses.ResponseValue responseValue) throws Exception {
-                        if (!isViewAttached()) {
-                            return;
-                        }
-
-                        getMvpView().hideLoading();
-
-                        if (responseValue.getD().getResult()) {
-                            getMvpView().showAddresses(responseValue);
-                        } else {
-                            getMvpView().onError(responseValue.getD().getMessage());
-                        }
-                    }
-                }, new Consumer<Throwable>() {
-                    @Override
-                    public void accept(@NonNull Throwable throwable) throws Exception {
-                        if (!isViewAttached()) {
-                            return;
-                        }
-
-                        getMvpView().hideLoading();
-                        getMvpView().onError(throwable.getMessage());
-
-                        // handle load accounts error here
-                        if (throwable instanceof ANError) {
-                            ANError anError = (ANError) throwable;
-                            handleApiError(anError);
-                        }
-                    }
-                })
-        );
-
-
+        doApiCallForResponse(getDataManager().callGetUserAddresses(
+                new GetAddresses.RequestValues(getDataManager().getLanguageId())), new AppApiCallback() {
+            @Override
+            public void onSuccess(Object response) {
+                super.onSuccess(response);
+                if (((GetAddresses.ResponseValue) response).getD().getResult()) {
+                    getMvpView().showAddresses(((GetAddresses.ResponseValue) response));
+                } else {
+                    getMvpView().onError(((GetAddresses.ResponseValue) response).getD().getMessage());
+                }
+            }
+        });
     }
 
     @Override
@@ -80,86 +53,36 @@ public class ViewAddressPresenter<V extends ViewAddressMvpView> extends BasePres
         applyAddressRequest.imageSize = "100";
         applyAddressRequest.deliveryAddressID = deliveryAddressId;
 
-        getCompositeDisposable().add(getDataManager()
-                .callApplyDeliveryAddress(applyAddressRequest)
-                .subscribeOn(getSchedulerProvider().io())
-                .observeOn(getSchedulerProvider().ui())
-                .subscribe(new Consumer<ApplyAddressResponse>() {
-                    @Override
-                    public void accept(@NonNull ApplyAddressResponse applyAddressResponse) throws Exception {
-                        if (!isViewAttached()) {
-                            return;
-                        }
-
-                        getMvpView().hideLoading();
-
-                        if(applyAddressResponse.d.getResult()){
+        doApiCallForResponse(getDataManager().callApplyDeliveryAddress(applyAddressRequest), new AppApiCallback() {
+            @Override
+            public void onSuccess(Object response) {
+                super.onSuccess(response);
+                if (((ApplyAddressResponse) response).d.getResult()) {
 //                            GDebug.log("DEBUG", "ApplyDeliveryAddress success");
-                            getMvpView().backToCheckout();
-                        }
-                    }
-                }, new Consumer<Throwable>() {
-                    @Override
-                    public void accept(@NonNull Throwable throwable) throws Exception {
-                        if (!isViewAttached()) {
-                            return;
-                        }
-
-                        getMvpView().hideLoading();
-                        getMvpView().onError(throwable.getMessage());
-
-                        // handle load accounts error here
-                        if (throwable instanceof ANError) {
-                            ANError anError = (ANError) throwable;
-                            handleApiError(anError);
-                        }
-                    }
-                })
-        );
+                    getMvpView().backToCheckout();
+                }
+            }
+        });
     }
 
     @Override
     public void deleteUserDeliveryAddress(String deliveryAddressId) {
-        DeleteUserAddress.RequestValues requestValues = new DeleteUserAddress.RequestValues(deliveryAddressId);
-        getCompositeDisposable().add(getDataManager()
-                .callDeleteUserDeliveryAddress(requestValues)
-                .subscribeOn(getSchedulerProvider().io())
-                .observeOn(getSchedulerProvider().ui())
-                .subscribe(new Consumer<DeleteUserAddress.ResponseValue>() {
-                    @Override
-                    public void accept(@NonNull DeleteUserAddress.ResponseValue responseValue) throws Exception {
-                        if (!isViewAttached()) {
-                            return;
-                        }
+        doApiCallForResponse(getDataManager().callDeleteUserDeliveryAddress(
+                new DeleteUserAddress.RequestValues(deliveryAddressId)), new AppApiCallback() {
+            @Override
+            public void onSuccess(Object response) {
+                super.onSuccess(response);
+                if (response != null) {
 
-                        if (responseValue != null){
+                    Timber.d("remove address", " result = " + ((DeleteUserAddress.ResponseValue) response).d.getResult()
+                            + " , " + ((DeleteUserAddress.ResponseValue) response).d.getMessage());
 
-                            Timber.d("remove address", " result = "+ responseValue.d.getResult()
-                                    + " , "+ responseValue.d.getMessage());
-                            if (responseValue.d.getResult()) {
-
-                                Timber.d("remove address", "DeleteUserDeliveryAddress " + "success");
-                                getMvpView().onUserDeliveryAddressDeleted(responseValue);
-                            }
-                        }
+                    if (((DeleteUserAddress.ResponseValue) response).d.getResult()) {
+                        Timber.d("remove address", "DeleteUserDeliveryAddress " + "success");
+                        getMvpView().onUserDeliveryAddressDeleted(((DeleteUserAddress.ResponseValue) response));
                     }
-                }, new Consumer<Throwable>() {
-                    @Override
-                    public void accept(@NonNull Throwable throwable) throws Exception {
-                        if (!isViewAttached()) {
-                            return;
-                        }
-
-                        getMvpView().hideLoading();
-                        getMvpView().onError(throwable.getMessage());
-
-                        // handle load accounts error here
-                        if (throwable instanceof ANError) {
-                            ANError anError = (ANError) throwable;
-                            handleApiError(anError);
-                        }
-                    }
-                })
-        );
+                }
+            }
+        });
     }
 }

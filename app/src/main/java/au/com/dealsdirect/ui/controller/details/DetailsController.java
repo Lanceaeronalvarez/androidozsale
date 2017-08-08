@@ -106,13 +106,15 @@ public class DetailsController extends BasePullToRefreshController implements De
 
     @Override
     protected View inflateView(@NonNull LayoutInflater inflater, @NonNull ViewGroup container) {
-
-
         View view = super.inflateView(inflater, container);
+
         fillToolbar(inflater.inflate(R.layout.partial_toolbar_arrow, container, false));
         fillContent(inflater.inflate(R.layout.controller_user_details, container, false));
+
         getControllerComponent().inject(this);
+
         mPresenter.onAttach(this);
+
         return view;
     }
 
