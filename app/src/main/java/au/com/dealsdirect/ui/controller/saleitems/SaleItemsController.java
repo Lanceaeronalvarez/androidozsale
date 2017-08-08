@@ -239,8 +239,6 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
         }else if (mFromShopSearch||mFromCategorySearch){
             if (mSaleItemsToolbarTitle.getText().toString().isEmpty() && mSearchQuery.isEmpty()  && !isFiltered){
                 activateSearch();
-            }else{
-                deactivateSearch();
             }
 
         } else{
@@ -249,6 +247,7 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
             mSaleItemsBackIcon.setOnClickListener(view12 -> {
                 getActivity().onBackPressed();
             });
+            deactivateSearch();
         }
 
 
@@ -464,6 +463,9 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
             getRouter().pushController(RouterTransaction.with(SaleItemDetailsController.newInstance(bundle))
                     .pushChangeHandler(new SharedArcFadePushChangeHandler())
                     .popChangeHandler(new SharedArcFadePopChangeHandler()));
+
+            mFromShopSearch = false;
+            mFromCategorySearch = false;
         }
 
     }
