@@ -506,41 +506,58 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
                         mSaleItemsToolbarField.getApplicationWindowToken(),
                         InputMethodManager.SHOW_FORCED, 0);
             }
-
-            mSaleItemsToolbarField.addTextChangedListener(new TextWatcher() {
-                @Override
-                public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-
-                }
-
-                @Override
-                public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-                    mSearchQuery = charSequence.toString();
-                    mIsSearch = true;
-                    mPresenter.loadSaleItems("", mSaleId, charSequence.toString(), 0, new ArrayList());
-                    mSaleItemsToolbarTitle.setText(charSequence.toString());
-                    mSaleItemsOpaqueCover.setVisibility(View.VISIBLE);
-
-                }
-
-                @Override
-                public void afterTextChanged(Editable editable) {
-
-                }
-            });
-
-            mSaleItemsToolbarField.setOnEditorActionListener((textView, i, keyEvent) -> {
-                if (i == EditorInfo.IME_ACTION_SEARCH) {
-                    hideKeyboard();
-                    mSearchQuery = textView.getText().toString();
-                    mIsSearch = true;
-                    mPresenter.loadSaleItems("", mSaleId, mSearchQuery, 0, new ArrayList());
-                    deActivateSearch();
-                }
-
-                return false;
-            });
         },200);
+
+        mSaleItemsToolbarTitle.setText(getActivity().getResources().getString(R.string.i_am_looking_for));
+        mSaleItemsBackIcon.setImageDrawable(getActivity().getDrawable(R.drawable.ic_search));
+        mSaleItemsFilterIcon.setImageDrawable(getActivity().getDrawable(R.drawable.ic_close));
+
+        mSaleItemsBackIcon.setOnClickListener(null);
+        mSaleItemsFilterIcon.setOnClickListener(view -> {
+            deActivateSearch();
+        });
+
+        mSaleItemsOpaqueCover.setVisibility(View.VISIBLE);
+        mSaleItemsToolbarField.setVisibility(View.VISIBLE);
+
+        mSaleItemsToolbarField.setActivated(true);
+        mSaleItemsToolbarTitle.setVisibility(View.GONE);
+
+
+        mSaleItemsToolbarField.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+                mSearchQuery = charSequence.toString();
+                mIsSearch = true;
+                mPresenter.loadSaleItems("", mSaleId, charSequence.toString(), 0, new ArrayList());
+                mSaleItemsToolbarTitle.setText(charSequence.toString());
+                mSaleItemsOpaqueCover.setVisibility(View.VISIBLE);
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable editable) {
+
+            }
+        });
+
+        mSaleItemsToolbarField.setOnEditorActionListener((textView, i, keyEvent) -> {
+            if (i == EditorInfo.IME_ACTION_SEARCH) {
+//                    hideKeyboard();
+                mSearchQuery = textView.getText().toString();
+                mIsSearch = true;
+                mPresenter.loadSaleItems("", mSaleId, mSearchQuery, 0, new ArrayList());
+                deActivateSearch();
+            }
+
+            return false;
+        });
+
     }
 
 }
