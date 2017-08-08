@@ -23,6 +23,7 @@ import javax.inject.Inject;
 import au.com.dealsdirect.R;
 import au.com.dealsdirect.data.network.model.checkout.getuserpaymentmethods.PaymentMethod;
 import au.com.dealsdirect.ui.base.BaseController;
+import au.com.dealsdirect.ui.base.BasePullToRefreshController;
 import au.com.dealsdirect.ui.controller.checkout.addpayment.AddPaymentController;
 import au.com.dealsdirect.ui.custom.CustomAlertDialog;
 import au.com.dealsdirect.ui.custom.RecyclerOnTouchListener;
@@ -36,7 +37,7 @@ import butterknife.OnClick;
  * Created by smartwave on 30/06/2017.
  */
 
-public class PaymentSelectController extends BaseController implements PaymentSelectMvpView {
+public class PaymentSelectController extends BasePullToRefreshController implements PaymentSelectMvpView {
 
     private static final String PAYMENT_METHODS = "PaymentMethods";
     private final static String IS_FROM_CART = "IsFromCart";
@@ -81,10 +82,20 @@ public class PaymentSelectController extends BaseController implements PaymentSe
 
     @Override
     protected View inflateView(@NonNull LayoutInflater inflater, @NonNull ViewGroup container) {
-        View view = inflater.inflate(R.layout.controller_payment_select, container, false);
+        View view = super.inflateView(inflater, container);
+
+        fillToolbar(inflater.inflate(R.layout.partial_toolbar_arrow, container, false));
+        fillContent(inflater.inflate(R.layout.controller_payment_select, container, false));
+
         getControllerComponent().inject(this);
         mPresenter.onAttach(this);
         return view;
+    }
+
+    @Override
+    public void onRefreshStart() {
+        super.onRefreshStart();
+        mPresenter.fetchUserPaymentMethods();
     }
 
     @Override

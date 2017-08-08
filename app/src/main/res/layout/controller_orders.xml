@@ -5,10 +5,6 @@
     android:background="@color/white"
     android:orientation="vertical">
 
-    <include
-        android:id="@+id/order_details_toolbar_layout"
-        layout="@layout/partial_toolbar_arrow" />
-
     <RelativeLayout
         android:id="@+id/contentFrame"
         android:layout_width="match_parent"
