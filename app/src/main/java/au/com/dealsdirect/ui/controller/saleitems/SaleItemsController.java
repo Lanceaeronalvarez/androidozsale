@@ -38,6 +38,7 @@ import au.com.dealsdirect.data.network.model.saleitems.GetSaleItemsRequest;
 import au.com.dealsdirect.data.network.model.saleitems.GetSaleItemsResponse;
 import au.com.dealsdirect.data.network.model.sorting.SortingResponse;
 import au.com.dealsdirect.ui.base.BaseController;
+import au.com.dealsdirect.ui.base.BasePullToRefreshController;
 import au.com.dealsdirect.ui.controller.saleitemdetails.SaleItemDetailsController;
 import au.com.dealsdirect.ui.controller.saleitems.adapter.SaleItemsAdapter;
 import au.com.dealsdirect.ui.controller.searchfilter.SearchFilterController;
@@ -64,7 +65,7 @@ import static au.com.dealsdirect.ui.controller.searchfilter.SearchFilterControll
  * dp Created by Admin on 6/8/17.
  */
 
-public class SaleItemsController extends BaseController implements SaleItemsMvpView {
+public class SaleItemsController extends BasePullToRefreshController implements SaleItemsMvpView {
 
     public static final String KEY_SALE_ID = "SaleItemsController.KEY_SALE_ID";
     public static final String KEY_BANNER_ID = "SaleItemsController.KEY_BANNER_ID";
@@ -215,10 +216,20 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
 
     @Override
     protected View inflateView(@NonNull LayoutInflater inflater, @NonNull ViewGroup container) {
-        View view = inflater.inflate(R.layout.controller_sale_items, container, false);
+        View view = super.inflateView(inflater, container);
+
+        fillToolbar(inflater.inflate(R.layout.partial_toolbar_field_title, container, false));
+        fillContent(inflater.inflate(R.layout.controller_sale_items, container, false));
+
         getControllerComponent().inject(this);
         mPresenter.onAttach(this);
         return view;
+    }
+
+    @Override
+    public void onRefreshStart() {
+        super.onRefreshStart();
+        mPresenter.loadSaleItems(createSaleItemsRequest(mCategoryKey, mSaleId, mSearchQuery, 0, mChipFilters));
     }
 
     @Override
