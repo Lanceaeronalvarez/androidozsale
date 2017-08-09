@@ -37,6 +37,7 @@ import au.com.dealsdirect.data.network.model.invite.GetInviteResponse;
 import au.com.dealsdirect.data.network.model.invite.SetInviteRequest;
 import au.com.dealsdirect.data.network.model.invite.SetInviteResponse;
 import au.com.dealsdirect.ui.base.BaseController;
+import au.com.dealsdirect.ui.base.BasePullToRefreshController;
 import au.com.dealsdirect.ui.custom.CustomAlertDialog;
 import au.com.dealsdirect.utils.BundleBuilder;
 import butterknife.BindView;
@@ -45,10 +46,13 @@ import butterknife.BindView;
  * Created by Paul on 7/3/17.
  */
 
-public class InviteSendController extends BaseController implements InviteMvpView {
+public class InviteSendController extends BasePullToRefreshController implements InviteMvpView {
 
     @Inject
     InviteMvpPresenter<InviteMvpView> mPresenter;
+
+    @BindView(R.id.controller_send_invite_root)
+    View mRoot;
 
     @BindView(R.id.partial_toolbar_arrow_title)
     TextView mTitleText;
@@ -144,12 +148,21 @@ public class InviteSendController extends BaseController implements InviteMvpVie
 
     @Override
     protected View inflateView(@NonNull LayoutInflater inflater, @NonNull ViewGroup container) {
-        View view = inflater.inflate(R.layout.controller_invite_send, container, false);
+        View view = super.inflateView(inflater, container);
+
+        fillToolbar(inflater.inflate(R.layout.partial_toolbar_arrow, container, false));
+        fillContent(inflater.inflate(R.layout.controller_invite_send, container, false));
 
         getControllerComponent().inject(this);
         mPresenter.onAttach(this);
-
         return view;
+    }
+
+    @Override
+    public void onRefreshStart() {
+        super.onRefreshStart();
+        mRoot.setVisibility(View.GONE);
+        mPresenter.start();
     }
 
     @Override
@@ -421,6 +434,8 @@ public class InviteSendController extends BaseController implements InviteMvpVie
 
     @Override
     public void showInviteLink(GetInviteResponse getInviteLinkBody) {
+        mRoot.setVisibility(View.VISIBLE);
+
         if (getInviteLinkBody.getResponse().getValue() != null) {
             inviteBody = getInviteLinkBody.getResponse().getValue();
         }

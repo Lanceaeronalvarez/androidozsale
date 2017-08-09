@@ -5,10 +5,6 @@
     android:background="@color/white"
     android:orientation="vertical">
 
-    <include
-        android:id="@+id/view_contacts_toolbar_layout"
-        layout="@layout/partial_toolbar_arrow" />
-
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent">
