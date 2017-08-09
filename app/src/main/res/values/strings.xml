@@ -234,6 +234,7 @@
     <string name="contact_history">Contact History</string>
     <string name="no_order_number">No Order Number</string>
     <string name="create_contact">Create Contact</string>
+    <string name="create_contact_fill_up">Please fill up all fields</string>
 
 
     <!--INVITE-->
