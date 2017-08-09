@@ -177,7 +177,9 @@ public class AddVouchersController extends BaseController implements AddVouchers
 
         mSharedPreference = getActivity().getSharedPreferences("Voucher_Preference", Context.MODE_PRIVATE);
         Set<String> voucherSet = mSharedPreference.getStringSet("VOUCHER_SET", null);
-        voucherIds.addAll(voucherSet);
+        if(voucherSet != null) {
+            voucherIds.addAll(voucherSet);
+        }
 
         if (mVouchers != null) {
             listSize = mVouchers.size();
