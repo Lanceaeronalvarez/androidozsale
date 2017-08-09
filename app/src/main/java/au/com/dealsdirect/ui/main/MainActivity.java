@@ -80,7 +80,7 @@ public class MainActivity extends BaseActivity implements MainMvpView {
     private Router mAccountsRouter;
 
     private boolean mIsFromCategories = false;
-    private boolean isSearchActive = false;
+    private boolean mIsViewPagerSet = false;
 
 
     @Override
@@ -142,65 +142,69 @@ public class MainActivity extends BaseActivity implements MainMvpView {
     @Override
     public void onBackPressed() {
 
-        switch (getMainController().getHomeViewPager().getCurrentItem()) {
-            case 0:
-                if (mCategoriesRouter.getBackstackSize() == 1) { //go back to shops
-                    getMainController().goToShops();
-                    mIsFromCategories = false;
-                } else {
-                    mRouter.handleBack();
-                }
-                break;
-            case 1:
-                //check accounts first
-                if (getMainController().getHomeController().isAccountsActive()) {
-                    if (mAccountsRouter.getBackstackSize() == 1) {
-                        goToShops();
+        if (mIsViewPagerSet) {
+            switch (getMainController().getHomeViewPager().getCurrentItem()) {
+                case 0:
+                    if (mCategoriesRouter.getBackstackSize() == 1) { //go back to shops
+                        getMainController().goToShops();
+                        mIsFromCategories = false;
                     } else {
-                        mAccountsRouter.handleBack();
+                        mRouter.handleBack();
                     }
-                } else { //then check homerouter stack
-
-                    int topControllerIndex = mHomeRouter.getBackstackSize() - 1;
-                    if (topControllerIndex >= 0) {
-
-                        if (getHomeRouterCurrentController() instanceof SearchFilterController) {
-                            mHomeRouter.handleBack();
-                            return;
-                        }
-
-                        if (mIsFromCategories) {
-                            if(getHomeRouterCurrentController() instanceof ShopsController){ //reset shops controller root.
-                                getMainController().getHomeController().showShopController();
-                                mMainController.goToCategories();
-                                mMainController.setViewpagerDraggable(true);
-                            } else {
-                                goToCategoriesFromSaleItems(); //logic for other controllers in home router.
-                            }
-                            mIsFromCategories = false;
+                    break;
+                case 1:
+                    //check accounts first
+                    if (getMainController().getHomeController().isAccountsActive()) {
+                        if (mAccountsRouter.getBackstackSize() == 1) {
+                            goToShops();
                         } else {
-                            if (getHomeRouterCurrentController() instanceof ShopsController) {
-                                //exit app
-                                DialogUtils.showYesNoDialog(
-                                        this,
-                                        getString(R.string.dealsdirect),
-                                        getString(R.string.exit_app),
-                                        getString(R.string.exit),
-                                        getString(R.string.no),
-                                        (dialogInterface, i) -> finish(),
-                                        (dialogInterface, i) -> {
-                                        });
+                            mAccountsRouter.handleBack();
+                        }
+                    } else { //then check homerouter stack
 
-                            } else if (mHomeRouter.getBackstackSize() == 1) { // catch for other bottom nav roots to go back to shop before exiting.
-                                goToShops();
-                            } else { //general home router back.
+                        int topControllerIndex = mHomeRouter.getBackstackSize() - 1;
+                        if (topControllerIndex >= 0) {
+
+                            if (getHomeRouterCurrentController() instanceof SearchFilterController) {
                                 mHomeRouter.handleBack();
+                                return;
+                            }
 
+                            if (mIsFromCategories) {
+                                if (getHomeRouterCurrentController() instanceof ShopsController) { //reset shops controller root.
+                                    getMainController().getHomeController().showShopController();
+                                    mMainController.goToCategories();
+                                    mMainController.setViewpagerDraggable(true);
+                                } else {
+                                    goToCategoriesFromSaleItems(); //logic for other controllers in home router.
+                                }
+                                mIsFromCategories = false;
+                            } else {
+                                if (getHomeRouterCurrentController() instanceof ShopsController) {
+                                    //exit app
+                                    DialogUtils.showYesNoDialog(
+                                            this,
+                                            getString(R.string.dealsdirect),
+                                            getString(R.string.exit_app),
+                                            getString(R.string.exit),
+                                            getString(R.string.no),
+                                            (dialogInterface, i) -> finish(),
+                                            (dialogInterface, i) -> {
+                                            });
+
+                                } else if (mHomeRouter.getBackstackSize() == 1) { // catch for other bottom nav roots to go back to shop before exiting.
+                                    goToShops();
+                                } else { //general home router back.
+                                    mHomeRouter.handleBack();
+
+                                }
                             }
                         }
                     }
-                }
-                break;
+                    break;
+            }
+        } else {
+            finish();
         }
     }
 
@@ -456,7 +460,7 @@ public class MainActivity extends BaseActivity implements MainMvpView {
         mAccountsRouter = router;
     }
 
-    public void goToSaleItemsFromCategory(Bundle bundle){
+    public void goToSaleItemsFromCategory(Bundle bundle) {
         mShopController.goToItemsFromCategories(bundle);
 
         final Handler handler = new Handler();
@@ -494,7 +498,7 @@ public class MainActivity extends BaseActivity implements MainMvpView {
         mShopController = shopsController;
     }
 
-    public MainController getMainController(){
+    public MainController getMainController() {
         return mMainController;
     }
 
@@ -527,6 +531,10 @@ public class MainActivity extends BaseActivity implements MainMvpView {
         mRouter.setRoot(RouterTransaction.with(mMainController)
                 .tag("Home"));
 
+    }
+
+    public void isViewPagerSet(boolean val) {
+        mIsViewPagerSet = val;
     }
 
     public void goToShops() {
