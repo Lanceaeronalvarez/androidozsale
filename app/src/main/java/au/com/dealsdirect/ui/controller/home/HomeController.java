@@ -207,7 +207,7 @@ public class HomeController extends BaseController implements HomeMvpView {
                                 showLoginController(mRouter, new AuthHandler() {
                                     @Override
                                     public void success() {
-                                        proceedToController(position);
+                                        new Handler().postDelayed(() -> proceedToController(position), 500);
                                     }
 
                                     @Override
