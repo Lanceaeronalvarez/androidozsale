@@ -367,6 +367,11 @@ public class MainActivity extends BaseActivity implements MainMvpView {
     }
 
     @Override
+    public void callGCMRegisterSubscriber() {
+        mPresenter.initializeNotifications(getApplicationContext());
+    }
+
+    @Override
     public void callLogout(AuthHandler handler) {
         mPresenter.callLogout(handler);
     }
@@ -539,6 +544,10 @@ public class MainActivity extends BaseActivity implements MainMvpView {
 
     public void goToShops() {
         getMainController().getHomeController().showShopController();
+    }
+
+    public void callGetAppSettings(){
+        mPresenter.callGetAppSettings();
     }
 
 }

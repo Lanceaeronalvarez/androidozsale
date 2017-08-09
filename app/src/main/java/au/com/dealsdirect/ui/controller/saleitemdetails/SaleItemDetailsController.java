@@ -479,9 +479,8 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
     public void showAddToCartResponse(boolean val) {
         //notify bottom navigation view(checkout) with success.
         if (val) {
-            HomeController homeController = ((MainActivity) getActivity()).getMainController().getHomeController();
             CartUtil.addValueToCart(1);
-            homeController.updateBasketItemCount();
+            mActivity.getMainController().getHomeController().updateBasketItemCount();
         }
     }
 
@@ -520,7 +519,7 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
                 @Override
                 public void success() {
                     mPresenter.addToCart(request);
-                    new Handler().postDelayed(()-> animateAddToCart(), 400);
+                    new Handler().postDelayed(()-> animateAddToCart(), 1000);
                 }
 
                 @Override

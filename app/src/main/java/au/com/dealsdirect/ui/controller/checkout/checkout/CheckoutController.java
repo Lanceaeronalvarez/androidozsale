@@ -238,6 +238,7 @@ public class CheckoutController extends BaseController implements CheckoutMvpVie
             }else{
                 mPresenter.start();
             }
+            mActivity.getMainController().getHomeController().getPresenter().callGetBasketItemsQuantity();
         }else{
             showNoCartItemsLayout();
         }

@@ -38,6 +38,7 @@ import au.com.dealsdirect.ui.custom.CustomAlertDialog;
 import au.com.dealsdirect.ui.main.MainActivity;
 import au.com.dealsdirect.ui.main.MainMvpView;
 import au.com.dealsdirect.utils.BundleBuilder;
+import au.com.dealsdirect.utils.CartUtil;
 import butterknife.BindView;
 import butterknife.OnClick;
 
@@ -252,6 +253,8 @@ public class AccountController extends BaseController implements AccountMvpView,
         if(mPresenter.getIsAuthorized()) {
             mFilterButton.setImageDrawable(getActivity().getResources().getDrawable(R.drawable.ic_login));
             triggerLogout();
+            CartUtil.setValueToCart(0);
+            ((MainActivity) getActivity()).getMainController().getHomeController().updateBasketItemCount();
         } else {
             ((MainMvpView)getActivity()).showLoginController(getRouter(),new AuthHandler() {
                 @Override

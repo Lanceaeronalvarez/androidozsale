@@ -3,6 +3,7 @@ package au.com.dealsdirect.ui.controller.searchfilter;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.NonNull;
+import android.support.v4.util.Pair;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -147,13 +148,13 @@ public class SearchFilterController extends BaseController
     private HashMap<String, Set<Integer>> mPreviousSelectedFacetIndices = new HashMap<>();
     private ArrayList<SearchChipModel> mPreviousSearchChips = new ArrayList<>();
 
-    List<String> mFacetFilters = Arrays.asList
-            ("Sort",
-                    "Category",
-                    "Brands",
-                    "Sizes",
-                    "Colors",
-                    "Price");
+    List<Pair<String,String>> mFacetFilters = Arrays.asList
+            (new Pair<String, String>(SORT_FACETFILTER_NAME,"Sort"),
+            new Pair<String, String>(CATEGORY_TREE_FACET,"Category"),
+            new Pair<String, String>(BRANDS_FACETFILTER_NAME,"Brands"),
+            new Pair<String, String>(SIZES_FACETFILTER_NAME,"Sizes"),
+            new Pair<String, String>(COLORS_FACETFILTER_NAME,"Colors"),
+            new Pair<String, String>(PRICE_FACETFILTER_NAME,"Price"));
 
     public static SearchFilterController newInstance(String jsonCategoriesString, String jsonFacetString, String sortingFacetString, String saleId, String categoryKey, String previouslySelectedFacetIndices, String previousChipFilters) {
         return new SearchFilterController(new BundleBuilder(new Bundle())
@@ -230,13 +231,6 @@ public class SearchFilterController extends BaseController
 
         mSearchApplyButton.setImageDrawable(getResources().getDrawable(R.drawable.ic_check));
 
-        mFacetsAdapter = new FacetsAdapter(getActivity(), mFacetFilters, mPresenter);
-        mFacetsRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity(), LinearLayoutManager.VERTICAL, false));
-        mFacetsRecyclerView.setAdapter(mFacetsAdapter);
-
-        mSubCategoriesAdapter = new SubCategoriesAdapter(mChosenCategory, mPreLoadedCategories, mSubCategoryClickListener,mSubCategoryItemClickListener, mCategoryMap);
-        mFilterCategoriesRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity(), LinearLayoutManager.VERTICAL, false));
-        mFilterCategoriesRecyclerView.setAdapter(mSubCategoriesAdapter);
 
         mFacetItemsAdapter = new FacetItemsAdapter(new ArrayList<>(), mPresenter, new HashSet<Integer>());
         mFacetItemsRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity(), LinearLayoutManager.VERTICAL, false));
@@ -249,15 +243,26 @@ public class SearchFilterController extends BaseController
         });
 
 
+        mSubCategoriesAdapter = new SubCategoriesAdapter(mChosenCategory, mPreLoadedCategories, mSubCategoryClickListener,mSubCategoryItemClickListener, mCategoryMap);
+        mFilterCategoriesRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity(), LinearLayoutManager.VERTICAL, false));
+        mFilterCategoriesRecyclerView.setAdapter(mSubCategoriesAdapter);
+
         mSearchTagsLayoutManager = new LinearLayoutManager(getActivity(), LinearLayoutManager.HORIZONTAL, false);
         mSearchTagsRecyclerView.setLayoutManager(mSearchTagsLayoutManager);
-        mSearchTagsAdapter = new SearchTagsAdapter(getActivity(), mSearchTagsRecyclerView, mSearchTagsLayoutManager, new ArrayList<SearchChipModel>(), mPresenter, mFacetItemsAdapter, mPreviousSelectedFacetIndices);
+        mSearchTagsAdapter = new SearchTagsAdapter(getActivity(), mSearchTagsRecyclerView, mSearchTagsLayoutManager, new ArrayList<SearchChipModel>(), mPresenter, mFacetItemsAdapter, mSubCategoriesAdapter, mPreviousSelectedFacetIndices);
         mSearchTagsRecyclerView.setAdapter(mSearchTagsAdapter);
         mSearchTagsRecyclerView.setVisibility(View.VISIBLE);
+
+        mFacetsAdapter = new FacetsAdapter(getActivity(), mFacetFilters, mPresenter, mSearchTagsAdapter.getData());
+        mFacetsRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity(), LinearLayoutManager.VERTICAL, false));
+        mFacetsRecyclerView.setAdapter(mFacetsAdapter);
 
         if(!mPreviousSearchChips.isEmpty()) {
             mSearchTagsAdapter.replaceData(mPreviousSearchChips);
         }
+
+        mSearchTagsAdapter.setFacetsAdapter(mFacetsAdapter);
+
 
         if (mFacets != null) {
             parseFacets(mFacets);
@@ -609,15 +614,11 @@ public class SearchFilterController extends BaseController
 
     @Override
     public void onSubCategoryItemClicked(String categoryID, String categoryName, String categoryKey) {
-
-        mSubCategoriesAdapter.setActiveCategoryKey(categoryKey);
         updateSubCategoryOnSearchTagAdapter(categoryName,categoryKey);
     }
 
     @Override
     public void onSubCategoryClicked(GetCategoryTreeResponse getCategoryTreeResponse) {
-        mSubCategoriesAdapter.setActiveCategoryKey(getCategoryTreeResponse.getKey());
-
         updateSubCategoryOnSearchTagAdapter(
                 getCategoryTreeResponse.getName(),
                 getCategoryTreeResponse.getKey());
@@ -643,10 +644,12 @@ public class SearchFilterController extends BaseController
 
             removeChipOnCategories();
 
-            SearchTagsAdapter searchTagsAdapter = (SearchTagsAdapter) mSearchTagsRecyclerView.getAdapter();
-            searchTagsAdapter.add(categoryChip);
+            mSearchTagsAdapter.add(categoryChip);
             mChosenCategory = categoryKey;
         }
+
+        mSubCategoriesAdapter.setActiveCategoryKey(mChosenCategory);
+
     }
 
     private SearchChipModel findPriceChip(){

@@ -43,7 +43,10 @@ public class LoginPresenter<V extends LoginMvpView> extends AuthenticationBasePr
                         responseValue.isSuccess(),
                         responseValue.getTicket(),
                         responseValue.getMessage()),
-                        throwable -> onAuthFailure(throwable)));
+                        throwable ->
+                        {
+                            onAuthFailure(throwable);
+                        }));
 
         return true;
     }

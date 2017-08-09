@@ -22,18 +22,22 @@ import au.com.dealsdirect.ui.controller.searchfilter.SearchFilterController;
 import au.com.dealsdirect.ui.controller.searchfilter.SearchFilterMvpPresenter;
 import au.com.dealsdirect.ui.custom.ChipsEditText;
 
+import static au.com.dealsdirect.ui.controller.searchfilter.SearchFilterController.CATEGORY_TREE_FACET;
+
 /**
  * Created by smartwave on 21/07/2017.
  */
 
 public class SearchTagsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
-    private ArrayList<SearchChipModel> mData;
+    private ArrayList<SearchChipModel> mData = new ArrayList<>();
     private Context mContext;
     private DisplayMetrics mDisplayMetrics;
     private LinearLayoutManager mLayoutManager;
     private SearchFilterMvpPresenter mPresenter;
     private FacetItemsAdapter mFacetItemsAdapter;
+    private SubCategoriesAdapter mSubCategoriesAdapter;
+    private FacetsAdapter mFacetsAdapter;
     private HashMap<String, Set<Integer>> mPreviousSelectedFacetIndices;
     private RecyclerView mRecyclerView;
 
@@ -43,41 +47,47 @@ public class SearchTagsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
 
     public EditTextViewHolder editTextViewHolder;
 
-    public SearchTagsAdapter(Context ctx,RecyclerView recyclerView, LinearLayoutManager llm, ArrayList<SearchChipModel> items, SearchFilterMvpPresenter presenter
-            , FacetItemsAdapter adapter
-            , HashMap<String, Set<Integer>> selectedIndices){
-        mContext=ctx;
+    public SearchTagsAdapter(Context ctx, RecyclerView recyclerView, LinearLayoutManager llm, ArrayList<SearchChipModel> items, SearchFilterMvpPresenter presenter
+            , FacetItemsAdapter facetItemsAdapter
+            , SubCategoriesAdapter subCategoriesAdapter
+            , HashMap<String, Set<Integer>> selectedIndices) {
+        mContext = ctx;
         mDisplayMetrics = ctx.getResources().getDisplayMetrics();
         mLayoutManager = llm;
         mRecyclerView = recyclerView;
         mData = items;
         mPresenter = presenter;
-        mFacetItemsAdapter = adapter;
+        mFacetItemsAdapter = facetItemsAdapter;
+        mSubCategoriesAdapter = subCategoriesAdapter;
         mPreviousSelectedFacetIndices = selectedIndices;
     }
 
 
-    public void add(SearchChipModel chip){
-        if(mData!=null){
+    public void add(SearchChipModel chip) {
+        if (mData != null) {
             mData.add(chip);
-            notifyItemInserted(mData.size()-1);
+            notifyItemInserted(mData.size() - 1);
 
-            mRecyclerView.scrollToPosition(mData.size()-1);
-            new Handler().postDelayed(()->{
+            mRecyclerView.scrollToPosition(mData.size() - 1);
+            new Handler().postDelayed(() -> {
                 int editTextIndex = mLayoutManager.getItemCount() - 1;
                 int lastVisibleItemPosition = mLayoutManager.findLastVisibleItemPosition();
 
-                if(editTextIndex != lastVisibleItemPosition){ //meaning edittext is not visible on screen anymore
+                if (editTextIndex != lastVisibleItemPosition) { //meaning edittext is not visible on screen anymore
                     mRecyclerView.smoothScrollToPosition(editTextIndex);
                 }
 
-            },500);
+            }, 500);
+
+            if (mFacetsAdapter != null) {
+                mFacetsAdapter.notifyDataSetChanged();
+            }
 
         }
     }
 
-    public void remove(SearchChipModel chip){
-        if(mData!=null){
+    public void remove(SearchChipModel chip) {
+        if (mData != null) {
             int itemIndex = mData.indexOf(chip);
             mData.remove(chip);
             notifyItemRemoved(itemIndex);
@@ -87,10 +97,14 @@ public class SearchTagsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                 mLayoutManager.scrollToPosition(0);
             }
 
+            if (mFacetsAdapter != null) {
+                mFacetsAdapter.notifyDataSetChanged();
+            }
+
         }
     }
 
-    public void replaceData(ArrayList<SearchChipModel> chips){
+    public void replaceData(ArrayList<SearchChipModel> chips) {
         mData = chips;
         notifyDataSetChanged();
     }
@@ -102,11 +116,11 @@ public class SearchTagsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         RecyclerView.ViewHolder vh = null;
-        View v= null;
-        if(viewType == 0 ) {
+        View v = null;
+        if (viewType == 0) {
             v = LayoutInflater.from(parent.getContext()).inflate(R.layout.viewholder_filter_chip_item, parent, false);
             vh = new SearchTagsViewHolder(v);
-        } else if (viewType == 1){
+        } else if (viewType == 1) {
             v = LayoutInflater.from(parent.getContext()).inflate(R.layout.viewholder_filter_edit_text, parent, false);
             vh = editTextViewHolder = new EditTextViewHolder(v);
         }
@@ -116,13 +130,13 @@ public class SearchTagsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
 
     @Override
     public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
-        if(holder instanceof SearchTagsViewHolder) {
+        if (holder instanceof SearchTagsViewHolder) {
             SearchChipModel chip = mData.get(position);
             SearchTagsViewHolder vh = (SearchTagsViewHolder) holder;
             vh.tv.setText(chip.getChipTitle());
         }
 
-        if(holder instanceof EditTextViewHolder) {
+        if (holder instanceof EditTextViewHolder) {
             EditTextViewHolder vh = (EditTextViewHolder) holder;
 //            if (mData.size() == 0) {
 ////                vh.placeholder.setVisibility(View.VISIBLE);
@@ -139,7 +153,7 @@ public class SearchTagsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                 public boolean onEditorAction(TextView textView, int actionId, KeyEvent
                         keyEvent) {
                     if (actionId == EditorInfo.IME_ACTION_SEARCH) {
-                        add(new SearchChipModel(SearchFilterController.SEARCH_QUERY_NAME,vh.et.getText().toString(),-1));
+                        add(new SearchChipModel(SearchFilterController.SEARCH_QUERY_NAME, vh.et.getText().toString(), -1));
                         vh.et.setText("");
                     }
 
@@ -152,13 +166,13 @@ public class SearchTagsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                 int dataSize = getData().size();
 
                 if (dataSize > 0) {
-                    SearchChipModel chipToBeRemoved = getData().get(dataSize-1);
+                    SearchChipModel chipToBeRemoved = getData().get(dataSize - 1);
 
-                    if(mFacetItemsAdapter.getSelectedFacets().contains(chipToBeRemoved.getIndex())){
+                    if (mFacetItemsAdapter.getSelectedFacets().contains(chipToBeRemoved.getIndex())) {
                         mFacetItemsAdapter.getSelectedFacets().remove(chipToBeRemoved.getIndex());
                     }
 
-                    if(mPreviousSelectedFacetIndices.get(chipToBeRemoved.getFilterType()) != null){
+                    if (mPreviousSelectedFacetIndices.get(chipToBeRemoved.getFilterType()) != null) {
                         Set<Integer> selectedIndices = mPreviousSelectedFacetIndices.get(chipToBeRemoved.getFilterType());
                         selectedIndices.remove(chipToBeRemoved.getIndex());
                     }
@@ -166,21 +180,34 @@ public class SearchTagsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                     getData().remove(chipToBeRemoved);
                     notifyItemRemoved(dataSize - 1);
 
+                    if(chipToBeRemoved.getFilterType() == CATEGORY_TREE_FACET){
+                        mSubCategoriesAdapter.setActiveCategoryKey("");
+                    }
+
+                    if (mFacetsAdapter != null) {
+                        mFacetsAdapter.notifyDataSetChanged();
+                    }
+
                     mPresenter.getOriginalSelectedSet().remove(chipToBeRemoved.getIndex());
 //                    mLayoutManager.scrollToPosition(dataSize - 1);
 //                    mShopPresenter.updateShopFilters();
                     mFacetItemsAdapter.notifyItemChanged(chipToBeRemoved.getIndex());
 
-                    if(chipToBeRemoved.getFilterType().equals(SearchFilterController.PRICE_FACETFILTER_NAME)){
+                    if (chipToBeRemoved.getFilterType().equals(SearchFilterController.PRICE_FACETFILTER_NAME)) {
                         mPresenter.resetPriceRange();
                     }
 
-                    if (chipToBeRemoved.getFilterType().equals(SearchFilterController.CATEGORY_TREE_FACET)){
+                    if (chipToBeRemoved.getFilterType().equals(CATEGORY_TREE_FACET)) {
                         mPresenter.onCategoryChipRemoved();
                     }
                 }
             });
         }
+    }
+
+    public void setFacetsAdapter(FacetsAdapter facetsAdapter) {
+        mFacetsAdapter = facetsAdapter;
+        notifyDataSetChanged();
     }
 
     @Override
@@ -190,19 +217,19 @@ public class SearchTagsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
 
     @Override
     public int getItemViewType(int position) {
-        if(getItemCount()-1 == position){ //if last, that should be search edit text
+        if (getItemCount() - 1 == position) { //if last, that should be search edit text
             return 1;
         }
         //else, its search chips
         return 0;
     }
 
-    public static class SearchTagsViewHolder extends RecyclerView.ViewHolder{
+    public static class SearchTagsViewHolder extends RecyclerView.ViewHolder {
         TextView tv;
 
         public SearchTagsViewHolder(View itemView) {
             super(itemView);
-            tv=(TextView) itemView.findViewById(R.id.search_tag_text_item);
+            tv = (TextView) itemView.findViewById(R.id.search_tag_text_item);
         }
     }
 

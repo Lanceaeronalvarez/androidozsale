@@ -144,6 +144,10 @@ public class HomeController extends BaseController implements HomeMvpView {
         super.onDestroyView(view);
     }
 
+    public HomeMvpPresenter<HomeMvpView> getPresenter() {
+        return mPresenter;
+    }
+
     @Override
     protected void setUp(View view) {
         if(mPresenter.isAuthorized()) {
