@@ -21,7 +21,6 @@ import au.com.dealsdirect.ui.controller.details.DetailsController;
 import au.com.dealsdirect.ui.controller.forgotpassword.ForgotPasswordController;
 import au.com.dealsdirect.ui.controller.home.HomeController;
 import au.com.dealsdirect.ui.controller.main.MainController;
-import au.com.dealsdirect.ui.controller.invite.InviteController;
 import au.com.dealsdirect.ui.controller.invite.InviteSendController;
 import au.com.dealsdirect.ui.controller.language.LanguageController;
 import au.com.dealsdirect.ui.controller.legalities.LegalitiesController;
@@ -113,8 +112,6 @@ public interface ControllerComponent {
     void inject(PaymentSelectController controller);
 
     void inject(PaymentSuccessController controller);
-  
-    void inject(InviteController controller);
 
     void inject(InviteSendController controller);
 

@@ -33,7 +33,6 @@ import au.com.dealsdirect.ui.controller.account.AccountController;
 import au.com.dealsdirect.ui.controller.account.AccountMvpView;
 import au.com.dealsdirect.ui.controller.checkout.checkout.CheckoutController;
 import au.com.dealsdirect.ui.controller.contact.viewcontacts.ViewContactsController;
-import au.com.dealsdirect.ui.controller.invite.InviteController;
 import au.com.dealsdirect.ui.controller.invite.InviteSendController;
 import au.com.dealsdirect.ui.controller.login.LoginController;
 import au.com.dealsdirect.ui.controller.shops.ShopsController;
@@ -169,7 +168,7 @@ public class HomeController extends BaseController implements HomeMvpView {
                     mBottomNavigationView.setCurrentItem(1);
                 } else if (to instanceof ViewContactsController) {
                     mBottomNavigationView.setCurrentItem(2);
-                } else if (to instanceof InviteController) {
+                } else if (to instanceof InviteSendController) {
                     mBottomNavigationView.setCurrentItem(3);
                 } else if (to instanceof CheckoutController) {
                     mBottomNavigationView.setCurrentItem(4);
