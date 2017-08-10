@@ -12,6 +12,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.bluelinelabs.conductor.Router;
 import com.bluelinelabs.conductor.RouterTransaction;
 import com.bluelinelabs.conductor.changehandler.HorizontalChangeHandler;
 import com.bluelinelabs.conductor.changehandler.VerticalChangeHandler;
@@ -254,7 +255,8 @@ public class ViewContactsController extends BasePullToRefreshController implemen
             timeStampString = "";
         }
 
-        getRouter().pushController(RouterTransaction.with(ViewContactHistoryController.newInstance(
+        Router router = getRouter();
+        router.pushController(RouterTransaction.with(ViewContactHistoryController.newInstance(
                 contactSubject,
                 saleName,
                 invoiceNo,

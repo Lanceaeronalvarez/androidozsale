@@ -4,8 +4,6 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.support.transition.Fade;
-import android.support.transition.TransitionManager;
 import android.support.v4.content.ContextCompat;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -21,7 +19,7 @@ import com.bluelinelabs.conductor.Router;
 import com.bluelinelabs.conductor.RouterTransaction;
 import com.bluelinelabs.conductor.changehandler.VerticalChangeHandler;
 
-import java.util.LinkedList;
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.inject.Inject;
@@ -36,7 +34,6 @@ import au.com.dealsdirect.ui.controller.contact.viewcontacts.ViewContactsControl
 import au.com.dealsdirect.ui.controller.invite.InviteSendController;
 import au.com.dealsdirect.ui.controller.login.LoginController;
 import au.com.dealsdirect.ui.controller.shops.ShopsController;
-import au.com.dealsdirect.ui.custom.transitions.SimpleChangeHandler;
 import au.com.dealsdirect.ui.main.MainActivity;
 import au.com.dealsdirect.utils.BundleBuilder;
 import au.com.dealsdirect.utils.CartUtil;
@@ -56,10 +53,19 @@ public class HomeController extends BaseController implements HomeMvpView {
     HomeMvpPresenter<HomeMvpView> mPresenter;
 
     @BindView(R.id.controller_home_frame)
-    ViewGroup mContainer;
+    ViewGroup mShopContainer;
 
     @BindView(R.id.controller_accounts_frame)
     ViewGroup mAccountsContainer;
+
+    @BindView(R.id.controller_contacts_frame)
+    ViewGroup mContactsContainer;
+
+    @BindView(R.id.controller_checkout_frame)
+    ViewGroup mCheckoutContainer;
+
+    @BindView(R.id.controller_invites_frame)
+    ViewGroup mInvitesContainer;
 
     public AHBottomNavigation getBottomNavigationView() {
         return mBottomNavigationView;
@@ -68,8 +74,13 @@ public class HomeController extends BaseController implements HomeMvpView {
     @BindView(R.id.controller_home_bottom_nav)
     AHBottomNavigation mBottomNavigationView;
 
-    private Router mRouter;
+    private Router mShopRouter;
     private Router mAccountsRouter;
+    private Router mContactsRouter;
+    private Router mInvitesRouter;
+    private Router mCheckoutRouter;
+    private List<Router> mRouterList;
+    private List<ViewGroup> mContainersList;
 
     public Router getAccountsRouter() {
         return mAccountsRouter;
@@ -77,6 +88,7 @@ public class HomeController extends BaseController implements HomeMvpView {
 
     private int mPreviousTab = R.id.action_shop;
     private int mCurrentTab = R.id.action_shop;
+    private int currentVisibleIndex = 1;
 
 
     private int mBottomNavItemSelectCounter = 0;
@@ -112,13 +124,16 @@ public class HomeController extends BaseController implements HomeMvpView {
     protected void onViewBound(@NonNull View view) {
         super.onViewBound(view);
 
+        mShopRouter = Conductor.attachRouter(getActivity(), mShopContainer, null);
         mAccountsRouter = Conductor.attachRouter(getActivity(), mAccountsContainer, null);
-        mRouter = Conductor.attachRouter(getActivity(), mContainer, null);
+        mContactsRouter = Conductor.attachRouter(getActivity(), mContactsContainer, null);
+        mInvitesRouter = Conductor.attachRouter(getActivity(), mInvitesContainer, null);
+        mCheckoutRouter = Conductor.attachRouter(getActivity(), mCheckoutContainer, null);
 
-        if (!mRouter.hasRootController()) {
+        if (!mShopRouter.hasRootController()) {
             ShopsController shopsController = new ShopsController();
             ((MainActivity) getActivity()).setShopController(shopsController);
-            mRouter.setRoot(RouterTransaction.with(shopsController)
+            mShopRouter.setRoot(RouterTransaction.with(shopsController)
                     .tag(ShopsController.TAG));
         }
 
@@ -129,8 +144,43 @@ public class HomeController extends BaseController implements HomeMvpView {
             ((MainActivity) getActivity()).setAccountsRouter(mAccountsRouter);
         }
 
+        mContactsRouter = getChildRouter(mContactsContainer);
 
-        ((MainActivity) getActivity()).setHomeRouter(mRouter);
+        if(!mContactsRouter.hasRootController()){
+            mContactsRouter.setRoot(RouterTransaction.with(ViewContactsController.newInstance())
+                    .tag(ViewContactsController.TAG));
+        }
+
+        mInvitesRouter = getChildRouter(mInvitesContainer);
+
+        if(!mInvitesRouter.hasRootController()){
+            mInvitesRouter.setRoot(RouterTransaction.with(InviteSendController.newInstance())
+                    .tag(getActivity().getResources().getString(R.string.invite_friends_tag)));
+        }
+
+        mCheckoutRouter = getChildRouter(mCheckoutContainer);
+
+        if(!mCheckoutRouter.hasRootController()){
+            mCheckoutRouter.setRoot(RouterTransaction.with(new CheckoutController())
+                    .tag(getActivity().getResources().getString(R.string.checkout_controller)));
+        }
+
+        mContainersList = new ArrayList<>();
+        mContainersList.add(mShopContainer);
+        mContainersList.add(mAccountsContainer);
+        mContainersList.add(mContactsContainer);
+        mContainersList.add(mInvitesContainer);
+        mContainersList.add(mCheckoutContainer);
+        setVisibleContainer(0);
+
+        mRouterList = new ArrayList<>();
+        mRouterList.add(mShopRouter);
+        mRouterList.add(mAccountsRouter);
+        mRouterList.add(mContactsRouter);
+        mRouterList.add(mInvitesRouter);
+        mRouterList.add(mCheckoutRouter);
+
+        ((MainActivity) getActivity()).setHomeRouter(mShopRouter);
         AHBottomNavigationAdapter navigationAdapter = new AHBottomNavigationAdapter(getActivity(), R.menu.bottom_navigation_menu);
         navigationAdapter.setupWithBottomNavigation(mBottomNavigationView);
         mBottomNavigationView.setTitleState(AHBottomNavigation.TitleState.ALWAYS_SHOW);
@@ -154,7 +204,7 @@ public class HomeController extends BaseController implements HomeMvpView {
             mPresenter.callGetBasketItemsQuantity();
         }
 
-        mRouter.addChangeListener(new ControllerChangeHandler.ControllerChangeListener() {
+        mShopRouter.addChangeListener(new ControllerChangeHandler.ControllerChangeListener() {
             @Override
             public void onChangeStarted(@Nullable Controller to, @Nullable Controller from, boolean isPush, @NonNull ViewGroup container, @NonNull ControllerChangeHandler handler) {
 
@@ -199,10 +249,9 @@ public class HomeController extends BaseController implements HomeMvpView {
                     case 2:
                     case 3:
                         mBottomNavItemSelectCounter = 0;
-                        showHomeContainer();
                         if (!((MainActivity) getActivity()).isAuthorized()) {
                             new Handler().postDelayed(()-> {
-                                showLoginController(mRouter, new AuthHandler() {
+                                showLoginController(mShopRouter, new AuthHandler() {
                                     @Override
                                     public void success() {
                                         new Handler().postDelayed(() -> proceedToController(position), 500);
@@ -226,7 +275,7 @@ public class HomeController extends BaseController implements HomeMvpView {
                 }
             } else {
                 if(position == 0){
-                    mRouter.popToRoot();
+                    mShopRouter.popToRoot();
                 }
             }
             return true;
@@ -236,71 +285,60 @@ public class HomeController extends BaseController implements HomeMvpView {
 
     @Override
     public void showShopController() {
-        showHomeContainer();
-        mRouter.setRoot(RouterTransaction.with(new ShopsController())
-                .tag(getActivity().getResources().getString(R.string.search_tag))
-                .pushChangeHandler(new SimpleChangeHandler())
-                .popChangeHandler(new SimpleChangeHandler()));
+//        TransitionManager.beginDelayedTransition(mShopContainer,new Fade(Fade.IN).setDuration(200));
+//        TransitionManager.beginDelayedTransition(mAccountsContainer,new Fade(Fade.OUT).setStartDelay(200));
+        setVisibleContainer(0);
     }
 
     @Override
     public void showAccountController() {
-//        mRouter.setRoot(RouterTransaction.with(AccountController.newInstance())
+//        mShopRouter.setRoot(RouterTransaction.with(AccountController.newInstance())
 //                .tag(AccountController.TAG)
 //                .pushChangeHandler(new SimpleChangeHandler())
 //                .popChangeHandler(new SimpleChangeHandler()));
-        TransitionManager.beginDelayedTransition(mContainer,new Fade(Fade.OUT));
-        TransitionManager.beginDelayedTransition(mAccountsContainer,new Fade(Fade.IN));
-        mAccountsContainer.setVisibility(View.VISIBLE);
+//        TransitionManager.beginDelayedTransition(mShopContainer,new Fade(Fade.OUT));
+//        TransitionManager.beginDelayedTransition(mAccountsContainer,new Fade(Fade.IN));
+        setVisibleContainer(1);
         int size = mAccountsRouter.getBackstack().size();
         if(mAccountsRouter.getBackstack().get(size - 1).controller() instanceof AccountMvpView)
             ((AccountMvpView) mAccountsRouter.getBackstack().get(size - 1).controller()).initLoginDrawable();
-        mContainer.setVisibility(View.GONE);
     }
 
     @Override
     public void showContactController() {
-        mRouter.setRoot(RouterTransaction.with(ViewContactsController.newInstance())
-                .tag(ViewContactsController.TAG)
-                .pushChangeHandler(new SimpleChangeHandler())
-                .popChangeHandler(new SimpleChangeHandler()));
+//        TransitionManager.beginDelayedTransition(mShopContainer,new Fade(Fade.OUT));
+//        TransitionManager.beginDelayedTransition(mContactsContainer,new Fade(Fade.IN));
+        setVisibleContainer(2);
     }
 
     @Override
     public void showInviteController() {
-        mRouter.setRoot(RouterTransaction.with(InviteSendController.newInstance())
-                .tag(getActivity().getResources().getString(R.string.invite_friends_tag))
-                .pushChangeHandler(new SimpleChangeHandler())
-                .popChangeHandler(new SimpleChangeHandler()));
+//        TransitionManager.beginDelayedTransition(mShopContainer,new Fade(Fade.OUT));
+//        TransitionManager.beginDelayedTransition(mInvitesContainer,new Fade(Fade.IN));
+        setVisibleContainer(3);
     }
 
     @Override
     public void showCheckoutController() {
-        showHomeContainer();
-        mRouter.setRoot(RouterTransaction.with(new CheckoutController())
-                .tag(getActivity().getResources().getString(R.string.checkout_controller))
-                .pushChangeHandler(new SimpleChangeHandler())
-                .popChangeHandler(new SimpleChangeHandler()));
+//        TransitionManager.beginDelayedTransition(mShopContainer,new Fade(Fade.OUT));
+//        TransitionManager.beginDelayedTransition(mCheckoutContainer,new Fade(Fade.IN));
+        setVisibleContainer(4);
     }
 
     @Override
     public void showLoginController(Router router, AuthHandler handler) {
-        mRouter.pushController(RouterTransaction.with(LoginController.newInstance(handler))
+        mShopRouter.pushController(RouterTransaction.with(LoginController.newInstance(handler))
                 .pushChangeHandler(new VerticalChangeHandler())
                 .popChangeHandler(new VerticalChangeHandler()));
-    }
-
-    private void showHomeContainer(){
-        TransitionManager.beginDelayedTransition(mContainer,new Fade(Fade.IN).setDuration(200));
-        TransitionManager.beginDelayedTransition(mAccountsContainer,new Fade(Fade.OUT).setStartDelay(200));
-        mAccountsContainer.setVisibility(View.GONE);
-        mContainer.setVisibility(View.VISIBLE);
     }
 
     public boolean isAccountsActive(){
         return mAccountsContainer != null && mAccountsContainer.isShown();
     }
 
+    public boolean isShopActive() {
+        return mShopContainer != null && mShopContainer.isShown();
+    }
 
     @Override
     public void updateBasketItemCount() {
@@ -330,5 +368,16 @@ public class HomeController extends BaseController implements HomeMvpView {
             mBottomNavigationView.setVisibility(View.VISIBLE);
             mBottomNavigationView.bringToFront();
         }
+    }
+
+    public void setVisibleContainer(int i) {
+        mContainersList.get(currentVisibleIndex).setVisibility(View.GONE);
+        mContainersList.get(i).setVisibility(View.VISIBLE);
+        mBottomNavigationView.setCurrentItem(i, false);
+        currentVisibleIndex = i;
+    }
+
+    public Router getCurrentRouter() {
+        return mRouterList.get(currentVisibleIndex);
     }
 }

@@ -25,6 +25,7 @@ import au.com.dealsdirect.data.network.model.checkout.getuserpaymentmethods.Paym
 import au.com.dealsdirect.ui.base.BaseController;
 import au.com.dealsdirect.ui.base.BasePullToRefreshController;
 import au.com.dealsdirect.ui.controller.checkout.addpayment.AddPaymentController;
+import au.com.dealsdirect.ui.controller.checkout.checkout.CheckoutController;
 import au.com.dealsdirect.ui.custom.CustomAlertDialog;
 import au.com.dealsdirect.ui.custom.RecyclerOnTouchListener;
 import au.com.dealsdirect.ui.main.MainActivity;
@@ -112,17 +113,23 @@ public class PaymentSelectController extends BasePullToRefreshController impleme
 
     @Override
     public void showPaymentList(List<PaymentMethod> paymentMethods) {
-        if (paymentMethods != null) {
+        int backstackSize = getRouter().getBackstackSize();
+        String checkoutTag = getRouter().getBackstack().get(backstackSize-1).tag();
+
+        if (paymentMethods != null && paymentMethods.size() > 0) {
             mNoPaymentPlaceholder.setVisibility(View.INVISIBLE);
             mRecyclerView.setVisibility(View.VISIBLE);
             mPaymentMethods = new ArrayList<>(paymentMethods);
             mAdapter.replaceData(mPaymentMethods);
-        } else {
-            mNoPaymentPlaceholder.setVisibility(View.VISIBLE);
-            mRecyclerView.setVisibility(View.INVISIBLE);
+        } else if (checkoutTag == getActivity().getString(R.string.checkout_controller)
+                        && (paymentMethods == null
+                        || paymentMethods.size() == 0)) {
             getRouter().pushController(RouterTransaction.with(new AddPaymentController(false))
                     .pushChangeHandler(new HorizontalChangeHandler())
                     .popChangeHandler(new HorizontalChangeHandler()));
+        } else if (paymentMethods.size() == 0) {
+            mNoPaymentPlaceholder.setVisibility(View.VISIBLE);
+            mRecyclerView.setVisibility(View.INVISIBLE);
         }
     }
 
