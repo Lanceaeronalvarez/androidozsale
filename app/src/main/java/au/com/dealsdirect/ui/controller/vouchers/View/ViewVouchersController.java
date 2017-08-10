@@ -168,10 +168,13 @@ public class ViewVouchersController extends BasePullToRefreshController implemen
             }
 
             mUnusedVouchersAdapter.replace(currentVouchers);
+            mUnusedVouchersRecyclerView.setVisibility(View.VISIBLE);
 
 
             if (!usedVouchers.isEmpty()) {
                 mUsedVouchersAdapter.replace(usedVouchers);
+                mDivider.setVisibility(View.VISIBLE);
+                mUsedVoucherIndicatorText.setVisibility(View.VISIBLE);
             } else {
                 mDivider.setVisibility(View.GONE);
                 mUsedVoucherIndicatorText.setVisibility(View.GONE);
