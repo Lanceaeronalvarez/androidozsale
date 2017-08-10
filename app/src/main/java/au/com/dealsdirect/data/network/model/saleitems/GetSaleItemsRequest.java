@@ -32,6 +32,8 @@ public class GetSaleItemsRequest {
     @SerializedName("sa")
     private String sorting;
 
+    private boolean hasFilters;
+
     public String getQuery() {
         return query;
     }
@@ -78,5 +80,13 @@ public class GetSaleItemsRequest {
 
     public void setSorting(String sorting) {
         this.sorting = sorting;
+    }
+
+    public boolean hasFilters() {
+        return hasFilters;
+    }
+
+    public void setHasFilters(boolean val){
+        this.hasFilters = val;
     }
 }

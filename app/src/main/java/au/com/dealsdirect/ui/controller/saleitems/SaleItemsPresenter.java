@@ -37,14 +37,6 @@ public class SaleItemsPresenter<V extends SaleItemsMvpView> extends BasePresente
 
     @Override
     public void loadSaleItems(GetSaleItemsRequest getSaleItemsRequest) {
-//        doApiCallForResponse(, new AppApiCallback() {
-//            @Override
-//            public void onSuccess(Object response) {
-//                super.onSuccess(response);
-//                getMvpView().showSaleItems((GetSaleItemsResponse) response);
-//            }
-//        });
-
         getCompositeDisposable().add(getDataManager()
                 .callGetSaleItemsRequest(getSaleItemsRequest)
                 .subscribeOn(getSchedulerProvider().io())
@@ -58,8 +50,12 @@ public class SaleItemsPresenter<V extends SaleItemsMvpView> extends BasePresente
                                    }
 
                                    getMvpView().hideLoading();
+                                   if (getSaleItemsRequest.hasFilters()) {
+                                       getMvpView().showSaleItems(response, false);
+                                   } else {
+                                       getMvpView().showSaleItems(response, true);
+                                   }
 
-                                   getMvpView().showSaleItems(response);
                                }
                            }, new Consumer<Throwable>() {
                                @Override
@@ -83,21 +79,21 @@ public class SaleItemsPresenter<V extends SaleItemsMvpView> extends BasePresente
                 ));
     }
 
-        @Override
-        public void loadProductDetails (RecyclerView.ViewHolder viewHolder,int position, String
-        seoIdentifierId, String imageUrl, String skuId, String saleId){
-            getMvpView().showProductDetails(viewHolder, position, seoIdentifierId, imageUrl, skuId, saleId);
-        }
-
-        @Override
-        public void loadSortingFacets () {
-            doApiCallForResponse(getDataManager().callSortingFacets(), new AppApiCallback() {
-                @Override
-                public void onSuccess(List<?> response) {
-                    super.onSuccess(response);
-                    getMvpView().onLoadSortingFacetsFinished((List<SortingResponse>) response);
-                }
-            });
-        }
-
+    @Override
+    public void loadProductDetails(RecyclerView.ViewHolder viewHolder, int position, String
+            seoIdentifierId, String imageUrl, String skuId, String saleId) {
+        getMvpView().showProductDetails(viewHolder, position, seoIdentifierId, imageUrl, skuId, saleId);
     }
+
+    @Override
+    public void loadSortingFacets() {
+        doApiCallForResponse(getDataManager().callSortingFacets(), new AppApiCallback() {
+            @Override
+            public void onSuccess(List<?> response) {
+                super.onSuccess(response);
+                getMvpView().onLoadSortingFacetsFinished((List<SortingResponse>) response);
+            }
+        });
+    }
+
+}

@@ -254,7 +254,7 @@ public class AccountController extends BaseController implements AccountMvpView,
             mFilterButton.setImageDrawable(getActivity().getResources().getDrawable(R.drawable.ic_login));
             triggerLogout();
             CartUtil.setValueToCart(0);
-            ((MainActivity) getActivity()).getMainController().getHomeController().updateBasketItemCount();
+            ((MainActivity) getActivity()).getMainController().getHomeController().removeBasketItemCount();
         } else {
             ((MainMvpView)getActivity()).showLoginController(getRouter(),new AuthHandler() {
                 @Override

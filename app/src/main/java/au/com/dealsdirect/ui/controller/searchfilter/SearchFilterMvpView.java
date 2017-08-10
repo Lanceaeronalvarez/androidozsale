@@ -19,4 +19,8 @@ public interface SearchFilterMvpView extends MvpView{
     void onResetPriceRange();
 
     void categoryChipRemoved();
+
+    void onShowTransparentOverlay();
+
+    void onHideTransparentOverlay();
 }

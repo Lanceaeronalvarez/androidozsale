@@ -350,6 +350,10 @@ public class HomeController extends BaseController implements HomeMvpView {
         getBottomNavigationView().setNotification(notification, 4);
     }
 
+    public void removeBasketItemCount(){
+        getBottomNavigationView().setNotification("",4);
+    }
+
     private void proceedToController(int id) {
         if (id == 2) {
             showContactController();

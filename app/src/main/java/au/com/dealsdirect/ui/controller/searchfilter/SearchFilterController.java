@@ -1,7 +1,6 @@
 package au.com.dealsdirect.ui.controller.searchfilter;
 
 import android.os.Bundle;
-import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.support.v4.util.Pair;
 import android.support.v7.widget.LinearLayoutManager;
@@ -10,7 +9,6 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.ViewTreeObserver;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
@@ -29,6 +27,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.function.Predicate;
 
 import javax.inject.Inject;
 
@@ -56,6 +55,7 @@ import butterknife.OnClick;
 import static au.com.dealsdirect.ui.controller.saleitems.SaleItemsController.KEY_CATEGORY_MAP;
 import static au.com.dealsdirect.ui.controller.saleitems.SaleItemsController.KEY_CHIPS_FILTER;
 import static au.com.dealsdirect.ui.controller.saleitems.SaleItemsController.KEY_SALE_ID;
+import static au.com.dealsdirect.ui.controller.saleitems.SaleItemsController.KEY_SEARCH_QUERY;
 
 /**
  * Created by smartwave on 20/07/2017.
@@ -72,14 +72,22 @@ public class SearchFilterController extends BaseController
     public static final String SORT_FACETFILTER_NAME = "sort";
     public static final String CATEGORY_TREE_FACET = "KEY_CATEGORY_FACET";
     public static final String KEY_SELECTED_FACETS = "KEY_SELECTED_FACETS";
+    public static final String KEY_BRAND_LIST = "KEY_BRAND_LIST";
     public static final String KEY_ORIG_SELECTED = "KEY_ORIG_SELECTED";
 
     private static final String KEY_FACET_STRING = "KEY_FACET_STRING";
     private static final String KEY_CATEGORY_STRING = "KEY_CATEGORY_STRING";
     private static final String KEY_SORTING_STRING = "KEY_SORTING_STRING";
 
+    private static String mPreviousChosenCategory = "";
+    private String mJoinedQueryChipsString = "";
+
     @Inject
     SearchFilterMvpPresenter<SearchFilterMvpView> mPresenter;
+
+
+    @BindView(R.id.controller_search_filter_transparent_view)
+    RelativeLayout mTransparentOverlay;
 
     @BindView(R.id.filters_facets_recyclerview)
     RecyclerView mFacetsRecyclerView;
@@ -150,11 +158,7 @@ public class SearchFilterController extends BaseController
 
     List<Pair<String,String>> mFacetFilters = Arrays.asList
             (new Pair<String, String>(SORT_FACETFILTER_NAME,"Sort"),
-            new Pair<String, String>(CATEGORY_TREE_FACET,"Category"),
-            new Pair<String, String>(BRANDS_FACETFILTER_NAME,"Brands"),
-            new Pair<String, String>(SIZES_FACETFILTER_NAME,"Sizes"),
-            new Pair<String, String>(COLORS_FACETFILTER_NAME,"Colors"),
-            new Pair<String, String>(PRICE_FACETFILTER_NAME,"Price"));
+            new Pair<String, String>(CATEGORY_TREE_FACET,"Category"));
 
     public static SearchFilterController newInstance(String jsonCategoriesString, String jsonFacetString, String sortingFacetString, String saleId, String categoryKey, String previouslySelectedFacetIndices, String previousChipFilters) {
         return new SearchFilterController(new BundleBuilder(new Bundle())
@@ -177,6 +181,8 @@ public class SearchFilterController extends BaseController
         mSaleId = args.getString(KEY_SALE_ID,"");
         mCategoryKey = args.getString(KEY_CATEGORY_MAP,"");
         mCategoryTree = JsonUtils.convertStringToObject(args.getString(KEY_CATEGORY_STRING, ""), new TypeToken<ArrayList<GetCategoryTreeResponse>>() {
+        }.getType());
+        mBrandList = JsonUtils.convertStringToObject(args.getString(KEY_BRAND_LIST, ""), new TypeToken<ArrayList<String>>() {
         }.getType());
 
         restoreStateSelection(args);
@@ -242,7 +248,6 @@ public class SearchFilterController extends BaseController
             }
         });
 
-
         mSubCategoriesAdapter = new SubCategoriesAdapter(mChosenCategory, mPreLoadedCategories, mSubCategoryClickListener,mSubCategoryItemClickListener, mCategoryMap);
         mFilterCategoriesRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity(), LinearLayoutManager.VERTICAL, false));
         mFilterCategoriesRecyclerView.setAdapter(mSubCategoriesAdapter);
@@ -253,16 +258,23 @@ public class SearchFilterController extends BaseController
         mSearchTagsRecyclerView.setAdapter(mSearchTagsAdapter);
         mSearchTagsRecyclerView.setVisibility(View.VISIBLE);
 
-        mFacetsAdapter = new FacetsAdapter(getActivity(), mFacetFilters, mPresenter, mSearchTagsAdapter.getData());
-        mFacetsRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity(), LinearLayoutManager.VERTICAL, false));
-        mFacetsRecyclerView.setAdapter(mFacetsAdapter);
+        //remove other chips if a new category is selected.
+        // also remove selected indices for other filter types
+        if(!mPreviousChosenCategory.equals(mChosenCategory)){
+            removeAllChipsExceptCategory();
+            removeSelectedIndicesExceptCategory();
+            mPreviousChosenCategory = mChosenCategory;
+        }
 
         if(!mPreviousSearchChips.isEmpty()) {
             mSearchTagsAdapter.replaceData(mPreviousSearchChips);
         }
 
-        mSearchTagsAdapter.setFacetsAdapter(mFacetsAdapter);
+        mFacetsAdapter = new FacetsAdapter(getActivity(), new ArrayList(mFacetFilters), mPresenter, mSearchTagsAdapter.getData());
+        mFacetsRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity(), LinearLayoutManager.VERTICAL, false));
+        mFacetsRecyclerView.setAdapter(mFacetsAdapter);
 
+        mSearchTagsAdapter.setFacetsAdapter(mFacetsAdapter);
 
         if (mFacets != null) {
             parseFacets(mFacets);
@@ -354,8 +366,30 @@ public class SearchFilterController extends BaseController
         }
     }
 
+    private void removeAllChipsExceptCategory(){
+        List<SearchChipModel> listToIterate = new ArrayList<>(mPreviousSearchChips);
+        for (SearchChipModel chip : listToIterate) {
+            if(!chip.getFilterType().equals(CATEGORY_TREE_FACET)){
+                mPreviousSearchChips.remove(chip);
+            }
+        }
+
+        String test="";
+    }
+
+    private void removeSelectedIndicesExceptCategory(){
+        for (Map.Entry entry : mPreviousSelectedFacetIndices.entrySet()) {
+            if(!entry.getKey().equals(CATEGORY_TREE_FACET)){
+                entry.setValue(new HashSet<>());
+            }
+
+        }
+    }
+
+
     @Override
     public void showFacetItem(int position) {
+
 
         if(mapFacetFilterType(position) != PRICE_FACETFILTER_NAME) { //only do this logic if facet clicked != price
 
@@ -391,6 +425,7 @@ public class SearchFilterController extends BaseController
             mFacetItemsRecyclerView.setVisibility(View.GONE);
             mSeekbarLayout.setVisibility(View.VISIBLE);
         }
+
 
         mFacetItemsAdapter.setFilterType(mapFacetFilterType(position));
         mFacetItemsAdapter.replaceData(mapFacetItemClicked(position));
@@ -477,6 +512,21 @@ public class SearchFilterController extends BaseController
         mChosenCategory = "";
     }
 
+    @Override
+    public void onShowTransparentOverlay() {
+        mTransparentOverlay.setVisibility(View.VISIBLE);
+    }
+
+
+
+    @OnClick(R.id.controller_search_filter_transparent_view)
+    @Override
+    public void onHideTransparentOverlay() {
+        mSearchTagsRecyclerView.clearFocus();
+        mTransparentOverlay.setVisibility(View.GONE);
+        hideKeyboard();
+    }
+
     private List<String> mapFacetItemClicked(int position) {
         switch (position) {
             case 0:
@@ -508,20 +558,26 @@ public class SearchFilterController extends BaseController
                             GetSaleItemsResponse.Values facetValue = facets.get(i).getFacetValues().get(j);
                             mBrandList.add(facetValue.getValue());
                         }
+                        mFacetsAdapter.add(new Pair<String, String>(BRANDS_FACETFILTER_NAME,"Brands"));
                         break;
                     case SIZES_FACETFILTER_NAME:
                         for (int j = 0; j < facets.get(i).getFacetValues().size(); j++) {
                             GetSaleItemsResponse.Values facetValue = facets.get(i).getFacetValues().get(j);
                             mSizeList.add(facetValue.getValue());
                         }
+                        mFacetsAdapter.add(new Pair<String, String>(SIZES_FACETFILTER_NAME,"Sizes"));
                         break;
                     case COLORS_FACETFILTER_NAME:
                         for (int j = 0; j < facets.get(i).getFacetValues().size(); j++) {
                             GetSaleItemsResponse.Values facetValue = facets.get(i).getFacetValues().get(j);
                             mColorList.add(facetValue.getValue());
                         }
+
+                        mFacetsAdapter.add(new Pair<String, String>(COLORS_FACETFILTER_NAME,"Colors"));
                         break;
                     case PRICE_FACETFILTER_NAME:
+                        mFacetsAdapter.add(new Pair<String, String>(PRICE_FACETFILTER_NAME,"Price"));
+
                         break;
                     default:
                         break;
@@ -535,11 +591,16 @@ public class SearchFilterController extends BaseController
 
         trackLastSelectedFacet();
 
+        String editTextString = mSearchTagsAdapter.getEditTextViewHolder().getEditText().getText().toString();
+
+        mSearchTagsAdapter.add(new SearchChipModel(SEARCH_QUERY_NAME, editTextString, -1));
+
         Bundle saleItemBundle = new BundleBuilder(new Bundle())
                 .putString(KEY_CATEGORY_MAP, mChosenCategory)
                 .putString(KEY_SALE_ID,mSaleId)
                 .putString(KEY_CHIPS_FILTER,new Gson().toJson(mSearchTagsAdapter.getData()))
                 .putString(KEY_SELECTED_FACETS, new Gson().toJson(mPreviousSelectedFacetIndices))
+//                .putString(KEY_SEARCH_QUERY, new Gson().toJson(mBrandList))
                 .build();
         
         SaleItemsController saleItemsController = (SaleItemsController) getRouter().getControllerWithTag(getActivity().getString(R.string.sale_items_controller_tag));

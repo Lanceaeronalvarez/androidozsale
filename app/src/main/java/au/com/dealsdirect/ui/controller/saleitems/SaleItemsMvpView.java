@@ -16,7 +16,7 @@ public interface SaleItemsMvpView extends MvpView{
 
     void onLoadSortingFacetsFinished(List<SortingResponse> responseList);
 
-    void showSaleItems(GetSaleItemsResponse getSaleItemsResponse);
+    void showSaleItems(GetSaleItemsResponse getSaleItemsResponse, boolean forFacetCorrection);
 
     void refresh();
 

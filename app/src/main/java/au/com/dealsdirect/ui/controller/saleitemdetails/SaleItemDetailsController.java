@@ -227,21 +227,6 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
         return new SaleItemDetailsController(bundle);
     }
 
-    public static SaleItemsController newInstance(
-            String seoIdentifierId,
-            String imageUrl,
-            String skuId,
-            String saleId) {
-
-        return new SaleItemsController(
-                new BundleBuilder(new Bundle())
-                        .putString("KEY_IMAGE_ID", imageUrl)
-                        .putString("KEY_SEO_IDENTIFIER", seoIdentifierId)
-                        .putString("KEY_ITEM_ID", skuId)
-                        .putString("KEY_SALE_ID", saleId)
-                        .build());
-    }
-
     public SaleItemDetailsController(Bundle args) {
         super(args);
         mSaleId = args.getString(KEY_SALE_ID);

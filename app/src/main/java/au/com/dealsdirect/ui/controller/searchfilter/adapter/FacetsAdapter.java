@@ -12,6 +12,7 @@ import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Set;
@@ -31,14 +32,14 @@ import static au.com.dealsdirect.ui.controller.searchfilter.SearchFilterControll
 
 public class FacetsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
-    private List<Pair<String,String>> mData;
+    private ArrayList<Pair<String,String>> mData;
     private SearchFilterMvpPresenter mPresenter;
     private int mLastPosition = -1;
     private RecyclerView.ViewHolder mLastSelectedViewHolder = null;
     private Context mContext;
     private List<SearchChipModel> mSearchChips;
 
-    public FacetsAdapter(Context context, List<Pair<String,String>> data, SearchFilterMvpPresenter presenter, List<SearchChipModel> searchChips) {
+    public FacetsAdapter(Context context, ArrayList<Pair<String,String>> data, SearchFilterMvpPresenter presenter, List<SearchChipModel> searchChips) {
         mContext = context;
         mData = data;
         mPresenter = presenter;
@@ -109,6 +110,11 @@ public class FacetsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
 
     }
 
+    public void add(Pair<String,String> newFacet){
+        mData.add(newFacet);
+        notifyItemInserted(mData.size()-1);
+    }
+
     @Override
     public int getItemViewType(int position) {
         return position;
@@ -160,9 +166,15 @@ public class FacetsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
 
     private boolean isFacetActive(String key){
         for (SearchChipModel chip : mSearchChips) {
-            return chip.getFilterType().equals(key);
+            if(chip.getFilterType().equals(key)) {
+                return true;
+            }
         }
         return false;
+    }
+
+    public void updateSelectedSearchChips(List<SearchChipModel> selectedSearchChips) {
+        mSearchChips = selectedSearchChips;
     }
 
 }
