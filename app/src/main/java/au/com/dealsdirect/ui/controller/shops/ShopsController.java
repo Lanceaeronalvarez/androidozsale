@@ -565,6 +565,8 @@ public class ShopsController extends BasePullToRefreshController implements Shop
     public void onRefreshStart() {
         super.onRefreshStart();
 
-        mPresenter.loadShopsBanner(mCategoryName, mCategoryID, bannerOffset, bannerLimit);
+        shopsControllerBannerRecyclerView.setVisibility(View.GONE);
+
+        mPresenter.loadShopsBanner(mCategoryName, mCategoryID, 0, newBannerCount);
     }
 }
