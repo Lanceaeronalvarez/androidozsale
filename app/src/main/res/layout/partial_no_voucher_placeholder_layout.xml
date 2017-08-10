@@ -6,6 +6,8 @@
     android:layout_height="wrap_content"
     android:layout_centerInParent="true"
     android:orientation="vertical"
+    android:paddingLeft="@dimen/place_holder_padding"
+    android:paddingRight="@dimen/place_holder_padding"
     tools:ignore="MissingPrefix">
 
     <ImageView
@@ -15,7 +17,7 @@
         android:src="@drawable/ic_vouchers_placeholder" />
 
     <TextView
-        fontPath="@string/font_lato_semibold"
+        fontPath="@string/font_lato_medium"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
@@ -23,7 +25,7 @@
         android:textSize="@dimen/text_size_xxxlarge" />
 
     <TextView
-        fontPath="@string/font_lato_semibold"
+        fontPath="@string/font_lato_light"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
@@ -31,7 +33,7 @@
         android:layout_marginTop="10dp"
         android:paddingBottom="@dimen/default_button_height"
         android:text="you do not currently have any vouchers"
-        android:textColor="#D0D0D0"
-        android:textSize="@dimen/text_size_xxlarge" />
+        android:textColor="#9f9f9f"
+        android:textSize="@dimen/text_size_xlarge" />
 
 </LinearLayout>
