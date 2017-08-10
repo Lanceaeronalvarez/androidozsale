@@ -152,8 +152,6 @@ public class HomeController extends BaseController implements HomeMvpView {
     protected void setUp(View view) {
         if(mPresenter.isAuthorized()) {
             mPresenter.callGetBasketItemsQuantity();
-        }else{
-            updateBasketItemCount();
         }
 
         mRouter.addChangeListener(new ControllerChangeHandler.ControllerChangeListener() {
