@@ -135,7 +135,8 @@ public class InviteSendController extends BasePullToRefreshController implements
         @Override
         public void afterTextChanged(Editable s) {
 
-        }};
+        }
+    };
 
     public InviteSendController(Bundle args) {
         super(args);
@@ -174,7 +175,7 @@ public class InviteSendController extends BasePullToRefreshController implements
     private String urlEncode(String s) {
         try {
             return URLEncoder.encode(s, "UTF-8");
-        }catch (UnsupportedEncodingException e) {
+        } catch (UnsupportedEncodingException e) {
             e.printStackTrace();
             return "null";
         }
@@ -196,15 +197,15 @@ public class InviteSendController extends BasePullToRefreshController implements
 
         progress = new ProgressDialog(getActivity());
 
-        if (twitterLink.isEmpty()){
+        if (twitterLink.isEmpty()) {
             mTwitterFollowUsContainer.setVisibility(View.GONE);
-        }else{
+        } else {
             mTwitterFollowUsContainer.setVisibility(View.VISIBLE);
         }
 
-        if (facebookLink.isEmpty()){
+        if (facebookLink.isEmpty()) {
             mFacebookLikeUsContainer.setVisibility(View.GONE);
-        }else{
+        } else {
             mFacebookLikeUsContainer.setVisibility(View.VISIBLE);
         }
 
@@ -260,8 +261,9 @@ public class InviteSendController extends BasePullToRefreshController implements
             }
         });
 
-        mFacebookSendInvitationLayout.setOnClickListener(new View.OnClickListener(){
-            @Override public void onClick(View view) {
+        mFacebookSendInvitationLayout.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
                 onSaveInstanceState(getArgs());
 
                 String personalInvitation = mPersonalInvitationMessageEditText.getText().toString();
@@ -288,7 +290,8 @@ public class InviteSendController extends BasePullToRefreshController implements
         });
 
         mMessageSendInvitationLayout.setOnClickListener(new View.OnClickListener() {
-            @Override public void onClick(View view) {
+            @Override
+            public void onClick(View view) {
                 onSaveInstanceState(getArgs());
 
                 String message = mPersonalInvitationMessageEditText.getText().toString();
@@ -297,22 +300,23 @@ public class InviteSendController extends BasePullToRefreshController implements
 
                 Intent smsIntent = new Intent(android.content.Intent.ACTION_VIEW);
                 smsIntent.setType("vnd.android-dir/mms-sms");
-                smsIntent.putExtra("sms_body",messageWithInvite);
+                smsIntent.putExtra("sms_body", messageWithInvite);
                 startActivity(smsIntent);
             }
         });
 
 
         mMailSendInvitationLayout.setOnClickListener(new View.OnClickListener() {
-            @Override public void onClick(View view) {
+            @Override
+            public void onClick(View view) {
                 onSaveInstanceState(getArgs());
 
 
                 String message = mPersonalInvitationMessageEditText.getText().toString();
                 String invitationLink = mPersonalInvitationLinkEditText.getText().toString();
-                String messageWithInvite = message +invitationLink;
+                String messageWithInvite = message + invitationLink;
 
-                if(invitationLink.isEmpty() || invitationLink.equals("")){
+                if (invitationLink.isEmpty() || invitationLink.equals("")) {
 
                     new Handler().postDelayed(new Runnable() {
                         @Override
@@ -369,7 +373,7 @@ public class InviteSendController extends BasePullToRefreshController implements
                 Intent intent;
                 if (!link.isEmpty()) {
                     try {
-                        getActivity().getPackageManager().getPackageInfo("com.twitter.android",0);
+                        getActivity().getPackageManager().getPackageInfo("com.twitter.android", 0);
                         Uri uri = Uri.parse("twitter://user?user_id=37405859");
                         intent = new Intent(Intent.ACTION_VIEW, uri);
                     } catch (PackageManager.NameNotFoundException e) {
@@ -398,7 +402,7 @@ public class InviteSendController extends BasePullToRefreshController implements
                 hideKeyboard();
                 mSendInviteLinkLayout.requestFocus();
 
-                if(mClipboardText.equals("Save Changes") || mClipboardText.getText().toString() == "Save Changes") {
+                if (mClipboardText.equals("Save Changes") || mClipboardText.getText().toString() == "Save Changes") {
                     mPersonalInvitationMessageEditText.setEnabled(true);
 
                     String editedLink = mPersonalInvitationLinkEditText.getText().toString();
@@ -471,22 +475,19 @@ public class InviteSendController extends BasePullToRefreshController implements
                     "Edit Successful");
 
         } else {
-            mPersonalInvitationLinkEditText.setFocusable(false);
-            mPersonalInvitationLinkEditText.setFocusableInTouchMode(false);
-
             mPersonalInvitationLinkEditText.setText(inviteLink);
+
+            mPersonalInvitationMessageEditText.setEnabled(true);
 
             mClipboardText.setText("Copy link to clipboard");
             mClipboardImage.setVisibility(View.VISIBLE);
-
 
             progress.dismiss();
 
             CustomAlertDialog.showCustomAlertDialog(
                     getActivity(),
                     CustomAlertDialog.CustomDialogIconState.NEGATIVE,
-                    editLinkResponse
-            );
+                    editLinkResponse);
         }
     }
 }
