@@ -10,4 +10,6 @@ import au.com.dealsdirect.ui.base.MvpView;
 public interface PaymentSuccessMvpPresenter<V extends MvpView> extends MvpPresenter<V> {
 
     void incrementPayCount();
+
+    void generateOurpay();
 }

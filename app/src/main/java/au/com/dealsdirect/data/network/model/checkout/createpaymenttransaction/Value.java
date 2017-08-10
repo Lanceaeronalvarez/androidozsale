@@ -4,6 +4,8 @@ package au.com.dealsdirect.data.network.model.checkout.createpaymenttransaction;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
+import au.com.dealsdirect.data.network.model.checkout.getcurrentorder.MyPayDetails;
+
 public class Value {
 
     @SerializedName("AddressString")
@@ -42,6 +44,10 @@ public class Value {
     @SerializedName("transactionStatus")
     @Expose
     private String transactionStatus;
+
+    @SerializedName("PlannedTransactions")
+    @Expose
+    private java.util.List<MyPayDetails.PlannedTransaction> plannedTransactions;
 
     public String getAddressString() {
         return addressString;
@@ -139,4 +145,19 @@ public class Value {
         this.transactionStatus = transactionStatus;
     }
 
+    public Boolean getPaid() {
+        return isPaid;
+    }
+
+    public void setPaid(Boolean paid) {
+        isPaid = paid;
+    }
+
+    public java.util.List<MyPayDetails.PlannedTransaction> getPlannedTransactions() {
+        return plannedTransactions;
+    }
+
+    public void setPlannedTransaction(java.util.List<MyPayDetails.PlannedTransaction> plannedTransactions) {
+        this.plannedTransactions = plannedTransactions;
+    }
 }

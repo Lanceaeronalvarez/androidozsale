@@ -7,17 +7,22 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.text.Html;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import javax.inject.Inject;
 
 import au.com.dealsdirect.R;
 import au.com.dealsdirect.data.network.model.checkout.CreatePaymentTransaction;
+import au.com.dealsdirect.ourpay.Ourpay;
+import au.com.dealsdirect.ourpay.OurpayPanel;
+import au.com.dealsdirect.ourpay.OurpayState;
+import au.com.dealsdirect.ui.base.BaseActivity;
 import au.com.dealsdirect.ui.base.BaseController;
-import au.com.dealsdirect.ui.controller.masterpass.MasterpassController;
 import au.com.dealsdirect.ui.main.MainActivity;
 import au.com.dealsdirect.utils.BundleBuilder;
 import au.com.dealsdirect.utils.DialogUtils;
@@ -58,11 +63,16 @@ public class PaymentSuccessController extends BaseController implements PaymentS
     private String packageName;
     private String appUri;
 
+    private Ourpay mOurpay;
     //
     private String mAddressString;
     private String mPriceString;
     private String mInvoiceString;
     private String mEstimatedDeliveryString;
+
+    @BindView(R.id.ourpay_panel_holder)
+    LinearLayout mLLOurpay;
+
 
     public static PaymentSuccessController newInstance(String address, String price, String invoice, String delivery) {
 
@@ -96,6 +106,11 @@ public class PaymentSuccessController extends BaseController implements PaymentS
     protected void onViewBound(@NonNull View view) {
         super.onViewBound(view);
         mActivity = (MainActivity) getActivity();
+        mOurpay = ((MainActivity)getActivity()).getOurpay();
+        if (mOurpay.isCanUse()){
+            mPresenter.generateOurpay();
+        }
+
         setUp(view);
     }
 
@@ -180,10 +195,25 @@ public class PaymentSuccessController extends BaseController implements PaymentS
 
     }
 
+    @Override
+    public void showOurpay() {
+        mOurpay.setState(OurpayState.POSTCART);
+        if (mOurpay != null){
+            Log.d("postcart", "entered");
+            OurpayPanel ourpayPanel = new OurpayPanel((BaseActivity)getActivity());
+            mLLOurpay.removeAllViews();
+            mLLOurpay.addView(ourpayPanel.generatePanel(mOurpay));
+        }else{
+            Log.d("postcart", "not entered");
+
+        }
+    }
+
 
     @OnClick(R.id.partial_continue_shopping_button)
     void onContinueShoppingClick() {
         getRouter().popToTag("CheckoutController");
         ((MainActivity) getActivity()).goToShops();
     }
+
 }

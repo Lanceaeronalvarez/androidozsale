@@ -3,6 +3,7 @@ package au.com.dealsdirect.ui.main;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
+import android.util.Log;
 import android.view.ViewGroup;
 
 import com.bluelinelabs.conductor.Conductor;
@@ -29,13 +30,18 @@ import com.braintreepayments.api.models.CardBuilder;
 import com.braintreepayments.api.models.PaymentMethodNonce;
 import com.braintreepayments.cardform.view.CardForm;
 
+import java.util.List;
+
 import javax.inject.Inject;
 
 import au.com.dealsdirect.R;
 import au.com.dealsdirect.data.auth.AuthHandler;
 import au.com.dealsdirect.data.network.model.category.GetCategoryTreeResponse;
 import au.com.dealsdirect.data.network.model.checkout.CreatePaymentTransaction;
+import au.com.dealsdirect.data.network.model.checkout.getcurrentorder.MyPayDetails;
 import au.com.dealsdirect.data.network.model.checkout.getuserpaymentmethods.PaymentMethod;
+import au.com.dealsdirect.ourpay.Ourpay;
+import au.com.dealsdirect.ourpay.OurpayState;
 import au.com.dealsdirect.ui.base.BaseActivity;
 import au.com.dealsdirect.ui.controller.categories.CategoriesController;
 import au.com.dealsdirect.ui.controller.checkout.addpayment.AddPaymentController;
@@ -56,6 +62,7 @@ import timber.log.Timber;
 public class MainActivity extends BaseActivity implements MainMvpView {
 
     private static final String TAG = "MainActivity";
+    private static final String PAYMENT_TYPE_MYPAY = "mypay";
 
     @Inject
     MainMvpPresenter<MainMvpView> mPresenter;
@@ -80,6 +87,9 @@ public class MainActivity extends BaseActivity implements MainMvpView {
 
     private boolean mIsFromCategories = false;
     private boolean isSearchActive = false;
+
+    private Ourpay mOurpay;
+    private boolean mThreeDSecureRequired;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -305,6 +315,19 @@ public class MainActivity extends BaseActivity implements MainMvpView {
     }
 
     @Override
+    public void callCreatePaymentTransaction(String paymentType, String paymentNonce){
+        mPaymentType = paymentType;
+        BraintreeResponseListener<String> handler = deviceData ->
+                mPresenter.callCreatePaymentTransaction(deviceData, mPaymentType, paymentNonce, getPaymentMethodSelected().getToken());
+
+        if (!mPresenter.getKountMerchantId().isEmpty()) {
+            DataCollector.collectDeviceData(mBraintreeFragment, mPresenter.getKountMerchantId(), handler);
+        } else {
+            DataCollector.collectDeviceData(mBraintreeFragment, handler);
+        }
+    }
+
+    @Override
     public void onAuthorizationFetched(String paymentToken, String paymentMethod) {
         mAuthorization = paymentToken;
         mPaymentType = paymentMethod;
@@ -386,6 +409,14 @@ public class MainActivity extends BaseActivity implements MainMvpView {
 
 //            GCartUtil.setValueToCart(0);
 //            RxBus.instance().post("update_cart_items_immediate");
+            if (mPaymentType.equals(PAYMENT_TYPE_MYPAY)){
+                Log.d("postcart", "payment type == mypay");
+                setPaymentSuccessOurpay(responseValue);
+            } else {
+                Log.d("postcart", "payment type != mypay");
+
+                mOurpay.setCanUse(false);
+            }
 
             mHomeRouter.pushController(RouterTransaction.with(new PaymentSuccessController(responseValue))
                     .pushChangeHandler(new HorizontalChangeHandler())
@@ -531,5 +562,56 @@ public class MainActivity extends BaseActivity implements MainMvpView {
         getMainController().getHomeController().showShopController();
     }
 
+
+    public Ourpay getOurpay() {
+        return mOurpay;
+    }
+
+    public void setOurpay(Ourpay mOurpay) {
+        this.mOurpay = mOurpay;
+    }
+
+    public boolean isThreeDSecureRequired() {
+        return mThreeDSecureRequired;
+    }
+
+    public void setThreeDSecureRequired(boolean mThreeDSecureRequired) {
+        this.mThreeDSecureRequired = mThreeDSecureRequired;
+    }
+
+    public String getPaymentType() {
+        return mPaymentType;
+    }
+
+    public void setPaymentType(String mPaymentType) {
+        this.mPaymentType = mPaymentType;
+    }
+
+    private void setPaymentSuccessOurpay(CreatePaymentTransaction.ResponseValue responseValue){
+        Ourpay paymentSuccessOurpay = new Ourpay();
+
+        try{
+            List<MyPayDetails.PlannedTransaction> transactions = responseValue.getD().getValue().getPlannedTransactions();
+
+            paymentSuccessOurpay.setCanUse(true);
+            paymentSuccessOurpay.setPlannedTransactions(transactions);
+
+            double remainingAmount = 0;
+            for (int i = 0; i < transactions.size(); i++){
+                if (transactions.get(i).getState()==0){
+                    remainingAmount = remainingAmount + transactions.get(i).getAmount();
+                }
+            }
+
+            paymentSuccessOurpay.setAmount(remainingAmount);
+            setOurpay(paymentSuccessOurpay);
+        } catch (Exception e){
+
+            paymentSuccessOurpay.setCanUse(false);
+            paymentSuccessOurpay.setPlannedTransactions(null);
+            paymentSuccessOurpay.setState(paymentSuccessOurpay.getState() | OurpayState.ERROR);
+        }
+
+    }
 
 }

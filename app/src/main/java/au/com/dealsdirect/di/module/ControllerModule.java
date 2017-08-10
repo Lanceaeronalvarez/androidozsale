@@ -23,6 +23,9 @@ import au.com.dealsdirect.ui.controller.checkout.addpayment.AddPaymentPresenter;
 import au.com.dealsdirect.ui.controller.checkout.checkout.CheckoutMvpPresenter;
 import au.com.dealsdirect.ui.controller.checkout.checkout.CheckoutMvpView;
 import au.com.dealsdirect.ui.controller.checkout.checkout.CheckoutPresenter;
+import au.com.dealsdirect.ui.controller.checkout.ourpay.OurpaySMSVerificationMvpPresenter;
+import au.com.dealsdirect.ui.controller.checkout.ourpay.OurpaySMSVerificationMvpView;
+import au.com.dealsdirect.ui.controller.checkout.ourpay.OurpaySMSVerificationPresenter;
 import au.com.dealsdirect.ui.controller.checkout.paymentselect.PaymentSelectMvpPresenter;
 import au.com.dealsdirect.ui.controller.checkout.paymentselect.PaymentSelectMvpView;
 import au.com.dealsdirect.ui.controller.checkout.paymentselect.PaymentSelectPresenter;
@@ -321,6 +324,11 @@ public class ControllerModule {
 
     @Provides
     MasterpassMvpPresenter<MasterpassMvpView> provideMasterpassPresenter(MasterpassPresenter<MasterpassMvpView> presenter) {
+        return presenter;
+    }
+
+    @Provides
+    OurpaySMSVerificationMvpPresenter<OurpaySMSVerificationMvpView> provideOurpaySMSVerificationPresenter(OurpaySMSVerificationPresenter<OurpaySMSVerificationMvpView> presenter) {
         return presenter;
     }
 }

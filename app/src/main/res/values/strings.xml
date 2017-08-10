@@ -286,4 +286,17 @@
     <string name="account_controller_tag">AccountController</string>
     <string name="i_am_looking_For">I am looking for...</string>
     <string name="sale_item_from_search_category">SaleItemFromSearchCategory</string>
+
+    <string name="confirm_your_phone_number">Confirm your Phone Number</string>
+    <string name="an_sms_with_your_code_has_been_sent_to_this_number">An SMS with your code has been
+        sent to this number
+    </string>
+    <string name="resend_code">Resend Code</string>
+    <string name="enter_your_code_below">Enter your code below</string>
+    <string name="confirm">Confirm</string>
+    <string name="invalid_phone_number">Invalid Phone Number</string>
+    <string name="invalid_code">Invalid Code</string>
+    <string name="sms_verification_title">SMS Verification</string>
+    <string name="add_address_before_payment">Please set delivery address before proceeding to payment</string>
+
 </resources>

@@ -82,17 +82,27 @@ public class OurpayPanel {
                 mPanelHolder.addView(getTemplateText(
                         OurpayTemplateText.getTemplateText(mBaseActivity, ourpay)), 0);
 
+                View panelRows = getPanelRows(ourpay.getPlannedTransactions());
+                View panelTotalRow = getPanelTotalRow(PriceUtils.getPriceStringValue(ourpay.getUserAmount()));
                 mPanelHolder.addView(getCartAmountHeader(PriceUtils.getPriceStringValue(ourpay.getAmount())), 0);
-                mHolderInBorder.addView(getPanelRows(ourpay.getPlannedTransactions()));
-                mHolderInBorder.addView(getPanelTotalRow(PriceUtils.getPriceStringValue(ourpay.getUserAmount())));
+                mHolderInBorder.addView(panelRows);
+                mHolderInBorder.addView(panelTotalRow);
+
+                header.setOnClickListener(view -> {
+                    panelRows.setVisibility(panelRows.getVisibility() == View.GONE ? View.VISIBLE : View.GONE);
+                    panelTotalRow.setVisibility(panelTotalRow.getVisibility() == View.GONE ? View.VISIBLE : View.GONE);
+                });
             }
         } else if (0 != (ourpay.getState() & OurpayState.POSTCART)) {
 
+            Log.d("postcart", "generate in postcart");
             TextView tv = (TextView) getTemplateText(
                     OurpayTemplateText.getTemplateText(mBaseActivity, ourpay));
             tv.setGravity(Gravity.CENTER_HORIZONTAL);
             mPanelHolder.addView(tv, 0);
             mHolderInBorder.addView(getPanelRows(ourpay.getPlannedTransactions()));
+            Log.d("postcart", "planned transactions = "+ourpay.getPlannedTransactions().size());
+
             mHolderInBorder.addView(getPanelRemainingRow(PriceUtils.getPriceStringValue(ourpay.getAmount())));
             mPanelHolder.addView(getThankYouFooter());
         }
@@ -158,7 +168,7 @@ public class OurpayPanel {
         CheckBox cb = (CheckBox) view.findViewById(R.id.ourpay_checkbox_tc);
         TextView textViewTC = (TextView) view.findViewById(R.id.ourpay_text_tc);
 
-        textViewTC.setText(Html.fromHtml(ourpay.getTermsAndConditionsText()));
+        textViewTC.setText(Html.fromHtml(OurpayTemplateText.getText(mBaseActivity, ourpay.getTermsAndConditionsText())));
         textViewTC.setOnClickListener(view1 -> {
 
             Bundle bundle = new Bundle();
@@ -192,6 +202,7 @@ public class OurpayPanel {
     private View getPanelRemainingRow(String amount) {
 
         View footer = mBaseActivity.getLayoutInflater().inflate(R.layout.ourpay_panel_row_footer, null, false);
+        footer.setBackgroundColor(Color.parseColor("#000000"));
         TextView textViewAmount = (TextView) footer.findViewById(R.id.textView_amount_total);
         TextView textViewLabel = (TextView) footer.findViewById(R.id.textView_amount_label);
         textViewAmount.setText(amount);

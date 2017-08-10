@@ -4,7 +4,6 @@ import javax.inject.Inject;
 
 import au.com.dealsdirect.data.DataManager;
 import au.com.dealsdirect.ui.base.BasePresenter;
-import au.com.dealsdirect.ui.controller.checkout.paymentselect.PaymentSelectMvpPresenter;
 import au.com.dealsdirect.utils.rx.SchedulerProvider;
 import io.reactivex.disposables.CompositeDisposable;
 
@@ -31,5 +30,12 @@ public class PaymentSuccessPresenter<V extends PaymentSuccessMvpView> extends Ba
 
         }
         getDataManager().setPaymentCount(paymentCount + 1);
+    }
+
+    @Override
+    public void generateOurpay() {
+        if (getDataManager().getIsMyPayEnabled()){
+            getMvpView().showOurpay();
+        }
     }
 }

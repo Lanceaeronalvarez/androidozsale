@@ -35,6 +35,8 @@ public interface MainMvpView extends MvpView, BrainTreeListeners {
 
     void callCreatePaymentTransaction(String paymentNonce);
 
+    void callCreatePaymentTransaction(String paymentType, String paymentNonce);
+
     void createPaymentTransactionSuccess(CreatePaymentTransaction.ResponseValue responseValue);
 
 

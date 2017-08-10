@@ -9,4 +9,6 @@ import au.com.dealsdirect.ui.base.MvpView;
 public interface PaymentSuccessMvpView extends MvpView{
 
     void showRatePopUp();
+
+    void showOurpay();
 }

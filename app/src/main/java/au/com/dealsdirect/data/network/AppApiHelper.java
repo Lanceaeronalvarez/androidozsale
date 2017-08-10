@@ -61,6 +61,10 @@ import au.com.dealsdirect.data.network.model.login.LoginTicket;
 import au.com.dealsdirect.data.network.model.login.Logout;
 import au.com.dealsdirect.data.network.model.orders.GetOrderPaymentDetails;
 import au.com.dealsdirect.data.network.model.orders.GetPaymentsList;
+import au.com.dealsdirect.data.network.model.ourpayverificationcodeconfirm.VerificationCodeConfirmRequest;
+import au.com.dealsdirect.data.network.model.ourpayverificationcodeconfirm.VerificationCodeConfirmResponseBody;
+import au.com.dealsdirect.data.network.model.ourpayverificationnormalizephone.VerificationNormalizePhoneRequest;
+import au.com.dealsdirect.data.network.model.ourpayverificationnormalizephone.VerificationNormalizePhoneResponseBody;
 import au.com.dealsdirect.data.network.model.productdetails.GetPublicSaleDetailsRequest;
 import au.com.dealsdirect.data.network.model.productdetails.GetPublicSaleDetailsResponse;
 import au.com.dealsdirect.data.network.model.publicsalescategories.GetPublicSalesCategoriesRequest;
@@ -676,6 +680,29 @@ public class AppApiHelper implements ApiHelper {
                 .build()
                 .getObjectObservable(CreateReturnRequestResponseBody.class);
     }
+
+    @Override
+    public Observable<VerificationNormalizePhoneResponseBody> callNormalizePhone(VerificationNormalizePhoneRequest verificationNormalizePhoneRequest) {
+        return Rx2AndroidNetworking.post(ApiEndPoint.SMS_VERIFICATION_NORMALIZE_PHONE)
+                .addJSONObjectBody(JsonUtils.convertToJsonObject(verificationNormalizePhoneRequest))
+                .build()
+                .getObjectObservable(VerificationNormalizePhoneResponseBody.class);
+    }
+
+    @Override
+    public Observable<VerificationNormalizePhoneResponseBody> callVerificationCodeSend(VerificationNormalizePhoneRequest verificationNormalizePhoneRequest) {
+        return Rx2AndroidNetworking.post(ApiEndPoint.SMS_VERIFICATION_CODE_SEND)
+                .addJSONObjectBody(JsonUtils.convertToJsonObject(verificationNormalizePhoneRequest))
+                .build()
+                .getObjectObservable(VerificationNormalizePhoneResponseBody.class);
+    }
+
+    @Override
+    public Observable<VerificationCodeConfirmResponseBody> callVerificationCodeConfirm(VerificationCodeConfirmRequest verificationCodeConfirmRequest) {
+        return Rx2AndroidNetworking.post(ApiEndPoint.SMS_VERIFICATION_CODE_CONFRIM)
+                .addJSONObjectBody(JsonUtils.convertToJsonObject(verificationCodeConfirmRequest))
+                .build()
+                .getObjectObservable(VerificationCodeConfirmResponseBody.class);    }
 
     @Override
     public Observable<JSONObject> callMasterpassPayment(HashMap<String, Object> param) {

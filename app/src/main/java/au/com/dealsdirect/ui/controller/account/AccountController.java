@@ -14,7 +14,6 @@ import android.widget.TextView;
 
 import com.bluelinelabs.conductor.RouterTransaction;
 import com.bluelinelabs.conductor.changehandler.HorizontalChangeHandler;
-import com.squareup.haha.perflib.Main;
 
 import java.io.Serializable;
 import java.util.List;
@@ -32,7 +31,6 @@ import au.com.dealsdirect.ui.controller.language.LanguageController;
 import au.com.dealsdirect.ui.controller.legalities.LegalitiesController;
 import au.com.dealsdirect.ui.controller.orders.orders.OrdersController;
 import au.com.dealsdirect.ui.controller.returns.currentreturns.CurrentReturnsController;
-import au.com.dealsdirect.ui.controller.shops.ShopsController;
 import au.com.dealsdirect.ui.controller.vouchers.View.ViewVouchersController;
 import au.com.dealsdirect.ui.custom.CustomAlertDialog;
 import au.com.dealsdirect.ui.main.MainActivity;
@@ -257,6 +255,7 @@ public class AccountController extends BaseController implements AccountMvpView,
 
                 @Override
                 public void error() {
+
                     mFilterButton.setImageDrawable(getActivity().getResources().getDrawable(R.drawable.ic_login));
                 }
             });

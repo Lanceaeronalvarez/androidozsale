@@ -15,6 +15,7 @@ import android.widget.TextView;
 
 import com.bluelinelabs.conductor.RouterTransaction;
 import com.bluelinelabs.conductor.changehandler.HorizontalChangeHandler;
+import com.braintreepayments.api.ThreeDSecure;
 import com.google.gson.Gson;
 
 import java.util.ArrayList;
@@ -37,10 +38,12 @@ import au.com.dealsdirect.ui.base.BaseController;
 import au.com.dealsdirect.ui.controller.address.addnewaddress.AddNewAddressController;
 import au.com.dealsdirect.ui.controller.address.viewaddress.ViewAddressController;
 import au.com.dealsdirect.ui.controller.checkout.addpayment.AddPaymentController;
+import au.com.dealsdirect.ui.controller.checkout.ourpay.OurpaySMSVerificationController;
 import au.com.dealsdirect.ui.controller.checkout.paymentselect.PaymentSelectController;
 import au.com.dealsdirect.ui.controller.home.HomeController;
 import au.com.dealsdirect.ui.controller.masterpass.MasterpassController;
 import au.com.dealsdirect.ui.controller.vouchers.Add.AddVouchersController;
+import au.com.dealsdirect.ui.custom.CustomAlertDialog;
 import au.com.dealsdirect.ui.main.FetchTokenHandler;
 import au.com.dealsdirect.ui.main.MainActivity;
 import au.com.dealsdirect.ui.main.MainMvpView;
@@ -59,6 +62,8 @@ public class CheckoutController extends BaseController implements CheckoutMvpVie
     public static final String CARD_MASTERPASS = "Masterpass";
     public static final String CARD_MASTERCARD = "MasterCard";
     public static final String CARD_VISA = "Visa";
+    private static final String PAYMENT_TYPE_MYPAY = "mypay";
+
 
     @Inject
     CheckoutMvpPresenter<CheckoutMvpView> mPresenter;
@@ -95,7 +100,6 @@ public class CheckoutController extends BaseController implements CheckoutMvpVie
     RelativeLayout mNoCartItemsLayout;
     @BindView(R.id.partial_checkout_empty_button)
     Button mShopNowButton;
-
     @BindView(R.id.partial_toolbar_title_view)
     TextView mTitleTextView;
 
@@ -107,6 +111,7 @@ public class CheckoutController extends BaseController implements CheckoutMvpVie
     private CheckoutOrderAdapter mAdapter;
 
     private boolean mIsVoucherAdded = false;
+    private String mCartPhone;
 
     MainActivity mActivity;
 
@@ -137,9 +142,17 @@ public class CheckoutController extends BaseController implements CheckoutMvpVie
                             .popChangeHandler(new HorizontalChangeHandler()));
                 } else {
                     //push controller to add payment
-                    getRouter().pushController(RouterTransaction.with(new AddPaymentController(true))
-                            .pushChangeHandler(new HorizontalChangeHandler())
-                            .popChangeHandler(new HorizontalChangeHandler()));
+                    if (!isAddressValid()) {
+                        //push add new address fragment
+                        CustomAlertDialog.showCustomAlertDialog(getActivity(), CustomAlertDialog.CustomDialogIconState.NEGATIVE, mActivity.getString(R.string.add_address_before_payment));
+                        getRouter().pushController(RouterTransaction.with(new AddNewAddressController(new Gson().toJson(mDecorationInfoList), true))
+                                .pushChangeHandler(new HorizontalChangeHandler())
+                                .popChangeHandler(new HorizontalChangeHandler()));
+                    }else{
+                        getRouter().pushController(RouterTransaction.with(new AddPaymentController(true))
+                                .pushChangeHandler(new HorizontalChangeHandler())
+                                .popChangeHandler(new HorizontalChangeHandler()));
+                    }
                 }
 
             } else if (view.getId() == mVoucherChangeText.getId()
@@ -261,8 +274,12 @@ public class CheckoutController extends BaseController implements CheckoutMvpVie
     @Override
     public void showMyPayDetails(Value value, Ourpay ourpay) {
         if(value.getMyPayDetails().getEnabled()){
-            OurpayPanel ourpayPanel = new OurpayPanel((BaseActivity)getActivity());
+            ((MainActivity)getActivity()).setOurpay(ourpay);
+            ((MainActivity)getActivity()).setThreeDSecureRequired(value.threeDSecureRequired);
 
+
+            OurpayPanel ourpayPanel = new OurpayPanel((BaseActivity)getActivity());
+            mOurpay = ourpay;
             mOurpayHolder.removeAllViews();
             PaymentMethod paymentMethod = ((MainActivity) getActivity()).getPaymentMethodSelected();
             Log.d("ourpay", "showMyPayDetails. payment type = "+paymentMethod.getPaymentType() +  " , "+ourpay.isCanUse());
@@ -307,6 +324,8 @@ public class CheckoutController extends BaseController implements CheckoutMvpVie
         if (deliveryAddress != null) {
             ((TextView) mAddressLayout.findViewById(R.id.partial_checkout_address_name)).setText(deliveryAddress.name);
             ((TextView) mAddressLayout.findViewById(R.id.partial_checkout_address_details)).setText(formAddressDetails(deliveryAddress));
+            mCartPhone = deliveryAddress.phone;
+
             mAddNewAddressLayout.setVisibility(View.GONE);
             mAddressLayout.setVisibility(View.VISIBLE);
             mAddressChangeText.setVisibility(View.VISIBLE);
@@ -320,6 +339,7 @@ public class CheckoutController extends BaseController implements CheckoutMvpVie
     @Override
     public void showPaymentDetails(PaymentMethod paymentMethod) {
 
+        Log.d("ourpay", "payment = "+paymentMethod.getPaymentType());
         if (paymentMethod == null) {
             mAddNewPaymentLayout.setVisibility(View.VISIBLE);
             mPaymentLayout.setVisibility(View.GONE);
@@ -477,12 +497,33 @@ public class CheckoutController extends BaseController implements CheckoutMvpVie
     public void onOurpayButtonClick() {
 
         assert (getActivity()) != null;
-        if (((MainActivity)getActivity()).getPaymentMethodSelected().getPaymentType().equalsIgnoreCase(CARD_PAYPAL)){
 
-            if (mCheckBoxOurpayTC != null && !mCheckBoxOurpayTC.isChecked()){
+        if (mActivity.isBraintreeInitialized()) {
+            if (mActivity.getPaymentMethodSelected() == null) {
+                getRouter().pushController(RouterTransaction.with(new AddPaymentController(false))
+                        .pushChangeHandler(new HorizontalChangeHandler())
+                        .popChangeHandler(new HorizontalChangeHandler()));
 
+            } else {
+                if (!mActivity.getPaymentMethodSelected().getPaymentType().equalsIgnoreCase(CARD_PAYPAL)){
+
+                    if (mCheckBoxOurpayTC != null && !mCheckBoxOurpayTC.isChecked()){
+                        CustomAlertDialog.showCustomAlertDialog(getActivity(), CustomAlertDialog.CustomDialogIconState.NEGATIVE, "Please agree with OurPay's terms and conditions");
+                    }
+
+                    if (mOurpay.isPhoneVerificationRequired()){
+
+                        getRouter().pushController(RouterTransaction.with(OurpaySMSVerificationController.newInstance(mCartPhone))
+                                .pushChangeHandler(new HorizontalChangeHandler())
+                                .popChangeHandler(new HorizontalChangeHandler()));
+                    } else{
+                        ourpayPaymentSubmit();
+                    }
+                }
             }
         }
+
+
     }
 
     private boolean isAddressValid() {
@@ -534,4 +575,19 @@ public class CheckoutController extends BaseController implements CheckoutMvpVie
         if (!isAttached()) return;
         hidePaymentButtons();
     }
+
+    private void ourpayPaymentSubmit(){
+
+        if (((MainActivity)getActivity()).isThreeDSecureRequired()){
+            callThree3DS(Double.toString(mOurpay.getAmount()));
+        } else {
+            ((MainActivity)getActivity()).callCreatePaymentTransaction(PAYMENT_TYPE_MYPAY,"");
+        }
+    }
+
+    private void callThree3DS(String cost){
+        showLoading();
+        ThreeDSecure.performVerification(((MainActivity)getActivity()).getBraintreeFragment(), mOurpay.getPaymentMethodNonce().getNonce(),cost);
+    }
 }
+

@@ -6,7 +6,7 @@ import au.com.dealsdirect.BuildConfig;
 public final class ApiEndPoint {
 
     //    private static final String TEST_API_LEGACY = "https://sbx-mob-api.mysaledev.com/public/v3.18/api.asmx/";
-    private static final String TEST_API_LEGACY = "https://api.mysaledev.com/public/v3.18/api.asmx/";
+    private static final String TEST_API_LEGACY = "https://api.mysaledev.com/public/v3.17/api.asmx/";
     private static final String LIVE_API_LEGACY = "https://api.apacsale.com/public/v3.18/api.asmx/";
 
     private static final String TEST_API_GENIE = "https://genie-ui-dealsdirect-pre.mysaledev.com/";
@@ -40,6 +40,11 @@ public final class ApiEndPoint {
     private static final String BASE_URL = API_HOST + HANDLER_PREFIX;
     private static final String BASE_URL_ASMX = API_HOST + HANDLER_ASMX_PREFIX;
 
+    /* OURPAY, SMS VERIFICATION */
+    public static final String SMS_VERIFICATION_NORMALIZE_PHONE = getBaseApiLegacy()+ "NormalizePhone";
+    public static final String SMS_VERIFICATION_CODE_SEND = getBaseApiLegacy() + "VerificationCodeSend";
+    public static final String SMS_VERIFICATION_CODE_CONFRIM = getBaseApiLegacy() + "VerificationCodeConfirm";
+    public static final String OURPAY_GET_TEMPLATE_TEXT = getBaseApiLegacy() + "GetTemplateTexts";
 
     /*GCM CALLS*/
     public static final String GCM_REGISTER_DEVICE = getBaseApiLegacy() + "RegisterDevice";

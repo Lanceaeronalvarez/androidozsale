@@ -10,6 +10,7 @@ import au.com.dealsdirect.ui.controller.cart.CartController;
 import au.com.dealsdirect.ui.controller.categories.CategoriesController;
 import au.com.dealsdirect.ui.controller.checkout.addpayment.AddPaymentController;
 import au.com.dealsdirect.ui.controller.checkout.checkout.CheckoutController;
+import au.com.dealsdirect.ui.controller.checkout.ourpay.OurpaySMSVerificationController;
 import au.com.dealsdirect.ui.controller.checkout.paymentselect.PaymentSelectController;
 import au.com.dealsdirect.ui.controller.checkout.paymentsuccess.PaymentSuccessController;
 import au.com.dealsdirect.ui.controller.contact.addcontact.AddContactController;
@@ -134,4 +135,6 @@ public interface ControllerComponent {
     void inject(SearchFilterController controller);
 
     void inject(MasterpassController controller);
+
+    void inject(OurpaySMSVerificationController controller);
 }
