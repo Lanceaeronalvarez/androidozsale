@@ -62,7 +62,7 @@ public class FacetsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
         if (!mData.isEmpty()) {
 
             vh.mFacetName.setText(mData.get(position).second);
-            vh.mFacetBackground.setImageDrawable(mContext.getDrawable(mapDrawable(position)));
+            vh.mFacetBackground.setImageResource(mapDrawable(position));
 
             if(isFacetActive(mData.get(position).first)){
                 vh.mFacetIndicator.setVisibility(View.VISIBLE);

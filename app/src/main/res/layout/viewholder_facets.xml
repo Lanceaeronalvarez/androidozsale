@@ -21,8 +21,8 @@
 
             <ImageView
                 android:id="@+id/row_facets_image"
-                android:layout_width="40dp"
-                android:layout_height="40dp"
+                android:layout_width="@dimen/category_image_size"
+                android:layout_height="@dimen/category_image_size"
                 android:layout_centerInParent="true"/>
 
         </RelativeLayout>

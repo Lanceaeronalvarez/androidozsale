@@ -49,6 +49,7 @@
     <dimen name="cartview_x_adjustment">30dp</dimen>
     <dimen name="cartview_y_adjustment">40dp</dimen>
 
+    <dimen name="category_image_size">60dp</dimen>
     <dimen name="category_background_size">120dp</dimen>
     <dimen name="category_container_width">150dp</dimen>
 
