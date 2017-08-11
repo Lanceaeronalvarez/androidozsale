@@ -60,6 +60,12 @@ public abstract class BasePullToRefreshController extends BaseController impleme
         return view;
     }
 
+    @Override
+    protected void onAttach(@NonNull View view) {
+        super.onAttach(view);
+        mPtrLayout.setIsChildScrollingEnabled(false);
+    }
+
     protected void fillContent(View view) {
         mContentLayout.addView(view);
         addOverScrollListener(mContentLayout);
