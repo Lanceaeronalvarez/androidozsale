@@ -7,7 +7,6 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.text.Html;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -199,13 +198,9 @@ public class PaymentSuccessController extends BaseController implements PaymentS
     public void showOurpay() {
         mOurpay.setState(OurpayState.POSTCART);
         if (mOurpay != null){
-            Log.d("postcart", "entered");
             OurpayPanel ourpayPanel = new OurpayPanel((BaseActivity)getActivity());
             mLLOurpay.removeAllViews();
             mLLOurpay.addView(ourpayPanel.generatePanel(mOurpay));
-        }else{
-            Log.d("postcart", "not entered");
-
         }
     }
 

@@ -1,5 +1,7 @@
 package au.com.dealsdirect.ui.controller.checkout.checkout;
 
+import android.util.Log;
+
 import com.androidnetworking.error.ANError;
 
 import java.util.ArrayList;
@@ -14,6 +16,7 @@ import au.com.dealsdirect.data.network.model.checkout.getcurrentorder.Value;
 import au.com.dealsdirect.ourpay.Ourpay;
 import au.com.dealsdirect.ourpay.OurpayPhoneVerification;
 import au.com.dealsdirect.ourpay.OurpayState;
+import au.com.dealsdirect.ourpay.OurpayStateManager;
 import au.com.dealsdirect.ourpay.OurpayUtils;
 import au.com.dealsdirect.ui.base.BasePresenter;
 import au.com.dealsdirect.utils.CartUtil;
@@ -32,7 +35,8 @@ public class CheckoutPresenter<V extends CheckoutMvpView> extends BasePresenter<
     private boolean mFetchCartFinished = false;
     private boolean mFetchUserPaymentMethodsFinished = false;
     private Ourpay ourpay;
-    private Value mValue;
+    private boolean isPaymentsCalled = false;
+    private boolean isCartDetailsCalled = false;
 
     @Inject
     public CheckoutPresenter(DataManager dataManager, SchedulerProvider schedulerProvider,
@@ -112,7 +116,7 @@ public class CheckoutPresenter<V extends CheckoutMvpView> extends BasePresenter<
                             getMvpView().setPaymentList(responseValue.getUserPaymentMethods());
                             getMvpView().showPaymentDetails(responseValue.getD().getValue().getLastPaymentMethod());
                             mFetchUserPaymentMethodsFinished = true;
-                            getMvpView().showMyPayDetails(mValue, ourpay);
+                            isPaymentsCalled = true;
 
                         } else {
                             getMvpView().onError(responseValue.getD().getMessage());
@@ -201,9 +205,10 @@ public class CheckoutPresenter<V extends CheckoutMvpView> extends BasePresenter<
     }
 
     @Override
-    public void generateOurpay() {
+    public void generateOurpay(Value value) {
         ourpay = new Ourpay();
-        Value value = mValue;
+        ourpay.setState(OurpayState.ONCART);
+
         try {
 
             ourpay.setUserAmount(value.getSummary().total);
@@ -214,7 +219,12 @@ public class CheckoutPresenter<V extends CheckoutMvpView> extends BasePresenter<
             ourpay.setTermsAndConditionsCheckboxState(value.getMyPayDetails().getTermsAndConditions());
             ourpay.setMinAmount(value.getMyPayDetails().getPaymentConditions().minAmountThreshold);
             ourpay.setMaxAmount(value.getMyPayDetails().getPaymentConditions().maxAmountThreshold);
+
+            if (value.getMyPayDetails().getPaymentSchemeDescription()!=null){
+
+            }
             ourpay.setDetails(value.getMyPayDetails().getPaymentSchemeDescription());
+            Log.d("Checkout", "detail = "+value.getMyPayDetails().getPaymentSchemeDescription());
 
 
             /* specifics */
@@ -238,7 +248,6 @@ public class CheckoutPresenter<V extends CheckoutMvpView> extends BasePresenter<
 
             try {
                 ourpay.setPlannedTransactions(value.getMyPayDetails().getBillingAgreement().getPlannedTransactions());
-                ourpay.setState(OurpayState.ONCART);
             } catch (Exception e){
                 ourpay.setPlannedTransactions(null);
                 ourpay.setState(ourpay.getState() | OurpayState.ERROR);
@@ -252,7 +261,9 @@ public class CheckoutPresenter<V extends CheckoutMvpView> extends BasePresenter<
                 e.printStackTrace();
             }
 
+            OurpayStateManager.setDetails(ourpay, getDataManager().getIsMyPayEnabled());
 
+            getMvpView().showMyPayDetails(value, ourpay);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -278,7 +289,10 @@ public class CheckoutPresenter<V extends CheckoutMvpView> extends BasePresenter<
 //                    e.printStackTrace();
 //                }
 
-                mValue = response.getD().getValue();
+                Value value = response.getD().getValue();
+                isCartDetailsCalled = true;
+
+                getMvpView().storeCartDetails(value);
 
                 getMvpView().showCartDetails(response.getD().getValue().getItems());
 

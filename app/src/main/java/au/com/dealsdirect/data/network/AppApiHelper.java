@@ -55,6 +55,8 @@ import au.com.dealsdirect.data.network.model.invite.SetInviteRequest;
 import au.com.dealsdirect.data.network.model.invite.SetInviteResponse;
 import au.com.dealsdirect.data.network.model.legalities.GetTemplateTextRequest;
 import au.com.dealsdirect.data.network.model.legalities.GetTemplateTextResponse;
+import au.com.dealsdirect.data.network.model.legalities.GetTemplateTextsRequest;
+import au.com.dealsdirect.data.network.model.legalities.GetTemplateTextsResponse;
 import au.com.dealsdirect.data.network.model.login.LoginEmail;
 import au.com.dealsdirect.data.network.model.login.LoginFacebook;
 import au.com.dealsdirect.data.network.model.login.LoginTicket;
@@ -515,6 +517,15 @@ public class AppApiHelper implements ApiHelper {
                 .addJSONObjectBody(JsonUtils.convertToJsonObject(templateTextRequest))
                 .build()
                 .getObjectObservable(GetTemplateTextResponse.class);
+    }
+
+    @Override
+    public Observable<GetTemplateTextsResponse> callGetTemplateTexts(GetTemplateTextsRequest templateTextRequest) {
+        return Rx2AndroidNetworking.post(ApiEndPoint.GET_TEMPLATE_TEXTS)
+                .addHeaders(mApiHeader.getPublicApiHeader())
+                .addJSONObjectBody(JsonUtils.convertToJsonObject(templateTextRequest))
+                .build()
+                .getObjectObservable(GetTemplateTextsResponse.class);
     }
 
     @Override

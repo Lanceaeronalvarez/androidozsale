@@ -51,6 +51,8 @@ import au.com.dealsdirect.data.network.model.invite.SetInviteRequest;
 import au.com.dealsdirect.data.network.model.invite.SetInviteResponse;
 import au.com.dealsdirect.data.network.model.legalities.GetTemplateTextRequest;
 import au.com.dealsdirect.data.network.model.legalities.GetTemplateTextResponse;
+import au.com.dealsdirect.data.network.model.legalities.GetTemplateTextsRequest;
+import au.com.dealsdirect.data.network.model.legalities.GetTemplateTextsResponse;
 import au.com.dealsdirect.data.network.model.login.LoginEmail;
 import au.com.dealsdirect.data.network.model.login.LoginFacebook;
 import au.com.dealsdirect.data.network.model.login.LoginTicket;
@@ -121,7 +123,6 @@ public interface ApiHelper {
     Observable<GetSaleItemsResponse> callGetSaleItemsRequest(GetSaleItemsRequest getSaleItemsRequest);
 
     Observable<String> callAddItemToCart(AddToCartRequest requestValues);
-
 
     // CONFIG API CALLS
     Observable<GetServerSettings.ResponseValue> callGetServerSettings(String countryId);
@@ -227,6 +228,9 @@ public interface ApiHelper {
 
     // LEGALITIES API CALLS
     Observable<GetTemplateTextResponse> callGetTemplateText(GetTemplateTextRequest templateTextRequest);
+
+    Observable<GetTemplateTextsResponse> callGetTemplateTexts(GetTemplateTextsRequest templateTextRequest);
+
 
     //GCM api calls
     Observable<RegisterDevice.ResponseValue> callRegisterDevice(RegisterDevice.RequestValue requestValue);

@@ -9,6 +9,7 @@ import com.bluelinelabs.conductor.Router;
 import au.com.dealsdirect.data.auth.AuthHandler;
 import au.com.dealsdirect.data.network.model.checkout.CreatePaymentTransaction;
 import au.com.dealsdirect.data.network.model.checkout.getuserpaymentmethods.PaymentMethod;
+import au.com.dealsdirect.data.network.model.legalities.GetTemplateTextsResponse;
 import au.com.dealsdirect.ui.base.MvpView;
 
 public interface MainMvpView extends MvpView, BrainTreeListeners {
@@ -36,6 +37,8 @@ public interface MainMvpView extends MvpView, BrainTreeListeners {
     void callCreatePaymentTransaction(String paymentNonce);
 
     void callCreatePaymentTransaction(String paymentType, String paymentNonce);
+
+    void storeTemplateTexts(GetTemplateTextsResponse.GetTemplateTextsValue templateKeysValue);
 
     void createPaymentTransactionSuccess(CreatePaymentTransaction.ResponseValue responseValue);
 

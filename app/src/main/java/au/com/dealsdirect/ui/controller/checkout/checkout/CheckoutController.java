@@ -112,6 +112,7 @@ public class CheckoutController extends BaseController implements CheckoutMvpVie
 
     private boolean mIsVoucherAdded = false;
     private String mCartPhone;
+    private Value mValue;
 
     MainActivity mActivity;
 
@@ -273,7 +274,11 @@ public class CheckoutController extends BaseController implements CheckoutMvpVie
 
     @Override
     public void showMyPayDetails(Value value, Ourpay ourpay) {
-        if(value.getMyPayDetails().getEnabled()){
+
+        if(value!=null){
+
+            Log.d("checkout", "showMyDetails");
+
             ((MainActivity)getActivity()).setOurpay(ourpay);
             ((MainActivity)getActivity()).setThreeDSecureRequired(value.threeDSecureRequired);
 
@@ -282,9 +287,10 @@ public class CheckoutController extends BaseController implements CheckoutMvpVie
             mOurpay = ourpay;
             mOurpayHolder.removeAllViews();
             PaymentMethod paymentMethod = ((MainActivity) getActivity()).getPaymentMethodSelected();
-            Log.d("ourpay", "showMyPayDetails. payment type = "+paymentMethod.getPaymentType() +  " , "+ourpay.isCanUse());
+            Log.d("checkout", "showMyDetails iscanuse ="+ourpay.isCanUse());
+            mOurpayHolder.addView(ourpayPanel.generatePanel(ourpay));
+
             if (!paymentMethod.getPaymentType().equalsIgnoreCase(CARD_PAYPAL) && ourpay.isCanUse()) {
-                mOurpayHolder.addView(ourpayPanel.generatePanel(ourpay));
                 mButtonOurpay = (RelativeLayout) mOurpayHolder.findViewById(R.id.rl_button_ourpay);
                 mButtonOurpay.setOnClickListener(view -> onOurpayButtonClick());
 
@@ -339,7 +345,6 @@ public class CheckoutController extends BaseController implements CheckoutMvpVie
     @Override
     public void showPaymentDetails(PaymentMethod paymentMethod) {
 
-        Log.d("ourpay", "payment = "+paymentMethod.getPaymentType());
         if (paymentMethod == null) {
             mAddNewPaymentLayout.setVisibility(View.VISIBLE);
             mPaymentLayout.setVisibility(View.GONE);
@@ -420,7 +425,7 @@ public class CheckoutController extends BaseController implements CheckoutMvpVie
             }
             ((TextView) mSummaryLayout.findViewById(R.id.partial_checkout_summary_total)).setText(PriceUtils.getPriceStringValue(summary.total));
         }
-        mPresenter.generateOurpay();
+        mPresenter.generateOurpay(mValue);
 
     }
 
@@ -428,6 +433,11 @@ public class CheckoutController extends BaseController implements CheckoutMvpVie
     public void setPaymentList(List<PaymentMethod> paymentList) {
         mPaymentList.clear();
         mPaymentList.addAll(paymentList);
+    }
+
+    @Override
+    public void storeCartDetails(Value value) {
+        mValue = value;
     }
 
     @Override

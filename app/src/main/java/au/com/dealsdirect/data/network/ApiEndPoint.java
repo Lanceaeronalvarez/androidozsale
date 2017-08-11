@@ -44,7 +44,6 @@ public final class ApiEndPoint {
     public static final String SMS_VERIFICATION_NORMALIZE_PHONE = getBaseApiLegacy()+ "NormalizePhone";
     public static final String SMS_VERIFICATION_CODE_SEND = getBaseApiLegacy() + "VerificationCodeSend";
     public static final String SMS_VERIFICATION_CODE_CONFRIM = getBaseApiLegacy() + "VerificationCodeConfirm";
-    public static final String OURPAY_GET_TEMPLATE_TEXT = getBaseApiLegacy() + "GetTemplateTexts";
 
     /*GCM CALLS*/
     public static final String GCM_REGISTER_DEVICE = getBaseApiLegacy() + "RegisterDevice";
@@ -139,6 +138,8 @@ public final class ApiEndPoint {
 
     /* Legalities Endpoint*/
     public static final String GET_LEGALITIES_TEXT = getBaseApiLegacy() + "GetTemplateText";
+    public static final String GET_TEMPLATE_TEXTS = getBaseApiLegacy() + "GetTemplateTexts";
+
 
 
     /* Login Controller */

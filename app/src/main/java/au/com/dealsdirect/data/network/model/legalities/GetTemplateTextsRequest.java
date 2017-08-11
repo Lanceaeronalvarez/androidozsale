@@ -4,10 +4,10 @@ import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
 /**
- * Created by Paul on 7/14/17.
+ * Created by dp on 7/14/17.
  */
 
-public class GetTemplateTextRequest {
+public class GetTemplateTextsRequest {
 
     @SerializedName("countryID")
     @Expose
@@ -17,6 +17,7 @@ public class GetTemplateTextRequest {
     @Expose
     public String languageId;
 
-    public String templateKey;
-
+    @SerializedName("templateKeys")
+    @Expose
+    public String[] templateKeys;
 }

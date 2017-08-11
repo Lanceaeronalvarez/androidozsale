@@ -14,6 +14,7 @@ import com.mysale.genie.utility.config.api.GetServerSettings;
 import com.mysale.genie.utility.config.model.getappsettingssection.Android;
 import com.mysale.genie.utility.config.model.getappsettingssection.Payload;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -26,6 +27,8 @@ import au.com.dealsdirect.data.auth.AuthHandler;
 import au.com.dealsdirect.data.network.model.checkout.CreatePaymentMethod;
 import au.com.dealsdirect.data.network.model.checkout.CreatePaymentTransaction;
 import au.com.dealsdirect.data.network.model.checkout.GetPaymentToken;
+import au.com.dealsdirect.data.network.model.legalities.GetTemplateTextsRequest;
+import au.com.dealsdirect.data.network.model.legalities.GetTemplateTextsResponse;
 import au.com.dealsdirect.data.network.model.login.LoginEmail;
 import au.com.dealsdirect.data.network.model.login.LoginTicket;
 import au.com.dealsdirect.data.network.model.login.Logout;
@@ -38,6 +41,30 @@ import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.functions.Consumer;
 
 public class MainPresenter<V extends MainMvpView> extends BasePresenter<V> implements MainMvpPresenter<V> {
+
+    public static final String KEY_CHECKOUT_MYPAY_PAY_EXCEED_LIMIT = "_checkoutMyPayPayExceedLimit";
+    public static final String KEY_CHECKOUT_MYPAY_PAY_INVALID_PAYMENT_METHOD = "_checkoutMyPayPayInvalidPaymentMethod";
+    public static final String KEY_CHECKOUT_MYPAY_PAY_OUT_OF_RANGE_MOBILE_APP = "_checkoutMyPayPayOutOfRangeMobileApp";
+    public static final String KEY_CHECKOUT_MYPAY_PAY_OUT_UP_TO_MOBILE_APP = "_checkoutMyPayPayOutUpToMobileApp";
+    public static final String KEY_CHECKOUT_MYPAY_PAY_UNTRUSTED = "_checkoutMyPayPayUntrusted";
+    public static final String KEY_MYPAY_DETAILS_MOBILE_APP = "myPayDetailsMobileApp";
+    public static final String KEY_OURPAY_THANK_YOU_TEXT = "_OurPayThankYouTextMobileApp";
+    public static final String KEY_OURPAY_TC_TEXT = "_OurPayTC_text"; // Using web's template text for hyper link
+    public static final String KEY_OURPAY_TC_VALIDATION_FAILED = "_OurPayTCValidationFailed";
+    public static final String KEY_PAYMENT_SCHEDULE = "_PaymentSchedule";
+
+    private static String[] templateTextsKeys = {
+            KEY_CHECKOUT_MYPAY_PAY_EXCEED_LIMIT, //0
+            KEY_CHECKOUT_MYPAY_PAY_INVALID_PAYMENT_METHOD, //1
+            KEY_CHECKOUT_MYPAY_PAY_OUT_OF_RANGE_MOBILE_APP, //2
+            KEY_CHECKOUT_MYPAY_PAY_OUT_UP_TO_MOBILE_APP, //3
+            KEY_CHECKOUT_MYPAY_PAY_UNTRUSTED, //4
+            KEY_MYPAY_DETAILS_MOBILE_APP, //5
+            KEY_OURPAY_THANK_YOU_TEXT, //6
+            KEY_OURPAY_TC_TEXT, //7
+            KEY_OURPAY_TC_VALIDATION_FAILED, //8
+            KEY_PAYMENT_SCHEDULE //9
+    };
 
     @Inject
     public MainPresenter(DataManager dataManager,
@@ -484,6 +511,35 @@ public class MainPresenter<V extends MainMvpView> extends BasePresenter<V> imple
     }
 
     @Override
+    public void callGetTemplateTexts() {
+        GetTemplateTextsRequest getTemplateTextRequest = new GetTemplateTextsRequest();
+        getTemplateTextRequest.templateKeys = templateTextsKeys;
+        getTemplateTextRequest.countryId = getDataManager().getCountryId();
+        getTemplateTextRequest.languageId = getDataManager().getLanguageId();
+        getCompositeDisposable().add(getDataManager().callGetTemplateTexts(getTemplateTextRequest)
+                .subscribeOn(getSchedulerProvider().io())
+                .observeOn(getSchedulerProvider().ui())
+                .subscribe(new Consumer<GetTemplateTextsResponse>() {
+                    @Override
+                    public void accept(@NonNull GetTemplateTextsResponse getTemplateTextsResponse) throws Exception {
+                        getDataManager().setMyPayTemplateTexts(getTemplateTextsResponse.getResponse().getValue());
+                        getMvpView().storeTemplateTexts(getTemplateTextsResponse.getResponse().getValue());
+
+                    }
+                }, new Consumer<Throwable>() {
+                    @Override
+                    public void accept(@NonNull Throwable throwable) throws Exception {
+
+                    }
+                }));
+    }
+
+    @Override
+    public String getStoredTemplateTexts(String detailKey) {
+        return getDataManager().getMyPayTemplateTexts(detailKey);
+    }
+
+    @Override
     public void initializeNotifications(Context context) {
         GNotification gNotification = new GNotification(getDataManager(), getSchedulerProvider(), getCompositeDisposable());
         gNotification.registerDeviceForNotification(context);
@@ -510,4 +566,16 @@ public class MainPresenter<V extends MainMvpView> extends BasePresenter<V> imple
         return getDataManager().isAuthorized();
     }
 
+    private static JSONArray constructArrayToJsonArray(String[] templateTextsKeys) {
+
+        JSONArray jsonArray = new JSONArray();
+        for (int i=0; i<templateTextsKeys.length; i++) {
+            try {
+                jsonArray.put(i, templateTextsKeys[i]);
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+        }
+        return jsonArray;
+    }
 }

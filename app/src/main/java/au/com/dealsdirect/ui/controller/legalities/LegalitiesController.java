@@ -36,6 +36,7 @@ public class LegalitiesController extends BaseController implements LegalitiesMv
     @BindView(R.id.partial_toolbar_arrow_title)
     TextView mTitleText;
 
+    String ourpayTermsAndConditionKey = "OurPayTermsAndConditions_Text";
 
     private String key;
 
@@ -80,7 +81,13 @@ public class LegalitiesController extends BaseController implements LegalitiesMv
 
         mTitleText.setText(title);
         mFilterButton.setVisibility(View.INVISIBLE);
-        mPresenter.loadText(key);
+
+        if (key.equals(ourpayTermsAndConditionKey)){
+            displayFetchedText(((MainActivity)getActivity()).getMyTemplateTexts(key));
+
+        }else{
+            mPresenter.loadText(key);
+        }
     }
 
     @Override

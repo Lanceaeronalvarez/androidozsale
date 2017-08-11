@@ -1,5 +1,6 @@
 package au.com.dealsdirect.ui.controller.checkout.checkout;
 
+import au.com.dealsdirect.data.network.model.checkout.getcurrentorder.Value;
 import au.com.dealsdirect.ui.base.MvpPresenter;
 import au.com.dealsdirect.ui.base.MvpView;
 
@@ -23,5 +24,5 @@ public interface CheckoutMvpPresenter<V extends MvpView> extends MvpPresenter<V>
 
     boolean checkIsLoggedIn();
 
-    void generateOurpay();
+    void generateOurpay(Value value);
 }

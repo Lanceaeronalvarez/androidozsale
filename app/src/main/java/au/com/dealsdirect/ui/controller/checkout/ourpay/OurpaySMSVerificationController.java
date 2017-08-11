@@ -5,7 +5,6 @@ import android.support.annotation.NonNull;
 import android.text.Editable;
 import android.text.InputFilter;
 import android.text.TextWatcher;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -136,7 +135,6 @@ public class OurpaySMSVerificationController extends BaseController implements O
 
     @Override
     public void callNormalizePhoneResponse(VerificationNormalizePhoneResponseBody response) {
-        Log.d("SMSVERIFICATION", "response = "+ response.getVerificationNormalizePhoneResponse().getValue().getPhone());
 
         if (!response.getVerificationNormalizePhoneResponse().getValue().getErrorMessage().isEmpty()){
             CustomAlertDialog.showCustomAlertDialog(getActivity(),
@@ -150,7 +148,6 @@ public class OurpaySMSVerificationController extends BaseController implements O
 
     @Override
     public void callVerificationCodeSendResponse(VerificationNormalizePhoneResponseBody response) {
-        Log.d("SMSVERIFICATION", "response verification = "+ response.getVerificationNormalizePhoneResponse().getValue().getPhone());
 
         if (!response.getVerificationNormalizePhoneResponse().getValue().getPhone().isEmpty()){
             setPhoneError(response.getVerificationNormalizePhoneResponse().getValue().getErrorMessage());

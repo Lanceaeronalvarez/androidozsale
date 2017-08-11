@@ -40,6 +40,7 @@ import au.com.dealsdirect.data.network.model.category.GetCategoryTreeResponse;
 import au.com.dealsdirect.data.network.model.checkout.CreatePaymentTransaction;
 import au.com.dealsdirect.data.network.model.checkout.getcurrentorder.MyPayDetails;
 import au.com.dealsdirect.data.network.model.checkout.getuserpaymentmethods.PaymentMethod;
+import au.com.dealsdirect.data.network.model.legalities.GetTemplateTextsResponse;
 import au.com.dealsdirect.ourpay.Ourpay;
 import au.com.dealsdirect.ourpay.OurpayState;
 import au.com.dealsdirect.ui.base.BaseActivity;
@@ -87,6 +88,7 @@ public class MainActivity extends BaseActivity implements MainMvpView {
 
     private boolean mIsFromCategories = false;
     private boolean isSearchActive = false;
+    private boolean isTemplateTextsStored = false;
 
     private Ourpay mOurpay;
     private boolean mThreeDSecureRequired;
@@ -102,6 +104,7 @@ public class MainActivity extends BaseActivity implements MainMvpView {
         setUnBinder(ButterKnife.bind(this));
 
         mPresenter.onAttach(this);
+        mPresenter.callGetTemplateTexts();
 
         mMainController = MainController.newInstance();
         mRouter = Conductor.attachRouter(this, mContainer, savedInstanceState);
@@ -324,6 +327,15 @@ public class MainActivity extends BaseActivity implements MainMvpView {
             DataCollector.collectDeviceData(mBraintreeFragment, mPresenter.getKountMerchantId(), handler);
         } else {
             DataCollector.collectDeviceData(mBraintreeFragment, handler);
+        }
+    }
+
+    @Override
+    public void storeTemplateTexts(GetTemplateTextsResponse.GetTemplateTextsValue value) {
+        if (value!=null){
+            Log.d("TemplateText", " value entered ");
+
+            isTemplateTextsStored = true;
         }
     }
 
@@ -614,4 +626,7 @@ public class MainActivity extends BaseActivity implements MainMvpView {
 
     }
 
+    public String getMyTemplateTexts(String detailKey){
+        return mPresenter.getStoredTemplateTexts(detailKey);
+    }
 }

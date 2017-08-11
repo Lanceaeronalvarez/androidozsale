@@ -33,6 +33,10 @@ public interface MainMvpPresenter<V extends MainMvpView> extends MvpPresenter<V>
 
     void callLogout(AuthHandler handler);
 
+    void callGetTemplateTexts();
+
+    String getStoredTemplateTexts(String detailKey);
+
     void initializeNotifications(Context context);
 
     String getKountMerchantId();

@@ -1,9 +1,12 @@
 package au.com.dealsdirect.ourpay;
 
+import android.app.Activity;
+import android.util.Log;
+
 import org.json.JSONArray;
 import org.json.JSONException;
 
-import au.com.dealsdirect.ui.base.BaseActivity;
+import au.com.dealsdirect.ui.main.MainActivity;
 import au.com.dealsdirect.utils.PriceUtils;
 
 /**
@@ -44,24 +47,29 @@ public class OurpayTemplateText {
             KEY_PAYMENT_SCHEDULE //9
     };
 
-    public static String getTemplateText(BaseActivity baseActivity, Ourpay ourpay){
+    public static String getTemplateText(Activity activity, Ourpay ourpay){
+        try {
+            String templateTexts = ((MainActivity) activity).getMyTemplateTexts(ourpay.getDetails());
+            Log.d("Checkout", "detail = "+ourpay.getDetails());
+            return parseTextSymbolsInString(templateTexts,ourpay);
 
-        String details = ourpay.getDetails();
-        return parseTextSymbolsInString(details, ourpay);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return "";
+        }
+
     }
 
-    public static String getText(BaseActivity baseActivity, String key) {
+    public static String getText(Activity activity, String key) {
+        try {
+            String templateTexts = ((MainActivity) activity).getMyTemplateTexts(key);
+            Log.d("Checkout", "detail = "+key);
+            return templateTexts;
 
-//        try {
-//            JSONObject jsonObject = new JSONObject(pref.getMyPayTemplateTexts());
-//
-//            return jsonObject.getString(key);
-//
-//        } catch (JSONException e) {
-//
-//            return "";
-//        }
-        return "";
+        } catch (Exception e) {
+            e.printStackTrace();
+            return "";
+        }
     }
 
     private static String parseTextSymbolsInString(String details, Ourpay ourpay) {
@@ -71,6 +79,7 @@ public class OurpayTemplateText {
         details = details.replace(KEY_CODE_MAX, PriceUtils.getPriceStringValue(ourpay.getMaxAmount()));
         details = details.replace(KEY_BILLING_PERIOD, ourpay.getBillingPeriod() + "");
         details = details.replace(KEY_TRANSACTION_COUNT, ourpay.getTransactionCount() + "");
+        Log.d("Checkout", "detail = "+details);
 
         return details;
 

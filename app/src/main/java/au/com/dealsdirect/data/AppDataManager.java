@@ -59,6 +59,8 @@ import au.com.dealsdirect.data.network.model.invite.SetInviteRequest;
 import au.com.dealsdirect.data.network.model.invite.SetInviteResponse;
 import au.com.dealsdirect.data.network.model.legalities.GetTemplateTextRequest;
 import au.com.dealsdirect.data.network.model.legalities.GetTemplateTextResponse;
+import au.com.dealsdirect.data.network.model.legalities.GetTemplateTextsRequest;
+import au.com.dealsdirect.data.network.model.legalities.GetTemplateTextsResponse;
 import au.com.dealsdirect.data.network.model.login.LoginEmail;
 import au.com.dealsdirect.data.network.model.login.LoginFacebook;
 import au.com.dealsdirect.data.network.model.login.LoginTicket;
@@ -461,6 +463,11 @@ public class AppDataManager implements DataManager {
     }
 
     @Override
+    public Observable<GetTemplateTextsResponse> callGetTemplateTexts(GetTemplateTextsRequest templateTextRequest) {
+        return mApiHelper.callGetTemplateTexts(templateTextRequest);
+    }
+
+    @Override
     public Observable<RegisterDevice.ResponseValue> callRegisterDevice(RegisterDevice.RequestValue requestValue) {
         return mApiHelper.callRegisterDevice(requestValue);
     }
@@ -719,6 +726,17 @@ public class AppDataManager implements DataManager {
     @Override
     public boolean getIsMyPayEnabled() {
         return mPreferencesHelper.getIsMyPayEnabled();
+    }
+
+    @Override
+    public void setMyPayTemplateTexts(GetTemplateTextsResponse.GetTemplateTextsValue value) {
+        mPreferencesHelper.setMyPayTemplateTexts(value);
+
+    }
+
+    @Override
+    public String getMyPayTemplateTexts(String detailKey) {
+        return mPreferencesHelper.getMyPayTemplateTexts(detailKey);
     }
 
     @Override

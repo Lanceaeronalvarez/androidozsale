@@ -1,6 +1,8 @@
 package au.com.dealsdirect.data.pref;
 
 
+import au.com.dealsdirect.data.network.model.legalities.GetTemplateTextsResponse;
+
 public interface PreferencesHelper {
 
 
@@ -97,4 +99,8 @@ public interface PreferencesHelper {
     void setIsMyPayEnabled(boolean isMyPayEnabled);
 
     boolean getIsMyPayEnabled();
+
+    void setMyPayTemplateTexts(GetTemplateTextsResponse.GetTemplateTextsValue value);
+
+    String getMyPayTemplateTexts(String detailKey);
 }

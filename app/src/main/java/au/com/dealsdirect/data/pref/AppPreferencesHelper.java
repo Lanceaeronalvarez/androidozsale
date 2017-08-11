@@ -11,6 +11,7 @@ import javax.inject.Inject;
 import javax.inject.Singleton;
 
 import au.com.dealsdirect.R;
+import au.com.dealsdirect.data.network.model.legalities.GetTemplateTextsResponse;
 import au.com.dealsdirect.di.ApplicationContext;
 import au.com.dealsdirect.di.PreferenceInfo;
 import au.com.dealsdirect.service.fcm.GNotification;
@@ -47,6 +48,19 @@ public class AppPreferencesHelper implements PreferencesHelper {
     private static final String PAYMENT_KOUNT_ENABLED = "app_kount_enabled";
     private static final String PAYMENT_KOUNT_MERCHANT_ID = "app_kount_merchant_id";
     private static final String PAYMENT_MYPAY_ENABLED = "app_mypay_enabled";
+
+    /* mypay */
+    private static final String PAYMENT_MYPAY_TEMPLATE_TEXTS_KEY = "settings_mypay_template_texts";
+    private static final String MYPAY_EXCEED_LIMIT = "_checkoutMyPayPayExceedLimit";
+    private static final String MYPAY_INVALID_PAYMENT_METHOD = "_checkoutMyPayPayInvalidPaymentMethod";
+    private static final String MYPAY_OUT_OF_RANGE = "_checkoutMyPayPayOutOfRangeMobileApp";
+    private static final String MYPAY_OUT_UP_TO_MOBILE_UP = "_checkoutMyPayPayOutUpToMobileApp";
+    private static final String MYPAY_UNTRUSTED = "_checkoutMyPayPayUntrusted";
+    private static final String MYPAY_DETAILS = "myPayDetailsMobileApp";
+    private static final String MYPAY_THANKYOU_TEXT = "_OurPayThankYouTextMobileApp";
+    private static final String MYPAY_TC = "_OurPayTC_text";
+    private static final String MYPAY_TC_VALIDATION_FAILED = "_OurPayTCValidationFailed";
+    private static final String MYPAY_PAYMENT_SCHEDULE = "_PaymentSchedule";
 
     private static final String SEARCH_MAX_PRICE = "app_search_max_price";
     private static final String ACCESS_ANONYMOUS_ENABLED = "app_anonymous_enabled";
@@ -345,6 +359,25 @@ public class AppPreferencesHelper implements PreferencesHelper {
     @Override
     public boolean getIsMyPayEnabled() {
         return Prefs.getBoolean(PAYMENT_MYPAY_ENABLED, true);
+    }
+
+    @Override
+    public void setMyPayTemplateTexts(GetTemplateTextsResponse.GetTemplateTextsValue value) {
+        Prefs.putString(MYPAY_EXCEED_LIMIT, value.getCheckoutMyPayPayExceedLimit());
+        Prefs.putString(MYPAY_INVALID_PAYMENT_METHOD, value.getCheckoutMyPayPayInvalidPaymentMethod());
+        Prefs.putString(MYPAY_OUT_OF_RANGE, value.getCheckoutMyPayPayOutOfRangeMobileApp());
+        Prefs.putString(MYPAY_OUT_UP_TO_MOBILE_UP, value.getCheckoutMyPayPayOutUpToMobileApp());
+        Prefs.putString(MYPAY_UNTRUSTED, value.getCheckoutMyPayPayUntrusted());
+        Prefs.putString(MYPAY_DETAILS, value.getMyPayDetailsMobileApp());
+        Prefs.putString(MYPAY_THANKYOU_TEXT, value.getOurPayThankYouTextMobileApp());
+        Prefs.putString(MYPAY_TC, value.getOurPayTC_text());
+        Prefs.putString(MYPAY_TC_VALIDATION_FAILED, value.getOurPayTCValidationFailed());
+        Prefs.putString(MYPAY_PAYMENT_SCHEDULE, value.getPaymentSchedule());
+    }
+
+    @Override
+    public String getMyPayTemplateTexts(String detailKey) {
+       return  Prefs.getString(detailKey,"");
     }
 
 }

@@ -1,5 +1,6 @@
 package au.com.dealsdirect.ourpay;
 
+import android.app.Activity;
 import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
@@ -11,11 +12,16 @@ import android.widget.CheckBox;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.bluelinelabs.conductor.Router;
+import com.bluelinelabs.conductor.RouterTransaction;
+import com.bluelinelabs.conductor.changehandler.HorizontalChangeHandler;
+
 import java.util.List;
 
 import au.com.dealsdirect.R;
 import au.com.dealsdirect.data.network.model.checkout.getcurrentorder.MyPayDetails;
 import au.com.dealsdirect.ui.base.BaseActivity;
+import au.com.dealsdirect.ui.controller.legalities.LegalitiesController;
 import au.com.dealsdirect.utils.PriceUtils;
 
 /**
@@ -24,9 +30,10 @@ import au.com.dealsdirect.utils.PriceUtils;
 
 public class OurpayPanel {
 
-    BaseActivity mBaseActivity;
+    Activity mBaseActivity;
     private LinearLayout mPanelHolder;
     LinearLayout mHolderInBorder;
+    Router mRouter;
 
     public OurpayPanel(BaseActivity activity) {
         this.mBaseActivity = activity;
@@ -35,9 +42,19 @@ public class OurpayPanel {
         mHolderInBorder = (LinearLayout) view.findViewById(R.id.linearlayout_placeholder_boredered);
     }
 
+    public OurpayPanel(BaseActivity activity, Router router) {
+        this.mBaseActivity = activity;
+        this.mRouter = router;
+
+        View view = activity.getLayoutInflater().inflate(R.layout.ourpay_panel_holder, null, false);
+        mPanelHolder = (LinearLayout) view.findViewById(R.id.linearLayout_placeholder);
+        mHolderInBorder = (LinearLayout) view.findViewById(R.id.linearlayout_placeholder_boredered);
+    }
+
     public View generatePanel(Ourpay ourpay){
         Log.d("ourpay", "generating ourpay with state = "+ourpay.getState());
         if (0 != (ourpay.getState() & OurpayState.PRECART)){
+            Log.d("checkout", "pre cart");
 
             if (0 != (ourpay.getState() & OurpayState.ERROR)){
                 mHolderInBorder.addView(getTemplateText(ourpay.getDetails()));
@@ -65,12 +82,17 @@ public class OurpayPanel {
 
             }
         }else if (0 != (ourpay.getState() & OurpayState.ONCART)) {
+            Log.d("checkout", "on cart");
 
             if (0 != (ourpay.getState() & OurpayState.ERROR)) {
+                Log.d("checkout", "error");
+
                 mHolderInBorder.addView(getTemplateText(
                         OurpayTemplateText.getTemplateText(mBaseActivity, ourpay)));
                 mPanelHolder.addView(getCartAmountHeader(""), 0);
             } else {
+                Log.d("checkout", "not error");
+
                 mPanelHolder.addView(getButton(), 0);
 
                 View header = getPanelHeader(ourpay);
@@ -171,8 +193,14 @@ public class OurpayPanel {
         textViewTC.setText(Html.fromHtml(OurpayTemplateText.getText(mBaseActivity, ourpay.getTermsAndConditionsText())));
         textViewTC.setOnClickListener(view1 -> {
 
+            String ourpayTermsAndConditionKey = "OurPayTermsAndConditions_Text";
             Bundle bundle = new Bundle();
-            bundle.putString("templateKey", "OurPayTermsAndConditions_Text");
+            bundle.putString("templateKey", ourpayTermsAndConditionKey);
+
+            mRouter.pushController(RouterTransaction.with(new LegalitiesController(ourpayTermsAndConditionKey,"My Basket"))
+                    .pushChangeHandler(new HorizontalChangeHandler(false))
+                    .popChangeHandler(new HorizontalChangeHandler(false)));
+
 //                HTMLViewFragment fragment = new HTMLViewFragment();
 //                fragment.setArguments(bundle);
 //
