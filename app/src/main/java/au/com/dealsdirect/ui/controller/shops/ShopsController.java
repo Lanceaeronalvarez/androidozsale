@@ -259,6 +259,7 @@ public class ShopsController extends BasePullToRefreshController implements Shop
                 ((MainMvpView) getActivity()).showLoginController(getRouter(), new AuthHandler() {
                     @Override
                     public void success() {
+                        ((MainActivity) getActivity()).callGCMRegisterSubscriber();
                         ((MainActivity) getActivity()).getHomeRouter()
                                 .pushController(RouterTransaction.with(
                                         SaleItemsController.newInstance(

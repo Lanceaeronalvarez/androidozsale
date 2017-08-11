@@ -503,6 +503,7 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
             ((MainActivity) getActivity()).showLoginController(getRouter(), new AuthHandler() {
                 @Override
                 public void success() {
+                    mActivity.callGCMRegisterSubscriber();
                     mPresenter.addToCart(request);
                     new Handler().postDelayed(()-> animateAddToCart(), 1000);
                 }

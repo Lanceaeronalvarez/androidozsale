@@ -143,7 +143,6 @@ public class LoginController extends BaseController implements LoginMvpView {
         mAuthHandler.success();
         hideKeyboard();
         mActivity.getMainController().getHomeController().getPresenter().callGetBasketItemsQuantity();
-        mActivity.callGCMRegisterSubscriber();
         mActivity.getMainController().showBottomNav();
     }
 

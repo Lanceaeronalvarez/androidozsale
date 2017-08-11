@@ -209,6 +209,7 @@ public class AccountController extends BaseController implements AccountMvpView,
             public void success() {
                 mPresenter.onAttach(mvpView);
                 mPresenter.onAccountItemClick(option);
+                ((MainActivity) getActivity()).callGCMRegisterSubscriber();
                 mFilterButton.setImageDrawable(getActivity().getResources().getDrawable(R.drawable.ic_logout));
             }
 
@@ -261,6 +262,7 @@ public class AccountController extends BaseController implements AccountMvpView,
                 @Override
                 public void success() {
                     mPresenter.onAttach(AccountController.this);
+                    ((MainMvpView)getActivity()).callGCMRegisterSubscriber();
                     mFilterButton.setImageDrawable(getActivity().getResources().getDrawable(R.drawable.ic_logout));
                 }
 
