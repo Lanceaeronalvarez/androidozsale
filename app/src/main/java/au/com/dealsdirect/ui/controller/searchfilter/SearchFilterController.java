@@ -27,7 +27,6 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import java.util.function.Predicate;
 
 import javax.inject.Inject;
 
@@ -55,7 +54,6 @@ import butterknife.OnClick;
 import static au.com.dealsdirect.ui.controller.saleitems.SaleItemsController.KEY_CATEGORY_MAP;
 import static au.com.dealsdirect.ui.controller.saleitems.SaleItemsController.KEY_CHIPS_FILTER;
 import static au.com.dealsdirect.ui.controller.saleitems.SaleItemsController.KEY_SALE_ID;
-import static au.com.dealsdirect.ui.controller.saleitems.SaleItemsController.KEY_SEARCH_QUERY;
 
 /**
  * Created by smartwave on 20/07/2017.
@@ -391,9 +389,9 @@ public class SearchFilterController extends BaseController
     public void showFacetItem(int position) {
 
 
-        if(mapFacetFilterType(position) != PRICE_FACETFILTER_NAME) { //only do this logic if facet clicked != price
+        if(getFacetFilterType(position) != PRICE_FACETFILTER_NAME) { //only do this logic if facet clicked != price
 
-            if (mapFacetFilterType(position) == CATEGORY_TREE_FACET){
+            if (getFacetFilterType(position) == CATEGORY_TREE_FACET){
 
                 mFilterCategoriesRecyclerView.setVisibility(View.VISIBLE);
                 mFacetItemsRecyclerView.setVisibility(View.GONE);
@@ -407,7 +405,7 @@ public class SearchFilterController extends BaseController
             }
 
             if (mPreviousSelectedFacetIndex != -1) {
-                mPreviousSelectedFacetIndices.put(mapFacetFilterType(mPreviousSelectedFacetIndex), new HashSet<>(mFacetItemsAdapter.getSelectedFacets()));
+                mPreviousSelectedFacetIndices.put(getFacetFilterType(mPreviousSelectedFacetIndex), new HashSet<>(mFacetItemsAdapter.getSelectedFacets()));
             }
 
             if (position != mPreviousSelectedFacetIndex) {
@@ -415,9 +413,9 @@ public class SearchFilterController extends BaseController
                 origSelectedSet.clear();
             }
 
-            if (mPreviousSelectedFacetIndices.get(mapFacetFilterType(position)) != null) {
-                mFacetItemsAdapter.updateSelectedFacets(mPreviousSelectedFacetIndices.get(mapFacetFilterType(position)));
-                origSelectedSet = mPreviousSelectedFacetIndices.get(mapFacetFilterType(position));
+            if (mPreviousSelectedFacetIndices.get(getFacetFilterType(position)) != null) {
+                mFacetItemsAdapter.updateSelectedFacets(mPreviousSelectedFacetIndices.get(getFacetFilterType(position)));
+                origSelectedSet = mPreviousSelectedFacetIndices.get(getFacetFilterType(position));
             }
 
         } else { //price is clicked
@@ -426,36 +424,16 @@ public class SearchFilterController extends BaseController
             mSeekbarLayout.setVisibility(View.VISIBLE);
         }
 
-
-        mFacetItemsAdapter.setFilterType(mapFacetFilterType(position));
+        mFacetItemsAdapter.setFilterType(getFacetFilterType(position));
         mFacetItemsAdapter.replaceData(mapFacetItemClicked(position));
 
         mPreviousSelectedFacetIndex = position;
     }
 
     private void trackLastSelectedFacet(){
-        mPreviousSelectedFacetIndices.put(mapFacetFilterType(mPreviousSelectedFacetIndex), new HashSet<>(mFacetItemsAdapter.getSelectedFacets()));
+        mPreviousSelectedFacetIndices.put(getFacetFilterType(mPreviousSelectedFacetIndex), new HashSet<>(mFacetItemsAdapter.getSelectedFacets()));
     }
 
-
-    private String mapFacetFilterType(int position){
-        switch (position) {
-            case 0:
-                return SORT_FACETFILTER_NAME;
-            case 1:
-                return CATEGORY_TREE_FACET;
-            case 2:
-                return BRANDS_FACETFILTER_NAME;
-            case 3:
-                return SIZES_FACETFILTER_NAME;
-            case 4:
-                return COLORS_FACETFILTER_NAME;
-            case 5:
-                return PRICE_FACETFILTER_NAME;
-            default:
-                return "";
-        }
-    }
 
     @Override
     public void updateFacetItemToFilters(Set<Integer> selectPosSet) {
@@ -527,19 +505,24 @@ public class SearchFilterController extends BaseController
         hideKeyboard();
     }
 
+    private String getFacetFilterType(int position){
+        return mFacetsAdapter.getData().get(position).first;
+    }
+
     private List<String> mapFacetItemClicked(int position) {
-        switch (position) {
-            case 0:
+        String facetFilterType = getFacetFilterType(position);
+        switch (facetFilterType) {
+            case SORT_FACETFILTER_NAME:
                 return mSortingList;
-            case 1:
+            case CATEGORY_TREE_FACET:
                 return new ArrayList<>();
-            case 2:
+            case BRANDS_FACETFILTER_NAME:
                 return mBrandList;
-            case 3:
+            case SIZES_FACETFILTER_NAME:
                 return mSizeList;
-            case 4:
+            case COLORS_FACETFILTER_NAME:
                 return mColorList;
-            case 5:
+            case PRICE_FACETFILTER_NAME:
                 return new ArrayList<>();
             default:
                 return new ArrayList<>();

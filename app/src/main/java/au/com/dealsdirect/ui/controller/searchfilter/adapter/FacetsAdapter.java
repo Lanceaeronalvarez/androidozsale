@@ -125,6 +125,9 @@ public class FacetsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
         return super.getItemId(position);
     }
 
+    public ArrayList<Pair<String,String>> getData(){
+        return mData;
+    }
 
     @Override
     public int getItemCount() {
