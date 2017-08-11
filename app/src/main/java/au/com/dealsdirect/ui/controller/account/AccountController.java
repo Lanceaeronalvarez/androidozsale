@@ -233,6 +233,7 @@ public class AccountController extends BaseController implements AccountMvpView,
             }
         });
 
+        ((MainActivity) getActivity()).getMainController().getHomeController().showShopController();
         CustomAlertDialog.showCustomAlertDialog(getActivity(),
                 CustomAlertDialog.CustomDialogIconState.POSITIVE,
                 "Logout Successful");
