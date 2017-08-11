@@ -250,6 +250,8 @@ public class MainActivity extends BaseActivity implements MainMvpView {
             DataCollector.collectDeviceData(mBraintreeFragment, handler);
         }
 
+        onBackPressed();
+
     }
 
     @Override

@@ -323,6 +323,10 @@ public class HomeController extends BaseController implements HomeMvpView {
 //        TransitionManager.beginDelayedTransition(mShopContainer,new Fade(Fade.OUT));
 //        TransitionManager.beginDelayedTransition(mCheckoutContainer,new Fade(Fade.IN));
         setVisibleContainer(4);
+        Controller controller = getCurrentControllerOnRouter(mCheckoutRouter);
+        if(controller instanceof CheckoutController){
+            ((CheckoutController) controller).loadCart();
+        }
     }
 
     @Override
@@ -383,5 +387,14 @@ public class HomeController extends BaseController implements HomeMvpView {
 
     public Router getCurrentRouter() {
         return mRouterList.get(currentVisibleIndex);
+    }
+
+    public Controller getCurrentControllerOnRouter(Router router){
+        int topIndex = router.getBackstackSize()-1;
+        if(topIndex >= 0){
+            return router.getBackstack().get(topIndex).controller();
+        }
+
+        return null;
     }
 }

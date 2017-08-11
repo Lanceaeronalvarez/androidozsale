@@ -73,7 +73,7 @@ public class CheckoutController extends BaseController implements CheckoutMvpVie
     TextView mAddressChangeText;
     TextView mPaymentChangeText;
     TextView mVoucherChangeText;
-    View mBraintreeLoading;
+//    View mBraintreeLoading;
     View mButtonHolder;
     Button mPayButton;
     RelativeLayout mPaypalButton;
@@ -180,8 +180,8 @@ public class CheckoutController extends BaseController implements CheckoutMvpVie
         mAddressChangeText = (TextView) mFooterView.findViewById(R.id.partial_checkout_address_change);
         mPaymentChangeText = (TextView) mFooterView.findViewById(R.id.partial_checkout_payment_change);
         mVoucherChangeText = (TextView) mFooterView.findViewById(R.id.partial_checkout_voucher_change);
-
-        mBraintreeLoading = mFooterView.findViewById(R.id.partial_checkout_bt_loading);
+//
+//        mBraintreeLoading = mFooterView.findViewById(R.id.partial_checkout_bt_loading);
         mButtonHolder = mFooterView.findViewById(R.id.partial_checkout_button_holder);
         mPayButton = (Button) mFooterView.findViewById(R.id.partial_checkout_button_pay);
         mPaypalButton = (RelativeLayout) mFooterView.findViewById(R.id.partial_checkout_button_paypal);
@@ -464,12 +464,12 @@ public class CheckoutController extends BaseController implements CheckoutMvpVie
     }
 
     private void hidePaymentButtons() {
-        mBraintreeLoading.setVisibility(View.VISIBLE);
+//        mBraintreeLoading.setVisibility(View.VISIBLE);
         mButtonHolder.setVisibility(View.GONE);
     }
 
     private void showPaymentButtons() {
-        mBraintreeLoading.setVisibility(View.GONE);
+//        mBraintreeLoading.setVisibility(View.GONE);
         mButtonHolder.setVisibility(View.VISIBLE);
 
     }

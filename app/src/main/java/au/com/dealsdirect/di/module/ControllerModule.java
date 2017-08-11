@@ -11,9 +11,6 @@ import au.com.dealsdirect.ui.controller.address.addnewaddress.AddNewAddressPrese
 import au.com.dealsdirect.ui.controller.address.viewaddress.ViewAddressMvpPresenter;
 import au.com.dealsdirect.ui.controller.address.viewaddress.ViewAddressMvpView;
 import au.com.dealsdirect.ui.controller.address.viewaddress.ViewAddressPresenter;
-import au.com.dealsdirect.ui.controller.cart.CartMvpPresenter;
-import au.com.dealsdirect.ui.controller.cart.CartMvpView;
-import au.com.dealsdirect.ui.controller.cart.CartPresenter;
 import au.com.dealsdirect.ui.controller.categories.CategoriesMvpPresenter;
 import au.com.dealsdirect.ui.controller.categories.CategoriesMvpView;
 import au.com.dealsdirect.ui.controller.categories.CategoriesPresenter;
@@ -222,11 +219,6 @@ public class ControllerModule {
 
     @Provides
     OrderDetailsMvpPresenter<OrderDetailsMvpView> provideOrderDetailPresenter(OrderDetailsPresenter<OrderDetailsMvpView> presenter){
-        return presenter;
-    }
-
-    @Provides
-    CartMvpPresenter<CartMvpView> provideCartPresenter(CartPresenter<CartMvpView> presenter) {
         return presenter;
     }
 

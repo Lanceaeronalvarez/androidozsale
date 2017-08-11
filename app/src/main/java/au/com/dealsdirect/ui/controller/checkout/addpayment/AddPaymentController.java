@@ -44,8 +44,8 @@ public class AddPaymentController extends BaseController implements AddPaymentMv
 
     @BindView(R.id.card_form)
     CardForm mCardForm;
-    @BindView(R.id.partial_checkout_bt_loading)
-    View mBraintreeLoading;
+//    @BindView(R.id.partial_checkout_bt_loading)
+//    View mBraintreeLoading;
     @BindView(R.id.partial_checkout_button_holder)
     View mButtonHolder;
     @BindView(R.id.partial_checkout_button_pay)
@@ -111,10 +111,10 @@ public class AddPaymentController extends BaseController implements AddPaymentMv
             onPaypalSubmit();
         });
 
-        if(!isFromCart) {
-            mButtonPay.setText("add");
-            mTextPaypal.setText("add");
-        }
+//        if(!isFromCart) {
+//            mButtonPay.setText("add");
+//            mTextPaypal.setText("add");
+//        }
 
         if (((MainActivity)getActivity()).isBraintreeInitialized()) {
             showPaymentButtons();
@@ -141,12 +141,12 @@ public class AddPaymentController extends BaseController implements AddPaymentMv
     }
 
     private void hidePaymentButtons() {
-        mBraintreeLoading.setVisibility(View.VISIBLE);
+//        mBraintreeLoading.setVisibility(View.VISIBLE);
         mButtonHolder.setVisibility(View.GONE);
     }
 
     private void showPaymentButtons() {
-        mBraintreeLoading.setVisibility(View.GONE);
+//        mBraintreeLoading.setVisibility(View.GONE);
         mButtonHolder.setVisibility(View.VISIBLE);
     }
 

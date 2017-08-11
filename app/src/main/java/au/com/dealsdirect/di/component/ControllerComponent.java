@@ -6,7 +6,6 @@ import au.com.dealsdirect.di.module.ControllerModule;
 import au.com.dealsdirect.ui.controller.account.AccountController;
 import au.com.dealsdirect.ui.controller.address.addnewaddress.AddNewAddressController;
 import au.com.dealsdirect.ui.controller.address.viewaddress.ViewAddressController;
-import au.com.dealsdirect.ui.controller.cart.CartController;
 import au.com.dealsdirect.ui.controller.categories.CategoriesController;
 import au.com.dealsdirect.ui.controller.checkout.addpayment.AddPaymentController;
 import au.com.dealsdirect.ui.controller.checkout.checkout.CheckoutController;
@@ -92,8 +91,6 @@ public interface ControllerComponent {
     void inject(OrderDetailsController controller);
 
     void inject(ViewContactHistoryController controller);
-
-    void inject(CartController controller);
 
     void inject(ViewVouchersController controller);
 

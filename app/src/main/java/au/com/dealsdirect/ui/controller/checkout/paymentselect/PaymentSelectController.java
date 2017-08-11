@@ -117,10 +117,9 @@ public class PaymentSelectController extends BasePullToRefreshController impleme
         String checkoutTag = getRouter().getBackstack().get(backstackSize-1).tag();
 
         if (paymentMethods != null && paymentMethods.size() > 0) {
-            mNoPaymentPlaceholder.setVisibility(View.INVISIBLE);
-            mRecyclerView.setVisibility(View.VISIBLE);
             mPaymentMethods = new ArrayList<>(paymentMethods);
             mAdapter.replaceData(mPaymentMethods);
+            showPaymentMethodsPlaceholder(false);
         } else if (checkoutTag == getActivity().getString(R.string.checkout_controller)
                         && (paymentMethods == null
                         || paymentMethods.size() == 0)) {
@@ -128,8 +127,17 @@ public class PaymentSelectController extends BasePullToRefreshController impleme
                     .pushChangeHandler(new HorizontalChangeHandler())
                     .popChangeHandler(new HorizontalChangeHandler()));
         } else if (paymentMethods.size() == 0) {
+            showPaymentMethodsPlaceholder(true);
+        }
+    }
+
+    private void showPaymentMethodsPlaceholder(boolean val){
+        if(val) {
             mNoPaymentPlaceholder.setVisibility(View.VISIBLE);
-            mRecyclerView.setVisibility(View.INVISIBLE);
+            mRecyclerView.setVisibility(View.GONE);
+        } else {
+            mNoPaymentPlaceholder.setVisibility(View.GONE);
+            mRecyclerView.setVisibility(View.VISIBLE);
         }
     }
 
@@ -141,23 +149,13 @@ public class PaymentSelectController extends BasePullToRefreshController impleme
             mPaymentMethods.remove(paymentMethod);
             mAdapter.notifyDataSetChanged();
 
-            CustomAlertDialog.showCustomAlertDialog(mActivity, CustomAlertDialog.CustomDialogIconState.POSITIVE, "Payment method removed!");
-//            DialogUtils.showYesDialog(mActivity, "Success", "Payment method removed!", "OK", new DialogInterface.OnClickListener() {
-//                @Override
-//                public void onClick(DialogInterface dialog, int which) {
-//                    dialog.dismiss();
-//                }
-//            });
+            if(mAdapter.getItemCount() == 0){
+                showPaymentMethodsPlaceholder(true);
+            }
 
         } else {
             CustomAlertDialog.showCustomAlertDialog(mActivity, CustomAlertDialog.CustomDialogIconState.NEGATIVE, "An error occured.");
 
-//            DialogUtils.showYesDialog(mActivity, "Failed", "Please try again.", "OK", new DialogInterface.OnClickListener() {
-//                @Override
-//                public void onClick(DialogInterface dialog, int which) {
-//                    dialog.dismiss();
-//                }
-//            });
         }
     }
 
