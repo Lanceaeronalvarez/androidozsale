@@ -42,6 +42,7 @@ import au.com.dealsdirect.ui.controller.categories.CategoriesController;
 import au.com.dealsdirect.ui.controller.checkout.addpayment.AddPaymentController;
 import au.com.dealsdirect.ui.controller.checkout.checkout.CheckoutController;
 import au.com.dealsdirect.ui.controller.checkout.paymentsuccess.PaymentSuccessController;
+import au.com.dealsdirect.ui.controller.home.HomeController;
 import au.com.dealsdirect.ui.controller.login.LoginController;
 import au.com.dealsdirect.ui.controller.main.MainController;
 import au.com.dealsdirect.ui.controller.saleitemdetails.SaleItemDetailsController;
@@ -250,8 +251,6 @@ public class MainActivity extends BaseActivity implements MainMvpView {
             DataCollector.collectDeviceData(mBraintreeFragment, handler);
         }
 
-        onBackPressed();
-
     }
 
     @Override
@@ -369,13 +368,16 @@ public class MainActivity extends BaseActivity implements MainMvpView {
 
     @Override
     public void createPaymentMethodSuccess(PaymentMethod lastPaymentMethod) {
-        Controller currentController = getHomeRouterCurrentController();
+
+        HomeController homeController = getMainController().getHomeController();
+        Router currentRouter = homeController.getCurrentRouter();
+        Controller currentController = homeController.getCurrentControllerOnRouter(currentRouter);
 
         if ((currentController instanceof AddPaymentController) && ((AddPaymentController) currentController).isCalledFromAccounts()) {
             ((AddPaymentController) currentController).showAddPaymentResult(true, "");
         } else {
             setPaymentMethodSelected(lastPaymentMethod);
-            mHomeRouter.popCurrentController();
+            currentRouter.handleBack();
         }
     }
 

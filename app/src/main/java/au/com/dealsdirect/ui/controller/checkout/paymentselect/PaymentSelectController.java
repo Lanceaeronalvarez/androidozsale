@@ -154,7 +154,7 @@ public class PaymentSelectController extends BasePullToRefreshController impleme
             }
 
         } else {
-            CustomAlertDialog.showCustomAlertDialog(mActivity, CustomAlertDialog.CustomDialogIconState.NEGATIVE, "An error occured.");
+            CustomAlertDialog.showCustomAlertDialog(mActivity, CustomAlertDialog.CustomDialogIconState.NEGATIVE, message);
 
         }
     }
@@ -163,7 +163,6 @@ public class PaymentSelectController extends BasePullToRefreshController impleme
     protected void setUp(View view) {
 
         if (!isFromCart) {
-            showLoading();
             mPresenter.fetchUserPaymentMethods();
         }
 
@@ -195,7 +194,7 @@ public class PaymentSelectController extends BasePullToRefreshController impleme
 
     @OnClick(R.id.partial_toolbar_filter_view)
     public void onAddPaymentMethod() {
-        getRouter().pushController(RouterTransaction.with(new AddPaymentController(true))
+        getRouter().pushController(RouterTransaction.with(new AddPaymentController(isFromCart))
                 .pushChangeHandler(new HorizontalChangeHandler())
                 .popChangeHandler(new HorizontalChangeHandler()));
     }
