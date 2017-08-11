@@ -35,7 +35,7 @@
             fontPath="@string/font_lato_light"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_gravity="center"
+            android:gravity="center"
             android:layout_marginTop="15dp"
             android:text="@string/you_have_not_added_any_items_in_your_shopping_cart"
             android:textColor="#9f9f9f"
