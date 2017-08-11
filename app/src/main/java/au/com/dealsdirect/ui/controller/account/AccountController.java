@@ -216,7 +216,6 @@ public class AccountController extends BaseController implements AccountMvpView,
             @Override
             public void error() {
                 mPresenter.onAttach(mvpView);
-                mFilterButton.setImageDrawable(getActivity().getResources().getDrawable(R.drawable.ic_login));
             }
         });
     }
