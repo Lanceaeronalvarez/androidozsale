@@ -252,6 +252,12 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
     }
 
     @Override
+    protected void onAttach(@NonNull View view) {
+        super.onAttach(view);
+        mPresenter.onAttach(this);
+    }
+
+    @Override
     protected void onViewBound(@NonNull View view) {
         super.onViewBound(view);
         mRootView = ((ElasticDragDismissFrameLayout) view);
@@ -326,17 +332,13 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
     protected void setUp(View view) {
 
 
-        Animation anim = AnimationUtils.loadAnimation(getActivity(), R.anim.slide_to_bottom);
-        anim.setDuration(200);
-
-
     }
 
     @Override
     public void onDetach(View view) {
         mPresenter.onDetach();
-        mProductDetailBottomCard.setVisibility(View.GONE);
-        mProductPriceCategory.setVisibility(View.GONE);
+//        mProductDetailBottomCard.setVisibility(View.GONE);
+//        mProductPriceCategory.setVisibility(View.GONE);
         super.onDetach(view);
     }
 
