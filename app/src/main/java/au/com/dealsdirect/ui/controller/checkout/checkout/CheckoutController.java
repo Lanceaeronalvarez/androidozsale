@@ -544,7 +544,7 @@ public class CheckoutController extends BaseController implements CheckoutMvpVie
     void shopNow() {
 
         assert (getActivity()) != null;
-        ((MainActivity)getActivity()).goToShops();
+        ((MainActivity)getActivity()).setShopsAsVisibleContainer();
     }
 
     private String formAddressDetails(DeliveryAddress deliveryAddress) {

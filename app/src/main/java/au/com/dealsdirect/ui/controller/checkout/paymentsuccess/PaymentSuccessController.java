@@ -208,7 +208,7 @@ public class PaymentSuccessController extends BaseController implements PaymentS
     @OnClick(R.id.partial_continue_shopping_button)
     void onContinueShoppingClick() {
         getRouter().popToTag("CheckoutController");
-        ((MainActivity) getActivity()).goToShops();
+        ((MainActivity) getActivity()).setShopsAsVisibleContainer();
     }
 
 }

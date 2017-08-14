@@ -51,7 +51,6 @@ import au.com.dealsdirect.ui.controller.checkout.paymentsuccess.PaymentSuccessCo
 import au.com.dealsdirect.ui.controller.home.HomeController;
 import au.com.dealsdirect.ui.controller.login.LoginController;
 import au.com.dealsdirect.ui.controller.main.MainController;
-import au.com.dealsdirect.ui.controller.saleitemdetails.SaleItemDetailsController;
 import au.com.dealsdirect.ui.controller.saleitems.SaleItemsController;
 import au.com.dealsdirect.ui.controller.shops.ShopsController;
 import au.com.dealsdirect.ui.controller.splash.SplashScreenController;
@@ -157,34 +156,32 @@ public class MainActivity extends BaseActivity implements MainMvpView {
     public void onBackPressed() {
 
         if (mIsViewPagerSet) {
-
             Router currentRouter = getMainController().getHomeController().getCurrentRouter();
             Controller currentController = getMainController().getHomeController().getCurrentControllerOnRouter(currentRouter);
 
             switch (getMainController().getHomeViewPager().getCurrentItem()) {
                 case 0:
                     if (mCategoriesRouter.getBackstackSize() == 1) { //go back to shops
-                        getMainController().goToShops();
+                        setRootViewpagerItem(1);
                     }
                     break;
                 case 1:
-                    if(mIsFromCategories) {
+                    if (mIsFromCategories) {
                         if (currentController instanceof ShopsController) { //reset shops controller root.
                             ShopsController shopsController = new ShopsController();
                             setShopController(shopsController);
                             currentRouter.setRoot(RouterTransaction.with(shopsController).tag(ShopsController.TAG));
-                            goToCategories();
+                            setRootViewpagerItem(0);
+                            setDraggableViewPager(true);
                         } else if (currentController instanceof SaleItemsController) {
-                            goToCategories();
+                            setRootViewpagerItem(0);
                             currentRouter.handleBack();
                         } else {
                             currentRouter.handleBack();
-                            mIsFromCategories = false;
                         }
+                        mIsFromCategories = false;
                     } else {
-                        if (currentController instanceof ShopsController
-//                                && currentBottomNav instanceof ShopsController
-                                && currentRouter.getBackstack().size() == 1){
+                        if (currentController instanceof ShopsController && currentRouter.getBackstack().size() == 1) {
                             //exit app
                             DialogUtils.showYesNoDialog(
                                     this,
@@ -196,9 +193,9 @@ public class MainActivity extends BaseActivity implements MainMvpView {
                                     (dialogInterface, i) -> {
                                     });
                             break;
-                        } else if(currentRouter.getBackstackSize() == 1){ //From Bottom Nav
+                        } else if (currentRouter.getBackstackSize() == 1) { //From Bottom Nav
                             getMainController().showBottomNav();
-                            goToShops();
+                            setShopsAsVisibleContainer();
                             break;
                         } else {
                             currentRouter.handleBack();
@@ -314,7 +311,7 @@ public class MainActivity extends BaseActivity implements MainMvpView {
     }
 
     @Override
-    public void callCreatePaymentTransaction(String paymentType, String paymentNonce){
+    public void callCreatePaymentTransaction(String paymentType, String paymentNonce) {
         mPaymentType = paymentType;
         BraintreeResponseListener<String> handler = deviceData ->
                 mPresenter.callCreatePaymentTransaction(deviceData, mPaymentType, paymentNonce, getPaymentMethodSelected().getToken());
@@ -328,7 +325,7 @@ public class MainActivity extends BaseActivity implements MainMvpView {
 
     @Override
     public void storeTemplateTexts(GetTemplateTextsResponse.GetTemplateTextsValue value) {
-        if (value!=null){
+        if (value != null) {
             Log.d("TemplateText", " value entered ");
 
             isTemplateTextsStored = true;
@@ -425,7 +422,7 @@ public class MainActivity extends BaseActivity implements MainMvpView {
 
 //            GCartUtil.setValueToCart(0);
 //            RxBus.instance().post("update_cart_items_immediate");
-            if (mPaymentType.equals(PAYMENT_TYPE_MYPAY)){
+            if (mPaymentType.equals(PAYMENT_TYPE_MYPAY)) {
                 Log.d("postcart", "payment type == mypay");
                 setPaymentSuccessOurpay(responseValue);
             } else {
@@ -512,28 +509,15 @@ public class MainActivity extends BaseActivity implements MainMvpView {
         mIsFromCategories = true;
         mShopController.goToSaleItemsFromCategorySearch();
         final Handler handler = new Handler();
-        handler.postDelayed(() -> mMainController.goToShops(), 400);
+        handler.postDelayed(() -> setRootViewpagerItem(1), 400);
     }
 
     public void goToSalesFromCategory(GetCategoryTreeResponse getCategoryTreeResponse) {
         mIsFromCategories = true;
         mShopController.goToSalesFromCategories(getCategoryTreeResponse);
-        mMainController.goToShops();
+        setRootViewpagerItem(1);
     }
 
-    public void goToCategories() {
-//        Handler handler = new Handler();
-//        handler.postDelayed(() -> mHomeRouter.handleBack(), 500)
-        mMainController.goToCategories();
-        mMainController.setViewpagerDraggable(true);
-        mIsFromCategories = false;
-    }
-
-    public void goToCategoriesFromSales() {
-        mMainController.goToCategories();
-        mShopController.loadShopBanners();
-
-    }
 
     public void setShopController(ShopsController shopsController) {
         mShopController = shopsController;
@@ -566,16 +550,15 @@ public class MainActivity extends BaseActivity implements MainMvpView {
         mIsViewPagerSet = val;
     }
 
-    public void goToShops() {
+    public void setShopsAsVisibleContainer() {
         getMainController().getHomeController().setVisibleContainer(0);
     }
 
-     public void callGetAppSettings(){
+    public void callGetAppSettings() {
         mPresenter.callGetAppSettings();
     }
 
 
-    
     public Ourpay getOurpay() {
         return mOurpay;
     }
@@ -600,25 +583,25 @@ public class MainActivity extends BaseActivity implements MainMvpView {
         this.mPaymentType = mPaymentType;
     }
 
-    private void setPaymentSuccessOurpay(CreatePaymentTransaction.ResponseValue responseValue){
+    private void setPaymentSuccessOurpay(CreatePaymentTransaction.ResponseValue responseValue) {
         Ourpay paymentSuccessOurpay = new Ourpay();
 
-        try{
+        try {
             List<MyPayDetails.PlannedTransaction> transactions = responseValue.getD().getValue().getPlannedTransactions();
 
             paymentSuccessOurpay.setCanUse(true);
             paymentSuccessOurpay.setPlannedTransactions(transactions);
 
             double remainingAmount = 0;
-            for (int i = 0; i < transactions.size(); i++){
-                if (transactions.get(i).getState()==0){
+            for (int i = 0; i < transactions.size(); i++) {
+                if (transactions.get(i).getState() == 0) {
                     remainingAmount = remainingAmount + transactions.get(i).getAmount();
                 }
             }
 
             paymentSuccessOurpay.setAmount(remainingAmount);
             setOurpay(paymentSuccessOurpay);
-        } catch (Exception e){
+        } catch (Exception e) {
 
             paymentSuccessOurpay.setCanUse(false);
             paymentSuccessOurpay.setPlannedTransactions(null);
@@ -627,7 +610,7 @@ public class MainActivity extends BaseActivity implements MainMvpView {
 
     }
 
-    public String getMyTemplateTexts(String detailKey){
+    public String getMyTemplateTexts(String detailKey) {
         return mPresenter.getStoredTemplateTexts(detailKey);
     }
 }
