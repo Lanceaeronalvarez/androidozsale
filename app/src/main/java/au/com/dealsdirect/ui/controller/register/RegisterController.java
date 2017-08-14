@@ -166,25 +166,15 @@ public class RegisterController extends BaseController implements RegisterMvpVie
         mPresenter.onFacebookLogin(getActivity(), mCallbackManager);
     }
 
-    @Override
-    public void showRegisterSuccessful(String loginTicket) {
-        getRouter().popToRoot(new VerticalChangeHandler());
-        mAuthHandler.success();
 
-        CustomAlertDialog.showCustomAlertDialog(getActivity(),
-                CustomAlertDialog.CustomDialogIconState.POSITIVE,"register successful");
-    }
-
-    @Override
-    public void showRegisterError(String message) {
-        CustomAlertDialog.showCustomAlertDialog(getActivity(),
-                CustomAlertDialog.CustomDialogIconState.NEGATIVE,message);
-    }
 
     @Override
     public void showLoginSuccessful(String loginTicket) {
         getRouter().popToRoot();
-        mAuthHandler.success();
+
+        if (mAuthHandler!=null)
+            mAuthHandler.success();
+
         hideKeyboard();
         mActivity.getMainController().getHomeController().getPresenter().callGetBasketItemsQuantity();
         mActivity.getMainController().showBottomNav();
@@ -198,8 +188,7 @@ public class RegisterController extends BaseController implements RegisterMvpVie
         CustomAlertDialog.showCustomAlertDialog(
                 getActivity(),
                 CustomAlertDialog.CustomDialogIconState.NEGATIVE,
-                "Login incorrect");
+                message);
 
-        mActivity.getMainController().showBottomNav();
     }
 }

@@ -56,9 +56,9 @@ public class RegisterPresenter<V extends RegisterMvpView> extends Authentication
 
                         if(registerUserResponse.isSuccess()){
                             getDataManager().acknowledgeAuth(registerUserResponse.getTicket());
-                            getMvpView().showRegisterSuccessful(registerUserResponse.getTicket());
+                            getMvpView().showLoginSuccessful(registerUserResponse.getTicket());
                         } else{
-                            getMvpView().showRegisterError(registerUserResponse.getMessage());
+                            getMvpView().showLoginError(registerUserResponse.getMessage());
                         }
                     }
 
@@ -71,7 +71,7 @@ public class RegisterPresenter<V extends RegisterMvpView> extends Authentication
 
                         getMvpView().hideLoading();
                         getMvpView().onError(throwable.getMessage());
-                        getMvpView().showRegisterError(throwable.getMessage());
+                        getMvpView().showLoginError(throwable.getMessage());
 
                         // handle load accounts error here
                         if (throwable instanceof ANError) {

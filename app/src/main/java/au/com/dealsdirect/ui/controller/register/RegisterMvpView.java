@@ -8,8 +8,4 @@ import au.com.dealsdirect.ui.base.AuthenticationMvpView;
 
 public interface RegisterMvpView extends AuthenticationMvpView{
 
-    void showRegisterSuccessful(String loginTicket);
-
-    void showRegisterError(String message);
-
 }

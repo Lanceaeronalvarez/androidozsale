@@ -4,7 +4,6 @@ package au.com.dealsdirect.ui.base;
 import android.app.Activity;
 import android.os.Bundle;
 import android.util.Base64;
-import android.util.Log;
 
 import com.androidnetworking.error.ANError;
 import com.facebook.AccessToken;
