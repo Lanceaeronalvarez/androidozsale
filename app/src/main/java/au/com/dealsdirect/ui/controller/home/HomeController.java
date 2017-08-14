@@ -276,6 +276,8 @@ public class HomeController extends BaseController implements HomeMvpView {
             } else {
                 if(position == 0){
                     mShopRouter.popToRoot();
+                }else if (position == 1){
+                    mAccountsRouter.popToRoot();
                 }
             }
             return true;
