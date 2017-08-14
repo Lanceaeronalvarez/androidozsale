@@ -205,7 +205,7 @@
                         android:layout_height="wrap_content"
                         android:layout_marginBottom="10dp"
                         android:text="Invitation link"
-                        android:textColor="@color/gray_title_text" />
+                        android:textColor="@color/gray_title_text"/>
 
 
                     <RelativeLayout
@@ -234,7 +234,7 @@
                             android:singleLine="true"
                             android:textColor="@color/gray_title_text"
                             android:textColorHint="@color/gray_title_text"
-                            android:textSize="@dimen/text_size_xlarge" />
+                            android:textSize="@dimen/text_size_xlarge"/>
                     </RelativeLayout>
                 </LinearLayout>
 

@@ -390,7 +390,6 @@ public class SaleItemsController extends BasePullToRefreshController implements 
 
             mCategoryTreeResponse = getSaleItemsResponse.getCategories();
 
-            Log.d("SaleItemsCategories", "size = " + getSaleItemsResponse.getCategories().size());
             loadingInProgress = false;
 
             if (!initialLoad) {
@@ -400,6 +399,7 @@ public class SaleItemsController extends BasePullToRefreshController implements 
                 initialLoad = true;
             } else if (isFiltered || mIsSearch) {
                 mSaleItemsAdapter.replaceData(items);
+                mSaleItemsRecyclerView.scrollToPosition(0);
                 isFiltered = false;
                 mIsSearch = false;
             } else {
