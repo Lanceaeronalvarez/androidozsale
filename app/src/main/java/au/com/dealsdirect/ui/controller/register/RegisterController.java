@@ -4,7 +4,6 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,6 +14,7 @@ import com.bluelinelabs.conductor.RouterTransaction;
 import com.bluelinelabs.conductor.changehandler.HorizontalChangeHandler;
 import com.bluelinelabs.conductor.changehandler.VerticalChangeHandler;
 import com.facebook.CallbackManager;
+import com.facebook.internal.CallbackManagerImpl;
 
 import javax.inject.Inject;
 
@@ -23,7 +23,6 @@ import au.com.dealsdirect.data.auth.AuthHandler;
 import au.com.dealsdirect.ui.base.BaseController;
 import au.com.dealsdirect.ui.controller.legalities.LegalitiesController;
 import au.com.dealsdirect.ui.custom.CustomAlertDialog;
-import au.com.dealsdirect.ui.custom.transitions.RightHorizontalTransitionChangeHandler;
 import au.com.dealsdirect.ui.main.MainActivity;
 import au.com.dealsdirect.utils.BundleBuilder;
 import butterknife.BindView;
@@ -63,6 +62,7 @@ public class RegisterController extends BaseController implements RegisterMvpVie
     TextView mTermsLink;
 
     private static AuthHandler mAuthHandler;
+    private MainActivity mActivity;
 
     public static RegisterController newInstance() {
 
@@ -94,8 +94,9 @@ public class RegisterController extends BaseController implements RegisterMvpVie
         View view = inflater.inflate(R.layout.controller_register, container, false);
 
         getControllerComponent().inject(this);
+        registerForActivityResult(CallbackManagerImpl.RequestCodeOffset.Login.toRequestCode());
         mCallbackManager = CallbackManager.Factory.create();
-
+        mActivity = (MainActivity) getActivity();
         mPresenter.onAttach(this);
 
         return view;
@@ -177,24 +178,33 @@ public class RegisterController extends BaseController implements RegisterMvpVie
 
         CustomAlertDialog.showCustomAlertDialog(getActivity(),
                 CustomAlertDialog.CustomDialogIconState.POSITIVE,"register successful");
-        Log.d("Register", "Successful");
     }
 
     @Override
     public void showRegisterError(String message) {
-        Log.d("Register", "Error message = "+message);
         CustomAlertDialog.showCustomAlertDialog(getActivity(),
                 CustomAlertDialog.CustomDialogIconState.NEGATIVE,message);
     }
 
     @Override
     public void showLoginSuccessful(String loginTicket) {
-        getActivity().onBackPressed();
-
+        getRouter().popToRoot();
+        mAuthHandler.success();
+        hideKeyboard();
+        mActivity.getMainController().getHomeController().getPresenter().callGetBasketItemsQuantity();
+        mActivity.getMainController().showBottomNav();
     }
 
     @Override
     public void showLoginError(String message) {
+        if (mAuthHandler!=null)
+            mAuthHandler.error();
 
+        CustomAlertDialog.showCustomAlertDialog(
+                getActivity(),
+                CustomAlertDialog.CustomDialogIconState.NEGATIVE,
+                "Login incorrect");
+
+        mActivity.getMainController().showBottomNav();
     }
 }

@@ -4,6 +4,7 @@ package au.com.dealsdirect.ui.base;
 import android.app.Activity;
 import android.os.Bundle;
 import android.util.Base64;
+import android.util.Log;
 
 import com.androidnetworking.error.ANError;
 import com.facebook.AccessToken;
@@ -290,18 +291,18 @@ public class AuthenticationBasePresenter<V extends AuthenticationMvpView> implem
 
     @Override
     public void onFacebookLogin(Activity activity, CallbackManager callbackManager) {
-
-
         LoginManager loginManager = LoginManager.getInstance();
         loginManager.logInWithReadPermissions(activity, permissions);
         loginManager.registerCallback(callbackManager, new FacebookCallback<LoginResult>() {
             @Override
             public void onSuccess(LoginResult loginResult) {
+
                 fetchUserInfo(loginResult.getAccessToken());
             }
 
             @Override
             public void onCancel() {
+
                 //TODO: Handle cancel
             }
 
