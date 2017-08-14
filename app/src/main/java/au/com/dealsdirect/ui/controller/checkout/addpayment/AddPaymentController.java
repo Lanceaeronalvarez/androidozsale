@@ -138,17 +138,20 @@ public class AddPaymentController extends BaseController implements AddPaymentMv
 
     @Override
     public void onDetach(View view) {
-        mPresenter.onDetach();
         hideLoading();
         super.onDetach(view);
     }
 
+    @Override
+    protected void onDestroyView(@NonNull View view) {
+        mPresenter.onDetach();
+        super.onDestroyView(view);
+    }
 
     @Override
     protected void onAttach(@NonNull View view) {
+        mPresenter.onAttach(this);
         super.onAttach(view);
-
-
     }
 
     @Override

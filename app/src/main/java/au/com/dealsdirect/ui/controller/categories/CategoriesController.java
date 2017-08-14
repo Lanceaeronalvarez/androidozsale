@@ -150,15 +150,6 @@ public class CategoriesController extends BaseController
         }
 
 
-//        mPresenter.loadCategoryTree();
-
-    }
-
-    @Override
-    public void onDetach(View view) {
-        mPresenter.onDetach();
-        super.onDetach(view);
-
     }
 
     @Override

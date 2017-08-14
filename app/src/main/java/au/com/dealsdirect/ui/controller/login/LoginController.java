@@ -126,10 +126,12 @@ public class LoginController extends BaseController implements LoginMvpView {
 
     }
 
+
     @Override
-    public void onDetach(View view) {
-        super.onDetach(view);
+    protected void onDestroyView(@NonNull View view) {
+        mPresenter.onDetach();
         mAuthHandler = null;
+        super.onDestroyView(view);
     }
 
     @OnClick(R.id.controller_login_close_icon)

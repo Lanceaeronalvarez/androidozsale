@@ -313,9 +313,9 @@ public class SaleItemsController extends BasePullToRefreshController implements 
     }
 
     @Override
-    public void onDetach(View view) {
+    protected void onDestroyView(@NonNull View view) {
         mPresenter.onDetach();
-        super.onDetach(view);
+        super.onDestroyView(view);
     }
 
     @Override
