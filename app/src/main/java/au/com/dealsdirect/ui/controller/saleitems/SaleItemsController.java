@@ -114,6 +114,9 @@ public class SaleItemsController extends BasePullToRefreshController implements 
     @BindView(R.id.controller_sale_items_opaque_view)
     RelativeLayout mSaleItemsOpaqueCover;
 
+    @BindView(R.id.controller_search_popular_subheader)
+    TextView mPopularProductsHeader;
+
     private SaleItemsAdapter mSaleItemsAdapter;
 
     private Paginate mPaginateManager;
@@ -256,6 +259,7 @@ public class SaleItemsController extends BasePullToRefreshController implements 
             if (mSaleItemsToolbarTitle.getText().toString().isEmpty() && mSearchQuery.isEmpty() && !isFiltered) {
                 activateSearch();
             }
+            mPopularProductsHeader.setVisibility(View.VISIBLE);
 
         } else {
             mSaleItemsFilterIcon.setOnClickListener(view12 -> showFilters());
@@ -264,6 +268,8 @@ public class SaleItemsController extends BasePullToRefreshController implements 
                 getActivity().onBackPressed();
             });
             deactivateSearch();
+
+            mPopularProductsHeader.setVisibility(View.GONE);
         }
 
         setUp(view);
