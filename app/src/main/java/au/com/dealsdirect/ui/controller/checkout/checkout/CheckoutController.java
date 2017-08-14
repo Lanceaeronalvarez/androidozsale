@@ -318,7 +318,6 @@ public class CheckoutController extends BaseController implements CheckoutMvpVie
             mItemList.addAll(items);
             mAdapter.notifyDataSetChanged();
         }
-        mActivity.getMainController().getHomeController().getPresenter().callGetBasketItemsQuantity();
     }
 
     @Override
