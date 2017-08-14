@@ -1,7 +1,6 @@
 package au.com.dealsdirect.ui.controller.checkout.checkout;
 
 import android.support.annotation.NonNull;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -277,20 +276,16 @@ public class CheckoutController extends BaseController implements CheckoutMvpVie
 
         if(value!=null){
 
-            Log.d("checkout", "showMyDetails");
-
             ((MainActivity)getActivity()).setOurpay(ourpay);
             ((MainActivity)getActivity()).setThreeDSecureRequired(value.threeDSecureRequired);
 
-
-            OurpayPanel ourpayPanel = new OurpayPanel((BaseActivity)getActivity());
+            OurpayPanel ourpayPanel = new OurpayPanel((BaseActivity)getActivity(), getRouter());
             mOurpay = ourpay;
             mOurpayHolder.removeAllViews();
             PaymentMethod paymentMethod = ((MainActivity) getActivity()).getPaymentMethodSelected();
-            Log.d("checkout", "showMyDetails iscanuse ="+ourpay.isCanUse());
-            mOurpayHolder.addView(ourpayPanel.generatePanel(ourpay));
 
             if (!paymentMethod.getPaymentType().equalsIgnoreCase(CARD_PAYPAL) && ourpay.isCanUse()) {
+                mOurpayHolder.addView(ourpayPanel.generatePanel(ourpay));
                 mButtonOurpay = (RelativeLayout) mOurpayHolder.findViewById(R.id.rl_button_ourpay);
                 mButtonOurpay.setOnClickListener(view -> onOurpayButtonClick());
 

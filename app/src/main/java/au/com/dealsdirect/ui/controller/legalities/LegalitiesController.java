@@ -81,13 +81,8 @@ public class LegalitiesController extends BaseController implements LegalitiesMv
 
         mTitleText.setText(title);
         mFilterButton.setVisibility(View.INVISIBLE);
+        mPresenter.loadText(key);
 
-        if (key.equals(ourpayTermsAndConditionKey)){
-            displayFetchedText(((MainActivity)getActivity()).getMyTemplateTexts(key));
-
-        }else{
-            mPresenter.loadText(key);
-        }
     }
 
     @Override
