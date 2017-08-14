@@ -2,6 +2,7 @@ package au.com.dealsdirect.data.pref;
 
 
 import au.com.dealsdirect.data.network.model.legalities.GetTemplateTextsResponse;
+import java.util.HashSet;
 
 public interface PreferencesHelper {
 
@@ -101,6 +102,12 @@ public interface PreferencesHelper {
     boolean getIsMyPayEnabled();
 
     void setMyPayTemplateTexts(GetTemplateTextsResponse.GetTemplateTextsValue value);
+
+    void setEventUserId(String userId);
+
+    String getEventUserId();
+
+    HashSet<String> getCookies();
 
     String getMyPayTemplateTexts(String detailKey);
 }

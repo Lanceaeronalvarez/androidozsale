@@ -7,6 +7,8 @@ import android.os.Build;
 
 import com.mysale.genie.utility.Prefs;
 
+import java.util.HashSet;
+
 import javax.inject.Inject;
 import javax.inject.Singleton;
 
@@ -66,6 +68,9 @@ public class AppPreferencesHelper implements PreferencesHelper {
     private static final String ACCESS_ANONYMOUS_ENABLED = "app_anonymous_enabled";
     private static final String FB_SECRET = "fb_secret";
     private static final String PAYMENT_COUNT = "payment_count";
+
+    private static final String EVENT_USER_ID = "event_user_id";
+    private static final String COOKIES = "network_cookies";
 
     private Context mContext;
 
@@ -377,7 +382,22 @@ public class AppPreferencesHelper implements PreferencesHelper {
 
     @Override
     public String getMyPayTemplateTexts(String detailKey) {
-       return  Prefs.getString(detailKey,"");
+        return Prefs.getString(detailKey, "");
+
+    }
+
+    public void setEventUserId(String userId) {
+        Prefs.putString(EVENT_USER_ID, userId);
+    }
+
+    @Override
+    public String getEventUserId() {
+        return Prefs.getString(EVENT_USER_ID, "");
+    }
+
+    @Override
+    public HashSet<String> getCookies() {
+        return (HashSet<String>) Prefs.getStringSet(COOKIES, new HashSet<>());
     }
 
 }

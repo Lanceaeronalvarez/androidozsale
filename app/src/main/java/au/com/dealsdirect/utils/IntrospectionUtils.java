@@ -154,7 +154,7 @@ public class IntrospectionUtils {
         return versionCode;
     }
 
-    private static String getVersionName(Context context) {
+    public static String getVersionName(Context context) {
         String versionName;
         try {
             PackageInfo packageInfo = context.getPackageManager()

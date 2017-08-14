@@ -20,6 +20,9 @@ public final class ApiEndPoint {
     private static final String PRODUCT_DETAILS = "api/shop/product/v1/accounts/A56B0D62-AEF6-4653-848E-2ECDDB6E9B8C/products/{seo_identifier}";
     private static final String ADDTOCART = "api/shop/product/v1/accounts/A56B0D62-AEF6-4653-848E-2ECDDB6E9B8C/basket/items";
     private static final String BASKET_QUANTITY = "api/shop/product/v1/accounts/A56B0D62-AEF6-4653-848E-2ECDDB6E9B8C/basket/items/quantity";
+    private static final String EVENTS = "api/shop/eventing/v1/events";
+    private static final String USERS = "api/shop/eventing/v1/users/current";
+
 
     public static final String GET_CATEGORY_TREE = getBaseApiGenie() + CATEGORY_TREE;
     public static final String GET_SORTING = getBaseApiGenie() + SORTING;
@@ -27,6 +30,8 @@ public final class ApiEndPoint {
     public static final String GET_PRODUCTS = getBaseApiGenie() + PRODUCTS;
     public static final String GET_PRODUCT_DETAILS = getBaseApiGenie() + PRODUCT_DETAILS;
     public static final String GET_BASKET_QUANTITY = getBaseApiGenie() + BASKET_QUANTITY;
+    public static final String SEARCH_EVENT = getBaseApiGenie() + EVENTS;
+    public static final String GET_EVENT_USER = getBaseApiGenie() + USERS;
 
     public static final String API_LEGACY_AKAMAI = "https://www.dealsdirect.com.au/papi/public/v3.17/api.ashx/";
 

@@ -41,6 +41,7 @@ import au.com.dealsdirect.data.network.model.contactsubject.ContactSubjects;
 import au.com.dealsdirect.data.network.model.contactsubject.ContactSubjectsRequest;
 import au.com.dealsdirect.data.network.model.createcontact.CreateContactRequest;
 import au.com.dealsdirect.data.network.model.createcontact.CreateContactResponse;
+import au.com.dealsdirect.data.network.model.events.SearchEventRequest;
 import au.com.dealsdirect.data.network.model.fcm.NotificationEvent;
 import au.com.dealsdirect.data.network.model.fcm.RegisterDevice;
 import au.com.dealsdirect.data.network.model.forgotpassword.ForgotPasswordRequest;
@@ -266,4 +267,8 @@ public interface ApiHelper {
 
     Observable<JSONObject> callMasterpassPostTransaction(HashMap<String, Object> param);
 
+    // EVENT
+    Observable<String> callSearchEvent(SearchEventRequest request);
+
+    Observable<String> callEventUser();
 }

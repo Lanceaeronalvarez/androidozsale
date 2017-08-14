@@ -8,19 +8,21 @@ import android.net.NetworkInfo;
 import com.androidnetworking.common.ANConstants;
 import com.androidnetworking.interceptors.HttpLoggingInterceptor;
 import com.androidnetworking.utils.Utils;
+import com.mysale.genie.utility.Prefs;
 
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
 import okhttp3.CacheControl;
-import okhttp3.Cookie;
 import okhttp3.Interceptor;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
+import okhttp3.Response;
 
 
 public final class NetworkUtils {
@@ -38,11 +40,11 @@ public final class NetworkUtils {
         return activeNetwork != null && activeNetwork.isConnectedOrConnecting();
     }
 
-    public static OkHttpClient provideOkHttpClientResponseCaching(Context ctx){
-        return provideOkHttpClientResponseCaching(ctx,null);
+    public static OkHttpClient provideOkHttpClientResponseCaching(Context ctx) {
+        return provideOkHttpClientResponseCaching(ctx, null);
     }
 
-    public static OkHttpClient provideOkHttpClientResponseCaching(Context ctx, HttpLoggingInterceptor.Level level){
+    public static OkHttpClient provideOkHttpClientResponseCaching(Context ctx, HttpLoggingInterceptor.Level level) {
         OkHttpClient.Builder builder = new OkHttpClient.Builder()
                 .cache(Utils.getCache(ctx, ANConstants.MAX_CACHE_SIZE, ANConstants.CACHE_DIR_NAME))
                 .connectTimeout(60, TimeUnit.SECONDS)
@@ -50,19 +52,20 @@ public final class NetworkUtils {
                 .writeTimeout(60, TimeUnit.SECONDS)
                 .cookieJar(CookieUtils.getInstance());
 
-        if(level != null) {
+        if (level != null) {
             builder.addInterceptor(new HttpLoggingInterceptor().setLevel(level));
         }
 
         return builder.addInterceptor(provideOfflineCacheInterceptor(ctx, CACHE_EXPIRATION, TimeUnit.HOURS))
-            .addNetworkInterceptor(provideCacheInterceptor())
-            .build();
+                .addNetworkInterceptor(provideCacheInterceptor())
+                .addInterceptor(provideReceivedCookiesInterceptor())
+                .build();
     }
 
     private static Interceptor provideOfflineCacheInterceptor(final Context ctx, final int maxStale, final TimeUnit timeUnit) {
         return new Interceptor() {
             @Override
-            public okhttp3.Response intercept(Chain chain) throws IOException {
+            public Response intercept(Chain chain) throws IOException {
 
                 Request request = chain.request();
                 if (!NetworkUtils.isNetworkConnected(ctx)) {
@@ -80,12 +83,16 @@ public final class NetworkUtils {
         };
     }
 
+    public static HashSet<String> getCookies() {
+        return (HashSet<String>) Prefs.getStringSet("Cookies", new HashSet<>());
+    }
+
     private static Interceptor provideCacheInterceptor() {
         return new Interceptor() {
             @Override
-            public okhttp3.Response intercept(Chain chain) throws IOException {
+            public Response intercept(Chain chain) throws IOException {
                 Request request = chain.request();
-                okhttp3.Response response = chain.proceed(request);
+                Response response = chain.proceed(request);
 
                 CacheControl cacheControl = new CacheControl.Builder()
                         .maxAge(60, TimeUnit.SECONDS)
@@ -95,6 +102,27 @@ public final class NetworkUtils {
                         .removeHeader("Pragma")
                         .header("Cache-Control", cacheControl.toString())
                         .build();
+            }
+        };
+    }
+
+    private static Interceptor provideReceivedCookiesInterceptor() {
+        return new Interceptor() {
+            @Override
+            public Response intercept(Chain chain) throws IOException {
+                Response originalResponse = chain.proceed(chain.request());
+
+                if (!originalResponse.headers("Set-Cookie").isEmpty()) {
+                    HashSet<String> cookies = new HashSet<>();
+
+                    for (String header : originalResponse.headers("Set-Cookie")) {
+                        cookies.add(header);
+                    }
+
+                    Prefs.putStringSet("network_cookies", cookies);
+                }
+
+                return originalResponse;
             }
         };
     }

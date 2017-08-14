@@ -9,6 +9,7 @@ import com.mysale.genie.utility.config.api.GetServerSettings;
 import org.json.JSONObject;
 
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 
 import javax.inject.Inject;
@@ -49,6 +50,7 @@ import au.com.dealsdirect.data.network.model.contactsubject.ContactSubjects;
 import au.com.dealsdirect.data.network.model.contactsubject.ContactSubjectsRequest;
 import au.com.dealsdirect.data.network.model.createcontact.CreateContactRequest;
 import au.com.dealsdirect.data.network.model.createcontact.CreateContactResponse;
+import au.com.dealsdirect.data.network.model.events.SearchEventRequest;
 import au.com.dealsdirect.data.network.model.fcm.NotificationEvent;
 import au.com.dealsdirect.data.network.model.fcm.RegisterDevice;
 import au.com.dealsdirect.data.network.model.forgotpassword.ForgotPasswordRequest;
@@ -324,7 +326,7 @@ public class AppDataManager implements DataManager {
 
     @Override
     public Observable<GetCurrentOrder.ResponseValue> callAdjustQuantityOrderItem(String url, AdjustOrderItem.RequestValue requestValue) {
-        return mApiHelper.callAdjustQuantityOrderItem(url,requestValue);
+        return mApiHelper.callAdjustQuantityOrderItem(url, requestValue);
     }
 
     @Override
@@ -454,6 +456,16 @@ public class AppDataManager implements DataManager {
     @Override
     public Observable<JSONObject> callMasterpassPostTransaction(HashMap<String, Object> param) {
         return mApiHelper.callMasterpassPostTransaction(param);
+    }
+
+    @Override
+    public Observable<String> callSearchEvent(SearchEventRequest request) {
+        return mApiHelper.callSearchEvent(request);
+    }
+
+    @Override
+    public Observable<String> callEventUser() {
+        return mApiHelper.callEventUser();
     }
 
 
@@ -740,23 +752,18 @@ public class AppDataManager implements DataManager {
     }
 
     @Override
-    public void updateApiHeader(Long userId, String accessToken) {
-
+    public void setEventUserId(String userId) {
+        mPreferencesHelper.setEventUserId(userId);
     }
 
     @Override
-    public void setUserAsLoggedOut() {
-
+    public String getEventUserId() {
+        return mPreferencesHelper.getEventUserId();
     }
 
     @Override
-    public Observable<Boolean> seedDatabaseQuestions() {
-        return null;
-    }
-
-    @Override
-    public Observable<Boolean> seedDatabaseOptions() {
-        return null;
+    public HashSet<String> getCookies() {
+        return mPreferencesHelper.getCookies();
     }
 
     @Override
@@ -764,10 +771,6 @@ public class AppDataManager implements DataManager {
         return mContext.getResources().getBoolean(R.bool.is_tablet);
     }
 
-    @Override
-    public void updateUserInfo(String accessToken, Long userId, LoggedInMode loggedInMode, String userName, String email, String profilePicPath) {
-
-    }
 
     @Override
     public void acknowledgeAuth(String loginTicket) {
