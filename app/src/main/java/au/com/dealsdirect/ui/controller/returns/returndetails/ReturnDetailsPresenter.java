@@ -24,8 +24,7 @@ public class ReturnDetailsPresenter<V extends ReturnDetailsMvpView> extends Base
     @Override
     public void loadCurrentReturnDetails(String returnId) {
 
-        GetReturnDetailRequest getReturnDetailRequest = new GetReturnDetailRequest();
-        getReturnDetailRequest.returnID = returnId;
+        GetReturnDetailRequest getReturnDetailRequest = new GetReturnDetailRequest(returnId);
 
         getCompositeDisposable()
                 .add(getDataManager()

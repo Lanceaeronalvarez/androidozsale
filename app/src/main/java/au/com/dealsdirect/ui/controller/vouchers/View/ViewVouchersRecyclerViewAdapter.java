@@ -58,6 +58,7 @@ public class ViewVouchersRecyclerViewAdapter extends RecyclerView.Adapter<ViewVo
             holder.mVouchersItemExpiresOnText.setText(voucher.getExpired());
             holder.mVouchersItemDescText.setText(voucher.getFullname());
             holder.mVouchersItemCostText.setText(voucher.getDiscountLeft());
+            holder.mVouchersLayout.setBackground(holder.mVouchersLayout.getContext().getDrawable(R.drawable.bg_voucher_item));
         }
 
     }

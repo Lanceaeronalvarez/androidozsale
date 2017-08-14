@@ -172,7 +172,7 @@ public class RegisterController extends BaseController implements RegisterMvpVie
 
     @Override
     public void showRegisterSuccessful(String loginTicket) {
-        getRouter().popToTag("AccountController");
+        getRouter().popToRoot(new VerticalChangeHandler());
         mAuthHandler.success();
 
         CustomAlertDialog.showCustomAlertDialog(getActivity(),

@@ -1,5 +1,6 @@
 package au.com.dealsdirect.ui.base;
 
+import android.app.Activity;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.StringRes;
@@ -53,6 +54,12 @@ public abstract class BaseController extends RefWatchingController implements Mv
     }
 
     protected abstract void setUp(View view);
+
+    @Override
+    protected void onActivityResumed(@NonNull Activity activity) {
+        super.onActivityResumed(activity);
+        mActivity = (BaseActivity) activity;
+    }
 
     @Override
     public void showLoading() {

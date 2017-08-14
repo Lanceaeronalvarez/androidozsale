@@ -51,4 +51,9 @@ public class HomePresenter<V extends HomeMvpView> extends BasePresenter<V> imple
                 })
         );
     }
+
+    @Override
+    public boolean isAuthorized() {
+        return getDataManager().isAuthorized();
+    }
 }

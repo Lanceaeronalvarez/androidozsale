@@ -32,6 +32,7 @@ import au.com.dealsdirect.ui.base.BaseController;
 import au.com.dealsdirect.ui.controller.account.AccountController;
 import au.com.dealsdirect.ui.controller.contact.addcontact.selectorder.ContactSelectOrderController;
 import au.com.dealsdirect.ui.controller.contact.addcontact.selectsubject.ContactSelectSubjectController;
+import au.com.dealsdirect.ui.custom.CustomAlertDialog;
 import au.com.dealsdirect.ui.custom.transitions.ReverseVerticalChangeHandler;
 import au.com.dealsdirect.ui.main.MainActivity;
 import au.com.dealsdirect.utils.BundleBuilder;
@@ -181,7 +182,7 @@ public class AddContactController extends BaseController implements AddContactMv
             }
         });
 
-        mAddContactToolbarRightOption.setVisibility(View.INVISIBLE);
+        mAddContactToolbarRightOption.setImageDrawable(getActivity().getResources().getDrawable(R.drawable.ic_check));
         mAddContactToolbarTitle.setText(R.string.create_contact);
 
         boolean isSubjectsLoaded = Prefs.getBoolean("isSubjectsLoaded", false);
@@ -277,12 +278,13 @@ public class AddContactController extends BaseController implements AddContactMv
 
                 createContactRequest.subj = mAddContactSubjectText.getText().toString();
 
-                if (mAddContactMessageField.getText().toString().isEmpty()) {
+                if (mAddContactMessageField.getText().toString().isEmpty()
+                        || currentSubject.isEmpty()) {
 
-//                    CustomAlertDialog.showCustomAlertDialog(
-//                            mBaseActivity,
-//                            CustomAlertDialog.CustomDialogIconState.NEGATIVE,
-//                            mBaseActivity.getString(R.string.please_write_a_message));
+                    CustomAlertDialog.showCustomAlertDialog(
+                            getActivity(),
+                            CustomAlertDialog.CustomDialogIconState.NEGATIVE,
+                            getActivity().getString(R.string.create_contact_fill_up));
 
                 } else {
 

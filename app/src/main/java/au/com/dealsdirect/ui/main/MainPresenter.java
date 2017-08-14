@@ -34,6 +34,7 @@ import au.com.dealsdirect.data.network.model.login.LoginTicket;
 import au.com.dealsdirect.data.network.model.login.Logout;
 import au.com.dealsdirect.service.fcm.GNotification;
 import au.com.dealsdirect.ui.base.BasePresenter;
+import au.com.dealsdirect.utils.CartUtil;
 import au.com.dealsdirect.utils.IntrospectionUtils;
 import au.com.dealsdirect.utils.rx.SchedulerProvider;
 import io.reactivex.annotations.NonNull;
@@ -41,6 +42,8 @@ import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.functions.Consumer;
 
 public class MainPresenter<V extends MainMvpView> extends BasePresenter<V> implements MainMvpPresenter<V> {
+
+    GNotification gNotification;
 
     public static final String KEY_CHECKOUT_MYPAY_PAY_EXCEED_LIMIT = "_checkoutMyPayPayExceedLimit";
     public static final String KEY_CHECKOUT_MYPAY_PAY_INVALID_PAYMENT_METHOD = "_checkoutMyPayPayInvalidPaymentMethod";
@@ -72,6 +75,7 @@ public class MainPresenter<V extends MainMvpView> extends BasePresenter<V> imple
                          CompositeDisposable compositeDisposable) {
 
         super(dataManager, schedulerProvider, compositeDisposable);
+        gNotification = new GNotification(getDataManager(), getSchedulerProvider(), getCompositeDisposable());
     }
 
     @Override
@@ -510,6 +514,7 @@ public class MainPresenter<V extends MainMvpView> extends BasePresenter<V> imple
         );
     }
 
+
     @Override
     public void callGetTemplateTexts() {
         GetTemplateTextsRequest getTemplateTextRequest = new GetTemplateTextsRequest();
@@ -541,10 +546,11 @@ public class MainPresenter<V extends MainMvpView> extends BasePresenter<V> imple
 
     @Override
     public void initializeNotifications(Context context) {
-        GNotification gNotification = new GNotification(getDataManager(), getSchedulerProvider(), getCompositeDisposable());
-        gNotification.registerDeviceForNotification(context);
-
+        if (gNotification != null) {
+            gNotification.registerDeviceForNotification(context);
+        }
     }
+
 
     @Override
     public void callAppSettingsWithAuthCheck() {

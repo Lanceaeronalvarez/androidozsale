@@ -23,7 +23,9 @@ import javax.inject.Inject;
 import au.com.dealsdirect.R;
 import au.com.dealsdirect.data.network.model.checkout.getuserpaymentmethods.PaymentMethod;
 import au.com.dealsdirect.ui.base.BaseController;
+import au.com.dealsdirect.ui.base.BasePullToRefreshController;
 import au.com.dealsdirect.ui.controller.checkout.addpayment.AddPaymentController;
+import au.com.dealsdirect.ui.controller.checkout.checkout.CheckoutController;
 import au.com.dealsdirect.ui.custom.CustomAlertDialog;
 import au.com.dealsdirect.ui.custom.RecyclerOnTouchListener;
 import au.com.dealsdirect.ui.main.MainActivity;
@@ -36,7 +38,7 @@ import butterknife.OnClick;
  * Created by smartwave on 30/06/2017.
  */
 
-public class PaymentSelectController extends BaseController implements PaymentSelectMvpView {
+public class PaymentSelectController extends BasePullToRefreshController implements PaymentSelectMvpView {
 
     private static final String PAYMENT_METHODS = "PaymentMethods";
     private final static String IS_FROM_CART = "IsFromCart";
@@ -81,10 +83,20 @@ public class PaymentSelectController extends BaseController implements PaymentSe
 
     @Override
     protected View inflateView(@NonNull LayoutInflater inflater, @NonNull ViewGroup container) {
-        View view = inflater.inflate(R.layout.controller_payment_select, container, false);
+        View view = super.inflateView(inflater, container);
+
+        fillToolbar(inflater.inflate(R.layout.partial_toolbar_arrow, container, false));
+        fillContent(inflater.inflate(R.layout.controller_payment_select, container, false));
+
         getControllerComponent().inject(this);
         mPresenter.onAttach(this);
         return view;
+    }
+
+    @Override
+    public void onRefreshStart() {
+        super.onRefreshStart();
+        mPresenter.fetchUserPaymentMethods();
     }
 
     @Override
@@ -101,18 +113,31 @@ public class PaymentSelectController extends BaseController implements PaymentSe
 
     @Override
     public void showPaymentList(List<PaymentMethod> paymentMethods) {
-        if (paymentMethods != null) {
-            mNoPaymentPlaceholder.setVisibility(View.VISIBLE);
+        int backstackSize = getRouter().getBackstackSize();
+        String checkoutTag = getRouter().getBackstack().get(backstackSize-1).tag();
+
+        if (paymentMethods != null && paymentMethods.size() > 0) {
             mPaymentMethods = new ArrayList<>(paymentMethods);
             mAdapter.replaceData(mPaymentMethods);
+            showPaymentMethodsPlaceholder(false);
+        } else if (checkoutTag == getActivity().getString(R.string.checkout_controller)
+                        && (paymentMethods == null
+                        || paymentMethods.size() == 0)) {
+            getRouter().pushController(RouterTransaction.with(new AddPaymentController(false))
+                    .pushChangeHandler(new HorizontalChangeHandler())
+                    .popChangeHandler(new HorizontalChangeHandler()));
+        } else if (paymentMethods.size() == 0) {
+            showPaymentMethodsPlaceholder(true);
+        }
+    }
+
+    private void showPaymentMethodsPlaceholder(boolean val){
+        if(val) {
+            mNoPaymentPlaceholder.setVisibility(View.VISIBLE);
             mRecyclerView.setVisibility(View.GONE);
         } else {
             mNoPaymentPlaceholder.setVisibility(View.GONE);
             mRecyclerView.setVisibility(View.VISIBLE);
-
-            getRouter().pushController(RouterTransaction.with(new AddPaymentController(false))
-                    .pushChangeHandler(new HorizontalChangeHandler())
-                    .popChangeHandler(new HorizontalChangeHandler()));
         }
     }
 
@@ -124,23 +149,13 @@ public class PaymentSelectController extends BaseController implements PaymentSe
             mPaymentMethods.remove(paymentMethod);
             mAdapter.notifyDataSetChanged();
 
-            CustomAlertDialog.showCustomAlertDialog(mActivity, CustomAlertDialog.CustomDialogIconState.POSITIVE, "Payment method removed!");
-//            DialogUtils.showYesDialog(mActivity, "Success", "Payment method removed!", "OK", new DialogInterface.OnClickListener() {
-//                @Override
-//                public void onClick(DialogInterface dialog, int which) {
-//                    dialog.dismiss();
-//                }
-//            });
+            if(mAdapter.getItemCount() == 0){
+                showPaymentMethodsPlaceholder(true);
+            }
 
         } else {
-            CustomAlertDialog.showCustomAlertDialog(mActivity, CustomAlertDialog.CustomDialogIconState.NEGATIVE, "An error occured.");
+            CustomAlertDialog.showCustomAlertDialog(mActivity, CustomAlertDialog.CustomDialogIconState.NEGATIVE, message);
 
-//            DialogUtils.showYesDialog(mActivity, "Failed", "Please try again.", "OK", new DialogInterface.OnClickListener() {
-//                @Override
-//                public void onClick(DialogInterface dialog, int which) {
-//                    dialog.dismiss();
-//                }
-//            });
         }
     }
 
@@ -148,7 +163,6 @@ public class PaymentSelectController extends BaseController implements PaymentSe
     protected void setUp(View view) {
 
         if (!isFromCart) {
-            showLoading();
             mPresenter.fetchUserPaymentMethods();
         }
 
@@ -180,7 +194,7 @@ public class PaymentSelectController extends BaseController implements PaymentSe
 
     @OnClick(R.id.partial_toolbar_filter_view)
     public void onAddPaymentMethod() {
-        getRouter().pushController(RouterTransaction.with(new AddPaymentController(true))
+        getRouter().pushController(RouterTransaction.with(new AddPaymentController(isFromCart))
                 .pushChangeHandler(new HorizontalChangeHandler())
                 .popChangeHandler(new HorizontalChangeHandler()));
     }

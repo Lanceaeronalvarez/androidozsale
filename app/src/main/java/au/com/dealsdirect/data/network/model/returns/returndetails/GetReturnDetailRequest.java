@@ -7,7 +7,7 @@ public class GetReturnDetailRequest {
 
     public String returnID;
 
-    public GetReturnDetailRequest() {
-
+    public GetReturnDetailRequest(String returnID) {
+        this.returnID = returnID;
     }
 }

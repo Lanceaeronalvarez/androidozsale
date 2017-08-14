@@ -13,6 +13,7 @@ import javax.inject.Inject;
 
 import au.com.dealsdirect.R;
 import au.com.dealsdirect.ui.base.BaseController;
+import au.com.dealsdirect.ui.base.BasePullToRefreshController;
 import au.com.dealsdirect.ui.main.MainActivity;
 import au.com.dealsdirect.utils.BundleBuilder;
 import butterknife.BindView;
@@ -22,7 +23,7 @@ import butterknife.OnClick;
  * Created by Paul on 7/14/17.
  */
 
-public class LegalitiesController extends BaseController implements LegalitiesMvpView {
+public class LegalitiesController extends BasePullToRefreshController implements LegalitiesMvpView {
 
     @Inject
     LegalitiesMvpPresenter<LegalitiesMvpView> mPresenter;
@@ -61,12 +62,21 @@ public class LegalitiesController extends BaseController implements LegalitiesMv
 
     @Override
     protected View inflateView(@NonNull LayoutInflater inflater, @NonNull ViewGroup container) {
-        View view = inflater.inflate(R.layout.controller_legalities, container, false);
+        View view = super.inflateView(inflater, container);
+
+        fillToolbar(inflater.inflate(R.layout.partial_toolbar_arrow, container, false));
+        fillContent(inflater.inflate(R.layout.controller_legalities, container, false));
 
         getControllerComponent().inject(this);
         mPresenter.onAttach(this);
-
         return view;
+    }
+
+    @Override
+    public void onRefreshStart() {
+        super.onRefreshStart();
+        mWebView.setVisibility(View.GONE);
+        mPresenter.loadText(key);
     }
 
     @Override
@@ -91,6 +101,7 @@ public class LegalitiesController extends BaseController implements LegalitiesMv
         String footer = getActivity().getResources().getString(R.string.base_html_template_footer);
 
         mWebView.loadData(header + value + footer, "text/html; charset=UTF-8", null);
+        mWebView.setVisibility(View.VISIBLE);
     }
 
     @OnClick(R.id.partial_toolbar_arrow_view)

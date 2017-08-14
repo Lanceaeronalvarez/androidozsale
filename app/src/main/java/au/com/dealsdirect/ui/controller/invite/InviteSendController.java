@@ -37,6 +37,7 @@ import au.com.dealsdirect.data.network.model.invite.GetInviteResponse;
 import au.com.dealsdirect.data.network.model.invite.SetInviteRequest;
 import au.com.dealsdirect.data.network.model.invite.SetInviteResponse;
 import au.com.dealsdirect.ui.base.BaseController;
+import au.com.dealsdirect.ui.base.BasePullToRefreshController;
 import au.com.dealsdirect.ui.custom.CustomAlertDialog;
 import au.com.dealsdirect.utils.BundleBuilder;
 import butterknife.BindView;
@@ -45,10 +46,13 @@ import butterknife.BindView;
  * Created by Paul on 7/3/17.
  */
 
-public class InviteSendController extends BaseController implements InviteMvpView {
+public class InviteSendController extends BasePullToRefreshController implements InviteMvpView {
 
     @Inject
     InviteMvpPresenter<InviteMvpView> mPresenter;
+
+    @BindView(R.id.controller_send_invite_root)
+    View mRoot;
 
     @BindView(R.id.partial_toolbar_arrow_title)
     TextView mTitleText;
@@ -131,7 +135,8 @@ public class InviteSendController extends BaseController implements InviteMvpVie
         @Override
         public void afterTextChanged(Editable s) {
 
-        }};
+        }
+    };
 
     public InviteSendController(Bundle args) {
         super(args);
@@ -144,12 +149,21 @@ public class InviteSendController extends BaseController implements InviteMvpVie
 
     @Override
     protected View inflateView(@NonNull LayoutInflater inflater, @NonNull ViewGroup container) {
-        View view = inflater.inflate(R.layout.controller_invite_send, container, false);
+        View view = super.inflateView(inflater, container);
+
+        fillToolbar(inflater.inflate(R.layout.partial_toolbar_arrow, container, false));
+        fillContent(inflater.inflate(R.layout.controller_invite_send, container, false));
 
         getControllerComponent().inject(this);
         mPresenter.onAttach(this);
-
         return view;
+    }
+
+    @Override
+    public void onRefreshStart() {
+        super.onRefreshStart();
+        mRoot.setVisibility(View.GONE);
+        mPresenter.start();
     }
 
     @Override
@@ -161,7 +175,7 @@ public class InviteSendController extends BaseController implements InviteMvpVie
     private String urlEncode(String s) {
         try {
             return URLEncoder.encode(s, "UTF-8");
-        }catch (UnsupportedEncodingException e) {
+        } catch (UnsupportedEncodingException e) {
             e.printStackTrace();
             return "null";
         }
@@ -183,15 +197,15 @@ public class InviteSendController extends BaseController implements InviteMvpVie
 
         progress = new ProgressDialog(getActivity());
 
-        if (twitterLink.isEmpty()){
+        if (twitterLink.isEmpty()) {
             mTwitterFollowUsContainer.setVisibility(View.GONE);
-        }else{
+        } else {
             mTwitterFollowUsContainer.setVisibility(View.VISIBLE);
         }
 
-        if (facebookLink.isEmpty()){
+        if (facebookLink.isEmpty()) {
             mFacebookLikeUsContainer.setVisibility(View.GONE);
-        }else{
+        } else {
             mFacebookLikeUsContainer.setVisibility(View.VISIBLE);
         }
 
@@ -247,8 +261,9 @@ public class InviteSendController extends BaseController implements InviteMvpVie
             }
         });
 
-        mFacebookSendInvitationLayout.setOnClickListener(new View.OnClickListener(){
-            @Override public void onClick(View view) {
+        mFacebookSendInvitationLayout.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
                 onSaveInstanceState(getArgs());
 
                 String personalInvitation = mPersonalInvitationMessageEditText.getText().toString();
@@ -275,7 +290,8 @@ public class InviteSendController extends BaseController implements InviteMvpVie
         });
 
         mMessageSendInvitationLayout.setOnClickListener(new View.OnClickListener() {
-            @Override public void onClick(View view) {
+            @Override
+            public void onClick(View view) {
                 onSaveInstanceState(getArgs());
 
                 String message = mPersonalInvitationMessageEditText.getText().toString();
@@ -284,22 +300,23 @@ public class InviteSendController extends BaseController implements InviteMvpVie
 
                 Intent smsIntent = new Intent(android.content.Intent.ACTION_VIEW);
                 smsIntent.setType("vnd.android-dir/mms-sms");
-                smsIntent.putExtra("sms_body",messageWithInvite);
+                smsIntent.putExtra("sms_body", messageWithInvite);
                 startActivity(smsIntent);
             }
         });
 
 
         mMailSendInvitationLayout.setOnClickListener(new View.OnClickListener() {
-            @Override public void onClick(View view) {
+            @Override
+            public void onClick(View view) {
                 onSaveInstanceState(getArgs());
 
 
                 String message = mPersonalInvitationMessageEditText.getText().toString();
                 String invitationLink = mPersonalInvitationLinkEditText.getText().toString();
-                String messageWithInvite = message +invitationLink;
+                String messageWithInvite = message + invitationLink;
 
-                if(invitationLink.isEmpty() || invitationLink.equals("")){
+                if (invitationLink.isEmpty() || invitationLink.equals("")) {
 
                     new Handler().postDelayed(new Runnable() {
                         @Override
@@ -356,7 +373,7 @@ public class InviteSendController extends BaseController implements InviteMvpVie
                 Intent intent;
                 if (!link.isEmpty()) {
                     try {
-                        getActivity().getPackageManager().getPackageInfo("com.twitter.android",0);
+                        getActivity().getPackageManager().getPackageInfo("com.twitter.android", 0);
                         Uri uri = Uri.parse("twitter://user?user_id=37405859");
                         intent = new Intent(Intent.ACTION_VIEW, uri);
                     } catch (PackageManager.NameNotFoundException e) {
@@ -385,7 +402,7 @@ public class InviteSendController extends BaseController implements InviteMvpVie
                 hideKeyboard();
                 mSendInviteLinkLayout.requestFocus();
 
-                if(mClipboardText.equals("Save Changes") || mClipboardText.getText().toString() == "Save Changes") {
+                if (mClipboardText.equals("Save Changes") || mClipboardText.getText().toString() == "Save Changes") {
                     mPersonalInvitationMessageEditText.setEnabled(true);
 
                     String editedLink = mPersonalInvitationLinkEditText.getText().toString();
@@ -421,6 +438,8 @@ public class InviteSendController extends BaseController implements InviteMvpVie
 
     @Override
     public void showInviteLink(GetInviteResponse getInviteLinkBody) {
+        mRoot.setVisibility(View.VISIBLE);
+
         if (getInviteLinkBody.getResponse().getValue() != null) {
             inviteBody = getInviteLinkBody.getResponse().getValue();
         }
@@ -456,22 +475,19 @@ public class InviteSendController extends BaseController implements InviteMvpVie
                     "Edit Successful");
 
         } else {
-            mPersonalInvitationLinkEditText.setFocusable(false);
-            mPersonalInvitationLinkEditText.setFocusableInTouchMode(false);
-
             mPersonalInvitationLinkEditText.setText(inviteLink);
+
+            mPersonalInvitationMessageEditText.setEnabled(true);
 
             mClipboardText.setText("Copy link to clipboard");
             mClipboardImage.setVisibility(View.VISIBLE);
-
 
             progress.dismiss();
 
             CustomAlertDialog.showCustomAlertDialog(
                     getActivity(),
                     CustomAlertDialog.CustomDialogIconState.NEGATIVE,
-                    editLinkResponse
-            );
+                    editLinkResponse);
         }
     }
 }

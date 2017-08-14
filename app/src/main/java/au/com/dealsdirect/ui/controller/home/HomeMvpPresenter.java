@@ -11,4 +11,6 @@ public interface HomeMvpPresenter<V extends MvpView> extends MvpPresenter<V> {
 
     void callGetBasketItemsQuantity();
 
+    boolean isAuthorized();
+
 }

@@ -6,7 +6,6 @@ import au.com.dealsdirect.di.module.ControllerModule;
 import au.com.dealsdirect.ui.controller.account.AccountController;
 import au.com.dealsdirect.ui.controller.address.addnewaddress.AddNewAddressController;
 import au.com.dealsdirect.ui.controller.address.viewaddress.ViewAddressController;
-import au.com.dealsdirect.ui.controller.cart.CartController;
 import au.com.dealsdirect.ui.controller.categories.CategoriesController;
 import au.com.dealsdirect.ui.controller.checkout.addpayment.AddPaymentController;
 import au.com.dealsdirect.ui.controller.checkout.checkout.CheckoutController;
@@ -22,7 +21,6 @@ import au.com.dealsdirect.ui.controller.details.DetailsController;
 import au.com.dealsdirect.ui.controller.forgotpassword.ForgotPasswordController;
 import au.com.dealsdirect.ui.controller.home.HomeController;
 import au.com.dealsdirect.ui.controller.main.MainController;
-import au.com.dealsdirect.ui.controller.invite.InviteController;
 import au.com.dealsdirect.ui.controller.invite.InviteSendController;
 import au.com.dealsdirect.ui.controller.language.LanguageController;
 import au.com.dealsdirect.ui.controller.legalities.LegalitiesController;
@@ -39,7 +37,6 @@ import au.com.dealsdirect.ui.controller.salecategories.SaleCategoriesController;
 import au.com.dealsdirect.ui.controller.saleitemdetails.SaleItemDetailsController;
 import au.com.dealsdirect.ui.controller.saleitems.SaleItemsController;
 import au.com.dealsdirect.ui.controller.searchfilter.SearchFilterController;
-import au.com.dealsdirect.ui.controller.search.SearchController;
 import au.com.dealsdirect.ui.controller.shops.ShopsController;
 import au.com.dealsdirect.ui.controller.vouchers.Add.AddVouchersController;
 import au.com.dealsdirect.ui.controller.vouchers.View.ViewVouchersController;
@@ -96,8 +93,6 @@ public interface ControllerComponent {
 
     void inject(ViewContactHistoryController controller);
 
-    void inject(CartController controller);
-
     void inject(ViewVouchersController controller);
 
     void inject(AddVouchersController controller);
@@ -115,8 +110,6 @@ public interface ControllerComponent {
     void inject(PaymentSelectController controller);
 
     void inject(PaymentSuccessController controller);
-  
-    void inject(InviteController controller);
 
     void inject(InviteSendController controller);
 
@@ -129,8 +122,6 @@ public interface ControllerComponent {
     void inject(LegalitiesController controller);
 
     void inject(NewReturnController controller);
-
-    void inject(SearchController controller);
 
     void inject(SearchFilterController controller);
 

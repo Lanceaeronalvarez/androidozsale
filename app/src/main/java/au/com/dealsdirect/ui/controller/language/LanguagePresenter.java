@@ -34,6 +34,7 @@ public class LanguagePresenter<V extends LanguageMvpView> extends BasePresenter<
         String languagesJsonString = getDataManager().getLanguages();
         List<Language> languages = new Gson().fromJson(languagesJsonString, new TypeToken<ArrayList<Language>>(){}.getType());
         getMvpView().showLanguages(languages, getDataManager().getLanguageId());
+        getMvpView().hideLoading();
     }
 
     @Override

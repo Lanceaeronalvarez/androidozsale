@@ -21,4 +21,8 @@ public interface SearchFilterMvpPresenter<V extends SearchFilterMvpView> extends
     void resetPriceRange();
 
     void onCategoryChipRemoved();
+
+    void showTransparentOverlay();
+
+    void hideTransparentOverlay();
 }

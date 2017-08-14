@@ -1,8 +1,11 @@
 package au.com.dealsdirect.ui.controller.checkout.addpayment;
 
+import android.app.Activity;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -37,15 +40,14 @@ import butterknife.OnClick;
 
 public class AddPaymentController extends BaseController implements AddPaymentMvpView,OnCardFormSubmitListener, CardEditText.OnCardTypeChangedListener {
     private final static String  IS_FROM_CART = "IsFromCart";
-
     @Inject
     AddPaymentMvpPresenter<AddPaymentMvpView> mPresenter;
 
 
     @BindView(R.id.card_form)
     CardForm mCardForm;
-    @BindView(R.id.partial_checkout_bt_loading)
-    View mBraintreeLoading;
+//    @BindView(R.id.partial_checkout_bt_loading)
+//    View mBraintreeLoading;
     @BindView(R.id.partial_checkout_button_holder)
     View mButtonHolder;
     @BindView(R.id.partial_checkout_button_pay)
@@ -64,6 +66,7 @@ public class AddPaymentController extends BaseController implements AddPaymentMv
 
     MainActivity mActivity;
     boolean isFromCart = false;
+    boolean isPayPalSubmitClicked = false;
 
     public AddPaymentController(boolean isFromCart) {
         this(new BundleBuilder(new Bundle())
@@ -111,10 +114,10 @@ public class AddPaymentController extends BaseController implements AddPaymentMv
             onPaypalSubmit();
         });
 
-        if(!isFromCart) {
-            mButtonPay.setText("add");
-            mTextPaypal.setText("add");
-        }
+//        if(!isFromCart) {
+//            mButtonPay.setText("add");
+//            mTextPaypal.setText("add");
+//        }
 
         if (((MainActivity)getActivity()).isBraintreeInitialized()) {
             showPaymentButtons();
@@ -140,13 +143,30 @@ public class AddPaymentController extends BaseController implements AddPaymentMv
         super.onDetach(view);
     }
 
+
+    @Override
+    protected void onAttach(@NonNull View view) {
+        super.onAttach(view);
+
+
+    }
+
+    @Override
+    protected void onActivityResumed(@NonNull Activity activity) {
+        super.onActivityResumed(activity);
+        if(isPayPalSubmitClicked){
+            showLoading();
+        }
+        isPayPalSubmitClicked = false;
+    }
+
     private void hidePaymentButtons() {
-        mBraintreeLoading.setVisibility(View.VISIBLE);
+//        mBraintreeLoading.setVisibility(View.VISIBLE);
         mButtonHolder.setVisibility(View.GONE);
     }
 
     private void showPaymentButtons() {
-        mBraintreeLoading.setVisibility(View.GONE);
+//        mBraintreeLoading.setVisibility(View.GONE);
         mButtonHolder.setVisibility(View.VISIBLE);
     }
 
@@ -155,7 +175,6 @@ public class AddPaymentController extends BaseController implements AddPaymentMv
         hideKeyboard();
 
         if (mCardForm.isValid() && mActivity.getBraintreeFragment() != null) {
-//            mActivity.showProgressDialog("Verifying payment method");
             showLoading();
             mActivity.onPurchase(mCardForm);
 
@@ -163,14 +182,7 @@ public class AddPaymentController extends BaseController implements AddPaymentMv
             CustomAlertDialog.showCustomAlertDialog(
                     mActivity, CustomAlertDialog.CustomDialogIconState.NEGATIVE,
                     "Please wait for payments to finish initializing");
-//            DialogUtils.showYesDialog(mActivity, "Notification"
-//                    , "Please wait for payments to finish initializing"
-//                    , "ok", new DialogInterface.OnClickListener() {
-//                        @Override
-//                        public void onClick(DialogInterface dialog, int which) {
-//                            dialog.dismiss();
-//                        }
-//                    });
+
         } else {
             mCardForm.validate();
         }
@@ -183,24 +195,27 @@ public class AddPaymentController extends BaseController implements AddPaymentMv
 
     @Override
     public void onPaypalSubmit() {
+        isPayPalSubmitClicked = true;
+        showLoading();
         mActivity.startPaypalPayment();
     }
 
 
     @Override
     public void showAddPaymentResult(boolean result, String message) {
+        hideLoading();
         if (result) {
-            DialogUtils.showYesDialog(mActivity, "Success", "Payment method added!", "ok", new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialog, int which) {
-                            dialog.dismiss();
-                            getRouter().popController(AddPaymentController.this);
-                        }
-                    });
-            clearFields();
+
+            CustomAlertDialog.showCustomAlertDialog(
+                    mActivity, CustomAlertDialog.CustomDialogIconState.POSITIVE,
+                    "Payment method added!");
+
         } else {
-            DialogUtils.showYesDialog(mActivity, "Failed", message, "ok", null);
+            CustomAlertDialog.showCustomAlertDialog(
+                    mActivity, CustomAlertDialog.CustomDialogIconState.NEGATIVE,
+                    "Can't add payment method");
         }
+        getRouter().handleBack();
     }
 
     @Override
@@ -219,10 +234,4 @@ public class AddPaymentController extends BaseController implements AddPaymentMv
         getActivity().onBackPressed();
     }
 
-    public void goToCheckout(){
-        getRouter().setRoot(RouterTransaction.with(new CheckoutController())
-                .tag(getActivity().getResources().getString(R.string.checkout_controller))
-                .pushChangeHandler(new FadeChangeHandler())
-                .popChangeHandler(new FadeChangeHandler()));
-    }
 }

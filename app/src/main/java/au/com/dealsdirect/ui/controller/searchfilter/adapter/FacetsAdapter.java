@@ -1,6 +1,7 @@
 package au.com.dealsdirect.ui.controller.searchfilter.adapter;
 
 import android.content.Context;
+import android.support.v4.util.Pair;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -11,26 +12,38 @@ import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Set;
 
 import au.com.dealsdirect.R;
 import au.com.dealsdirect.ui.controller.searchfilter.SearchFilterMvpPresenter;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
+import static au.com.dealsdirect.ui.controller.searchfilter.SearchFilterController.BRANDS_FACETFILTER_NAME;
+import static au.com.dealsdirect.ui.controller.searchfilter.SearchFilterController.CATEGORY_TREE_FACET;
+import static au.com.dealsdirect.ui.controller.searchfilter.SearchFilterController.COLORS_FACETFILTER_NAME;
+import static au.com.dealsdirect.ui.controller.searchfilter.SearchFilterController.PRICE_FACETFILTER_NAME;
+import static au.com.dealsdirect.ui.controller.searchfilter.SearchFilterController.SIZES_FACETFILTER_NAME;
+import static au.com.dealsdirect.ui.controller.searchfilter.SearchFilterController.SORT_FACETFILTER_NAME;
+
 
 public class FacetsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
-    private List<String> mData;
+    private ArrayList<Pair<String,String>> mData;
     private SearchFilterMvpPresenter mPresenter;
     private int mLastPosition = -1;
     private RecyclerView.ViewHolder mLastSelectedViewHolder = null;
     private Context mContext;
+    private List<SearchChipModel> mSearchChips;
 
-    public FacetsAdapter(Context context, List<String> data, SearchFilterMvpPresenter presenter) {
+    public FacetsAdapter(Context context, ArrayList<Pair<String,String>> data, SearchFilterMvpPresenter presenter, List<SearchChipModel> searchChips) {
         mContext = context;
         mData = data;
         mPresenter = presenter;
+        mSearchChips = searchChips;
     }
 
     @Override
@@ -48,8 +61,14 @@ public class FacetsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
 
         if (!mData.isEmpty()) {
 
-            vh.mFacetName.setText(mData.get(position));
-            vh.mFacetBackground.setImageDrawable(mContext.getDrawable(mapDrawable(position)));
+            vh.mFacetName.setText(mData.get(position).second);
+            vh.mFacetBackground.setImageResource(mapDrawable(position));
+
+            if(isFacetActive(mData.get(position).first)){
+                vh.mFacetIndicator.setVisibility(View.VISIBLE);
+            } else {
+                vh.mFacetIndicator.setVisibility(View.INVISIBLE);
+            }
 
             vh.itemView.setOnClickListener(view -> {
                 if (mLastSelectedViewHolder == null) {
@@ -91,6 +110,11 @@ public class FacetsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
 
     }
 
+    public void add(Pair<String,String> newFacet){
+        mData.add(newFacet);
+        notifyItemInserted(mData.size()-1);
+    }
+
     @Override
     public int getItemViewType(int position) {
         return position;
@@ -101,6 +125,9 @@ public class FacetsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
         return super.getItemId(position);
     }
 
+    public ArrayList<Pair<String,String>> getData(){
+        return mData;
+    }
 
     @Override
     public int getItemCount() {
@@ -116,6 +143,9 @@ public class FacetsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
 
         @BindView(R.id.row_facets_name)
         public TextView mFacetName;
+
+        @BindView(R.id.row_indicator_active_text)
+        public TextView mFacetIndicator;
 
         public SearchFilterMvpPresenter mPresenter;
 
@@ -137,8 +167,17 @@ public class FacetsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
         }
     }
 
-    public String getItemAt(int position) {
-        return mData.get(position);
+    private boolean isFacetActive(String key){
+        for (SearchChipModel chip : mSearchChips) {
+            if(chip.getFilterType().equals(key)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    public void updateSelectedSearchChips(List<SearchChipModel> selectedSearchChips) {
+        mSearchChips = selectedSearchChips;
     }
 
 }

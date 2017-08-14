@@ -14,18 +14,22 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
+import android.widget.LinearLayout;
 
 import au.com.dealsdirect.R;
+import butterknife.BindView;
 import in.srain.cube.views.ptr.PtrClassicFrameLayout;
 import in.srain.cube.views.ptr.PtrDefaultHandler;
 import in.srain.cube.views.ptr.PtrFrameLayout;
 import in.srain.cube.views.ptr.PtrHandler;
 
-public abstract class BasePullToRefreshController extends BaseController implements MvpView, PtrHandler {
+public abstract class BasePullToRefreshController extends BaseController implements PullToRefreshMvpView, PtrHandler {
 
     FrameLayout mToolbarFrameLayout;
 
     FrameLayout mContentLayout;
+
+    LinearLayout mNoNetworkLayout;
 
     PtrClassicFrameLayout mPtrLayout;
 
@@ -45,10 +49,21 @@ public abstract class BasePullToRefreshController extends BaseController impleme
 
         mContentLayout = (FrameLayout) view.findViewById(R.id.controller_base_content_layout);
 
+        mNoNetworkLayout = (LinearLayout) view.findViewById(R.id.no_network_layout);
+
+        mNoNetworkLayout.setOnClickListener(v -> onRefreshStart());
+
         mPtrLayout = (PtrClassicFrameLayout) view.findViewById(R.id.controller_base_ptr_layout);
+
         mPtrLayout.setPtrHandler(this);
 
         return view;
+    }
+
+    @Override
+    protected void onAttach(@NonNull View view) {
+        super.onAttach(view);
+        mPtrLayout.setIsChildScrollingEnabled(false);
     }
 
     protected void fillContent(View view) {
@@ -71,6 +86,15 @@ public abstract class BasePullToRefreshController extends BaseController impleme
     }
 
     @Override
+    public void onError(String message) {
+        if (message != null && message.contains("UnknownHostException")) {
+            showNoNetworkLayout();
+        } else {
+            super.onError(message);
+        }
+    }
+
+    @Override
     public void onRefreshStart() {
 
     }
@@ -89,33 +113,47 @@ public abstract class BasePullToRefreshController extends BaseController impleme
     }
 
     @Override
+    public void showNoNetworkLayout() {
+        mContentLayout.setVisibility(View.GONE);
+        mNoNetworkLayout.setVisibility(View.VISIBLE);
+    }
+
+    @Override
+    public void hideNoNetworkLayout() {
+        if (mContentLayout != null && mNoNetworkLayout != null) {
+            mContentLayout.setVisibility(View.VISIBLE);
+            mNoNetworkLayout.setVisibility(View.GONE);
+        }
+    }
+
+    @Override
     public boolean checkCanDoRefresh(PtrFrameLayout frame, View content, View header) {
         return PtrDefaultHandler.checkContentCanBePulledDown(frame, content, header);
     }
 
     private void addOverScrollListener(ViewGroup vg) {
-        for (int i = 0; i < vg.getChildCount(); i++){
+        for (int i = 0; i < vg.getChildCount(); i++) {
             View child = vg.getChildAt(i);
-            if (child instanceof ViewGroup){
-                if(child instanceof RecyclerView) {
+            if (child instanceof ViewGroup) {
+                if (child instanceof RecyclerView) {
                     recyclerViewEnablePullToRefresh(child);
                 }
-                if(child instanceof NestedScrollView){
+                if (child instanceof NestedScrollView) {
                     nestedScrollViewEnablePullToRefresh(child);
                 }
-                addOverScrollListener((ViewGroup)child);
+                addOverScrollListener((ViewGroup) child);
             }
         }
     }
 
     private void recyclerViewEnablePullToRefresh(View child) {
-        RecyclerView recyclerView = ((RecyclerView)child);
+        RecyclerView recyclerView = ((RecyclerView) child);
         recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
             @Override
             public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
                 super.onScrollStateChanged(recyclerView, newState);
-                if(((LinearLayoutManager) recyclerView.getLayoutManager()).
-                        findFirstCompletelyVisibleItemPosition() == 0){
+                if (((LinearLayoutManager) recyclerView.getLayoutManager()).
+                        findFirstCompletelyVisibleItemPosition() == 0) {
                     mPtrLayout.setIsChildScrollingEnabled(true);
                 } else {
                     mPtrLayout.setIsChildScrollingEnabled(false);
@@ -129,7 +167,7 @@ public abstract class BasePullToRefreshController extends BaseController impleme
         nestedScrollView.setOnScrollChangeListener(new NestedScrollView.OnScrollChangeListener() {
             @Override
             public void onScrollChange(NestedScrollView view, int scrollX, int scrollY, int oldScrollX, int oldScrollY) {
-                if(view.getTop()==scrollY){
+                if (view.getTop() == scrollY) {
                     mPtrLayout.setIsChildScrollingEnabled(true);
                 } else {
                     mPtrLayout.setIsChildScrollingEnabled(false);

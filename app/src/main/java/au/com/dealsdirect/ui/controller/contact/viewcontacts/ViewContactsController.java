@@ -12,6 +12,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.bluelinelabs.conductor.Router;
 import com.bluelinelabs.conductor.RouterTransaction;
 import com.bluelinelabs.conductor.changehandler.HorizontalChangeHandler;
 import com.bluelinelabs.conductor.changehandler.VerticalChangeHandler;
@@ -26,6 +27,7 @@ import au.com.dealsdirect.R;
 import au.com.dealsdirect.data.network.model.contactitem.ContactItemByDate;
 import au.com.dealsdirect.data.network.model.contactitem.GetContactsResponse;
 import au.com.dealsdirect.ui.base.BaseController;
+import au.com.dealsdirect.ui.base.BasePullToRefreshController;
 import au.com.dealsdirect.ui.controller.contact.addcontact.AddContactController;
 import au.com.dealsdirect.ui.controller.contact.viewcontacthistory.ViewContactHistoryController;
 import au.com.dealsdirect.ui.controller.contact.viewcontacts.contacts.ContactsAdapter;
@@ -40,7 +42,7 @@ import butterknife.OnClick;
  * dp Created by Admin on 6/6/17.
  */
 
-public class ViewContactsController extends BaseController implements ViewContactsMvpView, ContactsClickListener {
+public class ViewContactsController extends BasePullToRefreshController implements ViewContactsMvpView, ContactsClickListener {
 
     public static final String TAG = "ContactController";
     private static final String KEY_TEXT = "ContactController.KEY_TEXT";
@@ -85,10 +87,21 @@ public class ViewContactsController extends BaseController implements ViewContac
     @NonNull
     @Override
     protected View inflateView(@NonNull LayoutInflater inflater, @NonNull ViewGroup container) {
-        View view = inflater.inflate(R.layout.controller_view_contacts, container, false);
+        View view = super.inflateView(inflater, container);
+
+        fillToolbar(inflater.inflate(R.layout.partial_toolbar_arrow, container, false));
+        fillContent(inflater.inflate(R.layout.controller_view_contacts, container, false));
+
         getControllerComponent().inject(this);
         mPresenter.onAttach(this);
         return view;
+    }
+
+    @Override
+    public void onRefreshStart() {
+        super.onRefreshStart();
+        mViewContactsRecyclerView.setVisibility(View.GONE);
+        mPresenter.loadContacts();
     }
 
     @Override
@@ -242,7 +255,8 @@ public class ViewContactsController extends BaseController implements ViewContac
             timeStampString = "";
         }
 
-        getRouter().pushController(RouterTransaction.with(ViewContactHistoryController.newInstance(
+        Router router = getRouter();
+        router.pushController(RouterTransaction.with(ViewContactHistoryController.newInstance(
                 contactSubject,
                 saleName,
                 invoiceNo,

@@ -23,6 +23,7 @@ import javax.inject.Inject;
 import au.com.dealsdirect.R;
 import au.com.dealsdirect.data.network.model.orders.GetPaymentsList;
 import au.com.dealsdirect.ui.base.BaseController;
+import au.com.dealsdirect.ui.base.BasePullToRefreshController;
 import au.com.dealsdirect.ui.controller.orders.orderdetails.OrderDetailsController;
 import au.com.dealsdirect.ui.custom.RecyclerOnTouchListener;
 import au.com.dealsdirect.ui.custom.SimpleDividerItemDecoration;
@@ -34,7 +35,7 @@ import butterknife.OnClick;
  * Created by smartwave on 22/06/2017.
  */
 
-public class OrdersController extends BaseController implements OrdersMvpView {
+public class OrdersController extends BasePullToRefreshController implements OrdersMvpView {
     @Inject
     OrdersMvpPresenter<OrdersMvpView> mPresenter;
 
@@ -53,10 +54,20 @@ public class OrdersController extends BaseController implements OrdersMvpView {
 
     @Override
     protected View inflateView(@NonNull LayoutInflater inflater, @NonNull ViewGroup container) {
-        View view = inflater.inflate(R.layout.controller_orders,container,false);
+        View view = super.inflateView(inflater, container);
+
+        fillToolbar(inflater.inflate(R.layout.partial_toolbar_arrow, container, false));
+        fillContent(inflater.inflate(R.layout.controller_orders, container, false));
+
         getControllerComponent().inject(this);
         mPresenter.onAttach(this);
         return view;
+    }
+
+    @Override
+    public void onRefreshStart() {
+        super.onRefreshStart();
+        mPresenter.loadOrders();
     }
 
     @Override

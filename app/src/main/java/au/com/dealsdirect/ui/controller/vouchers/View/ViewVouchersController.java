@@ -26,6 +26,7 @@ import au.com.dealsdirect.R;
 import au.com.dealsdirect.data.network.model.vouchers.GetUserVoucherResponse;
 import au.com.dealsdirect.data.network.model.vouchers.GetVouchersResponse;
 import au.com.dealsdirect.ui.base.BaseController;
+import au.com.dealsdirect.ui.base.BasePullToRefreshController;
 import au.com.dealsdirect.utils.BundleBuilder;
 import butterknife.BindView;
 
@@ -33,7 +34,7 @@ import butterknife.BindView;
  * Created by Paul on 6/23/17.
  */
 
-public class ViewVouchersController extends BaseController implements ViewVouchersMvpView {
+public class ViewVouchersController extends BasePullToRefreshController implements ViewVouchersMvpView {
 
     @Inject
     ViewVouchersMvpPresenter<ViewVouchersMvpView> mPresenter;
@@ -84,12 +85,20 @@ public class ViewVouchersController extends BaseController implements ViewVouche
 
     @Override
     protected View inflateView(@NonNull LayoutInflater inflater, @NonNull ViewGroup container) {
-        View view = inflater.inflate(R.layout.controller_view_vouchers, container, false);
+        View view = super.inflateView(inflater, container);
+
+        fillToolbar(inflater.inflate(R.layout.partial_toolbar_arrow, container, false));
+        fillContent(inflater.inflate(R.layout.controller_view_vouchers, container, false));
 
         getControllerComponent().inject(this);
         mPresenter.onAttach(this);
-
         return view;
+    }
+
+    @Override
+    public void onRefreshStart() {
+        super.onRefreshStart();
+        mPresenter.loadMyVouchers();
     }
 
     @Override
@@ -159,10 +168,13 @@ public class ViewVouchersController extends BaseController implements ViewVouche
             }
 
             mUnusedVouchersAdapter.replace(currentVouchers);
+            mUnusedVouchersRecyclerView.setVisibility(View.VISIBLE);
 
 
             if (!usedVouchers.isEmpty()) {
                 mUsedVouchersAdapter.replace(usedVouchers);
+                mDivider.setVisibility(View.VISIBLE);
+                mUsedVoucherIndicatorText.setVisibility(View.VISIBLE);
             } else {
                 mDivider.setVisibility(View.GONE);
                 mUsedVoucherIndicatorText.setVisibility(View.GONE);

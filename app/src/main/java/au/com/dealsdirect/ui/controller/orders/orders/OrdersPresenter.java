@@ -10,6 +10,7 @@ import java.util.ArrayList;
 import javax.inject.Inject;
 
 import au.com.dealsdirect.data.DataManager;
+import au.com.dealsdirect.data.network.AppApiCallback;
 import au.com.dealsdirect.data.network.model.orders.GetPaymentsList;
 import au.com.dealsdirect.ui.base.BasePresenter;
 import au.com.dealsdirect.utils.rx.SchedulerProvider;
@@ -160,40 +161,16 @@ public class OrdersPresenter<V extends OrdersMvpView> extends BasePresenter<V> i
     @Override
     public void loadOrders() {
 //        TRUE API CALL
-        GetPaymentsList.RequestValues requestValues = new GetPaymentsList.RequestValues();
-        getCompositeDisposable().add(getDataManager()
-                .callGetPaymentsList(requestValues)
-                .subscribeOn(getSchedulerProvider().io())
-                .observeOn(getSchedulerProvider().ui())
-                .subscribe(new Consumer<GetPaymentsList.ResponseValue>() {
-                    @Override
-                    public void accept(@NonNull GetPaymentsList.ResponseValue responseValue) throws Exception {
-                        if (!isViewAttached()) {
-                            return;
-                        }
-
-                        if(responseValue.getD().getResult()){
-                            getMvpView().showOrders(responseValue.getD().getList());
-                        }
-                    }
-                }, new Consumer<Throwable>() {
-                    @Override
-                    public void accept(@NonNull Throwable throwable) throws Exception {
-                        if (!isViewAttached()) {
-                            return;
-                        }
-
-                        getMvpView().hideLoading();
-                        getMvpView().onError(throwable.getMessage());
-
-                        // handle load accounts error here
-                        if (throwable instanceof ANError) {
-                            ANError anError = (ANError) throwable;
-                            handleApiError(anError);
-                        }
-                    }
-                })
-        );
+        doApiCallForResponse(getDataManager()
+                .callGetPaymentsList(new GetPaymentsList.RequestValues()), new AppApiCallback(){
+            @Override
+            public void onSuccess(Object response) {
+                super.onSuccess(response);
+                if(((GetPaymentsList.ResponseValue) response).getD().getResult()){
+                    getMvpView().showOrders(((GetPaymentsList.ResponseValue) response).getD().getList());
+                }
+            }
+        });
 //
 //        MOCK CALL
 //        GetPaymentsList.ResponseValue responseValue = new Gson().fromJson(mockCall,GetPaymentsList.ResponseValue.class);

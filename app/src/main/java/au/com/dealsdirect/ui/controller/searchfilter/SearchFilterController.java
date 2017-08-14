@@ -2,6 +2,7 @@ package au.com.dealsdirect.ui.controller.searchfilter;
 
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.v4.util.Pair;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -69,14 +70,22 @@ public class SearchFilterController extends BaseController
     public static final String SORT_FACETFILTER_NAME = "sort";
     public static final String CATEGORY_TREE_FACET = "KEY_CATEGORY_FACET";
     public static final String KEY_SELECTED_FACETS = "KEY_SELECTED_FACETS";
+    public static final String KEY_BRAND_LIST = "KEY_BRAND_LIST";
     public static final String KEY_ORIG_SELECTED = "KEY_ORIG_SELECTED";
 
     private static final String KEY_FACET_STRING = "KEY_FACET_STRING";
     private static final String KEY_CATEGORY_STRING = "KEY_CATEGORY_STRING";
     private static final String KEY_SORTING_STRING = "KEY_SORTING_STRING";
 
+    private static String mPreviousChosenCategory = "";
+    private String mJoinedQueryChipsString = "";
+
     @Inject
     SearchFilterMvpPresenter<SearchFilterMvpView> mPresenter;
+
+
+    @BindView(R.id.controller_search_filter_transparent_view)
+    RelativeLayout mTransparentOverlay;
 
     @BindView(R.id.filters_facets_recyclerview)
     RecyclerView mFacetsRecyclerView;
@@ -131,7 +140,7 @@ public class SearchFilterController extends BaseController
     private int origMinValue = -1;
     private int origMaxValue = -1;
     private boolean isSeekbarReset = false;
-
+    private MainActivity mActivity;
     private String mChosenCategory = "";
 
     String mCategoryKey = "";
@@ -145,13 +154,9 @@ public class SearchFilterController extends BaseController
     private HashMap<String, Set<Integer>> mPreviousSelectedFacetIndices = new HashMap<>();
     private ArrayList<SearchChipModel> mPreviousSearchChips = new ArrayList<>();
 
-    List<String> mFacetFilters = Arrays.asList
-            ("Sort",
-                    "Category",
-                    "Brands",
-                    "Sizes",
-                    "Colors",
-                    "Price");
+    List<Pair<String,String>> mFacetFilters = Arrays.asList
+            (new Pair<String, String>(SORT_FACETFILTER_NAME,"Sort"),
+            new Pair<String, String>(CATEGORY_TREE_FACET,"Category"));
 
     public static SearchFilterController newInstance(String jsonCategoriesString, String jsonFacetString, String sortingFacetString, String saleId, String categoryKey, String previouslySelectedFacetIndices, String previousChipFilters) {
         return new SearchFilterController(new BundleBuilder(new Bundle())
@@ -174,6 +179,8 @@ public class SearchFilterController extends BaseController
         mSaleId = args.getString(KEY_SALE_ID,"");
         mCategoryKey = args.getString(KEY_CATEGORY_MAP,"");
         mCategoryTree = JsonUtils.convertStringToObject(args.getString(KEY_CATEGORY_STRING, ""), new TypeToken<ArrayList<GetCategoryTreeResponse>>() {
+        }.getType());
+        mBrandList = JsonUtils.convertStringToObject(args.getString(KEY_BRAND_LIST, ""), new TypeToken<ArrayList<String>>() {
         }.getType());
 
         restoreStateSelection(args);
@@ -206,33 +213,90 @@ public class SearchFilterController extends BaseController
         View view = inflater.inflate(R.layout.controller_search_filter, container, false);
         getControllerComponent().inject(this);
         mPresenter.onAttach(this);
+        mActivity = (MainActivity) getActivity();
         return view;
     }
 
     @Override
     protected void onViewBound(@NonNull View view) {
         super.onViewBound(view);
+        mActivity.getMainController().hideBottomNav();
         setUp(view);
 
     }
 
     @Override
     protected void setUp(View view) {
-        origMaxValue = mPresenter.getSearchMaxPrice();
-        origMinValue = mSeekbar.getSelectedMinValue().intValue();
 
         mSubCategoryClickListener = this;
         mSubCategoryItemClickListener = this;
 
         createCategoryMap(mCategoryTree);
 
+        mSearchApplyButton.setImageDrawable(getResources().getDrawable(R.drawable.ic_check));
+
+
+        mFacetItemsAdapter = new FacetItemsAdapter(new ArrayList<>(), mPresenter, new HashSet<Integer>());
+        mFacetItemsRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity(), LinearLayoutManager.VERTICAL, false));
+        mFacetItemsRecyclerView.setAdapter(mFacetItemsAdapter);
+        mFacetItemsAdapter.setOnSelectListener(new FacetItemsAdapter.OnSelectListener() {
+            @Override
+            public void onSelected(Set<Integer> selectPosSet) {
+                mPresenter.onFacetItemClicked(selectPosSet);
+            }
+        });
+
+        mSubCategoriesAdapter = new SubCategoriesAdapter(mChosenCategory, mPreLoadedCategories, mSubCategoryClickListener,mSubCategoryItemClickListener, mCategoryMap);
+        mFilterCategoriesRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity(), LinearLayoutManager.VERTICAL, false));
+        mFilterCategoriesRecyclerView.setAdapter(mSubCategoriesAdapter);
+
+        mSearchTagsLayoutManager = new LinearLayoutManager(getActivity(), LinearLayoutManager.HORIZONTAL, false);
+        mSearchTagsRecyclerView.setLayoutManager(mSearchTagsLayoutManager);
+        mSearchTagsAdapter = new SearchTagsAdapter(getActivity(), mSearchTagsRecyclerView, mSearchTagsLayoutManager, new ArrayList<SearchChipModel>(), mPresenter, mFacetItemsAdapter, mSubCategoriesAdapter, mPreviousSelectedFacetIndices);
+        mSearchTagsRecyclerView.setAdapter(mSearchTagsAdapter);
+        mSearchTagsRecyclerView.setVisibility(View.VISIBLE);
+
+        //remove other chips if a new category is selected.
+        // also remove selected indices for other filter types
+        if(!mPreviousChosenCategory.equals(mChosenCategory)){
+            removeAllChipsExceptCategory();
+            removeSelectedIndicesExceptCategory();
+            mPreviousChosenCategory = mChosenCategory;
+        }
+
+        if(!mPreviousSearchChips.isEmpty()) {
+            mSearchTagsAdapter.replaceData(mPreviousSearchChips);
+        }
+
+        mFacetsAdapter = new FacetsAdapter(getActivity(), new ArrayList(mFacetFilters), mPresenter, mSearchTagsAdapter.getData());
+        mFacetsRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity(), LinearLayoutManager.VERTICAL, false));
+        mFacetsRecyclerView.setAdapter(mFacetsAdapter);
+
+        mSearchTagsAdapter.setFacetsAdapter(mFacetsAdapter);
+
+        if (mFacets != null) {
+            parseFacets(mFacets);
+        }
+
+        if(mSortingFacets != null){
+            parseSortingFacets(mSortingFacets);
+        }
+
+        setupPriceFacet();
+
+    }
+
+    private void setupPriceFacet(){
+        origMaxValue = mPresenter.getSearchMaxPrice();
+        origMinValue = mSeekbar.getSelectedMinValue().intValue();
+
         mSeekbar.setMaxValue(origMaxValue);
-        mSeekbar.setMaxStartValue(origMaxValue);
+
         mClearText.setOnClickListener((v)->{
             if(!isSeekbarReset) {
                 //remove previously selected price range
                 for (SearchChipModel chip : mSearchTagsAdapter.getData()) {
-                    if (chip.getFilterType() == PRICE_FACETFILTER_NAME) {
+                    if (chip.getFilterType().equals(PRICE_FACETFILTER_NAME)) {
                         mSearchTagsAdapter.remove(chip);
                         break;
                     }
@@ -260,7 +324,7 @@ public class SearchFilterController extends BaseController
 
                 //remove previously selected price range
                 for (SearchChipModel chip : mSearchTagsAdapter.getData()) {
-                    if(chip.getFilterType() == PRICE_FACETFILTER_NAME){
+                    if(chip.getFilterType().equals(PRICE_FACETFILTER_NAME)){
                         mSearchTagsAdapter.remove(chip);
                         break;
                     }
@@ -268,53 +332,24 @@ public class SearchFilterController extends BaseController
 
                 //add newly selected price range
                 if(origMinValue!=minValue.intValue() || origMaxValue!=maxValue.intValue()){
-                    mSearchTagsAdapter.add(new SearchChipModel(PRICE_FACETFILTER_NAME, minValue.intValue() + " to " + maxValue.intValue(),-1));
+                    SearchChipModel priceChip = new SearchChipModel(PRICE_FACETFILTER_NAME, minValue.intValue() + " to " + maxValue.intValue(),-1);
+                    priceChip.setMaxValue(maxValue.intValue());
+                    priceChip.setMinValue(minValue.intValue());
+                    mSearchTagsAdapter.add(priceChip);
                 }
 
                 isSeekbarReset=false;
             }
         });
 
+        SearchChipModel priceChip = findPriceChip();
 
-        mSearchApplyButton.setImageDrawable(getResources().getDrawable(R.drawable.ic_check));
-
-        mFacetsAdapter = new FacetsAdapter(getActivity(), mFacetFilters, mPresenter);
-        mFacetsRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity(), LinearLayoutManager.VERTICAL, false));
-        mFacetsRecyclerView.setAdapter(mFacetsAdapter);
-
-        mSubCategoriesAdapter = new SubCategoriesAdapter(mChosenCategory, mPreLoadedCategories, mSubCategoryClickListener,mSubCategoryItemClickListener, mCategoryMap);
-        mFilterCategoriesRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity(), LinearLayoutManager.VERTICAL, false));
-        mFilterCategoriesRecyclerView.setAdapter(mSubCategoriesAdapter);
-
-        mFacetItemsAdapter = new FacetItemsAdapter(new ArrayList<>(), mPresenter, new HashSet<Integer>());
-        mFacetItemsRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity(), LinearLayoutManager.VERTICAL, false));
-        mFacetItemsRecyclerView.setAdapter(mFacetItemsAdapter);
-        mFacetItemsAdapter.setOnSelectListener(new FacetItemsAdapter.OnSelectListener() {
-            @Override
-            public void onSelected(Set<Integer> selectPosSet) {
-                mPresenter.onFacetItemClicked(selectPosSet);
-            }
-        });
+        if(priceChip != null){
+            mSeekbar.setMinStartValue(priceChip.getMinValue()).apply();
+            mSeekbar.setMaxStartValue(priceChip.getMaxValue()).apply();
 
 
-        mSearchTagsLayoutManager = new LinearLayoutManager(getActivity(), LinearLayoutManager.HORIZONTAL, false);
-        mSearchTagsRecyclerView.setLayoutManager(mSearchTagsLayoutManager);
-        mSearchTagsAdapter = new SearchTagsAdapter(getActivity(), mSearchTagsRecyclerView, mSearchTagsLayoutManager, new ArrayList<SearchChipModel>(), mPresenter, mFacetItemsAdapter, mPreviousSelectedFacetIndices);
-        mSearchTagsRecyclerView.setAdapter(mSearchTagsAdapter);
-        mSearchTagsRecyclerView.setVisibility(View.VISIBLE);
-
-        if(!mPreviousSearchChips.isEmpty()) {
-            mSearchTagsAdapter.replaceData(mPreviousSearchChips);
         }
-
-        if (mFacets != null) {
-            parseFacets(mFacets);
-        }
-
-        if(mSortingFacets != null){
-            parseSortingFacets(mSortingFacets);
-        }
-
     }
 
     @Override
@@ -329,12 +364,34 @@ public class SearchFilterController extends BaseController
         }
     }
 
+    private void removeAllChipsExceptCategory(){
+        List<SearchChipModel> listToIterate = new ArrayList<>(mPreviousSearchChips);
+        for (SearchChipModel chip : listToIterate) {
+            if(!chip.getFilterType().equals(CATEGORY_TREE_FACET)){
+                mPreviousSearchChips.remove(chip);
+            }
+        }
+
+        String test="";
+    }
+
+    private void removeSelectedIndicesExceptCategory(){
+        for (Map.Entry entry : mPreviousSelectedFacetIndices.entrySet()) {
+            if(!entry.getKey().equals(CATEGORY_TREE_FACET)){
+                entry.setValue(new HashSet<>());
+            }
+
+        }
+    }
+
+
     @Override
     public void showFacetItem(int position) {
 
-        if(mapFacetFilterType(position) != PRICE_FACETFILTER_NAME) { //only do this logic if facet clicked != price
 
-            if (mapFacetFilterType(position) == CATEGORY_TREE_FACET){
+        if(getFacetFilterType(position) != PRICE_FACETFILTER_NAME) { //only do this logic if facet clicked != price
+
+            if (getFacetFilterType(position) == CATEGORY_TREE_FACET){
 
                 mFilterCategoriesRecyclerView.setVisibility(View.VISIBLE);
                 mFacetItemsRecyclerView.setVisibility(View.GONE);
@@ -348,7 +405,7 @@ public class SearchFilterController extends BaseController
             }
 
             if (mPreviousSelectedFacetIndex != -1) {
-                mPreviousSelectedFacetIndices.put(mapFacetFilterType(mPreviousSelectedFacetIndex), new HashSet<>(mFacetItemsAdapter.getSelectedFacets()));
+                mPreviousSelectedFacetIndices.put(getFacetFilterType(mPreviousSelectedFacetIndex), new HashSet<>(mFacetItemsAdapter.getSelectedFacets()));
             }
 
             if (position != mPreviousSelectedFacetIndex) {
@@ -356,45 +413,27 @@ public class SearchFilterController extends BaseController
                 origSelectedSet.clear();
             }
 
-            if (mPreviousSelectedFacetIndices.get(mapFacetFilterType(position)) != null) {
-                mFacetItemsAdapter.updateSelectedFacets(mPreviousSelectedFacetIndices.get(mapFacetFilterType(position)));
-                origSelectedSet = mPreviousSelectedFacetIndices.get(mapFacetFilterType(position));
+            if (mPreviousSelectedFacetIndices.get(getFacetFilterType(position)) != null) {
+                mFacetItemsAdapter.updateSelectedFacets(mPreviousSelectedFacetIndices.get(getFacetFilterType(position)));
+                origSelectedSet = mPreviousSelectedFacetIndices.get(getFacetFilterType(position));
             }
 
         } else { //price is clicked
+            mFilterCategoriesRecyclerView.setVisibility(View.GONE);
             mFacetItemsRecyclerView.setVisibility(View.GONE);
             mSeekbarLayout.setVisibility(View.VISIBLE);
         }
 
-        mFacetItemsAdapter.setFilterType(mapFacetFilterType(position));
+        mFacetItemsAdapter.setFilterType(getFacetFilterType(position));
         mFacetItemsAdapter.replaceData(mapFacetItemClicked(position));
 
         mPreviousSelectedFacetIndex = position;
     }
 
     private void trackLastSelectedFacet(){
-        mPreviousSelectedFacetIndices.put(mapFacetFilterType(mPreviousSelectedFacetIndex), new HashSet<>(mFacetItemsAdapter.getSelectedFacets()));
+        mPreviousSelectedFacetIndices.put(getFacetFilterType(mPreviousSelectedFacetIndex), new HashSet<>(mFacetItemsAdapter.getSelectedFacets()));
     }
 
-
-    private String mapFacetFilterType(int position){
-        switch (position) {
-            case 0:
-                return SORT_FACETFILTER_NAME;
-            case 1:
-                return CATEGORY_TREE_FACET;
-            case 2:
-                return BRANDS_FACETFILTER_NAME;
-            case 3:
-                return SIZES_FACETFILTER_NAME;
-            case 4:
-                return COLORS_FACETFILTER_NAME;
-            case 5:
-                return PRICE_FACETFILTER_NAME;
-            default:
-                return "";
-        }
-    }
 
     @Override
     public void updateFacetItemToFilters(Set<Integer> selectPosSet) {
@@ -433,8 +472,8 @@ public class SearchFilterController extends BaseController
 
     @Override
     public void onResetPriceRange() {
-        mSeekbar.setMinValue(origMinValue);
-        mSeekbar.setMaxValue(origMaxValue);
+        mSeekbar.setMinStartValue(origMinValue);
+        mSeekbar.setMaxStartValue(origMaxValue);
 
         mSeekbar.apply();
         mMinPriceMovingLayout.setTranslationX(0);
@@ -442,6 +481,7 @@ public class SearchFilterController extends BaseController
         mMaxPriceMovingLayout.setX(mSeekbar.getWidth() - (lp.rightMargin));
 
         isSeekbarReset = true;
+        mSeekbar.resetMovingLayoutVisibility();
     }
 
     @Override
@@ -450,19 +490,39 @@ public class SearchFilterController extends BaseController
         mChosenCategory = "";
     }
 
+    @Override
+    public void onShowTransparentOverlay() {
+        mTransparentOverlay.setVisibility(View.VISIBLE);
+    }
+
+
+
+    @OnClick(R.id.controller_search_filter_transparent_view)
+    @Override
+    public void onHideTransparentOverlay() {
+        mSearchTagsRecyclerView.clearFocus();
+        mTransparentOverlay.setVisibility(View.GONE);
+        hideKeyboard();
+    }
+
+    private String getFacetFilterType(int position){
+        return mFacetsAdapter.getData().get(position).first;
+    }
+
     private List<String> mapFacetItemClicked(int position) {
-        switch (position) {
-            case 0:
+        String facetFilterType = getFacetFilterType(position);
+        switch (facetFilterType) {
+            case SORT_FACETFILTER_NAME:
                 return mSortingList;
-            case 1:
+            case CATEGORY_TREE_FACET:
                 return new ArrayList<>();
-            case 2:
+            case BRANDS_FACETFILTER_NAME:
                 return mBrandList;
-            case 3:
+            case SIZES_FACETFILTER_NAME:
                 return mSizeList;
-            case 4:
+            case COLORS_FACETFILTER_NAME:
                 return mColorList;
-            case 5:
+            case PRICE_FACETFILTER_NAME:
                 return new ArrayList<>();
             default:
                 return new ArrayList<>();
@@ -481,20 +541,26 @@ public class SearchFilterController extends BaseController
                             GetSaleItemsResponse.Values facetValue = facets.get(i).getFacetValues().get(j);
                             mBrandList.add(facetValue.getValue());
                         }
+                        mFacetsAdapter.add(new Pair<String, String>(BRANDS_FACETFILTER_NAME,"Brands"));
                         break;
                     case SIZES_FACETFILTER_NAME:
                         for (int j = 0; j < facets.get(i).getFacetValues().size(); j++) {
                             GetSaleItemsResponse.Values facetValue = facets.get(i).getFacetValues().get(j);
                             mSizeList.add(facetValue.getValue());
                         }
+                        mFacetsAdapter.add(new Pair<String, String>(SIZES_FACETFILTER_NAME,"Sizes"));
                         break;
                     case COLORS_FACETFILTER_NAME:
                         for (int j = 0; j < facets.get(i).getFacetValues().size(); j++) {
                             GetSaleItemsResponse.Values facetValue = facets.get(i).getFacetValues().get(j);
                             mColorList.add(facetValue.getValue());
                         }
+
+                        mFacetsAdapter.add(new Pair<String, String>(COLORS_FACETFILTER_NAME,"Colors"));
                         break;
                     case PRICE_FACETFILTER_NAME:
+                        mFacetsAdapter.add(new Pair<String, String>(PRICE_FACETFILTER_NAME,"Price"));
+
                         break;
                     default:
                         break;
@@ -508,18 +574,24 @@ public class SearchFilterController extends BaseController
 
         trackLastSelectedFacet();
 
+        String editTextString = mSearchTagsAdapter.getEditTextViewHolder().getEditText().getText().toString();
+
+        mSearchTagsAdapter.add(new SearchChipModel(SEARCH_QUERY_NAME, editTextString, -1));
+
         Bundle saleItemBundle = new BundleBuilder(new Bundle())
                 .putString(KEY_CATEGORY_MAP, mChosenCategory)
                 .putString(KEY_SALE_ID,mSaleId)
                 .putString(KEY_CHIPS_FILTER,new Gson().toJson(mSearchTagsAdapter.getData()))
                 .putString(KEY_SELECTED_FACETS, new Gson().toJson(mPreviousSelectedFacetIndices))
+//                .putString(KEY_SEARCH_QUERY, new Gson().toJson(mBrandList))
                 .build();
         
-        SaleItemsController saleItemsController = (SaleItemsController) getRouter().getControllerWithTag("SaleItemsController");
+        SaleItemsController saleItemsController = (SaleItemsController) getRouter().getControllerWithTag(getActivity().getString(R.string.sale_items_controller_tag));
         saleItemsController.onPassFiltersData(saleItemBundle);
-
+        mActivity.getMainController().showBottomNav();
         //noinspection ConstantConditions
         getActivity().onBackPressed();
+
     }
 
 
@@ -586,15 +658,11 @@ public class SearchFilterController extends BaseController
 
     @Override
     public void onSubCategoryItemClicked(String categoryID, String categoryName, String categoryKey) {
-
-        mSubCategoriesAdapter.setActiveCategoryKey(categoryKey);
         updateSubCategoryOnSearchTagAdapter(categoryName,categoryKey);
     }
 
     @Override
     public void onSubCategoryClicked(GetCategoryTreeResponse getCategoryTreeResponse) {
-        mSubCategoriesAdapter.setActiveCategoryKey(getCategoryTreeResponse.getKey());
-
         updateSubCategoryOnSearchTagAdapter(
                 getCategoryTreeResponse.getName(),
                 getCategoryTreeResponse.getKey());
@@ -620,9 +688,21 @@ public class SearchFilterController extends BaseController
 
             removeChipOnCategories();
 
-            SearchTagsAdapter searchTagsAdapter = (SearchTagsAdapter) mSearchTagsRecyclerView.getAdapter();
-            searchTagsAdapter.add(categoryChip);
+            mSearchTagsAdapter.add(categoryChip);
             mChosenCategory = categoryKey;
         }
+
+        mSubCategoriesAdapter.setActiveCategoryKey(mChosenCategory);
+
+    }
+
+    private SearchChipModel findPriceChip(){
+        for (SearchChipModel chip : mSearchTagsAdapter.getData()) {
+            if (chip.getFilterType().equals(PRICE_FACETFILTER_NAME)) {
+                return chip;
+            }
+        }
+
+        return null;
     }
 }

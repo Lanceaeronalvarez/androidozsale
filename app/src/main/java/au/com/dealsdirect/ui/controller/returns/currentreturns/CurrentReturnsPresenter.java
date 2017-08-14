@@ -4,12 +4,13 @@ package au.com.dealsdirect.ui.controller.returns.currentreturns;
  */
 
 
-import com.androidnetworking.error.ANError;
-
 import javax.inject.Inject;
 
 import au.com.dealsdirect.data.DataManager;
+import au.com.dealsdirect.data.network.AppApiCallback;
+import au.com.dealsdirect.data.network.model.returns.currentreturn.CurrentReturnResponseBody;
 import au.com.dealsdirect.data.network.model.returns.returndetails.GetReturnDetailRequest;
+import au.com.dealsdirect.data.network.model.returns.returndetails.GetReturnDetailsResponse;
 import au.com.dealsdirect.ui.base.BasePresenter;
 import au.com.dealsdirect.utils.rx.SchedulerProvider;
 import io.reactivex.disposables.CompositeDisposable;
@@ -90,69 +91,24 @@ public class CurrentReturnsPresenter<V extends CurrentReturnsMvpView> extends Ba
 //        currentReturnResponseBody.setCurrentReturnResponse(currentReturnResponse);
 //        getMvpView().showCurrentReturns(currentReturns);
 
-        getCompositeDisposable()
-                .add(getDataManager()
-                        .callGetCurrentReturns()
-                        .subscribeOn(getSchedulerProvider().io())
-                        .observeOn(getSchedulerProvider().ui())
-                        .subscribe(getCurrentReturnsResponse -> {
-
-                            if (!isViewAttached()) {
-                                return;
-                            }
-                            getMvpView().hideLoading();
-                            getMvpView().showCurrentReturns(getCurrentReturnsResponse);
-
-                        }, throwable -> {
-
-                            if (!isViewAttached()) {
-                                return;
-                            }
-
-                            getMvpView().hideLoading();
-                            getMvpView().onError(throwable.getMessage());
-
-                            // handle load accounts error here
-                            if (throwable instanceof ANError) {
-                                ANError anError = (ANError) throwable;
-                                handleApiError(anError);
-                            }
-                        }));
+        doApiCallForResponse(getDataManager().callGetCurrentReturns(), new AppApiCallback() {
+            @Override
+            public void onSuccess(Object response) {
+                super.onSuccess(response);
+                getMvpView().showCurrentReturns((CurrentReturnResponseBody) response);
+            }
+        });
     }
 
     @Override
     public void loadReturnDetails(String returnID, int position) {
-
-        GetReturnDetailRequest getReturnDetailRequest = new GetReturnDetailRequest();
-        getReturnDetailRequest.returnID = returnID;
-
-        getCompositeDisposable()
-                .add(getDataManager()
-                        .callGetReturnDetails(getReturnDetailRequest)
-                        .subscribeOn(getSchedulerProvider().io())
-                        .observeOn(getSchedulerProvider().ui())
-                        .subscribe(getCurrentReturnDetailResponse -> {
-
-                            if (!isViewAttached()) {
-                                return;
-                            }
-                            getMvpView().hideLoading();
-                            getMvpView().showCurrentReturnDetails(getCurrentReturnDetailResponse.getGetReturnDetailsResponseBody());
-
-                        }, throwable -> {
-
-                            if (!isViewAttached()) {
-                                return;
-                            }
-
-                            getMvpView().hideLoading();
-                            getMvpView().onError(throwable.getMessage());
-
-                            // handle load accounts error here
-                            if (throwable instanceof ANError) {
-                                ANError anError = (ANError) throwable;
-                                handleApiError(anError);
-                            }
-                        }));
+        doApiCallForResponse(getDataManager().callGetReturnDetails(
+                new GetReturnDetailRequest(returnID)), new AppApiCallback() {
+            @Override
+            public void onSuccess(Object response) {
+                super.onSuccess(response);
+                getMvpView().showCurrentReturnDetails(((GetReturnDetailsResponse) response).getGetReturnDetailsResponseBody());
+            }
+        });
     }
 }

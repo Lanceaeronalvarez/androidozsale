@@ -11,9 +11,6 @@ import au.com.dealsdirect.ui.controller.address.addnewaddress.AddNewAddressPrese
 import au.com.dealsdirect.ui.controller.address.viewaddress.ViewAddressMvpPresenter;
 import au.com.dealsdirect.ui.controller.address.viewaddress.ViewAddressMvpView;
 import au.com.dealsdirect.ui.controller.address.viewaddress.ViewAddressPresenter;
-import au.com.dealsdirect.ui.controller.cart.CartMvpPresenter;
-import au.com.dealsdirect.ui.controller.cart.CartMvpView;
-import au.com.dealsdirect.ui.controller.cart.CartPresenter;
 import au.com.dealsdirect.ui.controller.categories.CategoriesMvpPresenter;
 import au.com.dealsdirect.ui.controller.categories.CategoriesMvpView;
 import au.com.dealsdirect.ui.controller.categories.CategoriesPresenter;
@@ -101,9 +98,6 @@ import au.com.dealsdirect.ui.controller.saleitemdetails.SaleItemDetailsPresenter
 import au.com.dealsdirect.ui.controller.saleitems.SaleItemsMvpPresenter;
 import au.com.dealsdirect.ui.controller.saleitems.SaleItemsMvpView;
 import au.com.dealsdirect.ui.controller.saleitems.SaleItemsPresenter;
-import au.com.dealsdirect.ui.controller.search.SearchMvpPresenter;
-import au.com.dealsdirect.ui.controller.search.SearchMvpView;
-import au.com.dealsdirect.ui.controller.search.SearchPresenter;
 import au.com.dealsdirect.ui.controller.searchfilter.SearchFilterMvpPresenter;
 import au.com.dealsdirect.ui.controller.searchfilter.SearchFilterMvpView;
 import au.com.dealsdirect.ui.controller.searchfilter.SearchFilterPresenter;
@@ -232,11 +226,6 @@ public class ControllerModule {
     }
 
     @Provides
-    CartMvpPresenter<CartMvpView> provideCartPresenter(CartPresenter<CartMvpView> presenter) {
-        return presenter;
-    }
-
-    @Provides
     ViewVouchersMvpPresenter<ViewVouchersMvpView> provideVouchersPresnter(ViewVouchersPresenter<ViewVouchersMvpView> presenter) {
         return presenter;
     }
@@ -314,11 +303,6 @@ public class ControllerModule {
 
     @Provides
     HomeMvpPresenter<HomeMvpView> provideHomePresenter(HomePresenter<HomeMvpView> presenter) {
-        return presenter;
-    }
-
-    @Provides
-    SearchMvpPresenter<SearchMvpView> provideSearchPresenter(SearchPresenter<SearchMvpView> presenter) {
         return presenter;
     }
 

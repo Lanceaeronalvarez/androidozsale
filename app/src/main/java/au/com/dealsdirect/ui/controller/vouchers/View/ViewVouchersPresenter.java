@@ -9,6 +9,7 @@ import java.util.List;
 import javax.inject.Inject;
 
 import au.com.dealsdirect.data.DataManager;
+import au.com.dealsdirect.data.network.AppApiCallback;
 import au.com.dealsdirect.data.network.model.vouchers.GetUserVoucherResponse;
 import au.com.dealsdirect.data.network.model.vouchers.GetUserVouchersRequest;
 import au.com.dealsdirect.data.network.model.vouchers.GetVouchersResponse;
@@ -41,8 +42,8 @@ public class ViewVouchersPresenter<V extends ViewVouchersMvpView> extends BasePr
                 = PublishSubject.create();
 
         Observable.zip(selectSubject, selectSubject2, Pair::new)
-                .subscribe(action->{
-                    if(!isViewAttached()){
+                .subscribe(action -> {
+                    if (!isViewAttached()) {
                         return;
                     }
                     getMvpView().updateVoucherList(action);
@@ -50,64 +51,21 @@ public class ViewVouchersPresenter<V extends ViewVouchersMvpView> extends BasePr
 
         GetUserVouchersRequest getUserVouchersRequest =
                 new GetUserVouchersRequest(getDataManager().getLanguageId());
-        getCompositeDisposable().add(getDataManager()
-                .callGetUserVouchers(getUserVouchersRequest)
-                .subscribeOn(getSchedulerProvider().io())
-                .observeOn(getSchedulerProvider().ui())
-                .subscribe(new Consumer<GetUserVoucherResponse>() {
-                    @Override
-                    public void accept(@NonNull GetUserVoucherResponse getUserVoucherResponse) throws Exception {
-                        if(!isViewAttached()) {
-                            return;
-                        }
-                        getMvpView().hideLoading();
-                        selectSubject.onNext(getUserVoucherResponse.getValue().getList());
-                    }
-                }, new Consumer<Throwable>() {
-                    @Override
-                    public void accept(@NonNull Throwable throwable) throws Exception {
-                        if (!isViewAttached()) {
-                            return;
-                        }
 
-                        getMvpView().hideLoading();
-                        getMvpView().onError(throwable.getMessage());
+        doApiCallForResponse(getDataManager().callGetUserVouchers(getUserVouchersRequest), new AppApiCallback() {
+            @Override
+            public void onSuccess(Object response) {
+                super.onSuccess(response);
+                selectSubject.onNext(((GetUserVoucherResponse) response).getValue().getList());
+            }
+        });
 
-                        // handle load accounts error here
-                        if (throwable instanceof ANError) {
-                            ANError anError = (ANError) throwable;
-                            handleApiError(anError);
-                        }
-                    }
-                }));
-        getCompositeDisposable().add(getDataManager()
-                .callGetVouchers(getUserVouchersRequest)
-                .subscribeOn(getSchedulerProvider().io())
-                .observeOn(getSchedulerProvider().ui())
-                .subscribe(new Consumer<GetVouchersResponse>() {
-                    @Override
-                    public void accept(@NonNull GetVouchersResponse getVouchersResponse) throws Exception {
-                        if(!isViewAttached()) {
-                            return;
-                        }
-                        selectSubject2.onNext(getVouchersResponse);
-                    }
-                }, new Consumer<Throwable>() {
-                    @Override
-                    public void accept(@NonNull Throwable throwable) throws Exception {
-                        if (!isViewAttached()) {
-                            return;
-                        }
-
-                        getMvpView().hideLoading();
-                        getMvpView().onError(throwable.getMessage());
-
-                        // handle load accounts error here
-                        if (throwable instanceof ANError) {
-                            ANError anError = (ANError) throwable;
-                            handleApiError(anError);
-                        }
-                    }
-                }));
+        doApiCallForResponse(getDataManager().callGetVouchers(getUserVouchersRequest), new AppApiCallback() {
+            @Override
+            public void onSuccess(Object response) {
+                super.onSuccess(response);
+                selectSubject2.onNext((GetVouchersResponse) response);
+            }
+        });
     }
 }

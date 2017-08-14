@@ -131,12 +131,12 @@ public abstract class BaseActivity extends AppCompatActivity implements MvpView 
     }
 
     public void hideKeyboard() {
-        View view = this.getCurrentFocus();
-        if (view != null) {
+//        View view = this.getCurrentFocus();
+//        if (view != null) {
             InputMethodManager imm = (InputMethodManager)
                     getSystemService(Context.INPUT_METHOD_SERVICE);
-            imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
-        }
+            imm.hideSoftInputFromWindow(getWindow().getDecorView().getWindowToken(), 0);
+//        }
     }
 
     @Override

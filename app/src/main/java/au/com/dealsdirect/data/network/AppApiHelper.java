@@ -195,7 +195,7 @@ public class AppApiHelper implements ApiHelper {
         linkedHashMap.put("ps", getSaleItemsRequest.getPageSize());
         linkedHashMap.put("c", getSaleItemsRequest.getCategoryKey());
         linkedHashMap.put("ff", getSaleItemsRequest.getFacetFilter());
-        linkedHashMap.put("sa", getSaleItemsRequest.getLanguageID());
+        linkedHashMap.put("sa", getSaleItemsRequest.getSorting());
 
         return Rx2AndroidNetworking.get(ApiEndPoint.GET_PRODUCTS)
                 .addHeaders(mApiHeader.getPublicApiHeader())

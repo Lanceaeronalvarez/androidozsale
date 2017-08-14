@@ -37,6 +37,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:clickable="true"
+            android:descendantFocusability="beforeDescendants"
             android:overScrollMode="never"
             android:layout_centerInParent="true"
             android:layout_toLeftOf="@+id/partial_toolbar_search_right_option"

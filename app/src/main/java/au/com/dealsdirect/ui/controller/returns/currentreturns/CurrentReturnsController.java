@@ -26,6 +26,7 @@ import au.com.dealsdirect.data.network.model.returns.currentreturn.CurrentReturn
 import au.com.dealsdirect.data.network.model.returns.currentreturn.CurrentReturns;
 import au.com.dealsdirect.data.network.model.returns.returndetails.GetReturnDetailsResponseBody;
 import au.com.dealsdirect.ui.base.BaseController;
+import au.com.dealsdirect.ui.base.BasePullToRefreshController;
 import au.com.dealsdirect.ui.controller.returns.currentreturns.adapter.CurrentReturnAdapter;
 import au.com.dealsdirect.ui.controller.returns.currentreturns.listener.CurrentReturnClickListener;
 import au.com.dealsdirect.ui.controller.returns.currentreturns.viewholder.CurrentReturnViewHolder;
@@ -39,7 +40,7 @@ import butterknife.OnClick;
  * Created by dp on 05/06/2017.
  */
 
-public class CurrentReturnsController extends BaseController
+public class CurrentReturnsController extends BasePullToRefreshController
         implements CurrentReturnsMvpView, CurrentReturnClickListener{
 
     public static final String TAG = "CurrentReturnsController";
@@ -82,13 +83,20 @@ public class CurrentReturnsController extends BaseController
     @NonNull
     @Override
     protected View inflateView(@NonNull LayoutInflater inflater, @NonNull ViewGroup container) {
-        View view = inflater.inflate(R.layout.controller_current_returns, container, false);
+        View view = super.inflateView(inflater, container);
+
+        fillToolbar(inflater.inflate(R.layout.partial_toolbar_arrow, container, false));
+        fillContent(inflater.inflate(R.layout.controller_current_returns, container, false));
 
         getControllerComponent().inject(this);
-
         mPresenter.onAttach(this);
-
         return view;
+    }
+
+    @Override
+    public void onRefreshStart() {
+        super.onRefreshStart();
+        mPresenter.loadCurrentReturns();
     }
 
     @Override
@@ -106,13 +114,8 @@ public class CurrentReturnsController extends BaseController
 
         if (mCurrentReturns == null || mCurrentReturns.size() == 0){
             mPresenter.loadCurrentReturns();
-            mPlaceholderLayout.setVisibility(View.VISIBLE);
-            mCurrentReturnsRecyclerView.setVisibility(View.GONE);
-
         }  else {
 
-            mPlaceholderLayout.setVisibility(View.GONE);
-            mCurrentReturnsRecyclerView.setVisibility(View.VISIBLE);
             mCurrentReturnsAdapter = new CurrentReturnAdapter(
                     mCurrentReturns,
                     returnDetailsResponseBodyList,

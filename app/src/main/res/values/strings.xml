@@ -234,6 +234,7 @@
     <string name="contact_history">Contact History</string>
     <string name="no_order_number">No Order Number</string>
     <string name="create_contact">Create Contact</string>
+    <string name="create_contact_fill_up">Please fill up all fields</string>
 
 
     <!--INVITE-->
@@ -286,6 +287,7 @@
     <string name="account_controller_tag">AccountController</string>
     <string name="i_am_looking_For">I am looking for...</string>
     <string name="sale_item_from_search_category">SaleItemFromSearchCategory</string>
+    <string name="no_internet_connection_ntap_to_retry">No internet connection.\nTap to retry</string>
 
     <string name="confirm_your_phone_number">Confirm your Phone Number</string>
     <string name="an_sms_with_your_code_has_been_sent_to_this_number">An SMS with your code has been

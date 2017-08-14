@@ -49,4 +49,14 @@ public class SearchFilterPresenter<V extends SearchFilterMvpView> extends BasePr
     public void onCategoryChipRemoved() {
         getMvpView().categoryChipRemoved();
     }
+
+    @Override
+    public void showTransparentOverlay() {
+        getMvpView().onShowTransparentOverlay();
+    }
+
+    @Override
+    public void hideTransparentOverlay() {
+        getMvpView().onHideTransparentOverlay();
+    }
 }

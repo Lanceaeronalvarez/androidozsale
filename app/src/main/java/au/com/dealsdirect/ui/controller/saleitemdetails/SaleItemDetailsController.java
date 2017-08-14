@@ -227,21 +227,6 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
         return new SaleItemDetailsController(bundle);
     }
 
-    public static SaleItemsController newInstance(
-            String seoIdentifierId,
-            String imageUrl,
-            String skuId,
-            String saleId) {
-
-        return new SaleItemsController(
-                new BundleBuilder(new Bundle())
-                        .putString("KEY_IMAGE_ID", imageUrl)
-                        .putString("KEY_SEO_IDENTIFIER", seoIdentifierId)
-                        .putString("KEY_ITEM_ID", skuId)
-                        .putString("KEY_SALE_ID", saleId)
-                        .build());
-    }
-
     public SaleItemDetailsController(Bundle args) {
         super(args);
         mSaleId = args.getString(KEY_SALE_ID);
@@ -264,6 +249,12 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
         getControllerComponent().inject(this);
         mPresenter.onAttach(this);
         return view;
+    }
+
+    @Override
+    protected void onAttach(@NonNull View view) {
+        super.onAttach(view);
+        mPresenter.onAttach(this);
     }
 
     @Override
@@ -341,17 +332,13 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
     protected void setUp(View view) {
 
 
-        Animation anim = AnimationUtils.loadAnimation(getActivity(), R.anim.slide_to_bottom);
-        anim.setDuration(200);
-
-
     }
 
     @Override
     public void onDetach(View view) {
         mPresenter.onDetach();
-        mProductDetailBottomCard.setVisibility(View.GONE);
-        mProductPriceCategory.setVisibility(View.GONE);
+//        mProductDetailBottomCard.setVisibility(View.GONE);
+//        mProductPriceCategory.setVisibility(View.GONE);
         super.onDetach(view);
     }
 
@@ -479,9 +466,8 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
     public void showAddToCartResponse(boolean val) {
         //notify bottom navigation view(checkout) with success.
         if (val) {
-            HomeController homeController = ((MainActivity) getActivity()).getMainController().getHomeController();
             CartUtil.addValueToCart(1);
-            homeController.updateBasketItemCount();
+            mActivity.getMainController().getHomeController().updateBasketItemCount();
         }
     }
 
@@ -496,25 +482,7 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
 
     @OnClick(R.id.product_details_add_to_basket)
     void addToBasket() {
-        if (!mPresenter.isAuthorized()) {
-            ((MainActivity) getActivity()).showLoginController(getRouter(), new AuthHandler() {
-                @Override
-                public void success() {
-                    verifyAddToCart();
-                }
 
-                @Override
-                public void error() {
-
-                }
-            });
-        } else {
-            verifyAddToCart();
-        }
-
-    }
-
-    private void verifyAddToCart() {
         AddToCartRequest request = new AddToCartRequest(mSkuId);
 
         if (hasSizes) {
@@ -524,9 +492,29 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
                         CustomAlertDialog.CustomDialogIconState.NEGATIVE,
                         getActivity().getString(R.string.please_select_size));
             } else {
-                mPresenter.addToCart(request);
-                animateAddToCart();
+                verifyAddToCart(request);
             }
+        } else {
+            verifyAddToCart(request);
+        }
+
+    }
+
+    private void verifyAddToCart(AddToCartRequest request) {
+        if (!mPresenter.isAuthorized()) {
+            ((MainActivity) getActivity()).showLoginController(getRouter(), new AuthHandler() {
+                @Override
+                public void success() {
+                    mActivity.callGCMRegisterSubscriber();
+                    mPresenter.addToCart(request);
+                    new Handler().postDelayed(()-> animateAddToCart(), 1000);
+                }
+
+                @Override
+                public void error() {
+
+                }
+            });
         } else {
             mPresenter.addToCart(request);
             animateAddToCart();

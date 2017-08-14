@@ -15,6 +15,7 @@ import com.bluelinelabs.conductor.Router;
 import com.bluelinelabs.conductor.RouterTransaction;
 import com.bluelinelabs.conductor.changehandler.FadeChangeHandler;
 import com.bluelinelabs.conductor.support.RouterPagerAdapter;
+import com.squareup.haha.perflib.Main;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -30,7 +31,6 @@ import au.com.dealsdirect.data.network.model.category.GetCategoryTreeResponse;
 import au.com.dealsdirect.ui.base.BaseController;
 import au.com.dealsdirect.ui.controller.categories.CategoriesController;
 import au.com.dealsdirect.ui.controller.home.HomeController;
-import au.com.dealsdirect.ui.controller.shops.ShopsController;
 import au.com.dealsdirect.ui.main.MainActivity;
 import au.com.dealsdirect.utils.BundleBuilder;
 import butterknife.BindView;
@@ -67,6 +67,7 @@ public class MainController extends BaseController implements MainMvpView {
 
     private HomeController mHomeController;
     private CategoriesController mCategoriesController;
+    private MainActivity mActivity;
 
     public static MainController newInstance() {
 
@@ -98,9 +99,8 @@ public class MainController extends BaseController implements MainMvpView {
     @Override
     protected void onViewBound(@NonNull View view) {
         super.onViewBound(view);
-//        if (mPreLoadedCategories.size() == 0) {
-            mPresenter.loadCategoryTree();
-//        }
+        mPresenter.loadCategoryTree();
+        mActivity = (MainActivity) getActivity();
         setUp(view);
     }
 
@@ -112,14 +112,11 @@ public class MainController extends BaseController implements MainMvpView {
 
     @Override
     protected void setUp(View view) {
-//        getRouter().setRoot(RouterTransaction.with(new ShopsController()));
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             Window window = getActivity().getWindow();
             window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
             window.setStatusBarColor(getActivity().getResources().getColor(R.color.colorAccent));
         }
-
-//        setupViewPager();
     }
 
 
@@ -129,7 +126,7 @@ public class MainController extends BaseController implements MainMvpView {
         createCategoryMap(mPreLoadedCategories);
     }
 
-     private void createCategoryMap(List<GetCategoryTreeResponse> categories) {
+    private void createCategoryMap(List<GetCategoryTreeResponse> categories) {
 
         List<GetCategoryTreeResponse> newList;
         mCategoryMap.put("shop", categories);
@@ -175,7 +172,7 @@ public class MainController extends BaseController implements MainMvpView {
         return mCategoryMap.get("shop");
     }
 
-    private void setupViewPager(){
+    private void setupViewPager() {
 
         mViewPagerAdapter = new RouterPagerAdapter(this) {
             @Override
@@ -184,35 +181,29 @@ public class MainController extends BaseController implements MainMvpView {
 
                     mHomeController = HomeController.newInstance();
                     mCategoriesController = CategoriesController.newInstance(mCategoryMap, mPreLoadedCategories);
-//                    if (mPreLoadedCategories.size()!=0) {
-//
 
-                        switch (position) {
-                            case 0:
-                                router.setRoot(RouterTransaction.with(mCategoriesController)
-                                        .pushChangeHandler(new FadeChangeHandler(100))
-                                        .popChangeHandler(new FadeChangeHandler(100)));
-                                break;
-                            case 1:
-                                router.setRoot(RouterTransaction.with(mHomeController));
-                                break;
-                            default:
-                                router.setRoot(RouterTransaction.with(mHomeController));
-                                break;
-                        }
-//                    }else{
-//                        router.setRoot(RouterTransaction.with(new ShopsController())
-//                                .tag(ShopsController.TAG));
-//
-//                    }
+
+                    switch (position) {
+                        case 0:
+                            router.setRoot(RouterTransaction.with(mCategoriesController)
+                                    .pushChangeHandler(new FadeChangeHandler(100))
+                                    .popChangeHandler(new FadeChangeHandler(100)));
+                            break;
+                        case 1:
+                            router.setRoot(RouterTransaction.with(mHomeController));
+                            break;
+                        default:
+                            router.setRoot(RouterTransaction.with(mHomeController));
+                            break;
+                    }
                 }
             }
 
             @Override
             public int getCount() {
-                if (mPreLoadedCategories.size()!=0){
+                if (mPreLoadedCategories.size() != 0) {
                     return 2;
-                }else{
+                } else {
                     return 1;
                 }
             }
@@ -227,32 +218,34 @@ public class MainController extends BaseController implements MainMvpView {
         mHomeViewPager.setAdapter(mViewPagerAdapter);
         mHomeViewPager.setCurrentItem(1);
         mHomeViewPager.setMyScroller();
+
+        mActivity.isViewPagerSet(true);
         //noinspection deprecation
 
     }
 
-    public void goToCategories(){
+    public void goToCategories() {
         mHomeViewPager.setCurrentItem(0);
     }
 
-    public void goToShops(){
+    public void goToShops() {
         mHomeViewPager.setCurrentItem(1);
     }
 
-    public void setViewpagerDraggable(boolean isDraggable){
+    public void setViewpagerDraggable(boolean isDraggable) {
         mHomeViewPager.setSwipeable(isDraggable);
     }
 
-    public int getActiveItem(){
+    public int getActiveItem() {
         return mHomeViewPager.getCurrentItem();
     }
 
-    public void showSaleItems(){
+    public void showSaleItems() {
         mHomeViewPager.setCurrentItem(1);
 
     }
 
-    private List<GetCategoryTreeResponse> updateCategoryChildren(GetCategoryTreeResponse categoryTree){
+    private List<GetCategoryTreeResponse> updateCategoryChildren(GetCategoryTreeResponse categoryTree) {
         if (!categoryTree.getName().equals("All")) {
             GetCategoryTreeResponse getCategoryTreeResponse = new GetCategoryTreeResponse();
             getCategoryTreeResponse.setName("All");
@@ -262,15 +255,15 @@ public class MainController extends BaseController implements MainMvpView {
 
             List<GetCategoryTreeResponse> newList = new ArrayList<>();
 
-            if (categoryTree.getChildren()!=null){
-                for (int i=0;i <categoryTree.getChildren().size()+1;i++){
+            if (categoryTree.getChildren() != null) {
+                for (int i = 0; i < categoryTree.getChildren().size() + 1; i++) {
 
-                    if (i==0) {
+                    if (i == 0) {
                         newList.add(getCategoryTreeResponse);
 
-                    } else{
+                    } else {
 
-                        newList.add(categoryTree.getChildren().get(i-1));
+                        newList.add(categoryTree.getChildren().get(i - 1));
                     }
                 }
             }
@@ -279,34 +272,34 @@ public class MainController extends BaseController implements MainMvpView {
         return categoryTree.getChildren();
     }
 
-    public void hideBottomNav(){
+    public void hideBottomNav() {
         mHomeController.hideBottomNav();
     }
 
-    public void showBottomNav(){
+    public void showBottomNav() {
         mHomeController.showBottomNav();
     }
 
-    public void setChosenCategoryItemKey(String key){
+    public void setChosenCategoryItemKey(String key) {
         mChosenSubCategoryItemKey = key;
     }
 
-    public String getChosenCategoryItemKey(){
+    public String getChosenCategoryItemKey() {
         return mChosenSubCategoryItemKey;
     }
 
-    public String getCategoryParentKey(){
+    public String getCategoryParentKey() {
         char c = '>';
         int charCount = 0;
         String newString = "";
-        for (int i = 0; i < mChosenSubCategoryItemKey.length(); i++){
+        for (int i = 0; i < mChosenSubCategoryItemKey.length(); i++) {
             String getChar = String.valueOf(mChosenSubCategoryItemKey.charAt(i));
-            if (!getChar.equals(String.valueOf(c))){
+            if (!getChar.equals(String.valueOf(c))) {
                 newString = newString + mChosenSubCategoryItemKey.charAt(i);
 
-            } else{
+            } else {
                 charCount++;
-                if (charCount>3){
+                if (charCount > 3) {
                     break;
                 }
                 newString = newString + mChosenSubCategoryItemKey.charAt(i);
@@ -316,7 +309,7 @@ public class MainController extends BaseController implements MainMvpView {
         return newString;
     }
 
-    public HomeController getHomeController(){
+    public HomeController getHomeController() {
         return mHomeController;
     }
 }

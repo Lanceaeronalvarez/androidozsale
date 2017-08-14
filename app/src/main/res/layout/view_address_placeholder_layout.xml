@@ -1,45 +1,48 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/no_addresses_layout"
-    xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:visibility="visible"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:background="@android:color/white"
-    xmlns:tools="http://schemas.android.com/tools"
+    android:paddingLeft="@dimen/place_holder_padding"
+    android:paddingRight="@dimen/place_holder_padding"
+    android:visibility="visible"
     tools:ignore="MissingPrefix">
-    
+
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical"
+        android:layout_alignParentStart="true"
         android:layout_centerVertical="true"
-        android:layout_alignParentStart="true">
+        android:orientation="vertical">
 
         <ImageView
             android:layout_width="60dp"
             android:layout_height="60dp"
             android:layout_gravity="center"
-            android:src="@drawable/ic_address_placeholder"/>
-        
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/welcome_to_my_address"
-            android:layout_gravity="center"
-            android:textSize="@dimen/text_size_xxxlarge"/>
+            android:src="@drawable/ic_address_placeholder" />
 
         <TextView
+            fontPath="@string/font_lato_medium"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/you_currently_do_not_have_any_addresses"
-            android:textColor="#D0D0D0"
-            android:layout_marginTop="10dp"
-            android:layout_marginBottom="@dimen/default_button_height"
-            android:paddingBottom="@dimen/default_button_height"
             android:layout_gravity="center"
-            android:textSize="@dimen/text_size_xlarge"/>
+            android:text="@string/welcome_to_my_address"
+            android:textSize="@dimen/text_size_xxxlarge" />
+
+        <TextView
+            fontPath="@string/font_lato_light"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginBottom="@dimen/default_button_height"
+            android:layout_marginTop="10dp"
+            android:paddingBottom="@dimen/default_button_height"
+            android:text="@string/you_currently_do_not_have_any_addresses"
+            android:textColor="#9f9f9f"
+            android:textSize="@dimen/text_size_xlarge" />
 
     </LinearLayout>
 

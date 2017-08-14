@@ -19,6 +19,7 @@ import javax.inject.Inject;
 
 import au.com.dealsdirect.R;
 import au.com.dealsdirect.ui.base.BaseController;
+import au.com.dealsdirect.ui.base.BasePullToRefreshController;
 import au.com.dealsdirect.ui.custom.CustomAlertDialog;
 import au.com.dealsdirect.utils.BundleBuilder;
 import butterknife.BindView;
@@ -27,7 +28,7 @@ import butterknife.BindView;
  * Created by Paul on 6/22/17.
  */
 
-public class LanguageController extends BaseController implements LanguageMvpView {
+public class LanguageController extends BasePullToRefreshController implements LanguageMvpView {
 
     @Inject
     LanguageMvpPresenter<LanguageMvpView> mPresenter;
@@ -71,12 +72,20 @@ public class LanguageController extends BaseController implements LanguageMvpVie
 
     @Override
     protected View inflateView(@NonNull LayoutInflater inflater, @NonNull ViewGroup container) {
-        View view = inflater.inflate(R.layout.controller_user_languages, container, false);
+        View view = super.inflateView(inflater, container);
+
+        fillToolbar(inflater.inflate(R.layout.partial_toolbar_arrow, container, false));
+        fillContent(inflater.inflate(R.layout.controller_user_languages, container, false));
 
         getControllerComponent().inject(this);
         mPresenter.onAttach(this);
-
         return view;
+    }
+
+    @Override
+    public void onRefreshStart() {
+        super.onRefreshStart();
+        mPresenter.getUserLanguages();
     }
 
     @Override

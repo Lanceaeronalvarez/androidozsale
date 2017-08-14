@@ -7,21 +7,16 @@
     android:background="@color/white"
     tools:ignore="MissingPrefix">
 
-    <include
-        android:id="@+id/controller_view_vouchers_toolbar_title_layout"
-        layout="@layout/partial_toolbar_arrow" />
-
     <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_below="@id/controller_view_vouchers_toolbar_title_layout" >
+        android:layout_height="match_parent">
 
         <LinearLayout
             android:id="@+id/controller_vouchers_root_layout"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:orientation="vertical"
-            android:visibility="visible">
+            android:visibility="gone">
 
 
         <TextView
@@ -44,7 +39,8 @@
                 app:rvp_triggerOffset="0.1"
                 app:rvp_singlePageFling="true"
                 android:layout_below="@+id/vouchers_view_detail_text_view"
-                android:clipToPadding="false"></com.lsjwzh.widget.recyclerviewpager.RecyclerViewPager>
+                android:clipToPadding="false"
+                android:visibility="gone"/>
 
             <LinearLayout
                 android:id="@+id/voucher_recycler_divider"
@@ -53,7 +49,8 @@
                 android:layout_below="@id/controller_recycler_view_unused_vouchers"
                 android:orientation="vertical"
                 android:paddingBottom="20dp"
-                android:paddingTop="20dp">
+                android:paddingTop="20dp"
+                android:visibility="gone" >
 
                 <View
                     android:layout_width="match_parent"
@@ -79,7 +76,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_below="@+id/controller_recycler_view_unused_vouchers"
-                android:layout_marginTop="50dp"></android.support.v7.widget.RecyclerView>
+                android:layout_marginTop="50dp"
+                android:visibility="gone"/>
 
         </LinearLayout>
 

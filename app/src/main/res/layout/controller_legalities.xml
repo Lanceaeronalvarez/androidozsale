@@ -10,8 +10,6 @@
         android:layout_height="match_parent"
         android:orientation="vertical">
 
-        <include layout="@layout/partial_toolbar_arrow" />
-
         <WebView
             android:id="@+id/controller_legalities_base_webview"
             android:layout_width="match_parent"

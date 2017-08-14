@@ -22,12 +22,14 @@ import java.util.List;
 import javax.inject.Inject;
 
 import au.com.dealsdirect.R;
+import au.com.dealsdirect.data.network.model.address.Address;
 import au.com.dealsdirect.data.network.model.address.AddressesItem;
 import au.com.dealsdirect.data.network.model.address.DecorationInfoList;
 import au.com.dealsdirect.data.network.model.address.DeleteUserAddress;
 import au.com.dealsdirect.data.network.model.address.GetAddresses;
 import au.com.dealsdirect.data.network.model.checkout.getcurrentorder.DeliveryAddress;
 import au.com.dealsdirect.ui.base.BaseController;
+import au.com.dealsdirect.ui.base.BasePullToRefreshController;
 import au.com.dealsdirect.ui.custom.CustomAlertDialog;
 import au.com.dealsdirect.ui.custom.RecyclerOnTouchListener;
 import au.com.dealsdirect.ui.controller.address.addnewaddress.AddNewAddressController;
@@ -40,7 +42,7 @@ import timber.log.Timber;
  * Created by smartwave on 21/06/2017.
  */
 
-public class ViewAddressController extends BaseController implements ViewAddressMvpView {
+public class ViewAddressController extends BasePullToRefreshController implements ViewAddressMvpView {
 
     private static final String CALLED_FROM_CART = "CalledFromCart";
 
@@ -128,7 +130,11 @@ public class ViewAddressController extends BaseController implements ViewAddress
 
     @Override
     protected View inflateView(@NonNull LayoutInflater inflater, @NonNull ViewGroup container) {
-        View view = inflater.inflate(R.layout.controller_view_address, container, false);
+        View view = super.inflateView(inflater, container);
+
+        fillToolbar(inflater.inflate(R.layout.partial_toolbar_arrow, container, false));
+        fillContent(inflater.inflate(R.layout.controller_view_address, container, false));
+
         getControllerComponent().inject(this);
         mPresenter.onAttach(this);
 
@@ -136,18 +142,22 @@ public class ViewAddressController extends BaseController implements ViewAddress
     }
 
     @Override
+    public void onRefreshStart() {
+        super.onRefreshStart();
+        mPresenter.loadAddresses();
+    }
+
+    @Override
     public void showAddresses(GetAddresses.ResponseValue responseValue) {
         Timber.d("ViewAddressController", "addresses response");
         if (responseValue.getD().getValue() != null) {
-            mRecyclerView.setVisibility(View.VISIBLE);
-            mAddressPlaceHolder.setVisibility(View.GONE);
 
             //If status 0, not valid Address
             if (mAddressList != null) {
-                List<AddressesItem> addressesItems = responseValue.getD().getValue().getAddressesList();
-                for (int i = addressesItems.size() - 1; i >= 0; i--) {
-                    AddressesItem addressesItem = addressesItems.get(i);
-                    if (addressesItem.Status != 0) {
+                mRecyclerView.setVisibility(View.VISIBLE);
+                mAddressPlaceHolder.setVisibility(View.GONE);
+                for (AddressesItem addressesItem : responseValue.getD().getValue().getAddressesList()) {
+                    if (addressesItem.Status != 0 && !mAddressList.contains(addressesItem)) {
                         mAddressList.add(addressesItem);
                     }
                 }

@@ -8,10 +8,14 @@ import android.util.Log;
 
 import com.androidnetworking.error.ANError;
 
+import java.util.List;
+
 import javax.inject.Inject;
 
 import au.com.dealsdirect.data.DataManager;
+import au.com.dealsdirect.data.network.AppApiCallback;
 import au.com.dealsdirect.data.network.model.banner.GetBannerRequest;
+import au.com.dealsdirect.data.network.model.banner.GetBannerResponse;
 import au.com.dealsdirect.ui.base.BasePresenter;
 import au.com.dealsdirect.utils.rx.SchedulerProvider;
 import io.reactivex.disposables.CompositeDisposable;
@@ -45,44 +49,14 @@ public class ShopsPresenter<V extends ShopsMvpView> extends BasePresenter<V> imp
         if(bannerOffset == 0){
             getMvpView().showLoading();
         }
-        
-        getCompositeDisposable()
-                .add(getDataManager()
-                        .callGetBanners(getBannerRequest)
-                        .subscribeOn(getSchedulerProvider().io())
-                        .observeOn(getSchedulerProvider().ui())
-                        .subscribe(response -> {
 
-                            if (!isViewAttached()) {
-                                return;
-                            }
-
-                            getMvpView().hideLoading();
-
-                            if (response.isEmpty()) {
-                                getMvpView().showShopBanners(response);
-
-//                             getMvpView().showNoResultsLayout();
-
-                            } else {
-                                getMvpView().showShopBanners(response);
-                            }
-
-                        }, throwable -> {
-
-                            if (!isViewAttached()) {
-                                return;
-                            }
-
-                            getMvpView().hideLoading();
-                            getMvpView().onError(throwable.getMessage());
-
-                            // handle load accounts error here
-                            if (throwable instanceof ANError) {
-                                ANError anError = (ANError) throwable;
-                                handleApiError(anError);
-                            }
-                        }));
+        doApiCallForResponse(getDataManager().callGetBanners(getBannerRequest), new AppApiCallback(){
+            @Override
+            public void onSuccess(List<?> response) {
+                super.onSuccess(response);
+                getMvpView().showShopBanners((List<GetBannerResponse>) response);
+            }
+        });
     }
 
     @Override

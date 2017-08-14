@@ -36,6 +36,7 @@ import au.com.dealsdirect.ui.custom.CustomAlertDialog;
 import au.com.dealsdirect.ui.main.MainActivity;
 import au.com.dealsdirect.ui.main.MainMvpView;
 import au.com.dealsdirect.utils.BundleBuilder;
+import au.com.dealsdirect.utils.CartUtil;
 import butterknife.BindView;
 import butterknife.OnClick;
 
@@ -109,12 +110,7 @@ public class AccountController extends BaseController implements AccountMvpView,
         mTitleTextView.setText("My Account");
         mArrowButton.setVisibility(View.INVISIBLE);
 
-        if(mPresenter.getIsAuthorized()) {
-            mFilterButton.setImageDrawable(getActivity().getResources().getDrawable(R.drawable.ic_logout));
-
-        } else {
-            mFilterButton.setImageDrawable(getActivity().getResources().getDrawable(R.drawable.ic_login));
-        }
+        initLoginDrawable();
     }
 
     @Override
@@ -211,12 +207,13 @@ public class AccountController extends BaseController implements AccountMvpView,
             public void success() {
                 mPresenter.onAttach(mvpView);
                 mPresenter.onAccountItemClick(option);
+                ((MainActivity) getActivity()).callGCMRegisterSubscriber();
                 mFilterButton.setImageDrawable(getActivity().getResources().getDrawable(R.drawable.ic_logout));
             }
 
             @Override
             public void error() {
-                mFilterButton.setImageDrawable(getActivity().getResources().getDrawable(R.drawable.ic_login));
+                mPresenter.onAttach(mvpView);
             }
         });
     }
@@ -240,16 +237,29 @@ public class AccountController extends BaseController implements AccountMvpView,
                 "Logout Successful");
     }
 
+    @Override
+    public void initLoginDrawable() {
+        if(mPresenter.getIsAuthorized()) {
+            mFilterButton.setImageDrawable(getActivity().getResources().getDrawable(R.drawable.ic_logout));
+
+        } else {
+            mFilterButton.setImageDrawable(getActivity().getResources().getDrawable(R.drawable.ic_login));
+        }
+    }
+
     @OnClick(R.id.partial_toolbar_filter_view)
     public void promptLogin(){
         if(mPresenter.getIsAuthorized()) {
             mFilterButton.setImageDrawable(getActivity().getResources().getDrawable(R.drawable.ic_login));
             triggerLogout();
+            CartUtil.setValueToCart(0);
+            ((MainActivity) getActivity()).getMainController().getHomeController().removeBasketItemCount();
         } else {
             ((MainMvpView)getActivity()).showLoginController(getRouter(),new AuthHandler() {
                 @Override
                 public void success() {
                     mPresenter.onAttach(AccountController.this);
+                    ((MainMvpView)getActivity()).callGCMRegisterSubscriber();
                     mFilterButton.setImageDrawable(getActivity().getResources().getDrawable(R.drawable.ic_logout));
                 }
 

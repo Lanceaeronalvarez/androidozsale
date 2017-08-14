@@ -14,7 +14,7 @@
     <in.srain.cube.views.ptr.PtrClassicFrameLayout
         android:id="@+id/controller_base_ptr_layout"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="match_parent"
         app:ptr_duration_to_close="200"
         app:ptr_duration_to_close_header="1000"
         app:ptr_keep_header_when_refresh="true"
@@ -23,9 +23,17 @@
         app:ptr_resistance="1.7">
 
         <FrameLayout
-            android:id="@+id/controller_base_content_layout"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content" />
+            android:layout_height="match_parent">
+
+            <FrameLayout
+                android:id="@+id/controller_base_content_layout"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent" />
+
+            <include layout="@layout/partial_no_network_layout" />
+
+        </FrameLayout>
 
     </in.srain.cube.views.ptr.PtrClassicFrameLayout>
 
