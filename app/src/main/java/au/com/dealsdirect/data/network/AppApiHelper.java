@@ -190,24 +190,15 @@ public class AppApiHelper implements ApiHelper {
 
     @Override
     public Observable<GetSaleItemsResponse> callGetSaleItemsRequest(GetSaleItemsRequest getSaleItemsRequest) {
-        LinkedHashMap<String, String> linkedHashMap = new LinkedHashMap();
-        linkedHashMap.put("q", getSaleItemsRequest.getQuery());
-        linkedHashMap.put("pn", getSaleItemsRequest.getPageNumber());
-        linkedHashMap.put("ps", getSaleItemsRequest.getPageSize());
-        linkedHashMap.put("c", getSaleItemsRequest.getCategoryKey());
-        linkedHashMap.put("ff", getSaleItemsRequest.getFacetFilter());
-        linkedHashMap.put("sa", getSaleItemsRequest.getSorting());
-
         return Rx2AndroidNetworking.get(ApiEndPoint.GET_PRODUCTS)
                 .addHeaders(mApiHeader.get())
-                .addQueryParameter(linkedHashMap)
+                .addQueryParameter(getSaleItemsRequest)
                 .build()
                 .getObjectObservable(GetSaleItemsResponse.class);
     }
 
     @Override
     public Observable<String> callAddItemToCart(AddToCartRequest requestValues) {
-//        final Observable<Object> returnObservable;
         return Rx2AndroidNetworking.post(ApiEndPoint.ADD_TO_CART)
                 .addHeaders(mApiHeader.get())
                 .addJSONObjectBody(JsonUtils.convertToJsonObject(requestValues))

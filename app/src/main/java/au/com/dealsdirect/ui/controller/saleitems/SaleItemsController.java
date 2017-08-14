@@ -460,7 +460,7 @@ public class SaleItemsController extends BasePullToRefreshController implements 
 
     @Override
     public void refresh() {
-        Log.d("chipsBuilt","refreshcalled");
+        Log.d("chipsBuilt", "refreshcalled");
         loadingInProgress = true;
         mChipFilters = removeSearchQueryChips(mChipFilters);
         buildSearchQueryChips(mChipFilters);
@@ -692,8 +692,9 @@ public class SaleItemsController extends BasePullToRefreshController implements 
         }
 
 
-        facetFilters.put("saleId", saleIds);
-
+        if (!saleIds.isEmpty()) {
+            facetFilters.put("saleId", saleIds);
+        }
 
         if (chipsList == null) {
             getSaleItemsRequest.setHasFilters(false);
