@@ -18,6 +18,7 @@ import com.bluelinelabs.conductor.RouterTransaction;
 import com.bluelinelabs.conductor.changehandler.HorizontalChangeHandler;
 import com.facebook.CallbackManager;
 import com.facebook.internal.CallbackManagerImpl;
+import com.mysale.genie.utility.RxBus;
 
 import java.util.regex.Pattern;
 
@@ -31,6 +32,7 @@ import au.com.dealsdirect.ui.controller.register.RegisterController;
 import au.com.dealsdirect.ui.custom.CustomAlertDialog;
 import au.com.dealsdirect.ui.main.MainActivity;
 import au.com.dealsdirect.utils.BundleBuilder;
+import au.com.dealsdirect.utils.IntrospectionUtils;
 import butterknife.BindView;
 import butterknife.OnClick;
 
@@ -110,7 +112,7 @@ public class LoginController extends BaseController implements LoginMvpView {
 
     @Override
     protected void setUp(View view) {
-        ((MainActivity)getActivity()).setDraggableViewPager(false);
+        ((MainActivity) getActivity()).setDraggableViewPager(false);
 
         mLoginButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -135,12 +137,14 @@ public class LoginController extends BaseController implements LoginMvpView {
     }
 
     @OnClick(R.id.controller_login_close_icon)
-    void onCloseIconClick(){
+    void onCloseIconClick() {
         getActivity().onBackPressed();
     }
 
     @Override
     public void showLoginSuccessful(String loginTicket) {
+        RxBus.instance().post(IntrospectionUtils.EVENT_LOGIN);
+
         getActivity().onBackPressed();
         mAuthHandler.success();
         hideKeyboard();
@@ -151,7 +155,7 @@ public class LoginController extends BaseController implements LoginMvpView {
     @Override
     public void showLoginError(String message) {
 
-        if (mAuthHandler!=null)
+        if (mAuthHandler != null)
             mAuthHandler.error();
 
         CustomAlertDialog.showCustomAlertDialog(
@@ -195,7 +199,7 @@ public class LoginController extends BaseController implements LoginMvpView {
     }
 
     @OnClick(R.id.controller_login_forgot_password_text)
-    void onForgotPasswordClick(){
+    void onForgotPasswordClick() {
         showForgotPassword();
     }
 

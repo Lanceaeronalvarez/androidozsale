@@ -19,10 +19,7 @@ import com.mysale.genie.utility.config.model.getappsettingssection.Android;
 
 import java.util.List;
 
-import javax.inject.Inject;
-
 import au.com.dealsdirect.R;
-import au.com.dealsdirect.ui.main.MainActivity;
 
 
 public class IntrospectionUtils {
@@ -107,7 +104,7 @@ public class IntrospectionUtils {
         }
     }
 
-    public static void showPayload(Context context, Android android) {
+    private static void showPayload(Context context, Android android) {
 
         Dialog dialog = new Dialog(context);
         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
@@ -154,7 +151,7 @@ public class IntrospectionUtils {
         return versionCode;
     }
 
-    public static String getVersionName(Context context) {
+    private static String getVersionName(Context context) {
         String versionName;
         try {
             PackageInfo packageInfo = context.getPackageManager()
