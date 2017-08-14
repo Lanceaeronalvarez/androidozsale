@@ -1,6 +1,5 @@
 package au.com.dealsdirect.ui.controller.splash;
 
-import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
@@ -48,7 +47,7 @@ public class SplashScreenController extends BaseController {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             Window window = getActivity().getWindow();
             window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
-            window.setStatusBarColor(Color.WHITE);
+            window.setStatusBarColor(getActivity().getResources().getColor(R.color.toolbar_skin));
         }
 
         setUp(view);
