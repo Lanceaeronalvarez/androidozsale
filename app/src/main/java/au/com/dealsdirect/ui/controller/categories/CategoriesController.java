@@ -209,6 +209,7 @@ public class CategoriesController extends BaseController
         if (getCategoryTreeResponse.getName().equals("All")) {
             assert (getActivity()) != null;
             ((MainActivity) getActivity()).goToSalesFromCategory(getCategoryTreeResponse);
+            mSubCategoryAdapter.notifyDataSetChanged();
         }
     }
 
