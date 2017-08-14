@@ -127,7 +127,7 @@ public class BasePresenter<V extends MvpView> implements MvpPresenter<V> {
 
     @Override
     public void doApiCallForResponse(Observable observable, final ApiCallback callback) {
-        getMvpView().showLoading();
+//        getMvpView().showLoading();
 
         if(getMvpView() instanceof BasePullToRefreshController) {
             ((BasePullToRefreshController) getMvpView()).hideNoNetworkLayout();

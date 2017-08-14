@@ -46,10 +46,6 @@ public class ShopsPresenter<V extends ShopsMvpView> extends BasePresenter<V> imp
         if (categoryId!=null && !categoryId.isEmpty())
             getBannerRequest.setCategoryId(categoryId);
 
-        if(bannerOffset == 0){
-            getMvpView().showLoading();
-        }
-
         doApiCallForResponse(getDataManager().callGetBanners(getBannerRequest), new AppApiCallback(){
             @Override
             public void onSuccess(List<?> response) {
