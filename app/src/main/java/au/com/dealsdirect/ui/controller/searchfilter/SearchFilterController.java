@@ -154,9 +154,9 @@ public class SearchFilterController extends BaseController
     private HashMap<String, Set<Integer>> mPreviousSelectedFacetIndices = new HashMap<>();
     private ArrayList<SearchChipModel> mPreviousSearchChips = new ArrayList<>();
 
-    List<Pair<String,String>> mFacetFilters = Arrays.asList
-            (new Pair<String, String>(SORT_FACETFILTER_NAME,"Sort"),
-            new Pair<String, String>(CATEGORY_TREE_FACET,"Category"));
+    List<Pair<String, String>> mFacetFilters = Arrays.asList
+            (new Pair<String, String>(SORT_FACETFILTER_NAME, "Sort"),
+                    new Pair<String, String>(CATEGORY_TREE_FACET, "Category"));
 
     public static SearchFilterController newInstance(String jsonCategoriesString, String jsonFacetString, String sortingFacetString, String saleId, String categoryKey, String previouslySelectedFacetIndices, String previousChipFilters) {
         return new SearchFilterController(new BundleBuilder(new Bundle())
@@ -164,9 +164,9 @@ public class SearchFilterController extends BaseController
                 .putString(KEY_FACET_STRING, jsonFacetString)
                 .putString(KEY_SORTING_STRING, sortingFacetString)
                 .putString(KEY_CATEGORY_MAP, categoryKey)
-                .putString(KEY_SALE_ID,saleId)
-                .putString(KEY_SELECTED_FACETS,previouslySelectedFacetIndices)
-                .putString(KEY_CHIPS_FILTER,previousChipFilters)
+                .putString(KEY_SALE_ID, saleId)
+                .putString(KEY_SELECTED_FACETS, previouslySelectedFacetIndices)
+                .putString(KEY_CHIPS_FILTER, previousChipFilters)
                 .build());
     }
 
@@ -176,8 +176,8 @@ public class SearchFilterController extends BaseController
         }.getType());
         mSortingFacets = JsonUtils.convertStringToObject(args.getString(KEY_SORTING_STRING, ""), new TypeToken<ArrayList<SortingResponse>>() {
         }.getType());
-        mSaleId = args.getString(KEY_SALE_ID,"");
-        mCategoryKey = args.getString(KEY_CATEGORY_MAP,"");
+        mSaleId = args.getString(KEY_SALE_ID, "");
+        mCategoryKey = args.getString(KEY_CATEGORY_MAP, "");
         mCategoryTree = JsonUtils.convertStringToObject(args.getString(KEY_CATEGORY_STRING, ""), new TypeToken<ArrayList<GetCategoryTreeResponse>>() {
         }.getType());
         mBrandList = JsonUtils.convertStringToObject(args.getString(KEY_BRAND_LIST, ""), new TypeToken<ArrayList<String>>() {
@@ -187,18 +187,20 @@ public class SearchFilterController extends BaseController
     }
 
 
-    private void restoreStateSelection(Bundle args){
-        String selectedFacetItemsString = args.getString(KEY_SELECTED_FACETS,"");
-        if(!selectedFacetItemsString.isEmpty()) {
-            mPreviousSelectedFacetIndices = JsonUtils.convertStringToObject(selectedFacetItemsString, new TypeToken<HashMap<String,Set<Integer>>>(){}.getType());
-        } else{
+    private void restoreStateSelection(Bundle args) {
+        String selectedFacetItemsString = args.getString(KEY_SELECTED_FACETS, "");
+        if (!selectedFacetItemsString.isEmpty()) {
+            mPreviousSelectedFacetIndices = JsonUtils.convertStringToObject(selectedFacetItemsString, new TypeToken<HashMap<String, Set<Integer>>>() {
+            }.getType());
+        } else {
             mPreviousSelectedFacetIndices = new HashMap<>();
         }
 
-        String previousChipsString = args.getString(KEY_CHIPS_FILTER,"");
-        if(!previousChipsString.isEmpty()) {
-            mPreviousSearchChips = JsonUtils.convertStringToObject(previousChipsString, new TypeToken<ArrayList<SearchChipModel>>(){}.getType());
-        } else{
+        String previousChipsString = args.getString(KEY_CHIPS_FILTER, "");
+        if (!previousChipsString.isEmpty()) {
+            mPreviousSearchChips = JsonUtils.convertStringToObject(previousChipsString, new TypeToken<ArrayList<SearchChipModel>>() {
+            }.getType());
+        } else {
             mPreviousSearchChips = new ArrayList<>();
         }
 
@@ -246,7 +248,7 @@ public class SearchFilterController extends BaseController
             }
         });
 
-        mSubCategoriesAdapter = new SubCategoriesAdapter(mChosenCategory, mPreLoadedCategories, mSubCategoryClickListener,mSubCategoryItemClickListener, mCategoryMap);
+        mSubCategoriesAdapter = new SubCategoriesAdapter(mChosenCategory, mPreLoadedCategories, mSubCategoryClickListener, mSubCategoryItemClickListener, mCategoryMap);
         mFilterCategoriesRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity(), LinearLayoutManager.VERTICAL, false));
         mFilterCategoriesRecyclerView.setAdapter(mSubCategoriesAdapter);
 
@@ -258,13 +260,13 @@ public class SearchFilterController extends BaseController
 
         //remove other chips if a new category is selected.
         // also remove selected indices for other filter types
-        if(!mPreviousChosenCategory.equals(mChosenCategory)){
+        if (!mPreviousChosenCategory.equals(mChosenCategory)) {
             removeAllChipsExceptCategory();
             removeSelectedIndicesExceptCategory();
             mPreviousChosenCategory = mChosenCategory;
         }
 
-        if(!mPreviousSearchChips.isEmpty()) {
+        if (!mPreviousSearchChips.isEmpty()) {
             mSearchTagsAdapter.replaceData(mPreviousSearchChips);
         }
 
@@ -278,7 +280,7 @@ public class SearchFilterController extends BaseController
             parseFacets(mFacets);
         }
 
-        if(mSortingFacets != null){
+        if (mSortingFacets != null) {
             parseSortingFacets(mSortingFacets);
         }
 
@@ -286,14 +288,14 @@ public class SearchFilterController extends BaseController
 
     }
 
-    private void setupPriceFacet(){
+    private void setupPriceFacet() {
         origMaxValue = mPresenter.getSearchMaxPrice();
         origMinValue = mSeekbar.getSelectedMinValue().intValue();
 
         mSeekbar.setMaxValue(origMaxValue);
 
-        mClearText.setOnClickListener((v)->{
-            if(!isSeekbarReset) {
+        mClearText.setOnClickListener((v) -> {
+            if (!isSeekbarReset) {
                 //remove previously selected price range
                 for (SearchChipModel chip : mSearchTagsAdapter.getData()) {
                     if (chip.getFilterType().equals(PRICE_FACETFILTER_NAME)) {
@@ -310,10 +312,10 @@ public class SearchFilterController extends BaseController
         mSeekbar.setOnRangeSeekbarChangeListener(new OnRangeSeekbarChangeListener() {
             @Override
             public void valueChanged(Number minValue, Number maxValue) {
-                mMinPrice.setText("$"+minValue.intValue());
-                mMaxPrice.setText("$"+maxValue.intValue());
-                if(maxValue.intValue() == origMaxValue){
-                    mMaxPrice.setText("$"+maxValue.intValue()+"+");
+                mMinPrice.setText("$" + minValue.intValue());
+                mMaxPrice.setText("$" + maxValue.intValue());
+                if (maxValue.intValue() == origMaxValue) {
+                    mMaxPrice.setText("$" + maxValue.intValue() + "+");
                 }
 
             }
@@ -324,27 +326,27 @@ public class SearchFilterController extends BaseController
 
                 //remove previously selected price range
                 for (SearchChipModel chip : mSearchTagsAdapter.getData()) {
-                    if(chip.getFilterType().equals(PRICE_FACETFILTER_NAME)){
+                    if (chip.getFilterType().equals(PRICE_FACETFILTER_NAME)) {
                         mSearchTagsAdapter.remove(chip);
                         break;
                     }
                 }
 
                 //add newly selected price range
-                if(origMinValue!=minValue.intValue() || origMaxValue!=maxValue.intValue()){
-                    SearchChipModel priceChip = new SearchChipModel(PRICE_FACETFILTER_NAME, minValue.intValue() + " to " + maxValue.intValue(),-1);
+                if (origMinValue != minValue.intValue() || origMaxValue != maxValue.intValue()) {
+                    SearchChipModel priceChip = new SearchChipModel(PRICE_FACETFILTER_NAME, minValue.intValue() + " to " + maxValue.intValue(), -1);
                     priceChip.setMaxValue(maxValue.intValue());
                     priceChip.setMinValue(minValue.intValue());
                     mSearchTagsAdapter.add(priceChip);
                 }
 
-                isSeekbarReset=false;
+                isSeekbarReset = false;
             }
         });
 
         SearchChipModel priceChip = findPriceChip();
 
-        if(priceChip != null){
+        if (priceChip != null) {
             mSeekbar.setMinStartValue(priceChip.getMinValue()).apply();
             mSeekbar.setMaxStartValue(priceChip.getMaxValue()).apply();
 
@@ -359,25 +361,25 @@ public class SearchFilterController extends BaseController
     }
 
     private void parseSortingFacets(List<SortingResponse> sortingList) {
-        for (SortingResponse response: sortingList) {
+        for (SortingResponse response : sortingList) {
             mSortingList.add(response.getTitle());
         }
     }
 
-    private void removeAllChipsExceptCategory(){
+    private void removeAllChipsExceptCategory() {
         List<SearchChipModel> listToIterate = new ArrayList<>(mPreviousSearchChips);
         for (SearchChipModel chip : listToIterate) {
-            if(!chip.getFilterType().equals(CATEGORY_TREE_FACET)){
+            if (!chip.getFilterType().equals(CATEGORY_TREE_FACET)) {
                 mPreviousSearchChips.remove(chip);
             }
         }
 
-        String test="";
+        String test = "";
     }
 
-    private void removeSelectedIndicesExceptCategory(){
+    private void removeSelectedIndicesExceptCategory() {
         for (Map.Entry entry : mPreviousSelectedFacetIndices.entrySet()) {
-            if(!entry.getKey().equals(CATEGORY_TREE_FACET)){
+            if (!entry.getKey().equals(CATEGORY_TREE_FACET)) {
                 entry.setValue(new HashSet<>());
             }
 
@@ -389,15 +391,15 @@ public class SearchFilterController extends BaseController
     public void showFacetItem(int position) {
 
 
-        if(getFacetFilterType(position) != PRICE_FACETFILTER_NAME) { //only do this logic if facet clicked != price
+        if (getFacetFilterType(position) != PRICE_FACETFILTER_NAME) { //only do this logic if facet clicked != price
 
-            if (getFacetFilterType(position) == CATEGORY_TREE_FACET){
+            if (getFacetFilterType(position) == CATEGORY_TREE_FACET) {
 
                 mFilterCategoriesRecyclerView.setVisibility(View.VISIBLE);
                 mFacetItemsRecyclerView.setVisibility(View.GONE);
                 mSeekbarLayout.setVisibility(View.GONE);
 
-            }else{
+            } else {
 
                 mFacetItemsRecyclerView.setVisibility(View.VISIBLE);
                 mSeekbarLayout.setVisibility(View.GONE);
@@ -430,8 +432,11 @@ public class SearchFilterController extends BaseController
         mPreviousSelectedFacetIndex = position;
     }
 
-    private void trackLastSelectedFacet(){
-        mPreviousSelectedFacetIndices.put(getFacetFilterType(mPreviousSelectedFacetIndex), new HashSet<>(mFacetItemsAdapter.getSelectedFacets()));
+    private void trackLastSelectedFacet() {
+        if (mPreviousSelectedFacetIndex != -1) {
+            mPreviousSelectedFacetIndices.put(getFacetFilterType(mPreviousSelectedFacetIndex), new HashSet<>(mFacetItemsAdapter.getSelectedFacets()));
+
+        }
     }
 
 
@@ -496,7 +501,6 @@ public class SearchFilterController extends BaseController
     }
 
 
-
     @OnClick(R.id.controller_search_filter_transparent_view)
     @Override
     public void onHideTransparentOverlay() {
@@ -505,7 +509,7 @@ public class SearchFilterController extends BaseController
         hideKeyboard();
     }
 
-    private String getFacetFilterType(int position){
+    private String getFacetFilterType(int position) {
         return mFacetsAdapter.getData().get(position).first;
     }
 
@@ -541,14 +545,14 @@ public class SearchFilterController extends BaseController
                             GetSaleItemsResponse.Values facetValue = facets.get(i).getFacetValues().get(j);
                             mBrandList.add(facetValue.getValue());
                         }
-                        mFacetsAdapter.add(new Pair<String, String>(BRANDS_FACETFILTER_NAME,"Brands"));
+                        mFacetsAdapter.add(new Pair<String, String>(BRANDS_FACETFILTER_NAME, "Brands"));
                         break;
                     case SIZES_FACETFILTER_NAME:
                         for (int j = 0; j < facets.get(i).getFacetValues().size(); j++) {
                             GetSaleItemsResponse.Values facetValue = facets.get(i).getFacetValues().get(j);
                             mSizeList.add(facetValue.getValue());
                         }
-                        mFacetsAdapter.add(new Pair<String, String>(SIZES_FACETFILTER_NAME,"Sizes"));
+                        mFacetsAdapter.add(new Pair<String, String>(SIZES_FACETFILTER_NAME, "Sizes"));
                         break;
                     case COLORS_FACETFILTER_NAME:
                         for (int j = 0; j < facets.get(i).getFacetValues().size(); j++) {
@@ -556,10 +560,10 @@ public class SearchFilterController extends BaseController
                             mColorList.add(facetValue.getValue());
                         }
 
-                        mFacetsAdapter.add(new Pair<String, String>(COLORS_FACETFILTER_NAME,"Colors"));
+                        mFacetsAdapter.add(new Pair<String, String>(COLORS_FACETFILTER_NAME, "Colors"));
                         break;
                     case PRICE_FACETFILTER_NAME:
-                        mFacetsAdapter.add(new Pair<String, String>(PRICE_FACETFILTER_NAME,"Price"));
+                        mFacetsAdapter.add(new Pair<String, String>(PRICE_FACETFILTER_NAME, "Price"));
 
                         break;
                     default:
@@ -570,22 +574,24 @@ public class SearchFilterController extends BaseController
     }
 
     @OnClick(R.id.partial_toolbar_search_right_option)
-    void applyFilters(){
+    void applyFilters() {
 
         trackLastSelectedFacet();
 
         String editTextString = mSearchTagsAdapter.getEditTextViewHolder().getEditText().getText().toString();
 
-        mSearchTagsAdapter.add(new SearchChipModel(SEARCH_QUERY_NAME, editTextString, -1));
+        if(!editTextString.isEmpty()) {
+            mSearchTagsAdapter.add(new SearchChipModel(SEARCH_QUERY_NAME, editTextString, -1));
+        }
 
         Bundle saleItemBundle = new BundleBuilder(new Bundle())
                 .putString(KEY_CATEGORY_MAP, mChosenCategory)
-                .putString(KEY_SALE_ID,mSaleId)
-                .putString(KEY_CHIPS_FILTER,new Gson().toJson(mSearchTagsAdapter.getData()))
+                .putString(KEY_SALE_ID, mSaleId)
+                .putString(KEY_CHIPS_FILTER, new Gson().toJson(mSearchTagsAdapter.getData()))
                 .putString(KEY_SELECTED_FACETS, new Gson().toJson(mPreviousSelectedFacetIndices))
 //                .putString(KEY_SEARCH_QUERY, new Gson().toJson(mBrandList))
                 .build();
-        
+
         SaleItemsController saleItemsController = (SaleItemsController) getRouter().getControllerWithTag(getActivity().getString(R.string.sale_items_controller_tag));
         saleItemsController.onPassFiltersData(saleItemBundle);
         mActivity.getMainController().showBottomNav();
@@ -619,13 +625,13 @@ public class SearchFilterController extends BaseController
         mPreLoadedCategories = fillCategoryContent();
     }
 
-    private List<GetCategoryTreeResponse> updateCategoryChildren(GetCategoryTreeResponse categoryTree){
+    private List<GetCategoryTreeResponse> updateCategoryChildren(GetCategoryTreeResponse categoryTree) {
         if (!categoryTree.getName().equals("All")) {
 
             List<GetCategoryTreeResponse> newList = new ArrayList<>();
 
-            if (categoryTree.getChildren()!=null){
-                for (int i=0;i <categoryTree.getChildren().size();i++){
+            if (categoryTree.getChildren() != null) {
+                for (int i = 0; i < categoryTree.getChildren().size(); i++) {
                     newList.add(categoryTree.getChildren().get(i));
 
                 }
@@ -658,7 +664,7 @@ public class SearchFilterController extends BaseController
 
     @Override
     public void onSubCategoryItemClicked(String categoryID, String categoryName, String categoryKey) {
-        updateSubCategoryOnSearchTagAdapter(categoryName,categoryKey);
+        updateSubCategoryOnSearchTagAdapter(categoryName, categoryKey);
     }
 
     @Override
@@ -668,7 +674,7 @@ public class SearchFilterController extends BaseController
                 getCategoryTreeResponse.getKey());
     }
 
-    public void removeChipOnCategories(){
+    public void removeChipOnCategories() {
 
         for (SearchChipModel chip : mSearchTagsAdapter.getData()) {
             if (chip.getFilterType().equals(CATEGORY_TREE_FACET)) {
@@ -678,13 +684,13 @@ public class SearchFilterController extends BaseController
         }
     }
 
-    public void updateSubCategoryOnSearchTagAdapter(String categoryName, String categoryKey){
+    public void updateSubCategoryOnSearchTagAdapter(String categoryName, String categoryKey) {
         SearchChipModel categoryChip = new SearchChipModel(CATEGORY_TREE_FACET, categoryName, 0);
-        if (!mChosenCategory.isEmpty() && mChosenCategory.equals(categoryKey)){
+        if (!mChosenCategory.isEmpty() && mChosenCategory.equals(categoryKey)) {
             removeChipOnCategories();
             mChosenCategory = "";
 
-        }else{
+        } else {
 
             removeChipOnCategories();
 
@@ -696,7 +702,7 @@ public class SearchFilterController extends BaseController
 
     }
 
-    private SearchChipModel findPriceChip(){
+    private SearchChipModel findPriceChip() {
         for (SearchChipModel chip : mSearchTagsAdapter.getData()) {
             if (chip.getFilterType().equals(PRICE_FACETFILTER_NAME)) {
                 return chip;

@@ -251,7 +251,7 @@ public class SaleItemsController extends BasePullToRefreshController implements 
 //                    getActivity().onBackPressed();
 //
 //                });
-//                ((MainActivity) getActivity()).goToCategoriesFromSaleItems();
+//                ((MainActivity) getActivity()).goToCategories();
 //            });
 //        }else
 

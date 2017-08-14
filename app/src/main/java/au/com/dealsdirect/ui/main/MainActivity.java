@@ -56,7 +56,6 @@ import au.com.dealsdirect.ui.controller.saleitems.SaleItemsController;
 import au.com.dealsdirect.ui.controller.shops.ShopsController;
 import au.com.dealsdirect.ui.controller.splash.SplashScreenController;
 import au.com.dealsdirect.ui.custom.CustomAlertDialog;
-import au.com.dealsdirect.utils.AppLogger;
 import au.com.dealsdirect.utils.DialogUtils;
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -158,8 +157,9 @@ public class MainActivity extends BaseActivity implements MainMvpView {
     public void onBackPressed() {
 
         if (mIsViewPagerSet) {
-            Controller currentBottomNav = getMainController().getHomeController().getCurrentRouter()
-                    .getBackstack().get(0).controller();
+
+            Router currentRouter = getMainController().getHomeController().getCurrentRouter();
+            Controller currentController = getMainController().getHomeController().getCurrentControllerOnRouter(currentRouter);
 
             switch (getMainController().getHomeViewPager().getCurrentItem()) {
                 case 0:
@@ -169,20 +169,22 @@ public class MainActivity extends BaseActivity implements MainMvpView {
                     break;
                 case 1:
                     if(mIsFromCategories) {
-                        if (getHomeRouterCurrentController() instanceof ShopsController) { //reset shops controller root.
-                            getMainController().getHomeController().showShopController();
-                            mMainController.goToCategories();
-                            mMainController.setViewpagerDraggable(true);
-                        } else if (getHomeRouterCurrentController() instanceof SaleItemsController) {
-                            goToCategoriesFromSaleItems();
-                            mHomeRouter.handleBack();
-                        } else if (getHomeRouterCurrentController() instanceof SaleItemDetailsController) {
-                            mHomeRouter.handleBack();
+                        if (currentController instanceof ShopsController) { //reset shops controller root.
+                            ShopsController shopsController = new ShopsController();
+                            setShopController(shopsController);
+                            currentRouter.setRoot(RouterTransaction.with(shopsController).tag(ShopsController.TAG));
+                            goToCategories();
+                        } else if (currentController instanceof SaleItemsController) {
+                            goToCategories();
+                            currentRouter.handleBack();
+                        } else {
+                            currentRouter.handleBack();
+                            mIsFromCategories = false;
                         }
                     } else {
-                        if (getHomeRouterCurrentController() instanceof ShopsController
-                                && currentBottomNav instanceof ShopsController
-                                && mHomeRouter.getBackstack().size() == 1){
+                        if (currentController instanceof ShopsController
+//                                && currentBottomNav instanceof ShopsController
+                                && currentRouter.getBackstack().size() == 1){
                             //exit app
                             DialogUtils.showYesNoDialog(
                                     this,
@@ -194,12 +196,12 @@ public class MainActivity extends BaseActivity implements MainMvpView {
                                     (dialogInterface, i) -> {
                                     });
                             break;
-                        } else if(getMainController().getHomeController().getCurrentRouter().getBackstackSize() == 1){ //From Bottom Nav
+                        } else if(currentRouter.getBackstackSize() == 1){ //From Bottom Nav
                             getMainController().showBottomNav();
                             goToShops();
                             break;
                         } else {
-                            getMainController().getHomeController().getCurrentRouter().handleBack();
+                            currentRouter.handleBack();
                         }
                     }
                     break;
@@ -519,7 +521,7 @@ public class MainActivity extends BaseActivity implements MainMvpView {
         mMainController.goToShops();
     }
 
-    public void goToCategoriesFromSaleItems() {
+    public void goToCategories() {
 //        Handler handler = new Handler();
 //        handler.postDelayed(() -> mHomeRouter.handleBack(), 500)
         mMainController.goToCategories();
@@ -541,18 +543,6 @@ public class MainActivity extends BaseActivity implements MainMvpView {
         return mMainController;
     }
 
-    public void bottomNavSalesClick() {
-        int backstackSize = mHomeRouter.getBackstackSize() - 1;
-        if (backstackSize != -1) {
-            String tag = mHomeRouter.getBackstack().get(backstackSize).tag();
-
-            if ((tag != null) && tag.equals(getString(R.string.sale_items_from_category))) {
-                AppLogger.d(TAG, "(tag!=null) && tag.equals(getString(R.string.sale_items_from_category))");
-
-                mHomeRouter.handleBack();
-            }
-        }
-    }
 
     public void setCategoriesController(CategoriesController categoriesController) {
         mCategoriesController = categoriesController;
