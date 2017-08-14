@@ -5,6 +5,7 @@ import android.animation.AnimatorSet;
 import android.animation.ObjectAnimator;
 import android.animation.ValueAnimator;
 import android.annotation.SuppressLint;
+import android.app.Activity;
 import android.content.Intent;
 import android.graphics.Paint;
 import android.graphics.drawable.Drawable;
@@ -335,15 +336,8 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
     }
 
     @Override
-    public void onDetach(View view) {
-        mPresenter.onDetach();
-//        mProductDetailBottomCard.setVisibility(View.GONE);
-//        mProductPriceCategory.setVisibility(View.GONE);
-        super.onDetach(view);
-    }
-
-    @Override
     protected void onDestroyView(@NonNull View view) {
+        mPresenter.onDetach();
         super.onDestroyView(view);
     }
 

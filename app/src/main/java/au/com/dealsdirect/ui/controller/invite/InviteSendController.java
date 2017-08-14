@@ -432,8 +432,8 @@ public class InviteSendController extends BasePullToRefreshController implements
 
     @Override
     protected void onDestroyView(@NonNull View view) {
-        super.onDestroyView(view);
         mPresenter.onDetach();
+        super.onDestroyView(view);
     }
 
     @Override

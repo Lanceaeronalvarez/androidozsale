@@ -219,9 +219,14 @@ public class CheckoutController extends BaseController implements CheckoutMvpVie
 
     @Override
     public void onDetach(View view) {
-        mPresenter.onDetach();
         hideLoading();
         super.onDetach(view);
+    }
+
+    @Override
+    protected void onDestroyView(@NonNull View view) {
+        mPresenter.onDetach();
+        super.onDestroyView(view);
     }
 
     @Override
@@ -266,7 +271,7 @@ public class CheckoutController extends BaseController implements CheckoutMvpVie
             }else{
                 mPresenter.start();
             }
-            mActivity.getMainController().getHomeController().getPresenter().callGetBasketItemsQuantity();
+
         }else{
             showNoCartItemsLayout();
         }
@@ -313,6 +318,7 @@ public class CheckoutController extends BaseController implements CheckoutMvpVie
             mItemList.addAll(items);
             mAdapter.notifyDataSetChanged();
         }
+        mActivity.getMainController().getHomeController().getPresenter().callGetBasketItemsQuantity();
     }
 
     @Override
@@ -458,7 +464,6 @@ public class CheckoutController extends BaseController implements CheckoutMvpVie
             return;
         }
 
-//        RxBus.instance().post(GVersion.EVENT_PAY);
 
         if (mActivity.isBraintreeInitialized()) {
             if (mActivity.getPaymentMethodSelected() == null) {

@@ -166,9 +166,14 @@ public class ShopsController extends BasePullToRefreshController implements Shop
 
     @Override
     public void onDetach(View view) {
-        mPresenter.onDetach();
         hideLoading();
         super.onDetach(view);
+    }
+
+    @Override
+    protected void onDestroyView(@NonNull View view) {
+        mPresenter.onDetach();
+        super.onDestroyView(view);
     }
 
     @Override

@@ -150,15 +150,6 @@ public class CategoriesController extends BaseController
         }
 
 
-//        mPresenter.loadCategoryTree();
-
-    }
-
-    @Override
-    public void onDetach(View view) {
-        mPresenter.onDetach();
-        super.onDetach(view);
-
     }
 
     @Override
@@ -209,6 +200,7 @@ public class CategoriesController extends BaseController
         if (getCategoryTreeResponse.getName().equals("All")) {
             assert (getActivity()) != null;
             ((MainActivity) getActivity()).goToSalesFromCategory(getCategoryTreeResponse);
+            mSubCategoryAdapter.notifyDataSetChanged();
         }
     }
 

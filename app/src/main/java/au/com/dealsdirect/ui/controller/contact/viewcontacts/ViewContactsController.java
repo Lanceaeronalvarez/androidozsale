@@ -136,16 +136,15 @@ public class ViewContactsController extends BasePullToRefreshController implemen
 
     @Override
     public void onDetach(View view) {
-        mPresenter.onDetach();
         hideLoading();
         super.onDetach(view);
     }
 
-    //    @OnClick(R.id.partial_toolbar_arrow_view)
-//    public void onBackClick() {
-//        getActivity().onBackPressed();
-//    }
-
+    @Override
+    protected void onDestroyView(@NonNull View view) {
+        mPresenter.onDetach();
+        super.onDestroyView(view);
+    }
 
     @Override
     public void showContactItems(GetContactsResponse.Response myContacts) {

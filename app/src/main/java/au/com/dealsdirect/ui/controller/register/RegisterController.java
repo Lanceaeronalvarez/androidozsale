@@ -125,11 +125,6 @@ public class RegisterController extends BaseController implements RegisterMvpVie
     }
 
     @Override
-    public void onDetach(View view) {
-        super.onDetach(view);
-    }
-
-    @Override
     public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         mCallbackManager.onActivityResult(requestCode, resultCode, data);
     }

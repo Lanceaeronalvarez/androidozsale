@@ -353,9 +353,9 @@ public class SearchFilterController extends BaseController
     }
 
     @Override
-    public void onDetach(View view) {
+    protected void onDestroyView(@NonNull View view) {
         mPresenter.onDetach();
-        super.onDetach(view);
+        super.onDestroyView(view);
     }
 
     private void parseSortingFacets(List<SortingResponse> sortingList) {
