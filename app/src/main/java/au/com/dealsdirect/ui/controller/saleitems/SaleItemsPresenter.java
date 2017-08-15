@@ -37,46 +37,17 @@ public class SaleItemsPresenter<V extends SaleItemsMvpView> extends BasePresente
 
     @Override
     public void loadSaleItems(GetSaleItemsRequest getSaleItemsRequest) {
-        getCompositeDisposable().add(getDataManager()
-                .callGetSaleItemsRequest(getSaleItemsRequest)
-                .subscribeOn(getSchedulerProvider().io())
-                .observeOn(getSchedulerProvider().ui())
-                .subscribe(new Consumer<GetSaleItemsResponse>() {
-                               @Override
-                               public void accept(GetSaleItemsResponse response) throws Exception {
-
-                                   if (!isViewAttached()) {
-                                       return;
-                                   }
-
-                                   getMvpView().hideLoading();
-                                   if (getSaleItemsRequest.hasFilters()) {
-                                       getMvpView().showSaleItems(response, false);
-                                   } else {
-                                       getMvpView().showSaleItems(response, true);
-                                   }
-
-                               }
-                           }, new Consumer<Throwable>() {
-                               @Override
-                               public void accept(Throwable throwable) throws Exception {
-
-                                   if (!isViewAttached()) {
-                                       return;
-                                   }
-
-                                   getMvpView().hideLoading();
-                                   getMvpView().onError(throwable.getMessage());
-
-                                   // handle load accounts error here
-                                   if (throwable instanceof ANError) {
-                                       ANError anError = (ANError) throwable;
-                                       handleApiError(anError);
-                                   }
-                               }
-
-                           }
-                ));
+        doApiCallForResponse(getDataManager().callGetSaleItemsRequest(getSaleItemsRequest), new AppApiCallback(){
+            @Override
+            public void onSuccess(Object response) {
+                super.onSuccess(response);
+                if (getSaleItemsRequest.hasFilters()) {
+                    getMvpView().showSaleItems((GetSaleItemsResponse) response, false);
+                } else {
+                    getMvpView().showSaleItems((GetSaleItemsResponse) response, true);
+                }
+            }
+        });
     }
 
     @Override

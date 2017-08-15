@@ -145,14 +145,12 @@ public class ShopsController extends BasePullToRefreshController implements Shop
 
     @Override
     protected View inflateView(@NonNull LayoutInflater inflater, @NonNull ViewGroup container) {
-
         View view = super.inflateView(inflater, container);
 
         fillToolbar(inflater.inflate(R.layout.partial_toolbar_logo, container, false));
         fillContent(inflater.inflate(R.layout.controller_shop, container, false));
 
         getControllerComponent().inject(this);
-
         mPresenter.onAttach(this);
 
         return view;

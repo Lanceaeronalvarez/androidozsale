@@ -446,11 +446,12 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
         }
 
 
+        mAddButton.setEnabled(true);
+
         if (saleDetail.getQuantity() <= 0) {
             mAddButton.setEnabled(false);
             mAddButton.setText("Sold Out");
         }
-        mAddButton.setVisibility(View.VISIBLE);
 
         if (saleDetail.getOriginalPrice().getValue() <= 0) {
             mProductPreviousPrice.setVisibility(View.GONE);
