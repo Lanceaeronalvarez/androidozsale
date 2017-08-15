@@ -43,7 +43,7 @@
             android:layout_marginTop="5dp"
             android:gravity="center_horizontal"
             android:textColor="@color/gray_field_text"
-            android:textSize="@dimen/text_size_large"
+            android:textSize="@dimen/text_size_medium"
             tools:text="Mens" />
 
     </LinearLayout>

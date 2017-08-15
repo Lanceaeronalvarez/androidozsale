@@ -47,6 +47,7 @@ import com.facebook.rebound.Spring;
 import com.facebook.rebound.SpringConfig;
 import com.facebook.rebound.SpringSystem;
 import com.lsjwzh.widget.recyclerviewpager.RecyclerViewPager;
+import com.mysale.genie.utility.RxBus;
 import com.zhy.view.flowlayout.FlowLayout;
 import com.zhy.view.flowlayout.TagAdapter;
 import com.zhy.view.flowlayout.TagFlowLayout;
@@ -73,6 +74,7 @@ import au.com.dealsdirect.ui.main.SharedActivity;
 import au.com.dealsdirect.utils.BundleBuilder;
 import au.com.dealsdirect.utils.CartUtil;
 import au.com.dealsdirect.utils.ImageUtils;
+import au.com.dealsdirect.utils.IntrospectionUtils;
 import au.com.dealsdirect.utils.PriceUtils;
 import au.com.dealsdirect.widget.ElasticDragDismissFrameLayout;
 import butterknife.BindView;
@@ -458,6 +460,8 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
 
     @Override
     public void showAddToCartResponse(boolean val) {
+        RxBus.instance().post(IntrospectionUtils.EVENT_ADD_TO_CART);
+
         //notify bottom navigation view(checkout) with success.
         if (val) {
             CartUtil.addValueToCart(1);

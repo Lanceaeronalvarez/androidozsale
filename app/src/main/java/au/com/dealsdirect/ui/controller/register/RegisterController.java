@@ -15,6 +15,7 @@ import com.bluelinelabs.conductor.changehandler.HorizontalChangeHandler;
 import com.bluelinelabs.conductor.changehandler.VerticalChangeHandler;
 import com.facebook.CallbackManager;
 import com.facebook.internal.CallbackManagerImpl;
+import com.mysale.genie.utility.RxBus;
 
 import javax.inject.Inject;
 
@@ -25,6 +26,7 @@ import au.com.dealsdirect.ui.controller.legalities.LegalitiesController;
 import au.com.dealsdirect.ui.custom.CustomAlertDialog;
 import au.com.dealsdirect.ui.main.MainActivity;
 import au.com.dealsdirect.utils.BundleBuilder;
+import au.com.dealsdirect.utils.IntrospectionUtils;
 import butterknife.BindView;
 import butterknife.OnClick;
 
@@ -72,7 +74,7 @@ public class RegisterController extends BaseController implements RegisterMvpVie
     }
 
 
-    public static RegisterController newInstance(AuthHandler authHandler){
+    public static RegisterController newInstance(AuthHandler authHandler) {
         mAuthHandler = authHandler;
         return new RegisterController(
                 new BundleBuilder(new Bundle())
@@ -113,7 +115,7 @@ public class RegisterController extends BaseController implements RegisterMvpVie
     protected void setUp(View view) {
         // Setup views here
         //mPresenter.loadSample(new SampleRequest());
-        ((MainActivity)getActivity()).setDraggableViewPager(false);
+        ((MainActivity) getActivity()).setDraggableViewPager(false);
 
         mTermsLink.setOnClickListener(action -> {
             getRouter().pushController(RouterTransaction.with(
@@ -136,12 +138,12 @@ public class RegisterController extends BaseController implements RegisterMvpVie
     }
 
     @OnClick(R.id.controller_register_close_icon)
-    void onCloseIconClick(){
+    void onCloseIconClick() {
         getRouter().popToRoot(new VerticalChangeHandler());
     }
 
     @OnClick(R.id.controller_register_back_icon)
-    void onBackIconClick(){
+    void onBackIconClick() {
         getActivity().onBackPressed();
     }
 
@@ -156,13 +158,13 @@ public class RegisterController extends BaseController implements RegisterMvpVie
     }
 
     @OnClick(R.id.controller_register_login_text)
-    void onLoginClick(){
+    void onLoginClick() {
         getActivity().onBackPressed();
     }
 
 
     @OnClick(R.id.facebook_login_button)
-    void onFacebookLoginClick(){
+    void onFacebookLoginClick() {
         mPresenter.onFacebookLogin(getActivity(), mCallbackManager);
     }
 
@@ -170,6 +172,8 @@ public class RegisterController extends BaseController implements RegisterMvpVie
 
     @Override
     public void showLoginSuccessful(String loginTicket) {
+        RxBus.instance().post(IntrospectionUtils.EVENT_LOGIN);
+
         getRouter().popToRoot();
 
         if (mAuthHandler!=null)
@@ -182,7 +186,7 @@ public class RegisterController extends BaseController implements RegisterMvpVie
 
     @Override
     public void showLoginError(String message) {
-        if (mAuthHandler!=null)
+        if (mAuthHandler != null)
             mAuthHandler.error();
 
         CustomAlertDialog.showCustomAlertDialog(

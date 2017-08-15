@@ -42,14 +42,14 @@
 
         <TextView
             android:id="@+id/row_facets_name"
-            fontPath="@string/font_lato_medium"
+            fontPath="@string/font_lato_regular"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:layout_marginTop="-10dp"
             android:gravity="center"
             android:textColor="@color/gray_field_text"
-            android:textSize="@dimen/text_size_large"
+            android:textSize="@dimen/text_size_medium"
             tools:text="Category"/>
 
 
