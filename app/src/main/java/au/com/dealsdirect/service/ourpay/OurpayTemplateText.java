@@ -1,7 +1,6 @@
 package au.com.dealsdirect.service.ourpay;
 
 import android.app.Activity;
-import android.util.Log;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -50,7 +49,6 @@ public class OurpayTemplateText {
     public static String getTemplateText(Activity activity, Ourpay ourpay){
         try {
             String templateTexts = ((MainActivity) activity).getMyTemplateTexts(ourpay.getDetails());
-            Log.d("Checkout", "detail = "+ourpay.getDetails());
             return parseTextSymbolsInString(templateTexts,ourpay);
 
         } catch (Exception e) {
@@ -63,7 +61,6 @@ public class OurpayTemplateText {
     public static String getText(Activity activity, String key) {
         try {
             String templateTexts = ((MainActivity) activity).getMyTemplateTexts(key);
-            Log.d("Checkout", "detail = "+key);
             return templateTexts;
 
         } catch (Exception e) {
@@ -79,7 +76,6 @@ public class OurpayTemplateText {
         details = details.replace(KEY_CODE_MAX, PriceUtils.getPriceStringValue(ourpay.getMaxAmount()));
         details = details.replace(KEY_BILLING_PERIOD, ourpay.getBillingPeriod() + "");
         details = details.replace(KEY_TRANSACTION_COUNT, ourpay.getTransactionCount() + "");
-        Log.d("Checkout", "detail = "+details);
 
         return details;
 

@@ -328,7 +328,6 @@ public class MainActivity extends BaseActivity implements MainMvpView {
     @Override
     public void storeTemplateTexts(GetTemplateTextsResponse.GetTemplateTextsValue value) {
         if (value != null) {
-            Log.d("TemplateText", " value entered ");
 
             isTemplateTextsStored = true;
         }
@@ -422,13 +421,9 @@ public class MainActivity extends BaseActivity implements MainMvpView {
 
         if (responseValue.isPaid()) {
 
-//            GCartUtil.setValueToCart(0);
-//            RxBus.instance().post("update_cart_items_immediate");
             if (mPaymentType.equals(PAYMENT_TYPE_MYPAY)) {
-                Log.d("postcart", "payment type == mypay");
                 setPaymentSuccessOurpay(responseValue);
             } else {
-                Log.d("postcart", "payment type != mypay");
 
                 mOurpay.setCanUse(false);
             }
