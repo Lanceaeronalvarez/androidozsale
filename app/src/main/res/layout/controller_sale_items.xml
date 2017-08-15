@@ -29,11 +29,18 @@
             android:paddingLeft="5dp"
             android:paddingRight="5dp" />
 
+
+        <RelativeLayout
+            android:id="@+id/controller_sale_items_opaque_view"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@color/search_gray_opaque"
+            android:visibility="gone" />
+
         <LinearLayout
             android:id="@+id/controller_sale_items_placeholder"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_margin="@dimen/activity_horizontal_margin"
             android:background="#FFFFFF"
             android:gravity="center"
             android:orientation="vertical"
@@ -59,14 +66,6 @@
                 android:textSize="@dimen/text_size_large" />
 
         </LinearLayout>
-
-
-        <RelativeLayout
-            android:id="@+id/controller_sale_items_opaque_view"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:background="@color/search_gray_opaque"
-            android:visibility="gone" />
 
     </RelativeLayout>
 
