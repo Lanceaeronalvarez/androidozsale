@@ -185,6 +185,7 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
     private MainActivity mActivity;
 
     int[] checkoutLocation = new int[2];
+    boolean isAnimating = false;
 
     ElasticDragDismissFrameLayout mRootView;
     View mCheckoutView;
@@ -471,11 +472,12 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
 
     @Override
     public boolean handleBack() {
-
-        ImageUtils.loadImageImmediate(getActivity(), mItemImageUrl, mProductSharedImage, null);
-        mProductImagesRv.setVisibility(View.GONE);
-        mRootView.removeListener(dragDismissListener);
-        return false;
+        if(!isAnimating) {
+            ImageUtils.loadImageImmediate(getActivity(), mItemImageUrl, mProductSharedImage, null);
+            mProductImagesRv.setVisibility(View.GONE);
+            return false;
+        }
+        return true;
     }
 
     @OnClick(R.id.product_details_add_to_basket)
@@ -549,6 +551,22 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
                 checkoutLocation[1]);
 
         anim.setInterpolator(new LinearInterpolator());
+        anim.setAnimationListener(new Animation.AnimationListener() {
+            @Override
+            public void onAnimationStart(Animation animation) {
+                isAnimating = true;
+            }
+
+            @Override
+            public void onAnimationEnd(Animation animation) {
+                isAnimating = false;
+            }
+
+            @Override
+            public void onAnimationRepeat(Animation animation) {
+
+            }
+        });
 
         mImageViewToAnimate.startAnimation(anim);
 
