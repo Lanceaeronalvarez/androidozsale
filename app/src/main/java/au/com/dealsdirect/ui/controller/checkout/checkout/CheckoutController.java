@@ -1,6 +1,7 @@
 package au.com.dealsdirect.ui.controller.checkout.checkout;
 
 import android.support.annotation.NonNull;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -31,8 +32,8 @@ import au.com.dealsdirect.data.network.model.checkout.getcurrentorder.Summary;
 import au.com.dealsdirect.data.network.model.checkout.getcurrentorder.Value;
 import au.com.dealsdirect.data.network.model.checkout.getcurrentorder.Voucher;
 import au.com.dealsdirect.data.network.model.checkout.getuserpaymentmethods.PaymentMethod;
-import au.com.dealsdirect.ourpay.Ourpay;
-import au.com.dealsdirect.ourpay.OurpayPanel;
+import au.com.dealsdirect.service.ourpay.Ourpay;
+import au.com.dealsdirect.service.ourpay.OurpayPanel;
 import au.com.dealsdirect.ui.base.BaseActivity;
 import au.com.dealsdirect.ui.base.BaseController;
 import au.com.dealsdirect.ui.controller.address.addnewaddress.AddNewAddressController;
@@ -64,7 +65,7 @@ public class CheckoutController extends BaseController implements CheckoutMvpVie
     public static final String CARD_MASTERCARD = "MasterCard";
     public static final String CARD_VISA = "Visa";
     private static final String PAYMENT_TYPE_MYPAY = "mypay";
-
+    private boolean isPaymentMethodNull = false;
 
     @Inject
     CheckoutMvpPresenter<CheckoutMvpView> mPresenter;
@@ -295,13 +296,20 @@ public class CheckoutController extends BaseController implements CheckoutMvpVie
             mOurpayHolder.removeAllViews();
             PaymentMethod paymentMethod = ((MainActivity) getActivity()).getPaymentMethodSelected();
 
-            if (!paymentMethod.getPaymentType().equalsIgnoreCase(CARD_PAYPAL) && ourpay.isCanUse()) {
+            if (!paymentMethod.getPaymentType().equalsIgnoreCase(CARD_PAYPAL) && ourpay.isCanUse() && !isPaymentMethodNull) {
+
                 mOurpayHolder.addView(ourpayPanel.generatePanel(ourpay));
+
                 mButtonOurpay = (RelativeLayout) mOurpayHolder.findViewById(R.id.rl_button_ourpay);
                 mButtonOurpay.setOnClickListener(view -> onOurpayButtonClick());
 
                 if (ourpay.getTermsAndConditionsCheckboxState() != 0) {
                     mCheckBoxOurpayTC = (CheckBox) mOurpayHolder.findViewById(R.id.ourpay_checkbox_tc);
+                }
+            }else{
+                if (!paymentMethod.getPaymentType().equalsIgnoreCase(CARD_PAYPAL)){
+                    mOurpayHolder.addView(ourpayPanel.generatePanel(ourpay));
+
                 }
             }
         }
@@ -384,6 +392,7 @@ public class CheckoutController extends BaseController implements CheckoutMvpVie
         if (paymentMethod == null) {
             mPayButton.setVisibility(View.VISIBLE);
             mPaypalButton.setVisibility(View.VISIBLE);
+            isPaymentMethodNull = true;
         } else {
 
             if (paymentMethod.getPaymentType().equalsIgnoreCase(CARD_PAYPAL)) {
@@ -531,6 +540,7 @@ public class CheckoutController extends BaseController implements CheckoutMvpVie
 
                     if (mCheckBoxOurpayTC != null && !mCheckBoxOurpayTC.isChecked()) {
                         CustomAlertDialog.showCustomAlertDialog(getActivity(), CustomAlertDialog.CustomDialogIconState.NEGATIVE, "Please agree with OurPay's terms and conditions");
+                        return;
                     }
 
                     if (mOurpay.isPhoneVerificationRequired()) {

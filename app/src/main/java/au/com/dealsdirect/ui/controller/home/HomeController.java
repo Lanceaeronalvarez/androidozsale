@@ -166,6 +166,7 @@ public class HomeController extends BaseController implements HomeMvpView {
         if (!mCheckoutRouter.hasRootController()) {
             mCheckoutRouter.setRoot(RouterTransaction.with(new CheckoutController())
                     .tag(getActivity().getResources().getString(R.string.checkout_controller)));
+            ((MainActivity)getActivity()).setCheckoutRouter(mCheckoutRouter);
         }
 
         mContainersList = new ArrayList<>();

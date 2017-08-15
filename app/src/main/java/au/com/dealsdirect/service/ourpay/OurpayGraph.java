@@ -1,4 +1,4 @@
-package au.com.dealsdirect.ourpay;
+package au.com.dealsdirect.service.ourpay;
 
 /*
  * Created by CodeineBot on 9/28/16.
@@ -26,7 +26,6 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import au.com.dealsdirect.R;

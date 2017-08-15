@@ -23,7 +23,7 @@ import javax.inject.Inject;
 import au.com.dealsdirect.R;
 import au.com.dealsdirect.data.network.model.ourpayverificationcodeconfirm.VerificationCodeConfirmResponseBody;
 import au.com.dealsdirect.data.network.model.ourpayverificationnormalizephone.VerificationNormalizePhoneResponseBody;
-import au.com.dealsdirect.ourpay.Ourpay;
+import au.com.dealsdirect.service.ourpay.Ourpay;
 import au.com.dealsdirect.ui.base.BaseController;
 import au.com.dealsdirect.ui.custom.CustomAlertDialog;
 import au.com.dealsdirect.ui.main.MainActivity;

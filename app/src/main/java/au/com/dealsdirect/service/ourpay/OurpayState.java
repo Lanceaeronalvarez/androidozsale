@@ -1,4 +1,4 @@
-package au.com.dealsdirect.ourpay;
+package au.com.dealsdirect.service.ourpay;
 
 public class OurpayState {
     public static final int DISABLED = 1<<0; // 0x01

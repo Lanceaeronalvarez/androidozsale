@@ -1,4 +1,4 @@
-package au.com.dealsdirect.ourpay;
+package au.com.dealsdirect.service.ourpay;
 
 import android.app.Activity;
 import android.graphics.Color;

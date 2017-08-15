@@ -1,6 +1,7 @@
 package au.com.dealsdirect.data;
 
 import android.content.Context;
+import android.util.Log;
 
 import com.mysale.genie.utility.config.api.GetAppSettings;
 import com.mysale.genie.utility.config.api.GetAppSettingsSection;
@@ -744,6 +745,7 @@ public class AppDataManager implements DataManager {
 
     @Override
     public void setMyPayTemplateTexts(GetTemplateTextsResponse.GetTemplateTextsValue value) {
+        Log.d("Checkout", "set my pay template texts");
         mPreferencesHelper.setMyPayTemplateTexts(value);
 
     }

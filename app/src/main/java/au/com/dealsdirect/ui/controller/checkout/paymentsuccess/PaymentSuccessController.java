@@ -17,9 +17,9 @@ import javax.inject.Inject;
 
 import au.com.dealsdirect.R;
 import au.com.dealsdirect.data.network.model.checkout.CreatePaymentTransaction;
-import au.com.dealsdirect.ourpay.Ourpay;
-import au.com.dealsdirect.ourpay.OurpayPanel;
-import au.com.dealsdirect.ourpay.OurpayState;
+import au.com.dealsdirect.service.ourpay.Ourpay;
+import au.com.dealsdirect.service.ourpay.OurpayPanel;
+import au.com.dealsdirect.service.ourpay.OurpayState;
 import au.com.dealsdirect.ui.base.BaseActivity;
 import au.com.dealsdirect.ui.base.BaseController;
 import au.com.dealsdirect.ui.main.MainActivity;

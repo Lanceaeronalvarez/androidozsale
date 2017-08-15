@@ -5,6 +5,7 @@ package au.com.dealsdirect.ui.main;
 
 
 import android.content.Context;
+import android.util.Log;
 
 import com.androidnetworking.error.ANError;
 import com.google.gson.Gson;
@@ -28,13 +29,11 @@ import au.com.dealsdirect.data.network.model.checkout.CreatePaymentMethod;
 import au.com.dealsdirect.data.network.model.checkout.CreatePaymentTransaction;
 import au.com.dealsdirect.data.network.model.checkout.GetPaymentToken;
 import au.com.dealsdirect.data.network.model.legalities.GetTemplateTextsRequest;
-import au.com.dealsdirect.data.network.model.legalities.GetTemplateTextsResponse;
 import au.com.dealsdirect.data.network.model.login.LoginEmail;
 import au.com.dealsdirect.data.network.model.login.LoginTicket;
 import au.com.dealsdirect.data.network.model.login.Logout;
 import au.com.dealsdirect.service.fcm.GNotification;
 import au.com.dealsdirect.ui.base.BasePresenter;
-import au.com.dealsdirect.utils.CartUtil;
 import au.com.dealsdirect.utils.IntrospectionUtils;
 import au.com.dealsdirect.utils.rx.SchedulerProvider;
 import io.reactivex.annotations.NonNull;
@@ -517,6 +516,7 @@ public class MainPresenter<V extends MainMvpView> extends BasePresenter<V> imple
 
     @Override
     public void callGetTemplateTexts() {
+        Log.d("checkout", "template set");
         GetTemplateTextsRequest getTemplateTextRequest = new GetTemplateTextsRequest();
         getTemplateTextRequest.templateKeys = templateTextsKeys;
         getTemplateTextRequest.countryId = getDataManager().getCountryId();
@@ -524,18 +524,12 @@ public class MainPresenter<V extends MainMvpView> extends BasePresenter<V> imple
         getCompositeDisposable().add(getDataManager().callGetTemplateTexts(getTemplateTextRequest)
                 .subscribeOn(getSchedulerProvider().io())
                 .observeOn(getSchedulerProvider().ui())
-                .subscribe(new Consumer<GetTemplateTextsResponse>() {
-                    @Override
-                    public void accept(@NonNull GetTemplateTextsResponse getTemplateTextsResponse) throws Exception {
-                        getDataManager().setMyPayTemplateTexts(getTemplateTextsResponse.getResponse().getValue());
-                        getMvpView().storeTemplateTexts(getTemplateTextsResponse.getResponse().getValue());
+                .subscribe(getTemplateTextsResponse -> {
+                    getDataManager().setMyPayTemplateTexts(getTemplateTextsResponse.getResponse().getValue());
+                    getMvpView().storeTemplateTexts(getTemplateTextsResponse.getResponse().getValue());
 
-                    }
-                }, new Consumer<Throwable>() {
-                    @Override
-                    public void accept(@NonNull Throwable throwable) throws Exception {
+                }, throwable -> {
 
-                    }
                 }));
     }
 

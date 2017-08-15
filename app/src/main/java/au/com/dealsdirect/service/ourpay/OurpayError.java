@@ -1,4 +1,4 @@
-package au.com.dealsdirect.ourpay;
+package au.com.dealsdirect.service.ourpay;
 
 /**
  * dd Created by Admin on 8/8/17.

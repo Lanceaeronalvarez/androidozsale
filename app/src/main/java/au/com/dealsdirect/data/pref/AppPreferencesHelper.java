@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.ContextWrapper;
 import android.content.pm.PackageManager;
 import android.os.Build;
+import android.util.Log;
 
 import com.mysale.genie.utility.Prefs;
 
@@ -368,6 +369,7 @@ public class AppPreferencesHelper implements PreferencesHelper {
 
     @Override
     public void setMyPayTemplateTexts(GetTemplateTextsResponse.GetTemplateTextsValue value) {
+        Log.d("Template", value.getOurPayTCValidationFailed());
         Prefs.putString(MYPAY_EXCEED_LIMIT, value.getCheckoutMyPayPayExceedLimit());
         Prefs.putString(MYPAY_INVALID_PAYMENT_METHOD, value.getCheckoutMyPayPayInvalidPaymentMethod());
         Prefs.putString(MYPAY_OUT_OF_RANGE, value.getCheckoutMyPayPayOutOfRangeMobileApp());
@@ -382,6 +384,8 @@ public class AppPreferencesHelper implements PreferencesHelper {
 
     @Override
     public String getMyPayTemplateTexts(String detailKey) {
+        Log.d("Template",Prefs.getString(detailKey, ""));
+
         return Prefs.getString(detailKey, "");
 
     }

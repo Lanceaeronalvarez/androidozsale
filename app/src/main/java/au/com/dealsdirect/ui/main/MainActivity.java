@@ -41,8 +41,8 @@ import au.com.dealsdirect.data.network.model.checkout.CreatePaymentTransaction;
 import au.com.dealsdirect.data.network.model.checkout.getcurrentorder.MyPayDetails;
 import au.com.dealsdirect.data.network.model.checkout.getuserpaymentmethods.PaymentMethod;
 import au.com.dealsdirect.data.network.model.legalities.GetTemplateTextsResponse;
-import au.com.dealsdirect.ourpay.Ourpay;
-import au.com.dealsdirect.ourpay.OurpayState;
+import au.com.dealsdirect.service.ourpay.Ourpay;
+import au.com.dealsdirect.service.ourpay.OurpayState;
 import au.com.dealsdirect.ui.base.BaseActivity;
 import au.com.dealsdirect.ui.controller.categories.CategoriesController;
 import au.com.dealsdirect.ui.controller.checkout.addpayment.AddPaymentController;
@@ -85,6 +85,7 @@ public class MainActivity extends BaseActivity implements MainMvpView {
     private Router mHomeRouter;
     private Router mCategoriesRouter;
     private Router mAccountsRouter;
+    private Router mCheckoutRouter;
 
 
     private boolean mIsFromCategories = false;
@@ -315,7 +316,7 @@ public class MainActivity extends BaseActivity implements MainMvpView {
     public void callCreatePaymentTransaction(String paymentType, String paymentNonce) {
         mPaymentType = paymentType;
         BraintreeResponseListener<String> handler = deviceData ->
-                mPresenter.callCreatePaymentTransaction(deviceData, mPaymentType, paymentNonce, getPaymentMethodSelected().getToken());
+                    mPresenter.callCreatePaymentTransaction(deviceData, mPaymentType, paymentNonce, getPaymentMethodSelected().getToken());
 
         if (!mPresenter.getKountMerchantId().isEmpty()) {
             DataCollector.collectDeviceData(mBraintreeFragment, mPresenter.getKountMerchantId(), handler);
@@ -432,7 +433,7 @@ public class MainActivity extends BaseActivity implements MainMvpView {
                 mOurpay.setCanUse(false);
             }
 
-            mHomeRouter.pushController(RouterTransaction.with(new PaymentSuccessController(responseValue))
+            mCheckoutRouter.pushController(RouterTransaction.with(new PaymentSuccessController(responseValue))
                     .pushChangeHandler(new HorizontalChangeHandler())
                     .popChangeHandler(new HorizontalChangeHandler()));
 
@@ -491,6 +492,14 @@ public class MainActivity extends BaseActivity implements MainMvpView {
 
     public Router getCategoriesRouter() {
         return mCategoriesRouter;
+    }
+
+    public void setCheckoutRouter(Router router){
+        mCheckoutRouter = router;
+    }
+
+    public Router getCheckoutRouter(){
+        return mCheckoutRouter;
     }
 
     public void setCategoriesRouter(Router router) {
