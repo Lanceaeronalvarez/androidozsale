@@ -35,7 +35,10 @@ public class InvitePresenter<V extends InviteMvpView> extends BasePresenter<V> i
             @Override
             public void onSuccess(Object response) {
                 super.onSuccess(response);
-                getMvpView().showInviteLink((GetInviteResponse) response);
+                GetInviteResponse getInviteResponse = (GetInviteResponse) response;
+                if(getInviteResponse.getD().isAuthenticated()) {
+                    getMvpView().showInviteLink((GetInviteResponse) response);
+                }
             }
         });
     }
