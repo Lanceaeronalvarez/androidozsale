@@ -90,7 +90,7 @@ public class HomeController extends BaseController implements HomeMvpView {
     private int mCurrentTab = R.id.action_shop;
     private int currentVisibleIndex = 1;
 
-
+    private boolean isLoginVisible = false;
     private int mBottomNavItemSelectCounter = 0;
 
     public static HomeController newInstance() {
@@ -229,6 +229,8 @@ public class HomeController extends BaseController implements HomeMvpView {
         });
 
         mBottomNavigationView.setOnTabSelectedListener((position, wasSelected) -> {
+
+
             mBottomNavItemSelectCounter++;
             if (isAttached())
                 ((MainActivity) getActivity()).setIsFromCategories(false);
@@ -333,9 +335,21 @@ public class HomeController extends BaseController implements HomeMvpView {
 
     @Override
     public void showLoginController(Router router, AuthHandler handler) {
-        getCurrentRouter().pushController(RouterTransaction.with(LoginController.newInstance(handler))
-                .pushChangeHandler(new VerticalChangeHandler())
-                .popChangeHandler(new VerticalChangeHandler()));
+
+        if(!isLoginVisible){
+            isLoginVisible = true;
+            getCurrentRouter().pushController(RouterTransaction.with(LoginController.newInstance(handler))
+                    .pushChangeHandler(new VerticalChangeHandler())
+                    .popChangeHandler(new VerticalChangeHandler()));
+        }
+
+        Handler loginHandler = new Handler();
+        loginHandler.postDelayed(() -> {
+            isLoginVisible = false;
+            mBottomNavigationView.setClickable(true);
+
+        }, 1000);
+
     }
 
     public boolean isAccountsActive(){

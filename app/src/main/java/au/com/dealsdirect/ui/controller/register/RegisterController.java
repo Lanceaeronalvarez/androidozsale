@@ -123,7 +123,6 @@ public class RegisterController extends BaseController implements RegisterMvpVie
                     .popChangeHandler(new HorizontalChangeHandler())
                     .pushChangeHandler(new HorizontalChangeHandler()));
         });
-
     }
 
     @Override
