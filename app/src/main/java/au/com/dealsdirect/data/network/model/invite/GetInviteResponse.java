@@ -10,7 +10,11 @@ import com.mysale.genie.utility.LegacyBaseResponseValue;
 
 public class GetInviteResponse {
 
-    public Response d;
+    public Response getD() {
+        return d;
+    }
+
+    private Response d;
 
     public static class Response extends LegacyBaseResponseValue {
 
