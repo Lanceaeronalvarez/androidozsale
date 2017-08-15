@@ -67,6 +67,8 @@ import au.com.dealsdirect.data.network.model.login.LoginEmail;
 import au.com.dealsdirect.data.network.model.login.LoginFacebook;
 import au.com.dealsdirect.data.network.model.login.LoginTicket;
 import au.com.dealsdirect.data.network.model.login.Logout;
+import au.com.dealsdirect.data.network.model.masterpass.MasterPassPaymentRequest;
+import au.com.dealsdirect.data.network.model.masterpass.MasterPassPostTransactionRequest;
 import au.com.dealsdirect.data.network.model.orders.GetOrderPaymentDetails;
 import au.com.dealsdirect.data.network.model.orders.GetPaymentsList;
 import au.com.dealsdirect.data.network.model.ourpayverificationcodeconfirm.VerificationCodeConfirmRequest;
@@ -449,13 +451,13 @@ public class AppDataManager implements DataManager {
     }
 
     @Override
-    public Observable<JSONObject> callMasterpassPayment(HashMap<String, Object> param) {
-        return mApiHelper.callMasterpassPayment(param);
+    public Observable<JSONObject> callMasterpassPayment(MasterPassPaymentRequest request) {
+        return mApiHelper.callMasterpassPayment(request);
     }
 
     @Override
-    public Observable<JSONObject> callMasterpassPostTransaction(HashMap<String, Object> param) {
-        return mApiHelper.callMasterpassPostTransaction(param);
+    public Observable<JSONObject> callMasterpassPostTransaction(MasterPassPostTransactionRequest request) {
+        return mApiHelper.callMasterpassPostTransaction(request);
     }
 
     @Override

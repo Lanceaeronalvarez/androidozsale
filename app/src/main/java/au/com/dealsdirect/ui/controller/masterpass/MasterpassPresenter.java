@@ -8,12 +8,13 @@ import org.json.JSONObject;
 
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.util.HashMap;
 
 import javax.inject.Inject;
 
 import au.com.dealsdirect.data.DataManager;
 import au.com.dealsdirect.data.network.AppApiCallback;
+import au.com.dealsdirect.data.network.model.masterpass.MasterPassPaymentRequest;
+import au.com.dealsdirect.data.network.model.masterpass.MasterPassPostTransactionRequest;
 import au.com.dealsdirect.ui.base.BasePresenter;
 import au.com.dealsdirect.utils.rx.SchedulerProvider;
 import io.reactivex.disposables.CompositeDisposable;
@@ -27,10 +28,8 @@ public class MasterpassPresenter<V extends MasterpassMvpView> extends BasePresen
 
     @Override
     public void getMasterpassPayment() {
-        HashMap<String, Object> param = new HashMap<>();
-        param.put("isMobile", true);
 
-        doApiCallForResponse(getDataManager().callMasterpassPayment(param), new AppApiCallback() {
+        doApiCallForResponse(getDataManager().callMasterpassPayment(new MasterPassPaymentRequest(true)), new AppApiCallback() {
             @Override
             public void onSuccess(Object response) {
                 super.onSuccess(response);
@@ -68,20 +67,10 @@ public class MasterpassPresenter<V extends MasterpassMvpView> extends BasePresen
     @Override
     public void confirmPayment(String oAuthToken, String oAuthVerifier, String checkoutResourceUrl) {
 
-        JSONObject masterPassData = new JSONObject();
-        try {
-            masterPassData.put("OAuthToken", oAuthToken);
-            masterPassData.put("OAuthVerifier", oAuthVerifier);
-            masterPassData.put("CheckoutResourceUrl", checkoutResourceUrl);
-            masterPassData.put("IsMobile", true);
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
+        MasterPassPostTransactionRequest request = new MasterPassPostTransactionRequest(
+                new MasterPassPostTransactionRequest.Data(oAuthToken, oAuthVerifier, checkoutResourceUrl, true));
 
-        HashMap<String, Object> param = new HashMap<>();
-        param.put("data", masterPassData);
-
-        doApiCallForResponse(getDataManager().callMasterpassPostTransaction(param), new AppApiCallback() {
+        doApiCallForResponse(getDataManager().callMasterpassPostTransaction(request), new AppApiCallback() {
             @Override
             public void onSuccess(Object response) {
                 super.onSuccess(response);

@@ -58,6 +58,8 @@ import au.com.dealsdirect.data.network.model.login.LoginEmail;
 import au.com.dealsdirect.data.network.model.login.LoginFacebook;
 import au.com.dealsdirect.data.network.model.login.LoginTicket;
 import au.com.dealsdirect.data.network.model.login.Logout;
+import au.com.dealsdirect.data.network.model.masterpass.MasterPassPaymentRequest;
+import au.com.dealsdirect.data.network.model.masterpass.MasterPassPostTransactionRequest;
 import au.com.dealsdirect.data.network.model.orders.GetOrderPaymentDetails;
 import au.com.dealsdirect.data.network.model.orders.GetPaymentsList;
 import au.com.dealsdirect.data.network.model.ourpayverificationcodeconfirm.VerificationCodeConfirmRequest;
@@ -263,9 +265,9 @@ public interface ApiHelper {
 
 
     // MASTERPASS CALLS
-    Observable<JSONObject> callMasterpassPayment(HashMap<String, Object> param);
+    Observable<JSONObject> callMasterpassPayment(MasterPassPaymentRequest request);
 
-    Observable<JSONObject> callMasterpassPostTransaction(HashMap<String, Object> param);
+    Observable<JSONObject> callMasterpassPostTransaction(MasterPassPostTransactionRequest request);
 
     // EVENT
     Observable<String> callSearchEvent(SearchEventRequest request);
