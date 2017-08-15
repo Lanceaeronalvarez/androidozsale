@@ -436,11 +436,13 @@ public class MainActivity extends BaseActivity implements MainMvpView {
                     .popChangeHandler(new HorizontalChangeHandler()));
 
         } else {
+            Router currentRouter = getMainController().getHomeController().getCurrentRouter();
+            Controller currentController = getMainController().getHomeController().getCurrentControllerOnRouter(currentRouter);
 
             CustomAlertDialog.showCustomAlertDialog(this, CustomAlertDialog.CustomDialogIconState.NEGATIVE, responseValue.getD().getMessage());
 
-            if (getHomeRouterCurrentController() instanceof CheckoutController) {
-                CheckoutController checkoutController = (CheckoutController) getHomeRouterCurrentController();
+            if (currentController instanceof CheckoutController) {
+                CheckoutController checkoutController = (CheckoutController) currentController;
                 checkoutController.loadCart();
             }
         }
@@ -527,14 +529,6 @@ public class MainActivity extends BaseActivity implements MainMvpView {
         return mMainController;
     }
 
-
-    public void setCategoriesController(CategoriesController categoriesController) {
-        mCategoriesController = categoriesController;
-    }
-
-    public CategoriesController getCategoriesController() {
-        return mCategoriesController;
-    }
 
     public void setIsFromCategories(boolean isFromCategories) {
         mIsFromCategories = isFromCategories;
