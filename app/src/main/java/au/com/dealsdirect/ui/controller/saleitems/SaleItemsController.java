@@ -259,8 +259,6 @@ public class SaleItemsController extends BasePullToRefreshController implements 
             if (mSaleItemsToolbarTitle.getText().toString().isEmpty() && mSearchQuery.isEmpty() && !isFiltered) {
                 activateSearch();
             }
-            mPopularProductsHeader.setVisibility(View.VISIBLE);
-
         } else {
             mSaleItemsFilterIcon.setOnClickListener(view12 -> showFilters());
 
@@ -268,8 +266,6 @@ public class SaleItemsController extends BasePullToRefreshController implements 
                 getActivity().onBackPressed();
             });
             deactivateSearch();
-
-            mPopularProductsHeader.setVisibility(View.GONE);
         }
 
         setUp(view);
@@ -383,6 +379,16 @@ public class SaleItemsController extends BasePullToRefreshController implements 
     @Override
     public void showSaleItems(GetSaleItemsResponse getSaleItemsResponse, boolean forFacetCorrection) {
         List<GetSaleItemsResponse.Products> items = getSaleItemsResponse.products;
+
+        if (mFromShopSearch || mFromCategorySearch) {
+            if (mSaleItemsToolbarField.getText().toString().isEmpty()) {
+                mPopularProductsHeader.setVisibility(View.VISIBLE);
+            } else {
+                mPopularProductsHeader.setVisibility(View.GONE);
+            }
+        }
+
+
         if (forFacetCorrection) {
             mFacets = getSaleItemsResponse.facets;
             mCategoryTreeResponse = getSaleItemsResponse.getCategories();
