@@ -22,17 +22,15 @@ import java.util.List;
 import javax.inject.Inject;
 
 import au.com.dealsdirect.R;
-import au.com.dealsdirect.data.network.model.address.Address;
 import au.com.dealsdirect.data.network.model.address.AddressesItem;
 import au.com.dealsdirect.data.network.model.address.DecorationInfoList;
 import au.com.dealsdirect.data.network.model.address.DeleteUserAddress;
 import au.com.dealsdirect.data.network.model.address.GetAddresses;
 import au.com.dealsdirect.data.network.model.checkout.getcurrentorder.DeliveryAddress;
-import au.com.dealsdirect.ui.base.BaseController;
 import au.com.dealsdirect.ui.base.BasePullToRefreshController;
+import au.com.dealsdirect.ui.controller.address.addnewaddress.AddNewAddressController;
 import au.com.dealsdirect.ui.custom.CustomAlertDialog;
 import au.com.dealsdirect.ui.custom.RecyclerOnTouchListener;
-import au.com.dealsdirect.ui.controller.address.addnewaddress.AddNewAddressController;
 import au.com.dealsdirect.utils.BundleBuilder;
 import butterknife.BindView;
 import butterknife.OnClick;
@@ -57,6 +55,8 @@ public class ViewAddressController extends BasePullToRefreshController implement
     TextView mViewAddressToolarTitle;
     @BindView(R.id.partial_toolbar_filter_view)
     ImageView mViewAddressRightOption;
+    @BindView(R.id.address_office_delivery_subtitle)
+    TextView mViewAddressSubHeader;
 
     private List<AddressesItem> mAddressList;
     boolean mCalledFromCart;
@@ -154,6 +154,7 @@ public class ViewAddressController extends BasePullToRefreshController implement
 
             //If status 0, not valid Address
             if (mAddressList != null) {
+                mViewAddressSubHeader.setVisibility(View.VISIBLE);
                 mRecyclerView.setVisibility(View.VISIBLE);
                 mAddressPlaceHolder.setVisibility(View.GONE);
                 for (AddressesItem addressesItem : responseValue.getD().getValue().getAddressesList()) {
@@ -163,6 +164,7 @@ public class ViewAddressController extends BasePullToRefreshController implement
                 }
                 if (mAddressList.size() == 0) {
                     Timber.d("ViewAddressController", "mAddressList size is zero");
+                    mViewAddressSubHeader.setVisibility(View.GONE);
                     mRecyclerView.setVisibility(View.GONE);
                     mAddressPlaceHolder.setVisibility(View.VISIBLE);
                 }
@@ -183,6 +185,7 @@ public class ViewAddressController extends BasePullToRefreshController implement
 
             } else {
                 Timber.d("ViewAddressController", "mAddressList is null)");
+                mViewAddressSubHeader.setVisibility(View.GONE);
                 mRecyclerView.setVisibility(View.GONE);
                 mAddressPlaceHolder.setVisibility(View.VISIBLE);
             }

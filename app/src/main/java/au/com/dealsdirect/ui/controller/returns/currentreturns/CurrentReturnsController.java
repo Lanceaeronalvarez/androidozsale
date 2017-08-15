@@ -25,7 +25,6 @@ import au.com.dealsdirect.R;
 import au.com.dealsdirect.data.network.model.returns.currentreturn.CurrentReturnResponseBody;
 import au.com.dealsdirect.data.network.model.returns.currentreturn.CurrentReturns;
 import au.com.dealsdirect.data.network.model.returns.returndetails.GetReturnDetailsResponseBody;
-import au.com.dealsdirect.ui.base.BaseController;
 import au.com.dealsdirect.ui.base.BasePullToRefreshController;
 import au.com.dealsdirect.ui.controller.returns.currentreturns.adapter.CurrentReturnAdapter;
 import au.com.dealsdirect.ui.controller.returns.currentreturns.listener.CurrentReturnClickListener;
@@ -123,6 +122,7 @@ public class CurrentReturnsController extends BasePullToRefreshController
                     mCurrentReturnsListener);
 
             mCurrentReturnsRecyclerView.setAdapter(mCurrentReturnsAdapter);
+            mCurrentReturnsRecyclerView.setVisibility(View.VISIBLE);
 //            getCurrentReturnItems(mCurrentReturns);
 
 
