@@ -251,7 +251,7 @@ public class HomeController extends BaseController implements HomeMvpView {
                         mBottomNavItemSelectCounter = 0;
                         if (!((MainActivity) getActivity()).isAuthorized()) {
                             new Handler().postDelayed(()-> {
-                                showLoginController(mShopRouter, new AuthHandler() {
+                                showLoginController(getCurrentRouter(), new AuthHandler() {
                                     @Override
                                     public void success() {
                                         new Handler().postDelayed(() -> proceedToController(position), 500);
@@ -333,7 +333,7 @@ public class HomeController extends BaseController implements HomeMvpView {
 
     @Override
     public void showLoginController(Router router, AuthHandler handler) {
-        mShopRouter.pushController(RouterTransaction.with(LoginController.newInstance(handler))
+        getCurrentRouter().pushController(RouterTransaction.with(LoginController.newInstance(handler))
                 .pushChangeHandler(new VerticalChangeHandler())
                 .popChangeHandler(new VerticalChangeHandler()));
     }
