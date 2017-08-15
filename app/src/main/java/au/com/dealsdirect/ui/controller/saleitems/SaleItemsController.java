@@ -236,6 +236,7 @@ public class SaleItemsController extends BasePullToRefreshController implements 
         super.onRefreshStart();
         page = 0;
         mPresenter.loadSaleItems(createSaleItemsRequest(mCategoryKey, mSaleId, page, mChipFilters));
+        mPresenter.loadSaleItems(createSaleItemsRequest(mCategoryKey, mSaleId, page, null));
     }
 
     @Override
