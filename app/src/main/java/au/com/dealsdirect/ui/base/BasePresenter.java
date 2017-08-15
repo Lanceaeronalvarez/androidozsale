@@ -130,7 +130,11 @@ public class BasePresenter<V extends MvpView> implements MvpPresenter<V> {
 //        getMvpView().showLoading();
 
         if(getMvpView() instanceof BasePullToRefreshController) {
-            ((BasePullToRefreshController) getMvpView()).hideNoNetworkLayout();
+            if(getMvpView().isNetworkConnected()) {
+                ((BasePullToRefreshController) getMvpView()).hideNoNetworkLayout();
+            } else {
+                ((BasePullToRefreshController) getMvpView()).showNoNetworkLayout();
+            }
         }
 
         getCompositeDisposable().add(observable
@@ -152,6 +156,10 @@ public class BasePresenter<V extends MvpView> implements MvpPresenter<V> {
                             callback.onSuccess(response);
                         } else {
                             callback.onSuccess();
+                        }
+
+                        if(getMvpView() instanceof BasePullToRefreshController) {
+                            ((BasePullToRefreshController) getMvpView()).hideNoNetworkLayout();
                         }
                     }
                 }, new Consumer<Throwable>() {

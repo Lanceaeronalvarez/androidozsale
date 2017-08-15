@@ -112,11 +112,17 @@ public class MainController extends BaseController implements MainMvpView {
 
     @Override
     protected void setUp(View view) {
+
+        mHomeController = HomeController.newInstance();
+        mCategoriesController = CategoriesController.newInstance();
+
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             Window window = getActivity().getWindow();
             window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
             window.setStatusBarColor(getActivity().getResources().getColor(R.color.colorAccent));
         }
+        setupViewPager();
+
     }
 
 
@@ -148,7 +154,7 @@ public class MainController extends BaseController implements MainMvpView {
         }
 
         mPreLoadedCategories = fillCategoryContent();
-        setupViewPager();
+        mCategoriesController.updateCategoryResponse(mCategoryMap, mPreLoadedCategories);
     }
 
     private void addToMap(List<GetCategoryTreeResponse> list) {
@@ -178,11 +184,6 @@ public class MainController extends BaseController implements MainMvpView {
             @Override
             public void configureRouter(@NonNull Router router, int position) {
                 if (!router.hasRootController()) {
-
-                    mHomeController = HomeController.newInstance();
-                    mCategoriesController = CategoriesController.newInstance(mCategoryMap, mPreLoadedCategories);
-
-
                     switch (position) {
                         case 0:
                             router.setRoot(RouterTransaction.with(mCategoriesController)
@@ -201,11 +202,12 @@ public class MainController extends BaseController implements MainMvpView {
 
             @Override
             public int getCount() {
-                if (mPreLoadedCategories.size() != 0) {
-                    return 2;
-                } else {
-                    return 1;
-                }
+//                if (mPreLoadedCategories.size() != 0) {
+//                    return 2;
+//                } else {
+//                    return 1;
+//                }
+                return 2;
             }
 
             @Override

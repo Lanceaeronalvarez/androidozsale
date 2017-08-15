@@ -71,23 +71,24 @@ public class CategoriesController extends BaseController
     private SubCategoryClickListener mSubCategoryClickListener;
     private SubCategoryItemClickListener mSubCategoryItemClickListener;
 
-    private static List<GetCategoryTreeResponse> mCategories;
-    private static Map<String, List<GetCategoryTreeResponse>> mCategoryMap = new HashMap<>();
+    private List<GetCategoryTreeResponse> mCategories;
+    private Map<String, List<GetCategoryTreeResponse>> mCategoryMap = new HashMap<>();
 
     private int searchTapCounter = 0;
 
     private MainActivity mActivity;
 
-    public static CategoriesController newInstance(
-            Map<String, List<GetCategoryTreeResponse>> categoryMap,
-            List<GetCategoryTreeResponse> categoryTree) {
-
-        mCategories = categoryTree;
-        mCategoryMap = categoryMap;
-
+    public static CategoriesController newInstance() {
         return new CategoriesController(
                 new BundleBuilder(new Bundle())
                         .build());
+    }
+
+    public void updateCategoryResponse(Map<String, List<GetCategoryTreeResponse>> categoryMap,
+                                  List<GetCategoryTreeResponse> categoryTree){
+        mCategories = categoryTree;
+        mCategoryMap = categoryMap;
+        setupCategories();
     }
 
     public CategoriesController(Bundle args) {
@@ -127,16 +128,17 @@ public class CategoriesController extends BaseController
 
         //noinspection ConstantConditions,deprecation
         mToolbarRightOption.setImageDrawable(getResources().getDrawable(R.drawable.ic_double_chevron));
-        CategoryClickListener mCategoryClickListener = this;
         mSubCategoryClickListener = this;
         mSubCategoryItemClickListener = this;
 
-        mAdapter = new CategoriesAdapter(mCategories, mPresenter, mCategoryClickListener);
-        mRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity(), LinearLayoutManager.VERTICAL, false));
-        mRecyclerView.setAdapter(mAdapter);
+    }
 
-
+    private void setupCategories(){
         if (mCategories != null) {
+            mAdapter = new CategoriesAdapter(mCategories, mPresenter, this);
+            mRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity(), LinearLayoutManager.VERTICAL, false));
+            mRecyclerView.setAdapter(mAdapter);
+
             if (mCategories.get(0).getChildren() != null) {
                 mSubCategoryAdapter = new SubCategoriesAdapter(
                         new ArrayList<>(), mPresenter, mSubCategoryClickListener, mSubCategoryItemClickListener, mCategoryMap);
@@ -148,8 +150,6 @@ public class CategoriesController extends BaseController
             mSubCategoryRecyclerView.setAdapter(mSubCategoryAdapter);
 
         }
-
-
     }
 
     @Override

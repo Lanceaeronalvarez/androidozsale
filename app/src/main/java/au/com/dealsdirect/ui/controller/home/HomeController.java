@@ -126,12 +126,13 @@ public class HomeController extends BaseController implements HomeMvpView {
         super.onViewBound(view);
         mRoot = view;
 
-        mShopRouter = Conductor.attachRouter(getActivity(), mShopContainer, null);
-        mAccountsRouter = Conductor.attachRouter(getActivity(), mAccountsContainer, null);
-        mContactsRouter = Conductor.attachRouter(getActivity(), mContactsContainer, null);
-        mInvitesRouter = Conductor.attachRouter(getActivity(), mInvitesContainer, null);
-        mCheckoutRouter = Conductor.attachRouter(getActivity(), mCheckoutContainer, null);
+//        mShopRouter = Conductor.attachRouter(getActivity(), mShopContainer, null);
+//        mAccountsRouter = Conductor.attachRouter(getActivity(), mAccountsContainer, null);
+//        mContactsRouter = Conductor.attachRouter(getActivity(), mContactsContainer, null);
+//        mInvitesRouter = Conductor.attachRouter(getActivity(), mInvitesContainer, null);
+//        mCheckoutRouter = Conductor.attachRouter(getActivity(), mCheckoutContainer, null);
 
+        mShopRouter = getChildRouter(mShopContainer);
         if (!mShopRouter.hasRootController()) {
             ShopsController shopsController = new ShopsController();
             ((MainActivity) getActivity()).setShopController(shopsController);
@@ -422,6 +423,11 @@ public class HomeController extends BaseController implements HomeMvpView {
         mContainersList.get(i).setVisibility(View.VISIBLE);
         mBottomNavigationView.setCurrentItem(i, false);
         currentVisibleIndex = i;
+    }
+
+    @Override
+    public void onDetach(View view) {
+        super.onDetach(view);
     }
 
     public Router getCurrentRouter() {

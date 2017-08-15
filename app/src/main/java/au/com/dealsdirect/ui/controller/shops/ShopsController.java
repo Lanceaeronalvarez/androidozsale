@@ -20,6 +20,7 @@ import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.bluelinelabs.conductor.Router;
 import com.bluelinelabs.conductor.RouterTransaction;
 import com.bluelinelabs.conductor.changehandler.FadeChangeHandler;
 import com.bluelinelabs.conductor.changehandler.HorizontalChangeHandler;
@@ -329,7 +330,9 @@ public class ShopsController extends BasePullToRefreshController implements Shop
                 .putString("SaleItemsController.SEARCH_KEY", "")
                 .putBoolean("SaleItemsController.FROM_SHOP_SEARCH",true)
                 .build();
-        getRouter().pushController(RouterTransaction.with(
+        Router router = getRouter();
+
+        router.pushController(RouterTransaction.with(
                 SaleItemsController.newInstance(saleItemBundle))
                 .tag(getActivity().getString(R.string.sale_items_controller_tag))
                 .pushChangeHandler(new SimpleChangeHandler())

@@ -292,6 +292,10 @@ public class SearchFilterController extends BaseController
         origMaxValue = mPresenter.getSearchMaxPrice();
         origMinValue = mSeekbar.getSelectedMinValue().intValue();
 
+        if(origMaxValue == origMinValue){
+            origMaxValue = 200;
+        }
+
         mSeekbar.setMaxValue(origMaxValue);
 
         mClearText.setOnClickListener((v) -> {
