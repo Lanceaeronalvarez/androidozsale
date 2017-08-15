@@ -5,7 +5,7 @@
     android:id="@+id/view_voucher_card_container"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
-    tools:ignore="MissngPrefix">
+    tools:ignore="MissngPrefix" >
 
     <LinearLayout
         android:id="@+id/row_layout_vouchers"
@@ -17,19 +17,21 @@
         android:clickable="true"
         android:orientation="vertical"
         android:padding="@dimen/activity_horizontal_margin"
-        tools:ignore="UselessParent">
+        tools:ignore="UselessParent" >
 
         <TextView
             android:id="@+id/row_text_vouchers_item_cost_value"
             android:fontFamily="@string/font_lato_light"
-            android:layout_width="match_parent"
+            android:layout_width="80dp"
             android:layout_height="wrap_content"
+            android:maxLines="2"
             android:textSize="@dimen/text_size_xxxxlarge"
             android:textStyle="bold"
             android:textColor="@color/white"
-            tools:text="$10" />
+            tools:text="Already Spent" />
 
         <TextView
+            android:id="@+id/row_text_label_value"
             android:fontFamily="@string/font_lato_light"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"

@@ -198,6 +198,7 @@ public class MainActivity extends BaseActivity implements MainMvpView {
                             setShopsAsVisibleContainer();
                             break;
                         } else {
+                            getMainController().showBottomNav();
                             currentRouter.handleBack();
                         }
                     }

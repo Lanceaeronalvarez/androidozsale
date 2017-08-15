@@ -175,6 +175,7 @@ public class ViewVouchersController extends BasePullToRefreshController implemen
                 mUsedVouchersAdapter.replace(usedVouchers);
                 mDivider.setVisibility(View.VISIBLE);
                 mUsedVoucherIndicatorText.setVisibility(View.VISIBLE);
+                mUsedVouchersRecyclerView.setVisibility(View.VISIBLE);
             } else {
                 mDivider.setVisibility(View.GONE);
                 mUsedVoucherIndicatorText.setVisibility(View.GONE);
