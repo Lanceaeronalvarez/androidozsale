@@ -22,7 +22,7 @@
             fontPath="@string/font_lato_semibold"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textSize="20sp"
+            android:textSize="@dimen/text_size_xlarge"
             android:textStyle="bold"
             android:textColor="@color/facet_item_text_selector"
             android:text="Category"/>
