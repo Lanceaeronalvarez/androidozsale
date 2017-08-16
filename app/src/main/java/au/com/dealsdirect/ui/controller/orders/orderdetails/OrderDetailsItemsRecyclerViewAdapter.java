@@ -15,7 +15,7 @@ import android.widget.TextView;
 import java.util.ArrayList;
 
 import au.com.dealsdirect.R;
-import au.com.dealsdirect.data.network.model.orders.GetOrderPaymentDetailsResponse;
+import au.com.dealsdirect.data.network.model.orders.GetOrderPaymentDetails;
 import au.com.dealsdirect.data.network.model.orders.GetPaymentsList;
 import au.com.dealsdirect.utils.ImageUtils;
 import au.com.dealsdirect.utils.LegacyStringImageUtils;
@@ -28,7 +28,7 @@ import au.com.dealsdirect.utils.PriceUtils;
 public class OrderDetailsItemsRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
     public ArrayList<GetPaymentsList.ResponseValue.Order> mOrderList = new ArrayList<>();
-    public GetOrderPaymentDetailsResponse.Value mOrderDetail;
+    GetOrderPaymentDetails.ResponseValue.Value mOrderDetail;
     public int mItemPosition;
 
     Context context;
@@ -36,7 +36,7 @@ public class OrderDetailsItemsRecyclerViewAdapter extends RecyclerView.Adapter<R
 
     public OrderDetailsItemsRecyclerViewAdapter(
             int position,
-            GetOrderPaymentDetailsResponse.Value orderDetail,
+            GetOrderPaymentDetails.ResponseValue.Value orderDetail,
             ArrayList<GetPaymentsList.ResponseValue.Order> orderList,
             Context context) {
 

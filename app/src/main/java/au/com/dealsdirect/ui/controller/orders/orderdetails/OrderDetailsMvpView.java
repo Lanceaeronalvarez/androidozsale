@@ -1,6 +1,6 @@
 package au.com.dealsdirect.ui.controller.orders.orderdetails;
 
-import au.com.dealsdirect.data.network.model.orders.GetOrderPaymentDetailsResponse;
+import au.com.dealsdirect.data.network.model.orders.GetOrderPaymentDetails;
 import au.com.dealsdirect.ui.base.MvpView;
 
 /**
@@ -9,5 +9,5 @@ import au.com.dealsdirect.ui.base.MvpView;
 
 public interface OrderDetailsMvpView extends MvpView{
 
-    void showOrderDetails(GetOrderPaymentDetailsResponse response);
+    void showOrderDetails(GetOrderPaymentDetails.ResponseValue response);
 }

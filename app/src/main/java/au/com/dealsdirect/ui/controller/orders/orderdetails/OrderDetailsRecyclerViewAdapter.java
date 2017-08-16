@@ -18,7 +18,7 @@ import android.widget.TextView;
 import java.util.ArrayList;
 
 import au.com.dealsdirect.R;
-import au.com.dealsdirect.data.network.model.orders.GetOrderPaymentDetailsResponse;
+import au.com.dealsdirect.data.network.model.orders.GetOrderPaymentDetails;
 import au.com.dealsdirect.data.network.model.orders.GetPaymentsList;
 import au.com.dealsdirect.utils.DateUtils;
 import au.com.dealsdirect.utils.PriceUtils;
@@ -33,7 +33,7 @@ public class OrderDetailsRecyclerViewAdapter extends RecyclerView.Adapter<Recycl
     //    private final MyOrderClickListener mListener;
 
     private View mView;
-    GetOrderPaymentDetailsResponse.Value mOrderDetails;
+    GetOrderPaymentDetails.ResponseValue.Value mOrderDetails;
     private View.OnClickListener onClickListener;
 
 
@@ -46,7 +46,7 @@ public class OrderDetailsRecyclerViewAdapter extends RecyclerView.Adapter<Recycl
     int paymentReferenceNo;
 
     public OrderDetailsRecyclerViewAdapter(
-            GetOrderPaymentDetailsResponse.Value orderDetails,
+            GetOrderPaymentDetails.ResponseValue.Value orderDetails,
             int paymentReferenceNo,
             ArrayList<GetPaymentsList.ResponseValue.Order> orderList,
             GetPaymentsList.ResponseValue.Total total,

@@ -15,7 +15,7 @@ import com.google.gson.Gson;
 import javax.inject.Inject;
 
 import au.com.dealsdirect.R;
-import au.com.dealsdirect.data.network.model.orders.GetOrderPaymentDetailsResponse;
+import au.com.dealsdirect.data.network.model.orders.GetOrderPaymentDetails;
 import au.com.dealsdirect.data.network.model.orders.GetPaymentsList;
 import au.com.dealsdirect.ui.base.BaseController;
 import au.com.dealsdirect.utils.BundleBuilder;
@@ -45,7 +45,7 @@ public class OrderDetailsController extends BaseController implements OrderDetai
     RecyclerView mRecyclerView;
 
     GetPaymentsList.ResponseValue.PaymentItem mOrderItem;
-    GetOrderPaymentDetailsResponse.Value mOrderDetails;
+    GetOrderPaymentDetails.ResponseValue.Value mOrderDetails;
 
     int mSelectedPosition;
     String mPaymentReferenceNo;
@@ -98,7 +98,7 @@ public class OrderDetailsController extends BaseController implements OrderDetai
     }
 
     @Override
-    public void showOrderDetails(GetOrderPaymentDetailsResponse response) {
+    public void showOrderDetails(GetOrderPaymentDetails.ResponseValue response) {
         if (response != null) {
             mOrderDetails = response.getD().getValue();
         }
