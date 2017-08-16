@@ -23,13 +23,13 @@ public class PaymentSuccessPresenter<V extends PaymentSuccessMvpView> extends Ba
     @Override
     public void incrementPayCount() {
 
-        int paymentCount = getDataManager().getPaymentCount();
+        int paymentCount = getDataManager().getPaymentCount() + 1;
 
-        if ((paymentCount + 1) == countToShowRatePopup) {
+        if (paymentCount % countToShowRatePopup == 0) {
             getMvpView().showRatePopUp();
 
         }
-        getDataManager().setPaymentCount(paymentCount + 1);
+        getDataManager().setPaymentCount(paymentCount);
     }
 
     @Override

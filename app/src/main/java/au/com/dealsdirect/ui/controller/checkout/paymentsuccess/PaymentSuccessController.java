@@ -105,8 +105,8 @@ public class PaymentSuccessController extends BaseController implements PaymentS
     protected void onViewBound(@NonNull View view) {
         super.onViewBound(view);
         mActivity = (MainActivity) getActivity();
-        mOurpay = ((MainActivity)getActivity()).getOurpay();
-        if (mOurpay.isCanUse()){
+        mOurpay = ((MainActivity) getActivity()).getOurpay();
+        if (mOurpay.isCanUse()) {
             mPresenter.generateOurpay();
         }
 
@@ -173,32 +173,23 @@ public class PaymentSuccessController extends BaseController implements PaymentS
 
     @Override
     public void showRatePopUp() {
-
-        DialogUtils.showYesNoDialog(getActivity()
-                , getApplicationContext().getString(R.string.rate_us_dialog_title)
-                , getApplicationContext().getString(R.string.rate_us_message)
-                , getApplicationContext().getString(R.string.rate_us_positive_text)
-                , getApplicationContext().getString(R.string.rate_us_negative_text)
-                , new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        rateApp();
-                        dialog.dismiss();
-                    }
-                }, new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        dialog.dismiss();
-                    }
-                });
-
+        DialogUtils.showYesNoDialog(getActivity(),
+                getApplicationContext().getString(R.string.rate_us_dialog_title),
+                getApplicationContext().getString(R.string.rate_us_message),
+                getApplicationContext().getString(R.string.rate_us_positive_text),
+                getApplicationContext().getString(R.string.rate_us_negative_text),
+                (dialog, which) -> {
+                    rateApp();
+                    dialog.dismiss();
+                },
+                (dialog, which) -> dialog.dismiss());
     }
 
     @Override
     public void showOurpay() {
         mOurpay.setState(OurpayState.POSTCART);
-        if (mOurpay != null){
-            OurpayPanel ourpayPanel = new OurpayPanel((BaseActivity)getActivity());
+        if (mOurpay != null) {
+            OurpayPanel ourpayPanel = new OurpayPanel((BaseActivity) getActivity());
             mLLOurpay.removeAllViews();
             mLLOurpay.addView(ourpayPanel.generatePanel(mOurpay));
         }
