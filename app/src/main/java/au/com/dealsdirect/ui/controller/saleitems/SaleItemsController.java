@@ -386,7 +386,7 @@ public class SaleItemsController extends BasePullToRefreshController implements 
             } else {
                 mPopularProductsHeader.setVisibility(View.GONE);
             }
-        }else{
+        } else {
             mPopularProductsHeader.setVisibility(View.GONE);
         }
 
@@ -438,6 +438,7 @@ public class SaleItemsController extends BasePullToRefreshController implements 
                 }
             }
         }
+    }
 
 
     @Override
