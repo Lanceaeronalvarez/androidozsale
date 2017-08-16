@@ -366,6 +366,7 @@ public class OurpaySMSVerificationController extends BaseController implements O
         } else {
             ((MainActivity)getActivity()).callCreatePaymentTransaction(PAYMENT_TYPE_MYPAY,"");
         }
+        getActivity().onBackPressed();
     }
 
     private void callThree3DS(String cost){
