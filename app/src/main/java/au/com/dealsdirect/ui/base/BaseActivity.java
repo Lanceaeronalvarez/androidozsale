@@ -101,12 +101,14 @@ public abstract class BaseActivity extends AppCompatActivity implements MvpView 
     @Override
     public void onError(String message) {
         Log.i("SnackbarError", message + "");
-        if (message != null && !message.contains("UnknownHostException")) {
-            CustomAlertDialog.showCustomAlertDialog(this, CustomAlertDialog.CustomDialogIconState.NEGATIVE, message);
-        } else if (message != null && message.contains("UnknownHostException")) {
-            CustomAlertDialog.showCustomAlertDialog(this, CustomAlertDialog.CustomDialogIconState.NEGATIVE, getString(R.string.no_network_connection));
-        } else {
-            CustomAlertDialog.showCustomAlertDialog(this, CustomAlertDialog.CustomDialogIconState.NEGATIVE, getString(R.string.error));
+        if(!message.isEmpty()){
+            if(message.contains("UnknownHostException") || message.contains("SocketTimeoutException")){
+                CustomAlertDialog.showCustomAlertDialog(this, CustomAlertDialog.CustomDialogIconState.NEGATIVE, getString(R.string.no_network_connection));
+            } else if (message.contains("Exception")){
+                CustomAlertDialog.showCustomAlertDialog(this, CustomAlertDialog.CustomDialogIconState.NEGATIVE, getString(R.string.error));
+            } else {
+                CustomAlertDialog.showCustomAlertDialog(this, CustomAlertDialog.CustomDialogIconState.NEGATIVE, message);
+            }
         }
     }
 
