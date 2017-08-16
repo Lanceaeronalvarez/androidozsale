@@ -119,6 +119,7 @@
             android:background="@drawable/ourpay_edittext_selector"
             android:focusableInTouchMode="true"
             android:gravity="center"
+            android:maxLength="6"
             android:hint="xxxx"
             android:inputType="phone"
             android:padding="10dp"/>
