@@ -1,7 +1,6 @@
 package au.com.dealsdirect.ui.controller.checkout.paymentsuccess;
 
 import android.content.ActivityNotFoundException;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
@@ -144,11 +143,6 @@ public class PaymentSuccessController extends BaseController implements PaymentS
     public void onDetach(View view) {
         mPresenter.onDetach();
         super.onDetach(view);
-    }
-
-    @Override
-    public boolean handleBack() {
-        return getRouter().popToRoot();
     }
 
     public void rateApp() {

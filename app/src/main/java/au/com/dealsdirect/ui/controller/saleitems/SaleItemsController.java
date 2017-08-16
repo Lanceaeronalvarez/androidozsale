@@ -343,7 +343,7 @@ public class SaleItemsController extends BasePullToRefreshController implements 
         };
 
         mSaleItemsAdapter = new SaleItemsAdapter(mSaleItems, mPresenter, mSaleId, mTitle);
-            mSaleItemsRecyclerView.setLayoutManager(new GridLayoutManager(getActivity(), 2));
+        mSaleItemsRecyclerView.setLayoutManager(new GridLayoutManager(getActivity(), 2));
         mSaleItemsRecyclerView.setAdapter(mSaleItemsAdapter);
 
         if (isFiltered || mSaleItems.isEmpty()) {
@@ -395,47 +395,38 @@ public class SaleItemsController extends BasePullToRefreshController implements 
             mFacets = getSaleItemsResponse.facets;
             mCategoryTreeResponse = getSaleItemsResponse.getCategories();
         } else {
+
             mCategoryTreeResponse = getSaleItemsResponse.getCategories();
 
             loadingInProgress = false;
-            if (page == 0) {
 
-                mSaleItemsAdapter = new SaleItemsAdapter(mSaleItems, mPresenter, mSaleId, mTitle);
-                if (mPresenter.isTablet()) {
-                    mSaleItemsRecyclerView.setLayoutManager(new GridLayoutManager(getActivity(), 4));
-                } else {
-                    mSaleItemsRecyclerView.setLayoutManager(new GridLayoutManager(getActivity(), 2));
+            if (!initialLoad) {
+                mSaleItemsAdapter.replaceData(items);
+                mPaginateManager = PaginateUtils.init(mSaleItemsRecyclerView, mPaginateCallbacks);
+
+                initialLoad = true;
+            } else if (isFiltered || mIsSearch) {
+                mSaleItemsAdapter.replaceData(items);
+                mSaleItemsRecyclerView.scrollToPosition(0);
+                isFiltered = false;
+                mIsSearch = false;
+            } else {
+                mSaleItemsAdapter.addData(items);
+                if (items.size() == 0) {
+                    hasLoadedAllItems = true;
                 }
-                mSaleItemsRecyclerView.setAdapter(mSaleItemsAdapter);
-
-                if (!initialLoad) {
-                    mSaleItemsAdapter.replaceData(items);
-                    mPaginateManager = PaginateUtils.init(mSaleItemsRecyclerView, mPaginateCallbacks);
-
-                    initialLoad = true;
-                } else if (isFiltered || mIsSearch) {
-                    mSaleItemsAdapter.replaceData(items);
-                    mSaleItemsRecyclerView.scrollToPosition(0);
-                    isFiltered = false;
-                    mIsSearch = false;
-                } else {
-                    mSaleItemsAdapter.addData(items);
-                    if (items.size() == 0) {
-                        hasLoadedAllItems = true;
-                    }
-                }
+            }
 
 
-                mSaleItems = mSaleItemsAdapter.getData();
+            mSaleItems = mSaleItemsAdapter.getData();
 
-                if (mSaleItems == null || mSaleItems.isEmpty()) {
-                    mPlaceholder.setVisibility(View.VISIBLE);
-                    mSaleItemsRecyclerView.setVisibility(View.GONE);
-                    mPaginateManager.unbind();
-                } else {
-                    mPlaceholder.setVisibility(View.GONE);
-                    mSaleItemsRecyclerView.setVisibility(View.VISIBLE);
-                }
+            if (mSaleItems == null || mSaleItems.isEmpty()) {
+                mPlaceholder.setVisibility(View.VISIBLE);
+                mSaleItemsRecyclerView.setVisibility(View.GONE);
+                mPaginateManager.unbind();
+            } else {
+                mPlaceholder.setVisibility(View.GONE);
+                mSaleItemsRecyclerView.setVisibility(View.VISIBLE);
             }
         }
     }
