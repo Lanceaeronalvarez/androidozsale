@@ -32,6 +32,8 @@ public class SubCategoryItemsAdapter extends RecyclerView.Adapter<RecyclerView.V
     private SubCategoryItemClickListener mCategoryAdapterClickListener;
     private int lastPosition = -1;
 
+    private RecyclerView.ViewHolder mLastSelectedViewHolder = null;
+
     public SubCategoryItemsAdapter(
             List<GetCategoryTreeResponse> data,
             CategoriesMvpPresenter presenter,
@@ -55,25 +57,32 @@ public class SubCategoryItemsAdapter extends RecyclerView.Adapter<RecyclerView.V
         setAnimation(holder.itemView, position);
         Context context = holder.itemView.getContext();
 
+        SubCategoryItemViewHolder vh = (SubCategoryItemViewHolder) holder;
         if (!mData.isEmpty()) {
 
             if (!mData.get(position).getName().isEmpty()) {
 
-                ((SubCategoryItemsAdapter.SubCategoryItemViewHolder) holder)
-                        .subCategoryTitle.setText(mData.get(position).getName());
+                vh.subCategoryTitle.setText(mData.get(position).getName());
 
                 String chosenKey =((MainActivity)context).getMainController().getChosenCategoryItemKey();
 
                 if (mData.get(position).getKey().equals(chosenKey)){
-
-                    ((SubCategoryItemsAdapter.SubCategoryItemViewHolder) holder)
-                            .subCategoryTitle.setTextColor(context.getResources().getColor(R.color.category_text_active));
+                    vh.subCategoryTitle.setTextColor(context.getResources().getColor(R.color.category_text_active));
                 }
             }
 
-            ((SubCategoryItemViewHolder) holder).subCategoryTitle.setOnClickListener(view -> {
+            vh.itemView.setOnClickListener(view -> {
 
-                ((SubCategoryItemViewHolder) holder).subCategoryTitle.setEnabled(true);
+                if (mLastSelectedViewHolder == null) {
+                    mLastSelectedViewHolder = vh;
+                    vh.itemView.setActivated(true);
+                } else {
+                    if(mLastSelectedViewHolder != vh) {
+                        mLastSelectedViewHolder.itemView.setActivated(false);
+                        mLastSelectedViewHolder = vh;
+                        mLastSelectedViewHolder.itemView.setActivated(true);
+                    }
+                }
                 mCategoryAdapterClickListener.onSubCategoryItemClicked(
                         mData.get(position).getId(),
                         mData.get(position).getName(),
@@ -106,10 +115,16 @@ public class SubCategoryItemsAdapter extends RecyclerView.Adapter<RecyclerView.V
         @BindView(R.id.viewholder_subcategory_item_name)
         TextView subCategoryTitle;
 
+        boolean isSelected = false;
+
         public SubCategoryItemViewHolder(View itemView) {
             super(itemView);
             ButterKnife.bind(this, itemView);
 
+        }
+
+        public void toggle(){
+            isSelected = !isSelected;
         }
     }
 
