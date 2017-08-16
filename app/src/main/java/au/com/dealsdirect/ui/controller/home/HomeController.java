@@ -254,6 +254,7 @@ public class HomeController extends BaseController implements HomeMvpView {
 
                     case 2:
                     case 3:
+                    case 4:
                         mBottomNavItemSelectCounter = 0;
                         if (!((MainActivity) getActivity()).isAuthorized()) {
                             new Handler().postDelayed(() -> showLoginController(getCurrentRouter(), new AuthHandler() {
@@ -271,11 +272,6 @@ public class HomeController extends BaseController implements HomeMvpView {
                         } else {
                             proceedToController(position);
                         }
-                        break;
-
-                    case 4:
-                        mBottomNavItemSelectCounter = 0;
-                        showCheckoutController();
                         break;
                 }
             } else {
@@ -404,6 +400,8 @@ public class HomeController extends BaseController implements HomeMvpView {
             showContactController();
         } else if (id == 3) {
             showInviteController();
+        } else if (id == 4) {
+            showCheckoutController();
         }
     }
 
