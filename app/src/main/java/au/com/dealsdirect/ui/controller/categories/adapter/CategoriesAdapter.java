@@ -180,7 +180,7 @@ public class CategoriesAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                 holder.categoryImageIndicator.setImageDrawable(context.getDrawable(R.drawable.ic_shop));
                 break;
             case "Home":
-                holder.categoryImageIndicator.setImageDrawable(context.getDrawable(R.drawable.ic_home));
+                holder.categoryImageIndicator.setImageDrawable(context.getDrawable(R.drawable.ic_category_home));
                 break;
             case "Women":
                 holder.categoryImageIndicator.setImageDrawable(context.getDrawable(R.drawable.ic_women));

@@ -50,4 +50,5 @@
     <dimen name="return_card_height">450dp</dimen>
     <dimen name="place_holder_padding">16dp</dimen>
 
+    <dimen name="category_image_padding">15dp</dimen>
 </resources>

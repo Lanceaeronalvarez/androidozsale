@@ -50,9 +50,10 @@
     <dimen name="cartview_y_adjustment">40dp</dimen>
 
     <dimen name="category_image_size">60dp</dimen>
-    <dimen name="category_background_size">120dp</dimen>
+    <dimen name="category_background_size">100dp</dimen>
     <dimen name="category_container_width">150dp</dimen>
 
     <dimen name="return_card_height">500dp</dimen>
+    <dimen name="category_image_padding">25dp</dimen>
 
 </resources>
