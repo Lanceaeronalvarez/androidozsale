@@ -328,7 +328,7 @@ public class ShopsController extends BasePullToRefreshController implements Shop
         Bundle saleItemBundle = new BundleBuilder(new Bundle())
                 .putString("SaleItemsController.KEY_TITLE", "")
                 .putString("SaleItemsController.SEARCH_KEY", "")
-                .putBoolean("SaleItemsController.FROM_SHOP_SEARCH",true)
+                .putBoolean("SaleItemsController.FROM_SHOP_SEARCH", true)
                 .build();
         Router router = getRouter();
 
@@ -456,7 +456,9 @@ public class ShopsController extends BasePullToRefreshController implements Shop
 
     public void goToSalesFromCategories(GetCategoryTreeResponse getCategoryTreeResponse) {
         mPresenter.onAttach(this);
-        shopsControllerBannerRecyclerView.setVisibility(View.GONE);
+        if (shopsControllerBannerRecyclerView != null) {
+            shopsControllerBannerRecyclerView.setVisibility(View.GONE);
+        }
 
         if (getCategoryTreeResponse.getKey() != null) {
 
@@ -552,12 +554,12 @@ public class ShopsController extends BasePullToRefreshController implements Shop
         mPresenter.loadShopsBanner(shopCategory.getKey(), shopCategory.getId(), 0, 0);
     }
 
-    public void goToSaleItemsFromCategorySearch(){
+    public void goToSaleItemsFromCategorySearch() {
 
         Bundle saleItemBundle = new BundleBuilder(new Bundle())
                 .putString("SaleItemsController.KEY_TITLE", "")
                 .putString("SaleItemsController.SEARCH_KEY", "")
-                .putBoolean("SaleItemsController.FROM_CATEGORY_SEARCH",true)
+                .putBoolean("SaleItemsController.FROM_CATEGORY_SEARCH", true)
                 .build();
 
         getRouter().pushController(RouterTransaction.with(
