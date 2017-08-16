@@ -3,7 +3,6 @@ package au.com.dealsdirect.ui.main;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
-import android.util.Log;
 import android.view.ViewGroup;
 
 import com.bluelinelabs.conductor.Conductor;
@@ -226,6 +225,7 @@ public class MainActivity extends BaseActivity implements MainMvpView {
 
     @Override
     public void onError(Exception error) {
+
         if (error instanceof ErrorWithResponse) {
 //            hideProgressDialog();
 //            CustomAlertDialog.showCustomAlertDialog(this, CustomAlertDialog.CustomDialogIconState.NEGATIVE, error.getMessage());
@@ -322,6 +322,14 @@ public class MainActivity extends BaseActivity implements MainMvpView {
             DataCollector.collectDeviceData(mBraintreeFragment, mPresenter.getKountMerchantId(), handler);
         } else {
             DataCollector.collectDeviceData(mBraintreeFragment, handler);
+        }
+    }
+
+    @Override
+    public void callCreatePaymentTransactionError(String errorMessage) {
+        if (errorMessage!=null){
+            CustomAlertDialog.showCustomAlertDialog(this, CustomAlertDialog.CustomDialogIconState.NEGATIVE, errorMessage);
+            mCheckoutRouter.popToRoot();
         }
     }
 

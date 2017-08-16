@@ -5,6 +5,7 @@ import android.support.annotation.NonNull;
 import android.text.Editable;
 import android.text.InputFilter;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -137,9 +138,15 @@ public class OurpaySMSVerificationController extends BaseController implements O
     public void callNormalizePhoneResponse(VerificationNormalizePhoneResponseBody response) {
 
         if (!response.getVerificationNormalizePhoneResponse().getValue().getErrorMessage().isEmpty()){
-            CustomAlertDialog.showCustomAlertDialog(getActivity(),
-                    CustomAlertDialog.CustomDialogIconState.NEGATIVE,
-                    response.getVerificationNormalizePhoneResponse().getValue().getErrorMessage());
+            if (response.getVerificationNormalizePhoneResponse().getValue().getCountryCode()!=null){
+                String countryCode = response.getVerificationNormalizePhoneResponse().getValue().getCountryCode();
+
+                setExtension(countryCode);
+
+            }
+//            CustomAlertDialog.showCustomAlertDialog(getActivity(),
+//                    CustomAlertDialog.CustomDialogIconState.NEGATIVE,
+//                    response.getVerificationNormalizePhoneResponse().getValue().getErrorMessage());
         } else {
             setExtension(response.getVerificationNormalizePhoneResponse().getValue().getCountryCode());
 
@@ -165,6 +172,7 @@ public class OurpaySMSVerificationController extends BaseController implements O
         if (!mResult || !mIsAuthenticated){
             CustomAlertDialog.showCustomAlertDialog(getActivity(), CustomAlertDialog.CustomDialogIconState.NEGATIVE,mMessage);
             mSMSVerificationConfirmButton.setEnabled(true);
+            Log.d("verification", response.getVerificationCodeConfirmResponse().getMessage());
 
         }else{
 
@@ -289,6 +297,7 @@ public class OurpaySMSVerificationController extends BaseController implements O
 
     @OnClick(R.id.ourpay_button_confirm)
     void onConfirmButtonClick(){
+        hideKeyboard();
         mSMSVerificationConfirmButton.setEnabled(false);
         mPresenter.callVerificationCodeConfirm(mSMSVerificationPhone.getText().toString(), mSMSVerificationPhoneExtension.getText().toString() , mSMSVerificationCode.getText().toString());
     }

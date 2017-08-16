@@ -65,7 +65,7 @@ public class CheckoutController extends BaseController implements CheckoutMvpVie
     public static final String CARD_MASTERCARD = "MasterCard";
     public static final String CARD_VISA = "Visa";
     private static final String PAYMENT_TYPE_MYPAY = "mypay";
-    private boolean isPaymentMethodNull = false;
+    private boolean isPaymentMethodNull = true;
 
     @Inject
     CheckoutMvpPresenter<CheckoutMvpView> mPresenter;
@@ -264,21 +264,28 @@ public class CheckoutController extends BaseController implements CheckoutMvpVie
     }
 
     public void loadCart() {
-
+        Log.d("loadcart", "loading cart");
         if (mPresenter.checkIsLoggedIn()) {
+            Log.d("loadcart", "logged in");
 
             RxBus.instance().post(IntrospectionUtils.EVENT_CHECKOUT_SCREEN);
 
             showLoading();
             if (!mActivity.isBraintreeInitialized()) {
+                Log.d("loadcart", "is not initialized cart");
+
                 ((MainMvpView) getActivity()).fetchAuthorization(this);
                 mPresenter.start();
 
             } else {
+                Log.d("loadcart", "is initiialized");
+
                 mPresenter.start();
             }
 
         } else {
+            Log.d("loadcart", "no cart items layout");
+
             showNoCartItemsLayout();
         }
     }
@@ -296,6 +303,7 @@ public class CheckoutController extends BaseController implements CheckoutMvpVie
             mOurpayHolder.removeAllViews();
             PaymentMethod paymentMethod = ((MainActivity) getActivity()).getPaymentMethodSelected();
 
+            Log.d("checkout", "payment = " +paymentMethod.getPaymentType()+ " , "+ourpay.isCanUse()  +  " , "+isPaymentMethodNull );
             if (!paymentMethod.getPaymentType().equalsIgnoreCase(CARD_PAYPAL) && ourpay.isCanUse() && !isPaymentMethodNull) {
 
                 mOurpayHolder.addView(ourpayPanel.generatePanel(ourpay));
@@ -307,7 +315,7 @@ public class CheckoutController extends BaseController implements CheckoutMvpVie
                     mCheckBoxOurpayTC = (CheckBox) mOurpayHolder.findViewById(R.id.ourpay_checkbox_tc);
                 }
             }else{
-                if (!paymentMethod.getPaymentType().equalsIgnoreCase(CARD_PAYPAL)){
+                if (!paymentMethod.getPaymentType().equalsIgnoreCase(CARD_PAYPAL) && !isPaymentMethodNull){
                     mOurpayHolder.addView(ourpayPanel.generatePanel(ourpay));
 
                 }
@@ -394,6 +402,7 @@ public class CheckoutController extends BaseController implements CheckoutMvpVie
             mPaypalButton.setVisibility(View.VISIBLE);
             isPaymentMethodNull = true;
         } else {
+            isPaymentMethodNull = false;
 
             if (paymentMethod.getPaymentType().equalsIgnoreCase(CARD_PAYPAL)) {
                 mPayButton.setVisibility(View.GONE);
@@ -403,7 +412,7 @@ public class CheckoutController extends BaseController implements CheckoutMvpVie
                 mPaypalButton.setVisibility(View.GONE);
             }
         }
-
+        mPresenter.generateOurpay(mValue);
     }
 
     @Override
@@ -440,7 +449,7 @@ public class CheckoutController extends BaseController implements CheckoutMvpVie
             }
             ((TextView) mSummaryLayout.findViewById(R.id.partial_checkout_summary_total)).setText(PriceUtils.getPriceStringValue(summary.total));
         }
-        mPresenter.generateOurpay(mValue);
+
 
     }
 
@@ -523,7 +532,7 @@ public class CheckoutController extends BaseController implements CheckoutMvpVie
     }
 
     private void onOurpayButtonClick() {
-
+        Log.d("ourpaybutton", "clicked");
         RxBus.instance().post(IntrospectionUtils.EVENT_PAY);
 
 

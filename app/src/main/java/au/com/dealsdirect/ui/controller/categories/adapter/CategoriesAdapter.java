@@ -1,6 +1,8 @@
 package au.com.dealsdirect.ui.controller.categories.adapter;
 
+import android.content.Context;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -55,8 +57,9 @@ public class CategoriesAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
 
         if (!mData.isEmpty()) {
             if (!mData.get(position).getName().isEmpty()) {
-                char first = mData.get(position).getName().charAt(0);
-                ((CategoriesViewHolder) holder).categoryIndicator.setText(String.valueOf(first));
+                Log.d("category",mData.get(position).getName());
+                setCategoryImage(((CategoriesViewHolder)holder), mData.get(position).getName(), position);
+
             }
 
             if (position==1){
@@ -133,6 +136,9 @@ public class CategoriesAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
 
     public static class CategoriesViewHolder extends RecyclerView.ViewHolder {
 
+        @BindView(R.id.row_category_image_indicator)
+        public ImageView categoryImageIndicator;
+
         @BindView(R.id.row_category_image)
         public ImageView categoryTitleBackground;
 
@@ -165,4 +171,40 @@ public class CategoriesAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
         return mData.get(position);
     }
 
+    public void setCategoryImage(CategoriesViewHolder holder,String category, int position){
+        holder.categoryImageIndicator.setVisibility(View.VISIBLE);
+        holder.categoryIndicator.setVisibility(View.GONE);
+        Context context = holder.itemView.getContext();
+        switch (category){
+            case "Shop":
+                holder.categoryImageIndicator.setImageDrawable(context.getDrawable(R.drawable.ic_shop));
+                break;
+            case "Home":
+                holder.categoryImageIndicator.setImageDrawable(context.getDrawable(R.drawable.ic_home));
+                break;
+            case "Women":
+                holder.categoryImageIndicator.setImageDrawable(context.getDrawable(R.drawable.ic_women));
+                break;
+            case "Kids & Toys":
+                holder.categoryImageIndicator.setImageDrawable(context.getDrawable(R.drawable.ic_kids));
+                break;
+            case "Men":
+                holder.categoryImageIndicator.setImageDrawable(context.getDrawable(R.drawable.ic_mens));
+                break;
+            case "Beauty":
+                holder.categoryImageIndicator.setImageDrawable(context.getDrawable(R.drawable.ic_beauty));
+                break;
+            case "Sports":
+                holder.categoryImageIndicator.setImageDrawable(context.getDrawable(R.drawable.ic_sports));
+                break;
+            case "Tech":
+                holder.categoryImageIndicator.setImageDrawable(context.getDrawable(R.drawable.ic_tech));
+                break;
+            default:
+                holder.categoryImageIndicator.setVisibility(View.GONE);
+                holder.categoryIndicator.setVisibility(View.VISIBLE);
+                String categoryTitle = mData.get(position).getName().charAt(0)+""+mData.get(position).getName().charAt(1);
+                holder.categoryIndicator.setText(String.valueOf(categoryTitle.toUpperCase()));
+        }
+    }
 }

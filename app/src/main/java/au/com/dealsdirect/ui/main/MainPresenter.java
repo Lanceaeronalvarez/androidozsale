@@ -5,7 +5,6 @@ package au.com.dealsdirect.ui.main;
 
 
 import android.content.Context;
-import android.util.Log;
 
 import com.androidnetworking.error.ANError;
 import com.google.gson.Gson;
@@ -348,7 +347,7 @@ public class MainPresenter<V extends MainMvpView> extends BasePresenter<V> imple
                         if (responseValue.getD().getResult()) {
                             getMvpView().createPaymentTransactionSuccess(responseValue);
                         } else {
-                            getMvpView().onError(responseValue.getD().getMessage());
+                            getMvpView().callCreatePaymentTransactionError(responseValue.getD().getMessage());
                         }
 
                     }
@@ -516,7 +515,6 @@ public class MainPresenter<V extends MainMvpView> extends BasePresenter<V> imple
 
     @Override
     public void callGetTemplateTexts() {
-        Log.d("checkout", "template set");
         GetTemplateTextsRequest getTemplateTextRequest = new GetTemplateTextsRequest();
         getTemplateTextRequest.templateKeys = templateTextsKeys;
         getTemplateTextRequest.countryId = getDataManager().getCountryId();
