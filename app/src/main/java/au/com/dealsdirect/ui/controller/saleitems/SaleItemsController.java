@@ -279,7 +279,6 @@ public class SaleItemsController extends BasePullToRefreshController implements 
             mSaleItemsToolbarField.setHint(mSearchQuery);
             mSaleItemsToolbarTitle.setText(mSearchQuery);
         } else if (mFromCategorySearch && !mCategoryKey.isEmpty()) {
-            Log.d("saletitle", "with category " + mCategoryKey);
 
             char c = '>';
             int charCount = 0;
@@ -387,6 +386,8 @@ public class SaleItemsController extends BasePullToRefreshController implements 
             } else {
                 mPopularProductsHeader.setVisibility(View.GONE);
             }
+        }else{
+            mPopularProductsHeader.setVisibility(View.GONE);
         }
 
 
