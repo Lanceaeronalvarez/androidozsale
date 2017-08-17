@@ -164,7 +164,6 @@ public class LoginController extends BaseController implements LoginMvpView {
                 "Login incorrect");
 
         isLoginTapped = false;
-        mActivity.getMainController().showBottomNav();
     }
 
     @Override
