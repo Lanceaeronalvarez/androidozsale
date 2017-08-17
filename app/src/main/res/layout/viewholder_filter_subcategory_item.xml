@@ -27,14 +27,6 @@
             tools:ignore="MissingPrefix"
             tools:text="Category" />
 
-        <!--<ImageView-->
-        <!--android:id="@+id/viewholder_subcategory_dropdown_icon"-->
-        <!--android:layout_width="wrap_content"-->
-        <!--android:layout_height="wrap_content"-->
-        <!--android:layout_alignParentEnd="true"-->
-        <!--android:background="@drawable/ic_add_gray"-->
-        <!--android:clickable="true"/>-->
-
     </RelativeLayout>
 
     <android.support.v7.widget.RecyclerView
@@ -44,12 +36,5 @@
         android:layout_marginStart="25dp"
         android:layout_marginTop="5dp"
         android:overScrollMode="never" />
-
-    <View
-        android:layout_width="match_parent"
-        android:layout_height="0.9dp"
-        android:layout_marginStart="5dp"
-        android:layout_marginTop="15dp"
-        android:background="@color/gray_border" />
 
 </LinearLayout>

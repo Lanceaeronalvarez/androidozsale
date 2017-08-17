@@ -248,7 +248,7 @@ public class SearchFilterController extends BaseController
             }
         });
 
-        mSubCategoriesAdapter = new SubCategoriesAdapter(mChosenCategory, mPreLoadedCategories, mSubCategoryClickListener, mSubCategoryItemClickListener, mCategoryMap);
+        mSubCategoriesAdapter = new SubCategoriesAdapter(mChosenCategory, mCategoryTree, mSubCategoryClickListener, mSubCategoryItemClickListener, mCategoryMap);
         mFilterCategoriesRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity(), LinearLayoutManager.VERTICAL, false));
         mFilterCategoriesRecyclerView.setAdapter(mSubCategoriesAdapter);
 
@@ -606,57 +606,17 @@ public class SearchFilterController extends BaseController
 
     private void createCategoryMap(List<GetCategoryTreeResponse> categories) {
 
-        List<GetCategoryTreeResponse> newList;
         mCategoryMap.put("shop", categories);
 
-        for (GetCategoryTreeResponse i : categories) {
-
-            newList = updateCategoryChildren(i);
-
-            if (newList != null) {
-
-                int childrenSize = newList.size();
-                if (childrenSize != 1) {
-
-                    addToMap(newList);
-                }
-
-                mCategoryMap.put(i.getKey(), newList);
-            }
-        }
+        updateCategories(categories);
 
         mPreLoadedCategories = fillCategoryContent();
     }
 
-    private List<GetCategoryTreeResponse> updateCategoryChildren(GetCategoryTreeResponse categoryTree) {
-        if (!categoryTree.getName().equals("All")) {
-
-            List<GetCategoryTreeResponse> newList = new ArrayList<>();
-
-            if (categoryTree.getChildren() != null) {
-                for (int i = 0; i < categoryTree.getChildren().size(); i++) {
-                    newList.add(categoryTree.getChildren().get(i));
-
-                }
-            }
-            return newList;
-        }
-        return categoryTree.getChildren();
-    }
-
-    private void addToMap(List<GetCategoryTreeResponse> list) {
-        List<GetCategoryTreeResponse> newList2;
-
-        for (GetCategoryTreeResponse i : list) {
-            newList2 = updateCategoryChildren(i);
-
-            int childrenSize = newList2.size();
-            if (childrenSize != 1) {
-                addToMap(newList2);
-            }
-
-            mCategoryMap.put(i.getKey(), newList2);
-
+    private void updateCategories(List<GetCategoryTreeResponse> getCategoryTreeResponses){
+        for(GetCategoryTreeResponse category : getCategoryTreeResponses){
+            mCategoryMap.put(category.getKey(), category.getChildren());
+            updateCategories(category.getChildren());
         }
     }
 

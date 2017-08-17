@@ -79,14 +79,13 @@ public class SubCategoriesAdapter extends RecyclerView.Adapter<RecyclerView.View
 
                 List<GetCategoryTreeResponse> subCategoryItems = getSubCategoryItems(mData.get(position).getKey());
 
-                mSubCategoryItemsAdapter = new SubCategoryItemsAdapter(mChosenCategoryKey, subCategoryItems, mSubCategoryItemClickListener);
+                mSubCategoryItemsAdapter = new SubCategoryItemsAdapter(mChosenCategoryKey, subCategoryItems, mSubCategoryItemClickListener, mCategoryMap);
                 ((SubCategoriesViewHolder) holder).subCategoryItemsRecyclerView.setLayoutManager(new LinearLayoutManager(holder.itemView.getContext(), LinearLayoutManager.VERTICAL, false));
                 ((SubCategoriesViewHolder) holder).subCategoryItemsRecyclerView.setAdapter(mSubCategoryItemsAdapter);
 
-                if (!subCategoryItems.isEmpty()){
+                if (subCategoryItems != null && !subCategoryItems.isEmpty()){
                     holder.itemView.setActivated(false);
-                    ((SubCategoriesViewHolder) holder)
-                            .subCategoryItemsRecyclerView.setVisibility(View.VISIBLE);
+                    ((SubCategoriesViewHolder) holder).subCategoryItemsRecyclerView.setVisibility(View.VISIBLE);
 
 
                     ((SubCategoriesViewHolder) holder).mViewholder_subcategory_container
