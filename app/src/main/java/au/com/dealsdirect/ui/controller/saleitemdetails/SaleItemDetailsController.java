@@ -195,6 +195,7 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
             = new ElasticDragDismissFrameLayout.ElasticDragDismissCallback() {
         @Override
         public void onDragDismissed() {
+            mRootView.removeListener(this);
             mProductDetailScrollView.scrollTo(0, 0);
             getActivity().onBackPressed();
         }
