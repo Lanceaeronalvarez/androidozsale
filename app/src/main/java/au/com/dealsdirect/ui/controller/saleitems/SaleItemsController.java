@@ -143,6 +143,46 @@ public class SaleItemsController extends BasePullToRefreshController implements 
 
     boolean initialLoad = false;
 
+    private TextWatcher mTextWatcher = new TextWatcher() {
+        private Timer timer = new Timer();
+        private final long DELAY = 1000; // milliseconds
+
+        @Override
+        public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+        }
+
+        @Override
+        public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+            mSearchQuery = s.toString();
+            Log.d("hehe", "onTextChanged "+mSearchQuery);
+            mIsSearch = true;
+            mSaleItemsToolbarTitle.setText(mSearchQuery);
+
+            timer.cancel();
+            timer = new Timer();
+            timer.schedule(
+                    new TimerTask() {
+                        @Override
+                        public void run() {
+                            if (before != 0 || count != 0) {
+                                getActivity().runOnUiThread(() -> showLoading());
+                                mChipFilters = removeSearchQueryChips(mChipFilters);
+                                buildSearchQueryChips(mChipFilters);
+                                mPresenter.loadSaleItems(createSaleItemsRequest(mCategoryKey, mSaleId, 0, mChipFilters));
+                            }
+                        }
+                    }, DELAY);
+
+        }
+
+        @Override
+        public void afterTextChanged(Editable editable) {
+
+        }
+    };
+
     @Inject
     SaleItemsMvpPresenter<SaleItemsMvpView> mPresenter;
 
@@ -275,37 +315,68 @@ public class SaleItemsController extends BasePullToRefreshController implements 
     }
 
     private void determineToolbarTitle() {
-        if (!mSearchQuery.isEmpty()) {
-            mSaleItemsToolbarField.setHint(mSearchQuery);
-            mSaleItemsToolbarTitle.setText(mSearchQuery);
-        } else if (mFromCategorySearch && !mCategoryKey.isEmpty()) {
 
-            char c = '>';
-            int charCount = 0;
-            String newString = "";
-            for (int i = 0; i < mCategoryKey.length(); i++) {
-                String getChar = String.valueOf(mCategoryKey.charAt(i));
-                if (!getChar.equals(String.valueOf(c))) {
-                    newString = newString + mCategoryKey.charAt(i);
+        //always set edittext string to empty initially
+        mSaleItemsToolbarField.setText("");
 
-                } else {
-                    if (charCount == 2) {
-                        newString = newString + " • ";
-                        charCount = 0;
-                    }
-                    charCount++;
-                }
-            }
+        String categoryToolbarString = buildCategoryToolbarTitle();
 
-            mSaleItemsToolbarField.setHint(newString);
-            mSaleItemsToolbarTitle.setText(newString);
-        } else if (!mTitle.isEmpty()) {
+        //determining hint logic
+        //category precedes above all
+        if(!mCategoryKey.isEmpty()){
+            mSaleItemsToolbarField.setHint(categoryToolbarString);
+        } else if(!mTitle.isEmpty()){
             mSaleItemsToolbarField.setHint(mTitle);
-            mSaleItemsToolbarTitle.setText(mTitle);
         } else {
             mSaleItemsToolbarField.setHint(getResources().getString(R.string.i_am_looking_for));
+        }
+
+        //determining toolbartitle logic
+        //category preces above all
+        if (!mSearchQuery.isEmpty()) {
+            mSaleItemsToolbarTitle.setText(mSearchQuery);
+            mSaleItemsToolbarField.setText(mSearchQuery);
+        } else if (!mTitle.isEmpty()) {
+            mSaleItemsToolbarTitle.setText(mTitle);
+        } else {
             mSaleItemsToolbarTitle.setText(getResources().getString(R.string.i_am_looking_for));
         }
+
+//        if (!mSearchQuery.isEmpty()) {
+//            mSaleItemsToolbarTitle.setText(mSearchQuery);
+//        } else if (mFromCategorySearch && !mCategoryKey.isEmpty()) {
+//
+//            String newString = buildCategoryToolbarTitle();
+//
+//            mSaleItemsToolbarField.setHint(newString);
+//            mSaleItemsToolbarTitle.setText(newString);
+//        } else if (!mTitle.isEmpty()) {
+//            mSaleItemsToolbarField.setHint(mTitle);
+//            mSaleItemsToolbarTitle.setText(mTitle);
+//        } else {
+//            mSaleItemsToolbarField.setHint(getResources().getString(R.string.i_am_looking_for));
+//            mSaleItemsToolbarTitle.setText(getResources().getString(R.string.i_am_looking_for));
+//        }
+    }
+
+    private String buildCategoryToolbarTitle(){
+        char c = '>';
+        int charCount = 0;
+        String newString = "";
+        for (int i = 0; i < mCategoryKey.length(); i++) {
+            String getChar = String.valueOf(mCategoryKey.charAt(i));
+            if (!getChar.equals(String.valueOf(c))) {
+                newString = newString + mCategoryKey.charAt(i);
+
+            } else {
+                if (charCount == 2) {
+                    newString = newString + " • ";
+                    charCount = 0;
+                }
+                charCount++;
+            }
+        }
+        return newString;
     }
 
     @Override
@@ -396,6 +467,10 @@ public class SaleItemsController extends BasePullToRefreshController implements 
             mCategoryTreeResponse = getSaleItemsResponse.getCategories();
         } else {
 
+            if(items.size() == 0){
+                mFacets = getSaleItemsResponse.facets;
+            }
+
             mCategoryTreeResponse = getSaleItemsResponse.getCategories();
 
             loadingInProgress = false;
@@ -461,6 +536,9 @@ public class SaleItemsController extends BasePullToRefreshController implements 
 
     //    @OnClick(R.id.partial_toolbar_field_title_right_option)
     void showFilters() {
+        mChipFilters = removeSearchQueryChips(mChipFilters);
+        buildSearchQueryChips(mChipFilters);
+
         getRouter().pushController(RouterTransaction.with(SearchFilterController.newInstance(
                 new Gson().toJson(mCategoryTreeResponse),
                 new Gson().toJson(mFacets)
@@ -536,6 +614,8 @@ public class SaleItemsController extends BasePullToRefreshController implements 
     }
 
     public void deactivateSearch() {
+        mSaleItemsToolbarField.removeTextChangedListener(mTextWatcher);
+        mSearchQuery = mSaleItemsToolbarField.getText().toString();
 
         mSaleItemsBackIcon.setImageDrawable(getActivity().getDrawable(R.drawable.ic_pink_chevron));
         mSaleItemsFilterIcon.setImageDrawable(getActivity().getDrawable(R.drawable.ic_toolbar_filter));
@@ -547,6 +627,8 @@ public class SaleItemsController extends BasePullToRefreshController implements 
 
         mSaleItemsBackIcon.setOnClickListener(view -> onBackClick());
         mSaleItemsFilterIcon.setOnClickListener(view12 -> showFilters());
+
+        determineToolbarTitle();
         hideKeyboard();
     }
 
@@ -563,9 +645,10 @@ public class SaleItemsController extends BasePullToRefreshController implements 
             }
         }, 200);
 
-        if (mCategoryKey.isEmpty() && mTitle.isEmpty() && mSearchQuery.isEmpty()) {
-            mSaleItemsToolbarTitle.setText(getActivity().getResources().getString(R.string.i_am_looking_for));
-        }
+//        if (mCategoryKey.isEmpty() && mTitle.isEmpty() && mSearchQuery.isEmpty()) {
+//            mSaleItemsToolbarTitle.setText(getActivity().getResources().getString(R.string.i_am_looking_for));
+//        }
+
         mSaleItemsBackIcon.setImageDrawable(getActivity().getDrawable(R.drawable.ic_search));
         mSaleItemsFilterIcon.setImageDrawable(getActivity().getDrawable(R.drawable.ic_close));
 
@@ -578,52 +661,15 @@ public class SaleItemsController extends BasePullToRefreshController implements 
         mSaleItemsToolbarField.setVisibility(View.VISIBLE);
 
         mSaleItemsToolbarField.setActivated(true);
+        mSaleItemsToolbarField.setSelection(mSaleItemsToolbarField.getText().length());
         mSaleItemsToolbarTitle.setVisibility(View.GONE);
 
-        mSaleItemsToolbarField.addTextChangedListener(new TextWatcher() {
-            private Timer timer = new Timer();
-            private final long DELAY = 1000; // milliseconds
-
-            @Override
-            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-
-            }
-
-            @Override
-            public void onTextChanged(CharSequence s, int start, int before, int count) {
-                mSearchQuery = s.toString();
-                mIsSearch = true;
-                mSaleItemsToolbarTitle.setText(mSearchQuery);
-
-                timer.cancel();
-                timer = new Timer();
-                timer.schedule(
-                        new TimerTask() {
-                            @Override
-                            public void run() {
-                                if (before != 0 || count != 0) {
-                                    getActivity().runOnUiThread(() -> showLoading());
-                                    mChipFilters = removeSearchQueryChips(mChipFilters);
-                                    buildSearchQueryChips(mChipFilters);
-                                    mPresenter.loadSaleItems(createSaleItemsRequest(mCategoryKey, mSaleId, 0, mChipFilters));
-                                }
-                            }
-                        }, DELAY);
-
-            }
-
-            @Override
-            public void afterTextChanged(Editable editable) {
-                if (mSaleItemsToolbarField.getText().toString().isEmpty()) {
-                    determineToolbarTitle();
-                }
-            }
-        });
-
+        mSaleItemsToolbarField.addTextChangedListener(mTextWatcher);
         mSaleItemsToolbarField.setOnEditorActionListener((textView, i, keyEvent) -> {
             if (i == EditorInfo.IME_ACTION_SEARCH) {
 //                    hideKeyboard();
-//                mSearchQuery = textView.getText().toString();
+                mSearchQuery = textView.getText().toString();
+                Log.d("hehe", "onEditorAction "+mSearchQuery);
                 mIsSearch = true;
                 mChipFilters = removeSearchQueryChips(mChipFilters);
                 buildSearchQueryChips(mChipFilters);
@@ -669,15 +715,6 @@ public class SaleItemsController extends BasePullToRefreshController implements 
         }
 
         Log.d("chipTitlesBuilt", chipFilters.toString());
-    }
-
-    private SearchChipModel findSearchQueryChip() {
-        for (SearchChipModel chip : mChipFilters) {
-            if (chip.getFilterType().equals(SEARCH_QUERY_NAME)) {
-                return chip;
-            }
-        }
-        return null;
     }
 
     private GetSaleItemsRequest createSaleItemsRequest(String categoryKey, String saleId, int pageNumber, List<SearchChipModel> chipsList) {

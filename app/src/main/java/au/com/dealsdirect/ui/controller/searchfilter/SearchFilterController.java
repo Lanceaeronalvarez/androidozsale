@@ -261,7 +261,7 @@ public class SearchFilterController extends BaseController
         //remove other chips if a new category is selected.
         // also remove selected indices for other filter types
         if (!mPreviousChosenCategory.equals(mChosenCategory)) {
-            removeAllChipsExceptCategory();
+            removeAllChipsExceptCategoryAndSearchQuery();
             removeSelectedIndicesExceptCategory();
             mPreviousChosenCategory = mChosenCategory;
         }
@@ -370,15 +370,14 @@ public class SearchFilterController extends BaseController
         }
     }
 
-    private void removeAllChipsExceptCategory() {
+    private void removeAllChipsExceptCategoryAndSearchQuery() {
         List<SearchChipModel> listToIterate = new ArrayList<>(mPreviousSearchChips);
         for (SearchChipModel chip : listToIterate) {
-            if (!chip.getFilterType().equals(CATEGORY_TREE_FACET)) {
+            if (!(chip.getFilterType().equals(CATEGORY_TREE_FACET) || chip.getFilterType().equals(SEARCH_QUERY_NAME))) {
                 mPreviousSearchChips.remove(chip);
             }
         }
 
-        String test = "";
     }
 
     private void removeSelectedIndicesExceptCategory() {

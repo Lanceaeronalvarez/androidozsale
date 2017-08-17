@@ -32,6 +32,7 @@ public class GetSaleItemsRequest {
     @SerializedName("sa")
     private String sorting;
 
+    @Expose(serialize = false)
     private boolean hasFilters;
 
     public String getQuery() {
