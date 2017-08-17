@@ -176,7 +176,6 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
             = new ElasticDragDismissFrameLayout.ElasticDragDismissCallback() {
         @Override
         public void onDragDismissed() {
-            mRootView.removeListener(this);
             mProductDetailScrollView.scrollTo(0, 0);
             getActivity().onBackPressed();
         }
@@ -468,6 +467,7 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
     @Override
     public boolean handleBack() {
         if(!isAnimating) {
+            mRootView.removeListener(dragDismissListener);
             ImageUtils.loadImageImmediate(getActivity(), mItemImageUrl, mProductSharedImage, null);
             mProductImagesRv.setVisibility(View.GONE);
             return false;

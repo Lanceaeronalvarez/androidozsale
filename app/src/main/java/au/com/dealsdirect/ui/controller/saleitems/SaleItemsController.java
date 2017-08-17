@@ -414,7 +414,11 @@ public class SaleItemsController extends BasePullToRefreshController implements 
         };
 
         mSaleItemsAdapter = new SaleItemsAdapter(mSaleItems, mPresenter, mSaleId, mTitle);
-        mSaleItemsRecyclerView.setLayoutManager(new GridLayoutManager(getActivity(), 2));
+        if (mPresenter.isTablet()) {
+            mSaleItemsRecyclerView.setLayoutManager(new GridLayoutManager(getActivity(), 4));
+        } else {
+            mSaleItemsRecyclerView.setLayoutManager(new GridLayoutManager(getActivity(), 2));
+        }
         mSaleItemsRecyclerView.setAdapter(mSaleItemsAdapter);
 
         if (isFiltered || mSaleItems.isEmpty()) {
@@ -474,16 +478,6 @@ public class SaleItemsController extends BasePullToRefreshController implements 
             mCategoryTreeResponse = getSaleItemsResponse.getCategories();
 
             loadingInProgress = false;
-
-            if (page == 0) {
-                mSaleItemsAdapter = new SaleItemsAdapter(mSaleItems, mPresenter, mSaleId, mTitle);
-                if (mPresenter.isTablet()) {
-                    mSaleItemsRecyclerView.setLayoutManager(new GridLayoutManager(getActivity(), 4));
-                } else {
-                    mSaleItemsRecyclerView.setLayoutManager(new GridLayoutManager(getActivity(), 2));
-                }
-                mSaleItemsRecyclerView.setAdapter(mSaleItemsAdapter);
-            }
 
             if (!initialLoad) {
                 mSaleItemsAdapter.replaceData(items);
