@@ -224,7 +224,7 @@ public class CategoriesController extends BaseController
 
         new Handler().postDelayed(() -> {
             ((MainActivity) getActivity()).getMainController().goToShops();
-//            mSubCategoryAdapter.notifyDataSetChanged();
+            mSubCategoryAdapter.notifyDataSetChanged();
         }, 400);
 
         mActivity.setIsFromCategories(true);
