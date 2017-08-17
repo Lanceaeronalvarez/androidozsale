@@ -1,6 +1,7 @@
 package au.com.dealsdirect.ui.controller.saleitemdetails;
 
 import au.com.dealsdirect.data.network.model.saleitemdetails.GetSaleItemDetailsResponse;
+import au.com.dealsdirect.service.ourpay.Ourpay;
 import au.com.dealsdirect.ui.base.MvpView;
 
 /**
@@ -13,4 +14,5 @@ public interface SaleItemDetailsMvpView extends MvpView {
 
     void showAddToCartResponse(boolean val);
 
+    void showMyPayDetails(GetSaleItemDetailsResponse value, Ourpay ourpay);
 }

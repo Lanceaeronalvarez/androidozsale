@@ -6,6 +6,9 @@ import com.google.gson.annotations.SerializedName;
 
 import java.util.List;
 
+import au.com.dealsdirect.data.network.model.checkout.getcurrentorder.MyPayDetails;
+import au.com.dealsdirect.data.network.model.checkout.getcurrentorder.PaymentConditions;
+
 public class GetSaleItemDetailsResponse {
 
     @SerializedName("skuVariants")
@@ -59,6 +62,26 @@ public class GetSaleItemDetailsResponse {
     @SerializedName("seoIdentifier")
     @Expose
     private String seoIdentifier;
+
+    @SerializedName("BillingAgreement")
+    @Expose
+    private MyPayDetails.BillingAgreement billingAgreement;
+
+    @SerializedName("PaymentPlan")
+    @Expose
+    private PaymentPlan paymentPlan;
+
+    @SerializedName("PaymentConditions")
+    @Expose
+    private PaymentConditions paymentConditions;
+
+    @SerializedName("MyPayAmount")
+    @Expose
+    private int myPayAmount;
+
+    @SerializedName("MyPayDetails")
+    @Expose
+    private String myPayDetails;
 
     public List<GetSaleItemDetailsResponse> getSkuVariants() {
         return skuVariants;
@@ -196,4 +219,44 @@ public class GetSaleItemDetailsResponse {
         this.seoIdentifier = seoIdentifier;
     }
 
+    public MyPayDetails.BillingAgreement getBillingAgreement() {
+        return billingAgreement;
+    }
+
+    public void setBillingAgreement(MyPayDetails.BillingAgreement billingAgreement) {
+        this.billingAgreement = billingAgreement;
+    }
+
+    public PaymentConditions getPaymentConditions() {
+        return paymentConditions;
+    }
+
+    public void setPaymentConditions(PaymentConditions paymentConditions) {
+        this.paymentConditions = paymentConditions;
+    }
+
+    public int getMyPayAmount() {
+        return myPayAmount;
+    }
+
+    public void setMyPayAmount(int myPayAmount) {
+        this.myPayAmount = myPayAmount;
+    }
+
+    public String getMyPayDetails() {
+        return myPayDetails;
+    }
+
+    public void setMyPayDetails(String myPayDetails) {
+        this.myPayDetails = myPayDetails;
+    }
+
+
+    public PaymentPlan getPaymentPlan() {
+        return paymentPlan;
+    }
+
+    public void setPaymentPlan(PaymentPlan paymentPlan) {
+        this.paymentPlan = paymentPlan;
+    }
 }

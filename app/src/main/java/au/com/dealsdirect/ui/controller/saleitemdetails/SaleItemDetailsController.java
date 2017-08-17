@@ -1,51 +1,32 @@
 package au.com.dealsdirect.ui.controller.saleitemdetails;
 
-import android.animation.Animator;
-import android.animation.AnimatorSet;
-import android.animation.ObjectAnimator;
-import android.animation.ValueAnimator;
 import android.annotation.SuppressLint;
-import android.app.Activity;
 import android.content.Intent;
 import android.graphics.Paint;
-import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.NonNull;
-import android.support.v4.content.ContextCompat;
 import android.support.v4.util.Pair;
-import android.support.v4.view.animation.FastOutLinearInInterpolator;
-import android.support.v4.view.animation.FastOutSlowInInterpolator;
 import android.support.v4.widget.NestedScrollView;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.ViewTreeObserver;
-import android.view.animation.AccelerateInterpolator;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.view.animation.LinearInterpolator;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
-import android.widget.FrameLayout;
 import android.widget.Button;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.aurelhubert.ahbottomnavigation.AHBottomNavigation;
-import com.aurelhubert.ahbottomnavigation.notification.AHNotification;
-import com.daasuu.ei.Ease;
-import com.daasuu.ei.EasingInterpolator;
-import com.facebook.rebound.SimpleSpringListener;
-import com.facebook.rebound.Spring;
-import com.facebook.rebound.SpringConfig;
-import com.facebook.rebound.SpringSystem;
 import com.lsjwzh.widget.recyclerviewpager.RecyclerViewPager;
 import com.mysale.genie.utility.RxBus;
 import com.zhy.view.flowlayout.FlowLayout;
@@ -62,15 +43,14 @@ import au.com.dealsdirect.R;
 import au.com.dealsdirect.data.auth.AuthHandler;
 import au.com.dealsdirect.data.network.model.saleitemdetails.AddToCartRequest;
 import au.com.dealsdirect.data.network.model.saleitemdetails.GetSaleItemDetailsResponse;
+import au.com.dealsdirect.service.ourpay.Ourpay;
+import au.com.dealsdirect.service.ourpay.OurpayPanel;
+import au.com.dealsdirect.ui.base.BaseActivity;
 import au.com.dealsdirect.ui.base.BaseController;
-import au.com.dealsdirect.ui.controller.home.HomeController;
 import au.com.dealsdirect.ui.controller.saleitemdetails.listener.LoadImagesListener;
-import au.com.dealsdirect.ui.controller.saleitems.SaleItemsController;
 import au.com.dealsdirect.ui.custom.ArcTranslateAnimation;
 import au.com.dealsdirect.ui.custom.CustomAlertDialog;
 import au.com.dealsdirect.ui.main.MainActivity;
-import au.com.dealsdirect.utils.AnimationEngine;
-import au.com.dealsdirect.ui.main.SharedActivity;
 import au.com.dealsdirect.utils.BundleBuilder;
 import au.com.dealsdirect.utils.CartUtil;
 import au.com.dealsdirect.utils.ImageUtils;
@@ -190,6 +170,7 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
     ElasticDragDismissFrameLayout mRootView;
     View mCheckoutView;
     AHBottomNavigation mBottomNavView;
+    LinearLayout mOurpayHolder;
 
     private final ElasticDragDismissFrameLayout.ElasticDragDismissCallback dragDismissListener
             = new ElasticDragDismissFrameLayout.ElasticDragDismissCallback() {
@@ -297,6 +278,7 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
 //                .load(mItemImageUrl)
 //                .apply(options)
 //                .into(mProductSharedImage);
+        mOurpayHolder = (LinearLayout) view.findViewById(R.id.partial_checkout_ourpay_panel_holder);
 
         ImageUtils.loadImageImmediate(getActivity(), mItemImageUrl, mProductSharedImage, null);
 
@@ -459,6 +441,8 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
         } else {
             mProductPreviousPrice.setVisibility(View.VISIBLE);
         }
+
+        mPresenter.generateOurpay(saleDetail);
     }
 
     @Override
@@ -469,6 +453,15 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
         if (val) {
             CartUtil.addValueToCart(1);
             mActivity.getMainController().getHomeController().updateBasketItemCount();
+        }
+    }
+
+    @Override
+    public void showMyPayDetails(GetSaleItemDetailsResponse value, Ourpay ourpay) {
+        if (ourpay != null) {
+            OurpayPanel panel = new OurpayPanel((BaseActivity)getActivity());
+            mOurpayHolder.removeAllViews();
+            mOurpayHolder.addView(panel.generatePanel(ourpay));
         }
     }
 

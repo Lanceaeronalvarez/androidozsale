@@ -6,6 +6,11 @@ import javax.inject.Inject;
 
 import au.com.dealsdirect.data.DataManager;
 import au.com.dealsdirect.data.network.model.saleitemdetails.AddToCartRequest;
+import au.com.dealsdirect.data.network.model.saleitemdetails.GetSaleItemDetailsResponse;
+import au.com.dealsdirect.service.ourpay.Ourpay;
+import au.com.dealsdirect.service.ourpay.OurpayError;
+import au.com.dealsdirect.service.ourpay.OurpayState;
+import au.com.dealsdirect.service.ourpay.OurpayStateManager;
 import au.com.dealsdirect.ui.base.BasePresenter;
 import au.com.dealsdirect.utils.rx.SchedulerProvider;
 import io.reactivex.disposables.CompositeDisposable;
@@ -137,5 +142,42 @@ public class SaleItemDetailsPresenter<V extends SaleItemDetailsMvpView> extends 
     @Override
     public boolean isAuthorized() {
         return getDataManager().isAuthorized();
+    }
+
+    @Override
+    public void generateOurpay(GetSaleItemDetailsResponse value) {
+        Ourpay ourpay = new Ourpay();
+
+        try {
+            ourpay.setState(OurpayState.PRECART);
+
+            ourpay.setUserAmount(value.getPrice().getValue());
+            ourpay.setCanUse(true);
+            ourpay.setBillingPeriod(value.getPaymentPlan().getBillingPeriod());
+            ourpay.setTransactionCount(value.getPaymentPlan().getTransactionCount());
+
+            ourpay.setMinAmount(value.getPaymentConditions().minAmountThreshold);
+            ourpay.setMaxAmount(value.getPaymentConditions().maxAmountThreshold);
+
+            ourpay.setAmount(value.getMyPayAmount());
+
+            ourpay.setPlannedTransactions(value.getBillingAgreement().getPlannedTransactions());
+
+            if (OurpayStateManager.isPriceOutOfRange(ourpay)){
+                ourpay.setState(ourpay.getState() | OurpayState.ERROR);
+                ourpay.setCanUse(false);
+                ourpay.setErrorCode(OurpayError.AMOUNT_OUT_OF_RANGE);
+            }else{
+                if (ourpay.getPlannedTransactions() == null){
+                    ourpay.setState(OurpayState.DISABLED);
+                }
+            }
+        }catch (Exception ex){
+            ourpay.setState(OurpayState.DISABLED);
+        }
+
+        getMvpView().showMyPayDetails(value, ourpay);
+
+
     }
 }

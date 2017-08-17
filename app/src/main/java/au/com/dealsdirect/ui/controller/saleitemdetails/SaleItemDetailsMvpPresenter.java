@@ -1,6 +1,7 @@
 package au.com.dealsdirect.ui.controller.saleitemdetails;
 
 import au.com.dealsdirect.data.network.model.saleitemdetails.AddToCartRequest;
+import au.com.dealsdirect.data.network.model.saleitemdetails.GetSaleItemDetailsResponse;
 import au.com.dealsdirect.ui.base.MvpPresenter;
 import au.com.dealsdirect.ui.base.MvpView;
 
@@ -16,4 +17,6 @@ public interface SaleItemDetailsMvpPresenter<V extends MvpView> extends MvpPrese
     void addToCart(AddToCartRequest requestValues);
 
     boolean isAuthorized();
+
+    void generateOurpay(GetSaleItemDetailsResponse value);
 }
