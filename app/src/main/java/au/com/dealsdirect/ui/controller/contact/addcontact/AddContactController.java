@@ -182,7 +182,7 @@ public class AddContactController extends BaseController implements AddContactMv
             }
         });
 
-        mAddContactToolbarRightOption.setImageDrawable(getActivity().getResources().getDrawable(R.drawable.ic_check));
+        mAddContactToolbarRightOption.setVisibility(View.INVISIBLE);
         mAddContactToolbarTitle.setText(R.string.create_contact);
 
         boolean isSubjectsLoaded = Prefs.getBoolean("isSubjectsLoaded", false);
@@ -310,14 +310,6 @@ public class AddContactController extends BaseController implements AddContactMv
     @OnClick(R.id.partial_toolbar_arrow_view)
     void onBack() {
         getActivity().onBackPressed();
-    }
-
-    @OnClick(R.id.partial_toolbar_filter_view)
-    void onCreate() {
-        getRouter().setRoot(RouterTransaction.with(AccountController.newInstance())
-                .pushChangeHandler(new FadeChangeHandler())
-                .popChangeHandler(new FadeChangeHandler()));
-
     }
 
     @OnFocusChange(R.id.controller_add_contact_message_field)
