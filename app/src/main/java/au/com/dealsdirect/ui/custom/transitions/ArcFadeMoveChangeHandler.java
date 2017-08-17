@@ -69,7 +69,7 @@ public class ArcFadeMoveChangeHandler extends TransitionChangeHandler {
             container.removeView(from);
         }
         if (to != null && to.getParent() == null) {
-            from.findViewById(R.id.cell_product_image).setTransitionName("none");
+            from.findViewById(R.id.vh_sale_item_image).setTransitionName("none");
             container.addView(to);
         }
     }

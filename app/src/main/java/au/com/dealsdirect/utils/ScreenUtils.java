@@ -11,6 +11,15 @@ public class ScreenUtils {
         // This utility class is not publicly instantiable
     }
 
+    public static float getScreenDensity(Context context) {
+        WindowManager windowManager = (WindowManager) context
+                .getSystemService(Context.WINDOW_SERVICE);
+        DisplayMetrics dm = new DisplayMetrics();
+        windowManager.getDefaultDisplay().getMetrics(dm);
+
+        return dm.density;
+    }
+
     public static int getScreenWidth(Context context) {
         WindowManager windowManager = (WindowManager) context
                 .getSystemService(Context.WINDOW_SERVICE);

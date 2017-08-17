@@ -413,12 +413,13 @@ public class SaleItemsController extends BasePullToRefreshController implements 
             }
         };
 
-        mSaleItemsAdapter = new SaleItemsAdapter(mSaleItems, mPresenter, mSaleId, mTitle);
+        mSaleItemsAdapter = new SaleItemsAdapter(getActivity(), mSaleItems, mPresenter, mSaleId, mTitle);
         if (mPresenter.isTablet()) {
             mSaleItemsRecyclerView.setLayoutManager(new GridLayoutManager(getActivity(), 4));
         } else {
             mSaleItemsRecyclerView.setLayoutManager(new GridLayoutManager(getActivity(), 2));
         }
+
         mSaleItemsRecyclerView.setAdapter(mSaleItemsAdapter);
 
         if (isFiltered || mSaleItems.isEmpty()) {
@@ -578,9 +579,9 @@ public class SaleItemsController extends BasePullToRefreshController implements 
             bundle.putString("KEY_SEO_IDENTIFIER", seoIdentifierId);
             bundle.putString("KEY_SKU_ID", skuId);
             bundle.putString("KEY_SALE_ID", saleId);
-            bundle.putString("KEY_SALE_NAME", ((SaleItemsAdapter.ViewHolder) viewHolder).mSaleItemName.getText().toString());
-            bundle.putString("KEY_SALE_PRICE", ((SaleItemsAdapter.ViewHolder) viewHolder).mSalePrice.getText().toString());
-            bundle.putString("KEY_SALE_OLD_PRICE", ((SaleItemsAdapter.ViewHolder) viewHolder).mOldPrice.getText().toString());
+            bundle.putString("KEY_SALE_NAME", ((SaleItemsAdapter.ViewHolder) viewHolder).name.getText().toString());
+            bundle.putString("KEY_SALE_PRICE", ((SaleItemsAdapter.ViewHolder) viewHolder).price.getText().toString());
+            bundle.putString("KEY_SALE_OLD_PRICE", ((SaleItemsAdapter.ViewHolder) viewHolder).oldPrice.getText().toString());
 
             getRouter().pushController(RouterTransaction.with(SaleItemDetailsController.newInstance(bundle))
                     .pushChangeHandler(new SharedArcFadePushChangeHandler())

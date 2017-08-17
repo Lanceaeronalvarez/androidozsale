@@ -6,6 +6,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -17,6 +18,7 @@ import au.com.dealsdirect.data.network.model.saleitems.GetSaleItemsResponse;
 import au.com.dealsdirect.ui.controller.saleitems.SaleItemsMvpPresenter;
 import au.com.dealsdirect.utils.ImageUtils;
 import au.com.dealsdirect.utils.PriceUtils;
+import au.com.dealsdirect.utils.ScreenUtils;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
@@ -32,53 +34,63 @@ public class SaleItemsAdapter extends RecyclerView.Adapter<SaleItemsAdapter.View
     private String mSaleId;
     private String mSaleName;
 
+    private int mComputedHeight = 0;
+
     public static class ViewHolder extends RecyclerView.ViewHolder {
 
-        @BindView(R.id.cell_product_image)
-        public ImageView mSaleItemImage;
+        @BindView(R.id.vh_sale_item_image)
+        ImageView image;
 
-        @BindView(R.id.sale_item_sold_out)
-        public TextView mSaleItemSoldOut;
+        @BindView(R.id.vh_sale_item_sold_out)
+        TextView soldout;
 
-        @BindView(R.id.sale_item_name)
-        public TextView mSaleItemName;
+        @BindView(R.id.vh_sale_item_name)
+        public TextView name;
 
-        @BindView(R.id.sale_item_brand)
-        public TextView mSaleBrand;
+        @BindView(R.id.vh_sale_item_brand)
+        TextView brand;
 
-        @BindView(R.id.sale_item_price)
-        public TextView mSalePrice;
+        @BindView(R.id.vh_sale_item_price)
+        public TextView price;
 
-        @BindView(R.id.sale_item_old_price)
-        public TextView mOldPrice;
+        @BindView(R.id.vh_sale_item_old_price)
+        public TextView oldPrice;
 
-        @BindView(R.id.sale_item_container)
-        public RelativeLayout mCardView;
+        @BindView(R.id.vh_sale_item_frame)
+        FrameLayout layout;
 
-        ViewHolder(View view) {
+        ViewHolder(View view, int height) {
             super(view);
             ButterKnife.bind(this, view);
+
+            RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams) layout.getLayoutParams();
+            params.height = height;
+            layout.setLayoutParams(params);
         }
     }
 
     public SaleItemsAdapter(
+            Context context,
             List<GetSaleItemsResponse.Products> saleItems,
             SaleItemsMvpPresenter presenter,
             String saleId,
             String saleName) {
 
+        this.mContext = context;
         this.mData = saleItems;
         this.mPresenter = presenter;
         this.mSaleId = saleId;
         this.mSaleName = saleName;
+
+        int screenWidth = (int) (ScreenUtils.getScreenWidth(mContext) / 2 - (15 * ScreenUtils.getScreenDensity(mContext)));
+        mComputedHeight = ImageUtils.getComputedBannerHeight(225, 360, screenWidth);
     }
 
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        mContext = parent.getContext();
         View view = LayoutInflater.from(parent.getContext())
                 .inflate(R.layout.viewholder_sale_item, parent, false);
-        return new ViewHolder(view);
+        return new ViewHolder(view, mComputedHeight);
     }
 
     @Override
@@ -86,7 +98,7 @@ public class SaleItemsAdapter extends RecyclerView.Adapter<SaleItemsAdapter.View
         GetSaleItemsResponse.Products saleItem = mData.get(position);
         String url = mData.get(position).getImages().isEmpty() ? "" : mData.get(position).getImages().get(0);
 
-        holder.mSaleItemName.setText(saleItem.getProductName());
+        holder.name.setText(saleItem.getProductName());
 
         String saleItemBrand = saleItem.getProductName();
 
@@ -100,18 +112,18 @@ public class SaleItemsAdapter extends RecyclerView.Adapter<SaleItemsAdapter.View
 
 //        ImageUtils.clearImage(mContext,holder.mSaleItemImage);
 
-        ImageUtils.loadImage(mContext, url, holder.mSaleItemImage);
+        ImageUtils.loadImage(mContext, url, holder.image);
 
-        holder.mSaleItemImage.setTransitionName(mContext.getString(R.string.transition_sale_image_indexed,position));
+        holder.image.setTransitionName(mContext.getString(R.string.transition_sale_image_indexed,position));
 
         if (!saleItem.isAvailable()) {
-            holder.mSaleItemSoldOut.setVisibility(View.VISIBLE);
+            holder.soldout.setVisibility(View.VISIBLE);
         }
 
-        holder.mSaleBrand.setText(saleItemBrand);
-        holder.mSalePrice.setText(saleItemPrice);
-        holder.mOldPrice.setText(saleItemOldPrice);
-        holder.mOldPrice.setPaintFlags(holder.mOldPrice.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);
+        holder.brand.setText(saleItemBrand);
+        holder.price.setText(saleItemPrice);
+        holder.oldPrice.setText(saleItemOldPrice);
+        holder.oldPrice.setPaintFlags(holder.oldPrice.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);
 
         holder.itemView.setOnClickListener(v -> mPresenter.loadProductDetails(
                 holder,
