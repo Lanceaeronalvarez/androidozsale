@@ -383,12 +383,16 @@ public class HomeController extends BaseController implements HomeMvpView {
 
     @Override
     public void updateBasketItemCount() {
-        AHNotification notification = new AHNotification.Builder()
-                .setText(CartUtil.getCartValue() + "")
-                .setBackgroundColor(ContextCompat.getColor(getActivity(), android.R.color.holo_red_dark))
-                .setTextColor(ContextCompat.getColor(getActivity(), R.color.white))
-                .build();
-        getBottomNavigationView().setNotification(notification, 4);
+        if(CartUtil.getCartValue() == 0){
+            removeBasketItemCount();
+        } else {
+            AHNotification notification = new AHNotification.Builder()
+                    .setText(CartUtil.getCartValue() + "")
+                    .setBackgroundColor(ContextCompat.getColor(getActivity(), android.R.color.holo_red_dark))
+                    .setTextColor(ContextCompat.getColor(getActivity(), R.color.white))
+                    .build();
+            getBottomNavigationView().setNotification(notification, 4);
+        }
     }
 
     public void removeBasketItemCount() {
