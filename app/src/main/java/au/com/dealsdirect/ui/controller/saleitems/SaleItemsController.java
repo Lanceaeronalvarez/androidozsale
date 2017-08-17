@@ -400,6 +400,16 @@ public class SaleItemsController extends BasePullToRefreshController implements 
 
             loadingInProgress = false;
 
+            if (page == 0) {
+                mSaleItemsAdapter = new SaleItemsAdapter(mSaleItems, mPresenter, mSaleId, mTitle);
+                if (mPresenter.isTablet()) {
+                    mSaleItemsRecyclerView.setLayoutManager(new GridLayoutManager(getActivity(), 4));
+                } else {
+                    mSaleItemsRecyclerView.setLayoutManager(new GridLayoutManager(getActivity(), 2));
+                }
+                mSaleItemsRecyclerView.setAdapter(mSaleItemsAdapter);
+            }
+
             if (!initialLoad) {
                 mSaleItemsAdapter.replaceData(items);
                 mPaginateManager = PaginateUtils.init(mSaleItemsRecyclerView, mPaginateCallbacks);
