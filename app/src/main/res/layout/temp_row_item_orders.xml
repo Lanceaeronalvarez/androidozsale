@@ -31,7 +31,7 @@
                     android:text="Order #:"
                     android:textColor="@color/colorAccent"
                     android:textSize="18sp"
-                    tools:ignore="HardcodedText" />
+                    tools:ignore="HardcodedText"/>
 
                 <TextView
                     android:id="@+id/order_number_text_value"
@@ -44,16 +44,19 @@
                     android:text="204400890"
                     android:textColor="@color/colorAccent"
                     android:textSize="18sp"
-                    tools:ignore="HardcodedText" />
+                    tools:ignore="HardcodedText"/>
 
-                <!--<ImageView-->
-                    <!--android:layout_width="wrap_content"-->
-                    <!--android:layout_height="wrap_content"-->
-                    <!--android:layout_alignParentRight="true"-->
-                    <!--android:src="@drawable/ic_right_arrow"/>-->
 
             </RelativeLayout>
 
+
+            <View
+                android:layout_width="wrap_content"
+                android:layout_height="0.5dp"
+                android:layout_below="@+id/my_order_information_header"
+                android:layout_marginTop="20dp"
+                android:background="#dedede"
+                android:paddingBottom="20dp"/>
 
         </RelativeLayout>
 
@@ -80,7 +83,7 @@
                     android:text=""
                     android:textColor="#878787"
                     android:textSize="@dimen/text_size_xlarge"
-                    tools:ignore="HardcodedText" />
+                    tools:ignore="HardcodedText"/>
 
                 <TextView
                     android:id="@+id/my_order_product_items_amount"
@@ -93,7 +96,7 @@
                     android:text="hehe"
                     android:textColor="@color/gray_field_text"
                     android:textSize="@dimen/text_size_xxxlarge"
-                    tools:ignore="HardcodedText" />
+                    tools:ignore="HardcodedText"/>
 
             </LinearLayout>
 
@@ -107,7 +110,7 @@
                 android:text="1 item"
                 android:textColor="#b7b7b7"
                 android:textSize="14sp"
-                tools:ignore="HardcodedText" />
+                tools:ignore="HardcodedText"/>
 
         </RelativeLayout>
 
@@ -131,11 +134,6 @@
                 android:orientation="horizontal"
                 tools:ignore="UselessParent">
 
-                <!--<View-->
-                <!--android:layout_width="0dp"-->
-                <!--android:layout_height="0dp"-->
-                <!--android:layout_weight=".05"-->
-                <!--android:layout_gravity="center_vertical"/>-->
 
                 <TextView
                     android:id="@+id/approved_date_graph_node"
@@ -145,14 +143,8 @@
                     android:gravity="center"
                     android:text=""
                     android:textColor="@android:color/white"
-                    tools:ignore="ContentDescription" />
+                    tools:ignore="ContentDescription"/>
 
-                <!--<ImageView-->
-                <!--android:id="@+id/approved_date_graph_node"-->
-                <!--android:layout_width="25dp"-->
-                <!--android:layout_height="25dp"-->
-                <!--android:src="@drawable/bg_orders_graph_active_state"-->
-                <!--tools:ignore="ContentDescription"/>-->
 
                 <View
                     android:id="@+id/my_order_product_order_date_graph_check_connector"
@@ -160,7 +152,7 @@
                     android:layout_height="5dp"
                     android:layout_gravity="center_vertical"
                     android:layout_weight=".33"
-                    android:background="#d9d9d9" />
+                    android:background="#d9d9d9"/>
 
 
                 <TextView
@@ -171,7 +163,7 @@
                     android:gravity="center"
                     android:text="2"
                     android:textColor="@android:color/white"
-                    tools:ignore="ContentDescription" />
+                    tools:ignore="ContentDescription"/>
 
                 <View
                     android:id="@+id/my_order_product_stocked_arrived_graph_check_connector"
@@ -179,7 +171,7 @@
                     android:layout_height="5dp"
                     android:layout_gravity="center_vertical"
                     android:layout_weight=".33"
-                    android:background="#d9d9d9" />
+                    android:background="#d9d9d9"/>
 
                 <TextView
                     android:id="@+id/dispatched_date_graph_node"
@@ -189,7 +181,7 @@
                     android:gravity="center"
                     android:text="3"
                     android:textColor="@android:color/white"
-                    tools:ignore="ContentDescription" />
+                    tools:ignore="ContentDescription"/>
 
                 <View
                     android:id="@+id/my_order_product_packed_graph_check_connector"
@@ -197,7 +189,7 @@
                     android:layout_height="5dp"
                     android:layout_gravity="center_vertical"
                     android:layout_weight=".33"
-                    android:background="#d9d9d9" />
+                    android:background="#d9d9d9"/>
 
                 <TextView
                     android:id="@+id/closed_date_graph_node"
@@ -207,7 +199,7 @@
                     android:gravity="center"
                     android:text="4"
                     android:textColor="@android:color/white"
-                    tools:ignore="ContentDescription" />
+                    tools:ignore="ContentDescription"/>
 
                 <!--<View-->
                 <!--android:layout_width="0dp"-->
@@ -239,7 +231,7 @@
                         android:text="Order Date"
                         android:textColor="@color/gray_field_text"
                         android:textSize="12sp"
-                        tools:ignore="HardcodedText" />
+                        tools:ignore="HardcodedText"/>
 
                     <TextView
 
@@ -250,14 +242,14 @@
                         android:text="05 Sep"
                         android:textColor="#b1b1b1"
                         android:textSize="12sp"
-                        tools:ignore="HardcodedText" />
+                        tools:ignore="HardcodedText"/>
 
                 </LinearLayout>
 
                 <View
                     android:layout_width="0dp"
                     android:layout_height="0dp"
-                    android:layout_weight=".33" />
+                    android:layout_weight=".33"/>
 
                 <LinearLayout
                     android:layout_width="wrap_content"
@@ -275,7 +267,7 @@
                         android:text="Stock Arrived"
                         android:textColor="#b1b1b1"
                         android:textSize="12sp"
-                        tools:ignore="HardcodedText" />
+                        tools:ignore="HardcodedText"/>
 
                     <TextView
 
@@ -286,13 +278,13 @@
                         android:text="05 Sep"
                         android:textColor="#b1b1b1"
                         android:textSize="12sp"
-                        tools:ignore="HardcodedText" />
+                        tools:ignore="HardcodedText"/>
                 </LinearLayout>
 
                 <View
                     android:layout_width="0dp"
                     android:layout_height="0dp"
-                    android:layout_weight=".25" />
+                    android:layout_weight=".25"/>
 
                 <LinearLayout
                     android:layout_width="wrap_content"
@@ -310,7 +302,7 @@
                         android:text="Order Packed"
                         android:textColor="#b1b1b1"
                         android:textSize="12sp"
-                        tools:ignore="HardcodedText" />
+                        tools:ignore="HardcodedText"/>
 
                     <TextView
 
@@ -321,13 +313,13 @@
                         android:text="05 Sep"
                         android:textColor="#b1b1b1"
                         android:textSize="12sp"
-                        tools:ignore="HardcodedText" />
+                        tools:ignore="HardcodedText"/>
                 </LinearLayout>
 
                 <View
                     android:layout_width="0dp"
                     android:layout_height="0dp"
-                    android:layout_weight=".33" />
+                    android:layout_weight=".33"/>
 
                 <LinearLayout
                     android:layout_width="wrap_content"
@@ -344,7 +336,7 @@
                         android:text="Dispatched"
                         android:textColor="#b1b1b1"
                         android:textSize="12sp"
-                        tools:ignore="HardcodedText" />
+                        tools:ignore="HardcodedText"/>
 
                     <TextView
 
@@ -355,14 +347,13 @@
                         android:text="05 Sep"
                         android:textColor="#b1b1b1"
                         android:textSize="12sp"
-                        tools:ignore="HardcodedText" />
+                        tools:ignore="HardcodedText"/>
 
                 </LinearLayout>
 
             </LinearLayout>
 
             <LinearLayout
-                android:id="@+id/row_item_order_track_her_container"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_below="@id/my_order_graph_progress_states"
@@ -372,7 +363,7 @@
                 <View
                     android:layout_width="wrap_content"
                     android:layout_height="0.5dp"
-                    android:background="#f4f4f4" />
+                    android:background="#f4f4f4"/>
 
                 <Button
                     android:id="@+id/trackHereButton"
@@ -382,14 +373,14 @@
                     android:layout_alignParentBottom="true"
                     android:text="track here"
                     android:textAllCaps="false"
-                    android:textSize="15sp" />
+                    android:textSize="15sp"/>
 
 
                 <View
                     android:layout_width="wrap_content"
                     android:layout_height="0.5dp"
                     android:layout_marginTop="20dp"
-                    android:background="#dedede" />
+                    android:background="#dedede"/>
 
             </LinearLayout>
 

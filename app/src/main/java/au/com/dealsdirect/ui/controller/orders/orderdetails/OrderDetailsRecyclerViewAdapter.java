@@ -72,8 +72,6 @@ public class OrderDetailsRecyclerViewAdapter extends RecyclerView.Adapter<Recycl
     @Override
     public void onBindViewHolder(RecyclerView.ViewHolder vh, final int position) {
 
-//        CURRENCY = Config.getCurrencySign();
-
         mItemsRecyclerView = (RecyclerView)
                 mView.findViewById(R.id.order_items_recyclerview);
 
@@ -91,13 +89,9 @@ public class OrderDetailsRecyclerViewAdapter extends RecyclerView.Adapter<Recycl
         OrdersViewHolder holder = (OrdersViewHolder) vh;
         
         String orderItemCount = item.getSubTotal().getItemsCount()+"";
-//        String orderNumber = Integer.toString(paymentReferenceNo);
-        
-//        if (position != 0){
-//            holder.orderNumberContainerLayout.setVisibility(View.GONE);
-//        }else{
-//            holder.orderNumberValueTextView.setText(orderNumber);
-//        }
+        String orderNumber = Integer.toString(paymentReferenceNo);
+        String orderName = item.getDescription();
+        String orderStatus = item.getStatus();
 
         if (position == orderList.size()-1){
             holder.orderDetailLayout.setVisibility(View.VISIBLE);
@@ -105,25 +99,10 @@ public class OrderDetailsRecyclerViewAdapter extends RecyclerView.Adapter<Recycl
             holder.orderDetailLayout.setVisibility(View.GONE);
         }
 
-        //        if(mOrderDetails != null) {
-        //
-        //            String brandId = mOrderDetails.getOrders().get(position).getItems().get(position).getBrandID();
-        //            String imageId = mOrderDetails.getOrders().get(position).getItems().get(position).getImageID();
-        //            String fileName = mOrderDetails.getOrders().get(position).getItems().get(0).getFileName();
-        //
-        //            Glide.with(context).load(GImageUrlUtil.generateImageUrl(brandId, imageId, fileName))
-        //                 .diskCacheStrategy(DiskCacheStrategy.ALL)
-        //                 .placeholder(R.drawable.topbuy_loading_image_placeholder_xml_tall)
-        //                 .fitCenter().into(holder.orderImage);
-        //
-        //        }
-
-        //  holder.orderProductNameTextView.setText(orderName);
         String itemText=" item";
         if(Integer.parseInt(orderItemCount) > 1){
             itemText=" items";
         }
-        //    holder.orderProductQuantityTextView.setText(orderItemCount+itemText);
 
         String approvedDate = DateUtils.getDateForOrderProgress(item.getTracker().getApprovedDate());
         String approvedTime = DateUtils.getTimeFromDateString(item.getTracker().getApprovedDate());
@@ -138,38 +117,38 @@ public class OrderDetailsRecyclerViewAdapter extends RecyclerView.Adapter<Recycl
         holder.dispatchedDateValueTextView.setText(closeDate);
         holder.closedDateValueTextView.setText(dispatchDate);
 
-        Log.d("myorderstracker","approved date = "+approvedDate+ " , stock date = "+item
-                .getTracker().getStockDate()+ " , dispatched date = "+dispatchDate+
-                " , get closed date = "+item.getTracker().getClosedDate()+" , " +
-                "estimated delivery text"+
-                item.getEstimatedDeliveryText());
 
         int currentStep = item.getTracker().getStep();
+        int colorActive = holder.itemView.getResources().getColor(R.color.colorAccent);
 
-        switch (currentStep){
+        switch (currentStep) {
             case 1:
-                holder.orderFirstNodeStatus.setText(item.getStatus());
+                holder.orderFirstNodeStatus.setText(orderStatus);
                 holder.approvedDateGraphNodeImageView.setBackgroundResource(R.drawable.bg_orders_graph_active_state);
                 holder.approvedDateGraphNodeImageView.setText("");
+                holder.orderStockArrivedConnector.setBackgroundColor(colorActive);
+                holder.stockDateGraphNodeTextView.setBackgroundResource(R.drawable.bg_orders_graph_pending_state);
                 break;
 
             case -1:
-                holder.orderFirstNodeStatus.setText(item.getStatus());
+                holder.orderFirstNodeStatus.setText(orderStatus);
                 holder.approvedDateGraphNodeImageView.setBackgroundResource(R.drawable.bg_orders_negative_state);
                 holder.approvedDateGraphNodeImageView.setText("");
                 break;
-
             case 2:
                 holder.stockDateGraphNodeTextView.setBackgroundResource(R.drawable.bg_orders_graph_active_state);
                 holder.stockDateGraphNodeTextView.setText("");
-//                holder.stockDateValueTextView.setVisibility(View.INVISIBLE);
+                holder.orderStockArrivedConnector.setBackgroundColor(colorActive);
+                holder.orderPackedConnector.setBackgroundColor(colorActive);
+                holder.dispatchedDateGraphNodeTextView.setBackgroundResource(R.drawable.bg_orders_graph_pending_state);
                 holder.orderSecondNodeStatus.setText("Stock Arrived");
                 break;
             case -2:
                 holder.stockDateGraphNodeTextView.setBackgroundResource(R.drawable.bg_orders_negative_state);
                 holder.stockDateGraphNodeTextView.setText("");
+                holder.orderStockArrivedConnector.setBackgroundColor(colorActive);
 //                holder.stockDateValueTextView.setVisibility(View.INVISIBLE);
-                holder.orderSecondNodeStatus.setText(item.getStatus());
+                holder.orderSecondNodeStatus.setText(orderStatus);
                 break;
 
             case 3:
@@ -177,6 +156,10 @@ public class OrderDetailsRecyclerViewAdapter extends RecyclerView.Adapter<Recycl
                 holder.stockDateGraphNodeTextView.setText("");
                 holder.dispatchedDateGraphNodeTextView.setBackgroundResource(R.drawable.bg_orders_graph_active_state);
                 holder.dispatchedDateGraphNodeTextView.setText("");
+                holder.orderPackedConnector.setBackgroundColor(colorActive);
+                holder.orderDispatchedConnector.setBackgroundColor(colorActive);
+                holder.orderStockArrivedConnector.setBackgroundColor(colorActive);
+                holder.closedDateGraphNodeTextView.setBackgroundResource(R.drawable.bg_orders_graph_pending_state);
 //                holder.dispatchedDateValueTextView.setVisibility(View.INVISIBLE);
                 holder.orderThirdNodeStatus.setText("Order Packed");
                 break;
@@ -187,7 +170,7 @@ public class OrderDetailsRecyclerViewAdapter extends RecyclerView.Adapter<Recycl
                 holder.dispatchedDateGraphNodeTextView.setBackgroundResource(R.drawable.bg_orders_negative_state);
                 holder.dispatchedDateGraphNodeTextView.setText("");
 //                holder.dispatchedDateValueTextView.setVisibility(View.INVISIBLE);
-                holder.orderThirdNodeStatus.setText(item.getStatus());
+                holder.orderThirdNodeStatus.setText(orderStatus);
                 break;
 
             case 4:
@@ -197,6 +180,10 @@ public class OrderDetailsRecyclerViewAdapter extends RecyclerView.Adapter<Recycl
                 holder.dispatchedDateGraphNodeTextView.setText("");
                 holder.closedDateGraphNodeTextView.setBackgroundResource(R.drawable.bg_orders_graph_active_state);
                 holder.closedDateGraphNodeTextView.setText("");
+
+                holder.orderDispatchedConnector.setBackgroundColor(colorActive);
+                holder.orderStockArrivedConnector.setBackgroundColor(colorActive);
+                holder.orderPackedConnector.setBackgroundColor(colorActive);
 //                holder.closedDateValueTextView.setVisibility(View.INVISIBLE);
                 holder.orderFourthNodeStatus.setText("Dispatched");
                 break;
@@ -208,15 +195,19 @@ public class OrderDetailsRecyclerViewAdapter extends RecyclerView.Adapter<Recycl
                 holder.dispatchedDateGraphNodeTextView.setText("");
                 holder.closedDateGraphNodeTextView.setBackgroundResource(R.drawable.bg_orders_negative_state);
                 holder.closedDateGraphNodeTextView.setText("");
-//                holder.closedDateValueTextView.setVisibility(View.INVISIBLE);
-                holder.orderFourthNodeStatus.setText(item.getStatus());
-                break;
 
+                holder.orderDispatchedConnector.setBackgroundColor(colorActive);
+                holder.orderStockArrivedConnector.setBackgroundColor(colorActive);
+                holder.orderPackedConnector.setBackgroundColor(colorActive);
+//                holder.closedDateValueTextView.setVisibility(View.INVISIBLE);
+//                holder.orderFourthNodeStatus.setText(orderStatus);
+                break;
 
 
             default:
                 break;
         }
+
 
         holder.orderStatusTextView.setText(item.getStatus());
         holder.deliveryAmountValue.setText(PriceUtils.getPriceStringValue(total.getDeliveryAmount()));
@@ -244,17 +235,15 @@ public class OrderDetailsRecyclerViewAdapter extends RecyclerView.Adapter<Recycl
                 PriceUtils.getPriceStringValue(total.getTotalAmount()));
         //
         String trackHereLink = item.getLink();
-        onClickListener = new View.OnClickListener() {
-            @Override public void onClick(View view) {
+        onClickListener = view -> {
 
-                Timber.d("OrderDetails", "track here button");
-                if (!trackHereLink.isEmpty()){
+            Timber.d("OrderDetails", "track here button");
+            if (!trackHereLink.isEmpty()){
 
-                    Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(trackHereLink));
-                    context.startActivity(browserIntent);
-                }else {
-                    // ToastEngine.showShortMessage(context, "Tracking link not yet availble");
-                }
+                Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(trackHereLink));
+                context.startActivity(browserIntent);
+            }else {
+                // ToastEngine.showShortMessage(context, "Tracking link not yet availble");
             }
         };
 
@@ -334,10 +323,18 @@ public class OrderDetailsRecyclerViewAdapter extends RecyclerView.Adapter<Recycl
         TextView orderThirdNodeStatus;
         TextView orderFourthNodeStatus;
 
+        View orderStockArrivedConnector;
+        View orderPackedConnector;
+        View orderDispatchedConnector;
+
         public OrdersViewHolder(View itemView) {
             super(itemView);
 
             trackHereButton = (Button) itemView.findViewById(R.id.order_track_button);
+
+            orderStockArrivedConnector = itemView.findViewById(R.id.my_order_product_order_date_graph_check_connector);
+            orderPackedConnector = itemView.findViewById(R.id.my_order_product_stocked_arrived_graph_check_connector);
+            orderDispatchedConnector = itemView.findViewById(R.id.my_order_product_packed_graph_check_connector);
 
             orderImage = (ImageView) itemView.findViewById(R.id.order_image);
             productPrice = (TextView) itemView.findViewById(R.id.product_price);
