@@ -93,7 +93,7 @@
                     android:layout_gravity="end"
                     android:gravity="end"
                     android:maxLines="1"
-                    android:text="hehe"
+                    android:text=""
                     android:textColor="@color/gray_field_text"
                     android:textSize="@dimen/text_size_xxxlarge"
                     tools:ignore="HardcodedText"/>

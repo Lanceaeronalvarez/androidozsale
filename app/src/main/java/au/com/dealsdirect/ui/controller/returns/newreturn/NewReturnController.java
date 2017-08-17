@@ -195,21 +195,6 @@ public class NewReturnController extends BaseController implements NewReturnMvpV
 
                 mPresenter.addNewReturnOrderRequest(createReturnRequest);
             }
-
-
-
-//              getActivity().getSupportFragmentManager().popBackStack(1, FragmentManager
-//                        .POP_BACK_STACK_INCLUSIVE);
-//
-//
-//                getActivity().getSupportFragmentManager()
-//                             .popBackStack(
-//                                     getActivity()
-//                                             .getSupportFragmentManager()
-//                                             .getFragments()
-//                                             .get(0)
-//                                             .getTag(),
-//                                     FragmentManager.POP_BACK_STACK_INCLUSIVE);
         };
 
 //        newReturnOrderSetDetailSendBottomButton.setOnClickListener(onClickListener);
@@ -226,8 +211,10 @@ public class NewReturnController extends BaseController implements NewReturnMvpV
 
     @OnClick(R.id.partial_toolbar_arrow_view)
     void onBackClick(){
+        hideKeyboard();
         if (getActivity()!=null)
             getActivity().onBackPressed();
+
     }
 
     private java.util.List getUpdateRequestList(){
@@ -300,6 +287,4 @@ public class NewReturnController extends BaseController implements NewReturnMvpV
 
         }
     }
-
-
 }
