@@ -47,6 +47,7 @@ public class BannersAdapter extends RecyclerView.Adapter<BannersAdapter.ViewHold
         this.mPresenter = presenter;
         this.mBannerClickListener = bannerClickListener;
 
+        // Dynamic Height Computation
         if (mPresenter.isTablet()) {
 
             int screenWidth = ScreenUtils.getScreenWidth(mContext) / 2;

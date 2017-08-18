@@ -82,7 +82,9 @@ public class SaleItemsAdapter extends RecyclerView.Adapter<SaleItemsAdapter.View
         this.mSaleId = saleId;
         this.mSaleName = saleName;
 
-        int screenWidth = (int) (ScreenUtils.getScreenWidth(mContext) / 2 - (15 * ScreenUtils.getScreenDensity(mContext)));
+        // Dynamic Height Computation
+        int columns = mPresenter.isTablet() ? 4 : 2;
+        int screenWidth = (int) (ScreenUtils.getScreenWidth(mContext) / columns - (15 * ScreenUtils.getScreenDensity(mContext)));
         mComputedHeight = ImageUtils.getComputedBannerHeight(225, 360, screenWidth);
     }
 
@@ -114,7 +116,7 @@ public class SaleItemsAdapter extends RecyclerView.Adapter<SaleItemsAdapter.View
 
         ImageUtils.loadImage(mContext, url, holder.image);
 
-        holder.image.setTransitionName(mContext.getString(R.string.transition_sale_image_indexed,position));
+        holder.image.setTransitionName(mContext.getString(R.string.transition_sale_image_indexed, position));
 
         if (!saleItem.isAvailable()) {
             holder.soldout.setVisibility(View.VISIBLE);
@@ -132,7 +134,6 @@ public class SaleItemsAdapter extends RecyclerView.Adapter<SaleItemsAdapter.View
                 url,
                 mData.get(position).getSkus().get(0).getId(),
                 mSaleId));
-
 
 
     }
