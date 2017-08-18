@@ -32,7 +32,6 @@ public class SaleItemsAdapter extends RecyclerView.Adapter<SaleItemsAdapter.View
     private Context mContext;
     private SaleItemsMvpPresenter mPresenter;
     private String mSaleId;
-    private String mSaleName;
 
     private int mComputedHeight = 0;
 
@@ -73,14 +72,12 @@ public class SaleItemsAdapter extends RecyclerView.Adapter<SaleItemsAdapter.View
             Context context,
             List<GetSaleItemsResponse.Products> saleItems,
             SaleItemsMvpPresenter presenter,
-            String saleId,
-            String saleName) {
+            String saleId) {
 
         this.mContext = context;
         this.mData = saleItems;
         this.mPresenter = presenter;
         this.mSaleId = saleId;
-        this.mSaleName = saleName;
 
         // Dynamic Height Computation
         int columns = mPresenter.isTablet() ? 4 : 2;

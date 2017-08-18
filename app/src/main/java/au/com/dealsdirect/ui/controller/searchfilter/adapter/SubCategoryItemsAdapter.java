@@ -71,7 +71,6 @@ public class SubCategoryItemsAdapter extends RecyclerView.Adapter<SubCategoryIte
                 holder.titleTextView.setText(mData.get(position).getName());
 
                 if (mData.get(position).getKey().equals(mChosenCategoryKey)) {
-
                     holder.titleTextView.setTextColor(context.getResources().getColor(R.color.category_text_active));
                 }
             }
@@ -85,15 +84,15 @@ public class SubCategoryItemsAdapter extends RecyclerView.Adapter<SubCategoryIte
 
                 holder.itemView.setActivated(false);
                 holder.recyclerView.setVisibility(View.VISIBLE);
-
-                holder.container.setOnClickListener(view -> {
-                    holder.titleTextView.setEnabled(true);
-                    mCategoryAdapterClickListener.onSubCategoryItemClicked(
-                            mData.get(position).getId(),
-                            mData.get(position).getName(),
-                            mData.get(position).getKey());
-                });
             }
+
+            holder.container.setOnClickListener(view -> {
+                holder.titleTextView.setEnabled(true);
+                mCategoryAdapterClickListener.onSubCategoryItemClicked(
+                        mData.get(position).getId(),
+                        mData.get(position).getName(),
+                        mData.get(position).getKey());
+            });
         }
     }
 
