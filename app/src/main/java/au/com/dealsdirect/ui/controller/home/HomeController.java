@@ -92,7 +92,6 @@ public class HomeController extends BaseController implements HomeMvpView {
     private int currentVisibleIndex = 1;
 
     private boolean isLoginVisible = false;
-    private int mBottomNavItemSelectCounter = 0;
 
     public static HomeController newInstance() {
 
@@ -235,7 +234,6 @@ public class HomeController extends BaseController implements HomeMvpView {
         mBottomNavigationView.setOnTabSelectedListener((position, wasSelected) -> {
 
 
-            mBottomNavItemSelectCounter++;
             if (isAttached())
                 ((MainActivity) getActivity()).setIsFromCategories(false);
 
@@ -243,19 +241,16 @@ public class HomeController extends BaseController implements HomeMvpView {
 
                 switch (position) {
                     case 0:
-                        mBottomNavItemSelectCounter = 0;
                         showShopController();
                         break;
 
                     case 1:
-                        mBottomNavItemSelectCounter = 0;
                         showAccountController();
                         break;
 
                     case 2:
                     case 3:
                     case 4:
-                        mBottomNavItemSelectCounter = 0;
                         if (!((MainActivity) getActivity()).isAuthorized()) {
                             new Handler().postDelayed(() -> showLoginController(getCurrentRouter(), new AuthHandler() {
                                 @Override
