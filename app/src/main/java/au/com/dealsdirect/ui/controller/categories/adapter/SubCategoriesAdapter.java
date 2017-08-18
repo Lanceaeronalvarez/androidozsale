@@ -97,7 +97,7 @@ public class SubCategoriesAdapter extends RecyclerView.Adapter<RecyclerView.View
                     });
                     return;
                 } else {
-                    mSubCategoryItemsAdapter = new SubCategoryItemsAdapter(subCategoryItems, mPresenter, mSubCategoryItemClickListener);
+                    mSubCategoryItemsAdapter = new SubCategoryItemsAdapter(subCategoryItems, mPresenter, mSubCategoryItemClickListener, mAnimateInsert, mIsResetSubCategories);
                     ((SubCategoriesViewHolder) holder).subCategoryItemsRecyclerView.setLayoutManager(new LinearLayoutManager(holder.itemView.getContext(), LinearLayoutManager.VERTICAL, false));
                     ((SubCategoriesViewHolder) holder).subCategoryItemsRecyclerView.setAdapter(mSubCategoryItemsAdapter);
                 }
@@ -131,7 +131,7 @@ public class SubCategoriesAdapter extends RecyclerView.Adapter<RecyclerView.View
                                         holder.itemView.setActivated(true);
                                         ((SubCategoriesViewHolder) holder)
                                                 .subCategoryItemsRecyclerView.setVisibility(View.VISIBLE);
-                                        mSubCategoryItemsAdapter = new SubCategoryItemsAdapter(subCategoryItems, mPresenter, mSubCategoryItemClickListener);
+                                        mSubCategoryItemsAdapter = new SubCategoryItemsAdapter(subCategoryItems, mPresenter, mSubCategoryItemClickListener, mAnimateInsert, mIsResetSubCategories);
                                         ((SubCategoriesViewHolder) holder).subCategoryItemsRecyclerView.setLayoutManager(new LinearLayoutManager(holder.itemView.getContext(), LinearLayoutManager.VERTICAL, false));
                                         ((SubCategoriesViewHolder) holder).subCategoryItemsRecyclerView.setAdapter(mSubCategoryItemsAdapter);
                                     }
