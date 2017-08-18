@@ -37,6 +37,8 @@ public interface MainMvpPresenter<V extends MainMvpView> extends MvpPresenter<V>
 
     String getStoredTemplateTexts(String detailKey);
 
+    boolean getIsMyPayEnabled();
+
     void initializeNotifications(Context context);
 
     String getKountMerchantId();

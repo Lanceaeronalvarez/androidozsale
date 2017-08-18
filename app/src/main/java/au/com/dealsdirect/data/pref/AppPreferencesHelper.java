@@ -369,7 +369,7 @@ public class AppPreferencesHelper implements PreferencesHelper {
 
     @Override
     public void setMyPayTemplateTexts(GetTemplateTextsResponse.GetTemplateTextsValue value) {
-        Log.d("Template", value.getOurPayTCValidationFailed());
+        Log.d("Template", "= " +value.getOurPayTCValidationFailed()+ " , "+value.getCheckoutMyPayPayInvalidPaymentMethod()+" , " +value.getMyPayDetailsMobileApp());
         Prefs.putString(MYPAY_EXCEED_LIMIT, value.getCheckoutMyPayPayExceedLimit());
         Prefs.putString(MYPAY_INVALID_PAYMENT_METHOD, value.getCheckoutMyPayPayInvalidPaymentMethod());
         Prefs.putString(MYPAY_OUT_OF_RANGE, value.getCheckoutMyPayPayOutOfRangeMobileApp());

@@ -5,6 +5,7 @@ package au.com.dealsdirect.ui.main;
 
 
 import android.content.Context;
+import android.util.Log;
 
 import com.androidnetworking.error.ANError;
 import com.google.gson.Gson;
@@ -517,6 +518,7 @@ public class MainPresenter<V extends MainMvpView> extends BasePresenter<V> imple
     public void callGetTemplateTexts() {
         GetTemplateTextsRequest getTemplateTextRequest = new GetTemplateTextsRequest();
         getTemplateTextRequest.templateKeys = templateTextsKeys;
+
         getTemplateTextRequest.countryId = getDataManager().getCountryId();
         getTemplateTextRequest.languageId = getDataManager().getLanguageId();
         getCompositeDisposable().add(getDataManager().callGetTemplateTexts(getTemplateTextRequest)
@@ -525,9 +527,10 @@ public class MainPresenter<V extends MainMvpView> extends BasePresenter<V> imple
                 .subscribe(getTemplateTextsResponse -> {
                     getDataManager().setMyPayTemplateTexts(getTemplateTextsResponse.getResponse().getValue());
                     getMvpView().storeTemplateTexts(getTemplateTextsResponse.getResponse().getValue());
+                    Log.d("mainpresenter", " getTemplatetexts success");
 
                 }, throwable -> {
-
+                    Log.d("mainpresenter", " getTemplatetexts failed = "+throwable.getMessage());
                 }));
     }
 
@@ -575,5 +578,9 @@ public class MainPresenter<V extends MainMvpView> extends BasePresenter<V> imple
             }
         }
         return jsonArray;
+    }
+
+    public boolean getIsMyPayEnabled(){
+        return getDataManager().getIsMyPayEnabled();
     }
 }

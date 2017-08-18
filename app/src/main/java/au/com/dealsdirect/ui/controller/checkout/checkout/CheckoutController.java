@@ -34,6 +34,7 @@ import au.com.dealsdirect.data.network.model.checkout.getcurrentorder.Voucher;
 import au.com.dealsdirect.data.network.model.checkout.getuserpaymentmethods.PaymentMethod;
 import au.com.dealsdirect.service.ourpay.Ourpay;
 import au.com.dealsdirect.service.ourpay.OurpayPanel;
+import au.com.dealsdirect.service.ourpay.OurpayStateManager;
 import au.com.dealsdirect.ui.base.BaseActivity;
 import au.com.dealsdirect.ui.base.BaseController;
 import au.com.dealsdirect.ui.controller.address.addnewaddress.AddNewAddressController;
@@ -294,32 +295,50 @@ public class CheckoutController extends BaseController implements CheckoutMvpVie
     public void showMyPayDetails(Value value, Ourpay ourpay) {
 
         if (value != null) {
-
-            ((MainActivity) getActivity()).setOurpay(ourpay);
-            ((MainActivity) getActivity()).setThreeDSecureRequired(value.threeDSecureRequired);
-
-            OurpayPanel ourpayPanel = new OurpayPanel((BaseActivity) getActivity(), getRouter());
-            mOurpay = ourpay;
-            mOurpayHolder.removeAllViews();
             PaymentMethod paymentMethod = ((MainActivity) getActivity()).getPaymentMethodSelected();
+            boolean isMyPayEnabled = ((MainActivity)getActivity()).getIsMyPayEnabled();
 
-            Log.d("checkout", "payment = " +paymentMethod.getPaymentType()+ " , "+ourpay.isCanUse()  +  " , "+isPaymentMethodNull );
-            if (!paymentMethod.getPaymentType().equalsIgnoreCase(CARD_PAYPAL) && ourpay.isCanUse() && !isPaymentMethodNull) {
+            if(paymentMethod!=null){
+                if (ourpay!=null && isMyPayEnabled){
+                    OurpayStateManager.setOurpayAccordingToPaymentMethod(ourpay, paymentMethod);
 
-                mOurpayHolder.addView(ourpayPanel.generatePanel(ourpay));
+                    ((MainActivity) getActivity()).setOurpay(ourpay);
+                    ((MainActivity) getActivity()).setThreeDSecureRequired(value.threeDSecureRequired);
 
-                mButtonOurpay = (RelativeLayout) mOurpayHolder.findViewById(R.id.rl_button_ourpay);
-                mButtonOurpay.setOnClickListener(view -> onOurpayButtonClick());
+                    OurpayPanel ourpayPanel = new OurpayPanel((BaseActivity) getActivity(), getRouter());
+                    mOurpay = ourpay;
+                    mOurpayHolder.removeAllViews();
+                    mOurpayHolder.addView(ourpayPanel.generatePanel(mOurpay));
 
-                if (ourpay.getTermsAndConditionsCheckboxState() != 0) {
-                    mCheckBoxOurpayTC = (CheckBox) mOurpayHolder.findViewById(R.id.ourpay_checkbox_tc);
-                }
-            }else{
-                if (!paymentMethod.getPaymentType().equalsIgnoreCase(CARD_PAYPAL) && !isPaymentMethodNull){
-                    mOurpayHolder.addView(ourpayPanel.generatePanel(ourpay));
+                    if (paymentMethod.getPaymentType().equalsIgnoreCase(CARD_PAYPAL) && ourpay.isCanUse()){
+                        mButtonOurpay = (RelativeLayout) mOurpayHolder.findViewById(R.id.rl_button_ourpay);
+                        mButtonOurpay.setOnClickListener(view -> onOurpayButtonClick());
 
+                        if (ourpay.getTermsAndConditionsCheckboxState() != 0) {
+                            mCheckBoxOurpayTC = (CheckBox) mOurpayHolder.findViewById(R.id.ourpay_checkbox_tc);
+                        }
+                    }
                 }
             }
+
+//
+//            Log.d("checkout", "payment = " +paymentMethod.getPaymentType()+ " , "+ourpay.isCanUse()  +  " , "+isPaymentMethodNull );
+//            if (!paymentMethod.getPaymentType().equalsIgnoreCase(CARD_PAYPAL) && ourpay.isCanUse() && !isPaymentMethodNull) {
+//
+//                mOurpayHolder.addView(ourpayPanel.generatePanel(ourpay));
+//
+//                mButtonOurpay = (RelativeLayout) mOurpayHolder.findViewById(R.id.rl_button_ourpay);
+//                mButtonOurpay.setOnClickListener(view -> onOurpayButtonClick());
+//
+//                if (ourpay.getTermsAndConditionsCheckboxState() != 0) {
+//                    mCheckBoxOurpayTC = (CheckBox) mOurpayHolder.findViewById(R.id.ourpay_checkbox_tc);
+//                }
+//            }else{
+//                if (!paymentMethod.getPaymentType().equalsIgnoreCase(CARD_PAYPAL) && !isPaymentMethodNull){
+//                    mOurpayHolder.addView(ourpayPanel.generatePanel(ourpay));
+//
+//                }
+//            }
         }
     }
 

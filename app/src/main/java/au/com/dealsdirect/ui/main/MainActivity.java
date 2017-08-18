@@ -620,4 +620,16 @@ public class MainActivity extends BaseActivity implements MainMvpView {
     public String getMyTemplateTexts(String detailKey) {
         return mPresenter.getStoredTemplateTexts(detailKey);
     }
+
+    public Controller getCategoriesController(){
+        return mCategoriesController;
+    }
+
+    public void setCategoriesController(CategoriesController categoriesController) {
+        mCategoriesController = categoriesController;
+    }
+
+    public boolean getIsMyPayEnabled(){
+       return mPresenter.getIsMyPayEnabled();
+    }
 }

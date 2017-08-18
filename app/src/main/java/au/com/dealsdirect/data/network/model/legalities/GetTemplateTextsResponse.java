@@ -59,7 +59,7 @@ public class GetTemplateTextsResponse {
         @Expose
         private String ourPayTC_text;
 
-        @SerializedName("OurPayTCValidationFailed")
+        @SerializedName("_OurPayTCValidationFailed")
         @Expose
         private String ourPayTCValidationFailed;
 

@@ -2,6 +2,7 @@ package au.com.dealsdirect.ui.controller.categories.adapter;
 
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -31,17 +32,23 @@ public class SubCategoryItemsAdapter extends RecyclerView.Adapter<RecyclerView.V
     private CategoriesMvpPresenter mPresenter;
     private SubCategoryItemClickListener mCategoryAdapterClickListener;
     private int lastPosition = -1;
+    private boolean mAnimateInsert = true;
+    private boolean mIsResetSubCategories;
 
     private RecyclerView.ViewHolder mLastSelectedViewHolder = null;
 
     public SubCategoryItemsAdapter(
             List<GetCategoryTreeResponse> data,
             CategoriesMvpPresenter presenter,
-            SubCategoryItemClickListener subCategoryItemClickListener) {
+            SubCategoryItemClickListener subCategoryItemClickListener,
+            boolean animateInsert,
+            boolean isResetSubCategories) {
 
         mData = data;
         mPresenter = presenter;
         mCategoryAdapterClickListener = subCategoryItemClickListener;
+        mAnimateInsert = animateInsert;
+        mIsResetSubCategories = isResetSubCategories;
     }
 
     @Override
@@ -66,7 +73,8 @@ public class SubCategoryItemsAdapter extends RecyclerView.Adapter<RecyclerView.V
 
                 String chosenKey =((MainActivity)context).getMainController().getChosenCategoryItemKey();
 
-                if (mData.get(position).getKey().equals(chosenKey)){
+//                boolean isResetSubCategories = ((MainActivity)holder.itemView.getContext()).getMain
+                if (mData.get(position).getKey().equals(chosenKey) && !mIsResetSubCategories){
                     vh.subCategoryTitle.setTextColor(context.getResources().getColor(R.color.category_text_active));
                 }
             }
@@ -130,7 +138,7 @@ public class SubCategoryItemsAdapter extends RecyclerView.Adapter<RecyclerView.V
 
 
     private void setAnimation(View viewToAnimate, int position) {
-        if (position > lastPosition) {
+        if (position > lastPosition && mAnimateInsert) {
             Animation animation = AnimationUtils.loadAnimation(viewToAnimate.getContext(), R.anim.slide_to_bottom);
             viewToAnimate.startAnimation(animation);
             lastPosition = position;

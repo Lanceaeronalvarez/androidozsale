@@ -1,13 +1,18 @@
 package au.com.dealsdirect.service.ourpay;
 
-import com.braintreepayments.api.models.CardNonce;
-import com.braintreepayments.api.models.PaymentMethodNonce;
+import au.com.dealsdirect.data.network.model.checkout.getuserpaymentmethods.PaymentMethod;
 
 /**
  * dp Created by Admin on 8/8/17.
  */
 
 public class OurpayStateManager {
+
+    public static final String CARD_PAYPAL = "Paypal";
+    public static final String CARD_MASTERPASS = "Masterpass";
+    public static final String CARD_MASTERCARD = "MasterCard";
+    public static final String CARD_VISA = "Visa";
+    private static final String PAYMENT_TYPE_MYPAY = "mypay";
 
     public static void setDetails(Ourpay ourpay, boolean isMyPayEnabled) {
 
@@ -60,8 +65,8 @@ public class OurpayStateManager {
 
     }
 
-    public static void setOurpayAccordingToPaymentMethod(Ourpay ourpay, PaymentMethodNonce paymentMethodNonce) {
-        if (!(paymentMethodNonce instanceof CardNonce)) {
+    public static void setOurpayAccordingToPaymentMethod(Ourpay ourpay, PaymentMethod paymentMethod) {
+        if (paymentMethod.getPaymentType().equalsIgnoreCase(CARD_PAYPAL)) {
             //"You can pay less with {0} now, but we don't support your current payment method for it. If you choose another payment method you could use it."
             ourpay.setState(ourpay.getState() | OurpayState.ERROR);
             ourpay.setDetails(OurpayTemplateText.KEY_CHECKOUT_MYPAY_PAY_INVALID_PAYMENT_METHOD);

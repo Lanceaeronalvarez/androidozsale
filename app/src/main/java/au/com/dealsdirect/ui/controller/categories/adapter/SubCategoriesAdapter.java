@@ -3,7 +3,6 @@ package au.com.dealsdirect.ui.controller.categories.adapter;
 import android.content.Context;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -36,6 +35,8 @@ public class SubCategoriesAdapter extends RecyclerView.Adapter<RecyclerView.View
     private SubCategoryItemClickListener mSubCategoryItemClickListener;
     private SubCategoryItemsAdapter mSubCategoryItemsAdapter;
     private Map<String, List<GetCategoryTreeResponse>> mCategoryMap = new HashMap<>();
+    private boolean mAnimateInsert = true;
+    private boolean mIsResetSubCategories = false;
 
     public SubCategoriesAdapter(
             List<GetCategoryTreeResponse> data,
@@ -181,4 +182,13 @@ public class SubCategoriesAdapter extends RecyclerView.Adapter<RecyclerView.View
     private List<GetCategoryTreeResponse> getSubCategoryItems(String categoryKey) {
         return mCategoryMap.get(categoryKey);
     }
+
+    public void animateInsertItems(boolean animateInsert){
+        mAnimateInsert = animateInsert;
+    }
+
+    public void isResetSubCategories(boolean isResetSubCategories){
+        mIsResetSubCategories = isResetSubCategories;
+    }
+
 }

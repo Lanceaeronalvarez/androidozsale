@@ -1,6 +1,5 @@
 package au.com.dealsdirect.ui.controller.categories;
 
-import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.NonNull;
@@ -13,7 +12,6 @@ import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import com.bluelinelabs.conductor.Router;
 import com.bluelinelabs.conductor.RouterTransaction;
 import com.bluelinelabs.conductor.changehandler.HorizontalChangeHandler;
 
@@ -34,8 +32,6 @@ import au.com.dealsdirect.ui.controller.categories.listener.CategoryClickListene
 import au.com.dealsdirect.ui.controller.categories.listener.SubCategoryClickListener;
 import au.com.dealsdirect.ui.controller.categories.listener.SubCategoryItemClickListener;
 import au.com.dealsdirect.ui.controller.saleitems.SaleItemsController;
-import au.com.dealsdirect.ui.controller.shops.ShopsController;
-import au.com.dealsdirect.ui.custom.transitions.RightHorizontalTransitionChangeHandler;
 import au.com.dealsdirect.ui.main.MainActivity;
 import au.com.dealsdirect.utils.BundleBuilder;
 import butterknife.BindView;
@@ -70,6 +66,7 @@ public class CategoriesController extends BaseController
     LinearLayout mNoNetworkLayout;
 
     public static final String TAG = "CategoriesController";
+    public boolean mIsResetSubCategories = false;
 
 
     private GetCategoryTreeResponse mChosenSubCategoryTreeResponse = new GetCategoryTreeResponse();
@@ -113,6 +110,7 @@ public class CategoriesController extends BaseController
         mActivity = (MainActivity) getActivity();
         mActivity.setDraggableViewPager(true);
         mActivity.setCategoriesRouter(getRouter());
+        mActivity.setCategoriesController(this);
         hideKeyboard();
         mPresenter.callGetCategoryTree();
         mNoNetworkLayout.setOnClickListener((v)->mPresenter.callGetCategoryTree());
@@ -171,6 +169,7 @@ public class CategoriesController extends BaseController
             mSubCategoryRecyclerView.setAdapter(mSubCategoryAdapter);
 
             GetCategoryTreeResponse shopCategory = new GetCategoryTreeResponse();
+            mSubCategoryAdapter.isResetSubCategories(mIsResetSubCategories);
             mSubCategoryAdapter.notifyDataSetChanged();
             mAdapter.notifyDataSetChanged();
 
@@ -178,19 +177,23 @@ public class CategoriesController extends BaseController
             ((MainActivity) getActivity()).goToSalesFromCategory(shopCategory);
 
         } else {
+            mSubCategoryAdapter.isResetSubCategories(mIsResetSubCategories);
             if (mCategories != null && mCategories.get(position).getChildren() != null) {
                 mSubCategoryAdapter = new SubCategoriesAdapter(
                         (mCategories.get(position).getChildren()), mPresenter, mSubCategoryClickListener, mSubCategoryItemClickListener, mCategoryMap);
                 mSubCategoryRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity(), LinearLayoutManager.VERTICAL, false));
                 mSubCategoryRecyclerView.setAdapter(mSubCategoryAdapter);
-
+                mSubCategoryAdapter.notifyDataSetChanged();
 
             } else {
                 ArrayList<GetCategoryTreeResponse> emptyChildren = new ArrayList<>();
                 mSubCategoryAdapter = new SubCategoriesAdapter(emptyChildren, mPresenter, mSubCategoryClickListener, mSubCategoryItemClickListener, mCategoryMap);
                 mSubCategoryRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity(), LinearLayoutManager.VERTICAL, false));
                 mSubCategoryRecyclerView.setAdapter(mSubCategoryAdapter);
+
             }
+            mIsResetSubCategories = true;
+
         }
     }
 
@@ -200,11 +203,14 @@ public class CategoriesController extends BaseController
             assert (getActivity()) != null;
             ((MainActivity) getActivity()).goToSalesFromCategory(getCategoryTreeResponse);
             mSubCategoryAdapter.notifyDataSetChanged();
+        }else{
+            mSubCategoryAdapter.animateInsertItems(true);
         }
     }
 
     @Override
     public void onSubCategoryItemClicked(String categoryID, String categoryName, String categoryKey) {
+        mSubCategoryAdapter.notifyDataSetChanged();
 
         assert (getActivity()) != null;
         mActivity.getMainController().setChosenCategoryItemKey(categoryKey);
@@ -225,6 +231,10 @@ public class CategoriesController extends BaseController
             ((MainActivity) getActivity()).getMainController().goToShops();
             mSubCategoryAdapter.notifyDataSetChanged();
         }, 400);
+
+        mSubCategoryAdapter.animateInsertItems(false);
+        mSubCategoryAdapter.notifyDataSetChanged();
+        mIsResetSubCategories =false;
 
         mActivity.setIsFromCategories(true);
 
