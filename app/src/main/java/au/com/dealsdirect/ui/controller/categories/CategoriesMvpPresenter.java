@@ -9,6 +9,8 @@ import au.com.dealsdirect.ui.base.MvpView;
  */
 
 public interface CategoriesMvpPresenter <V extends MvpView> extends MvpPresenter<V>{
-    void loadPublicSalesCategories(GetPublicSalesCategoriesRequest request);
+
+
+    void callGetCategoryTree();
 
 }

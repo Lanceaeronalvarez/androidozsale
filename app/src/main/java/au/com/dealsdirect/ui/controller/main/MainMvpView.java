@@ -11,8 +11,6 @@ import au.com.dealsdirect.ui.base.MvpView;
 
 public interface MainMvpView extends MvpView {
 
-    void storeCategories(List<GetCategoryTreeResponse> categories);
-
 //
 //    void showCategoryController();
 //

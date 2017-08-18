@@ -99,7 +99,6 @@ public class MainController extends BaseController implements MainMvpView {
     @Override
     protected void onViewBound(@NonNull View view) {
         super.onViewBound(view);
-        mPresenter.loadCategoryTree();
         mActivity = (MainActivity) getActivity();
         setUp(view);
     }
@@ -125,13 +124,6 @@ public class MainController extends BaseController implements MainMvpView {
 
     }
 
-
-    @Override
-    public void storeCategories(List<GetCategoryTreeResponse> categories) {
-        mPreLoadedCategories = categories;
-        createCategoryMap(mPreLoadedCategories);
-    }
-
     private void createCategoryMap(List<GetCategoryTreeResponse> categories) {
 
         List<GetCategoryTreeResponse> newList;
@@ -154,7 +146,6 @@ public class MainController extends BaseController implements MainMvpView {
         }
 
         mPreLoadedCategories = fillCategoryContent();
-        mCategoriesController.updateCategoryResponse(mCategoryMap, mPreLoadedCategories);
     }
 
     private void addToMap(List<GetCategoryTreeResponse> list) {

@@ -27,45 +27,49 @@ public class CategoriesPresenter<V extends CategoriesMvpView> extends BasePresen
         super(dataManager, schedulerProvider, compositeDisposable);
     }
 
+
     @Override
-    public void loadPublicSalesCategories(final GetPublicSalesCategoriesRequest request) {
-        Log.d("categories", "controller presenter load public sales category");
+    public void callGetCategoryTree() {
+        if (!getMvpView().isNetworkConnected()) {
+            getMvpView().showNoNetworkLayout();
+        } else {
+            getMvpView().hideNoNetworklayout();
+        }
 
         getCompositeDisposable().add(getDataManager()
-                .callGetPublicSalesCategories(request)
+                .callGetGetCategories()
                 .subscribeOn(getSchedulerProvider().io())
                 .observeOn(getSchedulerProvider().ui())
-                .subscribe(new Consumer<GetPublicSalesCategoriesResponse>() {
-                    @Override
-                    public void accept(GetPublicSalesCategoriesResponse response) throws Exception {
+                .subscribe(response -> {
 
-                        if (!isViewAttached()) {
-                            return;
-                        }
-
-                        getMvpView().hideLoading();
-                        if(response.d.result && response.d.list != null){
-                            getMvpView().showPublicSalesCategories(response.d.list);
-                        }
-
-
+                    if (!isViewAttached()) {
+                        return;
                     }
-                }, new Consumer<Throwable>() {
-                    @Override
-                    public void accept(Throwable throwable) throws Exception {
 
-                        if (!isViewAttached()) {
-                            return;
-                        }
+                    Log.d("CategoryPresenter", "success load category tree");
 
-                        getMvpView().hideLoading();
-                        getMvpView().onError(throwable.getMessage());
+                    if (response != null) {
 
-                        // handle load accounts error here
-                        if (throwable instanceof ANError) {
-                            ANError anError = (ANError) throwable;
-                            handleApiError(anError);
-                        }
+                        getMvpView().showCategories(response);
+                    }
+
+                    getMvpView().hideLoading();
+
+                    getMvpView().hideNoNetworklayout();
+
+                }, throwable -> {
+
+                    if (!isViewAttached()) {
+                        return;
+                    }
+
+                    getMvpView().hideLoading();
+                    getMvpView().onError(throwable.getMessage());
+
+                    // handle load accounts error here
+                    if (throwable instanceof ANError) {
+                        ANError anError = (ANError) throwable;
+                        handleApiError(anError);
                     }
                 }));
     }

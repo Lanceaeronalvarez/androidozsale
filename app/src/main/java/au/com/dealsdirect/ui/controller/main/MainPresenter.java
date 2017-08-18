@@ -24,41 +24,4 @@ public class MainPresenter<V extends MainMvpView> extends BasePresenter<V> imple
         super(dataManager, schedulerProvider, compositeDisposable);
     }
 
-    @Override
-    public void loadCategoryTree() {
-        getCompositeDisposable().add(getDataManager()
-                .callGetGetCategories()
-                .subscribeOn(getSchedulerProvider().io())
-                .observeOn(getSchedulerProvider().ui())
-                .subscribe(response -> {
-
-                    if (!isViewAttached()) {
-                        return;
-                    }
-
-                    Log.d("CategoryPresenter","success load category tree");
-
-                    if (response != null) {
-
-                        getMvpView().storeCategories(response);
-                    }
-
-                    getMvpView().hideLoading();
-
-                }, throwable -> {
-
-                    if (!isViewAttached()) {
-                        return;
-                    }
-
-                    getMvpView().hideLoading();
-                    getMvpView().onError(throwable.getMessage());
-
-                    // handle load accounts error here
-                    if (throwable instanceof ANError) {
-                        ANError anError = (ANError) throwable;
-                        handleApiError(anError);
-                    }
-                }));
-    }
 }

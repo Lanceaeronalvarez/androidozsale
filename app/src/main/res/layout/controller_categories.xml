@@ -6,43 +6,51 @@
               android:orientation="vertical">
 
     <include layout="@layout/partial_toolbar_disabled_search"/>
-
-    <LinearLayout
+    <FrameLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:weightSum="100"
-        android:orientation="horizontal">
+        android:layout_height="match_parent">
 
         <LinearLayout
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:animateLayoutChanges="false"
-            android:orientation="vertical">
+            android:id="@+id/controller_categories_content_layout"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:weightSum="100"
+            android:orientation="horizontal">
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:animateLayoutChanges="false"
+                android:orientation="vertical">
+
+                <android.support.v7.widget.RecyclerView
+                    android:id="@+id/categories_recyclerview"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:layout_gravity="center"
+                    android:overScrollMode="never"
+                    android:layout_marginLeft="10dp"
+                    android:layout_marginRight="10dp"/>
+
+            </LinearLayout>
+
+            <View
+                android:layout_width="1dp"
+                android:layout_height="match_parent"
+                android:background="#d1d1d1"/>
 
             <android.support.v7.widget.RecyclerView
-                android:id="@+id/categories_recyclerview"
-                android:layout_width="wrap_content"
+                android:id="@+id/sub_categories_recyclerview"
+                android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:layout_gravity="center"
                 android:overScrollMode="never"
-                android:layout_marginLeft="10dp"
-                android:layout_marginRight="10dp"/>
+                android:layout_marginLeft="10dp" />
 
         </LinearLayout>
 
-        <View
-            android:layout_width="1dp"
-            android:layout_height="match_parent"
-            android:background="#d1d1d1"/>
 
-        <android.support.v7.widget.RecyclerView
-            android:id="@+id/sub_categories_recyclerview"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:overScrollMode="never"
-            android:layout_marginLeft="10dp" />
-
-    </LinearLayout>
+        <include layout="@layout/partial_no_network_layout" />
+    </FrameLayout>
 
 
 </LinearLayout>

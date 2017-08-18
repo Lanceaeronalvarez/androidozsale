@@ -10,6 +10,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageButton;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.bluelinelabs.conductor.Router;
@@ -50,6 +51,9 @@ public class CategoriesController extends BaseController
     @Inject
     CategoriesMvpPresenter<CategoriesMvpView> mPresenter;
 
+    @BindView(R.id.controller_categories_content_layout)
+    LinearLayout mContentLayout;
+
     @BindView(R.id.categories_recyclerview)
     RecyclerView mRecyclerView;
 
@@ -61,6 +65,9 @@ public class CategoriesController extends BaseController
 
     @BindView(R.id.partial_toolbar_disabled_search_right_option)
     ImageButton mToolbarRightOption;
+
+    @BindView(R.id.no_network_layout)
+    LinearLayout mNoNetworkLayout;
 
     public static final String TAG = "CategoriesController";
 
@@ -84,12 +91,6 @@ public class CategoriesController extends BaseController
                         .build());
     }
 
-    public void updateCategoryResponse(Map<String, List<GetCategoryTreeResponse>> categoryMap,
-                                  List<GetCategoryTreeResponse> categoryTree){
-        mCategories = categoryTree;
-        mCategoryMap = categoryMap;
-        setupCategories();
-    }
 
     public CategoriesController(Bundle args) {
         super(args);
@@ -113,6 +114,8 @@ public class CategoriesController extends BaseController
         mActivity.setDraggableViewPager(true);
         mActivity.setCategoriesRouter(getRouter());
         hideKeyboard();
+        mPresenter.callGetCategoryTree();
+        mNoNetworkLayout.setOnClickListener((v)->mPresenter.callGetCategoryTree());
         setUp(view);
     }
 
@@ -152,10 +155,6 @@ public class CategoriesController extends BaseController
         }
     }
 
-    @Override
-    public void showPublicSalesCategories(List<GetPublicSalesCategoriesResponse.SaleList> saleList) {
-//        mAdapter.replaceData(saleList);
-    }
 
     @Override
     public void onCategoryClicked(int position, GetCategoryTreeResponse getCategoryTreeResponse) {
@@ -286,5 +285,70 @@ public class CategoriesController extends BaseController
 
     public void updateSubCategoryItemState() {
         mSubCategoryAdapter.notifyDataSetChanged();
+    }
+
+    @Override
+    public void showNoNetworkLayout(){
+        mContentLayout.setVisibility(View.GONE);
+        mNoNetworkLayout.setVisibility(View.VISIBLE);
+    }
+
+    @Override
+    public void hideNoNetworklayout(){
+        mContentLayout.setVisibility(View.VISIBLE);
+        mNoNetworkLayout.setVisibility(View.GONE);
+    }
+
+
+    @Override
+    public void showCategories(List<GetCategoryTreeResponse> categories) {
+        mCategories = categories;
+        createCategoryMap(mCategories);
+    }
+
+    private void createCategoryMap(List<GetCategoryTreeResponse> categories) {
+
+        List<GetCategoryTreeResponse> newList;
+        mCategoryMap.put("shop", categories);
+
+        for (GetCategoryTreeResponse i : categories) {
+
+            newList = updateCategoryChildren(i);
+
+            if (newList != null) {
+
+                int childrenSize = newList.size();
+                if (childrenSize != 1) {
+
+                    addToMap(newList);
+                }
+
+                mCategoryMap.put(i.getKey(), newList);
+            }
+        }
+
+        mCategories = fillCategoryContent();
+        setupCategories();
+    }
+
+    private void addToMap(List<GetCategoryTreeResponse> list) {
+        List<GetCategoryTreeResponse> newList2;
+
+        for (GetCategoryTreeResponse i : list) {
+            newList2 = updateCategoryChildren(i);
+
+            int childrenSize = newList2.size();
+            if (childrenSize != 1) {
+                addToMap(newList2);
+            }
+
+            mCategoryMap.put(i.getKey(), newList2);
+
+        }
+    }
+
+    private List<GetCategoryTreeResponse> fillCategoryContent() {
+
+        return mCategoryMap.get("shop");
     }
 }
