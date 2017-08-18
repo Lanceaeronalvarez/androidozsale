@@ -54,6 +54,7 @@ import butterknife.OnClick;
 import static au.com.dealsdirect.ui.controller.saleitems.SaleItemsController.KEY_CATEGORY_MAP;
 import static au.com.dealsdirect.ui.controller.saleitems.SaleItemsController.KEY_CHIPS_FILTER;
 import static au.com.dealsdirect.ui.controller.saleitems.SaleItemsController.KEY_SALE_ID;
+import static au.com.dealsdirect.ui.controller.saleitems.SaleItemsController.KEY_TITLE;
 
 /**
  * Created by smartwave on 20/07/2017.
@@ -61,6 +62,8 @@ import static au.com.dealsdirect.ui.controller.saleitems.SaleItemsController.KEY
 
 public class SearchFilterController extends BaseController
         implements SearchFilterMvpView, SubCategoryClickListener, SubCategoryItemClickListener {
+
+    public static final String TAG = SearchFilterController.class.getSimpleName();
 
     public static final String BRANDS_FACETFILTER_NAME = "skus.brandName";
     public static final String SIZES_FACETFILTER_NAME = "skus.attributes.size";
@@ -588,6 +591,7 @@ public class SearchFilterController extends BaseController
         }
 
         Bundle saleItemBundle = new BundleBuilder(new Bundle())
+                .putString(KEY_TITLE, mChosenCategory)
                 .putString(KEY_CATEGORY_MAP, mChosenCategory)
                 .putString(KEY_SALE_ID, mSaleId)
                 .putString(KEY_CHIPS_FILTER, new Gson().toJson(mSearchTagsAdapter.getData()))

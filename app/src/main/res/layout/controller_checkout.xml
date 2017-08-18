@@ -8,7 +8,8 @@
 
     <include layout="@layout/partial_toolbar_title"/>
 
-    <include layout="@layout/partial_checkout_empty" />
+    <include layout="@layout/partial_checkout_empty"
+        android:visibility="gone"/>
 
     <android.support.v4.widget.NestedScrollView
         android:layout_width="match_parent"

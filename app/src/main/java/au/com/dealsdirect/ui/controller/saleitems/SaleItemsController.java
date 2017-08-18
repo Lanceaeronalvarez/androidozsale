@@ -68,6 +68,8 @@ import static au.com.dealsdirect.ui.controller.searchfilter.SearchFilterControll
 
 public class SaleItemsController extends BasePullToRefreshController implements SaleItemsMvpView {
 
+    public static final String TAG = SaleItemsController.class.getSimpleName();
+
     public static final String KEY_SALE_ID = "SaleItemsController.KEY_SALE_ID";
     public static final String KEY_BANNER_ID = "SaleItemsController.KEY_BANNER_ID";
     public static final String KEY_TITLE = "SaleItemsController.KEY_TITLE";
@@ -215,8 +217,10 @@ public class SaleItemsController extends BasePullToRefreshController implements 
     public SaleItemsController(Bundle args) {
         super(args);
 
-        if (args.containsKey(KEY_TITLE))
+        if (args.containsKey(KEY_TITLE)) {
             mTitle = getArgs().getString(KEY_TITLE, "");
+            mTitle = mTitle.replaceAll(">>>", " • ");
+        }
         if (args.containsKey(KEY_SALE_ID))
             mSaleId = getArgs().getString(KEY_SALE_ID, "");
         if (args.containsKey(KEY_CATEGORY_MAP))
@@ -232,8 +236,10 @@ public class SaleItemsController extends BasePullToRefreshController implements 
     }
 
     public void onPassFiltersData(Bundle args) {
-        if (args.containsKey(KEY_TITLE))
+        if (args.containsKey(KEY_TITLE)) {
             mTitle = args.getString(KEY_TITLE, "");
+            mTitle = mTitle.replaceAll(">>>", " • ");
+        }
         if (args.containsKey(KEY_SALE_ID))
             mSaleId = args.getString(KEY_SALE_ID, "");
         if (args.containsKey(KEY_CATEGORY_MAP))
@@ -413,7 +419,7 @@ public class SaleItemsController extends BasePullToRefreshController implements 
             }
         };
 
-        mSaleItemsAdapter = new SaleItemsAdapter(getActivity(), mSaleItems, mPresenter, mSaleId, mTitle);
+        mSaleItemsAdapter = new SaleItemsAdapter(getActivity(), mSaleItems, mPresenter, mSaleId);
         if (mPresenter.isTablet()) {
             mSaleItemsRecyclerView.setLayoutManager(new GridLayoutManager(getActivity(), 4));
         } else {

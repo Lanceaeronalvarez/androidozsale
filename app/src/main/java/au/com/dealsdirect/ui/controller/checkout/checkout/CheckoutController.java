@@ -1,6 +1,7 @@
 package au.com.dealsdirect.ui.controller.checkout.checkout;
 
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -13,6 +14,9 @@ import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.bluelinelabs.conductor.ChangeHandlerFrameLayout;
+import com.bluelinelabs.conductor.Controller;
+import com.bluelinelabs.conductor.ControllerChangeHandler;
 import com.bluelinelabs.conductor.RouterTransaction;
 import com.bluelinelabs.conductor.changehandler.HorizontalChangeHandler;
 import com.braintreepayments.api.ThreeDSecure;
@@ -126,14 +130,14 @@ public class CheckoutController extends BaseController implements CheckoutMvpVie
             if (view.getId() == mAddNewAddressLayout.getId()) {
                 //push controller to add new address
                 getRouter().pushController(RouterTransaction.with(new AddNewAddressController(new Gson().toJson(mDecorationInfoList), true))
-                        .pushChangeHandler(new HorizontalChangeHandler())
+                        .pushChangeHandler(new HorizontalChangeHandler(false))
                         .popChangeHandler(new HorizontalChangeHandler()));
 
 
             } else if (view.getId() == mAddressChangeText.getId()) {
                 //push controller to view my address
                 getRouter().pushController(RouterTransaction.with(new ViewAddressController(true, mDeliveryAddress))
-                        .pushChangeHandler(new HorizontalChangeHandler())
+                        .pushChangeHandler(new HorizontalChangeHandler(false))
                         .popChangeHandler(new HorizontalChangeHandler()));
 
             } else if (view.getId() == mPaymentChangeText.getId()
@@ -142,7 +146,7 @@ public class CheckoutController extends BaseController implements CheckoutMvpVie
                 if (mPaymentList.size() > 1) {
 //                  //push to payment select
                     getRouter().pushController(RouterTransaction.with(new PaymentSelectController(new Gson().toJson(mPaymentList), true))
-                            .pushChangeHandler(new HorizontalChangeHandler())
+                            .pushChangeHandler(new HorizontalChangeHandler(false))
                             .popChangeHandler(new HorizontalChangeHandler()));
                 } else {
                     //push controller to add payment
@@ -150,11 +154,11 @@ public class CheckoutController extends BaseController implements CheckoutMvpVie
                         //push add new address fragment
                         CustomAlertDialog.showCustomAlertDialog(getActivity(), CustomAlertDialog.CustomDialogIconState.NEGATIVE, mActivity.getString(R.string.add_address_before_payment));
                         getRouter().pushController(RouterTransaction.with(new AddNewAddressController(new Gson().toJson(mDecorationInfoList), true))
-                                .pushChangeHandler(new HorizontalChangeHandler())
+                                .pushChangeHandler(new HorizontalChangeHandler(false))
                                 .popChangeHandler(new HorizontalChangeHandler()));
                     } else {
                         getRouter().pushController(RouterTransaction.with(new AddPaymentController(true))
-                                .pushChangeHandler(new HorizontalChangeHandler())
+                                .pushChangeHandler(new HorizontalChangeHandler(false))
                                 .popChangeHandler(new HorizontalChangeHandler()));
                     }
                 }
@@ -163,7 +167,7 @@ public class CheckoutController extends BaseController implements CheckoutMvpVie
                     || view.getId() == mAddNewVoucherLayout.getId()) {
 
                 getRouter().pushController(RouterTransaction.with(AddVouchersController.newInstance(new Gson().toJson(mVouchers), mIsVoucherAdded))
-                        .pushChangeHandler(new HorizontalChangeHandler())
+                        .pushChangeHandler(new HorizontalChangeHandler(false))
                         .popChangeHandler(new HorizontalChangeHandler()));
             }
 
@@ -257,6 +261,20 @@ public class CheckoutController extends BaseController implements CheckoutMvpVie
         mPayButton.setOnClickListener(view1 -> onPayButtonClick());
         mPaypalButton.setOnClickListener(view2 -> onPaypalButtonClick());
         mMasterpassButton.setOnClickListener(view3 -> onMasterpassButtonClick());
+
+        getRouter().addChangeListener(new ControllerChangeHandler.ControllerChangeListener() {
+            @Override
+            public void onChangeStarted(@Nullable Controller to, @Nullable Controller from, boolean isPush, @NonNull ViewGroup container, @NonNull ControllerChangeHandler handler) {
+
+            }
+
+            @Override
+            public void onChangeCompleted(@Nullable Controller to, @Nullable Controller from, boolean isPush, @NonNull ViewGroup container, @NonNull ControllerChangeHandler handler) {
+                if(to instanceof CheckoutController) {
+                    loadCart();
+                }
+            }
+        });
 
         loadCart();
         mListView.setVisibility(View.GONE);
@@ -500,7 +518,7 @@ public class CheckoutController extends BaseController implements CheckoutMvpVie
 
             //push add new address fragment.
             getRouter().pushController(RouterTransaction.with(new AddNewAddressController(new Gson().toJson(mDecorationInfoList), true))
-                    .pushChangeHandler(new HorizontalChangeHandler())
+                    .pushChangeHandler(new HorizontalChangeHandler(false))
                     .popChangeHandler(new HorizontalChangeHandler()));
             return;
         }
@@ -510,7 +528,7 @@ public class CheckoutController extends BaseController implements CheckoutMvpVie
         if (mActivity.isBraintreeInitialized()) {
             if (mActivity.getPaymentMethodSelected() == null) {
                 getRouter().pushController(RouterTransaction.with(new AddPaymentController(false))
-                        .pushChangeHandler(new HorizontalChangeHandler())
+                        .pushChangeHandler(new HorizontalChangeHandler(false))
                         .popChangeHandler(new HorizontalChangeHandler()));
 
             } else {
@@ -524,7 +542,7 @@ public class CheckoutController extends BaseController implements CheckoutMvpVie
         if (!isAddressValid()) {
             //push add new address fragment
             getRouter().pushController(RouterTransaction.with(new AddNewAddressController(new Gson().toJson(mDecorationInfoList), true))
-                    .pushChangeHandler(new HorizontalChangeHandler())
+                    .pushChangeHandler(new HorizontalChangeHandler(false))
                     .popChangeHandler(new HorizontalChangeHandler()));
             return;
         }
@@ -546,7 +564,7 @@ public class CheckoutController extends BaseController implements CheckoutMvpVie
         RxBus.instance().post(IntrospectionUtils.EVENT_PAY);
 
         getRouter().pushController(RouterTransaction.with(MasterpassController.newInstance())
-                .pushChangeHandler(new HorizontalChangeHandler())
+                .pushChangeHandler(new HorizontalChangeHandler(false))
                 .popChangeHandler(new HorizontalChangeHandler()));
     }
 
@@ -560,7 +578,7 @@ public class CheckoutController extends BaseController implements CheckoutMvpVie
         if (mActivity.isBraintreeInitialized()) {
             if (mActivity.getPaymentMethodSelected() == null) {
                 getRouter().pushController(RouterTransaction.with(new AddPaymentController(false))
-                        .pushChangeHandler(new HorizontalChangeHandler())
+                        .pushChangeHandler(new HorizontalChangeHandler(false))
                         .popChangeHandler(new HorizontalChangeHandler()));
 
             } else {
@@ -574,7 +592,7 @@ public class CheckoutController extends BaseController implements CheckoutMvpVie
                     if (mOurpay.isPhoneVerificationRequired()) {
 
                         getRouter().pushController(RouterTransaction.with(OurpaySMSVerificationController.newInstance(mCartPhone))
-                                .pushChangeHandler(new HorizontalChangeHandler())
+                                .pushChangeHandler(new HorizontalChangeHandler(false))
                                 .popChangeHandler(new HorizontalChangeHandler()));
                     } else {
                         ourpayPaymentSubmit();
