@@ -555,6 +555,7 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
             @Override
             public void onAnimationEnd(Animation animation) {
                 isAnimating = false;
+                mImageViewToAnimate.setVisibility(View.GONE);
             }
 
             @Override
