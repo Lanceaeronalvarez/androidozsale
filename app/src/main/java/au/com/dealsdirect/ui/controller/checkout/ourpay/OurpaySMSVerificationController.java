@@ -5,7 +5,6 @@ import android.support.annotation.NonNull;
 import android.text.Editable;
 import android.text.InputFilter;
 import android.text.TextWatcher;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -172,7 +171,6 @@ public class OurpaySMSVerificationController extends BaseController implements O
         if (!mResult || !mIsAuthenticated){
             CustomAlertDialog.showCustomAlertDialog(getActivity(), CustomAlertDialog.CustomDialogIconState.NEGATIVE,mMessage);
             mSMSVerificationConfirmButton.setEnabled(true);
-            Log.d("verification", response.getVerificationCodeConfirmResponse().getMessage());
 
         }else{
 
@@ -375,7 +373,6 @@ public class OurpaySMSVerificationController extends BaseController implements O
         } else {
             ((MainActivity)getActivity()).callCreatePaymentTransaction(PAYMENT_TYPE_MYPAY,"");
         }
-        getActivity().onBackPressed();
     }
 
     private void callThree3DS(String cost){

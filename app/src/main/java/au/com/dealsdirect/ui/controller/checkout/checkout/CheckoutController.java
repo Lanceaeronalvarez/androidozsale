@@ -14,7 +14,6 @@ import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import com.bluelinelabs.conductor.ChangeHandlerFrameLayout;
 import com.bluelinelabs.conductor.Controller;
 import com.bluelinelabs.conductor.ControllerChangeHandler;
 import com.bluelinelabs.conductor.RouterTransaction;
@@ -283,27 +282,19 @@ public class CheckoutController extends BaseController implements CheckoutMvpVie
     }
 
     public void loadCart() {
-        Log.d("loadcart", "loading cart");
         if (mPresenter.checkIsLoggedIn()) {
-            Log.d("loadcart", "logged in");
-
             RxBus.instance().post(IntrospectionUtils.EVENT_CHECKOUT_SCREEN);
 
             showLoading();
             if (!mActivity.isBraintreeInitialized()) {
-                Log.d("loadcart", "is not initialized cart");
-
                 ((MainMvpView) getActivity()).fetchAuthorization(this);
                 mPresenter.start();
 
             } else {
-                Log.d("loadcart", "is initiialized");
-
                 mPresenter.start();
             }
 
         } else {
-            Log.d("loadcart", "no cart items layout");
 
             showNoCartItemsLayout();
         }
@@ -311,12 +302,12 @@ public class CheckoutController extends BaseController implements CheckoutMvpVie
 
     @Override
     public void showMyPayDetails(Value value, Ourpay ourpay) {
-
         if (value != null) {
             PaymentMethod paymentMethod = ((MainActivity) getActivity()).getPaymentMethodSelected();
             boolean isMyPayEnabled = ((MainActivity)getActivity()).getIsMyPayEnabled();
 
             if(paymentMethod!=null){
+
                 if (ourpay!=null && isMyPayEnabled){
                     OurpayStateManager.setOurpayAccordingToPaymentMethod(ourpay, paymentMethod);
 
@@ -337,6 +328,8 @@ public class CheckoutController extends BaseController implements CheckoutMvpVie
                         }
                     }
                 }
+            }else{
+                mOurpayHolder.removeAllViews();
             }
 
 //
@@ -411,7 +404,7 @@ public class CheckoutController extends BaseController implements CheckoutMvpVie
 
             mPayButton.setVisibility(View.VISIBLE);
             mPaypalButton.setVisibility(View.VISIBLE);
-
+            mOurpayHolder.removeAllViews();
             return;
 
         } else if (((MainActivity) getActivity()).getPaymentMethodSelected() == null && paymentMethod != null) {
@@ -435,6 +428,7 @@ public class CheckoutController extends BaseController implements CheckoutMvpVie
 
         //Payment buttons
         if (paymentMethod == null) {
+
             mPayButton.setVisibility(View.VISIBLE);
             mPaypalButton.setVisibility(View.VISIBLE);
             isPaymentMethodNull = true;
@@ -569,7 +563,6 @@ public class CheckoutController extends BaseController implements CheckoutMvpVie
     }
 
     private void onOurpayButtonClick() {
-        Log.d("ourpaybutton", "clicked");
         RxBus.instance().post(IntrospectionUtils.EVENT_PAY);
 
 
@@ -665,6 +658,10 @@ public class CheckoutController extends BaseController implements CheckoutMvpVie
     private void callThree3DS(String cost) {
         showLoading();
         ThreeDSecure.performVerification(((MainActivity) getActivity()).getBraintreeFragment(), mOurpay.getPaymentMethodNonce().getNonce(), cost);
+    }
+
+    public boolean isPaymentMethodNull(){
+        return isPaymentMethodNull;
     }
 }
 

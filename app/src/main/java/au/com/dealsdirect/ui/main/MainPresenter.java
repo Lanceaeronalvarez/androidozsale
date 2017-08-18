@@ -346,7 +346,7 @@ public class MainPresenter<V extends MainMvpView> extends BasePresenter<V> imple
                         getMvpView().hideLoading();
 
                         if (responseValue.getD().getResult()) {
-                            getMvpView().createPaymentTransactionSuccess(responseValue);
+                            getMvpView().createPaymentTransactionSuccess(paymentType, responseValue);
                         } else {
                             getMvpView().callCreatePaymentTransactionError(responseValue.getD().getMessage());
                         }

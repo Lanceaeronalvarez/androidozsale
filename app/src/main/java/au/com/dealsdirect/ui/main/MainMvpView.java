@@ -44,7 +44,7 @@ public interface MainMvpView extends MvpView, BrainTreeListeners {
 
     void storeTemplateTexts(GetTemplateTextsResponse.GetTemplateTextsValue templateKeysValue);
 
-    void createPaymentTransactionSuccess(CreatePaymentTransaction.ResponseValue responseValue);
+    void createPaymentTransactionSuccess(String paymentType, CreatePaymentTransaction.ResponseValue responseValue);
 
 
 }

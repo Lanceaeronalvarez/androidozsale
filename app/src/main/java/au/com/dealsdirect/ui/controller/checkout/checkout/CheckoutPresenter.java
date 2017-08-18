@@ -224,7 +224,6 @@ public class CheckoutPresenter<V extends CheckoutMvpView> extends BasePresenter<
 
             }
             ourpay.setDetails(value.getMyPayDetails().getPaymentSchemeDescription());
-            Log.d("Checkout", "detail = "+value.getMyPayDetails().getPaymentSchemeDescription());
 
 
             /* specifics */

@@ -63,6 +63,7 @@ public class MainActivity extends BaseActivity implements MainMvpView {
 
     private static final String TAG = "MainActivity";
     private static final String PAYMENT_TYPE_MYPAY = "mypay";
+    private static final String PAYMENT_TYPE_BRAINTREE = "braintree";
 
     @Inject
     MainMvpPresenter<MainMvpView> mPresenter;
@@ -300,7 +301,6 @@ public class MainActivity extends BaseActivity implements MainMvpView {
 
     @Override
     public void callCreatePaymentTransaction(String paymentNonce) {
-
         BraintreeResponseListener<String> handler = deviceData ->
                 mPresenter.callCreatePaymentTransaction(deviceData, mPaymentType, paymentNonce, getPaymentMethodSelected().getToken());
 
@@ -314,9 +314,9 @@ public class MainActivity extends BaseActivity implements MainMvpView {
 
     @Override
     public void callCreatePaymentTransaction(String paymentType, String paymentNonce) {
-        mPaymentType = paymentType;
+
         BraintreeResponseListener<String> handler = deviceData ->
-                    mPresenter.callCreatePaymentTransaction(deviceData, mPaymentType, paymentNonce, getPaymentMethodSelected().getToken());
+                    mPresenter.callCreatePaymentTransaction(deviceData, paymentType, paymentNonce, getPaymentMethodSelected().getToken());
 
         if (!mPresenter.getKountMerchantId().isEmpty()) {
             DataCollector.collectDeviceData(mBraintreeFragment, mPresenter.getKountMerchantId(), handler);
@@ -424,12 +424,12 @@ public class MainActivity extends BaseActivity implements MainMvpView {
     }
 
     @Override
-    public void createPaymentTransactionSuccess(CreatePaymentTransaction.ResponseValue responseValue) {
+    public void createPaymentTransactionSuccess(String paymentType, CreatePaymentTransaction.ResponseValue responseValue) {
         fetchAuthorization(null);
 
         if (responseValue.isPaid()) {
 
-            if (mPaymentType.equals(PAYMENT_TYPE_MYPAY)) {
+            if (paymentType.equals(PAYMENT_TYPE_MYPAY)) {
                 setPaymentSuccessOurpay(responseValue);
             } else {
 
