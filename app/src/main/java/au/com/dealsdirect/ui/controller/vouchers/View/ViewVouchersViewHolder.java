@@ -29,6 +29,9 @@ public class ViewVouchersViewHolder extends RecyclerView.ViewHolder {
     @BindView(R.id.row_text_label_value)
     TextView mVouchersItemValue;
 
+    @BindView(R.id.row_text_vouchers_item_already_spent)
+    TextView mVouchersAlreadySpent;
+
     public ViewVouchersViewHolder(View itemView) {
         super(itemView);
         ButterKnife.bind(this, itemView);
