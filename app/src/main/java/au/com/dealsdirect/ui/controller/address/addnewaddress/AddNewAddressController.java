@@ -138,7 +138,8 @@ public class AddNewAddressController extends BaseController implements AddNewAdd
                 TextView textViewLabel2 = (TextView) dynamicView.findViewById(R.id.add_address_label);
                 textViewLabel2.setText(StringUtils.toTitleCase(infoList.Label));
 
-                ArrayAdapter<String> signatureOnDeliveryAdapter = new ArrayAdapter<>(getActivity(), android.R.layout.simple_list_item_activated_1, infoList.Options);
+                ArrayAdapter<String> signatureOnDeliveryAdapter = new ArrayAdapter<>(getActivity(),
+                        R.layout.add_new_address_spinner_text, infoList.Options);
 
                 Spinner signatureOnDeliverySpinner = (Spinner) dynamicView.findViewById(R.id.add_address_spinner);
                 signatureOnDeliverySpinner.setAdapter(signatureOnDeliveryAdapter);
