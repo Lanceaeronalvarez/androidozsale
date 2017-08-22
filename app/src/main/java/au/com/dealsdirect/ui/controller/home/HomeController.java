@@ -30,6 +30,7 @@ import au.com.dealsdirect.ui.base.BaseController;
 import au.com.dealsdirect.ui.controller.account.AccountController;
 import au.com.dealsdirect.ui.controller.account.AccountMvpView;
 import au.com.dealsdirect.ui.controller.checkout.checkout.CheckoutController;
+import au.com.dealsdirect.ui.controller.checkout.paymentsuccess.PaymentSuccessController;
 import au.com.dealsdirect.ui.controller.contact.viewcontacts.ViewContactsController;
 import au.com.dealsdirect.ui.controller.invite.InviteSendController;
 import au.com.dealsdirect.ui.controller.login.LoginController;
@@ -238,6 +239,11 @@ public class HomeController extends BaseController implements HomeMvpView {
                 ((MainActivity) getActivity()).setIsFromCategories(false);
 
             if (!wasSelected) {
+
+                Controller checkoutController = getCurrentControllerOnRouter(mCheckoutRouter);
+                if (position != 4 && checkoutController instanceof PaymentSuccessController) {
+                    mCheckoutRouter.popToRoot();
+                }
 
                 switch (position) {
                     case 0:
