@@ -104,7 +104,7 @@ public abstract class BaseActivity extends AppCompatActivity implements MvpView 
         if(message != null && !message.isEmpty()){
             if(message.contains("UnknownHostException") || message.contains("SocketTimeoutException")){
                 CustomAlertDialog.showCustomAlertDialog(this, CustomAlertDialog.CustomDialogIconState.NEGATIVE, getString(R.string.no_network_connection));
-            } else if (message.contains("Exception")){
+            } else if (message.contains("Exception") || message.contains("null") || message.contains("virtual method")){
                 CustomAlertDialog.showCustomAlertDialog(this, CustomAlertDialog.CustomDialogIconState.NEGATIVE, getString(R.string.error));
             } else {
                 CustomAlertDialog.showCustomAlertDialog(this, CustomAlertDialog.CustomDialogIconState.NEGATIVE, message);
