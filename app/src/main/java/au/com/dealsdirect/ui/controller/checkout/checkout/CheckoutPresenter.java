@@ -308,6 +308,7 @@ public class CheckoutPresenter<V extends CheckoutMvpView> extends BasePresenter<
             }
 //            RxBus.instance().post("update_cart_items_immediate");
         } else {
+            getMvpView().showCartDetails(new ArrayList<>());
             getMvpView().onError(response.getD().getMessage());
         }
 
