@@ -319,7 +319,7 @@ public class CheckoutController extends BaseController implements CheckoutMvpVie
                     mOurpayHolder.removeAllViews();
                     mOurpayHolder.addView(ourpayPanel.generatePanel(mOurpay));
 
-                    if (!paymentMethod.getPaymentType().equalsIgnoreCase(CARD_PAYPAL) && ourpay.isCanUse()){
+                    if (!paymentMethod.getPaymentType().equalsIgnoreCase(CARD_PAYPAL) && ourpay != null && ourpay.isCanUse()){
                         mButtonOurpay = (RelativeLayout) mOurpayHolder.findViewById(R.id.rl_button_ourpay);
                         mButtonOurpay.setOnClickListener(view -> onOurpayButtonClick());
 
@@ -548,7 +548,7 @@ public class CheckoutController extends BaseController implements CheckoutMvpVie
             if (mActivity.getPaymentMethodSelected() == null) {
                 mActivity.startPaypalPayment();
             } else {
-                ((MainMvpView) mActivity).callCreatePaymentTransaction("");
+                mActivity.callCreatePaymentTransaction("");
             }
         }
     }

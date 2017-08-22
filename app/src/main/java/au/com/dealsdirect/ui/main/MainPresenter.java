@@ -325,7 +325,7 @@ public class MainPresenter<V extends MainMvpView> extends BasePresenter<V> imple
     }
 
     @Override
-    public void callCreatePaymentTransaction(String deviceData, String paymentType, String paymentNonce, String paymentToken) {
+    public void createPaymentTransaction(String deviceData, String paymentType, String paymentNonce, String paymentToken) {
         getMvpView().showLoading();
 
         String languageId = getDataManager().getLanguageId();

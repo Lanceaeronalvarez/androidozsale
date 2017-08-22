@@ -256,8 +256,19 @@ public class MainActivity extends BaseActivity implements MainMvpView {
     @Override
     public void onPaymentMethodNonceCreated(PaymentMethodNonce paymentMethodNonce) {
 
-        BraintreeResponseListener<String> handler = deviceData ->
-                mPresenter.createPaymentMethod(deviceData, paymentMethodNonce.getNonce(), mPaymentType);
+        HomeController homeController = getMainController().getHomeController();
+        Router currentRouter = homeController.getCurrentRouter();
+        Controller currentController = homeController.getCurrentControllerOnRouter(currentRouter);
+
+        BraintreeResponseListener<String> handler;
+
+        if(currentController instanceof CheckoutController){
+            handler = deviceData -> mPresenter.createPaymentTransaction(
+                    deviceData, mPaymentType, paymentMethodNonce.getNonce(), "");
+        } else {
+            handler = deviceData -> mPresenter.createPaymentMethod(
+                    deviceData, paymentMethodNonce.getNonce(), mPaymentType);
+        }
 
         if (!mPresenter.getKountMerchantId().isEmpty()) {
             DataCollector.collectDeviceData(mBraintreeFragment, mPresenter.getKountMerchantId(), handler);
@@ -302,7 +313,7 @@ public class MainActivity extends BaseActivity implements MainMvpView {
     @Override
     public void callCreatePaymentTransaction(String paymentNonce) {
         BraintreeResponseListener<String> handler = deviceData ->
-                mPresenter.callCreatePaymentTransaction(deviceData, mPaymentType, paymentNonce, getPaymentMethodSelected().getToken());
+                mPresenter.createPaymentTransaction(deviceData, mPaymentType, paymentNonce, getPaymentMethodSelected().getToken());
 
         if (!mPresenter.getKountMerchantId().isEmpty()) {
             DataCollector.collectDeviceData(mBraintreeFragment, mPresenter.getKountMerchantId(), handler);
@@ -316,7 +327,7 @@ public class MainActivity extends BaseActivity implements MainMvpView {
     public void callCreatePaymentTransaction(String paymentType, String paymentNonce) {
 
         BraintreeResponseListener<String> handler = deviceData ->
-                    mPresenter.callCreatePaymentTransaction(deviceData, paymentType, paymentNonce, getPaymentMethodSelected().getToken());
+                mPresenter.createPaymentTransaction(deviceData, paymentType, paymentNonce, getPaymentMethodSelected().getToken());
 
         if (!mPresenter.getKountMerchantId().isEmpty()) {
             DataCollector.collectDeviceData(mBraintreeFragment, mPresenter.getKountMerchantId(), handler);
@@ -327,7 +338,7 @@ public class MainActivity extends BaseActivity implements MainMvpView {
 
     @Override
     public void callCreatePaymentTransactionError(String errorMessage) {
-        if (errorMessage!=null){
+        if (errorMessage != null) {
             CustomAlertDialog.showCustomAlertDialog(this, CustomAlertDialog.CustomDialogIconState.NEGATIVE, errorMessage);
 //            mCheckoutRouter.popToRoot();
         }
@@ -431,8 +442,7 @@ public class MainActivity extends BaseActivity implements MainMvpView {
 
             if (paymentType.equals(PAYMENT_TYPE_MYPAY)) {
                 setPaymentSuccessOurpay(responseValue);
-            } else {
-
+            } else if (mOurpay != null){
                 mOurpay.setCanUse(false);
             }
 
@@ -497,11 +507,11 @@ public class MainActivity extends BaseActivity implements MainMvpView {
         return mCategoriesRouter;
     }
 
-    public void setCheckoutRouter(Router router){
+    public void setCheckoutRouter(Router router) {
         mCheckoutRouter = router;
     }
 
-    public Router getCheckoutRouter(){
+    public Router getCheckoutRouter() {
         return mCheckoutRouter;
     }
 
@@ -621,7 +631,7 @@ public class MainActivity extends BaseActivity implements MainMvpView {
         return mPresenter.getStoredTemplateTexts(detailKey);
     }
 
-    public Controller getCategoriesController(){
+    public Controller getCategoriesController() {
         return mCategoriesController;
     }
 
@@ -629,7 +639,7 @@ public class MainActivity extends BaseActivity implements MainMvpView {
         mCategoriesController = categoriesController;
     }
 
-    public boolean getIsMyPayEnabled(){
-       return mPresenter.getIsMyPayEnabled();
+    public boolean getIsMyPayEnabled() {
+        return mPresenter.getIsMyPayEnabled();
     }
 }

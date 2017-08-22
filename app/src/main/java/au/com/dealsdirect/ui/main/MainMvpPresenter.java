@@ -25,7 +25,7 @@ public interface MainMvpPresenter<V extends MainMvpView> extends MvpPresenter<V>
 
     void fetchBTAuthorization();
 
-    void callCreatePaymentTransaction(String deviceData, String paymentType, String paymentNonce, String paymentToken);
+    void createPaymentTransaction(String deviceData, String paymentType, String paymentNonce, String paymentToken);
 
     void createPaymentMethod(String deviceData, String paymentNonce, String paymentType);
 

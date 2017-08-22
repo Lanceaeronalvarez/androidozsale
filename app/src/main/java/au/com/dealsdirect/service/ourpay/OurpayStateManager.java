@@ -16,6 +16,8 @@ public class OurpayStateManager {
 
     public static void setDetails(Ourpay ourpay, boolean isMyPayEnabled) {
 
+        assert ourpay != null;
+
         if (!isMyPayEnabled) {
             ourpay.setState(OurpayState.DISABLED);
         } else if (!ourpay.isCanUse()) {

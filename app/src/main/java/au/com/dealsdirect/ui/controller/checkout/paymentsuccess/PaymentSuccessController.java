@@ -105,7 +105,7 @@ public class PaymentSuccessController extends BaseController implements PaymentS
         super.onViewBound(view);
         mActivity = (MainActivity) getActivity();
         mOurpay = ((MainActivity) getActivity()).getOurpay();
-        if (mOurpay.isCanUse()) {
+        if (mOurpay != null && mOurpay.isCanUse()) {
             mPresenter.generateOurpay();
         }
 
