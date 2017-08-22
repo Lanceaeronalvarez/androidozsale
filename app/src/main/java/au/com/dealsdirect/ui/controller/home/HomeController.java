@@ -245,12 +245,14 @@ public class HomeController extends BaseController implements HomeMvpView {
                         break;
 
                     case 1:
+                        ((MainActivity) getActivity()).setDraggableViewPager(false);
                         showAccountController();
                         break;
 
                     case 2:
                     case 3:
                     case 4:
+                        ((MainActivity) getActivity()).setDraggableViewPager(false);
                         if (!((MainActivity) getActivity()).isAuthorized()) {
                             new Handler().postDelayed(() -> showLoginController(getCurrentRouter(), new AuthHandler() {
                                 @Override
