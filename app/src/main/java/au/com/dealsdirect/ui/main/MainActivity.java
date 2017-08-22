@@ -157,8 +157,8 @@ public class MainActivity extends BaseActivity implements MainMvpView {
     public void onBackPressed() {
 
         if (mIsViewPagerSet) {
-            Router currentRouter = getMainController().getHomeController().getCurrentRouter();
-            Controller currentController = getMainController().getHomeController().getCurrentControllerOnRouter(currentRouter);
+            Router currentRouter = getCurrentRouter();
+            Controller currentController = getCurrentController(getCurrentRouter());
 
             switch (getMainController().getHomeViewPager().getCurrentItem()) {
                 case 0:
@@ -642,5 +642,15 @@ public class MainActivity extends BaseActivity implements MainMvpView {
 
     public boolean getIsMyPayEnabled() {
         return mPresenter.getIsMyPayEnabled();
+    }
+
+    @Override
+    public Router getCurrentRouter() {
+        return getMainController().getHomeController().getCurrentRouter();
+    }
+
+    @Override
+    public Controller getCurrentController(Router router) {
+        return getMainController().getHomeController().getCurrentControllerOnRouter(router);
     }
 }

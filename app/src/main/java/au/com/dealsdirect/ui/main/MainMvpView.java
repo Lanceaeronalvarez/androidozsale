@@ -4,6 +4,7 @@ package au.com.dealsdirect.ui.main;
  */
 
 
+import com.bluelinelabs.conductor.Controller;
 import com.bluelinelabs.conductor.Router;
 
 import au.com.dealsdirect.data.auth.AuthHandler;
@@ -45,6 +46,10 @@ public interface MainMvpView extends MvpView, BrainTreeListeners {
     void storeTemplateTexts(GetTemplateTextsResponse.GetTemplateTextsValue templateKeysValue);
 
     void createPaymentTransactionSuccess(String paymentType, CreatePaymentTransaction.ResponseValue responseValue);
+
+    Router getCurrentRouter();
+
+    Controller getCurrentController(Router router);
 
 
 }

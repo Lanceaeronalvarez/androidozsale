@@ -8,6 +8,7 @@ import android.content.Context;
 import android.util.Log;
 
 import com.androidnetworking.error.ANError;
+import com.bluelinelabs.conductor.Controller;
 import com.google.gson.Gson;
 import com.mysale.genie.utility.config.api.GetAppSettings;
 import com.mysale.genie.utility.config.api.GetAppSettingsSection;
@@ -34,6 +35,7 @@ import au.com.dealsdirect.data.network.model.login.LoginTicket;
 import au.com.dealsdirect.data.network.model.login.Logout;
 import au.com.dealsdirect.service.fcm.GNotification;
 import au.com.dealsdirect.ui.base.BasePresenter;
+import au.com.dealsdirect.ui.controller.checkout.checkout.CheckoutController;
 import au.com.dealsdirect.utils.IntrospectionUtils;
 import au.com.dealsdirect.utils.rx.SchedulerProvider;
 import io.reactivex.annotations.NonNull;
@@ -350,6 +352,11 @@ public class MainPresenter<V extends MainMvpView> extends BasePresenter<V> imple
                             getMvpView().createPaymentTransactionSuccess(paymentType, responseValue);
                         } else {
                             getMvpView().callCreatePaymentTransactionError(responseValue.getD().getMessage());
+
+                            Controller controller = getMvpView().getCurrentController(getMvpView().getCurrentRouter());
+                            if(controller instanceof CheckoutController) {
+                                ((CheckoutController) controller).loadCart();
+                            }
                         }
 
                     }
