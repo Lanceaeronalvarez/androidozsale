@@ -16,6 +16,7 @@
 
 package au.com.dealsdirect.service.fcm;
 
+import android.app.IntentService;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Context;
@@ -40,7 +41,7 @@ import au.com.dealsdirect.utils.AppLogger;
  * service is finished, it calls {@code completeWakefulIntent()} to release the
  * wake lock.
  */
-public class GcmIntentService extends BaseIntentService {
+public class GcmIntentService extends IntentService {
 
     public GcmIntentService() {
         super("GcmIntentService");
