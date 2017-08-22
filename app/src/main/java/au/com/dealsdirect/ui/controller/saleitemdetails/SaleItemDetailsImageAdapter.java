@@ -1,6 +1,7 @@
 package au.com.dealsdirect.ui.controller.saleitemdetails;
 
 import android.content.Context;
+import android.graphics.drawable.Drawable;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -8,6 +9,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 
+import com.bumptech.glide.request.RequestListener;
+import com.bumptech.glide.request.target.Target;
 import com.github.chrisbanes.photoview.ScalableImageView;
 
 import java.util.LinkedList;
@@ -23,7 +26,7 @@ import butterknife.ButterKnife;
  * dp Created by Admin on 6/25/17.
  */
 
-public class SaleItemDetailsImageAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>  {
+public class SaleItemDetailsImageAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
     List<String> mData = new LinkedList<>();
     Context mContext;
@@ -31,6 +34,7 @@ public class SaleItemDetailsImageAdapter extends RecyclerView.Adapter<RecyclerVi
     SaleItemDetailsController mSaleItemDetailsController;
     LoadImagesListener mLoadImagesListener;
     int mViewType;
+    Drawable mPlaceholder;
 
     public void replaceData(List<String> data) {
         mData = data;
@@ -53,13 +57,15 @@ public class SaleItemDetailsImageAdapter extends RecyclerView.Adapter<RecyclerVi
             LoadImagesListener loadImagesListener,
             List<String> data,
             String saleId,
-            int viewType) {
+            int viewType,
+            Drawable placeholder) {
 
         this.mSaleItemDetailsController = saleItemDetailsController;
         this.mLoadImagesListener = loadImagesListener;
         this.mData = data;
         this.mSaleId = saleId;
         this.mViewType = viewType;
+        this.mPlaceholder = placeholder;
     }
 
 
@@ -92,12 +98,23 @@ public class SaleItemDetailsImageAdapter extends RecyclerView.Adapter<RecyclerVi
             case 1:
                 if (mData.size() != 0) {
                     String url = mData.get(position);
-                    ImageUtils.loadImage(mContext, url, vh.image);
+                    if (position == 0) {
+                        ImageUtils.loadImageWithPlaceholder(mContext, url, vh.image, mPlaceholder, new RequestListener() {
+                            @Override
+                            public boolean onException(Exception e, Object model, Target target, boolean isFirstResource) {
+                                return false;
+                            }
 
-                    if (position==0){
-                        mLoadImagesListener.imagesLoaded();
-
+                            @Override
+                            public boolean onResourceReady(Object resource, Object model, Target target, boolean isFromMemoryCache, boolean isFirstResource) {
+                                mLoadImagesListener.imagesLoaded();
+                                return false;
+                            }
+                        });
+                    } else {
+                        ImageUtils.loadImage(mContext, url, vh.image);
                     }
+
 //                    if (position == 0) {
 //                        vh.image.setTransitionName(mData.getID());
 //                    } else {
@@ -119,11 +136,13 @@ public class SaleItemDetailsImageAdapter extends RecyclerView.Adapter<RecyclerVi
 
     }
 
-    @Override public int getItemViewType(int position) {
+    @Override
+    public int getItemViewType(int position) {
         return mViewType;
     }
 
-    @Override public int getItemCount() {
+    @Override
+    public int getItemCount() {
         if (mData != null) {
             return mData.size();
         } else {

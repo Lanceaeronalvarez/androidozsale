@@ -6,6 +6,7 @@ package au.com.dealsdirect.utils;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.graphics.Bitmap;
+import android.graphics.drawable.Drawable;
 import android.view.ViewTreeObserver;
 import android.widget.ImageView;
 
@@ -44,6 +45,20 @@ public class ImageUtils {
                 .diskCacheStrategy(DiskCacheStrategy.SOURCE)
                 .skipMemoryCache(true)
                 .format(DecodeFormat.PREFER_RGB_565)
+                .into(imageView);
+    }
+
+    public static void loadImageWithPlaceholder(Context context, String url, ImageView imageView, Drawable placeholder,
+                                                RequestListener requestListener) {
+        Glide.with(context)
+                .load(url)
+                .asBitmap()
+                .placeholder(placeholder)
+                .encoder(new BitmapEncoder(Bitmap.CompressFormat.JPEG, 50))
+                .diskCacheStrategy(DiskCacheStrategy.SOURCE)
+                .skipMemoryCache(true)
+                .format(DecodeFormat.PREFER_RGB_565)
+                .listener(requestListener)
                 .into(imageView);
     }
 

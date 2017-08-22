@@ -284,12 +284,12 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
         mPresenter.loadSaleItemDetails(mSeoIdentifierId);
 
         mOtherImagesRv.setLayoutManager(new LinearLayoutManager(getActivity(), LinearLayoutManager.HORIZONTAL, false));
-        mSaleItemImagesIndicatorAdapter = new SaleItemDetailsImageAdapter(this, loadImagesListener, null, mSaleId, 2);
+        mSaleItemImagesIndicatorAdapter = new SaleItemDetailsImageAdapter(this, loadImagesListener, null, mSaleId, 2, null);
         mOtherImagesRv.setAdapter(mSaleItemImagesIndicatorAdapter);
 
         mProductImagesRvLayoutManager = new LinearLayoutManager(getActivity(), LinearLayoutManager.HORIZONTAL, false);
         mProductImagesRv.setLayoutManager(mProductImagesRvLayoutManager);
-        mSaleItemImagesAdapter = new SaleItemDetailsImageAdapter(this, loadImagesListener, null, mSaleId, 1);
+        mSaleItemImagesAdapter = new SaleItemDetailsImageAdapter(this, loadImagesListener, null, mSaleId, 1, mProductSharedImage.getDrawable());
         mProductImagesRv.setAdapter(mSaleItemImagesAdapter);
 
         mProductImagesRv.addOnPageChangedListener((i, i1) -> {
