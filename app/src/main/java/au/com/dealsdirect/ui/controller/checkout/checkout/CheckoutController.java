@@ -2,7 +2,7 @@ package au.com.dealsdirect.ui.controller.checkout.checkout;
 
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.util.Log;
+import android.support.v4.widget.NestedScrollView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -108,6 +108,8 @@ public class CheckoutController extends BaseController implements CheckoutMvpVie
     Button mShopNowButton;
     @BindView(R.id.partial_toolbar_title_view)
     TextView mTitleTextView;
+    @BindView(R.id.checkout_scrollview)
+    NestedScrollView mNestedScrollView;
 
     private ArrayList<Item> mItemList = new ArrayList<>();
     private ArrayList<PaymentMethod> mPaymentList = new ArrayList<>();
@@ -279,6 +281,7 @@ public class CheckoutController extends BaseController implements CheckoutMvpVie
         mListView.setVisibility(View.GONE);
 //        showNoCartItemsLayout();
 
+
     }
 
     public void loadCart() {
@@ -306,30 +309,33 @@ public class CheckoutController extends BaseController implements CheckoutMvpVie
             PaymentMethod paymentMethod = ((MainActivity) getActivity()).getPaymentMethodSelected();
             boolean isMyPayEnabled = ((MainActivity)getActivity()).getIsMyPayEnabled();
 
-            if(paymentMethod!=null){
 
-                if (ourpay!=null && isMyPayEnabled){
-                    OurpayStateManager.setOurpayAccordingToPaymentMethod(ourpay, paymentMethod);
+            if (ourpay!=null && isMyPayEnabled){
+                OurpayStateManager.setOurpayAccordingToPaymentMethod(ourpay, paymentMethod);
 
-                    ((MainActivity) getActivity()).setOurpay(ourpay);
-                    ((MainActivity) getActivity()).setThreeDSecureRequired(value.threeDSecureRequired);
+                ((MainActivity) getActivity()).setOurpay(ourpay);
+                ((MainActivity) getActivity()).setThreeDSecureRequired(value.threeDSecureRequired);
 
-                    OurpayPanel ourpayPanel = new OurpayPanel((BaseActivity) getActivity(), getRouter());
-                    mOurpay = ourpay;
-                    mOurpayHolder.removeAllViews();
-                    mOurpayHolder.addView(ourpayPanel.generatePanel(mOurpay));
+                OurpayPanel ourpayPanel = new OurpayPanel((BaseActivity) getActivity(), getRouter());
+                mOurpay = ourpay;
+                mOurpayHolder.removeAllViews();
+                mOurpayHolder.addView(ourpayPanel.generatePanel(mOurpay));
+                View mViewHolder = mOurpayHolder.findViewById(R.id.linearLayout_header);
+//                mViewHolder.setOnClickListener(new View.OnClickListener() {
+//                    @Override
+//                    public void onClick(View view) {
+//                        Log.d("CheckoutController", "linearlayout clicked");
+//                    }
+//                });
 
-                    if (!paymentMethod.getPaymentType().equalsIgnoreCase(CARD_PAYPAL) && ourpay != null && ourpay.isCanUse()){
+                    if (!paymentMethod.getPaymentType().equalsIgnoreCase(CARD_PAYPAL) && ourpay.isCanUse()){
                         mButtonOurpay = (RelativeLayout) mOurpayHolder.findViewById(R.id.rl_button_ourpay);
                         mButtonOurpay.setOnClickListener(view -> onOurpayButtonClick());
 
-                        if (ourpay.getTermsAndConditionsCheckboxState() != 0) {
-                            mCheckBoxOurpayTC = (CheckBox) mOurpayHolder.findViewById(R.id.ourpay_checkbox_tc);
-                        }
+                    if (ourpay.getTermsAndConditionsCheckboxState() != 0) {
+                        mCheckBoxOurpayTC = (CheckBox) mOurpayHolder.findViewById(R.id.ourpay_checkbox_tc);
                     }
                 }
-            }else{
-                mOurpayHolder.removeAllViews();
             }
 
 //
@@ -355,6 +361,7 @@ public class CheckoutController extends BaseController implements CheckoutMvpVie
 
     @Override
     public void showCartDetails(List<Item> items) {
+        mPresenter.generateOurpay(mValue);
 
         if (items == null || items.isEmpty()) {
 
@@ -404,7 +411,7 @@ public class CheckoutController extends BaseController implements CheckoutMvpVie
 
             mPayButton.setVisibility(View.VISIBLE);
             mPaypalButton.setVisibility(View.VISIBLE);
-            mOurpayHolder.removeAllViews();
+            mActivity.setPaymentMethodSelected(null);
             return;
 
         } else if (((MainActivity) getActivity()).getPaymentMethodSelected() == null && paymentMethod != null) {
@@ -443,7 +450,6 @@ public class CheckoutController extends BaseController implements CheckoutMvpVie
                 mPaypalButton.setVisibility(View.GONE);
             }
         }
-        mPresenter.generateOurpay(mValue);
     }
 
     @Override
@@ -565,11 +571,16 @@ public class CheckoutController extends BaseController implements CheckoutMvpVie
     private void onOurpayButtonClick() {
         RxBus.instance().post(IntrospectionUtils.EVENT_PAY);
 
-
         assert (getActivity()) != null;
 
         if (mActivity.isBraintreeInitialized()) {
-            if (mActivity.getPaymentMethodSelected() == null) {
+            if (!isAddressValid()) {
+                //push add new address fragment
+                CustomAlertDialog.showCustomAlertDialog(getActivity(), CustomAlertDialog.CustomDialogIconState.NEGATIVE, mActivity.getString(R.string.add_address_before_payment));
+                getRouter().pushController(RouterTransaction.with(new AddNewAddressController(new Gson().toJson(mDecorationInfoList), true))
+                        .pushChangeHandler(new HorizontalChangeHandler(false))
+                        .popChangeHandler(new HorizontalChangeHandler()));
+            }else if (mActivity.getPaymentMethodSelected() == null) {
                 getRouter().pushController(RouterTransaction.with(new AddPaymentController(false))
                         .pushChangeHandler(new HorizontalChangeHandler(false))
                         .popChangeHandler(new HorizontalChangeHandler()));

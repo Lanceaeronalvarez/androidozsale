@@ -12,6 +12,7 @@
         android:visibility="gone"/>
 
     <android.support.v4.widget.NestedScrollView
+        android:id="@+id/checkout_scrollview"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:fillViewport="true">

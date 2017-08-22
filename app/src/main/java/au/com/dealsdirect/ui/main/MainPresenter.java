@@ -344,6 +344,7 @@ public class MainPresenter<V extends MainMvpView> extends BasePresenter<V> imple
                         }
 
                         getMvpView().hideLoading();
+                        getMvpView().performResetWithAuthFetch();
 
                         if (responseValue.getD().getResult()) {
                             getMvpView().createPaymentTransactionSuccess(paymentType, responseValue);

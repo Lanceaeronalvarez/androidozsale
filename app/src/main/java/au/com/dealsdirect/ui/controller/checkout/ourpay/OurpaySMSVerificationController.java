@@ -164,11 +164,21 @@ public class OurpaySMSVerificationController extends BaseController implements O
 
     @Override
     public void callVerificationCodeConfirmResponse(VerificationCodeConfirmResponseBody response) {
+        hideLoading();
         boolean mIsAuthenticated = response.getVerificationCodeConfirmResponse().getIsAuthenticated();
         boolean mResult = response.getVerificationCodeConfirmResponse().getResult();
+        boolean mAuthRequired = true;
+
+        try {
+            mIsAuthenticated = response.getVerificationCodeConfirmResponse().getIsAuthenticated();
+            mAuthRequired = true;
+        } catch (Exception e){
+            mAuthRequired = false;
+        }
+
         String mMessage = response.getVerificationCodeConfirmResponse().getMessage();
 
-        if (!mResult || !mIsAuthenticated){
+        if (!mResult || (mAuthRequired && !mIsAuthenticated)){
             CustomAlertDialog.showCustomAlertDialog(getActivity(), CustomAlertDialog.CustomDialogIconState.NEGATIVE,mMessage);
             mSMSVerificationConfirmButton.setEnabled(true);
 
@@ -296,6 +306,7 @@ public class OurpaySMSVerificationController extends BaseController implements O
     @OnClick(R.id.ourpay_button_confirm)
     void onConfirmButtonClick(){
         hideKeyboard();
+        showLoading();
         mSMSVerificationConfirmButton.setEnabled(false);
         mPresenter.callVerificationCodeConfirm(mSMSVerificationPhone.getText().toString(), mSMSVerificationPhoneExtension.getText().toString() , mSMSVerificationCode.getText().toString());
     }
@@ -310,7 +321,7 @@ public class OurpaySMSVerificationController extends BaseController implements O
 
         int max;
         try {
-            max = mOurpay.getOurpayPhoneVerification().getFields().phoneNumberFormat.maxLength;
+            max = mOurpay.getOurpayPhoneVerification().getFields().verificationCodeFormat.maxLength;
 
             InputFilter[] filters = new InputFilter[1];
             filters[0] = new InputFilter.LengthFilter(max);

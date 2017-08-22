@@ -5,7 +5,6 @@ import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
 import android.text.Html;
-import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
 import android.widget.CheckBox;
@@ -52,9 +51,7 @@ public class OurpayPanel {
     }
 
     public View generatePanel(Ourpay ourpay){
-        Log.d("ourpay", "generating ourpay with state = "+ourpay.getState());
         if (0 != (ourpay.getState() & OurpayState.PRECART)){
-            Log.d("checkout", "pre cart");
 
             if (0 != (ourpay.getState() & OurpayState.ERROR)){
                 mHolderInBorder.addView(getTemplateText(ourpay.getDetails()));
@@ -82,16 +79,13 @@ public class OurpayPanel {
 
             }
         }else if (0 != (ourpay.getState() & OurpayState.ONCART)) {
-            Log.d("checkout", "on cart");
 
             if (0 != (ourpay.getState() & OurpayState.ERROR)) {
-                Log.d("checkout", "error");
 
                 mHolderInBorder.addView(getTemplateText(
                         OurpayTemplateText.getTemplateText(mBaseActivity, ourpay)));
                 mPanelHolder.addView(getCartAmountHeader(""), 0);
             } else {
-                Log.d("checkout", "not error");
 
                 mPanelHolder.addView(getButton(), 0);
 
@@ -111,19 +105,18 @@ public class OurpayPanel {
                 mHolderInBorder.addView(panelTotalRow);
 
                 header.setOnClickListener(view -> {
+
                     panelRows.setVisibility(panelRows.getVisibility() == View.GONE ? View.VISIBLE : View.GONE);
                     panelTotalRow.setVisibility(panelTotalRow.getVisibility() == View.GONE ? View.VISIBLE : View.GONE);
                 });
             }
         } else if (0 != (ourpay.getState() & OurpayState.POSTCART)) {
 
-            Log.d("postcart", "generate in postcart");
             TextView tv = (TextView) getTemplateText(
                     OurpayTemplateText.getTemplateText(mBaseActivity, ourpay));
             tv.setGravity(Gravity.CENTER_HORIZONTAL);
             mPanelHolder.addView(tv, 0);
             mHolderInBorder.addView(getPanelRows(ourpay.getPlannedTransactions()));
-            Log.d("postcart", "planned transactions = "+ourpay.getPlannedTransactions().size());
 
             mHolderInBorder.addView(getPanelRemainingRow(PriceUtils.getPriceStringValue(ourpay.getAmount())));
             mPanelHolder.addView(getThankYouFooter());
