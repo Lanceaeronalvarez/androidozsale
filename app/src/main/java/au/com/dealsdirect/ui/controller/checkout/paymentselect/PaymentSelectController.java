@@ -109,6 +109,7 @@ public class PaymentSelectController extends BasePullToRefreshController impleme
     @Override
     protected void onAttach(@NonNull View view) {
         super.onAttach(view);
+        mPresenter.fetchUserPaymentMethods();
     }
 
     @Override
