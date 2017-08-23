@@ -209,6 +209,8 @@ public class CheckoutPresenter<V extends CheckoutMvpView> extends BasePresenter<
         ourpay = new Ourpay();
         ourpay.setState(OurpayState.ONCART);
 
+        assert ourpay != null;
+
         try {
 
             ourpay.setUserAmount(value.getSummary().total);
