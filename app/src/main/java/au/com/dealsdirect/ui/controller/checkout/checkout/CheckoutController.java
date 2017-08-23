@@ -1,5 +1,6 @@
 package au.com.dealsdirect.ui.controller.checkout.checkout;
 
+import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.widget.NestedScrollView;
@@ -127,6 +128,9 @@ public class CheckoutController extends BaseController implements CheckoutMvpVie
     private View.OnClickListener mChangeClickListener = new View.OnClickListener() {
         @Override
         public void onClick(View view) {
+
+            view.setOnClickListener(null);
+            new Handler().postDelayed(() -> view.setOnClickListener(mChangeClickListener), 2000);
 
             if (view.getId() == mAddNewAddressLayout.getId()) {
                 //push controller to add new address
