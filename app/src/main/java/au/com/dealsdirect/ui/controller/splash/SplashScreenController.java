@@ -56,15 +56,11 @@ public class SplashScreenController extends BaseController {
     @Override
     protected void setUp(View view) {
 
-        AppLogger.d("splash"+"setup");
+        AppLogger.d("splash" + "setup");
 
-        (new Handler()).postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                AppLogger.d("splash"+"popcontroller");
-                ((MainActivity)getActivity()).splashShownCallback();
-
-            }
+        new Handler().postDelayed(() -> {
+            AppLogger.d("splash" + "popcontroller");
+            if (getActivity() != null) ((MainActivity) getActivity()).splashShownCallback();
         }, 3000);
     }
 }
