@@ -1,3 +1,6 @@
 [submodule "sw_o_android.genieandroid"]
 	path = sw_o_android.genieandroid
 	url = https://jpaseneta:Paradigmshift1@git.assembla.com/sw_o_android.genieandroid.git
+[submodule "android-card-form"]
+	path = android-card-form
+	url = https://github.com/GADORZA06/android-card-form.git

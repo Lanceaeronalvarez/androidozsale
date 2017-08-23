@@ -172,6 +172,7 @@ dependencies {
     compile project(path: ':genie-utility')
     compile project(path: ':CardForm')
     compile project(path: ':ptr-lib')
+
 }
 
 configurations.all {
