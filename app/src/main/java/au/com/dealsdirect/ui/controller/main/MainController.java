@@ -264,11 +264,11 @@ public class MainController extends BaseController implements MainMvpView {
     }
 
     public void hideBottomNav() {
-        mHomeController.hideBottomNav();
+        if (mHomeController != null) mHomeController.hideBottomNav();
     }
 
     public void showBottomNav() {
-        mHomeController.showBottomNav();
+        if (mHomeController != null) mHomeController.showBottomNav();
     }
 
     public void setChosenCategoryItemKey(String key) {
