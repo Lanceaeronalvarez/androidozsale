@@ -1,7 +1,5 @@
 package au.com.dealsdirect.ui.controller.checkout.checkout;
 
-import android.util.Log;
-
 import com.androidnetworking.error.ANError;
 
 import java.util.ArrayList;
@@ -40,14 +38,14 @@ public class CheckoutPresenter<V extends CheckoutMvpView> extends BasePresenter<
 
     @Inject
     public CheckoutPresenter(DataManager dataManager, SchedulerProvider schedulerProvider,
-            CompositeDisposable compositeDisposable) {
+                             CompositeDisposable compositeDisposable) {
         super(dataManager, schedulerProvider, compositeDisposable);
     }
 
 
     @Override
     public void start() {
-        if(!isCartAlreadyLoadedOnce() && isViewAttached()) {
+        if (!isCartAlreadyLoadedOnce() && isViewAttached()) {
             getMvpView().showLoading();
         }
         fetchCartDetails();
@@ -145,7 +143,7 @@ public class CheckoutPresenter<V extends CheckoutMvpView> extends BasePresenter<
     @Override
     public void fetchAdjustItemQuantity(String url, String itemID) {
         getCompositeDisposable().add(getDataManager()
-                .callAdjustQuantityOrderItem(url,new AdjustOrderItem.RequestValue(itemID,getDataManager().getLanguageId()))
+                .callAdjustQuantityOrderItem(url, new AdjustOrderItem.RequestValue(itemID, getDataManager().getLanguageId()))
                 .subscribeOn(getSchedulerProvider().io())
                 .observeOn(getSchedulerProvider().ui())
                 .subscribe(new Consumer<GetCurrentOrder.ResponseValue>() {
@@ -156,16 +154,6 @@ public class CheckoutPresenter<V extends CheckoutMvpView> extends BasePresenter<
                         }
 
                         getMvpView().hideLoading();
-
-                        if(responseValue.getD().getResult()) {
-                            if (url.equalsIgnoreCase("IncreaseOrderItem")) {
-                                CartUtil.addValueToCart(1);
-                            } else {
-                                CartUtil.addValueToCart(-1);
-                            }
-
-                            getMvpView().updateCheckoutBadge();
-                        }
                         updateCart(responseValue);
                     }
                 }, new Consumer<Throwable>() {
@@ -189,12 +177,12 @@ public class CheckoutPresenter<V extends CheckoutMvpView> extends BasePresenter<
     }
 
     @Override
-    public boolean isCartAlreadyLoadedOnce(){
+    public boolean isCartAlreadyLoadedOnce() {
         return mFetchCartFinished && mFetchUserPaymentMethodsFinished;
     }
 
     @Override
-    public void resetIsCartAlreadyLoaded(){
+    public void resetIsCartAlreadyLoaded() {
         mFetchCartFinished = false;
         mFetchUserPaymentMethodsFinished = false;
     }
@@ -222,7 +210,7 @@ public class CheckoutPresenter<V extends CheckoutMvpView> extends BasePresenter<
             ourpay.setMinAmount(value.getMyPayDetails().getPaymentConditions().minAmountThreshold);
             ourpay.setMaxAmount(value.getMyPayDetails().getPaymentConditions().maxAmountThreshold);
 
-            if (value.getMyPayDetails().getPaymentSchemeDescription()!=null){
+            if (value.getMyPayDetails().getPaymentSchemeDescription() != null) {
 
             }
             ourpay.setDetails(value.getMyPayDetails().getPaymentSchemeDescription());
@@ -231,25 +219,25 @@ public class CheckoutPresenter<V extends CheckoutMvpView> extends BasePresenter<
             /* specifics */
             try {
                 ourpay.setAmount(value.myPayDetails.getAmount());
-            } catch (Exception e){
+            } catch (Exception e) {
                 ourpay.setAmount(0);
             }
 
             try {
                 ourpay.setBillingPeriod(OurpayUtils.convertDaysToWeeks(value.getMyPayDetails().getBillingPeriod().getDays()));
-            } catch (Exception e){
+            } catch (Exception e) {
                 ourpay.setBillingPeriod(0);
             }
 
             try {
                 ourpay.setTransactionCount(value.myPayDetails.getTransactionCount());
-            } catch (Exception e){
+            } catch (Exception e) {
                 ourpay.setTransactionCount(0);
             }
 
             try {
                 ourpay.setPlannedTransactions(value.getMyPayDetails().getBillingAgreement().getPlannedTransactions());
-            } catch (Exception e){
+            } catch (Exception e) {
                 ourpay.setPlannedTransactions(null);
                 ourpay.setState(ourpay.getState() | OurpayState.ERROR);
             }
@@ -258,7 +246,7 @@ public class CheckoutPresenter<V extends CheckoutMvpView> extends BasePresenter<
                 OurpayPhoneVerification ourpayPhoneVerification = new OurpayPhoneVerification();
                 ourpayPhoneVerification.setRequired(value.getPhoneVerification().isRequired);
                 ourpay.setOurpayPhoneVerification(value.getPhoneVerification());
-            } catch (Exception e){
+            } catch (Exception e) {
                 e.printStackTrace();
             }
 
@@ -272,44 +260,41 @@ public class CheckoutPresenter<V extends CheckoutMvpView> extends BasePresenter<
 
     private void updateCart(GetCurrentOrder.ResponseValue response) {
 
-        if(!isViewAttached()){
+        if (!isViewAttached()) {
             return;
         }
 
         if (!response.getD().isAuthenticated()) {
             getMvpView().triggerLoginTicket();
+
+            return;
         }
 
-        if (response.getD().getResult()) {
+        if (response.getD().getResult() && !response.getD().getValue().isEmpty()) {
 
-            if (!response.getD().getValue().isEmpty()) {
-
-//                try {
-//                    GCartUtil.setValueToCart(response.d.Value.itemsCount);
-//                } catch (NullPointerException e) { //Adjust quantity no itemsCount key
-//                    e.printStackTrace();
-//                }
-
-                Value value = response.getD().getValue();
-                isCartDetailsCalled = true;
-
-                getMvpView().storeCartDetails(value);
-
-                getMvpView().showCartDetails(response.getD().getValue().getItems());
-
-                getMvpView().showAddressDetails(response.getD().getValue().getDeliveryAddress(), response.getD().getValue().getDecorationInfoList());
-
-                getMvpView().showVoucherDetails(response.getD().getValue().getVouchers());
-
-                getMvpView().showSummaryDetails(response.getD().getValue().getSummary());
-
-            } else {
-//                GCartUtil.setValueToCart(0);
-
-                getMvpView().showCartDetails(new ArrayList<>());
+            if (response.getD().getValue().getItemsCount() != null) {
+                CartUtil.setValueToCart(response.getD().getValue().getItemsCount());
             }
-//            RxBus.instance().post("update_cart_items_immediate");
+            getMvpView().updateCheckoutBadge();
+
+            Value value = response.getD().getValue();
+            isCartDetailsCalled = true;
+
+            getMvpView().storeCartDetails(value);
+
+            getMvpView().showCartDetails(response.getD().getValue().getItems());
+
+            getMvpView().showAddressDetails(response.getD().getValue().getDeliveryAddress(), response.getD().getValue().getDecorationInfoList());
+
+            getMvpView().showVoucherDetails(response.getD().getValue().getVouchers());
+
+            getMvpView().showSummaryDetails(response.getD().getValue().getSummary());
+
+
         } else {
+
+            CartUtil.setValueToCart(0);
+            getMvpView().updateCheckoutBadge();
             getMvpView().showCartDetails(new ArrayList<>());
             getMvpView().onError(response.getD().getMessage());
         }

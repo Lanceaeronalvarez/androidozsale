@@ -671,5 +671,10 @@ public class CheckoutController extends BaseController implements CheckoutMvpVie
     public boolean isPaymentMethodNull() {
         return isPaymentMethodNull;
     }
+
+    @Override
+    public void onError(String message) {
+        super.onError(message);
+    }
 }
 
