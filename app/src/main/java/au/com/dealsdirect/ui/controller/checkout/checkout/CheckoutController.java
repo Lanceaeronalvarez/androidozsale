@@ -667,14 +667,5 @@ public class CheckoutController extends BaseController implements CheckoutMvpVie
         showLoading();
         ThreeDSecure.performVerification(((MainActivity) getActivity()).getBraintreeFragment(), mOurpay.getPaymentMethodNonce().getNonce(), cost);
     }
-
-    public boolean isPaymentMethodNull() {
-        return isPaymentMethodNull;
-    }
-
-    @Override
-    public void onError(String message) {
-        super.onError(message);
-    }
 }
 
