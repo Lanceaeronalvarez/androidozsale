@@ -3,6 +3,7 @@ package au.com.dealsdirect.ui.controller.checkout.checkout;
 import au.com.dealsdirect.data.network.model.checkout.getcurrentorder.Value;
 import au.com.dealsdirect.ui.base.MvpPresenter;
 import au.com.dealsdirect.ui.base.MvpView;
+import au.com.dealsdirect.ui.custom.ProductQuantityLayout;
 
 /**
  * dp Created by Admin on 6/6/17.
@@ -16,7 +17,7 @@ public interface CheckoutMvpPresenter<V extends MvpView> extends MvpPresenter<V>
 
     void fetchUserPaymentMethods();
 
-    void fetchAdjustItemQuantity(String url, String itemID);
+    void fetchAdjustItemQuantity(String url, String itemID, ProductQuantityLayout view);
 
     boolean isCartAlreadyLoadedOnce();
 

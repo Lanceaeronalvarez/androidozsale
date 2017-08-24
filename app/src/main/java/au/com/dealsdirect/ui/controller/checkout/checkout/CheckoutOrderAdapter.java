@@ -108,12 +108,12 @@ public class CheckoutOrderAdapter extends ArrayAdapter<Item> {
         view.quantityLayout.setOnQuantityChangeListener(new ProductQuantityLayout.onQuantityChangeListener() {
             @Override
             public void onQuantityIncrease(ProductQuantityLayout view, int value) {
-                mPresenter.fetchAdjustItemQuantity("IncreaseOrderItem", item.id);
+                mPresenter.fetchAdjustItemQuantity("IncreaseOrderItem", item.id, view);
             }
 
             @Override
             public void onQuantityDecrease(ProductQuantityLayout view, int value) {
-                mPresenter.fetchAdjustItemQuantity("DecreaseOrderItem", item.id);
+                mPresenter.fetchAdjustItemQuantity("DecreaseOrderItem", item.id, view);
             }
         });
 

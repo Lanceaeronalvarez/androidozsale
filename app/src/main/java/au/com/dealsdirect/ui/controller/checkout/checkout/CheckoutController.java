@@ -360,11 +360,11 @@ public class CheckoutController extends BaseController implements CheckoutMvpVie
     public void showCartDetails(List<Item> items) {
         mPresenter.generateOurpay(mValue);
 
-        if (items == null || items.isEmpty()) {
-
+        if (items == null ){ //do nothing (ie. when increasing order quantity, returns a soldout/out of stock message)
+            return;
+        }else if(items.isEmpty()) {
             //no items
             showNoCartItemsLayout();
-
         } else {
             mNoCartItemsLayout.setVisibility(View.GONE);
             showPaymentButtons();
@@ -506,7 +506,7 @@ public class CheckoutController extends BaseController implements CheckoutMvpVie
     @Override
     public void updateCheckoutBadge() {
         HomeController homeController = ((MainActivity) getActivity()).getMainController().getHomeController();
-        homeController.updateBasketItemCount();
+        homeController.getPresenter().callGetBasketItemsQuantity();
     }
 
     private void onPayButtonClick() {

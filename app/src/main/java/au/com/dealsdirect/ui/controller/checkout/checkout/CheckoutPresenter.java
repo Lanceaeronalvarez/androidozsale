@@ -17,6 +17,7 @@ import au.com.dealsdirect.service.ourpay.OurpayState;
 import au.com.dealsdirect.service.ourpay.OurpayStateManager;
 import au.com.dealsdirect.service.ourpay.OurpayUtils;
 import au.com.dealsdirect.ui.base.BasePresenter;
+import au.com.dealsdirect.ui.custom.ProductQuantityLayout;
 import au.com.dealsdirect.utils.CartUtil;
 import au.com.dealsdirect.utils.rx.SchedulerProvider;
 import io.reactivex.annotations.NonNull;
@@ -141,7 +142,7 @@ public class CheckoutPresenter<V extends CheckoutMvpView> extends BasePresenter<
     }
 
     @Override
-    public void fetchAdjustItemQuantity(String url, String itemID) {
+    public void fetchAdjustItemQuantity(String url, String itemID, ProductQuantityLayout view) {
         getCompositeDisposable().add(getDataManager()
                 .callAdjustQuantityOrderItem(url, new AdjustOrderItem.RequestValue(itemID, getDataManager().getLanguageId()))
                 .subscribeOn(getSchedulerProvider().io())
@@ -153,7 +154,7 @@ public class CheckoutPresenter<V extends CheckoutMvpView> extends BasePresenter<
                             return;
                         }
 
-                        getMvpView().hideLoading();
+                        view.resetLoaders();
                         updateCart(responseValue);
                     }
                 }, new Consumer<Throwable>() {
@@ -163,7 +164,7 @@ public class CheckoutPresenter<V extends CheckoutMvpView> extends BasePresenter<
                             return;
                         }
 
-                        getMvpView().hideLoading();
+                        view.resetLoaders();
                         getMvpView().onError(throwable.getMessage());
 
                         // handle load accounts error here
@@ -270,12 +271,14 @@ public class CheckoutPresenter<V extends CheckoutMvpView> extends BasePresenter<
             return;
         }
 
+        getMvpView().updateCheckoutBadge();
+
         if (response.getD().getResult() && !response.getD().getValue().isEmpty()) {
 
-            if (response.getD().getValue().getItemsCount() != null) {
-                CartUtil.setValueToCart(response.getD().getValue().getItemsCount());
-            }
-            getMvpView().updateCheckoutBadge();
+//            if (response.getD().getValue().getItemsCount() != null) {
+//                CartUtil.setValueToCart(response.getD().getValue().getItemsCount());
+//
+//            }
 
             Value value = response.getD().getValue();
             isCartDetailsCalled = true;
@@ -292,10 +295,7 @@ public class CheckoutPresenter<V extends CheckoutMvpView> extends BasePresenter<
 
 
         } else {
-
-            CartUtil.setValueToCart(0);
-            getMvpView().updateCheckoutBadge();
-            getMvpView().showCartDetails(new ArrayList<>());
+            getMvpView().showCartDetails(null);
             getMvpView().onError(response.getD().getMessage());
         }
 
