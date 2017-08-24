@@ -348,6 +348,7 @@ public class CheckoutController extends BaseController implements CheckoutMvpVie
         mPresenter.generateOurpay(mValue);
 
         if (items == null ){ //do nothing (ie. when increasing order quantity, returns a soldout/out of stock message)
+            showNoCartItemsLayout();
             return;
         }else if(items.isEmpty()) {
             //no items
