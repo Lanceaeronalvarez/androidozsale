@@ -55,8 +55,9 @@ public class OurpayPanel {
 
             if (0 != (ourpay.getState() & OurpayState.ERROR)){
                 mHolderInBorder.addView(getTemplateText(ourpay.getDetails()));
-            }else{
+                mHolderInBorder.setBackground(mBaseActivity.getDrawable(R.drawable.ourpay_layout_border));
 
+            }else{
 
                 View header = getPanelHeader(ourpay);
                 final View panelRows = getPanelRows(ourpay.getPlannedTransactions());
@@ -84,6 +85,7 @@ public class OurpayPanel {
 
                 mHolderInBorder.addView(getTemplateText(
                         OurpayTemplateText.getTemplateText(mBaseActivity, ourpay)));
+                mHolderInBorder.setBackground(mBaseActivity.getDrawable(R.drawable.ourpay_layout_border));
                 mPanelHolder.addView(getCartAmountHeader(""), 0);
             } else {
 
@@ -92,12 +94,12 @@ public class OurpayPanel {
                 View header = getPanelHeader(ourpay);
                 mHolderInBorder.addView(header);
 
-                if (ourpay.getTermsAndConditionsCheckboxState() != 0) {
-                    mPanelHolder.addView(getTermsAndConditions(ourpay), 1);
-                }
                 mPanelHolder.addView(getTemplateText(
-                        OurpayTemplateText.getTemplateText(mBaseActivity, ourpay)), 0);
+                        OurpayTemplateText.getTemplateText(mBaseActivity, ourpay)), 1);
 
+                if (ourpay.getTermsAndConditionsCheckboxState() != 0) {
+                    mPanelHolder.addView(getTermsAndConditions(ourpay), 2);
+                }
                 View panelRows = getPanelRows(ourpay.getPlannedTransactions());
                 View panelTotalRow = getPanelTotalRow(PriceUtils.getPriceStringValue(ourpay.getUserAmount()));
                 mPanelHolder.addView(getCartAmountHeader(PriceUtils.getPriceStringValue(ourpay.getAmount())), 0);

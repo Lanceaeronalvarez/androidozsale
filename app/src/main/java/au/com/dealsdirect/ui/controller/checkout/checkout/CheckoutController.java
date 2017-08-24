@@ -270,6 +270,20 @@ public class CheckoutController extends BaseController implements CheckoutMvpVie
         mPaypalButton.setOnClickListener(view2 -> onPaypalButtonClick());
         mMasterpassButton.setOnClickListener(view3 -> onMasterpassButtonClick());
 
+        getRouter().addChangeListener(new ControllerChangeHandler.ControllerChangeListener() {
+            @Override
+            public void onChangeStarted(@Nullable Controller to, @Nullable Controller from, boolean isPush, @NonNull ViewGroup container, @NonNull ControllerChangeHandler handler) {
+
+            }
+
+            @Override
+            public void onChangeCompleted(@Nullable Controller to, @Nullable Controller from, boolean isPush, @NonNull ViewGroup container, @NonNull ControllerChangeHandler handler) {
+                if (to instanceof CheckoutController) {
+                    loadCart();
+                }
+            }
+        });
+
         loadCart();
         mListView.setVisibility(View.GONE);
 //        showNoCartItemsLayout();
@@ -326,25 +340,6 @@ public class CheckoutController extends BaseController implements CheckoutMvpVie
 
 
             }
-
-//
-//            Log.d("checkout", "payment = " +paymentMethod.getPaymentType()+ " , "+ourpay.isCanUse()  +  " , "+isPaymentMethodNull );
-//            if (!paymentMethod.getPaymentType().equalsIgnoreCase(CARD_PAYPAL) && ourpay.isCanUse() && !isPaymentMethodNull) {
-//
-//                mOurpayHolder.addView(ourpayPanel.generatePanel(ourpay));
-//
-//                mButtonOurpay = (RelativeLayout) mOurpayHolder.findViewById(R.id.rl_button_ourpay);
-//                mButtonOurpay.setOnClickListener(view -> onOurpayButtonClick());
-//
-//                if (ourpay.getTermsAndConditionsCheckboxState() != 0) {
-//                    mCheckBoxOurpayTC = (CheckBox) mOurpayHolder.findViewById(R.id.ourpay_checkbox_tc);
-//                }
-//            }else{
-//                if (!paymentMethod.getPaymentType().equalsIgnoreCase(CARD_PAYPAL) && !isPaymentMethodNull){
-//                    mOurpayHolder.addView(ourpayPanel.generatePanel(ourpay));
-//
-//                }
-//            }
         }
     }
 
