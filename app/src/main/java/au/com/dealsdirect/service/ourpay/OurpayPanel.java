@@ -116,8 +116,8 @@ public class OurpayPanel {
                     OurpayTemplateText.getTemplateText(mBaseActivity, ourpay));
             tv.setGravity(Gravity.CENTER_HORIZONTAL);
             mPanelHolder.addView(tv, 0);
+            mHolderInBorder.addView(getSuccessHeaderRow());
             mHolderInBorder.addView(getPanelRows(ourpay.getPlannedTransactions()));
-
             mHolderInBorder.addView(getPanelRemainingRow(PriceUtils.getPriceStringValue(ourpay.getAmount())));
             mPanelHolder.addView(getThankYouFooter());
         }
@@ -223,13 +223,19 @@ public class OurpayPanel {
     private View getPanelRemainingRow(String amount) {
 
         View footer = mBaseActivity.getLayoutInflater().inflate(R.layout.ourpay_panel_row_footer, null, false);
-        footer.setBackgroundColor(Color.parseColor("#000000"));
+        footer.setBackground(mBaseActivity.getDrawable(R.drawable.ourpay_layout_remaining_balance_footer));
         TextView textViewAmount = (TextView) footer.findViewById(R.id.textView_amount_total);
         TextView textViewLabel = (TextView) footer.findViewById(R.id.textView_amount_label);
         textViewAmount.setText(amount);
         textViewAmount.setTextColor(Color.parseColor("#FFE47C0B"));
         textViewLabel.setText("Remaining Balance");
         return footer;
+    }
+
+    private View getSuccessHeaderRow(){
+
+        View header = mBaseActivity.getLayoutInflater().inflate(R.layout.ourpay_post_cart_panel_header, null, false);
+        return header;
     }
 
     private View getThankYouFooter() {

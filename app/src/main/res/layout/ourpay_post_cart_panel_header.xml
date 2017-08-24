@@ -10,7 +10,7 @@
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
         android:layout_alignParentTop="true"
-        android:background="@drawable/ourpay_layout_border"
+        android:background="@drawable/ourpay_layout_header_border"
         android:orientation="vertical">
 
 
@@ -36,6 +36,7 @@
             android:layout_marginTop="-10dp"
             android:orientation="horizontal"
             android:gravity="center"
+            android:visibility="gone"
             android:paddingBottom="8dp"
             android:paddingLeft="10dp">
 

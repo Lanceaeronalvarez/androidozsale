@@ -39,6 +39,7 @@ import au.com.dealsdirect.data.network.model.checkout.getuserpaymentmethods.Paym
 import au.com.dealsdirect.service.ourpay.Ourpay;
 import au.com.dealsdirect.service.ourpay.OurpayPanel;
 import au.com.dealsdirect.service.ourpay.OurpayStateManager;
+import au.com.dealsdirect.service.ourpay.OurpayTemplateText;
 import au.com.dealsdirect.ui.base.BaseActivity;
 import au.com.dealsdirect.ui.base.BaseController;
 import au.com.dealsdirect.ui.controller.address.addnewaddress.AddNewAddressController;
@@ -58,6 +59,8 @@ import au.com.dealsdirect.utils.IntrospectionUtils;
 import au.com.dealsdirect.utils.PriceUtils;
 import butterknife.BindView;
 import butterknife.OnClick;
+
+import static au.com.dealsdirect.service.ourpay.OurpayTemplateText.KEY_OURPAY_TC_VALIDATION_FAILED;
 
 
 /**
@@ -295,10 +298,10 @@ public class CheckoutController extends BaseController implements CheckoutMvpVie
 
     @Override
     public void showMyPayDetails(Value value, Ourpay ourpay) {
+        mOurpayHolder.setVisibility(View.GONE);
         if (value != null) {
             PaymentMethod paymentMethod = ((MainActivity) getActivity()).getPaymentMethodSelected();
             boolean isMyPayEnabled = ((MainActivity) getActivity()).getIsMyPayEnabled();
-
 
             if (ourpay != null && isMyPayEnabled) {
                 OurpayStateManager.setOurpayAccordingToPaymentMethod(ourpay, paymentMethod);
@@ -311,14 +314,17 @@ public class CheckoutController extends BaseController implements CheckoutMvpVie
                 mOurpayHolder.removeAllViews();
                 mOurpayHolder.addView(ourpayPanel.generatePanel(mOurpay));
 
-                if (paymentMethod != null && !paymentMethod.getPaymentType().equalsIgnoreCase(CARD_PAYPAL) && ourpay.isCanUse()) {
-                    mButtonOurpay = (RelativeLayout) mOurpayHolder.findViewById(R.id.rl_button_ourpay);
-                    mButtonOurpay.setOnClickListener(view -> onOurpayButtonClick());
+                Handler handler = new Handler();
+                handler.postDelayed(() -> mOurpayHolder.setVisibility(View.VISIBLE), 500);
 
-                    if (ourpay.getTermsAndConditionsCheckboxState() != 0) {
-                        mCheckBoxOurpayTC = (CheckBox) mOurpayHolder.findViewById(R.id.ourpay_checkbox_tc);
-                    }
+                mButtonOurpay = (RelativeLayout) mOurpayHolder.findViewById(R.id.rl_button_ourpay);
+                mButtonOurpay.setOnClickListener(view -> onOurpayButtonClick());
+
+                if (ourpay.getTermsAndConditionsCheckboxState() != 0) {
+                    mCheckBoxOurpayTC = (CheckBox) mOurpayHolder.findViewById(R.id.ourpay_checkbox_tc);
                 }
+
+
             }
 
 //
@@ -557,8 +563,8 @@ public class CheckoutController extends BaseController implements CheckoutMvpVie
         assert (getActivity()) != null;
 
         if (mActivity.isBraintreeInitialized()) {
+
             if (!isAddressValid()) {
-                //push add new address fragment
                 CustomAlertDialog.showCustomAlertDialog(getActivity(), CustomAlertDialog.CustomDialogIconState.NEGATIVE, mActivity.getString(R.string.add_address_before_payment));
                 getRouter().pushController(RouterTransaction.with(new AddNewAddressController(new Gson().toJson(mDecorationInfoList), true))
                         .pushChangeHandler(new HorizontalChangeHandler(false))
@@ -569,10 +575,11 @@ public class CheckoutController extends BaseController implements CheckoutMvpVie
                         .popChangeHandler(new HorizontalChangeHandler()));
 
             } else {
-                if (!mActivity.getPaymentMethodSelected().getPaymentType().equalsIgnoreCase(CARD_PAYPAL)) {
+
+                if (!mActivity.getPaymentMethodSelected().getPaymentType().equalsIgnoreCase(CARD_PAYPAL) && mOurpay.isCanUse()) {
 
                     if (mCheckBoxOurpayTC != null && !mCheckBoxOurpayTC.isChecked()) {
-                        CustomAlertDialog.showCustomAlertDialog(getActivity(), CustomAlertDialog.CustomDialogIconState.NEGATIVE, "Please agree with OurPay's terms and conditions");
+                        CustomAlertDialog.showCustomAlertDialog(getActivity(), CustomAlertDialog.CustomDialogIconState.NEGATIVE, OurpayTemplateText.getText(mActivity,KEY_OURPAY_TC_VALIDATION_FAILED));
                         return;
                     }
 
@@ -587,8 +594,6 @@ public class CheckoutController extends BaseController implements CheckoutMvpVie
                 }
             }
         }
-
-
     }
 
     private boolean isAddressValid() {
