@@ -215,6 +215,8 @@ public class OurpayPanel {
 
         View footer = mBaseActivity.getLayoutInflater().inflate(R.layout.ourpay_panel_row_footer, null, false);
         TextView textViewAmount = (TextView) footer.findViewById(R.id.textView_amount_total);
+        TextView textTotalAmountLabel = (TextView) footer.findViewById(R.id.textView_amount_label);
+        textTotalAmountLabel.setTextColor(Color.parseColor("#FF6F7070"));
         textViewAmount.setText(amount);
 
         return footer;
