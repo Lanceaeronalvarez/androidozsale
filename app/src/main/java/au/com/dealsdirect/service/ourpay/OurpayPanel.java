@@ -51,6 +51,10 @@ public class OurpayPanel {
     }
 
     public View generatePanel(Ourpay ourpay){
+        return generatePanel(ourpay, null);
+    }
+
+    public View generatePanel(Ourpay ourpay, OurpayCallback callback){
         if (0 != (ourpay.getState() & OurpayState.PRECART)){
 
             if (0 != (ourpay.getState() & OurpayState.ERROR)){
@@ -76,6 +80,7 @@ public class OurpayPanel {
                 header.setOnClickListener(view -> {
                     panelRows.setVisibility(panelRows.getVisibility() == View.GONE ? View.VISIBLE : View.GONE);
                     templateView.setVisibility(templateView.getVisibility() == View.GONE ? View.VISIBLE : View.GONE);
+                    if(callback != null) callback.onHeaderClick(panelRows.getVisibility() == View.VISIBLE);
                 });
 
             }
@@ -107,9 +112,9 @@ public class OurpayPanel {
                 mHolderInBorder.addView(panelTotalRow);
 
                 header.setOnClickListener(view -> {
-
                     panelRows.setVisibility(panelRows.getVisibility() == View.GONE ? View.VISIBLE : View.GONE);
                     panelTotalRow.setVisibility(panelTotalRow.getVisibility() == View.GONE ? View.VISIBLE : View.GONE);
+                    if(callback != null) callback.onHeaderClick(panelRows.getVisibility() == View.VISIBLE);
                 });
             }
         } else if (0 != (ourpay.getState() & OurpayState.POSTCART)) {

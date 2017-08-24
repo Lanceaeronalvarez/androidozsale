@@ -37,6 +37,7 @@ import au.com.dealsdirect.data.network.model.checkout.getcurrentorder.Value;
 import au.com.dealsdirect.data.network.model.checkout.getcurrentorder.Voucher;
 import au.com.dealsdirect.data.network.model.checkout.getuserpaymentmethods.PaymentMethod;
 import au.com.dealsdirect.service.ourpay.Ourpay;
+import au.com.dealsdirect.service.ourpay.OurpayCallback;
 import au.com.dealsdirect.service.ourpay.OurpayPanel;
 import au.com.dealsdirect.service.ourpay.OurpayStateManager;
 import au.com.dealsdirect.service.ourpay.OurpayTemplateText;
@@ -326,7 +327,11 @@ public class CheckoutController extends BaseController implements CheckoutMvpVie
                 OurpayPanel ourpayPanel = new OurpayPanel((BaseActivity) getActivity(), getRouter());
                 mOurpay = ourpay;
                 mOurpayHolder.removeAllViews();
-                mOurpayHolder.addView(ourpayPanel.generatePanel(mOurpay));
+                mOurpayHolder.addView(ourpayPanel.generatePanel(mOurpay, isRowVisible -> {
+                    if(isRowVisible){
+                        new Handler().postDelayed(() -> mNestedScrollView.fullScroll(View.FOCUS_DOWN), 400);
+                    }
+                }));
 
                 Handler handler = new Handler();
                 handler.postDelayed(() -> mOurpayHolder.setVisibility(View.VISIBLE), 500);
