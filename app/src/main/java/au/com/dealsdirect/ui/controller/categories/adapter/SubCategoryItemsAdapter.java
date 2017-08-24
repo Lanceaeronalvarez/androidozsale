@@ -62,22 +62,12 @@ public class SubCategoryItemsAdapter extends RecyclerView.Adapter<RecyclerView.V
     @Override
     public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
         setAnimation(holder.itemView, position);
-        Context context = holder.itemView.getContext();
 
         SubCategoryItemViewHolder vh = (SubCategoryItemViewHolder) holder;
         if (!mData.isEmpty()) {
 
-            if (!mData.get(position).getName().isEmpty()) {
-
-                vh.subCategoryTitle.setText(mData.get(position).getName());
-
-                String chosenKey =((MainActivity)context).getMainController().getChosenCategoryItemKey();
-
-//                boolean isResetSubCategories = ((MainActivity)holder.itemView.getContext()).getMain
-                if (mData.get(position).getKey().equals(chosenKey) && !mIsResetSubCategories){
-                    vh.subCategoryTitle.setTextColor(context.getResources().getColor(R.color.category_text_active));
-                }
-            }
+            vh.itemView.setActivated(false);
+            vh.subCategoryTitle.setText(mData.get(position).getName());
 
             vh.itemView.setOnClickListener(view -> {
 
