@@ -444,6 +444,7 @@ public class AppApiHelper implements ApiHelper {
     public Observable<BasketQuantityResponse> callGetBasketItemsQuantity() {
         return Rx2AndroidNetworking.get(ApiEndPoint.GET_BASKET_QUANTITY)
                 .addHeaders(mApiHeader.get())
+                .doNotCacheResponse()
                 .build()
                 .getObjectObservable(BasketQuantityResponse.class);
     }

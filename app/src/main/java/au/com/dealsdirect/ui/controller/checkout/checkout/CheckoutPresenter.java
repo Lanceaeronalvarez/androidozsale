@@ -272,13 +272,8 @@ public class CheckoutPresenter<V extends CheckoutMvpView> extends BasePresenter<
         }
 
         getMvpView().updateCheckoutBadge();
-
+        
         if (response.getD().getResult() && !response.getD().getValue().isEmpty()) {
-
-//            if (response.getD().getValue().getItemsCount() != null) {
-//                CartUtil.setValueToCart(response.getD().getValue().getItemsCount());
-//
-//            }
 
             Value value = response.getD().getValue();
             isCartDetailsCalled = true;
