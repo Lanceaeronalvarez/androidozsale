@@ -272,7 +272,7 @@ public class CheckoutPresenter<V extends CheckoutMvpView> extends BasePresenter<
         }
 
         getMvpView().updateCheckoutBadge();
-        
+
         if (response.getD().getResult() && !response.getD().getValue().isEmpty()) {
 
             Value value = response.getD().getValue();
