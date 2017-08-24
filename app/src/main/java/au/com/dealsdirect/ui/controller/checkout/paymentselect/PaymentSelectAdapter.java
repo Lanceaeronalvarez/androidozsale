@@ -56,8 +56,8 @@ public class PaymentSelectAdapter extends RecyclerView.Adapter<RecyclerView.View
         vh.remove.setVisibility(isFromCart ? View.GONE : View.VISIBLE);
 
         if (isFromCart) {
-            vh.itemView.setSelected(isFromCart && mActivity.getPaymentMethodSelected().equals(item));
-            vh.name.setSelected(isFromCart && mActivity.getPaymentMethodSelected().equals(item));
+            vh.itemView.setSelected(isFromCart && mActivity.getPaymentMethodSelected() != null && mActivity.getPaymentMethodSelected().equals(item));
+            vh.name.setSelected(isFromCart && mActivity.getPaymentMethodSelected() != null && mActivity.getPaymentMethodSelected().equals(item));
         } else {
             ((PaymentSelectViewHolder) holder).remove.setOnClickListener(view -> {
                 mPresenter.removeUserPaymentMethod(mData.get(position));
