@@ -205,6 +205,7 @@ public class NewReturnController extends BaseController implements NewReturnMvpV
     @Override
     public void onDestroyView(View view) {
         mPresenter.onDetach();
+        hideKeyboard();
         super.onDestroyView(view);
     }
 
