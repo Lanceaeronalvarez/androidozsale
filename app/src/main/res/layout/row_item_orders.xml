@@ -140,12 +140,13 @@
 
                 <TextView
                     android:id="@+id/approved_date_graph_node"
+                    fontPath="@string/font_lato_semibold"
                     android:layout_width="25dp"
                     android:layout_height="25dp"
                     android:background="@drawable/bg_orders_graph_active_state"
                     android:gravity="center"
                     android:text=""
-                    android:textColor="@android:color/white"
+                    android:textColor="@color/dark_gray"
                     tools:ignore="ContentDescription" />
 
                 <!--<ImageView-->
@@ -166,12 +167,13 @@
 
                 <TextView
                     android:id="@+id/stock_date_graph_node"
+                    fontPath="@string/font_lato_semibold"
                     android:layout_width="25dp"
                     android:layout_height="25dp"
                     android:background="@drawable/bg_orders_graph_empty_state"
                     android:gravity="center"
                     android:text="2"
-                    android:textColor="@android:color/white"
+                    android:textColor="@color/dark_gray"
                     tools:ignore="ContentDescription" />
 
                 <View
@@ -184,12 +186,13 @@
 
                 <TextView
                     android:id="@+id/dispatched_date_graph_node"
+                    fontPath="@string/font_lato_semibold"
                     android:layout_width="25dp"
                     android:layout_height="25dp"
                     android:background="@drawable/bg_orders_graph_empty_state"
                     android:gravity="center"
                     android:text="3"
-                    android:textColor="@android:color/white"
+                    android:textColor="@color/dark_gray"
                     tools:ignore="ContentDescription" />
 
                 <View
@@ -202,12 +205,13 @@
 
                 <TextView
                     android:id="@+id/closed_date_graph_node"
+                    fontPath="@string/font_lato_semibold"
                     android:layout_width="25dp"
                     android:layout_height="25dp"
                     android:background="@drawable/bg_orders_graph_empty_state"
                     android:gravity="center"
                     android:text="4"
-                    android:textColor="@android:color/white"
+                    android:textColor="@color/dark_gray"
                     tools:ignore="ContentDescription" />
 
                 <!--<View-->

@@ -1,6 +1,7 @@
 package au.com.dealsdirect.ui.controller.orders.orders;
 
 import android.content.Context;
+import android.graphics.Color;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -18,12 +19,11 @@ import au.com.dealsdirect.utils.DateUtils;
 import au.com.dealsdirect.utils.PriceUtils;
 
 /**
- * Created by smartwave on 22/06/2017.
+ *Created by smartwave on 22/06/2017.
  */
 
 public class OrdersItemRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
-//    private final MyOrderClickListener mListener;
 
 
     public ArrayList<GetPaymentsList.ResponseValue.Order> orderList = new ArrayList<>();
@@ -38,14 +38,12 @@ public class OrdersItemRecyclerViewAdapter extends RecyclerView.Adapter<Recycler
         this.orderList = orderList;
         this.context = context;
         this.paymentReferenceNo = paymentReferenceNo;
-//        this.mListener = listener;
     }
 
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.row_item_orders, parent, false);
         OrderItemsViewHolder holder = new OrderItemsViewHolder(v);
-        //mView = v;
 
         return holder;
     }
@@ -83,8 +81,7 @@ public class OrdersItemRecyclerViewAdapter extends RecyclerView.Adapter<Recycler
         }
         holder.orderProductQuantityTextView.setText(orderItemCount + itemText);
 
-        String approvedDate = DateUtils.getDateForOrderProgress(item.getTracker().getApprovedDate
-                ());
+        String approvedDate = DateUtils.getDateForOrderProgress(item.getTracker().getApprovedDate());
         String dispatchDate = DateUtils.getDateForOrderProgress(item.getTracker()
                 .getDispatchedDate());
         String closeDate = DateUtils.getDateForOrderProgress(item.getTracker().getClosedDate());
@@ -105,6 +102,7 @@ public class OrdersItemRecyclerViewAdapter extends RecyclerView.Adapter<Recycler
                 holder.approvedDateGraphNodeTextView.setText("");
                 holder.orderStockArrivedConnector.setBackgroundColor(colorActive);
                 holder.stockDateGraphNodeTextView.setBackgroundResource(R.drawable.bg_orders_graph_pending_state);
+                holder.stockDateGraphNodeTextView.setTextColor(Color.WHITE);
                 break;
 
             case -1:
@@ -119,6 +117,7 @@ public class OrdersItemRecyclerViewAdapter extends RecyclerView.Adapter<Recycler
                 holder.orderStockArrivedConnector.setBackgroundColor(colorActive);
                 holder.orderPackedConnector.setBackgroundColor(colorActive);
                 holder.dispatchedDateGraphNodeTextView.setBackgroundResource(R.drawable.bg_orders_graph_pending_state);
+                holder.dispatchedDateGraphNodeTextView.setTextColor(Color.WHITE);
                 holder.orderSecondNodeStatus.setText("Stock Arrived");
                 break;
             case -2:
@@ -127,7 +126,6 @@ public class OrdersItemRecyclerViewAdapter extends RecyclerView.Adapter<Recycler
                 holder.orderStockArrivedConnector.setBackgroundColor(colorActive);
                 holder.orderPackedConnector.setBackgroundColor(colorActive);
 
-//                holder.stockDateValueTextView.setVisibility(View.INVISIBLE);
                 holder.orderSecondNodeStatus.setText(orderStatus);
                 break;
 
@@ -140,8 +138,8 @@ public class OrdersItemRecyclerViewAdapter extends RecyclerView.Adapter<Recycler
                 holder.orderDispatchedConnector.setBackgroundColor(colorActive);
                 holder.orderStockArrivedConnector.setBackgroundColor(colorActive);
                 holder.closedDateGraphNodeTextView.setBackgroundResource(R.drawable.bg_orders_graph_pending_state);
-//                holder.dispatchedDateValueTextView.setVisibility(View.INVISIBLE);
-                holder.orderThirdNodeStatus.setText("Order Packed");
+                holder.closedDateGraphNodeTextView.setTextColor(Color.WHITE);
+                holder.orderThirdNodeStatus.setText(R.string.order_packed);
                 break;
 
             case -3:
@@ -150,7 +148,6 @@ public class OrdersItemRecyclerViewAdapter extends RecyclerView.Adapter<Recycler
                 holder.dispatchedDateGraphNodeTextView.setBackgroundResource(R.drawable.bg_orders_negative_state);
                 holder.dispatchedDateGraphNodeTextView.setText("");
                 holder.orderPackedConnector.setBackgroundColor(colorActive);
-//                holder.dispatchedDateValueTextView.setVisibility(View.INVISIBLE);
                 holder.orderThirdNodeStatus.setText(orderStatus);
                 break;
 
@@ -165,8 +162,7 @@ public class OrdersItemRecyclerViewAdapter extends RecyclerView.Adapter<Recycler
                 holder.orderDispatchedConnector.setBackgroundColor(colorActive);
                 holder.orderStockArrivedConnector.setBackgroundColor(colorActive);
                 holder.orderPackedConnector.setBackgroundColor(colorActive);
-//                holder.closedDateValueTextView.setVisibility(View.INVISIBLE);
-                holder.orderFourthNodeStatus.setText("Dispatched");
+                holder.orderFourthNodeStatus.setText(R.string.dispatched);
                 break;
 
             case -4:
@@ -180,19 +176,12 @@ public class OrdersItemRecyclerViewAdapter extends RecyclerView.Adapter<Recycler
                 holder.orderDispatchedConnector.setBackgroundColor(colorActive);
                 holder.orderStockArrivedConnector.setBackgroundColor(colorActive);
                 holder.orderPackedConnector.setBackgroundColor(colorActive);
-//                holder.closedDateValueTextView.setVisibility(View.INVISIBLE);
-//                holder.orderFourthNodeStatus.setText(orderStatus);
                 break;
 
 
             default:
                 break;
         }
-
-//        holder.orderDateTextView.setText(DateUtils.getTrimmedServerDateString(item.getTracker().getApprovedDate()));
-//        String dateString = item.getEstimatedDeliveryText();
-//        holder.orderEstimatedDeliveryDateTextView.setText(dateString.substring(dateString.indexOf(":")+1));
-
     }
 
     @Override

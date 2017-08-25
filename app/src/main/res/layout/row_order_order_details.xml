@@ -55,7 +55,7 @@
                 android:layout_width="25dp"
                 android:layout_height="25dp"
                 android:text="2"
-                android:textColor="@android:color/white"
+                android:textColor="@color/dark_gray"
                 android:gravity="center"
                 android:background="@drawable/bg_orders_graph_empty_state"
                 tools:ignore="ContentDescription"/>
@@ -73,7 +73,7 @@
                 android:layout_width="25dp"
                 android:layout_height="25dp"
                 android:text="3"
-                android:textColor="@android:color/white"
+                android:textColor="@color/dark_gray"
                 android:gravity="center"
                 android:background="@drawable/bg_orders_graph_empty_state"
                 tools:ignore="ContentDescription"/>
@@ -91,7 +91,7 @@
                 android:layout_width="25dp"
                 android:layout_height="25dp"
                 android:text="4"
-                android:textColor="@android:color/white"
+                android:textColor="@color/dark_gray"
                 android:gravity="center"
                 android:background="@drawable/bg_orders_graph_empty_state"
                 tools:ignore="ContentDescription"/>
@@ -124,7 +124,7 @@
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_horizontal"
                     android:text="Order Date"
-                    android:textSize="@dimen/text_size_small"
+                    android:textSize="@dimen/text_size_medium"
                     android:textColor="#464646"
                     tools:ignore="HardcodedText"/>
 
@@ -157,7 +157,7 @@
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_horizontal"
                     android:text="Stock Arrived"
-                    android:textSize="@dimen/text_size_small"
+                    android:textSize="@dimen/text_size_medium"
                     android:textColor="#b1b1b1"
                     tools:ignore="HardcodedText"/>
 
@@ -189,7 +189,7 @@
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_horizontal"
                     android:text="Order Packed"
-                    android:textSize="@dimen/text_size_small"
+                    android:textSize="@dimen/text_size_medium"
                     android:textColor="#b1b1b1"
                     tools:ignore="HardcodedText"/>
 
@@ -229,7 +229,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_horizontal"
-                    android:textSize="@dimen/text_size_small"
+                    android:textSize="@dimen/text_size_medium"
                     android:text=""
                     android:textColor="#b1b1b1"
                     tools:ignore="HardcodedText"/>

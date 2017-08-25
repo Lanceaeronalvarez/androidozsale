@@ -300,5 +300,8 @@
     <string name="invalid_code">Invalid Code</string>
     <string name="sms_verification_title">SMS Verification</string>
     <string name="add_address_before_payment">Please set delivery address before proceeding to payment</string>
+    <string name="order_packed">Order Packed</string>
+    <string name="dispatched">Dispatched</string>
+    <string name="stock_arrived">Stock Arrived</string>
 
 </resources>

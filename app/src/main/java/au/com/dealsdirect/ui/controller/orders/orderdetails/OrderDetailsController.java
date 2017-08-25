@@ -23,7 +23,7 @@ import butterknife.BindView;
 import butterknife.OnClick;
 
 /**
- * Created by smartwave on 22/06/2017.
+ *  Created by smartwave on 22/06/2017.
  */
 
 public class OrderDetailsController extends BaseController implements OrderDetailsMvpView {

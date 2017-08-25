@@ -2,14 +2,12 @@ package au.com.dealsdirect.ui.controller.orders.orderdetails;
 
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import java.util.ArrayList;
@@ -22,7 +20,7 @@ import au.com.dealsdirect.utils.LegacyStringImageUtils;
 import au.com.dealsdirect.utils.PriceUtils;
 
 /**
- * Created by smartwave on 22/06/2017.
+ *  Created by smartwave on 22/06/2017.
  */
 
 public class OrderDetailsItemsRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
@@ -57,16 +55,7 @@ public class OrderDetailsItemsRecyclerViewAdapter extends RecyclerView.Adapter<R
     @Override
     public void onBindViewHolder(RecyclerView.ViewHolder vh, final int position) {
 
-//        CURRENCY = Config.getCurrencySign();
-        Log.d("myorders", " on bind view holder = " + position);
-        //
-        //        RecyclerView itemsRecyclerView = (RecyclerView)
-        //                mView.findViewById(R.id.order_items_recyclerview);
-        //
-
-
         GetPaymentsList.ResponseValue.Order item = mOrderList.get(mItemPosition);
-        // GetPaymentsList.ResponseValue.Order orderItem = item.getOrders().get(position);
         OrderDetailsItemViewHolder holder = (OrderDetailsItemViewHolder) vh;
 
         String orderName = item.getDescription();
@@ -74,7 +63,6 @@ public class OrderDetailsItemsRecyclerViewAdapter extends RecyclerView.Adapter<R
         String productSize = "";
 
         if (mOrderDetail != null) {
-            Log.d("myorders", "orderdetails not null");
 
             String brandId = mOrderDetail.getOrders().get(mItemPosition).getItems().get(position).getBrandID();
             String imageId = mOrderDetail.getOrders().get(mItemPosition).getItems().get(position).getImageID();
@@ -97,10 +85,6 @@ public class OrderDetailsItemsRecyclerViewAdapter extends RecyclerView.Adapter<R
                     LegacyStringImageUtils.productDetailsImageURLString(brandId, imageId, fileName),
                     holder.orderImage);
 
-//            Glide.with(context).load()
-//                    .skipMemoryCache(true).diskCacheStrategy(DiskCacheStrategy.RESULT)
-//                    .placeholder(R.drawable.topbuy_loading_image_placeholder_xml_tall)
-//                    .fitCenter().into(holder.orderImage);
         }
 
         holder.orderProductNameTextView.setText(orderName);
@@ -118,8 +102,6 @@ public class OrderDetailsItemsRecyclerViewAdapter extends RecyclerView.Adapter<R
             return 0;
         }
 
-        Log.d("myorders", "size in items recyclerview adapter inside orders = " +
-                mOrderDetail.getOrders().get(mItemPosition).getItems().size());
         return mOrderDetail.getOrders().get(mItemPosition).getItems().size();
     }
 
@@ -161,9 +143,6 @@ public class OrderDetailsItemsRecyclerViewAdapter extends RecyclerView.Adapter<R
         TextView productSize;
 
         Button trackHereButton;
-
-        RelativeLayout orderNumberContainerLayout;
-
         LinearLayout orderDetailLayout;
 
         ImageView orderImage;
@@ -179,7 +158,6 @@ public class OrderDetailsItemsRecyclerViewAdapter extends RecyclerView.Adapter<R
             productSize = (TextView) itemView.findViewById(R.id.product_size);
 
             orderImage = (ImageView) itemView.findViewById(R.id.order_image);
-//            orderNumberContainerLayout = (RelativeLayout) itemView.findViewById(R.id.order_number_container);
             orderDetailLayout = (LinearLayout) itemView.findViewById(R.id.product_list_order_detail);
 
             orderNumberValueTextView = (TextView) itemView.findViewById(R.id.order_number_text_value);
