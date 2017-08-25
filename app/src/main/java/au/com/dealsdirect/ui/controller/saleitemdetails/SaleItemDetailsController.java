@@ -585,7 +585,9 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
 
     @Override
     public void imagesLoaded() {
-        ImageUtils.clearImage(mProductSharedImage);
+        if(mProductSharedImage != null) {
+            ImageUtils.clearImage(mProductSharedImage);
+        }
         imagesLoaded = true;
     }
 
