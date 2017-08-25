@@ -273,26 +273,31 @@ public class CheckoutPresenter<V extends CheckoutMvpView> extends BasePresenter<
 
         getMvpView().updateCheckoutBadge();
 
-        if (response.getD().getResult() && !response.getD().getValue().isEmpty()) {
+        if (response.getD().getResult()) {
 
-            Value value = response.getD().getValue();
-            isCartDetailsCalled = true;
+            if(!response.getD().getValue().isEmpty()) {
+                Value value = response.getD().getValue();
+                isCartDetailsCalled = true;
 
-            getMvpView().storeCartDetails(value);
+                getMvpView().storeCartDetails(value);
 
-            getMvpView().showCartDetails(response.getD().getValue().getItems());
+                getMvpView().showCartDetails(response.getD().getValue().getItems());
 
-            getMvpView().showAddressDetails(response.getD().getValue().getDeliveryAddress(), response.getD().getValue().getDecorationInfoList());
+                getMvpView().showAddressDetails(response.getD().getValue().getDeliveryAddress(), response.getD().getValue().getDecorationInfoList());
 
-            getMvpView().showVoucherDetails(response.getD().getValue().getVouchers());
+                getMvpView().showVoucherDetails(response.getD().getValue().getVouchers());
 
-            getMvpView().showSummaryDetails(response.getD().getValue().getSummary());
-
-
+                getMvpView().showSummaryDetails(response.getD().getValue().getSummary());
+            } else {
+                getMvpView().showCartDetails(new ArrayList<>());
+            }
         } else {
             getMvpView().showCartDetails(null);
             getMvpView().onError(response.getD().getMessage());
         }
+
+
+
 
     }
 
