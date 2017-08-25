@@ -115,12 +115,12 @@
                                                 android:layout_height="match_parent"
                                                 android:layout_alignTop="@+id/product_details_shared_image"
                                                 android:layout_gravity="center"
-                                                android:layout_marginTop="10dp"
                                                 android:layout_marginBottom="10dp"
+                                                android:layout_marginTop="10dp"
                                                 android:clipChildren="false"
                                                 android:clipToPadding="false"
-                                                android:paddingTop="5dp"
                                                 android:paddingBottom="5dp"
+                                                android:paddingTop="5dp"
                                                 app:rvp_singlePageFling="true"
                                                 app:rvp_triggerOffset="0.05" />
 
@@ -225,7 +225,38 @@
                                                     android:textSize="@dimen/text_size_medium" />
 
                                             </LinearLayout>
+
+                                            <LinearLayout
+                                                android:layout_width="0px"
+                                                android:layout_height="wrap_content"
+                                                android:layout_weight="1"
+                                                android:orientation="vertical">
+
+                                                <TextView
+                                                    android:id="@+id/productPrice"
+                                                    android:layout_width="wrap_content"
+                                                    android:layout_height="wrap_content"
+                                                    android:layout_gravity="end"
+                                                    android:maxLines="1"
+                                                    android:text=""
+                                                    android:textColor="@color/colorAccent"
+                                                    fontPath="@string/font_lato_bold"
+                                                    android:textSize="@dimen/text_size_xxxxlarge" />
+
+                                                <TextView
+                                                    android:id="@+id/productPreviousPrice"
+                                                    fontPath="@string/font_lato_light"
+                                                    android:layout_width="wrap_content"
+                                                    android:layout_height="wrap_content"
+                                                    android:layout_gravity="end"
+                                                    android:maxLines="1"
+                                                    android:text=""
+                                                    android:textColor="@color/gray_sale_price"
+                                                    android:textSize="@dimen/text_size_large" />
+
+                                            </LinearLayout>
                                         </LinearLayout>
+
                                     </LinearLayout>
                                 </RelativeLayout>
 
@@ -241,7 +272,7 @@
                                     android:layout_width="match_parent"
                                     android:layout_height="wrap_content"
                                     android:layout_margin="10dp"
-                                    android:orientation="vertical"/>
+                                    android:orientation="vertical" />
 
 
                                 <LinearLayout
@@ -592,61 +623,6 @@
                             </LinearLayout>
 
                         </RelativeLayout>
-
-                        <TextView
-                            android:id="@+id/discountLabel"
-                            fontPath="@string/font_lato_black"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_marginTop="10dp"
-                            android:paddingBottom="14dp"
-                            android:paddingLeft="16dp"
-                            android:paddingRight="16dp"
-                            android:paddingTop="14dp"
-                            android:textColor="@android:color/white"
-                            android:textSize="14sp"
-                            android:visibility="invisible"
-                            tools:ignore="MissingPrefix" />
-
-                        <LinearLayout
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_gravity="right"
-                            android:layout_marginBottom="10dp"
-                            android:layout_marginRight="-5dp"
-                            android:layout_marginTop="40dp"
-                            android:layout_weight="1"
-                            android:background="@drawable/bg_sale_details_price_background"
-                            android:clickable="false"
-                            android:focusable="false"
-                            android:orientation="vertical"
-                            android:paddingBottom="5dp"
-                            android:paddingLeft="10dp"
-                            android:paddingRight="10dp"
-                            android:paddingTop="5dp">
-
-                            <TextView
-                                android:id="@+id/productPrice"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:layout_gravity="end|fill_vertical"
-                                android:maxLines="1"
-                                android:text=""
-                                android:textColor="@color/white"
-                                android:textSize="@dimen/text_size_xxxxlarge" />
-
-                            <TextView
-                                android:id="@+id/productPreviousPrice"
-                                fontPath="@string/font_lato_light"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:layout_gravity="end"
-                                android:maxLines="1"
-                                android:text=""
-                                android:textColor="#FBFBFB"
-                                android:textSize="@dimen/text_size_large" />
-
-                        </LinearLayout>
 
                     </FrameLayout>
 

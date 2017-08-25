@@ -96,9 +96,6 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
     private String mSalePrice;
     private String mSaleOldPrice;
 
-    //product details views
-    @BindView(R.id.discountLabel)
-    TextView mDiscountLabel;
     @BindView(R.id.productImageRecyclerView)
     RecyclerViewPager mProductImagesRv;
     @BindView(R.id.otherImagesRecyclerView)
