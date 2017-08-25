@@ -2,7 +2,6 @@ package au.com.dealsdirect.ui.controller.orders.orders;
 
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -35,7 +34,6 @@ public class OrdersItemRecyclerViewAdapter extends RecyclerView.Adapter<Recycler
             int paymentReferenceNo,
             ArrayList<GetPaymentsList.ResponseValue.Order> orderList,
             Context context) {
-        Log.d("myorders", "size inside when set adapter = " + orderList.size());
 
         this.orderList = orderList;
         this.context = context;

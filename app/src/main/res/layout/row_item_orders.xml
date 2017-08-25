@@ -20,8 +20,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="10dp"
-                android:layout_marginLeft="10dp"
-                android:layout_marginRight="10dp"
+                android:layout_marginLeft="5dp"
+                android:layout_marginRight="5dp"
                 android:layout_marginTop="10dp">
 
                 <TextView
@@ -46,11 +46,11 @@
                     android:textSize="18sp"
                     tools:ignore="HardcodedText" />
 
-                <!--<ImageView-->
-                    <!--android:layout_width="wrap_content"-->
-                    <!--android:layout_height="wrap_content"-->
-                    <!--android:layout_alignParentRight="true"-->
-                    <!--android:src="@drawable/ic_right_arrow"/>-->
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentRight="true"
+                    android:src="@drawable/ic_disclosure_indicator"/>
 
             </RelativeLayout>
 
@@ -62,8 +62,8 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_below="@+id/my_order_number_container"
-            android:layout_marginLeft="10dp"
-            android:layout_marginRight="10dp"
+            android:layout_marginLeft="5dp"
+            android:layout_marginRight="5dp"
             android:layout_marginTop="5dp">
 
             <LinearLayout
@@ -75,10 +75,11 @@
                 <TextView
                     android:id="@+id/my_order_product_name"
                     android:layout_width="wrap_content"
+                    fontPath="@string/font_lato_semibold"
                     android:layout_height="wrap_content"
                     android:layout_weight="4"
-                    android:text=""
-                    android:textColor="#878787"
+                    android:textColor="#707070"
+                    android:textStyle="bold"
                     android:textSize="@dimen/text_size_xlarge"
                     tools:ignore="HardcodedText" />
 
@@ -90,8 +91,8 @@
                     android:layout_gravity="end"
                     android:gravity="end"
                     android:maxLines="1"
-                    android:text="hehe"
-                    android:textColor="@color/gray_field_text"
+                    android:layout_marginTop="-5dp"
+                    android:textColor="#5c5c5c"
                     android:textSize="@dimen/text_size_xxxlarge"
                     tools:ignore="HardcodedText" />
 
