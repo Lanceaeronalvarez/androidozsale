@@ -22,10 +22,8 @@ import javax.inject.Inject;
 
 import au.com.dealsdirect.R;
 import au.com.dealsdirect.data.network.model.checkout.getuserpaymentmethods.PaymentMethod;
-import au.com.dealsdirect.ui.base.BaseController;
 import au.com.dealsdirect.ui.base.BasePullToRefreshController;
 import au.com.dealsdirect.ui.controller.checkout.addpayment.AddPaymentController;
-import au.com.dealsdirect.ui.controller.checkout.checkout.CheckoutController;
 import au.com.dealsdirect.ui.custom.CustomAlertDialog;
 import au.com.dealsdirect.ui.custom.RecyclerOnTouchListener;
 import au.com.dealsdirect.ui.main.MainActivity;
@@ -190,6 +188,7 @@ public class PaymentSelectController extends BasePullToRefreshController impleme
 
     @OnClick(R.id.partial_toolbar_arrow_view)
     public void onBackClick() {
+        hideKeyboard();
         getActivity().onBackPressed();
     }
 
