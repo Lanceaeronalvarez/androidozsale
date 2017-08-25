@@ -13,38 +13,49 @@
         android:background="@drawable/bg_voucher_item"
         android:clickable="true"
         android:gravity="center_vertical"
-        android:orientation="vertical"
-        android:padding="@dimen/activity_horizontal_margin">
+        android:orientation="horizontal"
+        android:weightSum="2">
 
-        <TextView
-            android:id="@+id/row_add_vouchers_text_item_cost_value"
-            fontPath="@string/font_lato_bold"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:textColor="@color/white"
-            android:textSize="@dimen/text_size_xxxxlarge"
-            android:textStyle="bold"
-            tools:text="$10" />
 
-        <TextView
-            android:id="@+id/row_add_vouchers_text_item_desc"
-            fontPath="@string/font_lato_medium"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="5dp"
-            android:textColor="@color/white"
-            android:textSize="@dimen/text_size_small"
-            tools:text="voucher good for use until " />
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:gravity="center_vertical"
+            android:orientation="vertical"
+            android:padding="@dimen/activity_horizontal_margin">
 
-        <TextView
-            android:id="@+id/row_add_vouchers_text_item_expires_on_value"
-            fontPath="@string/font_lato_medium"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="2dp"
-            android:textColor="@color/white"
-            android:textSize="@dimen/text_size_small"
-            tools:text="January 15" />
+            <TextView
+                android:id="@+id/row_add_vouchers_text_item_cost_value"
+                fontPath="@string/font_lato_bold"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textColor="@color/white"
+                android:textSize="@dimen/text_size_xxxxlarge"
+                android:textStyle="bold"
+                tools:text="$10" />
+
+            <TextView
+                android:id="@+id/row_add_vouchers_text_item_desc"
+                fontPath="@string/font_lato_medium"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="5dp"
+                android:textColor="@color/white"
+                android:textSize="@dimen/text_size_small"
+                tools:text="voucher good for use until " />
+
+            <TextView
+                android:id="@+id/row_add_vouchers_text_item_expires_on_value"
+                fontPath="@string/font_lato_medium"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="2dp"
+                android:textColor="@color/white"
+                android:textSize="@dimen/text_size_small"
+                tools:text="January 15" />
+
+        </LinearLayout>
 
     </LinearLayout>
 
