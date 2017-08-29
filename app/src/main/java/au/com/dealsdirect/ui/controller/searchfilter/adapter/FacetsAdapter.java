@@ -90,24 +90,28 @@ public class FacetsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
 
     }
 
+    private String getFacetFilterType(int position) {
+        return mData.get(position).first;
+    }
+
     private int mapDrawable(int position){
-        switch (position){
-            case 0:
+        String facetFilterType = getFacetFilterType(position);
+        switch (facetFilterType) {
+            case SORT_FACETFILTER_NAME:
                 return R.drawable.bg_filter_sort_icon;
-            case 1:
+            case CATEGORY_TREE_FACET:
                 return R.drawable.bg_filter_categories_icon;
-            case 2:
+            case BRANDS_FACETFILTER_NAME:
                 return R.drawable.bg_filter_brand_icon;
-            case 3:
+            case SIZES_FACETFILTER_NAME:
                 return R.drawable.bg_filter_size_icon;
-            case 4:
+            case COLORS_FACETFILTER_NAME:
                 return R.drawable.bg_filter_color_icon;
-            case 5:
+            case PRICE_FACETFILTER_NAME:
                 return R.drawable.bg_filter_price_icon;
             default:
                 return -1;
         }
-
     }
 
     public void add(Pair<String,String> newFacet){
