@@ -20,7 +20,7 @@ public class Attributes {
     private Double width;
     @SerializedName("brandDescription")
     @Expose
-    private Object brandDescription;
+    private String brandDescription;
 
     public String getSize() {
         return size;
@@ -54,11 +54,11 @@ public class Attributes {
         this.width = width;
     }
 
-    public Object getBrandDescription() {
+    public String getBrandDescription() {
         return brandDescription;
     }
 
-    public void setBrandDescription(Object brandDescription) {
+    public void setBrandDescription(String brandDescription) {
         this.brandDescription = brandDescription;
     }
 

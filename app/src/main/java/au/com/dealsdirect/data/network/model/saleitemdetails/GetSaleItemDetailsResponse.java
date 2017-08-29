@@ -47,6 +47,9 @@ public class GetSaleItemDetailsResponse {
     @SerializedName("countryOfOrigin")
     @Expose
     private String countryOfOrigin;
+    @SerializedName("deliveryInformation")
+    @Expose
+    private String deliveryInformation;
     @SerializedName("shippingInformation")
     @Expose
     private String shippingInformation;
@@ -177,6 +180,14 @@ public class GetSaleItemDetailsResponse {
 
     public void setCountryOfOrigin(String countryOfOrigin) {
         this.countryOfOrigin = countryOfOrigin;
+    }
+
+    public String getDeliveryInformation() {
+        return deliveryInformation;
+    }
+
+    public void setDeliveryInformation(String deliveryInformation) {
+        this.deliveryInformation = deliveryInformation;
     }
 
     public String getShippingInformation() {

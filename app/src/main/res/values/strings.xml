@@ -27,9 +27,7 @@
     <string name="font_lato_thin">fonts/Lato-Thin.ttf</string>
     <string name="font_lato_thin_italic">fonts/Lato-ThinItalic.ttf</string>
 
-    <string name="return_policy">
-        This item is final sale and non-returnable. Please refer to our Terms and Conditions.
-    </string>
+    <string name="return_policy">Return Policy</string>
 
     <string name="base_html_template_header" formatted="false">
         <![CDATA["<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN">
@@ -261,7 +259,9 @@
     <string name="sale_items_from_category">SaleItemFromCategory</string>
     <string name="bottom_nav_sale_top_from_sale_items">BottomNavSaleTapFromSaleItems</string>
     <string name="choose_your_size">Choose your size:</string>
+    <string name="about">About</string>
     <string name="pricing">Pricing</string>
+    <string name="estimated_delivery">Estimated Delivery</string>
     <string name="subject">Subject:</string>
     <string name="sale">Sale:</string>
     <string name="write_a_message">Write a message...</string>

@@ -11,6 +11,7 @@ import android.support.v4.util.Pair;
 import android.support.v4.widget.NestedScrollView;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -118,8 +119,12 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
     WebView mShippingDescText;
     @BindView(R.id.product_description_text)
     WebView mProductDescriptionText;
-    @BindView(R.id.product_about_pricing)
+    @BindView(R.id.product_about_pricing_text)
     WebView mProductAboutPricing;
+    @BindView(R.id.product_about)
+    WebView mProductAboutText;
+    @BindView(R.id.return_policy_text)
+    WebView mReturnPolicyText;
     @BindView(R.id.product_details_shared_image)
     ImageView mProductSharedImage;
     @BindView(R.id.product_details_coordinator)
@@ -130,10 +135,16 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
     LinearLayout mProductPriceCategory;
     @BindView(R.id.aboutPricing)
     LinearLayout mProductPricing;
+    @BindView(R.id.product_about_container)
+    LinearLayout mProductAboutContainer;
+    @BindView(R.id.return_policy_container)
+    LinearLayout mReturnPolicyContainer;
+    @BindView(R.id.partial_item_details_ourpay_panel_holder)
+    LinearLayout mOurpayHolder;
     @BindView(R.id.controller_sale_item_detail_scrollview)
     NestedScrollView mProductDetailScrollView;
     @BindView(R.id.product_details_add_to_basket)
-    Button mAddButton;
+    Button mAddToCartButton;
 
     @BindView(R.id.image_container)
     FrameLayout mImageContainerViewGroup;
@@ -167,7 +178,6 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
     ElasticDragDismissFrameLayout mRootView;
     View mCheckoutView;
     AHBottomNavigation mBottomNavView;
-    LinearLayout mOurpayHolder;
 
     private final ElasticDragDismissFrameLayout.ElasticDragDismissCallback dragDismissListener
             = new ElasticDragDismissFrameLayout.ElasticDragDismissCallback() {
@@ -261,7 +271,6 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
                 mProductPreviousPrice.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);
 
         mProductDetailBottomCard.setVisibility(View.VISIBLE);
-        mProductDetailBottomCard.setVisibility(View.VISIBLE);
 
         //noinspection ConstantConditions
         mRootView.addListener(dragDismissListener);
@@ -280,7 +289,6 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
 //                .load(mItemImageUrl)
 //                .apply(options)
 //                .into(mProductSharedImage);
-        mOurpayHolder = (LinearLayout) view.findViewById(R.id.partial_checkout_ourpay_panel_holder);
 
         ImageUtils.loadImageImmediate(getActivity(), mItemImageUrl, mProductSharedImage, null);
 
@@ -322,8 +330,11 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
         Animation anim = AnimationUtils.loadAnimation(getActivity(), R.anim.slide_to_bottom);
         anim.setDuration(200);
 
+        String deliveryInformation = saleDetail.getDeliveryInformation();
         String shippingInformation = saleDetail.getShippingInformation();
         String shippingPricing = saleDetail.getPricing();
+        String returnPolicy = saleDetail.getReturnPolicy();
+        String productAbout = saleDetail.getAttributes() == null ? "" : saleDetail.getAttributes().getBrandDescription() == null ? "" : saleDetail.getAttributes().getBrandDescription();
 
         mProductName.setText(saleDetail.getName().trim());
         mProductBrand.setText(saleDetail.getBrandName().trim());
@@ -331,19 +342,26 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
         mProductPreviousPrice.setText(PriceUtils.getRpStringValue(saleDetail.getOriginalPrice().getValue()));
 
         if (shippingInformation != null) {
+            mShippingContainer.setVisibility(View.VISIBLE);
+            mShippingDescText.startAnimation(anim);
+            mShippingDescText.loadData(mHtmlHeader + deliveryInformation + "<br/><br/>" +shippingInformation + mHtmlFooter, "text/html; charset=UTF-8", null);
+
             mProductPricing.setVisibility(View.VISIBLE);
             mProductAboutPricing.startAnimation(anim);
             mProductAboutPricing.loadData(mHtmlHeader + shippingPricing + mHtmlFooter, "text/html; charset=UTF-8", null);
-        } else {
-            mProductPricing.setVisibility(View.GONE);
+
         }
 
-        if (shippingInformation != null) {
-            mShippingDescText.setVisibility(View.VISIBLE);
-            mShippingDescText.startAnimation(anim);
-            mShippingDescText.loadData(mHtmlHeader + shippingInformation + mHtmlFooter, "text/html; charset=UTF-8", null);
-        } else {
-            mShippingContainer.setVisibility(View.GONE);
+        if(returnPolicy != null){
+            mReturnPolicyContainer.setVisibility(View.VISIBLE);
+            mReturnPolicyText.startAnimation(anim);
+            mReturnPolicyText.loadData(mHtmlHeader + returnPolicy + mHtmlFooter, "text/html; charset=UTF-8", null);
+        }
+
+        if(!productAbout.isEmpty()){
+            mProductAboutContainer.setVisibility(View.VISIBLE);
+            mProductAboutText.startAnimation(anim);
+            mProductAboutText.loadData(mHtmlHeader + productAbout + mHtmlFooter, "text/html; charset=UTF-8", null);
         }
 
         List<String> qualitySaleImages = getQualityImages(saleDetail.getImages());
@@ -417,11 +435,11 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
         }
 
 
-        mAddButton.setEnabled(true);
+        mAddToCartButton.setEnabled(true);
 
         if (saleDetail.getQuantity() <= 0) {
-            mAddButton.setEnabled(false);
-            mAddButton.setText("Sold Out");
+            mAddToCartButton.setEnabled(false);
+            mAddToCartButton.setText("Sold Out");
         }
 
         if (saleDetail.getOriginalPrice().getValue() <= 0) {
@@ -448,6 +466,7 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
     public void showMyPayDetails(GetSaleItemDetailsResponse value, Ourpay ourpay) {
         if (ourpay != null) {
             OurpayPanel panel = new OurpayPanel((BaseActivity)getActivity());
+            mOurpayHolder.setVisibility(View.VISIBLE);
             mOurpayHolder.removeAllViews();
             mOurpayHolder.addView(panel.generatePanel(ourpay));
         }
@@ -506,7 +525,6 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
     }
 
     private void animateAddToCart() {
-
         mProductDetailScrollView.scrollTo(0,0);
         int[] imageToAnimateLocation = new int[2];
         mImageViewToAnimate.getLocationOnScreen(imageToAnimateLocation);
@@ -520,7 +538,6 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
         } else {
             mImageViewToAnimate.setImageDrawable(mProductSharedImage.getDrawable());
         }
-
 
         mImageViewToAnimate.bringToFront();
         mImageViewToAnimate.requestLayout();

@@ -18,7 +18,6 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-
         <android.support.design.widget.CoordinatorLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
@@ -86,7 +85,9 @@
 
                                         <RelativeLayout
                                             android:layout_width="wrap_content"
-                                            android:layout_height="390dp"
+                                            android:layout_height="370dp"
+                                            android:clipChildren="false"
+                                            android:clipToPadding="false"
                                             android:transitionName="cardbackground">
 
                                             <ImageView
@@ -104,8 +105,10 @@
                                                 android:layout_height="match_parent"
                                                 android:layout_alignParentTop="true"
                                                 android:layout_gravity="center"
-                                                android:layout_margin="10dp"
-                                                android:padding="5dp"
+                                                android:layout_marginBottom="10dp"
+                                                android:layout_marginTop="10dp"
+                                                android:paddingBottom="5dp"
+                                                android:paddingTop="5dp"
                                                 android:visibility="visible" />
 
 
@@ -113,7 +116,6 @@
                                                 android:id="@+id/productImageRecyclerView"
                                                 android:layout_width="match_parent"
                                                 android:layout_height="match_parent"
-                                                android:layout_alignTop="@+id/product_details_shared_image"
                                                 android:layout_gravity="center"
                                                 android:layout_marginBottom="10dp"
                                                 android:layout_marginTop="10dp"
@@ -272,15 +274,15 @@
                                     android:layout_width="match_parent"
                                     android:layout_height="wrap_content"
                                     android:layout_margin="10dp"
-                                    android:orientation="vertical" />
-
+                                    android:orientation="vertical"
+                                    android:visibility="gone"/>
 
                                 <LinearLayout
                                     android:id="@+id/bottom_card"
                                     android:layout_width="match_parent"
                                     android:layout_height="wrap_content"
                                     android:orientation="vertical"
-                                    android:paddingBottom="20dp"
+                                    android:paddingBottom="@dimen/default_button_height"
                                     android:visibility="gone">
 
                                     <RelativeLayout
@@ -345,20 +347,71 @@
 
                                     </RelativeLayout>
 
-                                    <Button
-                                        android:id="@+id/product_details_add_to_basket"
-                                        style="@style/DDButtonStyle"
-                                        fontPath="@string/font_lato_medium"
+                                    <LinearLayout
+                                        android:id="@+id/shipping_desc_container"
                                         android:layout_width="match_parent"
-                                        android:layout_gravity="bottom"
-                                        android:layout_margin="@dimen/activity_horizontal_margin"
-                                        android:enabled="false"
-                                        android:text="@string/add_to_cart" />
+                                        android:layout_height="match_parent"
+                                        android:orientation="vertical"
+                                        android:visibility="gone">
+
+                                        <TextView
+                                            fontPath="@string/font_lato_bold"
+                                            android:layout_width="wrap_content"
+                                            android:layout_height="wrap_content"
+                                            android:text="@string/estimated_delivery"
+                                            android:layout_margin="5dp"
+                                            android:textColor="@color/gray_item_details"
+                                            android:textSize="@dimen/text_size_large" />
+
+                                        <WebView
+                                            android:id="@+id/shipping_desc_text"
+                                            android:layout_width="match_parent"
+                                            android:layout_height="wrap_content" />
+
+                                        <ImageView
+                                            android:layout_width="match_parent"
+                                            android:layout_height="1px"
+                                            android:layout_gravity="center"
+                                            android:background="#23000000" />
+
+                                    </LinearLayout>
+
+                                    <LinearLayout
+                                        android:id="@+id/return_policy_container"
+                                        android:layout_width="match_parent"
+                                        android:layout_height="match_parent"
+                                        android:orientation="vertical"
+                                        android:visibility="gone">
+
+                                        <TextView
+                                            fontPath="@string/font_lato_bold"
+                                            android:layout_width="wrap_content"
+                                            android:layout_height="wrap_content"
+                                            android:text="@string/return_policy"
+                                            android:layout_margin="5dp"
+                                            android:textColor="@color/gray_item_details"
+                                            android:textSize="@dimen/text_size_large" />
+
+                                        <WebView
+                                            android:id="@+id/return_policy_text"
+                                            android:layout_width="match_parent"
+                                            android:layout_height="wrap_content"
+                                            android:layout_marginTop="5dp"
+                                            android:textSize="@dimen/text_size_medium"/>
+
+                                        <ImageView
+                                            android:layout_width="match_parent"
+                                            android:layout_height="1px"
+                                            android:layout_gravity="center"
+                                            android:background="#23000000" />
+
+                                    </LinearLayout>
 
                                     <LinearLayout
                                         android:id="@+id/product_description_container"
                                         android:layout_width="match_parent"
                                         android:layout_height="match_parent"
+                                        android:layout_marginTop="10dp"
                                         android:orientation="vertical">
 
                                         <WebView
@@ -366,35 +419,15 @@
                                             android:layout_width="match_parent"
                                             android:layout_height="match_parent" />
 
-                                    </LinearLayout>
-
-                                    <ImageView
-                                        android:layout_width="match_parent"
-                                        android:layout_height="1px"
-                                        android:layout_gravity="center"
-                                        android:background="#23000000" />
-
-                                    <LinearLayout
-                                        android:id="@+id/shipping_desc_container"
-                                        android:layout_width="match_parent"
-                                        android:layout_height="match_parent"
-                                        android:orientation="vertical">
-
-                                        <WebView
-                                            android:id="@+id/shipping_desc_text"
+                                        <ImageView
                                             android:layout_width="match_parent"
-                                            android:layout_height="wrap_content"
-                                            android:layout_marginBottom="5dp"
-                                            android:layout_marginTop="5dp" />
+                                            android:layout_height="1px"
+                                            android:layout_gravity="center"
+                                            android:background="#23000000" />
 
                                     </LinearLayout>
 
-                                    <ImageView
-                                        android:layout_width="match_parent"
-                                        android:layout_height="1px"
-                                        android:layout_gravity="center"
-                                        android:background="#23000000"
-                                        android:visibility="gone" />
+
 
                                     <!--pickup points container-->
                                     <LinearLayout
@@ -461,25 +494,17 @@
                                             </LinearLayout>
                                         </LinearLayout>
 
+                                        <ImageView
+                                            android:layout_width="match_parent"
+                                            android:layout_height="1px"
+                                            android:layout_gravity="center"
+                                            android:background="#23000000" />
                                     </LinearLayout>
 
-                                    <ImageView
-                                        android:layout_width="match_parent"
-                                        android:layout_height="1px"
-                                        android:layout_gravity="center"
-                                        android:background="#23000000" />
-
-                                    <ImageView
-                                        android:layout_width="match_parent"
-                                        android:layout_height="1px"
-                                        android:layout_gravity="center"
-                                        android:background="#23000000" />
-
                                     <LinearLayout
-                                        android:id="@+id/aboutPricing"
+                                        android:id="@+id/product_about_container"
                                         android:layout_width="match_parent"
                                         android:layout_height="match_parent"
-                                        android:layout_margin="10dp"
                                         android:orientation="vertical"
                                         android:visibility="gone">
 
@@ -487,17 +512,46 @@
                                             fontPath="@string/font_lato_bold"
                                             android:layout_width="wrap_content"
                                             android:layout_height="wrap_content"
-                                            android:text="@string/pricing"
+                                            android:layout_margin="5dp"
+                                            android:text="@string/about"
                                             android:textColor="@color/gray_item_details"
                                             android:textSize="@dimen/text_size_large" />
 
-
                                         <WebView
-                                            android:id="@+id/product_about_pricing"
+                                            android:id="@+id/product_about"
                                             android:layout_width="match_parent"
                                             android:layout_height="wrap_content"
                                             android:layout_marginTop="5dp" />
 
+                                        <ImageView
+                                            android:layout_width="match_parent"
+                                            android:layout_height="1px"
+                                            android:layout_gravity="center"
+                                            android:background="#23000000"/>
+
+                                    </LinearLayout>
+
+                                    <LinearLayout
+                                        android:id="@+id/aboutPricing"
+                                        android:layout_width="match_parent"
+                                        android:layout_height="match_parent"
+                                        android:orientation="vertical"
+                                        android:visibility="gone">
+
+                                        <TextView
+                                            fontPath="@string/font_lato_bold"
+                                            android:layout_width="wrap_content"
+                                            android:layout_height="wrap_content"
+                                            android:layout_margin="5dp"
+                                            android:text="@string/pricing"
+                                            android:textColor="@color/gray_item_details"
+                                            android:textSize="@dimen/text_size_large" />
+
+                                        <WebView
+                                            android:id="@+id/product_about_pricing_text"
+                                            android:layout_width="match_parent"
+                                            android:layout_height="wrap_content"
+                                            android:layout_marginTop="5dp" />
 
                                         <!--<com.example.customviewlib.GenieTextView-->
                                         <!--android:id="@+id/productAboutPricing"-->
@@ -508,12 +562,7 @@
                                         <!--android:textSize="@dimen/text_size_small" />-->
                                     </LinearLayout>
 
-                                    <ImageView
-                                        android:layout_width="match_parent"
-                                        android:layout_height="1px"
-                                        android:layout_gravity="center"
-                                        android:background="#23000000"
-                                        android:visibility="gone" />
+
 
                                     <LinearLayout
                                         android:id="@+id/relatedItemsContainer"
@@ -629,6 +678,19 @@
                 </LinearLayout>
 
             </android.support.v4.widget.NestedScrollView>
+
+            <Button
+                android:id="@+id/product_details_add_to_basket"
+                style="@style/DDButtonStyle"
+                fontPath="@string/font_lato_medium"
+                android:layout_width="match_parent"
+                android:layout_gravity="bottom"
+                android:layout_marginTop="10dp"
+                android:layout_marginBottom="10dp"
+                android:layout_marginLeft="5dp"
+                android:layout_marginRight="5dp"
+                android:enabled="false"
+                android:text="@string/add_to_cart" />
 
         </android.support.design.widget.CoordinatorLayout>
 

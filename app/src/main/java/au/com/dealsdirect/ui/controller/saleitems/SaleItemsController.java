@@ -1,5 +1,6 @@
 package au.com.dealsdirect.ui.controller.saleitems;
 
+import android.app.Activity;
 import android.content.Context;
 import android.os.Bundle;
 import android.os.Handler;
@@ -286,11 +287,14 @@ public class SaleItemsController extends BasePullToRefreshController implements 
     }
 
     @Override
+    protected void onActivityResumed(@NonNull Activity activity) {
+        super.onActivityResumed(activity);
+        ((MainActivity) getActivity()).setDraggableViewPager(false);
+    }
+
+    @Override
     protected void onViewBound(@NonNull View view) {
         super.onViewBound(view);
-
-        assert (getActivity()) != null;
-        ((MainActivity) getActivity()).setDraggableViewPager(false);
 
 //        if (mIsFromCategory){
 //            mSaleItemsBackIcon.setOnClickListener(view1 -> {
