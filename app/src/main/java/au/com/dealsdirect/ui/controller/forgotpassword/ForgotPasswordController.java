@@ -86,6 +86,7 @@ public class ForgotPasswordController extends BaseController implements ForgotPa
 
     @OnClick(R.id.partial_toolbar_arrow_view)
     void onBackClick(){
+        hideKeyboard();
         getActivity().onBackPressed();
     }
 

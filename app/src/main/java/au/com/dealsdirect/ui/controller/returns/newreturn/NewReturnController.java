@@ -4,11 +4,9 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.TextView;
@@ -52,9 +50,6 @@ public class NewReturnController extends BaseController implements NewReturnMvpV
 
     @BindView(R.id.partial_toolbar_filter_view)
     ImageButton mNewReturnToolbarRightOption;
-
-    @BindView(R.id.new_return_create_button)
-    Button mNewReturnCreateSubmitButton;
 
     @BindView(R.id.controller_new_return_field)
     EditText mNewReturnCreateReasonField;
@@ -106,7 +101,8 @@ public class NewReturnController extends BaseController implements NewReturnMvpV
         // Setup views here
         //mPresenter.loadSample(new SampleRequest());
         mNewReturnToolbarTitle.setText("Create Return");
-        mNewReturnToolbarRightOption.setVisibility(View.INVISIBLE);
+        mNewReturnToolbarRightOption.setVisibility(View.VISIBLE);
+        mNewReturnToolbarRightOption.setImageDrawable(getResources().getDrawable(R.drawable.ic_check));
 
 
         mPresenter.getReturnOrderDetail(mReturnItem.getInvoiceNo());
@@ -197,9 +193,7 @@ public class NewReturnController extends BaseController implements NewReturnMvpV
             }
         };
 
-//        newReturnOrderSetDetailSendBottomButton.setOnClickListener(onClickListener);
-
-        mNewReturnCreateSubmitButton.setOnClickListener(onClickListener);
+        mNewReturnToolbarRightOption.setOnClickListener(onClickListener);
     }
 
     @Override
@@ -251,16 +245,15 @@ public class NewReturnController extends BaseController implements NewReturnMvpV
         }
 
         getRouter().popToTag("CurrentReturnController");
+        hideKeyboard();
 
     }
 
     @Override
     public void loadReturnOrderDetail(NewReturnOrderDetailResponse newReturnsOrderDetail) {
 
-        Log.d("NewReturnController" , " value = "+newReturnsOrderDetail.getMessage() + " , "+newReturnsOrderDetail.getList().size());
         mNewReturnsOrderDetail = newReturnsOrderDetail;
 
-        //        List<au.com.topbuy.myreturnsmodule.NewReturnOrderSetDetailsFragmentMVP.Domain.Model.GetReturnOrderDetail.List> lists = newReturnsOrderDetail.getList();
         final NewReturnOrdersAdapter adapter
                 = new NewReturnOrdersAdapter
                 (newReturnsOrderDetail.getList(),getActivity(),this);
@@ -288,4 +281,5 @@ public class NewReturnController extends BaseController implements NewReturnMvpV
 
         }
     }
+
 }

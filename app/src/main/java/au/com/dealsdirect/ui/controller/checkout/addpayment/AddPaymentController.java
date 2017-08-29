@@ -249,6 +249,7 @@ public class AddPaymentController extends BaseController implements AddPaymentMv
 
     @OnClick(R.id.partial_toolbar_arrow_view)
     void onBackPressed() {
+        hideKeyboard();
         ((MainActivity)getActivity()).getMainController().getHomeController().setIsResetCheckout(false);
         getActivity().onBackPressed();
     }
