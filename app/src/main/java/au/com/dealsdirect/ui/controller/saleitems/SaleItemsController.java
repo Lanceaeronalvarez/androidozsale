@@ -640,7 +640,7 @@ public class SaleItemsController extends BasePullToRefreshController implements 
     public void activateSearch() {
         android.os.Handler handler = new android.os.Handler();
         handler.postDelayed(() -> {
-            if (mSaleItemsToolbarField.requestFocus()) {
+            if (mSaleItemsToolbarField != null && mSaleItemsToolbarField.requestFocus()) {
                 InputMethodManager inputMethodManager =
                         (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
 

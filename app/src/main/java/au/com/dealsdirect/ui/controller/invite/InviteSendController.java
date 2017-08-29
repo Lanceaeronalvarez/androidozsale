@@ -161,7 +161,6 @@ public class InviteSendController extends BasePullToRefreshController implements
     @Override
     public void onRefreshStart() {
         super.onRefreshStart();
-        mRoot.setVisibility(View.GONE);
         mPresenter.start();
     }
 
