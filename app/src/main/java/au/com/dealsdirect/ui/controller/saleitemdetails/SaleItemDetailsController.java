@@ -242,6 +242,12 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
     @Override
     protected void onViewBound(@NonNull View view) {
         super.onViewBound(view);
+        setUp(view);
+    }
+
+    @Override
+    protected void setUp(View view) {
+
         mRootView = ((ElasticDragDismissFrameLayout) view);
 
         mActivity = (MainActivity)getActivity();
@@ -301,20 +307,6 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
                 .getString(R.string.base_html_template_header);
         mHtmlFooter = getActivity().getResources()
                 .getString(R.string.base_html_template_footer);
-
-
-        mBottomNavView = ((MainActivity) getActivity()).getMainController().getHomeController().getBottomNavigationView();
-        ArrayList<View> potentialViews = new ArrayList<View>();
-        mBottomNavView.findViewsWithText(potentialViews,"checkout", View.FIND_VIEWS_WITH_TEXT);
-//        mCheckoutView = !potentialViews.isEmpty() ? potentialViews.get(0) : null;
-        mCheckoutView = mBottomNavView.getViewAtPosition(4);
-
-    }
-
-    @Override
-    protected void setUp(View view) {
-
-
     }
 
     @Override
@@ -532,6 +524,12 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
 
         mImageViewToAnimate.bringToFront();
         mImageViewToAnimate.requestLayout();
+
+        mBottomNavView = ((MainActivity) getActivity()).getMainController().getHomeController().getBottomNavigationView();
+        ArrayList<View> potentialViews = new ArrayList<View>();
+        mBottomNavView.findViewsWithText(potentialViews,"checkout", View.FIND_VIEWS_WITH_TEXT);
+//        mCheckoutView = !potentialViews.isEmpty() ? potentialViews.get(0) : null;
+        mCheckoutView = mBottomNavView.getViewAtPosition(4);
         mCheckoutView.getLocationOnScreen(checkoutLocation);
 
         ArcTranslateAnimation anim = new ArcTranslateAnimation(
