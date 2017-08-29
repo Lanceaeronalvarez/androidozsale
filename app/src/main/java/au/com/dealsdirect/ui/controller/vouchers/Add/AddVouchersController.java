@@ -36,6 +36,7 @@ import au.com.dealsdirect.data.network.model.vouchers.ClearVouchersResponse;
 import au.com.dealsdirect.data.network.model.vouchers.Voucher;
 import au.com.dealsdirect.ui.base.BaseController;
 import au.com.dealsdirect.ui.custom.CustomAlertDialog;
+import au.com.dealsdirect.ui.main.MainActivity;
 import au.com.dealsdirect.utils.BundleBuilder;
 import au.com.dealsdirect.utils.JsonUtils;
 import butterknife.BindView;
@@ -190,16 +191,17 @@ public class AddVouchersController extends BaseController implements AddVouchers
 
     @Override
     protected void setUp(View view) {
-        mTitleText.setText("Promo Code");
+
+        if ((getActivity()) != null)
+            ((MainActivity)getActivity()).getMainController().getHomeController().setIsResetCheckout(true);
+        mTitleText.setText(getActivity().getResources().getText(R.string.promo_code));
         mFilterView.setVisibility(View.INVISIBLE);
         mArrowImage.setOnClickListener(action -> {
+            ((MainActivity)getActivity()).getMainController().getHomeController().setIsResetCheckout(false);
             getActivity().onBackPressed();
         });
 
         mAdapter = new AddVouchersRecyclerViewAdapter(mVouchers, this, getActivity());
-
-//        mAdapter.setVoucherOptionIndicator(voucherOptionIndicator);
-
 
         if (!mIsVoucherAdded) {
             mButtonClear.setVisibility(View.GONE);
@@ -212,7 +214,6 @@ public class AddVouchersController extends BaseController implements AddVouchers
             if (voucherIds.size() != 0 && tempVoucherIds.size() != 0) {
                 mPresenter.applyVouchers(100, voucherIds);
 
-
             } else {
                 CustomAlertDialog.showCustomAlertDialog(
                         getActivity(),
@@ -220,7 +221,6 @@ public class AddVouchersController extends BaseController implements AddVouchers
                         getApplicationContext().getString(R.string.no_voucher_selected));
             }
         });
-
 
         mAdapter = new AddVouchersRecyclerViewAdapter(mVouchers, this, getActivity());
         mRecyclerView.setAdapter(mAdapter);
@@ -243,9 +243,7 @@ public class AddVouchersController extends BaseController implements AddVouchers
             if (!mPromoCodeText.getText().toString().isEmpty()) {
 
                 mPresenter.addAndApplyVoucherByKey(100, mPromoCodeText.getText().toString());
-
                 mTempVoucherPromoKey = mPromoCodeText.getText().toString();
-
                 mPromoCodeText.clearFocus();
                 hideKeyboard();
 
@@ -255,7 +253,7 @@ public class AddVouchersController extends BaseController implements AddVouchers
                         .showCustomAlertDialog(
                                 getActivity(),
                                 CustomAlertDialog.CustomDialogIconState.NEGATIVE,
-                                "Please input a promo code.");
+                                getActivity().getString(R.string.please_input_promo_code));
             }
         });
     }
@@ -275,8 +273,6 @@ public class AddVouchersController extends BaseController implements AddVouchers
         boolean responseIsAuthenticated = applyVouchersResponseBody.getValue().isAuthenticated();
 
         if (responseMessage.isEmpty() && responseResult && responseIsAuthenticated) {
-//            GDebug.log(this.getClass().getSimpleName(),
-//                    "on vouchers applied and response is not empty");
 
             String successResponse = "voucher applied";
             if (voucherIds.size() > 1) {
@@ -294,6 +290,7 @@ public class AddVouchersController extends BaseController implements AddVouchers
             voucherSet.addAll(voucherIds);
             editor.putStringSet("VOUCHER_SET", voucherSet);
             editor.apply();
+
             getActivity().onBackPressed();
 
 
@@ -340,6 +337,7 @@ public class AddVouchersController extends BaseController implements AddVouchers
 
         voucherIds.clear();
         tempVoucherIds.clear();
+
         getActivity().onBackPressed();
 
     }
@@ -384,7 +382,6 @@ public class AddVouchersController extends BaseController implements AddVouchers
 
     @Override
     public void onVoucherItemClicked(String voucherId, String voucherState, LinearLayout holder, int position) {
-        Log.d("AddVoucher", " voucher  clicked");
 
         if (voucherOptionIndicator.get(position) != null) {
 
@@ -398,7 +395,6 @@ public class AddVouchersController extends BaseController implements AddVouchers
 
             } else {
 
-                Log.d("AddVoucher", " ID = " + voucherId);
                 voucherIds.add(voucherId);
                 tempVoucherIds.add(voucherId);
 

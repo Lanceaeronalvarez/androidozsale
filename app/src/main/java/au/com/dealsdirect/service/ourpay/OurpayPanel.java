@@ -21,6 +21,7 @@ import au.com.dealsdirect.R;
 import au.com.dealsdirect.data.network.model.checkout.getcurrentorder.MyPayDetails;
 import au.com.dealsdirect.ui.base.BaseActivity;
 import au.com.dealsdirect.ui.controller.legalities.LegalitiesController;
+import au.com.dealsdirect.ui.main.MainActivity;
 import au.com.dealsdirect.utils.PriceUtils;
 
 /**
@@ -197,6 +198,7 @@ public class OurpayPanel {
             Bundle bundle = new Bundle();
             bundle.putString("templateKey", ourpayTermsAndConditionKey);
 
+            ((MainActivity)mBaseActivity).getMainController().getHomeController().setIsResetCheckout(false);
             mRouter.pushController(RouterTransaction.with(new LegalitiesController(ourpayTermsAndConditionKey,"My Basket"))
                     .pushChangeHandler(new HorizontalChangeHandler(false))
                     .popChangeHandler(new HorizontalChangeHandler(false)));

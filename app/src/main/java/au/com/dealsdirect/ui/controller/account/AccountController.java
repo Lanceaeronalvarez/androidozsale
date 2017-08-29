@@ -225,6 +225,7 @@ public class AccountController extends BaseController implements AccountMvpView,
             @Override
             public void success() {
                 mPresenter.loadAccountItems();
+                ((MainActivity) getActivity()).getMainController().getHomeController().setIsResetCheckout(true);
                 ((MainActivity) getActivity()).getMainController().getHomeController().removeBasketItemCount();
 
             }

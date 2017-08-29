@@ -12,7 +12,6 @@ import android.view.ViewGroup;
 import com.aurelhubert.ahbottomnavigation.AHBottomNavigation;
 import com.aurelhubert.ahbottomnavigation.AHBottomNavigationAdapter;
 import com.aurelhubert.ahbottomnavigation.notification.AHNotification;
-import com.bluelinelabs.conductor.Conductor;
 import com.bluelinelabs.conductor.Controller;
 import com.bluelinelabs.conductor.ControllerChangeHandler;
 import com.bluelinelabs.conductor.Router;
@@ -91,6 +90,8 @@ public class HomeController extends BaseController implements HomeMvpView {
     private int mPreviousTab = R.id.action_shop;
     private int mCurrentTab = R.id.action_shop;
     private int currentVisibleIndex = 1;
+
+    public boolean mIsResetCart = true;
 
     private boolean isLoginVisible = false;
 
@@ -353,6 +354,8 @@ public class HomeController extends BaseController implements HomeMvpView {
         setVisibleContainer(4);
         Controller controller = getCurrentControllerOnRouter(mCheckoutRouter);
         if (controller instanceof CheckoutController) {
+            if ((getActivity()) != null)
+                ((MainActivity)getActivity()).getMainController().getHomeController().setIsResetCheckout(true);
             ((CheckoutController) controller).loadCart();
         }
     }
@@ -447,5 +450,13 @@ public class HomeController extends BaseController implements HomeMvpView {
         }
 
         return null;
+    }
+
+    public boolean getIsResetCheckout(){
+        return mIsResetCart;
+    }
+
+    public void setIsResetCheckout(boolean resetCheckout){
+        mIsResetCart = resetCheckout;
     }
 }

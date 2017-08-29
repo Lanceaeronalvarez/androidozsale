@@ -98,6 +98,10 @@ public class AddPaymentController extends BaseController implements AddPaymentMv
         mViewAddressToolarTitle.setText("Add New Payment");
         mViewAddressRightOption.setImageDrawable(null);
 
+        if ((getActivity()) != null) {
+            ((MainActivity)getActivity()).getMainController().getHomeController().setIsResetCheckout(true);
+        }
+
         mCardForm.cardRequired(true)
                 .expirationRequired(true)
                 .cvvRequired(true)
@@ -210,7 +214,6 @@ public class AddPaymentController extends BaseController implements AddPaymentMv
     public void showAddPaymentResult(boolean result, String message) {
         hideLoading();
         if (result) {
-
             CustomAlertDialog.showCustomAlertDialog(
                     mActivity, CustomAlertDialog.CustomDialogIconState.POSITIVE,
                     "Payment method added!");
@@ -246,6 +249,7 @@ public class AddPaymentController extends BaseController implements AddPaymentMv
 
     @OnClick(R.id.partial_toolbar_arrow_view)
     void onBackPressed() {
+        ((MainActivity)getActivity()).getMainController().getHomeController().setIsResetCheckout(false);
         getActivity().onBackPressed();
     }
 

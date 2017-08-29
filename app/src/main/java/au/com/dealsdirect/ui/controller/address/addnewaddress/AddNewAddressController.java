@@ -26,12 +26,12 @@ import au.com.dealsdirect.R;
 import au.com.dealsdirect.data.network.model.address.DecorationInfoList;
 import au.com.dealsdirect.ui.base.BaseController;
 import au.com.dealsdirect.ui.custom.CustomAlertDialog;
+import au.com.dealsdirect.ui.main.MainActivity;
 import au.com.dealsdirect.utils.BundleBuilder;
 import au.com.dealsdirect.utils.JsonUtils;
 import au.com.dealsdirect.utils.StringUtils;
 import butterknife.BindView;
 import butterknife.OnClick;
-import timber.log.Timber;
 
 /**
  * Created by smartwave on 20/06/2017.
@@ -77,6 +77,8 @@ public class AddNewAddressController extends BaseController implements AddNewAdd
     @Override
     protected void setUp(View view) {
 
+        if (getActivity()!=null)
+            ((MainActivity)getActivity()).getMainController().getHomeController().setIsResetCheckout(true);
         mAddNewAddressToolarTitle.setText("Add New Address");
         mAddNewAddressRightOption.setImageDrawable(getApplicationContext().getDrawable(R.drawable.ic_check));
     }
@@ -163,6 +165,13 @@ public class AddNewAddressController extends BaseController implements AddNewAdd
 
     @Override
     public void addNewAddressSuccessful() {
+
+        CustomAlertDialog.showCustomAlertDialog(
+                getActivity(),
+                CustomAlertDialog.CustomDialogIconState.POSITIVE,
+                getApplicationContext().getString(R.string.delivery_address_added));
+        getActivity().onBackPressed();
+
 //        DialogUtils.showYesDialog(getActivity(), "Success!", "added new address.", "OK", new DialogInterface.OnClickListener() {
 //            @Override
 //            public void onClick(DialogInterface dialog, int which) {
@@ -170,24 +179,17 @@ public class AddNewAddressController extends BaseController implements AddNewAdd
 //                dialog.dismiss();
 //            }
 //        });
-        CustomAlertDialog.showCustomAlertDialog(
-                getActivity(),
-                CustomAlertDialog.CustomDialogIconState.POSITIVE,
-                getApplicationContext().getString(R.string.delivery_address_added));
-        getActivity().onBackPressed();
-//
-//        if(mCalledFromCart) {
-//            //Refresh cart
-//            RxBus.instance().post("event_cart_load");
-////            getBaseActivity().popBackToFragment("class au.com.topbuy.checkoutmodule.checkout.CheckoutFragment");
-//        }
+
 //        getBaseActivity().callPopBackStack();
     }
 
     @OnClick(R.id.partial_toolbar_arrow_view)
     public void onBackClick() {
         hideKeyboard();
-        getActivity().onBackPressed();
+        if (getActivity()!=null){
+            ((MainActivity)getActivity()).getMainController().getHomeController().setIsResetCheckout(false);
+            getActivity().onBackPressed();
+        }
     }
 
     @OnClick(R.id.partial_toolbar_filter_view)
@@ -204,14 +206,10 @@ public class AddNewAddressController extends BaseController implements AddNewAdd
     @Override
     public void showErrorMessage(String message) {
 
-        Timber.d("addnewaddress", " error " + message);
-
         CustomAlertDialog.showCustomAlertDialog(
                 getActivity(),
                 CustomAlertDialog.CustomDialogIconState.NEGATIVE,
                 message);
-
-//        AlertDialogEngine.showDialog(getBaseActivity(), "error", message, "ok", (dialog, which) -> dialog.dismiss());
 
     }
 }

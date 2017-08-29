@@ -37,7 +37,6 @@ import au.com.dealsdirect.data.network.model.checkout.getcurrentorder.Value;
 import au.com.dealsdirect.data.network.model.checkout.getcurrentorder.Voucher;
 import au.com.dealsdirect.data.network.model.checkout.getuserpaymentmethods.PaymentMethod;
 import au.com.dealsdirect.service.ourpay.Ourpay;
-import au.com.dealsdirect.service.ourpay.OurpayCallback;
 import au.com.dealsdirect.service.ourpay.OurpayPanel;
 import au.com.dealsdirect.service.ourpay.OurpayStateManager;
 import au.com.dealsdirect.service.ourpay.OurpayTemplateText;
@@ -249,9 +248,10 @@ public class CheckoutController extends BaseController implements CheckoutMvpVie
     @Override
     protected void setUp(View view) {
 
-        assert (getActivity()) != null;
-        ((MainActivity) getActivity()).getMainController().showBottomNav();
-        ((MainActivity) getActivity()).getMainController().setViewpagerDraggable(false);
+        if (getActivity()!=null){
+            ((MainActivity) getActivity()).getMainController().showBottomNav();
+            ((MainActivity) getActivity()).getMainController().setViewpagerDraggable(false);
+        }
 
         mTitleTextView.setText(R.string.checkout_page_toolbar_title);
 
@@ -296,13 +296,12 @@ public class CheckoutController extends BaseController implements CheckoutMvpVie
         if (mPresenter.checkIsLoggedIn()) {
             RxBus.instance().post(IntrospectionUtils.EVENT_CHECKOUT_SCREEN);
 
-            showLoading();
             if (!mActivity.isBraintreeInitialized()) {
                 ((MainMvpView) getActivity()).fetchAuthorization(this);
-                mPresenter.start();
+                loadCartContent();
 
             } else {
-                mPresenter.start();
+                loadCartContent();
             }
 
         } else {
@@ -365,6 +364,8 @@ public class CheckoutController extends BaseController implements CheckoutMvpVie
             mItemList.addAll(items);
             mAdapter.notifyDataSetChanged();
         }
+
+        mNestedScrollView.scrollTo(0,0);
     }
 
     @Override
@@ -636,7 +637,7 @@ public class CheckoutController extends BaseController implements CheckoutMvpVie
     @Override
     public void onSuccess() {
         if (!isAttached()) return;
-        mPresenter.start();
+        loadCartContent();
     }
 
     @Override
@@ -657,6 +658,13 @@ public class CheckoutController extends BaseController implements CheckoutMvpVie
     private void callThree3DS(String cost) {
         showLoading();
         ThreeDSecure.performVerification(((MainActivity) getActivity()).getBraintreeFragment(), mOurpay.getPaymentMethodNonce().getNonce(), cost);
+    }
+
+    private void loadCartContent(){
+        if (((MainActivity)getActivity()).getMainController().getHomeController().getIsResetCheckout()){
+            showLoading();
+            mPresenter.start();
+        }
     }
 }
 

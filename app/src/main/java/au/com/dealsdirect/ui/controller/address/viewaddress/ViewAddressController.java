@@ -31,6 +31,7 @@ import au.com.dealsdirect.ui.base.BasePullToRefreshController;
 import au.com.dealsdirect.ui.controller.address.addnewaddress.AddNewAddressController;
 import au.com.dealsdirect.ui.custom.CustomAlertDialog;
 import au.com.dealsdirect.ui.custom.RecyclerOnTouchListener;
+import au.com.dealsdirect.ui.main.MainActivity;
 import au.com.dealsdirect.utils.BundleBuilder;
 import butterknife.BindView;
 import butterknife.OnClick;
@@ -91,6 +92,10 @@ public class ViewAddressController extends BasePullToRefreshController implement
     @Override
     protected void setUp(View view) {
         mPresenter.loadAddresses();
+
+        if (getActivity()!=null){
+            ((MainActivity)getActivity()).getMainController().getHomeController().setIsResetCheckout(true);
+        }
 
         mViewAddressToolarTitle.setText("My Addresses");
         if (mPresenter.isTablet()) {
@@ -240,7 +245,10 @@ public class ViewAddressController extends BasePullToRefreshController implement
 
     @OnClick(R.id.partial_toolbar_arrow_view)
     public void onBackClick() {
-        getActivity().onBackPressed();
+        if (getActivity()!=null){
+            ((MainActivity)getActivity()).getMainController().getHomeController().setIsResetCheckout(false);
+            getActivity().onBackPressed();
+        }
     }
 
     @OnClick(R.id.partial_toolbar_filter_view)
@@ -252,7 +260,6 @@ public class ViewAddressController extends BasePullToRefreshController implement
         getRouter().pushController(RouterTransaction.with(new AddNewAddressController(gson.toJson(mDecorationInfoList), false))
                 .pushChangeHandler(new HorizontalChangeHandler())
                 .popChangeHandler(new HorizontalChangeHandler()));
-
 
     }
 }

@@ -189,7 +189,11 @@ public class PaymentSelectController extends BasePullToRefreshController impleme
     @OnClick(R.id.partial_toolbar_arrow_view)
     public void onBackClick() {
         hideKeyboard();
-        getActivity().onBackPressed();
+        if (getActivity()!=null){
+            ((MainActivity)getActivity()).getMainController().getHomeController().setIsResetCheckout(false);
+            getActivity().onBackPressed();
+
+        }
     }
 
     @OnClick(R.id.partial_toolbar_filter_view)

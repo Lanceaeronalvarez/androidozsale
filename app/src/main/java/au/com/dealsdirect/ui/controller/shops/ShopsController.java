@@ -1,20 +1,15 @@
 package au.com.dealsdirect.ui.controller.shops;
 
-import android.os.Build;
 import android.os.Bundle;
-import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.AccelerateInterpolator;
 import android.view.animation.Animation;
 import android.view.animation.TranslateAnimation;
-import android.view.inputmethod.EditorInfo;
-import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
@@ -47,7 +42,6 @@ import au.com.dealsdirect.ui.main.MainActivity;
 import au.com.dealsdirect.ui.main.MainMvpView;
 import au.com.dealsdirect.utils.BundleBuilder;
 import au.com.dealsdirect.utils.DialogUtils;
-import au.com.dealsdirect.utils.KeyboardUtils;
 import au.com.dealsdirect.utils.PaginateUtils;
 import butterknife.BindView;
 import butterknife.OnClick;
@@ -251,7 +245,6 @@ public class ShopsController extends BasePullToRefreshController implements Shop
 
         if (mBannerClickCounter != 1) {
             mBannerClickCounter = +1;
-            Log.d("onBannerClick", " clicked");
 
 
             List<String> names = new ArrayList<>();
@@ -346,16 +339,13 @@ public class ShopsController extends BasePullToRefreshController implements Shop
         loadingInProgress = false;
 
         if (page == 0) {
-            Log.d("items", "replaced");
             mBannersAdapter.replace(getBannerResponses);
             mPaginateManager = PaginateUtils.init(shopsControllerBannerRecyclerView, mPaginateCallbacks);
         } else {
-            Log.d("items", "added");
             mBannersAdapter.addAll(getBannerResponses);
 
             if (getBannerResponses.isEmpty()) {
                 hasLoadedAllItems = true;
-                Log.d("LoadBanners", "has loaded items");
             }
         }
 
