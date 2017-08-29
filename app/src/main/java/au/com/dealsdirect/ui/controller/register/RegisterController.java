@@ -174,6 +174,10 @@ public class RegisterController extends BaseController implements RegisterMvpVie
 
     @Override
     public void showLoginSuccessful(String loginTicket) {
+
+        //Call facebook registration successful analytics
+        mPresenter.facebookRegisterAnalytics(getActivity());
+
         RxBus.instance().post(IntrospectionUtils.EVENT_LOGIN);
 
         getRouter().popToRoot();

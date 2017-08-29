@@ -4,9 +4,12 @@ package au.com.dealsdirect.ui.controller.register;
  */
 
 
+import android.app.Activity;
 import android.support.annotation.NonNull;
 
 import com.androidnetworking.error.ANError;
+import com.facebook.appevents.AppEventsConstants;
+import com.facebook.appevents.AppEventsLogger;
 
 import javax.inject.Inject;
 
@@ -31,17 +34,17 @@ public class RegisterPresenter<V extends RegisterMvpView> extends Authentication
 
         RegisterUserRequest registerUserRequest
                 = new RegisterUserRequest(
-                        getDataManager().getLanguageId(),
-                        getDataManager().getCountryId(),
-                        1,
-                        firstName,
-                        lastName,
-                        email,
-                        password,
-                        "android",
-                        "",
-                        "00000000-0000-0000-0000-000000000000",
-                        hasReadTermsAndCondition);
+                getDataManager().getLanguageId(),
+                getDataManager().getCountryId(),
+                1,
+                firstName,
+                lastName,
+                email,
+                password,
+                "android",
+                "",
+                "00000000-0000-0000-0000-000000000000",
+                hasReadTermsAndCondition);
 
         getCompositeDisposable().add(getDataManager()
                 .callRegiser(registerUserRequest)
@@ -54,10 +57,10 @@ public class RegisterPresenter<V extends RegisterMvpView> extends Authentication
                             return;
                         }
 
-                        if(registerUserResponse.isSuccess()){
+                        if (registerUserResponse.isSuccess()) {
                             getDataManager().acknowledgeAuth(registerUserResponse.getTicket());
                             getMvpView().showLoginSuccessful(registerUserResponse.getTicket());
-                        } else{
+                        } else {
                             getMvpView().showLoginError(registerUserResponse.getMessage());
                         }
                     }
@@ -81,5 +84,11 @@ public class RegisterPresenter<V extends RegisterMvpView> extends Authentication
                     }
                 }));
 
+    }
+
+    @Override
+    public void facebookRegisterAnalytics(Activity activity) {
+        AppEventsLogger logger = AppEventsLogger.newLogger(activity);
+        logger.logEvent(AppEventsConstants.EVENT_NAME_COMPLETED_REGISTRATION);
     }
 }

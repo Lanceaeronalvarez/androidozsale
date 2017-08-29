@@ -131,7 +131,6 @@ dependencies {
 
     // glide
     compile "com.github.bumptech.glide:glide:$rootProject.glideVersion"
-//    annotationProcessor "com.github.bumptech.glide:compiler:$rootProject.glideVersion"
 
     // guava
     compile "com.google.guava:guava:$rootProject.guavaVersion"
@@ -148,15 +147,6 @@ dependencies {
 
     // Crystal Range Seekbar
     compile "com.crystal:crystalrangeseekbar:$rootProject.crystalRangeSeekbarVersion"
-
-    //rebound
-    compile "com.facebook.rebound:rebound:$rootProject.facebookReboundVersion"
-
-    //ease interpolators
-    compile 'com.daasuu:EasingInterpolator:1.0.0'
-
-    //ultra ptr
-//    compile "in.srain.cube:ultra-ptr:$rootProject.ultraPtrVersion"
 
     // dependencies for local unit tests
     testCompile "junit:junit:$rootProject.ext.junitVersion"
