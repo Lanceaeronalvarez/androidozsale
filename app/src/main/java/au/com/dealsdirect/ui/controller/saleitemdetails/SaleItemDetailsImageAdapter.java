@@ -31,7 +31,6 @@ public class SaleItemDetailsImageAdapter extends RecyclerView.Adapter<RecyclerVi
     List<String> mData = new LinkedList<>();
     Context mContext;
     String mSaleId;
-    SaleItemDetailsController mSaleItemDetailsController;
     LoadImagesListener mLoadImagesListener;
     int mViewType;
     Drawable mPlaceholder;
@@ -53,14 +52,12 @@ public class SaleItemDetailsImageAdapter extends RecyclerView.Adapter<RecyclerVi
     }
 
     public SaleItemDetailsImageAdapter(
-            SaleItemDetailsController saleItemDetailsController,
             LoadImagesListener loadImagesListener,
             List<String> data,
             String saleId,
             int viewType,
             Drawable placeholder) {
 
-        this.mSaleItemDetailsController = saleItemDetailsController;
         this.mLoadImagesListener = loadImagesListener;
         this.mData = data;
         this.mSaleId = saleId;
