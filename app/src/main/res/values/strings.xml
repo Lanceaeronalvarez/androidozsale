@@ -208,6 +208,7 @@
     <string name="rate_us_dialog_title">Rate Us</string>
     <string name="total_payment">Total Payment</string>
     <string name="order_number">Order Number</string>
+    <string name="order_numbersign">Order #:</string>
     <string name="address">Address</string>
     <string name="total">Total</string>
     <string name="remove">Remove</string>

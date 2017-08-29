@@ -9,6 +9,7 @@ import au.com.dealsdirect.ui.controller.returns.currentreturns.viewholder.Curren
 public interface CurrentReturnClickListener {
 
     void onCurrentReturnClickListener(
+            int orderNumber,
             CurrentReturnViewHolder holder,
             int position,
             String productRequestStatus,
