@@ -256,6 +256,10 @@ public class AddVouchersController extends BaseController implements AddVouchers
                                 getActivity().getString(R.string.please_input_promo_code));
             }
         });
+
+        if (mVouchers.isEmpty()){
+            mButtonApply.setVisibility(View.GONE);
+        }
     }
 
 
@@ -335,8 +339,12 @@ public class AddVouchersController extends BaseController implements AddVouchers
                 responseMessage
         );
 
+        SharedPreferences.Editor editor = mSharedPreference.edit();
         voucherIds.clear();
         tempVoucherIds.clear();
+        Set<String> voucherSet = new HashSet<String>();
+        editor.putStringSet("VOUCHER_SET", voucherSet);
+        editor.apply();
 
         getActivity().onBackPressed();
 

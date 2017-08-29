@@ -2,7 +2,6 @@ package au.com.dealsdirect.ui.controller.forgotpassword;
 
 import android.os.Bundle;
 import android.support.annotation.NonNull;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -109,8 +108,6 @@ public class ForgotPasswordController extends BaseController implements ForgotPa
 
     @Override
     public void showForgotPasswordResponse(ForgotPasswordResponseBody response) {
-        //noinspection ConstantConditions
-        Log.d("forgotpassword", response.getForgotPasswordResponse().getMessage());
 
         if (response.getForgotPasswordResponse().getResult()) {
 
@@ -131,8 +128,6 @@ public class ForgotPasswordController extends BaseController implements ForgotPa
             );
 
         }
-
-//        getActivity().onBackPressed();
     }
 
     @Override
