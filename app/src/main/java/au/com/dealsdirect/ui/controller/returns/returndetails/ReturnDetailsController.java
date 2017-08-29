@@ -30,18 +30,22 @@ public class ReturnDetailsController extends BaseController implements ReturnDet
     public static final String TAG = "ReturnDetailsController";
 
     private static final String KEY_TEXT = "ReturnDetailsController.KEY_TEXT";
+    private static final String KEY_ORDER_NUMBER = "ReturnDetailsController.KEY_ORDER_NUMBER";
     private static final String KEY_REQUEST_DATE = "ReturnDetailsController.REQUEST_DATE";
     private static final String KEY_IS_APPROVED = "ReturnDetailsController.IS_APPROVED";
     private static final String KEY_STATUS = "ReturnDetailsController.STATUS";
     private static final String KEY_RAN = "ReturnDetailsController.RAN";
     private static final String KEY_RETURN_ID = "ReturnDetailsController.RETURN_ID";
 
+    private int mOrderNumber;
     private String mReturnID;
     private String mRequestDate;
     private String mIsApproved;
     private String mStatus;
     private String mRAN;
 
+    @BindView(R.id.controller_return_details_order_number)
+    TextView mOrderNumberTextView;
 
     @BindView(R.id.controller_return_details_order_product_delivery_from_date_value)
     TextView mReturnDetailsControllerRequestDateValue;
@@ -62,6 +66,7 @@ public class ReturnDetailsController extends BaseController implements ReturnDet
     ReturnDetailsMvpPresenter<ReturnDetailsMvpView> mPresenter;
 
     public static ReturnDetailsController newInstance(
+            int orderNumber,
             String returnID,
             String requestDate,
             String isApproved,
@@ -70,6 +75,7 @@ public class ReturnDetailsController extends BaseController implements ReturnDet
 
         return new ReturnDetailsController(
                 new BundleBuilder(new Bundle())
+                        .putInt(KEY_ORDER_NUMBER, orderNumber)
                         .putString(KEY_RETURN_ID, returnID)
                         .putString(KEY_REQUEST_DATE, requestDate)
                         .putString(KEY_IS_APPROVED, isApproved)
@@ -80,6 +86,7 @@ public class ReturnDetailsController extends BaseController implements ReturnDet
 
     public ReturnDetailsController(Bundle args) {
         super(args);
+        mOrderNumber = args.getInt(KEY_ORDER_NUMBER);
         mReturnID = args.getString(KEY_RETURN_ID);
         mRequestDate = args.getString(KEY_REQUEST_DATE);
         mIsApproved = args.getString(KEY_IS_APPROVED);
@@ -103,18 +110,17 @@ public class ReturnDetailsController extends BaseController implements ReturnDet
     public void onViewBound(@NonNull View view) {
         super.onViewBound(view);
         setUp(view);
+    }
 
+    @Override
+    protected void setUp(View view) {
+        mOrderNumberTextView.append(" " + mOrderNumber);
         mReturnDetailsControllerRequestDateValue.setText(mRequestDate);
         mReturnDetailsControllerisApprovedValue.setText(mIsApproved);
         mReturnDetailsControllerItemStatus.setText(mStatus);
         mReturnDetailsControllerRanValue.setText(mRAN);
 
         mPresenter.loadCurrentReturnDetails(mReturnID);
-    }
-
-    @Override
-    protected void setUp(View view) {
-
     }
 
     @Override
@@ -128,13 +134,10 @@ public class ReturnDetailsController extends BaseController implements ReturnDet
 
         List<Item> items = getReturnDetailsResponseBody.getValue().getItems();
         Double subTotal = getReturnDetailsResponseBody.getValue().getTotal();
-//
-        final ReturnDetailsAdapter adapter
-                = new ReturnDetailsAdapter
-                (items, subTotal, getActivity());
+
+        ReturnDetailsAdapter adapter = new ReturnDetailsAdapter(items, subTotal, getActivity());
 
         mReturnDetailsControllerRecyclerView.setAdapter(adapter);
         mReturnDetailsControllerRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
-
     }
 }

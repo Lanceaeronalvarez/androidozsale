@@ -148,12 +148,16 @@ public class RegisterController extends BaseController implements RegisterMvpVie
 
     @OnClick(R.id.controller_register_sign_up_button)
     void onSignUpClick() {
-        mPresenter.registerUser(
-                mRegisterForenameField.getText().toString(),
-                mRegisterSurnameField.getText().toString(),
-                mRegisterEmailField.getText().toString(),
-                mRegisterPasswordField.getText().toString(),
-                mTermsCheck.isChecked());
+        if (mTermsCheck.isChecked()) {
+            mPresenter.registerUser(
+                    mRegisterForenameField.getText().toString(),
+                    mRegisterSurnameField.getText().toString(),
+                    mRegisterEmailField.getText().toString(),
+                    mRegisterPasswordField.getText().toString(),
+                    mTermsCheck.isChecked());
+        } else {
+            onError(R.string.please_accept_terms_and_conditions);
+        }
     }
 
     @OnClick(R.id.controller_register_login_text)
@@ -168,14 +172,17 @@ public class RegisterController extends BaseController implements RegisterMvpVie
     }
 
 
-
     @Override
     public void showLoginSuccessful(String loginTicket) {
+
+        //Call facebook registration successful analytics
+        mPresenter.facebookRegisterAnalytics(getActivity());
+
         RxBus.instance().post(IntrospectionUtils.EVENT_LOGIN);
 
         getRouter().popToRoot();
 
-        if (mAuthHandler!=null)
+        if (mAuthHandler != null)
             mAuthHandler.success();
 
         hideKeyboard();

@@ -70,7 +70,8 @@ public class CurrentReturnAdapter extends RecyclerView.Adapter<CurrentReturnView
 
         String productName = mCurrentReturnList.get(position).getDescription();
 
-        int productRequestNumber = mCurrentReturnList.get(position).getOrderNumber();
+        int productRequestNumber = mCurrentReturnList.get(position).getInvoiceNo();
+        int orderNumber = mCurrentReturnList.get(position).getOrderNumber();
         String productRequestDate = mCurrentReturnList.get(position).getLastSavedDate();
         String returnRequestDateFormat = DateUtils.getTrimmedServerDateString(productRequestDate);
         String isRequestApproved;
@@ -104,6 +105,7 @@ public class CurrentReturnAdapter extends RecyclerView.Adapter<CurrentReturnView
         }
 //ee
         holder.currentReturnProductItem.setOnClickListener(view -> mListener.onCurrentReturnClickListener(
+                orderNumber,
                 holder,
                 position,
                 productRequestStatus,
@@ -121,6 +123,7 @@ public class CurrentReturnAdapter extends RecyclerView.Adapter<CurrentReturnView
             @Override
             public void onTouchEvent(RecyclerView rv, MotionEvent e) {
                 mListener.onCurrentReturnClickListener(
+                        orderNumber,
                         holder,
                         position,
                         productRequestStatus,

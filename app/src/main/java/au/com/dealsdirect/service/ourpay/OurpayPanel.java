@@ -152,7 +152,7 @@ public class OurpayPanel {
         TextView textViewPrice = (TextView) header.findViewById(R.id.ourpay_panel_header_price);
         TextView textViewCount = (TextView) header.findViewById(R.id.ourpay_panel_header_transaction);
 
-        textViewPrice.setText(PriceUtils.getProductRpStringValue(ourpay.getAmount()));
+        textViewPrice.setText(PriceUtils.getRpStringValue(ourpay.getAmount()));
         textViewCount.setText(Integer.toString(ourpay.getTransactionCount()));
 
         return header;

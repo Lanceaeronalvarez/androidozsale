@@ -1,233 +1,233 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.v4.widget.NestedScrollView
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
+<android.support.v4.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    xmlns:tools="http://schemas.android.com/tools"
     android:background="#FFFFFF">
 
     <RelativeLayout
         android:id="@+id/controller_return_details_container"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:isScrollContainer="true"
-        android:background="@color/white">
+        android:background="@color/white"
+        android:isScrollContainer="true">
 
-    <LinearLayout
-        android:id="@+id/controller_return_details_fragment"
-        android:orientation="vertical"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:padding="10dp"
-        android:layout_alignParentTop="true"
-        android:layout_centerHorizontal="true">
-
-        <TextView
-            android:fontFamily="@string/font_lato_light"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:paddingTop="20dp"
-            android:padding="10dp"
-            android:text="Order Items"
-            android:textSize="@dimen/text_size_xxlarge"
-            android:textColor="@color/gray_field_label"/>
-
-
-        <android.support.v7.widget.RecyclerView
-            android:id="@+id/controller_return_details_recyclerview"
-            android:paddingTop="20dp"
-            android:padding="10dp"
+        <LinearLayout
+            android:id="@+id/controller_return_details_fragment"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:overScrollMode="never"
-            android:orientation="vertical"/>
+            android:layout_alignParentTop="true"
+            android:layout_centerHorizontal="true"
+            android:orientation="vertical"
+            android:padding="10dp">
 
-        <RelativeLayout
-            android:id="@+id/controller_return_details_total_cost_container"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:background="#e4ffffff" >
+            <TextView
+                android:id="@+id/controller_return_details_order_number"
+                fontPath="@string/font_lato_semibold"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:padding="10dp"
+                android:paddingTop="20dp"
+                android:text="@string/order_numbersign"
+                android:textColor="@color/colorAccent"
+                android:textSize="@dimen/text_size_xlarge"
+                tools:ignore="MissingPrefix" />
 
-            <View
-                android:id="@+id/controller_return_details_total_cost_container_divider"
+
+            <android.support.v7.widget.RecyclerView
+                android:id="@+id/controller_return_details_recyclerview"
                 android:layout_width="match_parent"
-                android:layout_height="1dp"
-                android:background="@color/gray_field_label"
-                android:layout_marginBottom="20dp"/>
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:overScrollMode="never"
+                android:padding="10dp"
+                android:paddingTop="20dp" />
 
             <RelativeLayout
-                android:id="@+id/controller_return_details_bottom_info"
+                android:id="@+id/controller_return_details_total_cost_container"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content">
-
-
-                <RelativeLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:padding="10dp"
-                    android:id="@+id/controller_return_details_item_date_info">
-
-
-                    <TextView
-                        android:fontFamily="@string/font_lato_medium"
-                        android:id="@+id/controller_return_details_product_request_date"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:textColor="#5c5c5c"
-                        android:text="Request Date:"
-                        android:textSize="@dimen/text_size_large"
-                        tools:ignore="HardcodedText"/>
-
-
-                    <TextView
-                        android:fontFamily="@string/font_lato_medium"
-                        android:id="@+id/controller_return_details_order_product_delivery_from_date_value"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:textColor="#1b1b1b"
-                        android:text="12/08/16"
-                        android:layout_alignParentEnd="true"
-                        android:layout_alignParentRight="true"
-                        android:layout_marginLeft="2dp"
-                        android:textSize="@dimen/text_size_large"
-                        tools:ignore="HardcodedText"/>
-
-                </RelativeLayout>
+                android:layout_height="wrap_content"
+                android:background="#e4ffffff">
 
                 <View
+                    android:id="@+id/controller_return_details_total_cost_container_divider"
                     android:layout_width="match_parent"
                     android:layout_height="1dp"
-                    android:layout_below="@id/controller_return_details_item_date_info"
-                    android:background="@color/gray_field_label">
-
-                </View>
+                    android:layout_marginBottom="20dp"
+                    android:background="@color/gray_field_label" />
 
                 <RelativeLayout
-                    android:id="@+id/controller_return_details_item_is_approved_info"
+                    android:id="@+id/controller_return_details_bottom_info"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:padding="10dp"
-                    android:layout_marginTop="2dp"
-                    android:layout_below="@+id/controller_return_details_item_date_info">
+                    android:layout_height="wrap_content">
 
-                    <TextView
-                        android:fontFamily="@string/font_lato_medium"
-                        android:id="@+id/controller_return_details_product_is_approved_identifier"
-                        android:layout_width="wrap_content"
+
+                    <RelativeLayout
+                        android:id="@+id/controller_return_details_item_date_info"
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:textColor="#5c5c5c"
-                        android:text="Approved:"
-                        android:textSize="@dimen/text_size_large"
-                        tools:ignore="HardcodedText"/>
+                        android:padding="10dp">
 
 
-                    <TextView
-                        android:fontFamily="@string/font_lato_bold"
-                        android:id="@+id/controller_return_details_product_is_approved_value"
-                        android:layout_width="wrap_content"
+                        <TextView
+                            android:id="@+id/controller_return_details_product_request_date"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:fontFamily="@string/font_lato_medium"
+                            android:text="Request Date:"
+                            android:textColor="#5c5c5c"
+                            android:textSize="@dimen/text_size_large"
+                            tools:ignore="HardcodedText" />
+
+
+                        <TextView
+                            android:id="@+id/controller_return_details_order_product_delivery_from_date_value"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_alignParentEnd="true"
+                            android:layout_alignParentRight="true"
+                            android:layout_marginLeft="2dp"
+                            android:fontFamily="@string/font_lato_medium"
+                            android:text="12/08/16"
+                            android:textColor="#1b1b1b"
+                            android:textSize="@dimen/text_size_large"
+                            tools:ignore="HardcodedText" />
+
+                    </RelativeLayout>
+
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="1dp"
+                        android:layout_below="@id/controller_return_details_item_date_info"
+                        android:background="@color/gray_field_label">
+
+                    </View>
+
+                    <RelativeLayout
+                        android:id="@+id/controller_return_details_item_is_approved_info"
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:textColor="#1b1b1b"
-                        android:text="---"
-                        android:layout_marginLeft="2dp"
-                        android:textSize="@dimen/text_size_large"
-                        android:layout_alignParentEnd="true"
-                        android:layout_alignParentRight="true"
-                        tools:ignore="HardcodedText"/>
+                        android:layout_below="@+id/controller_return_details_item_date_info"
+                        android:layout_marginTop="2dp"
+                        android:padding="10dp">
+
+                        <TextView
+                            android:id="@+id/controller_return_details_product_is_approved_identifier"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:fontFamily="@string/font_lato_medium"
+                            android:text="Approved:"
+                            android:textColor="#5c5c5c"
+                            android:textSize="@dimen/text_size_large"
+                            tools:ignore="HardcodedText" />
+
+
+                        <TextView
+                            android:id="@+id/controller_return_details_product_is_approved_value"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_alignParentEnd="true"
+                            android:layout_alignParentRight="true"
+                            android:layout_marginLeft="2dp"
+                            android:fontFamily="@string/font_lato_bold"
+                            android:text="---"
+                            android:textColor="#1b1b1b"
+                            android:textSize="@dimen/text_size_large"
+                            tools:ignore="HardcodedText" />
+
+                    </RelativeLayout>
+
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="1dp"
+                        android:layout_below="@id/controller_return_details_item_is_approved_info"
+                        android:background="@color/gray_field_label">
+
+                    </View>
+
+                    <RelativeLayout
+                        android:id="@+id/controller_return_details_item_status_info"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@+id/controller_return_details_item_is_approved_info"
+                        android:padding="10dp">
+
+                        <TextView
+                            android:id="@+id/controller_return_details_item_status_identifier"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:fontFamily="@string/font_lato_medium"
+                            android:text="Status:"
+                            android:textColor="#5c5c5c"
+                            android:textSize="@dimen/text_size_large"
+                            tools:ignore="HardcodedText" />
+
+
+                        <TextView
+                            android:id="@+id/controller_return_details_item_status_value"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_alignParentEnd="true"
+                            android:layout_alignParentRight="true"
+                            android:layout_marginLeft="2dp"
+                            android:fontFamily="@string/font_lato_medium"
+                            android:text="---"
+                            android:textColor="#1b1b1b"
+                            android:textSize="@dimen/text_size_large"
+                            tools:ignore="HardcodedText" />
+
+                    </RelativeLayout>
+
+
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="1dp"
+                        android:layout_below="@id/controller_return_details_item_status_info"
+                        android:background="@color/gray_field_label">
+
+                    </View>
+
+
+                    <RelativeLayout
+                        android:id="@+id/controller_return_details_item_RAN_info"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@+id/controller_return_details_item_status_info"
+                        android:padding="10dp">
+
+                        <TextView
+                            android:id="@+id/controller_return_details_item_RAN_identifier"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:fontFamily="@string/font_lato_medium"
+                            android:text="RAN:"
+                            android:textColor="#5c5c5c"
+                            android:textSize="@dimen/text_size_large"
+                            tools:ignore="HardcodedText" />
+
+
+                        <TextView
+                            android:id="@+id/my_current_return_item_RAN_value"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_alignParentEnd="true"
+                            android:layout_alignParentRight="true"
+                            android:layout_marginLeft="2dp"
+                            android:fontFamily="@string/font_lato_bold"
+                            android:text="Pending"
+                            android:textColor="#1b1b1b"
+                            android:textSize="@dimen/text_size_large"
+                            tools:ignore="HardcodedText" />
+
+                    </RelativeLayout>
+
 
                 </RelativeLayout>
-
-                <View
-                    android:layout_width="match_parent"
-                    android:layout_height="1dp"
-                    android:layout_below="@id/controller_return_details_item_is_approved_info"
-                    android:background="@color/gray_field_label">
-
-                </View>
-
-                <RelativeLayout
-                    android:id="@+id/controller_return_details_item_status_info"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:padding="10dp"
-                    android:layout_below="@+id/controller_return_details_item_is_approved_info">
-
-                    <TextView
-                        android:fontFamily="@string/font_lato_medium"
-                        android:id="@+id/controller_return_details_item_status_identifier"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:textColor="#5c5c5c"
-                        android:text="Status:"
-                        android:textSize="@dimen/text_size_large"
-                        tools:ignore="HardcodedText"/>
-
-
-                    <TextView
-                        android:fontFamily="@string/font_lato_medium"
-                        android:id="@+id/controller_return_details_item_status_value"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:textColor="#1b1b1b"
-                        android:text="---"
-                        android:layout_marginLeft="2dp"
-                        android:textSize="@dimen/text_size_large"
-                        android:layout_alignParentEnd="true"
-                        android:layout_alignParentRight="true"
-                        tools:ignore="HardcodedText"/>
-
-                </RelativeLayout>
-
-
-                <View
-                    android:layout_width="match_parent"
-                    android:layout_height="1dp"
-                    android:layout_below="@id/controller_return_details_item_status_info"
-                    android:background="@color/gray_field_label">
-
-                </View>
-
-
-                <RelativeLayout
-                    android:id="@+id/controller_return_details_item_RAN_info"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:padding="10dp"
-                    android:layout_below="@+id/controller_return_details_item_status_info">
-
-                    <TextView
-                        android:fontFamily="@string/font_lato_medium"
-                        android:id="@+id/controller_return_details_item_RAN_identifier"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:textColor="#5c5c5c"
-                        android:text="RAN:"
-                        android:textSize="@dimen/text_size_large"
-                        tools:ignore="HardcodedText"/>
-
-
-                    <TextView
-                        android:fontFamily="@string/font_lato_bold"
-                        android:id="@+id/my_current_return_item_RAN_value"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:textColor="#1b1b1b"
-                        android:text="Pending"
-                        android:layout_marginLeft="2dp"
-                        android:textSize="@dimen/text_size_large"
-                        android:layout_alignParentEnd="true"
-                        android:layout_alignParentRight="true"
-                        tools:ignore="HardcodedText"/>
-
-                </RelativeLayout>
-
 
             </RelativeLayout>
 
-        </RelativeLayout>
 
-
-    </LinearLayout>
+        </LinearLayout>
 
     </RelativeLayout>
 </android.support.v4.widget.NestedScrollView>

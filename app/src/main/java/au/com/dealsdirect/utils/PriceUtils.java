@@ -1,6 +1,6 @@
 package au.com.dealsdirect.utils;
 
-
+import java.util.Locale;
 
 public class PriceUtils {
 
@@ -18,12 +18,7 @@ public class PriceUtils {
     }
 
     public static String getPriceStringValue(Double value) {
-//        return value % 1 == 0 ? TEMP_CURRENCY_SIGN + String.format("%.0f", value) : TEMP_CURRENCY_SIGN + String.format("%.2f", value);
-        return HIDECENTS ? TEMP_CURRENCY_SIGN + String.format("%.0f", value) : TEMP_CURRENCY_SIGN + String.format("%.2f", value);
+        String decimal = value % 1 == 0 ? "%.0f" : "%.2f";
+        return TEMP_CURRENCY_SIGN + String.format(Locale.ENGLISH, decimal, value);
     }
-
-    public static String getProductRpStringValue(Double value) {
-        return HIDECENTS ? TEMP_CURRENCY_SIGN + String.format("%.0f", value) : TEMP_CURRENCY_SIGN + String.format("%.2f", value);
-    }
-
 }

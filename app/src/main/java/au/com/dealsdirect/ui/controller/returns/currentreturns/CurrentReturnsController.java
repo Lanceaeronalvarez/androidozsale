@@ -203,6 +203,7 @@ public class CurrentReturnsController extends BasePullToRefreshController
 
     @Override
     public void onCurrentReturnClickListener(
+            int orderNumber,
             CurrentReturnViewHolder holder,
             int position,
             String productRequestStatus,
@@ -213,6 +214,7 @@ public class CurrentReturnsController extends BasePullToRefreshController
 
         getRouter().pushController(RouterTransaction.with(
                 ReturnDetailsController.newInstance(
+                        orderNumber,
                         returnId,
                         returnRequestDateFormat,
                         isRequestApproved,
