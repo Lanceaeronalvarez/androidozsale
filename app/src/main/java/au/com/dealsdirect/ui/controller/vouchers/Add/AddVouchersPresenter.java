@@ -1,15 +1,17 @@
 package au.com.dealsdirect.ui.controller.vouchers.Add;
 
-import com.androidnetworking.error.ANError;
-
 import java.util.List;
 
 import javax.inject.Inject;
 
 import au.com.dealsdirect.data.DataManager;
+import au.com.dealsdirect.data.network.AppApiCallback;
 import au.com.dealsdirect.data.network.model.vouchers.AddAndApplyVoucherByKeyRequest;
+import au.com.dealsdirect.data.network.model.vouchers.AddAndApplyVoucherByKeyResponse;
 import au.com.dealsdirect.data.network.model.vouchers.ApplyVouchersRequest;
+import au.com.dealsdirect.data.network.model.vouchers.ApplyVouchersResponse;
 import au.com.dealsdirect.data.network.model.vouchers.ClearVouchersRequest;
+import au.com.dealsdirect.data.network.model.vouchers.ClearVouchersResponse;
 import au.com.dealsdirect.ui.base.BasePresenter;
 import au.com.dealsdirect.utils.rx.SchedulerProvider;
 import io.reactivex.disposables.CompositeDisposable;
@@ -26,60 +28,46 @@ public class AddVouchersPresenter<V extends AddVouchersMvpView>  extends BasePre
 
     @Override
     public void applyVouchers(int imageSize, List<String> voucherIds) {
+        getMvpView().showLoading();
         ApplyVouchersRequest request = new ApplyVouchersRequest(voucherIds, imageSize, getDataManager().getLanguageId());
-        getCompositeDisposable().add(getDataManager().callGetApplyVouchers(request)
-                .subscribeOn(getSchedulerProvider().io())
-                .observeOn(getSchedulerProvider().ui())
-                .subscribe(applyVouchersResponse -> {
-                    if (!isViewAttached()) {
-                        return;
-                    }
-                    getMvpView().onVouchersApplied(applyVouchersResponse);
-                }, throwable -> {
-                    if (!isViewAttached()) {
-                        return;
-                    }
-                    getMvpView().onApplyVouchersError();
-                }));
+        doApiCallForResponse(getDataManager().callGetApplyVouchers(request), new AppApiCallback(){
+            @Override
+            public void onSuccess(Object response) {
+                super.onSuccess(response);
+                getMvpView().onVouchersApplied((ApplyVouchersResponse) response);
+            }
+
+            @Override
+            public void onFailure() {
+                super.onFailure();
+                getMvpView().onApplyVouchersError();
+            }
+        });
     }
 
     @Override
     public void clearVouchers(int imageSize) {
+        getMvpView().showLoading();
         ClearVouchersRequest request = new ClearVouchersRequest(imageSize, getDataManager().getLanguageId());
-        getCompositeDisposable().add(getDataManager().callGetClearVouchers(request)
-                .subscribeOn(getSchedulerProvider().io())
-                .observeOn(getSchedulerProvider().ui())
-                .subscribe(clearVouchersResponse -> {
-
-                    if (!isViewAttached()) {
-                        return;
-                    }
-
-                    getMvpView().onVouchersCleared(clearVouchersResponse);
-                }, throwable -> {
-                    if (!isViewAttached()) {
-                        return;
-                    }
-
-                    getMvpView().hideLoading();
-                    getMvpView().onError(throwable.getMessage());
-
-                    // handle load accounts error here
-                    if (throwable instanceof ANError) {
-                        ANError anError = (ANError) throwable;
-                        handleApiError(anError);
-                    }
-                }));
+        doApiCallForResponse(getDataManager().callGetClearVouchers(request), new AppApiCallback(){
+            @Override
+            public void onSuccess(Object response) {
+                super.onSuccess(response);
+                getMvpView().onVouchersCleared((ClearVouchersResponse) response);
+            }
+        });
     }
 
     @Override
     public void addAndApplyVoucherByKey(int imageSize, String key) {
+        getMvpView().showLoading();
         AddAndApplyVoucherByKeyRequest request = new AddAndApplyVoucherByKeyRequest(key, imageSize, getDataManager().getLanguageId());
-        getCompositeDisposable().add(getDataManager().callGetAddAndApplyVoucherByKey(request)
-                .subscribeOn(getSchedulerProvider().io())
-                .observeOn(getSchedulerProvider().ui())
-                .subscribe(addAndApplyVoucherByKeyResponse -> getMvpView().onAddAndAppliedVoucher(addAndApplyVoucherByKeyResponse), throwable -> {
-
-                }));
+        doApiCallForResponse(getDataManager().callGetAddAndApplyVoucherByKey(request), new AppApiCallback(){
+            @Override
+            public void onSuccess(Object response) {
+                super.onSuccess(response);
+                getMvpView().onAddAndAppliedVoucher((AddAndApplyVoucherByKeyResponse) response);
+            }
+        });
     }
 }
