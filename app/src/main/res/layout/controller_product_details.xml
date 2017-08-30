@@ -508,15 +508,6 @@
                                         android:orientation="vertical"
                                         android:visibility="gone">
 
-                                        <TextView
-                                            fontPath="@string/font_lato_bold"
-                                            android:layout_width="wrap_content"
-                                            android:layout_height="wrap_content"
-                                            android:layout_margin="5dp"
-                                            android:text="@string/about"
-                                            android:textColor="@color/gray_item_details"
-                                            android:textSize="@dimen/text_size_large" />
-
                                         <WebView
                                             android:id="@+id/product_about"
                                             android:layout_width="match_parent"
