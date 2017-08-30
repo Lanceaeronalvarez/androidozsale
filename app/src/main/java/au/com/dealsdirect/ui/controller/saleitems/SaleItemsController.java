@@ -159,7 +159,6 @@ public class SaleItemsController extends BasePullToRefreshController implements 
         public void onTextChanged(CharSequence s, int start, int before, int count) {
 
             mSearchQuery = s.toString();
-            Log.d("hehe", "onTextChanged "+mSearchQuery);
             mIsSearch = true;
             mSaleItemsToolbarTitle.setText(mSearchQuery);
 
@@ -674,7 +673,6 @@ public class SaleItemsController extends BasePullToRefreshController implements 
             if (i == EditorInfo.IME_ACTION_SEARCH) {
 //                    hideKeyboard();
                 mSearchQuery = textView.getText().toString();
-                Log.d("hehe", "onEditorAction "+mSearchQuery);
                 mIsSearch = true;
                 mChipFilters = removeSearchQueryChips(mChipFilters);
                 buildSearchQueryChips(mChipFilters);
@@ -697,7 +695,6 @@ public class SaleItemsController extends BasePullToRefreshController implements 
                 mRemovedChipTitles.add(chip.getChipTitle());
             }
         }
-        Log.d("chipTitlesRemoved", mRemovedChipTitles.toString());
         return chipList;
     }
 
@@ -719,7 +716,6 @@ public class SaleItemsController extends BasePullToRefreshController implements 
             }
         }
 
-        Log.d("chipTitlesBuilt", chipFilters.toString());
     }
 
     private GetSaleItemsRequest createSaleItemsRequest(String categoryKey, String saleId, int pageNumber, List<SearchChipModel> chipsList) {

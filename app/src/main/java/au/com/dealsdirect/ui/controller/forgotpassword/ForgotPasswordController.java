@@ -52,6 +52,12 @@ public class ForgotPasswordController extends BaseController implements ForgotPa
         super(args);
     }
 
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        hideKeyboard();
+    }
+
     @NonNull
     @Override
     protected View inflateView(@NonNull LayoutInflater inflater, @NonNull ViewGroup container) {
@@ -97,7 +103,7 @@ public class ForgotPasswordController extends BaseController implements ForgotPa
             CustomAlertDialog.showCustomAlertDialog(
                     getActivity(),
                     CustomAlertDialog.CustomDialogIconState.NEGATIVE,
-                    "Input email address");
+                    getActivity().getResources().getString(R.string.input_email_address));
 
         }else{
 
@@ -110,7 +116,7 @@ public class ForgotPasswordController extends BaseController implements ForgotPa
     public void showForgotPasswordResponse(ForgotPasswordResponseBody response) {
 
         if (response.getForgotPasswordResponse().getResult()) {
-
+            hideKeyboard();
             getActivity().onBackPressed();
 
             CustomAlertDialog.showCustomAlertDialog(
