@@ -87,6 +87,7 @@ public class MainActivity extends BaseActivity implements MainMvpView {
     private Router mAccountsRouter;
     private Router mCheckoutRouter;
 
+    private AuthHandler mAuthHandler;
 
     private boolean mIsFromCategories = false;
     private boolean mIsViewPagerSet = false;
@@ -212,6 +213,7 @@ public class MainActivity extends BaseActivity implements MainMvpView {
 
     @Override
     public void showLoginController(Router router, AuthHandler handler) {
+        mAuthHandler = handler;
         //pinapasa yung router, para kahit child router man siya ng kung ano mang view, pwedeng siya ang tumawag.
         router.pushController(RouterTransaction.with(LoginController.newInstance(handler))
                 .tag(LoginController.TAG)
@@ -652,5 +654,9 @@ public class MainActivity extends BaseActivity implements MainMvpView {
     @Override
     public Controller getCurrentController(Router router) {
         return getMainController().getHomeController().getCurrentControllerOnRouter(router);
+    }
+
+    public AuthHandler getAuthHandler(){
+        return mAuthHandler;
     }
 }

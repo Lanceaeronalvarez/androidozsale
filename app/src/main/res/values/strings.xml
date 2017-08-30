@@ -307,5 +307,6 @@
     <string name="please_accept_terms_and_conditions">Please accept Terms and Conditions</string>
     <string name="please_input_promo_code">Please input a promo code.</string>
     <string name="reason">reason</string>
+    <string name="login_incorrect">Login incorrect</string>
 
 </resources>

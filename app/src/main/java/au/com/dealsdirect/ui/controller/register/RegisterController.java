@@ -143,6 +143,7 @@ public class RegisterController extends BaseController implements RegisterMvpVie
 
     @OnClick(R.id.controller_register_back_icon)
     void onBackIconClick() {
+        hideKeyboard();
         getActivity().onBackPressed();
     }
 

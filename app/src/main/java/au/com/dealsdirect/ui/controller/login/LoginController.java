@@ -146,7 +146,11 @@ public class LoginController extends BaseController implements LoginMvpView {
         RxBus.instance().post(IntrospectionUtils.EVENT_LOGIN);
 
         getActivity().onBackPressed();
-        mAuthHandler.success();
+        if (mAuthHandler!=null){
+            mAuthHandler.success();
+        }else{
+            ((MainActivity)getActivity()).getAuthHandler().success();
+        }
         hideKeyboard();
         mActivity.getMainController().getHomeController().getPresenter().callGetBasketItemsQuantity();
         mActivity.getMainController().showBottomNav();
@@ -161,7 +165,7 @@ public class LoginController extends BaseController implements LoginMvpView {
         CustomAlertDialog.showCustomAlertDialog(
                 getActivity(),
                 CustomAlertDialog.CustomDialogIconState.NEGATIVE,
-                "Login incorrect");
+                mActivity.getString(R.string.login_incorrect));
 
         isLoginTapped = false;
     }
