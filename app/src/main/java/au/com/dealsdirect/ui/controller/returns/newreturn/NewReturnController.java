@@ -26,9 +26,12 @@ import au.com.dealsdirect.ui.controller.returns.newreturn.adapter.NewReturnOrder
 import au.com.dealsdirect.ui.controller.returns.newreturn.listener.NewReturnOrderUpdateListener;
 import au.com.dealsdirect.ui.controller.returns.newreturn.viewholder.NewReturnOrderViewHolder;
 import au.com.dealsdirect.ui.custom.CustomAlertDialog;
+import au.com.dealsdirect.ui.main.MainActivity;
 import au.com.dealsdirect.utils.BundleBuilder;
+import au.com.dealsdirect.utils.KeyboardUtils;
 import butterknife.BindView;
 import butterknife.OnClick;
+import butterknife.OnFocusChange;
 
 /*
  * Created by Ayi on 05/06/2017.
@@ -63,7 +66,7 @@ public class NewReturnController extends BaseController implements NewReturnMvpV
     NewReturnOrderDetailResponse mNewReturnsOrderDetail;
     View currentView;
 
-    private HashMap<Integer,java.util.List> updateList = new HashMap<>();
+    private HashMap<Integer, java.util.List> updateList = new HashMap<>();
 
 
     public static NewReturnController newInstance(List returnItem) {
@@ -115,7 +118,7 @@ public class NewReturnController extends BaseController implements NewReturnMvpV
 
             java.util.List requestList = new ArrayList<>();
 
-            for (int i = 0; i < itemCount; i++){
+            for (int i = 0; i < itemCount; i++) {
 
                 long viewID = mNewReturnOrderRecyclerView
                         .getAdapter().getItemId(i);
@@ -171,14 +174,14 @@ public class NewReturnController extends BaseController implements NewReturnMvpV
             createReturnRequest.reason = mNewReturnCreateReasonField.getText().toString();
             createReturnRequest.items = getUpdateRequestList();
 
-            if (createReturnRequest.items.size() == 0){
+            if (createReturnRequest.items.size() == 0) {
                 CustomAlertDialog.showCustomAlertDialog(
                         getActivity(),
                         CustomAlertDialog.CustomDialogIconState.NEGATIVE,
                         "Please add count to an item to request return"
                 );
 
-            }else if (createReturnRequest.reason.isEmpty()){
+            } else if (createReturnRequest.reason.isEmpty()) {
 
                 CustomAlertDialog.showCustomAlertDialog(
                         getActivity(),
@@ -187,7 +190,7 @@ public class NewReturnController extends BaseController implements NewReturnMvpV
                 );
 
 
-            }else {
+            } else {
 
                 mPresenter.addNewReturnOrderRequest(createReturnRequest);
             }
@@ -203,27 +206,38 @@ public class NewReturnController extends BaseController implements NewReturnMvpV
         super.onDestroyView(view);
     }
 
-
     @OnClick(R.id.partial_toolbar_arrow_view)
-    void onBackClick(){
+    void onBackClick() {
         hideKeyboard();
-        if (getActivity()!=null)
-            getActivity().onBackPressed();
-
+        if (getActivity() != null) getActivity().onBackPressed();
     }
 
-    private java.util.List getUpdateRequestList(){
+    @OnFocusChange(R.id.controller_new_return_field)
+    void onMessageFieldFocusChange(View view, boolean hasFocus) {
+        assert getActivity() != null;
+        if (hasFocus) {
+            KeyboardUtils.setKeyboardAdjustResize(getActivity());
+            assert ((MainActivity) getActivity()).getMainController() != null;
+            ((MainActivity) getActivity()).getMainController().hideBottomNav();
+        } else {
+            KeyboardUtils.setKeyboardAdjustPan(getActivity());
+            assert ((MainActivity) getActivity()).getMainController() != null;
+            ((MainActivity) getActivity()).getMainController().showBottomNav();
+        }
+    }
+
+    private java.util.List getUpdateRequestList() {
 
         //updateList.put(position, newList);
         java.util.List newRequestList = new ArrayList<>();
-        if(updateList.size() != 0){
+        if (updateList.size() != 0) {
 
-            for ( int key : updateList.keySet() ) {
+            for (int key : updateList.keySet()) {
 
                 java.util.List<Object> tempList = updateList.get(key);
 
 
-                if (Integer.valueOf(tempList.get(1).toString()) != 0 ){
+                if (Integer.valueOf(tempList.get(1).toString()) != 0) {
                     newRequestList.add(tempList);
                 }
             }
@@ -237,7 +251,7 @@ public class NewReturnController extends BaseController implements NewReturnMvpV
     @Override
     public void finishCreateReturnRequest(CreateReturnRequestResponseBody createReturnRequest) {
 
-        if(createReturnRequest.getCreateReturnRequestResponse().getResult()){
+        if (createReturnRequest.getCreateReturnRequestResponse().getResult()) {
             CustomAlertDialog.showCustomAlertDialog(
                     getActivity(),
                     CustomAlertDialog.CustomDialogIconState.POSITIVE,
@@ -256,7 +270,7 @@ public class NewReturnController extends BaseController implements NewReturnMvpV
 
         final NewReturnOrdersAdapter adapter
                 = new NewReturnOrdersAdapter
-                (newReturnsOrderDetail.getList(),getActivity(),this);
+                (newReturnsOrderDetail.getList(), getActivity(), this);
 
         mNewReturnOrderRecyclerView.setAdapter(adapter);
         mNewReturnOrderRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
@@ -268,7 +282,7 @@ public class NewReturnController extends BaseController implements NewReturnMvpV
 
         String itemId = holder.newReturnItemIdTextView.getText().toString();
 
-        if (productQuantityValue != 0){
+        if (productQuantityValue != 0) {
 
             java.util.List<Object> newList = new ArrayList<>();
             newList.add(itemId);
@@ -276,7 +290,7 @@ public class NewReturnController extends BaseController implements NewReturnMvpV
 
 
             updateList.put(position, newList);
-        }else{
+        } else {
             updateList.remove(position);
 
         }
