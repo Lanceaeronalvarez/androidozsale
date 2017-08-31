@@ -96,7 +96,7 @@ public class AddPaymentController extends BaseController implements AddPaymentMv
     @Override
     protected void setUp(View view) {
         mViewAddressToolarTitle.setText("Add New Payment");
-        mViewAddressRightOption.setImageDrawable(null);
+        mViewAddressRightOption.setVisibility(View.INVISIBLE);
 
         if ((getActivity()) != null) {
             ((MainActivity)getActivity()).getMainController().getHomeController().setIsResetCheckout(true);
