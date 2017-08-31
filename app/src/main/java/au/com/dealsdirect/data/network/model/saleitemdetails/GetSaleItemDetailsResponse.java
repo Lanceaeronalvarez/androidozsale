@@ -29,6 +29,9 @@ public class GetSaleItemDetailsResponse {
     @SerializedName("labelText")
     @Expose
     private String labelText;
+    @SerializedName("isSoldOut")
+    @Expose
+    private boolean isSoldOut;
     @SerializedName("price")
     @Expose
     private Price price;
@@ -269,5 +272,13 @@ public class GetSaleItemDetailsResponse {
 
     public void setPaymentPlan(PaymentPlan paymentPlan) {
         this.paymentPlan = paymentPlan;
+    }
+
+    public boolean isSoldOut() {
+        return isSoldOut;
+    }
+
+    public void setSoldOut(boolean soldOut) {
+        isSoldOut = soldOut;
     }
 }

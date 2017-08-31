@@ -49,6 +49,15 @@ public class GetSaleItemsResponse implements Serializable {
         ArrayList<String> categories;
         ArrayList<Sku> skus;
         String seoIdentifier;
+        boolean isSoldOut;
+
+        public boolean isSoldOut() {
+            return isSoldOut;
+        }
+
+        public void setSoldOut(boolean soldOut) {
+            isSoldOut = soldOut;
+        }
 
         public String getSeoIdentifier() {
             return seoIdentifier;

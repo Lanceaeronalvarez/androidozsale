@@ -437,7 +437,7 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
 
         mAddToCartButton.setEnabled(true);
 
-        if (saleDetail.getQuantity() <= 0) {
+        if (saleDetail.isSoldOut()) {
             mAddToCartButton.setEnabled(false);
             mAddToCartButton.setText("Sold Out");
         }
