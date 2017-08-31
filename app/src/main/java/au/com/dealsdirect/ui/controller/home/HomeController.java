@@ -264,7 +264,7 @@ public class HomeController extends BaseController implements HomeMvpView {
                             new Handler().postDelayed(() -> showLoginController(getCurrentRouter(), new AuthHandler() {
                                 @Override
                                 public void success() {
-                                    initControllers();
+                                    initControllers(true);
                                     new Handler().postDelayed(() -> proceedToController(position), 200);
                                 }
 
@@ -290,10 +290,12 @@ public class HomeController extends BaseController implements HomeMvpView {
 
     }
 
-    private void initControllers() {
-        ShopsController shopsController = new ShopsController();
-        ((MainActivity) getActivity()).setShopController(shopsController);
-        mShopRouter.setRoot(RouterTransaction.with(shopsController).tag(ShopsController.TAG));
+    public void initControllers(boolean includeShop) {
+        if(includeShop) {
+            ShopsController shopsController = new ShopsController();
+            ((MainActivity) getActivity()).setShopController(shopsController);
+            mShopRouter.setRoot(RouterTransaction.with(shopsController).tag(ShopsController.TAG));
+        }
 
         mAccountsRouter = getChildRouter(mAccountsContainer);
         mAccountsRouter.setRoot(RouterTransaction.with(AccountController.newInstance()));

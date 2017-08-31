@@ -210,6 +210,7 @@ public class AccountController extends BaseController implements AccountMvpView,
                 ((MainActivity) getActivity()).callGCMRegisterSubscriber();
                 mFilterButton.setImageDrawable(getActivity().getResources().getDrawable(R.drawable.ic_logout));
                 ((MainActivity) getActivity()).getMainController().getHomeController().getPresenter().callGetBasketItemsQuantity();
+                ((MainActivity) getActivity()).getMainController().getHomeController().initControllers(true);
             }
 
             @Override
@@ -227,7 +228,7 @@ public class AccountController extends BaseController implements AccountMvpView,
                 mPresenter.loadAccountItems();
                 ((MainActivity) getActivity()).getMainController().getHomeController().setIsResetCheckout(true);
                 ((MainActivity) getActivity()).getMainController().getHomeController().removeBasketItemCount();
-
+                ((MainActivity) getActivity()).getMainController().getHomeController().initControllers(false);
             }
 
             @Override
@@ -265,6 +266,7 @@ public class AccountController extends BaseController implements AccountMvpView,
                     ((MainMvpView)getActivity()).callGCMRegisterSubscriber();
                     mFilterButton.setImageDrawable(getActivity().getResources().getDrawable(R.drawable.ic_logout));
                     ((MainActivity) getActivity()).getMainController().getHomeController().getPresenter().callGetBasketItemsQuantity();
+                    ((MainActivity) getActivity()).getMainController().getHomeController().initControllers(true);
                 }
 
                 @Override

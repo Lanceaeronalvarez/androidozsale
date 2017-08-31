@@ -351,6 +351,7 @@ public class InviteSendController extends BasePullToRefreshController implements
                 if (!link.isEmpty()) {
                     Uri uri = Uri.parse(link);
                     Intent intent = new Intent(Intent.ACTION_VIEW, uri);
+                    assert getActivity() != null;
                     getActivity().startActivity(intent);
                 } else {
                     CustomAlertDialog.showCustomAlertDialog(
