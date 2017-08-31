@@ -78,10 +78,9 @@ public class CheckoutOrderAdapter extends ArrayAdapter<Item> {
         if(item == null) return convertView;
 
 //   (1) fix when item.fileName is null
-        if(item.fileName!=null){
-            ImageUtils.clearImage(view.image);
-            if (!item.fileName.isEmpty() && view.image.getDrawable() == null){
-                ImageUtils.loadImage(mContext,LegacyStringImageUtils.productDetailsImageURLString(item.brandID, item.imageID, item.fileName),view.image);
+        if(item.fileName != null){
+            if (!item.fileName.isEmpty()){
+                ImageUtils.loadImageDontAnimate(mContext,LegacyStringImageUtils.productDetailsImageURLString(item.brandID, item.imageID, item.fileName),view.image);
             }
         }
 

@@ -18,6 +18,8 @@ import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bumptech.glide.load.engine.Resource;
 import com.bumptech.glide.load.resource.bitmap.BitmapEncoder;
 import com.bumptech.glide.request.RequestListener;
+import com.bumptech.glide.request.animation.GlideAnimation;
+import com.bumptech.glide.request.target.SimpleTarget;
 import com.bumptech.glide.request.target.Target;
 
 import java.io.OutputStream;
@@ -46,6 +48,25 @@ public class ImageUtils {
                 .skipMemoryCache(true)
                 .format(DecodeFormat.PREFER_RGB_565)
                 .into(imageView);
+    }
+
+    public static void loadImageDontAnimate(Context context, String url, ImageView imageView){
+        Glide.with(context)
+                .load(url)
+                .asBitmap()
+                .encoder(new BitmapEncoder(Bitmap.CompressFormat.JPEG, 50))
+                .diskCacheStrategy(DiskCacheStrategy.SOURCE)
+                .skipMemoryCache(true)
+                .dontAnimate()
+                .format(DecodeFormat.PREFER_RGB_565)
+                .into(new SimpleTarget<Bitmap>() {
+
+                    @Override
+                    public void onResourceReady(Bitmap arg0, GlideAnimation<? super Bitmap> arg1) {
+                        // TODO Auto-generated method stub
+                        imageView.setImageBitmap(arg0);
+                    }
+                });
     }
 
     public static void loadImageWithPlaceholder(Context context, String url, ImageView imageView, Drawable placeholder,

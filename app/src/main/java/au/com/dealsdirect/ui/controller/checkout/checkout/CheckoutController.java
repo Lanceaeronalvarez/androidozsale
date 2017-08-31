@@ -221,8 +221,7 @@ public class CheckoutController extends BaseController implements CheckoutMvpVie
         mAddressChangeText = (TextView) mFooterView.findViewById(R.id.partial_checkout_address_change);
         mPaymentChangeText = (TextView) mFooterView.findViewById(R.id.partial_checkout_payment_change);
         mVoucherChangeText = (TextView) mFooterView.findViewById(R.id.partial_checkout_voucher_change);
-//
-//        mBraintreeLoading = mFooterView.findViewById(R.id.partial_checkout_bt_loading);
+
         mButtonHolder = mFooterView.findViewById(R.id.partial_checkout_button_holder);
         mPayButton = (Button) mFooterView.findViewById(R.id.partial_checkout_button_pay);
         mPaypalButton = (RelativeLayout) mFooterView.findViewById(R.id.partial_checkout_button_paypal);
@@ -287,8 +286,6 @@ public class CheckoutController extends BaseController implements CheckoutMvpVie
 
         loadCart();
         mListView.setVisibility(View.GONE);
-//        showNoCartItemsLayout();
-
 
     }
 
@@ -312,7 +309,6 @@ public class CheckoutController extends BaseController implements CheckoutMvpVie
 
     @Override
     public void showMyPayDetails(Value value, Ourpay ourpay) {
-        mOurpayHolder.setVisibility(View.GONE);
         if (value != null) {
             PaymentMethod paymentMethod = ((MainActivity) getActivity()).getPaymentMethodSelected();
             boolean isMyPayEnabled = ((MainActivity) getActivity()).getIsMyPayEnabled();
@@ -325,15 +321,14 @@ public class CheckoutController extends BaseController implements CheckoutMvpVie
 
                 OurpayPanel ourpayPanel = new OurpayPanel((BaseActivity) getActivity(), getRouter());
                 mOurpay = ourpay;
-                mOurpayHolder.removeAllViews();
-                mOurpayHolder.addView(ourpayPanel.generatePanel(mOurpay, isRowVisible -> {
-                    if(isRowVisible){
-                        new Handler().postDelayed(() -> mNestedScrollView.fullScroll(View.FOCUS_DOWN), 400);
-                    }
-                }));
 
-                Handler handler = new Handler();
-                handler.postDelayed(() -> mOurpayHolder.setVisibility(View.VISIBLE), 500);
+                if(mOurpayHolder.getChildCount() == 0) { //add view if there is no childview yet
+                    mOurpayHolder.addView(ourpayPanel.generatePanel(mOurpay, isRowVisible -> {
+                        if (isRowVisible) {
+                            new Handler().postDelayed(() -> mNestedScrollView.fullScroll(View.FOCUS_DOWN), 400);
+                        }
+                    }));
+                }
 
                 mButtonOurpay = (RelativeLayout) mOurpayHolder.findViewById(R.id.rl_button_ourpay);
                 mButtonOurpay.setOnClickListener(view -> onOurpayButtonClick());
@@ -365,7 +360,6 @@ public class CheckoutController extends BaseController implements CheckoutMvpVie
             mAdapter.notifyDataSetChanged();
         }
 
-        mNestedScrollView.scrollTo(0,0);
     }
 
     @Override
