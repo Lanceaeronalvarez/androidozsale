@@ -32,14 +32,14 @@ import static au.com.dealsdirect.ui.controller.searchfilter.SearchFilterControll
 
 public class FacetsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
-    private ArrayList<Pair<String,String>> mData;
+    private ArrayList<Pair<String, String>> mData;
     private SearchFilterMvpPresenter mPresenter;
     private int mLastPosition = -1;
     private RecyclerView.ViewHolder mLastSelectedViewHolder = null;
     private Context mContext;
     private List<SearchChipModel> mSearchChips;
 
-    public FacetsAdapter(Context context, ArrayList<Pair<String,String>> data, SearchFilterMvpPresenter presenter, List<SearchChipModel> searchChips) {
+    public FacetsAdapter(Context context, ArrayList<Pair<String, String>> data, SearchFilterMvpPresenter presenter, List<SearchChipModel> searchChips) {
         mContext = context;
         mData = data;
         mPresenter = presenter;
@@ -64,25 +64,24 @@ public class FacetsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
             vh.mFacetName.setText(mData.get(position).second);
             vh.mFacetBackground.setImageResource(mapDrawable(position));
 
-            if(isFacetActive(mData.get(position).first)){
+            if (isFacetActive(mData.get(position).first)) {
                 vh.mFacetIndicator.setVisibility(View.VISIBLE);
             } else {
                 vh.mFacetIndicator.setVisibility(View.INVISIBLE);
             }
 
-            vh.itemView.setOnClickListener(view -> {
-                if (mLastSelectedViewHolder == null) {
-                    mLastSelectedViewHolder = vh;
-                    vh.itemView.setActivated(true);
-                    mPresenter.onFacetClicked(position);
+            if (mLastSelectedViewHolder == null) {
+                mLastSelectedViewHolder = vh;
+                vh.itemView.setActivated(true);
+                mPresenter.onFacetClicked(position);
+            }
 
-                } else {
-                    if(mLastSelectedViewHolder != vh) {
-                        mLastSelectedViewHolder.itemView.setActivated(false);
-                        mLastSelectedViewHolder = vh;
-                        mLastSelectedViewHolder.itemView.setActivated(true);
-                        mPresenter.onFacetClicked(position);
-                    }
+            vh.itemView.setOnClickListener(view -> {
+                if (mLastSelectedViewHolder != vh) {
+                    mLastSelectedViewHolder.itemView.setActivated(false);
+                    mLastSelectedViewHolder = vh;
+                    mLastSelectedViewHolder.itemView.setActivated(true);
+                    mPresenter.onFacetClicked(position);
                 }
             });
 
@@ -94,7 +93,7 @@ public class FacetsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
         return mData.get(position).first;
     }
 
-    private int mapDrawable(int position){
+    private int mapDrawable(int position) {
         String facetFilterType = getFacetFilterType(position);
         switch (facetFilterType) {
             case SORT_FACETFILTER_NAME:
@@ -114,9 +113,9 @@ public class FacetsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
         }
     }
 
-    public void add(Pair<String,String> newFacet){
+    public void add(Pair<String, String> newFacet) {
         mData.add(newFacet);
-        notifyItemInserted(mData.size()-1);
+        notifyItemInserted(mData.size() - 1);
     }
 
     @Override
@@ -129,7 +128,7 @@ public class FacetsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
         return super.getItemId(position);
     }
 
-    public ArrayList<Pair<String,String>> getData(){
+    public ArrayList<Pair<String, String>> getData() {
         return mData;
     }
 
@@ -171,9 +170,9 @@ public class FacetsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
         }
     }
 
-    private boolean isFacetActive(String key){
+    private boolean isFacetActive(String key) {
         for (SearchChipModel chip : mSearchChips) {
-            if(chip.getFilterType().equals(key)) {
+            if (chip.getFilterType().equals(key)) {
                 return true;
             }
         }
