@@ -2,7 +2,6 @@ package au.com.dealsdirect.ui.controller.saleitemdetails;
 
 import android.content.Context;
 import android.graphics.drawable.Drawable;
-import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -13,6 +12,7 @@ import com.bumptech.glide.request.RequestListener;
 import com.bumptech.glide.request.target.Target;
 import com.github.chrisbanes.photoview.ScalableImageView;
 
+import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -28,6 +28,7 @@ import butterknife.ButterKnife;
 
 public class SaleItemDetailsImageAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
+    List<View> mViewsToToggle = new ArrayList<>();
     List<String> mData = new LinkedList<>();
     Context mContext;
     String mSaleId;
@@ -52,12 +53,14 @@ public class SaleItemDetailsImageAdapter extends RecyclerView.Adapter<RecyclerVi
     }
 
     public SaleItemDetailsImageAdapter(
+            ArrayList<View> views,
             LoadImagesListener loadImagesListener,
             List<String> data,
             String saleId,
             int viewType,
             Drawable placeholder) {
 
+        this.mViewsToToggle = views != null ? views : new ArrayList<>();
         this.mLoadImagesListener = loadImagesListener;
         this.mData = data;
         this.mSaleId = saleId;
@@ -111,6 +114,19 @@ public class SaleItemDetailsImageAdapter extends RecyclerView.Adapter<RecyclerVi
                     } else {
                         ImageUtils.loadImage(mContext, url, vh.image);
                     }
+
+                    ScalableImageView scalableImageView = (ScalableImageView) vh.image;
+                    scalableImageView.setOnScaleChangeListener((scaleFactor, focusX, focusY) -> {
+                        for (View v : mViewsToToggle) {
+                            v.setVisibility(View.INVISIBLE);
+                        }
+
+                        if (scalableImageView.getScale() <= 1.05f) {
+                            for (View v : mViewsToToggle) {
+                                v.setVisibility(View.VISIBLE);
+                            }
+                        }
+                    });
 
 //                    if (position == 0) {
 //                        vh.image.setTransitionName(mData.getID());

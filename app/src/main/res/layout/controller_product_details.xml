@@ -80,6 +80,7 @@
                                         android:id="@+id/image_container"
                                         android:layout_width="match_parent"
                                         android:layout_height="wrap_content"
+                                        android:elevation="10dp"
                                         android:clipChildren="false"
                                         android:clipToPadding="false">
 
