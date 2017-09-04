@@ -12,7 +12,7 @@
         android:id="@+id/add_address_label"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:textColor="@color/gray_field_label" />
+        android:textColor="@color/gray_active_field_text" />
 
     <android.support.v7.widget.AppCompatSpinner
         android:id="@+id/add_address_spinner"
