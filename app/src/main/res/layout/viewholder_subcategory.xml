@@ -18,10 +18,10 @@
 
         <TextView
             android:id="@+id/viewholder_subcategory_title"
-            fontPath="@string/font_lato_semibold"
+            fontPath="@string/font_lato_heavy"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textColor="@color/gray_title_text"
+            android:textColor="@color/gray_category_text"
             android:textSize="@dimen/text_size_xlarge"
             android:textStyle="bold"
             tools:ignore="MissingPrefix"
