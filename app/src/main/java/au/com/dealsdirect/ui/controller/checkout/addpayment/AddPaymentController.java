@@ -254,4 +254,9 @@ public class AddPaymentController extends BaseController implements AddPaymentMv
         getActivity().onBackPressed();
     }
 
+    @OnClick(R.id.bt_camera)
+    void launchCamera() {
+        mCardForm.scanCard(getActivity());
+    }
+
 }

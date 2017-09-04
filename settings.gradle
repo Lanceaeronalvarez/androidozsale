@@ -1,3 +1,5 @@
-include ':app', ':genie-utility', ':CardForm'
+include ':app', ':genie-utility', ':CardForm', ':card.io'
 include ':ptr-lib'
 project(':genie-utility').projectDir = new File('sw_o_android.genieandroid/genie-utility')
+project(':CardForm').projectDir = new File('android-card-form/CardForm')
+project(':card.io').projectDir = new File('card.io-Android-source/card.io')
