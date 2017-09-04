@@ -24,6 +24,16 @@
                 android:layout_height="wrap_content"
                 android:orientation="vertical">
 
+                <TextView
+                    fontPath="@string/font_lato_bold"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp"
+                    android:gravity="center"
+                    android:text="@string/invite_friends_title"
+                    android:textColor="@color/gray_item_details"
+                    android:textSize="@dimen/text_size_xxxlarge" />
+
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -41,7 +51,7 @@
                         android:layout_marginBottom="10dp"
                         android:layout_marginLeft="@dimen/activity_horizontal_margin"
                         android:layout_marginRight="@dimen/activity_horizontal_margin"
-                        android:layout_marginTop="10dp"
+                        android:layout_marginTop="6dp"
                         android:focusable="true" />
 
                     <TextView

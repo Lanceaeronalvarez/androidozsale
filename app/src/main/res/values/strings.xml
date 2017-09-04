@@ -243,6 +243,8 @@
         $20 Deals Direct voucher to use towards any future purchase.
     </string>
     <string name="send_personal_invite_text">Personal Invitation</string>
+    <string name="invite_friends_title">Invite your Friends!</string>
+
     <string name="write_a_message_here">write a message here</string>
     <string name="dealsdirect">DealsDirect</string>
     <string name="exit_app">Exit app?</string>
