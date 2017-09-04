@@ -401,6 +401,8 @@ public class SaleItemsController extends BasePullToRefreshController implements 
         mPresenter.loadSortingFacets();
         mSaleItemsToolbarTitle.setTextAlignment(View.TEXT_ALIGNMENT_TEXT_START);
 
+        ((MainActivity)getActivity()).getMainController().setViewpagerDraggable(false);
+
         mPaginateCallbacks = new Paginate.Callbacks() {
             @Override
             public void onLoadMore() {

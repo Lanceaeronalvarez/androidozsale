@@ -11,7 +11,6 @@ import android.support.v4.util.Pair;
 import android.support.v4.widget.NestedScrollView;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -261,7 +260,7 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
         mRootView = ((ElasticDragDismissFrameLayout) view);
 
         mActivity = (MainActivity)getActivity();
-
+        mActivity.getMainController().setViewpagerDraggable(false);
         //product info
         mProductName.setText(mSaleName);
 
