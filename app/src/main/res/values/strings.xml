@@ -310,5 +310,7 @@
     <string name="please_input_promo_code">Please input a promo code.</string>
     <string name="reason">reason</string>
     <string name="login_incorrect">Login incorrect</string>
+    <string name="logout_successful">Logout Successful</string>
+    <string name="logout_failed">Logout Failed</string>
 
 </resources>

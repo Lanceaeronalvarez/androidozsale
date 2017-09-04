@@ -165,7 +165,7 @@ public class LoginController extends BaseController implements LoginMvpView {
         CustomAlertDialog.showCustomAlertDialog(
                 getActivity(),
                 CustomAlertDialog.CustomDialogIconState.NEGATIVE,
-                mActivity.getString(R.string.login_incorrect));
+                message);
 
         isLoginTapped = false;
     }

@@ -228,11 +228,12 @@ public class AccountController extends BaseController implements AccountMvpView,
                 mPresenter.loadAccountItems();
                 ((MainActivity) getActivity()).getMainController().getHomeController().setIsResetCheckout(true);
                 ((MainActivity) getActivity()).getMainController().getHomeController().removeBasketItemCount();
+                mFilterButton.setImageDrawable(getActivity().getResources().getDrawable(R.drawable.ic_login));
 
                 ((MainActivity) getActivity()).getMainController().getHomeController().showShopController();
                 CustomAlertDialog.showCustomAlertDialog(getActivity(),
                         CustomAlertDialog.CustomDialogIconState.POSITIVE,
-                        "Logout Successful");  
+                        getActivity().getString(R.string.logout_successful));  
          }
 
             @Override
@@ -240,7 +241,7 @@ public class AccountController extends BaseController implements AccountMvpView,
 
                 CustomAlertDialog.showCustomAlertDialog(getActivity(),
                         CustomAlertDialog.CustomDialogIconState.NEGATIVE,
-                        "Logout Failed");
+                        getActivity().getString(R.string.logout_failed));
             }
         });
 
@@ -259,7 +260,6 @@ public class AccountController extends BaseController implements AccountMvpView,
     @OnClick(R.id.partial_toolbar_filter_view)
     public void promptLogin(){
         if(mPresenter.getIsAuthorized()) {
-            mFilterButton.setImageDrawable(getActivity().getResources().getDrawable(R.drawable.ic_login));
             triggerLogout();
             CartUtil.setValueToCart(0);
         } else {
