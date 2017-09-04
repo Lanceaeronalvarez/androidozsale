@@ -38,7 +38,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:text="Enter Promocode"
-                    android:textColor="#646464" />
+                    android:textColor="@color/gray_active_field_text" />
 
                 <LinearLayout
                     android:layout_width="match_parent"
