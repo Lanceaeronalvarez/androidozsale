@@ -228,18 +228,22 @@ public class AccountController extends BaseController implements AccountMvpView,
                 mPresenter.loadAccountItems();
                 ((MainActivity) getActivity()).getMainController().getHomeController().setIsResetCheckout(true);
                 ((MainActivity) getActivity()).getMainController().getHomeController().removeBasketItemCount();
-                ((MainActivity) getActivity()).getMainController().getHomeController().initControllers(false);
-            }
+
+                ((MainActivity) getActivity()).getMainController().getHomeController().showShopController();
+                CustomAlertDialog.showCustomAlertDialog(getActivity(),
+                        CustomAlertDialog.CustomDialogIconState.POSITIVE,
+                        "Logout Successful");  
+         }
 
             @Override
             public void error() {
+
+                CustomAlertDialog.showCustomAlertDialog(getActivity(),
+                        CustomAlertDialog.CustomDialogIconState.NEGATIVE,
+                        "Logout Failed");
             }
         });
 
-        ((MainActivity) getActivity()).getMainController().getHomeController().showShopController();
-        CustomAlertDialog.showCustomAlertDialog(getActivity(),
-                CustomAlertDialog.CustomDialogIconState.POSITIVE,
-                "Logout Successful");
     }
 
     @Override

@@ -101,6 +101,7 @@ public class OurpaySMSVerificationPresenter<V extends OurpaySMSVerificationMvpVi
         verificationCodeConfirmRequest.setLanguageID(getDataManager().getLanguageId());
         verificationCodeConfirmRequest.setPhone(String.format("%s%s", countryCode, phone));
         verificationCodeConfirmRequest.setCode(code);
+//        Log.d("verification", "values = "+countryCode+ " , "+phone+", "+getDataManager().getCountryId()+" , "+getDataManager().getLanguageId()+ " ,"+code);
 
         getCompositeDisposable().add(getDataManager()
                 .callVerificationCodeConfirm(verificationCodeConfirmRequest)

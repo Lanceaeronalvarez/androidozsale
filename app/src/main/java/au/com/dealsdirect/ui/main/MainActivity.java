@@ -341,9 +341,11 @@ public class MainActivity extends BaseActivity implements MainMvpView {
 
     @Override
     public void callCreatePaymentTransactionError(String errorMessage) {
+
         if (errorMessage != null) {
+
             CustomAlertDialog.showCustomAlertDialog(this, CustomAlertDialog.CustomDialogIconState.NEGATIVE, errorMessage);
-//            mCheckoutRouter.popToRoot();
+            mCheckoutRouter.popToRoot();
         }
     }
 

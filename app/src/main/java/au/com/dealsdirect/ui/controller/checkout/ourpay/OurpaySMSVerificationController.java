@@ -76,6 +76,8 @@ public class OurpaySMSVerificationController extends BaseController implements O
     @BindView(R.id.ourpay_progress_extension)
     ProgressBar mSMSVerificationProgressBar;
 
+    private boolean isToVerifyCode = false;
+
     @Inject
     OurpaySMSVerificationMvpPresenter<OurpaySMSVerificationMvpView> mPresenter;
 
@@ -121,6 +123,11 @@ public class OurpaySMSVerificationController extends BaseController implements O
         setCodeValidations();
     }
 
+    @Override
+    public void onError(String message) {
+        super.onError(message);
+    }
+
     @OnClick(R.id.partial_toolbar_arrow_view)
     void onBackClick(){
         getActivity().onBackPressed();
@@ -148,6 +155,8 @@ public class OurpaySMSVerificationController extends BaseController implements O
 //                    response.getVerificationNormalizePhoneResponse().getValue().getErrorMessage());
         } else {
             setExtension(response.getVerificationNormalizePhoneResponse().getValue().getCountryCode());
+            if (isToVerifyCode)
+                mPresenter.callVerificationCodeConfirm(mSMSVerificationPhone.getText().toString(), mSMSVerificationPhoneExtension.getText().toString() , mSMSVerificationCode.getText().toString());
 
         }
     }
@@ -176,6 +185,7 @@ public class OurpaySMSVerificationController extends BaseController implements O
             mAuthRequired = false;
         }
 
+
         String mMessage = response.getVerificationCodeConfirmResponse().getMessage();
 
         if (!mResult || (mAuthRequired && !mIsAuthenticated)){
@@ -185,6 +195,8 @@ public class OurpaySMSVerificationController extends BaseController implements O
         }else{
 
             String error = response.getVerificationCodeConfirmResponse().getValue().getErrorMessage();
+            String message = response.getVerificationCodeConfirmResponse().getMessage();
+
             if (!error.isEmpty()){
                 setCodeError(error);
                 mSMSVerificationConfirmButton.setEnabled(true);
@@ -193,14 +205,12 @@ public class OurpaySMSVerificationController extends BaseController implements O
                 CustomAlertDialog.showCustomAlertDialog(getActivity(), CustomAlertDialog.CustomDialogIconState.POSITIVE, "Verified");
                 ourpayPaymentSubmit();
             }
-
         }
-
     }
 
     @OnClick(R.id.ourpay_text_resend_code)
     void onResendCode(){
-
+        isToVerifyCode = false;
         mPresenter.callNormalizePhone(mSMSVerificationPhone.getText().toString());
         clearCode();
     }
@@ -308,7 +318,8 @@ public class OurpaySMSVerificationController extends BaseController implements O
         hideKeyboard();
         showLoading();
         mSMSVerificationConfirmButton.setEnabled(false);
-        mPresenter.callVerificationCodeConfirm(mSMSVerificationPhone.getText().toString(), mSMSVerificationPhoneExtension.getText().toString() , mSMSVerificationCode.getText().toString());
+        mPresenter.callNormalizePhone(mSMSVerificationPhone.getText().toString());
+        isToVerifyCode = true;
     }
 
     private void setCodeValidations() {

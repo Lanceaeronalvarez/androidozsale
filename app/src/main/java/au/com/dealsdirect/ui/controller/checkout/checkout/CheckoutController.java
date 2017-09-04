@@ -336,8 +336,6 @@ public class CheckoutController extends BaseController implements CheckoutMvpVie
                 if (ourpay.getTermsAndConditionsCheckboxState() != 0) {
                     mCheckBoxOurpayTC = (CheckBox) mOurpayHolder.findViewById(R.id.ourpay_checkbox_tc);
                 }
-
-
             }
         }
     }

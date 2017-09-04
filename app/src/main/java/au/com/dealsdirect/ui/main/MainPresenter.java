@@ -351,6 +351,7 @@ public class MainPresenter<V extends MainMvpView> extends BasePresenter<V> imple
                         if (responseValue.getD().getResult()) {
                             getMvpView().createPaymentTransactionSuccess(paymentType, responseValue);
                         } else {
+                            Log.d("nomoreitem", "message = "+responseValue.getD().getMessage());
                             getMvpView().callCreatePaymentTransactionError(responseValue.getD().getMessage());
 
                             Controller controller = getMvpView().getCurrentController(getMvpView().getCurrentRouter());
@@ -508,6 +509,7 @@ public class MainPresenter<V extends MainMvpView> extends BasePresenter<V> imple
                                     return;
                                 }
 
+                                handler.error();
                                 getMvpView().hideLoading();
                                 getMvpView().onError(throwable.getMessage());
 
