@@ -37,6 +37,8 @@
     <color name="gray_toolbar_border">#F2F2F2</color>
     <color name="gray_active_field_text">#616161</color>
     <color name="gray_inactive_field_text">#D0D0D0</color>
+    <color name="gray_address_title_text">#858585</color>
+    <color name="gray_address_subtitle_text">#454545</color>
 
     <color name="tab_bar_background">#e7e7e7</color>
     <color name="tab_bar_icon_inactive">#87939D</color>

@@ -29,18 +29,21 @@
         android:orientation="vertical">
 
         <TextView
+            fontPath="@string/font_lato_regular"
             android:id="@+id/view_my_address_row_item_name"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textColor="@color/address_text_selector"
-            android:textSize="20sp"
+            android:textSize="@dimen/text_size_xxxxlarge"
             tools:text="Address 1" />
 
         <TextView
+            fontPath="@string/font_lato_light"
             android:id="@+id/view_my_address_row_item_text"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textColor="@color/gray_title_text"
+            android:textColor="@color/gray_address_subtitle_text"
+            android:textSize="@dimen/text_size_xlarge"
             tools:text="some address" />
 
         <!-- remove text and express delivery layout below, uncomment to implement-->
@@ -88,7 +91,7 @@
         android:layout_height="wrap_content"
         android:layout_alignStart="@+id/view_my_addresses_row_layout"
         android:layout_below="@+id/view_my_addresses_row_layout"
-        android:layout_marginTop="15dp"
+        android:layout_marginTop="10dp"
         android:clickable="true"
         android:text="@string/remove"
         android:textColor="@color/gray_item_details"
@@ -98,7 +101,7 @@
         android:layout_width="match_parent"
         android:layout_height="0.5dp"
         android:layout_below="@+id/remove_address_text"
-        android:layout_marginTop="20dp"
+        android:layout_marginTop="10dp"
         android:background="@color/border_gray" />
 
 </RelativeLayout>
