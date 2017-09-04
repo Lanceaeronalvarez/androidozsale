@@ -6,6 +6,7 @@
     android:layout_height="wrap_content"
     android:layout_margin="10dp"
     android:background="#00000000"
+    android:gravity="center_horizontal"
     android:paddingLeft="10dp"
     android:paddingRight="10dp"
     android:paddingTop="10dp"
@@ -13,12 +14,12 @@
 
     <RelativeLayout
         android:id="@+id/linearLayout"
-        android:layout_width="match_parent"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:background="@drawable/bg_dialog_rounded">
 
         <LinearLayout
-            android:layout_width="match_parent"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:clickable="false"
             android:orientation="horizontal"
@@ -29,10 +30,10 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_margin="1dp"
-                android:paddingBottom="10dp"
-                android:paddingLeft="23dp"
+                android:paddingBottom="5dp"
+                android:paddingLeft="13dp"
                 android:paddingRight="13dp"
-                android:paddingTop="10dp"
+                android:paddingTop="5dp"
                 android:src="@drawable/ic_check" />
 
             <LinearLayout
@@ -45,7 +46,7 @@
 
                 <TextView
                     android:id="@+id/dialog_alert_description"
-                    fontPath="@string/font_lato_medium"
+                    fontPath="@string/font_lato_regular"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="@string/signature_on_delivery_note"
@@ -53,7 +54,7 @@
 
                 <TextView
                     android:id="@+id/dialog_alert_clickable_text"
-                    fontPath="@string/font_lato_medium"
+                    fontPath="@string/font_lato_regular"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:clickable="true"
