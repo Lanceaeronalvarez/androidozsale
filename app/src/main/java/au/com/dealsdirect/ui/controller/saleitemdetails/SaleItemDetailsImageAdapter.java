@@ -35,6 +35,18 @@ public class SaleItemDetailsImageAdapter extends RecyclerView.Adapter<RecyclerVi
     LoadImagesListener mLoadImagesListener;
     int mViewType;
     Drawable mPlaceholder;
+    RequestListener mRequestListener = new RequestListener() {
+        @Override
+        public boolean onException(Exception e, Object model, Target target, boolean isFirstResource) {
+            return false;
+        }
+
+        @Override
+        public boolean onResourceReady(Object resource, Object model, Target target, boolean isFromMemoryCache, boolean isFirstResource) {
+            mLoadImagesListener.imagesLoaded();
+            return false;
+        }
+    };
 
     public void replaceData(List<String> data) {
         mData = data;
@@ -99,18 +111,7 @@ public class SaleItemDetailsImageAdapter extends RecyclerView.Adapter<RecyclerVi
                 if (mData.size() != 0) {
                     String url = mData.get(position);
                     if (position == 0) {
-                        ImageUtils.loadImageWithPlaceholder(mContext, url, vh.image, mPlaceholder, new RequestListener() {
-                            @Override
-                            public boolean onException(Exception e, Object model, Target target, boolean isFirstResource) {
-                                return false;
-                            }
-
-                            @Override
-                            public boolean onResourceReady(Object resource, Object model, Target target, boolean isFromMemoryCache, boolean isFirstResource) {
-                                mLoadImagesListener.imagesLoaded();
-                                return false;
-                            }
-                        });
+                        ImageUtils.loadImageWithPlaceholder(mContext, url, vh.image, mPlaceholder, mRequestListener);
                     } else {
                         ImageUtils.loadImage(mContext, url, vh.image);
                     }
