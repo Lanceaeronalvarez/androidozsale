@@ -1,6 +1,7 @@
 apply plugin: 'com.android.application'
+apply plugin: 'io.fabric'
 apply plugin: 'me.tatarka.retrolambda'
-
+apply plugin: 'newrelic'
 
 android {
     compileSdkVersion rootProject.ext.compileSdkVersion
@@ -11,7 +12,7 @@ android {
     }
 
     defaultConfig {
-        applicationId "au.com.dealsdirect"
+        applicationId "au.com.dealsdirect.rc"
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
         multiDexEnabled true
@@ -42,7 +43,7 @@ android {
 
     productFlavors {
         dealsDirectRC {
-            applicationId "au.com.dealsdirect"
+            applicationId "au.com.dealsdirect.rc"
         }
 
         dealsDirectTest {
@@ -158,6 +159,19 @@ dependencies {
     androidTestCompile "com.android.support.test.espresso:espresso-intents:$rootProject.espressoVersion"
     androidTestCompile "org.mockito:mockito-core:$rootProject.mockitoVersion"
     androidTestAnnotationProcessor "com.google.dagger:dagger-compiler:$rootProject.dagger2Version"
+
+    // CLS
+    compile('com.crashlytics.sdk.android:crashlytics:2.6.8@aar') {
+        transitive = true;
+    }
+
+    // Answers
+    compile('com.crashlytics.sdk.android:answers:1.3.13@aar') {
+        transitive = true;
+    }
+
+    // NR
+    compile 'com.newrelic.agent.android:android-agent:5.12.3'
 
     compile project(path: ':genie-utility')
     compile project(path: ':CardForm')

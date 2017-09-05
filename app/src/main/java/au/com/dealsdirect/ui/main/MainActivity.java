@@ -28,6 +28,9 @@ import com.braintreepayments.api.interfaces.BraintreeResponseListener;
 import com.braintreepayments.api.models.CardBuilder;
 import com.braintreepayments.api.models.PaymentMethodNonce;
 import com.braintreepayments.cardform.view.CardForm;
+import com.crashlytics.android.Crashlytics;
+import com.crashlytics.android.answers.Answers;
+import com.newrelic.agent.android.NewRelic;
 
 import java.util.List;
 
@@ -57,6 +60,7 @@ import au.com.dealsdirect.ui.custom.CustomAlertDialog;
 import au.com.dealsdirect.utils.DialogUtils;
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import io.fabric.sdk.android.Fabric;
 import timber.log.Timber;
 
 public class MainActivity extends BaseActivity implements MainMvpView {
@@ -100,6 +104,9 @@ public class MainActivity extends BaseActivity implements MainMvpView {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        //Init All analytics sdk
+        initializeAnalytics();
 
         setContentView(R.layout.activity_main);
 
@@ -265,7 +272,7 @@ public class MainActivity extends BaseActivity implements MainMvpView {
 
         BraintreeResponseListener<String> handler;
 
-        if(currentController instanceof CheckoutController){
+        if (currentController instanceof CheckoutController) {
             handler = deviceData -> mPresenter.createPaymentTransaction(
                     deviceData, mPaymentType, paymentMethodNonce.getNonce(), "");
         } else {
@@ -447,7 +454,7 @@ public class MainActivity extends BaseActivity implements MainMvpView {
 
             if (paymentType.equals(PAYMENT_TYPE_MYPAY)) {
                 setPaymentSuccessOurpay(responseValue);
-            } else if (mOurpay != null){
+            } else if (mOurpay != null) {
                 mOurpay.setCanUse(false);
             }
 
@@ -658,7 +665,16 @@ public class MainActivity extends BaseActivity implements MainMvpView {
         return getMainController().getHomeController().getCurrentControllerOnRouter(router);
     }
 
-    public AuthHandler getAuthHandler(){
+    public AuthHandler getAuthHandler() {
         return mAuthHandler;
+    }
+
+    private void initializeAnalytics() {
+        //Fabric
+        Fabric.with(this, new Crashlytics());
+        Fabric.with(this, new Answers());
+
+        //New Relic
+        NewRelic.withApplicationToken(getString(R.string.new_relic_app_token)).start(this.getApplication());
     }
 }

@@ -13,10 +13,13 @@ import android.widget.TextView;
 
 import com.bluelinelabs.conductor.RouterTransaction;
 import com.bluelinelabs.conductor.changehandler.HorizontalChangeHandler;
+import com.braintreepayments.cardform.OnCardFormScanListener;
 import com.braintreepayments.cardform.OnCardFormSubmitListener;
 import com.braintreepayments.cardform.utils.CardType;
 import com.braintreepayments.cardform.view.CardEditText;
 import com.braintreepayments.cardform.view.CardForm;
+import com.crashlytics.android.answers.Answers;
+import com.crashlytics.android.answers.CustomEvent;
 import com.mysale.genie.utility.RxBus;
 
 import javax.inject.Inject;
@@ -36,7 +39,7 @@ import butterknife.OnClick;
  * Created by smartwave on 29/06/2017.
  */
 
-public class AddPaymentController extends BaseController implements AddPaymentMvpView, OnCardFormSubmitListener, CardEditText.OnCardTypeChangedListener {
+public class AddPaymentController extends BaseController implements AddPaymentMvpView, OnCardFormSubmitListener, CardEditText.OnCardTypeChangedListener, OnCardFormScanListener {
     private final static String IS_FROM_CART = "IsFromCart";
     @Inject
     AddPaymentMvpPresenter<AddPaymentMvpView> mPresenter;
@@ -256,7 +259,18 @@ public class AddPaymentController extends BaseController implements AddPaymentMv
 
     @OnClick(R.id.bt_camera)
     void launchCamera() {
+
+        Answers.getInstance().logCustom(new CustomEvent("Credit Cart Scanning")
+            .putCustomAttribute("Type", "Start"));
+
         mCardForm.scanCard(getActivity());
     }
 
+    @Override
+    public void onCardFormScan() {
+        //This callback is called when successful CC scanning
+
+        Answers.getInstance().logCustom(new CustomEvent("Credit Cart Scanning")
+                .putCustomAttribute("Type", "Success"));
+    }
 }

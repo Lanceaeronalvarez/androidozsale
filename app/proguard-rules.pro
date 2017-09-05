@@ -40,7 +40,7 @@
 # Newrelic
 -keep class com.newrelic.** { *; }
 -dontwarn com.newrelic.**
--keepattributes Exceptions, Signature, InnerClasses, LineNumberTable, EnclosingMethod
+-keepattributes Exceptions, Signature, InnerClasses, LineNumberTable
 
 # Crashlytics
 -keep class com.crashlytics.** { *; }
