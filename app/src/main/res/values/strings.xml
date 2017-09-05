@@ -313,5 +313,6 @@
     <string name="login_incorrect">Login incorrect</string>
     <string name="logout_successful">Logout Successful</string>
     <string name="logout_failed">Logout Failed</string>
+    <string name="registered_successfully">Registered Successfully</string>
 
 </resources>

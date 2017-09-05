@@ -238,7 +238,7 @@ public class SearchFilterController extends BaseController
 
         createCategoryMap(mCategoryTree);
 
-        mSearchApplyButton.setImageDrawable(getResources().getDrawable(R.drawable.ic_check));
+        mSearchApplyButton.setImageDrawable(getResources().getDrawable(R.drawable.ic_check_white_24dp));
 
 
         mFacetItemsAdapter = new FacetItemsAdapter(new ArrayList<>(), mPresenter, new HashSet<Integer>());
