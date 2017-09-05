@@ -315,5 +315,7 @@
     <string name="logout_successful">Logout Successful</string>
     <string name="logout_failed">Logout Failed</string>
     <string name="registered_successfully">Registered Successfully</string>
+    <string name="login_successfully">Logged In</string>
+
 
 </resources>

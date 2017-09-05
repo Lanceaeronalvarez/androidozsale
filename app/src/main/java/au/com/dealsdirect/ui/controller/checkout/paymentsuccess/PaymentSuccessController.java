@@ -37,6 +37,7 @@ public class PaymentSuccessController extends BaseController implements PaymentS
 
     private static final String KEY_ADDRESS = "Address";
     private static final String KEY_PRICE = "Price";
+    private static final String KEY_SHIPPING_FEE = "Shipping";
     private static final String KEY_INVOICE = "Invoice";
     private static final String KEY_ESTIMATED_DELIVERY = "EstimatedDelivery";
     private static final int KEY_PLANNED_TRANSACTION_STATE_PAID = 2;
@@ -48,7 +49,7 @@ public class PaymentSuccessController extends BaseController implements PaymentS
     @BindView(R.id.fragment_payment_success_address)
     TextView mAddress;
     @BindView(R.id.fragment_payment_success_price)
-    TextView mPrice;
+    TextView mPriceTextView;
     @BindView(R.id.fragment_payment_success_address_orderno)
     TextView mOrderNumber;
     @BindView(R.id.fragment_payment_success_estimated_delivery)
@@ -64,7 +65,9 @@ public class PaymentSuccessController extends BaseController implements PaymentS
     private Ourpay mOurpay;
     //
     private String mAddressString;
-    private String mPriceString;
+    private double mPrice;
+    private double mShippingFee;
+    private String mTotalPriceString;
     private String mInvoiceString;
     private String mEstimatedDeliveryString;
 
@@ -86,7 +89,8 @@ public class PaymentSuccessController extends BaseController implements PaymentS
     public PaymentSuccessController(CreatePaymentTransaction.ResponseValue responseValue) {
         this(new BundleBuilder(new Bundle())
                 .putString(KEY_ADDRESS, responseValue.getD().getValue().getAddressString())
-                .putString(KEY_PRICE, PriceUtils.getPriceStringValue(responseValue.getD().getValue().getOrderInfoResult().getTotal()))
+                .putDouble(KEY_PRICE,  responseValue.getD().getValue().getOrderInfoResult().getTotal())
+                .putDouble(KEY_SHIPPING_FEE, responseValue.getD().getValue().getOrderInfoResult().getShipping())
                 .putString(KEY_INVOICE, responseValue.getD().getValue().getInvoiceNo())
                 .putString(KEY_ESTIMATED_DELIVERY, responseValue.getD().getValue().getOrderInfoResult().getEstimatedDeliveryText())
                 .build());
@@ -95,7 +99,8 @@ public class PaymentSuccessController extends BaseController implements PaymentS
     public PaymentSuccessController(Bundle args) {
         super(args);
         mAddressString = args.getString(KEY_ADDRESS, "");
-        mPriceString = args.getString(KEY_PRICE, "");
+        mPrice = args.getDouble(KEY_PRICE);
+        mShippingFee = args.getDouble(KEY_SHIPPING_FEE);
         mInvoiceString = args.getString(KEY_INVOICE, "");
         mEstimatedDeliveryString = args.getString(KEY_ESTIMATED_DELIVERY, "");
     }
@@ -105,9 +110,12 @@ public class PaymentSuccessController extends BaseController implements PaymentS
         super.onViewBound(view);
         mActivity = (MainActivity) getActivity();
         mOurpay = ((MainActivity) getActivity()).getOurpay();
-        getTotalPayment(mOurpay);
         if (mOurpay != null && mOurpay.isCanUse()) {
+            getTotalPayment(mOurpay);
             mPresenter.generateOurpay();
+        }else{
+            double totalPayment = mShippingFee+mPrice;
+            mPriceTextView.setText(PriceUtils.getPriceStringValue(totalPayment));
         }
 
         setUp(view);
@@ -204,6 +212,6 @@ public class PaymentSuccessController extends BaseController implements PaymentS
             }
         }
 
-        mPrice.setText(Double.toString(totalPayment));
+        mPriceTextView.setText(Double.toString(totalPayment));
     }
 }

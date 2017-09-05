@@ -152,7 +152,7 @@ public class LoginController extends BaseController implements LoginMvpView {
             ((MainActivity)getActivity()).getAuthHandler().success();
         }
         hideKeyboard();
-        CustomAlertDialog.showCustomAlertDialog(getActivity(), CustomAlertDialog.CustomDialogIconState.POSITIVE, mActivity.getString(R.string.logout_successful));
+        CustomAlertDialog.showCustomAlertDialog(getActivity(), CustomAlertDialog.CustomDialogIconState.POSITIVE, mActivity.getString(R.string.login_successfully));
         mActivity.getMainController().getHomeController().getPresenter().callGetBasketItemsQuantity();
         mActivity.getMainController().showBottomNav();
     }
