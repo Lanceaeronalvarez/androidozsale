@@ -112,6 +112,7 @@ public class AddPaymentController extends BaseController implements AddPaymentMv
                 .setup(getActivity());
         mCardForm.setOnCardFormSubmitListener(this);
         mCardForm.setOnCardTypeChangedListener(this);
+        mCardForm.setOnCardFormScanListener(this);
 
         mButtonPay.setOnClickListener(action -> {
             onCardFormSubmit();
@@ -270,6 +271,7 @@ public class AddPaymentController extends BaseController implements AddPaymentMv
     public void onCardFormScan() {
         //This callback is called when successful CC scanning
 
+        mCardForm.getCardEditText().setEnabled(false);
         Answers.getInstance().logCustom(new CustomEvent("Credit Cart Scanning")
                 .putCustomAttribute("Type", "Success"));
     }
