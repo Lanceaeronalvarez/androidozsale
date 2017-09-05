@@ -39,7 +39,7 @@ public class PaymentSuccessController extends BaseController implements PaymentS
     private static final String KEY_PRICE = "Price";
     private static final String KEY_INVOICE = "Invoice";
     private static final String KEY_ESTIMATED_DELIVERY = "EstimatedDelivery";
-
+    private static final int KEY_PLANNED_TRANSACTION_STATE_PAID = 2;
 
     @Inject
     PaymentSuccessMvpPresenter<PaymentSuccessMvpView> mPresenter;
@@ -105,6 +105,7 @@ public class PaymentSuccessController extends BaseController implements PaymentS
         super.onViewBound(view);
         mActivity = (MainActivity) getActivity();
         mOurpay = ((MainActivity) getActivity()).getOurpay();
+        getTotalPayment(mOurpay);
         if (mOurpay != null && mOurpay.isCanUse()) {
             mPresenter.generateOurpay();
         }
@@ -115,7 +116,6 @@ public class PaymentSuccessController extends BaseController implements PaymentS
     @Override
     protected void setUp(View view) {
         mAddress.setText(mAddressString);
-        mPrice.setText(mPriceString);
         mOrderNumber.setText(mInvoiceString);
         mEstimatedDelivery.setText(Html.fromHtml(mEstimatedDeliveryString).toString());
 
@@ -196,4 +196,14 @@ public class PaymentSuccessController extends BaseController implements PaymentS
         ((MainActivity) getActivity()).setShopsAsVisibleContainer();
     }
 
+    public void getTotalPayment(Ourpay ourpay){
+        double totalPayment = 0;
+        for (int i = 0; i < ourpay.getPlannedTransactions().size(); i++){
+            if(ourpay.getPlannedTransactions().get(i).getState()==KEY_PLANNED_TRANSACTION_STATE_PAID){
+                totalPayment =+ ourpay.getPlannedTransactions().get(i).getAmount();
+            }
+        }
+
+        mPrice.setText(Double.toString(totalPayment));
+    }
 }
