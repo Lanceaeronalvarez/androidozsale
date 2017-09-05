@@ -166,6 +166,7 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
 
     private boolean hasSizes = false;
     private boolean didSelectSize = false;
+    private boolean scrolledToSizes = false;
     private int mFromPosition = -1;
 
     boolean checkOutLocated = false;
@@ -341,9 +342,15 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
         mProductPreviousPrice.setText(PriceUtils.getRpStringValue(saleDetail.getOriginalPrice().getValue()));
 
         if (shippingInformation != null) {
+
             mShippingContainer.setVisibility(View.VISIBLE);
             mShippingDescText.startAnimation(anim);
-            mShippingDescText.loadData(mHtmlHeader + deliveryInformation + "<br/><br/>" +shippingInformation + mHtmlFooter, "text/html; charset=UTF-8", null);
+
+            if(deliveryInformation == null){
+                mShippingDescText.loadData(mHtmlHeader + shippingInformation + mHtmlFooter, "text/html; charset=UTF-8", null);
+            } else {
+                mShippingDescText.loadData(mHtmlHeader + deliveryInformation + "<br/><br/>" +shippingInformation + mHtmlFooter, "text/html; charset=UTF-8", null);
+            }
 
             mProductPricing.setVisibility(View.VISIBLE);
             mProductAboutPricing.startAnimation(anim);
@@ -458,6 +465,10 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
         if (val) {
             CartUtil.addValueToCart(1);
             mActivity.getMainController().getHomeController().updateBasketItemCount();
+            CustomAlertDialog.showCustomAlertDialog(
+                        getActivity(),
+                        CustomAlertDialog.CustomDialogIconState.POSITIVE,
+                        getActivity().getString(R.string.add_to_cart));
         }
     }
 
@@ -490,10 +501,13 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
 
         if (hasSizes) {
             if (!didSelectSize) {
-                CustomAlertDialog.showCustomAlertDialog(
-                        getActivity(),
-                        CustomAlertDialog.CustomDialogIconState.NEGATIVE,
-                        getActivity().getString(R.string.please_select_size));
+//                CustomAlertDialog.showCustomAlertDialog(
+//                        getActivity(),
+//                        CustomAlertDialog.CustomDialogIconState.NEGATIVE,
+//                        getActivity().getString(R.string.please_select_size));
+                int[] sizesLoc = new int[2];
+                mProductDetailBottomCard.getLocationOnScreen(sizesLoc);
+                mProductDetailScrollView.smoothScrollTo(0, sizesLoc[1] - 50);
             } else {
                 verifyAddToCart(request);
             }
