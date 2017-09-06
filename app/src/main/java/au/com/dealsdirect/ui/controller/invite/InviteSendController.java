@@ -424,6 +424,13 @@ public class InviteSendController extends BasePullToRefreshController implements
             }
         });
 
+        mPersonalInvitationLinkEditText.setOnFocusChangeListener((view1, b) -> {
+            mPersonalInvitationLinkEditText.setTextColor(getResources().getColor(R.color.gray_active_field_text));
+        });
+
+        mPersonalInvitationMessageEditText.setOnFocusChangeListener((view1, b) -> {
+            mPersonalInvitationLinkEditText.setTextColor(getResources().getColor(R.color.gray_inactive_field_text));
+        });
 
         mPresenter.start();
     }
