@@ -43,6 +43,7 @@ import au.com.dealsdirect.R;
 import au.com.dealsdirect.data.auth.AuthHandler;
 import au.com.dealsdirect.data.network.model.saleitemdetails.AddToCartRequest;
 import au.com.dealsdirect.data.network.model.saleitemdetails.GetSaleItemDetailsResponse;
+import au.com.dealsdirect.data.network.model.saleitems.GetSaleItemsResponse;
 import au.com.dealsdirect.service.ourpay.Ourpay;
 import au.com.dealsdirect.service.ourpay.OurpayPanel;
 import au.com.dealsdirect.ui.base.BaseActivity;
@@ -95,6 +96,7 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
     private String mSaleName;
     private String mSalePrice;
     private String mSaleOldPrice;
+    private List<GetSaleItemDetailsResponse> mSkuVariants = new ArrayList<>();
 
     @BindView(R.id.productImageRecyclerView)
     RecyclerViewPager mProductImagesRv;
@@ -166,7 +168,7 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
 
     private boolean hasSizes = false;
     private boolean didSelectSize = false;
-    private boolean scrolledToSizes = false;
+    private boolean isSizeSoldOut = false;
     private int mFromPosition = -1;
 
     boolean checkOutLocated = false;
@@ -399,6 +401,7 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
         });
 
         if (!saleDetail.getSkuVariants().isEmpty()) {
+            mSkuVariants = saleDetail.getSkuVariants();
             for (GetSaleItemDetailsResponse skuVariant : saleDetail.getSkuVariants()) {
                 String skuId = skuVariant.getSkuId();
                 String size = skuVariant.getAttributes().getSize();
@@ -431,8 +434,15 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
 
             mSizesFlowLayout.setOnSelectListener(selectPosSet -> {
                 if (selectPosSet.size() != 0) {
-                    mSkuId = mProductSizes.get(selectPosSet.iterator()
-                            .next()).second;
+                    int selectedIndex = selectPosSet.iterator().next();
+
+                    mSkuId = mProductSizes.get(selectedIndex).second;
+
+                    isSizeSoldOut = saleDetail.getSkuVariants().get(selectedIndex).isSoldOut();
+
+                    mAddToCartButton.setEnabled(!isSizeSoldOut);
+                    mAddToCartButton.setText(!isSizeSoldOut ? R.string.add_to_cart : R.string.sold_out);
+
                     didSelectSize = true;
                 } else {
                     didSelectSize = false;
@@ -468,7 +478,7 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
             CustomAlertDialog.showCustomAlertDialog(
                         getActivity(),
                         CustomAlertDialog.CustomDialogIconState.POSITIVE,
-                        getActivity().getString(R.string.add_to_cart));
+                        getActivity().getString(R.string.add_to_cart_success));
         }
     }
 
