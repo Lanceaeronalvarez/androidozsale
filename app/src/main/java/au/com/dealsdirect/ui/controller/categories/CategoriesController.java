@@ -41,7 +41,7 @@ import butterknife.OnClick;
  * dp Created by Admin on 6/6/17.
  */
 
-public class CategoriesController extends BaseController
+public class  CategoriesController extends BaseController
         implements CategoriesMvpView, CategoryClickListener, SubCategoryItemClickListener {
 
     @Inject
@@ -217,6 +217,7 @@ public class CategoriesController extends BaseController
         new Handler().postDelayed(() -> {
             ((MainActivity) getActivity()).getMainController().goToShops();
         }, 400);
+
 
         mSubCategoryAdapter.animateInsertItems(false);
         mIsResetSubCategories =false;

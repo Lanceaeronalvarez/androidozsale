@@ -43,6 +43,7 @@ public class MainController extends BaseController implements MainMvpView {
     private static final String KEY_TEXT = "MainController.KEY_TEXT";
 
     private String mChosenSubCategoryItemKey = "";
+    private String mChosenSubCategoryKey = "";
 
     @Inject
     MainMvpPresenter<MainMvpView> mPresenter;
@@ -57,15 +58,15 @@ public class MainController extends BaseController implements MainMvpView {
     @BindView(R.id.controller_home_splash_container)
     LinearLayout mHomeSplashContainer;
 
-    private Router mChildRouter;
-    private List<GetCategoryTreeResponse> mPreLoadedCategories = new LinkedList<>();
-    private List<GetBannerResponse> sales = new LinkedList<>();
-    private Map<String, List<GetCategoryTreeResponse>> mCategoryMap = new HashMap<>();
     private RouterPagerAdapter mViewPagerAdapter = null;
 
     private HomeController mHomeController;
     private CategoriesController mCategoriesController;
     private MainActivity mActivity;
+
+    private View mLastSelectedSubCategoryItem;
+    private Map<String, List<GetCategoryTreeResponse>> mCategoryMap = new HashMap<>();
+
 
     public static MainController newInstance() {
 
@@ -142,8 +143,6 @@ public class MainController extends BaseController implements MainMvpView {
                 mCategoryMap.put(i.getKey(), newList);
             }
         }
-
-        mPreLoadedCategories = fillCategoryContent();
     }
 
     private void addToMap(List<GetCategoryTreeResponse> list) {
@@ -277,9 +276,25 @@ public class MainController extends BaseController implements MainMvpView {
         mChosenSubCategoryItemKey = key;
     }
 
+    public void setChosenCategoryKey(String key){
+        mChosenSubCategoryKey = key;
+    }
+
+    public void setSelectedSubCategoryItem(View view){
+        mLastSelectedSubCategoryItem = view;
+    }
+
+    public View getSelectedSubCategoryItem(){
+        return mLastSelectedSubCategoryItem;
+    }
+
     public String getChosenCategoryItemKey() {
         return mChosenSubCategoryItemKey;
     }
+
+    public String getChosenCategoryKey(){ return mChosenSubCategoryKey;}
+
+
 
     public String getCategoryParentKey() {
         char c = '>';

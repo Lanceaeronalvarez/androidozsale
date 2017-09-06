@@ -78,10 +78,11 @@ public class SubCategoriesAdapter extends RecyclerView.Adapter<RecyclerView.View
 
                         ((SubCategoriesViewHolder) holder)
                                 .subCategoryTitle.setTextColor(context.getResources().getColor(R.color.category_text_active));
-                    } else {
+                    }else{
                         ((SubCategoriesViewHolder) holder)
-                                .subCategoryTitle.setTextColor(context.getResources().getColor(R.color.gray_title_text));
+                                .subCategoryTitle.setTextColor(context.getResources().getColor(R.color.category_text_inactive));
                     }
+//
 
                     ((SubCategoriesViewHolder) holder).subCategoryItemsRecyclerView.setVisibility(View.GONE);
                     ((SubCategoriesViewHolder) holder).subCategoryTitle.setOnClickListener(v -> {
@@ -111,6 +112,7 @@ public class SubCategoriesAdapter extends RecyclerView.Adapter<RecyclerView.View
                                     holder.itemView.setActivated(true);
                                     ((SubCategoriesViewHolder) holder)
                                             .subCategoryItemsRecyclerView.setVisibility(View.VISIBLE);
+
                                     mSubCategoryItemsAdapter = new SubCategoryItemsAdapter(subCategoryItems, mPresenter, mSubCategoryItemClickListener, mAnimateInsert, mIsResetSubCategories);
                                     ((SubCategoriesViewHolder) holder).subCategoryItemsRecyclerView.setLayoutManager(new LinearLayoutManager(holder.itemView.getContext(), LinearLayoutManager.VERTICAL, false));
                                     ((SubCategoriesViewHolder) holder).subCategoryItemsRecyclerView.setAdapter(mSubCategoryItemsAdapter);

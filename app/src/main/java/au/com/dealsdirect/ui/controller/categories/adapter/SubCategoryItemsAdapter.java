@@ -61,25 +61,32 @@ public class SubCategoryItemsAdapter extends RecyclerView.Adapter<RecyclerView.V
 
     @Override
     public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
-        setAnimation(holder.itemView, position);
 
         SubCategoryItemViewHolder vh = (SubCategoryItemViewHolder) holder;
+        MainActivity activity = ((MainActivity) vh.itemView.getContext());
+        setAnimation(holder.itemView, position);
+
         if (!mData.isEmpty()) {
 
             vh.itemView.setActivated(false);
             vh.subCategoryTitle.setText(mData.get(position).getName());
 
             vh.itemView.setOnClickListener(view -> {
+                View subCategoryItem = activity.getMainController().getSelectedSubCategoryItem();
+                if (subCategoryItem!=null){
+                    subCategoryItem.setActivated(false);
+                }
 
                 if (mLastSelectedViewHolder == null) {
                     mLastSelectedViewHolder = vh;
+                    activity.getMainController().setSelectedSubCategoryItem(vh.itemView);
                     vh.itemView.setActivated(true);
                 } else {
-                    if(mLastSelectedViewHolder != vh) {
-                        mLastSelectedViewHolder.itemView.setActivated(false);
-                        mLastSelectedViewHolder = vh;
-                        mLastSelectedViewHolder.itemView.setActivated(true);
-                    }
+
+                    mLastSelectedViewHolder.itemView.setActivated(false);
+                    mLastSelectedViewHolder = vh;
+                    activity.getMainController().setSelectedSubCategoryItem(vh.itemView);
+                    mLastSelectedViewHolder.itemView.setActivated(true);
                 }
                 mCategoryAdapterClickListener.onSubCategoryItemClicked(
                         mData.get(position).getId(),
