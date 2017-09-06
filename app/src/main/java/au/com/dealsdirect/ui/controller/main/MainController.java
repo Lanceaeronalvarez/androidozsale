@@ -40,10 +40,8 @@ import butterknife.BindView;
 public class MainController extends BaseController implements MainMvpView {
 
     public static final String TAG = "MainController";
-    private static final String KEY_TEXT = "MainController.KEY_TEXT";
 
     private String mChosenSubCategoryItemKey = "";
-    private String mChosenSubCategoryKey = "";
 
     @Inject
     MainMvpPresenter<MainMvpView> mPresenter;
@@ -57,8 +55,6 @@ public class MainController extends BaseController implements MainMvpView {
 
     @BindView(R.id.controller_home_splash_container)
     LinearLayout mHomeSplashContainer;
-
-    private RouterPagerAdapter mViewPagerAdapter = null;
 
     private HomeController mHomeController;
     private CategoriesController mCategoriesController;
@@ -122,52 +118,9 @@ public class MainController extends BaseController implements MainMvpView {
 
     }
 
-    private void createCategoryMap(List<GetCategoryTreeResponse> categories) {
-
-        List<GetCategoryTreeResponse> newList;
-        mCategoryMap.put("shop", categories);
-
-        for (GetCategoryTreeResponse i : categories) {
-
-            newList = updateCategoryChildren(i);
-
-            if (newList != null) {
-
-                int childrenSize = newList.size();
-                if (childrenSize != 1) {
-
-                    addToMap(newList);
-                }
-
-                mCategoryMap.put(i.getKey(), newList);
-            }
-        }
-    }
-
-    private void addToMap(List<GetCategoryTreeResponse> list) {
-        List<GetCategoryTreeResponse> newList2;
-
-        for (GetCategoryTreeResponse i : list) {
-            newList2 = updateCategoryChildren(i);
-
-            int childrenSize = newList2.size();
-            if (childrenSize != 1) {
-                addToMap(newList2);
-            }
-
-            mCategoryMap.put(i.getKey(), newList2);
-
-        }
-    }
-
-    private List<GetCategoryTreeResponse> fillCategoryContent() {
-
-        return mCategoryMap.get("shop");
-    }
-
     private void setupViewPager() {
 
-        mViewPagerAdapter = new RouterPagerAdapter(this) {
+        RouterPagerAdapter mViewPagerAdapter = new RouterPagerAdapter(this) {
             @Override
             public void configureRouter(@NonNull Router router, int position) {
                 if (!router.hasRootController()) {
@@ -189,11 +142,6 @@ public class MainController extends BaseController implements MainMvpView {
 
             @Override
             public int getCount() {
-//                if (mPreLoadedCategories.size() != 0) {
-//                    return 2;
-//                } else {
-//                    return 1;
-//                }
                 return 2;
             }
 
@@ -209,7 +157,6 @@ public class MainController extends BaseController implements MainMvpView {
         mHomeViewPager.setMyScroller();
 
         mActivity.isViewPagerSet(true);
-        //noinspection deprecation
 
     }
 
@@ -227,42 +174,6 @@ public class MainController extends BaseController implements MainMvpView {
           mHomeViewPager.setSwipeable(isDraggable);
     }
 
-    public int getActiveItem() {
-        return mHomeViewPager.getCurrentItem();
-    }
-
-    public void showSaleItems() {
-        mHomeViewPager.setCurrentItem(1);
-
-    }
-
-    private List<GetCategoryTreeResponse> updateCategoryChildren(GetCategoryTreeResponse categoryTree) {
-        if (!categoryTree.getName().equals("All")) {
-            GetCategoryTreeResponse getCategoryTreeResponse = new GetCategoryTreeResponse();
-            getCategoryTreeResponse.setName("All");
-            getCategoryTreeResponse.setKey(categoryTree.getKey());
-            getCategoryTreeResponse.setChildren(new ArrayList<>());
-            getCategoryTreeResponse.setNodeType("usual");
-
-            List<GetCategoryTreeResponse> newList = new ArrayList<>();
-
-            if (categoryTree.getChildren() != null) {
-                for (int i = 0; i < categoryTree.getChildren().size() + 1; i++) {
-
-                    if (i == 0) {
-                        newList.add(getCategoryTreeResponse);
-
-                    } else {
-
-                        newList.add(categoryTree.getChildren().get(i - 1));
-                    }
-                }
-            }
-            return newList;
-        }
-        return categoryTree.getChildren();
-    }
-
     public void hideBottomNav() {
         if (mHomeController != null) mHomeController.hideBottomNav();
     }
@@ -273,10 +184,6 @@ public class MainController extends BaseController implements MainMvpView {
 
     public void setChosenCategoryItemKey(String key) {
         mChosenSubCategoryItemKey = key;
-    }
-
-    public void setChosenCategoryKey(String key){
-        mChosenSubCategoryKey = key;
     }
 
     public void setSelectedSubCategoryItem(View view){
@@ -290,9 +197,6 @@ public class MainController extends BaseController implements MainMvpView {
     public String getChosenCategoryItemKey() {
         return mChosenSubCategoryItemKey;
     }
-
-    public String getChosenCategoryKey(){ return mChosenSubCategoryKey;}
-
 
 
     public String getCategoryParentKey() {

@@ -82,7 +82,6 @@ public class SubCategoriesAdapter extends RecyclerView.Adapter<RecyclerView.View
                         ((SubCategoriesViewHolder) holder)
                                 .subCategoryTitle.setTextColor(context.getResources().getColor(R.color.category_text_inactive));
                     }
-//
 
                     ((SubCategoriesViewHolder) holder).subCategoryItemsRecyclerView.setVisibility(View.GONE);
                     ((SubCategoriesViewHolder) holder).subCategoryTitle.setOnClickListener(v -> {
