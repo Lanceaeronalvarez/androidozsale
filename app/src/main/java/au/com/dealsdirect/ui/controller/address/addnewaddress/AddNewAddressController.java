@@ -80,7 +80,7 @@ public class AddNewAddressController extends BaseController implements AddNewAdd
         if (getActivity()!=null)
             ((MainActivity)getActivity()).getMainController().getHomeController().setIsResetCheckout(true);
         mAddNewAddressToolarTitle.setText("Add New Address");
-        mAddNewAddressRightOption.setImageDrawable(getApplicationContext().getDrawable(R.drawable.ic_check));
+        mAddNewAddressRightOption.setImageDrawable(getApplicationContext().getDrawable(R.drawable.ic_check_white_24dp));
     }
 
     @Override
@@ -172,15 +172,6 @@ public class AddNewAddressController extends BaseController implements AddNewAdd
                 getApplicationContext().getString(R.string.delivery_address_added));
         getActivity().onBackPressed();
 
-//        DialogUtils.showYesDialog(getActivity(), "Success!", "added new address.", "OK", new DialogInterface.OnClickListener() {
-//            @Override
-//            public void onClick(DialogInterface dialog, int which) {
-//                getActivity().onBackPressed();
-//                dialog.dismiss();
-//            }
-//        });
-
-//        getBaseActivity().callPopBackStack();
     }
 
     @OnClick(R.id.partial_toolbar_arrow_view)
