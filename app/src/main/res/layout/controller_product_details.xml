@@ -671,6 +671,12 @@
 
             </android.support.v4.widget.NestedScrollView>
 
+            <ImageView
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/default_button_height"
+                android:background="#a0ffffff"
+                android:layout_gravity="bottom" />
+
             <Button
                 android:id="@+id/product_details_add_to_basket"
                 style="@style/DDButtonStyle"
@@ -683,12 +689,6 @@
                 android:layout_marginRight="5dp"
                 android:enabled="false"
                 android:text="@string/add_to_cart" />
-
-            <ImageView
-                android:layout_width="match_parent"
-                android:layout_height="@dimen/default_button_height"
-                android:background="#a0ffffff"
-                android:layout_gravity="bottom" />
 
         </android.support.design.widget.CoordinatorLayout>
 
