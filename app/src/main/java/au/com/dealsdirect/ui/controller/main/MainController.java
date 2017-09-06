@@ -67,7 +67,6 @@ public class MainController extends BaseController implements MainMvpView {
     private View mLastSelectedSubCategoryItem;
     private Map<String, List<GetCategoryTreeResponse>> mCategoryMap = new HashMap<>();
 
-
     public static MainController newInstance() {
 
         return new MainController(
