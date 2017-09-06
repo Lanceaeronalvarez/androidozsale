@@ -28,7 +28,7 @@ public class RegisterUserResponse {
     }
 
     public boolean isSuccess() {
-        return response.IsAuthenticated && response.Result;
+        return response.Result;
     }
 
     public String getTicket() {

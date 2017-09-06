@@ -173,6 +173,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textSize="@dimen/text_size_medium"
+                android:checked="true"
                 android:textColor="@color/filter_text_inactive"
                 android:layout_marginLeft="-5dp"
                 android:text="I agree to the "  />
