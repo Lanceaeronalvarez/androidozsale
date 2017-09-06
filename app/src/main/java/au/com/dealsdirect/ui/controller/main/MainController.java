@@ -224,7 +224,9 @@ public class MainController extends BaseController implements MainMvpView {
     }
 
     public void setViewpagerDraggable(boolean isDraggable) {
-        mHomeViewPager.setSwipeable(isDraggable);
+
+      if (mHomeViewPager!=null)
+          mHomeViewPager.setSwipeable(isDraggable);
     }
 
     public int getActiveItem() {
