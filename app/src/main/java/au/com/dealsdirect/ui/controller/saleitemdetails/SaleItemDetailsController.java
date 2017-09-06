@@ -505,9 +505,8 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
 //                        getActivity(),
 //                        CustomAlertDialog.CustomDialogIconState.NEGATIVE,
 //                        getActivity().getString(R.string.please_select_size));
-                int[] sizesLoc = new int[2];
-                mProductDetailBottomCard.getLocationOnScreen(sizesLoc);
-                mProductDetailScrollView.smoothScrollTo(0, sizesLoc[1] - 50);
+
+                mProductDetailScrollView.scrollTo(0, mProductDetailBottomCard.getTop());
             } else {
                 verifyAddToCart(request);
             }
