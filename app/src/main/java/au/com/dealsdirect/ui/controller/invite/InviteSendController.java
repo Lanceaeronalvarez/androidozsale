@@ -222,7 +222,7 @@ public class InviteSendController extends BasePullToRefreshController implements
 
                 String personalInvitation = mPersonalInvitationMessageEditText.getText().toString();
                 String invitationLink = mPersonalInvitationLinkEditText.getText().toString();
-                String messageWithInvite = personalInvitation + invitationLink;
+                String messageWithInvite = personalInvitation + " " + invitationLink;
 
                 Intent tweetIntent = new Intent(Intent.ACTION_SEND);
                 tweetIntent.putExtra(Intent.EXTRA_TEXT, messageWithInvite);
@@ -293,7 +293,7 @@ public class InviteSendController extends BasePullToRefreshController implements
 
                 String message = mPersonalInvitationMessageEditText.getText().toString();
                 String invitationLink = mPersonalInvitationLinkEditText.getText().toString();
-                String messageWithInvite = message + invitationLink;
+                String messageWithInvite = message + " " + invitationLink;
 
                 Intent smsIntent = new Intent(android.content.Intent.ACTION_VIEW);
                 smsIntent.setType("vnd.android-dir/mms-sms");
@@ -311,7 +311,7 @@ public class InviteSendController extends BasePullToRefreshController implements
 
                 String message = mPersonalInvitationMessageEditText.getText().toString();
                 String invitationLink = mPersonalInvitationLinkEditText.getText().toString();
-                String messageWithInvite = message + invitationLink;
+                String messageWithInvite = message + " " + invitationLink;
 
                 if (invitationLink.isEmpty() || invitationLink.equals("")) {
 
@@ -321,7 +321,7 @@ public class InviteSendController extends BasePullToRefreshController implements
 
                             String message = mPersonalInvitationMessageEditText.getText().toString();
                             String invitationLink = mPersonalInvitationLinkEditText.getText().toString();
-                            String messageWithInvite = message + invitationLink;
+                            String messageWithInvite = message + " " + invitationLink;
 
                             Intent emailIntent = new Intent(Intent.ACTION_SENDTO, Uri.fromParts("mailto", " ", null));
                             emailIntent.putExtra(Intent.EXTRA_SUBJECT, inviteSubject);
