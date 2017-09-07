@@ -185,6 +185,7 @@
                     android:layout_marginBottom="16dp"
                     android:layout_marginTop="10dp"
                     app:hintEnabled="false"
+                    app:passwordToggleDrawable="@drawable/ic_show_password_toggle"
                     app:passwordToggleEnabled="true">
 
                     <EditText
@@ -213,6 +214,8 @@
                     android:layout_marginBottom="16dp"
                     android:layout_marginTop="10dp"
                     app:hintEnabled="false"
+                    app:passwordToggleDrawable="@drawable/ic_show_password_toggle"
+
                     app:passwordToggleEnabled="true">
 
                     <EditText
@@ -240,6 +243,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginTop="10dp"
                     app:hintEnabled="false"
+                    app:passwordToggleDrawable="@drawable/ic_show_password_toggle"
                     app:passwordToggleEnabled="true">
 
                     <EditText
