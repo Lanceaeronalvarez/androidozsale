@@ -195,9 +195,8 @@
         order will arrive within 14-28 working days after the sale has finished.</string>
 
     <string name="continue_shopping">Continue shopping</string>
-    <string name="your_cart_is_currently_empty">Your cart is currently empty</string>
-    <string name="you_have_not_added_any_items_in_your_shopping_cart">You have not added any items
-        in your shopping cart
+    <string name="your_cart_is_currently_empty">welcome to my basket!</string>
+    <string name="you_have_not_added_any_items_in_your_shopping_cart">you do not currently have any items
     </string>
     <string name="add_payment_method">add payment method</string>
     <string name="rate_us_message">We value your feedback, please let us know what do you feel
@@ -316,6 +315,7 @@
     <string name="logout_failed">Logout Failed</string>
     <string name="registered_successfully">Registered Successfully</string>
     <string name="login_successfully">Logged In</string>
+    <string name="paid">Paid</string>
 
 
 </resources>

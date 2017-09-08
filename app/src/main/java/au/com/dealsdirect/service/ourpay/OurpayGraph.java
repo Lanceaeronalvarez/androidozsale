@@ -30,6 +30,7 @@ import java.util.List;
 
 import au.com.dealsdirect.R;
 import au.com.dealsdirect.data.network.model.checkout.getcurrentorder.MyPayDetails;
+import au.com.dealsdirect.utils.PriceUtils;
 
 import static android.view.ViewTreeObserver.OnGlobalLayoutListener;
 
@@ -2029,10 +2030,10 @@ public class OurpayGraph {
 
 
             if (ourpayTransactions.get(i).getState() == 0) {
-                tempPay.setText(ourpayTransactions.get(i).getAmount().toString());
+                tempPay.setText(PriceUtils.getPriceStringValue(ourpayTransactions.get(i).getAmount()));
                 checkImage.setVisibility(View.GONE);
             } else if (ourpayTransactions.get(i).getState() == 2) {
-                tempPay.setText("Paid");
+                tempPay.setText(R.string.paid);
                 checkImage.setVisibility(View.VISIBLE);
             }
 

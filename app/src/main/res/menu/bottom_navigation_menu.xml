@@ -34,7 +34,7 @@
         android:id="@+id/action_checkout"
         android:enabled="true"
         android:icon="@drawable/ic_tab_checkout"
-        android:title="Checkout"
+        android:title="My Basket"
         app:showAsAction="collapseActionView" />
 
 </menu>

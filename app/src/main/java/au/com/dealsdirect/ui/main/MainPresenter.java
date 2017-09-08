@@ -281,7 +281,7 @@ public class MainPresenter<V extends MainMvpView> extends BasePresenter<V> imple
     public void fetchBTAuthorization() {
         if (!getDataManager().isAuthorized()) return;
 
-        getMvpView().showLoading();
+//        getMvpView().showLoading();
 
         getCompositeDisposable().add(getDataManager()
                 .callGetPaymentToken(new GetPaymentToken.RequestValue(getDataManager().getLanguageId(), getDataManager().getCountryId()))
