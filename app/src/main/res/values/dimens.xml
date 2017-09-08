@@ -36,6 +36,7 @@
     <dimen name="voucher_container_width">240dp</dimen>
     <dimen name="voucher_container_height">150dp</dimen>
     <dimen name="voucher_padding">50dp</dimen>
+    <dimen name="voucher_text_padding">10dp</dimen>
 
     <dimen name="voucher_container_margin">20dp</dimen>
     <dimen name="voucher_container_padding">20dp</dimen>
