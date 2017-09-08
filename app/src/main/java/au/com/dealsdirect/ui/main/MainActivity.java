@@ -96,11 +96,12 @@ public class MainActivity extends BaseActivity implements MainMvpView {
 
     private boolean mIsFromCategories = false;
     private boolean mIsViewPagerSet = false;
-    private boolean isSearchActive = false;
     private boolean isTemplateTextsStored = false;
 
     private Ourpay mOurpay;
     private boolean mThreeDSecureRequired;
+
+    private boolean mIsCreatingPaymentTransaction = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -322,32 +323,40 @@ public class MainActivity extends BaseActivity implements MainMvpView {
 
     @Override
     public void callCreatePaymentTransaction(String paymentNonce) {
-        BraintreeResponseListener<String> handler = deviceData ->
-                mPresenter.createPaymentTransaction(deviceData, mPaymentType, paymentNonce, getPaymentMethodSelected().getToken());
+        if (!mIsCreatingPaymentTransaction){
+            mIsCreatingPaymentTransaction = true;
 
-        if (!mPresenter.getKountMerchantId().isEmpty()) {
-            DataCollector.collectDeviceData(mBraintreeFragment, mPresenter.getKountMerchantId(), handler);
-        } else {
-            DataCollector.collectDeviceData(mBraintreeFragment, handler);
+            BraintreeResponseListener<String> handler = deviceData ->
+                    mPresenter.createPaymentTransaction(deviceData, mPaymentType, paymentNonce, getPaymentMethodSelected().getToken());
+
+            if (!mPresenter.getKountMerchantId().isEmpty()) {
+                DataCollector.collectDeviceData(mBraintreeFragment, mPresenter.getKountMerchantId(), handler);
+            } else {
+                DataCollector.collectDeviceData(mBraintreeFragment, handler);
+            }
         }
 
     }
 
     @Override
     public void callCreatePaymentTransaction(String paymentType, String paymentNonce) {
+        if (!mIsCreatingPaymentTransaction){
+            mIsCreatingPaymentTransaction = true;
 
-        BraintreeResponseListener<String> handler = deviceData ->
-                mPresenter.createPaymentTransaction(deviceData, paymentType, paymentNonce, getPaymentMethodSelected().getToken());
+            BraintreeResponseListener<String> handler = deviceData ->
+                    mPresenter.createPaymentTransaction(deviceData, paymentType, paymentNonce, getPaymentMethodSelected().getToken());
 
-        if (!mPresenter.getKountMerchantId().isEmpty()) {
-            DataCollector.collectDeviceData(mBraintreeFragment, mPresenter.getKountMerchantId(), handler);
-        } else {
-            DataCollector.collectDeviceData(mBraintreeFragment, handler);
+            if (!mPresenter.getKountMerchantId().isEmpty()) {
+                DataCollector.collectDeviceData(mBraintreeFragment, mPresenter.getKountMerchantId(), handler);
+            } else {
+                DataCollector.collectDeviceData(mBraintreeFragment, handler);
+            }
         }
     }
 
     @Override
     public void callCreatePaymentTransactionError(String errorMessage) {
+        mIsCreatingPaymentTransaction = false;
 
         if (errorMessage != null) {
 
@@ -449,6 +458,7 @@ public class MainActivity extends BaseActivity implements MainMvpView {
     @Override
     public void createPaymentTransactionSuccess(String paymentType, CreatePaymentTransaction.ResponseValue responseValue) {
         fetchAuthorization(null);
+        mIsCreatingPaymentTransaction = false;
 
         if (responseValue.isPaid()) {
 
@@ -677,4 +687,5 @@ public class MainActivity extends BaseActivity implements MainMvpView {
         //New Relic
         NewRelic.withApplicationToken(getString(R.string.new_relic_app_token)).start(this.getApplication());
     }
+
 }

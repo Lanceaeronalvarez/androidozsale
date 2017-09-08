@@ -21,4 +21,8 @@ public class PriceUtils {
         String decimal = value % 1 == 0 ? "%.0f" : "%.2f";
         return TEMP_CURRENCY_SIGN + String.format(Locale.ENGLISH, decimal, value);
     }
+
+    public static String getVoucherStringValue(String value){
+        return TEMP_CURRENCY_SIGN + value;
+    }
 }

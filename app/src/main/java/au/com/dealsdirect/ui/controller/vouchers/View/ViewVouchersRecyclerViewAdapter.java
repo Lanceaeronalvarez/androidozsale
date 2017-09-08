@@ -2,10 +2,12 @@ package au.com.dealsdirect.ui.controller.vouchers.View;
 
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import java.text.DecimalFormat;
 import java.util.HashMap;
 import java.util.List;
 import java.util.regex.Matcher;
@@ -13,6 +15,7 @@ import java.util.regex.Pattern;
 
 import au.com.dealsdirect.R;
 import au.com.dealsdirect.data.network.model.vouchers.GetUserVoucherResponse;
+import au.com.dealsdirect.utils.PriceUtils;
 
 /**
  * Created by Paul on 6/27/17.
@@ -46,9 +49,14 @@ public class ViewVouchersRecyclerViewAdapter extends RecyclerView.Adapter<ViewVo
         if(m.find()) {
             Double doubleValue = Double.parseDouble(m.group(1));
             String mUseBefore = voucher.getExpired();
+            Float voucherAmount = Float.parseFloat(m.group(1));
+            DecimalFormat df = new DecimalFormat("0.00");
+            df.setMaximumFractionDigits(2);
+
+            String formattedVoucherValue = df.format(voucherAmount);
 
 
-            String voucherCostWithCurrency = '$'+String.valueOf(doubleValue);
+            String voucherCostWithCurrency = PriceUtils.getVoucherStringValue(formattedVoucherValue);
             holder.mVouchersItemCostText.setText(voucherCostWithCurrency);
             holder.mVouchersItemCostText.setVisibility(View.VISIBLE);
             holder.mVouchersAlreadySpent.setVisibility(View.GONE);

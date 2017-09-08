@@ -156,7 +156,6 @@ public class ViewVouchersController extends BasePullToRefreshController implemen
             List<GetUserVoucherResponse.Voucher> currentVouchers = new ArrayList<>();
 
             for (int i = 0; i < pair.first.size(); i++) {
-                Log.d("viewvouchers","discount  = "+pair.first.get(i).getDiscountLeft());
 
                 String discountLeft = pair.first.get(i).getDiscountLeft();
 

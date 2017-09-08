@@ -10,6 +10,7 @@ import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import java.text.DecimalFormat;
 import java.util.HashMap;
 import java.util.List;
 import java.util.regex.Matcher;
@@ -42,7 +43,6 @@ public class AddVouchersRecyclerViewAdapter extends RecyclerView.Adapter<Recycle
         this.context = context;
         this.mView = view;
 
-        //init hashmap for selected vouchers
         for (int i = 0; i <= mVoucherList.size(); i++) {
             mVoucherOptionIndicator.put(i, false);
         }
@@ -62,12 +62,17 @@ public class AddVouchersRecyclerViewAdapter extends RecyclerView.Adapter<Recycle
 
         Voucher voucher = mVoucherList.get(position);
         String description = voucher.getDescription();
-
         Matcher m = Pattern.compile("(?!=\\d\\.\\d\\.)([\\d.]+)").matcher(description);
 
         //noinspection ResultOfMethodCallIgnored
         m.find();
-        Double doubleValue = Double.parseDouble(m.group(1));
+        Double doubleValue = Double.valueOf(m.group(1));
+        Float voucherAmount = Float.parseFloat(m.group(1));
+        DecimalFormat df = new DecimalFormat("0.00");
+        df.setMaximumFractionDigits(2);
+
+        String formattedVoucherValue = df.format(voucherAmount);
+
         vh.mVoucherItemExpiresOnText.setVisibility(View.INVISIBLE);
 
         String finalDescription = "";
@@ -82,7 +87,6 @@ public class AddVouchersRecyclerViewAdapter extends RecyclerView.Adapter<Recycle
 
         vh.mVoucherItemDescText.setText(finalDescription);
 
-        Log.d("voucherDescription", "description : " + description);
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
             int voucherValue = doubleValue.intValue();
@@ -118,8 +122,7 @@ public class AddVouchersRecyclerViewAdapter extends RecyclerView.Adapter<Recycle
         }
 
         voucherColorStateCollection.put(position, ticketState);
-        vh.mVoucherItemCostText.setText(PriceUtils.getPriceStringValue(doubleValue));
-
+        vh.mVoucherItemCostText.setText(PriceUtils.getVoucherStringValue(formattedVoucherValue));
 
         vh.mVoucherItemLayout.setOnClickListener(new View.OnClickListener() {
             public void onClick(View view) {

@@ -10,17 +10,19 @@
         android:id="@+id/row_layout_vouchers"
         android:layout_width="@dimen/voucher_container_width"
         android:layout_height="@dimen/voucher_container_height"
-        android:layout_centerInParent="true"
-        android:layout_margin="8dp"
         android:clickable="true"
         android:gravity="center_vertical"
         android:orientation="vertical"
         android:padding="@dimen/activity_horizontal_margin"
-        tools:ignore="UselessParent">
+        tools:ignore="UselessParent"
+        android:layout_marginLeft="8dp"
+        android:layout_marginRight="8dp"
+        android:layout_centerVertical="true"
+        android:layout_centerHorizontal="true">
 
         <TextView
             android:id="@+id/row_text_vouchers_item_cost_value"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:fontFamily="@string/font_lato_light"
             android:textColor="@color/white"
