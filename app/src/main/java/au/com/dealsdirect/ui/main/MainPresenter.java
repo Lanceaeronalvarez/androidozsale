@@ -167,6 +167,11 @@ public class MainPresenter<V extends MainMvpView> extends BasePresenter<V> imple
                 getDataManager().setAccessAnonymousEnabled(value.getAccess().getAnonymousEnabled());
                 getDataManager().setIsMyPayEnabled(value.getPayments().getMyPay().getEnabled());
             }
+
+            //Call GetPaymentToken
+            if (getDataManager().isAuthorized()) {
+                fetchBTAuthorization();
+            }
         }
     };
 
@@ -351,7 +356,6 @@ public class MainPresenter<V extends MainMvpView> extends BasePresenter<V> imple
                         if (responseValue.getD().getResult()) {
                             getMvpView().createPaymentTransactionSuccess(paymentType, responseValue);
                         } else {
-                            Log.d("nomoreitem", "message = "+responseValue.getD().getMessage());
                             getMvpView().callCreatePaymentTransactionError(responseValue.getD().getMessage());
 
                             Controller controller = getMvpView().getCurrentController(getMvpView().getCurrentRouter());
@@ -389,6 +393,7 @@ public class MainPresenter<V extends MainMvpView> extends BasePresenter<V> imple
 
         String languageId = getDataManager().getLanguageId();
         String countryId = getDataManager().getCountryId();
+
         CreatePaymentMethod.RequestValue.Request requestValue = new CreatePaymentMethod.RequestValue.Request(paymentType, paymentNonce, deviceData);
         getCompositeDisposable().add(getDataManager()
                         .callCreatePaymentMethod(new CreatePaymentMethod.RequestValue(requestValue, countryId, languageId))
@@ -402,7 +407,6 @@ public class MainPresenter<V extends MainMvpView> extends BasePresenter<V> imple
                                 }
 
                                 getMvpView().hideLoading();
-
                                 getMvpView().performResetWithAuthFetch();
 
                                 if ((responseValue.getResult() && responseValue.getIsAuthenticated())) {
@@ -411,7 +415,6 @@ public class MainPresenter<V extends MainMvpView> extends BasePresenter<V> imple
                                     getMvpView().onError(responseValue.getMessage());
                                 }
 //
-
                             }
                         }, new Consumer<Throwable>() {
                             @Override
@@ -421,7 +424,6 @@ public class MainPresenter<V extends MainMvpView> extends BasePresenter<V> imple
                                 }
 
                                 getMvpView().hideLoading();
-
                                 getMvpView().onError(throwable.getMessage());
 
                                 // handle load accounts error here

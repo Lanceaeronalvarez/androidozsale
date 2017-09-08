@@ -4,6 +4,8 @@ package au.com.dealsdirect.ui.controller.checkout.ourpay;
  */
 
 
+import android.util.Log;
+
 import com.androidnetworking.error.ANError;
 
 import javax.inject.Inject;
@@ -38,7 +40,12 @@ public class OurpaySMSVerificationPresenter<V extends OurpaySMSVerificationMvpVi
                 .subscribeOn(getSchedulerProvider().io())
                 .observeOn(getSchedulerProvider().ui())
                 .subscribe(responseValue -> {
-
+                    Log.d("smsverify", "normalize response = "+responseValue.getVerificationNormalizePhoneResponse().getMessage() + " , "+
+                            responseValue.getVerificationNormalizePhoneResponse().getIsAuthenticated()+" , "+
+                            responseValue.getVerificationNormalizePhoneResponse().getResult()+ " , "+
+                            responseValue.getVerificationNormalizePhoneResponse().getValue().getErrorMessage()+" ,  "+
+                            responseValue.getVerificationNormalizePhoneResponse().getValue().getCountryCode()+ " , "+
+                            responseValue.getVerificationNormalizePhoneResponse().getValue().getPhone());
                     getMvpView().callNormalizePhoneResponse(responseValue);
                 }, new Consumer<Throwable>() {
                     @Override
@@ -108,6 +115,11 @@ public class OurpaySMSVerificationPresenter<V extends OurpaySMSVerificationMvpVi
                 .subscribeOn(getSchedulerProvider().io())
                 .observeOn(getSchedulerProvider().ui())
                 .subscribe(responseValue -> {
+                    Log.d("smsverify", "verify response = "+responseValue.getVerificationCodeConfirmResponse().getMessage() + " , "+
+                    responseValue.getVerificationCodeConfirmResponse().getIsAuthenticated()+" , "+
+                    responseValue.getVerificationCodeConfirmResponse().getResult()+ " , "+
+                    responseValue.getVerificationCodeConfirmResponse().getValue().getErrorMessage());
+
                     getMvpView().callVerificationCodeConfirmResponse(responseValue);
 
                 }, new Consumer<Throwable>() {
@@ -116,6 +128,7 @@ public class OurpaySMSVerificationPresenter<V extends OurpaySMSVerificationMvpVi
                         if (!isViewAttached()) {
                             return;
                         }
+                        Log.d("smsverify", "error response = "+throwable.getMessage());
 
                         getMvpView().hideLoading();
                         getMvpView().onError(throwable.getMessage());
