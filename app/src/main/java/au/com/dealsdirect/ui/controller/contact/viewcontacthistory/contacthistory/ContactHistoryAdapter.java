@@ -14,6 +14,9 @@ import au.com.dealsdirect.R;
 import au.com.dealsdirect.utils.ColorUtils;
 import au.com.dealsdirect.utils.DateUtils;
 import au.com.dealsdirect.utils.StringUtils;
+import uk.co.chrisjenx.calligraphy.CalligraphyTypefaceSpan;
+import uk.co.chrisjenx.calligraphy.CalligraphyUtils;
+import uk.co.chrisjenx.calligraphy.TypefaceUtils;
 
 /**
  * dp Created by Admin on 6/22/17.
@@ -55,6 +58,8 @@ public class ContactHistoryAdapter extends RecyclerView.Adapter<ContactHistoryVi
             holder.contactHistoryItemCircularTextView.setSolidColor("#EDC7D5");
         } else {
             holder.contactHistoryItemCircularTextView.setVisibility(View.INVISIBLE);
+            CalligraphyUtils.applyFontToTextView(holder.contactHistoryMessageTextView,
+                    TypefaceUtils.load(mContext.getAssets(), mContext.getString(R.string.font_lato_regular)));
         }
 
 //        String dateHeaderFormatOfItem = DateUtils.getTrimmedServerDateString(contactDate.toString());
