@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/discountTab"
     android:layout_width="match_parent"
@@ -9,8 +8,7 @@
     android:paddingBottom="15dp"
     android:paddingLeft="10dp"
     android:paddingRight="10dp"
-    android:paddingTop="15dp"
-    >
+    android:paddingTop="15dp">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -29,13 +27,12 @@
             android:gravity="start|center_vertical"
             android:textColor="#FF6F7070"
             android:textSize="@dimen/text_size_large"
-            tools:text="21 June"
-            />
+            tools:text="21 June" />
 
         <RelativeLayout
-            android:layout_gravity="center"
             android:layout_width="0dp"
             android:layout_height="match_parent"
+            android:layout_gravity="center"
             android:layout_weight="2">
 
             <RelativeLayout
@@ -43,12 +40,11 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_centerHorizontal="true"
-                android:layout_marginTop="7dp"
-                android:layout_marginRight="2dp"
                 android:layout_marginEnd="2dp"
                 android:layout_marginLeft="5dp"
+                android:layout_marginRight="2dp"
                 android:layout_marginStart="2dp"
-                >
+                android:layout_marginTop="7dp">
 
                 <ImageView
                     android:id="@+id/ourpay_bg_bar"
@@ -59,7 +55,7 @@
                     android:adjustViewBounds="true"
                     android:contentDescription="BackgroundBar"
                     android:scaleType="fitXY"
-                    android:src="@drawable/ourpay_graph_bg"/>
+                    android:src="@drawable/ourpay_graph_bg" />
 
                 <ImageView
                     android:id="@+id/ourpay_fg_bar"
@@ -71,25 +67,22 @@
                     android:adjustViewBounds="true"
                     android:contentDescription="ForegroundBar"
                     android:scaleType="fitXY"
-                    android:src="@drawable/ourpay_graph_fg"/>
+                    android:src="@drawable/ourpay_graph_fg" />
 
             </RelativeLayout>
 
             <RelativeLayout
                 android:id="@+id/circlesContainer"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                />
+                android:layout_height="match_parent" />
 
         </RelativeLayout>
-
 
         <RelativeLayout
             android:id="@+id/checkLayout"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1">
-
 
             <ImageView
                 android:id="@+id/checkImage"
@@ -98,11 +91,11 @@
                 android:layout_toLeftOf="@+id/dollarValue"
                 android:layout_toStartOf="@+id/dollarValue"
                 android:contentDescription="checkImage"
-                android:src="@drawable/ourpay_check"/>
-
+                android:src="@drawable/ourpay_check" />
 
             <TextView
                 android:id="@+id/dollarValue"
+                fontPath="@string/font_lato_bold"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignParentEnd="true"
@@ -114,9 +107,8 @@
                 android:paddingStart="10dp"
                 android:textColor="#FF6F7070"
                 android:textSize="@dimen/text_size_large"
-                android:textStyle="bold"
-                tools:text="$25.00"/>
-
+                tools:ignore="MissingPrefix"
+                tools:text="$25.00" />
 
         </RelativeLayout>
 

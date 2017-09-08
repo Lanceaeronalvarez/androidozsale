@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content">
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
 
     <LinearLayout
         android:id="@+id/linearLayout_header"
@@ -28,7 +29,7 @@
                 android:layout_marginRight="5dp"
                 android:text="Pay less today with"
                 android:textColor="#FF898989"
-                android:textSize="@dimen/text_size_large"/>
+                android:textSize="@dimen/text_size_large" />
 
             <ImageView
                 android:id="@+id/ourpay_logo"
@@ -37,7 +38,7 @@
                 android:layout_alignParentTop="true"
                 android:layout_toEndOf="@+id/ourpay_text"
                 android:layout_toRightOf="@+id/ourpay_text"
-                android:src="@drawable/ourpay_logo"/>
+                android:src="@drawable/ourpay_logo" />
 
             <ImageView
                 android:id="@+id/info_logo"
@@ -46,7 +47,7 @@
                 android:layout_alignParentEnd="true"
                 android:layout_alignParentRight="true"
                 android:scaleType="fitXY"
-                android:src="@drawable/ourpay_info"/>
+                android:src="@drawable/ourpay_info" />
 
         </RelativeLayout>
 
@@ -60,12 +61,14 @@
 
             <TextView
                 android:id="@+id/ourpay_panel_header_price"
+                fontPath="@string/font_lato_bold"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="$35.00"
                 android:textColor="#eb5424"
                 android:textSize="25sp"
-                android:textStyle="bold"/>
+                android:textStyle="bold"
+                tools:ignore="MissingPrefix" />
 
             <TextView
                 android:layout_width="wrap_content"
@@ -73,7 +76,7 @@
                 android:layout_marginLeft="5sp"
                 android:text="x"
                 android:textColor="#eb5424"
-                android:textSize="15sp"/>
+                android:textSize="15sp" />
 
             <TextView
                 android:id="@+id/ourpay_panel_header_transaction"
@@ -81,15 +84,14 @@
                 android:layout_height="wrap_content"
                 android:text="4"
                 android:textColor="#eb5424"
-                android:textSize="20sp"/>
+                android:textSize="20sp" />
 
         </LinearLayout>
 
-            <View
+        <View
             android:layout_width="match_parent"
             android:layout_height="1px"
-            android:background="#FFD3D4D4"
-            />
+            android:background="#FFD3D4D4" />
     </LinearLayout>
 
 

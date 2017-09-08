@@ -6,7 +6,8 @@
               android:layout_width="match_parent"
               android:layout_height="wrap_content"
               android:background="#FAFAFA"
-              android:orientation="vertical">
+              android:orientation="vertical"
+              tools:ignore="MissingPrefix">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -25,7 +26,7 @@
                 android:layout_weight="1"
                 android:text="@string/subtotal"
                 android:textColor="#C4C4C4"
-                />
+            />
 
             <TextView
                 android:id="@+id/partial_checkout_summary_subtotal"
@@ -51,7 +52,7 @@
                 android:layout_weight="1"
                 android:text="@string/shipping_fee"
                 android:textColor="#C4C4C4"
-                />
+            />
 
             <TextView
                 android:id="@+id/partial_checkout_summary_shipping_fee"
@@ -61,7 +62,7 @@
                 android:gravity="end"
                 android:textColor="@color/gray_title_text"
                 android:textStyle="bold"
-                
+
                 tools:text="$9"/>
 
         </LinearLayout>
@@ -79,7 +80,7 @@
                 android:layout_weight="1"
                 android:text="@string/voucher"
                 android:textColor="#C4C4C4"
-                />
+            />
 
             <TextView
                 android:id="@+id/partial_checkout_summary_voucher"
@@ -106,7 +107,7 @@
                 android:layout_weight="1"
                 android:text="@string/tax"
                 android:textColor="#C4C4C4"
-                />
+            />
 
             <TextView
                 android:id="@+id/partial_checkout_summary_tax"
@@ -116,7 +117,7 @@
                 android:gravity="end"
                 android:textColor="@color/gray_title_text"
                 android:textStyle="bold"
-                
+
                 tools:text="$9"/>
 
         </LinearLayout>
@@ -139,23 +140,23 @@
 
         <TextView
             android:id="@+id/textView"
+            fontPath="@string/font_lato_heavy"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:text="@string/total"
-            android:textColor="#919191"
-            android:textSize="@dimen/text_size_xlarge"
-            />
+            android:textColor="#676767"
+            android:textSize="@dimen/text_size_xxxlarge"/>
 
         <TextView
             android:id="@+id/partial_checkout_summary_total"
+            fontPath="@string/font_lato_heavy"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:gravity="end"
-            android:textColor="@color/gray_title_text"
-            android:textSize="@dimen/text_size_xlarge"
-            android:textStyle="bold"
+            android:textColor="#676767"
+            android:textSize="@dimen/text_size_xxxlarge"
             tools:text="$27"/>
 
     </LinearLayout>
