@@ -11,6 +11,7 @@ import android.support.v4.util.Pair;
 import android.support.v4.widget.NestedScrollView;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -149,8 +150,10 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
 
     @BindView(R.id.image_container)
     FrameLayout mImageContainerViewGroup;
-    @BindView(R.id.imageViewToAnimate)
+
     ImageView mImageViewToAnimate;
+
+    int[] mSharedImageLocation;
 
     LinearLayoutManager mProductImagesRvLayoutManager;
 
@@ -190,22 +193,6 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
         }
     };
 
-    private final ImageUtils.ImageLoadedCallback onGlideLoadedOnBackListener
-            = new ImageUtils.ImageLoadedCallback() {
-        @Override
-        public void onImageResourceReady() {
-            super.onImageResourceReady();
-
-            mProductSharedImage.setVisibility(View.VISIBLE);
-            mProductImagesRv.setVisibility(View.INVISIBLE);
-            mOtherImagesRv.setVisibility(View.INVISIBLE);
-
-            final Intent resultData = new Intent();
-            resultData.putExtra(RESULT_EXTRA_CONTROLLER_ID, getInstanceId());
-            getActivity().setResult(RESULT_OK, resultData);
-            getActivity().finishAfterTransition();
-        }
-    };
 
     public SaleItemDetailsController(
             String seoIdentifierId, String imageUrl, String skuId, String saleId) {
@@ -549,13 +536,16 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
 
     private void animateAddToCart() {
         mProductDetailScrollView.scrollTo(0,0);
-        int[] imageToAnimateLocation = new int[2];
-        mImageViewToAnimate.getLocationOnScreen(imageToAnimateLocation);
+        mImageViewToAnimate = mActivity.getMainController().getHomeController().getAddToCartImage();
 
+        mImageViewToAnimate.setVisibility(View.VISIBLE);
+        mImageViewToAnimate.setX(mSharedImageLocation[0]);
+        mImageViewToAnimate.setY(mSharedImageLocation[1]);
+        mImageViewToAnimate.getLayoutParams().width = mSharedImageLocation[2];
+        mImageViewToAnimate.getLayoutParams().height = mSharedImageLocation[3];
         SaleItemDetailsImageAdapter.ViewHolder vh = (SaleItemDetailsImageAdapter.ViewHolder) mProductImagesRv
         .findViewHolderForLayoutPosition(mProductImagesRvLayoutManager.findLastVisibleItemPosition());
 
-        mImageViewToAnimate.setVisibility(View.VISIBLE);
         if(imagesLoaded) {
             mImageViewToAnimate.setImageDrawable(vh.image.getDrawable());
         } else {
@@ -563,7 +553,6 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
         }
 
         mImageViewToAnimate.bringToFront();
-        mImageViewToAnimate.requestLayout();
 
         mBottomNavView = ((MainActivity) getActivity()).getMainController().getHomeController().getBottomNavigationView();
         ArrayList<View> potentialViews = new ArrayList<View>();
@@ -572,9 +561,12 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
         mCheckoutView = mBottomNavView.getViewAtPosition(4);
         mCheckoutView.getLocationOnScreen(checkoutLocation);
 
+        float origElevation = mBottomNavView.getElevation();
+        mBottomNavView.setElevation(0);
+
         ArcTranslateAnimation anim = new ArcTranslateAnimation(
                 700, Animation.ABSOLUTE,
-                imageToAnimateLocation[0],
+                mSharedImageLocation[0],
                 Animation.ABSOLUTE,
                 checkoutLocation[0],
                 Animation.ABSOLUTE,
@@ -591,6 +583,7 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
             public void onAnimationEnd(Animation animation) {
                 isAnimating = false;
                 mImageViewToAnimate.setVisibility(View.GONE);
+                mBottomNavView.setElevation(origElevation);
             }
 
             @Override
@@ -621,6 +614,7 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
     @Override
     public void imagesLoaded() {
         if(mProductSharedImage != null) {
+            mSharedImageLocation = ImageUtils.getDisplayedImageLocation(mProductSharedImage);
             ImageUtils.clearImage(mProductSharedImage);
         }
         imagesLoaded = true;

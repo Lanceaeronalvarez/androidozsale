@@ -7,7 +7,9 @@
 
     <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:clipChildren="false"
+        android:clipToPadding="false">
 
         <com.bluelinelabs.conductor.ChangeHandlerFrameLayout
             android:id="@+id/controller_home_frame"
@@ -54,6 +56,13 @@
             android:layout_height="56dp"
             android:layout_alignParentBottom="true" />
 
+        <ImageView
+            android:id="@+id/product_details_add_to_cart"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_alignParentTop="true"
+            android:layout_gravity="center"
+            android:visibility="gone" />
 
     </RelativeLayout>
 

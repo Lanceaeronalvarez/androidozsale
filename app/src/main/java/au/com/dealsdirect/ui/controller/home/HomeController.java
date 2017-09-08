@@ -1,5 +1,6 @@
 package au.com.dealsdirect.ui.controller.home;
 
+import android.media.Image;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.NonNull;
@@ -8,6 +9,7 @@ import android.support.v4.content.ContextCompat;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 
 import com.aurelhubert.ahbottomnavigation.AHBottomNavigation;
 import com.aurelhubert.ahbottomnavigation.AHBottomNavigationAdapter;
@@ -51,6 +53,9 @@ public class HomeController extends BaseController implements HomeMvpView {
 
     @Inject
     HomeMvpPresenter<HomeMvpView> mPresenter;
+
+    @BindView(R.id.product_details_add_to_cart)
+    ImageView mImageAddToCartAnimation;
 
     @BindView(R.id.controller_home_frame)
     ViewGroup mShopContainer;
@@ -460,5 +465,9 @@ public class HomeController extends BaseController implements HomeMvpView {
 
     public void setIsResetCheckout(boolean resetCheckout){
         mIsResetCart = resetCheckout;
+    }
+
+    public ImageView getAddToCartImage(){
+        return mImageAddToCartAnimation;
     }
 }

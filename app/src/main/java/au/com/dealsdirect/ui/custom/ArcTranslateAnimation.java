@@ -77,7 +77,7 @@ public class ArcTranslateAnimation extends Animation {
         float middleY = resolveSize(mYType, mYValue, width, parentWidth);
         float middleX = startX + ((endX-startX)/2);
         start = new OPoint(startX, 0);
-        end = new OPoint(endX, middleY * 1.2f);
+        end = new OPoint(endX, middleY * 1.1f);
         middle = new OPoint(middleX, 0);
     }
 
