@@ -49,6 +49,10 @@ android {
         dealsDirectTest {
             applicationId "au.com.dealsdirect.test"
         }
+
+        ooTest {
+            applicationId "au.com.oo.test"
+        }
     }
 
     compileOptions {
