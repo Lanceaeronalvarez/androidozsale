@@ -24,7 +24,8 @@
         android:id="@+id/controller_return_orders_list_container"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_below="@+id/controller_return_orders_toolbar_layout">
+        android:layout_below="@+id/controller_return_orders_toolbar_layout"
+        android:visibility="gone">
 
         <TextView
             android:fontFamily="@string/font_lato_medium"

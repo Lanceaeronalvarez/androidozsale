@@ -127,6 +127,9 @@ public class ReturnOrdersController extends BaseController
         }else if (newReturnsOrders.isEmpty()){
             mPlaceholderLayout.setVisibility(View.VISIBLE);
             mReturnOrdersListContainer.setVisibility(View.GONE);
+        } else {
+            mPlaceholderLayout.setVisibility(View.GONE);
+            mReturnOrdersListContainer.setVisibility(View.VISIBLE);
         }
 
         final ReturnOrdersAdapter adapter
