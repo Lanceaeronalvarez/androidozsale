@@ -316,6 +316,7 @@
     <string name="registered_successfully">Registered Successfully</string>
     <string name="login_successfully">Logged In</string>
     <string name="paid">Paid</string>
+    <string name="my_account">My Account</string>
 
 
 </resources>

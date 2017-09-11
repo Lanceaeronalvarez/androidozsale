@@ -321,19 +321,11 @@ public class HomeController extends BaseController implements HomeMvpView {
 
     @Override
     public void showShopController() {
-//        TransitionManager.beginDelayedTransition(mShopContainer,new Fade(Fade.IN).setDuration(200));
-//        TransitionManager.beginDelayedTransition(mAccountsContainer,new Fade(Fade.OUT).setStartDelay(200));
         setVisibleContainer(0);
     }
 
     @Override
     public void showAccountController() {
-//        mShopRouter.setRoot(RouterTransaction.with(AccountController.newInstance())
-//                .tag(AccountController.TAG)
-//                .pushChangeHandler(new SimpleChangeHandler())
-//                .popChangeHandler(new SimpleChangeHandler()));
-//        TransitionManager.beginDelayedTransition(mShopContainer,new Fade(Fade.OUT));
-//        TransitionManager.beginDelayedTransition(mAccountsContainer,new Fade(Fade.IN));
         setVisibleContainer(1);
         int size = mAccountsRouter.getBackstack().size();
         if (mAccountsRouter.getBackstack().get(size - 1).controller() instanceof AccountMvpView)
@@ -342,22 +334,16 @@ public class HomeController extends BaseController implements HomeMvpView {
 
     @Override
     public void showContactController() {
-//        TransitionManager.beginDelayedTransition(mShopContainer,new Fade(Fade.OUT));
-//        TransitionManager.beginDelayedTransition(mContactsContainer,new Fade(Fade.IN));
         setVisibleContainer(2);
     }
 
     @Override
     public void showInviteController() {
-//        TransitionManager.beginDelayedTransition(mShopContainer,new Fade(Fade.OUT));
-//        TransitionManager.beginDelayedTransition(mInvitesContainer,new Fade(Fade.IN));
         setVisibleContainer(3);
     }
 
     @Override
     public void showCheckoutController() {
-//        TransitionManager.beginDelayedTransition(mShopContainer,new Fade(Fade.OUT));
-//        TransitionManager.beginDelayedTransition(mCheckoutContainer,new Fade(Fade.IN));
         setVisibleContainer(4);
         Controller controller = getCurrentControllerOnRouter(mCheckoutRouter);
         if (controller instanceof CheckoutController) {
@@ -428,7 +414,7 @@ public class HomeController extends BaseController implements HomeMvpView {
     }
 
     public void showBottomNav() {
-        if (mBottomNavigationView != null) {
+        if (mBottomNavigationView != null && mBottomNavigationView.getVisibility()==View.GONE) {
             mBottomNavigationView.setVisibility(View.VISIBLE);
             mBottomNavigationView.bringToFront();
         }

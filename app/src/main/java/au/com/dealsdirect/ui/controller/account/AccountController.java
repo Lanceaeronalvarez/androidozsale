@@ -102,13 +102,12 @@ public class AccountController extends BaseController implements AccountMvpView,
     @Override
     protected void setUp(View view) {
         // Setup views here
-
         assert (getActivity()) != null;
         ((MainActivity) getActivity()).getMainController().showBottomNav();
         ((MainActivity) getActivity()).setDraggableViewPager(false);
 
         mPresenter.loadAccountItems();
-        mTitleTextView.setText("My Account");
+        mTitleTextView.setText(R.string.my_account);
         mArrowButton.setVisibility(View.INVISIBLE);
 
         initLoginDrawable();
@@ -155,7 +154,6 @@ public class AccountController extends BaseController implements AccountMvpView,
 
     @Override
     public void showMyOrders() {
-//        getRouter().popController(this);
         getRouter().pushController(RouterTransaction.with(new OrdersController())
                 .pushChangeHandler(new HorizontalChangeHandler())
                 .popChangeHandler(new HorizontalChangeHandler()));

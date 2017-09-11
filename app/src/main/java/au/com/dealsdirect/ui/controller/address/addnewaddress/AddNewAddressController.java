@@ -79,7 +79,7 @@ public class AddNewAddressController extends BaseController implements AddNewAdd
 
         if (getActivity()!=null)
             ((MainActivity)getActivity()).getMainController().getHomeController().setIsResetCheckout(true);
-        mAddNewAddressToolarTitle.setText("Add New Address");
+        mAddNewAddressToolarTitle.setText(getResources().getString(R.string.add_new_address));
         mAddNewAddressRightOption.setImageDrawable(getApplicationContext().getDrawable(R.drawable.ic_check_white_24dp));
     }
 
