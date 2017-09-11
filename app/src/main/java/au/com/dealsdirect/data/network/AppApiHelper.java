@@ -134,12 +134,21 @@ public class AppApiHelper implements ApiHelper {
 
     @Override
     public Observable<List<GetBannerResponse>> callGetBanners(
-            GetBannerRequest getBannerRequest) {
-        return Rx2AndroidNetworking.get(ApiEndPoint.GET_SALES)
-                .addHeaders(mApiHeader.get())
-                .addQueryParameter(getBannerRequest)
-                .build()
-                .getObjectListObservable(GetBannerResponse.class);
+            GetBannerRequest getBannerRequest, boolean getOnlyFromNetwork) {
+        if(getOnlyFromNetwork) {
+            return Rx2AndroidNetworking.get(ApiEndPoint.GET_SALES)
+                    .addHeaders(mApiHeader.get())
+                    .addQueryParameter(getBannerRequest)
+                    .getResponseOnlyFromNetwork()
+                    .build()
+                    .getObjectListObservable(GetBannerResponse.class);
+        } else {
+            return Rx2AndroidNetworking.get(ApiEndPoint.GET_SALES)
+                    .addHeaders(mApiHeader.get())
+                    .addQueryParameter(getBannerRequest)
+                    .build()
+                    .getObjectListObservable(GetBannerResponse.class);
+        }
     }
 
     @Override

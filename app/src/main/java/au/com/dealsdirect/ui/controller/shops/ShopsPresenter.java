@@ -35,6 +35,12 @@ public class ShopsPresenter<V extends ShopsMvpView> extends BasePresenter<V> imp
 
     @Override
     public void loadShopsBanner(String categoryName, String categoryId, int bannerOffset, int bannerLimit) {
+        loadShopsBanner(categoryName, categoryId, bannerOffset, bannerLimit, false);
+    }
+
+    @Override
+    public void loadShopsBanner(String categoryName, String categoryId, int bannerOffset,
+                                int bannerLimit, boolean getOnlyFromNetwork) {
 
         GetBannerRequest getBannerRequest = new GetBannerRequest();
         getBannerRequest.setOffset(String.valueOf(bannerOffset));
@@ -46,7 +52,7 @@ public class ShopsPresenter<V extends ShopsMvpView> extends BasePresenter<V> imp
         if (categoryId!=null && !categoryId.isEmpty())
             getBannerRequest.setCategoryId(categoryId);
 
-        doApiCallForResponse(getDataManager().callGetBanners(getBannerRequest), new AppApiCallback(){
+        doApiCallForResponse(getDataManager().callGetBanners(getBannerRequest, getOnlyFromNetwork), new AppApiCallback(){
             @Override
             public void onSuccess(List<?> response) {
                 super.onSuccess(response);

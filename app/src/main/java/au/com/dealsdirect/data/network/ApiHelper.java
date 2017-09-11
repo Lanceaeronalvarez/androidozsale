@@ -110,7 +110,7 @@ public interface ApiHelper {
 
     Observable<SampleResponse> doSampleApiCall(SampleRequest request);
 
-    Observable<List<GetBannerResponse>> callGetBanners(GetBannerRequest getPublicSalesBannerRequest);
+    Observable<List<GetBannerResponse>> callGetBanners(GetBannerRequest getPublicSalesBannerRequest, boolean getOnlyFromNetwork);
 
     Observable<GetPublicSalesCategoriesResponse> callGetPublicSalesCategories(GetPublicSalesCategoriesRequest request);
 
