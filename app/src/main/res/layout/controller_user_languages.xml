@@ -20,7 +20,7 @@
             android:layout_marginLeft="13dp"
             android:layout_marginTop="18dp"
             android:text="Select Language"
-            android:textColor="@color/gray_field_text"
+            android:textColor="@color/gray_active_field_text"
             android:textSize="@dimen/text_size_large" />
 
         <android.support.v7.widget.RecyclerView
