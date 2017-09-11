@@ -176,32 +176,14 @@ public class RegisterController extends BaseController implements RegisterMvpVie
 
     @Override
     public void showLoginSuccessful(String loginTicket) {
-
         //Call facebook registration successful analytics
         mPresenter.facebookRegisterAnalytics(getActivity());
-
-        RxBus.instance().post(IntrospectionUtils.EVENT_LOGIN);
-
-        getRouter().popToRoot();
-
-        if (mAuthHandler != null)
-            mAuthHandler.success();
-
-        hideKeyboard();
-        CustomAlertDialog.showCustomAlertDialog(getActivity(), CustomAlertDialog.CustomDialogIconState.POSITIVE, mActivity.getString(R.string.registered_successfully));
-        mActivity.getMainController().getHomeController().getPresenter().callGetBasketItemsQuantity();
-        mActivity.getMainController().showBottomNav();
+        mActivity.loginSuccessHandler(getRouter());
     }
 
     @Override
     public void showLoginError(String message) {
-        if (mAuthHandler != null)
-            mAuthHandler.error();
-
-        CustomAlertDialog.showCustomAlertDialog(
-                getActivity(),
-                CustomAlertDialog.CustomDialogIconState.NEGATIVE,
-                message);
+        mActivity.loginErrorHandler(message);
 
     }
 }

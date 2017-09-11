@@ -143,30 +143,13 @@ public class LoginController extends BaseController implements LoginMvpView {
 
     @Override
     public void showLoginSuccessful(String loginTicket) {
-        RxBus.instance().post(IntrospectionUtils.EVENT_LOGIN);
-
-        getActivity().onBackPressed();
-        if (mAuthHandler!=null){
-            mAuthHandler.success();
-        }else{
-            ((MainActivity)getActivity()).getAuthHandler().success();
-        }
-        hideKeyboard();
-        CustomAlertDialog.showCustomAlertDialog(getActivity(), CustomAlertDialog.CustomDialogIconState.POSITIVE, mActivity.getString(R.string.login_successfully));
-        mActivity.getMainController().getHomeController().getPresenter().callGetBasketItemsQuantity();
-        mActivity.getMainController().showBottomNav();
+        mActivity.loginSuccessHandler(getRouter());
     }
 
     @Override
     public void showLoginError(String message) {
 
-        if (mAuthHandler != null)
-            mAuthHandler.error();
-
-        CustomAlertDialog.showCustomAlertDialog(
-                getActivity(),
-                CustomAlertDialog.CustomDialogIconState.NEGATIVE,
-                message);
+        mActivity.loginErrorHandler(message);
 
         isLoginTapped = false;
     }

@@ -31,6 +31,7 @@ import com.braintreepayments.api.models.PaymentMethodNonce;
 import com.braintreepayments.cardform.view.CardForm;
 import com.crashlytics.android.Crashlytics;
 import com.crashlytics.android.answers.Answers;
+import com.mysale.genie.utility.RxBus;
 import com.newrelic.agent.android.NewRelic;
 
 import java.util.List;
@@ -59,6 +60,7 @@ import au.com.dealsdirect.ui.controller.shops.ShopsController;
 import au.com.dealsdirect.ui.controller.splash.SplashScreenController;
 import au.com.dealsdirect.ui.custom.CustomAlertDialog;
 import au.com.dealsdirect.utils.DialogUtils;
+import au.com.dealsdirect.utils.IntrospectionUtils;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import io.fabric.sdk.android.Fabric;
@@ -673,6 +675,31 @@ public class MainActivity extends BaseActivity implements MainMvpView {
     @Override
     public Controller getCurrentController(Router router) {
         return getMainController().getHomeController().getCurrentControllerOnRouter(router);
+    }
+
+    @Override
+    public void loginSuccessHandler(Router router) {
+
+        RxBus.instance().post(IntrospectionUtils.EVENT_LOGIN);
+
+        router.popToRoot();
+
+        if (mAuthHandler!=null){
+            mAuthHandler.success();
+        }
+
+        hideKeyboard();
+        CustomAlertDialog.showCustomAlertDialog(this, CustomAlertDialog.CustomDialogIconState.POSITIVE, getString(R.string.login_successfully));
+        mMainController.getHomeController().getPresenter().callGetBasketItemsQuantity();
+        mMainController.showBottomNav();
+    }
+
+    @Override
+    public void loginErrorHandler(String message) {
+        if (mAuthHandler != null)
+            mAuthHandler.error();
+
+        CustomAlertDialog.showCustomAlertDialog(this, CustomAlertDialog.CustomDialogIconState.NEGATIVE, message);
     }
 
     public AuthHandler getAuthHandler() {
