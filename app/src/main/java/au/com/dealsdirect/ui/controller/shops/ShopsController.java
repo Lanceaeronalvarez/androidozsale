@@ -4,6 +4,7 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -563,7 +564,7 @@ public class ShopsController extends BasePullToRefreshController implements Shop
     @Override
     public void onRefreshStart() {
         super.onRefreshStart();
-
+        Log.d("onreferesh", "onrefresh start");
         shopsControllerBannerRecyclerView.setVisibility(View.GONE);
 
         mPresenter.loadShopsBanner(mCategoryName, mCategoryID, 0, newBannerCount, true);

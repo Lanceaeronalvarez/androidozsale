@@ -468,8 +468,6 @@ public class CheckoutController extends BaseController implements CheckoutMvpVie
             }
             ((TextView) mSummaryLayout.findViewById(R.id.partial_checkout_summary_total)).setText(PriceUtils.getPriceStringValue(summary.total));
         }
-
-
     }
 
     @Override
