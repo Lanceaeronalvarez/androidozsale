@@ -15,6 +15,9 @@
     <color name="filter_text_active">#F86903</color>
     <color name="filter_text_inactive">#5F5F5F</color>
 
+    <color name="bottom_nav_accent_color">#90BF0A</color>
+    <color name="bottom_nav_badge_color">#90BF0A</color>
+
     <color name="category_text_active">#90BF0A</color>
     <color name="category_text_inactive">#707070</color>
 
@@ -57,7 +60,7 @@
     <!-- EditText Theme -->
     <color name="bg_edit_text_ripple">#FFFFFF</color>
     <color name="bg_edit_text_default">#ECECEC</color>
-    <color name="bg_edit_text_focused">#A2D709</color>
+    <color name="bg_edit_text_focused">#90BF0A</color>
 
     <!-- Chips Theme -->
     <color name="bg_chips_ripple">#FFFFFF</color>

@@ -195,6 +195,9 @@ public class HomeController extends BaseController implements HomeMvpView {
         navigationAdapter.setupWithBottomNavigation(mBottomNavigationView);
         mBottomNavigationView.setTitleState(AHBottomNavigation.TitleState.ALWAYS_SHOW);
         mBottomNavigationView.setCurrentItem(0);
+        mBottomNavigationView.setDefaultBackgroundColor(getResources().getColor(R.color.white));
+        mBottomNavigationView.setAccentColor(getResources().getColor(R.color.bottom_nav_accent_color));
+        mBottomNavigationView.setInactiveColor(getResources().getColor(R.color.gray_title_text));
         setUp(view);
     }
 
@@ -429,7 +432,7 @@ public class HomeController extends BaseController implements HomeMvpView {
         } else {
             AHNotification notification = new AHNotification.Builder()
                     .setText(CartUtil.getCartValue() + "")
-                    .setBackgroundColor(ContextCompat.getColor(getActivity(), android.R.color.holo_red_dark))
+                    .setBackgroundColor(ContextCompat.getColor(getActivity(), R.color.bottom_nav_badge_color))
                     .setTextColor(ContextCompat.getColor(getActivity(), R.color.white))
                     .build();
             getBottomNavigationView().setNotification(notification, 4);
