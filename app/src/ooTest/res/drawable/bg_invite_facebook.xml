@@ -6,7 +6,7 @@
 
             <item android:state_enabled="true">
                 <shape android:shape="rectangle">
-                    <corners android:radius="5dp"/>
+                    <corners android:radius="30dp"/>
                     <solid android:color="@color/invite_fb"/>
                 </shape>
             </item>
@@ -14,7 +14,7 @@
             <item android:state_enabled="true" android:state_pressed="true">
 
                 <shape android:shape="rectangle">
-                    <corners android:radius="5dp"/>
+                    <corners android:radius="30dp"/>
                     <solid android:color="@color/invite_fb_pressed"/>
                 </shape>
             </item>
