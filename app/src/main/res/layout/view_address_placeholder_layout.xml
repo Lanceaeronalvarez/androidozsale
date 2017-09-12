@@ -19,8 +19,8 @@
         android:orientation="vertical">
 
         <ImageView
-            android:layout_width="60dp"
-            android:layout_height="60dp"
+            android:layout_width="@dimen/placeholder_icon_size"
+            android:layout_height="@dimen/placeholder_icon_size"
             android:layout_gravity="center"
             android:src="@drawable/ic_address_placeholder" />
 
