@@ -85,4 +85,13 @@
     <color name="navy">#000080</color>
     <color name="red">#FF0000</color>
 
+    <color name="invite_fb">#FF2D91DE</color>
+    <color name="invite_fb_pressed">#FF2D91DE</color>
+    <color name="invite_twitter">#FF00B5E9</color>
+    <color name="invite_twitter_pressed">#FF00B5E9</color>
+    <color name="invite_mail">#FFEA5757</color>
+    <color name="invite_mail_pressed">#FFEA5757</color>
+    <color name="invite_sms">#FF65D87F</color>
+    <color name="invite_sms_pressed">#FF65D87F</color>
+
 </resources>

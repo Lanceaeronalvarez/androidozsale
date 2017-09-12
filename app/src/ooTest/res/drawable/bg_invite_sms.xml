@@ -6,16 +6,16 @@
 
             <item android:state_enabled="true">
                 <shape android:shape="rectangle">
-                    <corners android:radius="5dp"/>
-                    <solid android:color="@color/invite_fb"/>
+                    <corners android:radius="30dp"/>
+                    <solid android:color="@color/invite_sms"/>
                 </shape>
             </item>
 
             <item android:state_enabled="true" android:state_pressed="true">
 
                 <shape android:shape="rectangle">
-                    <corners android:radius="5dp"/>
-                    <solid android:color="@color/invite_fb_pressed"/>
+                    <corners android:radius="30dp"/>
+                    <solid android:color="@color/invite_sms_pressed"/>
                 </shape>
             </item>
 

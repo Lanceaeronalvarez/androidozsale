@@ -80,4 +80,12 @@
     <color name="ourpay_orange_dark">#D98221</color>
     <color name="ourpay_border_gray">#FFC7C7C7</color>
 
+    <color name="invite_fb">#009BEC</color>
+    <color name="invite_fb_pressed">#339EF0</color>
+    <color name="invite_twitter">#00B5E9</color>
+    <color name="invite_twitter_pressed">#10C4F8</color>
+    <color name="invite_mail">#EA5757</color>
+    <color name="invite_mail_pressed">#FD6767</color>
+    <color name="invite_sms">#65D87F</color>
+    <color name="invite_sms_pressed">#72E98D</color>
 </resources>
