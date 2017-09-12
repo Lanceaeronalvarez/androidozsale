@@ -57,7 +57,7 @@
     <!-- EditText Theme -->
     <color name="bg_edit_text_ripple">#FFFFFF</color>
     <color name="bg_edit_text_default">#ECECEC</color>
-    <color name="bg_edit_text_focused">#DE5C00</color>
+    <color name="bg_edit_text_focused">#A2D709</color>
 
     <!-- Chips Theme -->
     <color name="bg_chips_ripple">#FFFFFF</color>
