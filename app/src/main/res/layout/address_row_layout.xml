@@ -94,7 +94,7 @@
         android:layout_marginTop="10dp"
         android:clickable="true"
         android:text="@string/remove"
-        android:textColor="@color/gray_item_details"
+        android:textColor="@color/item_select_remove"
         android:textSize="@dimen/text_size_xlarge" />
 
     <View

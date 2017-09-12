@@ -92,4 +92,6 @@
     <color name="invite_mail_pressed">#FD6767</color>
     <color name="invite_sms">#65D87F</color>
     <color name="invite_sms_pressed">#72E98D</color>
+
+    <color name="item_select_remove">#F29124</color>
 </resources>
