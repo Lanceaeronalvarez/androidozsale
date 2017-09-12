@@ -3,5 +3,6 @@
 
     <string name="checkout_page_toolbar_title">My Cart</string>
     <string name="total">Grand Total</string>
+    <string name="add_new_address">add delivery address</string>
 
 </resources>
