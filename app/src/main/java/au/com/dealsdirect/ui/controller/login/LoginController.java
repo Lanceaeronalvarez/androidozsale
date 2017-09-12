@@ -125,7 +125,6 @@ public class LoginController extends BaseController implements LoginMvpView {
                 isLoginTapped = true;
             }
         });
-
     }
 
 
