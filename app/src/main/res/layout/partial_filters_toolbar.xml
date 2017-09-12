@@ -54,7 +54,7 @@
             android:layout_marginBottom="10dp"
             android:layout_marginEnd="10dp"
             android:layout_marginTop="10dp"
-            android:background="@drawable/bg_ripple_icon"
+            android:background="@drawable/bg_toolbar_button"
             android:padding="6dp"
             android:src="@drawable/ic_double_chevron" />
 
