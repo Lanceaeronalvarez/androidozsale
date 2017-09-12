@@ -15,6 +15,10 @@
     <color name="filter_text_active">#F86903</color>
     <color name="filter_text_inactive">#5F5F5F</color>
 
+    <color name="cart_order_price_text_color">#DE5C00</color>
+
+    <color name="progress_loader_stroke_color">#616161</color>
+
     <color name="bottom_nav_accent_color">#90BF0A</color>
     <color name="bottom_nav_badge_color">#90BF0A</color>
 

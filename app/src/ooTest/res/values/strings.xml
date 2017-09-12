@@ -1,3 +1,7 @@
 <resources>
     <string name="app_name">OO Test</string>
+
+    <string name="checkout_page_toolbar_title">My Cart</string>
+    <string name="total">Grand Total</string>
+
 </resources>

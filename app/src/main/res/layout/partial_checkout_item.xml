@@ -41,7 +41,7 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:gravity="end"
-                android:textColor="#454545"
+                android:textColor="@color/cart_order_price_text_color"
                 android:textSize="18sp"
                 android:textStyle="bold"
                 tools:text="$19.00" />
