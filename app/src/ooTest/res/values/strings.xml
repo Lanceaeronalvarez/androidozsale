@@ -31,7 +31,7 @@
 
                     a:link {
                         color: #A2D709;
-                        text-decoration: none;
+                        text-decoration: underline;
                     }
 
                     li{
@@ -41,7 +41,7 @@
 
                     b {
                         font-family: Lato;
-                        color: #616161;
+                        color: #90BF0A;
                     }
 
                     br {
