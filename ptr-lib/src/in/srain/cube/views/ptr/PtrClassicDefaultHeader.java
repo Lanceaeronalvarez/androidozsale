@@ -2,13 +2,17 @@ package in.srain.cube.views.ptr;
 
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.content.res.ColorStateList;
 import android.content.res.TypedArray;
+import android.graphics.Color;
+import android.graphics.drawable.Drawable;
 import android.text.TextUtils;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.FrameLayout;
+import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import in.srain.cube.views.ptr.indicator.PtrIndicator;
@@ -25,7 +29,8 @@ public class PtrClassicDefaultHeader extends FrameLayout implements PtrUIHandler
 //    private RotateAnimation mReverseFlipAnimation;
 //    private TextView mTitleTextView;
 //    private View mRotateView;
-    private View mProgressBar;
+    private ImageView mProgressBarIcon;
+    private ProgressBar mProgressBar;
     private ProgressBar mPullProgressBar;
     private long mLastUpdateTime = -1;
     private TextView mLastUpdateTextView;
@@ -64,6 +69,7 @@ public class PtrClassicDefaultHeader extends FrameLayout implements PtrUIHandler
         mProgressBar = header.findViewById(R.id.ptr_classic_header_rotate_view_progressbar);
 
         mPullProgressBar = (ProgressBar) header.findViewById(R.id.ptr_classic_header_pull_view_progressbar);
+        mProgressBarIcon = (ImageView) header.findViewById(R.id.ptr_classic_header_icon);
 
         resetView();
     }
@@ -316,5 +322,16 @@ public class PtrClassicDefaultHeader extends FrameLayout implements PtrUIHandler
                 postDelayed(this, 1000);
             }
         }
+    }
+    public void setProgressIcon(Drawable icon) {
+        mProgressBarIcon.setImageDrawable(icon);
+    }
+
+    public void setPullProgressbar(Drawable progressbar) {
+        mPullProgressBar.setProgressDrawable(progressbar);
+    }
+
+    public void setProgressBar(ColorStateList colorStateList) {
+        mProgressBar.setIndeterminateTintList(colorStateList);
     }
 }
