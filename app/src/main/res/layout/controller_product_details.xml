@@ -221,7 +221,7 @@
                                                     android:layout_gravity="start"
                                                     android:ellipsize="end"
                                                     android:text=""
-                                                    android:textColor="@color/gray_item_details"
+                                                    android:textColor="@color/color_item_title"
                                                     android:textSize="@dimen/text_size_xxxlarge" />
 
                                                 <TextView
@@ -310,7 +310,7 @@
                                                 android:paddingLeft="10dp"
                                                 android:paddingRight="10dp"
                                                 android:text="@string/choose_your_size"
-                                                android:textColor="@color/gray_item_details"
+                                                android:textColor="@color/color_item_title"
                                                 android:textSize="@dimen/text_size_large" />
 
                                             <ImageView
@@ -366,7 +366,7 @@
                                             android:layout_height="wrap_content"
                                             android:text="@string/estimated_delivery"
                                             android:layout_margin="5dp"
-                                            android:textColor="@color/gray_item_details"
+                                            android:textColor="@color/color_item_title"
                                             android:textSize="@dimen/text_size_large" />
 
                                         <WebView
@@ -395,7 +395,7 @@
                                             android:layout_height="wrap_content"
                                             android:text="@string/return_policy"
                                             android:layout_margin="5dp"
-                                            android:textColor="@color/gray_item_details"
+                                            android:textColor="@color/color_item_title"
                                             android:textSize="@dimen/text_size_large" />
 
                                         <WebView
@@ -541,7 +541,7 @@
                                             android:layout_height="wrap_content"
                                             android:layout_margin="5dp"
                                             android:text="@string/pricing"
-                                            android:textColor="@color/gray_item_details"
+                                            android:textColor="@color/color_item_title"
                                             android:textSize="@dimen/text_size_large" />
 
                                         <WebView
