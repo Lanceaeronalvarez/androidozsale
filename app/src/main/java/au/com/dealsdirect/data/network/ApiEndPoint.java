@@ -172,7 +172,7 @@ final class ApiEndPoint {
 
     private static String getBaseApiGenie() {
         if (BuildConfig.FLAVOR.contains("Test")) {
-            return LIVE_API_GENIE;
+            return TEST_API_GENIE;
         } else {
             return LIVE_API_GENIE;
         }
