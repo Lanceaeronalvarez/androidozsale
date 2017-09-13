@@ -4,13 +4,11 @@ import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.widget.NestedScrollView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.CheckBox;
-import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
@@ -74,36 +72,34 @@ public class CheckoutController extends BaseController implements CheckoutMvpVie
     public static final String CARD_MASTERCARD = "MasterCard";
     public static final String CARD_VISA = "Visa";
     private static final String PAYMENT_TYPE_MYPAY = "mypay";
-    private boolean isPaymentMethodNull = true;
 
     @Inject
     CheckoutMvpPresenter<CheckoutMvpView> mPresenter;
 
-    View mFooterView;
-
     @BindView(R.id.fragment_checkout_list)
     ListView mListView;
 
-    RelativeLayout mAddNewAddressLayout;
-    RelativeLayout mAddNewPaymentLayout;
-    RelativeLayout mAddNewVoucherLayout;
-    LinearLayout mAddressLayout;
-    LinearLayout mPaymentLayout;
-    LinearLayout mVoucherLayout;
-    LinearLayout mSummaryLayout;
+    private View mFooterView;
 
-    TextView mAddressChangeText;
-    TextView mPaymentChangeText;
-    TextView mVoucherChangeText;
-    //    View mBraintreeLoading;
-    View mButtonHolder;
-    Button mPayButton;
+    private RelativeLayout mAddNewAddressLayout;
+    private RelativeLayout mAddNewPaymentLayout;
+    private RelativeLayout mAddNewVoucherLayout;
+    private LinearLayout mAddressLayout;
+    private LinearLayout mPaymentLayout;
+    private LinearLayout mVoucherLayout;
+    private LinearLayout mSummaryLayout;
 
-    RelativeLayout mPaypalButton;
-    RelativeLayout mMasterpassButton;
-    LinearLayout mOurpayHolder;
-    RelativeLayout mButtonOurpay;
-    CheckBox mCheckBoxOurpayTC;
+    private TextView mAddressChangeText;
+    private TextView mPaymentChangeText;
+    private TextView mVoucherChangeText;
+    private View mButtonHolder;
+    private Button mPayButton;
+
+    private RelativeLayout mPaypalButton;
+    private RelativeLayout mMasterpassButton;
+    private LinearLayout mOurpayHolder;
+    private RelativeLayout mButtonOurpay;
+    private CheckBox mCheckBoxOurpayTC;
 
     private Ourpay mOurpay;
 
@@ -127,7 +123,7 @@ public class CheckoutController extends BaseController implements CheckoutMvpVie
     private String mCartPhone;
     private Value mValue;
 
-    MainActivity mActivity;
+    private MainActivity mActivity;
 
     private View.OnClickListener mChangeClickListener = new View.OnClickListener() {
         @Override
@@ -210,24 +206,24 @@ public class CheckoutController extends BaseController implements CheckoutMvpVie
 
         mActivity = ((MainActivity) getActivity());
 
-        mAddNewAddressLayout = (RelativeLayout) mFooterView.findViewById(R.id.partial_checkout_address_new_address);
-        mAddNewPaymentLayout = (RelativeLayout) mFooterView.findViewById(R.id.partial_checkout_payment_new_payment);
-        mAddNewVoucherLayout = (RelativeLayout) mFooterView.findViewById(R.id.partial_checkout_voucher_new_code);
+        mAddNewAddressLayout = mFooterView.findViewById(R.id.partial_checkout_address_new_address);
+        mAddNewPaymentLayout = mFooterView.findViewById(R.id.partial_checkout_payment_new_payment);
+        mAddNewVoucherLayout = mFooterView.findViewById(R.id.partial_checkout_voucher_new_code);
 
-        mAddressLayout = (LinearLayout) mFooterView.findViewById(R.id.partial_checkout_address_container);
-        mPaymentLayout = (LinearLayout) mFooterView.findViewById(R.id.partial_checkout_payment_container);
-        mVoucherLayout = (LinearLayout) mFooterView.findViewById(R.id.partial_checkout_voucher_container);
-        mSummaryLayout = (LinearLayout) mFooterView.findViewById(R.id.partial_checkout_summary_container);
+        mAddressLayout = mFooterView.findViewById(R.id.partial_checkout_address_container);
+        mPaymentLayout = mFooterView.findViewById(R.id.partial_checkout_payment_container);
+        mVoucherLayout = mFooterView.findViewById(R.id.partial_checkout_voucher_container);
+        mSummaryLayout = mFooterView.findViewById(R.id.partial_checkout_summary_container);
 
-        mAddressChangeText = (TextView) mFooterView.findViewById(R.id.partial_checkout_address_change);
-        mPaymentChangeText = (TextView) mFooterView.findViewById(R.id.partial_checkout_payment_change);
-        mVoucherChangeText = (TextView) mFooterView.findViewById(R.id.partial_checkout_voucher_change);
+        mAddressChangeText = mFooterView.findViewById(R.id.partial_checkout_address_change);
+        mPaymentChangeText = mFooterView.findViewById(R.id.partial_checkout_payment_change);
+        mVoucherChangeText = mFooterView.findViewById(R.id.partial_checkout_voucher_change);
 
         mButtonHolder = mFooterView.findViewById(R.id.partial_checkout_button_holder);
-        mPayButton = (Button) mFooterView.findViewById(R.id.partial_checkout_button_pay);
-        mPaypalButton = (RelativeLayout) mFooterView.findViewById(R.id.partial_checkout_button_paypal);
-        mMasterpassButton = (RelativeLayout) mFooterView.findViewById(R.id.partial_checkout_button_masterpass);
-        mOurpayHolder = (LinearLayout) mFooterView.findViewById(R.id.partial_checkout_ourpay_panel_holder);
+        mPayButton = mFooterView.findViewById(R.id.partial_checkout_button_pay);
+        mPaypalButton = mFooterView.findViewById(R.id.partial_checkout_button_paypal);
+        mMasterpassButton = mFooterView.findViewById(R.id.partial_checkout_button_masterpass);
+        mOurpayHolder = mFooterView.findViewById(R.id.partial_checkout_ourpay_panel_holder);
 
         setUp(view);
     }
@@ -249,8 +245,8 @@ public class CheckoutController extends BaseController implements CheckoutMvpVie
     protected void setUp(View view) {
 
         if (getActivity()!=null){
-            ((MainActivity) getActivity()).getMainController().showBottomNav();
-            ((MainActivity) getActivity()).getMainController().setViewpagerDraggable(false);
+            mActivity.getMainController().showBottomNav();
+            mActivity.getMainController().setViewpagerDraggable(false);
         }
 
         mTitleTextView.setText(R.string.checkout_page_toolbar_title);
@@ -295,7 +291,7 @@ public class CheckoutController extends BaseController implements CheckoutMvpVie
             RxBus.instance().post(IntrospectionUtils.EVENT_CHECKOUT_SCREEN);
 
             if (!mActivity.isBraintreeInitialized()) {
-                ((MainMvpView) getActivity()).fetchAuthorization(this);
+                mActivity.fetchAuthorization(this);
                 loadCartContent();
 
             } else {
@@ -311,14 +307,13 @@ public class CheckoutController extends BaseController implements CheckoutMvpVie
     @Override
     public void showMyPayDetails(Value value, Ourpay ourpay) {
         if (value != null) {
-            PaymentMethod paymentMethod = ((MainActivity) getActivity()).getPaymentMethodSelected();
-            boolean isMyPayEnabled = ((MainActivity) getActivity()).getIsMyPayEnabled();
+            PaymentMethod paymentMethod = mActivity.getPaymentMethodSelected();
+            boolean isMyPayEnabled = mActivity.getIsMyPayEnabled();
 
             if (ourpay != null && isMyPayEnabled) {
                 OurpayStateManager.setOurpayAccordingToPaymentMethod(ourpay, paymentMethod);
 
-                ((MainActivity) getActivity()).setOurpay(ourpay);
-                ((MainActivity) getActivity()).setThreeDSecureRequired(value.threeDSecureRequired);
+                mActivity.setOurpay(ourpay);
 
                 OurpayPanel ourpayPanel = new OurpayPanel((BaseActivity) getActivity(), getRouter());
                 mOurpay = ourpay;
@@ -331,11 +326,11 @@ public class CheckoutController extends BaseController implements CheckoutMvpVie
                     }));
                 }
 
-                mButtonOurpay = (RelativeLayout) mOurpayHolder.findViewById(R.id.rl_button_ourpay);
+                mButtonOurpay = mOurpayHolder.findViewById(R.id.rl_button_ourpay);
                 mButtonOurpay.setOnClickListener(view -> onOurpayButtonClick());
 
                 if (ourpay.getTermsAndConditionsCheckboxState() != 0) {
-                    mCheckBoxOurpayTC = (CheckBox) mOurpayHolder.findViewById(R.id.ourpay_checkbox_tc);
+                    mCheckBoxOurpayTC = mOurpayHolder.findViewById(R.id.ourpay_checkbox_tc);
                 }
             }
         }
@@ -397,11 +392,11 @@ public class CheckoutController extends BaseController implements CheckoutMvpVie
             mActivity.setPaymentMethodSelected(null);
             return;
 
-        } else if (((MainActivity) getActivity()).getPaymentMethodSelected() == null && paymentMethod != null) {
-            ((MainActivity) getActivity()).setPaymentMethodSelected(paymentMethod);
+        } else if (mActivity.getPaymentMethodSelected() == null) {
+            mActivity.setPaymentMethodSelected(paymentMethod);
         }
 
-        paymentMethod = ((MainActivity) getActivity()).getPaymentMethodSelected();
+        paymentMethod = mActivity.getPaymentMethodSelected();
         if (paymentMethod != null) {
 
             ((TextView) mPaymentLayout.findViewById(R.id.partial_checkout_payment_name)).setText(paymentMethod.getPaymentType());
@@ -409,7 +404,7 @@ public class CheckoutController extends BaseController implements CheckoutMvpVie
 
             ImageUtils.loadImage(getActivity()
                     , paymentMethod.getImageUrl()
-                    , (ImageView) mPaymentLayout.findViewById(R.id.partial_checkout_payment_image));
+                    , mPaymentLayout.findViewById(R.id.partial_checkout_payment_image));
 
             mAddNewPaymentLayout.setVisibility(View.GONE);
             mPaymentLayout.setVisibility(View.VISIBLE);
@@ -421,9 +416,7 @@ public class CheckoutController extends BaseController implements CheckoutMvpVie
 
             mPayButton.setVisibility(View.VISIBLE);
             mPaypalButton.setVisibility(View.VISIBLE);
-            isPaymentMethodNull = true;
         } else {
-            isPaymentMethodNull = false;
 
             if (paymentMethod.getPaymentType().equalsIgnoreCase(CARD_PAYPAL)) {
                 mPayButton.setVisibility(View.GONE);
@@ -479,6 +472,12 @@ public class CheckoutController extends BaseController implements CheckoutMvpVie
 
     @Override
     public void storeCartDetails(Value value) {
+
+        //Set 3DS value
+        if (getActivity() != null) {
+            mActivity.setThreeDSecureRequired(value.threeDSecureRequired);
+        }
+
         mValue = value;
     }
 
@@ -489,7 +488,7 @@ public class CheckoutController extends BaseController implements CheckoutMvpVie
 
     @Override
     public void updateCheckoutBadge() {
-        HomeController homeController = ((MainActivity) getActivity()).getMainController().getHomeController();
+        HomeController homeController = mActivity.getMainController().getHomeController();
         homeController.getPresenter().callGetBasketItemsQuantity();
     }
 
@@ -513,7 +512,13 @@ public class CheckoutController extends BaseController implements CheckoutMvpVie
                         .popChangeHandler(new HorizontalChangeHandler()));
 
             } else {
-                ((MainMvpView) mActivity).callCreatePaymentTransaction("");
+                if (mActivity.isThreeDSecureRequired()) {
+                    //TODO: Call 3DS if required in card payment
+                    //Need verification from API team how to get nonce
+                    //callThree3DS(Double.toString(mValue.getSummary().total), );
+                } else {
+                    mActivity.callCreatePaymentTransaction("");
+                }
             }
         }
     }
@@ -594,8 +599,7 @@ public class CheckoutController extends BaseController implements CheckoutMvpVie
 
     @OnClick(R.id.partial_checkout_empty_button)
     void shopNow() {
-        assert (getActivity()) != null;
-        ((MainActivity) getActivity()).setShopsAsVisibleContainer();
+        mActivity.setShopsAsVisibleContainer();
     }
 
     private String formAddressDetails(DeliveryAddress deliveryAddress) {
@@ -639,20 +643,20 @@ public class CheckoutController extends BaseController implements CheckoutMvpVie
 
     private void ourpayPaymentSubmit() {
 
-        if (((MainActivity) getActivity()).isThreeDSecureRequired()) {
-            callThree3DS(Double.toString(mOurpay.getAmount()));
+        if (mActivity.isThreeDSecureRequired()) {
+            callThree3DS(Double.toString(mOurpay.getAmount()), mOurpay.getPaymentMethodNonce().getNonce());
         } else {
-            ((MainActivity) getActivity()).callCreatePaymentTransaction(PAYMENT_TYPE_MYPAY, "");
+            mActivity.callCreatePaymentTransaction(PAYMENT_TYPE_MYPAY, "");
         }
     }
 
-    private void callThree3DS(String cost) {
-        showLoading();
-        ThreeDSecure.performVerification(((MainActivity) getActivity()).getBraintreeFragment(), mOurpay.getPaymentMethodNonce().getNonce(), cost);
+    private void callThree3DS(String cost, String nonce) {
+        showLoadingDialog("Loading", false);
+        ThreeDSecure.performVerification(mActivity.getBraintreeFragment(), nonce, cost);
     }
 
     private void loadCartContent(){
-        if (((MainActivity)getActivity()).getMainController().getHomeController().getIsResetCheckout()){
+        if (mActivity.getMainController().getHomeController().getIsResetCheckout()){
             showLoading();
             mPresenter.start();
         }

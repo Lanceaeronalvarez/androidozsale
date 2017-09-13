@@ -325,19 +325,7 @@ public class MainActivity extends BaseActivity implements MainMvpView {
 
     @Override
     public void callCreatePaymentTransaction(String paymentNonce) {
-        if (!mIsCreatingPaymentTransaction){
-            mIsCreatingPaymentTransaction = true;
-
-            BraintreeResponseListener<String> handler = deviceData ->
-                    mPresenter.createPaymentTransaction(deviceData, mPaymentType, paymentNonce, getPaymentMethodSelected().getToken());
-
-            if (!mPresenter.getKountMerchantId().isEmpty()) {
-                DataCollector.collectDeviceData(mBraintreeFragment, mPresenter.getKountMerchantId(), handler);
-            } else {
-                DataCollector.collectDeviceData(mBraintreeFragment, handler);
-            }
-        }
-
+        callCreatePaymentTransaction(mPaymentType, paymentNonce);
     }
 
     @Override
