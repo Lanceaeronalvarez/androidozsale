@@ -102,7 +102,7 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
     @BindView(R.id.productImageRecyclerView)
     RecyclerViewPager mProductImagesRv;
     @BindView(R.id.otherImagesRecyclerView)
-    public RecyclerView mOtherImagesRv;
+    RecyclerView mOtherImagesRv;
     @BindView(R.id.productName)
     TextView mProductName;
     @BindView(R.id.productBrand)
@@ -624,6 +624,11 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
 
         ImageUtils.loadImageImmediate(getActivity(), mItemImageUrl, mProductSharedImage, null);
 
+    }
+
+    @OnClick(R.id.arrow_down)
+    void dismissArrowDown(){
+        getActivity().onBackPressed();
     }
 
 
