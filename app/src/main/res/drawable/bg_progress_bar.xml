@@ -4,5 +4,5 @@
     android:shape="ring"
     android:thickness="5sp"
     android:useLevel="true">
-    <solid android:color="@color/colorAccent"/>
+    <solid android:color="@color/progress_loader_stroke_color"/>
 </shape>
