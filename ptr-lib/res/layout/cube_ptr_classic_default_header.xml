@@ -48,6 +48,7 @@
                 android:visibility="gone"/>
 
             <ImageView
+                android:id="@+id/ptr_classic_header_icon"
                 android:layout_width="40dp"
                 android:layout_height="40dp"
                 android:padding="10dp"
@@ -59,7 +60,7 @@
                 android:layout_width="40dp"
                 android:layout_height="40dp"
                 android:layout_gravity="center"
-                android:indeterminateTint="#F00065"
+                android:color="#F00065"
                 android:indeterminateTintMode="src_in"/>
 
             <ProgressBar
