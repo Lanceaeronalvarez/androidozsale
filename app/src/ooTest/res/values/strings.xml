@@ -4,5 +4,8 @@
     <string name="checkout_page_toolbar_title">My Cart</string>
     <string name="total">Grand Total</string>
     <string name="add_new_address">add delivery address</string>
-
+    <string name="invite_friend_guide">Invite your friends to join OO. Once your friends have
+        joined through your invitation and made their first purchase you will instantly receive a
+        $20 OO voucher to use towards any future purchase.
+    </string>
 </resources>
