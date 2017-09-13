@@ -93,7 +93,7 @@
             android:lines="1"
             android:singleLine="true"
             android:text=""
-            android:textColor="@color/colorAccent"
+            android:textColor="@color/color_text_option"
             android:textSize="@dimen/text_size_xxxlarge"
             android:textStyle="bold"
             tools:text="$100.00"/>

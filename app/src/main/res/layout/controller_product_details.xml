@@ -247,7 +247,7 @@
                                                     android:layout_gravity="end"
                                                     android:maxLines="1"
                                                     android:text=""
-                                                    android:textColor="@color/colorAccent"
+                                                    android:textColor="@color/color_text_option"
                                                     fontPath="@string/font_lato_bold"
                                                     android:textSize="@dimen/text_size_xxxxlarge" />
 
