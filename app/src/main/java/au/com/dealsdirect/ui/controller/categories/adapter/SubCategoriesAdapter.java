@@ -88,7 +88,10 @@ public class SubCategoriesAdapter extends RecyclerView.Adapter<RecyclerView.View
 
                         GetCategoryTreeResponse item = subCategoryItems.get(0);
                         mSubCategoryItemClickListener.onSubCategoryItemClicked(item.getKey(), item.getName(), item.getKey());
-                        ((MainActivity) context).getMainController().getSelectedSubCategoryItem().setActivated(false);
+                        if(((MainActivity) context).getMainController().getSelectedSubCategoryItem() != null){
+                            ((MainActivity) context).getMainController().getSelectedSubCategoryItem().setActivated(false);
+                        }
+
                         ((MainActivity) context).getMainController().setChosenCategoryItemKey(mData.get(position).getKey());
                     });
                     return;
