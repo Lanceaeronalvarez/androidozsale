@@ -34,7 +34,7 @@
     <color name="gray_title_text">#959595</color>
     <color name="gray_field_text">#868686</color>
     <color name="gray_field_label">#87939D</color>
-    <color name="dark_gray">#8c8c8c</color>
+    <color name="dark_gray">#616161</color>
     <color name="gray_description_text">#9E9E9E</color>
     <color name="gray_generic_icon">#9E9E9E</color>
     <color name="gray_sale_price">#919191</color>
@@ -96,4 +96,5 @@
     <color name="invite_sms_pressed">#72E98D</color>
 
     <color name="item_select_remove">#F29124</color>
+    <color name="verify_resend_color">#90BF0A</color>
 </resources>
