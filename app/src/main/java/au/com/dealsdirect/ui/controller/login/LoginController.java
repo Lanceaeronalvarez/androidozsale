@@ -147,6 +147,12 @@ public class LoginController extends BaseController implements LoginMvpView {
     }
 
     @Override
+    public boolean handleBack() {
+        mActivity.getMainController().getHomeController().resetVisibleContainer();
+        return super.handleBack();
+    }
+
+    @Override
     public void showLoginError(String message) {
 
         mActivity.loginErrorHandler(message);

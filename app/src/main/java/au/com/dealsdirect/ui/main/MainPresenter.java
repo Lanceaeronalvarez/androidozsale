@@ -486,6 +486,7 @@ public class MainPresenter<V extends MainMvpView> extends BasePresenter<V> imple
 //        GCartUtil.setValueToCart(0);
 //        RxBus.instance().post("update_cart_items_immediate");
 //        RxBus.instance().post(Auth.EVENT_PRE_LOGOUT);
+        getMvpView().showLoading();
         getCompositeDisposable().add(getDataManager()
                         .callLogout(new Logout.RequestValue())
                         .subscribeOn(getSchedulerProvider().io())
@@ -496,7 +497,7 @@ public class MainPresenter<V extends MainMvpView> extends BasePresenter<V> imple
                                 if (!isViewAttached()) {
                                     return;
                                 }
-
+                                getMvpView().hideLoading();
                                 getDataManager().revokeAuth();
                                 if (handler != null) {
                                     handler.success();

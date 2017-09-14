@@ -209,6 +209,7 @@ public class AccountController extends BaseController implements AccountMvpView,
                 ((MainActivity) getActivity()).callGCMRegisterSubscriber();
                 mFilterButton.setImageDrawable(getActivity().getResources().getDrawable(R.drawable.ic_logout));
                 ((MainActivity) getActivity()).getMainController().getHomeController().getPresenter().callGetBasketItemsQuantity();
+                ((MainActivity) getActivity()).getMainController().getHomeController().initControllers(true);
             }
 
             @Override
