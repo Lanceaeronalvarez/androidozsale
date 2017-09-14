@@ -52,6 +52,9 @@ public class OurpaySMSVerificationController extends BaseController implements O
     @BindView(R.id.partial_toolbar_arrow_view)
     ImageButton mOurpaySMSVerificationLeftOption;
 
+    @BindView(R.id.partial_toolbar_filter_view)
+    ImageButton mOurpaySMSVerificationRightOption;
+
     @BindView(R.id.ourpay_edittext_extension)
     EditText mSMSVerificationPhoneExtension;
 
@@ -109,7 +112,7 @@ public class OurpaySMSVerificationController extends BaseController implements O
         super.onViewBound(view);
         mOurpay = ((MainActivity)getActivity()).getOurpay();
         mPresenter.callNormalizePhone(mPhoneFromCart);
-
+        mOurpaySMSVerificationRightOption.setVisibility(View.INVISIBLE);
         setUp(view);
     }
 
