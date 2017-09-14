@@ -34,7 +34,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textColor="@color/address_text_selector"
-            android:textSize="@dimen/text_size_xxxxlarge"
+            android:textSize="@dimen/text_size_xxlarge"
             tools:text="Address 1" />
 
         <TextView
@@ -43,7 +43,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textColor="@color/gray_address_subtitle_text"
-            android:textSize="@dimen/text_size_xlarge"
+            android:textSize="@dimen/text_size_large"
             tools:text="some address" />
 
         <!-- remove text and express delivery layout below, uncomment to implement-->
