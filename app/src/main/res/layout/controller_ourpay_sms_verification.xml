@@ -7,7 +7,7 @@
 
     <include
         android:id="@+id/view_contacts_toolbar_layout"
-        layout="@layout/partial_toolbar_arrow" />
+        layout="@layout/partial_toolbar_arrow"/>
 
 
     <LinearLayout
@@ -17,11 +17,13 @@
         android:padding="10dp">
 
         <TextView
+            android:id="@+id/textView2"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginBottom="@dimen/activity_horizontal_margin"
             android:text="@string/confirm_your_phone_number"
-            android:textColor="@android:color/black"
-            android:textSize="18sp"
+            android:textColor="@color/dark_gray"
+            android:textSize="@dimen/text_size_large"
             android:textStyle="bold"/>
 
         <TextView
@@ -39,7 +41,7 @@
                 android:layout_width="50dp"
                 android:layout_height="43dp"
                 android:layout_marginTop="15dp"
-                android:background="#FFE7E7E7"
+                android:background="@drawable/ourpay_phone_extension_background"
                 android:padding="10dp"/>
 
             <EditText
@@ -47,7 +49,8 @@
                 android:layout_width="50dp"
                 android:layout_height="43dp"
                 android:layout_marginTop="15dp"
-                android:background="#FFE7E7E7"
+                android:textColor="@color/dark_text"
+                android:background="@drawable/ourpay_phone_extension_background"
                 android:enabled="false"
                 android:gravity="center"
                 android:visibility="invisible"/>
@@ -92,7 +95,7 @@
                 android:layout_alignParentRight="true"
                 android:paddingTop="5dp"
                 android:text="@string/resend_code"
-                android:textColor="@color/navy"
+                android:textColor="@color/verify_resend_color"
                 android:textSize="12sp"/>
 
         </RelativeLayout>
@@ -106,8 +109,8 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="@string/enter_your_code_below"
-            android:textColor="@android:color/black"
-            android:textSize="18sp"
+            android:textColor="@color/dark_gray"
+            android:textSize="@dimen/text_size_large"
             android:textStyle="bold"/>
 
 
