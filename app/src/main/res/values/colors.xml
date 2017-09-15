@@ -19,6 +19,8 @@
     <color name="category_text_active">#F00065</color>
     <color name="category_text_inactive">#707070</color>
 
+    <color name="payment_success_order_text_color">#446E87</color>
+
     <color name="border_gray">#E4E4E4</color>
 
     <color name="gray_category_text">#707070</color>

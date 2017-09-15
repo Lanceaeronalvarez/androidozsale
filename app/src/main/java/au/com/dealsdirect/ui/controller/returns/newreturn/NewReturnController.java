@@ -41,8 +41,6 @@ public class NewReturnController extends BaseController implements NewReturnMvpV
 
     public static final String TAG = "NewReturnController";
     private static final String KEY_TEXT = "NewReturnController.KEY_TEXT";
-    public static final String VIEW_FRAGMENT_NEW_RETURNS_ORDER_DETAIL_ID =
-            "NEW_RETURNS_ORDER_SET_DETAILS_FRAGMENT_ID";
 
     private View.OnClickListener onClickListener;
 
@@ -64,10 +62,7 @@ public class NewReturnController extends BaseController implements NewReturnMvpV
     NewReturnMvpPresenter<NewReturnMvpView> mPresenter;
 
     NewReturnOrderDetailResponse mNewReturnsOrderDetail;
-    View currentView;
-
     private HashMap<Integer, java.util.List> updateList = new HashMap<>();
-
 
     public static NewReturnController newInstance(List returnItem) {
 
@@ -101,22 +96,17 @@ public class NewReturnController extends BaseController implements NewReturnMvpV
 
     @Override
     protected void setUp(View view) {
-        // Setup views here
-        //mPresenter.loadSample(new SampleRequest());
-        mNewReturnToolbarTitle.setText("Create Return");
+
+        mNewReturnToolbarTitle.setText(R.string.create_return);
         mNewReturnToolbarRightOption.setVisibility(View.VISIBLE);
         mNewReturnToolbarRightOption.setImageDrawable(getResources().getDrawable(R.drawable.ic_check));
 
 
         mPresenter.getReturnOrderDetail(mReturnItem.getInvoiceNo());
         onClickListener = view1 -> {
-//                TextView quantityText
-//                        = (TextView) productQuantityLayout.findViewById(R.id.quantity_text);
 
             int itemCount = mNewReturnOrderRecyclerView.getLayoutManager()
                     .getItemCount();
-
-            java.util.List requestList = new ArrayList<>();
 
             for (int i = 0; i < itemCount; i++) {
 
@@ -127,46 +117,6 @@ public class NewReturnController extends BaseController implements NewReturnMvpV
                                 .findViewHolderForItemId(viewID);
 
 
-//                    TextView status = (TextView) viewte.findViewById(R.id.new_return_request_item_name);
-//                    TextView totalCost = (TextView) viewte
-//                            .findViewById(R.id.new_return_request_item_total_cost);
-//                    TextView itemCounttext = (TextView)  viewte.findViewById(R.id.new_returns_order_item_count_value);
-//                    TextView itemSizeTextView = (TextView) viewte.findViewById(R.id.new_returns_order_size_return_value);
-//                    TextView itemIdTextView = (TextView) viewte.findViewById(R.id.new_returns_order_item_id_value);
-//                    ProductQuantityLayout itemCountUpdatedQuantityLayout
-//                            = (ProductQuantityLayout) viewte.findViewById(R.id.new_returns_select_order_item_quantaty_selector);
-
-
-//                    TextView status = (TextView) viewte.findViewById(R.id.new_return_request_item_name);
-//                    TextView totalCost = (TextView) viewte
-//                            .newReturnItemPriceTextView;
-//                    TextView itemCounttext = (TextView)  viewte.newReturnItemCountTextView;
-//                    TextView itemSizeTextView = (TextView) viewte.newReturnItemSizeTextView;
-//                    TextView itemIdTextView = (TextView) viewte.newReturnItemIdTextView;
-//                    ProductQuantityLayout itemCountUpdatedQuantityLayout
-//                            = (ProductQuantityLayout) viewte.productQuantityLayout;
-//
-//                    String itemIdValue = itemIdTextView.getText().toString();
-//                    String itemSizeValue = itemSizeTextView.getText().toString();
-//                    String itemTotalCost = totalCost.getText().toString();
-//                    String itemCountValue = itemCounttext.getText().toString();
-//                    String itemUpdatedCount = itemCountUpdatedQuantityLayout.getQuantity();
-
-//                    java.util.List<Object> list1 = new ArrayList<>();
-//
-//                    if (Integer.parseInt(itemUpdatedCount) != 0){
-//
-//                        GDebug.log("returns", "entered count iterated");
-//                        list1.add(itemIdValue);
-//                        list1.add(itemCountValue);
-//                        requestList.add(list1);
-//                    }
-
-//                    GDebug.log("returns", "item id = "+ itemIdTextView   .getText().toString());
-//                    GDebug.log("returns", "item size = "+ itemSizeTextView.getText().toString());
-//                    GDebug.log("returns", "item total cost = "+ totalCost.getText().toString());
-//                    GDebug.log("returns", "item name = "+status.getText());
-//                    GDebug.log("returns", "item count = "+itemCounttext.getText());
             }
 
             CreateReturnRequest createReturnRequest = new CreateReturnRequest();
@@ -178,7 +128,7 @@ public class NewReturnController extends BaseController implements NewReturnMvpV
                 CustomAlertDialog.showCustomAlertDialog(
                         getActivity(),
                         CustomAlertDialog.CustomDialogIconState.NEGATIVE,
-                        "Please add count to an item to request return"
+                        getActivity().getResources().getString(R.string.please_add_count_to_an_item)
                 );
 
             } else if (createReturnRequest.reason.isEmpty()) {
@@ -186,7 +136,7 @@ public class NewReturnController extends BaseController implements NewReturnMvpV
                 CustomAlertDialog.showCustomAlertDialog(
                         getActivity(),
                         CustomAlertDialog.CustomDialogIconState.NEGATIVE,
-                        "Please fill up the field below"
+                        getResources().getString(R.string.please_fill_up_field)
                 );
 
 
@@ -228,7 +178,6 @@ public class NewReturnController extends BaseController implements NewReturnMvpV
 
     private java.util.List getUpdateRequestList() {
 
-        //updateList.put(position, newList);
         java.util.List newRequestList = new ArrayList<>();
         if (updateList.size() != 0) {
 
@@ -255,7 +204,7 @@ public class NewReturnController extends BaseController implements NewReturnMvpV
             CustomAlertDialog.showCustomAlertDialog(
                     getActivity(),
                     CustomAlertDialog.CustomDialogIconState.POSITIVE,
-                    "Return request submitted");
+                    getResources().getString(R.string.return_request_submitted));
         }
 
         getRouter().popToTag("CurrentReturnController");
@@ -295,5 +244,4 @@ public class NewReturnController extends BaseController implements NewReturnMvpV
 
         }
     }
-
 }

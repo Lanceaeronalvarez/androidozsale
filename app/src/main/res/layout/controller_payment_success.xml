@@ -56,7 +56,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_margin="10dp"
-                android:textColor="#446E87"
+                android:textColor="@color/payment_success_order_text_color"
                 android:gravity="center"
                 android:textSize="45sp"
                 android:textStyle="bold"

@@ -158,7 +158,7 @@
                     android:id="@+id/my_current_returns_product_is_approved_identifier"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Approved:"
+                    android:text="Approved Date:"
                     android:textColor="#5c5c5c"
                     android:textSize="@dimen/text_size_medium"
                     android:fontFamily="@string/font_lato_medium"
