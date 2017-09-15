@@ -143,7 +143,7 @@ public class LoginController extends BaseController implements LoginMvpView {
 
     @Override
     public void showLoginSuccessful(String loginTicket) {
-        mActivity.loginSuccessHandler(getRouter());
+        mActivity.loginSuccessHandler(getRouter(), getResources().getString(R.string.login_successfully));
     }
 
     @Override

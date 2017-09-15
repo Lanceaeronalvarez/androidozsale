@@ -318,6 +318,8 @@
     <string name="login_successfully">Logged In</string>
     <string name="paid">Paid</string>
     <string name="my_account">My Account</string>
+    <string name="your_order_number_is">Your order number is</string>
+    <string name="thank_you_for_shopping_with_deals_direct">Thank you for shopping with Deals Direct</string>
 
 
 </resources>

@@ -34,9 +34,46 @@
         android:textColor="@color/gray_field_text"
         android:textSize="@dimen/text_size_large" />
 
+
+        <LinearLayout
+            android:id="@+id/payment_ourpay_success_detail_container"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:visibility="visible"
+            android:orientation="vertical">
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:textSize="@dimen/text_size_xlarge"
+                android:textColor="@color/gray_field_text"
+                android:text="@string/your_order_number_is"/>
+
+
+            <TextView
+                android:id="@+id/payment_success_order_number"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="10dp"
+                android:textColor="#446E87"
+                android:gravity="center"
+                android:textSize="45sp"
+                android:textStyle="bold"
+                android:text="301231331"/>
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:textSize="@dimen/text_size_large"
+                android:layout_marginTop="20dp"
+                android:text="@string/thank_you_for_shopping_with_deals_direct"/>
+        </LinearLayout>
+
     <View
         android:layout_width="match_parent"
-        android:layout_height="80dp"/>
+        android:layout_height="30dp"/>
 
     <LinearLayout
         android:background="@drawable/bg_success_rounded"
@@ -46,121 +83,130 @@
         android:orientation="vertical">
 
         <LinearLayout
-            android:layout_width="match_parent"
+            android:id="@+id/payment_success_table_container"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:padding="@dimen/screen_padding">
-
-            <ImageView
-                android:layout_width="20dp"
-                android:layout_height="20dp"
-                android:src="@drawable/ic_home_delivery"/>
+            android:orientation="vertical"
+            android:visibility="gone">
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="vertical"
-                android:paddingLeft="15dp"
-                android:paddingRight="15dp">
+                android:orientation="horizontal"
+                android:padding="@dimen/screen_padding">
 
-                <TextView
+                <ImageView
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"
+                    android:src="@drawable/ic_home_delivery"/>
+
+                <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="@string/address"
-                    android:textColor="@color/gray_field_text" />
+                    android:orientation="vertical"
+                    android:paddingLeft="15dp"
+                    android:paddingRight="15dp">
 
-                <TextView
-                    android:id="@+id/fragment_payment_success_address"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:textSize="@dimen/text_size_xxlarge"
-                    android:textStyle="bold"
-                    tools:text="Express Delivery"/>
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="@string/address"
+                        android:textColor="@color/gray_field_text" />
+
+                    <TextView
+                        android:id="@+id/fragment_payment_success_address"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:textSize="@dimen/text_size_xxlarge"
+                        android:textStyle="bold"
+                        tools:text="Express Delivery"/>
+
+                </LinearLayout>
 
             </LinearLayout>
 
+                <View android:layout_width="match_parent"
+                      android:layout_height="1dp"
+                      android:background="@color/border_gray"/>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:padding="@dimen/screen_padding">
+
+                    <ImageView
+                        android:layout_width="20dp"
+                        android:layout_height="20dp"
+                        android:src="@drawable/ic_total_payment"/>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical"
+                        android:paddingLeft="15dp"
+                        android:paddingRight="15dp">
+
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:text="@string/total_payment"
+                            android:textColor="@color/gray_field_text"/>
+
+                        <TextView
+                            android:id="@+id/fragment_payment_success_price"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:textSize="@dimen/text_size_xxlarge"
+                            android:textStyle="bold"
+                            tools:text="$100"/>
+
+                    </LinearLayout>
+
+                </LinearLayout>
+
+                <View android:layout_width="match_parent"
+                      android:layout_height="1dp"
+                      android:background="@color/border_gray"/>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:padding="@dimen/screen_padding">
+
+                    <ImageView
+                        android:layout_width="20dp"
+                        android:layout_height="20dp"
+                        android:src="@drawable/ic_order_number"/>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical"
+                        android:paddingLeft="15dp"
+                        android:paddingRight="15dp">
+
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:text="@string/order_number"
+                            android:textColor="@color/gray_field_text" />
+
+                        <TextView
+                            android:id="@+id/fragment_payment_success_address_orderno"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:textSize="@dimen/text_size_xxlarge"
+                            android:textStyle="bold"
+
+                            tools:text="123312312312"/>
+
+                    </LinearLayout>
+
         </LinearLayout>
 
-        <View android:layout_width="match_parent"
-            android:layout_height="1dp"
-            android:background="@color/border_gray"/>
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:padding="@dimen/screen_padding">
-
-            <ImageView
-                android:layout_width="20dp"
-                android:layout_height="20dp"
-                android:src="@drawable/ic_total_payment"/>
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="vertical"
-                android:paddingLeft="15dp"
-                android:paddingRight="15dp">
-
-                <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="@string/total_payment"
-                    android:textColor="@color/gray_field_text"/>
-
-                <TextView
-                    android:id="@+id/fragment_payment_success_price"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:textSize="@dimen/text_size_xxlarge"
-                    android:textStyle="bold"
-                    tools:text="$100"/>
-
-            </LinearLayout>
-
-        </LinearLayout>
-
-        <View android:layout_width="match_parent"
-            android:layout_height="1dp"
-            android:background="@color/border_gray"/>
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:padding="@dimen/screen_padding">
-
-            <ImageView
-                android:layout_width="20dp"
-                android:layout_height="20dp"
-                android:src="@drawable/ic_order_number"/>
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="vertical"
-                android:paddingLeft="15dp"
-                android:paddingRight="15dp">
-
-                <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="@string/order_number"
-                    android:textColor="@color/gray_field_text" />
-
-                <TextView
-                    android:id="@+id/fragment_payment_success_address_orderno"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:textSize="@dimen/text_size_xxlarge"
-                    android:textStyle="bold"
-
-                    tools:text="123312312312"/>
-
-            </LinearLayout>
-
-        </LinearLayout>
+    </LinearLayout>
 
     </LinearLayout>
 

@@ -293,6 +293,7 @@ public class MainActivity extends BaseActivity implements MainMvpView {
 
     @Override
     public void performResetWithAuthFetch() {
+
         performReset();
         fetchAuthorization(null);
     }
@@ -666,7 +667,7 @@ public class MainActivity extends BaseActivity implements MainMvpView {
     }
 
     @Override
-    public void loginSuccessHandler(Router router) {
+    public void loginSuccessHandler(Router router, String successMessage) {
 
         RxBus.instance().post(IntrospectionUtils.EVENT_LOGIN);
 
@@ -677,7 +678,7 @@ public class MainActivity extends BaseActivity implements MainMvpView {
         }
 
         hideKeyboard();
-        CustomAlertDialog.showCustomAlertDialog(this, CustomAlertDialog.CustomDialogIconState.POSITIVE, getString(R.string.login_successfully));
+        CustomAlertDialog.showCustomAlertDialog(this, CustomAlertDialog.CustomDialogIconState.POSITIVE, successMessage);
         mMainController.getHomeController().getPresenter().callGetBasketItemsQuantity();
         mMainController.showBottomNav();
     }

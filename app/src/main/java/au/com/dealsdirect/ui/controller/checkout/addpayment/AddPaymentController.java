@@ -3,6 +3,7 @@ package au.com.dealsdirect.ui.controller.checkout.addpayment;
 import android.app.Activity;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -130,6 +131,7 @@ public class AddPaymentController extends BaseController implements AddPaymentMv
 //        }
 
         if (((MainActivity) getActivity()).isBraintreeInitialized()) {
+
             showPaymentButtons();
         } else {
             ((MainActivity) getActivity()).fetchAuthorization(new FetchTokenHandler() {

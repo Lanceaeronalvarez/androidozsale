@@ -51,7 +51,7 @@ public interface MainMvpView extends MvpView, BrainTreeListeners {
 
     Controller getCurrentController(Router router);
 
-    void loginSuccessHandler(Router router);
+    void loginSuccessHandler(Router router, String successMessage);
 
     void loginErrorHandler(String message);
 

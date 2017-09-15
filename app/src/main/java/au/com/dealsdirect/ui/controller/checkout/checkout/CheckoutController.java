@@ -205,6 +205,7 @@ public class CheckoutController extends BaseController implements CheckoutMvpVie
         super.onViewBound(view);
 
         mActivity = ((MainActivity) getActivity());
+        mActivity.performResetWithAuthFetch();
 
         mAddNewAddressLayout = mFooterView.findViewById(R.id.partial_checkout_address_new_address);
         mAddNewPaymentLayout = mFooterView.findViewById(R.id.partial_checkout_payment_new_payment);
@@ -248,6 +249,7 @@ public class CheckoutController extends BaseController implements CheckoutMvpVie
             mActivity.getMainController().showBottomNav();
             mActivity.getMainController().setViewpagerDraggable(false);
         }
+
 
         mTitleTextView.setText(R.string.checkout_page_toolbar_title);
 

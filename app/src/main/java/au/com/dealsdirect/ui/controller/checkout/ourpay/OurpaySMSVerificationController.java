@@ -147,20 +147,23 @@ public class OurpaySMSVerificationController extends BaseController implements O
     public void callNormalizePhoneResponse(VerificationNormalizePhoneResponseBody response) {
 
         if (!response.getVerificationNormalizePhoneResponse().getValue().getErrorMessage().isEmpty()){
-            if (response.getVerificationNormalizePhoneResponse().getValue().getCountryCode()!=null){
-                String countryCode = response.getVerificationNormalizePhoneResponse().getValue().getCountryCode();
 
-                setExtension(countryCode);
+            setPhoneError(response.getVerificationNormalizePhoneResponse().getValue().getErrorMessage());
 
-            }
+//
+//            if (response.getVerificationNormalizePhoneResponse().getValue().getCountryCode()!=null){
+//                String countryCode = response.getVerificationNormalizePhoneResponse().getValue().getCountryCode();
+//
+//                setExtension(countryCode);
+//
+//            }
 //            CustomAlertDialog.showCustomAlertDialog(getActivity(),
 //                    CustomAlertDialog.CustomDialogIconState.NEGATIVE,
 //                    response.getVerificationNormalizePhoneResponse().getValue().getErrorMessage());
         } else {
             setExtension(response.getVerificationNormalizePhoneResponse().getValue().getCountryCode());
-            if (isToVerifyCode)
-                mPresenter.callVerificationCodeConfirm(mSMSVerificationPhone.getText().toString(), mSMSVerificationPhoneExtension.getText().toString() , mSMSVerificationCode.getText().toString());
-
+            mPresenter.callVerificationCodeSend(mSMSVerificationPhone.getText().toString(),
+                    response.getVerificationNormalizePhoneResponse().getValue().getCountryCode());
         }
     }
 
@@ -179,15 +182,14 @@ public class OurpaySMSVerificationController extends BaseController implements O
         hideLoading();
         boolean mIsAuthenticated = response.getVerificationCodeConfirmResponse().getIsAuthenticated();
         boolean mResult = response.getVerificationCodeConfirmResponse().getResult();
-        boolean mAuthRequired = true;
+        boolean mAuthRequired;
 
-        try {
+        if (response.getVerificationCodeConfirmResponse().getIsAuthenticated()!=null){
             mIsAuthenticated = response.getVerificationCodeConfirmResponse().getIsAuthenticated();
             mAuthRequired = true;
-        } catch (Exception e){
+        }else{
             mAuthRequired = false;
         }
-
 
         String mMessage = response.getVerificationCodeConfirmResponse().getMessage();
 
@@ -321,7 +323,8 @@ public class OurpaySMSVerificationController extends BaseController implements O
         hideKeyboard();
         showLoading();
         mSMSVerificationConfirmButton.setEnabled(false);
-        mPresenter.callNormalizePhone(mSMSVerificationPhone.getText().toString());
+//        mPresenter.callNormalizePhone(mSMSVerificationPhone.getText().toString());
+        mPresenter.callVerificationCodeConfirm(mSMSVerificationPhone.getText().toString(),mSMSVerificationPhoneExtension.getText().toString() , mSMSVerificationCode.getText().toString() );
         isToVerifyCode = true;
     }
 

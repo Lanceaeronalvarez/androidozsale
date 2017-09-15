@@ -108,7 +108,7 @@ public class OurpaySMSVerificationPresenter<V extends OurpaySMSVerificationMvpVi
         verificationCodeConfirmRequest.setLanguageID(getDataManager().getLanguageId());
         verificationCodeConfirmRequest.setPhone(String.format("%s%s", countryCode, phone));
         verificationCodeConfirmRequest.setCode(code);
-//        Log.d("verification", "values = "+countryCode+ " , "+phone+", "+getDataManager().getCountryId()+" , "+getDataManager().getLanguageId()+ " ,"+code);
+        Log.d("verification", "values = "+countryCode+ " , "+phone+", "+getDataManager().getCountryId()+" , "+getDataManager().getLanguageId()+ " ,"+code);
 
         getCompositeDisposable().add(getDataManager()
                 .callVerificationCodeConfirm(verificationCodeConfirmRequest)
@@ -117,8 +117,7 @@ public class OurpaySMSVerificationPresenter<V extends OurpaySMSVerificationMvpVi
                 .subscribe(responseValue -> {
                     Log.d("smsverify", "verify response = "+responseValue.getVerificationCodeConfirmResponse().getMessage() + " , "+
                     responseValue.getVerificationCodeConfirmResponse().getIsAuthenticated()+" , "+
-                    responseValue.getVerificationCodeConfirmResponse().getResult()+ " , "+
-                    responseValue.getVerificationCodeConfirmResponse().getValue().getErrorMessage());
+                    responseValue.getVerificationCodeConfirmResponse().getResult()+ " , ");
 
                     getMvpView().callVerificationCodeConfirmResponse(responseValue);
 

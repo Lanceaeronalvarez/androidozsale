@@ -54,6 +54,12 @@ public class PaymentSuccessController extends BaseController implements PaymentS
     TextView mOrderNumber;
     @BindView(R.id.fragment_payment_success_estimated_delivery)
     TextView mEstimatedDelivery;
+    @BindView(R.id.payment_ourpay_success_detail_container)
+    LinearLayout mPaymentOurpaySuccessDetailContainer;
+    @BindView(R.id.payment_success_table_container)
+    LinearLayout mPaymentSuccessTableContainer;
+    @BindView(R.id.payment_success_order_number)
+    TextView mPaymentSuccessOrderNumber;
 
     MainActivity mActivity;
 
@@ -111,10 +117,13 @@ public class PaymentSuccessController extends BaseController implements PaymentS
         mActivity = (MainActivity) getActivity();
         mOurpay = ((MainActivity) getActivity()).getOurpay();
         if (mOurpay != null && mOurpay.isCanUse()) {
+            mPaymentOurpaySuccessDetailContainer.setVisibility(View.VISIBLE);
+            mPaymentSuccessOrderNumber.setText(mInvoiceString);
             getTotalPayment(mOurpay);
             mPresenter.generateOurpay();
         }else{
             double totalPayment = mShippingFee+mPrice;
+            mPaymentSuccessTableContainer.setVisibility(View.VISIBLE);
             mPriceTextView.setText(PriceUtils.getPriceStringValue(totalPayment));
         }
 
