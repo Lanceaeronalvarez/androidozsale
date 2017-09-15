@@ -4,6 +4,7 @@ import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.widget.NestedScrollView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -289,6 +290,7 @@ public class CheckoutController extends BaseController implements CheckoutMvpVie
     }
 
     public void loadCart() {
+        Log.d("loadcart", "loading cart");
         if (mPresenter.checkIsLoggedIn()) {
             RxBus.instance().post(IntrospectionUtils.EVENT_CHECKOUT_SCREEN);
 

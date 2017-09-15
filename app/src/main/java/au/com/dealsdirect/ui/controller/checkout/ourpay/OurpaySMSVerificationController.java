@@ -399,6 +399,7 @@ public class OurpaySMSVerificationController extends BaseController implements O
         if (((MainActivity)getActivity()).isThreeDSecureRequired()){
             callThree3DS(Double.toString(mOurpay.getAmount()));
         } else {
+            getActivity().onBackPressed();
             ((MainActivity)getActivity()).callCreatePaymentTransaction(PAYMENT_TYPE_MYPAY,"");
         }
     }
