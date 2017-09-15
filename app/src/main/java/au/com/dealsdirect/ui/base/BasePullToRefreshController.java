@@ -153,7 +153,9 @@ public abstract class BasePullToRefreshController extends BaseController impleme
             public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
                 super.onScrollStateChanged(recyclerView, newState);
                 if (((LinearLayoutManager) recyclerView.getLayoutManager()).
-                        findFirstCompletelyVisibleItemPosition() == 0) {
+                        findFirstCompletelyVisibleItemPosition() == 0
+                        || ((LinearLayoutManager) recyclerView.getLayoutManager()).getOrientation() ==
+                        LinearLayoutManager.HORIZONTAL) {
                     mPtrLayout.setIsChildScrollingEnabled(true);
                 } else {
                     mPtrLayout.setIsChildScrollingEnabled(false);
