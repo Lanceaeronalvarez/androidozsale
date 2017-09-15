@@ -25,7 +25,7 @@
 
             <TextView
                 android:id="@+id/row_category_indicator"
-                fontPath="@string/font_lato_light"
+                fontPath="@string/font_app_light"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:gravity="center"
@@ -45,7 +45,7 @@
 
         <TextView
             android:id="@+id/row_category_name"
-            fontPath="@string/font_lato_regular"
+            fontPath="@string/font_app_regular"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="5dp"

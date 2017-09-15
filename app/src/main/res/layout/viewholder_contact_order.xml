@@ -10,7 +10,7 @@
         android:id="@+id/contact_subject_row_item_name"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:fontFamily="@string/font_lato_black"
+        android:fontFamily="@string/font_app_black"
         android:padding="16dp"
         android:textColor="@color/contact_us_text_selector"
         android:textSize="16sp" />

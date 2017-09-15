@@ -85,4 +85,23 @@
         <body>"]]>
     </string>
 
+    <string name="font_app_black">fonts/App-Font-Semibold.ttf</string>
+    <string name="font_app_black_italic">fonts/App-Font-SemiboldItalic.ttf</string>
+    <string name="font_app_bold">fonts/App-Font-Bold.ttf</string>
+    <string name="font_app_bold_italic">fonts/App-Font-BoldItalic.ttf</string>
+    <string name="font_app_hairline">fonts/App-Font-Hairline.ttf</string>
+    <string name="font_app_hairline_italic">fonts/App-Font-HairlineItalic.ttf</string>
+    <string name="font_app_heavy">fonts/App-Font-ExtraBold.ttf</string>
+    <string name="font_app_heavy_italic">fonts/App-Font-ExtraBoldItalic.ttf</string>
+    <string name="font_app_italic">fonts/App-Font-Italic.ttf</string>
+    <string name="font_app_light">fonts/App-Font-Light.ttf</string>
+    <string name="font_app_light_italic">fonts/App-Font-LightItalic.ttf</string>
+    <string name="font_app_medium">fonts/App-Font-Regular.ttf</string>
+    <string name="font_app_medium_italic">fonts/App-Font-Italic.ttf</string>
+    <string name="font_app_regular">fonts/App-Font-Regular.ttf</string>
+    <string name="font_app_semibold">fonts/App-Font-Semibold.ttf</string>
+    <string name="font_app_semibold_italic">fonts/App-Font-SemiboldItalic.ttf</string>
+    <string name="font_app_thin">fonts/App-Font-Thin.ttf</string>
+    <string name="font_app_thin_italic">fonts/App-Font-ThinItalic.ttf</string>
+
 </resources>

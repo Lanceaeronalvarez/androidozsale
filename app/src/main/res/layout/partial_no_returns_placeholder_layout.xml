@@ -17,7 +17,7 @@
         android:src="@drawable/ic_return_placeholder" />
 
     <TextView
-        fontPath="@string/font_lato_medium"
+        fontPath="@string/font_app_medium"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
@@ -25,7 +25,7 @@
         android:textSize="@dimen/text_size_xxxlarge" />
 
     <TextView
-        fontPath="@string/font_lato_light"
+        fontPath="@string/font_app_light"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center"

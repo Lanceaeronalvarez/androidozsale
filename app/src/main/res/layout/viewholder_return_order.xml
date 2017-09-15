@@ -40,7 +40,7 @@
                 android:layout_marginTop="2dp" >
 
                 <TextView
-                    android:fontFamily="@string/font_lato_medium"
+                    android:fontFamily="@string/font_app_medium"
                     android:id="@+id/new_returns_order_item_requst_identifier"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -50,7 +50,7 @@
                     tools:ignore="HardcodedText"/>
 
                 <TextView
-                    android:fontFamily="@string/font_lato_medium"
+                    android:fontFamily="@string/font_app_medium"
                     android:id="@+id/new_returns_order_item_request_value"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -72,7 +72,7 @@
                 android:layout_height="wrap_content">
 
                 <TextView
-                    android:fontFamily="@string/font_lato_medium"
+                    android:fontFamily="@string/font_app_medium"
                     android:id="@+id/new_current_orders_item_name"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -90,7 +90,7 @@
 
 
                     <TextView
-                        android:fontFamily="@string/font_lato_medium"
+                        android:fontFamily="@string/font_app_medium"
                         android:id="@+id/new_returns_order_item_count_identifier"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
@@ -101,7 +101,7 @@
 
 
                     <TextView
-                        android:fontFamily="@string/font_lato_medium"
+                        android:fontFamily="@string/font_app_medium"
                         android:id="@+id/new_returns_order_item_count_value"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
@@ -124,7 +124,7 @@
                     android:layout_below="@+id/new_returns_order_item_count_detail">
 
                     <TextView
-                        android:fontFamily="@string/font_lato_medium"
+                        android:fontFamily="@string/font_app_medium"
                         android:id="@+id/new_returns_order_item_total_cost_identifier"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
@@ -151,7 +151,7 @@
 
 
                     <TextView
-                        android:fontFamily="@string/font_lato_medium"
+                        android:fontFamily="@string/font_app_medium"
                         android:id="@+id/new_returns_order_item_total_cost_value"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
@@ -175,7 +175,7 @@
                     android:layout_below="@+id/new_returns_order_item_total_cost_detail">
 
                     <TextView
-                        android:fontFamily="@string/font_lato_medium"
+                        android:fontFamily="@string/font_app_medium"
                         android:id="@+id/new_returns_order_item_status_indentifier"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
@@ -186,7 +186,7 @@
 
 
                     <TextView
-                        android:fontFamily="@string/font_lato_medium"
+                        android:fontFamily="@string/font_app_medium"
                         android:id="@+id/new_returns_order_item_status_value"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"

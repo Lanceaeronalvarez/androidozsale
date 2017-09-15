@@ -9,7 +9,7 @@
     tools:ignore="MissingPrefix">
 
     <TextView
-        fontPath="@string/font_lato_heavy"
+        fontPath="@string/font_app_heavy"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentLeft="true"
@@ -21,7 +21,7 @@
 
     <TextView
         android:id="@+id/textView_amount"
-        fontPath="@string/font_lato_heavy"
+        fontPath="@string/font_app_heavy"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textColor="@color/cart_order_price_text_color"

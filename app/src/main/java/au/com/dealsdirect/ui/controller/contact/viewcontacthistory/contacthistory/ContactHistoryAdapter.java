@@ -2,7 +2,6 @@ package au.com.dealsdirect.ui.controller.contact.viewcontacthistory.contacthisto
 
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;
-import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -11,10 +10,6 @@ import java.util.Collections;
 import java.util.List;
 
 import au.com.dealsdirect.R;
-import au.com.dealsdirect.utils.ColorUtils;
-import au.com.dealsdirect.utils.DateUtils;
-import au.com.dealsdirect.utils.StringUtils;
-import uk.co.chrisjenx.calligraphy.CalligraphyTypefaceSpan;
 import uk.co.chrisjenx.calligraphy.CalligraphyUtils;
 import uk.co.chrisjenx.calligraphy.TypefaceUtils;
 
@@ -59,7 +54,7 @@ public class ContactHistoryAdapter extends RecyclerView.Adapter<ContactHistoryVi
         } else {
             holder.contactHistoryItemCircularTextView.setVisibility(View.INVISIBLE);
             CalligraphyUtils.applyFontToTextView(holder.contactHistoryMessageTextView,
-                    TypefaceUtils.load(mContext.getAssets(), mContext.getString(R.string.font_lato_regular)));
+                    TypefaceUtils.load(mContext.getAssets(), mContext.getString(R.string.font_app_regular)));
         }
 
 //        String dateHeaderFormatOfItem = DateUtils.getTrimmedServerDateString(contactDate.toString());

@@ -42,7 +42,7 @@
             android:src="@drawable/logo_colored"/>
 
         <TextView
-            fontPath="@string/font_lato_medium"
+            fontPath="@string/font_app_medium"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="@string/email_address"
@@ -60,7 +60,7 @@
             <EditText
                 android:id="@+id/email"
                 style="@style/DDEditTextStyle"
-                fontPath="@string/font_lato_medium"
+                fontPath="@string/font_app_medium"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:hint="@string/email_hint"
@@ -70,7 +70,7 @@
         </android.support.design.widget.TextInputLayout>
 
         <TextView
-            fontPath="@string/font_lato_medium"
+            fontPath="@string/font_app_medium"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="5dp"
@@ -91,7 +91,7 @@
             <EditText
                 android:id="@+id/password"
                 style="@style/DDEditTextStyle"
-                fontPath="@string/font_lato_medium"
+                fontPath="@string/font_app_medium"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:hint="@string/password_hint"
@@ -102,7 +102,7 @@
         <Button
             android:id="@+id/login_button"
             style="@style/DDButtonStyle"
-            fontPath="@string/font_lato_semibold"
+            fontPath="@string/font_app_semibold"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="@string/log_in"
@@ -137,7 +137,7 @@
 
                 <TextView
                     android:id="@+id/controller_login_with_facebook_text"
-                    fontPath="@string/font_lato_semibold"
+                    fontPath="@string/font_app_semibold"
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
                     android:gravity="center"
@@ -164,7 +164,7 @@
                 android:padding="10dp">
 
                 <TextView
-                    fontPath="@string/font_lato_medium"
+                    fontPath="@string/font_app_medium"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="@string/not_a_member_yet_text"
@@ -173,7 +173,7 @@
 
                 <TextView
                     android:id="@+id/fragment_login_signup_text"
-                    fontPath="@string/font_lato_semibold"
+                    fontPath="@string/font_app_semibold"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:paddingEnd="0dp"
@@ -184,7 +184,7 @@
                     android:textSize="@dimen/text_size_medium"/>
 
                 <TextView
-                    fontPath="@string/font_lato_medium"
+                    fontPath="@string/font_app_medium"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:paddingEnd="0dp"
@@ -202,7 +202,7 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
                 android:layout_marginTop="20dp"
-                fontPath="@string/font_lato_medium"
+                fontPath="@string/font_app_medium"
                 android:textSize="@dimen/text_size_medium"
                 android:textColor="@color/bg_button_default"
                 android:text="@string/forgot_password"/>

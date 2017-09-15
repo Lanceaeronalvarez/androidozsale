@@ -140,7 +140,7 @@
 
         <TextView
             android:id="@+id/textView"
-            fontPath="@string/font_lato_heavy"
+            fontPath="@string/font_app_heavy"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
@@ -150,7 +150,7 @@
 
         <TextView
             android:id="@+id/partial_checkout_summary_total"
-            fontPath="@string/font_lato_heavy"
+            fontPath="@string/font_app_heavy"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
