@@ -677,6 +677,7 @@
             </android.support.v4.widget.NestedScrollView>
 
             <ImageView
+                android:id="@+id/product_details_button_overlay"
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/default_button_height"
                 android:background="#a0ffffff"
