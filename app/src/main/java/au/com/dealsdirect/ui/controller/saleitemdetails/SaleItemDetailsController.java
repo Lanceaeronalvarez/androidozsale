@@ -147,6 +147,8 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
     NestedScrollView mProductDetailScrollView;
     @BindView(R.id.product_details_add_to_basket)
     Button mAddToCartButton;
+    @BindView(R.id.product_details_button_overlay)
+    ImageView mAddToCartOverlay;
 
     @BindView(R.id.image_container)
     FrameLayout mImageContainerViewGroup;
@@ -289,7 +291,9 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
 
         mProductImagesRvLayoutManager = new LinearLayoutManager(getActivity(), LinearLayoutManager.HORIZONTAL, false);
         mProductImagesRv.setLayoutManager(mProductImagesRvLayoutManager);
-        mSaleItemImagesAdapter = new SaleItemDetailsImageAdapter(new ArrayList<View>(){{add(mOtherImagesRv); add(mAddToCartButton);}}, loadImagesListener, new ArrayList<>(), mSaleId, 1, mProductSharedImage.getDrawable());
+        mSaleItemImagesAdapter = new SaleItemDetailsImageAdapter(new ArrayList<View>(){{add(mOtherImagesRv);
+            add(mAddToCartButton); add(mProductPriceCategory); add(mAddToCartOverlay);}}, loadImagesListener,
+                new ArrayList<>(), mSaleId, 1, mProductSharedImage.getDrawable());
         mProductImagesRv.setAdapter(mSaleItemImagesAdapter);
 
         mProductImagesRv.addOnPageChangedListener((i, i1) -> {
