@@ -328,9 +328,11 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
         String shippingPricing = saleDetail.getPricing();
         String returnPolicy = saleDetail.getReturnPolicy();
         String productAbout = saleDetail.getAttributes() == null ? "" : saleDetail.getAttributes().getBrandDescription() == null ? "" : saleDetail.getAttributes().getBrandDescription();
+        String name = saleDetail.getName() == null ? "" : saleDetail.getName();
+        String branName = saleDetail.getBrandName() == null ? "" : saleDetail.getBrandName();
 
-        mProductName.setText(saleDetail.getName().trim());
-        mProductBrand.setText(saleDetail.getBrandName().trim());
+        mProductName.setText(name.trim());
+        mProductBrand.setText(branName.trim());
         mProductPrice.setText(PriceUtils.getPriceStringValue(saleDetail.getPrice().getValue()));
         mProductPreviousPrice.setText(PriceUtils.getRpStringValue(saleDetail.getOriginalPrice().getValue()));
 
