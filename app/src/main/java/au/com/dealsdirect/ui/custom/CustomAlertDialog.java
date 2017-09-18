@@ -85,7 +85,8 @@ public class CustomAlertDialog {
         mDialogTextLink.setOnClickListener(clickListener);
 
         if (showCount != 1) {
-            newAlertDialog.show();
+            if (activity!=null)
+                newAlertDialog.show();
 
         }
         showCount = 1;
@@ -139,7 +140,9 @@ public class CustomAlertDialog {
 
 
         if (showCount != 1) {
-            newAlertDialog.show();
+            if (activity!=null){
+                newAlertDialog.show();
+            }
         }
         showCount = 1;
         dismissOnDelay();
@@ -197,7 +200,6 @@ public class CustomAlertDialog {
 
 
     private static void dismissOnDelay() {
-
         Handler handler = new Handler();
         Runnable runnable = CustomAlertDialog::dismissCustomDialog;
 

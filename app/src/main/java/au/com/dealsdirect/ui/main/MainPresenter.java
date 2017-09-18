@@ -168,10 +168,6 @@ public class MainPresenter<V extends MainMvpView> extends BasePresenter<V> imple
                 getDataManager().setIsMyPayEnabled(value.getPayments().getMyPay().getEnabled());
             }
 
-            //Call GetPaymentToken
-            if (getDataManager().isAuthorized()) {
-                fetchBTAuthorization();
-            }
         }
     };
 
@@ -540,7 +536,6 @@ public class MainPresenter<V extends MainMvpView> extends BasePresenter<V> imple
                 .subscribe(getTemplateTextsResponse -> {
                     getDataManager().setMyPayTemplateTexts(getTemplateTextsResponse.getResponse().getValue());
                     getMvpView().storeTemplateTexts(getTemplateTextsResponse.getResponse().getValue());
-                    Log.d("mainpresenter", " getTemplatetexts success");
 
                 }, throwable -> {
                     Log.d("mainpresenter", " getTemplatetexts failed = "+throwable.getMessage());

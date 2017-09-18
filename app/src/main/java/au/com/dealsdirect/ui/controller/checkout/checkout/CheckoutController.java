@@ -206,7 +206,9 @@ public class CheckoutController extends BaseController implements CheckoutMvpVie
         super.onViewBound(view);
 
         mActivity = ((MainActivity) getActivity());
-        mActivity.performResetWithAuthFetch();
+        if (mActivity != null) {
+            mActivity.performResetWithAuthFetch();
+        }
 
         mAddNewAddressLayout = mFooterView.findViewById(R.id.partial_checkout_address_new_address);
         mAddNewPaymentLayout = mFooterView.findViewById(R.id.partial_checkout_payment_new_payment);
