@@ -663,7 +663,12 @@ public class CheckoutController extends BaseController implements CheckoutMvpVie
     }
 
     private void loadCartContent(){
-        if (mActivity.getMainController().getHomeController().getIsResetCheckout()){
+        if (mActivity.getMainController()!=null && mActivity.getMainController().getHomeController()!=null){
+            if (mActivity.getMainController().getHomeController().getIsResetCheckout()){
+                showLoading();
+                mPresenter.start();
+            }
+        }else{
             showLoading();
             mPresenter.start();
         }

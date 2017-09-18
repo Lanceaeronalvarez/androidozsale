@@ -8,6 +8,7 @@ import android.graphics.drawable.ColorDrawable;
 import android.os.Handler;
 import android.text.SpannableString;
 import android.text.style.UnderlineSpan;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -85,9 +86,11 @@ public class CustomAlertDialog {
         mDialogTextLink.setOnClickListener(clickListener);
 
         if (showCount != 1) {
-            if (activity!=null)
+            try{
                 newAlertDialog.show();
-
+            }catch (Exception e){
+                Log.d(CustomAlertDialog.class.getName(),e.getMessage());
+            }
         }
         showCount = 1;
         dismissOnDelay();
@@ -141,7 +144,11 @@ public class CustomAlertDialog {
 
         if (showCount != 1) {
             if (activity!=null){
-                newAlertDialog.show();
+                try{
+                    newAlertDialog.show();
+                }catch (Exception e){
+                    Log.d(CustomAlertDialog.class.getName(),e.getMessage());
+                }
             }
         }
         showCount = 1;
