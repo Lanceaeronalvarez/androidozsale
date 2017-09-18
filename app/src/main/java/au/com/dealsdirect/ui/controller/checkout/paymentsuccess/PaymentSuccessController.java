@@ -22,6 +22,7 @@ import au.com.dealsdirect.service.ourpay.OurpayState;
 import au.com.dealsdirect.ui.base.BaseActivity;
 import au.com.dealsdirect.ui.base.BaseController;
 import au.com.dealsdirect.ui.main.MainActivity;
+import au.com.dealsdirect.ui.main.PaymentInfo;
 import au.com.dealsdirect.utils.BundleBuilder;
 import au.com.dealsdirect.utils.DialogUtils;
 import au.com.dealsdirect.utils.PriceUtils;
@@ -29,7 +30,7 @@ import butterknife.BindView;
 import butterknife.OnClick;
 import timber.log.Timber;
 
-/**
+/*
  * Created by smartwave on 30/06/2017.
  */
 
@@ -68,8 +69,6 @@ public class PaymentSuccessController extends BaseController implements PaymentS
     private String packageName;
     private String appUri;
 
-    private Ourpay mOurpay;
-    //
     private String mAddressString;
     private double mPrice;
     private double mShippingFee;
@@ -115,11 +114,10 @@ public class PaymentSuccessController extends BaseController implements PaymentS
     protected void onViewBound(@NonNull View view) {
         super.onViewBound(view);
         mActivity = (MainActivity) getActivity();
-        mOurpay = ((MainActivity) getActivity()).getOurpay();
-        if (mOurpay != null && mOurpay.isCanUse()) {
+        if (PaymentInfo.getOurpay() != null && PaymentInfo.getOurpay().isCanUse()) {
             mPaymentOurpaySuccessDetailContainer.setVisibility(View.VISIBLE);
             mPaymentSuccessOrderNumber.setText(mInvoiceString);
-            getTotalPayment(mOurpay);
+            getTotalPayment(PaymentInfo.getOurpay());
             mPresenter.generateOurpay();
         }else{
             double totalPayment = mShippingFee+mPrice;
@@ -198,17 +196,19 @@ public class PaymentSuccessController extends BaseController implements PaymentS
 
     @Override
     public void showOurpay() {
-        mOurpay.setState(OurpayState.POSTCART);
-        if (mOurpay != null) {
+        PaymentInfo.getOurpay().setState(OurpayState.POSTCART);
+        if (PaymentInfo.getOurpay() != null) {
             OurpayPanel ourpayPanel = new OurpayPanel((BaseActivity) getActivity());
             mLLOurpay.removeAllViews();
-            mLLOurpay.addView(ourpayPanel.generatePanel(mOurpay));
+            mLLOurpay.addView(ourpayPanel.generatePanel(PaymentInfo.getOurpay()));
         }
     }
 
 
     @OnClick(R.id.partial_continue_shopping_button)
     void onContinueShoppingClick() {
+        PaymentInfo.resetPaymentInfo();
+
         getRouter().popToTag("CheckoutController");
         ((MainActivity) getActivity()).setShopsAsVisibleContainer();
     }

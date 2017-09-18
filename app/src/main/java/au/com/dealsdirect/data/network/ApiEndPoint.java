@@ -178,6 +178,9 @@ public final class ApiEndPoint {
     public static final String MASTERPASS_PAYMENT = getBaseApiLegacy() + "MasterPassPayment";
     public static final String MASTERPASS_POST_TRANSACTION = getBaseApiLegacy() + "MasterPassPostTransaction";
 
+    /* 3DS */
+    public static final String GET_PAYMENT_METHOD_NONCE = getBaseApiLegacy() + "GetPaymentMethodNonce";
+
 
     private ApiEndPoint() {
          // This class is not publicly instantiable

@@ -3,7 +3,6 @@ package au.com.dealsdirect.ui.main;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
-import android.util.Log;
 import android.view.ViewGroup;
 
 import com.bluelinelabs.conductor.Conductor;
@@ -16,6 +15,7 @@ import com.braintreepayments.api.BraintreeFragment;
 import com.braintreepayments.api.Card;
 import com.braintreepayments.api.DataCollector;
 import com.braintreepayments.api.PayPal;
+import com.braintreepayments.api.ThreeDSecure;
 import com.braintreepayments.api.exceptions.AuthenticationException;
 import com.braintreepayments.api.exceptions.AuthorizationException;
 import com.braintreepayments.api.exceptions.ConfigurationException;
@@ -64,13 +64,10 @@ import au.com.dealsdirect.utils.IntrospectionUtils;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import io.fabric.sdk.android.Fabric;
-import timber.log.Timber;
 
 public class MainActivity extends BaseActivity implements MainMvpView {
 
     private static final String TAG = "MainActivity";
-    private static final String PAYMENT_TYPE_MYPAY = "mypay";
-    private static final String PAYMENT_TYPE_BRAINTREE = "braintree";
 
     @Inject
     MainMvpPresenter<MainMvpView> mPresenter;
@@ -79,11 +76,8 @@ public class MainActivity extends BaseActivity implements MainMvpView {
     ViewGroup mContainer;
 
     private BraintreeFragment mBraintreeFragment;
-    private String mPaymentType;
-    private PaymentMethod mCurrentPaymentMethod;
-    private String mAuthorization;
     private Router mRouter;
-    private FetchTokenHandler mFetchTokenHandler;
+    private DefaultCallback mFetchTokenHandler;
 
     private MainController mMainController;
     private ShopsController mShopController;
@@ -99,11 +93,6 @@ public class MainActivity extends BaseActivity implements MainMvpView {
     private boolean mIsFromCategories = false;
     private boolean mIsViewPagerSet = false;
     private boolean isTemplateTextsStored = false;
-
-    private Ourpay mOurpay;
-    private boolean mThreeDSecureRequired;
-
-    private boolean mIsCreatingPaymentTransaction = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -234,16 +223,15 @@ public class MainActivity extends BaseActivity implements MainMvpView {
 
     @Override
     public void onCancel(int requestCode) {
+
+        PaymentInfo.setThreeDSecureCalled(false);
         hideLoading();
     }
 
     @Override
     public void onError(Exception error) {
 
-        if (error instanceof ErrorWithResponse) {
-//            hideProgressDialog();
-//            CustomAlertDialog.showCustomAlertDialog(this, CustomAlertDialog.CustomDialogIconState.NEGATIVE, error.getMessage());
-        } else {
+        if (!(error instanceof ErrorWithResponse)) {
 
             if (mBraintreeFragment != null) {
                 if (error instanceof AuthenticationException || error instanceof AuthorizationException ||
@@ -259,7 +247,6 @@ public class MainActivity extends BaseActivity implements MainMvpView {
                     mBraintreeFragment.sendAnalyticsEvent("sdk.exit.sdk-error");
                 }
 
-//                Crashlytics.log(error.getMessage());
                 //Call braintree client reset on error
                 performResetWithAuthFetch();
             }
@@ -273,37 +260,123 @@ public class MainActivity extends BaseActivity implements MainMvpView {
         Router currentRouter = homeController.getCurrentRouter();
         Controller currentController = homeController.getCurrentControllerOnRouter(currentRouter);
 
-        BraintreeResponseListener<String> handler;
-
-        if (currentController instanceof CheckoutController) {
-            handler = deviceData -> mPresenter.createPaymentTransaction(
-                    deviceData, mPaymentType, paymentMethodNonce.getNonce(), "");
+        if (currentController instanceof CheckoutController || PaymentInfo.isThreeDSecureCalled()) {
+            callCreatePaymentTransaction(PaymentInfo.getPaymentType(), paymentMethodNonce.getNonce(), "");
         } else {
-            handler = deviceData -> mPresenter.createPaymentMethod(
-                    deviceData, paymentMethodNonce.getNonce(), mPaymentType);
+            callCreatePaymentMethod(PaymentInfo.getPaymentType(), paymentMethodNonce.getNonce());
         }
 
+    }
+
+    //Call only here api for purchase
+    @Override
+    public void callCreatePaymentTransaction(String type, String nonce, String token) {
+
+        //3DS Check
+        if (PaymentInfo.isThreeDSecureRequired() && !PaymentInfo.isThreeDSecureCalled()) {
+            mPresenter.callGetPaymentMethodNonce(token);
+
+            return;
+        }
+
+        BraintreeResponseListener<String> handler = deviceData -> mPresenter.createPaymentTransaction(
+                deviceData, type, nonce, token);
+
+        //Kount Check
         if (!mPresenter.getKountMerchantId().isEmpty()) {
             DataCollector.collectDeviceData(mBraintreeFragment, mPresenter.getKountMerchantId(), handler);
         } else {
             DataCollector.collectDeviceData(mBraintreeFragment, handler);
         }
+    }
 
+    @Override
+    public void showCreatePaymentTransactionSuccess(String paymentType, CreatePaymentTransaction.ResponseValue responseValue) {
+        if (responseValue.isPaid()) {
+
+            if (paymentType.equals(PaymentInfo.TYPE_MYPAY)) {
+                setPaymentSuccessOurpay(responseValue);
+
+            } else if (PaymentInfo.getOurpay() != null) {
+                PaymentInfo.getOurpay().setCanUse(false);
+            }
+
+            mCheckoutRouter.pushController(RouterTransaction.with(new PaymentSuccessController(responseValue))
+                    .pushChangeHandler(new HorizontalChangeHandler())
+                    .popChangeHandler(new HorizontalChangeHandler()));
+
+        } else {
+            Router currentRouter = getMainController().getHomeController().getCurrentRouter();
+            Controller currentController = getMainController().getHomeController().getCurrentControllerOnRouter(currentRouter);
+
+            CustomAlertDialog.showCustomAlertDialog(this, CustomAlertDialog.CustomDialogIconState.NEGATIVE, responseValue.getD().getMessage());
+
+            if (currentController instanceof CheckoutController) {
+                CheckoutController checkoutController = (CheckoutController) currentController;
+                checkoutController.loadCart();
+            }
+        }
+    }
+
+    @Override
+    public void showCreatePaymentTransactionFailure(String errorMessage) {
+        if (errorMessage != null) {
+
+            CustomAlertDialog.showCustomAlertDialog(this, CustomAlertDialog.CustomDialogIconState.NEGATIVE, errorMessage);
+            mCheckoutRouter.popToRoot();
+        }
+    }
+
+    //Call only here api for adding payment method
+    @Override
+    public void callCreatePaymentMethod(String type, String nonce) {
+        BraintreeResponseListener<String> handler = deviceData -> mPresenter.createPaymentMethod(
+                deviceData, nonce, type);
+
+        //Kount Check
+        if (!mPresenter.getKountMerchantId().isEmpty()) {
+            DataCollector.collectDeviceData(mBraintreeFragment, mPresenter.getKountMerchantId(), handler);
+        } else {
+            DataCollector.collectDeviceData(mBraintreeFragment, handler);
+        }
+    }
+
+    @Override
+    public void showCreatePaymentMethodSuccess(PaymentMethod lastPaymentMethod) {
+
+        // Pop current fragment and return to cart controller
+        HomeController homeController = getMainController().getHomeController();
+        Router currentRouter = homeController.getCurrentRouter();
+        Controller currentController = homeController.getCurrentControllerOnRouter(currentRouter);
+
+        if ((currentController instanceof AddPaymentController) && ((AddPaymentController) currentController).isCalledFromAccounts()) {
+            ((AddPaymentController) currentController).showAddPaymentResult(true, "");
+        } else {
+            setPaymentMethodSelected(lastPaymentMethod);
+            currentRouter.handleBack();
+        }
+    }
+
+    @Override
+    public void showGetPaymentMethodNonceSuccess(String nonce) {
+        showLoadingDialog("Loading", false);
+        PaymentInfo.setThreeDSecureCalled(true);
+        ThreeDSecure.performVerification(getBraintreeFragment(), nonce, Double.toString(PaymentInfo.getCartCost()));
     }
 
     @Override
     public void performResetWithAuthFetch() {
 
-        performReset();
+        performBraintreeReset();
         fetchAuthorization(null);
     }
 
     @Override
-    public void performReset() {
+    public void performBraintreeReset() {
 
         setPaymentMethodSelected(null);
-        mAuthorization = null;
-        mPaymentType = null;
+        PaymentInfo.setAuthorization(null);
+        PaymentInfo.setPaymentType(null);
 
         if (mBraintreeFragment != null && getFragmentManager().findFragmentByTag(BraintreeFragment.TAG) != null) {
             getFragmentManager().beginTransaction().remove(mBraintreeFragment).commit();
@@ -312,49 +385,18 @@ public class MainActivity extends BaseActivity implements MainMvpView {
     }
 
     @Override
-    public FetchTokenHandler getFetchTokenHandler() {
+    public DefaultCallback getFetchTokenHandler() {
         return mFetchTokenHandler;
     }
 
     @Override
-    public void fetchAuthorization(FetchTokenHandler handler) {
+    public void fetchAuthorization(DefaultCallback handler) {
         mFetchTokenHandler = handler;
         //Don't proceed to call if not logged in
         mPresenter.fetchBTAuthorization();
 
     }
 
-    @Override
-    public void callCreatePaymentTransaction(String paymentNonce) {
-        callCreatePaymentTransaction(mPaymentType, paymentNonce);
-    }
-
-    @Override
-    public void callCreatePaymentTransaction(String paymentType, String paymentNonce) {
-        if (!mIsCreatingPaymentTransaction){
-            mIsCreatingPaymentTransaction = true;
-
-            BraintreeResponseListener<String> handler = deviceData ->
-                    mPresenter.createPaymentTransaction(deviceData, paymentType, paymentNonce, getPaymentMethodSelected().getToken());
-
-            if (!mPresenter.getKountMerchantId().isEmpty()) {
-                DataCollector.collectDeviceData(mBraintreeFragment, mPresenter.getKountMerchantId(), handler);
-            } else {
-                DataCollector.collectDeviceData(mBraintreeFragment, handler);
-            }
-        }
-    }
-
-    @Override
-    public void callCreatePaymentTransactionError(String errorMessage) {
-        mIsCreatingPaymentTransaction = false;
-
-        if (errorMessage != null) {
-
-            CustomAlertDialog.showCustomAlertDialog(this, CustomAlertDialog.CustomDialogIconState.NEGATIVE, errorMessage);
-            mCheckoutRouter.popToRoot();
-        }
-    }
 
     @Override
     public void storeTemplateTexts(GetTemplateTextsResponse.GetTemplateTextsValue value) {
@@ -365,12 +407,12 @@ public class MainActivity extends BaseActivity implements MainMvpView {
     }
 
     @Override
-    public void onAuthorizationFetched(String paymentToken, String paymentMethod) {
-        mAuthorization = paymentToken;
-        mPaymentType = paymentMethod;
+    public void onAuthorizationFetched(String authorizationToken, String paymentType) {
+        PaymentInfo.setAuthorization(authorizationToken);
+        PaymentInfo.setPaymentType(paymentType);
 
         try {
-            mBraintreeFragment = BraintreeFragment.newInstance(this, mAuthorization);
+            mBraintreeFragment = BraintreeFragment.newInstance(this, PaymentInfo.getAuthorization());
 
         } catch (InvalidArgumentException e) {
             onError(e);
@@ -389,22 +431,16 @@ public class MainActivity extends BaseActivity implements MainMvpView {
                 .cvv(cardForm.getCvv())
                 .postalCode(cardForm.getPostalCode());
 
-        Timber.d(TAG, "BT_cardNumber: " + cardForm.getCardNumber());
-        Timber.d(TAG, "BT_expirationMonth: " + cardForm.getExpirationMonth());
-        Timber.d(TAG, "BT_expirationYear: " + cardForm.getExpirationYear());
-        Timber.d(TAG, "BT_cvv: " + cardForm.getCvv());
-
         Card.tokenize(mBraintreeFragment, cardBuilder);
-
     }
 
     public PaymentMethod getPaymentMethodSelected() {
-        return mCurrentPaymentMethod;
+        return PaymentInfo.getPaymentMethod();
     }
 
     @Override
     public void setPaymentMethodSelected(PaymentMethod paymentMethodSelected) {
-        this.mCurrentPaymentMethod = paymentMethodSelected;
+        PaymentInfo.setPaymentMethod(paymentMethodSelected);
     }
 
     public BraintreeFragment getBraintreeFragment() {
@@ -428,61 +464,6 @@ public class MainActivity extends BaseActivity implements MainMvpView {
     @Override
     public void callLogout(AuthHandler handler) {
         mPresenter.callLogout(handler);
-    }
-
-
-    @Override
-    public void createPaymentMethodSuccess(PaymentMethod lastPaymentMethod) {
-
-        HomeController homeController = getMainController().getHomeController();
-        Router currentRouter = homeController.getCurrentRouter();
-        Controller currentController = homeController.getCurrentControllerOnRouter(currentRouter);
-
-        if ((currentController instanceof AddPaymentController) && ((AddPaymentController) currentController).isCalledFromAccounts()) {
-            ((AddPaymentController) currentController).showAddPaymentResult(true, "");
-        } else {
-            setPaymentMethodSelected(lastPaymentMethod);
-            currentRouter.handleBack();
-        }
-    }
-
-    @Override
-    public void createPaymentTransactionSuccess(String paymentType, CreatePaymentTransaction.ResponseValue responseValue) {
-        fetchAuthorization(null);
-        mIsCreatingPaymentTransaction = false;
-
-        if (responseValue.isPaid()) {
-
-            if (paymentType.equals(PAYMENT_TYPE_MYPAY)) {
-                setPaymentSuccessOurpay(responseValue);
-            } else if (mOurpay != null) {
-                mOurpay.setCanUse(false);
-            }
-
-            mCheckoutRouter.pushController(RouterTransaction.with(new PaymentSuccessController(responseValue))
-                    .pushChangeHandler(new HorizontalChangeHandler())
-                    .popChangeHandler(new HorizontalChangeHandler()));
-
-        } else {
-            Router currentRouter = getMainController().getHomeController().getCurrentRouter();
-            Controller currentController = getMainController().getHomeController().getCurrentControllerOnRouter(currentRouter);
-
-            CustomAlertDialog.showCustomAlertDialog(this, CustomAlertDialog.CustomDialogIconState.NEGATIVE, responseValue.getD().getMessage());
-
-            if (currentController instanceof CheckoutController) {
-                CheckoutController checkoutController = (CheckoutController) currentController;
-                checkoutController.loadCart();
-            }
-        }
-    }
-
-    public Controller getHomeRouterCurrentController() {
-        int backstackSize = mHomeRouter.getBackstack().size();
-        if (backstackSize > 0) {
-            return mHomeRouter.getBackstack().get(backstackSize - 1).controller();
-        } else {
-            return null;
-        }
     }
 
     public void setRootViewpagerItem(int item) {
@@ -584,35 +565,6 @@ public class MainActivity extends BaseActivity implements MainMvpView {
         getMainController().getHomeController().setVisibleContainer(0);
     }
 
-    public void callGetAppSettings() {
-        mPresenter.callGetAppSettings();
-    }
-
-
-    public Ourpay getOurpay() {
-        return mOurpay;
-    }
-
-    public void setOurpay(Ourpay mOurpay) {
-        this.mOurpay = mOurpay;
-    }
-
-    public boolean isThreeDSecureRequired() {
-        return mThreeDSecureRequired;
-    }
-
-    public void setThreeDSecureRequired(boolean mThreeDSecureRequired) {
-        this.mThreeDSecureRequired = mThreeDSecureRequired;
-    }
-
-    public String getPaymentType() {
-        return mPaymentType;
-    }
-
-    public void setPaymentType(String mPaymentType) {
-        this.mPaymentType = mPaymentType;
-    }
-
     private void setPaymentSuccessOurpay(CreatePaymentTransaction.ResponseValue responseValue) {
         Ourpay paymentSuccessOurpay = new Ourpay();
 
@@ -630,7 +582,7 @@ public class MainActivity extends BaseActivity implements MainMvpView {
             }
 
             paymentSuccessOurpay.setAmount(remainingAmount);
-            setOurpay(paymentSuccessOurpay);
+            PaymentInfo.setOurpay(paymentSuccessOurpay);
         } catch (Exception e) {
 
             paymentSuccessOurpay.setCanUse(false);
@@ -642,10 +594,6 @@ public class MainActivity extends BaseActivity implements MainMvpView {
 
     public String getMyTemplateTexts(String detailKey) {
         return mPresenter.getStoredTemplateTexts(detailKey);
-    }
-
-    public Controller getCategoriesController() {
-        return mCategoriesController;
     }
 
     public void setCategoriesController(CategoriesController categoriesController) {
@@ -673,7 +621,7 @@ public class MainActivity extends BaseActivity implements MainMvpView {
 
         router.popToRoot();
 
-        if (mAuthHandler!=null){
+        if (mAuthHandler != null) {
             mAuthHandler.success();
         }
 
@@ -689,10 +637,6 @@ public class MainActivity extends BaseActivity implements MainMvpView {
             mAuthHandler.error();
 
         CustomAlertDialog.showCustomAlertDialog(this, CustomAlertDialog.CustomDialogIconState.NEGATIVE, message);
-    }
-
-    public AuthHandler getAuthHandler() {
-        return mAuthHandler;
     }
 
     private void initializeAnalytics() {

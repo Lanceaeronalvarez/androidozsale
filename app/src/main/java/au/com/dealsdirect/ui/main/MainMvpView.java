@@ -17,17 +17,7 @@ public interface MainMvpView extends MvpView, BrainTreeListeners {
 
     void showLoginController(Router router, AuthHandler handler);
 
-    void onAuthorizationFetched(String paymentToken, String paymentMethod);
-
-    void performReset();
-
-    void performResetWithAuthFetch();
-
-    void fetchAuthorization(FetchTokenHandler fetchTokenHandler);
-
-    void setPaymentMethodSelected(PaymentMethod paymentMethodSelected);
-
-    FetchTokenHandler getFetchTokenHandler();
+    DefaultCallback getFetchTokenHandler();
 
     void callLoginTicket();
 
@@ -35,17 +25,7 @@ public interface MainMvpView extends MvpView, BrainTreeListeners {
 
     void callLogout(AuthHandler handler);
 
-    void createPaymentMethodSuccess(PaymentMethod lastPaymentMethod);
-
-    void callCreatePaymentTransaction(String paymentNonce);
-
-    void callCreatePaymentTransaction(String paymentType, String paymentNonce);
-
-    void callCreatePaymentTransactionError(String errorMessage);
-
     void storeTemplateTexts(GetTemplateTextsResponse.GetTemplateTextsValue templateKeysValue);
-
-    void createPaymentTransactionSuccess(String paymentType, CreatePaymentTransaction.ResponseValue responseValue);
 
     Router getCurrentRouter();
 
@@ -55,5 +35,20 @@ public interface MainMvpView extends MvpView, BrainTreeListeners {
 
     void loginErrorHandler(String message);
 
+
+    // Braintree methods
+    void onAuthorizationFetched(String paymentToken, String paymentMethod);
+    void performBraintreeReset();
+    void performResetWithAuthFetch();
+    void fetchAuthorization(DefaultCallback fetchTokenHandler);
+    void setPaymentMethodSelected(PaymentMethod paymentMethodSelected);
+
+    // Payment methods
+    void showGetPaymentMethodNonceSuccess(String nonce);
+    void callCreatePaymentMethod(String type, String nonce);
+    void showCreatePaymentMethodSuccess(PaymentMethod lastPaymentMethod);
+    void callCreatePaymentTransaction(String type, String nonce, String token);
+    void showCreatePaymentTransactionSuccess(String paymentType, CreatePaymentTransaction.ResponseValue responseValue);
+    void showCreatePaymentTransactionFailure(String errorMessage);
 
 }

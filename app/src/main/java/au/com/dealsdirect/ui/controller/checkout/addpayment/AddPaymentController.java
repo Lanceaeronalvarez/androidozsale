@@ -3,7 +3,6 @@ package au.com.dealsdirect.ui.controller.checkout.addpayment;
 import android.app.Activity;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -29,7 +28,7 @@ import au.com.dealsdirect.R;
 import au.com.dealsdirect.ui.base.BaseController;
 import au.com.dealsdirect.ui.controller.masterpass.MasterpassController;
 import au.com.dealsdirect.ui.custom.CustomAlertDialog;
-import au.com.dealsdirect.ui.main.FetchTokenHandler;
+import au.com.dealsdirect.ui.main.DefaultCallback;
 import au.com.dealsdirect.ui.main.MainActivity;
 import au.com.dealsdirect.utils.BundleBuilder;
 import au.com.dealsdirect.utils.IntrospectionUtils;
@@ -41,15 +40,14 @@ import butterknife.OnClick;
  */
 
 public class AddPaymentController extends BaseController implements AddPaymentMvpView, OnCardFormSubmitListener, CardEditText.OnCardTypeChangedListener, OnCardFormScanListener {
-    private final static String IS_FROM_CART = "IsFromCart";
+    private final static String IS_FROM_CART = "is_from_cart";
+    private final static String CART_TOTAL_COST = "cart_total_cost";
     @Inject
     AddPaymentMvpPresenter<AddPaymentMvpView> mPresenter;
 
 
     @BindView(R.id.card_form)
     CardForm mCardForm;
-    //    @BindView(R.id.partial_checkout_bt_loading)
-//    View mBraintreeLoading;
     @BindView(R.id.partial_checkout_button_holder)
     View mButtonHolder;
     @BindView(R.id.partial_checkout_button_pay)
@@ -68,18 +66,21 @@ public class AddPaymentController extends BaseController implements AddPaymentMv
     ImageView mViewAddressRightOption;
 
 
-    MainActivity mActivity;
-    boolean isFromCart = false;
-    boolean isPayPalSubmitClicked = false;
+    private MainActivity mActivity;
+    private boolean isFromCart = false;
+    private boolean isPayPalSubmitClicked = false;
+    private String mCartTotalCost;
 
-    public AddPaymentController(boolean isFromCart) {
+    public AddPaymentController(boolean isFromCart, String cartCost) {
         this(new BundleBuilder(new Bundle())
+                .putString(CART_TOTAL_COST, cartCost)
                 .putBoolean(IS_FROM_CART, isFromCart).build());
     }
 
     public AddPaymentController(Bundle args) {
         super(args);
         isFromCart = args.getBoolean(IS_FROM_CART, false);
+        mCartTotalCost = args.getString(CART_TOTAL_COST, "");
     }
 
     @Override
@@ -103,7 +104,7 @@ public class AddPaymentController extends BaseController implements AddPaymentMv
         mViewAddressRightOption.setVisibility(View.INVISIBLE);
 
         if ((getActivity()) != null) {
-            ((MainActivity)getActivity()).getMainController().getHomeController().setIsResetCheckout(true);
+            ((MainActivity) getActivity()).getMainController().getHomeController().setIsResetCheckout(true);
         }
 
         mCardForm.cardRequired(true)
@@ -125,16 +126,11 @@ public class AddPaymentController extends BaseController implements AddPaymentMv
 
         mMasterpassButton.setOnClickListener(action -> onMasterpassButtonClick());
 
-//        if(!isFromCart) {
-//            mButtonPay.setText("add");
-//            mTextPaypal.setText("add");
-//        }
-
         if (((MainActivity) getActivity()).isBraintreeInitialized()) {
 
             showPaymentButtons();
         } else {
-            ((MainActivity) getActivity()).fetchAuthorization(new FetchTokenHandler() {
+            ((MainActivity) getActivity()).fetchAuthorization(new DefaultCallback() {
                 @Override
                 public void onSuccess() {
                     showPaymentButtons();
@@ -176,12 +172,10 @@ public class AddPaymentController extends BaseController implements AddPaymentMv
     }
 
     private void hidePaymentButtons() {
-//        mBraintreeLoading.setVisibility(View.VISIBLE);
         mButtonHolder.setVisibility(View.GONE);
     }
 
     private void showPaymentButtons() {
-//        mBraintreeLoading.setVisibility(View.GONE);
         mButtonHolder.setVisibility(View.VISIBLE);
     }
 
@@ -256,7 +250,7 @@ public class AddPaymentController extends BaseController implements AddPaymentMv
     @OnClick(R.id.partial_toolbar_arrow_view)
     void onBackPressed() {
         hideKeyboard();
-        ((MainActivity)getActivity()).getMainController().getHomeController().setIsResetCheckout(false);
+        ((MainActivity) getActivity()).getMainController().getHomeController().setIsResetCheckout(false);
         getActivity().onBackPressed();
     }
 
@@ -264,7 +258,7 @@ public class AddPaymentController extends BaseController implements AddPaymentMv
     void launchCamera() {
 
         Answers.getInstance().logCustom(new CustomEvent("Credit Cart Scanning")
-            .putCustomAttribute("Type", "Start"));
+                .putCustomAttribute("Type", "Start"));
 
         mCardForm.scanCard(getActivity());
     }

@@ -4,7 +4,6 @@ import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.widget.NestedScrollView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -19,7 +18,6 @@ import com.bluelinelabs.conductor.Controller;
 import com.bluelinelabs.conductor.ControllerChangeHandler;
 import com.bluelinelabs.conductor.RouterTransaction;
 import com.bluelinelabs.conductor.changehandler.HorizontalChangeHandler;
-import com.braintreepayments.api.ThreeDSecure;
 import com.google.gson.Gson;
 import com.mysale.genie.utility.RxBus;
 
@@ -51,9 +49,10 @@ import au.com.dealsdirect.ui.controller.home.HomeController;
 import au.com.dealsdirect.ui.controller.masterpass.MasterpassController;
 import au.com.dealsdirect.ui.controller.vouchers.Add.AddVouchersController;
 import au.com.dealsdirect.ui.custom.CustomAlertDialog;
-import au.com.dealsdirect.ui.main.FetchTokenHandler;
+import au.com.dealsdirect.ui.main.DefaultCallback;
 import au.com.dealsdirect.ui.main.MainActivity;
 import au.com.dealsdirect.ui.main.MainMvpView;
+import au.com.dealsdirect.ui.main.PaymentInfo;
 import au.com.dealsdirect.utils.ImageUtils;
 import au.com.dealsdirect.utils.IntrospectionUtils;
 import au.com.dealsdirect.utils.PriceUtils;
@@ -67,7 +66,7 @@ import static au.com.dealsdirect.service.ourpay.OurpayTemplateText.KEY_OURPAY_TC
  * dp Created by Admin on 6/6/17.
  */
 
-public class CheckoutController extends BaseController implements CheckoutMvpView, FetchTokenHandler {
+public class CheckoutController extends BaseController implements CheckoutMvpView, DefaultCallback {
     public static final String CARD_PAYPAL = "Paypal";
     public static final String CARD_MASTERPASS = "Masterpass";
     public static final String CARD_MASTERCARD = "MasterCard";
@@ -102,8 +101,6 @@ public class CheckoutController extends BaseController implements CheckoutMvpVie
     private RelativeLayout mButtonOurpay;
     private CheckBox mCheckBoxOurpayTC;
 
-    private Ourpay mOurpay;
-
     @BindView(R.id.no_cart_items_layout)
     RelativeLayout mNoCartItemsLayout;
     @BindView(R.id.partial_checkout_empty_button)
@@ -135,9 +132,7 @@ public class CheckoutController extends BaseController implements CheckoutMvpVie
 
             if (view.getId() == mAddNewAddressLayout.getId()) {
                 //push controller to add new address
-                getRouter().pushController(RouterTransaction.with(new AddNewAddressController(new Gson().toJson(mDecorationInfoList), true))
-                        .pushChangeHandler(new HorizontalChangeHandler(false))
-                        .popChangeHandler(new HorizontalChangeHandler()));
+                showAddAddressController();
 
 
             } else if (view.getId() == mAddressChangeText.getId()) {
@@ -151,7 +146,7 @@ public class CheckoutController extends BaseController implements CheckoutMvpVie
 
                 if (mPaymentList.size() > 1) {
 //                  //push to payment select
-                    getRouter().pushController(RouterTransaction.with(new PaymentSelectController(new Gson().toJson(mPaymentList), true))
+                    getRouter().pushController(RouterTransaction.with(new PaymentSelectController(new Gson().toJson(mPaymentList), true, Double.toString(mValue.getSummary().total)))
                             .pushChangeHandler(new HorizontalChangeHandler(false))
                             .popChangeHandler(new HorizontalChangeHandler()));
                 } else {
@@ -159,13 +154,9 @@ public class CheckoutController extends BaseController implements CheckoutMvpVie
                     if (!isAddressValid()) {
                         //push add new address fragment
                         CustomAlertDialog.showCustomAlertDialog(getActivity(), CustomAlertDialog.CustomDialogIconState.NEGATIVE, mActivity.getString(R.string.add_address_before_payment));
-                        getRouter().pushController(RouterTransaction.with(new AddNewAddressController(new Gson().toJson(mDecorationInfoList), true))
-                                .pushChangeHandler(new HorizontalChangeHandler(false))
-                                .popChangeHandler(new HorizontalChangeHandler()));
+                        showAddAddressController();
                     } else {
-                        getRouter().pushController(RouterTransaction.with(new AddPaymentController(true))
-                                .pushChangeHandler(new HorizontalChangeHandler(false))
-                                .popChangeHandler(new HorizontalChangeHandler()));
+                        showAddPaymentMethodController();
                     }
                 }
 
@@ -248,7 +239,7 @@ public class CheckoutController extends BaseController implements CheckoutMvpVie
     @Override
     protected void setUp(View view) {
 
-        if (getActivity()!=null){
+        if (getActivity() != null) {
             mActivity.getMainController().showBottomNav();
             mActivity.getMainController().setViewpagerDraggable(false);
         }
@@ -318,13 +309,12 @@ public class CheckoutController extends BaseController implements CheckoutMvpVie
             if (ourpay != null && isMyPayEnabled) {
                 OurpayStateManager.setOurpayAccordingToPaymentMethod(ourpay, paymentMethod);
 
-                mActivity.setOurpay(ourpay);
+                PaymentInfo.setOurpay(ourpay);
 
                 OurpayPanel ourpayPanel = new OurpayPanel((BaseActivity) getActivity(), getRouter());
-                mOurpay = ourpay;
 
-                if(mOurpayHolder.getChildCount() == 0) { //add view if there is no childview yet
-                    mOurpayHolder.addView(ourpayPanel.generatePanel(mOurpay, isRowVisible -> {
+                if (mOurpayHolder.getChildCount() == 0) { //add view if there is no childview yet
+                    mOurpayHolder.addView(ourpayPanel.generatePanel(PaymentInfo.getOurpay(), isRowVisible -> {
                         if (isRowVisible) {
                             new Handler().postDelayed(() -> mNestedScrollView.fullScroll(View.FOCUS_DOWN), 400);
                         }
@@ -345,9 +335,9 @@ public class CheckoutController extends BaseController implements CheckoutMvpVie
     public void showCartDetails(List<Item> items) {
         mPresenter.generateOurpay(mValue);
 
-        if (items == null ){ //do nothing (ie. when increasing order quantity, returns a soldout/out of stock message)
+        if (items == null) { //do nothing (ie. when increasing order quantity, returns a soldout/out of stock message)
             return;
-        }else if(items.isEmpty()) {
+        } else if (items.isEmpty()) {
             //no items
             showNoCartItemsLayout();
         } else {
@@ -481,8 +471,10 @@ public class CheckoutController extends BaseController implements CheckoutMvpVie
     public void storeCartDetails(Value value) {
 
         //Set 3DS value
-        if (getActivity() != null) {
-            mActivity.setThreeDSecureRequired(value.threeDSecureRequired);
+        if (value != null) {
+//            PaymentInfo.setThreeDSecureRequired(value.threeDSecureRequired);
+            PaymentInfo.setThreeDSecureRequired(true);
+            PaymentInfo.setCartCost(value.getSummary().total);
         }
 
         mValue = value;
@@ -504,9 +496,7 @@ public class CheckoutController extends BaseController implements CheckoutMvpVie
         if (!isAddressValid()) {
 
             //push add new address fragment.
-            getRouter().pushController(RouterTransaction.with(new AddNewAddressController(new Gson().toJson(mDecorationInfoList), true))
-                    .pushChangeHandler(new HorizontalChangeHandler(false))
-                    .popChangeHandler(new HorizontalChangeHandler()));
+            showAddAddressController();
             return;
         }
 
@@ -514,18 +504,9 @@ public class CheckoutController extends BaseController implements CheckoutMvpVie
 
         if (mActivity.isBraintreeInitialized()) {
             if (mActivity.getPaymentMethodSelected() == null) {
-                getRouter().pushController(RouterTransaction.with(new AddPaymentController(false))
-                        .pushChangeHandler(new HorizontalChangeHandler(false))
-                        .popChangeHandler(new HorizontalChangeHandler()));
-
+                showAddPaymentMethodController();
             } else {
-                if (mActivity.isThreeDSecureRequired()) {
-                    //TODO: Call 3DS if required in card payment
-                    //Need verification from API team how to get nonce
-                    //callThree3DS(Double.toString(mValue.getSummary().total), );
-                } else {
-                    mActivity.callCreatePaymentTransaction("");
-                }
+                mActivity.callCreatePaymentTransaction(PaymentInfo.getPaymentType(), "", PaymentInfo.getPaymentMethod().getToken());
             }
         }
     }
@@ -534,9 +515,7 @@ public class CheckoutController extends BaseController implements CheckoutMvpVie
 
         if (!isAddressValid()) {
             //push add new address fragment
-            getRouter().pushController(RouterTransaction.with(new AddNewAddressController(new Gson().toJson(mDecorationInfoList), true))
-                    .pushChangeHandler(new HorizontalChangeHandler(false))
-                    .popChangeHandler(new HorizontalChangeHandler()));
+            showAddAddressController();
             return;
         }
 
@@ -547,7 +526,7 @@ public class CheckoutController extends BaseController implements CheckoutMvpVie
             if (mActivity.getPaymentMethodSelected() == null) {
                 mActivity.startPaypalPayment();
             } else {
-                mActivity.callCreatePaymentTransaction("");
+                mActivity.callCreatePaymentTransaction(PaymentInfo.getPaymentType(), "", PaymentInfo.getPaymentMethod().getToken());
             }
         }
     }
@@ -569,25 +548,24 @@ public class CheckoutController extends BaseController implements CheckoutMvpVie
         if (mActivity.isBraintreeInitialized()) {
 
             if (!isAddressValid()) {
+
                 CustomAlertDialog.showCustomAlertDialog(getActivity(), CustomAlertDialog.CustomDialogIconState.NEGATIVE, mActivity.getString(R.string.add_address_before_payment));
-                getRouter().pushController(RouterTransaction.with(new AddNewAddressController(new Gson().toJson(mDecorationInfoList), true))
-                        .pushChangeHandler(new HorizontalChangeHandler(false))
-                        .popChangeHandler(new HorizontalChangeHandler()));
+                showAddAddressController();
+
             } else if (mActivity.getPaymentMethodSelected() == null) {
-                getRouter().pushController(RouterTransaction.with(new AddPaymentController(false))
-                        .pushChangeHandler(new HorizontalChangeHandler(false))
-                        .popChangeHandler(new HorizontalChangeHandler()));
+
+                showAddPaymentMethodController();
 
             } else {
 
-                if (!mActivity.getPaymentMethodSelected().getPaymentType().equalsIgnoreCase(CARD_PAYPAL) && mOurpay.isCanUse()) {
+                if (!mActivity.getPaymentMethodSelected().getPaymentType().equalsIgnoreCase(CARD_PAYPAL) && PaymentInfo.getOurpay().isCanUse()) {
 
                     if (mCheckBoxOurpayTC != null && !mCheckBoxOurpayTC.isChecked()) {
-                        CustomAlertDialog.showCustomAlertDialog(getActivity(), CustomAlertDialog.CustomDialogIconState.NEGATIVE, OurpayTemplateText.getText(mActivity,KEY_OURPAY_TC_VALIDATION_FAILED));
+                        CustomAlertDialog.showCustomAlertDialog(getActivity(), CustomAlertDialog.CustomDialogIconState.NEGATIVE, OurpayTemplateText.getText(mActivity, KEY_OURPAY_TC_VALIDATION_FAILED));
                         return;
                     }
 
-                    if (mOurpay.isPhoneVerificationRequired()) {
+                    if (PaymentInfo.getOurpay().isPhoneVerificationRequired()) {
 
                         getRouter().pushController(RouterTransaction.with(OurpaySMSVerificationController.newInstance(mCartPhone))
                                 .pushChangeHandler(new HorizontalChangeHandler(false))
@@ -626,14 +604,11 @@ public class CheckoutController extends BaseController implements CheckoutMvpVie
     }
 
     private void hidePaymentButtons() {
-//        mBraintreeLoading.setVisibility(View.VISIBLE);
         mButtonHolder.setVisibility(View.GONE);
     }
 
     private void showPaymentButtons() {
-//        mBraintreeLoading.setVisibility(View.GONE);
         mButtonHolder.setVisibility(View.VISIBLE);
-
     }
 
     @Override
@@ -650,28 +625,33 @@ public class CheckoutController extends BaseController implements CheckoutMvpVie
 
     private void ourpayPaymentSubmit() {
 
-        if (mActivity.isThreeDSecureRequired()) {
-            callThree3DS(Double.toString(mOurpay.getAmount()), mOurpay.getPaymentMethodNonce().getNonce());
-        } else {
-            mActivity.callCreatePaymentTransaction(PAYMENT_TYPE_MYPAY, "");
-        }
+        mActivity.callCreatePaymentTransaction(PaymentInfo.TYPE_MYPAY, "", PaymentInfo.getPaymentMethod().getToken());
     }
 
-    private void callThree3DS(String cost, String nonce) {
-        showLoadingDialog("Loading", false);
-        ThreeDSecure.performVerification(mActivity.getBraintreeFragment(), nonce, cost);
-    }
-
-    private void loadCartContent(){
-        if (mActivity.getMainController()!=null && mActivity.getMainController().getHomeController()!=null){
-            if (mActivity.getMainController().getHomeController().getIsResetCheckout()){
+    private void loadCartContent() {
+        if (mActivity.getMainController() != null && mActivity.getMainController().getHomeController() != null) {
+            if (mActivity.getMainController().getHomeController().getIsResetCheckout()) {
                 showLoading();
                 mPresenter.start();
             }
-        }else{
+        } else {
+
             showLoading();
             mPresenter.start();
         }
+    }
+
+
+    private void showAddAddressController() {
+        getRouter().pushController(RouterTransaction.with(new AddNewAddressController(new Gson().toJson(mDecorationInfoList), true))
+                .pushChangeHandler(new HorizontalChangeHandler(false))
+                .popChangeHandler(new HorizontalChangeHandler()));
+    }
+
+    private void showAddPaymentMethodController() {
+        getRouter().pushController(RouterTransaction.with(new AddPaymentController(true, Double.toString(mValue.getSummary().total)))
+                .pushChangeHandler(new HorizontalChangeHandler(false))
+                .popChangeHandler(new HorizontalChangeHandler()));
     }
 }
 
