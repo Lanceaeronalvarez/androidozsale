@@ -105,6 +105,7 @@ public class ShopsController extends BasePullToRefreshController implements Shop
     private ImageView rightOption;
 
     private int mBannerClickCounter = 0;
+    private boolean isRefreshShop = false;
 
     BannerClickListener mBannerClickListener;
 
@@ -184,7 +185,7 @@ public class ShopsController extends BasePullToRefreshController implements Shop
                 // Load next page of data (e.g. network or database)
                 page++;
                 bannerOffset += newBannerCount; //load 10 banners every page
-                bannerLimit += newBannerCount;
+                bannerLimit = newBannerCount;
                 refresh();
             }
 
@@ -339,10 +340,12 @@ public class ShopsController extends BasePullToRefreshController implements Shop
 
         loadingInProgress = false;
 
-        if (page == 0) {
+        if (page == 0 || isRefreshShop) {
             mBannersAdapter.replace(getBannerResponses);
             mPaginateManager = PaginateUtils.init(shopsControllerBannerRecyclerView, mPaginateCallbacks);
+            isRefreshShop = false;
         } else {
+
             mBannersAdapter.addAll(getBannerResponses);
 
             if (getBannerResponses.isEmpty()) {
@@ -390,7 +393,7 @@ public class ShopsController extends BasePullToRefreshController implements Shop
         super.onError(message);
 
         bannerOffset -= newBannerCount;
-        bannerLimit -= newBannerCount;
+        bannerLimit = newBannerCount;
         page--;
 
         loadingInProgress = false;
@@ -565,7 +568,8 @@ public class ShopsController extends BasePullToRefreshController implements Shop
     public void onRefreshStart() {
         super.onRefreshStart();
         shopsControllerBannerRecyclerView.setVisibility(View.GONE);
-
-        mPresenter.loadShopsBanner(mCategoryName, mCategoryID, 0, newBannerCount, true);
+        isRefreshShop = true;
+        bannerOffset = 0;
+        mPresenter.loadShopsBanner(mCategoryName, mCategoryID, bannerOffset, newBannerCount, true);
     }
 }

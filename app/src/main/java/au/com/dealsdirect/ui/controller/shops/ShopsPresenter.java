@@ -42,6 +42,7 @@ public class ShopsPresenter<V extends ShopsMvpView> extends BasePresenter<V> imp
     public void loadShopsBanner(String categoryName, String categoryId, int bannerOffset,
                                 int bannerLimit, boolean getOnlyFromNetwork) {
 
+        Log.d("shopspresenter", "banneroffset = "+bannerOffset + " , banner limit= "+bannerLimit);
         GetBannerRequest getBannerRequest = new GetBannerRequest();
         getBannerRequest.setOffset(String.valueOf(bannerOffset));
         getBannerRequest.setLimit(String.valueOf(bannerLimit));
