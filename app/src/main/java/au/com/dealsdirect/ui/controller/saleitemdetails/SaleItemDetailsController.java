@@ -506,10 +506,10 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
 
         if (hasSizes) {
             if (!didSelectSize) {
-//                CustomAlertDialog.showCustomAlertDialog(
-//                        getActivity(),
-//                        CustomAlertDialog.CustomDialogIconState.NEGATIVE,
-//                        getActivity().getString(R.string.please_select_size));
+                CustomAlertDialog.showCustomAlertDialog(
+                        getActivity(),
+                        CustomAlertDialog.CustomDialogIconState.NEGATIVE,
+                        getActivity().getString(R.string.please_select_size));
 
                 mProductDetailScrollView.scrollTo(0, mProductDetailBottomCard.getTop());
             } else {
@@ -518,7 +518,6 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
         } else {
             verifyAddToCart(request);
         }
-
     }
 
     private void verifyAddToCart(AddToCartRequest request) {

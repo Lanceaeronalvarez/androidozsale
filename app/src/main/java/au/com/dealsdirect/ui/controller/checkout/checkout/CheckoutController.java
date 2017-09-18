@@ -290,7 +290,6 @@ public class CheckoutController extends BaseController implements CheckoutMvpVie
     }
 
     public void loadCart() {
-        Log.d("loadcart", "loading cart");
         if (mPresenter.checkIsLoggedIn()) {
             RxBus.instance().post(IntrospectionUtils.EVENT_CHECKOUT_SCREEN);
 
@@ -393,6 +392,7 @@ public class CheckoutController extends BaseController implements CheckoutMvpVie
 
             mPayButton.setVisibility(View.VISIBLE);
             mPaypalButton.setVisibility(View.VISIBLE);
+            mMasterpassButton.setVisibility(View.VISIBLE);
             mActivity.setPaymentMethodSelected(null);
             return;
 
@@ -413,6 +413,7 @@ public class CheckoutController extends BaseController implements CheckoutMvpVie
             mAddNewPaymentLayout.setVisibility(View.GONE);
             mPaymentLayout.setVisibility(View.VISIBLE);
             mPaymentChangeText.setVisibility(View.VISIBLE);
+            mMasterpassButton.setVisibility(View.GONE);
         }
 
         //Payment buttons
