@@ -396,7 +396,7 @@ public class OurpaySMSVerificationController extends BaseController implements O
 
     private void ourpayPaymentSubmit() {
 
-        getActivity().onBackPressed();
-        ((MainActivity) getActivity()).callCreatePaymentTransaction(PaymentInfo.TYPE_MYPAY, "", PaymentInfo.getPaymentMethod().getToken());
+        PaymentInfo.setPaymentType(PaymentInfo.TYPE_MYPAY);
+        ((MainActivity) getActivity()).callCreatePaymentTransaction(PaymentInfo.getPaymentType(), "", PaymentInfo.getPaymentMethod().getToken());
     }
 }

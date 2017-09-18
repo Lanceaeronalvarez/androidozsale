@@ -71,7 +71,6 @@ public class CheckoutController extends BaseController implements CheckoutMvpVie
     public static final String CARD_MASTERPASS = "Masterpass";
     public static final String CARD_MASTERCARD = "MasterCard";
     public static final String CARD_VISA = "Visa";
-    private static final String PAYMENT_TYPE_MYPAY = "mypay";
 
     @Inject
     CheckoutMvpPresenter<CheckoutMvpView> mPresenter;
@@ -506,6 +505,7 @@ public class CheckoutController extends BaseController implements CheckoutMvpVie
             if (mActivity.getPaymentMethodSelected() == null) {
                 showAddPaymentMethodController();
             } else {
+                PaymentInfo.setPaymentType(PaymentInfo.TYPE_BRAINTREE);
                 mActivity.callCreatePaymentTransaction(PaymentInfo.getPaymentType(), "", PaymentInfo.getPaymentMethod().getToken());
             }
         }
@@ -526,6 +526,7 @@ public class CheckoutController extends BaseController implements CheckoutMvpVie
             if (mActivity.getPaymentMethodSelected() == null) {
                 mActivity.startPaypalPayment();
             } else {
+                PaymentInfo.setPaymentType(PaymentInfo.TYPE_BRAINTREE);
                 mActivity.callCreatePaymentTransaction(PaymentInfo.getPaymentType(), "", PaymentInfo.getPaymentMethod().getToken());
             }
         }
@@ -625,7 +626,8 @@ public class CheckoutController extends BaseController implements CheckoutMvpVie
 
     private void ourpayPaymentSubmit() {
 
-        mActivity.callCreatePaymentTransaction(PaymentInfo.TYPE_MYPAY, "", PaymentInfo.getPaymentMethod().getToken());
+        PaymentInfo.setPaymentType(PaymentInfo.TYPE_MYPAY);
+        mActivity.callCreatePaymentTransaction(PaymentInfo.getPaymentType(), "", PaymentInfo.getPaymentMethod().getToken());
     }
 
     private void loadCartContent() {
