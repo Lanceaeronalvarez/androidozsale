@@ -1,6 +1,23 @@
 <?xml version="1.0" encoding="utf-8"?>
 <selector xmlns:android="http://schemas.android.com/apk/res/android">
-    <item android:drawable="@color/ourpay_gray" android:state_enabled="false"/>
-    <item android:drawable="@color/ourpay_orange_dark" android:state_pressed="true"/>
-    <item android:drawable="@color/ourpay_orange"/>
+    <item android:state_enabled="false">
+        <shape android:shape="rectangle">
+            <corners android:radius="5dp"/>
+            <solid android:color="@color/ourpay_gray"/>
+        </shape>
+    </item>
+
+    <item android:state_pressed="true">
+        <shape android:shape="rectangle">
+            <corners android:radius="5dp"/>
+            <solid android:color="@color/ourpay_orange_dark"/>
+        </shape>
+    </item>
+
+    <item >
+        <shape android:shape="rectangle">
+            <corners android:radius="5dp"/>
+            <solid android:color="@color/ourpay_orange"/>
+        </shape>
+    </item>
 </selector>

@@ -14,18 +14,17 @@ import android.widget.ImageView;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.Priority;
 import com.bumptech.glide.load.DecodeFormat;
-import com.bumptech.glide.load.ResourceEncoder;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
-import com.bumptech.glide.load.engine.Resource;
 import com.bumptech.glide.load.resource.bitmap.BitmapEncoder;
 import com.bumptech.glide.request.RequestListener;
 import com.bumptech.glide.request.animation.GlideAnimation;
 import com.bumptech.glide.request.target.SimpleTarget;
 import com.bumptech.glide.request.target.Target;
 
-import java.io.OutputStream;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
+
+import au.com.dealsdirect.R;
 
 
 public class ImageUtils {
