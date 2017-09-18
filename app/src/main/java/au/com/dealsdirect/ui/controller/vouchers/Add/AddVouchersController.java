@@ -368,6 +368,14 @@ public class AddVouchersController extends BaseController implements AddVouchers
 
             voucherIds.add(mTempVoucherPromoKey);
             tempVoucherIds.add(mTempVoucherPromoKey);
+
+            SharedPreferences.Editor editor = mSharedPreference.edit();
+            Set<String> voucherSet = new HashSet<String>();
+            voucherSet.addAll(voucherIds);
+            editor.putStringSet("VOUCHER_SET", voucherSet);
+            editor.apply();
+
+
             getActivity().onBackPressed();
         } else {
 
