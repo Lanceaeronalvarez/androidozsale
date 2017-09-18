@@ -301,7 +301,9 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
             vhNew.image.setImageResource(R.drawable.circle_indicator_active);
 
             SaleItemDetailsImageAdapter.ViewHolder vhOld = (SaleItemDetailsImageAdapter.ViewHolder) mOtherImagesRv.findViewHolderForLayoutPosition(i);
-            vhOld.image.setImageResource(R.drawable.circle_indicator_inactive);
+            if(vhOld.image != null) {
+                vhOld.image.setImageResource(R.drawable.circle_indicator_inactive);
+            }
         });
 
         mHtmlHeader = getActivity().getResources()
