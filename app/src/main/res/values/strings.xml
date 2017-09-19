@@ -325,4 +325,5 @@
     <string name="please_fill_up_field">Please fill up the field below</string>
 
     <string name="error">error</string>
+    <string name="remove_payment_method">Removed Payment Method</string>
 </resources>

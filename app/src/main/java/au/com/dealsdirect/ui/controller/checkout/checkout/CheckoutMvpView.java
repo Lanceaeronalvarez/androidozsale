@@ -37,4 +37,5 @@ public interface CheckoutMvpView extends MvpView {
     void triggerLoginTicket();
 
     void updateCheckoutBadge();
+
 }

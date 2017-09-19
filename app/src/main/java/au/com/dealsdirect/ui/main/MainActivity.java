@@ -635,7 +635,7 @@ public class MainActivity extends BaseActivity implements MainMvpView {
     }
 
     @Override
-    public void loginSuccessHandler(Router router, AppConstants.POP_FLAG flag) {
+    public void loginSuccessHandler(Router router, AppConstants.POP_FLAG flag, AppConstants.AUTH_FLAG authFlag) {
 
         RxBus.instance().post(IntrospectionUtils.EVENT_LOGIN);
 
@@ -654,8 +654,19 @@ public class MainActivity extends BaseActivity implements MainMvpView {
             mAuthHandler.success();
         }
 
+        String successMessage = getString(R.string.login_successfully);
+        switch (authFlag){
+            case REGISTER:
+                successMessage = getString(R.string.registered_successfully);
+                break;
+            case LOGIN:
+                successMessage = getString(R.string.login_successfully);
+                break;
+            default:
+                break;
+        }
         hideKeyboard();
-        CustomAlertDialog.showCustomAlertDialog(this, CustomAlertDialog.CustomDialogIconState.POSITIVE, getString(R.string.login_successfully));
+        CustomAlertDialog.showCustomAlertDialog(this, CustomAlertDialog.CustomDialogIconState.POSITIVE, successMessage);
         mMainController.getHomeController().getPresenter().callGetBasketItemsQuantity();
         mMainController.showBottomNav();
     }

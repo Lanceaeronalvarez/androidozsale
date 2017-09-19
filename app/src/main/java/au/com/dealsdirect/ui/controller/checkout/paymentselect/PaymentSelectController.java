@@ -150,6 +150,8 @@ public class PaymentSelectController extends BasePullToRefreshController impleme
         mActivity.setPaymentMethodSelected(null);
 
         if (result) {
+            CustomAlertDialog.showCustomAlertDialog(mActivity, CustomAlertDialog.CustomDialogIconState.POSITIVE, mActivity.getString(R.string.remove_payment_method));
+
             mPaymentMethods.remove(paymentMethod);
             mAdapter.notifyDataSetChanged();
 
@@ -207,5 +209,4 @@ public class PaymentSelectController extends BasePullToRefreshController impleme
                 .pushChangeHandler(new HorizontalChangeHandler())
                 .popChangeHandler(new HorizontalChangeHandler()));
     }
-
 }

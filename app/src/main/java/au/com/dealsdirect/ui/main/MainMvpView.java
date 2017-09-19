@@ -32,7 +32,7 @@ public interface MainMvpView extends MvpView, BrainTreeListeners {
 
     Controller getCurrentController(Router router);
 
-    void loginSuccessHandler(Router router, AppConstants.POP_FLAG flag);
+    void loginSuccessHandler(Router router, AppConstants.POP_FLAG flag, AppConstants.AUTH_FLAG authFlag);
 
     void loginErrorHandler(String message);
 
