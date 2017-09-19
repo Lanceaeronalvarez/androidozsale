@@ -43,7 +43,7 @@ android {
 
     productFlavors {
         dealsDirectRC {
-            applicationId "au.com.dealsdirect"
+            applicationId "au.com.dealsdirect.rc"
         }
 
         dealsDirectTest {
