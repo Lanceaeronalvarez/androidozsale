@@ -197,7 +197,7 @@ public class MainActivity extends BaseActivity implements MainMvpView {
                                     (dialogInterface, i) -> {
                                     });
                             break;
-                        } else if(currentController instanceof PaymentSuccessController){
+                        } else if (currentController instanceof PaymentSuccessController) {
                             try {
 
                                 getMainController().getHomeController().getCheckoutRouter().popToRoot();
@@ -206,15 +206,15 @@ public class MainActivity extends BaseActivity implements MainMvpView {
                                     getMainController().getHomeController().setIsResetCheckout(true);
                                     ((CheckoutController) controller).loadCart();
                                 }
-                            } catch (Exception e){
+                            } catch (Exception e) {
                                 Log.d(MainActivity.TAG, e.getMessage());
                             }
-                        }else if (currentRouter.getBackstackSize() == 1) { //From Bottom Nav
+                        } else if (currentRouter.getBackstackSize() == 1) { //From Bottom Nav
                             getMainController().showBottomNav();
                             setShopsAsVisibleContainer();
                             break;
                         } else {
-                            getMainController().showBottomNav();
+                            //getMainController().showBottomNav();
                             currentRouter.handleBack();
                         }
                     }
@@ -639,7 +639,7 @@ public class MainActivity extends BaseActivity implements MainMvpView {
 
         RxBus.instance().post(IntrospectionUtils.EVENT_LOGIN);
 
-        switch (flag){
+        switch (flag) {
             case BACK:
                 onBackPressed();
                 break;
