@@ -229,7 +229,9 @@ public class CurrentReturnsController extends BasePullToRefreshController
     @OnClick(R.id.partial_toolbar_filter_view)
 
     public void onAddReturnClick(){
-        mCurrentReturns.clear();
+        if (mCurrentReturns!=null)
+            mCurrentReturns.clear();
+
         getRouter().pushController(RouterTransaction.with(
                 ReturnOrdersController.newInstance())
                 .pushChangeHandler(new HorizontalChangeHandler())

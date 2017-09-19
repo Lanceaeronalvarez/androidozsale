@@ -494,4 +494,6 @@ public class HomeController extends BaseController implements HomeMvpView {
     public ImageView getAddToCartImage(){
         return mImageAddToCartAnimation;
     }
+
+    public Router getCheckoutRouter(){ return mCheckoutRouter; }
 }

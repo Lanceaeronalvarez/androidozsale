@@ -3,6 +3,7 @@ package au.com.dealsdirect.ui.main;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
+import android.util.Log;
 import android.view.ViewGroup;
 
 import com.bluelinelabs.conductor.Conductor;
@@ -195,7 +196,18 @@ public class MainActivity extends BaseActivity implements MainMvpView {
                                     (dialogInterface, i) -> {
                                     });
                             break;
-                        } else if (currentRouter.getBackstackSize() == 1) { //From Bottom Nav
+                        } else if(currentController instanceof PaymentSuccessController){
+                            try {
+                                getMainController().getHomeController().getCheckoutRouter().popToRoot();
+                                Controller controller = getMainController().getHomeController().getCurrentControllerOnRouter(mCheckoutRouter);
+                                if (controller instanceof CheckoutController) {
+                                    getMainController().getHomeController().setIsResetCheckout(true);
+                                    ((CheckoutController) controller).loadCart();
+                                }
+                            } catch (Exception e){
+                                Log.d(MainActivity.TAG, e.getMessage());
+                            }
+                        }else if (currentRouter.getBackstackSize() == 1) { //From Bottom Nav
                             getMainController().showBottomNav();
                             setShopsAsVisibleContainer();
                             break;
