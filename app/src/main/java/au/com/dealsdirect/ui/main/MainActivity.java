@@ -60,6 +60,7 @@ import au.com.dealsdirect.ui.controller.saleitems.SaleItemsController;
 import au.com.dealsdirect.ui.controller.shops.ShopsController;
 import au.com.dealsdirect.ui.controller.splash.SplashScreenController;
 import au.com.dealsdirect.ui.custom.CustomAlertDialog;
+import au.com.dealsdirect.utils.AppConstants;
 import au.com.dealsdirect.utils.DialogUtils;
 import au.com.dealsdirect.utils.IntrospectionUtils;
 import butterknife.BindView;
@@ -627,24 +628,34 @@ public class MainActivity extends BaseActivity implements MainMvpView {
     }
 
     @Override
-    public void loginSuccessHandler(Router router, String successMessage) {
+    public void loginSuccessHandler(Router router, AppConstants.POP_FLAG flag) {
 
         RxBus.instance().post(IntrospectionUtils.EVENT_LOGIN);
 
-        router.popToRoot();
+        switch (flag){
+            case BACK:
+                onBackPressed();
+                break;
+            case ROOT:
+                router.popToRoot();
+                break;
+            default:
+                break;
+        }
 
         if (mAuthHandler != null) {
             mAuthHandler.success();
         }
 
         hideKeyboard();
-        CustomAlertDialog.showCustomAlertDialog(this, CustomAlertDialog.CustomDialogIconState.POSITIVE, successMessage);
+        CustomAlertDialog.showCustomAlertDialog(this, CustomAlertDialog.CustomDialogIconState.POSITIVE, getString(R.string.login_successfully));
         mMainController.getHomeController().getPresenter().callGetBasketItemsQuantity();
         mMainController.showBottomNav();
     }
 
     @Override
     public void loginErrorHandler(String message) {
+
         if (mAuthHandler != null)
             mAuthHandler.error();
 

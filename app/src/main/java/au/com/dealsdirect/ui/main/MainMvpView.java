@@ -12,6 +12,7 @@ import au.com.dealsdirect.data.network.model.checkout.CreatePaymentTransaction;
 import au.com.dealsdirect.data.network.model.checkout.getuserpaymentmethods.PaymentMethod;
 import au.com.dealsdirect.data.network.model.legalities.GetTemplateTextsResponse;
 import au.com.dealsdirect.ui.base.MvpView;
+import au.com.dealsdirect.utils.AppConstants;
 
 public interface MainMvpView extends MvpView, BrainTreeListeners {
 
@@ -31,7 +32,7 @@ public interface MainMvpView extends MvpView, BrainTreeListeners {
 
     Controller getCurrentController(Router router);
 
-    void loginSuccessHandler(Router router, String successMessage);
+    void loginSuccessHandler(Router router, AppConstants.POP_FLAG flag);
 
     void loginErrorHandler(String message);
 

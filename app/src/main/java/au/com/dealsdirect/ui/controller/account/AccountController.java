@@ -208,8 +208,7 @@ public class AccountController extends BaseController implements AccountMvpView,
                 mPresenter.onAccountItemClick(option);
                 ((MainActivity) getActivity()).callGCMRegisterSubscriber();
                 mFilterButton.setImageDrawable(getActivity().getResources().getDrawable(R.drawable.ic_logout));
-                ((MainActivity) getActivity()).getMainController().getHomeController().getPresenter().callGetBasketItemsQuantity();
-                ((MainActivity) getActivity()).getMainController().getHomeController().initControllers(true);
+                ((MainActivity) getActivity()).getMainController().getHomeController().resetInviteRouter();
             }
 
             @Override
@@ -226,10 +225,15 @@ public class AccountController extends BaseController implements AccountMvpView,
             public void success() {
                 mPresenter.loadAccountItems();
                 ((MainActivity) getActivity()).getMainController().getHomeController().setIsResetCheckout(true);
+                CartUtil.setValueToCart(0);
                 ((MainActivity) getActivity()).getMainController().getHomeController().removeBasketItemCount();
                 mFilterButton.setImageDrawable(getActivity().getResources().getDrawable(R.drawable.ic_login));
 
-                ((MainActivity) getActivity()).getMainController().getHomeController().showShopController();
+//                commented. in iOS when logging out, it stays on my accounts.
+//                ((MainActivity) getActivity()).getMainController().getHomeController().showShopController();
+
+                //reset checkout router
+                ((MainActivity) getActivity()).getMainController().getHomeController().resetCheckoutRouter();
                 CustomAlertDialog.showCustomAlertDialog(getActivity(),
                         CustomAlertDialog.CustomDialogIconState.POSITIVE,
                         getActivity().getString(R.string.logout_successful));  
@@ -260,7 +264,6 @@ public class AccountController extends BaseController implements AccountMvpView,
     public void promptLogin(){
         if(mPresenter.getIsAuthorized()) {
             triggerLogout();
-            CartUtil.setValueToCart(0);
         } else {
             ((MainMvpView)getActivity()).showLoginController(getRouter(),new AuthHandler() {
                 @Override
@@ -268,7 +271,6 @@ public class AccountController extends BaseController implements AccountMvpView,
                     mPresenter.onAttach(AccountController.this);
                     ((MainMvpView)getActivity()).callGCMRegisterSubscriber();
                     mFilterButton.setImageDrawable(getActivity().getResources().getDrawable(R.drawable.ic_logout));
-                    ((MainActivity) getActivity()).getMainController().getHomeController().getPresenter().callGetBasketItemsQuantity();
                     ((MainActivity) getActivity()).getMainController().getHomeController().initControllers(true);
                 }
 

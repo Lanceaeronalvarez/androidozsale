@@ -23,6 +23,7 @@ import au.com.dealsdirect.data.auth.AuthHandler;
 import au.com.dealsdirect.ui.base.BaseController;
 import au.com.dealsdirect.ui.controller.legalities.LegalitiesController;
 import au.com.dealsdirect.ui.main.MainActivity;
+import au.com.dealsdirect.utils.AppConstants;
 import au.com.dealsdirect.utils.BundleBuilder;
 import butterknife.BindView;
 import butterknife.OnClick;
@@ -174,7 +175,7 @@ public class RegisterController extends BaseController implements RegisterMvpVie
     public void showLoginSuccessful(String loginTicket) {
         //Call facebook registration successful analytics
         mPresenter.facebookRegisterAnalytics(getActivity());
-        mActivity.loginSuccessHandler(getRouter(), getResources().getString(R.string.registered_successfully));
+        mActivity.loginSuccessHandler(getRouter(), AppConstants.POP_FLAG.ROOT);
     }
 
     @Override

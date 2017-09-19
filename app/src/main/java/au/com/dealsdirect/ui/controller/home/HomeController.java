@@ -315,6 +315,12 @@ public class HomeController extends BaseController implements HomeMvpView {
 
     }
 
+    public void resetCheckoutRouter(){
+        mCheckoutRouter = getChildRouter(mCheckoutContainer);
+        mCheckoutRouter.setRoot(RouterTransaction.with(new CheckoutController())
+                .tag(getActivity().getResources().getString(R.string.checkout_controller)));
+    }
+
     @Override
     public void showShopController() {
         setVisibleContainer(0);
@@ -457,7 +463,7 @@ public class HomeController extends BaseController implements HomeMvpView {
     }
 
     public void resetVisibleContainer(){
-        if(!(getCurrentRouter() == mAccountsRouter)) {
+        if(!(getCurrentRouter() == mAccountsRouter || getCurrentRouter() == mShopRouter)) {
             mContainersList.get(currentVisibleIndex).setVisibility(View.GONE);
             mContainersList.get(previousVisibleIndex).setVisibility(View.VISIBLE);
             mBottomNavigationView.setCurrentItem(previousVisibleIndex, false);

@@ -379,11 +379,6 @@ public class MainPresenter<V extends MainMvpView> extends BasePresenter<V> imple
                             getMvpView().showCreatePaymentTransactionSuccess(paymentType, responseValue);
                         } else {
                             getMvpView().showCreatePaymentTransactionFailure(responseValue.getD().getMessage());
-
-                            Controller controller = getMvpView().getCurrentController(getMvpView().getCurrentRouter());
-                            if (controller instanceof CheckoutController) {
-                                ((CheckoutController) controller).loadCart();
-                            }
                         }
 
                     }
@@ -504,8 +499,6 @@ public class MainPresenter<V extends MainMvpView> extends BasePresenter<V> imple
 
     @Override
     public void callLogout(AuthHandler handler) {
-
-        CartUtil.setValueToCart(0);
         PaymentInfo.resetPaymentInfo();
 
         getMvpView().showLoading();

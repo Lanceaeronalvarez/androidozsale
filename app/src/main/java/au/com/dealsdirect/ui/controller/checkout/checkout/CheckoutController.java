@@ -4,6 +4,7 @@ import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.widget.NestedScrollView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -270,7 +271,7 @@ public class CheckoutController extends BaseController implements CheckoutMvpVie
 
             @Override
             public void onChangeCompleted(@Nullable Controller to, @Nullable Controller from, boolean isPush, @NonNull ViewGroup container, @NonNull ControllerChangeHandler handler) {
-                if (to instanceof CheckoutController) {
+                if (to instanceof CheckoutController && mActivity.isAuthorized()) {
                     loadCart();
                 }
             }
@@ -287,8 +288,6 @@ public class CheckoutController extends BaseController implements CheckoutMvpVie
 
             if (!mActivity.isBraintreeInitialized()) {
                 mActivity.fetchAuthorization(this);
-                loadCartContent();
-
             } else {
                 loadCartContent();
             }
@@ -630,16 +629,16 @@ public class CheckoutController extends BaseController implements CheckoutMvpVie
     }
 
     private void loadCartContent() {
-        if (mActivity.getMainController() != null && mActivity.getMainController().getHomeController() != null) {
-            if (mActivity.getMainController().getHomeController().getIsResetCheckout()) {
-                showLoading();
-                mPresenter.start();
-            }
-        } else {
+//        if (mActivity.getMainController() != null && mActivity.getMainController().getHomeController() != null) {
+//            if (mActivity.getMainController().getHomeController().getIsResetCheckout()) {
+//                showLoading();
+//                mPresenter.start();
+//            }
+//        } else {
 
             showLoading();
             mPresenter.start();
-        }
+//        }
     }
 
 

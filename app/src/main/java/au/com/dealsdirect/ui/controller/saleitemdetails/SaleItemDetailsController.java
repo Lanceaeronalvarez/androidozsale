@@ -310,6 +310,8 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
                 .getString(R.string.base_html_template_header);
         mHtmlFooter = getActivity().getResources()
                 .getString(R.string.base_html_template_footer);
+
+        setRetainViewMode(RetainViewMode.RETAIN_DETACH);
     }
 
     @Override

@@ -31,6 +31,7 @@ import au.com.dealsdirect.ui.controller.forgotpassword.ForgotPasswordController;
 import au.com.dealsdirect.ui.controller.register.RegisterController;
 import au.com.dealsdirect.ui.custom.CustomAlertDialog;
 import au.com.dealsdirect.ui.main.MainActivity;
+import au.com.dealsdirect.utils.AppConstants;
 import au.com.dealsdirect.utils.BundleBuilder;
 import au.com.dealsdirect.utils.IntrospectionUtils;
 import butterknife.BindView;
@@ -143,12 +144,15 @@ public class LoginController extends BaseController implements LoginMvpView {
 
     @Override
     public void showLoginSuccessful(String loginTicket) {
-        mActivity.loginSuccessHandler(getRouter(), getResources().getString(R.string.login_successfully));
+        mActivity.loginSuccessHandler(getRouter(), AppConstants.POP_FLAG.BACK);
     }
 
     @Override
     public boolean handleBack() {
-        mActivity.getMainController().getHomeController().resetVisibleContainer();
+        if(!mActivity.isAuthorized()) {
+            mActivity.getMainController().getHomeController().resetVisibleContainer();
+        }
+        hideKeyboard();
         return super.handleBack();
     }
 
