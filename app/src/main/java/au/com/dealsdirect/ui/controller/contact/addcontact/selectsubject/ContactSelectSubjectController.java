@@ -111,6 +111,6 @@ public class ContactSelectSubjectController extends BaseController
                 getActivity(),
                 contactSubject);
 
-        getActivity().onBackPressed();
+        getRouter().popCurrentController();
     }
 }
