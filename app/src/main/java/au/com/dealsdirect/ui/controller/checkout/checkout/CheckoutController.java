@@ -471,8 +471,7 @@ public class CheckoutController extends BaseController implements CheckoutMvpVie
 
         //Set 3DS value
         if (value != null) {
-//            PaymentInfo.setThreeDSecureRequired(value.threeDSecureRequired);
-            PaymentInfo.setThreeDSecureRequired(true);
+            PaymentInfo.setThreeDSecureRequired(value.threeDSecureRequired);
             PaymentInfo.setCartCost(value.getSummary().total);
         }
 
