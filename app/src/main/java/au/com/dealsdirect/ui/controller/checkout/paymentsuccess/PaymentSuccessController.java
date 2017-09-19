@@ -124,7 +124,7 @@ public class PaymentSuccessController extends BaseController implements PaymentS
             mPaymentSuccessTableContainer.setVisibility(View.VISIBLE);
             mPriceTextView.setText(PriceUtils.getPriceStringValue(totalPayment));
         }
-
+        mEstimatedDelivery.setVisibility(View.GONE);
         setUp(view);
     }
 

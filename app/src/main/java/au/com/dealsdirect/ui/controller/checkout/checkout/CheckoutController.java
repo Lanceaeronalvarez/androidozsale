@@ -300,17 +300,18 @@ public class CheckoutController extends BaseController implements CheckoutMvpVie
 
     @Override
     public void showMyPayDetails(Value value, Ourpay ourpay) {
+
         if (value != null) {
             PaymentMethod paymentMethod = mActivity.getPaymentMethodSelected();
             boolean isMyPayEnabled = mActivity.getIsMyPayEnabled();
 
             if (ourpay != null && isMyPayEnabled) {
-                OurpayStateManager.setOurpayAccordingToPaymentMethod(ourpay, paymentMethod);
 
+                OurpayStateManager.setOurpayAccordingToPaymentMethod(ourpay, paymentMethod);
                 PaymentInfo.setOurpay(ourpay);
 
                 OurpayPanel ourpayPanel = new OurpayPanel((BaseActivity) getActivity(), getRouter());
-
+                mOurpayHolder.removeAllViews();
                 if (mOurpayHolder.getChildCount() == 0) { //add view if there is no childview yet
                     mOurpayHolder.addView(ourpayPanel.generatePanel(PaymentInfo.getOurpay(), isRowVisible -> {
                         if (isRowVisible) {
@@ -325,6 +326,8 @@ public class CheckoutController extends BaseController implements CheckoutMvpVie
                 if (ourpay.getTermsAndConditionsCheckboxState() != 0) {
                     mCheckBoxOurpayTC = mOurpayHolder.findViewById(R.id.ourpay_checkbox_tc);
                 }
+            }else{
+                Log.d(CheckoutController.class.getName(),"mypay disabled");
             }
         }
     }
@@ -421,6 +424,10 @@ public class CheckoutController extends BaseController implements CheckoutMvpVie
                 mPaypalButton.setVisibility(View.GONE);
             }
         }
+
+        if (mValue!=null){
+            mPresenter.generateOurpay(mValue);
+        }
     }
 
     @Override
@@ -467,7 +474,6 @@ public class CheckoutController extends BaseController implements CheckoutMvpVie
 
     @Override
     public void storeCartDetails(Value value) {
-
         //Set 3DS value
         if (value != null) {
             PaymentInfo.setThreeDSecureRequired(value.threeDSecureRequired);
@@ -475,6 +481,7 @@ public class CheckoutController extends BaseController implements CheckoutMvpVie
         }
 
         mValue = value;
+        mPresenter.generateOurpay(mValue);
     }
 
     @Override
@@ -531,6 +538,13 @@ public class CheckoutController extends BaseController implements CheckoutMvpVie
     }
 
     private void onMasterpassButtonClick() {
+
+        if (!isAddressValid()) {
+
+            //push add new address fragment.
+            showAddAddressController();
+            return;
+        }
 
         RxBus.instance().post(IntrospectionUtils.EVENT_PAY);
 

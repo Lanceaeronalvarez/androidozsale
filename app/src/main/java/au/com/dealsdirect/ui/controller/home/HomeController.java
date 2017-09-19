@@ -342,8 +342,9 @@ public class HomeController extends BaseController implements HomeMvpView {
     @Override
     public void showInviteController() {
         setVisibleContainer(3);
+
         if (!mActivity.isAuthorized()) {
-            new Handler().postDelayed(() -> mActivity.showLoginController(mInvitesRouter, new AuthHandler() {
+            mActivity.showLoginController(mInvitesRouter, new AuthHandler() {
                 @Override
                 public void success() {
 //                                    initControllers(true);
@@ -354,7 +355,7 @@ public class HomeController extends BaseController implements HomeMvpView {
                 public void error() {
 
                 }
-            }), 500);
+            });
         } else {
 
         }
@@ -363,8 +364,9 @@ public class HomeController extends BaseController implements HomeMvpView {
     @Override
     public void showCheckoutController() {
         setVisibleContainer(4);
+
         if (!mActivity.isAuthorized()) {
-            new Handler().postDelayed(() -> mActivity.showLoginController(mCheckoutRouter, new AuthHandler() {
+            mActivity.showLoginController(mCheckoutRouter, new AuthHandler() {
                 @Override
                 public void success() {
 //                                    initControllers(true);
@@ -375,7 +377,7 @@ public class HomeController extends BaseController implements HomeMvpView {
                 public void error() {
 
                 }
-            }), 500);
+            });
         } else {
             Controller controller = getCurrentControllerOnRouter(mCheckoutRouter);
             if (controller instanceof CheckoutController) {
