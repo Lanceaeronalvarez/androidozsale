@@ -1,27 +1,27 @@
 {
   "project_info": {
-    "project_number": "506012601270",
-    "firebase_url": "https://dealsdirect-4d830.firebaseio.com",
-    "project_id": "dealsdirect-4d830",
-    "storage_bucket": "dealsdirect-4d830.appspot.com"
+    "project_number": "72197270300",
+    "firebase_url": "https://dealsdirect-6f23d.firebaseio.com",
+    "project_id": "dealsdirect-6f23d",
+    "storage_bucket": "dealsdirect-6f23d.appspot.com"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:506012601270:android:d1712d1f61e17b08",
+        "mobilesdk_app_id": "1:72197270300:android:d1712d1f61e17b08",
         "android_client_info": {
-          "package_name": "au.com.dealsdirect.rc"
+          "package_name": "au.com.dealsdirect"
         }
       },
       "oauth_client": [
         {
-          "client_id": "506012601270-25pssartsntdo7paomqvpudnuprqtglk.apps.googleusercontent.com",
+          "client_id": "72197270300-8imqkribi80v4o70bsgt4gkh7oh42k0s.apps.googleusercontent.com",
           "client_type": 3
         }
       ],
       "api_key": [
         {
-          "current_key": "AIzaSyDaYEYj2nLt09L0JPCPbXc4-t5HR-AmhLA"
+          "current_key": "AIzaSyByuxDzliSIR7kUlqhRsLYy8KWJ30HzJAU"
         }
       ],
       "services": {
@@ -39,20 +39,51 @@
     },
     {
       "client_info": {
-        "mobilesdk_app_id": "1:506012601270:android:4c9f8b476601fda2",
+        "mobilesdk_app_id": "1:72197270300:android:4c9f8b476601fda2",
         "android_client_info": {
           "package_name": "au.com.dealsdirect.test"
         }
       },
       "oauth_client": [
         {
-          "client_id": "506012601270-25pssartsntdo7paomqvpudnuprqtglk.apps.googleusercontent.com",
+          "client_id": "72197270300-8imqkribi80v4o70bsgt4gkh7oh42k0s.apps.googleusercontent.com",
           "client_type": 3
         }
       ],
       "api_key": [
         {
-          "current_key": "AIzaSyDaYEYj2nLt09L0JPCPbXc4-t5HR-AmhLA"
+          "current_key": "AIzaSyByuxDzliSIR7kUlqhRsLYy8KWJ30HzJAU"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 1,
+          "other_platform_oauth_client": []
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:72197270300:android:dece612b12dc3aee",
+        "android_client_info": {
+          "package_name": "au.com.oo.test"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "72197270300-8imqkribi80v4o70bsgt4gkh7oh42k0s.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyByuxDzliSIR7kUlqhRsLYy8KWJ30HzJAU"
         }
       ],
       "services": {

@@ -5,9 +5,9 @@ import au.com.dealsdirect.BuildConfig;
 
 public final class ApiEndPoint {
 
-    //    private static final String TEST_API_LEGACY = "https://sbx-mob-api.mysaledev.com/public/v3.18/api.asmx/";
+    //private static final String TEST_API_LEGACY = "https://sbx-mob-api.mysaledev.com/public/v3.18/api.asmx/";
     private static final String TEST_API_LEGACY = "https://api.mysaledev.com/public/v3.17/api.asmx/";
-//    private static final String LIVE_API_LEGACY = "https://api.apacsale.com/public/v3.18/api.asmx/";
+    //private static final String LIVE_API_LEGACY = "https://api.apacsale.com/public/v3.18/api.asmx/";
     private static final String LIVE_API_LEGACY = "https://www.dealsdirect.com.au/papi/public/v3.17/api.asmx/";
 
     private static final String TEST_API_GENIE = "https://genie-ui-dealsdirect-pre.mysaledev.com/";
