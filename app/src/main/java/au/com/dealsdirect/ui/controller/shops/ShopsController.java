@@ -106,6 +106,7 @@ public class ShopsController extends BasePullToRefreshController implements Shop
 
     private int mBannerClickCounter = 0;
     private boolean isRefreshShop = false;
+    private int mPaginateManagerCounter = 0;
 
     BannerClickListener mBannerClickListener;
 
@@ -342,7 +343,10 @@ public class ShopsController extends BasePullToRefreshController implements Shop
 
         if (page == 0 || isRefreshShop) {
             mBannersAdapter.replace(getBannerResponses);
-            mPaginateManager = PaginateUtils.init(shopsControllerBannerRecyclerView, mPaginateCallbacks);
+            if (mPaginateManagerCounter==0){
+                mPaginateManager = PaginateUtils.init(shopsControllerBannerRecyclerView, mPaginateCallbacks);
+                mPaginateManagerCounter++;
+            }
             isRefreshShop = false;
         } else {
 
