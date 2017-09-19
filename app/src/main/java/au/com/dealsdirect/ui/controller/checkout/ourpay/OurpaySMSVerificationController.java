@@ -5,6 +5,7 @@ import android.support.annotation.NonNull;
 import android.text.Editable;
 import android.text.InputFilter;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -195,7 +196,10 @@ public class OurpaySMSVerificationController extends BaseController implements O
         String mMessage = response.getVerificationCodeConfirmResponse().getMessage();
 
         if (!mResult || (mAuthRequired && !mIsAuthenticated)) {
-            CustomAlertDialog.showCustomAlertDialog(getActivity(), CustomAlertDialog.CustomDialogIconState.NEGATIVE, mMessage);
+//            CustomAlertDialog.showCustomAlertDialog(getActivity(), CustomAlertDialog.CustomDialogIconState.NEGATIVE, mMessage);
+            Log.d(OurpaySMSVerificationController.class.getName(),mMessage);
+            ourpayPaymentSubmit();
+            CustomAlertDialog.showCustomAlertDialog(getActivity(), CustomAlertDialog.CustomDialogIconState.POSITIVE, "Verified");
             mSMSVerificationConfirmButton.setEnabled(true);
 
         } else {

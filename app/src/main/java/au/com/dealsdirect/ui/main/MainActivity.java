@@ -199,6 +199,7 @@ public class MainActivity extends BaseActivity implements MainMvpView {
                             break;
                         } else if(currentController instanceof PaymentSuccessController){
                             try {
+
                                 getMainController().getHomeController().getCheckoutRouter().popToRoot();
                                 Controller controller = getMainController().getHomeController().getCurrentControllerOnRouter(mCheckoutRouter);
                                 if (controller instanceof CheckoutController) {
@@ -337,6 +338,12 @@ public class MainActivity extends BaseActivity implements MainMvpView {
 
             CustomAlertDialog.showCustomAlertDialog(this, CustomAlertDialog.CustomDialogIconState.NEGATIVE, errorMessage);
             mCheckoutRouter.popToRoot();
+
+            Controller controller = getMainController().getHomeController().getCurrentControllerOnRouter(mCheckoutRouter);
+            if (controller != null && controller instanceof CheckoutController) {
+                getMainController().getHomeController().setIsResetCheckout(true);
+                ((CheckoutController) controller).loadCart();
+            }
         }
     }
 
