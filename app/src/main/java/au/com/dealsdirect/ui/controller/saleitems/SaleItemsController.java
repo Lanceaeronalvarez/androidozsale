@@ -2,6 +2,7 @@ package au.com.dealsdirect.ui.controller.saleitems;
 
 import android.app.Activity;
 import android.content.Context;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.NonNull;
@@ -21,6 +22,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.bluelinelabs.conductor.RouterTransaction;
+import com.bluelinelabs.conductor.changehandler.FadeChangeHandler;
 import com.bluelinelabs.conductor.changehandler.VerticalChangeHandler;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
@@ -332,9 +334,9 @@ public class SaleItemsController extends BasePullToRefreshController implements 
 
         //determining hint logic
         //category precedes above all
-        if(!mCategoryKey.isEmpty()){
+        if (!mCategoryKey.isEmpty()) {
             mSaleItemsToolbarField.setHint(categoryToolbarString);
-        } else if(!mTitle.isEmpty()){
+        } else if (!mTitle.isEmpty()) {
             mSaleItemsToolbarField.setHint(mTitle);
         } else {
             mSaleItemsToolbarField.setHint(getResources().getString(R.string.i_am_looking_for));
@@ -368,7 +370,7 @@ public class SaleItemsController extends BasePullToRefreshController implements 
 //        }
     }
 
-    private String buildCategoryToolbarTitle(){
+    private String buildCategoryToolbarTitle() {
         char c = '>';
         int charCount = 0;
         String newString = "";
@@ -401,7 +403,7 @@ public class SaleItemsController extends BasePullToRefreshController implements 
         mPresenter.loadSortingFacets();
         mSaleItemsToolbarTitle.setTextAlignment(View.TEXT_ALIGNMENT_TEXT_START);
 
-        ((MainActivity)getActivity()).getMainController().setViewpagerDraggable(false);
+        ((MainActivity) getActivity()).getMainController().setViewpagerDraggable(false);
 
         mPaginateCallbacks = new Paginate.Callbacks() {
             @Override
@@ -484,7 +486,7 @@ public class SaleItemsController extends BasePullToRefreshController implements 
             mCategoryTreeResponse = getSaleItemsResponse.getCategories();
         } else {
 
-            if(items.size() == 0){
+            if (items.size() == 0) {
                 mFacets = getSaleItemsResponse.facets;
             }
 
@@ -595,9 +597,16 @@ public class SaleItemsController extends BasePullToRefreshController implements 
             bundle.putString("KEY_SALE_PRICE", ((SaleItemsAdapter.ViewHolder) viewHolder).price.getText().toString());
             bundle.putString("KEY_SALE_OLD_PRICE", ((SaleItemsAdapter.ViewHolder) viewHolder).oldPrice.getText().toString());
 
-            getRouter().pushController(RouterTransaction.with(SaleItemDetailsController.newInstance(bundle))
-                    .pushChangeHandler(new SharedArcFadePushChangeHandler())
-                    .popChangeHandler(new SharedArcFadePopChangeHandler()));
+            if (Build.VERSION.SDK_INT < Build.VERSION_CODES.M) {
+                getRouter().pushController(RouterTransaction.with(SaleItemDetailsController.newInstance(bundle))
+                        .pushChangeHandler(new FadeChangeHandler())
+                        .popChangeHandler(new FadeChangeHandler()));
+            } else {
+                getRouter().pushController(RouterTransaction.with(SaleItemDetailsController.newInstance(bundle))
+                        .pushChangeHandler(new SharedArcFadePushChangeHandler())
+                        .popChangeHandler(new SharedArcFadePopChangeHandler()));
+            }
+
 
             mFromShopSearch = false;
             mFromCategorySearch = false;
