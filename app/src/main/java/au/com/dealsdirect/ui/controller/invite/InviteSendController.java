@@ -231,7 +231,7 @@ public class InviteSendController extends BasePullToRefreshController implements
 
                 Intent tweetIntent = new Intent(Intent.ACTION_SEND);
                 tweetIntent.putExtra(Intent.EXTRA_TEXT, messageWithInvite);
-                tweetIntent.putExtra(Intent.EXTRA_STREAM, Uri.parse(bannerImageUrl != null ? bannerImageUrl : ""));
+//                tweetIntent.putExtra(Intent.EXTRA_STREAM, Uri.parse(bannerImageUrl != null ? bannerImageUrl : ""));
                 tweetIntent.setType("text/plain");
 
                 PackageManager packManager = getActivity().getPackageManager();
@@ -460,6 +460,7 @@ public class InviteSendController extends BasePullToRefreshController implements
         bannerImageUrl = inviteBody.getBannerUrl();
 
         mPersonalInvitationLinkEditText.setText(inviteLink);
+        mPersonalInvitationMessageEditText.setText(inviteMessage);
         mSendInvitationContainer.setVisibility(View.VISIBLE);
         mPersonalInvitationLinkEditText.addTextChangedListener(mTextWatcher);
     }
