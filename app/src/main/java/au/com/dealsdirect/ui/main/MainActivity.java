@@ -639,7 +639,12 @@ public class MainActivity extends BaseActivity implements MainMvpView {
 
     @Override
     public Controller getCurrentController(Router router) {
-        return getMainController().getHomeController().getCurrentControllerOnRouter(router);
+        try {
+            return getMainController().getHomeController().getCurrentControllerOnRouter(router);
+        } catch (NullPointerException e) {
+            return getMainController();
+        }
+
     }
 
     @Override
