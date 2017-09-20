@@ -14,6 +14,7 @@ import android.graphics.Path;
 import android.graphics.Rect;
 import android.os.Build;
 import android.util.DisplayMetrics;
+import android.util.Log;
 import android.view.Display;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -41,6 +42,7 @@ public class OurpayGraph {
     private int indexTracker;
     private Bitmap bitmap;
     private Bitmap[] bitmapState = new Bitmap[6];
+
 
     /**
      * @param scaleBitmapImage - Contains Bitmap Image to be masked
@@ -162,6 +164,13 @@ public class OurpayGraph {
         int circleTempSize;
         int circleTempTextSize;
 
+        Log.d("ourpaygraph", "generate graph");
+
+        Bitmap progressBitmap = BitmapFactory.decodeResource(context.getResources(),
+                R.drawable.ourpay_image_gradient);
+        Bitmap grayBitmap = BitmapFactory.decodeResource(context.getResources(),
+                R.drawable.ourpay_image_gray);
+
 
         DisplayMetrics dm = context.getResources().getDisplayMetrics();
 
@@ -181,6 +190,10 @@ public class OurpayGraph {
 
         final int circleSize = circleTempSize;
         final int circleTextSize = circleTempTextSize;
+
+        Bitmap drawProgressCircle = getRoundedShape(progressBitmap, circleSize);
+        Bitmap drawGrayCircle = getCircle(grayBitmap, circleSize);
+
 
         layPayViewId = new LinearLayout(context);
         layPayViewId.setBackgroundColor(Color.WHITE);
@@ -220,9 +233,7 @@ public class OurpayGraph {
             vto.addOnGlobalLayoutListener(new OnGlobalLayoutListener() {
                 @Override
                 public void onGlobalLayout() {
-                    circleView.getViewTreeObserver().removeGlobalOnLayoutListener(this);
                     circlesLayoutWidth = deviceWidth - (deviceWidth / 3);
-
                     ImageView foregroundBar =
                             (ImageView) yourView.findViewById(R.id.ourpay_fg_bar);
 
@@ -241,13 +252,13 @@ public class OurpayGraph {
                             backgroundBar.getLayoutParams().height = 18;
                         }
                     }
-                    Bitmap progressBitmap = BitmapFactory.decodeResource(context.getResources(),
-                            R.drawable.ourpay_image_gradient);
-                    Bitmap grayBitmap = BitmapFactory.decodeResource(context.getResources(),
-                            R.drawable.ourpay_image_gray);
+//                    Bitmap progressBitmap = BitmapFactory.decodeResource(context.getResources(),
+//                            R.drawable.ourpay_image_gradient);
+//                    Bitmap grayBitmap = BitmapFactory.decodeResource(context.getResources(),
+//                            R.drawable.ourpay_image_gray);
 
-                    Bitmap drawProgressCircle = getRoundedShape(progressBitmap, circleSize);
-                    Bitmap drawGrayCircle = getCircle(grayBitmap, circleSize);
+//                    Bitmap drawProgressCircle = getRoundedShape(progressBitmap, circleSize);
+//                    Bitmap drawGrayCircle = getCircle(grayBitmap, circleSize);
 
 
                     if (state == 0) {
@@ -2021,8 +2032,11 @@ public class OurpayGraph {
                             }
                         }
                     }
+                    circleView.getViewTreeObserver().removeOnGlobalLayoutListener(this);
                 }
             });
+
+
 
             TextView tempDate = (TextView) yourView.findViewById(R.id.dateTextView);
             TextView tempPay = (TextView) yourView.findViewById(R.id.dollarValue);
@@ -2045,7 +2059,10 @@ public class OurpayGraph {
                 tempView[i] = yourView;
                 layPayViewId.addView(a);
             }
+
         }
+
+
         return layPayViewId;
     }
 

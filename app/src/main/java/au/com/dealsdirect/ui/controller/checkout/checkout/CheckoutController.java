@@ -273,6 +273,7 @@ public class CheckoutController extends BaseController implements CheckoutMvpVie
             public void onChangeCompleted(@Nullable Controller to, @Nullable Controller from, boolean isPush, @NonNull ViewGroup container, @NonNull ControllerChangeHandler handler) {
                 if (to instanceof CheckoutController && mActivity.isAuthorized()) {
                     loadCart();
+                    Log.d("checkoutListener","onChangeCompleted");
                 }
             }
         });
@@ -334,7 +335,7 @@ public class CheckoutController extends BaseController implements CheckoutMvpVie
 
     @Override
     public void showCartDetails(List<Item> items) {
-        mPresenter.generateOurpay(mValue);
+//        mPresenter.generateOurpay(mValue);
 
         if (items == null) { //do nothing (ie. when increasing order quantity, returns a soldout/out of stock message)
             return;
@@ -423,10 +424,6 @@ public class CheckoutController extends BaseController implements CheckoutMvpVie
                 mPayButton.setVisibility(View.VISIBLE);
                 mPaypalButton.setVisibility(View.GONE);
             }
-        }
-
-        if (mValue!=null){
-            mPresenter.generateOurpay(mValue);
         }
     }
 
@@ -668,6 +665,10 @@ public class CheckoutController extends BaseController implements CheckoutMvpVie
         getRouter().pushController(RouterTransaction.with(new AddPaymentController(true, Double.toString(mValue.getSummary().total)))
                 .pushChangeHandler(new HorizontalChangeHandler(false))
                 .popChangeHandler(new HorizontalChangeHandler()));
+    }
+
+    public void removeOurpayView(){
+        mOurpayHolder.removeAllViews();
     }
 }
 
