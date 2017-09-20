@@ -241,7 +241,7 @@ public class SearchFilterController extends BaseController
         mSearchApplyButton.setImageDrawable(getResources().getDrawable(R.drawable.ic_check_white_24dp));
 
 
-        mFacetItemsAdapter = new FacetItemsAdapter(new ArrayList<>(), mPresenter, new HashSet<Integer>());
+        mFacetItemsAdapter = new FacetItemsAdapter(new ArrayList<>(), mPresenter, new HashSet<Integer>(),mFacetItemsRecyclerView);
         mFacetItemsRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity(), LinearLayoutManager.VERTICAL, false));
         mFacetItemsRecyclerView.setAdapter(mFacetItemsAdapter);
         mFacetItemsAdapter.setOnSelectListener(new FacetItemsAdapter.OnSelectListener() {
@@ -278,6 +278,7 @@ public class SearchFilterController extends BaseController
         mFacetsRecyclerView.setAdapter(mFacetsAdapter);
 
         mSearchTagsAdapter.setFacetsAdapter(mFacetsAdapter);
+        mFacetItemsAdapter.setSearchTagsAdapter(mSearchTagsAdapter);
 
         if (mFacets != null) {
             parseFacets(mFacets);
