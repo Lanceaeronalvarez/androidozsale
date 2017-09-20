@@ -473,6 +473,8 @@ public class HomeController extends BaseController implements HomeMvpView {
             mContainersList.get(previousVisibleIndex).setVisibility(View.VISIBLE);
             mBottomNavigationView.setCurrentItem(previousVisibleIndex, false);
             currentVisibleIndex = previousVisibleIndex;
+        } else if (getCurrentRouter() == mShopRouter) {
+            showBottomNav();
         }
     }
 
