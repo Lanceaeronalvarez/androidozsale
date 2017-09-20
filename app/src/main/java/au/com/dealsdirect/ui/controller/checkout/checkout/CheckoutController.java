@@ -492,7 +492,9 @@ public class CheckoutController extends BaseController implements CheckoutMvpVie
     @Override
     public void updateCheckoutBadge() {
         HomeController homeController = mActivity.getMainController().getHomeController();
-        homeController.getPresenter().callGetBasketItemsQuantity();
+        if(mActivity.isAuthorized()) {
+            homeController.getPresenter().callGetBasketItemsQuantity();
+        }
     }
 
     private void onPayButtonClick() {
