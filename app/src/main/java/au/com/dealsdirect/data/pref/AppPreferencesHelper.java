@@ -213,7 +213,7 @@ public class AppPreferencesHelper implements PreferencesHelper {
     @Override
     public String getFollowUsFbLink() {
         String FACEBOOK_URL = Prefs.getString(FOLLOW_US_LINK_FB, "");
-        String FACEBOOK_PAGE_ID = "47143367223";      //  http://findmyfbid.com/
+        String FACEBOOK_PAGE_ID = mContext.getString(R.string.fb_page_id);     //  http://findmyfbid.com/
         try {
             mContext.getPackageManager().getPackageInfo("com.facebook.katana", 0);
             return "fb://page/" + FACEBOOK_PAGE_ID;
