@@ -13,8 +13,6 @@ import au.com.dealsdirect.ui.base.MvpPresenter;
 @PerActivity
 public interface MainMvpPresenter<V extends MainMvpView> extends MvpPresenter<V> {
 
-    void callAppSettingsWithAuthCheck();
-
     void callGetServerSettings();
 
     void callGetAppSettings();

@@ -16,15 +16,10 @@ import au.com.dealsdirect.utils.AppConstants;
 
 public interface MainMvpView extends MvpView, BrainTreeListeners {
 
-    void showLoginController(Router router, AuthHandler handler);
 
     DefaultCallback getFetchTokenHandler();
 
-    void callLoginTicket();
-
     void callGCMRegisterSubscriber();
-
-    void callLogout(AuthHandler handler);
 
     void storeTemplateTexts(GetTemplateTextsResponse.GetTemplateTextsValue templateKeysValue);
 
@@ -32,10 +27,13 @@ public interface MainMvpView extends MvpView, BrainTreeListeners {
 
     Controller getCurrentController(Router router);
 
+    // Authorization
+    void showLoginController(Router router, AuthHandler handler);
     void loginSuccessHandler(Router router, AppConstants.POP_FLAG flag, AppConstants.AUTH_FLAG authFlag);
-
     void loginErrorHandler(String message);
-
+    void loginSuccessMethods();
+    void callLoginTicket();
+    void callLogout(AuthHandler handler);
 
     // Braintree methods
     void onAuthorizationFetched(String paymentToken, String paymentMethod);

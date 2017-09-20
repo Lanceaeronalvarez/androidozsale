@@ -483,6 +483,7 @@ public class CheckoutController extends BaseController implements CheckoutMvpVie
 
     @Override
     public void triggerLoginTicket() {
+        assert (getActivity()) != null;
         ((MainMvpView) getActivity()).callLoginTicket();
     }
 

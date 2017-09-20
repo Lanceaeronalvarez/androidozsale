@@ -8,7 +8,6 @@ import android.content.Context;
 import android.util.Log;
 
 import com.androidnetworking.error.ANError;
-import com.bluelinelabs.conductor.Controller;
 import com.google.gson.Gson;
 import com.mysale.genie.utility.config.api.GetAppSettings;
 import com.mysale.genie.utility.config.api.GetAppSettingsSection;
@@ -37,8 +36,6 @@ import au.com.dealsdirect.data.network.model.login.LoginTicket;
 import au.com.dealsdirect.data.network.model.login.Logout;
 import au.com.dealsdirect.service.fcm.GNotification;
 import au.com.dealsdirect.ui.base.BasePresenter;
-import au.com.dealsdirect.ui.controller.checkout.checkout.CheckoutController;
-import au.com.dealsdirect.utils.CartUtil;
 import au.com.dealsdirect.utils.IntrospectionUtils;
 import au.com.dealsdirect.utils.rx.SchedulerProvider;
 import io.reactivex.annotations.NonNull;
@@ -107,10 +104,6 @@ public class MainPresenter<V extends MainMvpView> extends BasePresenter<V> imple
                             getDataManager().setFollowUsFbLink(responseValue.getFollowUsFacebookLink());
                             getDataManager().setFollowUsTwitterLink(responseValue.getFollowUsTwitterLink());
                             getDataManager().setImageServerUrl(responseValue.getImageServerUrl());
-
-
-                            callAppSettingsWithAuthCheck();
-
                         }
                     }
 
@@ -470,9 +463,10 @@ public class MainPresenter<V extends MainMvpView> extends BasePresenter<V> imple
 
                                     if (responseValue.isSuccess()) {
                                         getDataManager().acknowledgeAuth(responseValue.getTicket());
+                                        // Call required post login api methods
+                                        getMvpView().loginSuccessMethods();
                                     } else {
                                         //On login ticket fail, call logout and go back to shop
-//                                RxBus.instance().post("shop_now");
                                         callLogout(null);
                                     }
                                 }
@@ -499,7 +493,6 @@ public class MainPresenter<V extends MainMvpView> extends BasePresenter<V> imple
 
     @Override
     public void callLogout(AuthHandler handler) {
-        PaymentInfo.resetPaymentInfo();
 
         getMvpView().showLoading();
         getCompositeDisposable().add(getDataManager()
@@ -512,8 +505,18 @@ public class MainPresenter<V extends MainMvpView> extends BasePresenter<V> imple
                         if (!isViewAttached()) {
                             return;
                         }
+
                         getMvpView().hideLoading();
+
+                        //Remove login ticket
                         getDataManager().revokeAuth();
+                        //Clear payment info
+                        PaymentInfo.resetPaymentInfo();
+                        //Clear braintree
+                        getMvpView().performBraintreeReset();
+                        //Call Public App Settings
+                        callGetPublicAppSettings();
+
                         if (handler != null) {
                             handler.success();
                         }
@@ -568,17 +571,6 @@ public class MainPresenter<V extends MainMvpView> extends BasePresenter<V> imple
     public void initializeNotifications(Context context) {
         if (gNotification != null) {
             gNotification.registerDeviceForNotification(context);
-        }
-    }
-
-
-    @Override
-    public void callAppSettingsWithAuthCheck() {
-        //if auth is logged in, app settings call, else public app settings
-        if (isAuthorized()) {
-            callGetAppSettings();
-        } else {
-            callGetPublicAppSettings();
         }
     }
 

@@ -131,7 +131,14 @@ public class MainActivity extends BaseActivity implements MainMvpView {
         // Call API settings
         mPresenter.callGetServerSettings();
         mPresenter.callGetAppSettingsSection(this);
-
+        if (isAuthorized()) {
+            // If login ticket exist, call login ticket api to renew cookies and ticket
+            // GetAppSettings and GetPaymentToken will be called on success of this call
+            mPresenter.callLoginTicket();
+        } else {
+            //If not logged in, call GetPublicAppSettings
+            mPresenter.callGetPublicAppSettings();
+        }
     }
 
     @Override
@@ -147,7 +154,6 @@ public class MainActivity extends BaseActivity implements MainMvpView {
     protected void onResume() {
         super.onResume();
         mPresenter.onAttach(this);
-
     }
 
     @Override
@@ -651,6 +657,10 @@ public class MainActivity extends BaseActivity implements MainMvpView {
         }
 
         if (mAuthHandler != null) {
+
+            // Required api calls on successful auth
+            loginSuccessMethods();
+
             mAuthHandler.success();
         }
 
@@ -669,6 +679,14 @@ public class MainActivity extends BaseActivity implements MainMvpView {
         CustomAlertDialog.showCustomAlertDialog(this, CustomAlertDialog.CustomDialogIconState.POSITIVE, successMessage);
         mMainController.getHomeController().getPresenter().callGetBasketItemsQuantity();
         mMainController.showBottomNav();
+    }
+
+    @Override
+    public void loginSuccessMethods() {
+        //On success, must call AppSettings
+        mPresenter.callGetAppSettings();
+        //On success, must get new braintree token
+        mPresenter.fetchBTAuthorization();
     }
 
     @Override
