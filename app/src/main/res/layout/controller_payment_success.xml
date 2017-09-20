@@ -7,12 +7,15 @@
     android:orientation="vertical"
     android:background="@color/white"
     android:scrollbars="none"
-            android:overScrollMode="never"
-    android:padding="@dimen/screen_padding">
+    android:overScrollMode="never"
+    android:paddingLeft="@dimen/screen_padding"
+    android:paddingRight="@dimen/screen_padding"
+    android:paddingTop="@dimen/screen_padding">
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:layout_marginTop="10dp"
         android:orientation="vertical">
 
     <TextView

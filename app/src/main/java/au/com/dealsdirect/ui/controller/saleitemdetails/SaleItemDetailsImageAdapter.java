@@ -107,7 +107,7 @@ public class SaleItemDetailsImageAdapter extends RecyclerView.Adapter<RecyclerVi
     @Override
     public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
         SaleItemDetailsImageAdapter.ViewHolder vh = (SaleItemDetailsImageAdapter.ViewHolder) holder;
-
+        vh.image.setImageDrawable(mContext.getResources().getDrawable(R.drawable.bg_account_details));
         switch (mViewType) {
             case 1:
                 if (mData.size() != 0) {

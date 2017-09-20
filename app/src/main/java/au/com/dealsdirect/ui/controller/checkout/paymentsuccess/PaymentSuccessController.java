@@ -40,6 +40,7 @@ public class PaymentSuccessController extends BaseController implements PaymentS
     private static final String KEY_PRICE = "Price";
     private static final String KEY_SHIPPING_FEE = "Shipping";
     private static final String KEY_INVOICE = "Invoice";
+    private static final String KEY_INVOICE_NUMBER = "InvoiceNumber";
     private static final String KEY_ESTIMATED_DELIVERY = "EstimatedDelivery";
     private static final int KEY_PLANNED_TRANSACTION_STATE_PAID = 2;
 
@@ -92,11 +93,12 @@ public class PaymentSuccessController extends BaseController implements PaymentS
     }
 
     public PaymentSuccessController(CreatePaymentTransaction.ResponseValue responseValue) {
+
         this(new BundleBuilder(new Bundle())
                 .putString(KEY_ADDRESS, responseValue.getD().getValue().getAddressString())
                 .putDouble(KEY_PRICE,  responseValue.getD().getValue().getOrderInfoResult().getTotal())
                 .putDouble(KEY_SHIPPING_FEE, responseValue.getD().getValue().getOrderInfoResult().getShipping())
-                .putString(KEY_INVOICE, responseValue.getD().getValue().getInvoiceNo())
+                .putString(KEY_INVOICE, responseValue.getD().getValue().getInvoiceNo() == null ? String.valueOf(responseValue.getD().getValue().getTransactionInvoiceNo()): responseValue.getD().getValue().getInvoiceNo())
                 .putString(KEY_ESTIMATED_DELIVERY, responseValue.getD().getValue().getOrderInfoResult().getEstimatedDeliveryText())
                 .build());
     }
@@ -121,7 +123,7 @@ public class PaymentSuccessController extends BaseController implements PaymentS
             mPresenter.generateOurpay();
         }else{
             double totalPayment = mShippingFee+mPrice;
-            mPaymentSuccessTableContainer.setVisibility(View.VISIBLE);
+            mPaymentSuccessTableContainer.setVisibility(View.GONE);
             mPriceTextView.setText(PriceUtils.getPriceStringValue(totalPayment));
         }
         mEstimatedDelivery.setVisibility(View.GONE);

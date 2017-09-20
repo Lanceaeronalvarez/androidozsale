@@ -169,7 +169,15 @@ public class CheckoutController extends BaseController implements CheckoutMvpVie
             } else if (view.getId() == mVoucherChangeText.getId()
                     || view.getId() == mAddNewVoucherLayout.getId()) {
 
-                getRouter().pushController(RouterTransaction.with(AddVouchersController.newInstance(new Gson().toJson(mVouchers), mIsVoucherAdded))
+                TextView discountTextView = (TextView) mSummaryLayout.findViewById(R.id.partial_checkout_summary_voucher);
+                boolean isNoDiscount = true;
+                if (discountTextView!=null){
+                    if (!discountTextView.getText().toString().equals("$0")){
+                        isNoDiscount = false;
+                    }
+                }
+
+                getRouter().pushController(RouterTransaction.with(AddVouchersController.newInstance(new Gson().toJson(mVouchers), mIsVoucherAdded, isNoDiscount))
                         .pushChangeHandler(new HorizontalChangeHandler(false))
                         .popChangeHandler(new HorizontalChangeHandler()));
             }

@@ -312,6 +312,7 @@ public class MainActivity extends BaseActivity implements MainMvpView {
 
     @Override
     public void showCreatePaymentTransactionSuccess(String paymentType, CreatePaymentTransaction.ResponseValue responseValue) {
+
         if (responseValue.isPaid()) {
 
             if (paymentType.equals(PaymentInfo.TYPE_MYPAY)) {
@@ -326,6 +327,7 @@ public class MainActivity extends BaseActivity implements MainMvpView {
                     .popChangeHandler(new HorizontalChangeHandler()));
 
         } else {
+
             Router currentRouter = getMainController().getHomeController().getCurrentRouter();
             Controller currentController = getMainController().getHomeController().getCurrentControllerOnRouter(currentRouter);
 

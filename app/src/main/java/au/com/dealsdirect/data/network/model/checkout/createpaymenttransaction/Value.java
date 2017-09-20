@@ -11,12 +11,23 @@ public class Value {
     @SerializedName("AddressString")
     @Expose
     private String addressString;
+
     @SerializedName("invoiceNo")
     @Expose
     private String invoiceNo;
     @SerializedName("isPaid")
     @Expose
     private Boolean isPaid;
+
+
+    @SerializedName("InvoiceNo")
+    @Expose
+    private int transactionInvoiceNo;
+    @SerializedName("IsPaid")
+    @Expose
+    private Boolean transactionIsPaid;
+
+
     @SerializedName("liabilityShifted")
     @Expose
     private Object liabilityShifted;
@@ -159,5 +170,21 @@ public class Value {
 
     public void setPlannedTransaction(java.util.List<MyPayDetails.PlannedTransaction> plannedTransactions) {
         this.plannedTransactions = plannedTransactions;
+    }
+
+    public int getTransactionInvoiceNo() {
+        return transactionInvoiceNo;
+    }
+
+    public void setTransactionInvoiceNo(int transactionInvoiceNo) {
+        this.transactionInvoiceNo = transactionInvoiceNo;
+    }
+
+    public Boolean getTransactionIsPaid() {
+        return transactionIsPaid;
+    }
+
+    public void setTransactionIsPaid(Boolean transactionIsPaid) {
+        this.transactionIsPaid = transactionIsPaid;
     }
 }
