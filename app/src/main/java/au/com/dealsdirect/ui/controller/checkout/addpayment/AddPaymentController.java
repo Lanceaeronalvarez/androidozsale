@@ -56,8 +56,8 @@ public class AddPaymentController extends BaseController implements AddPaymentMv
     TextView mTextPaypal;
     @BindView(R.id.partial_checkout_button_paypal)
     RelativeLayout mButtonPaypal;
-//    @BindView(R.id.partial_checkout_button_masterpass)
-//    RelativeLayout mMasterpassButton;
+    @BindView(R.id.partial_checkout_button_masterpass)
+    RelativeLayout mMasterpassButton;
 
 
     @BindView(R.id.partial_toolbar_arrow_title)
@@ -127,7 +127,12 @@ public class AddPaymentController extends BaseController implements AddPaymentMv
             onPaypalSubmit();
         });
 
-//        mMasterpassButton.setOnClickListener(action -> onMasterpassButtonClick());
+        if (isFromCart) {
+            mMasterpassButton.setOnClickListener(action -> onMasterpassButtonClick());
+        } else {
+            mMasterpassButton.setEnabled(false);
+            mMasterpassButton.setVisibility(View.GONE);
+        }
 
         if (((MainActivity) getActivity()).isBraintreeInitialized()) {
 

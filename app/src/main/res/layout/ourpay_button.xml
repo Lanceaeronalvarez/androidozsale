@@ -1,55 +1,47 @@
 <?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/rl_button_ourpay"
+    android:layout_width="match_parent"
+    android:layout_height="@dimen/default_button_height"
+    android:background="@drawable/ourpay_button_selector"
+    android:clickable="true"
+    android:elevation="1.5dp">
 
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-              xmlns:tools="http://schemas.android.com/tools"
-              android:layout_width="match_parent"
-              android:layout_height="wrap_content"
-              android:paddingBottom="5dp"
-              android:paddingTop="5dp">
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true"
+        android:orientation="horizontal"
+        tools:ignore="UselessParent">
 
-    <RelativeLayout
-        android:id="@+id/rl_button_ourpay"
-        android:layout_width="match_parent"
-        android:layout_height="@dimen/default_button_height"
-        android:background="@drawable/ourpay_button_selector">
-
-        <LinearLayout
+        <TextView
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
-            android:layout_alignParentTop="true"
-            android:layout_centerHorizontal="true"
-            android:orientation="horizontal"
-            tools:ignore="UselessParent">
+            android:layout_marginEnd="5dp"
+            android:layout_marginRight="5dp"
+            android:gravity="center_vertical"
+            android:text="Pay less"
+            android:textColor="@android:color/white"
+            android:textSize="14sp"
+            android:textStyle="bold" />
 
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:layout_marginEnd="5dp"
-                android:layout_marginRight="5dp"
-                android:gravity="center_vertical"
-                android:text="Pay less"
-                android:textColor="@android:color/white"
-                android:textSize="14sp"
-                android:textStyle="bold"
-                />
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_marginEnd="5dp"
+            android:layout_marginRight="5dp"
+            android:gravity="center"
+            android:text="today with"
+            android:textColor="@android:color/white"
+            android:textSize="14sp" />
 
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:layout_marginEnd="5dp"
-                android:layout_marginRight="5dp"
-                android:gravity="center"
-                android:text="today with"
-                android:textColor="@android:color/white"
-                android:textSize="14sp"
-                />
-
-            <ImageView
-                android:layout_width="100dp"
-                android:layout_height="match_parent"
-                android:paddingTop="5dp"
-                android:src="@drawable/ourpay_logo_white"
-                tools:ignore="ContentDescription"/>
-        </LinearLayout>
-    </RelativeLayout>
-</LinearLayout>
+        <ImageView
+            android:layout_width="100dp"
+            android:layout_height="match_parent"
+            android:paddingTop="5dp"
+            android:src="@drawable/ourpay_logo_white"
+            tools:ignore="ContentDescription" />
+    </LinearLayout>
+</RelativeLayout>

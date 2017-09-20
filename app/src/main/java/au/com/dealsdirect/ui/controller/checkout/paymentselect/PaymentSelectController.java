@@ -127,7 +127,7 @@ public class PaymentSelectController extends BasePullToRefreshController impleme
         } else if (checkoutTag == getActivity().getString(R.string.checkout_controller)
                 && (paymentMethods == null
                 || paymentMethods.size() == 0)) {
-            getRouter().pushController(RouterTransaction.with(new AddPaymentController(false, mCartTotalCost))
+            getRouter().pushController(RouterTransaction.with(new AddPaymentController(isFromCart, mCartTotalCost))
                     .pushChangeHandler(new HorizontalChangeHandler())
                     .popChangeHandler(new HorizontalChangeHandler()));
         } else if (paymentMethods.size() == 0) {
