@@ -284,6 +284,7 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
         mOtherImagesRv.setLayoutManager(new LinearLayoutManager(getActivity(), LinearLayoutManager.HORIZONTAL, false));
         mSaleItemImagesIndicatorAdapter = new SaleItemDetailsImageAdapter(null, loadImagesListener, new ArrayList<>(), mSaleId, 2, null);
         mOtherImagesRv.setAdapter(mSaleItemImagesIndicatorAdapter);
+        mOtherImagesRv.setVisibility(View.INVISIBLE);
 
         mProductImagesRvLayoutManager = new LinearLayoutManager(getActivity(), LinearLayoutManager.HORIZONTAL, false);
         mProductImagesRv.setLayoutManager(mProductImagesRvLayoutManager);
@@ -291,15 +292,18 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
             add(mAddToCartButton); add(mProductPriceCategory); add(mAddToCartOverlay);}}, loadImagesListener,
                 new ArrayList<>(), mSaleId, 1, mProductSharedImage.getDrawable());
         mProductImagesRv.setAdapter(mSaleItemImagesAdapter);
+        mProductImagesRv.setEnabled(false);
+        mProductImagesRv.setOverScrollMode(View.OVER_SCROLL_NEVER);
+
 
         mProductImagesRv.addOnPageChangedListener((i, i1) -> {
-            SaleItemDetailsImageAdapter.ViewHolder vhNew = (SaleItemDetailsImageAdapter.ViewHolder) mOtherImagesRv.findViewHolderForLayoutPosition(i1);
-            vhNew.image.setImageResource(R.drawable.circle_indicator_active);
+                SaleItemDetailsImageAdapter.ViewHolder vhNew = (SaleItemDetailsImageAdapter.ViewHolder) mOtherImagesRv.findViewHolderForLayoutPosition(i1);
+                vhNew.image.setImageResource(R.drawable.circle_indicator_active);
 
-            SaleItemDetailsImageAdapter.ViewHolder vhOld = (SaleItemDetailsImageAdapter.ViewHolder) mOtherImagesRv.findViewHolderForLayoutPosition(i);
-            if(vhOld.image != null) {
-                vhOld.image.setImageResource(R.drawable.circle_indicator_inactive);
-            }
+                SaleItemDetailsImageAdapter.ViewHolder vhOld = (SaleItemDetailsImageAdapter.ViewHolder) mOtherImagesRv.findViewHolderForLayoutPosition(i);
+                if (vhOld != null && vhOld.image != null) {
+                    vhOld.image.setImageResource(R.drawable.circle_indicator_inactive);
+                }
         });
 
         mHtmlHeader = getActivity().getResources()
@@ -623,6 +627,10 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
             ImageUtils.clearImage(mProductSharedImage);
         }
         imagesLoaded = true;
+        mProductImagesRv.setEnabled(true);
+        mOtherImagesRv.setVisibility(View.VISIBLE);
+        mProductImagesRv.setOverScrollMode(View.OVER_SCROLL_ALWAYS);
+
     }
 
     public void readyViewsForTransition() {

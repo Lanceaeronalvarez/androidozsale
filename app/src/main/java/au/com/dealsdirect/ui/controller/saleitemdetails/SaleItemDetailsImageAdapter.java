@@ -115,6 +115,7 @@ public class SaleItemDetailsImageAdapter extends RecyclerView.Adapter<RecyclerVi
                     if (position == 0) {
                         ImageUtils.loadImageWithPlaceholder(mContext, url, vh.image, mPlaceholder, mRequestListener);
                     } else {
+                        ImageUtils.clearImage(vh.image);
                         ImageUtils.loadImage(mContext, url, vh.image);
                     }
 
