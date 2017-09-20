@@ -164,8 +164,6 @@ public class OurpayGraph {
         int circleTempSize;
         int circleTempTextSize;
 
-        Log.d("ourpaygraph", "generate graph");
-
         Bitmap progressBitmap = BitmapFactory.decodeResource(context.getResources(),
                 R.drawable.ourpay_image_gradient);
         Bitmap grayBitmap = BitmapFactory.decodeResource(context.getResources(),
@@ -228,11 +226,12 @@ public class OurpayGraph {
             final RelativeLayout circlesLayout =
                     (RelativeLayout) yourView.findViewById(R.id.circlesContainer);
 
-
-            ViewTreeObserver vto = circleView.getViewTreeObserver();
-            vto.addOnGlobalLayoutListener(new OnGlobalLayoutListener() {
+            circleView.getViewTreeObserver().addOnGlobalLayoutListener(new OnGlobalLayoutListener() {
                 @Override
                 public void onGlobalLayout() {
+
+                    Log.d("Ourpaygraph", "onGlobalLayout");
+
                     circlesLayoutWidth = deviceWidth - (deviceWidth / 3);
                     ImageView foregroundBar =
                             (ImageView) yourView.findViewById(R.id.ourpay_fg_bar);
