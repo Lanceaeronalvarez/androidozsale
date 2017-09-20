@@ -59,14 +59,7 @@ public class ImageUtils {
                 .skipMemoryCache(true)
                 .dontAnimate()
                 .format(DecodeFormat.PREFER_RGB_565)
-                .into(new SimpleTarget<Bitmap>() {
-
-                    @Override
-                    public void onResourceReady(Bitmap arg0, GlideAnimation<? super Bitmap> arg1) {
-                        // TODO Auto-generated method stub
-                        imageView.setImageBitmap(arg0);
-                    }
-                });
+                .into(imageView);
     }
 
     public static void loadImageWithPlaceholder(Context context, String url, ImageView imageView, Drawable placeholder,
