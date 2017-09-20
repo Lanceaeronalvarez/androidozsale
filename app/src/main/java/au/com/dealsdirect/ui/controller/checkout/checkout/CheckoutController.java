@@ -348,8 +348,6 @@ public class CheckoutController extends BaseController implements CheckoutMvpVie
 
     @Override
     public void showCartDetails(List<Item> items) {
-//        mPresenter.generateOurpay(mValue);
-
         if (items == null) { //do nothing (ie. when increasing order quantity, returns a soldout/out of stock message)
             return;
         } else if (items.isEmpty()) {
