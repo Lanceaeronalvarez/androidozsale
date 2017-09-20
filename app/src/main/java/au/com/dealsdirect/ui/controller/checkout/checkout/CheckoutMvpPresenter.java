@@ -11,7 +11,7 @@ import au.com.dealsdirect.ui.custom.ProductQuantityLayout;
 
 public interface CheckoutMvpPresenter<V extends MvpView> extends MvpPresenter<V> {
 
-    void start();
+    void callCartContent();
 
     void fetchCartDetails();
 

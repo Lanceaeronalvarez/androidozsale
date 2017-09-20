@@ -44,7 +44,7 @@ public class CheckoutPresenter<V extends CheckoutMvpView> extends BasePresenter<
 
 
     @Override
-    public void start() {
+    public void callCartContent() {
         if (!isCartAlreadyLoadedOnce() && isViewAttached()) {
             getMvpView().showLoading();
         }

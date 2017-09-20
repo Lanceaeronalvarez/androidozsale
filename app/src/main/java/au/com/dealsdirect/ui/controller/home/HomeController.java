@@ -392,8 +392,7 @@ public class HomeController extends BaseController implements HomeMvpView {
             mActivity.showLoginController(mCheckoutRouter, new AuthHandler() {
                 @Override
                 public void success() {
-//                                    initControllers(true);
-                    resetInviteRouter();
+                    resetCheckoutRouter();
                 }
 
                 @Override
@@ -401,7 +400,7 @@ public class HomeController extends BaseController implements HomeMvpView {
 
                 }
             });
-        } else {
+        } else { //TODO: Find better solution for this
             Controller controller = getCurrentControllerOnRouter(mCheckoutRouter);
             if (controller instanceof CheckoutController) {
 

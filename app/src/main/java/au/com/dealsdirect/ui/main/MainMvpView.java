@@ -17,7 +17,7 @@ import au.com.dealsdirect.utils.AppConstants;
 public interface MainMvpView extends MvpView, BrainTreeListeners {
 
 
-    DefaultCallback getFetchTokenHandler();
+    FetchTokenHandler getFetchTokenHandler();
 
     void callGCMRegisterSubscriber();
 
@@ -39,7 +39,7 @@ public interface MainMvpView extends MvpView, BrainTreeListeners {
     void onAuthorizationFetched(String paymentToken, String paymentMethod);
     void performBraintreeReset();
     void performResetWithAuthFetch();
-    void fetchAuthorization(DefaultCallback fetchTokenHandler);
+    void fetchAuthorization(FetchTokenHandler fetchTokenHandler);
     void setPaymentMethodSelected(PaymentMethod paymentMethodSelected);
 
     // Payment methods

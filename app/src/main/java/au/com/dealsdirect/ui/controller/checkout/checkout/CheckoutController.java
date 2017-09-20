@@ -1,5 +1,7 @@
 package au.com.dealsdirect.ui.controller.checkout.checkout;
 
+import android.app.Activity;
+import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -50,7 +52,7 @@ import au.com.dealsdirect.ui.controller.home.HomeController;
 import au.com.dealsdirect.ui.controller.masterpass.MasterpassController;
 import au.com.dealsdirect.ui.controller.vouchers.Add.AddVouchersController;
 import au.com.dealsdirect.ui.custom.CustomAlertDialog;
-import au.com.dealsdirect.ui.main.DefaultCallback;
+import au.com.dealsdirect.ui.main.FetchTokenHandler;
 import au.com.dealsdirect.ui.main.MainActivity;
 import au.com.dealsdirect.ui.main.MainMvpView;
 import au.com.dealsdirect.ui.main.PaymentInfo;
@@ -67,7 +69,7 @@ import static au.com.dealsdirect.service.ourpay.OurpayTemplateText.KEY_OURPAY_TC
  * dp Created by Admin on 6/6/17.
  */
 
-public class CheckoutController extends BaseController implements CheckoutMvpView, DefaultCallback {
+public class CheckoutController extends BaseController implements CheckoutMvpView, FetchTokenHandler {
     public static final String CARD_PAYPAL = "Paypal";
     public static final String CARD_MASTERPASS = "Masterpass";
     public static final String CARD_MASTERCARD = "MasterCard";
@@ -273,14 +275,12 @@ public class CheckoutController extends BaseController implements CheckoutMvpVie
             public void onChangeCompleted(@Nullable Controller to, @Nullable Controller from, boolean isPush, @NonNull ViewGroup container, @NonNull ControllerChangeHandler handler) {
                 if (to instanceof CheckoutController && mActivity.isAuthorized()) {
                     loadCart();
-                    Log.d("checkoutListener","onChangeCompleted");
+                    Log.d("checkoutListener", "onChangeCompleted");
                 }
             }
         });
 
-        loadCart();
         mListView.setVisibility(View.GONE);
-
     }
 
     public void loadCart() {
@@ -289,12 +289,11 @@ public class CheckoutController extends BaseController implements CheckoutMvpVie
 
             if (!mActivity.isBraintreeInitialized()) {
                 mActivity.fetchAuthorization(this);
-            } else {
-                loadCartContent();
             }
 
-        } else {
+            mPresenter.callCartContent();
 
+        } else {
             showNoCartItemsLayout();
         }
     }
@@ -327,8 +326,8 @@ public class CheckoutController extends BaseController implements CheckoutMvpVie
                 if (ourpay.getTermsAndConditionsCheckboxState() != 0) {
                     mCheckBoxOurpayTC = mOurpayHolder.findViewById(R.id.ourpay_checkbox_tc);
                 }
-            }else{
-                Log.d(CheckoutController.class.getName(),"mypay disabled");
+            } else {
+                Log.d(CheckoutController.class.getName(), "mypay disabled");
             }
         }
     }
@@ -490,7 +489,7 @@ public class CheckoutController extends BaseController implements CheckoutMvpVie
     @Override
     public void updateCheckoutBadge() {
         HomeController homeController = mActivity.getMainController().getHomeController();
-        if(mActivity.isAuthorized()) {
+        if (mActivity.isAuthorized()) {
             homeController.getPresenter().callGetBasketItemsQuantity();
         }
     }
@@ -627,7 +626,7 @@ public class CheckoutController extends BaseController implements CheckoutMvpVie
     @Override
     public void onSuccess() {
         if (!isAttached()) return;
-        loadCartContent();
+        //loadCartContent(); //Do we have to reload cart on bt token fetch?
     }
 
     @Override
@@ -642,20 +641,6 @@ public class CheckoutController extends BaseController implements CheckoutMvpVie
         mActivity.callCreatePaymentTransaction(PaymentInfo.getPaymentType(), "", PaymentInfo.getPaymentMethod().getToken());
     }
 
-    private void loadCartContent() {
-//        if (mActivity.getMainController() != null && mActivity.getMainController().getHomeController() != null) {
-//            if (mActivity.getMainController().getHomeController().getIsResetCheckout()) {
-//                showLoading();
-//                mPresenter.start();
-//            }
-//        } else {
-
-            showLoading();
-            mPresenter.start();
-//        }
-    }
-
-
     private void showAddAddressController() {
         getRouter().pushController(RouterTransaction.with(new AddNewAddressController(new Gson().toJson(mDecorationInfoList), true))
                 .pushChangeHandler(new HorizontalChangeHandler(false))
@@ -668,7 +653,7 @@ public class CheckoutController extends BaseController implements CheckoutMvpVie
                 .popChangeHandler(new HorizontalChangeHandler()));
     }
 
-    public void removeOurpayView(){
+    public void removeOurpayView() {
         mOurpayHolder.removeAllViews();
     }
 }

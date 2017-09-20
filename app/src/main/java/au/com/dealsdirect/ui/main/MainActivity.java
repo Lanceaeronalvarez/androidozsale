@@ -79,7 +79,7 @@ public class MainActivity extends BaseActivity implements MainMvpView {
 
     private BraintreeFragment mBraintreeFragment;
     private Router mRouter;
-    private DefaultCallback mFetchTokenHandler;
+    private FetchTokenHandler mFetchTokenHandler;
 
     private MainController mMainController;
     private ShopsController mShopController;
@@ -411,16 +411,15 @@ public class MainActivity extends BaseActivity implements MainMvpView {
     }
 
     @Override
-    public DefaultCallback getFetchTokenHandler() {
+    public FetchTokenHandler getFetchTokenHandler() {
         return mFetchTokenHandler;
     }
 
     @Override
-    public void fetchAuthorization(DefaultCallback handler) {
+    public void fetchAuthorization(FetchTokenHandler handler) {
         mFetchTokenHandler = handler;
         //Don't proceed to call if not logged in
         mPresenter.fetchBTAuthorization();
-
     }
 
 

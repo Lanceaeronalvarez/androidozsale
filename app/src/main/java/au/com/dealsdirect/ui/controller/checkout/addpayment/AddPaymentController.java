@@ -28,7 +28,7 @@ import au.com.dealsdirect.R;
 import au.com.dealsdirect.ui.base.BaseController;
 import au.com.dealsdirect.ui.controller.masterpass.MasterpassController;
 import au.com.dealsdirect.ui.custom.CustomAlertDialog;
-import au.com.dealsdirect.ui.main.DefaultCallback;
+import au.com.dealsdirect.ui.main.FetchTokenHandler;
 import au.com.dealsdirect.ui.main.MainActivity;
 import au.com.dealsdirect.utils.BundleBuilder;
 import au.com.dealsdirect.utils.IntrospectionUtils;
@@ -133,7 +133,7 @@ public class AddPaymentController extends BaseController implements AddPaymentMv
 
             showPaymentButtons();
         } else {
-            ((MainActivity) getActivity()).fetchAuthorization(new DefaultCallback() {
+            ((MainActivity) getActivity()).fetchAuthorization(new FetchTokenHandler() {
                 @Override
                 public void onSuccess() {
                     showPaymentButtons();
