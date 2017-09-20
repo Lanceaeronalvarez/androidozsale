@@ -280,6 +280,9 @@ public class MainPresenter<V extends MainMvpView> extends BasePresenter<V> imple
                 .subscribe(new Consumer<GetPaymentToken.ResponseValue>() {
                     @Override
                     public void accept(@NonNull GetPaymentToken.ResponseValue responseValue) throws Exception {
+
+                        PaymentInfo.setIsTokenFetching(false);
+
                         if (!isViewAttached()) {
                             return;
                         }
@@ -299,6 +302,8 @@ public class MainPresenter<V extends MainMvpView> extends BasePresenter<V> imple
                 }, new Consumer<Throwable>() {
                     @Override
                     public void accept(@NonNull Throwable throwable) throws Exception {
+                        PaymentInfo.setIsTokenFetching(false);
+
                         if (!isViewAttached()) {
                             return;
                         }

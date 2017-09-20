@@ -18,6 +18,7 @@ public class PaymentInfo {
     private static Double sCartCost = 0d;
     private static boolean sThreeDSecureCalled = false;
     private static Ourpay sOurpay = null;
+    private static boolean sIsTokenFetching = false;
 
     public static boolean isThreeDSecureRequired() {
         return sThreeDSecureRequired;
@@ -89,4 +90,11 @@ public class PaymentInfo {
     }
 
 
+    public static boolean isTokenFetching() {
+        return sIsTokenFetching;
+    }
+
+    public static void setIsTokenFetching(boolean sIsTokenFetching) {
+        PaymentInfo.sIsTokenFetching = sIsTokenFetching;
+    }
 }

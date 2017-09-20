@@ -38,4 +38,8 @@ public interface CheckoutMvpView extends MvpView {
 
     void updateCheckoutBadge();
 
+    boolean isCartLoading();
+
+    void setCartIsLoading(boolean val);
+
 }

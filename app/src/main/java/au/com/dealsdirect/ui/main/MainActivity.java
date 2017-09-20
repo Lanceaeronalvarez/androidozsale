@@ -417,9 +417,12 @@ public class MainActivity extends BaseActivity implements MainMvpView {
 
     @Override
     public void fetchAuthorization(FetchTokenHandler handler) {
-        mFetchTokenHandler = handler;
-        //Don't proceed to call if not logged in
-        mPresenter.fetchBTAuthorization();
+        if (!PaymentInfo.isTokenFetching()) {
+            mFetchTokenHandler = handler;
+            //Don't proceed to call if not logged in
+            mPresenter.fetchBTAuthorization();
+            PaymentInfo.setIsTokenFetching(true);
+        }
     }
 
 

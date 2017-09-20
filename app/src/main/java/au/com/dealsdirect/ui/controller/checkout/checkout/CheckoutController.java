@@ -1,7 +1,5 @@
 package au.com.dealsdirect.ui.controller.checkout.checkout;
 
-import android.app.Activity;
-import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -125,6 +123,12 @@ public class CheckoutController extends BaseController implements CheckoutMvpVie
 
     private MainActivity mActivity;
 
+    private boolean mCartIsLoading = false;
+
+    public CheckoutController() {
+
+    }
+
     private View.OnClickListener mChangeClickListener = new View.OnClickListener() {
         @Override
         public void onClick(View view) {
@@ -172,10 +176,6 @@ public class CheckoutController extends BaseController implements CheckoutMvpVie
 
         }
     };
-
-    public CheckoutController() {
-
-    }
 
     @Override
     protected void onAttach(@NonNull View view) {
@@ -265,6 +265,7 @@ public class CheckoutController extends BaseController implements CheckoutMvpVie
         mPaypalButton.setOnClickListener(view2 -> onPaypalButtonClick());
         mMasterpassButton.setOnClickListener(view3 -> onMasterpassButtonClick());
 
+        //Code for returning to checkout, call reload
         getRouter().addChangeListener(new ControllerChangeHandler.ControllerChangeListener() {
             @Override
             public void onChangeStarted(@Nullable Controller to, @Nullable Controller from, boolean isPush, @NonNull ViewGroup container, @NonNull ControllerChangeHandler handler) {
@@ -275,7 +276,6 @@ public class CheckoutController extends BaseController implements CheckoutMvpVie
             public void onChangeCompleted(@Nullable Controller to, @Nullable Controller from, boolean isPush, @NonNull ViewGroup container, @NonNull ControllerChangeHandler handler) {
                 if (to instanceof CheckoutController && mActivity.isAuthorized()) {
                     loadCart();
-                    Log.d("checkoutListener", "onChangeCompleted");
                 }
             }
         });
@@ -284,6 +284,7 @@ public class CheckoutController extends BaseController implements CheckoutMvpVie
     }
 
     public void loadCart() {
+
         if (mPresenter.checkIsLoggedIn()) {
             RxBus.instance().post(IntrospectionUtils.EVENT_CHECKOUT_SCREEN);
 
@@ -291,11 +292,24 @@ public class CheckoutController extends BaseController implements CheckoutMvpVie
                 mActivity.fetchAuthorization(this);
             }
 
-            mPresenter.callCartContent();
+            if (!isCartLoading()) {
+                setCartIsLoading(true);
+                mPresenter.callCartContent();
+            }
 
         } else {
             showNoCartItemsLayout();
         }
+    }
+
+    @Override
+    public boolean isCartLoading() {
+        return mCartIsLoading;
+    }
+
+    @Override
+    public void setCartIsLoading(boolean val) {
+        this.mCartIsLoading = val;
     }
 
     @Override
