@@ -626,13 +626,12 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
 
     @Override
     public void imagesLoaded() {
-        if(mProductSharedImage != null) {
+        if(isAttached()) {
             mSharedImageLocation = ImageUtils.getDisplayedImageLocation(mProductSharedImage);
             ImageUtils.clearImage(mProductSharedImage);
-        }
 
-        imagesLoaded = true;
-        if(mProductImagesRv != null && mOtherImagesRv !=null) {
+            imagesLoaded = true;
+
             mProductImagesRv.setEnabled(true);
             mOtherImagesRv.setVisibility(View.VISIBLE);
             mProductImagesRv.setOverScrollMode(View.OVER_SCROLL_ALWAYS);
