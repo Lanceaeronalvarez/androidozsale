@@ -279,7 +279,7 @@ public class AddContactController extends BaseController implements AddContactMv
                 createContactRequest.subj = mAddContactSubjectText.getText().toString();
 
                 if (mAddContactMessageField.getText().toString().isEmpty()
-                        || currentSubject.isEmpty()) {
+                        || mAddContactSubjectText.getText().toString().isEmpty()) {
 
                     CustomAlertDialog.showCustomAlertDialog(
                             getActivity(),
@@ -301,6 +301,7 @@ public class AddContactController extends BaseController implements AddContactMv
 
     @Override
     public void onDestroyView(View view) {
+        ContactPreferenceHelper.clear(getActivity());
         KeyboardUtils.setKeyboardAdjustPan(getActivity());
         mPresenter.onDetach();
         super.onDestroyView(view);
