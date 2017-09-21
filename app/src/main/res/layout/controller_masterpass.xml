@@ -4,7 +4,7 @@
               android:layout_height="match_parent"
               android:orientation="vertical">
 
-    <include layout="@layout/partial_toolbar_title"/>
+    <include layout="@layout/partial_toolbar_arrow"/>
 
     <WebView
         android:id="@+id/controller_masterpass_web"
