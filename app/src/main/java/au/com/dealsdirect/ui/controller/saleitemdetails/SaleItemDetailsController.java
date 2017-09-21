@@ -529,7 +529,9 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
                 public void success() {
                     mActivity.callGCMRegisterSubscriber();
                     mPresenter.addToCart(request);
-                    new Handler().postDelayed(()-> animateAddToCart(), 1000);
+                    if(mSharedImageLocation != null) {
+                        new Handler().postDelayed(() -> animateAddToCart(), 1000);
+                    }
                 }
 
                 @Override
@@ -539,7 +541,9 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
             });
         } else {
             mPresenter.addToCart(request);
-            animateAddToCart();
+            if(mSharedImageLocation != null) {
+                animateAddToCart();
+            }
         }
     }
 
@@ -622,10 +626,10 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
 
     @Override
     public void imagesLoaded() {
-        if(mProductSharedImage != null) {
-            mSharedImageLocation = ImageUtils.getDisplayedImageLocation(mProductSharedImage);
-            ImageUtils.clearImage(mProductSharedImage);
-        }
+
+        mSharedImageLocation = ImageUtils.getDisplayedImageLocation(mProductSharedImage);
+        ImageUtils.clearImage(mProductSharedImage);
+
         imagesLoaded = true;
         mProductImagesRv.setEnabled(true);
         mOtherImagesRv.setVisibility(View.VISIBLE);
