@@ -632,9 +632,11 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
         }
 
         imagesLoaded = true;
-        mProductImagesRv.setEnabled(true);
-        mOtherImagesRv.setVisibility(View.VISIBLE);
-        mProductImagesRv.setOverScrollMode(View.OVER_SCROLL_ALWAYS);
+        if(mProductImagesRv != null && mOtherImagesRv !=null) {
+            mProductImagesRv.setEnabled(true);
+            mOtherImagesRv.setVisibility(View.VISIBLE);
+            mProductImagesRv.setOverScrollMode(View.OVER_SCROLL_ALWAYS);
+        }
 
     }
 
