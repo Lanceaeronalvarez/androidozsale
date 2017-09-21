@@ -118,12 +118,14 @@ public class PaymentSuccessController extends BaseController implements PaymentS
         mActivity = (MainActivity) getActivity();
         if (PaymentInfo.getOurpay() != null && PaymentInfo.getOurpay().isCanUse()) {
             mPaymentOurpaySuccessDetailContainer.setVisibility(View.VISIBLE);
+            mPaymentSuccessTableContainer.setVisibility(View.GONE);
             mPaymentSuccessOrderNumber.setText(mInvoiceString);
             getTotalPayment(PaymentInfo.getOurpay());
             mPresenter.generateOurpay();
         }else{
             double totalPayment = mShippingFee+mPrice;
-            mPaymentSuccessTableContainer.setVisibility(View.GONE);
+            mPaymentSuccessTableContainer.setVisibility(View.VISIBLE);
+            mPaymentOurpaySuccessDetailContainer.setVisibility(View.GONE);
             mPriceTextView.setText(PriceUtils.getPriceStringValue(totalPayment));
         }
         mEstimatedDelivery.setVisibility(View.GONE);
