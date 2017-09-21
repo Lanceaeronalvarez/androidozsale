@@ -470,6 +470,15 @@ public class HomeController extends BaseController implements HomeMvpView {
         currentVisibleIndex = i;
     }
 
+    public void setShopRouterViewPagerDraggable(){
+        if (mShopRouter!=null){
+            Controller controller = getCurrentControllerOnRouter(mShopRouter);
+            if (controller instanceof ShopsController) {
+                ((MainActivity)getActivity()).getMainController().setViewpagerDraggable(true);
+            }
+        }
+    }
+
     public void resetVisibleContainer() {
         if (!(getCurrentRouter() == mAccountsRouter || getCurrentRouter() == mShopRouter)) {
             mContainersList.get(currentVisibleIndex).setVisibility(View.GONE);

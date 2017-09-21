@@ -616,6 +616,7 @@ public class CheckoutController extends BaseController implements CheckoutMvpVie
 
     @OnClick(R.id.partial_checkout_empty_button)
     void shopNow() {
+
         mActivity.setShopsAsVisibleContainer();
     }
 
