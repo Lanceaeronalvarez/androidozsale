@@ -626,9 +626,10 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
 
     @Override
     public void imagesLoaded() {
-
-        mSharedImageLocation = ImageUtils.getDisplayedImageLocation(mProductSharedImage);
-        ImageUtils.clearImage(mProductSharedImage);
+        if(mProductSharedImage != null) {
+            mSharedImageLocation = ImageUtils.getDisplayedImageLocation(mProductSharedImage);
+            ImageUtils.clearImage(mProductSharedImage);
+        }
 
         imagesLoaded = true;
         mProductImagesRv.setEnabled(true);
