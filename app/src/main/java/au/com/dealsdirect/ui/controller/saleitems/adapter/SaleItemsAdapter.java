@@ -115,9 +115,7 @@ public class SaleItemsAdapter extends RecyclerView.Adapter<SaleItemsAdapter.View
 
         holder.image.setTransitionName(mContext.getString(R.string.transition_sale_image_indexed, position));
 
-        if (saleItem.isSoldOut()) {
-            holder.soldout.setVisibility(View.VISIBLE);
-        }
+        holder.soldout.setVisibility(saleItem.isSoldOut() ? View.VISIBLE : View.GONE);
 
         holder.brand.setText(saleItemBrand);
         holder.price.setText(saleItemPrice);
