@@ -132,7 +132,7 @@ public class MainPresenter<V extends MainMvpView> extends BasePresenter<V> imple
         getCompositeDisposable().add(getDataManager()
                 .callGetAppSettings(getDataManager().getCountryId())
                 .subscribeOn(getSchedulerProvider().io())
-                .subscribeOn(getSchedulerProvider().ui())
+                .observeOn(getSchedulerProvider().ui())
                 .subscribe(mAppSettingsAcceptCallback, mAppSettingsThrowableCallback));
     }
 
@@ -141,7 +141,7 @@ public class MainPresenter<V extends MainMvpView> extends BasePresenter<V> imple
         getCompositeDisposable().add(getDataManager()
                 .callGetPublicAppSettings(getDataManager().getCountryId())
                 .subscribeOn(getSchedulerProvider().io())
-                .subscribeOn(getSchedulerProvider().ui())
+                .observeOn(getSchedulerProvider().ui())
                 .subscribe(mAppSettingsAcceptCallback, mAppSettingsThrowableCallback));
     }
 
