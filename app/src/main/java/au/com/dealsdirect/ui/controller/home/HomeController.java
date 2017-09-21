@@ -333,8 +333,14 @@ public class HomeController extends BaseController implements HomeMvpView {
 
     @Override
     public void showShopController() {
-        if (getActivity()!=null)
-            ((MainActivity)getActivity()).getMainController().setViewpagerDraggable(true);
+
+        if (mShopRouter!=null){
+            Controller controller = getCurrentControllerOnRouter(mShopRouter);
+            if (controller instanceof ShopsController) {
+                ((MainActivity)getActivity()).getMainController().setViewpagerDraggable(true);
+            }
+        }
+
         setVisibleContainer(0);
     }
 
