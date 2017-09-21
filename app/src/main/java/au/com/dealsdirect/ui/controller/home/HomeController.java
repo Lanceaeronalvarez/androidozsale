@@ -400,12 +400,9 @@ public class HomeController extends BaseController implements HomeMvpView {
 
                 }
             });
-        } else { //TODO: Find better solution for this
+        } else { //should load cart everytime checkout is clicked on bottom nav
             Controller controller = getCurrentControllerOnRouter(mCheckoutRouter);
             if (controller instanceof CheckoutController) {
-
-                if ((getActivity()) != null)
-                    ((MainActivity) getActivity()).getMainController().getHomeController().setIsResetCheckout(true);
                 ((CheckoutController) controller).loadCart();
             }
         }
