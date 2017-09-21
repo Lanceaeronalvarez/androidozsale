@@ -124,12 +124,13 @@ public class SaleItemsAdapter extends RecyclerView.Adapter<SaleItemsAdapter.View
         holder.oldPrice.setText(saleItemOldPrice);
         holder.oldPrice.setPaintFlags(holder.oldPrice.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);
 
+
         holder.itemView.setOnClickListener(v -> mPresenter.loadProductDetails(
                 holder,
                 position,
                 mData.get(position).getSeoIdentifier(),
                 url,
-                mData.get(position).getSkus().get(0).getId(),
+                mData.get(position).getSkus().isEmpty() ? "" : mData.get(position).getSkus().get(0).getId(),
                 mSaleId));
 
 
