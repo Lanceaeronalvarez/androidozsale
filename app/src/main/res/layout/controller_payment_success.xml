@@ -26,16 +26,16 @@
         android:text="@string/your_payment_has_been_successful"
         android:textSize="@dimen/text_size_xxxxlarge" />
 
-    <TextView
-        android:id="@+id/fragment_payment_success_estimated_delivery"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:gravity="center"
-        android:paddingLeft="10dp"
-        android:paddingRight="10dp"
-        android:paddingTop="10dp"
-        android:textColor="@color/gray_field_text"
-        android:textSize="@dimen/text_size_large" />
+        <TextView
+            android:id="@+id/fragment_payment_success_estimated_delivery"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:paddingLeft="10dp"
+            android:paddingRight="10dp"
+            android:paddingTop="10dp"
+            android:textColor="@color/gray_field_text"
+            android:textSize="@dimen/text_size_large"/>
 
 
         <LinearLayout
