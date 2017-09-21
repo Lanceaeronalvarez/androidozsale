@@ -7,10 +7,12 @@ import android.content.Context;
 import android.content.pm.PackageManager;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.annotation.Nullable;
 import android.support.annotation.StringRes;
 import android.support.design.widget.Snackbar;
 import android.support.v4.content.ContextCompat;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
@@ -37,6 +39,10 @@ public abstract class BaseActivity extends AppCompatActivity implements MvpView 
     private ActivityComponent mActivityComponent;
 
     private Unbinder mUnBinder;
+
+    private boolean canShowTimeoutDialog = true;
+
+    private int timeoutDialogDelay = 10000;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -100,10 +106,17 @@ public abstract class BaseActivity extends AppCompatActivity implements MvpView 
 
     @Override
     public void onError(String message) {
+        Handler handler = new Handler();
         Log.i("SnackbarError", message + "");
         if(message != null && !message.isEmpty()){
             if(message.contains("UnknownHostException") || message.contains("SocketTimeoutException")){
-                CustomAlertDialog.showCustomAlertDialog(this, CustomAlertDialog.CustomDialogIconState.NEGATIVE, getString(R.string.no_network_connection));
+                if (canShowTimeoutDialog) {
+                    canShowTimeoutDialog = false;
+                    CustomAlertDialog.showCustomAlertDialog(this, CustomAlertDialog.CustomDialogIconState.NEGATIVE, getString(R.string.no_network_connection));
+                    handler.postDelayed(() -> {
+                        canShowTimeoutDialog = true;
+                    }, timeoutDialogDelay);
+                }
             } else if (message.contains("Exception") || message.contains("null") || message.contains("virtual method")){
                 CustomAlertDialog.showCustomAlertDialog(this, CustomAlertDialog.CustomDialogIconState.NEGATIVE, getString(R.string.error));
             } else {

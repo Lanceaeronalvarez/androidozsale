@@ -49,7 +49,8 @@ public class CustomAlertDialog {
             String clickableText,
             View.OnClickListener clickListener) {
 
-        alertDialog = null;
+        if (alertDialog!=null)
+            alertDialog.dismiss();
 
         LayoutInflater inflater = activity.getLayoutInflater();
 
@@ -109,7 +110,8 @@ public class CustomAlertDialog {
             CustomDialogIconState customDialogIconState,
             String description) {
 
-        alertDialog = null;
+        if (alertDialog!=null)
+            alertDialog.dismiss();
 
         LayoutInflater inflater = activity.getLayoutInflater();
 
@@ -146,18 +148,19 @@ public class CustomAlertDialog {
             if (activity!=null){
                 try{
                     newAlertDialog.show();
+                    showCount = 1;
                 }catch (Exception e){
                     Log.d(CustomAlertDialog.class.getName(),e.getMessage());
                 }
             }
         }
-        showCount = 1;
-        dismissOnDelay();
 
         newAlertDialog.setOnDismissListener(dialogInterface -> showCount = 0);
-
         alertDialog = newAlertDialog;
+        dismissOnDelay();
+
         return newAlertDialog;
+
     }
 
     private static void setAlertDialogGravity(
@@ -214,12 +217,12 @@ public class CustomAlertDialog {
     }
 
     public static void dismissCustomDialog() {
-
         try {
             if ((alertDialog != null) && alertDialog.isShowing()) {
                 alertDialog.dismiss();
                 showCount = 0;
             }
+
             alertDialog = null;
 
         } catch (IllegalArgumentException e) {

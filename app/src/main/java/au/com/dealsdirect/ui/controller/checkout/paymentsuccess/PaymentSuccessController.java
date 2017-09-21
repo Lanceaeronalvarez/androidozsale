@@ -124,7 +124,7 @@ public class PaymentSuccessController extends BaseController implements PaymentS
             mPresenter.generateOurpay();
         }else{
             double totalPayment = mShippingFee+mPrice;
-            mPaymentSuccessTableContainer.setVisibility(View.VISIBLE);
+            mPaymentSuccessTableContainer.setVisibility(View.GONE);
             mPaymentOurpaySuccessDetailContainer.setVisibility(View.GONE);
             mPriceTextView.setText(PriceUtils.getPriceStringValue(totalPayment));
         }
