@@ -480,11 +480,13 @@ public class HomeController extends BaseController implements HomeMvpView {
     }
 
     public void resetVisibleContainer() {
+
         if (!(getCurrentRouter() == mAccountsRouter || getCurrentRouter() == mShopRouter)) {
             mContainersList.get(currentVisibleIndex).setVisibility(View.GONE);
             mContainersList.get(previousVisibleIndex).setVisibility(View.VISIBLE);
             mBottomNavigationView.setCurrentItem(previousVisibleIndex, false);
             currentVisibleIndex = previousVisibleIndex;
+
         } else if (getCurrentRouter() == mShopRouter) {
             showBottomNav();
         }

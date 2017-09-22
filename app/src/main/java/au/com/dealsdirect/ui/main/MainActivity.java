@@ -169,6 +169,12 @@ public class MainActivity extends BaseActivity implements MainMvpView {
             Router currentRouter = getCurrentRouter();
             Controller currentController = getCurrentController(getCurrentRouter());
 
+            if (getMainController().getHomeViewPager()==null){
+                mMainController = MainController.newInstance();
+                mRouter.setRoot(RouterTransaction.with(mMainController)
+                        .tag("Home"));
+            }
+
             switch (getMainController().getHomeViewPager().getCurrentItem()) {
                 case 0:
                     if (mCategoriesRouter.getBackstackSize() == 1) { //go back to shops

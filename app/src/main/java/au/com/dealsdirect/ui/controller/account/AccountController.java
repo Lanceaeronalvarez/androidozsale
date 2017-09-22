@@ -49,7 +49,6 @@ public class AccountController extends BaseController implements AccountMvpView,
 
     public static final String TAG = "AccountController";
     private static final String KEY_TEXT = "AccountController.KEY_TEXT";
-    private AccountMvpView mAccountMvpView;
     AccountItemAdapter accountItemAdapter;
 
     @BindView(R.id.partial_toolbar_arrow_title)
@@ -78,6 +77,12 @@ public class AccountController extends BaseController implements AccountMvpView,
         super(args);
     }
 
+    @Override
+    protected void onAttach(@NonNull View view) {
+        mPresenter.onAttach(this);
+        super.onAttach(view);
+    }
+
     @NonNull
     @Override
     protected View inflateView(@NonNull LayoutInflater inflater, @NonNull ViewGroup container) {
@@ -86,8 +91,6 @@ public class AccountController extends BaseController implements AccountMvpView,
         getControllerComponent().inject(this);
 
         mPresenter.onAttach(this);
-        mAccountMvpView = this;
-
         return view;
     }
 
@@ -119,13 +122,6 @@ public class AccountController extends BaseController implements AccountMvpView,
         super.onDetach(view);
     }
 
-    @Override
-    protected void onActivityResumed(@NonNull Activity activity) {
-        super.onActivityResumed(activity);
-        mPresenter.onAttach(this);
-        mAccountMvpView = this;
-
-    }
 
     @Override
     public void showAccountItems(List<String> accountItems, int[] accountImages) {
