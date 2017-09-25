@@ -17,6 +17,7 @@ import android.view.ViewGroup;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.view.animation.LinearInterpolator;
+import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.widget.Button;
@@ -343,6 +344,7 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
         if (shippingInformation != null) {
 
             mShippingContainer.setVisibility(View.VISIBLE);
+            mShippingDescText.setLayerType(View.LAYER_TYPE_SOFTWARE, null);
             mShippingDescText.startAnimation(anim);
 
             if(deliveryInformation == null){
@@ -352,6 +354,7 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
             }
 
             mProductPricing.setVisibility(View.VISIBLE);
+            mProductAboutPricing.setLayerType(View.LAYER_TYPE_SOFTWARE, null);
             mProductAboutPricing.startAnimation(anim);
             mProductAboutPricing.loadData(mHtmlHeader + shippingPricing + mHtmlFooter, "text/html; charset=UTF-8", null);
 
@@ -359,12 +362,14 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
 
         if(returnPolicy != null){
             mReturnPolicyContainer.setVisibility(View.VISIBLE);
+            mReturnPolicyText.setLayerType(View.LAYER_TYPE_SOFTWARE, null);
             mReturnPolicyText.startAnimation(anim);
             mReturnPolicyText.loadData(mHtmlHeader + returnPolicy + mHtmlFooter, "text/html; charset=UTF-8", null);
         }
 
         if(!productAbout.isEmpty()){
             mProductAboutContainer.setVisibility(View.VISIBLE);
+            mProductAboutText.setLayerType(View.LAYER_TYPE_SOFTWARE, null);
             mProductAboutText.startAnimation(anim);
             mProductAboutText.loadData(mHtmlHeader + productAbout + mHtmlFooter, "text/html; charset=UTF-8", null);
         }
@@ -374,6 +379,7 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
         mSaleItemImagesAdapter.replaceData(qualitySaleImages);
         mSaleItemImagesIndicatorAdapter.replaceData(qualitySaleImages);
 
+        mProductDescriptionText.setLayerType(View.LAYER_TYPE_SOFTWARE, null);
         mProductDescriptionText.startAnimation(anim);
         mProductDescriptionText.loadData(mHtmlHeader + saleDetail.getDescription() + mHtmlFooter,
                 "text/html; charset=UTF-8",
