@@ -89,9 +89,9 @@ public abstract class BasePullToRefreshController extends BaseController impleme
     public void onError(String message) {
         if (message != null && message.contains("UnknownHostException")) {
             showNoNetworkLayout();
-        } else {
-            super.onError(message);
         }
+
+        super.onError(message);
     }
 
     @Override
@@ -123,6 +123,20 @@ public abstract class BasePullToRefreshController extends BaseController impleme
         if (mContentLayout != null && mNoNetworkLayout != null) {
             mContentLayout.setVisibility(View.VISIBLE);
             mNoNetworkLayout.setVisibility(View.GONE);
+        }
+    }
+
+    @Override
+    public void showNoInternetSnackBar() {
+        if (mActivity != null) {
+            mActivity.showSnackBar(mActivity.getString(R.string.no_internet_connection), true);
+        }
+    }
+
+    @Override
+    public void dismissSnackBar() {
+        if (mActivity != null) {
+            mActivity.dismissSnackBar();
         }
     }
 

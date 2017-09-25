@@ -1,6 +1,9 @@
 package au.com.dealsdirect.ui.main;
 
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.os.Bundle;
 import android.os.Handler;
 import android.util.Log;
@@ -154,7 +157,15 @@ public class MainActivity extends BaseActivity implements MainMvpView {
     protected void onResume() {
         super.onResume();
         mPresenter.onAttach(this);
+        registerInternetCheckReceiver();
     }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        unregisterReceiver(broadcastReceiver);
+    }
+
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -726,6 +737,34 @@ public class MainActivity extends BaseActivity implements MainMvpView {
 
         //New Relic
         NewRelic.withApplicationToken(getString(R.string.new_relic_app_token)).start(this.getApplication());
+    }
+
+    /**
+     *  Method to register runtime broadcast receiver to show snackbar alert for internet connection..
+     */
+    private void registerInternetCheckReceiver() {
+        IntentFilter internetFilter = new IntentFilter();
+        internetFilter.addAction("android.net.wifi.STATE_CHANGE");
+        internetFilter.addAction("android.net.conn.CONNECTIVITY_CHANGE");
+        registerReceiver(broadcastReceiver, internetFilter);
+    }
+
+    /**
+     *  Runtime Broadcast receiver inner class to capture internet connectivity events
+     */
+    public BroadcastReceiver broadcastReceiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            updateSnackbar(isNetworkConnected());
+        }
+    };
+
+    private void updateSnackbar(boolean isOnline) {
+        if(!isOnline && !mSnackbar.isShown()) {
+            showSnackBar(getString(R.string.no_internet_connection), true);
+        }else if(isOnline && mSnackbar.isShown()){
+            dismissSnackBar();
+        }
     }
 
 }

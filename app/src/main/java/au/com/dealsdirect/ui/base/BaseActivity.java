@@ -40,6 +40,8 @@ public abstract class BaseActivity extends AppCompatActivity implements MvpView 
 
     private Unbinder mUnBinder;
 
+    protected Snackbar mSnackbar;
+
     private boolean canShowTimeoutDialog = true;
 
     private int timeoutDialogDelay = 10000;
@@ -52,6 +54,9 @@ public abstract class BaseActivity extends AppCompatActivity implements MvpView 
                 .applicationComponent(((DDApplication) getApplication()).getComponent())
                 .build();
 
+        //initial snackbar
+        mSnackbar = Snackbar.make(findViewById(android.R.id.content),
+                getString(R.string.no_internet_connection), Snackbar.LENGTH_INDEFINITE);
     }
 
     public ActivityComponent getActivityComponent() {
@@ -110,29 +115,40 @@ public abstract class BaseActivity extends AppCompatActivity implements MvpView 
         Log.i("SnackbarError", message + "");
         if(message != null && !message.isEmpty()){
             if(message.contains("UnknownHostException") || message.contains("SocketTimeoutException")){
-                if (canShowTimeoutDialog) {
-                    canShowTimeoutDialog = false;
-                    CustomAlertDialog.showCustomAlertDialog(this, CustomAlertDialog.CustomDialogIconState.NEGATIVE, getString(R.string.no_network_connection));
-                    handler.postDelayed(() -> {
-                        canShowTimeoutDialog = true;
-                    }, timeoutDialogDelay);
-                }
+//                if (canShowTimeoutDialog) {
+//                    canShowTimeoutDialog = false;
+//                    CustomAlertDialog.showCustomAlertDialog(this, CustomAlertDialog.CustomDialogIconState.NEGATIVE, getString(R.string.no_network_connection));
+//                    handler.postDelayed(() -> {
+//                        canShowTimeoutDialog = true;
+//                    }, timeoutDialogDelay);
+//                }
+                showSnackBar(getString(R.string.no_internet_connection), true);
             } else if (message.contains("Exception") || message.contains("null") || message.contains("virtual method")){
-                CustomAlertDialog.showCustomAlertDialog(this, CustomAlertDialog.CustomDialogIconState.NEGATIVE, getString(R.string.error));
-            } else {
-                CustomAlertDialog.showCustomAlertDialog(this, CustomAlertDialog.CustomDialogIconState.NEGATIVE, message);
+//                CustomAlertDialog.showCustomAlertDialog(this, CustomAlertDialog.CustomDialogIconState.NEGATIVE, getString(R.string.error));
+                showSnackBar(getString(R.string.error), false);
             }
+//            else {
+//                CustomAlertDialog.showCustomAlertDialog(this, CustomAlertDialog.CustomDialogIconState.NEGATIVE, message);
+//            }
         }
     }
 
-    private void showSnackBar(String message) {
-        Snackbar snackbar = Snackbar.make(findViewById(android.R.id.content),
-                message, Snackbar.LENGTH_SHORT);
-        View sbView = snackbar.getView();
+    protected void showSnackBar(String message, boolean indefinite) {
+        mSnackbar = Snackbar.make(findViewById(android.R.id.content),
+                message, indefinite ? Snackbar.LENGTH_INDEFINITE : Snackbar.LENGTH_SHORT);
+        View sbView = mSnackbar.getView();
+        sbView.setBackgroundColor(ContextCompat.getColor(this, R.color.colorAccent));
         TextView textView = (TextView) sbView
                 .findViewById(android.support.design.R.id.snackbar_text);
+        textView.setTextAlignment(View.TEXT_ALIGNMENT_CENTER);
         textView.setTextColor(ContextCompat.getColor(this, R.color.white));
-        snackbar.show();
+        mSnackbar.show();
+    }
+
+    protected void dismissSnackBar(){
+        if(mSnackbar != null) {
+            mSnackbar.dismiss();
+        }
     }
 
     @Override

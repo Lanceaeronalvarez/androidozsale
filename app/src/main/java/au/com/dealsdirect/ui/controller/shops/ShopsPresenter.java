@@ -59,6 +59,11 @@ public class ShopsPresenter<V extends ShopsMvpView> extends BasePresenter<V> imp
                 super.onSuccess(response);
                 getMvpView().showShopBanners((List<GetBannerResponse>) response);
             }
+
+            @Override
+            public void onFailure() {
+                getMvpView().unBindPaginate();
+            }
         });
     }
 

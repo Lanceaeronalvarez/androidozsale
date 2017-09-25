@@ -325,7 +325,7 @@
     <string name="return_request_submitted">Return request submitted</string>
     <string name="create_return">Create Return</string>
     <string name="please_fill_up_field">Please fill up the field below</string>
-
+    <string name="no_internet_connection">no internet connection</string>
     <string name="error">error</string>
     <string name="remove_payment_method">Removed Payment Method</string>
 </resources>

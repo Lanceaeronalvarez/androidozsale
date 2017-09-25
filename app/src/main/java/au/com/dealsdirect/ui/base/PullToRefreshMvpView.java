@@ -10,4 +10,8 @@ public interface PullToRefreshMvpView extends MvpView {
     void showNoNetworkLayout();
 
     void hideNoNetworkLayout();
+
+    void showNoInternetSnackBar();
+
+    void dismissSnackBar();
 }

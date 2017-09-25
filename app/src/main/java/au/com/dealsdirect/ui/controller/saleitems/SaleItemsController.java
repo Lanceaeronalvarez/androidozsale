@@ -494,8 +494,9 @@ public class SaleItemsController extends BasePullToRefreshController implements 
 
             loadingInProgress = false;
 
-            if (!initialLoad) {
+            if (!initialLoad || page == 0) {
                 mSaleItemsAdapter.replaceData(items);
+                mPaginateManager = null;
                 mPaginateManager = PaginateUtils.init(mSaleItemsRecyclerView, mPaginateCallbacks);
 
                 initialLoad = true;

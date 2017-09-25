@@ -238,6 +238,13 @@ public class ShopsController extends BasePullToRefreshController implements Shop
     }
 
     @Override
+    public void unBindPaginate() {
+        if(mPaginateManager != null) {
+            mPaginateManager.unbind();
+        }
+    }
+
+    @Override
     public void onBannerClicked(
             String saleId,
             String bannerTitle,
@@ -343,10 +350,8 @@ public class ShopsController extends BasePullToRefreshController implements Shop
 
         if (page == 0 || isRefreshShop) {
             mBannersAdapter.replace(getBannerResponses);
-            if (mPaginateManagerCounter==0){
-                mPaginateManager = PaginateUtils.init(shopsControllerBannerRecyclerView, mPaginateCallbacks);
-                mPaginateManagerCounter++;
-            }
+            mPaginateManager = null;
+            mPaginateManager = PaginateUtils.init(shopsControllerBannerRecyclerView, mPaginateCallbacks);
             isRefreshShop = false;
         } else {
 

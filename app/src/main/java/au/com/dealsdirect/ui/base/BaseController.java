@@ -15,7 +15,7 @@ import au.com.dealsdirect.di.module.ControllerModule;
 
 public abstract class BaseController extends RefWatchingController implements MvpView {
 
-    private BaseActivity mActivity;
+    protected BaseActivity mActivity;
 
     private ControllerComponent mControllerComponent;
 

@@ -16,4 +16,6 @@ public interface ShopsMvpView extends MvpView {
     void storeCategories(List<GetCategoryTreeResponse> categories);
 
     void refresh();
+
+    void unBindPaginate();
 }
