@@ -84,7 +84,6 @@ public class MainActivity extends BaseActivity implements MainMvpView {
     ViewGroup mContainer;
 
     private BraintreeFragment mBraintreeFragment;
-    private Router mRouter;
     private FetchTokenHandler mFetchTokenHandler;
 
     private MainController mMainController;

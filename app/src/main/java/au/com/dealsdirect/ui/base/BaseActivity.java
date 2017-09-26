@@ -19,11 +19,14 @@ import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.TextView;
 
+import com.bluelinelabs.conductor.Router;
+
 import au.com.dealsdirect.DDApplication;
 import au.com.dealsdirect.R;
 import au.com.dealsdirect.di.component.ActivityComponent;
 import au.com.dealsdirect.di.component.DaggerActivityComponent;
 import au.com.dealsdirect.di.module.ActivityModule;
+import au.com.dealsdirect.ui.controller.splash.SplashScreenController;
 import au.com.dealsdirect.ui.custom.CustomAlertDialog;
 import au.com.dealsdirect.utils.CommonUtils;
 import au.com.dealsdirect.utils.NetworkUtils;
@@ -41,6 +44,8 @@ public abstract class BaseActivity extends AppCompatActivity implements MvpView 
     private Unbinder mUnBinder;
 
     protected Snackbar mSnackbar;
+
+    protected Router mRouter;
 
     private boolean canShowTimeoutDialog = true;
 
@@ -133,6 +138,15 @@ public abstract class BaseActivity extends AppCompatActivity implements MvpView 
         }
     }
 
+    private boolean isCurrentControllerNotSplash(){
+        if(mRouter != null && mRouter.hasRootController()){
+            if(mRouter.getBackstack().get(0).controller() instanceof SplashScreenController){
+                return false;
+            }
+        }
+        return true;
+    }
+
     protected void showSnackBar(String message, boolean indefinite) {
         mSnackbar = Snackbar.make(findViewById(android.R.id.content),
                 message, indefinite ? Snackbar.LENGTH_INDEFINITE : Snackbar.LENGTH_SHORT);
@@ -142,7 +156,9 @@ public abstract class BaseActivity extends AppCompatActivity implements MvpView 
                 .findViewById(android.support.design.R.id.snackbar_text);
         textView.setTextAlignment(View.TEXT_ALIGNMENT_CENTER);
         textView.setTextColor(ContextCompat.getColor(this, R.color.white));
-        mSnackbar.show();
+        if(isCurrentControllerNotSplash()) {
+            mSnackbar.show();
+        }
     }
 
     protected void dismissSnackBar(){
