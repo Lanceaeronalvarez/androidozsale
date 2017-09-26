@@ -15,16 +15,13 @@ import com.bluelinelabs.conductor.RouterTransaction;
 import com.bluelinelabs.conductor.changehandler.FadeChangeHandler;
 import com.bluelinelabs.conductor.support.RouterPagerAdapter;
 
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
 import javax.inject.Inject;
 
 import au.com.dealsdirect.R;
-import au.com.dealsdirect.data.network.model.banner.GetBannerResponse;
 import au.com.dealsdirect.data.network.model.category.GetCategoryTreeResponse;
 import au.com.dealsdirect.ui.base.BaseController;
 import au.com.dealsdirect.ui.controller.categories.CategoriesController;
@@ -46,12 +43,8 @@ public class MainController extends BaseController implements MainMvpView {
     @Inject
     MainMvpPresenter<MainMvpView> mPresenter;
 
-    public MainCustomViewPager getHomeViewPager() {
-        return mHomeViewPager;
-    }
-
     @BindView(R.id.home_viewpager)
-    MainCustomViewPager mHomeViewPager;
+    private MainCustomViewPager mHomeViewPager;
 
     @BindView(R.id.controller_home_splash_container)
     LinearLayout mHomeSplashContainer;
@@ -161,17 +154,22 @@ public class MainController extends BaseController implements MainMvpView {
     }
 
     public void goToCategories() {
-        mHomeViewPager.setCurrentItem(0);
+        if (mHomeViewPager != null) {
+            mHomeViewPager.setCurrentItem(0);
+        }
     }
 
     public void goToShops() {
-        mHomeViewPager.setCurrentItem(1);
+        if (mHomeViewPager != null) {
+            mHomeViewPager.setCurrentItem(1);
+        }
     }
 
     public void setViewpagerDraggable(boolean isDraggable) {
 
-      if (mHomeViewPager!=null)
-          mHomeViewPager.setSwipeable(isDraggable);
+        if (mHomeViewPager != null) {
+            mHomeViewPager.setSwipeable(isDraggable);
+        }
     }
 
     public void hideBottomNav() {
@@ -186,11 +184,11 @@ public class MainController extends BaseController implements MainMvpView {
         mChosenSubCategoryItemKey = key;
     }
 
-    public void setSelectedSubCategoryItem(View view){
+    public void setSelectedSubCategoryItem(View view) {
         mLastSelectedSubCategoryItem = view;
     }
 
-    public View getSelectedSubCategoryItem(){
+    public View getSelectedSubCategoryItem() {
         return mLastSelectedSubCategoryItem;
     }
 
@@ -222,5 +220,9 @@ public class MainController extends BaseController implements MainMvpView {
 
     public HomeController getHomeController() {
         return mHomeController;
+    }
+
+    public MainCustomViewPager getHomeViewPager() {
+        return mHomeViewPager;
     }
 }
