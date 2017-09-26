@@ -466,8 +466,9 @@ public class ShopsController extends BasePullToRefreshController implements Shop
         if (getCategoryTreeResponse.getKey() != null) {
 
             mPresenter.loadShopsBanner(getCategoryTreeResponse.getKey(), getCategoryTreeResponse.getId(), 0, 0);
-            if (mShopsControllerToolbarLogo != null)
+            if (mShopsControllerToolbarLogo != null) {
                 mShopsControllerToolbarLogo.setVisibility(View.GONE);
+            }
             mShopsControllerToolbarTextView.setVisibility(View.VISIBLE);
             mShopsControllerToolbarTextView.setText(getCategoryParentKey(getCategoryTreeResponse.getKey()));
             mShopsControllerHamburgerView.setImageDrawable(getActivity().getDrawable(R.drawable.ic_pink_chevron));
@@ -548,7 +549,9 @@ public class ShopsController extends BasePullToRefreshController implements Shop
 
     public void loadShopBanners() {
 
-        mShopsControllerToolbarLogo.setVisibility(View.VISIBLE);
+        if(mShopsControllerToolbarLogo != null) {
+            mShopsControllerToolbarLogo.setVisibility(View.VISIBLE);
+        }
         mShopsControllerToolbarTextView.setVisibility(View.GONE);
         mShopsControllerHamburgerView.setImageDrawable(getActivity().getDrawable(R.drawable.ic_action_menu));
         shopsControllerSearchView.setVisibility(View.VISIBLE);
