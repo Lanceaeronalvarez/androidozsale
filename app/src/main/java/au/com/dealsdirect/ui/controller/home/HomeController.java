@@ -360,7 +360,7 @@ public class HomeController extends BaseController implements HomeMvpView {
             mActivity.showLoginController(mContactsRouter, new AuthHandler() {
                 @Override
                 public void success() {
-                    resetContactsRouter();
+                    resetRouters();
                 }
 
                 @Override
@@ -379,7 +379,7 @@ public class HomeController extends BaseController implements HomeMvpView {
             mActivity.showLoginController(mInvitesRouter, new AuthHandler() {
                 @Override
                 public void success() {
-                    resetInviteRouter();
+                    resetRouters();
                 }
 
                 @Override
@@ -398,7 +398,7 @@ public class HomeController extends BaseController implements HomeMvpView {
             mActivity.showLoginController(mCheckoutRouter, new AuthHandler() {
                 @Override
                 public void success() {
-                    resetCheckoutRouter();
+                    resetRouters();
                 }
 
                 @Override
@@ -524,5 +524,11 @@ public class HomeController extends BaseController implements HomeMvpView {
 
     public Router getCheckoutRouter() {
         return mCheckoutRouter;
+    }
+
+    public void resetRouters() {
+        resetContactsRouter();
+        resetInviteRouter();
+        resetCheckoutRouter();
     }
 }

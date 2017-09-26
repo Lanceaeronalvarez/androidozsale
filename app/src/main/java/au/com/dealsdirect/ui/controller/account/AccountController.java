@@ -228,8 +228,8 @@ public class AccountController extends BaseController implements AccountMvpView,
 //                commented. in iOS when logging out, it stays on my accounts.
 //                ((MainActivity) getActivity()).getMainController().getHomeController().showShopController();
 
-                //reset checkout router
-                ((MainActivity) getActivity()).getMainController().getHomeController().resetCheckoutRouter();
+                //reset routers with unique user info
+                ((MainActivity) getActivity()).getMainController().getHomeController().resetRouters();
                 CustomAlertDialog.showCustomAlertDialog(getActivity(),
                         CustomAlertDialog.CustomDialogIconState.POSITIVE,
                         getActivity().getString(R.string.logout_successful));  
