@@ -127,9 +127,9 @@ public abstract class BaseActivity extends AppCompatActivity implements MvpView 
 //                CustomAlertDialog.showCustomAlertDialog(this, CustomAlertDialog.CustomDialogIconState.NEGATIVE, getString(R.string.error));
                 showSnackBar(getString(R.string.error), false);
             }
-//            else {
-//                CustomAlertDialog.showCustomAlertDialog(this, CustomAlertDialog.CustomDialogIconState.NEGATIVE, message);
-//            }
+            else {
+                CustomAlertDialog.showCustomAlertDialog(this, CustomAlertDialog.CustomDialogIconState.NEGATIVE, message);
+            }
         }
     }
 
