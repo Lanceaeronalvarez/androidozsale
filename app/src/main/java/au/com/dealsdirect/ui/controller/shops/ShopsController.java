@@ -548,14 +548,12 @@ public class ShopsController extends BasePullToRefreshController implements Shop
     }
 
     public void loadShopBanners() {
-
-        if(mShopsControllerToolbarLogo != null) {
+        if(isAttached()) {
             mShopsControllerToolbarLogo.setVisibility(View.VISIBLE);
+            mShopsControllerToolbarTextView.setVisibility(View.GONE);
+            mShopsControllerHamburgerView.setImageDrawable(getActivity().getDrawable(R.drawable.ic_action_menu));
+            shopsControllerSearchView.setVisibility(View.VISIBLE);
         }
-        mShopsControllerToolbarTextView.setVisibility(View.GONE);
-        mShopsControllerHamburgerView.setImageDrawable(getActivity().getDrawable(R.drawable.ic_action_menu));
-        shopsControllerSearchView.setVisibility(View.VISIBLE);
-
         GetCategoryTreeResponse shopCategory = new GetCategoryTreeResponse();
         mPresenter.loadShopsBanner(shopCategory.getKey(), shopCategory.getId(), 0, 0);
     }
