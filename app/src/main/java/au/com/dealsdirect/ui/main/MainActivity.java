@@ -52,13 +52,16 @@ import au.com.dealsdirect.data.network.model.legalities.GetTemplateTextsResponse
 import au.com.dealsdirect.service.ourpay.Ourpay;
 import au.com.dealsdirect.service.ourpay.OurpayState;
 import au.com.dealsdirect.ui.base.BaseActivity;
+import au.com.dealsdirect.ui.controller.account.AccountController;
 import au.com.dealsdirect.ui.controller.categories.CategoriesController;
 import au.com.dealsdirect.ui.controller.checkout.addpayment.AddPaymentController;
 import au.com.dealsdirect.ui.controller.checkout.checkout.CheckoutController;
 import au.com.dealsdirect.ui.controller.checkout.paymentsuccess.PaymentSuccessController;
 import au.com.dealsdirect.ui.controller.home.HomeController;
+import au.com.dealsdirect.ui.controller.invite.InviteSendController;
 import au.com.dealsdirect.ui.controller.login.LoginController;
 import au.com.dealsdirect.ui.controller.main.MainController;
+import au.com.dealsdirect.ui.controller.saleitemdetails.SaleItemDetailsController;
 import au.com.dealsdirect.ui.controller.saleitems.SaleItemsController;
 import au.com.dealsdirect.ui.controller.shops.ShopsController;
 import au.com.dealsdirect.ui.controller.splash.SplashScreenController;
@@ -252,9 +255,16 @@ public class MainActivity extends BaseActivity implements MainMvpView {
     public void showLoginController(Router router, AuthHandler handler) {
         mAuthHandler = handler;
         //pinapasa yung router, para kahit child router man siya ng kung ano mang view, pwedeng siya ang tumawag.
-        router.pushController(RouterTransaction.with(LoginController.newInstance(handler))
-                .tag(LoginController.TAG)
-                .popChangeHandler(new VerticalChangeHandler()));
+        Controller currentController = getCurrentController(router);
+        if(currentController instanceof SaleItemDetailsController ||
+                currentController instanceof AccountController ){
+            router.pushController(RouterTransaction.with(LoginController.newInstance(handler))
+                    .tag(LoginController.TAG)
+                    .pushChangeHandler(new VerticalChangeHandler())
+                    .popChangeHandler(new VerticalChangeHandler()));
+        } else {
+            router.pushController(RouterTransaction.with(LoginController.newInstance(handler)));
+        }
     }
 
     @Override
