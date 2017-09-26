@@ -533,6 +533,8 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
             ((MainActivity) getActivity()).showLoginController(getRouter(), new AuthHandler() {
                 @Override
                 public void success() {
+                    mActivity.getMainController().getHomeController().resetInviteRouter();
+                    mActivity.getMainController().getHomeController().resetContactsRouter();
                     mActivity.callGCMRegisterSubscriber();
                     mPresenter.addToCart(request);
                     if(mSharedImageLocation != null) {

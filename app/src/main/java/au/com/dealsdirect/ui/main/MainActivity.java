@@ -254,7 +254,6 @@ public class MainActivity extends BaseActivity implements MainMvpView {
         //pinapasa yung router, para kahit child router man siya ng kung ano mang view, pwedeng siya ang tumawag.
         router.pushController(RouterTransaction.with(LoginController.newInstance(handler))
                 .tag(LoginController.TAG)
-                .pushChangeHandler(new VerticalChangeHandler())
                 .popChangeHandler(new VerticalChangeHandler()));
     }
 
