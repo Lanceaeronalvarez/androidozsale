@@ -17,14 +17,7 @@ import com.bumptech.glide.load.DecodeFormat;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bumptech.glide.load.resource.bitmap.BitmapEncoder;
 import com.bumptech.glide.request.RequestListener;
-import com.bumptech.glide.request.animation.GlideAnimation;
-import com.bumptech.glide.request.target.SimpleTarget;
 import com.bumptech.glide.request.target.Target;
-
-import java.io.UnsupportedEncodingException;
-import java.net.URLEncoder;
-
-import au.com.dealsdirect.R;
 
 
 public class ImageUtils {
@@ -188,27 +181,6 @@ public class ImageUtils {
         AppLogger.d("IMG " + String.format("width: %d height: %d screenWidth: %d scale: %f computedHeight: %d", width, height, screenWidth, scale, computedHeight));
 
         return computedHeight;
-    }
-
-    public static String generateImageUrl(String brandId, String imageId, String imageFilename) {
-        String encodedImageFilename;
-
-        try {
-            encodedImageFilename = URLEncoder.encode(imageFilename, "UTF-8");
-        } catch (UnsupportedEncodingException e) {
-            e.printStackTrace();
-            encodedImageFilename = "";
-        }
-        encodedImageFilename = encodedImageFilename.replace("+", "%20");
-
-//        String urlString =  Prefs.getString(IMAGE_SERVER_URL, "https://c1.mysalec.com/brands/")
-        String urlString = "https://c1.mysalec.com/"
-                + "brands/"
-                + brandId + "/"
-                + imageId + "/"
-                + encodedImageFilename;
-
-        return urlString;
     }
 
     /**

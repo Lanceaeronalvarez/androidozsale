@@ -15,6 +15,7 @@ import au.com.dealsdirect.ui.controller.returns.newreturn.listener.NewReturnOrde
 import au.com.dealsdirect.ui.controller.returns.newreturn.viewholder.NewReturnOrderViewHolder;
 import au.com.dealsdirect.ui.custom.ProductQuantityLayout;
 import au.com.dealsdirect.utils.ImageUtils;
+import au.com.dealsdirect.utils.LegacyStringImageUtils;
 import au.com.dealsdirect.utils.PriceUtils;
 
 /**
@@ -141,7 +142,7 @@ public class NewReturnOrdersAdapter extends RecyclerView.Adapter<NewReturnOrderV
             String imageId = mCurrentReturnList.get(position).getImageID();
             String imageFileName = mCurrentReturnList.get(position).getFileName();
 
-            String imageUrl = ImageUtils.generateImageUrl(imageBrandId,imageId,imageFileName);
+            String imageUrl = LegacyStringImageUtils.generateImageUrl(imageBrandId,imageId,imageFileName);
 
             ImageUtils.loadImage(mContext,imageUrl,holder.newReturnItemImageView);
             mUpateListener.onReturnValueUpdated(
