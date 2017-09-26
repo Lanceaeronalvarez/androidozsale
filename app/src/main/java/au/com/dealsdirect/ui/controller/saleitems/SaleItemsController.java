@@ -496,7 +496,6 @@ public class SaleItemsController extends BasePullToRefreshController implements 
 
             if (!initialLoad || page == 0) {
                 mSaleItemsAdapter.replaceData(items);
-                mPaginateManager = null;
                 mPaginateManager = PaginateUtils.init(mSaleItemsRecyclerView, mPaginateCallbacks);
 
                 initialLoad = true;
@@ -613,6 +612,13 @@ public class SaleItemsController extends BasePullToRefreshController implements 
             mFromCategorySearch = false;
         }
 
+    }
+
+    @Override
+    public void unbindPaginate() {
+        if(mPaginateManager != null){
+            mPaginateManager.unbind();
+        }
     }
 
     @OnClick(R.id.partial_toolbar_field_title_textview)
