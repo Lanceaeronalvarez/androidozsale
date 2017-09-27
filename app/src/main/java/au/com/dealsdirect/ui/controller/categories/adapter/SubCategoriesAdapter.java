@@ -119,6 +119,7 @@ public class SubCategoriesAdapter extends RecyclerView.Adapter<RecyclerView.View
 
                                     mSubCategoryItemsAdapter = new SubCategoryItemsAdapter(subCategoryItems, mPresenter, mSubCategoryItemClickListener, mAnimateInsert, mIsResetSubCategories);
                                     ((SubCategoriesViewHolder) holder).subCategoryItemsRecyclerView.setLayoutManager(new LinearLayoutManager(holder.itemView.getContext(), LinearLayoutManager.VERTICAL, false));
+                                    ((SubCategoriesViewHolder) holder).subCategoryItemsRecyclerView.setMotionEventSplittingEnabled(false);
                                     ((SubCategoriesViewHolder) holder).subCategoryItemsRecyclerView.setAdapter(mSubCategoryItemsAdapter);
                                 }
 

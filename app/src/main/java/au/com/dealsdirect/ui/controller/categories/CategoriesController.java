@@ -144,6 +144,7 @@ public class CategoriesController extends BaseController
         if (mCategories != null) {
             mAdapter = new CategoriesAdapter(mCategories, mPresenter, this);
             mRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity(), LinearLayoutManager.VERTICAL, false));
+            mRecyclerView.setMotionEventSplittingEnabled(false);
             mRecyclerView.setAdapter(mAdapter);
 
             if (mCategories.get(0).getChildren() != null) {
@@ -155,6 +156,7 @@ public class CategoriesController extends BaseController
             }
             mSubCategoryRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity(), LinearLayoutManager.VERTICAL, false));
             mSubCategoryRecyclerView.setAdapter(mSubCategoryAdapter);
+            mSubCategoryRecyclerView.setMotionEventSplittingEnabled(false);
 
         }
     }
