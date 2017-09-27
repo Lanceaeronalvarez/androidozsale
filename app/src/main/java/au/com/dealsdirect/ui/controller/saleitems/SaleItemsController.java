@@ -517,7 +517,6 @@ public class SaleItemsController extends BasePullToRefreshController implements 
             if (mSaleItems == null || mSaleItems.isEmpty()) {
                 mPlaceholder.setVisibility(View.VISIBLE);
                 mSaleItemsRecyclerView.setVisibility(View.GONE);
-                mPaginateManager.unbind();
             } else {
                 mPlaceholder.setVisibility(View.GONE);
                 mSaleItemsRecyclerView.setVisibility(View.VISIBLE);
