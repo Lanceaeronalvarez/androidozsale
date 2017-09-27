@@ -40,7 +40,7 @@ public class OurpaySMSVerificationPresenter<V extends OurpaySMSVerificationMvpVi
                 .subscribeOn(getSchedulerProvider().io())
                 .observeOn(getSchedulerProvider().ui())
                 .subscribe(responseValue -> {
-                    Log.d("smsverify", "normalize response = "+responseValue.getVerificationNormalizePhoneResponse().getMessage() + " , "+
+//                    Log.d("smsverify", "normalize response = "+responseValue.getVerificationNormalizePhoneResponse().getMessage() + " , "+
                             responseValue.getVerificationNormalizePhoneResponse().getIsAuthenticated()+" , "+
                             responseValue.getVerificationNormalizePhoneResponse().getResult()+ " , "+
                             responseValue.getVerificationNormalizePhoneResponse().getValue().getErrorMessage()+" ,  "+
@@ -76,7 +76,7 @@ public class OurpaySMSVerificationPresenter<V extends OurpaySMSVerificationMvpVi
         verificationNormalizePhoneRequest.setPhone(requestPhone);
         verificationNormalizePhoneRequest.setCode(code);
 
-        Log.d("smsverification", "code : "+code+" , "+requestPhone+" , "+getDataManager().getLanguageId()+" , "+getDataManager().getCountryId());
+//        Log.d("smsverification", "code : "+code+" , "+requestPhone+" , "+getDataManager().getLanguageId()+" , "+getDataManager().getCountryId());
         getCompositeDisposable().add(getDataManager()
                 .callVerificationCodeSend(verificationNormalizePhoneRequest)
                 .subscribeOn(getSchedulerProvider().io())
@@ -111,7 +111,7 @@ public class OurpaySMSVerificationPresenter<V extends OurpaySMSVerificationMvpVi
         verificationCodeConfirmRequest.setLanguageID(getDataManager().getLanguageId());
         verificationCodeConfirmRequest.setPhone(String.format("%s%s", countryCode, phone));
         verificationCodeConfirmRequest.setCode(code);
-        Log.d("verification", "values = "+countryCode+ " , "+phone+", "+getDataManager().getCountryId()+" , "+getDataManager().getLanguageId()+ " ,"+code);
+//        Log.d("verification", "values = "+countryCode+ " , "+phone+", "+getDataManager().getCountryId()+" , "+getDataManager().getLanguageId()+ " ,"+code);
 
         getCompositeDisposable().add(getDataManager()
                 .callVerificationCodeConfirm(verificationCodeConfirmRequest)

@@ -154,19 +154,26 @@ public class OurpaySMSVerificationController extends BaseController implements O
 
         } else {
             setExtension(response.getVerificationNormalizePhoneResponse().getValue().getCountryCode());
-            mPresenter.callVerificationCodeSend(mSMSVerificationCode.getText().toString(),
+            mPresenter.callVerificationCodeSend(
+                    mSMSVerificationCode.getText().toString(),
                     mSMSVerificationPhone.getText().toString(),
                     response.getVerificationNormalizePhoneResponse().getValue().getCountryCode());
+            clearCode();
         }
     }
 
     @Override
     public void callVerificationCodeSendResponse(VerificationNormalizePhoneResponseBody response) {
 
-        if (!response.getVerificationNormalizePhoneResponse().getValue().getPhone().isEmpty()) {
-            setPhoneError(response.getVerificationNormalizePhoneResponse().getValue().getErrorMessage());
-        } else {
-            setPhoneNormal();
+        if(!response.getVerificationNormalizePhoneResponse().getResult()||!response.getVerificationNormalizePhoneResponse().getIsAuthenticated()) {
+            CustomAlertDialog.showCustomAlertDialog(getActivity(), CustomAlertDialog.CustomDialogIconState.NEGATIVE, response.getVerificationNormalizePhoneResponse().getValue().getErrorMessage());
+        }else{
+//            Log.d("smsverification", response.getVerificationNormalizePhoneResponse().getValue().getErrorMessage()+" , "+response.getVerificationNormalizePhoneResponse().getMessage());
+            if (!response.getVerificationNormalizePhoneResponse().getValue().getErrorMessage().isEmpty()) {
+                setPhoneError(response.getVerificationNormalizePhoneResponse().getValue().getErrorMessage());
+            } else {
+                setPhoneNormal();
+            }
         }
     }
 
@@ -212,7 +219,6 @@ public class OurpaySMSVerificationController extends BaseController implements O
     void onResendCode() {
         isToVerifyCode = false;
         mPresenter.callNormalizePhone(mSMSVerificationPhone.getText().toString());
-        clearCode();
     }
 
     private void setCodeNormal() {
