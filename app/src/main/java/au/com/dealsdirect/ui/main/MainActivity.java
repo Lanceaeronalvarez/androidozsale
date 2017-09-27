@@ -76,7 +76,6 @@ import io.fabric.sdk.android.Fabric;
 public class MainActivity extends BaseActivity implements MainMvpView {
 
     private static final String TAG = "MainActivity";
-    private static final String CARDFORM = "com.braintreepayments.cardform.CardScanningFragment";
 
     @Inject
     MainMvpPresenter<MainMvpView> mPresenter;
