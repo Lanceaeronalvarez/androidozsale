@@ -203,12 +203,10 @@ public class AddVouchersController extends BaseController implements AddVouchers
     @Override
     protected void setUp(View view) {
 
-        if ((getActivity()) != null)
-            ((MainActivity)getActivity()).getMainController().getHomeController().setIsResetCheckout(true);
+
         mTitleText.setText(getActivity().getResources().getText(R.string.promo_code));
         mFilterView.setVisibility(View.INVISIBLE);
         mArrowImage.setOnClickListener(action -> {
-            ((MainActivity)getActivity()).getMainController().getHomeController().setIsResetCheckout(false);
             getActivity().onBackPressed();
         });
 

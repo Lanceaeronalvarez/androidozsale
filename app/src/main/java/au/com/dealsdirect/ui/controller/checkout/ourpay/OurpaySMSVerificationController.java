@@ -152,19 +152,10 @@ public class OurpaySMSVerificationController extends BaseController implements O
 
             setPhoneError(response.getVerificationNormalizePhoneResponse().getValue().getErrorMessage());
 
-//
-//            if (response.getVerificationNormalizePhoneResponse().getValue().getCountryCode()!=null){
-//                String countryCode = response.getVerificationNormalizePhoneResponse().getValue().getCountryCode();
-//
-//                setExtension(countryCode);
-//
-//            }
-//            CustomAlertDialog.showCustomAlertDialog(getActivity(),
-//                    CustomAlertDialog.CustomDialogIconState.NEGATIVE,
-//                    response.getVerificationNormalizePhoneResponse().getValue().getErrorMessage());
         } else {
             setExtension(response.getVerificationNormalizePhoneResponse().getValue().getCountryCode());
-            mPresenter.callVerificationCodeSend(mSMSVerificationPhone.getText().toString(),
+            mPresenter.callVerificationCodeSend(mSMSVerificationCode.getText().toString(),
+                    mSMSVerificationPhone.getText().toString(),
                     response.getVerificationNormalizePhoneResponse().getValue().getCountryCode());
         }
     }

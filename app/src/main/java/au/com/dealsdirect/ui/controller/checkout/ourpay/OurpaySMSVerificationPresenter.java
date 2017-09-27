@@ -67,13 +67,16 @@ public class OurpaySMSVerificationPresenter<V extends OurpaySMSVerificationMvpVi
     }
 
     @Override
-    public void callVerificationCodeSend(String phone, String countryCode) {
+    public void callVerificationCodeSend(String code, String phone, String countryCode) {
 
+        String requestPhone = "+"+countryCode+phone;
         VerificationNormalizePhoneRequest verificationNormalizePhoneRequest = new VerificationNormalizePhoneRequest();
-        verificationNormalizePhoneRequest.setCountryID(countryCode);
+        verificationNormalizePhoneRequest.setCountryID(getDataManager().getCountryId());
         verificationNormalizePhoneRequest.setLanguageID(getDataManager().getLanguageId());
-        verificationNormalizePhoneRequest.setPhone(phone);
+        verificationNormalizePhoneRequest.setPhone(requestPhone);
+        verificationNormalizePhoneRequest.setCode(code);
 
+        Log.d("smsverification", "code : "+code+" , "+requestPhone+" , "+getDataManager().getLanguageId()+" , "+getDataManager().getCountryId());
         getCompositeDisposable().add(getDataManager()
                 .callVerificationCodeSend(verificationNormalizePhoneRequest)
                 .subscribeOn(getSchedulerProvider().io())

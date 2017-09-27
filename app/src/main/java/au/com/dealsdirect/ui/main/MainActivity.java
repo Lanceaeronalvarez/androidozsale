@@ -76,6 +76,7 @@ import io.fabric.sdk.android.Fabric;
 public class MainActivity extends BaseActivity implements MainMvpView {
 
     private static final String TAG = "MainActivity";
+    private static final String CARDFORM = "com.braintreepayments.cardform.CardScanningFragment";
 
     @Inject
     MainMvpPresenter<MainMvpView> mPresenter;
@@ -149,15 +150,17 @@ public class MainActivity extends BaseActivity implements MainMvpView {
     @Override
     protected void onDestroy() {
         mPresenter.onDetach();
-        mMainController = null;
-        mShopController = null;
-        mCategoriesController = null;
         super.onDestroy();
     }
 
     @Override
     protected void onResume() {
         super.onResume();
+
+        if (getMainController().getHomeController()==null){
+            attachMainController();
+        }
+
         mPresenter.onAttach(this);
         registerInternetCheckReceiver();
     }
@@ -181,12 +184,6 @@ public class MainActivity extends BaseActivity implements MainMvpView {
         if (mIsViewPagerSet) {
             Router currentRouter = getCurrentRouter();
             Controller currentController = getCurrentController(getCurrentRouter());
-
-            if (getMainController().getHomeViewPager()==null){
-                mMainController = MainController.newInstance();
-                mRouter.setRoot(RouterTransaction.with(mMainController)
-                        .tag("Home"));
-            }
 
             switch (getMainController().getHomeViewPager().getCurrentItem()) {
                 case 0:
@@ -228,7 +225,6 @@ public class MainActivity extends BaseActivity implements MainMvpView {
                                 getMainController().getHomeController().getCheckoutRouter().popToRoot();
                                 Controller controller = getMainController().getHomeController().getCurrentControllerOnRouter(mCheckoutRouter);
                                 if (controller instanceof CheckoutController) {
-                                    getMainController().getHomeController().setIsResetCheckout(true);
                                     ((CheckoutController) controller).loadCart();
                                 }
                             } catch (Exception e) {
@@ -351,6 +347,9 @@ public class MainActivity extends BaseActivity implements MainMvpView {
                     .pushChangeHandler(new HorizontalChangeHandler())
                     .popChangeHandler(new HorizontalChangeHandler()));
 
+            if (getMainController().getHomeController()!=null)
+                getMainController().getHomeController().showCheckoutController();
+
         } else {
 
             Router currentRouter = getMainController().getHomeController().getCurrentRouter();
@@ -374,7 +373,6 @@ public class MainActivity extends BaseActivity implements MainMvpView {
 
             Controller controller = getMainController().getHomeController().getCurrentControllerOnRouter(mCheckoutRouter);
             if (controller != null && controller instanceof CheckoutController) {
-                getMainController().getHomeController().setIsResetCheckout(true);
                 ((CheckoutController) controller).loadCart();
             }
         }
@@ -774,5 +772,12 @@ public class MainActivity extends BaseActivity implements MainMvpView {
             dismissSnackBar();
         }
     }
+
+    public void attachMainController(){
+        mMainController = MainController.newInstance();
+        mRouter.setRoot(RouterTransaction.with(mMainController)
+                .tag("Home"));
+    }
+
 
 }

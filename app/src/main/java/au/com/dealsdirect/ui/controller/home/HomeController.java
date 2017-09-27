@@ -95,8 +95,6 @@ public class HomeController extends BaseController implements HomeMvpView {
     private int currentVisibleIndex = 1;
     private int previousVisibleIndex = 0;
 
-    public boolean mIsResetCart = true;
-
     private boolean isLoginVisible = false;
 
     public static HomeController newInstance() {
@@ -508,14 +506,6 @@ public class HomeController extends BaseController implements HomeMvpView {
         }
 
         return null;
-    }
-
-    public boolean getIsResetCheckout() {
-        return mIsResetCart;
-    }
-
-    public void setIsResetCheckout(boolean resetCheckout) {
-        mIsResetCart = resetCheckout;
     }
 
     public ImageView getAddToCartImage() {

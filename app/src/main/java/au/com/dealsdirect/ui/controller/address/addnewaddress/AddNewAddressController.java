@@ -77,8 +77,6 @@ public class AddNewAddressController extends BaseController implements AddNewAdd
     @Override
     protected void setUp(View view) {
 
-        if (getActivity()!=null)
-            ((MainActivity)getActivity()).getMainController().getHomeController().setIsResetCheckout(true);
         mAddNewAddressToolarTitle.setText(getResources().getString(R.string.add_new_address));
         mAddNewAddressRightOption.setImageDrawable(getApplicationContext().getDrawable(R.drawable.ic_check_white_24dp));
     }
@@ -178,7 +176,6 @@ public class AddNewAddressController extends BaseController implements AddNewAdd
     public void onBackClick() {
         hideKeyboard();
         if (getActivity()!=null){
-            ((MainActivity)getActivity()).getMainController().getHomeController().setIsResetCheckout(false);
             getActivity().onBackPressed();
         }
     }

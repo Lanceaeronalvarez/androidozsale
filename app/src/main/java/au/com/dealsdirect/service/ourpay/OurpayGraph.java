@@ -2042,12 +2042,13 @@ public class OurpayGraph {
             ImageView checkImage = (ImageView) yourView.findViewById(R.id.checkImage);
 
 
-            if (ourpayTransactions.get(i).getState() == 0) {
-                tempPay.setText(PriceUtils.getPriceStringValue(ourpayTransactions.get(i).getAmount()));
-                checkImage.setVisibility(View.GONE);
-            } else if (ourpayTransactions.get(i).getState() == 2) {
+            if (ourpayTransactions.get(i).getState() == 2) {
                 tempPay.setText(R.string.paid);
                 checkImage.setVisibility(View.VISIBLE);
+
+            } else{
+                tempPay.setText(PriceUtils.getPriceStringValue(ourpayTransactions.get(i).getAmount()));
+                checkImage.setVisibility(View.GONE);
             }
 
             tempDate.setText(OurpayUtils.convertDateToTrimmedString(ourpayTransactions.get(i).getPlannedDate()));
