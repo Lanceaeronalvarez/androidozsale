@@ -16,7 +16,6 @@ import android.widget.TextView;
 import com.bluelinelabs.conductor.Controller;
 import com.bluelinelabs.conductor.RouterTransaction;
 import com.bluelinelabs.conductor.changehandler.HorizontalChangeHandler;
-import com.squareup.haha.perflib.Main;
 
 import java.util.ArrayList;
 import java.util.HashMap;
