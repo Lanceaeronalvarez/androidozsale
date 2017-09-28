@@ -40,12 +40,7 @@ public class OurpaySMSVerificationPresenter<V extends OurpaySMSVerificationMvpVi
                 .subscribeOn(getSchedulerProvider().io())
                 .observeOn(getSchedulerProvider().ui())
                 .subscribe(responseValue -> {
-//                    Log.d("smsverify", "normalize response = "+responseValue.getVerificationNormalizePhoneResponse().getMessage() + " , "+
-                            responseValue.getVerificationNormalizePhoneResponse().getIsAuthenticated()+" , "+
-                            responseValue.getVerificationNormalizePhoneResponse().getResult()+ " , "+
-                            responseValue.getVerificationNormalizePhoneResponse().getValue().getErrorMessage()+" ,  "+
-                            responseValue.getVerificationNormalizePhoneResponse().getValue().getCountryCode()+ " , "+
-                            responseValue.getVerificationNormalizePhoneResponse().getValue().getPhone());
+
                     getMvpView().callNormalizePhoneResponse(responseValue);
                 }, new Consumer<Throwable>() {
                     @Override
@@ -76,7 +71,6 @@ public class OurpaySMSVerificationPresenter<V extends OurpaySMSVerificationMvpVi
         verificationNormalizePhoneRequest.setPhone(requestPhone);
         verificationNormalizePhoneRequest.setCode(code);
 
-//        Log.d("smsverification", "code : "+code+" , "+requestPhone+" , "+getDataManager().getLanguageId()+" , "+getDataManager().getCountryId());
         getCompositeDisposable().add(getDataManager()
                 .callVerificationCodeSend(verificationNormalizePhoneRequest)
                 .subscribeOn(getSchedulerProvider().io())
@@ -111,16 +105,12 @@ public class OurpaySMSVerificationPresenter<V extends OurpaySMSVerificationMvpVi
         verificationCodeConfirmRequest.setLanguageID(getDataManager().getLanguageId());
         verificationCodeConfirmRequest.setPhone(String.format("%s%s", countryCode, phone));
         verificationCodeConfirmRequest.setCode(code);
-//        Log.d("verification", "values = "+countryCode+ " , "+phone+", "+getDataManager().getCountryId()+" , "+getDataManager().getLanguageId()+ " ,"+code);
 
         getCompositeDisposable().add(getDataManager()
                 .callVerificationCodeConfirm(verificationCodeConfirmRequest)
                 .subscribeOn(getSchedulerProvider().io())
                 .observeOn(getSchedulerProvider().ui())
                 .subscribe(responseValue -> {
-                    Log.d("smsverify", "verify response = "+responseValue.getVerificationCodeConfirmResponse().getMessage() + " , "+
-                    responseValue.getVerificationCodeConfirmResponse().getIsAuthenticated()+" , "+
-                    responseValue.getVerificationCodeConfirmResponse().getResult()+ " , ");
 
                     getMvpView().callVerificationCodeConfirmResponse(responseValue);
 
@@ -130,7 +120,6 @@ public class OurpaySMSVerificationPresenter<V extends OurpaySMSVerificationMvpVi
                         if (!isViewAttached()) {
                             return;
                         }
-                        Log.d("smsverify", "error response = "+throwable.getMessage());
 
                         getMvpView().hideLoading();
                         getMvpView().onError(throwable.getMessage());
