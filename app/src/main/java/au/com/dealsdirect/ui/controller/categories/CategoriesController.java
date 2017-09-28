@@ -16,6 +16,7 @@ import android.widget.TextView;
 import com.bluelinelabs.conductor.Controller;
 import com.bluelinelabs.conductor.RouterTransaction;
 import com.bluelinelabs.conductor.changehandler.HorizontalChangeHandler;
+import com.squareup.haha.perflib.Main;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -33,6 +34,7 @@ import au.com.dealsdirect.ui.controller.categories.listener.CategoryClickListene
 import au.com.dealsdirect.ui.controller.categories.listener.SubCategoryClickListener;
 import au.com.dealsdirect.ui.controller.categories.listener.SubCategoryItemClickListener;
 import au.com.dealsdirect.ui.controller.saleitems.SaleItemsController;
+import au.com.dealsdirect.ui.controller.shops.ShopsController;
 import au.com.dealsdirect.ui.main.MainActivity;
 import au.com.dealsdirect.utils.BundleBuilder;
 import butterknife.BindView;
@@ -243,6 +245,11 @@ public class CategoriesController extends BaseController
     @SuppressWarnings("ConstantConditions")
     @OnClick(R.id.partial_toolbar_disabled_search_right_option)
     void onSearchOptionClicked() {
+
+        if (((MainActivity)getActivity()).getHomeRouter().getControllerWithTag(ShopsController.TAG)!=null){
+            ((MainActivity) getActivity()).getHomeRouter().popToTag(ShopsController.TAG);
+        }
+
         ((MainActivity) getActivity()).goToSalesFromCategory(mChosenSubCategoryTreeResponse);
 
     }
