@@ -5,6 +5,7 @@ import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,6 +13,7 @@ import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.bluelinelabs.conductor.Controller;
 import com.bluelinelabs.conductor.RouterTransaction;
 import com.bluelinelabs.conductor.changehandler.HorizontalChangeHandler;
 
@@ -24,7 +26,6 @@ import javax.inject.Inject;
 
 import au.com.dealsdirect.R;
 import au.com.dealsdirect.data.network.model.category.GetCategoryTreeResponse;
-import au.com.dealsdirect.data.network.model.publicsalescategories.GetPublicSalesCategoriesResponse;
 import au.com.dealsdirect.ui.base.BaseController;
 import au.com.dealsdirect.ui.controller.categories.adapter.CategoriesAdapter;
 import au.com.dealsdirect.ui.controller.categories.adapter.SubCategoriesAdapter;
@@ -208,20 +209,24 @@ public class CategoriesController extends BaseController
 
     @Override
     public void onSubCategoryItemClicked(String categoryID, String categoryName, String categoryKey) {
-        assert (getActivity()) != null;
-        mActivity.getMainController().setChosenCategoryItemKey(categoryKey);
 
-        Bundle saleItemBundle = new BundleBuilder(new Bundle())
-                .putString("SaleItemsController.KEY_TITLE", categoryKey)
-                .putString("SaleItemsController.CATEGORY_KEY", categoryKey)
-                .putBoolean("SaleItemsController.IS_FROM_CATEGORY", true)
-                .build();
+        Controller currentSaleItemsController = ((MainActivity)getActivity()).getHomeRouter().getControllerWithTag(getResources().getString(R.string.sale_items_controller_tag));
 
-        mActivity.getHomeRouter().pushController(RouterTransaction.with(
-                SaleItemsController.newInstance(saleItemBundle))
-                .tag(getResources().getString(R.string.sale_items_controller_tag))
-                .pushChangeHandler(new HorizontalChangeHandler())
-                .popChangeHandler(new HorizontalChangeHandler()));
+        if (currentSaleItemsController==null){
+            mActivity.getMainController().setChosenCategoryItemKey(categoryKey);
+
+            Bundle saleItemBundle = new BundleBuilder(new Bundle())
+                    .putString("SaleItemsController.KEY_TITLE", categoryKey)
+                    .putString("SaleItemsController.CATEGORY_KEY", categoryKey)
+                    .putBoolean("SaleItemsController.IS_FROM_CATEGORY", true)
+                    .build();
+
+            mActivity.getHomeRouter().pushController(RouterTransaction.with(
+                    SaleItemsController.newInstance(saleItemBundle))
+                    .tag(getResources().getString(R.string.sale_items_controller_tag))
+                    .pushChangeHandler(new HorizontalChangeHandler())
+                    .popChangeHandler(new HorizontalChangeHandler()));
+        }
 
         new Handler().postDelayed(() -> {
             ((MainActivity) getActivity()).getMainController().goToShops();
