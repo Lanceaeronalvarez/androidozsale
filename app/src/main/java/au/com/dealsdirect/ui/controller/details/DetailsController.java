@@ -3,6 +3,7 @@ package au.com.dealsdirect.ui.controller.details;
 import android.app.DatePickerDialog;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,6 +16,7 @@ import android.widget.TextView;
 
 import com.google.gson.internal.LinkedTreeMap;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
@@ -25,7 +27,6 @@ import javax.inject.Inject;
 import au.com.dealsdirect.R;
 import au.com.dealsdirect.data.network.model.userdetails.GetUserDetailsResponse;
 import au.com.dealsdirect.data.network.model.userdetails.SetUserDetailsRequest;
-import au.com.dealsdirect.ui.base.BaseController;
 import au.com.dealsdirect.ui.base.BasePullToRefreshController;
 import au.com.dealsdirect.ui.custom.CustomAlertDialog;
 import au.com.dealsdirect.ui.custom.transitions.CustomSpinnerAdapter;
@@ -172,11 +173,21 @@ public class DetailsController extends BasePullToRefreshController implements De
 
     @Override
     public void loadDetails(GetUserDetailsResponse userDetailsResponse) {
-        LinkedTreeMap details = (LinkedTreeMap) userDetailsResponse.getResponse().getValue();
-        mFirstNameText.setText(JsonUtils.getStringFromLinkedTreeMap(details, "Forename"));
-        mLastNameText.setText(JsonUtils.getStringFromLinkedTreeMap(details, "Surname"));
-        mEmailAddressText.setText(JsonUtils.getStringFromLinkedTreeMap(details, "Email"));
-        mDateOfBirthText.setText(JsonUtils.getStringDateFromLinkedTreeMap(details, "DateOfBirth"));
+//        LinkedTreeMap details = (LinkedTreeMap) userDetailsResponse.getResponse().getValue();
+        GetUserDetailsResponse.Value value = userDetailsResponse.getResponse().getValue();
+        mFirstNameText.setText(value.getForename());
+        mLastNameText.setText(value.getSurname());
+        mEmailAddressText.setText(value.getEmail());
+        String day =  value.getDateOfBirth().getDay().toString();
+        String year = value.getDateOfBirth().getYear().toString();
+        String month = DateUtils.months[value.getDateOfBirth().getMonth()-1];
+        int genderItem = 0;
+        if (!value.getGender()){
+            genderItem = 1;
+        }
+
+        mGenderSpinner.setSelection(genderItem);
+        mDateOfBirthText.setText(month+" "+day+", "+year);
     }
 
     @Override
