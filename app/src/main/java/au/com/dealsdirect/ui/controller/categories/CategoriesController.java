@@ -219,7 +219,7 @@ public class CategoriesController extends BaseController
             Bundle saleItemBundle = new BundleBuilder(new Bundle())
                     .putString("SaleItemsController.KEY_TITLE", categoryKey)
                     .putString("SaleItemsController.CATEGORY_KEY", categoryKey)
-                    .putBoolean("SaleItemsController.IS_FROM_CATEGORY", true)
+                    .putBoolean("SaleItemsController.FROM_CATEGORY_SEARCH", true)
                     .build();
 
             mActivity.getHomeRouter().pushController(RouterTransaction.with(

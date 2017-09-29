@@ -307,7 +307,7 @@ public class SaleItemsController extends BasePullToRefreshController implements 
 //            });
 //        }else
 
-        if (mFromShopSearch || mFromCategorySearch) {
+        if (mFromShopSearch) {
             if (mSaleItemsToolbarTitle.getText().toString().isEmpty() && mSearchQuery.isEmpty() && !isFiltered) {
                 activateSearch();
             }
@@ -476,8 +476,10 @@ public class SaleItemsController extends BasePullToRefreshController implements 
             } else {
                 mPopularProductsHeader.setVisibility(View.GONE);
             }
+            enablePullToRefresh(false);
         } else {
             mPopularProductsHeader.setVisibility(View.GONE);
+            enablePullToRefresh(true);
         }
 
 
@@ -494,7 +496,6 @@ public class SaleItemsController extends BasePullToRefreshController implements 
 
             loadingInProgress = false;
 
-            enablePullToRefresh(true);
 
             if (!initialLoad || page == 0) {
                 mSaleItemsAdapter.replaceData(items);
