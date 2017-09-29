@@ -94,7 +94,7 @@ public class OurpayGraph {
 
 
         Bitmap returnedBitmap = Bitmap.createBitmap(v.getMeasuredWidth(),
-                v.getMeasuredHeight(), Bitmap.Config.ARGB_8888);
+                v.getMeasuredHeight(), Bitmap.Config.RGB_565);
         Canvas c = new Canvas(returnedBitmap);
         v.draw(c);
         return returnedBitmap;
