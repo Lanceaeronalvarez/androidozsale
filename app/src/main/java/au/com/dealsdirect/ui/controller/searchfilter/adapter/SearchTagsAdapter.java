@@ -91,12 +91,14 @@ public class SearchTagsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
             int itemIndex = mData.indexOf(chip);
             mData.remove(chip);
             notifyItemRemoved(itemIndex);
-            if (itemIndex - 1 > 0) {
-                mLayoutManager.scrollToPosition(itemIndex - 1);
+
+            if(mLayoutManager.getItemCount() > 0){
+                int offsetAmount = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 135, mDisplayMetrics);
+                mLayoutManager.scrollToPositionWithOffset(mLayoutManager.getItemCount()-1, offsetAmount);
             } else {
                 mLayoutManager.scrollToPosition(0);
             }
-
+            
             if (mFacetsAdapter != null) {
                 mFacetsAdapter.updateSelectedSearchChips(mData);
                 mFacetsAdapter.notifyDataSetChanged();
