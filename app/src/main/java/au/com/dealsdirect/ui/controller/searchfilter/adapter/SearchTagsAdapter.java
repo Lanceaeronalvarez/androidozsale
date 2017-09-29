@@ -6,6 +6,7 @@ import android.os.Handler;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.DisplayMetrics;
+import android.util.TypedValue;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -68,18 +69,14 @@ public class SearchTagsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
     public void add(SearchChipModel chip) {
         if (mData != null) {
             mData.add(chip);
-            notifyItemInserted(mData.size() - 1);
+            int addedItemIndex = mData.indexOf(chip);
+            notifyItemInserted(mData.indexOf(chip));
 
-            mRecyclerView.scrollToPosition(mData.size() - 1);
-            new Handler().postDelayed(() -> {
-                int editTextIndex = mLayoutManager.getItemCount() - 1;
-                int lastVisibleItemPosition = mLayoutManager.findLastVisibleItemPosition();
+            int offsetAmount = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 135, mDisplayMetrics);
+            int currentLastItem = getItemCount()-1;
 
-                if (editTextIndex != lastVisibleItemPosition) { //meaning edittext is not visible on screen anymore
-                    mRecyclerView.smoothScrollToPosition(editTextIndex);
-                }
-
-            }, 500);
+            mLayoutManager.scrollToPosition(addedItemIndex);
+            mLayoutManager.scrollToPositionWithOffset(currentLastItem, offsetAmount);
 
             if (mFacetsAdapter != null) {
                 mFacetsAdapter.updateSelectedSearchChips(mData);
@@ -111,6 +108,10 @@ public class SearchTagsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
     public void replaceData(ArrayList<SearchChipModel> chips) {
         mData = chips;
         notifyDataSetChanged();
+
+        int offsetAmount = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 135, mDisplayMetrics);
+        int currentLastItem = getItemCount()-1;
+        mLayoutManager.scrollToPositionWithOffset(currentLastItem, offsetAmount);
     }
 
     public ArrayList<SearchChipModel> getData() {
