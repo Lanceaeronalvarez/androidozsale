@@ -494,14 +494,26 @@ public class SaleItemsController extends BasePullToRefreshController implements 
 
             loadingInProgress = false;
 
+            enablePullToRefresh(true);
+
             if (!initialLoad || page == 0) {
                 mSaleItemsAdapter.replaceData(items);
+                if(mPaginateManager != null){
+                    mPaginateManager.unbind();
+                }
                 mPaginateManager = PaginateUtils.init(mSaleItemsRecyclerView, mPaginateCallbacks);
+
+                if(isFiltered || !mSearchQuery.isEmpty()){
+                    enablePullToRefresh(false);
+                    isFiltered = false;
+                    mIsSearch = false;
+                }
 
                 initialLoad = true;
             } else if (isFiltered || mIsSearch) {
                 mSaleItemsAdapter.replaceData(items);
                 mSaleItemsRecyclerView.scrollToPosition(0);
+                enablePullToRefresh(false);
                 isFiltered = false;
                 mIsSearch = false;
             } else {

@@ -33,6 +33,8 @@ public abstract class BasePullToRefreshController extends BaseController impleme
 
     PtrClassicFrameLayout mPtrLayout;
 
+    boolean mCanDoRefresh = true;
+
     protected BasePullToRefreshController() {
     }
 
@@ -142,7 +144,11 @@ public abstract class BasePullToRefreshController extends BaseController impleme
 
     @Override
     public boolean checkCanDoRefresh(PtrFrameLayout frame, View content, View header) {
-        return PtrDefaultHandler.checkContentCanBePulledDown(frame, content, header);
+        return mCanDoRefresh && PtrDefaultHandler.checkContentCanBePulledDown(frame, content, header);
+    }
+
+    protected void enablePullToRefresh(boolean val){
+        mCanDoRefresh = val;
     }
 
     private void addOverScrollListener(ViewGroup vg) {
