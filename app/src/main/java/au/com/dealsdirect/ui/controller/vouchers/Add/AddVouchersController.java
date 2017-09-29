@@ -129,9 +129,6 @@ public class AddVouchersController extends BaseController implements AddVouchers
     @BindView(R.id.controller_edit_text_voucher)
     TextView mPromoCodeText;
 
-    @BindView(R.id.no_vouchers_placeholder)
-    LinearLayout mNoVouchersPlaceHolder;
-
     @BindView(R.id.partial_checkout_vouchers_button_clear)
     Button mButtonClear;
 
@@ -204,7 +201,7 @@ public class AddVouchersController extends BaseController implements AddVouchers
     protected void setUp(View view) {
 
 
-        mTitleText.setText(getActivity().getResources().getText(R.string.promo_code));
+        mTitleText.setText("My Vouchers");
         mFilterView.setVisibility(View.INVISIBLE);
         mArrowImage.setOnClickListener(action -> {
             getActivity().onBackPressed();
@@ -239,13 +236,11 @@ public class AddVouchersController extends BaseController implements AddVouchers
         helper.attachToRecyclerView(mRecyclerView);
 
         if (mVouchers.isEmpty()) {
-            mVoucherListContainerLayout.setVisibility(View.VISIBLE);
+            mVoucherListContainerLayout.setVisibility(View.GONE);
             mRecyclerView.setVisibility(View.GONE);
-            mNoVouchersPlaceHolder.setVisibility(View.VISIBLE);
         } else {
             mVoucherListContainerLayout.setVisibility(View.VISIBLE);
             mRecyclerView.setVisibility(View.VISIBLE);
-            mNoVouchersPlaceHolder.setVisibility(View.GONE);
         }
 
         mAddVoucherButton.setOnClickListener(action -> {
