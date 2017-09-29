@@ -1,11 +1,14 @@
 package au.com.dealsdirect.ui.controller.details;
 
+import android.util.Log;
+
 import javax.inject.Inject;
 
 import au.com.dealsdirect.data.DataManager;
 import au.com.dealsdirect.data.network.AppApiCallback;
 import au.com.dealsdirect.data.network.model.userdetails.GetUserDetailsResponse;
 import au.com.dealsdirect.data.network.model.userdetails.SetUserDetailsRequest;
+import au.com.dealsdirect.data.network.model.userdetails.SetUserDetailsResponse;
 import au.com.dealsdirect.ui.base.BasePresenter;
 import au.com.dealsdirect.utils.rx.SchedulerProvider;
 import io.reactivex.disposables.CompositeDisposable;
@@ -55,7 +58,8 @@ public class DetailsPresenter<V extends DetailsMvpView> extends BasePresenter<V>
             @Override
             public void onSuccess(Object response) {
                 super.onSuccess(response);
-                if (((GetUserDetailsResponse) response).getResponse().getResult()) {
+
+                if (((SetUserDetailsResponse) response).getSetUserDetailsResponseValue().isResult()) {
                     getMvpView().saveUserDetailsSuccess();
                 } else {
                     getMvpView().saveUserDetailsFailed(((GetUserDetailsResponse) response).getResponse().getMessage());
