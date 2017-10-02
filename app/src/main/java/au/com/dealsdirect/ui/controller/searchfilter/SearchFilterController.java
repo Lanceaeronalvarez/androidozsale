@@ -365,6 +365,10 @@ public class SearchFilterController extends BaseController
     @Override
     protected void onDestroyView(@NonNull View view) {
         mPresenter.onDetach();
+
+        if ((getActivity()) != null) {
+            ((MainActivity)getActivity()).getMainController().showBottomNav();
+        }
         super.onDestroyView(view);
     }
 
