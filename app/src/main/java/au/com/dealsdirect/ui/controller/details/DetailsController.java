@@ -178,16 +178,20 @@ public class DetailsController extends BasePullToRefreshController implements De
         mFirstNameText.setText(value.getForename());
         mLastNameText.setText(value.getSurname());
         mEmailAddressText.setText(value.getEmail());
-        String day =  value.getDateOfBirth().getDay().toString();
-        String year = value.getDateOfBirth().getYear().toString();
-        String month = DateUtils.months[value.getDateOfBirth().getMonth()-1];
+
+        if (value.getDateOfBirth()!=null){
+            String day =  value.getDateOfBirth().getDay().toString();
+            String year = value.getDateOfBirth().getYear().toString();
+            String month = DateUtils.months[value.getDateOfBirth().getMonth()-1];
+            mDateOfBirthText.setText(month+" "+day+", "+year);
+        }
+
         int genderItem = 0;
         if (!value.getGender()){
             genderItem = 1;
         }
 
         mGenderSpinner.setSelection(genderItem);
-        mDateOfBirthText.setText(month+" "+day+", "+year);
     }
 
     @Override
