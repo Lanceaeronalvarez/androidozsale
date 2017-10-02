@@ -233,6 +233,8 @@ public class ShopsController extends BasePullToRefreshController implements Shop
         if (mPreLoadedCategories.size() == 0) {
             mPresenter.loadCategoryTree();
         }
+        setRetainViewMode(RetainViewMode.RETAIN_DETACH);
+
     }
 
     @Override
@@ -354,7 +356,9 @@ public class ShopsController extends BasePullToRefreshController implements Shop
 
         if (page == 0 || isRefreshShop) {
             mBannersAdapter.replace(getBannerResponses);
-            mPaginateManager = null;
+            if(mPaginateManager != null){
+                mPaginateManager.unbind();
+            }
             mPaginateManager = PaginateUtils.init(shopsControllerBannerRecyclerView, mPaginateCallbacks);
             isRefreshShop = false;
         } else {
