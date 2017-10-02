@@ -479,7 +479,6 @@ public class SaleItemsController extends BasePullToRefreshController implements 
             enablePullToRefresh(false);
         } else {
             mPopularProductsHeader.setVisibility(View.GONE);
-            enablePullToRefresh(true);
         }
 
 
@@ -496,6 +495,7 @@ public class SaleItemsController extends BasePullToRefreshController implements 
 
             loadingInProgress = false;
 
+            enablePullToRefresh(true);
 
             if (!initialLoad || page == 0) {
                 mSaleItemsAdapter.replaceData(items);
