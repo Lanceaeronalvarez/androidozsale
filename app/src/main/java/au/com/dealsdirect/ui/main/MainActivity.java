@@ -119,10 +119,8 @@ public class MainActivity extends BaseActivity implements MainMvpView {
 
         mMainController = MainController.newInstance();
         mRouter = Conductor.attachRouter(this, mContainer, savedInstanceState);
-        if (!mRouter.hasRootController()) {
-            mRouter.setRoot(RouterTransaction.with(SplashScreenController.newInstance())
-                    .popChangeHandler(new VerticalChangeHandler()));
-        }
+        mRouter.setRoot(RouterTransaction.with(SplashScreenController.newInstance())
+                .popChangeHandler(new VerticalChangeHandler()));
 
         setUp();
     }
@@ -155,10 +153,6 @@ public class MainActivity extends BaseActivity implements MainMvpView {
     @Override
     protected void onResume() {
         super.onResume();
-
-        if (getMainController().getHomeController()==null){
-            attachMainController();
-        }
 
         mPresenter.onAttach(this);
         registerInternetCheckReceiver();
@@ -604,6 +598,7 @@ public class MainActivity extends BaseActivity implements MainMvpView {
     }
 
     public void splashShownCallback() {
+        mMainController = MainController.newInstance();
         mRouter.setRoot(RouterTransaction.with(mMainController)
                 .tag("Home"));
 
