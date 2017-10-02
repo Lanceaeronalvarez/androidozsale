@@ -97,6 +97,7 @@ public class SaleItemsController extends BasePullToRefreshController implements 
     private List<GetCategoryTreeResponse> mCategoryTreeResponse = new LinkedList<>();
     private List<SortingResponse> mSortingResponse = new ArrayList<>();
     private String mSortingListJsonString = "";
+    private boolean mIsFilterClicked = false;
 
     @BindView(R.id.controller_sale_items_grid_view)
     RecyclerView mSaleItemsRecyclerView;
@@ -561,26 +562,48 @@ public class SaleItemsController extends BasePullToRefreshController implements 
 //    @SuppressWarnings("ConstantConditions")
 //    @OnClick(R.id.partial_toolbar_field_title_left_option)
     void onBackClick() {
-        getActivity().onBackPressed();
+        Log.d("fixcrash", "showfilters");
+        if(!mIsFilterClicked) {
+            mIsFilterClicked = true;
+            getActivity().onBackPressed();
+            new Handler().postDelayed(new TimerTask() {
+                @Override
+                public void run() {
+                    mIsFilterClicked = false;
+                }
+            }, 2000);
+        }
     }
 
     //    @OnClick(R.id.partial_toolbar_field_title_right_option)
     void showFilters() {
-        mChipFilters = removeSearchQueryChips(mChipFilters);
-        buildSearchQueryChips(mChipFilters);
+        Log.d("fixcrash", "showfilters");
+        if (!mIsFilterClicked) {
 
-        getRouter().pushController(RouterTransaction.with(SearchFilterController.newInstance(
-                new Gson().toJson(mCategoryTreeResponse),
-                new Gson().toJson(mFacets)
-                , mSortingListJsonString
-                , mSaleId
-                , mCategoryKey
-                , mPreviousSelectedFacetIndicesJsonString
-                , new Gson().toJson(mChipFilters)))
-                .pushChangeHandler(new VerticalChangeHandler())
-                .popChangeHandler(new VerticalChangeHandler()));
-        mFromShopSearch = false;
-        mFromCategorySearch = false;
+            mIsFilterClicked = true;
+            mChipFilters = removeSearchQueryChips(mChipFilters);
+            buildSearchQueryChips(mChipFilters);
+
+            getRouter().pushController(RouterTransaction.with(SearchFilterController.newInstance(
+                    new Gson().toJson(mCategoryTreeResponse),
+                    new Gson().toJson(mFacets)
+                    , mSortingListJsonString
+                    , mSaleId
+                    , mCategoryKey
+                    , mPreviousSelectedFacetIndicesJsonString
+                    , new Gson().toJson(mChipFilters)))
+                    .pushChangeHandler(new VerticalChangeHandler())
+                    .popChangeHandler(new VerticalChangeHandler()));
+            mFromShopSearch = false;
+            mFromCategorySearch = false;
+
+            new Handler().postDelayed(new TimerTask() {
+                @Override
+                public void run() {
+                    mIsFilterClicked = false;
+                }
+            }, 2000);
+        }
     }
 
 
