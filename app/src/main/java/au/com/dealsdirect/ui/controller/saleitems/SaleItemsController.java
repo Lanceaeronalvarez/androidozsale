@@ -766,12 +766,7 @@ public class SaleItemsController extends BasePullToRefreshController implements 
 
         getSaleItemsRequest.setSorting("");
         getSaleItemsRequest.setPageNumber(String.valueOf(pageNumber));
-
-//        Log.d("okhttpQuery", searchQuery);
-//        if (!searchQuery.isEmpty())
-//            getSaleItemsRequest.setQuery(searchQuery);
-//        else
-//            getSaleItemsRequest.setQuery("");
+        getSaleItemsRequest.setQuery("");
 
         getSaleItemsRequest.setPageSize("50");
 
