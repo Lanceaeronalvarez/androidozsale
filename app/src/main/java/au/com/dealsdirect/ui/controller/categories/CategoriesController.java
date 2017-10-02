@@ -220,6 +220,7 @@ public class CategoriesController extends BaseController
                     .putString("SaleItemsController.KEY_TITLE", categoryKey)
                     .putString("SaleItemsController.CATEGORY_KEY", categoryKey)
                     .putBoolean("SaleItemsController.FROM_CATEGORY_SEARCH", false)
+                    .putBoolean("SaleItemsController.IS_FROM_CATEGORY",true)
                     .build();
 
             mActivity.getHomeRouter().pushController(RouterTransaction.with(
