@@ -86,7 +86,6 @@ public class SaleItemsController extends BasePullToRefreshController implements 
     private static final String KEY_FROM_SHOP_SEARCH = "SaleItemsController.FROM_SHOP_SEARCH";
     private static final String KEY_FROM_CATEGORY_SEARCH = "SaleItemsController.FROM_CATEGORY_SEARCH";
 
-
     private String mSaleId;
     private String mTitle;
     private String mCategoryKey = "";
@@ -242,6 +241,7 @@ public class SaleItemsController extends BasePullToRefreshController implements 
     }
 
     public void onPassFiltersData(Bundle args) {
+
         if (args.containsKey(KEY_TITLE)) {
             mTitle = args.getString(KEY_TITLE, "");
             mTitle = mTitle.replaceAll(">>>", " • ");
@@ -267,6 +267,29 @@ public class SaleItemsController extends BasePullToRefreshController implements 
     protected void onAttach(@NonNull View view) {
         mPresenter.onAttach(this);
         mSaleItemClickCounter = 0;
+
+        String lookingForText = getResources().getString(R.string.i_am_looking_for);
+
+        if (mSaleItemsToolbarTitle.getText().toString().equals(lookingForText) &&
+            mSaleItemsToolbarField.getText().toString().equals(lookingForText) &&
+            (!mFromShopSearch || !mFromCategorySearch)) {
+            mPopularProductsHeader.setVisibility(View.VISIBLE);
+            determineToolbarTitle();
+
+        }else if (mSaleItemsToolbarTitle.getText().toString().equals(lookingForText) &&
+                mSaleItemsToolbarField.getText().toString().isEmpty()){
+            mPopularProductsHeader.setVisibility(View.VISIBLE);
+            determineToolbarTitle();
+
+        }   else if (mSaleItemsToolbarTitle.getText().toString().equals(lookingForText) &&
+                !mSaleItemsToolbarField.getText().toString().equals(lookingForText))    {
+            mSearchQuery = mSaleItemsToolbarField.getText().toString();
+            determineToolbarTitle();
+        }  else if (!mSaleItemsToolbarTitle.getText().toString().equals(lookingForText) &&
+                !mSaleItemsToolbarField.getText().toString().equals(lookingForText)){
+            mSearchQuery = mSaleItemsToolbarField.getText().toString();
+             determineToolbarTitle();
+        }
 
         super.onAttach(view);
     }
@@ -334,6 +357,7 @@ public class SaleItemsController extends BasePullToRefreshController implements 
         //always set edittext string to empty initially
         mSaleItemsToolbarField.setText("");
 
+        String lookingForText = getResources().getString(R.string.i_am_looking_for);
         String categoryToolbarString = buildCategoryToolbarTitle();
 
         //determining hint logic
@@ -343,7 +367,7 @@ public class SaleItemsController extends BasePullToRefreshController implements 
         } else if (!mTitle.isEmpty()) {
             mSaleItemsToolbarField.setHint(mTitle);
         } else {
-            mSaleItemsToolbarField.setHint(getResources().getString(R.string.i_am_looking_for));
+            mSaleItemsToolbarField.setHint(lookingForText);
         }
 
         //determining toolbartitle logic
@@ -351,6 +375,8 @@ public class SaleItemsController extends BasePullToRefreshController implements 
         if (!mSearchQuery.isEmpty()) {
             mSaleItemsToolbarTitle.setText(mSearchQuery);
             mSaleItemsToolbarField.setText(mSearchQuery);
+        } else if(!mSaleItemsToolbarField.getText().toString().isEmpty() ){
+            mSaleItemsToolbarTitle.setText(mSaleItemsToolbarField.getText().toString());
         } else if (!mTitle.isEmpty()) {
             mSaleItemsToolbarTitle.setText(mTitle);
         } else {
@@ -489,7 +515,13 @@ public class SaleItemsController extends BasePullToRefreshController implements 
                     mPopularProductsHeader.setVisibility(View.GONE);
                 }
             } else {
-                mPopularProductsHeader.setVisibility(View.GONE);
+                if (mSaleItemsToolbarTitle.getText().toString().isEmpty() &&
+                    mSaleItemsToolbarField.getHint().toString().equals(getResources().getString(R.string.i_am_looking_For))){
+                    mPopularProductsHeader.setVisibility(View.VISIBLE);
+                }else{
+                    mPopularProductsHeader.setVisibility(View.GONE);
+
+                }
             }
 
             enablePullToRefresh(true); //default true
@@ -590,7 +622,8 @@ public class SaleItemsController extends BasePullToRefreshController implements 
                     , mSaleId
                     , mCategoryKey
                     , mPreviousSelectedFacetIndicesJsonString
-                    , new Gson().toJson(mChipFilters)))
+                    , new Gson().toJson(mChipFilters)
+                    , mSaleItemsToolbarTitle.getText().toString()))
                     .pushChangeHandler(new VerticalChangeHandler())
                     .popChangeHandler(new VerticalChangeHandler()));
             mFromShopSearch = false;
@@ -738,6 +771,7 @@ public class SaleItemsController extends BasePullToRefreshController implements 
                 mIsSearch = true;
                 mChipFilters = removeSearchQueryChips(mChipFilters);
                 buildSearchQueryChips(mChipFilters);
+                mSaleItemsToolbarTitle.setText(mSearchQuery);
                 mPresenter.loadSaleItems(createSaleItemsRequest(mCategoryKey, mSaleId, 0, mChipFilters));
                 deactivateSearch();
             }
