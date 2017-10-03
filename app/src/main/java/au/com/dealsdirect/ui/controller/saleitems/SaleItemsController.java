@@ -495,8 +495,7 @@ public class SaleItemsController extends BasePullToRefreshController implements 
             enablePullToRefresh(true); //default true
 
             if(mIsFromCategory){
-                enablePullToRefresh(false); //disable ptr from categories
-                mIsFromCategory = false;
+                enablePullToRefresh(false); //disable ptr when coming from categories
             }
 
             if (items.size() == 0) {
