@@ -267,7 +267,7 @@ public class AddContactController extends BaseController implements AddContactMv
             }
 
             View.OnClickListener onClickListener = view12 -> {
-//
+                mChosenOptionInvoice = ContactPreferenceHelper.getChosenInvoice(getActivity());
                 CreateContactRequest createContactRequest = new CreateContactRequest();
 
                 if (mChosenOptionInvoice != "") {
