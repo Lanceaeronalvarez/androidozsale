@@ -30,6 +30,7 @@ import android.widget.TextView;
 import com.aurelhubert.ahbottomnavigation.AHBottomNavigation;
 import com.lsjwzh.widget.recyclerviewpager.RecyclerViewPager;
 import com.mysale.genie.utility.RxBus;
+import com.squareup.haha.perflib.Main;
 import com.zhy.view.flowlayout.FlowLayout;
 import com.zhy.view.flowlayout.TagAdapter;
 import com.zhy.view.flowlayout.TagFlowLayout;
@@ -235,6 +236,7 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
     protected void onAttach(@NonNull View view) {
         super.onAttach(view);
         mPresenter.onAttach(this);
+        ((MainActivity)getActivity()).getMainController().setViewpagerDraggable(false);
     }
 
     @Override
@@ -249,7 +251,6 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
         mRootView = ((ElasticDragDismissFrameLayout) view);
 
         mActivity = (MainActivity)getActivity();
-        mActivity.getMainController().setViewpagerDraggable(false);
         //product info
         mProductName.setText(mSaleName);
 
