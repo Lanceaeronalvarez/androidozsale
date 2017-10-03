@@ -194,6 +194,14 @@ public class SearchFilterController extends BaseController
         restoreStateSelection(args);
     }
 
+    @Override
+    protected void onAttach(@NonNull View view) {
+        super.onAttach(view);
+        mPresenter.onAttach(this);
+        ((MainActivity)getActivity()).getMainController().setViewpagerDraggable(false);
+
+    }
+
 
     private void restoreStateSelection(Bundle args) {
         String selectedFacetItemsString = args.getString(KEY_SELECTED_FACETS, "");
