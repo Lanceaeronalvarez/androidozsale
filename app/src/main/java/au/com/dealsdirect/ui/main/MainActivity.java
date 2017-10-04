@@ -193,6 +193,7 @@ public class MainActivity extends BaseActivity implements MainMvpView {
                             setRootViewpagerItem(0);
                             setDraggableViewPager(true);
                         } else if (currentController instanceof SaleItemsController) {
+                            getMainController().setViewpagerDraggable(true);
                             setRootViewpagerItem(0);
                             currentRouter.handleBack();
                         } else {
@@ -229,6 +230,9 @@ public class MainActivity extends BaseActivity implements MainMvpView {
                             break;
                         } else {
                             //getMainController().showBottomNav();
+                            if (currentController instanceof SaleItemsController){
+                                getMainController().setViewpagerDraggable(true);
+                            }
                             currentRouter.handleBack();
                         }
                     }

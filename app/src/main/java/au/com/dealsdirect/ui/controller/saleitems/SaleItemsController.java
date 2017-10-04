@@ -423,9 +423,6 @@ public class SaleItemsController extends BasePullToRefreshController implements 
     @Override
     protected void onDestroyView(@NonNull View view) {
         mPresenter.onDetach();
-        if ((getActivity()) != null) {
-            ((MainActivity)getActivity()).setDraggableViewPager(true);
-        }
         super.onDestroyView(view);
     }
 

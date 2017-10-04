@@ -235,7 +235,6 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
     protected void onAttach(@NonNull View view) {
         super.onAttach(view);
         mPresenter.onAttach(this);
-        ((MainActivity)getActivity()).getMainController().setViewpagerDraggable(false);
     }
 
     @Override
