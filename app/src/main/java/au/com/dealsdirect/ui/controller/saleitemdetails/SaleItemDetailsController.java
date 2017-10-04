@@ -30,7 +30,6 @@ import android.widget.TextView;
 import com.aurelhubert.ahbottomnavigation.AHBottomNavigation;
 import com.lsjwzh.widget.recyclerviewpager.RecyclerViewPager;
 import com.mysale.genie.utility.RxBus;
-import com.squareup.haha.perflib.Main;
 import com.zhy.view.flowlayout.FlowLayout;
 import com.zhy.view.flowlayout.TagAdapter;
 import com.zhy.view.flowlayout.TagFlowLayout;
