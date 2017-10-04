@@ -598,9 +598,13 @@ public class SearchFilterController extends BaseController
             mSearchTagsAdapter.add(new SearchChipModel(SEARCH_QUERY_NAME, editTextString, -1));
         }
 
-        if (mChosenCategory.isEmpty()) {
-            mTitle = mSaleItemsTitle;
-        }else{
+//        if (mChosenCategory.isEmpty()) {
+//            mTitle = mSaleItemsTitle;
+//        }else{
+//            mTitle = mChosenCategory;
+//        }
+
+        if(!mChosenCategory.isEmpty()){
             mTitle = mChosenCategory;
         }
 
@@ -615,7 +619,6 @@ public class SearchFilterController extends BaseController
 
         SaleItemsController saleItemsController = (SaleItemsController) getRouter().getControllerWithTag(getActivity().getString(R.string.sale_items_controller_tag));
         saleItemsController.onPassFiltersData(saleItemBundle);
-        mActivity.getMainController().showBottomNav();
         //noinspection ConstantConditions
         getActivity().onBackPressed();
 
