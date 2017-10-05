@@ -270,6 +270,9 @@ public class SaleItemsController extends BasePullToRefreshController implements 
         mSaleItemClickCounter = 0;
 
         determineToolbarTitle();
+        if(!mSaleItems.isEmpty()) {
+            mSaleItemsFilterIcon.setOnClickListener(view12 -> showFilters());
+        }
 
         super.onAttach(view);
     }
@@ -557,7 +560,6 @@ public class SaleItemsController extends BasePullToRefreshController implements 
 //    @SuppressWarnings("ConstantConditions")
 //    @OnClick(R.id.partial_toolbar_field_title_left_option)
     void onBackClick() {
-        Log.d("fixcrash", "showfilters");
         if (!mIsFilterClicked) {
             mIsFilterClicked = true;
             getActivity().onBackPressed();
@@ -572,7 +574,6 @@ public class SaleItemsController extends BasePullToRefreshController implements 
 
     //    @OnClick(R.id.partial_toolbar_field_title_right_option)
     void showFilters() {
-        Log.d("fixcrash", "showfilters");
         if (!mIsFilterClicked) {
 
             mIsFilterClicked = true;
