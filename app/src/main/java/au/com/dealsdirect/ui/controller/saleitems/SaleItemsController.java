@@ -895,6 +895,9 @@ public class SaleItemsController extends BasePullToRefreshController implements 
 
         getSaleItemsRequest.setFacetFilter(facetFiltersString);
 
+        if (pageNumber == 0)
+            page = pageNumber;
+
         return getSaleItemsRequest;
     }
 
