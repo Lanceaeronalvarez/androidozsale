@@ -11,6 +11,7 @@ import org.mockito.ArgumentCaptor;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import au.com.dealsdirect.data.DataManager;
@@ -20,6 +21,7 @@ import au.com.dealsdirect.data.network.model.vouchers.GetVouchersResponse;
 import au.com.dealsdirect.ui.controller.vouchers.View.ViewVouchersMvpView;
 import au.com.dealsdirect.ui.controller.vouchers.View.ViewVouchersPresenter;
 import au.com.dealsdirect.utils.rx.TestSchedulerProvider;
+import io.reactivex.Observable;
 import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.schedulers.TestScheduler;
 import io.reactivex.subjects.PublishSubject;
@@ -58,24 +60,19 @@ public class ViewVouchersPresenterTest {
 
     @Test
     public void testLoadMyVouchers() {
-        final PublishSubject<List<GetUserVoucherResponse.Voucher>> selectSubject
-                = PublishSubject.create();
-        final PublishSubject<GetVouchersResponse> selectSubject2
-                = PublishSubject.create();
-
-        mTestScheduler.triggerActions();
+        List<GetUserVoucherResponse.Voucher> list = new ArrayList<>();
+        GetVouchersResponse response = new GetVouchersResponse();
 
         ArgumentCaptor<GetUserVouchersRequest> getUserVouchersRequestCaptor =
                 ArgumentCaptor.forClass(GetUserVouchersRequest.class);
-        ArgumentCaptor<Pair<List<GetUserVoucherResponse.Voucher>,GetVouchersResponse>>
-                pairCaptor = ArgumentCaptor.forClass(Pair.class);
 
-        doReturn(selectSubject).when(mMockDataManager).callGetUserVouchers(getUserVouchersRequestCaptor.capture());
-        doReturn(selectSubject2).when(mMockDataManager).callGetVouchers(getUserVouchersRequestCaptor.capture());
+        doReturn(Observable.just(list)).when(mMockDataManager).callGetUserVouchers(getUserVouchersRequestCaptor.capture());
+        doReturn(Observable.just(response)).when(mMockDataManager).callGetVouchers(getUserVouchersRequestCaptor.capture());
 
 
         mPresenter.loadMyVouchers();
-//        verify(mMockViewVouchersMvpView, times(2)).updateVoucherList(pairCaptor.capture());
+        mTestScheduler.triggerActions();
+        verify(mMockViewVouchersMvpView).updateVoucherList(new Pair<>(list ,response));
     }
 
     @Test

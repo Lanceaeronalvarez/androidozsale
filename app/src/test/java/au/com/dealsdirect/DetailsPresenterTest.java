@@ -12,6 +12,7 @@ import org.mockito.junit.MockitoJUnitRunner;
 import au.com.dealsdirect.data.DataManager;
 import au.com.dealsdirect.data.network.model.userdetails.GetUserDetailsResponse;
 import au.com.dealsdirect.data.network.model.userdetails.SetUserDetailsRequest;
+import au.com.dealsdirect.data.network.model.userdetails.SetUserDetailsResponse;
 import au.com.dealsdirect.ui.controller.details.DetailsMvpView;
 import au.com.dealsdirect.ui.controller.details.DetailsPresenter;
 import au.com.dealsdirect.utils.rx.TestSchedulerProvider;
@@ -20,6 +21,7 @@ import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.schedulers.TestScheduler;
 
 import static org.mockito.Mockito.doReturn;
+import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
 import static org.mockito.internal.verification.VerificationModeFactory.times;
 
@@ -50,12 +52,13 @@ public class DetailsPresenterTest {
 
     @Test
     public void loadUserTest() {
-        SetUserDetailsRequest setUserDetailsRequest = new SetUserDetailsRequest();
-        ArgumentCaptor<SetUserDetailsRequest> setUserCaptor = ArgumentCaptor.forClass(SetUserDetailsRequest.class);
-        doReturn(Observable.just(setUserDetailsRequest)).when(mMockDataManager).getLoadUserDetailsApiCall(setUserCaptor.capture());
-
-        mPresenter.loadUser(setUserDetailsRequest);
         GetUserDetailsResponse getUserDetailsResponse = new GetUserDetailsResponse();
+        ArgumentCaptor<SetUserDetailsRequest> setUserCaptor = ArgumentCaptor.forClass(SetUserDetailsRequest.class);
+        doReturn(Observable.just(getUserDetailsResponse)).when(mMockDataManager).getLoadUserDetailsApiCall(setUserCaptor.capture());
+
+        mPresenter.loadUser(setUserCaptor.capture());
+        mTestScheduler.triggerActions();
+
         verify(mMockDetailsView).loadDetails(getUserDetailsResponse);
     }
 
@@ -66,23 +69,13 @@ public class DetailsPresenterTest {
 
     @Test
     public void sendUserDetailsTest() {
-        SetUserDetailsRequest setUserDetailsRequest = new SetUserDetailsRequest();
+        SetUserDetailsResponse setUserDetailsResponse = new SetUserDetailsResponse();
         ArgumentCaptor<SetUserDetailsRequest> setUserCaptor = ArgumentCaptor.forClass(SetUserDetailsRequest.class);
-        doReturn(Observable.just(setUserDetailsRequest)).when(mMockDataManager).getSaveUserDetailsApiCall(setUserCaptor.capture());
+        doReturn(Observable.just(setUserDetailsResponse)).when(mMockDataManager).getSaveUserDetailsApiCall(setUserCaptor.capture());
 
         mPresenter.sendUserDetails("", "", "", "", true, "", "", "", "");
+        mTestScheduler.triggerActions();
 
-        ArgumentCaptor<GetUserDetailsResponse> arg = ArgumentCaptor.forClass(GetUserDetailsResponse.class);
-        GetUserDetailsResponse getUserDetailsResponse = new GetUserDetailsResponse();
-
-//        verify(mMockDetailsView, times(2)).loadDetails(getUserDetailsResponse);
+        verify(mMockDetailsView).saveUserDetailsSuccess();
     }
-
-    @Test
-    public void saveUserLanguageTest() {
-        SetUserDetailsRequest setUserDetailsRequest = new SetUserDetailsRequest();
-
-        mPresenter.saveUser(setUserDetailsRequest);
-    }
-
 }
