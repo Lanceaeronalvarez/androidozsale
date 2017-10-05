@@ -611,7 +611,6 @@ public class SaleItemsController extends BasePullToRefreshController implements 
         loadingInProgress = true;
         mChipFilters = removeSearchQueryChips(mChipFilters);
         buildSearchQueryChips(mChipFilters);
-        showLoading();
         mPresenter.loadSaleItems(createSaleItemsRequest(mCategoryKey, mSaleId, page, mChipFilters));
     }
 
