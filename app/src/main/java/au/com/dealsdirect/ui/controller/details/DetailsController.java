@@ -14,9 +14,6 @@ import android.widget.LinearLayout;
 import android.widget.Spinner;
 import android.widget.TextView;
 
-import com.google.gson.internal.LinkedTreeMap;
-
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
@@ -32,7 +29,6 @@ import au.com.dealsdirect.ui.custom.CustomAlertDialog;
 import au.com.dealsdirect.ui.custom.transitions.CustomSpinnerAdapter;
 import au.com.dealsdirect.utils.BundleBuilder;
 import au.com.dealsdirect.utils.DateUtils;
-import au.com.dealsdirect.utils.JsonUtils;
 import butterknife.BindView;
 import butterknife.OnClick;
 
@@ -228,8 +224,12 @@ public class DetailsController extends BasePullToRefreshController implements De
         String newpassword = mNewPasswordText.getText().toString();
         String confirmpassword = mConfirmPasswordText.getText().toString();
 
-        mPresenter.sendUserDetails(email, firstname, lastname, dateofbirth, gender, email,
-                password, newpassword, confirmpassword);
+        if (newpassword.equals(confirmpassword)){
+            mPresenter.sendUserDetails(email, firstname, lastname, dateofbirth, gender, email,
+                    password, newpassword, confirmpassword);
+        }else{
+            CustomAlertDialog.showCustomAlertDialog(getActivity(), CustomAlertDialog.CustomDialogIconState.POSITIVE,mActivity.getString(R.string.password_does_not_match));
+        }
     }
 
     @OnClick(R.id.partial_toolbar_arrow_view)

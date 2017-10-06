@@ -62,7 +62,7 @@ public class DetailsPresenter<V extends DetailsMvpView> extends BasePresenter<V>
                 if (((SetUserDetailsResponse) response).getSetUserDetailsResponseValue().isResult()) {
                     getMvpView().saveUserDetailsSuccess();
                 } else {
-                    getMvpView().saveUserDetailsFailed(((GetUserDetailsResponse) response).getResponse().getMessage());
+                    getMvpView().saveUserDetailsFailed(((SetUserDetailsResponse) response).getSetUserDetailsResponseValue().getMessage());
                 }
             }
         });
