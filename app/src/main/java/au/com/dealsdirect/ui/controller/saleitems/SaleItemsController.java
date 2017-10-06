@@ -458,13 +458,6 @@ public class SaleItemsController extends BasePullToRefreshController implements 
                 mFromShopSearch = true;
             }
 
-            if (!mChipFilters.isEmpty()) {
-                isFiltered = true;
-            } else {
-                isFiltered = false;
-            }
-
-
             mChipFilters = removeSearchQueryChips(mChipFilters);
             mSearchQuery = buildSearchQueryText(mRemovedChipTitles);
 
@@ -541,7 +534,7 @@ public class SaleItemsController extends BasePullToRefreshController implements 
                 page = 0;
             } else {
 
-                if (!mChipFilters.isEmpty() || mFromCategorySearch || mFromShopSearch) {
+                if (!mChipFilters.isEmpty() || mFromCategorySearch || mFromShopSearch || !mSearchQuery.isEmpty()) {
                     enablePullToRefresh(false);
                     isFiltered = false;
                 }
