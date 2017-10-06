@@ -248,11 +248,11 @@ public class SaleItemsController extends BasePullToRefreshController implements 
             mSaleId = args.getString(KEY_SALE_ID, "");
         if (args.containsKey(KEY_CATEGORY_MAP))
             mCategoryKey = args.getString(KEY_CATEGORY_MAP, "");
-            if(!mCategoryKey.isEmpty()){
-                mCategoryForTitle = mCategoryKey.replaceAll(">>>", " • ");
-            } else {
-                mCategoryForTitle = "";
-            }
+        if (!mCategoryKey.isEmpty()) {
+            mCategoryForTitle = mCategoryKey.replaceAll(">>>", " • ");
+        } else {
+            mCategoryForTitle = "";
+        }
         if (args.containsKey(KEY_CHIPS_FILTER)) {
             mChipFilters = JsonUtils.convertStringToObject(args.getString(KEY_CHIPS_FILTER, ""), new TypeToken<ArrayList<SearchChipModel>>() {
             }.getType());
@@ -272,7 +272,7 @@ public class SaleItemsController extends BasePullToRefreshController implements 
         mSaleItemClickCounter = 0;
 
         determineToolbarTitle();
-        if(!mSaleItems.isEmpty()) {
+        if (!mSaleItems.isEmpty()) {
             mSaleItemsFilterIcon.setOnClickListener(view12 -> showFilters());
         }
 
@@ -360,7 +360,7 @@ public class SaleItemsController extends BasePullToRefreshController implements 
             mSaleItemsToolbarField.setText(mSearchQuery);
         } else if (!editTextString.isEmpty()) {
             mSaleItemsToolbarTitle.setText(editTextString);
-        }else if(!mCategoryForTitle.isEmpty()){
+        } else if (!mCategoryForTitle.isEmpty()) {
             mSaleItemsToolbarTitle.setText(mCategoryForTitle);
         } else if (!mTitle.isEmpty()) {
             mSaleItemsToolbarTitle.setText(mTitle);
@@ -370,7 +370,7 @@ public class SaleItemsController extends BasePullToRefreshController implements 
 
         //show popular products if saleitemstoolbar title is "looking for"
 
-        if (mSaleItemsToolbarTitle.getText().equals(lookingForText) && mChipFilters.isEmpty()){
+        if (mSaleItemsToolbarTitle.getText().equals(lookingForText) && mChipFilters.isEmpty()) {
             mPopularProductsHeader.setVisibility(View.VISIBLE);
         }
 
@@ -448,17 +448,17 @@ public class SaleItemsController extends BasePullToRefreshController implements 
             mPresenter.loadSaleItems(createSaleItemsRequest(mCategoryKey, mSaleId, page, mChipFilters));
 
             /* show popular products after filter with empty chips */
-            if (mCategoryKey.isEmpty()&& (mSaleId==null||mSaleId.isEmpty()) && mChipFilters.isEmpty()){
+            if (mCategoryKey.isEmpty() && (mSaleId == null || mSaleId.isEmpty()) && mChipFilters.isEmpty()) {
                 mPopularProductsHeader.setVisibility(View.VISIBLE);
             }
 
             /* set if still in search */
-            if (mCategoryKey.isEmpty() && (mSaleId==null||mSaleId.isEmpty())){
-                mIsSearch  = true;
+            if (mCategoryKey.isEmpty() && (mSaleId == null || mSaleId.isEmpty())) {
+                mIsSearch = true;
                 mFromShopSearch = true;
             }
 
-            if (!mChipFilters.isEmpty()){
+            if (!mChipFilters.isEmpty()) {
                 isFiltered = true;
             } else {
                 isFiltered = false;
@@ -541,13 +541,13 @@ public class SaleItemsController extends BasePullToRefreshController implements 
                 page = 0;
             } else {
 
-                if (!mChipFilters.isEmpty() || mIsSearch) {
+                if (!mChipFilters.isEmpty() || mFromCategorySearch || mFromShopSearch) {
                     enablePullToRefresh(false);
                     isFiltered = false;
                 }
 
 
-                if (page == 0) {
+                if (page == 0 || mIsSearch) {
                     if (mPaginateManager != null) {
                         mPaginateManager.unbind();
                     }
@@ -893,8 +893,7 @@ public class SaleItemsController extends BasePullToRefreshController implements 
 
         getSaleItemsRequest.setFacetFilter(facetFiltersString);
 
-        if (pageNumber == 0)
-            page = pageNumber;
+        page = pageNumber;
 
         return getSaleItemsRequest;
     }
