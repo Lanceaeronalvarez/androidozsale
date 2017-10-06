@@ -496,7 +496,7 @@ public class SaleItemsController extends BasePullToRefreshController implements 
             mCategoryTreeResponse = getSaleItemsResponse.getCategories();
         } else {
 
-            if ((!isFiltered && mFromShopSearch && mChipFilters.isEmpty()) || mFromCategorySearch) {
+            if ((mSearchQuery.isEmpty() && mFromShopSearch && mChipFilters.isEmpty()) || mFromCategorySearch) {
                 if (mSaleItemsToolbarField.getText().toString().isEmpty()) {
                     mPopularProductsHeader.setVisibility(View.VISIBLE);
                 } else {
