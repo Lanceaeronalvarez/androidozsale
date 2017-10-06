@@ -34,26 +34,14 @@ public class ShopsPresenter<V extends ShopsMvpView> extends BasePresenter<V> imp
     }
 
     @Override
-    public void loadShopsBanner(String categoryName, String categoryId, int bannerOffset, int bannerLimit) {
-        loadShopsBanner(categoryName, categoryId, bannerOffset, bannerLimit, false);
+    public void loadShopsBanner(GetBannerRequest request) {
+        loadShopsBanner(request, false);
     }
 
     @Override
-    public void loadShopsBanner(String categoryName, String categoryId, int bannerOffset,
-                                int bannerLimit, boolean getOnlyFromNetwork) {
+    public void loadShopsBanner(GetBannerRequest request, boolean getOnlyFromNetwork) {
 
-        Log.d("shopspresenter", "banneroffset = "+bannerOffset + " , banner limit= "+bannerLimit);
-        GetBannerRequest getBannerRequest = new GetBannerRequest();
-        getBannerRequest.setOffset(String.valueOf(bannerOffset));
-        getBannerRequest.setLimit(String.valueOf(bannerLimit));
-
-        if (categoryName!=null && !categoryName.isEmpty())
-            getBannerRequest.setCategory(categoryName);
-
-        if (categoryId!=null && !categoryId.isEmpty())
-            getBannerRequest.setCategoryId(categoryId);
-
-        doApiCallForResponse(getDataManager().callGetBanners(getBannerRequest, getOnlyFromNetwork), new AppApiCallback(){
+        doApiCallForResponse(getDataManager().callGetBanners(request, getOnlyFromNetwork), new AppApiCallback(){
             @Override
             public void onSuccess(List<?> response) {
                 super.onSuccess(response);

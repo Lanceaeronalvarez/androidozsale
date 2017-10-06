@@ -32,6 +32,7 @@ import javax.inject.Inject;
 
 import au.com.dealsdirect.R;
 import au.com.dealsdirect.data.auth.AuthHandler;
+import au.com.dealsdirect.data.network.model.banner.GetBannerRequest;
 import au.com.dealsdirect.data.network.model.banner.GetBannerResponse;
 import au.com.dealsdirect.data.network.model.category.GetCategoryTreeResponse;
 import au.com.dealsdirect.ui.base.BasePullToRefreshController;
@@ -222,7 +223,7 @@ public class ShopsController extends BasePullToRefreshController implements Shop
 
         if (sales.isEmpty()) {
             shopsControllerBannerRecyclerView.setVisibility(View.GONE);
-            mPresenter.loadShopsBanner(mCategoryName, mCategoryID, bannerOffset, bannerLimit);
+            mPresenter.loadShopsBanner(createBannerRequest(mCategoryName, mCategoryID, bannerOffset, bannerLimit));
         } else {
             shopsControllerBannerRecyclerView.setAdapter(mBannersAdapter);
 
@@ -240,7 +241,7 @@ public class ShopsController extends BasePullToRefreshController implements Shop
     @Override
     public void refresh() {
         loadingInProgress = true;
-        mPresenter.loadShopsBanner(mCategoryName, mCategoryID, bannerOffset, bannerLimit);
+        mPresenter.loadShopsBanner(createBannerRequest(mCategoryName, mCategoryID, bannerOffset, bannerLimit));
     }
 
     @Override
@@ -473,7 +474,7 @@ public class ShopsController extends BasePullToRefreshController implements Shop
 
         if (getCategoryTreeResponse.getKey() != null) {
 
-            mPresenter.loadShopsBanner(getCategoryTreeResponse.getKey(), getCategoryTreeResponse.getId(), 0, 0);
+            mPresenter.loadShopsBanner(createBannerRequest(getCategoryTreeResponse.getKey(), getCategoryTreeResponse.getId(), 0, 0));
             if (mShopsControllerToolbarLogo != null) {
                 mShopsControllerToolbarLogo.setVisibility(View.GONE);
             }
@@ -563,7 +564,7 @@ public class ShopsController extends BasePullToRefreshController implements Shop
             shopsControllerSearchView.setVisibility(View.VISIBLE);
         }
         GetCategoryTreeResponse shopCategory = new GetCategoryTreeResponse();
-        mPresenter.loadShopsBanner(shopCategory.getKey(), shopCategory.getId(), 0, 0);
+        mPresenter.loadShopsBanner(createBannerRequest(shopCategory.getKey(), shopCategory.getId(), 0, 0));
     }
 
     public void goToSaleItemsFromCategorySearch() {
@@ -588,6 +589,20 @@ public class ShopsController extends BasePullToRefreshController implements Shop
         shopsControllerBannerRecyclerView.setVisibility(View.GONE);
         isRefreshShop = true;
         bannerOffset = 0;
-        mPresenter.loadShopsBanner(mCategoryName, mCategoryID, bannerOffset, newBannerCount, true);
+        mPresenter.loadShopsBanner(createBannerRequest(mCategoryName, mCategoryID, bannerOffset, newBannerCount), true);
+    }
+
+    private GetBannerRequest createBannerRequest(String categoryName, String categoryId, int bannerOffset, int bannerLimit) {
+       GetBannerRequest getBannerRequest = new GetBannerRequest();
+        getBannerRequest.setOffset(String.valueOf(bannerOffset));
+        getBannerRequest.setLimit(String.valueOf(bannerLimit));
+
+        if (categoryName != null && !categoryName.isEmpty())
+            getBannerRequest.setCategory(categoryName);
+
+        if (categoryId != null && !categoryId.isEmpty())
+            getBannerRequest.setCategoryId(categoryId);
+
+        return getBannerRequest;
     }
 }
