@@ -541,11 +541,9 @@ public class SaleItemsController extends BasePullToRefreshController implements 
                 page = 0;
             } else {
 
-                if ((isFiltered) || !mChipFilters.isEmpty() || (mIsSearch && mSaleItemsToolbarField.getHint().equals(getResources().getString(R.string.i_am_looking_For))) || mFromShopSearch) {
+                if (!mChipFilters.isEmpty() || mIsSearch) {
                     enablePullToRefresh(false);
                     isFiltered = false;
-                    mIsSearch = false;
-
                 }
 
 
