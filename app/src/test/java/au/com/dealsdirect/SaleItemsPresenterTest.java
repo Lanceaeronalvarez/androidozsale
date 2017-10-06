@@ -1,0 +1,96 @@
+package au.com.dealsdirect;
+
+import android.support.v7.widget.RecyclerView;
+
+import junit.framework.Assert;
+
+import org.junit.Before;
+import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.mockito.ArgumentCaptor;
+import org.mockito.Mock;
+import org.mockito.junit.MockitoJUnitRunner;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import au.com.dealsdirect.data.DataManager;
+import au.com.dealsdirect.data.network.AppApiCallback;
+import au.com.dealsdirect.data.network.model.saleitems.GetSaleItemsRequest;
+import au.com.dealsdirect.data.network.model.saleitems.GetSaleItemsResponse;
+import au.com.dealsdirect.data.network.model.sorting.SortingResponse;
+import au.com.dealsdirect.data.network.model.userdetails.GetUserDetailsResponse;
+import au.com.dealsdirect.data.network.model.userdetails.SetUserDetailsRequest;
+import au.com.dealsdirect.data.network.model.userdetails.SetUserDetailsResponse;
+import au.com.dealsdirect.ui.controller.saleitems.SaleItemsMvpView;
+import au.com.dealsdirect.ui.controller.saleitems.SaleItemsPresenter;
+import au.com.dealsdirect.ui.controller.saleitems.adapter.SaleItemsAdapter;
+import au.com.dealsdirect.utils.rx.TestSchedulerProvider;
+import io.reactivex.Observable;
+import io.reactivex.disposables.CompositeDisposable;
+import io.reactivex.schedulers.TestScheduler;
+
+import static org.mockito.Mockito.doReturn;
+import static org.mockito.Mockito.verify;
+
+/**
+ * Created by Ayi on 10/6/17.
+ */
+
+@RunWith(MockitoJUnitRunner.class)
+public class SaleItemsPresenterTest {
+
+    @Mock
+    SaleItemsMvpView mMockView;
+
+    @Mock
+    DataManager mMockDataManager;
+
+    private SaleItemsPresenter<SaleItemsMvpView> mPresenter;
+    private TestScheduler mTestScheduler;
+
+    @Before
+    public void setup() throws Exception {
+        mTestScheduler = new TestScheduler();
+        TestSchedulerProvider schedulerProvider = new TestSchedulerProvider(mTestScheduler);
+        CompositeDisposable compositeDisposable = new CompositeDisposable();
+        mPresenter = new SaleItemsPresenter<>(mMockDataManager, schedulerProvider, compositeDisposable);
+        mPresenter.onAttach(mMockView);
+    }
+
+    @Test
+    public void SaleItemsPresenterNullCheck() {
+        Assert.assertNotNull(mPresenter);
+    }
+
+    @Test
+    public void loadSaleItemsTest() {
+        GetSaleItemsResponse getSaleItemsResponse = new GetSaleItemsResponse();
+        ArgumentCaptor<GetSaleItemsRequest> setSaleItemsCaptor = ArgumentCaptor.forClass(GetSaleItemsRequest.class);
+        doReturn(Observable.just(getSaleItemsResponse)).when(mMockDataManager).callGetSaleItemsRequest(setSaleItemsCaptor.capture());
+
+        mPresenter.loadSaleItems(setSaleItemsCaptor.capture());
+        mTestScheduler.triggerActions();
+
+        verify(mMockView).showSaleItems(getSaleItemsResponse, true);
+    }
+
+    @Test
+    public void loadProductDetailsTest() {
+        mPresenter.loadProductDetails(null, 0, "", "", "", "");
+        mTestScheduler.triggerActions();
+
+        verify(mMockView).showProductDetails(null, 0, "", "", "", "");
+    }
+
+    @Test
+    public void loadSortingFacetsTest() {
+        List<SortingResponse> sortingResponse = new ArrayList<>();
+        doReturn(Observable.just(sortingResponse)).when(mMockDataManager).callSortingFacets();
+
+        mPresenter.loadSortingFacets();
+        mTestScheduler.triggerActions();
+
+        verify(mMockView).onLoadSortingFacetsFinished(sortingResponse);
+    }
+}
