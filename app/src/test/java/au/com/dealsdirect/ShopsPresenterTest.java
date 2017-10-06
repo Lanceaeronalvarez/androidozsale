@@ -76,19 +76,17 @@ public class ShopsPresenterTest {
         getBannerRequest.setOffset(String.valueOf(0));
         getBannerRequest.setLimit(String.valueOf(10));
 
-
         List<GetBannerResponse> getBannerResponse = new ArrayList<>();
         doReturn(Observable.just(getBannerResponse))
                 .when(mMockDataManager)
                 .callGetBanners(getBannerRequest,true);
 
-        mShopsPresenter.loadShopsBanner("","",0,10,true);
+        mShopsPresenter.loadShopsBanner(getBannerRequest,true);
 
         mTestScheduler.triggerActions();
 
         ArgumentCaptor<List<GetBannerResponse>> argument = ArgumentCaptor.forClass((Class) List.class);
 
-        verify(mMockShopsMvpView).showLoading();
         verify(mMockShopsMvpView).hideLoading();
         verify(mMockShopsMvpView).showShopBanners(argument.capture());
         Assert.assertNotNull(argument.getValue());
@@ -96,10 +94,6 @@ public class ShopsPresenterTest {
 
     @Test
     public void loadCategories(){
-//        doReturn(Observable.just(requestCaptor.getValue()))
-//                .when(mMockDataManager)
-//                .callGetBanners(requestCaptor.capture(),true);
-
         List<GetCategoryTreeResponse> response = new ArrayList<>();
         doReturn(Observable.just(response))
                 .when(mMockDataManager)
@@ -109,9 +103,6 @@ public class ShopsPresenterTest {
 
         mTestScheduler.triggerActions();
 
-        ArgumentCaptor<List<GetBannerResponse>> argument = ArgumentCaptor.forClass((Class) List.class);
-
-//        verify(mMockShopsMvpView).showLoading();
         verify(mMockShopsMvpView).hideLoading();
         verify(mMockShopsMvpView).storeCategories(response);
     }
