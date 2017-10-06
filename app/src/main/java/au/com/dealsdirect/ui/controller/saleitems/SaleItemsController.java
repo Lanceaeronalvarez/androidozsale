@@ -550,6 +550,7 @@ public class SaleItemsController extends BasePullToRefreshController implements 
                     mSaleItemsRecyclerView.scrollToPosition(0);
                     hasLoadedAllItems = false;
                     page = 0;
+                    mIsSearch = false;
                 } else {
                     mSaleItemsAdapter.addData(items);
                 }
