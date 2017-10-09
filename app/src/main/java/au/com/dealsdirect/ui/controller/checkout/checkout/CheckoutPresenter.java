@@ -220,10 +220,8 @@ public class CheckoutPresenter<V extends CheckoutMvpView> extends BasePresenter<
             ourpay.setMaxAmount(value.getMyPayDetails().getPaymentConditions().maxAmountThreshold);
 
             if (value.getMyPayDetails().getPaymentSchemeDescription() != null) {
-
+                ourpay.setDetails(value.getMyPayDetails().getPaymentSchemeDescription());
             }
-            ourpay.setDetails(value.getMyPayDetails().getPaymentSchemeDescription());
-
 
             /* specifics */
             try {
