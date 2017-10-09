@@ -54,12 +54,11 @@ public class ReturnDetailsPresenterTest {
         ArgumentCaptor<GetReturnDetailRequest> setReturnCaptor = ArgumentCaptor.forClass(GetReturnDetailRequest.class);
         doReturn(Observable.just(getReturnDetailsResponse)).when(mMockDataManager).callGetReturnDetails(setReturnCaptor.capture());
 
-        mPresenter.loadCurrentReturnDetails(setReturnCaptor.capture().returnID);
+        mPresenter.loadCurrentReturnDetails("14231");
         mTestScheduler.triggerActions();
 
         verify(mMockDetailsView).showCurrentReturnDetails(getReturnDetailsResponse.getGetReturnDetailsResponseBody());
     }
-
 
     @Test
     public void ReturnDetailsPresenterNullCheck() {
