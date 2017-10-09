@@ -63,43 +63,6 @@ public class SaleItemDetailsPresenter<V extends SaleItemDetailsMvpView> extends 
                     }
                 }));
 
-//        getCompositeDisposable().add(getDataManager()
-//                .callGetPublicSaleDetails(publicSaleDetailsRequest)
-//                .subscribeOn(getSchedulerProvider().io())
-//                .observeOn(getSchedulerProvider().ui())
-//                .subscribe(new Consumer<GetPublicSaleDetailsResponse>() {
-//                    @Override
-//                    public void accept(GetPublicSaleDetailsResponse response) throws Exception {
-//
-//                        if (!isViewAttached()) {
-//                            return;
-//                        }
-//
-//                        getMvpView().hideLoading();
-//                        if(response.getNewReturnOrderDetailResponse().getResult() && response.getNewReturnOrderDetailResponse().getValue() != null){
-//                            getMvpView().showSaleDetails(response.getNewReturnOrderDetailResponse().getValue());
-//                        }
-//
-//
-//                    }
-//                }, new Consumer<Throwable>() {
-//                    @Override
-//                    public void accept(Throwable throwable) throws Exception {
-//
-//                        if (!isViewAttached()) {
-//                            return;
-//                        }
-//
-//                        getMvpView().hideLoading();
-////                        getMvpView().onError(throwable.getMessage());
-//
-//                        // handle load accounts error here
-//                        if (throwable instanceof ANError) {
-//                            ANError anError = (ANError) throwable;
-//                            handleApiError(anError);
-//                        }
-//                    }
-//                }));
     }
 
     @Override
