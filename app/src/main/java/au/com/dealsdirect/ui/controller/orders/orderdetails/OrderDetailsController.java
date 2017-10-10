@@ -87,7 +87,9 @@ public class OrderDetailsController extends BaseController implements OrderDetai
         mOrderDetailsToolarTitle.setText("Order #: " + mPaymentReferenceNo);
         mOrderDetailsRightOption.setImageDrawable(null);
 
-        mPresenter.loadOrderDetails(mPaymentReferenceNo);
+        GetOrderPaymentDetails.RequestValues requestValues =
+                new GetOrderPaymentDetails.RequestValues(mPaymentReferenceNo);
+        mPresenter.loadOrderDetails(requestValues);
     }
 
 

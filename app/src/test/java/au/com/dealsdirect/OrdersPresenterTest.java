@@ -1,7 +1,8 @@
 package au.com.dealsdirect;
 
 import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
+
+import junit.framework.Assert;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -11,7 +12,6 @@ import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
 
 import au.com.dealsdirect.data.DataManager;
-import au.com.dealsdirect.data.network.model.orders.GetOrderPaymentDetails;
 import au.com.dealsdirect.data.network.model.orders.GetPaymentsList;
 import au.com.dealsdirect.ui.controller.orders.orders.OrdersMvpView;
 import au.com.dealsdirect.ui.controller.orders.orders.OrdersPresenter;
@@ -21,6 +21,7 @@ import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.schedulers.TestScheduler;
 
 import static org.mockito.Mockito.doReturn;
+import static org.mockito.Mockito.verify;
 
 /**
  * Created by Paul on 10/6/17.
@@ -38,7 +39,7 @@ public class OrdersPresenterTest {
     TestScheduler mTestScheduler;
     OrdersPresenter<OrdersMvpView> mPresenter;
 
-    String mockCall ="{\n" +
+    String mockResponse ="{\n" +
             "  \"d\": {\n" +
             "    \"List\": [\n" +
             "      {\n" +
@@ -175,13 +176,18 @@ public class OrdersPresenterTest {
 
     @Test
     public void applyDeliveryAddress() {
-        GetPaymentsList.ResponseValue responseValue = new Gson().fromJson(mockCall, GetPaymentsList.ResponseValue.class);
+        GetPaymentsList.ResponseValue responseValue = new Gson().fromJson(mockResponse, GetPaymentsList.ResponseValue.class);
         ArgumentCaptor<GetPaymentsList.RequestValues> requestCaptor = ArgumentCaptor.forClass(GetPaymentsList.RequestValues.class);
         doReturn(Observable.just(responseValue)).when(dataManager).callGetPaymentsList(requestCaptor.capture());
 
         mPresenter.loadOrders();
         mTestScheduler.triggerActions();
 
-        ordersMvpView.showOrders(responseValue.getD().getList());
+        verify(ordersMvpView).showOrders(responseValue.getD().getList());
+    }
+
+    @Test
+    public void PresenterNullCheck() {
+        Assert.assertNotNull(mPresenter);
     }
 }

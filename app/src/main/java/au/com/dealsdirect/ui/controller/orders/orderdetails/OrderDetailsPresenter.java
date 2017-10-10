@@ -21,10 +21,8 @@ public class OrderDetailsPresenter<V extends OrderDetailsMvpView> extends BasePr
     }
 
     @Override
-    public void loadOrderDetails(String invoiceNo) {
+    public void loadOrderDetails(GetOrderPaymentDetails.RequestValues requestValues) {
         getMvpView().showLoading();
-
-        GetOrderPaymentDetails.RequestValues requestValues = new GetOrderPaymentDetails.RequestValues(invoiceNo);
 
         doApiCallForResponse(getDataManager().callGetOrderPaymentDetails(requestValues), new AppApiCallback() {
             @Override

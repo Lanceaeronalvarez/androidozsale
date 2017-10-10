@@ -9,7 +9,5 @@ import au.com.dealsdirect.ui.base.MvpView;
 
 public interface OrdersMvpPresenter<V extends MvpView> extends MvpPresenter<V> {
 
-    void loadOrderDetails(int position);
-
     void loadOrders();
 }

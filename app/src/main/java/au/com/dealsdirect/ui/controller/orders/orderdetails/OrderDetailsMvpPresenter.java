@@ -1,5 +1,6 @@
 package au.com.dealsdirect.ui.controller.orders.orderdetails;
 
+import au.com.dealsdirect.data.network.model.orders.GetOrderPaymentDetails;
 import au.com.dealsdirect.ui.base.MvpPresenter;
 import au.com.dealsdirect.ui.base.MvpView;
 
@@ -9,5 +10,5 @@ import au.com.dealsdirect.ui.base.MvpView;
 
 public interface OrderDetailsMvpPresenter<V extends MvpView> extends MvpPresenter<V> {
 
-    void loadOrderDetails(String invoiceNo);
+    void loadOrderDetails(GetOrderPaymentDetails.RequestValues requestValues);
 }

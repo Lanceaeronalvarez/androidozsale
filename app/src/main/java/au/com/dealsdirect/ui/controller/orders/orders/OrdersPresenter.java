@@ -154,13 +154,7 @@ public class OrdersPresenter<V extends OrdersMvpView> extends BasePresenter<V> i
     }
 
     @Override
-    public void loadOrderDetails(int position) {
-        getMvpView().showOrderDetails(position);
-    }
-
-    @Override
     public void loadOrders() {
-//        TRUE API CALL
         doApiCallForResponse(getDataManager()
                 .callGetPaymentsList(new GetPaymentsList.RequestValues()), new AppApiCallback(){
             @Override
@@ -171,10 +165,5 @@ public class OrdersPresenter<V extends OrdersMvpView> extends BasePresenter<V> i
                 }
             }
         });
-//
-//        MOCK CALL
-//        GetPaymentsList.ResponseValue responseValue = new Gson().fromJson(mockCall,GetPaymentsList.ResponseValue.class);
-//        ArrayList<GetPaymentsList.ResponseValue.PaymentItem> testOrders = responseValue.getD().getList();
-//        getMvpView().showOrders(testOrders);
     }
 }
