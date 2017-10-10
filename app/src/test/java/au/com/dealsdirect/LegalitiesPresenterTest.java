@@ -77,6 +77,11 @@ public class LegalitiesPresenterTest {
 
     }
 
+    @Test
+    public void LegalitiesPresenterNullCheck() {
+        Assert.assertNotNull(mPresenter);
+    }
+
 }
 
 

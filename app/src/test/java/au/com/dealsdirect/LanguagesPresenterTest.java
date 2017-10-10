@@ -4,6 +4,8 @@ import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.mysale.genie.utility.config.model.getserversettings.Language;
 
+import junit.framework.Assert;
+
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -71,5 +73,10 @@ public class LanguagesPresenterTest {
         mTestScheduler.triggerActions();
         verify(mMockLanguageMvpView).showLanguageLanguageDialog(language.getName());
         verify(mMockLanguageMvpView).onBackPress();
+    }
+
+    @Test
+    public void LanguagePresenterNullCheck() {
+        Assert.assertNotNull(mPresenter);
     }
 }
