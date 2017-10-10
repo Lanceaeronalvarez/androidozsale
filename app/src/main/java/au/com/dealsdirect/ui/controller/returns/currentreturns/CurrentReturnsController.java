@@ -25,6 +25,7 @@ import javax.inject.Inject;
 import au.com.dealsdirect.R;
 import au.com.dealsdirect.data.network.model.returns.currentreturn.CurrentReturnResponseBody;
 import au.com.dealsdirect.data.network.model.returns.currentreturn.CurrentReturns;
+import au.com.dealsdirect.data.network.model.returns.returndetails.GetReturnDetailRequest;
 import au.com.dealsdirect.data.network.model.returns.returndetails.GetReturnDetailsResponseBody;
 import au.com.dealsdirect.ui.base.BasePullToRefreshController;
 import au.com.dealsdirect.ui.controller.returns.currentreturns.adapter.CurrentReturnAdapter;
@@ -188,12 +189,12 @@ public class CurrentReturnsController extends BasePullToRefreshController
                 returnDetailsResponseBodyList.add(returnItemsMap.get(itemIterator));
 
                 itemIterator = itemIterator + 1;
-                mPresenter.loadReturnDetails(mCurrentReturns.get(itemIterator).getID(), itemIterator);
+                mPresenter.loadReturnDetails(createReturnDetailsRequest(mCurrentReturns.get(itemIterator).getID()));
             }
     }
 
     public void getCurrentReturnItems(List<CurrentReturns> currentReturns){
-        mPresenter.loadReturnDetails(currentReturns.get(itemIterator).getID(), itemIterator);
+        mPresenter.loadReturnDetails(createReturnDetailsRequest(currentReturns.get(itemIterator).getID()));
 
     }
 
@@ -236,5 +237,9 @@ public class CurrentReturnsController extends BasePullToRefreshController
                 ReturnOrdersController.newInstance())
                 .pushChangeHandler(new HorizontalChangeHandler())
                 .popChangeHandler(new HorizontalChangeHandler()));
+    }
+
+    public GetReturnDetailRequest createReturnDetailsRequest(String itemID) {
+        return new GetReturnDetailRequest(itemID);
     }
 }
