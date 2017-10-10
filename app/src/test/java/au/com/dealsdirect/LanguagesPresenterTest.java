@@ -25,6 +25,9 @@ import au.com.dealsdirect.utils.rx.TestSchedulerProvider;
 import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.schedulers.TestScheduler;
 
+import static org.mockito.ArgumentMatchers.anyList;
+import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.verify;
 
 /**
@@ -54,11 +57,16 @@ public class LanguagesPresenterTest {
     }
 
     @Test
-    public void getUserLanguagesTest() {
+    public void showLanguagesTest() {
+        String languagesJsonString = "[{'Culture':'en-au','ID':'en','Name':'English'}]";
+
+        doReturn(languagesJsonString).when(mMockDataManager).getLanguages();
+        doReturn("en").when(mMockDataManager).getLanguageId();
+
 
         mPresenter.getUserLanguages();
         mTestScheduler.triggerActions();
-        verify(mMockLanguageMvpView).showLanguages(null,null);
+        verify(mMockLanguageMvpView).showLanguages(anyList(),anyString());
         verify(mMockLanguageMvpView).hideLoading();
 
     }
@@ -69,6 +77,7 @@ public class LanguagesPresenterTest {
         language.setID("testId");
         language.setCulture("testCulture");
         language.setName("testName");
+
         mPresenter.onLanguageItemClick(language);
         mTestScheduler.triggerActions();
         verify(mMockLanguageMvpView).showLanguageLanguageDialog(language.getName());
