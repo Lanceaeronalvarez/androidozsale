@@ -64,9 +64,10 @@ public class SaleItemsPresenterTest {
     }
 
     @Test
-    public void loadSaleItemsTest() {
+    public void loadSaleItemsTestNoFilters() {
         GetSaleItemsResponse getSaleItemsResponse = new GetSaleItemsResponse();
         ArgumentCaptor<GetSaleItemsRequest> setSaleItemsCaptor = ArgumentCaptor.forClass(GetSaleItemsRequest.class);
+
         doReturn(Observable.just(getSaleItemsResponse)).when(mMockDataManager).callGetSaleItemsRequest(setSaleItemsCaptor.capture());
 
         mPresenter.loadSaleItems(setSaleItemsCaptor.capture());
@@ -76,11 +77,18 @@ public class SaleItemsPresenterTest {
     }
 
     @Test
-    public void loadProductDetailsTest() {
-        mPresenter.loadProductDetails(null, 0, "", "", "", "");
+    public void loadSaleItemsTestHasFilters(){
+        GetSaleItemsRequest getSaleItemsRequest = new GetSaleItemsRequest();
+        getSaleItemsRequest.setHasFilters(true);
+
+        GetSaleItemsResponse getSaleItemsResponse = new GetSaleItemsResponse();
+
+        doReturn(Observable.just(getSaleItemsResponse)).when(mMockDataManager).callGetSaleItemsRequest(getSaleItemsRequest);
+
+        mPresenter.loadSaleItems(getSaleItemsRequest);
         mTestScheduler.triggerActions();
 
-        verify(mMockView).showProductDetails(null, 0, "", "", "", "");
+        verify(mMockView).showSaleItems(getSaleItemsResponse, false);
     }
 
     @Test

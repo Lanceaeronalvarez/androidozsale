@@ -1,4 +1,4 @@
-package au.com.dealsdirect;
+package au.com.dealsdirect.returns;
 
 import com.google.gson.Gson;
 
