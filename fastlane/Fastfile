@@ -55,7 +55,7 @@ GRADLE_APK_OUTPUT_PATH = '/Users/Paul/AndroidDealsDirect/app/build/outputs/apk/'
     elainedizon@mysale.com,
     diofelpallega@mysale.com,
     ayicatimpo@mysale.com,
-    JulianPaul@mysale
+    JulianPaul@mysale.com
   "'
 
 default_platform :android
@@ -119,9 +119,11 @@ lane :fabric_deploy_dd_test do
 lane :fabric_deploy_dd_rc do
   # Release notes for each app
   dd_release_notes = '/Users/Paul/AndroidDealsDirect/app/build/outputs/apk/release_notes.md'
+
   #Change apk_name and app_name for other flavors
   sh "fastlane dd_build app_name:'DealsDirect' notes_path:" + dd_release_notes + " emails:" + test_emails + " apk_name:" + 'app-dealsDirectRC-debug.apk' + " app_flavor:" + "DealsDirectRCDebug"
  end
+
 lane :fabric_deploy_dd_test do
   # Release notes for each app
   dd_release_notes = '/Users/Paul/AndroidDealsDirect/app/build/outputs/apk/release_notes.md'
@@ -129,15 +131,19 @@ lane :fabric_deploy_dd_test do
   #Change apk_name and app_name for other flavors
   sh "fastlane dd_build app_name:'DealsDirectTest' notes_path:" + dd_release_notes + " emails:" + test_emails + " apk_name:" + 'app-dealsDirectTest-debug.apk' + " app_flavor:" + "DealsDirectTestDebug"
  end
+
 lane :fabric_deploy_oo_tes do
   # Release notes for each app
   dd_release_notes = '/Users/Paul/AndroidDealsDirect/app/build/outputs/apk/release_notes.md'
+
   #Change apk_name and app_name for other flavors
   sh "fastlane dd_build app_name:'ooTest' notes_path:" + dd_release_notes + " emails:" + test_emails + " apk_name:" + 'app-ooTest-debug.apk' + " app_flavor:" + "ooTestDebug"
  end
+
 lane :fabric_deploy_lc_test do
   # Release notes for each app
   dd_release_notes = '/Users/Paul/AndroidDealsDirect/app/build/outputs/apk/release_notes.md'
+
   #Change apk_name and app_name for other flavors
   sh "fastlane dd_build app_name:'londonChic' notes_path:" + dd_release_notes + " emails:" + test_emails + " apk_name:" + 'app-londonChicTest-debug.apk' + " app_flavor:" + "londonChicTestDebug"
  end
