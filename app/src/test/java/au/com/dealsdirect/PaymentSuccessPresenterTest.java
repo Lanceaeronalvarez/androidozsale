@@ -80,7 +80,7 @@ public class PaymentSuccessPresenterTest {
     }
 
     @Test
-    public void generateOurpayWhenMyPayDisabledTest(){
+    public void noOurpayInteractionWhenMyPayDisabledTest(){
 
         doReturn(false).when(mMockDataManager).getIsMyPayEnabled();
         mPresenter.generateOurpay();
