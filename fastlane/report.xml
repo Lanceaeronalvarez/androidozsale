@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuites>
+  <testsuite name="fastlane.lanes">
+    
+    
+    
+      
+      <testcase classname="fastlane.lanes" name="0: Verifying required fastlane version" time="0.002767">
+        
+      </testcase>
+    
+      
+      <testcase classname="fastlane.lanes" name="1: default_platform" time="0.002448">
+        
+      </testcase>
+    
+      
+      <testcase classname="fastlane.lanes" name="2: fastlane dd_build app_name:'DealsDirectTest' notes_path:/Users/Paul/AndroidDealsDirect/app/build/outputs/apk/release_notes.md emails:&quot;
+    ayi@smartwave.ph,
+    ericapena@apacsale.com,
+    jelinepena@gmail.com,
+    elainedizon@mysale.com,
+    ruz@apacsale.com,
+    michael@smartwave.ph,
+    jc@mysale.com,
+    elaine@smartwave.ph,
+    chindee@smartwave.ph
+  &quot; apk_name:app-dealsDirectTest-debug.apk app_flavor:DealsDirectTestDebug" time="148.758604">
+        
+      </testcase>
+    
+  </testsuite>
+</testsuites>
