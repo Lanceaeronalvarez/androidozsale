@@ -38,23 +38,11 @@ public class DetailsPresenter<V extends DetailsMvpView> extends BasePresenter<V>
     }
 
     @Override
-    public void sendUserDetails(String username, String firstname, String lastname,
-                                String dateofbirth, boolean gender, String email, String password,
-                                String newpassword, String confirmpassword) {
+    public void sendUserDetails(SetUserDetailsRequest userDetailsRequest) {
 
-        SetUserDetailsRequest setUserDetailsRequest = new SetUserDetailsRequest();
-        setUserDetailsRequest.setUserName(username);
-        setUserDetailsRequest.setFirstname(firstname);
-        setUserDetailsRequest.setSurname(lastname);
-        setUserDetailsRequest.setDateBirth(dateofbirth);
-        setUserDetailsRequest.setGender(gender);
-        setUserDetailsRequest.setEmail(email);
-        setUserDetailsRequest.setPassword(password);
-        setUserDetailsRequest.setNewPassword(newpassword);
-        setUserDetailsRequest.setConfirmPassword(confirmpassword);
-        setUserDetailsRequest.setLanguageID(getDataManager().getLanguageId());
+        userDetailsRequest.setLanguageID(getDataManager().getLanguageId());
 
-        doApiCallForResponse(getDataManager().getSaveUserDetailsApiCall(setUserDetailsRequest), new AppApiCallback() {
+        doApiCallForResponse(getDataManager().getSaveUserDetailsApiCall(userDetailsRequest), new AppApiCallback() {
             @Override
             public void onSuccess(Object response) {
                 super.onSuccess(response);

@@ -225,8 +225,8 @@ public class DetailsController extends BasePullToRefreshController implements De
         String confirmpassword = mConfirmPasswordText.getText().toString();
 
         if (newpassword.equals(confirmpassword)){
-            mPresenter.sendUserDetails(email, firstname, lastname, dateofbirth, gender, email,
-                    password, newpassword, confirmpassword);
+            mPresenter.sendUserDetails(createUserDetailRequest(email, firstname, lastname, dateofbirth,
+                    gender, email, password, newpassword, confirmpassword ));
         }else{
             CustomAlertDialog.showCustomAlertDialog(getActivity(), CustomAlertDialog.CustomDialogIconState.POSITIVE,mActivity.getString(R.string.password_does_not_match));
         }
@@ -244,5 +244,22 @@ public class DetailsController extends BasePullToRefreshController implements De
 
         SetUserDetailsRequest setUserDetailsRequest = new SetUserDetailsRequest();
         mPresenter.loadUser(setUserDetailsRequest);
+    }
+
+    public SetUserDetailsRequest createUserDetailRequest(String userName, String firstName, String lastName,
+                                                         String dateOfBirth, boolean gender, String email,
+                                                         String password, String newPassword, String confirmPassword) {
+        SetUserDetailsRequest userDetailsRequest = new SetUserDetailsRequest();
+        userDetailsRequest.setUserName(userName);
+        userDetailsRequest.setFirstname(firstName);
+        userDetailsRequest.setSurname(lastName);
+        userDetailsRequest.setDateBirth(dateOfBirth);
+        userDetailsRequest.setGender(gender);
+        userDetailsRequest.setEmail(email);
+        userDetailsRequest.setPassword(password);
+        userDetailsRequest.setNewPassword(newPassword);
+        userDetailsRequest.setConfirmPassword(confirmPassword);
+
+        return userDetailsRequest;
     }
 }

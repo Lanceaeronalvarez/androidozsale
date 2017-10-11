@@ -11,8 +11,7 @@ import au.com.dealsdirect.ui.base.MvpView;
 public interface DetailsMvpPresenter<V extends MvpView>  extends MvpPresenter<V>{
     void loadUser(SetUserDetailsRequest setUserDetailsRequest);
 
-    void sendUserDetails(String username, String firstname, String lastname, String dateofbirth,
-            boolean gender, String email, String password, String newpassword, String confirmpassword);
+    void sendUserDetails(SetUserDetailsRequest userDetailsRequest);
 
     void saveUser(SetUserDetailsRequest userDetails);
 }
