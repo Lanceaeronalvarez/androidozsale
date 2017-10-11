@@ -154,7 +154,7 @@ public interface ApiHelper {
 
     // REGISTER API CALLS
 
-    Observable<RegisterUserResponse> callRegiser(RegisterUserRequest requestValue);
+    Observable<RegisterUserResponse> callRegister(RegisterUserRequest requestValue);
 
     // FORGOT PASSWORD API CALL
 

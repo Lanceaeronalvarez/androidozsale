@@ -47,7 +47,7 @@ public class RegisterPresenter<V extends RegisterMvpView> extends Authentication
                 hasReadTermsAndCondition);
 
         getCompositeDisposable().add(getDataManager()
-                .callRegiser(registerUserRequest)
+                .callRegister(registerUserRequest)
                 .subscribeOn(getSchedulerProvider().io())
                 .observeOn(getSchedulerProvider().ui())
                 .subscribe(new io.reactivex.functions.Consumer<RegisterUserResponse>() {

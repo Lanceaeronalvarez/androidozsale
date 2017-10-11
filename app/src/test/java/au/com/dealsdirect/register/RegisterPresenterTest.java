@@ -1,5 +1,7 @@
 package au.com.dealsdirect.register;
 
+import com.google.gson.Gson;
+
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -17,11 +19,9 @@ import io.reactivex.Observable;
 import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.schedulers.TestScheduler;
 
-import static org.mockito.ArgumentMatchers.anyString;
-import static org.mockito.Mockito.doAnswer;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
 
 /**
  * Created by Paul on 10/5/17.
@@ -29,6 +29,27 @@ import static org.mockito.Mockito.when;
 @RunWith(MockitoJUnitRunner.class)
 public class RegisterPresenterTest {
 
+    private static final String mMockRegisterUserResponseSuccess = "{\n" +
+            "  \"d\": {\n" +
+            "    \"IsAuthenticated\": true,\n" +
+            "    \"Value\": {\n" +
+            "      \"Ticket\" : \"12345678\",\n" +
+            "      \"Registered\" : true\n" +
+            "    },\n" +
+            "    \"Result\": true,\n" +
+            "    \"Message\": \"\"\n" +
+            "  }\n" +
+            "}";
+
+    private static final String mMockRegisterUserResponseFailure = "{\n" +
+            "  \"d\": {\n" +
+            "    \"IsAuthenticated\": true,\n" +
+            "    \"Value\": {\n" +
+            "    },\n" +
+            "    \"Result\": false,\n" +
+            "    \"Message\": \"error\"\n" +
+            "  }\n" +
+            "}";
 
     @Mock
     DataManager mMockDataManager;
@@ -38,6 +59,7 @@ public class RegisterPresenterTest {
 
     RegisterPresenter<RegisterMvpView> mPresenter;
     TestScheduler testScheduler;
+    Gson gson = new Gson();
 
     @Before
     public void setup() {
@@ -49,15 +71,25 @@ public class RegisterPresenterTest {
     }
 
     @Test
-    public void register() {
-        RegisterUserResponse registerUserResponse = new RegisterUserResponse();
-        ArgumentCaptor<RegisterUserRequest> registerRequestCaptor =
-                ArgumentCaptor.forClass(RegisterUserRequest.class);
+    public void testRegisterUserSuccess() {
+        RegisterUserResponse registerUserResponse = gson.fromJson(mMockRegisterUserResponseSuccess,RegisterUserResponse.class);
 
-        doReturn(Observable.just(registerUserResponse)).when(mMockDataManager).callRegiser(registerRequestCaptor.capture());
+        doReturn(Observable.just(registerUserResponse)).when(mMockDataManager).callRegister(any(RegisterUserRequest.class));
         mPresenter.registerUser("", "", "", "", true);
         testScheduler.triggerActions();
 
+        verify(mMockDataManager).acknowledgeAuth(registerUserResponse.getTicket());
         verify(mMvpView).showLoginSuccessful(registerUserResponse.getTicket());
+    }
+
+    @Test
+    public void testRegisterUserFailure() {
+        RegisterUserResponse registerUserResponse = gson.fromJson(mMockRegisterUserResponseFailure, RegisterUserResponse.class);
+
+        doReturn(Observable.just(registerUserResponse)).when(mMockDataManager).callRegister(any(RegisterUserRequest.class));
+        mPresenter.registerUser("", "", "", "", true);
+        testScheduler.triggerActions();
+
+        verify(mMvpView).showLoginError(registerUserResponse.getMessage());
     }
 }
