@@ -3,10 +3,13 @@ package au.com.dealsdirect.main;
 import android.content.Context;
 
 import com.google.gson.Gson;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
 import com.mysale.genie.utility.config.api.GetAppSettings;
 import com.mysale.genie.utility.config.api.GetAppSettingsSection;
 import com.mysale.genie.utility.config.api.GetServerSettings;
 
+import org.json.JSONObject;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.BeforeClass;
@@ -17,6 +20,7 @@ import org.mockito.junit.MockitoJUnitRunner;
 
 import au.com.dealsdirect.data.DataManager;
 import au.com.dealsdirect.data.network.model.checkout.GetPaymentToken;
+import au.com.dealsdirect.data.network.model.checkout.getpaymentmethodnonce.GetPaymentMethodNonceRequest;
 import au.com.dealsdirect.ui.main.FetchTokenHandler;
 import au.com.dealsdirect.ui.main.MainPresenter;
 import au.com.dealsdirect.ui.main.MainMvpPresenter;
@@ -247,6 +251,17 @@ public class MainPresenterTest {
             "  }\n" +
             "}";
 
+    private static final String mMockGetPaymentMethodNonce = "{\n" +
+            "  \"d\": {\n" +
+            "    \"IsAuthenticated\": true,\n" +
+            "    \"Value\": {\n" +
+            "      \"Nonce\": \"testNonce\"\n" +
+            "    },\n" +
+            "    \"Result\": true,\n" +
+            "    \"Message\": \"\"\n" +
+            "  }\n" +
+            "}";
+
     @Mock
     MainMvpView mMockMainMvpView;
     @Mock
@@ -353,6 +368,35 @@ public class MainPresenterTest {
 
         verify(mMockMainMvpView).onError("error");
         verify(mMockMainMvpView.getFetchTokenHandler()).onFailure();
+
+    }
+
+    @Test
+    public void testCallGetPaymentMethodNonce(){
+
+        JsonObject origJo = new JsonParser().parse(mMockGetPaymentMethodNonce).getAsJsonObject();
+        JSONObject jo = null;
+
+        try {
+            jo = new JSONObject(origJo.toString());
+        } catch (Exception e){
+
+        }
+
+        doReturn(Observable.just(jo))
+                .when(mMockDataManager).callGetPaymentMethodNonce(any(GetPaymentMethodNonceRequest.class));
+
+        mPresenter.callGetPaymentMethodNonce("");
+        mTestScheduler.triggerActions();
+
+        String nonceString = "";
+        try {
+            nonceString = jo.getJSONObject("d").getJSONObject("Value").getString("Nonce");
+        }catch (Exception e){
+
+        }
+
+        verify(mMockMainMvpView).showGetPaymentMethodNonceSuccess(nonceString);
 
     }
 
