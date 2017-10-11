@@ -15,12 +15,22 @@ import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.mockito.ArgumentCaptor;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
 
 import au.com.dealsdirect.data.DataManager;
+import au.com.dealsdirect.data.auth.Auth;
+import au.com.dealsdirect.data.auth.AuthHandler;
+import au.com.dealsdirect.data.network.model.checkout.CreatePaymentMethod;
+import au.com.dealsdirect.data.network.model.checkout.CreatePaymentTransaction;
 import au.com.dealsdirect.data.network.model.checkout.GetPaymentToken;
 import au.com.dealsdirect.data.network.model.checkout.getpaymentmethodnonce.GetPaymentMethodNonceRequest;
+import au.com.dealsdirect.data.network.model.legalities.GetTemplateTextsRequest;
+import au.com.dealsdirect.data.network.model.legalities.GetTemplateTextsResponse;
+import au.com.dealsdirect.data.network.model.login.LoginEmail;
+import au.com.dealsdirect.data.network.model.login.LoginTicket;
+import au.com.dealsdirect.data.network.model.login.Logout;
 import au.com.dealsdirect.ui.main.FetchTokenHandler;
 import au.com.dealsdirect.ui.main.MainPresenter;
 import au.com.dealsdirect.ui.main.MainMvpPresenter;
@@ -32,6 +42,7 @@ import io.reactivex.schedulers.TestScheduler;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.doReturn;
+import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 
 /**
@@ -262,6 +273,78 @@ public class MainPresenterTest {
             "  }\n" +
             "}";
 
+    private static final String mMockCreatePaymentTxnSuccess = "{\n" +
+            "  \"d\": {\n" +
+            "    \"IsAuthenticated\": true,\n" +
+            "    \"Value\": {},\n" +
+            "    \"Result\": true,\n" +
+            "    \"Message\": \"\"\n" +
+            "  }\n" +
+            "}";
+
+    private final String mMockCreatePaymentTxnFailure = "{\n" +
+            "  \"d\": {\n" +
+            "    \"IsAuthenticated\": true,\n" +
+            "    \"Value\": {},\n" +
+            "    \"Result\": false,\n" +
+            "    \"Message\": \"error\"\n" +
+            "  }\n" +
+            "}";
+
+    private final String mMockCreatePaymentMethodSuccess = "{\n" +
+            "  \"d\": {\n" +
+            "    \"IsAuthenticated\": true,\n" +
+            "    \"Value\": {\n" +
+            "      \"PaymentMethods\": [\n" +
+            "        {\n" +
+            "          \"PaymentType\": \"Visa\",\n" +
+            "          \"Description\": \"400000******0002\",\n" +
+            "          \"Token\": \"5d7fb8\",\n" +
+            "          \"ImageUrl\": \"https://assets.braintreegateway.com/payment_method_logo/visa.png?environment=sandbox\"\n" +
+            "        }\n" +
+            "      ],\n" +
+            "      \"LastPaidToken\": \"5d7fb8\"\n" +
+            "    },\n" +
+            "    \"Result\": true,\n" +
+            "    \"Message\": \"\"\n" +
+            "  }\n" +
+            "}";
+
+    private final String mMockCreatePaymentMethodFailure = "{\n" +
+            "  \"d\": {\n" +
+            "    \"IsAuthenticated\": false,\n" +
+            "    \"Value\": {\n" +
+            "      \"PaymentMethods\": [\n" +
+            "        {\n" +
+            "          \"PaymentType\": \"Visa\",\n" +
+            "          \"Description\": \"400000******0002\",\n" +
+            "          \"Token\": \"5d7fb8\",\n" +
+            "          \"ImageUrl\": \"https://assets.braintreegateway.com/payment_method_logo/visa.png?environment=sandbox\"\n" +
+            "        }\n" +
+            "      ],\n" +
+            "      \"LastPaidToken\": \"5d7fb8\"\n" +
+            "    },\n" +
+            "    \"Result\": false,\n" +
+            "    \"Message\": \"error\"\n" +
+            "  }\n" +
+            "}";
+
+    private static final String mMockCallLoginTicketResponse = "{\n" +
+            "  \"d\": {\n" +
+            "    \"IsAuthenticated\": true,\n" +
+            "    \"Value\": {},\n" +
+            "    \"Result\": true,\n" +
+            "    \"Message\": \"\"\n" +
+            "  }\n" +
+            "}";
+
+    private static final String mMockGetTemplateTextsResponse = "{\n" +
+            "  \"d\": {\n" +
+            "    \"Value\": {\n" +
+            "    }\n" +
+            "  }\n" +
+            "}";
+
     @Mock
     MainMvpView mMockMainMvpView;
     @Mock
@@ -291,13 +374,15 @@ public class MainPresenterTest {
                 testSchedulerProvider,
                 compositeDisposable);
         mPresenter.onAttach(mMockMainMvpView);
+
+        doReturn("").when(mMockDataManager).getCountryId();
+        doReturn("").when(mMockDataManager).getLanguageId();
     }
 
     @Test
     public void testCallGetServerSettings() {
         GetServerSettings.ResponseValue responseValue = gson.fromJson(mMockGetServerSettingsResponse, GetServerSettings.ResponseValue.class);
 
-        doReturn("").when(mMockDataManager).getCountryId();
         doReturn(Observable.just(responseValue))
                 .when(mMockDataManager).callGetServerSettings("");
 
@@ -320,7 +405,6 @@ public class MainPresenterTest {
     public void testCallGetAppSettings() {
         GetAppSettings.ResponseValue responseValue = gson.fromJson(mMockGetAppSettingsResponse, GetAppSettings.ResponseValue.class);
 
-        doReturn("").when(mMockDataManager).getCountryId();
         doReturn(Observable.just(responseValue))
                 .when(mMockDataManager).callGetAppSettings("");
 
@@ -341,7 +425,6 @@ public class MainPresenterTest {
     public void testFetchBtAuthTrue() {
         GetPaymentToken.ResponseValue responseValue = gson.fromJson(mMockGetPaymentTokenResponse, GetPaymentToken.ResponseValue.class);
 
-        doReturn("").when(mMockDataManager).getCountryId();
         doReturn(true).when(mMockDataManager).isAuthorized();
         doReturn(mMockFetchTokenHandler).when(mMockMainMvpView).getFetchTokenHandler();
         doReturn(Observable.just(responseValue))
@@ -398,6 +481,122 @@ public class MainPresenterTest {
 
         verify(mMockMainMvpView).showGetPaymentMethodNonceSuccess(nonceString);
 
+    }
+
+    @Test
+    public void testCreatePaymentTransactionSuccess(){
+
+        CreatePaymentTransaction.ResponseValue responseValue = gson.fromJson(mMockCreatePaymentTxnSuccess, CreatePaymentTransaction.ResponseValue.class);
+
+        doReturn(Observable.just(responseValue))
+                .when(mMockDataManager).callCreatePaymentTransaction(any(CreatePaymentTransaction.RequestValue.class));
+
+        mPresenter.createPaymentTransaction("","","","");
+        mTestScheduler.triggerActions();
+
+        verify(mMockMainMvpView).hideLoading();
+        verify(mMockMainMvpView).performResetWithAuthFetch();
+        verify(mMockMainMvpView).showCreatePaymentTransactionSuccess("",responseValue);
+
+    }
+
+    @Test
+    public void testCreatePaymentTransactionFailure(){
+
+        CreatePaymentTransaction.ResponseValue responseValue = gson.fromJson(mMockCreatePaymentTxnFailure, CreatePaymentTransaction.ResponseValue.class);
+
+        doReturn(Observable.just(responseValue))
+                .when(mMockDataManager).callCreatePaymentTransaction(any(CreatePaymentTransaction.RequestValue.class));
+
+        mPresenter.createPaymentTransaction("","","","");
+        mTestScheduler.triggerActions();
+
+        verify(mMockMainMvpView).hideLoading();
+        verify(mMockMainMvpView).performResetWithAuthFetch();
+        verify(mMockMainMvpView).showCreatePaymentTransactionFailure(responseValue.getD().getMessage());
+
+    }
+
+    @Test
+    public void testCreatePaymentMethodSuccess(){
+
+        CreatePaymentMethod.ResponseValue responseValue = gson.fromJson(mMockCreatePaymentMethodSuccess,CreatePaymentMethod.ResponseValue.class);
+
+        doReturn(Observable.just(responseValue))
+                .when(mMockDataManager).callCreatePaymentMethod(any(CreatePaymentMethod.RequestValue.class));
+
+        mPresenter.createPaymentMethod("","","");
+        mTestScheduler.triggerActions();
+
+        verify(mMockMainMvpView).hideLoading();
+        verify(mMockMainMvpView).performResetWithAuthFetch();
+        verify(mMockMainMvpView).showCreatePaymentMethodSuccess(responseValue.getD().getValue().getLastPaymentMethod());
+    }
+
+    @Test
+    public void testCreatePaymentMethodFailure(){
+
+        CreatePaymentMethod.ResponseValue responseValue = gson.fromJson(mMockCreatePaymentMethodFailure,CreatePaymentMethod.ResponseValue.class);
+
+        doReturn(Observable.just(responseValue))
+                .when(mMockDataManager).callCreatePaymentMethod(any(CreatePaymentMethod.RequestValue.class));
+
+        mPresenter.createPaymentMethod("","","");
+        mTestScheduler.triggerActions();
+
+        verify(mMockMainMvpView).hideLoading();
+        verify(mMockMainMvpView).performResetWithAuthFetch();
+        verify(mMockMainMvpView).onError(responseValue.getMessage());
+    }
+
+    @Test
+    public void testCallLoginTicket(){
+        doReturn("testLoginTicket")
+                .when(mMockDataManager).getLoginTicket();
+
+        LoginEmail.ResponseValue responseValue = gson.fromJson(mMockCallLoginTicketResponse,LoginEmail.ResponseValue.class);
+
+        doReturn(Observable.just(responseValue))
+                .when(mMockDataManager).callLoginTicket(any(LoginTicket.RequestValue.class));
+
+        mPresenter.callLoginTicket();
+        mTestScheduler.triggerActions();
+
+        verify(mMockDataManager).acknowledgeAuth(responseValue.getTicket());
+        verify(mMockMainMvpView).loginSuccessMethods();
+
+    }
+
+    @Test
+    public void testCallLogout(){
+
+        Logout.ResponseValue responseValue = new Logout.ResponseValue();
+
+        doReturn(Observable.just(responseValue))
+                .when(mMockDataManager).callLogout(any(Logout.RequestValue.class));
+
+        mPresenter.callLogout(null);
+        mTestScheduler.triggerActions();
+
+        verify(mMockMainMvpView).showLoading();
+        verify(mMockMainMvpView).hideLoading();
+        verify(mMockDataManager).revokeAuth();
+        verify(mMockMainMvpView).performBraintreeReset();
+
+    }
+
+    @Test
+    public void testCallGetTemplateTexts(){
+
+        GetTemplateTextsResponse response = gson.fromJson(mMockGetTemplateTextsResponse, GetTemplateTextsResponse.class);
+        doReturn(Observable.just(response))
+                .when(mMockDataManager).callGetTemplateTexts(any(GetTemplateTextsRequest.class));
+
+        mPresenter.callGetTemplateTexts();
+        mTestScheduler.triggerActions();
+
+        verify(mMockDataManager).setMyPayTemplateTexts(response.getResponse().getValue());
+        verify(mMockMainMvpView).storeTemplateTexts(response.getResponse().getValue());
     }
 
     @After
