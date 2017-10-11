@@ -44,6 +44,16 @@ fastlane fabric_deploy_dd_test
 fastlane fabric_deploy_dd_rc
 ```
 
+### fabric_deploy_oo_test
+```
+fastlane fabric_deploy_oo_test
+```
+
+### fabric_deploy_lc_test
+```
+fastlane fabric_deploy_lc_test
+```
+
 
 ----
 

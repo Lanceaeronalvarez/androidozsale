@@ -17,51 +17,48 @@ fastlane_version "2.61.0"
 API_TOKEN = '156e897ec909d04276fe681aef03572370ac089e'
 BUILD_SECRET = 'e048a220b52f841eef5e6862bc43a56a5a51841da934f1e0b76a5019c630c661'
 
-# APK Path
-GRADLE_APK_OUTPUT_PATH = '/Users/Paul/AndroidDealsDirect/app/build/outputs/apk/'
-
-
-  # You can list more emails here
+# You can list more emails here
   live_emails = '"
-    ericapena@apacsale.com,
-    jelinepena@gmail.com,
-    elainedizon@mysale.com,
-    ruz@apacsale.com,
-    michael@smartwave.ph,
-    jc@mysale.com,
-    gavin@mysale.com,
-    elaine@smartwave.ph,
-    chindee@smartwave.ph,
-    ejptacc123@gmail.com,
-    Dmitry.Gavrilov@mysale.com
-  "'
+  ericapena@apacsale.com,
+  jelinepena@gmail.com,
+  elainedizon@mysale.com,
+  ruz@apacsale.com,
+  michael@smartwave.ph,
+  jc@mysale.com,
+  gavin@mysale.com,
+  elaine@smartwave.ph,
+  chindee@smartwave.ph,
+  ejptacc123@gmail.com,
+  Dmitry.Gavrilov@mysale.com
+"'
 
-  # You can list more emails here
+# You can list more emails here
   test_emails = '"
-    ayi@smartwave.ph,
-    ericapena@apacsale.com,
-    jelinepena@gmail.com,
-    elainedizon@mysale.com,
-    ruz@apacsale.com,
-    michael@smartwave.ph,
-    jc@mysale.com,
-    elaine@smartwave.ph,
-    chindee@smartwave.ph
-  "'
+  ayi@smartwave.ph,
+  ericapena@apacsale.com,
+  jelinepena@gmail.com,
+  elainedizon@mysale.com,
+  ruz@apacsale.com,
+  michael@smartwave.ph,
+  jc@mysale.com,
+  elaine@smartwave.ph,
+  chindee@smartwave.ph
+"'
 
-  # You can list more emails here
+# You can list more emails here
   dev_emails = '"
-    PaulDeSilva@mysale.com,
-    elainedizon@mysale.com,
-    diofelpallega@mysale.com,
-    ayicatimpo@mysale.com,
-    JulianPaul@mysale.com
-  "'
+  PaulDeSilva@mysale.com,
+  elainedizon@mysale.com,
+  diofelpallega@mysale.com,
+  ayicatimpo@mysale.com,
+  JulianPaul@mysale.com
+"'
 
 default_platform :android
 
 # Uploads the app to Fabric
-def uploadToFabric(app_name, emails, apk_name)
+def uploadToFabric(app_name, emails, apk_name, app_path)
+projectDir = app_path + '/app/build/outputs/apk/'
   puts "Uploading to fabric"
     tries = 3
     begin
@@ -71,7 +68,7 @@ def uploadToFabric(app_name, emails, apk_name)
       crashlytics(api_token: API_TOKEN,
            build_secret: BUILD_SECRET,
                  emails: emails,
-               apk_path: GRADLE_APK_OUTPUT_PATH + apk_name,
+               apk_path: projectDir + apk_name,
           notifications: true)
     rescue Exception => e
       puts e
@@ -105,45 +102,37 @@ lane :dd_build do |options|
 
   displayEmails(emails)
 
-  uploadToFabric(options[:app_name], emails, options[:apk_name])
+  uploadToFabric(options[:app_name], emails, options[:apk_name], options[:app_path])
 end
 
 lane :fabric_deploy_dd_test do
-  # Release notes for each app
-  dd_release_notes = '/Users/Paul/AndroidDealsDirect/app/build/outputs/apk/release_notes.md'
+  Dir.chdir("..")
+  app_dir = Dir.pwd
 
   #Change apk_name and app_name for other flavors
-  sh "fastlane dd_build app_name:'DealsDirectTest' notes_path:" + dd_release_notes + " emails:" + test_emails + " apk_name:" + 'app-dealsDirectTest-debug.apk' + " app_flavor:" + "DealsDirectTestDebug"
+  sh "fastlane dd_build app_name:'DealsDirectTest' emails:" + dev_emails + " apk_name:" + 'app-dealsDirectTest-release.apk' + " app_flavor:" + 'DealsDirectTestRelease' + " app_path:" + app_dir
  end
 
 lane :fabric_deploy_dd_rc do
-  # Release notes for each app
-  dd_release_notes = '/Users/Paul/AndroidDealsDirect/app/build/outputs/apk/release_notes.md'
+  Dir.chdir("..")
+  app_dir = Dir.pwd
 
   #Change apk_name and app_name for other flavors
-  sh "fastlane dd_build app_name:'DealsDirect' notes_path:" + dd_release_notes + " emails:" + test_emails + " apk_name:" + 'app-dealsDirectRC-debug.apk' + " app_flavor:" + "DealsDirectRCDebug"
+  sh "fastlane dd_build app_name:'DealsDirect' emails:" + dev_emails + " apk_name:" + 'app-dealsDirectTest-release.apk' + " app_flavor:" + 'DealsDirectRCRelease' + " app_path:" + app_dir
  end
 
-lane :fabric_deploy_dd_test do
-  # Release notes for each app
-  dd_release_notes = '/Users/Paul/AndroidDealsDirect/app/build/outputs/apk/release_notes.md'
+lane :fabric_deploy_oo_test do
+  Dir.chdir("..")
+  app_dir = Dir.pwd
 
   #Change apk_name and app_name for other flavors
-  sh "fastlane dd_build app_name:'DealsDirectTest' notes_path:" + dd_release_notes + " emails:" + test_emails + " apk_name:" + 'app-dealsDirectTest-debug.apk' + " app_flavor:" + "DealsDirectTestDebug"
- end
-
-lane :fabric_deploy_oo_tes do
-  # Release notes for each app
-  dd_release_notes = '/Users/Paul/AndroidDealsDirect/app/build/outputs/apk/release_notes.md'
-
-  #Change apk_name and app_name for other flavors
-  sh "fastlane dd_build app_name:'ooTest' notes_path:" + dd_release_notes + " emails:" + test_emails + " apk_name:" + 'app-ooTest-debug.apk' + " app_flavor:" + "ooTestDebug"
+  sh "fastlane dd_build app_name:'ooTest' emails:" + dev_emails + " apk_name:" + 'app-ooTest-debug.apk' + " app_flavor:" + 'ooTestDebug' + " app_path:" + app_dir
  end
 
 lane :fabric_deploy_lc_test do
-  # Release notes for each app
-  dd_release_notes = '/Users/Paul/AndroidDealsDirect/app/build/outputs/apk/release_notes.md'
+  Dir.chdir("..")
+  app_dir = Dir.pwd
 
   #Change apk_name and app_name for other flavors
-  sh "fastlane dd_build app_name:'londonChic' notes_path:" + dd_release_notes + " emails:" + test_emails + " apk_name:" + 'app-londonChicTest-debug.apk' + " app_flavor:" + "londonChicTestDebug"
- end
+  sh "fastlane dd_build app_name:'londonChicTest' emails:" + dev_emails + " apk_name:" + 'app-londonChicTest-debug.apk' + " app_flavor:" + 'londonChicTestDebug' + " app_path:" + app_dir
+end
