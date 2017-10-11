@@ -272,7 +272,7 @@ public class SaleItemsController extends BasePullToRefreshController implements 
         mSaleItemClickCounter = 0;
 
         determineToolbarTitle();
-        if (!mSaleItems.isEmpty()) {
+        if (!mSaleItems.isEmpty() && !mFromShopSearch) {
             mSaleItemsFilterIcon.setOnClickListener(view12 -> showFilters());
         }
 
@@ -486,8 +486,10 @@ public class SaleItemsController extends BasePullToRefreshController implements 
     @Override
     public void showSaleItems(GetSaleItemsResponse getSaleItemsResponse, boolean forFacetCorrection) {
 
-        //allow showing filters only when sale items have loaded.
-        mSaleItemsFilterIcon.setOnClickListener(view12 -> showFilters());
+        if(!mFromShopSearch){
+            //allow showing filters only when sale items have loaded.
+            mSaleItemsFilterIcon.setOnClickListener(view12 -> showFilters());
+        }
 
         List<GetSaleItemsResponse.Products> items = getSaleItemsResponse.products;
 
