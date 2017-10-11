@@ -1,4 +1,4 @@
-package au.com.dealsdirect;
+package au.com.dealsdirect.languages;
 
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;

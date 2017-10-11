@@ -1,4 +1,4 @@
-package au.com.dealsdirect;
+package au.com.dealsdirect.register;
 
 import org.junit.Before;
 import org.junit.Test;

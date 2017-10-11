@@ -1,4 +1,4 @@
-package au.com.dealsdirect;
+package au.com.dealsdirect.checkout;
 
 import junit.framework.Assert;
 

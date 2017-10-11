@@ -59,6 +59,10 @@ android {
     configurations.all {
         resolutionStrategy.force 'com.google.code.findbugs:jsr305:1.3.9'
     }
+
+    testOptions {
+        unitTests.returnDefaultValues = true
+    }
 }
 
 dependencies {
@@ -153,12 +157,15 @@ dependencies {
     testCompile "junit:junit:$rootProject.ext.junitVersion"
     testCompile "org.mockito:mockito-core:$rootProject.mockitoVersion"
     testAnnotationProcessor "com.google.dagger:dagger-compiler:$rootProject.dagger2Version"
+    testCompile 'org.json:json:20160810'
 
     // UI Testing
     androidTestCompile "com.android.support.test.espresso:espresso-core:$rootProject.espressoVersion"
     androidTestCompile "com.android.support.test.espresso:espresso-intents:$rootProject.espressoVersion"
     androidTestCompile "org.mockito:mockito-core:$rootProject.mockitoVersion"
     androidTestAnnotationProcessor "com.google.dagger:dagger-compiler:$rootProject.dagger2Version"
+
+
 
     // CLS
     compile('com.crashlytics.sdk.android:crashlytics:2.6.8@aar') {

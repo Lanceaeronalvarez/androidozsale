@@ -1,4 +1,4 @@
-package au.com.dealsdirect;
+package au.com.dealsdirect.saleitems;
 
 import android.support.v7.widget.RecyclerView;
 
