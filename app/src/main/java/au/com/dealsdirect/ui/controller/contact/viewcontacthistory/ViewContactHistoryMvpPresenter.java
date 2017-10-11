@@ -1,5 +1,6 @@
 package au.com.dealsdirect.ui.controller.contact.viewcontacthistory;
 
+import au.com.dealsdirect.data.network.model.contacthistory.GetContactHistoryRequest;
 import au.com.dealsdirect.data.network.model.contactreply.ReplyContact;
 import au.com.dealsdirect.data.network.model.contactreply.ReplyContactRequest;
 import au.com.dealsdirect.ui.base.MvpPresenter;
@@ -10,7 +11,7 @@ import au.com.dealsdirect.ui.base.MvpPresenter;
 
 public interface ViewContactHistoryMvpPresenter<V extends ViewContactHistoryMvpView> extends MvpPresenter<V> {
 
-    void loadContactHistory(int contactId);
+    void loadContactHistory(GetContactHistoryRequest contactHistoryRequest);
 
     void replyContact(ReplyContactRequest replyContactRequest);
 }

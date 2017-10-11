@@ -18,6 +18,7 @@ import com.bluelinelabs.conductor.changehandler.HorizontalChangeHandler;
 import javax.inject.Inject;
 
 import au.com.dealsdirect.R;
+import au.com.dealsdirect.data.network.model.contacthistory.GetContactHistoryRequest;
 import au.com.dealsdirect.data.network.model.contacthistory.List;
 import au.com.dealsdirect.data.network.model.contactreply.ReplyContact;
 import au.com.dealsdirect.data.network.model.contactreply.ReplyContactRequest;
@@ -122,7 +123,7 @@ public class ViewContactHistoryController extends BaseController implements View
     protected void onViewBound(@NonNull View view) {
         super.onViewBound(view);
         setUp(view);
-        mPresenter.loadContactHistory(getArgs().getInt(KEY_CONTACT_NO));
+        mPresenter.loadContactHistory(createContactHistoryRequest(getArgs().getInt(KEY_CONTACT_NO)));
     }
 
     @Override
@@ -210,12 +211,18 @@ public class ViewContactHistoryController extends BaseController implements View
             CustomAlertDialog.showCustomAlertDialog(
                     getActivity(), CustomAlertDialog.CustomDialogIconState.POSITIVE,
                     getActivity().getString(R.string.message_submitted));
-            mPresenter.loadContactHistory(getArgs().getInt(KEY_CONTACT_NO));
+            mPresenter.loadContactHistory(createContactHistoryRequest(getArgs().getInt(KEY_CONTACT_NO)));
             mContactHistoryMessageField.setText("");
         } else {
             CustomAlertDialog.showCustomAlertDialog(
                     getActivity(), CustomAlertDialog.CustomDialogIconState.POSITIVE,
                     getActivity().getString(R.string.error_creating_message));
         }
+    }
+
+    public GetContactHistoryRequest createContactHistoryRequest(int contactNo) {
+        GetContactHistoryRequest getContactHistoryRequest = new GetContactHistoryRequest();
+        getContactHistoryRequest.contactNo = contactNo;
+        return  getContactHistoryRequest;
     }
 }

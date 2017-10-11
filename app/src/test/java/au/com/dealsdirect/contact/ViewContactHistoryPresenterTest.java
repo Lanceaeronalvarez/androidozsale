@@ -65,17 +65,16 @@ public class ViewContactHistoryPresenterTest {
 
     @Test
     public void loadContactHistoryTest() {
-        GetContactHistoryResponse getContactHistoryResponse = new Gson().fromJson(mockContactsResponse, GetContactHistoryResponse.class);
-
+        GetContactHistoryResponse.ResponseValue getContactHistoryResponse = new Gson().fromJson(mockContactsResponse, GetContactHistoryResponse.ResponseValue.class);
         GetContactHistoryRequest getContactHistoryRequest = new GetContactHistoryRequest();
-        getContactHistoryRequest.contactNo = 299299;
+        getContactHistoryRequest.contactNo = 12333;
 
-        doReturn(Observable.just(getContactHistoryResponse)).when(mockDataManager).callGetContactHistory(any(GetContactHistoryRequest.class));
+        doReturn(Observable.just(getContactHistoryResponse)).when(mockDataManager).callGetContactHistory(getContactHistoryRequest);
 
-        viewContactHistoryPresenter.loadContactHistory(getContactHistoryRequest.contactNo);
+        viewContactHistoryPresenter.loadContactHistory(getContactHistoryRequest);
         testScheduler.triggerActions();
 
-        verify(viewContactsMvpView).showContactHistory(getContactHistoryResponse.getGetContactHistoryResponseBody().getList());
+        verify(viewContactsMvpView).showContactHistory(getContactHistoryResponse.getList());
 
     }
 

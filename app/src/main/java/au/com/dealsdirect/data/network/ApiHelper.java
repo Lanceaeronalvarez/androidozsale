@@ -140,7 +140,7 @@ public interface ApiHelper {
 
     Observable<GetContactsResponse> callGetContacts(String languageId);
 
-    Observable<GetContactHistoryResponse> callGetContactHistory(GetContactHistoryRequest getContactHistoryRequest);
+    Observable<GetContactHistoryResponse.ResponseValue> callGetContactHistory(GetContactHistoryRequest getContactHistoryRequest);
 
     // LOGIN API CALLS
 

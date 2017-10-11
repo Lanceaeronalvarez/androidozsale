@@ -29,15 +29,12 @@ public class ViewContactHistoryPresenter<V extends ViewContactHistoryMvpView>
     }
 
     @Override
-    public void loadContactHistory(int contactId) {
+    public void loadContactHistory(GetContactHistoryRequest contactHistoryRequest) {
         getMvpView().showLoading();
-
-        GetContactHistoryRequest getContactHistoryRequest = new GetContactHistoryRequest();
-        getContactHistoryRequest.contactNo = contactId;
 
         getCompositeDisposable()
                 .add(getDataManager()
-                        .callGetContactHistory(getContactHistoryRequest)
+                        .callGetContactHistory(contactHistoryRequest)
                         .subscribeOn(getSchedulerProvider().io())
                         .observeOn(getSchedulerProvider().ui())
                         .subscribe(response -> {
@@ -48,19 +45,8 @@ public class ViewContactHistoryPresenter<V extends ViewContactHistoryMvpView>
                                 return;
                             }
                             getMvpView().hideLoading();
-                            if (response.getGetContactHistoryResponseBody().getList() != null) {
-                                Log.d("viewcontactshistory", "list is null empty");
-                                List<au.com.dealsdirect.data.network.model.contacthistory.List> myContactItems = response.getGetContactHistoryResponseBody().getList();
-
-                                if (myContactItems != null && !myContactItems.isEmpty()) {
-
-                                    Log.d("viewcontactshistory", "list is not empty");
-                                    getMvpView().showContactHistory(myContactItems);
-
-                                } else {
-                                    Log.d("viewcontactshistory", "list is empty");
-
-                                }
+                            if (response.getList() != null && !response.getList().isEmpty()) {
+                                getMvpView().showContactHistory(response.getList());
                             }
 
                         }, throwable -> {
