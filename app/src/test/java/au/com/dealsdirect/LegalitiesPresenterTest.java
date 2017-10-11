@@ -72,7 +72,6 @@ public class LegalitiesPresenterTest {
         mPresenter.loadText("_OurPayThankYouTextMobileApp");
         mTestScheduler.triggerActions();
 
-        verify(mMockLegalitiesMvpView).hideLoading();
         verify(mMockLegalitiesMvpView).onError(null);
 
     }
