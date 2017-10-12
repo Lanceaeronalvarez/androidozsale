@@ -220,7 +220,6 @@ public class AccountController extends BaseController implements AccountMvpView,
             @Override
             public void success() {
                 mPresenter.loadAccountItems();
-                ((MainActivity) getActivity()).getMainController().getHomeController().setIsResetCheckout(true);
                 CartUtil.setValueToCart(0);
                 ((MainActivity) getActivity()).getMainController().getHomeController().removeBasketItemCount();
                 mFilterButton.setImageDrawable(getActivity().getResources().getDrawable(R.drawable.ic_login));

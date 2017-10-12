@@ -103,10 +103,6 @@ public class AddPaymentController extends BaseController implements AddPaymentMv
         mViewAddressToolarTitle.setText("Add New Payment");
         mViewAddressRightOption.setVisibility(View.INVISIBLE);
 
-        if ((getActivity()) != null) {
-            ((MainActivity) getActivity()).getMainController().getHomeController().setIsResetCheckout(true);
-        }
-
         mCardForm.cardRequired(true)
                 .expirationRequired(true)
                 .cvvRequired(true)
@@ -165,8 +161,8 @@ public class AddPaymentController extends BaseController implements AddPaymentMv
 
     @Override
     protected void onAttach(@NonNull View view) {
-        mPresenter.onAttach(this);
         super.onAttach(view);
+        mPresenter.onAttach(this);
     }
 
     @Override
@@ -179,11 +175,13 @@ public class AddPaymentController extends BaseController implements AddPaymentMv
     }
 
     private void hidePaymentButtons() {
-        mButtonHolder.setVisibility(View.GONE);
+        if (mButtonHolder!=null)
+            mButtonHolder.setVisibility(View.GONE);
     }
 
     private void showPaymentButtons() {
-        mButtonHolder.setVisibility(View.VISIBLE);
+        if (mButtonHolder!=null)
+            mButtonHolder.setVisibility(View.VISIBLE);
     }
 
     @Override
@@ -257,7 +255,6 @@ public class AddPaymentController extends BaseController implements AddPaymentMv
     @OnClick(R.id.partial_toolbar_arrow_view)
     void onBackPressed() {
         hideKeyboard();
-        ((MainActivity) getActivity()).getMainController().getHomeController().setIsResetCheckout(false);
         getActivity().onBackPressed();
     }
 

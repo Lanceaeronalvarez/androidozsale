@@ -119,10 +119,8 @@ public class MainActivity extends BaseActivity implements MainMvpView {
 
         mMainController = MainController.newInstance();
         mRouter = Conductor.attachRouter(this, mContainer, savedInstanceState);
-        if (!mRouter.hasRootController()) {
-            mRouter.setRoot(RouterTransaction.with(SplashScreenController.newInstance())
-                    .popChangeHandler(new VerticalChangeHandler()));
-        }
+        mRouter.setRoot(RouterTransaction.with(SplashScreenController.newInstance())
+                .popChangeHandler(new VerticalChangeHandler()));
 
         setUp();
     }
@@ -149,15 +147,13 @@ public class MainActivity extends BaseActivity implements MainMvpView {
     @Override
     protected void onDestroy() {
         mPresenter.onDetach();
-        mMainController = null;
-        mShopController = null;
-        mCategoriesController = null;
         super.onDestroy();
     }
 
     @Override
     protected void onResume() {
         super.onResume();
+
         mPresenter.onAttach(this);
         registerInternetCheckReceiver();
     }
@@ -182,12 +178,6 @@ public class MainActivity extends BaseActivity implements MainMvpView {
             Router currentRouter = getCurrentRouter();
             Controller currentController = getCurrentController(getCurrentRouter());
 
-            if (getMainController().getHomeViewPager()==null){
-                mMainController = MainController.newInstance();
-                mRouter.setRoot(RouterTransaction.with(mMainController)
-                        .tag("Home"));
-            }
-
             switch (getMainController().getHomeViewPager().getCurrentItem()) {
                 case 0:
                     if (mCategoriesRouter.getBackstackSize() == 1) { //go back to shops
@@ -203,6 +193,7 @@ public class MainActivity extends BaseActivity implements MainMvpView {
                             setRootViewpagerItem(0);
                             setDraggableViewPager(true);
                         } else if (currentController instanceof SaleItemsController) {
+                            getMainController().setViewpagerDraggable(true);
                             setRootViewpagerItem(0);
                             currentRouter.handleBack();
                         } else {
@@ -228,7 +219,6 @@ public class MainActivity extends BaseActivity implements MainMvpView {
                                 getMainController().getHomeController().getCheckoutRouter().popToRoot();
                                 Controller controller = getMainController().getHomeController().getCurrentControllerOnRouter(mCheckoutRouter);
                                 if (controller instanceof CheckoutController) {
-                                    getMainController().getHomeController().setIsResetCheckout(true);
                                     ((CheckoutController) controller).loadCart();
                                 }
                             } catch (Exception e) {
@@ -240,6 +230,9 @@ public class MainActivity extends BaseActivity implements MainMvpView {
                             break;
                         } else {
                             //getMainController().showBottomNav();
+                            if (currentController instanceof SaleItemsController){
+                                getMainController().setViewpagerDraggable(true);
+                            }
                             currentRouter.handleBack();
                         }
                     }
@@ -351,6 +344,9 @@ public class MainActivity extends BaseActivity implements MainMvpView {
                     .pushChangeHandler(new HorizontalChangeHandler())
                     .popChangeHandler(new HorizontalChangeHandler()));
 
+            if (getMainController().getHomeController()!=null)
+                getMainController().getHomeController().showCheckoutController();
+
         } else {
 
             Router currentRouter = getMainController().getHomeController().getCurrentRouter();
@@ -374,7 +370,6 @@ public class MainActivity extends BaseActivity implements MainMvpView {
 
             Controller controller = getMainController().getHomeController().getCurrentControllerOnRouter(mCheckoutRouter);
             if (controller != null && controller instanceof CheckoutController) {
-                getMainController().getHomeController().setIsResetCheckout(true);
                 ((CheckoutController) controller).loadCart();
             }
         }
@@ -607,6 +602,7 @@ public class MainActivity extends BaseActivity implements MainMvpView {
     }
 
     public void splashShownCallback() {
+        mMainController = MainController.newInstance();
         mRouter.setRoot(RouterTransaction.with(mMainController)
                 .tag("Home"));
 
@@ -739,12 +735,16 @@ public class MainActivity extends BaseActivity implements MainMvpView {
     }
 
     private void initializeAnalytics() {
-        //Fabric
-        Fabric.with(this, new Crashlytics());
-        Fabric.with(this, new Answers());
 
-        //New Relic
-        NewRelic.withApplicationToken(getString(R.string.new_relic_app_token)).start(this.getApplication());
+        // Only activate analytics for release versions
+        if (!mPresenter.isDebug()) {
+            //Fabric
+            Fabric.with(this, new Crashlytics());
+            Fabric.with(this, new Answers());
+
+            //New Relic
+            NewRelic.withApplicationToken(getString(R.string.new_relic_app_token)).start(this.getApplication());
+        }
     }
 
     /**
@@ -774,5 +774,12 @@ public class MainActivity extends BaseActivity implements MainMvpView {
             dismissSnackBar();
         }
     }
+
+    public void attachMainController(){
+        mMainController = MainController.newInstance();
+        mRouter.setRoot(RouterTransaction.with(mMainController)
+                .tag("Home"));
+    }
+
 
 }

@@ -333,4 +333,5 @@
     <string name="no_internet_connection">no internet connection</string>
     <string name="error">error</string>
     <string name="remove_payment_method">Removed Payment Method</string>
+    <string name="password_does_not_match">Password does not match</string>
 </resources>

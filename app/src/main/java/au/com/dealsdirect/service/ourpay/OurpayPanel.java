@@ -203,7 +203,6 @@ public class OurpayPanel {
             Bundle bundle = new Bundle();
             bundle.putString("templateKey", ourpayTermsAndConditionKey);
 
-            ((MainActivity)mBaseActivity).getMainController().getHomeController().setIsResetCheckout(false);
             mRouter.pushController(RouterTransaction.with(new LegalitiesController(ourpayTermsAndConditionKey,"My Basket"))
                     .pushChangeHandler(new HorizontalChangeHandler(false))
                     .popChangeHandler(new HorizontalChangeHandler(false)));

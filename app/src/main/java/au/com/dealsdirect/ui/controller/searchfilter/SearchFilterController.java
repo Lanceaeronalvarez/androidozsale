@@ -80,6 +80,9 @@ public class SearchFilterController extends BaseController
     private static final String KEY_CATEGORY_STRING = "KEY_CATEGORY_STRING";
     private static final String KEY_SORTING_STRING = "KEY_SORTING_STRING";
 
+    private static final String KEY_SALE_ITEMS_TITLE = "KEY_SALE_ITEMS_TITLE";
+
+    private String mSaleItemsTitle = "";
     private static String mPreviousChosenCategory = "";
     private String mJoinedQueryChipsString = "";
 
@@ -145,6 +148,7 @@ public class SearchFilterController extends BaseController
     private boolean isSeekbarReset = false;
     private MainActivity mActivity;
     private String mChosenCategory = "";
+    private String mTitle = "";
 
     String mCategoryKey = "";
     String mSaleId = "";
@@ -161,7 +165,7 @@ public class SearchFilterController extends BaseController
             (new Pair<String, String>(SORT_FACETFILTER_NAME, "Sort"),
                     new Pair<String, String>(CATEGORY_TREE_FACET, "Category"));
 
-    public static SearchFilterController newInstance(String jsonCategoriesString, String jsonFacetString, String sortingFacetString, String saleId, String categoryKey, String previouslySelectedFacetIndices, String previousChipFilters) {
+    public static SearchFilterController newInstance(String jsonCategoriesString, String jsonFacetString, String sortingFacetString, String saleId, String categoryKey, String previouslySelectedFacetIndices, String previousChipFilters, String saleItemsTitle) {
         return new SearchFilterController(new BundleBuilder(new Bundle())
                 .putString(KEY_CATEGORY_STRING, jsonCategoriesString)
                 .putString(KEY_FACET_STRING, jsonFacetString)
@@ -170,6 +174,7 @@ public class SearchFilterController extends BaseController
                 .putString(KEY_SALE_ID, saleId)
                 .putString(KEY_SELECTED_FACETS, previouslySelectedFacetIndices)
                 .putString(KEY_CHIPS_FILTER, previousChipFilters)
+                .putString(KEY_SALE_ITEMS_TITLE, saleItemsTitle)
                 .build());
     }
 
@@ -185,10 +190,9 @@ public class SearchFilterController extends BaseController
         }.getType());
         mBrandList = JsonUtils.convertStringToObject(args.getString(KEY_BRAND_LIST, ""), new TypeToken<ArrayList<String>>() {
         }.getType());
-
+        mSaleItemsTitle = args.getString(KEY_SALE_ITEMS_TITLE);
         restoreStateSelection(args);
     }
-
 
     private void restoreStateSelection(Bundle args) {
         String selectedFacetItemsString = args.getString(KEY_SELECTED_FACETS, "");
@@ -227,7 +231,6 @@ public class SearchFilterController extends BaseController
         super.onViewBound(view);
         mActivity.getMainController().hideBottomNav();
         setUp(view);
-
     }
 
     @Override
@@ -365,6 +368,10 @@ public class SearchFilterController extends BaseController
     @Override
     protected void onDestroyView(@NonNull View view) {
         mPresenter.onDetach();
+
+        if ((getActivity()) != null) {
+            ((MainActivity)getActivity()).getMainController().showBottomNav();
+        }
         super.onDestroyView(view);
     }
 
@@ -591,8 +598,18 @@ public class SearchFilterController extends BaseController
             mSearchTagsAdapter.add(new SearchChipModel(SEARCH_QUERY_NAME, editTextString, -1));
         }
 
+//        if (mChosenCategory.isEmpty()) {
+//            mTitle = mSaleItemsTitle;
+//        }else{
+//            mTitle = mChosenCategory;
+//        }
+
+        if(!mChosenCategory.isEmpty()){
+            mTitle = mChosenCategory;
+        }
+
         Bundle saleItemBundle = new BundleBuilder(new Bundle())
-                .putString(KEY_TITLE, mChosenCategory)
+                .putString(KEY_TITLE, mTitle)
                 .putString(KEY_CATEGORY_MAP, mChosenCategory)
                 .putString(KEY_SALE_ID, mSaleId)
                 .putString(KEY_CHIPS_FILTER, new Gson().toJson(mSearchTagsAdapter.getData()))
@@ -602,7 +619,6 @@ public class SearchFilterController extends BaseController
 
         SaleItemsController saleItemsController = (SaleItemsController) getRouter().getControllerWithTag(getActivity().getString(R.string.sale_items_controller_tag));
         saleItemsController.onPassFiltersData(saleItemBundle);
-        mActivity.getMainController().showBottomNav();
         //noinspection ConstantConditions
         getActivity().onBackPressed();
 

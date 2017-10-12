@@ -108,7 +108,6 @@ public class MainController extends BaseController implements MainMvpView {
             window.setStatusBarColor(getActivity().getResources().getColor(R.color.colorAccent));
         }
         setupViewPager();
-
     }
 
     private void setupViewPager() {
@@ -225,4 +224,5 @@ public class MainController extends BaseController implements MainMvpView {
     public MainCustomViewPager getHomeViewPager() {
         return mHomeViewPager;
     }
+
 }

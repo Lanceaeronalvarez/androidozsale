@@ -124,9 +124,6 @@
                     android:padding="15dp"
                     android:visibility="gone" />
 
-
-                <include layout="@layout/partial_no_voucher_placeholder_layout"/>
-
             </LinearLayout>
 
             <include layout="@layout/partial_vouchers_buttons"/>

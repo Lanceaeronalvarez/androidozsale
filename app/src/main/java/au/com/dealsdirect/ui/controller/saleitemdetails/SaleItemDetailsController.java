@@ -249,7 +249,6 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
         mRootView = ((ElasticDragDismissFrameLayout) view);
 
         mActivity = (MainActivity)getActivity();
-        mActivity.getMainController().setViewpagerDraggable(false);
         //product info
         mProductName.setText(mSaleName);
 

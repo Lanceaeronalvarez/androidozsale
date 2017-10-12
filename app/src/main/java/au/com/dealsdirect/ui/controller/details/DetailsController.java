@@ -3,6 +3,7 @@ package au.com.dealsdirect.ui.controller.details;
 import android.app.DatePickerDialog;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,8 +13,6 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.Spinner;
 import android.widget.TextView;
-
-import com.google.gson.internal.LinkedTreeMap;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -25,13 +24,11 @@ import javax.inject.Inject;
 import au.com.dealsdirect.R;
 import au.com.dealsdirect.data.network.model.userdetails.GetUserDetailsResponse;
 import au.com.dealsdirect.data.network.model.userdetails.SetUserDetailsRequest;
-import au.com.dealsdirect.ui.base.BaseController;
 import au.com.dealsdirect.ui.base.BasePullToRefreshController;
 import au.com.dealsdirect.ui.custom.CustomAlertDialog;
 import au.com.dealsdirect.ui.custom.transitions.CustomSpinnerAdapter;
 import au.com.dealsdirect.utils.BundleBuilder;
 import au.com.dealsdirect.utils.DateUtils;
-import au.com.dealsdirect.utils.JsonUtils;
 import butterknife.BindView;
 import butterknife.OnClick;
 
@@ -172,11 +169,25 @@ public class DetailsController extends BasePullToRefreshController implements De
 
     @Override
     public void loadDetails(GetUserDetailsResponse userDetailsResponse) {
-        LinkedTreeMap details = (LinkedTreeMap) userDetailsResponse.getResponse().getValue();
-        mFirstNameText.setText(JsonUtils.getStringFromLinkedTreeMap(details, "Forename"));
-        mLastNameText.setText(JsonUtils.getStringFromLinkedTreeMap(details, "Surname"));
-        mEmailAddressText.setText(JsonUtils.getStringFromLinkedTreeMap(details, "Email"));
-        mDateOfBirthText.setText(JsonUtils.getStringDateFromLinkedTreeMap(details, "DateOfBirth"));
+//        LinkedTreeMap details = (LinkedTreeMap) userDetailsResponse.getResponse().getValue();
+        GetUserDetailsResponse.Value value = userDetailsResponse.getResponse().getValue();
+        mFirstNameText.setText(value.getForename());
+        mLastNameText.setText(value.getSurname());
+        mEmailAddressText.setText(value.getEmail());
+
+        if (value.getDateOfBirth()!=null){
+            String day =  value.getDateOfBirth().getDay().toString();
+            String year = value.getDateOfBirth().getYear().toString();
+            String month = DateUtils.months[value.getDateOfBirth().getMonth()-1];
+            mDateOfBirthText.setText(month+" "+day+", "+year);
+        }
+
+        int genderItem = 0;
+        if (!value.getGender()){
+            genderItem = 1;
+        }
+
+        mGenderSpinner.setSelection(genderItem);
     }
 
     @Override
@@ -213,8 +224,12 @@ public class DetailsController extends BasePullToRefreshController implements De
         String newpassword = mNewPasswordText.getText().toString();
         String confirmpassword = mConfirmPasswordText.getText().toString();
 
-        mPresenter.sendUserDetails(email, firstname, lastname, dateofbirth, gender, email,
-                password, newpassword, confirmpassword);
+        if (newpassword.equals(confirmpassword)){
+            mPresenter.sendUserDetails(email, firstname, lastname, dateofbirth, gender, email,
+                    password, newpassword, confirmpassword);
+        }else{
+            CustomAlertDialog.showCustomAlertDialog(getActivity(), CustomAlertDialog.CustomDialogIconState.POSITIVE,mActivity.getString(R.string.password_does_not_match));
+        }
     }
 
     @OnClick(R.id.partial_toolbar_arrow_view)

@@ -93,10 +93,6 @@ public class ViewAddressController extends BasePullToRefreshController implement
     protected void setUp(View view) {
         mPresenter.loadAddresses();
 
-        if (getActivity()!=null){
-            ((MainActivity)getActivity()).getMainController().getHomeController().setIsResetCheckout(true);
-        }
-
         mViewAddressToolarTitle.setText("My Addresses");
         if (mPresenter.isTablet()) {
             mViewAddressRightOption.setPadding(5, 5, 5, 5);
@@ -246,7 +242,6 @@ public class ViewAddressController extends BasePullToRefreshController implement
     @OnClick(R.id.partial_toolbar_arrow_view)
     public void onBackClick() {
         if (getActivity()!=null){
-            ((MainActivity)getActivity()).getMainController().getHomeController().setIsResetCheckout(false);
             getActivity().onBackPressed();
         }
     }
