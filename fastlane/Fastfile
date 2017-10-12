@@ -126,7 +126,7 @@ lane :fabric_deploy_oo_test do
   app_dir = Dir.pwd
 
   #Change apk_name and app_name for other flavors
-  sh "fastlane dd_build app_name:'ooTest' emails:" + dev_emails + " apk_name:" + 'app-ooTest-debug.apk' + " app_flavor:" + 'ooTestDebug' + " app_path:" + app_dir
+  sh "fastlane dd_build app_name:'ooTest' emails:" + dev_emails + " apk_name:" + 'app-ooTest-release.apk' + " app_flavor:" + 'ooTestRelease' + " app_path:" + app_dir
  end
 
 lane :fabric_deploy_lc_test do
@@ -134,5 +134,5 @@ lane :fabric_deploy_lc_test do
   app_dir = Dir.pwd
 
   #Change apk_name and app_name for other flavors
-  sh "fastlane dd_build app_name:'londonChicTest' emails:" + dev_emails + " apk_name:" + 'app-londonChicTest-debug.apk' + " app_flavor:" + 'londonChicTestDebug' + " app_path:" + app_dir
+  sh "fastlane dd_build app_name:'londonChicTest' emails:" + dev_emails + " apk_name:" + 'app-londonChicTest-release.apk' + " app_flavor:" + 'londonChicTestRelease' + " app_path:" + app_dir
 end
