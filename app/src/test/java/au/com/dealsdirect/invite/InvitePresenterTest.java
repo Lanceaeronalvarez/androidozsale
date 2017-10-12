@@ -1,5 +1,7 @@
 package au.com.dealsdirect.invite;
 
+import com.google.gson.Gson;
+
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -30,6 +32,17 @@ import static org.mockito.Mockito.verify;
 @RunWith(MockitoJUnitRunner.class)
 public class InvitePresenterTest {
 
+    private static final String mMockDefaultResponseSuccess = "{\n" +
+            "  \"d\": {\n" +
+            "    \"IsAuthenticated\": true,\n" +
+            "    \"Value\": {\n" +
+            "    },\n" +
+            "    \"Result\": true,\n" +
+            "    \"Message\": \"\"\n" +
+            "  }\n" +
+            "}";
+
+
     @Mock
     DataManager mMockDataManager;
 
@@ -38,6 +51,7 @@ public class InvitePresenterTest {
 
     InvitePresenter<InviteMvpView> mPresenter;
     TestScheduler testScheduler;
+    Gson gson = new Gson();
 
     @Before
     public void setup() {
@@ -51,13 +65,14 @@ public class InvitePresenterTest {
     @Test
     public void getInviteLinkTest() {
 
-        GetInviteRequest getInviteRequest = new GetInviteRequest();
-        getInviteRequest.countryId = mMockDataManager.getCountryId();
-        getInviteRequest.languageId = mMockDataManager.getLanguageId();
+        doReturn("DA").when(mMockDataManager).getCountryId();
+        doReturn("EN").when(mMockDataManager).getLanguageId();
 
-        GetInviteResponse getInviteResponse = new GetInviteResponse();
-        doReturn(Observable.just(getInviteResponse)).when(mMockDataManager).callGetInvite(getInviteRequest);
-        mPresenter.getInviteLink(getInviteRequest);
+        GetInviteRequest request = new GetInviteRequest();
+        GetInviteResponse getInviteResponse = gson.fromJson(mMockDefaultResponseSuccess,GetInviteResponse.class);
+
+        doReturn(Observable.just(getInviteResponse)).when(mMockDataManager).callGetInvite(request);
+        mPresenter.getInviteLink(request);
         testScheduler.triggerActions();
 
         verify(inviteMvpView).showInviteLink(getInviteResponse);

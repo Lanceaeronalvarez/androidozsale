@@ -18,6 +18,7 @@ import au.com.dealsdirect.utils.rx.SchedulerProvider;
 import io.reactivex.Observable;
 import io.reactivex.annotations.NonNull;
 import io.reactivex.disposables.CompositeDisposable;
+import io.reactivex.functions.BiFunction;
 import io.reactivex.functions.Consumer;
 import io.reactivex.subjects.PublishSubject;
 
@@ -36,12 +37,19 @@ public class ViewVouchersPresenter<V extends ViewVouchersMvpView> extends BasePr
 
     @Override
     public void loadMyVouchers() {
-        final PublishSubject<List<GetUserVoucherResponse.Voucher>> selectSubject
-                = PublishSubject.create();
-        final PublishSubject<GetVouchersResponse> selectSubject2
-                = PublishSubject.create();
 
-        Observable.zip(selectSubject, selectSubject2, Pair::new)
+        GetUserVouchersRequest getUserVouchersRequest =
+                new GetUserVouchersRequest(getDataManager().getLanguageId());
+
+        Observable.zip(wrapObservable(getDataManager().callGetUserVouchers(getUserVouchersRequest)),
+                        wrapObservable(getDataManager().callGetVouchers(getUserVouchersRequest)),
+                        new BiFunction<GetUserVoucherResponse, GetVouchersResponse, Pair<List<GetUserVoucherResponse.Voucher>, GetVouchersResponse>>() {
+            @Override
+            public Pair<List<GetUserVoucherResponse.Voucher>, GetVouchersResponse> apply(@NonNull GetUserVoucherResponse getUserVoucherResponse, @NonNull GetVouchersResponse getVouchersResponse) throws Exception {
+                return new Pair<>(getUserVoucherResponse.d.getList(),getVouchersResponse);
+            }
+        })
+                .observeOn(getSchedulerProvider().ui())
                 .subscribe(action -> {
                     if (!isViewAttached()) {
                         return;
@@ -49,23 +57,11 @@ public class ViewVouchersPresenter<V extends ViewVouchersMvpView> extends BasePr
                     getMvpView().updateVoucherList(action);
                 });
 
-        GetUserVouchersRequest getUserVouchersRequest =
-                new GetUserVouchersRequest(getDataManager().getLanguageId());
 
-        doApiCallForResponse(getDataManager().callGetUserVouchers(getUserVouchersRequest), new AppApiCallback() {
-            @Override
-            public void onSuccess(Object response) {
-                super.onSuccess(response);
-                selectSubject.onNext(((GetUserVoucherResponse) response).getValue().getList());
-            }
-        });
 
-        doApiCallForResponse(getDataManager().callGetVouchers(getUserVouchersRequest), new AppApiCallback() {
-            @Override
-            public void onSuccess(Object response) {
-                super.onSuccess(response);
-                selectSubject2.onNext((GetVouchersResponse) response);
-            }
-        });
+    }
+
+    protected <T> Observable<T> wrapObservable(Observable<T> observable) {
+        return observable.subscribeOn(getSchedulerProvider().io());
     }
 }

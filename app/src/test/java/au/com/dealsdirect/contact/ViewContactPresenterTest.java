@@ -67,8 +67,8 @@ public class ViewContactPresenterTest {
     public void loadContactsTest() {
         GetContactsResponse getContactsResponse = new Gson().fromJson(mockContactsResponse, GetContactsResponse.class);
 
-        ArgumentCaptor<DataManager> dataManagerCaptor = ArgumentCaptor.forClass(DataManager.class);
-        doReturn(Observable.just(getContactsResponse)).when(mockDataManager).callGetContacts(dataManagerCaptor.capture().getLanguageId());
+        doReturn("EN").when(mockDataManager).getLanguageId();
+        doReturn(Observable.just(getContactsResponse)).when(mockDataManager).callGetContacts(any(String.class));
 
         viewContactsPresenter.loadContacts();
         testScheduler.triggerActions();

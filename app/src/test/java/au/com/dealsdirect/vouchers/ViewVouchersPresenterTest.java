@@ -2,6 +2,8 @@ package au.com.dealsdirect.vouchers;
 
 import android.support.v4.util.Pair;
 
+import com.google.gson.Gson;
+
 import junit.framework.Assert;
 
 import org.junit.Before;
@@ -26,6 +28,7 @@ import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.schedulers.TestScheduler;
 import io.reactivex.subjects.PublishSubject;
 
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
@@ -38,6 +41,32 @@ import static org.mockito.Mockito.when;
 @RunWith(MockitoJUnitRunner.class)
 public class ViewVouchersPresenterTest {
 
+    private static final String mMockGetUserVouchersResponse = "{\n" +
+            "  \"d\": {\n" +
+            "    \"IsAuthenticated\": true,\n" +
+            "    \"List\": [\n" +
+            "      {\n" +
+            "        \"Fullname\": \"Ozsale.com.au\",\n" +
+            "        \"Activated\": true,\n" +
+            "        \"FirstPurchase\": true,\n" +
+            "        \"DiscountLeft\": \"$20.00\",\n" +
+            "        \"Expired\": \"3/07/2017\"\n" +
+            "      }\n" +
+            "    ],\n" +
+            "    \"Result\": true,\n" +
+            "    \"Message\": \"\"\n" +
+            "  }\n" +
+            "}";
+
+    private static final String mMockGetVouchersResponse = "{\n" +
+            "  \"d\": {\n" +
+            "    \"IsAuthenticated\": true,\n" +
+            "    \"List\": [],\n" +
+            "    \"Result\": true,\n" +
+            "    \"Message\": \"\"\n" +
+            "  }\n" +
+            "}";
+
     @Mock
     ViewVouchersMvpView mMockViewVouchersMvpView;
 
@@ -47,6 +76,7 @@ public class ViewVouchersPresenterTest {
     @Mock
     ViewVouchersPresenter<ViewVouchersMvpView> mPresenter;
     private TestScheduler mTestScheduler;
+    Gson gson = new Gson();
 
     @Before
     public void setup() throws Exception {
@@ -60,19 +90,20 @@ public class ViewVouchersPresenterTest {
 
     @Test
     public void testLoadMyVouchers() {
-        List<GetUserVoucherResponse.Voucher> list = new ArrayList<>();
-        GetVouchersResponse response = new GetVouchersResponse();
 
-        ArgumentCaptor<GetUserVouchersRequest> getUserVouchersRequestCaptor =
-                ArgumentCaptor.forClass(GetUserVouchersRequest.class);
+        doReturn("").when(mMockDataManager).getLanguageId();
 
-        doReturn(Observable.just(list)).when(mMockDataManager).callGetUserVouchers(getUserVouchersRequestCaptor.capture());
-        doReturn(Observable.just(response)).when(mMockDataManager).callGetVouchers(getUserVouchersRequestCaptor.capture());
+        GetVouchersResponse getVouchersResponse = new GetVouchersResponse();
+        GetUserVoucherResponse getUserVouchersResponse = gson.fromJson(mMockGetUserVouchersResponse,GetUserVoucherResponse.class);
 
+        doReturn(Observable.just(getUserVouchersResponse)).when(mMockDataManager).callGetUserVouchers(any(GetUserVouchersRequest.class));
+        doReturn(Observable.just(getVouchersResponse)).when(mMockDataManager).callGetVouchers(any(GetUserVouchersRequest.class));
+
+        ArgumentCaptor<Pair> pairArgumentCaptor = ArgumentCaptor.forClass(Pair.class);
 
         mPresenter.loadMyVouchers();
         mTestScheduler.triggerActions();
-        verify(mMockViewVouchersMvpView).updateVoucherList(new Pair<>(list ,response));
+        verify(mMockViewVouchersMvpView).updateVoucherList(pairArgumentCaptor.capture());
     }
 
     @Test
