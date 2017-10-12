@@ -248,7 +248,7 @@
                                                     android:maxLines="1"
                                                     android:text=""
                                                     android:textColor="@color/colorAccent"
-                                                    fontPath="@string/font_lato_bold"
+                                                    fontPath="@string/font_app_bold"
                                                     android:textSize="@dimen/text_size_xxxxlarge" />
 
                                                 <TextView

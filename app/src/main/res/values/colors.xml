@@ -17,6 +17,8 @@
     <color name="filter_text_active">#00A6B4</color>
     <color name="filter_text_inactive">#5F5F5F</color>
 
+    <color name="payment_success_order_text_color">#446E87</color>
+
     <color name="bottom_nav_accent_color">#F00065</color>
     <color name="bottom_nav_badge_color">#ffcc0000</color>
 
