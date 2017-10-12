@@ -140,22 +140,22 @@
 
         <TextView
             android:id="@+id/textView"
-            fontPath="@string/font_lato_heavy"
+            fontPath="@string/font_app_heavy"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:text="@string/total"
             android:textColor="#676767"
-            android:textSize="@dimen/text_size_xxxlarge"/>
+            android:textSize="@dimen/text_size_xxlarge"/>
 
         <TextView
             android:id="@+id/partial_checkout_summary_total"
-            fontPath="@string/font_lato_heavy"
+            fontPath="@string/font_app_heavy"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:gravity="end"
-            android:textColor="#676767"
+            android:textColor="@color/cart_order_price_text_color"
             android:textSize="@dimen/text_size_xxxlarge"
             tools:text="$27"/>
 

@@ -23,7 +23,7 @@
             android:layout_marginBottom="10dp"
             android:text="clear"
             android:textSize="20sp"
-            fontPath="@string/font_lato_medium"/>
+            fontPath="@string/font_app_medium"/>
 
         <Button
             android:id="@+id/partial_checkout_vouchers_button_apply"
@@ -33,7 +33,7 @@
             android:layout_marginBottom="16dp"
             android:text="apply"
             android:textSize="20sp"
-            fontPath="@string/font_lato_medium"/>
+            fontPath="@string/font_app_medium"/>
 
     </LinearLayout>
 </RelativeLayout>

@@ -205,7 +205,7 @@ public class MainActivity extends BaseActivity implements MainMvpView {
                             //exit app
                             DialogUtils.showYesNoDialog(
                                     this,
-                                    getString(R.string.dealsdirect),
+                                    getString(R.string.exit_app_name),
                                     getString(R.string.exit_app),
                                     getString(R.string.exit),
                                     getString(R.string.no),
@@ -735,12 +735,16 @@ public class MainActivity extends BaseActivity implements MainMvpView {
     }
 
     private void initializeAnalytics() {
-        //Fabric
-        Fabric.with(this, new Crashlytics());
-        Fabric.with(this, new Answers());
 
-        //New Relic
-        NewRelic.withApplicationToken(getString(R.string.new_relic_app_token)).start(this.getApplication());
+        // Only activate analytics for release versions
+        if (!mPresenter.isDebug()) {
+            //Fabric
+            Fabric.with(this, new Crashlytics());
+            Fabric.with(this, new Answers());
+
+            //New Relic
+            NewRelic.withApplicationToken(getString(R.string.new_relic_app_token)).start(this.getApplication());
+        }
     }
 
     /**

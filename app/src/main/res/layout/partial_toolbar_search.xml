@@ -34,7 +34,7 @@
 
         <au.com.dealsdirect.ui.custom.SearchEditText
             android:id="@+id/partial_toolbar_search_field"
-            fontPath="@string/font_lato_medium"
+            fontPath="@string/font_app_medium"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:clickable="true"
@@ -56,7 +56,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentEnd="true"
-            android:background="@drawable/bg_ripple_icon"
+            android:background="@drawable/bg_toolbar_button"
             android:padding="10dp"
             android:src="@drawable/ic_double_chevron" />
 

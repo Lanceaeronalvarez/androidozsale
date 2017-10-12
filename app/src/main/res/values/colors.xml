@@ -6,6 +6,8 @@
     <color name="colorPrimaryDark">#303F9F</color>
     <color name="colorAccent">#F00065</color>
 
+    <color name="color_text_option">#F00065</color>
+    <color name="color_item_title">#466E87</color>
     <color name="white">#FFFFFF</color>
 
     <color name="dark_text">#99000000</color>
@@ -15,11 +17,15 @@
     <color name="filter_text_active">#00A6B4</color>
     <color name="filter_text_inactive">#5F5F5F</color>
 
+    <color name="bottom_nav_accent_color">#F00065</color>
+    <color name="bottom_nav_badge_color">#ffcc0000</color>
 
     <color name="category_text_active">#F00065</color>
     <color name="category_text_inactive">#707070</color>
 
-    <color name="payment_success_order_text_color">#446E87</color>
+    <color name="cart_order_price_text_color">#454545</color>
+
+    <color name="progress_loader_stroke_color">#F00065</color>
 
     <color name="border_gray">#E4E4E4</color>
 
@@ -82,5 +88,17 @@
     <color name="ourpay_border_gray">#FFC7C7C7</color>
     <color name="navy">#000080</color>
     <color name="red">#FF0000</color>
+
+    <color name="invite_fb">#FF2D91DE</color>
+    <color name="invite_fb_pressed">#FF2D91DE</color>
+    <color name="invite_twitter">#FF00B5E9</color>
+    <color name="invite_twitter_pressed">#FF00B5E9</color>
+    <color name="invite_mail">#FFEA5757</color>
+    <color name="invite_mail_pressed">#FFEA5757</color>
+    <color name="invite_sms">#FF65D87F</color>
+    <color name="invite_sms_pressed">#FF65D87F</color>
+
+    <color name="item_select_remove">#466E87</color>
+    <color name="verify_resend_color">#000080</color>
 
 </resources>

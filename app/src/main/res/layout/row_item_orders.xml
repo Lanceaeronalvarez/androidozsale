@@ -74,25 +74,25 @@
 
                 <TextView
                     android:id="@+id/my_order_product_name"
+                    fontPath="@string/font_app_semibold"
                     android:layout_width="wrap_content"
-                    fontPath="@string/font_lato_semibold"
                     android:layout_height="wrap_content"
                     android:layout_weight="4"
                     android:textColor="#707070"
-                    android:textStyle="bold"
                     android:textSize="@dimen/text_size_xlarge"
-                    tools:ignore="HardcodedText" />
+                    android:textStyle="bold"
+                    tools:ignore="HardcodedText"/>
 
                 <TextView
                     android:id="@+id/my_order_product_items_amount"
-                    fontPath="@string/font_lato_semibold"
+                    fontPath="@string/font_app_semibold"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="end"
                     android:gravity="end"
                     android:maxLines="1"
                     android:layout_marginTop="-5dp"
-                    android:textColor="#5c5c5c"
+                    android:textColor="@color/cart_order_price_text_color"
                     android:textSize="@dimen/text_size_xxxlarge"
                     tools:ignore="HardcodedText" />
 
@@ -140,7 +140,7 @@
 
                 <TextView
                     android:id="@+id/approved_date_graph_node"
-                    fontPath="@string/font_lato_semibold"
+                    fontPath="@string/font_app_semibold"
                     android:layout_width="25dp"
                     android:layout_height="25dp"
                     android:background="@drawable/bg_orders_graph_active_state"
@@ -167,7 +167,7 @@
 
                 <TextView
                     android:id="@+id/stock_date_graph_node"
-                    fontPath="@string/font_lato_semibold"
+                    fontPath="@string/font_app_semibold"
                     android:layout_width="25dp"
                     android:layout_height="25dp"
                     android:background="@drawable/bg_orders_graph_empty_state"
@@ -186,7 +186,7 @@
 
                 <TextView
                     android:id="@+id/dispatched_date_graph_node"
-                    fontPath="@string/font_lato_semibold"
+                    fontPath="@string/font_app_semibold"
                     android:layout_width="25dp"
                     android:layout_height="25dp"
                     android:background="@drawable/bg_orders_graph_empty_state"
@@ -205,7 +205,7 @@
 
                 <TextView
                     android:id="@+id/closed_date_graph_node"
-                    fontPath="@string/font_lato_semibold"
+                    fontPath="@string/font_app_semibold"
                     android:layout_width="25dp"
                     android:layout_height="25dp"
                     android:background="@drawable/bg_orders_graph_empty_state"
@@ -398,6 +398,14 @@
 
             </LinearLayout>
 
+
+
+            <View
+                android:layout_width="wrap_content"
+                android:layout_height="0.5dp"
+                android:layout_marginTop="20dp"
+                android:layout_below="@id/my_order_graph_progress_states"
+                android:background="#eaeaea" />
         </RelativeLayout>
 
     </RelativeLayout>

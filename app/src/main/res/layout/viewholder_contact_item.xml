@@ -23,7 +23,7 @@
 
             <au.com.dealsdirect.ui.custom.CircularTextView
                 android:id="@+id/my_contact_us_row_acronym"
-                fontPath="@string/font_lato_heavy"
+                fontPath="@string/font_app_heavy"
                 android:layout_width="40dp"
                 android:layout_height="40dp"
                 android:layout_centerVertical="true"

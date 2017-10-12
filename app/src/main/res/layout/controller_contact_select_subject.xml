@@ -9,13 +9,13 @@
 
     <TextView
         android:id="@+id/controller_contact_select_subject_header"
-        fontPath="@string/font_lato_light"
+        fontPath="@string/font_app_light"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginBottom="10dp"
         android:layout_marginStart="16dp"
         android:layout_marginTop="10dp"
-        android:fontFamily="@string/font_lato_black"
+        android:fontFamily="@string/font_app_black"
         android:gravity="center_vertical"
         android:text="@string/select_a_subject"
         android:textColor="@color/gray_description_text"

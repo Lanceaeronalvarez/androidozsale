@@ -193,6 +193,7 @@ public class InviteSendController extends BasePullToRefreshController implements
 
         Glide.with(getActivity())
                 .load(R.drawable.invite_friend_vouchers_medium)
+                .placeholder(R.drawable.invite_friend_vouchers_medium)
                 .into(mImageView);
 
         String twitterLink = mPresenter.getFollowUsTwitterLink();

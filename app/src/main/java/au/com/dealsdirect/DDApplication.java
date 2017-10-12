@@ -86,7 +86,7 @@ public class DDApplication extends Application {
 
     private void initFonts() {
         CalligraphyConfig.initDefault(new CalligraphyConfig.Builder()
-                .setDefaultFontPath("fonts/Lato-Regular.ttf")
+                .setDefaultFontPath("fonts/App-Font-Regular.ttf")
                 .setFontAttrId(R.attr.fontPath)
                 .build()
         );

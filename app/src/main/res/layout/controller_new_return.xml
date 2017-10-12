@@ -42,7 +42,7 @@
         <au.com.dealsdirect.ui.custom.ClearFocusEditText
             android:id="@+id/controller_new_return_field"
             style="@style/DDEditTextStyle"
-            fontPath="@string/font_lato_medium"
+            fontPath="@string/font_app_medium"
             android:layout_width="match_parent"
             android:layout_height="140dp"
             android:layout_below="@+id/controller_new_return_reason_header"

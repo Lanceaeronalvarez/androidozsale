@@ -43,7 +43,7 @@
                 android:layout_marginLeft="5dp">
 
                 <TextView
-                    android:fontFamily="@string/font_lato_medium"
+                    android:fontFamily="@string/font_app_medium"
                     android:id="@+id/viewholder_return_details_item_name"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -63,7 +63,7 @@
 
 
                     <TextView
-                        android:fontFamily="@string/font_lato_medium"
+                        android:fontFamily="@string/font_app_medium"
                         android:id="@+id/viewholder_returns_details_item_count_identifier"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
@@ -74,7 +74,7 @@
 
 
                     <TextView
-                        android:fontFamily="@string/font_lato_medium"
+                        android:fontFamily="@string/font_app_medium"
                         android:id="@+id/viewholder_returns_details_item_count_value"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
@@ -97,7 +97,7 @@
                     android:layout_marginTop="2dp">
 
                     <TextView
-                        android:fontFamily="@string/font_lato_medium"
+                        android:fontFamily="@string/font_app_medium"
                         android:id="@+id/viewholder_returns_details_size_indentifier"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
@@ -108,7 +108,7 @@
 
 
                     <TextView
-                        android:fontFamily="@string/font_lato_medium"
+                        android:fontFamily="@string/font_app_medium"
                         android:id="@+id/viewholder_returns_details_size_value"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
@@ -131,7 +131,7 @@
                     android:layout_marginTop="2dp">
 
                     <TextView
-                        android:fontFamily="@string/font_lato_medium"
+                        android:fontFamily="@string/font_app_medium"
                         android:id="@+id/viewholder_return_details_price_identifier"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
@@ -142,7 +142,7 @@
 
 
                     <TextView
-                        android:fontFamily="@string/font_lato_medium"
+                        android:fontFamily="@string/font_app_medium"
                         android:id="@+id/viewholder_returns_order_item_total_cost_value"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
@@ -165,7 +165,7 @@
                     android:layout_marginTop="2dp">
 
                     <TextView
-                        android:fontFamily="@string/font_lato_medium"
+                        android:fontFamily="@string/font_app_medium"
                         android:id="@+id/viewholder_returns_details_subtotal_indentifier"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
@@ -176,7 +176,7 @@
 
 
                     <TextView
-                        android:fontFamily="@string/font_lato_medium"
+                        android:fontFamily="@string/font_app_medium"
                         android:id="@+id/viewholder_returns_details_subtotal_value"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"

@@ -530,7 +530,7 @@
                 android:textSize="@dimen/text_size_xlarge"/>
 
             <TextView
-                fontPath="@string/font_lato_bold"
+                fontPath="@string/font_app_bold"
                 android:id="@+id/grand_total_value"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"

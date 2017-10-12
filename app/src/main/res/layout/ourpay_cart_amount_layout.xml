@@ -9,26 +9,26 @@
     tools:ignore="MissingPrefix">
 
     <TextView
-        fontPath="@string/font_lato_heavy"
+        fontPath="@string/font_app_heavy"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
-        android:text="Or"
+        android:text="or"
         android:textColor="#676767"
-        android:textSize="@dimen/text_size_xxxlarge"
+        android:textSize="@dimen/text_size_xxlarge"
         android:textStyle="bold" />
 
     <TextView
         android:id="@+id/textView_amount"
-        fontPath="@string/font_lato_heavy"
+        fontPath="@string/font_app_heavy"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignParentEnd="true"
-        android:layout_alignParentRight="true"
-        android:textColor="#676767"
+        android:textColor="@color/cart_order_price_text_color"
         android:textSize="@dimen/text_size_xxxlarge"
         android:textStyle="bold"
-        tools:text="$25.00" />
+        tools:text="$25.00"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentEnd="true"/>
 
 </RelativeLayout>

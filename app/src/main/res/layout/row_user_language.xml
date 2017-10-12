@@ -8,7 +8,7 @@
 
     <TextView
         android:id="@+id/row_text_language"
-        fontPath="@string/font_lato_medium"
+        fontPath="@string/font_app_medium"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginBottom="13dp"

@@ -7,7 +7,7 @@
             <item android:state_enabled="true">
                 <shape android:shape="rectangle">
                     <corners android:radius="5dp"/>
-                    <solid android:color="#FFEA5757"/>
+                    <solid android:color="@color/invite_mail"/>
                 </shape>
             </item>
 
@@ -15,7 +15,7 @@
 
                 <shape android:shape="rectangle">
                     <corners android:radius="5dp"/>
-                    <solid android:color="#FFEA5757"/>
+                    <solid android:color="@color/invite_mail_pressed"/>
                 </shape>
             </item>
 

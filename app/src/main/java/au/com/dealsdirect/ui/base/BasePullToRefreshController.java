@@ -4,6 +4,7 @@ package au.com.dealsdirect.ui.base;
  */
 
 
+import android.content.res.ColorStateList;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.widget.NestedScrollView;
@@ -58,6 +59,12 @@ public abstract class BasePullToRefreshController extends BaseController impleme
         mPtrLayout = (PtrClassicFrameLayout) view.findViewById(R.id.controller_base_ptr_layout);
 
         mPtrLayout.setPtrHandler(this);
+
+        mPtrLayout.getHeader().setProgressIcon(getResources().getDrawable(R.drawable.ic_loader_logo));
+
+        mPtrLayout.getHeader().setPullProgressbar(getResources().getDrawable(R.drawable.bg_progress_bar));
+
+        mPtrLayout.getHeader().setProgressBar(ColorStateList.valueOf(getResources().getColor(R.color.progress_loader_stroke_color)));
 
         return view;
     }

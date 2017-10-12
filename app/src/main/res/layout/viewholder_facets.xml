@@ -30,7 +30,7 @@
 
         <TextView
             android:id="@+id/row_indicator_active_text"
-            fontPath="@string/font_lato_medium"
+            fontPath="@string/font_app_medium"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textColor="@color/colorAccent"
@@ -42,7 +42,7 @@
 
         <TextView
             android:id="@+id/row_facets_name"
-            fontPath="@string/font_lato_regular"
+            fontPath="@string/font_app_regular"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"

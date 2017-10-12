@@ -19,13 +19,13 @@
         android:orientation="vertical">
 
         <ImageView
-            android:layout_width="60dp"
-            android:layout_height="60dp"
+            android:layout_width="@dimen/placeholder_icon_size"
+            android:layout_height="@dimen/placeholder_icon_size"
             android:layout_gravity="center"
             android:src="@drawable/ic_address_placeholder" />
 
         <TextView
-            fontPath="@string/font_lato_medium"
+            fontPath="@string/font_app_medium"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
@@ -33,7 +33,7 @@
             android:textSize="@dimen/text_size_xxxlarge" />
 
         <TextView
-            fontPath="@string/font_lato_light"
+            fontPath="@string/font_app_light"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
