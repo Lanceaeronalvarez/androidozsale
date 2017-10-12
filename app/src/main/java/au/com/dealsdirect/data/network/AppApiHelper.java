@@ -34,6 +34,7 @@ import au.com.dealsdirect.data.network.model.checkout.GetCurrentOrder;
 import au.com.dealsdirect.data.network.model.checkout.GetPaymentToken;
 import au.com.dealsdirect.data.network.model.checkout.GetUserPaymentMethods;
 import au.com.dealsdirect.data.network.model.checkout.RemoveUserPaymentMethod;
+import au.com.dealsdirect.data.network.model.checkout.getpaymentmethodnonce.GetPaymentMethodNonceRequest;
 import au.com.dealsdirect.data.network.model.contacthistory.GetContactHistoryRequest;
 import au.com.dealsdirect.data.network.model.contacthistory.GetContactHistoryResponse;
 import au.com.dealsdirect.data.network.model.contactitem.GetContactsResponse;
@@ -92,6 +93,7 @@ import au.com.dealsdirect.data.network.model.saleitems.GetSaleItemsResponse;
 import au.com.dealsdirect.data.network.model.sorting.SortingResponse;
 import au.com.dealsdirect.data.network.model.userdetails.GetUserDetailsResponse;
 import au.com.dealsdirect.data.network.model.userdetails.SetUserDetailsRequest;
+import au.com.dealsdirect.data.network.model.userdetails.SetUserDetailsResponse;
 import au.com.dealsdirect.data.network.model.vouchers.AddAndApplyVoucherByKeyRequest;
 import au.com.dealsdirect.data.network.model.vouchers.AddAndApplyVoucherByKeyResponse;
 import au.com.dealsdirect.data.network.model.vouchers.AddVoucherByKeyRequest;
@@ -586,12 +588,12 @@ public class AppApiHelper implements ApiHelper {
     }
 
     @Override
-    public Observable<GetUserDetailsResponse> getSaveUserDetailsApiCall(SetUserDetailsRequest setUserDetailsRequest) {
+    public Observable<SetUserDetailsResponse> getSaveUserDetailsApiCall(SetUserDetailsRequest setUserDetailsRequest) {
         return Rx2AndroidNetworking.post(ApiEndPoint.SAVE_USER_DETAILS)
                 .addHeaders(mApiHeader.get())
                 .addJSONObjectBody(JsonUtils.convertToJsonObject(setUserDetailsRequest))
                 .build()
-                .getObjectObservable(GetUserDetailsResponse.class);
+                .getObjectObservable(SetUserDetailsResponse.class);
     }
 
     @Override
@@ -757,6 +759,15 @@ public class AppApiHelper implements ApiHelper {
                 .addHeaders(mApiHeader.get())
                 .build()
                 .getStringObservable();
+    }
+
+    @Override
+    public Observable<JSONObject> callGetPaymentMethodNonce(GetPaymentMethodNonceRequest request) {
+        return Rx2AndroidNetworking.post(ApiEndPoint.GET_PAYMENT_METHOD_NONCE)
+                .addHeaders(mApiHeader.get())
+                .addJSONObjectBody(JsonUtils.convertToJsonObject(request))
+                .build()
+                .getJSONObjectObservable();
     }
 }
 

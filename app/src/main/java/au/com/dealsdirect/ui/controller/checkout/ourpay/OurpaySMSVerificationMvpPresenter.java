@@ -10,7 +10,7 @@ public interface OurpaySMSVerificationMvpPresenter<V extends OurpaySMSVerificati
 
     void callNormalizePhone(String phone);
 
-    void callVerificationCodeSend(String phone, String countryCode);
+    void callVerificationCodeSend(String code, String phone, String countryCode);
 
     void callVerificationCodeConfirm(String phone, String countryCode, String code);
 }

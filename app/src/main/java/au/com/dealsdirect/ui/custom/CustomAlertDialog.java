@@ -8,6 +8,7 @@ import android.graphics.drawable.ColorDrawable;
 import android.os.Handler;
 import android.text.SpannableString;
 import android.text.style.UnderlineSpan;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -48,7 +49,8 @@ public class CustomAlertDialog {
             String clickableText,
             View.OnClickListener clickListener) {
 
-        alertDialog = null;
+        if (alertDialog!=null)
+            alertDialog.dismiss();
 
         LayoutInflater inflater = activity.getLayoutInflater();
 
@@ -85,8 +87,11 @@ public class CustomAlertDialog {
         mDialogTextLink.setOnClickListener(clickListener);
 
         if (showCount != 1) {
-            newAlertDialog.show();
-
+            try{
+                newAlertDialog.show();
+            }catch (Exception e){
+                Log.d(CustomAlertDialog.class.getName(),e.getMessage());
+            }
         }
         showCount = 1;
         dismissOnDelay();
@@ -105,7 +110,8 @@ public class CustomAlertDialog {
             CustomDialogIconState customDialogIconState,
             String description) {
 
-        alertDialog = null;
+        if (alertDialog!=null)
+            alertDialog.dismiss();
 
         LayoutInflater inflater = activity.getLayoutInflater();
 
@@ -139,15 +145,22 @@ public class CustomAlertDialog {
 
 
         if (showCount != 1) {
-            newAlertDialog.show();
+            if (activity!=null){
+                try{
+                    newAlertDialog.show();
+                    showCount = 1;
+                }catch (Exception e){
+                    Log.d(CustomAlertDialog.class.getName(),e.getMessage());
+                }
+            }
         }
-        showCount = 1;
-        dismissOnDelay();
 
         newAlertDialog.setOnDismissListener(dialogInterface -> showCount = 0);
-
         alertDialog = newAlertDialog;
+        dismissOnDelay();
+
         return newAlertDialog;
+
     }
 
     private static void setAlertDialogGravity(
@@ -197,7 +210,6 @@ public class CustomAlertDialog {
 
 
     private static void dismissOnDelay() {
-
         Handler handler = new Handler();
         Runnable runnable = CustomAlertDialog::dismissCustomDialog;
 
@@ -205,12 +217,12 @@ public class CustomAlertDialog {
     }
 
     public static void dismissCustomDialog() {
-
         try {
             if ((alertDialog != null) && alertDialog.isShowing()) {
                 alertDialog.dismiss();
                 showCount = 0;
             }
+
             alertDialog = null;
 
         } catch (IllegalArgumentException e) {

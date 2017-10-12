@@ -82,7 +82,7 @@ public class OrderDetailsItemsRecyclerViewAdapter extends RecyclerView.Adapter<R
             }
 
             ImageUtils.loadImage(context,
-                    LegacyStringImageUtils.productDetailsImageURLString(brandId, imageId, fileName),
+                    LegacyStringImageUtils.generateImageUrl(brandId, imageId, fileName),
                     holder.orderImage);
 
         }

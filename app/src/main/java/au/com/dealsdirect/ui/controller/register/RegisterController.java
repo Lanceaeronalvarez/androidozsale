@@ -4,7 +4,6 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,7 +15,6 @@ import com.bluelinelabs.conductor.changehandler.HorizontalChangeHandler;
 import com.bluelinelabs.conductor.changehandler.VerticalChangeHandler;
 import com.facebook.CallbackManager;
 import com.facebook.internal.CallbackManagerImpl;
-import com.mysale.genie.utility.RxBus;
 
 import javax.inject.Inject;
 
@@ -24,10 +22,9 @@ import au.com.dealsdirect.R;
 import au.com.dealsdirect.data.auth.AuthHandler;
 import au.com.dealsdirect.ui.base.BaseController;
 import au.com.dealsdirect.ui.controller.legalities.LegalitiesController;
-import au.com.dealsdirect.ui.custom.CustomAlertDialog;
 import au.com.dealsdirect.ui.main.MainActivity;
+import au.com.dealsdirect.utils.AppConstants;
 import au.com.dealsdirect.utils.BundleBuilder;
-import au.com.dealsdirect.utils.IntrospectionUtils;
 import butterknife.BindView;
 import butterknife.OnClick;
 
@@ -178,7 +175,7 @@ public class RegisterController extends BaseController implements RegisterMvpVie
     public void showLoginSuccessful(String loginTicket) {
         //Call facebook registration successful analytics
         mPresenter.facebookRegisterAnalytics(getActivity());
-        mActivity.loginSuccessHandler(getRouter());
+        mActivity.loginSuccessHandler(getRouter(), AppConstants.POP_FLAG.ROOT, AppConstants.AUTH_FLAG.REGISTER);
     }
 
     @Override

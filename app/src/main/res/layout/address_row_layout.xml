@@ -29,21 +29,21 @@
         android:orientation="vertical">
 
         <TextView
-            fontPath="@string/font_lato_regular"
+            fontPath="@string/font_app_regular"
             android:id="@+id/view_my_address_row_item_name"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textColor="@color/address_text_selector"
-            android:textSize="@dimen/text_size_xxxxlarge"
+            android:textSize="@dimen/text_size_xxlarge"
             tools:text="Address 1" />
 
         <TextView
-            fontPath="@string/font_lato_light"
+            fontPath="@string/font_app_light"
             android:id="@+id/view_my_address_row_item_text"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textColor="@color/gray_address_subtitle_text"
-            android:textSize="@dimen/text_size_xlarge"
+            android:textSize="@dimen/text_size_large"
             tools:text="some address" />
 
         <!-- remove text and express delivery layout below, uncomment to implement-->

@@ -55,7 +55,13 @@ public class CreatePaymentTransaction {
         }
 
         public boolean isPaid() {
-            return getD().getResult() && getD().isAuthenticated() && getD().getValue().getIsPaid() == null ? false : getD().getValue().getIsPaid();
+
+            if (getD().getValue().getIsPaid()!=null){
+                return getD().getResult() && getD().isAuthenticated() && getD().getValue().getIsPaid() == null ? false : getD().getValue().getIsPaid();
+
+            }else{
+                return getD().getResult() && getD().isAuthenticated() && getD().getValue().getTransactionIsPaid() == null ? false : getD().getValue().getTransactionIsPaid();
+            }
         }
 
     }

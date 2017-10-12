@@ -129,9 +129,10 @@
                                                 android:overScrollMode="never" />
 
                                             <ImageView
+                                                android:id="@+id/arrow_left"
                                                 android:layout_width="wrap_content"
                                                 android:layout_height="wrap_content"
-                                                android:src="@drawable/ic_arrow_down"
+                                                android:src="@drawable/ic_item_details_back_arrow"
                                                 android:layout_alignTop="@id/product_details_shared_image"
                                                 android:layout_alignLeft="@id/product_details_shared_image"
                                                 android:layout_marginTop="@dimen/activity_vertical_margin"
@@ -214,7 +215,7 @@
 
                                                 <TextView
                                                     android:id="@+id/productBrand"
-                                                    fontPath="@string/font_lato_semibold"
+                                                    fontPath="@string/font_app_semibold"
                                                     android:layout_width="wrap_content"
                                                     android:layout_height="wrap_content"
                                                     android:layout_gravity="start"
@@ -246,13 +247,13 @@
                                                     android:layout_gravity="end"
                                                     android:maxLines="1"
                                                     android:text=""
-                                                    android:textColor="@color/color_text_option"
+                                                    android:textColor="@color/colorAccent"
                                                     fontPath="@string/font_lato_bold"
                                                     android:textSize="@dimen/text_size_xxxxlarge" />
 
                                                 <TextView
                                                     android:id="@+id/productPreviousPrice"
-                                                    fontPath="@string/font_lato_light"
+                                                    fontPath="@string/font_app_light"
                                                     android:layout_width="wrap_content"
                                                     android:layout_height="wrap_content"
                                                     android:layout_gravity="end"
@@ -288,7 +289,7 @@
                                     android:layout_height="wrap_content"
                                     android:orientation="vertical"
                                     android:paddingBottom="@dimen/product_details_bottom_padding"
-                                    android:visibility="gone">
+                                    android:visibility="visible">
 
                                     <RelativeLayout
                                         android:id="@+id/sizes"
@@ -303,7 +304,7 @@
                                             android:layout_height="wrap_content">
 
                                             <TextView
-                                                fontPath="@string/font_lato_bold"
+                                                fontPath="@string/font_app_bold"
                                                 android:layout_width="wrap_content"
                                                 android:layout_height="wrap_content"
                                                 android:paddingLeft="10dp"
@@ -320,7 +321,7 @@
                                                 android:visibility="invisible" />
 
                                             <TextView
-                                                fontPath="@string/font_lato_black"
+                                                fontPath="@string/font_app_black"
                                                 android:layout_width="wrap_content"
                                                 android:layout_height="wrap_content"
                                                 android:layout_centerVertical="true"
@@ -360,7 +361,7 @@
                                         android:visibility="gone">
 
                                         <TextView
-                                            fontPath="@string/font_lato_bold"
+                                            fontPath="@string/font_app_bold"
                                             android:layout_width="wrap_content"
                                             android:layout_height="wrap_content"
                                             android:text="@string/estimated_delivery"
@@ -389,7 +390,7 @@
                                         android:visibility="gone">
 
                                         <TextView
-                                            fontPath="@string/font_lato_bold"
+                                            fontPath="@string/font_app_bold"
                                             android:layout_width="wrap_content"
                                             android:layout_height="wrap_content"
                                             android:text="@string/return_policy"
@@ -443,7 +444,7 @@
                                         android:visibility="gone">
 
                                         <TextView
-                                            fontPath="@string/font_lato_bold"
+                                            fontPath="@string/font_app_bold"
                                             android:layout_width="wrap_content"
                                             android:layout_height="wrap_content"
                                             android:text="available for"
@@ -466,7 +467,7 @@
                                                     android:layout_height="30dp" />
 
                                                 <TextView
-                                                    fontPath="@string/font_lato_bold"
+                                                    fontPath="@string/font_app_bold"
                                                     android:layout_width="wrap_content"
                                                     android:layout_height="wrap_content"
                                                     android:layout_gravity="center"
@@ -487,7 +488,7 @@
                                                     android:layout_height="30dp" />
 
                                                 <TextView
-                                                    fontPath="@string/font_lato_bold"
+                                                    fontPath="@string/font_app_bold"
                                                     android:layout_width="wrap_content"
                                                     android:layout_height="wrap_content"
                                                     android:layout_gravity="center"
@@ -535,7 +536,7 @@
                                         android:visibility="gone">
 
                                         <TextView
-                                            fontPath="@string/font_lato_bold"
+                                            fontPath="@string/font_app_bold"
                                             android:layout_width="wrap_content"
                                             android:layout_height="wrap_content"
                                             android:layout_margin="5dp"
@@ -569,7 +570,7 @@
                                         android:visibility="gone">
 
                                         <TextView
-                                            fontPath="@string/font_lato_bold"
+                                            fontPath="@string/font_app_bold"
                                             android:layout_width="wrap_content"
                                             android:layout_height="wrap_content"
                                             android:text="related items"
@@ -599,7 +600,7 @@
                                         android:visibility="gone">
 
                                         <TextView
-                                            fontPath="@string/font_lato_bold"
+                                            fontPath="@string/font_app_bold"
                                             android:layout_width="wrap_content"
                                             android:layout_height="wrap_content"
                                             android:text="customers also bought"
@@ -629,7 +630,7 @@
                                         android:visibility="gone">
 
                                         <TextView
-                                            fontPath="@string/font_lato_bold"
+                                            fontPath="@string/font_app_bold"
                                             android:layout_width="wrap_content"
                                             android:layout_height="wrap_content"
                                             android:text="reviews"
@@ -655,7 +656,7 @@
 
                                         <TextView
                                             android:id="@+id/see_more_text"
-                                            fontPath="@string/font_lato_bold"
+                                            fontPath="@string/font_app_bold"
                                             android:layout_width="wrap_content"
                                             android:layout_height="wrap_content"
                                             android:layout_below="@id/reviewsRecyclerView"
@@ -676,6 +677,7 @@
             </android.support.v4.widget.NestedScrollView>
 
             <ImageView
+                android:id="@+id/product_details_button_overlay"
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/default_button_height"
                 android:background="#a0ffffff"
@@ -684,7 +686,7 @@
             <Button
                 android:id="@+id/product_details_add_to_basket"
                 style="@style/DDButtonStyle"
-                fontPath="@string/font_lato_medium"
+                fontPath="@string/font_app_medium"
                 android:layout_width="match_parent"
                 android:layout_gravity="bottom"
                 android:layout_marginTop="10dp"

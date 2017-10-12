@@ -65,9 +65,6 @@ public class ViewContactsController extends BasePullToRefreshController implemen
     @BindView(R.id.no_contacts_placeholder)
     LinearLayout mPlaceholderLayout;
 
-    @BindView(R.id.controller_view_contacts_add_button)
-    Button mViewContactsNewMessage;
-
     @Inject
     ViewContactsMvpPresenter<ViewContactsMvpView> mPresenter;
 
@@ -154,10 +151,8 @@ public class ViewContactsController extends BasePullToRefreshController implemen
             mContactAdapter.replace(myContacts.getList());
             mViewContactsRecyclerView.setVisibility(View.VISIBLE);
             mPlaceholderLayout.setVisibility(View.GONE);
-            mViewContactsNewMessage.setVisibility(View.GONE);
         } else {
             mPlaceholderLayout.setVisibility(View.VISIBLE);
-            mViewContactsNewMessage.setVisibility(View.VISIBLE);
             mViewContactsRecyclerView.setVisibility(View.GONE);
         }
 
@@ -170,7 +165,7 @@ public class ViewContactsController extends BasePullToRefreshController implemen
         mViewContactsToolbarRightOption.setImageResource(R.drawable.ic_add);
     }
 
-    @OnClick({R.id.controller_view_contacts_add_button, R.id.partial_toolbar_filter_view})
+    @OnClick(R.id.partial_toolbar_filter_view)
     void addContact() {
         getRouter().pushController(RouterTransaction.with(AddContactController.newInstance())
                 .pushChangeHandler(new VerticalChangeHandler())

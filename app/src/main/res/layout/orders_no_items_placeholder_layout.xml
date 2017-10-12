@@ -23,7 +23,7 @@
             android:src="@drawable/ic_orders_placeholder"/>
 
         <TextView
-            fontPath="@string/font_lato_medium"
+            fontPath="@string/font_app_medium"
             android:id="@+id/welcome"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -32,15 +32,13 @@
             android:textSize="@dimen/text_size_xxxlarge"/>
 
         <TextView
-            fontPath="@string/font_lato_light"
+            fontPath="@string/font_app_light"
             android:textColor="#9f9f9f"
             android:textSize="@dimen/text_size_xlarge"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/you_currently_do_no_have_any_orders"
             android:layout_marginTop="10dp"
-            android:layout_marginBottom="@dimen/default_button_height"
-            android:paddingBottom="@dimen/default_button_height"
             android:layout_gravity="center"/>
 
     </LinearLayout>

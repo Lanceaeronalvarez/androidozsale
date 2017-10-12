@@ -3,30 +3,30 @@
     <string name="facebook_app_id">1650094968544406</string>
     <string name="facebook_app_secret">94da0f48bd2ffea25981e52c56f9260a</string>
     <string name="fb_login_protocol_scheme">fb1650094968544406</string>
+    <string name="fb_page_id">257280167216</string>
     <string name="default_country_id">DA</string>
     <string name="default_language_id">EN</string>
     <bool name="debug_mode">true</bool>
-    <string name="error">error</string>
     <string name="new_relic_app_token">AAa9d543732ff39dddc60c9cb9ad8c9cf22297904b</string>
 
-    <string name="font_lato_black">fonts/Lato-Black.ttf</string>
-    <string name="font_lato_black_italic">fonts/Lato-BlackItalic.ttf</string>
-    <string name="font_lato_bold">fonts/Lato-Bold.ttf</string>
-    <string name="font_lato_bold_italic">fonts/Lato-BoldItalic.ttf</string>
-    <string name="font_lato_hairline">fonts/Lato-Hairline.ttf</string>
-    <string name="font_lato_hairline_italic">fonts/Lato-HairlineItalic.ttf</string>
-    <string name="font_lato_heavy">fonts/Lato-Heavy.ttf</string>
-    <string name="font_lato_heavy_italic">fonts/Lato-HeavyItalic.ttf</string>
-    <string name="font_lato_italic">fonts/Lato-Italic.ttf</string>
-    <string name="font_lato_light">fonts/Lato-Light.ttf</string>
-    <string name="font_lato_light_italic">fonts/Lato-LightItalic.ttf</string>
-    <string name="font_lato_medium">fonts/Lato-Medium.ttf</string>
-    <string name="font_lato_medium_italic">fonts/Lato-MediumItalic.ttf</string>
-    <string name="font_lato_regular">fonts/Lato-Regular.ttf</string>
-    <string name="font_lato_semibold">fonts/Lato-Semibold.ttf</string>
-    <string name="font_lato_semibold_italic">fonts/Lato-SemiboldItalic.ttf</string>
-    <string name="font_lato_thin">fonts/Lato-Thin.ttf</string>
-    <string name="font_lato_thin_italic">fonts/Lato-ThinItalic.ttf</string>
+    <string name="font_app_black">fonts/App-Font-Black.ttf</string>
+    <string name="font_app_black_italic">fonts/App-Font-BlackItalic.ttf</string>
+    <string name="font_app_bold">fonts/App-Font-Bold.ttf</string>
+    <string name="font_app_bold_italic">fonts/App-Font-BoldItalic.ttf</string>
+    <string name="font_app_hairline">fonts/App-Font-Hairline.ttf</string>
+    <string name="font_app_hairline_italic">fonts/App-Font-HairlineItalic.ttf</string>
+    <string name="font_app_heavy">fonts/App-Font-Heavy.ttf</string>
+    <string name="font_app_heavy_italic">fonts/App-Font-HeavyItalic.ttf</string>
+    <string name="font_app_italic">fonts/App-Font-Italic.ttf</string>
+    <string name="font_app_light">fonts/App-Font-Light.ttf</string>
+    <string name="font_app_light_italic">fonts/App-Font-LightItalic.ttf</string>
+    <string name="font_app_medium">fonts/App-Font-Medium.ttf</string>
+    <string name="font_app_medium_italic">fonts/App-Font-MediumItalic.ttf</string>
+    <string name="font_app_regular">fonts/App-Font-Regular.ttf</string>
+    <string name="font_app_semibold">fonts/App-Font-Semibold.ttf</string>
+    <string name="font_app_semibold_italic">fonts/App-Font-SemiboldItalic.ttf</string>
+    <string name="font_app_thin">fonts/App-Font-Thin.ttf</string>
+    <string name="font_app_thin_italic">fonts/App-Font-ThinItalic.ttf</string>
 
     <string name="return_policy">Return Policy</string>
 
@@ -157,8 +157,9 @@
     <string name="welcome_to_my_address">welcome to my address!</string>
     <string name="delivery_address_added">delivery address added</string>
     <string name="remove_string">remove</string>
-    <string name="add_to_cart">Add to Cart</string>
-    <string name="add_to_cart_success">Item has been added to your cart</string>
+    <string name="add_to_basket">Add to Basket</string>
+    <string name="add_to_cart">Add to Basket</string>
+    <string name="add_to_cart_success">Item has been added to your basket</string>
     <string name="category_title">Categories</string>
 
     <!--ORDERS-->
@@ -222,7 +223,7 @@
     <string name="value">value</string>
     <string name="vouchers_view_detail">Invite your friends to join DEALSDIRECT. Once your friends have
         joined through your invitation and made their first purchase you will instantly receive a
-        PHP400 DEALSDIRECT voucher to use towards any future purchase. \n\nYou can apply any vouchers
+        $20 voucher to use towards any future purchase. \n\nYou can apply any vouchers
         currently in your account when you checkout your order. \n
     </string>
     <string name="apply">apply</string>
@@ -252,7 +253,7 @@
     <string name="invite_friends_title">Invite your Friends!</string>
 
     <string name="write_a_message_here">write a message here</string>
-    <string name="dealsdirect">DealsDirect</string>
+    <string name="exit_app_name">DealsDirect</string>
     <string name="exit_app">Exit app?</string>
     <string name="exit">exit</string>
     <string name="no">no</string>
@@ -280,6 +281,7 @@
     <string name="error_creating_message">Error creating message</string>
     <string name="invite_friends_tag">InviteFriendsController</string>
     <string name="checkout_controller">CheckoutController</string>
+    <string name="view_contacts_controller">ViewContactsController</string>
 
     <string-array name="genders">
         <item>Male</item>
@@ -322,6 +324,14 @@
     <string name="login_successfully">Logged In</string>
     <string name="paid">Paid</string>
     <string name="my_account">My Account</string>
-
-
+    <string name="your_order_number_is">Your order number is</string>
+    <string name="thank_you_for_shopping_with_deals_direct">Thank you for shopping with Deals Direct</string>
+    <string name="please_add_count_to_an_item">Please add count to an item to request return</string>
+    <string name="return_request_submitted">Return request submitted</string>
+    <string name="create_return">Create Return</string>
+    <string name="please_fill_up_field">Please fill up the field below</string>
+    <string name="no_internet_connection">no internet connection</string>
+    <string name="error">error</string>
+    <string name="remove_payment_method">Removed Payment Method</string>
+    <string name="password_does_not_match">Password does not match</string>
 </resources>

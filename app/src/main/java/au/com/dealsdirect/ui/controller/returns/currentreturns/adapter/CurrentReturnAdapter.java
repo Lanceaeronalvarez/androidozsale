@@ -74,18 +74,17 @@ public class CurrentReturnAdapter extends RecyclerView.Adapter<CurrentReturnView
         int orderNumber = mCurrentReturnList.get(position).getOrderNumber();
         String productRequestDate = mCurrentReturnList.get(position).getLastSavedDate();
         String returnRequestDateFormat = DateUtils.getTrimmedServerDateString(productRequestDate);
-        String isRequestApproved;
 
-        boolean isProductReturnRequestApprovedBoolean;
         Object isProductReturnRequestApprovedObject
                 = mCurrentReturnList.get(position).getApprovedDate();
 
-        if (isProductReturnRequestApprovedObject == null){
-            isProductReturnRequestApprovedBoolean = false;
-            isRequestApproved = "pending";
-        }else {
-            isProductReturnRequestApprovedBoolean = true;
-            isRequestApproved = "YES";
+        String productApproveDate = "";
+        String returnApproveDateFormat = "";
+
+        if (isProductReturnRequestApprovedObject != null){
+            productApproveDate = isProductReturnRequestApprovedObject.toString();
+            returnApproveDateFormat = DateUtils.getTrimmedServerDateString(productApproveDate);
+
         }
 
         String productRequestStatus = mCurrentReturnList.get(position).getReturnStatus();
@@ -95,7 +94,7 @@ public class CurrentReturnAdapter extends RecyclerView.Adapter<CurrentReturnView
         holder.currentReturnsRequestProductNameValueTextView.setText(productName);
         holder.currentReturnsRequestDateValueTextView.setText(returnRequestDateFormat);
 
-        holder.currentReturnsRequestIsApprovedValueTextView.setText(isRequestApproved);
+        holder.currentReturnsRequestIsApprovedValueTextView.setText(returnApproveDateFormat);
 
         holder.currentReturnsRequestStatusValueTextView.setText(productRequestStatus);
         holder.currentReturnsRequestRANValueTextView.setText(productRAN);
@@ -103,7 +102,7 @@ public class CurrentReturnAdapter extends RecyclerView.Adapter<CurrentReturnView
         if (mReturnDetailsResponseBodyList.size()!=0){
             updateHolderReturnItems(holder, position);
         }
-//ee
+
         holder.currentReturnProductItem.setOnClickListener(view -> mListener.onCurrentReturnClickListener(
                 orderNumber,
                 holder,
@@ -111,7 +110,7 @@ public class CurrentReturnAdapter extends RecyclerView.Adapter<CurrentReturnView
                 productRequestStatus,
                 productRAN,
                 returnRequestDateFormat,
-                isRequestApproved,
+                holder.currentReturnsRequestIsApprovedValueTextView.getText().toString(),
                 mCurrentReturnList.get(position).getID()));
 
         holder.currentReturnItemsRecyclerView.addOnItemTouchListener(new RecyclerView.OnItemTouchListener() {
@@ -129,7 +128,7 @@ public class CurrentReturnAdapter extends RecyclerView.Adapter<CurrentReturnView
                         productRequestStatus,
                         productRAN,
                         returnRequestDateFormat,
-                        isRequestApproved,
+                        holder.currentReturnsRequestIsApprovedValueTextView.getText().toString(),
                         mCurrentReturnList.get(position).getID());
             }
 

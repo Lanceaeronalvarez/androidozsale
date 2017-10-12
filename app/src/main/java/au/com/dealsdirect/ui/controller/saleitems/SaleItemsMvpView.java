@@ -22,4 +22,5 @@ public interface SaleItemsMvpView extends MvpView{
 
     void showProductDetails(RecyclerView.ViewHolder viewHolder, int position, String seoIdentifierId, String imageUrl, String skuId, String saleId);
 
+    void unbindPaginate();
 }

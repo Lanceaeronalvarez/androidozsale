@@ -13,7 +13,7 @@
             android:id="@+id/controller_search_popular_subheader"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:fontFamily="@string/font_lato_bold"
+            android:fontFamily="@string/font_app_bold"
             android:gravity="left"
             android:padding="10dp"
             android:text="@string/popular_products"
@@ -49,7 +49,7 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:fontFamily="@string/font_lato_bold"
+                android:fontFamily="@string/font_app_bold"
                 android:text="Sorry, today we can't find anything by your request."
                 android:textColor="#3e3e3e"
                 android:textSize="@dimen/text_size_large" />
@@ -59,7 +59,7 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
                 android:layout_margin="5dp"
-                android:fontFamily="@string/font_lato_bold"
+                android:fontFamily="@string/font_app_bold"
                 android:gravity="center"
                 android:text="Meanwhile, why not search for something else?"
                 android:textColor="@color/gray_description_text"

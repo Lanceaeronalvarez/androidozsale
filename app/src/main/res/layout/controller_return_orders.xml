@@ -28,7 +28,7 @@
         android:visibility="gone">
 
         <TextView
-            android:fontFamily="@string/font_lato_medium"
+            android:fontFamily="@string/font_app_medium"
             android:id="@+id/controller_return_order_title"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"

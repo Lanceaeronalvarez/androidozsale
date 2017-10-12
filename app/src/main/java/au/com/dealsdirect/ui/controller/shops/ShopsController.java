@@ -96,15 +96,17 @@ public class ShopsController extends BasePullToRefreshController implements Shop
 
     private GridLayoutManager mLayoutManager;
 
-    private List<GetCategoryTreeResponse> mPreLoadedCategories = new LinkedList<>();
-    private List<GetBannerResponse> sales = new LinkedList<>();
-    private Map<String, List<GetCategoryTreeResponse>> mCategoryMap = new HashMap<>();
+    private List<GetCategoryTreeResponse> mPreLoadedCategories;
+    private List<GetBannerResponse> sales;
+    private Map<String, List<GetCategoryTreeResponse>> mCategoryMap;
 
     private View child;
     private RelativeLayout item;
     private ImageView rightOption;
 
     private int mBannerClickCounter = 0;
+    private boolean isRefreshShop = false;
+    private int mPaginateManagerCounter = 0;
 
     BannerClickListener mBannerClickListener;
 
@@ -178,13 +180,17 @@ public class ShopsController extends BasePullToRefreshController implements Shop
         ((MainActivity) getActivity()).setDraggableViewPager(true);
         hideKeyboard();
 
+        mPreLoadedCategories = new LinkedList<>();
+        sales = new LinkedList<>();
+        mCategoryMap = new HashMap<>();
+
         mPaginateCallbacks = new Paginate.Callbacks() {
             @Override
             public void onLoadMore() {
                 // Load next page of data (e.g. network or database)
                 page++;
                 bannerOffset += newBannerCount; //load 10 banners every page
-                bannerLimit += newBannerCount;
+                bannerLimit = newBannerCount;
                 refresh();
             }
 
@@ -227,12 +233,21 @@ public class ShopsController extends BasePullToRefreshController implements Shop
         if (mPreLoadedCategories.size() == 0) {
             mPresenter.loadCategoryTree();
         }
+        setRetainViewMode(RetainViewMode.RETAIN_DETACH);
+
     }
 
     @Override
     public void refresh() {
         loadingInProgress = true;
         mPresenter.loadShopsBanner(mCategoryName, mCategoryID, bannerOffset, bannerLimit);
+    }
+
+    @Override
+    public void unBindPaginate() {
+        if(mPaginateManager != null) {
+            mPaginateManager.unbind();
+        }
     }
 
     @Override
@@ -339,10 +354,15 @@ public class ShopsController extends BasePullToRefreshController implements Shop
 
         loadingInProgress = false;
 
-        if (page == 0) {
+        if (page == 0 || isRefreshShop) {
             mBannersAdapter.replace(getBannerResponses);
+            if(mPaginateManager != null){
+                mPaginateManager.unbind();
+            }
             mPaginateManager = PaginateUtils.init(shopsControllerBannerRecyclerView, mPaginateCallbacks);
+            isRefreshShop = false;
         } else {
+
             mBannersAdapter.addAll(getBannerResponses);
 
             if (getBannerResponses.isEmpty()) {
@@ -390,7 +410,7 @@ public class ShopsController extends BasePullToRefreshController implements Shop
         super.onError(message);
 
         bannerOffset -= newBannerCount;
-        bannerLimit -= newBannerCount;
+        bannerLimit = newBannerCount;
         page--;
 
         loadingInProgress = false;
@@ -454,8 +474,9 @@ public class ShopsController extends BasePullToRefreshController implements Shop
         if (getCategoryTreeResponse.getKey() != null) {
 
             mPresenter.loadShopsBanner(getCategoryTreeResponse.getKey(), getCategoryTreeResponse.getId(), 0, 0);
-            if (mShopsControllerToolbarLogo != null)
+            if (mShopsControllerToolbarLogo != null) {
                 mShopsControllerToolbarLogo.setVisibility(View.GONE);
+            }
             mShopsControllerToolbarTextView.setVisibility(View.VISIBLE);
             mShopsControllerToolbarTextView.setText(getCategoryParentKey(getCategoryTreeResponse.getKey()));
             mShopsControllerHamburgerView.setImageDrawable(getActivity().getDrawable(R.drawable.ic_pink_chevron));
@@ -535,12 +556,12 @@ public class ShopsController extends BasePullToRefreshController implements Shop
     }
 
     public void loadShopBanners() {
-
-        mShopsControllerToolbarLogo.setVisibility(View.VISIBLE);
-        mShopsControllerToolbarTextView.setVisibility(View.GONE);
-        mShopsControllerHamburgerView.setImageDrawable(getActivity().getDrawable(R.drawable.ic_action_menu));
-        shopsControllerSearchView.setVisibility(View.VISIBLE);
-
+        if(isAttached()) {
+            mShopsControllerToolbarLogo.setVisibility(View.VISIBLE);
+            mShopsControllerToolbarTextView.setVisibility(View.GONE);
+            mShopsControllerHamburgerView.setImageDrawable(getActivity().getDrawable(R.drawable.ic_action_menu));
+            shopsControllerSearchView.setVisibility(View.VISIBLE);
+        }
         GetCategoryTreeResponse shopCategory = new GetCategoryTreeResponse();
         mPresenter.loadShopsBanner(shopCategory.getKey(), shopCategory.getId(), 0, 0);
     }
@@ -565,7 +586,8 @@ public class ShopsController extends BasePullToRefreshController implements Shop
     public void onRefreshStart() {
         super.onRefreshStart();
         shopsControllerBannerRecyclerView.setVisibility(View.GONE);
-
-        mPresenter.loadShopsBanner(mCategoryName, mCategoryID, 0, newBannerCount, true);
+        isRefreshShop = true;
+        bannerOffset = 0;
+        mPresenter.loadShopsBanner(mCategoryName, mCategoryID, bannerOffset, newBannerCount, true);
     }
 }

@@ -21,7 +21,5 @@ public interface HomeMvpView extends MvpView {
 
     void showCheckoutController();
 
-    void showLoginController(Router router, AuthHandler handler);
-
     void updateBasketItemCount();
 }

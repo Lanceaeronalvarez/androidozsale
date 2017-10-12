@@ -16,8 +16,8 @@ android {
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
         multiDexEnabled true
-        versionCode 1
-        versionName "0.9"
+        versionCode 63
+        versionName "2.3"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
         vectorDrawables.useSupportLibrary = true
     }
@@ -43,11 +43,21 @@ android {
 
     productFlavors {
         dealsDirectRC {
-            applicationId "au.com.dealsdirect.rc"
+            applicationId "au.com.dealsdirect"
         }
 
         dealsDirectTest {
             applicationId "au.com.dealsdirect.test"
+            buildConfigField "String", "API_ROOT", "\"https://genie-ui-dealsdirect-pre.mysaledev.com/\""
+            buildConfigField "String", "API_LEGACY", "\"https://api.mysaledev.com/public/v3.17/api.asmx/\""
+            buildConfigField "String", "ACCOUNT_ID", "\"A56B0D62-AEF6-4653-848E-2ECDDB6E9B8C\""
+        }
+
+        ooTest {
+            applicationId "au.com.oo.test"
+            buildConfigField "String", "API_ROOT", "\"https://genie-ui-oo-pre.mysaledev.com/\""
+            buildConfigField "String", "API_LEGACY", "\"https://api.mysaledev.com/public/v3.17/api.asmx/\""
+            buildConfigField "String", "ACCOUNT_ID", "\"25D201EB-9A1C-4045-90B6-E6A9F122C7CB\""
         }
 
         ooTest {

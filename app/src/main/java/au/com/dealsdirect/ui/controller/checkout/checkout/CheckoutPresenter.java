@@ -33,8 +33,6 @@ public class CheckoutPresenter<V extends CheckoutMvpView> extends BasePresenter<
     private boolean mFetchCartFinished = false;
     private boolean mFetchUserPaymentMethodsFinished = false;
     private Ourpay ourpay;
-    private boolean isPaymentsCalled = false;
-    private boolean isCartDetailsCalled = false;
 
     @Inject
     public CheckoutPresenter(DataManager dataManager, SchedulerProvider schedulerProvider,
@@ -44,7 +42,7 @@ public class CheckoutPresenter<V extends CheckoutMvpView> extends BasePresenter<
 
 
     @Override
-    public void start() {
+    public void callCartContent() {
         if (!isCartAlreadyLoadedOnce() && isViewAttached()) {
             getMvpView().showLoading();
         }
@@ -61,6 +59,8 @@ public class CheckoutPresenter<V extends CheckoutMvpView> extends BasePresenter<
                 .subscribe(new Consumer<GetCurrentOrder.ResponseValue>() {
                     @Override
                     public void accept(@NonNull GetCurrentOrder.ResponseValue responseValue) throws Exception {
+                        getMvpView().setCartIsLoading(false);
+
                         if (!isViewAttached()) {
                             return;
                         }
@@ -73,6 +73,9 @@ public class CheckoutPresenter<V extends CheckoutMvpView> extends BasePresenter<
                 }, new Consumer<Throwable>() {
                     @Override
                     public void accept(@NonNull Throwable throwable) throws Exception {
+
+                        getMvpView().setCartIsLoading(false);
+
                         if (!isViewAttached()) {
                             return;
                         }
@@ -114,7 +117,6 @@ public class CheckoutPresenter<V extends CheckoutMvpView> extends BasePresenter<
                             getMvpView().setPaymentList(responseValue.getUserPaymentMethods());
                             getMvpView().showPaymentDetails(responseValue.getD().getValue().getLastPaymentMethod());
                             mFetchUserPaymentMethodsFinished = true;
-                            isPaymentsCalled = true;
 
                         } else {
                             getMvpView().onError(responseValue.getD().getMessage());
@@ -149,6 +151,9 @@ public class CheckoutPresenter<V extends CheckoutMvpView> extends BasePresenter<
                 .subscribe(new Consumer<GetCurrentOrder.ResponseValue>() {
                     @Override
                     public void accept(@NonNull GetCurrentOrder.ResponseValue responseValue) throws Exception {
+
+                        getMvpView().setCartIsLoading(false);
+
                         if (!isViewAttached()) {
                             return;
                         }
@@ -159,6 +164,9 @@ public class CheckoutPresenter<V extends CheckoutMvpView> extends BasePresenter<
                 }, new Consumer<Throwable>() {
                     @Override
                     public void accept(@NonNull Throwable throwable) throws Exception {
+
+                        getMvpView().setCartIsLoading(false);
+
                         if (!isViewAttached()) {
                             return;
                         }
@@ -201,7 +209,8 @@ public class CheckoutPresenter<V extends CheckoutMvpView> extends BasePresenter<
 
         try {
 
-            ourpay.setUserAmount(value.getSummary().total);
+            if (value!=null)
+                ourpay.setUserAmount(value.getSummary().total);
 
             /* default */
             ourpay.setCanUse(value.getMyPayDetails().enabled);
@@ -276,7 +285,6 @@ public class CheckoutPresenter<V extends CheckoutMvpView> extends BasePresenter<
 
             if(!response.getD().getValue().isEmpty()) {
                 Value value = response.getD().getValue();
-                isCartDetailsCalled = true;
 
                 getMvpView().storeCartDetails(value);
 

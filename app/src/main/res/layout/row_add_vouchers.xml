@@ -27,7 +27,7 @@
 
             <TextView
                 android:id="@+id/row_add_vouchers_text_item_cost_value"
-                fontPath="@string/font_lato_bold"
+                fontPath="@string/font_app_bold"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:textColor="@color/white"
@@ -37,7 +37,7 @@
 
             <TextView
                 android:id="@+id/row_add_vouchers_text_item_desc"
-                fontPath="@string/font_lato_medium"
+                fontPath="@string/font_app_medium"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="5dp"
@@ -47,7 +47,7 @@
 
             <TextView
                 android:id="@+id/row_add_vouchers_text_item_expires_on_value"
-                fontPath="@string/font_lato_medium"
+                fontPath="@string/font_app_medium"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="2dp"

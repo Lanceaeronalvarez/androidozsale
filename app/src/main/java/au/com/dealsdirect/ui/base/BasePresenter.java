@@ -129,13 +129,13 @@ public class BasePresenter<V extends MvpView> implements MvpPresenter<V> {
     public void doApiCallForResponse(Observable observable, final ApiCallback callback) {
 //        getMvpView().showLoading();
 
-        if(getMvpView() instanceof BasePullToRefreshController) {
-            if(getMvpView().isNetworkConnected()) {
-                ((BasePullToRefreshController) getMvpView()).hideNoNetworkLayout();
-            } else {
-                ((BasePullToRefreshController) getMvpView()).showNoNetworkLayout();
-            }
-        }
+//        if(getMvpView() instanceof BasePullToRefreshController) {
+//            if(getMvpView().isNetworkConnected()) {
+//                ((BasePullToRefreshController) getMvpView()).hideNoNetworkLayout();
+//            } else {
+//                ((BasePullToRefreshController) getMvpView()).showNoNetworkLayout();
+//            }
+//        }
 
         getCompositeDisposable().add(observable
                 .subscribeOn(getSchedulerProvider().io())

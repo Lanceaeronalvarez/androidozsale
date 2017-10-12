@@ -1,5 +1,7 @@
 package au.com.dealsdirect.service.ourpay;
 
+import android.util.Log;
+
 import au.com.dealsdirect.data.network.model.checkout.getuserpaymentmethods.PaymentMethod;
 
 /**

@@ -5,21 +5,13 @@ import au.com.dealsdirect.BuildConfig;
 
 public final class ApiEndPoint {
 
-    //    private static final String TEST_API_LEGACY = "https://sbx-mob-api.mysaledev.com/public/v3.18/api.asmx/";
-    private static final String TEST_API_LEGACY = "https://api.mysaledev.com/public/v3.17/api.asmx/";
-//    private static final String LIVE_API_LEGACY = "https://api.apacsale.com/public/v3.18/api.asmx/";
-    private static final String LIVE_API_LEGACY = "https://www.dealsdirect.com.au/papi/public/v3.17/api.asmx/";
-
-    private static final String TEST_API_GENIE = "https://genie-ui-dealsdirect-pre.mysaledev.com/";
-    private static final String LIVE_API_GENIE = "https://www.dealsdirect.com.au/";
-
-    private static final String CATEGORY_TREE = "api/shop/shop/v1/accounts/A56B0D62-AEF6-4653-848E-2ECDDB6E9B8C/categorytree/";
-    private static final String SORTING = "api/shop/shop/v1/accounts/A56B0D62-AEF6-4653-848E-2ECDDB6E9B8C/sorting/";
-    private static final String SALES = "api/sale/sale/v1/accounts/A56B0D62-AEF6-4653-848E-2ECDDB6E9B8C/banners/";
-    private static final String PRODUCTS = "api/shop/shop/v1/accounts/A56B0D62-AEF6-4653-848E-2ECDDB6E9B8C/products";
-    private static final String PRODUCT_DETAILS = "api/shop/product/v1/accounts/A56B0D62-AEF6-4653-848E-2ECDDB6E9B8C/products/{seo_identifier}";
-    private static final String ADDTOCART = "api/shop/product/v1/accounts/A56B0D62-AEF6-4653-848E-2ECDDB6E9B8C/basket/items";
-    private static final String BASKET_QUANTITY = "api/shop/product/v1/accounts/A56B0D62-AEF6-4653-848E-2ECDDB6E9B8C/basket/items/quantity";
+    private static final String CATEGORY_TREE = "api/shop/shop/v1/accounts/" + BuildConfig.ACCOUNT_ID + "/categorytree/";
+    private static final String SORTING = "api/shop/shop/v1/accounts/" + BuildConfig.ACCOUNT_ID + "/sorting/";
+    private static final String SALES = "api/sale/sale/v1/accounts/" + BuildConfig.ACCOUNT_ID + "/banners/";
+    private static final String PRODUCTS = "api/shop/shop/v1/accounts/" + BuildConfig.ACCOUNT_ID + "/products";
+    private static final String PRODUCT_DETAILS = "api/shop/product/v1/accounts/" + BuildConfig.ACCOUNT_ID + "/products/{seo_identifier}";
+    private static final String ADDTOCART = "api/shop/product/v1/accounts/" + BuildConfig.ACCOUNT_ID + "/basket/items";
+    private static final String BASKET_QUANTITY = "api/shop/product/v1/accounts/" + BuildConfig.ACCOUNT_ID + "/basket/items/quantity";
     private static final String EVENTS = "api/shop/eventing/v1/events";
     private static final String USERS = "api/shop/eventing/v1/users/current";
 
@@ -178,25 +170,19 @@ public final class ApiEndPoint {
     public static final String MASTERPASS_PAYMENT = getBaseApiLegacy() + "MasterPassPayment";
     public static final String MASTERPASS_POST_TRANSACTION = getBaseApiLegacy() + "MasterPassPostTransaction";
 
+    /* 3DS */
+    public static final String GET_PAYMENT_METHOD_NONCE = getBaseApiLegacy() + "GetPaymentMethodNonce";
 
     private ApiEndPoint() {
          // This class is not publicly instantiable
     }
 
     private static String getBaseApiLegacy() {
-        if (BuildConfig.FLAVOR.contains("Test")) {
-            return TEST_API_LEGACY;
-        } else {
-            return LIVE_API_LEGACY;
-        }
+        return BuildConfig.API_LEGACY;
     }
 
     private static String getBaseApiGenie() {
-        if (BuildConfig.FLAVOR.contains("Test")) {
-            return TEST_API_GENIE;
-        } else {
-            return LIVE_API_GENIE;
-        }
+        return BuildConfig.API_ROOT;
     }
 
 }

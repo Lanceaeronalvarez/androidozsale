@@ -16,6 +16,7 @@ import au.com.dealsdirect.R;
 import au.com.dealsdirect.data.network.model.returns.returndetails.Item;
 import au.com.dealsdirect.ui.controller.returns.returndetails.viewholder.ReturnDetailsViewHolder;
 import au.com.dealsdirect.utils.ImageUtils;
+import au.com.dealsdirect.utils.LegacyStringImageUtils;
 import au.com.dealsdirect.utils.PriceUtils;
 
 /**
@@ -65,7 +66,7 @@ public class ReturnDetailsAdapter extends RecyclerView.Adapter<ReturnDetailsView
         Log.d("itemiterator", "position = "+position+ "itemssize  = "+itemSize +" , brandid = "+brandId+" , imageid = "+imageId );
 
 //
-        String imageUrl = ImageUtils.generateImageUrl(brandId,imageId,fileName);
+        String imageUrl = LegacyStringImageUtils.generateImageUrl(brandId,imageId,fileName);
         ImageUtils.loadImage(holder.myReturnsDetailsProductImageView.getContext(),imageUrl,holder.myReturnsDetailsProductImageView
         );
 

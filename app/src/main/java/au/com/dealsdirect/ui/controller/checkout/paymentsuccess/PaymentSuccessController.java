@@ -22,6 +22,7 @@ import au.com.dealsdirect.service.ourpay.OurpayState;
 import au.com.dealsdirect.ui.base.BaseActivity;
 import au.com.dealsdirect.ui.base.BaseController;
 import au.com.dealsdirect.ui.main.MainActivity;
+import au.com.dealsdirect.ui.main.PaymentInfo;
 import au.com.dealsdirect.utils.BundleBuilder;
 import au.com.dealsdirect.utils.DialogUtils;
 import au.com.dealsdirect.utils.PriceUtils;
@@ -29,7 +30,7 @@ import butterknife.BindView;
 import butterknife.OnClick;
 import timber.log.Timber;
 
-/**
+/*
  * Created by smartwave on 30/06/2017.
  */
 
@@ -39,6 +40,7 @@ public class PaymentSuccessController extends BaseController implements PaymentS
     private static final String KEY_PRICE = "Price";
     private static final String KEY_SHIPPING_FEE = "Shipping";
     private static final String KEY_INVOICE = "Invoice";
+    private static final String KEY_INVOICE_NUMBER = "InvoiceNumber";
     private static final String KEY_ESTIMATED_DELIVERY = "EstimatedDelivery";
     private static final int KEY_PLANNED_TRANSACTION_STATE_PAID = 2;
 
@@ -54,6 +56,12 @@ public class PaymentSuccessController extends BaseController implements PaymentS
     TextView mOrderNumber;
     @BindView(R.id.fragment_payment_success_estimated_delivery)
     TextView mEstimatedDelivery;
+    @BindView(R.id.payment_ourpay_success_detail_container)
+    LinearLayout mPaymentOurpaySuccessDetailContainer;
+    @BindView(R.id.payment_success_table_container)
+    LinearLayout mPaymentSuccessTableContainer;
+    @BindView(R.id.payment_success_order_number)
+    TextView mPaymentSuccessOrderNumber;
 
     MainActivity mActivity;
 
@@ -62,8 +70,6 @@ public class PaymentSuccessController extends BaseController implements PaymentS
     private String packageName;
     private String appUri;
 
-    private Ourpay mOurpay;
-    //
     private String mAddressString;
     private double mPrice;
     private double mShippingFee;
@@ -87,11 +93,12 @@ public class PaymentSuccessController extends BaseController implements PaymentS
     }
 
     public PaymentSuccessController(CreatePaymentTransaction.ResponseValue responseValue) {
+
         this(new BundleBuilder(new Bundle())
                 .putString(KEY_ADDRESS, responseValue.getD().getValue().getAddressString())
                 .putDouble(KEY_PRICE,  responseValue.getD().getValue().getOrderInfoResult().getTotal())
                 .putDouble(KEY_SHIPPING_FEE, responseValue.getD().getValue().getOrderInfoResult().getShipping())
-                .putString(KEY_INVOICE, responseValue.getD().getValue().getInvoiceNo())
+                .putString(KEY_INVOICE, responseValue.getD().getValue().getInvoiceNo() == null ? String.valueOf(responseValue.getD().getValue().getTransactionInvoiceNo()): responseValue.getD().getValue().getInvoiceNo())
                 .putString(KEY_ESTIMATED_DELIVERY, responseValue.getD().getValue().getOrderInfoResult().getEstimatedDeliveryText())
                 .build());
     }
@@ -109,15 +116,20 @@ public class PaymentSuccessController extends BaseController implements PaymentS
     protected void onViewBound(@NonNull View view) {
         super.onViewBound(view);
         mActivity = (MainActivity) getActivity();
-        mOurpay = ((MainActivity) getActivity()).getOurpay();
-        if (mOurpay != null && mOurpay.isCanUse()) {
-            getTotalPayment(mOurpay);
+
+        mPaymentSuccessOrderNumber.setText(mInvoiceString);
+        mPaymentOurpaySuccessDetailContainer.setVisibility(View.VISIBLE);
+
+        if (PaymentInfo.getOurpay() != null && PaymentInfo.getOurpay().isCanUse()) {
+            mPaymentSuccessTableContainer.setVisibility(View.GONE);
+            getTotalPayment(PaymentInfo.getOurpay());
             mPresenter.generateOurpay();
         }else{
             double totalPayment = mShippingFee+mPrice;
+            mPaymentSuccessTableContainer.setVisibility(View.GONE);
             mPriceTextView.setText(PriceUtils.getPriceStringValue(totalPayment));
         }
-
+        mEstimatedDelivery.setVisibility(View.GONE);
         setUp(view);
     }
 
@@ -189,17 +201,19 @@ public class PaymentSuccessController extends BaseController implements PaymentS
 
     @Override
     public void showOurpay() {
-        mOurpay.setState(OurpayState.POSTCART);
-        if (mOurpay != null) {
+        PaymentInfo.getOurpay().setState(OurpayState.POSTCART);
+        if (PaymentInfo.getOurpay() != null) {
             OurpayPanel ourpayPanel = new OurpayPanel((BaseActivity) getActivity());
             mLLOurpay.removeAllViews();
-            mLLOurpay.addView(ourpayPanel.generatePanel(mOurpay));
+            mLLOurpay.addView(ourpayPanel.generatePanel(PaymentInfo.getOurpay()));
         }
     }
 
 
     @OnClick(R.id.partial_continue_shopping_button)
     void onContinueShoppingClick() {
+        PaymentInfo.resetPaymentInfo();
+
         getRouter().popToTag("CheckoutController");
         ((MainActivity) getActivity()).setShopsAsVisibleContainer();
     }

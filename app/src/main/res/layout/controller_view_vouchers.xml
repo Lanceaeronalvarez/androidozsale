@@ -20,7 +20,7 @@
 
                 <TextView
                     android:id="@+id/controller_text_vouchers_desc"
-                    fontPath="@string/font_lato_light"
+                    fontPath="@string/font_app_light"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:padding="@dimen/activity_horizontal_margin"
@@ -58,7 +58,7 @@
 
                     <TextView
                         android:id="@+id/controller_text_used_voucher_indicator"
-                        fontPath="@string/font_lato_light"
+                        fontPath="@string/font_app_light"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginBottom="10dp"

@@ -49,7 +49,6 @@ public class AccountController extends BaseController implements AccountMvpView,
 
     public static final String TAG = "AccountController";
     private static final String KEY_TEXT = "AccountController.KEY_TEXT";
-    private AccountMvpView mAccountMvpView;
     AccountItemAdapter accountItemAdapter;
 
     @BindView(R.id.partial_toolbar_arrow_title)
@@ -78,6 +77,12 @@ public class AccountController extends BaseController implements AccountMvpView,
         super(args);
     }
 
+    @Override
+    protected void onAttach(@NonNull View view) {
+        mPresenter.onAttach(this);
+        super.onAttach(view);
+    }
+
     @NonNull
     @Override
     protected View inflateView(@NonNull LayoutInflater inflater, @NonNull ViewGroup container) {
@@ -86,8 +91,6 @@ public class AccountController extends BaseController implements AccountMvpView,
         getControllerComponent().inject(this);
 
         mPresenter.onAttach(this);
-        mAccountMvpView = this;
-
         return view;
     }
 
@@ -119,13 +122,6 @@ public class AccountController extends BaseController implements AccountMvpView,
         super.onDetach(view);
     }
 
-    @Override
-    protected void onActivityResumed(@NonNull Activity activity) {
-        super.onActivityResumed(activity);
-        mPresenter.onAttach(this);
-        mAccountMvpView = this;
-
-    }
 
     @Override
     public void showAccountItems(List<String> accountItems, int[] accountImages) {
@@ -176,7 +172,7 @@ public class AccountController extends BaseController implements AccountMvpView,
 
     @Override
     public void showMyPaymentsController() {
-        getRouter().pushController(RouterTransaction.with(new PaymentSelectController("", false))
+        getRouter().pushController(RouterTransaction.with(new PaymentSelectController("", false, ""))
                 .pushChangeHandler(new HorizontalChangeHandler())
                 .popChangeHandler(new HorizontalChangeHandler()));
     }
@@ -208,7 +204,7 @@ public class AccountController extends BaseController implements AccountMvpView,
                 mPresenter.onAccountItemClick(option);
                 ((MainActivity) getActivity()).callGCMRegisterSubscriber();
                 mFilterButton.setImageDrawable(getActivity().getResources().getDrawable(R.drawable.ic_logout));
-                ((MainActivity) getActivity()).getMainController().getHomeController().getPresenter().callGetBasketItemsQuantity();
+                ((MainActivity) getActivity()).getMainController().getHomeController().resetInviteRouter();
             }
 
             @Override
@@ -224,11 +220,15 @@ public class AccountController extends BaseController implements AccountMvpView,
             @Override
             public void success() {
                 mPresenter.loadAccountItems();
-                ((MainActivity) getActivity()).getMainController().getHomeController().setIsResetCheckout(true);
+                CartUtil.setValueToCart(0);
                 ((MainActivity) getActivity()).getMainController().getHomeController().removeBasketItemCount();
                 mFilterButton.setImageDrawable(getActivity().getResources().getDrawable(R.drawable.ic_login));
 
-                ((MainActivity) getActivity()).getMainController().getHomeController().showShopController();
+//                commented. in iOS when logging out, it stays on my accounts.
+//                ((MainActivity) getActivity()).getMainController().getHomeController().showShopController();
+
+                //reset routers with unique user info
+                ((MainActivity) getActivity()).getMainController().getHomeController().resetRouters();
                 CustomAlertDialog.showCustomAlertDialog(getActivity(),
                         CustomAlertDialog.CustomDialogIconState.POSITIVE,
                         getActivity().getString(R.string.logout_successful));  
@@ -259,7 +259,6 @@ public class AccountController extends BaseController implements AccountMvpView,
     public void promptLogin(){
         if(mPresenter.getIsAuthorized()) {
             triggerLogout();
-            CartUtil.setValueToCart(0);
         } else {
             ((MainMvpView)getActivity()).showLoginController(getRouter(),new AuthHandler() {
                 @Override
@@ -267,7 +266,6 @@ public class AccountController extends BaseController implements AccountMvpView,
                     mPresenter.onAttach(AccountController.this);
                     ((MainMvpView)getActivity()).callGCMRegisterSubscriber();
                     mFilterButton.setImageDrawable(getActivity().getResources().getDrawable(R.drawable.ic_logout));
-                    ((MainActivity) getActivity()).getMainController().getHomeController().getPresenter().callGetBasketItemsQuantity();
                     ((MainActivity) getActivity()).getMainController().getHomeController().initControllers(true);
                 }
 

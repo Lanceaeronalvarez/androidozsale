@@ -19,11 +19,12 @@ public class GetUserDetailsResponse {
     }
 
     public static class Response extends LegacyBaseResponseValue {
-        public Object Value;
+        public Value Value;
 
-        public Object getValue() {
+        public Value getValue() {
             return Value;
         }
+
     }
 
     public static class Value {

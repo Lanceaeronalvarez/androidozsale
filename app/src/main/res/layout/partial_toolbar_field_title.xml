@@ -46,7 +46,7 @@
 
         <au.com.dealsdirect.ui.custom.SearchEditText
             android:id="@+id/partial_toolbar_field_title_edittext"
-            fontPath="@string/font_lato_medium"
+            fontPath="@string/font_app_medium"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:clickable="true"

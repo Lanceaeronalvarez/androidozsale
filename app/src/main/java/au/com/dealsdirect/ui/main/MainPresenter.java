@@ -8,7 +8,6 @@ import android.content.Context;
 import android.util.Log;
 
 import com.androidnetworking.error.ANError;
-import com.bluelinelabs.conductor.Controller;
 import com.google.gson.Gson;
 import com.mysale.genie.utility.config.api.GetAppSettings;
 import com.mysale.genie.utility.config.api.GetAppSettingsSection;
@@ -26,16 +25,17 @@ import javax.inject.Inject;
 
 import au.com.dealsdirect.data.DataManager;
 import au.com.dealsdirect.data.auth.AuthHandler;
+import au.com.dealsdirect.data.network.AppApiCallback;
 import au.com.dealsdirect.data.network.model.checkout.CreatePaymentMethod;
 import au.com.dealsdirect.data.network.model.checkout.CreatePaymentTransaction;
 import au.com.dealsdirect.data.network.model.checkout.GetPaymentToken;
+import au.com.dealsdirect.data.network.model.checkout.getpaymentmethodnonce.GetPaymentMethodNonceRequest;
 import au.com.dealsdirect.data.network.model.legalities.GetTemplateTextsRequest;
 import au.com.dealsdirect.data.network.model.login.LoginEmail;
 import au.com.dealsdirect.data.network.model.login.LoginTicket;
 import au.com.dealsdirect.data.network.model.login.Logout;
 import au.com.dealsdirect.service.fcm.GNotification;
 import au.com.dealsdirect.ui.base.BasePresenter;
-import au.com.dealsdirect.ui.controller.checkout.checkout.CheckoutController;
 import au.com.dealsdirect.utils.IntrospectionUtils;
 import au.com.dealsdirect.utils.rx.SchedulerProvider;
 import io.reactivex.annotations.NonNull;
@@ -104,10 +104,6 @@ public class MainPresenter<V extends MainMvpView> extends BasePresenter<V> imple
                             getDataManager().setFollowUsFbLink(responseValue.getFollowUsFacebookLink());
                             getDataManager().setFollowUsTwitterLink(responseValue.getFollowUsTwitterLink());
                             getDataManager().setImageServerUrl(responseValue.getImageServerUrl());
-
-
-                            callAppSettingsWithAuthCheck();
-
                         }
                     }
 
@@ -136,7 +132,7 @@ public class MainPresenter<V extends MainMvpView> extends BasePresenter<V> imple
         getCompositeDisposable().add(getDataManager()
                 .callGetAppSettings(getDataManager().getCountryId())
                 .subscribeOn(getSchedulerProvider().io())
-                .subscribeOn(getSchedulerProvider().ui())
+                .observeOn(getSchedulerProvider().ui())
                 .subscribe(mAppSettingsAcceptCallback, mAppSettingsThrowableCallback));
     }
 
@@ -145,7 +141,7 @@ public class MainPresenter<V extends MainMvpView> extends BasePresenter<V> imple
         getCompositeDisposable().add(getDataManager()
                 .callGetPublicAppSettings(getDataManager().getCountryId())
                 .subscribeOn(getSchedulerProvider().io())
-                .subscribeOn(getSchedulerProvider().ui())
+                .observeOn(getSchedulerProvider().ui())
                 .subscribe(mAppSettingsAcceptCallback, mAppSettingsThrowableCallback));
     }
 
@@ -168,10 +164,6 @@ public class MainPresenter<V extends MainMvpView> extends BasePresenter<V> imple
                 getDataManager().setIsMyPayEnabled(value.getPayments().getMyPay().getEnabled());
             }
 
-            //Call GetPaymentToken
-            if (getDataManager().isAuthorized()) {
-                fetchBTAuthorization();
-            }
         }
     };
 
@@ -281,8 +273,6 @@ public class MainPresenter<V extends MainMvpView> extends BasePresenter<V> imple
     public void fetchBTAuthorization() {
         if (!getDataManager().isAuthorized()) return;
 
-//        getMvpView().showLoading();
-
         getCompositeDisposable().add(getDataManager()
                 .callGetPaymentToken(new GetPaymentToken.RequestValue(getDataManager().getLanguageId(), getDataManager().getCountryId()))
                 .subscribeOn(getSchedulerProvider().io())
@@ -290,6 +280,9 @@ public class MainPresenter<V extends MainMvpView> extends BasePresenter<V> imple
                 .subscribe(new Consumer<GetPaymentToken.ResponseValue>() {
                     @Override
                     public void accept(@NonNull GetPaymentToken.ResponseValue responseValue) throws Exception {
+
+                        PaymentInfo.setIsTokenFetching(false);
+
                         if (!isViewAttached()) {
                             return;
                         }
@@ -309,6 +302,8 @@ public class MainPresenter<V extends MainMvpView> extends BasePresenter<V> imple
                 }, new Consumer<Throwable>() {
                     @Override
                     public void accept(@NonNull Throwable throwable) throws Exception {
+                        PaymentInfo.setIsTokenFetching(false);
+
                         if (!isViewAttached()) {
                             return;
                         }
@@ -329,6 +324,34 @@ public class MainPresenter<V extends MainMvpView> extends BasePresenter<V> imple
                 })
         );
 
+    }
+
+    @Override
+    public void callGetPaymentMethodNonce(String token) {
+        doApiCallForResponse(getDataManager().callGetPaymentMethodNonce(new GetPaymentMethodNonceRequest(token)),
+                new AppApiCallback() {
+                    @Override
+                    public void onSuccess(Object response) {
+                        super.onSuccess(response);
+
+                        if (response instanceof JSONObject) {
+                            try {
+                                JSONObject jsonResponse = ((JSONObject) response).getJSONObject("d");
+
+                                if (jsonResponse.getBoolean("IsAuthenticated") && jsonResponse.getBoolean("Result")) {
+                                    getMvpView().showGetPaymentMethodNonceSuccess(jsonResponse.getJSONObject("Value").getString("Nonce"));
+                                }
+                            } catch (JSONException e) {
+                                e.printStackTrace();
+                            }
+                        }
+                    }
+                });
+    }
+
+    @Override
+    public boolean isDebug() {
+        return getDataManager().isDebugMode();
     }
 
     @Override
@@ -354,14 +377,9 @@ public class MainPresenter<V extends MainMvpView> extends BasePresenter<V> imple
                         getMvpView().performResetWithAuthFetch();
 
                         if (responseValue.getD().getResult()) {
-                            getMvpView().createPaymentTransactionSuccess(paymentType, responseValue);
+                            getMvpView().showCreatePaymentTransactionSuccess(paymentType, responseValue);
                         } else {
-                            getMvpView().callCreatePaymentTransactionError(responseValue.getD().getMessage());
-
-                            Controller controller = getMvpView().getCurrentController(getMvpView().getCurrentRouter());
-                            if(controller instanceof CheckoutController) {
-                                ((CheckoutController) controller).loadCart();
-                            }
+                            getMvpView().showCreatePaymentTransactionFailure(responseValue.getD().getMessage());
                         }
 
                     }
@@ -410,7 +428,7 @@ public class MainPresenter<V extends MainMvpView> extends BasePresenter<V> imple
                                 getMvpView().performResetWithAuthFetch();
 
                                 if ((responseValue.getResult() && responseValue.getIsAuthenticated())) {
-                                    getMvpView().createPaymentMethodSuccess(responseValue.getD().getValue().getLastPaymentMethod());
+                                    getMvpView().showCreatePaymentMethodSuccess(responseValue.getD().getValue().getLastPaymentMethod());
                                 } else {
                                     getMvpView().onError(responseValue.getMessage());
                                 }
@@ -453,9 +471,10 @@ public class MainPresenter<V extends MainMvpView> extends BasePresenter<V> imple
 
                                     if (responseValue.isSuccess()) {
                                         getDataManager().acknowledgeAuth(responseValue.getTicket());
+                                        // Call required post login api methods
+                                        getMvpView().loginSuccessMethods();
                                     } else {
                                         //On login ticket fail, call logout and go back to shop
-//                                RxBus.instance().post("shop_now");
                                         callLogout(null);
                                     }
                                 }
@@ -483,45 +502,51 @@ public class MainPresenter<V extends MainMvpView> extends BasePresenter<V> imple
     @Override
     public void callLogout(AuthHandler handler) {
 
-//        GCartUtil.setValueToCart(0);
-//        RxBus.instance().post("update_cart_items_immediate");
-//        RxBus.instance().post(Auth.EVENT_PRE_LOGOUT);
+        getMvpView().showLoading();
         getCompositeDisposable().add(getDataManager()
-                        .callLogout(new Logout.RequestValue())
-                        .subscribeOn(getSchedulerProvider().io())
-                        .observeOn(getSchedulerProvider().ui())
-                        .subscribe(new Consumer<Logout.ResponseValue>() {
-                            @Override
-                            public void accept(@NonNull Logout.ResponseValue responseValue) throws Exception {
-                                if (!isViewAttached()) {
-                                    return;
-                                }
+                .callLogout(new Logout.RequestValue())
+                .subscribeOn(getSchedulerProvider().io())
+                .observeOn(getSchedulerProvider().ui())
+                .subscribe(new Consumer<Logout.ResponseValue>() {
+                    @Override
+                    public void accept(@NonNull Logout.ResponseValue responseValue) throws Exception {
+                        if (!isViewAttached()) {
+                            return;
+                        }
 
-                                getDataManager().revokeAuth();
-                                if (handler != null) {
-                                    handler.success();
-                                }
-//                RxBus.instance().post(Auth.EVENT_LOGOUT);
-//                RxBus.instance().post(GVersion.EVENT_LOGOUT);
-                            }
-                        }, new Consumer<Throwable>() {
-                            @Override
-                            public void accept(@NonNull Throwable throwable) throws Exception {
-                                if (!isViewAttached()) {
-                                    return;
-                                }
+                        getMvpView().hideLoading();
 
-                                handler.error();
-                                getMvpView().hideLoading();
-                                getMvpView().onError(throwable.getMessage());
+                        //Remove login ticket
+                        getDataManager().revokeAuth();
+                        //Clear payment info
+                        PaymentInfo.resetPaymentInfo();
+                        //Clear braintree
+                        getMvpView().performBraintreeReset();
+                        //Call Public App Settings
+                        callGetPublicAppSettings();
 
-                                // handle load accounts error here
-                                if (throwable instanceof ANError) {
-                                    ANError anError = (ANError) throwable;
-                                    handleApiError(anError);
-                                }
-                            }
-                        })
+                        if (handler != null) {
+                            handler.success();
+                        }
+                    }
+                }, new Consumer<Throwable>() {
+                    @Override
+                    public void accept(@NonNull Throwable throwable) throws Exception {
+                        if (!isViewAttached()) {
+                            return;
+                        }
+
+                        handler.error();
+                        getMvpView().hideLoading();
+                        getMvpView().onError(throwable.getMessage());
+
+                        // handle load accounts error here
+                        if (throwable instanceof ANError) {
+                            ANError anError = (ANError) throwable;
+                            handleApiError(anError);
+                        }
+                    }
+                })
         );
     }
 
@@ -539,10 +564,9 @@ public class MainPresenter<V extends MainMvpView> extends BasePresenter<V> imple
                 .subscribe(getTemplateTextsResponse -> {
                     getDataManager().setMyPayTemplateTexts(getTemplateTextsResponse.getResponse().getValue());
                     getMvpView().storeTemplateTexts(getTemplateTextsResponse.getResponse().getValue());
-                    Log.d("mainpresenter", " getTemplatetexts success");
 
                 }, throwable -> {
-                    Log.d("mainpresenter", " getTemplatetexts failed = "+throwable.getMessage());
+                    Log.d("mainpresenter", " getTemplatetexts failed = " + throwable.getMessage());
                 }));
     }
 
@@ -558,17 +582,6 @@ public class MainPresenter<V extends MainMvpView> extends BasePresenter<V> imple
         }
     }
 
-
-    @Override
-    public void callAppSettingsWithAuthCheck() {
-        //if auth is logged in, app settings call, else public app settings
-        if (isAuthorized()) {
-            callGetAppSettings();
-        } else {
-            callGetPublicAppSettings();
-        }
-    }
-
     @Override
     public String getKountMerchantId() {
         return getDataManager().isKountEnabled() ? getDataManager().getKountMerchantId() : "";
@@ -579,10 +592,11 @@ public class MainPresenter<V extends MainMvpView> extends BasePresenter<V> imple
         return getDataManager().isAuthorized();
     }
 
+
     private static JSONArray constructArrayToJsonArray(String[] templateTextsKeys) {
 
         JSONArray jsonArray = new JSONArray();
-        for (int i=0; i<templateTextsKeys.length; i++) {
+        for (int i = 0; i < templateTextsKeys.length; i++) {
             try {
                 jsonArray.put(i, templateTextsKeys[i]);
             } catch (JSONException e) {
@@ -592,7 +606,7 @@ public class MainPresenter<V extends MainMvpView> extends BasePresenter<V> imple
         return jsonArray;
     }
 
-    public boolean getIsMyPayEnabled(){
+    public boolean getIsMyPayEnabled() {
         return getDataManager().getIsMyPayEnabled();
     }
 }

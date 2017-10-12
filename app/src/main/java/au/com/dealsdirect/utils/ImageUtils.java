@@ -14,18 +14,10 @@ import android.widget.ImageView;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.Priority;
 import com.bumptech.glide.load.DecodeFormat;
-import com.bumptech.glide.load.ResourceEncoder;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
-import com.bumptech.glide.load.engine.Resource;
 import com.bumptech.glide.load.resource.bitmap.BitmapEncoder;
 import com.bumptech.glide.request.RequestListener;
-import com.bumptech.glide.request.animation.GlideAnimation;
-import com.bumptech.glide.request.target.SimpleTarget;
 import com.bumptech.glide.request.target.Target;
-
-import java.io.OutputStream;
-import java.io.UnsupportedEncodingException;
-import java.net.URLEncoder;
 
 
 public class ImageUtils {
@@ -60,14 +52,7 @@ public class ImageUtils {
                 .skipMemoryCache(true)
                 .dontAnimate()
                 .format(DecodeFormat.PREFER_RGB_565)
-                .into(new SimpleTarget<Bitmap>() {
-
-                    @Override
-                    public void onResourceReady(Bitmap arg0, GlideAnimation<? super Bitmap> arg1) {
-                        // TODO Auto-generated method stub
-                        imageView.setImageBitmap(arg0);
-                    }
-                });
+                .into(imageView);
     }
 
     public static void loadImageWithPlaceholder(Context context, String url, ImageView imageView, Drawable placeholder,
@@ -196,27 +181,6 @@ public class ImageUtils {
         AppLogger.d("IMG " + String.format("width: %d height: %d screenWidth: %d scale: %f computedHeight: %d", width, height, screenWidth, scale, computedHeight));
 
         return computedHeight;
-    }
-
-    public static String generateImageUrl(String brandId, String imageId, String imageFilename) {
-        String encodedImageFilename;
-
-        try {
-            encodedImageFilename = URLEncoder.encode(imageFilename, "UTF-8");
-        } catch (UnsupportedEncodingException e) {
-            e.printStackTrace();
-            encodedImageFilename = "";
-        }
-        encodedImageFilename = encodedImageFilename.replace("+", "%20");
-
-//        String urlString =  Prefs.getString(IMAGE_SERVER_URL, "https://c1.mysalec.com/brands/")
-        String urlString = "https://c1.mysalec.com/"
-                + "brands/"
-                + brandId + "/"
-                + imageId + "/"
-                + encodedImageFilename;
-
-        return urlString;
     }
 
     /**

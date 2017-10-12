@@ -38,6 +38,7 @@ import au.com.dealsdirect.data.network.model.invite.SetInviteRequest;
 import au.com.dealsdirect.data.network.model.invite.SetInviteResponse;
 import au.com.dealsdirect.ui.base.BasePullToRefreshController;
 import au.com.dealsdirect.ui.custom.CustomAlertDialog;
+import au.com.dealsdirect.ui.main.MainActivity;
 import au.com.dealsdirect.utils.BundleBuilder;
 import butterknife.BindView;
 
@@ -181,6 +182,10 @@ public class InviteSendController extends BasePullToRefreshController implements
 
     @Override
     protected void setUp(View view) {
+
+        assert (getActivity()) != null;
+        ((MainActivity) getActivity()).getMainController().showBottomNav();
+
         mTitleText.setText("Invite Friends");
         mFilterView.setVisibility(View.INVISIBLE);
         mArrowImage.setVisibility(View.INVISIBLE);
@@ -227,7 +232,7 @@ public class InviteSendController extends BasePullToRefreshController implements
 
                 Intent tweetIntent = new Intent(Intent.ACTION_SEND);
                 tweetIntent.putExtra(Intent.EXTRA_TEXT, messageWithInvite);
-                tweetIntent.putExtra(Intent.EXTRA_STREAM, Uri.parse(bannerImageUrl != null ? bannerImageUrl : ""));
+//                tweetIntent.putExtra(Intent.EXTRA_STREAM, Uri.parse(bannerImageUrl != null ? bannerImageUrl : ""));
                 tweetIntent.setType("text/plain");
 
                 PackageManager packManager = getActivity().getPackageManager();
@@ -456,6 +461,7 @@ public class InviteSendController extends BasePullToRefreshController implements
         bannerImageUrl = inviteBody.getBannerUrl();
 
         mPersonalInvitationLinkEditText.setText(inviteLink);
+        mPersonalInvitationMessageEditText.setText(inviteMessage);
         mSendInvitationContainer.setVisibility(View.VISIBLE);
         mPersonalInvitationLinkEditText.addTextChangedListener(mTextWatcher);
     }

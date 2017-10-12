@@ -13,7 +13,7 @@
 
     <au.com.dealsdirect.ui.custom.CircularTextView
         android:id="@+id/my_contact_history_row_message_acronym"
-        fontPath="@string/font_lato_heavy"
+        fontPath="@string/font_app_heavy"
         android:layout_width="40dp"
         android:layout_height="40dp"
         android:layout_gravity="bottom"
@@ -22,7 +22,7 @@
 
     <TextView
         android:id="@+id/my_contact_history_row_message_text_view"
-        fontPath="@string/font_lato_light"
+        fontPath="@string/font_app_light"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="10dp"

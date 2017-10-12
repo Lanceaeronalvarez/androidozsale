@@ -32,14 +32,15 @@ import au.com.dealsdirect.utils.JsonUtils;
 import butterknife.BindView;
 import butterknife.OnClick;
 
-/**
+/*
  * Created by smartwave on 30/06/2017.
  */
 
 public class PaymentSelectController extends BasePullToRefreshController implements PaymentSelectMvpView {
 
-    private static final String PAYMENT_METHODS = "PaymentMethods";
-    private final static String IS_FROM_CART = "IsFromCart";
+    private final static String PAYMENT_METHODS = "payment_methods";
+    private final static String IS_FROM_CART = "is_from_cart";
+    private final static String CART_TOTAL_COST = "cart_total_cost";
 
     @Inject
     PaymentSelectMvpPresenter<PaymentSelectMvpView> mPresenter;
@@ -55,28 +56,32 @@ public class PaymentSelectController extends BasePullToRefreshController impleme
     @BindView(R.id.no_payment_method_placeholder)
     LinearLayout mNoPaymentPlaceholder;
 
-    PaymentSelectAdapter mAdapter;
-    MainActivity mActivity;
+    private PaymentSelectAdapter mAdapter;
+    private MainActivity mActivity;
 
     private ArrayList<PaymentMethod> mPaymentMethods = new ArrayList<>();
     private boolean isFromCart = false;
+    private String mCartTotalCost;
 
 
-    public PaymentSelectController(String paymentMethodsJsonString, boolean isFromCart) {
+    public PaymentSelectController(String paymentMethodsJsonString, boolean isFromCart, String cartCost) {
         this(new BundleBuilder(new Bundle())
                 .putString(PAYMENT_METHODS, paymentMethodsJsonString)
                 .putBoolean(IS_FROM_CART, isFromCart)
+                .putString(CART_TOTAL_COST, cartCost)
                 .build());
     }
 
     public PaymentSelectController(Bundle args) {
         super(args);
-        mPaymentMethods = JsonUtils.convertStringToObject(args.getString(PAYMENT_METHODS), new TypeToken<ArrayList<PaymentMethod>>() {
-        }.getType());
+
+        mPaymentMethods = JsonUtils.convertStringToObject(args.getString(PAYMENT_METHODS), new TypeToken<ArrayList<PaymentMethod>>() {}.getType());
+
         if (mPaymentMethods == null) {
             mPaymentMethods = new ArrayList<>();
         }
         isFromCart = args.getBoolean(IS_FROM_CART);
+        mCartTotalCost = args.getString(CART_TOTAL_COST, "");
     }
 
     @Override
@@ -113,16 +118,16 @@ public class PaymentSelectController extends BasePullToRefreshController impleme
     @Override
     public void showPaymentList(List<PaymentMethod> paymentMethods) {
         int backstackSize = getRouter().getBackstackSize();
-        String checkoutTag = getRouter().getBackstack().get(backstackSize-1).tag();
+        String checkoutTag = getRouter().getBackstack().get(backstackSize - 1).tag();
 
         if (paymentMethods != null && paymentMethods.size() > 0) {
             mPaymentMethods = new ArrayList<>(paymentMethods);
             mAdapter.replaceData(mPaymentMethods);
             showPaymentMethodsPlaceholder(false);
         } else if (checkoutTag == getActivity().getString(R.string.checkout_controller)
-                        && (paymentMethods == null
-                        || paymentMethods.size() == 0)) {
-            getRouter().pushController(RouterTransaction.with(new AddPaymentController(false))
+                && (paymentMethods == null
+                || paymentMethods.size() == 0)) {
+            getRouter().pushController(RouterTransaction.with(new AddPaymentController(isFromCart, mCartTotalCost))
                     .pushChangeHandler(new HorizontalChangeHandler())
                     .popChangeHandler(new HorizontalChangeHandler()));
         } else if (paymentMethods.size() == 0) {
@@ -130,8 +135,8 @@ public class PaymentSelectController extends BasePullToRefreshController impleme
         }
     }
 
-    private void showPaymentMethodsPlaceholder(boolean val){
-        if(val) {
+    private void showPaymentMethodsPlaceholder(boolean val) {
+        if (val) {
             mNoPaymentPlaceholder.setVisibility(View.VISIBLE);
             mRecyclerView.setVisibility(View.GONE);
         } else {
@@ -145,10 +150,12 @@ public class PaymentSelectController extends BasePullToRefreshController impleme
         mActivity.setPaymentMethodSelected(null);
 
         if (result) {
+            CustomAlertDialog.showCustomAlertDialog(mActivity, CustomAlertDialog.CustomDialogIconState.POSITIVE, mActivity.getString(R.string.remove_payment_method));
+
             mPaymentMethods.remove(paymentMethod);
             mAdapter.notifyDataSetChanged();
 
-            if(mAdapter.getItemCount() == 0){
+            if (mAdapter.getItemCount() == 0) {
                 showPaymentMethodsPlaceholder(true);
             }
 
@@ -189,8 +196,7 @@ public class PaymentSelectController extends BasePullToRefreshController impleme
     @OnClick(R.id.partial_toolbar_arrow_view)
     public void onBackClick() {
         hideKeyboard();
-        if (getActivity()!=null){
-            ((MainActivity)getActivity()).getMainController().getHomeController().setIsResetCheckout(false);
+        if (getActivity() != null) {
             getActivity().onBackPressed();
 
         }
@@ -198,9 +204,8 @@ public class PaymentSelectController extends BasePullToRefreshController impleme
 
     @OnClick(R.id.partial_toolbar_filter_view)
     public void onAddPaymentMethod() {
-        getRouter().pushController(RouterTransaction.with(new AddPaymentController(isFromCart))
+        getRouter().pushController(RouterTransaction.with(new AddPaymentController(isFromCart, mCartTotalCost))
                 .pushChangeHandler(new HorizontalChangeHandler())
                 .popChangeHandler(new HorizontalChangeHandler()));
     }
-
 }

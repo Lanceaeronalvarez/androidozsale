@@ -11,13 +11,13 @@ import android.support.v4.util.Pair;
 import android.support.v4.widget.NestedScrollView;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.view.animation.LinearInterpolator;
+import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.widget.Button;
@@ -44,7 +44,6 @@ import au.com.dealsdirect.R;
 import au.com.dealsdirect.data.auth.AuthHandler;
 import au.com.dealsdirect.data.network.model.saleitemdetails.AddToCartRequest;
 import au.com.dealsdirect.data.network.model.saleitemdetails.GetSaleItemDetailsResponse;
-import au.com.dealsdirect.data.network.model.saleitems.GetSaleItemsResponse;
 import au.com.dealsdirect.service.ourpay.Ourpay;
 import au.com.dealsdirect.service.ourpay.OurpayPanel;
 import au.com.dealsdirect.ui.base.BaseActivity;
@@ -61,8 +60,6 @@ import au.com.dealsdirect.utils.PriceUtils;
 import au.com.dealsdirect.widget.ElasticDragDismissFrameLayout;
 import butterknife.BindView;
 import butterknife.OnClick;
-
-import static android.app.Activity.RESULT_OK;
 
 /*
  * Created by smartwave on 08/06/2017.
@@ -102,7 +99,7 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
     @BindView(R.id.productImageRecyclerView)
     RecyclerViewPager mProductImagesRv;
     @BindView(R.id.otherImagesRecyclerView)
-    public RecyclerView mOtherImagesRv;
+    RecyclerView mOtherImagesRv;
     @BindView(R.id.productName)
     TextView mProductName;
     @BindView(R.id.productBrand)
@@ -147,6 +144,8 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
     NestedScrollView mProductDetailScrollView;
     @BindView(R.id.product_details_add_to_basket)
     Button mAddToCartButton;
+    @BindView(R.id.product_details_button_overlay)
+    ImageView mAddToCartOverlay;
 
     @BindView(R.id.image_container)
     FrameLayout mImageContainerViewGroup;
@@ -250,7 +249,6 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
         mRootView = ((ElasticDragDismissFrameLayout) view);
 
         mActivity = (MainActivity)getActivity();
-        mActivity.getMainController().setViewpagerDraggable(false);
         //product info
         mProductName.setText(mSaleName);
 
@@ -286,24 +284,34 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
         mOtherImagesRv.setLayoutManager(new LinearLayoutManager(getActivity(), LinearLayoutManager.HORIZONTAL, false));
         mSaleItemImagesIndicatorAdapter = new SaleItemDetailsImageAdapter(null, loadImagesListener, new ArrayList<>(), mSaleId, 2, null);
         mOtherImagesRv.setAdapter(mSaleItemImagesIndicatorAdapter);
+        mOtherImagesRv.setVisibility(View.INVISIBLE);
 
         mProductImagesRvLayoutManager = new LinearLayoutManager(getActivity(), LinearLayoutManager.HORIZONTAL, false);
         mProductImagesRv.setLayoutManager(mProductImagesRvLayoutManager);
-        mSaleItemImagesAdapter = new SaleItemDetailsImageAdapter(new ArrayList<View>(){{add(mOtherImagesRv); add(mAddToCartButton);}}, loadImagesListener, new ArrayList<>(), mSaleId, 1, mProductSharedImage.getDrawable());
+        mSaleItemImagesAdapter = new SaleItemDetailsImageAdapter(new ArrayList<View>(){{add(mOtherImagesRv);
+            add(mAddToCartButton); add(mProductPriceCategory); add(mAddToCartOverlay);}}, loadImagesListener,
+                new ArrayList<>(), mSaleId, 1, mProductSharedImage.getDrawable());
         mProductImagesRv.setAdapter(mSaleItemImagesAdapter);
+        mProductImagesRv.setEnabled(false);
+        mProductImagesRv.setOverScrollMode(View.OVER_SCROLL_NEVER);
+
 
         mProductImagesRv.addOnPageChangedListener((i, i1) -> {
-            SaleItemDetailsImageAdapter.ViewHolder vhNew = (SaleItemDetailsImageAdapter.ViewHolder) mOtherImagesRv.findViewHolderForLayoutPosition(i1);
-            vhNew.image.setImageResource(R.drawable.circle_indicator_active);
+                SaleItemDetailsImageAdapter.ViewHolder vhNew = (SaleItemDetailsImageAdapter.ViewHolder) mOtherImagesRv.findViewHolderForLayoutPosition(i1);
+                vhNew.image.setImageResource(R.drawable.circle_indicator_active);
 
-            SaleItemDetailsImageAdapter.ViewHolder vhOld = (SaleItemDetailsImageAdapter.ViewHolder) mOtherImagesRv.findViewHolderForLayoutPosition(i);
-            vhOld.image.setImageResource(R.drawable.circle_indicator_inactive);
+                SaleItemDetailsImageAdapter.ViewHolder vhOld = (SaleItemDetailsImageAdapter.ViewHolder) mOtherImagesRv.findViewHolderForLayoutPosition(i);
+                if (vhOld != null && vhOld.image != null) {
+                    vhOld.image.setImageResource(R.drawable.circle_indicator_inactive);
+                }
         });
 
         mHtmlHeader = getActivity().getResources()
                 .getString(R.string.base_html_template_header);
         mHtmlFooter = getActivity().getResources()
                 .getString(R.string.base_html_template_footer);
+
+        setRetainViewMode(RetainViewMode.RETAIN_DETACH);
     }
 
     @Override
@@ -324,15 +332,18 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
         String shippingPricing = saleDetail.getPricing();
         String returnPolicy = saleDetail.getReturnPolicy();
         String productAbout = saleDetail.getAttributes() == null ? "" : saleDetail.getAttributes().getBrandDescription() == null ? "" : saleDetail.getAttributes().getBrandDescription();
+        String name = saleDetail.getName() == null ? "" : saleDetail.getName();
+        String branName = saleDetail.getBrandName() == null ? "" : saleDetail.getBrandName();
 
-        mProductName.setText(saleDetail.getName().trim());
-        mProductBrand.setText(saleDetail.getBrandName().trim());
+        mProductName.setText(name.trim());
+        mProductBrand.setText(branName.trim());
         mProductPrice.setText(PriceUtils.getPriceStringValue(saleDetail.getPrice().getValue()));
         mProductPreviousPrice.setText(PriceUtils.getRpStringValue(saleDetail.getOriginalPrice().getValue()));
 
         if (shippingInformation != null) {
 
             mShippingContainer.setVisibility(View.VISIBLE);
+            mShippingDescText.setLayerType(View.LAYER_TYPE_SOFTWARE, null);
             mShippingDescText.startAnimation(anim);
 
             if(deliveryInformation == null){
@@ -342,6 +353,7 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
             }
 
             mProductPricing.setVisibility(View.VISIBLE);
+            mProductAboutPricing.setLayerType(View.LAYER_TYPE_SOFTWARE, null);
             mProductAboutPricing.startAnimation(anim);
             mProductAboutPricing.loadData(mHtmlHeader + shippingPricing + mHtmlFooter, "text/html; charset=UTF-8", null);
 
@@ -349,12 +361,14 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
 
         if(returnPolicy != null){
             mReturnPolicyContainer.setVisibility(View.VISIBLE);
+            mReturnPolicyText.setLayerType(View.LAYER_TYPE_SOFTWARE, null);
             mReturnPolicyText.startAnimation(anim);
             mReturnPolicyText.loadData(mHtmlHeader + returnPolicy + mHtmlFooter, "text/html; charset=UTF-8", null);
         }
 
         if(!productAbout.isEmpty()){
             mProductAboutContainer.setVisibility(View.VISIBLE);
+            mProductAboutText.setLayerType(View.LAYER_TYPE_SOFTWARE, null);
             mProductAboutText.startAnimation(anim);
             mProductAboutText.loadData(mHtmlHeader + productAbout + mHtmlFooter, "text/html; charset=UTF-8", null);
         }
@@ -364,6 +378,7 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
         mSaleItemImagesAdapter.replaceData(qualitySaleImages);
         mSaleItemImagesIndicatorAdapter.replaceData(qualitySaleImages);
 
+        mProductDescriptionText.setLayerType(View.LAYER_TYPE_SOFTWARE, null);
         mProductDescriptionText.startAnimation(anim);
         mProductDescriptionText.loadData(mHtmlHeader + saleDetail.getDescription() + mHtmlFooter,
                 "text/html; charset=UTF-8",
@@ -498,10 +513,10 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
 
         if (hasSizes) {
             if (!didSelectSize) {
-//                CustomAlertDialog.showCustomAlertDialog(
-//                        getActivity(),
-//                        CustomAlertDialog.CustomDialogIconState.NEGATIVE,
-//                        getActivity().getString(R.string.please_select_size));
+                CustomAlertDialog.showCustomAlertDialog(
+                        getActivity(),
+                        CustomAlertDialog.CustomDialogIconState.NEGATIVE,
+                        getActivity().getString(R.string.please_select_size));
 
                 mProductDetailScrollView.scrollTo(0, mProductDetailBottomCard.getTop());
             } else {
@@ -510,7 +525,6 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
         } else {
             verifyAddToCart(request);
         }
-
     }
 
     private void verifyAddToCart(AddToCartRequest request) {
@@ -518,9 +532,13 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
             ((MainActivity) getActivity()).showLoginController(getRouter(), new AuthHandler() {
                 @Override
                 public void success() {
+                    mActivity.getMainController().getHomeController().resetInviteRouter();
+                    mActivity.getMainController().getHomeController().resetContactsRouter();
                     mActivity.callGCMRegisterSubscriber();
                     mPresenter.addToCart(request);
-                    new Handler().postDelayed(()-> animateAddToCart(), 1000);
+                    if(mSharedImageLocation != null) {
+                        new Handler().postDelayed(() -> animateAddToCart(), 1000);
+                    }
                 }
 
                 @Override
@@ -530,7 +548,9 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
             });
         } else {
             mPresenter.addToCart(request);
-            animateAddToCart();
+            if(mSharedImageLocation != null) {
+                animateAddToCart();
+            }
         }
     }
 
@@ -613,17 +633,28 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
 
     @Override
     public void imagesLoaded() {
-        if(mProductSharedImage != null) {
+        if(isAttached()) {
             mSharedImageLocation = ImageUtils.getDisplayedImageLocation(mProductSharedImage);
             ImageUtils.clearImage(mProductSharedImage);
+
+            imagesLoaded = true;
+
+            mProductImagesRv.setEnabled(true);
+            mOtherImagesRv.setVisibility(View.VISIBLE);
+            mProductImagesRv.setOverScrollMode(View.OVER_SCROLL_ALWAYS);
         }
-        imagesLoaded = true;
+
     }
 
     public void readyViewsForTransition() {
 
         ImageUtils.loadImageImmediate(getActivity(), mItemImageUrl, mProductSharedImage, null);
 
+    }
+
+    @OnClick(R.id.arrow_left)
+    void dismissArrowDown(){
+        getActivity().onBackPressed();
     }
 
 

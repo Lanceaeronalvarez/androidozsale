@@ -9,9 +9,4 @@ public interface LoginMvpPresenter<V extends LoginMvpView> extends Authenticatio
 
     boolean loginViaEmail(String username, String password);
 
-    boolean logout();
-
-    boolean loginTicket(String ticket, String countryId);
-
-
 }

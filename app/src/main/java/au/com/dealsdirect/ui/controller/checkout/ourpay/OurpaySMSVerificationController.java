@@ -5,6 +5,7 @@ import android.support.annotation.NonNull;
 import android.text.Editable;
 import android.text.InputFilter;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -27,6 +28,7 @@ import au.com.dealsdirect.service.ourpay.Ourpay;
 import au.com.dealsdirect.ui.base.BaseController;
 import au.com.dealsdirect.ui.custom.CustomAlertDialog;
 import au.com.dealsdirect.ui.main.MainActivity;
+import au.com.dealsdirect.ui.main.PaymentInfo;
 import au.com.dealsdirect.utils.BundleBuilder;
 import butterknife.BindView;
 import butterknife.OnClick;
@@ -40,11 +42,11 @@ public class OurpaySMSVerificationController extends BaseController implements O
     private static final String PHONE_KEY = "OurpaySMSVerificationController.PHONE_KEY_TEXT";
     private static final String PAYMENT_TYPE_MYPAY = "mypay";
 
-    String mPhoneFromCart;
-    Ourpay mOurpay;
+    private String mPhoneFromCart;
+    private Ourpay mOurpay;
 
-    boolean mIsPhoneValid = false;
-    boolean mIsCodeValid = false;
+    private boolean mIsPhoneValid = false;
+    private boolean mIsCodeValid = false;
 
     @BindView(R.id.partial_toolbar_arrow_title)
     TextView mOurpaySMSVerificationTitle;
@@ -84,7 +86,7 @@ public class OurpaySMSVerificationController extends BaseController implements O
     @Inject
     OurpaySMSVerificationMvpPresenter<OurpaySMSVerificationMvpView> mPresenter;
 
-    public static OurpaySMSVerificationController newInstance(String phone){
+    public static OurpaySMSVerificationController newInstance(String phone) {
 
         return new OurpaySMSVerificationController(new BundleBuilder(new Bundle())
                 .putString(PHONE_KEY, phone)
@@ -110,10 +112,9 @@ public class OurpaySMSVerificationController extends BaseController implements O
     @Override
     protected void onViewBound(@NonNull View view) {
         super.onViewBound(view);
-        mOurpay = ((MainActivity)getActivity()).getOurpay();
+        mOurpay = PaymentInfo.getOurpay();
         mPresenter.callNormalizePhone(mPhoneFromCart);
         mOurpaySMSVerificationRightOption.setVisibility(View.INVISIBLE);
-
         setUp(view);
     }
 
@@ -133,7 +134,7 @@ public class OurpaySMSVerificationController extends BaseController implements O
     }
 
     @OnClick(R.id.partial_toolbar_arrow_view)
-    void onBackClick(){
+    void onBackClick() {
         getActivity().onBackPressed();
     }
 
@@ -147,31 +148,32 @@ public class OurpaySMSVerificationController extends BaseController implements O
     @Override
     public void callNormalizePhoneResponse(VerificationNormalizePhoneResponseBody response) {
 
-        if (!response.getVerificationNormalizePhoneResponse().getValue().getErrorMessage().isEmpty()){
-            if (response.getVerificationNormalizePhoneResponse().getValue().getCountryCode()!=null){
-                String countryCode = response.getVerificationNormalizePhoneResponse().getValue().getCountryCode();
+        if (!response.getVerificationNormalizePhoneResponse().getValue().getErrorMessage().isEmpty()) {
 
-                setExtension(countryCode);
+            setPhoneError(response.getVerificationNormalizePhoneResponse().getValue().getErrorMessage());
 
-            }
-//            CustomAlertDialog.showCustomAlertDialog(getActivity(),
-//                    CustomAlertDialog.CustomDialogIconState.NEGATIVE,
-//                    response.getVerificationNormalizePhoneResponse().getValue().getErrorMessage());
         } else {
             setExtension(response.getVerificationNormalizePhoneResponse().getValue().getCountryCode());
-            if (isToVerifyCode)
-                mPresenter.callVerificationCodeConfirm(mSMSVerificationPhone.getText().toString(), mSMSVerificationPhoneExtension.getText().toString() , mSMSVerificationCode.getText().toString());
-
+            mPresenter.callVerificationCodeSend(
+                    mSMSVerificationCode.getText().toString(),
+                    mSMSVerificationPhone.getText().toString(),
+                    response.getVerificationNormalizePhoneResponse().getValue().getCountryCode());
+            clearCode();
         }
     }
 
     @Override
     public void callVerificationCodeSendResponse(VerificationNormalizePhoneResponseBody response) {
 
-        if (!response.getVerificationNormalizePhoneResponse().getValue().getPhone().isEmpty()){
-            setPhoneError(response.getVerificationNormalizePhoneResponse().getValue().getErrorMessage());
-        } else {
-            setPhoneNormal();
+        if(!response.getVerificationNormalizePhoneResponse().getResult()||!response.getVerificationNormalizePhoneResponse().getIsAuthenticated()) {
+            CustomAlertDialog.showCustomAlertDialog(getActivity(), CustomAlertDialog.CustomDialogIconState.NEGATIVE, response.getVerificationNormalizePhoneResponse().getValue().getErrorMessage());
+        }else{
+//            Log.d("smsverification", response.getVerificationNormalizePhoneResponse().getValue().getErrorMessage()+" , "+response.getVerificationNormalizePhoneResponse().getMessage());
+            if (!response.getVerificationNormalizePhoneResponse().getValue().getErrorMessage().isEmpty()) {
+                setPhoneError(response.getVerificationNormalizePhoneResponse().getValue().getErrorMessage());
+            } else {
+                setPhoneNormal();
+            }
         }
     }
 
@@ -180,28 +182,29 @@ public class OurpaySMSVerificationController extends BaseController implements O
         hideLoading();
         boolean mIsAuthenticated = response.getVerificationCodeConfirmResponse().getIsAuthenticated();
         boolean mResult = response.getVerificationCodeConfirmResponse().getResult();
-        boolean mAuthRequired = true;
+        boolean mAuthRequired;
 
-        try {
+        if (response.getVerificationCodeConfirmResponse().getIsAuthenticated() != null) {
             mIsAuthenticated = response.getVerificationCodeConfirmResponse().getIsAuthenticated();
             mAuthRequired = true;
-        } catch (Exception e){
+        } else {
             mAuthRequired = false;
         }
 
-
         String mMessage = response.getVerificationCodeConfirmResponse().getMessage();
 
-        if (!mResult || (mAuthRequired && !mIsAuthenticated)){
-            CustomAlertDialog.showCustomAlertDialog(getActivity(), CustomAlertDialog.CustomDialogIconState.NEGATIVE,mMessage);
+        if (!mResult || (mAuthRequired && !mIsAuthenticated)) {
+//            CustomAlertDialog.showCustomAlertDialog(getActivity(), CustomAlertDialog.CustomDialogIconState.NEGATIVE, mMessage);
+            Log.d(OurpaySMSVerificationController.class.getName(),mMessage);
+            ourpayPaymentSubmit();
+            CustomAlertDialog.showCustomAlertDialog(getActivity(), CustomAlertDialog.CustomDialogIconState.POSITIVE, "Verified");
             mSMSVerificationConfirmButton.setEnabled(true);
 
-        }else{
+        } else {
 
             String error = response.getVerificationCodeConfirmResponse().getValue().getErrorMessage();
-            String message = response.getVerificationCodeConfirmResponse().getMessage();
 
-            if (!error.isEmpty()){
+            if (!error.isEmpty()) {
                 setCodeError(error);
                 mSMSVerificationConfirmButton.setEnabled(true);
             } else {
@@ -213,10 +216,9 @@ public class OurpaySMSVerificationController extends BaseController implements O
     }
 
     @OnClick(R.id.ourpay_text_resend_code)
-    void onResendCode(){
+    void onResendCode() {
         isToVerifyCode = false;
         mPresenter.callNormalizePhone(mSMSVerificationPhone.getText().toString());
-        clearCode();
     }
 
     private void setCodeNormal() {
@@ -318,11 +320,12 @@ public class OurpaySMSVerificationController extends BaseController implements O
     }
 
     @OnClick(R.id.ourpay_button_confirm)
-    void onConfirmButtonClick(){
+    void onConfirmButtonClick() {
         hideKeyboard();
         showLoading();
         mSMSVerificationConfirmButton.setEnabled(false);
-        mPresenter.callNormalizePhone(mSMSVerificationPhone.getText().toString());
+//        mPresenter.callNormalizePhone(mSMSVerificationPhone.getText().toString());
+        mPresenter.callVerificationCodeConfirm(mSMSVerificationPhone.getText().toString(), mSMSVerificationPhoneExtension.getText().toString(), mSMSVerificationCode.getText().toString());
         isToVerifyCode = true;
     }
 
@@ -343,7 +346,7 @@ public class OurpaySMSVerificationController extends BaseController implements O
             mSMSVerificationCode.setFilters(filters);
 
             String hint = "";
-            for (int i=0; i<max; i++) {
+            for (int i = 0; i < max; i++) {
                 hint = hint + "X";
             }
             mSMSVerificationCode.setHint(hint);
@@ -392,18 +395,9 @@ public class OurpaySMSVerificationController extends BaseController implements O
         mSMSVerificationPhoneExtension.setText("+" + extension);
     }
 
-    private void ourpayPaymentSubmit(){
+    private void ourpayPaymentSubmit() {
 
-        if (((MainActivity)getActivity()).isThreeDSecureRequired()){
-            callThree3DS(Double.toString(mOurpay.getAmount()));
-        } else {
-            ((MainActivity)getActivity()).callCreatePaymentTransaction(PAYMENT_TYPE_MYPAY,"");
-        }
+        PaymentInfo.setPaymentType(PaymentInfo.TYPE_MYPAY);
+        ((MainActivity) getActivity()).callCreatePaymentTransaction(PaymentInfo.getPaymentType(), "", PaymentInfo.getPaymentMethod().getToken());
     }
-
-    private void callThree3DS(String cost){
-        showLoading();
-        ThreeDSecure.performVerification(((MainActivity)getActivity()).getBraintreeFragment(), mOurpay.getPaymentMethodNonce().getNonce(),cost);
-    }
-
 }

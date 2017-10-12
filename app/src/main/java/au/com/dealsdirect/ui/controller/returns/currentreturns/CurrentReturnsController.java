@@ -3,6 +3,7 @@ package au.com.dealsdirect.ui.controller.returns.currentreturns;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.LinearLayoutManager;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -125,13 +126,11 @@ public class CurrentReturnsController extends BasePullToRefreshController
             mCurrentReturnsRecyclerView.setVisibility(View.VISIBLE);
 //            getCurrentReturnItems(mCurrentReturns);
 
-
         }
     }
 
     @Override
     protected void setUp(View view) {
-        // Setup views here
 
         mCurrentReturnsRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity(),LinearLayoutManager
                 .HORIZONTAL,false));
@@ -196,9 +195,6 @@ public class CurrentReturnsController extends BasePullToRefreshController
     public void getCurrentReturnItems(List<CurrentReturns> currentReturns){
         mPresenter.loadReturnDetails(currentReturns.get(itemIterator).getID(), itemIterator);
 
-//        for (int i = 0; i < currentReturns.size(); i++){
-//            mPresenter.loadReturnDetails(currentReturns.get(itemIterator).getID(), itemIterator);
-//        }
     }
 
     @Override
@@ -233,6 +229,9 @@ public class CurrentReturnsController extends BasePullToRefreshController
     @OnClick(R.id.partial_toolbar_filter_view)
 
     public void onAddReturnClick(){
+        if (mCurrentReturns!=null)
+            mCurrentReturns.clear();
+
         getRouter().pushController(RouterTransaction.with(
                 ReturnOrdersController.newInstance())
                 .pushChangeHandler(new HorizontalChangeHandler())

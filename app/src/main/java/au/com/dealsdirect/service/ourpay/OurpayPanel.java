@@ -7,8 +7,10 @@ import android.os.Bundle;
 import android.text.Html;
 import android.view.Gravity;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.CheckBox;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.bluelinelabs.conductor.Router;
@@ -181,6 +183,9 @@ public class OurpayPanel {
 
     private View getButton() {
         View view = mBaseActivity.getLayoutInflater().inflate(R.layout.ourpay_button, null, false);
+        RelativeLayout.LayoutParams layoutParams = new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,
+                (int) mBaseActivity.getResources().getDimension(R.dimen.default_button_height));
+        view.setLayoutParams(layoutParams);
 
         return view;
     }
@@ -198,7 +203,6 @@ public class OurpayPanel {
             Bundle bundle = new Bundle();
             bundle.putString("templateKey", ourpayTermsAndConditionKey);
 
-            ((MainActivity)mBaseActivity).getMainController().getHomeController().setIsResetCheckout(false);
             mRouter.pushController(RouterTransaction.with(new LegalitiesController(ourpayTermsAndConditionKey,"My Basket"))
                     .pushChangeHandler(new HorizontalChangeHandler(false))
                     .popChangeHandler(new HorizontalChangeHandler(false)));

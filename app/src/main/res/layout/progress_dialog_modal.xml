@@ -37,7 +37,7 @@
         android:layout_height="wrap_content"
         android:layout_centerInParent="true"
         android:gravity="center"
-        app:fontPath="@string/font_lato_medium"
+        app:fontPath="@string/font_app_medium"
         tools:text="Loading....."/>
 
 </RelativeLayout>

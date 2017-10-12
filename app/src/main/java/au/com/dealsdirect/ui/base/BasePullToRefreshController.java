@@ -34,6 +34,8 @@ public abstract class BasePullToRefreshController extends BaseController impleme
 
     PtrClassicFrameLayout mPtrLayout;
 
+    boolean mCanDoRefresh = true;
+
     protected BasePullToRefreshController() {
     }
 
@@ -96,9 +98,9 @@ public abstract class BasePullToRefreshController extends BaseController impleme
     public void onError(String message) {
         if (message != null && message.contains("UnknownHostException")) {
             showNoNetworkLayout();
-        } else {
-            super.onError(message);
         }
+
+        super.onError(message);
     }
 
     @Override
@@ -134,8 +136,26 @@ public abstract class BasePullToRefreshController extends BaseController impleme
     }
 
     @Override
+    public void showNoInternetSnackBar() {
+        if (mActivity != null) {
+            mActivity.showSnackBar(mActivity.getString(R.string.no_internet_connection), true);
+        }
+    }
+
+    @Override
+    public void dismissSnackBar() {
+        if (mActivity != null) {
+            mActivity.dismissSnackBar();
+        }
+    }
+
+    @Override
     public boolean checkCanDoRefresh(PtrFrameLayout frame, View content, View header) {
-        return PtrDefaultHandler.checkContentCanBePulledDown(frame, content, header);
+        return mCanDoRefresh && PtrDefaultHandler.checkContentCanBePulledDown(frame, content, header);
+    }
+
+    protected void enablePullToRefresh(boolean val){
+        mCanDoRefresh = val;
     }
 
     private void addOverScrollListener(ViewGroup vg) {
@@ -160,7 +180,9 @@ public abstract class BasePullToRefreshController extends BaseController impleme
             public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
                 super.onScrollStateChanged(recyclerView, newState);
                 if (((LinearLayoutManager) recyclerView.getLayoutManager()).
-                        findFirstCompletelyVisibleItemPosition() == 0) {
+                        findFirstCompletelyVisibleItemPosition() == 0
+                        || ((LinearLayoutManager) recyclerView.getLayoutManager()).getOrientation() ==
+                        LinearLayoutManager.HORIZONTAL) {
                     mPtrLayout.setIsChildScrollingEnabled(true);
                 } else {
                     mPtrLayout.setIsChildScrollingEnabled(false);

@@ -5,6 +5,7 @@ import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,6 +13,7 @@ import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.bluelinelabs.conductor.Controller;
 import com.bluelinelabs.conductor.RouterTransaction;
 import com.bluelinelabs.conductor.changehandler.HorizontalChangeHandler;
 
@@ -24,7 +26,6 @@ import javax.inject.Inject;
 
 import au.com.dealsdirect.R;
 import au.com.dealsdirect.data.network.model.category.GetCategoryTreeResponse;
-import au.com.dealsdirect.data.network.model.publicsalescategories.GetPublicSalesCategoriesResponse;
 import au.com.dealsdirect.ui.base.BaseController;
 import au.com.dealsdirect.ui.controller.categories.adapter.CategoriesAdapter;
 import au.com.dealsdirect.ui.controller.categories.adapter.SubCategoriesAdapter;
@@ -32,6 +33,7 @@ import au.com.dealsdirect.ui.controller.categories.listener.CategoryClickListene
 import au.com.dealsdirect.ui.controller.categories.listener.SubCategoryClickListener;
 import au.com.dealsdirect.ui.controller.categories.listener.SubCategoryItemClickListener;
 import au.com.dealsdirect.ui.controller.saleitems.SaleItemsController;
+import au.com.dealsdirect.ui.controller.shops.ShopsController;
 import au.com.dealsdirect.ui.main.MainActivity;
 import au.com.dealsdirect.utils.BundleBuilder;
 import butterknife.BindView;
@@ -41,7 +43,7 @@ import butterknife.OnClick;
  * dp Created by Admin on 6/6/17.
  */
 
-public class  CategoriesController extends BaseController
+public class CategoriesController extends BaseController
         implements CategoriesMvpView, CategoryClickListener, SubCategoryItemClickListener {
 
     @Inject
@@ -94,6 +96,13 @@ public class  CategoriesController extends BaseController
     }
 
     @Override
+    protected void onAttach(@NonNull View view) {
+        super.onAttach(view);
+        mPresenter.onAttach(this);
+
+    }
+
+    @Override
     protected View inflateView(@NonNull LayoutInflater inflater, @NonNull ViewGroup container) {
 
         View view = inflater.inflate(R.layout.controller_categories, container, false);
@@ -137,6 +146,7 @@ public class  CategoriesController extends BaseController
         if (mCategories != null) {
             mAdapter = new CategoriesAdapter(mCategories, mPresenter, this);
             mRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity(), LinearLayoutManager.VERTICAL, false));
+            mRecyclerView.setMotionEventSplittingEnabled(false);
             mRecyclerView.setAdapter(mAdapter);
 
             if (mCategories.get(0).getChildren() != null) {
@@ -148,6 +158,7 @@ public class  CategoriesController extends BaseController
             }
             mSubCategoryRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity(), LinearLayoutManager.VERTICAL, false));
             mSubCategoryRecyclerView.setAdapter(mSubCategoryAdapter);
+            mSubCategoryRecyclerView.setMotionEventSplittingEnabled(false);
 
         }
     }
@@ -199,20 +210,25 @@ public class  CategoriesController extends BaseController
 
     @Override
     public void onSubCategoryItemClicked(String categoryID, String categoryName, String categoryKey) {
-        assert (getActivity()) != null;
-        mActivity.getMainController().setChosenCategoryItemKey(categoryKey);
 
-        Bundle saleItemBundle = new BundleBuilder(new Bundle())
-                .putString("SaleItemsController.KEY_TITLE", categoryKey)
-                .putString("SaleItemsController.CATEGORY_KEY", categoryKey)
-                .putBoolean("SaleItemsController.IS_FROM_CATEGORY", true)
-                .build();
+        Controller currentSaleItemsController = ((MainActivity)getActivity()).getHomeRouter().getControllerWithTag(getResources().getString(R.string.sale_items_controller_tag));
 
-        mActivity.getHomeRouter().pushController(RouterTransaction.with(
-                SaleItemsController.newInstance(saleItemBundle))
-                .tag(getResources().getString(R.string.sale_items_controller_tag))
-                .pushChangeHandler(new HorizontalChangeHandler())
-                .popChangeHandler(new HorizontalChangeHandler()));
+        if (currentSaleItemsController==null){
+            mActivity.getMainController().setChosenCategoryItemKey(categoryKey);
+
+            Bundle saleItemBundle = new BundleBuilder(new Bundle())
+                    .putString("SaleItemsController.KEY_TITLE", categoryKey)
+                    .putString("SaleItemsController.CATEGORY_KEY", categoryKey)
+                    .putBoolean("SaleItemsController.FROM_CATEGORY_SEARCH", false)
+                    .putBoolean("SaleItemsController.IS_FROM_CATEGORY",true)
+                    .build();
+
+            mActivity.getHomeRouter().pushController(RouterTransaction.with(
+                    SaleItemsController.newInstance(saleItemBundle))
+                    .tag(getResources().getString(R.string.sale_items_controller_tag))
+                    .pushChangeHandler(new HorizontalChangeHandler())
+                    .popChangeHandler(new HorizontalChangeHandler()));
+        }
 
         new Handler().postDelayed(() -> {
             ((MainActivity) getActivity()).getMainController().goToShops();
@@ -229,6 +245,11 @@ public class  CategoriesController extends BaseController
     @SuppressWarnings("ConstantConditions")
     @OnClick(R.id.partial_toolbar_disabled_search_right_option)
     void onSearchOptionClicked() {
+
+        if (((MainActivity)getActivity()).getHomeRouter().getControllerWithTag(ShopsController.TAG)!=null){
+            ((MainActivity) getActivity()).getHomeRouter().popToTag(ShopsController.TAG);
+        }
+
         ((MainActivity) getActivity()).goToSalesFromCategory(mChosenSubCategoryTreeResponse);
 
     }

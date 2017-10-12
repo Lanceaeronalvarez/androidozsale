@@ -52,12 +52,6 @@ public class ForgotPasswordController extends BaseController implements ForgotPa
         super(args);
     }
 
-    @Override
-    public void onDestroy() {
-        super.onDestroy();
-        hideKeyboard();
-    }
-
     @NonNull
     @Override
     protected View inflateView(@NonNull LayoutInflater inflater, @NonNull ViewGroup container) {
@@ -85,6 +79,7 @@ public class ForgotPasswordController extends BaseController implements ForgotPa
     @Override
     public void onDestroyView(View view) {
         mPresenter.onDetach();
+        hideKeyboard();
         super.onDestroyView(view);
     }
 

@@ -77,6 +77,7 @@ public class ViewVouchersRecyclerViewAdapter extends RecyclerView.Adapter<ViewVo
             holder.mVouchersItemDescText.setText(voucher.getFullname());
             holder.mVouchersItemValue.setVisibility(View.GONE);
             holder.mVouchersLayout.setBackground(holder.mVouchersLayout.getContext().getDrawable(R.drawable.bg_voucher_item));
+            holder.mVouchersLayout.setAlpha(0.21f);
         }
 
     }

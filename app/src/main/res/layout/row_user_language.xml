@@ -8,7 +8,7 @@
 
     <TextView
         android:id="@+id/row_text_language"
-        fontPath="@string/font_lato_medium"
+        fontPath="@string/font_app_medium"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginBottom="13dp"
@@ -22,6 +22,6 @@
         android:layout_height="1dp"
         android:layout_marginLeft="13dp"
         android:layout_marginTop="10dp"
-        android:background="@color/gray_hint_text" />
+        android:background="@color/gray_border" />
 
 </LinearLayout>

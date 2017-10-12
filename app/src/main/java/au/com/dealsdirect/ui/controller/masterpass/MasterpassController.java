@@ -13,6 +13,7 @@ import android.view.ViewGroup;
 import android.webkit.WebResourceRequest;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.bluelinelabs.conductor.RouterTransaction;
@@ -30,6 +31,7 @@ import au.com.dealsdirect.utils.AppLogger;
 import au.com.dealsdirect.utils.BundleBuilder;
 import au.com.dealsdirect.utils.NetworkUtils;
 import butterknife.BindView;
+import butterknife.OnClick;
 
 public class MasterpassController extends BaseController implements MasterpassMvpView {
 
@@ -38,8 +40,11 @@ public class MasterpassController extends BaseController implements MasterpassMv
     @Inject
     MasterpassMvpPresenter<MasterpassMvpView> mPresenter;
 
-    @BindView(R.id.partial_toolbar_title_view)
+    @BindView(R.id.partial_toolbar_arrow_title)
     TextView mTitleTextView;
+
+    @BindView(R.id.partial_toolbar_filter_view)
+    ImageView mFilterButton;
 
     @BindView(R.id.controller_masterpass_web)
     WebView mWebView;
@@ -76,6 +81,7 @@ public class MasterpassController extends BaseController implements MasterpassMv
     @SuppressLint("SetJavaScriptEnabled")
     @Override
     protected void setUp(View view) {
+        mFilterButton.setVisibility(View.INVISIBLE);
         mTitleTextView.setText("Masterpass");
 
         mWebView.getSettings().setJavaScriptEnabled(true);
@@ -172,5 +178,10 @@ public class MasterpassController extends BaseController implements MasterpassMv
         getRouter().pushController(RouterTransaction.with(PaymentSuccessController.newInstance(address, price, invoice, delivery))
                 .pushChangeHandler(new HorizontalChangeHandler())
                 .popChangeHandler(new HorizontalChangeHandler()));
+    }
+
+    @OnClick(R.id.partial_toolbar_arrow_view)
+    public void onClickBack() {
+        getActivity().onBackPressed();
     }
 }

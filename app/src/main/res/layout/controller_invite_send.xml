@@ -25,7 +25,7 @@
                 android:orientation="vertical">
 
                 <TextView
-                    fontPath="@string/font_lato_bold"
+                    fontPath="@string/font_app_bold"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="10dp"
@@ -55,7 +55,7 @@
                         android:focusable="true" />
 
                     <TextView
-                        fontPath="@string/font_lato_regular"
+                        fontPath="@string/font_app_regular"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_margin="@dimen/screen_padding"
@@ -108,7 +108,7 @@
                                     tools:ignore="ContentDescription" />
 
                                 <TextView
-                                    fontPath="@string/font_lato_medium"
+                                    fontPath="@string/font_app_medium"
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
                                     android:layout_marginLeft="@dimen/invite_friends_padding"
@@ -149,7 +149,7 @@
                                     tools:ignore="ContentDescription" />
 
                                 <TextView
-                                    fontPath="@string/font_lato_medium"
+                                    fontPath="@string/font_app_medium"
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
                                     android:gravity="center"
@@ -176,7 +176,7 @@
                     android:paddingTop="@dimen/screen_padding">
 
                     <TextView
-                        fontPath="@string/font_lato_medium"
+                        fontPath="@string/font_app_medium"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginBottom="10dp"
@@ -188,7 +188,7 @@
                     <EditText
                         android:id="@+id/controller_send_invite_edit_text_personal_invitation"
                         style="@style/DDEditTextStyle"
-                        fontPath="@string/font_lato_medium"
+                        fontPath="@string/font_app_medium"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:gravity="top|left"
@@ -210,7 +210,7 @@
                     android:padding="@dimen/screen_padding">
 
                     <TextView
-                        fontPath="@string/font_lato_medium"
+                        fontPath="@string/font_app_medium"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginBottom="10dp"
@@ -229,7 +229,7 @@
 
                         <EditText
                             android:id="@+id/controller_send_invite_edit_text_deals_direct_link"
-                            fontPath="@string/font_lato_medium"
+                            fontPath="@string/font_app_medium"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:background="@drawable/bg_edit_text_rounded"
@@ -295,7 +295,7 @@
 
                                 <TextView
                                     android:id="@+id/invite_friend_clipboard_text"
-                                    fontPath="@string/font_lato_medium"
+                                    fontPath="@string/font_app_medium"
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
                                     android:layout_marginLeft="@dimen/invite_friends_padding"
@@ -309,7 +309,7 @@
                         </RelativeLayout>
 
                         <TextView
-                            fontPath="@string/font_lato_medium"
+                            fontPath="@string/font_app_medium"
                             android:layout_width="wrap_content"
                             android:layout_height="match_parent"
                             android:layout_marginLeft="@dimen/invite_friends_padding"
@@ -349,7 +349,7 @@
                                     tools:ignore="ContentDescription" />
 
                                 <TextView
-                                    fontPath="@string/font_lato_medium"
+                                    fontPath="@string/font_app_medium"
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
                                     android:layout_marginLeft="@dimen/invite_friends_padding"
@@ -391,7 +391,7 @@
                                     tools:ignore="ContentDescription" />
 
                                 <TextView
-                                    fontPath="@string/font_lato_medium"
+                                    fontPath="@string/font_app_medium"
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
                                     android:layout_marginLeft="@dimen/invite_friends_padding"
@@ -434,7 +434,7 @@
                                     tools:ignore="ContentDescription" />
 
                                 <TextView
-                                    fontPath="@string/font_lato_medium"
+                                    fontPath="@string/font_app_medium"
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
                                     android:layout_marginLeft="@dimen/invite_friends_padding"
@@ -475,7 +475,7 @@
                                     tools:ignore="ContentDescription" />
 
                                 <TextView
-                                    fontPath="@string/font_lato_medium"
+                                    fontPath="@string/font_app_medium"
                                     android:layout_width="wrap_content"
                                     android:layout_height="match_parent"
                                     android:layout_marginLeft="@dimen/invite_friends_padding"

@@ -50,6 +50,7 @@ public class AddVouchersController extends BaseController implements AddVouchers
 
     private static final String VOUCHERS="Vouchers";
     private static final String IS_VOUCHER_ADDED = "IS_VOUCHER_ADDED_KEY";
+    private static final String IS_CART_NO_DISCOUNT = "IS_NO_DISCOUNT";
 
     private static final String testVouchersString = "[{\n" +
             "\t\t\t\t\"ID\": \"ba41e1d8-0a3d-4868-81ba-2f139f0827fa\",\n" +
@@ -128,9 +129,6 @@ public class AddVouchersController extends BaseController implements AddVouchers
     @BindView(R.id.controller_edit_text_voucher)
     TextView mPromoCodeText;
 
-    @BindView(R.id.no_vouchers_placeholder)
-    LinearLayout mNoVouchersPlaceHolder;
-
     @BindView(R.id.partial_checkout_vouchers_button_clear)
     Button mButtonClear;
 
@@ -150,11 +148,13 @@ public class AddVouchersController extends BaseController implements AddVouchers
 
     private AddVouchersRecyclerViewAdapter mAdapter;
     private boolean mIsVoucherAdded = false;
+    private boolean mIsNoDiscountApplied = false;
 
-    public static AddVouchersController newInstance(String vouchersJsonString, boolean isVoucherAdded) {
+    public static AddVouchersController newInstance(String vouchersJsonString, boolean isVoucherAdded, boolean isNoDiscount) {
         return new AddVouchersController(new BundleBuilder(new Bundle())
                 .putString(VOUCHERS, vouchersJsonString)
                 .putBoolean(IS_VOUCHER_ADDED, isVoucherAdded)
+                .putBoolean(IS_CART_NO_DISCOUNT, isNoDiscount)
                 .build());
     }
 
@@ -162,6 +162,7 @@ public class AddVouchersController extends BaseController implements AddVouchers
         super(args);
         mVouchers = JsonUtils.convertStringToObject(args.getString(VOUCHERS,""), new TypeToken<ArrayList<Voucher>>(){}.getType());
         mIsVoucherAdded = args.getBoolean(IS_VOUCHER_ADDED);
+        mIsNoDiscountApplied = args.getBoolean(IS_CART_NO_DISCOUNT);
     }
 
     @Override
@@ -178,8 +179,15 @@ public class AddVouchersController extends BaseController implements AddVouchers
 
         mSharedPreference = getActivity().getSharedPreferences("Voucher_Preference", Context.MODE_PRIVATE);
         Set<String> voucherSet = mSharedPreference.getStringSet("VOUCHER_SET", null);
-        if(voucherSet != null) {
+        if(voucherSet != null && !mIsNoDiscountApplied) {
             voucherIds.addAll(voucherSet);
+        }else{
+            SharedPreferences.Editor editor = mSharedPreference.edit();
+            voucherIds.clear();
+            tempVoucherIds.clear();
+            Set<String> emptySet = new HashSet<String>();
+            editor.putStringSet("VOUCHER_SET", emptySet);
+            editor.apply();
         }
 
         if (mVouchers != null) {
@@ -192,12 +200,10 @@ public class AddVouchersController extends BaseController implements AddVouchers
     @Override
     protected void setUp(View view) {
 
-        if ((getActivity()) != null)
-            ((MainActivity)getActivity()).getMainController().getHomeController().setIsResetCheckout(true);
-        mTitleText.setText(getActivity().getResources().getText(R.string.promo_code));
+
+        mTitleText.setText("My Vouchers");
         mFilterView.setVisibility(View.INVISIBLE);
         mArrowImage.setOnClickListener(action -> {
-            ((MainActivity)getActivity()).getMainController().getHomeController().setIsResetCheckout(false);
             getActivity().onBackPressed();
         });
 
@@ -230,13 +236,11 @@ public class AddVouchersController extends BaseController implements AddVouchers
         helper.attachToRecyclerView(mRecyclerView);
 
         if (mVouchers.isEmpty()) {
-            mVoucherListContainerLayout.setVisibility(View.VISIBLE);
+            mVoucherListContainerLayout.setVisibility(View.GONE);
             mRecyclerView.setVisibility(View.GONE);
-            mNoVouchersPlaceHolder.setVisibility(View.VISIBLE);
         } else {
             mVoucherListContainerLayout.setVisibility(View.VISIBLE);
             mRecyclerView.setVisibility(View.VISIBLE);
-            mNoVouchersPlaceHolder.setVisibility(View.GONE);
         }
 
         mAddVoucherButton.setOnClickListener(action -> {
@@ -368,6 +372,14 @@ public class AddVouchersController extends BaseController implements AddVouchers
 
             voucherIds.add(mTempVoucherPromoKey);
             tempVoucherIds.add(mTempVoucherPromoKey);
+
+            SharedPreferences.Editor editor = mSharedPreference.edit();
+            Set<String> voucherSet = new HashSet<String>();
+            voucherSet.addAll(voucherIds);
+            editor.putStringSet("VOUCHER_SET", voucherSet);
+            editor.apply();
+
+
             getActivity().onBackPressed();
         } else {
 
