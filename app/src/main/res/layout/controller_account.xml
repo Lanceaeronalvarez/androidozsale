@@ -7,7 +7,7 @@
 
     <include
         android:id="@+id/account_header"
-        layout="@layout/partial_toolbar_arrow" />
+        layout="@layout/partial_toolbar_login" />
 
     <android.support.v7.widget.RecyclerView
         android:id="@+id/account_recycler_view"
