@@ -5,6 +5,9 @@ import au.com.dealsdirect.BuildConfig;
 
 public final class ApiEndPoint {
 
+    private static final String NO_AKAMAI_EXTENSION = "api.asmx/";
+    private static final String AKAMAI_EXTENSION = "api.ashx/";
+
     private static final String CATEGORY_TREE = "api/shop/shop/v1/accounts/" + BuildConfig.ACCOUNT_ID + "/categorytree/";
     private static final String SORTING = "api/shop/shop/v1/accounts/" + BuildConfig.ACCOUNT_ID + "/sorting/";
     private static final String SALES = "api/sale/sale/v1/accounts/" + BuildConfig.ACCOUNT_ID + "/banners/";
@@ -45,8 +48,8 @@ public final class ApiEndPoint {
 
     /*GCM CALLS*/
     public static final String GCM_REGISTER_DEVICE = getBaseApiLegacy() + "RegisterDevice";
-    public static final String GCM_NOTIFICATION_EVENT = API_LEGACY_AKAMAI + "NotificationEvent";
-    public static final String GCM_REGISTER_SUBSCRIBER = API_LEGACY_AKAMAI + "RegisterSubscriber";
+    public static final String GCM_NOTIFICATION_EVENT = getBaseApiLegacyAkamai() + "NotificationEvent";
+    public static final String GCM_REGISTER_SUBSCRIBER = getBaseApiLegacyAkamai() + "RegisterSubscriber";
 
 
     /*CONFIG CALLS*/
@@ -178,11 +181,14 @@ public final class ApiEndPoint {
     }
 
     private static String getBaseApiLegacy() {
-        return BuildConfig.API_LEGACY;
+        return BuildConfig.API_LEGACY + NO_AKAMAI_EXTENSION;
     }
 
     private static String getBaseApiGenie() {
         return BuildConfig.API_ROOT;
     }
 
+    private static String getBaseApiLegacyAkamai() {
+        return BuildConfig.API_LEGACY + AKAMAI_EXTENSION;
+    }
 }
