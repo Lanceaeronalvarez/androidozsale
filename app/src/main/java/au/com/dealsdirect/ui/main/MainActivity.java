@@ -105,9 +105,6 @@ public class MainActivity extends BaseActivity implements MainMvpView {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        //Init All analytics sdk
-        initializeAnalytics();
-
         setContentView(R.layout.activity_main);
 
         getActivityComponent().inject(this);
@@ -116,6 +113,9 @@ public class MainActivity extends BaseActivity implements MainMvpView {
 
         mPresenter.onAttach(this);
         mPresenter.callGetTemplateTexts();
+
+        //Init All analytics sdk
+        initializeAnalytics();
 
         mMainController = MainController.newInstance();
         mRouter = Conductor.attachRouter(this, mContainer, savedInstanceState);
