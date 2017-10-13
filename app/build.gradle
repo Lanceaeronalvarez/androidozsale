@@ -49,7 +49,7 @@ android {
             buildConfigField "String", "ACCOUNT_ID", "\"A56B0D62-AEF6-4653-848E-2ECDDB6E9B8C\""
         }
 
-        dealsDirectTest {
+        dealsDirectRC {
             versionCode 63
             versionName "2.3"
             applicationId "au.com.dealsdirect.test"
