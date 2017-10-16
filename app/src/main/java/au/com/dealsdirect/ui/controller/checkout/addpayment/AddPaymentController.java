@@ -113,6 +113,8 @@ public class AddPaymentController extends BaseController implements AddPaymentMv
         mCardForm.setOnCardFormScanListener(this);
         mCardForm.setCameraIcon(getResources().getDrawable(R.drawable.bg_credit_card));
         mCardForm.setToolbarColor(getResources().getColor(R.color.toolbar_active_skin));
+        mCardForm.setCameraBackground(null);
+        mCardForm.setEditTextDrawable(getResources().getDrawable(R.drawable.bg_edit_text_rounded));
 
         mButtonPay.setOnClickListener(action -> {
             onCardFormSubmit();
