@@ -114,7 +114,6 @@ public abstract class BaseController extends RefWatchingController implements Mv
 
     @Override
     public void onDetach(View view) {
-        mActivity = null;
         super.onDetach(view);
     }
 
