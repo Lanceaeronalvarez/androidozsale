@@ -1,7 +1,11 @@
 package au.com.dealsdirect.di.module;
 
+import android.app.Activity;
+
 import com.bluelinelabs.conductor.Controller;
 
+import au.com.dealsdirect.ui.base.BaseActivity;
+import au.com.dealsdirect.ui.base.MvpView;
 import au.com.dealsdirect.ui.controller.account.AccountMvpPresenter;
 import au.com.dealsdirect.ui.controller.account.AccountMvpView;
 import au.com.dealsdirect.ui.controller.account.AccountPresenter;
@@ -110,6 +114,7 @@ import au.com.dealsdirect.ui.controller.vouchers.Add.AddVouchersPresenter;
 import au.com.dealsdirect.ui.controller.vouchers.View.ViewVouchersMvpPresenter;
 import au.com.dealsdirect.ui.controller.vouchers.View.ViewVouchersMvpView;
 import au.com.dealsdirect.ui.controller.vouchers.View.ViewVouchersPresenter;
+import au.com.dealsdirect.ui.main.MainActivity;
 import au.com.dealsdirect.ui.sample.SampleMvpPresenter;
 import au.com.dealsdirect.ui.sample.SampleMvpView;
 import au.com.dealsdirect.ui.sample.SamplePresenter;
@@ -314,5 +319,10 @@ public class ControllerModule {
     @Provides
     OurpaySMSVerificationMvpPresenter<OurpaySMSVerificationMvpView> provideOurpaySMSVerificationPresenter(OurpaySMSVerificationPresenter<OurpaySMSVerificationMvpView> presenter) {
         return presenter;
+    }
+
+    @Provides
+    MainActivity provideActivity() {
+        return ((MainActivity) mController.getActivity());
     }
 }
