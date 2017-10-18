@@ -114,10 +114,10 @@ public class ShopsController extends BasePullToRefreshController implements Shop
     @Override
     protected void onAttach(@NonNull View view) {
         mPresenter.onAttach(this);
-        assert (getActivity()) != null;
+        assert (mActivity) != null;
 
         mBannerClickCounter = 0;
-        ((MainActivity) getActivity()).setShopController(this);
+        mActivity.setShopController(this);
         super.onAttach(view);
     }
 
@@ -176,9 +176,9 @@ public class ShopsController extends BasePullToRefreshController implements Shop
     @Override
     protected void setUp(View view) {
 
-        assert (getActivity()) != null;
-        ((MainActivity) getActivity()).getMainController().showBottomNav();
-        ((MainActivity) getActivity()).setDraggableViewPager(true);
+        assert (mActivity) != null;
+        mActivity.getMainController().showBottomNav();
+        mActivity.setDraggableViewPager(true);
         hideKeyboard();
 
         mPreLoadedCategories = new LinkedList<>();
@@ -209,15 +209,15 @@ public class ShopsController extends BasePullToRefreshController implements Shop
         };
 
         mBannerClickListener = this;
-        mBannersAdapter = new BannersAdapter(getActivity(), mPresenter, new ArrayList(), mBannerClickListener);
+        mBannersAdapter = new BannersAdapter(mActivity, mPresenter, new ArrayList(), mBannerClickListener);
 
         if (getResources().getBoolean(R.bool.is_tablet)) {
-            mLayoutManager = new GridLayoutManager(getActivity(), 2, GridLayoutManager.VERTICAL, false);
+            mLayoutManager = new GridLayoutManager(mActivity, 2, GridLayoutManager.VERTICAL, false);
         } else {
-            mLayoutManager = new GridLayoutManager(getActivity(), 1, GridLayoutManager.VERTICAL, false);
+            mLayoutManager = new GridLayoutManager(mActivity, 1, GridLayoutManager.VERTICAL, false);
         }
 
-        mBannersAdapter = new BannersAdapter(getActivity(), mPresenter, sales, this);
+        mBannersAdapter = new BannersAdapter(mActivity, mPresenter, sales, this);
         shopsControllerBannerRecyclerView.setLayoutManager(mLayoutManager);
         shopsControllerBannerRecyclerView.setAdapter(mBannersAdapter);
 
@@ -269,12 +269,12 @@ public class ShopsController extends BasePullToRefreshController implements Shop
             if (!mPresenter.isAccessAnonymousEnabled() && !mPresenter.isAuthorized()) {
 
                 // Invoke login if no auth or not an open app
-                assert (getActivity()) != null;
-                ((MainMvpView) getActivity()).showLoginController(getRouter(), new AuthHandler() {
+                assert (mActivity) != null;
+                ((MainMvpView) mActivity).showLoginController(getRouter(), new AuthHandler() {
                     @Override
                     public void success() {
-                        ((MainActivity) getActivity()).callGCMRegisterSubscriber();
-                        ((MainActivity) getActivity()).getHomeRouter()
+                        mActivity.callGCMRegisterSubscriber();
+                        mActivity.getHomeRouter()
                                 .pushController(RouterTransaction.with(
                                         SaleItemsController.newInstance(
                                                 saleId,
@@ -282,7 +282,7 @@ public class ShopsController extends BasePullToRefreshController implements Shop
                                                 bannerId,
                                                 position,
                                                 imageUrl, null))
-                                        .tag(getActivity().getString(R.string.sale_items_controller_tag))
+                                        .tag(mActivity.getString(R.string.sale_items_controller_tag))
                                         .pushChangeHandler(new HorizontalChangeHandler())
                                         .popChangeHandler(new HorizontalChangeHandler()));
                     }
@@ -297,8 +297,8 @@ public class ShopsController extends BasePullToRefreshController implements Shop
 // Check if sale is available
                 //TODO: Need computation for date and time when sale response is cached
                 if (isAvailable) {
-                    assert (getActivity()) != null;
-                    ((MainActivity) getActivity())
+                    assert (mActivity) != null;
+                    mActivity
                             .getHomeRouter()
                             .pushController(RouterTransaction.with(
                                     SaleItemsController.newInstance(
@@ -308,11 +308,11 @@ public class ShopsController extends BasePullToRefreshController implements Shop
                                             position,
                                             imageUrl,
                                             null))
-                                    .tag(getActivity().getString(R.string.sale_items_controller_tag))
+                                    .tag(mActivity.getString(R.string.sale_items_controller_tag))
                                     .pushChangeHandler(new HorizontalChangeHandler())
                                     .popChangeHandler(new HorizontalChangeHandler()));
                 } else {
-                    DialogUtils.showYesDialog(getActivity(), "", "Sale is currently closed", "OK", (dialogInterface, i) -> dialogInterface.dismiss());
+                    DialogUtils.showYesDialog(mActivity, "", "Sale is currently closed", "OK", (dialogInterface, i) -> dialogInterface.dismiss());
                 }
             }
         }
@@ -321,8 +321,8 @@ public class ShopsController extends BasePullToRefreshController implements Shop
     @OnClick(R.id.partial_toolbar_hamburger)
     void onClickHamburger() {
 
-        assert (getActivity()) != null;
-        ((MainActivity) getActivity()).setRootViewpagerItem(0);
+        assert (mActivity) != null;
+        mActivity.setRootViewpagerItem(0);
     }
 
     @OnClick(R.id.partial_toolbar_logo)
@@ -344,7 +344,7 @@ public class ShopsController extends BasePullToRefreshController implements Shop
 
         router.pushController(RouterTransaction.with(
                 SaleItemsController.newInstance(saleItemBundle))
-                .tag(getActivity().getString(R.string.sale_items_controller_tag))
+                .tag(mActivity.getString(R.string.sale_items_controller_tag))
                 .pushChangeHandler(new SimpleChangeHandler())
                 .popChangeHandler(new FadeChangeHandler()));
     }
@@ -480,12 +480,12 @@ public class ShopsController extends BasePullToRefreshController implements Shop
             }
             mShopsControllerToolbarTextView.setVisibility(View.VISIBLE);
             mShopsControllerToolbarTextView.setText(getCategoryParentKey(getCategoryTreeResponse.getKey()));
-            mShopsControllerHamburgerView.setImageDrawable(getActivity().getDrawable(R.drawable.ic_pink_chevron));
+            mShopsControllerHamburgerView.setImageDrawable(mActivity.getDrawable(R.drawable.ic_pink_chevron));
             shopsControllerSearchView.setVisibility(View.INVISIBLE);
-            ((MainActivity) getActivity()).setIsFromCategories(true);
+            mActivity.setIsFromCategories(true);
         } else {
-            assert (getActivity()) != null;
-            ((MainActivity) getActivity()).setIsFromCategories(false);
+            assert (mActivity) != null;
+            mActivity.setIsFromCategories(false);
             loadShopBanners();
         }
     }
@@ -501,7 +501,7 @@ public class ShopsController extends BasePullToRefreshController implements Shop
 //        item = (RelativeLayout) getToolbar();
 //
 //        //noinspection ConstantConditions
-//        child = getActivity().getLayoutInflater().inflate(R.layout.partial_toolbar_search, null);
+//        child = mActivity.getLayoutInflater().inflate(R.layout.partial_toolbar_search, null);
 //        item.addView(child);
 //
 //        child.setBackgroundColor(getResources().getColor(R.color.toolbar_active_skin));
@@ -513,7 +513,7 @@ public class ShopsController extends BasePullToRefreshController implements Shop
 //        searchField.setFocusable(true);
 //
 ////        if (searchField.requestFocus()) {
-////            KeyboardUtils.showSoftInput(searchField, getActivity());
+////            KeyboardUtils.showSoftInput(searchField, mActivity);
 ////        }
 //
 //        //noinspection deprecation
@@ -543,7 +543,7 @@ public class ShopsController extends BasePullToRefreshController implements Shop
 //
 //        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
 //            //noinspection ConstantConditions
-//            getActivity().dismissKeyboardShortcutsHelper();
+//            mActivity.dismissKeyboardShortcutsHelper();
 //        }
 //
 //        Handler handler = new Handler();
@@ -560,7 +560,7 @@ public class ShopsController extends BasePullToRefreshController implements Shop
         if(isAttached()) {
             mShopsControllerToolbarLogo.setVisibility(View.VISIBLE);
             mShopsControllerToolbarTextView.setVisibility(View.GONE);
-            mShopsControllerHamburgerView.setImageDrawable(getActivity().getDrawable(R.drawable.ic_action_menu));
+            mShopsControllerHamburgerView.setImageDrawable(mActivity.getDrawable(R.drawable.ic_action_menu));
             shopsControllerSearchView.setVisibility(View.VISIBLE);
         }
         GetCategoryTreeResponse shopCategory = new GetCategoryTreeResponse();

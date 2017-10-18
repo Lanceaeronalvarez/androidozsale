@@ -121,8 +121,6 @@ public class CheckoutController extends BaseController implements CheckoutMvpVie
     private String mCartPhone;
     private Value mValue;
 
-    private MainActivity mActivity;
-
     private boolean mCartIsLoading = false;
 
     public CheckoutController() {
@@ -159,7 +157,7 @@ public class CheckoutController extends BaseController implements CheckoutMvpVie
                     //push controller to add payment
                     if (!isAddressValid()) {
                         //push add new address fragment
-                        CustomAlertDialog.showCustomAlertDialog(getActivity(), CustomAlertDialog.CustomDialogIconState.NEGATIVE, mActivity.getString(R.string.add_address_before_payment));
+                        CustomAlertDialog.showCustomAlertDialog(mActivity, CustomAlertDialog.CustomDialogIconState.NEGATIVE, mActivity.getString(R.string.add_address_before_payment));
                         showAddAddressController();
                     } else {
                         showAddPaymentMethodController();
@@ -206,7 +204,6 @@ public class CheckoutController extends BaseController implements CheckoutMvpVie
     protected void onViewBound(@NonNull View view) {
         super.onViewBound(view);
 
-        mActivity = ((MainActivity) getActivity());
         if (mActivity != null) {
             mActivity.performResetWithAuthFetch();
         }
@@ -249,7 +246,7 @@ public class CheckoutController extends BaseController implements CheckoutMvpVie
     @Override
     protected void setUp(View view) {
 
-        if (getActivity() != null) {
+        if (mActivity != null) {
             mActivity.getMainController().showBottomNav();
             mActivity.getMainController().setViewpagerDraggable(false);
         }
@@ -257,7 +254,7 @@ public class CheckoutController extends BaseController implements CheckoutMvpVie
 
         mTitleTextView.setText(R.string.checkout_page_toolbar_title);
 
-        mAdapter = new CheckoutOrderAdapter(getActivity(), R.layout.partial_checkout_item, mItemList, mPresenter);
+        mAdapter = new CheckoutOrderAdapter(mActivity, R.layout.partial_checkout_item, mItemList, mPresenter);
         mListView.setAdapter(mAdapter);
         mListView.addFooterView(mFooterView, null, false);
 
@@ -332,7 +329,7 @@ public class CheckoutController extends BaseController implements CheckoutMvpVie
                 OurpayStateManager.setOurpayAccordingToPaymentMethod(ourpay, paymentMethod);
                 PaymentInfo.setOurpay(ourpay);
 
-                OurpayPanel ourpayPanel = new OurpayPanel((BaseActivity) getActivity(), getRouter());
+                OurpayPanel ourpayPanel = new OurpayPanel((BaseActivity) mActivity, getRouter());
                 mOurpayHolder.removeAllViews();
                 if (mOurpayHolder.getChildCount() == 0) { //add view if there is no childview yet
                     mOurpayHolder.addView(ourpayPanel.generatePanel(PaymentInfo.getOurpay(), isRowVisible -> {
@@ -419,7 +416,7 @@ public class CheckoutController extends BaseController implements CheckoutMvpVie
             ((TextView) mPaymentLayout.findViewById(R.id.partial_checkout_payment_name)).setText(paymentMethod.getPaymentType());
             ((TextView) mPaymentLayout.findViewById(R.id.partial_checkout_payment_details)).setText(paymentMethod.getDescription());
 
-            ImageUtils.loadImage(getActivity()
+            ImageUtils.loadImage(mActivity
                     , paymentMethod.getImageUrl()
                     , mPaymentLayout.findViewById(R.id.partial_checkout_payment_image));
 
@@ -502,8 +499,8 @@ public class CheckoutController extends BaseController implements CheckoutMvpVie
 
     @Override
     public void triggerLoginTicket() {
-        assert (getActivity()) != null;
-        ((MainMvpView) getActivity()).callLoginTicket();
+        assert (mActivity) != null;
+        mActivity.callLoginTicket();
     }
 
     @Override
@@ -575,13 +572,13 @@ public class CheckoutController extends BaseController implements CheckoutMvpVie
     private void onOurpayButtonClick() {
         RxBus.instance().post(IntrospectionUtils.EVENT_PAY);
 
-        assert (getActivity()) != null;
+        assert (mActivity) != null;
 
         if (mActivity.isBraintreeInitialized()) {
 
             if (!isAddressValid()) {
 
-                CustomAlertDialog.showCustomAlertDialog(getActivity(), CustomAlertDialog.CustomDialogIconState.NEGATIVE, mActivity.getString(R.string.add_address_before_payment));
+                CustomAlertDialog.showCustomAlertDialog(mActivity, CustomAlertDialog.CustomDialogIconState.NEGATIVE, mActivity.getString(R.string.add_address_before_payment));
                 showAddAddressController();
 
             } else if (mActivity.getPaymentMethodSelected() == null) {
@@ -593,7 +590,7 @@ public class CheckoutController extends BaseController implements CheckoutMvpVie
                 if (!mActivity.getPaymentMethodSelected().getPaymentType().equalsIgnoreCase(CARD_PAYPAL) && PaymentInfo.getOurpay().isCanUse()) {
 
                     if (mCheckBoxOurpayTC != null && !mCheckBoxOurpayTC.isChecked()) {
-                        CustomAlertDialog.showCustomAlertDialog(getActivity(), CustomAlertDialog.CustomDialogIconState.NEGATIVE, OurpayTemplateText.getText(mActivity, KEY_OURPAY_TC_VALIDATION_FAILED));
+                        CustomAlertDialog.showCustomAlertDialog(mActivity, CustomAlertDialog.CustomDialogIconState.NEGATIVE, OurpayTemplateText.getText(mActivity, KEY_OURPAY_TC_VALIDATION_FAILED));
                         return;
                     }
 

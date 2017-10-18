@@ -120,7 +120,7 @@ public class CurrentReturnsController extends BasePullToRefreshController
             mCurrentReturnsAdapter = new CurrentReturnAdapter(
                     mCurrentReturns,
                     returnDetailsResponseBodyList,
-                    getActivity(),
+                    mActivity,
                     mCurrentReturnsListener);
 
             mCurrentReturnsRecyclerView.setAdapter(mCurrentReturnsAdapter);
@@ -133,7 +133,7 @@ public class CurrentReturnsController extends BasePullToRefreshController
     @Override
     protected void setUp(View view) {
 
-        mCurrentReturnsRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity(),LinearLayoutManager
+        mCurrentReturnsRecyclerView.setLayoutManager(new LinearLayoutManager(mActivity,LinearLayoutManager
                 .HORIZONTAL,false));
 
     }
@@ -159,7 +159,7 @@ public class CurrentReturnsController extends BasePullToRefreshController
             mCurrentReturnsAdapter = new CurrentReturnAdapter(
                     currentReturns,
                     returnDetailsResponseBodyList,
-                    getActivity(),
+                    mActivity,
                     mCurrentReturnsListener);
 
             mCurrentReturnsRecyclerView.setAdapter(mCurrentReturnsAdapter);
@@ -224,7 +224,7 @@ public class CurrentReturnsController extends BasePullToRefreshController
 
     @OnClick(R.id.partial_toolbar_arrow_view)
     public void onBackClick(){
-        getActivity().onBackPressed();
+        mActivity.onBackPressed();
     }
 
     @OnClick(R.id.partial_toolbar_filter_view)
