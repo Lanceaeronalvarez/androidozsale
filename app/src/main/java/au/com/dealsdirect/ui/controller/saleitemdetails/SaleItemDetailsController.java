@@ -174,7 +174,6 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
     private int mFromPosition = -1;
 
     boolean checkOutLocated = false;
-    private MainActivity mActivity;
 
     int[] checkoutLocation = new int[2];
     boolean isAnimating = false;
@@ -188,7 +187,7 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
         @Override
         public void onDragDismissed() {
             mProductDetailScrollView.scrollTo(0, 0);
-            getActivity().onBackPressed();
+            mActivity.onBackPressed();
         }
     };
 
@@ -248,7 +247,6 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
 
         mRootView = ((ElasticDragDismissFrameLayout) view);
 
-        mActivity = (MainActivity) getActivity();
         //product info
         mProductName.setText(mSaleName);
 
@@ -272,21 +270,21 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
 //                .dontAnimate()
 //                .format(DecodeFormat.PREFER_RGB_565);
 //
-//        Glide.with(getActivity())
+//        Glide.with(mActivity)
 //                .load(mItemImageUrl)
 //                .apply(options)
 //                .into(mProductSharedImage);
 
-        ImageUtils.loadImageImmediate(getActivity(), mItemImageUrl, mProductSharedImage, null);
+        ImageUtils.loadImageImmediate(mActivity, mItemImageUrl, mProductSharedImage, null);
 
         mPresenter.loadSaleItemDetails(mSeoIdentifierId);
 
-        mOtherImagesRv.setLayoutManager(new LinearLayoutManager(getActivity(), LinearLayoutManager.HORIZONTAL, false));
+        mOtherImagesRv.setLayoutManager(new LinearLayoutManager(mActivity, LinearLayoutManager.HORIZONTAL, false));
         mSaleItemImagesIndicatorAdapter = new SaleItemDetailsImageAdapter(null, loadImagesListener, new ArrayList<>(), mSaleId, 2, null);
         mOtherImagesRv.setAdapter(mSaleItemImagesIndicatorAdapter);
         mOtherImagesRv.setVisibility(View.INVISIBLE);
 
-        mProductImagesRvLayoutManager = new LinearLayoutManager(getActivity(), LinearLayoutManager.HORIZONTAL, false);
+        mProductImagesRvLayoutManager = new LinearLayoutManager(mActivity, LinearLayoutManager.HORIZONTAL, false);
         mProductImagesRv.setLayoutManager(mProductImagesRvLayoutManager);
         mSaleItemImagesAdapter = new SaleItemDetailsImageAdapter(new ArrayList<View>() {{
             add(mOtherImagesRv);
@@ -313,9 +311,9 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
             }
         });
 
-        mHtmlHeader = getActivity().getResources()
+        mHtmlHeader = mActivity.getResources()
                 .getString(R.string.base_html_template_header);
-        mHtmlFooter = getActivity().getResources()
+        mHtmlFooter = mActivity.getResources()
                 .getString(R.string.base_html_template_footer);
 
         setRetainViewMode(RetainViewMode.RETAIN_DETACH);
@@ -331,7 +329,7 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
     @Override
     public void showSaleDetails(GetSaleItemDetailsResponse saleDetail) {
 
-        Animation anim = AnimationUtils.loadAnimation(getActivity(), R.anim.slide_to_bottom);
+        Animation anim = AnimationUtils.loadAnimation(mActivity, R.anim.slide_to_bottom);
         anim.setDuration(200);
 
         String deliveryInformation = saleDetail.getDeliveryInformation();
@@ -430,7 +428,7 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
                 @SuppressWarnings("ConstantConditions")
                 @Override
                 public View getView(FlowLayout parent, int position, Pair<String, String> data) {
-                    TextView tv = (TextView) getActivity().getLayoutInflater()
+                    TextView tv = (TextView) mActivity.getLayoutInflater()
                             .inflate(R.layout.sizes_chips_layout,
                                     parent,
                                     false);
@@ -485,16 +483,16 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
             CartUtil.addValueToCart(1);
             mActivity.getMainController().getHomeController().updateBasketItemCount();
             CustomAlertDialog.showCustomAlertDialog(
-                    getActivity(),
+                    mActivity,
                     CustomAlertDialog.CustomDialogIconState.POSITIVE,
-                    getActivity().getString(R.string.add_to_cart_success));
+                    mActivity.getString(R.string.add_to_cart_success));
         }
     }
 
     @Override
     public void showMyPayDetails(GetSaleItemDetailsResponse value, Ourpay ourpay) {
         if (ourpay != null) {
-            OurpayPanel panel = new OurpayPanel((BaseActivity) getActivity());
+            OurpayPanel panel = new OurpayPanel(mActivity);
             mOurpayHolder.setVisibility(View.VISIBLE);
             mOurpayHolder.removeAllViews();
             mOurpayHolder.addView(panel.generatePanel(ourpay));
@@ -506,7 +504,7 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
         if (!isAnimating) {
             mProductDetailScrollView.scrollTo(0, 0);
             mRootView.removeListener(dragDismissListener);
-            ImageUtils.loadImageImmediate(getActivity(), mItemImageUrl, mProductSharedImage, null);
+            ImageUtils.loadImageImmediate(mActivity, mItemImageUrl, mProductSharedImage, null);
             mProductImagesRv.setVisibility(View.GONE);
             return false;
         }
@@ -521,9 +519,9 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
         if (hasSizes) {
             if (!didSelectSize) {
                 CustomAlertDialog.showCustomAlertDialog(
-                        getActivity(),
+                        mActivity,
                         CustomAlertDialog.CustomDialogIconState.NEGATIVE,
-                        getActivity().getString(R.string.please_select_size));
+                        mActivity.getString(R.string.please_select_size));
 
                 mProductDetailScrollView.scrollTo(0, mProductDetailBottomCard.getTop());
             } else {
@@ -536,7 +534,7 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
 
     private void verifyAddToCart(AddToCartRequest request) {
         if (!mPresenter.isAuthorized()) {
-            ((MainActivity) getActivity()).showLoginController(getRouter(), new AuthHandler() {
+            mActivity.showLoginController(getRouter(), new AuthHandler() {
                 @Override
                 public void success() {
                     mActivity.getMainController().getHomeController().resetInviteRouter();
@@ -581,7 +579,7 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
 
         mImageViewToAnimate.bringToFront();
 
-        mBottomNavView = ((MainActivity) getActivity()).getMainController().getHomeController().getBottomNavigationView();
+        mBottomNavView = mActivity.getMainController().getHomeController().getBottomNavigationView();
         ArrayList<View> potentialViews = new ArrayList<View>();
         mBottomNavView.findViewsWithText(potentialViews, "checkout", View.FIND_VIEWS_WITH_TEXT);
 //        mCheckoutView = !potentialViews.isEmpty() ? potentialViews.get(0) : null;
@@ -655,13 +653,13 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
 
     public void readyViewsForTransition() {
 
-        ImageUtils.loadImageImmediate(getActivity(), mItemImageUrl, mProductSharedImage, null);
+        ImageUtils.loadImageImmediate(mActivity, mItemImageUrl, mProductSharedImage, null);
 
     }
 
     @OnClick(R.id.arrow_left)
     void dismissArrowDown() {
-        getActivity().onBackPressed();
+        mActivity.onBackPressed();
     }
 
 
