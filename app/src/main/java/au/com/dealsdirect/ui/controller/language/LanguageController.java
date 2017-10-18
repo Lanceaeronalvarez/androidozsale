@@ -65,7 +65,7 @@ public class LanguageController extends BasePullToRefreshController implements L
 
     @Override
     public void showLanguageLanguageDialog(String language) {
-        CustomAlertDialog.showCustomAlertDialog(getActivity(),
+        CustomAlertDialog.showCustomAlertDialog(mActivity,
                 CustomAlertDialog.CustomDialogIconState.POSITIVE,
                 language);
     }
@@ -108,8 +108,8 @@ public class LanguageController extends BasePullToRefreshController implements L
             onBackPress();
         });
 
-        mAdapter = new LanguageAdapter(new ArrayList<>(), getActivity(), mPresenter);
-        mRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity(), LinearLayoutManager.VERTICAL, false));
+        mAdapter = new LanguageAdapter(new ArrayList<>(), mActivity, mPresenter);
+        mRecyclerView.setLayoutManager(new LinearLayoutManager(mActivity, LinearLayoutManager.VERTICAL, false));
         mRecyclerView.setAdapter(mAdapter);
 
         mPresenter.getUserLanguages();
@@ -117,6 +117,6 @@ public class LanguageController extends BasePullToRefreshController implements L
 
     @Override
     public void onBackPress() {
-        getActivity().onBackPressed();
+        mActivity.onBackPressed();
     }
 }

@@ -87,7 +87,7 @@ public class LegalitiesController extends BasePullToRefreshController implements
 
     @Override
     protected void setUp(View view) {
-        ((MainActivity)getActivity()).setDraggableViewPager(false);
+        mActivity.setDraggableViewPager(false);
 
         mTitleText.setText(title);
         mFilterButton.setVisibility(View.INVISIBLE);
@@ -97,8 +97,8 @@ public class LegalitiesController extends BasePullToRefreshController implements
 
     @Override
     public void displayFetchedText(String value) {
-        String header = getActivity().getResources().getString(R.string.base_html_template_header);
-        String footer = getActivity().getResources().getString(R.string.base_html_template_footer);
+        String header = mActivity.getResources().getString(R.string.base_html_template_header);
+        String footer = mActivity.getResources().getString(R.string.base_html_template_footer);
 
         mWebView.loadData(header + value + footer, "text/html; charset=UTF-8", null);
         mWebView.setVisibility(View.VISIBLE);
@@ -106,6 +106,6 @@ public class LegalitiesController extends BasePullToRefreshController implements
 
     @OnClick(R.id.partial_toolbar_arrow_view)
     public void backPress() {
-        getActivity().onBackPressed();
+        mActivity.onBackPressed();
     }
 }

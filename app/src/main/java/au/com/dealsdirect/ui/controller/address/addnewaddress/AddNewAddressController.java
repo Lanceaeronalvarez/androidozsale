@@ -138,7 +138,7 @@ public class AddNewAddressController extends BaseController implements AddNewAdd
                 TextView textViewLabel2 = (TextView) dynamicView.findViewById(R.id.add_address_label);
                 textViewLabel2.setText(StringUtils.toTitleCase(infoList.Label));
 
-                ArrayAdapter<String> signatureOnDeliveryAdapter = new ArrayAdapter<>(getActivity(),
+                ArrayAdapter<String> signatureOnDeliveryAdapter = new ArrayAdapter<>(mActivity,
                         R.layout.add_new_address_spinner_text, infoList.Options);
 
                 Spinner signatureOnDeliverySpinner = (Spinner) dynamicView.findViewById(R.id.add_address_spinner);
@@ -165,18 +165,18 @@ public class AddNewAddressController extends BaseController implements AddNewAdd
     public void addNewAddressSuccessful() {
 
         CustomAlertDialog.showCustomAlertDialog(
-                getActivity(),
+                mActivity,
                 CustomAlertDialog.CustomDialogIconState.POSITIVE,
                 getApplicationContext().getString(R.string.delivery_address_added));
-        getActivity().onBackPressed();
+        mActivity.onBackPressed();
 
     }
 
     @OnClick(R.id.partial_toolbar_arrow_view)
     public void onBackClick() {
         hideKeyboard();
-        if (getActivity()!=null){
-            getActivity().onBackPressed();
+        if (mActivity != null){
+            mActivity.onBackPressed();
         }
     }
 
@@ -195,7 +195,7 @@ public class AddNewAddressController extends BaseController implements AddNewAdd
     public void showErrorMessage(String message) {
 
         CustomAlertDialog.showCustomAlertDialog(
-                getActivity(),
+                mActivity,
                 CustomAlertDialog.CustomDialogIconState.NEGATIVE,
                 message);
 
