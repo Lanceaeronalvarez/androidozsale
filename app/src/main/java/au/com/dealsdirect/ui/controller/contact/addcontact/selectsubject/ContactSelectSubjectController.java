@@ -92,10 +92,10 @@ public class ContactSelectSubjectController extends BaseController
 
         final ContactSubjectAdapter adapter
                 = new ContactSubjectAdapter
-                (myContactSubjects,getActivity(), mContactSubjectItemListener);
+                (myContactSubjects,mActivity, mContactSubjectItemListener);
 
         mContactSelectSubjectControllerRecyclerView.setAdapter(adapter);
-        mContactSelectSubjectControllerRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
+        mContactSelectSubjectControllerRecyclerView.setLayoutManager(new LinearLayoutManager(mActivity));
     }
 
     @Override
@@ -108,7 +108,7 @@ public class ContactSelectSubjectController extends BaseController
     @Override
     public void onContactSubjectItemClicked(String contactSubject) {
         ContactPreferenceHelper.setChosenSubjectString(
-                getActivity(),
+                mActivity,
                 contactSubject);
 
         getRouter().popCurrentController();

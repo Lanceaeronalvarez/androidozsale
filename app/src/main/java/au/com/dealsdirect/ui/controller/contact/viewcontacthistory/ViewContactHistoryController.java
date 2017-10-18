@@ -129,8 +129,8 @@ public class ViewContactHistoryController extends BaseController implements View
     @Override
     protected void setUp(View view) {
 
-        KeyboardUtils.setKeyboardAdjustResize(getActivity());
-        ((MainActivity) getActivity()).getMainController().hideBottomNav();
+        KeyboardUtils.setKeyboardAdjustResize(mActivity);
+        mActivity.getMainController().hideBottomNav();
 
         mContactHistorySubject.setText(StringUtils.toTitleCase(mContactSubject));
         mContactHistoryTimeStamp.setText(mTimeStamp);
@@ -147,7 +147,7 @@ public class ViewContactHistoryController extends BaseController implements View
 
     @Override
     protected void onDestroyView(@NonNull View view) {
-        KeyboardUtils.setKeyboardAdjustPan(getActivity());
+        KeyboardUtils.setKeyboardAdjustPan(mActivity);
         mPresenter.onDetach();
         super.onDestroyView(view);
     }
@@ -156,9 +156,9 @@ public class ViewContactHistoryController extends BaseController implements View
     public void showContactHistory(java.util.List<List> myContactItems) {
 
         Log.d("contacts", myContactItems.size() + " ");
-        ContactHistoryAdapter adapter = new ContactHistoryAdapter(myContactItems, getActivity());
+        ContactHistoryAdapter adapter = new ContactHistoryAdapter(myContactItems, mActivity);
 
-        LinearLayoutManager layoutManager = new LinearLayoutManager(getActivity());
+        LinearLayoutManager layoutManager = new LinearLayoutManager(mActivity);
         layoutManager.setStackFromEnd(true);
 
         contactHistoryRecyclerView.setAdapter(adapter);
@@ -167,7 +167,7 @@ public class ViewContactHistoryController extends BaseController implements View
 
     @OnClick(R.id.partial_toolbar_arrow_view)
     void onBackClick() {
-        getActivity().onBackPressed();
+        mActivity.onBackPressed();
     }
 
     @OnClick(R.id.controller_view_contacts_history_reply_button)
@@ -183,7 +183,7 @@ public class ViewContactHistoryController extends BaseController implements View
 //                .pushChangeHandler(new HorizontalChangeHandler())
 //                .popChangeHandler(new HorizontalChangeHandler()));
 
-        KeyboardUtils.hideSoftInput(getActivity());
+        KeyboardUtils.hideSoftInput(mActivity);
 
         String replyMessage = mContactHistoryMessageField.getText().toString();
         int contactId = mContactNumber;
@@ -209,14 +209,14 @@ public class ViewContactHistoryController extends BaseController implements View
     public void repliedContactSwitchView(ReplyContact replyContact) {
         if (replyContact.getResult()) {
             CustomAlertDialog.showCustomAlertDialog(
-                    getActivity(), CustomAlertDialog.CustomDialogIconState.POSITIVE,
-                    getActivity().getString(R.string.message_submitted));
+                    mActivity, CustomAlertDialog.CustomDialogIconState.POSITIVE,
+                    mActivity.getString(R.string.message_submitted));
             mPresenter.loadContactHistory(createContactHistoryRequest(getArgs().getInt(KEY_CONTACT_NO)));
             mContactHistoryMessageField.setText("");
         } else {
             CustomAlertDialog.showCustomAlertDialog(
-                    getActivity(), CustomAlertDialog.CustomDialogIconState.POSITIVE,
-                    getActivity().getString(R.string.error_creating_message));
+                    mActivity, CustomAlertDialog.CustomDialogIconState.POSITIVE,
+                    mActivity.getString(R.string.error_creating_message));
         }
     }
 

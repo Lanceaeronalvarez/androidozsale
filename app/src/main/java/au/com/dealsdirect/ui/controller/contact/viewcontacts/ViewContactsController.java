@@ -105,8 +105,8 @@ public class ViewContactsController extends BasePullToRefreshController implemen
     public void onViewBound(@NonNull View view) {
         super.onViewBound(view);
 
-        assert (getActivity()) != null;
-        ((MainActivity) getActivity()).getMainController().showBottomNav();
+        assert (mActivity) != null;
+        mActivity.getMainController().showBottomNav();
 
         mContactClickListener = this;
         setUp(view);
@@ -117,17 +117,17 @@ public class ViewContactsController extends BasePullToRefreshController implemen
     @Override
     protected void setUp(View view) {
 
-        assert (getActivity()) != null;
-        ((MainActivity) getActivity()).setDraggableViewPager(false);
+        assert (mActivity) != null;
+        mActivity.setDraggableViewPager(false);
 
         mViewContactsToolarTitle.setText("Contact Us");
         mViewContactsToolbarLeftOption.setVisibility(View.INVISIBLE);
         mViewContactsToolbarRightOption.setVisibility(View.INVISIBLE);
 
-        mContactAdapter = new ContactsAdapter(new ArrayList<>(), getActivity(), mContactClickListener);
+        mContactAdapter = new ContactsAdapter(new ArrayList<>(), mActivity, mContactClickListener);
 
         mViewContactsRecyclerView.setAdapter(mContactAdapter);
-        mViewContactsRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
+        mViewContactsRecyclerView.setLayoutManager(new LinearLayoutManager(mActivity));
         hideKeyboard();
     }
 
