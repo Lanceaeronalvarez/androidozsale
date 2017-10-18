@@ -84,7 +84,6 @@ public class HomeController extends BaseController implements HomeMvpView {
     private Router mCheckoutRouter;
     private List<Router> mRouterList;
     private List<ViewGroup> mContainersList;
-    private MainActivity mActivity;
 
     public Router getAccountsRouter() {
         return mAccountsRouter;
@@ -127,7 +126,6 @@ public class HomeController extends BaseController implements HomeMvpView {
     @Override
     protected void onViewBound(@NonNull View view) {
         super.onViewBound(view);
-        mActivity = (MainActivity) getActivity();
         mRoot = view;
 
 //        mShopRouter = Conductor.attachRouter(getActivity(), mShopContainer, null);

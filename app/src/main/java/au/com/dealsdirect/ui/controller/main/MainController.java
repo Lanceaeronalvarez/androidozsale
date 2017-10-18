@@ -51,7 +51,6 @@ public class MainController extends BaseController implements MainMvpView {
 
     private HomeController mHomeController;
     private CategoriesController mCategoriesController;
-    private MainActivity mActivity;
 
     private View mLastSelectedSubCategoryItem;
     private Map<String, List<GetCategoryTreeResponse>> mCategoryMap = new HashMap<>();
@@ -86,7 +85,6 @@ public class MainController extends BaseController implements MainMvpView {
     @Override
     protected void onViewBound(@NonNull View view) {
         super.onViewBound(view);
-        mActivity = (MainActivity) getActivity();
         setUp(view);
     }
 
