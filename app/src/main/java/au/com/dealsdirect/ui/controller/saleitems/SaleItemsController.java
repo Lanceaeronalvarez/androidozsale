@@ -467,7 +467,9 @@ public class SaleItemsController extends BasePullToRefreshController implements 
 
             mPresenter.loadSaleItems(createSaleItemsRequest(mCategoryKey, mSaleId, page, null));
         } else if (!mSaleItems.isEmpty()) {
-            mPaginateManager = PaginateUtils.init(mSaleItemsRecyclerView, mPaginateCallbacks);
+            if(mSaleItems.size() >= PaginateUtils.LOADING_TRIGGER_THRESHOLD) {
+                mPaginateManager = PaginateUtils.init(mSaleItemsRecyclerView, mPaginateCallbacks);
+            }
         }
 
         mSaleItemsToolbarField.setOnKeyboardListener((keyboardEditText, showing) -> {
@@ -550,8 +552,10 @@ public class SaleItemsController extends BasePullToRefreshController implements 
 
                     mPaginateManager = PaginateUtils.init(mSaleItemsRecyclerView, mPaginateCallbacks);
                     mSaleItemsRecyclerView.scrollToPosition(0);
-                    hasLoadedAllItems = false;
-                    page = 0;
+                    if(items.size() <= PaginateUtils.LOADING_TRIGGER_THRESHOLD) {
+                        hasLoadedAllItems = false;
+                        mPaginateManager.setHasMoreDataToLoad(false);
+                    }
                     mIsSearch = false;
                 } else {
                     mSaleItemsAdapter.addData(items);
