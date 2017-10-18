@@ -12,22 +12,17 @@ import android.widget.TextView;
 
 import com.bluelinelabs.conductor.RouterTransaction;
 import com.bluelinelabs.conductor.changehandler.HorizontalChangeHandler;
-import com.bluelinelabs.conductor.changehandler.VerticalChangeHandler;
 import com.google.gson.Gson;
-import com.lsjwzh.widget.recyclerviewpager.RecyclerViewPager;
-
 import java.util.ArrayList;
 
 import javax.inject.Inject;
 
 import au.com.dealsdirect.R;
 import au.com.dealsdirect.data.network.model.orders.GetPaymentsList;
-import au.com.dealsdirect.ui.base.BaseController;
 import au.com.dealsdirect.ui.base.BasePullToRefreshController;
 import au.com.dealsdirect.ui.controller.orders.orderdetails.OrderDetailsController;
 import au.com.dealsdirect.ui.custom.RecyclerOnTouchListener;
 import au.com.dealsdirect.ui.custom.SimpleDividerItemDecoration;
-import au.com.dealsdirect.utils.JsonUtils;
 import butterknife.BindView;
 import butterknife.OnClick;
 
@@ -82,9 +77,9 @@ public class OrdersController extends BasePullToRefreshController implements Ord
         mOrdersToolarTitle.setText("My Orders");
         mOrdersRightOption.setImageDrawable(null);
 
-        mRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity(),LinearLayoutManager.VERTICAL,false));
-        mRecyclerView.addOnItemTouchListener(new RecyclerOnTouchListener(getActivity(), (v, position) -> showOrderDetails(position)));
-        mRecyclerView.addItemDecoration(new SimpleDividerItemDecoration(getActivity()));
+        mRecyclerView.setLayoutManager(new LinearLayoutManager(mActivity,LinearLayoutManager.VERTICAL,false));
+        mRecyclerView.addOnItemTouchListener(new RecyclerOnTouchListener(mActivity, (v, position) -> showOrderDetails(position)));
+        mRecyclerView.addItemDecoration(new SimpleDividerItemDecoration(mActivity));
         mPresenter.loadOrders();
     }
 
@@ -93,7 +88,7 @@ public class OrdersController extends BasePullToRefreshController implements Ord
     public void showOrders(ArrayList<GetPaymentsList.ResponseValue.PaymentItem> orders) {
         if(orders.size()>0) {
             mOrders = orders;
-            mAdapter = new OrdersRecyclerViewAdapter(orders,getActivity());
+            mAdapter = new OrdersRecyclerViewAdapter(orders,mActivity);
             mRecyclerView.setAdapter(mAdapter);
             mRecyclerView.setVisibility(View.VISIBLE);
             mPlaceholderLayout.setVisibility(View.GONE);
@@ -115,6 +110,6 @@ public class OrdersController extends BasePullToRefreshController implements Ord
 
     @OnClick(R.id.partial_toolbar_arrow_view)
     public void onBackClick() {
-        getActivity().onBackPressed();
+        mActivity.onBackPressed();
     }
 }

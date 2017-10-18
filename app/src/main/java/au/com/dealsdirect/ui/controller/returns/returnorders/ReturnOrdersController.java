@@ -111,7 +111,7 @@ public class ReturnOrdersController extends BaseController
 
     @OnClick(R.id.partial_toolbar_arrow_view)
     void onBackClick(){
-        getActivity().onBackPressed();
+        mActivity.onBackPressed();
     }
 
     @Override
@@ -134,15 +134,15 @@ public class ReturnOrdersController extends BaseController
 
         final ReturnOrdersAdapter adapter
                 = new ReturnOrdersAdapter
-                (newReturnsOrders,getActivity(), mReturnOrderClickListener);
+                (newReturnsOrders,mActivity, mReturnOrderClickListener);
 
         mReturnOrdersRecyclerView
                 .addItemDecoration(
-                        new DividerItemDecoration(getActivity(), DividerItemDecoration.VERTICAL)
+                        new DividerItemDecoration(mActivity, DividerItemDecoration.VERTICAL)
                 );
 
         mReturnOrdersRecyclerView.setAdapter(adapter);
-        mReturnOrdersRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
+        mReturnOrdersRecyclerView.setLayoutManager(new LinearLayoutManager(mActivity));
         //  newReturnsSelectOrderRecyclerView.setItemAnimator(new DefaultItemAnimator());
     }
 

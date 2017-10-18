@@ -26,7 +26,6 @@ import au.com.dealsdirect.ui.controller.returns.newreturn.adapter.NewReturnOrder
 import au.com.dealsdirect.ui.controller.returns.newreturn.listener.NewReturnOrderUpdateListener;
 import au.com.dealsdirect.ui.controller.returns.newreturn.viewholder.NewReturnOrderViewHolder;
 import au.com.dealsdirect.ui.custom.CustomAlertDialog;
-import au.com.dealsdirect.ui.main.MainActivity;
 import au.com.dealsdirect.utils.BundleBuilder;
 import au.com.dealsdirect.utils.KeyboardUtils;
 import butterknife.BindView;
@@ -126,15 +125,15 @@ public class NewReturnController extends BaseController implements NewReturnMvpV
 
             if (createReturnRequest.items.size() == 0) {
                 CustomAlertDialog.showCustomAlertDialog(
-                        getActivity(),
+                        mActivity,
                         CustomAlertDialog.CustomDialogIconState.NEGATIVE,
-                        getActivity().getResources().getString(R.string.please_add_count_to_an_item)
+                        mActivity.getResources().getString(R.string.please_add_count_to_an_item)
                 );
 
             } else if (createReturnRequest.reason.isEmpty()) {
 
                 CustomAlertDialog.showCustomAlertDialog(
-                        getActivity(),
+                        mActivity,
                         CustomAlertDialog.CustomDialogIconState.NEGATIVE,
                         getResources().getString(R.string.please_fill_up_field)
                 );
@@ -159,20 +158,20 @@ public class NewReturnController extends BaseController implements NewReturnMvpV
     @OnClick(R.id.partial_toolbar_arrow_view)
     void onBackClick() {
         hideKeyboard();
-        if (getActivity() != null) getActivity().onBackPressed();
+        if (mActivity != null) mActivity.onBackPressed();
     }
 
     @OnFocusChange(R.id.controller_new_return_field)
     void onMessageFieldFocusChange(View view, boolean hasFocus) {
-        assert getActivity() != null;
+        assert mActivity != null;
         if (hasFocus) {
-            KeyboardUtils.setKeyboardAdjustResize(getActivity());
-            assert ((MainActivity) getActivity()).getMainController() != null;
-            ((MainActivity) getActivity()).getMainController().hideBottomNav();
+            KeyboardUtils.setKeyboardAdjustResize(mActivity);
+            assert mActivity.getMainController() != null;
+            mActivity.getMainController().hideBottomNav();
         } else {
-            KeyboardUtils.setKeyboardAdjustPan(getActivity());
-            assert ((MainActivity) getActivity()).getMainController() != null;
-            ((MainActivity) getActivity()).getMainController().showBottomNav();
+            KeyboardUtils.setKeyboardAdjustPan(mActivity);
+            assert mActivity.getMainController() != null;
+            mActivity.getMainController().showBottomNav();
         }
     }
 
@@ -202,7 +201,7 @@ public class NewReturnController extends BaseController implements NewReturnMvpV
 
         if (createReturnRequest.getCreateReturnRequestResponse().getResult()) {
             CustomAlertDialog.showCustomAlertDialog(
-                    getActivity(),
+                    mActivity,
                     CustomAlertDialog.CustomDialogIconState.POSITIVE,
                     getResources().getString(R.string.return_request_submitted));
         }
@@ -219,10 +218,10 @@ public class NewReturnController extends BaseController implements NewReturnMvpV
 
         final NewReturnOrdersAdapter adapter
                 = new NewReturnOrdersAdapter
-                (newReturnsOrderDetail.getList(), getActivity(), this);
+                (newReturnsOrderDetail.getList(), mActivity, this);
 
         mNewReturnOrderRecyclerView.setAdapter(adapter);
-        mNewReturnOrderRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
+        mNewReturnOrderRecyclerView.setLayoutManager(new LinearLayoutManager(mActivity));
 
     }
 

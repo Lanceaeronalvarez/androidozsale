@@ -22,7 +22,6 @@ import au.com.dealsdirect.R;
 import au.com.dealsdirect.data.auth.AuthHandler;
 import au.com.dealsdirect.ui.base.BaseController;
 import au.com.dealsdirect.ui.controller.legalities.LegalitiesController;
-import au.com.dealsdirect.ui.main.MainActivity;
 import au.com.dealsdirect.utils.AppConstants;
 import au.com.dealsdirect.utils.BundleBuilder;
 import butterknife.BindView;
@@ -62,18 +61,9 @@ public class RegisterController extends BaseController implements RegisterMvpVie
     TextView mTermsLink;
 
     private static AuthHandler mAuthHandler;
-    private MainActivity mActivity;
 
     public static RegisterController newInstance() {
 
-        return new RegisterController(
-                new BundleBuilder(new Bundle())
-                        .build());
-    }
-
-
-    public static RegisterController newInstance(AuthHandler authHandler) {
-        mAuthHandler = authHandler;
         return new RegisterController(
                 new BundleBuilder(new Bundle())
                         .build());
@@ -96,7 +86,6 @@ public class RegisterController extends BaseController implements RegisterMvpVie
         getControllerComponent().inject(this);
         registerForActivityResult(CallbackManagerImpl.RequestCodeOffset.Login.toRequestCode());
         mCallbackManager = CallbackManager.Factory.create();
-        mActivity = (MainActivity) getActivity();
         mPresenter.onAttach(this);
 
         return view;
@@ -113,7 +102,7 @@ public class RegisterController extends BaseController implements RegisterMvpVie
     protected void setUp(View view) {
         // Setup views here
         //mPresenter.loadSample(new SampleRequest());
-        ((MainActivity) getActivity()).setDraggableViewPager(false);
+        mActivity.setDraggableViewPager(false);
 
         mTermsLink.setOnClickListener(action -> {
             getRouter().pushController(RouterTransaction.with(
@@ -142,7 +131,7 @@ public class RegisterController extends BaseController implements RegisterMvpVie
     @OnClick(R.id.controller_register_back_icon)
     void onBackIconClick() {
         hideKeyboard();
-        getActivity().onBackPressed();
+        mActivity.onBackPressed();
     }
 
     @OnClick(R.id.controller_register_sign_up_button)
@@ -161,20 +150,20 @@ public class RegisterController extends BaseController implements RegisterMvpVie
 
     @OnClick(R.id.controller_register_login_text)
     void onLoginClick() {
-        getActivity().onBackPressed();
+        mActivity.onBackPressed();
     }
 
 
     @OnClick(R.id.facebook_login_button)
     void onFacebookLoginClick() {
-        mPresenter.onFacebookLogin(getActivity(), mCallbackManager);
+        mPresenter.onFacebookLogin(mActivity, mCallbackManager);
     }
 
 
     @Override
     public void showLoginSuccessful(String loginTicket) {
         //Call facebook registration successful analytics
-        mPresenter.facebookRegisterAnalytics(getActivity());
+        mPresenter.facebookRegisterAnalytics(mActivity);
         mActivity.loginSuccessHandler(getRouter(), AppConstants.POP_FLAG.ROOT, AppConstants.AUTH_FLAG.REGISTER);
     }
 
