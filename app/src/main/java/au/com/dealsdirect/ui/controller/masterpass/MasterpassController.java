@@ -121,7 +121,7 @@ public class MasterpassController extends BaseController implements MasterpassMv
                         mPresenter.confirmPayment(oAuthToken, oAuthVerifier, checkoutResourceUrl);
                     } else {
                         // Assume logout
-                        getActivity().onBackPressed();
+                        mActivity.onBackPressed();
                     }
                 }
 
@@ -166,11 +166,11 @@ public class MasterpassController extends BaseController implements MasterpassMv
     @Override
     public void showError(String message) {
         CustomAlertDialog.showCustomAlertDialog(
-                getActivity(),
+                mActivity,
                 CustomAlertDialog.CustomDialogIconState.NEGATIVE,
                 message);
 
-        getActivity().onBackPressed();
+        mActivity.onBackPressed();
     }
 
     @Override
@@ -182,6 +182,6 @@ public class MasterpassController extends BaseController implements MasterpassMv
 
     @OnClick(R.id.partial_toolbar_arrow_view)
     public void onClickBack() {
-        getActivity().onBackPressed();
+        mActivity.onBackPressed();
     }
 }

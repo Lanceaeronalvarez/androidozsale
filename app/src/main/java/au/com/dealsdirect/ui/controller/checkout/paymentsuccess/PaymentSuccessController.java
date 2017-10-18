@@ -63,8 +63,6 @@ public class PaymentSuccessController extends BaseController implements PaymentS
     @BindView(R.id.payment_success_order_number)
     TextView mPaymentSuccessOrderNumber;
 
-    MainActivity mActivity;
-
     //rate us strings
     private String appPlayStoreUri;
     private String packageName;
@@ -115,7 +113,6 @@ public class PaymentSuccessController extends BaseController implements PaymentS
     @Override
     protected void onViewBound(@NonNull View view) {
         super.onViewBound(view);
-        mActivity = (MainActivity) getActivity();
 
         mPaymentSuccessOrderNumber.setText(mInvoiceString);
         mPaymentOurpaySuccessDetailContainer.setVisibility(View.VISIBLE);
