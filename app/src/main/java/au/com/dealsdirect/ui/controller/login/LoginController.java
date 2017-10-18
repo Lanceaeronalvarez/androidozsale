@@ -56,7 +56,6 @@ public class LoginController extends BaseController implements LoginMvpView {
     private boolean isLoginTapped = false;
 
     public static AuthHandler mAuthHandler;
-    private MainActivity mActivity;
 
     private CallbackManager mCallbackManager = CallbackManager.Factory.create();
 
@@ -81,7 +80,7 @@ public class LoginController extends BaseController implements LoginMvpView {
 
     @Override
     protected void onAttach(@NonNull View view) {
-        assert (getActivity()) != null;
+        assert (mActivity) != null;
         mActivity.getMainController().hideBottomNav();
         super.onAttach(view);
     }
@@ -95,7 +94,6 @@ public class LoginController extends BaseController implements LoginMvpView {
         // Init facebook callback
         registerForActivityResult(CallbackManagerImpl.RequestCodeOffset.Login.toRequestCode());
         mCallbackManager = CallbackManager.Factory.create();
-        mActivity = (MainActivity) getActivity();
         mPresenter.onAttach(this);
 
         return view;
@@ -110,7 +108,7 @@ public class LoginController extends BaseController implements LoginMvpView {
 
     @Override
     protected void setUp(View view) {
-        ((MainActivity) getActivity()).setDraggableViewPager(false);
+        mActivity.setDraggableViewPager(false);
 
         mLoginButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -135,7 +133,7 @@ public class LoginController extends BaseController implements LoginMvpView {
 
     @OnClick(R.id.controller_login_close_icon)
     void onCloseIconClick() {
-        getActivity().onBackPressed();
+        mActivity.onBackPressed();
     }
 
     @Override
@@ -187,7 +185,7 @@ public class LoginController extends BaseController implements LoginMvpView {
 
     @OnClick(R.id.controller_login_fb_layout)
     void onFacebookButtonClick() {
-        mPresenter.onFacebookLogin(getActivity(), mCallbackManager);
+        mPresenter.onFacebookLogin(mActivity, mCallbackManager);
 
     }
 
