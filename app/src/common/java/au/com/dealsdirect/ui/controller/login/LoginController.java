@@ -24,11 +24,9 @@ import java.util.regex.Pattern;
 import javax.inject.Inject;
 
 import au.com.dealsdirect.R;
-import au.com.dealsdirect.data.auth.AuthHandler;
 import au.com.dealsdirect.ui.base.BaseController;
 import au.com.dealsdirect.ui.controller.forgotpassword.ForgotPasswordController;
 import au.com.dealsdirect.ui.controller.register.RegisterController;
-import au.com.dealsdirect.ui.main.MainActivity;
 import au.com.dealsdirect.utils.AppConstants;
 import au.com.dealsdirect.utils.BundleBuilder;
 import butterknife.BindView;
@@ -55,12 +53,9 @@ public class LoginController extends BaseController implements LoginMvpView {
 
     private boolean isLoginTapped = false;
 
-    public static AuthHandler mAuthHandler;
-
     private CallbackManager mCallbackManager = CallbackManager.Factory.create();
 
-    public static LoginController newInstance(AuthHandler handler) {
-        mAuthHandler = handler;
+    public static LoginController newInstance() {
         return new LoginController(
                 new BundleBuilder(new Bundle())
                         .build());
@@ -75,7 +70,6 @@ public class LoginController extends BaseController implements LoginMvpView {
 
     public LoginController(Bundle args) {
         super(args);
-//        mAuthHandler = (AuthHandler) args.getSerializable(AUTH_HANDLER);
     }
 
     @Override
@@ -127,7 +121,6 @@ public class LoginController extends BaseController implements LoginMvpView {
     @Override
     protected void onDestroyView(@NonNull View view) {
         mPresenter.onDetach();
-        mAuthHandler = null;
         super.onDestroyView(view);
     }
 

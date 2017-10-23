@@ -6,8 +6,6 @@ import com.bluelinelabs.conductor.changehandler.VerticalChangeHandler;
 import com.mysale.genie.utility.Prefs;
 
 import javax.inject.Inject;
-
-import au.com.dealsdirect.ui.controller.login.LoginController;
 import au.com.dealsdirect.utils.CookieUtils;
 
 /**

@@ -59,7 +59,6 @@ import au.com.dealsdirect.ui.controller.checkout.addpayment.AddPaymentController
 import au.com.dealsdirect.ui.controller.checkout.checkout.CheckoutController;
 import au.com.dealsdirect.ui.controller.checkout.paymentsuccess.PaymentSuccessController;
 import au.com.dealsdirect.ui.controller.home.HomeController;
-import au.com.dealsdirect.ui.controller.login.LoginController;
 import au.com.dealsdirect.ui.controller.main.MainController;
 import au.com.dealsdirect.ui.controller.saleitemdetails.SaleItemDetailsController;
 import au.com.dealsdirect.ui.controller.saleitems.SaleItemsController;
@@ -69,6 +68,8 @@ import au.com.dealsdirect.ui.custom.CustomAlertDialog;
 import au.com.dealsdirect.utils.AppConstants;
 import au.com.dealsdirect.utils.DialogUtils;
 import au.com.dealsdirect.utils.IntrospectionUtils;
+import au.com.dealsdirect.utils.module.ControllerFactory;
+import au.com.dealsdirect.utils.module.GateKeeper;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import io.fabric.sdk.android.Fabric;
@@ -142,6 +143,27 @@ public class MainActivity extends BaseActivity implements MainMvpView {
             //If not logged in, call GetPublicAppSettings
             mPresenter.callGetPublicAppSettings();
         }
+
+//        //create route origins for main
+//        mMainRouteOrigins = new GateKeeper.RouteBuilder()
+//                .addRouteFrom(GateKeeper.Destination.LOGIN)
+//                .build();
+//
+//        //create route origins for login
+//        mLoginRouteOrigins = new GateKeeper.RouteBuilder()
+//                .addRouteFrom(GateKeeper.Destination.DETAILS)
+//                .build();
+//
+//        //register them
+//        GateKeeper.registerRoute(GateKeeper.Destination.LOGIN, mLoginRouteOrigins);
+//        GateKeeper.registerRoute(GateKeeper.Destination.MAIN, mMainRouteOrigins);
+//
+//        //call to update CURRENT_LOCATION too
+//        //pag di mo pinadaan sa gatekeeper baka makalimutan ng developer to set CURRENT_LOCATION.
+//        GateKeeper.setRoot(mRouter,GateKeeper.Destination.DETAILS,
+//                RouterTransaction.with(ControllerFactory.getInstance(GateKeeper.Destination.DETAILS)));
+
+
     }
 
     @Override
@@ -250,12 +272,9 @@ public class MainActivity extends BaseActivity implements MainMvpView {
         Controller currentController = getCurrentController(router);
         if(currentController instanceof SaleItemDetailsController ||
                 currentController instanceof AccountController ){
-            router.pushController(RouterTransaction.with(LoginController.newInstance(handler))
-                    .tag(LoginController.TAG)
-                    .pushChangeHandler(new VerticalChangeHandler())
-                    .popChangeHandler(new VerticalChangeHandler()));
+            GateKeeper.push(router, GateKeeper.Destination.LOGIN,new VerticalChangeHandler(),new VerticalChangeHandler());
         } else {
-            router.pushController(RouterTransaction.with(LoginController.newInstance(handler)));
+            GateKeeper.push(router, GateKeeper.Destination.LOGIN);
         }
     }
 

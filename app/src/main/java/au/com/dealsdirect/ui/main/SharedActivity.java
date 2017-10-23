@@ -122,7 +122,7 @@ public class SharedActivity extends BaseActivity {
 
     public void showLoginController(Router router, AuthHandler handler) {
         //pinapasa yung router, para kahit child router man siya ng kung ano mang view, pwedeng siya ang tumawag.
-        router.pushController(RouterTransaction.with(LoginController.newInstance(handler))
+        router.pushController(RouterTransaction.with(LoginController.newInstance())
                 .pushChangeHandler(new VerticalChangeHandler())
                 .popChangeHandler(new VerticalChangeHandler()));
     }

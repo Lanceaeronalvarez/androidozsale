@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="fb_btn_pressed">#325A9D</color>
+
+    <color name="colorPrimary">#01A2A6</color>
+    <color name="colorPrimaryDark">#242425</color>
+    <color name="colorAccent">#1CB1B4</color>
+
+    <color name="yellow">#FFCA28</color>
+    <color name="bluegreen">#04b2b6</color>
+    <color name="lightBlueGreen">#0cc3c7</color>
+    <color name="activered">#F06248</color>
+
+    <!-- Button Theme -->
+    <color name="bg_button_ripple">#DBE1EA</color>
+    <color name="bg_button_default">#F00065</color>
+    <color name="bg_button_pressed">#FFB9004E</color>
+
+    <!-- EditText Theme -->
+    <color name="bg_edit_text_ripple">#FFFFFF</color>
+    <color name="bg_edit_text_default">#ECECEC</color>
+    <color name="bg_edit_text_focused">#009BEC</color>
+</resources>

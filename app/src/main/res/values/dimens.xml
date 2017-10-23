@@ -55,4 +55,5 @@
     <dimen name="category_image_padding">15dp</dimen>
 
     <dimen name="placeholder_icon_size">60dp</dimen>
+    <dimen name="btn_radius">5dp</dimen>
 </resources>
