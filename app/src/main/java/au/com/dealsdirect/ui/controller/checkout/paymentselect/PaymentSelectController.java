@@ -146,6 +146,7 @@ public class PaymentSelectController extends BasePullToRefreshController impleme
     @Override
     public void showRemovePaymentMethodResult(PaymentMethod paymentMethod, boolean result, String message) {
         mActivity.setPaymentMethodSelected(null);
+        hideLoading();
 
         if (result) {
             CustomAlertDialog.showCustomAlertDialog(mActivity, CustomAlertDialog.CustomDialogIconState.POSITIVE, mActivity.getString(R.string.remove_payment_method));
