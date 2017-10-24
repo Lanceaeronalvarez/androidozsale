@@ -6,16 +6,16 @@
 
             <item android:state_enabled="true">
                 <shape android:shape="rectangle">
-                    <corners android:radius="@dimen/btn_radius"/>
-                    <solid android:color="#1A9DE9"/>
+                    <corners android:radius="@dimen/corner_radius"/>
+                    <solid android:color="@color/fb_button_normal"/>
                 </shape>
             </item>
 
             <item android:state_enabled="true" android:state_pressed="true">
 
                 <shape android:shape="rectangle">
-                    <corners android:radius="@dimen/btn_radius"/>
-                    <solid android:color="#FF1583C2"/>
+                    <corners android:radius="@dimen/corner_radius"/>
+                    <solid android:color="@color/fb_button_pressed"/>
                 </shape>
             </item>
 

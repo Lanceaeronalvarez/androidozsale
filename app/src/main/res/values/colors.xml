@@ -60,6 +60,10 @@
     <color name="toolbar_active_skin">#F00065</color>
 
 
+    <!-- FB Button -->
+    <color name="fb_button_normal">#1A9DE9</color>
+    <color name="fb_button_pressed">#FF1583C2</color>
+
     <!-- Button Theme -->
     <color name="bg_button_ripple">#DBE1EA</color>
     <color name="bg_button_default">#F00065</color>

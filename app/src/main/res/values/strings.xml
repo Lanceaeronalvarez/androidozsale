@@ -120,6 +120,7 @@
     <string name="join_now">Join Now</string>
     <string name="already_a_member">Already a member?</string>
     <string name="log_in">Log In</string>
+    <string name="save">save</string>
     <string name="forgot_password_guide">To reset your account password, enter the email address and
         we will send you the instruction
     </string>

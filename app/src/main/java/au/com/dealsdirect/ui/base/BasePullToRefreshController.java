@@ -10,7 +10,6 @@ import android.support.annotation.NonNull;
 import android.support.v4.widget.NestedScrollView;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -18,7 +17,6 @@ import android.widget.FrameLayout;
 import android.widget.LinearLayout;
 
 import au.com.dealsdirect.R;
-import butterknife.BindView;
 import in.srain.cube.views.ptr.PtrClassicFrameLayout;
 import in.srain.cube.views.ptr.PtrDefaultHandler;
 import in.srain.cube.views.ptr.PtrFrameLayout;
@@ -46,7 +44,7 @@ public abstract class BasePullToRefreshController extends BaseController impleme
     @NonNull
     @Override
     protected View inflateView(@NonNull LayoutInflater inflater, @NonNull ViewGroup container) {
-        View view = inflater.inflate(R.layout.controller_base, container, false);
+        View view = inflater.inflate(R.layout.controller_base_ptr, container, false);
 
         mToolbarFrameLayout = (FrameLayout) view.findViewById(R.id.controller_base_toolbar_layout);
 

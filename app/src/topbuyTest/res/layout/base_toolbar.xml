@@ -5,8 +5,7 @@
     android:id="@+id/root_app_bar_layout"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="#ffffff"
-    app:elevation="0dp">
+    android:background="#ffffff">
 
     <!--Transfer padding and color to resources, add adjusted padding for tablet support-->
     <android.support.v7.widget.Toolbar
