@@ -4,6 +4,7 @@ import android.os.Bundle;
 
 import com.bluelinelabs.conductor.Controller;
 
+import au.com.dealsdirect.ui.controller.categories.CategoriesController;
 import au.com.dealsdirect.ui.controller.details.DetailsController;
 import au.com.dealsdirect.ui.controller.login.LoginController;
 import au.com.dealsdirect.ui.controller.main.MainController;
@@ -34,6 +35,8 @@ public class ControllerFactory {
                 return DetailsController.newInstance();
             case LOGIN:
                 return LoginController.newInstance();
+            case CATEGORIES:
+                return CategoriesController.newInstance();
             default:
                 return null;
         }
@@ -47,6 +50,8 @@ public class ControllerFactory {
                 return new DetailsController(bundle);
             case LOGIN:
                 return new LoginController(bundle);
+            case CATEGORIES:
+                return new CategoriesController(bundle);
             default:
                 return null;
         }

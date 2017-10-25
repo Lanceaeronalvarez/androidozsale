@@ -216,6 +216,7 @@ dependencies {
     compile 'com.newrelic.agent.android:android-agent:5.12.3'
 
     compile project(path: ':genie-utility')
+    compile project(path: ':genie-animation')
     compile project(path: ':CardForm')
     compile project(path: ':ptr-lib')
 

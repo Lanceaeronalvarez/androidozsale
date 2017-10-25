@@ -1,6 +1,8 @@
 package au.com.dealsdirect.utils.module;
 
 
+import android.os.Bundle;
+
 import com.bluelinelabs.conductor.Controller;
 import com.bluelinelabs.conductor.ControllerChangeHandler;
 import com.bluelinelabs.conductor.Router;
@@ -27,7 +29,8 @@ public class GateKeeper {
         MAIN,
         REGISTER,
         SALEITEMS,
-        CHECKOUT
+        CHECKOUT,
+        CATEGORIES
         //add more destinations
     }
 
@@ -97,6 +100,26 @@ public class GateKeeper {
     }
 
     /**
+     * Router push operation given specified destination. Uses given pop/push changehandler.
+     * sets CURRENT_LOCATION to specified destination.
+     * @param router Conductor router
+     * @param destination Destination enum controller
+     * @param pushChangeHandler your custom pushChangeHandler
+     * @param popChangeHandler your custom popChangehandler
+     */
+    public static void push (Router router, Destination destination, Bundle bundle, ControllerChangeHandler pushChangeHandler, ControllerChangeHandler popChangeHandler){
+//        if(validateRouteOrigin(destination)){
+        router.pushController(RouterTransaction.with(ControllerFactory.getInstance(destination,bundle)).pushChangeHandler(pushChangeHandler).popChangeHandler(popChangeHandler));
+        CURRENT_LOCATION = destination;
+//        } else {
+//            Controller currentController = getCurrentControllerOnRouter(router);
+//            if(currentController != null) {
+////                ((BaseController) currentController).showInvalidRoute();
+//            }
+//        }
+    }
+
+    /**
      * Gets top of the backstack controller given specified router
      * @param router Conductor router
      * @return topmost controller
@@ -117,6 +140,15 @@ public class GateKeeper {
      */
     public static void push(Router router, Destination destination){
         push(router,destination,null,null);
+    }
+
+    /**
+     * Router push operation given specified destination. Uses default pop/push changehandler(null)
+     * @param router conductor router
+     * @param destination destination enum
+     */
+    public static void push(Router router, Destination destination, Bundle bundle){
+        push(router,destination,bundle,null,null);
     }
 
     /**

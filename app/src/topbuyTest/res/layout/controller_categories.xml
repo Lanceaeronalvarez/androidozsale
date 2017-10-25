@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/root_categories_layout"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:clickable="true"
+    android:orientation="vertical">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="#00000000"
+        android:padding="20dp">
+
+        <TextView
+            android:id="@+id/prev_category_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:textColor="#f1f1f1"
+            android:textSize="18sp"
+            android:visibility="invisible" />
+
+
+        <TextView
+            android:id="@+id/current_category_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/prev_category_text"
+            android:layout_marginTop="3dp"
+            android:text="shop"
+            android:textColor="@color/white"
+            android:textSize="30sp"
+            android:transitionName="categoryHeaderTransitionName" />
+
+        <View
+            android:id="@+id/header_underline"
+            android:layout_width="1dp"
+            android:layout_height="2dp"
+            android:layout_below="@+id/current_category_text"
+            android:layout_marginTop="15dp"
+            android:background="#FFFFFF" />
+
+    </RelativeLayout>
+
+
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/categories_recyclerview"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginTop="10dp"
+        android:clickable="true"
+        android:overScrollMode="never" />
+
+
+</LinearLayout>
