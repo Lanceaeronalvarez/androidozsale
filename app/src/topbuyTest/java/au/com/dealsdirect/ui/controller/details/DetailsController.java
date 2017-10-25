@@ -103,7 +103,7 @@ public class DetailsController extends BaseToolBarController implements DetailsM
     protected void onViewBound(@NonNull View view) {
         super.onViewBound(view);
         mToolbarTitle.setText("my details");
-//        setUp(view);
+        setUp(view);
     }
 
     @Override
