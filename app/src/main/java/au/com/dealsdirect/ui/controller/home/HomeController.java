@@ -239,10 +239,14 @@ public class HomeController extends BaseController implements HomeMvpView {
 
         mBottomNavigationView.setOnTabSelectedListener((position, wasSelected) -> {
 
+
             if (mCheckoutRouter!=null){
                 Controller controller = getCurrentControllerOnRouter(mCheckoutRouter);
                 if (controller instanceof CheckoutController) {
+                    Log.d("ourpay", "home controller remove ourpay");
+                    ((CheckoutController) controller).setIsGraphVisible(false);
                     ((CheckoutController) controller).removeOurpayView();
+                    ((CheckoutController) controller).clearOurpayGraphBitmapsAndListeners();
                 }
             }
 
@@ -409,6 +413,7 @@ public class HomeController extends BaseController implements HomeMvpView {
             Controller controller = getCurrentControllerOnRouter(mCheckoutRouter);
             if (controller instanceof CheckoutController) {
                 ((CheckoutController) controller).loadCart();
+                ((CheckoutController) controller).setIsGraphVisible(true);
             }
         }
     }
@@ -521,5 +526,10 @@ public class HomeController extends BaseController implements HomeMvpView {
         resetContactsRouter();
         resetInviteRouter();
         resetCheckoutRouter();
+    }
+
+    public boolean isCheckoutRouterVisible(){
+        Log.d("ourpay", "current item = "+mBottomNavigationView.getCurrentItem());
+        return mBottomNavigationView.getCurrentItem()==4;
     }
 }

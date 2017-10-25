@@ -52,7 +52,6 @@ import au.com.dealsdirect.ui.controller.vouchers.Add.AddVouchersController;
 import au.com.dealsdirect.ui.custom.CustomAlertDialog;
 import au.com.dealsdirect.ui.main.FetchTokenHandler;
 import au.com.dealsdirect.ui.main.MainActivity;
-import au.com.dealsdirect.ui.main.MainMvpView;
 import au.com.dealsdirect.ui.main.PaymentInfo;
 import au.com.dealsdirect.utils.ImageUtils;
 import au.com.dealsdirect.utils.IntrospectionUtils;
@@ -122,6 +121,7 @@ public class CheckoutController extends BaseController implements CheckoutMvpVie
     private Value mValue;
 
     private boolean mCartIsLoading = false;
+    public OurpayPanel ourpayPanel;
 
     public CheckoutController() {
 
@@ -326,25 +326,34 @@ public class CheckoutController extends BaseController implements CheckoutMvpVie
 
             if (ourpay != null && isMyPayEnabled) {
 
-                OurpayStateManager.setOurpayAccordingToPaymentMethod(ourpay, paymentMethod);
-                PaymentInfo.setOurpay(ourpay);
+                if (((MainActivity)getActivity()).getMainController().getHomeController().isCheckoutRouterVisible()){
+                    Log.d("ourpay", "checkout controller is visible");
+                    OurpayStateManager.setOurpayAccordingToPaymentMethod(ourpay, paymentMethod);
+                    PaymentInfo.setOurpay(ourpay);
 
-                OurpayPanel ourpayPanel = new OurpayPanel((BaseActivity) mActivity, getRouter());
-                mOurpayHolder.removeAllViews();
-                if (mOurpayHolder.getChildCount() == 0) { //add view if there is no childview yet
-                    mOurpayHolder.addView(ourpayPanel.generatePanel(PaymentInfo.getOurpay(), isRowVisible -> {
-                        if (isRowVisible) {
-                            new Handler().postDelayed(() -> mNestedScrollView.fullScroll(View.FOCUS_DOWN), 400);
-                        }
-                    }));
+                    ourpayPanel = new OurpayPanel((BaseActivity) mActivity, getRouter());
+                    mOurpayHolder.removeAllViews();
+                    if (mOurpayHolder.getChildCount() == 0) { //add view if there is no childview yet
+                        mOurpayHolder.addView(ourpayPanel.generatePanel(PaymentInfo.getOurpay(), isRowVisible -> {
+                            if (isRowVisible) {
+                                new Handler().postDelayed(() -> mNestedScrollView.fullScroll(View.FOCUS_DOWN), 400);
+                            }
+                        }));
+                    }
+
+                    mButtonOurpay = mOurpayHolder.findViewById(R.id.rl_button_ourpay);
+                    mButtonOurpay.setOnClickListener(view -> onOurpayButtonClick());
+
+                    if (ourpay.getTermsAndConditionsCheckboxState() != 0) {
+                        mCheckBoxOurpayTC = mOurpayHolder.findViewById(R.id.ourpay_checkbox_tc);
+                    }
+
+                }else{
+                    //checkout controller not visible
+                    Log.d("ourpay", "checkout controller is not visible");
+
                 }
 
-                mButtonOurpay = mOurpayHolder.findViewById(R.id.rl_button_ourpay);
-                mButtonOurpay.setOnClickListener(view -> onOurpayButtonClick());
-
-                if (ourpay.getTermsAndConditionsCheckboxState() != 0) {
-                    mCheckBoxOurpayTC = mOurpayHolder.findViewById(R.id.ourpay_checkbox_tc);
-                }
             } else {
                 Log.d(CheckoutController.class.getName(), "mypay disabled");
             }
@@ -673,6 +682,20 @@ public class CheckoutController extends BaseController implements CheckoutMvpVie
 
     public void removeOurpayView() {
         mOurpayHolder.removeAllViews();
+    }
+
+    public void clearOurpayGraphBitmapsAndListeners(){
+        if (ourpayPanel!=null){
+            ourpayPanel.clearOurpayGraphBitmapsAndListeners();
+
+        }
+    }
+
+    public void setIsGraphVisible(boolean isVisible){
+        if (ourpayPanel!=null){
+            ourpayPanel.setIsGraphVisible(isVisible);
+        }
+
     }
 }
 
