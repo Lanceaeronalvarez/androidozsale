@@ -236,6 +236,7 @@ public class OurpayGraph {
             View yourView = inflater.inflate(R.layout.ourpay_panel_row,
                     layPayViewId, false);
 
+
             RelativeLayout circleView = yourView.findViewById(R.id.imagelayout);
             RelativeLayout circlesLayout = yourView.findViewById(R.id.circlesContainer);
 
@@ -254,16 +255,17 @@ public class OurpayGraph {
 
                     }
 
-
                     if (tabletSize) {
+                        TextView tempDate = yourView.findViewById(R.id.dateTextView);
+                        tempDate.getLayoutParams().height = circleSize;
                         if (deviceWidth <= 900) {
-                            backgroundBar.getLayoutParams().height = 10;
+                            backgroundBar.getLayoutParams().height =                                                                                  10;
                         } else if (deviceWidth <= 1300) {
 
                             backgroundBar.getLayoutParams().height = 12;
                         } else {
 
-                            backgroundBar.getLayoutParams().height = 18;
+                            backgroundBar.getLayoutParams().height = 19;
                         }
                     }
 
@@ -661,7 +663,6 @@ public class OurpayGraph {
                                         imageParams.leftMargin = 0;
 
                                         iv.setImageBitmap(drawGrayCircle);
-//                                        
 
                                         iv.setScaleType(ImageView.ScaleType.FIT_XY);
                                         imageParams.addRule(RelativeLayout.ALIGN_PARENT_BOTTOM,
@@ -1211,7 +1212,6 @@ public class OurpayGraph {
                                                         circleSize);
 
                                         iv.setImageBitmap(drawProgressCircle);
-//                                        
 
                                         iv.setScaleType(ImageView.ScaleType.FIT_XY);
                                         imageParams.addRule(RelativeLayout.ALIGN_PARENT_BOTTOM,
