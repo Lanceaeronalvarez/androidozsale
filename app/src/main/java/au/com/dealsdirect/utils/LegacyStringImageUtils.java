@@ -16,14 +16,17 @@ public class LegacyStringImageUtils {
 
 
     public static String generateImageUrl(String brandId, String imageId, String imageFilename) {
-        String encodedImageFilename;
+        String encodedImageFilename = "";
 
-        try {
-            encodedImageFilename = URLEncoder.encode(imageFilename, "UTF-8");
-        } catch (UnsupportedEncodingException e) {
-            e.printStackTrace();
-            encodedImageFilename = "";
+        if (imageFilename!=null){
+            try {
+                encodedImageFilename = URLEncoder.encode(imageFilename, "UTF-8");
+            } catch (UnsupportedEncodingException e) {
+                e.printStackTrace();
+                encodedImageFilename = "";
+            }
         }
+
         encodedImageFilename = encodedImageFilename.replace("+", "%20");
 
         return Prefs.getString(IMAGE_SERVER_URL, DEFAULT_IMAGE_SERVER_URL)
