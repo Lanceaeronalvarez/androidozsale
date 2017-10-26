@@ -56,7 +56,9 @@ public class LanguageAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
 
     @Override
     public int getItemCount() {
-        return mLanguages.size();
+        if (mLanguages!=null)
+            return mLanguages.size();
+        return 0;
     }
 
     public void replaceData(List<Language> languages, String selectedLanguage){
