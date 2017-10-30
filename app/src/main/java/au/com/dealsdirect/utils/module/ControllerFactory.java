@@ -8,6 +8,7 @@ import au.com.dealsdirect.ui.controller.categories.CategoriesController;
 import au.com.dealsdirect.ui.controller.details.DetailsController;
 import au.com.dealsdirect.ui.controller.login.LoginController;
 import au.com.dealsdirect.ui.controller.main.MainController;
+import au.com.dealsdirect.ui.controller.shops.ShopsController;
 
 /**
  * Created by smartwave on 16/10/2017.
@@ -37,6 +38,10 @@ public class ControllerFactory {
                 return LoginController.newInstance();
             case CATEGORIES:
                 return CategoriesController.newInstance();
+            case CHECKOUT:
+                return CategoriesController.newInstance();
+            case SHOPS:
+                return ShopsController.newInstance();
             default:
                 return null;
         }

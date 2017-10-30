@@ -10,6 +10,7 @@ import android.view.Window;
 import android.view.WindowManager;
 
 import com.bluelinelabs.conductor.Router;
+import com.bluelinelabs.conductor.RouterTransaction;
 import com.bluelinelabs.conductor.support.RouterPagerAdapter;
 
 import javax.inject.Inject;
@@ -17,6 +18,8 @@ import javax.inject.Inject;
 import au.com.dealsdirect.R;
 import au.com.dealsdirect.ui.base.BaseController;
 import au.com.dealsdirect.utils.BundleBuilder;
+import au.com.dealsdirect.utils.module.ControllerFactory;
+import au.com.dealsdirect.utils.module.GateKeeper;
 import butterknife.BindView;
 
 /**
@@ -77,8 +80,8 @@ public class MainController extends BaseController implements MainMvpView {
     @Override
     protected void setUp(View view) {
 
-//        mHomeController = HomeController.newInstance();
-//        mCategoriesController = CategoriesController.newInstance();
+        mShopsController = HomeController.newInstance();
+        mCheckoutController = ControllerFactory.getInstance(GateKeeper.Destination.CHECKOUT);
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             Window window = getActivity().getWindow();
@@ -96,15 +99,13 @@ public class MainController extends BaseController implements MainMvpView {
                 if (!router.hasRootController()) {
                     switch (position) {
                         case 0:
-//                            router.setRoot(RouterTransaction.with(mCategoriesController)
-//                                    .pushChangeHandler(new FadeChangeHandler(100))
-//                                    .popChangeHandler(new FadeChangeHandler(100)));
+                            router.setRoot(RouterTransaction.with(mShopsController);
                             break;
                         case 1:
-//                            router.setRoot(RouterTransaction.with(mHomeController));
+                            router.setRoot(RouterTransaction.with(mCheckoutController);
                             break;
                         default:
-//                            router.setRoot(RouterTransaction.with(mHomeController));
+                            router.setRoot(RouterTransaction.with(mCheckoutController));
                             break;
                     }
                 }

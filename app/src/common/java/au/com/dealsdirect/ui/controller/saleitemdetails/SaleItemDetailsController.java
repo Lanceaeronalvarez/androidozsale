@@ -222,8 +222,7 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
     @Override
     protected View inflateView(@NonNull LayoutInflater inflater, @NonNull ViewGroup container) {
 
-        SaleItemDetailsView view = (SaleItemDetailsView)
-                inflater.inflate(R.layout.controller_product_details, container, false);
+        View view = inflater.inflate(R.layout.controller_product_details, container, false);
 
         getControllerComponent().inject(this);
         mPresenter.onAttach(this);

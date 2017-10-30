@@ -121,13 +121,9 @@ public class ShopsController extends BasePullToRefreshController implements Shop
         super.onAttach(view);
     }
 
-    public static ShopsController newInstance(GetCategoryTreeResponse getCategoryTreeResponse) {
-
+    public static ShopsController newInstance() {
         return new ShopsController(
                 new BundleBuilder(new Bundle())
-                        .putString(KEY_CATEGORY_ID, getCategoryTreeResponse.getId())
-                        .putString(KEY_CATEGORY_NAME, getCategoryTreeResponse.getName())
-                        .putString(KEY_CATEGORY_MAP, getCategoryTreeResponse.getKey())
                         .build());
     }
 

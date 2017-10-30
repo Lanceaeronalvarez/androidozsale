@@ -45,9 +45,6 @@ public class MainController extends BaseController implements MainMvpView {
     @BindView(R.id.home_viewpager)
     MainCustomViewPager mHomeViewPager;
 
-    @BindView(R.id.controller_home_splash_container)
-    LinearLayout mHomeSplashContainer;
-
     private HomeController mHomeController;
     private CategoriesController mCategoriesController;
 

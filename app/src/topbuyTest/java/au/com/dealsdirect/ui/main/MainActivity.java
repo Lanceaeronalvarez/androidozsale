@@ -2,11 +2,14 @@ package au.com.dealsdirect.ui.main;
 
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.widget.FrameLayout;
 
+import com.bluelinelabs.conductor.Conductor;
 import com.bluelinelabs.conductor.Controller;
 import com.bluelinelabs.conductor.Router;
 import com.bluelinelabs.conductor.RouterTransaction;
 import com.bluelinelabs.conductor.changehandler.FadeChangeHandler;
+import com.bluelinelabs.conductor.changehandler.VerticalChangeHandler;
 import com.bluelinelabs.conductor.support.RouterPagerAdapter;
 import com.braintreepayments.api.models.PaymentMethodNonce;
 
@@ -19,6 +22,7 @@ import au.com.dealsdirect.data.network.model.checkout.getuserpaymentmethods.Paym
 import au.com.dealsdirect.data.network.model.legalities.GetTemplateTextsResponse;
 import au.com.dealsdirect.ui.base.BaseActivity;
 import au.com.dealsdirect.ui.controller.main.MainCustomViewPager;
+import au.com.dealsdirect.ui.controller.splash.SplashScreenController;
 import au.com.dealsdirect.ui.main.MainMvpPresenter;
 import au.com.dealsdirect.ui.main.MainMvpView;
 import au.com.dealsdirect.utils.AppConstants;
@@ -37,6 +41,9 @@ public class MainActivity extends BaseActivity implements MainMvpView {
     @BindView(R.id.viewpage_main)
     MainCustomViewPager mMainViewPager;
 
+    @BindView(R.id.activity_main_frame)
+    FrameLayout mContainer;
+
     boolean mIsViewPagerSet;
 
 
@@ -53,20 +60,30 @@ public class MainActivity extends BaseActivity implements MainMvpView {
         mPresenter.onAttach(this);
         mPresenter.callGetTemplateTexts();
 
-        //Init All analytics sdk
+//        Init All analytics sdk
 //        initializeAnalytics();
 
 
-//        mRouter = Conductor.attachRouter(this, mContainer, savedInstanceState);
-//        mRouter.setRoot(RouterTransaction.with(SplashScreenController.newInstance())
-//                .popChangeHandler(new VerticalChangeHandler()));
+        mRouter = Conductor.attachRouter(this, mContainer, savedInstanceState);
+        mRouter.setRoot(RouterTransaction.with(SplashScreenController.newInstance())
+                .popChangeHandler(new VerticalChangeHandler()));
 
         setUp();
     }
 
     @Override
     protected void setUp() {
-
+        // Call API settings
+        mPresenter.callGetServerSettings();
+        mPresenter.callGetAppSettingsSection(this);
+        if (mPresenter.isAuthorized()) {
+            // If login ticket exist, call login ticket api to renew cookies and ticket
+            // GetAppSettings and GetPaymentToken will be called on success of this call
+            mPresenter.callLoginTicket();
+        } else {
+            //If not logged in, call GetPublicAppSettings
+            mPresenter.callGetPublicAppSettings();
+        }
     }
 
     @Override
@@ -197,5 +214,6 @@ public class MainActivity extends BaseActivity implements MainMvpView {
     public void isViewPagerSet(boolean val) {
         mIsViewPagerSet = val;
     }
+
 
 }
