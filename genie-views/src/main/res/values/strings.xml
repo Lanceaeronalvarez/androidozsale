@@ -1,9 +1,0 @@
-<resources>
-    <string name="fontname_lato">Lato</string>
-    <string name="fontname_lato_bold">LatoBold</string>
-    <string name="fontname_lato_bold_italic">LatoBoldItalic</string>
-    <string name="fontname_lato_light">LatoLight</string>
-    <string name="fontname_lato_light_italic">LatoLightItalic</string>
-    <string name="fontname_lato_italic">LatoItalic</string>
-
-</resources>

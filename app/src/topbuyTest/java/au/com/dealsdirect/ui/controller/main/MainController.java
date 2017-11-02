@@ -9,6 +9,7 @@ import android.view.ViewGroup;
 import android.view.Window;
 import android.view.WindowManager;
 
+import com.bluelinelabs.conductor.Controller;
 import com.bluelinelabs.conductor.Router;
 import com.bluelinelabs.conductor.RouterTransaction;
 import com.bluelinelabs.conductor.support.RouterPagerAdapter;
@@ -17,6 +18,8 @@ import javax.inject.Inject;
 
 import au.com.dealsdirect.R;
 import au.com.dealsdirect.ui.base.BaseController;
+import au.com.dealsdirect.ui.controller.home.HomeController;
+import au.com.dealsdirect.ui.controller.shops.ShopsController;
 import au.com.dealsdirect.utils.BundleBuilder;
 import au.com.dealsdirect.utils.module.ControllerFactory;
 import au.com.dealsdirect.utils.module.GateKeeper;
@@ -35,8 +38,12 @@ public class MainController extends BaseController implements MainMvpView {
     @Inject
     MainMvpPresenter<MainMvpView> mPresenter;
 
-    @BindView(R.id.viewpage_main)
-    MainCustomViewPager mMainViewPager;
+    @BindView(R.id.home_viewpager)
+    MainCustomViewPager mHomeViewPager;
+
+    Controller mSaleItemsController;
+    Controller mCheckoutController;
+    Controller mAccountsController;
 
     public static MainController newInstance() {
 
@@ -80,8 +87,9 @@ public class MainController extends BaseController implements MainMvpView {
     @Override
     protected void setUp(View view) {
 
-        mShopsController = HomeController.newInstance();
+        mSaleItemsController = ControllerFactory.getInstance(GateKeeper.Destination.SALEITEMS);
         mCheckoutController = ControllerFactory.getInstance(GateKeeper.Destination.CHECKOUT);
+        mAccountsController = ControllerFactory.getInstance(GateKeeper.Destination.ACCOUNT);
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             Window window = getActivity().getWindow();
@@ -99,13 +107,16 @@ public class MainController extends BaseController implements MainMvpView {
                 if (!router.hasRootController()) {
                     switch (position) {
                         case 0:
-                            router.setRoot(RouterTransaction.with(mShopsController);
+                            router.setRoot(RouterTransaction.with(mAccountsController));
                             break;
                         case 1:
-                            router.setRoot(RouterTransaction.with(mCheckoutController);
+                            router.setRoot(RouterTransaction.with(mSaleItemsController));
+                            break;
+                        case 2:
+                            router.setRoot(RouterTransaction.with(mCheckoutController));
                             break;
                         default:
-                            router.setRoot(RouterTransaction.with(mCheckoutController));
+                            router.setRoot(RouterTransaction.with(mSaleItemsController));
                             break;
                     }
                 }
@@ -113,7 +124,7 @@ public class MainController extends BaseController implements MainMvpView {
 
             @Override
             public int getCount() {
-                return 2;
+                return 3;
             }
 
             @Override
@@ -123,35 +134,76 @@ public class MainController extends BaseController implements MainMvpView {
         };
 
 
-        mMainViewPager.setAdapter(mViewPagerAdapter);
-        mMainViewPager.setCurrentItem(1);
-        mMainViewPager.setMyScroller();
+        mHomeViewPager.setAdapter(mViewPagerAdapter);
+        mHomeViewPager.setCurrentItem(1);
+        mHomeViewPager.setMyScroller();
 
         mActivity.isViewPagerSet(true);
 
     }
 
     public void goToCheckout() {
-        if (mMainViewPager != null) {
-            mMainViewPager.setCurrentItem(1);
+        if (mHomeViewPager != null) {
+            mHomeViewPager.setCurrentItem(2);
         }
     }
 
-    public void goToShops() {
-        if (mMainViewPager != null) {
-            mMainViewPager.setCurrentItem(0);
+    public void goToSaleItems() {
+        if (mHomeViewPager != null) {
+            mHomeViewPager.setCurrentItem(1);
+        }
+    }
+
+    public void goToAccounts(){
+        if (mHomeViewPager != null) {
+            mHomeViewPager.setCurrentItem(0);
         }
     }
 
     public void setViewpagerDraggable(boolean isDraggable) {
 
-        if (mMainViewPager != null) {
-            mMainViewPager.setSwipeable(isDraggable);
+        if (mHomeViewPager != null) {
+            mHomeViewPager.setSwipeable(isDraggable);
         }
     }
 
-    public MainCustomViewPager getMainViewPager() {
-        return mMainViewPager;
+    public MainCustomViewPager getHomeViewPager() {
+        return mHomeViewPager;
     }
 
+
+    @Override
+    public void hideBottomNav() {
+
+    }
+
+    @Override
+    public void showBottomNav() {
+
+    }
+
+    @Override
+    public void setChosenCategoryItemKey(String key) {
+
+    }
+
+    @Override
+    public void setSelectedSubCategoryItem(View view) {
+
+    }
+
+    @Override
+    public View getSelectedSubCategoryItem() {
+        return null;
+    }
+
+    @Override
+    public String getChosenCategoryItemKey() {
+        return null;
+    }
+
+    @Override
+    public HomeController getHomeController() {
+        return null;
+    }
 }

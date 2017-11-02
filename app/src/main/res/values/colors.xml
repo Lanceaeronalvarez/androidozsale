@@ -107,4 +107,8 @@
     <color name="item_select_remove">#466E87</color>
     <color name="verify_resend_color">#000080</color>
 
+    <!--MyAccounts TB Background/panel color -->
+    <color name="menu_panel_gray">#4B6171</color>
+    <color name="menu_panel_gray_selected">#455B6A</color>
+
 </resources>

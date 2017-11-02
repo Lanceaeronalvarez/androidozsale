@@ -4,10 +4,13 @@ import android.os.Bundle;
 
 import com.bluelinelabs.conductor.Controller;
 
+import au.com.dealsdirect.ui.controller.account.AccountController;
 import au.com.dealsdirect.ui.controller.categories.CategoriesController;
+import au.com.dealsdirect.ui.controller.checkout.checkout.CheckoutController;
 import au.com.dealsdirect.ui.controller.details.DetailsController;
 import au.com.dealsdirect.ui.controller.login.LoginController;
 import au.com.dealsdirect.ui.controller.main.MainController;
+import au.com.dealsdirect.ui.controller.saleitems.SaleItemsController;
 import au.com.dealsdirect.ui.controller.shops.ShopsController;
 
 /**
@@ -40,8 +43,10 @@ public class ControllerFactory {
                 return CategoriesController.newInstance();
             case CHECKOUT:
                 return CategoriesController.newInstance();
-            case SHOPS:
-                return ShopsController.newInstance();
+            case SALEITEMS:
+                return SaleItemsController.newInstance();
+            case ACCOUNT:
+                return AccountController.newInstance();
             default:
                 return null;
         }
@@ -57,6 +62,12 @@ public class ControllerFactory {
                 return new LoginController(bundle);
             case CATEGORIES:
                 return new CategoriesController(bundle);
+            case CHECKOUT:
+                return new CheckoutController();
+            case SALEITEMS:
+                return new SaleItemsController(bundle);
+            case ACCOUNT:
+                return new AccountController();
             default:
                 return null;
         }

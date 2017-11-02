@@ -21,11 +21,15 @@ import au.com.dealsdirect.data.network.model.checkout.CreatePaymentTransaction;
 import au.com.dealsdirect.data.network.model.checkout.getuserpaymentmethods.PaymentMethod;
 import au.com.dealsdirect.data.network.model.legalities.GetTemplateTextsResponse;
 import au.com.dealsdirect.ui.base.BaseActivity;
+import au.com.dealsdirect.ui.controller.categories.CategoriesController;
+import au.com.dealsdirect.ui.controller.main.MainController;
 import au.com.dealsdirect.ui.controller.main.MainCustomViewPager;
 import au.com.dealsdirect.ui.controller.splash.SplashScreenController;
 import au.com.dealsdirect.ui.main.MainMvpPresenter;
 import au.com.dealsdirect.ui.main.MainMvpView;
 import au.com.dealsdirect.utils.AppConstants;
+import au.com.dealsdirect.utils.module.ControllerFactory;
+import au.com.dealsdirect.utils.module.GateKeeper;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
@@ -38,14 +42,14 @@ public class MainActivity extends BaseActivity implements MainMvpView {
     @Inject
     MainMvpPresenter<MainMvpView> mPresenter;
 
-    @BindView(R.id.viewpage_main)
-    MainCustomViewPager mMainViewPager;
-
     @BindView(R.id.activity_main_frame)
     FrameLayout mContainer;
 
     boolean mIsViewPagerSet;
 
+    Controller mMainController;
+    private Router mCategoriesRouter;
+    private Router mCheckoutRouter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -62,7 +66,6 @@ public class MainActivity extends BaseActivity implements MainMvpView {
 
 //        Init All analytics sdk
 //        initializeAnalytics();
-
 
         mRouter = Conductor.attachRouter(this, mContainer, savedInstanceState);
         mRouter.setRoot(RouterTransaction.with(SplashScreenController.newInstance())
@@ -216,4 +219,34 @@ public class MainActivity extends BaseActivity implements MainMvpView {
     }
 
 
+    public MainController getMainController(){
+        return (MainController) mMainController;
+    }
+
+    public Router getCategoriesRouter() {
+        return mCategoriesRouter;
+    }
+
+    public void setCheckoutRouter(Router router) {
+        mCheckoutRouter = router;
+    }
+
+    public Router getCheckoutRouter() {
+        return mCheckoutRouter;
+    }
+
+    public void setCategoriesRouter(Router router) {
+        mCategoriesRouter = router;
+    }
+
+    public void setDraggableViewPager(boolean isDraggable) {
+        getMainController().setViewpagerDraggable(isDraggable);
+    }
+
+    public void splashShownCallback() {
+        mMainController = ControllerFactory.getInstance(GateKeeper.Destination.MAIN);
+        mRouter.setRoot(RouterTransaction.with(mMainController)
+                .tag("Home"));
+
+    }
 }

@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/my_account_root_layout"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/menu_panel_gray"
+    android:orientation="vertical">
+
+    <RelativeLayout
+        android:id="@+id/account_header_container"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="20dp"
+        android:layout_marginTop="16dp"
+        android:paddingLeft="20dp"
+        android:paddingRight="20dp" >
+
+        <com.mysale.genie.views.custom.GenieTextView
+            app:font="@string/fontname_lato"
+            android:id="@+id/account_header_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="my account"
+            android:textStyle="bold"
+            android:layout_marginTop="-10dp"
+            android:textColor="@android:color/white"
+            android:textSize="30sp" />
+
+        <View
+            android:id="@+id/header_underline"
+            android:layout_width="35dp"
+            android:layout_height="2dp"
+            android:layout_below="@+id/account_header_text"
+            android:layout_marginTop="15dp"
+            android:background="@android:color/white"/>
+
+    </RelativeLayout>
+
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/account_recycler_view"
+        android:descendantFocusability="blocksDescendants"
+        android:layout_below="@+id/account_header_container"
+        android:layout_alignLeft="@+id/account_header_container"
+        android:layout_alignStart="@id/account_header_container"
+        android:overScrollMode="never"
+        android:layout_marginTop="10dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:clickable="true"
+        android:focusableInTouchMode="true"
+        android:focusable="true">
+
+    </android.support.v7.widget.RecyclerView>
+
+</RelativeLayout>

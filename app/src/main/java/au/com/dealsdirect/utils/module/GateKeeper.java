@@ -31,7 +31,7 @@ public class GateKeeper {
         SALEITEMS,
         CHECKOUT,
         CATEGORIES,
-        SHOPS
+        ACCOUNT
         //add more destinations
     }
 

@@ -129,7 +129,6 @@ public class CategoriesController extends BaseController
 
         mActivity.setDraggableViewPager(true);
         mActivity.setCategoriesRouter(getRouter());
-        mActivity.setCategoriesController(this);
         hideKeyboard();
         mPresenter.callGetCategoryTree();
 
