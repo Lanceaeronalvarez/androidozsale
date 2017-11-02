@@ -51,4 +51,13 @@ public class HomeController extends BaseController implements HomeMvpView {
     public void updateBasketItemCount() {
 
     }
+
+    public HomeMvpPresenter<HomeMvpView> getPresenter() {
+        return null;
+    }
+
+    public boolean isCheckoutRouterVisible() {
+        return false;
+    }
+
 }

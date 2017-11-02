@@ -123,9 +123,6 @@ public class LoginController extends BaseToolBarController implements LoginMvpVi
 
     @Override
     public boolean handleBack() {
-        if(!mActivity.isAuthorized()) {
-            mActivity.getMainController().getHomeController().resetVisibleContainer();
-        }
         hideKeyboard();
         return super.handleBack();
     }

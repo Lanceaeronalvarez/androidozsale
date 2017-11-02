@@ -1,0 +1,24 @@
+package au.com.dealsdirect.utils;
+
+/**
+ * Created by smartwave on 02/11/2017.
+ */
+
+public class BundleKeys {
+
+    //sale items
+    public static final String SALEITEMS_SALE_ID = "SaleItemsController.SALEITEMS_SALE_ID";
+    public static final String SALEITEMS_BANNER_ID = "SaleItemsController.SALEITEMS_BANNER_ID";
+    public static final String SALEITEMS_TITLE = "SaleItemsController.SALEITEMS_TITLE";
+    public static final String SALEITEMS_HEADER_IMAGE = "SaleItemsController.header_image_url";
+    public static final String SALEITEMS_FROM_POSITION = "SaleItemsController.position";
+    public static final String SALEITEMS_CATEGORY_MAP = "SaleItemsController.CATEGORY_SALEITEMS";
+    public static final String SALEITEMS_SEARCH_QUERY = "SaleItemsController.SEARCH_SALEITEMS";
+    public static final String SALEITEMS_CHIPS_FILTER = "SaleItemsController.CHIPS_FILTER";
+    public static final String SALEITEMS_FROM_CATEGORIES = "SaleItemsController.IS_FROM_CATEGORY";
+    public static final String SALEITEMS_FROM_SHOP_SEARCH = "SaleItemsController.FROM_SHOP_SEARCH";
+    public static final String SALEITEMS_FROM_CATEGORY_SEARCH = "SaleItemsController.FROM_CATEGORY_SEARCH";
+
+
+
+}

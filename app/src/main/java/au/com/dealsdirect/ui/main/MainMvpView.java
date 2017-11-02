@@ -6,6 +6,8 @@ package au.com.dealsdirect.ui.main;
 
 import com.bluelinelabs.conductor.Controller;
 import com.bluelinelabs.conductor.Router;
+import com.braintreepayments.api.BraintreeFragment;
+import com.braintreepayments.cardform.view.CardForm;
 
 import au.com.dealsdirect.data.auth.AuthHandler;
 import au.com.dealsdirect.data.network.model.checkout.CreatePaymentTransaction;
@@ -41,6 +43,8 @@ public interface MainMvpView extends MvpView, BrainTreeListeners {
     void performResetWithAuthFetch();
     void fetchAuthorization(FetchTokenHandler fetchTokenHandler);
     void setPaymentMethodSelected(PaymentMethod paymentMethodSelected);
+    BraintreeFragment getBraintreeFragment();
+    boolean isBraintreeInitialized();
 
     // Payment methods
     void showGetPaymentMethodNonceSuccess(String nonce);
@@ -49,5 +53,9 @@ public interface MainMvpView extends MvpView, BrainTreeListeners {
     void callCreatePaymentTransaction(String type, String nonce, String token);
     void showCreatePaymentTransactionSuccess(String paymentType, CreatePaymentTransaction.ResponseValue responseValue);
     void showCreatePaymentTransactionFailure(String errorMessage);
+    PaymentMethod getPaymentMethodSelected();
+    boolean getIsMyPayEnabled();
+    void onPurchase(CardForm cardForm);
+    void startPaypalPayment();
 
 }

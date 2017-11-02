@@ -104,7 +104,7 @@ public class AccountPresenter<V extends AccountMvpView> extends BasePresenter<V>
     }
 
     @Override
-    public boolean getIsAuthorized() {
+    public boolean isAuthorized() {
         return getDataManager().isAuthorized();
     }
 

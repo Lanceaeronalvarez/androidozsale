@@ -44,14 +44,11 @@ import au.com.dealsdirect.ui.controller.searchfilter.adapter.SubCategoriesAdapte
 import au.com.dealsdirect.ui.controller.searchfilter.adapter.SubCategoryItemsAdapter;
 import au.com.dealsdirect.ui.custom.CustomRangeSeekbar;
 import au.com.dealsdirect.utils.BundleBuilder;
+import au.com.dealsdirect.utils.BundleKeys;
 import au.com.dealsdirect.utils.JsonUtils;
 import butterknife.BindView;
 import butterknife.OnClick;
 
-import static au.com.dealsdirect.ui.controller.saleitems.SaleItemsController.KEY_CATEGORY_MAP;
-import static au.com.dealsdirect.ui.controller.saleitems.SaleItemsController.KEY_CHIPS_FILTER;
-import static au.com.dealsdirect.ui.controller.saleitems.SaleItemsController.KEY_SALE_ID;
-import static au.com.dealsdirect.ui.controller.saleitems.SaleItemsController.KEY_TITLE;
 
 /**
  * Created by smartwave on 20/07/2017.
@@ -166,10 +163,10 @@ public class SearchFilterController extends BaseController
                 .putString(KEY_CATEGORY_STRING, jsonCategoriesString)
                 .putString(KEY_FACET_STRING, jsonFacetString)
                 .putString(KEY_SORTING_STRING, sortingFacetString)
-                .putString(KEY_CATEGORY_MAP, categoryKey)
-                .putString(KEY_SALE_ID, saleId)
+                .putString(BundleKeys.SALEITEMS_CATEGORY_MAP, categoryKey)
+                .putString(BundleKeys.SALEITEMS_SALE_ID, saleId)
                 .putString(KEY_SELECTED_FACETS, previouslySelectedFacetIndices)
-                .putString(KEY_CHIPS_FILTER, previousChipFilters)
+                .putString(BundleKeys.SALEITEMS_CHIPS_FILTER, previousChipFilters)
                 .putString(KEY_SALE_ITEMS_TITLE, saleItemsTitle)
                 .build());
     }
@@ -180,8 +177,8 @@ public class SearchFilterController extends BaseController
         }.getType());
         mSortingFacets = JsonUtils.convertStringToObject(args.getString(KEY_SORTING_STRING, ""), new TypeToken<ArrayList<SortingResponse>>() {
         }.getType());
-        mSaleId = args.getString(KEY_SALE_ID, "");
-        mCategoryKey = args.getString(KEY_CATEGORY_MAP, "");
+        mSaleId = args.getString(BundleKeys.SALEITEMS_SALE_ID, "");
+        mCategoryKey = args.getString(BundleKeys.SALEITEMS_CATEGORY_MAP, "");
         mCategoryTree = JsonUtils.convertStringToObject(args.getString(KEY_CATEGORY_STRING, ""), new TypeToken<ArrayList<GetCategoryTreeResponse>>() {
         }.getType());
         mBrandList = JsonUtils.convertStringToObject(args.getString(KEY_BRAND_LIST, ""), new TypeToken<ArrayList<String>>() {
@@ -199,7 +196,7 @@ public class SearchFilterController extends BaseController
             mPreviousSelectedFacetIndices = new HashMap<>();
         }
 
-        String previousChipsString = args.getString(KEY_CHIPS_FILTER, "");
+        String previousChipsString = args.getString(BundleKeys.SALEITEMS_CHIPS_FILTER, "");
         if (!previousChipsString.isEmpty()) {
             mPreviousSearchChips = JsonUtils.convertStringToObject(previousChipsString, new TypeToken<ArrayList<SearchChipModel>>() {
             }.getType());
@@ -604,10 +601,10 @@ public class SearchFilterController extends BaseController
         }
 
         Bundle saleItemBundle = new BundleBuilder(new Bundle())
-                .putString(KEY_TITLE, mTitle)
-                .putString(KEY_CATEGORY_MAP, mChosenCategory)
-                .putString(KEY_SALE_ID, mSaleId)
-                .putString(KEY_CHIPS_FILTER, new Gson().toJson(mSearchTagsAdapter.getData()))
+                .putString(BundleKeys.SALEITEMS_TITLE, mTitle)
+                .putString(BundleKeys.SALEITEMS_CATEGORY_MAP, mChosenCategory)
+                .putString(BundleKeys.SALEITEMS_SALE_ID, mSaleId)
+                .putString(BundleKeys.SALEITEMS_CHIPS_FILTER, new Gson().toJson(mSearchTagsAdapter.getData()))
                 .putString(KEY_SELECTED_FACETS, new Gson().toJson(mPreviousSelectedFacetIndices))
 //                .putString(KEY_SEARCH_QUERY, new Gson().toJson(mBrandList))
                 .build();

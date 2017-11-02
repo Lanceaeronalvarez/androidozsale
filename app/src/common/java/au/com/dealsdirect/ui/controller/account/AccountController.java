@@ -22,7 +22,6 @@ import javax.inject.Inject;
 import au.com.dealsdirect.R;
 import au.com.dealsdirect.data.auth.AuthHandler;
 import au.com.dealsdirect.ui.base.BaseController;
-import au.com.dealsdirect.ui.controller.account.adapter.AccountItemAdapter;
 import au.com.dealsdirect.ui.controller.address.viewaddress.ViewAddressController;
 import au.com.dealsdirect.ui.controller.checkout.paymentselect.PaymentSelectController;
 import au.com.dealsdirect.ui.controller.details.DetailsController;
@@ -46,6 +45,7 @@ public class AccountController extends BaseController implements AccountMvpView,
     public static final String TAG = "AccountController";
     private static final String KEY_TEXT = "AccountController.KEY_TEXT";
     AccountItemAdapter accountItemAdapter;
+
 
     @BindView(R.id.partial_toolbar_arrow_title)
     TextView mTitleTextView;
@@ -123,7 +123,7 @@ public class AccountController extends BaseController implements AccountMvpView,
     public void showAccountItems(List<String> accountItems, int[] accountImages) {
 
 
-        accountItemAdapter = new AccountItemAdapter(accountItems, accountImages, getActivity(), mPresenter);
+        accountItemAdapter = new AccountItemAdapter(accountItems, accountImages, mPresenter);
         mAccountRecyclerView.setAdapter(accountItemAdapter);
         mAccountRecyclerView.setLayoutManager(new GridLayoutManager(getActivity(), 3));
         mAccountRecyclerView.setItemAnimator(new DefaultItemAnimator());
@@ -182,6 +182,21 @@ public class AccountController extends BaseController implements AccountMvpView,
     }
 
     @Override
+    public void showContactUs() {
+
+    }
+
+    @Override
+    public void showTutorial() {
+
+    }
+
+    @Override
+    public void showInviteAFriend() {
+
+    }
+
+    @Override
     public void showLegalities(String key, String title) {
         getRouter().pushController(RouterTransaction.with(new LegalitiesController(key, title))
                 .pushChangeHandler(new HorizontalChangeHandler())
@@ -199,7 +214,7 @@ public class AccountController extends BaseController implements AccountMvpView,
                 mPresenter.onAttach(mvpView);
                 mPresenter.onAccountItemClick(option);
                 mActivity.callGCMRegisterSubscriber();
-                mFilterButton.setImageDrawable(getActivity().getResources().getDrawable(R.drawable.ic_logout));
+                mFilterButton.setImageDrawable(getActivity().getResources().getDrawable(R.drawable.ic_account_logout));
                 mActivity.getMainController().getHomeController().resetInviteRouter();
             }
 
@@ -244,7 +259,7 @@ public class AccountController extends BaseController implements AccountMvpView,
     @Override
     public void initLoginDrawable() {
         if(mPresenter.getIsAuthorized()) {
-            mFilterButton.setImageDrawable(getActivity().getResources().getDrawable(R.drawable.ic_logout));
+            mFilterButton.setImageDrawable(getActivity().getResources().getDrawable(R.drawable.ic_account_logout));
 
         } else {
             mFilterButton.setImageDrawable(getActivity().getResources().getDrawable(R.drawable.ic_login));
@@ -261,7 +276,7 @@ public class AccountController extends BaseController implements AccountMvpView,
                 public void success() {
                     mPresenter.onAttach(AccountController.this);
                     mActivity.callGCMRegisterSubscriber();
-                    mFilterButton.setImageDrawable(getActivity().getResources().getDrawable(R.drawable.ic_logout));
+                    mFilterButton.setImageDrawable(getActivity().getResources().getDrawable(R.drawable.ic_account_logout));
                     mActivity.getMainController().getHomeController().initControllers(true);
                 }
 

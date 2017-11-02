@@ -1,6 +1,5 @@
-package au.com.dealsdirect.ui.controller.account.adapter;
+package au.com.dealsdirect.ui.controller.account;
 
-import android.content.Context;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -10,8 +9,6 @@ import java.util.Collections;
 import java.util.List;
 
 import au.com.dealsdirect.R;
-import au.com.dealsdirect.ui.controller.account.AccountMvpPresenter;
-import au.com.dealsdirect.ui.controller.account.viewholder.AccountItemViewHolder;
 
 /**
  * dp Created by Admin on 6/20/17.
@@ -21,19 +18,16 @@ public class AccountItemAdapter extends RecyclerView.Adapter<AccountItemViewHold
 
     private List<String> mAccountItems = Collections.emptyList();
     private int[] mAccountImages;
-    private Context mContext;
     private AccountMvpPresenter mPresenter;
 
 
     public AccountItemAdapter(
             List<String> mAccountItems,
             int[] accountImages,
-            Context mContext,
             AccountMvpPresenter presenter) {
 
         this.mAccountItems = mAccountItems;
         this.mAccountImages = accountImages;
-        this.mContext = mContext;
         this.mPresenter = presenter;
     }
 
@@ -51,12 +45,9 @@ public class AccountItemAdapter extends RecyclerView.Adapter<AccountItemViewHold
     public void onBindViewHolder(AccountItemViewHolder holder, int position) {
 
         holder.mAccountItemImage.setImageResource(mAccountImages[position]);
-        holder.mAccountItemImage.setOnClickListener(view -> {
-            mPresenter.onAccountItemClick(mAccountItems.get(position));
-        });
 
-        holder.mAccountItemName
-                .setText(mAccountItems.get(position));
+        holder.mAccountItemName.setText(mAccountItems.get(position));
+
         holder.itemView.setOnClickListener(view -> {
                 mPresenter.onAccountItemClick(mAccountItems.get(position));
         });

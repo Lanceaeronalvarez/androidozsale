@@ -46,6 +46,13 @@ import au.com.dealsdirect.utils.PaginateUtils;
 import butterknife.BindView;
 import butterknife.OnClick;
 
+import static au.com.dealsdirect.utils.BundleKeys.SALEITEMS_BANNER_ID;
+import static au.com.dealsdirect.utils.BundleKeys.SALEITEMS_CATEGORY_MAP;
+import static au.com.dealsdirect.utils.BundleKeys.SALEITEMS_FROM_POSITION;
+import static au.com.dealsdirect.utils.BundleKeys.SALEITEMS_HEADER_IMAGE;
+import static au.com.dealsdirect.utils.BundleKeys.SALEITEMS_SALE_ID;
+import static au.com.dealsdirect.utils.BundleKeys.SALEITEMS_TITLE;
+
 
 /**
  * dp Created by Admin on 6/6/17.
@@ -254,6 +261,16 @@ public class ShopsController extends BasePullToRefreshController implements Shop
             String imageUrl,
             boolean isAvailable) {
 
+
+        Bundle args = new BundleBuilder(new Bundle())
+                .putString(SALEITEMS_TITLE, bannerTitle)
+                .putString(SALEITEMS_SALE_ID, saleId)
+                .putString(SALEITEMS_BANNER_ID, bannerId)
+                .putString(SALEITEMS_HEADER_IMAGE, imageUrl)
+                .putInt(SALEITEMS_FROM_POSITION, position)
+                .putString(SALEITEMS_CATEGORY_MAP, null)
+                .build();
+
         if (mBannerClickCounter != 1) {
             mBannerClickCounter = +1;
 
@@ -268,14 +285,9 @@ public class ShopsController extends BasePullToRefreshController implements Shop
                     @Override
                     public void success() {
                         mActivity.callGCMRegisterSubscriber();
-                        mActivity.getHomeRouter()
-                                .pushController(RouterTransaction.with(
-                                        SaleItemsController.newInstance(
-                                                saleId,
-                                                bannerTitle,
-                                                bannerId,
-                                                position,
-                                                imageUrl, null))
+
+                        mActivity.getHomeRouter().pushController(RouterTransaction.with(
+                                        new SaleItemsController(args))
                                         .tag(mActivity.getString(R.string.sale_items_controller_tag))
                                         .pushChangeHandler(new HorizontalChangeHandler())
                                         .popChangeHandler(new HorizontalChangeHandler()));
@@ -295,13 +307,7 @@ public class ShopsController extends BasePullToRefreshController implements Shop
                     mActivity
                             .getHomeRouter()
                             .pushController(RouterTransaction.with(
-                                    SaleItemsController.newInstance(
-                                            saleId,
-                                            bannerTitle,
-                                            bannerId,
-                                            position,
-                                            imageUrl,
-                                            null))
+                                    new SaleItemsController(args))
                                     .tag(mActivity.getString(R.string.sale_items_controller_tag))
                                     .pushChangeHandler(new HorizontalChangeHandler())
                                     .popChangeHandler(new HorizontalChangeHandler()));
@@ -337,7 +343,7 @@ public class ShopsController extends BasePullToRefreshController implements Shop
         Router router = getRouter();
 
         router.pushController(RouterTransaction.with(
-                SaleItemsController.newInstance(saleItemBundle))
+                new SaleItemsController(saleItemBundle))
                 .tag(mActivity.getString(R.string.sale_items_controller_tag))
                 .pushChangeHandler(new SimpleChangeHandler())
                 .popChangeHandler(new FadeChangeHandler()));
@@ -454,7 +460,7 @@ public class ShopsController extends BasePullToRefreshController implements Shop
     public void goToItemsFromCategories(Bundle bundle) {
         //noinspection ConstantConditions
         getRouter().pushController(RouterTransaction.with(
-                SaleItemsController.newInstance(bundle))
+                new SaleItemsController(bundle))
                 .tag(getResources().getString(R.string.sale_items_controller_tag))
                 .pushChangeHandler(new HorizontalChangeHandler())
                 .popChangeHandler(new HorizontalChangeHandler()));
@@ -570,7 +576,7 @@ public class ShopsController extends BasePullToRefreshController implements Shop
                 .build();
 
         getRouter().pushController(RouterTransaction.with(
-                SaleItemsController.newInstance(saleItemBundle))
+                new SaleItemsController(saleItemBundle))
                 .tag(getResources().getString(R.string.sale_items_controller_tag))
                 .pushChangeHandler(new SimpleChangeHandler())
                 .popChangeHandler(new FadeChangeHandler()));

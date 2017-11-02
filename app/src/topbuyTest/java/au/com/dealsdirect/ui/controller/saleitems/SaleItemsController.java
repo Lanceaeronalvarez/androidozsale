@@ -9,6 +9,9 @@ import android.view.ViewGroup;
 
 import java.util.List;
 
+import javax.inject.Inject;
+
+import au.com.dealsdirect.R;
 import au.com.dealsdirect.data.network.model.saleitems.GetSaleItemsResponse;
 import au.com.dealsdirect.data.network.model.sorting.SortingResponse;
 import au.com.dealsdirect.ui.base.BaseController;
@@ -21,9 +24,10 @@ import au.com.dealsdirect.utils.JsonUtils;
 
 public class SaleItemsController extends BaseController implements SaleItemsMvpView {
 
+    @Inject
+    SaleItemsMvpPresenter<SaleItemsMvpView> mPresenter;
+
     public static SaleItemsController newInstance(){
-
-
         return new SaleItemsController(
                 new BundleBuilder(new Bundle())
                         .build());
@@ -50,7 +54,11 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
 
     @Override
     protected View inflateView(@NonNull LayoutInflater inflater, @NonNull ViewGroup container) {
-        return null;
+        View view = inflater.inflate(R.layout.controller_sale_items, container, false);
+
+        getControllerComponent().inject(this);
+        mPresenter.onAttach(this);
+        return view;
     }
 
     @Override
@@ -80,6 +88,11 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
 
     @Override
     public void unbindPaginate() {
+
+    }
+
+    @Override
+    public void onPassFiltersData(Bundle bundle) {
 
     }
 

@@ -11,7 +11,9 @@ import com.bluelinelabs.conductor.RouterTransaction;
 import com.bluelinelabs.conductor.changehandler.FadeChangeHandler;
 import com.bluelinelabs.conductor.changehandler.VerticalChangeHandler;
 import com.bluelinelabs.conductor.support.RouterPagerAdapter;
+import com.braintreepayments.api.BraintreeFragment;
 import com.braintreepayments.api.models.PaymentMethodNonce;
+import com.braintreepayments.cardform.view.CardForm;
 
 import javax.inject.Inject;
 
@@ -170,6 +172,16 @@ public class MainActivity extends BaseActivity implements MainMvpView {
     }
 
     @Override
+    public BraintreeFragment getBraintreeFragment() {
+        return null;
+    }
+
+    @Override
+    public boolean isBraintreeInitialized() {
+        return false;
+    }
+
+    @Override
     public void showGetPaymentMethodNonceSuccess(String nonce) {
 
     }
@@ -196,6 +208,26 @@ public class MainActivity extends BaseActivity implements MainMvpView {
 
     @Override
     public void showCreatePaymentTransactionFailure(String errorMessage) {
+
+    }
+
+    @Override
+    public PaymentMethod getPaymentMethodSelected() {
+        return null;
+    }
+
+    @Override
+    public boolean getIsMyPayEnabled() {
+        return false;
+    }
+
+    @Override
+    public void onPurchase(CardForm cardForm) {
+
+    }
+
+    @Override
+    public void startPaypalPayment() {
 
     }
 
@@ -243,10 +275,21 @@ public class MainActivity extends BaseActivity implements MainMvpView {
         getMainController().setViewpagerDraggable(isDraggable);
     }
 
+    public String getMyTemplateTexts(String detailKey) {
+        return mPresenter.getStoredTemplateTexts(detailKey);
+    }
+    public boolean isAuthorized() {
+        return mPresenter.isAuthorized();
+    }
+
     public void splashShownCallback() {
         mMainController = ControllerFactory.getInstance(GateKeeper.Destination.MAIN);
         mRouter.setRoot(RouterTransaction.with(mMainController)
-                .tag("Home"));
+                .tag("Main"));
+
+    }
+
+    public void setShopsAsVisibleContainer(){
 
     }
 }

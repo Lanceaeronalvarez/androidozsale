@@ -36,6 +36,7 @@ import au.com.dealsdirect.ui.controller.saleitems.SaleItemsController;
 import au.com.dealsdirect.ui.controller.shops.ShopsController;
 import au.com.dealsdirect.ui.main.MainActivity;
 import au.com.dealsdirect.utils.BundleBuilder;
+import au.com.dealsdirect.utils.BundleKeys;
 import butterknife.BindView;
 import butterknife.OnClick;
 
@@ -214,14 +215,13 @@ public class CategoriesController extends BaseController
             mActivity.getMainController().setChosenCategoryItemKey(categoryKey);
 
             Bundle saleItemBundle = new BundleBuilder(new Bundle())
-                    .putString("SaleItemsController.KEY_TITLE", categoryKey)
-                    .putString("SaleItemsController.CATEGORY_KEY", categoryKey)
-                    .putBoolean("SaleItemsController.FROM_CATEGORY_SEARCH", false)
-                    .putBoolean("SaleItemsController.IS_FROM_CATEGORY",true)
+                    .putString(BundleKeys.SALEITEMS_TITLE, categoryKey)
+                    .putBoolean(BundleKeys.SALEITEMS_FROM_CATEGORY_SEARCH, false)
+                    .putBoolean(BundleKeys.SALEITEMS_FROM_CATEGORIES,true)
                     .build();
 
             mActivity.getHomeRouter().pushController(RouterTransaction.with(
-                    SaleItemsController.newInstance(saleItemBundle))
+                    new SaleItemsController(saleItemBundle))
                     .tag(getResources().getString(R.string.sale_items_controller_tag))
                     .pushChangeHandler(new HorizontalChangeHandler())
                     .popChangeHandler(new HorizontalChangeHandler()));

@@ -1,9 +1,8 @@
-package au.com.dealsdirect.ui.controller.account.viewholder;
+package au.com.dealsdirect.ui.controller.account;
 
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.widget.ImageButton;
-import android.widget.ImageView;
 import android.widget.TextView;
 
 import au.com.dealsdirect.R;
@@ -11,7 +10,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 
 /**
- * dp Created by Admin on 6/20/17.
+ * Created by smartwave on 02/11/2017.
  */
 
 public class AccountItemViewHolder extends RecyclerView.ViewHolder{

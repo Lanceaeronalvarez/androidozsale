@@ -11,7 +11,6 @@ import au.com.dealsdirect.ui.controller.details.DetailsController;
 import au.com.dealsdirect.ui.controller.login.LoginController;
 import au.com.dealsdirect.ui.controller.main.MainController;
 import au.com.dealsdirect.ui.controller.saleitems.SaleItemsController;
-import au.com.dealsdirect.ui.controller.shops.ShopsController;
 
 /**
  * Created by smartwave on 16/10/2017.
@@ -42,7 +41,7 @@ public class ControllerFactory {
             case CATEGORIES:
                 return CategoriesController.newInstance();
             case CHECKOUT:
-                return CategoriesController.newInstance();
+                return new CheckoutController();
             case SALEITEMS:
                 return SaleItemsController.newInstance();
             case ACCOUNT:
@@ -67,7 +66,7 @@ public class ControllerFactory {
             case SALEITEMS:
                 return new SaleItemsController(bundle);
             case ACCOUNT:
-                return new AccountController();
+                return new AccountController(bundle);
             default:
                 return null;
         }
