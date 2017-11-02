@@ -8,7 +8,7 @@ buildscript {
     }
 
     dependencies {
-        classpath 'com.android.tools.build:gradle:2.3.3'
+        classpath 'com.android.tools.build:gradle:3.0.0'
         classpath 'me.tatarka:gradle-retrolambda:3.2.5'
         classpath 'com.google.gms:google-services:3.1.0'
         classpath 'io.codearte.gradle.nexus:gradle-nexus-staging-plugin:0.5.3'
@@ -39,10 +39,10 @@ ext {
     minSdkVersion = 21
     targetSdkVersion = 26
     compileSdkVersion = 26
-    buildToolsVersion = '26.0.0'
+    buildToolsVersion = '26.0.2'
 
     // App dependencies
-    supportLibrary = '26.0.0'
+    supportLibrary = '26.1.0'
     gsonVersion = '2.8.1'
     calligraphyVersion = '2.2.0'
 
