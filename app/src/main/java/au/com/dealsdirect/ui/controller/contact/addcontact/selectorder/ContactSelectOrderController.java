@@ -93,17 +93,17 @@ public class ContactSelectOrderController extends BaseController
             mContactOrdersHeader.setVisibility(View.GONE);
             mContactOrdersRecyclerView.setVisibility(View.GONE);
             mContactSelectOrderPlaceholder.setVisibility(View.VISIBLE);
-            mContactSelectOrderPlaceholder.setOnClickListener(v -> getActivity().onBackPressed());
+            mContactSelectOrderPlaceholder.setOnClickListener(v -> mActivity.onBackPressed());
         } else {
             mContactSelectOrderPlaceholder.setVisibility(View.GONE);
             mContactOrdersRecyclerView.setVisibility(View.VISIBLE);
 
             final ContactOrderAdapter adapter
                     = new ContactOrderAdapter
-                    (mContactOrders, getActivity(), mContactOrderItemListener);
+                    (mContactOrders, mActivity, mContactOrderItemListener);
 
             mContactOrdersRecyclerView.setAdapter(adapter);
-            mContactOrdersRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
+            mContactOrdersRecyclerView.setLayoutManager(new LinearLayoutManager(mActivity));
         }
     }
 
@@ -116,14 +116,14 @@ public class ContactSelectOrderController extends BaseController
     @Override
     public void onContactOrderItemClicked(ContactOrderList contactOrder) {
         ContactPreferenceHelper.setChosenInvoiceString(
-                getActivity(),
+                mActivity,
                 contactOrder.getInvoiceNo());
 
         ContactPreferenceHelper.setChosenOrderString(
-                getActivity(),
+                mActivity,
                 contactOrder.getDescription());
 
-        getActivity().onBackPressed();
+        mActivity.onBackPressed();
     }
 
     @Override

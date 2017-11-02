@@ -111,13 +111,13 @@ public class OrderDetailsController extends BaseController implements OrderDetai
                     mOrderItem.getPaymentReferenceNo(),
                     mOrderItem.getOrders(),
                     mOrderItem.getTotal(),
-                    getActivity()));
-            mRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity(), LinearLayoutManager.VERTICAL, false));
+                    mActivity));
+            mRecyclerView.setLayoutManager(new LinearLayoutManager(mActivity, LinearLayoutManager.VERTICAL, false));
         }
     }
 
     @OnClick(R.id.partial_toolbar_arrow_view)
     public void onBackClick() {
-        getActivity().onBackPressed();
+        mActivity.onBackPressed();
     }
 }

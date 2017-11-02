@@ -86,7 +86,7 @@ public class ForgotPasswordController extends BaseController implements ForgotPa
     @OnClick(R.id.partial_toolbar_arrow_view)
     void onBackClick(){
         hideKeyboard();
-        getActivity().onBackPressed();
+        mActivity.onBackPressed();
     }
 
     @OnClick(R.id.controller_forgot_password_send_button)
@@ -95,9 +95,9 @@ public class ForgotPasswordController extends BaseController implements ForgotPa
         String inputEmail = mForgotPasswordEmailForm.getText().toString();
         if (inputEmail.isEmpty()){
             CustomAlertDialog.showCustomAlertDialog(
-                    getActivity(),
+                    mActivity,
                     CustomAlertDialog.CustomDialogIconState.NEGATIVE,
-                    getActivity().getResources().getString(R.string.input_email_address));
+                    mActivity.getResources().getString(R.string.input_email_address));
 
         }else{
 
@@ -111,18 +111,18 @@ public class ForgotPasswordController extends BaseController implements ForgotPa
 
         if (response.getForgotPasswordResponse().getResult()) {
             hideKeyboard();
-            getActivity().onBackPressed();
+            mActivity.onBackPressed();
 
             CustomAlertDialog.showCustomAlertDialog(
-                    getActivity(),
+                    mActivity,
                     CustomAlertDialog.CustomDialogIconState.POSITIVE,
-                    getActivity().getString(R.string.request_sent)
+                    mActivity.getString(R.string.request_sent)
             );
 
         } else {
 
             CustomAlertDialog.showCustomAlertDialog(
-                    getActivity(),
+                    mActivity,
                     CustomAlertDialog.CustomDialogIconState.NEGATIVE,
                     response.getForgotPasswordResponse().getMessage()
             );
@@ -134,9 +134,9 @@ public class ForgotPasswordController extends BaseController implements ForgotPa
     public void showForgotPasswordError() {
         //noinspection ConstantConditions
         CustomAlertDialog.showCustomAlertDialog(
-                getActivity(),
+                mActivity,
                 CustomAlertDialog.CustomDialogIconState.NEGATIVE,
                 "please try again");
-//        getActivity().onBackPressed();
+//        mActivity.onBackPressed();
     }
 }

@@ -131,7 +131,7 @@ public class DetailsController extends BasePullToRefreshController implements De
 
 
         List<String> list = new ArrayList<String>(Arrays.asList(getResources().getStringArray(R.array.genders)));
-        CustomSpinnerAdapter customSpinnerAdapter = new CustomSpinnerAdapter(getActivity(),
+        CustomSpinnerAdapter customSpinnerAdapter = new CustomSpinnerAdapter(mActivity,
                 R.layout.row_custom_spinner_drop_down,
                 list);
         mGenderSpinner.setAdapter(customSpinnerAdapter);
@@ -152,7 +152,7 @@ public class DetailsController extends BasePullToRefreshController implements De
         mDateOfBirthText.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                new DatePickerDialog(getActivity(), R.style.DatePickerTheme, onDateSetListener,
+                new DatePickerDialog(mActivity, R.style.DatePickerTheme, onDateSetListener,
                         mCalendar.get(Calendar.YEAR), mCalendar.get(Calendar.MONTH),
                         mCalendar.get(Calendar.DAY_OF_MONTH)).show();
             }
@@ -192,14 +192,14 @@ public class DetailsController extends BasePullToRefreshController implements De
 
     @Override
     public void saveUserDetailsSuccess() {
-        CustomAlertDialog.showCustomAlertDialog(getActivity(),
+        CustomAlertDialog.showCustomAlertDialog(mActivity,
                 CustomAlertDialog.CustomDialogIconState.POSITIVE,
                 "User details is saved");
     }
 
     @Override
     public void saveUserDetailsFailed(String message) {
-        CustomAlertDialog.showCustomAlertDialog(getActivity(),
+        CustomAlertDialog.showCustomAlertDialog(mActivity,
                 CustomAlertDialog.CustomDialogIconState.NEGATIVE,
                 message);
     }
@@ -209,7 +209,7 @@ public class DetailsController extends BasePullToRefreshController implements De
         hideKeyboard();
 
         if (mPasswordText.getText().toString().isEmpty() || mPasswordText.getText().toString() == "") {
-            CustomAlertDialog.showCustomAlertDialog(getActivity(),
+            CustomAlertDialog.showCustomAlertDialog(mActivity,
                     CustomAlertDialog.CustomDialogIconState.NEGATIVE,
                     "Please enter your password");
             return;
@@ -228,14 +228,14 @@ public class DetailsController extends BasePullToRefreshController implements De
             mPresenter.sendUserDetails(createUserDetailRequest(email, firstname, lastname, dateofbirth,
                     gender, email, password, newpassword, confirmpassword ));
         }else{
-            CustomAlertDialog.showCustomAlertDialog(getActivity(), CustomAlertDialog.CustomDialogIconState.POSITIVE,mActivity.getString(R.string.password_does_not_match));
+            CustomAlertDialog.showCustomAlertDialog(mActivity, CustomAlertDialog.CustomDialogIconState.POSITIVE,mActivity.getString(R.string.password_does_not_match));
         }
     }
 
     @OnClick(R.id.partial_toolbar_arrow_view)
     public void onBackClick() {
         hideKeyboard();
-        getActivity().onBackPressed();
+        mActivity.onBackPressed();
     }
 
     @Override

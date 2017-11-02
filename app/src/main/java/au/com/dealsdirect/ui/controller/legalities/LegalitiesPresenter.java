@@ -9,9 +9,7 @@ import au.com.dealsdirect.data.network.model.legalities.GetTemplateTextRequest;
 import au.com.dealsdirect.data.network.model.legalities.GetTemplateTextResponse;
 import au.com.dealsdirect.ui.base.BasePresenter;
 import au.com.dealsdirect.utils.rx.SchedulerProvider;
-import io.reactivex.annotations.NonNull;
 import io.reactivex.disposables.CompositeDisposable;
-import io.reactivex.functions.Consumer;
 
 /**
  * Created by Paul on 7/14/17.

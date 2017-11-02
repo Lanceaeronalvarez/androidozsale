@@ -23,7 +23,6 @@ import au.com.dealsdirect.R;
 import au.com.dealsdirect.data.network.model.checkout.getcurrentorder.MyPayDetails;
 import au.com.dealsdirect.ui.base.BaseActivity;
 import au.com.dealsdirect.ui.controller.legalities.LegalitiesController;
-import au.com.dealsdirect.ui.main.MainActivity;
 import au.com.dealsdirect.utils.PriceUtils;
 
 /**
@@ -36,6 +35,8 @@ public class OurpayPanel {
     private LinearLayout mPanelHolder;
     LinearLayout mHolderInBorder;
     Router mRouter;
+    OurpayGraph mOurpayGraph = new OurpayGraph();
+
 
     public OurpayPanel(BaseActivity activity) {
         this.mBaseActivity = activity;
@@ -163,8 +164,7 @@ public class OurpayPanel {
 
     private View getPanelRows(List<MyPayDetails.PlannedTransaction> transactions) {
 
-        OurpayGraph ourpayGraph = new OurpayGraph();
-        return ourpayGraph.generateGraph(mBaseActivity, transactions);
+        return mOurpayGraph.generateGraph(mBaseActivity, transactions);
     }
 
     private View getCartAmountHeader(String amount) {
@@ -259,4 +259,11 @@ public class OurpayPanel {
         return view;
     }
 
+    public void clearOurpayGraphBitmapsAndListeners(){
+        mOurpayGraph.clearOurpayGraphBitmapsAndListeners();
+    }
+
+    public void setIsGraphVisible(boolean isVisible){
+        mOurpayGraph.setIsGraphVisible(isVisible);
+    }
 }

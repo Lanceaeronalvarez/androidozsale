@@ -32,7 +32,6 @@ public class SharedArcFadePopChangeHandler extends TransitionChangeHandler {
     @Override
     @NonNull
     protected Transition getTransition(@NonNull ViewGroup container, View from, View to, boolean isPush) {
-        View test = from.findViewById(R.id.product_details_shared_image);
 
         TransitionSet transition = new TransitionSet()
                 .setOrdering(TransitionSet.ORDERING_SEQUENTIAL)

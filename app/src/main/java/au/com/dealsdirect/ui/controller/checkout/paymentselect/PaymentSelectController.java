@@ -57,7 +57,6 @@ public class PaymentSelectController extends BasePullToRefreshController impleme
     LinearLayout mNoPaymentPlaceholder;
 
     private PaymentSelectAdapter mAdapter;
-    private MainActivity mActivity;
 
     private ArrayList<PaymentMethod> mPaymentMethods = new ArrayList<>();
     private boolean isFromCart = false;
@@ -105,7 +104,6 @@ public class PaymentSelectController extends BasePullToRefreshController impleme
     @Override
     protected void onViewBound(@NonNull View view) {
         super.onViewBound(view);
-        mActivity = ((MainActivity) getActivity());
         setUp(view);
     }
 
@@ -148,6 +146,7 @@ public class PaymentSelectController extends BasePullToRefreshController impleme
     @Override
     public void showRemovePaymentMethodResult(PaymentMethod paymentMethod, boolean result, String message) {
         mActivity.setPaymentMethodSelected(null);
+        hideLoading();
 
         if (result) {
             CustomAlertDialog.showCustomAlertDialog(mActivity, CustomAlertDialog.CustomDialogIconState.POSITIVE, mActivity.getString(R.string.remove_payment_method));

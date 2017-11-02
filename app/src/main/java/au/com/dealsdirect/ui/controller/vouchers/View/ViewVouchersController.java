@@ -113,12 +113,12 @@ public class ViewVouchersController extends BasePullToRefreshController implemen
         mTitleText.setText("My Vouchers");
         mFilterView.setVisibility(View.INVISIBLE);
         mArrowImage.setOnClickListener(action -> {
-            getActivity().onBackPressed();
+            mActivity.onBackPressed();
         });
 
-        mUnusedVouchersAdapter = new ViewVouchersRecyclerViewAdapter(new ArrayList<>(), getActivity());
+        mUnusedVouchersAdapter = new ViewVouchersRecyclerViewAdapter(new ArrayList<>(), mActivity);
         mUsedVouchersAdapter = new ViewVouchersRecyclerViewAdapter
-                (new ArrayList<>(), getActivity());
+                (new ArrayList<>(), mActivity);
 
         LinearLayoutManager unusedVouchersLayoutManager
                 = new LinearLayoutManager(getApplicationContext(), LinearLayoutManager.HORIZONTAL, false);

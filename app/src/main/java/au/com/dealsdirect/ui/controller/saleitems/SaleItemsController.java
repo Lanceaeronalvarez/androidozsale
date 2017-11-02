@@ -50,7 +50,6 @@ import au.com.dealsdirect.ui.controller.searchfilter.adapter.SearchChipModel;
 import au.com.dealsdirect.ui.custom.SearchEditText;
 import au.com.dealsdirect.ui.custom.transitions.SharedArcFadePopChangeHandler;
 import au.com.dealsdirect.ui.custom.transitions.SharedArcFadePushChangeHandler;
-import au.com.dealsdirect.ui.main.MainActivity;
 import au.com.dealsdirect.utils.BundleBuilder;
 import au.com.dealsdirect.utils.JsonUtils;
 import au.com.dealsdirect.utils.PaginateUtils;
@@ -173,7 +172,7 @@ public class SaleItemsController extends BasePullToRefreshController implements 
                         @Override
                         public void run() {
                             if (before != 0 || count != 0) {
-                                getActivity().runOnUiThread(() -> showLoading());
+                                mActivity.runOnUiThread(() -> showLoading());
                                 mChipFilters = removeSearchQueryChips(mChipFilters);
                                 buildSearchQueryChips(mChipFilters);
                                 mPresenter.loadSaleItems(createSaleItemsRequest(mCategoryKey, mSaleId, 0, mChipFilters));
@@ -302,22 +301,13 @@ public class SaleItemsController extends BasePullToRefreshController implements 
     @Override
     protected void onActivityResumed(@NonNull Activity activity) {
         super.onActivityResumed(activity);
-        ((MainActivity) getActivity()).setDraggableViewPager(false);
+        mActivity.setDraggableViewPager(false);
     }
 
     @Override
     protected void onViewBound(@NonNull View view) {
         super.onViewBound(view);
 
-//        if (mIsFromCategory){
-//            mSaleItemsBackIcon.setOnClickListener(view1 -> {
-//                mSaleItemsBackIcon.setOnClickListener(view2 -> {
-//                    getActivity().onBackPressed();
-//
-//                });
-//                ((MainActivity) getActivity()).goToCategories();
-//            });
-//        }else
 
         if (mFromShopSearch) {
             if (mSaleItemsToolbarTitle.getText().toString().isEmpty() && mSearchQuery.isEmpty() && !isFiltered) {
@@ -325,7 +315,7 @@ public class SaleItemsController extends BasePullToRefreshController implements 
             }
         } else {
             mSaleItemsBackIcon.setOnClickListener(view12 -> {
-                getActivity().onBackPressed();
+                mActivity.onBackPressed();
             });
         }
 
@@ -409,7 +399,7 @@ public class SaleItemsController extends BasePullToRefreshController implements 
         mPresenter.loadSortingFacets();
         mSaleItemsToolbarTitle.setTextAlignment(View.TEXT_ALIGNMENT_TEXT_START);
 
-        ((MainActivity) getActivity()).getMainController().setViewpagerDraggable(false);
+        mActivity.getMainController().setViewpagerDraggable(false);
 
         mPaginateCallbacks = new Paginate.Callbacks() {
             @Override
@@ -433,11 +423,11 @@ public class SaleItemsController extends BasePullToRefreshController implements 
             }
         };
 
-        mSaleItemsAdapter = new SaleItemsAdapter(getActivity(), mSaleItems, mPresenter, mSaleId);
+        mSaleItemsAdapter = new SaleItemsAdapter(mActivity, mSaleItems, mPresenter, mSaleId);
         if (mPresenter.isTablet()) {
-            mSaleItemsRecyclerView.setLayoutManager(new GridLayoutManager(getActivity(), 4));
+            mSaleItemsRecyclerView.setLayoutManager(new GridLayoutManager(mActivity, 4));
         } else {
-            mSaleItemsRecyclerView.setLayoutManager(new GridLayoutManager(getActivity(), 2));
+            mSaleItemsRecyclerView.setLayoutManager(new GridLayoutManager(mActivity, 2));
         }
 
         mSaleItemsRecyclerView.setAdapter(mSaleItemsAdapter);
@@ -467,7 +457,9 @@ public class SaleItemsController extends BasePullToRefreshController implements 
 
             mPresenter.loadSaleItems(createSaleItemsRequest(mCategoryKey, mSaleId, page, null));
         } else if (!mSaleItems.isEmpty()) {
-            mPaginateManager = PaginateUtils.init(mSaleItemsRecyclerView, mPaginateCallbacks);
+            if (mSaleItems.size() >= PaginateUtils.LOADING_TRIGGER_THRESHOLD) {
+                mPaginateManager = PaginateUtils.init(mSaleItemsRecyclerView, mPaginateCallbacks);
+            }
         }
 
         mSaleItemsToolbarField.setOnKeyboardListener((keyboardEditText, showing) -> {
@@ -486,7 +478,7 @@ public class SaleItemsController extends BasePullToRefreshController implements 
     @Override
     public void showSaleItems(GetSaleItemsResponse getSaleItemsResponse, boolean forFacetCorrection) {
 
-        if(!mFromShopSearch){
+        if (!mFromShopSearch) {
             //allow showing filters only when sale items have loaded.
             mSaleItemsFilterIcon.setOnClickListener(view12 -> showFilters());
         }
@@ -550,8 +542,10 @@ public class SaleItemsController extends BasePullToRefreshController implements 
 
                     mPaginateManager = PaginateUtils.init(mSaleItemsRecyclerView, mPaginateCallbacks);
                     mSaleItemsRecyclerView.scrollToPosition(0);
-                    hasLoadedAllItems = false;
-                    page = 0;
+                    if (items.size() <= PaginateUtils.LOADING_TRIGGER_THRESHOLD) {
+                        hasLoadedAllItems = false;
+                        mPaginateManager.setHasMoreDataToLoad(false);
+                    }
                     mIsSearch = false;
                 } else {
                     mSaleItemsAdapter.addData(items);
@@ -587,7 +581,7 @@ public class SaleItemsController extends BasePullToRefreshController implements 
     void onBackClick() {
         if (!mIsFilterClicked) {
             mIsFilterClicked = true;
-            getActivity().onBackPressed();
+            mActivity.onBackPressed();
             new Handler().postDelayed(new TimerTask() {
                 @Override
                 public void run() {
@@ -707,8 +701,8 @@ public class SaleItemsController extends BasePullToRefreshController implements 
         mSaleItemsToolbarField.removeTextChangedListener(mTextWatcher);
         mSearchQuery = mSaleItemsToolbarField.getText().toString();
 
-        mSaleItemsBackIcon.setImageDrawable(getActivity().getDrawable(R.drawable.ic_pink_chevron));
-        mSaleItemsFilterIcon.setImageDrawable(getActivity().getDrawable(R.drawable.ic_toolbar_filter));
+        mSaleItemsBackIcon.setImageDrawable(mActivity.getDrawable(R.drawable.ic_pink_chevron));
+        mSaleItemsFilterIcon.setImageDrawable(mActivity.getDrawable(R.drawable.ic_toolbar_filter));
 
         mSaleItemsOpaqueCover.setVisibility(View.GONE);
         mSaleItemsToolbarField.setActivated(false);
@@ -727,7 +721,7 @@ public class SaleItemsController extends BasePullToRefreshController implements 
         handler.postDelayed(() -> {
             if (mSaleItemsToolbarField != null && mSaleItemsToolbarField.requestFocus()) {
                 InputMethodManager inputMethodManager =
-                        (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
+                        (InputMethodManager) mActivity.getSystemService(Context.INPUT_METHOD_SERVICE);
 
                 inputMethodManager.toggleSoftInputFromWindow(
                         mSaleItemsToolbarField.getApplicationWindowToken(),
@@ -736,11 +730,11 @@ public class SaleItemsController extends BasePullToRefreshController implements 
         }, 200);
 
 //        if (mCategoryKey.isEmpty() && mTitle.isEmpty() && mSearchQuery.isEmpty()) {
-//            mSaleItemsToolbarTitle.setText(getActivity().getResources().getString(R.string.i_am_looking_for));
+//            mSaleItemsToolbarTitle.setText(mActivity.getResources().getString(R.string.i_am_looking_for));
 //        }
 
-        mSaleItemsBackIcon.setImageDrawable(getActivity().getDrawable(R.drawable.ic_search));
-        mSaleItemsFilterIcon.setImageDrawable(getActivity().getDrawable(R.drawable.ic_close));
+        mSaleItemsBackIcon.setImageDrawable(mActivity.getDrawable(R.drawable.ic_search));
+        mSaleItemsFilterIcon.setImageDrawable(mActivity.getDrawable(R.drawable.ic_close));
 
         mSaleItemsBackIcon.setOnClickListener(null);
         mSaleItemsFilterIcon.setOnClickListener(view -> {

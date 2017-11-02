@@ -8,14 +8,18 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import javax.inject.Inject;
+
 import au.com.dealsdirect.di.component.ControllerComponent;
 import au.com.dealsdirect.di.component.DaggerControllerComponent;
 import au.com.dealsdirect.di.module.ControllerModule;
+import au.com.dealsdirect.ui.main.MainActivity;
 
 
 public abstract class BaseController extends RefWatchingController implements MvpView {
 
-    protected BaseActivity mActivity;
+    @Inject
+    protected MainActivity mActivity;
 
     private ControllerComponent mControllerComponent;
 
@@ -31,15 +35,12 @@ public abstract class BaseController extends RefWatchingController implements Mv
     protected View onCreateView(@NonNull LayoutInflater inflater, @NonNull ViewGroup container) {
         setHasOptionsMenu(false);
 
-        if (getActivity() instanceof BaseActivity) {
-            BaseActivity activity = (BaseActivity) getActivity();
-            this.mActivity = activity;
-        }
-
         mControllerComponent = DaggerControllerComponent.builder()
                 .controllerModule(new ControllerModule(this))
                 .activityComponent(((BaseActivity) getActivity()).getActivityComponent())
                 .build();
+        mControllerComponent.inject(this);
+
         return super.onCreateView(inflater, container);
     }
 
@@ -58,7 +59,7 @@ public abstract class BaseController extends RefWatchingController implements Mv
     @Override
     protected void onActivityResumed(@NonNull Activity activity) {
         super.onActivityResumed(activity);
-        mActivity = (BaseActivity) activity;
+        mActivity = (MainActivity) activity;
     }
 
     @Override
@@ -113,7 +114,6 @@ public abstract class BaseController extends RefWatchingController implements Mv
 
     @Override
     public void onDetach(View view) {
-        mActivity = null;
         super.onDetach(view);
     }
 

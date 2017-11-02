@@ -65,8 +65,6 @@ public class AddPaymentController extends BaseController implements AddPaymentMv
     @BindView(R.id.partial_toolbar_filter_view)
     ImageView mViewAddressRightOption;
 
-
-    private MainActivity mActivity;
     private boolean isFromCart = false;
     private boolean isPayPalSubmitClicked = false;
     private String mCartTotalCost;
@@ -94,7 +92,6 @@ public class AddPaymentController extends BaseController implements AddPaymentMv
     @Override
     protected void onViewBound(@NonNull View view) {
         super.onViewBound(view);
-        mActivity = ((MainActivity) getActivity());
         setUp(view);
     }
 

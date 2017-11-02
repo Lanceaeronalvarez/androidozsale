@@ -135,7 +135,7 @@ public class OurpaySMSVerificationController extends BaseController implements O
 
     @OnClick(R.id.partial_toolbar_arrow_view)
     void onBackClick() {
-        getActivity().onBackPressed();
+        mActivity.onBackPressed();
     }
 
     @Override
@@ -166,7 +166,7 @@ public class OurpaySMSVerificationController extends BaseController implements O
     public void callVerificationCodeSendResponse(VerificationNormalizePhoneResponseBody response) {
 
         if(!response.getVerificationNormalizePhoneResponse().getResult()||!response.getVerificationNormalizePhoneResponse().getIsAuthenticated()) {
-            CustomAlertDialog.showCustomAlertDialog(getActivity(), CustomAlertDialog.CustomDialogIconState.NEGATIVE, response.getVerificationNormalizePhoneResponse().getValue().getErrorMessage());
+            CustomAlertDialog.showCustomAlertDialog(mActivity, CustomAlertDialog.CustomDialogIconState.NEGATIVE, response.getVerificationNormalizePhoneResponse().getValue().getErrorMessage());
         }else{
 //            Log.d("smsverification", response.getVerificationNormalizePhoneResponse().getValue().getErrorMessage()+" , "+response.getVerificationNormalizePhoneResponse().getMessage());
             if (!response.getVerificationNormalizePhoneResponse().getValue().getErrorMessage().isEmpty()) {
@@ -197,7 +197,7 @@ public class OurpaySMSVerificationController extends BaseController implements O
 //            CustomAlertDialog.showCustomAlertDialog(getActivity(), CustomAlertDialog.CustomDialogIconState.NEGATIVE, mMessage);
             Log.d(OurpaySMSVerificationController.class.getName(),mMessage);
             ourpayPaymentSubmit();
-            CustomAlertDialog.showCustomAlertDialog(getActivity(), CustomAlertDialog.CustomDialogIconState.POSITIVE, "Verified");
+            CustomAlertDialog.showCustomAlertDialog(mActivity, CustomAlertDialog.CustomDialogIconState.POSITIVE, "Verified");
             mSMSVerificationConfirmButton.setEnabled(true);
 
         } else {
@@ -209,7 +209,7 @@ public class OurpaySMSVerificationController extends BaseController implements O
                 mSMSVerificationConfirmButton.setEnabled(true);
             } else {
                 setCodeNormal();
-                CustomAlertDialog.showCustomAlertDialog(getActivity(), CustomAlertDialog.CustomDialogIconState.POSITIVE, "Verified");
+                CustomAlertDialog.showCustomAlertDialog(mActivity, CustomAlertDialog.CustomDialogIconState.POSITIVE, "Verified");
                 ourpayPaymentSubmit();
             }
         }
@@ -398,6 +398,6 @@ public class OurpaySMSVerificationController extends BaseController implements O
     private void ourpayPaymentSubmit() {
 
         PaymentInfo.setPaymentType(PaymentInfo.TYPE_MYPAY);
-        ((MainActivity) getActivity()).callCreatePaymentTransaction(PaymentInfo.getPaymentType(), "", PaymentInfo.getPaymentMethod().getToken());
+        mActivity.callCreatePaymentTransaction(PaymentInfo.getPaymentType(), "", PaymentInfo.getPaymentMethod().getToken());
     }
 }

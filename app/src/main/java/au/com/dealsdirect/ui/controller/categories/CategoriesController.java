@@ -82,8 +82,6 @@ public class CategoriesController extends BaseController
 
     private int searchTapCounter = 0;
 
-    private MainActivity mActivity;
-
     public static CategoriesController newInstance() {
         return new CategoriesController(
                 new BundleBuilder(new Bundle())
@@ -115,8 +113,7 @@ public class CategoriesController extends BaseController
     protected void onViewBound(@NonNull View view) {
         super.onViewBound(view);
 
-        assert (getActivity()) != null;
-        mActivity = (MainActivity) getActivity();
+        assert (mActivity) != null;
         mActivity.setDraggableViewPager(true);
         mActivity.setCategoriesRouter(getRouter());
         mActivity.setCategoriesController(this);
@@ -145,7 +142,7 @@ public class CategoriesController extends BaseController
     private void setupCategories(){
         if (mCategories != null) {
             mAdapter = new CategoriesAdapter(mCategories, mPresenter, this);
-            mRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity(), LinearLayoutManager.VERTICAL, false));
+            mRecyclerView.setLayoutManager(new LinearLayoutManager(mActivity, LinearLayoutManager.VERTICAL, false));
             mRecyclerView.setMotionEventSplittingEnabled(false);
             mRecyclerView.setAdapter(mAdapter);
 
@@ -156,7 +153,7 @@ public class CategoriesController extends BaseController
                 mSubCategoryAdapter = new SubCategoriesAdapter(
                         mCategories.get(0).getChildren(), mPresenter, mSubCategoryItemClickListener, mCategoryMap);
             }
-            mSubCategoryRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity(), LinearLayoutManager.VERTICAL, false));
+            mSubCategoryRecyclerView.setLayoutManager(new LinearLayoutManager(mActivity, LinearLayoutManager.VERTICAL, false));
             mSubCategoryRecyclerView.setAdapter(mSubCategoryAdapter);
             mSubCategoryRecyclerView.setMotionEventSplittingEnabled(false);
 
@@ -171,11 +168,11 @@ public class CategoriesController extends BaseController
         String categoryName = getCategoryTreeResponse.getName();
 
         //noinspection ConstantConditions
-        if (categoryName.equals(getActivity().getResources().getString(R.string.shop_category))) {
+        if (categoryName.equals(mActivity.getResources().getString(R.string.shop_category))) {
 
             ArrayList<GetCategoryTreeResponse> emptyChildren = new ArrayList<>();
             mSubCategoryAdapter = new SubCategoriesAdapter(emptyChildren, mPresenter, mSubCategoryItemClickListener, mCategoryMap);
-            mSubCategoryRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity(), LinearLayoutManager.VERTICAL, false));
+            mSubCategoryRecyclerView.setLayoutManager(new LinearLayoutManager(mActivity, LinearLayoutManager.VERTICAL, false));
             mSubCategoryRecyclerView.setAdapter(mSubCategoryAdapter);
 
             mIsResetSubCategories = true;
@@ -184,22 +181,22 @@ public class CategoriesController extends BaseController
             mSubCategoryAdapter.notifyDataSetChanged();
             mAdapter.notifyDataSetChanged();
 
-            assert (getActivity()) != null;
-            ((MainActivity) getActivity()).goToSalesFromCategory(shopCategory);
+            assert (mActivity) != null;
+            mActivity.goToSalesFromCategory(shopCategory);
 
         } else {
             mSubCategoryAdapter.isResetSubCategories(mIsResetSubCategories);
             if (mCategories != null && mCategories.get(position).getChildren() != null) {
                 mSubCategoryAdapter = new SubCategoriesAdapter(
                         (mCategories.get(position).getChildren()), mPresenter, mSubCategoryItemClickListener, mCategoryMap);
-                mSubCategoryRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity(), LinearLayoutManager.VERTICAL, false));
+                mSubCategoryRecyclerView.setLayoutManager(new LinearLayoutManager(mActivity, LinearLayoutManager.VERTICAL, false));
                 mSubCategoryRecyclerView.setAdapter(mSubCategoryAdapter);
                 mSubCategoryAdapter.notifyDataSetChanged();
 
             } else {
                 ArrayList<GetCategoryTreeResponse> emptyChildren = new ArrayList<>();
                 mSubCategoryAdapter = new SubCategoriesAdapter(emptyChildren, mPresenter, mSubCategoryItemClickListener, mCategoryMap);
-                mSubCategoryRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity(), LinearLayoutManager.VERTICAL, false));
+                mSubCategoryRecyclerView.setLayoutManager(new LinearLayoutManager(mActivity, LinearLayoutManager.VERTICAL, false));
                 mSubCategoryRecyclerView.setAdapter(mSubCategoryAdapter);
 
             }
@@ -211,7 +208,7 @@ public class CategoriesController extends BaseController
     @Override
     public void onSubCategoryItemClicked(String categoryID, String categoryName, String categoryKey) {
 
-        Controller currentSaleItemsController = ((MainActivity)getActivity()).getHomeRouter().getControllerWithTag(getResources().getString(R.string.sale_items_controller_tag));
+        Controller currentSaleItemsController = mActivity.getHomeRouter().getControllerWithTag(getResources().getString(R.string.sale_items_controller_tag));
 
         if (currentSaleItemsController==null){
             mActivity.getMainController().setChosenCategoryItemKey(categoryKey);
@@ -231,7 +228,7 @@ public class CategoriesController extends BaseController
         }
 
         new Handler().postDelayed(() -> {
-            ((MainActivity) getActivity()).getMainController().goToShops();
+            mActivity.getMainController().goToShops();
         }, 400);
 
 
@@ -246,11 +243,11 @@ public class CategoriesController extends BaseController
     @OnClick(R.id.partial_toolbar_disabled_search_right_option)
     void onSearchOptionClicked() {
 
-        if (((MainActivity)getActivity()).getHomeRouter().getControllerWithTag(ShopsController.TAG)!=null){
-            ((MainActivity) getActivity()).getHomeRouter().popToTag(ShopsController.TAG);
+        if (mActivity.getHomeRouter().getControllerWithTag(ShopsController.TAG)!=null){
+            mActivity.getHomeRouter().popToTag(ShopsController.TAG);
         }
 
-        ((MainActivity) getActivity()).goToSalesFromCategory(mChosenSubCategoryTreeResponse);
+        mActivity.goToSalesFromCategory(mChosenSubCategoryTreeResponse);
 
     }
 
@@ -287,8 +284,8 @@ public class CategoriesController extends BaseController
     }
 
     private void onSearchFieldClick() {
-        if ((getActivity()) != null) {
-            ((MainActivity) getActivity()).goToSaleItemsFromSearchCategory();
+        if (mActivity != null) {
+            mActivity.goToSaleItemsFromSearchCategory();
         }
 //        assert (getActivity()) != null;
 //        ((MainActivity)getActivity()).getCategoriesRouter().pushController(

@@ -38,7 +38,6 @@ import au.com.dealsdirect.data.network.model.invite.SetInviteRequest;
 import au.com.dealsdirect.data.network.model.invite.SetInviteResponse;
 import au.com.dealsdirect.ui.base.BasePullToRefreshController;
 import au.com.dealsdirect.ui.custom.CustomAlertDialog;
-import au.com.dealsdirect.ui.main.MainActivity;
 import au.com.dealsdirect.utils.BundleBuilder;
 import butterknife.BindView;
 
@@ -183,15 +182,15 @@ public class InviteSendController extends BasePullToRefreshController implements
     @Override
     protected void setUp(View view) {
 
-        assert (getActivity()) != null;
-        ((MainActivity) getActivity()).getMainController().showBottomNav();
+        assert mActivity != null;
+        mActivity.getMainController().showBottomNav();
 
         mTitleText.setText("Invite Friends");
         mFilterView.setVisibility(View.INVISIBLE);
         mArrowImage.setVisibility(View.INVISIBLE);
 
 
-        Glide.with(getActivity())
+        Glide.with(mActivity)
                 .load(R.drawable.invite_friend_vouchers_medium)
                 .placeholder(R.drawable.invite_friend_vouchers_medium)
                 .into(mImageView);
@@ -199,7 +198,7 @@ public class InviteSendController extends BasePullToRefreshController implements
         String twitterLink = mPresenter.getFollowUsTwitterLink();
         String facebookLink = mPresenter.getFollowUsFbLink();
 
-        progress = new ProgressDialog(getActivity());
+        progress = new ProgressDialog(mActivity);
 
         if (twitterLink.isEmpty()) {
             mTwitterFollowUsContainer.setVisibility(View.GONE);
@@ -235,7 +234,7 @@ public class InviteSendController extends BasePullToRefreshController implements
 //                tweetIntent.putExtra(Intent.EXTRA_STREAM, Uri.parse(bannerImageUrl != null ? bannerImageUrl : ""));
                 tweetIntent.setType("text/plain");
 
-                PackageManager packManager = getActivity().getPackageManager();
+                PackageManager packManager = mActivity.getPackageManager();
                 List<ResolveInfo> resolvedInfoList = packManager.queryIntentActivities(tweetIntent, PackageManager.MATCH_DEFAULT_ONLY);
 
                 boolean resolved = false;
@@ -257,7 +256,7 @@ public class InviteSendController extends BasePullToRefreshController implements
                     i.setData(Uri.parse("https://twitter.com/intent/tweet?text=" + urlEncode(messageWithInvite)));
                     startActivity(i);
                     CustomAlertDialog.showCustomAlertDialog(
-                            getActivity(),
+                            mActivity,
                             CustomAlertDialog.CustomDialogIconState.NEGATIVE,
                             "Twitter is not installed on this device");
                 }
@@ -282,7 +281,7 @@ public class InviteSendController extends BasePullToRefreshController implements
                                     .setContentDescription(inviteMessage)
                                     .setQuote(personalInvitation)
                                     .build();
-                    ShareDialog shareDialog = new ShareDialog(getActivity());
+                    ShareDialog shareDialog = new ShareDialog(mActivity);
                     shareDialog.show(content, ShareDialog.Mode.AUTOMATIC);
 
                 } catch (Exception e) {
@@ -357,11 +356,11 @@ public class InviteSendController extends BasePullToRefreshController implements
                 if (!link.isEmpty()) {
                     Uri uri = Uri.parse(link);
                     Intent intent = new Intent(Intent.ACTION_VIEW, uri);
-                    assert getActivity() != null;
-                    getActivity().startActivity(intent);
+                    assert mActivity != null;
+                    mActivity.startActivity(intent);
                 } else {
                     CustomAlertDialog.showCustomAlertDialog(
-                            getActivity(),
+                            mActivity,
                             CustomAlertDialog.CustomDialogIconState.NEGATIVE,
                             "facebook link missing");
                 }
@@ -377,7 +376,7 @@ public class InviteSendController extends BasePullToRefreshController implements
                 Intent intent;
                 if (!link.isEmpty()) {
                     try {
-                        getActivity().getPackageManager().getPackageInfo("com.twitter.android", 0);
+                        mActivity.getPackageManager().getPackageInfo("com.twitter.android", 0);
                         Uri uri = Uri.parse("twitter://user?user_id=37405859");
                         intent = new Intent(Intent.ACTION_VIEW, uri);
                     } catch (PackageManager.NameNotFoundException e) {
@@ -385,12 +384,12 @@ public class InviteSendController extends BasePullToRefreshController implements
                         Uri uri = Uri.parse(link);
                         intent = new Intent(Intent.ACTION_VIEW, uri);
                     }
-                    getActivity().startActivity(intent);
+                    mActivity.startActivity(intent);
 
                 } else {
 
                     CustomAlertDialog.showCustomAlertDialog(
-                            getActivity(),
+                            mActivity,
                             CustomAlertDialog.CustomDialogIconState.NEGATIVE,
                             "twitter link missing");
                 }
@@ -419,12 +418,12 @@ public class InviteSendController extends BasePullToRefreshController implements
                     mPresenter.setInviteLink(setInviteLinkRequest);
                 } else {
 
-                    ClipboardManager clipboard = (ClipboardManager) getActivity().getApplicationContext()
+                    ClipboardManager clipboard = (ClipboardManager) mActivity.getApplicationContext()
                             .getSystemService(Context.CLIPBOARD_SERVICE);
                     ClipData clipData = ClipData.newPlainText("Text", mPersonalInvitationLinkEditText.getText().toString());
                     clipboard.setPrimaryClip(clipData);
 
-                    CustomAlertDialog.showCustomAlertDialog(getActivity(), CustomAlertDialog.CustomDialogIconState.POSITIVE,
+                    CustomAlertDialog.showCustomAlertDialog(mActivity, CustomAlertDialog.CustomDialogIconState.POSITIVE,
                             "Link Copied to Clipboard");
                 }
             }
@@ -482,7 +481,7 @@ public class InviteSendController extends BasePullToRefreshController implements
             progress.dismiss();
 
             CustomAlertDialog.showCustomAlertDialog(
-                    getActivity(),
+                    mActivity,
                     CustomAlertDialog.CustomDialogIconState.POSITIVE,
                     "Edit Successful");
 
@@ -497,7 +496,7 @@ public class InviteSendController extends BasePullToRefreshController implements
             progress.dismiss();
 
             CustomAlertDialog.showCustomAlertDialog(
-                    getActivity(),
+                    mActivity,
                     CustomAlertDialog.CustomDialogIconState.NEGATIVE,
                     editLinkResponse);
         }

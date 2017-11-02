@@ -14,19 +14,18 @@ import android.graphics.Path;
 import android.graphics.Rect;
 import android.os.Build;
 import android.util.DisplayMetrics;
-import android.util.Log;
 import android.view.Display;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.ViewTreeObserver;
 import android.view.WindowManager;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import java.io.ByteArrayOutputStream;
 import java.util.List;
 
 import au.com.dealsdirect.R;
@@ -35,14 +34,24 @@ import au.com.dealsdirect.utils.PriceUtils;
 
 import static android.view.ViewTreeObserver.OnGlobalLayoutListener;
 
-@SuppressWarnings("deprecation")
+@SuppressWarnings({"ResourceType"})
 public class OurpayGraph {
 
     private int circlesLayoutWidth;
     private int indexTracker;
     private Bitmap bitmap;
     private Bitmap[] bitmapState = new Bitmap[6];
+    private Bitmap[] progressBitmaps;
+    private OnGlobalLayoutListener mOnGlobalLayoutListener;
+    private int mGlobalLayoutListenerCounter = 0;
+    private OnGlobalLayoutListener[] mGlobalLayoutListenerArray;
+    private View[] mViewArray;
+    private boolean mIsGraphVisible = true;
 
+    private Bitmap drawProgressCircle;
+    private Bitmap drawGrayCircle;
+    private Bitmap progressBitmap;
+    private Bitmap grayBitmap;
 
     /**
      * @param scaleBitmapImage - Contains Bitmap Image to be masked
@@ -50,7 +59,7 @@ public class OurpayGraph {
      * @return - Round version of Bitmap
      */
 
-    public static Bitmap getRoundedShape(Bitmap scaleBitmapImage, int circleSize) {
+    private static Bitmap getRoundedShape(Bitmap scaleBitmapImage, int circleSize) {
         Bitmap targetBitmap = Bitmap.createBitmap(circleSize,
                 circleSize, Bitmap.Config.ARGB_8888);
 
@@ -63,10 +72,12 @@ public class OurpayGraph {
                 Path.Direction.CCW);
 
         canvas.clipPath(path);
+
         canvas.drawBitmap(scaleBitmapImage,
                 new Rect(0, 0, scaleBitmapImage.getWidth(),
                         scaleBitmapImage.getHeight()),
                 new Rect(0, 0, circleSize, circleSize), null);
+
         return targetBitmap;
     }
 
@@ -75,7 +86,7 @@ public class OurpayGraph {
      * @param startFrom - int where to start the crop
      * @return - cropped bitmap
      */
-    public static Bitmap cropImage(Bitmap bitmap, int startFrom) {
+    private static Bitmap cropImage(Bitmap bitmap, int startFrom) {
         return Bitmap.createBitmap(bitmap, startFrom, 0, 1, 1);
     }
 
@@ -92,11 +103,12 @@ public class OurpayGraph {
 
         v.layout(0, 0, v.getMeasuredWidth(), v.getMeasuredHeight());
 
-
         Bitmap returnedBitmap = Bitmap.createBitmap(v.getMeasuredWidth(),
                 v.getMeasuredHeight(), Bitmap.Config.RGB_565);
+
         Canvas c = new Canvas(returnedBitmap);
         v.draw(c);
+
         return returnedBitmap;
     }
 
@@ -106,8 +118,9 @@ public class OurpayGraph {
      * @param circleSize - Size for the new processed bitmap
      * @return - processed bitmap (Cropped and masked)
      */
-    public Bitmap getCircle(Bitmap bitmap, int circleSize) {
+    private Bitmap getCircle(Bitmap bitmap, int circleSize) {
         Bitmap croppedProgressBitmap = cropImage(bitmap, 0);
+
         return getRoundedShape(croppedProgressBitmap, circleSize);
     }
 
@@ -164,10 +177,13 @@ public class OurpayGraph {
         int circleTempSize;
         int circleTempTextSize;
 
-        Bitmap progressBitmap = BitmapFactory.decodeResource(context.getResources(),
-                R.drawable.ourpay_image_gradient);
-        Bitmap grayBitmap = BitmapFactory.decodeResource(context.getResources(),
-                R.drawable.ourpay_image_gray);
+        BitmapFactory.Options bitOption = new BitmapFactory.Options();
+        bitOption.inSampleSize = 10;
+        bitOption.inScaled = true;
+        progressBitmap = BitmapFactory.decodeResource(context.getResources(),
+                R.drawable.ourpay_image_gradient, bitOption);
+        grayBitmap = BitmapFactory.decodeResource(context.getResources(),
+                R.drawable.ourpay_image_gray, bitOption);
 
 
         DisplayMetrics dm = context.getResources().getDisplayMetrics();
@@ -189,8 +205,8 @@ public class OurpayGraph {
         final int circleSize = circleTempSize;
         final int circleTextSize = circleTempTextSize;
 
-        Bitmap drawProgressCircle = getRoundedShape(progressBitmap, circleSize);
-        Bitmap drawGrayCircle = getCircle(grayBitmap, circleSize);
+        drawProgressCircle = getRoundedShape(progressBitmap, circleSize);
+        drawGrayCircle = getCircle(grayBitmap, circleSize);
 
 
         layPayViewId = new LinearLayout(context);
@@ -206,7 +222,8 @@ public class OurpayGraph {
 
         View[] tempView = new View[ourpayTransactions.size() + 1];
         final int max = ourpayTransactions.size() - 1;
-
+        mViewArray = new View[max + 1];
+        mGlobalLayoutListenerArray = new OnGlobalLayoutListener[max + 1];
 
         for (int i = 0; i < ourpayTransactions.size(); i++) {
 
@@ -216,49 +233,41 @@ public class OurpayGraph {
             a.setOrientation(LinearLayout.HORIZONTAL);
 
             LayoutInflater inflater = LayoutInflater.from(context);
-            final View yourView = inflater.inflate(R.layout.ourpay_panel_row,
+            View yourView = inflater.inflate(R.layout.ourpay_panel_row,
                     layPayViewId, false);
 
 
-            final RelativeLayout circleView =
-                    (RelativeLayout) yourView.findViewById(R.id.imagelayout);
+            RelativeLayout circleView = yourView.findViewById(R.id.imagelayout);
+            RelativeLayout circlesLayout = yourView.findViewById(R.id.circlesContainer);
 
-            final RelativeLayout circlesLayout =
-                    (RelativeLayout) yourView.findViewById(R.id.circlesContainer);
-
-            circleView.getViewTreeObserver().addOnGlobalLayoutListener(new OnGlobalLayoutListener() {
+            mOnGlobalLayoutListener = new OnGlobalLayoutListener() {
                 @Override
                 public void onGlobalLayout() {
 
-                    Log.d("Ourpaygraph", "onGlobalLayout");
 
                     circlesLayoutWidth = deviceWidth - (deviceWidth / 3);
-                    ImageView foregroundBar =
-                            (ImageView) yourView.findViewById(R.id.ourpay_fg_bar);
+                    ImageView foregroundBar = yourView.findViewById(R.id.ourpay_fg_bar);
+                    ImageView backgroundBar = yourView.findViewById(R.id.ourpay_bg_bar);
 
+                    foregroundBar.getLayoutParams().width = 0;
+                    if (progressBitmaps == null) {
+                        generateRoundedBitmaps(context, max, circleSize, circleView);
 
-                    ImageView backgroundBar =
-                            (ImageView) yourView.findViewById(R.id.ourpay_bg_bar);
+                    }
 
                     if (tabletSize) {
+                        TextView tempDate = yourView.findViewById(R.id.dateTextView);
+                        tempDate.getLayoutParams().height = circleSize;
                         if (deviceWidth <= 900) {
-                            backgroundBar.getLayoutParams().height = 10;
+                            backgroundBar.getLayoutParams().height =                                                                                  10;
                         } else if (deviceWidth <= 1300) {
 
                             backgroundBar.getLayoutParams().height = 12;
                         } else {
 
-                            backgroundBar.getLayoutParams().height = 18;
+                            backgroundBar.getLayoutParams().height = 19;
                         }
                     }
-//                    Bitmap progressBitmap = BitmapFactory.decodeResource(context.getResources(),
-//                            R.drawable.ourpay_image_gradient);
-//                    Bitmap grayBitmap = BitmapFactory.decodeResource(context.getResources(),
-//                            R.drawable.ourpay_image_gray);
-
-//                    Bitmap drawProgressCircle = getRoundedShape(progressBitmap, circleSize);
-//                    Bitmap drawGrayCircle = getCircle(grayBitmap, circleSize);
-
 
                     if (state == 0) {
                         if (max == 1 && deviceWidth <= 600) {
@@ -286,13 +295,6 @@ public class OurpayGraph {
                             }
 
                             indexTracker = x + 1;
-
-                            //
-                            bitmap = getBitmapFromView(context, circleView);
-                            int startsAt = (((circlesLayoutWidth / max) * x));
-
-                            Bitmap croppedBitmap = cropImage(bitmap, startsAt);
-                            Bitmap roundBitmap = getRoundedShape(croppedBitmap, circleSize);
 
                             ImageView iv = new ImageView(context);
                             iv.setId(findId(context, 555));
@@ -362,7 +364,8 @@ public class OurpayGraph {
                                             R.id.dateTextView);
                                     imageParams.addRule(RelativeLayout.ALIGN_PARENT_TOP,
                                             R.id.dateTextView);
-                                    iv.setImageBitmap(roundBitmap);
+
+                                    iv.setImageBitmap(progressBitmaps[x]);
                                     iv.setLayoutParams(imageParams);
 
                                     circlesLayout.addView(iv);
@@ -388,6 +391,7 @@ public class OurpayGraph {
                                     imageParams.leftMargin =
                                             ((((circlesLayoutWidth) / (max + 1)) - (circleSize / 2)));
                                     iv.setImageBitmap(drawProgressCircle);
+
                                     iv.setScaleType(ImageView.ScaleType.FIT_XY);
                                     imageParams.addRule(RelativeLayout.ALIGN_PARENT_BOTTOM,
                                             R.id.dateTextView);
@@ -405,6 +409,7 @@ public class OurpayGraph {
                                                 ((((circlesLayoutWidth) / (max + 1)) * x) -
                                                         (circleSize + (circleSize / 2)));
                                         iv.setImageBitmap(drawGrayCircle);
+
                                         iv.setScaleType(ImageView.ScaleType.FIT_XY);
                                         imageParams.addRule(RelativeLayout.ALIGN_PARENT_BOTTOM,
                                                 R.id.dateTextView);
@@ -419,6 +424,7 @@ public class OurpayGraph {
                                                 ((((circlesLayoutWidth) / (max + 1)) * x) -
                                                         (circleSize + (circleSize)));
                                         iv.setImageBitmap(drawGrayCircle);
+
                                         iv.setScaleType(ImageView.ScaleType.FIT_XY);
                                         imageParams.addRule(RelativeLayout.ALIGN_PARENT_BOTTOM,
                                                 R.id.dateTextView);
@@ -435,6 +441,7 @@ public class OurpayGraph {
                                         imageParams.rightMargin =
                                                 ((((circlesLayoutWidth) / (max * 2))));
                                         iv.setImageBitmap(drawGrayCircle);
+
                                         iv.setScaleType(ImageView.ScaleType.FIT_XY);
                                         imageParams.addRule(RelativeLayout.ALIGN_PARENT_BOTTOM,
                                                 R.id.dateTextView);
@@ -497,7 +504,8 @@ public class OurpayGraph {
 
                             } else if (max + 1 == 5) {
                                 if (x == 0) {
-                                    iv.setImageBitmap(roundBitmap);
+                                    iv.setImageBitmap(progressBitmaps[x]);
+
                                     iv.setScaleType(ImageView.ScaleType.FIT_XY);
                                     imageParams.addRule(RelativeLayout.ALIGN_PARENT_BOTTOM,
                                             R.id.dateTextView);
@@ -539,6 +547,7 @@ public class OurpayGraph {
 
                                 } else {
                                     if (x == 3) {
+
                                         imageParams.leftMargin =
                                                 ((((circlesLayoutWidth) / (max + 1)) * x) -
                                                         (circleSize + (circleSize / 2)));
@@ -553,6 +562,7 @@ public class OurpayGraph {
                                         circlesLayout.addView(iv);
                                         circlesLayout.addView(tv);
                                     } else {
+
                                         imageParams.leftMargin =
                                                 ((((circlesLayoutWidth) / (max + 1)) * x) - (circleSize));
                                         iv.setImageBitmap(drawGrayCircle);
@@ -568,9 +578,9 @@ public class OurpayGraph {
                                     }
                                 }
                             } else {
-
                                 if (x == 0) {
-                                    iv.setImageBitmap(roundBitmap);
+
+                                    iv.setImageBitmap(progressBitmaps[x]);
                                     iv.setScaleType(ImageView.ScaleType.FIT_XY);
                                     imageParams.addRule(RelativeLayout.ALIGN_PARENT_BOTTOM,
                                             R.id.dateTextView);
@@ -607,6 +617,7 @@ public class OurpayGraph {
                                             ((((circlesLayoutWidth) / (max + 1)))
                                                     - (circleSize / 2));
                                     iv.setImageBitmap(drawProgressCircle);
+
                                     iv.setScaleType(ImageView.ScaleType.FIT_XY);
                                     imageParams.addRule(RelativeLayout.ALIGN_PARENT_BOTTOM,
                                             R.id.dateTextView);
@@ -636,6 +647,7 @@ public class OurpayGraph {
 
                                     iv.setScaleType(ImageView.ScaleType.FIT_XY);
                                     iv.setImageBitmap(drawProgressCircle);
+
                                     imageParams.addRule(RelativeLayout.ALIGN_PARENT_RIGHT);
                                     imageParams.addRule(RelativeLayout.ALIGN_PARENT_BOTTOM,
                                             R.id.dateTextView);
@@ -651,6 +663,7 @@ public class OurpayGraph {
                                         imageParams.leftMargin = 0;
 
                                         iv.setImageBitmap(drawGrayCircle);
+
                                         iv.setScaleType(ImageView.ScaleType.FIT_XY);
                                         imageParams.addRule(RelativeLayout.ALIGN_PARENT_BOTTOM,
                                                 R.id.dateTextView);
@@ -665,6 +678,7 @@ public class OurpayGraph {
                                                 ((((circlesLayoutWidth) /
                                                         (max + 1)) * x) - (circleSize));
                                         iv.setImageBitmap(drawGrayCircle);
+
                                         iv.setScaleType(ImageView.ScaleType.FIT_XY);
                                         imageParams.addRule(RelativeLayout.ALIGN_PARENT_BOTTOM,
                                                 R.id.dateTextView);
@@ -712,14 +726,8 @@ public class OurpayGraph {
                                         ((circlesLayoutWidth / max) * loopIndex) - circleSize;
                                 foregroundBar.setPadding(0, 0, -100, 0);
                             }
-                            bitmap = getBitmapFromView(context, circleView);
 
-                            int startsAt = (((circlesLayoutWidth / max) * x));
-
-
-                            Bitmap croppedBitmap = cropImage(bitmap, startsAt);
-                            Bitmap roundBitmap = getRoundedShape(croppedBitmap, circleSize);
-                            bitmapState[x] = roundBitmap;
+                            bitmapState[x] = progressBitmaps[x];
 
                             ImageView iv = new ImageView(context);
                             TextView tv = new TextView(context);
@@ -763,7 +771,7 @@ public class OurpayGraph {
                             if (max + 1 == 5) {
                                 if (x == 0) {
                                     imageParams.setMargins(0, 0, 0, 0);
-                                    iv.setImageBitmap(roundBitmap);
+                                    iv.setImageBitmap(progressBitmaps[x]);
 
                                     iv.setScaleType(ImageView.ScaleType.FIT_XY);
                                     imageParams.addRule(RelativeLayout.ALIGN_PARENT_BOTTOM,
@@ -780,7 +788,8 @@ public class OurpayGraph {
                                                 ((((circlesLayoutWidth) / (max + 1)) * x)) -
                                                         (circleSize / 2);
 
-                                        iv.setImageBitmap(roundBitmap);
+                                        iv.setImageBitmap(progressBitmaps[x]);
+
                                         iv.setScaleType(ImageView.ScaleType.FIT_XY);
                                         imageParams.addRule(RelativeLayout.ALIGN_PARENT_BOTTOM,
                                                 R.id.dateTextView);
@@ -803,20 +812,19 @@ public class OurpayGraph {
                                                 R.id.dateTextView);
 
 
-                                        iv.setImageBitmap(roundBitmap);
+                                        iv.setImageBitmap(progressBitmaps[x]);
                                         iv.setLayoutParams(imageParams);
                                         circlesLayout.addView(iv);
                                         circlesLayout.addView(tv);
                                     }
-                                }
-//
-                                else if (x + 1 == max) {
+                                } else if (x + 1 == max) {
                                     if (state < x - 1) {
                                         imageParams.leftMargin =
                                                 ((((circlesLayoutWidth) / (max + 1)) * x)) -
                                                         (circleSize + (circleSize / 2));
 
                                         iv.setImageBitmap(drawGrayCircle);
+
                                         iv.setScaleType(ImageView.ScaleType.FIT_XY);
                                         imageParams.addRule(RelativeLayout.ALIGN_PARENT_BOTTOM,
                                                 R.id.dateTextView);
@@ -831,7 +839,7 @@ public class OurpayGraph {
                                                 ((((circlesLayoutWidth) / (max + 1)) * x)) -
                                                         (circleSize + (circleSize / 2));
 
-                                        iv.setImageBitmap(roundBitmap);
+                                        iv.setImageBitmap(progressBitmaps[x]);
                                         iv.setScaleType(ImageView.ScaleType.FIT_XY);
                                         imageParams.addRule(RelativeLayout.ALIGN_PARENT_BOTTOM,
                                                 R.id.dateTextView);
@@ -893,7 +901,8 @@ public class OurpayGraph {
                                         imageParams.addRule(RelativeLayout.ALIGN_PARENT_TOP,
                                                 R.id.dateTextView);
 
-                                        iv.setImageBitmap(roundBitmap);
+                                        iv.setImageBitmap(progressBitmaps[x]);
+
                                         iv.setLayoutParams(imageParams);
                                         circlesLayout.addView(iv);
                                         circlesLayout.addView(tv);
@@ -906,7 +915,7 @@ public class OurpayGraph {
                                                 ((((circlesLayoutWidth) / (max + 1)) * x)) -
                                                         (circleSize / 2);
 
-                                        iv.setImageBitmap(roundBitmap);
+                                        iv.setImageBitmap(progressBitmaps[x]);
                                         iv.setScaleType(ImageView.ScaleType.FIT_XY);
                                         imageParams.addRule(RelativeLayout.ALIGN_PARENT_BOTTOM,
                                                 R.id.dateTextView);
@@ -922,7 +931,7 @@ public class OurpayGraph {
                                                 ((((circlesLayoutWidth) / (max + 1)) * x)) -
                                                         (circleSize - 2);
 
-                                        iv.setImageBitmap(roundBitmap);
+                                        iv.setImageBitmap(progressBitmaps[x]);
                                         iv.setScaleType(ImageView.ScaleType.FIT_XY);
                                         imageParams.addRule(RelativeLayout.ALIGN_PARENT_BOTTOM,
                                                 R.id.dateTextView);
@@ -938,7 +947,7 @@ public class OurpayGraph {
                                                 ((((circlesLayoutWidth) / (max + 1)) * x)) -
                                                         (circleSize + (circleSize / 2));
 
-                                        iv.setImageBitmap(roundBitmap);
+                                        iv.setImageBitmap(progressBitmaps[x]);
                                         iv.setScaleType(ImageView.ScaleType.FIT_XY);
                                         imageParams.addRule(RelativeLayout.ALIGN_PARENT_BOTTOM,
                                                 R.id.dateTextView);
@@ -1007,6 +1016,7 @@ public class OurpayGraph {
                                     iv.setScaleType(ImageView.ScaleType.FIT_XY);
 
                                     iv.setImageBitmap(drawProgressCircle);
+
                                     iv.setLayoutParams(imageParams);
 
                                     circlesLayout.addView(iv);
@@ -1025,7 +1035,7 @@ public class OurpayGraph {
                                     imageParams.addRule(RelativeLayout.ALIGN_PARENT_TOP,
                                             R.id.dateTextView);
 
-                                    iv.setImageBitmap(roundBitmap);
+                                    iv.setImageBitmap(progressBitmaps[x]);
                                     iv.setLayoutParams(imageParams);
 
                                     circlesLayout.addView(iv);
@@ -1088,7 +1098,7 @@ public class OurpayGraph {
                                             R.id.dateTextView);
                                     imageParams.addRule(RelativeLayout.ALIGN_PARENT_TOP,
                                             R.id.dateTextView);
-                                    iv.setImageBitmap(roundBitmap);
+                                    iv.setImageBitmap(progressBitmaps[x]);
                                     iv.setLayoutParams(imageParams);
 
                                     circlesLayout.addView(iv);
@@ -1098,7 +1108,7 @@ public class OurpayGraph {
 
                                     imageParams.leftMargin = ((((circlesLayoutWidth) / (max + 1)) -
                                             (circleSize / 2)));
-                                    iv.setImageBitmap(roundBitmap);
+                                    iv.setImageBitmap(progressBitmaps[x]);
                                     iv.setScaleType(ImageView.ScaleType.FIT_XY);
                                     imageParams.addRule(RelativeLayout.ALIGN_PARENT_BOTTOM,
                                             R.id.dateTextView);
@@ -1122,7 +1132,7 @@ public class OurpayGraph {
                                         imageParams.addRule(RelativeLayout.ALIGN_PARENT_TOP,
                                                 R.id.dateTextView);
 
-                                        iv.setImageBitmap(roundBitmap);
+                                        iv.setImageBitmap(progressBitmaps[x]);
                                         iv.setLayoutParams(imageParams);
 
                                         circlesLayout.addView(iv);
@@ -1138,7 +1148,7 @@ public class OurpayGraph {
                                         imageParams.addRule(RelativeLayout.ALIGN_PARENT_TOP,
                                                 R.id.dateTextView);
 
-                                        iv.setImageBitmap(roundBitmap);
+                                        iv.setImageBitmap(progressBitmaps[x]);
                                         iv.setLayoutParams(imageParams);
 
                                         circlesLayout.addView(iv);
@@ -1155,7 +1165,7 @@ public class OurpayGraph {
                                         imageParams.addRule(RelativeLayout.ALIGN_PARENT_TOP,
                                                 R.id.dateTextView);
 
-                                        iv.setImageBitmap(roundBitmap);
+                                        iv.setImageBitmap(progressBitmaps[x]);
                                         iv.setLayoutParams(imageParams);
 
                                         circlesLayout.addView(iv);
@@ -1202,6 +1212,7 @@ public class OurpayGraph {
                                                         circleSize);
 
                                         iv.setImageBitmap(drawProgressCircle);
+
                                         iv.setScaleType(ImageView.ScaleType.FIT_XY);
                                         imageParams.addRule(RelativeLayout.ALIGN_PARENT_BOTTOM,
                                                 R.id.dateTextView);
@@ -1311,7 +1322,7 @@ public class OurpayGraph {
                                 } else if (x == 1 && max == 2) {
 
                                     imageParams.leftMargin = circlesLayoutWidth / 3;
-                                    iv.setImageBitmap(roundBitmap);
+                                    iv.setImageBitmap(progressBitmaps[x]);
                                     iv.setScaleType(ImageView.ScaleType.FIT_XY);
                                     imageParams.addRule(RelativeLayout.ALIGN_PARENT_BOTTOM,
                                             R.id.dateTextView);
@@ -1327,6 +1338,7 @@ public class OurpayGraph {
                                     imageParams.leftMargin =
                                             ((((circlesLayoutWidth) / (max + 1)) * x) - (circleSize / 2));
                                     iv.setImageBitmap(bitmapState[x]);
+
                                     iv.setScaleType(ImageView.ScaleType.FIT_XY);
                                     imageParams.addRule(RelativeLayout.ALIGN_PARENT_BOTTOM,
                                             R.id.dateTextView);
@@ -1372,6 +1384,7 @@ public class OurpayGraph {
                                     imageParams.leftMargin =
                                             ((((circlesLayoutWidth) / (max + 1)) * x) - (circleSize));
                                     iv.setImageBitmap(drawGrayCircle);
+
                                     iv.setScaleType(ImageView.ScaleType.FIT_XY);
                                     imageParams.addRule(RelativeLayout.ALIGN_PARENT_BOTTOM,
                                             R.id.dateTextView);
@@ -1435,13 +1448,6 @@ public class OurpayGraph {
 
                             indexTracker = x + 1;
                             foregroundBar.getLayoutParams().width = 0;
-                            bitmap = getBitmapFromView(context, circleView);
-
-                            int startsAt = (((circlesLayoutWidth / max) * x));
-
-                            Bitmap croppedBitmap = cropImage(bitmap, startsAt);
-                            Bitmap roundBitmap = getRoundedShape(croppedBitmap, circleSize);
-
 
                             ImageView iv = new ImageView(context);
                             TextView tv = new TextView(context);
@@ -1451,7 +1457,6 @@ public class OurpayGraph {
 
                             RelativeLayout.LayoutParams imageParams;
                             RelativeLayout.LayoutParams textParams;
-
 
                             imageParams = new RelativeLayout
                                     .LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT,
@@ -1487,7 +1492,7 @@ public class OurpayGraph {
                             if (max + 1 == 5) {
                                 if (x == 0) {
                                     imageParams.setMargins(0, 0, 0, 0);
-                                    iv.setImageBitmap(roundBitmap);
+                                    iv.setImageBitmap(progressBitmaps[x]);
 
                                     iv.setScaleType(ImageView.ScaleType.FIT_XY);
                                     imageParams.addRule(RelativeLayout.ALIGN_PARENT_BOTTOM,
@@ -1504,7 +1509,8 @@ public class OurpayGraph {
                                                 ((((circlesLayoutWidth) / (max + 1)) * x)) -
                                                         (circleSize / 2);
 
-                                        iv.setImageBitmap(roundBitmap);
+                                        iv.setImageBitmap(progressBitmaps[x]);
+
                                         iv.setScaleType(ImageView.ScaleType.FIT_XY);
                                         imageParams.addRule(RelativeLayout.ALIGN_PARENT_BOTTOM,
                                                 R.id.dateTextView);
@@ -1527,7 +1533,8 @@ public class OurpayGraph {
                                                 R.id.dateTextView);
 
 
-                                        iv.setImageBitmap(roundBitmap);
+                                        iv.setImageBitmap(progressBitmaps[x]);
+
                                         iv.setLayoutParams(imageParams);
                                         circlesLayout.addView(iv);
                                         circlesLayout.addView(tv);
@@ -1543,20 +1550,20 @@ public class OurpayGraph {
                                                 R.id.dateTextView);
 
 
-                                        iv.setImageBitmap(roundBitmap);
+                                        iv.setImageBitmap(progressBitmaps[x]);
+
                                         iv.setLayoutParams(imageParams);
                                         circlesLayout.addView(iv);
                                         circlesLayout.addView(tv);
                                     }
-                                }
-                                //
-                                else if (x + 1 == max) {
+                                } else if (x + 1 == max) {
                                     if (state < x - 1) {
                                         imageParams.leftMargin =
                                                 ((((circlesLayoutWidth) / (max + 1)) * x)) -
                                                         (circleSize + (circleSize / 2));
 
                                         iv.setImageBitmap(drawGrayCircle);
+
                                         iv.setScaleType(ImageView.ScaleType.FIT_XY);
                                         imageParams.addRule(RelativeLayout.ALIGN_PARENT_BOTTOM,
                                                 R.id.dateTextView);
@@ -1571,7 +1578,8 @@ public class OurpayGraph {
                                                 ((((circlesLayoutWidth) / (max + 1)) * x)) -
                                                         (circleSize + (circleSize / 2));
 
-                                        iv.setImageBitmap(roundBitmap);
+                                        iv.setImageBitmap(progressBitmaps[x]);
+
                                         iv.setScaleType(ImageView.ScaleType.FIT_XY);
                                         imageParams.addRule(RelativeLayout.ALIGN_PARENT_BOTTOM,
                                                 R.id.dateTextView);
@@ -1587,6 +1595,7 @@ public class OurpayGraph {
                                                         (circleSize);
 
                                         iv.setImageBitmap(drawProgressCircle);
+
                                         iv.setScaleType(ImageView.ScaleType.FIT_XY);
                                         imageParams.addRule(RelativeLayout.ALIGN_PARENT_BOTTOM,
                                                 R.id.dateTextView);
@@ -1608,6 +1617,7 @@ public class OurpayGraph {
                                                 R.id.dateTextView);
 
                                         iv.setImageBitmap(drawGrayCircle);
+
                                         iv.setLayoutParams(imageParams);
                                         circlesLayout.addView(iv);
                                         circlesLayout.addView(tv);
@@ -1621,6 +1631,7 @@ public class OurpayGraph {
                                                 R.id.dateTextView);
 
                                         iv.setImageBitmap(drawProgressCircle);
+
                                         iv.setLayoutParams(imageParams);
                                         circlesLayout.addView(iv);
                                         circlesLayout.addView(tv);
@@ -1633,7 +1644,8 @@ public class OurpayGraph {
                                         imageParams.addRule(RelativeLayout.ALIGN_PARENT_TOP,
                                                 R.id.dateTextView);
 
-                                        iv.setImageBitmap(roundBitmap);
+                                        iv.setImageBitmap(progressBitmaps[x]);
+
                                         iv.setLayoutParams(imageParams);
                                         circlesLayout.addView(iv);
                                         circlesLayout.addView(tv);
@@ -1646,7 +1658,8 @@ public class OurpayGraph {
                                                 ((((circlesLayoutWidth) / (max + 1)) * x)) -
                                                         (circleSize / 2);
 
-                                        iv.setImageBitmap(roundBitmap);
+                                        iv.setImageBitmap(progressBitmaps[x]);
+
                                         iv.setScaleType(ImageView.ScaleType.FIT_XY);
                                         imageParams.addRule(RelativeLayout.ALIGN_PARENT_BOTTOM,
                                                 R.id.dateTextView);
@@ -1662,7 +1675,8 @@ public class OurpayGraph {
                                                 ((((circlesLayoutWidth) / (max + 1)) * x)) -
                                                         (circleSize - 2);
 
-                                        iv.setImageBitmap(roundBitmap);
+                                        iv.setImageBitmap(progressBitmaps[x]);
+
                                         iv.setScaleType(ImageView.ScaleType.FIT_XY);
                                         imageParams.addRule(RelativeLayout.ALIGN_PARENT_BOTTOM,
                                                 R.id.dateTextView);
@@ -1678,7 +1692,8 @@ public class OurpayGraph {
                                                 ((((circlesLayoutWidth) / (max + 1)) * x)) -
                                                         (circleSize);
 
-                                        iv.setImageBitmap(roundBitmap);
+                                        iv.setImageBitmap(progressBitmaps[x]);
+
                                         iv.setScaleType(ImageView.ScaleType.FIT_XY);
                                         imageParams.addRule(RelativeLayout.ALIGN_PARENT_BOTTOM,
                                                 R.id.dateTextView);
@@ -1695,6 +1710,7 @@ public class OurpayGraph {
                                             ((((circlesLayoutWidth) / (max + 1)) * x) - (circleSize));
 
                                     iv.setImageBitmap(drawProgressCircle);
+
                                     iv.setScaleType(ImageView.ScaleType.FIT_XY);
                                     imageParams.addRule(RelativeLayout.ALIGN_PARENT_BOTTOM,
                                             R.id.dateTextView);
@@ -1717,6 +1733,7 @@ public class OurpayGraph {
                                     iv.setScaleType(ImageView.ScaleType.FIT_XY);
 
                                     iv.setImageBitmap(drawProgressCircle);
+
                                     iv.setLayoutParams(imageParams);
 
                                     circlesLayout.addView(iv);
@@ -1732,6 +1749,7 @@ public class OurpayGraph {
                                     iv.setScaleType(ImageView.ScaleType.FIT_XY);
 
                                     iv.setImageBitmap(drawGrayCircle);
+
                                     iv.setLayoutParams(imageParams);
 
                                     circlesLayout.addView(iv);
@@ -1747,6 +1765,7 @@ public class OurpayGraph {
                                     iv.setScaleType(ImageView.ScaleType.FIT_XY);
 
                                     iv.setImageBitmap(drawProgressCircle);
+
                                     iv.setLayoutParams(imageParams);
 
                                     circlesLayout.addView(iv);
@@ -1760,7 +1779,8 @@ public class OurpayGraph {
                                             R.id.dateTextView);
                                     imageParams.addRule(RelativeLayout.ALIGN_PARENT_TOP,
                                             R.id.dateTextView);
-                                    iv.setImageBitmap(roundBitmap);
+                                    iv.setImageBitmap(progressBitmaps[x]);
+
                                     iv.setLayoutParams(imageParams);
 
                                     circlesLayout.addView(iv);
@@ -1775,7 +1795,8 @@ public class OurpayGraph {
                                             R.id.dateTextView);
                                     imageParams.addRule(RelativeLayout.ALIGN_PARENT_TOP,
                                             R.id.dateTextView);
-                                    iv.setImageBitmap(roundBitmap);
+                                    iv.setImageBitmap(progressBitmaps[x]);
+
                                     iv.setLayoutParams(imageParams);
 
                                     circlesLayout.addView(iv);
@@ -1787,7 +1808,8 @@ public class OurpayGraph {
                                             R.id.dateTextView);
                                     imageParams.addRule(RelativeLayout.ALIGN_PARENT_TOP,
                                             R.id.dateTextView);
-                                    iv.setImageBitmap(roundBitmap);
+                                    iv.setImageBitmap(progressBitmaps[x]);
+
                                     iv.setLayoutParams(imageParams);
 
                                     circlesLayout.addView(iv);
@@ -1803,7 +1825,8 @@ public class OurpayGraph {
                                             R.id.dateTextView);
                                     imageParams.addRule(RelativeLayout.ALIGN_PARENT_TOP,
                                             R.id.dateTextView);
-                                    iv.setImageBitmap(roundBitmap);
+                                    iv.setImageBitmap(progressBitmaps[x]);
+
                                     iv.setLayoutParams(imageParams);
 
                                     circlesLayout.addView(iv);
@@ -1813,7 +1836,8 @@ public class OurpayGraph {
 
                                     imageParams.leftMargin =
                                             ((((circlesLayoutWidth) / (max + 1)) - (circleSize / 2)));
-                                    iv.setImageBitmap(roundBitmap);
+                                    iv.setImageBitmap(progressBitmaps[x]);
+
                                     iv.setScaleType(ImageView.ScaleType.FIT_XY);
                                     imageParams.addRule(RelativeLayout.ALIGN_PARENT_BOTTOM,
                                             R.id.dateTextView);
@@ -1834,7 +1858,7 @@ public class OurpayGraph {
                                         imageParams.addRule(RelativeLayout.ALIGN_PARENT_TOP,
                                                 R.id.dateTextView);
 
-                                        iv.setImageBitmap(roundBitmap);
+                                        iv.setImageBitmap(progressBitmaps[x]);
                                         iv.setLayoutParams(imageParams);
 
                                         circlesLayout.addView(iv);
@@ -1852,7 +1876,7 @@ public class OurpayGraph {
                                         imageParams.addRule(RelativeLayout.ALIGN_PARENT_TOP,
                                                 R.id.dateTextView);
 
-                                        iv.setImageBitmap(roundBitmap);
+                                        iv.setImageBitmap(progressBitmaps[x]);
                                         iv.setLayoutParams(imageParams);
 
                                         circlesLayout.addView(iv);
@@ -1914,8 +1938,7 @@ public class OurpayGraph {
                             } else if (max + 1 == 5) {
                                 if (x == 0) {
                                     imageParams.setMargins(0, 0, 0, 0);
-                                    iv.setImageBitmap(roundBitmap);
-
+                                    iv.setImageBitmap(progressBitmaps[x]);
                                     iv.setScaleType(ImageView.ScaleType.FIT_XY);
                                     imageParams.addRule(RelativeLayout.ALIGN_PARENT_BOTTOM,
                                             R.id.dateTextView);
@@ -1936,7 +1959,7 @@ public class OurpayGraph {
                                     imageParams.addRule(RelativeLayout.ALIGN_PARENT_TOP,
                                             R.id.dateTextView);
 
-                                    iv.setImageBitmap(roundBitmap);
+                                    iv.setImageBitmap(progressBitmaps[x]);
                                     iv.setLayoutParams(imageParams);
                                     circlesLayout.addView(iv);
                                     circlesLayout.addView(tv);
@@ -1950,7 +1973,7 @@ public class OurpayGraph {
                                     imageParams.addRule(RelativeLayout.ALIGN_PARENT_TOP,
                                             R.id.dateTextView);
 
-                                    iv.setImageBitmap(roundBitmap);
+                                    iv.setImageBitmap(progressBitmaps[x]);
                                     iv.setLayoutParams(imageParams);
                                     circlesLayout.addView(iv);
                                     circlesLayout.addView(tv);
@@ -1959,8 +1982,7 @@ public class OurpayGraph {
                             } else {
                                 if (x == 0) {
                                     imageParams.setMargins(0, 0, 0, 0);
-                                    iv.setImageBitmap(roundBitmap);
-
+                                    iv.setImageBitmap(progressBitmaps[x]);
                                     iv.setScaleType(ImageView.ScaleType.FIT_XY);
                                     imageParams.addRule(RelativeLayout.ALIGN_PARENT_BOTTOM,
                                             R.id.dateTextView);
@@ -1973,7 +1995,7 @@ public class OurpayGraph {
                                 } else if (x == 1 && max == 2) {
 
                                     imageParams.leftMargin = ((circlesLayoutWidth) / 3);
-                                    iv.setImageBitmap(roundBitmap);
+                                    iv.setImageBitmap(progressBitmaps[x]);
                                     iv.setScaleType(ImageView.ScaleType.FIT_XY);
                                     imageParams.addRule(RelativeLayout.ALIGN_PARENT_BOTTOM,
                                             R.id.dateTextView);
@@ -1988,7 +2010,7 @@ public class OurpayGraph {
                                     imageParams.leftMargin =
                                             ((((circlesLayoutWidth) /
                                                     (max + 1)) * x) - (circleSize));
-                                    iv.setImageBitmap(roundBitmap);
+                                    iv.setImageBitmap(progressBitmaps[x]);
                                     iv.setScaleType(ImageView.ScaleType.FIT_XY);
                                     imageParams.addRule(RelativeLayout.ALIGN_PARENT_BOTTOM,
                                             R.id.dateTextView);
@@ -2008,7 +2030,7 @@ public class OurpayGraph {
                                     imageParams.addRule(RelativeLayout.ALIGN_PARENT_TOP,
                                             R.id.dateTextView);
 
-                                    iv.setImageBitmap(roundBitmap);
+                                    iv.setImageBitmap(progressBitmaps[x]);
                                     iv.setLayoutParams(imageParams);
                                     circlesLayout.addView(iv);
                                     circlesLayout.addView(tv);
@@ -2022,7 +2044,8 @@ public class OurpayGraph {
                                     imageParams.addRule(RelativeLayout.ALIGN_PARENT_TOP,
                                             R.id.dateTextView);
 
-                                    iv.setImageBitmap(roundBitmap);
+                                    iv.setImageBitmap(progressBitmaps[x]);
+
                                     iv.setLayoutParams(imageParams);
                                     circlesLayout.addView(iv);
                                     circlesLayout.addView(tv);
@@ -2031,22 +2054,29 @@ public class OurpayGraph {
                             }
                         }
                     }
+
                     circleView.getViewTreeObserver().removeOnGlobalLayoutListener(this);
                 }
-            });
+            };
 
+            mViewArray[i] = circleView;
+            mGlobalLayoutListenerArray[i] = mOnGlobalLayoutListener;
 
+            if (mGlobalLayoutListenerCounter <= ourpayTransactions.size() && mIsGraphVisible) {
+                circleView.getViewTreeObserver().addOnGlobalLayoutListener(mOnGlobalLayoutListener);
+                mGlobalLayoutListenerCounter++;
+            }
 
-            TextView tempDate = (TextView) yourView.findViewById(R.id.dateTextView);
-            TextView tempPay = (TextView) yourView.findViewById(R.id.dollarValue);
-            ImageView checkImage = (ImageView) yourView.findViewById(R.id.checkImage);
+            TextView tempDate = yourView.findViewById(R.id.dateTextView);
+            TextView tempPay = yourView.findViewById(R.id.dollarValue);
+            ImageView checkImage = yourView.findViewById(R.id.checkImage);
 
 
             if (ourpayTransactions.get(i).getState() == 2) {
                 tempPay.setText(R.string.paid);
                 checkImage.setVisibility(View.VISIBLE);
 
-            } else{
+            } else {
                 tempPay.setText(PriceUtils.getPriceStringValue(ourpayTransactions.get(i).getAmount()));
                 checkImage.setVisibility(View.GONE);
             }
@@ -2059,11 +2089,95 @@ public class OurpayGraph {
                 tempView[i] = yourView;
                 layPayViewId.addView(a);
             }
-
         }
-
 
         return layPayViewId;
     }
 
+    public void clearOurpayGraphBitmapsAndListeners() {
+
+        if (mGlobalLayoutListenerArray != null) {
+            int arraySize = mGlobalLayoutListenerArray.length;
+            for (int i = 0; i < arraySize; i++) {
+                View tempCircleView = mViewArray[i];
+
+                OnGlobalLayoutListener tempOnGlobalLayoutListener = mGlobalLayoutListenerArray[i];
+                tempCircleView.getViewTreeObserver().removeOnGlobalLayoutListener(tempOnGlobalLayoutListener);
+                tempCircleView.destroyDrawingCache();
+            }
+
+            mGlobalLayoutListenerArray = null;
+            mViewArray = null;
+        }
+
+        if (bitmap != null) {
+
+            bitmap.recycle();
+            bitmap = null;
+        }
+
+        if (drawProgressCircle != null) {
+
+            drawProgressCircle.recycle();
+            drawProgressCircle = null;
+        }
+
+        if (drawGrayCircle != null) {
+
+            drawGrayCircle.recycle();
+            drawGrayCircle = null;
+        }
+
+        if (progressBitmap != null) {
+
+            progressBitmap.recycle();
+            progressBitmap = null;
+        }
+
+        if (grayBitmap != null) {
+            grayBitmap.recycle();
+            grayBitmap = null;
+        }
+
+
+        for (int x = 0; x < bitmapState.length; x++) {
+            if (bitmapState[x] != null) {
+                bitmapState[x].recycle();
+                bitmapState[x] = null;
+            }
+        }
+
+        for (int y = 0; y < progressBitmaps.length; y++) {
+            if (bitmapState[y] != null) {
+                bitmapState[y].recycle();
+                bitmapState[y] = null;
+            }
+        }
+
+        Runtime.getRuntime().gc();
+    }
+
+    public void setIsGraphVisible(boolean isVisible) {
+        mIsGraphVisible = isVisible;
+    }
+
+    private void generateRoundedBitmaps(Context context, int max, int circleSize, View circleView) {
+
+        progressBitmaps = new Bitmap[max + 1];
+
+        for (int x = 0; x <= max; x++) {
+
+            indexTracker = x + 1;
+            bitmap = getBitmapFromView(context, circleView);
+
+            int startsAt = (((circlesLayoutWidth / max) * x));
+
+            Bitmap croppedBitmap = cropImage(bitmap, startsAt);
+            Bitmap roundBitmap = getRoundedShape(croppedBitmap, circleSize);
+
+            ByteArrayOutputStream stream = new ByteArrayOutputStream();
+            roundBitmap.compress(Bitmap.CompressFormat.JPEG, 50, stream);
+            progressBitmaps[x] = roundBitmap;
+        }
+    }
 }

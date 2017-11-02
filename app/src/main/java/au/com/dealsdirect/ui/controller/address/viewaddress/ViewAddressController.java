@@ -103,10 +103,10 @@ public class ViewAddressController extends BasePullToRefreshController implement
         mViewAddressRightOption.setVisibility(View.INVISIBLE);
 
         mAddressList = new ArrayList<>();
-        mRecyclerViewAdapter = new ViewAddressRecyclerViewAdapter(mCalledFromCart, this, mAddressList, getActivity(), mDeliveryAddress, mPresenter);
+        mRecyclerViewAdapter = new ViewAddressRecyclerViewAdapter(mCalledFromCart, this, mAddressList, mActivity, mDeliveryAddress, mPresenter);
 
         mRecyclerView.setAdapter(mRecyclerViewAdapter);
-        mRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
+        mRecyclerView.setLayoutManager(new LinearLayoutManager(mActivity));
 
         RecyclerView.ItemAnimator itemAnimator = new DefaultItemAnimator();
         itemAnimator.setAddDuration(1000);
@@ -114,7 +114,7 @@ public class ViewAddressController extends BasePullToRefreshController implement
         mRecyclerView.setItemAnimator(itemAnimator);
 
         if (mCalledFromCart) {
-            mRecyclerView.addOnItemTouchListener(new RecyclerOnTouchListener(getActivity(), (v, position) -> {
+            mRecyclerView.addOnItemTouchListener(new RecyclerOnTouchListener(mActivity, (v, position) -> {
                 if (mAddressesLoaded) {
                     //showAddNewAddressFragment();
                     AddressesItem item = mAddressList.get(position);
@@ -204,7 +204,7 @@ public class ViewAddressController extends BasePullToRefreshController implement
 //                .getDeleteAddressResponseValue()
 //                .getDeleteUserDeliveryAddressResponseValue().getType());
 //
-        CustomAlertDialog.showCustomAlertDialog(getActivity(),
+        CustomAlertDialog.showCustomAlertDialog(mActivity,
                 CustomAlertDialog.CustomDialogIconState.POSITIVE,
                 "Removed address");
 
@@ -229,7 +229,7 @@ public class ViewAddressController extends BasePullToRefreshController implement
     @Override
     public void backToCheckout() {
         if (mCalledFromCart) {
-            getActivity().onBackPressed();
+            mActivity.onBackPressed();
         }
     }
 
@@ -241,8 +241,8 @@ public class ViewAddressController extends BasePullToRefreshController implement
 
     @OnClick(R.id.partial_toolbar_arrow_view)
     public void onBackClick() {
-        if (getActivity()!=null){
-            getActivity().onBackPressed();
+        if (mActivity != null){
+            mActivity.onBackPressed();
         }
     }
 

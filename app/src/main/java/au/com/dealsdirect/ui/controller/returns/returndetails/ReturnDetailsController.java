@@ -135,9 +135,9 @@ public class ReturnDetailsController extends BaseController implements ReturnDet
         List<Item> items = getReturnDetailsResponseBody.getValue().getItems();
         Double subTotal = getReturnDetailsResponseBody.getValue().getTotal();
 
-        ReturnDetailsAdapter adapter = new ReturnDetailsAdapter(items, subTotal, getActivity());
+        ReturnDetailsAdapter adapter = new ReturnDetailsAdapter(items, subTotal, mActivity);
 
         mReturnDetailsControllerRecyclerView.setAdapter(adapter);
-        mReturnDetailsControllerRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
+        mReturnDetailsControllerRecyclerView.setLayoutManager(new LinearLayoutManager(mActivity));
     }
 }

@@ -45,7 +45,6 @@ import au.com.dealsdirect.ui.controller.searchfilter.adapter.SearchTagsAdapter;
 import au.com.dealsdirect.ui.controller.searchfilter.adapter.SubCategoriesAdapter;
 import au.com.dealsdirect.ui.controller.searchfilter.adapter.SubCategoryItemsAdapter;
 import au.com.dealsdirect.ui.custom.CustomRangeSeekbar;
-import au.com.dealsdirect.ui.main.MainActivity;
 import au.com.dealsdirect.utils.BundleBuilder;
 import au.com.dealsdirect.utils.JsonUtils;
 import butterknife.BindView;
@@ -146,7 +145,6 @@ public class SearchFilterController extends BaseController
     private int origMinValue = -1;
     private int origMaxValue = -1;
     private boolean isSeekbarReset = false;
-    private MainActivity mActivity;
     private String mChosenCategory = "";
     private String mTitle = "";
 
@@ -222,7 +220,6 @@ public class SearchFilterController extends BaseController
         View view = inflater.inflate(R.layout.controller_search_filter, container, false);
         getControllerComponent().inject(this);
         mPresenter.onAttach(this);
-        mActivity = (MainActivity) getActivity();
         return view;
     }
 
@@ -245,7 +242,7 @@ public class SearchFilterController extends BaseController
 
 
         mFacetItemsAdapter = new FacetItemsAdapter(new ArrayList<>(), mPresenter, new HashSet<Integer>(),mFacetItemsRecyclerView);
-        mFacetItemsRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity(), LinearLayoutManager.VERTICAL, false));
+        mFacetItemsRecyclerView.setLayoutManager(new LinearLayoutManager(mActivity, LinearLayoutManager.VERTICAL, false));
         mFacetItemsRecyclerView.setAdapter(mFacetItemsAdapter);
         mFacetItemsAdapter.setOnSelectListener(new FacetItemsAdapter.OnSelectListener() {
             @Override
@@ -255,12 +252,12 @@ public class SearchFilterController extends BaseController
         });
 
         mSubCategoriesAdapter = new SubCategoriesAdapter(mChosenCategory, mCategoryTree, mSubCategoryClickListener, mSubCategoryItemClickListener, mCategoryMap);
-        mFilterCategoriesRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity(), LinearLayoutManager.VERTICAL, false));
+        mFilterCategoriesRecyclerView.setLayoutManager(new LinearLayoutManager(mActivity, LinearLayoutManager.VERTICAL, false));
         mFilterCategoriesRecyclerView.setAdapter(mSubCategoriesAdapter);
 
-        mSearchTagsLayoutManager = new LinearLayoutManager(getActivity(), LinearLayoutManager.HORIZONTAL, false);
+        mSearchTagsLayoutManager = new LinearLayoutManager(mActivity, LinearLayoutManager.HORIZONTAL, false);
         mSearchTagsRecyclerView.setLayoutManager(mSearchTagsLayoutManager);
-        mSearchTagsAdapter = new SearchTagsAdapter(getActivity(), mSearchTagsRecyclerView, mSearchTagsLayoutManager, new ArrayList<SearchChipModel>(), mPresenter, mFacetItemsAdapter, mSubCategoriesAdapter, mPreviousSelectedFacetIndices);
+        mSearchTagsAdapter = new SearchTagsAdapter(mActivity, mSearchTagsRecyclerView, mSearchTagsLayoutManager, new ArrayList<SearchChipModel>(), mPresenter, mFacetItemsAdapter, mSubCategoriesAdapter, mPreviousSelectedFacetIndices);
         mSearchTagsRecyclerView.setAdapter(mSearchTagsAdapter);
         mSearchTagsRecyclerView.setVisibility(View.VISIBLE);
 
@@ -276,8 +273,8 @@ public class SearchFilterController extends BaseController
             mSearchTagsAdapter.replaceData(mPreviousSearchChips);
         }
 
-        mFacetsAdapter = new FacetsAdapter(getActivity(), new ArrayList(mFacetFilters), mPresenter, mSearchTagsAdapter.getData());
-        mFacetsRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity(), LinearLayoutManager.VERTICAL, false));
+        mFacetsAdapter = new FacetsAdapter(mActivity, new ArrayList(mFacetFilters), mPresenter, mSearchTagsAdapter.getData());
+        mFacetsRecyclerView.setLayoutManager(new LinearLayoutManager(mActivity, LinearLayoutManager.VERTICAL, false));
         mFacetsRecyclerView.setAdapter(mFacetsAdapter);
 
         mSearchTagsAdapter.setFacetsAdapter(mFacetsAdapter);
@@ -369,8 +366,8 @@ public class SearchFilterController extends BaseController
     protected void onDestroyView(@NonNull View view) {
         mPresenter.onDetach();
 
-        if ((getActivity()) != null) {
-            ((MainActivity)getActivity()).getMainController().showBottomNav();
+        if (mActivity != null) {
+            mActivity.getMainController().showBottomNav();
         }
         super.onDestroyView(view);
     }
@@ -617,10 +614,10 @@ public class SearchFilterController extends BaseController
 //                .putString(KEY_SEARCH_QUERY, new Gson().toJson(mBrandList))
                 .build();
 
-        SaleItemsController saleItemsController = (SaleItemsController) getRouter().getControllerWithTag(getActivity().getString(R.string.sale_items_controller_tag));
+        SaleItemsController saleItemsController = (SaleItemsController) getRouter().getControllerWithTag(mActivity.getString(R.string.sale_items_controller_tag));
         saleItemsController.onPassFiltersData(saleItemBundle);
         //noinspection ConstantConditions
-        getActivity().onBackPressed();
+        mActivity.onBackPressed();
 
     }
 

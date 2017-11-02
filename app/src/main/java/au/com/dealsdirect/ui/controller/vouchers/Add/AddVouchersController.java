@@ -36,7 +36,6 @@ import au.com.dealsdirect.data.network.model.vouchers.ClearVouchersResponse;
 import au.com.dealsdirect.data.network.model.vouchers.Voucher;
 import au.com.dealsdirect.ui.base.BaseController;
 import au.com.dealsdirect.ui.custom.CustomAlertDialog;
-import au.com.dealsdirect.ui.main.MainActivity;
 import au.com.dealsdirect.utils.BundleBuilder;
 import au.com.dealsdirect.utils.JsonUtils;
 import butterknife.BindView;
@@ -177,7 +176,7 @@ public class AddVouchersController extends BaseController implements AddVouchers
     protected void onViewBound(@NonNull View view) {
         super.onViewBound(view);
 
-        mSharedPreference = getActivity().getSharedPreferences("Voucher_Preference", Context.MODE_PRIVATE);
+        mSharedPreference = mActivity.getSharedPreferences("Voucher_Preference", Context.MODE_PRIVATE);
         Set<String> voucherSet = mSharedPreference.getStringSet("VOUCHER_SET", null);
         if(voucherSet != null && !mIsNoDiscountApplied) {
             voucherIds.addAll(voucherSet);
@@ -204,10 +203,10 @@ public class AddVouchersController extends BaseController implements AddVouchers
         mTitleText.setText("My Vouchers");
         mFilterView.setVisibility(View.INVISIBLE);
         mArrowImage.setOnClickListener(action -> {
-            getActivity().onBackPressed();
+            mActivity.onBackPressed();
         });
 
-        mAdapter = new AddVouchersRecyclerViewAdapter(mVouchers, this, getActivity());
+        mAdapter = new AddVouchersRecyclerViewAdapter(mVouchers, this, mActivity);
 
         if (!mIsVoucherAdded) {
             mButtonClear.setVisibility(View.GONE);
@@ -222,15 +221,15 @@ public class AddVouchersController extends BaseController implements AddVouchers
 
             } else {
                 CustomAlertDialog.showCustomAlertDialog(
-                        getActivity(),
+                        mActivity,
                         CustomAlertDialog.CustomDialogIconState.NEGATIVE,
                         getApplicationContext().getString(R.string.no_voucher_selected));
             }
         });
 
-        mAdapter = new AddVouchersRecyclerViewAdapter(mVouchers, this, getActivity());
+        mAdapter = new AddVouchersRecyclerViewAdapter(mVouchers, this, mActivity);
         mRecyclerView.setAdapter(mAdapter);
-        mRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity(), LinearLayoutManager.HORIZONTAL, false));
+        mRecyclerView.setLayoutManager(new LinearLayoutManager(mActivity, LinearLayoutManager.HORIZONTAL, false));
 
         SnapHelper helper = new PagerSnapHelper();
         helper.attachToRecyclerView(mRecyclerView);
@@ -255,9 +254,9 @@ public class AddVouchersController extends BaseController implements AddVouchers
 
                 CustomAlertDialog
                         .showCustomAlertDialog(
-                                getActivity(),
+                                mActivity,
                                 CustomAlertDialog.CustomDialogIconState.NEGATIVE,
-                                getActivity().getString(R.string.please_input_promo_code));
+                                mActivity.getString(R.string.please_input_promo_code));
             }
         });
 
@@ -288,7 +287,7 @@ public class AddVouchersController extends BaseController implements AddVouchers
             }
 
             CustomAlertDialog.showCustomAlertDialog(
-                    getActivity(),
+                    mActivity,
                     CustomAlertDialog.CustomDialogIconState.POSITIVE,
                     successResponse
             );
@@ -299,28 +298,28 @@ public class AddVouchersController extends BaseController implements AddVouchers
             editor.putStringSet("VOUCHER_SET", voucherSet);
             editor.apply();
 
-            getActivity().onBackPressed();
+            mActivity.onBackPressed();
 
 
         } else {
 
             if (responseMessage.isEmpty()) {
                 CustomAlertDialog.showCustomAlertDialog(
-                        getActivity(),
+                        mActivity,
                         CustomAlertDialog.CustomDialogIconState.NEGATIVE,
-                        getActivity().getString(R.string.unable_to_apply_voucher)
+                        mActivity.getString(R.string.unable_to_apply_voucher)
                 );
 
             } else {
                 CustomAlertDialog.showCustomAlertDialog(
-                        getActivity(),
+                        mActivity,
                         CustomAlertDialog.CustomDialogIconState.NEGATIVE,
                         responseMessage
                 );
             }
 
 //            mActivity.getSupportFragmentManager().popBackStack();
-            getActivity().onBackPressed();
+            mActivity.onBackPressed();
             voucherIds.clear();
             tempVoucherIds.clear();
         }
@@ -338,7 +337,7 @@ public class AddVouchersController extends BaseController implements AddVouchers
         }
 
         CustomAlertDialog.showCustomAlertDialog(
-                getActivity(),
+                mActivity,
                 CustomAlertDialog.CustomDialogIconState.POSITIVE,
                 responseMessage
         );
@@ -350,14 +349,14 @@ public class AddVouchersController extends BaseController implements AddVouchers
         editor.putStringSet("VOUCHER_SET", voucherSet);
         editor.apply();
 
-        getActivity().onBackPressed();
+        mActivity.onBackPressed();
 
     }
 
     @Override
     public void onApplyVouchersError() {
         voucherIds.clear();
-        getActivity().onBackPressed();
+        mActivity.onBackPressed();
     }
 
     @Override
@@ -365,9 +364,9 @@ public class AddVouchersController extends BaseController implements AddVouchers
 
         if (response.getValue().getResult()) {
             CustomAlertDialog.showCustomAlertDialog(
-                    getActivity(),
+                    mActivity,
                     CustomAlertDialog.CustomDialogIconState.POSITIVE,
-                    getActivity().getString(R.string.promo_code_applied)
+                    mActivity.getString(R.string.promo_code_applied)
             );
 
             voucherIds.add(mTempVoucherPromoKey);
@@ -380,11 +379,11 @@ public class AddVouchersController extends BaseController implements AddVouchers
             editor.apply();
 
 
-            getActivity().onBackPressed();
+            mActivity.onBackPressed();
         } else {
 
             CustomAlertDialog.showCustomAlertDialog(
-                    getActivity(),
+                    mActivity,
                     CustomAlertDialog.CustomDialogIconState.NEGATIVE,
                     response.getValue().getMessage());
         }

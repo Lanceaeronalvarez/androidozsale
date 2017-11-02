@@ -1,12 +1,10 @@
 package au.com.dealsdirect.ui.controller.account;
 
-import android.app.Activity;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -106,8 +104,8 @@ public class AccountController extends BaseController implements AccountMvpView,
     protected void setUp(View view) {
         // Setup views here
         assert (getActivity()) != null;
-        ((MainActivity) getActivity()).getMainController().showBottomNav();
-        ((MainActivity) getActivity()).setDraggableViewPager(false);
+        mActivity.getMainController().showBottomNav();
+        mActivity.setDraggableViewPager(false);
 
         mPresenter.loadAccountItems();
         mTitleTextView.setText(R.string.my_account);
@@ -197,14 +195,14 @@ public class AccountController extends BaseController implements AccountMvpView,
     public void triggerLogin(String option) {
         AccountMvpView mvpView = this;
 
-        ((MainMvpView) getActivity()).showLoginController(getRouter(), new AuthHandler() {
+        mActivity.showLoginController(getRouter(), new AuthHandler() {
             @Override
             public void success() {
                 mPresenter.onAttach(mvpView);
                 mPresenter.onAccountItemClick(option);
-                ((MainActivity) getActivity()).callGCMRegisterSubscriber();
+                mActivity.callGCMRegisterSubscriber();
                 mFilterButton.setImageDrawable(getActivity().getResources().getDrawable(R.drawable.ic_logout));
-                ((MainActivity) getActivity()).getMainController().getHomeController().resetInviteRouter();
+                mActivity.getMainController().getHomeController().resetInviteRouter();
             }
 
             @Override
@@ -216,19 +214,19 @@ public class AccountController extends BaseController implements AccountMvpView,
 
     @Override
     public void triggerLogout() {
-        ((MainMvpView) getActivity()).callLogout(new AuthHandler() {
+        mActivity.callLogout(new AuthHandler() {
             @Override
             public void success() {
                 mPresenter.loadAccountItems();
                 CartUtil.setValueToCart(0);
-                ((MainActivity) getActivity()).getMainController().getHomeController().removeBasketItemCount();
+                mActivity.getMainController().getHomeController().removeBasketItemCount();
                 mFilterButton.setImageDrawable(getActivity().getResources().getDrawable(R.drawable.ic_login));
 
 //                commented. in iOS when logging out, it stays on my accounts.
 //                ((MainActivity) getActivity()).getMainController().getHomeController().showShopController();
 
                 //reset routers with unique user info
-                ((MainActivity) getActivity()).getMainController().getHomeController().resetRouters();
+                mActivity.getMainController().getHomeController().resetRouters();
                 CustomAlertDialog.showCustomAlertDialog(getActivity(),
                         CustomAlertDialog.CustomDialogIconState.POSITIVE,
                         getActivity().getString(R.string.logout_successful));  
@@ -260,13 +258,13 @@ public class AccountController extends BaseController implements AccountMvpView,
         if(mPresenter.getIsAuthorized()) {
             triggerLogout();
         } else {
-            ((MainMvpView)getActivity()).showLoginController(getRouter(),new AuthHandler() {
+            mActivity.showLoginController(getRouter(),new AuthHandler() {
                 @Override
                 public void success() {
                     mPresenter.onAttach(AccountController.this);
-                    ((MainMvpView)getActivity()).callGCMRegisterSubscriber();
+                    mActivity.callGCMRegisterSubscriber();
                     mFilterButton.setImageDrawable(getActivity().getResources().getDrawable(R.drawable.ic_logout));
-                    ((MainActivity) getActivity()).getMainController().getHomeController().initControllers(true);
+                    mActivity.getMainController().getHomeController().initControllers(true);
                 }
 
                 @Override
