@@ -1,11 +1,7 @@
 package au.com.dealsdirect.di.module;
 
-import android.app.Activity;
-
 import com.bluelinelabs.conductor.Controller;
 
-import au.com.dealsdirect.ui.base.BaseActivity;
-import au.com.dealsdirect.ui.base.MvpView;
 import au.com.dealsdirect.ui.controller.account.AccountMvpPresenter;
 import au.com.dealsdirect.ui.controller.account.AccountMvpView;
 import au.com.dealsdirect.ui.controller.account.AccountPresenter;

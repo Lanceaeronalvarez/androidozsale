@@ -1,9 +1,12 @@
 package au.com.dealsdirect.ui.controller.main;
 
+import android.view.View;
+
 import java.util.List;
 
 import au.com.dealsdirect.data.network.model.category.GetCategoryTreeResponse;
 import au.com.dealsdirect.ui.base.MvpView;
+import au.com.dealsdirect.ui.controller.home.HomeController;
 
 /**
  * dp Created by Admin on 6/6/17.
@@ -11,16 +14,19 @@ import au.com.dealsdirect.ui.base.MvpView;
 
 public interface MainMvpView extends MvpView {
 
-//
-//    void showCategoryController();
-//
-//    void showShopController();
-//
-//    void showAccountController();
-//
-//    void showContactController();
-//
-//    void showInviteController();
-//
-//    void showCheckoutController();
+    void hideBottomNav();
+
+    void showBottomNav();
+
+    void setChosenCategoryItemKey(String key);
+
+    void setSelectedSubCategoryItem(View view);
+
+    View getSelectedSubCategoryItem();
+
+    String getChosenCategoryItemKey();
+
+    HomeController getHomeController();
+
+    MainCustomViewPager getHomeViewPager();
 }

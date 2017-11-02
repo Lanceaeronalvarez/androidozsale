@@ -16,8 +16,8 @@ import java.util.Map;
 
 import au.com.dealsdirect.R;
 import au.com.dealsdirect.data.network.model.category.GetCategoryTreeResponse;
-import au.com.dealsdirect.ui.controller.categories.listener.SubCategoryClickListener;
-import au.com.dealsdirect.ui.controller.categories.listener.SubCategoryItemClickListener;
+import au.com.dealsdirect.ui.controller.searchfilter.SubCategoryClickListener;
+import au.com.dealsdirect.ui.controller.searchfilter.SubCategoryItemClickListener;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 

@@ -1,17 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
-<au.com.dealsdirect.ui.controller.saleitemdetails.SaleItemDetailsView xmlns:android="http://schemas.android.com/apk/res/android"
+<au.com.dealsdirect.widget.ElasticDragDismissFrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/product_details_container"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:ignore="MissingPrefix">
-
-    <View
-        android:id="@+id/background"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:transitionName="detailsSharedBackground" />
 
     <RelativeLayout
         android:id="@+id/product_details_coordinator"
@@ -700,4 +694,4 @@
 
     </RelativeLayout>
 
-</au.com.dealsdirect.ui.controller.saleitemdetails.SaleItemDetailsView>
+</au.com.dealsdirect.widget.ElasticDragDismissFrameLayout>

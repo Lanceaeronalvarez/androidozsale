@@ -6,7 +6,6 @@ import au.com.dealsdirect.data.DataManager;
 import au.com.dealsdirect.di.PerActivity;
 import au.com.dealsdirect.di.module.ActivityModule;
 import au.com.dealsdirect.ui.main.MainActivity;
-import au.com.dealsdirect.ui.main.SharedActivity;
 import au.com.dealsdirect.utils.rx.SchedulerProvider;
 import dagger.Component;
 import io.reactivex.disposables.CompositeDisposable;
@@ -17,8 +16,6 @@ import io.reactivex.disposables.CompositeDisposable;
 public interface ActivityComponent {
 
     void inject(MainActivity activity);
-
-    void inject(SharedActivity activity);
 
     DataManager getDataManager();
 

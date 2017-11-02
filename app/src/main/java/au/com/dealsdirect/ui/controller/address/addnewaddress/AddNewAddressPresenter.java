@@ -6,7 +6,6 @@ import android.widget.EditText;
 
 import com.androidnetworking.error.ANError;
 import com.google.gson.JsonObject;
-import com.mysale.genie.utility.RxBus;
 
 import java.util.HashMap;
 import java.util.Iterator;
