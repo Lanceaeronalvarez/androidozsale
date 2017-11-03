@@ -20,6 +20,7 @@ import au.com.dealsdirect.R;
 import au.com.dealsdirect.ui.base.BaseController;
 import au.com.dealsdirect.ui.controller.home.HomeController;
 import au.com.dealsdirect.ui.controller.shops.ShopsController;
+import au.com.dealsdirect.ui.main.MainActivity;
 import au.com.dealsdirect.utils.BundleBuilder;
 import au.com.dealsdirect.utils.module.ControllerFactory;
 import au.com.dealsdirect.utils.module.GateKeeper;
@@ -40,6 +41,9 @@ public class MainController extends BaseController implements MainMvpView {
 
     @BindView(R.id.home_viewpager)
     MainCustomViewPager mHomeViewPager;
+
+    @Inject
+    MainActivity mActivity;
 
     Controller mSaleItemsController;
     Controller mCheckoutController;
@@ -107,13 +111,13 @@ public class MainController extends BaseController implements MainMvpView {
                 if (!router.hasRootController()) {
                     switch (position) {
                         case 0:
-                            router.setRoot(RouterTransaction.with(mAccountsController));
+                            GateKeeper.setRoot(router, GateKeeper.Destination.ACCOUNT,RouterTransaction.with(mAccountsController));
                             break;
                         case 1:
-                            router.setRoot(RouterTransaction.with(mSaleItemsController));
+                            GateKeeper.setRoot(router, GateKeeper.Destination.SALEITEMS,RouterTransaction.with(mSaleItemsController));
                             break;
                         case 2:
-                            router.setRoot(RouterTransaction.with(mCheckoutController));
+                            GateKeeper.setRoot(router, GateKeeper.Destination.CHECKOUT,RouterTransaction.with(mCheckoutController));
                             break;
                         default:
                             router.setRoot(RouterTransaction.with(mSaleItemsController));

@@ -13,38 +13,40 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-
 /**
  * Created by smartwave on 16/10/2017.
  */
 
 public class GateKeeper {
 
-    private static Map<Router,Destination> sCURRENT_LOCATION;
+    private static Map<Router, Destination> sCURRENT_LOCATION = new HashMap<>();
 
     public enum Destination {
+        EMPTY,
         SPLASH,
         LOGIN,
         DETAILS,
         MAIN,
         REGISTER,
         SALEITEMS,
+        SALEITEM_DETAILS,
         CHECKOUT,
         CATEGORIES,
         ACCOUNT
         //add more destinations
     }
 
-    private static HashMap<Destination,List<Destination>> mRouteMap = new HashMap<>();
+    private static HashMap<Destination, List<Destination>> mRouteMap = new HashMap<>();
 
     /**
      * Registers the list of routes as valid to the specified destination endpoint.
+     *
      * @param destination destination route end point.
-     * @param routesFrom a list of routes to be associated with specified destination to be registered as valid
-     *                   routes.
+     * @param routesFrom  a list of routes to be associated with specified destination to be registered as valid
+     *                    routes.
      */
-    public static void registerRoute(Destination destination, List<Destination> routesFrom){
-        mRouteMap.put(destination,routesFrom);
+    public static void registerRoute(Destination destination, List<Destination> routesFrom) {
+        mRouteMap.put(destination, routesFrom);
     }
 
     /**
@@ -66,13 +68,14 @@ public class GateKeeper {
 
     /**
      * Validates if current location is specified under list possible origins for specified destination
+     *
      * @param destination Destination enum controller
      * @return true if origin is registered as a valid route to destination, false otherwise
      */
-    private static boolean validateRouteOrigin(Router router,Destination destination){
+    private static boolean validateRouteOrigin(Router router, Destination destination) {
         List<Destination> validOrigins = mRouteMap.get(destination);
 
-        if(validOrigins == null || !validOrigins.contains(sCURRENT_LOCATION.get(router))){
+        if (validOrigins == null || !validOrigins.contains(sCURRENT_LOCATION.get(router))) {
             //throw RouteNotValidException orrr?
             return false;
         }
@@ -83,15 +86,16 @@ public class GateKeeper {
     /**
      * Router push operation given specified destination. Uses given pop/push changehandler.
      * sets CURRENT_LOCATION to specified destination.
-     * @param router Conductor router
-     * @param destination Destination enum controller
+     *
+     * @param router            Conductor router
+     * @param destination       Destination enum controller
      * @param pushChangeHandler your custom pushChangeHandler
-     * @param popChangeHandler your custom popChangehandler
+     * @param popChangeHandler  your custom popChangehandler
      */
-    public static void push (Router router, Destination destination, ControllerChangeHandler pushChangeHandler, ControllerChangeHandler popChangeHandler){
+    public static void push(Router router, Destination destination, ControllerChangeHandler pushChangeHandler, ControllerChangeHandler popChangeHandler) {
 //        if(validateRouteOrigin(destination)){
-            router.pushController(RouterTransaction.with(ControllerFactory.getInstance(destination)).pushChangeHandler(pushChangeHandler).popChangeHandler(popChangeHandler));
-            sCURRENT_LOCATION.put(router,destination);
+        router.pushController(RouterTransaction.with(ControllerFactory.getInstance(destination)).pushChangeHandler(pushChangeHandler).popChangeHandler(popChangeHandler));
+        sCURRENT_LOCATION.put(router, destination);
 //        } else {
 //            Controller currentController = getCurrentControllerOnRouter(router);
 //            if(currentController != null) {
@@ -103,15 +107,16 @@ public class GateKeeper {
     /**
      * Router push operation given specified destination. Uses given pop/push changehandler.
      * sets CURRENT_LOCATION to specified destination.
-     * @param router Conductor router
-     * @param destination Destination enum controller
+     *
+     * @param router            Conductor router
+     * @param destination       Destination enum controller
      * @param pushChangeHandler your custom pushChangeHandler
-     * @param popChangeHandler your custom popChangehandler
+     * @param popChangeHandler  your custom popChangehandler
      */
-    public static void push (Router router, Destination destination, Bundle bundle, ControllerChangeHandler pushChangeHandler, ControllerChangeHandler popChangeHandler){
+    public static void push(Router router, Destination destination, Bundle bundle, ControllerChangeHandler pushChangeHandler, ControllerChangeHandler popChangeHandler) {
 //        if(validateRouteOrigin(destination)){
-        router.pushController(RouterTransaction.with(ControllerFactory.getInstance(destination,bundle)).pushChangeHandler(pushChangeHandler).popChangeHandler(popChangeHandler));
-        sCURRENT_LOCATION.put(router,destination);
+        router.pushController(RouterTransaction.with(ControllerFactory.getInstance(destination, bundle)).pushChangeHandler(pushChangeHandler).popChangeHandler(popChangeHandler));
+        sCURRENT_LOCATION.put(router, destination);
 //        } else {
 //            Controller currentController = getCurrentControllerOnRouter(router);
 //            if(currentController != null) {
@@ -122,6 +127,7 @@ public class GateKeeper {
 
     /**
      * Gets top of the backstack controller given specified router
+     *
      * @param router Conductor router
      * @return topmost controller
      */
@@ -136,35 +142,43 @@ public class GateKeeper {
 
     /**
      * Router push operation given specified destination. Uses default pop/push changehandler(null)
-     * @param router conductor router
+     *
+     * @param router      conductor router
      * @param destination destination enum
      */
-    public static void push(Router router, Destination destination){
-        push(router,destination,null,null);
+    public static void push(Router router, Destination destination) {
+        push(router, destination, null, null);
     }
 
     /**
      * Router push operation given specified destination. Uses default pop/push changehandler(null)
-     * @param router conductor router
+     *
+     * @param router      conductor router
      * @param destination destination enum
      */
-    public static void push(Router router, Destination destination, Bundle bundle){
-        push(router,destination,bundle,null,null);
+    public static void push(Router router, Destination destination, Bundle bundle) {
+        push(router, destination, bundle, null, null);
     }
 
     /**
      * sets root controller of the specified router
-     * @param router  conductor router
-     * @param destination destination enum
+     *
+     * @param router            conductor router
+     * @param destination       destination enum
      * @param routerTransaction your custom router transaction
      */
-    public static void setRoot(Router router, Destination destination, RouterTransaction routerTransaction){
+    public static void setRoot(Router router, Destination destination, RouterTransaction routerTransaction) {
         router.setRoot(routerTransaction);
-        sCURRENT_LOCATION.put(router,destination);
+        sCURRENT_LOCATION.put(router, destination);
     }
 
-    public static Destination getCurrentLocation(Router router){
+    public static Destination getCurrentLocation(Router router) {
         return sCURRENT_LOCATION.get(router);
+    }
+
+    public static void updateCurrentLocation(Router router) {
+        Destination destination = ControllerFactory.mapControllerToDestination(getCurrentControllerOnRouter(router));
+        sCURRENT_LOCATION.put(router, destination);
     }
 
 }

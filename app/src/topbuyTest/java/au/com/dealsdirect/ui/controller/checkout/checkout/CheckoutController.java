@@ -59,6 +59,7 @@ public class CheckoutController extends BaseController implements CheckoutMvpVie
         super.onViewBound(view);
 
         mButtonHolder = mFooterView.findViewById(R.id.partial_checkout_button_holder);
+        mActivity.setCheckoutRouter(getRouter());
 
         setUp(view);
     }

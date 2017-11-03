@@ -5,6 +5,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
@@ -59,6 +60,10 @@ public class AccountItemAdapter extends RecyclerView.Adapter<AccountItemViewHold
             return 0;
         }
         return mAccountItems.size();
+    }
+
+    public List<String> getData(){
+        return mAccountItems;
     }
 
     public void removeItemAtPosition(int position) {

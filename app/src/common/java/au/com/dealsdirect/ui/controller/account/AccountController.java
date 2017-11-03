@@ -15,6 +15,8 @@ import com.bluelinelabs.conductor.RouterTransaction;
 import com.bluelinelabs.conductor.changehandler.HorizontalChangeHandler;
 
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import javax.inject.Inject;
@@ -62,6 +64,31 @@ public class AccountController extends BaseController implements AccountMvpView,
     @Inject
     AccountMvpPresenter<AccountMvpView> mPresenter;
 
+    ArrayList<String> mAccountItems = new ArrayList<>(
+            Arrays.asList(AccountItems.DETAILS,
+                    AccountItems.ADDRESSES,
+                    AccountItems.ORDERS,
+                    AccountItems.PAYMENTS,
+                    AccountItems.VOUCHERS,
+                    AccountItems.RETURNS,
+                    AccountItems.LANGUAGE,
+                    AccountItems.TNC,
+                    AccountItems.PRIVACY_POLICY,
+                    AccountItems.ABOUT_US));
+
+    int[] mAccountImages = new int[]{
+            R.drawable.bg_account_details,
+            R.drawable.bg_account_address,
+            R.drawable.bg_account_orders,
+            R.drawable.bg_account_payments,
+            R.drawable.bg_account_vouchers,
+            R.drawable.bg_account_returns,
+            R.drawable.bg_account_languages,
+            R.drawable.bg_account_terms_and_conditions,
+            R.drawable.bg_account_privacy_policy,
+            R.drawable.bg_account_about_us,
+    };
+
     public static AccountController newInstance() {
 
         return new AccountController(
@@ -105,7 +132,7 @@ public class AccountController extends BaseController implements AccountMvpView,
         mActivity.getMainController().showBottomNav();
         mActivity.setDraggableViewPager(false);
 
-        mPresenter.loadAccountItems();
+        mPresenter.loadAccountItems(mAccountItems, mAccountImages);
         mTitleTextView.setText(R.string.my_account);
         mArrowButton.setVisibility(View.INVISIBLE);
 
@@ -230,7 +257,7 @@ public class AccountController extends BaseController implements AccountMvpView,
         mActivity.callLogout(new AuthHandler() {
             @Override
             public void success() {
-                mPresenter.loadAccountItems();
+                mPresenter.loadAccountItems(mAccountItems,mAccountImages);
                 CartUtil.setValueToCart(0);
                 mActivity.getMainController().getHomeController().removeBasketItemCount();
                 mFilterButton.setImageDrawable(getActivity().getResources().getDrawable(R.drawable.ic_login));
@@ -242,8 +269,8 @@ public class AccountController extends BaseController implements AccountMvpView,
                 mActivity.getMainController().getHomeController().resetRouters();
                 CustomAlertDialog.showCustomAlertDialog(getActivity(),
                         CustomAlertDialog.CustomDialogIconState.POSITIVE,
-                        getActivity().getString(R.string.logout_successful));  
-         }
+                        getActivity().getString(R.string.logout_successful));
+            }
 
             @Override
             public void error() {
@@ -258,7 +285,7 @@ public class AccountController extends BaseController implements AccountMvpView,
 
     @Override
     public void initLoginDrawable() {
-        if(mPresenter.getIsAuthorized()) {
+        if (mPresenter.isAuthorized()) {
             mFilterButton.setImageDrawable(getActivity().getResources().getDrawable(R.drawable.ic_account_logout));
 
         } else {
@@ -267,11 +294,11 @@ public class AccountController extends BaseController implements AccountMvpView,
     }
 
     @OnClick(R.id.partial_toolbar_filter_view)
-    public void promptLogin(){
-        if(mPresenter.getIsAuthorized()) {
+    public void promptLogin() {
+        if (mPresenter.isAuthorized()) {
             triggerLogout();
         } else {
-            mActivity.showLoginController(getRouter(),new AuthHandler() {
+            mActivity.showLoginController(getRouter(), new AuthHandler() {
                 @Override
                 public void success() {
                     mPresenter.onAttach(AccountController.this);

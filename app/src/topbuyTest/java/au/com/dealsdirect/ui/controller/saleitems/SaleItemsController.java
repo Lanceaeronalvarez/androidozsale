@@ -62,6 +62,13 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
     }
 
     @Override
+    protected void onViewBound(@NonNull View view) {
+        super.onViewBound(view);
+        mActivity.setSaleItemsRouter(getRouter());
+        setUp(view);
+    }
+
+    @Override
     protected void setUp(View view) {
 
     }

@@ -9,6 +9,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.bluelinelabs.conductor.Router;
+
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -18,8 +20,10 @@ import javax.inject.Inject;
 import au.com.dealsdirect.R;
 import au.com.dealsdirect.data.auth.AuthHandler;
 import au.com.dealsdirect.ui.base.BaseController;
+import au.com.dealsdirect.ui.custom.CustomAlertDialog;
 import au.com.dealsdirect.ui.main.MainActivity;
 import au.com.dealsdirect.utils.BundleBuilder;
+import au.com.dealsdirect.utils.CartUtil;
 import butterknife.BindView;
 
 /**
@@ -33,7 +37,7 @@ public class AccountController extends BaseController implements AccountMvpView 
     AccountItemAdapter accountItemAdapter;
 
 
-    private int[] accountIcons = new int[]{
+    private int[] mAccountIcons = new int[]{
             R.drawable.ic_account_my_orders,
             R.drawable.ic_account_my_payments,
             R.drawable.ic_account_my_details,
@@ -50,21 +54,21 @@ public class AccountController extends BaseController implements AccountMvpView 
             R.drawable.ic_account_logout
     };
 
-    private ArrayList<String> accountItems = new ArrayList(Arrays.asList(
+    private ArrayList<String> mAccountItems = new ArrayList(Arrays.asList(
                     //"my cart",
-                    "my orders",
-                    "my payments",
-                    "my details",
-                    "my addresses",
-                    "my returns",
-                    "my vouchers",
-                    "invite friends",
-                    "language",
-                    "contact us",
-                    "about us",
-                    "privacy policy",
-                    "terms & conditions",
-                    "tutorial"));
+                    AccountItems.ORDERS,
+            AccountItems.PAYMENTS,
+            AccountItems.DETAILS,
+            AccountItems.ADDRESSES,
+            AccountItems.RETURNS,
+            AccountItems.VOUCHERS,
+            AccountItems.INVITE_FRIEND,
+            AccountItems.LANGUAGE,
+            AccountItems.CONTACT_US,
+            AccountItems.ABOUT_US,
+            AccountItems.PRIVACY_POLICY,
+            AccountItems.TNC,
+            AccountItems.TUTORIAL));
 
 
     @BindView(R.id.account_recycler_view)
@@ -101,6 +105,7 @@ public class AccountController extends BaseController implements AccountMvpView 
     @Override
     protected void onViewBound(@NonNull View view) {
         super.onViewBound(view);
+        mActivity.setAccountsRouter(getRouter());
         setUp(view);
     }
 
@@ -108,14 +113,20 @@ public class AccountController extends BaseController implements AccountMvpView 
     protected void setUp(View view) {
         // Setup views here
         assert (mActivity) != null;
-        if(mPresenter.isAuthorized()){
-            accountItems.add("logout");
-        }
-        mPresenter.loadAccountItems(accountItems,accountIcons);
+
+        mPresenter.loadAccountItems(mAccountItems,mAccountIcons);
     }
 
     @Override
     public void showAccountItems(List<String> accountItems, int[] accountImages) {
+        if(mPresenter.isAuthorized()){
+            accountItems.add(AccountItems.LOGOUT);
+        }else{
+            if(accountItemAdapter!=null){
+                accountItemAdapter.getData().remove(AccountItems.LOGOUT);
+            }
+        }
+
         accountItemAdapter = new AccountItemAdapter(accountItems, accountImages, mPresenter);
         mAccountRecyclerView.setAdapter(accountItemAdapter);
         mAccountRecyclerView.setLayoutManager(new LinearLayoutManager(mActivity,LinearLayoutManager.VERTICAL,false));
@@ -181,7 +192,6 @@ public class AccountController extends BaseController implements AccountMvpView 
     @Override
     public void triggerLogin(String option) {
         AccountMvpView mvpView = this;
-
         mActivity.showLoginController(getRouter(), new AuthHandler() {
             @Override
             public void success() {
@@ -199,7 +209,30 @@ public class AccountController extends BaseController implements AccountMvpView 
 
     @Override
     public void triggerLogout() {
+        mActivity.callLogout(new AuthHandler() {
+            @Override
+            public void success() {
+                mPresenter.loadAccountItems(mAccountItems,mAccountIcons);
+                CartUtil.setValueToCart(0);
+//                mActivity.getMainController().getHomeController().removeBasketItemCount();
 
+//                commented. in iOS when logging out, it stays on my accounts.
+//                ((MainActivity) getActivity()).getMainController().getHomeController().showShopController();
+
+                //reset routers with unique user info
+//                mActivity.getMainController().getHomeController().resetRouters();
+                CustomAlertDialog.showCustomAlertDialog(getActivity(),
+                        CustomAlertDialog.CustomDialogIconState.POSITIVE,
+                        getActivity().getString(R.string.logout_successful));
+            }
+
+            @Override
+            public void error() {
+                CustomAlertDialog.showCustomAlertDialog(getActivity(),
+                        CustomAlertDialog.CustomDialogIconState.NEGATIVE,
+                        getActivity().getString(R.string.logout_failed));
+            }
+        });
     }
 
     @Override

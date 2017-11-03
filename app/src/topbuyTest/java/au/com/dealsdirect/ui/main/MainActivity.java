@@ -14,6 +14,7 @@ import com.bluelinelabs.conductor.support.RouterPagerAdapter;
 import com.braintreepayments.api.BraintreeFragment;
 import com.braintreepayments.api.models.PaymentMethodNonce;
 import com.braintreepayments.cardform.view.CardForm;
+import com.mysale.genie.utility.RxBus;
 
 import javax.inject.Inject;
 
@@ -30,6 +31,8 @@ import au.com.dealsdirect.ui.controller.splash.SplashScreenController;
 import au.com.dealsdirect.ui.main.MainMvpPresenter;
 import au.com.dealsdirect.ui.main.MainMvpView;
 import au.com.dealsdirect.utils.AppConstants;
+import au.com.dealsdirect.utils.DialogUtils;
+import au.com.dealsdirect.utils.IntrospectionUtils;
 import au.com.dealsdirect.utils.module.ControllerFactory;
 import au.com.dealsdirect.utils.module.GateKeeper;
 import butterknife.BindView;
@@ -51,7 +54,11 @@ public class MainActivity extends BaseActivity implements MainMvpView {
 
     Controller mMainController;
     private Router mCategoriesRouter;
+    private Router mAccountsRouter;
+    private Router mMainRouter;
     private Router mCheckoutRouter;
+
+    AuthHandler mAuthHandler;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -92,6 +99,44 @@ public class MainActivity extends BaseActivity implements MainMvpView {
     }
 
     @Override
+    public void onBackPressed() {
+        switch (getMainController().getHomeViewPager().getCurrentItem()){
+            case 0: //accounts
+                if(getAccountsRouter().getBackstack().size() == 1){
+                    getMainController().getHomeViewPager().setCurrentItem(1);
+                } else {
+                    getAccountsRouter().handleBack();
+                    GateKeeper.updateCurrentLocation(getAccountsRouter());
+                }
+                break;
+            case 1: //sale items
+                if(getSaleItemsRouter().getBackstack().size() == 1) {
+                    //exit app
+                    DialogUtils.showYesNoDialog(
+                            this,
+                            getString(R.string.exit_app_name),
+                            getString(R.string.exit_app),
+                            getString(R.string.exit),
+                            getString(R.string.no),
+                            (dialogInterface, i) -> finish(),
+                            (dialogInterface, i) -> {
+                            });
+                }
+                break;
+            case 2: //checkout
+                if(getCheckoutRouter().getBackstack().size() == 1){
+                    getMainController().getHomeViewPager().setCurrentItem(1);
+                } else {
+                    getCheckoutRouter().handleBack();
+                    GateKeeper.updateCurrentLocation(getCheckoutRouter());
+                }
+                break;
+            default:
+                break;
+        }
+    }
+
+    @Override
     public FetchTokenHandler getFetchTokenHandler() {
         return null;
     }
@@ -118,11 +163,52 @@ public class MainActivity extends BaseActivity implements MainMvpView {
 
     @Override
     public void showLoginController(Router router, AuthHandler handler) {
-
+        mAuthHandler = handler;
+        //pinapasa yung router, para kahit child router man siya ng kung ano mang view, pwedeng siya ang tumawag.
+        GateKeeper.Destination currentLocation = GateKeeper.getCurrentLocation(router);
+        if (currentLocation == GateKeeper.Destination.SALEITEM_DETAILS ||
+                currentLocation == GateKeeper.Destination.ACCOUNT) {
+            GateKeeper.push(router, GateKeeper.Destination.LOGIN, new VerticalChangeHandler(), new VerticalChangeHandler());
+        } else {
+            GateKeeper.push(router, GateKeeper.Destination.LOGIN);
+        }
     }
 
     @Override
     public void loginSuccessHandler(Router router, AppConstants.POP_FLAG flag, AppConstants.AUTH_FLAG authFlag) {
+        RxBus.instance().post(IntrospectionUtils.EVENT_LOGIN);
+
+        switch (flag) {
+            case BACK:
+                onBackPressed();
+                break;
+            case ROOT:
+                router.popToRoot();
+                break;
+            default:
+                break;
+        }
+
+        if (mAuthHandler != null) {
+
+            // Required api calls on successful auth
+            loginSuccessMethods();
+
+            mAuthHandler.success();
+        }
+
+        String successMessage = getString(R.string.login_successfully);
+        switch (authFlag){
+            case REGISTER:
+                successMessage = getString(R.string.registered_successfully);
+                break;
+            case LOGIN:
+                successMessage = getString(R.string.login_successfully);
+                break;
+            default:
+                break;
+        }
+        hideKeyboard();
 
     }
 
@@ -143,7 +229,7 @@ public class MainActivity extends BaseActivity implements MainMvpView {
 
     @Override
     public void callLogout(AuthHandler handler) {
-
+        mPresenter.callLogout(handler);
     }
 
     @Override
@@ -251,8 +337,12 @@ public class MainActivity extends BaseActivity implements MainMvpView {
     }
 
 
-    public MainController getMainController(){
+    public MainController getMainController() {
         return (MainController) mMainController;
+    }
+
+    public void setCategoriesRouter(Router router) {
+        mCategoriesRouter = router;
     }
 
     public Router getCategoriesRouter() {
@@ -267,9 +357,22 @@ public class MainActivity extends BaseActivity implements MainMvpView {
         return mCheckoutRouter;
     }
 
-    public void setCategoriesRouter(Router router) {
-        mCategoriesRouter = router;
+    public void setSaleItemsRouter(Router router) {
+        mMainRouter = router;
     }
+
+    public Router getSaleItemsRouter() {
+        return mMainRouter;
+    }
+
+    public void setAccountsRouter(Router router) {
+        mAccountsRouter = router;
+    }
+
+    public Router getAccountsRouter() {
+        return mAccountsRouter;
+    }
+
 
     public void setDraggableViewPager(boolean isDraggable) {
         getMainController().setViewpagerDraggable(isDraggable);
@@ -278,6 +381,7 @@ public class MainActivity extends BaseActivity implements MainMvpView {
     public String getMyTemplateTexts(String detailKey) {
         return mPresenter.getStoredTemplateTexts(detailKey);
     }
+
     public boolean isAuthorized() {
         return mPresenter.isAuthorized();
     }
@@ -289,7 +393,7 @@ public class MainActivity extends BaseActivity implements MainMvpView {
 
     }
 
-    public void setShopsAsVisibleContainer(){
+    public void setShopsAsVisibleContainer() {
 
     }
 }

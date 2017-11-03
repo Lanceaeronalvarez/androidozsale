@@ -27,7 +27,7 @@ public class ControllerFactory {
     }
 
     private static Controller determineConstructionType(GateKeeper.Destination destination, Bundle bundle) {
-        return bundle == null || bundle.isEmpty() ? simpleConstruction(destination) : buildWithParameters(destination,bundle);
+        return bundle == null || bundle.isEmpty() ? simpleConstruction(destination) : buildWithParameters(destination, bundle);
     }
 
     private static Controller simpleConstruction(GateKeeper.Destination destination) {
@@ -51,7 +51,7 @@ public class ControllerFactory {
         }
     }
 
-    private static Controller buildWithParameters(GateKeeper.Destination destination, Bundle bundle){
+    private static Controller buildWithParameters(GateKeeper.Destination destination, Bundle bundle) {
         switch (destination) {
             case MAIN:
                 return new MainController(bundle);
@@ -70,5 +70,37 @@ public class ControllerFactory {
             default:
                 return null;
         }
+    }
+
+    public static GateKeeper.Destination mapControllerToDestination(Controller controller) {
+        if (controller instanceof MainController) {
+            return GateKeeper.Destination.MAIN;
+        }
+
+        if (controller instanceof DetailsController) {
+            return GateKeeper.Destination.DETAILS;
+        }
+
+        if (controller instanceof LoginController) {
+            return GateKeeper.Destination.LOGIN;
+        }
+
+        if (controller instanceof CategoriesController) {
+            return GateKeeper.Destination.CATEGORIES;
+        }
+
+        if (controller instanceof CheckoutController) {
+            return GateKeeper.Destination.CHECKOUT;
+        }
+
+        if (controller instanceof SaleItemsController) {
+            return GateKeeper.Destination.SALEITEMS;
+        }
+
+        if (controller instanceof AccountController) {
+            return GateKeeper.Destination.ACCOUNT;
+        }
+
+        return GateKeeper.Destination.EMPTY;
     }
 }

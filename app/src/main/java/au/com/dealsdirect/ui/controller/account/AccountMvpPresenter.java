@@ -11,8 +11,6 @@ import au.com.dealsdirect.ui.base.MvpView;
 
 public interface AccountMvpPresenter <V extends MvpView> extends MvpPresenter<V> {
 
-    void loadAccountItems();
-
     void loadAccountItems(ArrayList<String> items, int[] images);
 
     void onAccountItemClick(String option);
