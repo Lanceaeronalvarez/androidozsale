@@ -9,6 +9,7 @@
 
     <color name="yellow">#FFCA28</color>
     <color name="activered">#F06248</color>
+    <color name="defaultred">#FF785F</color>
 
     <!-- Button Theme -->
     <color name="bg_button_ripple">#DBE1EA</color>

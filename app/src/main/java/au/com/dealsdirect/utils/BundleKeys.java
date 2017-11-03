@@ -19,6 +19,13 @@ public class BundleKeys {
     public static final String SALEITEMS_FROM_SHOP_SEARCH = "SaleItemsController.FROM_SHOP_SEARCH";
     public static final String SALEITEMS_FROM_CATEGORY_SEARCH = "SaleItemsController.FROM_CATEGORY_SEARCH";
 
+    //search filters
+    public static final String BRANDS_FACETFILTER_NAME = "skus.brandName";
+    public static final String SIZES_FACETFILTER_NAME = "skus.attributes.size";
+    public static final String COLORS_FACETFILTER_NAME = "color";
+    public static final String PRICE_FACETFILTER_NAME = "skus.attributesForFaceting.aud";
+    public static final String SEARCH_QUERY_NAME = "search_query";
+    public static final String SORT_FACETFILTER_NAME = "sort";
 
 
 }
