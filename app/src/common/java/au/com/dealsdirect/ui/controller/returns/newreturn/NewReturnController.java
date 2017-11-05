@@ -115,7 +115,6 @@ public class NewReturnController extends BaseController implements NewReturnMvpV
                         mNewReturnOrderRecyclerView
                                 .findViewHolderForItemId(viewID);
 
-
             }
 
             CreateReturnRequest createReturnRequest = new CreateReturnRequest();
