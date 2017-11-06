@@ -8,6 +8,7 @@ import au.com.dealsdirect.ui.controller.account.AccountController;
 import au.com.dealsdirect.ui.controller.categories.CategoriesController;
 import au.com.dealsdirect.ui.controller.checkout.checkout.CheckoutController;
 import au.com.dealsdirect.ui.controller.details.DetailsController;
+import au.com.dealsdirect.ui.controller.forgotpassword.ForgotPasswordController;
 import au.com.dealsdirect.ui.controller.login.LoginController;
 import au.com.dealsdirect.ui.controller.main.MainController;
 import au.com.dealsdirect.ui.controller.register.RegisterController;
@@ -49,6 +50,8 @@ public class ControllerFactory {
                 return AccountController.newInstance();
             case REGISTER:
                 return RegisterController.newInstance();
+            case FORGOT_PASSWORD:
+                return ForgotPasswordController.newInstance();
             default:
                 return null;
         }
@@ -72,6 +75,8 @@ public class ControllerFactory {
                 return new AccountController(bundle);
             case REGISTER:
                 return new RegisterController(bundle);
+            case FORGOT_PASSWORD:
+                return new ForgotPasswordController(bundle);
             default:
                 return null;
         }
@@ -108,6 +113,10 @@ public class ControllerFactory {
 
         if (controller instanceof RegisterController) {
             return GateKeeper.Destination.REGISTER;
+        }
+
+        if (controller instanceof ForgotPasswordController) {
+            return GateKeeper.Destination.FORGOT_PASSWORD;
         }
 
         return GateKeeper.Destination.EMPTY;

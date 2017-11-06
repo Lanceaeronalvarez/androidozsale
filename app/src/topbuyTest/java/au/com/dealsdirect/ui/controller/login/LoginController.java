@@ -142,9 +142,7 @@ public class LoginController extends BaseToolBarController implements LoginMvpVi
 
     @Override
     public void showForgotPassword() {
-//        getRouter().pushController(RouterTransaction.with(ForgotPasswordController.newInstance())
-//                .pushChangeHandler(new HorizontalChangeHandler())
-//                .popChangeHandler(new HorizontalChangeHandler()));
+        GateKeeper.push(getRouter(), GateKeeper.Destination.FORGOT_PASSWORD);
     }
 
     private void callLoginApi() {
