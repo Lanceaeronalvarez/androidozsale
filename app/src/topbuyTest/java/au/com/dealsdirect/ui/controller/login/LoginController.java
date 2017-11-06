@@ -19,10 +19,10 @@ import java.util.regex.Pattern;
 import javax.inject.Inject;
 
 import au.com.dealsdirect.R;
-import au.com.dealsdirect.ui.base.BaseController;
 import au.com.dealsdirect.ui.base.BaseToolBarController;
 import au.com.dealsdirect.utils.AppConstants;
 import au.com.dealsdirect.utils.BundleBuilder;
+import au.com.dealsdirect.utils.module.GateKeeper;
 import butterknife.BindView;
 import butterknife.OnClick;
 
@@ -137,9 +137,7 @@ public class LoginController extends BaseToolBarController implements LoginMvpVi
 
     @Override
     public void showRegistration() {
-//        getRouter().pushController(RouterTransaction.with(RegisterController.newInstance())
-//                .pushChangeHandler(new HorizontalChangeHandler())
-//                .popChangeHandler(new HorizontalChangeHandler()));
+        GateKeeper.push(getRouter(), GateKeeper.Destination.REGISTER);
     }
 
     @Override

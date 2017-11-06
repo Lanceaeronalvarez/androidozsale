@@ -10,6 +10,7 @@ import au.com.dealsdirect.ui.controller.checkout.checkout.CheckoutController;
 import au.com.dealsdirect.ui.controller.details.DetailsController;
 import au.com.dealsdirect.ui.controller.login.LoginController;
 import au.com.dealsdirect.ui.controller.main.MainController;
+import au.com.dealsdirect.ui.controller.register.RegisterController;
 import au.com.dealsdirect.ui.controller.saleitems.SaleItemsController;
 
 /**
@@ -46,6 +47,8 @@ public class ControllerFactory {
                 return SaleItemsController.newInstance();
             case ACCOUNT:
                 return AccountController.newInstance();
+            case REGISTER:
+                return RegisterController.newInstance();
             default:
                 return null;
         }
@@ -67,6 +70,8 @@ public class ControllerFactory {
                 return new SaleItemsController(bundle);
             case ACCOUNT:
                 return new AccountController(bundle);
+            case REGISTER:
+                return new RegisterController(bundle);
             default:
                 return null;
         }
@@ -99,6 +104,10 @@ public class ControllerFactory {
 
         if (controller instanceof AccountController) {
             return GateKeeper.Destination.ACCOUNT;
+        }
+
+        if (controller instanceof RegisterController) {
+            return GateKeeper.Destination.REGISTER;
         }
 
         return GateKeeper.Destination.EMPTY;
