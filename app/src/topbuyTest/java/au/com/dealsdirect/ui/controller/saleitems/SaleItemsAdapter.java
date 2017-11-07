@@ -1,0 +1,273 @@
+package au.com.dealsdirect.ui.controller.saleitems;
+
+import android.content.Context;
+import android.graphics.Bitmap;
+import android.graphics.Color;
+import android.graphics.Paint;
+import android.graphics.PorterDuff;
+import android.graphics.PorterDuffColorFilter;
+import android.support.v7.widget.CardView;
+import android.support.v7.widget.RecyclerView;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
+import android.widget.TextView;
+
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.DecodeFormat;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
+import com.bumptech.glide.load.resource.bitmap.BitmapEncoder;
+
+import java.util.List;
+
+import au.com.dealsdirect.R;
+import au.com.dealsdirect.data.network.model.saleitems.GetSaleItemsResponse;
+import au.com.dealsdirect.utils.ImageUtils;
+import au.com.dealsdirect.utils.PriceUtils;
+import au.com.dealsdirect.utils.ScreenUtils;
+import butterknife.BindView;
+import butterknife.ButterKnife;
+
+/**
+ * Created by smartwave on 07/11/2017.
+ */
+
+public class SaleItemsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
+
+    private HeaderViewHolder headerViewHolderInstance;
+    private List<GetSaleItemsResponse.Products> mData;
+    private Context mContext;
+    private SaleItemsMvpPresenter mPresenter;
+
+    private int mComputedHeight = 0;
+
+    public SaleItemsAdapter(List<GetSaleItemsResponse.Products> mData, Context mContext, SaleItemsMvpPresenter mPresenter) {
+        this.mData = mData;
+        this.mContext = mContext;
+        this.mPresenter = mPresenter;
+
+        // Dynamic Height Computation
+        int columns = mPresenter.isTablet() ? 4 : 2;
+        int screenWidth = (int) (ScreenUtils.getScreenWidth(mContext) / columns - (15 * ScreenUtils.getScreenDensity(mContext)));
+        mComputedHeight = ImageUtils.getComputedBannerHeight(225, 360, screenWidth);
+    }
+
+    @Override
+    public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+        RecyclerView.ViewHolder vh = null;
+        View v = null;
+        if (viewType == 0) {
+            v = LayoutInflater.from(parent.getContext()).inflate(R.layout.viewholder_sale_item_header, parent, false);
+            vh = headerViewHolderInstance = new HeaderViewHolder(v, mPresenter);
+        } else if (viewType == 1) {
+            v = LayoutInflater.from(parent.getContext()).inflate(R.layout.viewholder_sale_item, parent, false);
+            vh = new ShopItemsViewHolder(v, mComputedHeight);
+        }
+
+        return vh;
+    }
+
+    @Override
+    public void onBindViewHolder(RecyclerView.ViewHolder vh, int position) {
+
+        if (vh instanceof ShopItemsViewHolder) {
+            ShopItemsViewHolder holder = (ShopItemsViewHolder) vh;
+
+            GetSaleItemsResponse.Products saleItem = mData.get(position);
+            String url = mData.get(position).getImages().isEmpty() ? "" : mData.get(position).getImages().get(0);
+
+            holder.productName.setText(saleItem.getProductName());
+
+            String saleItemBrand = saleItem.getProductName();
+
+            if (mData.get(position).getSkus() != null)
+                if (!mData.get(position).getSkus().isEmpty())
+                    if (mData.get(position).getSkus().get(0).getBrandName() != null)
+                        saleItemBrand = mData.get(position).getSkus().get(0).getBrandName();
+
+            if (saleItem.getLabelText() == null) {
+                holder.discountLabel.setVisibility(View.GONE);
+            } else {
+//                AnimationEngine.Builder.animate(holder.discountLabel).fadeIn().setDuration(200).build().start();
+                holder.discountLabel.setVisibility(View.VISIBLE);
+                holder.discountLabel.setText(saleItem.getLabelText());
+            }
+
+            String saleItemPrice = PriceUtils.getPriceStringValue(mData.get(position).getPrice().getValue());
+            String saleItemOldPrice = PriceUtils.getRpStringValue(mData.get(position).getOriginalPrice().getValue());
+
+//        ImageUtils.clearImage(mContext,holder.mSaleItemImage);
+
+            ImageUtils.loadImage(mContext, url, holder.productImage);
+
+            holder.productImage.setTransitionName(mContext.getString(R.string.transition_sale_image_indexed, position));
+
+//            holder.soldout.setVisibility(saleItem.isSoldOut() ? View.VISIBLE : View.GONE);
+
+//            holder..setText(saleItemBrand);
+            holder.productPrice.setText(saleItemPrice);
+            holder.productPreviousPrice.setText(saleItemOldPrice);
+            holder.productPreviousPrice.setPaintFlags(holder.productPreviousPrice.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);
+
+
+//            holder.itemView.setOnClickListener(v -> mPresenter.loadProductDetails(
+//                    holder,
+//                    position,
+//                    mData.get(position).getSeoIdentifier(),
+//                    url,
+//                    mData.get(position).getSkus().isEmpty() ? "" : mData.get(position).getSkus().get(0).getId(),
+//                    mSaleId));
+        }
+
+        if (vh instanceof HeaderViewHolder) {
+            HeaderViewHolder holder = (HeaderViewHolder) vh;
+//            ImageUtils.loadImage(mContext, url, holder.headerImage);
+            Glide.with(mContext).load(R.drawable.bg_sale_item_header)
+                    .asBitmap()
+                    .encoder(new BitmapEncoder(Bitmap.CompressFormat.JPEG, 50))
+                    .diskCacheStrategy(DiskCacheStrategy.SOURCE)
+                    .skipMemoryCache(true)
+                    .format(DecodeFormat.PREFER_RGB_565)
+                    .centerCrop().into(holder.headerImage);
+
+
+//            if (!FilterCategoriesFragment.getLastOptionCategoryName().isEmpty()) {
+//                vh.shopTextView.setText(FilterCategoriesFragment.getLastOptionCategoryName());
+//            } else {
+//                vh.shopTextView.setText(FilterCategoriesFragment.getChosenCategoryName());
+//            }
+        }
+    }
+
+    @Override
+    public int getItemCount() {
+        return mData.size();
+    }
+
+    public void replaceData(List<GetSaleItemsResponse.Products> saleItems) {
+        mData = saleItems;
+        notifyDataSetChanged();
+    }
+
+    public void addData(List<GetSaleItemsResponse.Products> saleItems) {
+        mData.addAll(saleItems);
+        notifyDataSetChanged();
+    }
+
+    @Override
+    public int getItemViewType(int position) {
+        //header
+        if (position == 0) {
+            return 0;
+        } else {
+            return 1;
+        }
+    }
+
+    public static class HeaderViewHolder extends RecyclerView.ViewHolder {
+
+        @BindView(R.id.welcome_header_layout)
+        LinearLayout welcomeHeaderTextLayout;
+        @BindView(R.id.main_page_header_text)
+        TextView shopTextView;
+        @BindView(R.id.header_image)
+        ImageView headerImage;
+        @BindView(R.id.no_search_items_layout)
+        LinearLayout noSearchItemsLayout;
+        @BindView(R.id.header_separator)
+        View headerSeparator;
+        @BindView(R.id.see_other_popular_products_text)
+        TextView seeOtherPopularProductsText;
+        @BindView(R.id.no_items_text)
+        TextView noItemsText;
+
+        SaleItemsMvpPresenter mPresenter;
+
+//        public SimpleFilterCategoryClickObserver getFilterCategoryClickObserver() {
+//            return mFilterCategoryClickObserver;
+//        }
+//
+//        private SimpleFilterCategoryClickObserver mFilterCategoryClickObserver;
+
+        public LinearLayout getNoSearchItemsLayout() {
+            return noSearchItemsLayout;
+        }
+
+        public View getHeaderSeparator() {
+            return headerSeparator;
+        }
+
+        public TextView getSeeOtherPopularProductsText() {
+            return seeOtherPopularProductsText;
+        }
+
+        public TextView getNoItemsText() {
+            return noItemsText;
+        }
+
+        public HeaderViewHolder(View itemView, SaleItemsMvpPresenter presenter) {
+            super(itemView);
+            mPresenter = presenter;
+            ButterKnife.bind(this, itemView);
+            headerImage.setColorFilter(new PorterDuffColorFilter(Color.parseColor("#6c000000"), PorterDuff.Mode.SRC_OVER));
+
+//            mFilterCategoryClickObserver = new SimpleFilterCategoryClickObserver(){
+//                @Override
+//                public void onCategoryChangeUpdateShopUI(String text, int color) {
+//                    shopTextView.setText(text);
+//                    welcomeHeaderTextLayout.setBackgroundColor(color);
+//                }
+//
+//                @Override
+//                public void showShopCategoryText() {
+//                    shopTextView.setVisibility(View.VISIBLE);
+//                    if(shopTextView.getAlpha()!=1f) {
+//                        AnimationEngine.Builder.animate(shopTextView).fadeIn().build().start();
+//                    }
+//                }
+//            };
+
+//            shopTextView.setOnClickListener(v -> {
+//                AnimationEngine.Builder.animate(shopTextView).fadeOut()
+//                        .build().start();
+//
+//                GDebug.log("shoptextview", "clicked ");
+//                mPresenter.clickShopTextView();
+//            });
+
+
+        }
+
+    }
+
+    public static class ShopItemsViewHolder extends RecyclerView.ViewHolder {
+        @BindView(R.id.item_card_view)
+        public CardView cardView;
+        @BindView(R.id.vh_uppercard)
+        public RelativeLayout upperCard;
+        @BindView(R.id.vh_sale_item_discount)
+        public TextView discountLabel;
+        @BindView(R.id.vh_sale_item_price)
+        public TextView productPrice;
+        @BindView(R.id.vh_sale_item_old_price)
+        public TextView productPreviousPrice;
+        @BindView(R.id.vh_sale_item_image)
+        public ImageView productImage;
+        @BindView(R.id.vh_sale_item_name)
+        public TextView productName;
+
+        public ShopItemsViewHolder(View v, int computedHeight) {
+            super(v);
+
+            ButterKnife.bind(this,v);
+
+            RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams) upperCard.getLayoutParams();
+            params.height = computedHeight;
+            upperCard.setLayoutParams(params);
+        }
+
+    }
+}

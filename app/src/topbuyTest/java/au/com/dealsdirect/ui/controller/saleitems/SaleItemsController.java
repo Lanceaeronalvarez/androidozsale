@@ -8,6 +8,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.google.gson.Gson;
+import com.paginate.Paginate;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -21,14 +22,11 @@ import au.com.dealsdirect.data.network.model.saleitems.GetSaleItemsRequest;
 import au.com.dealsdirect.data.network.model.saleitems.GetSaleItemsResponse;
 import au.com.dealsdirect.data.network.model.sorting.SortingResponse;
 import au.com.dealsdirect.ui.base.BaseController;
-import au.com.dealsdirect.ui.controller.saleitems.adapter.SaleItemsAdapter;
 import au.com.dealsdirect.ui.controller.searchfilter.adapter.SearchChipModel;
 import au.com.dealsdirect.utils.BundleBuilder;
 import au.com.dealsdirect.utils.BundleKeys;
-import au.com.dealsdirect.utils.JsonUtils;
+import au.com.dealsdirect.utils.PaginateUtils;
 import butterknife.BindView;
-
-import static au.com.dealsdirect.ui.controller.searchfilter.SearchFilterController.PRICE_FACETFILTER_NAME;
 
 /**
  * Created by smartwave on 02/11/2017.
@@ -42,9 +40,21 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
     @BindView(R.id.sale_items_recyclerview)
     RecyclerView mSaleItemsRecyclerView;
 
-    private int page = 0;
+    SaleItemsAdapter mAdapter;
+    CustomGridLayoutManager mLayoutManager;
 
-    public static SaleItemsController newInstance(){
+    List<SearchChipModel> mChipFilters = new ArrayList<>();
+
+    private List<GetSaleItemsResponse.Products> mSaleItems = new ArrayList<>();
+
+    private Paginate mPaginateManager;
+
+    private Paginate.Callbacks mPaginateCallbacks;
+    private int page = 0;
+    private boolean loadingInProgress = false;
+    private boolean hasLoadedAllItems = false;
+
+    public static SaleItemsController newInstance() {
         return new SaleItemsController(
                 new BundleBuilder(new Bundle())
                         .build());
@@ -87,7 +97,48 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
 
     @Override
     protected void setUp(View view) {
-        mPresenter.loadSaleItems(createSaleItemsRequest("","",0,new ArrayList<>()));
+
+        mPaginateCallbacks = new Paginate.Callbacks() {
+            @Override
+            public void onLoadMore() {
+                // Load next page of data (e.g. network or database)
+                page++;
+                refresh();
+
+            }
+
+            @Override
+            public boolean isLoading() {
+                // Indicate whether new page loading is in progress or not
+                return loadingInProgress;
+            }
+
+            @Override
+            public boolean hasLoadedAllItems() {
+                // Indicate whether all data (pages) are loaded or not
+                return hasLoadedAllItems;
+            }
+        };
+
+        mAdapter = new SaleItemsAdapter(mSaleItems, mActivity, mPresenter);
+        if (mPresenter.isTablet()) {
+            mSaleItemsRecyclerView.setLayoutManager(mLayoutManager = new CustomGridLayoutManager(mActivity, 4));
+        } else {
+            mSaleItemsRecyclerView.setLayoutManager(mLayoutManager = new CustomGridLayoutManager(mActivity, 2));
+        }
+
+        HeaderSpanSizeLookup headerSpanSizeLookup = new HeaderSpanSizeLookup(mAdapter, mLayoutManager);
+        mLayoutManager.setSpanSizeLookup(headerSpanSizeLookup);
+
+        mSaleItemsRecyclerView.setAdapter(mAdapter);
+
+        if (mSaleItems.isEmpty()) {
+            mPresenter.loadSaleItems(createSaleItemsRequest("", "", 0, mChipFilters));
+        } else if (!mSaleItems.isEmpty()) {
+            if (mSaleItems.size() >= PaginateUtils.LOADING_TRIGGER_THRESHOLD) {
+                mPaginateManager = PaginateUtils.init(mSaleItemsRecyclerView, mPaginateCallbacks);
+            }
+        }
     }
 
     @Override
@@ -97,12 +148,37 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
 
     @Override
     public void showSaleItems(GetSaleItemsResponse getSaleItemsResponse, boolean forFacetCorrection) {
+        List<GetSaleItemsResponse.Products> items = getSaleItemsResponse.products;
+
+        if (items.size() == 0 && page != 0) {
+            hasLoadedAllItems = true;
+            mPaginateManager.setHasMoreDataToLoad(false);
+            page = 0;
+        }else{
+            if (page == 0) {
+                if (mPaginateManager != null) {
+                    mPaginateManager.unbind();
+                }
+                mAdapter.replaceData(items);
+
+                mPaginateManager = PaginateUtils.init(mSaleItemsRecyclerView, mPaginateCallbacks);
+                mSaleItemsRecyclerView.scrollToPosition(0);
+                if (items.size() <= PaginateUtils.LOADING_TRIGGER_THRESHOLD) {
+                    hasLoadedAllItems = false;
+                    mPaginateManager.setHasMoreDataToLoad(false);
+                }
+            } else {
+                mAdapter.addData(items);
+            }
+        }
 
     }
 
     @Override
     public void refresh() {
+        loadingInProgress = true;
 
+        mPresenter.loadSaleItems(createSaleItemsRequest("", "", page, mChipFilters));
     }
 
     @Override
@@ -112,7 +188,9 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
 
     @Override
     public void unbindPaginate() {
-
+        if (mPaginateManager != null) {
+            mPaginateManager.unbind();
+        }
     }
 
     @Override

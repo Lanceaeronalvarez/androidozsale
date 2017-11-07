@@ -53,7 +53,7 @@
             android:layout_marginLeft="15dp"
             android:layout_marginTop="15dp"
             android:background="@drawable/bg_sale_items_logo"
-            android:src="@drawable/ic_dd_logo"
+            android:src="@drawable/ic_app_logo"
             android:clickable="true"
             android:padding="10dp"
             android:elevation="3dp"

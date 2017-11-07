@@ -3,4 +3,12 @@
 
     <dimen name="order_card_view_height">450dp</dimen>
 
+    <dimen name="header_height">320dp</dimen>
+    <dimen name="thumbnail_height">770dp</dimen>
+    <dimen name="card_width">700dp</dimen>
+    <integer name="card_width_int">700</integer>
+    <integer name="scroll_by">60</integer>
+    <dimen name="cartview_translation">65dp</dimen>
+    <dimen name="cartview_x_adjustment">2.5dp</dimen>
+    <dimen name="cartview_y_adjustment">5dp</dimen>
 </resources>

@@ -2,5 +2,7 @@
 <resources>
     <string name="app_name">topbuy testtest</string>
     <string name="exit_app_name">TopBuy</string>
+    <string name="shop_image_header_text">shop</string>
+    <string name="sorry_default_text">sorry, no product matches with </string>
     <!--<string name="exit_app_name">TopBuy</string>-->
 </resources>

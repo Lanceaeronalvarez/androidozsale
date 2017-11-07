@@ -1,4 +1,4 @@
-package au.com.dealsdirect.ui.controller.saleitems.adapter;
+package au.com.dealsdirect.ui.controller.saleitems;
 
 import android.content.Context;
 import android.graphics.Paint;
@@ -15,7 +15,6 @@ import java.util.List;
 
 import au.com.dealsdirect.R;
 import au.com.dealsdirect.data.network.model.saleitems.GetSaleItemsResponse;
-import au.com.dealsdirect.ui.controller.saleitems.SaleItemsMvpPresenter;
 import au.com.dealsdirect.utils.ImageUtils;
 import au.com.dealsdirect.utils.PriceUtils;
 import au.com.dealsdirect.utils.ScreenUtils;

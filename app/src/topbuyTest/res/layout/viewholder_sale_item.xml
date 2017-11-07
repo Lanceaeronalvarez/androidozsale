@@ -1,0 +1,111 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.v7.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:card_view="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/item_card_view"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginLeft="5dp"
+    android:layout_marginRight="5dp"
+    android:layout_marginTop="10dp"
+    card_view:cardCornerRadius="3dp"
+    card_view:cardElevation="3dp"
+    card_view:cardUseCompatPadding="true">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <RelativeLayout
+            android:id="@+id/vh_uppercard"
+            android:layout_width="match_parent"
+            android:layout_height="260dp"
+            android:clipChildren="false"
+            android:clipToPadding="false">
+
+            <ImageView
+                android:id="@+id/vh_sale_item_image"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_centerHorizontal="true"
+                android:adjustViewBounds="true"
+                android:scaleType="fitCenter" />
+
+        </RelativeLayout>
+
+        <ImageView
+            android:id="@+id/card_separator"
+            android:layout_width="match_parent"
+            android:layout_height="1px"
+            android:layout_below="@id/vh_uppercard"
+            android:layout_gravity="bottom"
+            android:background="#23000000" />
+
+        <LinearLayout
+            android:id="@+id/vh_lowercard"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/card_separator"
+            android:layout_margin="5dp">
+
+            <TextView
+                android:id="@+id/vh_sale_item_name"
+                android:layout_width="0px"
+                android:layout_height="wrap_content"
+                android:layout_gravity="left"
+                android:layout_weight="3"
+                android:ellipsize="end"
+                android:maxLines="2"
+                android:textColor="@color/gray_hint_text"
+                android:textSize="@dimen/text_size_medium"
+                tools:text="Portable Dash" />
+
+            <LinearLayout
+                android:layout_width="0px"
+                android:layout_height="wrap_content"
+                android:layout_weight="3"
+                android:orientation="vertical">
+
+                <TextView
+                    android:id="@+id/vh_sale_item_price"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="right"
+                    android:maxLines="1"
+                    android:textSize="@dimen/text_size_small"
+                    tools:text="$8123.0" />
+
+                <TextView
+                    android:id="@+id/vh_sale_item_old_price"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="right"
+                    android:maxLines="1"
+                    android:text="$10"
+                    android:textColor="@color/gray_hint_text"
+                    android:textSize="@dimen/text_size_small" />
+
+            </LinearLayout>
+        </LinearLayout>
+    </RelativeLayout>
+
+    <TextView
+        android:id="@+id/vh_sale_item_discount"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="15dp"
+        android:background="@drawable/bg_sale_item_discount"
+        android:paddingBottom="8dp"
+        android:paddingLeft="10dp"
+        android:paddingRight="10dp"
+        android:paddingTop="8dp"
+        android:textColor="@android:color/white"
+        android:textSize="12sp"
+        android:visibility="visible" />
+
+
+</android.support.v7.widget.CardView>
+
+
+
+

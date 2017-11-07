@@ -5,4 +5,18 @@
     <dimen name="order_card_view_height">450dp</dimen>
     <dimen name ="splash_logo_size"> 200dp </dimen>
 
+
+    <dimen name="header_height">200dp</dimen>
+    <dimen name="thumbnail_height">470dp</dimen>
+    <dimen name="card_width">300dp</dimen>
+    <integer name="card_width_int">300</integer>
+    <integer name="scroll_by">60</integer>
+    <integer name="shop_page_item_price_layout_weight">2</integer>
+
+    <dimen name="bottomsheet_height"> 300dp</dimen>
+
+    <dimen name="cartview_translation">65dp</dimen>
+    <dimen name="cartview_x_adjustment">2.5dp</dimen>
+    <dimen name="cartview_y_adjustment">5dp</dimen>
+
 </resources>

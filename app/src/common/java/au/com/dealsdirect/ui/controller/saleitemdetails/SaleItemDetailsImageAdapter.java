@@ -57,7 +57,7 @@ public class SaleItemDetailsImageAdapter extends RecyclerView.Adapter<RecyclerVi
 
     public static class ViewHolder extends RecyclerView.ViewHolder {
 
-        @BindView(R.id.productImage)
+        @BindView(R.id.vh_sale_item_image)
         ImageView image;
 
         ViewHolder(View view) {
