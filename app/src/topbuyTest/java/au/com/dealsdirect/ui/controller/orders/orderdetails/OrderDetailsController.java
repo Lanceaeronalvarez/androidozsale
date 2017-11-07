@@ -7,8 +7,6 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
-import android.widget.TextView;
 
 import com.google.gson.Gson;
 
@@ -17,29 +15,25 @@ import javax.inject.Inject;
 import au.com.dealsdirect.R;
 import au.com.dealsdirect.data.network.model.orders.GetOrderPaymentDetails;
 import au.com.dealsdirect.data.network.model.orders.GetPaymentsList;
-import au.com.dealsdirect.ui.base.BaseController;
+import au.com.dealsdirect.ui.base.BaseToolBarController;
+import au.com.dealsdirect.ui.controller.orders.orders.orderdetails.OrderDetailsMvpPresenter;
+import au.com.dealsdirect.ui.controller.orders.orders.orderdetails.OrderDetailsMvpView;
+import au.com.dealsdirect.ui.controller.orders.orders.orderdetails.OrderDetailsRecyclerViewAdapter;
 import au.com.dealsdirect.utils.BundleBuilder;
 import butterknife.BindView;
-import butterknife.OnClick;
 
 /**
- *  Created by smartwave on 22/06/2017.
+ * Created by smartwave on 22/06/2017.
  */
 
-public class OrderDetailsController extends BaseController implements OrderDetailsMvpView {
+public class OrderDetailsController extends BaseToolBarController implements OrderDetailsMvpView {
 
-    private static final String PAYMENT_ITEM="PAYMENT_ITEM";
-    private static final String PAYMENT_REF_NO="PAYMENT_REF_NO";
-    private static final String SELECTED_ITEM="SELECTED_ITEM";
+    private static final String PAYMENT_ITEM = "PAYMENT_ITEM";
+    private static final String PAYMENT_REF_NO = "PAYMENT_REF_NO";
+    private static final String SELECTED_ITEM = "SELECTED_ITEM";
 
     @Inject
     OrderDetailsMvpPresenter<OrderDetailsMvpView> mPresenter;
-
-
-    @BindView(R.id.partial_toolbar_arrow_title)
-    TextView mOrderDetailsToolarTitle;
-    @BindView(R.id.partial_toolbar_filter_view)
-    ImageView mOrderDetailsRightOption;
 
     @BindView(R.id.order_details_recyclerview)
     RecyclerView mRecyclerView;
@@ -50,42 +44,41 @@ public class OrderDetailsController extends BaseController implements OrderDetai
     int mSelectedPosition;
     String mPaymentReferenceNo;
 
-    public OrderDetailsController(String paymentItemString, String paymentRefNo, int position){
+    public OrderDetailsController(String paymentItemString, String paymentRefNo, int position) {
         this(new BundleBuilder(new Bundle())
-                .putString(PAYMENT_ITEM,paymentItemString)
-                .putString(PAYMENT_REF_NO,paymentRefNo)
-                .putInt(SELECTED_ITEM,position)
+                .putString(PAYMENT_ITEM, paymentItemString)
+                .putString(PAYMENT_REF_NO, paymentRefNo)
+                .putInt(SELECTED_ITEM, position)
                 .build());
     }
 
 
-
     public OrderDetailsController(Bundle args) {
         super(args);
-        mOrderItem = new Gson().fromJson(args.getString(PAYMENT_ITEM,""),GetPaymentsList.ResponseValue.PaymentItem.class);
-        mSelectedPosition = args.getInt(SELECTED_ITEM,0);
-        mPaymentReferenceNo = args.getString(PAYMENT_REF_NO,"");
+        mOrderItem = new Gson().fromJson(args.getString(PAYMENT_ITEM, ""), GetPaymentsList.ResponseValue.PaymentItem.class);
+        mSelectedPosition = args.getInt(SELECTED_ITEM, 0);
+        mPaymentReferenceNo = args.getString(PAYMENT_REF_NO, "");
     }
 
     @Override
     protected View inflateView(@NonNull LayoutInflater inflater, @NonNull ViewGroup container) {
-        View view = inflater.inflate(R.layout.controller_orders_details, container, false);
+        View view = super.inflateView(inflater, container);
+
+        fillContent(inflater.inflate(R.layout.controller_orders_details, container, false));
         getControllerComponent().inject(this);
         mPresenter.onAttach(this);
-
         return view;
     }
 
     @Override
     protected void onViewBound(@NonNull View view) {
         super.onViewBound(view);
+        mToolbarTitle.setText(R.string.my_orders);
         setUp(view);
     }
 
     @Override
     protected void setUp(View view) {
-        mOrderDetailsToolarTitle.setText("Order #: " + mPaymentReferenceNo);
-        mOrderDetailsRightOption.setImageDrawable(null);
 
         GetOrderPaymentDetails.RequestValues requestValues =
                 new GetOrderPaymentDetails.RequestValues(mPaymentReferenceNo);
@@ -116,8 +109,4 @@ public class OrderDetailsController extends BaseController implements OrderDetai
         }
     }
 
-    @OnClick(R.id.partial_toolbar_arrow_view)
-    public void onBackClick() {
-        mActivity.onBackPressed();
-    }
 }

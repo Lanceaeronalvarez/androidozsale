@@ -2,18 +2,15 @@ package au.com.dealsdirect.ui.controller.orders.orders;
 
 import android.support.annotation.NonNull;
 import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
 import android.widget.RelativeLayout;
-import android.widget.TextView;
 
 import com.bluelinelabs.conductor.RouterTransaction;
 import com.bluelinelabs.conductor.changehandler.HorizontalChangeHandler;
 import com.google.gson.Gson;
+import com.lsjwzh.widget.recyclerviewpager.RecyclerViewPager;
 
 import java.util.ArrayList;
 
@@ -21,13 +18,13 @@ import javax.inject.Inject;
 
 import au.com.dealsdirect.R;
 import au.com.dealsdirect.data.network.model.orders.GetPaymentsList;
-import au.com.dealsdirect.ui.base.BasePullToRefreshController;
 import au.com.dealsdirect.ui.base.BaseToolBarController;
 import au.com.dealsdirect.ui.controller.orders.orderdetails.OrderDetailsController;
+import au.com.dealsdirect.ui.controller.orders.orders.orders.OrdersMvpPresenter;
+import au.com.dealsdirect.ui.controller.orders.orders.orders.OrdersMvpView;
+import au.com.dealsdirect.ui.controller.orders.orders.orders.OrdersRecyclerViewAdapter;
 import au.com.dealsdirect.ui.custom.RecyclerOnTouchListener;
-import au.com.dealsdirect.ui.custom.SimpleDividerItemDecoration;
 import butterknife.BindView;
-import butterknife.OnClick;
 
 /**
  * Created by smartwave on 22/06/2017.
@@ -39,7 +36,7 @@ public class OrdersController extends BaseToolBarController implements OrdersMvp
     OrdersMvpPresenter<OrdersMvpView> mPresenter;
 
     @BindView(R.id.orders_recycler_view)
-    RecyclerView mRecyclerView;
+    RecyclerViewPager mRecyclerView;
     @BindView(R.id.no_orders_layout)
     RelativeLayout mPlaceholderLayout;
 
@@ -51,7 +48,6 @@ public class OrdersController extends BaseToolBarController implements OrdersMvp
         View view = super.inflateView(inflater, container);
 
         fillContent(inflater.inflate(R.layout.controller_orders, container, false));
-
         getControllerComponent().inject(this);
         mPresenter.onAttach(this);
         return view;
@@ -66,17 +62,15 @@ public class OrdersController extends BaseToolBarController implements OrdersMvp
     @Override
     protected void onViewBound(@NonNull View view) {
         super.onViewBound(view);
-        mToolbarTitle.setText("my orders");
-
+        mToolbarTitle.setText(R.string.my_orders);
         setUp(view);
     }
 
     @Override
     protected void setUp(View view) {
 
-        mRecyclerView.setLayoutManager(new LinearLayoutManager(mActivity, LinearLayoutManager.VERTICAL, false));
+        mRecyclerView.setLayoutManager(new LinearLayoutManager(mActivity, LinearLayoutManager.HORIZONTAL, false));
         mRecyclerView.addOnItemTouchListener(new RecyclerOnTouchListener(mActivity, (v, position) -> showOrderDetails(position)));
-        mRecyclerView.addItemDecoration(new SimpleDividerItemDecoration(mActivity));
         mPresenter.loadOrders();
     }
 
