@@ -2,5 +2,6 @@
 <resources>
 
     <dimen name="order_card_view_height">520dp</dimen>
+    <dimen name ="splash_logo_size"> 450dp </dimen>
 
 </resources>

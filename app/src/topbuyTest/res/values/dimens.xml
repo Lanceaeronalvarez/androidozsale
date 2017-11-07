@@ -3,5 +3,6 @@
 
     <dimen name="corner_radius">25dp</dimen>
     <dimen name="order_card_view_height">450dp</dimen>
+    <dimen name ="splash_logo_size"> 200dp </dimen>
 
 </resources>
