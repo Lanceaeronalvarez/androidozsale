@@ -9,6 +9,7 @@ import android.view.ViewGroup;
 import android.widget.RelativeLayout;
 
 import com.bluelinelabs.conductor.RouterTransaction;
+import com.bluelinelabs.conductor.changehandler.HorizontalChangeHandler;
 import com.bluelinelabs.conductor.changehandler.VerticalChangeHandler;
 import com.lsjwzh.widget.recyclerviewpager.RecyclerViewPager;
 
@@ -28,8 +29,10 @@ import au.com.dealsdirect.ui.controller.returns.currentreturns.adapter.CurrentRe
 import au.com.dealsdirect.ui.controller.returns.currentreturns.listener.CurrentReturnClickListener;
 import au.com.dealsdirect.ui.controller.returns.currentreturns.viewholder.CurrentReturnViewHolder;
 import au.com.dealsdirect.ui.controller.returns.returndetails.ReturnDetailsController;
+import au.com.dealsdirect.ui.controller.returns.returnorders.ReturnOrdersController;
 import au.com.dealsdirect.utils.BundleBuilder;
 import butterknife.BindView;
+import butterknife.OnClick;
 
 /*
  * Created by dp on 05/06/2017.
@@ -52,7 +55,6 @@ public class CurrentReturnsController extends BaseToolBarController
 
     @BindView(R.id.no_returns_placeholder)
     RelativeLayout mPlaceholderLayout;
-
 
     @Inject
     CurrentReturnsMvpPresenter<CurrentReturnsMvpView> mPresenter;
@@ -90,7 +92,7 @@ public class CurrentReturnsController extends BaseToolBarController
     public void onViewBound(@NonNull View view) {
         super.onViewBound(view);
         setUp(view);
-        mToolbarTitle.setText("my returns");
+        mToolbarTitle.setText(R.string.my_returns);
 
         mCurrentReturnsListener = this;
 
@@ -204,5 +206,12 @@ public class CurrentReturnsController extends BaseToolBarController
 
     public GetReturnDetailRequest createReturnDetailsRequest(String itemID) {
         return new GetReturnDetailRequest(itemID);
+    }
+
+    @OnClick(R.id.controller_current_returns_create_new_button)
+    void onAddNewReturnClick() {
+        getRouter().pushController(RouterTransaction.with(ReturnOrdersController.newInstance())
+                .pushChangeHandler(new HorizontalChangeHandler())
+                .popChangeHandler(new HorizontalChangeHandler()));
     }
 }

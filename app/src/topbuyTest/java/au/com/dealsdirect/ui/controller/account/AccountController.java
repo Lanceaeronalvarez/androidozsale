@@ -162,6 +162,7 @@ public class AccountController extends BaseController implements AccountMvpView 
     @Override
     public void showMyReturns() {
         getRouter().pushController(RouterTransaction.with(CurrentReturnsController.newInstance())
+                .tag(CurrentReturnsController.TAG)
                 .pushChangeHandler(new VerticalChangeHandler())
                 .popChangeHandler(new VerticalChangeHandler()));
     }
