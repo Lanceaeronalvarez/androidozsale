@@ -20,9 +20,6 @@ import au.com.dealsdirect.R;
 import au.com.dealsdirect.data.network.model.orders.GetPaymentsList;
 import au.com.dealsdirect.ui.base.BaseToolBarController;
 import au.com.dealsdirect.ui.controller.orders.orderdetails.OrderDetailsController;
-import au.com.dealsdirect.ui.controller.orders.orders.orders.OrdersMvpPresenter;
-import au.com.dealsdirect.ui.controller.orders.orders.orders.OrdersMvpView;
-import au.com.dealsdirect.ui.controller.orders.orders.orders.OrdersRecyclerViewAdapter;
 import au.com.dealsdirect.ui.custom.RecyclerOnTouchListener;
 import butterknife.BindView;
 

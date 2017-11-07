@@ -1,4 +1,4 @@
-package au.com.dealsdirect.ui.controller.orders.orders.orders;
+package au.com.dealsdirect.ui.controller.orders.orders;
 
 import au.com.dealsdirect.ui.base.MvpPresenter;
 import au.com.dealsdirect.ui.base.MvpView;

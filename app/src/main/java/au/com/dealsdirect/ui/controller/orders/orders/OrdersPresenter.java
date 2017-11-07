@@ -1,4 +1,4 @@
-package au.com.dealsdirect.ui.controller.orders.orders.orders;
+package au.com.dealsdirect.ui.controller.orders.orders;
 
 import com.google.gson.Gson;
 

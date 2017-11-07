@@ -1,4 +1,4 @@
-package au.com.dealsdirect.ui.controller.orders.orders.orders;
+package au.com.dealsdirect.ui.controller.orders.orders;
 
 import android.content.Context;
 import android.support.v7.widget.LinearLayoutManager;
