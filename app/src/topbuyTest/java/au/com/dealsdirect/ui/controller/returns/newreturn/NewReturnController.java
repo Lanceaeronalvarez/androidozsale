@@ -7,6 +7,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.EditText;
 
 import java.util.ArrayList;
@@ -48,6 +49,9 @@ public class NewReturnController extends BaseToolBarController implements NewRet
     @BindView(R.id.new_returns_set_detail_recyclerview)
     RecyclerView mNewReturnOrderRecyclerView;
 
+    @BindView(R.id.controller_new_return_create_button)
+    Button mNewReturnSubmitButton;
+
     @Inject
     NewReturnMvpPresenter<NewReturnMvpView> mPresenter;
 
@@ -69,10 +73,9 @@ public class NewReturnController extends BaseToolBarController implements NewRet
     @NonNull
     @Override
     protected View inflateView(@NonNull LayoutInflater inflater, @NonNull ViewGroup container) {
-        View view = inflater.inflate(R.layout.controller_new_return, container, false);
-
+        View view = super.inflateView(inflater, container);
+        fillContent(inflater.inflate(R.layout.controller_new_return, container, false));
         getControllerComponent().inject(this);
-
         mPresenter.onAttach(this);
 
         return view;
@@ -131,6 +134,7 @@ public class NewReturnController extends BaseToolBarController implements NewRet
             }
         };
 
+        mNewReturnSubmitButton.setOnClickListener(onClickListener);
     }
 
     @Override
