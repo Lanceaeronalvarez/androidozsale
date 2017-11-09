@@ -27,10 +27,7 @@ import au.com.dealsdirect.data.network.model.contactreply.ReplyContact;
 import au.com.dealsdirect.data.network.model.contactreply.ReplyContactRequest;
 import au.com.dealsdirect.data.network.model.createcontact.CreateContactRequest;
 import au.com.dealsdirect.data.network.model.createcontact.CreateContactResponse;
-import au.com.dealsdirect.ui.base.BaseController;
-import au.com.dealsdirect.ui.controller.account.AccountController;
-import au.com.dealsdirect.ui.controller.contact.addcontact.selectorder.ContactSelectOrderController;
-import au.com.dealsdirect.ui.controller.contact.addcontact.selectsubject.ContactSelectSubjectController;
+import au.com.dealsdirect.ui.base.BaseToolBarController;
 import au.com.dealsdirect.ui.custom.CustomAlertDialog;
 import au.com.dealsdirect.ui.custom.transitions.ReverseVerticalChangeHandler;
 import au.com.dealsdirect.utils.BundleBuilder;
@@ -43,7 +40,7 @@ import butterknife.OnFocusChange;
  * dp Created by Admin on 6/20/17.
  */
 
-public class AddContactController extends BaseController implements AddContactMvpView {
+public class AddContactController extends BaseToolBarController implements AddContactMvpView {
 
     public static final String TAG = "AddContactController";
 
@@ -153,6 +150,7 @@ public class AddContactController extends BaseController implements AddContactMv
     @Override
     public void onViewBound(@NonNull View view) {
         super.onViewBound(view);
+        mToolbarTitle.setText("new message");
         setUp(view);
     }
 
