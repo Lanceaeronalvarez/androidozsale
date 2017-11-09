@@ -21,6 +21,7 @@ import javax.inject.Inject;
 import au.com.dealsdirect.R;
 import au.com.dealsdirect.data.auth.AuthHandler;
 import au.com.dealsdirect.ui.base.BaseController;
+import au.com.dealsdirect.ui.controller.contact.viewcontacts.ViewContactsController;
 import au.com.dealsdirect.ui.controller.orders.orders.OrdersController;
 import au.com.dealsdirect.ui.controller.returns.currentreturns.CurrentReturnsController;
 import au.com.dealsdirect.ui.custom.CustomAlertDialog;
@@ -179,7 +180,10 @@ public class AccountController extends BaseController implements AccountMvpView 
 
     @Override
     public void showContactUs() {
-
+        getRouter().pushController(RouterTransaction.with(ViewContactsController.newInstance())
+                .tag(CurrentReturnsController.TAG)
+                .pushChangeHandler(new VerticalChangeHandler())
+                .popChangeHandler(new VerticalChangeHandler()));
     }
 
     @Override

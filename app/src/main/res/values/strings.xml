@@ -336,4 +336,5 @@
     <string name="password_does_not_match">Password does not match</string>
     <string name="my_returns">my returns</string>
     <string name="my_orders">my orders</string>
+    <string name="reply">reply</string>
 </resources>
