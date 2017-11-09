@@ -108,7 +108,7 @@ public class CurrentReturnsController extends BaseToolBarController
 
             mCurrentReturnsRecyclerView.setAdapter(mCurrentReturnsAdapter);
             mCurrentReturnsRecyclerView.setVisibility(View.VISIBLE);
-
+            mPlaceholderLayout.setVisibility(View.GONE);
         }
     }
 
