@@ -11,6 +11,7 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:layout_marginTop="@dimen/activity_horizontal_margin"
         android:orientation="vertical">
 
         <LinearLayout
@@ -27,7 +28,7 @@
                 android:layout_height="wrap_content"
                 android:text="select subject"
                 android:textColor="@color/gray_field_text"
-                android:textSize="@dimen/text_size_medium"/>
+                android:textSize="@dimen/text_size_large"/>
 
             <android.support.design.widget.TextInputLayout
                 android:layout_width="match_parent"
@@ -42,9 +43,9 @@
                     android:layout_height="wrap_content"
                     android:background="@drawable/bg_edit_text_rounded"
                     android:maxLines="1"
-                    android:padding="15dp"
+                    android:padding="20dp"
                     android:textColor="#919191"
-                    android:textSize="@dimen/text_size_medium"/>
+                    android:textSize="@dimen/text_size_large"/>
 
             </android.support.design.widget.TextInputLayout>
         </LinearLayout>
@@ -63,7 +64,7 @@
                 android:layout_marginTop="@dimen/activity_horizontal_margin"
                 android:text="select order"
                 android:textColor="@color/gray_field_text"
-                android:textSize="@dimen/text_size_medium"/>
+                android:textSize="@dimen/text_size_large"/>
 
             <android.support.design.widget.TextInputLayout
                 android:layout_width="match_parent"
@@ -78,9 +79,9 @@
                     android:layout_height="wrap_content"
                     android:background="@drawable/bg_edit_text_rounded"
                     android:maxLines="1"
-                    android:padding="15dp"
+                    android:padding="20dp"
                     android:textColor="#919191"
-                    android:textSize="@dimen/text_size_medium"/>
+                    android:textSize="@dimen/text_size_large"/>
 
             </android.support.design.widget.TextInputLayout>
 
@@ -238,7 +239,7 @@
                     android:layout_marginTop="@dimen/activity_horizontal_margin"
                     android:text="reason"
                     android:textColor="@color/gray_field_text"
-                    android:textSize="@dimen/text_size_medium"/>
+                    android:textSize="@dimen/text_size_large"/>
 
                 <android.support.design.widget.TextInputLayout
                     android:layout_width="match_parent"
@@ -254,17 +255,15 @@
                         android:background="@drawable/bg_edit_text_rounded"
                         android:hint="@string/write_us_a_message"
                         android:maxLines="1"
-                        android:padding="15dp"
+                        android:padding="20dp"
                         android:textColor="#919191"
-                        android:textSize="@dimen/text_size_medium"/>
+                        android:textSize="@dimen/text_size_large"/>
 
                 </android.support.design.widget.TextInputLayout>
 
 
             </LinearLayout>
-
         </LinearLayout>
-
     </LinearLayout>
 
 
@@ -274,7 +273,7 @@
         android:layout_width="match_parent"
         android:layout_height="@dimen/default_button_height"
         android:layout_gravity="bottom"
-        android:text="@string/reply"
+        android:text="submit"
         android:layout_alignParentBottom="true"
         android:textSize="@dimen/text_size_large"/>
 

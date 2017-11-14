@@ -3,6 +3,7 @@
           android:exitFadeDuration="@android:integer/config_shortAnimTime">
     <item>
         <shape android:shape="rectangle">
+            <corners android:topLeftRadius="25dp" android:bottomLeftRadius="25dp"/>
             <stroke android:width="1.5dp" android:color="#FFE7E7E7"/>
             <solid android:color="#FFE7E7E7"></solid>
         </shape>

@@ -218,11 +218,11 @@ public class AddContactController extends BaseToolBarController implements AddCo
 
                 if (replyContactRequest.comments.isEmpty()) {
 
-                    //                CustomAlertDialog.showCustomAlertDialog(
-                    //                        mBaseActivity,
-                    //                        CustomAlertDialog.CustomDialogIconState.NEGATIVE,
-                    //                        mBaseActivity.getString(R.string.please_input_message)
-                    //                );
+                    CustomAlertDialog.showCustomAlertDialog(
+                            mActivity,
+                            CustomAlertDialog.CustomDialogIconState.NEGATIVE,
+                            "please input message"
+                    );
 
                 } else {
                     mPresenter.replyContact(replyContactRequest);

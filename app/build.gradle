@@ -190,6 +190,10 @@ dependencies {
     // Crystal Range Seekbar
     compile "com.crystal:crystalrangeseekbar:$rootProject.crystalRangeSeekbarVersion"
 
+
+    //viewpager indicator
+    compile 'me.relex:circleindicator:1.2.2@aar'
+
     // dependencies for local unit tests
     testCompile "junit:junit:$rootProject.ext.junitVersion"
     testCompile "org.mockito:mockito-core:$rootProject.mockitoVersion"
