@@ -11,4 +11,6 @@
     <dimen name="cartview_translation">65dp</dimen>
     <dimen name="cartview_x_adjustment">2.5dp</dimen>
     <dimen name="cartview_y_adjustment">5dp</dimen>
+    <dimen name="tutorial_image_size">550dp</dimen>
+
 </resources>
