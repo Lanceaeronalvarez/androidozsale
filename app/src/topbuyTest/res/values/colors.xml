@@ -22,4 +22,13 @@
     <color name="bg_edit_text_ripple">#FFFFFF</color>
     <color name="bg_edit_text_default">#ECECEC</color>
     <color name="bg_edit_text_focused">@color/colorAccent</color>
+
+    <color name="teal">#00B1B5</color>
+    <color name="splash_yellow">#F8C100</color>
+    <color name="red">#FF785F</color>
+    <color name="blue">#17B2E7</color>
+
+    <color name="darkteal">#01a4a7</color>
+    <color name="darkyellow">#e1af02</color>
+    <color name="darkred">#e76a54</color>
 </resources>
