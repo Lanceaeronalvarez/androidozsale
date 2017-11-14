@@ -11,8 +11,13 @@ import android.view.Window;
 import android.view.WindowManager;
 import android.widget.ImageView;
 
+import com.bluelinelabs.conductor.RouterTransaction;
+import com.bluelinelabs.conductor.changehandler.VerticalChangeHandler;
+
 import au.com.dealsdirect.R;
 import au.com.dealsdirect.ui.base.BaseController;
+import au.com.dealsdirect.ui.controller.returns.currentreturns.CurrentReturnsController;
+import au.com.dealsdirect.ui.controller.tutorial.TutorialController;
 import au.com.dealsdirect.ui.main.MainActivity;
 import au.com.dealsdirect.utils.AppLogger;
 import au.com.dealsdirect.utils.BundleBuilder;
@@ -60,7 +65,10 @@ public class SplashScreenController extends BaseController {
 
         new Handler().postDelayed(() -> {
             AppLogger.d("splash" + "popcontroller");
-            if (getActivity() != null) ((MainActivity) getActivity()).splashShownCallback();
+            getRouter().pushController(RouterTransaction.with(TutorialController.newInstance())
+                    .tag(CurrentReturnsController.TAG)
+                    .pushChangeHandler(new VerticalChangeHandler())
+                    .popChangeHandler(new VerticalChangeHandler()));
         }, 3000);
     }
 }

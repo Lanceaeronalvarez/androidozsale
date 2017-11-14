@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:padding="@dimen/screen_padding"
+    android:background="@color/activered"
+    android:id="@+id/controller_tutorial_child_container"
+    tools:ignore="MissingPrefix">
+
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginRight="40dp" >
+
+        <TextView
+            android:id="@+id/splash_header_text"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginRight="20dp"
+            android:text="click shop to browse categories"
+            android:textColor="#FFFFFF"
+            fontPath="@string/font_app_medium"
+            android:textSize="@dimen/text_size_xxxxlarge" />
+
+        <View
+            android:id="@+id/header_underline"
+            android:layout_below="@+id/splash_header_text"
+            android:layout_width="43dp"
+            android:layout_height="2dp"
+            android:layout_marginTop="20dp"
+            android:background="#FFFFFF"/>
+
+
+    </RelativeLayout>
+
+
+    <ImageView
+        android:id="@+id/controller_tutorial_image"
+        android:layout_width="@dimen/tutorial_image_size"
+        android:layout_height="@dimen/tutorial_image_size"
+        android:padding="@dimen/screen_padding"
+        android:layout_centerInParent="true"
+        android:src="@drawable/splash_screen_logo"/>
+
+</RelativeLayout>
