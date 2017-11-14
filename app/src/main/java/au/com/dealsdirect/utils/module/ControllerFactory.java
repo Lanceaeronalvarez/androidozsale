@@ -45,8 +45,7 @@ public class ControllerFactory {
             case CHECKOUT:
                 return new CheckoutController();
             case SALEITEMS:
-                return CategoriesController.newInstance();
-
+                return SaleItemsController.newInstance();
             case ACCOUNT:
                 return AccountController.newInstance();
             case REGISTER:

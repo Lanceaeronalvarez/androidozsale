@@ -4,9 +4,11 @@ import android.app.Activity;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.design.widget.CoordinatorLayout;
 import android.support.v4.view.ViewCompat;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,6 +16,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.mysale.genie.animation.AnimationEngine;
+import com.mysale.genie.views.custom.CoordinatorLayoutAsBottomSheetBehavior;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -26,7 +29,10 @@ import au.com.dealsdirect.R;
 import au.com.dealsdirect.data.network.model.category.GetCategoryTreeResponse;
 import au.com.dealsdirect.ui.base.BaseController;
 import au.com.dealsdirect.ui.controller.categories.adapter.CategoriesAdapter;
+import au.com.dealsdirect.ui.controller.saleitems.SaleItemsMvpPresenter;
+import au.com.dealsdirect.ui.controller.saleitems.SaleItemsMvpView;
 import au.com.dealsdirect.utils.BundleBuilder;
+import au.com.dealsdirect.utils.module.ControllerFactory;
 import au.com.dealsdirect.utils.module.GateKeeper;
 import butterknife.BindView;
 
@@ -42,33 +48,32 @@ public class CategoriesController extends BaseController
     private static final String ARG_CATEGORY_PREV_KEY = "argCategoryPrevKey";
     private static final String ARG_CATEGORY_CURRENT_KEY = "argCategoryCurrentKey";
     private static final String ARG_CATEGORY_POSITION = "argCategoryCurrentPosition";
-    private static String chosenCategoryName="shop";
-    private static String prevChosenCategoryName="";
-    private static String chosenCategoryKey="";
-    private static String prevChosenCategoryKey="";
-    private static String lastOptionCategoryName="shop";
+    private String chosenCategoryName="shop";
+    private String prevChosenCategoryName="";
+    private String chosenCategoryKey="";
+    private String prevChosenCategoryKey="";
+    private String lastOptionCategoryName="shop";
 
-    private View mRootView;
     private CategoriesAdapter mAdapter;
     private List<GetCategoryTreeResponse> mCategories;
     private Map<String,List<GetCategoryTreeResponse>> mCategoryMap = new HashMap<>();
     private int itemPosition = 0;
     private int categoriesChangeCount = 0;
-    private Bundle fragmentBundle;
+    private CoordinatorLayoutAsBottomSheetBehavior mBottomSheetBehavior;
 
-    public static String getChosenCategoryName(){
+    public String getChosenCategoryName(){
         return chosenCategoryName;
     }
 
-    public static String getLastOptionCategoryName(){
+    public String getLastOptionCategoryName(){
         return lastOptionCategoryName;
     }
 
-    public static void setLastOptionCategoryName(String val){
+    public void setLastOptionCategoryName(String val){
         lastOptionCategoryName = val;
     }
 
-    public static String getPrevChosenCategoryKey(){
+    public String getPrevChosenCategoryKey(){
         return prevChosenCategoryKey;
     }
 
@@ -80,6 +85,9 @@ public class CategoriesController extends BaseController
 
     @Inject
     CategoriesMvpPresenter<CategoriesMvpView> mPresenter;
+
+    @Inject
+    SaleItemsMvpPresenter<SaleItemsMvpView> mSaleItemsPresenter;
 
     @BindView(R.id.root_categories_layout)
     LinearLayout mRootLayout;
@@ -119,6 +127,7 @@ public class CategoriesController extends BaseController
 
         View view = inflater.inflate(R.layout.controller_categories, container, false);
         getControllerComponent().inject(this);
+        mSaleItemsPresenter.onAttach((SaleItemsMvpView)GateKeeper.getCurrentControllerOnRouter(mActivity.getSaleItemsRouter()));
         mPresenter.onAttach(this);
         return view;
     }
@@ -132,6 +141,7 @@ public class CategoriesController extends BaseController
         hideKeyboard();
         mPresenter.callGetCategoryTree();
 
+        Log.d("ChosenCategory", chosenCategoryName+"");
 //        com.mysale.genie.animation.AnimationEngine.Builder.animate(headerUnderlineView)
 //                .scaleX(65)
 //                .setDuration(300)
@@ -139,6 +149,18 @@ public class CategoriesController extends BaseController
 //                .start();
 
         setUp(view);
+    }
+
+    @Override
+    public boolean handleBack() {
+        if(getRouter().getBackstackSize() == 1){
+            getRouter().setPopsLastView(true);
+            mSaleItemsPresenter.showSelectedCategoryText();
+            getRouter().popCurrentController();
+            return true;
+        }
+
+        return false;
     }
 
     @Override
@@ -162,6 +184,7 @@ public class CategoriesController extends BaseController
                 .start();
 
         initUIValues();
+        setupSwipingBehavior();
     }
 
     @Override
@@ -182,66 +205,44 @@ public class CategoriesController extends BaseController
     }
 
     @Override
-    public void onCategoryClicked(au.com.dealsdirect.ui.controller.categories.adapter.CategoriesAdapter.CategoriesViewHolder holder, int position, String categoryName, String categoryKey) {
-        prevChosenCategoryName = chosenCategoryName;
-        prevChosenCategoryKey = chosenCategoryKey;
-        chosenCategoryName = categoryName;
-        chosenCategoryKey = categoryKey;
+    public void onCategoryClicked(CategoriesAdapter.CategoriesViewHolder holder, int position, String categoryName, String categoryKey) {
 
 //        //post chosen category key to shop fragment to call api
 //        GDebug.log("categoryFilterSelected",categoryKey);
-//        mShopPresenter.executeCategoryChangeApiCall(categoryKey);
+        mSaleItemsPresenter.executeCategoryChangeApiCall(categoryKey);
 
         //check if is last option
         boolean isOptionLastContent = isOptionLastContent(categoryKey);
 
         if(isOptionLastContent) {
 
-//            GDebug.log(FilterCategoriesFragment.class.getSimpleName(),"isOptionLastContent: "+isOptionLastContent);
+            lastOptionCategoryName = categoryName;
 
             //collapse fragment
-//            mBottomSheetBehavior.setState(CoordinatorLayoutAsBottomSheetBehavior.STATE_COLLAPSED);
-
-            lastOptionCategoryName = categoryName;
-//            Log.d("lastOptionCategoryName",lastOptionCategoryName+"onClicked");
+//            mSaleItemsPresenter.updateSaleItemHeaderOnChosenCategory(categoryName,determineColor());
+            mBottomSheetBehavior.setState(CoordinatorLayoutAsBottomSheetBehavior.STATE_COLLAPSED);
 
         }else {
 
             //reset lastOptionCategoryName
             lastOptionCategoryName = "";
-//            Log.d("lastOptionCategoryName",lastOptionCategoryName+"onCreate");
-//            FilterCategoriesFragment fragment = FilterCategoriesFragment
-//                    .newInstance(baseActivity,
-//                            mCategoryList,
-//                            position,
-//                            prevChosenCategoryName,
-//                            chosenCategoryName,
-//                            prevChosenCategoryKey,
-//                            chosenCategoryKey,
-//                            mShopPresenter);
-
-//            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-//                Log.d("holderTextTransition", holder.categoryText.getTransitionName());
-//
-//                fragment.setSharedElementEnterTransition(new FilterCategoriesTransition());
-//                fragment.setSharedElementReturnTransition(new FilterCategoriesTransition());
-//                fragment.setEnterTransition(new FilterCategoriesTransition());
-//                setExitTransition(new FilterCategoriesTransition());
-//            }
-
 
             Bundle bundle = new Bundle();
-            bundle.putString(ARG_CATEGORY_PREV_NAME, prevChosenCategoryName);
-            bundle.putString(ARG_CATEGORY_CURRENT_NAME, chosenCategoryName);
+            bundle.putString(ARG_CATEGORY_PREV_NAME, chosenCategoryName);
+            bundle.putString(ARG_CATEGORY_CURRENT_NAME, categoryName);
 
-            bundle.putString(ARG_CATEGORY_PREV_KEY, prevChosenCategoryKey);
-            bundle.putString(ARG_CATEGORY_CURRENT_KEY, chosenCategoryKey);
+            bundle.putString(ARG_CATEGORY_PREV_KEY, chosenCategoryKey);
+            bundle.putString(ARG_CATEGORY_CURRENT_KEY, categoryKey);
             bundle.putInt(ARG_CATEGORY_POSITION, position);
 
             GateKeeper.push(getRouter(), GateKeeper.Destination.CATEGORIES, bundle);
         }
 
-//            mShopPresenter.changeFilterCategory(fragment,holder.categoryText);
+    }
+
+    @Override
+    public boolean isActive() {
+        return mBottomSheetBehavior.getState() == CoordinatorLayoutAsBottomSheetBehavior.STATE_EXPANDED;
     }
 
     public void initUIValues() {
@@ -249,10 +250,39 @@ public class CategoriesController extends BaseController
         if (chosenCategoryName.equals("shop")) {
             prevHeaderCategoryTextView.setVisibility(View.GONE);
         } else {
+            prevHeaderCategoryTextView.setVisibility(View.VISIBLE);
             prevHeaderCategoryTextView.setText(prevChosenCategoryName);
-
         }
 
+        headerCategoryTextView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                //need to reset transition name of headerCategoryTextView to allow shared element return transition to work.
+                ViewCompat.setTransitionName(headerCategoryTextView,"categoryHeaderTransitionName");
+
+                lastOptionCategoryName = "";
+
+                mSaleItemsPresenter.executeCategoryChangeApiCall(prevChosenCategoryKey);
+
+                mActivity.onBackPressed();
+
+            }
+        });
+
+
+        int color = determineColor();
+        //set fragment background color
+        mRootLayout.setBackgroundColor(color);
+
+        if(chosenCategoryName.equals("shop")){
+            color = getResources().getColor(R.color.shop_banner_divider_default);
+        }
+        mSaleItemsPresenter.updateSaleItemHeaderOnChosenCategory(chosenCategoryName,color);
+        headerCategoryTextView.setText(chosenCategoryName);
+        categoriesChangeCount++;
+    }
+
+    private int determineColor(){
         CategoriesColorHelper categoriesColorHelper = new CategoriesColorHelper();
         String[] colorSet = categoriesColorHelper.getBackgroundColor(categoriesChangeCount);
 
@@ -262,20 +292,7 @@ public class CategoriesController extends BaseController
             }
         }
 
-        int color = Color.parseColor(colorSet[itemPosition]);
-
-        //set fragment background color
-        mRootLayout.setBackgroundColor(color);
-
-        //TODO
-        //update welcome header background color in shop
-//        if(chosenCategoryName.equals("shop")){
-//            color = getResources().getColor(R.color.shop_banner_divider_default);
-//        }
-//        mShopPresenter.categoryChangeUpdateShopUI(chosenCategoryName,color);
-//        updateWelcomeHeaderBackgroundColor(color);
-        headerCategoryTextView.setText(chosenCategoryName);
-        categoriesChangeCount++;
+        return Color.parseColor(colorSet[itemPosition]);
     }
 
     private void createCategoryMap(List<GetCategoryTreeResponse> categories) {
@@ -329,4 +346,42 @@ public class CategoriesController extends BaseController
         return mCategoryMap.get(option) == null || mCategoryMap.get(option).size() == 0;
     }
 
+    private void setupSwipingBehavior() {
+        mBottomSheetBehavior = CoordinatorLayoutAsBottomSheetBehavior.from(mRootLayout);
+
+        if (mBottomSheetBehavior != null) {
+            mBottomSheetBehavior.setPeekHeight(0);
+            mBottomSheetBehavior.setBottomSheetCallback(new CoordinatorLayoutAsBottomSheetBehavior.BottomSheetCallback() {
+                @Override
+                public void onStateChanged(@NonNull View bottomSheet, int newState) {
+                    switch (newState) {
+                        case CoordinatorLayoutAsBottomSheetBehavior.STATE_COLLAPSED:
+                            mSaleItemsPresenter.showSelectedCategoryText();
+//                            mShopPresenter.showShopCategoryText();
+//                            mShopPresenter.backPress();
+                            break;
+                        case CoordinatorLayoutAsBottomSheetBehavior.STATE_EXPANDED:
+                            break;
+                    }
+                }
+
+                @Override
+                public void onSlide(@NonNull View bottomSheet, float slideOffset) {
+                    bottomSheet.setAlpha(slideOffset);
+                }
+            });
+
+        } else {
+            CoordinatorLayout.LayoutParams params = (CoordinatorLayout.LayoutParams) mRootLayout.getLayoutParams();
+            params.setBehavior(mBottomSheetBehavior = new CoordinatorLayoutAsBottomSheetBehavior());
+            mRootLayout.requestLayout();
+        }
+
+        mBottomSheetBehavior.setState(CoordinatorLayoutAsBottomSheetBehavior.STATE_EXPANDED);
+
+    }
+
+    public CoordinatorLayoutAsBottomSheetBehavior getBottomSheetBehavior(){
+        return mBottomSheetBehavior;
+    }
 }

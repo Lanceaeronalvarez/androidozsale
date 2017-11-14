@@ -100,39 +100,45 @@ public class MainActivity extends BaseActivity implements MainMvpView {
 
     @Override
     public void onBackPressed() {
-        switch (getMainController().getHomeViewPager().getCurrentItem()){
-            case 0: //accounts
-                if(getAccountsRouter().getBackstack().size() == 1){
-                    getMainController().getHomeViewPager().setCurrentItem(1);
-                } else {
-                    getAccountsRouter().handleBack();
-                    GateKeeper.updateCurrentLocation(getAccountsRouter());
-                }
-                break;
-            case 1: //sale items
-                if(getSaleItemsRouter().getBackstack().size() == 1) {
-                    //exit app
-                    DialogUtils.showYesNoDialog(
-                            this,
-                            getString(R.string.exit_app_name),
-                            getString(R.string.exit_app),
-                            getString(R.string.exit),
-                            getString(R.string.no),
-                            (dialogInterface, i) -> finish(),
-                            (dialogInterface, i) -> {
-                            });
-                }
-                break;
-            case 2: //checkout
-                if(getCheckoutRouter().getBackstack().size() == 1){
-                    getMainController().getHomeViewPager().setCurrentItem(1);
-                } else {
-                    getCheckoutRouter().handleBack();
-                    GateKeeper.updateCurrentLocation(getCheckoutRouter());
-                }
-                break;
-            default:
-                break;
+
+//        CategoriesController categoriesController = (CategoriesController) GateKeeper.getCurrentControllerOnRouter(getCategoriesRouter());
+        if(getCategoriesRouter().getBackstackSize() != 0){
+            getCategoriesRouter().handleBack();
+        }else {
+            switch (getMainController().getHomeViewPager().getCurrentItem()) {
+                case 0: //accounts
+                    if (getAccountsRouter().getBackstack().size() == 1) {
+                        getMainController().getHomeViewPager().setCurrentItem(1);
+                    } else {
+                        getAccountsRouter().handleBack();
+                        GateKeeper.updateCurrentLocation(getAccountsRouter());
+                    }
+                    break;
+                case 1: //sale items
+                    if (getSaleItemsRouter().getBackstack().size() == 1) {
+                        //exit app
+                        DialogUtils.showYesNoDialog(
+                                this,
+                                getString(R.string.exit_app_name),
+                                getString(R.string.exit_app),
+                                getString(R.string.exit),
+                                getString(R.string.no),
+                                (dialogInterface, i) -> finish(),
+                                (dialogInterface, i) -> {
+                                });
+                    }
+                    break;
+                case 2: //checkout
+                    if (getCheckoutRouter().getBackstack().size() == 1) {
+                        getMainController().getHomeViewPager().setCurrentItem(1);
+                    } else {
+                        getCheckoutRouter().handleBack();
+                        GateKeeper.updateCurrentLocation(getCheckoutRouter());
+                    }
+                    break;
+                default:
+                    break;
+            }
         }
     }
 

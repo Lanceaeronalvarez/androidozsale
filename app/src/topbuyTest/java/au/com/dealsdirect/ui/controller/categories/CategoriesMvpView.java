@@ -18,4 +18,6 @@ public interface CategoriesMvpView extends MvpView {
     void hideNoNetworklayout();
 
     void onCategoryClicked(CategoriesAdapter.CategoriesViewHolder holder, int position, String categoryName, String categoryKey);
+
+    boolean isActive();
 }
