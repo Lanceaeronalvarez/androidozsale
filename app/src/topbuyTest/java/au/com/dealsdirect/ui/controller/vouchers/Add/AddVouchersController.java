@@ -35,6 +35,7 @@ import au.com.dealsdirect.data.network.model.vouchers.ApplyVouchersResponse;
 import au.com.dealsdirect.data.network.model.vouchers.ClearVouchersResponse;
 import au.com.dealsdirect.data.network.model.vouchers.Voucher;
 import au.com.dealsdirect.ui.base.BaseController;
+import au.com.dealsdirect.ui.base.BaseToolBarController;
 import au.com.dealsdirect.ui.custom.CustomAlertDialog;
 import au.com.dealsdirect.utils.BundleBuilder;
 import au.com.dealsdirect.utils.JsonUtils;
@@ -45,13 +46,13 @@ import butterknife.BindView;
  * Created by Paul on 6/27/17.
  */
 
-public class AddVouchersController extends BaseController implements AddVouchersMvpView {
+public class AddVouchersController extends BaseToolBarController implements AddVouchersMvpView {
 
     private static final String VOUCHERS="Vouchers";
     private static final String IS_VOUCHER_ADDED = "IS_VOUCHER_ADDED_KEY";
     private static final String IS_CART_NO_DISCOUNT = "IS_NO_DISCOUNT";
 
-    private static final String testVouchersString = "[{\n" +
+    public static final String testVouchersString = "[{\n" +
             "\t\t\t\t\"ID\": \"ba41e1d8-0a3d-4868-81ba-2f139f0827fa\",\n" +
             "\t\t\t\t\"Description\": \"$20.0000 (Ozsale.com.au)\"\n" +
             "\t\t\t}, {\n" +
@@ -107,15 +108,6 @@ public class AddVouchersController extends BaseController implements AddVouchers
     @Inject
     AddVouchersMvpPresenter<AddVouchersMvpView> mPresenter;
 
-    @BindView(R.id.partial_toolbar_arrow_title)
-    TextView mTitleText;
-
-    @BindView(R.id.partial_toolbar_filter_view)
-    ImageView mFilterView;
-
-    @BindView(R.id.partial_toolbar_arrow_view)
-    ImageView mArrowImage;
-
     @BindView(R.id.controller_button_add_voucher)
     Button mAddVoucherButton;
 
@@ -133,6 +125,9 @@ public class AddVouchersController extends BaseController implements AddVouchers
 
     @BindView(R.id.partial_checkout_vouchers_button_apply)
     Button mButtonApply;
+
+    @BindView(R.id.add_promo_place_holder)
+    LinearLayout mVouchersPlaceholder;
 
     List<String> voucherIds = new LinkedList<>();
     List<String> tempVoucherIds = new LinkedList<>();
@@ -166,7 +161,9 @@ public class AddVouchersController extends BaseController implements AddVouchers
 
     @Override
     protected View inflateView(@NonNull LayoutInflater inflater, @NonNull ViewGroup container) {
-        View view = inflater.inflate(R.layout.controller_add_vouchers,container,false);
+        View view = super.inflateView(inflater, container);
+
+        fillContent(inflater.inflate(R.layout.controller_add_vouchers,container,false));
         getControllerComponent().inject(this);
         mPresenter.onAttach(this);
         return view;
@@ -176,6 +173,7 @@ public class AddVouchersController extends BaseController implements AddVouchers
     protected void onViewBound(@NonNull View view) {
         super.onViewBound(view);
 
+        mToolbarTitle.setText(mActivity.getResources().getString(R.string.promo_code));
         mSharedPreference = mActivity.getSharedPreferences("Voucher_Preference", Context.MODE_PRIVATE);
         Set<String> voucherSet = mSharedPreference.getStringSet("VOUCHER_SET", null);
         if(voucherSet != null && !mIsNoDiscountApplied) {
@@ -198,13 +196,6 @@ public class AddVouchersController extends BaseController implements AddVouchers
 
     @Override
     protected void setUp(View view) {
-
-
-        mTitleText.setText("My Vouchers");
-        mFilterView.setVisibility(View.INVISIBLE);
-        mArrowImage.setOnClickListener(action -> {
-            mActivity.onBackPressed();
-        });
 
         mAdapter = new AddVouchersRecyclerViewAdapter(mVouchers, this, mActivity);
 
@@ -237,9 +228,11 @@ public class AddVouchersController extends BaseController implements AddVouchers
         if (mVouchers.isEmpty()) {
             mVoucherListContainerLayout.setVisibility(View.GONE);
             mRecyclerView.setVisibility(View.GONE);
+            mVouchersPlaceholder.setVisibility(View.VISIBLE);
         } else {
             mVoucherListContainerLayout.setVisibility(View.VISIBLE);
             mRecyclerView.setVisibility(View.VISIBLE);
+            mVouchersPlaceholder.setVisibility(View.GONE);
         }
 
         mAddVoucherButton.setOnClickListener(action -> {

@@ -3,7 +3,6 @@ package au.com.dealsdirect.ui.controller.vouchers.View;
 import android.content.Context;
 import android.os.Build;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -64,7 +63,7 @@ public class ViewVouchersRecyclerViewAdapter extends RecyclerView.Adapter<ViewVo
 
                     holder.mVouchersLayout.setBackground(
                             context.getResources()
-                                    .getDrawable(R.drawable.voucher_container_red));
+                                    .getDrawable(R.drawable.bg_voucher_container_red));
 
                 }
 
@@ -72,7 +71,7 @@ public class ViewVouchersRecyclerViewAdapter extends RecyclerView.Adapter<ViewVo
 
                     holder.mVouchersLayout.setBackground(
                             context.getResources()
-                                    .getDrawable(R.drawable.voucher_container_blue));
+                                    .getDrawable(R.drawable.bg_voucher_container_blue));
 
                 }
 
@@ -88,7 +87,7 @@ public class ViewVouchersRecyclerViewAdapter extends RecyclerView.Adapter<ViewVo
 
                     holder.mVouchersLayout.setBackground(
                             context.getResources()
-                                    .getDrawable(R.drawable.voucher_container_green));
+                                    .getDrawable(R.drawable.bg_voucher_container_green));
 
                 }
 
@@ -96,7 +95,7 @@ public class ViewVouchersRecyclerViewAdapter extends RecyclerView.Adapter<ViewVo
 
                     holder.mVouchersLayout.setBackground(
                             context.getResources()
-                                    .getDrawable(R.drawable.voucher_container_violet));
+                                    .getDrawable(R.drawable.bg_voucher_container_violet));
 
                 }
 
@@ -104,7 +103,7 @@ public class ViewVouchersRecyclerViewAdapter extends RecyclerView.Adapter<ViewVo
 
                     holder.mVouchersLayout.setBackground(
                             context.getResources()
-                                    .getDrawable(R.drawable.voucher_container_aqua));
+                                    .getDrawable(R.drawable.bg_voucher_container_aqua));
 
                 }
 
@@ -112,7 +111,7 @@ public class ViewVouchersRecyclerViewAdapter extends RecyclerView.Adapter<ViewVo
 
                     holder.mVouchersLayout.setBackground(
                             context.getResources()
-                                    .getDrawable(R.drawable.voucher_container_orange));
+                                    .getDrawable(R.drawable.bg_voucher_container_orange));
 
                 }
 
@@ -120,14 +119,14 @@ public class ViewVouchersRecyclerViewAdapter extends RecyclerView.Adapter<ViewVo
 
                     holder.mVouchersLayout.setBackground(
                             context.getResources()
-                                    .getDrawable(R.drawable.voucher_container_darkblue));
+                                    .getDrawable(R.drawable.bg_voucher_container_darkblue));
 
                 }
                 else{
 
                     holder.mVouchersLayout.setBackground(
                             context.getResources()
-                                    .getDrawable(R.drawable.voucher_container_blue));
+                                    .getDrawable(R.drawable.bg_voucher_container_blue));
 
                 }
             }

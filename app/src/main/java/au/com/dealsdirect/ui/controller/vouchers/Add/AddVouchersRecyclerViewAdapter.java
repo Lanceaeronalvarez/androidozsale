@@ -95,7 +95,7 @@ public class AddVouchersRecyclerViewAdapter extends RecyclerView.Adapter<Recycle
 //                vh.mVoucherItemLayout.setBackground(context.getResources().getDrawable(R.drawable.voucher_container_red));
                 ticketState = "red";
             } else if (10 <= voucherValue && voucherValue < 15) {
-//                vh.mVoucherItemLayout.setBackground(context.getResources().getDrawable(R.drawable.voucher_container_blue));
+//                vh.mVoucherItemLayout.setBackground(context.getResources().getDrawable(R.drawable.bg_voucher_container_blue));
                 ticketState = "blue";
             } else if (15 <= voucherValue && voucherValue < 20) {
 //                vh.mVoucherItemLayout.setBackground(context.getResources().getDrawable(R.drawable.voucher_container_yellow));
@@ -107,16 +107,16 @@ public class AddVouchersRecyclerViewAdapter extends RecyclerView.Adapter<Recycle
 //                vh.mVoucherItemLayout.setBackground(context.getResources().getDrawable(R.drawable.voucher_container_violet));
                 ticketState = "violet";
             } else if (50 <= voucherValue && voucherValue < 125) {
-//                vh.mVoucherItemLayout.setBackground(context.getResources().getDrawable(R.drawable.voucher_container_aqua));
+//                vh.mVoucherItemLayout.setBackground(context.getResources().getDrawable(R.drawable.bg_voucher_container_aqua));
                 ticketState = "aqua";
             } else if (125 <= voucherValue && voucherValue < 500) {
 //                vh.mVoucherItemLayout.setBackground(context.getResources().getDrawable(R.drawable.voucher_container_orange));
                 ticketState = "orange";
             } else if (500 <= voucherValue && voucherValue <= 1000) {
-//                vh.mVoucherItemLayout.setBackground(context.getResources().getDrawable(R.drawable.voucher_container_darkblue));
+//                vh.mVoucherItemLayout.setBackground(context.getResources().getDrawable(R.drawable.bg_voucher_container_darkblue));
                 ticketState = "darkblue";
             } else {
-//                vh.mVoucherItemLayout.setBackground(context.getResources().getDrawable(R.drawable.voucher_container_blue));
+//                vh.mVoucherItemLayout.setBackground(context.getResources().getDrawable(R.drawable.bg_voucher_container_blue));
                 ticketState = "blue";
             }
         }

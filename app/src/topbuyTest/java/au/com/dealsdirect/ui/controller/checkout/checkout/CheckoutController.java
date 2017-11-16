@@ -6,7 +6,12 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
+import android.widget.TextView;
 
+import com.bluelinelabs.conductor.RouterTransaction;
+import com.bluelinelabs.conductor.changehandler.HorizontalChangeHandler;
+
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.inject.Inject;
@@ -23,6 +28,7 @@ import au.com.dealsdirect.service.ourpay.Ourpay;
 import au.com.dealsdirect.ui.base.BaseController;
 import au.com.dealsdirect.ui.controller.checkout.checkout.CheckoutMvpPresenter;
 import au.com.dealsdirect.ui.controller.checkout.checkout.CheckoutMvpView;
+import au.com.dealsdirect.ui.controller.vouchers.Add.AddVouchersController;
 import butterknife.BindView;
 
 /**
@@ -44,6 +50,12 @@ public class CheckoutController extends BaseController implements CheckoutMvpVie
 
     private View mFooterView;
 
+    private RelativeLayout mAddNewVoucherLayout;
+
+    private CheckoutOrderAdapter mAdapter;
+    private ArrayList<Item> mItemList = new ArrayList<>();
+
+
 
     @Override
     protected View inflateView(@NonNull LayoutInflater inflater, @NonNull ViewGroup container) {
@@ -60,6 +72,17 @@ public class CheckoutController extends BaseController implements CheckoutMvpVie
 
         mButtonHolder = mFooterView.findViewById(R.id.partial_checkout_button_holder);
         mActivity.setCheckoutRouter(getRouter());
+        mAdapter = new CheckoutOrderAdapter(mActivity, R.layout.partial_checkout_item, mItemList, mPresenter);
+        mListView.setAdapter(mAdapter);
+        mListView.addFooterView(mFooterView, null, false);
+        mAddNewVoucherLayout = mFooterView.findViewById(R.id.partial_checkout_voucher_new_code);
+
+        mAddNewVoucherLayout.setOnClickListener(view1 -> getRouter()
+                .pushController(RouterTransaction.with(AddVouchersController
+                        .newInstance(AddVouchersController.testVouchersString, true, true))
+                .pushChangeHandler(new HorizontalChangeHandler())
+                .popChangeHandler(new HorizontalChangeHandler())));
+
 
         setUp(view);
     }
@@ -130,9 +153,9 @@ public class CheckoutController extends BaseController implements CheckoutMvpVie
     }
 
     private void showNoCartItemsLayout() {
-        hidePaymentButtons();
-        mNoCartItemsLayout.setVisibility(View.VISIBLE);
-        mListView.setVisibility(View.GONE);
+        showPaymentButtons();
+        mNoCartItemsLayout.setVisibility(View.GONE);
+        mListView.setVisibility(View.VISIBLE);
         mPresenter.resetIsCartAlreadyLoaded();
     }
 
