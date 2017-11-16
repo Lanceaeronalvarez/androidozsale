@@ -95,7 +95,7 @@ public class MainActivity extends BaseActivity implements MainMvpView {
     public void onBackPressed() {
 
 //        CategoriesController categoriesController = (CategoriesController) GateKeeper.getCurrentControllerOnRouter(getCategoriesRouter());
-        if(getCategoriesRouter().getBackstackSize() != 0){
+        if(getCategoriesRouter()!=null && getCategoriesRouter().getBackstackSize() != 0){
             getCategoriesRouter().handleBack();
         }else {
             switch (getMainController().getHomeViewPager().getCurrentItem()) {
