@@ -99,6 +99,7 @@
     <color name="bluegreen">#04b2b6</color>
 
 
+    <color name="invite_clipboard">#FF8B8B8B</color>
     <color name="invite_fb">#FF2D91DE</color>
     <color name="invite_fb_pressed">#FF2D91DE</color>
     <color name="invite_twitter">#FF00B5E9</color>

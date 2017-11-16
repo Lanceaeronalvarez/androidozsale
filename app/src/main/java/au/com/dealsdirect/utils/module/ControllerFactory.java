@@ -9,6 +9,7 @@ import au.com.dealsdirect.ui.controller.categories.CategoriesController;
 import au.com.dealsdirect.ui.controller.checkout.checkout.CheckoutController;
 import au.com.dealsdirect.ui.controller.details.DetailsController;
 import au.com.dealsdirect.ui.controller.forgotpassword.ForgotPasswordController;
+import au.com.dealsdirect.ui.controller.invite.InviteSendController;
 import au.com.dealsdirect.ui.controller.login.LoginController;
 import au.com.dealsdirect.ui.controller.main.MainController;
 import au.com.dealsdirect.ui.controller.register.RegisterController;
@@ -56,6 +57,8 @@ public class ControllerFactory {
                 return ForgotPasswordController.newInstance();
             case VIEW_VOUCHERS:
                 return ViewVouchersController.newInstance();
+            case INVITE:
+                return InviteSendController.newInstance();
             default:
                 return null;
         }
@@ -125,6 +128,10 @@ public class ControllerFactory {
 
         if (controller instanceof  ViewVouchersController) {
             return GateKeeper.Destination.VIEW_VOUCHERS;
+        }
+
+        if (controller instanceof InviteSendController) {
+            return GateKeeper.Destination.INVITE;
         }
 
         return GateKeeper.Destination.EMPTY;
