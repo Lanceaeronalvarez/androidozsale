@@ -13,6 +13,7 @@ import au.com.dealsdirect.ui.controller.login.LoginController;
 import au.com.dealsdirect.ui.controller.main.MainController;
 import au.com.dealsdirect.ui.controller.register.RegisterController;
 import au.com.dealsdirect.ui.controller.saleitems.SaleItemsController;
+import au.com.dealsdirect.ui.controller.vouchers.View.ViewVouchersController;
 
 /**
  * Created by smartwave on 16/10/2017.
@@ -52,6 +53,8 @@ public class ControllerFactory {
                 return RegisterController.newInstance();
             case FORGOT_PASSWORD:
                 return ForgotPasswordController.newInstance();
+            case VIEW_VOUCHERS:
+                return ViewVouchersController.newInstance();
             default:
                 return null;
         }
@@ -117,6 +120,10 @@ public class ControllerFactory {
 
         if (controller instanceof ForgotPasswordController) {
             return GateKeeper.Destination.FORGOT_PASSWORD;
+        }
+
+        if (controller instanceof  ViewVouchersController) {
+            return GateKeeper.Destination.VIEW_VOUCHERS;
         }
 
         return GateKeeper.Destination.EMPTY;

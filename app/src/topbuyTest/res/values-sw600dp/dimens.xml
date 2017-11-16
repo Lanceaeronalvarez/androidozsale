@@ -16,4 +16,12 @@
     <dimen name="cartview_translation">130dp</dimen>
     <dimen name="cartview_x_adjustment">30dp</dimen>
     <dimen name="cartview_y_adjustment">40dp</dimen>
+
+    <bool name="is_tablet">true</bool>
+
+    <dimen name="voucher_container_width">400dp</dimen>
+    <dimen name="voucher_container_height">250dp</dimen>
+
+    <dimen name="voucher_container_margin">5dp</dimen>
+    <dimen name="voucher_container_padding">50dp</dimen>
 </resources>

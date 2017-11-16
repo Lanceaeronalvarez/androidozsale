@@ -12,11 +12,30 @@
     <integer name="card_width_int">300</integer>
     <integer name="scroll_by">60</integer>
     <integer name="shop_page_item_price_layout_weight">2</integer>
+    <dimen name="button_height">35dp</dimen>
+
 
     <dimen name="bottomsheet_height"> 300dp</dimen>
 
     <dimen name="cartview_translation">65dp</dimen>
     <dimen name="cartview_x_adjustment">2.5dp</dimen>
     <dimen name="cartview_y_adjustment">5dp</dimen>
+
+    <dimen name="placeholder_imageview_margin"> 100dp </dimen>
+    <dimen name="voucher_container_width">240dp</dimen>
+    <dimen name="voucher_container_height">150dp</dimen>
+
+    <dimen name="voucher_container_margin">20dp</dimen>
+    <dimen name="voucher_container_padding">20dp</dimen>
+
+    <dimen name="text_size_small">12sp</dimen>
+    <dimen name="text_size_normal">14sp</dimen>
+    <dimen name="text_size_medium">16sp</dimen>
+    <dimen name="text_size_large">18sp</dimen>
+    <dimen name="text_size_x_large">20sp</dimen>
+    <dimen name="text_size_xx_large">22sp</dimen>
+    <dimen name="text_size_xxx_large">24sp</dimen>
+
+    <dimen name="padding">5dp</dimen>
 
 </resources>

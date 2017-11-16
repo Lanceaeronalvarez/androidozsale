@@ -33,7 +33,8 @@ public class GateKeeper {
         CHECKOUT,
         CATEGORIES,
         ACCOUNT,
-        FORGOT_PASSWORD
+        FORGOT_PASSWORD,
+        VIEW_VOUCHERS
         //add more destinations
     }
 
