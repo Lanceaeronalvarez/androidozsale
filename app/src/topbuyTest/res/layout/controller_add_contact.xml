@@ -1,0 +1,280 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/white"
+    android:padding="@dimen/activity_horizontal_margin">
+
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginTop="@dimen/activity_horizontal_margin"
+        android:orientation="vertical">
+
+        <LinearLayout
+            android:id="@+id/controller_add_contact_subject_container"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:clickable="true"
+            android:orientation="vertical">
+
+
+            <TextView
+                android:id="@+id/controller_add_contact_subject_title"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="select subject"
+                android:textColor="@color/gray_field_text"
+                android:textSize="@dimen/text_size_large"/>
+
+            <android.support.design.widget.TextInputLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="16dp"
+                android:layout_marginTop="10dp"
+                app:hintEnabled="false">
+
+                <TextView
+                    android:id="@+id/controller_add_contact_subject_text"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/bg_edit_text_rounded"
+                    android:maxLines="1"
+                    android:padding="20dp"
+                    android:textColor="#919191"
+                    android:textSize="@dimen/text_size_large"/>
+
+            </android.support.design.widget.TextInputLayout>
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/controller_add_contact_order_container"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:clickable="true"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/controller_add_contact_order_title"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/activity_horizontal_margin"
+                android:text="select order"
+                android:textColor="@color/gray_field_text"
+                android:textSize="@dimen/text_size_large"/>
+
+            <android.support.design.widget.TextInputLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="16dp"
+                android:layout_marginTop="10dp"
+                app:hintEnabled="false">
+
+                <TextView
+                    android:id="@+id/controller_add_contact_order_text"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/bg_edit_text_rounded"
+                    android:maxLines="1"
+                    android:padding="20dp"
+                    android:textColor="#919191"
+                    android:textSize="@dimen/text_size_large"/>
+
+            </android.support.design.widget.TextInputLayout>
+
+
+        </LinearLayout>
+        <!--<TextView-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:text="select order"-->
+        <!--android:textColor="@color/gray_field_text"-->
+        <!--android:layout_marginTop="@dimen/activity_horizontal_margin"-->
+        <!--android:textSize="@dimen/text_size_medium" />-->
+
+        <!--<android.support.design.widget.TextInputLayout-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:layout_marginBottom="16dp"-->
+        <!--android:layout_marginTop="10dp"-->
+        <!--app:hintEnabled="false">-->
+
+        <!--<EditText-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:background="@drawable/bg_edit_text_rounded"-->
+        <!--android:maxLines="1"-->
+        <!--android:padding="15dp"-->
+        <!--android:textColor="#919191"-->
+        <!--android:hint="@string/write_us_a_message"-->
+        <!--android:textColorHint="#c1c1c1"-->
+        <!--android:textSize="@dimen/text_size_medium" />-->
+
+        <!--</android.support.design.widget.TextInputLayout>-->
+
+
+        <LinearLayout
+            android:id="@+id/controller_add_contact_header_container"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <!--<LinearLayout-->
+            <!--android:id="@+id/controller_add_contact_subject_container"-->
+            <!--android:layout_width="match_parent"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:orientation="horizontal"-->
+            <!--android:clickable="true"-->
+            <!--android:padding="16dp">-->
+
+            <!--<TextView-->
+            <!--android:id="@+id/controller_add_contact_subject_title"-->
+            <!--android:layout_width="wrap_content"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:layout_gravity="center_vertical"-->
+            <!--android:layout_marginEnd="16dp"-->
+            <!--android:focusable="true"-->
+            <!--android:focusableInTouchMode="true"-->
+            <!--android:text="@string/subject"-->
+            <!--android:textColor="@color/contact_us_text_selector"-->
+            <!--android:textSize="@dimen/text_size_large" />-->
+
+            <!--<TextView-->
+            <!--android:id="@+id/controller_add_contact_subject_text"-->
+            <!--android:layout_width="match_parent"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:textColor="#616161" />-->
+
+            <!--</LinearLayout>-->
+
+            <!--<LinearLayout-->
+            <!--android:id="@+id/controller_add_contact_order_container"-->
+            <!--android:layout_width="match_parent"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:orientation="horizontal"-->
+            <!--android:clickable="true"-->
+            <!--android:padding="16dp">-->
+
+            <!--<TextView-->
+            <!--android:id="@+id/controller_add_contact_order_title"-->
+            <!--android:layout_width="wrap_content"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:layout_gravity="center_vertical"-->
+            <!--android:layout_marginEnd="16dp"-->
+            <!--android:focusable="true"-->
+            <!--android:focusableInTouchMode="true"-->
+            <!--android:text="@string/sale"-->
+            <!--android:textColor="@color/contact_us_text_selector"-->
+            <!--android:textSize="@dimen/text_size_large" />-->
+
+            <!--<TextView-->
+            <!--android:id="@+id/controller_add_contact_order_text"-->
+            <!--android:layout_width="match_parent"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:textColor="#616161" />-->
+
+            <!--</LinearLayout>-->
+
+            <!--<View-->
+            <!--android:layout_width="match_parent"-->
+            <!--android:layout_height="1dp"-->
+            <!--android:background="@color/gray_border" />-->
+
+            <!--</LinearLayout>-->
+
+            <!--<LinearLayout-->
+            <!--android:id="@+id/controller_add_contact_message_container"-->
+            <!--android:layout_width="match_parent"-->
+            <!--android:layout_height="@dimen/toolbar_height"-->
+            <!--android:background="@color/gray_background"-->
+            <!--android:orientation="horizontal"-->
+            <!--android:padding="8dp"-->
+            <!--android:layout_alignParentBottom="true"-->
+            <!--android:layout_alignParentStart="true">-->
+
+            <!--<EditText-->
+            <!--android:id="@+id/controller_add_contact_message_field"-->
+            <!--style="@style/Widget.AppCompat.Spinner.Underlined"-->
+            <!--android:layout_width="0dp"-->
+            <!--android:layout_height="40dp"-->
+            <!--android:layout_gravity="center"-->
+            <!--android:layout_marginEnd="10dp"-->
+            <!--android:layout_weight="1"-->
+            <!--android:background="@drawable/bg_add_contact_message"-->
+            <!--android:hint="@string/write_a_message"-->
+            <!--android:padding="10dp" />-->
+
+            <!--<ImageButton-->
+            <!--android:id="@+id/controller_add_contact_message_send"-->
+            <!--android:layout_width="wrap_content"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:layout_gravity="center"-->
+            <!--android:background="@null"-->
+            <!--android:src="@drawable/ic_contact_us_send" />-->
+
+            <!--</LinearLayout>-->
+
+            <!--<View-->
+            <!--android:layout_width="match_parent"-->
+            <!--android:layout_height="1dp"-->
+            <!--android:layout_above="@id/controller_add_contact_message_container"-->
+            <!--android:background="@color/gray_border" />-->
+
+            <!--</LinearLayout>-->
+
+
+            <LinearLayout
+                android:id="@+id/controller_add_contact_message_container"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:clickable="true"
+                android:orientation="vertical">
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/activity_horizontal_margin"
+                    android:text="reason"
+                    android:textColor="@color/gray_field_text"
+                    android:textSize="@dimen/text_size_large"/>
+
+                <android.support.design.widget.TextInputLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="16dp"
+                    android:layout_marginTop="10dp"
+                    app:hintEnabled="false">
+
+                    <EditText
+                        android:id="@+id/controller_add_contact_message_field"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:background="@drawable/bg_edit_text_rounded"
+                        android:hint="@string/write_us_a_message"
+                        android:maxLines="1"
+                        android:padding="20dp"
+                        android:textColor="#919191"
+                        android:textSize="@dimen/text_size_large"/>
+
+                </android.support.design.widget.TextInputLayout>
+
+
+            </LinearLayout>
+        </LinearLayout>
+    </LinearLayout>
+
+
+    <Button
+        android:id="@+id/controller_add_contact_submit_button"
+        style="@style/DDButtonStyle"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/default_button_height"
+        android:layout_gravity="bottom"
+        android:text="submit"
+        android:layout_alignParentBottom="true"
+        android:textSize="@dimen/text_size_large"/>
+
+</RelativeLayout>

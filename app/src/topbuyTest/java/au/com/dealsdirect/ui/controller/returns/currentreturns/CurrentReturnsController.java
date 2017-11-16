@@ -92,7 +92,7 @@ public class CurrentReturnsController extends BaseToolBarController
     public void onViewBound(@NonNull View view) {
         super.onViewBound(view);
         setUp(view);
-        mToolbarTitle.setText(R.string.my_returns);
+        mToolbarTitle.setText("confirm your number");
 
         mCurrentReturnsListener = this;
 
@@ -108,7 +108,7 @@ public class CurrentReturnsController extends BaseToolBarController
 
             mCurrentReturnsRecyclerView.setAdapter(mCurrentReturnsAdapter);
             mCurrentReturnsRecyclerView.setVisibility(View.VISIBLE);
-
+            mPlaceholderLayout.setVisibility(View.GONE);
         }
     }
 

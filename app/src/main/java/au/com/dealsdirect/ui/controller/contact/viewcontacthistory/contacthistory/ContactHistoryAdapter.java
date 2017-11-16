@@ -10,8 +10,7 @@ import java.util.Collections;
 import java.util.List;
 
 import au.com.dealsdirect.R;
-import uk.co.chrisjenx.calligraphy.CalligraphyUtils;
-import uk.co.chrisjenx.calligraphy.TypefaceUtils;
+import au.com.dealsdirect.utils.DateUtils;
 
 /**
  * dp Created by Admin on 6/22/17.
@@ -45,24 +44,45 @@ public class ContactHistoryAdapter extends RecyclerView.Adapter<ContactHistoryVi
 
         String contactSubject = mCurrentContactsHistoryList.get(position).getSubject();
 
-        if (mCurrentContactsHistoryList.get(position).getIsStaff()) {
-            holder.contactHistoryMessageTextView.setSelected(true);
-            holder.contactHistoryMessageTextView.setBackgroundResource(R.drawable.bg_message_incoming);
-            holder.contactHistoryItemCircularTextView.setText("DD");
-            holder.contactHistoryItemCircularTextView.setVisibility(View.VISIBLE);
-            holder.contactHistoryItemCircularTextView.setSolidColor("#EDC7D5");
-        } else {
-            holder.contactHistoryItemCircularTextView.setVisibility(View.INVISIBLE);
-            CalligraphyUtils.applyFontToTextView(holder.contactHistoryMessageTextView,
-                    TypefaceUtils.load(mContext.getAssets(), mContext.getString(R.string.font_app_regular)));
+
+        String dateHeaderFormatOfItem = DateUtils.getTrimmedServerDateString(contactDate.toString());
+
+        if (userName != null){
+            holder.contactHistoryItemUserNameTextView
+                    .setText(userName.toString());
+        }else{
+            holder.contactHistoryItemUserNameTextView
+                    .setText("unknown");
         }
 
-//        String dateHeaderFormatOfItem = DateUtils.getTrimmedServerDateString(contactDate.toString());
+        if (contactSubject != null){
 
-        if (contactMessage != null) {
+            holder.contactHistoryDescriptionTextView
+                    .setText(contactSubject.toString());
+        }else{
+
+            holder.contactHistoryDescriptionTextView.setText("");
+        }
+
+
+        if (contactMessage != null){
             holder.contactHistoryMessageTextView.setText(contactMessage.toString());
-        } else {
+        }else{
             holder.contactHistoryMessageTextView.setText("Nothing to display");
+        }
+
+        if (contactDate != null){
+            String itemLastAnswerTimeFormat
+                    = DateUtils.getTimeFromDateString(contactDate.toString());
+
+            holder.contactHistoryItemDateStampTextView
+                    .setText(dateHeaderFormatOfItem);
+
+            holder.contactHistoryItemTimeStampTextView
+                    .setText(itemLastAnswerTimeFormat);
+
+        }else{
+            holder.contactHistoryItemDateStampTextView.setText("");
         }
     }
 

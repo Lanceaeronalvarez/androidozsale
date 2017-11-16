@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/white"
+    android:orientation="vertical"
+    tools:ignore="MissingPrefix">
+
+    <RelativeLayout
+        android:id="@+id/controller_add_contact_subject_container"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="20dp"
+        android:padding="16dp">
+
+        <TextView
+            android:id="@+id/contact_history_header_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="#0cc3c7"
+            android:text="Puma Designer Collaboration"
+            fontPath="@string/font_app_light"
+            android:textSize="@dimen/text_size_xxlarge" />
+
+        <TextView
+            android:id="@+id/contact_history_header_time_stamp"
+            fontPath="@string/font_app_semibold"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentEnd="true"
+            android:layout_centerVertical="true"
+            android:text="06:57pm"
+            android:textColor="#b3b3b3"
+            android:textSize="@dimen/text_size_large" />
+
+        <TextView
+            android:id="@+id/contact_item_header_invoice_indicator"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentStart="true"
+            fontPath="@string/font_app_semibold"
+            android:layout_below="@+id/contact_history_header_title"
+            android:text="Invoice #:"
+            android:textColor="#b3b3b3"
+            android:textSize="15sp"  />
+
+        <TextView
+            android:id="@+id/controller_view_contact_history_header_invoice_value"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/contact_history_header_title"
+            android:layout_toRightOf="@+id/contact_item_header_invoice_indicator"
+            android:text=""
+            android:layout_marginLeft="10dp"
+            android:textColor="#919191"
+            fontPath="@string/font_app_light"
+            android:textSize="@dimen/text_size_xlarge" />
+
+    </RelativeLayout>
+
+
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_below="@id/controller_add_contact_subject_container"
+        android:background="@color/gray_border" />
+
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/contact_history_recycler_view"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@id/controller_add_contact_subject_container"
+        android:overScrollMode="never" />
+
+
+
+    <Button
+        android:id="@+id/controller_view_contacts_history_reply_button"
+        style="@style/DDButtonStyle"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/default_button_height"
+        android:layout_gravity="bottom"
+        android:layout_margin="@dimen/activity_horizontal_margin"
+        android:text="@string/reply"
+        android:layout_alignParentBottom="true"
+        android:textSize="@dimen/text_size_large"/>
+
+</RelativeLayout>
+

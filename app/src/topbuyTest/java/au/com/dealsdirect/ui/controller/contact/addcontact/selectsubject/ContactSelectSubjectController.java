@@ -8,8 +8,6 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
-import android.widget.TextView;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -17,20 +15,18 @@ import java.util.List;
 import javax.inject.Inject;
 
 import au.com.dealsdirect.R;
-import au.com.dealsdirect.ui.base.BaseController;
-import au.com.dealsdirect.ui.controller.contact.addcontact.AddContactController;
+import au.com.dealsdirect.ui.base.BaseToolBarController;
 import au.com.dealsdirect.ui.controller.contact.addcontact.ContactPreferenceHelper;
 import au.com.dealsdirect.ui.controller.contact.addcontact.selectsubject.adapter.ContactSubjectAdapter;
 import au.com.dealsdirect.ui.controller.contact.addcontact.selectsubject.listener.ContactSubjectClickListener;
 import au.com.dealsdirect.utils.BundleBuilder;
 import butterknife.BindView;
-import butterknife.OnClick;
 
 /*
  * Created by DP on 05/06/2017.
  */
 
-public class ContactSelectSubjectController extends BaseController
+public class ContactSelectSubjectController extends BaseToolBarController
         implements ContactSelectSubjectMvpView, ContactSubjectClickListener {
 
     public static final String TAG = "ContactSelectSubjectController";
@@ -71,10 +67,11 @@ public class ContactSelectSubjectController extends BaseController
     @NonNull
     @Override
     protected View inflateView(@NonNull LayoutInflater inflater, @NonNull ViewGroup container) {
-        View view = inflater.inflate(R.layout.controller_contact_select_subject, container, false);
 
+        View view = super.inflateView(inflater, container);
+
+        fillContent(inflater.inflate(R.layout.controller_contact_select_subject, container, false));
         getControllerComponent().inject(this);
-
         mPresenter.onAttach(this);
 
         return view;
@@ -83,6 +80,8 @@ public class ContactSelectSubjectController extends BaseController
     @Override
     public void onViewBound(@NonNull View view) {
         super.onViewBound(view);
+        mToolbarTitle.setText("message subject");
+
         setUp(view);
     }
 

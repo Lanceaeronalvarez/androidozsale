@@ -10,8 +10,7 @@
     <color name="yellow">#FFCA28</color>
     <color name="activered">#F06248</color>
     <color name="defaultred">#FF785F</color>
-    <color name="lightBlueGreen">#0cc3c7</color>
-    <color name="hint_gray">#D0D0D0</color>
+    <color name="shop_banner_divider_default">#242525</color>
 
     <color name="progress_loader_stroke_color">@color/colorAccent</color>
 
@@ -25,4 +24,12 @@
     <color name="bg_edit_text_default">#ECECEC</color>
     <color name="bg_edit_text_focused">@color/colorAccent</color>
 
+    <color name="teal">#00B1B5</color>
+    <color name="splash_yellow">#F8C100</color>
+    <color name="red">#FF785F</color>
+    <color name="blue">#17B2E7</color>
+
+    <color name="darkteal">#01a4a7</color>
+    <color name="darkyellow">#e1af02</color>
+    <color name="darkred">#e76a54</color>
 </resources>

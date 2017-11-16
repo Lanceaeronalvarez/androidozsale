@@ -239,7 +239,6 @@ public class SaleItemsController extends BasePullToRefreshController implements 
         page = 0;
     }
 
-
     @Override
     protected void onAttach(@NonNull View view) {
         mPresenter.onAttach(this);

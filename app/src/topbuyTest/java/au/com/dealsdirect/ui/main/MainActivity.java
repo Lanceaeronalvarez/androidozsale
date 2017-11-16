@@ -1,16 +1,13 @@
 package au.com.dealsdirect.ui.main;
 
 import android.os.Bundle;
-import android.support.annotation.NonNull;
 import android.widget.FrameLayout;
 
 import com.bluelinelabs.conductor.Conductor;
 import com.bluelinelabs.conductor.Controller;
 import com.bluelinelabs.conductor.Router;
 import com.bluelinelabs.conductor.RouterTransaction;
-import com.bluelinelabs.conductor.changehandler.FadeChangeHandler;
 import com.bluelinelabs.conductor.changehandler.VerticalChangeHandler;
-import com.bluelinelabs.conductor.support.RouterPagerAdapter;
 import com.braintreepayments.api.BraintreeFragment;
 import com.braintreepayments.api.models.PaymentMethodNonce;
 import com.braintreepayments.cardform.view.CardForm;
@@ -24,12 +21,8 @@ import au.com.dealsdirect.data.network.model.checkout.CreatePaymentTransaction;
 import au.com.dealsdirect.data.network.model.checkout.getuserpaymentmethods.PaymentMethod;
 import au.com.dealsdirect.data.network.model.legalities.GetTemplateTextsResponse;
 import au.com.dealsdirect.ui.base.BaseActivity;
-import au.com.dealsdirect.ui.controller.categories.CategoriesController;
 import au.com.dealsdirect.ui.controller.main.MainController;
-import au.com.dealsdirect.ui.controller.main.MainCustomViewPager;
 import au.com.dealsdirect.ui.controller.splash.SplashScreenController;
-import au.com.dealsdirect.ui.main.MainMvpPresenter;
-import au.com.dealsdirect.ui.main.MainMvpView;
 import au.com.dealsdirect.utils.AppConstants;
 import au.com.dealsdirect.utils.DialogUtils;
 import au.com.dealsdirect.utils.IntrospectionUtils;
@@ -100,39 +93,45 @@ public class MainActivity extends BaseActivity implements MainMvpView {
 
     @Override
     public void onBackPressed() {
-        switch (getMainController().getHomeViewPager().getCurrentItem()){
-            case 0: //accounts
-                if(getAccountsRouter().getBackstack().size() == 1){
-                    getMainController().getHomeViewPager().setCurrentItem(1);
-                } else {
-                    getAccountsRouter().handleBack();
-                    GateKeeper.updateCurrentLocation(getAccountsRouter());
-                }
-                break;
-            case 1: //sale items
-                if(getSaleItemsRouter().getBackstack().size() == 1) {
-                    //exit app
-                    DialogUtils.showYesNoDialog(
-                            this,
-                            getString(R.string.exit_app_name),
-                            getString(R.string.exit_app),
-                            getString(R.string.exit),
-                            getString(R.string.no),
-                            (dialogInterface, i) -> finish(),
-                            (dialogInterface, i) -> {
-                            });
-                }
-                break;
-            case 2: //checkout
-                if(getCheckoutRouter().getBackstack().size() == 1){
-                    getMainController().getHomeViewPager().setCurrentItem(1);
-                } else {
-                    getCheckoutRouter().handleBack();
-                    GateKeeper.updateCurrentLocation(getCheckoutRouter());
-                }
-                break;
-            default:
-                break;
+
+//        CategoriesController categoriesController = (CategoriesController) GateKeeper.getCurrentControllerOnRouter(getCategoriesRouter());
+        if(getCategoriesRouter()!=null && getCategoriesRouter().getBackstackSize() != 0){
+            getCategoriesRouter().handleBack();
+        }else {
+            switch (getMainController().getHomeViewPager().getCurrentItem()) {
+                case 0: //accounts
+                    if (getAccountsRouter().getBackstack().size() == 1) {
+                        getMainController().getHomeViewPager().setCurrentItem(1);
+                    } else {
+                        getAccountsRouter().handleBack();
+                        GateKeeper.updateCurrentLocation(getAccountsRouter());
+                    }
+                    break;
+                case 1: //sale items
+                    if (getSaleItemsRouter().getBackstack().size() == 1) {
+                        //exit app
+                        DialogUtils.showYesNoDialog(
+                                this,
+                                getString(R.string.exit_app_name),
+                                getString(R.string.exit_app),
+                                getString(R.string.exit),
+                                getString(R.string.no),
+                                (dialogInterface, i) -> finish(),
+                                (dialogInterface, i) -> {
+                                });
+                    }
+                    break;
+                case 2: //checkout
+                    if (getCheckoutRouter().getBackstack().size() == 1) {
+                        getMainController().getHomeViewPager().setCurrentItem(1);
+                    } else {
+                        getCheckoutRouter().handleBack();
+                        GateKeeper.updateCurrentLocation(getCheckoutRouter());
+                    }
+                    break;
+                default:
+                    break;
+            }
         }
     }
 
@@ -387,6 +386,7 @@ public class MainActivity extends BaseActivity implements MainMvpView {
     }
 
     public void splashShownCallback() {
+
         mMainController = ControllerFactory.getInstance(GateKeeper.Destination.MAIN);
         mRouter.setRoot(RouterTransaction.with(mMainController)
                 .tag("Main"));

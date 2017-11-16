@@ -8,15 +8,11 @@ import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
 import au.com.dealsdirect.R;
-import au.com.dealsdirect.data.network.model.contactitem.ContactItemByDate;
 import au.com.dealsdirect.data.network.model.contactitem.GetContactsResponse;
-import au.com.dealsdirect.ui.custom.CircularTextView;
-import au.com.dealsdirect.utils.ColorUtils;
 import au.com.dealsdirect.utils.DateUtils;
 import au.com.dealsdirect.utils.StringUtils;
 
@@ -65,9 +61,6 @@ public class ContactsAdapter
         String dateOfContactItem = mCurrentContactsList.get(position).getLastComment();
         String dateHeaderFormatOfItem = DateUtils.getDayOfWeekFromDateString(itemLastAnswer.toString());
 
-        holder.circularTextView.setText("DD");
-
-        holder.circularTextView.setSolidColor(ColorUtils.getOvalColor(position));
 
         if (itemSubject != null) {
             holder.contactUsTitleTextView.setText(StringUtils.toTitleCase(itemSubject.toString()));
@@ -109,7 +102,6 @@ public class ContactsAdapter
     static class ViewContactsItemViewHolder extends RecyclerView.ViewHolder {
 
         LinearLayout contactItem;
-        CircularTextView circularTextView;
         TextView contactUsTitleTextView;
         TextView contactUsTimeStampTextView;
         TextView contactUsDescriptionTextView;
@@ -120,8 +112,6 @@ public class ContactsAdapter
             contactItem = (LinearLayout) itemView
                     .findViewById(R.id.my_contact_us_recycler_row_item_layout);
 
-            circularTextView = (CircularTextView) itemView
-                    .findViewById(R.id.my_contact_us_row_acronym);
 
             contactUsTitleTextView = (TextView) itemView
                     .findViewById(R.id.my_contact_us_row_title_text_view);
