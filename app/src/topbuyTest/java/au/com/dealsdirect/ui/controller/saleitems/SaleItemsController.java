@@ -4,6 +4,7 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.AppBarLayout;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -57,11 +58,10 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
 
     SaleItemsAdapter mAdapter;
     CustomGridLayoutManager mLayoutManager;
-
-
-
     List<SearchChipModel> mChipFilters = new ArrayList<>();
 
+    private String mChosenCategory = "";
+    private String mDefaultCategory = "";
     private List<GetSaleItemsResponse.Products> mSaleItems = new ArrayList<>();
 
     private Paginate mPaginateManager;
@@ -115,12 +115,15 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
 
     @Override
     protected void setUp(View view) {
+        mDefaultCategory = getResources().getString(R.string.category_default);
+
         mCategoriesRouter = getChildRouter(mCategoriesContainer);
         mPaginateCallbacks = new Paginate.Callbacks() {
             @Override
             public void onLoadMore() {
                 // Load next page of data (e.g. network or database)
                 page++;
+                Log.d("SaleItemsController", "calling onLoadMore");
                 refresh();
 
             }
@@ -138,7 +141,7 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
             }
         };
 
-        mAdapter = new SaleItemsAdapter(mSaleItems, mActivity, mPresenter);
+        mAdapter = new SaleItemsAdapter(mSaleItems, mActivity, mPresenter, this);
         if (mPresenter.isTablet()) {
             mSaleItemsRecyclerView.setLayoutManager(mLayoutManager = new CustomGridLayoutManager(mActivity, 4));
         } else {
@@ -150,13 +153,21 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
 
         mSaleItemsRecyclerView.setAdapter(mAdapter);
 
+        mPaginateManager = PaginateUtils.init(mSaleItemsRecyclerView, mPaginateCallbacks);
+
         if (mSaleItems.isEmpty()) {
             mPresenter.loadSaleItems(createSaleItemsRequest("", "", 0, mChipFilters));
-        } else if (!mSaleItems.isEmpty()) {
-            if (mSaleItems.size() >= PaginateUtils.LOADING_TRIGGER_THRESHOLD) {
-                mPaginateManager = PaginateUtils.init(mSaleItemsRecyclerView, mPaginateCallbacks);
-            }
+        } else {
+//            if (mSaleItems.size() >= PaginateUtils.LOADING_TRIGGER_THRESHOLD) {
+//
+//            }
         }
+
+//        else if (!mSaleItems.isEmpty()) {
+//            if (mSaleItems.size() >= PaginateUtils.LOADING_TRIGGER_THRESHOLD) {
+//
+//            }
+//        }
     }
 
     @Override
@@ -172,14 +183,10 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
             hasLoadedAllItems = true;
             mPaginateManager.setHasMoreDataToLoad(false);
             page = 0;
-        }else{
+        } else {
             if (page == 0) {
-                if (mPaginateManager != null) {
-                    mPaginateManager.unbind();
-                }
                 mAdapter.replaceData(items);
 
-                mPaginateManager = PaginateUtils.init(mSaleItemsRecyclerView, mPaginateCallbacks);
                 mSaleItemsRecyclerView.scrollToPosition(0);
                 if (items.size() <= PaginateUtils.LOADING_TRIGGER_THRESHOLD) {
                     hasLoadedAllItems = false;
@@ -188,15 +195,24 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
             } else {
                 mAdapter.addData(items);
             }
+            hasLoadedAllItems = false;
+            mPaginateManager.setHasMoreDataToLoad(true);
+            loadingInProgress = false;
         }
+
+        mSaleItems = mAdapter.getData();
 
     }
 
     @Override
     public void refresh() {
-        loadingInProgress = true;
-
-        mPresenter.loadSaleItems(createSaleItemsRequest("", "", page, mChipFilters));
+        if (mSaleItems.size() < PaginateUtils.LOADING_TRIGGER_THRESHOLD) {
+            hasLoadedAllItems = true;
+            page = 0;
+        } else {
+            loadingInProgress = true;
+            mPresenter.loadSaleItems(createSaleItemsRequest("", "", page, mChipFilters));
+        }
     }
 
     @Override
@@ -222,13 +238,13 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
 
         mCategoriesContainer.setVisibility(View.VISIBLE);
 
-        if(!mCategoriesRouter.hasRootController()) {
+        if (!mCategoriesRouter.hasRootController()) {
             Controller controller = ControllerFactory.getInstance(GateKeeper.Destination.CATEGORIES);
             GateKeeper.setRoot(mCategoriesRouter, GateKeeper.Destination.CATEGORIES, RouterTransaction.with(controller).popChangeHandler(new FadeChangeHandler()).pushChangeHandler(new FadeChangeHandler()));
-        }else{
-            CategoriesController controller = (CategoriesController)GateKeeper.getCurrentControllerOnRouter(mCategoriesRouter);
+        } else {
+            CategoriesController controller = (CategoriesController) GateKeeper.getCurrentControllerOnRouter(mCategoriesRouter);
 
-            if(controller.getBottomSheetBehavior().getState() == CoordinatorLayoutAsBottomSheetBehavior.STATE_COLLAPSED) {
+            if (controller.getBottomSheetBehavior().getState() == CoordinatorLayoutAsBottomSheetBehavior.STATE_COLLAPSED) {
                 controller.getBottomSheetBehavior().setState(CoordinatorLayoutAsBottomSheetBehavior.STATE_EXPANDED);
             }
         }
@@ -239,15 +255,21 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
     @Override
     public void onCategoryClicked(String chosenCategoryName, int color) {
         SaleItemsAdapter.HeaderViewHolder vh = mAdapter.getHeaderViewHolderInstance();
-        if(vh!=null) {
+        mChosenCategory = chosenCategoryName;
+        if (vh != null) {
             vh.onCategoryChangeUpdateUI(chosenCategoryName, color);
         }
     }
 
     @Override
+    public String getChosenCategory() {
+        return mChosenCategory;
+    }
+
+    @Override
     public void onShowSelectedCategoryText() {
         SaleItemsAdapter.HeaderViewHolder vh = mAdapter.getHeaderViewHolderInstance();
-        if(vh!=null) {
+        if (vh != null) {
             vh.showShopCategoryText();
         }
         mSearchBar.setVisibility(View.VISIBLE);
@@ -255,7 +277,7 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
 
     @Override
     public void onExecuteCategoryChangeApiCall(String chosenCategoryKey) {
-        mPresenter.loadSaleItems(createSaleItemsRequest(chosenCategoryKey,"",0,mChipFilters));
+        mPresenter.loadSaleItems(createSaleItemsRequest(chosenCategoryKey, "", 0, mChipFilters));
     }
 
     private GetSaleItemsRequest createSaleItemsRequest(String categoryKey, String saleId, int pageNumber, List<SearchChipModel> chipsList) {

@@ -31,6 +31,8 @@ public interface SaleItemsMvpView extends MvpView{
 
     void onCategoryClicked(String chosenCategoryName, int color);
 
+    String getChosenCategory();
+
     void onShowSelectedCategoryText();
 
     void onExecuteCategoryChangeApiCall(String chosenCategoryKey);

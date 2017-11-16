@@ -32,7 +32,6 @@ import au.com.dealsdirect.ui.controller.categories.adapter.CategoriesAdapter;
 import au.com.dealsdirect.ui.controller.saleitems.SaleItemsMvpPresenter;
 import au.com.dealsdirect.ui.controller.saleitems.SaleItemsMvpView;
 import au.com.dealsdirect.utils.BundleBuilder;
-import au.com.dealsdirect.utils.module.ControllerFactory;
 import au.com.dealsdirect.utils.module.GateKeeper;
 import butterknife.BindView;
 
@@ -48,38 +47,30 @@ public class CategoriesController extends BaseController
     private static final String ARG_CATEGORY_PREV_KEY = "argCategoryPrevKey";
     private static final String ARG_CATEGORY_CURRENT_KEY = "argCategoryCurrentKey";
     private static final String ARG_CATEGORY_POSITION = "argCategoryCurrentPosition";
-    private String chosenCategoryName="shop";
-    private String prevChosenCategoryName="";
-    private String chosenCategoryKey="";
-    private String prevChosenCategoryKey="";
-    private String lastOptionCategoryName="shop";
+    private String chosenCategoryName = "";
+    private String prevChosenCategoryName = "";
+    private String chosenCategoryKey = "";
+    private String prevChosenCategoryKey = "";
+    private String lastOptionCategoryName = "";
 
     private CategoriesAdapter mAdapter;
     private List<GetCategoryTreeResponse> mCategories;
-    private Map<String,List<GetCategoryTreeResponse>> mCategoryMap = new HashMap<>();
+    private Map<String, List<GetCategoryTreeResponse>> mCategoryMap = new HashMap<>();
     private int itemPosition = 0;
     private int categoriesChangeCount = 0;
     private CoordinatorLayoutAsBottomSheetBehavior mBottomSheetBehavior;
 
-    public String getChosenCategoryName(){
+    public String getChosenCategoryName() {
         return chosenCategoryName;
     }
 
-    public String getLastOptionCategoryName(){
-        return lastOptionCategoryName;
-    }
-
-    public void setLastOptionCategoryName(String val){
-        lastOptionCategoryName = val;
-    }
-
-    public String getPrevChosenCategoryKey(){
+    public String getPrevChosenCategoryKey() {
         return prevChosenCategoryKey;
     }
 
-    public void resetHeaderTextViewTransitionName(String text){
-        if(headerCategoryTextView!=null){
-            ViewCompat.setTransitionName(headerCategoryTextView,text);
+    public void resetHeaderTextViewTransitionName(String text) {
+        if (headerCategoryTextView != null) {
+            ViewCompat.setTransitionName(headerCategoryTextView, text);
         }
     }
 
@@ -109,11 +100,11 @@ public class CategoriesController extends BaseController
 
     public CategoriesController(Bundle args) {
         super(args);
-        chosenCategoryKey = args.getString(ARG_CATEGORY_CURRENT_KEY,"");
-        chosenCategoryName = args.getString(ARG_CATEGORY_CURRENT_NAME,"shop");
-        prevChosenCategoryKey = args.getString(ARG_CATEGORY_PREV_KEY,"");
-        prevChosenCategoryName = args.getString(ARG_CATEGORY_PREV_NAME,"");
-        itemPosition = args.getInt(ARG_CATEGORY_POSITION,0);
+        chosenCategoryKey = args.getString(ARG_CATEGORY_CURRENT_KEY, "");
+        chosenCategoryName = args.getString(ARG_CATEGORY_CURRENT_NAME,"");
+        prevChosenCategoryKey = args.getString(ARG_CATEGORY_PREV_KEY, "");
+        prevChosenCategoryName = args.getString(ARG_CATEGORY_PREV_NAME, "");
+        itemPosition = args.getInt(ARG_CATEGORY_POSITION, 0);
     }
 
     @Override
@@ -127,7 +118,7 @@ public class CategoriesController extends BaseController
 
         View view = inflater.inflate(R.layout.controller_categories, container, false);
         getControllerComponent().inject(this);
-        mSaleItemsPresenter.onAttach((SaleItemsMvpView)GateKeeper.getCurrentControllerOnRouter(mActivity.getSaleItemsRouter()));
+        mSaleItemsPresenter.onAttach((SaleItemsMvpView) GateKeeper.getCurrentControllerOnRouter(mActivity.getSaleItemsRouter()));
         mPresenter.onAttach(this);
         return view;
     }
@@ -136,12 +127,14 @@ public class CategoriesController extends BaseController
     protected void onViewBound(@NonNull View view) {
         super.onViewBound(view);
 
+        if(chosenCategoryName.isEmpty()){
+            chosenCategoryName = getResources().getString(R.string.category_default);
+        }
+
         mActivity.setDraggableViewPager(true);
         mActivity.setCategoriesRouter(getRouter());
         hideKeyboard();
         mPresenter.callGetCategoryTree();
-
-        Log.d("ChosenCategory", chosenCategoryName+"");
 //        com.mysale.genie.animation.AnimationEngine.Builder.animate(headerUnderlineView)
 //                .scaleX(65)
 //                .setDuration(300)
@@ -153,9 +146,14 @@ public class CategoriesController extends BaseController
 
     @Override
     public boolean handleBack() {
-        if(getRouter().getBackstackSize() == 1){
-            getRouter().setPopsLastView(true);
+
+        ViewCompat.setTransitionName(headerCategoryTextView, "categoryHeaderTransitionName");
+
+        mSaleItemsPresenter.executeCategoryChangeApiCall(prevChosenCategoryKey);
+
+        if (getRouter().getBackstackSize() == 1) {
             mSaleItemsPresenter.showSelectedCategoryText();
+            getRouter().setPopsLastView(true);
             getRouter().popCurrentController();
             return true;
         }
@@ -167,7 +165,6 @@ public class CategoriesController extends BaseController
     protected void onDestroyView(@NonNull View view) {
         mPresenter.onDetach();
         super.onDestroyView(view);
-
     }
 
     @Override
@@ -214,18 +211,15 @@ public class CategoriesController extends BaseController
         //check if is last option
         boolean isOptionLastContent = isOptionLastContent(categoryKey);
 
-        if(isOptionLastContent) {
-
-            lastOptionCategoryName = categoryName;
-
+        if (isOptionLastContent) {
             //collapse fragment
-//            mSaleItemsPresenter.updateSaleItemHeaderOnChosenCategory(categoryName,determineColor());
+            mSaleItemsPresenter.categoryClicked(categoryName, determineColor());
+            categoriesChangeCount++;
             mBottomSheetBehavior.setState(CoordinatorLayoutAsBottomSheetBehavior.STATE_COLLAPSED);
 
-        }else {
+        } else {
 
             //reset lastOptionCategoryName
-            lastOptionCategoryName = "";
 
             Bundle bundle = new Bundle();
             bundle.putString(ARG_CATEGORY_PREV_NAME, chosenCategoryName);
@@ -247,7 +241,7 @@ public class CategoriesController extends BaseController
 
     public void initUIValues() {
 
-        if (chosenCategoryName.equals("shop")) {
+        if (chosenCategoryName.equals(getResources().getString(R.string.category_default))) {
             prevHeaderCategoryTextView.setVisibility(View.GONE);
         } else {
             prevHeaderCategoryTextView.setVisibility(View.VISIBLE);
@@ -258,14 +252,7 @@ public class CategoriesController extends BaseController
             @Override
             public void onClick(View view) {
                 //need to reset transition name of headerCategoryTextView to allow shared element return transition to work.
-                ViewCompat.setTransitionName(headerCategoryTextView,"categoryHeaderTransitionName");
-
-                lastOptionCategoryName = "";
-
-                mSaleItemsPresenter.executeCategoryChangeApiCall(prevChosenCategoryKey);
-
                 mActivity.onBackPressed();
-
             }
         });
 
@@ -274,15 +261,23 @@ public class CategoriesController extends BaseController
         //set fragment background color
         mRootLayout.setBackgroundColor(color);
 
-        if(chosenCategoryName.equals("shop")){
+        if (chosenCategoryName.equals(getResources().getString(R.string.category_default))) {
             color = getResources().getColor(R.color.shop_banner_divider_default);
         }
-        mSaleItemsPresenter.updateSaleItemHeaderOnChosenCategory(chosenCategoryName,color);
+
+        mSaleItemsPresenter.categoryClicked(chosenCategoryName, color);
         headerCategoryTextView.setText(chosenCategoryName);
         categoriesChangeCount++;
     }
 
-    private int determineColor(){
+    private void goBack(){
+        ViewCompat.setTransitionName(headerCategoryTextView, "categoryHeaderTransitionName");
+
+        mSaleItemsPresenter.executeCategoryChangeApiCall(prevChosenCategoryKey);
+
+    }
+
+    private int determineColor() {
         CategoriesColorHelper categoriesColorHelper = new CategoriesColorHelper();
         String[] colorSet = categoriesColorHelper.getBackgroundColor(categoriesChangeCount);
 
@@ -296,16 +291,16 @@ public class CategoriesController extends BaseController
     }
 
     private void createCategoryMap(List<GetCategoryTreeResponse> categories) {
-        mCategoryMap.put("shop", categories);
+        mCategoryMap.put(getResources().getString(R.string.category_default), categories);
 
         for (GetCategoryTreeResponse i : categories) {
 
-            if (i.getChildren() != null && !i.getChildren().isEmpty()){
+            if (i.getChildren() != null && !i.getChildren().isEmpty()) {
 
                 addToMap(i.getChildren());
             }
 
-            mCategoryMap.put(i.getKey(),i.getChildren());
+            mCategoryMap.put(i.getKey(), i.getChildren());
         }
 
     }
@@ -313,35 +308,35 @@ public class CategoriesController extends BaseController
     private void addToMap(List<GetCategoryTreeResponse> list) {
         for (GetCategoryTreeResponse i : list) {
 
-            if (i.getChildren() != null && !i.getChildren().isEmpty()){
+            if (i.getChildren() != null && !i.getChildren().isEmpty()) {
 
                 addToMap(i.getChildren());
             }
 
-            mCategoryMap.put(i.getKey(),i.getChildren());
+            mCategoryMap.put(i.getKey(), i.getChildren());
 
         }
     }
 
     private List<GetCategoryTreeResponse> fillCategoryContent() {
 
-        if (chosenCategoryName.equals("shop")){
+        if (chosenCategoryName.equals(getResources().getString(R.string.category_default))) {
             return mCategoryMap.get(chosenCategoryName);
-        }else if (mCategoryMap.get(chosenCategoryKey)!= null){
+        } else if (mCategoryMap.get(chosenCategoryKey) != null) {
             return mCategoryMap.get(chosenCategoryKey);
-        }else {
+        } else {
             return new ArrayList<>();
         }
     }
 
-    private void setupCategories(){
-        mAdapter = new CategoriesAdapter(fillCategoryContent(), "shop", this);
+    private void setupCategories() {
+        mAdapter = new CategoriesAdapter(fillCategoryContent(), getResources().getString(R.string.category_default), this);
         mRecyclerView.setAdapter(mAdapter);
         mRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
 
     }
 
-    private boolean isOptionLastContent(String option){
+    private boolean isOptionLastContent(String option) {
 
         return mCategoryMap.get(option) == null || mCategoryMap.get(option).size() == 0;
     }
@@ -381,7 +376,7 @@ public class CategoriesController extends BaseController
 
     }
 
-    public CoordinatorLayoutAsBottomSheetBehavior getBottomSheetBehavior(){
+    public CoordinatorLayoutAsBottomSheetBehavior getBottomSheetBehavior() {
         return mBottomSheetBehavior;
     }
 }

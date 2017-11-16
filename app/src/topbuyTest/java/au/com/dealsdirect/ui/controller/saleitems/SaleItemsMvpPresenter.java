@@ -23,7 +23,7 @@ public interface SaleItemsMvpPresenter<V extends SaleItemsMvpView> extends MvpPr
 
     void openCategoriesController();
 
-    void updateSaleItemHeaderOnChosenCategory(String chosenCategoryName, int color);
+    void categoryClicked(String chosenCategoryName, int color);
 
     void showSelectedCategoryText();
 

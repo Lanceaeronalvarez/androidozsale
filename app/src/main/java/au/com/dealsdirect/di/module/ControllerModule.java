@@ -183,7 +183,6 @@ public class ControllerModule {
     }
 
     @Provides
-    @PerController
     SaleItemsMvpPresenter<SaleItemsMvpView> provideSaleItemsPresenter(SaleItemsPresenter<SaleItemsMvpView> presenter) {
         return presenter;
     }

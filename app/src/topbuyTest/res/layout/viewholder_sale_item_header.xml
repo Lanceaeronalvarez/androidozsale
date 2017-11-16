@@ -26,16 +26,16 @@
             android:id="@+id/main_page_header_text"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            tools:text="@string/shop_image_header_text"
-            android:visibility="visible"
+            tools:text="@string/category_default"
+            android:visibility="gone"
             android:textColor="@color/white"
-            android:text="shop"
             android:textSize="@dimen/text_size_xxxlarge"
             android:maxLines="2" />
 
 
         <View
             android:id="@+id/header_underline"
+            android:visibility="gone"
             android:layout_width="35dp"
             android:layout_height="2dp"
             android:layout_marginTop="10dp"

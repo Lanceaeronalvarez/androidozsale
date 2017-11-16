@@ -28,8 +28,6 @@ public class SaleItemsPresenter<V extends SaleItemsMvpView> extends BasePresente
 
     private static final String SEARCH_QUERY_TAG = "search_query";
 
-    String mSaleId = "";
-
     @Inject
     public SaleItemsPresenter(DataManager dataManager, SchedulerProvider schedulerProvider,
                               CompositeDisposable compositeDisposable) {
@@ -79,7 +77,7 @@ public class SaleItemsPresenter<V extends SaleItemsMvpView> extends BasePresente
     }
 
     @Override
-    public void updateSaleItemHeaderOnChosenCategory(String chosenCategoryName, int color) {
+    public void categoryClicked(String chosenCategoryName, int color) {
         getMvpView().onCategoryClicked(chosenCategoryName,color);
     }
 

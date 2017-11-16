@@ -8,6 +8,7 @@ import android.graphics.PorterDuff;
 import android.graphics.PorterDuffColorFilter;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -47,16 +48,18 @@ public class SaleItemsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
     }
 
     private HeaderViewHolder headerViewHolderInstance;
-    private List<GetSaleItemsResponse.Products> mData;
+    private List<GetSaleItemsResponse.Products> mData = new ArrayList<>();
     private MainActivity mActivity;
     private SaleItemsMvpPresenter mPresenter;
+    private SaleItemsMvpView mvpView;
 
     private int mComputedHeight = 0;
 
-    public SaleItemsAdapter(List<GetSaleItemsResponse.Products> mData, MainActivity activity, SaleItemsMvpPresenter mPresenter) {
+    public SaleItemsAdapter(List<GetSaleItemsResponse.Products> mData, MainActivity activity, SaleItemsMvpPresenter mPresenter, SaleItemsMvpView mvpView) {
         this.mData = mData;
         this.mActivity = activity;
         this.mPresenter = mPresenter;
+        this.mvpView = mvpView;
 
         // Dynamic Height Computation
         int columns = mPresenter.isTablet() ? 4 : 2;
@@ -69,6 +72,7 @@ public class SaleItemsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
         RecyclerView.ViewHolder vh = null;
         View v = null;
         if (viewType == 0) {
+            Log.d("SaleItemsAdapter", "onCreateViewHolder header");
             v = LayoutInflater.from(parent.getContext()).inflate(R.layout.viewholder_sale_item_header, parent, false);
             vh = headerViewHolderInstance = new HeaderViewHolder(v, mPresenter);
         } else if (viewType == 1) {
@@ -85,17 +89,17 @@ public class SaleItemsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
         if (vh instanceof ShopItemsViewHolder) {
             ShopItemsViewHolder holder = (ShopItemsViewHolder) vh;
 
-            GetSaleItemsResponse.Products saleItem = mData.get(position);
-            String url = mData.get(position).getImages().isEmpty() ? "" : mData.get(position).getImages().get(0);
+            GetSaleItemsResponse.Products saleItem = mData.get(position-1);
+            String url = saleItem.getImages().isEmpty() ? "" : saleItem.getImages().get(0);
 
             holder.productName.setText(saleItem.getProductName());
 
             String saleItemBrand = saleItem.getProductName();
 
-            if (mData.get(position).getSkus() != null)
-                if (!mData.get(position).getSkus().isEmpty())
-                    if (mData.get(position).getSkus().get(0).getBrandName() != null)
-                        saleItemBrand = mData.get(position).getSkus().get(0).getBrandName();
+            if (saleItem.getSkus() != null)
+                if (!saleItem.getSkus().isEmpty())
+                    if (saleItem.getSkus().get(0).getBrandName() != null)
+                        saleItemBrand = saleItem.getSkus().get(0).getBrandName();
 
             if (saleItem.getLabelText() == null) {
                 holder.discountLabel.setVisibility(View.GONE);
@@ -105,8 +109,8 @@ public class SaleItemsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
                 holder.discountLabel.setText(saleItem.getLabelText());
             }
 
-            String saleItemPrice = PriceUtils.getPriceStringValue(mData.get(position).getPrice().getValue());
-            String saleItemOldPrice = PriceUtils.getRpStringValue(mData.get(position).getOriginalPrice().getValue());
+            String saleItemPrice = PriceUtils.getPriceStringValue(saleItem.getPrice().getValue());
+            String saleItemOldPrice = PriceUtils.getRpStringValue(saleItem.getOriginalPrice().getValue());
 
 //        ImageUtils.clearImage(mContext,holder.mSaleItemImage);
 
@@ -145,24 +149,22 @@ public class SaleItemsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
 //                    .format(DecodeFormat.PREFER_RGB_565)
 //                    .centerCrop().into(holder.headerImage);
 
-            if(mActivity.getCategoriesRouter() != null) {
-                CategoriesController controller = (CategoriesController) GateKeeper.getCurrentControllerOnRouter(mActivity.getCategoriesRouter());
-                if (!controller.getLastOptionCategoryName().isEmpty()) {
-                    holder.shopTextView.setText(controller.getLastOptionCategoryName());
-                } else {
-                    holder.shopTextView.setText(controller.getChosenCategoryName());
-                }
+            holder.shopTextView.setVisibility(View.VISIBLE);
+            holder.headerUnderline.setVisibility(View.VISIBLE);
+
+            if(mvpView.getChosenCategory().isEmpty()){
+                holder.shopTextView.setText(mActivity.getString(R.string.category_default));
             }
         }
     }
 
     @Override
     public int getItemCount() {
-        return mData.size();
+        return mData.size()+1;
     }
 
     public void replaceData(List<GetSaleItemsResponse.Products> saleItems) {
-        mData = new ArrayList<>(saleItems);
+        mData = saleItems;
         notifyDataSetChanged();
     }
 
@@ -171,14 +173,19 @@ public class SaleItemsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
         notifyDataSetChanged();
     }
 
+    public List<GetSaleItemsResponse.Products> getData(){
+        return mData;
+    }
+
     @Override
     public int getItemViewType(int position) {
         //header
         if (position == 0) {
             return 0;
-        } else {
-            return 1;
         }
+
+        return 1;
+
     }
 
     public static class HeaderViewHolder extends RecyclerView.ViewHolder implements CategoryObserver {
@@ -242,6 +249,7 @@ public class SaleItemsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
 
         @Override
         public void onCategoryChangeUpdateUI(String text, int color) {
+            Log.d("SaleItemsAdapter","updating "+text+" color "+color);
             shopTextView.setText(text);
             welcomeHeaderTextLayout.setBackgroundColor(color);
         }

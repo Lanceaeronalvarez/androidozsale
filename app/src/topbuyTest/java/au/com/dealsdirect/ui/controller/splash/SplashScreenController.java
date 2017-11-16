@@ -64,11 +64,12 @@ public class SplashScreenController extends BaseController {
         AppLogger.d("splash" + "setup");
 
         new Handler().postDelayed(() -> {
-            AppLogger.d("splash" + "popcontroller");
-            getRouter().pushController(RouterTransaction.with(TutorialController.newInstance())
-                    .tag(CurrentReturnsController.TAG)
-                    .pushChangeHandler(new VerticalChangeHandler())
-                    .popChangeHandler(new VerticalChangeHandler()));
+            if (getActivity() != null) ((MainActivity) getActivity()).splashShownCallback();
+//            AppLogger.d("splash" + "popcontroller");
+//            getRouter().pushController(RouterTransaction.with(TutorialController.newInstance())
+//                    .tag(CurrentReturnsController.TAG)
+//                    .pushChangeHandler(new VerticalChangeHandler())
+//                    .popChangeHandler(new VerticalChangeHandler()));
         }, 3000);
     }
 }
