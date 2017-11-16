@@ -43,4 +43,11 @@
 
     <!--<include layout="@layout/bottom_sheet_layout" />-->
 
+    <com.bluelinelabs.conductor.ChangeHandlerFrameLayout
+        android:id="@+id/controller_categories_frame"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:visibility="gone"/>
+
+
 </android.support.design.widget.CoordinatorLayout>

@@ -221,6 +221,7 @@ dependencies {
 
     compile project(path: ':genie-utility')
     compile project(path: ':genie-animation')
+    compile project(path: ':genie-views')
     compile project(path: ':CardForm')
     compile project(path: ':ptr-lib')
 

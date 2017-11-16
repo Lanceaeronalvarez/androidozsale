@@ -2,12 +2,18 @@ package au.com.dealsdirect.ui.controller.saleitems;
 
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.design.widget.AppBarLayout;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.bluelinelabs.conductor.Controller;
+import com.bluelinelabs.conductor.Router;
+import com.bluelinelabs.conductor.RouterTransaction;
+import com.bluelinelabs.conductor.changehandler.FadeChangeHandler;
 import com.google.gson.Gson;
+import com.mysale.genie.views.custom.CoordinatorLayoutAsBottomSheetBehavior;
 import com.paginate.Paginate;
 
 import java.util.ArrayList;
@@ -22,10 +28,13 @@ import au.com.dealsdirect.data.network.model.saleitems.GetSaleItemsRequest;
 import au.com.dealsdirect.data.network.model.saleitems.GetSaleItemsResponse;
 import au.com.dealsdirect.data.network.model.sorting.SortingResponse;
 import au.com.dealsdirect.ui.base.BaseController;
+import au.com.dealsdirect.ui.controller.categories.CategoriesController;
 import au.com.dealsdirect.ui.controller.searchfilter.adapter.SearchChipModel;
 import au.com.dealsdirect.utils.BundleBuilder;
 import au.com.dealsdirect.utils.BundleKeys;
 import au.com.dealsdirect.utils.PaginateUtils;
+import au.com.dealsdirect.utils.module.ControllerFactory;
+import au.com.dealsdirect.utils.module.GateKeeper;
 import butterknife.BindView;
 
 /**
@@ -40,8 +49,16 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
     @BindView(R.id.sale_items_recyclerview)
     RecyclerView mSaleItemsRecyclerView;
 
+    @BindView(R.id.controller_categories_frame)
+    ViewGroup mCategoriesContainer;
+
+    @BindView(R.id.sale_items_search_bar)
+    AppBarLayout mSearchBar;
+
     SaleItemsAdapter mAdapter;
     CustomGridLayoutManager mLayoutManager;
+
+
 
     List<SearchChipModel> mChipFilters = new ArrayList<>();
 
@@ -53,6 +70,7 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
     private int page = 0;
     private boolean loadingInProgress = false;
     private boolean hasLoadedAllItems = false;
+    private Router mCategoriesRouter;
 
     public static SaleItemsController newInstance() {
         return new SaleItemsController(
@@ -97,7 +115,7 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
 
     @Override
     protected void setUp(View view) {
-
+        mCategoriesRouter = getChildRouter(mCategoriesContainer);
         mPaginateCallbacks = new Paginate.Callbacks() {
             @Override
             public void onLoadMore() {
@@ -196,6 +214,48 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
     @Override
     public void onPassFiltersData(Bundle bundle) {
 
+    }
+
+    @Override
+    public void showCategoriesController() {
+        mSearchBar.setVisibility(View.GONE);
+
+        mCategoriesContainer.setVisibility(View.VISIBLE);
+
+        if(!mCategoriesRouter.hasRootController()) {
+            Controller controller = ControllerFactory.getInstance(GateKeeper.Destination.CATEGORIES);
+            GateKeeper.setRoot(mCategoriesRouter, GateKeeper.Destination.CATEGORIES, RouterTransaction.with(controller).popChangeHandler(new FadeChangeHandler()).pushChangeHandler(new FadeChangeHandler()));
+        }else{
+            CategoriesController controller = (CategoriesController)GateKeeper.getCurrentControllerOnRouter(mCategoriesRouter);
+
+            if(controller.getBottomSheetBehavior().getState() == CoordinatorLayoutAsBottomSheetBehavior.STATE_COLLAPSED) {
+                controller.getBottomSheetBehavior().setState(CoordinatorLayoutAsBottomSheetBehavior.STATE_EXPANDED);
+            }
+        }
+
+
+    }
+
+    @Override
+    public void onCategoryClicked(String chosenCategoryName, int color) {
+        SaleItemsAdapter.HeaderViewHolder vh = mAdapter.getHeaderViewHolderInstance();
+        if(vh!=null) {
+            vh.onCategoryChangeUpdateUI(chosenCategoryName, color);
+        }
+    }
+
+    @Override
+    public void onShowSelectedCategoryText() {
+        SaleItemsAdapter.HeaderViewHolder vh = mAdapter.getHeaderViewHolderInstance();
+        if(vh!=null) {
+            vh.showShopCategoryText();
+        }
+        mSearchBar.setVisibility(View.VISIBLE);
+    }
+
+    @Override
+    public void onExecuteCategoryChangeApiCall(String chosenCategoryKey) {
+        mPresenter.loadSaleItems(createSaleItemsRequest(chosenCategoryKey,"",0,mChipFilters));
     }
 
     private GetSaleItemsRequest createSaleItemsRequest(String categoryKey, String saleId, int pageNumber, List<SearchChipModel> chipsList) {

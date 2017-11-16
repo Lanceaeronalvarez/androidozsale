@@ -1,6 +1,8 @@
 package au.com.dealsdirect.ui.base;
 
 
+import android.os.Parcelable;
+
 import com.androidnetworking.error.ANError;
 
 import au.com.dealsdirect.data.network.ApiCallback;

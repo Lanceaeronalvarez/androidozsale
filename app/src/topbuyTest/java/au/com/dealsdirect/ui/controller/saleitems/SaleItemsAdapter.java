@@ -20,14 +20,19 @@ import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.DecodeFormat;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bumptech.glide.load.resource.bitmap.BitmapEncoder;
+import com.mysale.genie.animation.AnimationEngine;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import au.com.dealsdirect.R;
 import au.com.dealsdirect.data.network.model.saleitems.GetSaleItemsResponse;
+import au.com.dealsdirect.ui.controller.categories.CategoriesController;
+import au.com.dealsdirect.ui.main.MainActivity;
 import au.com.dealsdirect.utils.ImageUtils;
 import au.com.dealsdirect.utils.PriceUtils;
 import au.com.dealsdirect.utils.ScreenUtils;
+import au.com.dealsdirect.utils.module.GateKeeper;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
@@ -37,21 +42,25 @@ import butterknife.ButterKnife;
 
 public class SaleItemsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
+    public HeaderViewHolder getHeaderViewHolderInstance() {
+        return headerViewHolderInstance;
+    }
+
     private HeaderViewHolder headerViewHolderInstance;
     private List<GetSaleItemsResponse.Products> mData;
-    private Context mContext;
+    private MainActivity mActivity;
     private SaleItemsMvpPresenter mPresenter;
 
     private int mComputedHeight = 0;
 
-    public SaleItemsAdapter(List<GetSaleItemsResponse.Products> mData, Context mContext, SaleItemsMvpPresenter mPresenter) {
+    public SaleItemsAdapter(List<GetSaleItemsResponse.Products> mData, MainActivity activity, SaleItemsMvpPresenter mPresenter) {
         this.mData = mData;
-        this.mContext = mContext;
+        this.mActivity = activity;
         this.mPresenter = mPresenter;
 
         // Dynamic Height Computation
         int columns = mPresenter.isTablet() ? 4 : 2;
-        int screenWidth = (int) (ScreenUtils.getScreenWidth(mContext) / columns - (15 * ScreenUtils.getScreenDensity(mContext)));
+        int screenWidth = (int) (ScreenUtils.getScreenWidth(mActivity) / columns - (15 * ScreenUtils.getScreenDensity(mActivity)));
         mComputedHeight = ImageUtils.getComputedBannerHeight(225, 360, screenWidth);
     }
 
@@ -101,9 +110,9 @@ public class SaleItemsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
 
 //        ImageUtils.clearImage(mContext,holder.mSaleItemImage);
 
-            ImageUtils.loadImage(mContext, url, holder.productImage);
+            ImageUtils.loadImage(mActivity, url, holder.productImage);
 
-            holder.productImage.setTransitionName(mContext.getString(R.string.transition_sale_image_indexed, position));
+            holder.productImage.setTransitionName(mActivity.getString(R.string.transition_sale_image_indexed, position));
 
 //            holder.soldout.setVisibility(saleItem.isSoldOut() ? View.VISIBLE : View.GONE);
 
@@ -125,20 +134,25 @@ public class SaleItemsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
         if (vh instanceof HeaderViewHolder) {
             HeaderViewHolder holder = (HeaderViewHolder) vh;
 //            ImageUtils.loadImage(mContext, url, holder.headerImage);
-            Glide.with(mContext).load(R.drawable.bg_sale_item_header)
-                    .asBitmap()
-                    .encoder(new BitmapEncoder(Bitmap.CompressFormat.JPEG, 50))
-                    .diskCacheStrategy(DiskCacheStrategy.SOURCE)
-                    .skipMemoryCache(true)
-                    .format(DecodeFormat.PREFER_RGB_565)
+            Glide.with(mActivity).load(R.drawable.bg_sale_item_header)
+                    .diskCacheStrategy(DiskCacheStrategy.RESULT)
                     .centerCrop().into(holder.headerImage);
+//            Glide.with(mActivity).load(R.drawable.bg_sale_item_header)
+//                    .asBitmap()
+//                    .encoder(new BitmapEncoder(Bitmap.CompressFormat.JPEG, 50))
+//                    .diskCacheStrategy(DiskCacheStrategy.SOURCE)
+//                    .skipMemoryCache(true)
+//                    .format(DecodeFormat.PREFER_RGB_565)
+//                    .centerCrop().into(holder.headerImage);
 
-
-//            if (!FilterCategoriesFragment.getLastOptionCategoryName().isEmpty()) {
-//                vh.shopTextView.setText(FilterCategoriesFragment.getLastOptionCategoryName());
-//            } else {
-//                vh.shopTextView.setText(FilterCategoriesFragment.getChosenCategoryName());
-//            }
+            if(mActivity.getCategoriesRouter() != null) {
+                CategoriesController controller = (CategoriesController) GateKeeper.getCurrentControllerOnRouter(mActivity.getCategoriesRouter());
+                if (!controller.getLastOptionCategoryName().isEmpty()) {
+                    holder.shopTextView.setText(controller.getLastOptionCategoryName());
+                } else {
+                    holder.shopTextView.setText(controller.getChosenCategoryName());
+                }
+            }
         }
     }
 
@@ -148,7 +162,7 @@ public class SaleItemsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
     }
 
     public void replaceData(List<GetSaleItemsResponse.Products> saleItems) {
-        mData = saleItems;
+        mData = new ArrayList<>(saleItems);
         notifyDataSetChanged();
     }
 
@@ -167,12 +181,14 @@ public class SaleItemsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
         }
     }
 
-    public static class HeaderViewHolder extends RecyclerView.ViewHolder {
+    public static class HeaderViewHolder extends RecyclerView.ViewHolder implements CategoryObserver {
 
         @BindView(R.id.welcome_header_layout)
         LinearLayout welcomeHeaderTextLayout;
         @BindView(R.id.main_page_header_text)
         TextView shopTextView;
+        @BindView(R.id.header_underline)
+        View headerUnderline;
         @BindView(R.id.header_image)
         ImageView headerImage;
         @BindView(R.id.no_search_items_layout)
@@ -214,33 +230,31 @@ public class SaleItemsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
             ButterKnife.bind(this, itemView);
             headerImage.setColorFilter(new PorterDuffColorFilter(Color.parseColor("#6c000000"), PorterDuff.Mode.SRC_OVER));
 
-//            mFilterCategoryClickObserver = new SimpleFilterCategoryClickObserver(){
-//                @Override
-//                public void onCategoryChangeUpdateShopUI(String text, int color) {
-//                    shopTextView.setText(text);
-//                    welcomeHeaderTextLayout.setBackgroundColor(color);
-//                }
-//
-//                @Override
-//                public void showShopCategoryText() {
-//                    shopTextView.setVisibility(View.VISIBLE);
-//                    if(shopTextView.getAlpha()!=1f) {
-//                        AnimationEngine.Builder.animate(shopTextView).fadeIn().build().start();
-//                    }
-//                }
-//            };
 
-//            shopTextView.setOnClickListener(v -> {
-//                AnimationEngine.Builder.animate(shopTextView).fadeOut()
-//                        .build().start();
-//
-//                GDebug.log("shoptextview", "clicked ");
-//                mPresenter.clickShopTextView();
-//            });
+            shopTextView.setOnClickListener(v -> {
+                AnimationEngine.Builder.animate(shopTextView).fadeOut().build().start();
+                AnimationEngine.Builder.animate(headerUnderline).fadeOut().build().start();
+                mPresenter.openCategoriesController();
+            });
 
 
         }
 
+        @Override
+        public void onCategoryChangeUpdateUI(String text, int color) {
+            shopTextView.setText(text);
+            welcomeHeaderTextLayout.setBackgroundColor(color);
+        }
+
+        @Override
+        public void showShopCategoryText() {
+            shopTextView.setVisibility(View.VISIBLE);
+            headerUnderline.setVisibility(View.VISIBLE);
+            if (shopTextView.getAlpha() != 1f) {
+                AnimationEngine.Builder.animate(shopTextView).fadeIn().build().start();
+                AnimationEngine.Builder.animate(headerUnderline).fadeIn().build().start();
+            }
+        }
     }
 
     public static class ShopItemsViewHolder extends RecyclerView.ViewHolder {
@@ -262,7 +276,7 @@ public class SaleItemsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
         public ShopItemsViewHolder(View v, int computedHeight) {
             super(v);
 
-            ButterKnife.bind(this,v);
+            ButterKnife.bind(this, v);
 
             RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams) upperCard.getLayoutParams();
             params.height = computedHeight;
