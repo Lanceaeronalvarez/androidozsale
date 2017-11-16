@@ -6,6 +6,8 @@
     <color name="colorPrimary">#01A2A6</color>
     <color name="colorPrimaryDark">#242425</color>
     <color name="colorAccent">#1CB1B4</color>
+    <color name="hint_gray">#D0D0D0</color>
+
 
     <color name="yellow">#FFCA28</color>
     <color name="activered">#F06248</color>

@@ -36,6 +36,8 @@
     <dimen name="text_size_xx_large">22sp</dimen>
     <dimen name="text_size_xxx_large">24sp</dimen>
 
+    <dimen name="tutorial_image_size">350dp</dimen>
+
     <dimen name="padding">5dp</dimen>
 
 </resources>
