@@ -33,11 +33,8 @@ import au.com.dealsdirect.data.network.model.vouchers.AddAndApplyVoucherByKeyRes
 import au.com.dealsdirect.data.network.model.vouchers.AddVoucherByKeyResponse;
 import au.com.dealsdirect.data.network.model.vouchers.ApplyVouchersResponse;
 import au.com.dealsdirect.data.network.model.vouchers.ClearVouchersResponse;
-import au.com.dealsdirect.data.network.model.vouchers.GetUserVoucherResponse;
 import au.com.dealsdirect.data.network.model.vouchers.Voucher;
-import au.com.dealsdirect.ui.base.BaseController;
 import au.com.dealsdirect.ui.base.BaseToolBarController;
-import au.com.dealsdirect.ui.controller.vouchers.View.ViewVouchersRecyclerViewAdapter;
 import au.com.dealsdirect.ui.custom.CustomAlertDialog;
 import au.com.dealsdirect.utils.BundleBuilder;
 import au.com.dealsdirect.utils.JsonUtils;
@@ -137,12 +134,12 @@ public class AddVouchersController extends BaseToolBarController implements AddV
     int listSize = 0;
     private String mTempVoucherPromoKey;
 
-    private List<GetUserVoucherResponse.Voucher> mVouchers = new ArrayList<>();
+    private List<Voucher> mVouchers = new ArrayList<>();
     SharedPreferences mSharedPreference;
 
     HashMap<Integer, Boolean> voucherOptionIndicator = new HashMap<>();
 
-    private ViewVouchersRecyclerViewAdapter mAdapter;
+    private AddVouchersRecyclerViewAdapter mAdapter;
     private boolean mIsVoucherAdded = false;
     private boolean mIsNoDiscountApplied = false;
 
@@ -199,7 +196,7 @@ public class AddVouchersController extends BaseToolBarController implements AddV
     @Override
     protected void setUp(View view) {
 
-        mAdapter = new ViewVouchersRecyclerViewAdapter(mVouchers, mActivity);
+        mAdapter = new AddVouchersRecyclerViewAdapter(mVouchers, this, mActivity);
 
         if (!mIsVoucherAdded) {
             mButtonClear.setVisibility(View.GONE);
@@ -220,7 +217,7 @@ public class AddVouchersController extends BaseToolBarController implements AddV
             }
         });
 
-        mAdapter = new ViewVouchersRecyclerViewAdapter(mVouchers, mActivity);
+        mAdapter = new AddVouchersRecyclerViewAdapter(mVouchers,this, mActivity);
         mRecyclerView.setAdapter(mAdapter);
         mRecyclerView.setLayoutManager(new LinearLayoutManager(mActivity, LinearLayoutManager.HORIZONTAL, false));
 
