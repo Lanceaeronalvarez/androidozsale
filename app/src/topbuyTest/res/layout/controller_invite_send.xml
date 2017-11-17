@@ -51,7 +51,7 @@
                         android:layout_margin="@dimen/screen_padding"
                         android:gravity="center"
                         android:lineSpacingExtra="5dp"
-                        android:text="@string/invite_friend_guide"
+                        android:text="@string/my_vouchers_view_detail"
                         android:textAlignment="center"
                         android:textSize="@dimen/text_size_medium" />
 
@@ -75,7 +75,7 @@
                             android:layout_height="wrap_content"
                             android:layout_marginRight="5dp"
                             android:layout_weight="1"
-                            android:background="@drawable/rounded_btn_states"
+                            android:background="@drawable/bg_invite_twitter"
                             android:clickable="true"
                             android:padding="15dp">
 
@@ -93,7 +93,6 @@
                                     android:layout_height="@dimen/invite_friends_image_height"
                                     android:scaleType="fitXY"
                                     android:layout_gravity="center"
-                                    android:background="@color/invite_twitter"
                                     android:src="@drawable/ic_twitter"
                                     tools:ignore="ContentDescription" />
 
@@ -106,7 +105,7 @@
                                     android:gravity="center"
                                     android:paddingLeft="@dimen/invite_friends_padding"
                                     android:paddingRight="@dimen/invite_friends_padding"
-                                    android:textColor="@color/category_text_inactive"
+                                    android:textColor="@color/white"
                                     android:text="Follow us"
                                     android:textSize="@dimen/text_size_large" />
 
@@ -119,6 +118,7 @@
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
                             android:layout_marginLeft="5dp"
+                            android:background="@drawable/bg_invite_facebook"
                             android:layout_weight="1"
                             android:clickable="true"
                             android:padding="15dp">
@@ -135,7 +135,6 @@
                                     android:layout_width="@dimen/invite_friends_image_width"
                                     android:layout_height="@dimen/invite_friends_image_height"
                                     android:scaleType="fitXY"
-                                    android:background="@color/invite_fb"
                                     android:layout_gravity="center"
                                     android:src="@drawable/ic_fb"
                                     tools:ignore="ContentDescription" />
@@ -145,7 +144,7 @@
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
                                     android:gravity="center"
-                                    android:textColor="@color/category_text_inactive"
+                                    android:textColor="@color/white"
                                     android:paddingLeft="@dimen/invite_friends_padding"
                                     android:paddingRight="@dimen/invite_friends_padding"
                                     android:singleLine="true"
@@ -264,7 +263,7 @@
                             android:layout_height="wrap_content"
                             android:layout_marginTop="5dp"
                             android:layout_weight="1"
-                            android:background="@drawable/rounded_btn_states"
+                            android:background="@drawable/bg_invite_clipboard"
                             android:clickable="true"
                             android:padding="15dp">
 
@@ -281,7 +280,6 @@
                                     android:layout_width="@dimen/invite_friends_image_width"
                                     android:layout_height="@dimen/invite_friends_image_height"
                                     android:layout_gravity="center_horizontal"
-                                    android:layout_weight="0.50"
                                     android:background="@color/invite_clipboard"
                                     android:src="@drawable/ic_clipboard"
                                     tools:ignore="ContentDescription" />
@@ -294,7 +292,7 @@
                                     android:layout_marginLeft="@dimen/invite_friends_padding"
                                     android:paddingLeft="@dimen/invite_friends_padding"
                                     android:paddingRight="@dimen/invite_friends_padding"
-                                    android:textColor="@color/category_text_inactive"
+                                    android:textColor="@color/white"
                                     android:text="Copy link to clipboard"
                                     android:textSize="@dimen/text_size_large" />
 
@@ -322,7 +320,7 @@
                             android:layout_marginTop="10dp"
                             android:layout_weight="1"
                             android:layout_gravity="center"
-                            android:background="@drawable/rounded_btn_states"
+                            android:background="@drawable/bg_invite_facebook"
                             android:clickable="true"
                             android:padding="15dp">
 
@@ -340,7 +338,6 @@
                                     android:layout_gravity="center_vertical"
                                     android:scaleType="fitEnd"
                                     android:src="@drawable/ic_fb"
-                                    android:background="@color/invite_fb"
                                     tools:ignore="ContentDescription" />
 
                                 <TextView
@@ -348,7 +345,7 @@
                                     android:layout_width="wrap_content"
                                     android:layout_height="match_parent"
                                     android:layout_marginLeft="@dimen/invite_friends_padding"
-                                    android:textColor="@color/category_text_inactive"
+                                    android:textColor="@color/white"
                                     android:paddingLeft="@dimen/invite_friends_padding"
                                     android:paddingRight="@dimen/invite_friends_padding"
                                     android:text="Invite your friends on Facebook"
@@ -364,7 +361,7 @@
                             android:layout_height="wrap_content"
                             android:layout_marginTop="10dp"
                             android:layout_weight="1"
-                            android:background="@drawable/rounded_btn_states"
+                            android:background="@drawable/bg_invite_twitter"
                             android:clickable="true"
                             android:padding="15dp">
 
@@ -381,7 +378,6 @@
                                     android:layout_height="@dimen/invite_friends_image_width"
                                     android:layout_gravity="center_vertical"
                                     android:scaleType="fitEnd"
-                                    android:background="@color/invite_twitter"
                                     android:src="@drawable/ic_twitter"
                                     tools:ignore="ContentDescription" />
 
@@ -390,7 +386,7 @@
                                     android:layout_width="wrap_content"
                                     android:layout_height="match_parent"
                                     android:layout_marginLeft="@dimen/invite_friends_padding"
-                                    android:textColor="@color/category_text_inactive"
+                                    android:textColor="@color/white"
                                     android:paddingLeft="@dimen/invite_friends_padding"
                                     android:paddingRight="@dimen/invite_friends_padding"
                                     android:text="Invite your friends on Twitter"
@@ -407,7 +403,7 @@
                             android:layout_height="wrap_content"
                             android:layout_marginTop="10dp"
                             android:layout_weight="1"
-                            android:background="@drawable/rounded_btn_states"
+                            android:background="@drawable/bg_invite_mail"
                             android:clickable="true"
                             android:padding="15dp">
 
@@ -422,9 +418,8 @@
                                 <ImageView
                                     android:layout_width="@dimen/invite_friends_image_width"
                                     android:layout_height="@dimen/invite_friends_image_height"
-                                    android:layout_gravity="center_vertical"
+                                    android:layout_gravity="center"
                                     android:scaleType="fitEnd"
-                                    android:background="@color/invite_mail"
                                     android:src="@drawable/ic_email"
                                     tools:ignore="ContentDescription" />
 
@@ -435,7 +430,7 @@
                                     android:layout_marginLeft="@dimen/invite_friends_padding"
                                     android:paddingLeft="@dimen/invite_friends_padding"
                                     android:paddingRight="@dimen/invite_friends_padding"
-                                    android:textColor="@color/category_text_inactive"
+                                    android:textColor="@color/white"
                                     android:text="Invite your friends on Email"
                                     android:textSize="@dimen/text_size_large" />
 
@@ -449,7 +444,7 @@
                             android:layout_height="wrap_content"
                             android:layout_marginTop="10dp"
                             android:layout_weight="1"
-                            android:background="@drawable/rounded_btn_states"
+                            android:background="@drawable/bg_invite_sms"
                             android:clickable="true"
                             android:padding="15dp">
 
@@ -466,7 +461,6 @@
                                     android:layout_height="@dimen/invite_friends_image_width"
                                     android:layout_gravity="center_vertical"
                                     android:scaleType="fitEnd"
-                                    android:background="@color/invite_sms"
                                     android:src="@drawable/ic_message"
                                     tools:ignore="ContentDescription" />
 
@@ -477,7 +471,7 @@
                                     android:layout_marginLeft="@dimen/invite_friends_padding"
                                     android:paddingLeft="@dimen/invite_friends_padding"
                                     android:paddingRight="@dimen/invite_friends_padding"
-                                    android:textColor="@color/category_text_inactive"
+                                    android:textColor="@color/white"
                                     android:text="Invite your friends on SMS"
                                     android:textSize="@dimen/text_size_large" />
 
