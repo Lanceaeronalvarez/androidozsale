@@ -1,5 +1,6 @@
 package au.com.dealsdirect.ui.controller.checkout.checkout;
 
+import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -29,7 +30,12 @@ import au.com.dealsdirect.ui.base.BaseController;
 import au.com.dealsdirect.ui.controller.checkout.checkout.CheckoutMvpPresenter;
 import au.com.dealsdirect.ui.controller.checkout.checkout.CheckoutMvpView;
 import au.com.dealsdirect.ui.controller.vouchers.Add.AddVouchersController;
+import au.com.dealsdirect.utils.BundleBuilder;
+import au.com.dealsdirect.utils.BundleKeys;
+import au.com.dealsdirect.utils.module.GateKeeper;
 import butterknife.BindView;
+
+import static com.mysale.genie.utility.Prefs.putBoolean;
 
 /**
  * Created by smartwave on 02/11/2017.
@@ -51,6 +57,8 @@ public class CheckoutController extends BaseController implements CheckoutMvpVie
     private View mFooterView;
 
     private RelativeLayout mAddNewVoucherLayout;
+
+    private RelativeLayout mAddNewPaymentLayout;
 
     private CheckoutOrderAdapter mAdapter;
     private ArrayList<Item> mItemList = new ArrayList<>();
@@ -77,11 +85,25 @@ public class CheckoutController extends BaseController implements CheckoutMvpVie
         mListView.addFooterView(mFooterView, null, false);
         mAddNewVoucherLayout = mFooterView.findViewById(R.id.partial_checkout_voucher_new_code);
 
-        mAddNewVoucherLayout.setOnClickListener(view1 -> getRouter()
-                .pushController(RouterTransaction.with(AddVouchersController
-                        .newInstance(AddVouchersController.testVouchersString, true, true))
-                .pushChangeHandler(new HorizontalChangeHandler())
-                .popChangeHandler(new HorizontalChangeHandler())));
+        mAddNewPaymentLayout = mFooterView.findViewById(R.id.partial_checkout_payment_new_payment);
+
+        mAddNewVoucherLayout.setOnClickListener(view1 -> GateKeeper.push(getRouter(),
+                GateKeeper.Destination.ADD_VOUCHERS,
+                new BundleBuilder(new Bundle())
+                .putString(BundleKeys.VOUCHERS, AddVouchersController.testVouchersString)
+                .putBoolean(BundleKeys.IS_VOUCHER_ADDED, true)
+                .putBoolean(BundleKeys.IS_CART_NO_DISCOUNT, false)
+                .build(),
+                new HorizontalChangeHandler(), new HorizontalChangeHandler()));
+
+        mAddNewPaymentLayout.setOnClickListener(view1 -> GateKeeper.push(getRouter(),
+                GateKeeper.Destination.PAYMENT_ADD,
+                new BundleBuilder(new Bundle())
+                        .putBoolean(BundleKeys.IS_FROM_CART, true)
+                        .putString(BundleKeys.CART_TOTAL_COST, "")
+                        .build()
+                ,new HorizontalChangeHandler()
+                ,new HorizontalChangeHandler()));
 
 
         setUp(view);

@@ -27,5 +27,14 @@ public class BundleKeys {
     public static final String SEARCH_QUERY_NAME = "search_query";
     public static final String SORT_FACETFILTER_NAME = "sort";
 
+    //payment select
+    public static final String PAYMENT_METHODS = "payment_methods";
+    public static final String IS_FROM_CART = "is_from_cart";
+    public static final String CART_TOTAL_COST = "cart_total_cost";
+
+    //add vouchers
+    public static final String VOUCHERS="Vouchers";
+    public static final String IS_VOUCHER_ADDED = "IS_VOUCHER_ADDED_KEY";
+    public static final String IS_CART_NO_DISCOUNT = "IS_NO_DISCOUNT";
 
 }

@@ -11,6 +11,7 @@ import android.view.ViewGroup;
 
 import com.bluelinelabs.conductor.Router;
 import com.bluelinelabs.conductor.RouterTransaction;
+import com.bluelinelabs.conductor.changehandler.HorizontalChangeHandler;
 import com.bluelinelabs.conductor.changehandler.VerticalChangeHandler;
 
 import java.util.ArrayList;
@@ -30,7 +31,9 @@ import au.com.dealsdirect.ui.controller.vouchers.View.ViewVouchersController;
 import au.com.dealsdirect.ui.custom.CustomAlertDialog;
 import au.com.dealsdirect.ui.main.MainActivity;
 import au.com.dealsdirect.utils.BundleBuilder;
+import au.com.dealsdirect.utils.BundleKeys;
 import au.com.dealsdirect.utils.CartUtil;
+import au.com.dealsdirect.utils.module.GateKeeper;
 import butterknife.BindView;
 
 /**
@@ -160,9 +163,10 @@ public class AccountController extends BaseController implements AccountMvpView 
 
     @Override
     public void showMyVouchers() {
-        getRouter().pushController(RouterTransaction.with(ViewVouchersController.newInstance())
-                    .pushChangeHandler(new VerticalChangeHandler())
-                    .popChangeHandler(new VerticalChangeHandler()));
+        GateKeeper.push(getRouter(),
+                GateKeeper.Destination.VIEW_VOUCHERS,
+                new HorizontalChangeHandler(),
+                new HorizontalChangeHandler());
 
     }
 
@@ -176,7 +180,15 @@ public class AccountController extends BaseController implements AccountMvpView 
 
     @Override
     public void showMyPaymentsController() {
-
+        GateKeeper.push(getRouter(),
+                GateKeeper.Destination.PAYMENT_SELECT,
+                new BundleBuilder(new Bundle())
+                .putBoolean(BundleKeys.IS_FROM_CART, false)
+                .putString(BundleKeys.PAYMENT_METHODS, "")
+                .putString(BundleKeys.CART_TOTAL_COST, "")
+                .build(),
+                new HorizontalChangeHandler(),
+                new HorizontalChangeHandler());
     }
 
     @Override
@@ -199,9 +211,10 @@ public class AccountController extends BaseController implements AccountMvpView 
 
     @Override
     public void showInviteAFriend() {
-        getRouter().pushController(RouterTransaction.with(InviteSendController.newInstance())
-                .pushChangeHandler(new VerticalChangeHandler())
-                .popChangeHandler(new VerticalChangeHandler()));
+        GateKeeper.push(getRouter(),
+                GateKeeper.Destination.INVITE,
+                new HorizontalChangeHandler(),
+                new HorizontalChangeHandler());
 
     }
 

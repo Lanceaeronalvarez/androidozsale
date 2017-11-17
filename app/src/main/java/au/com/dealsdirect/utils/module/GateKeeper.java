@@ -35,7 +35,10 @@ public class GateKeeper {
         ACCOUNT,
         FORGOT_PASSWORD,
         VIEW_VOUCHERS,
-        INVITE
+        ADD_VOUCHERS,
+        INVITE,
+        PAYMENT_SELECT,
+        PAYMENT_ADD
         //add more destinations
     }
 

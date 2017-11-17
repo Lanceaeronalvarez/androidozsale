@@ -34,4 +34,5 @@
     <color name="darkteal">#01a4a7</color>
     <color name="darkyellow">#e1af02</color>
     <color name="darkred">#e76a54</color>
+    <color name="toolbar_active_skin">@color/darkteal</color>
 </resources>

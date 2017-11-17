@@ -6,7 +6,9 @@ import com.bluelinelabs.conductor.Controller;
 
 import au.com.dealsdirect.ui.controller.account.AccountController;
 import au.com.dealsdirect.ui.controller.categories.CategoriesController;
+import au.com.dealsdirect.ui.controller.checkout.addpayment.AddPaymentController;
 import au.com.dealsdirect.ui.controller.checkout.checkout.CheckoutController;
+import au.com.dealsdirect.ui.controller.checkout.paymentselect.PaymentSelectController;
 import au.com.dealsdirect.ui.controller.details.DetailsController;
 import au.com.dealsdirect.ui.controller.forgotpassword.ForgotPasswordController;
 import au.com.dealsdirect.ui.controller.invite.InviteSendController;
@@ -84,6 +86,12 @@ public class ControllerFactory {
                 return new RegisterController(bundle);
             case FORGOT_PASSWORD:
                 return new ForgotPasswordController(bundle);
+            case ADD_VOUCHERS:
+                return new AddVouchersController(bundle);
+            case PAYMENT_ADD:
+                return new AddPaymentController(bundle);
+            case PAYMENT_SELECT:
+                return new PaymentSelectController(bundle);
             default:
                 return null;
         }

@@ -23,7 +23,6 @@ import javax.inject.Inject;
 import au.com.dealsdirect.R;
 import au.com.dealsdirect.data.network.model.checkout.getuserpaymentmethods.PaymentMethod;
 import au.com.dealsdirect.ui.base.BasePullToRefreshController;
-import au.com.dealsdirect.ui.controller.checkout.addpayment.AddPaymentController;
 import au.com.dealsdirect.ui.custom.CustomAlertDialog;
 import au.com.dealsdirect.ui.custom.RecyclerOnTouchListener;
 import au.com.dealsdirect.ui.main.MainActivity;
@@ -125,9 +124,14 @@ public class PaymentSelectController extends BasePullToRefreshController impleme
         } else if (checkoutTag == getActivity().getString(R.string.checkout_controller)
                 && (paymentMethods == null
                 || paymentMethods.size() == 0)) {
-            getRouter().pushController(RouterTransaction.with(new AddPaymentController(isFromCart, mCartTotalCost))
-                    .pushChangeHandler(new HorizontalChangeHandler())
-                    .popChangeHandler(new HorizontalChangeHandler()));
+            GateKeeper.push(getRouter(),
+                    GateKeeper.Destination.PAYMENT_ADD,
+                    new BundleBuilder(new Bundle())
+                            .putBoolean(BundleKeys.IS_FROM_CART,isFromCart)
+                            .putString(BundleKeys.CART_TOTAL_COST, mCartTotalCost)
+                            .build()
+                    ,new HorizontalChangeHandler()
+                    ,new HorizontalChangeHandler());
         } else if (paymentMethods.size() == 0) {
             showPaymentMethodsPlaceholder(true);
         }
@@ -203,8 +207,13 @@ public class PaymentSelectController extends BasePullToRefreshController impleme
 
     @OnClick(R.id.partial_toolbar_filter_view)
     public void onAddPaymentMethod() {
-        getRouter().pushController(RouterTransaction.with(new AddPaymentController(isFromCart, mCartTotalCost))
-                .pushChangeHandler(new HorizontalChangeHandler())
-                .popChangeHandler(new HorizontalChangeHandler()));
+        GateKeeper.push(getRouter(),
+                GateKeeper.Destination.PAYMENT_ADD,
+                new BundleBuilder(new Bundle())
+                        .putBoolean(BundleKeys.IS_FROM_CART,isFromCart)
+                        .putString(BundleKeys.CART_TOTAL_COST, mCartTotalCost)
+                        .build()
+                ,new HorizontalChangeHandler()
+                ,new HorizontalChangeHandler());
     }
 }

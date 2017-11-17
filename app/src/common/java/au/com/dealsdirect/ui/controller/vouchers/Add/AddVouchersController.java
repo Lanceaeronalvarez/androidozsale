@@ -47,10 +47,6 @@ import butterknife.BindView;
 
 public class AddVouchersController extends BaseController implements AddVouchersMvpView {
 
-    private static final String VOUCHERS="Vouchers";
-    private static final String IS_VOUCHER_ADDED = "IS_VOUCHER_ADDED_KEY";
-    private static final String IS_CART_NO_DISCOUNT = "IS_NO_DISCOUNT";
-
     private static final String testVouchersString = "[{\n" +
             "\t\t\t\t\"ID\": \"ba41e1d8-0a3d-4868-81ba-2f139f0827fa\",\n" +
             "\t\t\t\t\"Description\": \"$20.0000 (Ozsale.com.au)\"\n" +
@@ -149,19 +145,11 @@ public class AddVouchersController extends BaseController implements AddVouchers
     private boolean mIsVoucherAdded = false;
     private boolean mIsNoDiscountApplied = false;
 
-    public static AddVouchersController newInstance(String vouchersJsonString, boolean isVoucherAdded, boolean isNoDiscount) {
-        return new AddVouchersController(new BundleBuilder(new Bundle())
-                .putString(VOUCHERS, vouchersJsonString)
-                .putBoolean(IS_VOUCHER_ADDED, isVoucherAdded)
-                .putBoolean(IS_CART_NO_DISCOUNT, isNoDiscount)
-                .build());
-    }
-
     public AddVouchersController(Bundle args) {
         super(args);
-        mVouchers = JsonUtils.convertStringToObject(args.getString(VOUCHERS,""), new TypeToken<ArrayList<Voucher>>(){}.getType());
-        mIsVoucherAdded = args.getBoolean(IS_VOUCHER_ADDED);
-        mIsNoDiscountApplied = args.getBoolean(IS_CART_NO_DISCOUNT);
+        mVouchers = JsonUtils.convertStringToObject(args.getString(BundleKeys.VOUCHERS,""), new TypeToken<ArrayList<Voucher>>(){}.getType());
+        mIsVoucherAdded = args.getBoolean(BundleKeys.IS_VOUCHER _ADDED);
+        mIsNoDiscountApplied = args.getBoolean(BundleKeys.IS_CART_NO_DISCOUNT);
     }
 
     @Override
