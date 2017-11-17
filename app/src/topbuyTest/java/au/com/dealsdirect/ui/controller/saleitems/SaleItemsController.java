@@ -1,6 +1,8 @@
 package au.com.dealsdirect.ui.controller.saleitems;
 
+import android.os.Build;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.support.design.widget.AppBarLayout;
 import android.support.v7.widget.RecyclerView;
@@ -30,7 +32,11 @@ import au.com.dealsdirect.data.network.model.saleitems.GetSaleItemsResponse;
 import au.com.dealsdirect.data.network.model.sorting.SortingResponse;
 import au.com.dealsdirect.ui.base.BaseController;
 import au.com.dealsdirect.ui.controller.categories.CategoriesController;
+import au.com.dealsdirect.ui.controller.saleitemdetails.SaleItemDetailsController;
 import au.com.dealsdirect.ui.controller.searchfilter.adapter.SearchChipModel;
+import au.com.dealsdirect.ui.custom.transitions.ArcFadeMoveChangeHandler;
+import au.com.dealsdirect.ui.custom.transitions.SharedArcFadePopChangeHandler;
+import au.com.dealsdirect.ui.custom.transitions.SharedArcFadePushChangeHandler;
 import au.com.dealsdirect.utils.BundleBuilder;
 import au.com.dealsdirect.utils.BundleKeys;
 import au.com.dealsdirect.utils.PaginateUtils;
@@ -68,6 +74,7 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
 
     private Paginate.Callbacks mPaginateCallbacks;
     private int page = 0;
+    private int mSaleItemClickCounter = 0;
     private boolean loadingInProgress = false;
     private boolean hasLoadedAllItems = false;
     private Router mCategoriesRouter;
@@ -104,6 +111,13 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
         getControllerComponent().inject(this);
         mPresenter.onAttach(this);
         return view;
+    }
+
+    @Override
+    protected void onAttach(@NonNull View view) {
+        mPresenter.onAttach(this);
+        mSaleItemClickCounter = 0;
+        super.onAttach(view);
     }
 
     @Override
@@ -217,7 +231,41 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
 
     @Override
     public void showProductDetails(RecyclerView.ViewHolder viewHolder, int position, String seoIdentifierId, String imageUrl, String skuId, String saleId) {
+        if (mSaleItemClickCounter != 1) {
+            mSaleItemClickCounter++;
 
+            Handler clickHandler = new Handler();
+            clickHandler.postDelayed(() -> {
+                mSaleItemClickCounter = 0;
+            }, 2000);
+
+//            List<String> names = new ArrayList<>();
+//            names.add(getResources().getString(R.string.transition_sale_image_indexed, position));
+            mSaleItemsRecyclerView.smoothScrollToPosition(position);
+
+            Bundle bundle = new Bundle();
+            bundle.putInt("KEY_POSITION", position);
+            bundle.putString("KEY_IMAGE_ID", imageUrl);
+            bundle.putString("KEY_SEO_IDENTIFIER", seoIdentifierId);
+            bundle.putString("KEY_SKU_ID", skuId);
+            bundle.putString("KEY_SALE_ID", saleId);
+            bundle.putString("KEY_SALE_NAME", ((SaleItemsAdapter.ShopItemsViewHolder) viewHolder).productName.getText().toString());
+            bundle.putString("KEY_SALE_PRICE", ((SaleItemsAdapter.ShopItemsViewHolder) viewHolder).productPrice.getText().toString());
+            bundle.putString("KEY_SALE_OLD_PRICE", ((SaleItemsAdapter.ShopItemsViewHolder) viewHolder).productPreviousPrice.getText().toString());
+
+            if (Build.VERSION.SDK_INT < Build.VERSION_CODES.M) {
+                getRouter().pushController(RouterTransaction.with(SaleItemDetailsController.newInstance(bundle))
+                        .pushChangeHandler(new FadeChangeHandler())
+                        .popChangeHandler(new FadeChangeHandler()));
+            } else {
+                getRouter().pushController(RouterTransaction.with(SaleItemDetailsController.newInstance(bundle))
+//                        .pushChangeHandler(new ArcFadeMoveChangeHandler(getResources().getString(R.string.transition_sale_image_indexed, position)))
+//                        .popChangeHandler(new ArcFadeMoveChangeHandler(getResources().getString(R.string.transition_sale_image_indexed, position))));
+                        .popChangeHandler(new SharedArcFadePopChangeHandler())
+                        .pushChangeHandler(new SharedArcFadePushChangeHandler()));
+            }
+
+        }
     }
 
     @Override

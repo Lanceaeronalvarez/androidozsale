@@ -13,6 +13,11 @@
         PHP400 TOPBUY voucher to use towards any future purchase. \n\n You can apply any vouchers
         currently in you account when you checkout your order. \n
     </string>
+
+    <string name="return_policy">
+        This item is final sale and non-returnable. Please refer to our Terms and Conditions.
+    </string>
+
     <string name="apply">apply</string>
     <string name="add_voucher_code">add voucher code</string>
     <string name="my_voucher">my voucher</string>
