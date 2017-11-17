@@ -27,6 +27,7 @@ import au.com.dealsdirect.data.network.model.contactitem.ContactItemByDate;
 import au.com.dealsdirect.data.network.model.contactitem.GetContactsResponse;
 import au.com.dealsdirect.ui.base.BasePullToRefreshController;
 import au.com.dealsdirect.ui.controller.contact.addcontact.AddContactController;
+import au.com.dealsdirect.ui.controller.contact.viewcontacthistory.ViewContactHistoryController;
 import au.com.dealsdirect.ui.controller.contact.viewcontacts.contacts.ContactsAdapter;
 import au.com.dealsdirect.ui.controller.contact.viewcontacts.contacts.ContactsClickListener;
 import au.com.dealsdirect.utils.BundleBuilder;

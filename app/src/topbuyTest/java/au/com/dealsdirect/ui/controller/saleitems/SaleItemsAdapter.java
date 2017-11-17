@@ -126,13 +126,13 @@ public class SaleItemsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
             holder.productPreviousPrice.setPaintFlags(holder.productPreviousPrice.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);
 
 
-//            holder.itemView.setOnClickListener(v -> mPresenter.loadProductDetails(
-//                    holder,
-//                    position,
-//                    mData.get(position).getSeoIdentifier(),
-//                    url,
-//                    mData.get(position).getSkus().isEmpty() ? "" : mData.get(position).getSkus().get(0).getId(),
-//                    mSaleId));
+            holder.itemView.setOnClickListener(v -> mPresenter.loadProductDetails(
+                    holder,
+                    position,
+                    saleItem.getSeoIdentifier(),
+                    url,
+                    saleItem.getSkus().isEmpty() ? "" : saleItem.getSkus().get(0).getId(),
+                    ""));
         }
 
         if (vh instanceof HeaderViewHolder) {

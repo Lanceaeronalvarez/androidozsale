@@ -94,8 +94,7 @@
                                                 android:layout_marginBottom="10dp"
                                                 android:layout_marginTop="10dp"
                                                 android:paddingBottom="5dp"
-                                                android:paddingTop="5dp"
-                                                android:visibility="visible" />
+                                                android:paddingTop="5dp"/>
 
 
                                             <com.lsjwzh.widget.recyclerviewpager.RecyclerViewPager
@@ -523,7 +522,7 @@
                                     </LinearLayout>
 
                                     <LinearLayout
-                                        android:id="@+id/aboutPricing"
+                                        android:id="@+id/about_pricing_container"
                                         android:layout_width="match_parent"
                                         android:layout_height="match_parent"
                                         android:orientation="vertical"

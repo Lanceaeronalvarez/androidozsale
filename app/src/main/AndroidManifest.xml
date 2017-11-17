@@ -72,18 +72,6 @@
             </intent-filter>
         </activity>
 
-        <activity
-            android:name=".ui.main.SharedActivity"
-            android:parentActivityName=".ui.main.SharedActivity"
-            android:theme="@style/Theme_Translucent">
-            <intent-filter tools:ignore="GoogleAppIndexingUrlError">
-                <action android:name="android.intent.action.VIEW"/>
-                <category android:name="android.intent.category.DEFAULT"/>
-                <category android:name="android.intent.category.BROWSABLE"/>
-
-            </intent-filter>
-        </activity>
-
 
         <!-- [START gcm_service] -->
         <meta-data
