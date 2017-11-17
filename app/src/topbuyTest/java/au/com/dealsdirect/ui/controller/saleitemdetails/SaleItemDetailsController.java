@@ -126,6 +126,8 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
     Button mAddToCartButton;
     @BindView(R.id.product_details_button_overlay)
     ImageView mAddToCartOverlay;
+    @BindView(R.id.discountLabel)
+    TextView mDiscountLabel;
 
     @BindView(R.id.image_container)
     FrameLayout mImageContainerViewGroup;
@@ -289,6 +291,13 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
         mProductBrand.setText(branName.trim());
         mProductPrice.setText(PriceUtils.getPriceStringValue(saleDetail.getPrice().getValue()));
         mProductPreviousPrice.setText(PriceUtils.getRpStringValue(saleDetail.getOriginalPrice().getValue()));
+
+        if (saleDetail.getLabelText() == null) {
+            mDiscountLabel.setVisibility(View.GONE);
+        } else {
+            mDiscountLabel.setVisibility(View.VISIBLE);
+            mDiscountLabel.setText(saleDetail.getLabelText());
+        }
 
         if (shippingInformation != null) {
 

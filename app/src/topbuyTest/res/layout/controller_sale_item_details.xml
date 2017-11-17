@@ -25,6 +25,7 @@
                 android:id="@+id/main_layout"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:background="@android:color/white"
                 android:clipChildren="false"
                 android:clipToPadding="false"
                 android:orientation="vertical">
@@ -38,18 +39,17 @@
                     android:clipToPadding="false"
                     android:elevation="10dp">
 
-
                     <FrameLayout
                         android:id="@+id/image_container"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:clipChildren="false"
                         android:clipToPadding="false"
-                        android:paddingBottom="50dp">
+                        android:paddingBottom="10dp">
 
                         <RelativeLayout
                             android:layout_width="wrap_content"
-                            android:layout_height="@dimen/thumbnail_height"
+                            android:layout_height="370dp"
                             android:clipChildren="false"
                             android:clipToPadding="false"
                             android:transitionName="cardbackground">
@@ -83,11 +83,11 @@
                                 android:id="@+id/otherImagesRecyclerView"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:paddingBottom="50dp"
                                 android:layout_alignParentBottom="true"
                                 android:layout_centerHorizontal="true"
                                 android:isScrollContainer="true"
-                                android:overScrollMode="never" />
+                                android:overScrollMode="never"
+                                android:paddingBottom="10dp" />
 
                         </RelativeLayout>
 
@@ -199,6 +199,7 @@
                             android:layout_height="wrap_content">
 
                             <TextView
+                                fontPath="@string/font_app_bold"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:paddingLeft="16dp"
@@ -207,26 +208,6 @@
                                 android:text="sizes"
                                 android:textColor="@color/gray_field_text"
                                 android:textSize="@dimen/text_size_normal" />
-
-                            <!--<ImageView-->
-                            <!--android:id="@+id/question_mark"-->
-                            <!--android:layout_width="15dp"-->
-                            <!--android:layout_height="15dp"-->
-                            <!--android:layout_alignParentRight="true"-->
-                            <!--android:background="@drawable/question"-->
-                            <!--android:visibility="invisible" />-->
-
-                            <!--<TextView-->
-                            <!--android:layout_width="wrap_content"-->
-                            <!--android:layout_height="wrap_content"-->
-                            <!--android:layout_centerVertical="true"-->
-                            <!--android:layout_toLeftOf="@id/question_mark"-->
-                            <!--android:paddingRight="5dp"-->
-                            <!--android:text="size guide"-->
-                            <!--android:textColor="@color/text_teal"-->
-                            <!--android:textSize="@dimen/text_size_normal"-->
-                            <!--android:visibility="invisible"-->
-                            <!--app:font="Lato" />-->
 
                         </RelativeLayout>
 
@@ -264,14 +245,13 @@
                             android:layout_marginTop="10dp"
                             tools:ignore="WebViewLayout" />
 
-                        <ImageView
-                            android:layout_width="match_parent"
-                            android:layout_height="1px"
-                            android:layout_gravity="center"
-                            android:background="#23000000" />
-
                     </LinearLayout>
 
+                    <ImageView
+                        android:layout_width="match_parent"
+                        android:layout_height="1px"
+                        android:layout_gravity="center"
+                        android:background="#23000000" />
 
                     <LinearLayout
                         android:id="@+id/shipping_desc_container"
@@ -287,21 +267,20 @@
                             android:layout_height="wrap_content"
                             android:layout_margin="5dp"
                             android:text="@string/estimated_delivery"
-                            android:textColor="@color/color_item_title"
+                            android:textColor="@color/gray_field_label"
                             android:textSize="@dimen/text_size_large" />
 
                         <WebView
                             android:id="@+id/shipping_desc_text"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content" />
-
-                        <ImageView
-                            android:layout_width="match_parent"
-                            android:layout_height="1px"
-                            android:layout_gravity="center"
-                            android:background="#23000000" />
-
                     </LinearLayout>
+
+                    <ImageView
+                        android:layout_width="match_parent"
+                        android:layout_height="1px"
+                        android:layout_gravity="center"
+                        android:background="#23000000" />
 
                     <LinearLayout
                         android:id="@+id/return_policy_container"
@@ -327,13 +306,13 @@
                             android:layout_marginTop="10dp"
                             android:textSize="@dimen/text_size_medium" />
 
-                        <ImageView
-                            android:layout_width="match_parent"
-                            android:layout_height="1px"
-                            android:layout_gravity="center"
-                            android:background="#23000000" />
-
                     </LinearLayout>
+
+                    <ImageView
+                        android:layout_width="match_parent"
+                        android:layout_height="1px"
+                        android:layout_gravity="center"
+                        android:background="#23000000" />
 
                     <LinearLayout
                         android:id="@+id/product_about_container"
@@ -344,6 +323,7 @@
                         android:visibility="gone">
 
                         <TextView
+                            fontPath="@string/font_app_bold"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="about"
@@ -366,13 +346,13 @@
                             android:layout_marginTop="10dp"
                             tools:ignore="WebViewLayout" />
 
-                        <ImageView
-                            android:layout_width="match_parent"
-                            android:layout_height="1px"
-                            android:layout_gravity="center"
-                            android:background="#23000000" />
-
                     </LinearLayout>
+
+                    <ImageView
+                        android:layout_width="match_parent"
+                        android:layout_height="1px"
+                        android:layout_gravity="center"
+                        android:background="#23000000" />
 
                     <LinearLayout
                         android:id="@+id/about_pricing_container"
@@ -398,13 +378,13 @@
                             android:layout_marginTop="10dp"
                             tools:ignore="WebViewLayout" />
 
-                        <ImageView
-                            android:layout_width="match_parent"
-                            android:layout_height="1px"
-                            android:layout_gravity="center"
-                            android:background="#23000000" />
-
                     </LinearLayout>
+
+                    <ImageView
+                        android:layout_width="match_parent"
+                        android:layout_height="1px"
+                        android:layout_gravity="center"
+                        android:background="#23000000" />
 
                     <LinearLayout
                         android:id="@+id/relatedItemsContainer"
