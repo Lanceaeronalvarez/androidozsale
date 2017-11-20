@@ -8,7 +8,6 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
@@ -27,11 +26,10 @@ import au.com.dealsdirect.data.network.model.address.DecorationInfoList;
 import au.com.dealsdirect.data.network.model.address.DeleteUserAddress;
 import au.com.dealsdirect.data.network.model.address.GetAddresses;
 import au.com.dealsdirect.data.network.model.checkout.getcurrentorder.DeliveryAddress;
-import au.com.dealsdirect.ui.base.BasePullToRefreshController;
+import au.com.dealsdirect.ui.base.SwipeableBaseToolBarController;
 import au.com.dealsdirect.ui.controller.address.addnewaddress.AddNewAddressController;
 import au.com.dealsdirect.ui.custom.CustomAlertDialog;
 import au.com.dealsdirect.ui.custom.RecyclerOnTouchListener;
-import au.com.dealsdirect.ui.main.MainActivity;
 import au.com.dealsdirect.utils.BundleBuilder;
 import butterknife.BindView;
 import butterknife.OnClick;
@@ -41,7 +39,7 @@ import timber.log.Timber;
  * Created by smartwave on 21/06/2017.
  */
 
-public class ViewAddressController extends BasePullToRefreshController implements ViewAddressMvpView {
+public class ViewAddressController extends SwipeableBaseToolBarController implements ViewAddressMvpView {
 
     private static final String CALLED_FROM_CART = "CalledFromCart";
 
@@ -52,10 +50,6 @@ public class ViewAddressController extends BasePullToRefreshController implement
     @BindView(R.id.view_addresses_recyclerView)
     RecyclerView mRecyclerView;
 
-    @BindView(R.id.partial_toolbar_arrow_title)
-    TextView mViewAddressToolarTitle;
-    @BindView(R.id.partial_toolbar_filter_view)
-    ImageView mViewAddressRightOption;
     @BindView(R.id.address_office_delivery_subtitle)
     TextView mViewAddressSubHeader;
 
@@ -86,21 +80,14 @@ public class ViewAddressController extends BasePullToRefreshController implement
     @Override
     protected void onViewBound(@NonNull View view) {
         super.onViewBound(view);
+
+        mToolbarTitle.setText(R.string.my_addresses);
         setUp(view);
     }
 
     @Override
     protected void setUp(View view) {
         mPresenter.loadAddresses();
-
-        mViewAddressToolarTitle.setText("My Addresses");
-        if (mPresenter.isTablet()) {
-            mViewAddressRightOption.setPadding(5, 5, 5, 5);
-        } else {
-            mViewAddressRightOption.setPadding(20, 20, 20, 20);
-        }
-        mViewAddressRightOption.setImageDrawable(getApplicationContext().getDrawable(R.drawable.ic_add));
-        mViewAddressRightOption.setVisibility(View.INVISIBLE);
 
         mAddressList = new ArrayList<>();
         mRecyclerViewAdapter = new ViewAddressRecyclerViewAdapter(mCalledFromCart, this, mAddressList, mActivity, mDeliveryAddress, mPresenter);
@@ -133,9 +120,7 @@ public class ViewAddressController extends BasePullToRefreshController implement
     protected View inflateView(@NonNull LayoutInflater inflater, @NonNull ViewGroup container) {
         View view = super.inflateView(inflater, container);
 
-        fillToolbar(inflater.inflate(R.layout.partial_toolbar_arrow, container, false));
         fillContent(inflater.inflate(R.layout.controller_view_address, container, false));
-
         getControllerComponent().inject(this);
         mPresenter.onAttach(this);
 
@@ -172,7 +157,6 @@ public class ViewAddressController extends BasePullToRefreshController implement
                 mDecorationInfoList = responseValue.getD().getValue().getDecorationInfoList();
                 mRecyclerViewAdapter.replaceData(mAddressList);
                 mAddressesLoaded = true;
-                mViewAddressRightOption.setVisibility(View.VISIBLE);
 
 //                setupDefaultBottomButton(getString(R.string.add_delivery_address),
 //                        new View.OnClickListener() {
@@ -239,16 +223,9 @@ public class ViewAddressController extends BasePullToRefreshController implement
         super.onDestroyView(view);
     }
 
-    @OnClick(R.id.partial_toolbar_arrow_view)
-    public void onBackClick() {
-        if (mActivity != null){
-            mActivity.onBackPressed();
-        }
-    }
-
-    @OnClick(R.id.partial_toolbar_filter_view)
-    public void showAddNewAddress() {
-//        AddNewAddressFragment fragment = AddNewAddressFragment
+    @OnClick(R.id.view_address_add_button)
+    void showAddNewAddress(){
+        //        AddNewAddressFragment fragment = AddNewAddressFragment
 //                .newInstance(mActivity, mGetUserAddressesResponse.d.Value.DecorationInfoList, mCalledFromCart);
 //        push router to addnewaddress
         Gson gson = new Gson();
@@ -257,4 +234,16 @@ public class ViewAddressController extends BasePullToRefreshController implement
                 .popChangeHandler(new HorizontalChangeHandler()));
 
     }
+
+//    @OnClick(R.id.partial_toolbar_filter_view)
+//    public void showAddNewAddress() {
+////        AddNewAddressFragment fragment = AddNewAddressFragment
+////                .newInstance(mActivity, mGetUserAddressesResponse.d.Value.DecorationInfoList, mCalledFromCart);
+////        push router to addnewaddress
+//        Gson gson = new Gson();
+//        getRouter().pushController(RouterTransaction.with(new AddNewAddressController(gson.toJson(mDecorationInfoList), false))
+//                .pushChangeHandler(new HorizontalChangeHandler())
+//                .popChangeHandler(new HorizontalChangeHandler()));
+//
+//    }
 }
