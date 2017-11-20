@@ -24,7 +24,7 @@ import au.com.dealsdirect.data.network.model.returns.currentreturn.CurrentReturn
 import au.com.dealsdirect.data.network.model.returns.currentreturn.CurrentReturns;
 import au.com.dealsdirect.data.network.model.returns.returndetails.GetReturnDetailRequest;
 import au.com.dealsdirect.data.network.model.returns.returndetails.GetReturnDetailsResponseBody;
-import au.com.dealsdirect.ui.base.BaseToolBarController;
+import au.com.dealsdirect.ui.base.SwipeableBaseToolBarController;
 import au.com.dealsdirect.ui.controller.returns.currentreturns.adapter.CurrentReturnAdapter;
 import au.com.dealsdirect.ui.controller.returns.currentreturns.listener.CurrentReturnClickListener;
 import au.com.dealsdirect.ui.controller.returns.currentreturns.viewholder.CurrentReturnViewHolder;
@@ -38,7 +38,7 @@ import butterknife.OnClick;
  * Created by dp on 05/06/2017.
  */
 
-public class CurrentReturnsController extends BaseToolBarController
+public class CurrentReturnsController extends SwipeableBaseToolBarController
         implements CurrentReturnsMvpView, CurrentReturnClickListener {
 
     public static final String TAG = "CurrentReturnsController";
@@ -92,6 +92,7 @@ public class CurrentReturnsController extends BaseToolBarController
     public void onViewBound(@NonNull View view) {
         super.onViewBound(view);
         setUp(view);
+        setupSwipingBehavior();
         mToolbarTitle.setText("confirm your number");
 
         mCurrentReturnsListener = this;

@@ -15,7 +15,7 @@ import javax.inject.Inject;
 import au.com.dealsdirect.R;
 import au.com.dealsdirect.data.network.model.orders.GetOrderPaymentDetails;
 import au.com.dealsdirect.data.network.model.orders.GetPaymentsList;
-import au.com.dealsdirect.ui.base.BaseToolBarController;
+import au.com.dealsdirect.ui.base.SwipeableBaseToolBarController;
 import au.com.dealsdirect.utils.BundleBuilder;
 import butterknife.BindView;
 
@@ -23,7 +23,7 @@ import butterknife.BindView;
  * Created by smartwave on 22/06/2017.
  */
 
-public class OrderDetailsController extends BaseToolBarController implements OrderDetailsMvpView {
+public class OrderDetailsController extends SwipeableBaseToolBarController implements OrderDetailsMvpView {
 
     private static final String PAYMENT_ITEM = "PAYMENT_ITEM";
     private static final String PAYMENT_REF_NO = "PAYMENT_REF_NO";

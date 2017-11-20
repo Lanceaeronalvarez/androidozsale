@@ -23,7 +23,7 @@ import javax.inject.Inject;
 import au.com.dealsdirect.R;
 import au.com.dealsdirect.data.network.model.contactitem.ContactItemByDate;
 import au.com.dealsdirect.data.network.model.contactitem.GetContactsResponse;
-import au.com.dealsdirect.ui.base.BaseToolBarController;
+import au.com.dealsdirect.ui.base.SwipeableBaseToolBarController;
 import au.com.dealsdirect.ui.controller.contact.addcontact.AddContactController;
 import au.com.dealsdirect.ui.controller.contact.viewcontacthistory.ViewContactHistoryController;
 import au.com.dealsdirect.ui.controller.contact.viewcontacts.contacts.ContactsAdapter;
@@ -41,7 +41,7 @@ import static au.com.dealsdirect.utils.DateUtils.getTrimmedServerDateString;
  * dp Created by Admin on 6/6/17.
  */
 
-public class ViewContactsController extends BaseToolBarController implements ViewContactsMvpView, ContactsClickListener {
+public class ViewContactsController extends SwipeableBaseToolBarController implements ViewContactsMvpView, ContactsClickListener {
 
     public static final String TAG = "ContactController";
     private static final String KEY_TEXT = "ContactController.KEY_TEXT";

@@ -19,7 +19,7 @@ import au.com.dealsdirect.R;
 import au.com.dealsdirect.data.network.model.contacthistory.GetContactHistoryRequest;
 import au.com.dealsdirect.data.network.model.contacthistory.List;
 import au.com.dealsdirect.data.network.model.contactreply.ReplyContact;
-import au.com.dealsdirect.ui.base.BaseToolBarController;
+import au.com.dealsdirect.ui.base.SwipeableBaseToolBarController;
 import au.com.dealsdirect.ui.controller.contact.addcontact.AddContactController;
 import au.com.dealsdirect.ui.controller.contact.viewcontacthistory.contacthistory.ContactHistoryAdapter;
 import au.com.dealsdirect.ui.custom.CustomAlertDialog;
@@ -32,7 +32,7 @@ import butterknife.OnClick;
  * dp Created by Admin on 6/21/17.
  */
 
-public class ViewContactHistoryController extends BaseToolBarController implements ViewContactHistoryMvpView {
+public class ViewContactHistoryController extends SwipeableBaseToolBarController implements ViewContactHistoryMvpView {
 
     public static final String TAG = "ViewContactHistoryController";
     private static final String KEY_TEXT = "ViewContactHistoryController.KEY_TEXT";
