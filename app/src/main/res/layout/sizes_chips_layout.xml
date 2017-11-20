@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <TextView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/filter_text"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
     android:layout_marginBottom="5dp"
@@ -9,6 +8,6 @@
     android:layout_marginTop="5dp"
     android:background="@drawable/bg_chips_rounded"
     android:padding="10dp"
-    android:textColor="@color/sizes_text_color_selector"
+    android:textColor="@color/gray_field_text"
     tools:ignore="MissingPrefix"
     tools:text="test" />

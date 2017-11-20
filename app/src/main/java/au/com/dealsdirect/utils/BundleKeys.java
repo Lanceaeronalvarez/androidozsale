@@ -19,6 +19,16 @@ public class BundleKeys {
     public static final String SALEITEMS_FROM_SHOP_SEARCH = "SaleItemsController.FROM_SHOP_SEARCH";
     public static final String SALEITEMS_FROM_CATEGORY_SEARCH = "SaleItemsController.FROM_CATEGORY_SEARCH";
 
+    //sale item details
+    public static final String SALEITEMDETAILS_KEY_POSITION = "SALEITEMDETAILS_KEY_POSITION";
+    public static final String SALEITEMDETAILS_KEY_SKU_ID = "SALEITEMDETAILS_KEY_SKU_ID";
+    public static final String SALEITEMDETAILS_KEY_SALE_ID = "SALEITEMDETAILS_KEY_SALE_ID";
+    public static final String SALEITEMDETAILS_KEY_ITEM_IMAGE_ID = "SALEITEMDETAILS_KEY_IMAGE_ID";
+    public static final String SALEITEMDETAILS_KEY_SEO_IDENTIFIER_ID = "SALEITEMDETAILS_KEY_SEO_IDENTIFIER";
+    public static final String SALEITEMDETAILS_KEY_ITEM_NAME = "SALEITEMDETAILS_KEY_SALE_NAME";
+    public static final String SALEITEMDETAILS_KEY_ITEM_PRICE = "SALEITEMDETAILS_KEY_SALE_PRICE";
+    public static final String SALEITEMDETAILS_KEY_ITEM_OLD_PRICE = "SALEITEMDETAILS_KEY_SALE_OLD_PRICE";
+    
     //search filters
     public static final String BRANDS_FACETFILTER_NAME = "skus.brandName";
     public static final String SIZES_FACETFILTER_NAME = "skus.attributes.size";

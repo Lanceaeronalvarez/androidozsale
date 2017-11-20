@@ -88,7 +88,6 @@
                 android:layout_alignTop="@id/sale_items_cart_icon"
                 android:padding="2dp"
                 android:gravity="center"
-                android:visibility="visible"
                 android:background="@drawable/bg_cart_counter"
                 android:text="0"
                 android:textSize="12sp"
