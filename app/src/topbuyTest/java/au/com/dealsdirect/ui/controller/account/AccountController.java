@@ -5,13 +5,12 @@ import android.support.annotation.NonNull;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.bluelinelabs.conductor.Router;
 import com.bluelinelabs.conductor.RouterTransaction;
-import com.bluelinelabs.conductor.changehandler.HorizontalChangeHandler;
 import com.bluelinelabs.conductor.changehandler.VerticalChangeHandler;
 
 import java.util.ArrayList;
@@ -24,10 +23,8 @@ import au.com.dealsdirect.R;
 import au.com.dealsdirect.data.auth.AuthHandler;
 import au.com.dealsdirect.ui.base.BaseController;
 import au.com.dealsdirect.ui.controller.contact.viewcontacts.ViewContactsController;
-import au.com.dealsdirect.ui.controller.invite.InviteSendController;
 import au.com.dealsdirect.ui.controller.orders.orders.OrdersController;
 import au.com.dealsdirect.ui.controller.returns.currentreturns.CurrentReturnsController;
-import au.com.dealsdirect.ui.controller.vouchers.View.ViewVouchersController;
 import au.com.dealsdirect.ui.custom.CustomAlertDialog;
 import au.com.dealsdirect.ui.main.MainActivity;
 import au.com.dealsdirect.utils.BundleBuilder;
@@ -156,9 +153,8 @@ public class AccountController extends BaseController implements AccountMvpView 
 
     @Override
     public void showMyOrders() {
-        getRouter().pushController(RouterTransaction.with(new OrdersController())
-                .pushChangeHandler(new VerticalChangeHandler())
-                .popChangeHandler(new VerticalChangeHandler()));
+        Log.d("dealsdirect", "showmyorders");
+        GateKeeper.push(getRouter(), GateKeeper.Destination.ORDERS, new VerticalChangeHandler(false), new VerticalChangeHandler());
     }
 
     @Override
@@ -172,10 +168,9 @@ public class AccountController extends BaseController implements AccountMvpView 
 
     @Override
     public void showMyReturns() {
-        getRouter().pushController(RouterTransaction.with(CurrentReturnsController.newInstance())
-                .tag(CurrentReturnsController.TAG)
-                .pushChangeHandler(new VerticalChangeHandler())
-                .popChangeHandler(new VerticalChangeHandler()));
+        Log.d("dealsdirect", "current returns");
+        GateKeeper.push(getRouter(), GateKeeper.Destination.CURRENT_RETURNS, new VerticalChangeHandler(), new VerticalChangeHandler());
+
     }
 
     @Override
@@ -198,10 +193,8 @@ public class AccountController extends BaseController implements AccountMvpView 
 
     @Override
     public void showContactUs() {
-        getRouter().pushController(RouterTransaction.with(ViewContactsController.newInstance())
-                .tag(CurrentReturnsController.TAG)
-                .pushChangeHandler(new VerticalChangeHandler())
-                .popChangeHandler(new VerticalChangeHandler()));
+        Log.d("dealsdirect", "contact us");
+        GateKeeper.push(getRouter(), GateKeeper.Destination.CONTACT_US, new VerticalChangeHandler(), new VerticalChangeHandler());
     }
 
     @Override

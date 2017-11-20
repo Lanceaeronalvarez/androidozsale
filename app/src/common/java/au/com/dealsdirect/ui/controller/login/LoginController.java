@@ -191,6 +191,4 @@ public class LoginController extends BaseController implements LoginMvpView {
     public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         mCallbackManager.onActivityResult(requestCode, resultCode, data);
     }
-
-
 }

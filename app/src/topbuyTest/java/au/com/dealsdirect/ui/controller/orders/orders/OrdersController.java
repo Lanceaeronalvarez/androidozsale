@@ -18,7 +18,7 @@ import javax.inject.Inject;
 
 import au.com.dealsdirect.R;
 import au.com.dealsdirect.data.network.model.orders.GetPaymentsList;
-import au.com.dealsdirect.ui.base.BaseToolBarController;
+import au.com.dealsdirect.ui.base.SwipeableBaseToolBarController;
 import au.com.dealsdirect.ui.controller.orders.orderdetails.OrderDetailsController;
 import au.com.dealsdirect.ui.custom.RecyclerOnTouchListener;
 import butterknife.BindView;
@@ -27,7 +27,7 @@ import butterknife.BindView;
  * Created by smartwave on 22/06/2017.
  */
 
-public class OrdersController extends BaseToolBarController implements OrdersMvpView {
+public class OrdersController extends SwipeableBaseToolBarController implements OrdersMvpView {
 
     @Inject
     OrdersMvpPresenter<OrdersMvpView> mPresenter;
