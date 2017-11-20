@@ -2,7 +2,6 @@ package au.com.dealsdirect.di.module;
 
 import com.bluelinelabs.conductor.Controller;
 
-import au.com.dealsdirect.di.PerController;
 import au.com.dealsdirect.ui.controller.account.AccountMvpPresenter;
 import au.com.dealsdirect.ui.controller.account.AccountMvpView;
 import au.com.dealsdirect.ui.controller.account.AccountPresenter;

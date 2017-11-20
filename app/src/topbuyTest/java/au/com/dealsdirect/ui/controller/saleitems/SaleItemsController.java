@@ -10,6 +10,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.bluelinelabs.conductor.Controller;
@@ -34,10 +35,9 @@ import au.com.dealsdirect.data.network.model.sorting.SortingResponse;
 import au.com.dealsdirect.ui.base.BaseController;
 import au.com.dealsdirect.ui.controller.categories.CategoriesController;
 import au.com.dealsdirect.ui.controller.saleitemdetails.SaleItemDetailsController;
+import au.com.dealsdirect.ui.controller.searchfilter.adapter.SearchTagsAdapter;
 import au.com.dealsdirect.ui.controller.searchfilter.adapter.SearchChipModel;
 import au.com.dealsdirect.ui.custom.transitions.ArcFadeMoveChangeHandler;
-import au.com.dealsdirect.ui.custom.transitions.SharedArcFadePopChangeHandler;
-import au.com.dealsdirect.ui.custom.transitions.SharedArcFadePushChangeHandler;
 import au.com.dealsdirect.utils.BundleBuilder;
 import au.com.dealsdirect.utils.BundleKeys;
 import au.com.dealsdirect.utils.CartUtil;
@@ -60,15 +60,20 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
 
     @BindView(R.id.controller_categories_frame)
     ViewGroup mCategoriesContainer;
+    @BindView(R.id.controller_search_filter_frame)
+    ViewGroup mSearchFilterContainer;
 
     @BindView(R.id.sale_items_search_bar)
     AppBarLayout mSearchBar;
     @BindView(R.id.sale_items_cart_counter)
     TextView mCartCounter;
+    @BindView(R.id.overlay)
+    RelativeLayout mOverlay;
 
     SaleItemsAdapter mAdapter;
     CustomGridLayoutManager mLayoutManager;
     List<SearchChipModel> mChipFilters = new ArrayList<>();
+    private List<GetSaleItemsResponse.Facets> mFacets = new ArrayList<>();
 
     private String mChosenCategory = "";
     private String mDefaultCategory = "";
@@ -82,6 +87,11 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
     private boolean loadingInProgress = false;
     private boolean hasLoadedAllItems = false;
     private Router mCategoriesRouter;
+
+    //search filter variables
+    private Router mSearchFilterRouter;
+    SearchTagsAdapter mSearchTagsAdapter;
+    RecyclerView mSearchTagsRecyclerView;
 
     public static SaleItemsController newInstance() {
         return new SaleItemsController(
@@ -138,6 +148,8 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
         mCartCounter.setText(CartUtil.getCartValue()+"");
 
         mCategoriesRouter = getChildRouter(mCategoriesContainer);
+        mSearchFilterRouter= getChildRouter(mSearchFilterContainer);
+
         mPaginateCallbacks = new Paginate.Callbacks() {
             @Override
             public void onLoadMore() {
@@ -194,6 +206,8 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
             mPaginateManager.setHasMoreDataToLoad(false);
             page = 0;
         } else {
+            mFacets = getSaleItemsResponse.facets;
+            
             if (page == 0) {
                 mAdapter.replaceData(items);
 
@@ -324,6 +338,18 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
         mPresenter.loadSaleItems(createSaleItemsRequest(chosenCategoryKey, "", 0, mChipFilters));
     }
 
+    @Override
+    public void onShowTransparentOverlay() {
+        mOverlay.setVisibility(View.VISIBLE);
+    }
+
+    @Override
+    public void onHideTransparentOverlay() {
+        mSearchTagsRecyclerView.clearFocus();
+        mOverlay.setVisibility(View.GONE);
+        hideKeyboard();
+    }
+
     private GetSaleItemsRequest createSaleItemsRequest(String categoryKey, String saleId, int pageNumber, List<SearchChipModel> chipsList) {
         List<String> saleIds = new LinkedList<>();
         HashMap<String, List<String>> facetFilters = new HashMap<>();
@@ -410,4 +436,28 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
 
         return getSaleItemsRequest;
     }
+
+
+//    private void showBottomSheetOnClick() {
+//        //TODO SHOW BOTTOM SHEET EXPANDED
+//        mOverlay.setVisibility(View.VISIBLE);
+//        mOverlay.bringToFront();
+//        bottomSheetLayout.bringToFront();
+//
+//        mSearchTagAdapter.getEditTextViewHolder().setVisibility(true);
+//        mSearchTagAdapter.getEditTextViewHolder().toggleEditTextVisibility(true);
+//
+//        bottomSheetBehavior.setState(ViewPagerBottomSheetBehavior.STATE_EXPANDED);
+//        isBottomSheetExpanded = true;
+//        bottomSheetLayout.setVisibility(View.VISIBLE);
+//
+//        AnimationEngine.Builder.animate(bottomSheetLayout).fadeIn().setDuration(200)
+//                .build().start();
+//
+//
+//        if (tabLayout.getSelectedTabPosition() == 0) {
+//            mSearchTagAdapter.getEditTextViewHolder().getEditText().requestFocus();
+//            imm.showSoftInput(mSearchTagAdapter.getEditTextViewHolder().getEditText(), InputMethodManager.SHOW_FORCED);
+//        }
+//    }
 }

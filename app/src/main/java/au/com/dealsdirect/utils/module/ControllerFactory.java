@@ -21,6 +21,7 @@ import au.com.dealsdirect.ui.controller.orders.orders.OrdersController;
 import au.com.dealsdirect.ui.controller.register.RegisterController;
 import au.com.dealsdirect.ui.controller.returns.currentreturns.CurrentReturnsController;
 import au.com.dealsdirect.ui.controller.saleitems.SaleItemsController;
+import au.com.dealsdirect.ui.controller.searchfilter.facetfilter.FacetFilterController;
 import au.com.dealsdirect.ui.controller.vouchers.Add.AddVouchersController;
 import au.com.dealsdirect.ui.controller.vouchers.View.ViewVouchersController;
 
@@ -74,6 +75,8 @@ public class ControllerFactory {
                 return new ViewAddressController(false, null);
             case CONTACT_US:
                 return ViewContactsController.newInstance();
+            case FACET_FILTER:
+                return FacetFilterController.newInstance();
             default:
                 return null;
         }
@@ -115,6 +118,8 @@ public class ControllerFactory {
                 return ViewContactsController.newInstance();
             case LEGALITIES:
                 return new LegalitiesController(bundle);
+            case FACET_FILTER:
+                return new FacetFilterController(bundle);
             default:
                 return null;
         }
@@ -167,6 +172,10 @@ public class ControllerFactory {
 
         if (controller instanceof LegalitiesController) {
             return GateKeeper.Destination.LEGALITIES;
+	}
+
+        if (controller instanceof FacetFilterController) {
+            return GateKeeper.Destination.FACET_FILTER;
         }
 
         return GateKeeper.Destination.EMPTY;

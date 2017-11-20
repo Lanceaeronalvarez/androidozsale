@@ -1,8 +1,6 @@
 package au.com.dealsdirect.ui.controller.searchfilter.adapter;
 
-import android.app.Activity;
 import android.content.Context;
-import android.os.Handler;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.DisplayMetrics;
@@ -12,8 +10,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.EditorInfo;
-import android.view.inputmethod.InputMethodManager;
-import android.widget.EditText;
 import android.widget.TextView;
 
 import java.util.ArrayList;
@@ -21,8 +17,13 @@ import java.util.HashMap;
 import java.util.Set;
 
 import au.com.dealsdirect.R;
+import au.com.dealsdirect.ui.controller.saleitems.SaleItemsMvpPresenter;
 import au.com.dealsdirect.ui.controller.searchfilter.SearchFilterController;
 import au.com.dealsdirect.ui.controller.searchfilter.SearchFilterMvpPresenter;
+import au.com.dealsdirect.ui.controller.searchfilter.adapter.FacetItemsAdapter;
+import au.com.dealsdirect.ui.controller.searchfilter.adapter.FacetsAdapter;
+import au.com.dealsdirect.ui.controller.searchfilter.adapter.SearchChipModel;
+import au.com.dealsdirect.ui.controller.searchfilter.adapter.SubCategoriesAdapter;
 import au.com.dealsdirect.ui.custom.ChipsEditText;
 
 import static au.com.dealsdirect.ui.controller.searchfilter.SearchFilterController.CATEGORY_TREE_FACET;
@@ -38,6 +39,7 @@ public class SearchTagsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
     private DisplayMetrics mDisplayMetrics;
     private LinearLayoutManager mLayoutManager;
     private SearchFilterMvpPresenter mPresenter;
+    private SaleItemsMvpPresenter mSaleItemPresenter;
     private FacetItemsAdapter mFacetItemsAdapter;
     private SubCategoriesAdapter mSubCategoriesAdapter;
     private FacetsAdapter mFacetsAdapter;
@@ -156,9 +158,9 @@ public class SearchTagsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                 @Override
                 public void onFocusChange(View v, boolean hasFocus) {
                     if(hasFocus){
-                        mPresenter.showTransparentOverlay();
+                        mSaleItemPresenter.showTransparentOverlay();
                     } else {
-                        mPresenter.hideTransparentOverlay();
+                        mSaleItemPresenter.hideTransparentOverlay();
                     }
                 }
             });
@@ -170,7 +172,7 @@ public class SearchTagsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                     if (actionId == EditorInfo.IME_ACTION_SEARCH) {
                         add(new SearchChipModel(SearchFilterController.SEARCH_QUERY_NAME, vh.et.getText().toString(), -1));
                         vh.et.setText("");
-                        mPresenter.hideTransparentOverlay();
+                        mSaleItemPresenter.hideTransparentOverlay();
                     }
 
                     return false;
@@ -211,10 +213,6 @@ public class SearchTagsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
 
                     if (chipToBeRemoved.getFilterType().equals(SearchFilterController.PRICE_FACETFILTER_NAME)) {
                         mPresenter.resetPriceRange();
-                    }
-
-                    if (chipToBeRemoved.getFilterType().equals(CATEGORY_TREE_FACET)) {
-                        mPresenter.onCategoryChipRemoved();
                     }
                 }
             });

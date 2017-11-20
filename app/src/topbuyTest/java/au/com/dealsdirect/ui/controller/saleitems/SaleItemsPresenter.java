@@ -91,9 +91,15 @@ public class SaleItemsPresenter<V extends SaleItemsMvpView> extends BasePresente
         getMvpView().onExecuteCategoryChangeApiCall(chosenCategoryKey);
     }
 
-    @Override
-    public void checkLastOptionSelected() {
 
+    @Override
+    public void showTransparentOverlay() {
+        getMvpView().onShowTransparentOverlay();
+    }
+
+    @Override
+    public void hideTransparentOverlay() {
+        getMvpView().onHideTransparentOverlay();
     }
 
 

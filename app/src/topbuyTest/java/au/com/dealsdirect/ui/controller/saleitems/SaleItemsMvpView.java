@@ -36,4 +36,8 @@ public interface SaleItemsMvpView extends MvpView{
     void onShowSelectedCategoryText();
 
     void onExecuteCategoryChangeApiCall(String chosenCategoryKey);
+
+    void onShowTransparentOverlay();
+
+    void onHideTransparentOverlay();
 }

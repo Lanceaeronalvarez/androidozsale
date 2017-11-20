@@ -23,6 +23,7 @@ public class GateKeeper {
 
     public enum Destination {
         EMPTY,
+        FACET_FILTER,
         SPLASH,
         LOGIN,
         DETAILS,
@@ -44,6 +45,7 @@ public class GateKeeper {
         CURRENT_RETURNS,
         VIEW_ADDRESSES,
         CONTACT_US,
+        SEARCH_FILTER,
         LEGALITIES
         //add more destinations
     }

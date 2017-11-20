@@ -9,13 +9,10 @@ import android.view.ViewGroup;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.ImageView;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Set;
 
 import au.com.dealsdirect.R;
 import au.com.dealsdirect.ui.controller.searchfilter.SearchFilterMvpPresenter;
