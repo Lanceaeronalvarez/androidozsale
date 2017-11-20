@@ -14,7 +14,6 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.bluelinelabs.conductor.Router;
-import com.bluelinelabs.conductor.RouterTransaction;
 import com.bluelinelabs.conductor.changehandler.HorizontalChangeHandler;
 
 import java.util.List;
@@ -22,8 +21,10 @@ import java.util.List;
 import au.com.dealsdirect.R;
 import au.com.dealsdirect.data.network.model.checkout.getcurrentorder.MyPayDetails;
 import au.com.dealsdirect.ui.base.BaseActivity;
-import au.com.dealsdirect.ui.controller.legalities.LegalitiesController;
+import au.com.dealsdirect.utils.BundleBuilder;
+import au.com.dealsdirect.utils.BundleKeys;
 import au.com.dealsdirect.utils.PriceUtils;
+import au.com.dealsdirect.utils.module.GateKeeper;
 
 /**
  *dp  Created on 8/4/17.
@@ -203,9 +204,13 @@ public class OurpayPanel {
             Bundle bundle = new Bundle();
             bundle.putString("templateKey", ourpayTermsAndConditionKey);
 
-            mRouter.pushController(RouterTransaction.with(new LegalitiesController(ourpayTermsAndConditionKey,"My Basket"))
-                    .pushChangeHandler(new HorizontalChangeHandler(false))
-                    .popChangeHandler(new HorizontalChangeHandler(false)));
+            GateKeeper.push(mRouter,GateKeeper.Destination.LEGALITIES,
+                    new BundleBuilder(new Bundle())
+                    .putString(BundleKeys.TEMPLATE_KEY, ourpayTermsAndConditionKey)
+                    .putString(BundleKeys.TITLE, "My Basket")
+                    .build(),
+                    new HorizontalChangeHandler(),
+                    new HorizontalChangeHandler());
 
 //                HTMLViewFragment fragment = new HTMLViewFragment();
 //                fragment.setArguments(bundle);

@@ -11,6 +11,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.bluelinelabs.conductor.RouterTransaction;
+import com.bluelinelabs.conductor.changehandler.HorizontalChangeHandler;
 import com.bluelinelabs.conductor.changehandler.VerticalChangeHandler;
 
 import java.util.ArrayList;
@@ -212,8 +213,13 @@ public class AccountController extends BaseController implements AccountMvpView 
     }
 
     @Override
-    public void showLegalities(String key, String Title) {
-
+    public void showLegalities(String key, String title) {
+        GateKeeper.push(getRouter(),
+                GateKeeper.Destination.LEGALITIES,
+                new BundleBuilder(new Bundle())
+                .putString(BundleKeys.TEMPLATE_KEY, key)
+                .putString(BundleKeys.TITLE, title)
+                .build());
     }
 
     @Override

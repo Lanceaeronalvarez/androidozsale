@@ -47,4 +47,8 @@ public class BundleKeys {
     public static final String IS_VOUCHER_ADDED = "IS_VOUCHER_ADDED_KEY";
     public static final String IS_CART_NO_DISCOUNT = "IS_NO_DISCOUNT";
 
+    //legalities
+    public static final String TEMPLATE_KEY = "TEMPLATE_KEY";
+    public static final String TITLE = "TITLE";
+
 }

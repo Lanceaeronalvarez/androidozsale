@@ -43,7 +43,8 @@ public class GateKeeper {
         ORDER_DETAILS,
         CURRENT_RETURNS,
         VIEW_ADDRESSES,
-        CONTACT_US
+        CONTACT_US,
+        LEGALITIES
         //add more destinations
     }
 

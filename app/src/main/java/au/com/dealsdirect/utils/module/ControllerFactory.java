@@ -5,18 +5,24 @@ import android.os.Bundle;
 import com.bluelinelabs.conductor.Controller;
 
 import au.com.dealsdirect.ui.controller.account.AccountController;
+import au.com.dealsdirect.ui.controller.address.viewaddress.ViewAddressController;
 import au.com.dealsdirect.ui.controller.categories.CategoriesController;
 import au.com.dealsdirect.ui.controller.checkout.addpayment.AddPaymentController;
 import au.com.dealsdirect.ui.controller.checkout.checkout.CheckoutController;
+import au.com.dealsdirect.ui.controller.checkout.paymentselect.PaymentSelectController;
+import au.com.dealsdirect.ui.controller.contact.viewcontacts.ViewContactsController;
 import au.com.dealsdirect.ui.controller.details.DetailsController;
 import au.com.dealsdirect.ui.controller.forgotpassword.ForgotPasswordController;
 import au.com.dealsdirect.ui.controller.invite.InviteSendController;
+import au.com.dealsdirect.ui.controller.legalities.LegalitiesController;
 import au.com.dealsdirect.ui.controller.login.LoginController;
 import au.com.dealsdirect.ui.controller.main.MainController;
 import au.com.dealsdirect.ui.controller.orders.orders.OrdersController;
 import au.com.dealsdirect.ui.controller.register.RegisterController;
 import au.com.dealsdirect.ui.controller.returns.currentreturns.CurrentReturnsController;
 import au.com.dealsdirect.ui.controller.saleitems.SaleItemsController;
+import au.com.dealsdirect.ui.controller.vouchers.Add.AddVouchersController;
+import au.com.dealsdirect.ui.controller.vouchers.View.ViewVouchersController;
 
 /**
  * Created by smartwave on 16/10/2017.
@@ -107,6 +113,8 @@ public class ControllerFactory {
                 return new ViewAddressController(false, null);
             case CONTACT_US:
                 return ViewContactsController.newInstance();
+            case LEGALITIES:
+                return new LegalitiesController(bundle);
             default:
                 return null;
         }
@@ -155,6 +163,10 @@ public class ControllerFactory {
 
         if (controller instanceof InviteSendController) {
             return GateKeeper.Destination.INVITE;
+        }
+
+        if (controller instanceof LegalitiesController) {
+            return GateKeeper.Destination.LEGALITIES;
         }
 
         return GateKeeper.Destination.EMPTY;

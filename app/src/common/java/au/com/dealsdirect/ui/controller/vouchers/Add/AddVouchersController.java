@@ -37,6 +37,7 @@ import au.com.dealsdirect.data.network.model.vouchers.Voucher;
 import au.com.dealsdirect.ui.base.BaseController;
 import au.com.dealsdirect.ui.custom.CustomAlertDialog;
 import au.com.dealsdirect.utils.BundleBuilder;
+import au.com.dealsdirect.utils.BundleKeys;
 import au.com.dealsdirect.utils.JsonUtils;
 import butterknife.BindView;
 
@@ -148,7 +149,7 @@ public class AddVouchersController extends BaseController implements AddVouchers
     public AddVouchersController(Bundle args) {
         super(args);
         mVouchers = JsonUtils.convertStringToObject(args.getString(BundleKeys.VOUCHERS,""), new TypeToken<ArrayList<Voucher>>(){}.getType());
-        mIsVoucherAdded = args.getBoolean(BundleKeys.IS_VOUCHER _ADDED);
+        mIsVoucherAdded = args.getBoolean(BundleKeys.IS_VOUCHER_ADDED);
         mIsNoDiscountApplied = args.getBoolean(BundleKeys.IS_CART_NO_DISCOUNT);
     }
 
