@@ -10,6 +10,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
 import com.bluelinelabs.conductor.Controller;
 import com.bluelinelabs.conductor.Router;
@@ -39,6 +40,7 @@ import au.com.dealsdirect.ui.custom.transitions.SharedArcFadePopChangeHandler;
 import au.com.dealsdirect.ui.custom.transitions.SharedArcFadePushChangeHandler;
 import au.com.dealsdirect.utils.BundleBuilder;
 import au.com.dealsdirect.utils.BundleKeys;
+import au.com.dealsdirect.utils.CartUtil;
 import au.com.dealsdirect.utils.PaginateUtils;
 import au.com.dealsdirect.utils.module.ControllerFactory;
 import au.com.dealsdirect.utils.module.GateKeeper;
@@ -61,6 +63,8 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
 
     @BindView(R.id.sale_items_search_bar)
     AppBarLayout mSearchBar;
+    @BindView(R.id.sale_items_cart_counter)
+    TextView mCartCounter;
 
     SaleItemsAdapter mAdapter;
     CustomGridLayoutManager mLayoutManager;
@@ -131,6 +135,8 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
     protected void setUp(View view) {
         mDefaultCategory = getResources().getString(R.string.category_default);
 
+        mCartCounter.setText(CartUtil.getCartValue()+"");
+
         mCategoriesRouter = getChildRouter(mCategoriesContainer);
         mPaginateCallbacks = new Paginate.Callbacks() {
             @Override
@@ -171,17 +177,7 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
 
         if (mSaleItems.isEmpty()) {
             mPresenter.loadSaleItems(createSaleItemsRequest("", "", 0, mChipFilters));
-        } else {
-//            if (mSaleItems.size() >= PaginateUtils.LOADING_TRIGGER_THRESHOLD) {
-//
-//            }
         }
-
-//        else if (!mSaleItems.isEmpty()) {
-//            if (mSaleItems.size() >= PaginateUtils.LOADING_TRIGGER_THRESHOLD) {
-//
-//            }
-//        }
     }
 
     @Override
@@ -244,14 +240,14 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
             mSaleItemsRecyclerView.smoothScrollToPosition(position);
 
             Bundle bundle = new Bundle();
-            bundle.putInt("KEY_POSITION", position);
-            bundle.putString("KEY_IMAGE_ID", imageUrl);
-            bundle.putString("KEY_SEO_IDENTIFIER", seoIdentifierId);
-            bundle.putString("KEY_SKU_ID", skuId);
-            bundle.putString("KEY_SALE_ID", saleId);
-            bundle.putString("KEY_SALE_NAME", ((SaleItemsAdapter.ShopItemsViewHolder) viewHolder).productName.getText().toString());
-            bundle.putString("KEY_SALE_PRICE", ((SaleItemsAdapter.ShopItemsViewHolder) viewHolder).productPrice.getText().toString());
-            bundle.putString("KEY_SALE_OLD_PRICE", ((SaleItemsAdapter.ShopItemsViewHolder) viewHolder).productPreviousPrice.getText().toString());
+            bundle.putInt(BundleKeys.SALEITEMDETAILS_KEY_POSITION, position);
+            bundle.putString(BundleKeys.SALEITEMDETAILS_KEY_ITEM_IMAGE_ID, imageUrl);
+            bundle.putString(BundleKeys.SALEITEMDETAILS_KEY_SEO_IDENTIFIER_ID, seoIdentifierId);
+            bundle.putString(BundleKeys.SALEITEMDETAILS_KEY_SKU_ID, skuId);
+            bundle.putString(BundleKeys.SALEITEMDETAILS_KEY_SALE_ID, saleId);
+            bundle.putString(BundleKeys.SALEITEMDETAILS_KEY_ITEM_NAME, ((SaleItemsAdapter.ShopItemsViewHolder) viewHolder).productName.getText().toString());
+            bundle.putString(BundleKeys.SALEITEMDETAILS_KEY_ITEM_PRICE, ((SaleItemsAdapter.ShopItemsViewHolder) viewHolder).productPrice.getText().toString());
+            bundle.putString(BundleKeys.SALEITEMDETAILS_KEY_ITEM_OLD_PRICE, ((SaleItemsAdapter.ShopItemsViewHolder) viewHolder).productPreviousPrice.getText().toString());
 
             if (Build.VERSION.SDK_INT < Build.VERSION_CODES.M) {
                 getRouter().pushController(RouterTransaction.with(SaleItemDetailsController.newInstance(bundle))
@@ -259,10 +255,10 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
                         .popChangeHandler(new FadeChangeHandler()));
             } else {
                 getRouter().pushController(RouterTransaction.with(SaleItemDetailsController.newInstance(bundle))
-//                        .pushChangeHandler(new ArcFadeMoveChangeHandler(getResources().getString(R.string.transition_sale_image_indexed, position)))
-//                        .popChangeHandler(new ArcFadeMoveChangeHandler(getResources().getString(R.string.transition_sale_image_indexed, position))));
-                        .popChangeHandler(new SharedArcFadePopChangeHandler())
-                        .pushChangeHandler(new SharedArcFadePushChangeHandler()));
+                        .pushChangeHandler(new ArcFadeMoveChangeHandler(getResources().getString(R.string.transition_sale_image_indexed, position)))
+                        .popChangeHandler(new ArcFadeMoveChangeHandler(getResources().getString(R.string.transition_sale_image_indexed, position))));
+//                        .popChangeHandler(new SharedArcFadePopChangeHandler())
+//                        .pushChangeHandler(new SharedArcFadePushChangeHandler()));
             }
 
         }

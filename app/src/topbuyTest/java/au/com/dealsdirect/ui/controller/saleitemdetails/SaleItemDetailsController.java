@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.graphics.Paint;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.support.v4.util.Pair;
 import android.support.v4.widget.NestedScrollView;
@@ -14,6 +15,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
+import android.view.animation.LinearInterpolator;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.widget.Button;
@@ -24,6 +26,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.lsjwzh.widget.recyclerviewpager.RecyclerViewPager;
+import com.mysale.genie.utility.RxBus;
 import com.zhy.view.flowlayout.FlowLayout;
 import com.zhy.view.flowlayout.TagAdapter;
 import com.zhy.view.flowlayout.TagFlowLayout;
@@ -35,36 +38,29 @@ import java.util.List;
 import javax.inject.Inject;
 
 import au.com.dealsdirect.R;
+import au.com.dealsdirect.data.auth.AuthHandler;
+import au.com.dealsdirect.data.network.model.saleitemdetails.AddToCartRequest;
 import au.com.dealsdirect.data.network.model.saleitemdetails.GetSaleItemDetailsResponse;
 import au.com.dealsdirect.service.ourpay.Ourpay;
 import au.com.dealsdirect.ui.base.BaseController;
+import au.com.dealsdirect.ui.custom.ArcTranslateAnimation;
+import au.com.dealsdirect.ui.custom.CustomAlertDialog;
 import au.com.dealsdirect.utils.BundleBuilder;
+import au.com.dealsdirect.utils.BundleKeys;
+import au.com.dealsdirect.utils.CartUtil;
 import au.com.dealsdirect.utils.ImageUtils;
+import au.com.dealsdirect.utils.IntrospectionUtils;
 import au.com.dealsdirect.utils.PriceUtils;
 import au.com.dealsdirect.widget.ElasticDragDismissFrameLayout;
 import butterknife.BindView;
+import butterknife.OnClick;
+
 
 /**
  * Created by smartwave on 30/10/2017.
  */
 
 public class SaleItemDetailsController extends BaseController implements SaleItemDetailsMvpView,LoadImagesListener {
-    private final String KEY_POSITION = "KEY_POSITION";
-    private final String KEY_SKU_ID = "KEY_SKU_ID";
-    private final String KEY_SALE_ID = "KEY_SALE_ID";
-    private final String KEY_ITEM_IMAGE_ID = "KEY_IMAGE_ID";
-    private final String KEY_SEO_IDENTIFIER_ID = "KEY_SEO_IDENTIFIER";
-    private final String KEY_ITEM_NAME = "KEY_SALE_NAME";
-    private final String KEY_ITEM_PRICE = "KEY_SALE_PRICE";
-    private final String KEY_ITEM_OLD_PRICE = "KEY_SALE_OLD_PRICE";
-
-    private final String KEY_COUNTRY_ID = "KEY_COUNTRY_ID";
-    private final String KEY_LANGUAGE_ID = "KEY_LANGUAGE_ID";
-    private final String KEY_USER_GROUP = "KEY_USER_GROUP";
-    private final String KEY_GET_BIG_IMAGES = "KEY_GET_BIG_IMAGES";
-    private final String KEY_INCLUDE_PRICES = "KEY_INCLUDE_PRICES";
-
-    public final static String RESULT_EXTRA_CONTROLLER_ID = "SALE_ITEM_DETAILS_ID";
 
     @Inject
     SaleItemDetailsMvpPresenter<SaleItemDetailsMvpView> mPresenter;
@@ -128,10 +124,15 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
     ImageView mAddToCartOverlay;
     @BindView(R.id.discountLabel)
     TextView mDiscountLabel;
+    @BindView(R.id.cart_view)
+    RelativeLayout mCartView;
+    @BindView(R.id.cart_counter)
+    TextView mCartCounter;
 
     @BindView(R.id.image_container)
     FrameLayout mImageContainerViewGroup;
 
+    @BindView(R.id.product_details_add_to_cart_image)
     ImageView mImageViewToAnimate;
 
     int[] mSharedImageLocation;
@@ -157,7 +158,7 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
 
     boolean checkOutLocated = false;
 
-    int[] checkoutLocation = new int[2];
+    int[] cartLocation = new int[2];
     boolean isAnimating = false;
 
     ElasticDragDismissFrameLayout mRootView;
@@ -189,14 +190,14 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
 
     public SaleItemDetailsController(Bundle args) {
         super(args);
-        mSaleId = args.getString(KEY_SALE_ID);
-        mSkuId = args.getString(KEY_SKU_ID, "");
-        mItemImageUrl = args.getString(KEY_ITEM_IMAGE_ID);
-        mSeoIdentifierId = args.getString(KEY_SEO_IDENTIFIER_ID);
-        mSaleName = args.getString(KEY_ITEM_NAME);
-        mSalePrice = args.getString(KEY_ITEM_PRICE);
-        mSaleOldPrice = args.getString(KEY_ITEM_OLD_PRICE);
-        mFromPosition = args.getInt(KEY_POSITION);
+        mSaleId = args.getString(BundleKeys.SALEITEMDETAILS_KEY_SALE_ID);
+        mSkuId = args.getString(BundleKeys.SALEITEMDETAILS_KEY_SKU_ID, "");
+        mItemImageUrl = args.getString(BundleKeys.SALEITEMDETAILS_KEY_ITEM_IMAGE_ID);
+        mSeoIdentifierId = args.getString(BundleKeys.SALEITEMDETAILS_KEY_SEO_IDENTIFIER_ID);
+        mSaleName = args.getString(BundleKeys.SALEITEMDETAILS_KEY_ITEM_NAME);
+        mSalePrice = args.getString(BundleKeys.SALEITEMDETAILS_KEY_ITEM_PRICE);
+        mSaleOldPrice = args.getString(BundleKeys.SALEITEMDETAILS_KEY_ITEM_OLD_PRICE);
+        mFromPosition = args.getInt(BundleKeys.SALEITEMDETAILS_KEY_POSITION);
     }
     @Override
     protected View inflateView(@NonNull LayoutInflater inflater, @NonNull ViewGroup container) {
@@ -441,7 +442,16 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
 
     @Override
     public void showAddToCartResponse(boolean val) {
+        RxBus.instance().post(IntrospectionUtils.EVENT_ADD_TO_CART);
 
+        if (val) {
+            CartUtil.addValueToCart(1);
+            mCartCounter.setText(CartUtil.getCartValue()+"");
+            CustomAlertDialog.showCustomAlertDialog(
+                    mActivity,
+                    CustomAlertDialog.CustomDialogIconState.POSITIVE,
+                    mActivity.getString(R.string.add_to_cart_success));
+        }
     }
 
     @Override
@@ -461,6 +471,105 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
             mOtherImagesRv.setVisibility(View.VISIBLE);
             mProductImagesRv.setOverScrollMode(View.OVER_SCROLL_ALWAYS);
         }
+    }
+
+    @OnClick(R.id.product_details_add_to_basket)
+    void addToBasket() {
+
+        AddToCartRequest request = new AddToCartRequest(mSkuId);
+
+        if (hasSizes) {
+            if (!didSelectSize) {
+                CustomAlertDialog.showCustomAlertDialog(
+                        mActivity,
+                        CustomAlertDialog.CustomDialogIconState.NEGATIVE,
+                        mActivity.getString(R.string.please_select_size));
+
+                mProductDetailScrollView.scrollTo(0, mProductDetailBottomCard.getTop());
+            } else {
+                verifyAddToCart(request);
+            }
+        } else {
+            verifyAddToCart(request);
+        }
+    }
+
+    private void verifyAddToCart(AddToCartRequest request) {
+        if (!mPresenter.isAuthorized()) {
+            mActivity.showLoginController(getRouter(), new AuthHandler() {
+                @Override
+                public void success() {
+                    mActivity.callGCMRegisterSubscriber();
+                    mPresenter.addToCart(request);
+                    if (mSharedImageLocation != null) {
+                        new Handler().postDelayed(() -> animateAddToCart(), 1000);
+                    }
+                }
+
+                @Override
+                public void error() {
+
+                }
+            });
+        } else {
+            mPresenter.addToCart(request);
+            if (mSharedImageLocation != null) {
+                animateAddToCart();
+            }
+        }
+    }
+
+    private void animateAddToCart() {
+        mProductDetailScrollView.scrollTo(0, 0);
+
+        SaleItemDetailsImageAdapter.ViewHolder vh = (SaleItemDetailsImageAdapter.ViewHolder) mProductImagesRv
+                .findViewHolderForLayoutPosition(mProductImagesRvLayoutManager.findLastVisibleItemPosition());
+
+        mImageViewToAnimate.setVisibility(View.VISIBLE);
+        if (imagesLoaded) {
+            mImageViewToAnimate.setImageDrawable(vh.image.getDrawable());
+        } else {
+            mImageViewToAnimate.setImageDrawable(mProductSharedImage.getDrawable());
+        }
+
+        mImageViewToAnimate.setElevation(5f);
+        mImageViewToAnimate.bringToFront();
+
+        mCartView.getLocationOnScreen(cartLocation);
+
+        float origElevation = mCartView.getElevation();
+        mCartView.setElevation(0);
+
+        ArcTranslateAnimation anim = new ArcTranslateAnimation(
+                700, Animation.ABSOLUTE,
+                mSharedImageLocation[0],
+                Animation.ABSOLUTE,
+                cartLocation[0],
+                Animation.ABSOLUTE,
+                cartLocation[1]);
+
+        anim.setInterpolator(new LinearInterpolator());
+        anim.setAnimationListener(new Animation.AnimationListener() {
+            @Override
+            public void onAnimationStart(Animation animation) {
+                isAnimating = true;
+            }
+
+            @Override
+            public void onAnimationEnd(Animation animation) {
+                isAnimating = false;
+                mImageViewToAnimate.setVisibility(View.GONE);
+                mCartView.setElevation(origElevation);
+            }
+
+            @Override
+            public void onAnimationRepeat(Animation animation) {
+
+            }
+        });
+
+        mImageViewToAnimate.startAnimation(anim);
+
     }
 
     private List<String> getQualityImages(List<String> images) {
