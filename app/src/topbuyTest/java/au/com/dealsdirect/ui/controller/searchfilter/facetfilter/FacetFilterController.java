@@ -103,7 +103,7 @@ public class FacetFilterController extends BaseController {
     public FacetFilterController(Bundle args) {
         super(args);
         mFacetList = args.getStringArrayList(BundleKeys.FACET_PAYLOAD);
-        mFacetFilterType = args.getString(BundleKeys.FACET_FILTER_TYPE);
+        mFacetFilterType = args.getString(BundleKeys.FACET_FILTER_TYPE,"");
     }
 
     @Override
