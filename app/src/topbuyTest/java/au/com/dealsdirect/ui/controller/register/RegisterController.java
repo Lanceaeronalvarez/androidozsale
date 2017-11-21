@@ -7,12 +7,8 @@ import android.support.annotation.Nullable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.CheckBox;
 import android.widget.TextView;
 
-import com.bluelinelabs.conductor.RouterTransaction;
-import com.bluelinelabs.conductor.changehandler.HorizontalChangeHandler;
-import com.bluelinelabs.conductor.changehandler.VerticalChangeHandler;
 import com.facebook.CallbackManager;
 import com.facebook.internal.CallbackManagerImpl;
 
@@ -20,8 +16,7 @@ import javax.inject.Inject;
 
 import au.com.dealsdirect.R;
 import au.com.dealsdirect.data.auth.AuthHandler;
-import au.com.dealsdirect.ui.base.BaseController;
-import au.com.dealsdirect.ui.base.BaseToolBarController;
+import au.com.dealsdirect.ui.base.SwipeableBaseToolBarController;
 import au.com.dealsdirect.utils.AppConstants;
 import au.com.dealsdirect.utils.BundleBuilder;
 import butterknife.BindView;
@@ -31,7 +26,7 @@ import butterknife.OnClick;
  * Created by Ayi on 05/06/2017.
  */
 
-public class RegisterController extends BaseToolBarController implements RegisterMvpView {
+public class RegisterController extends SwipeableBaseToolBarController implements RegisterMvpView {
 
     public static final String TAG = "RegisterController";
 
@@ -96,7 +91,7 @@ public class RegisterController extends BaseToolBarController implements Registe
     @Override
     public void onViewBound(@NonNull View view) {
         super.onViewBound(view);
-
+        setupSwipingBehavior();
         setUp(view);
     }
 

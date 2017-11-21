@@ -11,6 +11,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 
+import com.bluelinelabs.conductor.changehandler.VerticalChangeHandler;
 import com.facebook.CallbackManager;
 import com.facebook.internal.CallbackManagerImpl;
 
@@ -19,7 +20,7 @@ import java.util.regex.Pattern;
 import javax.inject.Inject;
 
 import au.com.dealsdirect.R;
-import au.com.dealsdirect.ui.base.BaseToolBarController;
+import au.com.dealsdirect.ui.base.SwipeableBaseToolBarController;
 import au.com.dealsdirect.utils.AppConstants;
 import au.com.dealsdirect.utils.BundleBuilder;
 import au.com.dealsdirect.utils.module.GateKeeper;
@@ -30,7 +31,7 @@ import butterknife.OnClick;
  * Created by smartwave on 23/10/2017.
  */
 
-public class LoginController extends BaseToolBarController implements LoginMvpView {
+public class LoginController extends SwipeableBaseToolBarController implements LoginMvpView {
 
     public static final String TAG = "LoginController";
     public static final String AUTH_HANDLER = "AUTH_HANDLER";
@@ -107,6 +108,7 @@ public class LoginController extends BaseToolBarController implements LoginMvpVi
     protected void onViewBound(@NonNull View view) {
         super.onViewBound(view);
         setUp(view);
+        setupSwipingBehavior();
     }
 
 
@@ -137,7 +139,7 @@ public class LoginController extends BaseToolBarController implements LoginMvpVi
 
     @Override
     public void showRegistration() {
-        GateKeeper.push(getRouter(), GateKeeper.Destination.REGISTER);
+        GateKeeper.push(getRouter(), GateKeeper.Destination.REGISTER,new VerticalChangeHandler(false),new VerticalChangeHandler());
     }
 
     @Override
