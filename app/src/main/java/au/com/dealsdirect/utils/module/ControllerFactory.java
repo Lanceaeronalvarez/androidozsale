@@ -21,9 +21,6 @@ import au.com.dealsdirect.ui.controller.orders.orders.OrdersController;
 import au.com.dealsdirect.ui.controller.register.RegisterController;
 import au.com.dealsdirect.ui.controller.returns.currentreturns.CurrentReturnsController;
 import au.com.dealsdirect.ui.controller.saleitems.SaleItemsController;
-import au.com.dealsdirect.ui.controller.searchfilter.facetfilter.FacetFilterController;
-import au.com.dealsdirect.ui.controller.vouchers.Add.AddVouchersController;
-import au.com.dealsdirect.ui.controller.vouchers.View.ViewVouchersController;
 
 /**
  * Created by smartwave on 16/10/2017.

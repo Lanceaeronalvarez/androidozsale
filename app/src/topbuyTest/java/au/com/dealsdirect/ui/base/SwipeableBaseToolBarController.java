@@ -8,6 +8,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.mysale.genie.views.custom.CoordinatorLayoutAsBottomSheetBehavior;
@@ -22,7 +23,7 @@ import butterknife.BindView;
 public abstract class SwipeableBaseToolBarController extends BaseController {
 
     @BindView(R.id.root_base_toolbar_layout)
-    LinearLayout mRootLayout;
+    RelativeLayout mRootLayout;
 
     CoordinatorLayoutAsBottomSheetBehavior mBottomSheetBehavior;
 
@@ -97,7 +98,6 @@ public abstract class SwipeableBaseToolBarController extends BaseController {
             mActivity.showSnackBar(mActivity.getString(R.string.no_internet_connection), true);
         }
     }
-
 
 
     public void setupSwipingBehavior() {
