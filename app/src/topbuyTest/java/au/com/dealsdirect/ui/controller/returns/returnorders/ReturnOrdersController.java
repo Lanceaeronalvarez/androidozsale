@@ -19,7 +19,7 @@ import java.util.List;
 import javax.inject.Inject;
 
 import au.com.dealsdirect.R;
-import au.com.dealsdirect.ui.base.BaseToolBarController;
+import au.com.dealsdirect.ui.base.SwipeableBaseToolBarController;
 import au.com.dealsdirect.ui.controller.returns.newreturn.NewReturnController;
 import au.com.dealsdirect.ui.controller.returns.returnorders.adapter.ReturnOrdersAdapter;
 import au.com.dealsdirect.ui.controller.returns.returnorders.listener.ReturnOrderClickListener;
@@ -30,7 +30,7 @@ import butterknife.BindView;
  * Created by Ayi on 05/06/2017.
  */
 
-public class ReturnOrdersController extends BaseToolBarController
+public class ReturnOrdersController extends SwipeableBaseToolBarController
         implements ReturnOrdersMvpView, ReturnOrderClickListener {
 
     public static final String TAG = "ReturnOrdersController";
@@ -78,6 +78,7 @@ public class ReturnOrdersController extends BaseToolBarController
     public void onViewBound(@NonNull View view) {
         super.onViewBound(view);
         setUp(view);
+        setupSwipingBehavior();
         mToolbarTitle.setText("new returns");
 
     }

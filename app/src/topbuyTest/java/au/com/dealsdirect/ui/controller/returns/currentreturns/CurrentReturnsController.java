@@ -92,7 +92,7 @@ public class CurrentReturnsController extends SwipeableBaseToolBarController
         super.onViewBound(view);
         setUp(view);
         setupSwipingBehavior();
-        mToolbarTitle.setText("confirm your number");
+        mToolbarTitle.setText(mActivity.getString(R.string.my_returns));
 
         mCurrentReturnsListener = this;
 
@@ -154,6 +154,7 @@ public class CurrentReturnsController extends SwipeableBaseToolBarController
             mCurrentReturnsRecyclerView.setVisibility(View.GONE);
             setupDefaultBottomButton("add new return", view -> {
                 GateKeeper.push(getRouter(), GateKeeper.Destination.RETURN_ORDERS, new HorizontalChangeHandler(), new HorizontalChangeHandler());
+
             });
         }
     }
