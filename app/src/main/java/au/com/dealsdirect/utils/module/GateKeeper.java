@@ -46,6 +46,7 @@ public class GateKeeper {
         RETURN_ORDERS,
         VIEW_ADDRESSES,
         CONTACT_US,
+        ADD_CONTACT,
         SEARCH_FILTER,
         LEGALITIES
         //add more destinations

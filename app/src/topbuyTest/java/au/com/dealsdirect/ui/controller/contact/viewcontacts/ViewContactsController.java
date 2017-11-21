@@ -12,7 +12,6 @@ import android.widget.LinearLayout;
 import com.bluelinelabs.conductor.Router;
 import com.bluelinelabs.conductor.RouterTransaction;
 import com.bluelinelabs.conductor.changehandler.HorizontalChangeHandler;
-import com.bluelinelabs.conductor.changehandler.VerticalChangeHandler;
 
 import java.util.ArrayList;
 import java.util.LinkedList;
@@ -24,16 +23,14 @@ import au.com.dealsdirect.R;
 import au.com.dealsdirect.data.network.model.contactitem.ContactItemByDate;
 import au.com.dealsdirect.data.network.model.contactitem.GetContactsResponse;
 import au.com.dealsdirect.ui.base.SwipeableBaseToolBarController;
-import au.com.dealsdirect.ui.controller.contact.addcontact.AddContactController;
 import au.com.dealsdirect.ui.controller.contact.viewcontacthistory.ViewContactHistoryController;
 import au.com.dealsdirect.ui.controller.contact.viewcontacts.contacts.ContactsAdapter;
 import au.com.dealsdirect.ui.controller.contact.viewcontacts.contacts.ContactsClickListener;
 import au.com.dealsdirect.ui.controller.contact.viewcontacts.viewcontactdate.ViewContactDateAdapter;
-import au.com.dealsdirect.ui.controller.returns.currentreturns.CurrentReturnsController;
 import au.com.dealsdirect.utils.BundleBuilder;
 import au.com.dealsdirect.utils.DateUtils;
+import au.com.dealsdirect.utils.module.GateKeeper;
 import butterknife.BindView;
-import butterknife.OnClick;
 
 import static au.com.dealsdirect.utils.DateUtils.getTrimmedServerDateString;
 
@@ -95,6 +92,10 @@ public class ViewContactsController extends SwipeableBaseToolBarController imple
         super.onViewBound(view);
 
         mToolbarTitle.setText("contact us");
+        setupSwipingBehavior();
+        setupDefaultBottomButton(mActivity.getString(R.string.write_us_a_message), view1 -> {
+            GateKeeper.push(getRouter(), GateKeeper.Destination.ADD_CONTACT, new HorizontalChangeHandler(false), new HorizontalChangeHandler());
+        });
 
         assert (mActivity) != null;
         mActivity.getMainController().showBottomNav();
@@ -155,14 +156,6 @@ public class ViewContactsController extends SwipeableBaseToolBarController imple
         }
 
     }
-
-//    @OnClick(R.id.partial_toolbar_filter_view)
-//    void addContact() {
-//        getRouter().pushController(RouterTransaction.with(AddContactController.newInstance())
-//                .pushChangeHandler(new VerticalChangeHandler())
-//                .popChangeHandler(new VerticalChangeHandler()));
-//
-//    }
 
     public ArrayList<ContactItemByDate> getDifferentDates(List<GetContactsResponse.ContactList> lists) {
 
@@ -249,13 +242,5 @@ public class ViewContactsController extends SwipeableBaseToolBarController imple
                 contactList.getContactNo()))
                 .pushChangeHandler(new HorizontalChangeHandler())
                 .popChangeHandler(new HorizontalChangeHandler()));
-    }
-
-    @OnClick(R.id.controller_view_contacts_write_message)
-    void onWriteMessageClick(){
-        getRouter().pushController(RouterTransaction.with(AddContactController.newInstance())
-                .tag(CurrentReturnsController.TAG)
-                .pushChangeHandler(new VerticalChangeHandler())
-                .popChangeHandler(new VerticalChangeHandler()));
     }
 }

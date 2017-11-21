@@ -10,6 +10,7 @@ import au.com.dealsdirect.ui.controller.categories.CategoriesController;
 import au.com.dealsdirect.ui.controller.checkout.addpayment.AddPaymentController;
 import au.com.dealsdirect.ui.controller.checkout.checkout.CheckoutController;
 import au.com.dealsdirect.ui.controller.checkout.paymentselect.PaymentSelectController;
+import au.com.dealsdirect.ui.controller.contact.addcontact.AddContactController;
 import au.com.dealsdirect.ui.controller.contact.viewcontacts.ViewContactsController;
 import au.com.dealsdirect.ui.controller.details.DetailsController;
 import au.com.dealsdirect.ui.controller.forgotpassword.ForgotPasswordController;
@@ -78,6 +79,8 @@ public class ControllerFactory {
                 return new ViewAddressController(false, null);
             case CONTACT_US:
                 return ViewContactsController.newInstance();
+            case ADD_CONTACT:
+                return AddContactController.newInstance();
             case EMPTY:
                 break;
             case FACET_FILTER:
@@ -140,6 +143,8 @@ public class ControllerFactory {
                 return new ViewAddressController(false, null);
             case CONTACT_US:
                 return ViewContactsController.newInstance();
+            case ADD_CONTACT:
+                return AddContactController.newInstance();
             case LEGALITIES:
                 return new LegalitiesController(bundle);
             case FACET_FILTER:

@@ -189,8 +189,7 @@ public class AccountController extends BaseController implements AccountMvpView 
 
     @Override
     public void showContactUs() {
-        Log.d("dealsdirect", "contact us");
-        GateKeeper.push(getRouter(), GateKeeper.Destination.CONTACT_US, new VerticalChangeHandler(), new VerticalChangeHandler());
+        GateKeeper.push(getRouter(), GateKeeper.Destination.CONTACT_US, new VerticalChangeHandler(false), new VerticalChangeHandler());
     }
 
     @Override

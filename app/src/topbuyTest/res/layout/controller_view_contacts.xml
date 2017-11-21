@@ -20,17 +20,6 @@
             layout="@layout/partial_no_contacts_placeholder_layout"
             android:visibility="gone" />
 
-        <Button
-            android:id="@+id/controller_view_contacts_write_message"
-            style="@style/DDButtonStyle"
-            android:layout_width="match_parent"
-            android:layout_height="@dimen/default_button_height"
-            android:layout_gravity="bottom"
-            android:layout_margin="@dimen/activity_horizontal_margin"
-            android:text="write us a message"
-            android:layout_alignParentBottom="true"
-            android:textSize="@dimen/text_size_large"/>
-
     </RelativeLayout>
 
 </LinearLayout>
