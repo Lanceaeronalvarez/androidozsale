@@ -17,4 +17,8 @@ public interface SearchFilterMvpView extends MvpView{
     Set<Integer> getOriginalSelectedSet();
 
     void onResetPriceRange();
+
+    void showFilters();
+
+    void hideFilters();
 }

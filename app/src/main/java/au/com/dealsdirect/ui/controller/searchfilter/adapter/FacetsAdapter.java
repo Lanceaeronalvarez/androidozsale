@@ -16,15 +16,9 @@ import java.util.List;
 
 import au.com.dealsdirect.R;
 import au.com.dealsdirect.ui.controller.searchfilter.SearchFilterMvpPresenter;
+import au.com.dealsdirect.utils.BundleKeys;
 import butterknife.BindView;
 import butterknife.ButterKnife;
-
-import static au.com.dealsdirect.ui.controller.searchfilter.SearchFilterController.BRANDS_FACETFILTER_NAME;
-import static au.com.dealsdirect.ui.controller.searchfilter.SearchFilterController.CATEGORY_TREE_FACET;
-import static au.com.dealsdirect.ui.controller.searchfilter.SearchFilterController.COLORS_FACETFILTER_NAME;
-import static au.com.dealsdirect.ui.controller.searchfilter.SearchFilterController.PRICE_FACETFILTER_NAME;
-import static au.com.dealsdirect.ui.controller.searchfilter.SearchFilterController.SIZES_FACETFILTER_NAME;
-import static au.com.dealsdirect.ui.controller.searchfilter.SearchFilterController.SORT_FACETFILTER_NAME;
 
 
 public class FacetsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
@@ -93,17 +87,17 @@ public class FacetsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
     private int mapDrawable(int position) {
         String facetFilterType = getFacetFilterType(position);
         switch (facetFilterType) {
-            case SORT_FACETFILTER_NAME:
+            case BundleKeys.SORT_FACETFILTER_NAME:
                 return R.drawable.bg_filter_sort_icon;
-            case CATEGORY_TREE_FACET:
+            case BundleKeys.CATEGORY_TREE_FACET:
                 return R.drawable.bg_filter_categories_icon;
-            case BRANDS_FACETFILTER_NAME:
+            case BundleKeys.BRANDS_FACETFILTER_NAME:
                 return R.drawable.bg_filter_brand_icon;
-            case SIZES_FACETFILTER_NAME:
+            case BundleKeys.SIZES_FACETFILTER_NAME:
                 return R.drawable.bg_filter_size_icon;
-            case COLORS_FACETFILTER_NAME:
+            case BundleKeys.COLORS_FACETFILTER_NAME:
                 return R.drawable.bg_filter_color_icon;
-            case PRICE_FACETFILTER_NAME:
+            case BundleKeys.PRICE_FACETFILTER_NAME:
                 return R.drawable.bg_filter_price_icon;
             default:
                 return -1;

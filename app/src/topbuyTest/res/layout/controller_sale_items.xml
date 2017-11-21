@@ -52,7 +52,8 @@
     <com.bluelinelabs.conductor.ChangeHandlerFrameLayout
         android:id="@+id/controller_search_filter_frame"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_behavior="au.com.dealsdirect.ui.controller.searchfilter.ViewPagerBottomSheetBehavior"
         android:visibility="gone"/>
 
 

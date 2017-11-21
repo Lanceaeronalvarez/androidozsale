@@ -14,10 +14,9 @@ import java.util.Set;
 
 import au.com.dealsdirect.R;
 import au.com.dealsdirect.ui.controller.searchfilter.SearchFilterMvpPresenter;
+import au.com.dealsdirect.utils.BundleKeys;
 import butterknife.BindView;
 import butterknife.ButterKnife;
-
-import static au.com.dealsdirect.ui.controller.searchfilter.SearchFilterController.SORT_FACETFILTER_NAME;
 
 /**
  * Created by smartwave on 20/07/2017.
@@ -71,7 +70,7 @@ public class FacetItemsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
             public void onClick(View v) {
 
                 //single selection, allows unselection logic for sort type of facet.
-                if (mFilterType == SORT_FACETFILTER_NAME) {
+                if (mFilterType == BundleKeys.SORT_FACETFILTER_NAME) {
                     if (!vh.isSelected) {
                         if (selectedPos == -1) {
                             vh.toggle();
@@ -158,7 +157,7 @@ public class FacetItemsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
     private void removeChip() {
         SearchChipModel chipToRemove = null;
         for (SearchChipModel chip : mSearchTagsAdapter.getData()) {
-            if (chip.getFilterType().equals(SORT_FACETFILTER_NAME)) {
+            if (chip.getFilterType().equals(BundleKeys.SORT_FACETFILTER_NAME)) {
                 chipToRemove = chip;
             }
         }
@@ -180,7 +179,7 @@ public class FacetItemsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
 
     public void setFilterType(String type) {
         mFilterType = type;
-        if (mFilterType == SORT_FACETFILTER_NAME) { //update selectedPos when coming back from saleitemslist
+        if (mFilterType == BundleKeys.SORT_FACETFILTER_NAME) { //update selectedPos when coming back from saleitemslist
             List<Integer> tempList = new ArrayList<>(mSelectedFacets);
             if (!tempList.isEmpty()) {
                 selectedPos = tempList.get(0);
