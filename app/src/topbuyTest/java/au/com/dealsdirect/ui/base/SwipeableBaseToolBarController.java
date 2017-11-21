@@ -142,7 +142,7 @@ public abstract class SwipeableBaseToolBarController extends BaseController {
 
                 @Override
                 public void onSlide(@NonNull View bottomSheet, float slideOffset) {
-                    bottomSheet.setAlpha(slideOffset);
+//                    bottomSheet.setAlpha(slideOffset);
                 }
             });
 
