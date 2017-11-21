@@ -48,7 +48,8 @@ public class GateKeeper {
         CONTACT_US,
         ADD_CONTACT,
         SEARCH_FILTER,
-        LEGALITIES
+        LEGALITIES,
+        LANGUAGE
         //add more destinations
     }
 

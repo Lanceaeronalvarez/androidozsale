@@ -184,7 +184,7 @@ public class AccountController extends BaseController implements AccountMvpView 
 
     @Override
     public void showLanguage() {
-
+        GateKeeper.push(getRouter(), GateKeeper.Destination.LANGUAGE, new VerticalChangeHandler(false), new VerticalChangeHandler());
     }
 
     @Override
