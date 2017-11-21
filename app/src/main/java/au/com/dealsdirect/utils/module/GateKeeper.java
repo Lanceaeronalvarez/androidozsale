@@ -43,6 +43,7 @@ public class GateKeeper {
         ORDERS,
         ORDER_DETAILS,
         CURRENT_RETURNS,
+        RETURN_ORDERS,
         VIEW_ADDRESSES,
         CONTACT_US,
         SEARCH_FILTER,

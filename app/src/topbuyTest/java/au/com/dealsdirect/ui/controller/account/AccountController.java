@@ -10,7 +10,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.bluelinelabs.conductor.RouterTransaction;
+import com.bluelinelabs.conductor.changehandler.HorizontalChangeHandler;
 import com.bluelinelabs.conductor.changehandler.VerticalChangeHandler;
 
 import java.util.ArrayList;
@@ -165,8 +165,7 @@ public class AccountController extends BaseController implements AccountMvpView 
 
     @Override
     public void showMyReturns() {
-        Log.d("dealsdirect", "current returns");
-        GateKeeper.push(getRouter(), GateKeeper.Destination.CURRENT_RETURNS, new VerticalChangeHandler(), new VerticalChangeHandler());
+        GateKeeper.push(getRouter(), GateKeeper.Destination.CURRENT_RETURNS, new VerticalChangeHandler(false), new VerticalChangeHandler());
 
     }
 

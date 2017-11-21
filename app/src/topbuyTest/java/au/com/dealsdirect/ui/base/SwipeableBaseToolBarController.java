@@ -6,6 +6,7 @@ import android.support.design.widget.CoordinatorLayout;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
@@ -24,6 +25,15 @@ public abstract class SwipeableBaseToolBarController extends BaseController {
 
     @BindView(R.id.root_base_toolbar_layout)
     RelativeLayout mRootLayout;
+
+    @BindView(R.id.root_scroll_view)
+    LockableNestedScrollView mScrollView;
+
+    @BindView(R.id.custom_bottom_button)
+    Button mBottomButton;
+
+    @BindView(R.id.swipeable_fragment_bottom_layout)
+    FrameLayout mBottomLayout;
 
     CoordinatorLayoutAsBottomSheetBehavior mBottomSheetBehavior;
 
@@ -99,6 +109,17 @@ public abstract class SwipeableBaseToolBarController extends BaseController {
         }
     }
 
+    public void setupDefaultBottomButton(String text,View.OnClickListener listener){
+        showBottomLayout();
+        mBottomButton.setVisibility(View.VISIBLE);
+        mBottomButton.setText(text);
+        mBottomButton.setOnClickListener(listener);
+
+    }
+
+    public void showBottomLayout(){
+        mBottomLayout.setVisibility(View.VISIBLE);
+    }
 
     public void setupSwipingBehavior() {
         mBottomSheetBehavior = CoordinatorLayoutAsBottomSheetBehavior.from(mRootLayout);

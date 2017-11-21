@@ -40,9 +40,7 @@
                 android:layout_height="match_parent"
                 android:fillViewport="true"
                 android:background="#ffffff"
-                app:layout_behavior="@string/appbar_scrolling_view_behavior"
-                android:clipChildren="false"
-                android:clipToPadding="false">
+                app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -53,7 +51,6 @@
                         android:id="@+id/controller_base_content_layout"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
-                        android:clickable="true"
                         android:layout_marginTop="@dimen/activity_vertical_margin">
 
 
@@ -74,6 +71,13 @@
             android:background="@android:color/transparent"
             android:visibility="gone">
 
+            <Button
+                android:id="@+id/custom_bottom_button"
+                style="@style/DDButtonStyle"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="@dimen/activity_horizontal_margin"
+                android:textSize="@dimen/text_size_large" />
 
         </FrameLayout>
     </RelativeLayout>

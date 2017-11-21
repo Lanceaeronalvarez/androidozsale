@@ -20,7 +20,11 @@ import au.com.dealsdirect.ui.controller.main.MainController;
 import au.com.dealsdirect.ui.controller.orders.orders.OrdersController;
 import au.com.dealsdirect.ui.controller.register.RegisterController;
 import au.com.dealsdirect.ui.controller.returns.currentreturns.CurrentReturnsController;
+import au.com.dealsdirect.ui.controller.returns.returnorders.ReturnOrdersController;
 import au.com.dealsdirect.ui.controller.saleitems.SaleItemsController;
+import au.com.dealsdirect.ui.controller.searchfilter.facetfilter.FacetFilterController;
+import au.com.dealsdirect.ui.controller.vouchers.Add.AddVouchersController;
+import au.com.dealsdirect.ui.controller.vouchers.View.ViewVouchersController;
 
 /**
  * Created by smartwave on 16/10/2017.
@@ -68,15 +72,36 @@ public class ControllerFactory {
                 return new OrdersController();
             case CURRENT_RETURNS:
                 return CurrentReturnsController.newInstance();
+            case RETURN_ORDERS:
+                return ReturnOrdersController.newInstance();
             case VIEW_ADDRESSES:
                 return new ViewAddressController(false, null);
             case CONTACT_US:
                 return ViewContactsController.newInstance();
+            case EMPTY:
+                break;
             case FACET_FILTER:
                 return FacetFilterController.newInstance();
+            case SPLASH:
+                break;
+            case SALEITEM_DETAILS:
+                break;
+            case ADD_VOUCHERS:
+                break;
+            case PAYMENT_SELECT:
+                break;
+            case PAYMENT_ADD:
+                break;
+            case ORDER_DETAILS:
+                break;
+            case SEARCH_FILTER:
+                break;
+            case LEGALITIES:
+                break;
             default:
                 return null;
         }
+        return null;
     }
 
     private static Controller buildWithParameters(GateKeeper.Destination destination, Bundle bundle) {
@@ -109,6 +134,8 @@ public class ControllerFactory {
                 return new OrdersController();
             case CURRENT_RETURNS:
                 return CurrentReturnsController.newInstance();
+            case RETURN_ORDERS:
+                return ReturnOrdersController.newInstance();
             case VIEW_ADDRESSES:
                 return new ViewAddressController(false, null);
             case CONTACT_US:
