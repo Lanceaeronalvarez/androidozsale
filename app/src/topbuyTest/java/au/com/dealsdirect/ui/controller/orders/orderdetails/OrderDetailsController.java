@@ -71,6 +71,7 @@ public class OrderDetailsController extends SwipeableBaseToolBarController imple
     protected void onViewBound(@NonNull View view) {
         super.onViewBound(view);
         mToolbarTitle.setText(R.string.my_orders);
+        setupSwipingBehavior();
         setUp(view);
     }
 

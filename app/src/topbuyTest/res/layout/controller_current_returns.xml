@@ -29,17 +29,6 @@
             layout="@layout/partial_no_returns_placeholder_layout"
             android:visibility="visible"/>
 
-        <Button
-            android:id="@+id/controller_current_returns_create_new_button"
-            style="@style/DDButtonStyle"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_gravity="bottom"
-            android:layout_margin="@dimen/activity_horizontal_margin"
-            android:text="add new return"
-            android:layout_alignParentBottom="true"
-            android:textSize="@dimen/text_size_large"/>
-
     </RelativeLayout>
 
 </ScrollView>

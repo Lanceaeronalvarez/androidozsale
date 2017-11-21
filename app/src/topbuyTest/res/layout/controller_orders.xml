@@ -26,18 +26,6 @@
         <include layout="@layout/placeholder_layout_orders" android:visibility="visible"></include>
 
 
-        <Button
-            android:id="@+id/controller_orders_shop_now_button"
-            style="@style/DDButtonStyle"
-            android:layout_width="match_parent"
-            android:layout_height="@dimen/default_button_height"
-            android:layout_gravity="bottom"
-            android:layout_margin="@dimen/activity_horizontal_margin"
-            android:text="shop now"
-            android:layout_alignParentBottom="true"
-            android:textSize="@dimen/text_size_large"/>
-
-
     </RelativeLayout>
 
 </ScrollView>

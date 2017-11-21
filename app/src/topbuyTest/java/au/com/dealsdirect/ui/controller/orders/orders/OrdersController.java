@@ -85,6 +85,9 @@ public class OrdersController extends SwipeableBaseToolBarController implements 
         } else {
             mRecyclerView.setVisibility(View.GONE);
             mPlaceholderLayout.setVisibility(View.VISIBLE);
+            setupDefaultBottomButton(mActivity.getString(R.string.shop_now), view -> {
+
+            });
         }
     }
 

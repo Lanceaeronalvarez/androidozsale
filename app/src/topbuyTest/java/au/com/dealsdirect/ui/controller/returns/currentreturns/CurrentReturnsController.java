@@ -29,10 +29,9 @@ import au.com.dealsdirect.ui.controller.returns.currentreturns.adapter.CurrentRe
 import au.com.dealsdirect.ui.controller.returns.currentreturns.listener.CurrentReturnClickListener;
 import au.com.dealsdirect.ui.controller.returns.currentreturns.viewholder.CurrentReturnViewHolder;
 import au.com.dealsdirect.ui.controller.returns.returndetails.ReturnDetailsController;
-import au.com.dealsdirect.ui.controller.returns.returnorders.ReturnOrdersController;
 import au.com.dealsdirect.utils.BundleBuilder;
+import au.com.dealsdirect.utils.module.GateKeeper;
 import butterknife.BindView;
-import butterknife.OnClick;
 
 /*
  * Created by dp on 05/06/2017.
@@ -153,6 +152,9 @@ public class CurrentReturnsController extends SwipeableBaseToolBarController
 
             mPlaceholderLayout.setVisibility(View.VISIBLE);
             mCurrentReturnsRecyclerView.setVisibility(View.GONE);
+            setupDefaultBottomButton("add new return", view -> {
+                GateKeeper.push(getRouter(), GateKeeper.Destination.RETURN_ORDERS, new HorizontalChangeHandler(), new HorizontalChangeHandler());
+            });
         }
     }
 
@@ -209,10 +211,4 @@ public class CurrentReturnsController extends SwipeableBaseToolBarController
         return new GetReturnDetailRequest(itemID);
     }
 
-    @OnClick(R.id.controller_current_returns_create_new_button)
-    void onAddNewReturnClick() {
-        getRouter().pushController(RouterTransaction.with(ReturnOrdersController.newInstance())
-                .pushChangeHandler(new HorizontalChangeHandler())
-                .popChangeHandler(new HorizontalChangeHandler()));
-    }
 }
