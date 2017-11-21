@@ -6,7 +6,6 @@ import android.support.annotation.Nullable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 
@@ -64,13 +63,12 @@ public class AddContactController extends SwipeableBaseToolBarController impleme
     @BindView(R.id.controller_add_contact_message_field)
     EditText mAddContactMessageField;
 
-    @BindView(R.id.controller_add_contact_submit_button)
-    Button mAddContactSubmitButton;
+    private View.OnClickListener onClickListener;
 
+    //
+//    @BindView(R.id.controller_add_contact_submit_button)
+//    Button mAddContactSubmitButton;
 //
-//    @BindView(R.id.controller_add_contact_message_send)
-//    ImageButton mAddContactMessageSend;
-
     @Inject
     AddContactMvpPresenter<AddContactMvpView> mPresenter;
     
@@ -151,6 +149,7 @@ public class AddContactController extends SwipeableBaseToolBarController impleme
     public void onViewBound(@NonNull View view) {
         super.onViewBound(view);
         mToolbarTitle.setText("new message");
+        setupSwipingBehavior();
 
         setUp(view);
     }
@@ -190,7 +189,7 @@ public class AddContactController extends SwipeableBaseToolBarController impleme
             mPresenter.loadContactUsSubjects();
             Prefs.putBoolean("isSubjectsLoaded", true);
         } else {
-//            setupDefaultBottomButton(mBaseActivity.getString(R.string.submit), onClickListener);
+            setupDefaultBottomButton("submit", onClickListener);
         }
 
         final String chosenSubject = mAddContactSubjectText.getText().toString();
@@ -208,7 +207,7 @@ public class AddContactController extends SwipeableBaseToolBarController impleme
             mAddContactSubjectText.setClickable(false);
             mAddContactOrderText.setClickable(false);
 
-            View.OnClickListener onClickListener = view1 -> {
+            onClickListener = view1 -> {
                 String replyMessage = mAddContactMessageField.getText().toString();
                 int contactId = mContactNumber;
 
@@ -229,8 +228,7 @@ public class AddContactController extends SwipeableBaseToolBarController impleme
                 }
             };
 
-            mAddContactSubmitButton.setOnClickListener(onClickListener);
-
+            setupDefaultBottomButton("submit", onClickListener);
 
 
         } else if (mFromFragmentId.equals("CONTACT_US")) {
@@ -244,21 +242,18 @@ public class AddContactController extends SwipeableBaseToolBarController impleme
 
             mPresenter.loadContactUsSubjects();
 
-//            if (!hasLoadedOrders) {
-//                Log.d("clickable", "from contact load orders");
-//
-//                mPresenter.loadContactUsOrders();
-//
-//            } if (!hasLoadedSubjects){
-//                Log.d("clickable", "from contact load subjects");
-//
-//                mPresenter.loadContactUsSubjects();
-//            }
+            if (!hasLoadedOrders) {
+
+                mPresenter.loadContactUsOrders();
+
+            } if (!hasLoadedSubjects){
+
+                mPresenter.loadContactUsSubjects();
+            }
 
             if (!currentOrder.isEmpty()) {
 
                 showContactFirstOrderFromPreference(currentOrder);
-
             }
 
             if (!currentSubject.isEmpty()) {
@@ -267,7 +262,7 @@ public class AddContactController extends SwipeableBaseToolBarController impleme
 
             }
 
-            View.OnClickListener onClickListener = view12 -> {
+            onClickListener = view12 -> {
                 mChosenOptionInvoice = ContactPreferenceHelper.getChosenInvoice(mActivity);
                 CreateContactRequest createContactRequest = new CreateContactRequest();
 
@@ -295,7 +290,6 @@ public class AddContactController extends SwipeableBaseToolBarController impleme
 
                 }
             };
-            mAddContactSubmitButton.setOnClickListener(onClickListener);
 
         }
     }
@@ -335,10 +329,10 @@ public class AddContactController extends SwipeableBaseToolBarController impleme
             }
         } else {
 
-//            CustomAlertDialog.showCustomAlertDialog(
-//                    mBaseActivity,
-//                    CustomAlertDialog.CustomDialogIconState.NEGATIVE,
-//                    mBaseActivity.getString(R.string.loading_subjects));
+            CustomAlertDialog.showCustomAlertDialog(
+                    mActivity,
+                    CustomAlertDialog.CustomDialogIconState.NEGATIVE,
+                    "Loading subjects");
         }
     }
 
@@ -362,13 +356,17 @@ public class AddContactController extends SwipeableBaseToolBarController impleme
             }
         } else if (hasLoadedOrders && mContactOrders != null && mContactOrders.size() == 0) {
 
-//            CustomAlertDialog.showCustomAlertDialog(
-//                    mBaseActivity,
-//                    CustomAlertDialog.CustomDialogIconState.NEGATIVE,
-//                    mBaseActivity.getString(R.string.you_have_no_order));
+            CustomAlertDialog.showCustomAlertDialog(
+                    mActivity,
+                    CustomAlertDialog.CustomDialogIconState.NEGATIVE,
+                    "You have no orders");
 
         } else {
 
+            CustomAlertDialog.showCustomAlertDialog(
+                    mActivity,
+                    CustomAlertDialog.CustomDialogIconState.NEGATIVE,
+                    "Loading orders");
         }
 
     }
@@ -378,6 +376,9 @@ public class AddContactController extends SwipeableBaseToolBarController impleme
 
         mContactSubjects = contactSubjectList;
         hasLoadedSubjects = true;
+
+        setupDefaultBottomButton("subnmit", onClickListener);
+
     }
 
     @Override
@@ -407,7 +408,7 @@ public class AddContactController extends SwipeableBaseToolBarController impleme
     public void repliedContactSwitchView(ReplyContact replyContact) {
 
         if (replyContact.getResult()) {
-//
+
             CustomAlertDialog.showCustomAlertDialog(
                     getActivity(), CustomAlertDialog.CustomDialogIconState.POSITIVE,
                     getActivity().getString(R.string.message_submitted));

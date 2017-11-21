@@ -15,7 +15,7 @@ import java.util.List;
 import javax.inject.Inject;
 
 import au.com.dealsdirect.R;
-import au.com.dealsdirect.ui.base.BaseToolBarController;
+import au.com.dealsdirect.ui.base.SwipeableBaseToolBarController;
 import au.com.dealsdirect.ui.controller.contact.addcontact.ContactPreferenceHelper;
 import au.com.dealsdirect.ui.controller.contact.addcontact.selectsubject.adapter.ContactSubjectAdapter;
 import au.com.dealsdirect.ui.controller.contact.addcontact.selectsubject.listener.ContactSubjectClickListener;
@@ -26,7 +26,7 @@ import butterknife.BindView;
  * Created by DP on 05/06/2017.
  */
 
-public class ContactSelectSubjectController extends BaseToolBarController
+public class ContactSelectSubjectController extends SwipeableBaseToolBarController
         implements ContactSelectSubjectMvpView, ContactSubjectClickListener {
 
     public static final String TAG = "ContactSelectSubjectController";
@@ -81,7 +81,7 @@ public class ContactSelectSubjectController extends BaseToolBarController
     public void onViewBound(@NonNull View view) {
         super.onViewBound(view);
         mToolbarTitle.setText("message subject");
-
+        setupSwipingBehavior();
         setUp(view);
     }
 

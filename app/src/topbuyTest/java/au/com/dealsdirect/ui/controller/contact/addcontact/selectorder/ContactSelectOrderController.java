@@ -15,7 +15,7 @@ import javax.inject.Inject;
 
 import au.com.dealsdirect.R;
 import au.com.dealsdirect.data.network.model.contactorder.ContactOrderList;
-import au.com.dealsdirect.ui.base.BaseToolBarController;
+import au.com.dealsdirect.ui.base.SwipeableBaseToolBarController;
 import au.com.dealsdirect.ui.controller.contact.addcontact.ContactPreferenceHelper;
 import au.com.dealsdirect.ui.controller.contact.addcontact.selectorder.adapter.ContactOrderAdapter;
 import au.com.dealsdirect.ui.controller.contact.addcontact.selectorder.listener.ContactOrderClickListener;
@@ -26,7 +26,7 @@ import butterknife.BindView;
  * Created by DP on 05/06/2017.
  */
 
-public class ContactSelectOrderController extends BaseToolBarController
+public class ContactSelectOrderController extends SwipeableBaseToolBarController
         implements ContactSelectOrderMvpView, ContactOrderClickListener {
 
     public static final String TAG = "ContactSelectOrderController";
@@ -81,6 +81,7 @@ public class ContactSelectOrderController extends BaseToolBarController
         super.onViewBound(view);
 
         mToolbarTitle.setText("select order");
+        setupSwipingBehavior();
         mContactOrderItemListener = this;
         setUp(view);
     }
