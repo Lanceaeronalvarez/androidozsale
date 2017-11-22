@@ -1,6 +1,7 @@
 package au.com.dealsdirect.ui.controller.tutorial;
 
 import android.os.Build;
+import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.view.ViewPager;
 import android.util.Log;
@@ -19,6 +20,8 @@ import au.com.dealsdirect.R;
 import au.com.dealsdirect.ui.base.BaseController;
 import au.com.dealsdirect.ui.main.MainActivity;
 import au.com.dealsdirect.utils.AppLogger;
+import au.com.dealsdirect.utils.BundleBuilder;
+import au.com.dealsdirect.utils.BundleKeys;
 import butterknife.BindView;
 import butterknife.OnClick;
 import me.relex.circleindicator.CircleIndicator;
@@ -40,8 +43,8 @@ public class TutorialController extends BaseController {
     private final RouterPagerAdapter pagerAdapter;
 
 
-    public TutorialController() {
-        super();
+    public TutorialController(Bundle args) {
+        super(args);
 
         pagerAdapter = new RouterPagerAdapter(this) {
             @Override
@@ -61,12 +64,10 @@ public class TutorialController extends BaseController {
                 return "Page " + position;
             }
         };
-
-
     }
 
     public static TutorialController newInstance() {
-        return new TutorialController();
+        return new TutorialController(new BundleBuilder(new Bundle()).build());
     }
 
     @Override
@@ -167,7 +168,12 @@ public class TutorialController extends BaseController {
 
     @OnClick(R.id.controller_tutorial_get_started_button)
     void onGetStartedButtonClick(){
-        if (getActivity() != null) ((MainActivity) getActivity()).splashShownCallback();
+
+        if (getArgs().getBoolean(BundleKeys.FROM_MY_ACCOUNTS)){
+            if (getActivity() != null) ((MainActivity) getActivity()).splashShownCallback();
+        }else{
+            getRouter().popCurrentController();
+        }
 
     }
 

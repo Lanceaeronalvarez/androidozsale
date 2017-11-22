@@ -16,6 +16,7 @@ import com.bluelinelabs.conductor.changehandler.VerticalChangeHandler;
 import au.com.dealsdirect.R;
 import au.com.dealsdirect.ui.base.BaseController;
 import au.com.dealsdirect.utils.BundleBuilder;
+import au.com.dealsdirect.utils.BundleKeys;
 import au.com.dealsdirect.utils.module.GateKeeper;
 import butterknife.BindView;
 
@@ -58,7 +59,14 @@ public class SplashScreenController extends BaseController {
     protected void setUp(View view) {
 
         new Handler().postDelayed(() -> {
-            GateKeeper.push(getRouter(), GateKeeper.Destination.TUTORIAL, new VerticalChangeHandler(false), new VerticalChangeHandler());
+            GateKeeper.push(
+                    getRouter(),
+                    GateKeeper.Destination.TUTORIAL,
+                    new BundleBuilder(new Bundle())
+                            .putBoolean(BundleKeys.FROM_MY_ACCOUNTS, false)
+                            .build(),
+                    new VerticalChangeHandler(false),
+                    new VerticalChangeHandler());
 
         }, 5000);
     }

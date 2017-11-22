@@ -64,4 +64,7 @@ public class BundleKeys {
     public static final String TEMPLATE_KEY = "TEMPLATE_KEY";
     public static final String TITLE = "TITLE";
 
+    //Tutorial
+    public static final String FROM_MY_ACCOUNTS = "FROM_MY_ACCOUNTS";
+
 }
