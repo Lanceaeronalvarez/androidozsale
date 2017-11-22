@@ -7,16 +7,11 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.PagerSnapHelper;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.SnapHelper;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
-
-import com.lsjwzh.widget.recyclerviewpager.RecyclerViewPager;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -26,9 +21,7 @@ import javax.inject.Inject;
 import au.com.dealsdirect.R;
 import au.com.dealsdirect.data.network.model.vouchers.GetUserVoucherResponse;
 import au.com.dealsdirect.data.network.model.vouchers.GetVouchersResponse;
-import au.com.dealsdirect.ui.base.BaseController;
-import au.com.dealsdirect.ui.base.BasePullToRefreshController;
-import au.com.dealsdirect.ui.base.BaseToolBarController;
+import au.com.dealsdirect.ui.base.SwipeableBaseToolBarController;
 import au.com.dealsdirect.utils.BundleBuilder;
 import butterknife.BindView;
 
@@ -36,7 +29,7 @@ import butterknife.BindView;
  * Created by Paul on 6/23/17.
  */
 
-public class ViewVouchersController extends BaseToolBarController implements ViewVouchersMvpView {
+public class ViewVouchersController extends SwipeableBaseToolBarController implements ViewVouchersMvpView {
 
     @Inject
     ViewVouchersMvpPresenter<ViewVouchersMvpView> mPresenter;
@@ -96,6 +89,7 @@ public class ViewVouchersController extends BaseToolBarController implements Vie
     @Override
     protected void onViewBound(@NonNull View view) {
         super.onViewBound(view);
+        setupSwipingBehavior();
         setUp(view);
     }
 
