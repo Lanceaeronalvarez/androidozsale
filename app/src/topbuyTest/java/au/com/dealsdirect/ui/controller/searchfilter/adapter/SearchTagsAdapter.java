@@ -18,7 +18,6 @@ import java.util.Set;
 
 import au.com.dealsdirect.R;
 import au.com.dealsdirect.ui.controller.saleitems.SaleItemsMvpPresenter;
-import au.com.dealsdirect.ui.controller.searchfilter.SearchFilterMvpPresenter;
 import au.com.dealsdirect.ui.custom.ChipsEditText;
 import au.com.dealsdirect.utils.BundleKeys;
 
@@ -33,13 +32,8 @@ public class SearchTagsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
     private Context mContext;
     private DisplayMetrics mDisplayMetrics;
     private LinearLayoutManager mLayoutManager;
-    private SearchFilterMvpPresenter mPresenter;
     private SaleItemsMvpPresenter mSaleItemPresenter;
-    private FacetItemsAdapter mFacetItemsAdapter;
-    private SubCategoriesAdapter mSubCategoriesAdapter;
-    private FacetsAdapter mFacetsAdapter;
     private HashMap<String, Set<Integer>> mPreviousSelectedFacetIndices;
-    private RecyclerView mRecyclerView;
 
     public EditTextViewHolder getEditTextViewHolder() {
         return editTextViewHolder;
@@ -47,19 +41,12 @@ public class SearchTagsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
 
     public EditTextViewHolder editTextViewHolder;
 
-    public SearchTagsAdapter(Context ctx, RecyclerView recyclerView, LinearLayoutManager llm, ArrayList<SearchChipModel> items, SearchFilterMvpPresenter presenter
-            , FacetItemsAdapter facetItemsAdapter
-            , SubCategoriesAdapter subCategoriesAdapter
-            , HashMap<String, Set<Integer>> selectedIndices) {
+    public SearchTagsAdapter(Context ctx, LinearLayoutManager llm, ArrayList<SearchChipModel> items, SaleItemsMvpPresenter presenter) {
         mContext = ctx;
         mDisplayMetrics = ctx.getResources().getDisplayMetrics();
         mLayoutManager = llm;
-        mRecyclerView = recyclerView;
         mData = items;
-        mPresenter = presenter;
-        mFacetItemsAdapter = facetItemsAdapter;
-        mSubCategoriesAdapter = subCategoriesAdapter;
-        mPreviousSelectedFacetIndices = selectedIndices;
+        mSaleItemPresenter = presenter;
     }
 
 
@@ -74,11 +61,6 @@ public class SearchTagsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
 
             mLayoutManager.scrollToPosition(addedItemIndex);
             mLayoutManager.scrollToPositionWithOffset(currentLastItem, offsetAmount);
-
-            if (mFacetsAdapter != null) {
-                mFacetsAdapter.updateSelectedSearchChips(mData);
-                mFacetsAdapter.notifyDataSetChanged();
-            }
 
         }
     }
@@ -95,11 +77,7 @@ public class SearchTagsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
             } else {
                 mLayoutManager.scrollToPosition(0);
             }
-            
-            if (mFacetsAdapter != null) {
-                mFacetsAdapter.updateSelectedSearchChips(mData);
-                mFacetsAdapter.notifyDataSetChanged();
-            }
+
 
         }
     }
@@ -143,19 +121,20 @@ public class SearchTagsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
         if (holder instanceof EditTextViewHolder) {
             EditTextViewHolder vh = (EditTextViewHolder) holder;
 
-//            vh.et.setOnClickListener(new View.OnClickListener() {
-//                @Override
-//                public void onClick(View v) {
-//                    vh.et.requestFocus();
-//                }
-//            });
+            vh.et.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    vh.et.requestFocus();
+                }
+            });
+
             vh.et.setOnFocusChangeListener(new View.OnFocusChangeListener() {
                 @Override
                 public void onFocusChange(View v, boolean hasFocus) {
                     if(hasFocus){
-                        mSaleItemPresenter.showTransparentOverlay();
+                        mSaleItemPresenter.showSearchFilters();
                     } else {
-                        mSaleItemPresenter.hideTransparentOverlay();
+                        mSaleItemPresenter.hideSearchFilters();
                     }
                 }
             });
@@ -167,12 +146,14 @@ public class SearchTagsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                     if (actionId == EditorInfo.IME_ACTION_SEARCH) {
                         add(new SearchChipModel(BundleKeys.SEARCH_QUERY_NAME, vh.et.getText().toString(), -1));
                         vh.et.setText("");
-                        mSaleItemPresenter.hideTransparentOverlay();
+                        mSaleItemPresenter.hideSearchFilters();
                     }
 
                     return false;
                 }
             });
+
+            vh.et.setBackPressedListener(et -> mSaleItemPresenter.hideSearchFilters());
 
             vh.et.setDeleteListener(() -> {
                 //remove search tags
@@ -181,43 +162,22 @@ public class SearchTagsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                 if (dataSize > 0) {
                     SearchChipModel chipToBeRemoved = getData().get(dataSize - 1);
 
-                    if (mFacetItemsAdapter.getSelectedFacets().contains(chipToBeRemoved.getIndex())) {
-                        mFacetItemsAdapter.getSelectedFacets().remove(chipToBeRemoved.getIndex());
-                    }
-
-                    if (mPreviousSelectedFacetIndices.get(chipToBeRemoved.getFilterType()) != null) {
-                        Set<Integer> selectedIndices = mPreviousSelectedFacetIndices.get(chipToBeRemoved.getFilterType());
-                        selectedIndices.remove(chipToBeRemoved.getIndex());
-                    }
 
                     getData().remove(chipToBeRemoved);
                     notifyItemRemoved(dataSize - 1);
 
-                    if(chipToBeRemoved.getFilterType() == BundleKeys.CATEGORY_TREE_FACET){
-                        mSubCategoriesAdapter.setActiveCategoryKey("");
-                    }
-
-                    if (mFacetsAdapter != null) {
-                        mFacetsAdapter.notifyDataSetChanged();
-                    }
-
-                    mPresenter.getOriginalSelectedSet().remove(chipToBeRemoved.getIndex());
+//                    mPresenter.getOriginalSelectedSet().remove(chipToBeRemoved.getIndex());
 //                    mLayoutManager.scrollToPosition(dataSize - 1);
 //                    mShopPresenter.updateShopFilters();
-                    mFacetItemsAdapter.notifyItemChanged(chipToBeRemoved.getIndex());
 
                     if (chipToBeRemoved.getFilterType().equals(BundleKeys.PRICE_FACETFILTER_NAME)) {
-                        mPresenter.resetPriceRange();
+//                        mPresenter.resetPriceRange();
                     }
                 }
             });
         }
     }
 
-    public void setFacetsAdapter(FacetsAdapter facetsAdapter) {
-        mFacetsAdapter = facetsAdapter;
-        notifyDataSetChanged();
-    }
 
     @Override
     public int getItemCount() {

@@ -69,6 +69,8 @@ public class FacetFilterController extends BaseController {
     TextView mMaxPrice;
     @BindView(R.id.movingMinPrice)
     TextView mMinPrice;
+    @BindView(R.id.price_facet_type)
+    TextView mPriceFacetIndicatorText;
 
     @BindView(R.id.flow_layout)
     TagFlowLayout mFlowLayout;
@@ -125,9 +127,14 @@ public class FacetFilterController extends BaseController {
         mFacetIndicatorText.setText(mFacetFilterType);
 
         if(!mFacetFilterType.equals(BundleKeys.PRICE_FACET_FILTER_TYPE)){
+            if(mFacetFilterType.isEmpty()){
+                mClearText.setVisibility(View.GONE);
+            }
             setupDefaultLayout();
         }else{
             setupPriceLayout();
+            mPriceLayout.setVisibility(View.VISIBLE);
+            mDefaultLayout.setVisibility(View.GONE);
         }
     }
 
@@ -210,7 +217,7 @@ public class FacetFilterController extends BaseController {
     }
 
     private void setupPriceLayout(){
-//        origMaxValue = mPresenter.getSearchMaxPrice();
+        origMaxValue = mSaleItemsPresenter.getSearchMaxPrice();
         origMinValue = mSeekbar.getSelectedMinValue().intValue();
 
         if(origMaxValue == origMinValue){
@@ -229,7 +236,7 @@ public class FacetFilterController extends BaseController {
 //                    }
 //                }
 
-//                onResetPriceRange();
+                onResetPriceRange();
             }
         });
         mSeekbar.setMinPriceMovingLayout(mMinPriceMovingLayout);
@@ -242,6 +249,7 @@ public class FacetFilterController extends BaseController {
                 if (maxValue.intValue() == origMaxValue) {
                     mMaxPrice.setText("$" + maxValue.intValue() + "+");
                 }
+                mPriceFacetIndicatorText.setText(mFacetFilterType+"("+mMinPrice.getText()+"-"+mMaxPrice.getText()+")");
 
             }
         });

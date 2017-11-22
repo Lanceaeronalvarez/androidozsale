@@ -1,32 +1,26 @@
-<ScrollView
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/contentFrame"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:fillViewport="true"
-    android:background="@color/white"
-    xmlns:app="http://schemas.android.com/apk/res-auto">
+    android:layout_height="wrap_content">
 
-    <RelativeLayout
-        android:id="@+id/contentFrame"
+    <com.lsjwzh.widget.recyclerviewpager.RecyclerViewPager
+        android:id="@+id/orders_recycler_view"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="@dimen/order_card_view_height"
+        android:clipToPadding="false"
+        android:overScrollMode="never"
+        android:paddingLeft="15dp"
+        android:paddingRight="15dp"
+        app:rvp_flingFactor="0.15"
+        app:rvp_singlePageFling="true"
+        app:rvp_triggerOffset="0.25" />
 
-        <com.lsjwzh.widget.recyclerviewpager.RecyclerViewPager
-            android:id="@+id/orders_recycler_view"
-            android:layout_width="match_parent"
-            android:layout_height="@dimen/order_card_view_height"
-            android:overScrollMode="never"
-            android:clipToPadding="false"
-            app:rvp_triggerOffset="0.25"
-            app:rvp_flingFactor="0.15"
-            android:paddingLeft="15dp"
-            android:paddingRight="15dp"
-            app:rvp_singlePageFling="true"/>
-
-        <include layout="@layout/placeholder_layout_orders" android:visibility="visible"></include>
+    <include
+        layout="@layout/placeholder_layout_orders"
+        android:visibility="visible"></include>
 
 
-    </RelativeLayout>
+</RelativeLayout>
 
-</ScrollView>
 

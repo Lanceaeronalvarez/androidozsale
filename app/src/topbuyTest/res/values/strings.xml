@@ -19,6 +19,7 @@
     </string>
     <string name="estimated_delivery">estimated delivery</string>
 
+    <string name="search_filter_hint">search</string>
     <string name="apply">apply</string>
     <string name="add_voucher_code">add voucher code</string>
     <string name="my_voucher">my voucher</string>

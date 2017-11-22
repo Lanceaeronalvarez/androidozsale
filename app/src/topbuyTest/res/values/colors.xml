@@ -18,6 +18,14 @@
 
     <color name="progress_loader_stroke_color">@color/colorAccent</color>
 
+
+    <!--Search Edit Text Color-->
+
+
+    <!--Search Edit Text Colors-->
+    <color name="search_edit_text_hint_color">@color/text_gray</color>
+    <color name="search_edit_text_color">@color/text_gray</color>
+    <color name="search_edit_cursor_color">@color/colorAccent</color>
     <!-- Button Theme -->
     <color name="bg_button_ripple">#DBE1EA</color>
     <color name="bg_button_default">#04b2b6</color>

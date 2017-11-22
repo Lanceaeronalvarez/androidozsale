@@ -31,13 +31,17 @@ import au.com.dealsdirect.data.network.model.saleitems.GetSaleItemsResponse;
 import au.com.dealsdirect.data.network.model.sorting.SortingResponse;
 import au.com.dealsdirect.ui.base.BaseController;
 import au.com.dealsdirect.ui.controller.main.MainCustomViewPager;
+import au.com.dealsdirect.ui.controller.saleitems.SaleItemsMvpPresenter;
+import au.com.dealsdirect.ui.controller.saleitems.SaleItemsMvpView;
 import au.com.dealsdirect.ui.controller.searchfilter.adapter.FacetsAdapter;
 import au.com.dealsdirect.ui.controller.searchfilter.adapter.SearchChipModel;
 import au.com.dealsdirect.ui.controller.searchfilter.adapter.SearchTagsAdapter;
 import au.com.dealsdirect.ui.controller.searchfilter.facetfilter.FacetFilterController;
+import au.com.dealsdirect.ui.main.MainActivity;
 import au.com.dealsdirect.utils.BundleBuilder;
 import au.com.dealsdirect.utils.BundleKeys;
 import au.com.dealsdirect.utils.JsonUtils;
+import au.com.dealsdirect.utils.KeyboardUtils;
 import au.com.dealsdirect.utils.module.ControllerFactory;
 import au.com.dealsdirect.utils.module.GateKeeper;
 import butterknife.BindView;
@@ -70,12 +74,17 @@ public class SearchFilterController extends BaseController
     };
 
     @Inject
-    SearchFilterMvpPresenter<SearchFilterMvpView> mPresenter;
+    SaleItemsMvpPresenter<SaleItemsMvpView> mSaleItemsPresenter;
 
     @BindView(R.id.bottom_sheet)
     RelativeLayout mBottomSheetLayout;
     @BindView(R.id.viewpager)
     MainCustomViewPager mFiltersViewPager;
+
+    public TabLayout getTabLayout() {
+        return mTabLayout;
+    }
+
     @BindView(R.id.sliding_tabs)
     TabLayout mTabLayout;
 
@@ -87,8 +96,6 @@ public class SearchFilterController extends BaseController
     Controller mColorsController;
     Controller mSizesController;
     Controller mPriceController;
-
-    SearchTagsAdapter mSearchTagsAdapter;
 
     ArrayList<String> mBrandList = new ArrayList<>();
     ArrayList<String> mSizeList = new ArrayList<>();
@@ -112,23 +119,19 @@ public class SearchFilterController extends BaseController
     protected View inflateView(@NonNull LayoutInflater inflater, @NonNull ViewGroup container) {
         View view = inflater.inflate(R.layout.controller_search_filter, container, false);
         getControllerComponent().inject(this);
-        mPresenter.onAttach(this);
+        mSaleItemsPresenter.onAttach((SaleItemsMvpView) GateKeeper.getCurrentControllerOnRouter(mActivity.getSaleItemsRouter()));
         return view;
     }
 
     @Override
     protected void onViewBound(@NonNull View view) {
         super.onViewBound(view);
+        mActivity.setSearchFilterRouter(getRouter());
         setUp(view);
     }
 
     @Override
     protected void setUp(View view) {
-//        mSearchTagsLayoutManager = new LinearLayoutManager(mActivity, LinearLayoutManager.HORIZONTAL, false);
-//        mSearchTagsRecyclerView.setLayoutManager(mSearchTagsLayoutManager);
-//        mSearchTagsAdapter = new SearchTagsAdapter(mActivity, mSearchTagsRecyclerView, mSearchTagsLayoutManager, new ArrayList<SearchChipModel>(), mPresenter, mFacetItemsAdapter, mPreviousSelectedFacetIndices);
-//        mSearchTagsRecyclerView.setAdapter(mSearchTagsAdapter);
-//        mSearchTagsRecyclerView.setVisibility(View.VISIBLE);
 
         if (mFacets != null) {
             parseFacets(mFacets);
@@ -140,8 +143,7 @@ public class SearchFilterController extends BaseController
 
     @Override
     protected void onDestroyView(@NonNull View view) {
-        mPresenter.onDetach();
-
+        mSaleItemsPresenter.onDetach();
         super.onDestroyView(view);
     }
 
@@ -229,6 +231,11 @@ public class SearchFilterController extends BaseController
             @Override
             public void onTabSelected(TabLayout.Tab tab) {
 
+                if(tab.getPosition() != 0){
+                    hideKeyboard();
+                } else {
+                    mSaleItemsPresenter.showKeyboard();
+                }
 //                if (mBottomSheetBehavior.getState() == ViewPagerBottomSheetBehavior.STATE_EXPANDED) {
 //                    if (tab.getPosition() == 0 && !isKeyboardOpen) {
 //                        mSearchTagAdapter.getEditTextViewHolder().getEditText().requestFocus();

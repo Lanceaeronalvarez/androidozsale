@@ -6,8 +6,8 @@
     android:id="@+id/sale_items_search_bar"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:clickable="true"
     android:focusable="true"
+    android:clickable="true"
     android:background="#00000000">
 
     <RelativeLayout
@@ -29,16 +29,20 @@
             <FrameLayout
                 android:id="@+id/search_bar_left_content"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:layout_height="match_parent"
                 android:layout_marginLeft="80dp"
                 android:layout_marginRight="50dp"
                 android:layout_alignParentLeft="true">
 
                 <android.support.v7.widget.RecyclerView
                     android:id="@+id/search_tag_recycler_view"
-                    android:layout_width="wrap_content"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:focusable="true"
+                    android:clickable="true"
+                    android:layout_gravity="center_vertical"
                     android:overScrollMode="never"
+                    android:descendantFocusability="beforeDescendants"
                     android:visibility="visible"/>
 
             </FrameLayout>

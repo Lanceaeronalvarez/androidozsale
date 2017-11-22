@@ -23,7 +23,11 @@ import au.com.dealsdirect.data.network.model.legalities.GetTemplateTextsResponse
 import au.com.dealsdirect.ui.base.BaseActivity;
 import au.com.dealsdirect.ui.controller.categories.CategoriesController;
 import au.com.dealsdirect.ui.controller.main.MainController;
+import au.com.dealsdirect.ui.controller.main.MainCustomViewPager;
+import au.com.dealsdirect.ui.controller.saleitems.SaleItemsController;
 import au.com.dealsdirect.ui.controller.splash.SplashScreenController;
+import au.com.dealsdirect.ui.main.MainMvpPresenter;
+import au.com.dealsdirect.ui.main.MainMvpView;
 import au.com.dealsdirect.utils.AppConstants;
 import au.com.dealsdirect.utils.DialogUtils;
 import au.com.dealsdirect.utils.IntrospectionUtils;
@@ -51,6 +55,7 @@ public class MainActivity extends BaseActivity implements MainMvpView {
     private Router mAccountsRouter;
     private Router mMainRouter;
     private Router mCheckoutRouter;
+    private Router mSearchFilterRouter;
 
     AuthHandler mAuthHandler;
 
@@ -97,7 +102,8 @@ public class MainActivity extends BaseActivity implements MainMvpView {
 
         if (getCategoriesRouter() != null) {
             CategoriesController categoriesController = (CategoriesController) GateKeeper.getCurrentControllerOnRouter(getCategoriesRouter());
-            if (categoriesController.isActive() && getCategoriesRouter().getBackstackSize() != 0) {
+
+            if (categoriesController != null && categoriesController.isActive() && getCategoriesRouter().getBackstackSize() != 0) {
                 getCategoriesRouter().handleBack();
             } else {
                 backPressLogic();
@@ -119,7 +125,9 @@ public class MainActivity extends BaseActivity implements MainMvpView {
                 }
                 break;
             case 1: //sale items
-                if (getSaleItemsRouter().getBackstack().size() == 1) {
+
+                SaleItemsController saleItemsController = (SaleItemsController) GateKeeper.getCurrentControllerOnRouter(getSaleItemsRouter());
+                if (!saleItemsController.isSearchFiltersShown() && getSaleItemsRouter().getBackstackSize() == 1) {
                     //exit app
                     DialogUtils.showYesNoDialog(
                             this,
@@ -130,10 +138,12 @@ public class MainActivity extends BaseActivity implements MainMvpView {
                             (dialogInterface, i) -> finish(),
                             (dialogInterface, i) -> {
                             });
+                } else {
+                    getSaleItemsRouter().handleBack();
                 }
-
-                getSaleItemsRouter().handleBack();
                 break;
+
+
             case 2: //checkout
                 if (getCheckoutRouter().getBackstack().size() == 1) {
                     getMainController().getHomeViewPager().setCurrentItem(1);
@@ -145,6 +155,7 @@ public class MainActivity extends BaseActivity implements MainMvpView {
             default:
                 break;
         }
+
     }
 
     @Override
@@ -354,6 +365,15 @@ public class MainActivity extends BaseActivity implements MainMvpView {
 
     public void setCategoriesRouter(Router router) {
         mCategoriesRouter = router;
+    }
+
+    public Router getSearchFilterRouter() {
+        return mSearchFilterRouter;
+    }
+
+
+    public void setSearchFilterRouter(Router router) {
+        mSearchFilterRouter = router;
     }
 
     public Router getCategoriesRouter() {

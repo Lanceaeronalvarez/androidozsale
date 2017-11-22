@@ -59,6 +59,10 @@
     <color name="toolbar_skin">#F00065</color>
     <color name="toolbar_active_skin">#F00065</color>
 
+    <!--Search Edit Text Colors-->
+    <color name="search_edit_text_hint_color">#CCFFFFFF</color>
+    <color name="search_edit_text_color">@color/white</color>
+    <color name="search_edit_cursor_color">@color/white</color>
 
     <!-- FB Button -->
     <color name="fb_button_normal">#1A9DE9</color>

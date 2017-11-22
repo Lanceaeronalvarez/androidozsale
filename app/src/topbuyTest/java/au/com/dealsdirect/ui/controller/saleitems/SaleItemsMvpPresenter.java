@@ -1,13 +1,9 @@
 package au.com.dealsdirect.ui.controller.saleitems;
 
-import android.os.Parcelable;
 import android.support.v7.widget.RecyclerView;
-
-import java.util.List;
 
 import au.com.dealsdirect.data.network.model.saleitems.GetSaleItemsRequest;
 import au.com.dealsdirect.ui.base.MvpPresenter;
-import au.com.dealsdirect.ui.controller.searchfilter.adapter.SearchChipModel;
 
 /**
  * dp Created by Admin on 6/8/17.
@@ -29,8 +25,15 @@ public interface SaleItemsMvpPresenter<V extends SaleItemsMvpView> extends MvpPr
 
     void executeCategoryChangeApiCall(String chosenCategoryKey);
 
+    void showKeyboard();
+
+    void showSearchFilters();
+
+    void hideSearchFilters();
 
     void showTransparentOverlay();
 
     void hideTransparentOverlay();
+
+    int getSearchMaxPrice();
 }

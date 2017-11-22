@@ -1,12 +1,13 @@
 package au.com.dealsdirect.ui.controller.saleitems;
 
-import android.graphics.PorterDuff;
+import android.app.Activity;
+import android.content.res.Configuration;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.support.design.widget.AppBarLayout;
-import android.support.v4.content.ContextCompat;
+import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -15,6 +16,7 @@ import android.view.ViewGroup;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.bluelinelabs.conductor.ChangeHandlerFrameLayout;
 import com.bluelinelabs.conductor.Controller;
 import com.bluelinelabs.conductor.Router;
 import com.bluelinelabs.conductor.RouterTransaction;
@@ -47,23 +49,28 @@ import au.com.dealsdirect.ui.custom.transitions.ArcFadeMoveChangeHandler;
 import au.com.dealsdirect.utils.BundleBuilder;
 import au.com.dealsdirect.utils.BundleKeys;
 import au.com.dealsdirect.utils.CartUtil;
+import au.com.dealsdirect.utils.KeyboardUtils;
 import au.com.dealsdirect.utils.PaginateUtils;
 import au.com.dealsdirect.utils.module.ControllerFactory;
 import au.com.dealsdirect.utils.module.GateKeeper;
 import butterknife.BindView;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 
+import static au.com.dealsdirect.utils.ViewUtils.dpToPx;
+
 /**
  * Created by smartwave on 02/11/2017.
  */
 
-public class SaleItemsController extends BaseController implements SaleItemsMvpView {
+public class SaleItemsController extends BaseController implements SaleItemsMvpView, KeyboardHeightObserver {
 
     @Inject
     SaleItemsMvpPresenter<SaleItemsMvpView> mPresenter;
 
     @BindView(R.id.sale_items_recyclerview)
     RecyclerView mSaleItemsRecyclerView;
+    @BindView(R.id.search_tag_recycler_view)
+    RecyclerView mSearchTagsRecyclerView;
 
     @BindView(R.id.controller_categories_frame)
     ViewGroup mCategoriesContainer;
@@ -78,7 +85,12 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
     RelativeLayout mOverlay;
 
     ViewPagerBottomSheetBehavior mBottomSheetBehavior;
-    boolean mIsFiltersShown;
+
+    public boolean isSearchFiltersShown() {
+        return mIsSearchFiltersShown;
+    }
+
+    boolean mIsSearchFiltersShown;
 
 
     SaleItemsAdapter mAdapter;
@@ -103,7 +115,11 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
     private SearchFilterController mSearchFilterController;
     private Router mSearchFilterRouter;
     SearchTagsAdapter mSearchTagsAdapter;
-    RecyclerView mSearchTagsRecyclerView;
+    LinearLayoutManager mSearchTagsLayoutManager;
+
+    private KeyboardHeightProvider mKeyboardHeightProvider;
+    private boolean isBottomSheetAdjustedHeight = false;
+    private boolean isKeyboardOpen = false;
 
     public static SaleItemsController newInstance() {
         return new SaleItemsController(
@@ -113,7 +129,6 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
 
     public SaleItemsController(Bundle args) {
         super(args);
-
 //        if (args.containsKey(KEY_SALE_ID))
 //            mSaleId = getArgs().getString(KEY_SALE_ID, "");
 //        if (args.containsKey(KEY_CATEGORY_MAP))
@@ -141,17 +156,21 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
 
     @Override
     protected void onAttach(@NonNull View view) {
+        super.onAttach(view);
         mPresenter.onAttach(this);
         mSaleItemClickCounter = 0;
-        super.onAttach(view);
     }
 
     @Override
     protected void onViewBound(@NonNull View view) {
         super.onViewBound(view);
+        mKeyboardHeightProvider = new KeyboardHeightProvider(mActivity);
+        mKeyboardHeightProvider.setKeyboardHeightObserver(this);
+        mKeyboardHeightProvider.start();
         mActivity.setSaleItemsRouter(getRouter());
         setUp(view);
     }
+
 
     @Override
     protected void setUp(View view) {
@@ -203,22 +222,45 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
             mPresenter.loadSaleItems(createSaleItemsRequest("", "", 0, mChipFilters));
         }
 
+        mSearchTagsLayoutManager = new LinearLayoutManager(mActivity, LinearLayoutManager.HORIZONTAL, false);
+        mSearchTagsRecyclerView.setLayoutManager(mSearchTagsLayoutManager);
+        mSearchTagsAdapter = new SearchTagsAdapter(mActivity, mSearchTagsLayoutManager, new ArrayList<SearchChipModel>(), mPresenter);
+        mSearchTagsRecyclerView.setAdapter(mSearchTagsAdapter);
+        mSearchTagsRecyclerView.setVisibility(View.VISIBLE);
 
-        RxView.clicks(mSearchBar)
-                .throttleFirst(1000, TimeUnit.MILLISECONDS)
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe((action) -> {
-                    showSearchFilters();
-                });
+//        RxView.clicks(mSearchBar)
+//                .throttleFirst(1000, TimeUnit.MILLISECONDS)
+//                .observeOn(AndroidSchedulers.mainThread())
+//                .subscribe((action) -> {
+//                    onShowSearchFilters();
+//                });
 
         RxView.clicks(mOverlay)
                 .throttleFirst(1000, TimeUnit.MILLISECONDS)
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(action -> {
-                    hideSearchFilters();
+                    onHideSearchFilters();
                 });
 
         setupBottomSheet();
+    }
+
+    @Override
+    public void onDetach(View view) {
+        mKeyboardHeightProvider.setKeyboardHeightObserver(null);
+        super.onDetach(view);
+    }
+
+    @Override
+    protected void onActivityResumed(@NonNull Activity activity) {
+        super.onActivityResumed(activity);
+        mKeyboardHeightProvider.setKeyboardHeightObserver(this);
+    }
+
+    @Override
+    protected void onActivityPaused(@NonNull Activity activity) {
+        super.onActivityPaused(activity);
+        mKeyboardHeightProvider.setKeyboardHeightObserver(null);
     }
 
     @Override
@@ -311,6 +353,10 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
 
     @Override
     public boolean handleBack() {
+        if (mBottomSheetBehavior.getState() == ViewPagerBottomSheetBehavior.STATE_EXPANDED) {
+            mPresenter.hideSearchFilters();
+            return true;
+        }
         return super.handleBack();
     }
 
@@ -382,24 +428,29 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
 
     @Override
     public void onHideTransparentOverlay() {
-//        mSearchTagsRecyclerView.clearFocus();
+        mSearchTagsRecyclerView.clearFocus();
         mOverlay.setVisibility(View.GONE);
         hideKeyboard();
     }
 
     @Override
-    public void showSearchFilters() {
-        mPresenter.showTransparentOverlay();
+    public void onShowSearchFilters() {
+        onShowTransparentOverlay();
         mSearchFilterContainer.bringToFront();
-        mIsFiltersShown = true;
         mBottomSheetBehavior.setState(ViewPagerBottomSheetBehavior.STATE_EXPANDED);
     }
 
     @Override
-    public void hideSearchFilters() {
-        mPresenter.hideTransparentOverlay();
-        mIsFiltersShown = false;
+    public void onHideSearchFilters() {
+        onHideTransparentOverlay();
+
         mBottomSheetBehavior.setState(ViewPagerBottomSheetBehavior.STATE_COLLAPSED);
+    }
+
+    @Override
+    public void onShowKeyboard() {
+        mSearchTagsAdapter.getEditTextViewHolder().getEditText().requestFocus();
+        KeyboardUtils.showSoftInput(mSearchTagsAdapter.getEditTextViewHolder().getEditText(), mActivity);
     }
 
     private void setupSearchFilters() {
@@ -419,7 +470,7 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
 
         GetSaleItemsRequest getSaleItemsRequest = new GetSaleItemsRequest();
 
-        if (!categoryKey.isEmpty())
+        if (categoryKey != null && !categoryKey.isEmpty())
             getSaleItemsRequest.setCategoryKey("[\"" + categoryKey + "\"]");
         else
             getSaleItemsRequest.setCategoryKey("[]");
@@ -509,7 +560,9 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
             public void onStateChanged(@NonNull View bottomSheet, int newState) {
                 switch (newState) {
                     case ViewPagerBottomSheetBehavior.STATE_COLLAPSED:
-
+                        mActivity.setDraggableViewPager(true);
+                        onHideTransparentOverlay();
+                        mIsSearchFiltersShown = false;
                         //TODO add this logic in sale items
 //                        overlay.setVisibility(View.GONE);
 //                        mRecyclerView.addOnItemTouchListener(mShopOnItemTouchlistener);
@@ -527,6 +580,9 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
 //                        }
                         break;
                     case ViewPagerBottomSheetBehavior.STATE_EXPANDED:
+                        mActivity.setDraggableViewPager(false);
+                        mIsSearchFiltersShown = true;
+                        mSearchFilterController.getTabLayout().getTabAt(0).select();
                         break;
                     case ViewPagerBottomSheetBehavior.STATE_SETTLING:
                         break;
@@ -554,6 +610,25 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
         return null;
     }
 
+    @Override
+    public void onKeyboardHeightChanged(int height, int orientation) {
+        if (height == 0) {
+            isKeyboardOpen = false;
+        } else {
+            isKeyboardOpen = true;
+            if (!isBottomSheetAdjustedHeight) {
+                View bottomSheetChild = mSearchFilterContainer.getChildAt(0);
+                ChangeHandlerFrameLayout.LayoutParams params = (ChangeHandlerFrameLayout.LayoutParams) bottomSheetChild.getLayoutParams();
+                params.height = height + dpToPx(50);
+                bottomSheetChild.setLayoutParams(params);
+                mSearchFilterContainer.postDelayed(() -> mSearchFilterContainer.requestLayout(), 500);
+                isBottomSheetAdjustedHeight = true;
+
+            }
+        }
+    }
+}
+
 //    private String getFacetFilterType(int position) {
 //        return mFacetsAdapter.getData().get(position).first;
 //    }
@@ -580,4 +655,4 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
 
 
 
-}
+

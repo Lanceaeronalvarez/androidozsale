@@ -23,7 +23,7 @@ import au.com.dealsdirect.ui.controller.categories.CategoriesMvpView;
 public class CategoriesAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
     private String fragmentCategoryIdentifier;
-    private final CategoriesMvpView mFilterCategoriesFragment;
+    private final CategoriesMvpView mCategoriesMvpView;
 
     private long mLastClickTime = System.currentTimeMillis();
     private static final long CLICK_TIME_INTERVAL = 300;
@@ -33,9 +33,9 @@ public class CategoriesAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
     View row;
 
 
-    public CategoriesAdapter(List<GetCategoryTreeResponse> categoryList, String fragmentIdentifier, CategoriesMvpView filterFragment) {
+    public CategoriesAdapter(List<GetCategoryTreeResponse> categoryList, String fragmentIdentifier, CategoriesMvpView categoriesMvpView) {
 
-        mFilterCategoriesFragment = filterFragment;
+        mCategoriesMvpView = categoriesMvpView;
         mCategoryOption = categoryList;
         fragmentCategoryIdentifier = fragmentIdentifier;
     }
@@ -74,7 +74,7 @@ public class CategoriesAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                 }
                 mLastClickTime = now;
 
-                mFilterCategoriesFragment.onCategoryClicked
+                mCategoriesMvpView.onCategoryClicked
                         (vh,
                          position,
                          mCategoryOption.get(position).getName().toLowerCase(),mCategoryOption.get(position).getKey());

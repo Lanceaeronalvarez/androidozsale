@@ -437,7 +437,7 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
             mProductImagesRv.setVisibility(View.GONE);
             return false;
         }
-        return true;
+        return super.handleBack();
     }
 
     @Override

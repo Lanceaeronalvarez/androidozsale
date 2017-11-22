@@ -1,9 +1,6 @@
 package au.com.dealsdirect.ui.controller.saleitems;
 
-import android.os.Parcel;
 import android.support.v7.widget.RecyclerView;
-
-import com.androidnetworking.error.ANError;
 
 import java.util.List;
 
@@ -17,7 +14,6 @@ import au.com.dealsdirect.data.network.model.sorting.SortingResponse;
 import au.com.dealsdirect.ui.base.BasePresenter;
 import au.com.dealsdirect.utils.rx.SchedulerProvider;
 import io.reactivex.disposables.CompositeDisposable;
-import io.reactivex.functions.Consumer;
 
 /**
  * dp Created by Admin on 6/8/17.
@@ -91,6 +87,22 @@ public class SaleItemsPresenter<V extends SaleItemsMvpView> extends BasePresente
         getMvpView().onExecuteCategoryChangeApiCall(chosenCategoryKey);
     }
 
+    @Override
+    public void showKeyboard() {
+        getMvpView().onShowKeyboard();
+    }
+
+    @Override
+    public void showSearchFilters() {
+        getMvpView().onShowSearchFilters();
+    }
+
+    @Override
+    public void hideSearchFilters() {
+        getMvpView().onHideSearchFilters();
+    }
+
+
 
     @Override
     public void showTransparentOverlay() {
@@ -103,4 +115,8 @@ public class SaleItemsPresenter<V extends SaleItemsMvpView> extends BasePresente
     }
 
 
+    @Override
+    public int getSearchMaxPrice(){
+        return getDataManager().getSearchMaxPrice();
+    }
 }
