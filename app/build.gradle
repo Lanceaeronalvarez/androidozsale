@@ -125,8 +125,8 @@ android {
             versionCode 1
             versionName "0.9"
             applicationId "au.com.ourpay.test"
-            buildConfigField "String", "API_ROOT", "\"https://www.dealsdirect.com.au/\""
-            buildConfigField "String", "API_LEGACY", "\"https://www.dealsdirect.com.au/papi/public/v3.17/\""
+            buildConfigField "String", "API_ROOT", "\"https://genie-ui-dealsdirect-pre.mysaledev.com/\""
+            buildConfigField "String", "API_LEGACY", "\"https://api.mysaledev.com/public/v3.17/\""
             buildConfigField "String", "ACCOUNT_ID", "\"A56B0D62-AEF6-4653-848E-2ECDDB6E9B8C\""
         }
 
@@ -154,6 +154,7 @@ android {
         buyinviteRC.res.srcDir 'src/buyinviteTest/res/'
         buyinviteRC.java.srcDir 'src/common/java/'
         buyinviteTest.java.srcDir 'src/common/java/'
+        ourpayTest.java.srcDir 'src/common/java/'
         topbuyTest.java.srcDir 'src/topbuyTest/java'
         topbuyRC.java.srcDir 'src/topbuyTest/java'
 
