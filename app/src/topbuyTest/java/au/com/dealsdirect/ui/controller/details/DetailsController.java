@@ -3,17 +3,12 @@ package au.com.dealsdirect.ui.controller.details;
 import android.app.DatePickerDialog;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
-import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.Spinner;
-import android.widget.TextView;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -25,8 +20,7 @@ import javax.inject.Inject;
 import au.com.dealsdirect.R;
 import au.com.dealsdirect.data.network.model.userdetails.GetUserDetailsResponse;
 import au.com.dealsdirect.data.network.model.userdetails.SetUserDetailsRequest;
-import au.com.dealsdirect.ui.base.BasePullToRefreshController;
-import au.com.dealsdirect.ui.base.BaseToolBarController;
+import au.com.dealsdirect.ui.base.SwipeableBaseToolBarController;
 import au.com.dealsdirect.ui.custom.CustomAlertDialog;
 import au.com.dealsdirect.ui.custom.transitions.CustomSpinnerAdapter;
 import au.com.dealsdirect.utils.BundleBuilder;
@@ -38,7 +32,7 @@ import butterknife.OnClick;
  * Created by Paul on 6/20/17.
  */
 
-public class DetailsController extends BaseToolBarController implements DetailsMvpView {
+public class DetailsController extends SwipeableBaseToolBarController implements DetailsMvpView {
 
     @Inject
     DetailsMvpPresenter<DetailsMvpView> mPresenter;
@@ -103,6 +97,7 @@ public class DetailsController extends BaseToolBarController implements DetailsM
     protected void onViewBound(@NonNull View view) {
         super.onViewBound(view);
         mToolbarTitle.setText("my details");
+        setupSwipingBehavior();
         setUp(view);
     }
 
