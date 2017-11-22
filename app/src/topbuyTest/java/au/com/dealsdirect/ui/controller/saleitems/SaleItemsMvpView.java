@@ -40,4 +40,8 @@ public interface SaleItemsMvpView extends MvpView{
     void onShowTransparentOverlay();
 
     void onHideTransparentOverlay();
+
+    void showSearchFilters();
+
+    void hideSearchFilters();
 }

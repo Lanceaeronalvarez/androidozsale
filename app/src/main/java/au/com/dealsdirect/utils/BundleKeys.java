@@ -30,12 +30,25 @@ public class BundleKeys {
     public static final String SALEITEMDETAILS_KEY_ITEM_OLD_PRICE = "SALEITEMDETAILS_KEY_SALE_OLD_PRICE";
     
     //search filters
+    public static final String FACET_FILTER_TYPE = "FACET_FILTER_TYPE";
+    public static final String BRANDS_FACET_FILTER_TYPE = "brands";
+    public static final String COLOR_FACET_FILTER_TYPE = "color";
+    public static final String SIZE_FACET_FILTER_TYPE = "size";
+    public static final String PRICE_FACET_FILTER_TYPE = "price";
     public static final String BRANDS_FACETFILTER_NAME = "skus.brandName";
     public static final String SIZES_FACETFILTER_NAME = "skus.attributes.size";
     public static final String COLORS_FACETFILTER_NAME = "color";
     public static final String PRICE_FACETFILTER_NAME = "skus.attributesForFaceting.aud";
     public static final String SEARCH_QUERY_NAME = "search_query";
     public static final String SORT_FACETFILTER_NAME = "sort";
+    public static final String KEY_FACET_STRING = "KEY_FACET_STRING";
+    public static final String CATEGORY_TREE_FACET = "KEY_CATEGORY_FACET";
+    public static final String KEY_SELECTED_FACETS = "KEY_SELECTED_FACETS";
+    public static final String KEY_BRAND_LIST = "KEY_BRAND_LIST";
+    public static final String KEY_ORIG_SELECTED = "KEY_ORIG_SELECTED";
+
+    //facet filters
+    public static final String FACET_PAYLOAD = "FACET_PAYLOAD";
 
     //payment select
     public static final String PAYMENT_METHODS = "payment_methods";
