@@ -121,6 +121,15 @@ android {
 //            buildConfigField "String", "ACCOUNT_ID", "\"909E0AC5-908A-4A73-8E5C-5312DEEBD24C\""
         }
 
+        ourpay {
+            versionCode 1
+            versionName "0.9"
+            applicationId "au.com.ourpay.test"
+            buildConfigField "String", "API_ROOT", "\"https://www.dealsdirect.com.au/\""
+            buildConfigField "String", "API_LEGACY", "\"https://www.dealsdirect.com.au/papi/public/v3.17/\""
+            buildConfigField "String", "ACCOUNT_ID", "\"A56B0D62-AEF6-4653-848E-2ECDDB6E9B8C\""
+        }
+
         topbuyTest {
             versionCode 66
             versionName "2.2.0"
@@ -232,6 +241,8 @@ dependencies {
     compile "com.github.chrisbanes:PhotoView:$rootProject.photoViewVersion"
     // bottom navigation
     compile 'com.aurelhubert:ahbottomnavigation:2.0.6'
+    // circle indicator
+    compile 'me.relex:circleindicator:1.2.2@aar'
 
     // glide
     compile "com.github.bumptech.glide:glide:$rootProject.glideVersion"
