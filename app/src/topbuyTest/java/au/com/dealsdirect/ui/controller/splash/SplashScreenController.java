@@ -11,16 +11,12 @@ import android.view.Window;
 import android.view.WindowManager;
 import android.widget.ImageView;
 
-import com.bluelinelabs.conductor.RouterTransaction;
 import com.bluelinelabs.conductor.changehandler.VerticalChangeHandler;
 
 import au.com.dealsdirect.R;
 import au.com.dealsdirect.ui.base.BaseController;
-import au.com.dealsdirect.ui.controller.returns.currentreturns.CurrentReturnsController;
-import au.com.dealsdirect.ui.controller.tutorial.TutorialController;
-import au.com.dealsdirect.ui.main.MainActivity;
-import au.com.dealsdirect.utils.AppLogger;
 import au.com.dealsdirect.utils.BundleBuilder;
+import au.com.dealsdirect.utils.module.GateKeeper;
 import butterknife.BindView;
 
 /**
@@ -61,15 +57,9 @@ public class SplashScreenController extends BaseController {
     @Override
     protected void setUp(View view) {
 
-        AppLogger.d("splash" + "setup");
-
         new Handler().postDelayed(() -> {
-            if (getActivity() != null) ((MainActivity) getActivity()).splashShownCallback();
-//            AppLogger.d("splash" + "popcontroller");
-//            getRouter().pushController(RouterTransaction.with(TutorialController.newInstance())
-//                    .tag(CurrentReturnsController.TAG)
-//                    .pushChangeHandler(new VerticalChangeHandler())
-//                    .popChangeHandler(new VerticalChangeHandler()));
-        }, 3000);
+            GateKeeper.push(getRouter(), GateKeeper.Destination.TUTORIAL, new VerticalChangeHandler(false), new VerticalChangeHandler());
+
+        }, 5000);
     }
 }
