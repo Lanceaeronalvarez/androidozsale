@@ -6,26 +6,19 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.webkit.WebView;
-import android.widget.ImageButton;
-import android.widget.TextView;
 
 import javax.inject.Inject;
 
 import au.com.dealsdirect.R;
-import au.com.dealsdirect.ui.base.BaseController;
-import au.com.dealsdirect.ui.base.BasePullToRefreshController;
-import au.com.dealsdirect.ui.base.BaseToolBarController;
-import au.com.dealsdirect.ui.main.MainActivity;
-import au.com.dealsdirect.utils.BundleBuilder;
+import au.com.dealsdirect.ui.base.SwipeableBaseToolBarController;
 import au.com.dealsdirect.utils.BundleKeys;
 import butterknife.BindView;
-import butterknife.OnClick;
 
 /**
  * Created by Paul on 7/14/17.
  */
 
-public class LegalitiesController extends BaseToolBarController implements LegalitiesMvpView {
+public class LegalitiesController extends SwipeableBaseToolBarController implements LegalitiesMvpView {
 
     @Inject
     LegalitiesMvpPresenter<LegalitiesMvpView> mPresenter;
@@ -66,6 +59,7 @@ public class LegalitiesController extends BaseToolBarController implements Legal
     @Override
     protected void onViewBound(@NonNull View view) {
         super.onViewBound(view);
+        setupSwipingBehavior();
         setUp(view);
     }
 

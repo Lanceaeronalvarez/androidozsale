@@ -36,8 +36,7 @@ import au.com.dealsdirect.R;
 import au.com.dealsdirect.data.network.model.invite.GetInviteResponse;
 import au.com.dealsdirect.data.network.model.invite.SetInviteRequest;
 import au.com.dealsdirect.data.network.model.invite.SetInviteResponse;
-import au.com.dealsdirect.ui.base.BasePullToRefreshController;
-import au.com.dealsdirect.ui.base.BaseToolBarController;
+import au.com.dealsdirect.ui.base.SwipeableBaseToolBarController;
 import au.com.dealsdirect.ui.custom.CustomAlertDialog;
 import au.com.dealsdirect.utils.BundleBuilder;
 import butterknife.BindView;
@@ -46,7 +45,7 @@ import butterknife.BindView;
  * Created by Paul on 7/3/17.
  */
 
-public class InviteSendController extends BaseToolBarController implements InviteMvpView {
+public class InviteSendController extends SwipeableBaseToolBarController implements InviteMvpView {
 
     @Inject
     InviteMvpPresenter<InviteMvpView> mPresenter;
@@ -158,6 +157,7 @@ public class InviteSendController extends BaseToolBarController implements Invit
     @Override
     protected void onViewBound(@NonNull View view) {
         super.onViewBound(view);
+        setupSwipingBehavior();
         setUp(view);
     }
 
