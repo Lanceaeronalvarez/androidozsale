@@ -1,0 +1,246 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:gravity="center_horizontal"
+    android:orientation="vertical">
+
+    <TextView
+        fontPath="@string/font_lato_light"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="10dp"
+        android:text="@string/or_add_new_delivery_address"
+        android:textColor="@color/edit_text_content"
+        android:textSize="@dimen/text_size_xxxlarge"
+        tools:ignore="MissingPrefix" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="10dp"
+        android:layout_marginStart="10dp"
+        android:background="@drawable/bg_edit_text_rounded"
+        android:orientation="vertical"
+        android:paddingBottom="20dp"
+        android:paddingTop="10dp">
+
+        <TextView
+            fontPath="@string/font_lato_bold"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="20dp"
+            android:layout_marginStart="20dp"
+            android:layout_marginTop="10dp"
+            android:text="@string/name"
+            android:textColor="@color/edit_text_label"
+            android:textSize="@dimen/text_size_large"
+            tools:ignore="MissingPrefix" />
+
+        <EditText
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="20dp"
+            android:layout_marginStart="20dp"
+            android:layout_marginTop="10dp"
+            android:background="@android:color/transparent"
+            android:hint="@string/mary_doe"
+            android:textColor="@color/edit_text_content"
+            android:textSize="@dimen/text_size_large" />
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/divider_height"
+            android:layout_marginBottom="10dp"
+            android:layout_marginTop="20dp"
+            android:background="@color/border_gray" />
+
+        <TextView
+            fontPath="@string/font_lato_bold"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="20dp"
+            android:layout_marginStart="20dp"
+            android:layout_marginTop="10dp"
+            android:text="@string/contact_number"
+            android:textColor="@color/edit_text_label"
+            android:textSize="@dimen/text_size_large"
+            tools:ignore="MissingPrefix" />
+
+        <TextView
+            android:id="@+id/controller_contact_number_edit_text"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="10dp"
+            android:layout_marginStart="20dp"
+            android:layout_marginTop="10dp"
+            android:background="@android:color/transparent"
+            android:clickable="true"
+            android:drawableEnd="@drawable/ic_chevron"
+            android:hint="@string/_1_202_555_0104"
+            android:textColor="@color/edit_text_content"
+            android:textSize="@dimen/text_size_large" />
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/divider_height"
+            android:layout_marginBottom="10dp"
+            android:layout_marginTop="20dp"
+            android:background="@color/border_gray" />
+
+        <TextView
+            fontPath="@string/font_lato_bold"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="20dp"
+            android:layout_marginStart="20dp"
+            android:layout_marginTop="10dp"
+            android:text="@string/address"
+            android:textColor="@color/edit_text_label"
+            android:textSize="@dimen/text_size_large"
+            tools:ignore="MissingPrefix" />
+
+        <EditText
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="20dp"
+            android:layout_marginStart="20dp"
+            android:layout_marginTop="10dp"
+            android:background="@android:color/transparent"
+            android:hint="@string/regent_u_7_1824_aubrey_st"
+            android:textColor="@color/edit_text_content"
+            android:textSize="@dimen/text_size_large" />
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/divider_height"
+            android:layout_marginBottom="10dp"
+            android:layout_marginTop="20dp"
+            android:background="@color/border_gray" />
+
+        <TextView
+            fontPath="@string/font_lato_bold"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="20dp"
+            android:layout_marginStart="20dp"
+            android:layout_marginTop="10dp"
+            android:text="@string/suburb"
+            android:textColor="@color/edit_text_label"
+            android:textSize="@dimen/text_size_large"
+            tools:ignore="MissingPrefix" />
+
+        <EditText
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="20dp"
+            android:layout_marginStart="20dp"
+            android:layout_marginTop="10dp"
+            android:background="@android:color/transparent"
+            android:hint="@string/surfers_paradise"
+            android:textColor="@color/edit_text_content"
+            android:textSize="@dimen/text_size_large" />
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/divider_height"
+            android:layout_marginBottom="10dp"
+            android:layout_marginTop="20dp"
+            android:background="@color/border_gray" />
+
+        <TextView
+            fontPath="@string/font_lato_bold"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="20dp"
+            android:layout_marginStart="20dp"
+            android:layout_marginTop="10dp"
+            android:text="@string/country"
+            android:textColor="@color/edit_text_label"
+            android:textSize="@dimen/text_size_large"
+            tools:ignore="MissingPrefix" />
+
+        <EditText
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="10dp"
+            android:layout_marginStart="20dp"
+            android:layout_marginTop="10dp"
+            android:background="@android:color/transparent"
+            android:drawableEnd="@drawable/ic_chevron"
+            android:hint="@string/australia"
+            android:textColor="@color/edit_text_content"
+            android:textSize="@dimen/text_size_large" />
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/divider_height"
+            android:layout_marginBottom="10dp"
+            android:layout_marginTop="20dp"
+            android:background="@color/border_gray" />
+
+        <TextView
+            fontPath="@string/font_lato_bold"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="20dp"
+            android:layout_marginStart="20dp"
+            android:layout_marginTop="10dp"
+            android:text="@string/state"
+            android:textColor="@color/edit_text_label"
+            android:textSize="@dimen/text_size_large"
+            tools:ignore="MissingPrefix" />
+
+        <EditText
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="10dp"
+            android:layout_marginStart="20dp"
+            android:layout_marginTop="10dp"
+            android:background="@android:color/transparent"
+            android:drawableEnd="@drawable/ic_chevron"
+            android:hint="@string/queensland"
+            android:textColor="@color/edit_text_content"
+            android:textSize="@dimen/text_size_large" />
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/divider_height"
+            android:layout_marginBottom="10dp"
+            android:layout_marginTop="20dp"
+            android:background="@color/border_gray" />
+
+        <TextView
+            fontPath="@string/font_lato_bold"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="20dp"
+            android:layout_marginStart="20dp"
+            android:layout_marginTop="10dp"
+            android:text="@string/postcode"
+            android:textColor="@color/edit_text_label"
+            android:textSize="@dimen/text_size_large"
+            tools:ignore="MissingPrefix" />
+
+        <EditText
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="20dp"
+            android:layout_marginStart="20dp"
+            android:layout_marginTop="10dp"
+            android:background="@android:color/transparent"
+            android:hint="@string/_4170"
+            android:textColor="@color/edit_text_content"
+            android:textSize="@dimen/text_size_large" />
+
+    </LinearLayout>
+
+    <Button
+        style="@style/OPButtonStyle"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="10dp"
+        android:text="@string/save_details" />
+
+</LinearLayout>

@@ -1,0 +1,225 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/bg_gray"
+    android:orientation="vertical"
+    android:paddingBottom="20dp"
+    android:paddingTop="10dp">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="10dp"
+        android:background="@drawable/bg_edit_text_rounded"
+        android:orientation="vertical"
+        android:paddingBottom="20dp"
+        android:paddingTop="20dp">
+
+        <TextView
+            fontPath="@string/font_lato_bold"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="10dp"
+            android:layout_marginEnd="20dp"
+            android:layout_marginStart="20dp"
+            android:text="@string/delivery_address"
+            android:textColor="@color/edit_text_label"
+            android:textSize="@dimen/text_size_large"
+            tools:ignore="MissingPrefix" />
+
+        <TextView
+            android:id="@+id/controller_checkout_deliver_address_text"
+            fontPath="@string/font_lato_regular"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="10dp"
+            android:layout_marginEnd="10dp"
+            android:layout_marginStart="20dp"
+            android:clickable="true"
+            android:drawableEnd="@drawable/ic_chevron"
+            android:text="@string/add_new_delivery_address"
+            android:textColor="@color/edit_text_content"
+            android:textSize="@dimen/text_size_large"
+            tools:ignore="MissingPrefix" />
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/divider_height"
+            android:layout_marginBottom="20dp"
+            android:layout_marginTop="10dp"
+            android:background="@color/border_gray" />
+
+        <TextView
+            fontPath="@string/font_lato_bold"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="10dp"
+            android:layout_marginEnd="20dp"
+            android:layout_marginStart="20dp"
+            android:text="@string/billing_address"
+            android:textColor="@color/edit_text_label"
+            android:textSize="@dimen/text_size_large"
+            tools:ignore="MissingPrefix" />
+
+        <TextView
+            fontPath="@string/font_lato_regular"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="10dp"
+            android:layout_marginEnd="10dp"
+            android:layout_marginStart="20dp"
+            android:clickable="true"
+            android:drawableEnd="@drawable/ic_chevron"
+            android:text="@string/add_new_billing_address"
+            android:textColor="@color/edit_text_content"
+            android:textSize="@dimen/text_size_large"
+            tools:ignore="MissingPrefix" />
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/divider_height"
+            android:layout_marginBottom="20dp"
+            android:layout_marginTop="10dp"
+            android:background="@color/border_gray" />
+
+        <TextView
+            fontPath="@string/font_lato_bold"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="10dp"
+            android:layout_marginEnd="20dp"
+            android:layout_marginStart="20dp"
+            android:text="@string/payment_method"
+            android:textColor="@color/edit_text_label"
+            android:textSize="@dimen/text_size_large"
+            tools:ignore="MissingPrefix" />
+
+        <TextView
+            android:id="@+id/controller_checkout_payment_method_text"
+            fontPath="@string/font_lato_regular"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="10dp"
+            android:layout_marginStart="20dp"
+            android:clickable="true"
+            android:drawableEnd="@drawable/ic_chevron"
+            android:text="@string/add_new_payment_method"
+            android:textColor="@color/edit_text_content"
+            android:textSize="@dimen/text_size_large"
+            tools:ignore="MissingPrefix" />
+
+    </LinearLayout>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="20dp"
+        android:layout_marginEnd="10dp"
+        android:layout_marginStart="10dp"
+        android:layout_marginTop="10dp"
+        android:background="@drawable/bg_edit_text_rounded"
+        android:orientation="vertical"
+        android:paddingBottom="20dp"
+        android:paddingTop="20dp">
+
+        <TextView
+            android:id="@+id/controller_checkout_subtotal_label"
+            fontPath="@string/font_lato_bold"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="10dp"
+            android:layout_marginEnd="20dp"
+            android:layout_marginStart="20dp"
+            android:text="@string/subtotal"
+            android:textColor="@color/edit_text_label"
+            android:textSize="@dimen/text_size_large"
+            tools:ignore="MissingPrefix" />
+
+        <TextView
+            android:id="@+id/controller_checkout_shipping_label"
+            fontPath="@string/font_lato_bold"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/controller_checkout_subtotal_label"
+            android:layout_marginBottom="10dp"
+            android:layout_marginEnd="20dp"
+            android:layout_marginStart="20dp"
+            android:text="@string/shipping_fee"
+            android:textColor="@color/edit_text_label"
+            android:textSize="@dimen/text_size_large"
+            tools:ignore="MissingPrefix" />
+
+        <TextView
+            android:id="@+id/controller_checkout_subtotal_value"
+            fontPath="@string/font_lato_bold"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentEnd="true"
+            android:layout_marginBottom="10dp"
+            android:layout_marginEnd="20dp"
+            android:layout_marginStart="20dp"
+            android:text="$350.00"
+            android:textColor="@color/edit_text_label"
+            android:textSize="@dimen/text_size_large"
+            tools:ignore="MissingPrefix" />
+
+        <TextView
+            android:id="@+id/controller_checkout_shipping_value"
+            fontPath="@string/font_lato_bold"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentEnd="true"
+            android:layout_below="@id/controller_checkout_subtotal_label"
+            android:layout_marginBottom="10dp"
+            android:layout_marginEnd="20dp"
+            android:layout_marginStart="20dp"
+            android:text="$0.00"
+            android:textColor="@color/edit_text_label"
+            android:textSize="@dimen/text_size_large"
+            tools:ignore="MissingPrefix" />
+
+        <View
+            android:id="@+id/controller_checkout_divider"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/divider_height"
+            android:layout_below="@id/controller_checkout_shipping_label"
+            android:layout_marginBottom="20dp"
+            android:layout_marginTop="10dp"
+            android:background="@color/border_gray" />
+
+        <TextView
+            fontPath="@string/font_lato_bold"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/controller_checkout_divider"
+            android:layout_marginEnd="20dp"
+            android:layout_marginStart="20dp"
+            android:text="@string/grand_total"
+            android:textColor="@color/edit_text_label"
+            android:textSize="@dimen/text_size_large"
+            tools:ignore="MissingPrefix" />
+
+        <TextView
+            android:id="@+id/controller_checkout_total_value"
+            fontPath="@string/font_lato_bold"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentEnd="true"
+            android:layout_below="@id/controller_checkout_divider"
+            android:layout_marginEnd="20dp"
+            android:layout_marginStart="20dp"
+            android:text="$350.00"
+            android:textColor="@color/colorPrimaryDark"
+            android:textSize="@dimen/text_size_large"
+            tools:ignore="MissingPrefix" />
+
+    </RelativeLayout>
+
+    <include
+        android:id="@+id/controller_checkout_ourpay_button"
+        layout="@layout/button_ourpay" />
+
+</LinearLayout>

@@ -1,0 +1,130 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/white"
+    android:orientation="vertical">
+
+    <ImageView
+        android:id="@+id/controller_edit_account_header"
+        android:layout_width="match_parent"
+        android:layout_height="80dp"
+        android:contentDescription="@string/controller_edit_account_header"
+        android:scaleType="fitXY"
+        android:src="@drawable/bg_default_horizontal" />
+
+    <TextView
+        fontPath="@string/font_lato_bold"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginTop="27dp"
+        android:padding="10dp"
+        android:text="@string/verification_code"
+        android:textColor="@color/white"
+        android:textSize="@dimen/text_size_xxxlarge"
+        tools:ignore="MissingPrefix" />
+
+    <ImageButton
+        android:id="@+id/controller_back"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:layout_marginTop="@dimen/status_bar_height"
+        android:background="@drawable/bg_toolbar_ripple"
+        android:clickable="true"
+        android:contentDescription="@string/ic_back"
+        android:src="@drawable/ic_back" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginTop="80dp"
+        android:gravity="center_horizontal"
+        android:orientation="vertical">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="10dp"
+            android:background="@drawable/bg_edit_text_rounded"
+            android:orientation="vertical"
+            android:paddingBottom="20dp"
+            android:paddingTop="10dp">
+
+            <TextView
+                fontPath="@string/font_lato_bold"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="20dp"
+                android:layout_marginStart="20dp"
+                android:layout_marginTop="10dp"
+                android:text="@string/enter_code_below"
+                android:textColor="@color/edit_text_label"
+                android:textSize="@dimen/text_size_large"
+                tools:ignore="MissingPrefix" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="10dp"
+                android:layout_marginStart="20dp"
+                android:layout_marginTop="10dp"
+                android:background="@android:color/transparent"
+                android:clickable="true"
+                android:hint="@string/please_type_the_verification_code_sent_to"
+                android:textColor="@color/edit_text_content"
+                android:textSize="@dimen/text_size_large" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:letterSpacing=".25"
+                android:text="57272"
+                android:textColor="@color/edit_text_label"
+                android:textSize="@dimen/text_size_xxxxxlarge" />
+
+        </LinearLayout>
+
+        <Button
+            style="@style/OPButtonStyle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="10dp"
+            android:text="@string/verify_sms_code" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="20dp"
+            android:layout_marginTop="20dp"
+            android:gravity="center|bottom"
+            android:orientation="horizontal">
+
+            <TextView
+                fontPath="@string/font_lato_light"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="10dp"
+                android:text="@string/no_verification_code_yet"
+                android:textSize="@dimen/text_size_xxxlarge"
+                tools:ignore="MissingPrefix" />
+
+            <TextView
+                fontPath="@string/font_lato_bold"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/resend"
+                android:textColor="@color/colorPrimaryDark"
+                android:textSize="@dimen/text_size_xxxlarge"
+                tools:ignore="MissingPrefix" />
+
+        </LinearLayout>
+
+        <include layout="@layout/partial_numpad" />
+
+    </LinearLayout>
+
+</android.support.design.widget.CoordinatorLayout>

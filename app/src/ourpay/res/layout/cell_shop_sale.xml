@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.v7.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="170dp"
+    android:layout_margin="5dp"
+    app:cardCornerRadius="8dp">
+
+    <ImageView
+        android:layout_width="match_parent"
+        android:layout_height="120dp"
+        android:scaleType="centerCrop"
+        android:src="@drawable/img_sample_sale" />
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom"
+        android:layout_margin="5dp"
+        android:padding="5dp">
+
+        <TextView
+            android:id="@+id/cell_shop_sale_name"
+            fontPath="@string/font_lato_semibold"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@color/edit_text_label"
+            android:textSize="@dimen/text_size_xxlarge"
+            tools:ignore="MissingPrefix"
+            tools:text="Trendy Collections" />
+
+        <TextView
+            android:id="@+id/cell_shop_sale_brand"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/cell_shop_sale_name"
+            android:textColor="#adadad"
+            android:textSize="@dimen/text_size_medium"
+            tools:text="95068491" />
+
+        <TextView
+            android:id="@+id/cell_shop_sale_value"
+            fontPath="@string/font_lato_bold"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentEnd="true"
+            android:layout_centerVertical="true"
+            android:textColor="@color/colorPrimaryDark"
+            android:textSize="@dimen/text_size_xxlarge"
+            tools:ignore="MissingPrefix"
+            tools:text="$45.00" />
+
+    </RelativeLayout>
+
+</android.support.v7.widget.CardView>

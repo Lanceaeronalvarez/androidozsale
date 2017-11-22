@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="colorPrimary">#FDBB16</color>
+    <color name="colorPrimaryAlpha">#CCFDBB16</color>
+    <color name="colorPrimaryDark">#F37325</color>
+    <color name="colorAccent">#FDBB16</color>
+    <color name="colorBlueDark">#1E303E</color>
+    <color name="colorBlueDarkAlpha">#1A1E303E</color>
+    <color name="colorInactive">#929292</color>
+    <color name="colorInactiveAlpha">#AA6F6E6E</color>
+
+    <color name="white">#FFFFFFFF</color>
+    <color name="black">#FF000000</color>
+
+    <color name="bg_gray">#F8F8F8</color>
+
+    <color name="border_gray">#EBEBEB</color>
+
+    <color name="bg_membership">#DBA142</color>
+
+    <color name="bg_button_ripple">@color/white</color>
+    <color name="bg_button_default">@color/colorPrimary</color>
+    <color name="bg_button_pressed">@color/colorPrimaryDark</color>
+
+    <color name="bg_edit_text_ripple">#F9F9F9</color>
+    <color name="bg_edit_text_default">@color/white</color>
+    <color name="bg_edit_text_pressed">#F9F9F9</color>
+
+    <color name="edit_text_label">#6F6E6E</color>
+    <color name="edit_text_content">#7E7E7E</color>
+
+    <color name="page_indicator_active">@color/colorPrimary</color>
+    <color name="page_indicator_active_dark">@color/colorPrimaryDark</color>
+    <color name="page_indicator_inactive">#868E95</color>
+</resources>

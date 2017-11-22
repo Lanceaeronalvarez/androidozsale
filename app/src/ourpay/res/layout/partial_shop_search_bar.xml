@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/partial_shop_search_bar"
+    android:layout_width="match_parent"
+    android:layout_height="?attr/actionBarSize"
+    android:layout_marginTop="@dimen/status_bar_height"
+    android:gravity="center_vertical"
+    android:orientation="horizontal"
+    android:visibility="invisible">
+
+    <EditText
+        android:id="@+id/partial_shop_search_text"
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:layout_margin="5dp"
+        android:layout_weight="5"
+        android:background="@drawable/bg_edit_text_rounded"
+        android:drawablePadding="5dp"
+        android:drawableStart="@drawable/ic_search"
+        android:hint="@string/i_am_looking_for"
+        android:padding="10dp"
+        android:textColor="@color/edit_text_label"
+        android:textSize="@dimen/text_size_large" />
+
+    <TextView
+        android:id="@+id/partial_shop_search_cancel"
+        fontPath="@string/font_lato_light"
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:layout_marginEnd="5dp"
+        android:layout_weight="1"
+        android:background="@drawable/bg_toolbar_ripple"
+        android:gravity="center"
+        android:text="@string/cancel"
+        android:textColor="@color/white"
+        android:textSize="@dimen/text_size_xlarge"
+        tools:ignore="MissingPrefix" />
+
+</LinearLayout>

@@ -1,0 +1,181 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/bg_gray"
+    android:paddingBottom="40dp">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_margin="10dp"
+        android:background="@drawable/bg_edit_text_rounded"
+        android:orientation="vertical"
+        android:paddingBottom="20dp"
+        android:paddingTop="20dp">
+
+        <TextView
+            fontPath="@string/font_lato_bold"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="10dp"
+            android:layout_marginEnd="20dp"
+            android:layout_marginStart="20dp"
+            android:text="@string/estimated_delivery"
+            android:textColor="@color/edit_text_label"
+            android:textSize="@dimen/text_size_large"
+            tools:ignore="MissingPrefix" />
+
+        <TextView
+            fontPath="@string/font_lato_regular"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="10dp"
+            android:layout_marginEnd="20dp"
+            android:layout_marginStart="20dp"
+            android:text="@string/_05_06_15_09_06_17_orders_are_dispatched_directly_to_you_from_austrailia"
+            android:textColor="@color/edit_text_content"
+            android:textSize="@dimen/text_size_large"
+            tools:ignore="MissingPrefix" />
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/divider_height"
+            android:layout_marginBottom="20dp"
+            android:layout_marginTop="10dp"
+            android:background="@color/border_gray" />
+
+        <TextView
+            fontPath="@string/font_lato_bold"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="10dp"
+            android:layout_marginEnd="20dp"
+            android:layout_marginStart="20dp"
+            android:text="@string/return_policy"
+            android:textColor="@color/edit_text_label"
+            android:textSize="@dimen/text_size_large"
+            tools:ignore="MissingPrefix" />
+
+        <TextView
+            fontPath="@string/font_lato_regular"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="10dp"
+            android:layout_marginEnd="20dp"
+            android:layout_marginStart="20dp"
+            android:text="@string/please_refer_to_our_return_policy"
+            android:textColor="@color/edit_text_content"
+            android:textSize="@dimen/text_size_large"
+            tools:ignore="MissingPrefix" />
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/divider_height"
+            android:layout_marginBottom="20dp"
+            android:layout_marginTop="10dp"
+            android:background="@color/border_gray" />
+
+        <TextView
+            fontPath="@string/font_lato_bold"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="10dp"
+            android:layout_marginEnd="20dp"
+            android:layout_marginStart="20dp"
+            android:text="Features"
+            android:textColor="@color/edit_text_label"
+            android:textSize="@dimen/text_size_large"
+            tools:ignore="MissingPrefix" />
+
+        <TextView
+            fontPath="@string/font_lato_regular"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="10dp"
+            android:layout_marginEnd="20dp"
+            android:layout_marginStart="20dp"
+            android:text="@string/_100_rayon_mykonos_embroidered_off_shoulder_top_white_elasticated_top_and_bottom_the_clothing_at_morrisday_is_true_to_standard_austrailian_sizing"
+            android:textColor="@color/edit_text_content"
+            android:textSize="@dimen/text_size_large"
+            tools:ignore="MissingPrefix" />
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/divider_height"
+            android:layout_marginBottom="20dp"
+            android:layout_marginTop="10dp"
+            android:background="@color/border_gray" />
+
+        <TextView
+            fontPath="@string/font_lato_bold"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="10dp"
+            android:layout_marginEnd="20dp"
+            android:layout_marginStart="20dp"
+            android:text="@string/measurements"
+            android:textColor="@color/edit_text_label"
+            android:textSize="@dimen/text_size_large"
+            tools:ignore="MissingPrefix" />
+
+        <TextView
+            fontPath="@string/font_lato_regular"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="10dp"
+            android:layout_marginStart="20dp"
+            android:drawableEnd="@drawable/ic_chevron"
+            android:text="@string/size_guide"
+            android:textColor="@color/edit_text_content"
+            android:textSize="@dimen/text_size_large"
+            tools:ignore="MissingPrefix" />
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/divider_height"
+            android:layout_marginBottom="20dp"
+            android:layout_marginTop="10dp"
+            android:background="@color/border_gray" />
+
+        <TextView
+            fontPath="@string/font_lato_bold"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="10dp"
+            android:layout_marginEnd="20dp"
+            android:layout_marginStart="20dp"
+            android:text="@string/about_atom"
+            android:textColor="@color/edit_text_label"
+            android:textSize="@dimen/text_size_large"
+            tools:ignore="MissingPrefix" />
+
+        <TextView
+            fontPath="@string/font_lato_regular"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="20dp"
+            android:layout_marginEnd="20dp"
+            android:layout_marginStart="20dp"
+            android:text="@string/a_full_range_of_compression_wear_where_technology_is_at_the_heart_of_atom_pro_compression_born_out_of_the_desire_to_find_a_effective_great_looking_comfortable_range_that_enables_you_to_perform_at_your_best_for_extended_periods_of_time"
+            android:textColor="@color/edit_text_content"
+            android:textSize="@dimen/text_size_large"
+            tools:ignore="MissingPrefix" />
+
+        <TextView
+            fontPath="@string/font_lato_regular"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="10dp"
+            android:layout_marginStart="20dp"
+            android:drawableEnd="@drawable/ic_chevron"
+            android:text="@string/pricing"
+            android:textColor="@color/edit_text_content"
+            android:textSize="@dimen/text_size_large"
+            tools:ignore="MissingPrefix" />
+
+    </LinearLayout>
+
+</RelativeLayout>

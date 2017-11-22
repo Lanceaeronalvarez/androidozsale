@@ -1,0 +1,158 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/white"
+    android:orientation="vertical">
+
+    <ImageView
+        android:layout_width="match_parent"
+        android:layout_height="160dp"
+        android:scaleType="fitXY"
+        android:src="@drawable/bg_default_text" />
+
+    <android.support.v4.widget.NestedScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:overScrollMode="never">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:gravity="center_horizontal"
+            android:orientation="vertical"
+            android:padding="20dp">
+
+            <TextView
+                fontPath="@string/font_lato_thin"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:lineSpacingMultiplier="1.3"
+                android:text="@string/ourpay_is_cocosa_s_exclusive_installment_payment_plan_solution_ourpay_allows_you_to_checkout_with_all_the_items_you_love_and_pay_over_four_easy_interest_free_installments_simply_browse_the_site_and_add_your_preferred_goodies_to_your_cart_proceed_to_checkout_and_pay_less_today_with_ourpay"
+                android:textColor="@color/edit_text_label"
+                android:textSize="@dimen/text_size_xxlarge"
+                tools:ignore="MissingPrefix" />
+
+            <TextView
+                fontPath="@string/font_lato_light"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="20dp"
+                android:layout_marginTop="30dp"
+                android:text="@string/benefits"
+                android:textColor="@color/edit_text_label"
+                android:textSize="@dimen/text_size_xxxlarge"
+                tools:ignore="MissingPrefix" />
+
+            <TextView
+                fontPath="@string/font_lato_light"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="10dp"
+                android:background="@drawable/bg_edit_text_rounded"
+                android:drawablePadding="20dp"
+                android:drawableStart="@drawable/ic_about_sale"
+                android:gravity="center_vertical"
+                android:padding="10dp"
+                android:text="@string/shop_all_your_favorite_sales"
+                android:textColor="@color/edit_text_label"
+                android:textSize="@dimen/text_size_xxlarge"
+                tools:ignore="MissingPrefix" />
+
+            <TextView
+                fontPath="@string/font_lato_light"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="10dp"
+                android:background="@drawable/bg_edit_text_rounded"
+                android:drawablePadding="20dp"
+                android:drawableStart="@drawable/ic_about_interest"
+                android:gravity="center_vertical"
+                android:padding="10dp"
+                android:text="@string/interest_free"
+                android:textColor="@color/edit_text_label"
+                android:textSize="@dimen/text_size_xxlarge"
+                tools:ignore="MissingPrefix" />
+
+            <TextView
+                fontPath="@string/font_lato_light"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="10dp"
+                android:background="@drawable/bg_edit_text_rounded"
+                android:drawablePadding="20dp"
+                android:drawableStart="@drawable/ic_about_easy"
+                android:gravity="center_vertical"
+                android:padding="10dp"
+                android:text="@string/easy_to_use_no_long_sign_ups"
+                android:textColor="@color/edit_text_label"
+                android:textSize="@dimen/text_size_xxlarge"
+                tools:ignore="MissingPrefix" />
+
+            <TextView
+                fontPath="@string/font_lato_light"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="10dp"
+                android:background="@drawable/bg_edit_text_rounded"
+                android:drawablePadding="20dp"
+                android:drawableStart="@drawable/ic_about_secure"
+                android:gravity="center_vertical"
+                android:padding="10dp"
+                android:text="@string/secure_payment_method"
+                android:textColor="@color/edit_text_label"
+                android:textSize="@dimen/text_size_xxlarge"
+                tools:ignore="MissingPrefix" />
+
+            <TextView
+                fontPath="@string/font_lato_light"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="10dp"
+                android:background="@drawable/bg_edit_text_rounded"
+                android:drawablePadding="20dp"
+                android:drawableStart="@drawable/ic_about_handbag"
+                android:gravity="center_vertical"
+                android:padding="10dp"
+                android:text="@string/get_that_pair_of_shoes_and_handbag_using_ourpay"
+                android:textColor="@color/edit_text_label"
+                android:textSize="@dimen/text_size_xxlarge"
+                tools:ignore="MissingPrefix" />
+
+            <TextView
+                fontPath="@string/font_lato_light"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="20dp"
+                android:layout_marginTop="30dp"
+                android:text="@string/our_partners"
+                android:textColor="@color/edit_text_label"
+                android:textSize="@dimen/text_size_xxxlarge"
+                tools:ignore="MissingPrefix" />
+
+            <android.support.v4.view.ViewPager
+                android:id="@+id/controller_ourpay_pager"
+                android:layout_width="match_parent"
+                android:layout_height="200dp"
+                android:overScrollMode="never" />
+
+            <me.relex.circleindicator.CircleIndicator
+                android:id="@+id/controller_ourpay_page_indicator"
+                android:layout_width="match_parent"
+                android:layout_height="32dp"
+                android:layout_marginBottom="20dp"
+                app:ci_animator="@animator/alpha"
+                app:ci_animator_reverse="@animator/alpha_reverse"
+                app:ci_drawable="@drawable/page_indicator_active_dark"
+                app:ci_drawable_unselected="@drawable/page_indicator_inactive"
+                app:ci_height="7dp"
+                app:ci_width="7dp" />
+
+        </LinearLayout>
+
+    </android.support.v4.widget.NestedScrollView>
+
+</LinearLayout>
