@@ -22,17 +22,6 @@
                 android:layout_marginTop="@dimen/screen_padding"
                 android:orientation="vertical" />
 
-
-            <Button
-                android:id="@+id/add_address_button"
-                style="@style/DDButtonStyle"
-                android:layout_width="match_parent"
-                android:layout_height="@dimen/default_button_height"
-                android:layout_gravity="bottom"
-                android:layout_margin="@dimen/activity_horizontal_margin"
-                android:text="@string/use_this_address"
-                android:layout_alignParentBottom="true"
-                android:textSize="@dimen/text_size_large"/>
         </RelativeLayout>
     </android.support.v4.widget.NestedScrollView>
 

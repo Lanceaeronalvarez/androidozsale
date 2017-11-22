@@ -5,6 +5,7 @@ import android.os.Bundle;
 import com.bluelinelabs.conductor.Controller;
 
 import au.com.dealsdirect.ui.controller.account.AccountController;
+import au.com.dealsdirect.ui.controller.address.addnewaddress.AddNewAddressController;
 import au.com.dealsdirect.ui.controller.address.viewaddress.ViewAddressController;
 import au.com.dealsdirect.ui.controller.categories.CategoriesController;
 import au.com.dealsdirect.ui.controller.checkout.addpayment.AddPaymentController;
@@ -79,6 +80,8 @@ public class ControllerFactory {
                 return ReturnOrdersController.newInstance();
             case VIEW_ADDRESSES:
                 return new ViewAddressController(false, null);
+            case ADD_NEW_ADDRESS:
+                return new AddNewAddressController(new Bundle());
             case CONTACT_US:
                 return ViewContactsController.newInstance();
             case FACET_FILTER:
@@ -141,6 +144,8 @@ public class ControllerFactory {
                 return ReturnOrdersController.newInstance();
             case VIEW_ADDRESSES:
                 return new ViewAddressController(false, null);
+            case ADD_NEW_ADDRESS:
+                return new AddNewAddressController(bundle);
             case CONTACT_US:
                 return ViewContactsController.newInstance();
             case ADD_CONTACT:

@@ -23,18 +23,17 @@ import javax.inject.Inject;
 
 import au.com.dealsdirect.R;
 import au.com.dealsdirect.data.network.model.address.DecorationInfoList;
-import au.com.dealsdirect.ui.base.BaseToolBarController;
+import au.com.dealsdirect.ui.base.SwipeableBaseToolBarController;
 import au.com.dealsdirect.ui.custom.CustomAlertDialog;
 import au.com.dealsdirect.utils.BundleBuilder;
 import au.com.dealsdirect.utils.JsonUtils;
 import au.com.dealsdirect.utils.StringUtils;
-import butterknife.OnClick;
 
 /**
  * Created by smartwave on 20/06/2017.
  */
 
-public class AddNewAddressController extends BaseToolBarController implements AddNewAddressMvpView {
+public class AddNewAddressController extends SwipeableBaseToolBarController implements AddNewAddressMvpView {
     private static final String DECORATION_INFO_LIST = "DECORATION_INFO_LIST";
     private static final String CALLED_FROM_CART = "CALLED_FROM_CART";
 
@@ -63,7 +62,9 @@ public class AddNewAddressController extends BaseToolBarController implements Ad
     protected void onViewBound(@NonNull View view) {
         super.onViewBound(view);
         mToolbarTitle.setText(R.string.new_address);
-
+        setupSwipingBehavior();
+        setupDefaultBottomButton(mActivity.getString(R.string.use_this_address),
+                view1 -> mPresenter.addNewAddress(mViewMap));
         setUp(view);
     }
 
@@ -166,15 +167,9 @@ public class AddNewAddressController extends BaseToolBarController implements Ad
 
     }
 
-    @OnClick(R.id.add_address_button)
-    void callAddNewAddress(){
-        hideKeyboard();
-        mPresenter.addNewAddress(mViewMap);
-    }
-
     @Override
     public void setFieldErrorState(View view) {
-        //view.setBackgroundResource(R.drawable.rounded_edittext_error);
+        view.setBackgroundResource(R.drawable.rounded_edittext_error);
     }
 
     @Override

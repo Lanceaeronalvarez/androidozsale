@@ -42,16 +42,6 @@
         <include layout="@layout/view_address_placeholder_layout"
             android:visibility="gone"/>
 
-        <Button
-            android:id="@+id/view_address_add_button"
-            style="@style/DDButtonStyle"
-            android:layout_width="match_parent"
-            android:layout_height="@dimen/default_button_height"
-            android:layout_gravity="bottom"
-            android:layout_margin="@dimen/activity_horizontal_margin"
-            android:text="@string/add_delivery_address"
-            android:layout_alignParentBottom="true"
-            android:textSize="@dimen/text_size_large"/>
 
     </RelativeLayout>
 

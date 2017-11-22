@@ -11,8 +11,7 @@ import android.view.ViewGroup;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import com.bluelinelabs.conductor.RouterTransaction;
-import com.bluelinelabs.conductor.changehandler.HorizontalChangeHandler;
+import com.bluelinelabs.conductor.changehandler.VerticalChangeHandler;
 import com.google.gson.Gson;
 
 import java.util.ArrayList;
@@ -27,12 +26,11 @@ import au.com.dealsdirect.data.network.model.address.DeleteUserAddress;
 import au.com.dealsdirect.data.network.model.address.GetAddresses;
 import au.com.dealsdirect.data.network.model.checkout.getcurrentorder.DeliveryAddress;
 import au.com.dealsdirect.ui.base.SwipeableBaseToolBarController;
-import au.com.dealsdirect.ui.controller.address.addnewaddress.AddNewAddressController;
 import au.com.dealsdirect.ui.custom.CustomAlertDialog;
 import au.com.dealsdirect.ui.custom.RecyclerOnTouchListener;
 import au.com.dealsdirect.utils.BundleBuilder;
+import au.com.dealsdirect.utils.module.GateKeeper;
 import butterknife.BindView;
-import butterknife.OnClick;
 import timber.log.Timber;
 
 /**
@@ -44,6 +42,8 @@ public class ViewAddressController extends SwipeableBaseToolBarController implem
     private static final String CALLED_FROM_CART = "CalledFromCart";
 
     private static final String DELIVERY_ADDRESS = "ViewAddressController.DELIVERY_ADDRESS";
+    private static final String DECORATION_LIST_KEY = "DECORATION_LIST";
+    private static final String CALLED_FROM_CART_KEY = "CALLED_FROM_CART";
 
     @BindView(R.id.no_addresses_layout)
     RelativeLayout mAddressPlaceHolder;
@@ -80,8 +80,9 @@ public class ViewAddressController extends SwipeableBaseToolBarController implem
     @Override
     protected void onViewBound(@NonNull View view) {
         super.onViewBound(view);
-
+        setupSwipingBehavior();
         mToolbarTitle.setText(R.string.my_addresses);
+
         setUp(view);
     }
 
@@ -106,7 +107,7 @@ public class ViewAddressController extends SwipeableBaseToolBarController implem
                     //showAddNewAddressFragment();
                     AddressesItem item = mAddressList.get(position);
 
-//                                        getBaseActivity().showProgressDialog("Setting address. Please wait.");
+//                    getBaseActivity().showProgressDialog("Setting address. Please wait.");
                     mPresenter.applyDeliveryAddress(item.ID);
 
                     mRecyclerViewAdapter.updateDeliveryAddress(item);
@@ -157,16 +158,29 @@ public class ViewAddressController extends SwipeableBaseToolBarController implem
                 mDecorationInfoList = responseValue.getD().getValue().getDecorationInfoList();
                 mRecyclerViewAdapter.replaceData(mAddressList);
                 mAddressesLoaded = true;
+                Gson gson = new Gson();
 
-//                setupDefaultBottomButton(getString(R.string.add_delivery_address),
-//                        new View.OnClickListener() {
-//                            @Override
-//                            public void onClick(View v) {
-//                                if (mAddressesLoaded) {
-//                                    showAddNewAddressFragment();
-//                                }
-//                            }
-//                        });
+                String decorationList = gson.toJson(mDecorationInfoList);
+                Bundle bundle = new Bundle();
+                bundle.putString(DECORATION_LIST_KEY, decorationList);
+                bundle.putBoolean(CALLED_FROM_CART_KEY, mCalledFromCart);
+
+                setupDefaultBottomButton("add delivery address",
+                        new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                if (mAddressesLoaded) {
+
+                                    GateKeeper.push(
+                                            getRouter(),
+                                            GateKeeper.Destination.ADD_NEW_ADDRESS,
+                                            bundle,
+                                            new VerticalChangeHandler(false),
+                                            new VerticalChangeHandler());
+
+                                }
+                            }
+                        });
 
             } else {
                 Timber.d("ViewAddressController", "mAddressList is null)");
@@ -181,13 +195,7 @@ public class ViewAddressController extends SwipeableBaseToolBarController implem
 
     @Override
     public void onUserDeliveryAddressDeleted(DeleteUserAddress.ResponseValue responseValue) {
-        //        GDebug.log("remove address", "FROM VIEW MY ADDRESS - on user Delivery address deleted = "+
-//                responseValue
-//                        .getDeleteAddressResponseValue().getDeleteUserDeliveryAddressResponseValue().getMessage()+" ," +
-//                " "+responseValue
-//                .getDeleteAddressResponseValue()
-//                .getDeleteUserDeliveryAddressResponseValue().getType());
-//
+
         CustomAlertDialog.showCustomAlertDialog(mActivity,
                 CustomAlertDialog.CustomDialogIconState.POSITIVE,
                 "Removed address");
@@ -223,27 +231,4 @@ public class ViewAddressController extends SwipeableBaseToolBarController implem
         super.onDestroyView(view);
     }
 
-    @OnClick(R.id.view_address_add_button)
-    void showAddNewAddress(){
-        //        AddNewAddressFragment fragment = AddNewAddressFragment
-//                .newInstance(mActivity, mGetUserAddressesResponse.d.Value.DecorationInfoList, mCalledFromCart);
-//        push router to addnewaddress
-        Gson gson = new Gson();
-        getRouter().pushController(RouterTransaction.with(new AddNewAddressController(gson.toJson(mDecorationInfoList), false))
-                .pushChangeHandler(new HorizontalChangeHandler())
-                .popChangeHandler(new HorizontalChangeHandler()));
-
-    }
-
-//    @OnClick(R.id.partial_toolbar_filter_view)
-//    public void showAddNewAddress() {
-////        AddNewAddressFragment fragment = AddNewAddressFragment
-////                .newInstance(mActivity, mGetUserAddressesResponse.d.Value.DecorationInfoList, mCalledFromCart);
-////        push router to addnewaddress
-//        Gson gson = new Gson();
-//        getRouter().pushController(RouterTransaction.with(new AddNewAddressController(gson.toJson(mDecorationInfoList), false))
-//                .pushChangeHandler(new HorizontalChangeHandler())
-//                .popChangeHandler(new HorizontalChangeHandler()));
-//
-//    }
 }
