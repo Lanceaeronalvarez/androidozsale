@@ -50,7 +50,8 @@ public class GateKeeper {
         ADD_CONTACT,
         SEARCH_FILTER,
         LEGALITIES,
-        LANGUAGE
+        LANGUAGE,
+        TUTORIAL
         //add more destinations
     }
 

@@ -2,12 +2,9 @@ package au.com.dealsdirect.ui.controller.account;
 
 import java.io.Serializable;
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
 
 import javax.inject.Inject;
 
-import au.com.dealsdirect.R;
 import au.com.dealsdirect.data.DataManager;
 import au.com.dealsdirect.ui.base.BasePresenter;
 import au.com.dealsdirect.utils.rx.SchedulerProvider;
@@ -31,7 +28,8 @@ public class AccountPresenter<V extends AccountMvpView> extends BasePresenter<V>
         if (getDataManager().isAuthorized() || (option.equals(AccountItems.LANGUAGE) ||
                 option.equals(AccountItems.PRIVACY_POLICY) ||
                 option.equalsIgnoreCase(AccountItems.TNC) ||
-                option.equalsIgnoreCase(AccountItems.ABOUT_US))) {
+                option.equalsIgnoreCase(AccountItems.ABOUT_US) ||
+                option.equalsIgnoreCase(AccountItems.TUTORIAL))) {
 
             switch (option) {
                 case AccountItems.DETAILS:

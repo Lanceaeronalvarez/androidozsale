@@ -195,6 +195,7 @@ public class AccountController extends BaseController implements AccountMvpView 
 
     @Override
     public void showTutorial() {
+        GateKeeper.push(getRouter(), GateKeeper.Destination.TUTORIAL, new VerticalChangeHandler(false), new VerticalChangeHandler());
 
     }
 

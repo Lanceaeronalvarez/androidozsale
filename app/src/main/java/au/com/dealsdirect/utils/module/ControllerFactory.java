@@ -27,6 +27,7 @@ import au.com.dealsdirect.ui.controller.returns.returnorders.ReturnOrdersControl
 import au.com.dealsdirect.ui.controller.saleitems.SaleItemsController;
 import au.com.dealsdirect.ui.controller.searchfilter.SearchFilterController;
 import au.com.dealsdirect.ui.controller.searchfilter.facetfilter.FacetFilterController;
+import au.com.dealsdirect.ui.controller.tutorial.TutorialController;
 import au.com.dealsdirect.ui.controller.vouchers.Add.AddVouchersController;
 import au.com.dealsdirect.ui.controller.vouchers.View.ViewVouchersController;
 
@@ -104,6 +105,8 @@ public class ControllerFactory {
                 break;
             case LANGUAGE:
                 return LanguageController.newInstance();
+            case TUTORIAL:
+                return TutorialController.newInstance();
             default:
                 return null;
         }
@@ -158,6 +161,8 @@ public class ControllerFactory {
                 return LanguageController.newInstance();
             case FACET_FILTER:
                 return new FacetFilterController(bundle);
+            case TUTORIAL:
+                return TutorialController.newInstance();
             default:
                 return null;
         }
