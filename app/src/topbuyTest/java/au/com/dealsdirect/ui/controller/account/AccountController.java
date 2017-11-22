@@ -10,7 +10,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.bluelinelabs.conductor.RouterTransaction;
 import com.bluelinelabs.conductor.changehandler.HorizontalChangeHandler;
 import com.bluelinelabs.conductor.changehandler.VerticalChangeHandler;
 
@@ -141,11 +140,13 @@ public class AccountController extends BaseController implements AccountMvpView 
 
     @Override
     public void showMyDetailsController() {
+        GateKeeper.push(getRouter(), GateKeeper.Destination.DETAILS, new VerticalChangeHandler(false), new VerticalChangeHandler());
 
     }
 
     @Override
     public void showMyAddressesController() {
+        GateKeeper.push(getRouter(), GateKeeper.Destination.VIEW_ADDRESSES, new VerticalChangeHandler(false), new VerticalChangeHandler());
 
     }
 
@@ -159,8 +160,8 @@ public class AccountController extends BaseController implements AccountMvpView 
     public void showMyVouchers() {
         GateKeeper.push(getRouter(),
                 GateKeeper.Destination.VIEW_VOUCHERS,
-                new HorizontalChangeHandler(),
-                new HorizontalChangeHandler());
+                new VerticalChangeHandler(false),
+                new VerticalChangeHandler());
 
     }
 
@@ -179,8 +180,8 @@ public class AccountController extends BaseController implements AccountMvpView 
                 .putString(BundleKeys.PAYMENT_METHODS, "")
                 .putString(BundleKeys.CART_TOTAL_COST, "")
                 .build(),
-                new HorizontalChangeHandler(),
-                new HorizontalChangeHandler());
+                new VerticalChangeHandler(false),
+                new VerticalChangeHandler());
     }
 
     @Override
@@ -202,8 +203,8 @@ public class AccountController extends BaseController implements AccountMvpView 
     public void showInviteAFriend() {
         GateKeeper.push(getRouter(),
                 GateKeeper.Destination.INVITE,
-                new HorizontalChangeHandler(),
-                new HorizontalChangeHandler());
+                new VerticalChangeHandler(false),
+                new VerticalChangeHandler());
 
     }
 
@@ -214,7 +215,9 @@ public class AccountController extends BaseController implements AccountMvpView 
                 new BundleBuilder(new Bundle())
                 .putString(BundleKeys.TEMPLATE_KEY, key)
                 .putString(BundleKeys.TITLE, title)
-                .build());
+                .build(),
+                new VerticalChangeHandler(false),
+                new VerticalChangeHandler());
     }
 
     @Override
