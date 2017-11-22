@@ -8,7 +8,7 @@ import android.view.ViewGroup;
 import android.widget.RelativeLayout;
 
 import com.bluelinelabs.conductor.RouterTransaction;
-import com.bluelinelabs.conductor.changehandler.HorizontalChangeHandler;
+import com.bluelinelabs.conductor.changehandler.VerticalChangeHandler;
 import com.google.gson.Gson;
 import com.lsjwzh.widget.recyclerviewpager.RecyclerViewPager;
 
@@ -96,7 +96,7 @@ public class OrdersController extends SwipeableBaseToolBarController implements 
         String paymentRefNo = String.valueOf(mOrders.get(position).getPaymentReferenceNo());
         String jsonData = new Gson().toJson(mOrders.get(position));
         getRouter().pushController(RouterTransaction.with(new OrderDetailsController(jsonData, paymentRefNo, position))
-                .pushChangeHandler(new HorizontalChangeHandler())
-                .popChangeHandler(new HorizontalChangeHandler()));
+                .pushChangeHandler(new VerticalChangeHandler(false))
+                .popChangeHandler(new VerticalChangeHandler()));
     }
 }
