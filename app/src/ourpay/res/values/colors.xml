@@ -1,14 +1,42 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <color name="colorPrimary">#FDBB16</color>
+    <color name="colorPrimaryAlpha">#CCFDBB16</color>
+    <color name="colorPrimaryDark">#F37325</color>
+    <color name="colorAccent">#FDBB16</color>
+    <color name="colorBlueDark">#1E303E</color>
+    <color name="colorBlueDarkAlpha">#1A1E303E</color>
+    <color name="colorInactive">#929292</color>
+    <color name="colorInactiveAlpha">#AA6F6E6E</color>
 
+    <color name="white">#FFFFFFFF</color>
+    <color name="black">#FF000000</color>
+
+    <color name="bg_gray">#F8F8F8</color>
+
+    <color name="border_gray">#EBEBEB</color>
+
+    <color name="bg_membership">#DBA142</color>
+
+    <color name="bg_button_ripple">@color/white</color>
+    <color name="bg_button_default">@color/colorPrimary</color>
+    <color name="bg_button_pressed">@color/colorPrimaryDark</color>
+
+    <color name="bg_edit_text_ripple">#F9F9F9</color>
+    <color name="bg_edit_text_default">@color/white</color>
+    <color name="bg_edit_text_pressed">#F9F9F9</color>
+
+    <color name="edit_text_label">#6F6E6E</color>
+    <color name="edit_text_content">#7E7E7E</color>
+
+    <color name="page_indicator_active">@color/colorPrimary</color>
+    <color name="page_indicator_active_dark">@color/colorPrimaryDark</color>
+    <color name="page_indicator_inactive">#868E95</color>
+
+    <!-- FROM OO -->
     <color name="transparent">#00000000</color>
-    <color name="colorPrimary">#A2D709</color>
-    <color name="colorPrimaryDark">#90BF0A</color>
-    <color name="colorAccent">#90BF0A</color>
-
     <color name="color_text_option">#F86903</color>
     <color name="color_item_title">#616161</color>
-    <color name="white">#FFFFFF</color>
 
     <color name="dark_text">#99000000</color>
     <color name="dark_icon">#99000000</color>
@@ -26,8 +54,6 @@
 
     <color name="category_text_active">#90BF0A</color>
     <color name="category_text_inactive">#707070</color>
-
-    <color name="border_gray">#E4E4E4</color>
 
     <color name="gray_category_text">#707070</color>
     <color name="gray_item_details">#466E87</color>
@@ -57,15 +83,7 @@
     <color name="toolbar_skin">#90BF0A</color>
     <color name="toolbar_active_skin">#90BF0A</color>
 
-
     <!-- Button Theme -->
-    <color name="bg_button_ripple">#DBE1EA</color>
-    <color name="bg_button_default">#90BF0A</color>
-    <color name="bg_button_pressed">#A2D709</color>
-
-    <!-- EditText Theme -->
-    <color name="bg_edit_text_ripple">#FFFFFF</color>
-    <color name="bg_edit_text_default">#ECECEC</color>
     <color name="bg_edit_text_focused">#90BF0A</color>
 
     <!-- Chips Theme -->

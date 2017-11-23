@@ -44,6 +44,9 @@ import au.com.dealsdirect.ui.controller.contact.viewcontacts.ViewContactsPresent
 import au.com.dealsdirect.ui.controller.country.CountryMvpPresenter;
 import au.com.dealsdirect.ui.controller.country.CountryMvpView;
 import au.com.dealsdirect.ui.controller.country.CountryPresenter;
+import au.com.dealsdirect.ui.controller.dashboard.DashboardMvpPresenter;
+import au.com.dealsdirect.ui.controller.dashboard.DashboardMvpView;
+import au.com.dealsdirect.ui.controller.dashboard.DashboardPresenter;
 import au.com.dealsdirect.ui.controller.details.DetailsMvpPresenter;
 import au.com.dealsdirect.ui.controller.details.DetailsMvpView;
 import au.com.dealsdirect.ui.controller.details.DetailsPresenter;
@@ -345,5 +348,11 @@ public class ControllerModule {
     @Provides
     MainActivity provideActivity() {
         return ((MainActivity) mController.getActivity());
+    }
+
+    @Provides
+    DashboardMvpPresenter<DashboardMvpView> providePaymentPresenter(DashboardPresenter<DashboardMvpView> presenter) {
+
+        return presenter;
     }
 }

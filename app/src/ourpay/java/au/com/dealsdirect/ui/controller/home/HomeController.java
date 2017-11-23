@@ -31,6 +31,7 @@ import au.com.dealsdirect.ui.controller.account.AccountMvpView;
 import au.com.dealsdirect.ui.controller.checkout.checkout.CheckoutController;
 import au.com.dealsdirect.ui.controller.checkout.paymentsuccess.PaymentSuccessController;
 import au.com.dealsdirect.ui.controller.contact.viewcontacts.ViewContactsController;
+import au.com.dealsdirect.ui.controller.dashboard.DashboardController;
 import au.com.dealsdirect.ui.controller.invite.InviteSendController;
 import au.com.dealsdirect.ui.controller.shops.ShopsController;
 import au.com.dealsdirect.ui.main.MainActivity;
@@ -152,8 +153,8 @@ public class HomeController extends BaseController implements HomeMvpView {
         mContactsRouter = getChildRouter(mContactsContainer);
 
         if (!mContactsRouter.hasRootController()) {
-            mContactsRouter.setRoot(RouterTransaction.with(ViewContactsController.newInstance())
-                    .tag(ViewContactsController.TAG));
+            mContactsRouter.setRoot(RouterTransaction.with(DashboardController.newInstance())
+                    .tag(DashboardController.TAG));
         }
 
         mInvitesRouter = getChildRouter(mInvitesContainer);
@@ -359,19 +360,19 @@ public class HomeController extends BaseController implements HomeMvpView {
     public void showContactController() {
         setVisibleContainer(2);
 
-        if (!mActivity.isAuthorized()) {
-            mActivity.showLoginController(mContactsRouter, new AuthHandler() {
-                @Override
-                public void success() {
-                    resetRouters();
-                }
-
-                @Override
-                public void error() {
-
-                }
-            });
-        }
+//        if (!mActivity.isAuthorized()) {
+//            mActivity.showLoginController(mContactsRouter, new AuthHandler() {
+//                @Override
+//                public void success() {
+//                    resetRouters();
+//                }
+//
+//                @Override
+//                public void error() {
+//
+//                }
+//            });
+//        }
     }
 
     @Override

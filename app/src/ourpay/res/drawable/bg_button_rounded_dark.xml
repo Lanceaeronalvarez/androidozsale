@@ -7,7 +7,7 @@
             <item android:state_enabled="true">
                 <shape android:shape="rectangle">
                     <corners android:radius="8dp"/>
-                    <solid android:color="@color/bg_button_default"/>
+                    <solid android:color="@color/bg_button_pressed"/>
                 </shape>
             </item>
 
@@ -15,7 +15,7 @@
 
                 <shape android:shape="rectangle">
                     <corners android:radius="8dp"/>
-                    <solid android:color="@color/bg_button_pressed"/>
+                    <solid android:color="@color/bg_button_default"/>
                 </shape>
             </item>
 

@@ -9,6 +9,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 
+import au.com.dealsdirect.R;
 import uk.co.chrisjenx.calligraphy.CalligraphyUtils;
 
 /*
@@ -16,6 +17,16 @@ import uk.co.chrisjenx.calligraphy.CalligraphyUtils;
  */
 
 public class TabLayoutUtils {
+
+    public static void setupWithCustomFont(Context context, TabLayout tabLayout, String[] tabTitles, String fontPath) {
+        for (int i = 0; i < tabLayout.getTabCount(); i++) {
+            RelativeLayout tabCustomView = (RelativeLayout) LayoutInflater.from(context).inflate(R.layout.tab_custom_font, null);
+            TextView tabTitle = (TextView) tabCustomView.findViewById(R.id.tab_title);
+            tabTitle.setText(tabTitles[i]);
+            CalligraphyUtils.applyFontToTextView(tabTitle, Typeface.createFromAsset(context.getAssets(), fontPath));
+            tabLayout.getTabAt(i).setCustomView(tabCustomView);
+        }
+    }
 
 //    public static void setupWithLeftIcon(Context context, TabLayout tabLayout, String[] tabTitles, int[] tabIcons) {
 //        for (int i = 0; i < tabTitles.length; i++) {

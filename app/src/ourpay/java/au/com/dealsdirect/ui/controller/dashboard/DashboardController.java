@@ -1,0 +1,131 @@
+package au.com.dealsdirect.ui.controller.dashboard;
+
+import android.os.Bundle;
+import android.support.annotation.NonNull;
+import android.support.design.widget.TabLayout;
+import android.support.v4.view.ViewPager;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+
+import com.bluelinelabs.conductor.Controller;
+import com.bluelinelabs.conductor.Router;
+import com.bluelinelabs.conductor.RouterTransaction;
+import com.bluelinelabs.conductor.support.RouterPagerAdapter;
+
+import javax.inject.Inject;
+
+import au.com.dealsdirect.R;
+import au.com.dealsdirect.data.network.model.Payment;
+import au.com.dealsdirect.ui.base.BaseController;
+import au.com.dealsdirect.ui.controller.dashboard.plans.PastPaymentsController;
+import au.com.dealsdirect.ui.controller.dashboard.plans.PaymentPlansController;
+import au.com.dealsdirect.ui.controller.dashboard.plans.ScheduledPlansController;
+import au.com.dealsdirect.utils.BundleBuilder;
+import au.com.dealsdirect.utils.TabLayoutUtils;
+import butterknife.BindView;
+
+/*
+ * Created by Ayi on 05/06/2017.
+ */
+
+public class DashboardController extends BaseController implements DashboardMvpView {
+
+    public static final String TAG = "DashboardController";
+
+    private static final int PAGE_COUNT = 3;
+
+    @Inject
+    DashboardMvpPresenter<DashboardMvpView> mPresenter;
+
+    @BindView(R.id.controller_payment_tab_layout)
+    TabLayout mTabLayout;
+
+    @BindView(R.id.controller_payment_view_pager)
+    ViewPager mViewPager;
+
+    String[] mTabTitles;
+
+    RouterPagerAdapter mAdapter;
+
+    public static DashboardController newInstance() {
+
+        return new DashboardController(
+                new BundleBuilder(new Bundle())
+                        .build());
+    }
+
+    public DashboardController(Bundle args) {
+        super(args);
+    }
+
+    @NonNull
+    @Override
+    protected View inflateView(@NonNull LayoutInflater inflater, @NonNull ViewGroup container) {
+        View view = inflater.inflate(R.layout.controller_payment, container, false);
+
+        getControllerComponent().inject(this);
+
+        mPresenter.onAttach(this);
+
+        return view;
+    }
+
+    @Override
+    public void onViewBound(@NonNull View view) {
+        super.onViewBound(view);
+
+        setUp(view);
+    }
+
+    @Override
+    protected void setUp(View view) {
+        mTabTitles = new String[]{getString(R.string.payment_plans), getString(R.string.scheduled_plans), getString(R.string.past_payments)};
+        mAdapter = new RouterPagerAdapter(this) {
+            @Override
+            public void configureRouter(@NonNull Router router, int position) {
+                if (!router.hasRootController()) {
+                    Controller page = PaymentPlansController.newInstance();
+                    switch (position) {
+                        case 1:
+                            page = ScheduledPlansController.newInstance();
+                            break;
+                        case 2:
+                            page = PastPaymentsController.newInstance();
+                            break;
+                    }
+                    router.setRoot(RouterTransaction.with(page));
+                }
+            }
+
+            @Override
+            public int getCount() {
+                return PAGE_COUNT;
+            }
+
+            @Override
+            public int getItemPosition(Object object) {
+                return POSITION_NONE;
+            }
+
+            @Override
+            public CharSequence getPageTitle(int position) {
+                return mTabTitles[position];
+            }
+        };
+        mViewPager.setAdapter(mAdapter);
+        mTabLayout.setupWithViewPager(mViewPager, true);
+        TabLayoutUtils.setupWithCustomFont(getActivity(), mTabLayout, mTabTitles, getString(R.string.font_lato_light));
+    }
+
+    @Override
+    public void onDestroyView(@NonNull View view) {
+        mPresenter.onDetach();
+        super.onDestroyView(view);
+    }
+
+    @Override
+    public void showPaymentDetailsController(Payment payment) {
+
+    }
+}
