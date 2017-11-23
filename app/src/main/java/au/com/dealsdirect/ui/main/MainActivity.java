@@ -731,7 +731,7 @@ public class MainActivity extends BaseActivity implements MainMvpView {
         if (mAuthHandler != null)
             mAuthHandler.error();
 
-        CustomAlertDialog.showCustomAlertDialog(this, CustomAlertDialog.CustomDialogIconState.NEGATIVE, message);
+        CustomAlertDialog.showCustomAlertDialog(MainActivity.this, CustomAlertDialog.CustomDialogIconState.NEGATIVE, message);
     }
 
     private void initializeAnalytics() {

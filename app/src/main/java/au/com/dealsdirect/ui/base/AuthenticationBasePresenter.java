@@ -429,7 +429,8 @@ public class AuthenticationBasePresenter<V extends AuthenticationMvpView> implem
         }
 
         getMvpView().hideLoading();
-        getMvpView().showLoginError(throwable.getMessage());
+        // Elv - 11/23/17 - should not display to user any code errors just prompts
+        //getMvpView().showLoginError(throwable.getMessage());
 
         // handle load accounts error here
         if (throwable instanceof ANError) {

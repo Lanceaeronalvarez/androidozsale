@@ -2,6 +2,7 @@ package au.com.dealsdirect.ui.custom;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.drawable.ColorDrawable;
@@ -19,7 +20,7 @@ import android.widget.TextView;
 
 import au.com.dealsdirect.R;
 
-/**
+/*
  * Created by Paul on 7/5/17.
  */
 
@@ -28,7 +29,7 @@ public class CustomAlertDialog {
     private static final int WINDOW_DIM_AMOUNT = 0;
     private static final int DISMISS_DELAY = 2000;
 
-    private static android.support.v7.app.AlertDialog alertDialog;
+    private static AlertDialog alertDialog;
 
     private static int showCount = 0;
 
@@ -42,14 +43,14 @@ public class CustomAlertDialog {
         BOTTOM
     }
 
-    public static android.support.v7.app.AlertDialog showCustomAlertDialogWithTextLink(
+    public static AlertDialog showCustomAlertDialogWithTextLink(
             Activity activity,
             CustomDialogIconState customDialogIconState,
             String description,
             String clickableText,
             View.OnClickListener clickListener) {
 
-        if (alertDialog!=null)
+        if (alertDialog != null)
             alertDialog.dismiss();
 
         LayoutInflater inflater = activity.getLayoutInflater();
@@ -57,12 +58,9 @@ public class CustomAlertDialog {
         @SuppressLint("InflateParams")
         View dialogView = inflater.inflate(R.layout.custom_alert_dialog, null);
 
-        ImageView mDialogIcon =
-                (ImageView) dialogView.findViewById(R.id.dialog_alert_icon);
-        TextView mDialogDescription =
-                (TextView) dialogView.findViewById(R.id.dialog_alert_description);
-        TextView mDialogTextLink =
-                (TextView) dialogView.findViewById(R.id.dialog_alert_clickable_text);
+        ImageView mDialogIcon = dialogView.findViewById(R.id.dialog_alert_icon);
+        TextView mDialogDescription = dialogView.findViewById(R.id.dialog_alert_description);
+        TextView mDialogTextLink = dialogView.findViewById(R.id.dialog_alert_clickable_text);
 
 
         setAlertDialogDrawable(mDialogIcon, customDialogIconState);
@@ -74,9 +72,9 @@ public class CustomAlertDialog {
         mDialogTextLink.setPaintFlags(mDialogTextLink.getPaintFlags() |
                 Paint.UNDERLINE_TEXT_FLAG);
 
-        android.support.v7.app.AlertDialog.Builder builder = new android.support.v7.app.AlertDialog.Builder(activity);
+        AlertDialog.Builder builder = new AlertDialog.Builder(activity.getApplicationContext());
         builder.setView(dialogView);
-        android.support.v7.app.AlertDialog newAlertDialog = builder.create();
+        AlertDialog newAlertDialog = builder.create();
         newAlertDialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
 
         setAlertDialogGravity(newAlertDialog, CustomDialogGravity.TOP);
@@ -87,10 +85,10 @@ public class CustomAlertDialog {
         mDialogTextLink.setOnClickListener(clickListener);
 
         if (showCount != 1) {
-            try{
+            try {
                 newAlertDialog.show();
-            }catch (Exception e){
-                Log.d(CustomAlertDialog.class.getName(),e.getMessage());
+            } catch (Exception e) {
+                Log.d(CustomAlertDialog.class.getName(), e.getMessage());
             }
         }
         showCount = 1;
@@ -105,12 +103,12 @@ public class CustomAlertDialog {
     }
 
 
-    public static android.support.v7.app.AlertDialog showCustomAlertDialog(
+    public static AlertDialog showCustomAlertDialog(
             Activity activity,
             CustomDialogIconState customDialogIconState,
             String description) {
 
-        if (alertDialog!=null)
+        if (alertDialog != null)
             alertDialog.dismiss();
 
         LayoutInflater inflater = activity.getLayoutInflater();
@@ -119,38 +117,38 @@ public class CustomAlertDialog {
         View dialogView = inflater.inflate(R.layout.custom_alert_dialog, null);
 
         ImageView mDialogIcon =
-                (ImageView) dialogView.findViewById(R.id.dialog_alert_icon);
+                dialogView.findViewById(R.id.dialog_alert_icon);
         TextView mDialogDescription =
-                (TextView) dialogView.findViewById(R.id.dialog_alert_description);
+                dialogView.findViewById(R.id.dialog_alert_description);
         TextView mDialogTextLink =
-                (TextView) dialogView.findViewById(R.id.dialog_alert_clickable_text);
+                dialogView.findViewById(R.id.dialog_alert_clickable_text);
 
 
         mDialogTextLink.setVisibility(View.GONE);
         setAlertDialogDrawable(mDialogIcon, customDialogIconState);
         mDialogDescription.setText(description);
 
-        android.support.v7.app.AlertDialog.Builder builder = new android.support.v7.app.AlertDialog.Builder(activity);
+        AlertDialog.Builder builder = new AlertDialog.Builder(activity);
         builder.setView(dialogView);
 
-        android.support.v7.app.AlertDialog newAlertDialog = builder.create();
+        AlertDialog newAlertDialog = builder.create();
         newAlertDialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
 
         setAlertDialogGravity(newAlertDialog, CustomDialogGravity.TOP);
-        newAlertDialog.getWindow()
-                .getAttributes().windowAnimations = R.style.AppearDialog;
+        newAlertDialog.getWindow().getAttributes().windowAnimations = R.style.AppearDialog;
 
         newAlertDialog.getWindow().setDimAmount(WINDOW_DIM_AMOUNT);
-        newAlertDialog.getWindow().setType(WindowManager.LayoutParams.TYPE_TOAST);
+        // Elv - 11/23/17 - this line of code causes dialog not to show for Oreo
+        //newAlertDialog.getWindow().setType(WindowManager.LayoutParams.TYPE_TOAST);
 
 
         if (showCount != 1) {
-            if (activity!=null){
-                try{
+            if (activity != null) {
+                try {
                     newAlertDialog.show();
                     showCount = 1;
-                }catch (Exception e){
-                    Log.d(CustomAlertDialog.class.getName(),e.getMessage());
+                } catch (Exception e) {
+                    Log.d(CustomAlertDialog.class.getName(), e.getMessage());
                 }
             }
         }
@@ -164,7 +162,7 @@ public class CustomAlertDialog {
     }
 
     private static void setAlertDialogGravity(
-            android.support.v7.app.AlertDialog alertDialog,
+            AlertDialog alertDialog,
             CustomDialogGravity customDialogGravity) {
 
         Window window = alertDialog.getWindow();
@@ -216,7 +214,7 @@ public class CustomAlertDialog {
         handler.postDelayed(runnable, DISMISS_DELAY);
     }
 
-    public static void dismissCustomDialog() {
+    private static void dismissCustomDialog() {
         try {
             if ((alertDialog != null) && alertDialog.isShowing()) {
                 alertDialog.dismiss();

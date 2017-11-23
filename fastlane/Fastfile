@@ -25,11 +25,9 @@ BUILD_SECRET = 'e048a220b52f841eef5e6862bc43a56a5a51841da934f1e0b76a5019c630c661
   ruz@apacsale.com,
   michael@smartwave.ph,
   jc@mysale.com,
-  gavin@mysale.com,
   elaine@smartwave.ph,
   chindee@smartwave.ph,
   ejptacc123@gmail.com,
-  Dmitry.Gavrilov@mysale.com
 "'
 
 # You can list more emails here
@@ -52,6 +50,10 @@ BUILD_SECRET = 'e048a220b52f841eef5e6862bc43a56a5a51841da934f1e0b76a5019c630c661
   diofelpallega@mysale.com,
   ayicatimpo@mysale.com,
   JulianPaul@mysale.com
+  ChindeeTubasis@mysale.com
+  MichaelGuiriba@mysale.com
+  EricaPena@mysale.com
+  jc@mysale.com
 "'
 
 default_platform :android
