@@ -12,6 +12,7 @@ import au.com.dealsdirect.data.network.model.saleitems.GetSaleItemsRequest;
 import au.com.dealsdirect.data.network.model.saleitems.GetSaleItemsResponse;
 import au.com.dealsdirect.data.network.model.sorting.SortingResponse;
 import au.com.dealsdirect.ui.base.BasePresenter;
+import au.com.dealsdirect.ui.controller.searchfilter.adapter.SearchTagsAdapter;
 import au.com.dealsdirect.utils.rx.SchedulerProvider;
 import io.reactivex.disposables.CompositeDisposable;
 
@@ -68,8 +69,8 @@ public class SaleItemsPresenter<V extends SaleItemsMvpView> extends BasePresente
     }
 
     @Override
-    public void openCategoriesController() {
-        getMvpView().showCategoriesController();
+    public void showCategoriesController() {
+        getMvpView().onShowCategoriesController();
     }
 
     @Override
@@ -78,8 +79,8 @@ public class SaleItemsPresenter<V extends SaleItemsMvpView> extends BasePresente
     }
 
     @Override
-    public void showSelectedCategoryText() {
-        getMvpView().onShowSelectedCategoryText();
+    public void dismissCategoriesController() {
+        getMvpView().onDismissCategoriesController();
     }
 
     @Override
@@ -114,9 +115,13 @@ public class SaleItemsPresenter<V extends SaleItemsMvpView> extends BasePresente
         getMvpView().onHideTransparentOverlay();
     }
 
+    @Override
+    public SearchTagsAdapter getSearchTagsAdapter() {
+        return getMvpView().onGetSearchTagsAdapter();
+    }
 
     @Override
-    public int getSearchMaxPrice(){
-        return getDataManager().getSearchMaxPrice();
+    public void updateShopFilters() {
+        getMvpView().onUpdateShopFilters();
     }
 }

@@ -21,28 +21,28 @@ public class SearchFilterPresenter<V extends SearchFilterMvpView> extends BasePr
     }
 
     @Override
-    public void onFacetClicked(int position) {
-        getMvpView().showFacetItem(position);
-    }
-
-    @Override
-    public void onFacetItemClicked(Set<Integer> selectPosSet) {
-        getMvpView().updateFacetItemToFilters(selectPosSet);
-    }
-
-    @Override
     public Set<Integer> getOriginalSelectedSet() {
         return getMvpView().getOriginalSelectedSet();
     }
 
     @Override
-    public int getSearchMaxPrice(){
-        return getDataManager().getSearchMaxPrice();
+    public void setActiveTabIndicatorIcons(String facetFilterType) {
+        getMvpView().onSetActiveTabIndicatorIcons(facetFilterType);
     }
 
     @Override
-    public void resetPriceRange() {
-        getMvpView().onResetPriceRange();
+    public void setActiveDefaultTabIcons(String facetFilterType) {
+        getMvpView().onSetActiveDefaultTabIcons(facetFilterType);
+    }
+
+    @Override
+    public void setInactiveDefaultTabIcons(String facetFilterType){
+        getMvpView().onSetInactiveDefaultTabIcons(facetFilterType);
+    }
+
+    @Override
+    public void setFiltersViewPagerCurrentItem(int position) {
+        getMvpView().onSetFiltersViewPagerCurrentItem(position);
     }
 
 }

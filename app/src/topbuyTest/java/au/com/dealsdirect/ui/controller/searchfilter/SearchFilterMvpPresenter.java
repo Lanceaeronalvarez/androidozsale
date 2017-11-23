@@ -10,13 +10,14 @@ import au.com.dealsdirect.ui.base.MvpPresenter;
 
 public interface SearchFilterMvpPresenter<V extends SearchFilterMvpView> extends MvpPresenter<V> {
 
-    void onFacetClicked(int position);
-
-    void onFacetItemClicked(Set<Integer> selectPosSet);
 
     Set<Integer> getOriginalSelectedSet();
 
-    int getSearchMaxPrice();
+    void setActiveTabIndicatorIcons(String facetFilterType);
 
-    void resetPriceRange();
+    void setActiveDefaultTabIcons(String facetFilterType);
+
+    void setInactiveDefaultTabIcons(String facetFilterType);
+
+    void setFiltersViewPagerCurrentItem(int position);
 }

@@ -46,6 +46,7 @@ public class BundleKeys {
     public static final String KEY_SELECTED_FACETS = "KEY_SELECTED_FACETS";
     public static final String KEY_BRAND_LIST = "KEY_BRAND_LIST";
     public static final String KEY_ORIG_SELECTED = "KEY_ORIG_SELECTED";
+    public static final String KEY_CHIP_TO_REMOVE = "KEY_CHIP_TO_REMOVE";
 
     //facet filters
     public static final String FACET_PAYLOAD = "FACET_PAYLOAD";

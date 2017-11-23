@@ -1,7 +1,5 @@
 package au.com.dealsdirect.ui.controller.saleitems;
 
-import android.content.Context;
-import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.PorterDuff;
@@ -18,24 +16,23 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
-import com.bumptech.glide.load.DecodeFormat;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
-import com.bumptech.glide.load.resource.bitmap.BitmapEncoder;
+import com.jakewharton.rxbinding2.view.RxView;
 import com.mysale.genie.animation.AnimationEngine;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 import au.com.dealsdirect.R;
 import au.com.dealsdirect.data.network.model.saleitems.GetSaleItemsResponse;
-import au.com.dealsdirect.ui.controller.categories.CategoriesController;
 import au.com.dealsdirect.ui.main.MainActivity;
 import au.com.dealsdirect.utils.ImageUtils;
 import au.com.dealsdirect.utils.PriceUtils;
 import au.com.dealsdirect.utils.ScreenUtils;
-import au.com.dealsdirect.utils.module.GateKeeper;
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import io.reactivex.android.schedulers.AndroidSchedulers;
 
 /**
  * Created by smartwave on 07/11/2017.
@@ -238,11 +235,14 @@ public class SaleItemsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
             headerImage.setColorFilter(new PorterDuffColorFilter(Color.parseColor("#6c000000"), PorterDuff.Mode.SRC_OVER));
 
 
-            shopTextView.setOnClickListener(v -> {
-                AnimationEngine.Builder.animate(shopTextView).fadeOut().build().start();
-                AnimationEngine.Builder.animate(headerUnderline).fadeOut().build().start();
-                mPresenter.openCategoriesController();
-            });
+            RxView.clicks(shopTextView)
+                    .throttleFirst(1000, TimeUnit.MILLISECONDS)
+                    .observeOn(AndroidSchedulers.mainThread())
+                    .subscribe(action->{
+                        AnimationEngine.Builder.animate(shopTextView).fadeOut().build().start();
+                        AnimationEngine.Builder.animate(headerUnderline).fadeOut().build().start();
+                        mPresenter.showCategoriesController();
+                    });
 
 
         }

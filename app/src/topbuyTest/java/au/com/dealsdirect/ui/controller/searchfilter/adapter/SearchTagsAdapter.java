@@ -1,9 +1,11 @@
 package au.com.dealsdirect.ui.controller.searchfilter.adapter;
 
 import android.content.Context;
+import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.DisplayMetrics;
+import android.util.Pair;
 import android.util.TypedValue;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
@@ -12,13 +14,18 @@ import android.view.ViewGroup;
 import android.view.inputmethod.EditorInfo;
 import android.widget.TextView;
 
+import com.google.gson.Gson;
+import com.mysale.genie.utility.RxBus;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Set;
 
 import au.com.dealsdirect.R;
 import au.com.dealsdirect.ui.controller.saleitems.SaleItemsMvpPresenter;
+import au.com.dealsdirect.ui.controller.searchfilter.facetfilter.FacetFilterMvpPresenter;
 import au.com.dealsdirect.ui.custom.ChipsEditText;
+import au.com.dealsdirect.utils.BundleBuilder;
 import au.com.dealsdirect.utils.BundleKeys;
 
 
@@ -33,6 +40,7 @@ public class SearchTagsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
     private DisplayMetrics mDisplayMetrics;
     private LinearLayoutManager mLayoutManager;
     private SaleItemsMvpPresenter mSaleItemPresenter;
+    private FacetFilterMvpPresenter mFacetFilterPresenter;
     private HashMap<String, Set<Integer>> mPreviousSelectedFacetIndices;
 
     public EditTextViewHolder getEditTextViewHolder() {
@@ -95,6 +103,10 @@ public class SearchTagsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
         return mData;
     }
 
+    public void setFacetFilterPresenter(FacetFilterMvpPresenter facetFilterPresenter){
+        mFacetFilterPresenter = facetFilterPresenter;
+    }
+
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         RecyclerView.ViewHolder vh = null;
@@ -121,12 +133,12 @@ public class SearchTagsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
         if (holder instanceof EditTextViewHolder) {
             EditTextViewHolder vh = (EditTextViewHolder) holder;
 
-            vh.et.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    vh.et.requestFocus();
-                }
-            });
+//            vh.et.setOnClickListener(new View.OnClickListener() {
+//                @Override
+//                public void onClick(View v) {
+//                    vh.et.requestFocus();
+//                }
+//            });
 
             vh.et.setOnFocusChangeListener(new View.OnFocusChangeListener() {
                 @Override
@@ -168,11 +180,11 @@ public class SearchTagsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
 
 //                    mPresenter.getOriginalSelectedSet().remove(chipToBeRemoved.getIndex());
 //                    mLayoutManager.scrollToPosition(dataSize - 1);
-//                    mShopPresenter.updateShopFilters();
+                    mSaleItemPresenter.updateShopFilters();
 
-                    if (chipToBeRemoved.getFilterType().equals(BundleKeys.PRICE_FACETFILTER_NAME)) {
-//                        mPresenter.resetPriceRange();
-                    }
+                    RxBus.instance().post(new BundleBuilder(new Bundle())
+                            .putString(BundleKeys.KEY_CHIP_TO_REMOVE, new Gson().toJson(chipToBeRemoved)).build());
+//
                 }
             });
         }

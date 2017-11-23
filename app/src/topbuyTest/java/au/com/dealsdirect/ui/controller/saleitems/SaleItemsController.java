@@ -1,7 +1,6 @@
 package au.com.dealsdirect.ui.controller.saleitems;
 
 import android.app.Activity;
-import android.content.res.Configuration;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
@@ -42,6 +41,8 @@ import au.com.dealsdirect.ui.base.BaseController;
 import au.com.dealsdirect.ui.controller.categories.CategoriesController;
 import au.com.dealsdirect.ui.controller.saleitemdetails.SaleItemDetailsController;
 import au.com.dealsdirect.ui.controller.searchfilter.SearchFilterController;
+import au.com.dealsdirect.ui.controller.searchfilter.SearchFilterMvpPresenter;
+import au.com.dealsdirect.ui.controller.searchfilter.SearchFilterMvpView;
 import au.com.dealsdirect.ui.controller.searchfilter.ViewPagerBottomSheetBehavior;
 import au.com.dealsdirect.ui.controller.searchfilter.adapter.SearchTagsAdapter;
 import au.com.dealsdirect.ui.controller.searchfilter.adapter.SearchChipModel;
@@ -54,6 +55,7 @@ import au.com.dealsdirect.utils.PaginateUtils;
 import au.com.dealsdirect.utils.module.ControllerFactory;
 import au.com.dealsdirect.utils.module.GateKeeper;
 import butterknife.BindView;
+import butterknife.OnClick;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 
 import static au.com.dealsdirect.utils.ViewUtils.dpToPx;
@@ -66,6 +68,8 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
 
     @Inject
     SaleItemsMvpPresenter<SaleItemsMvpView> mPresenter;
+    @Inject
+    SearchFilterMvpPresenter<SearchFilterMvpView> mSearchFilterPresenter;
 
     @BindView(R.id.sale_items_recyclerview)
     RecyclerView mSaleItemsRecyclerView;
@@ -121,6 +125,8 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
     private boolean isBottomSheetAdjustedHeight = false;
     private boolean isKeyboardOpen = false;
 
+    private boolean isSetupFinished = false;
+
     public static SaleItemsController newInstance() {
         return new SaleItemsController(
                 new BundleBuilder(new Bundle())
@@ -164,16 +170,17 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
     @Override
     protected void onViewBound(@NonNull View view) {
         super.onViewBound(view);
-        mKeyboardHeightProvider = new KeyboardHeightProvider(mActivity);
-        mKeyboardHeightProvider.setKeyboardHeightObserver(this);
-        mKeyboardHeightProvider.start();
         mActivity.setSaleItemsRouter(getRouter());
         setUp(view);
     }
 
-
     @Override
     protected void setUp(View view) {
+
+        mKeyboardHeightProvider = new KeyboardHeightProvider(mActivity);
+        mKeyboardHeightProvider.setKeyboardHeightObserver(this);
+        mKeyboardHeightProvider.start();
+
         mDefaultCategory = getResources().getString(R.string.category_default);
 
         mCartCounter.setText(CartUtil.getCartValue() + "");
@@ -243,6 +250,8 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
                 });
 
         setupBottomSheet();
+
+        isSetupFinished = true;
     }
 
     @Override
@@ -254,7 +263,9 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
     @Override
     protected void onActivityResumed(@NonNull Activity activity) {
         super.onActivityResumed(activity);
-        mKeyboardHeightProvider.setKeyboardHeightObserver(this);
+        if (isSetupFinished) {
+            mKeyboardHeightProvider.setKeyboardHeightObserver(this);
+        }
     }
 
     @Override
@@ -373,7 +384,8 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
     }
 
     @Override
-    public void showCategoriesController() {
+    public void onShowCategoriesController() {
+        mSearchTagsRecyclerView.setEnabled(false);
         mSearchBar.setVisibility(View.GONE);
 
         mCategoriesContainer.setVisibility(View.VISIBLE);
@@ -407,11 +419,27 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
     }
 
     @Override
-    public void onShowSelectedCategoryText() {
+    public SearchTagsAdapter onGetSearchTagsAdapter() {
+        return mSearchTagsAdapter;
+    }
+
+    @Override
+    public void onUpdateShopFilters() {
+        //TODO API CALL FOR CALLING NEW SHOP FILTERS
+    }
+
+    @OnClick(R.id.sale_items_logo)
+    void scrollToTop() {
+        mSaleItemsRecyclerView.smoothScrollToPosition(0);
+    }
+
+    @Override
+    public void onDismissCategoriesController() {
         SaleItemsAdapter.HeaderViewHolder vh = mAdapter.getHeaderViewHolderInstance();
         if (vh != null) {
             vh.showShopCategoryText();
         }
+        mSearchTagsRecyclerView.setEnabled(true);
         mSearchBar.setVisibility(View.VISIBLE);
     }
 
@@ -437,13 +465,14 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
     public void onShowSearchFilters() {
         onShowTransparentOverlay();
         mSearchFilterContainer.bringToFront();
+//        mSearchFilterPresenter.setFiltersViewPagerCurrentItem(0);
+        mSearchFilterController.getTabLayout().getTabAt(0).select();
         mBottomSheetBehavior.setState(ViewPagerBottomSheetBehavior.STATE_EXPANDED);
     }
 
     @Override
     public void onHideSearchFilters() {
         onHideTransparentOverlay();
-
         mBottomSheetBehavior.setState(ViewPagerBottomSheetBehavior.STATE_COLLAPSED);
     }
 
@@ -461,6 +490,8 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
             bundle.putString(BundleKeys.KEY_FACET_STRING, new Gson().toJson(mFacets));
             mSearchFilterController = (SearchFilterController) ControllerFactory.getInstance(GateKeeper.Destination.SEARCH_FILTER, bundle);
             GateKeeper.setRoot(mSearchFilterRouter, GateKeeper.Destination.SEARCH_FILTER, RouterTransaction.with(mSearchFilterController));
+
+//            mSearchFilterPresenter.onAttach((SearchFilterMvpView) GateKeeper.getCurrentControllerOnRouter(mSearchFilterRouter));
         }
     }
 
@@ -582,7 +613,6 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
                     case ViewPagerBottomSheetBehavior.STATE_EXPANDED:
                         mActivity.setDraggableViewPager(false);
                         mIsSearchFiltersShown = true;
-                        mSearchFilterController.getTabLayout().getTabAt(0).select();
                         break;
                     case ViewPagerBottomSheetBehavior.STATE_SETTLING:
                         break;
@@ -618,15 +648,18 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
             isKeyboardOpen = true;
             if (!isBottomSheetAdjustedHeight) {
                 View bottomSheetChild = mSearchFilterContainer.getChildAt(0);
-                ChangeHandlerFrameLayout.LayoutParams params = (ChangeHandlerFrameLayout.LayoutParams) bottomSheetChild.getLayoutParams();
-                params.height = height + dpToPx(50);
-                bottomSheetChild.setLayoutParams(params);
-                mSearchFilterContainer.postDelayed(() -> mSearchFilterContainer.requestLayout(), 500);
-                isBottomSheetAdjustedHeight = true;
-
+                if (bottomSheetChild != null) {
+                    ChangeHandlerFrameLayout.LayoutParams params = (ChangeHandlerFrameLayout.LayoutParams) bottomSheetChild.getLayoutParams();
+                    params.height = height + dpToPx(50);
+                    bottomSheetChild.setLayoutParams(params);
+                    mSearchFilterContainer.postDelayed(() -> mSearchFilterContainer.requestLayout(), 500);
+                    isBottomSheetAdjustedHeight = true;
+                }
             }
         }
     }
+
+
 }
 
 //    private String getFacetFilterType(int position) {
@@ -639,7 +672,7 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
 //            case BundleKeys.SORT_FACETFILTER_NAME:
 //                return mSortingList;
 //            case BundleKeys.CATEGORY_TREE_FACET:
-//                return new ArrayList<>();
+//               return new ArrayList<>();
 //            case BundleKeys.BRANDS_FACETFILTER_NAME:
 //                return mBrandList;
 //            case BundleKeys.SIZES_FACETFILTER_NAME:

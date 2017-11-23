@@ -8,7 +8,6 @@ import android.support.design.widget.CoordinatorLayout;
 import android.support.v4.view.ViewCompat;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -152,7 +151,7 @@ public class CategoriesController extends BaseController
         mSaleItemsPresenter.executeCategoryChangeApiCall(prevChosenCategoryKey);
 
         if (getRouter().getBackstackSize() == 1) {
-            mSaleItemsPresenter.showSelectedCategoryText();
+            mSaleItemsPresenter.dismissCategoriesController();
             getRouter().setPopsLastView(true);
             getRouter().popCurrentController();
             return true;
@@ -351,7 +350,7 @@ public class CategoriesController extends BaseController
                 public void onStateChanged(@NonNull View bottomSheet, int newState) {
                     switch (newState) {
                         case CoordinatorLayoutAsBottomSheetBehavior.STATE_COLLAPSED:
-                            mSaleItemsPresenter.showSelectedCategoryText();
+                            mSaleItemsPresenter.dismissCategoriesController();
 //                            mShopPresenter.showShopCategoryText();
 //                            mShopPresenter.backPress();
                             break;

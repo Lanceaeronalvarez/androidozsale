@@ -8,6 +8,7 @@ import java.util.List;
 import au.com.dealsdirect.data.network.model.saleitems.GetSaleItemsResponse;
 import au.com.dealsdirect.data.network.model.sorting.SortingResponse;
 import au.com.dealsdirect.ui.base.MvpView;
+import au.com.dealsdirect.ui.controller.searchfilter.adapter.SearchTagsAdapter;
 
 /**
  * dp Created by Admin on 6/8/17.
@@ -27,13 +28,13 @@ public interface SaleItemsMvpView extends MvpView{
 
     void onPassFiltersData(Bundle bundle);
 
-    void showCategoriesController();
+    void onShowCategoriesController();
 
     void onCategoryClicked(String chosenCategoryName, int color);
 
     String getChosenCategory();
 
-    void onShowSelectedCategoryText();
+    void onDismissCategoriesController();
 
     void onExecuteCategoryChangeApiCall(String chosenCategoryKey);
 
@@ -46,4 +47,8 @@ public interface SaleItemsMvpView extends MvpView{
     void onHideSearchFilters();
 
     void onShowKeyboard();
+
+    SearchTagsAdapter onGetSearchTagsAdapter();
+
+    void onUpdateShopFilters();
 }

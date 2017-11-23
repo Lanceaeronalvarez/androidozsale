@@ -4,6 +4,7 @@ import android.support.v7.widget.RecyclerView;
 
 import au.com.dealsdirect.data.network.model.saleitems.GetSaleItemsRequest;
 import au.com.dealsdirect.ui.base.MvpPresenter;
+import au.com.dealsdirect.ui.controller.searchfilter.adapter.SearchTagsAdapter;
 
 /**
  * dp Created by Admin on 6/8/17.
@@ -17,11 +18,11 @@ public interface SaleItemsMvpPresenter<V extends SaleItemsMvpView> extends MvpPr
 
     void loadSortingFacets();
 
-    void openCategoriesController();
+    void showCategoriesController();
 
     void categoryClicked(String chosenCategoryName, int color);
 
-    void showSelectedCategoryText();
+    void dismissCategoriesController();
 
     void executeCategoryChangeApiCall(String chosenCategoryKey);
 
@@ -35,5 +36,7 @@ public interface SaleItemsMvpPresenter<V extends SaleItemsMvpView> extends MvpPr
 
     void hideTransparentOverlay();
 
-    int getSearchMaxPrice();
+    SearchTagsAdapter getSearchTagsAdapter();
+
+    void updateShopFilters();
 }

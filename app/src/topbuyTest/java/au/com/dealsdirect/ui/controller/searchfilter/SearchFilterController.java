@@ -3,10 +3,9 @@ package au.com.dealsdirect.ui.controller.searchfilter;
 import android.graphics.PorterDuff;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
-import android.support.design.widget.BottomSheetBehavior;
 import android.support.design.widget.TabLayout;
 import android.support.v4.content.ContextCompat;
-import android.support.v4.util.Pair;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -26,22 +25,14 @@ import java.util.Set;
 import javax.inject.Inject;
 
 import au.com.dealsdirect.R;
-import au.com.dealsdirect.data.network.model.category.GetCategoryTreeResponse;
 import au.com.dealsdirect.data.network.model.saleitems.GetSaleItemsResponse;
-import au.com.dealsdirect.data.network.model.sorting.SortingResponse;
 import au.com.dealsdirect.ui.base.BaseController;
 import au.com.dealsdirect.ui.controller.main.MainCustomViewPager;
 import au.com.dealsdirect.ui.controller.saleitems.SaleItemsMvpPresenter;
 import au.com.dealsdirect.ui.controller.saleitems.SaleItemsMvpView;
-import au.com.dealsdirect.ui.controller.searchfilter.adapter.FacetsAdapter;
-import au.com.dealsdirect.ui.controller.searchfilter.adapter.SearchChipModel;
-import au.com.dealsdirect.ui.controller.searchfilter.adapter.SearchTagsAdapter;
-import au.com.dealsdirect.ui.controller.searchfilter.facetfilter.FacetFilterController;
-import au.com.dealsdirect.ui.main.MainActivity;
 import au.com.dealsdirect.utils.BundleBuilder;
 import au.com.dealsdirect.utils.BundleKeys;
 import au.com.dealsdirect.utils.JsonUtils;
-import au.com.dealsdirect.utils.KeyboardUtils;
 import au.com.dealsdirect.utils.module.ControllerFactory;
 import au.com.dealsdirect.utils.module.GateKeeper;
 import butterknife.BindView;
@@ -149,24 +140,8 @@ public class SearchFilterController extends BaseController
 
 
     @Override
-    public void showFacetItem(int position) {
-
-    }
-
-
-    @Override
-    public void updateFacetItemToFilters(Set<Integer> selectPosSet) {
-
-    }
-
-    @Override
     public Set<Integer> getOriginalSelectedSet() {
         return origSelectedSet;
-    }
-
-    @Override
-    public void onResetPriceRange() {
-
     }
 
     @Override
@@ -230,7 +205,7 @@ public class SearchFilterController extends BaseController
         mTabOnSelectedListener = new TabLayout.OnTabSelectedListener() {
             @Override
             public void onTabSelected(TabLayout.Tab tab) {
-
+                Log.d("tabtab", "selected is " + tab.getPosition());
                 if(tab.getPosition() != 0){
                     hideKeyboard();
                 } else {
@@ -258,6 +233,8 @@ public class SearchFilterController extends BaseController
 
             @Override
             public void onTabUnselected(TabLayout.Tab tab) {
+
+                Log.d("tabtab", "unselected is " + tab.getPosition());
                 if (tab.getIcon() != null) {
                     tab.getIcon().setColorFilter(ContextCompat.getColor(getActivity(), R.color.filter_icon_default), PorterDuff.Mode.SRC_IN);
                 }
@@ -265,6 +242,8 @@ public class SearchFilterController extends BaseController
 
             @Override
             public void onTabReselected(TabLayout.Tab tab) {
+
+                Log.d("tabtab", "reselected is " + tab.getPosition());
 //                if (isKeyboardOpen && tab.getPosition() != 0) {
 //                    imm.hideSoftInputFromWindow(activity.getWindow().getDecorView().getWindowToken(), 0);
 //                }
@@ -335,7 +314,6 @@ public class SearchFilterController extends BaseController
             }
         };
 
-
         mFiltersViewPager.setAdapter(mViewPagerAdapter);
         mFiltersViewPager.setCurrentItem(1);
         mFiltersViewPager.setMyScroller();
@@ -361,6 +339,7 @@ public class SearchFilterController extends BaseController
         }
     }
 
+    @Override
     public void onSetActiveTabIndicatorIcons(String filterFragmentType) {
         switch (mapFilterTypeToFacetName(filterFragmentType)) {
             case BundleKeys.BRANDS_FACETFILTER_NAME:
@@ -393,35 +372,55 @@ public class SearchFilterController extends BaseController
 
     }
 
+    @Override
     public void onSetActiveDefaultTabIcons(String filterFragmentType) {
+
+        TabLayout.Tab tab = onSetInactiveDefaultTabIcons(filterFragmentType);
+        if(tab!=null){
+            tab.getIcon().setColorFilter(ContextCompat.getColor(getActivity(), R.color.bluegreen), PorterDuff.Mode.SRC_IN);
+        }
+    }
+
+    @Override
+    public TabLayout.Tab onSetInactiveDefaultTabIcons(String filterFragmentType) {
+        TabLayout.Tab selectedTab = null;
+
         switch (mapFilterTypeToFacetName(filterFragmentType)) {
+
             case BundleKeys.BRANDS_FACETFILTER_NAME:
-                if (mTabLayout.getTabAt(1) != null) {
-                    mTabLayout.getTabAt(1).setIcon(SearchTabIcons[1]);
-                    mTabLayout.getTabAt(1).getIcon().setColorFilter(ContextCompat.getColor(getActivity(), R.color.bluegreen), PorterDuff.Mode.SRC_IN);
+                selectedTab = mTabLayout.getTabAt(1);
+                if (selectedTab != null) {
+                    selectedTab.setIcon(SearchTabIcons[1]);
                 }
                 break;
             case BundleKeys.COLORS_FACETFILTER_NAME:
-                if (mTabLayout.getTabAt(2) != null) {
-                    mTabLayout.getTabAt(2).setIcon(SearchTabIcons[2]);
-                    mTabLayout.getTabAt(2).getIcon().setColorFilter(ContextCompat.getColor(getActivity(), R.color.bluegreen), PorterDuff.Mode.SRC_IN);
-                }
+                selectedTab = mTabLayout.getTabAt(2);
+                if (selectedTab != null) {
+                    selectedTab.setIcon(SearchTabIcons[2]);
+                  }
                 break;
             case BundleKeys.SIZES_FACETFILTER_NAME:
-                if (mTabLayout.getTabAt(3) != null) {
-                    mTabLayout.getTabAt(3).setIcon(SearchTabIcons[3]);
-                    mTabLayout.getTabAt(3).getIcon().setColorFilter(ContextCompat.getColor(getActivity(), R.color.bluegreen), PorterDuff.Mode.SRC_IN);
+                selectedTab = mTabLayout.getTabAt(3);
+                if (selectedTab != null) {
+                    selectedTab.setIcon(SearchTabIcons[3]);
                 }
                 break;
             case BundleKeys.PRICE_FACETFILTER_NAME:
+                selectedTab = mTabLayout.getTabAt(4);
                 if (mTabLayout.getTabAt(4) != null) {
-                    mTabLayout.getTabAt(4).setIcon(SearchTabIcons[4]);
-                    mTabLayout.getTabAt(4).getIcon().setColorFilter(ContextCompat.getColor(getActivity(), R.color.bluegreen), PorterDuff.Mode.SRC_IN);
+                    selectedTab.setIcon(SearchTabIcons[4]);
                 }
                 break;
             default:
                 break;
         }
+
+        return selectedTab;
+    }
+
+    @Override
+    public void onSetFiltersViewPagerCurrentItem(int position) {
+        mFiltersViewPager.setCurrentItem(position);
     }
 
     public void onShowTabOfSelectedChip(String filterFragmentType) {
