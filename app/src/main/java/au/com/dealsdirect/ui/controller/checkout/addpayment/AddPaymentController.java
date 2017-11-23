@@ -260,8 +260,10 @@ public class AddPaymentController extends BaseController implements AddPaymentMv
     @OnClick(R.id.bt_camera)
     void launchCamera() {
 
-        Answers.getInstance().logCustom(new CustomEvent("Credit Cart Scanning")
-                .putCustomAttribute("Type", "Start"));
+        if(!mPresenter.isDebug()) {
+            Answers.getInstance().logCustom(new CustomEvent("Credit Cart Scanning")
+                    .putCustomAttribute("Type", "Start"));
+        }
 
         mCardForm.scanCard(getActivity());
     }
@@ -271,7 +273,9 @@ public class AddPaymentController extends BaseController implements AddPaymentMv
         //This callback is called when successful CC scanning
 
         mCardForm.getCardEditText().setEnabled(false);
-        Answers.getInstance().logCustom(new CustomEvent("Credit Cart Scanning")
-                .putCustomAttribute("Type", "Success"));
+        if(!mPresenter.isDebug()) {
+            Answers.getInstance().logCustom(new CustomEvent("Credit Cart Scanning")
+                    .putCustomAttribute("Type", "Success"));
+        }
     }
 }

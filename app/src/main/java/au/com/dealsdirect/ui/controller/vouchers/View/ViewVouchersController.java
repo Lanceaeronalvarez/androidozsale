@@ -148,6 +148,7 @@ public class ViewVouchersController extends BasePullToRefreshController implemen
 
     @Override
     public void updateVoucherList(Pair<List<GetUserVoucherResponse.Voucher>, GetVouchersResponse> pair) {
+        hideLoading();
         if (pair.first != null && pair.first.size() != 0) {
             mRootLayout.setVisibility(View.VISIBLE);
             mUnusedVouchersRecyclerView.getLayoutManager().scrollToPosition(0);

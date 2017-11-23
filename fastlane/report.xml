@@ -5,12 +5,12 @@
     
     
       
-      <testcase classname="fastlane.lanes" name="0: Verifying required fastlane version" time="0.007298">
+      <testcase classname="fastlane.lanes" name="0: Verifying required fastlane version" time="0.009501">
         
       </testcase>
     
       
-      <testcase classname="fastlane.lanes" name="1: default_platform" time="0.006398">
+      <testcase classname="fastlane.lanes" name="1: default_platform" time="0.007868">
         
       </testcase>
     
@@ -20,8 +20,10 @@
   elainedizon@mysale.com,
   diofelpallega@mysale.com,
   ayicatimpo@mysale.com,
-  JulianPaul@mysale.com
-&quot; apk_name:app-ooTest-release.apk build_variant:ooTestRelease app_path:/Users/Paul/AndroidDealsDirect app_flavor:ooTest" time="8.091759">
+  JulianPaul@mysale.com,
+  michael@smartwave.ph,
+  jelinepena@gmail.com
+&quot; apk_name:app-ooTest-release.apk build_variant:ooTestRelease app_path:/Users/Paul/AndroidDealsDirect app_flavor:ooTest" time="2021.535744">
         
       </testcase>
     

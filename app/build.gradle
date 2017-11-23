@@ -49,7 +49,7 @@ android {
             buildConfigField "String", "ACCOUNT_ID", "\"A56B0D62-AEF6-4653-848E-2ECDDB6E9B8C\""
         }
 
-        dealsDirectRC {
+        dealsDirectTest {
             versionCode 63
             versionName "2.3"
             applicationId "au.com.dealsdirect.test"
@@ -59,7 +59,7 @@ android {
         }
 
         ooTest {
-            versionCode 1
+            versionCode 3
             versionName "0.9"
             applicationId "au.com.oo.test"
             buildConfigField "String", "API_ROOT", "\"https://genie-ui-oo-pre.mysaledev.com/\""
