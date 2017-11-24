@@ -93,6 +93,7 @@ public class DashboardController extends BaseController implements DashboardMvpV
 
     @Override
     protected void setUp(View view) {
+        mPresenter.getPaymentPlans();
         mTabTitles = new String[]{getString(R.string.payment_plans), getString(R.string.scheduled_plans), getString(R.string.past_payments)};
         mAdapter = new RouterPagerAdapter(this) {
             @Override

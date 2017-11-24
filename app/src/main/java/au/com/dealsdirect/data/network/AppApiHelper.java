@@ -66,6 +66,7 @@ import au.com.dealsdirect.data.network.model.masterpass.MasterPassPaymentRequest
 import au.com.dealsdirect.data.network.model.masterpass.MasterPassPostTransactionRequest;
 import au.com.dealsdirect.data.network.model.orders.GetOrderPaymentDetails;
 import au.com.dealsdirect.data.network.model.orders.GetPaymentsList;
+import au.com.dealsdirect.data.network.model.ourpaydashboard.paymentplans.GetPaymentPlansResponse;
 import au.com.dealsdirect.data.network.model.ourpayverificationcodeconfirm.VerificationCodeConfirmRequest;
 import au.com.dealsdirect.data.network.model.ourpayverificationcodeconfirm.VerificationCodeConfirmResponseBody;
 import au.com.dealsdirect.data.network.model.ourpayverificationnormalizephone.VerificationNormalizePhoneRequest;
@@ -768,6 +769,14 @@ public class AppApiHelper implements ApiHelper {
                 .addJSONObjectBody(JsonUtils.convertToJsonObject(request))
                 .build()
                 .getJSONObjectObservable();
+    }
+
+    @Override
+    public Observable<GetPaymentPlansResponse> callGetPaymentPlans() {
+        return Rx2AndroidNetworking.get(ApiEndPoint.GET_PAYMENT_PLANS)
+                .addHeaders(mApiHeader.get())
+                .build()
+                .getObjectObservable(GetPaymentPlansResponse.class);
     }
 }
 

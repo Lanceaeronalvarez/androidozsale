@@ -73,6 +73,7 @@ import au.com.dealsdirect.data.network.model.masterpass.MasterPassPaymentRequest
 import au.com.dealsdirect.data.network.model.masterpass.MasterPassPostTransactionRequest;
 import au.com.dealsdirect.data.network.model.orders.GetOrderPaymentDetails;
 import au.com.dealsdirect.data.network.model.orders.GetPaymentsList;
+import au.com.dealsdirect.data.network.model.ourpaydashboard.paymentplans.GetPaymentPlansResponse;
 import au.com.dealsdirect.data.network.model.ourpayverificationcodeconfirm.VerificationCodeConfirmRequest;
 import au.com.dealsdirect.data.network.model.ourpayverificationcodeconfirm.VerificationCodeConfirmResponseBody;
 import au.com.dealsdirect.data.network.model.ourpayverificationnormalizephone.VerificationNormalizePhoneRequest;
@@ -476,6 +477,11 @@ public class AppDataManager implements DataManager {
     @Override
     public Observable<JSONObject> callGetPaymentMethodNonce(GetPaymentMethodNonceRequest request) {
         return mApiHelper.callGetPaymentMethodNonce(request);
+    }
+
+    @Override
+    public Observable<GetPaymentPlansResponse> callGetPaymentPlans() {
+        return mApiHelper.callGetPaymentPlans();
     }
 
     @Override

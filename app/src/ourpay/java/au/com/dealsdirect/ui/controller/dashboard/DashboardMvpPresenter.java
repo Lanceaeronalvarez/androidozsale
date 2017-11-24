@@ -7,4 +7,6 @@ package au.com.dealsdirect.ui.controller.dashboard;
 import au.com.dealsdirect.ui.base.MvpPresenter;
 
 public interface DashboardMvpPresenter<V extends DashboardMvpView> extends MvpPresenter<V> {
+
+    void getPaymentPlans();
 }
