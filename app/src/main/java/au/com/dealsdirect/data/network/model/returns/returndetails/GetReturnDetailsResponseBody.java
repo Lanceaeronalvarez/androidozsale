@@ -9,7 +9,7 @@ public class GetReturnDetailsResponseBody {
     @SerializedName("IsAuthenticated")
     @Expose
     private Boolean isAuthenticated;
-    @SerializedName("Value")
+    @SerializedName("ScheduledPayment")
     @Expose
     private Value value;
     @SerializedName("Result")

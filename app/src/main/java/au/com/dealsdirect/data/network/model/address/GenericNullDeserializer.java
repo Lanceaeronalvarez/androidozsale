@@ -36,7 +36,7 @@ public class GenericNullDeserializer<T> implements JsonDeserializer<T> {
                 decorationInfoList.setMinLength(0);
             }
 
-            JsonElement value = jsonObject.get("Value");
+            JsonElement value = jsonObject.get("ScheduledPayment");
             if(value.isJsonNull()){
                 decorationInfoList.setValue("");
             }

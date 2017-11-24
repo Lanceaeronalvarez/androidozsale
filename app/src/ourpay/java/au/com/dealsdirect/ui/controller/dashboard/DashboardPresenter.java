@@ -7,7 +7,9 @@ import javax.inject.Inject;
 
 import au.com.dealsdirect.data.DataManager;
 import au.com.dealsdirect.data.network.AppApiCallback;
+import au.com.dealsdirect.data.network.model.ourpaydashboard.pastpayments.GetPastPaymentsResponse;
 import au.com.dealsdirect.data.network.model.ourpaydashboard.paymentplans.GetPaymentPlansResponse;
+import au.com.dealsdirect.data.network.model.ourpaydashboard.scheduledpayments.GetScheduledPaymentsResponse;
 import au.com.dealsdirect.ui.base.BasePresenter;
 import au.com.dealsdirect.utils.rx.SchedulerProvider;
 import io.reactivex.disposables.CompositeDisposable;
@@ -36,6 +38,7 @@ public class DashboardPresenter<V extends DashboardMvpView> extends BasePresente
             @Override
             public void onSuccess(Object response) {
                 super.onSuccess(response);
+                getMvpView().showScheduledPayments((GetScheduledPaymentsResponse) response);
             }
         });
     }
@@ -46,6 +49,7 @@ public class DashboardPresenter<V extends DashboardMvpView> extends BasePresente
             @Override
             public void onSuccess(Object response) {
                 super.onSuccess(response);
+                getMvpView().showPastPayments((GetPastPaymentsResponse) response);
             }
         });
     }

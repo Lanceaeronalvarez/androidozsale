@@ -20,12 +20,12 @@ public class GetPastPaymentsResponse {
         d.setIsAuthenticated(isAuthenticated);
     }
 
-    public List<Value> getValue() {
-        return d.getValue();
+    public List<PastPayment> getPastPayment() {
+        return d.getPastPayment();
     }
 
-    public void setValue(List<Value> value) {
-        d.setValue(value);
+    public void setPastPayment(List<PastPayment> pastPayment) {
+        d.setPastPayment(pastPayment);
     }
 
     public Boolean getResult() {

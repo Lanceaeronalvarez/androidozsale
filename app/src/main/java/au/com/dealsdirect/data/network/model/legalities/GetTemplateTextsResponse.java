@@ -16,7 +16,7 @@ public class GetTemplateTextsResponse {
     }
 
     public class Response {
-        @SerializedName("Value")
+        @SerializedName("ScheduledPayment")
         @Expose
         private GetTemplateTextsValue value;
 

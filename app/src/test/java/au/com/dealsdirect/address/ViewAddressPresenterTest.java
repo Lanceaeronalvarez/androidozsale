@@ -35,7 +35,7 @@ public class ViewAddressPresenterTest {
     private static final String mMockDefaultResponseSuccess = "{\n" +
             "  \"d\": {\n" +
             "    \"IsAuthenticated\": true,\n" +
-            "    \"Value\": {\n" +
+            "    \"ScheduledPayment\": {\n" +
             "    },\n" +
             "    \"Result\": true,\n" +
             "    \"Message\": \"\"\n" +
@@ -45,7 +45,7 @@ public class ViewAddressPresenterTest {
     private static final String mMockGetUserAddressesResponseFailure = "{\n" +
             "  \"d\": {\n" +
             "    \"IsAuthenticated\": true,\n" +
-            "    \"Value\": {\n" +
+            "    \"ScheduledPayment\": {\n" +
             "    },\n" +
             "    \"Result\": false,\n" +
             "    \"Message\": \"error\"\n" +

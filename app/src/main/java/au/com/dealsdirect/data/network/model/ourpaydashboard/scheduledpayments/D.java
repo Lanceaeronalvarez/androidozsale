@@ -10,9 +10,9 @@ public class D {
     @SerializedName("IsAuthenticated")
     @Expose
     private Boolean isAuthenticated;
-    @SerializedName("Value")
+    @SerializedName("ScheduledPayment")
     @Expose
-    private List<Value> value = null;
+    private List<ScheduledPayment> scheduledPayment = null;
     @SerializedName("Result")
     @Expose
     private Boolean result;
@@ -28,12 +28,12 @@ public class D {
         this.isAuthenticated = isAuthenticated;
     }
 
-    public List<Value> getValue() {
-        return value;
+    public List<ScheduledPayment> getScheduledPayment() {
+        return scheduledPayment;
     }
 
-    public void setValue(List<Value> value) {
-        this.value = value;
+    public void setScheduledPayment(List<ScheduledPayment> scheduledPayment) {
+        this.scheduledPayment = scheduledPayment;
     }
 
     public Boolean getResult() {

@@ -21,7 +21,7 @@ public class VerificationCodeFormat {
     @SerializedName("Class")
     @Expose
     private String _class;
-    @SerializedName("Value")
+    @SerializedName("ScheduledPayment")
     @Expose
     private Object value;
     @SerializedName("MaxLength")

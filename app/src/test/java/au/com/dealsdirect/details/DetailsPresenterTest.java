@@ -42,7 +42,7 @@ public class DetailsPresenterTest {
     String userDetailsResponse = "{\n" +
             "\t\"d\": {\n" +
             "\t\t\"IsAuthenticated\": true,\n" +
-            "\t\t\"Value\": \"81e1949a-3e7f-4a58-84bf-e82ec86d7f18.OQ7^bV^PI6R1pDiYBi6SgrMkhfs_\",\n" +
+            "\t\t\"ScheduledPayment\": \"81e1949a-3e7f-4a58-84bf-e82ec86d7f18.OQ7^bV^PI6R1pDiYBi6SgrMkhfs_\",\n" +
             "\t\t\"Result\": true,\n" +
             "\t\t\"Message\": \"\"\n" +
             "\t}\n" +

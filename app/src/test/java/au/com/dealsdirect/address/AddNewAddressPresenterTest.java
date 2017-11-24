@@ -37,7 +37,7 @@ public class AddNewAddressPresenterTest {
     private static final String setUserAddressMockResponseSuccess = "{\n" +
             "\t\"d\": {\n" +
             "\t\t\"IsAuthenticated\": true,\n" +
-            "\t\t\"Value\": \"09502262-fd7b-4580-a271-08bf291c29b0\",\n" +
+            "\t\t\"ScheduledPayment\": \"09502262-fd7b-4580-a271-08bf291c29b0\",\n" +
             "\t\t\"Result\": true,\n" +
             "\t\t\"Message\": \"\"\n" +
             "\t}\n" +
@@ -45,7 +45,7 @@ public class AddNewAddressPresenterTest {
     private static final String setUserAddressMockResponseError = "{\n" +
             "\t\"d\": {\n" +
             "\t\t\"IsAuthenticated\": true,\n" +
-            "\t\t\"Value\": \"\",\n" +
+            "\t\t\"ScheduledPayment\": \"\",\n" +
             "\t\t\"Result\": false,\n" +
             "\t\t\"Message\": \"An error occured\"\n" +
             "\t}\n" +

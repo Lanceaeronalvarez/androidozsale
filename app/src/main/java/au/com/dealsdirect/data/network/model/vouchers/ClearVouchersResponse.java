@@ -14,7 +14,7 @@ public class ClearVouchersResponse {
 
     public static class Response extends LegacyBaseResponseValue {
 
-        @SerializedName("Value")
+        @SerializedName("ScheduledPayment")
         @Expose
         private Object value;
         public Object getValue() {

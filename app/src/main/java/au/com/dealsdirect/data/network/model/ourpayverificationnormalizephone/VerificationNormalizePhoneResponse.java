@@ -10,7 +10,7 @@ public class VerificationNormalizePhoneResponse {
     @SerializedName("IsAuthenticated")
     private Boolean isAuthenticated;
 
-    @SerializedName("Value")
+    @SerializedName("ScheduledPayment")
     private VerificationNormalizePhoneResponseValue value;
 
     @SerializedName("Result")

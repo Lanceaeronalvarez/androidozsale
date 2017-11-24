@@ -21,8 +21,12 @@ import javax.inject.Inject;
 
 import au.com.dealsdirect.R;
 import au.com.dealsdirect.data.network.model.ourpaydashboard.Payment;
+import au.com.dealsdirect.data.network.model.ourpaydashboard.pastpayments.GetPastPaymentsResponse;
+import au.com.dealsdirect.data.network.model.ourpaydashboard.pastpayments.PastPayment;
 import au.com.dealsdirect.data.network.model.ourpaydashboard.paymentplans.GetPaymentPlansResponse;
 import au.com.dealsdirect.data.network.model.ourpaydashboard.paymentplans.PaymentPlan;
+import au.com.dealsdirect.data.network.model.ourpaydashboard.scheduledpayments.GetScheduledPaymentsResponse;
+import au.com.dealsdirect.data.network.model.ourpaydashboard.scheduledpayments.ScheduledPayment;
 import au.com.dealsdirect.ui.base.BaseController;
 import au.com.dealsdirect.ui.controller.dashboard.plans.PastPaymentsController;
 import au.com.dealsdirect.ui.controller.dashboard.plans.PaymentPlansController;
@@ -64,6 +68,10 @@ public class DashboardController extends BaseController implements DashboardMvpV
 
     List<PaymentPlan> mPaymentPlans;
 
+    List<ScheduledPayment> mScheduledPayments;
+
+    List<PastPayment> mPastPayments;
+
     String[] mTabTitles;
 
     RouterPagerAdapter mAdapter;
@@ -101,6 +109,9 @@ public class DashboardController extends BaseController implements DashboardMvpV
     @Override
     protected void setUp(View view) {
         mPresenter.getPaymentPlans();
+        mPresenter.getPastPayments();
+        mPresenter.getScheduledPayments();
+
         mTabTitles = new String[]{getString(R.string.payment_plans), getString(R.string.scheduled_plans), getString(R.string.past_payments)};
         mAdapter = new RouterPagerAdapter(this) {
             @Override
@@ -153,6 +164,62 @@ public class DashboardController extends BaseController implements DashboardMvpV
         mOverdueText.setText(String.format(Locale.getDefault(), "%d", paymentPlansResponse.getValue().getOverduePlansCount()));
 
         mPaymentPlans = paymentPlansResponse.getValue().getPaymentPlans();
+        refreshPager();
+    }
+
+    @Override
+    public void showScheduledPayments(GetScheduledPaymentsResponse scheduledPaymentsResponse) {
+        mScheduledPayments = scheduledPaymentsResponse.getScheduledPayment();
+        refreshPager();
+    }
+
+    @Override
+    public void showPastPayments(GetPastPaymentsResponse pastPaymentsResponse) {
+        mPastPayments = pastPaymentsResponse.getPastPayment();
+        refreshPager();
+    }
+
+    @Override
+    public void refreshPager() {
+        if (mPaymentPlans == null || mScheduledPayments == null || mPastPayments == null) {
+            return;
+        } else {
+            mAdapter = new RouterPagerAdapter(this) {
+                @Override
+                public void configureRouter(@NonNull Router router, int position) {
+                    if (!router.hasRootController()) {
+                        Controller page = PaymentPlansController.newInstance();
+                        switch (position) {
+                            case 1:
+                                page = ScheduledPlansController.newInstance();
+                                break;
+                            case 2:
+                                page = PastPaymentsController.newInstance();
+                                break;
+                        }
+                        router.setRoot(RouterTransaction.with(page));
+                    }
+                }
+
+                @Override
+                public int getCount() {
+                    return PAGE_COUNT;
+                }
+
+                @Override
+                public int getItemPosition(Object object) {
+                    return POSITION_NONE;
+                }
+
+                @Override
+                public CharSequence getPageTitle(int position) {
+                    return mTabTitles[position];
+                }
+            };
+            mViewPager.setAdapter(mAdapter);
+            mTabLayout.setupWithViewPager(mViewPager, true);
+            TabLayoutUtils.setupWithCustomFont(getActivity(), mTabLayout, mTabTitles, getString(R.string.font_lato_light));
+        }
     }
 
     @Override

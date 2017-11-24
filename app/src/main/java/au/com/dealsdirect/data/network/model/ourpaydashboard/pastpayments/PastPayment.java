@@ -4,7 +4,7 @@ package au.com.dealsdirect.data.network.model.ourpaydashboard.pastpayments;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
-public class Value {
+public class PastPayment {
 
     @SerializedName("PlannedDate")
     @Expose

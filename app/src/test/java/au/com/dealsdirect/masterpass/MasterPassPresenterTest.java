@@ -37,7 +37,7 @@ public class MasterPassPresenterTest {
     private static final String mMockGetMasterpassPaymentResponse = "{\n" +
             "  \"d\": {\n" +
             "    \"IsAuthenticated\": true,\n" +
-            "    \"Value\": {\n" +
+            "    \"ScheduledPayment\": {\n" +
             "      \"PaymentURL\": \"http://testpayment.com\"\n" +
             "    },\n" +
             "    \"Result\": true,\n" +
@@ -48,7 +48,7 @@ public class MasterPassPresenterTest {
     private static final String mMockConfirmPaymentResponse = "{\n" +
             "  \"d\": {\n" +
             "    \"IsAuthenticated\": true,\n" +
-            "    \"Value\": {\n" +
+            "    \"ScheduledPayment\": {\n" +
             "      \"invoiceNo\" : \"12345678\",\n" +
             "      \"AddressString\" : \"test address\",\n" +
             "      \"EstimatedDeliveryText\" : \"01/01/2001\",\n" +

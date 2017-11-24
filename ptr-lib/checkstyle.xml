@@ -10,12 +10,12 @@
 
     <!-- Trailing spaces -->
     <module name="RegexpSingleline">
-        <property name="format" value="\s+$"/>
-        <property name="message" value="Line has trailing spaces."/>
+        <property name="format" scheduledPayment="\s+$"/>
+        <property name="message" scheduledPayment="Line has trailing spaces."/>
     </module>
 
     <module name="TreeWalker">
-        <property name="cacheFile" value="${checkstyle.cache.file}"/>
+        <property name="cacheFile" scheduledPayment="${checkstyle.cache.file}"/>
 
         <!-- Checks for Javadoc comments.                     -->
         <!-- See http://checkstyle.sf.net/config_javadoc.html -->

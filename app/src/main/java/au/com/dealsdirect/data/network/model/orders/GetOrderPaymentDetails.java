@@ -44,7 +44,7 @@ public class GetOrderPaymentDetails {
                 return value;
             }
 
-            @SerializedName("Value")
+            @SerializedName("ScheduledPayment")
             @Expose
             private Value value;
 

@@ -38,7 +38,7 @@ public class LoginPresenterTest {
     private static final String mMockLoginResponse = "{\n" +
             "\t\"d\": {\n" +
             "\t\t\"IsAuthenticated\": true,\n" +
-            "\t\t\"Value\": {\n" +
+            "\t\t\"ScheduledPayment\": {\n" +
             "\t\t\t\"Ticket\": \"46375e5a-23bb-498a-8c5a-749b46e8418c.^ChtwbwjF4flvkAfwhgw-gW3ZRo_\",\n" +
             "\t\t\t\"ReadTerms\": false\n" +
             "\t\t},\n" +

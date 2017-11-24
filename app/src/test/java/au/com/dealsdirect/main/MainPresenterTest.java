@@ -53,7 +53,7 @@ public class MainPresenterTest {
 
     private static final String mMockGetServerSettingsResponse = "{\n" +
             "  \"d\": {\n" +
-            "    \"Value\": {\n" +
+            "    \"ScheduledPayment\": {\n" +
             "      \"Country\": {\n" +
             "        \"ID\": \"DA\",\n" +
             "        \"Iso\": \"AU\",\n" +
@@ -141,7 +141,7 @@ public class MainPresenterTest {
     private static final String mMockGetAppSettingsResponse = "{\n" +
             "  \"d\": {\n" +
             "    \"IsAuthenticated\": true,\n" +
-            "    \"Value\": {\n" +
+            "    \"ScheduledPayment\": {\n" +
             "      \"Country\": {\n" +
             "        \"ID\": \"DA\",\n" +
             "        \"Iso\": \"AU\",\n" +
@@ -255,7 +255,7 @@ public class MainPresenterTest {
     private static final String mMockGetPaymentTokenResponse = "{\n" +
             "  \"d\": {\n" +
             "    \"IsAuthenticated\": true,\n" +
-            "    \"Value\": {\n" +
+            "    \"ScheduledPayment\": {\n" +
             "    },\n" +
             "    \"Result\": true,\n" +
             "    \"Message\": \"\"\n" +
@@ -265,7 +265,7 @@ public class MainPresenterTest {
     private static final String mMockGetPaymentMethodNonce = "{\n" +
             "  \"d\": {\n" +
             "    \"IsAuthenticated\": true,\n" +
-            "    \"Value\": {\n" +
+            "    \"ScheduledPayment\": {\n" +
             "      \"Nonce\": \"testNonce\"\n" +
             "    },\n" +
             "    \"Result\": true,\n" +
@@ -276,7 +276,7 @@ public class MainPresenterTest {
     private static final String mMockCreatePaymentTxnSuccess = "{\n" +
             "  \"d\": {\n" +
             "    \"IsAuthenticated\": true,\n" +
-            "    \"Value\": {},\n" +
+            "    \"ScheduledPayment\": {},\n" +
             "    \"Result\": true,\n" +
             "    \"Message\": \"\"\n" +
             "  }\n" +
@@ -285,7 +285,7 @@ public class MainPresenterTest {
     private final String mMockCreatePaymentTxnFailure = "{\n" +
             "  \"d\": {\n" +
             "    \"IsAuthenticated\": true,\n" +
-            "    \"Value\": {},\n" +
+            "    \"ScheduledPayment\": {},\n" +
             "    \"Result\": false,\n" +
             "    \"Message\": \"error\"\n" +
             "  }\n" +
@@ -294,7 +294,7 @@ public class MainPresenterTest {
     private final String mMockCreatePaymentMethodSuccess = "{\n" +
             "  \"d\": {\n" +
             "    \"IsAuthenticated\": true,\n" +
-            "    \"Value\": {\n" +
+            "    \"ScheduledPayment\": {\n" +
             "      \"PaymentMethods\": [\n" +
             "        {\n" +
             "          \"PaymentType\": \"Visa\",\n" +
@@ -313,7 +313,7 @@ public class MainPresenterTest {
     private final String mMockCreatePaymentMethodFailure = "{\n" +
             "  \"d\": {\n" +
             "    \"IsAuthenticated\": false,\n" +
-            "    \"Value\": {\n" +
+            "    \"ScheduledPayment\": {\n" +
             "      \"PaymentMethods\": [\n" +
             "        {\n" +
             "          \"PaymentType\": \"Visa\",\n" +
@@ -332,7 +332,7 @@ public class MainPresenterTest {
     private static final String mMockCallLoginTicketResponse = "{\n" +
             "  \"d\": {\n" +
             "    \"IsAuthenticated\": true,\n" +
-            "    \"Value\": {},\n" +
+            "    \"ScheduledPayment\": {},\n" +
             "    \"Result\": true,\n" +
             "    \"Message\": \"\"\n" +
             "  }\n" +
@@ -340,7 +340,7 @@ public class MainPresenterTest {
 
     private static final String mMockGetTemplateTextsResponse = "{\n" +
             "  \"d\": {\n" +
-            "    \"Value\": {\n" +
+            "    \"ScheduledPayment\": {\n" +
             "    }\n" +
             "  }\n" +
             "}";
@@ -474,7 +474,7 @@ public class MainPresenterTest {
 
         String nonceString = "";
         try {
-            nonceString = jo.getJSONObject("d").getJSONObject("Value").getString("Nonce");
+            nonceString = jo.getJSONObject("d").getJSONObject("ScheduledPayment").getString("Nonce");
         }catch (Exception e){
 
         }

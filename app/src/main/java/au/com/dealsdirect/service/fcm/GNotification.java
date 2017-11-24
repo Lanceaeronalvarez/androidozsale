@@ -72,8 +72,8 @@ public class GNotification {
 //                    @Override
 //                    public void accept(@NonNull RegisterDevice.ResponseValue responseValue) throws Exception {
 //
-//                        mDataManager.setIsGCMRegistered(responseValue.getD().getValue().getRegistered());
-//                        AppLogger.d(TAG, "Device Registered to FCM and APAC Server: " + responseValue.getD().getValue().getRegistered());
+//                        mDataManager.setIsGCMRegistered(responseValue.getD().getScheduledPayment().getRegistered());
+//                        AppLogger.d(TAG, "Device Registered to FCM and APAC Server: " + responseValue.getD().getScheduledPayment().getRegistered());
 //
 //                    }
 //                }, new Consumer<Throwable>() {

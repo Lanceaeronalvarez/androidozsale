@@ -398,11 +398,11 @@
 //    public String getUrl() {
 //        String tempUrl = mUrl;
 //        for (HashMap.Entry<String, String> entry : mPathParameterMap.entrySet()) {
-//            tempUrl = tempUrl.replace("{" + entry.getKey() + "}", String.valueOf(entry.getValue()));
+//            tempUrl = tempUrl.replace("{" + entry.getKey() + "}", String.valueOf(entry.getScheduledPayment()));
 //        }
 //        HttpUrl.Builder urlBuilder = HttpUrl.parse(tempUrl).newBuilder();
 //        for (HashMap.Entry<String, String> entry : mQueryParameterMap.entrySet()) {
-//            urlBuilder.addQueryParameter(entry.getKey(), entry.getValue());
+//            urlBuilder.addQueryParameter(entry.getKey(), entry.getScheduledPayment());
 //        }
 //        return urlBuilder.build().toString();
 //    }
@@ -811,10 +811,10 @@
 //            FormBody.Builder builder = new FormBody.Builder();
 //            try {
 //                for (HashMap.Entry<String, String> entry : mBodyParameterMap.entrySet()) {
-//                    builder.add(entry.getKey(), entry.getValue());
+//                    builder.add(entry.getKey(), entry.getScheduledPayment());
 //                }
 //                for (HashMap.Entry<String, String> entry : mUrlEncodedFormBodyParameterMap.entrySet()) {
-//                    builder.addEncoded(entry.getKey(), entry.getValue());
+//                    builder.addEncoded(entry.getKey(), entry.getScheduledPayment());
 //                }
 //            } catch (Exception e) {
 //                e.printStackTrace();
@@ -831,12 +831,12 @@
 //            for (HashMap.Entry<String, String> entry : mMultiPartParameterMap.entrySet()) {
 //                builder.addPart(Headers.of("Content-Disposition",
 //                        "form-data; name=\"" + entry.getKey() + "\""),
-//                        RequestBody.create(null, entry.getValue()));
+//                        RequestBody.create(null, entry.getScheduledPayment()));
 //            }
 //            for (HashMap.Entry<String, File> entry : mMultiPartFileMap.entrySet()) {
-//                String fileName = entry.getValue().getName();
+//                String fileName = entry.getScheduledPayment().getName();
 //                RequestBody fileBody = RequestBody.create(MediaType.parse(Utils.getMimeType(fileName)),
-//                        entry.getValue());
+//                        entry.getScheduledPayment());
 //                builder.addPart(Headers.of("Content-Disposition",
 //                        "form-data; name=\"" + entry.getKey() + "\"; filename=\"" + fileName + "\""),
 //                        fileBody);
@@ -851,7 +851,7 @@
 //        Headers.Builder builder = new Headers.Builder();
 //        try {
 //            for (HashMap.Entry<String, String> entry : mHeadersMap.entrySet()) {
-//                builder.add(entry.getKey(), entry.getValue());
+//                builder.add(entry.getKey(), entry.getScheduledPayment());
 //            }
 //        } catch (Exception e) {
 //            e.printStackTrace();

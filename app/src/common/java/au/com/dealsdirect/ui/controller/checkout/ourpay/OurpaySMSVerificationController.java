@@ -168,7 +168,7 @@ public class OurpaySMSVerificationController extends BaseController implements O
         if(!response.getVerificationNormalizePhoneResponse().getResult()||!response.getVerificationNormalizePhoneResponse().getIsAuthenticated()) {
             CustomAlertDialog.showCustomAlertDialog(mActivity, CustomAlertDialog.CustomDialogIconState.NEGATIVE, response.getVerificationNormalizePhoneResponse().getValue().getErrorMessage());
         }else{
-//            Log.d("smsverification", response.getVerificationNormalizePhoneResponse().getValue().getErrorMessage()+" , "+response.getVerificationNormalizePhoneResponse().getMessage());
+//            Log.d("smsverification", response.getVerificationNormalizePhoneResponse().getScheduledPayment().getErrorMessage()+" , "+response.getVerificationNormalizePhoneResponse().getMessage());
             if (!response.getVerificationNormalizePhoneResponse().getValue().getErrorMessage().isEmpty()) {
                 setPhoneError(response.getVerificationNormalizePhoneResponse().getValue().getErrorMessage());
             } else {

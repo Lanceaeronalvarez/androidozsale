@@ -9,7 +9,7 @@ public class D {
     @SerializedName("IsAuthenticated")
     @Expose
     private Boolean isAuthenticated;
-    @SerializedName("Value")
+    @SerializedName("ScheduledPayment")
     @Expose
     private Value value;
     @SerializedName("Result")

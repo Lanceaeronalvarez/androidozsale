@@ -11,7 +11,7 @@ public class ApplyVouchersResponse {
 
     public static class Response extends LegacyBaseResponseValue {
 
-        @SerializedName("Value")
+        @SerializedName("ScheduledPayment")
         @Expose
         public Value value;
     }

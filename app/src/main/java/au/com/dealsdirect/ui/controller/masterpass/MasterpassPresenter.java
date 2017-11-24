@@ -45,7 +45,7 @@ public class MasterpassPresenter<V extends MasterpassMvpView> extends BasePresen
 
                     if (jsonResponse.getBoolean("Result") && jsonResponse.getBoolean("IsAuthenticated")) {
 
-                        String paymentUrl = jsonResponse.getJSONObject("Value").getString("PaymentURL");
+                        String paymentUrl = jsonResponse.getJSONObject("ScheduledPayment").getString("PaymentURL");
                         try {
                             URL url = new URL(paymentUrl);
                             getMvpView().loadMasterpassUrl(paymentUrl, url.getHost());
@@ -86,10 +86,10 @@ public class MasterpassPresenter<V extends MasterpassMvpView> extends BasePresen
 
                     if (jsonResponse.getBoolean("Result") && jsonResponse.getBoolean("IsAuthenticated")) {
 
-                        String invoiceNo = jsonResponse.getJSONObject("Value").getString("invoiceNo");
-                        String address = jsonResponse.getJSONObject("Value").getString("AddressString");
-                        String delivery = jsonResponse.getJSONObject("Value").getString("EstimatedDeliveryText");
-                        String price = String.valueOf(jsonResponse.getJSONObject("Value").getJSONObject("OrderInfoResult").getDouble("Total"));
+                        String invoiceNo = jsonResponse.getJSONObject("ScheduledPayment").getString("invoiceNo");
+                        String address = jsonResponse.getJSONObject("ScheduledPayment").getString("AddressString");
+                        String delivery = jsonResponse.getJSONObject("ScheduledPayment").getString("EstimatedDeliveryText");
+                        String price = String.valueOf(jsonResponse.getJSONObject("ScheduledPayment").getJSONObject("OrderInfoResult").getDouble("Total"));
                         getMvpView().showPaymentSuccess(address, price, invoiceNo, delivery);
 
                     } else {

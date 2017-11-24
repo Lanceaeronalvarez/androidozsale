@@ -20,12 +20,12 @@ public class GetScheduledPaymentsResponse {
         d.setIsAuthenticated(isAuthenticated);
     }
 
-    public List<Value> getValue() {
-        return d.getValue();
+    public List<ScheduledPayment> getScheduledPayment() {
+        return d.getScheduledPayment();
     }
 
-    public void setValue(List<Value> value) {
-        d.setValue(value);
+    public void setScheduledPayment(List<ScheduledPayment> scheduledPayment) {
+        d.setScheduledPayment(scheduledPayment);
     }
 
     public Boolean getResult() {
