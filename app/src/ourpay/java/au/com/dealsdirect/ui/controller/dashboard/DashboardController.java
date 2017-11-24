@@ -14,6 +14,7 @@ import com.bluelinelabs.conductor.Router;
 import com.bluelinelabs.conductor.RouterTransaction;
 import com.bluelinelabs.conductor.support.RouterPagerAdapter;
 
+import java.util.List;
 import java.util.Locale;
 
 import javax.inject.Inject;
@@ -21,6 +22,7 @@ import javax.inject.Inject;
 import au.com.dealsdirect.R;
 import au.com.dealsdirect.data.network.model.ourpaydashboard.Payment;
 import au.com.dealsdirect.data.network.model.ourpaydashboard.paymentplans.GetPaymentPlansResponse;
+import au.com.dealsdirect.data.network.model.ourpaydashboard.paymentplans.PaymentPlan;
 import au.com.dealsdirect.ui.base.BaseController;
 import au.com.dealsdirect.ui.controller.dashboard.plans.PastPaymentsController;
 import au.com.dealsdirect.ui.controller.dashboard.plans.PaymentPlansController;
@@ -59,6 +61,8 @@ public class DashboardController extends BaseController implements DashboardMvpV
 
     @BindView(R.id.controller_payment_dashboard_overdue_text)
     TextView mOverdueText;
+
+    List<PaymentPlan> mPaymentPlans;
 
     String[] mTabTitles;
 
@@ -147,6 +151,8 @@ public class DashboardController extends BaseController implements DashboardMvpV
         mBalanceText.setText(String.format(Locale.getDefault(), "%f", paymentPlansResponse.getValue().getRemainingBalance()));
         mCreditText.setText(String.format(Locale.getDefault(), "%f", paymentPlansResponse.getValue().getRemainingCredit()));
         mOverdueText.setText(String.format(Locale.getDefault(), "%d", paymentPlansResponse.getValue().getOverduePlansCount()));
+
+        mPaymentPlans = paymentPlansResponse.getValue().getPaymentPlans();
     }
 
     @Override
