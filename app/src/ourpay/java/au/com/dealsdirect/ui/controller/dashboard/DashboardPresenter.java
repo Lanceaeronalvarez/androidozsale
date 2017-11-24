@@ -29,4 +29,24 @@ public class DashboardPresenter<V extends DashboardMvpView> extends BasePresente
             }
         });
     }
+
+    @Override
+    public void getScheduledPayments() {
+        doApiCallForResponse(getDataManager().callGetScheduledPayments(), new AppApiCallback(){
+            @Override
+            public void onSuccess(Object response) {
+                super.onSuccess(response);
+            }
+        });
+    }
+
+    @Override
+    public void getPastPayments() {
+        doApiCallForResponse(getDataManager().callGetPastPayments(), new AppApiCallback(){
+            @Override
+            public void onSuccess(Object response) {
+                super.onSuccess(response);
+            }
+        });
+    }
 }

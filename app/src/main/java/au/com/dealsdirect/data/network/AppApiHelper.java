@@ -66,7 +66,9 @@ import au.com.dealsdirect.data.network.model.masterpass.MasterPassPaymentRequest
 import au.com.dealsdirect.data.network.model.masterpass.MasterPassPostTransactionRequest;
 import au.com.dealsdirect.data.network.model.orders.GetOrderPaymentDetails;
 import au.com.dealsdirect.data.network.model.orders.GetPaymentsList;
+import au.com.dealsdirect.data.network.model.ourpaydashboard.pastpayments.GetPastPaymentsResponse;
 import au.com.dealsdirect.data.network.model.ourpaydashboard.paymentplans.GetPaymentPlansResponse;
+import au.com.dealsdirect.data.network.model.ourpaydashboard.scheduledpayments.GetScheduledPaymentsResponse;
 import au.com.dealsdirect.data.network.model.ourpayverificationcodeconfirm.VerificationCodeConfirmRequest;
 import au.com.dealsdirect.data.network.model.ourpayverificationcodeconfirm.VerificationCodeConfirmResponseBody;
 import au.com.dealsdirect.data.network.model.ourpayverificationnormalizephone.VerificationNormalizePhoneRequest;
@@ -777,6 +779,22 @@ public class AppApiHelper implements ApiHelper {
                 .addHeaders(mApiHeader.get())
                 .build()
                 .getObjectObservable(GetPaymentPlansResponse.class);
+    }
+
+    @Override
+    public Observable<GetScheduledPaymentsResponse> callGetScheduledPayments() {
+        return Rx2AndroidNetworking.get(ApiEndPoint.GET_SCHEDULED_PAYMENTS)
+                .addHeaders(mApiHeader.get())
+                .build()
+                .getObjectObservable(GetScheduledPaymentsResponse.class);
+    }
+
+    @Override
+    public Observable<GetPastPaymentsResponse> callGetPastPayments() {
+        return Rx2AndroidNetworking.get(ApiEndPoint.GET_PAST_PAYMENTS)
+                .addHeaders(mApiHeader.get())
+                .build()
+                .getObjectObservable(GetPastPaymentsResponse.class);
     }
 }
 
