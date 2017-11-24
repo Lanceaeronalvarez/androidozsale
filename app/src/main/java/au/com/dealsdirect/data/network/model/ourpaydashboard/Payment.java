@@ -1,4 +1,4 @@
-package au.com.dealsdirect.data.network.model;
+package au.com.dealsdirect.data.network.model.ourpaydashboard;
 
 import android.os.Parcel;
 import android.os.Parcelable;

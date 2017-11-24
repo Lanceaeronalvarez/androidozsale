@@ -4,7 +4,7 @@ package au.com.dealsdirect.ui.controller.dashboard;
  */
 
 
-import au.com.dealsdirect.data.network.model.Payment;
+import au.com.dealsdirect.data.network.model.ourpaydashboard.Payment;
 import au.com.dealsdirect.ui.base.MvpView;
 
 public interface DashboardMvpView extends MvpView {

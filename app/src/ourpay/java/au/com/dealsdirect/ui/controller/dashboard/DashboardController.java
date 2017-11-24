@@ -17,7 +17,7 @@ import com.bluelinelabs.conductor.support.RouterPagerAdapter;
 import javax.inject.Inject;
 
 import au.com.dealsdirect.R;
-import au.com.dealsdirect.data.network.model.Payment;
+import au.com.dealsdirect.data.network.model.ourpaydashboard.Payment;
 import au.com.dealsdirect.ui.base.BaseController;
 import au.com.dealsdirect.ui.controller.dashboard.plans.PastPaymentsController;
 import au.com.dealsdirect.ui.controller.dashboard.plans.PaymentPlansController;
