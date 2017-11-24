@@ -14,7 +14,9 @@ import javax.inject.Inject;
 
 import au.com.dealsdirect.R;
 import au.com.dealsdirect.data.network.model.ourpaydashboard.Payment;
+import au.com.dealsdirect.data.network.model.ourpaydashboard.paymentplans.GetPaymentPlansResponse;
 import au.com.dealsdirect.ui.base.BaseController;
+import au.com.dealsdirect.ui.controller.dashboard.DashboardController;
 import au.com.dealsdirect.ui.controller.dashboard.DashboardMvpPresenter;
 import au.com.dealsdirect.ui.controller.dashboard.DashboardMvpView;
 import au.com.dealsdirect.utils.BundleBuilder;
@@ -88,9 +90,12 @@ public class PaymentPlansController extends BaseController implements DashboardM
     }
 
     @Override
+    public void showPaymentPlans(GetPaymentPlansResponse paymentPlansResponse) {
+
+    }
+
+    @Override
     public void showPaymentDetailsController(Payment payment) {
-//        getParentRouter().pushController(RouterTransaction.with(PaymentDetailsController.newInstance(payment))
-//                .pushChangeHandler(new HorizontalChangeHandler())
-//                .popChangeHandler(new HorizontalChangeHandler()));
+
     }
 }

@@ -10,44 +10,36 @@ public class GetPaymentPlansResponse {
     @Expose
     private D d;
 
-    public D getD() {
-        return d;
-    }
-
-    public void setD(D d) {
-        this.d = d;
-    }
-
     public Boolean getIsAuthenticated() {
-        return getD().getIsAuthenticated();
+        return d.getIsAuthenticated();
     }
 
     public void setIsAuthenticated(Boolean isAuthenticated) {
-        getD().setIsAuthenticated(isAuthenticated);
+        d.setIsAuthenticated(isAuthenticated);
     }
 
     public Value getValue() {
-        return getD().getValue();
+        return d.getValue();
     }
 
     public void setValue(Value value) {
-        getD().setValue(value);
+        d.setValue(value);
     }
 
     public Boolean getResult() {
-        return getD().getResult();
+        return d.getResult();
     }
 
     public void setResult(Boolean result) {
-        getD().setResult(result);
+        d.setResult(result);
     }
 
     public String getMessage() {
-        return getD().getMessage();
+        return d.getMessage();
     }
 
     public void setMessage(String message) {
-        getD().setMessage(message);
+        d.setMessage(message);
     }
 
 }

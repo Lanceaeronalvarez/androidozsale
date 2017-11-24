@@ -14,10 +14,13 @@ import com.bluelinelabs.conductor.Router;
 import com.bluelinelabs.conductor.RouterTransaction;
 import com.bluelinelabs.conductor.support.RouterPagerAdapter;
 
+import java.util.Locale;
+
 import javax.inject.Inject;
 
 import au.com.dealsdirect.R;
 import au.com.dealsdirect.data.network.model.ourpaydashboard.Payment;
+import au.com.dealsdirect.data.network.model.ourpaydashboard.paymentplans.GetPaymentPlansResponse;
 import au.com.dealsdirect.ui.base.BaseController;
 import au.com.dealsdirect.ui.controller.dashboard.plans.PastPaymentsController;
 import au.com.dealsdirect.ui.controller.dashboard.plans.PaymentPlansController;
@@ -136,6 +139,14 @@ public class DashboardController extends BaseController implements DashboardMvpV
     public void onDestroyView(@NonNull View view) {
         mPresenter.onDetach();
         super.onDestroyView(view);
+    }
+
+    @Override
+    public void showPaymentPlans(GetPaymentPlansResponse paymentPlansResponse) {
+        mActiveText.setText((String.format(Locale.getDefault(), "%d", paymentPlansResponse.getValue().getActivePlansCount())));
+        mBalanceText.setText(String.format(Locale.getDefault(), "%f", paymentPlansResponse.getValue().getRemainingBalance()));
+        mCreditText.setText(String.format(Locale.getDefault(), "%f", paymentPlansResponse.getValue().getRemainingCredit()));
+        mOverdueText.setText(String.format(Locale.getDefault(), "%d", paymentPlansResponse.getValue().getOverduePlansCount()));
     }
 
     @Override
