@@ -100,7 +100,7 @@ public class ControllerFactory {
             case ORDER_DETAILS:
                 break;
             case SEARCH_FILTER:
-                break;
+                return SearchFilterController.newInstance();
             case LEGALITIES:
                 break;
             case LANGUAGE:

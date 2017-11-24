@@ -125,21 +125,24 @@ public class MainActivity extends BaseActivity implements MainMvpView {
                 break;
             case 1: //sale items
 
-                SaleItemsController saleItemsController = (SaleItemsController) GateKeeper.getCurrentControllerOnRouter(getSaleItemsRouter());
-                if (!saleItemsController.isSearchFiltersShown() && getSaleItemsRouter().getBackstackSize() == 1) {
-                    //exit app
-                    DialogUtils.showYesNoDialog(
-                            this,
-                            getString(R.string.exit_app_name),
-                            getString(R.string.exit_app),
-                            getString(R.string.exit),
-                            getString(R.string.no),
-                            (dialogInterface, i) -> finish(),
-                            (dialogInterface, i) -> {
-                            });
+                Controller controller = GateKeeper.getCurrentControllerOnRouter(getSaleItemsRouter());
+                if (controller instanceof SaleItemsController) {
+                    if (!((SaleItemsController) controller).isSearchFiltersShown() && getSaleItemsRouter().getBackstackSize() == 1) {
+                        //exit app
+                        DialogUtils.showYesNoDialog(
+                                this,
+                                getString(R.string.exit_app_name),
+                                getString(R.string.exit_app),
+                                getString(R.string.exit),
+                                getString(R.string.no),
+                                (dialogInterface, i) -> finish(),
+                                (dialogInterface, i) -> {
+                                });
+                    }
                 } else {
                     getSaleItemsRouter().handleBack();
                 }
+
                 break;
 
 

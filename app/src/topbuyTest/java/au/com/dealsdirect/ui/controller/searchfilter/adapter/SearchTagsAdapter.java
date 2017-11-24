@@ -5,7 +5,6 @@ import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.DisplayMetrics;
-import android.util.Pair;
 import android.util.TypedValue;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
@@ -15,18 +14,19 @@ import android.view.inputmethod.EditorInfo;
 import android.widget.TextView;
 
 import com.google.gson.Gson;
+import com.jakewharton.rxbinding2.widget.RxTextView;
 import com.mysale.genie.utility.RxBus;
 
 import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Set;
+import java.util.concurrent.TimeUnit;
 
 import au.com.dealsdirect.R;
 import au.com.dealsdirect.ui.controller.saleitems.SaleItemsMvpPresenter;
-import au.com.dealsdirect.ui.controller.searchfilter.facetfilter.FacetFilterMvpPresenter;
 import au.com.dealsdirect.ui.custom.ChipsEditText;
 import au.com.dealsdirect.utils.BundleBuilder;
 import au.com.dealsdirect.utils.BundleKeys;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.disposables.Disposable;
 
 
 /**
@@ -40,8 +40,6 @@ public class SearchTagsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
     private DisplayMetrics mDisplayMetrics;
     private LinearLayoutManager mLayoutManager;
     private SaleItemsMvpPresenter mSaleItemPresenter;
-    private FacetFilterMvpPresenter mFacetFilterPresenter;
-    private HashMap<String, Set<Integer>> mPreviousSelectedFacetIndices;
 
     public EditTextViewHolder getEditTextViewHolder() {
         return editTextViewHolder;
@@ -103,9 +101,6 @@ public class SearchTagsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
         return mData;
     }
 
-    public void setFacetFilterPresenter(FacetFilterMvpPresenter facetFilterPresenter){
-        mFacetFilterPresenter = facetFilterPresenter;
-    }
 
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
@@ -128,25 +123,30 @@ public class SearchTagsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
             SearchChipModel chip = mData.get(position);
             SearchTagsViewHolder vh = (SearchTagsViewHolder) holder;
             vh.tv.setText(chip.getChipTitle());
+            vh.itemView.setOnClickListener((v)->{
+                mSaleItemPresenter.showSearchFilters(chip.getFilterType());
+            });
         }
 
         if (holder instanceof EditTextViewHolder) {
             EditTextViewHolder vh = (EditTextViewHolder) holder;
 
-//            vh.et.setOnClickListener(new View.OnClickListener() {
-//                @Override
-//                public void onClick(View v) {
-//                    vh.et.requestFocus();
-//                }
-//            });
+            vh.textChangeObservable = RxTextView.textChanges(vh.et)
+                    .debounce(1000, TimeUnit.MILLISECONDS)
+                    .map(charSequence -> charSequence.toString())
+                    .observeOn(AndroidSchedulers.mainThread());
 
             vh.et.setOnFocusChangeListener(new View.OnFocusChangeListener() {
                 @Override
                 public void onFocusChange(View v, boolean hasFocus) {
                     if(hasFocus){
-                        mSaleItemPresenter.showSearchFilters();
+                        mSaleItemPresenter.showSearchFilters("");
+                        vh.textChangeDisposable = vh.textChangeObservable.subscribe((searchQuery)->{
+                            mSaleItemPresenter.loadSaleItemsWhileTyping(searchQuery);
+                        });
                     } else {
                         mSaleItemPresenter.hideSearchFilters();
+                        vh.textChangeDisposable.dispose();
                     }
                 }
             });
@@ -156,8 +156,6 @@ public class SearchTagsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                 public boolean onEditorAction(TextView textView, int actionId, KeyEvent
                         keyEvent) {
                     if (actionId == EditorInfo.IME_ACTION_SEARCH) {
-                        add(new SearchChipModel(BundleKeys.SEARCH_QUERY_NAME, vh.et.getText().toString(), -1));
-                        vh.et.setText("");
                         mSaleItemPresenter.hideSearchFilters();
                     }
 
@@ -174,9 +172,9 @@ public class SearchTagsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                 if (dataSize > 0) {
                     SearchChipModel chipToBeRemoved = getData().get(dataSize - 1);
 
-
-                    getData().remove(chipToBeRemoved);
-                    notifyItemRemoved(dataSize - 1);
+                    remove(chipToBeRemoved);
+//                    getData().remove(chipToBeRemoved);
+//                    notifyItemRemoved(dataSize - 1);
 
 //                    mPresenter.getOriginalSelectedSet().remove(chipToBeRemoved.getIndex());
 //                    mLayoutManager.scrollToPosition(dataSize - 1);
@@ -216,6 +214,9 @@ public class SearchTagsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
 
     public static class EditTextViewHolder extends RecyclerView.ViewHolder {
         private ChipsEditText et;
+
+        io.reactivex.Observable<String> textChangeObservable;
+        Disposable textChangeDisposable;
 
         public ChipsEditText getEditText() {
             return et;

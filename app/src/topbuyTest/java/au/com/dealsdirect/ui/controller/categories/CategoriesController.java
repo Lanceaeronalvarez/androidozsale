@@ -203,22 +203,17 @@ public class CategoriesController extends BaseController
     @Override
     public void onCategoryClicked(CategoriesAdapter.CategoriesViewHolder holder, int position, String categoryName, String categoryKey) {
 
-//        //post chosen category key to shop fragment to call api
-//        GDebug.log("categoryFilterSelected",categoryKey);
         mSaleItemsPresenter.executeCategoryChangeApiCall(categoryKey);
 
         //check if is last option
         boolean isOptionLastContent = isOptionLastContent(categoryKey);
 
         if (isOptionLastContent) {
-            //collapse fragment
             mSaleItemsPresenter.categoryClicked(categoryName, determineColor());
             categoriesChangeCount++;
             mBottomSheetBehavior.setState(CoordinatorLayoutAsBottomSheetBehavior.STATE_COLLAPSED);
 
         } else {
-
-            //reset lastOptionCategoryName
 
             Bundle bundle = new Bundle();
             bundle.putString(ARG_CATEGORY_PREV_NAME, chosenCategoryName);

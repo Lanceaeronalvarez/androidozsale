@@ -49,10 +49,6 @@ import io.reactivex.disposables.Disposable;
 
 public class FacetFilterController extends BaseController implements FacetFilterMvpView {
 
-    public static final String BRANDS_FILTER_FRAGMENT = "brands";
-    public static final String COLORS_FILTER_FRAGMENT = "colors";
-    public static final String SIZES_FILTER_FRAGMENT = "sizes";
-
     @Inject
     SearchFilterMvpPresenter<SearchFilterMvpView> mSearchFilterPresenter;
     @Inject
@@ -121,6 +117,21 @@ public class FacetFilterController extends BaseController implements FacetFilter
         mFacetFilterType = args.getString(BundleKeys.FACET_FILTER_TYPE, "");
     }
 
+    public void replaceFacetList(ArrayList<String> facetList){
+        mFacetList = facetList;
+        mFlowLayoutAdapter = new TagAdapter<String>(mFacetList) {
+            @Override
+            public View getView(FlowLayout parent, int position, String s) {
+                TextView tv = (TextView) LayoutInflater.from(getApplicationContext()).inflate(R.layout.facet_filter_chips,
+                        mFlowLayout, false);
+                tv.setText(s);
+                return tv;
+            }
+        };
+
+        mFlowLayout.setAdapter(mFlowLayoutAdapter);
+    }
+
     @Override
     protected View inflateView(@NonNull LayoutInflater inflater, @NonNull ViewGroup container) {
         View view = inflater.inflate(R.layout.controller_facet_filter, container, false);
@@ -146,13 +157,12 @@ public class FacetFilterController extends BaseController implements FacetFilter
                 String chipModelJsonString = ((Bundle) bundle).getString(BundleKeys.KEY_CHIP_TO_REMOVE);
                 if (!chipModelJsonString.isEmpty()) {
                     SearchChipModel chipModel = new Gson().fromJson(chipModelJsonString, SearchChipModel.class);
-                    if (chipModel.getFilterType().equals(mFacetFilterType)) {
+                    if (chipModel.getFilterType().equals(mapFilterTypeToFacetName(mFacetFilterType))) {
                         if (mFacetFilterType.equals(BundleKeys.PRICE_FACET_FILTER_TYPE)) {
                             mSearchTagsAdapter.remove(chipModel);
                             onResetPriceRange();
                             mSearchFilterPresenter.setInactiveDefaultTabIcons(mFacetFilterType);
                         } else {
-
                             Set<Integer> newSelectedList = mFlowLayout.getSelectedList();
                             newSelectedList.remove(chipModel.getIndex());
                             mFlowLayoutAdapter.setSelectedList(newSelectedList);
@@ -202,22 +212,25 @@ public class FacetFilterController extends BaseController implements FacetFilter
         }
     }
 
+
+
     private void setupDefaultLayout() {
         mClearText.setOnClickListener(action -> {
-//            mFilterIndicatorTextView.setText(mFacetFilterType);
-//            mPresenter.setActiveDefaultTabIcons(mFacetFilterType);
+            mFacetIndicatorText.setText(mFacetFilterType);
+            mSearchFilterPresenter.setActiveDefaultTabIcons(mFacetFilterType);
+
             Set<Integer> set = null;
             mFlowLayoutAdapter.setSelectedList(set);
-            List<Integer> tempSet = new ArrayList<Integer>(origSelectedSet);
-            for (Integer i : tempSet) {
-                SearchChipModel searchChipModel = new SearchChipModel(mapFilterTypeToFacetName(mFacetFilterType), mFacetList.get(i), i);
-                mSearchTagsAdapter.remove(searchChipModel);
+
+            ArrayList<SearchChipModel> searchTags = new ArrayList<>(mSearchTagsAdapter.getData());
+            for(SearchChipModel chipModel : searchTags){
+                if(chipModel.getFilterType() == mapFilterTypeToFacetName(mFacetFilterType)){
+                    mSearchTagsAdapter.remove(chipModel);
+                }
             }
             origSelectedSet.clear();
 
-            if (mSearchTagsAdapter.getData().size() != 0) {
-//                mSaleItemsPresenter.updateShopFilters();
-            }
+            mSaleItemsPresenter.updateShopFilters();
         });
 
         mFlowLayoutAdapter = new TagAdapter<String>(mFacetList) {
@@ -228,7 +241,6 @@ public class FacetFilterController extends BaseController implements FacetFilter
                 tv.setText(s);
                 return tv;
             }
-
         };
 
         mFlowLayout.setAdapter(mFlowLayoutAdapter);
@@ -246,7 +258,7 @@ public class FacetFilterController extends BaseController implements FacetFilter
 
                 if (!newSet.isEmpty()) {
                     List<Integer> temp = new ArrayList(newSet);
-                    SearchChipModel newChip = new SearchChipModel(mFacetFilterType, mFacetList.get(temp.get(0)), temp.get(0));
+                    SearchChipModel newChip = new SearchChipModel(mapFilterTypeToFacetName(mFacetFilterType), mFacetList.get(temp.get(0)), temp.get(0));
                     mSearchTagsAdapter.add(newChip);
                 } else if (!oldSet.isEmpty()) {
                     List<Integer> temp = new ArrayList(oldSet);
@@ -274,7 +286,6 @@ public class FacetFilterController extends BaseController implements FacetFilter
             }
         });
 
-        mSearchTagsAdapter.setFacetFilterPresenter(mPresenter);
     }
 
     private void setupPriceLayout() {
@@ -293,7 +304,7 @@ public class FacetFilterController extends BaseController implements FacetFilter
                 removePriceChip();
                 onResetPriceRange();
                 mSearchFilterPresenter.setActiveDefaultTabIcons(mFacetFilterType);
-
+                mSaleItemsPresenter.updateShopFilters();
             }
         });
         mSeekbar.setMinPriceMovingLayout(mMinPriceMovingLayout);
@@ -317,7 +328,7 @@ public class FacetFilterController extends BaseController implements FacetFilter
 
                 //add newly selected price range
                 if (origMinValue != minValue.intValue() || origMaxValue != maxValue.intValue()) {
-                    SearchChipModel priceChip = new SearchChipModel(mFacetFilterType, minValue.intValue() + " to " + maxValue.intValue(), -1);
+                    SearchChipModel priceChip = new SearchChipModel(mapFilterTypeToFacetName(mFacetFilterType), minValue.intValue() + " to " + maxValue.intValue(), -1);
                     priceChip.setMaxValue(maxValue.intValue());
                     priceChip.setMinValue(minValue.intValue());
                     mSearchTagsAdapter.add(priceChip);
@@ -333,8 +344,6 @@ public class FacetFilterController extends BaseController implements FacetFilter
 
             }
         });
-
-        mSearchTagsAdapter.setFacetFilterPresenter(mPresenter);
 
 //        SearchChipModel priceChip = findPriceChip();
 //

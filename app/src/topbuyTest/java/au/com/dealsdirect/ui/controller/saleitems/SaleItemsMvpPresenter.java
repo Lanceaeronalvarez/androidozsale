@@ -14,6 +14,8 @@ public interface SaleItemsMvpPresenter<V extends SaleItemsMvpView> extends MvpPr
 
     void loadSaleItems(GetSaleItemsRequest getSaleItemsRequest);
 
+    void loadSaleItemsWhileTyping(String searchQuery);
+
     void loadProductDetails(RecyclerView.ViewHolder viewHolder, int position, String seoIdentifierId, String imageUrl, String skuId, String saleId);
 
     void loadSortingFacets();
@@ -28,7 +30,7 @@ public interface SaleItemsMvpPresenter<V extends SaleItemsMvpView> extends MvpPr
 
     void showKeyboard();
 
-    void showSearchFilters();
+    void showSearchFilters(String facetFilterName);
 
     void hideSearchFilters();
 

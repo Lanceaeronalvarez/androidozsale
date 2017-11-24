@@ -11,11 +11,9 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.RelativeLayout;
 
-import com.bluelinelabs.conductor.Controller;
 import com.bluelinelabs.conductor.Router;
 import com.bluelinelabs.conductor.RouterTransaction;
 import com.bluelinelabs.conductor.support.RouterPagerAdapter;
-import com.google.gson.reflect.TypeToken;
 
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -30,9 +28,9 @@ import au.com.dealsdirect.ui.base.BaseController;
 import au.com.dealsdirect.ui.controller.main.MainCustomViewPager;
 import au.com.dealsdirect.ui.controller.saleitems.SaleItemsMvpPresenter;
 import au.com.dealsdirect.ui.controller.saleitems.SaleItemsMvpView;
+import au.com.dealsdirect.ui.controller.searchfilter.facetfilter.FacetFilterController;
 import au.com.dealsdirect.utils.BundleBuilder;
 import au.com.dealsdirect.utils.BundleKeys;
-import au.com.dealsdirect.utils.JsonUtils;
 import au.com.dealsdirect.utils.module.ControllerFactory;
 import au.com.dealsdirect.utils.module.GateKeeper;
 import butterknife.BindView;
@@ -82,11 +80,11 @@ public class SearchFilterController extends BaseController
     TabLayout.OnTabSelectedListener mTabOnSelectedListener;
 
     List<GetSaleItemsResponse.Facets> mFacets;
-    Controller mBlankController;
-    Controller mBrandsController;
-    Controller mColorsController;
-    Controller mSizesController;
-    Controller mPriceController;
+    FacetFilterController mBlankController;
+    FacetFilterController mBrandsController;
+    FacetFilterController mColorsController;
+    FacetFilterController mSizesController;
+    FacetFilterController mPriceController;
 
     ArrayList<String> mBrandList = new ArrayList<>();
     ArrayList<String> mSizeList = new ArrayList<>();
@@ -102,8 +100,16 @@ public class SearchFilterController extends BaseController
 
     public SearchFilterController(Bundle args) {
         super(args);
-        mFacets = JsonUtils.convertStringToObject(args.getString(BundleKeys.KEY_FACET_STRING, ""), new TypeToken<ArrayList<GetSaleItemsResponse.Facets>>() {
-        }.getType());
+//        mFacets = JsonUtils.convertStringToObject(args.getString(BundleKeys.KEY_FACET_STRING, ""), new TypeToken<ArrayList<GetSaleItemsResponse.Facets>>() {
+//        }.getType());
+    }
+
+    public void replaceFacets(List<GetSaleItemsResponse.Facets> facets) {
+        mFacets = facets;
+        parseFacets(mFacets);
+        mBrandsController.replaceFacetList(mBrandList);
+        mColorsController.replaceFacetList(mColorList);
+        mSizesController.replaceFacetList(mSizeList);
     }
 
     @Override
@@ -206,7 +212,7 @@ public class SearchFilterController extends BaseController
             @Override
             public void onTabSelected(TabLayout.Tab tab) {
                 Log.d("tabtab", "selected is " + tab.getPosition());
-                if(tab.getPosition() != 0){
+                if (tab.getPosition() != 0) {
                     hideKeyboard();
                 } else {
                     mSaleItemsPresenter.showKeyboard();
@@ -257,22 +263,22 @@ public class SearchFilterController extends BaseController
     }
 
     private void setupViewPager() {
-        mBlankController = ControllerFactory.getInstance(GateKeeper.Destination.FACET_FILTER);
+        mBlankController = (FacetFilterController) ControllerFactory.getInstance(GateKeeper.Destination.FACET_FILTER);
 
-        mBrandsController = ControllerFactory.getInstance(GateKeeper.Destination.FACET_FILTER, new BundleBuilder(new Bundle())
-                .putStringArrayList(BundleKeys.FACET_PAYLOAD, mBrandList)
+        mBrandsController = (FacetFilterController) ControllerFactory.getInstance(GateKeeper.Destination.FACET_FILTER, new BundleBuilder(new Bundle())
+//                .putStringArrayList(BundleKeys.FACET_PAYLOAD, mBrandList)
                 .putString(BundleKeys.FACET_FILTER_TYPE, BundleKeys.BRANDS_FACET_FILTER_TYPE)
                 .build());
 
-        mColorsController = ControllerFactory.getInstance(GateKeeper.Destination.FACET_FILTER, new BundleBuilder(new Bundle())
-                .putStringArrayList(BundleKeys.FACET_PAYLOAD, mColorList)
+        mColorsController = (FacetFilterController) ControllerFactory.getInstance(GateKeeper.Destination.FACET_FILTER, new BundleBuilder(new Bundle())
+//                .putStringArrayList(BundleKeys.FACET_PAYLOAD, mColorList)
                 .putString(BundleKeys.FACET_FILTER_TYPE, BundleKeys.COLOR_FACET_FILTER_TYPE)
                 .build());
-        mSizesController = ControllerFactory.getInstance(GateKeeper.Destination.FACET_FILTER, new BundleBuilder(new Bundle())
-                .putStringArrayList(BundleKeys.FACET_PAYLOAD, mSizeList)
+        mSizesController = (FacetFilterController) ControllerFactory.getInstance(GateKeeper.Destination.FACET_FILTER, new BundleBuilder(new Bundle())
+//                .putStringArrayList(BundleKeys.FACET_PAYLOAD, mSizeList)
                 .putString(BundleKeys.FACET_FILTER_TYPE, BundleKeys.SIZE_FACET_FILTER_TYPE)
                 .build());
-        mPriceController = ControllerFactory.getInstance(GateKeeper.Destination.FACET_FILTER, new BundleBuilder(new Bundle())
+        mPriceController = (FacetFilterController) ControllerFactory.getInstance(GateKeeper.Destination.FACET_FILTER, new BundleBuilder(new Bundle())
                 .putString(BundleKeys.FACET_FILTER_TYPE, BundleKeys.PRICE_FACET_FILTER_TYPE)
                 .build());
 
@@ -314,6 +320,7 @@ public class SearchFilterController extends BaseController
             }
         };
 
+        mFiltersViewPager.setOffscreenPageLimit(4);
         mFiltersViewPager.setAdapter(mViewPagerAdapter);
         mFiltersViewPager.setCurrentItem(1);
         mFiltersViewPager.setMyScroller();
@@ -376,7 +383,7 @@ public class SearchFilterController extends BaseController
     public void onSetActiveDefaultTabIcons(String filterFragmentType) {
 
         TabLayout.Tab tab = onSetInactiveDefaultTabIcons(filterFragmentType);
-        if(tab!=null){
+        if (tab != null) {
             tab.getIcon().setColorFilter(ContextCompat.getColor(getActivity(), R.color.bluegreen), PorterDuff.Mode.SRC_IN);
         }
     }
@@ -397,7 +404,7 @@ public class SearchFilterController extends BaseController
                 selectedTab = mTabLayout.getTabAt(2);
                 if (selectedTab != null) {
                     selectedTab.setIcon(SearchTabIcons[2]);
-                  }
+                }
                 break;
             case BundleKeys.SIZES_FACETFILTER_NAME:
                 selectedTab = mTabLayout.getTabAt(3);

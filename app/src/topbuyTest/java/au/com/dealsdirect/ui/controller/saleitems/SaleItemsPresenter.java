@@ -52,6 +52,11 @@ public class SaleItemsPresenter<V extends SaleItemsMvpView> extends BasePresente
     }
 
     @Override
+    public void loadSaleItemsWhileTyping(String searchQuery) {
+        getMvpView().onLoadSaleItemsWhileTyping(searchQuery);
+    }
+
+    @Override
     public void loadProductDetails(RecyclerView.ViewHolder viewHolder, int position, String
             seoIdentifierId, String imageUrl, String skuId, String saleId) {
         getMvpView().showProductDetails(viewHolder, position, seoIdentifierId, imageUrl, skuId, saleId);
@@ -94,8 +99,8 @@ public class SaleItemsPresenter<V extends SaleItemsMvpView> extends BasePresente
     }
 
     @Override
-    public void showSearchFilters() {
-        getMvpView().onShowSearchFilters();
+    public void showSearchFilters(String facetFilterName) {
+        getMvpView().onShowSearchFilters(facetFilterName);
     }
 
     @Override

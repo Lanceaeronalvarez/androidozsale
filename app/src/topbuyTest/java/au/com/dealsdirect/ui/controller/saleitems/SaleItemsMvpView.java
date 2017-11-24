@@ -20,6 +20,8 @@ public interface SaleItemsMvpView extends MvpView{
 
     void showSaleItems(GetSaleItemsResponse getSaleItemsResponse, boolean forFacetCorrection);
 
+    void onLoadSaleItemsWhileTyping(String searchQuery);
+
     void refresh();
 
     void showProductDetails(RecyclerView.ViewHolder viewHolder, int position, String seoIdentifierId, String imageUrl, String skuId, String saleId);
@@ -42,7 +44,7 @@ public interface SaleItemsMvpView extends MvpView{
 
     void onHideTransparentOverlay();
 
-    void onShowSearchFilters();
+    void onShowSearchFilters(String facetFilterName);
 
     void onHideSearchFilters();
 
