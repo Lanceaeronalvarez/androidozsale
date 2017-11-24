@@ -28,8 +28,6 @@ public interface SaleItemsMvpView extends MvpView{
 
     void unbindPaginate();
 
-    void onPassFiltersData(Bundle bundle);
-
     void onShowCategoriesController();
 
     void onCategoryClicked(String chosenCategoryName, int color);

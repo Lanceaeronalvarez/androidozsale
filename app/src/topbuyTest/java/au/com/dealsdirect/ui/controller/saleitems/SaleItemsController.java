@@ -5,6 +5,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.design.widget.AppBarLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -18,6 +19,7 @@ import android.widget.TextView;
 
 import com.bluelinelabs.conductor.ChangeHandlerFrameLayout;
 import com.bluelinelabs.conductor.Controller;
+import com.bluelinelabs.conductor.ControllerChangeHandler;
 import com.bluelinelabs.conductor.Router;
 import com.bluelinelabs.conductor.RouterTransaction;
 import com.bluelinelabs.conductor.changehandler.FadeChangeHandler;
@@ -58,6 +60,7 @@ import au.com.dealsdirect.utils.module.GateKeeper;
 import butterknife.BindView;
 import butterknife.OnClick;
 import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.disposables.Disposable;
 
 import static au.com.dealsdirect.utils.ViewUtils.dpToPx;
 
@@ -139,20 +142,6 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
 
     public SaleItemsController(Bundle args) {
         super(args);
-//        if (args.containsKey(KEY_SALE_ID))
-//            mSaleId = getArgs().getString(KEY_SALE_ID, "");
-//        if (args.containsKey(KEY_CATEGORY_MAP))
-//            mCategoryKey = getArgs().getString(KEY_CATEGORY_MAP, "");
-//        if (args.containsKey(KEY_CHIPS_FILTER))
-//            mChipFilters = JsonUtils.convertStringToObject(getArgs().getString(KEY_CHIPS_FILTER, ""), new TypeToken<ArrayList<SearchChipModel>>() {
-//            }.getType());
-//        if (args.containsKey(KEY_FROM_SHOP_SEARCH))
-//            mFromShopSearch = getArgs().getBoolean(KEY_FROM_SHOP_SEARCH, true);
-//        if (args.containsKey(KEY_FROM_CATEGORY_SEARCH))
-//            mFromCategorySearch = getArgs().getBoolean(KEY_FROM_CATEGORY_SEARCH, true);
-//        if (args.containsKey(KEY_FROM_CATEGORIES)) {
-//            mIsFromCategory = getArgs().getBoolean(KEY_FROM_CATEGORIES, true);
-//        }
     }
 
     @Override
@@ -236,13 +225,6 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
         mSearchTagsRecyclerView.setAdapter(mSearchTagsAdapter);
         mSearchTagsRecyclerView.setVisibility(View.VISIBLE);
 
-//        RxView.clicks(mSearchBar)
-//                .throttleFirst(1000, TimeUnit.MILLISECONDS)
-//                .observeOn(AndroidSchedulers.mainThread())
-//                .subscribe((action) -> {
-//                    onShowSearchFilters();
-//                });
-
         RxView.clicks(mOverlay)
                 .throttleFirst(1000, TimeUnit.MILLISECONDS)
                 .observeOn(AndroidSchedulers.mainThread())
@@ -316,7 +298,6 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
             if (isCategoryChanged || initialLoad) {
                 mSearchFilterController.replaceFacets(mFacets);
                 initialLoad = false;
-//                mSearchTagsAdapter.replaceData(new ArrayList<>());
             }
 
             isCategoryChanged = false;
@@ -396,11 +377,6 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
         if (mPaginateManager != null) {
             mPaginateManager.unbind();
         }
-    }
-
-    @Override
-    public void onPassFiltersData(Bundle bundle) {
-
     }
 
     @Override
@@ -492,8 +468,9 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
     public void onShowSearchFilters(String facetFilterName) {
         onShowTransparentOverlay();
         mSearchFilterContainer.bringToFront();
-        selectTabOfFilterType(facetFilterName);
+        mSearchFilterPresenter.selectTabOfFilterType(facetFilterName);
         mBottomSheetBehavior.setState(ViewPagerBottomSheetBehavior.STATE_EXPANDED);
+//        mSearchTagsAdapter.getEditTextViewHolder().subscribeTextChange();
     }
 
     @Override
@@ -514,7 +491,19 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
         if (!mSearchFilterRouter.hasRootController()) {
             mSearchFilterController = (SearchFilterController) ControllerFactory.getInstance(GateKeeper.Destination.SEARCH_FILTER);
             GateKeeper.setRoot(mSearchFilterRouter, GateKeeper.Destination.SEARCH_FILTER, RouterTransaction.with(mSearchFilterController));
-//            mSearchFilterPresenter.onAttach((SearchFilterMvpView) GateKeeper.getCurrentControllerOnRouter(mSearchFilterRouter));
+            mSearchFilterRouter.addChangeListener(new ControllerChangeHandler.ControllerChangeListener() {
+                @Override
+                public void onChangeStarted(@Nullable Controller to, @Nullable Controller from, boolean isPush, @NonNull ViewGroup container, @NonNull ControllerChangeHandler handler) {
+
+                }
+
+                @Override
+                public void onChangeCompleted(@Nullable Controller to, @Nullable Controller from, boolean isPush, @NonNull ViewGroup container, @NonNull ControllerChangeHandler handler) {
+                    if (to instanceof SearchFilterController) {
+                        mSearchFilterPresenter.onAttach((SearchFilterMvpView) GateKeeper.getCurrentControllerOnRouter(mSearchFilterRouter));
+                    }
+                }
+            });
         }
     }
 
@@ -630,6 +619,7 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
                             String trimmedText = searchTextQuery.length() > 15 ? searchTextQuery.substring(0, 14) + ".." : searchTextQuery;
 
                             mSearchTagsAdapter.add(new SearchChipModel(BundleKeys.SEARCH_QUERY_NAME, trimmedText, -1));
+
                             searchEditText.getText().clear();
                         }
 
@@ -654,15 +644,6 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
 
     }
 
-    private SearchChipModel findPriceChip() {
-        for (SearchChipModel chip : mSearchTagsAdapter.getData()) {
-            if (chip.getFilterType().equals(BundleKeys.PRICE_FACETFILTER_NAME)) {
-                return chip;
-            }
-        }
-
-        return null;
-    }
 
     @Override
     public void onKeyboardHeightChanged(int height, int orientation) {
@@ -683,52 +664,7 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
         }
     }
 
-    private void selectTabOfFilterType(String facetFilterName) {
-        switch (facetFilterName) {
-            case BundleKeys.BRANDS_FACETFILTER_NAME:
-                mSearchFilterController.getTabLayout().getTabAt(1).select();
-                break;
-            case BundleKeys.COLORS_FACETFILTER_NAME:
-                mSearchFilterController.getTabLayout().getTabAt(2).select();
-                break;
-            case BundleKeys.SIZES_FACETFILTER_NAME:
-                mSearchFilterController.getTabLayout().getTabAt(3).select();
-                break;
-            case BundleKeys.PRICE_FACETFILTER_NAME:
-                mSearchFilterController.getTabLayout().getTabAt(4).select();
-                break;
-            default:
-                mSearchFilterController.getTabLayout().getTabAt(0).select();
-                break;
-        }
-    }
-
-
 }
-
-//    private String getFacetFilterType(int position) {
-//        return mFacetsAdapter.getData().get(position).first;
-//    }
-//
-//    private List<String> mapFacetItemClicked(int position) {
-//        String facetFilterType = getFacetFilterType(position);
-//        switch (facetFilterType) {
-//            case BundleKeys.SORT_FACETFILTER_NAME:
-//                return mSortingList;
-//            case BundleKeys.CATEGORY_TREE_FACET:
-//               return new ArrayList<>();
-//            case BundleKeys.BRANDS_FACETFILTER_NAME:
-//                return mBrandList;
-//            case BundleKeys.SIZES_FACETFILTER_NAME:
-//                return mSizeList;
-//            case BundleKeys.COLORS_FACETFILTER_NAME:
-//                return mColorList;
-//            case BundleKeys.PRICE_FACETFILTER_NAME:
-//                return new ArrayList<>();
-//            default:
-//                return new ArrayList<>();
-//        }
-//    }
 
 
 

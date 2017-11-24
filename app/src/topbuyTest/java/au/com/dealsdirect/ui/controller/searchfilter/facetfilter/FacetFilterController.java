@@ -340,17 +340,10 @@ public class FacetFilterController extends BaseController implements FacetFilter
                 }
 
                 mSaleItemsPresenter.updateShopFilters();
-//                priceFilterActive = true;
 
             }
         });
 
-//        SearchChipModel priceChip = findPriceChip();
-//
-//        if (priceChip != null) {
-//            mSeekbar.setMinStartValue(priceChip.getMinValue()).apply();
-//            mSeekbar.setMaxStartValue(priceChip.getMaxValue()).apply();
-//        }
     }
 
     private void removePriceChip() {

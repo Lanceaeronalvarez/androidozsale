@@ -4,7 +4,10 @@ import android.content.Context;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.DisplayMetrics;
+import android.util.Log;
 import android.util.TypedValue;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
@@ -16,6 +19,7 @@ import android.widget.TextView;
 import com.google.gson.Gson;
 import com.jakewharton.rxbinding2.widget.RxTextView;
 import com.mysale.genie.utility.RxBus;
+import com.mysale.genie.utility.config.model.getappsettingssection.Android;
 
 import java.util.ArrayList;
 import java.util.concurrent.TimeUnit;
@@ -63,7 +67,7 @@ public class SearchTagsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
             notifyItemInserted(mData.indexOf(chip));
 
             int offsetAmount = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 135, mDisplayMetrics);
-            int currentLastItem = getItemCount()-1;
+            int currentLastItem = getItemCount() - 1;
 
             mLayoutManager.scrollToPosition(addedItemIndex);
             mLayoutManager.scrollToPositionWithOffset(currentLastItem, offsetAmount);
@@ -77,9 +81,9 @@ public class SearchTagsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
             mData.remove(chip);
             notifyItemRemoved(itemIndex);
 
-            if(mLayoutManager.getItemCount() > 0){
+            if (mLayoutManager.getItemCount() > 0) {
                 int offsetAmount = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 135, mDisplayMetrics);
-                mLayoutManager.scrollToPositionWithOffset(mLayoutManager.getItemCount()-1, offsetAmount);
+                mLayoutManager.scrollToPositionWithOffset(mLayoutManager.getItemCount() - 1, offsetAmount);
             } else {
                 mLayoutManager.scrollToPosition(0);
             }
@@ -93,7 +97,7 @@ public class SearchTagsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
         notifyDataSetChanged();
 
         int offsetAmount = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 135, mDisplayMetrics);
-        int currentLastItem = getItemCount()-1;
+        int currentLastItem = getItemCount() - 1;
         mLayoutManager.scrollToPositionWithOffset(currentLastItem, offsetAmount);
     }
 
@@ -111,7 +115,7 @@ public class SearchTagsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
             vh = new SearchTagsViewHolder(v);
         } else if (viewType == 1) {
             v = LayoutInflater.from(parent.getContext()).inflate(R.layout.viewholder_filter_edit_text, parent, false);
-            vh = editTextViewHolder = new EditTextViewHolder(v);
+            vh = editTextViewHolder = new EditTextViewHolder(v,mSaleItemPresenter);
         }
 
         return vh;
@@ -123,7 +127,7 @@ public class SearchTagsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
             SearchChipModel chip = mData.get(position);
             SearchTagsViewHolder vh = (SearchTagsViewHolder) holder;
             vh.tv.setText(chip.getChipTitle());
-            vh.itemView.setOnClickListener((v)->{
+            vh.itemView.setOnClickListener((v) -> {
                 mSaleItemPresenter.showSearchFilters(chip.getFilterType());
             });
         }
@@ -131,19 +135,14 @@ public class SearchTagsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
         if (holder instanceof EditTextViewHolder) {
             EditTextViewHolder vh = (EditTextViewHolder) holder;
 
-            vh.textChangeObservable = RxTextView.textChanges(vh.et)
-                    .debounce(1000, TimeUnit.MILLISECONDS)
-                    .map(charSequence -> charSequence.toString())
-                    .observeOn(AndroidSchedulers.mainThread());
+
 
             vh.et.setOnFocusChangeListener(new View.OnFocusChangeListener() {
                 @Override
                 public void onFocusChange(View v, boolean hasFocus) {
-                    if(hasFocus){
+                    if (hasFocus) {
                         mSaleItemPresenter.showSearchFilters("");
-                        vh.textChangeDisposable = vh.textChangeObservable.subscribe((searchQuery)->{
-                            mSaleItemPresenter.loadSaleItemsWhileTyping(searchQuery);
-                        });
+                        vh.subscribeTextChange();
                     } else {
                         mSaleItemPresenter.hideSearchFilters();
                         vh.textChangeDisposable.dispose();
@@ -215,16 +214,33 @@ public class SearchTagsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
     public static class EditTextViewHolder extends RecyclerView.ViewHolder {
         private ChipsEditText et;
 
-        io.reactivex.Observable<String> textChangeObservable;
+        SaleItemsMvpPresenter mSaleItemPresenter;
+
+        public Disposable getTextChangeDisposable() {
+            return textChangeDisposable;
+        }
+
         Disposable textChangeDisposable;
 
         public ChipsEditText getEditText() {
             return et;
         }
 
-        public EditTextViewHolder(View itemView) {
+        public EditTextViewHolder(View itemView, SaleItemsMvpPresenter saleItemsMvpPresenter) {
             super(itemView);
             et = (ChipsEditText) itemView.findViewById(R.id.search_edit_text);
+            mSaleItemPresenter = saleItemsMvpPresenter;
+        }
+
+        public void subscribeTextChange(){
+            textChangeDisposable = RxTextView.textChanges(et)
+                    .skipInitialValue()
+                    .debounce(1000, TimeUnit.MILLISECONDS)
+                    .map(charSequence -> charSequence.toString())
+                    .observeOn(AndroidSchedulers.mainThread())
+                    .subscribe((searchQuery) -> {
+                        mSaleItemPresenter.loadSaleItemsWhileTyping(searchQuery);
+                    });
         }
 
 

@@ -145,21 +145,6 @@ public class SearchFilterController extends BaseController
     }
 
 
-    @Override
-    public Set<Integer> getOriginalSelectedSet() {
-        return origSelectedSet;
-    }
-
-    @Override
-    public void showFilters() {
-
-    }
-
-    @Override
-    public void hideFilters() {
-
-    }
-
     private void setDefaultTabIcons() {
         mTabLayout.getTabAt(0).setIcon(SearchTabIcons[0]).setCustomView(R.layout.tab_icon_layout);
         mTabLayout.getTabAt(1).setIcon(SearchTabIcons[1]).setCustomView(R.layout.tab_icon_layout);
@@ -425,30 +410,6 @@ public class SearchFilterController extends BaseController
         return selectedTab;
     }
 
-    @Override
-    public void onSetFiltersViewPagerCurrentItem(int position) {
-        mFiltersViewPager.setCurrentItem(position);
-    }
-
-    public void onShowTabOfSelectedChip(String filterFragmentType) {
-        switch (mapFilterTypeToFacetName(filterFragmentType)) {
-            case BundleKeys.BRANDS_FACETFILTER_NAME:
-                if (mTabLayout.getTabAt(1) != null) mTabLayout.getTabAt(1).select();
-                break;
-            case BundleKeys.COLORS_FACETFILTER_NAME:
-                if (mTabLayout.getTabAt(2) != null) mTabLayout.getTabAt(2).select();
-                break;
-            case BundleKeys.SIZES_FACETFILTER_NAME:
-                if (mTabLayout.getTabAt(3) != null) mTabLayout.getTabAt(3).select();
-                break;
-            case BundleKeys.PRICE_FACETFILTER_NAME:
-                if (mTabLayout.getTabAt(4) != null) mTabLayout.getTabAt(4).select();
-                break;
-            default:
-                break;
-        }
-    }
-
     private String mapFilterTypeToFacetName(String fragmentType) {
         String value = "";
         switch (fragmentType) {
@@ -469,5 +430,26 @@ public class SearchFilterController extends BaseController
         }
 
         return value;
+    }
+
+    @Override
+    public void onSelectTabOfFilterType(String facetFilterName) {
+        switch (facetFilterName) {
+            case BundleKeys.BRANDS_FACETFILTER_NAME:
+                mTabLayout.getTabAt(1).select();
+                break;
+            case BundleKeys.COLORS_FACETFILTER_NAME:
+                mTabLayout.getTabAt(2).select();
+                break;
+            case BundleKeys.SIZES_FACETFILTER_NAME:
+                mTabLayout.getTabAt(3).select();
+                break;
+            case BundleKeys.PRICE_FACETFILTER_NAME:
+                mTabLayout.getTabAt(4).select();
+                break;
+            default:
+                mTabLayout.getTabAt(0).select();
+                break;
+        }
     }
 }

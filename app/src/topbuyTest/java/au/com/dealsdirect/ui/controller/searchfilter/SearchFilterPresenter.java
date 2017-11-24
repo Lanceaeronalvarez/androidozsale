@@ -21,11 +21,6 @@ public class SearchFilterPresenter<V extends SearchFilterMvpView> extends BasePr
     }
 
     @Override
-    public Set<Integer> getOriginalSelectedSet() {
-        return getMvpView().getOriginalSelectedSet();
-    }
-
-    @Override
     public void setActiveTabIndicatorIcons(String facetFilterType) {
         getMvpView().onSetActiveTabIndicatorIcons(facetFilterType);
     }
@@ -41,8 +36,8 @@ public class SearchFilterPresenter<V extends SearchFilterMvpView> extends BasePr
     }
 
     @Override
-    public void setFiltersViewPagerCurrentItem(int position) {
-        getMvpView().onSetFiltersViewPagerCurrentItem(position);
+    public void selectTabOfFilterType(String facetFilterName) {
+        getMvpView().onSelectTabOfFilterType(facetFilterName);
     }
 
 }

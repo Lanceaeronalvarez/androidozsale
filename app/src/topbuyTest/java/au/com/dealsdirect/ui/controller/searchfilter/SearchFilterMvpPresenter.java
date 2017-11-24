@@ -10,14 +10,12 @@ import au.com.dealsdirect.ui.base.MvpPresenter;
 
 public interface SearchFilterMvpPresenter<V extends SearchFilterMvpView> extends MvpPresenter<V> {
 
-
-    Set<Integer> getOriginalSelectedSet();
-
     void setActiveTabIndicatorIcons(String facetFilterType);
 
     void setActiveDefaultTabIcons(String facetFilterType);
 
     void setInactiveDefaultTabIcons(String facetFilterType);
 
-    void setFiltersViewPagerCurrentItem(int position);
+    void selectTabOfFilterType(String facetFilterName);
+
 }
