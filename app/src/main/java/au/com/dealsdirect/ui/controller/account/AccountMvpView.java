@@ -1,5 +1,7 @@
 package au.com.dealsdirect.ui.controller.account;
 
+import com.bluelinelabs.conductor.Router;
+
 import java.util.List;
 
 import au.com.dealsdirect.ui.base.MvpView;
@@ -33,4 +35,6 @@ public interface AccountMvpView extends MvpView {
     void triggerLogout();
 
     void initLoginDrawable();
+
+    int getBackstackSize();
 }

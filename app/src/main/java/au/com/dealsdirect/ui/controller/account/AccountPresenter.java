@@ -57,46 +57,48 @@ public class AccountPresenter<V extends AccountMvpView> extends BasePresenter<V>
 
     @Override
     public void onAccountItemClick(String option) {
-        if (getDataManager().isAuthorized() || (option.equalsIgnoreCase("Language") ||
+        if (getDataManager().isAuthorized() ||  (option.equalsIgnoreCase("Language") ||
                 option.equalsIgnoreCase("Privacy Policy") ||
                 option.equalsIgnoreCase("Terms & Conditions") ||
                 option.equalsIgnoreCase("About Us"))) {
-            switch (option) {
-                case "My Details":
-                    getMvpView().showMyDetailsController();
-                    break;
-                case "My Addresses":
-                    getMvpView().showMyAddressesController();
-                    break;
-                case "My Orders":
-                    getMvpView().showMyOrders();
-                    break;
-                case "My Vouchers":
-                    getMvpView().showMyVouchers();
-                    break;
-                case "My Returns":
-                    getMvpView().showMyReturns();
-                    break;
-                case "My Payments":
-                    getMvpView().showMyPaymentsController();
-                    break;
-                case "Language":
-                    getMvpView().showLanguage();
-                    break;
-                case "Logout":
-                    getMvpView().triggerLogout();
-                    break;
-                case "About Us":
-                    getMvpView().showLegalities("aboutus", option);
-                    break;
-                case "Privacy Policy":
-                    getMvpView().showLegalities("PrivacyPolicy_Text", option);
-                    break;
-                case "Terms & Conditions":
-                    getMvpView().showLegalities("TermsAndConditions_Text", option);
-                    break;
-                default:
-                    break;
+            if(getMvpView().getBackstackSize() == 1) {
+                switch (option) {
+                    case "My Details":
+                        getMvpView().showMyDetailsController();
+                        break;
+                    case "My Addresses":
+                        getMvpView().showMyAddressesController();
+                        break;
+                    case "My Orders":
+                        getMvpView().showMyOrders();
+                        break;
+                    case "My Vouchers":
+                        getMvpView().showMyVouchers();
+                        break;
+                    case "My Returns":
+                        getMvpView().showMyReturns();
+                        break;
+                    case "My Payments":
+                        getMvpView().showMyPaymentsController();
+                        break;
+                    case "Language":
+                        getMvpView().showLanguage();
+                        break;
+                    case "Logout":
+                        getMvpView().triggerLogout();
+                        break;
+                    case "About Us":
+                        getMvpView().showLegalities("aboutus", option);
+                        break;
+                    case "Privacy Policy":
+                        getMvpView().showLegalities("PrivacyPolicy_Text", option);
+                        break;
+                    case "Terms & Conditions":
+                        getMvpView().showLegalities("TermsAndConditions_Text", option);
+                        break;
+                    default:
+                        break;
+                }
             }
         } else {
             getMvpView().triggerLogin(option);

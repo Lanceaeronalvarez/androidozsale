@@ -6,8 +6,11 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.jakewharton.rxbinding2.view.RxView;
+
 import java.util.Collections;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 import au.com.dealsdirect.R;
 import au.com.dealsdirect.ui.controller.account.AccountMvpPresenter;
@@ -51,15 +54,10 @@ public class AccountItemAdapter extends RecyclerView.Adapter<AccountItemViewHold
     public void onBindViewHolder(AccountItemViewHolder holder, int position) {
 
         holder.mAccountItemImage.setImageResource(mAccountImages[position]);
-        holder.mAccountItemImage.setOnClickListener(view -> {
-            mPresenter.onAccountItemClick(mAccountItems.get(position));
-        });
 
         holder.mAccountItemName
                 .setText(mAccountItems.get(position));
-        holder.itemView.setOnClickListener(view -> {
-                mPresenter.onAccountItemClick(mAccountItems.get(position));
-        });
+        holder.itemView.setOnClickListener(o -> mPresenter.onAccountItemClick(mAccountItems.get(position)));
     }
 
     @Override
