@@ -277,4 +277,8 @@ public interface ApiHelper {
     Observable<String> callEventUser();
 
     Observable<JSONObject> callGetPaymentMethodNonce(GetPaymentMethodNonceRequest request);
+
+    // OURPAY
+
+
 }

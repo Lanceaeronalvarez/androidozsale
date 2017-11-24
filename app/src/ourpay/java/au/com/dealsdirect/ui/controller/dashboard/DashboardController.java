@@ -7,6 +7,7 @@ import android.support.v4.view.ViewPager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
 import com.bluelinelabs.conductor.Controller;
 import com.bluelinelabs.conductor.Router;
@@ -43,6 +44,18 @@ public class DashboardController extends BaseController implements DashboardMvpV
 
     @BindView(R.id.controller_payment_view_pager)
     ViewPager mViewPager;
+
+    @BindView(R.id.controller_payment_dashboard_active_text)
+    TextView mActiveText;
+
+    @BindView(R.id.controller_payment_dashboard_balance_text)
+    TextView mBalanceText;
+
+    @BindView(R.id.controller_payment_dashboard_credit_text)
+    TextView mCreditText;
+
+    @BindView(R.id.controller_payment_dashboard_overdue_text)
+    TextView mOverdueText;
 
     String[] mTabTitles;
 

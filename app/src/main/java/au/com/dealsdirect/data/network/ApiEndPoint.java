@@ -153,7 +153,6 @@ public final class ApiEndPoint {
     public static String SAVE_USER_DETAILS = getBaseApiLegacy() + "SetUserDetails";
     public static String LOAD_USER_DETAILS = getBaseApiLegacy() + "GetUserDetails";
 
-
     /* Summary */
     public static final String GET_SUMMARY_MENU = BASE_URL + "menu";
     public static final String GET_SUMMARY_DASHBOARDS = BASE_URL + "summary/dashboards";
@@ -175,6 +174,12 @@ public final class ApiEndPoint {
 
     /* 3DS */
     public static final String GET_PAYMENT_METHOD_NONCE = getBaseApiLegacy() + "GetPaymentMethodNonce";
+
+    /* Ourpay */
+    public static String GET_PAYMENT_PLANS = getBaseApiLegacy() + "GetPaymentPlans";
+    public static String GET_SCHEDULED_PAYMENTS = getBaseApiLegacy() + "GetScheduledPayments";
+    public static String GET_PAST_PAYMENTS = getBaseApiLegacy() + "GetPastPayments";
+    public static String GET_DELIVERY_SERVICE = getBaseApiLegacy() + "GetDeliveryServicePackageByCustomer";
 
     private ApiEndPoint() {
          // This class is not publicly instantiable
