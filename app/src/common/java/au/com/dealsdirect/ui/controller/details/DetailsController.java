@@ -169,7 +169,7 @@ public class DetailsController extends BasePullToRefreshController implements De
 
     @Override
     public void loadDetails(GetUserDetailsResponse userDetailsResponse) {
-//        LinkedTreeMap details = (LinkedTreeMap) userDetailsResponse.getResponse().getScheduledPayment();
+//        LinkedTreeMap details = (LinkedTreeMap) userDetailsResponse.getResponse().getScheduledPlan();
         GetUserDetailsResponse.Value value = userDetailsResponse.getResponse().getValue();
         mFirstNameText.setText(value.getForename());
         mLastNameText.setText(value.getSurname());

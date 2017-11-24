@@ -35,7 +35,7 @@ public class InvitePresenterTest {
     private static final String mMockDefaultResponseSuccess = "{\n" +
             "  \"d\": {\n" +
             "    \"IsAuthenticated\": true,\n" +
-            "    \"ScheduledPayment\": {\n" +
+            "    \"ScheduledPlan\": {\n" +
             "    },\n" +
             "    \"Result\": true,\n" +
             "    \"Message\": \"\"\n" +

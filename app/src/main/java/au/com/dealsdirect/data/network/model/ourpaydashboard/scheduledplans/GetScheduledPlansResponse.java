@@ -1,12 +1,12 @@
 
-package au.com.dealsdirect.data.network.model.ourpaydashboard.scheduledpayments;
+package au.com.dealsdirect.data.network.model.ourpaydashboard.scheduledplans;
 
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
 import java.util.List;
 
-public class GetScheduledPaymentsResponse {
+public class GetScheduledPlansResponse {
 
     @SerializedName("d")
     @Expose
@@ -20,12 +20,12 @@ public class GetScheduledPaymentsResponse {
         d.setIsAuthenticated(isAuthenticated);
     }
 
-    public List<ScheduledPayment> getScheduledPayment() {
-        return d.getScheduledPayment();
+    public List<ScheduledPlan> getScheduledPayment() {
+        return d.getScheduledPlan();
     }
 
-    public void setScheduledPayment(List<ScheduledPayment> scheduledPayment) {
-        d.setScheduledPayment(scheduledPayment);
+    public void setScheduledPayment(List<ScheduledPlan> scheduledPlan) {
+        d.setScheduledPlan(scheduledPlan);
     }
 
     public Boolean getResult() {

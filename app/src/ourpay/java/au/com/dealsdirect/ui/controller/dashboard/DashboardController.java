@@ -25,8 +25,8 @@ import au.com.dealsdirect.data.network.model.ourpaydashboard.pastpayments.GetPas
 import au.com.dealsdirect.data.network.model.ourpaydashboard.pastpayments.PastPayment;
 import au.com.dealsdirect.data.network.model.ourpaydashboard.paymentplans.GetPaymentPlansResponse;
 import au.com.dealsdirect.data.network.model.ourpaydashboard.paymentplans.PaymentPlan;
-import au.com.dealsdirect.data.network.model.ourpaydashboard.scheduledpayments.GetScheduledPaymentsResponse;
-import au.com.dealsdirect.data.network.model.ourpaydashboard.scheduledpayments.ScheduledPayment;
+import au.com.dealsdirect.data.network.model.ourpaydashboard.scheduledplans.GetScheduledPlansResponse;
+import au.com.dealsdirect.data.network.model.ourpaydashboard.scheduledplans.ScheduledPlan;
 import au.com.dealsdirect.ui.base.BaseController;
 import au.com.dealsdirect.ui.controller.dashboard.plans.PastPaymentsController;
 import au.com.dealsdirect.ui.controller.dashboard.plans.PaymentPlansController;
@@ -68,7 +68,7 @@ public class DashboardController extends BaseController implements DashboardMvpV
 
     List<PaymentPlan> mPaymentPlans;
 
-    List<ScheduledPayment> mScheduledPayments;
+    List<ScheduledPlan> mScheduledPlans;
 
     List<PastPayment> mPastPayments;
 
@@ -117,13 +117,13 @@ public class DashboardController extends BaseController implements DashboardMvpV
             @Override
             public void configureRouter(@NonNull Router router, int position) {
                 if (!router.hasRootController()) {
-                    Controller page = PaymentPlansController.newInstance();
+                    Controller page = PaymentPlansController.newInstance(DashboardController.this, mPaymentPlans);
                     switch (position) {
                         case 1:
-                            page = ScheduledPlansController.newInstance();
+                            page = ScheduledPlansController.newInstance(DashboardController.this, mScheduledPlans);
                             break;
                         case 2:
-                            page = PastPaymentsController.newInstance();
+                            page = PastPaymentsController.newInstance(DashboardController.this, mPastPayments);
                             break;
                     }
                     router.setRoot(RouterTransaction.with(page));
@@ -168,8 +168,8 @@ public class DashboardController extends BaseController implements DashboardMvpV
     }
 
     @Override
-    public void showScheduledPayments(GetScheduledPaymentsResponse scheduledPaymentsResponse) {
-        mScheduledPayments = scheduledPaymentsResponse.getScheduledPayment();
+    public void showScheduledPlans(GetScheduledPlansResponse scheduledPaymentsResponse) {
+        mScheduledPlans = scheduledPaymentsResponse.getScheduledPayment();
         refreshPager();
     }
 
@@ -181,20 +181,18 @@ public class DashboardController extends BaseController implements DashboardMvpV
 
     @Override
     public void refreshPager() {
-        if (mPaymentPlans == null || mScheduledPayments == null || mPastPayments == null) {
-            return;
-        } else {
+        if (mPaymentPlans != null && mScheduledPlans != null && mPastPayments != null) {
             mAdapter = new RouterPagerAdapter(this) {
                 @Override
                 public void configureRouter(@NonNull Router router, int position) {
                     if (!router.hasRootController()) {
-                        Controller page = PaymentPlansController.newInstance();
+                        Controller page = PaymentPlansController.newInstance(DashboardController.this, mPaymentPlans);
                         switch (position) {
                             case 1:
-                                page = ScheduledPlansController.newInstance();
+                                page = ScheduledPlansController.newInstance(DashboardController.this, mScheduledPlans);
                                 break;
                             case 2:
-                                page = PastPaymentsController.newInstance();
+                                page = PastPaymentsController.newInstance(DashboardController.this, mPastPayments);
                                 break;
                         }
                         router.setRoot(RouterTransaction.with(page));

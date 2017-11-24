@@ -197,7 +197,7 @@ public class ViewAddressController extends BasePullToRefreshController implement
                 mAddressPlaceHolder.setVisibility(View.VISIBLE);
             }
         } else {
-            Timber.d("ViewAddressController", "response.d.ScheduledPayment is null) error");
+            Timber.d("ViewAddressController", "response.d.ScheduledPlan is null) error");
         }
     }
 
@@ -255,7 +255,7 @@ public class ViewAddressController extends BasePullToRefreshController implement
     @OnClick(R.id.partial_toolbar_filter_view)
     public void showAddNewAddress() {
 //        AddNewAddressFragment fragment = AddNewAddressFragment
-//                .newInstance(mActivity, mGetUserAddressesResponse.d.ScheduledPayment.DecorationInfoList, mCalledFromCart);
+//                .newInstance(mActivity, mGetUserAddressesResponse.d.ScheduledPlan.DecorationInfoList, mCalledFromCart);
 //        push router to addnewaddress
         Gson gson = new Gson();
         getRouter().pushController(RouterTransaction.with(new AddNewAddressController(gson.toJson(mDecorationInfoList), false))

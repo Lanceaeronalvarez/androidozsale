@@ -21,7 +21,7 @@ public class DecorationInfoList {
     @SerializedName("Class")
     @Expose
     private String _class;
-    @SerializedName("ScheduledPayment")
+    @SerializedName("ScheduledPlan")
     @Expose
     private Object value;
     @SerializedName("MaxLength")

@@ -46,7 +46,7 @@ public class CreatePaymentMethod {
         private Response d;
 
         public class Response extends LegacyBaseResponseValue{
-            @SerializedName("ScheduledPayment")
+            @SerializedName("ScheduledPlan")
             @Expose
             private Value value;
 

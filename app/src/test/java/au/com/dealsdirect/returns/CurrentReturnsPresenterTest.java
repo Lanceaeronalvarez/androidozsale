@@ -65,7 +65,7 @@ public class CurrentReturnsPresenterTest {
     String mockResponseReturnDetails = "{\n" +
             "\t\"d\": {\n" +
             "\t\t\"IsAuthenticated\": true,\n" +
-            "\t\t\"ScheduledPayment\": {\n" +
+            "\t\t\"ScheduledPlan\": {\n" +
             "\t\t\t\"Items\": [{\n" +
             "\t\t\t\t\"BrandID\": \"a9767a03-c3e9-492c-a995-c57bb3246b79\",\n" +
             "\t\t\t\t\"ItemID\": \"4d2034d5-313b-4892-890b-40f6d1a9e3d6\",\n" +

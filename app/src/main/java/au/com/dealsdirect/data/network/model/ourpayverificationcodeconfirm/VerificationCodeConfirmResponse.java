@@ -10,7 +10,7 @@ public class VerificationCodeConfirmResponse {
     @SerializedName("IsAuthenticated")
     private Boolean isAuthenticated;
 
-    @SerializedName("ScheduledPayment")
+    @SerializedName("ScheduledPlan")
     private VerificationCodeConfirmResponseValue value;
 
     @SerializedName("Result")

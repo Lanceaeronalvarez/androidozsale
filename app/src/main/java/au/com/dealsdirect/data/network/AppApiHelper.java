@@ -68,7 +68,7 @@ import au.com.dealsdirect.data.network.model.orders.GetOrderPaymentDetails;
 import au.com.dealsdirect.data.network.model.orders.GetPaymentsList;
 import au.com.dealsdirect.data.network.model.ourpaydashboard.pastpayments.GetPastPaymentsResponse;
 import au.com.dealsdirect.data.network.model.ourpaydashboard.paymentplans.GetPaymentPlansResponse;
-import au.com.dealsdirect.data.network.model.ourpaydashboard.scheduledpayments.GetScheduledPaymentsResponse;
+import au.com.dealsdirect.data.network.model.ourpaydashboard.scheduledplans.GetScheduledPlansResponse;
 import au.com.dealsdirect.data.network.model.ourpayverificationcodeconfirm.VerificationCodeConfirmRequest;
 import au.com.dealsdirect.data.network.model.ourpayverificationcodeconfirm.VerificationCodeConfirmResponseBody;
 import au.com.dealsdirect.data.network.model.ourpayverificationnormalizephone.VerificationNormalizePhoneRequest;
@@ -782,11 +782,11 @@ public class AppApiHelper implements ApiHelper {
     }
 
     @Override
-    public Observable<GetScheduledPaymentsResponse> callGetScheduledPayments() {
-        return Rx2AndroidNetworking.get(ApiEndPoint.GET_SCHEDULED_PAYMENTS)
+    public Observable<GetScheduledPlansResponse> callGetScheduledPlans() {
+        return Rx2AndroidNetworking.get(ApiEndPoint.GET_SCHEDULED_PLANS)
                 .addHeaders(mApiHeader.get())
                 .build()
-                .getObjectObservable(GetScheduledPaymentsResponse.class);
+                .getObjectObservable(GetScheduledPlansResponse.class);
     }
 
     @Override

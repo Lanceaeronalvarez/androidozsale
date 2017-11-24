@@ -38,7 +38,7 @@ public class CheckoutPresenterTest {
     private final static String getCurrentOrderMockString = "{\n" +
             "\t\"d\": {\n" +
             "\t\t\"IsAuthenticated\": true,\n" +
-            "\t\t\"ScheduledPayment\": {\n" +
+            "\t\t\"ScheduledPlan\": {\n" +
             "\t\t\t\"IsEmpty\": false\n" +
             "\t\t},\n" +
             "\t\t\"Result\": true,\n" +

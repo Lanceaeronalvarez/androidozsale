@@ -9,6 +9,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import javax.inject.Inject;
 
@@ -16,8 +17,10 @@ import au.com.dealsdirect.R;
 import au.com.dealsdirect.data.network.model.ourpaydashboard.Payment;
 import au.com.dealsdirect.data.network.model.ourpaydashboard.pastpayments.GetPastPaymentsResponse;
 import au.com.dealsdirect.data.network.model.ourpaydashboard.paymentplans.GetPaymentPlansResponse;
-import au.com.dealsdirect.data.network.model.ourpaydashboard.scheduledpayments.GetScheduledPaymentsResponse;
+import au.com.dealsdirect.data.network.model.ourpaydashboard.scheduledplans.GetScheduledPlansResponse;
+import au.com.dealsdirect.data.network.model.ourpaydashboard.scheduledplans.ScheduledPlan;
 import au.com.dealsdirect.ui.base.BaseController;
+import au.com.dealsdirect.ui.controller.dashboard.DashboardController;
 import au.com.dealsdirect.ui.controller.dashboard.DashboardMvpPresenter;
 import au.com.dealsdirect.ui.controller.dashboard.DashboardMvpView;
 import au.com.dealsdirect.utils.BundleBuilder;
@@ -39,7 +42,11 @@ public class ScheduledPlansController extends BaseController implements Dashboar
 
     ScheduledPlansAdapter mAdapter;
 
-    public static ScheduledPlansController newInstance() {
+    List<ScheduledPlan> mScheduledPlans;
+
+    DashboardController mParentController;
+
+    public static ScheduledPlansController newInstance(DashboardController parentController, List<ScheduledPlan> scheduledPlans) {
 
         return new ScheduledPlansController(
                 new BundleBuilder(new Bundle())
@@ -95,7 +102,7 @@ public class ScheduledPlansController extends BaseController implements Dashboar
     }
 
     @Override
-    public void showScheduledPayments(GetScheduledPaymentsResponse scheduledPaymentsResponse) {
+    public void showScheduledPayments(GetScheduledPlansResponse scheduledPaymentsResponse) {
 
     }
 

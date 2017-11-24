@@ -32,7 +32,7 @@ public class RegisterPresenterTest {
     private static final String mMockRegisterUserResponseSuccess = "{\n" +
             "  \"d\": {\n" +
             "    \"IsAuthenticated\": true,\n" +
-            "    \"ScheduledPayment\": {\n" +
+            "    \"ScheduledPlan\": {\n" +
             "      \"Ticket\" : \"12345678\",\n" +
             "      \"Registered\" : true\n" +
             "    },\n" +
@@ -44,7 +44,7 @@ public class RegisterPresenterTest {
     private static final String mMockRegisterUserResponseFailure = "{\n" +
             "  \"d\": {\n" +
             "    \"IsAuthenticated\": true,\n" +
-            "    \"ScheduledPayment\": {\n" +
+            "    \"ScheduledPlan\": {\n" +
             "    },\n" +
             "    \"Result\": false,\n" +
             "    \"Message\": \"error\"\n" +

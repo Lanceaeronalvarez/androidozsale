@@ -276,7 +276,7 @@ public class AuthenticationBasePresenter<V extends AuthenticationMvpView> implem
                         jsonObject -> {
                             JSONObject resObj = jsonObject.getJSONObject("d");
                             boolean isSuccess = (resObj.getBoolean("IsAuthenticated") && resObj.getBoolean("Result"));
-                            onAuthSuccess(isSuccess, isSuccess? resObj.getJSONObject("ScheduledPayment").getString("Ticket"): "", resObj.getString("Message"));
+                            onAuthSuccess(isSuccess, isSuccess? resObj.getJSONObject("ScheduledPlan").getString("Ticket"): "", resObj.getString("Message"));
                         },
 
                         throwable -> {

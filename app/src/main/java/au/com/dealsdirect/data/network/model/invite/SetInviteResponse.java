@@ -13,7 +13,7 @@ public class SetInviteResponse {
     private Response d;
 
     public static class Response extends LegacyBaseResponseValue {
-        @SerializedName("ScheduledPayment")
+        @SerializedName("ScheduledPlan")
         @Expose
         public Value value;
     }

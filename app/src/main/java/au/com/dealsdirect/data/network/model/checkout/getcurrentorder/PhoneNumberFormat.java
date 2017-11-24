@@ -16,7 +16,7 @@ public class PhoneNumberFormat {
     public String dataType;
     @SerializedName("Class")
     public String _class;
-    @SerializedName("ScheduledPayment")
+    @SerializedName("ScheduledPlan")
     public Object value;
     @SerializedName("MaxLength")
     public Integer maxLength;

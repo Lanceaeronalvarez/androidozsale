@@ -1,10 +1,10 @@
 
-package au.com.dealsdirect.data.network.model.ourpaydashboard.scheduledpayments;
+package au.com.dealsdirect.data.network.model.ourpaydashboard.scheduledplans;
 
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
-public class ScheduledPayment {
+public class ScheduledPlan {
 
     @SerializedName("PlannedDate")
     @Expose

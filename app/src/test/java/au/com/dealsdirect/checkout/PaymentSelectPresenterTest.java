@@ -38,7 +38,7 @@ public class PaymentSelectPresenterTest {
     private static final String mMockUserPaymentMethodResponse = "{\n" +
             "  \"d\": {\n" +
             "    \"IsAuthenticated\": true,\n" +
-            "    \"ScheduledPayment\": {\n" +
+            "    \"ScheduledPlan\": {\n" +
             "      \"PaymentMethods\": [\n" +
             "        {\n" +
             "          \"PaymentType\": \"Visa\",\n" +
@@ -57,7 +57,7 @@ public class PaymentSelectPresenterTest {
     private static final String mMockGetUserPaymentMethodResponseFail = "{\n" +
             "  \"d\": {\n" +
             "    \"IsAuthenticated\": true,\n" +
-            "    \"ScheduledPayment\": {\n" +
+            "    \"ScheduledPlan\": {\n" +
             "      \"PaymentMethods\": []\n" +
             "    },\n" +
             "    \"Result\": false,\n" +

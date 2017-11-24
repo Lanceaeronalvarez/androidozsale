@@ -177,7 +177,7 @@ public final class ApiEndPoint {
 
     /* Ourpay */
     public static String GET_PAYMENT_PLANS = getBaseApiLegacy() + "GetPaymentPlans";
-    public static String GET_SCHEDULED_PAYMENTS = getBaseApiLegacy() + "GetScheduledPayments";
+    public static String GET_SCHEDULED_PLANS = getBaseApiLegacy() + "GetScheduledPayments";
     public static String GET_PAST_PAYMENTS = getBaseApiLegacy() + "GetPastPayments";
     public static String GET_DELIVERY_SERVICE = getBaseApiLegacy() + "GetDeliveryServicePackageByCustomer";
 

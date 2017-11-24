@@ -37,7 +37,7 @@ public class GetCurrentOrder {
             }
 
             @Expose
-            @SerializedName("ScheduledPayment")
+            @SerializedName("ScheduledPlan")
             public Value value;
         }
 
