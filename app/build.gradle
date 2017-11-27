@@ -126,7 +126,7 @@ android {
             versionName "0.9"
             applicationId "au.com.ourpay.test"
             buildConfigField "String", "API_ROOT", "\"https://genie-ui-dealsdirect-pre.mysaledev.com/\""
-            buildConfigField "String", "API_LEGACY", "\"https://www.oz.mysaledev.com/ApacService.asmx/\""
+            buildConfigField "String", "API_LEGACY", "\"https://api.mysaledev.com/public/v3.17/\""
             buildConfigField "String", "ACCOUNT_ID", "\"A56B0D62-AEF6-4653-848E-2ECDDB6E9B8C\""
         }
 

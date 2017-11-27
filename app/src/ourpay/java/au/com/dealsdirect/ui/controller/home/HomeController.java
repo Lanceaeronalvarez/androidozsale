@@ -360,19 +360,19 @@ public class HomeController extends BaseController implements HomeMvpView {
     public void showContactController() {
         setVisibleContainer(2);
 
-//        if (!mActivity.isAuthorized()) {
-//            mActivity.showLoginController(mContactsRouter, new AuthHandler() {
-//                @Override
-//                public void success() {
-//                    resetRouters();
-//                }
-//
-//                @Override
-//                public void error() {
-//
-//                }
-//            });
-//        }
+        if (!mActivity.isAuthorized()) {
+            mActivity.showLoginController(mContactsRouter, new AuthHandler() {
+                @Override
+                public void success() {
+                    resetRouters();
+                }
+
+                @Override
+                public void error() {
+
+                }
+            });
+        }
     }
 
     @Override
