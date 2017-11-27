@@ -101,7 +101,7 @@ public class PastPaymentsController extends BaseController implements DashboardM
     }
 
     @Override
-    public void showScheduledPayments(GetScheduledPlansResponse scheduledPaymentsResponse) {
+    public void showScheduledPlans(GetScheduledPlansResponse scheduledPlansResponse) {
 
     }
 

@@ -102,7 +102,7 @@ public class ScheduledPlansController extends BaseController implements Dashboar
     }
 
     @Override
-    public void showScheduledPayments(GetScheduledPlansResponse scheduledPaymentsResponse) {
+    public void showScheduledPlans(GetScheduledPlansResponse scheduledPlansResponse) {
 
     }
 

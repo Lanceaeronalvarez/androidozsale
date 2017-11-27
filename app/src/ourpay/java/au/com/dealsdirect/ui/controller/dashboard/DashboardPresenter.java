@@ -38,7 +38,7 @@ public class DashboardPresenter<V extends DashboardMvpView> extends BasePresente
             @Override
             public void onSuccess(Object response) {
                 super.onSuccess(response);
-                getMvpView().showScheduledPayments((GetScheduledPlansResponse) response);
+                getMvpView().showScheduledPlans((GetScheduledPlansResponse) response);
             }
         });
     }
