@@ -11,9 +11,12 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import java.util.List;
+import java.util.Locale;
 
 import au.com.dealsdirect.R;
 import au.com.dealsdirect.data.network.model.ourpaydashboard.Payment;
+import au.com.dealsdirect.data.network.model.ourpaydashboard.scheduledplans.ScheduledPlan;
+import au.com.dealsdirect.utils.DateUtils;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
@@ -21,10 +24,10 @@ public class ScheduledPlansAdapter extends RecyclerView.Adapter<ScheduledPlansAd
 
     Context mContext;
     ScheduledPlansController mController;
-    List<Payment> mData;
+    List<ScheduledPlan> mData;
     String mLastMonth = "";
 
-    public ScheduledPlansAdapter(ScheduledPlansController controller, List<Payment> data) {
+    public ScheduledPlansAdapter(ScheduledPlansController controller, List<ScheduledPlan> data) {
         this.mController = controller;
         this.mData = data;
     }
@@ -66,24 +69,24 @@ public class ScheduledPlansAdapter extends RecyclerView.Adapter<ScheduledPlansAd
     @Override
     public void onBindViewHolder(final ViewHolder holder, final int position) {
 
-        final Payment item = mData.get(position);
+        final ScheduledPlan item = mData.get(position);
 
-        if (mLastMonth.equals(item.getMonth())) {
+        if (mLastMonth.equals(DateUtils.getDateFromStringInFormat(item.getPlannedDate(), "MMMM yyyy"))) {
             holder.header.setVisibility(View.GONE);
         }
-        mLastMonth = item.getMonth();
+        mLastMonth = DateUtils.getDateFromStringInFormat(item.getPlannedDate(), "MMMM yyyy");
 
-        holder.header.setText(item.getMonth() + " 2017");
-        holder.day.setText(item.getDay());
-        holder.month.setText(item.getMonth().substring(0, 3));
-        holder.title.setText(item.getTitle());
-        holder.id.setText(item.getId());
-        holder.value.setText(item.getCurrency() + item.getValue());
+        holder.header.setText(DateUtils.getDateFromStringInFormat(item.getPlannedDate(), "MMMM yyyy"));
+        holder.day.setText(DateUtils.getDateFromStringInFormat(item.getPlannedDate(), "dd"));
+        holder.month.setText(DateUtils.getDateFromStringInFormat(item.getPlannedDate(), "MMM"));
+        holder.title.setText(item.getName());
+        holder.id.setText(item.getOrderNo());
+        holder.value.setText(String.format(Locale.getDefault(), "%s%.2f", item.getCurrency(), item.getAmount()));
 
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                mController.showPaymentDetailsController(item);
+//                mController.showPaymentDetailsController(item);
             }
         });
     }

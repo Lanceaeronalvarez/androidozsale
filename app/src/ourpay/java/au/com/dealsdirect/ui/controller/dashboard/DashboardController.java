@@ -230,7 +230,7 @@ public class DashboardController extends BaseController implements DashboardMvpV
     }
 
     @Override
-    public void showPaymentDetailsController(Payment payment) {
+    public void showPaymentDetailsController(PaymentPlan payment) {
 
     }
 }

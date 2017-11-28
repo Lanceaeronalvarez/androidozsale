@@ -17,6 +17,7 @@ import au.com.dealsdirect.data.network.model.ourpaydashboard.Payment;
 import au.com.dealsdirect.data.network.model.ourpaydashboard.pastpayments.GetPastPaymentsResponse;
 import au.com.dealsdirect.data.network.model.ourpaydashboard.pastpayments.PastPayment;
 import au.com.dealsdirect.data.network.model.ourpaydashboard.paymentplans.GetPaymentPlansResponse;
+import au.com.dealsdirect.data.network.model.ourpaydashboard.paymentplans.PaymentPlan;
 import au.com.dealsdirect.data.network.model.ourpaydashboard.scheduledplans.GetScheduledPlansResponse;
 import au.com.dealsdirect.ui.base.BaseController;
 import au.com.dealsdirect.ui.controller.dashboard.DashboardController;
@@ -86,14 +87,7 @@ public class PastPaymentsController extends BaseController implements DashboardM
         mParentController = (DashboardController) getArgs().getSerializable(KEY_CONTROLLER);
         mPastPayments = getArgs().getParcelableArrayList(KEY_PLANS);
 
-        ArrayList<Payment> data = new ArrayList<>();
-        data.add(new Payment("12", "January", "lifeandlookstyle"));
-        data.add(new Payment("12", "January", "ozsale"));
-        data.add(new Payment("01", "February", "mysale"));
-        data.add(new Payment("10", "February", "cocosa"));
-        data.add(new Payment("10", "February", "cocosa"));
-
-        mAdapter = new PastPaymentsAdapter(this, data);
+        mAdapter = new PastPaymentsAdapter(this, mPastPayments);
         mRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity(), LinearLayoutManager.VERTICAL, false));
         mRecyclerView.setAdapter(mAdapter);
     }
@@ -125,7 +119,7 @@ public class PastPaymentsController extends BaseController implements DashboardM
     }
 
     @Override
-    public void showPaymentDetailsController(Payment payment) {
+    public void showPaymentDetailsController(PaymentPlan payment) {
 
     }
 }

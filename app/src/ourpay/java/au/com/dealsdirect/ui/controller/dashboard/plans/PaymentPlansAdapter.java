@@ -11,9 +11,10 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import java.util.List;
+import java.util.Locale;
 
 import au.com.dealsdirect.R;
-import au.com.dealsdirect.data.network.model.ourpaydashboard.Payment;
+import au.com.dealsdirect.data.network.model.ourpaydashboard.paymentplans.PaymentPlan;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
@@ -21,9 +22,9 @@ public class PaymentPlansAdapter extends RecyclerView.Adapter<PaymentPlansAdapte
 
     Context mContext;
     PaymentPlansController mController;
-    List<Payment> mData;
+    List<PaymentPlan> mData;
 
-    public PaymentPlansAdapter(PaymentPlansController controller, List<Payment> data) {
+    public PaymentPlansAdapter(PaymentPlansController controller, List<PaymentPlan> data) {
         this.mController = controller;
         this.mData = data;
     }
@@ -56,11 +57,11 @@ public class PaymentPlansAdapter extends RecyclerView.Adapter<PaymentPlansAdapte
     @Override
     public void onBindViewHolder(final ViewHolder holder, final int position) {
 
-        final Payment item = mData.get(position);
+        final PaymentPlan item = mData.get(position);
 
-        holder.title.setText(item.getTitle());
-        holder.id.setText(item.getId());
-        holder.value.setText(item.getCurrency() + item.getValue());
+        holder.title.setText(item.getName());
+        holder.id.setText(item.getOrderNo());
+        holder.value.setText(String.format(Locale.getDefault(), "%s%.2f", item.getCurrencySign(), item.getTotalAmount()));
 
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override

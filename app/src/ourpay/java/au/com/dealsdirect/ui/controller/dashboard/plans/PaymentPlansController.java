@@ -14,7 +14,6 @@ import java.util.List;
 import javax.inject.Inject;
 
 import au.com.dealsdirect.R;
-import au.com.dealsdirect.data.network.model.ourpaydashboard.Payment;
 import au.com.dealsdirect.data.network.model.ourpaydashboard.pastpayments.GetPastPaymentsResponse;
 import au.com.dealsdirect.data.network.model.ourpaydashboard.paymentplans.GetPaymentPlansResponse;
 import au.com.dealsdirect.data.network.model.ourpaydashboard.paymentplans.PaymentPlan;
@@ -87,15 +86,7 @@ public class PaymentPlansController extends BaseController implements DashboardM
         mParentController = (DashboardController) getArgs().getSerializable(KEY_CONTROLLER);
         mPaymentPlans = getArgs().getParcelableArrayList(KEY_PLANS);
 
-        ArrayList<Payment> data = new ArrayList<>();
-        data.add(new Payment("mysale"));
-        data.add(new Payment("lifeandlookstyle"));
-        data.add(new Payment("nzsale"));
-        data.add(new Payment("cocosa"));
-        data.add(new Payment("mysale"));
-        data.add(new Payment("lifeandlookstyle"));
-
-        mAdapter = new PaymentPlansAdapter(this, data);
+        mAdapter = new PaymentPlansAdapter(this, mPaymentPlans);
         mRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity(), LinearLayoutManager.VERTICAL, false));
         mRecyclerView.setAdapter(mAdapter);
     }
@@ -127,7 +118,7 @@ public class PaymentPlansController extends BaseController implements DashboardM
     }
 
     @Override
-    public void showPaymentDetailsController(Payment payment) {
+    public void showPaymentDetailsController(PaymentPlan payment) {
 
     }
 }

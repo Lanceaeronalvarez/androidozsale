@@ -14,9 +14,9 @@ import java.util.List;
 import javax.inject.Inject;
 
 import au.com.dealsdirect.R;
-import au.com.dealsdirect.data.network.model.ourpaydashboard.Payment;
 import au.com.dealsdirect.data.network.model.ourpaydashboard.pastpayments.GetPastPaymentsResponse;
 import au.com.dealsdirect.data.network.model.ourpaydashboard.paymentplans.GetPaymentPlansResponse;
+import au.com.dealsdirect.data.network.model.ourpaydashboard.paymentplans.PaymentPlan;
 import au.com.dealsdirect.data.network.model.ourpaydashboard.scheduledplans.GetScheduledPlansResponse;
 import au.com.dealsdirect.data.network.model.ourpaydashboard.scheduledplans.ScheduledPlan;
 import au.com.dealsdirect.ui.base.BaseController;
@@ -87,14 +87,7 @@ public class ScheduledPlansController extends BaseController implements Dashboar
         mParentController = (DashboardController) getArgs().getSerializable(KEY_CONTROLLER);
         mScheduledPlans = getArgs().getParcelableArrayList(KEY_PLANS);
 
-        ArrayList<Payment> data = new ArrayList<>();
-        data.add(new Payment("12", "January", "lifeandlookstyle"));
-        data.add(new Payment("12", "January", "ozsale"));
-        data.add(new Payment("01", "February", "mysale"));
-        data.add(new Payment("10", "February", "cocosa"));
-        data.add(new Payment("10", "February", "cocosa"));
-
-        mAdapter = new ScheduledPlansAdapter(this, data);
+        mAdapter = new ScheduledPlansAdapter(this, mScheduledPlans);
         mRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity(), LinearLayoutManager.VERTICAL, false));
         mRecyclerView.setAdapter(mAdapter);
     }
@@ -126,7 +119,7 @@ public class ScheduledPlansController extends BaseController implements Dashboar
     }
 
     @Override
-    public void showPaymentDetailsController(Payment payment) {
+    public void showPaymentDetailsController(PaymentPlan payment) {
 
     }
 }
