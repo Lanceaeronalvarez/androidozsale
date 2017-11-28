@@ -4,6 +4,7 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.TabLayout;
 import android.support.v4.view.ViewPager;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -159,30 +160,37 @@ public class DashboardController extends BaseController implements DashboardMvpV
 
     @Override
     public void showPaymentPlans(GetPaymentPlansResponse paymentPlansResponse) {
-        mActiveText.setText((String.format(Locale.getDefault(), "%d", paymentPlansResponse.getValue().getActivePlansCount())));
-        mBalanceText.setText(String.format(Locale.getDefault(), "%f", paymentPlansResponse.getValue().getRemainingBalance()));
-        mCreditText.setText(String.format(Locale.getDefault(), "%f", paymentPlansResponse.getValue().getRemainingCredit()));
-        mOverdueText.setText(String.format(Locale.getDefault(), "%d", paymentPlansResponse.getValue().getOverduePlansCount()));
+        if (paymentPlansResponse.getValue() != null) {
+            mActiveText.setText((String.format(Locale.getDefault(), "%d", paymentPlansResponse.getValue().getActivePlansCount())));
+            mBalanceText.setText(String.format(Locale.getDefault(), "%s%.0f", paymentPlansResponse.getValue().getCurrencySign(), paymentPlansResponse.getValue().getRemainingBalance()));
+            mCreditText.setText(String.format(Locale.getDefault(), "%s%.0f", paymentPlansResponse.getValue().getCurrencySign(), paymentPlansResponse.getValue().getRemainingCredit()));
+            mOverdueText.setText(String.format(Locale.getDefault(), "%d", paymentPlansResponse.getValue().getOverduePlansCount()));
 
-        mPaymentPlans.addAll(paymentPlansResponse.getValue().getPaymentPlans());
-        refreshPager();
+            mPaymentPlans.addAll(paymentPlansResponse.getValue().getPaymentPlans());
+            refreshPager();
+        }
     }
 
     @Override
     public void showScheduledPlans(GetScheduledPlansResponse scheduledPaymentsResponse) {
-        mScheduledPlans.addAll(scheduledPaymentsResponse.getScheduledPayment());
-        refreshPager();
+        if (scheduledPaymentsResponse.getScheduledPayment() != null) {
+            mScheduledPlans.addAll(scheduledPaymentsResponse.getScheduledPayment());
+            refreshPager();
+        }
     }
 
     @Override
     public void showPastPayments(GetPastPaymentsResponse pastPaymentsResponse) {
-        mPastPayments.addAll(pastPaymentsResponse.getPastPayment());
-        refreshPager();
+        if (pastPaymentsResponse.getPastPayment() != null) {
+            mPastPayments.addAll(pastPaymentsResponse.getPastPayment());
+            refreshPager();
+        }
     }
 
     @Override
     public void refreshPager() {
         if (mPaymentPlans != null && mScheduledPlans != null && mPastPayments != null) {
+            mTabTitles = new String[]{getString(R.string.payment_plans), getString(R.string.scheduled_plans), getString(R.string.past_payments)};
             mAdapter = new RouterPagerAdapter(this) {
                 @Override
                 public void configureRouter(@NonNull Router router, int position) {

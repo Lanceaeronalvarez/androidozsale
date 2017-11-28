@@ -9,7 +9,7 @@ public class D {
     @SerializedName("IsAuthenticated")
     @Expose
     private Boolean isAuthenticated;
-    @SerializedName("ScheduledPlan")
+    @SerializedName("Value")
     @Expose
     private Value value;
     @SerializedName("Result")
@@ -51,4 +51,13 @@ public class D {
         this.message = message;
     }
 
+    @Override
+    public String toString() {
+        return "D{" +
+                "isAuthenticated=" + isAuthenticated +
+                ", value=" + value.toString() +
+                ", result=" + result +
+                ", message='" + message + '\'' +
+                '}';
+    }
 }
