@@ -13,4 +13,6 @@ public interface DashboardMvpPresenter<V extends DashboardMvpView> extends MvpPr
     void getScheduledPayments();
 
     void getPastPayments();
+
+    void getDeliveryService();
 }

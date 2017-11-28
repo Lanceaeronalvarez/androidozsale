@@ -22,7 +22,7 @@ import java.util.Locale;
 import javax.inject.Inject;
 
 import au.com.dealsdirect.R;
-import au.com.dealsdirect.data.network.model.ourpaydashboard.Payment;
+import au.com.dealsdirect.data.network.model.ourpaydashboard.deliveryservice.GetDeliveryServiceResponse;
 import au.com.dealsdirect.data.network.model.ourpaydashboard.pastpayments.GetPastPaymentsResponse;
 import au.com.dealsdirect.data.network.model.ourpaydashboard.pastpayments.PastPayment;
 import au.com.dealsdirect.data.network.model.ourpaydashboard.paymentplans.GetPaymentPlansResponse;
@@ -185,6 +185,11 @@ public class DashboardController extends BaseController implements DashboardMvpV
             mPastPayments.addAll(pastPaymentsResponse.getPastPayment());
             refreshPager();
         }
+    }
+
+    @Override
+    public void showDeliveryService(GetDeliveryServiceResponse deliveryServiceResponse) {
+
     }
 
     @Override

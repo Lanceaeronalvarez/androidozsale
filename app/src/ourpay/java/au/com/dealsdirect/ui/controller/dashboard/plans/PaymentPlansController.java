@@ -14,6 +14,7 @@ import java.util.List;
 import javax.inject.Inject;
 
 import au.com.dealsdirect.R;
+import au.com.dealsdirect.data.network.model.ourpaydashboard.deliveryservice.GetDeliveryServiceResponse;
 import au.com.dealsdirect.data.network.model.ourpaydashboard.pastpayments.GetPastPaymentsResponse;
 import au.com.dealsdirect.data.network.model.ourpaydashboard.paymentplans.GetPaymentPlansResponse;
 import au.com.dealsdirect.data.network.model.ourpaydashboard.paymentplans.PaymentPlan;
@@ -99,26 +100,31 @@ public class PaymentPlansController extends BaseController implements DashboardM
 
     @Override
     public void showPaymentPlans(GetPaymentPlansResponse paymentPlansResponse) {
-
+        mParentController.showPaymentPlans(paymentPlansResponse);
     }
 
     @Override
     public void showScheduledPlans(GetScheduledPlansResponse scheduledPlansResponse) {
-
+        mParentController.showScheduledPlans(scheduledPlansResponse);
     }
 
     @Override
     public void showPastPayments(GetPastPaymentsResponse pastPaymentsResponse) {
+        mParentController.showPastPayments(pastPaymentsResponse);
+    }
 
+    @Override
+    public void showDeliveryService(GetDeliveryServiceResponse deliveryServiceResponse) {
+        mParentController.showDeliveryService(deliveryServiceResponse);
     }
 
     @Override
     public void refreshPager() {
-
+        mParentController.refreshPager();
     }
 
     @Override
     public void showPaymentDetailsController(PaymentPlan payment) {
-
+        mParentController.showPaymentDetailsController(payment);
     }
 }

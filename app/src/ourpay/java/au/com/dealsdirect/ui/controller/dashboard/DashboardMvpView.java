@@ -4,6 +4,7 @@ package au.com.dealsdirect.ui.controller.dashboard;
  */
 
 
+import au.com.dealsdirect.data.network.model.ourpaydashboard.deliveryservice.GetDeliveryServiceResponse;
 import au.com.dealsdirect.data.network.model.ourpaydashboard.pastpayments.GetPastPaymentsResponse;
 import au.com.dealsdirect.data.network.model.ourpaydashboard.paymentplans.GetPaymentPlansResponse;
 import au.com.dealsdirect.data.network.model.ourpaydashboard.paymentplans.PaymentPlan;
@@ -17,6 +18,8 @@ public interface DashboardMvpView extends MvpView {
     void showScheduledPlans(GetScheduledPlansResponse scheduledPlansResponse);
 
     void showPastPayments(GetPastPaymentsResponse pastPaymentsResponse);
+
+    void showDeliveryService(GetDeliveryServiceResponse deliveryServiceResponse);
 
     void refreshPager();
 

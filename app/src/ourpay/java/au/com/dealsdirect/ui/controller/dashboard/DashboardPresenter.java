@@ -9,6 +9,7 @@ import javax.inject.Inject;
 
 import au.com.dealsdirect.data.DataManager;
 import au.com.dealsdirect.data.network.AppApiCallback;
+import au.com.dealsdirect.data.network.model.ourpaydashboard.deliveryservice.GetDeliveryServiceResponse;
 import au.com.dealsdirect.data.network.model.ourpaydashboard.pastpayments.GetPastPaymentsResponse;
 import au.com.dealsdirect.data.network.model.ourpaydashboard.paymentplans.GetPaymentPlansResponse;
 import au.com.dealsdirect.data.network.model.ourpaydashboard.scheduledplans.GetScheduledPlansResponse;
@@ -289,6 +290,21 @@ public class DashboardPresenter<V extends DashboardMvpView> extends BasePresente
                 public void onSuccess(Object response) {
                     super.onSuccess(response);
                     getMvpView().showPastPayments((GetPastPaymentsResponse) response);
+                }
+            });
+        }
+    }
+
+    @Override
+    public void getDeliveryService() {
+        if (useMockData) {
+            getMvpView().showDeliveryService(new Gson().fromJson(SAMPLE_DELIVERY, GetDeliveryServiceResponse.class));
+        } else {
+            doApiCallForResponse(getDataManager().callGetDeliveryService(), new AppApiCallback() {
+                @Override
+                public void onSuccess(Object response) {
+                    super.onSuccess(response);
+                    getMvpView().showDeliveryService((GetDeliveryServiceResponse) response);
                 }
             });
         }
