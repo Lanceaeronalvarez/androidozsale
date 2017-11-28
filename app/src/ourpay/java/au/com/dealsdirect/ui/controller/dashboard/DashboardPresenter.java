@@ -226,6 +226,9 @@ public class DashboardPresenter<V extends DashboardMvpView> extends BasePresente
             "   }\n" +
             "}";
 
+    // Ayv - Just to make it easier to flip between mock and api data during testing
+    private boolean useMockData = true;
+
     @Inject
     public DashboardPresenter(DataManager dataManager, SchedulerProvider schedulerProvider, CompositeDisposable compositeDisposable) {
         super(dataManager, schedulerProvider, compositeDisposable);
@@ -233,40 +236,46 @@ public class DashboardPresenter<V extends DashboardMvpView> extends BasePresente
 
     @Override
     public void getPaymentPlans() {
-        getMvpView().showPaymentPlans(new Gson().fromJson(SAMPLE_PAYMENT_PLANS, GetPaymentPlansResponse.class));
-
-//        doApiCallForResponse(getDataManager().callGetPaymentPlans(), new AppApiCallback(){
-//            @Override
-//            public void onSuccess(Object response) {
-//                super.onSuccess(response);
-//                getMvpView().showPaymentPlans((GetPaymentPlansResponse) response);
-//            }
-//        });
+        if (useMockData) {
+            getMvpView().showPaymentPlans(new Gson().fromJson(SAMPLE_PAYMENT_PLANS, GetPaymentPlansResponse.class));
+        } else {
+            doApiCallForResponse(getDataManager().callGetPaymentPlans(), new AppApiCallback() {
+                @Override
+                public void onSuccess(Object response) {
+                    super.onSuccess(response);
+                    getMvpView().showPaymentPlans((GetPaymentPlansResponse) response);
+                }
+            });
+        }
     }
 
     @Override
     public void getScheduledPayments() {
-        getMvpView().showScheduledPlans(new Gson().fromJson(SAMPLE_SCHEDULED_PLANS, GetScheduledPlansResponse.class));
-
-//        doApiCallForResponse(getDataManager().callGetScheduledPlans(), new AppApiCallback(){
-//            @Override
-//            public void onSuccess(Object response) {
-//                super.onSuccess(response);
-//                getMvpView().showScheduledPlans((GetScheduledPlansResponse) response);
-//            }
-//        });
+        if (useMockData) {
+            getMvpView().showScheduledPlans(new Gson().fromJson(SAMPLE_SCHEDULED_PLANS, GetScheduledPlansResponse.class));
+        } else {
+            doApiCallForResponse(getDataManager().callGetScheduledPlans(), new AppApiCallback() {
+                @Override
+                public void onSuccess(Object response) {
+                    super.onSuccess(response);
+                    getMvpView().showScheduledPlans((GetScheduledPlansResponse) response);
+                }
+            });
+        }
     }
 
     @Override
     public void getPastPayments() {
-        getMvpView().showPastPayments(new Gson().fromJson(SAMPLE_PAST_PAYMENTS, GetPastPaymentsResponse.class));
-
-//        doApiCallForResponse(getDataManager().callGetPastPayments(), new AppApiCallback(){
-//            @Override
-//            public void onSuccess(Object response) {
-//                super.onSuccess(response);
-//                getMvpView().showPastPayments((GetPastPaymentsResponse) response);
-//            }
-//        });
+        if (useMockData) {
+            getMvpView().showPastPayments(new Gson().fromJson(SAMPLE_PAST_PAYMENTS, GetPastPaymentsResponse.class));
+        } else {
+            doApiCallForResponse(getDataManager().callGetPastPayments(), new AppApiCallback() {
+                @Override
+                public void onSuccess(Object response) {
+                    super.onSuccess(response);
+                    getMvpView().showPastPayments((GetPastPaymentsResponse) response);
+                }
+            });
+        }
     }
 }
