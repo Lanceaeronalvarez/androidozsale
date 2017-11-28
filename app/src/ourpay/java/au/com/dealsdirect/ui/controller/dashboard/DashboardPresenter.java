@@ -251,6 +251,14 @@ public class DashboardPresenter<V extends DashboardMvpView> extends BasePresente
     }
 
     @Override
+    public void loadAll() {
+        getPaymentPlans();
+        getScheduledPayments();
+        getPastPayments();
+        getDeliveryService();
+    }
+
+    @Override
     public void getPaymentPlans() {
         if (useMockData) {
             getMvpView().showPaymentPlans(new Gson().fromJson(SAMPLE_PAYMENT_PLANS, GetPaymentPlansResponse.class));

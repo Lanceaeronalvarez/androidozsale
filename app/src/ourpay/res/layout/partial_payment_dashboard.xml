@@ -34,9 +34,9 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_centerHorizontal="true"
-                android:text="18"
                 android:textColor="@color/colorPrimary"
-                android:textSize="@dimen/text_size_xxxxxlarge" />
+                android:textSize="@dimen/text_size_xxxxxlarge"
+                tools:text="18" />
 
             <TextView
                 fontPath="@string/font_lato_light"
@@ -66,9 +66,9 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_centerHorizontal="true"
-                android:text="$200"
                 android:textColor="@color/colorPrimary"
-                android:textSize="@dimen/text_size_xxxxxlarge" />
+                android:textSize="@dimen/text_size_xxxxxlarge"
+                tools:text="$200" />
 
             <TextView
                 fontPath="@string/font_lato_light"
@@ -88,8 +88,8 @@
             android:id="@+id/controller_payment_dashboard_credit_container"
             android:layout_width="160dp"
             android:layout_height="160dp"
-            android:layout_margin="5dp"
             android:layout_below="@id/controller_payment_dashboard_active_container"
+            android:layout_margin="5dp"
             android:background="@drawable/bg_dashboard_item"
             android:gravity="center">
 
@@ -98,9 +98,9 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_centerHorizontal="true"
-                android:text="$300"
                 android:textColor="@color/colorPrimary"
-                android:textSize="@dimen/text_size_xxxxxlarge" />
+                android:textSize="@dimen/text_size_xxxxxlarge"
+                tools:text="$300" />
 
             <TextView
                 fontPath="@string/font_lato_light"
@@ -117,33 +117,32 @@
         </RelativeLayout>
 
         <RelativeLayout
-            android:id="@+id/controller_payment_dashboard_overdue_container"
+            android:id="@+id/controller_payment_dashboard_delivery_container"
             android:layout_width="160dp"
             android:layout_height="160dp"
-            android:layout_margin="5dp"
             android:layout_below="@id/controller_payment_dashboard_balance_container"
+            android:layout_margin="5dp"
             android:layout_toEndOf="@id/controller_payment_dashboard_credit_container"
-            android:background="@drawable/bg_dashboard_item"
+            android:background="@drawable/bg_dashboard_item_light"
             android:gravity="center">
 
             <TextView
-                android:id="@+id/controller_payment_dashboard_overdue_text"
+                android:id="@+id/controller_payment_dashboard_delivery_text"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_centerHorizontal="true"
-                android:text="12"
+                android:layout_centerInParent="true"
                 android:textColor="@color/colorPrimary"
-                android:textSize="@dimen/text_size_xxxxxlarge" />
+                android:textSize="@dimen/text_size_xxxxxlarge"
+                tools:text="12" />
 
             <TextView
                 fontPath="@string/font_lato_light"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_below="@id/controller_payment_dashboard_overdue_text"
+                android:layout_below="@id/controller_payment_dashboard_delivery_text"
                 android:layout_centerHorizontal="true"
-                android:drawablePadding="5dp"
-                android:drawableStart="@drawable/ic_dashboard_overdue"
-                android:text="@string/overdue_plans"
+                android:drawableBottom="@drawable/ic_dashboard_delivery"
+                android:text="@string/remaining_deliveries"
                 android:textColor="#afafaf"
                 tools:ignore="MissingPrefix" />
 

@@ -4,7 +4,6 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.TabLayout;
 import android.support.v4.view.ViewPager;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -65,8 +64,8 @@ public class DashboardController extends BaseController implements DashboardMvpV
     @BindView(R.id.controller_payment_dashboard_credit_text)
     TextView mCreditText;
 
-    @BindView(R.id.controller_payment_dashboard_overdue_text)
-    TextView mOverdueText;
+    @BindView(R.id.controller_payment_dashboard_delivery_text)
+    TextView mDeliveryText;
 
     ArrayList<PaymentPlan> mPaymentPlans = new ArrayList<>();
 
@@ -110,9 +109,7 @@ public class DashboardController extends BaseController implements DashboardMvpV
 
     @Override
     protected void setUp(View view) {
-        mPresenter.getPaymentPlans();
-        mPresenter.getPastPayments();
-        mPresenter.getScheduledPayments();
+        mPresenter.loadAll();
 
         mTabTitles = new String[]{getString(R.string.payment_plans), getString(R.string.scheduled_plans), getString(R.string.past_payments)};
         mAdapter = new RouterPagerAdapter(this) {
@@ -164,7 +161,7 @@ public class DashboardController extends BaseController implements DashboardMvpV
             mActiveText.setText((String.format(Locale.getDefault(), "%d", paymentPlansResponse.getValue().getActivePlansCount())));
             mBalanceText.setText(String.format(Locale.getDefault(), "%s%.0f", paymentPlansResponse.getValue().getCurrencySign(), paymentPlansResponse.getValue().getRemainingBalance()));
             mCreditText.setText(String.format(Locale.getDefault(), "%s%.0f", paymentPlansResponse.getValue().getCurrencySign(), paymentPlansResponse.getValue().getRemainingCredit()));
-            mOverdueText.setText(String.format(Locale.getDefault(), "%d", paymentPlansResponse.getValue().getOverduePlansCount()));
+            mDeliveryText.setText(String.format(Locale.getDefault(), "%d", paymentPlansResponse.getValue().getOverduePlansCount()));
 
             mPaymentPlans.addAll(paymentPlansResponse.getValue().getPaymentPlans());
             refreshPager();
@@ -189,7 +186,9 @@ public class DashboardController extends BaseController implements DashboardMvpV
 
     @Override
     public void showDeliveryService(GetDeliveryServiceResponse deliveryServiceResponse) {
-
+        if (deliveryServiceResponse.getValue() != null && !deliveryServiceResponse.getValue().isEmpty()) {
+            mDeliveryText.setText((String.format(Locale.getDefault(), "%d", deliveryServiceResponse.getValue().get(0).getRemainingCount())));
+        }
     }
 
     @Override
