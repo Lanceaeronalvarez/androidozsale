@@ -33,6 +33,10 @@ public class PastPaymentsController extends BaseController implements DashboardM
 
     public static final String TAG = "PastPaymentsController";
 
+    private static final String KEY_CONTROLLER = "PastPaymentsController.KEY_CONTROLLER";
+
+    private static final String KEY_PLANS = "PastPaymentsController.KEY_PLANS";
+
     @Inject
     DashboardMvpPresenter<DashboardMvpView> mPresenter;
 
@@ -45,10 +49,12 @@ public class PastPaymentsController extends BaseController implements DashboardM
 
     DashboardController mParentController;
 
-    public static PastPaymentsController newInstance(DashboardController parentController, List<PastPayment> pastPayments) {
+    public static PastPaymentsController newInstance(DashboardController parentController, ArrayList<PastPayment> pastPayments) {
 
         return new PastPaymentsController(
                 new BundleBuilder(new Bundle())
+                        .putSerializable(KEY_CONTROLLER, parentController)
+                        .putParcelableArrayList(KEY_PLANS, pastPayments)
                         .build());
     }
 
@@ -77,6 +83,9 @@ public class PastPaymentsController extends BaseController implements DashboardM
 
     @Override
     protected void setUp(View view) {
+        mParentController = (DashboardController) getArgs().getSerializable(KEY_CONTROLLER);
+        mPastPayments = getArgs().getParcelableArrayList(KEY_PLANS);
+
         ArrayList<Payment> data = new ArrayList<>();
         data.add(new Payment("12", "January", "lifeandlookstyle"));
         data.add(new Payment("12", "January", "ozsale"));

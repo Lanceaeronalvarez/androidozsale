@@ -1,10 +1,13 @@
 
 package au.com.dealsdirect.data.network.model.ourpaydashboard.pastpayments;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
-public class PastPayment {
+public class PastPayment implements Parcelable {
 
     @SerializedName("PlannedDate")
     @Expose
@@ -33,6 +36,66 @@ public class PastPayment {
     @SerializedName("MaskedNumber")
     @Expose
     private String maskedNumber;
+
+    protected PastPayment(Parcel in) {
+        plannedDate = in.readString();
+        if (in.readByte() == 0) {
+            amount = null;
+        } else {
+            amount = in.readDouble();
+        }
+        currency = in.readString();
+        state = in.readString();
+        if (in.readByte() == 0) {
+            number = null;
+        } else {
+            number = in.readInt();
+        }
+        orderNo = in.readString();
+        paymentMethod = in.readString();
+        name = in.readString();
+        maskedNumber = in.readString();
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeString(plannedDate);
+        if (amount == null) {
+            dest.writeByte((byte) 0);
+        } else {
+            dest.writeByte((byte) 1);
+            dest.writeDouble(amount);
+        }
+        dest.writeString(currency);
+        dest.writeString(state);
+        if (number == null) {
+            dest.writeByte((byte) 0);
+        } else {
+            dest.writeByte((byte) 1);
+            dest.writeInt(number);
+        }
+        dest.writeString(orderNo);
+        dest.writeString(paymentMethod);
+        dest.writeString(name);
+        dest.writeString(maskedNumber);
+    }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    public static final Creator<PastPayment> CREATOR = new Creator<PastPayment>() {
+        @Override
+        public PastPayment createFromParcel(Parcel in) {
+            return new PastPayment(in);
+        }
+
+        @Override
+        public PastPayment[] newArray(int size) {
+            return new PastPayment[size];
+        }
+    };
 
     public String getPlannedDate() {
         return plannedDate;

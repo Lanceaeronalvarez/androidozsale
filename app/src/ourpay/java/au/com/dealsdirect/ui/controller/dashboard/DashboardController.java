@@ -14,7 +14,8 @@ import com.bluelinelabs.conductor.Router;
 import com.bluelinelabs.conductor.RouterTransaction;
 import com.bluelinelabs.conductor.support.RouterPagerAdapter;
 
-import java.util.List;
+import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.Locale;
 
 import javax.inject.Inject;
@@ -39,7 +40,7 @@ import butterknife.BindView;
  * Created by Ayi on 05/06/2017.
  */
 
-public class DashboardController extends BaseController implements DashboardMvpView {
+public class DashboardController extends BaseController implements DashboardMvpView, Serializable {
 
     public static final String TAG = "DashboardController";
 
@@ -66,11 +67,11 @@ public class DashboardController extends BaseController implements DashboardMvpV
     @BindView(R.id.controller_payment_dashboard_overdue_text)
     TextView mOverdueText;
 
-    List<PaymentPlan> mPaymentPlans;
+    ArrayList<PaymentPlan> mPaymentPlans = new ArrayList<>();
 
-    List<ScheduledPlan> mScheduledPlans;
+    ArrayList<ScheduledPlan> mScheduledPlans = new ArrayList<>();
 
-    List<PastPayment> mPastPayments;
+    ArrayList<PastPayment> mPastPayments = new ArrayList<>();
 
     String[] mTabTitles;
 
@@ -163,19 +164,19 @@ public class DashboardController extends BaseController implements DashboardMvpV
         mCreditText.setText(String.format(Locale.getDefault(), "%f", paymentPlansResponse.getValue().getRemainingCredit()));
         mOverdueText.setText(String.format(Locale.getDefault(), "%d", paymentPlansResponse.getValue().getOverduePlansCount()));
 
-        mPaymentPlans = paymentPlansResponse.getValue().getPaymentPlans();
+        mPaymentPlans.addAll(paymentPlansResponse.getValue().getPaymentPlans());
         refreshPager();
     }
 
     @Override
     public void showScheduledPlans(GetScheduledPlansResponse scheduledPaymentsResponse) {
-        mScheduledPlans = scheduledPaymentsResponse.getScheduledPayment();
+        mScheduledPlans.addAll(scheduledPaymentsResponse.getScheduledPayment());
         refreshPager();
     }
 
     @Override
     public void showPastPayments(GetPastPaymentsResponse pastPaymentsResponse) {
-        mPastPayments = pastPaymentsResponse.getPastPayment();
+        mPastPayments.addAll(pastPaymentsResponse.getPastPayment());
         refreshPager();
     }
 

@@ -34,6 +34,10 @@ public class ScheduledPlansController extends BaseController implements Dashboar
 
     public static final String TAG = "ScheduledPlansController";
 
+    private static final String KEY_CONTROLLER = "ScheduledPlansController.KEY_CONTROLLER";
+
+    private static final String KEY_PLANS = "ScheduledPlansController.KEY_PLANS";
+
     @Inject
     DashboardMvpPresenter<DashboardMvpView> mPresenter;
 
@@ -46,10 +50,12 @@ public class ScheduledPlansController extends BaseController implements Dashboar
 
     DashboardController mParentController;
 
-    public static ScheduledPlansController newInstance(DashboardController parentController, List<ScheduledPlan> scheduledPlans) {
+    public static ScheduledPlansController newInstance(DashboardController parentController, ArrayList<ScheduledPlan> scheduledPlans) {
 
         return new ScheduledPlansController(
                 new BundleBuilder(new Bundle())
+                        .putSerializable(KEY_CONTROLLER, parentController)
+                        .putParcelableArrayList(KEY_PLANS, scheduledPlans)
                         .build());
     }
 
@@ -78,6 +84,9 @@ public class ScheduledPlansController extends BaseController implements Dashboar
 
     @Override
     protected void setUp(View view) {
+        mParentController = (DashboardController) getArgs().getSerializable(KEY_CONTROLLER);
+        mScheduledPlans = getArgs().getParcelableArrayList(KEY_PLANS);
+
         ArrayList<Payment> data = new ArrayList<>();
         data.add(new Payment("12", "January", "lifeandlookstyle"));
         data.add(new Payment("12", "January", "ozsale"));

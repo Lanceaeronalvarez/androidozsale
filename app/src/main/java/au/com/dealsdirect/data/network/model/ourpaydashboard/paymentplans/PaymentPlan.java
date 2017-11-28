@@ -1,11 +1,15 @@
 
 package au.com.dealsdirect.data.network.model.ourpaydashboard.paymentplans;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
 import java.util.List;
+
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
-public class PaymentPlan {
+public class PaymentPlan implements Parcelable {
 
     @SerializedName("ID")
     @Expose
@@ -37,6 +41,76 @@ public class PaymentPlan {
     @SerializedName("PlannedTransactions")
     @Expose
     private List<PlannedTransaction> plannedTransactions = null;
+
+    protected PaymentPlan(Parcel in) {
+        iD = in.readString();
+        name = in.readString();
+        orderNo = in.readString();
+        if (in.readByte() == 0) {
+            orderBalance = null;
+        } else {
+            orderBalance = in.readDouble();
+        }
+        if (in.readByte() == 0) {
+            totalAmount = null;
+        } else {
+            totalAmount = in.readDouble();
+        }
+        if (in.readByte() == 0) {
+            refundAmount = null;
+        } else {
+            refundAmount = in.readInt();
+        }
+        currency = in.readString();
+        currencySign = in.readString();
+        byte tmpIsOverdue = in.readByte();
+        isOverdue = tmpIsOverdue == 0 ? null : tmpIsOverdue == 1;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeString(iD);
+        dest.writeString(name);
+        dest.writeString(orderNo);
+        if (orderBalance == null) {
+            dest.writeByte((byte) 0);
+        } else {
+            dest.writeByte((byte) 1);
+            dest.writeDouble(orderBalance);
+        }
+        if (totalAmount == null) {
+            dest.writeByte((byte) 0);
+        } else {
+            dest.writeByte((byte) 1);
+            dest.writeDouble(totalAmount);
+        }
+        if (refundAmount == null) {
+            dest.writeByte((byte) 0);
+        } else {
+            dest.writeByte((byte) 1);
+            dest.writeInt(refundAmount);
+        }
+        dest.writeString(currency);
+        dest.writeString(currencySign);
+        dest.writeByte((byte) (isOverdue == null ? 0 : isOverdue ? 1 : 2));
+    }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    public static final Creator<PaymentPlan> CREATOR = new Creator<PaymentPlan>() {
+        @Override
+        public PaymentPlan createFromParcel(Parcel in) {
+            return new PaymentPlan(in);
+        }
+
+        @Override
+        public PaymentPlan[] newArray(int size) {
+            return new PaymentPlan[size];
+        }
+    };
 
     public String getID() {
         return iD;
