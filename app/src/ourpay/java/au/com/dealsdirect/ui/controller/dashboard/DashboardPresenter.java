@@ -226,6 +226,21 @@ public class DashboardPresenter<V extends DashboardMvpView> extends BasePresente
             "   }\n" +
             "}";
 
+    private static final String SAMPLE_DELIVERY = "{  \n" +
+            "   \"d\":{  \n" +
+            "      \"IsAuthenticated\":true,\n" +
+            "      \"Value\":[  \n" +
+            "         {  \n" +
+            "            \"InitialCount\":10,\n" +
+            "            \"RemainingCount\":10,\n" +
+            "            \"ExpiryDate\":\"\\/Date(1543386151743)\\/\"\n" +
+            "         }\n" +
+            "      ],\n" +
+            "      \"Result\":true,\n" +
+            "      \"Message\":\"\"\n" +
+            "   }\n" +
+            "}";
+
     // Ayv - Just to make it easier to flip between mock and api data during testing
     private boolean useMockData = true;
 

@@ -63,6 +63,7 @@ import au.com.dealsdirect.data.network.model.masterpass.MasterPassPaymentRequest
 import au.com.dealsdirect.data.network.model.masterpass.MasterPassPostTransactionRequest;
 import au.com.dealsdirect.data.network.model.orders.GetOrderPaymentDetails;
 import au.com.dealsdirect.data.network.model.orders.GetPaymentsList;
+import au.com.dealsdirect.data.network.model.ourpaydashboard.deliveryservice.GetDeliveryServiceResponse;
 import au.com.dealsdirect.data.network.model.ourpaydashboard.pastpayments.GetPastPaymentsResponse;
 import au.com.dealsdirect.data.network.model.ourpaydashboard.paymentplans.GetPaymentPlansResponse;
 import au.com.dealsdirect.data.network.model.ourpaydashboard.scheduledplans.GetScheduledPlansResponse;
@@ -287,5 +288,7 @@ public interface ApiHelper {
     Observable<GetScheduledPlansResponse> callGetScheduledPlans();
 
     Observable<GetPastPaymentsResponse> callGetPastPayments();
+
+    Observable<GetDeliveryServiceResponse> callGetDeliveryService();
 
 }
