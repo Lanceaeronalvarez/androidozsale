@@ -47,8 +47,8 @@ import au.com.dealsdirect.ui.controller.searchfilter.SearchFilterController;
 import au.com.dealsdirect.ui.controller.searchfilter.SearchFilterMvpPresenter;
 import au.com.dealsdirect.ui.controller.searchfilter.SearchFilterMvpView;
 import au.com.dealsdirect.ui.controller.searchfilter.ViewPagerBottomSheetBehavior;
-import au.com.dealsdirect.ui.controller.searchfilter.adapter.SearchTagsAdapter;
 import au.com.dealsdirect.ui.controller.searchfilter.adapter.SearchChipModel;
+import au.com.dealsdirect.ui.controller.searchfilter.adapter.SearchTagsAdapter;
 import au.com.dealsdirect.ui.custom.transitions.ArcFadeMoveChangeHandler;
 import au.com.dealsdirect.utils.BundleBuilder;
 import au.com.dealsdirect.utils.BundleKeys;
@@ -60,7 +60,6 @@ import au.com.dealsdirect.utils.module.GateKeeper;
 import butterknife.BindView;
 import butterknife.OnClick;
 import io.reactivex.android.schedulers.AndroidSchedulers;
-import io.reactivex.disposables.Disposable;
 
 import static au.com.dealsdirect.utils.ViewUtils.dpToPx;
 
@@ -170,6 +169,12 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
 
     @Override
     protected void setUp(View view) {
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            mSearchBar.setOutlineProvider(null);
+            mSearchBar.setElevation(0);
+        }
+
 
         mKeyboardHeightProvider = new KeyboardHeightProvider(mActivity);
         mKeyboardHeightProvider.setKeyboardHeightObserver(this);
