@@ -1,4 +1,4 @@
-package au.com.dealsdirect.ui.controller.dashboard.plans;
+package au.com.dealsdirect.ui.controller.dashboard.paymentplans;
 
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -30,7 +30,7 @@ import butterknife.BindView;
  * Created by Ayi on 05/06/2017.
  */
 
-public class PaymentPlansController extends BaseController implements DashboardMvpView {
+public class PaymentPlansController extends BaseController implements PaymentPlansMvpView {
 
     public static final String TAG = "PaymentPlansController";
 
@@ -39,7 +39,7 @@ public class PaymentPlansController extends BaseController implements DashboardM
     private static final String KEY_PLANS = "PaymentPlansController.KEY_PLANS";
 
     @Inject
-    DashboardMvpPresenter<DashboardMvpView> mPresenter;
+    PaymentPlansMvpPresenter<PaymentPlansMvpView> mPresenter;
 
     @BindView(R.id.controller_payment_plans_recycler)
     RecyclerView mRecyclerView;
@@ -98,33 +98,4 @@ public class PaymentPlansController extends BaseController implements DashboardM
         super.onDestroyView(view);
     }
 
-    @Override
-    public void showPaymentPlans(GetPaymentPlansResponse paymentPlansResponse) {
-        mParentController.showPaymentPlans(paymentPlansResponse);
-    }
-
-    @Override
-    public void showScheduledPlans(GetScheduledPlansResponse scheduledPlansResponse) {
-        mParentController.showScheduledPlans(scheduledPlansResponse);
-    }
-
-    @Override
-    public void showPastPayments(GetPastPaymentsResponse pastPaymentsResponse) {
-        mParentController.showPastPayments(pastPaymentsResponse);
-    }
-
-    @Override
-    public void showDeliveryService(GetDeliveryServiceResponse deliveryServiceResponse) {
-        mParentController.showDeliveryService(deliveryServiceResponse);
-    }
-
-    @Override
-    public void refreshPager() {
-        mParentController.refreshPager();
-    }
-
-    @Override
-    public void showPaymentDetailsController(PaymentPlan payment) {
-        mParentController.showPaymentDetailsController(payment);
-    }
 }

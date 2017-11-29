@@ -21,7 +21,7 @@ import au.com.dealsdirect.ui.controller.contact.viewcontacts.ViewContactsControl
 import au.com.dealsdirect.ui.controller.country.CountryController;
 import au.com.dealsdirect.ui.controller.dashboard.DashboardController;
 import au.com.dealsdirect.ui.controller.dashboard.pastpayments.PastPaymentsController;
-import au.com.dealsdirect.ui.controller.dashboard.plans.PaymentPlansController;
+import au.com.dealsdirect.ui.controller.dashboard.paymentplans.PaymentPlansController;
 import au.com.dealsdirect.ui.controller.dashboard.plans.ScheduledPlansController;
 import au.com.dealsdirect.ui.controller.details.DetailsController;
 import au.com.dealsdirect.ui.controller.forgotpassword.ForgotPasswordController;

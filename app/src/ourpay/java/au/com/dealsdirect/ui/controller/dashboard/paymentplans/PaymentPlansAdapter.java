@@ -1,4 +1,4 @@
-package au.com.dealsdirect.ui.controller.dashboard.plans;
+package au.com.dealsdirect.ui.controller.dashboard.paymentplans;
 /*
  * Created by CodeineBot on 6/7/17.
  */
@@ -66,7 +66,7 @@ public class PaymentPlansAdapter extends RecyclerView.Adapter<PaymentPlansAdapte
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                mController.showPaymentDetailsController(item);
+//                mController.showPaymentDetailsController(item);
             }
         });
     }
