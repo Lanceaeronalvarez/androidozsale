@@ -26,14 +26,17 @@ public abstract class SwipeableBaseToolBarController extends BaseController {
     @BindView(R.id.root_base_toolbar_layout)
     RelativeLayout mRootLayout;
 
-    @BindView(R.id.root_scroll_view)
-    LockableNestedScrollView mScrollView;
-
     @BindView(R.id.custom_bottom_button)
     Button mBottomButton;
 
     @BindView(R.id.swipeable_fragment_bottom_layout)
     FrameLayout mBottomLayout;
+
+    @BindView(R.id.swipeable_fragment_coordinator_layout)
+    com.mysale.genie.views.custom.BottomSheetCoordinatorLayout mBottom;
+
+    @BindView(R.id.toolbar)
+    android.support.v7.widget.Toolbar mToolbar;
 
     CoordinatorLayoutAsBottomSheetBehavior mBottomSheetBehavior;
 
@@ -122,6 +125,7 @@ public abstract class SwipeableBaseToolBarController extends BaseController {
     }
 
     public void setupSwipingBehavior() {
+
         mBottomSheetBehavior = CoordinatorLayoutAsBottomSheetBehavior.from(mRootLayout);
 
         if (mBottomSheetBehavior != null) {
@@ -146,11 +150,19 @@ public abstract class SwipeableBaseToolBarController extends BaseController {
 
         } else {
             CoordinatorLayout.LayoutParams params = (CoordinatorLayout.LayoutParams) mRootLayout.getLayoutParams();
-            params.setBehavior(mBottomSheetBehavior = new CoordinatorLayoutAsBottomSheetBehavior());
-            mRootLayout.requestLayout();
+            params.setBehavior(new CoordinatorLayoutAsBottomSheetBehavior());
+            mBottomLayout.requestLayout();
         }
 
         mBottomSheetBehavior.setState(CoordinatorLayoutAsBottomSheetBehavior.STATE_EXPANDED);
 
     }
+
+    protected void disableSwipingBehavior() {
+        CoordinatorLayout.LayoutParams params = (CoordinatorLayout.LayoutParams) mRootLayout.getLayoutParams();
+        params.setBehavior(null);
+        mBottomLayout.requestLayout();
+    }
+
+
 }
