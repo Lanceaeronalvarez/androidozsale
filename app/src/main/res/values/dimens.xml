@@ -55,5 +55,5 @@
     <dimen name="category_image_padding">15dp</dimen>
 
     <dimen name="placeholder_icon_size">60dp</dimen>
-    <dimen name="corner_radius">5dp</dimen>
+    <dimen name="corner_radius">25dp</dimen>
 </resources>

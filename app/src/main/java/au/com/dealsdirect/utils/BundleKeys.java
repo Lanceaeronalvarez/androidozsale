@@ -68,4 +68,9 @@ public class BundleKeys {
     //Tutorial
     public static final String FROM_MY_ACCOUNTS = "FROM_MY_ACCOUNTS";
 
+    // Address
+    public static final String DECORATION_INFO_LIST = "DECORATION_INFO_LIST";
+    public static final String DELIVERY_ADDRESS = "ViewAddressController.DELIVERY_ADDRESS";
+
+
 }

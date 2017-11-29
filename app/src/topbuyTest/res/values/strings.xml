@@ -34,4 +34,9 @@
     <string name="enter_promo_code">enter promo code</string>
 
     <string name="invite_friends">invite friends</string>
+
+    <string name="your_cart_is_currently_empty">your cart is currently empty</string>
+    <string name="you_have_not_added_any_items_in_your_shopping_cart">you have not added any items
+        in your shopping cart
+    </string>
 </resources>
