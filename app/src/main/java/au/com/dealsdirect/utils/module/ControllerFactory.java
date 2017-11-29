@@ -21,6 +21,7 @@ import au.com.dealsdirect.ui.controller.language.LanguageController;
 import au.com.dealsdirect.ui.controller.legalities.LegalitiesController;
 import au.com.dealsdirect.ui.controller.login.LoginController;
 import au.com.dealsdirect.ui.controller.main.MainController;
+import au.com.dealsdirect.ui.controller.masterpass.MasterpassController;
 import au.com.dealsdirect.ui.controller.orders.orders.OrdersController;
 import au.com.dealsdirect.ui.controller.register.RegisterController;
 import au.com.dealsdirect.ui.controller.returns.currentreturns.CurrentReturnsController;
@@ -98,6 +99,8 @@ public class ControllerFactory {
                 break;
             case PAYMENT_ADD:
                 break;
+            case MASTERPASS:
+                return MasterpassController.newInstance();
             case ORDER_DETAILS:
                 break;
             case SEARCH_FILTER:
@@ -138,6 +141,8 @@ public class ControllerFactory {
                 return new AddVouchersController(bundle);
             case PAYMENT_ADD:
                 return new AddPaymentController(bundle);
+            case MASTERPASS:
+                return new MasterpassController(bundle);
             case PAYMENT_SELECT:
                 return new PaymentSelectController(bundle);
             case ORDERS:
@@ -206,6 +211,10 @@ public class ControllerFactory {
 
         if (controller instanceof ForgotPasswordController) {
             return GateKeeper.Destination.FORGOT_PASSWORD;
+        }
+
+        if (controller instanceof MasterpassController) {
+            return GateKeeper.Destination.MASTERPASS;
         }
 
         if (controller instanceof  ViewVouchersController) {
