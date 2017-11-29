@@ -327,20 +327,20 @@ public class MainActivity extends BaseActivity implements MainMvpView {
     public void callCreatePaymentTransaction(String type, String nonce, String token) {
 
         //3DS Check
-        if (PaymentInfo.isThreeDSecureRequired() && !PaymentInfo.isThreeDSecureCalled()) {
-            mPresenter.callGetPaymentMethodNonce(token);
+            if (PaymentInfo.isThreeDSecureRequired() && !PaymentInfo.isThreeDSecureCalled()) {
+                mPresenter.callGetPaymentMethodNonce(token);
 
-            return;
-        }
+                return;
+            }
 
-        BraintreeResponseListener<String> handler = deviceData -> mPresenter.createPaymentTransaction(
-                deviceData, type, nonce, token);
+            BraintreeResponseListener<String> handler = deviceData -> mPresenter.createPaymentTransaction(
+                    deviceData, type, nonce, token);
 
-        //Kount Check
-        if (!mPresenter.getKountMerchantId().isEmpty()) {
-            DataCollector.collectDeviceData(mBraintreeFragment, mPresenter.getKountMerchantId(), handler);
-        } else {
-            DataCollector.collectDeviceData(mBraintreeFragment, handler);
+            //Kount Check
+            if (!mPresenter.getKountMerchantId().isEmpty()) {
+                DataCollector.collectDeviceData(mBraintreeFragment, mPresenter.getKountMerchantId(), handler);
+            } else {
+                DataCollector.collectDeviceData(mBraintreeFragment, handler);
         }
     }
 
