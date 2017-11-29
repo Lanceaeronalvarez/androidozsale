@@ -29,8 +29,8 @@
             android:layout_weight="1"
             android:gravity="end"
             android:text="@string/change"
-            android:textColor="@color/gray_item_details"
-            android:textSize="@dimen/text_size_large"
+            android:textColor="@drawable/teal_text_selector"
+            android:textSize="@dimen/text_size_normal"
             android:visibility="gone" />
 
     </LinearLayout>
