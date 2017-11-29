@@ -20,6 +20,7 @@ import au.com.dealsdirect.ui.controller.contact.viewcontacthistory.ViewContactHi
 import au.com.dealsdirect.ui.controller.contact.viewcontacts.ViewContactsController;
 import au.com.dealsdirect.ui.controller.country.CountryController;
 import au.com.dealsdirect.ui.controller.dashboard.DashboardController;
+import au.com.dealsdirect.ui.controller.dashboard.details.PaymentDetailsController;
 import au.com.dealsdirect.ui.controller.dashboard.pastpayments.PastPaymentsController;
 import au.com.dealsdirect.ui.controller.dashboard.paymentplans.PaymentPlansController;
 import au.com.dealsdirect.ui.controller.dashboard.scheduledplans.ScheduledPlansController;
@@ -151,6 +152,8 @@ public interface ControllerComponent {
     void inject(ScheduledPlansController controller);
 
     void inject(PastPaymentsController controller);
+
+    void inject(PaymentDetailsController controller);
 
     void inject(SplashScreenController controller);
 }
