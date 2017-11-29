@@ -72,5 +72,8 @@ public class BundleKeys {
     public static final String DECORATION_INFO_LIST = "DECORATION_INFO_LIST";
     public static final String DELIVERY_ADDRESS = "ViewAddressController.DELIVERY_ADDRESS";
 
+    //Ourpay SMS Verification
+    public static final String PHONE_KEY = "PHONE_KEY";
+
 
 }

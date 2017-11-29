@@ -10,6 +10,7 @@ import au.com.dealsdirect.ui.controller.address.viewaddress.ViewAddressControlle
 import au.com.dealsdirect.ui.controller.categories.CategoriesController;
 import au.com.dealsdirect.ui.controller.checkout.addpayment.AddPaymentController;
 import au.com.dealsdirect.ui.controller.checkout.checkout.CheckoutController;
+import au.com.dealsdirect.ui.controller.checkout.ourpay.OurpaySMSVerificationController;
 import au.com.dealsdirect.ui.controller.checkout.paymentselect.PaymentSelectController;
 import au.com.dealsdirect.ui.controller.contact.addcontact.AddContactController;
 import au.com.dealsdirect.ui.controller.contact.viewcontacts.ViewContactsController;
@@ -153,6 +154,8 @@ public class ControllerFactory {
                 return ViewContactsController.newInstance();
             case ADD_CONTACT:
                 return AddContactController.newInstance();
+            case SMS_VERIFICATION:
+                return new OurpaySMSVerificationController(bundle);
             case LEGALITIES:
                 return new LegalitiesController(bundle);
             case SEARCH_FILTER:
@@ -213,9 +216,13 @@ public class ControllerFactory {
             return GateKeeper.Destination.INVITE;
         }
 
+        if (controller instanceof OurpaySMSVerificationController) {
+            return GateKeeper.Destination.SMS_VERIFICATION;
+        }
+
         if (controller instanceof LegalitiesController) {
             return GateKeeper.Destination.LEGALITIES;
-	}
+	    }
 
         if (controller instanceof FacetFilterController) {
             return GateKeeper.Destination.FACET_FILTER;

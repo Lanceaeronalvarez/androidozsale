@@ -49,6 +49,7 @@ public class GateKeeper {
         CONTACT_US,
         ADD_CONTACT,
         SEARCH_FILTER,
+        SMS_VERIFICATION,
         LEGALITIES,
         LANGUAGE,
         TUTORIAL
@@ -132,7 +133,7 @@ public class GateKeeper {
      * @param pushChangeHandler your custom pushChangeHandler
      * @param popChangeHandler  your custom popChangehandler
      */
-    public static void push(Router router, Destination destination, Bundle bundle, ControllerChangeHandler pushChangeHandler, ControllerChangeHandler popChangeHandler) {
+    public static void push(    Router router, Destination destination, Bundle bundle, ControllerChangeHandler pushChangeHandler, ControllerChangeHandler popChangeHandler) {
 //        if(validateRouteOrigin(destination)){
         router.pushController(RouterTransaction.with(ControllerFactory.getInstance(destination, bundle)).pushChangeHandler(pushChangeHandler).popChangeHandler(popChangeHandler));
         sCURRENT_LOCATION.put(router, destination);

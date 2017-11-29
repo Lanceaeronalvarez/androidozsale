@@ -29,14 +29,13 @@ import au.com.dealsdirect.utils.BundleBuilder;
 import butterknife.BindView;
 import butterknife.OnClick;
 
+import static au.com.dealsdirect.utils.BundleKeys.PHONE_KEY;
+
 /**
  * dp Created by Admin on 8/9/17.
  */
 
 public class OurpaySMSVerificationController extends BaseToolBarController implements OurpaySMSVerificationMvpView {
-
-    private static final String PHONE_KEY = "OurpaySMSVerificationController.PHONE_KEY_TEXT";
-    private static final String PAYMENT_TYPE_MYPAY = "mypay";
 
     private String mPhoneFromCart;
     private Ourpay mOurpay;
