@@ -103,6 +103,7 @@
         android:layout_height="match_parent"
         android:background="@color/bg_gray"
         android:overScrollMode="never"
+        android:descendantFocusability="blocksDescendants"
         app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
         <include layout="@layout/content_payment_details" />

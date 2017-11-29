@@ -1,6 +1,7 @@
 package au.com.dealsdirect.ui.controller.dashboard.details;
 
 import android.os.Bundle;
+import android.os.Parcelable;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -15,6 +16,9 @@ import javax.inject.Inject;
 
 import au.com.dealsdirect.R;
 import au.com.dealsdirect.data.network.model.ourpaydashboard.Payment;
+import au.com.dealsdirect.data.network.model.ourpaydashboard.pastpayments.PastPayment;
+import au.com.dealsdirect.data.network.model.ourpaydashboard.paymentplans.PaymentPlan;
+import au.com.dealsdirect.data.network.model.ourpaydashboard.scheduledplans.ScheduledPlan;
 import au.com.dealsdirect.ui.base.BaseController;
 import au.com.dealsdirect.utils.BundleBuilder;
 import butterknife.BindView;
@@ -42,15 +46,35 @@ public class PaymentDetailsController extends BaseController implements PaymentD
     @BindView(R.id.controller_payment_details_recycler)
     RecyclerView mRecyclerView;
 
-    Payment mPayment;
+    PaymentPlan mPaymentPlan;
+
+    ScheduledPlan mScheduledPlan;
+
+    PastPayment mPastPayment;
 
     PaymentDetailsAdapter mAdapter;
 
-    public static PaymentDetailsController newInstance(Payment payment) {
+    public static PaymentDetailsController newInstance(PaymentPlan paymentPlan) {
 
         return new PaymentDetailsController(
                 new BundleBuilder(new Bundle())
-                        .putParcelable(KEY_PAYMENT, payment)
+                        .putParcelable(KEY_PAYMENT, paymentPlan)
+                        .build());
+    }
+
+    public static PaymentDetailsController newInstance(ScheduledPlan scheduledPlan) {
+
+        return new PaymentDetailsController(
+                new BundleBuilder(new Bundle())
+                        .putParcelable(KEY_PAYMENT, scheduledPlan)
+                        .build());
+    }
+
+    public static PaymentDetailsController newInstance(PastPayment pastPayment) {
+
+        return new PaymentDetailsController(
+                new BundleBuilder(new Bundle())
+                        .putParcelable(KEY_PAYMENT, pastPayment)
                         .build());
     }
 
@@ -79,10 +103,26 @@ public class PaymentDetailsController extends BaseController implements PaymentD
 
     @Override
     protected void setUp(View view) {
-        mPayment = getArgs().getParcelable(KEY_PAYMENT);
+        Parcelable payment = getArgs().getParcelable(KEY_PAYMENT);
+        if (payment instanceof PaymentPlan) {
 
-        mTitleText.setText(mPayment.getTitle());
-        mIdText.setText(mPayment.getId());
+            mPaymentPlan = (PaymentPlan) payment;
+            mTitleText.setText(mPaymentPlan.getName());
+            mIdText.setText(mPaymentPlan.getOrderNo());
+
+        } else if (payment instanceof ScheduledPlan) {
+
+            mScheduledPlan = (ScheduledPlan) payment;
+            mTitleText.setText(mScheduledPlan.getName());
+            mIdText.setText(mScheduledPlan.getOrderNo());
+
+        } else if (payment instanceof PastPayment) {
+
+            mPastPayment = (PastPayment) payment;
+            mTitleText.setText(mPastPayment.getName());
+            mIdText.setText(mPastPayment.getOrderNo());
+
+        }
 
         ArrayList<Payment> data = new ArrayList<>();
         data.add(new Payment("01", "February", "lifeandlookstyle"));
