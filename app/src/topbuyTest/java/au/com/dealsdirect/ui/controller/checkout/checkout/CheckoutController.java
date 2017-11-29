@@ -610,10 +610,7 @@ public class CheckoutController extends SwipeableBaseToolBarController implement
 
         RxBus.instance().post(IntrospectionUtils.EVENT_PAY);
 
-
-//        getRouter().pushController(RouterTransaction.with(MasterpassController.newInstance())
-//                .pushChangeHandler(new HorizontalChangeHandler(false))
-//                .popChangeHandler(new HorizontalChangeHandler()));
+        GateKeeper.push(getRouter(), GateKeeper.Destination.MASTERPASS, new VerticalChangeHandler(false), new VerticalChangeHandler());
     }
 
     private void onOurpayButtonClick() {
