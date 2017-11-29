@@ -5,7 +5,6 @@ import android.support.annotation.NonNull;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -116,7 +115,7 @@ public class AccountController extends BaseController implements AccountMvpView 
     protected void setUp(View view) {
         // Setup views here
         assert (mActivity) != null;
-
+        mActivity.setDraggableViewPager(true);
         mPresenter.loadAccountItems(mAccountItems,mAccountIcons);
     }
 
@@ -139,24 +138,36 @@ public class AccountController extends BaseController implements AccountMvpView 
 
     @Override
     public void showMyDetailsController() {
-        GateKeeper.push(getRouter(), GateKeeper.Destination.DETAILS, new VerticalChangeHandler(false), new VerticalChangeHandler());
+        mActivity.setDraggableViewPager(false);
+        GateKeeper.push(getRouter(),
+                GateKeeper.Destination.DETAILS,
+                new VerticalChangeHandler(false),
+                new VerticalChangeHandler());
 
     }
 
     @Override
     public void showMyAddressesController() {
-        GateKeeper.push(getRouter(), GateKeeper.Destination.VIEW_ADDRESSES, new VerticalChangeHandler(false), new VerticalChangeHandler());
+        mActivity.setDraggableViewPager(false);
+        GateKeeper.push(getRouter(),
+                GateKeeper.Destination.VIEW_ADDRESSES,
+                new VerticalChangeHandler(false),
+                new VerticalChangeHandler());
 
     }
 
     @Override
     public void showMyOrders() {
-        Log.d("dealsdirect", "showmyorders");
-        GateKeeper.push(getRouter(), GateKeeper.Destination.ORDERS, new VerticalChangeHandler(false), new VerticalChangeHandler());
+        mActivity.setDraggableViewPager(false);
+        GateKeeper.push(getRouter(),
+                GateKeeper.Destination.ORDERS,
+                new VerticalChangeHandler(false),
+                new VerticalChangeHandler());
     }
 
     @Override
     public void showMyVouchers() {
+        mActivity.setDraggableViewPager(false);
         GateKeeper.push(getRouter(),
                 GateKeeper.Destination.VIEW_VOUCHERS,
                 new VerticalChangeHandler(false),
@@ -166,12 +177,17 @@ public class AccountController extends BaseController implements AccountMvpView 
 
     @Override
     public void showMyReturns() {
-        GateKeeper.push(getRouter(), GateKeeper.Destination.CURRENT_RETURNS, new VerticalChangeHandler(false), new VerticalChangeHandler());
+        mActivity.setDraggableViewPager(false);
+        GateKeeper.push(getRouter(),
+                GateKeeper.Destination.CURRENT_RETURNS,
+                new VerticalChangeHandler(false),
+                new VerticalChangeHandler());
 
     }
 
     @Override
     public void showMyPaymentsController() {
+        mActivity.setDraggableViewPager(false);
         GateKeeper.push(getRouter(),
                 GateKeeper.Destination.PAYMENT_SELECT,
                 new BundleBuilder(new Bundle())
@@ -185,16 +201,25 @@ public class AccountController extends BaseController implements AccountMvpView 
 
     @Override
     public void showLanguage() {
-        GateKeeper.push(getRouter(), GateKeeper.Destination.LANGUAGE, new VerticalChangeHandler(false), new VerticalChangeHandler());
+        mActivity.setDraggableViewPager(false);
+        GateKeeper.push(getRouter(),
+                GateKeeper.Destination.LANGUAGE,
+                new VerticalChangeHandler(false),
+                new VerticalChangeHandler());
     }
 
     @Override
     public void showContactUs() {
-        GateKeeper.push(getRouter(), GateKeeper.Destination.CONTACT_US, new VerticalChangeHandler(false), new VerticalChangeHandler());
+        mActivity.setDraggableViewPager(false);
+        GateKeeper.push(getRouter(),
+                GateKeeper.Destination.CONTACT_US,
+                new VerticalChangeHandler(false),
+                new VerticalChangeHandler());
     }
 
     @Override
     public void showTutorial() {
+        mActivity.setDraggableViewPager(false);
         GateKeeper.push(
                 getRouter(),
                 GateKeeper.Destination.TUTORIAL,
@@ -208,6 +233,7 @@ public class AccountController extends BaseController implements AccountMvpView 
 
     @Override
     public void showInviteAFriend() {
+        mActivity.setDraggableViewPager(false);
         GateKeeper.push(getRouter(),
                 GateKeeper.Destination.INVITE,
                 new VerticalChangeHandler(false),
@@ -217,6 +243,7 @@ public class AccountController extends BaseController implements AccountMvpView 
 
     @Override
     public void showLegalities(String key, String title) {
+        mActivity.setDraggableViewPager(false);
         GateKeeper.push(getRouter(),
                 GateKeeper.Destination.LEGALITIES,
                 new BundleBuilder(new Bundle())

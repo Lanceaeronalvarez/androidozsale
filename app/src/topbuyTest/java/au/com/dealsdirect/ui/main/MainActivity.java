@@ -1,6 +1,7 @@
 package au.com.dealsdirect.ui.main;
 
 import android.os.Bundle;
+import android.util.Log;
 import android.widget.FrameLayout;
 
 import com.bluelinelabs.conductor.Conductor;
@@ -142,8 +143,11 @@ public class MainActivity extends BaseActivity implements MainMvpView {
         switch (getMainController().getHomeViewPager().getCurrentItem()) {
             case 0: //accounts
                 if (getAccountsRouter().getBackstack().size() == 1) {
+                    Log.d("mainactivity","if statement");
                     getMainController().getHomeViewPager().setCurrentItem(1);
                 } else {
+
+                    setDraggableViewPager(true);
                     getAccountsRouter().handleBack();
                     GateKeeper.updateCurrentLocation(getAccountsRouter());
                 }
