@@ -31,7 +31,7 @@ import au.com.dealsdirect.data.network.model.ourpaydashboard.scheduledplans.Sche
 import au.com.dealsdirect.ui.base.BaseController;
 import au.com.dealsdirect.ui.controller.dashboard.pastpayments.PastPaymentsController;
 import au.com.dealsdirect.ui.controller.dashboard.paymentplans.PaymentPlansController;
-import au.com.dealsdirect.ui.controller.dashboard.plans.ScheduledPlansController;
+import au.com.dealsdirect.ui.controller.dashboard.scheduledplans.ScheduledPlansController;
 import au.com.dealsdirect.utils.BundleBuilder;
 import au.com.dealsdirect.utils.TabLayoutUtils;
 import butterknife.BindView;

@@ -53,6 +53,9 @@ import au.com.dealsdirect.ui.controller.dashboard.pastpayments.PastPaymentsPrese
 import au.com.dealsdirect.ui.controller.dashboard.paymentplans.PaymentPlansMvpPresenter;
 import au.com.dealsdirect.ui.controller.dashboard.paymentplans.PaymentPlansMvpView;
 import au.com.dealsdirect.ui.controller.dashboard.paymentplans.PaymentPlansPresenter;
+import au.com.dealsdirect.ui.controller.dashboard.scheduledplans.ScheduledPlansMvpPresenter;
+import au.com.dealsdirect.ui.controller.dashboard.scheduledplans.ScheduledPlansMvpView;
+import au.com.dealsdirect.ui.controller.dashboard.scheduledplans.ScheduledPlansPresenter;
 import au.com.dealsdirect.ui.controller.details.DetailsMvpPresenter;
 import au.com.dealsdirect.ui.controller.details.DetailsMvpView;
 import au.com.dealsdirect.ui.controller.details.DetailsPresenter;
@@ -370,6 +373,12 @@ public class ControllerModule {
 
     @Provides
     PaymentPlansMvpPresenter<PaymentPlansMvpView> providePaymentPlansPresenter(PaymentPlansPresenter<PaymentPlansMvpView> presenter) {
+
+        return presenter;
+    }
+
+    @Provides
+    ScheduledPlansMvpPresenter<ScheduledPlansMvpView> provideScheduledPlansPresenter(ScheduledPlansPresenter<ScheduledPlansMvpView> presenter) {
 
         return presenter;
     }
