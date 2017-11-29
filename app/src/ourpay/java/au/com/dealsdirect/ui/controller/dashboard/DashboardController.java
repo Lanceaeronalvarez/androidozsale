@@ -29,7 +29,7 @@ import au.com.dealsdirect.data.network.model.ourpaydashboard.paymentplans.Paymen
 import au.com.dealsdirect.data.network.model.ourpaydashboard.scheduledplans.GetScheduledPlansResponse;
 import au.com.dealsdirect.data.network.model.ourpaydashboard.scheduledplans.ScheduledPlan;
 import au.com.dealsdirect.ui.base.BaseController;
-import au.com.dealsdirect.ui.controller.dashboard.plans.PastPaymentsController;
+import au.com.dealsdirect.ui.controller.dashboard.pastpayments.PastPaymentsController;
 import au.com.dealsdirect.ui.controller.dashboard.plans.PaymentPlansController;
 import au.com.dealsdirect.ui.controller.dashboard.plans.ScheduledPlansController;
 import au.com.dealsdirect.utils.BundleBuilder;

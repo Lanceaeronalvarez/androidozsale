@@ -47,6 +47,9 @@ import au.com.dealsdirect.ui.controller.country.CountryPresenter;
 import au.com.dealsdirect.ui.controller.dashboard.DashboardMvpPresenter;
 import au.com.dealsdirect.ui.controller.dashboard.DashboardMvpView;
 import au.com.dealsdirect.ui.controller.dashboard.DashboardPresenter;
+import au.com.dealsdirect.ui.controller.dashboard.pastpayments.PastPaymentsMvpPresenter;
+import au.com.dealsdirect.ui.controller.dashboard.pastpayments.PastPaymentsMvpView;
+import au.com.dealsdirect.ui.controller.dashboard.pastpayments.PastPaymentsPresenter;
 import au.com.dealsdirect.ui.controller.details.DetailsMvpPresenter;
 import au.com.dealsdirect.ui.controller.details.DetailsMvpView;
 import au.com.dealsdirect.ui.controller.details.DetailsPresenter;
@@ -351,7 +354,13 @@ public class ControllerModule {
     }
 
     @Provides
-    DashboardMvpPresenter<DashboardMvpView> providePaymentPresenter(DashboardPresenter<DashboardMvpView> presenter) {
+    DashboardMvpPresenter<DashboardMvpView> provideDashboardPresenter(DashboardPresenter<DashboardMvpView> presenter) {
+
+        return presenter;
+    }
+
+    @Provides
+    PastPaymentsMvpPresenter<PastPaymentsMvpView> providePastPaymentsPresenter(PastPaymentsPresenter<PastPaymentsMvpView> presenter) {
 
         return presenter;
     }

@@ -1,4 +1,4 @@
-package au.com.dealsdirect.ui.controller.dashboard.plans;
+package au.com.dealsdirect.ui.controller.dashboard.pastpayments;
 
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -13,16 +13,9 @@ import java.util.List;
 import javax.inject.Inject;
 
 import au.com.dealsdirect.R;
-import au.com.dealsdirect.data.network.model.ourpaydashboard.deliveryservice.GetDeliveryServiceResponse;
-import au.com.dealsdirect.data.network.model.ourpaydashboard.pastpayments.GetPastPaymentsResponse;
 import au.com.dealsdirect.data.network.model.ourpaydashboard.pastpayments.PastPayment;
-import au.com.dealsdirect.data.network.model.ourpaydashboard.paymentplans.GetPaymentPlansResponse;
-import au.com.dealsdirect.data.network.model.ourpaydashboard.paymentplans.PaymentPlan;
-import au.com.dealsdirect.data.network.model.ourpaydashboard.scheduledplans.GetScheduledPlansResponse;
 import au.com.dealsdirect.ui.base.BaseController;
 import au.com.dealsdirect.ui.controller.dashboard.DashboardController;
-import au.com.dealsdirect.ui.controller.dashboard.DashboardMvpPresenter;
-import au.com.dealsdirect.ui.controller.dashboard.DashboardMvpView;
 import au.com.dealsdirect.utils.BundleBuilder;
 import butterknife.BindView;
 
@@ -30,7 +23,7 @@ import butterknife.BindView;
  * Created by Ayi on 05/06/2017.
  */
 
-public class PastPaymentsController extends BaseController implements DashboardMvpView {
+public class PastPaymentsController extends BaseController implements PastPaymentsMvpView {
 
     public static final String TAG = "PastPaymentsController";
 
@@ -39,7 +32,7 @@ public class PastPaymentsController extends BaseController implements DashboardM
     private static final String KEY_PLANS = "PastPaymentsController.KEY_PLANS";
 
     @Inject
-    DashboardMvpPresenter<DashboardMvpView> mPresenter;
+    PastPaymentsMvpPresenter<PastPaymentsMvpView> mPresenter;
 
     @BindView(R.id.controller_payment_plans_recycler)
     RecyclerView mRecyclerView;
@@ -98,33 +91,4 @@ public class PastPaymentsController extends BaseController implements DashboardM
         super.onDestroyView(view);
     }
 
-    @Override
-    public void showPaymentPlans(GetPaymentPlansResponse paymentPlansResponse) {
-        mParentController.showPaymentPlans(paymentPlansResponse);
-    }
-
-    @Override
-    public void showScheduledPlans(GetScheduledPlansResponse scheduledPlansResponse) {
-        mParentController.showScheduledPlans(scheduledPlansResponse);
-    }
-
-    @Override
-    public void showPastPayments(GetPastPaymentsResponse pastPaymentsResponse) {
-        mParentController.showPastPayments(pastPaymentsResponse);
-    }
-
-    @Override
-    public void showDeliveryService(GetDeliveryServiceResponse deliveryServiceResponse) {
-        mParentController.showDeliveryService(deliveryServiceResponse);
-    }
-
-    @Override
-    public void refreshPager() {
-        mParentController.refreshPager();
-    }
-
-    @Override
-    public void showPaymentDetailsController(PaymentPlan payment) {
-        mParentController.showPaymentDetailsController(payment);
-    }
 }

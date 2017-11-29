@@ -20,7 +20,7 @@ import au.com.dealsdirect.ui.controller.contact.viewcontacthistory.ViewContactHi
 import au.com.dealsdirect.ui.controller.contact.viewcontacts.ViewContactsController;
 import au.com.dealsdirect.ui.controller.country.CountryController;
 import au.com.dealsdirect.ui.controller.dashboard.DashboardController;
-import au.com.dealsdirect.ui.controller.dashboard.plans.PastPaymentsController;
+import au.com.dealsdirect.ui.controller.dashboard.pastpayments.PastPaymentsController;
 import au.com.dealsdirect.ui.controller.dashboard.plans.PaymentPlansController;
 import au.com.dealsdirect.ui.controller.dashboard.plans.ScheduledPlansController;
 import au.com.dealsdirect.ui.controller.details.DetailsController;

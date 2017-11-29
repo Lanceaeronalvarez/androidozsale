@@ -1,4 +1,4 @@
-package au.com.dealsdirect.ui.controller.dashboard.plans;
+package au.com.dealsdirect.ui.controller.dashboard.pastpayments;
 /*
  * Created by CodeineBot on 6/7/17.
  */
@@ -15,7 +15,6 @@ import java.util.List;
 import java.util.Locale;
 
 import au.com.dealsdirect.R;
-import au.com.dealsdirect.data.network.model.ourpaydashboard.Payment;
 import au.com.dealsdirect.data.network.model.ourpaydashboard.pastpayments.PastPayment;
 import au.com.dealsdirect.utils.DateUtils;
 import butterknife.BindView;
