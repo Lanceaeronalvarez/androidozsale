@@ -13,6 +13,7 @@ import android.widget.TextView;
 
 import com.bluelinelabs.conductor.changehandler.VerticalChangeHandler;
 import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -29,9 +30,14 @@ import au.com.dealsdirect.ui.base.SwipeableBaseToolBarController;
 import au.com.dealsdirect.ui.custom.CustomAlertDialog;
 import au.com.dealsdirect.ui.custom.RecyclerOnTouchListener;
 import au.com.dealsdirect.utils.BundleBuilder;
+import au.com.dealsdirect.utils.JsonUtils;
 import au.com.dealsdirect.utils.module.GateKeeper;
 import butterknife.BindView;
 import timber.log.Timber;
+
+import static au.com.dealsdirect.utils.BundleKeys.DECORATION_INFO_LIST;
+import static au.com.dealsdirect.utils.BundleKeys.DELIVERY_ADDRESS;
+import static au.com.dealsdirect.utils.BundleKeys.IS_FROM_CART;
 
 /**
  * Created by smartwave on 21/06/2017.
@@ -39,11 +45,6 @@ import timber.log.Timber;
 
 public class ViewAddressController extends SwipeableBaseToolBarController implements ViewAddressMvpView {
 
-    private static final String CALLED_FROM_CART = "CalledFromCart";
-
-    private static final String DELIVERY_ADDRESS = "ViewAddressController.DELIVERY_ADDRESS";
-    private static final String DECORATION_LIST_KEY = "DECORATION_LIST";
-    private static final String CALLED_FROM_CART_KEY = "CALLED_FROM_CART";
 
     @BindView(R.id.no_addresses_layout)
     RelativeLayout mAddressPlaceHolder;
@@ -66,15 +67,15 @@ public class ViewAddressController extends SwipeableBaseToolBarController implem
 
     public ViewAddressController(boolean mCalledFromCart, DeliveryAddress deliveryAddress) {
         this(new BundleBuilder(new Bundle())
-                .putBoolean(CALLED_FROM_CART, mCalledFromCart)
+                .putBoolean(IS_FROM_CART, mCalledFromCart)
                 .putParcelable(DELIVERY_ADDRESS, deliveryAddress)
                 .build());
     }
 
     public ViewAddressController(Bundle args) {
         super(args);
-        mCalledFromCart = args.getBoolean(CALLED_FROM_CART, false);
-        mDeliveryAddress = args.getParcelable(DELIVERY_ADDRESS);
+        mCalledFromCart = args.getBoolean(IS_FROM_CART, false);
+        mDeliveryAddress =  JsonUtils.convertStringToObject(args.getString(DELIVERY_ADDRESS), new TypeToken<ArrayList<DecorationInfoList>>(){}.getType());
     }
 
     @Override
@@ -162,8 +163,8 @@ public class ViewAddressController extends SwipeableBaseToolBarController implem
 
                 String decorationList = gson.toJson(mDecorationInfoList);
                 Bundle bundle = new Bundle();
-                bundle.putString(DECORATION_LIST_KEY, decorationList);
-                bundle.putBoolean(CALLED_FROM_CART_KEY, mCalledFromCart);
+                bundle.putString(DECORATION_INFO_LIST, decorationList);
+                bundle.putBoolean(IS_FROM_CART, mCalledFromCart);
 
                 setupDefaultBottomButton("add delivery address",
                         new View.OnClickListener() {
