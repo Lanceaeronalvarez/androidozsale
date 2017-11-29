@@ -234,7 +234,18 @@ public class DashboardController extends BaseController implements DashboardMvpV
     }
 
     @Override
-    public void showPaymentDetailsController(PaymentPlan payment) {
+    public void showPaymentPlanDetails(PaymentPlan paymentPlan) {
 
     }
+
+    @Override
+    public void showScheduledPlanDetails(ScheduledPlan scheduledPlan) {
+
+    }
+
+    @Override
+    public void showPastPaymentDetails(PastPayment pastPayment) {
+
+    }
+
 }

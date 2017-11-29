@@ -15,6 +15,7 @@ import java.util.Locale;
 
 import au.com.dealsdirect.R;
 import au.com.dealsdirect.data.network.model.ourpaydashboard.scheduledplans.ScheduledPlan;
+import au.com.dealsdirect.ui.controller.dashboard.DashboardController;
 import au.com.dealsdirect.utils.DateUtils;
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -22,11 +23,11 @@ import butterknife.ButterKnife;
 public class ScheduledPlansAdapter extends RecyclerView.Adapter<ScheduledPlansAdapter.ViewHolder> {
 
     Context mContext;
-    ScheduledPlansController mController;
+    DashboardController mController;
     List<ScheduledPlan> mData;
     String mLastMonth = "";
 
-    public ScheduledPlansAdapter(ScheduledPlansController controller, List<ScheduledPlan> data) {
+    public ScheduledPlansAdapter(DashboardController controller, List<ScheduledPlan> data) {
         this.mController = controller;
         this.mData = data;
     }
@@ -85,7 +86,7 @@ public class ScheduledPlansAdapter extends RecyclerView.Adapter<ScheduledPlansAd
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-//                mController.showPaymentDetailsController(item);
+                mController.showScheduledPlanDetails(item);
             }
         });
     }

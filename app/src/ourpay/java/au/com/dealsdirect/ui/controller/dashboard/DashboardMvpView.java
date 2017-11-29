@@ -6,9 +6,11 @@ package au.com.dealsdirect.ui.controller.dashboard;
 
 import au.com.dealsdirect.data.network.model.ourpaydashboard.deliveryservice.GetDeliveryServiceResponse;
 import au.com.dealsdirect.data.network.model.ourpaydashboard.pastpayments.GetPastPaymentsResponse;
+import au.com.dealsdirect.data.network.model.ourpaydashboard.pastpayments.PastPayment;
 import au.com.dealsdirect.data.network.model.ourpaydashboard.paymentplans.GetPaymentPlansResponse;
 import au.com.dealsdirect.data.network.model.ourpaydashboard.paymentplans.PaymentPlan;
 import au.com.dealsdirect.data.network.model.ourpaydashboard.scheduledplans.GetScheduledPlansResponse;
+import au.com.dealsdirect.data.network.model.ourpaydashboard.scheduledplans.ScheduledPlan;
 import au.com.dealsdirect.ui.base.MvpView;
 
 public interface DashboardMvpView extends MvpView {
@@ -23,5 +25,9 @@ public interface DashboardMvpView extends MvpView {
 
     void refreshPager();
 
-    void showPaymentDetailsController(PaymentPlan payment);
+    void showPaymentPlanDetails(PaymentPlan paymentPlan);
+
+    void showScheduledPlanDetails(ScheduledPlan scheduledPlan);
+
+    void showPastPaymentDetails(PastPayment pastPayment);
 }

@@ -80,7 +80,7 @@ public class PastPaymentsController extends BaseController implements PastPaymen
         mParentController = (DashboardController) getArgs().getSerializable(KEY_CONTROLLER);
         mPastPayments = getArgs().getParcelableArrayList(KEY_PLANS);
 
-        mAdapter = new PastPaymentsAdapter(this, mPastPayments);
+        mAdapter = new PastPaymentsAdapter(mParentController, mPastPayments);
         mRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity(), LinearLayoutManager.VERTICAL, false));
         mRecyclerView.setAdapter(mAdapter);
     }

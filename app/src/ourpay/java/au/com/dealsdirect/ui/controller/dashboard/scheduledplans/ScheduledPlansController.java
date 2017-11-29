@@ -81,7 +81,7 @@ public class ScheduledPlansController extends BaseController implements Schedule
         mParentController = (DashboardController) getArgs().getSerializable(KEY_CONTROLLER);
         mScheduledPlans = getArgs().getParcelableArrayList(KEY_PLANS);
 
-        mAdapter = new ScheduledPlansAdapter(this, mScheduledPlans);
+        mAdapter = new ScheduledPlansAdapter(mParentController, mScheduledPlans);
         mRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity(), LinearLayoutManager.VERTICAL, false));
         mRecyclerView.setAdapter(mAdapter);
     }

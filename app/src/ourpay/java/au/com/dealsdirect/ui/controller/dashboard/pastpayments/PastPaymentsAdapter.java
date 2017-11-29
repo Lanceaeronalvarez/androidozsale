@@ -16,6 +16,7 @@ import java.util.Locale;
 
 import au.com.dealsdirect.R;
 import au.com.dealsdirect.data.network.model.ourpaydashboard.pastpayments.PastPayment;
+import au.com.dealsdirect.ui.controller.dashboard.DashboardController;
 import au.com.dealsdirect.utils.DateUtils;
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -23,11 +24,11 @@ import butterknife.ButterKnife;
 public class PastPaymentsAdapter extends RecyclerView.Adapter<PastPaymentsAdapter.ViewHolder> {
 
     Context mContext;
-    PastPaymentsController mController;
+    DashboardController mController;
     List<PastPayment> mData;
     String mLastMonth = "";
 
-    public PastPaymentsAdapter(PastPaymentsController controller, List<PastPayment> data) {
+    public PastPaymentsAdapter(DashboardController controller, List<PastPayment> data) {
         this.mController = controller;
         this.mData = data;
     }
@@ -86,7 +87,7 @@ public class PastPaymentsAdapter extends RecyclerView.Adapter<PastPaymentsAdapte
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-//                mController.showPaymentDetailsController(item);
+                mController.showPastPaymentDetails(item);
             }
         });
     }

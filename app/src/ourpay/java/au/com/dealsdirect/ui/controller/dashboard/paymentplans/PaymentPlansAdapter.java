@@ -15,16 +15,17 @@ import java.util.Locale;
 
 import au.com.dealsdirect.R;
 import au.com.dealsdirect.data.network.model.ourpaydashboard.paymentplans.PaymentPlan;
+import au.com.dealsdirect.ui.controller.dashboard.DashboardController;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
 public class PaymentPlansAdapter extends RecyclerView.Adapter<PaymentPlansAdapter.ViewHolder> {
 
     Context mContext;
-    PaymentPlansController mController;
+    DashboardController mController;
     List<PaymentPlan> mData;
 
-    public PaymentPlansAdapter(PaymentPlansController controller, List<PaymentPlan> data) {
+    public PaymentPlansAdapter(DashboardController controller, List<PaymentPlan> data) {
         this.mController = controller;
         this.mData = data;
     }
@@ -66,7 +67,7 @@ public class PaymentPlansAdapter extends RecyclerView.Adapter<PaymentPlansAdapte
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-//                mController.showPaymentDetailsController(item);
+                mController.showPaymentPlanDetails(item);
             }
         });
     }

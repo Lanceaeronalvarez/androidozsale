@@ -87,7 +87,7 @@ public class PaymentPlansController extends BaseController implements PaymentPla
         mParentController = (DashboardController) getArgs().getSerializable(KEY_CONTROLLER);
         mPaymentPlans = getArgs().getParcelableArrayList(KEY_PLANS);
 
-        mAdapter = new PaymentPlansAdapter(this, mPaymentPlans);
+        mAdapter = new PaymentPlansAdapter(mParentController, mPaymentPlans);
         mRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity(), LinearLayoutManager.VERTICAL, false));
         mRecyclerView.setAdapter(mAdapter);
     }
