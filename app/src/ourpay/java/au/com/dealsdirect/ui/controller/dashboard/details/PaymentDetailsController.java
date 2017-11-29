@@ -9,11 +9,11 @@ import android.text.format.DateFormat;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.Date;
 import java.util.Locale;
 
 import javax.inject.Inject;
@@ -53,6 +53,9 @@ public class PaymentDetailsController extends BaseController implements PaymentD
 
     @BindView(R.id.controller_payment_details_balance)
     TextView mBalanceText;
+
+    @BindView(R.id.controller_payment_details_schedule_container)
+    LinearLayout mPaymentScheduleContainer;
 
     @BindView(R.id.controller_payment_details_recycler)
     RecyclerView mRecyclerView;
@@ -123,6 +126,10 @@ public class PaymentDetailsController extends BaseController implements PaymentD
             mDateText.setText(DateFormat.format("MM/dd/yyyy, hh:mm a", Calendar.getInstance()));
             mBalanceText.setText(String.format(Locale.getDefault(), "%s%.2f", mPaymentPlan.getCurrencySign(), mPaymentPlan.getOrderBalance()));
 
+            mAdapter = new PaymentDetailsAdapter(mPaymentPlan, mPaymentPlan.getPlannedTransactions());
+            mRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity(), LinearLayoutManager.VERTICAL, false));
+            mRecyclerView.setAdapter(mAdapter);
+
         } else if (payment instanceof ScheduledPlan) {
 
             mScheduledPlan = (ScheduledPlan) payment;
@@ -130,6 +137,8 @@ public class PaymentDetailsController extends BaseController implements PaymentD
             mIdText.setText(mScheduledPlan.getOrderNo());
             mDateText.setText(DateUtils.getDateFromStringInFormat(mScheduledPlan.getPlannedDate(), "MM/dd/yyyy, hh:mm a"));
             mBalanceText.setText(String.format(Locale.getDefault(), "%s%.2f", mScheduledPlan.getCurrency(), mScheduledPlan.getAmount()));
+
+            mPaymentScheduleContainer.setVisibility(View.GONE);
 
         } else if (payment instanceof PastPayment) {
 
@@ -139,17 +148,9 @@ public class PaymentDetailsController extends BaseController implements PaymentD
             mDateText.setText(DateUtils.getDateFromStringInFormat(mPastPayment.getPlannedDate(), "MM/dd/yyyy, hh:mm a"));
             mBalanceText.setText(String.format(Locale.getDefault(), "%s%.2f", mPastPayment.getCurrency(), mPastPayment.getAmount()));
 
+            mPaymentScheduleContainer.setVisibility(View.GONE);
+
         }
-
-        ArrayList<Payment> data = new ArrayList<>();
-        data.add(new Payment("01", "February", "lifeandlookstyle"));
-        data.add(new Payment("14", "February", "ozsale"));
-        data.add(new Payment("28", "February", "mysale"));
-        data.add(new Payment("14", "March", "cocosa"));
-
-        mAdapter = new PaymentDetailsAdapter(this, data);
-        mRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity(), LinearLayoutManager.VERTICAL, false));
-        mRecyclerView.setAdapter(mAdapter);
     }
 
     @Override

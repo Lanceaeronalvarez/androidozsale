@@ -12,21 +12,24 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import java.util.List;
+import java.util.Locale;
 
 import au.com.dealsdirect.R;
-import au.com.dealsdirect.data.network.model.ourpaydashboard.Payment;
+import au.com.dealsdirect.data.network.model.ourpaydashboard.paymentplans.PaymentPlan;
+import au.com.dealsdirect.data.network.model.ourpaydashboard.paymentplans.PlannedTransaction;
+import au.com.dealsdirect.utils.DateUtils;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
 public class PaymentDetailsAdapter extends RecyclerView.Adapter<PaymentDetailsAdapter.ViewHolder> {
 
     Context mContext;
-    PaymentDetailsController mController;
-    List<Payment> mData;
+    PaymentPlan mPaymentPlan;
+    List<PlannedTransaction> mData;
     String mLastMonth = "";
 
-    public PaymentDetailsAdapter(PaymentDetailsController controller, List<Payment> data) {
-        this.mController = controller;
+    public PaymentDetailsAdapter(PaymentPlan paymentPlan, List<PlannedTransaction> data) {
+        this.mPaymentPlan = paymentPlan;
         this.mData = data;
     }
 
@@ -64,12 +67,12 @@ public class PaymentDetailsAdapter extends RecyclerView.Adapter<PaymentDetailsAd
     @Override
     public void onBindViewHolder(final ViewHolder holder, final int position) {
 
-        final Payment item = mData.get(position);
+        final PlannedTransaction item = mData.get(position);
 
-        holder.day.setText(item.getDay());
-        holder.month.setText(item.getMonth().substring(0, 3));
-        holder.cardNumber.setText(item.getCardNumber());
-        holder.value.setText(item.getCurrency() + item.getValue());
+        holder.day.setText(DateUtils.getDateFromStringInFormat(item.getPlannedDate(), "dd"));
+        holder.month.setText(DateUtils.getDateFromStringInFormat(item.getPlannedDate(), "MMM"));
+        holder.cardNumber.setText(mPaymentPlan.getOrderNo());
+        holder.value.setText(String.format(Locale.getDefault(), "%s%.2f", mPaymentPlan.getCurrencySign(), item.getAmount()));
     }
 
     @Override

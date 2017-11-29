@@ -49,10 +49,10 @@
 
     <color name="progress_loader_stroke_color">#616161</color>
 
-    <color name="bottom_nav_accent_color">#90BF0A</color>
-    <color name="bottom_nav_badge_color">#90BF0A</color>
+    <color name="bottom_nav_accent_color">@color/colorPrimaryDark</color>
+    <color name="bottom_nav_badge_color">@color/colorPrimaryDark</color>
 
-    <color name="category_text_active">#90BF0A</color>
+    <color name="category_text_active">@color/colorPrimaryDark</color>
     <color name="category_text_inactive">#707070</color>
 
     <color name="gray_category_text">#707070</color>
@@ -76,21 +76,21 @@
 
     <color name="tab_bar_background">#e7e7e7</color>
     <color name="tab_bar_icon_inactive">#87939D</color>
-    <color name="tab_bar_icon_active">#A2D709</color>
-    <color name="tab_bar_icon_hovered">#A2D709</color>
+    <color name="tab_bar_icon_active">@color/colorPrimaryDark</color>
+    <color name="tab_bar_icon_hovered">@color/colorPrimaryDark</color>
 
     <color name="app_skin">#FAFAF9</color>
-    <color name="toolbar_skin">#90BF0A</color>
-    <color name="toolbar_active_skin">#90BF0A</color>
+    <color name="toolbar_skin">@color/colorPrimary</color>
+    <color name="toolbar_active_skin">@color/colorPrimary</color>
 
     <!-- Button Theme -->
-    <color name="bg_edit_text_focused">#90BF0A</color>
+    <color name="bg_edit_text_focused">@color/colorPrimary</color>
 
     <!-- Chips Theme -->
     <color name="bg_chips_ripple">#FFFFFF</color>
     <color name="bg_chips_default">#F8FAFD</color>
     <color name="bg_chips_default_border">#EDF0F5</color>
-    <color name="bg_chips_checked">#90BF0A</color>
+    <color name="bg_chips_checked">@color/colorPrimary</color>
     <color name="bg_chips_text">#FFFFFF</color>
 
     <!-- Dialog Theme -->
