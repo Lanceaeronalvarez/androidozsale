@@ -643,9 +643,10 @@ public class CheckoutController extends SwipeableBaseToolBarController implement
 
                     if (PaymentInfo.getOurpay().isPhoneVerificationRequired()) {
 
-//                        getRouter().pushController(RouterTransaction.with(OurpaySMSVerificationController.newInstance(mCartPhone))
-//                                .pushChangeHandler(new HorizontalChangeHandler(false))
-//                                .popChangeHandler(new HorizontalChangeHandler()));
+                        Bundle bundle = new Bundle();
+                        bundle.putString(BundleKeys.PHONE_KEY,mCartPhone);
+                        GateKeeper.push(getRouter(), GateKeeper.Destination.SMS_VERIFICATION, bundle, new VerticalChangeHandler(false), new VerticalChangeHandler());
+
                     } else {
                         ourpayPaymentSubmit();
                     }
