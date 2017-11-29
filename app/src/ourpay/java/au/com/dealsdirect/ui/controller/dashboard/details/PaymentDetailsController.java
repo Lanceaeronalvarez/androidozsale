@@ -9,19 +9,20 @@ import android.text.format.DateFormat;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.List;
 import java.util.Locale;
 
 import javax.inject.Inject;
 
 import au.com.dealsdirect.R;
-import au.com.dealsdirect.data.network.model.ourpaydashboard.Payment;
 import au.com.dealsdirect.data.network.model.ourpaydashboard.pastpayments.PastPayment;
 import au.com.dealsdirect.data.network.model.ourpaydashboard.paymentplans.PaymentPlan;
+import au.com.dealsdirect.data.network.model.ourpaydashboard.paymentplans.PlannedTransaction;
 import au.com.dealsdirect.data.network.model.ourpaydashboard.scheduledplans.ScheduledPlan;
 import au.com.dealsdirect.ui.base.BaseController;
 import au.com.dealsdirect.utils.BundleBuilder;
@@ -59,6 +60,42 @@ public class PaymentDetailsController extends BaseController implements PaymentD
 
     @BindView(R.id.controller_payment_details_recycler)
     RecyclerView mRecyclerView;
+
+    @BindView(R.id.controller_payment_details_schedule_circle1)
+    ImageView mPaymentScheduleCircle1;
+
+    @BindView(R.id.controller_payment_details_schedule_circle2)
+    ImageView mPaymentScheduleCircle2;
+
+    @BindView(R.id.controller_payment_details_schedule_circle3)
+    ImageView mPaymentScheduleCircle3;
+
+    @BindView(R.id.controller_payment_details_schedule_circle4)
+    ImageView mPaymentScheduleCircle4;
+
+    @BindView(R.id.controller_payment_details_schedule_date1)
+    TextView mPaymentScheduleDate1;
+
+    @BindView(R.id.controller_payment_details_schedule_date2)
+    TextView mPaymentScheduleDate2;
+
+    @BindView(R.id.controller_payment_details_schedule_date3)
+    TextView mPaymentScheduleDate3;
+
+    @BindView(R.id.controller_payment_details_schedule_date4)
+    TextView mPaymentScheduleDate4;
+
+    @BindView(R.id.controller_payment_details_schedule_value1)
+    TextView mPaymentScheduleValue1;
+
+    @BindView(R.id.controller_payment_details_schedule_value2)
+    TextView mPaymentScheduleValue2;
+
+    @BindView(R.id.controller_payment_details_schedule_value3)
+    TextView mPaymentScheduleValue3;
+
+    @BindView(R.id.controller_payment_details_schedule_value4)
+    TextView mPaymentScheduleValue4;
 
     PaymentPlan mPaymentPlan;
 
@@ -129,6 +166,7 @@ public class PaymentDetailsController extends BaseController implements PaymentD
             mAdapter = new PaymentDetailsAdapter(mPaymentPlan, mPaymentPlan.getPlannedTransactions());
             mRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity(), LinearLayoutManager.VERTICAL, false));
             mRecyclerView.setAdapter(mAdapter);
+            populatePaymentSchedule();
 
         } else if (payment instanceof ScheduledPlan) {
 
@@ -164,5 +202,34 @@ public class PaymentDetailsController extends BaseController implements PaymentD
         if (getActivity() != null) {
             getActivity().onBackPressed();
         }
+    }
+
+    @Override
+    public void populatePaymentSchedule() {
+        List<PlannedTransaction> plannedTransactions = mPaymentPlan.getPlannedTransactions();
+
+        populatePaymentScheduleCell(plannedTransactions.get(0), mPaymentScheduleCircle1, mPaymentScheduleDate1, mPaymentScheduleValue1);
+
+        populatePaymentScheduleCell(plannedTransactions.get(1), mPaymentScheduleCircle2, mPaymentScheduleDate2, mPaymentScheduleValue2);
+
+        populatePaymentScheduleCell(plannedTransactions.get(2), mPaymentScheduleCircle3, mPaymentScheduleDate3, mPaymentScheduleValue3);
+
+        populatePaymentScheduleCell(plannedTransactions.get(3), mPaymentScheduleCircle4, mPaymentScheduleDate4, mPaymentScheduleValue4);
+    }
+
+    @Override
+    public void populatePaymentScheduleCell(PlannedTransaction transaction, ImageView circle, TextView date, TextView value) {
+
+        if (transaction.getState().equalsIgnoreCase("successful")) {
+            circle.setImageResource(R.drawable.ic_schedule_successful);
+        } else if (transaction.getState().equalsIgnoreCase("pending")) {
+            circle.setImageResource(R.drawable.ic_schedule_pending);
+        } else if (transaction.getState().equalsIgnoreCase("cancelled")) {
+            circle.setImageResource(R.drawable.ic_schedule_cancelled);
+        }
+
+        date.setText(DateUtils.getDateFromStringInFormat(transaction.getPlannedDate(), "MMM dd").toLowerCase());
+
+        value.setText(String.format(Locale.getDefault(), "%s%.2f", mPaymentPlan.getCurrencySign(), transaction.getAmount()));
     }
 }

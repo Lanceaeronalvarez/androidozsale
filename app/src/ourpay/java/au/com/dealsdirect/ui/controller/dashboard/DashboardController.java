@@ -153,6 +153,9 @@ public class DashboardController extends BaseController implements DashboardMvpV
 
     @Override
     public void onDestroyView(@NonNull View view) {
+        if (getActivity() != null && !getActivity().isChangingConfigurations()) {
+            mViewPager.setAdapter(null);
+        }
         mPresenter.onDetach();
         super.onDestroyView(view);
     }
