@@ -31,6 +31,7 @@
                 tools:ignore="MissingPrefix" />
 
             <TextView
+                android:id="@+id/controller_payment_details_date"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:background="@android:color/transparent"
@@ -64,6 +65,7 @@
                 tools:ignore="MissingPrefix" />
 
             <TextView
+                android:id="@+id/controller_payment_details_balance"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:background="@android:color/transparent"

@@ -5,12 +5,16 @@ import android.os.Parcelable;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.text.format.DateFormat;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.Locale;
 
 import javax.inject.Inject;
 
@@ -21,6 +25,7 @@ import au.com.dealsdirect.data.network.model.ourpaydashboard.paymentplans.Paymen
 import au.com.dealsdirect.data.network.model.ourpaydashboard.scheduledplans.ScheduledPlan;
 import au.com.dealsdirect.ui.base.BaseController;
 import au.com.dealsdirect.utils.BundleBuilder;
+import au.com.dealsdirect.utils.DateUtils;
 import butterknife.BindView;
 import butterknife.OnClick;
 
@@ -42,6 +47,12 @@ public class PaymentDetailsController extends BaseController implements PaymentD
 
     @BindView(R.id.controller_payment_details_id)
     TextView mIdText;
+
+    @BindView(R.id.controller_payment_details_date)
+    TextView mDateText;
+
+    @BindView(R.id.controller_payment_details_balance)
+    TextView mBalanceText;
 
     @BindView(R.id.controller_payment_details_recycler)
     RecyclerView mRecyclerView;
@@ -109,18 +120,24 @@ public class PaymentDetailsController extends BaseController implements PaymentD
             mPaymentPlan = (PaymentPlan) payment;
             mTitleText.setText(mPaymentPlan.getName());
             mIdText.setText(mPaymentPlan.getOrderNo());
+            mDateText.setText(DateFormat.format("MM/dd/yyyy, hh:mm a", Calendar.getInstance()));
+            mBalanceText.setText(String.format(Locale.getDefault(), "%s%.2f", mPaymentPlan.getCurrencySign(), mPaymentPlan.getOrderBalance()));
 
         } else if (payment instanceof ScheduledPlan) {
 
             mScheduledPlan = (ScheduledPlan) payment;
             mTitleText.setText(mScheduledPlan.getName());
             mIdText.setText(mScheduledPlan.getOrderNo());
+            mDateText.setText(DateUtils.getDateFromStringInFormat(mScheduledPlan.getPlannedDate(), "MM/dd/yyyy, hh:mm a"));
+            mBalanceText.setText(String.format(Locale.getDefault(), "%s%.2f", mScheduledPlan.getCurrency(), mScheduledPlan.getAmount()));
 
         } else if (payment instanceof PastPayment) {
 
             mPastPayment = (PastPayment) payment;
             mTitleText.setText(mPastPayment.getName());
             mIdText.setText(mPastPayment.getOrderNo());
+            mDateText.setText(DateUtils.getDateFromStringInFormat(mPastPayment.getPlannedDate(), "MM/dd/yyyy, hh:mm a"));
+            mBalanceText.setText(String.format(Locale.getDefault(), "%s%.2f", mPastPayment.getCurrency(), mPastPayment.getAmount()));
 
         }
 
