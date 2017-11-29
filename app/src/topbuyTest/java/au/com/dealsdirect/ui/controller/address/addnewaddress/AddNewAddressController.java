@@ -29,13 +29,14 @@ import au.com.dealsdirect.utils.BundleBuilder;
 import au.com.dealsdirect.utils.JsonUtils;
 import au.com.dealsdirect.utils.StringUtils;
 
+import static au.com.dealsdirect.utils.BundleKeys.DECORATION_INFO_LIST;
+import static au.com.dealsdirect.utils.BundleKeys.IS_FROM_CART;
+
 /**
  * Created by smartwave on 20/06/2017.
  */
 
 public class AddNewAddressController extends SwipeableBaseToolBarController implements AddNewAddressMvpView {
-    private static final String DECORATION_INFO_LIST = "DECORATION_INFO_LIST";
-    private static final String CALLED_FROM_CART = "CALLED_FROM_CART";
 
     private ArrayList<DecorationInfoList> mDecorationInfoList;
     private HashMap<DecorationInfoList, View> mViewMap = new HashMap<>();
@@ -47,14 +48,14 @@ public class AddNewAddressController extends SwipeableBaseToolBarController impl
     public AddNewAddressController(String decorationInfoList, boolean calledFromCart){
         this(new BundleBuilder(new Bundle())
                 .putString(DECORATION_INFO_LIST, decorationInfoList)
-                .putBoolean(CALLED_FROM_CART, calledFromCart)
+                .putBoolean(IS_FROM_CART, calledFromCart)
                 .build());
     }
 
     public AddNewAddressController(Bundle args) {
         super(args);
         mDecorationInfoList = JsonUtils.convertStringToObject(args.getString(DECORATION_INFO_LIST), new TypeToken<ArrayList<DecorationInfoList>>(){}.getType());
-        mCalledFromCart = args.getBoolean(CALLED_FROM_CART,false);
+        mCalledFromCart = args.getBoolean(IS_FROM_CART,getArgs().getBoolean(IS_FROM_CART));
     }
 
 
