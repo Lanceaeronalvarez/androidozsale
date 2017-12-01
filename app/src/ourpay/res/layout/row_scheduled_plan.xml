@@ -11,13 +11,13 @@
         fontPath="@string/font_lato_light"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="10dp"
+        android:layout_marginBottom="5dp"
         android:layout_marginEnd="10dp"
         android:layout_marginStart="10dp"
-        android:layout_marginTop="20dp"
+        android:layout_marginTop="10dp"
         android:textAllCaps="true"
         android:textColor="#adadad"
-        android:textSize="@dimen/text_size_xxxlarge"
+        android:textSize="@dimen/text_size_xxlarge"
         tools:ignore="MissingPrefix"
         tools:text="January 2017" />
 
@@ -25,7 +25,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@drawable/bg_edit_text_rounded"
-        android:paddingEnd="10dp"
+        android:paddingEnd="20dp"
         android:paddingStart="20dp">
 
         <TextView
@@ -33,9 +33,9 @@
             fontPath="@string/font_lato_semibold"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:paddingTop="20dp"
+            android:paddingTop="10dp"
             android:textColor="@color/edit_text_label"
-            android:textSize="@dimen/text_size_xxxlarge"
+            android:textSize="@dimen/text_size_xxxxlarge"
             tools:ignore="MissingPrefix"
             tools:text="12" />
 
@@ -44,9 +44,11 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_below="@id/row_scheduled_plan_day"
-            android:paddingBottom="20dp"
+            android:paddingBottom="10dp"
+            android:paddingEnd="0dp"
+            android:paddingStart="5dp"
             android:textColor="#adadad"
-            android:textSize="@dimen/text_size_large"
+            android:textSize="@dimen/text_size_xlarge"
             tools:text="Jan" />
 
         <View
@@ -64,7 +66,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_toEndOf="@id/row_scheduled_plan_divider"
-            android:paddingTop="20dp"
+            android:paddingTop="10dp"
             android:textColor="@color/edit_text_label"
             android:textSize="@dimen/text_size_xxxlarge"
             tools:ignore="MissingPrefix"
@@ -76,9 +78,32 @@
             android:layout_height="wrap_content"
             android:layout_below="@id/row_scheduled_plan_title"
             android:layout_toEndOf="@id/row_scheduled_plan_divider"
-            android:paddingBottom="20dp"
+            android:paddingBottom="5dp"
             android:textColor="#adadad"
             android:textSize="@dimen/text_size_large"
+            tools:text="95068491" />
+
+        <ImageView
+            android:id="@+id/row_scheduled_plan_card_image"
+            android:layout_width="20dp"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/row_scheduled_plan_id"
+            android:layout_toEndOf="@id/row_scheduled_plan_divider"
+            android:paddingBottom="10dp"
+            android:src="@drawable/ic_credit_card"
+            android:tint="@color/colorPrimaryDark" />
+
+        <TextView
+            android:id="@+id/row_scheduled_plan_card_number"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/row_scheduled_plan_id"
+            android:layout_toEndOf="@id/row_scheduled_plan_card_image"
+            android:paddingBottom="10dp"
+            android:paddingEnd="5dp"
+            android:paddingStart="5dp"
+            android:textColor="#adadad"
+            android:textSize="@dimen/text_size_xlarge"
             tools:text="95068491" />
 
         <TextView
@@ -86,20 +111,12 @@
             fontPath="@string/font_lato_semibold"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_alignParentEnd="true"
             android:layout_centerVertical="true"
-            android:layout_toStartOf="@+id/row_scheduled_plan_chevron"
             android:textColor="@color/edit_text_label"
             android:textSize="@dimen/text_size_xxxlarge"
             tools:ignore="MissingPrefix"
             tools:text="$100" />
-
-        <ImageView
-            android:id="@+id/row_scheduled_plan_chevron"
-            android:layout_width="30dp"
-            android:layout_height="30dp"
-            android:layout_alignParentEnd="true"
-            android:layout_centerVertical="true"
-            android:src="@drawable/ic_chevron" />
 
     </RelativeLayout>
 
