@@ -136,7 +136,8 @@ public abstract class SwipeableBaseToolBarController extends BaseController {
                 public void onStateChanged(@NonNull View bottomSheet, int newState) {
                     switch (newState) {
                         case CoordinatorLayoutAsBottomSheetBehavior.STATE_COLLAPSED:
-                            getRouter().popCurrentController();
+                            mActivity.onBackPressed();
+
                             break;
                         case CoordinatorLayoutAsBottomSheetBehavior.STATE_EXPANDED:
                             break;
