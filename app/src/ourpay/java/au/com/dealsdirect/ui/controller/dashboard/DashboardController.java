@@ -12,7 +12,6 @@ import android.widget.TextView;
 import com.bluelinelabs.conductor.Controller;
 import com.bluelinelabs.conductor.Router;
 import com.bluelinelabs.conductor.RouterTransaction;
-import com.bluelinelabs.conductor.changehandler.HorizontalChangeHandler;
 import com.bluelinelabs.conductor.support.RouterPagerAdapter;
 
 import java.io.Serializable;
@@ -30,7 +29,6 @@ import au.com.dealsdirect.data.network.model.ourpaydashboard.paymentplans.Paymen
 import au.com.dealsdirect.data.network.model.ourpaydashboard.scheduledplans.GetScheduledPlansResponse;
 import au.com.dealsdirect.data.network.model.ourpaydashboard.scheduledplans.ScheduledPlan;
 import au.com.dealsdirect.ui.base.BaseController;
-import au.com.dealsdirect.ui.controller.dashboard.details.PaymentDetailsController;
 import au.com.dealsdirect.ui.controller.dashboard.pastpayments.PastPaymentsController;
 import au.com.dealsdirect.ui.controller.dashboard.paymentplans.PaymentPlansController;
 import au.com.dealsdirect.ui.controller.dashboard.scheduledplans.ScheduledPlansController;

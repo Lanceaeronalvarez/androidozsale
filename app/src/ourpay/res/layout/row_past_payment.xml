@@ -66,7 +66,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_toEndOf="@id/row_past_payment_divider"
-            android:paddingTop="10dp"
+            android:paddingTop="5dp"
             android:textColor="@color/edit_text_label"
             android:textSize="@dimen/text_size_xxxlarge"
             tools:ignore="MissingPrefix"
@@ -89,7 +89,7 @@
             android:layout_height="wrap_content"
             android:layout_below="@id/row_past_payment_id"
             android:layout_toEndOf="@id/row_past_payment_divider"
-            android:paddingBottom="10dp"
+            android:paddingBottom="5dp"
             android:src="@drawable/ic_credit_card"
             android:tint="@color/colorPrimaryDark" />
 
@@ -99,7 +99,7 @@
             android:layout_height="wrap_content"
             android:layout_below="@id/row_past_payment_id"
             android:layout_toEndOf="@id/row_past_payment_card_image"
-            android:paddingBottom="10dp"
+            android:paddingBottom="5dp"
             android:paddingEnd="5dp"
             android:paddingStart="5dp"
             android:textColor="#adadad"

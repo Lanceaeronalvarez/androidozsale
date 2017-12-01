@@ -5,16 +5,15 @@
     android:layout_height="wrap_content"
     android:layout_margin="5dp"
     android:background="@drawable/bg_edit_text_rounded"
-    android:paddingBottom="20dp"
-    android:paddingEnd="10dp"
-    android:paddingStart="20dp"
-    android:paddingTop="20dp">
+    android:paddingBottom="10dp"
+    android:paddingTop="10dp">
 
     <TextView
         android:id="@+id/row_payment_plan_title"
         fontPath="@string/font_lato_semibold"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginStart="20dp"
         android:textColor="@color/edit_text_label"
         android:textSize="@dimen/text_size_xxxlarge"
         tools:ignore="MissingPrefix"
@@ -25,6 +24,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@id/row_payment_plan_title"
+        android:layout_marginStart="20dp"
         android:textColor="#adadad"
         android:textSize="@dimen/text_size_large"
         tools:text="95068491" />
@@ -34,19 +34,235 @@
         fontPath="@string/font_lato_semibold"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_centerVertical="true"
-        android:layout_toStartOf="@+id/row_payment_plan_chevron"
+        android:layout_alignParentEnd="true"
+        android:layout_marginEnd="20dp"
         android:textColor="@color/edit_text_label"
         android:textSize="@dimen/text_size_xxxlarge"
         tools:ignore="MissingPrefix"
         tools:text="$100" />
 
-    <ImageView
-        android:id="@+id/row_payment_plan_chevron"
-        android:layout_width="30dp"
-        android:layout_height="30dp"
+    <TextView
+        android:id="@+id/row_payment_plan_balance"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         android:layout_alignParentEnd="true"
-        android:layout_centerVertical="true"
-        android:src="@drawable/ic_chevron" />
+        android:layout_below="@id/row_payment_plan_value"
+        android:layout_marginEnd="20dp"
+        android:text="@string/balance"
+        android:textColor="#adadad"
+        android:textSize="@dimen/text_size_large" />
+
+    <View
+        android:id="@+id/row_payment_plan_divider"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/divider_height"
+        android:layout_below="@id/row_payment_plan_id"
+        android:layout_marginBottom="20dp"
+        android:layout_marginTop="20dp"
+        android:background="@color/border_gray" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/row_payment_plan_divider"
+        android:layout_marginEnd="20dp"
+        android:layout_marginStart="20dp"
+        android:gravity="center"
+        android:orientation="vertical">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="10dp"
+            android:layout_marginEnd="16dp"
+            android:layout_marginStart="16dp"
+            android:gravity="center"
+            android:orientation="horizontal">
+
+            <ImageView
+                android:id="@+id/row_payment_plan_schedule_circle1"
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:src="@drawable/ic_schedule_cancelled" />
+
+            <View
+                android:layout_width="0dp"
+                android:layout_height="1dp"
+                android:layout_marginEnd="5dp"
+                android:layout_marginStart="5dp"
+                android:layout_weight="1"
+                android:background="@color/border_gray" />
+
+            <ImageView
+                android:id="@+id/row_payment_plan_schedule_circle2"
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:src="@drawable/ic_schedule_cancelled" />
+
+            <View
+                android:layout_width="0dp"
+                android:layout_height="1dp"
+                android:layout_marginEnd="5dp"
+                android:layout_marginStart="5dp"
+                android:layout_weight="1"
+                android:background="@color/border_gray" />
+
+            <ImageView
+                android:id="@+id/row_payment_plan_schedule_circle3"
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:src="@drawable/ic_schedule_cancelled" />
+
+            <View
+                android:layout_width="0dp"
+                android:layout_height="1dp"
+                android:layout_marginEnd="5dp"
+                android:layout_marginStart="5dp"
+                android:layout_weight="1"
+                android:background="@color/border_gray" />
+
+            <ImageView
+                android:id="@+id/row_payment_plan_schedule_circle4"
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:src="@drawable/ic_schedule_cancelled" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="10dp"
+            android:layout_marginStart="10dp"
+            android:gravity="center"
+            android:orientation="horizontal">
+
+            <TextView
+                android:id="@+id/row_payment_plan_schedule_date1"
+                android:layout_width="45dp"
+                android:layout_height="wrap_content"
+                android:background="@android:color/transparent"
+                android:gravity="center"
+                android:textColor="@color/edit_text_content"
+                android:textSize="@dimen/text_size_large"
+                tools:text="feb 01" />
+
+            <View
+                android:layout_width="0dp"
+                android:layout_height="1dp"
+                android:layout_weight="1" />
+
+            <TextView
+                android:id="@+id/row_payment_plan_schedule_date2"
+                android:layout_width="45dp"
+                android:layout_height="wrap_content"
+                android:background="@android:color/transparent"
+                android:gravity="center"
+                android:textColor="@color/edit_text_content"
+                android:textSize="@dimen/text_size_large"
+                tools:text="feb 14" />
+
+            <View
+                android:layout_width="0dp"
+                android:layout_height="1dp"
+                android:layout_weight="1" />
+
+            <TextView
+                android:id="@+id/row_payment_plan_schedule_date3"
+                android:layout_width="45dp"
+                android:layout_height="wrap_content"
+                android:background="@android:color/transparent"
+                android:gravity="center"
+                android:textColor="@color/edit_text_content"
+                android:textSize="@dimen/text_size_large"
+                tools:text="feb 28" />
+
+            <View
+                android:layout_width="0dp"
+                android:layout_height="1dp"
+                android:layout_weight="1" />
+
+            <TextView
+                android:id="@+id/row_payment_plan_schedule_date4"
+                android:layout_width="45dp"
+                android:layout_height="wrap_content"
+                android:background="@android:color/transparent"
+                android:gravity="center"
+                android:textColor="@color/edit_text_content"
+                android:textSize="@dimen/text_size_large"
+                tools:text="mar 14" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="10dp"
+            android:layout_marginStart="10dp"
+            android:gravity="center"
+            android:orientation="horizontal">
+
+            <TextView
+                android:id="@+id/row_payment_plan_schedule_value1"
+                fontPath="@string/font_lato_bold"
+                android:layout_width="45dp"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:textColor="@color/edit_text_label"
+                android:textSize="@dimen/text_size_large"
+                tools:ignore="MissingPrefix"
+                tools:text="@string/_25" />
+
+            <View
+                android:layout_width="0dp"
+                android:layout_height="1dp"
+                android:layout_weight="1" />
+
+            <TextView
+                android:id="@+id/row_payment_plan_schedule_value2"
+                fontPath="@string/font_lato_bold"
+                android:layout_width="45dp"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:textColor="@color/edit_text_label"
+                android:textSize="@dimen/text_size_large"
+                tools:ignore="MissingPrefix"
+                tools:text="@string/_25" />
+
+            <View
+                android:layout_width="0dp"
+                android:layout_height="1dp"
+                android:layout_weight="1" />
+
+            <TextView
+                android:id="@+id/row_payment_plan_schedule_value3"
+                fontPath="@string/font_lato_bold"
+                android:layout_width="45dp"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:textColor="@color/edit_text_label"
+                android:textSize="@dimen/text_size_large"
+                tools:ignore="MissingPrefix"
+                tools:text="@string/_25" />
+
+            <View
+                android:layout_width="0dp"
+                android:layout_height="1dp"
+                android:layout_weight="1" />
+
+            <TextView
+                android:id="@+id/row_payment_plan_schedule_value4"
+                fontPath="@string/font_lato_bold"
+                android:layout_width="45dp"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:textColor="@color/edit_text_label"
+                android:textSize="@dimen/text_size_large"
+                tools:ignore="MissingPrefix"
+                tools:text="@string/_25" />
+
+        </LinearLayout>
+
+    </LinearLayout>
 
 </RelativeLayout>
