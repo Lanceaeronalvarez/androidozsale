@@ -42,15 +42,25 @@
         tools:text="$100" />
 
     <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/row_payment_plan_value"
+        android:layout_toStartOf="@id/row_payment_plan_balance"
+        android:text="@string/balance"
+        android:textColor="#adadad"
+        android:textSize="@dimen/text_size_large" />
+
+    <TextView
         android:id="@+id/row_payment_plan_balance"
+        fontPath="@string/font_lato_semibold"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentEnd="true"
         android:layout_below="@id/row_payment_plan_value"
         android:layout_marginEnd="20dp"
-        android:text="@string/balance"
-        android:textColor="#adadad"
-        android:textSize="@dimen/text_size_large" />
+        android:textColor="@color/edit_text_label"
+        android:textSize="@dimen/text_size_large"
+        tools:ignore="MissingPrefix" />
 
     <View
         android:id="@+id/row_payment_plan_divider"

@@ -107,7 +107,7 @@ public class PaymentPlansAdapter extends RecyclerView.Adapter<PaymentPlansAdapte
         holder.title.setText(item.getName());
         holder.id.setText(item.getOrderNo());
         holder.value.setText(String.format(Locale.getDefault(), "%s%.2f", item.getCurrencySign(), item.getTotalAmount()));
-        holder.balance.append(Html.fromHtml("<b>" + String.format(Locale.getDefault(), "%s%.2f", item.getCurrencySign(), item.getOrderBalance())) + "</b>");
+        holder.balance.setText(String.format(Locale.getDefault(), "%s%.2f", item.getCurrencySign(), item.getOrderBalance()));
 
         List<PlannedTransaction> plannedTransactions = item.getPlannedTransactions();
 
