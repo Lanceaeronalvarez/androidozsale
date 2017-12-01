@@ -13,7 +13,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
@@ -34,23 +33,18 @@ import au.com.dealsdirect.data.network.model.vouchers.AddVoucherByKeyResponse;
 import au.com.dealsdirect.data.network.model.vouchers.ApplyVouchersResponse;
 import au.com.dealsdirect.data.network.model.vouchers.ClearVouchersResponse;
 import au.com.dealsdirect.data.network.model.vouchers.Voucher;
-import au.com.dealsdirect.ui.base.BaseToolBarController;
+import au.com.dealsdirect.ui.base.SwipeableBaseToolBarController;
 import au.com.dealsdirect.ui.custom.CustomAlertDialog;
-import au.com.dealsdirect.utils.BundleBuilder;
 import au.com.dealsdirect.utils.BundleKeys;
 import au.com.dealsdirect.utils.JsonUtils;
 import butterknife.BindView;
-
-import static au.com.dealsdirect.ui.controller.account.AccountItems.VOUCHERS;
-import static au.com.dealsdirect.utils.BundleKeys.IS_CART_NO_DISCOUNT;
-import static au.com.dealsdirect.utils.BundleKeys.IS_VOUCHER_ADDED;
 
 
 /**
  * Created by Paul on 6/27/17.
  */
 
-public class AddVouchersController extends BaseToolBarController implements AddVouchersMvpView {
+public class AddVouchersController extends SwipeableBaseToolBarController implements AddVouchersMvpView {
 
     public static final String testVouchersString = "[{\n" +
             "\t\t\t\t\"ID\": \"ba41e1d8-0a3d-4868-81ba-2f139f0827fa\",\n" +
@@ -166,6 +160,8 @@ public class AddVouchersController extends BaseToolBarController implements AddV
         super.onViewBound(view);
 
         mToolbarTitle.setText(mActivity.getResources().getString(R.string.promo_code));
+        setupSwipingBehavior();
+
         mSharedPreference = mActivity.getSharedPreferences("Voucher_Preference", Context.MODE_PRIVATE);
         Set<String> voucherSet = mSharedPreference.getStringSet("VOUCHER_SET", null);
         if(voucherSet != null && !mIsNoDiscountApplied) {

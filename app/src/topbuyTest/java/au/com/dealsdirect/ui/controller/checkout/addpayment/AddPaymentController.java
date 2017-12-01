@@ -24,7 +24,7 @@ import com.mysale.genie.utility.RxBus;
 import javax.inject.Inject;
 
 import au.com.dealsdirect.R;
-import au.com.dealsdirect.ui.base.BaseToolBarController;
+import au.com.dealsdirect.ui.base.SwipeableBaseToolBarController;
 import au.com.dealsdirect.ui.controller.masterpass.MasterpassController;
 import au.com.dealsdirect.ui.custom.CustomAlertDialog;
 import au.com.dealsdirect.ui.main.FetchTokenHandler;
@@ -38,7 +38,7 @@ import butterknife.OnClick;
  * Created by smartwave on 29/06/2017.
  */
 
-public class AddPaymentController extends BaseToolBarController implements AddPaymentMvpView, OnCardFormSubmitListener, CardEditText.OnCardTypeChangedListener, OnCardFormScanListener {
+public class AddPaymentController extends SwipeableBaseToolBarController implements AddPaymentMvpView, OnCardFormSubmitListener, CardEditText.OnCardTypeChangedListener, OnCardFormScanListener {
     @Inject
     AddPaymentMvpPresenter<AddPaymentMvpView> mPresenter;
 
@@ -79,6 +79,7 @@ public class AddPaymentController extends BaseToolBarController implements AddPa
     @Override
     protected void onViewBound(@NonNull View view) {
         super.onViewBound(view);
+        setupSwipingBehavior();
         setUp(view);
     }
 
