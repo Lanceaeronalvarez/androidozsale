@@ -16,6 +16,7 @@ import com.mysale.genie.views.custom.CoordinatorLayoutAsBottomSheetBehavior;
 
 import au.com.dealsdirect.R;
 import butterknife.BindView;
+import butterknife.OnClick;
 
 /**
  * Created by smartwave on 24/10/2017.
@@ -162,6 +163,11 @@ public abstract class SwipeableBaseToolBarController extends BaseController {
         CoordinatorLayout.LayoutParams params = (CoordinatorLayout.LayoutParams) mRootLayout.getLayoutParams();
         params.setBehavior(null);
         mBottomLayout.requestLayout();
+    }
+
+    @OnClick(R.id.toolbar)
+    public void onToolbarTitleClick(){
+        mActivity.onBackPressed();
     }
 
 
