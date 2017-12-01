@@ -223,7 +223,7 @@ public class PaymentDetailsController extends BaseController implements PaymentD
         if (transaction.getState().equalsIgnoreCase("successful")) {
             circle.setImageResource(R.drawable.ic_schedule_successful);
         } else if (transaction.getState().equalsIgnoreCase("pending")) {
-            circle.setImageResource(R.drawable.ic_schedule_pending);
+            circle.setImageResource(R.drawable.ic_schedule_pending_gray_1);
         } else if (transaction.getState().equalsIgnoreCase("cancelled")) {
             circle.setImageResource(R.drawable.ic_schedule_cancelled);
         }

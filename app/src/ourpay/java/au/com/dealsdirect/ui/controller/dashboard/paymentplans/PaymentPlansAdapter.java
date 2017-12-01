@@ -5,6 +5,7 @@ package au.com.dealsdirect.ui.controller.dashboard.paymentplans;
 
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;
+import android.text.Html;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -27,6 +28,7 @@ public class PaymentPlansAdapter extends RecyclerView.Adapter<PaymentPlansAdapte
     Context mContext;
     DashboardController mController;
     List<PaymentPlan> mData;
+    String lastState;
 
     public PaymentPlansAdapter(DashboardController controller, List<PaymentPlan> data) {
         this.mController = controller;
@@ -43,6 +45,9 @@ public class PaymentPlansAdapter extends RecyclerView.Adapter<PaymentPlansAdapte
 
         @BindView(R.id.row_payment_plan_value)
         TextView value;
+
+        @BindView(R.id.row_payment_plan_balance)
+        TextView balance;
 
         @BindView(R.id.row_payment_plan_schedule_circle1)
         ImageView circle1;
@@ -102,6 +107,7 @@ public class PaymentPlansAdapter extends RecyclerView.Adapter<PaymentPlansAdapte
         holder.title.setText(item.getName());
         holder.id.setText(item.getOrderNo());
         holder.value.setText(String.format(Locale.getDefault(), "%s%.2f", item.getCurrencySign(), item.getTotalAmount()));
+        holder.balance.append(Html.fromHtml("<b>" + String.format(Locale.getDefault(), "%s%.2f", item.getCurrencySign(), item.getOrderBalance())) + "</b>");
 
         List<PlannedTransaction> plannedTransactions = item.getPlannedTransactions();
 
@@ -124,13 +130,49 @@ public class PaymentPlansAdapter extends RecyclerView.Adapter<PaymentPlansAdapte
         if (transaction.getState().equalsIgnoreCase("successful")) {
             circle.setImageResource(R.drawable.ic_schedule_successful);
         } else if (transaction.getState().equalsIgnoreCase("pending")) {
-            circle.setImageResource(R.drawable.ic_schedule_pending);
+            processPendingCell(transaction, circle);
         } else if (transaction.getState().equalsIgnoreCase("cancelled")) {
             circle.setImageResource(R.drawable.ic_schedule_cancelled);
         }
 
+        lastState = transaction.getState();
+
         date.setText(DateUtils.getDateFromStringInFormat(transaction.getPlannedDate(), "MMM dd").toLowerCase());
 
         value.setText(String.format(Locale.getDefault(), "%s%.2f", item.getCurrencySign(), transaction.getAmount()));
+    }
+
+    private void processPendingCell(PlannedTransaction transaction, ImageView circle) {
+        if (lastState.equalsIgnoreCase("successful")) {
+            switch (transaction.getNumber()) {
+                case 1:
+                    circle.setImageResource(R.drawable.ic_schedule_pending_yellow_1);
+                    break;
+                case 2:
+                    circle.setImageResource(R.drawable.ic_schedule_pending_yellow_2);
+                    break;
+                case 3:
+                    circle.setImageResource(R.drawable.ic_schedule_pending_yellow_3);
+                    break;
+                case 4:
+                    circle.setImageResource(R.drawable.ic_schedule_pending_yellow_4);
+                    break;
+            }
+        } else {
+            switch (transaction.getNumber()) {
+                case 1:
+                    circle.setImageResource(R.drawable.ic_schedule_pending_gray_1);
+                    break;
+                case 2:
+                    circle.setImageResource(R.drawable.ic_schedule_pending_gray_2);
+                    break;
+                case 3:
+                    circle.setImageResource(R.drawable.ic_schedule_pending_gray_3);
+                    break;
+                case 4:
+                    circle.setImageResource(R.drawable.ic_schedule_pending_gray_4);
+                    break;
+            }
+        }
     }
 }
