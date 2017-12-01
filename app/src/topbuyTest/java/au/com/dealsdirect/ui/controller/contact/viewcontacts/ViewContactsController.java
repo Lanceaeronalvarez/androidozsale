@@ -12,6 +12,7 @@ import android.widget.LinearLayout;
 import com.bluelinelabs.conductor.Router;
 import com.bluelinelabs.conductor.RouterTransaction;
 import com.bluelinelabs.conductor.changehandler.HorizontalChangeHandler;
+import com.bluelinelabs.conductor.changehandler.VerticalChangeHandler;
 
 import java.util.ArrayList;
 import java.util.LinkedList;
@@ -94,7 +95,7 @@ public class ViewContactsController extends SwipeableBaseToolBarController imple
         mToolbarTitle.setText("contact us");
         setupSwipingBehavior();
         setupDefaultBottomButton(mActivity.getString(R.string.write_us_a_message), view1 -> {
-            GateKeeper.push(getRouter(), GateKeeper.Destination.ADD_CONTACT, new HorizontalChangeHandler(false), new HorizontalChangeHandler());
+            GateKeeper.push(getRouter(), GateKeeper.Destination.ADD_CONTACT, new VerticalChangeHandler(false), new VerticalChangeHandler());
         });
 
         assert (mActivity) != null;

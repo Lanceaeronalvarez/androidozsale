@@ -95,6 +95,8 @@ public class ControllerFactory {
                 break;
             case ADD_VOUCHERS:
                 break;
+            case ADD_CONTACT:
+                return AddContactController.newInstance();
             case PAYMENT_SELECT:
                 break;
             case PAYMENT_ADD:
@@ -215,6 +217,10 @@ public class ControllerFactory {
 
         if (controller instanceof MasterpassController) {
             return GateKeeper.Destination.MASTERPASS;
+        }
+
+        if (controller instanceof  AddContactController) {
+            return GateKeeper.Destination.ADD_CONTACT;
         }
 
         if (controller instanceof  ViewVouchersController) {
