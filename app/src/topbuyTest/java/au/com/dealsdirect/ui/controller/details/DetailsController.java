@@ -26,7 +26,6 @@ import au.com.dealsdirect.ui.custom.transitions.CustomSpinnerAdapter;
 import au.com.dealsdirect.utils.BundleBuilder;
 import au.com.dealsdirect.utils.DateUtils;
 import butterknife.BindView;
-import butterknife.OnClick;
 
 /**
  * Created by Paul on 6/20/17.
@@ -98,6 +97,9 @@ public class DetailsController extends SwipeableBaseToolBarController implements
         super.onViewBound(view);
         mToolbarTitle.setText("my details");
         setupSwipingBehavior();
+        setupDefaultBottomButton("save", view1 -> {
+            saveUserDetails();
+        });
         setUp(view);
     }
 
@@ -178,7 +180,6 @@ public class DetailsController extends SwipeableBaseToolBarController implements
                 message);
     }
 
-    @OnClick(R.id.save_button)
     public void saveUserDetails() {
         hideKeyboard();
 

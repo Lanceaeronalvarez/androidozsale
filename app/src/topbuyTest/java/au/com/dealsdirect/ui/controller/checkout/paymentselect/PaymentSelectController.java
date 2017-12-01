@@ -7,10 +7,9 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 
-import com.bluelinelabs.conductor.RouterTransaction;
 import com.bluelinelabs.conductor.changehandler.HorizontalChangeHandler;
+import com.bluelinelabs.conductor.changehandler.VerticalChangeHandler;
 import com.google.gson.reflect.TypeToken;
 
 import java.util.ArrayList;
@@ -20,8 +19,7 @@ import javax.inject.Inject;
 
 import au.com.dealsdirect.R;
 import au.com.dealsdirect.data.network.model.checkout.getuserpaymentmethods.PaymentMethod;
-import au.com.dealsdirect.ui.base.BaseToolBarController;
-import au.com.dealsdirect.ui.controller.checkout.addpayment.AddPaymentController;
+import au.com.dealsdirect.ui.base.SwipeableBaseToolBarController;
 import au.com.dealsdirect.ui.custom.CustomAlertDialog;
 import au.com.dealsdirect.ui.custom.RecyclerOnTouchListener;
 import au.com.dealsdirect.utils.BundleBuilder;
@@ -29,26 +27,18 @@ import au.com.dealsdirect.utils.BundleKeys;
 import au.com.dealsdirect.utils.JsonUtils;
 import au.com.dealsdirect.utils.module.GateKeeper;
 import butterknife.BindView;
-import butterknife.OnClick;
-
-import static au.com.dealsdirect.utils.BundleKeys.CART_TOTAL_COST;
-import static au.com.dealsdirect.utils.BundleKeys.IS_FROM_CART;
-import static au.com.dealsdirect.utils.BundleKeys.PAYMENT_METHODS;
 
 /*
  * Created by smartwave on 30/06/2017.
  */
 
-public class PaymentSelectController extends BaseToolBarController implements PaymentSelectMvpView {
+public class PaymentSelectController extends SwipeableBaseToolBarController implements PaymentSelectMvpView {
 
     @Inject
     PaymentSelectMvpPresenter<PaymentSelectMvpView> mPresenter;
 
     @BindView(R.id.payment_select_recyclerview)
     RecyclerView mRecyclerView;
-
-    @BindView(R.id.btn_add)
-    Button mAddButton;
 
     private PaymentSelectAdapter mAdapter;
 
@@ -88,6 +78,10 @@ public class PaymentSelectController extends BaseToolBarController implements Pa
     @Override
     protected void onViewBound(@NonNull View view) {
         super.onViewBound(view);
+        setupSwipingBehavior();
+        setupDefaultBottomButton("add", view1 -> {
+            onAddPaymentMethod();
+        });
         setUp(view);
     }
 
@@ -173,7 +167,6 @@ public class PaymentSelectController extends BaseToolBarController implements Pa
         }
     }
 
-    @OnClick(R.id.btn_add)
     public void onAddPaymentMethod() {
         GateKeeper.push(getRouter(),
                 GateKeeper.Destination.PAYMENT_ADD,
@@ -181,7 +174,7 @@ public class PaymentSelectController extends BaseToolBarController implements Pa
                 .putBoolean(BundleKeys.IS_FROM_CART,isFromCart)
                 .putString(BundleKeys.CART_TOTAL_COST, mCartTotalCost)
                 .build()
-                ,new HorizontalChangeHandler()
-                ,new HorizontalChangeHandler());
+                ,new VerticalChangeHandler(false)
+                ,new VerticalChangeHandler());
     }
 }
