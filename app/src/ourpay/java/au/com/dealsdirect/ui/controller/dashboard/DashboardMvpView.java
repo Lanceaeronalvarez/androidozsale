@@ -25,9 +25,4 @@ public interface DashboardMvpView extends MvpView {
 
     void refreshPager();
 
-    void showPaymentPlanDetails(PaymentPlan paymentPlan);
-
-    void showScheduledPlanDetails(ScheduledPlan scheduledPlan);
-
-    void showPastPaymentDetails(PastPayment pastPayment);
 }

@@ -49,6 +49,9 @@ public class ScheduledPlansAdapter extends RecyclerView.Adapter<ScheduledPlansAd
         @BindView(R.id.row_scheduled_plan_id)
         TextView id;
 
+        @BindView(R.id.row_scheduled_plan_card_number)
+        TextView card;
+
         @BindView(R.id.row_scheduled_plan_value)
         TextView value;
 
@@ -81,14 +84,8 @@ public class ScheduledPlansAdapter extends RecyclerView.Adapter<ScheduledPlansAd
         holder.month.setText(DateUtils.getDateFromStringInFormat(item.getPlannedDate(), "MMM"));
         holder.title.setText(item.getName());
         holder.id.setText(item.getOrderNo());
+        holder.card.setText(item.getMaskedNumber());
         holder.value.setText(String.format(Locale.getDefault(), "%s%.2f", item.getCurrency(), item.getAmount()));
-
-        holder.itemView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                mController.showScheduledPlanDetails(item);
-            }
-        });
     }
 
     @Override

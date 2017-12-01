@@ -63,13 +63,6 @@ public class PaymentPlansAdapter extends RecyclerView.Adapter<PaymentPlansAdapte
         holder.title.setText(item.getName());
         holder.id.setText(item.getOrderNo());
         holder.value.setText(String.format(Locale.getDefault(), "%s%.2f", item.getCurrencySign(), item.getTotalAmount()));
-
-        holder.itemView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                mController.showPaymentPlanDetails(item);
-            }
-        });
     }
 
     @Override

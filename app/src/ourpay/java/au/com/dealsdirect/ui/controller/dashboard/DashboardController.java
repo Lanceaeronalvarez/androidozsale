@@ -238,25 +238,4 @@ public class DashboardController extends BaseController implements DashboardMvpV
         }
     }
 
-    @Override
-    public void showPaymentPlanDetails(PaymentPlan paymentPlan) {
-        getRouter().pushController(RouterTransaction.with(PaymentDetailsController.newInstance(paymentPlan))
-                .pushChangeHandler(new HorizontalChangeHandler())
-                .popChangeHandler(new HorizontalChangeHandler()));
-    }
-
-    @Override
-    public void showScheduledPlanDetails(ScheduledPlan scheduledPlan) {
-        getRouter().pushController(RouterTransaction.with(PaymentDetailsController.newInstance(scheduledPlan))
-                .pushChangeHandler(new HorizontalChangeHandler())
-                .popChangeHandler(new HorizontalChangeHandler()));
-    }
-
-    @Override
-    public void showPastPaymentDetails(PastPayment pastPayment) {
-        getRouter().pushController(RouterTransaction.with(PaymentDetailsController.newInstance(pastPayment))
-                .pushChangeHandler(new HorizontalChangeHandler())
-                .popChangeHandler(new HorizontalChangeHandler()));
-    }
-
 }

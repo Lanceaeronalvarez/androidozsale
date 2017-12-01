@@ -50,6 +50,9 @@ public class PastPaymentsAdapter extends RecyclerView.Adapter<PastPaymentsAdapte
         @BindView(R.id.row_past_payment_id)
         TextView id;
 
+        @BindView(R.id.row_past_payment_card_number)
+        TextView card;
+
         @BindView(R.id.row_past_payment_value)
         TextView value;
 
@@ -82,14 +85,8 @@ public class PastPaymentsAdapter extends RecyclerView.Adapter<PastPaymentsAdapte
         holder.month.setText(DateUtils.getDateFromStringInFormat(item.getPlannedDate(), "MMM"));
         holder.title.setText(item.getName());
         holder.id.setText(item.getOrderNo());
+        holder.card.setText(item.getMaskedNumber());
         holder.value.setText(String.format(Locale.getDefault(), "%s%.2f", item.getCurrency(), item.getAmount()));
-
-        holder.itemView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                mController.showPastPaymentDetails(item);
-            }
-        });
     }
 
     @Override
