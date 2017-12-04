@@ -132,7 +132,7 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
     LinearLayout mProductDetailBottomCard;
     @BindView(R.id.name_price_category)
     LinearLayout mProductPriceCategory;
-    @BindView(R.id.aboutPricing)
+    @BindView(R.id.about_pricing_container)
     LinearLayout mProductPricing;
     @BindView(R.id.product_about_container)
     LinearLayout mProductAboutContainer;

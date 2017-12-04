@@ -55,14 +55,6 @@ import au.com.dealsdirect.utils.JsonUtils;
 import au.com.dealsdirect.utils.PaginateUtils;
 import butterknife.BindView;
 import butterknife.OnClick;
-
-import static au.com.dealsdirect.ui.controller.searchfilter.SearchFilterController.BRANDS_FACETFILTER_NAME;
-import static au.com.dealsdirect.ui.controller.searchfilter.SearchFilterController.COLORS_FACETFILTER_NAME;
-import static au.com.dealsdirect.ui.controller.searchfilter.SearchFilterController.KEY_SELECTED_FACETS;
-import static au.com.dealsdirect.ui.controller.searchfilter.SearchFilterController.PRICE_FACETFILTER_NAME;
-import static au.com.dealsdirect.ui.controller.searchfilter.SearchFilterController.SEARCH_QUERY_NAME;
-import static au.com.dealsdirect.ui.controller.searchfilter.SearchFilterController.SIZES_FACETFILTER_NAME;
-import static au.com.dealsdirect.ui.controller.searchfilter.SearchFilterController.SORT_FACETFILTER_NAME;
 import static au.com.dealsdirect.utils.BundleKeys.SALEITEMS_CATEGORY_MAP;
 import static au.com.dealsdirect.utils.BundleKeys.SALEITEMS_CHIPS_FILTER;
 import static au.com.dealsdirect.utils.BundleKeys.SALEITEMS_FROM_CATEGORIES;
@@ -232,8 +224,8 @@ public class SaleItemsController extends BasePullToRefreshController implements 
             }.getType());
         }
 
-        if (args.containsKey(KEY_SELECTED_FACETS))
-            mPreviousSelectedFacetIndicesJsonString = args.getString(KEY_SELECTED_FACETS, "");
+        if (args.containsKey(BundleKeys.KEY_SELECTED_FACETS))
+            mPreviousSelectedFacetIndicesJsonString = args.getString(BundleKeys.KEY_SELECTED_FACETS, "");
 
         isFiltered = true;
         page = 0;
@@ -573,15 +565,18 @@ public class SaleItemsController extends BasePullToRefreshController implements 
             mChipFilters = removeSearchQueryChips(mChipFilters);
             buildSearchQueryChips(mChipFilters);
 
-            getRouter().pushController(RouterTransaction.with(SearchFilterController.newInstance(
-                    new Gson().toJson(mCategoryTreeResponse),
-                    new Gson().toJson(mFacets)
-                    , mSortingListJsonString
-                    , mSaleId
-                    , mCategoryKey
-                    , mPreviousSelectedFacetIndicesJsonString
-                    , new Gson().toJson(mChipFilters)
-                    , mSearchQuery))
+            Bundle bundle = new BundleBuilder(new Bundle())
+                    .putString(BundleKeys.KEY_CATEGORY_STRING, new Gson().toJson(mCategoryTreeResponse))
+                    .putString(BundleKeys.KEY_FACET_STRING, new Gson().toJson(mFacets))
+                    .putString(BundleKeys.KEY_SORTING_STRING, mSortingListJsonString)
+                    .putString(BundleKeys.SALEITEMS_SALE_ID, mSaleId)
+                    .putString(BundleKeys.SALEITEMS_CATEGORY_MAP, mCategoryKey)
+                    .putString(BundleKeys.KEY_SELECTED_FACETS, mPreviousSelectedFacetIndicesJsonString)
+                    .putString(BundleKeys.SALEITEMS_CHIPS_FILTER, new Gson().toJson(mChipFilters))
+                    .putString(BundleKeys.KEY_SALE_ITEMS_TITLE, mSearchQuery)
+                    .build();
+
+            getRouter().pushController(RouterTransaction.with(new SearchFilterController(bundle))
                     .pushChangeHandler(new VerticalChangeHandler())
                     .popChangeHandler(new VerticalChangeHandler()));
             mFromShopSearch = false;
@@ -747,7 +742,7 @@ public class SaleItemsController extends BasePullToRefreshController implements 
         List<SearchChipModel> chipList = new ArrayList<>(chipFilters);
         mRemovedChipTitles = new ArrayList<>();
         for (SearchChipModel chip : chipFilters) {
-            if (chip.getFilterType().equals(SEARCH_QUERY_NAME)) {
+            if (chip.getFilterType().equals(BundleKeys.SEARCH_QUERY_NAME)) {
                 chipList.remove(chip);
                 mRemovedChipTitles.add(chip.getChipTitle());
             }
@@ -769,7 +764,7 @@ public class SaleItemsController extends BasePullToRefreshController implements 
         if (!mSearchQuery.isEmpty()) {
             String[] splitted = mSearchQuery.split("\\s+");
             for (String str : splitted) {
-                chipFilters.add(new SearchChipModel(SearchFilterController.SEARCH_QUERY_NAME, str, -1));
+                chipFilters.add(new SearchChipModel(BundleKeys.SEARCH_QUERY_NAME, str, -1));
             }
         }
 
@@ -816,25 +811,25 @@ public class SaleItemsController extends BasePullToRefreshController implements 
 
                 for (SearchChipModel chip : chipsList) {
                     String facetName = chip.getFilterType();
-                    if (facetName.equals(BRANDS_FACETFILTER_NAME)) {
+                    if (facetName.equals(BundleKeys.BRANDS_FACETFILTER_NAME)) {
                         brandNameFacetFilters.add(chip.getChipTitle());
-                    } else if (facetName.equals(COLORS_FACETFILTER_NAME)) {
+                    } else if (facetName.equals(BundleKeys.COLORS_FACETFILTER_NAME)) {
                         colorFacetFilters.add(chip.getChipTitle());
-                    } else if (facetName.equals(SIZES_FACETFILTER_NAME)) {
+                    } else if (facetName.equals(BundleKeys.SIZES_FACETFILTER_NAME)) {
                         sizesFacetFilters.add(chip.getChipTitle());
-                    } else if (facetName.equals(PRICE_FACETFILTER_NAME)) {
+                    } else if (facetName.equals(BundleKeys.PRICE_FACETFILTER_NAME)) {
                         priceFacetFilters.add(chip.getChipTitle());
-                    } else if (facetName.equals(SEARCH_QUERY_NAME)) {
+                    } else if (facetName.equals(BundleKeys.SEARCH_QUERY_NAME)) {
                         searchQueryFilters.add(chip.getChipTitle());
-                    } else if (facetName.equals(SORT_FACETFILTER_NAME)) {
+                    } else if (facetName.equals(BundleKeys.SORT_FACETFILTER_NAME)) {
                         getSaleItemsRequest.setSorting(mapSortingTitleToKey(chip.getChipTitle()));
                     }
                 }
 
-                facetFilters.put(BRANDS_FACETFILTER_NAME, brandNameFacetFilters);
-                facetFilters.put(COLORS_FACETFILTER_NAME, colorFacetFilters);
-                facetFilters.put(SIZES_FACETFILTER_NAME, sizesFacetFilters);
-                facetFilters.put(PRICE_FACETFILTER_NAME, priceFacetFilters);
+                facetFilters.put(BundleKeys.BRANDS_FACETFILTER_NAME, brandNameFacetFilters);
+                facetFilters.put(BundleKeys.COLORS_FACETFILTER_NAME, colorFacetFilters);
+                facetFilters.put(BundleKeys.SIZES_FACETFILTER_NAME, sizesFacetFilters);
+                facetFilters.put(BundleKeys.PRICE_FACETFILTER_NAME, priceFacetFilters);
 
 
                 if (searchQueryFilters.size() != 0) {

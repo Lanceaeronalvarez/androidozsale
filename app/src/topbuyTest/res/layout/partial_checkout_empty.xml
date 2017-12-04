@@ -12,16 +12,14 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_centerInParent="true"
-        android:orientation="vertical"
-        android:paddingLeft="@dimen/place_holder_padding"
-        android:paddingRight="@dimen/place_holder_padding">
+        android:orientation="vertical">
 
         <ImageView
             android:layout_width="@dimen/placeholder_icon_size"
             android:layout_height="@dimen/placeholder_icon_size"
             android:layout_gravity="center"
             android:scaleType="fitXY"
-            android:src="@drawable/ic_basket_placeholder" />
+            android:src="@drawable/ic_cart_placeholder" />
 
         <TextView
             fontPath="@string/font_app_medium"
@@ -45,20 +43,9 @@
             android:paddingBottom="@dimen/default_button_height"
             android:text="@string/you_have_not_added_any_items_in_your_shopping_cart"
             android:textColor="#9f9f9f"
-            android:textSize="@dimen/text_size_xlarge" />
+            android:textSize="@dimen/text_size_normal" />
 
     </LinearLayout>
 
-
-    <Button
-        android:id="@+id/partial_checkout_empty_button"
-        style="@style/DDButtonStyle"
-        android:layout_width="match_parent"
-        android:layout_height="@dimen/default_button_height"
-        android:layout_alignParentBottom="true"
-        android:layout_margin="@dimen/activity_horizontal_margin"
-        android:gravity="center"
-        android:text="@string/shop_now"
-        android:textSize="@dimen/text_size_xxlarge" />
 
 </RelativeLayout>

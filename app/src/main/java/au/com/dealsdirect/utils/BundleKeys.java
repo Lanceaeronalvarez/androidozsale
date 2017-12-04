@@ -41,12 +41,16 @@ public class BundleKeys {
     public static final String PRICE_FACETFILTER_NAME = "skus.attributesForFaceting.aud";
     public static final String SEARCH_QUERY_NAME = "search_query";
     public static final String SORT_FACETFILTER_NAME = "sort";
-    public static final String KEY_FACET_STRING = "KEY_FACET_STRING";
     public static final String CATEGORY_TREE_FACET = "KEY_CATEGORY_FACET";
     public static final String KEY_SELECTED_FACETS = "KEY_SELECTED_FACETS";
     public static final String KEY_BRAND_LIST = "KEY_BRAND_LIST";
     public static final String KEY_ORIG_SELECTED = "KEY_ORIG_SELECTED";
     public static final String KEY_CHIP_TO_REMOVE = "KEY_CHIP_TO_REMOVE";
+    public static final String KEY_FACET_STRING = "KEY_FACET_STRING";
+    public static final String KEY_CATEGORY_STRING = "KEY_CATEGORY_STRING";
+    public static final String KEY_SORTING_STRING = "KEY_SORTING_STRING";
+    public static final String KEY_SALE_ITEMS_TITLE = "KEY_SALE_ITEMS_TITLE";
+
 
     //facet filters
     public static final String FACET_PAYLOAD = "FACET_PAYLOAD";

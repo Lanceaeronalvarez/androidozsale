@@ -98,7 +98,7 @@ public class AddVouchersRecyclerViewAdapter extends RecyclerView.Adapter<Recycle
                 vh.mVoucherItemLayout.setBackground(context.getResources().getDrawable(R.drawable.bg_voucher_container_blue));
                 ticketState = "blue";
             } else if (15 <= voucherValue && voucherValue < 20) {
-                vh.mVoucherItemLayout.setBackground(context.getResources().getDrawable(R.drawable.voucher_container_yellow));
+                vh.mVoucherItemLayout.setBackground(context.getResources().getDrawable(R.drawable.bg_voucher_container_yellow));
                 ticketState = "yellow";
             } else if (20 <= voucherValue && voucherValue < 25) {
                 vh.mVoucherItemLayout.setBackground(context.getResources().getDrawable(R.drawable.bg_voucher_container_green));

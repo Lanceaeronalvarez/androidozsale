@@ -20,8 +20,8 @@ import au.com.dealsdirect.R;
 import au.com.dealsdirect.ui.controller.searchfilter.SearchFilterController;
 import au.com.dealsdirect.ui.controller.searchfilter.SearchFilterMvpPresenter;
 import au.com.dealsdirect.ui.custom.ChipsEditText;
+import au.com.dealsdirect.utils.BundleKeys;
 
-import static au.com.dealsdirect.ui.controller.searchfilter.SearchFilterController.CATEGORY_TREE_FACET;
 
 /**
  * Created by smartwave on 21/07/2017.
@@ -164,7 +164,7 @@ public class SearchTagsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                 public boolean onEditorAction(TextView textView, int actionId, KeyEvent
                         keyEvent) {
                     if (actionId == EditorInfo.IME_ACTION_SEARCH) {
-                        add(new SearchChipModel(SearchFilterController.SEARCH_QUERY_NAME, vh.et.getText().toString(), -1));
+                        add(new SearchChipModel(BundleKeys.SEARCH_QUERY_NAME, vh.et.getText().toString(), -1));
                         vh.et.setText("");
                         mPresenter.hideTransparentOverlay();
                     }
@@ -192,7 +192,7 @@ public class SearchTagsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                     getData().remove(chipToBeRemoved);
                     notifyItemRemoved(dataSize - 1);
 
-                    if(chipToBeRemoved.getFilterType() == CATEGORY_TREE_FACET){
+                    if(chipToBeRemoved.getFilterType() == BundleKeys.CATEGORY_TREE_FACET){
                         mSubCategoriesAdapter.setActiveCategoryKey("");
                     }
 
@@ -205,11 +205,11 @@ public class SearchTagsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
 //                    mShopPresenter.updateShopFilters();
                     mFacetItemsAdapter.notifyItemChanged(chipToBeRemoved.getIndex());
 
-                    if (chipToBeRemoved.getFilterType().equals(SearchFilterController.PRICE_FACETFILTER_NAME)) {
+                    if (chipToBeRemoved.getFilterType().equals(BundleKeys.PRICE_FACETFILTER_NAME)) {
                         mPresenter.resetPriceRange();
                     }
 
-                    if (chipToBeRemoved.getFilterType().equals(CATEGORY_TREE_FACET)) {
+                    if (chipToBeRemoved.getFilterType().equals(BundleKeys.CATEGORY_TREE_FACET)) {
                         mPresenter.onCategoryChipRemoved();
                     }
                 }

@@ -246,6 +246,8 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
         }
 
         isSetupFinished = true;
+
+        setRetainViewMode(RetainViewMode.RETAIN_DETACH);
     }
 
     @Override

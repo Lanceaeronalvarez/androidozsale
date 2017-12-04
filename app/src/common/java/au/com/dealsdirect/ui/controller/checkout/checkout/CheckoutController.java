@@ -1,5 +1,6 @@
 package au.com.dealsdirect.ui.controller.checkout.checkout;
 
+import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -54,6 +55,8 @@ import au.com.dealsdirect.ui.main.FetchTokenHandler;
 import au.com.dealsdirect.ui.main.MainActivity;
 import au.com.dealsdirect.ui.main.MainMvpView;
 import au.com.dealsdirect.ui.main.PaymentInfo;
+import au.com.dealsdirect.utils.BundleBuilder;
+import au.com.dealsdirect.utils.BundleKeys;
 import au.com.dealsdirect.utils.ImageUtils;
 import au.com.dealsdirect.utils.IntrospectionUtils;
 import au.com.dealsdirect.utils.PriceUtils;
@@ -176,7 +179,13 @@ public class CheckoutController extends BaseController implements CheckoutMvpVie
                     }
                 }
 
-                getRouter().pushController(RouterTransaction.with(AddVouchersController.newInstance(new Gson().toJson(mVouchers), mIsVoucherAdded, isNoDiscount))
+                Bundle bundle = new BundleBuilder(new Bundle())
+                        .putString(BundleKeys.VOUCHERS,new Gson().toJson(mVouchers))
+                        .putBoolean(BundleKeys.IS_VOUCHER_ADDED,mIsVoucherAdded)
+                        .putBoolean(BundleKeys.IS_CART_NO_DISCOUNT,isNoDiscount)
+                        .build();
+
+                getRouter().pushController(RouterTransaction.with(new AddVouchersController(bundle))
                         .pushChangeHandler(new HorizontalChangeHandler(false))
                         .popChangeHandler(new HorizontalChangeHandler()));
             }

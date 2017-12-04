@@ -59,22 +59,21 @@ public class SearchFilterController extends BaseController
 
     public static final String TAG = SearchFilterController.class.getSimpleName();
 
-    public static final String BRANDS_FACETFILTER_NAME = "skus.brandName";
-    public static final String SIZES_FACETFILTER_NAME = "skus.attributes.size";
-    public static final String COLORS_FACETFILTER_NAME = "color";
-    public static final String PRICE_FACETFILTER_NAME = "skus.attributesForFaceting.aud";
-    public static final String SEARCH_QUERY_NAME = "search_query";
-    public static final String SORT_FACETFILTER_NAME = "sort";
-    public static final String CATEGORY_TREE_FACET = "KEY_CATEGORY_FACET";
-    public static final String KEY_SELECTED_FACETS = "KEY_SELECTED_FACETS";
-    public static final String KEY_BRAND_LIST = "KEY_BRAND_LIST";
-    public static final String KEY_ORIG_SELECTED = "KEY_ORIG_SELECTED";
+//    public static final String BRANDS_FACETFILTER_NAME = "skus.brandName";
+//    public static final String SIZES_FACETFILTER_NAME = "skus.attributes.size";
+//    public static final String COLORS_FACETFILTER_NAME = "color";
+//    public static final String PRICE_FACETFILTER_NAME = "skus.attributesForFaceting.aud";
+//    public static final String SEARCH_QUERY_NAME = "search_query";
+//    public static final String SORT_FACETFILTER_NAME = "sort";
+//    public static final String CATEGORY_TREE_FACET = "KEY_CATEGORY_FACET";
+//    public static final String KEY_SELECTED_FACETS = "KEY_SELECTED_FACETS";
+//    public static final String KEY_BRAND_LIST = "KEY_BRAND_LIST";
+//    public static final String KEY_ORIG_SELECTED = "KEY_ORIG_SELECTED";
 
-    private static final String KEY_FACET_STRING = "KEY_FACET_STRING";
-    private static final String KEY_CATEGORY_STRING = "KEY_CATEGORY_STRING";
-    private static final String KEY_SORTING_STRING = "KEY_SORTING_STRING";
-
-    private static final String KEY_SALE_ITEMS_TITLE = "KEY_SALE_ITEMS_TITLE";
+//    private static final String KEY_FACET_STRING = "KEY_FACET_STRING";
+//    private static final String KEY_CATEGORY_STRING = "KEY_CATEGORY_STRING";
+//    private static final String KEY_SORTING_STRING = "KEY_SORTING_STRING";
+//    private static final String KEY_SALE_ITEMS_TITLE = "KEY_SALE_ITEMS_TITLE";
 
     private String mSaleItemsTitle = "";
     private static String mPreviousChosenCategory = "";
@@ -155,40 +154,31 @@ public class SearchFilterController extends BaseController
     private ArrayList<SearchChipModel> mPreviousSearchChips = new ArrayList<>();
 
     List<Pair<String, String>> mFacetFilters = Arrays.asList
-            (new Pair<String, String>(SORT_FACETFILTER_NAME, "Sort"),
-                    new Pair<String, String>(CATEGORY_TREE_FACET, "Category"));
+            (new Pair<String, String>(BundleKeys.SORT_FACETFILTER_NAME, "Sort"),
+                    new Pair<String, String>(BundleKeys.CATEGORY_TREE_FACET, "Category"));
 
-    public static SearchFilterController newInstance(String jsonCategoriesString, String jsonFacetString, String sortingFacetString, String saleId, String categoryKey, String previouslySelectedFacetIndices, String previousChipFilters, String saleItemsTitle) {
-        return new SearchFilterController(new BundleBuilder(new Bundle())
-                .putString(KEY_CATEGORY_STRING, jsonCategoriesString)
-                .putString(KEY_FACET_STRING, jsonFacetString)
-                .putString(KEY_SORTING_STRING, sortingFacetString)
-                .putString(BundleKeys.SALEITEMS_CATEGORY_MAP, categoryKey)
-                .putString(BundleKeys.SALEITEMS_SALE_ID, saleId)
-                .putString(KEY_SELECTED_FACETS, previouslySelectedFacetIndices)
-                .putString(BundleKeys.SALEITEMS_CHIPS_FILTER, previousChipFilters)
-                .putString(KEY_SALE_ITEMS_TITLE, saleItemsTitle)
-                .build());
+    public static SearchFilterController newInstance() {
+        return new SearchFilterController(new BundleBuilder(new Bundle()).build());
     }
 
     public SearchFilterController(Bundle args) {
         super(args);
-        mFacets = JsonUtils.convertStringToObject(args.getString(KEY_FACET_STRING, ""), new TypeToken<ArrayList<GetSaleItemsResponse.Facets>>() {
+        mFacets = JsonUtils.convertStringToObject(args.getString(BundleKeys.KEY_FACET_STRING, ""), new TypeToken<ArrayList<GetSaleItemsResponse.Facets>>() {
         }.getType());
-        mSortingFacets = JsonUtils.convertStringToObject(args.getString(KEY_SORTING_STRING, ""), new TypeToken<ArrayList<SortingResponse>>() {
+        mSortingFacets = JsonUtils.convertStringToObject(args.getString(BundleKeys.KEY_SORTING_STRING, ""), new TypeToken<ArrayList<SortingResponse>>() {
         }.getType());
         mSaleId = args.getString(BundleKeys.SALEITEMS_SALE_ID, "");
         mCategoryKey = args.getString(BundleKeys.SALEITEMS_CATEGORY_MAP, "");
-        mCategoryTree = JsonUtils.convertStringToObject(args.getString(KEY_CATEGORY_STRING, ""), new TypeToken<ArrayList<GetCategoryTreeResponse>>() {
+        mCategoryTree = JsonUtils.convertStringToObject(args.getString(BundleKeys.KEY_CATEGORY_STRING, ""), new TypeToken<ArrayList<GetCategoryTreeResponse>>() {
         }.getType());
-        mBrandList = JsonUtils.convertStringToObject(args.getString(KEY_BRAND_LIST, ""), new TypeToken<ArrayList<String>>() {
+        mBrandList = JsonUtils.convertStringToObject(args.getString(BundleKeys.KEY_BRAND_LIST, ""), new TypeToken<ArrayList<String>>() {
         }.getType());
-        mSaleItemsTitle = args.getString(KEY_SALE_ITEMS_TITLE);
+        mSaleItemsTitle = args.getString(BundleKeys.KEY_SALE_ITEMS_TITLE);
         restoreStateSelection(args);
     }
 
     private void restoreStateSelection(Bundle args) {
-        String selectedFacetItemsString = args.getString(KEY_SELECTED_FACETS, "");
+        String selectedFacetItemsString = args.getString(BundleKeys.KEY_SELECTED_FACETS, "");
         if (!selectedFacetItemsString.isEmpty()) {
             mPreviousSelectedFacetIndices = JsonUtils.convertStringToObject(selectedFacetItemsString, new TypeToken<HashMap<String, Set<Integer>>>() {
             }.getType());
@@ -301,7 +291,7 @@ public class SearchFilterController extends BaseController
             if (!isSeekbarReset) {
                 //remove previously selected price range
                 for (SearchChipModel chip : mSearchTagsAdapter.getData()) {
-                    if (chip.getFilterType().equals(PRICE_FACETFILTER_NAME)) {
+                    if (chip.getFilterType().equals(BundleKeys.PRICE_FACETFILTER_NAME)) {
                         mSearchTagsAdapter.remove(chip);
                         break;
                     }
@@ -329,7 +319,7 @@ public class SearchFilterController extends BaseController
 
                 //remove previously selected price range
                 for (SearchChipModel chip : mSearchTagsAdapter.getData()) {
-                    if (chip.getFilterType().equals(PRICE_FACETFILTER_NAME)) {
+                    if (chip.getFilterType().equals(BundleKeys.PRICE_FACETFILTER_NAME)) {
                         mSearchTagsAdapter.remove(chip);
                         break;
                     }
@@ -337,7 +327,7 @@ public class SearchFilterController extends BaseController
 
                 //add newly selected price range
                 if (origMinValue != minValue.intValue() || origMaxValue != maxValue.intValue()) {
-                    SearchChipModel priceChip = new SearchChipModel(PRICE_FACETFILTER_NAME, minValue.intValue() + " to " + maxValue.intValue(), -1);
+                    SearchChipModel priceChip = new SearchChipModel(BundleKeys.PRICE_FACETFILTER_NAME, minValue.intValue() + " to " + maxValue.intValue(), -1);
                     priceChip.setMaxValue(maxValue.intValue());
                     priceChip.setMinValue(minValue.intValue());
                     mSearchTagsAdapter.add(priceChip);
@@ -376,7 +366,7 @@ public class SearchFilterController extends BaseController
     private void removeAllChipsExceptCategoryAndSearchQuery() {
         List<SearchChipModel> listToIterate = new ArrayList<>(mPreviousSearchChips);
         for (SearchChipModel chip : listToIterate) {
-            if (!(chip.getFilterType().equals(CATEGORY_TREE_FACET) || chip.getFilterType().equals(SEARCH_QUERY_NAME))) {
+            if (!(chip.getFilterType().equals(BundleKeys.CATEGORY_TREE_FACET) || chip.getFilterType().equals(BundleKeys.SEARCH_QUERY_NAME))) {
                 mPreviousSearchChips.remove(chip);
             }
         }
@@ -385,7 +375,7 @@ public class SearchFilterController extends BaseController
 
     private void removeSelectedIndicesExceptCategory() {
         for (Map.Entry entry : mPreviousSelectedFacetIndices.entrySet()) {
-            if (!entry.getKey().equals(CATEGORY_TREE_FACET)) {
+            if (!entry.getKey().equals(BundleKeys.CATEGORY_TREE_FACET)) {
                 entry.setValue(new HashSet<>());
             }
 
@@ -397,9 +387,9 @@ public class SearchFilterController extends BaseController
     public void showFacetItem(int position) {
 
 
-        if (getFacetFilterType(position) != PRICE_FACETFILTER_NAME) { //only do this logic if facet clicked != price
+        if (getFacetFilterType(position) != BundleKeys.PRICE_FACETFILTER_NAME) { //only do this logic if facet clicked != price
 
-            if (getFacetFilterType(position) == CATEGORY_TREE_FACET) {
+            if (getFacetFilterType(position) == BundleKeys.CATEGORY_TREE_FACET) {
 
                 mFilterCategoriesRecyclerView.setVisibility(View.VISIBLE);
                 mFacetItemsRecyclerView.setVisibility(View.GONE);
@@ -522,17 +512,17 @@ public class SearchFilterController extends BaseController
     private List<String> mapFacetItemClicked(int position) {
         String facetFilterType = getFacetFilterType(position);
         switch (facetFilterType) {
-            case SORT_FACETFILTER_NAME:
+            case BundleKeys.SORT_FACETFILTER_NAME:
                 return mSortingList;
-            case CATEGORY_TREE_FACET:
+            case BundleKeys.CATEGORY_TREE_FACET:
                 return new ArrayList<>();
-            case BRANDS_FACETFILTER_NAME:
+            case BundleKeys.BRANDS_FACETFILTER_NAME:
                 return mBrandList;
-            case SIZES_FACETFILTER_NAME:
+            case BundleKeys.SIZES_FACETFILTER_NAME:
                 return mSizeList;
-            case COLORS_FACETFILTER_NAME:
+            case BundleKeys.COLORS_FACETFILTER_NAME:
                 return mColorList;
-            case PRICE_FACETFILTER_NAME:
+            case BundleKeys.PRICE_FACETFILTER_NAME:
                 return new ArrayList<>();
             default:
                 return new ArrayList<>();
@@ -546,30 +536,30 @@ public class SearchFilterController extends BaseController
             mColorList = new ArrayList<>();
             for (int i = 0; i < facets.size(); i++) {
                 switch (facets.get(i).getFacetName()) {
-                    case BRANDS_FACETFILTER_NAME:
+                    case BundleKeys.BRANDS_FACETFILTER_NAME:
                         for (int j = 0; j < facets.get(i).getFacetValues().size(); j++) {
                             GetSaleItemsResponse.Values facetValue = facets.get(i).getFacetValues().get(j);
                             mBrandList.add(facetValue.getValue());
                         }
-                        mFacetsAdapter.add(new Pair<String, String>(BRANDS_FACETFILTER_NAME, "Brands"));
+                        mFacetsAdapter.add(new Pair<String, String>(BundleKeys.BRANDS_FACETFILTER_NAME, "Brands"));
                         break;
-                    case SIZES_FACETFILTER_NAME:
+                    case BundleKeys.SIZES_FACETFILTER_NAME:
                         for (int j = 0; j < facets.get(i).getFacetValues().size(); j++) {
                             GetSaleItemsResponse.Values facetValue = facets.get(i).getFacetValues().get(j);
                             mSizeList.add(facetValue.getValue());
                         }
-                        mFacetsAdapter.add(new Pair<String, String>(SIZES_FACETFILTER_NAME, "Sizes"));
+                        mFacetsAdapter.add(new Pair<String, String>(BundleKeys.SIZES_FACETFILTER_NAME, "Sizes"));
                         break;
-                    case COLORS_FACETFILTER_NAME:
+                    case BundleKeys.COLORS_FACETFILTER_NAME:
                         for (int j = 0; j < facets.get(i).getFacetValues().size(); j++) {
                             GetSaleItemsResponse.Values facetValue = facets.get(i).getFacetValues().get(j);
                             mColorList.add(facetValue.getValue());
                         }
 
-                        mFacetsAdapter.add(new Pair<String, String>(COLORS_FACETFILTER_NAME, "Colors"));
+                        mFacetsAdapter.add(new Pair<String, String>(BundleKeys.COLORS_FACETFILTER_NAME, "Colors"));
                         break;
-                    case PRICE_FACETFILTER_NAME:
-                        mFacetsAdapter.add(new Pair<String, String>(PRICE_FACETFILTER_NAME, "Price"));
+                    case BundleKeys.PRICE_FACETFILTER_NAME:
+                        mFacetsAdapter.add(new Pair<String, String>(BundleKeys.PRICE_FACETFILTER_NAME, "Price"));
 
                         break;
                     default:
@@ -587,7 +577,7 @@ public class SearchFilterController extends BaseController
         String editTextString = mSearchTagsAdapter.getEditTextViewHolder().getEditText().getText().toString();
 
         if(!editTextString.isEmpty()) {
-            mSearchTagsAdapter.add(new SearchChipModel(SEARCH_QUERY_NAME, editTextString, -1));
+            mSearchTagsAdapter.add(new SearchChipModel(BundleKeys.SEARCH_QUERY_NAME, editTextString, -1));
         }
 
 //        if (mChosenCategory.isEmpty()) {
@@ -605,7 +595,7 @@ public class SearchFilterController extends BaseController
                 .putString(BundleKeys.SALEITEMS_CATEGORY_MAP, mChosenCategory)
                 .putString(BundleKeys.SALEITEMS_SALE_ID, mSaleId)
                 .putString(BundleKeys.SALEITEMS_CHIPS_FILTER, new Gson().toJson(mSearchTagsAdapter.getData()))
-                .putString(KEY_SELECTED_FACETS, new Gson().toJson(mPreviousSelectedFacetIndices))
+                .putString(BundleKeys.KEY_SELECTED_FACETS, new Gson().toJson(mPreviousSelectedFacetIndices))
 //                .putString(KEY_SEARCH_QUERY, new Gson().toJson(mBrandList))
                 .build();
 
@@ -653,7 +643,7 @@ public class SearchFilterController extends BaseController
     public void removeChipOnCategories() {
 
         for (SearchChipModel chip : mSearchTagsAdapter.getData()) {
-            if (chip.getFilterType().equals(CATEGORY_TREE_FACET)) {
+            if (chip.getFilterType().equals(BundleKeys.CATEGORY_TREE_FACET)) {
                 mSearchTagsAdapter.remove(chip);
                 break;
             }
@@ -661,7 +651,7 @@ public class SearchFilterController extends BaseController
     }
 
     public void updateSubCategoryOnSearchTagAdapter(String categoryName, String categoryKey) {
-        SearchChipModel categoryChip = new SearchChipModel(CATEGORY_TREE_FACET, categoryName, 0);
+        SearchChipModel categoryChip = new SearchChipModel(BundleKeys.CATEGORY_TREE_FACET, categoryName, 0);
         if (!mChosenCategory.isEmpty() && mChosenCategory.equals(categoryKey)) {
             removeChipOnCategories();
             mChosenCategory = "";
@@ -680,7 +670,7 @@ public class SearchFilterController extends BaseController
 
     private SearchChipModel findPriceChip() {
         for (SearchChipModel chip : mSearchTagsAdapter.getData()) {
-            if (chip.getFilterType().equals(PRICE_FACETFILTER_NAME)) {
+            if (chip.getFilterType().equals(BundleKeys.PRICE_FACETFILTER_NAME)) {
                 return chip;
             }
         }
