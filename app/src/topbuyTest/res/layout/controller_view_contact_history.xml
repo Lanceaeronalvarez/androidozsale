@@ -76,18 +76,5 @@
         android:layout_below="@id/controller_add_contact_subject_container"
         android:overScrollMode="never" />
 
-
-
-    <Button
-        android:id="@+id/controller_view_contacts_history_reply_button"
-        style="@style/DDButtonStyle"
-        android:layout_width="match_parent"
-        android:layout_height="@dimen/default_button_height"
-        android:layout_gravity="bottom"
-        android:layout_margin="@dimen/activity_horizontal_margin"
-        android:text="@string/reply"
-        android:layout_alignParentBottom="true"
-        android:textSize="@dimen/text_size_large"/>
-
 </RelativeLayout>
 
