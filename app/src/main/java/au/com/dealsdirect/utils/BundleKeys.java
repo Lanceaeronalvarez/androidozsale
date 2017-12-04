@@ -72,6 +72,17 @@ public class BundleKeys {
     public static final String DECORATION_INFO_LIST = "DECORATION_INFO_LIST";
     public static final String DELIVERY_ADDRESS = "ViewAddressController.DELIVERY_ADDRESS";
 
+    // Contact
+    public static final String IS_SUBJECT_LOADED = "IS_SUBJECT_LOADED";
+    public static final String FROM_FRAGMENT_ID = "FROM_FRAGMENT_ID";
+    public static final String CONTACT_SUBJECT = "CONTACT_SUBJECT";
+    public static final String CONTACT_INVOICE = "CONTACT_INVOICE";
+    public static final String CONTACT_NUMBER = "CONTACT_NUMBER";
+
+    public static final String CONTACT_NAME = "CONTACT_NAME";
+    public static final String CONTACT_INVOICE_NUMBER = "CONTACT_INVOICE_NUMBER";
+    public static final String CONTACT_TIME_STAMP = "CONTACT_TIME_STAMP";
+
     //Ourpay SMS Verification
     public static final String PHONE_KEY = "PHONE_KEY";
 
