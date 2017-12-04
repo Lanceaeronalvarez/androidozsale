@@ -79,7 +79,7 @@ public class ViewVouchersRecyclerViewAdapter extends RecyclerView.Adapter<ViewVo
 
                     holder.mVouchersLayout.setBackground(
                             context.getResources()
-                                    .getDrawable(R.drawable.voucher_container_yellow));
+                                    .getDrawable(R.drawable.bg_voucher_container_yellow));
 
                 }
 
