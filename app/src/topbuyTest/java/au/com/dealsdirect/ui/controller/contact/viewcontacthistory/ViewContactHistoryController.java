@@ -10,8 +10,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-import com.bluelinelabs.conductor.RouterTransaction;
-import com.bluelinelabs.conductor.changehandler.HorizontalChangeHandler;
+import com.bluelinelabs.conductor.changehandler.VerticalChangeHandler;
 
 import javax.inject.Inject;
 
@@ -20,13 +19,20 @@ import au.com.dealsdirect.data.network.model.contacthistory.GetContactHistoryReq
 import au.com.dealsdirect.data.network.model.contacthistory.List;
 import au.com.dealsdirect.data.network.model.contactreply.ReplyContact;
 import au.com.dealsdirect.ui.base.SwipeableBaseToolBarController;
-import au.com.dealsdirect.ui.controller.contact.addcontact.AddContactController;
 import au.com.dealsdirect.ui.controller.contact.viewcontacthistory.contacthistory.ContactHistoryAdapter;
 import au.com.dealsdirect.ui.custom.CustomAlertDialog;
 import au.com.dealsdirect.utils.BundleBuilder;
 import au.com.dealsdirect.utils.KeyboardUtils;
+import au.com.dealsdirect.utils.module.GateKeeper;
 import butterknife.BindView;
-import butterknife.OnClick;
+
+import static au.com.dealsdirect.utils.BundleKeys.CONTACT_INVOICE;
+import static au.com.dealsdirect.utils.BundleKeys.CONTACT_INVOICE_NUMBER;
+import static au.com.dealsdirect.utils.BundleKeys.CONTACT_NAME;
+import static au.com.dealsdirect.utils.BundleKeys.CONTACT_NUMBER;
+import static au.com.dealsdirect.utils.BundleKeys.CONTACT_SUBJECT;
+import static au.com.dealsdirect.utils.BundleKeys.CONTACT_TIME_STAMP;
+import static au.com.dealsdirect.utils.BundleKeys.FROM_FRAGMENT_ID;
 
 /**
  * dp Created by Admin on 6/21/17.
@@ -35,13 +41,6 @@ import butterknife.OnClick;
 public class ViewContactHistoryController extends SwipeableBaseToolBarController implements ViewContactHistoryMvpView {
 
     public static final String TAG = "ViewContactHistoryController";
-    private static final String KEY_TEXT = "ViewContactHistoryController.KEY_TEXT";
-    private static final String KEY_CONTACT_NO = "ContactHistoryNo";
-    private static final String KEY_CONTACT_INVOICE_NO = "ContactHistoryInvoiceNo";
-    private static final String KEY_CONTACT_TIMESTAMP = "ContactHistoryTimeStamp";
-    private static final String KEY_CONTACT_NAME = "ContactHistoryName";
-    private static final String KEY_CONTACT_SUBJECT = "ContactSubject";
-    private static final String KEY_CONTACT_ORDER = "ContactOrder";
 
     @BindView(R.id.contact_history_recycler_view)
     RecyclerView contactHistoryRecyclerView;
@@ -73,22 +72,23 @@ public class ViewContactHistoryController extends SwipeableBaseToolBarController
 
         return new ViewContactHistoryController(
                 new BundleBuilder(new Bundle())
-                        .putInt(KEY_CONTACT_NO, contactNo)
-                        .putString(KEY_CONTACT_NAME, saleName)
-                        .putInt(KEY_CONTACT_INVOICE_NO, invoiceNo)
-                        .putString(KEY_CONTACT_TIMESTAMP, lastAnswer)
-                        .putString(KEY_CONTACT_SUBJECT, contactSubject)
+                        .putInt(CONTACT_NUMBER, contactNo)
+                        .putString(CONTACT_NAME, saleName)
+                        .putInt(CONTACT_INVOICE_NUMBER, invoiceNo)
+                        .putString(CONTACT_TIME_STAMP, lastAnswer)
+                        .putString(CONTACT_SUBJECT, contactSubject)
                         .build());
     }
 
     public ViewContactHistoryController(Bundle args) {
         super(args);
-        mSaleNameObject = getArgs().getString(KEY_CONTACT_NAME);
-        mInvoiceNumber = getArgs().getInt(KEY_CONTACT_INVOICE_NO);
-        mTimeStamp = getArgs().getString(KEY_CONTACT_TIMESTAMP);
-        mContactNumber = getArgs().getInt(KEY_CONTACT_NO);
-        mContactSubject = getArgs().getString(KEY_CONTACT_SUBJECT);
+        mSaleNameObject = args.getString(CONTACT_NAME);
+        mInvoiceNumber = args.getInt(CONTACT_INVOICE_NUMBER);
+        mTimeStamp = args.getString(CONTACT_TIME_STAMP);
+        mContactNumber = args.getInt(CONTACT_NUMBER);
+        mContactSubject = args.getString(CONTACT_SUBJECT);
     }
+
 
 
     @Override
@@ -107,8 +107,12 @@ public class ViewContactHistoryController extends SwipeableBaseToolBarController
     protected void onViewBound(@NonNull View view) {
         super.onViewBound(view);
         mToolbarTitle.setText("message");
+        setupSwipingBehavior();
         setUp(view);
-        mPresenter.loadContactHistory(createContactHistoryRequest(getArgs().getInt(KEY_CONTACT_NO)));
+        setupDefaultBottomButton("reply", view1 -> {
+            onReplyClick();
+        });
+        mPresenter.loadContactHistory(createContactHistoryRequest(getArgs().getInt(CONTACT_NUMBER)));
     }
 
     @Override
@@ -149,11 +153,23 @@ public class ViewContactHistoryController extends SwipeableBaseToolBarController
         contactHistoryRecyclerView.setLayoutManager(layoutManager);
     }
 
-    @OnClick(R.id.controller_view_contacts_history_reply_button)
-    void onReplyClick() {
-        getRouter().pushController(RouterTransaction.with(AddContactController.newInstance("CONTACT_HISTORY", mContactSubject,mInvoiceNumber))
-                .pushChangeHandler(new HorizontalChangeHandler())
-                .popChangeHandler(new HorizontalChangeHandler()));
+    private void onReplyClick() {
+        Bundle bundle = new Bundle();
+        bundle.putString(FROM_FRAGMENT_ID,"CONTACT_HISTORY");
+        bundle.putString(CONTACT_SUBJECT, mContactSubject);
+        bundle.putInt(CONTACT_INVOICE, mInvoiceNumber);
+        bundle.putInt(CONTACT_NUMBER, mContactNumber);
+
+
+        GateKeeper.push(getRouter(),
+                GateKeeper.Destination.ADD_CONTACT,
+                bundle
+                ,new VerticalChangeHandler(false)
+                ,new VerticalChangeHandler());
+//
+//        getRouter().pushController(RouterTransaction.with(AddContactController.newInstance("CONTACT_HISTORY", mContactSubject,mInvoiceNumber))
+//                .pushChangeHandler(new HorizontalChangeHandler())
+//                .popChangeHandler(new HorizontalChangeHandler()));
 
     }
 
@@ -163,7 +179,7 @@ public class ViewContactHistoryController extends SwipeableBaseToolBarController
             CustomAlertDialog.showCustomAlertDialog(
                     mActivity, CustomAlertDialog.CustomDialogIconState.POSITIVE,
                     mActivity.getString(R.string.message_submitted));
-            mPresenter.loadContactHistory(createContactHistoryRequest(getArgs().getInt(KEY_CONTACT_NO)));
+            mPresenter.loadContactHistory(createContactHistoryRequest(getArgs().getInt(CONTACT_NUMBER)));
         } else {
             CustomAlertDialog.showCustomAlertDialog(
                     mActivity, CustomAlertDialog.CustomDialogIconState.POSITIVE,

@@ -3,6 +3,7 @@ package au.com.dealsdirect.ui.controller.contact.addcontact;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -30,23 +31,25 @@ import au.com.dealsdirect.ui.controller.contact.addcontact.selectorder.ContactSe
 import au.com.dealsdirect.ui.controller.contact.addcontact.selectsubject.ContactSelectSubjectController;
 import au.com.dealsdirect.ui.custom.CustomAlertDialog;
 import au.com.dealsdirect.utils.BundleBuilder;
+import au.com.dealsdirect.utils.BundleKeys;
 import au.com.dealsdirect.utils.KeyboardUtils;
 import butterknife.BindView;
 import butterknife.OnClick;
+
+import static au.com.dealsdirect.utils.BundleKeys.CONTACT_INVOICE;
+import static au.com.dealsdirect.utils.BundleKeys.CONTACT_NUMBER;
+import static au.com.dealsdirect.utils.BundleKeys.CONTACT_SUBJECT;
+import static au.com.dealsdirect.utils.BundleKeys.FROM_FRAGMENT_ID;
 
 /**
  * dp Created by Admin on 6/20/17.
  */
 
+@SuppressWarnings("ConstantConditions")
 public class AddContactController extends SwipeableBaseToolBarController implements AddContactMvpView {
 
     public static final String TAG = "AddContactController";
 
-    private static final String KEY_TEXT = "AddContactController.KEY_TEXT";
-    private static final String KEY_FROM_FRAGMENT_ID = "AddContactController.KEY_FROM";
-    private static final String KEY_CONTACT_SUBJECT = "CONTACT_SUBJECT";
-    private static final String KEY_CONTACT_NUMBER = "CONTACT_NUMBER";
-    private static final String KEY_INVOICE_NUMBER = "CONTACT_INVOICE_NUMBER";
 
     @BindView(R.id.controller_add_contact_subject_title)
     TextView mAddContactSubjectTitle;
@@ -65,18 +68,14 @@ public class AddContactController extends SwipeableBaseToolBarController impleme
 
     private View.OnClickListener onClickListener;
 
-    //
-//    @BindView(R.id.controller_add_contact_submit_button)
-//    Button mAddContactSubmitButton;
-//
     @Inject
     AddContactMvpPresenter<AddContactMvpView> mPresenter;
     
-    List<String> mContactSubjects;
-    List<ContactOrderList> mContactOrders;
+    private List<String> mContactSubjects;
+    private List<ContactOrderList> mContactOrders;
 
-    boolean hasLoadedSubjects = false;
-    boolean hasLoadedOrders = false;
+    private boolean hasLoadedSubjects = false;
+    private boolean hasLoadedOrders = false;
 
     //    static GetContactsResponse.ContactList mContactUsObject;
     private static int mContactNumber;
@@ -84,7 +83,6 @@ public class AddContactController extends SwipeableBaseToolBarController impleme
     private String mChosenOptionInvoice;
 
     private String mContactHistoryChosenSubject;
-    private String mContactHistoryChosenOrder;
     private static String mFromFragmentId;
 
     public static AddContactController newInstance(
@@ -93,9 +91,9 @@ public class AddContactController extends SwipeableBaseToolBarController impleme
             int invoiceNo) {
 
         return new AddContactController(new BundleBuilder(new Bundle())
-                .putString(KEY_FROM_FRAGMENT_ID, fromFragmentId)
-                .putString(KEY_CONTACT_SUBJECT, contactSubject)
-                .putInt(KEY_INVOICE_NUMBER, invoiceNo)
+                .putString(FROM_FRAGMENT_ID, fromFragmentId)
+                .putString(CONTACT_SUBJECT, contactSubject)
+                .putInt(CONTACT_INVOICE, invoiceNo)
                 .build());
     }
 
@@ -104,7 +102,7 @@ public class AddContactController extends SwipeableBaseToolBarController impleme
 
         return new AddContactController(
                 new BundleBuilder(new Bundle())
-                        .putString(KEY_FROM_FRAGMENT_ID, "CONTACT_US")
+                        .putString(BundleKeys.FROM_FRAGMENT_ID, "CONTACT_US")
                         .build());
     }
 
@@ -112,20 +110,21 @@ public class AddContactController extends SwipeableBaseToolBarController impleme
     public AddContactController(Bundle args) {
         super(args);
         if (!args.isEmpty()) {
-            if (args.containsKey(KEY_FROM_FRAGMENT_ID)) {
-                mFromFragmentId = args.getString(KEY_FROM_FRAGMENT_ID);
+            if (args.containsKey(FROM_FRAGMENT_ID)) {
+                mFromFragmentId = args.getString(FROM_FRAGMENT_ID);
+
             }
 
-            if (args.containsKey(KEY_CONTACT_SUBJECT)) {
-                mContactHistoryChosenSubject = args.getString(KEY_CONTACT_SUBJECT);
+            if (args.containsKey(CONTACT_SUBJECT)) {
+                mContactHistoryChosenSubject = args.getString(CONTACT_SUBJECT);
             }
 
-            if (args.containsKey(KEY_CONTACT_NUMBER)) {
-                mContactNumber = args.getInt(KEY_CONTACT_NUMBER);
+            if (args.containsKey(CONTACT_NUMBER)) {
+                mContactNumber = args.getInt(CONTACT_NUMBER);
             }
 
-            if (args.containsKey(KEY_INVOICE_NUMBER)) {
-                mInvoiceNumber = args.getInt(KEY_INVOICE_NUMBER);
+            if (args.containsKey(CONTACT_INVOICE)) {
+                mInvoiceNumber = args.getInt(CONTACT_INVOICE);
             }
         }
     }
@@ -156,6 +155,7 @@ public class AddContactController extends SwipeableBaseToolBarController impleme
 
     @Override
     protected void setUp(View view) {
+        Log.d("addContactController", "from = "+mFromFragmentId);
 
         KeyboardUtils.setKeyboardAdjustResize(mActivity);
         mActivity.getMainController().hideBottomNav();
@@ -192,15 +192,24 @@ public class AddContactController extends SwipeableBaseToolBarController impleme
             setupDefaultBottomButton("submit", onClickListener);
         }
 
-        final String chosenSubject = mAddContactSubjectText.getText().toString();
-        final String chosenOrder = mAddContactOrderText.getText().toString();
+//        final String chosenSubject = mAddContactSubjectText.getText().toString();
+//        final String chosenOrder = mAddContactOrderText.getText().toString();
 
         if (mFromFragmentId.equals("CONTACT_HISTORY")) {
 
-            if (mInvoiceNumber == 0)
+            Log.d("addContactController", "Contact history");
+            if (mInvoiceNumber == 0) {
+                Log.d("addContactController", "mInvoiceNumber == 0");
+
                 mAddContactOrderText.setText(String.valueOf("None"));
-            else
+            }
+            else {
+                Log.d("addContactController", "mInvoiceNumber == 0 else");
+
                 mAddContactOrderText.setText(String.valueOf(mInvoiceNumber));
+            }
+
+            Log.d("addContactController", "subject = "+mContactHistoryChosenSubject);
 
             mAddContactSubjectText.setText(mContactHistoryChosenSubject);
 
@@ -266,7 +275,7 @@ public class AddContactController extends SwipeableBaseToolBarController impleme
                 mChosenOptionInvoice = ContactPreferenceHelper.getChosenInvoice(mActivity);
                 CreateContactRequest createContactRequest = new CreateContactRequest();
 
-                if (mChosenOptionInvoice != "") {
+                if (!mChosenOptionInvoice.equals("")) {
                     createContactRequest.invoiceNo = Integer.valueOf(mChosenOptionInvoice);
                 } else {
                     createContactRequest.invoiceNo = 0;
@@ -295,7 +304,7 @@ public class AddContactController extends SwipeableBaseToolBarController impleme
     }
 
     @Override
-    public void onDestroyView(View view) {
+    public void onDestroyView(@NonNull View view) {
         ContactPreferenceHelper.clear(mActivity);
         KeyboardUtils.setKeyboardAdjustPan(mActivity);
         mPresenter.onDetach();
@@ -420,12 +429,12 @@ public class AddContactController extends SwipeableBaseToolBarController impleme
         }
     }
 
-    public void showContactFirstSubjectFromPreference(String subject) {
+    private void showContactFirstSubjectFromPreference(String subject) {
 
         mAddContactSubjectText.setText(subject);
     }
 
-    public void showContactFirstOrderFromPreference(String order) {
+    private void showContactFirstOrderFromPreference(String order) {
 
         mAddContactOrderText.setText(order);
     }

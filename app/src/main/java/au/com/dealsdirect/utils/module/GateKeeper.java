@@ -49,6 +49,7 @@ public class GateKeeper {
         ADD_NEW_ADDRESS,
         CONTACT_US,
         ADD_CONTACT,
+        CONTACT_HISTORY,
         SEARCH_FILTER,
         SMS_VERIFICATION,
         LEGALITIES,

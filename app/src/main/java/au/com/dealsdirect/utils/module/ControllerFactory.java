@@ -13,6 +13,7 @@ import au.com.dealsdirect.ui.controller.checkout.checkout.CheckoutController;
 import au.com.dealsdirect.ui.controller.checkout.ourpay.OurpaySMSVerificationController;
 import au.com.dealsdirect.ui.controller.checkout.paymentselect.PaymentSelectController;
 import au.com.dealsdirect.ui.controller.contact.addcontact.AddContactController;
+import au.com.dealsdirect.ui.controller.contact.viewcontacthistory.ViewContactHistoryController;
 import au.com.dealsdirect.ui.controller.contact.viewcontacts.ViewContactsController;
 import au.com.dealsdirect.ui.controller.details.DetailsController;
 import au.com.dealsdirect.ui.controller.forgotpassword.ForgotPasswordController;
@@ -159,8 +160,10 @@ public class ControllerFactory {
                 return new AddNewAddressController(bundle);
             case CONTACT_US:
                 return ViewContactsController.newInstance();
+            case CONTACT_HISTORY:
+                return new ViewContactHistoryController(bundle);
             case ADD_CONTACT:
-                return AddContactController.newInstance();
+                return new AddContactController(bundle);
             case SMS_VERIFICATION:
                 return new OurpaySMSVerificationController(bundle);
             case LEGALITIES:

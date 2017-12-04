@@ -9,9 +9,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
 
-import com.bluelinelabs.conductor.Router;
-import com.bluelinelabs.conductor.RouterTransaction;
-import com.bluelinelabs.conductor.changehandler.HorizontalChangeHandler;
 import com.bluelinelabs.conductor.changehandler.VerticalChangeHandler;
 
 import java.util.ArrayList;
@@ -24,7 +21,6 @@ import au.com.dealsdirect.R;
 import au.com.dealsdirect.data.network.model.contactitem.ContactItemByDate;
 import au.com.dealsdirect.data.network.model.contactitem.GetContactsResponse;
 import au.com.dealsdirect.ui.base.SwipeableBaseToolBarController;
-import au.com.dealsdirect.ui.controller.contact.viewcontacthistory.ViewContactHistoryController;
 import au.com.dealsdirect.ui.controller.contact.viewcontacts.contacts.ContactsAdapter;
 import au.com.dealsdirect.ui.controller.contact.viewcontacts.contacts.ContactsClickListener;
 import au.com.dealsdirect.ui.controller.contact.viewcontacts.viewcontactdate.ViewContactDateAdapter;
@@ -33,6 +29,11 @@ import au.com.dealsdirect.utils.DateUtils;
 import au.com.dealsdirect.utils.module.GateKeeper;
 import butterknife.BindView;
 
+import static au.com.dealsdirect.utils.BundleKeys.CONTACT_INVOICE_NUMBER;
+import static au.com.dealsdirect.utils.BundleKeys.CONTACT_NAME;
+import static au.com.dealsdirect.utils.BundleKeys.CONTACT_NUMBER;
+import static au.com.dealsdirect.utils.BundleKeys.CONTACT_SUBJECT;
+import static au.com.dealsdirect.utils.BundleKeys.CONTACT_TIME_STAMP;
 import static au.com.dealsdirect.utils.DateUtils.getTrimmedServerDateString;
 
 /**
@@ -234,14 +235,26 @@ public class ViewContactsController extends SwipeableBaseToolBarController imple
             timeStampString = "";
         }
 
-        Router router = getRouter();
-        router.pushController(RouterTransaction.with(ViewContactHistoryController.newInstance(
-                contactSubject,
-                saleName,
-                invoiceNo,
-                timeStampString,
-                contactList.getContactNo()))
-                .pushChangeHandler(new HorizontalChangeHandler())
-                .popChangeHandler(new HorizontalChangeHandler()));
+        Bundle bundle = new Bundle();
+        bundle.putString(CONTACT_SUBJECT,contactSubject);
+        bundle.putString(CONTACT_NAME, saleName);
+        bundle.putInt(CONTACT_INVOICE_NUMBER, invoiceNo);
+        bundle.putString(CONTACT_TIME_STAMP, timeStampString);
+        bundle.putInt(CONTACT_NUMBER, contactList.getContactNo());
+
+        GateKeeper.push(getRouter(),
+                GateKeeper.Destination.CONTACT_HISTORY,
+                bundle
+                ,new VerticalChangeHandler(false)
+                ,new VerticalChangeHandler());
+
+//        router.pushController(RouterTransaction.with(ViewContactHistoryController.newInstance(
+//                contactSubject,
+//                saleName,
+//                invoiceNo,
+//                timeStampString,
+//                contactList.getContactNo()))
+//                .pushChangeHandler(new HorizontalChangeHandler())
+//                .popChangeHandler(new HorizontalChangeHandler()));
     }
 }
