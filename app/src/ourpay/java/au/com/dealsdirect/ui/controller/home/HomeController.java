@@ -267,16 +267,11 @@ public class HomeController extends BaseController implements HomeMvpView {
                         break;
 
                     case 1:
-                        mActivity.setDraggableViewPager(false);
-                        showAccountController();
-                        break;
-
                     case 2:
                     case 3:
                     case 4:
                         mActivity.setDraggableViewPager(false);
                         proceedToController(position);
-
                         break;
                 }
             } else {
@@ -446,10 +441,12 @@ public class HomeController extends BaseController implements HomeMvpView {
     }
 
     private void proceedToController(int id) {
-        if (id == 2) {
+        if(id == 1){
+            showInviteController();
+        } else if (id == 2) {
             showContactController();
         } else if (id == 3) {
-            showInviteController();
+            showAccountController();
         } else if (id == 4) {
             showCheckoutController();
         }
