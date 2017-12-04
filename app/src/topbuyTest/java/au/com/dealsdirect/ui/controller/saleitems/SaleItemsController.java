@@ -184,9 +184,6 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
 
         mCartCounter.setText(CartUtil.getCartValue() + "");
 
-        mCategoriesRouter = getChildRouter(mCategoriesContainer);
-        mSearchFilterRouter = getChildRouter(mSearchFilterContainer);
-
         mPaginateCallbacks = new Paginate.Callbacks() {
             @Override
             public void onLoadMore() {
@@ -224,11 +221,16 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
 
         mPaginateManager = PaginateUtils.init(mSaleItemsRecyclerView, mPaginateCallbacks);
 
+
         mSearchTagsLayoutManager = new LinearLayoutManager(mActivity, LinearLayoutManager.HORIZONTAL, false);
         mSearchTagsRecyclerView.setLayoutManager(mSearchTagsLayoutManager);
-        mSearchTagsAdapter = new SearchTagsAdapter(mActivity, mSearchTagsLayoutManager, new ArrayList<SearchChipModel>(), mPresenter);
+        mSearchTagsAdapter = new SearchTagsAdapter(mActivity, mSearchTagsRecyclerView, mChipFilters, mPresenter);
         mSearchTagsRecyclerView.setAdapter(mSearchTagsAdapter);
         mSearchTagsRecyclerView.setVisibility(View.VISIBLE);
+        mSearchTagsAdapter.determineActiveFilters();
+
+        mCategoriesRouter = getChildRouter(mCategoriesContainer);
+        mSearchFilterRouter = getChildRouter(mSearchFilterContainer);
 
         RxView.clicks(mOverlay)
                 .throttleFirst(1000, TimeUnit.MILLISECONDS)
@@ -247,12 +249,12 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
 
         isSetupFinished = true;
 
-        setRetainViewMode(RetainViewMode.RETAIN_DETACH);
     }
 
     @Override
     public void onDetach(View view) {
-        mKeyboardHeightProvider.setKeyboardHeightObserver(null);
+        mKeyboardHeightProvider.close();
+        isBottomSheetAdjustedHeight = false;
         super.onDetach(view);
     }
 

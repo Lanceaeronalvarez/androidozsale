@@ -4,10 +4,7 @@ import android.content.Context;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.text.Editable;
-import android.text.TextWatcher;
 import android.util.DisplayMetrics;
-import android.util.Log;
 import android.util.TypedValue;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
@@ -19,9 +16,9 @@ import android.widget.TextView;
 import com.google.gson.Gson;
 import com.jakewharton.rxbinding2.widget.RxTextView;
 import com.mysale.genie.utility.RxBus;
-import com.mysale.genie.utility.config.model.getappsettingssection.Android;
 
 import java.util.ArrayList;
+import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 import au.com.dealsdirect.R;
@@ -39,11 +36,31 @@ import io.reactivex.disposables.Disposable;
 
 public class SearchTagsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
-    private ArrayList<SearchChipModel> mData = new ArrayList<>();
-    private Context mContext;
+    private List<SearchChipModel> mData = new ArrayList<>();
     private DisplayMetrics mDisplayMetrics;
     private LinearLayoutManager mLayoutManager;
+    private RecyclerView mRecyclerView;
     private SaleItemsMvpPresenter mSaleItemPresenter;
+    private boolean mBrandsActive = false;
+    private boolean mColorsActive = false;
+    private boolean mSizesActive = false;
+    private boolean mPriceActive = false;
+
+    public boolean isBrandsActiveFilter() {
+        return mBrandsActive;
+    }
+
+    public boolean isColorsActiveFilter() {
+        return mColorsActive;
+    }
+
+    public boolean isSizesActiveFilter() {
+        return mSizesActive;
+    }
+
+    public boolean isPriceActiveFilter() {
+        return mPriceActive;
+    }
 
     public EditTextViewHolder getEditTextViewHolder() {
         return editTextViewHolder;
@@ -51,14 +68,13 @@ public class SearchTagsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
 
     public EditTextViewHolder editTextViewHolder;
 
-    public SearchTagsAdapter(Context ctx, LinearLayoutManager llm, ArrayList<SearchChipModel> items, SaleItemsMvpPresenter presenter) {
-        mContext = ctx;
+    public SearchTagsAdapter(Context ctx, RecyclerView rv, List<SearchChipModel> items, SaleItemsMvpPresenter presenter) {
         mDisplayMetrics = ctx.getResources().getDisplayMetrics();
-        mLayoutManager = llm;
+        mRecyclerView = rv;
+        mLayoutManager = (LinearLayoutManager)rv.getLayoutManager();
         mData = items;
         mSaleItemPresenter = presenter;
     }
-
 
     public void add(SearchChipModel chip) {
         if (mData != null) {
@@ -88,7 +104,31 @@ public class SearchTagsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                 mLayoutManager.scrollToPosition(0);
             }
 
+        }
+    }
 
+    public void determineActiveFilters(){
+        mBrandsActive = false;
+        mColorsActive = false;
+        mSizesActive = false;
+        mPriceActive = false;
+
+        for (SearchChipModel chip : getData()) {
+            if(chip.getFilterType() == BundleKeys.BRANDS_FACETFILTER_NAME){
+                mBrandsActive = true;
+            }
+
+            if(chip.getFilterType() == BundleKeys.COLORS_FACETFILTER_NAME){
+                mColorsActive = true;
+            }
+
+            if(chip.getFilterType() == BundleKeys.SIZES_FACETFILTER_NAME){
+                mSizesActive = true;
+            }
+
+            if(chip.getFilterType() == BundleKeys.PRICE_FACETFILTER_NAME){
+                mPriceActive = true;
+            }
         }
     }
 
@@ -101,7 +141,7 @@ public class SearchTagsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
         mLayoutManager.scrollToPositionWithOffset(currentLastItem, offsetAmount);
     }
 
-    public ArrayList<SearchChipModel> getData() {
+    public List<SearchChipModel> getData() {
         return mData;
     }
 
@@ -115,7 +155,7 @@ public class SearchTagsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
             vh = new SearchTagsViewHolder(v);
         } else if (viewType == 1) {
             v = LayoutInflater.from(parent.getContext()).inflate(R.layout.viewholder_filter_edit_text, parent, false);
-            vh = editTextViewHolder = new EditTextViewHolder(v,mSaleItemPresenter);
+            vh = editTextViewHolder = new EditTextViewHolder(v, mSaleItemPresenter);
         }
 
         return vh;
@@ -134,7 +174,6 @@ public class SearchTagsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
 
         if (holder instanceof EditTextViewHolder) {
             EditTextViewHolder vh = (EditTextViewHolder) holder;
-
 
 
             vh.et.setOnFocusChangeListener(new View.OnFocusChangeListener() {
@@ -232,7 +271,7 @@ public class SearchTagsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
             mSaleItemPresenter = saleItemsMvpPresenter;
         }
 
-        public void subscribeTextChange(){
+        public void subscribeTextChange() {
             textChangeDisposable = RxTextView.textChanges(et)
                     .skipInitialValue()
                     .debounce(1000, TimeUnit.MILLISECONDS)

@@ -101,8 +101,6 @@ public class MainActivity extends BaseActivity implements MainMvpView {
         mRouter = Conductor.attachRouter(this, mContainer, savedInstanceState);
         mRouter.setRoot(RouterTransaction.with(SplashScreenController.newInstance())
                 .popChangeHandler(new VerticalChangeHandler()));
-        splashShownCallback();
-
 
         setUp();
     }

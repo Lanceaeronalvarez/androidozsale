@@ -26,8 +26,10 @@ import au.com.dealsdirect.R;
 import au.com.dealsdirect.data.network.model.saleitems.GetSaleItemsResponse;
 import au.com.dealsdirect.ui.base.BaseController;
 import au.com.dealsdirect.ui.controller.main.MainCustomViewPager;
+import au.com.dealsdirect.ui.controller.saleitems.SaleItemsController;
 import au.com.dealsdirect.ui.controller.saleitems.SaleItemsMvpPresenter;
 import au.com.dealsdirect.ui.controller.saleitems.SaleItemsMvpView;
+import au.com.dealsdirect.ui.controller.searchfilter.adapter.SearchTagsAdapter;
 import au.com.dealsdirect.ui.controller.searchfilter.facetfilter.FacetFilterController;
 import au.com.dealsdirect.utils.BundleBuilder;
 import au.com.dealsdirect.utils.BundleKeys;
@@ -69,6 +71,9 @@ public class SearchFilterController extends BaseController
     RelativeLayout mBottomSheetLayout;
     @BindView(R.id.viewpager)
     MainCustomViewPager mFiltersViewPager;
+    SaleItemsController mSaleItemsMvpView;
+
+    boolean initialLoad = false;
 
     public TabLayout getTabLayout() {
         return mTabLayout;
@@ -89,9 +94,8 @@ public class SearchFilterController extends BaseController
     ArrayList<String> mBrandList = new ArrayList<>();
     ArrayList<String> mSizeList = new ArrayList<>();
     ArrayList<String> mColorList = new ArrayList<>();
-    ArrayList<String> mSortingList = new ArrayList<>();
 
-    private Set<Integer> origSelectedSet = new HashSet<Integer>();
+    SearchTagsAdapter mSearchTagsAdapter;
 
     public static SearchFilterController newInstance() {
         return new SearchFilterController(new BundleBuilder(new Bundle())
@@ -100,8 +104,6 @@ public class SearchFilterController extends BaseController
 
     public SearchFilterController(Bundle args) {
         super(args);
-//        mFacets = JsonUtils.convertStringToObject(args.getString(BundleKeys.KEY_FACET_STRING, ""), new TypeToken<ArrayList<GetSaleItemsResponse.Facets>>() {
-//        }.getType());
     }
 
     public void replaceFacets(List<GetSaleItemsResponse.Facets> facets) {
@@ -116,7 +118,9 @@ public class SearchFilterController extends BaseController
     protected View inflateView(@NonNull LayoutInflater inflater, @NonNull ViewGroup container) {
         View view = inflater.inflate(R.layout.controller_search_filter, container, false);
         getControllerComponent().inject(this);
-        mSaleItemsPresenter.onAttach((SaleItemsMvpView) GateKeeper.getCurrentControllerOnRouter(mActivity.getSaleItemsRouter()));
+        mSaleItemsMvpView = (SaleItemsController) GateKeeper.getCurrentControllerOnRouter(mActivity.getSaleItemsRouter());
+        mSaleItemsPresenter.onAttach(mSaleItemsMvpView);
+        mSearchTagsAdapter = mSaleItemsPresenter.getSearchTagsAdapter();
         return view;
     }
 
@@ -146,11 +150,33 @@ public class SearchFilterController extends BaseController
 
 
     private void setDefaultTabIcons() {
+
         mTabLayout.getTabAt(0).setIcon(SearchTabIcons[0]).setCustomView(R.layout.tab_icon_layout);
-        mTabLayout.getTabAt(1).setIcon(SearchTabIcons[1]).setCustomView(R.layout.tab_icon_layout);
-        mTabLayout.getTabAt(2).setIcon(SearchTabIcons[2]).setCustomView(R.layout.tab_icon_layout);
-        mTabLayout.getTabAt(3).setIcon(SearchTabIcons[3]).setCustomView(R.layout.tab_icon_layout);
-        mTabLayout.getTabAt(4).setIcon(SearchTabIcons[4]).setCustomView(R.layout.tab_icon_layout);
+
+        if (mSearchTagsAdapter.isBrandsActiveFilter()) {
+            mTabLayout.getTabAt(1).setIcon(SearchTabIndicatorIcons[1]).setCustomView(R.layout.tab_icon_layout);
+        } else {
+            mTabLayout.getTabAt(1).setIcon(SearchTabIcons[1]).setCustomView(R.layout.tab_icon_layout);
+        }
+
+        if (mSearchTagsAdapter.isColorsActiveFilter()) {
+            mTabLayout.getTabAt(2).setIcon(SearchTabIndicatorIcons[2]).setCustomView(R.layout.tab_icon_layout);
+        } else {
+            mTabLayout.getTabAt(2).setIcon(SearchTabIcons[2]).setCustomView(R.layout.tab_icon_layout);
+
+        }
+
+        if (mSearchTagsAdapter.isSizesActiveFilter()) {
+            mTabLayout.getTabAt(3).setIcon(SearchTabIndicatorIcons[3]).setCustomView(R.layout.tab_icon_layout);
+        } else {
+            mTabLayout.getTabAt(3).setIcon(SearchTabIcons[3]).setCustomView(R.layout.tab_icon_layout);
+        }
+
+        if (mSearchTagsAdapter.isPriceActiveFilter()) {
+            mTabLayout.getTabAt(4).setIcon(SearchTabIndicatorIcons[4]).setCustomView(R.layout.tab_icon_layout);
+        } else {
+            mTabLayout.getTabAt(4).setIcon(SearchTabIcons[4]).setCustomView(R.layout.tab_icon_layout);
+        }
     }
 
 
@@ -200,21 +226,10 @@ public class SearchFilterController extends BaseController
                 if (tab.getPosition() != 0) {
                     hideKeyboard();
                 } else {
-                    mSaleItemsPresenter.showKeyboard();
+                    if (mSaleItemsMvpView.isAttached()) {
+                        mSaleItemsPresenter.showKeyboard();
+                    }
                 }
-//                if (mBottomSheetBehavior.getState() == ViewPagerBottomSheetBehavior.STATE_EXPANDED) {
-//                    if (tab.getPosition() == 0 && !isKeyboardOpen) {
-//                        mSearchTagAdapter.getEditTextViewHolder().getEditText().requestFocus();
-//                        //                        imm.showSoftInput(SearchTagsRecyclerViewAdapter.editTextViewHolder.et, InputMethodManager.SHOW_FORCED);
-//                        imm.toggleSoftInput(InputMethodManager.SHOW_FORCED, 0);
-//
-//                    }
-//
-//                    if (tab.getPosition() != 0 && isKeyboardOpen) {
-//                        //                    imm.hideSoftInputFromWindow(searchEditTextHack.getWindowToken(), 0);
-//                        imm.hideSoftInputFromWindow(activity.getWindow().getDecorView().getWindowToken(), 0);
-//                    }
-
 
                 if (tab.getIcon() != null) {
                     tab.getIcon().setColorFilter(ContextCompat.getColor(getActivity(), R.color.bluegreen), PorterDuff.Mode.SRC_IN);
@@ -243,7 +258,12 @@ public class SearchFilterController extends BaseController
         };
         mTabLayout.addOnTabSelectedListener(mTabOnSelectedListener);
         mTabLayout.setupWithViewPager(mFiltersViewPager);
+
+
         setDefaultTabIcons();
+
+
+        initialLoad = true;
 
     }
 
@@ -311,6 +331,12 @@ public class SearchFilterController extends BaseController
         mFiltersViewPager.setMyScroller();
 
     }
+
+//    @Override
+//    public void onDetach(View view) {
+//        mTabLayout.addOnTabSelectedListener(null);
+//        super.onDetach(view);
+//    }
 
     public void onSetInactiveTabIndicatorIcons(String filterFragmentType) {
         switch (mapFilterTypeToFacetName(filterFragmentType)) {
