@@ -377,7 +377,7 @@ public class InviteSendController extends BasePullToRefreshController implements
                 if (!link.isEmpty()) {
                     try {
                         mActivity.getPackageManager().getPackageInfo("com.twitter.android", 0);
-                        Uri uri = Uri.parse("twitter://user?user_id=37405859");
+                        Uri uri = Uri.parse(mActivity.getString(R.string.twitter_user_id));
                         intent = new Intent(Intent.ACTION_VIEW, uri);
                     } catch (PackageManager.NameNotFoundException e) {
                         e.printStackTrace();

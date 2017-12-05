@@ -37,7 +37,6 @@ BUILD_SECRET = 'e048a220b52f841eef5e6862bc43a56a5a51841da934f1e0b76a5019c630c661
   jelinepena@gmail.com,
   elainedizon@mysale.com,
   ruz@apacsale.com,
-  michael@smartwave.ph,
   jc@mysale.com,
   elaine@smartwave.ph,
   chindee@smartwave.ph
@@ -83,9 +82,9 @@ projectDir = app_path + '/app/build/outputs/apk/'
 end
 
 # Builds the app with scheme name
-def build(app_flavor)
-  # Adjust the `build_type` and `flavor` params as needed to build the right APK for your setup
-  gradle(task: "assemble", flavor: app_flavor)
+def build(build_variant, app_flavor)
+  increment_version_code_android(product_flavor: app_flavor)
+  gradle(task: "assemble", flavor: build_variant)
 end
 
 # Displays emails on which the build will be sent to
@@ -98,7 +97,7 @@ def displayEmails(emails)
 end
 
 lane :dd_build do |options|
-  build(options[:app_flavor])
+  build(options[:build_variant], options[:app_flavor])
 
   emails = options[:emails]
 
@@ -112,7 +111,7 @@ lane :fabric_deploy_dd_test do
   app_dir = Dir.pwd
 
   #Change apk_name and app_name for other flavors
-  sh "fastlane dd_build app_name:'DealsDirectTest' emails:" + dev_emails + " apk_name:" + 'app-dealsDirectTest-release.apk' + " app_flavor:" + 'DealsDirectTestRelease' + " app_path:" + app_dir
+  sh "fastlane dd_build app_name:'DealsDirectTest' emails:" + dev_emails + " apk_name:" + 'app-dealsDirectTest-release.apk' + " build_variant:" + 'DealsDirectTestRelease' + " app_path:" + app_dir + " app_flavor:" + 'dealsDirectRC'
  end
 
 lane :fabric_deploy_dd_rc do
@@ -120,7 +119,7 @@ lane :fabric_deploy_dd_rc do
   app_dir = Dir.pwd
 
   #Change apk_name and app_name for other flavors
-  sh "fastlane dd_build app_name:'DealsDirect' emails:" + dev_emails + " apk_name:" + 'app-dealsDirectRC-release.apk' + " app_flavor:" + 'DealsDirectRCRelease' + " app_path:" + app_dir
+  sh "fastlane dd_build app_name:'DealsDirect' emails:" + dev_emails + " apk_name:" + 'app-dealsDirectRC-release.apk' + " build_variant:" + 'DealsDirectRCRelease' + " app_path:" + app_dir+ " app_flavor:" + 'dealsDirectRC'
  end
 
 lane :fabric_deploy_oo_test do
@@ -128,7 +127,7 @@ lane :fabric_deploy_oo_test do
   app_dir = Dir.pwd
 
   #Change apk_name and app_name for other flavors
-  sh "fastlane dd_build app_name:'ooTest' emails:" + dev_emails + " apk_name:" + 'app-ooTest-debug.apk' + " app_flavor:" + 'ooTestDebug' + " app_path:" + app_dir
+  sh "fastlane dd_build app_name:'ooTest' emails:" + dev_emails + " apk_name:" + 'app-ooTest-release.apk' + " build_variant:" + 'ooTestRelease' + " app_path:" + app_dir + " app_flavor:" + 'ooTest'
  end
 
 lane :fabric_deploy_lc_test do
@@ -136,5 +135,5 @@ lane :fabric_deploy_lc_test do
   app_dir = Dir.pwd
 
   #Change apk_name and app_name for other flavors
-  sh "fastlane dd_build app_name:'londonChicTest' emails:" + dev_emails + " apk_name:" + 'app-londonChicTest-debug.apk' + " app_flavor:" + 'londonChicTestDebug' + " app_path:" + app_dir
+  sh "fastlane dd_build app_name:'londonChicTest' emails:" + dev_emails + " apk_name:" + 'app-londonChicTest-release.apk' + " build_variant:" + 'londonChicTestRelease' + " app_path:" + app_dir + " app_flavor:" + 'londonChicTest'
 end

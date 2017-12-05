@@ -16,4 +16,10 @@ public class AddPaymentPresenter<V extends AddPaymentMvpView> extends BasePresen
     public AddPaymentPresenter(DataManager dataManager, SchedulerProvider schedulerProvider, CompositeDisposable compositeDisposable) {
         super(dataManager, schedulerProvider, compositeDisposable);
     }
+
+    @Override
+    public boolean isDebug() {
+        return getDataManager().isDebugMode();
+    }
+
 }

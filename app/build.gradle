@@ -1,6 +1,5 @@
 apply plugin: 'com.android.application'
 apply plugin: 'io.fabric'
-apply plugin: 'me.tatarka.retrolambda'
 apply plugin: 'newrelic'
 
 android {
@@ -39,6 +38,8 @@ android {
         }
     }
 
+    flavorDimensions "default"
+
     productFlavors {
         dealsDirectRC {
             versionCode 64
@@ -59,7 +60,7 @@ android {
         }
 
         ooTest {
-            versionCode 1
+            versionCode 3
             versionName "0.9"
             applicationId "au.com.oo.test"
             buildConfigField "String", "API_ROOT", "\"https://genie-ui-oo-pre.mysaledev.com/\""

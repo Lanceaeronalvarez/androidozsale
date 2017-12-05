@@ -57,7 +57,7 @@
             android:layout_centerVertical="true"
             android:background="@drawable/bg_toolbar_button"
             android:scaleType="fitCenter"
-            android:padding="10dp"
+            android:padding="5dp"
             android:src="@drawable/ic_logout" />
 
     </RelativeLayout>
