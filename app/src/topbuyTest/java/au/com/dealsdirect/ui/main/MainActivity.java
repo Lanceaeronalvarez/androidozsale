@@ -1,7 +1,10 @@
 package au.com.dealsdirect.ui.main;
 
+import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.Window;
+import android.view.WindowManager;
 import android.widget.FrameLayout;
 
 import com.bluelinelabs.conductor.Conductor;
@@ -84,6 +87,7 @@ public class MainActivity extends BaseActivity implements MainMvpView {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        setTheme(R.style.App_Theme_Translucent);
         super.onCreate(savedInstanceState);
 
         setContentView(R.layout.activity_main);
@@ -141,10 +145,8 @@ public class MainActivity extends BaseActivity implements MainMvpView {
         switch (getMainController().getHomeViewPager().getCurrentItem()) {
             case 0: //accounts
                 if (getAccountsRouter().getBackstack().size() == 1) {
-                    Log.d("mainactivity","if statement");
                     getMainController().getHomeViewPager().setCurrentItem(1);
                 } else {
-
                     setDraggableViewPager(true);
                     getAccountsRouter().handleBack();
                     GateKeeper.updateCurrentLocation(getAccountsRouter());
@@ -189,12 +191,12 @@ public class MainActivity extends BaseActivity implements MainMvpView {
 
     @Override
     public FetchTokenHandler getFetchTokenHandler() {
-        return null;
+        return mFetchTokenHandler;
     }
 
     @Override
     public void callGCMRegisterSubscriber() {
-
+        mPresenter.initializeNotifications(getApplicationContext());
     }
 
     @Override
@@ -265,6 +267,7 @@ public class MainActivity extends BaseActivity implements MainMvpView {
         hideKeyboard();
 
     }
+
 
     @Override
     public void loginErrorHandler(String message) {
