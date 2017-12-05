@@ -12,6 +12,7 @@ import au.com.dealsdirect.ui.controller.checkout.addpayment.AddPaymentController
 import au.com.dealsdirect.ui.controller.checkout.checkout.CheckoutController;
 import au.com.dealsdirect.ui.controller.checkout.ourpay.OurpaySMSVerificationController;
 import au.com.dealsdirect.ui.controller.checkout.paymentselect.PaymentSelectController;
+import au.com.dealsdirect.ui.controller.checkout.paymentsuccess.PaymentSuccessController;
 import au.com.dealsdirect.ui.controller.contact.addcontact.AddContactController;
 import au.com.dealsdirect.ui.controller.contact.viewcontacthistory.ViewContactHistoryController;
 import au.com.dealsdirect.ui.controller.contact.viewcontacts.ViewContactsController;
@@ -102,6 +103,8 @@ public class ControllerFactory {
                 break;
             case PAYMENT_ADD:
                 break;
+            case PAYMENT_SUCCESS:
+                break;
             case MASTERPASS:
                 return MasterpassController.newInstance();
             case ORDER_DETAILS:
@@ -144,10 +147,12 @@ public class ControllerFactory {
                 return new AddVouchersController(bundle);
             case PAYMENT_ADD:
                 return new AddPaymentController(bundle);
-            case MASTERPASS:
-                return new MasterpassController(bundle);
             case PAYMENT_SELECT:
                 return new PaymentSelectController(bundle);
+            case PAYMENT_SUCCESS:
+                return new PaymentSuccessController(bundle);
+            case MASTERPASS:
+                return new MasterpassController(bundle);
             case ORDERS:
                 return new OrdersController();
             case CURRENT_RETURNS:

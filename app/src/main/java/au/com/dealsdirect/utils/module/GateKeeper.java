@@ -40,6 +40,7 @@ public class GateKeeper {
         INVITE,
         PAYMENT_SELECT,
         PAYMENT_ADD,
+        PAYMENT_SUCCESS,
         MASTERPASS,
         ORDERS,
         ORDER_DETAILS,
