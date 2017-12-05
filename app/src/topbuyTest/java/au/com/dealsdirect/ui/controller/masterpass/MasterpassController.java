@@ -14,8 +14,7 @@ import android.webkit.WebResourceRequest;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 
-import com.bluelinelabs.conductor.RouterTransaction;
-import com.bluelinelabs.conductor.changehandler.HorizontalChangeHandler;
+import com.bluelinelabs.conductor.changehandler.VerticalChangeHandler;
 
 import java.util.HashMap;
 
@@ -23,12 +22,17 @@ import javax.inject.Inject;
 
 import au.com.dealsdirect.R;
 import au.com.dealsdirect.ui.base.SwipeableBaseToolBarController;
-import au.com.dealsdirect.ui.controller.checkout.paymentsuccess.PaymentSuccessController;
 import au.com.dealsdirect.ui.custom.CustomAlertDialog;
 import au.com.dealsdirect.utils.AppLogger;
 import au.com.dealsdirect.utils.BundleBuilder;
 import au.com.dealsdirect.utils.NetworkUtils;
+import au.com.dealsdirect.utils.module.GateKeeper;
 import butterknife.BindView;
+
+import static au.com.dealsdirect.utils.BundleKeys.KEY_ADDRESS;
+import static au.com.dealsdirect.utils.BundleKeys.KEY_ESTIMATED_DELIVERY;
+import static au.com.dealsdirect.utils.BundleKeys.KEY_INVOICE;
+import static au.com.dealsdirect.utils.BundleKeys.KEY_PRICE;
 
 public class MasterpassController extends SwipeableBaseToolBarController implements MasterpassMvpView {
 
@@ -167,9 +171,13 @@ public class MasterpassController extends SwipeableBaseToolBarController impleme
 
     @Override
     public void showPaymentSuccess(String address, String price, String invoice, String delivery) {
-        getRouter().pushController(RouterTransaction.with(PaymentSuccessController.newInstance(address, price, invoice, delivery))
-                .pushChangeHandler(new HorizontalChangeHandler())
-                .popChangeHandler(new HorizontalChangeHandler()));
+        Bundle bundle = new Bundle();
+        bundle.putString(KEY_ADDRESS, address);
+        bundle.putString(KEY_PRICE, price);
+        bundle.putString(KEY_INVOICE, invoice);
+        bundle.putString(KEY_ESTIMATED_DELIVERY, delivery);
+        GateKeeper.push(getRouter(), GateKeeper.Destination.PAYMENT_SUCCESS, bundle, new VerticalChangeHandler(false), new VerticalChangeHandler());
+        
     }
 
 }
