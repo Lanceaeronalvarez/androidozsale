@@ -46,7 +46,7 @@ android {
             versionName "2.3.1"
             applicationId "au.com.dealsdirect"
             buildConfigField "String", "API_ROOT", "\"https://www.dealsdirect.com.au/\""
-            buildConfigField "String", "API_LEGACY", "\"https://www.dealsdirect.com.au/papi/public/v3.17/\""
+            buildConfigField "String", "API_LEGACY", "\"https://www.dealsdirect.com.au/papi/public/v3.20/\""
             buildConfigField "String", "ACCOUNT_ID", "\"A56B0D62-AEF6-4653-848E-2ECDDB6E9B8C\""
         }
 
@@ -55,7 +55,7 @@ android {
             versionName "2.3.1"
             applicationId "au.com.dealsdirect.test"
             buildConfigField "String", "API_ROOT", "\"https://genie-ui-dealsdirect-pre.mysaledev.com/\""
-            buildConfigField "String", "API_LEGACY", "\"https://api.mysaledev.com/public/v3.17/\""
+            buildConfigField "String", "API_LEGACY", "\"https://api.mysaledev.com/public/v3.20/\""
             buildConfigField "String", "ACCOUNT_ID", "\"A56B0D62-AEF6-4653-848E-2ECDDB6E9B8C\""
         }
 
