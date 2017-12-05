@@ -56,9 +56,6 @@ public class DetailsController extends BasePullToRefreshController implements De
     @BindView(R.id.controller_details_text_dateOfBirth)
     EditText mDateOfBirthText;
 
-    @BindView(R.id.controller_details_spinner_gender)
-    Spinner mGenderSpinner;
-
     @BindView(R.id.controller_details_text_emailaddress)
     EditText mEmailAddressText;
 
@@ -130,12 +127,6 @@ public class DetailsController extends BasePullToRefreshController implements De
 //        ((ElasticHorizontalDragDismissFrameLayout)view).addListener(mDragDismissCallback);
 
 
-        List<String> list = new ArrayList<String>(Arrays.asList(getResources().getStringArray(R.array.genders)));
-        CustomSpinnerAdapter customSpinnerAdapter = new CustomSpinnerAdapter(mActivity,
-                R.layout.row_custom_spinner_drop_down,
-                list);
-        mGenderSpinner.setAdapter(customSpinnerAdapter);
-
         mCalendar = Calendar.getInstance();
 
         onDateSetListener = new DatePickerDialog.OnDateSetListener() {
@@ -181,13 +172,6 @@ public class DetailsController extends BasePullToRefreshController implements De
             String month = DateUtils.months[value.getDateOfBirth().getMonth()-1];
             mDateOfBirthText.setText(month+" "+day+", "+year);
         }
-
-        int genderItem = 0;
-        if (!value.getGender()){
-            genderItem = 1;
-        }
-
-        mGenderSpinner.setSelection(genderItem);
     }
 
     @Override
@@ -217,7 +201,6 @@ public class DetailsController extends BasePullToRefreshController implements De
 
         String firstname = mFirstNameText.getText().toString();
         String lastname = mLastNameText.getText().toString();
-        boolean gender = mGenderSpinner.getSelectedItem().toString().equals("Male") ? true : false;
         String dateofbirth = mDateOfBirthText.getText().toString();
         String email = mEmailAddressText.getText().toString();
         String password = mPasswordText.getText().toString();
@@ -226,7 +209,7 @@ public class DetailsController extends BasePullToRefreshController implements De
 
         if (newpassword.equals(confirmpassword)){
             mPresenter.sendUserDetails(createUserDetailRequest(email, firstname, lastname, dateofbirth,
-                    gender, email, password, newpassword, confirmpassword ));
+                    true, email, password, newpassword, confirmpassword ));
         }else{
             CustomAlertDialog.showCustomAlertDialog(mActivity, CustomAlertDialog.CustomDialogIconState.POSITIVE,mActivity.getString(R.string.password_does_not_match));
         }

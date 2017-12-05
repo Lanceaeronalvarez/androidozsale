@@ -1,0 +1,245 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.v4.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/bg_gray"
+    android:overScrollMode="never"
+    app:layout_behavior="@string/appbar_scrolling_view_behavior">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
+        <LinearLayout
+            android:id="@+id/controller_details_background"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="10dp"
+            android:background="@drawable/bg_edit_text_rounded"
+            android:orientation="vertical"
+            android:paddingBottom="20dp"
+            android:paddingTop="10dp">
+
+            <TextView
+                fontPath="@string/font_lato_bold"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="20dp"
+                android:layout_marginStart="20dp"
+                android:layout_marginTop="10dp"
+                android:text="@string/first_name"
+                android:textColor="@color/edit_text_label"
+                android:textSize="@dimen/text_size_large"
+                tools:ignore="MissingPrefix" />
+
+            <EditText
+                android:id="@+id/controller_details_text_firstname"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="20dp"
+                android:layout_marginStart="20dp"
+                android:layout_marginTop="10dp"
+                android:hint="@string/first_name"
+                android:background="@android:color/transparent"
+                android:textColor="@color/edit_text_content"
+                android:textSize="@dimen/text_size_large" />
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/divider_height"
+                android:layout_marginBottom="10dp"
+                android:layout_marginTop="20dp"
+                android:background="@color/border_gray" />
+
+            <TextView
+                fontPath="@string/font_lato_bold"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="20dp"
+                android:layout_marginStart="20dp"
+                android:layout_marginTop="10dp"
+                android:text="@string/last_name"
+                android:textColor="@color/edit_text_label"
+                android:textSize="@dimen/text_size_large"
+                tools:ignore="MissingPrefix" />
+
+            <EditText
+                android:id="@+id/controller_details_text_lastname"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="20dp"
+                android:layout_marginStart="20dp"
+                android:layout_marginTop="10dp"
+                android:hint="@string/last_name"
+                android:background="@android:color/transparent"
+                android:textColor="@color/edit_text_content"
+                android:textSize="@dimen/text_size_large" />
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/divider_height"
+                android:layout_marginBottom="10dp"
+                android:layout_marginTop="20dp"
+                android:background="@color/border_gray" />
+
+            <TextView
+                fontPath="@string/font_lato_bold"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="20dp"
+                android:layout_marginStart="20dp"
+                android:layout_marginTop="10dp"
+                android:text="@string/date_of_birth"
+                android:textColor="@color/edit_text_label"
+                android:textSize="@dimen/text_size_large"
+                tools:ignore="MissingPrefix" />
+
+            <EditText
+                android:id="@+id/controller_details_text_dateOfBirth"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="20dp"
+                android:layout_marginStart="20dp"
+                android:layout_marginTop="10dp"
+                android:hint="@string/date_of_birth"
+                android:background="@android:color/transparent"
+                android:inputType="date"
+                android:textColor="@color/edit_text_content"
+                android:textSize="@dimen/text_size_large" />
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/divider_height"
+                android:layout_marginBottom="10dp"
+                android:layout_marginTop="20dp"
+                android:background="@color/border_gray" />
+
+            <TextView
+                fontPath="@string/font_lato_bold"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="20dp"
+                android:layout_marginStart="20dp"
+                android:layout_marginTop="10dp"
+                android:text="@string/email_address"
+                android:textColor="@color/edit_text_label"
+                android:textSize="@dimen/text_size_large"
+                tools:ignore="MissingPrefix" />
+
+            <EditText
+                android:id="@+id/controller_details_text_emailaddress"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="20dp"
+                android:layout_marginStart="20dp"
+                android:layout_marginTop="10dp"
+                android:hint="@string/email_address"
+                android:background="@android:color/transparent"
+                android:inputType="textEmailAddress"
+                android:textColor="@color/edit_text_content"
+                android:textSize="@dimen/text_size_large" />
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/divider_height"
+                android:layout_marginBottom="10dp"
+                android:layout_marginTop="20dp"
+                android:background="@color/border_gray" />
+
+            <TextView
+                fontPath="@string/font_lato_bold"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="20dp"
+                android:layout_marginStart="20dp"
+                android:layout_marginTop="10dp"
+                android:text="@string/password"
+                android:textColor="@color/edit_text_label"
+                android:textSize="@dimen/text_size_large"
+                tools:ignore="MissingPrefix" />
+
+            <EditText
+                android:id="@+id/controller_details_text_password"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="20dp"
+                android:layout_marginStart="20dp"
+                android:layout_marginTop="10dp"
+                android:background="@android:color/transparent"
+                android:hint="@string/password"
+                android:inputType="textPassword"
+                android:textColor="@color/edit_text_content"
+                android:textSize="@dimen/text_size_large" />
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/divider_height"
+                android:layout_marginBottom="10dp"
+                android:layout_marginTop="20dp"
+                android:background="@color/border_gray" />
+
+            <TextView
+                fontPath="@string/font_lato_bold"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="20dp"
+                android:layout_marginStart="20dp"
+                android:layout_marginTop="10dp"
+                android:text="@string/new_password"
+                android:textColor="@color/edit_text_label"
+                android:textSize="@dimen/text_size_large"
+                tools:ignore="MissingPrefix" />
+
+            <EditText
+                android:id="@+id/controller_details_text_newPassword"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="20dp"
+                android:layout_marginStart="20dp"
+                android:layout_marginTop="10dp"
+                android:background="@android:color/transparent"
+                android:hint="@string/new_password"
+                android:inputType="textPassword"
+                android:textColor="@color/edit_text_content"
+                android:textSize="@dimen/text_size_large" />
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/divider_height"
+                android:layout_marginBottom="10dp"
+                android:layout_marginTop="20dp"
+                android:background="@color/border_gray" />
+
+            <TextView
+                fontPath="@string/font_lato_bold"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="20dp"
+                android:layout_marginStart="20dp"
+                android:layout_marginTop="10dp"
+                android:text="@string/confirm_password"
+                android:textColor="@color/edit_text_label"
+                android:textSize="@dimen/text_size_large"
+                tools:ignore="MissingPrefix" />
+
+            <EditText
+                android:id="@+id/controller_details_text_confirmPassword"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="20dp"
+                android:layout_marginStart="20dp"
+                android:layout_marginTop="10dp"
+                android:background="@android:color/transparent"
+                android:hint="@string/confirm_password"
+                android:inputType="textPassword"
+                android:textColor="@color/edit_text_content"
+                android:textSize="@dimen/text_size_large" />
+
+        </LinearLayout>
+
+    </LinearLayout>
+
+</android.support.v4.widget.NestedScrollView>
