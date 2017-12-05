@@ -1,10 +1,6 @@
 package au.com.dealsdirect.ui.main;
 
-import android.os.Build;
 import android.os.Bundle;
-import android.util.Log;
-import android.view.Window;
-import android.view.WindowManager;
 import android.widget.FrameLayout;
 
 import com.bluelinelabs.conductor.Conductor;
@@ -46,17 +42,26 @@ import au.com.dealsdirect.service.ourpay.Ourpay;
 import au.com.dealsdirect.service.ourpay.OurpayState;
 import au.com.dealsdirect.ui.base.BaseActivity;
 import au.com.dealsdirect.ui.controller.categories.CategoriesController;
+import au.com.dealsdirect.ui.controller.checkout.addpayment.AddPaymentController;
+import au.com.dealsdirect.ui.controller.checkout.checkout.CheckoutController;
 import au.com.dealsdirect.ui.controller.main.MainController;
 import au.com.dealsdirect.ui.controller.saleitems.SaleItemsController;
 import au.com.dealsdirect.ui.controller.splash.SplashScreenController;
 import au.com.dealsdirect.ui.custom.CustomAlertDialog;
 import au.com.dealsdirect.utils.AppConstants;
+import au.com.dealsdirect.utils.BundleBuilder;
 import au.com.dealsdirect.utils.DialogUtils;
 import au.com.dealsdirect.utils.IntrospectionUtils;
 import au.com.dealsdirect.utils.module.ControllerFactory;
 import au.com.dealsdirect.utils.module.GateKeeper;
 import butterknife.BindView;
 import butterknife.ButterKnife;
+
+import static au.com.dealsdirect.utils.BundleKeys.KEY_ADDRESS;
+import static au.com.dealsdirect.utils.BundleKeys.KEY_ESTIMATED_DELIVERY;
+import static au.com.dealsdirect.utils.BundleKeys.KEY_INVOICE;
+import static au.com.dealsdirect.utils.BundleKeys.KEY_PRICE;
+import static au.com.dealsdirect.utils.BundleKeys.KEY_SHIPPING_FEE;
 
 /**
  * Created by smartwave on 30/10/2017.
@@ -209,7 +214,11 @@ public class MainActivity extends BaseActivity implements MainMvpView {
 
     @Override
     public Router getCurrentRouter() {
-        return null;
+        try{
+            return mRouter;
+        }catch (NullPointerException e){
+            return getSaleItemsRouter();
+        }
     }
 
     @Override
@@ -379,18 +388,16 @@ public class MainActivity extends BaseActivity implements MainMvpView {
 
     @Override
     public void showCreatePaymentMethodSuccess(PaymentMethod lastPaymentMethod) {
-//
-//        // Pop current fragment and return to cart controller
-//        HomeController homeController = getMainController().getHomeController();
-//        Router currentRouter = homeController.getCurrentRouter();
-//        Controller currentController = homeController.getCurrentControllerOnRouter(currentRouter);
-//
-//        if ((currentController instanceof AddPaymentController) && ((AddPaymentController) currentController).isCalledFromAccounts()) {
-//            ((AddPaymentController) currentController).showAddPaymentResult(true, "");
-//        } else {
-//            setPaymentMethodSelected(lastPaymentMethod);
-//            currentRouter.handleBack();
-//        }
+
+        // Pop current fragment and return to cart controller
+        Controller currentController = getCurrentControllerOnRouter(mRouter);
+
+        if ((currentController instanceof AddPaymentController) && ((AddPaymentController) currentController).isCalledFromAccounts()) {
+            ((AddPaymentController) currentController).showAddPaymentResult(true, "");
+        } else {
+            setPaymentMethodSelected(lastPaymentMethod);
+            mRouter.handleBack();
+        }
     }
 
     @Override
@@ -416,53 +423,65 @@ public class MainActivity extends BaseActivity implements MainMvpView {
 
     @Override
     public void showCreatePaymentTransactionSuccess(String paymentType, CreatePaymentTransaction.ResponseValue responseValue) {
-//        if (responseValue.isPaid()) {
-//
-//            if (paymentType.equals(PaymentInfo.TYPE_MYPAY)) {
-//                setPaymentSuccessOurpay(responseValue);
-//
-//            } else if (PaymentInfo.getOurpay() != null) {
-//                PaymentInfo.getOurpay().setCanUse(false);
-//            }
-//
-//            mCheckoutRouter.pushController(RouterTransaction.with(new PaymentSuccessController(responseValue))
-//                    .pushChangeHandler(new HorizontalChangeHandler())
-//                    .popChangeHandler(new HorizontalChangeHandler()));
-//
-//            if (getMainController().getHomeController()!=null)
-//                getMainController().getHomeController().showCheckoutController();
-//
-//        } else {
-//
-//            Router currentRouter = getMainController().getHomeController().getCurrentRouter();
-//            Controller currentController = getMainController().getHomeController().getCurrentControllerOnRouter(currentRouter);
-//
-//            CustomAlertDialog.showCustomAlertDialog(this, CustomAlertDialog.CustomDialogIconState.NEGATIVE, responseValue.getD().getMessage());
-//
-//            if (currentController instanceof CheckoutController) {
-//                CheckoutController checkoutController = (CheckoutController) currentController;
-//                checkoutController.loadCart();
-//            }
-//        }
+
+        new BundleBuilder(new Bundle())
+                .putString(KEY_ADDRESS, responseValue.getD().getValue().getAddressString())
+                .putDouble(KEY_PRICE,  responseValue.getD().getValue().getOrderInfoResult().getTotal())
+                .putDouble(KEY_SHIPPING_FEE, responseValue.getD().getValue().getOrderInfoResult().getShipping())
+                .putString(KEY_INVOICE, responseValue.getD().getValue().getInvoiceNo() == null ? String.valueOf(responseValue.getD().getValue().getTransactionInvoiceNo()): responseValue.getD().getValue().getInvoiceNo())
+                .putString(KEY_ESTIMATED_DELIVERY, responseValue.getD().getValue().getOrderInfoResult().getEstimatedDeliveryText())
+                .build();
+
+        if (responseValue.isPaid()) {
+
+            if (paymentType.equals(PaymentInfo.TYPE_MYPAY)) {
+                setPaymentSuccessOurpay(responseValue);
+
+            } else if (PaymentInfo.getOurpay() != null) {
+                PaymentInfo.getOurpay().setCanUse(false);
+            }
+
+            Bundle bundle = new Bundle();
+            bundle.putString(KEY_ADDRESS, responseValue.getD().getValue().getAddressString());
+            bundle.putDouble(KEY_PRICE,  responseValue.getD().getValue().getOrderInfoResult().getTotal());
+            bundle.putDouble(KEY_SHIPPING_FEE, responseValue.getD().getValue().getOrderInfoResult().getShipping());
+            bundle.putString(KEY_INVOICE, responseValue.getD().getValue().getInvoiceNo() == null ? String.valueOf(responseValue.getD().getValue().getTransactionInvoiceNo()): responseValue.getD().getValue().getInvoiceNo());
+            bundle.putString(KEY_ESTIMATED_DELIVERY, responseValue.getD().getValue().getOrderInfoResult().getEstimatedDeliveryText());
+
+            GateKeeper.push(mRouter, GateKeeper.Destination.PAYMENT_SUCCESS, bundle, new VerticalChangeHandler(false), new VerticalChangeHandler());
+
+            if (getMainController().getHomeController()!=null)
+                getMainController().getHomeController().showCheckoutController();
+
+        } else {
+
+            Controller currentController = getCurrentControllerOnRouter(mCheckoutRouter);
+            CustomAlertDialog.showCustomAlertDialog(this, CustomAlertDialog.CustomDialogIconState.NEGATIVE, responseValue.getD().getMessage());
+
+            if (currentController instanceof CheckoutController) {
+                CheckoutController checkoutController = (CheckoutController) currentController;
+                checkoutController.loadCart();
+            }
+        }
     }
 
     @Override
     public void showCreatePaymentTransactionFailure(String errorMessage) {
-//        if (errorMessage != null) {
-//
-//            CustomAlertDialog.showCustomAlertDialog(this, CustomAlertDialog.CustomDialogIconState.NEGATIVE, errorMessage);
-//            mCheckoutRouter.popToRoot();
-//
-//            Controller controller = getMainController().getHomeController().getCurrentControllerOnRouter(mCheckoutRouter);
-//            if (controller != null && controller instanceof CheckoutController) {
-//                ((CheckoutController) controller).loadCart();
-//            }
-//        }
+        if (errorMessage != null) {
+
+            CustomAlertDialog.showCustomAlertDialog(this, CustomAlertDialog.CustomDialogIconState.NEGATIVE, errorMessage);
+            mCheckoutRouter.popToRoot();
+
+            Controller controller = getCurrentControllerOnRouter(mCheckoutRouter);
+            if (controller != null && controller instanceof CheckoutController) {
+                ((CheckoutController) controller).loadCart();
+            }
+        }
     }
 
     @Override
     public PaymentMethod getPaymentMethodSelected() {
-        return null;
+        return PaymentInfo.getPaymentMethod();
     }
 
     @Override
@@ -521,15 +540,14 @@ public class MainActivity extends BaseActivity implements MainMvpView {
     @Override
     public void onPaymentMethodNonceCreated(PaymentMethodNonce paymentMethodNonce) {
 
-//        HomeController homeController = getMainController().getHomeController();
-//        Router currentRouter = homeController.getCurrentRouter();
-//        Controller currentController = homeController.getCurrentControllerOnRouter(currentRouter);
-//
-//        if (currentController instanceof CheckoutController || PaymentInfo.isThreeDSecureCalled()) {
-//            callCreatePaymentTransaction(PaymentInfo.getPaymentType(), paymentMethodNonce.getNonce(), "");
-//        } else {
-//            callCreatePaymentMethod(PaymentInfo.getPaymentType(), paymentMethodNonce.getNonce());
-//        }
+        Router currentRouter = getCurrentRouter();
+        Controller currentController = getCurrentControllerOnRouter(currentRouter);
+
+        if (currentController instanceof CheckoutController || PaymentInfo.isThreeDSecureCalled()) {
+            callCreatePaymentTransaction(PaymentInfo.getPaymentType(), paymentMethodNonce.getNonce(), "");
+        } else {
+            callCreatePaymentMethod(PaymentInfo.getPaymentType(), paymentMethodNonce.getNonce());
+        }
 
     }
 
@@ -633,6 +651,15 @@ public class MainActivity extends BaseActivity implements MainMvpView {
             paymentSuccessOurpay.setState(paymentSuccessOurpay.getState() | OurpayState.ERROR);
         }
 
+    }
+
+    public Controller getCurrentControllerOnRouter(Router router) {
+        int topIndex = router.getBackstackSize() - 1;
+        if (topIndex >= 0) {
+            return router.getBackstack().get(topIndex).controller();
+        }
+
+        return null;
     }
 
 }
