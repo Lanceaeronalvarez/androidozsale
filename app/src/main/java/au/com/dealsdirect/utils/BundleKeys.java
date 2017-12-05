@@ -60,6 +60,14 @@ public class BundleKeys {
     public static final String IS_FROM_CART = "is_from_cart";
     public static final String CART_TOTAL_COST = "cart_total_cost";
 
+    //payment success
+    public static final String KEY_ADDRESS = "Address";
+    public static final String KEY_PRICE = "Price";
+    public static final String KEY_SHIPPING_FEE = "Shipping";
+    public static final String KEY_INVOICE = "Invoice";
+    public static final String KEY_INVOICE_NUMBER = "InvoiceNumber";
+    public static final String KEY_ESTIMATED_DELIVERY = "EstimatedDelivery";
+
     //add vouchers
     public static final String VOUCHERS="Vouchers";
     public static final String IS_VOUCHER_ADDED = "IS_VOUCHER_ADDED_KEY";
