@@ -42,7 +42,7 @@ android {
 
     productFlavors {
         dealsDirectRC {
-            versionCode 65
+            versionCode 64
             versionName "2.3.1"
             applicationId "au.com.dealsdirect"
             buildConfigField "String", "API_ROOT", "\"https://www.dealsdirect.com.au/\""
