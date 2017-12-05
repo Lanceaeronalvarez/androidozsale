@@ -3,6 +3,7 @@ package au.com.dealsdirect.ui.controller.main;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.v4.view.ViewPager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -18,8 +19,8 @@ import javax.inject.Inject;
 
 import au.com.dealsdirect.R;
 import au.com.dealsdirect.ui.base.BaseController;
+import au.com.dealsdirect.ui.controller.checkout.checkout.CheckoutController;
 import au.com.dealsdirect.ui.controller.home.HomeController;
-import au.com.dealsdirect.ui.controller.shops.ShopsController;
 import au.com.dealsdirect.ui.main.MainActivity;
 import au.com.dealsdirect.utils.BundleBuilder;
 import au.com.dealsdirect.utils.module.ControllerFactory;
@@ -96,6 +97,8 @@ public class MainController extends BaseController implements MainMvpView {
         mAccountsController = ControllerFactory.getInstance(GateKeeper.Destination.ACCOUNT);
 
         setupViewPager();
+        setPageChangeListener();
+
     }
 
     private void setupViewPager() {
@@ -204,5 +207,29 @@ public class MainController extends BaseController implements MainMvpView {
     @Override
     public HomeController getHomeController() {
         return null;
+    }
+
+    private void setPageChangeListener(){
+        mHomeViewPager.setOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+            @Override
+            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+                if (position==2){
+                    Controller controller = mActivity.getCurrentControllerOnRouter(mActivity.getCheckoutRouter());
+                    if (controller instanceof CheckoutController){
+                        ((CheckoutController) controller).loadCart();
+                    }
+                }
+            }
+
+            @Override
+            public void onPageSelected(int position) {
+
+            }
+
+            @Override
+            public void onPageScrollStateChanged(int state) {
+
+            }
+        });
     }
 }
