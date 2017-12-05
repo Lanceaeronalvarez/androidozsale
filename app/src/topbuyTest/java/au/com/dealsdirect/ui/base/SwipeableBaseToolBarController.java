@@ -171,5 +171,7 @@ public abstract class SwipeableBaseToolBarController extends BaseController {
         mActivity.onBackPressed();
     }
 
-
+    public void hideToolbarTitle(){
+        mToolbar.setVisibility(View.GONE);
+    }
 }
