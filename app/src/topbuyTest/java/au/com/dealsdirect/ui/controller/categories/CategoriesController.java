@@ -148,14 +148,14 @@ public class CategoriesController extends BaseController
 
         ViewCompat.setTransitionName(headerCategoryTextView, "categoryHeaderTransitionName");
 
-        mSaleItemsPresenter.executeCategoryChangeApiCall(prevChosenCategoryKey);
-
         if (getRouter().getBackstackSize() == 1) {
             mSaleItemsPresenter.dismissCategoriesController();
             getRouter().setPopsLastView(true);
             getRouter().popCurrentController();
             return true;
         }
+
+        mSaleItemsPresenter.executeCategoryChangeApiCall(prevChosenCategoryKey);
 
         return false;
     }

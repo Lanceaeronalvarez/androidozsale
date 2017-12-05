@@ -60,6 +60,7 @@ import au.com.dealsdirect.utils.module.GateKeeper;
 import butterknife.BindView;
 import butterknife.OnClick;
 import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.disposables.CompositeDisposable;
 
 import static au.com.dealsdirect.utils.ViewUtils.dpToPx;
 
@@ -86,6 +87,8 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
 
     @BindView(R.id.sale_items_search_bar)
     AppBarLayout mSearchBar;
+    @BindView(R.id.sale_items_cart)
+    RelativeLayout mSaleItemsCart;
     @BindView(R.id.sale_items_cart_counter)
     TextView mCartCounter;
     @BindView(R.id.overlay)
@@ -133,6 +136,8 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
 
     private boolean isSetupFinished = false;
 
+    private CompositeDisposable mRxViewDisposables;
+
     public static SaleItemsController newInstance() {
         return new SaleItemsController(
                 new BundleBuilder(new Bundle())
@@ -141,6 +146,7 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
 
     public SaleItemsController(Bundle args) {
         super(args);
+        mRxViewDisposables = new CompositeDisposable();
     }
 
     @Override
@@ -232,12 +238,19 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
         mCategoriesRouter = getChildRouter(mCategoriesContainer);
         mSearchFilterRouter = getChildRouter(mSearchFilterContainer);
 
-        RxView.clicks(mOverlay)
+        mRxViewDisposables.add(RxView.clicks(mOverlay)
                 .throttleFirst(1000, TimeUnit.MILLISECONDS)
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(action -> {
                     onHideSearchFilters();
-                });
+                }));
+
+        mRxViewDisposables.add(RxView.clicks(mSaleItemsCart)
+                .throttleFirst(1000, TimeUnit.MILLISECONDS)
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(action -> {
+                    mActivity.getMainController().getHomeViewPager().setCurrentItem(2);
+                }));
 
         setupBottomSheet();
         setupSearchFilters();
@@ -255,6 +268,7 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
     public void onDetach(View view) {
         mKeyboardHeightProvider.close();
         isBottomSheetAdjustedHeight = false;
+        mRxViewDisposables.dispose();
         super.onDetach(view);
     }
 

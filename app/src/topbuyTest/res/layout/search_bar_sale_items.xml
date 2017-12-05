@@ -66,6 +66,7 @@
             tools:ignore="ContentDescription"/>
 
         <RelativeLayout
+            android:id="@+id/sale_items_cart"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignEnd="@+id/search_bar"
@@ -79,7 +80,6 @@
                 android:layout_width="55dp"
                 android:layout_height="55dp"
                 android:layout_marginTop="5dp"
-                android:clickable="true"
                 android:scaleType="fitXY"
                 android:src="@drawable/bg_cart"
                 tools:ignore="ContentDescription"/>
