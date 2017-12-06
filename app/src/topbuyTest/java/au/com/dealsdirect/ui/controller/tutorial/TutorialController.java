@@ -172,7 +172,9 @@ public class TutorialController extends BaseController {
         if (getArgs().getBoolean(BundleKeys.FROM_MY_ACCOUNTS)){
             if (getActivity() != null) ((MainActivity) getActivity()).splashShownCallback();
         }else{
-            getRouter().popCurrentController();
+
+            if (getActivity() != null) ((MainActivity) getActivity()).splashShownCallback();
+
         }
 
     }

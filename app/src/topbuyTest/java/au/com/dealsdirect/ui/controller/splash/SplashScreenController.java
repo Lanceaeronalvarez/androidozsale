@@ -1,21 +1,18 @@
 package au.com.dealsdirect.ui.controller.splash;
 
-import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.Window;
-import android.view.WindowManager;
 import android.widget.ImageView;
 
+import com.bluelinelabs.conductor.changehandler.FadeChangeHandler;
 import com.bluelinelabs.conductor.changehandler.VerticalChangeHandler;
 
 import au.com.dealsdirect.R;
 import au.com.dealsdirect.ui.base.BaseController;
-import au.com.dealsdirect.ui.main.MainActivity;
 import au.com.dealsdirect.utils.BundleBuilder;
 import au.com.dealsdirect.utils.BundleKeys;
 import au.com.dealsdirect.utils.module.GateKeeper;
@@ -54,15 +51,16 @@ public class SplashScreenController extends BaseController {
     protected void setUp(View view) {
 
         new Handler().postDelayed(() -> {
-            if (getActivity() != null) mActivity.splashShownCallback();
-//            GateKeeper.push(
-//                    getRouter(),
-//                    GateKeeper.Destination.TUTORIAL,
-//                    new BundleBuilder(new Bundle())
-//                            .putBoolean(BundleKeys.FROM_MY_ACCOUNTS, false)
-//                            .build(),
-//                    new VerticalChangeHandler(false),
-//                    new VerticalChangeHandler());
+            if (getActivity() != null)
+                mActivity.splashShownCallback();
+            GateKeeper.push(
+                     getRouter(),
+                    GateKeeper.Destination.TUTORIAL,
+                    new BundleBuilder(new Bundle())
+                            .putBoolean(BundleKeys.FROM_MY_ACCOUNTS, false)
+                            .build(),
+                    new FadeChangeHandler(false),
+                    new VerticalChangeHandler());
 
         }, 5000);
     }
