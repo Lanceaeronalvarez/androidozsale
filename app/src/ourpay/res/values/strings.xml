@@ -119,6 +119,8 @@
     <string name="_100_rayon_mykonos_embroidered_off_shoulder_top_white_elasticated_top_and_bottom_the_clothing_at_morrisday_is_true_to_standard_austrailian_sizing">•  100% Rayon\n\n•  Mykonos Embroidered Off Shoulder Top (White)\n\n•  Elasticated top and bottom\n\n•  The clothing at Morrisday is true to standard Austrailian sizing</string>
     <string name="checkout_lowercase">checkout</string>
     <string name="delivery_address">Delivery Address</string>
+    <string name="you_currently_do_not_have_any_addresses">You do not currently have any address.</string>
+    <string name="welcome_to_my_address">Welcome to My Address!</string>
     <string name="add_new_delivery_address">Add New Delivery Address</string>
     <string name="billing_address">Billing Address</string>
     <string name="add_new_billing_address">Add New Billing Address</string>
