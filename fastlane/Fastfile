@@ -48,18 +48,18 @@ BUILD_SECRET = 'e048a220b52f841eef5e6862bc43a56a5a51841da934f1e0b76a5019c630c661
   elainedizon@mysale.com,
   diofelpallega@mysale.com,
   ayicatimpo@mysale.com,
-  JulianPaul@mysale.com
-  ChindeeTubasis@mysale.com
-  MichaelGuiriba@mysale.com
-  EricaPena@mysale.com
-  jc@mysale.com
+  JulianPaul@mysale.com,
+  ChindeeTubasis@mysale.com,
+  michael@smartwave.com,
+  EricaPena@mysale.com,
+  jc@apacsale.com
 "'
 
 default_platform :android
 
 # Uploads the app to Fabric
-def uploadToFabric(app_name, emails, apk_name, app_path)
-projectDir = app_path + '/app/build/outputs/apk/'
+def uploadToFabric(app_name, emails, apk_name, app_path, app_flavor)
+projectDir = app_path + '/app/build/outputs/apk/' + app_flavor + '/release/'
   puts "Uploading to fabric"
     tries = 3
     begin
@@ -103,7 +103,7 @@ lane :dd_build do |options|
 
   displayEmails(emails)
 
-  uploadToFabric(options[:app_name], emails, options[:apk_name], options[:app_path])
+  uploadToFabric(options[:app_name], emails, options[:apk_name], options[:app_path], options[:app_flavor])
 end
 
 lane :fabric_deploy_dd_test do
@@ -121,6 +121,14 @@ lane :fabric_deploy_dd_rc do
   #Change apk_name and app_name for other flavors
   sh "fastlane dd_build app_name:'DealsDirect' emails:" + dev_emails + " apk_name:" + 'app-dealsDirectRC-release.apk' + " build_variant:" + 'DealsDirectRCRelease' + " app_path:" + app_dir+ " app_flavor:" + 'dealsDirectRC'
  end
+
+ lane :fabric_deploy_oo_rc do
+   Dir.chdir("..")
+   app_dir = Dir.pwd
+
+   #Change apk_name and app_name for other flavors
+   sh "fastlane dd_build app_name:'ooRC' emails:" + dev_emails + " apk_name:" + 'app-ooRC-release.apk' + " build_variant:" + 'ooRCRelease' + " app_path:" + app_dir + " app_flavor:" + 'ooRC'
+  end
 
 lane :fabric_deploy_oo_test do
   Dir.chdir("..")

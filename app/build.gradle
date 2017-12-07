@@ -59,6 +59,15 @@ android {
             buildConfigField "String", "ACCOUNT_ID", "\"A56B0D62-AEF6-4653-848E-2ECDDB6E9B8C\""
         }
 
+        ooRC {
+            versionCode 4
+            versionName "0.9"
+            applicationId "au.com.oo.rc"
+            buildConfigField "String", "API_ROOT", "\"https://www.oo.com.au/\""
+            buildConfigField "String", "API_LEGACY", "\"https://api.mysaledev.com/public/v3.20/\""
+            buildConfigField "String", "ACCOUNT_ID", "\"25D201EB-9A1C-4045-90B6-E6A9F122C7CB\""
+        }
+
         ooTest {
             versionCode 3
             versionName "0.9"
@@ -80,6 +89,12 @@ android {
 
     testOptions {
         unitTests.returnDefaultValues = true
+    }
+
+    sourceSets {
+        ooRC {
+            res.srcDirs = ['ooRC','src/ooTest/res']
+        }
     }
 }
 
