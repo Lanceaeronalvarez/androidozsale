@@ -169,12 +169,13 @@ public class TutorialController extends BaseController {
     @OnClick(R.id.controller_tutorial_get_started_button)
     void onGetStartedButtonClick() {
 
-        if (getArgs().getBoolean(BundleKeys.FROM_MY_ACCOUNTS)){
+        if (getArgs().getBoolean(BundleKeys.FROM_MY_ACCOUNTS)) {
             if (getActivity() != null) ((MainActivity) getActivity()).splashShownCallback();
-        }else{
+        } else {
 
             if (getActivity() != null) ((MainActivity) getActivity()).splashShownCallback();
 
         }
+    }
 
 }
