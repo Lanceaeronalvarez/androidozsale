@@ -110,6 +110,9 @@ public class CheckoutController extends SwipeableBaseToolBarController implement
     private String mCartPhone;
     private Value mValue;
 
+    private boolean mCartIsLoading = false;
+
+
     public OurpayPanel ourpayPanel;
 
     private View.OnClickListener mChangeClickListener = new View.OnClickListener() {
@@ -377,7 +380,11 @@ public class CheckoutController extends SwipeableBaseToolBarController implement
     @Override
     public void showPaymentDetails(PaymentMethod paymentMethod) {
 
+        Log.d("checkoutpayment", "paymentMethod entered");
+
         if (paymentMethod == null) {
+            Log.d("checkoutpayment", "paymentMethod null");
+
             mAddNewPaymentLayout.setVisibility(View.VISIBLE);
             mPaymentLayout.setVisibility(View.GONE);
             mPaymentChangeText.setVisibility(View.GONE);
@@ -492,11 +499,12 @@ public class CheckoutController extends SwipeableBaseToolBarController implement
 
     @Override
     public boolean isCartLoading() {
-        return false;
+        return mCartIsLoading;
     }
 
     @Override
     public void setCartIsLoading(boolean val) {
+        this.mCartIsLoading = val;
 
     }
 
@@ -505,7 +513,9 @@ public class CheckoutController extends SwipeableBaseToolBarController implement
         mNoCartItemsLayout.setVisibility(View.VISIBLE);
         mListView.setVisibility(View.GONE);
         mPresenter.resetIsCartAlreadyLoaded();
-        setupDefaultBottomButton("shop now", view -> loadCart());
+        setupDefaultBottomButton("shop now", view ->{
+            mActivity.getMainController().getHomeViewPager().setCurrentItem(1);
+        });
     }
 
     private void hidePaymentButtons() {
