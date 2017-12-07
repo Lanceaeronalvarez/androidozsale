@@ -78,8 +78,8 @@ public class OrdersController extends BasePullToRefreshController implements Ord
         mOrdersRightOption.setImageDrawable(null);
 
         mRecyclerView.setLayoutManager(new LinearLayoutManager(mActivity,LinearLayoutManager.VERTICAL,false));
-        mRecyclerView.addOnItemTouchListener(new RecyclerOnTouchListener(mActivity, (v, position) -> showOrderDetails(position)));
-        mRecyclerView.addItemDecoration(new SimpleDividerItemDecoration(mActivity));
+//        mRecyclerView.addOnItemTouchListener(new RecyclerOnTouchListener(mActivity, (v, position) -> showOrderDetails(position)));
+//        mRecyclerView.addItemDecoration(new SimpleDividerItemDecoration(mActivity));
         mPresenter.loadOrders();
     }
 
