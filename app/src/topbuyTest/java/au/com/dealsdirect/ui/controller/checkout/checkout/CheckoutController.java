@@ -11,6 +11,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.CheckBox;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
@@ -22,6 +23,8 @@ import com.bluelinelabs.conductor.changehandler.HorizontalChangeHandler;
 import com.bluelinelabs.conductor.changehandler.VerticalChangeHandler;
 import com.google.gson.Gson;
 import com.mysale.genie.utility.RxBus;
+
+import org.w3c.dom.Text;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -160,7 +163,7 @@ public class CheckoutController extends SwipeableBaseToolBarController implement
             } else if (view.getId() == mVoucherChangeText.getId()
                     || view.getId() == mAddNewVoucherLayout.getId()) {
 
-                TextView discountTextView = mSummaryLayout.findViewById(R.id.partial_checkout_summary_voucher);
+                TextView discountTextView = (TextView) mSummaryLayout.findViewById(R.id.partial_checkout_summary_voucher);
                 boolean isNoDiscount = true;
                 if (discountTextView != null) {
                     if (!discountTextView.getText().toString().equals("$0")) {
@@ -189,7 +192,7 @@ public class CheckoutController extends SwipeableBaseToolBarController implement
         getControllerComponent().inject(this);
         mPresenter.onAttach(this);
 
-        mListView = rootView.findViewById(R.id.fragment_checkout_list);
+        mListView = (ListView) rootView.findViewById(R.id.fragment_checkout_list);
         mAdapter = new CheckoutOrderAdapter(mActivity, R.layout.partial_checkout_item, mItemList, mPresenter);
         mListView.setAdapter(mAdapter);
 
@@ -211,31 +214,31 @@ public class CheckoutController extends SwipeableBaseToolBarController implement
 //        mListView.setAdapter(mAdapter);
 //        mListView.addFooterView(mFooterView, null, false);
 
-        mAddNewVoucherLayout = mFooterView.findViewById(R.id.partial_checkout_voucher_new_code);
-        mAddNewPaymentLayout = mFooterView.findViewById(R.id.partial_checkout_payment_new_payment);
+        mAddNewVoucherLayout = (RelativeLayout) mFooterView.findViewById(R.id.partial_checkout_voucher_new_code);
+        mAddNewPaymentLayout = (RelativeLayout) mFooterView.findViewById(R.id.partial_checkout_payment_new_payment);
 
         if (mActivity != null) {
             mActivity.performResetWithAuthFetch();
         }
 
-        mAddNewAddressLayout = mFooterView.findViewById(R.id.partial_checkout_address_new_address);
-        mAddNewPaymentLayout = mFooterView.findViewById(R.id.partial_checkout_payment_new_payment);
-        mAddNewVoucherLayout = mFooterView.findViewById(R.id.partial_checkout_voucher_new_code);
+        mAddNewAddressLayout = (RelativeLayout) mFooterView.findViewById(R.id.partial_checkout_address_new_address);
+        mAddNewPaymentLayout = (RelativeLayout) mFooterView.findViewById(R.id.partial_checkout_payment_new_payment);
+        mAddNewVoucherLayout = (RelativeLayout) mFooterView.findViewById(R.id.partial_checkout_voucher_new_code);
 
-        mAddressLayout = mFooterView.findViewById(R.id.partial_checkout_address_container);
-        mPaymentLayout = mFooterView.findViewById(R.id.partial_checkout_payment_container);
-        mVoucherLayout = mFooterView.findViewById(R.id.partial_checkout_voucher_container);
-        mSummaryLayout = mFooterView.findViewById(R.id.partial_checkout_summary_container);
+        mAddressLayout = (LinearLayout) mFooterView.findViewById(R.id.partial_checkout_address_container);
+        mPaymentLayout = (LinearLayout) mFooterView.findViewById(R.id.partial_checkout_payment_container);
+        mVoucherLayout = (LinearLayout) mFooterView.findViewById(R.id.partial_checkout_voucher_container);
+        mSummaryLayout = (LinearLayout) mFooterView.findViewById(R.id.partial_checkout_summary_container);
 
-        mAddressChangeText = mFooterView.findViewById(R.id.partial_checkout_address_change);
-        mPaymentChangeText = mFooterView.findViewById(R.id.partial_checkout_payment_change);
-        mVoucherChangeText = mFooterView.findViewById(R.id.partial_checkout_voucher_change);
+        mAddressChangeText = (TextView) mFooterView.findViewById(R.id.partial_checkout_address_change);
+        mPaymentChangeText = (TextView) mFooterView.findViewById(R.id.partial_checkout_payment_change);
+        mVoucherChangeText = (TextView) mFooterView.findViewById(R.id.partial_checkout_voucher_change);
 
         mButtonHolder = mFooterView.findViewById(R.id.partial_checkout_button_holder);
-        mPayButton = mFooterView.findViewById(R.id.partial_checkout_button_pay);
-        mPaypalButton = mFooterView.findViewById(R.id.partial_checkout_button_paypal);
-        mMasterpassButton = mFooterView.findViewById(R.id.partial_checkout_button_masterpass);
-        mOurpayHolder = mFooterView.findViewById(R.id.partial_checkout_ourpay_panel_holder);
+        mPayButton = (Button) mFooterView.findViewById(R.id.partial_checkout_button_pay);
+        mPaypalButton = (RelativeLayout) mFooterView.findViewById(R.id.partial_checkout_button_paypal);
+        mMasterpassButton = (RelativeLayout) mFooterView.findViewById(R.id.partial_checkout_button_masterpass);
+        mOurpayHolder = (LinearLayout) mFooterView.findViewById(R.id.partial_checkout_ourpay_panel_holder);
 
         mAddNewVoucherLayout.setOnClickListener(view1 -> GateKeeper.push(getRouter(),
                 GateKeeper.Destination.ADD_VOUCHERS,
@@ -323,11 +326,11 @@ public class CheckoutController extends SwipeableBaseToolBarController implement
                     }));
                 }
 
-                mButtonOurpay = mOurpayHolder.findViewById(R.id.rl_button_ourpay);
+                mButtonOurpay = (RelativeLayout) mOurpayHolder.findViewById(R.id.rl_button_ourpay);
                 mButtonOurpay.setOnClickListener(view -> onOurpayButtonClick());
 
                 if (ourpay.getTermsAndConditionsCheckboxState() != 0) {
-                    mCheckBoxOurpayTC = mOurpayHolder.findViewById(R.id.ourpay_checkbox_tc);
+                    mCheckBoxOurpayTC = (CheckBox) mOurpayHolder.findViewById(R.id.ourpay_checkbox_tc);
                 }
 
             } else {
@@ -407,7 +410,7 @@ public class CheckoutController extends SwipeableBaseToolBarController implement
 
             ImageUtils.loadImage(mActivity
                     , paymentMethod.getImageUrl()
-                    , mPaymentLayout.findViewById(R.id.partial_checkout_payment_image));
+                    , (ImageView) mPaymentLayout.findViewById(R.id.partial_checkout_payment_image));
 
             mAddNewPaymentLayout.setVisibility(View.GONE);
             mPaymentLayout.setVisibility(View.VISIBLE);
@@ -651,7 +654,7 @@ public class CheckoutController extends SwipeableBaseToolBarController implement
                     if (PaymentInfo.getOurpay().isPhoneVerificationRequired()) {
 
                         Bundle bundle = new Bundle();
-                        bundle.putString(BundleKeys.PHONE_KEY,mCartPhone);
+                        bundle.putString(BundleKeys.PHONE_KEY, mCartPhone);
                         GateKeeper.push(getRouter(), GateKeeper.Destination.SMS_VERIFICATION, bundle, new VerticalChangeHandler(false), new VerticalChangeHandler());
 
                     } else {

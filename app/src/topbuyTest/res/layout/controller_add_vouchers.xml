@@ -99,7 +99,7 @@
                             android:padding="10dp"
                             android:textColor="#919191"
                             android:textColorHint="#c1c1c1"
-                            app:font="@string/fontname_lato"/>
+                            fontPath="@string/fontname_lato"/>
 
                     </android.support.design.widget.TextInputLayout>
 
@@ -111,7 +111,7 @@
                         android:layout_weight="1"
                         android:text="apply"
                         android:textAllCaps="false"
-                        app:font="@string/fontname_lato"/>
+                        fontPath="@string/fontname_lato"/>
 
                 </LinearLayout>
 
@@ -190,7 +190,7 @@
                         android:text="you currently do not have any vouchers."
                         android:textColor="#D0D0D0"
                         android:textSize="@dimen/text_size_normal"
-                        app:font="@string/fontname_lato"/>
+                        fontPath="@string/font_app_bold"/>
 
                 </LinearLayout>
 

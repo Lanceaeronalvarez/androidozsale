@@ -33,8 +33,7 @@
             android:paddingTop="@dimen/activity_vertical_margin"
             android:text="clear"
             android:textColor="@color/defaultred"
-            android:textSize="@dimen/text_size_normal"
-            app:font="@string/fontname_lato_bold" />
+            android:textSize="@dimen/text_size_normal" />
 
         <android.support.v4.widget.NestedScrollView
             android:layout_width="match_parent"

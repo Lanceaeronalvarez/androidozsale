@@ -14,6 +14,8 @@ import android.widget.TextView;
 
 import com.mysale.genie.views.custom.CoordinatorLayoutAsBottomSheetBehavior;
 
+import org.w3c.dom.Text;
+
 import au.com.dealsdirect.R;
 import butterknife.BindView;
 import butterknife.OnClick;
@@ -59,11 +61,11 @@ public abstract class SwipeableBaseToolBarController extends BaseController {
     protected View inflateView(@NonNull LayoutInflater inflater, @NonNull ViewGroup container) {
         View view = inflater.inflate(R.layout.controller_swipeable_base_toolbar, container, false);
 
-        mContentLayout = view.findViewById(R.id.controller_base_content_layout);
+        mContentLayout = (FrameLayout) view.findViewById(R.id.controller_base_content_layout);
 
-        mNoNetworkLayout = view.findViewById(R.id.no_network_layout);
+        mNoNetworkLayout = (LinearLayout) view.findViewById(R.id.no_network_layout);
 
-        mToolbarTitle = view.findViewById(R.id.toolbar_title);
+        mToolbarTitle = (TextView) view.findViewById(R.id.toolbar_title);
 
         mNoNetworkLayout.setOnClickListener(v -> onRefreshStart());
 

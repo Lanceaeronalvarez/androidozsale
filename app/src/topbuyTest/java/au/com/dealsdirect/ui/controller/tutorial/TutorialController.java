@@ -21,6 +21,7 @@ import au.com.dealsdirect.ui.base.BaseController;
 import au.com.dealsdirect.ui.main.MainActivity;
 import au.com.dealsdirect.utils.AppLogger;
 import au.com.dealsdirect.utils.BundleBuilder;
+import au.com.dealsdirect.utils.BundleKeys;
 import butterknife.BindView;
 import butterknife.OnClick;
 import me.relex.circleindicator.CircleIndicator;
@@ -49,7 +50,7 @@ public class TutorialController extends BaseController {
             @Override
             public void configureRouter(@NonNull Router router, int position) {
                 if (!router.hasRootController()) {
-                    router.setRoot(RouterTransaction.with(TutorialChildController.newInstance("test",PAGE_COLORS[position])));
+                    router.setRoot(RouterTransaction.with(TutorialChildController.newInstance("test", PAGE_COLORS[position])));
                 }
             }
 
@@ -85,7 +86,7 @@ public class TutorialController extends BaseController {
             window.setStatusBarColor(getActivity().getResources().getColor(R.color.activered));
         }
 
-        CircleIndicator indicator = view.findViewById(R.id.controller_tutorial_indicator);
+        CircleIndicator indicator = (CircleIndicator) view.findViewById(R.id.controller_tutorial_indicator);
 
         tutorialViewPager.setAdapter(pagerAdapter);
         indicator.setViewPager(tutorialViewPager);
@@ -98,7 +99,7 @@ public class TutorialController extends BaseController {
 
             @Override
             public void onPageSelected(int position) {
-                Log.d("TutorialScreen", "page selected = "+position);
+                Log.d("TutorialScreen", "page selected = " + position);
                 changeFragmentThemeColor(position);
             }
 
@@ -134,11 +135,11 @@ public class TutorialController extends BaseController {
     }
 
 
-    private void changeFragmentThemeColor(int position){
+    private void changeFragmentThemeColor(int position) {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             Window window = getActivity().getWindow();
             window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
-            switch (position){
+            switch (position) {
                 case 0:
                     window.setStatusBarColor(getActivity().getResources().getColor(R.color.darkteal));
                     tutorialButton.setTextColor(getActivity().getResources().getColor(R.color.teal));
@@ -166,9 +167,14 @@ public class TutorialController extends BaseController {
     }
 
     @OnClick(R.id.controller_tutorial_get_started_button)
-    void onGetStartedButtonClick(){
+    void onGetStartedButtonClick() {
 
-        if (getActivity() != null) ((MainActivity) getActivity()).splashShownCallback();
-    }
+        if (getArgs().getBoolean(BundleKeys.FROM_MY_ACCOUNTS)){
+            if (getActivity() != null) ((MainActivity) getActivity()).splashShownCallback();
+        }else{
+
+            if (getActivity() != null) ((MainActivity) getActivity()).splashShownCallback();
+
+        }
 
 }

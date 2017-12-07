@@ -12,6 +12,7 @@ import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Path;
 import android.graphics.Rect;
+import android.media.Image;
 import android.os.Build;
 import android.util.DisplayMetrics;
 import android.view.Display;
@@ -237,8 +238,8 @@ public class OurpayGraph {
                     layPayViewId, false);
 
 
-            RelativeLayout circleView = yourView.findViewById(R.id.imagelayout);
-            RelativeLayout circlesLayout = yourView.findViewById(R.id.circlesContainer);
+            RelativeLayout circleView = (RelativeLayout) yourView.findViewById(R.id.imagelayout);
+            RelativeLayout circlesLayout = (RelativeLayout) yourView.findViewById(R.id.circlesContainer);
 
             mOnGlobalLayoutListener = new OnGlobalLayoutListener() {
                 @Override
@@ -246,8 +247,8 @@ public class OurpayGraph {
 
 
                     circlesLayoutWidth = deviceWidth - (deviceWidth / 3);
-                    ImageView foregroundBar = yourView.findViewById(R.id.ourpay_fg_bar);
-                    ImageView backgroundBar = yourView.findViewById(R.id.ourpay_bg_bar);
+                    ImageView foregroundBar = (ImageView) yourView.findViewById(R.id.ourpay_fg_bar);
+                    ImageView backgroundBar = (ImageView) yourView.findViewById(R.id.ourpay_bg_bar);
 
                     foregroundBar.getLayoutParams().width = 0;
                     if (progressBitmaps == null) {
@@ -256,10 +257,10 @@ public class OurpayGraph {
                     }
 
                     if (tabletSize) {
-                        TextView tempDate = yourView.findViewById(R.id.dateTextView);
+                        TextView tempDate = (TextView) yourView.findViewById(R.id.dateTextView);
                         tempDate.getLayoutParams().height = circleSize;
                         if (deviceWidth <= 900) {
-                            backgroundBar.getLayoutParams().height =                                                                                  10;
+                            backgroundBar.getLayoutParams().height = 10;
                         } else if (deviceWidth <= 1300) {
 
                             backgroundBar.getLayoutParams().height = 12;
@@ -2067,9 +2068,9 @@ public class OurpayGraph {
                 mGlobalLayoutListenerCounter++;
             }
 
-            TextView tempDate = yourView.findViewById(R.id.dateTextView);
-            TextView tempPay = yourView.findViewById(R.id.dollarValue);
-            ImageView checkImage = yourView.findViewById(R.id.checkImage);
+            TextView tempDate = (TextView) yourView.findViewById(R.id.dateTextView);
+            TextView tempPay = (TextView) yourView.findViewById(R.id.dollarValue);
+            ImageView checkImage = (ImageView) yourView.findViewById(R.id.checkImage);
 
 
             if (ourpayTransactions.get(i).getState() == 2) {

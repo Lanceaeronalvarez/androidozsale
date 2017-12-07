@@ -45,7 +45,7 @@ public class CategoriesAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
         LayoutInflater inflater = LayoutInflater.from(container.getContext());
         row = inflater.inflate(R.layout.category_row_item, container, false);
 
-        rowTextView = row.findViewById(R.id.category_text);
+        rowTextView = (TextView)row.findViewById(R.id.category_text);
 
         return new CategoriesViewHolder(row);
     }
@@ -102,7 +102,7 @@ public class CategoriesAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
 
         public CategoriesViewHolder(View itemView) {
             super(itemView);
-            categoryText = itemView.findViewById(R.id.category_text);
+            categoryText = (TextView) itemView.findViewById(R.id.category_text);
 
         }
     }
