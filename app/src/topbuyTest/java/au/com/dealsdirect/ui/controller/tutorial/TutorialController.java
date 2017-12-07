@@ -21,7 +21,6 @@ import au.com.dealsdirect.ui.base.BaseController;
 import au.com.dealsdirect.ui.main.MainActivity;
 import au.com.dealsdirect.utils.AppLogger;
 import au.com.dealsdirect.utils.BundleBuilder;
-import au.com.dealsdirect.utils.BundleKeys;
 import butterknife.BindView;
 import butterknife.OnClick;
 import me.relex.circleindicator.CircleIndicator;
@@ -169,14 +168,7 @@ public class TutorialController extends BaseController {
     @OnClick(R.id.controller_tutorial_get_started_button)
     void onGetStartedButtonClick(){
 
-        if (getArgs().getBoolean(BundleKeys.FROM_MY_ACCOUNTS)){
-            if (getActivity() != null) ((MainActivity) getActivity()).splashShownCallback();
-        }else{
-
-            if (getActivity() != null) ((MainActivity) getActivity()).splashShownCallback();
-
-        }
-
+        if (getActivity() != null) ((MainActivity) getActivity()).splashShownCallback();
     }
 
 }

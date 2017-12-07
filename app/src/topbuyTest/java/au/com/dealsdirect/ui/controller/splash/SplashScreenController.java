@@ -51,8 +51,7 @@ public class SplashScreenController extends BaseController {
     protected void setUp(View view) {
 
         new Handler().postDelayed(() -> {
-            if (getActivity() != null)
-                mActivity.splashShownCallback();
+
             GateKeeper.push(
                      getRouter(),
                     GateKeeper.Destination.TUTORIAL,
