@@ -104,7 +104,6 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
 
     boolean mIsSearchFiltersShown;
 
-
     SaleItemsAdapter mAdapter;
     CustomGridLayoutManager mLayoutManager;
     List<SearchChipModel> mChipFilters = new ArrayList<>();
@@ -135,7 +134,20 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
     private KeyboardHeightProvider mKeyboardHeightProvider;
     private boolean isBottomSheetAdjustedHeight = false;
     private boolean isKeyboardOpen = false;
+    private ControllerChangeHandler.ControllerChangeListener mControllerChangeListener;
 
+    @Override
+    public boolean isDefaultBool(){
+        return defaultBool;
+    }
+
+    @Override
+    public boolean isChangeStarted() {
+        return isChangeStarted ;
+    }
+
+    private boolean defaultBool = true;
+    private boolean isChangeStarted = false;
     private boolean isSetupFinished = false;
 
     private CompositeDisposable mRxViewDisposables;
@@ -227,8 +239,6 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
 
         mSaleItemsRecyclerView.setAdapter(mAdapter);
 
-        mPaginateManager = PaginateUtils.init(mSaleItemsRecyclerView, mPaginateCallbacks);
-
 
         mSearchTagsLayoutManager = new LinearLayoutManager(mActivity, LinearLayoutManager.HORIZONTAL, false);
         mSearchTagsRecyclerView.setLayoutManager(mSearchTagsLayoutManager);
@@ -260,7 +270,27 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
         if (mSaleItems.isEmpty()) {
             initialLoad = true;
             mPresenter.loadSaleItems(createSaleItemsRequest(mChosenCategoryKey, "", 0, mChipFilters, ""));
+        } else{
+            if (mSaleItems.size() >= PaginateUtils.LOADING_TRIGGER_THRESHOLD) {
+                mPaginateManager = PaginateUtils.init(mSaleItemsRecyclerView, mPaginateCallbacks);
+            }
         }
+
+        mControllerChangeListener = new ControllerChangeHandler.ControllerChangeListener() {
+            @Override
+            public void onChangeStarted(@Nullable Controller to, @Nullable Controller from, boolean isPush, @NonNull ViewGroup container, @NonNull ControllerChangeHandler handler) {
+                    isChangeStarted = true;
+            }
+
+            @Override
+            public void onChangeCompleted(@Nullable Controller to, @Nullable Controller from, boolean isPush, @NonNull ViewGroup container, @NonNull ControllerChangeHandler handler) {
+                if(from instanceof SaleItemDetailsController){
+                    isChangeStarted = false;
+                    defaultBool = false;
+                }
+            }
+        };
+        getRouter().addChangeListener(mControllerChangeListener);
 
         isSetupFinished = true;
 
@@ -309,6 +339,7 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
 
 
                 mSaleItemsRecyclerView.scrollToPosition(0);
+                mPaginateManager = PaginateUtils.init(mSaleItemsRecyclerView, mPaginateCallbacks);
                 if (items.size() <= PaginateUtils.LOADING_TRIGGER_THRESHOLD) {
                     hasLoadedAllItems = false;
                     mPaginateManager.setHasMoreDataToLoad(false);

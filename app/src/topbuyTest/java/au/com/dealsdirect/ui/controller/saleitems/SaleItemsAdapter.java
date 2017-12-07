@@ -86,7 +86,7 @@ public class SaleItemsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
         if (vh instanceof ShopItemsViewHolder) {
             ShopItemsViewHolder holder = (ShopItemsViewHolder) vh;
 
-            GetSaleItemsResponse.Products saleItem = mData.get(position-1);
+            GetSaleItemsResponse.Products saleItem = mData.get(position - 1);
             String url = saleItem.getImages().isEmpty() ? "" : saleItem.getImages().get(0);
 
             holder.productName.setText(saleItem.getProductName());
@@ -123,13 +123,17 @@ public class SaleItemsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
             holder.productPreviousPrice.setPaintFlags(holder.productPreviousPrice.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);
 
 
-            holder.itemView.setOnClickListener(v -> mPresenter.loadProductDetails(
-                    holder,
-                    position,
-                    saleItem.getSeoIdentifier(),
-                    url,
-                    saleItem.getSkus().isEmpty() ? "" : saleItem.getSkus().get(0).getId(),
-                    ""));
+            holder.itemView.setOnClickListener(v -> {
+                if(!mvpView.isChangeStarted() || mvpView.isDefaultBool()) {
+                    mPresenter.loadProductDetails(
+                            holder,
+                            position,
+                            saleItem.getSeoIdentifier(),
+                            url,
+                            saleItem.getSkus().isEmpty() ? "" : saleItem.getSkus().get(0).getId(),
+                            "");
+                }
+            });
         }
 
         if (vh instanceof HeaderViewHolder) {
@@ -149,7 +153,7 @@ public class SaleItemsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
             holder.shopTextView.setVisibility(View.VISIBLE);
             holder.headerUnderline.setVisibility(View.VISIBLE);
 
-            if(mvpView.getChosenCategory().isEmpty()){
+            if (mvpView.getChosenCategory().isEmpty()) {
                 holder.shopTextView.setText(mActivity.getString(R.string.category_default));
             }
         }
@@ -157,7 +161,7 @@ public class SaleItemsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
 
     @Override
     public int getItemCount() {
-        return mData.size()+1;
+        return mData.size() + 1;
     }
 
     public void replaceData(List<GetSaleItemsResponse.Products> saleItems) {
@@ -170,7 +174,7 @@ public class SaleItemsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
         notifyDataSetChanged();
     }
 
-    public List<GetSaleItemsResponse.Products> getData(){
+    public List<GetSaleItemsResponse.Products> getData() {
         return mData;
     }
 
@@ -238,7 +242,7 @@ public class SaleItemsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
             RxView.clicks(shopTextView)
                     .throttleFirst(1000, TimeUnit.MILLISECONDS)
                     .observeOn(AndroidSchedulers.mainThread())
-                    .subscribe(action->{
+                    .subscribe(action -> {
                         AnimationEngine.Builder.animate(shopTextView).fadeOut().build().start();
                         AnimationEngine.Builder.animate(headerUnderline).fadeOut().build().start();
                         mPresenter.showCategoriesController();
@@ -249,7 +253,7 @@ public class SaleItemsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
 
         @Override
         public void onCategoryChangeUpdateUI(String text, int color) {
-            Log.d("SaleItemsAdapter","updating "+text+" color "+color);
+            Log.d("SaleItemsAdapter", "updating " + text + " color " + color);
             shopTextView.setText(text);
             welcomeHeaderTextLayout.setBackgroundColor(color);
         }
