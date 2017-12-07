@@ -179,8 +179,9 @@ public class InviteSendController extends SwipeableBaseToolBarController impleme
         mActivity.getMainController().showBottomNav();
 
         Glide.with(mActivity)
-                .load(R.drawable.invite_friend_vouchers_medium)
+                .load(R.drawable.tb_invite_friend_vouchers_medium)
                 .placeholder(R.drawable.invite_friend_vouchers_medium)
+                .skipMemoryCache(true)
                 .into(mImageView);
 
         String twitterLink = mPresenter.getFollowUsTwitterLink();
