@@ -5,10 +5,16 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.jakewharton.rxbinding2.view.RxView;
+import com.jakewharton.rxbinding2.widget.RxTextView;
+
 import java.util.Collections;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 import au.com.dealsdirect.R;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.disposables.Disposable;
 
 /**
  * dp Created by Admin on 6/20/17.
@@ -19,6 +25,7 @@ public class AccountItemAdapter extends RecyclerView.Adapter<AccountItemViewHold
     private List<String> mAccountItems = Collections.emptyList();
     private int[] mAccountImages;
     private AccountMvpPresenter mPresenter;
+    private Disposable mDisposable;
 
 
     public AccountItemAdapter(
@@ -48,9 +55,18 @@ public class AccountItemAdapter extends RecyclerView.Adapter<AccountItemViewHold
 
         holder.mAccountItemName.setText(mAccountItems.get(position));
 
-        holder.itemView.setOnClickListener(view -> {
+        mDisposable = RxView.clicks(holder.itemView)
+                .throttleFirst(1000, TimeUnit.MILLISECONDS)
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(action -> {
                 mPresenter.onAccountItemClick(mAccountItems.get(position));
         });
+    }
+
+    @Override
+    public void onViewRecycled(AccountItemViewHolder holder) {
+        super.onViewRecycled(holder);
+        mDisposable.dispose();
     }
 
     @Override
