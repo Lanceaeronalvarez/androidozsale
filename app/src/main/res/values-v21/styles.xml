@@ -12,13 +12,8 @@
     <style name="App_Theme_Translucent" parent="AppTheme">
 
         <item name="android:windowNoTitle">true</item>
-        <item name="android:windowBackground">@android:color/transparent</item>
-        <item name="android:colorBackgroundCacheHint">@null</item>
         <item name="android:windowTranslucentStatus">true</item>
         <item name="android:windowTranslucentNavigation">false</item>
-        <item name="android:windowContentOverlay">@null</item>
-        <item name="android:windowIsFloating">false</item>
-        <item name="android:windowDrawsSystemBarBackgrounds">true</item>
     </style>
 
 </resources>

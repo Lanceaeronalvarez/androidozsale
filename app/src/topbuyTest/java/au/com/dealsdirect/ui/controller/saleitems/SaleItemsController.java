@@ -50,6 +50,8 @@ import au.com.dealsdirect.ui.controller.searchfilter.ViewPagerBottomSheetBehavio
 import au.com.dealsdirect.ui.controller.searchfilter.adapter.SearchChipModel;
 import au.com.dealsdirect.ui.controller.searchfilter.adapter.SearchTagsAdapter;
 import au.com.dealsdirect.ui.custom.transitions.ArcFadeMoveChangeHandler;
+import au.com.dealsdirect.ui.custom.transitions.SharedArcFadePopChangeHandler;
+import au.com.dealsdirect.ui.custom.transitions.SharedArcFadePushChangeHandler;
 import au.com.dealsdirect.utils.BundleBuilder;
 import au.com.dealsdirect.utils.BundleKeys;
 import au.com.dealsdirect.utils.CartUtil;
@@ -377,10 +379,10 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
                         .popChangeHandler(new FadeChangeHandler()));
             } else {
                 getRouter().pushController(RouterTransaction.with(SaleItemDetailsController.newInstance(bundle))
-                        .pushChangeHandler(new ArcFadeMoveChangeHandler(getResources().getString(R.string.transition_sale_image_indexed, position)))
-                        .popChangeHandler(new ArcFadeMoveChangeHandler(getResources().getString(R.string.transition_sale_image_indexed, position))));
-//                        .popChangeHandler(new SharedArcFadePopChangeHandler())
-//                        .pushChangeHandler(new SharedArcFadePushChangeHandler()));
+//                        .pushChangeHandler(new ArcFadeMoveChangeHandler(getResources().getString(R.string.transition_sale_image_indexed, position)))
+//                        .popChangeHandler(new ArcFadeMoveChangeHandler(getResources().getString(R.string.transition_sale_image_indexed, position))));
+                        .popChangeHandler(new SharedArcFadePopChangeHandler())
+                        .pushChangeHandler(new SharedArcFadePushChangeHandler()));
             }
 
         }

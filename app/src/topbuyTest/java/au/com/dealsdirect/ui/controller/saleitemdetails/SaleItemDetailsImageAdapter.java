@@ -121,31 +121,16 @@ public class SaleItemDetailsImageAdapter extends RecyclerView.Adapter<RecyclerVi
                     ScalableImageView scalableImageView = (ScalableImageView) vh.image;
                     scalableImageView.setOnScaleChangeListener((scaleFactor, focusX, focusY) -> {
                         for (View v : mViewsToToggle) {
-                            try{
-//                                ((MainActivity)mContext).getMainController().getHomeController().hideBottomNav();
-                            }catch (Exception e){
-                                Log.d(SaleItemDetailsImageAdapter.class.getName(),e.getMessage());
-                            }
                             v.setVisibility(View.INVISIBLE);
                         }
 
                         if (scalableImageView.getScale() <= 1.05f) {
                             for (View v : mViewsToToggle) {
-                                try{
-//                                    ((MainActivity)mContext).getMainController().getHomeController().showBottomNav();
-                                }catch (Exception e){
-                                    Log.d(SaleItemDetailsImageAdapter.class.getName(),e.getMessage());
-                                }
                                 v.setVisibility(View.VISIBLE);
                             }
                         }
                     });
 
-//                    if (position == 0) {
-//                        vh.image.setTransitionName(mData.getID());
-//                    } else {
-//                        vh.image.setTransitionName(mData.getID() + position);
-//                    }
                 }
                 break;
             case 2:
