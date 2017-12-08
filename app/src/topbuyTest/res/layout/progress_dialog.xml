@@ -19,7 +19,7 @@
             android:indeterminate="true"
             android:indeterminateTint="@color/progress_loader_stroke_color"
             android:indeterminateTintMode="src_in" />
-
+e
     </RelativeLayout>
 
 </RelativeLayout>
