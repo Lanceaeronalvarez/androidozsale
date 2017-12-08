@@ -51,4 +51,8 @@ public interface SaleItemsMvpView extends MvpView{
     SearchTagsAdapter onGetSearchTagsAdapter();
 
     void onUpdateShopFilters();
+
+    boolean isChangeStarted();
+
+    boolean isDefaultBool();
 }
