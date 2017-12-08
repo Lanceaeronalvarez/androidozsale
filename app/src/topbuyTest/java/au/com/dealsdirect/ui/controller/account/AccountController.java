@@ -57,8 +57,8 @@ public class AccountController extends BaseController implements AccountMvpView 
     };
 
     private ArrayList<String> mAccountItems = new ArrayList(Arrays.asList(
-                    //"my cart",
-                    AccountItems.ORDERS,
+            //"my cart",
+            AccountItems.ORDERS,
             AccountItems.PAYMENTS,
             AccountItems.DETAILS,
             AccountItems.ADDRESSES,
@@ -116,22 +116,22 @@ public class AccountController extends BaseController implements AccountMvpView 
         // Setup views here
         assert (mActivity) != null;
         mActivity.setDraggableViewPager(true);
-        mPresenter.loadAccountItems(mAccountItems,mAccountIcons);
+        mPresenter.loadAccountItems(mAccountItems, mAccountIcons);
     }
 
     @Override
     public void showAccountItems(List<String> accountItems, int[] accountImages) {
-        if(mPresenter.isAuthorized()){
+        if (mPresenter.isAuthorized()) {
             accountItems.add(AccountItems.LOGOUT);
-        }else{
-            if(accountItemAdapter!=null){
+        } else {
+            if (accountItemAdapter != null) {
                 accountItemAdapter.getData().remove(AccountItems.LOGOUT);
             }
         }
 
         accountItemAdapter = new AccountItemAdapter(accountItems, accountImages, mPresenter);
         mAccountRecyclerView.setAdapter(accountItemAdapter);
-        mAccountRecyclerView.setLayoutManager(new LinearLayoutManager(mActivity,LinearLayoutManager.VERTICAL,false));
+        mAccountRecyclerView.setLayoutManager(new LinearLayoutManager(mActivity, LinearLayoutManager.VERTICAL, false));
         mAccountRecyclerView.setItemAnimator(new DefaultItemAnimator());
         accountItemAdapter.notifyDataSetChanged();
     }
@@ -191,10 +191,10 @@ public class AccountController extends BaseController implements AccountMvpView 
         GateKeeper.push(getRouter(),
                 GateKeeper.Destination.PAYMENT_SELECT,
                 new BundleBuilder(new Bundle())
-                .putBoolean(BundleKeys.IS_FROM_CART, false)
-                .putString(BundleKeys.PAYMENT_METHODS, "")
-                .putString(BundleKeys.CART_TOTAL_COST, "")
-                .build(),
+                        .putBoolean(BundleKeys.IS_FROM_CART, false)
+                        .putString(BundleKeys.PAYMENT_METHODS, "")
+                        .putString(BundleKeys.CART_TOTAL_COST, "")
+                        .build(),
                 new VerticalChangeHandler(false),
                 new VerticalChangeHandler());
     }
@@ -247,9 +247,9 @@ public class AccountController extends BaseController implements AccountMvpView 
         GateKeeper.push(getRouter(),
                 GateKeeper.Destination.LEGALITIES,
                 new BundleBuilder(new Bundle())
-                .putString(BundleKeys.TEMPLATE_KEY, key)
-                .putString(BundleKeys.TITLE, title)
-                .build(),
+                        .putString(BundleKeys.TEMPLATE_KEY, key)
+                        .putString(BundleKeys.TITLE, title)
+                        .build(),
                 new VerticalChangeHandler(false),
                 new VerticalChangeHandler());
     }
@@ -277,7 +277,7 @@ public class AccountController extends BaseController implements AccountMvpView 
         mActivity.callLogout(new AuthHandler() {
             @Override
             public void success() {
-                mPresenter.loadAccountItems(mAccountItems,mAccountIcons);
+                mPresenter.loadAccountItems(mAccountItems, mAccountIcons);
                 CartUtil.setValueToCart(0);
 //                mActivity.getMainController().getHomeController().removeBasketItemCount();
 

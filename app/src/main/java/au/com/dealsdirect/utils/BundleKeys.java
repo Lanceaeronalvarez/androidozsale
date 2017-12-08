@@ -6,6 +6,10 @@ package au.com.dealsdirect.utils;
 
 public class BundleKeys {
 
+    //categories
+    public static final String CATEGORIES_ITEM_LIST = "CATEGORIES_ITEM_RESPONSE";
+    public static final String CATEGORIES_API_CALL_FINISHED = "CATEGORIES_API_CALL_FINISHED";
+
     //sale items
     public static final String SALEITEMS_SALE_ID = "SaleItemsController.SALEITEMS_SALE_ID";
     public static final String SALEITEMS_BANNER_ID = "SaleItemsController.SALEITEMS_BANNER_ID";

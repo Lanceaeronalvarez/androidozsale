@@ -11,6 +11,8 @@ import android.widget.ImageView;
 import com.bluelinelabs.conductor.changehandler.FadeChangeHandler;
 import com.bluelinelabs.conductor.changehandler.VerticalChangeHandler;
 
+import javax.inject.Inject;
+
 import au.com.dealsdirect.R;
 import au.com.dealsdirect.ui.base.BaseController;
 import au.com.dealsdirect.utils.BundleBuilder;
@@ -21,7 +23,10 @@ import butterknife.BindView;
 /**
  * Created by Paul on 7/21/17.
  */
-public class SplashScreenController extends BaseController {
+public class SplashScreenController extends BaseController implements SplashScreenMvpView {
+
+    @Inject
+    SplashScreenMvpPresenter<SplashScreenMvpView> mPresenter;
 
     @BindView(R.id.controller_splash_app_logo)
     ImageView mSplashLogoImageView;
@@ -37,6 +42,8 @@ public class SplashScreenController extends BaseController {
     @Override
     protected View inflateView(@NonNull LayoutInflater inflater, @NonNull ViewGroup container) {
         View view = inflater.inflate(R.layout.controller_splash_screen, container, false);
+        getControllerComponent().inject(this);
+        mPresenter.onAttach(this);
         return view;
     }
 
@@ -49,17 +56,20 @@ public class SplashScreenController extends BaseController {
 
     @Override
     protected void setUp(View view) {
-
         new Handler().postDelayed(() -> {
-
-            GateKeeper.push(
-                     getRouter(),
-                    GateKeeper.Destination.TUTORIAL,
-                    new BundleBuilder(new Bundle())
-                            .putBoolean(BundleKeys.FROM_MY_ACCOUNTS, false)
-                            .build(),
-                    new FadeChangeHandler(false),
-                    new VerticalChangeHandler());
+            if (mPresenter.isInitialLaunch()) {
+                GateKeeper.push(
+                        getRouter(),
+                        GateKeeper.Destination.TUTORIAL,
+                        new BundleBuilder(new Bundle())
+                                .putBoolean(BundleKeys.FROM_MY_ACCOUNTS, false)
+                                .build(),
+                        new FadeChangeHandler(false),
+                        new VerticalChangeHandler());
+                mPresenter.setIsInitialLaunch(false);
+            } else {
+                mActivity.splashShownCallback();
+            }
 
         }, 5000);
     }

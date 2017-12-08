@@ -215,7 +215,7 @@ public class MainController extends BaseController implements MainMvpView {
             @Override
             public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
                 if (position==2){
-                    Controller controller = mActivity.getCurrentControllerOnRouter(mActivity.getCheckoutRouter());
+                    Controller controller = GateKeeper.getCurrentControllerOnRouter(mActivity.getCheckoutRouter());
                     if (controller instanceof CheckoutController){
                         ((CheckoutController) controller).loadCart();
                     }

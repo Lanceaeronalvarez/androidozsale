@@ -32,6 +32,7 @@ public class AppPreferencesHelper implements PreferencesHelper {
             = "PREF_KEY_CURRENT_USER_PROFILE_PIC_URL";
     private static final String PREF_KEY_ACCESS_TOKEN = "PREF_KEY_ACCESS_TOKEN";
     private static final String PREF_KEY_USER_AGENT = "PREF_KEY_USER_AGENT";
+    private static final String IS_INITIAL_LAUNCH = "IS_INITIAL_LAUNCH";
 
 
     private static final String DEBUG_MODE = "app_debug_mode";
@@ -388,6 +389,16 @@ public class AppPreferencesHelper implements PreferencesHelper {
 
         return Prefs.getString(detailKey, "");
 
+    }
+
+    @Override
+    public void setIsInitialLaunch(boolean isInitialLaunch) {
+        Prefs.putBoolean(IS_INITIAL_LAUNCH,isInitialLaunch);
+    }
+
+    @Override
+    public boolean getIsInitialLaunch() {
+        return Prefs.getBoolean(IS_INITIAL_LAUNCH,true);
     }
 
     public void setEventUserId(String userId) {

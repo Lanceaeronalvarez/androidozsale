@@ -43,6 +43,8 @@ import au.com.dealsdirect.data.network.model.saleitemdetails.AddToCartRequest;
 import au.com.dealsdirect.data.network.model.saleitemdetails.GetSaleItemDetailsResponse;
 import au.com.dealsdirect.service.ourpay.Ourpay;
 import au.com.dealsdirect.ui.base.BaseController;
+import au.com.dealsdirect.ui.controller.saleitems.SaleItemsMvpPresenter;
+import au.com.dealsdirect.ui.controller.saleitems.SaleItemsMvpView;
 import au.com.dealsdirect.ui.custom.ArcTranslateAnimation;
 import au.com.dealsdirect.ui.custom.CustomAlertDialog;
 import au.com.dealsdirect.utils.BundleBuilder;
@@ -217,6 +219,7 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
     protected void setUp(View view) {
         mRootView = ((ElasticDragDismissFrameLayout) view);
 
+        mRootView.setPadding(0,mActivity.getStatusBarHeight(),0,0);
         //product info
         mProductName.setText(mSaleName);
 

@@ -25,7 +25,6 @@ public class AccountItemAdapter extends RecyclerView.Adapter<AccountItemViewHold
     private List<String> mAccountItems = Collections.emptyList();
     private int[] mAccountImages;
     private AccountMvpPresenter mPresenter;
-    private Disposable mDisposable;
 
 
     public AccountItemAdapter(
@@ -55,7 +54,7 @@ public class AccountItemAdapter extends RecyclerView.Adapter<AccountItemViewHold
 
         holder.mAccountItemName.setText(mAccountItems.get(position));
 
-        mDisposable = RxView.clicks(holder.itemView)
+        holder.mAccountItemClickListener = RxView.clicks(holder.itemView)
                 .throttleFirst(1000, TimeUnit.MILLISECONDS)
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(action -> {
@@ -66,7 +65,7 @@ public class AccountItemAdapter extends RecyclerView.Adapter<AccountItemViewHold
     @Override
     public void onViewRecycled(AccountItemViewHolder holder) {
         super.onViewRecycled(holder);
-        mDisposable.dispose();
+        holder.mAccountItemClickListener.dispose();
     }
 
     @Override

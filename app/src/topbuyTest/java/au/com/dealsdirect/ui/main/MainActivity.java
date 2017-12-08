@@ -47,6 +47,7 @@ import au.com.dealsdirect.ui.controller.checkout.checkout.CheckoutController;
 import au.com.dealsdirect.ui.controller.main.MainController;
 import au.com.dealsdirect.ui.controller.saleitems.SaleItemsController;
 import au.com.dealsdirect.ui.controller.splash.SplashScreenController;
+import au.com.dealsdirect.ui.controller.tutorial.TutorialController;
 import au.com.dealsdirect.ui.custom.CustomAlertDialog;
 import au.com.dealsdirect.utils.AppConstants;
 import au.com.dealsdirect.utils.BundleBuilder;
@@ -131,6 +132,11 @@ public class MainActivity extends BaseActivity implements MainMvpView {
 
     @Override
     public void onBackPressed() {
+
+        if(GateKeeper.getCurrentControllerOnRouter(mRouter) instanceof TutorialController){
+            finish();
+            return;
+        }
 
         if (getCategoriesRouter() != null) {
             CategoriesController categoriesController = (CategoriesController) GateKeeper.getCurrentControllerOnRouter(getCategoriesRouter());
@@ -390,7 +396,7 @@ public class MainActivity extends BaseActivity implements MainMvpView {
     public void showCreatePaymentMethodSuccess(PaymentMethod lastPaymentMethod) {
 
         // Pop current fragment and return to cart controller
-        Controller currentController = getCurrentControllerOnRouter(mRouter);
+        Controller currentController = GateKeeper.getCurrentControllerOnRouter(mRouter);
 
         if ((currentController instanceof AddPaymentController) && ((AddPaymentController) currentController).isCalledFromAccounts()) {
             ((AddPaymentController) currentController).showAddPaymentResult(true, "");
@@ -455,7 +461,7 @@ public class MainActivity extends BaseActivity implements MainMvpView {
 
         } else {
 
-            Controller currentController = getCurrentControllerOnRouter(mCheckoutRouter);
+            Controller currentController = GateKeeper.getCurrentControllerOnRouter(mCheckoutRouter);
             CustomAlertDialog.showCustomAlertDialog(this, CustomAlertDialog.CustomDialogIconState.NEGATIVE, responseValue.getD().getMessage());
 
             if (currentController instanceof CheckoutController) {
@@ -472,7 +478,7 @@ public class MainActivity extends BaseActivity implements MainMvpView {
             CustomAlertDialog.showCustomAlertDialog(this, CustomAlertDialog.CustomDialogIconState.NEGATIVE, errorMessage);
             mCheckoutRouter.popToRoot();
 
-            Controller controller = getCurrentControllerOnRouter(mCheckoutRouter);
+            Controller controller = GateKeeper.getCurrentControllerOnRouter(mCheckoutRouter);
             if (controller != null && controller instanceof CheckoutController) {
                 ((CheckoutController) controller).loadCart();
             }
@@ -541,7 +547,7 @@ public class MainActivity extends BaseActivity implements MainMvpView {
     public void onPaymentMethodNonceCreated(PaymentMethodNonce paymentMethodNonce) {
 
         Router currentRouter = getCurrentRouter();
-        Controller currentController = getCurrentControllerOnRouter(currentRouter);
+        Controller currentController = GateKeeper.getCurrentControllerOnRouter(currentRouter);
 
         if (currentController instanceof CheckoutController || PaymentInfo.isThreeDSecureCalled()) {
             callCreatePaymentTransaction(PaymentInfo.getPaymentType(), paymentMethodNonce.getNonce(), "");
@@ -653,13 +659,13 @@ public class MainActivity extends BaseActivity implements MainMvpView {
 
     }
 
-    public Controller getCurrentControllerOnRouter(Router router) {
-        int topIndex = router.getBackstackSize() - 1;
-        if (topIndex >= 0) {
-            return router.getBackstack().get(topIndex).controller();
+    public int getStatusBarHeight() {
+        int result = 0;
+        int resourceId = getResources().getIdentifier("status_bar_height", "dimen", "android");
+        if (resourceId > 0) {
+            result = getResources().getDimensionPixelSize(resourceId);
         }
-
-        return null;
+        return result;
     }
 
 }

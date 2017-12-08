@@ -762,6 +762,16 @@ public class AppDataManager implements DataManager {
     }
 
     @Override
+    public void setIsInitialLaunch(boolean isInitialLaunch) {
+        mPreferencesHelper.setIsInitialLaunch(isInitialLaunch);
+    }
+
+    @Override
+    public boolean getIsInitialLaunch() {
+        return mPreferencesHelper.getIsInitialLaunch();
+    }
+
+    @Override
     public void setEventUserId(String userId) {
         mPreferencesHelper.setEventUserId(userId);
     }
