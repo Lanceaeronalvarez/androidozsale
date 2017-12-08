@@ -1,6 +1,10 @@
 package au.com.dealsdirect.ui.controller.saleitems;
 
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
+
+import com.androidnetworking.error.ANError;
+import com.mysale.genie.utility.RxBus;
 
 import java.util.List;
 
@@ -13,6 +17,8 @@ import au.com.dealsdirect.data.network.model.saleitems.GetSaleItemsResponse;
 import au.com.dealsdirect.data.network.model.sorting.SortingResponse;
 import au.com.dealsdirect.ui.base.BasePresenter;
 import au.com.dealsdirect.ui.controller.searchfilter.adapter.SearchTagsAdapter;
+import au.com.dealsdirect.utils.BundleKeys;
+import au.com.dealsdirect.utils.CartUtil;
 import au.com.dealsdirect.utils.rx.SchedulerProvider;
 import io.reactivex.disposables.CompositeDisposable;
 
@@ -22,8 +28,6 @@ import io.reactivex.disposables.CompositeDisposable;
 
 public class SaleItemsPresenter<V extends SaleItemsMvpView> extends BasePresenter<V>
         implements SaleItemsMvpPresenter<V> {
-
-    private static final String SEARCH_QUERY_TAG = "search_query";
 
     @Inject
     public SaleItemsPresenter(DataManager dataManager, SchedulerProvider schedulerProvider,
@@ -128,5 +132,80 @@ public class SaleItemsPresenter<V extends SaleItemsMvpView> extends BasePresente
     @Override
     public void updateShopFilters() {
         getMvpView().onUpdateShopFilters();
+    }
+
+    @Override
+    public boolean isAuthorized() {
+        return getDataManager().isAuthorized();
+    }
+
+    @Override
+    public void callGetBasketItemsQuantity() {
+        getCompositeDisposable().add(getDataManager()
+                .callGetBasketItemsQuantity()
+                .subscribeOn(getSchedulerProvider().io())
+                .observeOn(getSchedulerProvider().ui())
+                .subscribe(basketQuantityResponse -> {
+                    if(!isViewAttached()){
+                        return;
+                    }
+                    CartUtil.setValueToCart(basketQuantityResponse.getItemQuantity());
+                    getMvpView().onCallGetBasketItemsQuantity();
+                },throwable -> {
+                    if (!isViewAttached()) {
+                        return;
+                    }
+
+                    getMvpView().onError(throwable.getMessage());
+
+                    // handle load accounts error here
+                    if (throwable instanceof ANError) {
+                        ANError anError = (ANError) throwable;
+                        handleApiError(anError);
+                    }
+                })
+        );
+    }
+
+    @Override
+    public void callGetCategoryTree() {
+        getCompositeDisposable().add(getDataManager()
+                .callGetGetCategories()
+                .subscribeOn(getSchedulerProvider().io())
+                .observeOn(getSchedulerProvider().ui())
+                .subscribe(response -> {
+
+                    if (!isViewAttached()) {
+                        return;
+                    }
+
+                    if (response != null) {
+                        getMvpView().onCallGetCategoryTree(response);
+                        RxBus.instance().post(BundleKeys.CATEGORIES_API_CALL_FINISHED);
+                        getMvpView().setCallGetCategoryTreeFinished(true);
+                    }
+
+                    getMvpView().hideLoading();
+
+                }, throwable -> {
+
+                    if (!isViewAttached()) {
+                        return;
+                    }
+
+                    getMvpView().hideLoading();
+                    getMvpView().onError(throwable.getMessage());
+
+                    // handle load accounts error here
+                    if (throwable instanceof ANError) {
+                        ANError anError = (ANError) throwable;
+                        handleApiError(anError);
+                    }
+                }));
+    }
+
+    @Override
+    public boolean isCallGetCategoryTreeFinished() {
+        return getMvpView().isCallGetCategoryTreeFinished();
     }
 }

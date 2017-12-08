@@ -5,6 +5,7 @@ import android.support.v7.widget.RecyclerView;
 
 import java.util.List;
 
+import au.com.dealsdirect.data.network.model.category.GetCategoryTreeResponse;
 import au.com.dealsdirect.data.network.model.saleitems.GetSaleItemsResponse;
 import au.com.dealsdirect.data.network.model.sorting.SortingResponse;
 import au.com.dealsdirect.ui.base.MvpView;
@@ -55,4 +56,12 @@ public interface SaleItemsMvpView extends MvpView{
     boolean isChangeStarted();
 
     boolean isDefaultBool();
+
+    void onCallGetBasketItemsQuantity();
+
+    void onCallGetCategoryTree(List<GetCategoryTreeResponse> response);
+
+    void setCallGetCategoryTreeFinished(boolean val);
+
+    boolean isCallGetCategoryTreeFinished();
 }

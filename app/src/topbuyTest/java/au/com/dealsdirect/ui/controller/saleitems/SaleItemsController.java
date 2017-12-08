@@ -37,6 +37,7 @@ import java.util.concurrent.TimeUnit;
 import javax.inject.Inject;
 
 import au.com.dealsdirect.R;
+import au.com.dealsdirect.data.network.model.category.GetCategoryTreeResponse;
 import au.com.dealsdirect.data.network.model.saleitems.GetSaleItemsRequest;
 import au.com.dealsdirect.data.network.model.saleitems.GetSaleItemsResponse;
 import au.com.dealsdirect.data.network.model.sorting.SortingResponse;
@@ -96,6 +97,8 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
     @BindView(R.id.overlay)
     RelativeLayout mOverlay;
 
+    boolean mIsCallGetCategoryTreeFinished = false;
+
     ViewPagerBottomSheetBehavior mBottomSheetBehavior;
 
     public boolean isSearchFiltersShown() {
@@ -111,10 +114,11 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
 
     private String mChosenCategoryKey = "";
     private String mChosenCategory = "";
-    private String mDefaultCategory = "";
+    private List<GetCategoryTreeResponse> mCategories = new ArrayList<>();
     private boolean isCategoryChanged = false;
     private boolean initialLoad = false;
     private List<GetSaleItemsResponse.Products> mSaleItems = new ArrayList<>();
+
 
     private Paginate mPaginateManager;
 
@@ -135,16 +139,6 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
     private boolean isBottomSheetAdjustedHeight = false;
     private boolean isKeyboardOpen = false;
     private ControllerChangeHandler.ControllerChangeListener mControllerChangeListener;
-
-    @Override
-    public boolean isDefaultBool(){
-        return defaultBool;
-    }
-
-    @Override
-    public boolean isChangeStarted() {
-        return isChangeStarted ;
-    }
 
     private boolean defaultBool = true;
     private boolean isChangeStarted = false;
@@ -177,7 +171,6 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
         super.onAttach(view);
         mPresenter.onAttach(this);
         mSaleItemClickCounter = 0;
-        mDefaultCategory = getResources().getString(R.string.category_default);
     }
 
     @Override
@@ -190,6 +183,14 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
     @Override
     protected void setUp(View view) {
 
+        if(!isCallGetCategoryTreeFinished()) {
+            mPresenter.callGetCategoryTree();
+        }
+
+        if (mPresenter.isAuthorized()) {
+            mPresenter.callGetBasketItemsQuantity();
+        }
+
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             mSearchBar.setOutlineProvider(null);
             mSearchBar.setElevation(0);
@@ -199,8 +200,6 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
         mKeyboardHeightProvider = new KeyboardHeightProvider(mActivity);
         mKeyboardHeightProvider.setKeyboardHeightObserver(this);
         mKeyboardHeightProvider.start();
-
-        mDefaultCategory = getResources().getString(R.string.category_default);
 
         mCartCounter.setText(CartUtil.getCartValue() + "");
 
@@ -239,6 +238,7 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
 
         mSaleItemsRecyclerView.setAdapter(mAdapter);
 
+        mPaginateManager = PaginateUtils.init(mSaleItemsRecyclerView, mPaginateCallbacks);
 
         mSearchTagsLayoutManager = new LinearLayoutManager(mActivity, LinearLayoutManager.HORIZONTAL, false);
         mSearchTagsRecyclerView.setLayoutManager(mSearchTagsLayoutManager);
@@ -270,10 +270,6 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
         if (mSaleItems.isEmpty()) {
             initialLoad = true;
             mPresenter.loadSaleItems(createSaleItemsRequest(mChosenCategoryKey, "", 0, mChipFilters, ""));
-        } else{
-            if (mSaleItems.size() >= PaginateUtils.LOADING_TRIGGER_THRESHOLD) {
-                mPaginateManager = PaginateUtils.init(mSaleItemsRecyclerView, mPaginateCallbacks);
-            }
         }
 
         mControllerChangeListener = new ControllerChangeHandler.ControllerChangeListener() {
@@ -339,7 +335,6 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
 
 
                 mSaleItemsRecyclerView.scrollToPosition(0);
-                mPaginateManager = PaginateUtils.init(mSaleItemsRecyclerView, mPaginateCallbacks);
                 if (items.size() <= PaginateUtils.LOADING_TRIGGER_THRESHOLD) {
                     hasLoadedAllItems = false;
                     mPaginateManager.setHasMoreDataToLoad(false);
@@ -443,7 +438,10 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
         mCategoriesContainer.setVisibility(View.VISIBLE);
 
         if (!mCategoriesRouter.hasRootController()) {
-            Controller controller = ControllerFactory.getInstance(GateKeeper.Destination.CATEGORIES);
+            Bundle bundle = new BundleBuilder(new Bundle())
+                    .putString(BundleKeys.CATEGORIES_ITEM_LIST,new Gson().toJson(mCategories))
+                    .build();
+            Controller controller = ControllerFactory.getInstance(GateKeeper.Destination.CATEGORIES,bundle);
             GateKeeper.setRoot(mCategoriesRouter, GateKeeper.Destination.CATEGORIES, RouterTransaction.with(controller).popChangeHandler(new FadeChangeHandler()).pushChangeHandler(new FadeChangeHandler()));
         } else {
             CategoriesController controller = (CategoriesController) GateKeeper.getCurrentControllerOnRouter(mCategoriesRouter);
@@ -720,6 +718,35 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
         }
     }
 
+    @Override
+    public boolean isDefaultBool(){
+        return defaultBool;
+    }
+
+    @Override
+    public boolean isChangeStarted() {
+        return isChangeStarted ;
+    }
+
+    @Override
+    public void onCallGetBasketItemsQuantity() {
+        mCartCounter.setText(CartUtil.getCartValue()+"");
+    }
+
+    @Override
+    public void onCallGetCategoryTree(List<GetCategoryTreeResponse> response) {
+        mCategories = response;
+    }
+
+    @Override
+    public void setCallGetCategoryTreeFinished(boolean val) {
+        mIsCallGetCategoryTreeFinished = val;
+    }
+
+    @Override
+    public boolean isCallGetCategoryTreeFinished() {
+        return mIsCallGetCategoryTreeFinished;
+    }
 }
 
 

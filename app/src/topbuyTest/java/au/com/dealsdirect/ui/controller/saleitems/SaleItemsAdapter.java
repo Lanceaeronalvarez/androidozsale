@@ -19,6 +19,7 @@ import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.jakewharton.rxbinding2.view.RxView;
 import com.mysale.genie.animation.AnimationEngine;
+import com.mysale.genie.utility.RxBus;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -27,12 +28,14 @@ import java.util.concurrent.TimeUnit;
 import au.com.dealsdirect.R;
 import au.com.dealsdirect.data.network.model.saleitems.GetSaleItemsResponse;
 import au.com.dealsdirect.ui.main.MainActivity;
+import au.com.dealsdirect.utils.BundleKeys;
 import au.com.dealsdirect.utils.ImageUtils;
 import au.com.dealsdirect.utils.PriceUtils;
 import au.com.dealsdirect.utils.ScreenUtils;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.disposables.Disposable;
 
 /**
  * Created by smartwave on 07/11/2017.
@@ -49,6 +52,7 @@ public class SaleItemsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
     private MainActivity mActivity;
     private SaleItemsMvpPresenter mPresenter;
     private SaleItemsMvpView mvpView;
+    private boolean mDataSetChanged;
 
     private int mComputedHeight = 0;
 
@@ -69,7 +73,6 @@ public class SaleItemsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
         RecyclerView.ViewHolder vh = null;
         View v = null;
         if (viewType == 0) {
-            Log.d("SaleItemsAdapter", "onCreateViewHolder header");
             v = LayoutInflater.from(parent.getContext()).inflate(R.layout.viewholder_sale_item_header, parent, false);
             vh = headerViewHolderInstance = new HeaderViewHolder(v, mPresenter);
         } else if (viewType == 1) {
@@ -123,22 +126,26 @@ public class SaleItemsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
             holder.productPreviousPrice.setPaintFlags(holder.productPreviousPrice.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);
 
 
-            holder.itemView.setOnClickListener(v -> {
-                if(!mvpView.isChangeStarted() || mvpView.isDefaultBool()) {
-                    mPresenter.loadProductDetails(
-                            holder,
-                            position,
-                            saleItem.getSeoIdentifier(),
-                            url,
-                            saleItem.getSkus().isEmpty() ? "" : saleItem.getSkus().get(0).getId(),
-                            "");
-                }
-            });
+            holder.shopItemClickListener = RxView.clicks(holder.itemView)
+                    .throttleFirst(1000, TimeUnit.MILLISECONDS)
+                    .observeOn(AndroidSchedulers.mainThread())
+                    .subscribe(action -> {
+                        {
+                            if (!mvpView.isChangeStarted() || mvpView.isDefaultBool()) {
+                                mPresenter.loadProductDetails(
+                                        holder,
+                                        position,
+                                        saleItem.getSeoIdentifier(),
+                                        url,
+                                        saleItem.getSkus().isEmpty() ? "" : saleItem.getSkus().get(0).getId(),
+                                        "");
+                            }
+                        }
+                    });
         }
 
         if (vh instanceof HeaderViewHolder) {
             HeaderViewHolder holder = (HeaderViewHolder) vh;
-//            ImageUtils.loadImage(mContext, url, holder.headerImage);
             Glide.with(mActivity).load(R.drawable.bg_sale_item_header)
                     .diskCacheStrategy(DiskCacheStrategy.RESULT)
                     .centerCrop().into(holder.headerImage);
@@ -150,8 +157,18 @@ public class SaleItemsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
 //                    .format(DecodeFormat.PREFER_RGB_565)
 //                    .centerCrop().into(holder.headerImage);
 
-            holder.shopTextView.setVisibility(View.VISIBLE);
-            holder.headerUnderline.setVisibility(View.VISIBLE);
+            //for cases api takes too long and view holder already binded
+            holder.rxBusSubscription = RxBus.instance().subscribe(action -> {
+                if (action.equals(BundleKeys.CATEGORIES_API_CALL_FINISHED)) {
+                    holder.shopTextView.setVisibility(View.VISIBLE);
+                    holder.headerUnderline.setVisibility(View.VISIBLE);
+                }
+            });
+
+            if (mDataSetChanged || mPresenter.isCallGetCategoryTreeFinished()) {
+                holder.shopTextView.setVisibility(View.VISIBLE);
+                holder.headerUnderline.setVisibility(View.VISIBLE);
+            }
 
             if (mvpView.getChosenCategory().isEmpty()) {
                 holder.shopTextView.setText(mActivity.getString(R.string.category_default));
@@ -166,11 +183,13 @@ public class SaleItemsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
 
     public void replaceData(List<GetSaleItemsResponse.Products> saleItems) {
         mData = saleItems;
+        mDataSetChanged = true;
         notifyDataSetChanged();
     }
 
     public void addData(List<GetSaleItemsResponse.Products> saleItems) {
         mData.addAll(saleItems);
+        mDataSetChanged = true;
         notifyDataSetChanged();
     }
 
@@ -187,6 +206,20 @@ public class SaleItemsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
 
         return 1;
 
+    }
+
+    @Override
+    public void onViewRecycled(RecyclerView.ViewHolder holder) {
+        if (holder instanceof HeaderViewHolder) {
+            ((HeaderViewHolder) holder).shopTextClickListener.dispose();
+            ((HeaderViewHolder) holder).rxBusSubscription.dispose();
+        }
+
+        if (holder instanceof ShopItemsViewHolder) {
+            ((ShopItemsViewHolder) holder).shopItemClickListener.dispose();
+        }
+
+        super.onViewRecycled(holder);
     }
 
     public static class HeaderViewHolder extends RecyclerView.ViewHolder implements CategoryObserver {
@@ -207,6 +240,9 @@ public class SaleItemsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
         TextView seeOtherPopularProductsText;
         @BindView(R.id.no_items_text)
         TextView noItemsText;
+
+        Disposable shopTextClickListener;
+        Disposable rxBusSubscription;
 
         SaleItemsMvpPresenter mPresenter;
 
@@ -239,10 +275,11 @@ public class SaleItemsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
             headerImage.setColorFilter(new PorterDuffColorFilter(Color.parseColor("#6c000000"), PorterDuff.Mode.SRC_OVER));
 
 
-            RxView.clicks(shopTextView)
+            shopTextClickListener = RxView.clicks(shopTextView)
                     .throttleFirst(1000, TimeUnit.MILLISECONDS)
                     .observeOn(AndroidSchedulers.mainThread())
                     .subscribe(action -> {
+
                         AnimationEngine.Builder.animate(shopTextView).fadeOut().build().start();
                         AnimationEngine.Builder.animate(headerUnderline).fadeOut().build().start();
                         mPresenter.showCategoriesController();
@@ -266,6 +303,8 @@ public class SaleItemsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
                 AnimationEngine.Builder.animate(shopTextView).fadeIn().build().start();
                 AnimationEngine.Builder.animate(headerUnderline).fadeIn().build().start();
             }
+
+
         }
     }
 
@@ -284,6 +323,8 @@ public class SaleItemsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
         public ImageView productImage;
         @BindView(R.id.vh_sale_item_name)
         public TextView productName;
+
+        Disposable shopItemClickListener;
 
         public ShopItemsViewHolder(View v, int computedHeight) {
             super(v);

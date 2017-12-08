@@ -5,6 +5,7 @@ import com.google.gson.Gson;
 import javax.inject.Inject;
 
 import au.com.dealsdirect.data.DataManager;
+import au.com.dealsdirect.data.network.AppApiCallback;
 import au.com.dealsdirect.data.network.model.orders.GetPaymentsList;
 import au.com.dealsdirect.ui.base.BasePresenter;
 import au.com.dealsdirect.utils.rx.SchedulerProvider;
@@ -156,19 +157,19 @@ public class OrdersPresenter<V extends OrdersMvpView> extends BasePresenter<V> i
     @Override
     public void loadOrders() {
 
-        Gson g = new Gson();
-        GetPaymentsList.ResponseValue mockResponse = g.fromJson(mockCall, GetPaymentsList.ResponseValue.class);
-        getMvpView().showOrders(mockResponse.getD().getList());
+//        Gson g = new Gson();
+//        GetPaymentsList.ResponseValue mockResponse = g.fromJson(mockCall, GetPaymentsList.ResponseValue.class);
+//        getMvpView().showOrders(mockResponse.getD().getList());
 //
-//        doApiCallForResponse(getDataManager()
-//                .callGetPaymentsList(new GetPaymentsList.RequestValues()), new AppApiCallback(){
-//            @Override
-//            public void onSuccess(Object response) {
-//                super.onSuccess(response);
-//                if(((GetPaymentsList.ResponseValue) response).getD().getResult()){
-//                    getMvpView().showOrders(((GetPaymentsList.ResponseValue) response).getD().getList());
-//                }
-//            }
-//        });
+        doApiCallForResponse(getDataManager()
+                .callGetPaymentsList(new GetPaymentsList.RequestValues()), new AppApiCallback(){
+            @Override
+            public void onSuccess(Object response) {
+                super.onSuccess(response);
+                if(((GetPaymentsList.ResponseValue) response).getD().getResult()){
+                    getMvpView().showOrders(((GetPaymentsList.ResponseValue) response).getD().getList());
+                }
+            }
+        });
     }
 }

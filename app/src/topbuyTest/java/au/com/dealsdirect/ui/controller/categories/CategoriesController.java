@@ -14,9 +14,12 @@ import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 import com.mysale.genie.animation.AnimationEngine;
 import com.mysale.genie.views.custom.CoordinatorLayoutAsBottomSheetBehavior;
 
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -31,6 +34,7 @@ import au.com.dealsdirect.ui.controller.categories.adapter.CategoriesAdapter;
 import au.com.dealsdirect.ui.controller.saleitems.SaleItemsMvpPresenter;
 import au.com.dealsdirect.ui.controller.saleitems.SaleItemsMvpView;
 import au.com.dealsdirect.utils.BundleBuilder;
+import au.com.dealsdirect.utils.BundleKeys;
 import au.com.dealsdirect.utils.module.GateKeeper;
 import butterknife.BindView;
 
@@ -54,6 +58,7 @@ public class CategoriesController extends BaseController
 
     private CategoriesAdapter mAdapter;
     private List<GetCategoryTreeResponse> mCategories;
+    private String mCategoriesString;
     private Map<String, List<GetCategoryTreeResponse>> mCategoryMap = new HashMap<>();
     private int itemPosition = 0;
     private int categoriesChangeCount = 0;
@@ -99,6 +104,8 @@ public class CategoriesController extends BaseController
 
     public CategoriesController(Bundle args) {
         super(args);
+        mCategoriesString = args.getString(BundleKeys.CATEGORIES_ITEM_LIST,"");
+        mCategories = new Gson().fromJson(mCategoriesString, new TypeToken<List<GetCategoryTreeResponse>>(){}.getType());
         chosenCategoryKey = args.getString(ARG_CATEGORY_CURRENT_KEY, "");
         chosenCategoryName = args.getString(ARG_CATEGORY_CURRENT_NAME,"");
         prevChosenCategoryKey = args.getString(ARG_CATEGORY_PREV_KEY, "");
@@ -133,7 +140,6 @@ public class CategoriesController extends BaseController
         mActivity.setDraggableViewPager(true);
         mActivity.setCategoriesRouter(getRouter());
         hideKeyboard();
-        mPresenter.callGetCategoryTree();
 //        com.mysale.genie.animation.AnimationEngine.Builder.animate(headerUnderlineView)
 //                .scaleX(65)
 //                .setDuration(300)
@@ -179,6 +185,7 @@ public class CategoriesController extends BaseController
                 .build()
                 .start();
 
+        showCategories(mCategories);
         initUIValues();
         setupSwipingBehavior();
     }
@@ -216,6 +223,7 @@ public class CategoriesController extends BaseController
         } else {
 
             Bundle bundle = new Bundle();
+            bundle.putString(BundleKeys.CATEGORIES_ITEM_LIST,mCategoriesString);
             bundle.putString(ARG_CATEGORY_PREV_NAME, chosenCategoryName);
             bundle.putString(ARG_CATEGORY_CURRENT_NAME, categoryName);
 

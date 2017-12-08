@@ -39,4 +39,80 @@
     <string name="you_have_not_added_any_items_in_your_shopping_cart">you have not added any items
         in your shopping cart
     </string>
+
+    <string name="base_html_template_header" formatted="false">
+        <![CDATA["<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN">
+        <html>
+            <head>
+                <style type="text/css">
+
+                    table {
+                        width: auto;
+                    }
+                    hr {
+                        border: 0;
+                        width: 80%;
+                        background-color: #FFFFFF;
+                        height: 1px;
+                    }
+                    a {
+                        color: #1C6CFD;
+                        text-decoration: none;
+                    }
+
+                    a:link{
+                        color: #1CB1B4;
+                        text-decoration: underline;
+                    }
+
+                    li{
+                        font-family: Lato;
+                        color: #757373;
+                    }
+
+                    b {
+                        font-family: Lato;
+                        color: #466e87;
+                    }
+
+                    br {
+                        font-family: Lato;
+                        color: #6E6868;
+                    }
+
+                    body {
+                        -webkit-text-size-adjust: none;
+                        font-family: Lato;
+                        color: #6E6868;
+                        font-family: Lato;
+                        font-size: 10pt;
+                        background-color: #FFFFFF;
+                        word-wrap: break-word;
+                        padding-left: 0px;
+                        padding-right: 0px;
+                        padding-top: 0px;
+                    }
+
+                    embed{
+                        width:100%;
+                    }
+
+                    object{
+                        width:100%;
+
+                    }
+
+                    iframe{
+                        width:100%;
+
+                    }
+
+                    html {
+                        -webkit-text-size-adjust: none; / Never autoresize text /
+                    }
+                </style>
+                <meta name='viewport' content='width=device-width, initial-scale=1.0, maximum-scale=1.0'>
+            </head>
+        <body>"]]>
+    </string>
 </resources>

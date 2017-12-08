@@ -41,4 +41,13 @@ public interface SaleItemsMvpPresenter<V extends SaleItemsMvpView> extends MvpPr
     SearchTagsAdapter getSearchTagsAdapter();
 
     void updateShopFilters();
+
+    boolean isAuthorized();
+
+    void callGetBasketItemsQuantity();
+
+    void callGetCategoryTree();
+
+    boolean isCallGetCategoryTreeFinished();
+
 }
