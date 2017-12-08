@@ -14,8 +14,6 @@ import android.widget.TextView;
 
 import com.mysale.genie.views.custom.CoordinatorLayoutAsBottomSheetBehavior;
 
-import org.w3c.dom.Text;
-
 import au.com.dealsdirect.R;
 import butterknife.BindView;
 import butterknife.OnClick;
@@ -176,4 +174,6 @@ public abstract class SwipeableBaseToolBarController extends BaseController {
     public void hideToolbarTitle(){
         mToolbar.setVisibility(View.GONE);
     }
+
+    public void hideBottomButton(){mBottomButton.setVisibility(View.GONE);}
 }

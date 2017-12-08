@@ -24,8 +24,6 @@ import com.bluelinelabs.conductor.changehandler.VerticalChangeHandler;
 import com.google.gson.Gson;
 import com.mysale.genie.utility.RxBus;
 
-import org.w3c.dom.Text;
-
 import java.util.ArrayList;
 import java.util.List;
 
@@ -348,6 +346,7 @@ public class CheckoutController extends SwipeableBaseToolBarController implement
             //no items
             showNoCartItemsLayout();
         } else {
+            hideBottomButton();
             mNoCartItemsLayout.setVisibility(View.GONE);
             showPaymentButtons();
             mListView.setVisibility(View.VISIBLE);
