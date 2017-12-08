@@ -69,11 +69,11 @@ android {
         }
 
         ooTest {
-            versionCode 3
+            versionCode 4
             versionName "0.9"
             applicationId "au.com.oo.test"
             buildConfigField "String", "API_ROOT", "\"https://genie-ui-oo-pre.mysaledev.com/\""
-            buildConfigField "String", "API_LEGACY", "\"https://api.mysaledev.com/public/v3.17/\""
+            buildConfigField "String", "API_LEGACY", "\"https://api.mysaledev.com/public/v3.20/\""
             buildConfigField "String", "ACCOUNT_ID", "\"25D201EB-9A1C-4045-90B6-E6A9F122C7CB\""
         }
     }

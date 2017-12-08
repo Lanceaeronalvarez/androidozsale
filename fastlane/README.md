@@ -12,9 +12,9 @@ xcode-select --install
 
 <table width="100%" >
 <tr>
-<th width="33%"><a href="http://brew.sh">Homebrew</a></td>
-<th width="33%">Installer Script</td>
-<th width="33%">Rubygems</td>
+<th width="33%"><a href="http://brew.sh">Homebrew</a></th>
+<th width="33%">Installer Script</th>
+<th width="33%">RubyGems</th>
 </tr>
 <tr>
 <td width="33%" align="center">macOS</td>
@@ -42,6 +42,11 @@ fastlane fabric_deploy_dd_test
 ### fabric_deploy_dd_rc
 ```
 fastlane fabric_deploy_dd_rc
+```
+
+### fabric_deploy_oo_rc
+```
+fastlane fabric_deploy_oo_rc
 ```
 
 ### fabric_deploy_oo_test
