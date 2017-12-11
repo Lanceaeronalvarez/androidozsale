@@ -67,10 +67,16 @@
             android:layout_marginRight="5dp"
             android:layout_marginTop="5dp">
 
+            <ImageView
+                android:id="@+id/my_order_product_image"
+                android:layout_width="160dp"
+                android:layout_height="120dp" />
+
             <LinearLayout
                 android:id="@+id/item_header_container"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_toEndOf="@id/my_order_product_image"
                 android:orientation="horizontal">
 
                 <TextView
@@ -99,13 +105,12 @@
 
             </LinearLayout>
 
-
             <TextView
-
                 android:id="@+id/productQuantityTextView"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_below="@+id/item_header_container"
+                android:layout_toEndOf="@id/my_order_product_image"
                 android:text="1 item"
                 android:textColor="#b7b7b7"
                 android:textSize="14sp"
