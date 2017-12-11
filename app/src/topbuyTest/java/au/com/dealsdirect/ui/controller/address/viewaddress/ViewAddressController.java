@@ -112,7 +112,7 @@ public class ViewAddressController extends SwipeableBaseToolBarController implem
                     //showAddNewAddressFragment();
                     AddressesItem item = mAddressList.get(position);
 
-//                    getBaseActivity().showProgressDialog("Setting address. Please wait.");
+                    showProgressDialog("Setting address. Please wait.");
                     mPresenter.applyDeliveryAddress(item.ID);
 
                     mRecyclerViewAdapter.updateDeliveryAddress(item);
@@ -244,6 +244,7 @@ public class ViewAddressController extends SwipeableBaseToolBarController implem
     public void backToCheckout() {
         if (mCalledFromCart) {
             mActivity.onBackPressed();
+            hideProgressDialog();
         }
     }
 
