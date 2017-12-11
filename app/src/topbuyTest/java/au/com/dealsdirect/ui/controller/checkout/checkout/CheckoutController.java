@@ -132,7 +132,7 @@ public class CheckoutController extends SwipeableBaseToolBarController implement
                 //push controller to view my address
                 Bundle bundle = new Bundle();
                 bundle.putBoolean(BundleKeys.IS_FROM_CART, true);
-                bundle.putString(BundleKeys.DECORATION_INFO_LIST, new Gson().toJson(mDeliveryAddress));
+                bundle.putString(BundleKeys.DELIVERY_ADDRESS, new Gson().toJson(mDeliveryAddress));
                 GateKeeper.push(getRouter(), GateKeeper.Destination.VIEW_ADDRESSES, bundle, new VerticalChangeHandler(false), new VerticalChangeHandler());
 
             } else if (view.getId() == mPaymentChangeText.getId()
