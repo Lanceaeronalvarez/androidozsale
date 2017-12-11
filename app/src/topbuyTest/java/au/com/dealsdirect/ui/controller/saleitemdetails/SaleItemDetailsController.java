@@ -276,7 +276,7 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
         mHtmlFooter = mActivity.getResources()
                 .getString(R.string.base_html_template_footer);
 
-//        setRetainViewMode(RetainViewMode.RETAIN_DETACH);
+        mCartCounter.setText(CartUtil.getCartValue()+"");
     }
     @Override
     public void showSaleDetails(GetSaleItemDetailsResponse saleDetail) {
@@ -495,6 +495,11 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
         } else {
             verifyAddToCart(request);
         }
+    }
+
+    @OnClick(R.id.cart_view)
+    void goToCheckout(){
+        mActivity.getMainController().getHomeViewPager().setCurrentItem(2);
     }
 
     private void verifyAddToCart(AddToCartRequest request) {

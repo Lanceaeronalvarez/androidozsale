@@ -31,8 +31,8 @@ public class SamplePresenter<V extends SampleMvpView> extends BasePresenter<V> i
             }
 
             @Override
-            public void onFailure() {
-                super.onFailure();
+            public void onFailure(Throwable t) {
+                super.onFailure(t);
             }
         });
     }

@@ -63,6 +63,10 @@ public interface SaleItemsMvpView extends MvpView{
 
     void setCallGetCategoryTreeFinished(boolean val);
 
+    void showNoNetworkLayout();
+
+    void hideNoNetworkLayout();
+
     boolean isCallGetCategoryTreeFinished();
 
     boolean isCategoriesActive();

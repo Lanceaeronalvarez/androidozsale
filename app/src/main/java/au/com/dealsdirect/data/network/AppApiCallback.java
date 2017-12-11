@@ -24,7 +24,7 @@ public class AppApiCallback implements ApiCallback {
     }
 
     @Override
-    public void onFailure() {
+    public void onFailure(Throwable t) {
 
     }
 }

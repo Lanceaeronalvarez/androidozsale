@@ -9,11 +9,15 @@ import android.support.annotation.Nullable;
 import android.support.design.widget.AppBarLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.text.Spannable;
+import android.text.SpannableString;
+import android.text.style.ForegroundColorSpan;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
+import android.widget.FrameLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
@@ -25,6 +29,7 @@ import com.bluelinelabs.conductor.RouterTransaction;
 import com.bluelinelabs.conductor.changehandler.FadeChangeHandler;
 import com.google.gson.Gson;
 import com.jakewharton.rxbinding2.view.RxView;
+import com.mysale.genie.animation.AnimationEngine;
 import com.mysale.genie.views.custom.CoordinatorLayoutAsBottomSheetBehavior;
 import com.paginate.Paginate;
 
@@ -98,7 +103,10 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
     @BindView(R.id.overlay)
     RelativeLayout mOverlay;
 
-    boolean mIsCallGetCategoryTreeFinished = false;
+    @BindView(R.id.no_network_base_frame)
+    FrameLayout mNoNetworkFrame;
+
+    private boolean mIsCallGetCategoryTreeFinished = false;
 
     ViewPagerBottomSheetBehavior mBottomSheetBehavior;
 
@@ -172,6 +180,7 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
         mPresenter.onAttach(this);
 
         if (mPresenter.isAuthorized()) {
+            onCallGetBasketItemsQuantity();
             mPresenter.callGetBasketItemsQuantity();
         }
 
@@ -210,6 +219,13 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
             mSearchBar.setElevation(0);
         }
 
+
+        mNoNetworkFrame.setOnClickListener((v)->{
+            hideNoNetworkLayout();
+            mIsCallGetCategoryTreeFinished = false;
+            mPresenter.callGetCategoryTree();
+            refresh();
+        });
 
         mKeyboardHeightProvider = new KeyboardHeightProvider(mActivity);
         mKeyboardHeightProvider.setKeyboardHeightObserver(this);
@@ -321,9 +337,84 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
 
     }
 
+    private void checkNoSearchItemsLayout(List<GetSaleItemsResponse.Products> products) {
+
+        SaleItemsAdapter.HeaderViewHolder vh = mAdapter.getHeaderViewHolderInstance();
+        if (products != null) {
+            if (products.size() == 0 && vh != null) {
+                List<SearchChipModel> data = mSearchTagsAdapter.getData();
+                //init no search items text
+                vh.getNoItemsText().setText(getResources().getString(R.string.sorry_default_text));
+
+                String text = vh.getNoItemsText().getText().toString() + " ";
+
+                StringBuilder result = new StringBuilder();
+                result.append(text);
+
+                int startIndex = result.toString().length();
+                for (int i = 0; i < data.size(); i++) {
+                    if (i > 0) {
+                        result.append(" ");
+                    }
+                    result.append("\"" + data.get(i).getChipTitle().replace("\n", " ").trim() + "\"");
+                }
+
+                if (!mSearchTagsAdapter.getEditTextViewHolder().getEditText().getText().toString().isEmpty()) {
+                    result.append(" " + "\"" + mSearchTagsAdapter.getEditTextViewHolder().getEditText().getText() + "\"");
+                }
+
+                int endIndex = result.toString().length();
+
+                SpannableString spannable = new SpannableString(result.toString());
+                spannable.setSpan(new ForegroundColorSpan(getResources().getColor(R.color.colorAccent)), startIndex, endIndex, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+                vh.getNoItemsText().setText(spannable);
+
+                if (mActivity.getString(R.string.category_default) != mChosenCategory && !mChosenCategory.isEmpty()) {
+                    spannable = new SpannableString(result.toString());
+                    spannable.setSpan(new ForegroundColorSpan(getResources().getColor(R.color.colorAccent)), startIndex, endIndex, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+                    vh.getNoItemsText().setText(spannable);
+                    vh.getNoItemsText().append(" in " + mChosenCategory.toLowerCase() + " category");
+                }
+
+                AnimationEngine.Builder.animate(vh.getHeaderSeparator()).fadeIn()
+                        .withEndAction(() -> vh.getHeaderSeparator().setVisibility(View.VISIBLE))
+                        .setDuration(300)
+                        .build().start();
+
+                AnimationEngine.Builder.animate(vh.getNoSearchItemsLayout()).fadeIn()
+                        .withEndAction(() -> vh.getNoSearchItemsLayout().setVisibility(View.VISIBLE))
+                        .setDuration(300)
+                        .build().start();
+                mLayoutManager.setScrollEnabled(false);
+
+            } else if (products.size() != 0) {
+
+                mLayoutManager.setScrollEnabled(true);
+                if (vh != null && vh.getNoSearchItemsLayout().getVisibility() == View.VISIBLE) {
+                    AnimationEngine.Builder.animate(vh.getHeaderSeparator()).fadeOut()
+                            .withEndAction(() -> vh.getHeaderSeparator().setVisibility(View.GONE))
+                            .setDuration(200)
+                            .build().start();
+
+                    AnimationEngine.Builder.animate(vh.getNoSearchItemsLayout()).fadeOut()
+                            .withEndAction(() -> vh.getNoSearchItemsLayout().setVisibility(View.GONE))
+                            .setDuration(200)
+                            .build().start();
+
+                    AnimationEngine.Builder.animate(vh.getSeeOtherPopularProductsText()).fadeOut()
+                            .withEndAction(() -> vh.getSeeOtherPopularProductsText().setVisibility(View.GONE))
+                            .setDuration(200)
+                            .build().start();
+                }
+            }
+        }
+    }
+
     @Override
     public void showSaleItems(GetSaleItemsResponse getSaleItemsResponse, boolean forFacetCorrection) {
         List<GetSaleItemsResponse.Products> items = getSaleItemsResponse.products;
+
+
 
         if (items.size() == 0 && page != 0) {
             hasLoadedAllItems = true;
@@ -332,21 +423,27 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
         } else {
             mFacets = getSaleItemsResponse.facets;
 
+            checkNoSearchItemsLayout(items);
+
+            hasLoadedAllItems = false;
+            mPaginateManager.setHasMoreDataToLoad(true);
+            loadingInProgress = false;
+
             if (page == 0) {
                 mAdapter.replaceData(items);
 
-
                 mSaleItemsRecyclerView.scrollToPosition(0);
+
                 if (items.size() <= PaginateUtils.LOADING_TRIGGER_THRESHOLD) {
-                    hasLoadedAllItems = false;
+                    hasLoadedAllItems = true;
                     mPaginateManager.setHasMoreDataToLoad(false);
+                    page = 0;
                 }
             } else {
                 mAdapter.addData(items);
             }
-            hasLoadedAllItems = false;
-            mPaginateManager.setHasMoreDataToLoad(true);
-            loadingInProgress = false;
+
+
 
             if (isCategoryChanged || initialLoad) {
                 mSearchFilterController.replaceFacets(mFacets);
@@ -666,8 +763,8 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
                             String trimmedText = searchTextQuery.length() > 15 ? searchTextQuery.substring(0, 14) + ".." : searchTextQuery;
 
                             mSearchTagsAdapter.add(new SearchChipModel(BundleKeys.SEARCH_QUERY_NAME, trimmedText, -1));
-
                             searchEditText.getText().clear();
+                            mPresenter.updateShopFilters();
                         }
 
                         break;
@@ -734,6 +831,17 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
     @Override
     public void setCallGetCategoryTreeFinished(boolean val) {
         mIsCallGetCategoryTreeFinished = val;
+    }
+
+    @Override
+    public void showNoNetworkLayout() {
+        mAdapter.replaceData(new ArrayList<>());
+        mNoNetworkFrame.setVisibility(View.VISIBLE);
+    }
+
+    @Override
+    public void hideNoNetworkLayout() {
+        mNoNetworkFrame.setVisibility(View.GONE);
     }
 
     @Override

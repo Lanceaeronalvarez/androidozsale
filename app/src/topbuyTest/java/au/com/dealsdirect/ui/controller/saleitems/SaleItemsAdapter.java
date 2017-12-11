@@ -249,12 +249,6 @@ public class SaleItemsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
 
         SaleItemsMvpPresenter mPresenter;
 
-//        public SimpleFilterCategoryClickObserver getFilterCategoryClickObserver() {
-//            return mFilterCategoryClickObserver;
-//        }
-//
-//        private SimpleFilterCategoryClickObserver mFilterCategoryClickObserver;
-
         public LinearLayout getNoSearchItemsLayout() {
             return noSearchItemsLayout;
         }

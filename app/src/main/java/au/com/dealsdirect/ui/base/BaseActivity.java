@@ -151,7 +151,7 @@ public abstract class BaseActivity extends AppCompatActivity implements MvpView 
         mSnackbar = Snackbar.make(findViewById(android.R.id.content),
                 message, indefinite ? Snackbar.LENGTH_INDEFINITE : Snackbar.LENGTH_SHORT);
         View sbView = mSnackbar.getView();
-        sbView.setBackgroundColor(ContextCompat.getColor(this, R.color.colorAccent));
+        sbView.setBackgroundColor(ContextCompat.getColor(this, R.color.snack_bar_color));
         TextView textView = (TextView) sbView
                 .findViewById(android.support.design.R.id.snackbar_text);
         textView.setTextAlignment(View.TEXT_ALIGNMENT_CENTER);

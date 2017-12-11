@@ -1,7 +1,6 @@
 package au.com.dealsdirect.ui.controller.saleitems;
 
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 
 import com.androidnetworking.error.ANError;
 import com.mysale.genie.utility.RxBus;
@@ -37,10 +36,11 @@ public class SaleItemsPresenter<V extends SaleItemsMvpView> extends BasePresente
 
     @Override
     public void loadSaleItems(GetSaleItemsRequest getSaleItemsRequest) {
-        doApiCallForResponse(getDataManager().callGetSaleItemsRequest(getSaleItemsRequest), new AppApiCallback(){
+        doApiCallForResponse(getDataManager().callGetSaleItemsRequest(getSaleItemsRequest), new AppApiCallback() {
             @Override
             public void onSuccess(Object response) {
                 super.onSuccess(response);
+                getMvpView().hideNoNetworkLayout();
                 if (getSaleItemsRequest.hasFilters()) {
                     getMvpView().showSaleItems((GetSaleItemsResponse) response, false);
                 } else {
@@ -49,8 +49,12 @@ public class SaleItemsPresenter<V extends SaleItemsMvpView> extends BasePresente
             }
 
             @Override
-            public void onFailure() {
-                getMvpView().unbindPaginate();
+            public void onFailure(Throwable t) {
+                if (t.getMessage().contains("UnknownHostException") || t.getMessage().contains("SocketTimeoutException")) {
+                    getMvpView().showNoNetworkLayout();
+                }
+                getMvpView().onError(t.getMessage());
+
             }
         });
     }
@@ -113,7 +117,6 @@ public class SaleItemsPresenter<V extends SaleItemsMvpView> extends BasePresente
     }
 
 
-
     @Override
     public void showTransparentOverlay() {
         getMvpView().onShowTransparentOverlay();
@@ -146,12 +149,12 @@ public class SaleItemsPresenter<V extends SaleItemsMvpView> extends BasePresente
                 .subscribeOn(getSchedulerProvider().io())
                 .observeOn(getSchedulerProvider().ui())
                 .subscribe(basketQuantityResponse -> {
-                    if(!isViewAttached()){
+                    if (!isViewAttached()) {
                         return;
                     }
                     CartUtil.setValueToCart(basketQuantityResponse.getItemQuantity());
                     getMvpView().onCallGetBasketItemsQuantity();
-                },throwable -> {
+                }, throwable -> {
                     if (!isViewAttached()) {
                         return;
                     }
@@ -178,7 +181,7 @@ public class SaleItemsPresenter<V extends SaleItemsMvpView> extends BasePresente
                     if (!isViewAttached()) {
                         return;
                     }
-
+                    getMvpView().hideNoNetworkLayout();
                     if (response != null) {
                         getMvpView().onCallGetCategoryTree(response);
                         RxBus.instance().post(BundleKeys.CATEGORIES_API_CALL_FINISHED);
@@ -194,7 +197,6 @@ public class SaleItemsPresenter<V extends SaleItemsMvpView> extends BasePresente
                     }
 
                     getMvpView().hideLoading();
-                    getMvpView().onError(throwable.getMessage());
 
                     // handle load accounts error here
                     if (throwable instanceof ANError) {
