@@ -22,11 +22,11 @@ public interface SaleItemsMvpPresenter<V extends SaleItemsMvpView> extends MvpPr
 
     void showCategoriesController();
 
-    void categoryClicked(String chosenCategoryName, int color);
+    void categoryClicked(int color);
 
     void dismissCategoriesController();
 
-    void executeCategoryChangeApiCall(String chosenCategoryKey);
+    void executeCategoryChangeApiCall(String chosenCategoryKey, String chosenCategoryName);
 
     void showKeyboard();
 

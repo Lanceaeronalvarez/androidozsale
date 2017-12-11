@@ -31,13 +31,13 @@ public interface SaleItemsMvpView extends MvpView{
 
     void onShowCategoriesController();
 
-    void onCategoryClicked(String chosenCategoryName, int color);
+    void categoryClicked(int color);
 
     String getChosenCategory();
 
     void onDismissCategoriesController();
 
-    void onExecuteCategoryChangeApiCall(String chosenCategoryKey);
+    void onExecuteCategoryChangeApiCall(String chosenCategoryKey, String chosenCategoryName);
 
     void onShowTransparentOverlay();
 
@@ -64,4 +64,6 @@ public interface SaleItemsMvpView extends MvpView{
     void setCallGetCategoryTreeFinished(boolean val);
 
     boolean isCallGetCategoryTreeFinished();
+
+    boolean isCategoriesActive();
 }

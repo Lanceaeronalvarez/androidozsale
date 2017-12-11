@@ -83,8 +83,8 @@ public class SaleItemsPresenter<V extends SaleItemsMvpView> extends BasePresente
     }
 
     @Override
-    public void categoryClicked(String chosenCategoryName, int color) {
-        getMvpView().onCategoryClicked(chosenCategoryName,color);
+    public void categoryClicked(int color) {
+        getMvpView().categoryClicked(color);
     }
 
     @Override
@@ -93,8 +93,8 @@ public class SaleItemsPresenter<V extends SaleItemsMvpView> extends BasePresente
     }
 
     @Override
-    public void executeCategoryChangeApiCall(String chosenCategoryKey) {
-        getMvpView().onExecuteCategoryChangeApiCall(chosenCategoryKey);
+    public void executeCategoryChangeApiCall(String chosenCategoryKey, String chosenCategoryName) {
+        getMvpView().onExecuteCategoryChangeApiCall(chosenCategoryKey, chosenCategoryName);
     }
 
     @Override

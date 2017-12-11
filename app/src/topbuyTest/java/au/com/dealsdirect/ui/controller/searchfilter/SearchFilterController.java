@@ -139,7 +139,7 @@ public class SearchFilterController extends BaseController
         }
 
         setupTabs();
-
+        setRetainViewMode(RetainViewMode.RETAIN_DETACH);
     }
 
     @Override

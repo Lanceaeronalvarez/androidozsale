@@ -157,6 +157,7 @@ public class SaleItemsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
 //                    .format(DecodeFormat.PREFER_RGB_565)
 //                    .centerCrop().into(holder.headerImage);
 
+            holder.shopTextView.setText(mvpView.getChosenCategory());
             //for cases api takes too long and view holder already binded
             holder.rxBusSubscription = RxBus.instance().subscribe(action -> {
                 if (action.equals(BundleKeys.CATEGORIES_API_CALL_FINISHED)) {
@@ -165,9 +166,11 @@ public class SaleItemsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
                 }
             });
 
-            if (mDataSetChanged || mPresenter.isCallGetCategoryTreeFinished()) {
+            if (mPresenter.isCallGetCategoryTreeFinished() && !mvpView.isCategoriesActive()) {
                 holder.shopTextView.setVisibility(View.VISIBLE);
                 holder.headerUnderline.setVisibility(View.VISIBLE);
+                holder.shopTextView.setAlpha(1f);
+                holder.headerUnderline.setAlpha(1f);
             }
 
             if (mvpView.getChosenCategory().isEmpty()) {
@@ -299,10 +302,10 @@ public class SaleItemsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
         public void showShopCategoryText() {
             shopTextView.setVisibility(View.VISIBLE);
             headerUnderline.setVisibility(View.VISIBLE);
-            if (shopTextView.getAlpha() != 1f) {
+//            if (shopTextView.getAlpha() != 1f) {
                 AnimationEngine.Builder.animate(shopTextView).fadeIn().build().start();
                 AnimationEngine.Builder.animate(headerUnderline).fadeIn().build().start();
-            }
+//            }
 
 
         }

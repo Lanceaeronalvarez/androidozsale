@@ -147,6 +147,7 @@ public class FacetFilterController extends BaseController implements FacetFilter
     protected void onViewBound(@NonNull View view) {
         super.onViewBound(view);
         setUp(view);
+        setRetainViewMode(RetainViewMode.RETAIN_DETACH);
     }
 
     @Override

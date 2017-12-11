@@ -8,12 +8,14 @@ import android.support.design.widget.CoordinatorLayout;
 import android.support.v4.view.ViewCompat;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.bluelinelabs.conductor.Router;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.mysale.genie.animation.AnimationEngine;
@@ -117,6 +119,18 @@ public class CategoriesController extends BaseController
     protected void onAttach(@NonNull View view) {
         super.onAttach(view);
         mPresenter.onAttach(this);
+
+        int color = determineColor();
+        //set fragment background color
+        mRootLayout.setBackgroundColor(color);
+
+        if (chosenCategoryName.equals(getResources().getString(R.string.category_default))) {
+            color = getResources().getColor(R.color.shop_banner_divider_default);
+        }
+
+        mSaleItemsPresenter.categoryClicked(color);
+        headerCategoryTextView.setText(chosenCategoryName);
+        categoriesChangeCount++;
     }
 
     @Override
@@ -152,7 +166,7 @@ public class CategoriesController extends BaseController
     @Override
     public boolean handleBack() {
 
-        ViewCompat.setTransitionName(headerCategoryTextView, "categoryHeaderTransitionName");
+//        ViewCompat.setTransitionName(headerCategoryTextView, "categoryHeaderTransitionName");
 
         if (getRouter().getBackstackSize() == 1) {
             mSaleItemsPresenter.dismissCategoriesController();
@@ -161,7 +175,7 @@ public class CategoriesController extends BaseController
             return true;
         }
 
-        mSaleItemsPresenter.executeCategoryChangeApiCall(prevChosenCategoryKey);
+        mSaleItemsPresenter.executeCategoryChangeApiCall(prevChosenCategoryKey,prevChosenCategoryName);
 
         return false;
     }
@@ -173,8 +187,8 @@ public class CategoriesController extends BaseController
     }
 
     @Override
-    protected void onActivityResumed(@NonNull Activity activity) {
-        super.onActivityResumed(activity);
+    public void onDetach(View view) {
+        super.onDetach(view);
     }
 
     @Override
@@ -188,6 +202,7 @@ public class CategoriesController extends BaseController
         showCategories(mCategories);
         initUIValues();
         setupSwipingBehavior();
+        setRetainViewMode(RetainViewMode.RETAIN_DETACH);
     }
 
     @Override
@@ -210,16 +225,15 @@ public class CategoriesController extends BaseController
     @Override
     public void onCategoryClicked(CategoriesAdapter.CategoriesViewHolder holder, int position, String categoryName, String categoryKey) {
 
-        mSaleItemsPresenter.executeCategoryChangeApiCall(categoryKey);
+        mSaleItemsPresenter.executeCategoryChangeApiCall(categoryKey,categoryName);
 
         //check if is last option
         boolean isOptionLastContent = isOptionLastContent(categoryKey);
 
         if (isOptionLastContent) {
-            mSaleItemsPresenter.categoryClicked(categoryName, determineColor());
+            mSaleItemsPresenter.categoryClicked(determineColor());
             categoriesChangeCount++;
             mBottomSheetBehavior.setState(CoordinatorLayoutAsBottomSheetBehavior.STATE_COLLAPSED);
-
         } else {
 
             Bundle bundle = new Bundle();
@@ -258,30 +272,11 @@ public class CategoriesController extends BaseController
             }
         });
 
-
-        int color = determineColor();
-        //set fragment background color
-        mRootLayout.setBackgroundColor(color);
-
-        if (chosenCategoryName.equals(getResources().getString(R.string.category_default))) {
-            color = getResources().getColor(R.color.shop_banner_divider_default);
-        }
-
-        mSaleItemsPresenter.categoryClicked(chosenCategoryName, color);
-        headerCategoryTextView.setText(chosenCategoryName);
-        categoriesChangeCount++;
-    }
-
-    private void goBack(){
-        ViewCompat.setTransitionName(headerCategoryTextView, "categoryHeaderTransitionName");
-
-        mSaleItemsPresenter.executeCategoryChangeApiCall(prevChosenCategoryKey);
-
     }
 
     private int determineColor() {
         CategoriesColorHelper categoriesColorHelper = new CategoriesColorHelper();
-        String[] colorSet = categoriesColorHelper.getBackgroundColor(categoriesChangeCount);
+        String[] colorSet = categoriesColorHelper.getBackgroundColor(getRouter().getBackstackSize()-1);
 
         if (itemPosition >= colorSet.length) {
             while (itemPosition >= colorSet.length) {

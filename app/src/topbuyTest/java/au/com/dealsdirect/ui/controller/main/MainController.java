@@ -220,11 +220,13 @@ public class MainController extends BaseController implements MainMvpView {
                         ((CheckoutController) controller).loadCart();
                     }
                 }
+
+                hideKeyboard();
             }
 
             @Override
             public void onPageSelected(int position) {
-
+                hideKeyboard();
             }
 
             @Override

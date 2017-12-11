@@ -43,6 +43,7 @@ import au.com.dealsdirect.data.network.model.saleitems.GetSaleItemsResponse;
 import au.com.dealsdirect.data.network.model.sorting.SortingResponse;
 import au.com.dealsdirect.ui.base.BaseController;
 import au.com.dealsdirect.ui.controller.categories.CategoriesController;
+import au.com.dealsdirect.ui.controller.categories.CategoriesMvpView;
 import au.com.dealsdirect.ui.controller.saleitemdetails.SaleItemDetailsController;
 import au.com.dealsdirect.ui.controller.searchfilter.SearchFilterController;
 import au.com.dealsdirect.ui.controller.searchfilter.SearchFilterMvpPresenter;
@@ -119,12 +120,10 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
     private boolean initialLoad = false;
     private List<GetSaleItemsResponse.Products> mSaleItems = new ArrayList<>();
 
-
     private Paginate mPaginateManager;
 
     private Paginate.Callbacks mPaginateCallbacks;
     private int page = 0;
-    private int mSaleItemClickCounter = 0;
     private boolean loadingInProgress = false;
     private boolean hasLoadedAllItems = false;
     private Router mCategoriesRouter;
@@ -144,6 +143,8 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
     private boolean isChangeStarted = false;
     private boolean isSetupFinished = false;
 
+    CategoriesController mCategoriesController;
+
     private CompositeDisposable mRxViewDisposables;
 
     public static SaleItemsController newInstance() {
@@ -154,7 +155,6 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
 
     public SaleItemsController(Bundle args) {
         super(args);
-        mRxViewDisposables = new CompositeDisposable();
     }
 
     @Override
@@ -170,7 +170,25 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
     protected void onAttach(@NonNull View view) {
         super.onAttach(view);
         mPresenter.onAttach(this);
-        mSaleItemClickCounter = 0;
+
+        if (mPresenter.isAuthorized()) {
+            mPresenter.callGetBasketItemsQuantity();
+        }
+
+        mRxViewDisposables = new CompositeDisposable();
+        mRxViewDisposables.add(RxView.clicks(mOverlay)
+                .throttleFirst(1000, TimeUnit.MILLISECONDS)
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(action -> {
+                    onHideSearchFilters();
+                }));
+
+        mRxViewDisposables.add(RxView.clicks(mSaleItemsCart)
+                .throttleFirst(1000, TimeUnit.MILLISECONDS)
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(action -> {
+                    mActivity.getMainController().getHomeViewPager().setCurrentItem(2);
+                }));
     }
 
     @Override
@@ -183,12 +201,8 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
     @Override
     protected void setUp(View view) {
 
-        if(!isCallGetCategoryTreeFinished()) {
+        if (!isCallGetCategoryTreeFinished()) {
             mPresenter.callGetCategoryTree();
-        }
-
-        if (mPresenter.isAuthorized()) {
-            mPresenter.callGetBasketItemsQuantity();
         }
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
@@ -250,20 +264,6 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
         mCategoriesRouter = getChildRouter(mCategoriesContainer);
         mSearchFilterRouter = getChildRouter(mSearchFilterContainer);
 
-        mRxViewDisposables.add(RxView.clicks(mOverlay)
-                .throttleFirst(1000, TimeUnit.MILLISECONDS)
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(action -> {
-                    onHideSearchFilters();
-                }));
-
-        mRxViewDisposables.add(RxView.clicks(mSaleItemsCart)
-                .throttleFirst(1000, TimeUnit.MILLISECONDS)
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(action -> {
-                    mActivity.getMainController().getHomeViewPager().setCurrentItem(2);
-                }));
-
         setupBottomSheet();
         setupSearchFilters();
 
@@ -275,12 +275,12 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
         mControllerChangeListener = new ControllerChangeHandler.ControllerChangeListener() {
             @Override
             public void onChangeStarted(@Nullable Controller to, @Nullable Controller from, boolean isPush, @NonNull ViewGroup container, @NonNull ControllerChangeHandler handler) {
-                    isChangeStarted = true;
+                isChangeStarted = true;
             }
 
             @Override
             public void onChangeCompleted(@Nullable Controller to, @Nullable Controller from, boolean isPush, @NonNull ViewGroup container, @NonNull ControllerChangeHandler handler) {
-                if(from instanceof SaleItemDetailsController){
+                if (from instanceof SaleItemDetailsController) {
                     isChangeStarted = false;
                     defaultBool = false;
                 }
@@ -288,6 +288,7 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
         };
         getRouter().addChangeListener(mControllerChangeListener);
 
+        setRetainViewMode(RetainViewMode.RETAIN_DETACH);
         isSetupFinished = true;
 
     }
@@ -296,6 +297,7 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
     public void onDetach(View view) {
         mKeyboardHeightProvider.close();
         isBottomSheetAdjustedHeight = false;
+//        defaultBool = true;
         mRxViewDisposables.dispose();
         super.onDetach(view);
     }
@@ -377,41 +379,33 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
 
     @Override
     public void showProductDetails(RecyclerView.ViewHolder viewHolder, int position, String seoIdentifierId, String imageUrl, String skuId, String saleId) {
-        if (mSaleItemClickCounter != 1) {
-            mSaleItemClickCounter++;
-
-            Handler clickHandler = new Handler();
-            clickHandler.postDelayed(() -> {
-                mSaleItemClickCounter = 0;
-            }, 2000);
-
 //            List<String> names = new ArrayList<>();
 //            names.add(getResources().getString(R.string.transition_sale_image_indexed, position));
-            mSaleItemsRecyclerView.smoothScrollToPosition(position);
+        mSaleItemsRecyclerView.smoothScrollToPosition(position);
 
-            Bundle bundle = new Bundle();
-            bundle.putInt(BundleKeys.SALEITEMDETAILS_KEY_POSITION, position);
-            bundle.putString(BundleKeys.SALEITEMDETAILS_KEY_ITEM_IMAGE_ID, imageUrl);
-            bundle.putString(BundleKeys.SALEITEMDETAILS_KEY_SEO_IDENTIFIER_ID, seoIdentifierId);
-            bundle.putString(BundleKeys.SALEITEMDETAILS_KEY_SKU_ID, skuId);
-            bundle.putString(BundleKeys.SALEITEMDETAILS_KEY_SALE_ID, saleId);
-            bundle.putString(BundleKeys.SALEITEMDETAILS_KEY_ITEM_NAME, ((SaleItemsAdapter.ShopItemsViewHolder) viewHolder).productName.getText().toString());
-            bundle.putString(BundleKeys.SALEITEMDETAILS_KEY_ITEM_PRICE, ((SaleItemsAdapter.ShopItemsViewHolder) viewHolder).productPrice.getText().toString());
-            bundle.putString(BundleKeys.SALEITEMDETAILS_KEY_ITEM_OLD_PRICE, ((SaleItemsAdapter.ShopItemsViewHolder) viewHolder).productPreviousPrice.getText().toString());
+        Bundle bundle = new Bundle();
+        bundle.putInt(BundleKeys.SALEITEMDETAILS_KEY_POSITION, position);
+        bundle.putString(BundleKeys.SALEITEMDETAILS_KEY_ITEM_IMAGE_ID, imageUrl);
+        bundle.putString(BundleKeys.SALEITEMDETAILS_KEY_SEO_IDENTIFIER_ID, seoIdentifierId);
+        bundle.putString(BundleKeys.SALEITEMDETAILS_KEY_SKU_ID, skuId);
+        bundle.putString(BundleKeys.SALEITEMDETAILS_KEY_SALE_ID, saleId);
+        bundle.putString(BundleKeys.SALEITEMDETAILS_KEY_ITEM_NAME, ((SaleItemsAdapter.ShopItemsViewHolder) viewHolder).productName.getText().toString());
+        bundle.putString(BundleKeys.SALEITEMDETAILS_KEY_ITEM_PRICE, ((SaleItemsAdapter.ShopItemsViewHolder) viewHolder).productPrice.getText().toString());
+        bundle.putString(BundleKeys.SALEITEMDETAILS_KEY_ITEM_OLD_PRICE, ((SaleItemsAdapter.ShopItemsViewHolder) viewHolder).productPreviousPrice.getText().toString());
 
-            if (Build.VERSION.SDK_INT < Build.VERSION_CODES.M) {
-                getRouter().pushController(RouterTransaction.with(SaleItemDetailsController.newInstance(bundle))
-                        .pushChangeHandler(new FadeChangeHandler())
-                        .popChangeHandler(new FadeChangeHandler()));
-            } else {
-                getRouter().pushController(RouterTransaction.with(SaleItemDetailsController.newInstance(bundle))
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.M) {
+            getRouter().pushController(RouterTransaction.with(SaleItemDetailsController.newInstance(bundle))
+                    .pushChangeHandler(new FadeChangeHandler())
+                    .popChangeHandler(new FadeChangeHandler()));
+        } else {
+            getRouter().pushController(RouterTransaction.with(SaleItemDetailsController.newInstance(bundle))
 //                        .pushChangeHandler(new ArcFadeMoveChangeHandler(getResources().getString(R.string.transition_sale_image_indexed, position)))
 //                        .popChangeHandler(new ArcFadeMoveChangeHandler(getResources().getString(R.string.transition_sale_image_indexed, position))));
-                        .popChangeHandler(new SharedArcFadePopChangeHandler())
-                        .pushChangeHandler(new SharedArcFadePushChangeHandler()));
-            }
-
+                    .popChangeHandler(new SharedArcFadePopChangeHandler())
+                    .pushChangeHandler(new SharedArcFadePushChangeHandler()));
         }
+
+
     }
 
     @Override
@@ -439,15 +433,14 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
 
         if (!mCategoriesRouter.hasRootController()) {
             Bundle bundle = new BundleBuilder(new Bundle())
-                    .putString(BundleKeys.CATEGORIES_ITEM_LIST,new Gson().toJson(mCategories))
+                    .putString(BundleKeys.CATEGORIES_ITEM_LIST, new Gson().toJson(mCategories))
                     .build();
-            Controller controller = ControllerFactory.getInstance(GateKeeper.Destination.CATEGORIES,bundle);
+            Controller controller = ControllerFactory.getInstance(GateKeeper.Destination.CATEGORIES, bundle);
             GateKeeper.setRoot(mCategoriesRouter, GateKeeper.Destination.CATEGORIES, RouterTransaction.with(controller).popChangeHandler(new FadeChangeHandler()).pushChangeHandler(new FadeChangeHandler()));
         } else {
-            CategoriesController controller = (CategoriesController) GateKeeper.getCurrentControllerOnRouter(mCategoriesRouter);
-
-            if (controller.getBottomSheetBehavior().getState() == CoordinatorLayoutAsBottomSheetBehavior.STATE_COLLAPSED) {
-                controller.getBottomSheetBehavior().setState(CoordinatorLayoutAsBottomSheetBehavior.STATE_EXPANDED);
+            mCategoriesController = (CategoriesController) GateKeeper.getCurrentControllerOnRouter(mCategoriesRouter);
+            if (mCategoriesController.getBottomSheetBehavior().getState() == CoordinatorLayoutAsBottomSheetBehavior.STATE_COLLAPSED) {
+                mCategoriesController.getBottomSheetBehavior().setState(CoordinatorLayoutAsBottomSheetBehavior.STATE_EXPANDED);
             }
         }
 
@@ -455,11 +448,10 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
     }
 
     @Override
-    public void onCategoryClicked(String chosenCategoryName, int color) {
+    public void categoryClicked(int color) {
         SaleItemsAdapter.HeaderViewHolder vh = mAdapter.getHeaderViewHolderInstance();
-        mChosenCategory = chosenCategoryName;
         if (vh != null) {
-            vh.onCategoryChangeUpdateUI(chosenCategoryName, color);
+            vh.onCategoryChangeUpdateUI(mChosenCategory, color);
         }
     }
 
@@ -497,8 +489,9 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
     }
 
     @Override
-    public void onExecuteCategoryChangeApiCall(String chosenCategoryKey) {
+    public void onExecuteCategoryChangeApiCall(String chosenCategoryKey, String chosenCategoryName) {
         mChosenCategoryKey = chosenCategoryKey;
+        mChosenCategory = chosenCategoryName;
         mSearchTagsAdapter.replaceData(new ArrayList<>());
         mChipFilters = mSearchTagsAdapter.getData();
         mPresenter.loadSaleItems(createSaleItemsRequest(chosenCategoryKey, "", 0, mChipFilters, ""));
@@ -719,18 +712,18 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
     }
 
     @Override
-    public boolean isDefaultBool(){
+    public boolean isDefaultBool() {
         return defaultBool;
     }
 
     @Override
     public boolean isChangeStarted() {
-        return isChangeStarted ;
+        return isChangeStarted;
     }
 
     @Override
     public void onCallGetBasketItemsQuantity() {
-        mCartCounter.setText(CartUtil.getCartValue()+"");
+        mCartCounter.setText(CartUtil.getCartValue() + "");
     }
 
     @Override
@@ -746,6 +739,15 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
     @Override
     public boolean isCallGetCategoryTreeFinished() {
         return mIsCallGetCategoryTreeFinished;
+    }
+
+    @Override
+    public boolean isCategoriesActive() {
+        if (mCategoriesController != null) {
+            return mCategoriesController.isActive();
+        }
+
+        return false;
     }
 }
 
