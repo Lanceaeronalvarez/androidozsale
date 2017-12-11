@@ -55,7 +55,7 @@ public class AddNewAddressController extends SwipeableBaseToolBarController impl
     public AddNewAddressController(Bundle args) {
         super(args);
         mDecorationInfoList = JsonUtils.convertStringToObject(args.getString(DECORATION_INFO_LIST), new TypeToken<ArrayList<DecorationInfoList>>(){}.getType());
-        mCalledFromCart = args.getBoolean(IS_FROM_CART,getArgs().getBoolean(IS_FROM_CART));
+        mCalledFromCart = args.getBoolean(IS_FROM_CART);
     }
 
 
@@ -164,6 +164,7 @@ public class AddNewAddressController extends SwipeableBaseToolBarController impl
                 mActivity,
                 CustomAlertDialog.CustomDialogIconState.POSITIVE,
                 getApplicationContext().getString(R.string.delivery_address_added));
+
         mActivity.onBackPressed();
 
     }
