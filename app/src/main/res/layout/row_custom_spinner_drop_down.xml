@@ -5,13 +5,14 @@
     android:layout_height="wrap_content"
     android:background="@drawable/bg_account_item"
     android:orientation="vertical"
-    android:padding="15dp"
     tools:ignore="MissingPrefix">
 
     <TextView
         android:id="@+id/row_spinner_text"
         fontPath="@string/font_app_medium"
         android:textColor="@color/gray_title_text"
+        android:paddingTop="10dp"
+        android:paddingBottom="10dp"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:textSize="@dimen/text_size_xlarge" />

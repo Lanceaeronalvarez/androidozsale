@@ -44,13 +44,14 @@
             android:background="#FFFFFF"
             android:gravity="center"
             android:orientation="vertical"
-            android:visibility="gone">
+            android:visibility="visible">
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:fontFamily="@string/font_app_bold"
                 android:text="Sorry, today we can't find anything by your request."
+                android:gravity="center"
                 android:textColor="#3e3e3e"
                 android:textSize="@dimen/text_size_large" />
 

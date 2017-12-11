@@ -18,6 +18,9 @@
         currently in your account when you checkout your order. \n
     </string>
 
+    <string name="thank_you_for_shopping">Thank you for shopping with OO</string>
+
+
     <string name="base_html_template_header" formatted="false">
         <![CDATA["<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN">
         <html>
