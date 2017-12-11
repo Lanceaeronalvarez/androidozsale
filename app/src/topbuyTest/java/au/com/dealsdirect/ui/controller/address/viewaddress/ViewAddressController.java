@@ -2,15 +2,19 @@ package au.com.dealsdirect.ui.controller.address.viewaddress;
 
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.bluelinelabs.conductor.Controller;
+import com.bluelinelabs.conductor.ControllerChangeHandler;
 import com.bluelinelabs.conductor.changehandler.VerticalChangeHandler;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
@@ -61,6 +65,7 @@ public class ViewAddressController extends SwipeableBaseToolBarController implem
     private List<DecorationInfoList> mDecorationInfoList;
     private boolean mAddressesLoaded = false;
     private DeliveryAddress mDeliveryAddress;
+    private int loadCounter = 0;
 
     @Inject
     ViewAddressMvpPresenter<ViewAddressMvpView> mPresenter;
@@ -74,8 +79,8 @@ public class ViewAddressController extends SwipeableBaseToolBarController implem
 
     public ViewAddressController(Bundle args) {
         super(args);
-        mCalledFromCart = args.getBoolean(IS_FROM_CART, false);
-        mDeliveryAddress =  JsonUtils.convertStringToObject(args.getString(DELIVERY_ADDRESS), new TypeToken<ArrayList<DecorationInfoList>>(){}.getType());
+        mCalledFromCart = args.getBoolean(IS_FROM_CART);
+        mDeliveryAddress =  JsonUtils.convertStringToObject(args.getString(DELIVERY_ADDRESS), new TypeToken<DeliveryAddress>(){}.getType());
     }
 
     @Override
@@ -116,6 +121,23 @@ public class ViewAddressController extends SwipeableBaseToolBarController implem
             }));
         }
 
+        getRouter().addChangeListener(new ControllerChangeHandler.ControllerChangeListener() {
+            @Override
+            public void onChangeStarted(@Nullable Controller to, @Nullable Controller from, boolean isPush, @NonNull ViewGroup container, @NonNull ControllerChangeHandler handler) {
+                loadCounter++;
+                if (loadCounter==1){
+                    mPresenter.loadAddresses();
+                    loadCounter = 0;
+                }
+            }
+
+            @Override
+            public void onChangeCompleted(@Nullable Controller to, @Nullable Controller from, boolean isPush, @NonNull ViewGroup container, @NonNull ControllerChangeHandler handler) {
+                if (to instanceof ViewAddressController && mActivity.isAuthorized()) {
+
+                }
+            }
+        });
     }
 
     @Override
