@@ -16,26 +16,27 @@ import javax.inject.Inject;
 import au.com.dealsdirect.R;
 import au.com.dealsdirect.data.network.model.returns.returndetails.GetReturnDetailsResponseBody;
 import au.com.dealsdirect.data.network.model.returns.returndetails.Item;
-import au.com.dealsdirect.ui.base.BaseController;
+import au.com.dealsdirect.ui.base.SwipeableBaseToolBarController;
 import au.com.dealsdirect.ui.controller.returns.returndetails.adapter.ReturnDetailsAdapter;
 import au.com.dealsdirect.utils.BundleBuilder;
 import butterknife.BindView;
+
+import static au.com.dealsdirect.utils.BundleKeys.KEY_IS_APPROVED;
+import static au.com.dealsdirect.utils.BundleKeys.KEY_ORDER_NUMBER;
+import static au.com.dealsdirect.utils.BundleKeys.KEY_RAN;
+import static au.com.dealsdirect.utils.BundleKeys.KEY_REQUEST_DATE;
+import static au.com.dealsdirect.utils.BundleKeys.KEY_RETURN_ID;
+import static au.com.dealsdirect.utils.BundleKeys.KEY_STATUS;
 
 /*
  * Created by Ayi on 05/06/2017.
  */
 
-public class ReturnDetailsController extends BaseController implements ReturnDetailsMvpView {
+public class ReturnDetailsController extends SwipeableBaseToolBarController implements ReturnDetailsMvpView {
 
     public static final String TAG = "ReturnDetailsController";
 
     private static final String KEY_TEXT = "ReturnDetailsController.KEY_TEXT";
-    private static final String KEY_ORDER_NUMBER = "ReturnDetailsController.KEY_ORDER_NUMBER";
-    private static final String KEY_REQUEST_DATE = "ReturnDetailsController.REQUEST_DATE";
-    private static final String KEY_IS_APPROVED = "ReturnDetailsController.IS_APPROVED";
-    private static final String KEY_STATUS = "ReturnDetailsController.STATUS";
-    private static final String KEY_RAN = "ReturnDetailsController.RAN";
-    private static final String KEY_RETURN_ID = "ReturnDetailsController.RETURN_ID";
 
     private int mOrderNumber;
     private String mReturnID;
@@ -97,7 +98,9 @@ public class ReturnDetailsController extends BaseController implements ReturnDet
     @NonNull
     @Override
     protected View inflateView(@NonNull LayoutInflater inflater, @NonNull ViewGroup container) {
-        View view = inflater.inflate(R.layout.controller_return_details, container, false);
+
+        View view = super.inflateView(inflater, container);
+        fillContent(inflater.inflate(R.layout.controller_return_details, container, false));
 
         getControllerComponent().inject(this);
 
@@ -109,6 +112,8 @@ public class ReturnDetailsController extends BaseController implements ReturnDet
     @Override
     public void onViewBound(@NonNull View view) {
         super.onViewBound(view);
+        setupSwipingBehavior();
+        hideToolbarTitle();
         setUp(view);
     }
 
