@@ -1,0 +1,121 @@
+<resources>
+    <string name="exit_app_name">OO</string>
+
+    <string name="default_country_id">OA</string>
+
+    <string name="checkout_page_toolbar_title">My Cart</string>
+    <string name="total">Grand Total</string>
+    <string name="add_new_address">add delivery address</string>
+    <string name="invite_friend_guide">Invite your friends to join OO. Once your friends have
+        joined through your invitation and made their first purchase you will instantly receive a
+        $20 OO voucher to use towards any future purchase.
+    </string>
+
+    <string name="vouchers_view_detail">Invite your friends to join Only Online. Once your friends have
+    joined through your invitation and made their first purchase you will instantly receive a
+    $20 voucher to use towards any future purchase. \n\nYou can apply any vouchers
+        currently in your account when you checkout your order. \n
+    </string>
+
+    <string name="thank_you_for_shopping">Thank you for shopping with OO</string>
+
+
+    <string name="base_html_template_header" formatted="false">
+        <![CDATA["<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN">
+        <html>
+            <head>
+                <style type="text/css">
+
+                    table {
+                        width: auto;
+                    }
+                    hr {
+                        border: 0;
+                        width: 80%;
+                        background-color: #FFFFFF;
+                        height: 1px;
+                    }
+                    a {
+                        color: #1C6CFD;
+                        text-decoration: none;
+                    }
+
+                    a:link {
+                        color: #A2D709;
+                        text-decoration: underline;
+                    }
+
+                    li{
+                        font-family: Lato;
+                        color: #757373;
+                    }
+
+                    b {
+                        font-family: Lato;
+                        color: #90BF0A;
+                    }
+
+                    br {
+                        font-family: Lato;
+                        color: #6E6868;
+                    }
+
+                    body {
+                        -webkit-text-size-adjust: none;
+                        font-family: Lato;
+                        color: #6E6868;
+                        font-family: Lato;
+                        font-size: 10pt;
+                        background-color: #FFFFFF;
+                        word-wrap: break-word;
+                        padding-left: 0px;
+                        padding-right: 0px;
+                        padding-top: 0px;
+                    }
+
+                    embed{
+                        width:100%;
+                    }
+
+                    object{
+                        width:100%;
+
+                    }
+
+                    iframe{
+                        width:100%;
+
+                    }
+
+                    html {
+                        -webkit-text-size-adjust: none; / Never autoresize text /
+                    }
+                </style>
+                <meta name='viewport' content='width=device-width, initial-scale=1.0, maximum-scale=1.0'>
+            </head>
+        <body>"]]>
+    </string>
+
+    <string name="twitter_user_id">twitter://user?user_id=14730691</string>
+    <string name="fb_page_id">10357598833</string>
+
+    <string name="font_app_black">fonts/App-Font-Semibold.ttf</string>
+    <string name="font_app_black_italic">fonts/App-Font-SemiboldItalic.ttf</string>
+    <string name="font_app_bold">fonts/App-Font-Bold.ttf</string>
+    <string name="font_app_bold_italic">fonts/App-Font-BoldItalic.ttf</string>
+    <string name="font_app_hairline">fonts/App-Font-Hairline.ttf</string>
+    <string name="font_app_hairline_italic">fonts/App-Font-HairlineItalic.ttf</string>
+    <string name="font_app_heavy">fonts/App-Font-ExtraBold.ttf</string>
+    <string name="font_app_heavy_italic">fonts/App-Font-ExtraBoldItalic.ttf</string>
+    <string name="font_app_italic">fonts/App-Font-Italic.ttf</string>
+    <string name="font_app_light">fonts/App-Font-Light.ttf</string>
+    <string name="font_app_light_italic">fonts/App-Font-LightItalic.ttf</string>
+    <string name="font_app_medium">fonts/App-Font-Regular.ttf</string>
+    <string name="font_app_medium_italic">fonts/App-Font-Italic.ttf</string>
+    <string name="font_app_regular">fonts/App-Font-Regular.ttf</string>
+    <string name="font_app_semibold">fonts/App-Font-Semibold.ttf</string>
+    <string name="font_app_semibold_italic">fonts/App-Font-SemiboldItalic.ttf</string>
+    <string name="font_app_thin">fonts/App-Font-Thin.ttf</string>
+    <string name="font_app_thin_italic">fonts/App-Font-ThinItalic.ttf</string>
+
+</resources>

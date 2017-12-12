@@ -119,6 +119,8 @@ android {
         ooRC {
             res.srcDirs = ['src/ooTest/res']
         }
+        buyinviteRC.res.srcDir 'src/buyinviteTest/res/'
+        buyinviteTest.res.srcDir 'src/buyinviteTest/res/'
     }
 }
 
