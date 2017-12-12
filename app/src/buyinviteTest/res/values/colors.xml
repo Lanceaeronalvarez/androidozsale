@@ -2,9 +2,9 @@
 <resources>
 
     <color name="transparent">#00000000</color>
-    <color name="colorPrimary">#A2D709</color>
-    <color name="colorPrimaryDark">#90BF0A</color>
-    <color name="colorAccent">#90BF0A</color>
+    <color name="colorPrimary">#E90F87</color>
+    <color name="colorPrimaryDark">#FF1998</color>
+    <color name="colorAccent">#FF1998</color>
 
     <color name="color_text_option">#F86903</color>
     <color name="color_item_title">#616161</color>
@@ -21,10 +21,10 @@
 
     <color name="progress_loader_stroke_color">#616161</color>
 
-    <color name="bottom_nav_accent_color">#90BF0A</color>
-    <color name="bottom_nav_badge_color">#90BF0A</color>
+    <color name="bottom_nav_accent_color">@color/colorAccent</color>
+    <color name="bottom_nav_badge_color">@color/colorAccent</color>
 
-    <color name="category_text_active">#90BF0A</color>
+    <color name="category_text_active">@color/colorAccent</color>
     <color name="category_text_inactive">#707070</color>
 
     <color name="border_gray">#E4E4E4</color>
@@ -50,29 +50,29 @@
 
     <color name="tab_bar_background">#e7e7e7</color>
     <color name="tab_bar_icon_inactive">#87939D</color>
-    <color name="tab_bar_icon_active">#A2D709</color>
-    <color name="tab_bar_icon_hovered">#A2D709</color>
+    <color name="tab_bar_icon_active">@color/colorPrimary</color>
+    <color name="tab_bar_icon_hovered">@color/colorPrimary</color>
 
     <color name="app_skin">#FAFAF9</color>
-    <color name="toolbar_skin">#90BF0A</color>
-    <color name="toolbar_active_skin">#90BF0A</color>
+    <color name="toolbar_skin">@color/colorAccent</color>
+    <color name="toolbar_active_skin">@color/colorAccent</color>
 
 
     <!-- Button Theme -->
     <color name="bg_button_ripple">#DBE1EA</color>
-    <color name="bg_button_default">#90BF0A</color>
-    <color name="bg_button_pressed">#A2D709</color>
+    <color name="bg_button_default">@color/colorAccent</color>
+    <color name="bg_button_pressed">@color/colorPrimary</color>
 
     <!-- EditText Theme -->
     <color name="bg_edit_text_ripple">#FFFFFF</color>
     <color name="bg_edit_text_default">#ECECEC</color>
-    <color name="bg_edit_text_focused">#90BF0A</color>
+    <color name="bg_edit_text_focused">@color/colorAccent</color>
 
     <!-- Chips Theme -->
     <color name="bg_chips_ripple">#FFFFFF</color>
     <color name="bg_chips_default">#F8FAFD</color>
     <color name="bg_chips_default_border">#EDF0F5</color>
-    <color name="bg_chips_checked">#90BF0A</color>
+    <color name="bg_chips_checked">@color/colorAccent</color>
     <color name="bg_chips_text">#FFFFFF</color>
 
     <!-- Dialog Theme -->
@@ -96,5 +96,5 @@
     <color name="invite_sms_pressed">#72E98D</color>
 
     <color name="item_select_remove">#F29124</color>
-    <color name="verify_resend_color">#90BF0A</color>
+    <color name="verify_resend_color">@color/colorAccent</color>
 </resources>
