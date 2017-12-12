@@ -122,7 +122,7 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
     private List<GetSaleItemsResponse.Facets> mFacets = new ArrayList<>();
 
     private String mChosenCategoryKey = "";
-    private String mChosenCategory = "";
+    private String mChosenCategory = "shop";
     private List<GetCategoryTreeResponse> mCategories = new ArrayList<>();
     private boolean isCategoryChanged = false;
     private boolean initialLoad = false;
@@ -221,10 +221,13 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
 
 
         mNoNetworkFrame.setOnClickListener((v)->{
-            hideNoNetworkLayout();
-            mIsCallGetCategoryTreeFinished = false;
-            mPresenter.callGetCategoryTree();
-            refresh();
+            if(!isCallGetCategoryTreeFinished()) {
+                mPresenter.callGetCategoryTree();
+            }
+            hasLoadedAllItems = false;
+            mPaginateManager.setHasMoreDataToLoad(true);
+            loadingInProgress = true;
+            mPresenter.loadSaleItems(createSaleItemsRequest(mChosenCategoryKey, "", page, mChipFilters, ""));
         });
 
         mKeyboardHeightProvider = new KeyboardHeightProvider(mActivity);
@@ -237,7 +240,6 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
             @Override
             public void onLoadMore() {
                 // Load next page of data (e.g. network or database)
-                page++;
                 Log.d("SaleItemsController", "calling onLoadMore");
                 refresh();
 
@@ -385,11 +387,11 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
                         .withEndAction(() -> vh.getNoSearchItemsLayout().setVisibility(View.VISIBLE))
                         .setDuration(300)
                         .build().start();
-                mLayoutManager.setScrollEnabled(false);
+//                mLayoutManager.setScrollEnabled(false);
 
             } else if (products.size() != 0) {
 
-                mLayoutManager.setScrollEnabled(true);
+//                mLayoutManager.setScrollEnabled(true);
                 if (vh != null && vh.getNoSearchItemsLayout().getVisibility() == View.VISIBLE) {
                     AnimationEngine.Builder.animate(vh.getHeaderSeparator()).fadeOut()
                             .withEndAction(() -> vh.getHeaderSeparator().setVisibility(View.GONE))
@@ -414,7 +416,7 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
     public void showSaleItems(GetSaleItemsResponse getSaleItemsResponse, boolean forFacetCorrection) {
         List<GetSaleItemsResponse.Products> items = getSaleItemsResponse.products;
 
-
+        checkNoSearchItemsLayout(items);
 
         if (items.size() == 0 && page != 0) {
             hasLoadedAllItems = true;
@@ -423,22 +425,23 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
         } else {
             mFacets = getSaleItemsResponse.facets;
 
-            checkNoSearchItemsLayout(items);
-
             hasLoadedAllItems = false;
             mPaginateManager.setHasMoreDataToLoad(true);
             loadingInProgress = false;
 
             if (page == 0) {
-                mAdapter.replaceData(items);
-
-                mSaleItemsRecyclerView.scrollToPosition(0);
 
                 if (items.size() <= PaginateUtils.LOADING_TRIGGER_THRESHOLD) {
                     hasLoadedAllItems = true;
                     mPaginateManager.setHasMoreDataToLoad(false);
                     page = 0;
                 }
+
+                mAdapter.replaceData(items);
+
+                mSaleItemsRecyclerView.scrollToPosition(0);
+
+
             } else {
                 mAdapter.addData(items);
             }
@@ -469,7 +472,9 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
             hasLoadedAllItems = true;
             page = 0;
         } else {
+            Log.d("testestest","WAS REFRESHED");
             loadingInProgress = true;
+            page++;
             mPresenter.loadSaleItems(createSaleItemsRequest(mChosenCategoryKey, "", page, mChipFilters, ""));
         }
     }
@@ -835,8 +840,11 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
 
     @Override
     public void showNoNetworkLayout() {
-        mAdapter.replaceData(new ArrayList<>());
         mNoNetworkFrame.setVisibility(View.VISIBLE);
+        mAdapter.replaceData(new ArrayList<>());
+        hasLoadedAllItems = true;
+        mPaginateManager.setHasMoreDataToLoad(false);
+        mNoNetworkFrame.requestLayout();
     }
 
     @Override

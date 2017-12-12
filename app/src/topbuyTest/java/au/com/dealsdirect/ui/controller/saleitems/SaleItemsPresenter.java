@@ -36,11 +36,12 @@ public class SaleItemsPresenter<V extends SaleItemsMvpView> extends BasePresente
 
     @Override
     public void loadSaleItems(GetSaleItemsRequest getSaleItemsRequest) {
+        getMvpView().hideNoNetworkLayout();
         doApiCallForResponse(getDataManager().callGetSaleItemsRequest(getSaleItemsRequest), new AppApiCallback() {
             @Override
             public void onSuccess(Object response) {
                 super.onSuccess(response);
-                getMvpView().hideNoNetworkLayout();
+
                 if (getSaleItemsRequest.hasFilters()) {
                     getMvpView().showSaleItems((GetSaleItemsResponse) response, false);
                 } else {
