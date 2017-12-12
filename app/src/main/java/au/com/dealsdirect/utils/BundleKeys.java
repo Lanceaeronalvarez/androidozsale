@@ -102,5 +102,13 @@ public class BundleKeys {
     //Ourpay SMS Verification
     public static final String PHONE_KEY = "PHONE_KEY";
 
+    //Returns
+    public static final String KEY_ORDER_NUMBER = "ReturnDetailsController.KEY_ORDER_NUMBER";
+    public static final String KEY_REQUEST_DATE = "ReturnDetailsController.REQUEST_DATE";
+    public static final String KEY_IS_APPROVED = "ReturnDetailsController.IS_APPROVED";
+    public static final String KEY_STATUS = "ReturnDetailsController.STATUS";
+    public static final String KEY_RAN = "ReturnDetailsController.RAN";
+    public static final String KEY_RETURN_ID = "ReturnDetailsController.RETURN_ID";
+
 
 }
