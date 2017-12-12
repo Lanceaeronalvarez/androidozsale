@@ -77,6 +77,7 @@ public class LegalitiesController extends SwipeableBaseToolBarController impleme
         String header = mActivity.getResources().getString(R.string.base_html_template_header);
         String footer = mActivity.getResources().getString(R.string.base_html_template_footer);
 
+        hideNoNetworkLayout();
         mWebView.loadData(header + value + footer, "text/html; charset=UTF-8", null);
         mWebView.setVisibility(View.VISIBLE);
     }
