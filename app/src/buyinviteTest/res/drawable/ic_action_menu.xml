@@ -4,18 +4,21 @@
         android:viewportWidth="34.0"
         android:viewportHeight="34.0">
     <path
-        android:pathData="M9.3,8.2C9,8.2 8.7,8.5 8.7,8.8C8.7,9.1 9,9.4 9.3,9.4L24.1,9.4C24.4,9.4 24.7,9.1 24.7,8.8C24.7,8.5 24.4,8.2 24.1,8.2L9.3,8.2Z"
+        android:pathData="M7.63,17.25L27.33,17.25C27.68,17.25 27.96,16.97 27.96,16.63C27.96,16.28 27.68,16 27.33,16L7.63,16C7.28,16 7,16.28 7,16.63C7,16.97 7.28,17.25 7.63,17.25"
         android:strokeColor="#00000000"
+        android:fillType="evenOdd"
         android:fillColor="#FFFFFF"
         android:strokeWidth="1"/>
     <path
-        android:pathData="M11.8,24.2C11.5,24.2 11.2,24.5 11.2,24.8C11.2,25.1 11.5,25.4 11.8,25.4L21.6,25.4C21.9,25.4 22.2,25.1 22.2,24.8C22.2,24.5 21.9,24.2 21.6,24.2L11.8,24.2Z"
+        android:pathData="M7.63,9.25L27.33,9.25C27.68,9.25 27.96,8.97 27.96,8.63C27.96,8.28 27.68,8 27.33,8L7.63,8C7.28,8 7,8.28 7,8.63C7,8.97 7.28,9.25 7.63,9.25"
         android:strokeColor="#00000000"
+        android:fillType="evenOdd"
         android:fillColor="#FFFFFF"
         android:strokeWidth="1"/>
     <path
-        android:pathData="M6.9,16.2C6.6,16.2 6.3,16.5 6.3,16.8C6.3,17.1 6.6,17.4 6.9,17.4L26.6,17.4C26.9,17.4 27.2,17.1 27.2,16.8C27.2,16.5 26.9,16.2 26.6,16.2L6.9,16.2Z"
+        android:pathData="M27.33,24L7.63,24C7.28,24 7,24.28 7,24.63C7,24.97 7.28,25.25 7.63,25.25L27.33,25.25C27.68,25.25 27.96,24.97 27.96,24.63C27.96,24.28 27.68,24 27.33,24"
         android:strokeColor="#00000000"
+        android:fillType="evenOdd"
         android:fillColor="#FFFFFF"
         android:strokeWidth="1"/>
 </vector>
