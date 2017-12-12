@@ -494,6 +494,7 @@ public class CheckoutController extends SwipeableBaseToolBarController implement
     @Override
     public void storeCartDetails(Value value) {
         //Set 3DS value
+        hideNoNetworkLayout();
         if (value != null) {
             PaymentInfo.setThreeDSecureRequired(value.threeDSecureRequired);
             PaymentInfo.setCartCost(value.getSummary().total);
