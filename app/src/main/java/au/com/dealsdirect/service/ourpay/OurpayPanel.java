@@ -201,23 +201,22 @@ public class OurpayPanel {
         textViewTC.setText(Html.fromHtml(OurpayTemplateText.getText(mBaseActivity, ourpay.getTermsAndConditionsText())));
         textViewTC.setOnClickListener(view1 -> {
 
-            String ourpayTermsAndConditionKey = "OurPayTermsAndConditions_Text";
-            Bundle bundle = new Bundle();
-            bundle.putString("templateKey", ourpayTermsAndConditionKey);
+            if (mRouter.getBackstackSize()==1){
 
-            ((MainActivity)mBaseActivity).setDraggableViewPager(false);
-            GateKeeper.push(mRouter,GateKeeper.Destination.LEGALITIES,
-                    new BundleBuilder(new Bundle())
-                    .putString(BundleKeys.TEMPLATE_KEY, ourpayTermsAndConditionKey)
-                    .putString(BundleKeys.TITLE, "My Basket")
-                    .build(),
-                    new VerticalChangeHandler(false),
-                    new VerticalChangeHandler());
+                String ourpayTermsAndConditionKey = "OurPayTermsAndConditions_Text";
+                Bundle bundle = new Bundle();
+                bundle.putString("templateKey", ourpayTermsAndConditionKey);
 
-//                HTMLViewFragment fragment = new HTMLViewFragment();
-//                fragment.setArguments(bundle);
-//
-//                baseActivity.switchContent(fragment, R.id.contentBody);
+                ((MainActivity)mBaseActivity).setDraggableViewPager(false);
+                GateKeeper.push(mRouter,GateKeeper.Destination.LEGALITIES,
+                        new BundleBuilder(new Bundle())
+                                .putString(BundleKeys.TEMPLATE_KEY, ourpayTermsAndConditionKey)
+                                .putString(BundleKeys.TITLE, "My Basket")
+                                .build(),
+                        new VerticalChangeHandler(false),
+                        new VerticalChangeHandler());
+
+            }
 
         });
 
