@@ -107,18 +107,18 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginBottom="16dp"
+        android:padding="4dp"
         android:layout_marginTop="10dp">
 
         <Spinner
             android:id="@+id/controller_details_spinner_gender"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:padding="2dp" />
-
+            android:padding="4dp" />
 
         <ImageView
             android:layout_width="25dp"
-            android:layout_height="25dp"
+            android:layout_height="50dp"
             android:layout_alignRight="@id/controller_details_spinner_gender"
             android:layout_centerVertical="true"
             android:layout_marginRight="5dp"
