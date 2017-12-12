@@ -1,5 +1,4 @@
 <resources>
-    <string name="app_name">DealsDirect</string>
     <string name="facebook_app_id">1650094968544406</string>
     <string name="facebook_app_secret">94da0f48bd2ffea25981e52c56f9260a</string>
     <string name="fb_login_protocol_scheme">fb1650094968544406</string>
