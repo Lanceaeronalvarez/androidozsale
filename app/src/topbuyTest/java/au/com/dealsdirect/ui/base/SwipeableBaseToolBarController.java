@@ -89,6 +89,7 @@ public abstract class SwipeableBaseToolBarController extends BaseController {
     @Override
     public void showNoNetworkLayout() {
         mContentLayout.setVisibility(View.GONE);
+        hideBottomLayout();
         mNoNetworkLayout.setVisibility(View.VISIBLE);
     }
 
@@ -97,6 +98,7 @@ public abstract class SwipeableBaseToolBarController extends BaseController {
         if (mContentLayout != null && mNoNetworkLayout != null) {
             mContentLayout.setVisibility(View.VISIBLE);
             mNoNetworkLayout.setVisibility(View.GONE);
+            showBottomLayout();
         }
     }
 
@@ -114,8 +116,12 @@ public abstract class SwipeableBaseToolBarController extends BaseController {
 
     }
 
-    public void showBottomLayout(){
+    protected void showBottomLayout(){
         mBottomLayout.setVisibility(View.VISIBLE);
+    }
+
+    protected void hideBottomLayout(){
+        mBottomLayout.setVisibility(View.GONE);
     }
 
     public void setupSwipingBehavior() {

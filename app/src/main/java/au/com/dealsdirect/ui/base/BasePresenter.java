@@ -138,9 +138,6 @@ public class BasePresenter<V extends MvpView> implements MvpPresenter<V> {
 //                ((BasePullToRefreshController) getMvpView()).showNoNetworkLayout();
 //            }
 //        }
-
-        getMvpView().hideNoNetworkLayout();
-
         getCompositeDisposable().add(observable
                 .subscribeOn(getSchedulerProvider().io())
                 .observeOn(getSchedulerProvider().ui())
@@ -152,6 +149,7 @@ public class BasePresenter<V extends MvpView> implements MvpPresenter<V> {
                             return;
                         }
 
+                        getMvpView().hideNoNetworkLayout();
                         getMvpView().hideLoading();
 
                         if (response instanceof List) {
@@ -176,7 +174,7 @@ public class BasePresenter<V extends MvpView> implements MvpPresenter<V> {
 
                         getMvpView().hideLoading();
 
-                        if(throwable instanceof SocketTimeoutException || throwable instanceof UnknownHostException){
+                        if(throwable.getCause() instanceof SocketTimeoutException || throwable.getCause() instanceof UnknownHostException){
                             getMvpView().showNoNetworkLayout();
                         }
 

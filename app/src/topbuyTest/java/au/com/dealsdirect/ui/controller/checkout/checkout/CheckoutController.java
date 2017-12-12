@@ -708,6 +708,16 @@ public class CheckoutController extends SwipeableBaseToolBarController implement
         hidePaymentButtons();
     }
 
+    @Override
+    public void showNoNetworkLayout() {
+
+    }
+
+    @Override
+    public void hideNoNetworkLayout() {
+
+    }
+
     private String formAddressDetails(DeliveryAddress deliveryAddress) {
 
         return deliveryAddress.addressLines + ", "
