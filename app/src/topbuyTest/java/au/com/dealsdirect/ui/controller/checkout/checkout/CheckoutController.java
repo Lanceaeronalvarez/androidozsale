@@ -133,6 +133,8 @@ public class CheckoutController extends SwipeableBaseToolBarController implement
                 Bundle bundle = new Bundle();
                 bundle.putBoolean(BundleKeys.IS_FROM_CART, true);
                 bundle.putString(BundleKeys.DELIVERY_ADDRESS, new Gson().toJson(mDeliveryAddress));
+
+                mActivity.setDraggableViewPager(false);
                 GateKeeper.push(getRouter(), GateKeeper.Destination.VIEW_ADDRESSES, bundle, new VerticalChangeHandler(false), new VerticalChangeHandler());
 
             } else if (view.getId() == mPaymentChangeText.getId()
@@ -145,6 +147,8 @@ public class CheckoutController extends SwipeableBaseToolBarController implement
                     bundle.putBoolean(BundleKeys.IS_FROM_CART, true);
                     bundle.putDouble(CART_TOTAL_COST, mValue.getSummary().total);
                     bundle.putString(PAYMENT_METHODS, new Gson().toJson(mPaymentList));
+
+                    mActivity.setDraggableViewPager(false);
                     GateKeeper.push(getRouter(), GateKeeper.Destination.PAYMENT_SELECT, bundle, new VerticalChangeHandler(false), new VerticalChangeHandler());
 
                 } else {
@@ -173,6 +177,8 @@ public class CheckoutController extends SwipeableBaseToolBarController implement
                 bundle.putString(BundleKeys.VOUCHERS, new Gson().toJson(mVouchers));
                 bundle.putBoolean(BundleKeys.IS_VOUCHER_ADDED, mIsVoucherAdded);
                 bundle.putBoolean(BundleKeys.IS_CART_NO_DISCOUNT, isNoDiscount);
+
+                mActivity.setDraggableViewPager(false);
                 GateKeeper.push(getRouter(), GateKeeper.Destination.ADD_VOUCHERS, bundle, new VerticalChangeHandler(false), new VerticalChangeHandler());
 
             }
@@ -238,23 +244,32 @@ public class CheckoutController extends SwipeableBaseToolBarController implement
         mMasterpassButton = (RelativeLayout) mFooterView.findViewById(R.id.partial_checkout_button_masterpass);
         mOurpayHolder = (LinearLayout) mFooterView.findViewById(R.id.partial_checkout_ourpay_panel_holder);
 
-        mAddNewVoucherLayout.setOnClickListener(view1 -> GateKeeper.push(getRouter(),
-                GateKeeper.Destination.ADD_VOUCHERS,
-                new BundleBuilder(new Bundle())
-                        .putString(BundleKeys.VOUCHERS, AddVouchersController.testVouchersString)
-                        .putBoolean(BundleKeys.IS_VOUCHER_ADDED, true)
-                        .putBoolean(BundleKeys.IS_CART_NO_DISCOUNT, false)
-                        .build(),
-                new HorizontalChangeHandler(), new HorizontalChangeHandler()));
 
-        mAddNewPaymentLayout.setOnClickListener(view1 -> GateKeeper.push(getRouter(),
-                GateKeeper.Destination.PAYMENT_ADD,
-                new BundleBuilder(new Bundle())
-                        .putBoolean(BundleKeys.IS_FROM_CART, true)
-                        .putString(CART_TOTAL_COST, "")
-                        .build()
-                , new HorizontalChangeHandler()
-                , new HorizontalChangeHandler()));
+        mAddNewVoucherLayout.setOnClickListener(view12 -> {
+            mActivity.setDraggableViewPager(false);
+            GateKeeper.push(getRouter(),
+                    GateKeeper.Destination.ADD_VOUCHERS,
+                    new BundleBuilder(new Bundle())
+                            .putString(BundleKeys.VOUCHERS, AddVouchersController.testVouchersString)
+                            .putBoolean(BundleKeys.IS_VOUCHER_ADDED, true)
+                            .putBoolean(BundleKeys.IS_CART_NO_DISCOUNT, false)
+                            .build(),
+                    new HorizontalChangeHandler(), new HorizontalChangeHandler());
+        });
+
+
+        mAddNewPaymentLayout.setOnClickListener(view1 -> {
+
+            mActivity.setDraggableViewPager(false);
+            GateKeeper.push(getRouter(),
+                    GateKeeper.Destination.PAYMENT_ADD,
+                    new BundleBuilder(new Bundle())
+                            .putBoolean(BundleKeys.IS_FROM_CART, true)
+                            .putString(CART_TOTAL_COST, "")
+                            .build()
+                    , new HorizontalChangeHandler()
+                    , new HorizontalChangeHandler());
+        });
 
 
         setUp(view);
@@ -520,7 +535,7 @@ public class CheckoutController extends SwipeableBaseToolBarController implement
         mNoCartItemsLayout.setVisibility(View.VISIBLE);
         mListView.setVisibility(View.GONE);
         mPresenter.resetIsCartAlreadyLoaded();
-        setupDefaultBottomButton("shop now", view ->{
+        setupDefaultBottomButton("shop now", view -> {
             mActivity.getMainController().getHomeViewPager().setCurrentItem(1);
         });
     }
@@ -541,6 +556,8 @@ public class CheckoutController extends SwipeableBaseToolBarController implement
         Bundle bundle = new Bundle();
         bundle.putString(BundleKeys.DECORATION_INFO_LIST, new Gson().toJson(mDecorationInfoList));
         bundle.putBoolean(BundleKeys.IS_FROM_CART, true);
+
+        mActivity.setDraggableViewPager(false);
         GateKeeper.push(getRouter(), GateKeeper.Destination.VIEW_ADDRESSES, bundle, new VerticalChangeHandler(false), new VerticalChangeHandler());
 
     }
@@ -549,6 +566,8 @@ public class CheckoutController extends SwipeableBaseToolBarController implement
         Bundle bundle = new Bundle();
         bundle.putString(CART_TOTAL_COST, Double.toString(mValue.getSummary().total));
         bundle.putBoolean(BundleKeys.IS_FROM_CART, true);
+
+        mActivity.setDraggableViewPager(false);
         GateKeeper.push(getRouter(), GateKeeper.Destination.PAYMENT_ADD, bundle, new VerticalChangeHandler(false), new VerticalChangeHandler());
 
     }
@@ -627,6 +646,7 @@ public class CheckoutController extends SwipeableBaseToolBarController implement
 
         RxBus.instance().post(IntrospectionUtils.EVENT_PAY);
 
+        mActivity.setDraggableViewPager(false);
         GateKeeper.push(getRouter(), GateKeeper.Destination.MASTERPASS, new VerticalChangeHandler(false), new VerticalChangeHandler());
     }
 
@@ -659,6 +679,7 @@ public class CheckoutController extends SwipeableBaseToolBarController implement
 
                         Bundle bundle = new Bundle();
                         bundle.putString(BundleKeys.PHONE_KEY, mCartPhone);
+                        mActivity.setDraggableViewPager(false);
                         GateKeeper.push(getRouter(), GateKeeper.Destination.SMS_VERIFICATION, bundle, new VerticalChangeHandler(false), new VerticalChangeHandler());
 
                     } else {

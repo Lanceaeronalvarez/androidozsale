@@ -14,13 +14,14 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.bluelinelabs.conductor.Router;
-import com.bluelinelabs.conductor.changehandler.HorizontalChangeHandler;
+import com.bluelinelabs.conductor.changehandler.VerticalChangeHandler;
 
 import java.util.List;
 
 import au.com.dealsdirect.R;
 import au.com.dealsdirect.data.network.model.checkout.getcurrentorder.MyPayDetails;
 import au.com.dealsdirect.ui.base.BaseActivity;
+import au.com.dealsdirect.ui.main.MainActivity;
 import au.com.dealsdirect.utils.BundleBuilder;
 import au.com.dealsdirect.utils.BundleKeys;
 import au.com.dealsdirect.utils.PriceUtils;
@@ -204,13 +205,14 @@ public class OurpayPanel {
             Bundle bundle = new Bundle();
             bundle.putString("templateKey", ourpayTermsAndConditionKey);
 
+            ((MainActivity)mBaseActivity).setDraggableViewPager(false);
             GateKeeper.push(mRouter,GateKeeper.Destination.LEGALITIES,
                     new BundleBuilder(new Bundle())
                     .putString(BundleKeys.TEMPLATE_KEY, ourpayTermsAndConditionKey)
                     .putString(BundleKeys.TITLE, "My Basket")
                     .build(),
-                    new HorizontalChangeHandler(),
-                    new HorizontalChangeHandler());
+                    new VerticalChangeHandler(false),
+                    new VerticalChangeHandler());
 
 //                HTMLViewFragment fragment = new HTMLViewFragment();
 //                fragment.setArguments(bundle);

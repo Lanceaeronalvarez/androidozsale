@@ -191,7 +191,14 @@ public class MainActivity extends BaseActivity implements MainMvpView {
                     getMainController().getHomeViewPager().setCurrentItem(1);
                 } else {
                     getCheckoutRouter().handleBack();
+
+                    Controller currentController = GateKeeper.getCurrentControllerOnRouter(getCheckoutRouter());
+                    if (currentController instanceof CheckoutController) {
+                        setDraggableViewPager(true);
+                    }
+
                     GateKeeper.updateCurrentLocation(getCheckoutRouter());
+
                 }
                 break;
             default:
