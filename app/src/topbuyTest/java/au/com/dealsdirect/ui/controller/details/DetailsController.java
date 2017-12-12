@@ -146,6 +146,7 @@ public class DetailsController extends SwipeableBaseToolBarController implements
     @Override
     public void loadDetails(GetUserDetailsResponse userDetailsResponse) {
 //        LinkedTreeMap details = (LinkedTreeMap) userDetailsResponse.getResponse().getValue();
+        hideNoNetworkLayout();
         GetUserDetailsResponse.Value value = userDetailsResponse.getResponse().getValue();
         mFirstNameText.setText(value.getForename());
         mLastNameText.setText(value.getSurname());
