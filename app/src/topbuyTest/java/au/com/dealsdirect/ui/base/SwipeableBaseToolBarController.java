@@ -77,7 +77,6 @@ public abstract class SwipeableBaseToolBarController extends BaseController {
 
     protected void fillContent(View view) {
         mContentLayout.addView(view);
-
     }
 
     @Override
@@ -86,20 +85,14 @@ public abstract class SwipeableBaseToolBarController extends BaseController {
         onRefreshEnd();
     }
 
+
     @Override
-    public void onError(String message) {
-        if (message != null && message.contains("UnknownHostException")) {
-            showNoNetworkLayout();
-        }
-
-        super.onError(message);
-    }
-
     public void showNoNetworkLayout() {
         mContentLayout.setVisibility(View.GONE);
         mNoNetworkLayout.setVisibility(View.VISIBLE);
     }
 
+    @Override
     public void hideNoNetworkLayout() {
         if (mContentLayout != null && mNoNetworkLayout != null) {
             mContentLayout.setVisibility(View.VISIBLE);

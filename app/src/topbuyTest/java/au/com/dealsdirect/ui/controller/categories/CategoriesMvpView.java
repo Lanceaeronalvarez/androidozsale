@@ -13,10 +13,6 @@ import au.com.dealsdirect.ui.controller.categories.adapter.CategoriesAdapter;
 public interface CategoriesMvpView extends MvpView {
     void showCategories(List<GetCategoryTreeResponse> categories);
 
-    void showNoNetworkLayout();
-
-    void hideNoNetworklayout();
-
     void onCategoryClicked(CategoriesAdapter.CategoriesViewHolder holder, int position, String categoryName, String categoryKey);
 
     boolean isActive();

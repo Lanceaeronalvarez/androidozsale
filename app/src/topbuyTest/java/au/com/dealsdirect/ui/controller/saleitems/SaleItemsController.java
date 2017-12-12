@@ -220,15 +220,7 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
         }
 
 
-        mNoNetworkFrame.setOnClickListener((v)->{
-            if(!isCallGetCategoryTreeFinished()) {
-                mPresenter.callGetCategoryTree();
-            }
-            hasLoadedAllItems = false;
-            mPaginateManager.setHasMoreDataToLoad(true);
-            loadingInProgress = true;
-            mPresenter.loadSaleItems(createSaleItemsRequest(mChosenCategoryKey, "", page, mChipFilters, ""));
-        });
+        mNoNetworkFrame.setOnClickListener((v) -> onRefreshStart());
 
         mKeyboardHeightProvider = new KeyboardHeightProvider(mActivity);
         mKeyboardHeightProvider.setKeyboardHeightObserver(this);
@@ -447,7 +439,6 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
             }
 
 
-
             if (isCategoryChanged || initialLoad) {
                 mSearchFilterController.replaceFacets(mFacets);
                 initialLoad = false;
@@ -472,7 +463,7 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
             hasLoadedAllItems = true;
             page = 0;
         } else {
-            Log.d("testestest","WAS REFRESHED");
+            Log.d("testestest", "WAS REFRESHED");
             loadingInProgress = true;
             page++;
             mPresenter.loadSaleItems(createSaleItemsRequest(mChosenCategoryKey, "", page, mChipFilters, ""));
@@ -844,12 +835,34 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
         mAdapter.replaceData(new ArrayList<>());
         hasLoadedAllItems = true;
         mPaginateManager.setHasMoreDataToLoad(false);
-        mNoNetworkFrame.requestLayout();
+    }
+
+    @Override
+    public void onError(String message) {
+        super.onError(message);
+        showNoNetworkLayout();
     }
 
     @Override
     public void hideNoNetworkLayout() {
         mNoNetworkFrame.setVisibility(View.GONE);
+    }
+
+    @Override
+    public void onRefreshStart() {
+        if (!isCallGetCategoryTreeFinished()) {
+            mPresenter.callGetCategoryTree();
+        }
+        hasLoadedAllItems = false;
+        mPaginateManager.setHasMoreDataToLoad(true);
+        loadingInProgress = true;
+        mPresenter.loadSaleItems(createSaleItemsRequest(mChosenCategoryKey, "", page, mChipFilters, ""));
+
+    }
+
+    @Override
+    public void onRefreshEnd() {
+        super.onRefreshEnd();
     }
 
     @Override

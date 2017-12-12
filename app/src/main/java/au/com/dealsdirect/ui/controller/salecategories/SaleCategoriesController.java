@@ -19,7 +19,7 @@ import butterknife.BindView;
  * dp Created by Admin on 6/8/17.
  */
 
-public class SaleCategoriesController extends BaseController implements SaleCategoriesMvpView{
+public class SaleCategoriesController extends BaseController implements SaleCategoriesMvpView {
 
     private static final String KEY_TEXT = "SaleCategoriesController.KEY_TEXT";
 
@@ -39,9 +39,9 @@ public class SaleCategoriesController extends BaseController implements SaleCate
     public SaleCategoriesController(String title, int fromPosition, String headerImageUrl) {
 
         this(new BundleBuilder(new Bundle())
-                     .putString(KEY_TITLE, title)
-                     .putInt(KEY_FROM_POSITION, fromPosition)
-                     .build());
+                .putString(KEY_TITLE, title)
+                .putInt(KEY_FROM_POSITION, fromPosition)
+                .build());
     }
 
     public SaleCategoriesController(Bundle args) {
@@ -62,16 +62,20 @@ public class SaleCategoriesController extends BaseController implements SaleCate
         return view;
     }
 
-    @Override protected void onViewBound(@NonNull View view) {
+    @Override
+    protected void onViewBound(@NonNull View view) {
         super.onViewBound(view);
-        mSaleCategoriesImage.setTransitionName(title+fromPosition);
+        mSaleCategoriesImage.setTransitionName(title + fromPosition);
     }
 
-    @Override protected void setUp(View view) {
+    @Override
+    protected void setUp(View view) {
 
     }
 
-    @Override public void showSaleCategories(GetPublicSalesBannerResponse getPublicSalesBannerResponse) {
+    @Override
+    public void showSaleCategories(GetPublicSalesBannerResponse getPublicSalesBannerResponse) {
 
     }
+
 }

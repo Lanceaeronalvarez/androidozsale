@@ -304,4 +304,5 @@ public class AccountController extends BaseController implements AccountMvpView 
     public void initLoginDrawable() {
 
     }
+
 }

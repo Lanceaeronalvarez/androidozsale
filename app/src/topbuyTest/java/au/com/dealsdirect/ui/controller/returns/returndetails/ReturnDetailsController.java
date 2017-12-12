@@ -145,4 +145,5 @@ public class ReturnDetailsController extends SwipeableBaseToolBarController impl
         mReturnDetailsControllerRecyclerView.setAdapter(adapter);
         mReturnDetailsControllerRecyclerView.setLayoutManager(new LinearLayoutManager(mActivity));
     }
+
 }

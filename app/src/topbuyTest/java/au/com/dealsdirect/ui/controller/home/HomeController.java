@@ -59,5 +59,4 @@ public class HomeController extends BaseController implements HomeMvpView {
     public boolean isCheckoutRouterVisible() {
         return false;
     }
-
 }

@@ -36,7 +36,6 @@ public class SaleItemsPresenter<V extends SaleItemsMvpView> extends BasePresente
 
     @Override
     public void loadSaleItems(GetSaleItemsRequest getSaleItemsRequest) {
-        getMvpView().hideNoNetworkLayout();
         doApiCallForResponse(getDataManager().callGetSaleItemsRequest(getSaleItemsRequest), new AppApiCallback() {
             @Override
             public void onSuccess(Object response) {
@@ -51,11 +50,7 @@ public class SaleItemsPresenter<V extends SaleItemsMvpView> extends BasePresente
 
             @Override
             public void onFailure(Throwable t) {
-                if (t.getMessage().contains("UnknownHostException") || t.getMessage().contains("SocketTimeoutException")) {
-                    getMvpView().showNoNetworkLayout();
-                }
                 getMvpView().onError(t.getMessage());
-
             }
         });
     }
@@ -182,7 +177,7 @@ public class SaleItemsPresenter<V extends SaleItemsMvpView> extends BasePresente
                     if (!isViewAttached()) {
                         return;
                     }
-                    getMvpView().hideNoNetworkLayout();
+
                     if (response != null) {
                         getMvpView().onCallGetCategoryTree(response);
                         RxBus.instance().post(BundleKeys.CATEGORIES_API_CALL_FINISHED);

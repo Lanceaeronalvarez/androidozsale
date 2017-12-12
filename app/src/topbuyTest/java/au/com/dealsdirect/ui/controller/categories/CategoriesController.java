@@ -213,16 +213,6 @@ public class CategoriesController extends BaseController
     }
 
     @Override
-    public void showNoNetworkLayout() {
-
-    }
-
-    @Override
-    public void hideNoNetworklayout() {
-
-    }
-
-    @Override
     public void onCategoryClicked(CategoriesAdapter.CategoriesViewHolder holder, int position, String categoryName, String categoryKey) {
 
         mSaleItemsPresenter.executeCategoryChangeApiCall(categoryKey,categoryName);

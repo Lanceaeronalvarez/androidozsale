@@ -3,6 +3,8 @@ package au.com.dealsdirect.ui.base;
 
 import com.androidnetworking.error.ANError;
 
+import java.net.SocketTimeoutException;
+import java.net.UnknownHostException;
 import java.util.List;
 
 import javax.inject.Inject;
@@ -137,6 +139,8 @@ public class BasePresenter<V extends MvpView> implements MvpPresenter<V> {
 //            }
 //        }
 
+        getMvpView().hideNoNetworkLayout();
+
         getCompositeDisposable().add(observable
                 .subscribeOn(getSchedulerProvider().io())
                 .observeOn(getSchedulerProvider().ui())
@@ -171,6 +175,11 @@ public class BasePresenter<V extends MvpView> implements MvpPresenter<V> {
                         }
 
                         getMvpView().hideLoading();
+
+                        if(throwable instanceof SocketTimeoutException || throwable instanceof UnknownHostException){
+                            getMvpView().showNoNetworkLayout();
+                        }
+
                         getMvpView().onError(throwable.getMessage());
 
                         callback.onFailure(throwable);

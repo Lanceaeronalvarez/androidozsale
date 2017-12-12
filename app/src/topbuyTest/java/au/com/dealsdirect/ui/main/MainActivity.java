@@ -315,7 +315,14 @@ public class MainActivity extends BaseActivity implements MainMvpView {
         if (mAuthHandler != null)
             mAuthHandler.error();
 
-        CustomAlertDialog.showCustomAlertDialog(this, CustomAlertDialog.CustomDialogIconState.NEGATIVE, message);
+        if(message != null && !message.isEmpty()) {
+            if (message.contains("UnknownHostException") || message.contains("SocketTimeoutException")) {
+                CustomAlertDialog.showCustomAlertDialog(this, CustomAlertDialog.CustomDialogIconState.NEGATIVE, getString(R.string.no_internet_connection));
+            }else{
+                CustomAlertDialog.showCustomAlertDialog(this, CustomAlertDialog.CustomDialogIconState.NEGATIVE, message);
+            }
+        }
+
     }
 
     @Override
@@ -718,4 +725,13 @@ public class MainActivity extends BaseActivity implements MainMvpView {
         return result;
     }
 
+    @Override
+    public void hideNoNetworkLayout() {
+
+    }
+
+    @Override
+    public void showNoNetworkLayout() {
+
+    }
 }
