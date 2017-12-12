@@ -203,7 +203,7 @@ public class CurrentReturnsController extends SwipeableBaseToolBarController
                         isRequestApproved,
                         productRequestStatus,
                         productRAN))
-                .pushChangeHandler(new VerticalChangeHandler())
+                .pushChangeHandler(new VerticalChangeHandler(false))
                 .popChangeHandler(new VerticalChangeHandler()));
 
     }
