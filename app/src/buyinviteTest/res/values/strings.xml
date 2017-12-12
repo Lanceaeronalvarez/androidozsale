@@ -1,23 +1,23 @@
 <resources>
-    <string name="exit_app_name">OO</string>
+    <string name="exit_app_name">BA</string>
 
-    <string name="default_country_id">OA</string>
+    <string name="default_country_id">BA</string>
 
     <string name="checkout_page_toolbar_title">My Cart</string>
     <string name="total">Grand Total</string>
     <string name="add_new_address">add delivery address</string>
-    <string name="invite_friend_guide">Invite your friends to join OO. Once your friends have
+    <string name="invite_friend_guide">Invite your friends to join BA. Once your friends have
         joined through your invitation and made their first purchase you will instantly receive a
         $20 OO voucher to use towards any future purchase.
     </string>
 
-    <string name="vouchers_view_detail">Invite your friends to join Only Online. Once your friends have
+    <string name="vouchers_view_detail">Invite your friends to join Buyinvite. Once your friends have
     joined through your invitation and made their first purchase you will instantly receive a
     $20 voucher to use towards any future purchase. \n\nYou can apply any vouchers
         currently in your account when you checkout your order. \n
     </string>
 
-    <string name="thank_you_for_shopping">Thank you for shopping with OO</string>
+    <string name="thank_you_for_shopping">Thank you for shopping with BA</string>
 
 
     <string name="base_html_template_header" formatted="false">
