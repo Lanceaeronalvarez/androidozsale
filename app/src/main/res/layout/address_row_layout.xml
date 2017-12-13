@@ -38,13 +38,15 @@
             tools:text="Address 1" />
 
         <TextView
-            fontPath="@string/font_app_light"
             android:id="@+id/view_my_address_row_item_text"
+            fontPath="@string/font_app_light"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_alignStart="@+id/view_my_addresses_row_layout"
+            android:layout_centerVertical="true"
             android:textColor="@color/gray_address_subtitle_text"
             android:textSize="@dimen/text_size_large"
-            tools:text="some address" />
+            tools:text="some address"/>
 
         <!-- remove text and express delivery layout below, uncomment to implement-->
         <!--<TextView-->
