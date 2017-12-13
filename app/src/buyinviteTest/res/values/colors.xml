@@ -14,7 +14,7 @@
     <color name="dark_icon">#99000000</color>
     <color name="dialog_background">#fafafa</color>
 
-    <color name="filter_text_active">#F86903</color>
+    <color name="filter_text_active">@color/colorPrimary</color>
     <color name="filter_text_inactive">#5F5F5F</color>
 
     <color name="cart_order_price_text_color">@color/colorAccent</color>
