@@ -17,7 +17,7 @@
     <color name="filter_text_active">#F86903</color>
     <color name="filter_text_inactive">#5F5F5F</color>
 
-    <color name="cart_order_price_text_color">#DE5C00</color>
+    <color name="cart_order_price_text_color">@color/colorAccent</color>
 
     <color name="progress_loader_stroke_color">#616161</color>
 
@@ -95,6 +95,6 @@
     <color name="invite_sms">#65D87F</color>
     <color name="invite_sms_pressed">#72E98D</color>
 
-    <color name="item_select_remove">#F29124</color>
+    <color name="item_select_remove">@color/colorAccent</color>
     <color name="verify_resend_color">@color/colorAccent</color>
 </resources>
