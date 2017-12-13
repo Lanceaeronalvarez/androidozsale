@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ripple xmlns:android="http://schemas.android.com/apk/res/android"
+    android:color="@color/bg_button_ripple">
+    <item>
+        <selector xmlns:android="http://schemas.android.com/apk/res/android">
+            <item android:state_pressed="true">
+                <shape android:shape="rectangle">
+                    <solid android:color="@color/pressed_logo" />
+                    <corners android:radius="@dimen/corner_radius" />
+                </shape>
+            </item>
+            <item>
+                <shape android:shape="rectangle">
+                    <solid android:color="@color/idle_logo" />
+                    <corners android:radius="@dimen/corner_radius" />
+                </shape>
+            </item>
+        </selector>
+    </item>
+</ripple>
