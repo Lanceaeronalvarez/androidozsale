@@ -18,6 +18,8 @@
 
     <color name="progress_loader_stroke_color">@color/colorAccent</color>
     <color name="snack_bar_color">@color/defaultred</color>
+    <color name="pressed_logo">@color/activered</color>
+    <color name="idle_logo">@color/defaultred</color>
 
     <!--Search Edit Text Color-->
 

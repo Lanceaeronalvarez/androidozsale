@@ -103,8 +103,8 @@
     <color name="bluegreen">#04b2b6</color>
 
     <color name="snack_bar_color">@color/colorAccent</color>
-    <color name="pressed_logo">@color/activered</color>
-    <color name="idle_logo">@color/defaultred</color>
+    <color name="pressed_logo">@color/bluegreen</color>
+    <color name="idle_logo">@color/colorAccent</color>
 
     <color name="invite_clipboard">#FF8B8B8B</color>
     <color name="invite_fb">#FF2D91DE</color>
