@@ -99,14 +99,14 @@
     <string name="twitter_user_id">twitter://user?user_id=14730691</string>
     <string name="fb_page_id">10357598833</string>
 
-    <string name="font_app_black">fonts/App-Font-Semibold.ttf</string>
-    <string name="font_app_black_italic">fonts/App-Font-SemiboldItalic.ttf</string>
+    <string name="font_app_black">fonts/App-Font-Bold.ttf</string>
+    <string name="font_app_black_italic">fonts/App-Font-BoldItalic.ttf</string>
     <string name="font_app_bold">fonts/App-Font-Bold.ttf</string>
     <string name="font_app_bold_italic">fonts/App-Font-BoldItalic.ttf</string>
     <string name="font_app_hairline">fonts/App-Font-Hairline.ttf</string>
     <string name="font_app_hairline_italic">fonts/App-Font-HairlineItalic.ttf</string>
-    <string name="font_app_heavy">fonts/App-Font-ExtraBold.ttf</string>
-    <string name="font_app_heavy_italic">fonts/App-Font-ExtraBoldItalic.ttf</string>
+    <string name="font_app_heavy">fonts/App-Font-Bold.ttf</string>
+    <string name="font_app_heavy_italic">fonts/App-Font-BoldItalic.ttf</string>
     <string name="font_app_italic">fonts/App-Font-Italic.ttf</string>
     <string name="font_app_light">fonts/App-Font-Light.ttf</string>
     <string name="font_app_light_italic">fonts/App-Font-LightItalic.ttf</string>
