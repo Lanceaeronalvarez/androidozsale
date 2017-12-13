@@ -154,6 +154,8 @@ public abstract class BaseController extends RefWatchingController implements Mv
 
     @Override
     public void onRefreshStart() {
+        showLoading();
+        hideNoNetworkLayout();
     }
 
     @Override

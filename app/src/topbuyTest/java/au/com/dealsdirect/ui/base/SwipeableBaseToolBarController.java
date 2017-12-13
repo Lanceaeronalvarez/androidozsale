@@ -15,6 +15,7 @@ import android.widget.TextView;
 import com.mysale.genie.views.custom.CoordinatorLayoutAsBottomSheetBehavior;
 
 import au.com.dealsdirect.R;
+import au.com.dealsdirect.ui.controller.legalities.LegalitiesController;
 import butterknife.BindView;
 import butterknife.OnClick;
 
@@ -98,7 +99,10 @@ public abstract class SwipeableBaseToolBarController extends BaseController {
         if (mContentLayout != null && mNoNetworkLayout != null) {
             mContentLayout.setVisibility(View.VISIBLE);
             mNoNetworkLayout.setVisibility(View.GONE);
-            showBottomLayout();
+
+            if(!(this instanceof LegalitiesController)) {
+                showBottomLayout();
+            }
         }
     }
 

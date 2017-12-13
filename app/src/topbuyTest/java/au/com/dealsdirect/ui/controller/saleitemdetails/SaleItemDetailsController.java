@@ -25,6 +25,7 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.jakewharton.rxbinding2.view.RxView;
 import com.lsjwzh.widget.recyclerviewpager.RecyclerViewPager;
 import com.mysale.genie.utility.RxBus;
 import com.zhy.view.flowlayout.FlowLayout;
@@ -34,6 +35,7 @@ import com.zhy.view.flowlayout.TagFlowLayout;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 import javax.inject.Inject;
 
@@ -56,13 +58,15 @@ import au.com.dealsdirect.utils.PriceUtils;
 import au.com.dealsdirect.widget.ElasticDragDismissFrameLayout;
 import butterknife.BindView;
 import butterknife.OnClick;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.disposables.Disposable;
 
 
 /**
  * Created by smartwave on 30/10/2017.
  */
 
-public class SaleItemDetailsController extends BaseController implements SaleItemDetailsMvpView,LoadImagesListener {
+public class SaleItemDetailsController extends BaseController implements SaleItemDetailsMvpView, LoadImagesListener {
 
     @Inject
     SaleItemDetailsMvpPresenter<SaleItemDetailsMvpView> mPresenter;
@@ -141,6 +145,8 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
 
     LinearLayoutManager mProductImagesRvLayoutManager;
 
+    Disposable mCartViewClickListener;
+
     private String mHtmlHeader = "";
     private String mHtmlFooter = "";
 
@@ -201,6 +207,7 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
         mSaleOldPrice = args.getString(BundleKeys.SALEITEMDETAILS_KEY_ITEM_OLD_PRICE);
         mFromPosition = args.getInt(BundleKeys.SALEITEMDETAILS_KEY_POSITION);
     }
+
     @Override
     protected View inflateView(@NonNull LayoutInflater inflater, @NonNull ViewGroup container) {
         View view = inflater.inflate(R.layout.controller_sale_item_details, container, false);
@@ -219,7 +226,7 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
     protected void setUp(View view) {
         mRootView = ((ElasticDragDismissFrameLayout) view);
 
-        mRootView.setPadding(0,mActivity.getStatusBarHeight(),0,0);
+        mRootView.setPadding(0, mActivity.getStatusBarHeight(), 0, 0);
         //product info
         mProductName.setText(mSaleName);
 
@@ -276,8 +283,15 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
         mHtmlFooter = mActivity.getResources()
                 .getString(R.string.base_html_template_footer);
 
-        mCartCounter.setText(CartUtil.getCartValue()+"");
+        mCartCounter.setText(CartUtil.getCartValue() + "");
+        mCartViewClickListener = RxView.clicks(mCartView)
+                .throttleFirst(1000, TimeUnit.MILLISECONDS)
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(v -> {
+                    mActivity.getMainController().getHomeViewPager().setCurrentItem(2);
+                });
     }
+
     @Override
     public void showSaleDetails(GetSaleItemDetailsResponse saleDetail) {
         Animation anim = AnimationUtils.loadAnimation(mActivity, R.anim.slide_to_bottom);
@@ -432,6 +446,12 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
     }
 
     @Override
+    public void onDetach(View view) {
+        mCartViewClickListener.dispose();
+        super.onDetach(view);
+    }
+
+    @Override
     public boolean handleBack() {
         if (!isAnimating) {
             mProductDetailScrollView.scrollTo(0, 0);
@@ -449,7 +469,7 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
 
         if (val) {
             CartUtil.addValueToCart(1);
-            mCartCounter.setText(CartUtil.getCartValue()+"");
+            mCartCounter.setText(CartUtil.getCartValue() + "");
             CustomAlertDialog.showCustomAlertDialog(
                     mActivity,
                     CustomAlertDialog.CustomDialogIconState.POSITIVE,
@@ -498,7 +518,7 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
     }
 
     @OnClick(R.id.cart_view)
-    void goToCheckout(){
+    void goToCheckout() {
         mActivity.getMainController().getHomeViewPager().setCurrentItem(2);
     }
 
