@@ -5,23 +5,27 @@
     
     
       
-      <testcase classname="fastlane.lanes" name="0: Verifying required fastlane version" time="0.003088">
+      <testcase classname="fastlane.lanes" name="0: Verifying required fastlane version" time="0.013683">
         
       </testcase>
     
       
-      <testcase classname="fastlane.lanes" name="1: default_platform" time="0.003812">
+      <testcase classname="fastlane.lanes" name="1: default_platform" time="0.017469">
         
       </testcase>
     
       
-      <testcase classname="fastlane.lanes" name="2: fastlane dd_build app_name:'DealsDirectTest' emails:&quot;
-    PaulDeSilva@mysale.com,
-    elainedizon@mysale.com,
-    diofelpallega@mysale.com,
-    ayicatimpo@mysale.com,
-    JulianPaul@mysale.com
-  &quot; apk_name:app-dealsDirectTest-debug.apk app_flavor:DealsDirectTestRelease app_path:/Users/Paul/AndroidDealsDirect" time="232.392354">
+      <testcase classname="fastlane.lanes" name="2: fastlane dd_build app_name:'topbuy Test' emails:&quot;
+  PaulDeSilva@mysale.com,
+  elainedizon@mysale.com,
+  diofelpallega@mysale.com,
+  ayicatimpo@mysale.com,
+  JulianPaul@mysale.com,
+  ChindeeTubasis@mysale.com,
+  michael@smartwave.ph,
+  EricaPena@mysale.com,
+  jc@apacsale.com
+&quot; apk_name:app-topbuyTest-release.apk build_variant:topbuyTestRelease app_path:/Users/pauldesilva/Documents/AndroidDealsDirect app_flavor:topbuyTest" time="291.425178">
         
       </testcase>
     

@@ -55,9 +55,4 @@ public class DetailsPresenter<V extends DetailsMvpView> extends BasePresenter<V>
             }
         });
     }
-
-    @Override
-    public void saveUser(SetUserDetailsRequest request) {
-        request.setLanguageID(getDataManager().getLanguageId());
-    }
 }

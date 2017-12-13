@@ -69,7 +69,7 @@ android {
         }
 
         topbuyTest {
-            versionCode 62
+            versionCode 64
             versionName "2.2.0"
             applicationId "au.com.topbuy.test"
             buildConfigField "String", "API_ROOT", "\"https://www.dealsdirect.com.au/\""
