@@ -5,12 +5,12 @@
     
     
       
-      <testcase classname="fastlane.lanes" name="0: Verifying required fastlane version" time="0.156639">
+      <testcase classname="fastlane.lanes" name="0: Verifying required fastlane version" time="0.010857">
         
       </testcase>
     
       
-      <testcase classname="fastlane.lanes" name="1: default_platform" time="0.030177">
+      <testcase classname="fastlane.lanes" name="1: default_platform" time="0.009644">
         
       </testcase>
     
@@ -25,7 +25,7 @@
   michael@smartwave.ph,
   EricaPena@mysale.com,
   jc@apacsale.com
-&quot; apk_name:app-dealsDirectTest-release.apk build_variant:DealsDirectTestRelease app_path:/Users/pauldesilva/Documents/AndroidDealsDirect app_flavor:dealsDirectTest" time="271.549389">
+&quot; apk_name:app-dealsDirectTest-release.apk build_variant:DealsDirectTestRelease app_path:/Users/pauldesilva/Documents/AndroidDealsDirect app_flavor:dealsDirectTest" time="232.378033">
         
       </testcase>
     

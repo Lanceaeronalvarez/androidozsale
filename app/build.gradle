@@ -42,7 +42,7 @@ android {
 
     productFlavors {
         dealsDirectRC {
-            versionCode 67
+            versionCode 68
             versionName "2.3.1"
             applicationId "au.com.dealsdirect"
             buildConfigField "String", "API_ROOT", "\"https://www.dealsdirect.com.au/\""
@@ -52,7 +52,7 @@ android {
         }
 
         dealsDirectTest {
-            versionCode 65
+            versionCode 66
             versionName "2.3.1"
             applicationId "au.com.dealsdirect.test"
             buildConfigField "String", "API_ROOT", "\"https://genie-ui-dealsdirect-pre.mysaledev.com/\""
@@ -62,7 +62,7 @@ android {
         }
 
         ooRC {
-            versionCode 7
+            versionCode 8
             versionName "0.9"
             applicationId "au.com.oo.rc"
             buildConfigField "String", "API_ROOT", "\"https://www.oo.com.au/\""
@@ -72,7 +72,7 @@ android {
         }
 
         ooTest {
-            versionCode 8
+            versionCode 9
             versionName "0.9"
             applicationId "au.com.oo.test"
             buildConfigField "String", "API_ROOT", "\"https://genie-ui-oo-pre.mysaledev.com/\""
