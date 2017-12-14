@@ -34,8 +34,8 @@
                 fontPath="@string/font_app_bold"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:textColor="@color/white"
-                android:textSize="@dimen/text_size_xxxxlarge"
+                android:textColor="@color/colorAccent"
+                android:textSize="@dimen/voucher_cost_text_size"
                 android:textStyle="bold"
                 tools:text="$10" />
 
@@ -45,7 +45,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="5dp"
-                android:textColor="@color/white"
+                android:textColor="@color/dark_gray"
                 android:textSize="@dimen/text_size_small"
                 tools:text="voucher good for use until " />
 
@@ -55,7 +55,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="2dp"
-                android:textColor="@color/white"
+                android:textColor="@color/dark_gray"
                 android:textSize="@dimen/text_size_small"
                 tools:text="January 15" />
 
