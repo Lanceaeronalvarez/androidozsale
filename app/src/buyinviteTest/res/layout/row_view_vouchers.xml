@@ -25,10 +25,12 @@
             android:id="@+id/row_text_vouchers_item_cost_value"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:fontFamily="@string/font_app_light"
-            android:textColor="@color/white"
-            android:textSize="@dimen/text_size_xxxxlarge"
+            android:fontFamily="@string/font_app_bold"
+            android:textColor="@color/colorAccent"
+            android:textSize="@dimen/voucher_cost_text_size"
+            android:layout_marginTop="-10dp"
             android:textStyle="bold"
+            android:text="$10.00"
             android:layout_gravity="right"/>
 
         <TextView
@@ -38,7 +40,7 @@
             android:fontFamily="@string/font_app_light"
             android:maxLines="2"
             android:text="Already\nSpent"
-            android:textColor="@color/white"
+            android:textColor="@color/colorAccent"
             android:textSize="@dimen/text_size_xxxlarge"
             android:textStyle="bold"
             android:visibility="gone"
@@ -50,7 +52,7 @@
             android:layout_height="wrap_content"
             android:fontFamily="@string/font_app_light"
             android:text="value"
-            android:textColor="@color/white"
+            android:textColor="@color/dark_gray"
             android:textSize="@dimen/text_size_xxlarge"
             android:layout_gravity="right"/>
 
@@ -60,8 +62,8 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="5dp"
             android:fontFamily="@string/font_app_light"
-            android:textColor="@color/white"
-            android:textSize="@dimen/text_size_small"
+            android:textColor="@color/dark_gray"
+            android:textSize="@dimen/text_size_medium"
             tools:text="voucher good for use until,"
             android:layout_gravity="right"/>
 
@@ -71,8 +73,8 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="2dp"
             android:fontFamily="@string/font_app_light"
-            android:textColor="@color/white"
-            android:textSize="@dimen/text_size_small"
+            android:textColor="@color/dark_gray"
+            android:textSize="@dimen/text_size_large"
             tools:text="January 15"
             android:layout_gravity="right"/>
 
