@@ -5,10 +5,6 @@
         tools:targetApi="lollipop">
     <item>
         <shape>
-            <corners android:bottomLeftRadius="0dp"
-                     android:bottomRightRadius="30dp"
-                     android:topLeftRadius="0dp"
-                     android:topRightRadius="30dp"/>
             <solid android:color="#E4762E" />
         </shape>
     </item>
