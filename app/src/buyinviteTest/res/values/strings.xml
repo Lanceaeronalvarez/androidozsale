@@ -3,6 +3,7 @@
 
     <string name="default_country_id">BA</string>
 
+    <string name="add_to_cart">Add to Cart</string>
     <string name="checkout_page_toolbar_title">My Cart</string>
     <string name="total">Grand Total</string>
     <string name="add_new_address">add delivery address</string>
@@ -41,7 +42,7 @@
                     }
 
                     a:link {
-                        color: #A2D709;
+                        color: #FF1998;
                         text-decoration: underline;
                     }
 
@@ -52,7 +53,7 @@
 
                     b {
                         font-family: Lato;
-                        color: #90BF0A;
+                        color: #E90F87;
                     }
 
                     br {
