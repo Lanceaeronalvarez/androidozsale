@@ -6,7 +6,6 @@
 
             <item android:state_enabled="true">
                 <shape android:shape="rectangle">
-                    <corners android:radius="30dp"/>
                     <solid android:color="@color/ourpay_orange"/>
                 </shape>
             </item>
@@ -14,14 +13,12 @@
             <item android:state_enabled="true" android:state_pressed="true">
 
                 <shape android:shape="rectangle">
-                    <corners android:radius="30dp"/>
                     <solid android:color="@color/ourpay_orange_dark"/>
                 </shape>
             </item>
 
             <item android:state_enabled="false">
                 <shape android:shape="rectangle">
-                    <corners android:radius="30dp"/>
                     <solid android:color="@color/ourpay_gray"/>
                 </shape>
             </item>
