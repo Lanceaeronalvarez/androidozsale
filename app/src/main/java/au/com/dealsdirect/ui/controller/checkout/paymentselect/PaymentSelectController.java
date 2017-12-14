@@ -114,6 +114,12 @@ public class PaymentSelectController extends BasePullToRefreshController impleme
     }
 
     @Override
+    public void onDetach(View view) {
+        mPresenter.onDetach();
+        super.onDetach(view);
+    }
+
+    @Override
     public void showPaymentList(List<PaymentMethod> paymentMethods) {
         int backstackSize = getRouter().getBackstackSize();
         String checkoutTag = getRouter().getBackstack().get(backstackSize - 1).tag();

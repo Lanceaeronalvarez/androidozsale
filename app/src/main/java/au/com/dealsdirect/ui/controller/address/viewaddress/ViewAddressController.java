@@ -90,6 +90,12 @@ public class ViewAddressController extends BasePullToRefreshController implement
     }
 
     @Override
+    public void onDetach(View view) {
+        mPresenter.onDetach();
+        super.onDetach(view);
+    }
+
+    @Override
     protected void setUp(View view) {
         mPresenter.loadAddresses();
 

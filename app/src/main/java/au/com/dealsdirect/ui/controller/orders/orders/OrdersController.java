@@ -83,6 +83,11 @@ public class OrdersController extends BasePullToRefreshController implements Ord
         mPresenter.loadOrders();
     }
 
+    @Override
+    public void onDetach(View view) {
+        mPresenter.onDetach();
+        super.onDetach(view);
+    }
 
     @Override
     public void showOrders(ArrayList<GetPaymentsList.ResponseValue.PaymentItem> orders) {
