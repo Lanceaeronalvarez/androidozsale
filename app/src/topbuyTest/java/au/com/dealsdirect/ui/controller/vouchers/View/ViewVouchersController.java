@@ -95,8 +95,6 @@ public class ViewVouchersController extends SwipeableBaseToolBarController imple
 
     @Override
     protected void setUp(View view) {
-        showLoading();
-
         mToolbarTitle.setText(getActivity().getResources().getString(R.string.my_voucher));
         mUnusedVouchersAdapter = new ViewVouchersRecyclerViewAdapter(new ArrayList<>(), mActivity);
         mUsedVouchersAdapter = new ViewVouchersRecyclerViewAdapter

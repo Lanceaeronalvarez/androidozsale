@@ -4,6 +4,8 @@ import android.support.v4.util.Pair;
 
 import com.androidnetworking.error.ANError;
 
+import java.net.SocketTimeoutException;
+import java.net.UnknownHostException;
 import java.util.List;
 
 import javax.inject.Inject;
@@ -38,6 +40,7 @@ public class ViewVouchersPresenter<V extends ViewVouchersMvpView> extends BasePr
     @Override
     public void loadMyVouchers() {
 
+        getMvpView().showLoading();
         GetUserVouchersRequest getUserVouchersRequest =
                 new GetUserVouchersRequest(getDataManager().getLanguageId());
 
@@ -54,7 +57,24 @@ public class ViewVouchersPresenter<V extends ViewVouchersMvpView> extends BasePr
                     if (!isViewAttached()) {
                         return;
                     }
+
+                    getMvpView().hideNoNetworkLayout();
+                    getMvpView().hideLoading();
+
                     getMvpView().updateVoucherList(action);
+                },throwable -> {
+                    if (!isViewAttached()) {
+                        return;
+                    }
+
+                    getMvpView().hideLoading();
+
+                    if(throwable.getCause() instanceof SocketTimeoutException || throwable.getCause() instanceof UnknownHostException){
+                        getMvpView().showNoNetworkLayout();
+                    }
+
+                    getMvpView().onError(throwable.getMessage());
+
                 });
 
 
