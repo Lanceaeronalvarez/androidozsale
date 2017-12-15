@@ -19,18 +19,8 @@
             android:layout_height="wrap_content"
             android:layout_weight="4"
             android:text="@string/voucher"
+            android:visibility="gone"
             android:textColor="@color/gray_title_text" />
-
-        <TextView
-            android:id="@+id/partial_checkout_voucher_change"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:gravity="end"
-            android:text="@string/change"
-            android:textColor="@color/gray_field_text"
-            android:textSize="@dimen/text_size_xlarge"
-            android:visibility="gone"/>
 
     </LinearLayout>
 
@@ -42,15 +32,22 @@
         android:layout_marginLeft="16sp"
         android:layout_marginRight="16sp"
         android:layout_marginTop="10dp"
-        android:background="@drawable/bg_chips_rounded"
-        android:clickable="true"
-        android:padding="15dp">
+        android:clickable="true">
+
+        <ImageView
+            android:id="@+id/voucher_icon"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:paddingBottom="5dp"
+            android:src="@drawable/ic_checkout_voucher"/>
 
         <TextView
+            android:layout_toRightOf="@+id/voucher_icon"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/add_new_voucher"
-            android:textColor="@color/gray_field_text"
+            android:textColor="@color/dark_gray"
+            android:layout_marginLeft="10dp"
             android:textSize="@dimen/text_size_xlarge"/>
 
         <ImageView
@@ -59,6 +56,21 @@
             android:layout_alignParentEnd="true"
             android:layout_alignParentRight="true"
             android:src="@drawable/ic_gray_chevron"/>
+
+        <TextView
+            android:id="@+id/partial_checkout_voucher_change"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:layout_alignParentEnd="true"
+            android:layout_marginBottom="31dp"
+            android:layout_marginEnd="33dp"
+            android:layout_weight="1"
+            android:gravity="end"
+            android:text="@string/change"
+            android:textColor="@color/gray_field_text"
+            android:textSize="@dimen/text_size_xlarge"
+            android:visibility="gone"/>
     </RelativeLayout>
 
     <LinearLayout
@@ -66,16 +78,67 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        android:visibility="gone">
+        android:visibility="visible">
+
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="16sp"
+            android:layout_marginRight="16sp"
+            android:clickable="true">
+
+            <ImageView
+                android:id="@+id/voucher_icon_temp"
+                android:layout_width="25dp"
+                android:layout_height="25dp"
+                android:layout_alignParentStart="true"
+                android:layout_alignParentTop="true"
+                android:paddingBottom="5dp"
+                android:src="@drawable/ic_checkout_voucher"/>
+
+            <TextView
+                android:layout_toRightOf="@+id/voucher_icon_temp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Voucher"
+                android:textColor="@color/dark_gray"
+                android:layout_marginLeft="10dp"
+                android:textSize="@dimen/text_size_large"/>
+
+            <ImageView
+                android:layout_width="22dp"
+                android:layout_height="22dp"
+                android:layout_alignParentEnd="true"
+                android:layout_alignParentRight="true"
+                android:src="@drawable/ic_gray_chevron"/>
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_alignParentBottom="true"
+                android:layout_alignParentEnd="true"
+                android:layout_marginBottom="31dp"
+                android:layout_marginEnd="33dp"
+                android:layout_weight="1"
+                android:gravity="end"
+                android:text="@string/change"
+                android:textColor="@color/gray_field_text"
+                android:textSize="@dimen/text_size_xlarge"
+                android:visibility="gone"/>
+        </RelativeLayout>
 
         <LinearLayout
-
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
-            android:padding="16dp">
+            android:paddingTop="5dp"
+            android:paddingLeft="16dp"
+            android:paddingRight="16dp"
+            android:paddingBottom="16dp">
 
             <ImageView
+                android:visibility="gone"
                 android:layout_width="30dp"
                 android:layout_height="30dp"
                 android:paddingBottom="5dp"
@@ -87,14 +150,14 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
-                android:paddingLeft="10dp"
+                android:layout_marginLeft="26dp"
                 android:paddingStart="10dp">
 
                 <TextView
                     android:id="@+id/partial_checkout_voucher_name"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:textColor="@color/gray_field_text"
+                    android:textColor="@color/dark_gray"
                     android:textSize="@dimen/text_size_xxlarge"
                     tools:text="$5 voucher"/>
 
@@ -109,11 +172,10 @@
 
         </LinearLayout>
 
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="1dp"
-            android:layout_marginLeft="16dp"
-            android:background="#F2F2F2"/>
     </LinearLayout>
 
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="#F2F2F2"/>
 </LinearLayout>
