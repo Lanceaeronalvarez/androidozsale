@@ -50,7 +50,6 @@ public abstract class BaseController extends RefWatchingController implements Mv
     @Override
     protected void onAttach(@NonNull View view) {
         super.onAttach(view);
-
     }
 
     public ControllerComponent getControllerComponent() {

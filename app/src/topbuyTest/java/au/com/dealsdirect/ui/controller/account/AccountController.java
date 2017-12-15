@@ -108,6 +108,7 @@ public class AccountController extends BaseController implements AccountMvpView 
     protected void onViewBound(@NonNull View view) {
         super.onViewBound(view);
         mActivity.setAccountsRouter(getRouter());
+        view.setPadding(0, mActivity.getStatusBarHeight(), 0, 0);
         setUp(view);
     }
 
@@ -263,6 +264,7 @@ public class AccountController extends BaseController implements AccountMvpView 
                 mPresenter.onAttach(mvpView);
                 mPresenter.onAccountItemClick(option);
                 mActivity.callGCMRegisterSubscriber();
+                mPresenter.loadAccountItems(mAccountItems,mAccountIcons);
             }
 
             @Override

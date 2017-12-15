@@ -225,7 +225,6 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
     @Override
     protected void setUp(View view) {
         mRootView = ((ElasticDragDismissFrameLayout) view);
-
         mRootView.setPadding(0, mActivity.getStatusBarHeight(), 0, 0);
         //product info
         mProductName.setText(mSaleName);

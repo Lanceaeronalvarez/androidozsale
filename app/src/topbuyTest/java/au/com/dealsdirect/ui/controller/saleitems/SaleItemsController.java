@@ -370,35 +370,41 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
                     vh.getNoItemsText().append(" in " + mChosenCategory.toLowerCase() + " category");
                 }
 
-                AnimationEngine.Builder.animate(vh.getHeaderSeparator()).fadeIn()
-                        .withEndAction(() -> vh.getHeaderSeparator().setVisibility(View.VISIBLE))
-                        .setDuration(300)
-                        .build().start();
+                vh.getHeaderSeparator().setVisibility(View.VISIBLE);
+                vh.getNoSearchItemsLayout().setVisibility(View.VISIBLE);
 
-                AnimationEngine.Builder.animate(vh.getNoSearchItemsLayout()).fadeIn()
-                        .withEndAction(() -> vh.getNoSearchItemsLayout().setVisibility(View.VISIBLE))
-                        .setDuration(300)
-                        .build().start();
+//                AnimationEngine.Builder.animate(vh.getHeaderSeparator()).fadeIn()
+//                        .withEndAction(() -> vh.getHeaderSeparator().setVisibility(View.VISIBLE))
+//                        .setDuration(300)
+//                        .build().start();
+//
+//                AnimationEngine.Builder.animate(vh.getNoSearchItemsLayout()).fadeIn()
+//                        .withEndAction(() -> vh.getNoSearchItemsLayout().setVisibility(View.VISIBLE))
+//                        .setDuration(300)
+//                        .build().start();
 //                mLayoutManager.setScrollEnabled(false);
 
             } else if (products.size() != 0) {
 
 //                mLayoutManager.setScrollEnabled(true);
                 if (vh != null && vh.getNoSearchItemsLayout().getVisibility() == View.VISIBLE) {
-                    AnimationEngine.Builder.animate(vh.getHeaderSeparator()).fadeOut()
-                            .withEndAction(() -> vh.getHeaderSeparator().setVisibility(View.GONE))
-                            .setDuration(200)
-                            .build().start();
-
-                    AnimationEngine.Builder.animate(vh.getNoSearchItemsLayout()).fadeOut()
-                            .withEndAction(() -> vh.getNoSearchItemsLayout().setVisibility(View.GONE))
-                            .setDuration(200)
-                            .build().start();
-
-                    AnimationEngine.Builder.animate(vh.getSeeOtherPopularProductsText()).fadeOut()
-                            .withEndAction(() -> vh.getSeeOtherPopularProductsText().setVisibility(View.GONE))
-                            .setDuration(200)
-                            .build().start();
+                    vh.getHeaderSeparator().setVisibility(View.GONE);
+                    vh.getNoSearchItemsLayout().setVisibility(View.GONE);
+                    vh.getSeeOtherPopularProductsText().setVisibility(View.GONE);
+//                    AnimationEngine.Builder.animate(vh.getHeaderSeparator()).fadeOut()
+//                            .withEndAction(() -> vh.getHeaderSeparator().setVisibility(View.GONE))
+//                            .setDuration(200)
+//                            .build().start();
+//
+//                    AnimationEngine.Builder.animate(vh.getNoSearchItemsLayout()).fadeOut()
+//                            .withEndAction(() -> vh.getNoSearchItemsLayout().setVisibility(View.GONE))
+//                            .setDuration(200)
+//                            .build().start();
+//
+//                    AnimationEngine.Builder.animate(vh.getSeeOtherPopularProductsText()).fadeOut()
+//                            .withEndAction(() -> vh.getSeeOtherPopularProductsText().setVisibility(View.GONE))
+//                            .setDuration(200)
+//                            .build().start();
                 }
             }
         }
