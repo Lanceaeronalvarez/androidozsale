@@ -37,7 +37,7 @@ public class AccountController extends BaseController implements AccountMvpView 
     public static final String TAG = "AccountController";
     private static final String KEY_TEXT = "AccountController.KEY_TEXT";
     AccountItemAdapter accountItemAdapter;
-
+    private boolean mClicked = false;
 
     private int[] mAccountIcons = new int[]{
             R.drawable.ic_account_my_orders,
@@ -117,6 +117,7 @@ public class AccountController extends BaseController implements AccountMvpView 
         // Setup views here
         assert (mActivity) != null;
         mActivity.setDraggableViewPager(true);
+        mClicked = false;
         mPresenter.loadAccountItems(mAccountItems, mAccountIcons);
     }
 
@@ -142,9 +143,9 @@ public class AccountController extends BaseController implements AccountMvpView 
         mActivity.setDraggableViewPager(false);
         GateKeeper.push(getRouter(),
                 GateKeeper.Destination.DETAILS,
-                new VerticalChangeHandler(false),
+                new VerticalChangeHandler(),
                 new VerticalChangeHandler());
-
+        mClicked = true;
     }
 
     @Override
@@ -152,9 +153,9 @@ public class AccountController extends BaseController implements AccountMvpView 
         mActivity.setDraggableViewPager(false);
         GateKeeper.push(getRouter(),
                 GateKeeper.Destination.VIEW_ADDRESSES,
-                new VerticalChangeHandler(false),
+                new VerticalChangeHandler(),
                 new VerticalChangeHandler());
-
+        mClicked = true;
     }
 
     @Override
@@ -162,8 +163,9 @@ public class AccountController extends BaseController implements AccountMvpView 
         mActivity.setDraggableViewPager(false);
         GateKeeper.push(getRouter(),
                 GateKeeper.Destination.ORDERS,
-                new VerticalChangeHandler(false),
+                new VerticalChangeHandler(),
                 new VerticalChangeHandler());
+        mClicked = true;
     }
 
     @Override
@@ -171,9 +173,9 @@ public class AccountController extends BaseController implements AccountMvpView 
         mActivity.setDraggableViewPager(false);
         GateKeeper.push(getRouter(),
                 GateKeeper.Destination.VIEW_VOUCHERS,
-                new VerticalChangeHandler(false),
+                new VerticalChangeHandler(),
                 new VerticalChangeHandler());
-
+        mClicked = true;
     }
 
     @Override
@@ -181,9 +183,9 @@ public class AccountController extends BaseController implements AccountMvpView 
         mActivity.setDraggableViewPager(false);
         GateKeeper.push(getRouter(),
                 GateKeeper.Destination.CURRENT_RETURNS,
-                new VerticalChangeHandler(false),
+                new VerticalChangeHandler(),
                 new VerticalChangeHandler());
-
+        mClicked = true;
     }
 
     @Override
@@ -196,8 +198,9 @@ public class AccountController extends BaseController implements AccountMvpView 
                         .putString(BundleKeys.PAYMENT_METHODS, "")
                         .putString(BundleKeys.CART_TOTAL_COST, "")
                         .build(),
-                new VerticalChangeHandler(false),
+                new VerticalChangeHandler(),
                 new VerticalChangeHandler());
+        mClicked = true;
     }
 
     @Override
@@ -205,8 +208,9 @@ public class AccountController extends BaseController implements AccountMvpView 
         mActivity.setDraggableViewPager(false);
         GateKeeper.push(getRouter(),
                 GateKeeper.Destination.LANGUAGE,
-                new VerticalChangeHandler(false),
+                new VerticalChangeHandler(),
                 new VerticalChangeHandler());
+        mClicked = true;
     }
 
     @Override
@@ -214,8 +218,9 @@ public class AccountController extends BaseController implements AccountMvpView 
         mActivity.setDraggableViewPager(false);
         GateKeeper.push(getRouter(),
                 GateKeeper.Destination.CONTACT_US,
-                new VerticalChangeHandler(false),
+                new VerticalChangeHandler(),
                 new VerticalChangeHandler());
+        mClicked = true;
     }
 
     @Override
@@ -227,9 +232,9 @@ public class AccountController extends BaseController implements AccountMvpView 
                 new BundleBuilder(new Bundle())
                         .putBoolean(BundleKeys.FROM_MY_ACCOUNTS, true)
                         .build(),
-                new VerticalChangeHandler(false),
+                new VerticalChangeHandler(),
                 new VerticalChangeHandler());
-
+        mClicked = true;
     }
 
     @Override
@@ -237,9 +242,9 @@ public class AccountController extends BaseController implements AccountMvpView 
         mActivity.setDraggableViewPager(false);
         GateKeeper.push(getRouter(),
                 GateKeeper.Destination.INVITE,
-                new VerticalChangeHandler(false),
+                new VerticalChangeHandler(),
                 new VerticalChangeHandler());
-
+        mClicked = true;
     }
 
     @Override
@@ -251,8 +256,9 @@ public class AccountController extends BaseController implements AccountMvpView 
                         .putString(BundleKeys.TEMPLATE_KEY, key)
                         .putString(BundleKeys.TITLE, title)
                         .build(),
-                new VerticalChangeHandler(false),
+                new VerticalChangeHandler(),
                 new VerticalChangeHandler());
+        mClicked = true;
     }
 
     @Override
@@ -272,6 +278,7 @@ public class AccountController extends BaseController implements AccountMvpView 
                 mPresenter.onAttach(mvpView);
             }
         });
+        mClicked = true;
     }
 
     @Override
@@ -300,11 +307,17 @@ public class AccountController extends BaseController implements AccountMvpView 
                         getActivity().getString(R.string.logout_failed));
             }
         });
+        mClicked = true;
     }
 
     @Override
     public void initLoginDrawable() {
 
+    }
+
+    @Override
+    public boolean isOptionClicked() {
+        return mClicked;
     }
 
 }

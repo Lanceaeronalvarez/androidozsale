@@ -25,6 +25,11 @@ public class AccountPresenter<V extends AccountMvpView> extends BasePresenter<V>
 
     @Override
     public void onAccountItemClick(String option) {
+
+        if(getMvpView().isOptionClicked()){
+            return;
+        }
+
         if (getDataManager().isAuthorized() || (option.equals(AccountItems.LANGUAGE) ||
                 option.equals(AccountItems.PRIVACY_POLICY) ||
                 option.equalsIgnoreCase(AccountItems.TNC) ||

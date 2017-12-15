@@ -23,8 +23,6 @@ public class AccountItemViewHolder extends RecyclerView.ViewHolder{
     @BindView(R.id.row_account_image)
     public ImageView mAccountItemImage;
 
-    public Disposable mAccountItemClickListener;
-
     public AccountItemViewHolder(View itemView) {
         super(itemView);
 

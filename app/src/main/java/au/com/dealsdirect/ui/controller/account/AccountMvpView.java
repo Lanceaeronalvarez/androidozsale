@@ -39,4 +39,6 @@ public interface AccountMvpView extends MvpView {
     void triggerLogout();
 
     void initLoginDrawable();
+
+    boolean isOptionClicked();
 }

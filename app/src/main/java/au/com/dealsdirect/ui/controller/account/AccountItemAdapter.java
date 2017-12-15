@@ -54,18 +54,7 @@ public class AccountItemAdapter extends RecyclerView.Adapter<AccountItemViewHold
 
         holder.mAccountItemName.setText(mAccountItems.get(position));
 
-        holder.mAccountItemClickListener = RxView.clicks(holder.itemView)
-                .throttleFirst(1000, TimeUnit.MILLISECONDS)
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(action -> {
-                mPresenter.onAccountItemClick(mAccountItems.get(position));
-        });
-    }
-
-    @Override
-    public void onViewRecycled(AccountItemViewHolder holder) {
-        super.onViewRecycled(holder);
-        holder.mAccountItemClickListener.dispose();
+        holder.itemView.setOnClickListener(v->mPresenter.onAccountItemClick(mAccountItems.get(position)));
     }
 
     @Override
