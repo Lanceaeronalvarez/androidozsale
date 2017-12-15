@@ -2,6 +2,7 @@ package au.com.dealsdirect.ui.controller.account;
 
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -9,6 +10,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.bluelinelabs.conductor.Controller;
+import com.bluelinelabs.conductor.ControllerChangeHandler;
 import com.bluelinelabs.conductor.changehandler.VerticalChangeHandler;
 
 import java.util.ArrayList;
@@ -20,6 +23,7 @@ import javax.inject.Inject;
 import au.com.dealsdirect.R;
 import au.com.dealsdirect.data.auth.AuthHandler;
 import au.com.dealsdirect.ui.base.BaseController;
+import au.com.dealsdirect.ui.controller.login.LoginController;
 import au.com.dealsdirect.ui.custom.CustomAlertDialog;
 import au.com.dealsdirect.ui.main.MainActivity;
 import au.com.dealsdirect.utils.BundleBuilder;
@@ -37,7 +41,10 @@ public class AccountController extends BaseController implements AccountMvpView 
     public static final String TAG = "AccountController";
     private static final String KEY_TEXT = "AccountController.KEY_TEXT";
     AccountItemAdapter accountItemAdapter;
-    private boolean mClicked = false;
+
+    private boolean mChangeInProgress = false;
+    private AccountMvpView mvpView;
+    private String mSelectedItemFromLogin;
 
     private int[] mAccountIcons = new int[]{
             R.drawable.ic_account_my_orders,
@@ -108,6 +115,7 @@ public class AccountController extends BaseController implements AccountMvpView 
     protected void onViewBound(@NonNull View view) {
         super.onViewBound(view);
         mActivity.setAccountsRouter(getRouter());
+        mvpView = this;
         view.setPadding(0, mActivity.getStatusBarHeight(), 0, 0);
         setUp(view);
     }
@@ -117,8 +125,31 @@ public class AccountController extends BaseController implements AccountMvpView 
         // Setup views here
         assert (mActivity) != null;
         mActivity.setDraggableViewPager(true);
-        mClicked = false;
         mPresenter.loadAccountItems(mAccountItems, mAccountIcons);
+
+        getRouter().addChangeListener(new ControllerChangeHandler.ControllerChangeListener() {
+            @Override
+            public void onChangeStarted(@Nullable Controller to, @Nullable Controller from, boolean isPush, @NonNull ViewGroup container, @NonNull ControllerChangeHandler handler) {
+                mChangeInProgress = true;
+                mAccountRecyclerView.setClickable(false);
+            }
+
+            @Override
+            public void onChangeCompleted(@Nullable Controller to, @Nullable Controller from, boolean isPush, @NonNull ViewGroup container, @NonNull ControllerChangeHandler handler) {
+                mChangeInProgress = false;
+                mAccountRecyclerView.setClickable(true);
+                if(from instanceof LoginController){
+                    mPresenter.onAttach(mvpView);
+                    mPresenter.loadAccountItems(mAccountItems,mAccountIcons);
+                    mPresenter.onAccountItemClick(mSelectedItemFromLogin);
+                }
+            }
+        });
+    }
+
+    @Override
+    public boolean isChangeInProgress() {
+        return mChangeInProgress;
     }
 
     @Override
@@ -143,9 +174,9 @@ public class AccountController extends BaseController implements AccountMvpView 
         mActivity.setDraggableViewPager(false);
         GateKeeper.push(getRouter(),
                 GateKeeper.Destination.DETAILS,
-                new VerticalChangeHandler(),
+                new VerticalChangeHandler(false),
                 new VerticalChangeHandler());
-        mClicked = true;
+        
     }
 
     @Override
@@ -153,9 +184,9 @@ public class AccountController extends BaseController implements AccountMvpView 
         mActivity.setDraggableViewPager(false);
         GateKeeper.push(getRouter(),
                 GateKeeper.Destination.VIEW_ADDRESSES,
-                new VerticalChangeHandler(),
+                new VerticalChangeHandler(false),
                 new VerticalChangeHandler());
-        mClicked = true;
+        
     }
 
     @Override
@@ -163,9 +194,9 @@ public class AccountController extends BaseController implements AccountMvpView 
         mActivity.setDraggableViewPager(false);
         GateKeeper.push(getRouter(),
                 GateKeeper.Destination.ORDERS,
-                new VerticalChangeHandler(),
+                new VerticalChangeHandler(false),
                 new VerticalChangeHandler());
-        mClicked = true;
+        
     }
 
     @Override
@@ -173,9 +204,9 @@ public class AccountController extends BaseController implements AccountMvpView 
         mActivity.setDraggableViewPager(false);
         GateKeeper.push(getRouter(),
                 GateKeeper.Destination.VIEW_VOUCHERS,
-                new VerticalChangeHandler(),
+                new VerticalChangeHandler(false),
                 new VerticalChangeHandler());
-        mClicked = true;
+        
     }
 
     @Override
@@ -183,9 +214,9 @@ public class AccountController extends BaseController implements AccountMvpView 
         mActivity.setDraggableViewPager(false);
         GateKeeper.push(getRouter(),
                 GateKeeper.Destination.CURRENT_RETURNS,
-                new VerticalChangeHandler(),
+                new VerticalChangeHandler(false),
                 new VerticalChangeHandler());
-        mClicked = true;
+        
     }
 
     @Override
@@ -198,9 +229,9 @@ public class AccountController extends BaseController implements AccountMvpView 
                         .putString(BundleKeys.PAYMENT_METHODS, "")
                         .putString(BundleKeys.CART_TOTAL_COST, "")
                         .build(),
-                new VerticalChangeHandler(),
+                new VerticalChangeHandler(false),
                 new VerticalChangeHandler());
-        mClicked = true;
+        
     }
 
     @Override
@@ -208,9 +239,9 @@ public class AccountController extends BaseController implements AccountMvpView 
         mActivity.setDraggableViewPager(false);
         GateKeeper.push(getRouter(),
                 GateKeeper.Destination.LANGUAGE,
-                new VerticalChangeHandler(),
+                new VerticalChangeHandler(false),
                 new VerticalChangeHandler());
-        mClicked = true;
+        
     }
 
     @Override
@@ -218,9 +249,9 @@ public class AccountController extends BaseController implements AccountMvpView 
         mActivity.setDraggableViewPager(false);
         GateKeeper.push(getRouter(),
                 GateKeeper.Destination.CONTACT_US,
-                new VerticalChangeHandler(),
+                new VerticalChangeHandler(false),
                 new VerticalChangeHandler());
-        mClicked = true;
+        
     }
 
     @Override
@@ -232,9 +263,9 @@ public class AccountController extends BaseController implements AccountMvpView 
                 new BundleBuilder(new Bundle())
                         .putBoolean(BundleKeys.FROM_MY_ACCOUNTS, true)
                         .build(),
-                new VerticalChangeHandler(),
+                new VerticalChangeHandler(false),
                 new VerticalChangeHandler());
-        mClicked = true;
+        
     }
 
     @Override
@@ -242,9 +273,9 @@ public class AccountController extends BaseController implements AccountMvpView 
         mActivity.setDraggableViewPager(false);
         GateKeeper.push(getRouter(),
                 GateKeeper.Destination.INVITE,
-                new VerticalChangeHandler(),
+                new VerticalChangeHandler(false),
                 new VerticalChangeHandler());
-        mClicked = true;
+        
     }
 
     @Override
@@ -256,21 +287,18 @@ public class AccountController extends BaseController implements AccountMvpView 
                         .putString(BundleKeys.TEMPLATE_KEY, key)
                         .putString(BundleKeys.TITLE, title)
                         .build(),
-                new VerticalChangeHandler(),
+                new VerticalChangeHandler(false),
                 new VerticalChangeHandler());
-        mClicked = true;
+        
     }
 
     @Override
     public void triggerLogin(String option) {
-        AccountMvpView mvpView = this;
+        mSelectedItemFromLogin = option;
         mActivity.showLoginController(getRouter(), new AuthHandler() {
             @Override
             public void success() {
-                mPresenter.onAttach(mvpView);
-                mPresenter.onAccountItemClick(option);
                 mActivity.callGCMRegisterSubscriber();
-                mPresenter.loadAccountItems(mAccountItems,mAccountIcons);
             }
 
             @Override
@@ -278,8 +306,9 @@ public class AccountController extends BaseController implements AccountMvpView 
                 mPresenter.onAttach(mvpView);
             }
         });
-        mClicked = true;
+        
     }
+
 
     @Override
     public void triggerLogout() {
@@ -307,17 +336,12 @@ public class AccountController extends BaseController implements AccountMvpView 
                         getActivity().getString(R.string.logout_failed));
             }
         });
-        mClicked = true;
+        
     }
 
     @Override
     public void initLoginDrawable() {
 
-    }
-
-    @Override
-    public boolean isOptionClicked() {
-        return mClicked;
     }
 
 }

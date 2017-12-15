@@ -40,5 +40,6 @@ public interface AccountMvpView extends MvpView {
 
     void initLoginDrawable();
 
-    boolean isOptionClicked();
+    boolean isChangeInProgress();
+
 }

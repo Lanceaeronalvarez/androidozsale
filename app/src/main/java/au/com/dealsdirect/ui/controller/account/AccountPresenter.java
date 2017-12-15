@@ -26,7 +26,7 @@ public class AccountPresenter<V extends AccountMvpView> extends BasePresenter<V>
     @Override
     public void onAccountItemClick(String option) {
 
-        if(getMvpView().isOptionClicked()){
+        if (getMvpView().isChangeInProgress()) {
             return;
         }
 

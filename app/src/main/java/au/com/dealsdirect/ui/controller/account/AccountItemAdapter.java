@@ -20,7 +20,7 @@ import io.reactivex.disposables.Disposable;
  * dp Created by Admin on 6/20/17.
  */
 
-public class AccountItemAdapter extends RecyclerView.Adapter<AccountItemViewHolder>{
+public class AccountItemAdapter extends RecyclerView.Adapter<AccountItemViewHolder> {
 
     private List<String> mAccountItems = Collections.emptyList();
     private int[] mAccountImages;
@@ -39,12 +39,12 @@ public class AccountItemAdapter extends RecyclerView.Adapter<AccountItemViewHold
 
     @Override
     public AccountItemViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-         View v = LayoutInflater.from(parent.getContext())
-                                .inflate(R.layout.viewholder_account_item,
-                                         parent,
-                                         false);
+        View v = LayoutInflater.from(parent.getContext())
+                .inflate(R.layout.viewholder_account_item,
+                        parent,
+                        false);
 
-         return new AccountItemViewHolder(v);
+        return new AccountItemViewHolder(v);
     }
 
     @Override
@@ -54,7 +54,10 @@ public class AccountItemAdapter extends RecyclerView.Adapter<AccountItemViewHold
 
         holder.mAccountItemName.setText(mAccountItems.get(position));
 
-        holder.itemView.setOnClickListener(v->mPresenter.onAccountItemClick(mAccountItems.get(position)));
+        holder.itemView.setOnClickListener(v -> {
+
+            mPresenter.onAccountItemClick(mAccountItems.get(position));
+        });
     }
 
     @Override
@@ -65,7 +68,7 @@ public class AccountItemAdapter extends RecyclerView.Adapter<AccountItemViewHold
         return mAccountItems.size();
     }
 
-    public List<String> getData(){
+    public List<String> getData() {
         return mAccountItems;
     }
 
@@ -73,7 +76,11 @@ public class AccountItemAdapter extends RecyclerView.Adapter<AccountItemViewHold
         mAccountItems.remove(position);
     }
 
-    public String getItemAtPosition(int position){ return mAccountItems.get(position); }
+    public String getItemAtPosition(int position) {
+        return mAccountItems.get(position);
+    }
 
-    public List<String> getList(){ return mAccountItems; }
+    public List<String> getList() {
+        return mAccountItems;
+    }
 }
