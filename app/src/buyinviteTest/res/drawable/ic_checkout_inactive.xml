@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <vector xmlns:android="http://schemas.android.com/apk/res/android"
-    android:viewportWidth="34"
-    android:viewportHeight="34"
-    android:width="34dp"
-    android:height="34dp">
+    android:viewportWidth="29"
+    android:viewportHeight="29"
+    android:width="29dp"
+    android:height="29dp">
     <group
-        android:translateX="5"
+        android:translateX="3"
         android:translateY="5">
         <group
             android:translateX="6.666667"
