@@ -76,6 +76,7 @@ public abstract class BaseController extends RefWatchingController implements Mv
     public void hideLoading() {
         if (mActivity != null) {
             mActivity.hideLoading();
+            mActivity.updateSnackbar(mActivity.isNetworkConnected());
         }
     }
 

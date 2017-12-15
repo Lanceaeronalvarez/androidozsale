@@ -680,7 +680,7 @@ public class MainActivity extends BaseActivity implements MainMvpView {
         }
     };
 
-    private void updateSnackbar(boolean isOnline) {
+    public void updateSnackbar(boolean isOnline) {
         if(!isOnline && !mSnackbar.isShown()) {
             showSnackBar(getString(R.string.no_internet_connection), true);
         }else if(isOnline && mSnackbar.isShown()){

@@ -41,6 +41,13 @@
         in your shopping cart
     </string>
 
+    <!--STRINGS for tutorial headers-->
+    <string name="tutorial_header_text_one">click shop to browse categories</string>
+    <string name="tutorial_header_text_two">swipe down to \ndismiss category</string>
+    <string name="tutorial_header_text_three">pinch to zoom on \ndetails image</string>
+    <string name="tutorial_header_text_four">swipe to view my cart \nand my account</string>
+
+
     <string name="base_html_template_header" formatted="false">
         <![CDATA["<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN">
         <html>

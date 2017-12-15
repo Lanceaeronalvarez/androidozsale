@@ -10,6 +10,7 @@ import android.view.Window;
 import android.view.WindowManager;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
+import android.widget.TextView;
 
 import au.com.dealsdirect.R;
 import au.com.dealsdirect.ui.base.BaseController;
@@ -33,7 +34,9 @@ public class TutorialChildController extends BaseController {
     @BindView(R.id.controller_tutorial_child_container)
     RelativeLayout mTutorialChildControllerContainer;
 
-    String tutorial;
+    @BindView(R.id.splash_header_text)
+    TextView mTutorialHeaderText;
+
     public TutorialChildController(Bundle args) {
         super(args);
     }
@@ -72,26 +75,31 @@ public class TutorialChildController extends BaseController {
                 mTutorialChildControllerImage.setImageDrawable(mActivity.getDrawable(R.drawable.tutorial_first_step));
                 backgroundColor = ContextCompat.getColor(getActivity(), backgroundColor);
                 mTutorialChildControllerContainer.setBackgroundColor(backgroundColor);
+                mTutorialHeaderText.setText(mActivity.getString(R.string.tutorial_header_text_one));
                 break;
             case R.color.yellow:
                 mTutorialChildControllerImage.setImageDrawable(mActivity.getDrawable(R.drawable.tutorial_second_step));
                 backgroundColor = ContextCompat.getColor(getActivity(), backgroundColor);
                 mTutorialChildControllerContainer.setBackgroundColor(backgroundColor);
+                mTutorialHeaderText.setText(mActivity.getString(R.string.tutorial_header_text_two));
                 break;
             case R.color.red:
                 mTutorialChildControllerImage.setImageDrawable(mActivity.getDrawable(R.drawable.tutorial_third_step));
                 backgroundColor = ContextCompat.getColor(getActivity(), backgroundColor);
                 mTutorialChildControllerContainer.setBackgroundColor(backgroundColor);
+                mTutorialHeaderText.setText(mActivity.getString(R.string.tutorial_header_text_three));
                 break;
             case R.color.blue:
                 mTutorialChildControllerImage.setImageDrawable(mActivity.getDrawable(R.drawable.tutorial_fourth_step));
                 backgroundColor = ContextCompat.getColor(getActivity(), backgroundColor);
                 mTutorialChildControllerContainer.setBackgroundColor(backgroundColor);
+                mTutorialHeaderText.setText(mActivity.getString(R.string.tutorial_header_text_four));
                 break;
             default:
                 mTutorialChildControllerImage.setImageDrawable(mActivity.getDrawable(R.drawable.tutorial_first_step));
                 backgroundColor = ContextCompat.getColor(getActivity(), backgroundColor);
                 mTutorialChildControllerContainer.setBackgroundColor(backgroundColor);
+                mTutorialHeaderText.setText(mActivity.getString(R.string.tutorial_header_text_one));
                 break;
 
         }
