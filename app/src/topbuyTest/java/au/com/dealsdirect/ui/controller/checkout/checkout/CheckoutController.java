@@ -42,6 +42,8 @@ import au.com.dealsdirect.service.ourpay.OurpayPanel;
 import au.com.dealsdirect.service.ourpay.OurpayStateManager;
 import au.com.dealsdirect.service.ourpay.OurpayTemplateText;
 import au.com.dealsdirect.ui.base.SwipeableBaseToolBarController;
+import au.com.dealsdirect.ui.controller.address.addnewaddress.AddNewAddressController;
+import au.com.dealsdirect.ui.controller.address.viewaddress.ViewAddressController;
 import au.com.dealsdirect.ui.controller.vouchers.Add.AddVouchersController;
 import au.com.dealsdirect.ui.custom.CustomAlertDialog;
 import au.com.dealsdirect.ui.main.FetchTokenHandler;
@@ -302,7 +304,13 @@ public class CheckoutController extends SwipeableBaseToolBarController implement
         getRouter().addChangeListener(new ControllerChangeHandler.ControllerChangeListener() {
             @Override
             public void onChangeStarted(@Nullable Controller to, @Nullable Controller from, boolean isPush, @NonNull ViewGroup container, @NonNull ControllerChangeHandler handler) {
+                if(from instanceof ViewAddressController && ((ViewAddressController) from).isNewAddressApplied()){
+                    mPresenter.resetIsCartAlreadyLoaded();
+                }
 
+                if(from instanceof AddNewAddressController && ((AddNewAddressController) from).isNewAddressApplied()){
+                    mPresenter.resetIsCartAlreadyLoaded();
+                }
             }
 
             @Override
@@ -558,7 +566,7 @@ public class CheckoutController extends SwipeableBaseToolBarController implement
         bundle.putBoolean(BundleKeys.IS_FROM_CART, true);
 
         mActivity.setDraggableViewPager(false);
-        GateKeeper.push(getRouter(), GateKeeper.Destination.VIEW_ADDRESSES, bundle, new VerticalChangeHandler(false), new VerticalChangeHandler());
+        GateKeeper.push(getRouter(), GateKeeper.Destination.ADD_NEW_ADDRESS, bundle, new VerticalChangeHandler(false), new VerticalChangeHandler());
 
     }
 

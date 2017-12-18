@@ -137,7 +137,12 @@ public class MainActivity extends BaseActivity implements MainMvpView {
     @Override
     public void onBackPressed() {
 
-        if(GateKeeper.getCurrentControllerOnRouter(mRouter) instanceof TutorialController){
+        if(isFinishing()){
+            return;
+        }
+
+        Controller mRouterController = GateKeeper.getCurrentControllerOnRouter(mRouter);
+        if(mRouterController instanceof TutorialController || mRouterController instanceof SplashScreenController){
             finish();
             return;
         }

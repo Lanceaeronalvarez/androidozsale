@@ -83,6 +83,7 @@ public class AddNewAddressPresenter <V extends AddNewAddressMvpView> extends Bas
             return;
         }
 
+        getMvpView().showLoading();
         getCompositeDisposable().add(getDataManager()
                 .callSetUserDeliveryAddress(new AddAddress.RequestValues(jsonAddress))
                 .subscribeOn(getSchedulerProvider().io())

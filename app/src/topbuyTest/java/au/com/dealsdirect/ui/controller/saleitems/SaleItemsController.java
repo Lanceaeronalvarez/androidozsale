@@ -846,7 +846,6 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
     @Override
     public void onError(String message) {
         super.onError(message);
-        showNoNetworkLayout();
     }
 
     @Override

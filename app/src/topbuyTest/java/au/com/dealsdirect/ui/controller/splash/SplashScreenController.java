@@ -57,20 +57,21 @@ public class SplashScreenController extends BaseController implements SplashScre
     @Override
     protected void setUp(View view) {
         new Handler().postDelayed(() -> {
-            if (mPresenter.isInitialLaunch()) {
-                GateKeeper.push(
-                        getRouter(),
-                        GateKeeper.Destination.TUTORIAL,
-                        new BundleBuilder(new Bundle())
-                                .putBoolean(BundleKeys.FROM_MY_ACCOUNTS, false)
-                                .build(),
-                        new FadeChangeHandler(false),
-                        new VerticalChangeHandler());
-                mPresenter.setIsInitialLaunch(false);
-            } else {
-                mActivity.splashShownCallback();
+            if(!mActivity.isFinishing()) {
+                if (mPresenter.isInitialLaunch()) {
+                    GateKeeper.push(
+                            getRouter(),
+                            GateKeeper.Destination.TUTORIAL,
+                            new BundleBuilder(new Bundle())
+                                    .putBoolean(BundleKeys.FROM_MY_ACCOUNTS, false)
+                                    .build(),
+                            new FadeChangeHandler(false),
+                            new VerticalChangeHandler());
+                    mPresenter.setIsInitialLaunch(false);
+                } else {
+                    mActivity.splashShownCallback();
+                }
             }
-
         }, 5000);
     }
 }

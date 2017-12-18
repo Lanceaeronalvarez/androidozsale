@@ -45,6 +45,12 @@ public class AddNewAddressController extends SwipeableBaseToolBarController impl
     AddNewAddressMvpPresenter<AddNewAddressMvpView> mPresenter;
     public boolean mCalledFromCart = false;
 
+    public boolean isNewAddressApplied() {
+        return mNewAddressApplied;
+    }
+
+    private boolean mNewAddressApplied = false;
+
     public AddNewAddressController(String decorationInfoList, boolean calledFromCart){
         this(new BundleBuilder(new Bundle())
                 .putString(DECORATION_INFO_LIST, decorationInfoList)
@@ -165,6 +171,7 @@ public class AddNewAddressController extends SwipeableBaseToolBarController impl
                 CustomAlertDialog.CustomDialogIconState.POSITIVE,
                 getApplicationContext().getString(R.string.delivery_address_added));
 
+        mNewAddressApplied = true;
         mActivity.onBackPressed();
 
     }

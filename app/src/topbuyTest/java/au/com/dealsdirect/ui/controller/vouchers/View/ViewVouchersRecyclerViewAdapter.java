@@ -63,7 +63,7 @@ public class ViewVouchersRecyclerViewAdapter extends RecyclerView.Adapter<ViewVo
 
                     holder.mVouchersLayout.setBackground(
                             context.getResources()
-                                    .getDrawable(R.drawable.bg_voucher_container_red));
+                                    .getDrawable(R.drawable.bg_voucher_red));
 
                 }
 
@@ -71,7 +71,7 @@ public class ViewVouchersRecyclerViewAdapter extends RecyclerView.Adapter<ViewVo
 
                     holder.mVouchersLayout.setBackground(
                             context.getResources()
-                                    .getDrawable(R.drawable.bg_voucher_container_blue));
+                                    .getDrawable(R.drawable.bg_voucher_blue));
 
                 }
 
@@ -79,7 +79,7 @@ public class ViewVouchersRecyclerViewAdapter extends RecyclerView.Adapter<ViewVo
 
                     holder.mVouchersLayout.setBackground(
                             context.getResources()
-                                    .getDrawable(R.drawable.bg_voucher_container_yellow));
+                                    .getDrawable(R.drawable.bg_voucher_yellow));
 
                 }
 
@@ -87,7 +87,7 @@ public class ViewVouchersRecyclerViewAdapter extends RecyclerView.Adapter<ViewVo
 
                     holder.mVouchersLayout.setBackground(
                             context.getResources()
-                                    .getDrawable(R.drawable.bg_voucher_container_green));
+                                    .getDrawable(R.drawable.bg_voucher_green));
 
                 }
 
@@ -95,7 +95,7 @@ public class ViewVouchersRecyclerViewAdapter extends RecyclerView.Adapter<ViewVo
 
                     holder.mVouchersLayout.setBackground(
                             context.getResources()
-                                    .getDrawable(R.drawable.bg_voucher_container_violet));
+                                    .getDrawable(R.drawable.bg_voucher_violet));
 
                 }
 
@@ -103,7 +103,7 @@ public class ViewVouchersRecyclerViewAdapter extends RecyclerView.Adapter<ViewVo
 
                     holder.mVouchersLayout.setBackground(
                             context.getResources()
-                                    .getDrawable(R.drawable.bg_voucher_container_aqua));
+                                    .getDrawable(R.drawable.bg_voucher_aqua));
 
                 }
 
@@ -111,7 +111,7 @@ public class ViewVouchersRecyclerViewAdapter extends RecyclerView.Adapter<ViewVo
 
                     holder.mVouchersLayout.setBackground(
                             context.getResources()
-                                    .getDrawable(R.drawable.bg_voucher_container_orange));
+                                    .getDrawable(R.drawable.bg_voucher_orange));
 
                 }
 
@@ -119,14 +119,14 @@ public class ViewVouchersRecyclerViewAdapter extends RecyclerView.Adapter<ViewVo
 
                     holder.mVouchersLayout.setBackground(
                             context.getResources()
-                                    .getDrawable(R.drawable.bg_voucher_container_darkblue));
+                                    .getDrawable(R.drawable.bg_voucher_darkblue));
 
                 }
                 else{
 
                     holder.mVouchersLayout.setBackground(
                             context.getResources()
-                                    .getDrawable(R.drawable.bg_voucher_container_blue));
+                                    .getDrawable(R.drawable.bg_voucher_blue));
 
                 }
             }
@@ -136,8 +136,6 @@ public class ViewVouchersRecyclerViewAdapter extends RecyclerView.Adapter<ViewVo
             holder.mVouchersItemCostText.setText(voucherCostWithCurrency);
             holder.mVouchersItemCostText.setVisibility(View.VISIBLE);
             holder.mVouchersItemDescText.setText(mUseBefore);
-            holder.mVouchersLayout.setBackground(holder.mVouchersLayout.getContext().getDrawable(R.drawable.bg_voucher_item));
-
         } else {
 
             if(voucher.getDiscountLeft().equalsIgnoreCase("already spent")) {
@@ -148,8 +146,7 @@ public class ViewVouchersRecyclerViewAdapter extends RecyclerView.Adapter<ViewVo
 
             holder.mVouchersItemExpiresOnText.setText(voucher.getExpired());
             holder.mVouchersItemDescText.setText(voucher.getFullname());
-            holder.mVouchersLayout.setBackground(holder.mVouchersLayout.getContext().getDrawable(R.drawable.bg_voucher_item));
-            holder.mVouchersLayout.setAlpha(0.21f);
+            holder.mVouchersLayout.setBackground(holder.mVouchersLayout.getContext().getDrawable(R.drawable.bg_voucher_container_gray));
         }
 
     }

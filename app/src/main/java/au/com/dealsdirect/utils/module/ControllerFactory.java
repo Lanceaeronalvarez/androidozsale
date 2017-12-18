@@ -28,9 +28,11 @@ import au.com.dealsdirect.ui.controller.orders.orders.OrdersController;
 import au.com.dealsdirect.ui.controller.register.RegisterController;
 import au.com.dealsdirect.ui.controller.returns.currentreturns.CurrentReturnsController;
 import au.com.dealsdirect.ui.controller.returns.returnorders.ReturnOrdersController;
+import au.com.dealsdirect.ui.controller.saleitemdetails.SaleItemDetailsController;
 import au.com.dealsdirect.ui.controller.saleitems.SaleItemsController;
 import au.com.dealsdirect.ui.controller.searchfilter.SearchFilterController;
 import au.com.dealsdirect.ui.controller.searchfilter.facetfilter.FacetFilterController;
+import au.com.dealsdirect.ui.controller.splash.SplashScreenController;
 import au.com.dealsdirect.ui.controller.tutorial.TutorialController;
 import au.com.dealsdirect.ui.controller.vouchers.Add.AddVouchersController;
 import au.com.dealsdirect.ui.controller.vouchers.View.ViewVouchersController;
@@ -92,7 +94,7 @@ public class ControllerFactory {
             case FACET_FILTER:
                 return FacetFilterController.newInstance();
             case SPLASH:
-                break;
+                return SplashScreenController.newInstance();
             case SALEITEM_DETAILS:
                 break;
             case ADD_VOUCHERS:

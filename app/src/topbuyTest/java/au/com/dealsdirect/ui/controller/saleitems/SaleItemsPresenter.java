@@ -51,6 +51,7 @@ public class SaleItemsPresenter<V extends SaleItemsMvpView> extends BasePresente
             @Override
             public void onFailure(Throwable t) {
                 getMvpView().onError(t.getMessage());
+                getMvpView().showNoNetworkLayout();
             }
         });
     }

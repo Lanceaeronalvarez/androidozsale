@@ -64,6 +64,12 @@ public class ViewAddressController extends SwipeableBaseToolBarController implem
     private List<DecorationInfoList> mDecorationInfoList;
     private boolean mAddressesLoaded = false;
     private DeliveryAddress mDeliveryAddress;
+
+    public boolean isNewAddressApplied() {
+        return newAddressApplied;
+    }
+
+    private boolean newAddressApplied = false;
     private int loadCounter = 0;
 
     @Inject
@@ -243,6 +249,7 @@ public class ViewAddressController extends SwipeableBaseToolBarController implem
     @Override
     public void backToCheckout() {
         if (mCalledFromCart) {
+            newAddressApplied = true;
             mActivity.onBackPressed();
             hideProgressDialog();
         }

@@ -88,18 +88,17 @@
                         app:hintEnabled="false"
                         app:passwordToggleEnabled="true">
 
-                        <TextView
+                        <EditText
                             android:id="@+id/controller_edit_text_voucher"
+                            style="@style/DDEditTextStyle"
                             android:layout_width="match_parent"
                             android:layout_height="@dimen/default_button_height"
                             android:layout_marginRight="5dp"
-                            android:background="@drawable/rounded_edittext_selector"
                             android:hint="enter promo code"
                             android:maxLines="1"
                             android:padding="10dp"
                             android:textColor="#919191"
-                            android:textColorHint="#c1c1c1"
-                            fontPath="@string/fontname_lato"/>
+                            android:textColorHint="#c1c1c1" />
 
                     </android.support.design.widget.TextInputLayout>
 
