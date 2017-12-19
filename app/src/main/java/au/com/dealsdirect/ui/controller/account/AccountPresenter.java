@@ -27,6 +27,7 @@ public class AccountPresenter<V extends AccountMvpView> extends BasePresenter<V>
             R.drawable.bg_account_vouchers,
             R.drawable.bg_account_returns,
             R.drawable.bg_account_languages,
+            R.drawable.bg_account_country,
             R.drawable.bg_account_terms_and_conditions,
             R.drawable.bg_account_privacy_policy,
             R.drawable.bg_account_about_us,
@@ -50,6 +51,7 @@ public class AccountPresenter<V extends AccountMvpView> extends BasePresenter<V>
                         "My Vouchers",
                         "My Returns",
                         "Language",
+                        "Country",
                         "Terms & Conditions",
                         "Privacy Policy",
                         "About Us" )), accountImages);
@@ -60,7 +62,8 @@ public class AccountPresenter<V extends AccountMvpView> extends BasePresenter<V>
         if (getDataManager().isAuthorized() ||  (option.equalsIgnoreCase("Language") ||
                 option.equalsIgnoreCase("Privacy Policy") ||
                 option.equalsIgnoreCase("Terms & Conditions") ||
-                option.equalsIgnoreCase("About Us"))) {
+                option.equalsIgnoreCase("About Us") ||
+                option.equalsIgnoreCase("Country"))) {
             if(getMvpView().getBackstackSize() == 1) {
                 switch (option) {
                     case "My Details":
@@ -83,6 +86,9 @@ public class AccountPresenter<V extends AccountMvpView> extends BasePresenter<V>
                         break;
                     case "Language":
                         getMvpView().showLanguage();
+                        break;
+                    case "Country":
+                        getMvpView().showCountry();
                         break;
                     case "Logout":
                         getMvpView().triggerLogout();

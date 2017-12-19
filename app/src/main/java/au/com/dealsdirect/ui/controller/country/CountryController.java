@@ -1,0 +1,123 @@
+package au.com.dealsdirect.ui.controller.country;
+
+import android.os.Bundle;
+import android.support.annotation.NonNull;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.ImageView;
+import android.widget.TextView;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import javax.inject.Inject;
+
+import au.com.dealsdirect.R;
+import au.com.dealsdirect.data.network.model.country.Country;
+import au.com.dealsdirect.ui.base.BasePullToRefreshController;
+import au.com.dealsdirect.ui.custom.CustomAlertDialog;
+import au.com.dealsdirect.utils.BundleBuilder;
+import butterknife.BindView;
+
+/**
+ * Created by Admin on 12/18/17.
+ */
+
+public class CountryController extends BasePullToRefreshController implements CountryMvpView {
+
+    @Inject
+    CountryMvpPresenter<CountryMvpView> mPresenter;
+
+    @BindView(R.id.partial_toolbar_arrow_title)
+    TextView mTitleText;
+
+    @BindView(R.id.partial_toolbar_filter_view)
+    ImageView mFilterView;
+
+    @BindView(R.id.partial_toolbar_arrow_view)
+    ImageView mArrowImage;
+
+    @BindView(R.id.controller_recycler_details)
+    RecyclerView mRecyclerView;
+
+    private CountryAdapter mAdapter;
+
+    public static CountryController newInstance() {
+        return new CountryController(
+                new BundleBuilder(new Bundle())
+                        .build());
+    }
+
+    public CountryController(Bundle args) {
+        super(args);
+    }
+
+
+    @Override
+    public void showCountries(List<Country> countries, String selectedCountry) {
+        mAdapter.replaceData(countries, selectedCountry);
+        mAdapter.notifyDataSetChanged();
+    }
+
+
+    @Override
+    public void onRefreshStart() {
+        super.onRefreshStart();
+        mPresenter.getUserCountries();
+    }
+
+    @Override
+    protected void onViewBound(@NonNull View view) {
+        super.onViewBound(view);
+        setUp(view);
+    }
+
+    @Override
+    protected void onDestroyView(@NonNull View view) {
+        mPresenter.onDetach();
+        super.onDestroyView(view);
+    }
+
+    @Override
+    public void showSelectedCountryDialog(String country) {
+        CustomAlertDialog.showCustomAlertDialog(mActivity,
+                CustomAlertDialog.CustomDialogIconState.POSITIVE,
+                country);
+    }
+
+    @Override
+    public void onBackPress() {
+        mActivity.onBackPressed();
+    }
+
+    @Override
+    protected void setUp(View view) {
+        mTitleText.setText("Country");
+        mFilterView.setVisibility(View.INVISIBLE);
+        mArrowImage.setOnClickListener(v -> {
+            onBackPress();
+        });
+
+        mAdapter = new CountryAdapter(new ArrayList<>(), mActivity, mPresenter);
+        mRecyclerView.setLayoutManager(new LinearLayoutManager(mActivity, LinearLayoutManager.VERTICAL, false));
+        mRecyclerView.setAdapter(mAdapter);
+
+        mPresenter.getUserCountries();
+    }
+
+    @NonNull
+    @Override
+    protected View inflateView(@NonNull LayoutInflater inflater, @NonNull ViewGroup container) {
+        View view = super.inflateView(inflater, container);
+
+        fillToolbar(inflater.inflate(R.layout.partial_toolbar_arrow, container, false));
+        fillContent(inflater.inflate(R.layout.controller_user_countries, container, false));
+
+        getControllerComponent().inject(this);
+        mPresenter.onAttach(this);
+        return view;
+    }
+}

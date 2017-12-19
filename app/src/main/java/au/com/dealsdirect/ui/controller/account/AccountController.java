@@ -11,7 +11,6 @@ import android.view.ViewGroup;
 import android.widget.ImageButton;
 import android.widget.TextView;
 
-import com.bluelinelabs.conductor.Router;
 import com.bluelinelabs.conductor.RouterTransaction;
 import com.bluelinelabs.conductor.changehandler.HorizontalChangeHandler;
 
@@ -26,6 +25,7 @@ import au.com.dealsdirect.ui.base.BaseController;
 import au.com.dealsdirect.ui.controller.account.adapter.AccountItemAdapter;
 import au.com.dealsdirect.ui.controller.address.viewaddress.ViewAddressController;
 import au.com.dealsdirect.ui.controller.checkout.paymentselect.PaymentSelectController;
+import au.com.dealsdirect.ui.controller.country.CountryController;
 import au.com.dealsdirect.ui.controller.details.DetailsController;
 import au.com.dealsdirect.ui.controller.language.LanguageController;
 import au.com.dealsdirect.ui.controller.legalities.LegalitiesController;
@@ -33,8 +33,6 @@ import au.com.dealsdirect.ui.controller.orders.orders.OrdersController;
 import au.com.dealsdirect.ui.controller.returns.currentreturns.CurrentReturnsController;
 import au.com.dealsdirect.ui.controller.vouchers.View.ViewVouchersController;
 import au.com.dealsdirect.ui.custom.CustomAlertDialog;
-import au.com.dealsdirect.ui.main.MainActivity;
-import au.com.dealsdirect.ui.main.MainMvpView;
 import au.com.dealsdirect.utils.BundleBuilder;
 import au.com.dealsdirect.utils.CartUtil;
 import butterknife.BindView;
@@ -182,6 +180,13 @@ public class AccountController extends BaseController implements AccountMvpView,
                 .pushChangeHandler(new HorizontalChangeHandler())
                 .popChangeHandler(new HorizontalChangeHandler()));
 
+    }
+
+    @Override
+    public void showCountry() {
+        getRouter().pushController(RouterTransaction.with(CountryController.newInstance())
+                .pushChangeHandler(new HorizontalChangeHandler())
+                .popChangeHandler(new HorizontalChangeHandler()));
     }
 
     @Override
