@@ -49,6 +49,7 @@ android {
             buildConfigField "String", "API_LEGACY", "\"https://www.dealsdirect.com.au/papi/public/v3.20/\""
             buildConfigField "String", "ACCOUNT_ID", "\"A56B0D62-AEF6-4653-848E-2ECDDB6E9B8C\""
             resValue "string", "app_name", "DealsDirect"
+            resValue "bool", "debug_mode", "false"
         }
 
         dealsDirectTest {
@@ -59,6 +60,7 @@ android {
             buildConfigField "String", "API_LEGACY", "\"https://api.mysaledev.com/public/v3.20/\""
             buildConfigField "String", "ACCOUNT_ID", "\"A56B0D62-AEF6-4653-848E-2ECDDB6E9B8C\""
             resValue "string", "app_name", "DealsDirect Test"
+            resValue "bool", "debug_mode", "false"
         }
 
         ooRC {
@@ -69,6 +71,7 @@ android {
             buildConfigField "String", "API_LEGACY", "\"https://api.mysaledev.com/public/v3.20/\""
             buildConfigField "String", "ACCOUNT_ID", "\"25D201EB-9A1C-4045-90B6-E6A9F122C7CB\""
             resValue "string", "app_name", "OO RC"
+            resValue "bool", "debug_mode", "false"
         }
 
         ooTest {
@@ -79,6 +82,7 @@ android {
             buildConfigField "String", "API_LEGACY", "\"https://api.mysaledev.com/public/v3.20/\""
             buildConfigField "String", "ACCOUNT_ID", "\"25D201EB-9A1C-4045-90B6-E6A9F122C7CB\""
             resValue "string", "app_name", "OO Test"
+            resValue "bool", "debug_mode", "true"
         }
     }
 
