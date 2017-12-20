@@ -2147,10 +2147,12 @@ public class OurpayGraph {
             }
         }
 
-        for (int y = 0; y < progressBitmaps.length; y++) {
-            if (bitmapState[y] != null) {
-                bitmapState[y].recycle();
-                bitmapState[y] = null;
+        if(progressBitmaps != null) {
+            for (int y = 0; y < progressBitmaps.length; y++) {
+                if (bitmapState[y] != null) {
+                    bitmapState[y].recycle();
+                    bitmapState[y] = null;
+                }
             }
         }
 
