@@ -64,11 +64,11 @@ android {
         }
 
         ooRC {
-            versionCode 8
+            versionCode 9
             versionName "0.9"
             applicationId "au.com.oo.rc"
             buildConfigField "String", "API_ROOT", "\"https://www.oo.com.au/\""
-            buildConfigField "String", "API_LEGACY", "\"https://api.apacsale.com/papi/public/v3.20/\""
+            buildConfigField "String", "API_LEGACY", "\"https://www.oo.com.au/papi/public/v3.20/\""
             buildConfigField "String", "ACCOUNT_ID", "\"25D201EB-9A1C-4045-90B6-E6A9F122C7CB\""
             resValue "string", "app_name", "OO RC"
             resValue "bool", "debug_mode", "false"

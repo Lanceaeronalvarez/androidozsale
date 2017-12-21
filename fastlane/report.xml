@@ -5,17 +5,17 @@
     
     
       
-      <testcase classname="fastlane.lanes" name="0: Verifying required fastlane version" time="0.007181">
+      <testcase classname="fastlane.lanes" name="0: Verifying required fastlane version" time="0.024777">
         
       </testcase>
     
       
-      <testcase classname="fastlane.lanes" name="1: default_platform" time="0.006772">
+      <testcase classname="fastlane.lanes" name="1: default_platform" time="0.011156">
         
       </testcase>
     
       
-      <testcase classname="fastlane.lanes" name="2: fastlane dd_build app_name:'ooTest' emails:&quot;
+      <testcase classname="fastlane.lanes" name="2: fastlane dd_build app_name:'ooRC' emails:&quot;
   PaulDeSilva@mysale.com,
   elainedizon@mysale.com,
   diofelpallega@mysale.com,
@@ -25,7 +25,7 @@
   michael@smartwave.ph,
   EricaPena@mysale.com,
   jc@apacsale.com
-&quot; apk_name:app-ooTest-release.apk build_variant:ooTestRelease app_path:/Users/pauldesilva/Documents/AndroidDealsDirect app_flavor:ooTest" time="977.908377">
+&quot; apk_name:app-ooRC-release.apk build_variant:ooRCRelease app_path:/Users/pauldesilva/Documents/AndroidDealsDirect app_flavor:ooRC" time="1060.252954">
         
       </testcase>
     
