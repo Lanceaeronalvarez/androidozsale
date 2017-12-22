@@ -34,6 +34,16 @@ xcode-select --install
 fastlane dd_build
 ```
 
+### fabric_deploy_ba_test
+```
+fastlane fabric_deploy_ba_test
+```
+
+### fabric_deploy_ba_rc
+```
+fastlane fabric_deploy_ba_rc
+```
+
 ### fabric_deploy_dd_test
 ```
 fastlane fabric_deploy_dd_test
