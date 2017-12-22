@@ -17,7 +17,6 @@ import android.view.ViewGroup;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.view.animation.LinearInterpolator;
-import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.widget.Button;
@@ -51,7 +50,6 @@ import au.com.dealsdirect.ui.base.BaseController;
 import au.com.dealsdirect.ui.controller.saleitemdetails.listener.LoadImagesListener;
 import au.com.dealsdirect.ui.custom.ArcTranslateAnimation;
 import au.com.dealsdirect.ui.custom.CustomAlertDialog;
-import au.com.dealsdirect.ui.main.MainActivity;
 import au.com.dealsdirect.utils.BundleBuilder;
 import au.com.dealsdirect.utils.CartUtil;
 import au.com.dealsdirect.utils.ImageUtils;
@@ -340,6 +338,9 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
         String name = saleDetail.getName() == null ? "" : saleDetail.getName();
         String branName = saleDetail.getBrandName() == null ? "" : saleDetail.getBrandName();
 
+        mPresenter.facebookViewedContent((BaseActivity) getActivity(), saleDetail.getSkuId(), name, saleDetail.getPrice().getValue(),
+                getActivity().getResources().getString(R.string.default_country_id));
+
         mProductName.setText(name.trim());
         mProductBrand.setText(branName.trim());
         mProductPrice.setText(PriceUtils.getPriceStringValue(saleDetail.getPrice().getValue()));
@@ -479,9 +480,14 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
         RxBus.instance().post(IntrospectionUtils.EVENT_ADD_TO_CART);
 
         //notify bottom navigation view(checkout) with success.
-        if (val) {
+            if (val) {
             CartUtil.addValueToCart(1);
             mActivity.getMainController().getHomeController().updateBasketItemCount();
+
+            mPresenter.facebookAddedToCart((BaseActivity) getActivity(), mSkuId
+                    ,mProductName.getText().toString(), Double.valueOf(mSalePrice.substring(1)),
+                    getActivity().getResources().getString(R.string.default_country_id));
+            
             CustomAlertDialog.showCustomAlertDialog(
                     mActivity,
                     CustomAlertDialog.CustomDialogIconState.POSITIVE,

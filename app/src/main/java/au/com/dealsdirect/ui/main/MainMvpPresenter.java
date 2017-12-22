@@ -8,6 +8,7 @@ import android.content.Context;
 
 import au.com.dealsdirect.data.auth.AuthHandler;
 import au.com.dealsdirect.di.PerActivity;
+import au.com.dealsdirect.ui.base.BaseActivity;
 import au.com.dealsdirect.ui.base.MvpPresenter;
 
 @PerActivity
@@ -46,4 +47,11 @@ public interface MainMvpPresenter<V extends MainMvpView> extends MvpPresenter<V>
     void callGetPaymentMethodNonce(String token);
 
     boolean isDebug();
+
+
+    void facebookCompletedPurchase(BaseActivity activity,
+                                   String paymentType,
+                                   int numItems,
+                                   double price,
+                                   String countryId);
 }

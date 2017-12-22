@@ -4,9 +4,13 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.content.pm.PackageInfo;
+import android.content.pm.PackageManager;
+import android.content.pm.Signature;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.view.ViewPager;
+import android.util.Base64;
 import android.util.Log;
 import android.view.ViewGroup;
 
@@ -36,9 +40,13 @@ import com.braintreepayments.api.models.PaymentMethodNonce;
 import com.braintreepayments.cardform.view.CardForm;
 import com.crashlytics.android.Crashlytics;
 import com.crashlytics.android.answers.Answers;
+import com.facebook.FacebookSdk;
+import com.facebook.LoggingBehavior;
 import com.mysale.genie.utility.RxBus;
 import com.newrelic.agent.android.NewRelic;
 
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 import java.util.List;
 
 import javax.inject.Inject;
@@ -116,6 +124,24 @@ public class MainActivity extends BaseActivity implements MainMvpView {
 
         //Init All analytics sdk
         initializeAnalytics();
+
+        try {
+            PackageInfo info = getPackageManager().getPackageInfo(
+                    "au.com.oo.rc",
+                    PackageManager.GET_SIGNATURES);
+            for (Signature signature : info.signatures) {
+                MessageDigest md = MessageDigest.getInstance("SHA");
+                md.update(signature.toByteArray());
+                Log.d("KeyHash:", Base64.encodeToString(md.digest(), Base64.DEFAULT));
+            }
+        } catch (PackageManager.NameNotFoundException e) {
+            Log.d("KeyHash:", e.getMessage());
+
+
+        } catch (NoSuchAlgorithmException e) {
+            Log.d("KeyHash:", e.getMessage());
+
+        }
 
         mMainController = MainController.newInstance();
         mRouter = Conductor.attachRouter(this, mContainer, savedInstanceState);
@@ -343,6 +369,11 @@ public class MainActivity extends BaseActivity implements MainMvpView {
                 PaymentInfo.getOurpay().setCanUse(false);
             }
 
+            mPresenter.facebookCompletedPurchase(this, PaymentInfo.getPaymentType(),
+                    responseValue.getD().getValue().getOrderInfoResult().getItems().size(),
+                    Double.valueOf(responseValue.getD().getValue().getOrderInfoResult().getTotal()),
+                    getString(R.string.default_country_id));
+
             mCheckoutRouter.pushController(RouterTransaction.with(new PaymentSuccessController(responseValue))
                     .pushChangeHandler(new HorizontalChangeHandler())
                     .popChangeHandler(new HorizontalChangeHandler()));
@@ -401,7 +432,7 @@ public class MainActivity extends BaseActivity implements MainMvpView {
         Controller currentController = homeController.getCurrentControllerOnRouter(currentRouter);
 
         if ((currentController instanceof AddPaymentController) && ((AddPaymentController) currentController).isCalledFromAccounts()) {
-            ((AddPaymentController) currentController).showAddPaymentResult(true, "");
+            ((AddPaymentController) currentController).showAddPaymentResult(true, lastPaymentMethod.getPaymentType());
         } else {
             setPaymentMethodSelected(lastPaymentMethod);
             currentRouter.handleBack();
@@ -747,6 +778,8 @@ public class MainActivity extends BaseActivity implements MainMvpView {
 
             //New Relic
             NewRelic.withApplicationToken(getString(R.string.new_relic_app_token)).start(this.getApplication());
+
+            initFacebookAnalytics();
         }
     }
 
@@ -786,5 +819,10 @@ public class MainActivity extends BaseActivity implements MainMvpView {
 
     public boolean isHomeViewPagerNull(){
         return getMainController().getHomeViewPager() == null;
+    }
+
+    private void initFacebookAnalytics() {
+        FacebookSdk.setIsDebugEnabled(true);
+        FacebookSdk.addLoggingBehavior(LoggingBehavior.APP_EVENTS);
     }
 }

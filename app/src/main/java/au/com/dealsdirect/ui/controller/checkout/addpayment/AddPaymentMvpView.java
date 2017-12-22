@@ -10,7 +10,7 @@ public interface AddPaymentMvpView extends MvpView {
 
     void onPaypalSubmit();
 
-    void showAddPaymentResult(boolean result, String message);
+    void showAddPaymentResult(boolean result, String paymentType);
 
     void clearFields();
 

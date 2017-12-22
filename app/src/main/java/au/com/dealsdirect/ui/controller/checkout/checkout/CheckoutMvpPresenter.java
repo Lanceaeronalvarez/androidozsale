@@ -1,6 +1,7 @@
 package au.com.dealsdirect.ui.controller.checkout.checkout;
 
 import au.com.dealsdirect.data.network.model.checkout.getcurrentorder.Value;
+import au.com.dealsdirect.ui.base.BaseActivity;
 import au.com.dealsdirect.ui.base.MvpPresenter;
 import au.com.dealsdirect.ui.base.MvpView;
 import au.com.dealsdirect.ui.custom.ProductQuantityLayout;
@@ -26,4 +27,11 @@ public interface CheckoutMvpPresenter<V extends MvpView> extends MvpPresenter<V>
     boolean checkIsLoggedIn();
 
     void generateOurpay(Value value);
+
+    void facebookInitiatedCheckout(BaseActivity activity,
+                                   String paymentType,
+                                   int numItems,
+                                   double price,
+                                   String countryId);
+
 }

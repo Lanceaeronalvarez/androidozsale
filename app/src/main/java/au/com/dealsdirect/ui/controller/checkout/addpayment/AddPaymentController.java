@@ -20,16 +20,19 @@ import com.braintreepayments.cardform.view.CardEditText;
 import com.braintreepayments.cardform.view.CardForm;
 import com.crashlytics.android.answers.Answers;
 import com.crashlytics.android.answers.CustomEvent;
+import com.facebook.appevents.AppEventsConstants;
 import com.mysale.genie.utility.RxBus;
 
 import javax.inject.Inject;
 
 import au.com.dealsdirect.R;
+import au.com.dealsdirect.ui.base.BaseActivity;
 import au.com.dealsdirect.ui.base.BaseController;
 import au.com.dealsdirect.ui.controller.masterpass.MasterpassController;
 import au.com.dealsdirect.ui.custom.CustomAlertDialog;
 import au.com.dealsdirect.ui.main.FetchTokenHandler;
 import au.com.dealsdirect.ui.main.MainActivity;
+import au.com.dealsdirect.ui.main.PaymentInfo;
 import au.com.dealsdirect.utils.BundleBuilder;
 import au.com.dealsdirect.utils.IntrospectionUtils;
 import butterknife.BindView;
@@ -215,12 +218,13 @@ public class AddPaymentController extends BaseController implements AddPaymentMv
 
 
     @Override
-    public void showAddPaymentResult(boolean result, String message) {
+    public void showAddPaymentResult(boolean result, String paymentType) {
         hideLoading();
         if (result) {
             CustomAlertDialog.showCustomAlertDialog(
                     mActivity, CustomAlertDialog.CustomDialogIconState.POSITIVE,
-                    "Payment method added!");
+                    "ePayment method added!");
+            mPresenter.facebookAddedPaymentInfo((BaseActivity) getActivity(), paymentType);
 
         } else {
             CustomAlertDialog.showCustomAlertDialog(

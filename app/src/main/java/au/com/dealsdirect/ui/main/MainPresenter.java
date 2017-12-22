@@ -35,7 +35,9 @@ import au.com.dealsdirect.data.network.model.login.LoginEmail;
 import au.com.dealsdirect.data.network.model.login.LoginTicket;
 import au.com.dealsdirect.data.network.model.login.Logout;
 import au.com.dealsdirect.service.fcm.GNotification;
+import au.com.dealsdirect.ui.base.BaseActivity;
 import au.com.dealsdirect.ui.base.BasePresenter;
+import au.com.dealsdirect.utils.AppEventHelper;
 import au.com.dealsdirect.utils.IntrospectionUtils;
 import au.com.dealsdirect.utils.rx.SchedulerProvider;
 import io.reactivex.annotations.NonNull;
@@ -352,6 +354,11 @@ public class MainPresenter<V extends MainMvpView> extends BasePresenter<V> imple
     @Override
     public boolean isDebug() {
         return getDataManager().isDebugMode();
+    }
+
+    @Override
+    public void facebookCompletedPurchase(BaseActivity activity, String paymentType, int numItems, double price, String countryId) {
+        AppEventHelper.completedPurchase(activity, paymentType, numItems, price, countryId);
     }
 
     @Override
