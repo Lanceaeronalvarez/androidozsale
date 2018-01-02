@@ -305,6 +305,8 @@ public class MainActivity extends BaseActivity implements MainMvpView {
                 //Call braintree client reset on error
                 performResetWithAuthFetch();
             }
+        } else {
+            CustomAlertDialog.showCustomAlertDialog(this, CustomAlertDialog.CustomDialogIconState.NEGATIVE, error.getMessage());
         }
     }
 
