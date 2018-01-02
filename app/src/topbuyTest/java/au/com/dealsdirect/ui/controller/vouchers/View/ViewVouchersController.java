@@ -130,6 +130,7 @@ public class ViewVouchersController extends SwipeableBaseToolBarController imple
     public void updateVoucherList(Pair<List<GetUserVoucherResponse.Voucher>, GetVouchersResponse> pair) {
         if (pair.first != null && pair.first.size() != 0) {
             mRootLayout.setVisibility(View.VISIBLE);
+            mNoVouchersLayout.setVisibility(View.GONE);
             mUnusedVouchersRecyclerView.getLayoutManager().scrollToPosition(0);
 
             List<GetUserVoucherResponse.Voucher> usedVouchers = new ArrayList<>();

@@ -85,7 +85,8 @@ public class ViewAddressController extends SwipeableBaseToolBarController implem
     public ViewAddressController(Bundle args) {
         super(args);
         mCalledFromCart = args.getBoolean(IS_FROM_CART);
-        mDeliveryAddress =  JsonUtils.convertStringToObject(args.getString(DELIVERY_ADDRESS), new TypeToken<DeliveryAddress>(){}.getType());
+        mDeliveryAddress = JsonUtils.convertStringToObject(args.getString(DELIVERY_ADDRESS), new TypeToken<DeliveryAddress>() {
+        }.getType());
     }
 
     @Override
@@ -130,7 +131,7 @@ public class ViewAddressController extends SwipeableBaseToolBarController implem
             @Override
             public void onChangeStarted(@Nullable Controller to, @Nullable Controller from, boolean isPush, @NonNull ViewGroup container, @NonNull ControllerChangeHandler handler) {
                 loadCounter++;
-                if (loadCounter==1){
+                if (loadCounter == 1) {
                     mPresenter.loadAddresses();
                     loadCounter = 0;
                 }
@@ -193,22 +194,19 @@ public class ViewAddressController extends SwipeableBaseToolBarController implem
                 bundle.putString(DECORATION_INFO_LIST, decorationList);
                 bundle.putBoolean(IS_FROM_CART, mCalledFromCart);
 
-                setupDefaultBottomButton("add delivery address",
-                        new View.OnClickListener() {
-                            @Override
-                            public void onClick(View v) {
-                                if (mAddressesLoaded) {
+                setupDefaultBottomButton("add delivery address", v -> {
+                            if (mAddressesLoaded) {
 
-                                    GateKeeper.push(
-                                            getRouter(),
-                                            GateKeeper.Destination.ADD_NEW_ADDRESS,
-                                            bundle,
-                                            new VerticalChangeHandler(false),
-                                            new VerticalChangeHandler());
+                                GateKeeper.push(
+                                        getRouter(),
+                                        GateKeeper.Destination.ADD_NEW_ADDRESS,
+                                        bundle,
+                                        new VerticalChangeHandler(false),
+                                        new VerticalChangeHandler());
 
-                                }
                             }
-                        });
+                        }
+                );
 
             } else {
                 Timber.d("ViewAddressController", "mAddressList is null)");

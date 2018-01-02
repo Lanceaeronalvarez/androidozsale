@@ -386,7 +386,7 @@ public class AddContactController extends SwipeableBaseToolBarController impleme
         mContactSubjects = contactSubjectList;
         hasLoadedSubjects = true;
 
-        setupDefaultBottomButton("subnmit", onClickListener);
+        setupDefaultBottomButton("submit", onClickListener);
 
     }
 

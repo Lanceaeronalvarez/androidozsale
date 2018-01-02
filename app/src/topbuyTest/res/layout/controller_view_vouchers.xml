@@ -13,7 +13,7 @@
         android:animateLayoutChanges="true"
         android:background="#FFFFFF"
         android:orientation="vertical"
-        android:visibility="visible">
+        android:visibility="gone">
 
         <TextView
             android:id="@+id/controller_text_vouchers_desc"
@@ -140,5 +140,6 @@
     <include
         layout="@layout/partial_no_voucher_placeholder_layout"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"/>
+        android:layout_height="match_parent"
+        android:visibility="visible"/>
 </FrameLayout>

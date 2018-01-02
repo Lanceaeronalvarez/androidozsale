@@ -220,7 +220,9 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
         }
 
 
-        mNoNetworkFrame.setOnClickListener((v) -> onRefreshStart());
+        mNoNetworkFrame.setOnClickListener((v) -> {
+            onRefreshStart();
+        });
 
         mKeyboardHeightProvider = new KeyboardHeightProvider(mActivity);
         mKeyboardHeightProvider.setKeyboardHeightObserver(this);
@@ -855,6 +857,8 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
 
     @Override
     public void onRefreshStart() {
+        hideNoNetworkLayout();
+
         if (!isCallGetCategoryTreeFinished()) {
             mPresenter.callGetCategoryTree();
         }

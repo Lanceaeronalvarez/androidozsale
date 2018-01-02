@@ -62,6 +62,11 @@ public class OrdersController extends SwipeableBaseToolBarController implements 
         mToolbarTitle.setText(R.string.my_orders);
         setupSwipingBehavior();
         setUp(view);
+        setupDefaultBottomButton(mActivity.getString(R.string.shop_now), (v) -> {
+            mActivity.onBackPressed();
+            mActivity.setDraggableViewPager(true);
+            mActivity.getMainController().getHomeViewPager().setCurrentItem(1);
+        });
     }
 
     @Override
@@ -81,13 +86,12 @@ public class OrdersController extends SwipeableBaseToolBarController implements 
             mRecyclerView.setAdapter(mAdapter);
             mRecyclerView.setVisibility(View.VISIBLE);
             mPlaceholderLayout.setVisibility(View.GONE);
+            hideBottomLayout();
 
         } else {
             mRecyclerView.setVisibility(View.GONE);
             mPlaceholderLayout.setVisibility(View.VISIBLE);
-            setupDefaultBottomButton(mActivity.getString(R.string.shop_now), view -> {
-
-            });
+            showBottomLayout();
         }
     }
 
