@@ -46,7 +46,7 @@ public abstract class SwipeableBaseToolBarController extends BaseController {
 
     FrameLayout mContentLayout;
 
-    FrameLayout mNoNetworkLayout;
+    LinearLayout mNoNetworkLayout;
 
     protected TextView mToolbarTitle;
 
@@ -64,7 +64,7 @@ public abstract class SwipeableBaseToolBarController extends BaseController {
 
         mContentLayout = (FrameLayout) view.findViewById(R.id.controller_base_content_layout);
 
-        mNoNetworkLayout = (FrameLayout) view.findViewById(R.id.no_network_layout);
+        mNoNetworkLayout = (LinearLayout) view.findViewById(R.id.no_network_layout);
 
         mToolbarTitle = (TextView) view.findViewById(R.id.toolbar_title);
 
