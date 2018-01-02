@@ -241,8 +241,10 @@ public class AddPaymentController extends SwipeableBaseToolBarController impleme
     @OnClick(R.id.bt_camera)
     void launchCamera() {
 
-//        Answers.getInstance().logCustom(new CustomEvent("Credit Cart Scanning")
-//                .putCustomAttribute("Type", "Start"));
+        if(!mPresenter.isDebug()) {
+            Answers.getInstance().logCustom(new CustomEvent("Credit Cart Scanning")
+                    .putCustomAttribute("Type", "Start"));
+        }
 
         mCardForm.scanCard(getActivity());
     }
@@ -251,8 +253,11 @@ public class AddPaymentController extends SwipeableBaseToolBarController impleme
     public void onCardFormScan() {
         //This callback is called when successful CC scanning
 
+        if(!mPresenter.isDebug()) {
+            Answers.getInstance().logCustom(new CustomEvent("Credit Cart Scanning")
+                    .putCustomAttribute("Type", "Success"));
+        }
+
         mCardForm.getCardEditText().setEnabled(false);
-        Answers.getInstance().logCustom(new CustomEvent("Credit Cart Scanning")
-                .putCustomAttribute("Type", "Success"));
     }
 }

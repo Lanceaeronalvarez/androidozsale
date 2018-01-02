@@ -123,4 +123,6 @@
             </head>
         <body>"]]>
     </string>
+
+    <bool name="debug_mode">true</bool>
 </resources>
