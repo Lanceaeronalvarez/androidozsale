@@ -138,10 +138,12 @@ public class AccountController extends BaseController implements AccountMvpView 
             public void onChangeCompleted(@Nullable Controller to, @Nullable Controller from, boolean isPush, @NonNull ViewGroup container, @NonNull ControllerChangeHandler handler) {
                 mChangeInProgress = false;
                 mAccountRecyclerView.setClickable(true);
-                if(from instanceof LoginController){
+                if (from instanceof LoginController) {
                     mPresenter.onAttach(mvpView);
-                    mPresenter.loadAccountItems(mAccountItems,mAccountIcons);
-                    mPresenter.onAccountItemClick(mSelectedItemFromLogin);
+                    if(mPresenter.isAuthorized()) {
+                        mPresenter.loadAccountItems(mAccountItems, mAccountIcons);
+                        mPresenter.onAccountItemClick(mSelectedItemFromLogin);
+                    }
                 }
             }
         });
@@ -176,7 +178,7 @@ public class AccountController extends BaseController implements AccountMvpView 
                 GateKeeper.Destination.DETAILS,
                 new VerticalChangeHandler(false),
                 new VerticalChangeHandler());
-        
+
     }
 
     @Override
@@ -186,7 +188,7 @@ public class AccountController extends BaseController implements AccountMvpView 
                 GateKeeper.Destination.VIEW_ADDRESSES,
                 new VerticalChangeHandler(false),
                 new VerticalChangeHandler());
-        
+
     }
 
     @Override
@@ -196,7 +198,7 @@ public class AccountController extends BaseController implements AccountMvpView 
                 GateKeeper.Destination.ORDERS,
                 new VerticalChangeHandler(false),
                 new VerticalChangeHandler());
-        
+
     }
 
     @Override
@@ -206,7 +208,7 @@ public class AccountController extends BaseController implements AccountMvpView 
                 GateKeeper.Destination.VIEW_VOUCHERS,
                 new VerticalChangeHandler(false),
                 new VerticalChangeHandler());
-        
+
     }
 
     @Override
@@ -216,7 +218,7 @@ public class AccountController extends BaseController implements AccountMvpView 
                 GateKeeper.Destination.CURRENT_RETURNS,
                 new VerticalChangeHandler(false),
                 new VerticalChangeHandler());
-        
+
     }
 
     @Override
@@ -231,7 +233,7 @@ public class AccountController extends BaseController implements AccountMvpView 
                         .build(),
                 new VerticalChangeHandler(false),
                 new VerticalChangeHandler());
-        
+
     }
 
     @Override
@@ -241,7 +243,7 @@ public class AccountController extends BaseController implements AccountMvpView 
                 GateKeeper.Destination.LANGUAGE,
                 new VerticalChangeHandler(false),
                 new VerticalChangeHandler());
-        
+
     }
 
     @Override
@@ -251,7 +253,7 @@ public class AccountController extends BaseController implements AccountMvpView 
                 GateKeeper.Destination.CONTACT_US,
                 new VerticalChangeHandler(false),
                 new VerticalChangeHandler());
-        
+
     }
 
     @Override
@@ -265,7 +267,7 @@ public class AccountController extends BaseController implements AccountMvpView 
                         .build(),
                 new VerticalChangeHandler(false),
                 new VerticalChangeHandler());
-        
+
     }
 
     @Override
@@ -275,7 +277,7 @@ public class AccountController extends BaseController implements AccountMvpView 
                 GateKeeper.Destination.INVITE,
                 new VerticalChangeHandler(false),
                 new VerticalChangeHandler());
-        
+
     }
 
     @Override
@@ -289,7 +291,7 @@ public class AccountController extends BaseController implements AccountMvpView 
                         .build(),
                 new VerticalChangeHandler(false),
                 new VerticalChangeHandler());
-        
+
     }
 
     @Override
@@ -306,7 +308,7 @@ public class AccountController extends BaseController implements AccountMvpView 
                 mPresenter.onAttach(mvpView);
             }
         });
-        
+
     }
 
 
@@ -336,7 +338,7 @@ public class AccountController extends BaseController implements AccountMvpView 
                         getActivity().getString(R.string.logout_failed));
             }
         });
-        
+
     }
 
     @Override

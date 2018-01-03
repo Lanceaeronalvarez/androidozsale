@@ -45,8 +45,6 @@ public class LoginController extends SwipeableBaseToolBarController implements L
     EditText mPasswordEditText;
     @BindView(R.id.login_button)
     Button mLoginButton;
-    @BindView(R.id.fragment_login_signup_text)
-    TextView mSignUpTextView;
 
     private boolean isLoginTapped = false;
 
