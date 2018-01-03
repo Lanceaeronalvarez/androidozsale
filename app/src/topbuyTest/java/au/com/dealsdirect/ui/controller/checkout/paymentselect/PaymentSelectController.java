@@ -7,6 +7,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.LinearLayout;
 
 import com.bluelinelabs.conductor.changehandler.HorizontalChangeHandler;
 import com.bluelinelabs.conductor.changehandler.VerticalChangeHandler;
@@ -39,6 +40,8 @@ public class PaymentSelectController extends SwipeableBaseToolBarController impl
 
     @BindView(R.id.payment_select_recyclerview)
     RecyclerView mRecyclerView;
+    @BindView(R.id.no_payment_method_placeholder)
+    LinearLayout mNoPaymentPlaceholder;
 
     private PaymentSelectAdapter mAdapter;
 
@@ -79,16 +82,11 @@ public class PaymentSelectController extends SwipeableBaseToolBarController impl
     protected void onViewBound(@NonNull View view) {
         super.onViewBound(view);
         setupSwipingBehavior();
+        mNoPaymentPlaceholder.setVisibility(View.VISIBLE);
         setupDefaultBottomButton("add", view1 -> {
             onAddPaymentMethod();
         });
         setUp(view);
-    }
-
-    @Override
-    protected void onAttach(@NonNull View view) {
-        super.onAttach(view);
-        mPresenter.fetchUserPaymentMethods();
     }
 
     @Override
@@ -119,8 +117,10 @@ public class PaymentSelectController extends SwipeableBaseToolBarController impl
     private void showPaymentMethodsPlaceholder(boolean val) {
         if (val) {
             mRecyclerView.setVisibility(View.GONE);
+            mNoPaymentPlaceholder.setVisibility(View.VISIBLE);
         } else {
             mRecyclerView.setVisibility(View.VISIBLE);
+            mNoPaymentPlaceholder.setVisibility(View.GONE);
         }
     }
 
@@ -147,7 +147,6 @@ public class PaymentSelectController extends SwipeableBaseToolBarController impl
 
     @Override
     protected void setUp(View view) {
-
         if (!isFromCart) {
             mPresenter.fetchUserPaymentMethods();
         }

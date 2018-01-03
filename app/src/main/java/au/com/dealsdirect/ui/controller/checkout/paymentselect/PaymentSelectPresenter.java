@@ -24,6 +24,7 @@ public class PaymentSelectPresenter<V extends PaymentSelectMvpView> extends Base
 
     @Override
     public void fetchUserPaymentMethods() {
+        getMvpView().showLoading();
         doApiCallForResponse(getDataManager().callGetUserPaymentMethods(
                 new GetUserPaymentMethods.RequestValue()), new AppApiCallback() {
             @Override
