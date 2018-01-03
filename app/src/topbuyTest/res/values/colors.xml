@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="fb_button_pressed">#3e6dba</color>
+    <color name="fb_button_normal">#325A9D</color>
+
+    <color name="colorPrimary">#01A2A6</color>
+    <color name="colorPrimaryDark">#242425</color>
+    <color name="colorAccent">#1CB1B4</color>
+    <color name="hint_gray">#D0D0D0</color>
+
+    <color name="color_text_option">#00B1B5</color>
+    <color name="filter_icon_default">#6C6C6C</color>
+
+    <color name="yellow">#FFCA28</color>
+    <color name="activered">#F06248</color>
+    <color name="defaultred">#FF785F</color>
+    <color name="shop_banner_divider_default">#242525</color>
+
+    <color name="progress_loader_stroke_color">@color/colorAccent</color>
+    <color name="snack_bar_color">@color/defaultred</color>
+    <color name="pressed_logo">@color/activered</color>
+    <color name="idle_logo">@color/defaultred</color>
+
+    <!--Search Edit Text Color-->
+
+
+    <!--Search Edit Text Colors-->
+    <color name="search_edit_text_hint_color">@color/text_gray</color>
+    <color name="search_edit_text_color">@color/text_gray</color>
+    <color name="search_edit_cursor_color">@color/colorAccent</color>
+    <!-- Button Theme -->
+    <color name="bg_button_ripple">#DBE1EA</color>
+    <color name="bg_button_default">#04b2b6</color>
+    <color name="bg_button_pressed">#0cc3c7</color>
+
+    <!-- EditText Theme -->
+    <color name="bg_edit_text_ripple">#FFFFFF</color>
+    <color name="bg_edit_text_default">#ECECEC</color>
+    <color name="bg_edit_text_focused">@color/colorAccent</color>
+
+    <!-- Chips Theme -->
+    <color name="bg_chips_ripple">#FFFFFF</color>
+    <color name="bg_chips_default">#F8FAFD</color>
+    <color name="bg_chips_default_border">#EDF0F5</color>
+    <color name="bg_chips_checked">@color/bluegreen</color>
+    <color name="bg_chips_text">#FFFFFF</color>
+
+    <color name="teal">#00B1B5</color>
+    <color name="splash_yellow">#F8C100</color>
+    <color name="red">#FF785F</color>
+    <color name="blue">#17B2E7</color>
+
+    <color name="darkteal">#01a4a7</color>
+    <color name="darkyellow">#e1af02</color>
+    <color name="darkred">#e76a54</color>
+
+    <color name="toolbar_active_skin">@color/darkteal</color>
+
+    <color name="text_gray">#919191</color>
+    <color name="text_teal">#1CB1B4</color>
+</resources>

@@ -1,0 +1,26 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/contentFrame"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <com.lsjwzh.widget.recyclerviewpager.RecyclerViewPager
+        android:id="@+id/orders_recycler_view"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/order_card_view_height"
+        android:clipToPadding="false"
+        android:overScrollMode="never"
+        android:paddingLeft="15dp"
+        android:paddingRight="15dp"
+        app:rvp_flingFactor="0.15"
+        app:rvp_singlePageFling="true"
+        app:rvp_triggerOffset="0.25" />
+
+    <include
+        layout="@layout/placeholder_layout_orders"
+        android:visibility="visible"></include>
+
+
+</RelativeLayout>
+
+

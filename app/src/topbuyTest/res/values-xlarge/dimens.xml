@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <dimen name="order_card_view_height">520dp</dimen>
+    <dimen name ="splash_logo_size"> 450dp </dimen>
+    <dimen name="tutorial_image_size">850dp</dimen>
+
+</resources>

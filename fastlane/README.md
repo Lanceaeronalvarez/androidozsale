@@ -59,6 +59,11 @@ fastlane fabric_deploy_oo_test
 fastlane fabric_deploy_lc_test
 ```
 
+### fabric_deploy_tb_test
+```
+fastlane fabric_deploy_tb_test
+```
+
 
 ----
 

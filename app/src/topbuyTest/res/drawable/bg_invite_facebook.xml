@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ripple xmlns:android="http://schemas.android.com/apk/res/android"
+    android:color="@color/bg_button_ripple">
+    <item>
+        <selector>
+
+            <item android:state_enabled="true">
+                <shape android:shape="rectangle">
+                    <corners android:radius="25dp"/>
+                    <solid android:color="@color/invite_fb"/>
+                </shape>
+            </item>
+
+            <item android:state_enabled="true" android:state_pressed="true">
+
+                <shape android:shape="rectangle">
+                    <corners android:radius="25dp"/>
+                    <solid android:color="@color/invite_fb_pressed"/>
+                </shape>
+            </item>
+
+
+        </selector>
+    </item>
+</ripple>

@@ -190,7 +190,7 @@ public class AuthenticationBasePresenter<V extends AuthenticationMvpView> implem
                         getMvpView().hideLoading();
                         getMvpView().onError(throwable.getMessage());
 
-                        callback.onFailure();
+                        callback.onFailure(throwable);
 
                         // handle load accounts error here
                         if (throwable instanceof ANError) {
@@ -232,7 +232,7 @@ public class AuthenticationBasePresenter<V extends AuthenticationMvpView> implem
                         getMvpView().hideLoading();
                         getMvpView().onError(throwable.getMessage());
 
-                        callback.onFailure();
+                        callback.onFailure(throwable);
 
                         // handle load accounts error here
                         if (throwable instanceof ANError) {

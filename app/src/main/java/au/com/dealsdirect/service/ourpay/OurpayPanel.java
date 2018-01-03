@@ -14,16 +14,18 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.bluelinelabs.conductor.Router;
-import com.bluelinelabs.conductor.RouterTransaction;
-import com.bluelinelabs.conductor.changehandler.HorizontalChangeHandler;
+import com.bluelinelabs.conductor.changehandler.VerticalChangeHandler;
 
 import java.util.List;
 
 import au.com.dealsdirect.R;
 import au.com.dealsdirect.data.network.model.checkout.getcurrentorder.MyPayDetails;
 import au.com.dealsdirect.ui.base.BaseActivity;
-import au.com.dealsdirect.ui.controller.legalities.LegalitiesController;
+import au.com.dealsdirect.ui.main.MainActivity;
+import au.com.dealsdirect.utils.BundleBuilder;
+import au.com.dealsdirect.utils.BundleKeys;
 import au.com.dealsdirect.utils.PriceUtils;
+import au.com.dealsdirect.utils.module.GateKeeper;
 
 /**
  *dp  Created on 8/4/17.
@@ -199,18 +201,22 @@ public class OurpayPanel {
         textViewTC.setText(Html.fromHtml(OurpayTemplateText.getText(mBaseActivity, ourpay.getTermsAndConditionsText())));
         textViewTC.setOnClickListener(view1 -> {
 
-            String ourpayTermsAndConditionKey = "OurPayTermsAndConditions_Text";
-            Bundle bundle = new Bundle();
-            bundle.putString("templateKey", ourpayTermsAndConditionKey);
+            if (mRouter.getBackstackSize()==1){
 
-            mRouter.pushController(RouterTransaction.with(new LegalitiesController(ourpayTermsAndConditionKey,"My Basket"))
-                    .pushChangeHandler(new HorizontalChangeHandler(false))
-                    .popChangeHandler(new HorizontalChangeHandler(false)));
+                String ourpayTermsAndConditionKey = "OurPayTermsAndConditions_Text";
+                Bundle bundle = new Bundle();
+                bundle.putString("templateKey", ourpayTermsAndConditionKey);
 
-//                HTMLViewFragment fragment = new HTMLViewFragment();
-//                fragment.setArguments(bundle);
-//
-//                baseActivity.switchContent(fragment, R.id.contentBody);
+                ((MainActivity)mBaseActivity).setDraggableViewPager(false);
+                GateKeeper.push(mRouter,GateKeeper.Destination.LEGALITIES,
+                        new BundleBuilder(new Bundle())
+                                .putString(BundleKeys.TEMPLATE_KEY, ourpayTermsAndConditionKey)
+                                .putString(BundleKeys.TITLE, "My Basket")
+                                .build(),
+                        new VerticalChangeHandler(false),
+                        new VerticalChangeHandler());
+
+            }
 
         });
 

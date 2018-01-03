@@ -110,4 +110,8 @@ public interface PreferencesHelper {
     HashSet<String> getCookies();
 
     String getMyPayTemplateTexts(String detailKey);
+
+    void setIsInitialLaunch(boolean isInitialLaunch);
+
+    boolean getIsInitialLaunch();
 }

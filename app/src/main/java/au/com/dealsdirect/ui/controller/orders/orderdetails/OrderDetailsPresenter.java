@@ -18,11 +18,13 @@ public class OrderDetailsPresenter<V extends OrderDetailsMvpView> extends BasePr
     @Inject
     public OrderDetailsPresenter(DataManager dataManager, SchedulerProvider schedulerProvider, CompositeDisposable compositeDisposable) {
         super(dataManager, schedulerProvider, compositeDisposable);
+        
     }
 
     @Override
     public void loadOrderDetails(GetOrderPaymentDetails.RequestValues requestValues) {
         getMvpView().showLoading();
+
 
         doApiCallForResponse(getDataManager().callGetOrderPaymentDetails(requestValues), new AppApiCallback() {
             @Override

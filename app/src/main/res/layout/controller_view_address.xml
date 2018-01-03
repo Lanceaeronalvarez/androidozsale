@@ -42,6 +42,7 @@
         <include layout="@layout/view_address_placeholder_layout"
             android:visibility="gone"/>
 
+
     </RelativeLayout>
 
 </LinearLayout>

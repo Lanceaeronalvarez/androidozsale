@@ -59,11 +59,21 @@
     <color name="toolbar_skin">#F00065</color>
     <color name="toolbar_active_skin">#F00065</color>
 
+    <!--Search Edit Text Colors-->
+    <color name="search_edit_text_hint_color">#CCFFFFFF</color>
+    <color name="search_edit_text_color">@color/white</color>
+    <color name="search_edit_cursor_color">@color/white</color>
+
+    <!-- FB Button -->
+    <color name="fb_button_normal">#1A9DE9</color>
+    <color name="fb_button_pressed">#FF1583C2</color>
 
     <!-- Button Theme -->
     <color name="bg_button_ripple">#DBE1EA</color>
     <color name="bg_button_default">#F00065</color>
     <color name="bg_button_pressed">#FFB9004E</color>
+    <color name="bg_button_tutorial">#f5f4f4</color>
+    <color name="bg_button_tutorial_pressed">#ECECEC</color>
 
     <!-- EditText Theme -->
     <color name="bg_edit_text_ripple">#FFFFFF</color>
@@ -90,7 +100,13 @@
     <color name="ourpay_border_gray">#FFC7C7C7</color>
     <color name="navy">#000080</color>
     <color name="red">#FF0000</color>
+    <color name="bluegreen">#04b2b6</color>
 
+    <color name="snack_bar_color">@color/colorAccent</color>
+    <color name="pressed_logo">@color/bluegreen</color>
+    <color name="idle_logo">@color/colorAccent</color>
+
+    <color name="invite_clipboard">#FF8B8B8B</color>
     <color name="invite_fb">#FF2D91DE</color>
     <color name="invite_fb_pressed">#FF2D91DE</color>
     <color name="invite_twitter">#FF00B5E9</color>
@@ -102,5 +118,9 @@
 
     <color name="item_select_remove">#466E87</color>
     <color name="verify_resend_color">#000080</color>
+
+    <!--MyAccounts TB Background/panel color -->
+    <color name="menu_panel_gray">#4B6171</color>
+    <color name="menu_panel_gray_selected">#455B6A</color>
 
 </resources>

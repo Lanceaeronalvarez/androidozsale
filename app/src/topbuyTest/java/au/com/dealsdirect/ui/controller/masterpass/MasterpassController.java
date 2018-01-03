@@ -1,0 +1,183 @@
+package au.com.dealsdirect.ui.controller.masterpass;
+/*
+ * Created by CodeineBot on 8/3/17.
+ */
+
+import android.annotation.SuppressLint;
+import android.graphics.Bitmap;
+import android.os.Bundle;
+import android.support.annotation.NonNull;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+import android.webkit.WebResourceRequest;
+import android.webkit.WebView;
+import android.webkit.WebViewClient;
+
+import com.bluelinelabs.conductor.changehandler.VerticalChangeHandler;
+
+import java.util.HashMap;
+
+import javax.inject.Inject;
+
+import au.com.dealsdirect.R;
+import au.com.dealsdirect.ui.base.SwipeableBaseToolBarController;
+import au.com.dealsdirect.ui.custom.CustomAlertDialog;
+import au.com.dealsdirect.utils.AppLogger;
+import au.com.dealsdirect.utils.BundleBuilder;
+import au.com.dealsdirect.utils.NetworkUtils;
+import au.com.dealsdirect.utils.module.GateKeeper;
+import butterknife.BindView;
+
+import static au.com.dealsdirect.utils.BundleKeys.KEY_ADDRESS;
+import static au.com.dealsdirect.utils.BundleKeys.KEY_ESTIMATED_DELIVERY;
+import static au.com.dealsdirect.utils.BundleKeys.KEY_INVOICE;
+import static au.com.dealsdirect.utils.BundleKeys.KEY_PRICE;
+
+public class MasterpassController extends SwipeableBaseToolBarController implements MasterpassMvpView {
+
+    public static final String TAG = "MasterpassController";
+
+    @Inject
+    MasterpassMvpPresenter<MasterpassMvpView> mPresenter;
+
+    @BindView(R.id.controller_masterpass_web)
+    WebView mWebView;
+
+    private String mBaseUrl = "";
+
+    public static MasterpassController newInstance() {
+        return new MasterpassController(
+                new BundleBuilder(new Bundle())
+                        .build());
+    }
+
+    public MasterpassController(Bundle args) {
+        super(args);
+    }
+
+
+    @Override
+    protected View inflateView(@NonNull LayoutInflater inflater, @NonNull ViewGroup container) {
+        View view = super.inflateView(inflater, container);
+        fillContent(inflater.inflate(R.layout.controller_masterpass, container, false));
+
+        getControllerComponent().inject(this);
+        mPresenter.onAttach(this);
+
+        return view;
+    }
+
+    @Override
+    protected void onViewBound(@NonNull View view) {
+        super.onViewBound(view);
+        setupSwipingBehavior();
+        setUp(view);
+    }
+
+    @SuppressLint("SetJavaScriptEnabled")
+    @Override
+    protected void setUp(View view) {
+
+        mToolbarTitle.setText("Masterpass");
+        mWebView.getSettings().setJavaScriptEnabled(true);
+        mWebView.getSettings().setJavaScriptCanOpenWindowsAutomatically(true);
+        mWebView.setWebViewClient(new WebViewClient() {
+
+            @Override
+            public boolean shouldOverrideUrlLoading(WebView view, WebResourceRequest request) {
+
+                String url = request.getUrl().toString();
+
+                if (!mBaseUrl.isEmpty() && url.contains(mBaseUrl)) {
+                    AppLogger.d(TAG + " should load url: " + url);
+					//view.loadUrl(url.replace("https", "http"));
+                } else {
+
+                    // Hide loading
+                    hideLoadingDialog();
+
+                    // parse
+                    HashMap<String, String> params = (HashMap<String, String>) NetworkUtils.getQueryParams(url);
+                    String oAuthToken = params.get("oauth_token");
+                    String oAuthVerifier = params.get("oauth_verifier");
+                    String checkoutResourceUrl = params.get("checkout_resource_url");
+
+                    AppLogger.d(TAG + "parse oauth_verifier: " + oAuthVerifier);
+
+                    if (oAuthToken != null
+                            && oAuthVerifier != null
+                            && checkoutResourceUrl != null
+                            && !oAuthToken.isEmpty()
+                            && !oAuthVerifier.isEmpty()
+                            && !checkoutResourceUrl.isEmpty()) {
+
+                        mWebView.stopLoading();
+                        showLoadingDialog("Confirming Payment", false);
+                        mPresenter.confirmPayment(oAuthToken, oAuthVerifier, checkoutResourceUrl);
+                    } else {
+                        // Assume logout
+                        mActivity.onBackPressed();
+                    }
+                }
+
+                return false;
+            }
+
+            @Override
+            public void onPageFinished(WebView view, String url) {
+                super.onPageFinished(view, url);
+
+                hideLoading();
+            }
+
+            @Override
+            public void onPageStarted(WebView view, String url, Bitmap favicon) {
+                super.onPageStarted(view, url, favicon);
+
+                showLoadingDialog("Processing", false);
+            }
+        });
+
+        showLoadingDialog("Confirming Payment", false);
+
+        mPresenter.getMasterpassPayment();
+    }
+
+    @Override
+    protected void onDestroyView(@NonNull View view) {
+        mPresenter.onDetach();
+        super.onDestroyView(view);
+    }
+
+    @Override
+    public void loadMasterpassUrl(String url, String host) {
+        if (url.isEmpty()) return;
+
+        mBaseUrl = host;
+        showLoadingDialog("Redirecting", false);
+        mWebView.loadUrl(url);
+    }
+
+    @Override
+    public void showError(String message) {
+        CustomAlertDialog.showCustomAlertDialog(
+                mActivity,
+                CustomAlertDialog.CustomDialogIconState.NEGATIVE,
+                message);
+
+        mActivity.onBackPressed();
+    }
+
+    @Override
+    public void showPaymentSuccess(String address, String price, String invoice, String delivery) {
+        Bundle bundle = new Bundle();
+        bundle.putString(KEY_ADDRESS, address);
+        bundle.putString(KEY_PRICE, price);
+        bundle.putString(KEY_INVOICE, invoice);
+        bundle.putString(KEY_ESTIMATED_DELIVERY, delivery);
+        GateKeeper.push(getRouter(), GateKeeper.Destination.PAYMENT_SUCCESS, bundle, new VerticalChangeHandler(false), new VerticalChangeHandler());
+        
+    }
+
+}

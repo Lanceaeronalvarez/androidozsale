@@ -9,8 +9,6 @@ import javax.inject.Inject;
 
 import au.com.dealsdirect.data.DataManager;
 import au.com.dealsdirect.data.network.model.login.LoginEmail;
-import au.com.dealsdirect.data.network.model.login.LoginTicket;
-import au.com.dealsdirect.data.network.model.login.Logout;
 import au.com.dealsdirect.ui.base.AuthenticationBasePresenter;
 import au.com.dealsdirect.utils.rx.SchedulerProvider;
 import io.reactivex.annotations.NonNull;

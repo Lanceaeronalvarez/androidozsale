@@ -26,7 +26,7 @@ import timber.log.Timber;
 
 public class ViewAddressRecyclerViewAdapter extends RecyclerView.Adapter<ViewAddressRecyclerViewAdapter.MyAddressModuleViewHolder> {
 
-    List<AddressesItem> addressList = Collections.emptyList();
+    public List<AddressesItem> addressList = Collections.emptyList();
     Context context;
     Boolean isCalledFromCart;
     ViewAddressMvpView mView;
@@ -49,7 +49,7 @@ public class ViewAddressRecyclerViewAdapter extends RecyclerView.Adapter<ViewAdd
         this.mPresenter = presenter;
     }
 
-    void updateDeliveryAddress(AddressesItem addressesItem){
+    public void updateDeliveryAddress(AddressesItem addressesItem){
         mDeliveryAddress.resetDataFromAddressItem(addressesItem);
         notifyDataSetChanged();
     }

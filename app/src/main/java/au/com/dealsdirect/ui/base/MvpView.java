@@ -29,4 +29,8 @@ public interface MvpView {
 
     void hideLoadingDialog();
 
+    void hideNoNetworkLayout();
+
+    void showNoNetworkLayout();
+
 }

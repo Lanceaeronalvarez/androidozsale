@@ -1,11 +1,7 @@
 package au.com.dealsdirect.di.module;
 
-import android.app.Activity;
-
 import com.bluelinelabs.conductor.Controller;
 
-import au.com.dealsdirect.ui.base.BaseActivity;
-import au.com.dealsdirect.ui.base.MvpView;
 import au.com.dealsdirect.ui.controller.account.AccountMvpPresenter;
 import au.com.dealsdirect.ui.controller.account.AccountMvpView;
 import au.com.dealsdirect.ui.controller.account.AccountPresenter;
@@ -105,9 +101,15 @@ import au.com.dealsdirect.ui.controller.saleitems.SaleItemsPresenter;
 import au.com.dealsdirect.ui.controller.searchfilter.SearchFilterMvpPresenter;
 import au.com.dealsdirect.ui.controller.searchfilter.SearchFilterMvpView;
 import au.com.dealsdirect.ui.controller.searchfilter.SearchFilterPresenter;
+import au.com.dealsdirect.ui.controller.searchfilter.facetfilter.FacetFilterMvpPresenter;
+import au.com.dealsdirect.ui.controller.searchfilter.facetfilter.FacetFilterMvpView;
+import au.com.dealsdirect.ui.controller.searchfilter.facetfilter.FacetFilterPresenter;
 import au.com.dealsdirect.ui.controller.shops.ShopsMvpPresenter;
 import au.com.dealsdirect.ui.controller.shops.ShopsMvpView;
 import au.com.dealsdirect.ui.controller.shops.ShopsPresenter;
+import au.com.dealsdirect.ui.controller.splash.SplashScreenMvpPresenter;
+import au.com.dealsdirect.ui.controller.splash.SplashScreenMvpView;
+import au.com.dealsdirect.ui.controller.splash.SplashScreenPresenter;
 import au.com.dealsdirect.ui.controller.vouchers.Add.AddVouchersMvpPresenter;
 import au.com.dealsdirect.ui.controller.vouchers.Add.AddVouchersMvpView;
 import au.com.dealsdirect.ui.controller.vouchers.Add.AddVouchersPresenter;
@@ -201,32 +203,32 @@ public class ControllerModule {
     }
 
     @Provides
-    AddContactMvpPresenter<AddContactMvpView> provideAddContactPresenter(AddContactpresenter<AddContactMvpView> presenter){
+    AddContactMvpPresenter<AddContactMvpView> provideAddContactPresenter(AddContactpresenter<AddContactMvpView> presenter) {
         return presenter;
     }
 
     @Provides
-    ViewAddressMvpPresenter<ViewAddressMvpView> provideViewAddressPresenter(ViewAddressPresenter<ViewAddressMvpView> presenter){
+    ViewAddressMvpPresenter<ViewAddressMvpView> provideViewAddressPresenter(ViewAddressPresenter<ViewAddressMvpView> presenter) {
         return presenter;
     }
 
     @Provides
-    AddNewAddressMvpPresenter<AddNewAddressMvpView> provideAddNewAddressPresenter(AddNewAddressPresenter<AddNewAddressMvpView> presenter){
+    AddNewAddressMvpPresenter<AddNewAddressMvpView> provideAddNewAddressPresenter(AddNewAddressPresenter<AddNewAddressMvpView> presenter) {
         return presenter;
     }
 
     @Provides
     LanguageMvpPresenter<LanguageMvpView> provideLanguagePresenter(LanguagePresenter<LanguageMvpView> presenter) {
-        return  presenter;
-    }
-
-    @Provides
-    OrdersMvpPresenter<OrdersMvpView> provideOrdersPresenter(OrdersPresenter<OrdersMvpView> presenter){
         return presenter;
     }
 
     @Provides
-    OrderDetailsMvpPresenter<OrderDetailsMvpView> provideOrderDetailPresenter(OrderDetailsPresenter<OrderDetailsMvpView> presenter){
+    OrdersMvpPresenter<OrdersMvpView> provideOrdersPresenter(OrdersPresenter<OrdersMvpView> presenter) {
+        return presenter;
+    }
+
+    @Provides
+    OrderDetailsMvpPresenter<OrderDetailsMvpView> provideOrderDetailPresenter(OrderDetailsPresenter<OrderDetailsMvpView> presenter) {
         return presenter;
     }
 
@@ -257,17 +259,17 @@ public class ControllerModule {
     }
 
     @Provides
-    AddPaymentMvpPresenter<AddPaymentMvpView> provideAddPaymentPresenter(AddPaymentPresenter<AddPaymentMvpView> presenter){
+    AddPaymentMvpPresenter<AddPaymentMvpView> provideAddPaymentPresenter(AddPaymentPresenter<AddPaymentMvpView> presenter) {
         return presenter;
     }
 
     @Provides
-    PaymentSelectMvpPresenter<PaymentSelectMvpView> providePaymentSelectPresenter(PaymentSelectPresenter<PaymentSelectMvpView> presenter){
+    PaymentSelectMvpPresenter<PaymentSelectMvpView> providePaymentSelectPresenter(PaymentSelectPresenter<PaymentSelectMvpView> presenter) {
         return presenter;
     }
 
     @Provides
-    PaymentSuccessMvpPresenter<PaymentSuccessMvpView> providePaymentSuccessPresenter(PaymentSuccessPresenter<PaymentSuccessMvpView> presenter){
+    PaymentSuccessMvpPresenter<PaymentSuccessMvpView> providePaymentSuccessPresenter(PaymentSuccessPresenter<PaymentSuccessMvpView> presenter) {
         return presenter;
     }
 
@@ -297,7 +299,7 @@ public class ControllerModule {
     }
 
     @Provides
-    SearchFilterMvpPresenter<SearchFilterMvpView> provideSearchFilterPresenter(SearchFilterPresenter<SearchFilterMvpView> presenter){
+    SearchFilterMvpPresenter<SearchFilterMvpView> provideSearchFilterPresenter(SearchFilterPresenter<SearchFilterMvpView> presenter) {
         return presenter;
     }
 
@@ -318,6 +320,16 @@ public class ControllerModule {
 
     @Provides
     OurpaySMSVerificationMvpPresenter<OurpaySMSVerificationMvpView> provideOurpaySMSVerificationPresenter(OurpaySMSVerificationPresenter<OurpaySMSVerificationMvpView> presenter) {
+        return presenter;
+    }
+
+    @Provides
+    FacetFilterMvpPresenter<FacetFilterMvpView> provideFacetFilterPresenter(FacetFilterPresenter<FacetFilterMvpView> presenter) {
+        return presenter;
+    }
+
+    @Provides
+    SplashScreenMvpPresenter<SplashScreenMvpView> provideSplashScreenPresenter(SplashScreenPresenter<SplashScreenMvpView> presenter) {
         return presenter;
     }
 

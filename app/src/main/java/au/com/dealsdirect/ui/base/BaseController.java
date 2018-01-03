@@ -1,6 +1,7 @@
 package au.com.dealsdirect.ui.base;
 
 import android.app.Activity;
+import android.app.ProgressDialog;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.StringRes;
@@ -30,6 +31,8 @@ public abstract class BaseController extends RefWatchingController implements Mv
         super(args);
     }
 
+    private ProgressDialog mProgressDialog;
+    
     @NonNull
     @Override
     protected View onCreateView(@NonNull LayoutInflater inflater, @NonNull ViewGroup container) {
@@ -47,7 +50,6 @@ public abstract class BaseController extends RefWatchingController implements Mv
     @Override
     protected void onAttach(@NonNull View view) {
         super.onAttach(view);
-
     }
 
     public ControllerComponent getControllerComponent() {
@@ -73,6 +75,7 @@ public abstract class BaseController extends RefWatchingController implements Mv
     public void hideLoading() {
         if (mActivity != null) {
             mActivity.hideLoading();
+            mActivity.updateSnackbar(mActivity.isNetworkConnected());
         }
     }
 
@@ -90,6 +93,27 @@ public abstract class BaseController extends RefWatchingController implements Mv
         }
     }
 
+    public void showProgressDialog(String message) {
+
+        hideProgressDialog();
+
+        if (mProgressDialog == null) {
+            mProgressDialog = new ProgressDialog(mActivity);
+            mProgressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+            mProgressDialog.setMessage(message);
+            mProgressDialog.setIndeterminate(true);
+            mProgressDialog.setCanceledOnTouchOutside(false);
+            mProgressDialog.setCancelable(false);
+            mProgressDialog.show();
+        }
+    }
+
+    public void hideProgressDialog() {
+        if (mProgressDialog != null) {
+            mProgressDialog.dismiss();
+        }
+        mProgressDialog = null;
+    }
     @Override
     public void onError(String message) {
         if (mActivity != null) {
@@ -130,5 +154,17 @@ public abstract class BaseController extends RefWatchingController implements Mv
 
     @Override
     public void onRefreshStart() {
+        showLoading();
+        hideNoNetworkLayout();
+    }
+
+    @Override
+    public void hideNoNetworkLayout() {
+
+    }
+
+    @Override
+    public void showNoNetworkLayout() {
+
     }
 }

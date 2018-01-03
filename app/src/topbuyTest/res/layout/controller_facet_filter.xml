@@ -1,0 +1,182 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:ignore="MissingPrefix">
+
+    <RelativeLayout
+        android:id="@+id/facet_default_layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <TextView
+            android:id="@+id/facet_type"
+            fontPath="@string/font_app_bold"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:paddingLeft="@dimen/activity_horizontal_margin"
+            android:paddingTop="@dimen/activity_vertical_margin"
+            tools:text="sort"
+            android:textColor="@color/bluegreen"
+            android:textSize="@dimen/text_size_normal" />
+
+        <TextView
+            android:id="@+id/clear_text"
+            fontPath="@string/font_app_bold"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:paddingRight="@dimen/activity_horizontal_margin"
+            android:paddingTop="@dimen/activity_vertical_margin"
+            android:text="clear"
+            android:textColor="@color/defaultred"
+            android:textSize="@dimen/text_size_normal" />
+
+        <android.support.v4.widget.NestedScrollView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/facet_type">
+
+            <com.zhy.view.flowlayout.TagFlowLayout
+                android:id="@+id/flow_layout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingLeft="20dp"
+                android:paddingRight="20dp"
+                android:paddingTop="10dp"
+                app:max_select="-1"></com.zhy.view.flowlayout.TagFlowLayout>
+
+        </android.support.v4.widget.NestedScrollView>
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:id="@+id/facet_price_layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:visibility="gone">
+
+        <TextView
+            fontPath="@string/font_app_bold"
+            android:id="@+id/price_facet_type"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:paddingLeft="@dimen/activity_horizontal_margin"
+            android:paddingTop="@dimen/activity_vertical_margin"
+            android:text="price"
+            android:textColor="@color/colorAccent"
+            android:textSize="@dimen/text_size_normal" />
+
+        <TextView
+            fontPath="@string/font_app_bold"
+            android:id="@+id/price_clear_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:paddingRight="@dimen/activity_horizontal_margin"
+            android:paddingTop="@dimen/activity_vertical_margin"
+            android:text="clear"
+            android:textColor="@color/defaultred"
+            android:textSize="@dimen/text_size_normal" />
+
+        <RelativeLayout
+            android:id="@+id/bubblePriceLayout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/price_clear_text"
+            android:layout_marginStart="10dp"
+            android:layout_marginTop="@dimen/activity_horizontal_margin"
+            android:clipChildren="false"
+            android:clipToPadding="false">
+
+            <LinearLayout
+                android:id="@+id/movingMinPriceLayout"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentLeft="true"
+                android:orientation="vertical">
+
+                <TextView
+                    android:id="@+id/movingMinPrice"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentLeft="true"
+                    android:layout_gravity="center"
+                    android:background="@drawable/rectangle_bg"
+                    android:paddingBottom="10dp"
+                    android:paddingLeft="10dp"
+                    android:paddingRight="10dp"
+                    android:paddingTop="10dp"
+                    android:text="$0"
+                    android:textColor="#ffffff"
+                    android:textSize="@dimen/text_size_normal" />
+
+                <ImageView
+                    android:layout_width="25dp"
+                    android:layout_height="25dp"
+                    android:layout_gravity="center"
+                    android:layout_marginTop="-5dp"
+                    android:background="@drawable/triangle_bg"
+                    android:rotation="180" />
+            </LinearLayout>
+
+
+            <LinearLayout
+                android:id="@+id/movingMaxPriceLayout"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentEnd="true"
+                android:layout_marginEnd="10dp"
+                android:orientation="vertical">
+
+                <TextView
+                    android:id="@+id/movingMaxPrice"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:background="@drawable/rectangle_bg"
+                    android:gravity="end"
+                    android:paddingBottom="10dp"
+                    android:paddingLeft="5dp"
+                    android:paddingRight="5dp"
+                    android:paddingTop="10dp"
+                    android:text="$100"
+                    android:textColor="@color/white"
+                    android:textSize="@dimen/text_size_normal" />
+
+                <ImageView
+                    android:layout_width="25dp"
+                    android:layout_height="25dp"
+                    android:layout_gravity="center"
+                    android:layout_marginTop="-5dp"
+                    android:background="@drawable/triangle_bg"
+                    android:rotation="180" />
+            </LinearLayout>
+        </RelativeLayout>
+
+        <au.com.dealsdirect.ui.custom.CustomRangeSeekbar
+            android:id="@+id/price_facet_range_seekbar"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/bubblePriceLayout"
+            android:layout_marginEnd="26dp"
+            android:layout_marginStart="16dp"
+            app:bar_color="#d6d6d6"
+            app:bar_highlight_color="#7c7c7c"
+            app:corner_radius="10"
+            app:data_type="_integer"
+            app:left_thumb_image="@drawable/thumb_normal"
+            app:left_thumb_image_pressed="@drawable/thumb_pressed"
+            app:max_value="100"
+            app:min_value="0"
+            app:right_thumb_image="@drawable/thumb_normal"
+            app:right_thumb_image_pressed="@drawable/thumb_pressed"
+            app:steps="5" />
+    </RelativeLayout>
+
+</RelativeLayout>
+

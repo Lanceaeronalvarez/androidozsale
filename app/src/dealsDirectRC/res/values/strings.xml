@@ -6,5 +6,6 @@
     <string name="fb_login_protocol_scheme">fb1650094968544406</string>
     <string name="default_country_id">DA</string>
     <string name="default_language_id">EN</string>
+    <bool name="debug_mode">false</bool>
     <string name="new_relic_app_token">AAa9d543732ff39dddc60c9cb9ad8c9cf22297904b</string>
 </resources>

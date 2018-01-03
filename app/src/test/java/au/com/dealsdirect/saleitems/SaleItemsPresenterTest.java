@@ -1,13 +1,10 @@
 package au.com.dealsdirect.saleitems;
 
-import android.support.v7.widget.RecyclerView;
-
 import junit.framework.Assert;
 
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.mockito.ArgumentCaptor;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
 
@@ -15,16 +12,11 @@ import java.util.ArrayList;
 import java.util.List;
 
 import au.com.dealsdirect.data.DataManager;
-import au.com.dealsdirect.data.network.AppApiCallback;
 import au.com.dealsdirect.data.network.model.saleitems.GetSaleItemsRequest;
 import au.com.dealsdirect.data.network.model.saleitems.GetSaleItemsResponse;
 import au.com.dealsdirect.data.network.model.sorting.SortingResponse;
-import au.com.dealsdirect.data.network.model.userdetails.GetUserDetailsResponse;
-import au.com.dealsdirect.data.network.model.userdetails.SetUserDetailsRequest;
-import au.com.dealsdirect.data.network.model.userdetails.SetUserDetailsResponse;
 import au.com.dealsdirect.ui.controller.saleitems.SaleItemsMvpView;
 import au.com.dealsdirect.ui.controller.saleitems.SaleItemsPresenter;
-import au.com.dealsdirect.ui.controller.saleitems.adapter.SaleItemsAdapter;
 import au.com.dealsdirect.utils.rx.TestSchedulerProvider;
 import io.reactivex.Observable;
 import io.reactivex.disposables.CompositeDisposable;

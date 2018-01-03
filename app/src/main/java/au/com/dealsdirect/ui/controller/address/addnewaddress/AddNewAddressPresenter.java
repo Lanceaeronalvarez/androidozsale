@@ -6,7 +6,6 @@ import android.widget.EditText;
 
 import com.androidnetworking.error.ANError;
 import com.google.gson.JsonObject;
-import com.mysale.genie.utility.RxBus;
 
 import java.util.HashMap;
 import java.util.Iterator;
@@ -84,6 +83,7 @@ public class AddNewAddressPresenter <V extends AddNewAddressMvpView> extends Bas
             return;
         }
 
+        getMvpView().showLoading();
         getCompositeDisposable().add(getDataManager()
                 .callSetUserDeliveryAddress(new AddAddress.RequestValues(jsonAddress))
                 .subscribeOn(getSchedulerProvider().io())

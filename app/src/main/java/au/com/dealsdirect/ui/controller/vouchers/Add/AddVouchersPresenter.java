@@ -38,8 +38,8 @@ public class AddVouchersPresenter<V extends AddVouchersMvpView>  extends BasePre
             }
 
             @Override
-            public void onFailure() {
-                super.onFailure();
+            public void onFailure(Throwable t) {
+                super.onFailure(t);
                 getMvpView().onApplyVouchersError();
             }
         });

@@ -14,6 +14,6 @@ public interface ApiCallback {
 
     void onSuccess(List<?> list);
 
-    void onFailure();
+    void onFailure(Throwable t);
 
 }

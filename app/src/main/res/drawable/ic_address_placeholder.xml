@@ -5,12 +5,12 @@
         android:viewportHeight="88.0">
     <path
         android:pathData="M38.36,4.22C19.77,4.22 4.5,18.97 4.26,37.24C4.16,44.94 6.82,52.49 11.74,58.48L35.48,83.39C35.86,83.91 36.68,84.25 37.61,84.26C38.5,84.26 39.37,83.95 39.78,83.42L39.92,83.27L64.2,58.89C69.26,53 72.09,45.52 72.19,37.82C72.31,28.97 68.92,20.61 62.65,14.28C56.3,7.87 47.79,4.3 38.67,4.22C38.57,4.22 38.46,4.22 38.36,4.22M37.65,87.48L37.57,87.48C35.65,87.46 33.92,86.67 32.91,85.38L9.29,60.6C3.81,53.93 0.89,45.65 1,37.19C1.26,17.17 17.99,1 38.36,1C38.48,1 38.58,1 38.7,1C48.69,1.09 58.02,5 64.98,12.03C71.86,18.98 75.58,28.15 75.46,37.86C75.34,46.33 72.21,54.55 66.64,61.02L66.57,61.1L42.31,85.46C41.27,86.73 39.55,87.48 37.65,87.48"
-        android:strokeColor="#F00065"
-        android:fillColor="#F00065"
+        android:strokeColor="@color/colorAccent"
+        android:fillColor="@color/colorAccent"
         android:strokeWidth="0.5"/>
     <path
         android:pathData="M32.37,35.81a6.72,6.96 0,1 0,13.45 0a6.72,6.96 0,1 0,-13.45 0z"
-        android:strokeColor="#F00065"
-        android:fillColor="#F00065"
+        android:strokeColor="@color/colorAccent"
+        android:fillColor="@color/colorAccent"
         android:strokeWidth="3"/>
 </vector>

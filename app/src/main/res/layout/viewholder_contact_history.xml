@@ -1,36 +1,98 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/my_contact_history_recycler_row_item_layout"
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:layout_marginBottom="10dp"
-    android:clickable="true"
-    android:gravity="end"
-    android:orientation="horizontal"
-    android:paddingEnd="10dp"
-    android:paddingStart="10dp">
+              xmlns:app="http://schemas.android.com/apk/res-auto"
+              android:id="@+id/my_contact_history_recycler_row_item_layout"
+              android:orientation="vertical"
+              android:layout_width="match_parent"
+              android:layout_height="wrap_content"
+              android:padding="@dimen/activity_horizontal_margin"
+              android:clickable="true">
 
-    <au.com.dealsdirect.ui.custom.CircularTextView
-        android:id="@+id/my_contact_history_row_message_acronym"
-        fontPath="@string/font_app_heavy"
-        android:layout_width="40dp"
-        android:layout_height="40dp"
-        android:layout_gravity="bottom"
-        android:textColor="@color/white"
-        tools:text="M" />
 
-    <TextView
-        android:id="@+id/my_contact_history_row_message_text_view"
-        fontPath="@string/font_app_light"
-        android:layout_width="0dp"
+    <LinearLayout
+        android:id="@+id/my_contact_history_item_container_layout"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginStart="10dp"
-        android:layout_weight="1"
-        android:background="@drawable/bg_message_outgoing"
-        android:padding="20dp"
-        android:textColor="@color/contact_history_text_selector"
-        android:textSize="@dimen/text_size_large"
-        tools:ignore="MissingPrefix" />
+        android:orientation="horizontal">
+
+
+        <RelativeLayout
+            android:id="@+id/my_contact_history_row_layout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <RelativeLayout
+                android:id="@+id/my_contact_history_row_header"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+
+                <ImageView
+                    android:id="@+id/contact_history_item_user_image"
+                    android:layout_width="30dp"
+                    android:layout_height="30dp"
+                    android:src="@drawable/ic_topbuy_contact_rounded"/>
+
+
+                <TextView
+                    android:id="@+id/my_contact_history_username_row_text_view"
+                    android:layout_toRightOf="@+id/contact_history_item_user_image"
+                    android:layout_alignRight="@+id/my_contact_history_row_subject_text_view"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="10dp"
+                    android:text="Usernametest Userlatnametest"
+                    android:textSize="16sp"
+                    android:singleLine="true"
+                    android:textColor="#7e7e7e"/>
+
+
+                <TextView
+                    android:id="@+id/my_contact_history_row_subject_text_view"
+                    android:layout_toRightOf="@+id/contact_history_item_user_image"
+                    android:layout_below="@+id/my_contact_history_row_date_stamp_text_view"
+                    android:layout_marginLeft="10dp"
+                    android:layout_marginTop="5dp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textSize="14sp"
+                    android:text="Message subject"
+                    android:textColor="#d1d1d1"/>
+
+
+                <TextView
+                    android:id="@+id/my_contact_history_row_date_stamp_text_view"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentEnd="true"
+                    android:layout_alignParentRight="true"
+                    android:textSize="12sp"
+                    android:text=""
+                    android:textColor="#b9b9b9"/>
+
+                <TextView
+                    android:id="@+id/my_contact_history_row_time_stamp_text_view"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/my_contact_history_row_date_stamp_text_view"
+                    android:layout_alignParentEnd="true"
+                    android:layout_alignParentRight="true"
+                    android:textSize="12sp"
+                    android:text=""
+                    android:textColor="#b9b9b9"/>
+            </RelativeLayout>
+
+
+            <TextView
+                android:id="@+id/my_contact_history_row_message_text_view"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="20dp"
+                android:text=""
+                android:textColor="#a4a4a4"
+                android:layout_below="@+id/my_contact_history_row_header"/>
+
+        </RelativeLayout>
+    </LinearLayout>
 
 </LinearLayout>

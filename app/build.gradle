@@ -84,6 +84,25 @@ android {
             resValue "string", "app_name", "OO Test"
             resValue "bool", "debug_mode", "true"
         }
+
+        topbuyTest {
+            versionCode 66
+            versionName "2.2.0"
+            applicationId "au.com.topbuy.test"
+            buildConfigField "String", "API_ROOT", "\"https://www.dealsdirect.com.au/\""
+            buildConfigField "String", "API_LEGACY", "\"https://www.dealsdirect.com.au/papi/public/v3.17/\""
+            buildConfigField "String", "ACCOUNT_ID", "\"A56B0D62-AEF6-4653-848E-2ECDDB6E9B8C\""
+//            buildConfigField "String", "API_ROOT", "\"https://geniemobileappsclientapi.herokuapp.com/sandbox/\""
+//            buildConfigField "String", "API_LEGACY", "\"https://geniemobileappsclientapi.herokuapp.com/sandbox/public/v3.18/api.asmx/\""
+//            buildConfigField "String", "ACCOUNT_ID", "\"909E0AC5-908A-4A73-8E5C-5312DEEBD24C\""
+        }
+    }
+
+    sourceSets {
+        dealsDirectRC.java.srcDir 'src/common/java/'
+        dealsDirectTest.java.srcDir 'src/common/java/'
+        ooTest.java.srcDir 'src/common/java/'
+        topbuyTest.java.srcDir 'src/topbuyTest/java'
     }
 
     compileOptions {
@@ -194,6 +213,10 @@ dependencies {
     // Crystal Range Seekbar
     compile "com.crystal:crystalrangeseekbar:$rootProject.crystalRangeSeekbarVersion"
 
+
+    //viewpager indicator
+    compile 'me.relex:circleindicator:1.2.2@aar'
+
     // dependencies for local unit tests
     testCompile "junit:junit:$rootProject.ext.junitVersion"
     testCompile "org.mockito:mockito-core:$rootProject.mockitoVersion"
@@ -220,6 +243,8 @@ dependencies {
     compile 'com.newrelic.agent.android:android-agent:5.12.3'
 
     compile project(path: ':genie-utility')
+    compile project(path: ':genie-animation')
+    compile project(path: ':genie-views')
     compile project(path: ':CardForm')
     compile project(path: ':ptr-lib')
 

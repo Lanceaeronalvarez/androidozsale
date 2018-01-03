@@ -28,6 +28,12 @@ public interface AccountMvpView extends MvpView {
 
     void showLanguage();
 
+    void showContactUs();
+
+    void showTutorial();
+
+    void showInviteAFriend();
+
     void showLegalities(String key, String Title);
 
     void triggerLogin(String option);
@@ -35,6 +41,8 @@ public interface AccountMvpView extends MvpView {
     void triggerLogout();
 
     void initLoginDrawable();
+
+    boolean isChangeInProgress();
 
     int getBackstackSize();
 }

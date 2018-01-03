@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/no_network_layout"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:layout_marginTop="5dp"
+    android:gravity="center"
+    android:orientation="vertical"
+    android:visibility="visible"
+    tools:ignore="MissingPrefix">
+
+    <RelativeLayout
+        android:id="@+id/no_connection_container"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center">
+
+        <TextView
+            fontPath="@string/font_app_bold"
+            android:id="@+id/no_connection_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:text="No connection"
+            android:textSize="@dimen/text_size_xx_large" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/no_connection_text"
+            android:gravity="center"
+            android:orientation="horizontal">
+
+            <ImageView
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                android:src="@drawable/ic_refresh" />
+
+            <TextView
+                fontPath="@string/font_app_regular"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:text="@string/tap_to_retry"
+                android:textSize="@dimen/text_size_large" />
+        </LinearLayout>
+
+    </RelativeLayout>
+</LinearLayout>

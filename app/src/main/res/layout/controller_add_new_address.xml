@@ -1,12 +1,7 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
-    >
-
-    <include
-        android:id="@+id/add_new_address_toolbar_layout"
-        layout="@layout/partial_toolbar_arrow" />
+    android:orientation="vertical">
 
     <android.support.v4.widget.NestedScrollView
         android:id="@+id/scrollView"
@@ -26,6 +21,9 @@
                 android:layout_marginRight="@dimen/screen_padding"
                 android:layout_marginTop="@dimen/screen_padding"
                 android:orientation="vertical" />
+
         </RelativeLayout>
     </android.support.v4.widget.NestedScrollView>
+
+
 </LinearLayout>

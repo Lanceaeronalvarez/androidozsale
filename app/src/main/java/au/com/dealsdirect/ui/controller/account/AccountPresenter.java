@@ -2,11 +2,9 @@ package au.com.dealsdirect.ui.controller.account;
 
 import java.io.Serializable;
 import java.util.ArrayList;
-import java.util.Arrays;
 
 import javax.inject.Inject;
 
-import au.com.dealsdirect.R;
 import au.com.dealsdirect.data.DataManager;
 import au.com.dealsdirect.ui.base.BasePresenter;
 import au.com.dealsdirect.utils.rx.SchedulerProvider;
@@ -19,19 +17,6 @@ import io.reactivex.disposables.CompositeDisposable;
 public class AccountPresenter<V extends AccountMvpView> extends BasePresenter<V> implements
         AccountMvpPresenter<V>, Serializable {
 
-    private int[] accountImages = new int[]{
-            R.drawable.bg_account_details,
-            R.drawable.bg_account_address,
-            R.drawable.bg_account_orders,
-            R.drawable.bg_account_payments,
-            R.drawable.bg_account_vouchers,
-            R.drawable.bg_account_returns,
-            R.drawable.bg_account_languages,
-            R.drawable.bg_account_terms_and_conditions,
-            R.drawable.bg_account_privacy_policy,
-            R.drawable.bg_account_about_us,
-    };
-
     @Inject
     public AccountPresenter(DataManager dataManager, SchedulerProvider schedulerProvider,
                             CompositeDisposable compositeDisposable) {
@@ -39,66 +24,63 @@ public class AccountPresenter<V extends AccountMvpView> extends BasePresenter<V>
     }
 
     @Override
-    public void loadAccountItems() {
-
-        loadAccountItems(new ArrayList<>(
-                Arrays.asList(
-                        "My Details",
-                        "My Addresses",
-                        "My Orders",
-                        "My Payments",
-                        "My Vouchers",
-                        "My Returns",
-                        "Language",
-                        "Terms & Conditions",
-                        "Privacy Policy",
-                        "About Us" )), accountImages);
-    }
-
-    @Override
     public void onAccountItemClick(String option) {
-        if (getDataManager().isAuthorized() ||  (option.equalsIgnoreCase("Language") ||
-                option.equalsIgnoreCase("Privacy Policy") ||
-                option.equalsIgnoreCase("Terms & Conditions") ||
-                option.equalsIgnoreCase("About Us"))) {
-            if(getMvpView().getBackstackSize() == 1) {
-                switch (option) {
-                    case "My Details":
-                        getMvpView().showMyDetailsController();
-                        break;
-                    case "My Addresses":
-                        getMvpView().showMyAddressesController();
-                        break;
-                    case "My Orders":
-                        getMvpView().showMyOrders();
-                        break;
-                    case "My Vouchers":
-                        getMvpView().showMyVouchers();
-                        break;
-                    case "My Returns":
-                        getMvpView().showMyReturns();
-                        break;
-                    case "My Payments":
-                        getMvpView().showMyPaymentsController();
-                        break;
-                    case "Language":
-                        getMvpView().showLanguage();
-                        break;
-                    case "Logout":
-                        getMvpView().triggerLogout();
-                        break;
-                    case "About Us":
-                        getMvpView().showLegalities("aboutus", option);
-                        break;
-                    case "Privacy Policy":
-                        getMvpView().showLegalities("PrivacyPolicy_Text", option);
-                        break;
-                    case "Terms & Conditions":
-                        getMvpView().showLegalities("TermsAndConditions_Text", option);
-                        break;
-                    default:
-                        break;
-                }
+
+        if (getMvpView().isChangeInProgress()) {
+            return;
+        }
+
+        if (getDataManager().isAuthorized() || (option.equals(AccountItems.LANGUAGE) ||
+                option.equals(AccountItems.PRIVACY_POLICY) ||
+                option.equalsIgnoreCase(AccountItems.TNC) ||
+                option.equalsIgnoreCase(AccountItems.ABOUT_US) ||
+                option.equalsIgnoreCase(AccountItems.TUTORIAL))) {
+
+            switch (option) {
+                case AccountItems.DETAILS:
+                    getMvpView().showMyDetailsController();
+                    break;
+                case AccountItems.ADDRESSES:
+                    getMvpView().showMyAddressesController();
+                    break;
+                case AccountItems.ORDERS:
+                    getMvpView().showMyOrders();
+                    break;
+                case AccountItems.VOUCHERS:
+                    getMvpView().showMyVouchers();
+                    break;
+                case AccountItems.RETURNS:
+                    getMvpView().showMyReturns();
+                    break;
+                case AccountItems.PAYMENTS:
+                    getMvpView().showMyPaymentsController();
+                    break;
+                case AccountItems.LANGUAGE:
+                    getMvpView().showLanguage();
+                    break;
+                case AccountItems.ABOUT_US:
+                    getMvpView().showLegalities("aboutus", option);
+                    break;
+                case AccountItems.PRIVACY_POLICY:
+                    getMvpView().showLegalities("PrivacyPolicy_Text", option);
+                    break;
+                case AccountItems.TNC:
+                    getMvpView().showLegalities("TermsAndConditions_Text", option);
+                    break;
+                case AccountItems.CONTACT_US:
+                    getMvpView().showContactUs();
+                    break;
+                case AccountItems.INVITE_FRIEND:
+                    getMvpView().showInviteAFriend();
+                    break;
+                case AccountItems.TUTORIAL:
+                    getMvpView().showTutorial();
+                    break;
+                case AccountItems.LOGOUT:
+                    getMvpView().triggerLogout();
+                    break;
+                default:
+                    break;
             }
         } else {
             getMvpView().triggerLogin(option);
@@ -106,12 +88,12 @@ public class AccountPresenter<V extends AccountMvpView> extends BasePresenter<V>
     }
 
     @Override
-    public boolean getIsAuthorized() {
+    public boolean isAuthorized() {
         return getDataManager().isAuthorized();
     }
 
     public void loadAccountItems(ArrayList<String> items, int[] images) {
-
         getMvpView().showAccountItems(items, images);
     }
+
 }

@@ -2,6 +2,7 @@ package au.com.dealsdirect.ui.custom;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
+import android.media.Image;
 import android.support.v7.app.AlertDialog;
 import android.graphics.Color;
 import android.graphics.Paint;
@@ -58,9 +59,9 @@ public class CustomAlertDialog {
         @SuppressLint("InflateParams")
         View dialogView = inflater.inflate(R.layout.custom_alert_dialog, null);
 
-        ImageView mDialogIcon = dialogView.findViewById(R.id.dialog_alert_icon);
-        TextView mDialogDescription = dialogView.findViewById(R.id.dialog_alert_description);
-        TextView mDialogTextLink = dialogView.findViewById(R.id.dialog_alert_clickable_text);
+        ImageView mDialogIcon = (ImageView) dialogView.findViewById(R.id.dialog_alert_icon);
+        TextView mDialogDescription = (TextView) dialogView.findViewById(R.id.dialog_alert_description);
+        TextView mDialogTextLink = (TextView) dialogView.findViewById(R.id.dialog_alert_clickable_text);
 
 
         setAlertDialogDrawable(mDialogIcon, customDialogIconState);
@@ -116,12 +117,9 @@ public class CustomAlertDialog {
         @SuppressLint("InflateParams")
         View dialogView = inflater.inflate(R.layout.custom_alert_dialog, null);
 
-        ImageView mDialogIcon =
-                dialogView.findViewById(R.id.dialog_alert_icon);
-        TextView mDialogDescription =
-                dialogView.findViewById(R.id.dialog_alert_description);
-        TextView mDialogTextLink =
-                dialogView.findViewById(R.id.dialog_alert_clickable_text);
+        ImageView mDialogIcon = (ImageView) dialogView.findViewById(R.id.dialog_alert_icon);
+        TextView mDialogDescription = (TextView) dialogView.findViewById(R.id.dialog_alert_description);
+        TextView mDialogTextLink = (TextView) dialogView.findViewById(R.id.dialog_alert_clickable_text);
 
 
         mDialogTextLink.setVisibility(View.GONE);

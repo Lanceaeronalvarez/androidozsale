@@ -28,6 +28,8 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
+            android:paddingLeft="@dimen/place_holder_padding"
+            android:paddingRight="@dimen/place_holder_padding"
             android:text="@string/your_cart_is_currently_empty"
             android:textSize="@dimen/text_size_xxxlarge" />
 
@@ -38,12 +40,15 @@
             android:layout_marginBottom="@dimen/default_button_height"
             android:layout_marginTop="10dp"
             android:gravity="center"
+            android:layout_marginLeft="@dimen/activity_horizontal_margin"
+            android:layout_marginRight="@dimen/activity_horizontal_margin"
             android:paddingBottom="@dimen/default_button_height"
             android:text="@string/you_have_not_added_any_items_in_your_shopping_cart"
             android:textColor="#9f9f9f"
             android:textSize="@dimen/text_size_xlarge" />
 
     </LinearLayout>
+
 
     <Button
         android:id="@+id/partial_checkout_empty_button"

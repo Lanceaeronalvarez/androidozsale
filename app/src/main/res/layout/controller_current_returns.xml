@@ -23,4 +23,5 @@
     <include
         layout="@layout/partial_no_returns_placeholder_layout"
         android:visibility="gone" />
+
 </LinearLayout>

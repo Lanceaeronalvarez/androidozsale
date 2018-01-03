@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.v4.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -8,7 +8,7 @@
     <RelativeLayout
         android:id="@+id/controller_return_details_container"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="wrap_content"
         android:background="@color/white"
         android:isScrollContainer="true">
 
@@ -43,10 +43,15 @@
                 android:padding="10dp"
                 android:paddingTop="20dp" />
 
-            <RelativeLayout
+        </LinearLayout>
+    </RelativeLayout>
+
+
+    <RelativeLayout
                 android:id="@+id/controller_return_details_total_cost_container"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_below="@+id/controller_return_details_container"
                 android:background="#e4ffffff">
 
                 <View
@@ -226,8 +231,4 @@
 
             </RelativeLayout>
 
-
-        </LinearLayout>
-
-    </RelativeLayout>
-</android.support.v4.widget.NestedScrollView>
+</RelativeLayout>

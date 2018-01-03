@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.design.widget.AppBarLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/sale_items_search_bar"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:focusable="true"
+    android:clickable="true"
+    android:background="#00000000">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="18dp"
+        app:elevation="10dp"
+        app:layout_scrollFlags="scroll|enterAlways">
+
+        <LinearLayout
+            android:id="@+id/search_bar"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:layout_marginLeft="15dp"
+            android:layout_marginRight="15dp"
+            android:layout_marginTop="15dp"
+            android:background="@drawable/bg_search_bar"
+            android:orientation="horizontal">
+
+            <FrameLayout
+                android:id="@+id/search_bar_left_content"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginLeft="80dp"
+                android:layout_marginRight="50dp"
+                android:layout_alignParentLeft="true">
+
+                <android.support.v7.widget.RecyclerView
+                    android:id="@+id/search_tag_recycler_view"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:focusable="true"
+                    android:clickable="true"
+                    android:layout_gravity="center_vertical"
+                    android:overScrollMode="never"
+                    android:descendantFocusability="beforeDescendants"
+                    android:visibility="visible"/>
+
+            </FrameLayout>
+
+
+        </LinearLayout>
+
+
+        <ImageView
+            android:id="@+id/sale_items_logo"
+            android:layout_width="70dp"
+            android:layout_height="50dp"
+            android:layout_marginLeft="15dp"
+            android:layout_marginTop="15dp"
+            android:background="@drawable/bg_sale_items_logo"
+            android:src="@drawable/ic_app_logo"
+            android:clickable="true"
+            android:padding="10dp"
+            android:elevation="3dp"
+            tools:ignore="ContentDescription"/>
+
+        <RelativeLayout
+            android:id="@+id/sale_items_cart"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignEnd="@+id/search_bar"
+            android:layout_alignRight="@+id/search_bar"
+            android:layout_marginRight="-5dp"
+            android:layout_marginTop="8dp"
+            android:clickable="true">
+
+            <ImageView
+                android:id="@+id/sale_items_cart_icon"
+                android:layout_width="55dp"
+                android:layout_height="55dp"
+                android:layout_marginTop="5dp"
+                android:scaleType="fitXY"
+                android:src="@drawable/bg_cart"
+                tools:ignore="ContentDescription"/>
+
+            <TextView
+                android:id="@+id/sale_items_cart_counter"
+                android:layout_width="20dp"
+                android:layout_height="20dp"
+                android:layout_marginTop="10dp"
+                android:layout_marginRight="10dp"
+                android:layout_alignRight="@id/sale_items_cart_icon"
+                android:layout_alignTop="@id/sale_items_cart_icon"
+                android:padding="2dp"
+                android:gravity="center"
+                android:background="@drawable/bg_cart_counter"
+                android:text="0"
+                android:textSize="12sp"
+                android:textColor="@color/colorAccent"/>
+
+        </RelativeLayout>
+
+    </RelativeLayout>
+</android.support.design.widget.AppBarLayout>

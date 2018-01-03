@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/view_voucher_card_container"
+    android:layout_width="wrap_content"
+    android:layout_height="match_parent"
+    tools:ignore="MissingPrefix">
+
+    <LinearLayout
+        android:id="@+id/row_layout_add_vouchers"
+        android:layout_width="@dimen/voucher_container_width"
+        android:layout_height="@dimen/voucher_container_height"
+        android:layout_centerInParent="true"
+        android:layout_margin="@dimen/activity_horizontal_margin"
+        android:background="@drawable/bg_voucher_container_red"
+        android:clickable="true"
+        android:orientation="vertical"
+        android:padding="@dimen/activity_horizontal_margin"
+        tools:ignore="UselessParent">
+
+
+        <TextView
+            android:id="@+id/row_add_vouchers_text_item_cost_value"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textColor="@color/lightBlueGreen"
+            android:textSize="@dimen/text_size_large"
+            android:textStyle="bold"
+            fontPath="@string/fontname_lato_bold"
+            tools:text="$10"/>
+
+
+        <TextView
+            android:id="@+id/row_add_vouchers_text_item_desc"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="5dp"
+            android:textColor="#999999"
+            android:textSize="@dimen/text_size_small"
+            fontPath="@string/fontname_lato"
+            tools:text="voucher good for use until,"/>
+
+
+        <TextView
+            android:id="@+id/row_add_vouchers_text_item_expires_on_value"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="2dp"
+            android:textColor="#999999"
+            android:textSize="@dimen/text_size_small"
+            fontPath="@string/fontname_lato_bold"
+            tools:text="January 15"/>
+
+    </LinearLayout>
+</RelativeLayout>

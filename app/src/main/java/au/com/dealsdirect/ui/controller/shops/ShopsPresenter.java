@@ -49,7 +49,8 @@ public class ShopsPresenter<V extends ShopsMvpView> extends BasePresenter<V> imp
             }
 
             @Override
-            public void onFailure() {
+            public void onFailure(Throwable t) {
+                super.onFailure(t);
                 getMvpView().unBindPaginate();
             }
         });

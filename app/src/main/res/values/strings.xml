@@ -119,6 +119,7 @@
     <string name="join_now">Join Now</string>
     <string name="already_a_member">Already a member?</string>
     <string name="log_in">Log In</string>
+    <string name="save">save</string>
     <string name="forgot_password_guide">To reset your account password, enter the email address and
         we will send you the instruction
     </string>
@@ -157,13 +158,12 @@
     <string name="delivery_address_added">delivery address added</string>
     <string name="remove_string">remove</string>
     <string name="add_to_basket">Add to Basket</string>
-    <string name="add_to_cart">Add to Basket</string>
+    <string name="add_to_cart">add to cart</string>
     <string name="add_to_cart_success">Item has been added to your basket</string>
     <string name="category_title">Categories</string>
 
     <!--ORDERS-->
     <string name="shop_now">shop now</string>
-    <string name="my_orders">my orders</string>
     <string name="you_currently_do_no_have_any_orders">you do not currently have any orders.</string>
     <string name="welcome_to_my_orders">welcome to my orders!</string>
     <string name="no_network_connection">No Network Connection</string>
@@ -251,6 +251,7 @@
     <string name="send_personal_invite_text">Personal Invitation</string>
     <string name="invite_friends_title">Invite your Friends!</string>
 
+    <string name="search_filter_hint">Search Filter</string>
     <string name="write_a_message_here">write a message here</string>
     <string name="exit_app_name">DealsDirect</string>
     <string name="exit_app">Exit app?</string>
@@ -288,6 +289,7 @@
     </string-array>
 
     <string name="transition_sale_image_indexed">transition.image%1$d</string>
+    <string name="transition_category_title_indexed">transition.category.title%1$d</string>
     <string name="you_currently_do_not_have_any_returns">you do not currently have any returns</string>
     <string name="plus">+</string>
     <string name="minus">-</string>
@@ -329,8 +331,11 @@
     <string name="return_request_submitted">Return request submitted</string>
     <string name="create_return">Create Return</string>
     <string name="please_fill_up_field">Please fill up the field below</string>
-    <string name="no_internet_connection">no internet connection</string>
+    <string name="no_internet_connection">no network connection</string>
     <string name="error">error</string>
     <string name="remove_payment_method">Removed Payment Method</string>
     <string name="password_does_not_match">Password does not match</string>
+    <string name="my_returns">my returns</string>
+    <string name="my_orders">my orders</string>
+    <string name="reply">reply</string>
 </resources>

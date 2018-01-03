@@ -1,0 +1,130 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/root_header_layout"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <ImageView
+        android:id="@+id/header_image"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/header_height"
+        android:scaleType="centerCrop"
+        tools:ignore="ContentDescription"/>
+
+    <LinearLayout
+        android:id="@+id/maine_header_image_title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerVertical="true"
+        android:layout_alignBottom="@id/header_image"
+        android:orientation="vertical"
+        android:paddingLeft="20dp"
+        android:paddingBottom="70dp">
+
+        <TextView
+            android:id="@+id/main_page_header_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            tools:text="@string/category_default"
+            android:visibility="gone"
+            android:textColor="@color/white"
+            android:textSize="@dimen/text_size_xxxlarge"
+            android:maxLines="2" />
+
+
+        <View
+            android:id="@+id/header_underline"
+            android:visibility="gone"
+            android:layout_width="35dp"
+            android:layout_height="2dp"
+            android:layout_marginTop="10dp"
+            android:background="#FFFFFF"/>
+
+    </LinearLayout>
+
+
+    <LinearLayout
+        android:id="@+id/welcome_header_layout"
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
+        android:layout_alignBottom="@+id/header_image"
+        android:background="#242525"
+        android:gravity="center"
+        android:orientation="horizontal">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="3dp"
+            android:text="Welcome to the "
+            android:textColor="#e4e4e4"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="NEW TopBuy"
+            android:textAllCaps="false"
+            android:textColor="#FFFFFF"/>
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/no_search_items_layout"
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/welcome_header_layout"
+        android:layout_margin="10dp"
+        android:visibility="gone"
+        >
+
+        <TextView
+            android:id="@+id/no_items_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="@dimen/text_size_xxxxlarge"
+            android:text="@string/sorry_default_text"
+            android:textColor="@color/gray_field_label"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="30dp"
+            android:text="search suggestions:"
+            android:textColor="@color/gray_field_text"
+            android:textSize="@dimen/text_size_large"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:text="try more general words or search from other categories"
+            android:textColor="@color/gray_field_text"
+            android:textSize="@dimen/text_size_medium"/>
+
+    </LinearLayout>
+
+
+    <View
+        android:id="@+id/header_separator"
+        android:layout_width="match_parent"
+        android:layout_height="1px"
+        android:layout_marginTop="10dp"
+        android:layout_below="@id/no_search_items_layout"
+        android:background="@color/border_gray"
+        android:visibility="gone"/>
+
+    <TextView
+        android:id="@+id/see_other_popular_products_text"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:layout_marginBottom="10dp"
+        android:layout_below="@id/header_separator"
+        android:layout_centerHorizontal="true"
+        android:text="see other popular products"
+        android:textColor="@color/gray_hint_text"
+        android:textSize="@dimen/text_size_xxxlarge"
+        android:visibility="gone"/>
+</RelativeLayout>

@@ -1,5 +1,8 @@
 package au.com.dealsdirect.ui.custom.transitions;
 
+import android.annotation.TargetApi;
+import android.os.Build;
+import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.transition.ArcMotion;
@@ -7,70 +10,99 @@ import android.transition.ChangeBounds;
 import android.transition.ChangeClipBounds;
 import android.transition.ChangeTransform;
 import android.transition.Fade;
-import android.transition.Slide;
 import android.transition.Transition;
+import android.transition.Transition.TransitionListener;
 import android.transition.TransitionSet;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.bluelinelabs.conductor.changehandler.TransitionChangeHandler;
+import java.util.ArrayList;
+import java.util.Collections;
 
-import au.com.dealsdirect.R;
-import au.com.dealsdirect.ui.controller.saleitemdetails.SaleItemDetailsView;
+@TargetApi(Build.VERSION_CODES.LOLLIPOP)
+public class ArcFadeMoveChangeHandler extends SharedElementTransitionChangeHandler {
 
-/**
- * dp Created by Admin on 6/8/17.
- */
+    private static final String KEY_SHARED_ELEMENT_NAMES = "ArcFadeMoveChangeHandler.sharedElementNames";
 
-public class ArcFadeMoveChangeHandler extends TransitionChangeHandler {
+    private final ArrayList<String> sharedElementNames = new ArrayList<>();
 
     public ArcFadeMoveChangeHandler() { }
 
+    public ArcFadeMoveChangeHandler(String... sharedElementNames) {
+        Collections.addAll(this.sharedElementNames, sharedElementNames);
+    }
+
     @Override
-    @NonNull
-    protected Transition getTransition(@NonNull ViewGroup container, View from, View to, boolean isPush) {
+    public void saveToBundle(@NonNull Bundle bundle) {
+        super.saveToBundle(bundle);
 
+        bundle.putStringArrayList(KEY_SHARED_ELEMENT_NAMES, sharedElementNames);
+    }
 
-        if (to == null || !(to instanceof SaleItemDetailsView)) {
-            throw new IllegalArgumentException("The to view must be a CountryDetailView");
-        }
+    @Override
+    public void restoreFromBundle(@NonNull Bundle bundle) {
+        super.restoreFromBundle(bundle);
 
-        final SaleItemDetailsView detailView = (SaleItemDetailsView) to;
+        sharedElementNames.addAll(bundle.getStringArrayList(KEY_SHARED_ELEMENT_NAMES));
+    }
 
-        ChangeTransform changeTransform = new ChangeTransform();
+    @Nullable
+    @Override
+    public Transition getExitTransition(@NonNull ViewGroup container, @Nullable View from, @Nullable View to, boolean isPush) {
+        return new Fade(Fade.OUT);
+    }
 
-        // Shared elements (the flag view in this case) are drawn in the window's view overlay during the transition by default.
-        // That causes the favourite fab being drawn behind the flag when it is scaled up.
-        // Setting the change transform not using overlay addresses this issue.
-//        changeTransform.setReparentWithOverlay(false);
-
-        TransitionSet transition = new TransitionSet()
-                .addTransition(new TransitionSet()
-                                       .addTransition(new ChangeBounds())
-                                       .addTransition(new ChangeClipBounds())
-                                       .addTransition(changeTransform))
-//                                       .addTransition(new ChangeImageTransform())
-                .addTransition(new Slide().addTarget(detailView.mSaleItemDetailsView).setStartDelay(150))
-                .addTransition(new Fade(Fade.IN));
-//
+    @Nullable
+    @Override
+    public Transition getSharedElementTransition(@NonNull ViewGroup container, @Nullable final View from, @Nullable View to, boolean isPush) {
+        Transition transition = new TransitionSet().addTransition(new ChangeBounds()).addTransition(new ChangeClipBounds()).addTransition(new ChangeTransform());
         transition.setPathMotion(new ArcMotion());
+
+        // The framework doesn't totally fade out the "from" shared element, so we'll hide it manually once it's safe.
+        transition.addListener(new TransitionListener() {
+            @Override
+            public void onTransitionStart(Transition transition) {
+                if (from != null) {
+                    for (String name : sharedElementNames) {
+                        View namedView = TransitionUtils.findNamedView(from, name);
+                        if (namedView != null) {
+                            namedView.setVisibility(View.INVISIBLE);
+                        }
+                    }
+                }
+            }
+
+            @Override
+            public void onTransitionEnd(Transition transition) { }
+
+            @Override
+            public void onTransitionCancel(Transition transition) { }
+
+            @Override
+            public void onTransitionPause(Transition transition) { }
+
+            @Override
+            public void onTransitionResume(Transition transition) { }
+        });
 
         return transition;
     }
 
-    @Override public boolean removesFromViewOnPush() {
-        return false;
+    @Nullable
+    @Override
+    public Transition getEnterTransition(@NonNull ViewGroup container, @Nullable View from, @Nullable View to, boolean isPush) {
+        return new Fade(Fade.IN);
     }
 
-    @Override public void executePropertyChanges(@NonNull ViewGroup container, @Nullable View from,
-            @Nullable View to, @Nullable Transition transition, boolean isPush) {
-        super.executePropertyChanges(container, from, to, transition, isPush);
-        if (from != null && (removesFromViewOnPush() || !isPush) && from.getParent() == container) {
-            container.removeView(from);
+    @Override
+    public void configureSharedElements(@NonNull ViewGroup container, @Nullable View from, @Nullable View to, boolean isPush) {
+        for (String name : sharedElementNames) {
+            addSharedElement(name);
         }
-        if (to != null && to.getParent() == null) {
-            from.findViewById(R.id.vh_sale_item_image).setTransitionName("none");
-            container.addView(to);
-        }
+    }
+
+    @Override
+    public boolean allowTransitionOverlap(boolean isPush) {
+        return false;
     }
 }
