@@ -107,6 +107,20 @@ android {
             resValue "bool", "debug_mode", "true"
         }
 
+        topbuyRC {
+            versionCode 66
+            versionName "2.2.0"
+            applicationId "au.com.topbuy"
+            buildConfigField "String", "API_ROOT", "\"https://www.dealsdirect.com.au/\""
+            buildConfigField "String", "API_LEGACY", "\"https://www.dealsdirect.com.au/papi/public/v3.17/\""
+            buildConfigField "String", "ACCOUNT_ID", "\"A56B0D62-AEF6-4653-848E-2ECDDB6E9B8C\""
+            resValue "string", "app_name", "TopBuy"
+            resValue "bool", "debug_mode", "false"
+//            buildConfigField "String", "API_ROOT", "\"https://www.topbuy.com.au/\""
+//            buildConfigField "String", "API_LEGACY", "\"https://www.topbuy.com.au/papi/public/v3.18/\""
+//            buildConfigField "String", "ACCOUNT_ID", "\"909E0AC5-908A-4A73-8E5C-5312DEEBD24C\""
+        }
+
         topbuyTest {
             versionCode 66
             versionName "2.2.0"
@@ -114,6 +128,8 @@ android {
             buildConfigField "String", "API_ROOT", "\"https://www.dealsdirect.com.au/\""
             buildConfigField "String", "API_LEGACY", "\"https://www.dealsdirect.com.au/papi/public/v3.17/\""
             buildConfigField "String", "ACCOUNT_ID", "\"A56B0D62-AEF6-4653-848E-2ECDDB6E9B8C\""
+            resValue "string", "app_name", "TopBuy Test"
+            resValue "bool", "debug_mode", "true"
 //            buildConfigField "String", "API_ROOT", "\"https://geniemobileappsclientapi.herokuapp.com/sandbox/\""
 //            buildConfigField "String", "API_LEGACY", "\"https://geniemobileappsclientapi.herokuapp.com/sandbox/public/v3.18/api.asmx/\""
 //            buildConfigField "String", "ACCOUNT_ID", "\"909E0AC5-908A-4A73-8E5C-5312DEEBD24C\""
@@ -127,6 +143,7 @@ android {
         ooRC.java.srcDir 'src/common/java/'
         ooTest.java.srcDir 'src/common/java/'
         topbuyTest.java.srcDir 'src/topbuyTest/java'
+        topbuyRC.java.srcDir 'src/topbuyTest/java'
 
     }
 
