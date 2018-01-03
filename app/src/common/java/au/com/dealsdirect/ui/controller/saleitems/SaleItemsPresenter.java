@@ -47,11 +47,6 @@ public class SaleItemsPresenter<V extends SaleItemsMvpView> extends BasePresente
                     getMvpView().showSaleItems((GetSaleItemsResponse) response, true);
                 }
             }
-
-            @Override
-            public void onFailure() {
-                getMvpView().unbindPaginate();
-            }
         });
     }
 

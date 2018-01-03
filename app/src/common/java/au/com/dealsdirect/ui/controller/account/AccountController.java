@@ -294,6 +294,11 @@ public class AccountController extends BaseController implements AccountMvpView,
         }
     }
 
+    @Override
+    public boolean isChangeInProgress() {
+        return false;
+    }
+
     @OnClick(R.id.partial_toolbar_filter_view)
     public void promptLogin() {
         if (mPresenter.isAuthorized()) {

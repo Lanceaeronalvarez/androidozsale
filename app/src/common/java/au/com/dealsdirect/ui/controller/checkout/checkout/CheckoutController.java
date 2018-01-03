@@ -331,6 +331,11 @@ public class CheckoutController extends BaseController implements CheckoutMvpVie
     }
 
     @Override
+    public boolean isViewPagerOnCheckout() {
+        return false;
+    }
+
+    @Override
     public void showMyPayDetails(Value value, Ourpay ourpay) {
 
         if (value != null) {

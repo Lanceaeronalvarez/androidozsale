@@ -10,6 +10,7 @@ import android.content.pm.Signature;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.view.ViewPager;
+import android.util.Base64;
 import android.util.Log;
 import android.view.ViewGroup;
 
@@ -817,7 +818,7 @@ public class MainActivity extends BaseActivity implements MainMvpView {
         }
     };
 
-    private void updateSnackbar(boolean isOnline) {
+    public void updateSnackbar(boolean isOnline) {
         if(!isOnline && !mSnackbar.isShown()) {
             showSnackBar(getString(R.string.no_internet_connection), true);
         }else if(isOnline && mSnackbar.isShown()){
@@ -838,5 +839,15 @@ public class MainActivity extends BaseActivity implements MainMvpView {
     private void initFacebookAnalytics() {
         FacebookSdk.setIsDebugEnabled(true);
         FacebookSdk.addLoggingBehavior(LoggingBehavior.APP_EVENTS);
+    }
+
+    @Override
+    public void hideNoNetworkLayout() {
+
+    }
+
+    @Override
+    public void showNoNetworkLayout() {
+
     }
 }
