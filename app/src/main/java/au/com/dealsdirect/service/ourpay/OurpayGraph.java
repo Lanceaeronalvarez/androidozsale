@@ -2147,7 +2147,7 @@ public class OurpayGraph {
             }
         }
 
-        if(progressBitmaps != null) {
+        if(progressBitmaps!=null){
             for (int y = 0; y < progressBitmaps.length; y++) {
                 if (bitmapState[y] != null) {
                     bitmapState[y].recycle();
