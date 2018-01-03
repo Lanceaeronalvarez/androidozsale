@@ -9,7 +9,6 @@ import android.support.annotation.NonNull;
 
 import com.androidnetworking.error.ANError;
 import com.facebook.appevents.AppEventsConstants;
-import com.facebook.appevents.AppEventsLogger;
 
 import javax.inject.Inject;
 
@@ -17,6 +16,9 @@ import au.com.dealsdirect.data.DataManager;
 import au.com.dealsdirect.data.network.model.register.RegisterUserRequest;
 import au.com.dealsdirect.data.network.model.register.RegisterUserResponse;
 import au.com.dealsdirect.ui.base.AuthenticationBasePresenter;
+import au.com.dealsdirect.ui.base.BaseActivity;
+import au.com.dealsdirect.utils.AppConstants;
+import au.com.dealsdirect.utils.AppEventHelper;
 import au.com.dealsdirect.utils.rx.SchedulerProvider;
 import io.reactivex.disposables.CompositeDisposable;
 
@@ -87,8 +89,7 @@ public class RegisterPresenter<V extends RegisterMvpView> extends Authentication
     }
 
     @Override
-    public void facebookRegisterAnalytics(Activity activity) {
-        AppEventsLogger logger = AppEventsLogger.newLogger(activity);
-        logger.logEvent(AppEventsConstants.EVENT_NAME_COMPLETED_REGISTRATION);
+    public void facebookRegisterAnalytics(BaseActivity activity) {
+        AppEventHelper.completedRegistration(activity, AppConstants.AUTH_FLAG.REGISTER.name());
     }
 }

@@ -96,6 +96,12 @@ public class LegalitiesController extends BasePullToRefreshController implements
     }
 
     @Override
+    public void onDetach(View view) {
+        mPresenter.onDetach();
+        super.onDetach(view);
+    }
+
+    @Override
     public void displayFetchedText(String value) {
         String header = mActivity.getResources().getString(R.string.base_html_template_header);
         String footer = mActivity.getResources().getString(R.string.base_html_template_footer);

@@ -537,6 +537,8 @@ public class CheckoutController extends BaseController implements CheckoutMvpVie
             } else {
                 PaymentInfo.setPaymentType(PaymentInfo.TYPE_BRAINTREE);
                 mActivity.callCreatePaymentTransaction(PaymentInfo.getPaymentType(), "", PaymentInfo.getPaymentMethod().getToken());
+                mPresenter.facebookInitiatedCheckout((BaseActivity) getActivity(), PaymentInfo.getPaymentType(), mValue.getItemsCount(),
+                        mValue.getSummary().total, getActivity().getResources().getString(R.string.default_country_id));
             }
         }
     }
@@ -558,6 +560,8 @@ public class CheckoutController extends BaseController implements CheckoutMvpVie
             } else {
                 PaymentInfo.setPaymentType(PaymentInfo.TYPE_BRAINTREE);
                 mActivity.callCreatePaymentTransaction(PaymentInfo.getPaymentType(), "", PaymentInfo.getPaymentMethod().getToken());
+                mPresenter.facebookInitiatedCheckout((BaseActivity) getActivity(), PaymentInfo.getPaymentType(), mValue.getItemsCount(),
+                        mValue.getSummary().total, getActivity().getResources().getString(R.string.default_country_id));
             }
         }
     }
@@ -576,6 +580,9 @@ public class CheckoutController extends BaseController implements CheckoutMvpVie
         getRouter().pushController(RouterTransaction.with(MasterpassController.newInstance())
                 .pushChangeHandler(new HorizontalChangeHandler(false))
                 .popChangeHandler(new HorizontalChangeHandler()));
+        
+        mPresenter.facebookInitiatedCheckout((BaseActivity) getActivity(), PaymentInfo.getPaymentType(), mValue.getItemsCount(),
+                mValue.getSummary().total, getActivity().getResources().getString(R.string.default_country_id));
     }
 
     private void onOurpayButtonClick() {

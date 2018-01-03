@@ -62,43 +62,47 @@ android {
         }
 
         dealsDirectRC {
-            versionCode 65
+            versionCode 69
             versionName "2.3.1"
             applicationId "au.com.dealsdirect"
             buildConfigField "String", "API_ROOT", "\"https://www.dealsdirect.com.au/\""
             buildConfigField "String", "API_LEGACY", "\"https://www.dealsdirect.com.au/papi/public/v3.20/\""
             buildConfigField "String", "ACCOUNT_ID", "\"A56B0D62-AEF6-4653-848E-2ECDDB6E9B8C\""
             resValue "string", "app_name", "DealsDirect"
+            resValue "bool", "debug_mode", "false"
         }
 
         dealsDirectTest {
-            versionCode 64
+            versionCode 67
             versionName "2.3.1"
             applicationId "au.com.dealsdirect.test"
             buildConfigField "String", "API_ROOT", "\"https://genie-ui-dealsdirect-pre.mysaledev.com/\""
             buildConfigField "String", "API_LEGACY", "\"https://api.mysaledev.com/public/v3.20/\""
             buildConfigField "String", "ACCOUNT_ID", "\"A56B0D62-AEF6-4653-848E-2ECDDB6E9B8C\""
             resValue "string", "app_name", "DealsDirect Test"
+            resValue "bool", "debug_mode", "false"
         }
 
         ooRC {
-            versionCode 6
+            versionCode 9
             versionName "0.9"
             applicationId "au.com.oo.rc"
             buildConfigField "String", "API_ROOT", "\"https://www.oo.com.au/\""
-            buildConfigField "String", "API_LEGACY", "\"https://api.mysaledev.com/public/v3.20/\""
+            buildConfigField "String", "API_LEGACY", "\"https://www.oo.com.au/papi/public/v3.20/\""
             buildConfigField "String", "ACCOUNT_ID", "\"25D201EB-9A1C-4045-90B6-E6A9F122C7CB\""
             resValue "string", "app_name", "OO RC"
+            resValue "bool", "debug_mode", "false"
         }
 
         ooTest {
-            versionCode 7
+            versionCode 10
             versionName "0.9"
             applicationId "au.com.oo.test"
             buildConfigField "String", "API_ROOT", "\"https://genie-ui-oo-pre.mysaledev.com/\""
             buildConfigField "String", "API_LEGACY", "\"https://api.mysaledev.com/public/v3.20/\""
             buildConfigField "String", "ACCOUNT_ID", "\"25D201EB-9A1C-4045-90B6-E6A9F122C7CB\""
             resValue "string", "app_name", "OO Test"
+            resValue "bool", "debug_mode", "true"
         }
     }
 

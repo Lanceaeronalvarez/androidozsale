@@ -125,16 +125,13 @@
                     android:layout_height="wrap_content"
                     android:layout_marginBottom="16dp"
                     android:gravity="center_vertical"
-                    android:paddingLeft="15dp"
-                    android:paddingTop="5dp"
-                    android:paddingBottom="5dp"
-                    android:paddingRight="15dp"
                     android:layout_marginTop="10dp">
 
                     <Spinner
                         android:id="@+id/controller_details_spinner_gender"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
+                        android:background="#00000000"
                         android:entries="@array/genders"/>
 
                 </RelativeLayout>
