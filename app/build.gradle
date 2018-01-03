@@ -49,6 +49,7 @@ android {
             buildConfigField "String", "API_LEGACY", "\"https://api.apacsale.com/papi/public/v3.21/\""
             buildConfigField "String", "ACCOUNT_ID", "\"25D201EB-9A1C-4045-90B6-E6A9F122C7CB\""
             resValue "string", "app_name", "buyinvite"
+            resValue "bool", "debug_mode", "false"
         }
 
         buyinviteTest {
@@ -59,6 +60,7 @@ android {
             buildConfigField "String", "API_LEGACY", "\" https://api.mysaledev.com/papi/public/v3.21/\""
             buildConfigField "String", "ACCOUNT_ID", "\"25D201EB-9A1C-4045-90B6-E6A9F122C7CB\""
             resValue "string", "app_name", "buyinvite Test"
+            resValue "bool", "debug_mode", "true"
         }
 
         dealsDirectRC {
