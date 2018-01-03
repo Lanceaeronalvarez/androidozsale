@@ -101,8 +101,11 @@ android {
     sourceSets {
         dealsDirectRC.java.srcDir 'src/common/java/'
         dealsDirectTest.java.srcDir 'src/common/java/'
+        ooRC.res.srcDir 'src/ooTest/res'
+        ooRC.java.srcDir 'src/common/java/'
         ooTest.java.srcDir 'src/common/java/'
         topbuyTest.java.srcDir 'src/topbuyTest/java'
+
     }
 
     compileOptions {
@@ -118,11 +121,6 @@ android {
         unitTests.returnDefaultValues = true
     }
 
-    sourceSets {
-        ooRC {
-            res.srcDirs = ['src/ooTest/res']
-        }
-    }
 }
 
 dependencies {
