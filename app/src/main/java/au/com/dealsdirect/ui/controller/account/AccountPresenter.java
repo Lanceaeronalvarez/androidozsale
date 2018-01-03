@@ -34,6 +34,7 @@ public class AccountPresenter<V extends AccountMvpView> extends BasePresenter<V>
                 option.equals(AccountItems.PRIVACY_POLICY) ||
                 option.equalsIgnoreCase(AccountItems.TNC) ||
                 option.equalsIgnoreCase(AccountItems.ABOUT_US) ||
+		option.equalsIgnoreCase(AccountItems.COUNTRY) ||
                 option.equalsIgnoreCase(AccountItems.TUTORIAL))) {
 
             switch (option) {
@@ -61,6 +62,9 @@ public class AccountPresenter<V extends AccountMvpView> extends BasePresenter<V>
                 case AccountItems.ABOUT_US:
                     getMvpView().showLegalities("aboutus", option);
                     break;
+		case AccountItems.COUNTRY:
+		    getMvpView().showCountry();
+		    break;
                 case AccountItems.PRIVACY_POLICY:
                     getMvpView().showLegalities("PrivacyPolicy_Text", option);
                     break;

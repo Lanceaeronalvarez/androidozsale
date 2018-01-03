@@ -15,6 +15,7 @@ public final class AccountItems {
     public static final String INVITE_FRIEND = "invite friends";
     public static final String LANGUAGE = "language";
     public static final String CONTACT_US = "contact us";
+    public static final String COUNTRY = "country";
     public static final String ABOUT_US = "about us";
     public static final String PRIVACY_POLICY = "privacy policy";
     public static final String TNC = "terms & conditions";

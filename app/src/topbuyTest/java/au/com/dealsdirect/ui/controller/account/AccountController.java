@@ -286,6 +286,11 @@ public class AccountController extends BaseController implements AccountMvpView 
     }
 
     @Override
+    public void showCountry() {
+
+    }
+
+    @Override
     public void showLegalities(String key, String title) {
         mActivity.setDraggableViewPager(false);
         GateKeeper.push(getRouter(),

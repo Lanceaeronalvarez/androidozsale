@@ -41,6 +41,28 @@ android {
     flavorDimensions "default"
 
     productFlavors {
+        buyinviteRC {
+            versionCode 1
+            versionName "0.9"
+            applicationId "au.com.buyinvite.rc"
+            buildConfigField "String", "API_ROOT", "\"https://www.dealsdirect.com.au/\""
+            buildConfigField "String", "API_LEGACY", "\"https://www.dealsdirect.com.au/papi/public/v3.20/\""
+            buildConfigField "String", "ACCOUNT_ID", "\"A56B0D62-AEF6-4653-848E-2ECDDB6E9B8C\""
+            resValue "string", "app_name", "buyinvite"
+            resValue "bool", "debug_mode", "false"
+        }
+
+        buyinviteTest {
+            versionCode 1
+            versionName "0.9"
+            applicationId "au.com.buyinvite.test"
+            buildConfigField "String", "API_ROOT", "\"https://genie-ui-dealsdirect-pre.mysaledev.com/\""
+            buildConfigField "String", "API_LEGACY", "\"https://api.mysaledev.com/public/v3.20/\""
+            buildConfigField "String", "ACCOUNT_ID", "\"A56B0D62-AEF6-4653-848E-2ECDDB6E9B8C\""
+            resValue "string", "app_name", "buyinvite Test"
+            resValue "bool", "debug_mode", "true"
+        }
+
         dealsDirectRC {
             versionCode 69
             versionName "2.3.1"
@@ -121,6 +143,11 @@ android {
         unitTests.returnDefaultValues = true
     }
 
+    sourceSets {
+        ooRC {
+            res.srcDirs = ['src/ooTest/res']
+        }
+    }
 }
 
 dependencies {

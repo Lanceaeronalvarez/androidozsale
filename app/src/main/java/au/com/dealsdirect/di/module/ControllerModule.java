@@ -41,6 +41,9 @@ import au.com.dealsdirect.ui.controller.contact.addcontact.selectsubject.Contact
 import au.com.dealsdirect.ui.controller.contact.viewcontacts.ViewContactsMvpPresenter;
 import au.com.dealsdirect.ui.controller.contact.viewcontacts.ViewContactsMvpView;
 import au.com.dealsdirect.ui.controller.contact.viewcontacts.ViewContactsPresenter;
+import au.com.dealsdirect.ui.controller.country.CountryMvpPresenter;
+import au.com.dealsdirect.ui.controller.country.CountryMvpView;
+import au.com.dealsdirect.ui.controller.country.CountryPresenter;
 import au.com.dealsdirect.ui.controller.details.DetailsMvpPresenter;
 import au.com.dealsdirect.ui.controller.details.DetailsMvpView;
 import au.com.dealsdirect.ui.controller.details.DetailsPresenter;
@@ -223,7 +226,13 @@ public class ControllerModule {
     }
 
     @Provides
-    OrdersMvpPresenter<OrdersMvpView> provideOrdersPresenter(OrdersPresenter<OrdersMvpView> presenter) {
+    CountryMvpPresenter<CountryMvpView> provideCountryPresenter(CountryPresenter<CountryMvpView> presenter) {
+        return  presenter;
+    }
+
+
+    @Provides
+    OrdersMvpPresenter<OrdersMvpView> provideOrdersPresenter(OrdersPresenter<OrdersMvpView> presenter){
         return presenter;
     }
 

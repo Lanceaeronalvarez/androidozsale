@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:orientation="vertical"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent">
+
+    <include layout="@layout/partial_toolbar_search"/>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+
+        <TextView
+            android:id="@+id/controller_search_popular_subheader"
+            android:fontFamily="@string/font_app_bold"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/popular_products"
+            android:padding="10dp"
+            android:background="#beffffff"
+            android:textColor="#446E87"/>
+
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/controller_search_sale_items_grid_view"
+            android:layout_below="@+id/controller_search_popular_subheader"
+            android:padding="5dp"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="#FFFFFF"/>
+
+        <LinearLayout
+            android:id="@+id/controller_search_sale_items_placeholder"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="#FFFFFF"
+            android:gravity="top"
+            android:padding="10dp"
+            android:orientation="vertical"
+            android:visibility="visible">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:fontFamily="@string/font_app_bold"
+                android:text="Sorry, today we can't find anything by your request."
+                android:textColor="#3e3e3e"
+                android:layout_marginBottom="10dp"
+                android:textSize="@dimen/text_size_xxlarge" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:fontFamily="@string/font_app_bold"
+                android:text="Meanwhile, why not search for something else?"
+                android:textColor="@color/gray_description_text"
+                android:textSize="@dimen/text_size_xlarge" />
+
+        </LinearLayout>
+
+
+        <RelativeLayout
+            android:id="@+id/controller_search_opaque_view"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@color/search_gray_opaque"/>
+
+    </RelativeLayout>
+
+
+</LinearLayout>
