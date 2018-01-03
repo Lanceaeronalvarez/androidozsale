@@ -71,8 +71,8 @@ public class SaleItemsController extends BasePullToRefreshController implements 
 
     public static final String TAG = SaleItemsController.class.getSimpleName();
 
-    private String mSaleId;
-    private String mTitle;
+    private String mSaleId = "";
+    private String mTitle = "";
     private String mCategoryKey = "";
     private String mCategoryForTitle = "";
     private String mSearchQuery = "";
