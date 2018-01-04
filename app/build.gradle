@@ -121,7 +121,7 @@ android {
 //            buildConfigField "String", "ACCOUNT_ID", "\"909E0AC5-908A-4A73-8E5C-5312DEEBD24C\""
         }
 
-        ourpay {
+        ourpayTest {
             versionCode 1
             versionName "0.9"
             applicationId "au.com.ourpay.test"
