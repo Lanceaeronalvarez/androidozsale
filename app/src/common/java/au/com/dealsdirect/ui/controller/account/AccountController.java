@@ -27,13 +27,14 @@ import au.com.dealsdirect.ui.controller.checkout.paymentselect.PaymentSelectCont
 import au.com.dealsdirect.ui.controller.country.CountryController;
 import au.com.dealsdirect.ui.controller.details.DetailsController;
 import au.com.dealsdirect.ui.controller.language.LanguageController;
-import au.com.dealsdirect.ui.controller.legalities.LegalitiesController;
 import au.com.dealsdirect.ui.controller.orders.orders.OrdersController;
 import au.com.dealsdirect.ui.controller.returns.currentreturns.CurrentReturnsController;
 import au.com.dealsdirect.ui.controller.vouchers.View.ViewVouchersController;
 import au.com.dealsdirect.ui.custom.CustomAlertDialog;
 import au.com.dealsdirect.utils.BundleBuilder;
+import au.com.dealsdirect.utils.BundleKeys;
 import au.com.dealsdirect.utils.CartUtil;
+import au.com.dealsdirect.utils.module.GateKeeper;
 import butterknife.BindView;
 import butterknife.OnClick;
 
@@ -121,10 +122,10 @@ public class AccountController extends BaseController implements AccountMvpView,
 
 
     @Override
-    public void showAccountItems(List<String> accountItems, List<Integer> accountImages) {
+    public void showAccountItems(List<Integer> accountItems, List<Integer> accountImages) {
 
 
-        accountItemAdapter = new AccountItemAdapter(accountItems, accountImages, mPresenter);
+        accountItemAdapter = new AccountItemAdapter(mActivity,accountItems, accountImages, mPresenter);
         mAccountRecyclerView.setAdapter(accountItemAdapter);
         mAccountRecyclerView.setLayoutManager(new GridLayoutManager(getActivity(), 3));
         mAccountRecyclerView.setItemAnimator(new DefaultItemAnimator());
@@ -203,16 +204,27 @@ public class AccountController extends BaseController implements AccountMvpView,
                 .popChangeHandler(new HorizontalChangeHandler()));
     }
 
-    @Override
-    public void showLegalities(String key, String title) {
-        getRouter().pushController(RouterTransaction.with(new LegalitiesController(key, title))
-                .pushChangeHandler(new HorizontalChangeHandler())
-                .popChangeHandler(new HorizontalChangeHandler()));
+      @Override
+    public void showLegalities(String key, int title) {
+
+          GateKeeper.push(getRouter(),
+                  GateKeeper.Destination.LEGALITIES,
+                  new BundleBuilder(new Bundle())
+                          .putString(BundleKeys.TEMPLATE_KEY, key)
+                          .putString(BundleKeys.TITLE, getResources().getString(title))
+                          .build(),
+                  new HorizontalChangeHandler(false),
+                  new HorizontalChangeHandler());
+
+//
+//
+//          getRouter().pushController(RouterTransaction.with(new LegalitiesController(key, title))
+//                .pushChangeHandler(new HorizontalChangeHandler())
+//                .popChangeHandler(new HorizontalChangeHandler()));
     }
 
-
     @Override
-    public void triggerLogin(String option) {
+    public void triggerLogin(int option) {
         AccountMvpView mvpView = this;
 
         mActivity.showLoginController(getRouter(), new AuthHandler() {

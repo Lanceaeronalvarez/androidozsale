@@ -3,7 +3,6 @@ package au.com.dealsdirect.ui.controller.account;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.List;
 
 import javax.inject.Inject;
 
@@ -100,13 +99,13 @@ public class AccountPresenter<V extends AccountMvpView> extends BasePresenter<V>
                     getMvpView().showLanguage();
                     break;
                 case R.string.account_about_us:
-                    getMvpView().showLegalities("aboutus", option);
+                    getMvpView().showLegalities("aboutus", mAccountItems.get(option));
                     break;
                 case R.string.account_privacy:
-                    getMvpView().showLegalities("PrivacyPolicy_Text", option);
+                    getMvpView().showLegalities("PrivacyPolicy_Text", mAccountItems.get(option));
                     break;
                 case R.string.account_tnc:
-                    getMvpView().showLegalities("TermsAndConditions_Text", option);
+                    getMvpView().showLegalities("TermsAndConditions_Text", mAccountItems.get(option));
                     break;
                 case R.string.account_contact_us:
                     getMvpView().showContactUs();

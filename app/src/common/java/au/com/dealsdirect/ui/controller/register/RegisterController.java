@@ -10,7 +10,6 @@ import android.view.ViewGroup;
 import android.widget.CheckBox;
 import android.widget.TextView;
 
-import com.bluelinelabs.conductor.RouterTransaction;
 import com.bluelinelabs.conductor.changehandler.HorizontalChangeHandler;
 import com.bluelinelabs.conductor.changehandler.VerticalChangeHandler;
 import com.facebook.CallbackManager;
@@ -22,9 +21,10 @@ import au.com.dealsdirect.R;
 import au.com.dealsdirect.data.auth.AuthHandler;
 import au.com.dealsdirect.ui.base.BaseActivity;
 import au.com.dealsdirect.ui.base.BaseController;
-import au.com.dealsdirect.ui.controller.legalities.LegalitiesController;
 import au.com.dealsdirect.utils.AppConstants;
 import au.com.dealsdirect.utils.BundleBuilder;
+import au.com.dealsdirect.utils.BundleKeys;
+import au.com.dealsdirect.utils.module.GateKeeper;
 import butterknife.BindView;
 import butterknife.OnClick;
 
@@ -106,10 +106,15 @@ public class RegisterController extends BaseController implements RegisterMvpVie
         mActivity.setDraggableViewPager(false);
 
         mTermsLink.setOnClickListener(action -> {
-            getRouter().pushController(RouterTransaction.with(
-                    new LegalitiesController("TermsAndConditions_Text", "Terms and Conditions"))
-                    .popChangeHandler(new HorizontalChangeHandler())
-                    .pushChangeHandler(new HorizontalChangeHandler()));
+
+            GateKeeper.push(getRouter(),
+                    GateKeeper.Destination.LEGALITIES,
+                    new BundleBuilder(new Bundle())
+                            .putString(BundleKeys.TEMPLATE_KEY, "TermsAndConditions_Text")
+                            .putString(BundleKeys.TITLE, "Terms and Conditions")
+                            .build(),
+                    new HorizontalChangeHandler(false),
+                    new HorizontalChangeHandler());
         });
     }
 
