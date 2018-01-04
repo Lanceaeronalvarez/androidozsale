@@ -55,12 +55,12 @@ public class AccountPresenter<V extends AccountMvpView> extends BasePresenter<V>
 
         if(!getDataManager().getIsMultiCountry()){
             mAccountItems.remove(AccountItems.COUNTRY);
-            mAccountImages.remove(R.drawable.bg_account_country);
+            mAccountImages.remove(mAccountImages.indexOf(R.drawable.bg_account_country));
         }
 
         if(!getDataManager().getIsMultiLanguage()){
             mAccountItems.remove(AccountItems.LANGUAGE);
-            mAccountImages.remove(R.drawable.bg_account_languages);
+            mAccountImages.remove(mAccountImages.indexOf(R.drawable.bg_account_languages));
         }
     }
 
