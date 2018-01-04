@@ -124,6 +124,7 @@ public class LoginController extends SwipeableBaseToolBarController implements L
     @Override
     public boolean handleBack() {
         hideKeyboard();
+        mActivity.setDraggableViewPager(true);
         return super.handleBack();
     }
 
