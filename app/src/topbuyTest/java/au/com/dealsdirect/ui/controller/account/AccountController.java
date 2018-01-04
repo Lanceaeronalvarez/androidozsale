@@ -44,40 +44,7 @@ public class AccountController extends BaseController implements AccountMvpView 
 
     private boolean mChangeInProgress = false;
     private AccountMvpView mvpView;
-    private String mSelectedItemFromLogin;
-
-    private int[] mAccountIcons = new int[]{
-            R.drawable.ic_account_my_orders,
-            R.drawable.ic_account_my_payments,
-            R.drawable.ic_account_my_details,
-            R.drawable.ic_account_my_addresses,
-            R.drawable.ic_account_my_returns,
-            R.drawable.ic_account_my_vouchers,
-            R.drawable.ic_account_invite_a_friend,
-            R.drawable.ic_account_language,
-            R.drawable.ic_account_contact_us,
-            R.drawable.ic_account_about_us,
-            R.drawable.ic_account_privacy_policy,
-            R.drawable.ic_account_terms_and_conditions,
-            R.drawable.ic_account_tutorial,
-            R.drawable.ic_account_logout
-    };
-
-    private ArrayList<String> mAccountItems = new ArrayList(Arrays.asList(
-            //"my cart",
-            AccountItems.ORDERS,
-            AccountItems.PAYMENTS,
-            AccountItems.DETAILS,
-            AccountItems.ADDRESSES,
-            AccountItems.RETURNS,
-            AccountItems.VOUCHERS,
-            AccountItems.INVITE_FRIEND,
-            AccountItems.LANGUAGE,
-            AccountItems.CONTACT_US,
-            AccountItems.ABOUT_US,
-            AccountItems.PRIVACY_POLICY,
-            AccountItems.TNC,
-            AccountItems.TUTORIAL));
+    private int mSelectedItemFromLogin;
 
 
     @BindView(R.id.account_recycler_view)
@@ -160,16 +127,16 @@ public class AccountController extends BaseController implements AccountMvpView 
     }
 
     @Override
-    public void showAccountItems(List<String> accountItems, List<Integer> accountImages) {
+    public void showAccountItems(List<Integer> accountItems, List<Integer> accountImages) {
         if (mPresenter.isAuthorized()) {
-            accountItems.add(AccountItems.LOGOUT);
+            accountItems.add(R.string.account_logout);
         } else {
             if (accountItemAdapter != null) {
-                accountItemAdapter.getData().remove(AccountItems.LOGOUT);
+                accountItemAdapter.getData().remove(R.string.account_logout);
             }
         }
 
-        accountItemAdapter = new AccountItemAdapter(accountItems, accountImages, mPresenter);
+        accountItemAdapter = new AccountItemAdapter(mActivity, accountItems, accountImages, mPresenter);
         mAccountRecyclerView.setAdapter(accountItemAdapter);
         mAccountRecyclerView.setLayoutManager(new LinearLayoutManager(mActivity, LinearLayoutManager.VERTICAL, false));
         mAccountRecyclerView.setItemAnimator(new DefaultItemAnimator());
@@ -291,13 +258,13 @@ public class AccountController extends BaseController implements AccountMvpView 
     }
 
     @Override
-    public void showLegalities(String key, String title) {
+    public void showLegalities(String key, int option) {
         mActivity.setDraggableViewPager(false);
         GateKeeper.push(getRouter(),
                 GateKeeper.Destination.LEGALITIES,
                 new BundleBuilder(new Bundle())
                         .putString(BundleKeys.TEMPLATE_KEY, key)
-                        .putString(BundleKeys.TITLE, title)
+                        .putString(BundleKeys.TITLE, getResources().getString(option))
                         .build(),
                 new VerticalChangeHandler(false),
                 new VerticalChangeHandler());
@@ -305,7 +272,7 @@ public class AccountController extends BaseController implements AccountMvpView 
     }
 
     @Override
-    public void triggerLogin(String option) {
+    public void triggerLogin(int option) {
         mSelectedItemFromLogin = option;
         mActivity.showLoginController(getRouter(), new AuthHandler() {
             @Override

@@ -125,4 +125,21 @@
     </string>
 
     <bool name="debug_mode">true</bool>
+
+    <!--MY ACCOUNT ITEMS-->
+    <string name="account_orders">my orders</string>
+    <string name="account_payments">my payments</string>
+    <string name="account_details">my details</string>
+    <string name="account_addresses">my addresses</string>
+    <string name="account_returns">my returns</string>
+    <string name="account_vouchers">my vouchers</string>
+    <string name="account_invite_friend">invite friends</string>
+    <string name="account_language">language</string>
+    <string name="account_contact_us">contact us</string>
+    <string name="account_country">country</string>
+    <string name="account_about_us">about us</string>
+    <string name="account_privacy">privacy policy</string>
+    <string name="account_tnc">terms &amp; conditions</string>
+    <string name="account_tutorial">tutorial</string>
+    <string name="account_logout">logout</string>
 </resources>

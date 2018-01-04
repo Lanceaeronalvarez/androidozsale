@@ -13,7 +13,7 @@ public interface AccountMvpPresenter <V extends MvpView> extends MvpPresenter<V>
 
     void loadAccountItems();
 
-    void onAccountItemClick(String option);
+    void onAccountItemClick(int option);
 
     boolean isAuthorized();
 }

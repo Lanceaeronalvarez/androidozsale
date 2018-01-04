@@ -1,5 +1,6 @@
 package au.com.dealsdirect.ui.controller.account;
 
+import android.content.Context;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -22,16 +23,18 @@ import io.reactivex.disposables.Disposable;
 
 public class AccountItemAdapter extends RecyclerView.Adapter<AccountItemViewHolder> {
 
-    private List<String> mAccountItems = Collections.emptyList();
-    private List<Integer> mAccountImages;
+    private List<Integer> mAccountItems = Collections.emptyList();
+    private List<Integer> mAccountImages = Collections.emptyList();
     private AccountMvpPresenter mPresenter;
+    private Context mContext;
 
 
     public AccountItemAdapter(
-            List<String> mAccountItems,
+            Context context,
+            List<Integer> mAccountItems,
             List<Integer> accountImages,
             AccountMvpPresenter presenter) {
-
+        this.mContext = context;
         this.mAccountItems = mAccountItems;
         this.mAccountImages = accountImages;
         this.mPresenter = presenter;
@@ -53,7 +56,7 @@ public class AccountItemAdapter extends RecyclerView.Adapter<AccountItemViewHold
         holder.mAccountItemImage.setImageResource(mAccountImages.get(position));
 
         holder.mAccountItemName
-                .setText(mAccountItems.get(position));
+                .setText(mContext.getResources().getString(mAccountItems.get(position)));
         holder.itemView.setOnClickListener(view -> {
                 mPresenter.onAccountItemClick(mAccountItems.get(position));
         });
@@ -67,19 +70,7 @@ public class AccountItemAdapter extends RecyclerView.Adapter<AccountItemViewHold
         return mAccountItems.size();
     }
 
-    public List<String> getData() {
-        return mAccountItems;
-    }
-
-    public void removeItemAtPosition(int position) {
-        mAccountItems.remove(position);
-    }
-
-    public String getItemAtPosition(int position) {
-        return mAccountItems.get(position);
-    }
-
-    public List<String> getList() {
+    public List<Integer> getData() {
         return mAccountItems;
     }
 }

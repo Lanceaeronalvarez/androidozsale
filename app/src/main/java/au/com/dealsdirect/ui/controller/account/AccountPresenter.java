@@ -20,18 +20,18 @@ import io.reactivex.disposables.CompositeDisposable;
 public class AccountPresenter<V extends AccountMvpView> extends BasePresenter<V> implements
         AccountMvpPresenter<V>, Serializable {
 
-    ArrayList<String> mAccountItems = new ArrayList<>(
-            Arrays.asList(AccountItems.DETAILS,
-                    AccountItems.ADDRESSES,
-                    AccountItems.ORDERS,
-                    AccountItems.PAYMENTS,
-                    AccountItems.VOUCHERS,
-                    AccountItems.RETURNS,
-                    AccountItems.LANGUAGE,
-                    AccountItems.COUNTRY,
-                    AccountItems.TNC,
-                    AccountItems.PRIVACY_POLICY,
-                    AccountItems.ABOUT_US));
+    ArrayList<Integer> mAccountItems = new ArrayList<>(
+            Arrays.asList(R.string.account_details,
+                    R.string.account_addresses,
+                    R.string.account_orders,
+                    R.string.account_payments,
+                    R.string.account_vouchers,
+                    R.string.account_returns,
+                    R.string.account_language,
+                    R.string.account_country,
+                    R.string.account_tnc,
+                    R.string.account_privacy,
+                    R.string.account_about_us));
 
     ArrayList<Integer> mAccountImages = new ArrayList<>(Arrays.asList(
             R.drawable.bg_account_details,
@@ -54,70 +54,70 @@ public class AccountPresenter<V extends AccountMvpView> extends BasePresenter<V>
         super(dataManager, schedulerProvider, compositeDisposable);
 
         if(!getDataManager().getIsMultiCountry()){
-            mAccountItems.remove(AccountItems.COUNTRY);
+            mAccountItems.remove(mAccountItems.indexOf(R.string.account_country));
             mAccountImages.remove(mAccountImages.indexOf(R.drawable.bg_account_country));
         }
 
         if(!getDataManager().getIsMultiLanguage()){
-            mAccountItems.remove(AccountItems.LANGUAGE);
+            mAccountItems.remove(mAccountItems.indexOf(R.string.account_language));
             mAccountImages.remove(mAccountImages.indexOf(R.drawable.bg_account_languages));
         }
     }
 
     @Override
-    public void onAccountItemClick(String option) {
+    public void onAccountItemClick(int option) {
 
         if (getMvpView().isChangeInProgress()) {
             return;
         }
 
-        if (getDataManager().isAuthorized() || (option.equals(AccountItems.LANGUAGE) ||
-                option.equals(AccountItems.PRIVACY_POLICY) ||
-                option.equalsIgnoreCase(AccountItems.TNC) ||
-                option.equalsIgnoreCase(AccountItems.ABOUT_US) ||
-                option.equalsIgnoreCase(AccountItems.TUTORIAL))) {
+        if (getDataManager().isAuthorized() || (option == R.string.account_language ||
+                option == R.string.account_privacy ||
+                option == R.string.account_tnc ||
+                option == R.string.account_about_us ||
+                option == R.string.account_tutorial)) {
 
             switch (option) {
-                case AccountItems.DETAILS:
+                case R.string.account_details:
                     getMvpView().showMyDetailsController();
                     break;
-                case AccountItems.ADDRESSES:
+                case R.string.account_addresses:
                     getMvpView().showMyAddressesController();
                     break;
-                case AccountItems.ORDERS:
+                case R.string.account_orders:
                     getMvpView().showMyOrders();
                     break;
-                case AccountItems.VOUCHERS:
+                case R.string.account_vouchers:
                     getMvpView().showMyVouchers();
                     break;
-                case AccountItems.RETURNS:
+                case R.string.account_returns:
                     getMvpView().showMyReturns();
                     break;
-                case AccountItems.PAYMENTS:
+                case R.string.account_payments:
                     getMvpView().showMyPaymentsController();
                     break;
-                case AccountItems.LANGUAGE:
+                case R.string.account_language:
                     getMvpView().showLanguage();
                     break;
-                case AccountItems.ABOUT_US:
+                case R.string.account_about_us:
                     getMvpView().showLegalities("aboutus", option);
                     break;
-                case AccountItems.PRIVACY_POLICY:
+                case R.string.account_privacy:
                     getMvpView().showLegalities("PrivacyPolicy_Text", option);
                     break;
-                case AccountItems.TNC:
+                case R.string.account_tnc:
                     getMvpView().showLegalities("TermsAndConditions_Text", option);
                     break;
-                case AccountItems.CONTACT_US:
+                case R.string.account_contact_us:
                     getMvpView().showContactUs();
                     break;
-                case AccountItems.INVITE_FRIEND:
+                case R.string.account_invite_friend:
                     getMvpView().showInviteAFriend();
                     break;
-                case AccountItems.TUTORIAL:
+                case R.string.account_tutorial:
                     getMvpView().showTutorial();
                     break;
-                case AccountItems.LOGOUT:
+                case R.string.account_logout:
                     getMvpView().triggerLogout();
                     break;
                 default:

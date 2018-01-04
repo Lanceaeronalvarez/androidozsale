@@ -10,7 +10,7 @@ import au.com.dealsdirect.ui.base.MvpView;
 
 public interface AccountMvpView extends MvpView {
 
-    void showAccountItems(List<String> accountItems, List<Integer> accountImages);
+    void showAccountItems(List<Integer> accountItems, List<Integer> accountImages);
 
     void showMyDetailsController();
 
@@ -34,9 +34,9 @@ public interface AccountMvpView extends MvpView {
 
     void showCountry();
 
-    void showLegalities(String key, String Title);
+    void showLegalities(String key, int option);
 
-    void triggerLogin(String option);
+    void triggerLogin(int option);
 
     void triggerLogout();
 
