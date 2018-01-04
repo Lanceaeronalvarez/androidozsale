@@ -142,6 +142,8 @@ android {
         ooRC.res.srcDir 'src/ooTest/res'
         ooRC.java.srcDir 'src/common/java/'
         ooTest.java.srcDir 'src/common/java/'
+        buyinviteRC.java.srcDir 'src/common/java/'
+        buyinviteTest.java.srcDir 'src/common/java/'
         topbuyTest.java.srcDir 'src/topbuyTest/java'
         topbuyRC.java.srcDir 'src/topbuyTest/java'
 

@@ -9,7 +9,6 @@ import android.content.pm.PackageManager;
 import android.content.pm.Signature;
 import android.os.Bundle;
 import android.os.Handler;
-import android.support.v4.view.ViewPager;
 import android.util.Base64;
 import android.util.Log;
 import android.view.ViewGroup;
@@ -121,6 +120,7 @@ public class MainActivity extends BaseActivity implements MainMvpView {
 
         mPresenter.onAttach(this);
         mPresenter.callGetTemplateTexts();
+
 
         //Init All analytics sdk
         initializeAnalytics();

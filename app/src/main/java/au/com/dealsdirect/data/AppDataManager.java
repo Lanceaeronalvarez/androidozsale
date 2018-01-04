@@ -772,6 +772,26 @@ public class AppDataManager implements DataManager {
     }
 
     @Override
+    public void setIsMultiLanguage(boolean isMultiLanguage) {
+        mPreferencesHelper.setIsMultiLanguage(isMultiLanguage);
+    }
+
+    @Override
+    public boolean getIsMultiLanguage() {
+        return mPreferencesHelper.getIsMultiLanguage();
+    }
+
+    @Override
+    public void setIsMultiCountry(boolean isMultiCountry) {
+        mPreferencesHelper.setIsMultiCountry(isMultiCountry);
+    }
+
+    @Override
+    public boolean getIsMultiCountry() {
+        return mPreferencesHelper.getIsMultiCountry();
+    }
+
+    @Override
     public void setEventUserId(String userId) {
         mPreferencesHelper.setEventUserId(userId);
     }
