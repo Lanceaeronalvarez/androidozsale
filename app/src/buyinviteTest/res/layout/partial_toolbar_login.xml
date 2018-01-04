@@ -58,7 +58,7 @@
             android:background="@drawable/bg_toolbar_button"
             android:scaleType="fitCenter"
             android:padding="5dp"
-            android:src="@drawable/ic_logout" />
+            android:src="@drawable/ic_account_logout" />
 
     </RelativeLayout>
 
