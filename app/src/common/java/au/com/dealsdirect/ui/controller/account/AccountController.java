@@ -88,6 +88,12 @@ public class AccountController extends BaseController implements AccountMvpView,
 
         getControllerComponent().inject(this);
 
+        if (getActivity().getPackageName().equals("au.com.buyinvite.rc")){
+            mPresenter.setMultiCountry(true);
+        }else{
+            mPresenter.setMultiCountry(false);
+        }
+
         mPresenter.onAttach(this);
         return view;
     }
@@ -97,6 +103,8 @@ public class AccountController extends BaseController implements AccountMvpView,
         super.onViewBound(view);
         setUp(view);
         hideKeyboard();
+
+
     }
 
 

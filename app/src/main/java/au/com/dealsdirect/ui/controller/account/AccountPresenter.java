@@ -27,8 +27,8 @@ public class AccountPresenter<V extends AccountMvpView> extends BasePresenter<V>
                     R.string.account_vouchers,
                     R.string.account_returns,
                     R.string.account_language,
-                    R.string.account_country,
                     R.string.account_tnc,
+                    R.string.account_country,
                     R.string.account_privacy,
                     R.string.account_about_us));
 
@@ -40,8 +40,8 @@ public class AccountPresenter<V extends AccountMvpView> extends BasePresenter<V>
             R.drawable.bg_account_vouchers,
             R.drawable.bg_account_returns,
             R.drawable.bg_account_languages,
-            R.drawable.bg_account_country,
             R.drawable.bg_account_terms_and_conditions,
+            R.drawable.bg_account_country,
             R.drawable.bg_account_privacy_policy,
             R.drawable.bg_account_about_us
     ));
@@ -51,6 +51,7 @@ public class AccountPresenter<V extends AccountMvpView> extends BasePresenter<V>
     public AccountPresenter(DataManager dataManager, SchedulerProvider schedulerProvider,
                             CompositeDisposable compositeDisposable) {
         super(dataManager, schedulerProvider, compositeDisposable);
+
 
         if(!getDataManager().getIsMultiCountry()){
             mAccountItems.remove(mAccountItems.indexOf(R.string.account_country));
@@ -125,6 +126,11 @@ public class AccountPresenter<V extends AccountMvpView> extends BasePresenter<V>
         } else {
             getMvpView().triggerLogin(option);
         }
+    }
+
+    @Override
+    public void setMultiCountry(boolean isMultiCountry) {
+        getDataManager().setIsMultiCountry(isMultiCountry);
     }
 
     @Override
