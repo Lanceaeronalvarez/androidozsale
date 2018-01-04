@@ -23,13 +23,13 @@ import io.reactivex.disposables.Disposable;
 public class AccountItemAdapter extends RecyclerView.Adapter<AccountItemViewHolder> {
 
     private List<String> mAccountItems = Collections.emptyList();
-    private int[] mAccountImages;
+    private List<Integer> mAccountImages;
     private AccountMvpPresenter mPresenter;
 
 
     public AccountItemAdapter(
             List<String> mAccountItems,
-            int[] accountImages,
+            List<Integer> accountImages,
             AccountMvpPresenter presenter) {
 
         this.mAccountItems = mAccountItems;
@@ -50,7 +50,7 @@ public class AccountItemAdapter extends RecyclerView.Adapter<AccountItemViewHold
     @Override
     public void onBindViewHolder(AccountItemViewHolder holder, int position) {
 
-        holder.mAccountItemImage.setImageResource(mAccountImages[position]);
+        holder.mAccountItemImage.setImageResource(mAccountImages.get(position));
 
         holder.mAccountItemName
                 .setText(mAccountItems.get(position));

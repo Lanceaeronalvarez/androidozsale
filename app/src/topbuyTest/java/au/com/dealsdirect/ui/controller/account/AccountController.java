@@ -125,7 +125,7 @@ public class AccountController extends BaseController implements AccountMvpView 
         // Setup views here
         assert (mActivity) != null;
         mActivity.setDraggableViewPager(true);
-        mPresenter.loadAccountItems(mAccountItems, mAccountIcons);
+        mPresenter.loadAccountItems();
 
         getRouter().addChangeListener(new ControllerChangeHandler.ControllerChangeListener() {
             @Override
@@ -141,7 +141,7 @@ public class AccountController extends BaseController implements AccountMvpView 
                 if (from instanceof LoginController) {
                     mPresenter.onAttach(mvpView);
                     if(mPresenter.isAuthorized()) {
-                        mPresenter.loadAccountItems(mAccountItems, mAccountIcons);
+                        mPresenter.loadAccountItems();
                         mPresenter.onAccountItemClick(mSelectedItemFromLogin);
                     }
                 }
@@ -327,7 +327,7 @@ public class AccountController extends BaseController implements AccountMvpView 
         mActivity.callLogout(new AuthHandler() {
             @Override
             public void success() {
-                mPresenter.loadAccountItems(mAccountItems, mAccountIcons);
+                mPresenter.loadAccountItems();
                 CartUtil.setValueToCart(0);
 //                mActivity.getMainController().getHomeController().removeBasketItemCount();
 

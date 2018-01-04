@@ -39,6 +39,8 @@ public class AppPreferencesHelper implements PreferencesHelper {
     private static final String COUNTRY_ID = "server_country_id";
     private static final String LANGUAGE_ID = "server_language_id";
     private static final String LANGUAGE_LIST = "server_language_list";
+    private static final String IS_MULTI_LANGUAGE = "server_multi_language";
+    private static final String IS_MULTI_COUNTRY = "server_multi_country";
     private static final String SITE_NAME = "server_site_name";
     private static final String CURRENCY = "server_currency";
     private static final String CURRENCY_SIGN = "server_currency_sign";
@@ -399,6 +401,26 @@ public class AppPreferencesHelper implements PreferencesHelper {
     @Override
     public boolean getIsInitialLaunch() {
         return Prefs.getBoolean(IS_INITIAL_LAUNCH,true);
+    }
+
+    @Override
+    public void setIsMultiLanguage(boolean isMultiLanguage) {
+        Prefs.putBoolean(IS_MULTI_LANGUAGE,isMultiLanguage);
+    }
+
+    @Override
+    public boolean getIsMultiLanguage() {
+        return Prefs.getBoolean(IS_MULTI_LANGUAGE,false);
+    }
+
+    @Override
+    public void setIsMultiCountry(boolean isMultiCountry) {
+        Prefs.putBoolean(IS_MULTI_COUNTRY,isMultiCountry);
+    }
+
+    @Override
+    public boolean getIsMultiCountry() {
+        return Prefs.getBoolean(IS_MULTI_COUNTRY,false);
     }
 
     public void setEventUserId(String userId) {

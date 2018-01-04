@@ -114,4 +114,12 @@ public interface PreferencesHelper {
     void setIsInitialLaunch(boolean isInitialLaunch);
 
     boolean getIsInitialLaunch();
+
+    void setIsMultiLanguage(boolean isMultiLanguage);
+
+    boolean getIsMultiLanguage();
+
+    void setIsMultiCountry(boolean isMultiCountry);
+
+    boolean getIsMultiCountry();
 }

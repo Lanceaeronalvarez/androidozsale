@@ -28,6 +28,7 @@ import au.com.dealsdirect.ui.base.BaseController;
 import au.com.dealsdirect.ui.controller.address.viewaddress.ViewAddressController;
 import au.com.dealsdirect.ui.controller.checkout.paymentselect.PaymentSelectController;
 import au.com.dealsdirect.ui.controller.country.CountryController;
+import au.com.dealsdirect.ui.controller.details.DetailsController;
 import au.com.dealsdirect.ui.controller.language.LanguageController;
 import au.com.dealsdirect.ui.controller.legalities.LegalitiesController;
 import au.com.dealsdirect.ui.controller.orders.orders.OrdersController;
@@ -64,31 +65,6 @@ public class AccountController extends BaseController implements AccountMvpView,
 
     @Inject
     AccountMvpPresenter<AccountMvpView> mPresenter;
-
-    ArrayList<String> mAccountItems = new ArrayList<>(
-            Arrays.asList(AccountItems.DETAILS,
-                    AccountItems.ADDRESSES,
-                    AccountItems.ORDERS,
-                    AccountItems.PAYMENTS,
-                    AccountItems.VOUCHERS,
-                    AccountItems.RETURNS,
-                    AccountItems.LANGUAGE,
-                    AccountItems.TNC,
-                    AccountItems.PRIVACY_POLICY,
-                    AccountItems.ABOUT_US));
-
-    int[] mAccountImages = new int[]{
-            R.drawable.bg_account_details,
-            R.drawable.bg_account_address,
-            R.drawable.bg_account_orders,
-            R.drawable.bg_account_payments,
-            R.drawable.bg_account_vouchers,
-            R.drawable.bg_account_returns,
-            R.drawable.bg_account_languages,
-            R.drawable.bg_account_terms_and_conditions,
-            R.drawable.bg_account_privacy_policy,
-            R.drawable.bg_account_about_us,
-    };
 
     public static AccountController newInstance() {
 
@@ -133,7 +109,7 @@ public class AccountController extends BaseController implements AccountMvpView,
         mActivity.getMainController().showBottomNav();
         mActivity.setDraggableViewPager(false);
 
-        mPresenter.loadAccountItems(mAccountItems, mAccountImages);
+        mPresenter.loadAccountItems();
         mTitleTextView.setText(R.string.my_account);
         mArrowButton.setVisibility(View.INVISIBLE);
 
@@ -148,7 +124,7 @@ public class AccountController extends BaseController implements AccountMvpView,
 
 
     @Override
-    public void showAccountItems(List<String> accountItems, int[] accountImages) {
+    public void showAccountItems(List<String> accountItems, List<Integer> accountImages) {
 
 
         accountItemAdapter = new AccountItemAdapter(accountItems, accountImages, mPresenter);
@@ -264,7 +240,7 @@ public class AccountController extends BaseController implements AccountMvpView,
         mActivity.callLogout(new AuthHandler() {
             @Override
             public void success() {
-                mPresenter.loadAccountItems(mAccountItems,mAccountImages);
+                mPresenter.loadAccountItems();
                 CartUtil.setValueToCart(0);
                 mActivity.getMainController().getHomeController().removeBasketItemCount();
                 mFilterButton.setImageDrawable(getActivity().getResources().getDrawable(R.drawable.ic_login));
