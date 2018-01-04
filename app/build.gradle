@@ -161,12 +161,6 @@ android {
     testOptions {
         unitTests.returnDefaultValues = true
     }
-
-    sourceSets {
-        ooRC {
-            res.srcDirs = ['src/ooTest/res']
-        }
-    }
 }
 
 dependencies {

@@ -160,7 +160,7 @@ public class AccountController extends BaseController implements AccountMvpView 
     }
 
     @Override
-    public void showAccountItems(List<String> accountItems, int[] accountImages) {
+    public void showAccountItems(List<String> accountItems, List<Integer> accountImages) {
         if (mPresenter.isAuthorized()) {
             accountItems.add(AccountItems.LOGOUT);
         } else {
