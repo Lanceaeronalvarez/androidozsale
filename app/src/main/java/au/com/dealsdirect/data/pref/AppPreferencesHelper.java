@@ -408,9 +408,10 @@ public class AppPreferencesHelper implements PreferencesHelper {
         Prefs.putBoolean(IS_MULTI_LANGUAGE,isMultiLanguage);
     }
 
+    //set default multi language to true temporarily
     @Override
     public boolean getIsMultiLanguage() {
-        return Prefs.getBoolean(IS_MULTI_LANGUAGE,false);
+        return Prefs.getBoolean(IS_MULTI_LANGUAGE,true);
     }
 
     @Override

@@ -43,7 +43,8 @@ public class AccountPresenter<V extends AccountMvpView> extends BasePresenter<V>
             R.drawable.bg_account_terms_and_conditions,
             R.drawable.bg_account_country,
             R.drawable.bg_account_privacy_policy,
-            R.drawable.bg_account_about_us
+            R.drawable.bg_account_about_us,
+            R.drawable.bg_account_logout
     ));
 
 
@@ -52,6 +53,7 @@ public class AccountPresenter<V extends AccountMvpView> extends BasePresenter<V>
                             CompositeDisposable compositeDisposable) {
         super(dataManager, schedulerProvider, compositeDisposable);
 
+        //Temporary logic for determining multi country, multi language account item availabilities.
 
         if(!getDataManager().getIsMultiCountry()){
             mAccountItems.remove(mAccountItems.indexOf(R.string.account_country));

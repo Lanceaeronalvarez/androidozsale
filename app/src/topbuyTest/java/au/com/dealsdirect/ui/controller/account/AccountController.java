@@ -128,15 +128,13 @@ public class AccountController extends BaseController implements AccountMvpView 
 
     @Override
     public void showAccountItems(List<Integer> accountItems, List<Integer> accountImages) {
+        List<Integer> newAccountItems = new ArrayList<>(accountItems);
+
         if (mPresenter.isAuthorized()) {
-            accountItems.add(R.string.account_logout);
-        } else {
-            if (accountItemAdapter != null) {
-                accountItemAdapter.getData().remove(R.string.account_logout);
-            }
+            newAccountItems.add(R.string.account_logout);
         }
 
-        accountItemAdapter = new AccountItemAdapter(mActivity, accountItems, accountImages, mPresenter);
+        accountItemAdapter = new AccountItemAdapter(mActivity, newAccountItems, accountImages, mPresenter);
         mAccountRecyclerView.setAdapter(accountItemAdapter);
         mAccountRecyclerView.setLayoutManager(new LinearLayoutManager(mActivity, LinearLayoutManager.VERTICAL, false));
         mAccountRecyclerView.setItemAnimator(new DefaultItemAnimator());
