@@ -7,6 +7,7 @@ import java.util.ArrayList;
 import javax.inject.Inject;
 
 import au.com.dealsdirect.data.DataManager;
+import au.com.dealsdirect.data.network.AppApiCallback;
 import au.com.dealsdirect.data.network.model.checkout.AdjustOrderItem;
 import au.com.dealsdirect.data.network.model.checkout.GetCurrentOrder;
 import au.com.dealsdirect.data.network.model.checkout.GetUserPaymentMethods;
@@ -54,6 +55,24 @@ public class CheckoutPresenter<V extends CheckoutMvpView> extends BasePresenter<
 
     @Override
     public void fetchCartDetails() {
+
+//        doApiCallForResponse(getDataManager().callGetCurrentOrder(new GetCurrentOrder.RequestValue(getDataManager().getLanguageId())), new AppApiCallback(){
+//            @Override
+//            public void onSuccess(Object responseValue) {
+//                super.onSuccess(responseValue);
+//
+//                getMvpView().setCartIsLoading(false);
+//                updateCart((GetCurrentOrder.ResponseValue)responseValue);
+//                mFetchCartFinished = true;
+//            }
+//
+//            @Override
+//            public void onFailure(Throwable t) {
+//                super.onFailure(t);
+//                getMvpView().setCartIsLoading(false);
+//            }
+//        });
+
         getCompositeDisposable().add(getDataManager()
                 .callGetCurrentOrder(new GetCurrentOrder.RequestValue(getDataManager().getLanguageId()))
                 .subscribeOn(getSchedulerProvider().io())
@@ -67,6 +86,7 @@ public class CheckoutPresenter<V extends CheckoutMvpView> extends BasePresenter<
                             return;
                         }
                         getMvpView().hideLoading();
+                        getMvpView().hideNoNetworkLayout();
 
                         updateCart(responseValue);
                         mFetchCartFinished = true;
@@ -80,6 +100,10 @@ public class CheckoutPresenter<V extends CheckoutMvpView> extends BasePresenter<
 
                         if (!isViewAttached()) {
                             return;
+                        }
+
+                        if(!isCartAlreadyLoadedOnce()){
+                            getMvpView().showNoNetworkLayout();
                         }
 
                         getMvpView().hideLoading();

@@ -101,7 +101,7 @@ public class CheckoutOrderAdapter extends ArrayAdapter<Item> {
         view.price.setText(PriceUtils.getPriceStringValue(item.price));
         view.quantityLayout.setMax(5);
         view.quantityLayout.setQuantity(item.qty);
-        view.quantityLayout.setAutoUpdateQuantity(true);
+        view.quantityLayout.setAutoUpdateQuantity(false);
         view.quantityLayout.setEditTextToNonEditable();
 
         view.quantityLayout.setOnQuantityChangeListener(new ProductQuantityLayout.onQuantityChangeListener() {

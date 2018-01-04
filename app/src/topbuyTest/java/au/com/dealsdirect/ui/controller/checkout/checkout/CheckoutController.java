@@ -216,9 +216,6 @@ public class CheckoutController extends SwipeableBaseToolBarController implement
         mToolbarTitle.setText("my checkout");
         mButtonHolder = mFooterView.findViewById(R.id.partial_checkout_button_holder);
         mActivity.setCheckoutRouter(getRouter());
-        mAdapter = new CheckoutOrderAdapter(mActivity, R.layout.partial_checkout_item, mItemList, mPresenter);
-//        mListView.setAdapter(mAdapter);
-//        mListView.addFooterView(mFooterView, null, false);
 
         mAddNewVoucherLayout = (RelativeLayout) mFooterView.findViewById(R.id.partial_checkout_voucher_new_code);
         mAddNewPaymentLayout = (RelativeLayout) mFooterView.findViewById(R.id.partial_checkout_payment_new_payment);
@@ -538,6 +535,12 @@ public class CheckoutController extends SwipeableBaseToolBarController implement
         return mActivity.getMainController().getHomeViewPager().getCurrentItem() == 2;
     }
 
+    @Override
+    public void onRefreshStart() {
+        super.onRefreshStart();
+        loadCart();
+    }
+
     private void showNoCartItemsLayout() {
         hidePaymentButtons();
         mNoCartItemsLayout.setVisibility(View.VISIBLE);
@@ -716,15 +719,6 @@ public class CheckoutController extends SwipeableBaseToolBarController implement
         hidePaymentButtons();
     }
 
-    @Override
-    public void showNoNetworkLayout() {
-
-    }
-
-    @Override
-    public void hideNoNetworkLayout() {
-
-    }
 
     private String formAddressDetails(DeliveryAddress deliveryAddress) {
 
