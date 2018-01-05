@@ -146,18 +146,48 @@ android {
     }
 
     sourceSets {
-        dealsDirectRC.java.srcDir 'src/common/java/'
-        dealsDirectTest.java.srcDir 'src/common/java/'
-        ooRC.res.srcDir 'src/ooTest/res'
-        ooRC.java.srcDir 'src/common/java/'
-        ooTest.java.srcDir 'src/common/java/'
-        buyinviteRC.res.srcDir 'src/buyinviteTest/res/'
-        buyinviteRC.java.srcDir 'src/common/java/'
-        buyinviteTest.java.srcDir 'src/common/java/'
-        ourpayTest.java.srcDir 'src/common/java/'
-        topbuyTest.java.srcDir 'src/topbuyTest/java'
-        topbuyRC.java.srcDir 'src/topbuyTest/java'
+        dealsDirectRC {
+            java.srcDirs = ['src/common/java/', 'src/main/java/']
+        }
 
+        dealsDirectTest {
+            java.srcDirs = ['src/common/java/', 'src/main/java/']
+        }
+
+        ooRC {
+            res.srcDir 'src/ooTest/res/'
+            java.srcDirs = ['src/common/java/', 'src/main/java/']
+        }
+
+        ooTest {
+            java.srcDirs = ['src/common/java/', 'src/main/java/']
+        }
+
+        buyinviteRC {
+            res.srcDir 'src/buyinviteTest/res/'
+            java.srcDirs = ['src/common/java/', 'src/main/java/']
+        }
+
+        buyinviteTest {
+            java.srcDirs = ['src/common/java/', 'src/main/java']
+        }
+
+        ourpayTest {
+            java.srcDirs = ['src/ourpayTest/java', 'src/commonControllers/java', 'src/main/java/']
+        }
+
+        topbuyTest {
+            java.srcDirs = ['src/topbuyTest/java/', 'src/main/java/']
+        }
+
+        topbuyRC {
+            res.srcDir 'src/topbuyTest/res/'
+            java.srcDirs = ['src/topbuyTest/java/', 'src/main/java/']
+        }
+
+        main {
+            java.srcDirs = ['src/main/java', 'src/uncommonOurpay/java/', 'src/commonActivity/java/']
+        }
     }
 
     compileOptions {
@@ -263,7 +293,6 @@ dependencies {
 
     // Crystal Range Seekbar
     compile "com.crystal:crystalrangeseekbar:$rootProject.crystalRangeSeekbarVersion"
-
 
     //viewpager indicator
     compile 'me.relex:circleindicator:1.2.2@aar'

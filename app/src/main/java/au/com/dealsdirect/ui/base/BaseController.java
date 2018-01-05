@@ -168,11 +168,4 @@ public abstract class BaseController extends RefWatchingController implements Mv
 
     }
 
-    @Override
-    public String getString(@StringRes int resId) {
-        if (getActivity() == null) {
-            return "";
-        }
-        return getActivity().getString(resId);
-    }
 }
