@@ -111,7 +111,7 @@ lane :fabric_deploy_ba_test do
   app_dir = Dir.pwd
 
   #Change apk_name and app_name for other flavors
-  sh "fastlane dd_build app_name:'BuyinviteTest' emails:" + dev_emails + " apk_name:" + 'app-buyinviteTest-debug.apk' + " build_variant:" + 'buyinviteTestDebug' + " app_path:" + app_dir + " app_flavor:" + 'buyinviteTest'
+  sh "fastlane dd_build app_name:'BuyinviteTest' emails:" + dev_emails + " apk_name:" + 'app-buyinviteTest-release.apk' + " build_variant:" + 'buyinviteTestRelease' + " app_path:" + app_dir + " app_flavor:" + 'buyinviteTest'
  end
 
 lane :fabric_deploy_ba_rc do
@@ -119,7 +119,7 @@ lane :fabric_deploy_ba_rc do
   app_dir = Dir.pwd
 
   #Change apk_name and app_name for other flavors
-  sh "fastlane dd_build app_name:'Buyinvite' emails:" + dev_emails + " apk_name:" + 'app-buyinviteRC-debug.apk' + " build_variant:" + 'buyinviteRCDebug' + " app_path:" + app_dir+ " app_flavor:" + 'buyinviteRC'
+  sh "fastlane dd_build app_name:'Buyinvite' emails:" + dev_emails + " apk_name:" + 'app-buyinviteRC-release.apk' + " build_variant:" + 'buyinviteRCRelease' + " app_path:" + app_dir+ " app_flavor:" + 'buyinviteRC'
  end
 
 lane :fabric_deploy_dd_test do
