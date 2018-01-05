@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">topbuy testtest</string>
     <string name="exit_app_name">TopBuy</string>
     <string name="category_default">shop</string>
     <string name="sorry_default_text">sorry, no product matches with </string>
