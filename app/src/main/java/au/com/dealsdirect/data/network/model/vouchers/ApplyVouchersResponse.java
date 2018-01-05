@@ -11,7 +11,7 @@ public class ApplyVouchersResponse {
 
     public static class Response extends LegacyBaseResponseValue {
 
-        @SerializedName("ScheduledPlan")
+        @SerializedName("Value")
         @Expose
         public Value value;
     }

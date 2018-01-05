@@ -29,7 +29,7 @@ public class SetUserDetailsResponse {
         @Expose
         public boolean isAuthenticated;
 
-        @SerializedName("ScheduledPlan")
+        @SerializedName("Value")
         @Expose
         public String value;
 

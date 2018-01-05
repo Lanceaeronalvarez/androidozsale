@@ -341,7 +341,7 @@ public class MainPresenter<V extends MainMvpView> extends BasePresenter<V> imple
                                 JSONObject jsonResponse = ((JSONObject) response).getJSONObject("d");
 
                                 if (jsonResponse.getBoolean("IsAuthenticated") && jsonResponse.getBoolean("Result")) {
-                                    getMvpView().showGetPaymentMethodNonceSuccess(jsonResponse.getJSONObject("ScheduledPlan").getString("Nonce"));
+                                    getMvpView().showGetPaymentMethodNonceSuccess(jsonResponse.getJSONObject("Value").getString("Nonce"));
                                 }
                             } catch (JSONException e) {
                                 e.printStackTrace();

@@ -474,7 +474,7 @@ public class MainPresenterTest {
 
         String nonceString = "";
         try {
-            nonceString = jo.getJSONObject("d").getJSONObject("ScheduledPlan").getString("Nonce");
+            nonceString = jo.getJSONObject("d").getJSONObject("Value").getString("Nonce");
         }catch (Exception e){
 
         }

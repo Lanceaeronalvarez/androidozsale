@@ -11,7 +11,7 @@ public class AddVoucherByKeyResponse {
 
     public static class Response extends LegacyBaseResponseValue{
 
-        @SerializedName("ScheduledPlan")
+        @SerializedName("Value")
         @Expose
         private Value value;
 

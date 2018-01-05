@@ -9,7 +9,7 @@ public class CreateContact {
     @SerializedName("IsAuthenticated")
     @Expose
     private Boolean isAuthenticated;
-    @SerializedName("ScheduledPlan")
+    @SerializedName("Value")
     @Expose
     private Integer value;
     @SerializedName("Result")

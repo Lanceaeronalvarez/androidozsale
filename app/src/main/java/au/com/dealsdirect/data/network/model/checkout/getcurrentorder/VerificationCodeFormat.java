@@ -16,7 +16,7 @@ public class VerificationCodeFormat {
     public String dataType;
     @SerializedName("Class")
     public String _class;
-    @SerializedName("ScheduledPlan")
+    @SerializedName("Value")
     public Object value;
     @SerializedName("MaxLength")
     public Integer maxLength;

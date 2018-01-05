@@ -18,7 +18,7 @@ public class GetPublicSaleDetailsResponse {
 
     public static class D {
 
-        @SerializedName("ScheduledPlan")
+        @SerializedName("Value")
         @Expose
         public Value value;
         @SerializedName("Result")
