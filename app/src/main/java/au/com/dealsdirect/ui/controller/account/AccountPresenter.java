@@ -77,6 +77,7 @@ public class AccountPresenter<V extends AccountMvpView> extends BasePresenter<V>
                 option == R.string.account_privacy ||
                 option == R.string.account_tnc ||
                 option == R.string.account_about_us ||
+                option == R.string.account_country ||
                 option == R.string.account_tutorial)) {
 
             switch (option) {
