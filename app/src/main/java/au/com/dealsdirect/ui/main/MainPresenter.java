@@ -362,6 +362,13 @@ public class MainPresenter<V extends MainMvpView> extends BasePresenter<V> imple
     }
 
     @Override
+    public void callApiSettings(Context context) {
+        callGetServerSettings();
+        callGetPublicAppSettings();
+        callGetAppSettingsSection(context);
+    }
+
+    @Override
     public void createPaymentTransaction(String deviceData, String paymentType, String paymentNonce, String paymentToken) {
         getMvpView().showLoading();
 

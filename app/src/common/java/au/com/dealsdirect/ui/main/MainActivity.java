@@ -522,6 +522,11 @@ public class MainActivity extends BaseActivity implements MainMvpView {
         PayPal.authorizeAccount(mBraintreeFragment);
     }
 
+    @Override
+    public void callApiSettings() {
+        mPresenter.callApiSettings(this);
+    }
+
     public void onPurchase(CardForm cardForm) {
         CardBuilder cardBuilder = new CardBuilder()
                 .cardNumber(cardForm.getCardNumber())
@@ -850,4 +855,6 @@ public class MainActivity extends BaseActivity implements MainMvpView {
     public void showNoNetworkLayout() {
 
     }
+
+
 }
