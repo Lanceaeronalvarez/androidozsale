@@ -33,4 +33,6 @@ public interface SaleItemDetailsMvpPresenter<V extends MvpView> extends MvpPrese
                              double price,
                              String countryId);
 
+    void callGetBasketItemsQuantity();
+
 }

@@ -44,6 +44,9 @@ import au.com.dealsdirect.service.ourpay.OurpayTemplateText;
 import au.com.dealsdirect.ui.base.SwipeableBaseToolBarController;
 import au.com.dealsdirect.ui.controller.address.addnewaddress.AddNewAddressController;
 import au.com.dealsdirect.ui.controller.address.viewaddress.ViewAddressController;
+import au.com.dealsdirect.ui.controller.saleitemdetails.SaleItemDetailsController;
+import au.com.dealsdirect.ui.controller.saleitemdetails.SaleItemDetailsMvpPresenter;
+import au.com.dealsdirect.ui.controller.saleitemdetails.SaleItemDetailsMvpView;
 import au.com.dealsdirect.ui.controller.vouchers.Add.AddVouchersController;
 import au.com.dealsdirect.ui.custom.CustomAlertDialog;
 import au.com.dealsdirect.ui.main.FetchTokenHandler;
@@ -69,6 +72,8 @@ public class CheckoutController extends SwipeableBaseToolBarController implement
 
     @Inject
     CheckoutMvpPresenter<CheckoutMvpView> mPresenter;
+    @Inject
+    SaleItemDetailsMvpPresenter<SaleItemDetailsMvpView> mSaleItemDetailsPresenter;
 
     ListView mListView;
 
@@ -301,11 +306,11 @@ public class CheckoutController extends SwipeableBaseToolBarController implement
         getRouter().addChangeListener(new ControllerChangeHandler.ControllerChangeListener() {
             @Override
             public void onChangeStarted(@Nullable Controller to, @Nullable Controller from, boolean isPush, @NonNull ViewGroup container, @NonNull ControllerChangeHandler handler) {
-                if(from instanceof ViewAddressController && ((ViewAddressController) from).isNewAddressApplied()){
+                if (from instanceof ViewAddressController && ((ViewAddressController) from).isNewAddressApplied()) {
                     mPresenter.resetIsCartAlreadyLoaded();
                 }
 
-                if(from instanceof AddNewAddressController && ((AddNewAddressController) from).isNewAddressApplied()){
+                if (from instanceof AddNewAddressController && ((AddNewAddressController) from).isNewAddressApplied()) {
                     mPresenter.resetIsCartAlreadyLoaded();
                 }
             }
@@ -516,7 +521,11 @@ public class CheckoutController extends SwipeableBaseToolBarController implement
 
     @Override
     public void updateCheckoutBadge() {
-
+        SaleItemDetailsController saleItemDetailsController = (SaleItemDetailsController) GateKeeper.getCurrentControllerOnRouter(mActivity.getSaleItemsRouter());
+        if (saleItemDetailsController != null) {
+            mSaleItemDetailsPresenter.onAttach(saleItemDetailsController);
+            mSaleItemDetailsPresenter.callGetBasketItemsQuantity();
+        }
     }
 
     @Override

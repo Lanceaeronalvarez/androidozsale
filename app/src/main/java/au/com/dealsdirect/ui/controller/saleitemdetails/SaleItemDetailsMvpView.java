@@ -15,4 +15,6 @@ public interface SaleItemDetailsMvpView extends MvpView {
     void showAddToCartResponse(boolean val);
 
     void showMyPayDetails(GetSaleItemDetailsResponse value, Ourpay ourpay);
+
+    void onCallGetBasketItemsQuantity();
 }

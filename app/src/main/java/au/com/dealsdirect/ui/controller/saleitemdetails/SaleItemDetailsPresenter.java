@@ -14,6 +14,7 @@ import au.com.dealsdirect.service.ourpay.OurpayStateManager;
 import au.com.dealsdirect.ui.base.BaseActivity;
 import au.com.dealsdirect.ui.base.BasePresenter;
 import au.com.dealsdirect.utils.AppEventHelper;
+import au.com.dealsdirect.utils.CartUtil;
 import au.com.dealsdirect.utils.rx.SchedulerProvider;
 import io.reactivex.disposables.CompositeDisposable;
 
@@ -154,5 +155,33 @@ public class SaleItemDetailsPresenter<V extends SaleItemDetailsMvpView> extends 
     @Override
     public void facebookAddedToCart(BaseActivity activity, String itemId, String itemName, double price, String countryId) {
         AppEventHelper.addedToCart(activity, itemId, itemName, price, countryId);
+    }
+
+    @Override
+    public void callGetBasketItemsQuantity() {
+        getCompositeDisposable().add(getDataManager()
+                .callGetBasketItemsQuantity()
+                .subscribeOn(getSchedulerProvider().io())
+                .observeOn(getSchedulerProvider().ui())
+                .subscribe(basketQuantityResponse -> {
+                    if (!isViewAttached()) {
+                        return;
+                    }
+                    CartUtil.setValueToCart(basketQuantityResponse.getItemQuantity());
+                    getMvpView().onCallGetBasketItemsQuantity();
+                }, throwable -> {
+                    if (!isViewAttached()) {
+                        return;
+                    }
+
+                    getMvpView().onError(throwable.getMessage());
+
+                    // handle load accounts error here
+                    if (throwable instanceof ANError) {
+                        ANError anError = (ANError) throwable;
+                        handleApiError(anError);
+                    }
+                })
+        );
     }
 }

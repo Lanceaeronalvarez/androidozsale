@@ -180,8 +180,8 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
         mPresenter.onAttach(this);
 
         if (mPresenter.isAuthorized()) {
-            onCallGetBasketItemsQuantity();
-            mPresenter.callGetBasketItemsQuantity();
+            onCallGetBasketItemsQuantity(); //update immediate
+            mPresenter.callGetBasketItemsQuantity(); //recall api to recheck/reupdate realtime quantity.
         }
 
         mRxViewDisposables = new CompositeDisposable();

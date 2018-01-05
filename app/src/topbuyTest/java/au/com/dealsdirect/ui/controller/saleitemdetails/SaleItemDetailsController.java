@@ -217,6 +217,21 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
     }
 
     @Override
+    protected void onAttach(@NonNull View view) {
+        super.onAttach(view);
+    }
+
+    @Override
+    protected void onRestoreViewState(@NonNull View view, @NonNull Bundle savedViewState) {
+        super.onRestoreViewState(view, savedViewState);
+    }
+
+    @Override
+    protected void onRestoreInstanceState(@NonNull Bundle savedInstanceState) {
+        super.onRestoreInstanceState(savedInstanceState);
+    }
+
+    @Override
     protected void onViewBound(@NonNull View view) {
         super.onViewBound(view);
         setUp(view);
@@ -479,6 +494,11 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
     @Override
     public void showMyPayDetails(GetSaleItemDetailsResponse value, Ourpay ourpay) {
 
+    }
+
+    @Override
+    public void onCallGetBasketItemsQuantity() {
+        mCartCounter.setText(CartUtil.getCartValue() + "");
     }
 
     @Override
