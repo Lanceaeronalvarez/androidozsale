@@ -26,7 +26,7 @@ public class GetUserPaymentMethods  {
         private Response d;
 
         public class Response extends LegacyBaseResponseValue {
-            @SerializedName("ScheduledPlan")
+            @SerializedName("Value")
             @Expose
             private Value value;
 

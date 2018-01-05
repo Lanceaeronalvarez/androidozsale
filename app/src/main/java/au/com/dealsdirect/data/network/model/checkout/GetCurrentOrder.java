@@ -37,7 +37,7 @@ public class GetCurrentOrder {
             }
 
             @Expose
-            @SerializedName("ScheduledPlan")
+            @SerializedName("Value")
             public Value value;
         }
 

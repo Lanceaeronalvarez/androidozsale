@@ -32,7 +32,7 @@ public class RegisterDevice  {
             @SerializedName("Message")
             @Expose
             private String message;
-            @SerializedName("ScheduledPlan")
+            @SerializedName("Value")
             @Expose
             private Value value;
 

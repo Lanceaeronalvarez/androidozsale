@@ -39,7 +39,7 @@ public class AddAddress {
         public Response d;
 
         public class Response extends LegacyBaseResponseValue {
-            @SerializedName("ScheduledPlan")
+            @SerializedName("Value")
             @Expose
             private String value;
 
