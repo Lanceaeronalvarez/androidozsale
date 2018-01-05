@@ -1,5 +1,7 @@
 package au.com.dealsdirect.ui.controller.country;
 
+import com.mysale.genie.utility.Prefs;
+
 import java.util.LinkedList;
 import java.util.List;
 
@@ -8,6 +10,7 @@ import javax.inject.Inject;
 import au.com.dealsdirect.data.DataManager;
 import au.com.dealsdirect.data.network.model.country.Country;
 import au.com.dealsdirect.ui.base.BasePresenter;
+import au.com.dealsdirect.utils.CookieUtils;
 import au.com.dealsdirect.utils.rx.SchedulerProvider;
 import io.reactivex.disposables.CompositeDisposable;
 
@@ -42,17 +45,26 @@ public class CountryPresenter<V extends CountryMvpView> extends BasePresenter<V>
         countries.add(0, australia);
         countries.add(1, newzealand);
 
-
-
         getMvpView().showCountries(countries, getDataManager().getCountryId());
         getMvpView().hideLoading();
     }
 
     @Override
     public void onCountryItemClick(Country country) {
-        getMvpView().showSelectedCountryDialog(country.getCountry());
+        Boolean isMultiCountry = getDataManager().getIsMultiCountry();
+        getMvpView().showSelectedCountryDialog(country);
+
+        Prefs.clear();
+        CookieUtils.getInstance().clear();
         getDataManager().setCountryId(country.getShopCode());
+        getDataManager().setIsMultiCountry(isMultiCountry);
         getMvpView().onBackPress();
     }
+
+    @Override
+    public void setCountry(Country country) {
+        getDataManager().setCountryId(country.getShopCode());
+    }
+
 
 }
