@@ -54,4 +54,6 @@ public interface MainMvpPresenter<V extends MainMvpView> extends MvpPresenter<V>
                                    int numItems,
                                    double price,
                                    String countryId);
+
+    void callApiSettings(Context context);
 }

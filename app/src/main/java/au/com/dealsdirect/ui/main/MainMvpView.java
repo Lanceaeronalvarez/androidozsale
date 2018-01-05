@@ -57,5 +57,6 @@ public interface MainMvpView extends MvpView, BrainTreeListeners {
     boolean getIsMyPayEnabled();
     void onPurchase(CardForm cardForm);
     void startPaypalPayment();
+    void callApiSettings();
 
 }
