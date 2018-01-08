@@ -96,7 +96,7 @@ public class MainPresenter<V extends MainMvpView> extends BasePresenter<V> imple
 
                         com.mysale.genie.utility.config.model.getserversettings.Value value = responseValue.d.getValue();
                         if (value != null) {
-                            getDataManager().setCountryId(responseValue.getCountryId());
+//                            getDataManager().setCountryId(responseValue.getCountryId());
                             getDataManager().setLanguageId(responseValue.getLanguages().get(0).getID());
                             Gson gson = new Gson();
                             getDataManager().setLanguages(gson.toJson(responseValue.getLanguages()));
@@ -359,6 +359,13 @@ public class MainPresenter<V extends MainMvpView> extends BasePresenter<V> imple
     @Override
     public void facebookCompletedPurchase(BaseActivity activity, String paymentType, int numItems, double price, String countryId) {
         AppEventHelper.completedPurchase(activity, paymentType, numItems, price, countryId);
+    }
+
+    @Override
+    public void callApiSettings(Context context) {
+        callGetServerSettings();
+        callGetPublicAppSettings();
+        callGetAppSettingsSection(context);
     }
 
     @Override

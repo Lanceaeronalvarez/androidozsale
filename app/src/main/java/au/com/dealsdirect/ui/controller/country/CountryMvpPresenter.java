@@ -12,4 +12,6 @@ public interface CountryMvpPresenter <V extends MvpView> extends MvpPresenter<V>
     void getUserCountries();
 
     void onCountryItemClick(Country country);
+
+    void setCountry(Country country);
 }

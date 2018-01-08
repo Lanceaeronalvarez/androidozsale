@@ -82,10 +82,14 @@ public class CountryController extends BasePullToRefreshController implements Co
     }
 
     @Override
-    public void showSelectedCountryDialog(String country) {
+    public void showSelectedCountryDialog(Country country) {
+        mActivity.callApiSettings();
         CustomAlertDialog.showCustomAlertDialog(mActivity,
                 CustomAlertDialog.CustomDialogIconState.POSITIVE,
-                country);
+                country.getCountry());
+        mPresenter.setCountry(country);
+
+        onBackPress();
     }
 
     @Override

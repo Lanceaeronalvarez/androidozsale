@@ -53,7 +53,7 @@ android {
         }
 
         buyinviteTest {
-            versionCode 1
+            versionCode 4
             versionName "0.9"
             applicationId "au.com.buyinvite.test"
             buildConfigField "String", "API_ROOT", "\"https://genie-ui-dealsdirect-pre.mysaledev.com/\""

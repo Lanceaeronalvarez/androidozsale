@@ -27,8 +27,8 @@ public class AccountPresenter<V extends AccountMvpView> extends BasePresenter<V>
                     R.string.account_vouchers,
                     R.string.account_returns,
                     R.string.account_language,
-                    R.string.account_tnc,
                     R.string.account_country,
+                    R.string.account_tnc,
                     R.string.account_privacy,
                     R.string.account_about_us));
 
@@ -40,8 +40,8 @@ public class AccountPresenter<V extends AccountMvpView> extends BasePresenter<V>
             R.drawable.bg_account_vouchers,
             R.drawable.bg_account_returns,
             R.drawable.bg_account_languages,
-            R.drawable.bg_account_terms_and_conditions,
             R.drawable.bg_account_country,
+            R.drawable.bg_account_terms_and_conditions,
             R.drawable.bg_account_privacy_policy,
             R.drawable.bg_account_about_us,
             R.drawable.bg_account_logout
@@ -77,6 +77,7 @@ public class AccountPresenter<V extends AccountMvpView> extends BasePresenter<V>
                 option == R.string.account_privacy ||
                 option == R.string.account_tnc ||
                 option == R.string.account_about_us ||
+                option == R.string.account_country ||
                 option == R.string.account_tutorial)) {
 
             switch (option) {
@@ -112,6 +113,9 @@ public class AccountPresenter<V extends AccountMvpView> extends BasePresenter<V>
                     break;
                 case R.string.account_contact_us:
                     getMvpView().showContactUs();
+                    break;
+                case R.string.account_country:
+                    getMvpView().showCountry();
                     break;
                 case R.string.account_invite_friend:
                     getMvpView().showInviteAFriend();

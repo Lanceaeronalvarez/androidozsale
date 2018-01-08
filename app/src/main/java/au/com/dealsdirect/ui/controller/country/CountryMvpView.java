@@ -12,7 +12,7 @@ import au.com.dealsdirect.ui.base.MvpView;
 public interface CountryMvpView extends MvpView {
     void showCountries(List<Country> countries, String selectedCountry);
 
-    void showSelectedCountryDialog(String Country);
+    void showSelectedCountryDialog(Country Country);
 
     void onBackPress();
 }
