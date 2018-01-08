@@ -152,7 +152,8 @@ public class AddContactController extends BaseToolBarController implements AddCo
     @Override
     public void onViewBound(@NonNull View view) {
         super.onViewBound(view);
-        mToolbarTitle.setText("new message");
+        // used for TB, null for DD
+        if (mToolbarTitle != null) mToolbarTitle.setText("new message");
         setUp(view);
     }
 
