@@ -505,6 +505,11 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
     }
 
     @Override
+    public void onCallGetBasketItemsQuantity() {
+
+    }
+
+    @Override
     public boolean handleBack() {
         if (!isAnimating) {
             mProductDetailScrollView.scrollTo(0, 0);
