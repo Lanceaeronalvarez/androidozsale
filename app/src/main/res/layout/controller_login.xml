@@ -115,21 +115,19 @@
             android:layout_marginTop="10dp"
             android:background="@drawable/login_default_button"
             android:clickable="true"
-            android:elevation="2.5dp"
-            android:padding="10dp">
+            android:elevation="2.5dp">
 
-            <RelativeLayout
+            <LinearLayout
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_centerInParent="true"
+                android:layout_height="match_parent"
                 android:orientation="horizontal"
-                tools:ignore="UselessParent">
+                android:layout_centerInParent="true">
 
                 <ImageView
                     android:id="@+id/controller_login_facebook_image_view"
                     android:layout_width="20dp"
                     android:layout_height="20dp"
-                    android:layout_centerVertical="true"
+                    android:layout_gravity="center"
                     android:layout_marginStart="10dp"
                     android:scaleType="fitCenter"
                     android:src="@drawable/facebook"
@@ -139,14 +137,13 @@
                     android:id="@+id/controller_login_with_facebook_text"
                     fontPath="@string/font_app_semibold"
                     android:layout_width="wrap_content"
-                    android:layout_height="match_parent"
-                    android:gravity="center"
-                    android:layout_toRightOf="@+id/controller_login_facebook_image_view"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
                     android:text="@string/sign_in_with_facebook"
-                    android:layout_marginLeft="10dp"
+                    android:layout_marginStart="10dp"
                     android:textColor="@android:color/white"
                     android:textSize="@dimen/text_size_xlarge"/>
-            </RelativeLayout>
+            </LinearLayout>
         </RelativeLayout>
 
 

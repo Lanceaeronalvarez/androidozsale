@@ -64,23 +64,19 @@
                 android:layout_marginBottom="10dp"
                 android:background="@drawable/bg_paypal_button"
                 android:clickable="true"
-                android:elevation="1.5dp"
-                android:padding="10dp">
+                android:elevation="1.5dp">
 
                 <LinearLayout
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                    android:layout_height="match_parent"
                     android:layout_centerInParent="true"
-                    android:orientation="horizontal"
-                    tools:ignore="UselessParent">
+                    android:orientation="horizontal">
 
                     <TextView
                         android:id="@+id/partial_checkout_button_paypal_text"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:gravity="center"
-                        android:paddingLeft="5dp"
-                        android:paddingRight="5dp"
+                        android:layout_gravity="center"
                         android:text="@string/pay_with"
                         android:textColor="#254181"
                         android:textSize="@dimen/text_size_xxxlarge" />
@@ -88,6 +84,8 @@
                     <ImageView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:layout_marginStart="10dp"
                         android:src="@drawable/paypal_logo"
                         tools:ignore="ContentDescription" />
 
