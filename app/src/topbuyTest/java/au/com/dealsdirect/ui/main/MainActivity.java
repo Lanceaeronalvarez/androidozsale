@@ -551,6 +551,11 @@ public class MainActivity extends BaseActivity implements MainMvpView {
     }
 
     @Override
+    public void callApiSettings() {
+
+    }
+
+    @Override
     public void onCancel(int requestCode) {
         PaymentInfo.setThreeDSecureCalled(false);
         hideLoading();

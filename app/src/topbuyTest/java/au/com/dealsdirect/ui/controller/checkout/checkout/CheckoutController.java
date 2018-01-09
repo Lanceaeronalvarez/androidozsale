@@ -521,9 +521,9 @@ public class CheckoutController extends SwipeableBaseToolBarController implement
 
     @Override
     public void updateCheckoutBadge() {
-        SaleItemDetailsController saleItemDetailsController = (SaleItemDetailsController) GateKeeper.getCurrentControllerOnRouter(mActivity.getSaleItemsRouter());
-        if (saleItemDetailsController != null) {
-            mSaleItemDetailsPresenter.onAttach(saleItemDetailsController);
+        Controller topController = GateKeeper.getCurrentControllerOnRouter(mActivity.getSaleItemsRouter());
+        if (topController instanceof SaleItemDetailsController) {
+            mSaleItemDetailsPresenter.onAttach((SaleItemDetailsController)topController);
             mSaleItemDetailsPresenter.callGetBasketItemsQuantity();
         }
     }
