@@ -164,17 +164,17 @@ public class OrderDetailsItemsRecyclerViewAdapter extends RecyclerView.Adapter<R
             orderProductNameTextView = (TextView) itemView.findViewById(R.id.my_order_product_name);
             orderProductQuantityTextView = (TextView) itemView.findViewById(R.id.productQuantityTextView);
 
-            approvedDateGraphNodeImageView = (TextView) itemView.findViewById(R.id.approved_date_graph_node);
-            approvedDateValueTextView = (TextView) itemView.findViewById(R.id.approved_date_value);
+            approvedDateGraphNodeImageView = (TextView) itemView.findViewById(R.id.order_date_graph_node);
+            approvedDateValueTextView = (TextView) itemView.findViewById(R.id.order_date_value);
 
-            stockDateGraphNodeTextView = (TextView) itemView.findViewById(R.id.stock_date_graph_node);
-            stockDateValueTextView = (TextView) itemView.findViewById(R.id.stock_date_value);
+            stockDateGraphNodeTextView = (TextView) itemView.findViewById(R.id.stock_arrived_graph_node);
+            stockDateValueTextView = (TextView) itemView.findViewById(R.id.stock_arrived_value);
 
-            dispatchedDateGraphNodeTextView = (TextView) itemView.findViewById(R.id.dispatched_date_graph_node);
+            dispatchedDateGraphNodeTextView = (TextView) itemView.findViewById(R.id.order_packed_graph_node);
             dispatchedDateValueTextView = (TextView) itemView.findViewById(R.id.dispatched_date_value);
 
-            closedDateGraphNodeTextView = (TextView) itemView.findViewById(R.id.closed_date_graph_node);
-            closedDateValueTextView = (TextView) itemView.findViewById(R.id.closed_date_value);
+            closedDateGraphNodeTextView = (TextView) itemView.findViewById(R.id.dispatched_graph_node);
+            closedDateValueTextView = (TextView) itemView.findViewById(R.id.order_packed_value);
 
             orderStatusTextView = (TextView) itemView.findViewById(R.id.status_text_view);
             orderDateTextView = (TextView) itemView.findViewById(R.id.order_date_text_view);

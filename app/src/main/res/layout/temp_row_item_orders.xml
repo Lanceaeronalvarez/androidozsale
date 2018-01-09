@@ -136,7 +136,7 @@
 
 
                 <TextView
-                    android:id="@+id/approved_date_graph_node"
+                    android:id="@+id/order_date_graph_node"
                     android:layout_width="25dp"
                     android:layout_height="25dp"
                     android:background="@drawable/bg_orders_graph_active_state"
@@ -147,7 +147,7 @@
 
 
                 <View
-                    android:id="@+id/my_order_product_order_date_graph_check_connector"
+                    android:id="@+id/connector_to_stock_arrived"
                     android:layout_width="0dp"
                     android:layout_height="5dp"
                     android:layout_gravity="center_vertical"
@@ -156,7 +156,7 @@
 
 
                 <TextView
-                    android:id="@+id/stock_date_graph_node"
+                    android:id="@+id/stock_arrived_graph_node"
                     android:layout_width="25dp"
                     android:layout_height="25dp"
                     android:background="@drawable/bg_orders_graph_empty_state"
@@ -166,7 +166,7 @@
                     tools:ignore="ContentDescription"/>
 
                 <View
-                    android:id="@+id/my_order_product_stocked_arrived_graph_check_connector"
+                    android:id="@+id/connector_to_order_packed"
                     android:layout_width="0dp"
                     android:layout_height="5dp"
                     android:layout_gravity="center_vertical"
@@ -174,7 +174,7 @@
                     android:background="#d9d9d9"/>
 
                 <TextView
-                    android:id="@+id/dispatched_date_graph_node"
+                    android:id="@+id/order_packed_graph_node"
                     android:layout_width="25dp"
                     android:layout_height="25dp"
                     android:background="@drawable/bg_orders_graph_empty_state"
@@ -184,7 +184,7 @@
                     tools:ignore="ContentDescription"/>
 
                 <View
-                    android:id="@+id/my_order_product_packed_graph_check_connector"
+                    android:id="@+id/connector_to_dispatched"
                     android:layout_width="0dp"
                     android:layout_height="5dp"
                     android:layout_gravity="center_vertical"
@@ -192,7 +192,7 @@
                     android:background="#d9d9d9"/>
 
                 <TextView
-                    android:id="@+id/closed_date_graph_node"
+                    android:id="@+id/dispatched_graph_node"
                     android:layout_width="25dp"
                     android:layout_height="25dp"
                     android:background="@drawable/bg_orders_graph_empty_state"
@@ -235,7 +235,7 @@
 
                     <TextView
 
-                        android:id="@+id/approved_date_value"
+                        android:id="@+id/order_date_value"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_gravity="center_horizontal"
@@ -271,7 +271,7 @@
 
                     <TextView
 
-                        android:id="@+id/stock_date_value"
+                        android:id="@+id/stock_arrived_value"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_gravity="center_horizontal"
@@ -306,7 +306,7 @@
 
                     <TextView
 
-                        android:id="@+id/closed_date_value"
+                        android:id="@+id/order_packed_value"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_gravity="center_horizontal"
