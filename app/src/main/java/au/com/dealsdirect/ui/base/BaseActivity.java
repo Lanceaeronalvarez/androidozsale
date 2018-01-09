@@ -16,6 +16,7 @@ import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
+import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.TextView;
 
@@ -152,6 +153,7 @@ public abstract class BaseActivity extends AppCompatActivity implements MvpView 
                 message, indefinite ? Snackbar.LENGTH_INDEFINITE : Snackbar.LENGTH_SHORT);
         View sbView = mSnackbar.getView();
         sbView.setBackgroundColor(ContextCompat.getColor(this, R.color.snack_bar_color));
+        sbView.getLayoutParams().width = ViewGroup.LayoutParams.MATCH_PARENT;
         TextView textView = (TextView) sbView
                 .findViewById(android.support.design.R.id.snackbar_text);
         textView.setTextAlignment(View.TEXT_ALIGNMENT_CENTER);
