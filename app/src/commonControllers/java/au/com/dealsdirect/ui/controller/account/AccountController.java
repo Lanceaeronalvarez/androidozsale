@@ -5,6 +5,7 @@ import android.support.annotation.NonNull;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -89,7 +90,10 @@ public class AccountController extends BaseController implements AccountMvpView,
         getControllerComponent().inject(this);
 
         //MOCK MULTI COUNTRY in my accounts temporarily for BA
-        if (getActivity().getPackageName().equals("au.com.buyinvite.rc")){
+        if (getActivity().getPackageName().equals("au.com.buyinvite.rc") ||
+                getActivity().getPackageName().equals("au.com.buyinvite.test") ){
+            Log.d("multicountry", "yes");
+
             mPresenter.setMultiCountry(true);
         }
 
