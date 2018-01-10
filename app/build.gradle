@@ -75,7 +75,7 @@ android {
         }
 
         dealsDirectTest {
-            versionCode 70
+            versionCode 71
             versionName "2.3.1"
             applicationId "au.com.dealsdirect.test"
             buildConfigField "String", "API_ROOT", "\"https://genie-ui-dealsdirect-pre.mysaledev.com/\""
@@ -97,7 +97,7 @@ android {
         }
 
         ooTest {
-            versionCode 12
+            versionCode 13
             versionName "0.9"
             applicationId "au.com.oo.test"
             buildConfigField "String", "API_ROOT", "\"https://genie-ui-oo-pre.mysaledev.com/\""
@@ -108,7 +108,7 @@ android {
         }
 
         topbuyRC {
-            versionCode 66
+            versionCode 67
             versionName "2.2.0"
             applicationId "au.com.topbuy"
             buildConfigField "String", "API_ROOT", "\"https://www.dealsdirect.com.au/\""
@@ -131,7 +131,7 @@ android {
         }
 
         topbuyTest {
-            versionCode 68
+            versionCode 69
             versionName "2.2.0"
             applicationId "au.com.topbuy.test"
             buildConfigField "String", "API_ROOT", "\"https://www.dealsdirect.com.au/\""
