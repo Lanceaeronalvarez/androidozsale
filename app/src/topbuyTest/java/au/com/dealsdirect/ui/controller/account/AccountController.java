@@ -1,5 +1,6 @@
 package au.com.dealsdirect.ui.controller.account;
 
+import android.app.Activity;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -88,10 +89,15 @@ public class AccountController extends BaseController implements AccountMvpView 
     }
 
     @Override
+    protected void onActivityResumed(@NonNull Activity activity) {
+        super.onActivityResumed(activity);
+        mActivity.setDraggableViewPager(true);
+    }
+
+    @Override
     protected void setUp(View view) {
         // Setup views here
-        assert (mActivity) != null;
-        mActivity.setDraggableViewPager(true);
+        
         mPresenter.loadAccountItems();
 
         getRouter().addChangeListener(new ControllerChangeHandler.ControllerChangeListener() {

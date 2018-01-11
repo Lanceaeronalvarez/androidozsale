@@ -196,6 +196,7 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(action -> {
                     mActivity.getMainController().getHomeViewPager().setCurrentItem(2);
+                    mActivity.setDraggableViewPager(true);
                 }));
     }
 
