@@ -117,7 +117,7 @@ android {
             resValue "string", "app_name", "TopBuy"
             resValue "bool", "debug_mode", "false"
             buildConfigField "String", "API_ROOT", "\"https://www.topbuy.com.au/\""
-            buildConfigField "String", "API_LEGACY", "\"https://www.topbuy.com.au/papi/public/v3.18/\""
+            buildConfigField "String", "API_LEGACY", "\"https://www.topbuy.com.au/papi/public/v3.20/\""
             buildConfigField "String", "ACCOUNT_ID", "\"909E0AC5-908A-4A73-8E5C-5312DEEBD24C\""
         }
 
@@ -140,7 +140,7 @@ android {
             resValue "string", "app_name", "TopBuy Test"
             resValue "bool", "debug_mode", "true"
             buildConfigField "String", "API_ROOT", "\"https://geniemobileappsclientapi.herokuapp.com/sandbox/\""
-            buildConfigField "String", "API_LEGACY", "\"https://geniemobileappsclientapi.herokuapp.com/sandbox/public/v3.18/api.asmx/\""
+            buildConfigField "String", "API_LEGACY", "\"https://geniemobileappsclientapi.herokuapp.com/sandbox/public/v3.20/\""
             buildConfigField "String", "ACCOUNT_ID", "\"909E0AC5-908A-4A73-8E5C-5312DEEBD24C\""
         }
     }
