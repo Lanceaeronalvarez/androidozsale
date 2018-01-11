@@ -23,6 +23,7 @@ import au.com.dealsdirect.data.network.model.ourpayverificationcodeconfirm.Verif
 import au.com.dealsdirect.data.network.model.ourpayverificationnormalizephone.VerificationNormalizePhoneResponseBody;
 import au.com.dealsdirect.service.ourpay.Ourpay;
 import au.com.dealsdirect.ui.base.BaseToolBarController;
+import au.com.dealsdirect.ui.base.SwipeableBaseToolBarController;
 import au.com.dealsdirect.ui.custom.CustomAlertDialog;
 import au.com.dealsdirect.ui.main.PaymentInfo;
 import au.com.dealsdirect.utils.BundleBuilder;
@@ -35,7 +36,7 @@ import static au.com.dealsdirect.utils.BundleKeys.PHONE_KEY;
  * dp Created by Admin on 8/9/17.
  */
 
-public class OurpaySMSVerificationController extends BaseToolBarController implements OurpaySMSVerificationMvpView {
+public class OurpaySMSVerificationController extends SwipeableBaseToolBarController implements OurpaySMSVerificationMvpView {
 
     private String mPhoneFromCart;
     private Ourpay mOurpay;
@@ -105,6 +106,7 @@ public class OurpaySMSVerificationController extends BaseToolBarController imple
         mOurpay = PaymentInfo.getOurpay();
         mPresenter.callNormalizePhone(mPhoneFromCart);
         setUp(view);
+        setupSwipingBehavior();
     }
 
     @Override

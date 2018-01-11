@@ -12,6 +12,7 @@ import javax.inject.Inject;
 import au.com.dealsdirect.R;
 import au.com.dealsdirect.data.network.model.forgotpassword.ForgotPasswordResponseBody;
 import au.com.dealsdirect.ui.base.BaseToolBarController;
+import au.com.dealsdirect.ui.base.SwipeableBaseToolBarController;
 import au.com.dealsdirect.ui.custom.CustomAlertDialog;
 import au.com.dealsdirect.utils.BundleBuilder;
 import butterknife.BindView;
@@ -21,7 +22,7 @@ import butterknife.OnClick;
  * Created by DP on 07/14/2017.
  */
 
-public class ForgotPasswordController extends BaseToolBarController implements ForgotPasswordMvpView {
+public class ForgotPasswordController extends SwipeableBaseToolBarController implements ForgotPasswordMvpView {
 
 //    @BindView(R.id.partial_toolbar_arrow_title)
 //    TextView mForgotPasswordTitle;
@@ -66,6 +67,7 @@ public class ForgotPasswordController extends BaseToolBarController implements F
     public void onViewBound(@NonNull View view) {
         super.onViewBound(view);
         setUp(view);
+        setupSwipingBehavior();
     }
 
     @Override

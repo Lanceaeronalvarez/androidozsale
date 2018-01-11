@@ -21,6 +21,7 @@ import au.com.dealsdirect.data.network.model.returns.createreturn.CreateReturnRe
 import au.com.dealsdirect.data.network.model.returns.newreturn.NewReturnOrderDetailResponse;
 import au.com.dealsdirect.data.network.model.returns.returnorders.List;
 import au.com.dealsdirect.ui.base.BaseToolBarController;
+import au.com.dealsdirect.ui.base.SwipeableBaseToolBarController;
 import au.com.dealsdirect.ui.controller.returns.newreturn.adapter.NewReturnOrdersAdapter;
 import au.com.dealsdirect.ui.controller.returns.newreturn.listener.NewReturnOrderUpdateListener;
 import au.com.dealsdirect.ui.controller.returns.newreturn.viewholder.NewReturnOrderViewHolder;
@@ -34,7 +35,7 @@ import butterknife.OnFocusChange;
  * Created by Ayi on 05/06/2017.
  */
 
-public class NewReturnController extends BaseToolBarController implements NewReturnMvpView, NewReturnOrderUpdateListener {
+public class NewReturnController extends SwipeableBaseToolBarController implements NewReturnMvpView, NewReturnOrderUpdateListener {
 
     public static final String TAG = "NewReturnController";
     private static final String KEY_TEXT = "NewReturnController.KEY_TEXT";
@@ -86,6 +87,7 @@ public class NewReturnController extends BaseToolBarController implements NewRet
         super.onViewBound(view);
         mToolbarTitle.setText("new returns");
         setUp(view);
+        setupSwipingBehavior();
     }
 
     @Override
