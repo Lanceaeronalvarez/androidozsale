@@ -214,18 +214,17 @@ public class MainController extends BaseController implements MainMvpView {
         mHomeViewPager.setOnPageChangeListener(new ViewPager.OnPageChangeListener() {
             @Override
             public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+                hideKeyboard();
+            }
+
+            @Override
+            public void onPageSelected(int position) {
                 if (position==2){
                     Controller controller = GateKeeper.getCurrentControllerOnRouter(mActivity.getCheckoutRouter());
                     if (controller instanceof CheckoutController){
                         ((CheckoutController) controller).loadCart();
                     }
                 }
-
-                hideKeyboard();
-            }
-
-            @Override
-            public void onPageSelected(int position) {
                 hideKeyboard();
             }
 

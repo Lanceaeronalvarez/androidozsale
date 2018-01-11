@@ -97,7 +97,7 @@ public class AccountController extends BaseController implements AccountMvpView 
     @Override
     protected void setUp(View view) {
         // Setup views here
-        
+
         mPresenter.loadAccountItems();
 
         getRouter().addChangeListener(new ControllerChangeHandler.ControllerChangeListener() {
