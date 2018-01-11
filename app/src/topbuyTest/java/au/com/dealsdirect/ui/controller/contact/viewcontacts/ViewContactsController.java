@@ -97,7 +97,7 @@ public class ViewContactsController extends SwipeableBaseToolBarController imple
         mToolbarTitle.setText("contact us");
         setupSwipingBehavior();
         setupDefaultBottomButton(mActivity.getString(R.string.write_us_a_message), view1 -> {
-            GateKeeper.push(getRouter(), GateKeeper.Destination.ADD_CONTACT, new VerticalChangeHandler(false), new VerticalChangeHandler());
+            GateKeeper.push(getRouter(), GateKeeper.Destination.ADD_CONTACT, new VerticalChangeHandler(), new VerticalChangeHandler());
         });
 
         assert (mActivity) != null;

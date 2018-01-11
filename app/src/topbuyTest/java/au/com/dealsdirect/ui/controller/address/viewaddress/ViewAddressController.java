@@ -201,7 +201,7 @@ public class ViewAddressController extends SwipeableBaseToolBarController implem
                                         getRouter(),
                                         GateKeeper.Destination.ADD_NEW_ADDRESS,
                                         bundle,
-                                        new VerticalChangeHandler(false),
+                                        new VerticalChangeHandler(),
                                         new VerticalChangeHandler());
 
                             }

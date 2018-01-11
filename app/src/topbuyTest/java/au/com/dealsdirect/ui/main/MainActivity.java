@@ -172,7 +172,7 @@ public class MainActivity extends BaseActivity implements MainMvpView {
                     getMainController().getHomeViewPager().setCurrentItem(1);
                 } else {
                     setDraggableViewPager(true);
-                    getAccountsRouter().handleBack();
+                    getAccountsRouter().popToRoot();
                     GateKeeper.updateCurrentLocation(getAccountsRouter());
                 }
                 break;
@@ -193,7 +193,7 @@ public class MainActivity extends BaseActivity implements MainMvpView {
                                 });
                     }
                 } else {
-                    getSaleItemsRouter().handleBack();
+                    getSaleItemsRouter().popToRoot();
                 }
 
                 break;
@@ -203,7 +203,7 @@ public class MainActivity extends BaseActivity implements MainMvpView {
                 if (getCheckoutRouter().getBackstack().size() == 1) {
                     getMainController().getHomeViewPager().setCurrentItem(1);
                 } else {
-                    getCheckoutRouter().handleBack();
+                    getCheckoutRouter().popToRoot();
 
                     Controller currentController = GateKeeper.getCurrentControllerOnRouter(getCheckoutRouter());
                     if (currentController instanceof CheckoutController) {

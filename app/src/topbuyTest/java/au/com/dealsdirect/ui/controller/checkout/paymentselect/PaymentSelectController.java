@@ -180,7 +180,7 @@ public class PaymentSelectController extends SwipeableBaseToolBarController impl
                 .putBoolean(BundleKeys.IS_FROM_CART,isFromCart)
                 .putString(BundleKeys.CART_TOTAL_COST, mCartTotalCost)
                 .build()
-                ,new VerticalChangeHandler(false)
+                ,new VerticalChangeHandler()
                 ,new VerticalChangeHandler());
     }
 }

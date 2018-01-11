@@ -153,7 +153,7 @@ public class CurrentReturnsController extends SwipeableBaseToolBarController
             mPlaceholderLayout.setVisibility(View.VISIBLE);
             mCurrentReturnsRecyclerView.setVisibility(View.GONE);
             setupDefaultBottomButton("add new return", view -> {
-                GateKeeper.push(getRouter(), GateKeeper.Destination.RETURN_ORDERS, new VerticalChangeHandler(false), new VerticalChangeHandler());
+                GateKeeper.push(getRouter(), GateKeeper.Destination.RETURN_ORDERS, new VerticalChangeHandler(), new VerticalChangeHandler());
             });
         }
     }
@@ -202,7 +202,7 @@ public class CurrentReturnsController extends SwipeableBaseToolBarController
                         isRequestApproved,
                         productRequestStatus,
                         productRAN))
-                .pushChangeHandler(new VerticalChangeHandler(false))
+                .pushChangeHandler(new VerticalChangeHandler())
                 .popChangeHandler(new VerticalChangeHandler()));
 
     }

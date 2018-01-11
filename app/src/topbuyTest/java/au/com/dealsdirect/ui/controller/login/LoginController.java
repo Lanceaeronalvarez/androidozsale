@@ -138,12 +138,12 @@ public class LoginController extends SwipeableBaseToolBarController implements L
 
     @Override
     public void showRegistration() {
-        GateKeeper.push(getRouter(), GateKeeper.Destination.REGISTER,new VerticalChangeHandler(false),new VerticalChangeHandler());
+        GateKeeper.push(getRouter(), GateKeeper.Destination.REGISTER,new VerticalChangeHandler(),new VerticalChangeHandler());
     }
 
     @Override
     public void showForgotPassword() {
-        GateKeeper.push(getRouter(), GateKeeper.Destination.FORGOT_PASSWORD, new VerticalChangeHandler(false),new VerticalChangeHandler());
+        GateKeeper.push(getRouter(), GateKeeper.Destination.FORGOT_PASSWORD, new VerticalChangeHandler(),new VerticalChangeHandler());
     }
 
     private void callLoginApi() {
