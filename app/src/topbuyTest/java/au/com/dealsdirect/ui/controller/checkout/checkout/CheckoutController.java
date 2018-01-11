@@ -152,7 +152,7 @@ public class CheckoutController extends SwipeableBaseToolBarController implement
 
                     Bundle bundle = new Bundle();
                     bundle.putBoolean(BundleKeys.IS_FROM_CART, true);
-                    bundle.putDouble(CART_TOTAL_COST, mValue.getSummary().total);
+                    bundle.putString(CART_TOTAL_COST, String.valueOf(mValue.getSummary().total));
                     bundle.putString(PAYMENT_METHODS, new Gson().toJson(mPaymentList));
 
                     mActivity.setDraggableViewPager(false);
