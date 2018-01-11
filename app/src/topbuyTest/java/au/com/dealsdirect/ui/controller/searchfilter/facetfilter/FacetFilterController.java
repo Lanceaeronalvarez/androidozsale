@@ -83,7 +83,7 @@ public class FacetFilterController extends BaseController implements FacetFilter
     @BindView(R.id.clear_text)
     TextView mClearText;
 
-    Disposable mDisposable;
+    private Disposable mDisposable;
 
     public TagFlowLayout getFlowLayout() {
         return mFlowLayout;

@@ -41,10 +41,11 @@
                     android:layout_height="wrap_content"
                     android:focusable="true"
                     android:clickable="true"
+                    android:clipChildren="false"
+                    android:clipToPadding="false"
                     android:layout_gravity="center_vertical"
                     android:overScrollMode="never"
-                    android:descendantFocusability="beforeDescendants"
-                    android:visibility="visible"/>
+                    android:descendantFocusability="beforeDescendants"/>
 
             </FrameLayout>
 

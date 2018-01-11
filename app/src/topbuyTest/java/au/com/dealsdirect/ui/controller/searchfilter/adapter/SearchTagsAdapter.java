@@ -218,8 +218,7 @@ public class SearchTagsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
 //                    mLayoutManager.scrollToPosition(dataSize - 1);
                     mSaleItemPresenter.updateShopFilters();
 
-                    RxBus.instance().post(new BundleBuilder(new Bundle())
-                            .putString(BundleKeys.KEY_CHIP_TO_REMOVE, new Gson().toJson(chipToBeRemoved)).build());
+                    RxBus.instance().post(new BundleBuilder(new Bundle()).putString(BundleKeys.KEY_CHIP_TO_REMOVE, new Gson().toJson(chipToBeRemoved)).build());
 //
                 }
             });
