@@ -207,4 +207,9 @@ public class SaleItemsPresenter<V extends SaleItemsMvpView> extends BasePresente
     public boolean isCallGetCategoryTreeFinished() {
         return getMvpView().isCallGetCategoryTreeFinished();
     }
+
+    @Override
+    public void setIsSearchActive(boolean val) {
+        getMvpView().setIsSearchActive(val);
+    }
 }

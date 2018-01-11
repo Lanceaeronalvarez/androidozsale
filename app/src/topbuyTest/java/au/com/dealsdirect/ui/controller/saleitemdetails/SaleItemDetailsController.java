@@ -45,6 +45,8 @@ import au.com.dealsdirect.data.network.model.saleitemdetails.AddToCartRequest;
 import au.com.dealsdirect.data.network.model.saleitemdetails.GetSaleItemDetailsResponse;
 import au.com.dealsdirect.service.ourpay.Ourpay;
 import au.com.dealsdirect.ui.base.BaseController;
+import au.com.dealsdirect.ui.controller.account.AccountMvpPresenter;
+import au.com.dealsdirect.ui.controller.account.AccountMvpView;
 import au.com.dealsdirect.ui.controller.saleitems.SaleItemsMvpPresenter;
 import au.com.dealsdirect.ui.controller.saleitems.SaleItemsMvpView;
 import au.com.dealsdirect.ui.custom.ArcTranslateAnimation;
@@ -55,6 +57,7 @@ import au.com.dealsdirect.utils.CartUtil;
 import au.com.dealsdirect.utils.ImageUtils;
 import au.com.dealsdirect.utils.IntrospectionUtils;
 import au.com.dealsdirect.utils.PriceUtils;
+import au.com.dealsdirect.utils.module.GateKeeper;
 import au.com.dealsdirect.widget.ElasticDragDismissFrameLayout;
 import butterknife.BindView;
 import butterknife.OnClick;
@@ -70,6 +73,8 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
 
     @Inject
     SaleItemDetailsMvpPresenter<SaleItemDetailsMvpView> mPresenter;
+    @Inject
+    AccountMvpPresenter<AccountMvpView> mAccountsPresenter;
 
     private String mSaleId;
     private String mSkuId;
@@ -213,6 +218,7 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
         View view = inflater.inflate(R.layout.controller_sale_item_details, container, false);
         getControllerComponent().inject(this);
         mPresenter.onAttach(this);
+        mAccountsPresenter.onAttach((AccountMvpView) GateKeeper.getCurrentControllerOnRouter(mActivity.getAccountsRouter()));
         return view;
     }
 
@@ -551,6 +557,7 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
                     if (mSharedImageLocation != null) {
                         new Handler().postDelayed(() -> animateAddToCart(), 1000);
                     }
+                    mAccountsPresenter.loadAccountItems();
                 }
 
                 @Override

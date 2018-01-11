@@ -50,4 +50,6 @@ public interface SaleItemsMvpPresenter<V extends SaleItemsMvpView> extends MvpPr
 
     boolean isCallGetCategoryTreeFinished();
 
+    void setIsSearchActive(boolean val);
+
 }

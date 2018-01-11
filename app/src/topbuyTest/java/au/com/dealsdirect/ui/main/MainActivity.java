@@ -180,7 +180,7 @@ public class MainActivity extends BaseActivity implements MainMvpView {
 
                 Controller controller = GateKeeper.getCurrentControllerOnRouter(getSaleItemsRouter());
                 if (controller instanceof SaleItemsController) {
-                    if (!((SaleItemsController) controller).isSearchFiltersShown() && getSaleItemsRouter().getBackstackSize() == 1) {
+                    if (!((SaleItemsController) controller).isSearchFiltersActive() && getSaleItemsRouter().getBackstackSize() == 1) {
                         //exit app
                         DialogUtils.showYesNoDialog(
                                 this,

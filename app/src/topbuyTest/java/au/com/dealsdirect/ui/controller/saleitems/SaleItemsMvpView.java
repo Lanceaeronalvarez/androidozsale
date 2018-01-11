@@ -72,4 +72,8 @@ public interface SaleItemsMvpView extends MvpView{
     boolean isCallGetCategoryTreeFinished();
 
     boolean isCategoriesActive();
+
+    void setIsSearchActive(boolean val);
+
+    boolean isSearchFiltersActive();
 }

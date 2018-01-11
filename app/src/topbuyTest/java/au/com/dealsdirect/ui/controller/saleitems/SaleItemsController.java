@@ -3,7 +3,6 @@ package au.com.dealsdirect.ui.controller.saleitems;
 import android.app.Activity;
 import android.os.Build;
 import android.os.Bundle;
-import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.AppBarLayout;
@@ -29,7 +28,6 @@ import com.bluelinelabs.conductor.RouterTransaction;
 import com.bluelinelabs.conductor.changehandler.FadeChangeHandler;
 import com.google.gson.Gson;
 import com.jakewharton.rxbinding2.view.RxView;
-import com.mysale.genie.animation.AnimationEngine;
 import com.mysale.genie.views.custom.CoordinatorLayoutAsBottomSheetBehavior;
 import com.paginate.Paginate;
 
@@ -48,7 +46,6 @@ import au.com.dealsdirect.data.network.model.saleitems.GetSaleItemsResponse;
 import au.com.dealsdirect.data.network.model.sorting.SortingResponse;
 import au.com.dealsdirect.ui.base.BaseController;
 import au.com.dealsdirect.ui.controller.categories.CategoriesController;
-import au.com.dealsdirect.ui.controller.categories.CategoriesMvpView;
 import au.com.dealsdirect.ui.controller.saleitemdetails.SaleItemDetailsController;
 import au.com.dealsdirect.ui.controller.searchfilter.SearchFilterController;
 import au.com.dealsdirect.ui.controller.searchfilter.SearchFilterMvpPresenter;
@@ -56,7 +53,6 @@ import au.com.dealsdirect.ui.controller.searchfilter.SearchFilterMvpView;
 import au.com.dealsdirect.ui.controller.searchfilter.ViewPagerBottomSheetBehavior;
 import au.com.dealsdirect.ui.controller.searchfilter.adapter.SearchChipModel;
 import au.com.dealsdirect.ui.controller.searchfilter.adapter.SearchTagsAdapter;
-import au.com.dealsdirect.ui.custom.transitions.ArcFadeMoveChangeHandler;
 import au.com.dealsdirect.ui.custom.transitions.SharedArcFadePopChangeHandler;
 import au.com.dealsdirect.ui.custom.transitions.SharedArcFadePushChangeHandler;
 import au.com.dealsdirect.utils.BundleBuilder;
@@ -110,11 +106,12 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
 
     ViewPagerBottomSheetBehavior mBottomSheetBehavior;
 
-    public boolean isSearchFiltersShown() {
-        return mIsSearchFiltersShown;
+    @Override
+    public boolean isSearchFiltersActive() {
+        return mIsSearchFiltersActive;
     }
 
-    boolean mIsSearchFiltersShown;
+    private boolean mIsSearchFiltersActive;
 
     SaleItemsAdapter mAdapter;
     CustomGridLayoutManager mLayoutManager;
@@ -270,7 +267,7 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
 
         mSearchTagsLayoutManager = new LinearLayoutManager(mActivity, LinearLayoutManager.HORIZONTAL, false);
         mSearchTagsRecyclerView.setLayoutManager(mSearchTagsLayoutManager);
-        mSearchTagsAdapter = new SearchTagsAdapter(mActivity, mSearchTagsRecyclerView, mChipFilters, mPresenter);
+        mSearchTagsAdapter = new SearchTagsAdapter(mActivity, mSearchTagsRecyclerView, mChipFilters, mPresenter, this);
         mSearchTagsRecyclerView.setAdapter(mSearchTagsAdapter);
         mSearchTagsRecyclerView.setVisibility(View.VISIBLE);
         mSearchTagsAdapter.determineActiveFilters();
@@ -629,7 +626,6 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
 
     @Override
     public void onHideSearchFilters() {
-        onHideTransparentOverlay();
         mBottomSheetBehavior.setState(ViewPagerBottomSheetBehavior.STATE_COLLAPSED);
     }
 
@@ -764,7 +760,7 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
                     case ViewPagerBottomSheetBehavior.STATE_COLLAPSED:
                         mActivity.setDraggableViewPager(true);
                         onHideTransparentOverlay();
-                        mIsSearchFiltersShown = false;
+                        mIsSearchFiltersActive = false;
 
                         EditText searchEditText = mSearchTagsAdapter.getEditTextViewHolder().getEditText();
                         if (searchEditText != null && !searchEditText.getText().toString().isEmpty()) {
@@ -780,7 +776,7 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
                         break;
                     case ViewPagerBottomSheetBehavior.STATE_EXPANDED:
                         mActivity.setDraggableViewPager(false);
-                        mIsSearchFiltersShown = true;
+                        mIsSearchFiltersActive = true;
                         break;
                     case ViewPagerBottomSheetBehavior.STATE_SETTLING:
                         break;
@@ -807,14 +803,14 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
             isKeyboardOpen = true;
             //commented to recalculate everytime
 //            if (mBottomSheetAdjustedHeight != height) {
-                View bottomSheetChild = mSearchFilterContainer.getChildAt(0);
-                if (bottomSheetChild != null) {
-                    ChangeHandlerFrameLayout.LayoutParams params = (ChangeHandlerFrameLayout.LayoutParams) bottomSheetChild.getLayoutParams();
-                    params.height = mBottomSheetAdjustedHeight = height + dpToPx(50);
-                    bottomSheetChild.setLayoutParams(params);
-                    mSearchFilterContainer.postDelayed(() -> mSearchFilterContainer.requestLayout(), 500);
-                    isBottomSheetAdjustedHeight = true;
-                }
+            View bottomSheetChild = mSearchFilterContainer.getChildAt(0);
+            if (bottomSheetChild != null) {
+                ChangeHandlerFrameLayout.LayoutParams params = (ChangeHandlerFrameLayout.LayoutParams) bottomSheetChild.getLayoutParams();
+                params.height = mBottomSheetAdjustedHeight = height + dpToPx(50);
+                bottomSheetChild.setLayoutParams(params);
+                mSearchFilterContainer.postDelayed(() -> mSearchFilterContainer.requestLayout(), 500);
+                isBottomSheetAdjustedHeight = true;
+            }
 //            }
         }
     }
@@ -898,6 +894,11 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
         }
 
         return false;
+    }
+
+    @Override
+    public void setIsSearchActive(boolean val) {
+        mIsSearchFiltersActive = val;
     }
 }
 

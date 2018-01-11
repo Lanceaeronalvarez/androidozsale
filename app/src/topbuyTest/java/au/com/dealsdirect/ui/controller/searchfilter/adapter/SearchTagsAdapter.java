@@ -23,6 +23,7 @@ import java.util.concurrent.TimeUnit;
 
 import au.com.dealsdirect.R;
 import au.com.dealsdirect.ui.controller.saleitems.SaleItemsMvpPresenter;
+import au.com.dealsdirect.ui.controller.saleitems.SaleItemsMvpView;
 import au.com.dealsdirect.ui.custom.ChipsEditText;
 import au.com.dealsdirect.utils.BundleBuilder;
 import au.com.dealsdirect.utils.BundleKeys;
@@ -41,6 +42,7 @@ public class SearchTagsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
     private LinearLayoutManager mLayoutManager;
     private RecyclerView mRecyclerView;
     private SaleItemsMvpPresenter mSaleItemPresenter;
+    private SaleItemsMvpView mMvpView;
     private boolean mBrandsActive = false;
     private boolean mColorsActive = false;
     private boolean mSizesActive = false;
@@ -68,12 +70,13 @@ public class SearchTagsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
 
     public EditTextViewHolder editTextViewHolder;
 
-    public SearchTagsAdapter(Context ctx, RecyclerView rv, List<SearchChipModel> items, SaleItemsMvpPresenter presenter) {
+    public SearchTagsAdapter(Context ctx, RecyclerView rv, List<SearchChipModel> items, SaleItemsMvpPresenter presenter, SaleItemsMvpView mvpView) {
         mDisplayMetrics = ctx.getResources().getDisplayMetrics();
         mRecyclerView = rv;
         mLayoutManager = (LinearLayoutManager)rv.getLayoutManager();
         mData = items;
         mSaleItemPresenter = presenter;
+        mMvpView = mvpView;
     }
 
     public void add(SearchChipModel chip) {
@@ -168,6 +171,7 @@ public class SearchTagsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
             SearchTagsViewHolder vh = (SearchTagsViewHolder) holder;
             vh.tv.setText(chip.getChipTitle());
             vh.itemView.setOnClickListener((v) -> {
+                mSaleItemPresenter.setIsSearchActive(true);
                 mSaleItemPresenter.showSearchFilters(chip.getFilterType());
             });
         }
@@ -180,9 +184,11 @@ public class SearchTagsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                 @Override
                 public void onFocusChange(View v, boolean hasFocus) {
                     if (hasFocus) {
+                        mSaleItemPresenter.setIsSearchActive(true);
                         mSaleItemPresenter.showSearchFilters("");
                         vh.subscribeTextChange();
                     } else {
+                        mSaleItemPresenter.setIsSearchActive(false);
                         mSaleItemPresenter.hideSearchFilters();
                         vh.textChangeDisposable.dispose();
                     }
