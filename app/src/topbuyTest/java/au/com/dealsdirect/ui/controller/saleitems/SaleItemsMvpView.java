@@ -57,6 +57,8 @@ public interface SaleItemsMvpView extends MvpView{
 
     boolean isDefaultBool();
 
+    boolean isOverlayVisible();
+
     void onCallGetBasketItemsQuantity();
 
     void onCallGetCategoryTree(List<GetCategoryTreeResponse> response);

@@ -30,7 +30,10 @@ import com.braintreepayments.api.interfaces.BraintreeResponseListener;
 import com.braintreepayments.api.models.CardBuilder;
 import com.braintreepayments.api.models.PaymentMethodNonce;
 import com.braintreepayments.cardform.view.CardForm;
+import com.crashlytics.android.Crashlytics;
+import com.crashlytics.android.answers.Answers;
 import com.mysale.genie.utility.RxBus;
+import com.newrelic.agent.android.NewRelic;
 
 import java.util.List;
 
@@ -61,6 +64,7 @@ import au.com.dealsdirect.utils.module.ControllerFactory;
 import au.com.dealsdirect.utils.module.GateKeeper;
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import io.fabric.sdk.android.Fabric;
 
 import static au.com.dealsdirect.utils.BundleKeys.KEY_ADDRESS;
 import static au.com.dealsdirect.utils.BundleKeys.KEY_ESTIMATED_DELIVERY;
@@ -110,7 +114,7 @@ public class MainActivity extends BaseActivity implements MainMvpView {
         mPresenter.callGetTemplateTexts();
 
 //        Init All analytics sdk
-//        initializeAnalytics();
+        initializeAnalytics();
 
         mRouter = Conductor.attachRouter(this, mContainer, savedInstanceState);
         mRouter.setRoot(RouterTransaction.with(SplashScreenController.newInstance())
@@ -214,6 +218,21 @@ public class MainActivity extends BaseActivity implements MainMvpView {
                 break;
         }
 
+    }
+
+    private void initializeAnalytics() {
+
+        // Only activate analytics for release versions
+        if (!mPresenter.isDebug()) {
+            //Fabric
+            Fabric.with(this, new Crashlytics());
+            Fabric.with(this, new Answers());
+
+            //New Relic
+            NewRelic.withApplicationToken(getString(R.string.new_relic_app_token)).start(this.getApplication());
+
+//            initFacebookAnalytics();
+        }
     }
 
     @Override

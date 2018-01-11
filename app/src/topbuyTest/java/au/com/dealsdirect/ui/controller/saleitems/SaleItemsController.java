@@ -126,6 +126,7 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
     private List<GetCategoryTreeResponse> mCategories = new ArrayList<>();
     private boolean isCategoryChanged = false;
     private boolean initialLoad = false;
+    private boolean isOverlayVisible = false;
     private List<GetSaleItemsResponse.Products> mSaleItems = new ArrayList<>();
 
     private Paginate mPaginateManager;
@@ -143,6 +144,7 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
     LinearLayoutManager mSearchTagsLayoutManager;
 
     private KeyboardHeightProvider mKeyboardHeightProvider;
+    private int mBottomSheetAdjustedHeight;
     private boolean isBottomSheetAdjustedHeight = false;
     private boolean isKeyboardOpen = false;
     private ControllerChangeHandler.ControllerChangeListener mControllerChangeListener;
@@ -307,7 +309,7 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
 
     @Override
     public void onDetach(View view) {
-        mKeyboardHeightProvider.close();
+        mKeyboardHeightProvider = null;
         isBottomSheetAdjustedHeight = false;
 //        defaultBool = true;
         mRxViewDisposables.dispose();
@@ -318,6 +320,7 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
     protected void onActivityResumed(@NonNull Activity activity) {
         super.onActivityResumed(activity);
         if (isSetupFinished) {
+            mKeyboardHeightProvider = new KeyboardHeightProvider(activity);
             mKeyboardHeightProvider.setKeyboardHeightObserver(this);
         }
     }
@@ -325,7 +328,8 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
     @Override
     protected void onActivityPaused(@NonNull Activity activity) {
         super.onActivityPaused(activity);
-        mKeyboardHeightProvider.setKeyboardHeightObserver(null);
+//        mKeyboardHeightProvider.setKeyboardHeightObserver(null);
+        mKeyboardHeightProvider = null;
     }
 
     @Override
@@ -601,12 +605,14 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
 
     @Override
     public void onShowTransparentOverlay() {
+        isOverlayVisible = true;
         mOverlay.setVisibility(View.VISIBLE);
         mOverlay.bringToFront();
     }
 
     @Override
     public void onHideTransparentOverlay() {
+        isOverlayVisible = false;
         mSearchTagsRecyclerView.clearFocus();
         mOverlay.setVisibility(View.GONE);
         hideKeyboard();
@@ -799,22 +805,28 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
             isKeyboardOpen = false;
         } else {
             isKeyboardOpen = true;
-            if (!isBottomSheetAdjustedHeight) {
+            //commented to recalculate everytime
+//            if (mBottomSheetAdjustedHeight != height) {
                 View bottomSheetChild = mSearchFilterContainer.getChildAt(0);
                 if (bottomSheetChild != null) {
                     ChangeHandlerFrameLayout.LayoutParams params = (ChangeHandlerFrameLayout.LayoutParams) bottomSheetChild.getLayoutParams();
-                    params.height = height + dpToPx(50);
+                    params.height = mBottomSheetAdjustedHeight = height + dpToPx(50);
                     bottomSheetChild.setLayoutParams(params);
                     mSearchFilterContainer.postDelayed(() -> mSearchFilterContainer.requestLayout(), 500);
                     isBottomSheetAdjustedHeight = true;
                 }
-            }
+//            }
         }
     }
 
     @Override
     public boolean isDefaultBool() {
         return defaultBool;
+    }
+
+    @Override
+    public boolean isOverlayVisible() {
+        return isOverlayVisible;
     }
 
     @Override

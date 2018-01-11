@@ -131,7 +131,7 @@ public class SaleItemsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
                     .observeOn(AndroidSchedulers.mainThread())
                     .subscribe(action -> {
                         {
-                            if (!mvpView.isChangeStarted() || mvpView.isDefaultBool()) {
+                            if (!mvpView.isOverlayVisible() && (!mvpView.isChangeStarted() || mvpView.isDefaultBool())) {
                                 mPresenter.loadProductDetails(
                                         holder,
                                         position,
