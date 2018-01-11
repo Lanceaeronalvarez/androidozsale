@@ -108,7 +108,7 @@ android {
         }
 
         topbuyRC {
-            versionCode 67
+            versionCode 68
             versionName "2.2.0"
             applicationId "au.com.topbuy"
 //            buildConfigField "String", "API_ROOT", "\"https://www.dealsdirect.com.au/\""
