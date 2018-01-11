@@ -94,6 +94,8 @@ public class CheckoutOrderAdapter extends ArrayAdapter<Item> {
             view.sizeText.setVisibility(View.INVISIBLE);
             view.sizeValue.setVisibility(View.INVISIBLE);
         } else {
+            view.sizeText.setVisibility(View.VISIBLE);
+            view.sizeValue.setVisibility(View.VISIBLE);
             view.sizeValue.setText(item.size);
         }
         view.colorText.setVisibility(View.INVISIBLE);

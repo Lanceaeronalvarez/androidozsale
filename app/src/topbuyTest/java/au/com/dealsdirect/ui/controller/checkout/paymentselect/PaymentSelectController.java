@@ -82,7 +82,6 @@ public class PaymentSelectController extends SwipeableBaseToolBarController impl
     protected void onViewBound(@NonNull View view) {
         super.onViewBound(view);
         setupSwipingBehavior();
-        mNoPaymentPlaceholder.setVisibility(View.VISIBLE);
         setupDefaultBottomButton("add", view1 -> {
             onAddPaymentMethod();
         });
@@ -148,6 +147,7 @@ public class PaymentSelectController extends SwipeableBaseToolBarController impl
     @Override
     protected void setUp(View view) {
         if (!isFromCart) {
+            showPaymentMethodsPlaceholder(true);
             mPresenter.fetchUserPaymentMethods();
         }
 

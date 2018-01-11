@@ -218,7 +218,7 @@ public class CheckoutController extends SwipeableBaseToolBarController implement
         super.onViewBound(view);
 
         disableSwipingBehavior();
-        mToolbarTitle.setText("my checkout");
+        mToolbarTitle.setText("my cart");
         mButtonHolder = mFooterView.findViewById(R.id.partial_checkout_button_holder);
         mActivity.setCheckoutRouter(getRouter());
 
