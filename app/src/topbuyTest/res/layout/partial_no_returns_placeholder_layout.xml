@@ -28,7 +28,7 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:text="welcome to my returns!"
-            android:textSize="@dimen/text_size_xxlarge" />
+            android:textSize="@dimen/text_size_xxxlarge" />
 
         <TextView
             fontPath="@string/font_app_light"

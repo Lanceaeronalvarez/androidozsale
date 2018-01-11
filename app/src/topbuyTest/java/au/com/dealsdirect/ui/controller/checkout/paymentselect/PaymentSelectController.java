@@ -163,6 +163,13 @@ public class PaymentSelectController extends SwipeableBaseToolBarController impl
                 mAdapter.notifyDataSetChanged();
                 mActivity.onBackPressed();
             }));
+
+            if(mPaymentMethods.size() > 0) {
+                mNoPaymentPlaceholder.setVisibility(View.GONE);
+            } else {
+                mNoPaymentPlaceholder.setVisibility(View.VISIBLE);
+            }
+
         }
     }
 

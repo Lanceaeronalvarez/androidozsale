@@ -8,7 +8,7 @@
         android:layout_height="match_parent" >
 
         <include layout="@layout/partial_no_return_orders_placeholder_layout"
-                 android:visibility="gone" />
+                 android:visibility="visible" />
 
 
     </RelativeLayout>

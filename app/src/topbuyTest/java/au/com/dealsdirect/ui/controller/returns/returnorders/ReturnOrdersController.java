@@ -79,7 +79,7 @@ public class ReturnOrdersController extends SwipeableBaseToolBarController
         super.onViewBound(view);
         setUp(view);
         setupSwipingBehavior();
-        mToolbarTitle.setText("new returns");
+        mToolbarTitle.setText("select order");
 
     }
 

@@ -14,16 +14,7 @@
         android:layout_width="@dimen/placeholder_icon_size"
         android:layout_height="@dimen/placeholder_icon_size"
         android:layout_gravity="center"
-        android:src="@drawable/ic_return_placeholder" />
-
-    <TextView
-        fontPath="@string/font_app_medium"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:gravity="center"
-        android:text="no orders for return"
-        android:textSize="@dimen/text_size_xxxlarge" />
+        android:src="@drawable/ic_orders_placeholder" />
 
     <TextView
         fontPath="@string/font_app_light"

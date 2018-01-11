@@ -8,6 +8,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 
 import com.bluelinelabs.conductor.changehandler.VerticalChangeHandler;
 
@@ -53,7 +54,7 @@ public class ViewContactsController extends SwipeableBaseToolBarController imple
     RecyclerView mViewContactsRecyclerView;
 
     @BindView(R.id.no_contacts_placeholder)
-    LinearLayout mPlaceholderLayout;
+    RelativeLayout mPlaceholderLayout;
 
     @Inject
     ViewContactsMvpPresenter<ViewContactsMvpView> mPresenter;
