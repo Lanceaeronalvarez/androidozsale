@@ -73,6 +73,7 @@ public class AddPaymentController extends SwipeableBaseToolBarController impleme
         fillContent(inflater.inflate(R.layout.controller_add_payment, container, false));
         getControllerComponent().inject(this);
         mPresenter.onAttach(this);
+        mActivity.setAddPaymentControllerIsFromCart(isFromCart);
         return view;
     }
 

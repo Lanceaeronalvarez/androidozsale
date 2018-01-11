@@ -620,6 +620,9 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
         onShowTransparentOverlay();
         mSearchFilterContainer.bringToFront();
         mSearchFilterPresenter.selectTabOfFilterType(facetFilterName);
+        if(facetFilterName.equals(BundleKeys.SEARCH_QUERY_NAME)){
+            mPresenter.showKeyboard();
+        }
         mBottomSheetBehavior.setState(ViewPagerBottomSheetBehavior.STATE_EXPANDED);
 //        mSearchTagsAdapter.getEditTextViewHolder().subscribeTextChange();
     }

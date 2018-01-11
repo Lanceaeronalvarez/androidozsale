@@ -95,6 +95,7 @@ public class MainActivity extends BaseActivity implements MainMvpView {
     private BraintreeFragment mBraintreeFragment;
 
     private boolean isTemplateTextsStored = false;
+    private boolean mIsAddPaymentControllerFromCart = false; //hence its from myAccounts
     private FetchTokenHandler mFetchTokenHandler;
 
     AuthHandler mAuthHandler;
@@ -451,14 +452,18 @@ public class MainActivity extends BaseActivity implements MainMvpView {
     @Override
     public void showCreatePaymentMethodSuccess(PaymentMethod lastPaymentMethod) {
 
-        // Pop current fragment and return to cart controller
-        Controller currentController = GateKeeper.getCurrentControllerOnRouter(mRouter);
 
-        if ((currentController instanceof AddPaymentController) && ((AddPaymentController) currentController).isCalledFromAccounts()) {
-            ((AddPaymentController) currentController).showAddPaymentResult(true, "");
+        if (!mIsAddPaymentControllerFromCart) {
+            Controller currentAccountsController = GateKeeper.getCurrentControllerOnRouter(getAccountsRouter());
+            if(currentAccountsController instanceof AddPaymentController) {
+                ((AddPaymentController) currentAccountsController).showAddPaymentResult(true, "");
+            } else {
+                setPaymentMethodSelected(lastPaymentMethod);
+                mRouter.handleBack();
+            }
         } else {
             setPaymentMethodSelected(lastPaymentMethod);
-            mRouter.handleBack();
+            getCheckoutRouter().popToRoot();
         }
     }
 
@@ -743,6 +748,10 @@ public class MainActivity extends BaseActivity implements MainMvpView {
             paymentSuccessOurpay.setState(paymentSuccessOurpay.getState() | OurpayState.ERROR);
         }
 
+    }
+
+    public void setAddPaymentControllerIsFromCart(boolean val){
+        mIsAddPaymentControllerFromCart = val;
     }
 
     public int getStatusBarHeight() {

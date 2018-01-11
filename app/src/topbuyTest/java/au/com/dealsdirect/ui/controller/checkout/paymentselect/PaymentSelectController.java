@@ -52,12 +52,13 @@ public class PaymentSelectController extends SwipeableBaseToolBarController impl
     public PaymentSelectController(Bundle args) {
         super(args);
 
-        mPaymentMethods = JsonUtils.convertStringToObject(args.getString(BundleKeys.PAYMENT_METHODS), new TypeToken<ArrayList<PaymentMethod>>() {}.getType());
+        mPaymentMethods = JsonUtils.convertStringToObject(args.getString(BundleKeys.PAYMENT_METHODS), new TypeToken<ArrayList<PaymentMethod>>() {
+        }.getType());
 
         if (mPaymentMethods == null) {
             mPaymentMethods = new ArrayList<>();
         }
-        isFromCart = args.getBoolean(BundleKeys.IS_FROM_CART);
+        isFromCart = args.getBoolean(BundleKeys.IS_FROM_CART, false);
         mCartTotalCost = args.getString(BundleKeys.CART_TOTAL_COST, "");
     }
 
@@ -81,6 +82,11 @@ public class PaymentSelectController extends SwipeableBaseToolBarController impl
     @Override
     protected void onViewBound(@NonNull View view) {
         super.onViewBound(view);
+        if (mPaymentMethods.isEmpty()) {
+            showPaymentMethodsPlaceholder(true);
+        } else {
+            showPaymentMethodsPlaceholder(false);
+        }
         setupSwipingBehavior();
         setupDefaultBottomButton("add", view1 -> {
             onAddPaymentMethod();
@@ -103,11 +109,11 @@ public class PaymentSelectController extends SwipeableBaseToolBarController impl
             GateKeeper.push(getRouter(),
                     GateKeeper.Destination.PAYMENT_ADD,
                     new BundleBuilder(new Bundle())
-                            .putBoolean(BundleKeys.IS_FROM_CART,isFromCart)
+                            .putBoolean(BundleKeys.IS_FROM_CART, isFromCart)
                             .putString(BundleKeys.CART_TOTAL_COST, mCartTotalCost)
                             .build()
-                    ,new HorizontalChangeHandler()
-                    ,new HorizontalChangeHandler());
+                    , new HorizontalChangeHandler()
+                    , new HorizontalChangeHandler());
         } else if (paymentMethods.size() == 0) {
             showPaymentMethodsPlaceholder(true);
         }
@@ -147,7 +153,8 @@ public class PaymentSelectController extends SwipeableBaseToolBarController impl
     @Override
     protected void setUp(View view) {
         if (!isFromCart) {
-            showPaymentMethodsPlaceholder(true);
+            showPaymentMethodsPlaceholder(false);
+            showLoading();
             mPresenter.fetchUserPaymentMethods();
         }
 
