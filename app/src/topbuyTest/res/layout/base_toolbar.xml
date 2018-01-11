@@ -33,7 +33,7 @@
                 android:layout_width="40dp"
                 android:layout_height="2dp"
                 android:layout_below="@+id/toolbar_title"
-                android:layout_marginTop="10dp"
+                android:layout_marginTop="5dp"
                 android:background="#ac000000"/>
 
             <ImageView
