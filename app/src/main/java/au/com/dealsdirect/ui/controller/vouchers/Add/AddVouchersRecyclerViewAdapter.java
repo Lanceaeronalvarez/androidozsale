@@ -92,31 +92,31 @@ public class AddVouchersRecyclerViewAdapter extends RecyclerView.Adapter<Recycle
             int voucherValue = doubleValue.intValue();
 
             if (0 <= voucherValue && voucherValue < 10) {
-//                vh.mVoucherItemLayout.setBackground(context.getResources().getDrawable(R.drawable.bg_voucher_red));
+                vh.mVoucherItemLayout.setBackground(context.getResources().getDrawable(R.drawable.bg_voucher_red));
                 ticketState = "red";
             } else if (10 <= voucherValue && voucherValue < 15) {
-//                vh.mVoucherItemLayout.setBackground(context.getResources().getDrawable(R.drawable.bg_voucher_blue));
+                vh.mVoucherItemLayout.setBackground(context.getResources().getDrawable(R.drawable.bg_voucher_blue));
                 ticketState = "blue";
             } else if (15 <= voucherValue && voucherValue < 20) {
-//                vh.mVoucherItemLayout.setBackground(context.getResources().getDrawable(R.drawable.bg_voucher_yellow));
+                vh.mVoucherItemLayout.setBackground(context.getResources().getDrawable(R.drawable.bg_voucher_yellow));
                 ticketState = "yellow";
             } else if (20 <= voucherValue && voucherValue < 25) {
-//                vh.mVoucherItemLayout.setBackground(context.getResources().getDrawable(R.drawable.bg_voucher_green));
+                vh.mVoucherItemLayout.setBackground(context.getResources().getDrawable(R.drawable.bg_voucher_green));
                 ticketState = "green";
             } else if (25 <= voucherValue && voucherValue < 50) {
-//                vh.mVoucherItemLayout.setBackground(context.getResources().getDrawable(R.drawable.bg_voucher_violet));
+                vh.mVoucherItemLayout.setBackground(context.getResources().getDrawable(R.drawable.bg_voucher_violet));
                 ticketState = "violet";
             } else if (50 <= voucherValue && voucherValue < 125) {
-//                vh.mVoucherItemLayout.setBackground(context.getResources().getDrawable(R.drawable.bg_voucher_aqua));
+                vh.mVoucherItemLayout.setBackground(context.getResources().getDrawable(R.drawable.bg_voucher_aqua));
                 ticketState = "aqua";
             } else if (125 <= voucherValue && voucherValue < 500) {
-//                vh.mVoucherItemLayout.setBackground(context.getResources().getDrawable(R.drawable.bg_voucher_orange));
+                vh.mVoucherItemLayout.setBackground(context.getResources().getDrawable(R.drawable.bg_voucher_orange));
                 ticketState = "orange";
             } else if (500 <= voucherValue && voucherValue <= 1000) {
-//                vh.mVoucherItemLayout.setBackground(context.getResources().getDrawable(R.drawable.bg_voucher_darkblue));
+                vh.mVoucherItemLayout.setBackground(context.getResources().getDrawable(R.drawable.bg_voucher_darkblue));
                 ticketState = "darkblue";
             } else {
-//                vh.mVoucherItemLayout.setBackground(context.getResources().getDrawable(R.drawable.bg_voucher_blue));
+                vh.mVoucherItemLayout.setBackground(context.getResources().getDrawable(R.drawable.bg_voucher_blue));
                 ticketState = "blue";
             }
         }
