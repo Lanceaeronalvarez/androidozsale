@@ -7,16 +7,20 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.WindowManager;
 import android.widget.EditText;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.bluelinelabs.conductor.Controller;
 import com.bluelinelabs.conductor.ControllerChangeHandler;
 import com.bluelinelabs.conductor.RouterTransaction;
 import com.bluelinelabs.conductor.changehandler.FadeChangeHandler;
+import com.jakewharton.rxbinding2.view.RxView;
 import com.mysale.genie.utility.Prefs;
 
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 import javax.inject.Inject;
 
@@ -32,9 +36,10 @@ import au.com.dealsdirect.ui.controller.contact.addcontact.selectsubject.Contact
 import au.com.dealsdirect.ui.custom.CustomAlertDialog;
 import au.com.dealsdirect.utils.BundleBuilder;
 import au.com.dealsdirect.utils.BundleKeys;
-import au.com.dealsdirect.utils.KeyboardUtils;
 import butterknife.BindView;
 import butterknife.OnClick;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.functions.Consumer;
 
 import static au.com.dealsdirect.utils.BundleKeys.CONTACT_INVOICE;
@@ -59,7 +64,7 @@ public class AddContactController extends SwipeableBaseToolBarController impleme
     TextView mAddContactOrderTitle;
 
     @BindView(R.id.controller_add_contact_subject_text)
-    TextView  mAddContactSubjectText;
+    TextView mAddContactSubjectText;
 
     @BindView(R.id.controller_add_contact_order_text)
     TextView mAddContactOrderText;
@@ -67,11 +72,19 @@ public class AddContactController extends SwipeableBaseToolBarController impleme
     @BindView(R.id.controller_add_contact_message_field)
     EditText mAddContactMessageField;
 
+    @BindView(R.id.controller_add_contact_order_container)
+    LinearLayout mAddContactOrderContainer;
+
+    @BindView(R.id.controller_add_contact_subject_container)
+    LinearLayout mAddContactSubjectContainer;
+
+    private CompositeDisposable mCompositeDisposable;
+
     private Consumer onClickListener;
 
     @Inject
     AddContactMvpPresenter<AddContactMvpView> mPresenter;
-    
+
     private List<String> mContactSubjects;
     private List<ContactOrderList> mContactOrders;
 
@@ -156,10 +169,9 @@ public class AddContactController extends SwipeableBaseToolBarController impleme
 
     @Override
     protected void setUp(View view) {
-        Log.d("addContactController", "from = "+mFromFragmentId);
+        Log.d("addContactController", "from = " + mFromFragmentId);
 
-        KeyboardUtils.setKeyboardAdjustResize(mActivity);
-        mActivity.getMainController().hideBottomNav();
+        mActivity.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE | WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN);
 
         getRouter().addChangeListener(new ControllerChangeHandler.ControllerChangeListener() {
             @Override
@@ -170,8 +182,8 @@ public class AddContactController extends SwipeableBaseToolBarController impleme
             @Override
             public void onChangeCompleted(@Nullable Controller to, @Nullable Controller from, boolean isPush, @NonNull ViewGroup container, @NonNull ControllerChangeHandler handler) {
 
-                if (!mFromFragmentId.equals("CONTACT_HISTORY")){
-                    if (mAddContactSubjectText!=null){
+                if (!mFromFragmentId.equals("CONTACT_HISTORY")) {
+                    if (mAddContactSubjectText != null) {
                         mAddContactSubjectText.setText(ContactPreferenceHelper.getChosenSubject(mActivity));
                         mAddContactOrderText.setText(ContactPreferenceHelper.getChosenOrder(mActivity));
                         if (!isPush) {
@@ -203,14 +215,13 @@ public class AddContactController extends SwipeableBaseToolBarController impleme
                 Log.d("addContactController", "mInvoiceNumber == 0");
 
                 mAddContactOrderText.setText(String.valueOf("None"));
-            }
-            else {
+            } else {
                 Log.d("addContactController", "mInvoiceNumber == 0 else");
 
                 mAddContactOrderText.setText(String.valueOf(mInvoiceNumber));
             }
 
-            Log.d("addContactController", "subject = "+mContactHistoryChosenSubject);
+            Log.d("addContactController", "subject = " + mContactHistoryChosenSubject);
 
 //            mAddContactSubjectText.setText(mContactHistoryChosenSubject);
 
@@ -256,7 +267,8 @@ public class AddContactController extends SwipeableBaseToolBarController impleme
 
                 mPresenter.loadContactUsOrders();
 
-            } if (!hasLoadedSubjects){
+            }
+            if (!hasLoadedSubjects) {
 
                 mPresenter.loadContactUsSubjects();
             }
@@ -305,9 +317,85 @@ public class AddContactController extends SwipeableBaseToolBarController impleme
     }
 
     @Override
+    protected void onAttach(@NonNull View view) {
+        super.onAttach(view);
+        mCompositeDisposable = new CompositeDisposable();
+        mCompositeDisposable.add(RxView.clicks(mAddContactOrderContainer)
+                .throttleFirst(1000, TimeUnit.MILLISECONDS)
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(v -> {
+                    mAddContactMessageField.clearFocus();
+                    mAddContactSubjectTitle.requestFocus();
+                    hideKeyboard();
+
+                    if (hasLoadedOrders) {
+                        if (mAddContactOrderTitle.isSelected()) {
+                            getRouter().popCurrentController();
+                            mAddContactOrderTitle.setSelected(false);
+                        } else {
+                            getRouter().pushController(RouterTransaction.with(ContactSelectOrderController.newInstance(mContactOrders))
+                                    .pushChangeHandler(new FadeChangeHandler(false))
+                                    .popChangeHandler(new FadeChangeHandler()));
+                            mAddContactSubjectTitle.setSelected(false);
+                            mAddContactOrderTitle.setSelected(true);
+                        }
+                    } else if (hasLoadedOrders && mContactOrders != null && mContactOrders.size() == 0) {
+
+                        CustomAlertDialog.showCustomAlertDialog(
+                                mActivity,
+                                CustomAlertDialog.CustomDialogIconState.NEGATIVE,
+                                "You have no orders");
+
+                    } else {
+
+                        CustomAlertDialog.showCustomAlertDialog(
+                                mActivity,
+                                CustomAlertDialog.CustomDialogIconState.NEGATIVE,
+                                "Loading orders");
+                    }
+                }));
+
+        mCompositeDisposable.add(RxView.clicks(mAddContactSubjectContainer)
+                .throttleFirst(1000, TimeUnit.MILLISECONDS)
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(v -> {
+                    mAddContactMessageField.clearFocus();
+                    mAddContactSubjectTitle.requestFocus();
+                    hideKeyboard();
+
+                    if (hasLoadedSubjects) {
+                        if (mAddContactSubjectTitle.isSelected()) {
+                            getRouter().popCurrentController();
+                            mAddContactSubjectTitle.setSelected(false);
+                        } else {
+                            getRouter().pushController(RouterTransaction.with(ContactSelectSubjectController.newInstance(mContactSubjects))
+                                    .pushChangeHandler(new FadeChangeHandler(false))
+                                    .popChangeHandler(new FadeChangeHandler()));
+                            mAddContactSubjectTitle.setSelected(true);
+                            mAddContactOrderTitle.setSelected(false);
+                        }
+                    } else {
+
+                        CustomAlertDialog.showCustomAlertDialog(
+                                mActivity,
+                                CustomAlertDialog.CustomDialogIconState.NEGATIVE,
+                                "Loading subjects");
+                    }
+                }));
+    }
+
+
+    @Override
+    public void onDetach(View view) {
+        super.onDetach(view);
+        mCompositeDisposable.dispose();
+        mCompositeDisposable = null;
+    }
+
+    @Override
     public void onDestroyView(@NonNull View view) {
         ContactPreferenceHelper.clear(mActivity);
-        KeyboardUtils.setKeyboardAdjustPan(mActivity);
+        mActivity.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE | WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN);
         mPresenter.onDetach();
         super.onDestroyView(view);
     }
@@ -319,67 +407,6 @@ public class AddContactController extends SwipeableBaseToolBarController impleme
 //        }
 //    }
 
-    @OnClick(R.id.controller_add_contact_subject_container)
-    void onClickSubjectContainer() {
-
-        mAddContactMessageField.clearFocus();
-        mAddContactSubjectTitle.requestFocus();
-        hideKeyboard();
-
-        if (hasLoadedSubjects) {
-            if (mAddContactSubjectTitle.isSelected()) {
-                getRouter().popCurrentController();
-                mAddContactSubjectTitle.setSelected(false);
-            } else {
-                getRouter().pushController(RouterTransaction.with(ContactSelectSubjectController.newInstance(mContactSubjects))
-                        .pushChangeHandler(new FadeChangeHandler(false))
-                        .popChangeHandler(new FadeChangeHandler()));
-                mAddContactSubjectTitle.setSelected(true);
-                mAddContactOrderTitle.setSelected(false);
-            }
-        } else {
-
-            CustomAlertDialog.showCustomAlertDialog(
-                    mActivity,
-                    CustomAlertDialog.CustomDialogIconState.NEGATIVE,
-                    "Loading subjects");
-        }
-    }
-
-    @OnClick(R.id.controller_add_contact_order_container)
-    void onClickOrderContainer() {
-
-        mAddContactMessageField.clearFocus();
-        mAddContactSubjectTitle.requestFocus();
-        hideKeyboard();
-
-        if (hasLoadedOrders) {
-            if (mAddContactOrderTitle.isSelected()) {
-                getRouter().popCurrentController();
-                mAddContactOrderTitle.setSelected(false);
-            } else {
-                getRouter().pushController(RouterTransaction.with(ContactSelectOrderController.newInstance(mContactOrders))
-                        .pushChangeHandler(new FadeChangeHandler(false))
-                        .popChangeHandler(new FadeChangeHandler()));
-                mAddContactSubjectTitle.setSelected(false);
-                mAddContactOrderTitle.setSelected(true);
-            }
-        } else if (hasLoadedOrders && mContactOrders != null && mContactOrders.size() == 0) {
-
-            CustomAlertDialog.showCustomAlertDialog(
-                    mActivity,
-                    CustomAlertDialog.CustomDialogIconState.NEGATIVE,
-                    "You have no orders");
-
-        } else {
-
-            CustomAlertDialog.showCustomAlertDialog(
-                    mActivity,
-                    CustomAlertDialog.CustomDialogIconState.NEGATIVE,
-                    "Loading orders");
-        }
-
-    }
 
     @Override
     public void showContactFirstSubject(List<String> contactSubjectList) {
