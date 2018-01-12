@@ -138,15 +138,10 @@ public class ViewVouchersRecyclerViewAdapter extends RecyclerView.Adapter<ViewVo
             holder.mVouchersItemDescText.setText(mUseBefore);
         } else {
 
-            if(voucher.getDiscountLeft().equalsIgnoreCase("already spent")) {
-                holder.mVouchersItemCostText.setVisibility(View.GONE);
-            } else {
-                holder.mVouchersItemCostText.setText(voucher.getDiscountLeft());
-            }
-
             holder.mVouchersItemExpiresOnText.setText(voucher.getExpired());
             holder.mVouchersItemDescText.setText(voucher.getFullname());
-            holder.mVouchersLayout.setBackground(holder.mVouchersLayout.getContext().getDrawable(R.drawable.bg_voucher_container_gray));
+            holder.mVouchersLayout.setBackground(context.getResources().getDrawable(R.drawable.bg_voucher_container_gray));
+            holder.mVouchersItemCostText.setText(voucher.getDiscountLeft());
         }
 
     }
