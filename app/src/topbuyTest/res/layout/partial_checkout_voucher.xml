@@ -4,8 +4,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:orientation="vertical"
-    tools:ignore="MissingPrefix">
+    tools:ignore="MissingPrefix"
+    android:orientation="vertical">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -19,28 +19,28 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="4"
-            android:text="@string/your_current_delivery_address"
+            android:text="@string/voucher"
             android:textColor="@color/gray_title_text" />
 
         <TextView
             fontPath="@string/font_app_bold"
-            android:id="@+id/partial_checkout_address_change"
+            android:id="@+id/partial_checkout_voucher_change"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:gravity="end"
             android:text="@string/change"
-            android:textColor="@drawable/teal_text_selector"
-            android:textSize="@dimen/text_size_medium"
-            android:visibility="gone" />
+            android:textColor="@color/gray_field_text"
+            android:textSize="@dimen/text_size_large"
+            android:visibility="gone"/>
 
     </LinearLayout>
 
     <RelativeLayout
-        android:id="@+id/partial_checkout_address_new_address"
+        android:id="@+id/partial_checkout_voucher_new_code"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="10dp"
+        android:layout_marginBottom="20dp"
         android:layout_marginLeft="16sp"
         android:layout_marginRight="16sp"
         android:layout_marginTop="10dp"
@@ -48,37 +48,35 @@
         android:clickable="true"
         android:padding="15dp">
 
+        <TextView
+            fontPath="@string/font_app_bold"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/add_new_voucher"
+            android:textColor="@color/gray_field_text"
+            android:textSize="@dimen/text_size_large"/>
+
         <ImageView
             android:layout_width="22dp"
             android:layout_height="22dp"
             android:layout_alignParentEnd="true"
             android:layout_alignParentRight="true"
-            android:src="@drawable/ic_gray_chevron" />
-
-        <TextView
-            fontPath="@string/font_app_bold"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentLeft="true"
-            android:layout_alignParentStart="true"
-            android:layout_alignParentTop="true"
-            android:text="@string/add_new_address"
-            android:textColor="@color/gray_field_text"
-            android:textSize="@dimen/text_size_medium" />
+            android:src="@drawable/ic_gray_chevron"/>
     </RelativeLayout>
 
     <LinearLayout
-        android:id="@+id/partial_checkout_address_container"
+        android:id="@+id/partial_checkout_voucher_container"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
         android:visibility="gone">
 
         <LinearLayout
+
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
-            android:padding="15dp">
+            android:padding="16dp">
 
             <ImageView
                 android:layout_width="30dp"
@@ -86,7 +84,7 @@
                 android:paddingBottom="5dp"
                 android:paddingLeft="5dp"
                 android:paddingRight="5dp"
-                android:src="@drawable/ic_home_delivery" />
+                android:src="@drawable/ic_my_vouchers"/>
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -96,19 +94,19 @@
                 android:paddingStart="10dp">
 
                 <TextView
-                    android:id="@+id/partial_checkout_address_name"
+                    android:id="@+id/partial_checkout_voucher_name"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:textColor="@color/gray_field_text"
-                    android:textSize="@dimen/text_size_xlarge"
-                    tools:text="Mary Doe" />
+                    android:textSize="@dimen/text_size_xxlarge"
+                    tools:text="$5 voucher"/>
 
                 <TextView
-                    android:id="@+id/partial_checkout_address_details"
+                    android:id="@+id/partial_checkout_voucher_details"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:textColor="@color/gray_field_text"
-                    tools:text="Pharmacy Warringah, Shop 4123, Broovale, NSW, 2100, Australia, +0123 123 123" />
+                    tools:text="voucher will expire on 12/25/16"/>
 
             </LinearLayout>
 
@@ -118,7 +116,7 @@
             android:layout_width="match_parent"
             android:layout_height="1dp"
             android:layout_marginLeft="16dp"
-            android:background="#F2F2F2" />
+            android:background="#F2F2F2"/>
     </LinearLayout>
 
 </LinearLayout>
