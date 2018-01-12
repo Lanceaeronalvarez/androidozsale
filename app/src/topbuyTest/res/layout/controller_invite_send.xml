@@ -106,7 +106,7 @@
                                     android:paddingLeft="@dimen/invite_friends_padding"
                                     android:paddingRight="@dimen/invite_friends_padding"
                                     android:textColor="@color/white"
-                                    android:text="Follow us"
+                                    android:text="Follow us on Twitter"
                                     android:textSize="@dimen/text_size_large" />
 
                             </LinearLayout>
@@ -147,8 +147,7 @@
                                     android:textColor="@color/white"
                                     android:paddingLeft="@dimen/invite_friends_padding"
                                     android:paddingRight="@dimen/invite_friends_padding"
-                                    android:singleLine="true"
-                                    android:text="Like us"
+                                    android:text="Like us on Facebook"
                                     android:textSize="@dimen/text_size_large" />
 
                             </LinearLayout>
