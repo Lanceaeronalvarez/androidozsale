@@ -48,6 +48,8 @@ public interface MainMvpPresenter<V extends MainMvpView> extends MvpPresenter<V>
 
     boolean isDebug();
 
+    void callGCMNotificationEvent(Context context);
+
 
     void facebookCompletedPurchase(BaseActivity activity,
                                    String paymentType,

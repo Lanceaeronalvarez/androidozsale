@@ -357,6 +357,11 @@ public class MainPresenter<V extends MainMvpView> extends BasePresenter<V> imple
     }
 
     @Override
+    public void callGCMNotificationEvent(Context context) {
+        gNotification.callNotificationEvent(context);
+    }
+
+    @Override
     public void facebookCompletedPurchase(BaseActivity activity, String paymentType, int numItems, double price, String countryId) {
         AppEventHelper.completedPurchase(activity, paymentType, numItems, price, countryId);
     }

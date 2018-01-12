@@ -45,6 +45,7 @@ import au.com.dealsdirect.data.network.model.checkout.CreatePaymentTransaction;
 import au.com.dealsdirect.data.network.model.checkout.getcurrentorder.MyPayDetails;
 import au.com.dealsdirect.data.network.model.checkout.getuserpaymentmethods.PaymentMethod;
 import au.com.dealsdirect.data.network.model.legalities.GetTemplateTextsResponse;
+import au.com.dealsdirect.service.fcm.GNotification;
 import au.com.dealsdirect.service.ourpay.Ourpay;
 import au.com.dealsdirect.service.ourpay.OurpayState;
 import au.com.dealsdirect.ui.base.BaseActivity;
@@ -122,6 +123,24 @@ public class MainActivity extends BaseActivity implements MainMvpView {
                 .popChangeHandler(new VerticalChangeHandler()));
 
         setUp();
+
+        Intent intent = getIntent();
+        if (intent != null) {
+            // If activity was launched from notification0
+            if (intent.hasExtra(GNotification.FCM_INTENT_LAUNCHED)) {
+                boolean isOpenedFromNotifications = intent.getExtras().getBoolean(GNotification.FCM_INTENT_LAUNCHED);
+                if (isOpenedFromNotifications) {
+                    mPresenter.callGCMNotificationEvent(getApplicationContext());
+                }
+            }
+            //If activity was launched via deep link
+//            else if (intent.hasExtra(GDeepLinkUtil.DEEP_LINK_INTENT_LAUNCHED)) {
+//                switchFragment(ShopProductDetailsFragment.newInstance(intent.getStringExtra(GDeepLinkUtil.KEY_DEEP_LINK_SEOIDENTIFIER)));
+//            }
+        }
+
+
+        callGCMRegisterSubscriber();
     }
 
     @Override
