@@ -1,12 +1,4 @@
 <resources>
-    <string name="facebook_app_id">1650094968544406</string>
-    <string name="facebook_app_secret">94da0f48bd2ffea25981e52c56f9260a</string>
-    <string name="fb_login_protocol_scheme">fb1650094968544406</string>
-    <string name="fb_page_id">257280167216</string>
-    <string name="default_country_id">DA</string>
-    <string name="default_language_id">EN</string>
-    <string name="new_relic_app_token">AAa9d543732ff39dddc60c9cb9ad8c9cf22297904b</string>
-    <string name="twitter_user_id">twitter://user?user_id=37405859</string>
 
     <string name="font_app_black">fonts/App-Font-Black.ttf</string>
     <string name="font_app_black_italic">fonts/App-Font-BlackItalic.ttf</string>
@@ -253,7 +245,6 @@
 
     <string name="search_filter_hint">Search Filter</string>
     <string name="write_a_message_here">write a message here</string>
-    <string name="exit_app_name">DealsDirect</string>
     <string name="exit_app">Exit app?</string>
     <string name="exit">exit</string>
     <string name="no">no</string>

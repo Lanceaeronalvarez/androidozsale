@@ -1,7 +1,4 @@
 <resources>
-    <string name="exit_app_name">OO</string>
-
-    <string name="default_country_id">OA</string>
 
     <string name="checkout_page_toolbar_title">My Cart</string>
     <string name="total">Grand Total</string>
@@ -95,9 +92,6 @@
             </head>
         <body>"]]>
     </string>
-
-    <string name="twitter_user_id">twitter://user?user_id=14730691</string>
-    <string name="fb_page_id">10357598833</string>
 
     <string name="font_app_black">fonts/App-Font-Bold.ttf</string>
     <string name="font_app_black_italic">fonts/App-Font-BoldItalic.ttf</string>

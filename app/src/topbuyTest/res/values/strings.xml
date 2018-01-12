@@ -1,11 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="exit_app_name">TopBuy</string>
     <string name="category_default">shop</string>
-    <string name="default_country_id">TA</string>
-    <string name="fb_page_id">47143367223</string>
     <string name="sorry_default_text">sorry, no product matches with </string>
-    <!--<string name="exit_app_name">TopBuy</string>-->
     <string name="tap_to_retry">Tap to retry</string>
     <string name="thank_you_for_shopping">Thank you for shopping with TopBuy</string>
     <string name="my_vouchers">my vouchers</string>
@@ -124,8 +120,6 @@
             </head>
         <body>"]]>
     </string>
-
-    <bool name="debug_mode">true</bool>
 
     <!--MY ACCOUNT ITEMS-->
     <string name="account_orders">my orders</string>

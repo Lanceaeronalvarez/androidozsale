@@ -225,7 +225,7 @@ public class MainActivity extends BaseActivity implements MainMvpView {
                             //exit app
                             DialogUtils.showYesNoDialog(
                                     this,
-                                    getString(R.string.exit_app_name),
+                                    getString(R.string.app_name),
                                     getString(R.string.exit_app),
                                     getString(R.string.exit),
                                     getString(R.string.no),
