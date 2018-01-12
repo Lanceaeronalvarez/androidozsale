@@ -126,7 +126,7 @@ public class PaymentSuccessController extends SwipeableBaseToolBarController imp
             mPaymentSuccessTableContainer.setVisibility(View.GONE);
             mPriceTextView.setText(PriceUtils.getPriceStringValue(totalPayment));
         }
-        mEstimatedDelivery.setVisibility(View.GONE);
+
         setUp(view);
     }
 
