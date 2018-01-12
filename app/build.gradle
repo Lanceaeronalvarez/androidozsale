@@ -273,12 +273,12 @@ android {
         }
 
         topbuyTest {
-            java.srcDirs = ['src/topbuyTest/java/', 'src/main/java/']
+            java.srcDirs = ['src/topbuy/java/', 'src/main/java/']
         }
 
         topbuyRC {
-            res.srcDir 'src/topbuyTest/res/'
-            java.srcDirs = ['src/topbuyTest/java/', 'src/main/java/']
+            res.srcDir 'src/topbuy/res/'
+            java.srcDirs = ['src/topbuy/java/', 'src/main/java/']
         }
 
         main {
