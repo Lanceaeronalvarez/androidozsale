@@ -83,6 +83,7 @@ public class ViewVouchersController extends SwipeableBaseToolBarController imple
     @Override
     public void onRefreshStart() {
         super.onRefreshStart();
+        mNoVouchersLayout.setVisibility(View.GONE);
         mPresenter.loadMyVouchers();
     }
 
@@ -117,6 +118,7 @@ public class ViewVouchersController extends SwipeableBaseToolBarController imple
         unusedVoucherHelper.attachToRecyclerView(mUnusedVouchersRecyclerView);
         usedVoucherHelper.attachToRecyclerView(mUsedVouchersRecyclerView);
 
+        mNoVouchersLayout.setVisibility(View.GONE);
         mPresenter.loadMyVouchers();
     }
 
