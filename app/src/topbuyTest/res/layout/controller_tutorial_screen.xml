@@ -21,11 +21,10 @@
     <Button
         android:id="@+id/controller_tutorial_get_started_button"
         style="@style/DDTutorialButtonStyle"
-        fontPath="@string/font_app_semibold"
+        fontPath="@string/font_app_bold"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
-        android:padding="@dimen/screen_padding"
         android:layout_margin="@dimen/screen_padding"
         android:text="@string/get_started_button"
         android:textColor="@color/teal"/>
