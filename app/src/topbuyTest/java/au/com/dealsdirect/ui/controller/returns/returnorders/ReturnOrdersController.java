@@ -88,7 +88,7 @@ public class ReturnOrdersController extends SwipeableBaseToolBarController
         // Setup views here
 
         mReturnOrderClickListener = this;
-
+        mPlaceholderLayout.setVisibility(View.GONE);
         mPresenter.loadOrders();
 
     }

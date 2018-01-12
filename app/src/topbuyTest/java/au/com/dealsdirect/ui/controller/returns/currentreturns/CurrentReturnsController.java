@@ -97,6 +97,7 @@ public class CurrentReturnsController extends SwipeableBaseToolBarController
         mCurrentReturnsListener = this;
 
         if (mCurrentReturns == null || mCurrentReturns.size() == 0) {
+            mPlaceholderLayout.setVisibility(View.GONE);
             mPresenter.loadCurrentReturns();
         } else {
 
@@ -152,10 +153,12 @@ public class CurrentReturnsController extends SwipeableBaseToolBarController
 
             mPlaceholderLayout.setVisibility(View.VISIBLE);
             mCurrentReturnsRecyclerView.setVisibility(View.GONE);
-            setupDefaultBottomButton("add new return", view -> {
-                GateKeeper.push(getRouter(), GateKeeper.Destination.RETURN_ORDERS, new VerticalChangeHandler(), new VerticalChangeHandler());
-            });
+
         }
+
+        setupDefaultBottomButton("add new return", view -> {
+            GateKeeper.push(getRouter(), GateKeeper.Destination.RETURN_ORDERS, new VerticalChangeHandler(), new VerticalChangeHandler());
+        });
     }
 
     @Override
