@@ -307,7 +307,10 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
 
     @Override
     public void onDetach(View view) {
-        mKeyboardHeightProvider = null;
+        if (mKeyboardHeightProvider != null) {
+            mKeyboardHeightProvider.close();
+            mKeyboardHeightProvider = null;
+        }
         isBottomSheetAdjustedHeight = false;
 //        defaultBool = true;
         mRxViewDisposables.dispose();
@@ -326,8 +329,10 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
     @Override
     protected void onActivityPaused(@NonNull Activity activity) {
         super.onActivityPaused(activity);
-//        mKeyboardHeightProvider.setKeyboardHeightObserver(null);
-        mKeyboardHeightProvider = null;
+        if (mKeyboardHeightProvider != null) {
+            mKeyboardHeightProvider.close();
+            mKeyboardHeightProvider = null;
+        }
     }
 
     @Override
@@ -621,7 +626,7 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
         onShowTransparentOverlay();
         mSearchFilterContainer.bringToFront();
         mSearchFilterPresenter.selectTabOfFilterType(facetFilterName);
-        if(facetFilterName.equals(BundleKeys.SEARCH_QUERY_NAME)){
+        if (facetFilterName.equals(BundleKeys.SEARCH_QUERY_NAME)) {
             mPresenter.showKeyboard();
         }
         mBottomSheetBehavior.setState(ViewPagerBottomSheetBehavior.STATE_EXPANDED);
