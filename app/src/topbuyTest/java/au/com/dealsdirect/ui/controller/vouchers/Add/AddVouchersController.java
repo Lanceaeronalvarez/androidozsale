@@ -184,7 +184,7 @@ public class AddVouchersController extends SwipeableBaseToolBarController implem
 
     @Override
     protected void setUp(View view) {
-
+        hideBottomButton();
         mAdapter = new AddVouchersRecyclerViewAdapter(mVouchers, this, mActivity);
 
         if (!mIsVoucherAdded) {
@@ -217,10 +217,12 @@ public class AddVouchersController extends SwipeableBaseToolBarController implem
             mVoucherListContainerLayout.setVisibility(View.GONE);
             mRecyclerView.setVisibility(View.GONE);
             mVouchersPlaceholder.setVisibility(View.VISIBLE);
+            mButtonApply.setVisibility(View.GONE);
         } else {
             mVoucherListContainerLayout.setVisibility(View.VISIBLE);
             mRecyclerView.setVisibility(View.VISIBLE);
             mVouchersPlaceholder.setVisibility(View.GONE);
+            mButtonApply.setVisibility(View.VISIBLE);
         }
 
         mAddVoucherButton.setOnClickListener(action -> {
@@ -241,9 +243,7 @@ public class AddVouchersController extends SwipeableBaseToolBarController implem
             }
         });
 
-        if (mVouchers.isEmpty()){
-            mButtonApply.setVisibility(View.GONE);
-        }
+
     }
 
 
