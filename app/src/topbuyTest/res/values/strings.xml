@@ -3,6 +3,7 @@
     <string name="exit_app_name">TopBuy</string>
     <string name="category_default">shop</string>
     <string name="default_country_id">TA</string>
+    <string name="fb_page_id">47143367223</string>
     <string name="sorry_default_text">sorry, no product matches with </string>
     <!--<string name="exit_app_name">TopBuy</string>-->
     <string name="tap_to_retry">Tap to retry</string>
