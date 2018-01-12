@@ -127,23 +127,6 @@ public class ViewAddressController extends SwipeableBaseToolBarController implem
             }));
         }
 
-        getRouter().addChangeListener(new ControllerChangeHandler.ControllerChangeListener() {
-            @Override
-            public void onChangeStarted(@Nullable Controller to, @Nullable Controller from, boolean isPush, @NonNull ViewGroup container, @NonNull ControllerChangeHandler handler) {
-                loadCounter++;
-                if (loadCounter == 1) {
-                    mPresenter.loadAddresses();
-                    loadCounter = 0;
-                }
-            }
-
-            @Override
-            public void onChangeCompleted(@Nullable Controller to, @Nullable Controller from, boolean isPush, @NonNull ViewGroup container, @NonNull ControllerChangeHandler handler) {
-                if (to instanceof ViewAddressController && mActivity.isAuthorized()) {
-
-                }
-            }
-        });
     }
 
     @Override
@@ -196,7 +179,6 @@ public class ViewAddressController extends SwipeableBaseToolBarController implem
 
                 setupDefaultBottomButton("add delivery address", v -> {
                             if (mAddressesLoaded) {
-
                                 GateKeeper.push(
                                         getRouter(),
                                         GateKeeper.Destination.ADD_NEW_ADDRESS,
