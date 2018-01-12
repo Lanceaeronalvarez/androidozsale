@@ -342,7 +342,7 @@
                                 <TextView
                                     fontPath="@string/font_app_medium"
                                     android:layout_width="wrap_content"
-                                    android:layout_height="match_parent"
+                                    android:layout_height="wrap_content"
                                     android:layout_marginLeft="@dimen/invite_friends_padding"
                                     android:textColor="@color/white"
                                     android:paddingLeft="@dimen/invite_friends_padding"
@@ -383,7 +383,7 @@
                                 <TextView
                                     fontPath="@string/font_app_medium"
                                     android:layout_width="wrap_content"
-                                    android:layout_height="match_parent"
+                                    android:layout_height="wrap_content"
                                     android:layout_marginLeft="@dimen/invite_friends_padding"
                                     android:textColor="@color/white"
                                     android:paddingLeft="@dimen/invite_friends_padding"
@@ -425,11 +425,11 @@
                                 <TextView
                                     fontPath="@string/font_app_medium"
                                     android:layout_width="wrap_content"
-                                    android:layout_height="match_parent"
+                                    android:layout_height="wrap_content"
                                     android:layout_marginLeft="@dimen/invite_friends_padding"
+                                    android:textColor="@color/white"
                                     android:paddingLeft="@dimen/invite_friends_padding"
                                     android:paddingRight="@dimen/invite_friends_padding"
-                                    android:textColor="@color/white"
                                     android:text="Invite your friends on Email"
                                     android:textSize="@dimen/text_size_large" />
 
@@ -466,7 +466,7 @@
                                 <TextView
                                     fontPath="@string/font_app_medium"
                                     android:layout_width="wrap_content"
-                                    android:layout_height="match_parent"
+                                    android:layout_height="wrap_content"
                                     android:layout_marginLeft="@dimen/invite_friends_padding"
                                     android:paddingLeft="@dimen/invite_friends_padding"
                                     android:paddingRight="@dimen/invite_friends_padding"
