@@ -13,6 +13,7 @@ import android.widget.RelativeLayout;
 
 import com.bluelinelabs.conductor.RouterTransaction;
 import com.bluelinelabs.conductor.changehandler.HorizontalChangeHandler;
+import com.bluelinelabs.conductor.changehandler.VerticalChangeHandler;
 
 import java.util.List;
 
@@ -134,8 +135,8 @@ public class ReturnOrdersController extends SwipeableBaseToolBarController
     @Override
     public void onReturnOrderItemClicked(au.com.dealsdirect.data.network.model.returns.returnorders.List newReturnsOrder) {
         getRouter().pushController(RouterTransaction.with(NewReturnController.newInstance(newReturnsOrder))
-                .pushChangeHandler(new HorizontalChangeHandler())
-                .popChangeHandler(new HorizontalChangeHandler()));
+                .pushChangeHandler(new VerticalChangeHandler())
+                .popChangeHandler(new VerticalChangeHandler()));
     }
 
 }
