@@ -22,6 +22,7 @@ import au.com.dealsdirect.data.network.model.returns.newreturn.NewReturnOrderDet
 import au.com.dealsdirect.data.network.model.returns.returnorders.List;
 import au.com.dealsdirect.ui.base.BaseToolBarController;
 import au.com.dealsdirect.ui.base.SwipeableBaseToolBarController;
+import au.com.dealsdirect.ui.controller.returns.currentreturns.CurrentReturnsController;
 import au.com.dealsdirect.ui.controller.returns.newreturn.adapter.NewReturnOrdersAdapter;
 import au.com.dealsdirect.ui.controller.returns.newreturn.listener.NewReturnOrderUpdateListener;
 import au.com.dealsdirect.ui.controller.returns.newreturn.viewholder.NewReturnOrderViewHolder;
@@ -136,6 +137,7 @@ public class NewReturnController extends SwipeableBaseToolBarController implemen
             }
         };
 
+        mNewReturnSubmitButton.setEnabled(false);
         mNewReturnSubmitButton.setOnClickListener(onClickListener);
     }
 
@@ -191,7 +193,7 @@ public class NewReturnController extends SwipeableBaseToolBarController implemen
                     getResources().getString(R.string.return_request_submitted));
         }
 
-        getRouter().popToTag("CurrentReturnController");
+        getRouter().popToTag(CurrentReturnsController.TAG);
         hideKeyboard();
 
     }
@@ -208,6 +210,7 @@ public class NewReturnController extends SwipeableBaseToolBarController implemen
         mNewReturnOrderRecyclerView.setAdapter(adapter);
         mNewReturnOrderRecyclerView.setLayoutManager(new LinearLayoutManager(mActivity));
 
+        mNewReturnSubmitButton.setEnabled(true);
     }
 
     @Override

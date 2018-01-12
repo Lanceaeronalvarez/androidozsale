@@ -13,6 +13,7 @@ import android.view.ViewGroup;
 
 import com.bluelinelabs.conductor.Controller;
 import com.bluelinelabs.conductor.ControllerChangeHandler;
+import com.bluelinelabs.conductor.RouterTransaction;
 import com.bluelinelabs.conductor.changehandler.VerticalChangeHandler;
 
 import java.util.ArrayList;
@@ -25,6 +26,7 @@ import au.com.dealsdirect.R;
 import au.com.dealsdirect.data.auth.AuthHandler;
 import au.com.dealsdirect.ui.base.BaseController;
 import au.com.dealsdirect.ui.controller.login.LoginController;
+import au.com.dealsdirect.ui.controller.returns.currentreturns.CurrentReturnsController;
 import au.com.dealsdirect.ui.controller.saleitemdetails.SaleItemDetailsMvpView;
 import au.com.dealsdirect.ui.controller.saleitems.SaleItemsController;
 import au.com.dealsdirect.ui.controller.saleitems.SaleItemsMvpView;
@@ -193,10 +195,10 @@ public class AccountController extends BaseController implements AccountMvpView 
     @Override
     public void showMyReturns() {
         mActivity.setDraggableViewPager(false);
-        GateKeeper.push(getRouter(),
-                GateKeeper.Destination.CURRENT_RETURNS,
-                new VerticalChangeHandler(false),
-                new VerticalChangeHandler());
+        getRouter().pushController(RouterTransaction.with(CurrentReturnsController.newInstance())
+                .tag(CurrentReturnsController.TAG)
+                .pushChangeHandler(new VerticalChangeHandler(false))
+                .popChangeHandler(new VerticalChangeHandler()));
 
     }
 
