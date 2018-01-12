@@ -26,7 +26,6 @@ public class CurrentReturnViewHolder extends RecyclerView.ViewHolder {
     public TextView currentReturnsRequestRANValueTextView;
     public RelativeLayout currentReturnsCardContentContainer;
 
-    public LinearLayout currentReturnsRecyclerViewContainer;
     public RecyclerView currentReturnItemsRecyclerView;
 
     public CurrentReturnViewHolder(View itemView) {
@@ -59,7 +58,5 @@ public class CurrentReturnViewHolder extends RecyclerView.ViewHolder {
         currentReturnsRequestRANValueTextView = (TextView) itemView.
                 findViewById(R.id.my_current_return_item_RAN_value);
 
-        currentReturnsRecyclerViewContainer = (LinearLayout) itemView.
-                findViewById(R.id.current_return_clickable_container);
     }
 }
