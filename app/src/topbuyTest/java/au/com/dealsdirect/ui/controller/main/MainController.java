@@ -220,9 +220,11 @@ public class MainController extends BaseController implements MainMvpView {
             @Override
             public void onPageSelected(int position) {
                 if (position==2){
-                    Controller controller = GateKeeper.getCurrentControllerOnRouter(mActivity.getCheckoutRouter());
-                    if (controller instanceof CheckoutController){
-                        ((CheckoutController) controller).loadCart();
+                    if(mActivity.getCurrentRouter() != null) {
+                        Controller controller = GateKeeper.getCurrentControllerOnRouter(mActivity.getCheckoutRouter());
+                        if (controller instanceof CheckoutController) {
+                            ((CheckoutController) controller).loadCart();
+                        }
                     }
                 }
                 hideKeyboard();

@@ -541,7 +541,11 @@ public class CheckoutController extends SwipeableBaseToolBarController implement
 
     @Override
     public boolean isViewPagerOnCheckout() {
-        return mActivity.getMainController().getHomeViewPager().getCurrentItem() == 2;
+        try {
+           return mActivity.getMainController().getHomeViewPager().getCurrentItem() == 2;
+        } catch (NullPointerException e){
+            return false;
+        }
     }
 
     @Override
