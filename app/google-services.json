@@ -101,59 +101,20 @@
     },
     {
       "client_info": {
-        "mobilesdk_app_id": "1:72197270300:android:dece612b12dc3aee",
-        "android_client_info": {
-          "package_name": "au.com.ourpay.test"
-        }
-      },
-      "oauth_client": [
-        {
-          "client_id": "72197270300-8imqkribi80v4o70bsgt4gkh7oh42k0s.apps.googleusercontent.com",
-          "client_type": 3
-        }
-      ],
-      "api_key": [
-        {
-          "current_key": "AIzaSyByuxDzliSIR7kUlqhRsLYy8KWJ30HzJAU"
-        }
-      ],
-      "services": {
-        "analytics_service": {
-          "status": 1
-        },
-        "appinvite_service": {
-          "status": 1,
-          "other_platform_oauth_client": []
-        },
-        "ads_service": {
-          "status": 2
-        }
-      }
-    },
-    {
-      "client_info": {
-        "mobilesdk_app_id": "1:547178898671:android:e301635b7d8bf4be",
+        "mobilesdk_app_id": "1:72197270300:android:3b2f2878c50c82d6",
         "android_client_info": {
           "package_name": "au.com.topbuy.test"
         }
       },
       "oauth_client": [
         {
-          "client_id": "547178898671-5so9kbm7tg7tv80npe5j4tdbe1e8b3f3.apps.googleusercontent.com",
-          "client_type": 1,
-          "android_info": {
-            "package_name": "au.com.topbuy.test",
-            "certificate_hash": "D3CB511A39D69FD6A8409E7693B1A8AF9B36787C"
-          }
-        },
-        {
-          "client_id": "547178898671-pbrmvlgp4l0tgpnliejhg51b5r3569i8.apps.googleusercontent.com",
+          "client_id": "72197270300-8imqkribi80v4o70bsgt4gkh7oh42k0s.apps.googleusercontent.com",
           "client_type": 3
         }
       ],
       "api_key": [
         {
-          "current_key": "AIzaSyA1K9V7BJnjXxRulgtUDe3jLBsBlLVtqYc"
+          "current_key": "AIzaSyByuxDzliSIR7kUlqhRsLYy8KWJ30HzJAU"
         }
       ],
       "services": {
@@ -161,13 +122,8 @@
           "status": 1
         },
         "appinvite_service": {
-          "status": 2,
-          "other_platform_oauth_client": [
-            {
-              "client_id": "547178898671-pbrmvlgp4l0tgpnliejhg51b5r3569i8.apps.googleusercontent.com",
-              "client_type": 3
-            }
-          ]
+          "status": 1,
+          "other_platform_oauth_client": []
         },
         "ads_service": {
           "status": 2
@@ -176,53 +132,9 @@
     },
     {
       "client_info": {
-        "mobilesdk_app_id": "1:547178898671:android:e301635b7d8bf4be",
+        "mobilesdk_app_id": "1:72197270300:android:a4e0fae8297e663c",
         "android_client_info": {
-          "package_name": "au.com.topbuy"
-        }
-      },
-      "oauth_client": [
-        {
-          "client_id": "547178898671-5so9kbm7tg7tv80npe5j4tdbe1e8b3f3.apps.googleusercontent.com",
-          "client_type": 1,
-          "android_info": {
-            "package_name": "au.com.topbuy",
-            "certificate_hash": "D3CB511A39D69FD6A8409E7693B1A8AF9B36787C"
-          }
-        },
-        {
-          "client_id": "547178898671-pbrmvlgp4l0tgpnliejhg51b5r3569i8.apps.googleusercontent.com",
-          "client_type": 3
-        }
-      ],
-      "api_key": [
-        {
-          "current_key": "AIzaSyA1K9V7BJnjXxRulgtUDe3jLBsBlLVtqYc"
-        }
-      ],
-      "services": {
-        "analytics_service": {
-          "status": 1
-        },
-        "appinvite_service": {
-          "status": 2,
-          "other_platform_oauth_client": [
-            {
-              "client_id": "547178898671-pbrmvlgp4l0tgpnliejhg51b5r3569i8.apps.googleusercontent.com",
-              "client_type": 3
-            }
-          ]
-        },
-        "ads_service": {
-          "status": 2
-        }
-      }
-    },
-    {
-      "client_info": {
-        "mobilesdk_app_id": "1:72197270300:android:dece612b12dc3aee",
-        "android_client_info": {
-          "package_name": "au.com.oo.rc"
+          "package_name": "au.com.oo"
         }
       },
       "oauth_client": [
@@ -251,7 +163,38 @@
     },
     {
       "client_info": {
-        "mobilesdk_app_id": "1:72197270300:android:dece612b12dc3aee",
+        "mobilesdk_app_id": "1:72197270300:android:e301635b7d8bf4be",
+        "android_client_info": {
+          "package_name": "au.com.topbuy"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "72197270300-8imqkribi80v4o70bsgt4gkh7oh42k0s.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyByuxDzliSIR7kUlqhRsLYy8KWJ30HzJAU"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 1,
+          "other_platform_oauth_client": []
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:72197270300:android:ad467c6385b109f9",
         "android_client_info": {
           "package_name": "au.com.buyinvite.test"
         }
@@ -282,9 +225,9 @@
     },
     {
       "client_info": {
-        "mobilesdk_app_id": "1:72197270300:android:dece612b12dc3aee",
+        "mobilesdk_app_id": "1:72197270300:android:87942a000f497465",
         "android_client_info": {
-          "package_name": "au.com.buyinvite.rc"
+          "package_name": "au.com.buyinvite"
         }
       },
       "oauth_client": [
