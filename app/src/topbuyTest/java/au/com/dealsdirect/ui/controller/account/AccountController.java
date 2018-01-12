@@ -25,6 +25,9 @@ import au.com.dealsdirect.R;
 import au.com.dealsdirect.data.auth.AuthHandler;
 import au.com.dealsdirect.ui.base.BaseController;
 import au.com.dealsdirect.ui.controller.login.LoginController;
+import au.com.dealsdirect.ui.controller.saleitemdetails.SaleItemDetailsMvpView;
+import au.com.dealsdirect.ui.controller.saleitems.SaleItemsController;
+import au.com.dealsdirect.ui.controller.saleitems.SaleItemsMvpView;
 import au.com.dealsdirect.ui.custom.CustomAlertDialog;
 import au.com.dealsdirect.ui.main.MainActivity;
 import au.com.dealsdirect.utils.BundleBuilder;
@@ -300,6 +303,7 @@ public class AccountController extends BaseController implements AccountMvpView 
             public void success() {
                 mPresenter.loadAccountItems();
                 CartUtil.setValueToCart(0);
+                updateCartCount();
 //                mActivity.getMainController().getHomeController().removeBasketItemCount();
 
 //                commented. in iOS when logging out, it stays on my accounts.
@@ -322,6 +326,14 @@ public class AccountController extends BaseController implements AccountMvpView 
 
     }
 
+    private void updateCartCount(){
+        Controller controller = GateKeeper.getCurrentControllerOnRouter(mActivity.getSaleItemsRouter());
+        if(controller instanceof SaleItemsMvpView){
+            ((SaleItemsMvpView) controller).onCallGetBasketItemsQuantity();
+        } else if(controller instanceof SaleItemDetailsMvpView){
+            ((SaleItemDetailsMvpView) controller).onCallGetBasketItemsQuantity();
+        }
+    }
     @Override
     public void initLoginDrawable() {
 

@@ -53,6 +53,7 @@ public class OrdersController extends SwipeableBaseToolBarController implements 
     @Override
     public void onRefreshStart() {
         super.onRefreshStart();
+        mPlaceholderLayout.setVisibility(View.GONE);
         mPresenter.loadOrders();
     }
 
@@ -62,11 +63,6 @@ public class OrdersController extends SwipeableBaseToolBarController implements 
         mToolbarTitle.setText(R.string.my_orders);
         setupSwipingBehavior();
         setUp(view);
-        setupDefaultBottomButton(mActivity.getString(R.string.shop_now), (v) -> {
-            mActivity.onBackPressed();
-            mActivity.setDraggableViewPager(true);
-            mActivity.getMainController().getHomeViewPager().setCurrentItem(1);
-        });
     }
 
     @Override
@@ -74,7 +70,9 @@ public class OrdersController extends SwipeableBaseToolBarController implements 
 
         mRecyclerView.setLayoutManager(new LinearLayoutManager(mActivity, LinearLayoutManager.HORIZONTAL, false));
         mRecyclerView.addOnItemTouchListener(new RecyclerOnTouchListener(mActivity, (v, position) -> showOrderDetails(position)));
+        mPlaceholderLayout.setVisibility(View.GONE);
         mPresenter.loadOrders();
+
     }
 
 
@@ -93,6 +91,12 @@ public class OrdersController extends SwipeableBaseToolBarController implements 
             mPlaceholderLayout.setVisibility(View.VISIBLE);
             showBottomLayout();
         }
+        
+        setupDefaultBottomButton(mActivity.getString(R.string.shop_now), (v) -> {
+            mActivity.onBackPressed();
+            mActivity.setDraggableViewPager(true);
+            mActivity.getMainController().getHomeViewPager().setCurrentItem(1);
+        });
     }
 
     @Override

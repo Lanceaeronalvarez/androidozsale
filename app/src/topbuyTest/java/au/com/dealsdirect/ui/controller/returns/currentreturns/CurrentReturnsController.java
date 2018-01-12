@@ -94,6 +94,12 @@ public class CurrentReturnsController extends SwipeableBaseToolBarController
         setupSwipingBehavior();
         mToolbarTitle.setText(mActivity.getString(R.string.my_returns));
 
+
+    }
+
+    @Override
+    protected void setUp(View view) {
+
         mCurrentReturnsListener = this;
 
         if (mCurrentReturns == null || mCurrentReturns.size() == 0) {
@@ -110,14 +116,16 @@ public class CurrentReturnsController extends SwipeableBaseToolBarController
             mCurrentReturnsRecyclerView.setAdapter(mCurrentReturnsAdapter);
             mCurrentReturnsRecyclerView.setVisibility(View.VISIBLE);
             mPlaceholderLayout.setVisibility(View.GONE);
-        }
-    }
 
-    @Override
-    protected void setUp(View view) {
+            setupDefaultBottomButton("add new return", btn -> {
+                GateKeeper.push(getRouter(), GateKeeper.Destination.RETURN_ORDERS, new VerticalChangeHandler(), new VerticalChangeHandler());
+            });
+        }
 
         mCurrentReturnsRecyclerView.setLayoutManager(new LinearLayoutManager(mActivity, LinearLayoutManager
                 .HORIZONTAL, false));
+
+
 
     }
 
@@ -156,7 +164,7 @@ public class CurrentReturnsController extends SwipeableBaseToolBarController
 
         }
 
-        setupDefaultBottomButton("add new return", view -> {
+        setupDefaultBottomButton("add new return", btn -> {
             GateKeeper.push(getRouter(), GateKeeper.Destination.RETURN_ORDERS, new VerticalChangeHandler(), new VerticalChangeHandler());
         });
     }
