@@ -58,4 +58,8 @@ public interface MainMvpPresenter<V extends MainMvpView> extends MvpPresenter<V>
                                    String countryId);
 
     void callApiSettings(Context context);
+
+    void initFacebookAnalytics();
+
+    void initializeAnalytics(Context activityContext, Context applicationContext);
 }

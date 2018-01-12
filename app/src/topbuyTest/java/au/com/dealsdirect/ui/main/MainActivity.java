@@ -115,8 +115,8 @@ public class MainActivity extends BaseActivity implements MainMvpView {
         mPresenter.onAttach(this);
         mPresenter.callGetTemplateTexts();
 
-//        Init All analytics sdk
-        initializeAnalytics();
+        // Init All analytics sdk
+        mPresenter.initializeAnalytics(this, this.getApplication());
 
         mRouter = Conductor.attachRouter(this, mContainer, savedInstanceState);
         mRouter.setRoot(RouterTransaction.with(SplashScreenController.newInstance())
@@ -238,21 +238,6 @@ public class MainActivity extends BaseActivity implements MainMvpView {
                 break;
         }
 
-    }
-
-    private void initializeAnalytics() {
-
-        // Only activate analytics for release versions
-        if (!mPresenter.isDebug()) {
-            //Fabric
-            Fabric.with(this, new Crashlytics());
-            Fabric.with(this, new Answers());
-
-            //New Relic
-            NewRelic.withApplicationToken(getString(R.string.new_relic_app_token)).start(this.getApplication());
-
-//            initFacebookAnalytics();
-        }
     }
 
     @Override

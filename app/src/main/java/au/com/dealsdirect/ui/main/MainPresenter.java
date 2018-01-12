@@ -8,12 +8,17 @@ import android.content.Context;
 import android.util.Log;
 
 import com.androidnetworking.error.ANError;
+import com.crashlytics.android.Crashlytics;
+import com.crashlytics.android.answers.Answers;
+import com.facebook.FacebookSdk;
+import com.facebook.LoggingBehavior;
 import com.google.gson.Gson;
 import com.mysale.genie.utility.config.api.GetAppSettings;
 import com.mysale.genie.utility.config.api.GetAppSettingsSection;
 import com.mysale.genie.utility.config.api.GetServerSettings;
 import com.mysale.genie.utility.config.model.getappsettingssection.Android;
 import com.mysale.genie.utility.config.model.getappsettingssection.Payload;
+import com.newrelic.agent.android.NewRelic;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -23,6 +28,7 @@ import java.util.ArrayList;
 
 import javax.inject.Inject;
 
+import au.com.dealsdirect.R;
 import au.com.dealsdirect.data.DataManager;
 import au.com.dealsdirect.data.auth.AuthHandler;
 import au.com.dealsdirect.data.network.AppApiCallback;
@@ -40,6 +46,7 @@ import au.com.dealsdirect.ui.base.BasePresenter;
 import au.com.dealsdirect.utils.AppEventHelper;
 import au.com.dealsdirect.utils.IntrospectionUtils;
 import au.com.dealsdirect.utils.rx.SchedulerProvider;
+import io.fabric.sdk.android.Fabric;
 import io.reactivex.annotations.NonNull;
 import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.functions.Consumer;
@@ -371,6 +378,34 @@ public class MainPresenter<V extends MainMvpView> extends BasePresenter<V> imple
         callGetServerSettings();
         callGetPublicAppSettings();
         callGetAppSettingsSection(context);
+    }
+
+    @Override
+    public void initFacebookAnalytics() {
+
+        // Allow debugging logs if debug mode
+        if (getDataManager().isDebugMode()) {
+            FacebookSdk.setIsDebugEnabled(true);
+            FacebookSdk.addLoggingBehavior(LoggingBehavior.APP_EVENTS);
+        }
+    }
+
+    @Override
+    public void initializeAnalytics(Context activityContext, Context applicationContext) {
+
+        // Only activate analytics for release versions
+        if (getDataManager().isDebugMode()) {
+
+            // Fabric
+            Fabric.with(activityContext, new Crashlytics());
+            Fabric.with(activityContext, new Answers());
+
+            // New Relic
+            NewRelic.withApplicationToken(activityContext.getResources().getString(R.string.new_relic_app_token)).start(applicationContext);
+
+            // Facebook Events
+            initFacebookAnalytics();
+        }
     }
 
     @Override

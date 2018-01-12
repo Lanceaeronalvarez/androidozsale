@@ -30,6 +30,7 @@ android {
 
     buildTypes {
 
+        // Always use release variant for deployment to QA and app release
         release {
             minifyEnabled true
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
@@ -39,6 +40,7 @@ android {
             resValue "bool", "debug_mode", "false"
         }
 
+        // Always use debug variant during development
         debug {
             resValue "bool", "debug_mode", "true"
         }
@@ -416,7 +418,7 @@ dependencies {
     }
 
     // NR
-    compile 'com.newrelic.agent.android:android-agent:5.12.3'
+    compile 'com.newrelic.agent.android:android-agent:5.14.0'
 
     compile project(path: ':genie-utility')
     compile project(path: ':genie-animation')
