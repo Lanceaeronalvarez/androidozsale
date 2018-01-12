@@ -101,6 +101,7 @@ public class AddPaymentController extends SwipeableBaseToolBarController impleme
         mCardForm.setEditTextDrawable(getResources().getDrawable(R.drawable.bg_edit_text_rounded),R.drawable.bg_edit_text_rounded);
         mCardForm.setCameraBackground(null);
         mButtonPay.setVisibility(View.VISIBLE);
+        mButtonPaypal.setVisibility(View.VISIBLE);
 
         mButtonPay.setOnClickListener(action -> {
             onCardFormSubmit();
