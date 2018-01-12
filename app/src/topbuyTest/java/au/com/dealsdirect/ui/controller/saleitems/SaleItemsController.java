@@ -344,7 +344,7 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
 
         SaleItemsAdapter.HeaderViewHolder vh = mAdapter.getHeaderViewHolderInstance();
         if (products != null) {
-            if (products.size() == 0 && vh != null) {
+            if (products.size() == 0 && vh != null && !hasLoadedAllItems) {
                 List<SearchChipModel> data = mSearchTagsAdapter.getData();
                 //init no search items text
                 vh.getNoItemsText().setText(getResources().getString(R.string.sorry_default_text));
@@ -423,12 +423,11 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
     public void showSaleItems(GetSaleItemsResponse getSaleItemsResponse, boolean forFacetCorrection) {
         List<GetSaleItemsResponse.Products> items = getSaleItemsResponse.products;
 
-        checkNoSearchItemsLayout(items);
-
         if (items.size() == 0 && page != 0) {
             hasLoadedAllItems = true;
             mPaginateManager.setHasMoreDataToLoad(false);
             page = 0;
+            checkNoSearchItemsLayout(items);
         } else {
             mFacets = getSaleItemsResponse.facets;
 
@@ -437,6 +436,8 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
             loadingInProgress = false;
 
             if (page == 0) {
+
+                checkNoSearchItemsLayout(items);
 
                 if (items.size() <= PaginateUtils.LOADING_TRIGGER_THRESHOLD) {
                     hasLoadedAllItems = true;
@@ -450,6 +451,7 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
 
 
             } else {
+                checkNoSearchItemsLayout(items);
                 mAdapter.addData(items);
             }
 

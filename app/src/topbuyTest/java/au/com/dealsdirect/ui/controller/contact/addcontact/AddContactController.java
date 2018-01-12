@@ -35,6 +35,7 @@ import au.com.dealsdirect.utils.BundleKeys;
 import au.com.dealsdirect.utils.KeyboardUtils;
 import butterknife.BindView;
 import butterknife.OnClick;
+import io.reactivex.functions.Consumer;
 
 import static au.com.dealsdirect.utils.BundleKeys.CONTACT_INVOICE;
 import static au.com.dealsdirect.utils.BundleKeys.CONTACT_NUMBER;
@@ -66,7 +67,7 @@ public class AddContactController extends SwipeableBaseToolBarController impleme
     @BindView(R.id.controller_add_contact_message_field)
     EditText mAddContactMessageField;
 
-    private View.OnClickListener onClickListener;
+    private Consumer onClickListener;
 
     @Inject
     AddContactMvpPresenter<AddContactMvpView> mPresenter;

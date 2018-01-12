@@ -12,7 +12,10 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.jakewharton.rxbinding2.view.RxView;
 import com.mysale.genie.views.custom.CoordinatorLayoutAsBottomSheetBehavior;
+
+import java.util.concurrent.TimeUnit;
 
 import au.com.dealsdirect.R;
 import au.com.dealsdirect.ui.controller.checkout.checkout.CheckoutController;
@@ -21,6 +24,9 @@ import au.com.dealsdirect.ui.controller.legalities.LegalitiesController;
 import au.com.dealsdirect.ui.controller.vouchers.View.ViewVouchersController;
 import butterknife.BindView;
 import butterknife.OnClick;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.disposables.Disposable;
+import io.reactivex.functions.Consumer;
 
 /**
  * Created by smartwave on 24/10/2017.
@@ -35,6 +41,8 @@ public abstract class SwipeableBaseToolBarController extends BaseController {
     Button mBottomButton;
 
     private View mCustomBottomView;
+
+    Disposable mBottomButtonClickListener;
 
     @BindView(R.id.swipeable_fragment_bottom_layout)
     FrameLayout mBottomLayout;
@@ -120,15 +128,26 @@ public abstract class SwipeableBaseToolBarController extends BaseController {
         }
     }
 
-    public void setupDefaultBottomButton(String text,View.OnClickListener listener){
+    public void setupDefaultBottomButton(String text,Consumer onNext){
         showBottomLayout();
         mBottomButton.setVisibility(View.VISIBLE);
         mBottomButton.setText(text);
-        mBottomButton.setOnClickListener(listener);
+        mBottomButtonClickListener = RxView.clicks(mBottomButton)
+                .throttleFirst(1000, TimeUnit.MILLISECONDS)
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(onNext);
         if (mCustomBottomView != null) {
             mCustomBottomView.setVisibility(View.GONE);
         }
 
+    }
+
+    @Override
+    public void onDetach(View view) {
+        super.onDetach(view);
+        if(mBottomButtonClickListener!=null) {
+            mBottomButtonClickListener.dispose();
+        }
     }
 
     protected void setupCustomBottomLayout(View view) {
@@ -167,7 +186,7 @@ public abstract class SwipeableBaseToolBarController extends BaseController {
 //                            mActivity.onBackPressed();
                             getRouter().popToRoot();
                             mActivity.setDraggableViewPager(true);
-
+                            hideKeyboard();
                             break;
                         case CoordinatorLayoutAsBottomSheetBehavior.STATE_EXPANDED:
                             break;
