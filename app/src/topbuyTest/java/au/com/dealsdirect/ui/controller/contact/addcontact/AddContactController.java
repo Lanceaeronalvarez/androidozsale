@@ -211,7 +211,7 @@ public class AddContactController extends SwipeableBaseToolBarController impleme
 
             Log.d("addContactController", "subject = "+mContactHistoryChosenSubject);
 
-            mAddContactSubjectText.setText(mContactHistoryChosenSubject);
+//            mAddContactSubjectText.setText(mContactHistoryChosenSubject);
 
             mAddContactSubjectText.setClickable(false);
             mAddContactOrderText.setClickable(false);
@@ -331,7 +331,7 @@ public class AddContactController extends SwipeableBaseToolBarController impleme
                 mAddContactSubjectTitle.setSelected(false);
             } else {
                 getRouter().pushController(RouterTransaction.with(ContactSelectSubjectController.newInstance(mContactSubjects))
-                        .pushChangeHandler(new FadeChangeHandler())
+                        .pushChangeHandler(new FadeChangeHandler(false))
                         .popChangeHandler(new FadeChangeHandler()));
                 mAddContactSubjectTitle.setSelected(true);
                 mAddContactOrderTitle.setSelected(false);
@@ -358,7 +358,7 @@ public class AddContactController extends SwipeableBaseToolBarController impleme
                 mAddContactOrderTitle.setSelected(false);
             } else {
                 getRouter().pushController(RouterTransaction.with(ContactSelectOrderController.newInstance(mContactOrders))
-                        .pushChangeHandler(new FadeChangeHandler())
+                        .pushChangeHandler(new FadeChangeHandler(false))
                         .popChangeHandler(new FadeChangeHandler()));
                 mAddContactSubjectTitle.setSelected(false);
                 mAddContactOrderTitle.setSelected(true);
