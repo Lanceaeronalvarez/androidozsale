@@ -218,13 +218,20 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
         View view = inflater.inflate(R.layout.controller_sale_item_details, container, false);
         getControllerComponent().inject(this);
         mPresenter.onAttach(this);
-        mAccountsPresenter.onAttach((AccountMvpView) GateKeeper.getCurrentControllerOnRouter(mActivity.getAccountsRouter()));
         return view;
     }
 
     @Override
     protected void onAttach(@NonNull View view) {
         super.onAttach(view);
+        mCartViewClickListener = RxView.clicks(mCartView)
+                .throttleFirst(1000, TimeUnit.MILLISECONDS)
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(v -> {
+                    mActivity.getMainController().getHomeViewPager().setCurrentItem(2);
+                });
+
+        mAccountsPresenter.onAttach((AccountMvpView) GateKeeper.getCurrentControllerOnRouter(mActivity.getAccountsRouter()));
     }
 
     @Override
@@ -304,12 +311,6 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
                 .getString(R.string.base_html_template_footer);
 
         mCartCounter.setText(CartUtil.getCartValue() + "");
-        mCartViewClickListener = RxView.clicks(mCartView)
-                .throttleFirst(1000, TimeUnit.MILLISECONDS)
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(v -> {
-                    mActivity.getMainController().getHomeViewPager().setCurrentItem(2);
-                });
     }
 
     @Override
@@ -470,6 +471,8 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
         mCartViewClickListener.dispose();
         super.onDetach(view);
     }
+
+
 
     @Override
     public boolean handleBack() {
