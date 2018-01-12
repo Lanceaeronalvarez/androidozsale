@@ -55,6 +55,7 @@
                 android:layout_marginBottom="10dp"
                 android:gravity="center"
                 android:text="@string/pay"
+                android:visibility="gone"
                 android:textSize="20sp" />
 
             <RelativeLayout
@@ -64,6 +65,7 @@
                 android:layout_marginBottom="10dp"
                 android:background="@drawable/bg_paypal_button"
                 android:clickable="true"
+                android:visibility="gone"
                 android:elevation="1.5dp">
 
                 <LinearLayout
@@ -100,6 +102,7 @@
                 android:layout_marginBottom="16dp"
                 android:background="@drawable/bg_masterpass_button"
                 android:clickable="true"
+                android:visibility="gone"
                 android:elevation="1.5dp">
 
                 <ImageView
