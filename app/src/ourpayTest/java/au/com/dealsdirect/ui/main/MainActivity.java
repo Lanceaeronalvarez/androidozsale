@@ -113,8 +113,8 @@ public class MainActivity extends BaseActivity implements MainMvpView {
         mPresenter.onAttach(this);
         mPresenter.callGetTemplateTexts();
 
-        //Init All analytics sdk
-        initializeAnalytics();
+        // Init All analytics sdk
+        mPresenter.initializeAnalytics(this, this.getApplication());
 
         mMainController = MainController.newInstance();
         mRouter = Conductor.attachRouter(this, mContainer, savedInstanceState);
@@ -749,19 +749,6 @@ public class MainActivity extends BaseActivity implements MainMvpView {
             mAuthHandler.error();
 
         CustomAlertDialog.showCustomAlertDialog(this, CustomAlertDialog.CustomDialogIconState.NEGATIVE, message);
-    }
-
-    private void initializeAnalytics() {
-
-        // Only activate analytics for release versions
-        if (!mPresenter.isDebug()) {
-            //Fabric
-            Fabric.with(this, new Crashlytics());
-            Fabric.with(this, new Answers());
-
-            //New Relic
-            NewRelic.withApplicationToken(getString(R.string.new_relic_app_token)).start(this.getApplication());
-        }
     }
 
     /**
