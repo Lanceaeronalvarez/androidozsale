@@ -2,13 +2,14 @@
 <resources>
     <bool name="is_tablet">true</bool>
 
-    <dimen name="text_size_small">15sp</dimen>
-    <dimen name="text_size_medium">20sp</dimen>
-    <dimen name="text_size_large">22sp</dimen>
-    <dimen name="text_size_xlarge">24sp</dimen>
-    <dimen name="text_size_xxlarge">26sp</dimen>
-    <dimen name="text_size_xxxlarge">28sp</dimen>
-    <dimen name="text_size_xxxxlarge">30sp</dimen>
+    <!--commented. not needed anymore-->
+    <!--<dimen name="text_size_small">15sp</dimen>-->
+    <!--<dimen name="text_size_medium">20sp</dimen>-->
+    <!--<dimen name="text_size_large">22sp</dimen>-->
+    <!--<dimen name="text_size_xlarge">24sp</dimen>-->
+    <!--<dimen name="text_size_xxlarge">26sp</dimen>-->
+    <!--<dimen name="text_size_xxxlarge">28sp</dimen>-->
+    <!--<dimen name="text_size_xxxxlarge">30sp</dimen>-->
 
     <!-- Default screen margins, per the Android Design guidelines. -->
     <dimen name="activity_horizontal_margin">16dp</dimen>
