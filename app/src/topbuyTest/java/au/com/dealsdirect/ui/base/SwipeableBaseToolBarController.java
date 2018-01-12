@@ -34,6 +34,8 @@ public abstract class SwipeableBaseToolBarController extends BaseController {
     @BindView(R.id.custom_bottom_button)
     Button mBottomButton;
 
+    private View mCustomBottomView;
+
     @BindView(R.id.swipeable_fragment_bottom_layout)
     FrameLayout mBottomLayout;
 
@@ -123,6 +125,22 @@ public abstract class SwipeableBaseToolBarController extends BaseController {
         mBottomButton.setVisibility(View.VISIBLE);
         mBottomButton.setText(text);
         mBottomButton.setOnClickListener(listener);
+        if (mCustomBottomView != null) {
+            mCustomBottomView.setVisibility(View.GONE);
+        }
+
+    }
+
+    protected void setupCustomBottomLayout(View view) {
+        showBottomLayout();
+
+        mBottomButton.setVisibility(View.GONE);
+        if (mCustomBottomView != null && mCustomBottomView.getParent() != null) {
+            ((ViewGroup) mCustomBottomView.getParent()).removeView(mCustomBottomView);
+        }
+        mCustomBottomView = view;
+        mCustomBottomView.setVisibility(View.VISIBLE);
+        mBottomLayout.addView(mCustomBottomView);
 
     }
 

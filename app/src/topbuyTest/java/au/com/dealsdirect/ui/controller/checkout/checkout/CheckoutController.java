@@ -97,6 +97,7 @@ public class CheckoutController extends SwipeableBaseToolBarController implement
     private TextView mAddressChangeText;
     private TextView mPaymentChangeText;
     private TextView mVoucherChangeText;
+    private RelativeLayout mPartialCheckoutButtonLayout;
     private View mButtonHolder;
     private Button mPayButton;
 
@@ -210,6 +211,8 @@ public class CheckoutController extends SwipeableBaseToolBarController implement
         mFooterView = inflater.inflate(R.layout.partial_checkout_footer, container, false);
         mListView.addFooterView(mFooterView, null, false);
 
+        mPartialCheckoutButtonLayout = (RelativeLayout) inflater.inflate(R.layout.partial_checkout_button, null, false);
+
         return view;
     }
 
@@ -219,6 +222,7 @@ public class CheckoutController extends SwipeableBaseToolBarController implement
 
         disableSwipingBehavior();
         mToolbarTitle.setText("my cart");
+
         mButtonHolder = mFooterView.findViewById(R.id.partial_checkout_button_holder);
         mActivity.setCheckoutRouter(getRouter());
 
@@ -242,11 +246,11 @@ public class CheckoutController extends SwipeableBaseToolBarController implement
         mPaymentChangeText = (TextView) mFooterView.findViewById(R.id.partial_checkout_payment_change);
         mVoucherChangeText = (TextView) mFooterView.findViewById(R.id.partial_checkout_voucher_change);
 
-        mButtonHolder = mFooterView.findViewById(R.id.partial_checkout_button_holder);
-        mPayButton = (Button) mFooterView.findViewById(R.id.partial_checkout_button_pay);
-        mPaypalButton = (RelativeLayout) mFooterView.findViewById(R.id.partial_checkout_button_paypal);
-        mMasterpassButton = (RelativeLayout) mFooterView.findViewById(R.id.partial_checkout_button_masterpass);
-        mOurpayHolder = (LinearLayout) mFooterView.findViewById(R.id.partial_checkout_ourpay_panel_holder);
+        mButtonHolder = mPartialCheckoutButtonLayout.findViewById(R.id.partial_checkout_button_holder);
+        mPayButton = (Button) mPartialCheckoutButtonLayout.findViewById(R.id.partial_checkout_button_pay);
+        mPaypalButton = (RelativeLayout) mPartialCheckoutButtonLayout.findViewById(R.id.partial_checkout_button_paypal);
+        mMasterpassButton = (RelativeLayout) mPartialCheckoutButtonLayout.findViewById(R.id.partial_checkout_button_masterpass);
+        mOurpayHolder = (LinearLayout) mPartialCheckoutButtonLayout.findViewById(R.id.partial_checkout_ourpay_panel_holder);
 
 
         mAddNewVoucherLayout.setOnClickListener(view12 -> {
@@ -570,6 +574,7 @@ public class CheckoutController extends SwipeableBaseToolBarController implement
 
     private void showPaymentButtons() {
         mButtonHolder.setVisibility(View.VISIBLE);
+        setupCustomBottomLayout(mPartialCheckoutButtonLayout);
     }
 
     private boolean isAddressValid() {
