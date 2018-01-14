@@ -1,5 +1,6 @@
 package au.com.dealsdirect.ui.controller.account;
 
+import android.content.res.TypedArray;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.DefaultItemAnimator;
@@ -16,7 +17,11 @@ import com.bluelinelabs.conductor.RouterTransaction;
 import com.bluelinelabs.conductor.changehandler.HorizontalChangeHandler;
 
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import javax.inject.Inject;
 
@@ -64,6 +69,9 @@ public class AccountController extends BaseController implements AccountMvpView,
 
     @Inject
     AccountMvpPresenter<AccountMvpView> mPresenter;
+
+    private ArrayList<Integer> titles;
+    private ArrayList<Integer> drawables;
 
     public static AccountController newInstance() {
 
@@ -117,7 +125,19 @@ public class AccountController extends BaseController implements AccountMvpView,
         mActivity.getMainController().showBottomNav();
         mActivity.setDraggableViewPager(false);
 
-        mPresenter.loadAccountItems();
+
+        TypedArray title = mActivity.getResources().obtainTypedArray(R.array.account_title_array);
+        titles = new ArrayList<>();
+        for(int i = 0; i < title.length(); i++) {
+            titles.add(title.getResourceId(i,0));
+        }
+        TypedArray drawable = mActivity.getResources().obtainTypedArray(R.array.account_drawable_array);
+        drawables = new ArrayList<>();
+        for(int i = 0; i < drawable.length(); i++) {
+            drawables.add(drawable.getResourceId(i,0));
+        }
+        mPresenter.loadAccountItems(titles, drawables);
+
         mTitleTextView.setText(R.string.my_account);
         mArrowButton.setVisibility(View.INVISIBLE);
 
@@ -259,7 +279,7 @@ public class AccountController extends BaseController implements AccountMvpView,
         mActivity.callLogout(new AuthHandler() {
             @Override
             public void success() {
-                mPresenter.loadAccountItems();
+                mPresenter.loadAccountItems(titles, drawables);
                 CartUtil.setValueToCart(0);
                 mActivity.getMainController().getHomeController().removeBasketItemCount();
                 mFilterButton.setImageDrawable(getActivity().getResources().getDrawable(R.drawable.ic_login));

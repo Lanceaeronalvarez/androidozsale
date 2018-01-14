@@ -1,6 +1,7 @@
 package au.com.dealsdirect.ui.controller.account;
 
 import android.app.Activity;
+import android.content.res.TypedArray;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -51,6 +52,9 @@ public class AccountController extends BaseController implements AccountMvpView 
     private boolean mChangeInProgress = false;
     private AccountMvpView mvpView;
     private int mSelectedItemFromLogin;
+
+    private ArrayList<Integer> titles;
+    private ArrayList<Integer> drawables;
 
 
     @BindView(R.id.account_recycler_view)
@@ -103,7 +107,18 @@ public class AccountController extends BaseController implements AccountMvpView 
     protected void setUp(View view) {
         // Setup views here
 
-        mPresenter.loadAccountItems();
+        TypedArray title = mActivity.getResources().obtainTypedArray(R.array.account_title_array);
+        titles = new ArrayList<>();
+        for(int i = 0; i < title.length(); i++) {
+            titles.add(title.getResourceId(i,0));
+        }
+        TypedArray drawable = mActivity.getResources().obtainTypedArray(R.array.account_drawable_array);
+        drawables = new ArrayList<>();
+        for(int i = 0; i < drawable.length(); i++) {
+            drawables.add(drawable.getResourceId(i,0));
+        }
+
+        mPresenter.loadAccountItems(titles, drawables);
 
         getRouter().addChangeListener(new ControllerChangeHandler.ControllerChangeListener() {
             @Override
@@ -119,7 +134,7 @@ public class AccountController extends BaseController implements AccountMvpView 
                 if (from instanceof LoginController) {
                     mPresenter.onAttach(mvpView);
                     if(mPresenter.isAuthorized()) {
-                        mPresenter.loadAccountItems();
+                        mPresenter.loadAccountItems(titles, drawables);
                         mPresenter.onAccountItemClick(mSelectedItemFromLogin);
                     }
                 }
@@ -303,7 +318,8 @@ public class AccountController extends BaseController implements AccountMvpView 
         mActivity.callLogout(new AuthHandler() {
             @Override
             public void success() {
-                mPresenter.loadAccountItems();
+
+                mPresenter.loadAccountItems(titles, drawables);
                 CartUtil.setValueToCart(0);
                 updateCartCount();
 //                mActivity.getMainController().getHomeController().removeBasketItemCount();

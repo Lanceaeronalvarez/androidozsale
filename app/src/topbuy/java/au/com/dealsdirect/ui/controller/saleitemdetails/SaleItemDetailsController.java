@@ -1,6 +1,7 @@
 package au.com.dealsdirect.ui.controller.saleitemdetails;
 
 import android.content.Intent;
+import android.content.res.TypedArray;
 import android.graphics.Paint;
 import android.net.Uri;
 import android.os.Bundle;
@@ -47,8 +48,6 @@ import au.com.dealsdirect.service.ourpay.Ourpay;
 import au.com.dealsdirect.ui.base.BaseController;
 import au.com.dealsdirect.ui.controller.account.AccountMvpPresenter;
 import au.com.dealsdirect.ui.controller.account.AccountMvpView;
-import au.com.dealsdirect.ui.controller.saleitems.SaleItemsMvpPresenter;
-import au.com.dealsdirect.ui.controller.saleitems.SaleItemsMvpView;
 import au.com.dealsdirect.ui.custom.ArcTranslateAnimation;
 import au.com.dealsdirect.ui.custom.CustomAlertDialog;
 import au.com.dealsdirect.utils.BundleBuilder;
@@ -560,7 +559,18 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
                     if (mSharedImageLocation != null) {
                         new Handler().postDelayed(() -> animateAddToCart(), 1000);
                     }
-                    mAccountsPresenter.loadAccountItems();
+
+                    TypedArray title = mActivity.getResources().obtainTypedArray(R.array.account_title_array);
+                    List<Integer> titles = new ArrayList<>();
+                    for(int i = 0; i < title.length(); i++) {
+                        titles.add(title.getResourceId(i,0));
+                    }
+                    TypedArray drawable = mActivity.getResources().obtainTypedArray(R.array.account_drawable_array);
+                    List<Integer> drawables = new ArrayList<>();
+                    for(int i = 0; i < drawable.length(); i++) {
+                        drawables.add(drawable.getResourceId(i,0));
+                    }
+                    mAccountsPresenter.loadAccountItems(titles, drawables);
                 }
 
                 @Override

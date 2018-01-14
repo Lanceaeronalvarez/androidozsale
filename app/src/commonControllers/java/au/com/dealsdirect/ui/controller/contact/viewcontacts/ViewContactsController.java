@@ -9,6 +9,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.bluelinelabs.conductor.Router;
@@ -60,7 +61,7 @@ public class ViewContactsController extends BasePullToRefreshController implemen
     RecyclerView mViewContactsRecyclerView;
 
     @BindView(R.id.no_contacts_placeholder)
-    LinearLayout mPlaceholderLayout;
+    RelativeLayout mPlaceholderLayout;
 
     @Inject
     ViewContactsMvpPresenter<ViewContactsMvpView> mPresenter;

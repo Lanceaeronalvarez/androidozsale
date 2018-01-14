@@ -54,7 +54,7 @@
                 android:layout_marginTop="20dp"
                 android:text="Philosophy Cotton Sleeveless Plain"
                 android:textColor="#878787"
-                android:textSize="@dimen/text_size_normal"
+                android:textSize="@dimen/text_size_xlarge"
                 android:maxLines="2"
                 fontPath="@string/font_app_bold"
                 tools:ignore="HardcodedText"/>

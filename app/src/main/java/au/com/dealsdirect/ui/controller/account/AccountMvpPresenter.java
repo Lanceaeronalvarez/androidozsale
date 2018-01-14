@@ -1,5 +1,8 @@
 package au.com.dealsdirect.ui.controller.account;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import au.com.dealsdirect.ui.base.MvpPresenter;
 import au.com.dealsdirect.ui.base.MvpView;
 
@@ -9,7 +12,7 @@ import au.com.dealsdirect.ui.base.MvpView;
 
 public interface AccountMvpPresenter <V extends MvpView> extends MvpPresenter<V> {
 
-    void loadAccountItems();
+    void loadAccountItems(List<Integer> accountItems, List<Integer> accountImages);
 
     void onAccountItemClick(int option);
 
