@@ -359,11 +359,6 @@ public class MainPresenter<V extends MainMvpView> extends BasePresenter<V> imple
     }
 
     @Override
-    public boolean isDebug() {
-        return getDataManager().isDebugMode();
-    }
-
-    @Override
     public void callGCMNotificationEvent(Context context) {
         gNotification.callNotificationEvent(context);
     }
@@ -394,7 +389,7 @@ public class MainPresenter<V extends MainMvpView> extends BasePresenter<V> imple
     public void initializeAnalytics(Context activityContext, Context applicationContext) {
 
         // Only activate analytics for release versions
-        if (getDataManager().isDebugMode()) {
+        if (!getDataManager().isDebugMode()) {
 
             // Fabric
             Fabric.with(activityContext, new Crashlytics());
