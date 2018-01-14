@@ -64,10 +64,12 @@ android {
             resValue "string", "facebook_app_secret", "1dea9436118690813bcc315ecfc28705"
             resValue "string", "fb_login_protocol_scheme", "fb" + facebookAppId
             resValue "string", "fb_page_id", "153472458025053"
-            resValue "string", "new_relic_app_token", "AAf4ce8e1466bf9d9b7c3dcfdf7c569defebda9edc"
             resValue "string", "twitter_user_id", "twitter://user?user_id=36309423"
             resValue "string", "default_country_id", "BA"
             resValue "string", "default_language_id", "EN"
+
+            ext.newRelicAppToken = "AAf4ce8e1466bf9d9b7c3dcfdf7c569defebda9edc"
+            resValue "string", "new_relic_app_token",  ext.newRelicAppToken
         }
 
         buyinviteTest {
@@ -85,10 +87,12 @@ android {
             resValue "string", "facebook_app_secret", "df91ab6a34e678773a41839b88d18cdb"
             resValue "string", "fb_login_protocol_scheme", "fb" + facebookAppId
             resValue "string", "fb_page_id", "153472458025053"
-            resValue "string", "new_relic_app_token", "AAf4ce8e1466bf9d9b7c3dcfdf7c569defebda9edc"
             resValue "string", "twitter_user_id", "twitter://user?user_id=36309423"
             resValue "string", "default_country_id", "BA"
             resValue "string", "default_language_id", "EN"
+
+            ext.newRelicAppToken = "AAf4ce8e1466bf9d9b7c3dcfdf7c569defebda9edc"
+            resValue "string", "new_relic_app_token",  ext.newRelicAppToken
         }
 
         dealsDirectRC {
@@ -106,10 +110,12 @@ android {
             resValue "string", "facebook_app_secret", "94da0f48bd2ffea25981e52c56f9260a"
             resValue "string", "fb_login_protocol_scheme", "fb" + facebookAppId
             resValue "string", "fb_page_id", "257280167216"
-            resValue "string", "new_relic_app_token", "AAa9d543732ff39dddc60c9cb9ad8c9cf22297904b"
             resValue "string", "twitter_user_id", "twitter://user?user_id=37405859"
             resValue "string", "default_country_id", "DA"
             resValue "string", "default_language_id", "EN"
+
+            ext.newRelicAppToken = "AAa9d543732ff39dddc60c9cb9ad8c9cf22297904b"
+            resValue "string", "new_relic_app_token",  ext.newRelicAppToken
 
         }
 
@@ -128,10 +134,12 @@ android {
             resValue "string", "facebook_app_secret", "38e0530d1a0339d117b5474f0731f2af"
             resValue "string", "fb_login_protocol_scheme", "fb" + facebookAppId
             resValue "string", "fb_page_id", "257280167216"
-            resValue "string", "new_relic_app_token", "AAa9d543732ff39dddc60c9cb9ad8c9cf22297904b"
             resValue "string", "twitter_user_id", "twitter://user?user_id=37405859"
             resValue "string", "default_country_id", "DA"
             resValue "string", "default_language_id", "EN"
+
+            ext.newRelicAppToken = "AAa9d543732ff39dddc60c9cb9ad8c9cf22297904b"
+            resValue "string", "new_relic_app_token",  ext.newRelicAppToken
         }
 
         ooRC {
@@ -149,10 +157,12 @@ android {
             resValue "string", "facebook_app_secret", "f372b6a78ffbb38215f796d1a8838bb2"
             resValue "string", "fb_login_protocol_scheme", "fb" + facebookAppId
             resValue "string", "fb_page_id", "10357598833"
-            resValue "string", "new_relic_app_token", "AAb0a85221e0d2eb8f185c2c2a34c566840b593941"
             resValue "string", "twitter_user_id", "twitter://user?user_id=14730691"
             resValue "string", "default_country_id", "OA"
             resValue "string", "default_language_id", "EN"
+
+            ext.newRelicAppToken = "AAb0a85221e0d2eb8f185c2c2a34c566840b593941"
+            resValue "string", "new_relic_app_token",  ext.newRelicAppToken
         }
 
         ooTest {
@@ -170,10 +180,12 @@ android {
             resValue "string", "facebook_app_secret", "e0fecfa7b794941aca88ed0840e50d6c"
             resValue "string", "fb_login_protocol_scheme", "fb" + facebookAppId
             resValue "string", "fb_page_id", "10357598833"
-            resValue "string", "new_relic_app_token", "AAb0a85221e0d2eb8f185c2c2a34c566840b593941"
             resValue "string", "twitter_user_id", "twitter://user?user_id=14730691"
             resValue "string", "default_country_id", "OA"
             resValue "string", "default_language_id", "EN"
+
+            ext.newRelicAppToken = "AAb0a85221e0d2eb8f185c2c2a34c566840b593941"
+            resValue "string", "new_relic_app_token",  ext.newRelicAppToken
         }
 
         topbuyRC {
@@ -191,10 +203,12 @@ android {
             resValue "string", "facebook_app_secret", "fb7a6db2221738ebe78810dff07e1223"
             resValue "string", "fb_login_protocol_scheme", "fb" + facebookAppId
             resValue "string", "fb_page_id", "47143367223"
-            resValue "string", "new_relic_app_token", "AA17bba4366f389b0ca3e7c8068935df33ce10bd35"
             resValue "string", "twitter_user_id", "twitter://user?user_id=20105193"
             resValue "string", "default_country_id", "TA"
             resValue "string", "default_language_id", "EN"
+
+            ext.newRelicAppToken = "AA17bba4366f389b0ca3e7c8068935df33ce10bd35"
+            resValue "string", "new_relic_app_token",  ext.newRelicAppToken
         }
 
         topbuyTest {
@@ -212,10 +226,12 @@ android {
             resValue "string", "facebook_app_secret", "c1c38e066ad13cc4987929e3c2f73770"
             resValue "string", "fb_login_protocol_scheme", "fb" + facebookAppId
             resValue "string", "fb_page_id", "47143367223"
-            resValue "string", "new_relic_app_token", "AA17bba4366f389b0ca3e7c8068935df33ce10bd35"
             resValue "string", "twitter_user_id", "twitter://user?user_id=20105193"
             resValue "string", "default_country_id", "TA"
             resValue "string", "default_language_id", "EN"
+
+            ext.newRelicAppToken = "AA17bba4366f389b0ca3e7c8068935df33ce10bd35"
+            resValue "string", "new_relic_app_token",  ext.newRelicAppToken
         }
 
         ourpayTest {
@@ -238,6 +254,9 @@ android {
             resValue "string", "twitter_user_id", ""
             resValue "string", "default_country_id", "DA"
             resValue "string", "default_language_id", "EN"
+
+            ext.newRelicAppToken = "asjdasldkalsnasdT"
+            resValue "string", "new_relic_app_token",  ext.newRelicAppToken
         }
 
 
@@ -275,12 +294,12 @@ android {
         }
 
         topbuyTest {
-            java.srcDirs = ['src/topbuyTest/java/', 'src/main/java/']
+            java.srcDirs = ['src/topbuyRC/java/', 'src/main/java/']
         }
 
         topbuyRC {
-            res.srcDir 'src/topbuyTest/res/'
-            java.srcDirs = ['src/topbuyTest/java/', 'src/main/java/']
+            res.srcDir 'src/topbuyRC/res/'
+            java.srcDirs = ['src/topbuyRC/java/', 'src/main/java/']
         }
 
         main {
@@ -301,6 +320,9 @@ android {
         unitTests.returnDefaultValues = true
     }
 }
+
+
+
 
 dependencies {
     compile fileTree(dir: 'libs', include: ['*.jar'])
@@ -426,6 +448,24 @@ dependencies {
     compile project(path: ':CardForm')
     compile project(path: ':ptr-lib')
 
+}
+
+// Create New Relic properties file according to flavor
+File newRelicProperties = new File("${project.projectDir.absolutePath}/newrelic.properties")
+newRelicProperties.createNewFile()
+
+android.applicationVariants.all { variant ->
+    variant.productFlavors.each { flavor ->
+        def variantSuffix = variant.name.capitalize()
+        def generateResourcesTask = project.tasks.getByName("compile${variantSuffix}Sources")
+        def generatePropertiesTask = task("newRelicGenerateProperties${variantSuffix}") << {
+            Properties properties = new Properties()
+            properties.load(newRelicProperties.newDataInputStream())
+            properties.setProperty("com.newrelic.application_token", flavor.ext.newRelicAppToken)
+            properties.store(newRelicProperties.newWriter(), null)
+        }
+        generateResourcesTask.dependsOn generatePropertiesTask
+    }
 }
 
 configurations.all {
