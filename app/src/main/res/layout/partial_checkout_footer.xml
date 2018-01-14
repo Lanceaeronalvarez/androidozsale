@@ -12,4 +12,6 @@
 
     <include layout="@layout/partial_checkout_summary"/>
 
+    <include layout="@layout/partial_checkout_button"/>
+
 </LinearLayout>

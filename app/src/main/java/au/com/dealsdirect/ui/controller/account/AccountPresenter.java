@@ -3,6 +3,7 @@ package au.com.dealsdirect.ui.controller.account;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 
 import javax.inject.Inject;
 
@@ -19,60 +20,11 @@ import io.reactivex.disposables.CompositeDisposable;
 public class AccountPresenter<V extends AccountMvpView> extends BasePresenter<V> implements
         AccountMvpPresenter<V>, Serializable {
 
-    ArrayList<Integer> mAccountItems = new ArrayList<>(
-            Arrays.asList(
-                    R.string.account_orders,
-                    R.string.account_payments,
-                    R.string.account_details,
-                    R.string.account_addresses,
-                    R.string.account_returns,
-                    R.string.account_vouchers,
-                    R.string.account_invite_friend,
-                    R.string.account_language,
-                    R.string.account_country,
-                    R.string.account_contact_us,
-                    R.string.account_about_us,
-                    R.string.account_privacy,
-                    R.string.account_tnc,
-                    R.string.account_tutorial
-                    ));
-
-    ArrayList<Integer> mAccountImages = new ArrayList<>(Arrays.asList(
-
-            R.drawable.bg_account_orders,
-            R.drawable.bg_account_payments,
-            R.drawable.bg_account_details,
-            R.drawable.bg_account_address,
-            R.drawable.bg_account_returns,
-            R.drawable.bg_account_vouchers,
-            R.drawable.bg_account_invite_friend,
-            R.drawable.bg_account_languages,
-            R.drawable.bg_account_country,
-            R.drawable.bg_account_contact_us,
-            R.drawable.bg_account_about_us,
-            R.drawable.bg_account_privacy_policy,
-            R.drawable.bg_account_terms_and_conditions,
-            R.drawable.bg_account_tutorial,
-            R.drawable.bg_account_logout
-    ));
-
-
     @Inject
     public AccountPresenter(DataManager dataManager, SchedulerProvider schedulerProvider,
                             CompositeDisposable compositeDisposable) {
         super(dataManager, schedulerProvider, compositeDisposable);
 
-        //Temporary logic for determining multi country, multi language account item availabilities.
-
-        if(!getDataManager().getIsMultiCountry()){
-            mAccountItems.remove(mAccountItems.indexOf(R.string.account_country));
-            mAccountImages.remove(mAccountImages.indexOf(R.drawable.bg_account_country));
-        }
-
-        if(!getDataManager().getIsMultiLanguage()){
-            mAccountItems.remove(mAccountItems.indexOf(R.string.account_language));
-            mAccountImages.remove(mAccountImages.indexOf(R.drawable.bg_account_languages));
-        }
     }
 
     @Override
@@ -153,7 +105,25 @@ public class AccountPresenter<V extends AccountMvpView> extends BasePresenter<V>
         return getDataManager().isAuthorized();
     }
 
-    public void loadAccountItems() {
+    @Override
+    public void loadAccountItems(List<Integer> title, List<Integer> drawable) {
+        //Temporary logic for determining multi country, multi language account item availabilities.
+
+        List<Integer> mAccountItems = title;
+
+        List<Integer> mAccountImages = drawable;
+
+
+        if(!getDataManager().getIsMultiCountry()){
+            mAccountItems.remove(mAccountItems.indexOf(R.string.account_country));
+            mAccountImages.remove(mAccountImages.indexOf(R.drawable.bg_account_country));
+        }
+
+        if(!getDataManager().getIsMultiLanguage()){
+            mAccountItems.remove(mAccountItems.indexOf(R.string.account_language));
+            mAccountImages.remove(mAccountImages.indexOf(R.drawable.bg_account_languages));
+        }
+
         getMvpView().showAccountItems(mAccountItems, mAccountImages);
     }
 

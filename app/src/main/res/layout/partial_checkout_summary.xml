@@ -36,7 +36,8 @@
                 android:layout_weight="1"
                 android:gravity="end"
                 android:textSize="@dimen/text_size_medium"
-                android:textColor="@color/filter_icon_default"
+                android:textColor="@color/gray_title_text"
+                android:textStyle="bold"
                 tools:text="$9"/>
 
         </LinearLayout>
@@ -63,7 +64,8 @@
                 android:layout_weight="1"
                 android:gravity="end"
                 android:textSize="@dimen/text_size_medium"
-                android:textColor="@color/filter_icon_default"
+                android:textColor="@color/gray_title_text"
+                android:textStyle="bold"
                 tools:text="$9"/>
 
         </LinearLayout>
@@ -91,7 +93,8 @@
                 android:layout_weight="1"
                 android:gravity="end"
                 android:textSize="@dimen/text_size_medium"
-                android:textColor="@color/filter_icon_default"
+                android:textColor="@color/gray_title_text"
+                android:textStyle="bold"
                 tools:text="$9"/>
 
         </LinearLayout>
@@ -119,7 +122,8 @@
                 android:layout_weight="1"
                 android:gravity="end"
                 android:textSize="@dimen/text_size_medium"
-                android:textColor="@color/filter_icon_default"
+                android:textColor="@color/gray_title_text"
+                android:textStyle="bold"
                 tools:text="$9"/>
 
         </LinearLayout>
@@ -147,7 +151,7 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:text="@string/total"
-            android:textColor="@color/text_gray"
+            android:textColor="#676767"
             android:textSize="@dimen/text_size_xxlarge"/>
 
         <TextView

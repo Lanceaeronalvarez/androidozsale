@@ -48,7 +48,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:textColor="@color/gray_field_text"
-                    android:textSize="@dimen/text_size_normal"
+                    android:textSize="@dimen/text_size_large"
                     tools:ignore="HardcodedText"
                     tools:text="Philosophy Cotton Sleeveless Plain" />
 
@@ -66,7 +66,7 @@
                         android:layout_height="wrap_content"
                         android:text="Items:"
                         android:textColor="#b7b7b7"
-                        android:textSize="@dimen/text_size_normal"
+                        android:textSize="@dimen/text_size_xlarge"
                         tools:ignore="HardcodedText" />
 
 
@@ -81,7 +81,7 @@
 
                         tools:text="1"
                         android:textColor="@color/gray_field_text"
-                        android:textSize="@dimen/text_size_normal"
+                        android:textSize="@dimen/text_size_xlarge"
                         tools:ignore="HardcodedText" />
 
                 </RelativeLayout>
@@ -99,7 +99,7 @@
                         android:layout_height="wrap_content"
                         android:text="Size:"
                         android:textColor="#b7b7b7"
-                        android:textSize="@dimen/text_size_normal"
+                        android:textSize="@dimen/text_size_xlarge"
                         tools:ignore="HardcodedText" />
 
 
@@ -114,7 +114,7 @@
                         android:fontFamily="@string/font_app_regular"
                         tools:text="123"
                         android:textColor="@color/gray_field_text"
-                        android:textSize="@dimen/text_size_normal"
+                        android:textSize="@dimen/text_size_xlarge"
                         tools:ignore="HardcodedText" />
 
                 </RelativeLayout>
@@ -132,7 +132,7 @@
                         android:layout_height="wrap_content"
                         android:text="Price:"
                         android:textColor="#b7b7b7"
-                        android:textSize="@dimen/text_size_normal"
+                        android:textSize="@dimen/text_size_xlarge"
                         tools:ignore="HardcodedText" />
 
 
@@ -147,7 +147,7 @@
                         android:layout_toRightOf="@+id/viewholder_return_details_price_identifier"
                         tools:text="12.00"
                         android:textColor="@color/gray_field_text"
-                        android:textSize="@dimen/text_size_normal"
+                        android:textSize="@dimen/text_size_xlarge"
                         tools:ignore="HardcodedText" />
 
                 </RelativeLayout>
@@ -165,7 +165,7 @@
                         android:layout_height="wrap_content"
                         android:text="Subtotal:"
                         android:textColor="#b7b7b7"
-                        android:textSize="@dimen/text_size_normal"
+                        android:textSize="@dimen/text_size_xlarge"
                         tools:ignore="HardcodedText" />
 
 
@@ -179,7 +179,7 @@
                         android:layout_toRightOf="@+id/viewholder_returns_details_subtotal_indentifier"
                         tools:text="123"
                         android:textColor="@color/gray_field_text"
-                        android:textSize="@dimen/text_size_normal"
+                        android:textSize="@dimen/text_size_xlarge"
                         tools:ignore="HardcodedText" />
 
                 </RelativeLayout>
