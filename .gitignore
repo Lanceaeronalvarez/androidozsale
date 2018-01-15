@@ -43,3 +43,6 @@ captures/
 
 # Fastlane autogen
 report.xml
+
+# New Relic autogen
+newrelic.properties
