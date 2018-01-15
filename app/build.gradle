@@ -258,6 +258,7 @@ android {
         }
 
         ooTest {
+            res.srcDir 'src/ooTest/res/'
             java.srcDirs = ['src/commonControllers/java/', 'src/commonActivity/java/', 'src/main/java/']
         }
 
