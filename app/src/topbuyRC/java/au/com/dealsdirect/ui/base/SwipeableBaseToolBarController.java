@@ -185,6 +185,7 @@ public abstract class SwipeableBaseToolBarController extends BaseController {
                             //when collapsed, swipeable controllers should pop to root and not a simple back press should be executed
 //                            mActivity.onBackPressed();
                             getRouter().popToRoot();
+                            handleBack();
                             mActivity.setDraggableViewPager(true);
                             hideKeyboard();
                             break;
