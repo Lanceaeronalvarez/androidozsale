@@ -26,9 +26,18 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:textColor="@color/lightBlueGreen"
-            android:textSize="@dimen/text_size_large"
+            android:textSize="@dimen/text_size_xxx_large"
             android:textStyle="bold"
             tools:text="$10" />
+
+        <TextView
+            android:id="@+id/row_text_vouchers_value"
+            fontPath="@string/font_app_semibold"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textColor="@color/lightBlueGreen"
+            android:textSize="@dimen/text_size_xxx_large"
+            android:text="value"/>
 
 
         <TextView
@@ -49,7 +58,7 @@
             android:layout_marginTop="2dp"
             android:textColor="#999999"
             android:textSize="@dimen/text_size_small"
-            fontPath="@string/font_app_bold"
+            fontPath="@string/font_app_medium"
             tools:text="January 15" />
 
     </LinearLayout>

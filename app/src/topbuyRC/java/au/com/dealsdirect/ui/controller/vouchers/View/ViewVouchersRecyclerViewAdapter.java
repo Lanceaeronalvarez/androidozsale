@@ -134,14 +134,16 @@ public class ViewVouchersRecyclerViewAdapter extends RecyclerView.Adapter<ViewVo
 
             String voucherCostWithCurrency = PriceUtils.getVoucherStringValue(formattedVoucherValue);
             holder.mVouchersItemCostText.setText(voucherCostWithCurrency);
-            holder.mVouchersItemCostText.setVisibility(View.VISIBLE);
-            holder.mVouchersItemDescText.setText(mUseBefore);
+            holder.mVouchersItemDescText.setText(voucher.getFullname());
+            holder.mVouchersItemExpiresOnText.setText(mUseBefore);
+            holder.mTextValue.setVisibility(View.VISIBLE);
         } else {
 
             holder.mVouchersItemExpiresOnText.setText(voucher.getExpired());
-            holder.mVouchersItemDescText.setText(voucher.getFullname());
             holder.mVouchersLayout.setBackground(context.getResources().getDrawable(R.drawable.bg_voucher_container_gray));
             holder.mVouchersItemCostText.setText(voucher.getDiscountLeft());
+            holder.mVouchersItemDescText.setVisibility(View.GONE);
+            holder.mTextValue.setVisibility(View.GONE);
         }
 
     }

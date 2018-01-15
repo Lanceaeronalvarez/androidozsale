@@ -26,11 +26,19 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:textColor="@color/lightBlueGreen"
-            android:textSize="@dimen/text_size_large"
+            android:textSize="@dimen/text_size_xxx_large"
             android:textStyle="bold"
             fontPath="@string/fontname_lato_bold"
             tools:text="$10"/>
 
+        <TextView
+            android:id="@+id/row_text_vouchers_value"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textColor="@color/lightBlueGreen"
+            android:textSize="@dimen/text_size_xxx_large"
+            fontPath="@string/fontname_lato_bold"
+            tools:text="@string/value"/> />
 
         <TextView
             android:id="@+id/row_add_vouchers_text_item_desc"
@@ -39,7 +47,7 @@
             android:layout_marginTop="5dp"
             android:textColor="#999999"
             android:textSize="@dimen/text_size_small"
-            fontPath="@string/fontname_lato"
+            fontPath="@string/font_app_medium"
             tools:text="voucher good for use until,"/>
 
 
@@ -50,7 +58,7 @@
             android:layout_marginTop="2dp"
             android:textColor="#999999"
             android:textSize="@dimen/text_size_small"
-            fontPath="@string/fontname_lato_bold"
+            fontPath="@string/font_app_medium"
             tools:text="January 15"/>
 
     </LinearLayout>
