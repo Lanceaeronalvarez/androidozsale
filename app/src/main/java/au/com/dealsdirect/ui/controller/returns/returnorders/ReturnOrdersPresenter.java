@@ -22,7 +22,7 @@ public class ReturnOrdersPresenter<V extends ReturnOrdersMvpView> extends BasePr
 
     @Override
     public void loadOrders() {
-
+        getMvpView().showLoading();
         getCompositeDisposable()
                 .add(getDataManager()
                         .callGetReturnOrders()

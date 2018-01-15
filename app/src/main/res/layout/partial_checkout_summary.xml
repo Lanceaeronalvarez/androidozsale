@@ -29,13 +29,14 @@
             />
 
             <TextView
+                fontPath="@string/font_app_medium"
                 android:id="@+id/partial_checkout_summary_subtotal"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:gravity="end"
-                android:textColor="@color/gray_title_text"
-                android:textStyle="bold"
+                android:textSize="@dimen/text_size_medium"
+                android:textColor="@color/filter_icon_default"
                 tools:text="$9"/>
 
         </LinearLayout>
@@ -55,14 +56,14 @@
             />
 
             <TextView
+                fontPath="@string/font_app_medium"
                 android:id="@+id/partial_checkout_summary_shipping_fee"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:gravity="end"
-                android:textColor="@color/gray_title_text"
-                android:textStyle="bold"
-
+                android:textSize="@dimen/text_size_medium"
+                android:textColor="@color/filter_icon_default"
                 tools:text="$9"/>
 
         </LinearLayout>
@@ -83,13 +84,14 @@
             />
 
             <TextView
+                fontPath="@string/font_app_medium"
                 android:id="@+id/partial_checkout_summary_voucher"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:gravity="end"
-                android:textColor="@color/gray_title_text"
-                android:textStyle="bold"
+                android:textSize="@dimen/text_size_medium"
+                android:textColor="@color/filter_icon_default"
                 tools:text="$9"/>
 
         </LinearLayout>
@@ -110,14 +112,14 @@
             />
 
             <TextView
+                fontPath="@string/font_app_medium"
                 android:id="@+id/partial_checkout_summary_tax"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:gravity="end"
-                android:textColor="@color/gray_title_text"
-                android:textStyle="bold"
-
+                android:textSize="@dimen/text_size_medium"
+                android:textColor="@color/filter_icon_default"
                 tools:text="$9"/>
 
         </LinearLayout>
@@ -140,17 +142,17 @@
 
         <TextView
             android:id="@+id/textView"
-            fontPath="@string/font_app_heavy"
+            fontPath="@string/font_app_semibold"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:text="@string/total"
-            android:textColor="#676767"
+            android:textColor="@color/text_gray"
             android:textSize="@dimen/text_size_xxlarge"/>
 
         <TextView
             android:id="@+id/partial_checkout_summary_total"
-            fontPath="@string/font_app_heavy"
+            fontPath="@string/font_app_semibold"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"

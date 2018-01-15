@@ -24,6 +24,7 @@ public class CurrentReturnsPresenter<V extends CurrentReturnsMvpView> extends Ba
 
     @Override
     public void loadCurrentReturns() {
+        getMvpView().showLoading();
         doApiCallForResponse(getDataManager().callGetCurrentReturns(), new AppApiCallback() {
             @Override
             public void onSuccess(Object response) {

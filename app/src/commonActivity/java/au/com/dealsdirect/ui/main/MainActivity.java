@@ -121,9 +121,8 @@ public class MainActivity extends BaseActivity implements MainMvpView {
         mPresenter.onAttach(this);
         mPresenter.callGetTemplateTexts();
 
-
-        //Init All analytics sdk
-        initializeAnalytics();
+        // Init All analytics sdk
+        mPresenter.initializeAnalytics(this, this.getApplication());
 
         try {
             PackageInfo info = getPackageManager().getPackageInfo(
@@ -252,7 +251,7 @@ public class MainActivity extends BaseActivity implements MainMvpView {
                             //exit app
                             DialogUtils.showYesNoDialog(
                                     this,
-                                    getString(R.string.exit_app_name),
+                                    getString(R.string.app_name),
                                     getString(R.string.exit_app),
                                     getString(R.string.exit),
                                     getString(R.string.no),
@@ -793,21 +792,6 @@ public class MainActivity extends BaseActivity implements MainMvpView {
         CustomAlertDialog.showCustomAlertDialog(MainActivity.this, CustomAlertDialog.CustomDialogIconState.NEGATIVE, message);
     }
 
-    private void initializeAnalytics() {
-
-        // Only activate analytics for release versions
-        if (!mPresenter.isDebug()) {
-            //Fabric
-            Fabric.with(this, new Crashlytics());
-            Fabric.with(this, new Answers());
-
-            //New Relic
-            NewRelic.withApplicationToken(getString(R.string.new_relic_app_token)).start(this.getApplication());
-
-            initFacebookAnalytics();
-        }
-    }
-
     /**
      *  Method to register runtime broadcast receiver to show snackbar alert for internet connection..
      */
@@ -846,11 +830,6 @@ public class MainActivity extends BaseActivity implements MainMvpView {
         return getMainController().getHomeViewPager() == null;
     }
 
-    private void initFacebookAnalytics() {
-        FacebookSdk.setIsDebugEnabled(true);
-        FacebookSdk.addLoggingBehavior(LoggingBehavior.APP_EVENTS);
-    }
-
     @Override
     public void hideNoNetworkLayout() {
 
@@ -860,6 +839,5 @@ public class MainActivity extends BaseActivity implements MainMvpView {
     public void showNoNetworkLayout() {
 
     }
-
 
 }

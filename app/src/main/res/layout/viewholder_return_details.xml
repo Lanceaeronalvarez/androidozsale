@@ -1,12 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-              xmlns:app="http://schemas.android.com/apk/res-auto"
-              xmlns:tools="http://schemas.android.com/tools"
-              android:id="@+id/viewholder_return_detail_row_container"
-              android:padding="10dp"
-              android:orientation="vertical"
-              android:layout_width="match_parent"
-              android:layout_height="wrap_content">
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/viewholder_return_detail_row_container"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:padding="10dp"
+    tools:ignore="MissingPrefix">
+    
 
     <!--<View-->
     <!--android:id="@+id/new_returns_order_item_divider"-->
@@ -18,74 +20,69 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_marginTop="5dp"
         android:layout_marginBottom="5dp"
+        android:layout_marginTop="5dp"
         android:orientation="horizontal">
 
         <ImageView
-            android:visibility="visible"
             android:id="@+id/viewholder_return_detail_image_view"
             android:layout_width="100dp"
             android:layout_height="150dp"
-            tools:ignore="ContentDescription"/>
+            tools:ignore="ContentDescription" />
 
         <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content" >
-
+            android:layout_height="wrap_content">
 
             <LinearLayout
                 android:id="@+id/viewholder_return_details_information_content"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="5dp"
-                android:orientation="vertical"
-                android:layout_marginLeft="5dp">
+                android:layout_marginLeft="10dp"
+                android:layout_marginTop="10dp"
+                android:orientation="vertical">
 
                 <TextView
-                    android:fontFamily="@string/font_app_medium"
+                    fontPath="@string/font_app_bold"
                     android:id="@+id/viewholder_return_details_item_name"
-                    android:layout_width="wrap_content"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:textColor="@color/gray_field_label"
-                    android:text=""
-                    android:gravity="start"
-                    android:textSize="@dimen/text_size_large"
-                    android:maxLines="3"
-                    tools:ignore="HardcodedText"/>
+                    android:textColor="@color/gray_field_text"
+                    android:textSize="@dimen/text_size_normal"
+                    tools:ignore="HardcodedText"
+                    tools:text="Philosophy Cotton Sleeveless Plain" />
 
 
                 <RelativeLayout
+                    android:id="@+id/my_returns_details_item_count"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="25dp"
-                    android:id="@+id/my_returns_details_item_count">
+                    android:layout_marginTop="25dp">
 
 
                     <TextView
-                        android:fontFamily="@string/font_app_medium"
                         android:id="@+id/viewholder_returns_details_item_count_identifier"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:textColor="#b7b7b7"
                         android:text="Items:"
-                        android:textSize="@dimen/text_size_xlarge"
-                        tools:ignore="HardcodedText"/>
+                        android:textColor="#b7b7b7"
+                        android:textSize="@dimen/text_size_normal"
+                        tools:ignore="HardcodedText" />
 
 
                     <TextView
-                        android:fontFamily="@string/font_app_medium"
                         android:id="@+id/viewholder_returns_details_item_count_value"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:textColor="@color/gray_field_label"
-                        android:text="1"
-                        android:layout_marginLeft="4dp"
-                        android:textSize="@dimen/text_size_large"
-                        android:layout_toRightOf="@+id/viewholder_returns_details_item_count_identifier"
-                        android:layout_toEndOf="@+id/viewholder_returns_details_item_count_identifier"
                         android:layout_alignTop="@+id/viewholder_returns_details_item_count_identifier"
-                        tools:ignore="HardcodedText"/>
+                        android:layout_marginLeft="4dp"
+                        android:layout_toEndOf="@+id/viewholder_returns_details_item_count_identifier"
+                        android:layout_toRightOf="@+id/viewholder_returns_details_item_count_identifier"
+
+                        tools:text="1"
+                        android:textColor="@color/gray_field_text"
+                        android:textSize="@dimen/text_size_normal"
+                        tools:ignore="HardcodedText" />
 
                 </RelativeLayout>
 
@@ -97,29 +94,28 @@
                     android:layout_marginTop="2dp">
 
                     <TextView
-                        android:fontFamily="@string/font_app_medium"
                         android:id="@+id/viewholder_returns_details_size_indentifier"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
+                        android:text="Size:"
                         android:textColor="#b7b7b7"
-                        android:text="size:"
-                        android:textSize="@dimen/text_size_xlarge"
-                        tools:ignore="HardcodedText"/>
+                        android:textSize="@dimen/text_size_normal"
+                        tools:ignore="HardcodedText" />
 
 
                     <TextView
-                        android:fontFamily="@string/font_app_medium"
                         android:id="@+id/viewholder_returns_details_size_value"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:textColor="@color/gray_field_label"
-                        android:text="123"
-                        android:layout_marginLeft="4dp"
-                        android:textSize="@dimen/text_size_large"
-                        android:layout_toRightOf="@+id/viewholder_returns_details_size_indentifier"
-                        android:layout_toEndOf="@+id/viewholder_returns_details_size_indentifier"
                         android:layout_alignTop="@+id/viewholder_returns_details_size_indentifier"
-                        tools:ignore="HardcodedText"/>
+                        android:layout_marginLeft="4dp"
+                        android:layout_toEndOf="@+id/viewholder_returns_details_size_indentifier"
+                        android:layout_toRightOf="@+id/viewholder_returns_details_size_indentifier"
+                        android:fontFamily="@string/font_app_regular"
+                        tools:text="123"
+                        android:textColor="@color/gray_field_text"
+                        android:textSize="@dimen/text_size_normal"
+                        tools:ignore="HardcodedText" />
 
                 </RelativeLayout>
 
@@ -131,29 +127,28 @@
                     android:layout_marginTop="2dp">
 
                     <TextView
-                        android:fontFamily="@string/font_app_medium"
                         android:id="@+id/viewholder_return_details_price_identifier"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:textColor="#b7b7b7"
                         android:text="Price:"
-                        android:textSize="@dimen/text_size_xlarge"
-                        tools:ignore="HardcodedText"/>
+                        android:textColor="#b7b7b7"
+                        android:textSize="@dimen/text_size_normal"
+                        tools:ignore="HardcodedText" />
 
 
                     <TextView
-                        android:fontFamily="@string/font_app_medium"
+
                         android:id="@+id/viewholder_returns_order_item_total_cost_value"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:textColor="@color/gray_field_label"
-                        android:layout_toRightOf="@+id/viewholder_return_details_price_identifier"
-                        android:layout_toEndOf="@+id/viewholder_return_details_price_identifier"
                         android:layout_alignTop="@+id/viewholder_return_details_price_identifier"
-                        android:text="12.00"
                         android:layout_marginLeft="4dp"
-                        android:textSize="@dimen/text_size_large"
-                        tools:ignore="HardcodedText"/>
+                        android:layout_toEndOf="@+id/viewholder_return_details_price_identifier"
+                        android:layout_toRightOf="@+id/viewholder_return_details_price_identifier"
+                        tools:text="12.00"
+                        android:textColor="@color/gray_field_text"
+                        android:textSize="@dimen/text_size_normal"
+                        tools:ignore="HardcodedText" />
 
                 </RelativeLayout>
 
@@ -165,33 +160,29 @@
                     android:layout_marginTop="2dp">
 
                     <TextView
-                        android:fontFamily="@string/font_app_medium"
                         android:id="@+id/viewholder_returns_details_subtotal_indentifier"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:textColor="#b7b7b7"
                         android:text="Subtotal:"
-                        android:textSize="@dimen/text_size_xlarge"
-                        tools:ignore="HardcodedText"/>
+                        android:textColor="#b7b7b7"
+                        android:textSize="@dimen/text_size_normal"
+                        tools:ignore="HardcodedText" />
 
 
                     <TextView
-                        android:fontFamily="@string/font_app_medium"
                         android:id="@+id/viewholder_returns_details_subtotal_value"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:textColor="@color/gray_field_label"
-                        android:text="123"
-                        android:layout_marginLeft="4dp"
-                        android:textSize="@dimen/text_size_large"
-                        android:layout_toRightOf="@+id/viewholder_returns_details_subtotal_indentifier"
-                        android:layout_toEndOf="@+id/viewholder_returns_details_subtotal_indentifier"
                         android:layout_alignTop="@+id/viewholder_returns_details_subtotal_indentifier"
-                        tools:ignore="HardcodedText"/>
+                        android:layout_marginLeft="4dp"
+                        android:layout_toEndOf="@+id/viewholder_returns_details_subtotal_indentifier"
+                        android:layout_toRightOf="@+id/viewholder_returns_details_subtotal_indentifier"
+                        tools:text="123"
+                        android:textColor="@color/gray_field_text"
+                        android:textSize="@dimen/text_size_normal"
+                        tools:ignore="HardcodedText" />
 
                 </RelativeLayout>
-
-
 
 
                 <!--<RelativeLayout-->
@@ -207,7 +198,7 @@
                 <!--android:layout_width="wrap_content"-->
                 <!--android:layout_height="wrap_content"-->
                 <!--android:textColor="#b7b7b7"-->
-                <!--android:text="Tracking:"-->
+                <!--tools:text="Tracking:"-->
                 <!--android:textSize="@dimen/my_current_return_details_identifier_text_size"-->
                 <!--tools:ignore="HardcodedText"/>-->
 
@@ -218,7 +209,7 @@
                 <!--android:layout_width="wrap_content"-->
                 <!--android:layout_height="wrap_content"-->
                 <!--android:textColor="#acacac"-->
-                <!--android:text=""-->
+                <!--tools:text=""-->
                 <!--android:layout_marginLeft="2dp"-->
                 <!--android:textSize="@dimen/my_current_return_details_value_text_size"-->
                 <!--android:layout_toRightOf="@+id/new_returns_order_item_tracking_identifier"-->
@@ -230,6 +221,7 @@
 
 
             </LinearLayout>
+
         </RelativeLayout>
 
     </LinearLayout>

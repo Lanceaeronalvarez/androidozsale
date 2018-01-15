@@ -32,7 +32,7 @@ public class SharedArcFadePushChangeHandler extends TransitionChangeHandler {
     protected Transition getTransition(@NonNull ViewGroup container, View from, View to, boolean isPush) {
 
         TransitionSet transition = new TransitionSet()
-                .setOrdering(TransitionSet.ORDERING_SEQUENTIAL)
+                .setOrdering(TransitionSet.ORDERING_TOGETHER)
                 .addTransition(new Fade(Fade.OUT))
                 .addTransition(new TransitionSet().addTransition(new ChangeBounds()).addTransition(new ChangeClipBounds()).addTransition(new ChangeTransform()))
                 .addTransition(new Fade(Fade.IN));
@@ -51,6 +51,7 @@ public class SharedArcFadePushChangeHandler extends TransitionChangeHandler {
     public boolean removesFromViewOnPush() {
         return true;
     }
+
 
     @Override
     public void prepareForTransition(@NonNull ViewGroup container, @Nullable View from, @Nullable View to, @NonNull Transition transition, boolean isPush, @NonNull OnTransitionPreparedListener onTransitionPreparedListener) {

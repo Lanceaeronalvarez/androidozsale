@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/no_orders_layout"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:background="@android:color/white"
+    tools:ignore="MissingPrefix"
+    android:visibility="visible">
+    
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:orientation="vertical">
+
+        <ImageView
+            android:layout_width="@dimen/placeholder_icon_size"
+            android:layout_height="@dimen/placeholder_icon_size"
+            android:layout_gravity="center"
+            android:src="@drawable/ic_orders_placeholder"/>
+
+        <TextView
+            android:id="@+id/welcome"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            fontPath="@string/font_app_medium"
+            android:text="@string/welcome_to_my_orders"
+            android:layout_gravity="center"
+            android:textSize="@dimen/text_size_xxxlarge"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            fontPath="@string/font_app_light"
+            android:text="@string/you_currently_do_no_have_any_orders"
+            android:textColor="#D0D0D0"
+            android:layout_marginTop="10dp"
+            android:layout_marginBottom="@dimen/default_button_height"
+            android:paddingBottom="@dimen/default_button_height"
+            android:layout_gravity="center"
+            android:textSize="@dimen/text_size_xlarge"/>
+
+    </LinearLayout>
+
+    <!--<com.mysale.genie.views.custom.GenieButton-->
+        <!--android:id="@+id/my_orders_shop_now_button"-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="45dp"-->
+        <!--style="@style/default_button"-->
+        <!--app:font="@string/fontname_lato_bold"-->
+        <!--android:text="shop now"-->
+        <!--android:textSize="20sp"-->
+        <!--android:gravity="center"-->
+        <!--android:layout_margin="@dimen/activity_horizontal_margin"-->
+        <!--android:layout_alignParentBottom="true"/>-->
+
+
+</RelativeLayout>

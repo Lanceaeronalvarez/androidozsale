@@ -21,8 +21,8 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
-        android:text="no orders for return"
         android:gravity="center"
+        android:text="no orders for return"
         android:textSize="@dimen/text_size_xxxlarge" />
 
     <TextView
@@ -30,8 +30,10 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
-        android:gravity="center"
         android:layout_marginTop="10dp"
+        android:gravity="center"
+        android:layout_marginBottom="@dimen/default_button_height"
+        android:paddingBottom="@dimen/default_button_height"
         android:text="you have not added any orders for return."
         android:textColor="#9f9f9f"
         android:textSize="@dimen/text_size_xlarge" />

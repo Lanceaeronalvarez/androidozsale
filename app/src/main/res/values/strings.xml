@@ -1,12 +1,4 @@
 <resources>
-    <string name="facebook_app_id">1650094968544406</string>
-    <string name="facebook_app_secret">94da0f48bd2ffea25981e52c56f9260a</string>
-    <string name="fb_login_protocol_scheme">fb1650094968544406</string>
-    <string name="fb_page_id">257280167216</string>
-    <string name="default_country_id">DA</string>
-    <string name="default_language_id">EN</string>
-    <string name="new_relic_app_token">AAa9d543732ff39dddc60c9cb9ad8c9cf22297904b</string>
-    <string name="twitter_user_id">twitter://user?user_id=37405859</string>
 
     <string name="font_app_black">fonts/App-Font-Black.ttf</string>
     <string name="font_app_black_italic">fonts/App-Font-BlackItalic.ttf</string>
@@ -204,7 +196,7 @@
     <string name="you_have_not_added_any_items_in_your_shopping_cart">you do not currently have any items
     </string>
     <string name="add_payment_method">add payment method</string>
-    <string name="rate_us_message">We scheduledPlan your feedback, please let us know what do you feel
+    <string name="rate_us_message">We value your feedback, please let us know what do you feel
         about this app.
     </string>
     <string name="rate_us_positive_text">RATE IT NOW</string>
@@ -253,7 +245,6 @@
 
     <string name="search_filter_hint">Search Filter</string>
     <string name="write_a_message_here">write a message here</string>
-    <string name="exit_app_name">DealsDirect</string>
     <string name="exit_app">Exit app?</string>
     <string name="exit">exit</string>
     <string name="no">no</string>
@@ -261,7 +252,7 @@
     <string name="send_to_email">Send to Email</string>
     <string name="sold_out">Sold Out</string>
     <string name="dismiss">dismiss</string>
-    <string name="sumbit">Sumbit</string>
+    <string name="submit">Submit</string>
     <string name="write_us_a_message">Write us a message</string>
     <string name="shop_category">Shop</string>
     <string name="search_tag">Search</string>

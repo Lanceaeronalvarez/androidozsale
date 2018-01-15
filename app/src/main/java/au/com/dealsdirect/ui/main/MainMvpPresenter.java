@@ -48,6 +48,8 @@ public interface MainMvpPresenter<V extends MainMvpView> extends MvpPresenter<V>
 
     boolean isDebug();
 
+    void callGCMNotificationEvent(Context context);
+
 
     void facebookCompletedPurchase(BaseActivity activity,
                                    String paymentType,
@@ -56,4 +58,8 @@ public interface MainMvpPresenter<V extends MainMvpView> extends MvpPresenter<V>
                                    String countryId);
 
     void callApiSettings(Context context);
+
+    void initFacebookAnalytics();
+
+    void initializeAnalytics(Context activityContext, Context applicationContext);
 }

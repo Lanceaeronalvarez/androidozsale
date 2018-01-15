@@ -1,0 +1,140 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="category_default">shop</string>
+    <string name="sorry_default_text">sorry, no product matches with </string>
+    <string name="tap_to_retry">Tap to retry</string>
+    <string name="thank_you_for_shopping">Thank you for shopping with TopBuy</string>
+    <string name="my_vouchers">my vouchers</string>
+    <string name="value">value</string>
+    <string name="my_vouchers_view_detail">Invite your friends to join TOPBUY. Once your friend have
+        joined through your invitation and made their first purchase you will instantly receive a
+        $20 TOPBUY voucher to use towards any future purchase. \n\n You can apply any vouchers
+        currently in you account when you checkout your order. \n
+    </string>
+
+    <string name="return_policy">
+        return policy
+    </string>
+    <string name="estimated_delivery">shipping</string>
+
+    <string name="search_filter_hint">search</string>
+    <string name="apply">apply</string>
+    <string name="add_voucher_code">add voucher code</string>
+    <string name="my_voucher">my voucher</string>
+    <string name="promo_code">promo code</string>
+    <string name="enter_voucher_code">enter voucher code</string>
+    <string name="no_voucher_selected">no voucher selected</string>
+    <string name="voucher_code_added">Voucher code added</string>
+    <string name="voucher_is_applied">voucher is applied</string>
+    <string name="promo_code_applied">Promo code applied</string>
+    <string name="unable_to_apply_voucher">Unable to apply voucher</string>
+    <string name="add_new_voucher">add new voucher</string>
+    <string name="enter_promo_code">enter promo code</string>
+
+    <string name="invite_friends">invite friends</string>
+
+    <string name="your_cart_is_currently_empty">your cart is currently empty</string>
+    <string name="you_have_not_added_any_items_in_your_shopping_cart">you have not added any items
+        in your shopping cart
+    </string>
+
+    <!--STRINGS for tutorial headers-->
+    <string name="tutorial_header_text_one">click shop to browse categories</string>
+    <string name="tutorial_header_text_two">swipe down to \ndismiss category</string>
+    <string name="tutorial_header_text_three">pinch to zoom on \ndetails image</string>
+    <string name="tutorial_header_text_four">swipe to view my cart \nand my account</string>
+
+
+    <string name="base_html_template_header" formatted="false">
+        <![CDATA["<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN">
+        <html>
+            <head>
+                <style type="text/css">
+
+                    table {
+                        width: auto;
+                    }
+                    hr {
+                        border: 0;
+                        width: 80%;
+                        background-color: #FFFFFF;
+                        height: 1px;
+                    }
+                    a {
+                        color: #1C6CFD;
+                        text-decoration: none;
+                    }
+
+                    a:link{
+                        color: #1CB1B4;
+                        text-decoration: underline;
+                    }
+
+                    li{
+                        font-family: Lato;
+                        color: #757373;
+                    }
+
+                    b {
+                        font-family: Lato;
+                        color: #466e87;
+                    }
+
+                    br {
+                        font-family: Lato;
+                        color: #6E6868;
+                    }
+
+                    body {
+                        -webkit-text-size-adjust: none;
+                        font-family: Lato;
+                        color: #6E6868;
+                        font-family: Lato;
+                        font-size: 10pt;
+                        background-color: #FFFFFF;
+                        word-wrap: break-word;
+                        padding-left: 5px;
+                        padding-right: 5px;
+                        padding-top: 0px;
+                    }
+
+                    embed{
+                        width:100%;
+                    }
+
+                    object{
+                        width:100%;
+
+                    }
+
+                    iframe{
+                        width:100%;
+
+                    }
+
+                    html {
+                        -webkit-text-size-adjust: none; / Never autoresize text /
+                    }
+                </style>
+                <meta name='viewport' content='width=device-width, initial-scale=1.0, maximum-scale=1.0'>
+            </head>
+        <body>"]]>
+    </string>
+
+    <!--MY ACCOUNT ITEMS-->
+    <string name="account_orders">my orders</string>
+    <string name="account_payments">my payments</string>
+    <string name="account_details">my details</string>
+    <string name="account_addresses">my addresses</string>
+    <string name="account_returns">my returns</string>
+    <string name="account_vouchers">my vouchers</string>
+    <string name="account_invite_friend">invite friends</string>
+    <string name="account_language">language</string>
+    <string name="account_contact_us">contact us</string>
+    <string name="account_country">country</string>
+    <string name="account_about_us">about us</string>
+    <string name="account_privacy">privacy policy</string>
+    <string name="account_tnc">terms &amp; conditions</string>
+    <string name="account_tutorial">tutorial</string>
+    <string name="account_logout">logout</string>
+</resources>

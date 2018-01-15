@@ -7,13 +7,13 @@
     android:layout_margin="5dp"
     android:layout_width="match_parent"
     android:layout_height="@dimen/return_card_height"
-    android:background="@drawable/bg_card_view_states">
+    android:background="@drawable/bg_card_view_states"
+    tools:ignore="MissingPrefix">
 
     <RelativeLayout
         android:id="@+id/viewholder_current_return_content_container"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="0dp">
+        android:layout_height="wrap_content">
 
         <RelativeLayout
             android:id="@+id/my_order_information_header"
@@ -28,7 +28,7 @@
                 android:text="Request #:"
                 android:textColor="#6c6b6b"
                 android:textSize="@dimen/text_size_large"
-                android:fontFamily="@string/font_app_bold"
+                fontPath="@string/font_app_bold"
                 tools:ignore="HardcodedText"/>
 
             <TextView
@@ -42,7 +42,7 @@
                 android:text="204400890"
                 android:textColor="@color/colorAccent"
                 android:textSize="@dimen/text_size_large"
-                android:fontFamily="@string/font_app_bold"
+                fontPath="@string/font_app_bold"
                 tools:ignore="HardcodedText"/>
 
 
@@ -54,9 +54,9 @@
                 android:layout_marginTop="20dp"
                 android:text="Philosophy Cotton Sleeveless Plain"
                 android:textColor="#878787"
-                android:textSize="@dimen/text_size_xlarge"
+                android:textSize="@dimen/text_size_normal"
                 android:maxLines="2"
-                android:fontFamily="@string/font_app_bold"
+                fontPath="@string/font_app_bold"
                 tools:ignore="HardcodedText"/>
 
         </RelativeLayout>
@@ -72,27 +72,17 @@
         </View>
 
 
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:clickable="true"
-            android:id="@+id/current_return_clickable_container"
-            android:layout_alignTop="@+id/current_return_items_recyclerview"
-            android:layout_alignBottom="@+id/current_return_items_recyclerview"
-            android:orientation="horizontal">
-
-        </LinearLayout>
-
         <android.support.v7.widget.RecyclerView
             android:id="@+id/current_return_items_recyclerview"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_below="@+id/return_header_divider"
-            android:layout_above="@+id/my_current_return_information_text_content"
+            android:focusable="true"
             android:clickable="true"
+            android:isScrollContainer="false"
+            android:nestedScrollingEnabled="false"
             android:orientation="vertical"
-            android:paddingLeft="10dp"
-            android:paddingRight="10dp">
+            android:padding="10dp">
 
         </android.support.v7.widget.RecyclerView>
 
@@ -118,8 +108,8 @@
                     android:layout_height="wrap_content"
                     android:text="Request Date:"
                     android:textColor="#5c5c5c"
-                    android:textSize="@dimen/text_size_medium"
-                    android:fontFamily="@string/font_app_medium"
+                    android:textSize="@dimen/text_size_small"
+                    fontPath="@string/font_app_medium"
                     tools:ignore="HardcodedText"/>
 
 
@@ -132,8 +122,8 @@
                     android:layout_marginLeft="2dp"
                     android:text="12/08/16"
                     android:textColor="#1b1b1b"
-                    android:textSize="@dimen/text_size_medium"
-                    android:fontFamily="@string/font_app_medium"
+                    android:textSize="@dimen/text_size_small"
+                    fontPath="@string/font_app_bold"
                     tools:ignore="HardcodedText"/>
 
             </RelativeLayout>
@@ -160,8 +150,8 @@
                     android:layout_height="wrap_content"
                     android:text="Approved Date:"
                     android:textColor="#5c5c5c"
-                    android:textSize="@dimen/text_size_medium"
-                    android:fontFamily="@string/font_app_medium"
+                    android:textSize="@dimen/text_size_small"
+                    fontPath="@string/font_app_medium"
                     tools:ignore="HardcodedText"/>
 
 
@@ -174,8 +164,8 @@
                     android:layout_marginLeft="2dp"
                     android:text="---"
                     android:textColor="#1b1b1b"
-                    android:textSize="@dimen/text_size_medium"
-                    android:fontFamily="@string/font_app_bold"
+                    android:textSize="@dimen/text_size_small"
+                    fontPath="@string/font_app_bold"
                     tools:ignore="HardcodedText"/>
 
             </RelativeLayout>
@@ -202,8 +192,8 @@
                     android:layout_height="wrap_content"
                     android:text="Status:"
                     android:textColor="#5c5c5c"
-                    android:textSize="@dimen/text_size_medium"
-                    android:fontFamily="@string/font_app_medium"
+                    android:textSize="@dimen/text_size_small"
+                    fontPath="@string/font_app_medium"
                     tools:ignore="HardcodedText"/>
 
 
@@ -216,8 +206,8 @@
                     android:layout_marginLeft="2dp"
                     android:text="---"
                     android:textColor="#1b1b1b"
-                    android:textSize="@dimen/text_size_medium"
-                    android:fontFamily="@string/font_app_black"
+                    android:textSize="@dimen/text_size_small"
+                    fontPath="@string/font_app_bold"
                     tools:ignore="HardcodedText"/>
 
             </RelativeLayout>
@@ -245,8 +235,7 @@
                     android:layout_height="wrap_content"
                     android:text="RAN:"
                     android:textColor="#5c5c5c"
-                    android:textSize="@dimen/text_size_medium"
-                    android:fontFamily="@string/font_app_black"
+                    android:textSize="@dimen/text_size_small"
                     tools:ignore="HardcodedText"/>
 
 
@@ -259,8 +248,8 @@
                     android:layout_marginLeft="2dp"
                     android:text="Pending"
                     android:textColor="#1b1b1b"
-                    android:textSize="@dimen/text_size_medium"
-                    android:fontFamily="@string/font_app_bold"
+                    android:textSize="@dimen/text_size_small"
+                    fontPath="@string/font_app_bold"
                     tools:ignore="HardcodedText"/>
 
             </RelativeLayout>

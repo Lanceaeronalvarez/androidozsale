@@ -5,7 +5,8 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="horizontal"
-    android:padding="16dp">
+    android:padding="16dp"
+    tools:ignore="MissingPrefix">
 
     <ImageView
         android:id="@+id/item_checkout_image"
@@ -32,18 +33,17 @@
                 android:layout_weight="2"
                 android:textColor="#717171"
                 android:textSize="16sp"
-                
                 tools:text="@string/test_product_name" />
 
             <TextView
+                fontPath="@string/font_app_semibold"
                 android:id="@+id/item_checkout_price"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:gravity="end"
                 android:textColor="@color/cart_order_price_text_color"
-                android:textSize="18sp"
-                android:textStyle="bold"
+                android:textSize="@dimen/text_size_xxlarge"
                 tools:text="$19.00" />
         </LinearLayout>
 

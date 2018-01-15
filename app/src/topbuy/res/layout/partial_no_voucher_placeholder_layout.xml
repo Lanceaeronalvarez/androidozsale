@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/no_vouchers_placeholder"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@android:color/white"
+    android:paddingLeft="@dimen/place_holder_padding"
+    android:paddingRight="@dimen/place_holder_padding"
+    android:visibility="visible"
+    tools:ignore="MissingPrefix">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:orientation="vertical">
+
+        <ImageView
+            android:layout_width="60dp"
+            android:layout_height="60dp"
+            android:layout_gravity="center"
+            android:src="@drawable/ic_vouchers_placeholder" />
+
+        <TextView
+            fontPath="@string/font_app_medium"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:text="welcome to my vouchers!"
+            android:textSize="@dimen/text_size_xx_large" />
+
+        <TextView
+            fontPath="@string/font_app_light"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginBottom="@dimen/default_button_height"
+            android:layout_marginTop="10dp"
+            android:paddingBottom="@dimen/default_button_height"
+            android:text="you currently do not have any vouchers."
+            android:textColor="#D0D0D0"
+            android:textSize="@dimen/text_size_xlarge" />
+
+    </LinearLayout>
+
+</RelativeLayout>
