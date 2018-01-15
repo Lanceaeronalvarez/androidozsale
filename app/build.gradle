@@ -294,6 +294,7 @@ android {
         }
 
         topbuyTest {
+            res.srcDir 'src/topbuyRC/res/'
             java.srcDirs = ['src/topbuyRC/java/', 'src/main/java/']
         }
 

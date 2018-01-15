@@ -154,13 +154,11 @@ public class AccountController extends BaseController implements AccountMvpView 
 
     @Override
     public void showAccountItems(List<Integer> accountItems, List<Integer> accountImages) {
-        List<Integer> newAccountItems = new ArrayList<>(accountItems);
-
         if (mPresenter.isAuthorized()) {
-            newAccountItems.add(R.string.account_logout);
+            titles.add(R.string.account_logout);
         }
 
-        accountItemAdapter = new AccountItemAdapter(mActivity, newAccountItems, accountImages, mPresenter);
+        accountItemAdapter = new AccountItemAdapter(mActivity, titles, accountImages, mPresenter);
         mAccountRecyclerView.setAdapter(accountItemAdapter);
         mAccountRecyclerView.setLayoutManager(new LinearLayoutManager(mActivity, LinearLayoutManager.VERTICAL, false));
         mAccountRecyclerView.setItemAnimator(new DefaultItemAnimator());
@@ -318,7 +316,7 @@ public class AccountController extends BaseController implements AccountMvpView 
         mActivity.callLogout(new AuthHandler() {
             @Override
             public void success() {
-
+                titles.remove(titles.indexOf(R.string.account_logout));
                 mPresenter.loadAccountItems(titles, drawables);
                 CartUtil.setValueToCart(0);
                 updateCartCount();
