@@ -22,10 +22,12 @@ import com.bluelinelabs.conductor.ControllerChangeHandler;
 import com.bluelinelabs.conductor.changehandler.HorizontalChangeHandler;
 import com.bluelinelabs.conductor.changehandler.VerticalChangeHandler;
 import com.google.gson.Gson;
+import com.jakewharton.rxbinding2.view.RxView;
 import com.mysale.genie.utility.RxBus;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 import javax.inject.Inject;
 
@@ -58,6 +60,8 @@ import au.com.dealsdirect.utils.IntrospectionUtils;
 import au.com.dealsdirect.utils.PriceUtils;
 import au.com.dealsdirect.utils.module.GateKeeper;
 import butterknife.BindView;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.disposables.CompositeDisposable;
 
 import static au.com.dealsdirect.service.ourpay.OurpayStateManager.CARD_PAYPAL;
 import static au.com.dealsdirect.service.ourpay.OurpayTemplateText.KEY_OURPAY_TC_VALIDATION_FAILED;
@@ -120,7 +124,7 @@ public class CheckoutController extends SwipeableBaseToolBarController implement
     private Value mValue;
 
     private boolean mCartIsLoading = false;
-
+    private CompositeDisposable mClickListeners;
 
     public OurpayPanel ourpayPanel;
 
@@ -287,7 +291,30 @@ public class CheckoutController extends SwipeableBaseToolBarController implement
     protected void onAttach(@NonNull View view) {
         super.onAttach(view);
         mPresenter.onAttach(this);
+        mClickListeners = new CompositeDisposable();
 
+        //        disabling masterpass for TB atm 01/16/2018 for 2.3
+//        mMasterpassButton.setOnClickListener(view3 -> onMasterpassButtonClick());
+
+        mClickListeners.add(RxView.clicks(mPayButton)
+                .throttleFirst(1000, TimeUnit.MILLISECONDS)
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(action -> onPayButtonClick()));
+
+        mClickListeners.add(RxView.clicks(mPaypalButton)
+                .throttleFirst(1000, TimeUnit.MILLISECONDS)
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(action -> onPaypalButtonClick()));
+
+    }
+
+    @Override
+    public void onDetach(View view) {
+        super.onDetach(view);
+        if(mClickListeners != null) {
+            mClickListeners.dispose();
+        }
+        mClickListeners = null;
     }
 
     @Override
@@ -301,11 +328,6 @@ public class CheckoutController extends SwipeableBaseToolBarController implement
         mAddressChangeText.setOnClickListener(mChangeClickListener);
         mPaymentChangeText.setOnClickListener(mChangeClickListener);
         mVoucherChangeText.setOnClickListener(mChangeClickListener);
-
-        mPayButton.setOnClickListener(view1 -> onPayButtonClick());
-        mPaypalButton.setOnClickListener(view2 -> onPaypalButtonClick());
-//        disabling masterpass for TB atm 01/16/2018 for 2.3
-//        mMasterpassButton.setOnClickListener(view3 -> onMasterpassButtonClick());
 
         //Code for returning to checkout, call reload
         getRouter().addChangeListener(new ControllerChangeHandler.ControllerChangeListener() {

@@ -98,6 +98,7 @@ public class MainActivity extends BaseActivity implements MainMvpView {
     private boolean isTemplateTextsStored = false;
     private boolean mIsAddPaymentControllerFromCart = false; //hence its from myAccounts
     private FetchTokenHandler mFetchTokenHandler;
+    private boolean mIsViewAttached = false;
 
     AuthHandler mAuthHandler;
 
@@ -107,6 +108,7 @@ public class MainActivity extends BaseActivity implements MainMvpView {
         super.onCreate(savedInstanceState);
 
         setContentView(R.layout.activity_main);
+        mIsViewAttached = true;
 
         getActivityComponent().inject(this);
 
@@ -156,6 +158,12 @@ public class MainActivity extends BaseActivity implements MainMvpView {
             //If not logged in, call GetPublicAppSettings
             mPresenter.callGetPublicAppSettings();
         }
+    }
+
+    @Override
+    protected void onDestroy() {
+        mIsViewAttached = false;
+        super.onDestroy();
     }
 
     @Override
@@ -775,5 +783,10 @@ public class MainActivity extends BaseActivity implements MainMvpView {
     @Override
     public void showNoNetworkLayout() {
 
+    }
+
+    @Override
+    public boolean isViewAttached() {
+        return mIsViewAttached;
     }
 }
