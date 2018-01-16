@@ -21,6 +21,8 @@ import au.com.dealsdirect.R;
 import au.com.dealsdirect.ui.controller.checkout.checkout.CheckoutController;
 import au.com.dealsdirect.ui.controller.invite.InviteSendController;
 import au.com.dealsdirect.ui.controller.legalities.LegalitiesController;
+import au.com.dealsdirect.ui.controller.orders.orderdetails.OrderDetailsController;
+import au.com.dealsdirect.ui.controller.orders.orders.OrdersController;
 import au.com.dealsdirect.ui.controller.vouchers.View.ViewVouchersController;
 import butterknife.BindView;
 import butterknife.OnClick;
@@ -116,7 +118,8 @@ public abstract class SwipeableBaseToolBarController extends BaseController {
             if(!(this instanceof LegalitiesController) &&
                     !(this instanceof InviteSendController) &&
                     !(this instanceof ViewVouchersController) &&
-                    !(this instanceof CheckoutController)) {
+                    !(this instanceof CheckoutController) &&
+                    !(this instanceof OrderDetailsController)) {
                 showBottomLayout();
             }
         }
