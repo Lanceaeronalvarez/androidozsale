@@ -229,8 +229,6 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
                 .subscribe(v -> {
                     mActivity.getMainController().getHomeViewPager().setCurrentItem(2);
                 });
-
-        mAccountsPresenter.onAttach((AccountMvpView) GateKeeper.getCurrentControllerOnRouter(mActivity.getAccountsRouter()));
     }
 
     @Override
@@ -468,6 +466,7 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
     @Override
     public void onDetach(View view) {
         mCartViewClickListener.dispose();
+        mActivity.setDraggableViewPager(true);
         super.onDetach(view);
     }
 
@@ -570,6 +569,8 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
                     for(int i = 0; i < drawable.length(); i++) {
                         drawables.add(drawable.getResourceId(i,0));
                     }
+
+                    mAccountsPresenter.onAttach((AccountMvpView) GateKeeper.getCurrentControllerOnRouter(mActivity.getAccountsRouter()));
                     mAccountsPresenter.loadAccountItems(titles, drawables);
                 }
 
