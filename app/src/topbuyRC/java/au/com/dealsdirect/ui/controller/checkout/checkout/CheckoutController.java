@@ -304,7 +304,8 @@ public class CheckoutController extends SwipeableBaseToolBarController implement
 
         mPayButton.setOnClickListener(view1 -> onPayButtonClick());
         mPaypalButton.setOnClickListener(view2 -> onPaypalButtonClick());
-        mMasterpassButton.setOnClickListener(view3 -> onMasterpassButtonClick());
+//        disabling masterpass for TB atm 01/16/2018 for 2.3
+//        mMasterpassButton.setOnClickListener(view3 -> onMasterpassButtonClick());
 
         //Code for returning to checkout, call reload
         getRouter().addChangeListener(new ControllerChangeHandler.ControllerChangeListener() {
@@ -422,7 +423,8 @@ public class CheckoutController extends SwipeableBaseToolBarController implement
 
             mPayButton.setVisibility(View.VISIBLE);
             mPaypalButton.setVisibility(View.VISIBLE);
-            mMasterpassButton.setVisibility(View.VISIBLE);
+//            disabling masterpass for TB atm 01/16/2018 for 2.3
+//            mMasterpassButton.setVisibility(View.VISIBLE);
             mActivity.setPaymentMethodSelected(null);
             return;
 
@@ -443,7 +445,8 @@ public class CheckoutController extends SwipeableBaseToolBarController implement
             mAddNewPaymentLayout.setVisibility(View.GONE);
             mPaymentLayout.setVisibility(View.VISIBLE);
             mPaymentChangeText.setVisibility(View.VISIBLE);
-            mMasterpassButton.setVisibility(View.GONE);
+//            disabling masterpass for TB atm 01/16/2018 for 2.3
+//            mMasterpassButton.setVisibility(View.GONE);
         }
 
         //Payment buttons

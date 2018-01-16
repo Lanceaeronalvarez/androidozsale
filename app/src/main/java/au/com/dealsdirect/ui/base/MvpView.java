@@ -33,4 +33,6 @@ public interface MvpView {
 
     void showNoNetworkLayout();
 
+    boolean isViewAttached();
+
 }

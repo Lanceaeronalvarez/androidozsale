@@ -52,15 +52,11 @@ public class BasePresenter<V extends MvpView> implements MvpPresenter<V> {
     }
 
     public boolean isViewAttached() {
-        return mMvpView != null;
+        return mMvpView != null && mMvpView.isViewAttached();
     }
 
     public V getMvpView() {
         return mMvpView;
-    }
-
-    public void checkViewAttached() {
-        if (!isViewAttached()) throw new MvpViewNotAttachedException();
     }
 
     public DataManager getDataManager() {
