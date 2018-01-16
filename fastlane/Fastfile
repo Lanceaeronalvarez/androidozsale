@@ -82,8 +82,7 @@ projectDir = app_path + '/app/build/outputs/apk/' + app_flavor + '/release/'
 end
 
 # Builds the app with scheme name
-def build(build_variant, app_flavor)
-  increment_version_code_android(product_flavor: app_flavor)
+def build(build_variant)
   gradle(task: "assemble", flavor: build_variant)
 end
 
@@ -97,13 +96,16 @@ def displayEmails(emails)
 end
 
 lane :dd_build do |options|
-  build(options[:build_variant], options[:app_flavor])
+  build(options[:build_variant])
 
   emails = options[:emails]
 
   displayEmails(emails)
 
   uploadToFabric(options[:app_name], emails, options[:apk_name], options[:app_path], options[:app_flavor])
+
+  increment_version_code_android(product_flavor: options[:app_flavor])
+
 end
 
 lane :fabric_deploy_ba_test do
