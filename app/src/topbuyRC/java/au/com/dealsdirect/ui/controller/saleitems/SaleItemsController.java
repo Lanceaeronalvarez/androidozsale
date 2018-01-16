@@ -15,6 +15,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.WindowManager;
 import android.widget.EditText;
 import android.widget.FrameLayout;
 import android.widget.RelativeLayout;
@@ -323,6 +324,12 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
         if (isSetupFinished) {
             mKeyboardHeightProvider = new KeyboardHeightProvider(activity);
             mKeyboardHeightProvider.setKeyboardHeightObserver(this);
+        }
+
+        if(mSearchTagsAdapter.getEditTextViewHolder().getEditText().hasFocus()){
+            activity.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_PAN|WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE);
+            //set search tab
+            mSearchFilterPresenter.selectTabOfFilterType("");
         }
     }
 
@@ -642,7 +649,7 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
 
     @Override
     public void onShowKeyboard() {
-        mSearchTagsAdapter.getEditTextViewHolder().getEditText().requestFocus();
+//        mSearchTagsAdapter.getEditTextViewHolder().getEditText().requestFocus();
         KeyboardUtils.showSoftInput(mSearchTagsAdapter.getEditTextViewHolder().getEditText(), mActivity);
     }
 
