@@ -107,12 +107,14 @@ public class MainActivity extends BaseActivity implements MainMvpView {
     private boolean mIsFromCategories = false;
     private boolean mIsViewPagerSet = false;
     private boolean isTemplateTextsStored = false;
+    private boolean mIsViewAttached = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
         setContentView(R.layout.activity_main);
+        mIsViewAttached = true;
 
         getActivityComponent().inject(this);
 
@@ -193,6 +195,7 @@ public class MainActivity extends BaseActivity implements MainMvpView {
     @Override
     protected void onDestroy() {
         mPresenter.onDetach();
+        mIsViewAttached = false;
         super.onDestroy();
     }
 
@@ -838,6 +841,11 @@ public class MainActivity extends BaseActivity implements MainMvpView {
     @Override
     public void showNoNetworkLayout() {
 
+    }
+
+    @Override
+    public boolean isViewAttached() {
+        return mIsViewAttached;
     }
 
 }
