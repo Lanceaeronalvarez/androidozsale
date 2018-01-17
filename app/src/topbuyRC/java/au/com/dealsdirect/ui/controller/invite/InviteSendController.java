@@ -178,6 +178,7 @@ public class InviteSendController extends SwipeableBaseToolBarController impleme
         mToolbarTitle.setText(mActivity.getResources().getString(R.string.invite_friends));
         mActivity.getMainController().showBottomNav();
 
+        //TODO: check if variant has its own invite_friend_voucher_medium
         Glide.with(mActivity)
                 .load(R.drawable.tb_invite_friend_vouchers_medium)
                 .placeholder(R.drawable.invite_friend_vouchers_medium)
