@@ -201,10 +201,7 @@ public class AddContactController extends SwipeableBaseToolBarController impleme
 
             mPresenter.loadContactUsSubjects();
             Prefs.putBoolean("isSubjectsLoaded", true);
-        } else {
-            setupDefaultBottomButton("submit", onClickListener);
         }
-
 //        final String chosenSubject = mAddContactSubjectText.getText().toString();
 //        final String chosenOrder = mAddContactOrderText.getText().toString();
 
@@ -254,36 +251,6 @@ public class AddContactController extends SwipeableBaseToolBarController impleme
 
         } else if (mFromFragmentId.equals("CONTACT_US")) {
 
-            String currentSubject = ContactPreferenceHelper.getChosenSubject(mActivity);
-            String currentOrder = ContactPreferenceHelper.getChosenOrder(mActivity);
-            mChosenOptionInvoice = ContactPreferenceHelper.getChosenInvoice(mActivity);
-
-//            myContactsSelectSubjectChosenOption.setText(mContactHistoryChosenSubject);
-            mPresenter.loadContactUsOrders();
-
-            mPresenter.loadContactUsSubjects();
-
-            if (!hasLoadedOrders) {
-
-                mPresenter.loadContactUsOrders();
-
-            }
-            if (!hasLoadedSubjects) {
-
-                mPresenter.loadContactUsSubjects();
-            }
-
-            if (!currentOrder.isEmpty()) {
-
-                showContactFirstOrderFromPreference(currentOrder);
-            }
-
-            if (!currentSubject.isEmpty()) {
-
-                showContactFirstSubjectFromPreference(currentSubject);
-
-            }
-
             onClickListener = view12 -> {
                 mChosenOptionInvoice = ContactPreferenceHelper.getChosenInvoice(mActivity);
                 CreateContactRequest createContactRequest = new CreateContactRequest();
@@ -313,6 +280,21 @@ public class AddContactController extends SwipeableBaseToolBarController impleme
                 }
             };
 
+            String currentSubject = ContactPreferenceHelper.getChosenSubject(mActivity);
+            String currentOrder = ContactPreferenceHelper.getChosenOrder(mActivity);
+            mChosenOptionInvoice = ContactPreferenceHelper.getChosenInvoice(mActivity);
+
+//            myContactsSelectSubjectChosenOption.setText(mContactHistoryChosenSubject);
+            mPresenter.loadContactUsOrders();
+            mPresenter.loadContactUsSubjects();
+
+            if (!currentOrder.isEmpty()) {
+                showContactFirstOrderFromPreference(currentOrder);
+            }
+
+            if (!currentSubject.isEmpty()) {
+                showContactFirstSubjectFromPreference(currentSubject);
+            }
         }
     }
 
