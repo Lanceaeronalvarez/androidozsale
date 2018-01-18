@@ -11,9 +11,7 @@ import au.com.dealsdirect.service.ourpay.Ourpay;
 import au.com.dealsdirect.service.ourpay.OurpayError;
 import au.com.dealsdirect.service.ourpay.OurpayState;
 import au.com.dealsdirect.service.ourpay.OurpayStateManager;
-import au.com.dealsdirect.ui.base.BaseActivity;
 import au.com.dealsdirect.ui.base.BasePresenter;
-import au.com.dealsdirect.utils.AppEventHelper;
 import au.com.dealsdirect.utils.CartUtil;
 import au.com.dealsdirect.utils.rx.SchedulerProvider;
 import io.reactivex.disposables.CompositeDisposable;
@@ -145,16 +143,6 @@ public class SaleItemDetailsPresenter<V extends SaleItemDetailsMvpView> extends 
         getMvpView().showMyPayDetails(value, ourpay);
 
 
-    }
-
-    @Override
-    public void facebookViewedContent(BaseActivity activity, String itemId, String itemName, double price, String countryId) {
-        AppEventHelper.viewedContent(activity, itemId, itemName, price, countryId);
-    }
-
-    @Override
-    public void facebookAddedToCart(BaseActivity activity, String itemId, String itemName, double price, String countryId) {
-        AppEventHelper.addedToCart(activity, itemId, itemName, price, countryId);
     }
 
     @Override

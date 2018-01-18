@@ -48,13 +48,6 @@ public interface MainMvpPresenter<V extends MainMvpView> extends MvpPresenter<V>
 
     void callGCMNotificationEvent(Context context);
 
-
-    void facebookCompletedPurchase(BaseActivity activity,
-                                   String paymentType,
-                                   int numItems,
-                                   double price,
-                                   String countryId);
-
     void callApiSettings(Context context);
 
     void initFacebookAnalytics();

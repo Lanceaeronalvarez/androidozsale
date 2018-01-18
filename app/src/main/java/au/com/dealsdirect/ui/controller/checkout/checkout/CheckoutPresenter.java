@@ -7,7 +7,6 @@ import java.util.ArrayList;
 import javax.inject.Inject;
 
 import au.com.dealsdirect.data.DataManager;
-import au.com.dealsdirect.data.network.AppApiCallback;
 import au.com.dealsdirect.data.network.model.checkout.AdjustOrderItem;
 import au.com.dealsdirect.data.network.model.checkout.GetCurrentOrder;
 import au.com.dealsdirect.data.network.model.checkout.GetUserPaymentMethods;
@@ -17,10 +16,8 @@ import au.com.dealsdirect.service.ourpay.OurpayPhoneVerification;
 import au.com.dealsdirect.service.ourpay.OurpayState;
 import au.com.dealsdirect.service.ourpay.OurpayStateManager;
 import au.com.dealsdirect.service.ourpay.OurpayUtils;
-import au.com.dealsdirect.ui.base.BaseActivity;
 import au.com.dealsdirect.ui.base.BasePresenter;
 import au.com.dealsdirect.ui.custom.ProductQuantityLayout;
-import au.com.dealsdirect.utils.AppEventHelper;
 import au.com.dealsdirect.utils.rx.SchedulerProvider;
 import io.reactivex.annotations.NonNull;
 import io.reactivex.disposables.CompositeDisposable;
@@ -289,11 +286,6 @@ public class CheckoutPresenter<V extends CheckoutMvpView> extends BasePresenter<
         } catch (Exception e) {
             e.printStackTrace();
         }
-    }
-
-    @Override
-    public void facebookInitiatedCheckout(BaseActivity activity, String paymentType, int numItems, double price, String countryId) {
-        AppEventHelper.initiatedCheckout(activity, paymentType, numItems, price, countryId);
     }
 
     private void updateCart(GetCurrentOrder.ResponseValue response) {

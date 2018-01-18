@@ -21,18 +21,6 @@ public interface SaleItemDetailsMvpPresenter<V extends MvpView> extends MvpPrese
 
     void generateOurpay(GetSaleItemDetailsResponse value);
 
-    void facebookViewedContent(BaseActivity activity,
-                               String itemId,
-                               String itemName,
-                               double price,
-                               String countryId);
-
-    void facebookAddedToCart(BaseActivity activity,
-                             String itemId,
-                             String itemName,
-                             double price,
-                             String countryId);
-
     void callGetBasketItemsQuantity();
 
 }
