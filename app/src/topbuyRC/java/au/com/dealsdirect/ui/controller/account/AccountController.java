@@ -27,6 +27,7 @@ import au.com.dealsdirect.R;
 import au.com.dealsdirect.data.auth.AuthHandler;
 import au.com.dealsdirect.ui.base.BaseController;
 import au.com.dealsdirect.ui.controller.login.LoginController;
+import au.com.dealsdirect.ui.controller.register.RegisterController;
 import au.com.dealsdirect.ui.controller.returns.currentreturns.CurrentReturnsController;
 import au.com.dealsdirect.ui.controller.saleitemdetails.SaleItemDetailsMvpView;
 import au.com.dealsdirect.ui.controller.saleitems.SaleItemsController;
@@ -131,7 +132,7 @@ public class AccountController extends BaseController implements AccountMvpView 
             public void onChangeCompleted(@Nullable Controller to, @Nullable Controller from, boolean isPush, @NonNull ViewGroup container, @NonNull ControllerChangeHandler handler) {
                 mChangeInProgress = false;
                 mAccountRecyclerView.setClickable(true);
-                if (from instanceof LoginController) {
+                if (from instanceof LoginController || from instanceof RegisterController) {
                     mPresenter.onAttach(mvpView);
                     if(mPresenter.isAuthorized()) {
                         mPresenter.loadAccountItems(titles, drawables);

@@ -409,6 +409,7 @@ dependencies {
 
     // facebook
     compile "com.facebook.android:facebook-android-sdk:$rootProject.facebookVersion"
+    implementation "com.facebook.android:facebook-login:$rootProject.facebookVersion"
 
     // GCM
     compile "com.google.android.gms:play-services-gcm:$rootProject.gcmVersion"

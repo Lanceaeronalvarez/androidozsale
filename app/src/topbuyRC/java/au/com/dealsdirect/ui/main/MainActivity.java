@@ -169,12 +169,12 @@ public class MainActivity extends BaseActivity implements MainMvpView {
     @Override
     public void onBackPressed() {
 
-        if(isFinishing()){
+        if (isFinishing()) {
             return;
         }
 
         Controller mRouterController = GateKeeper.getCurrentControllerOnRouter(mRouter);
-        if(mRouterController instanceof TutorialController || mRouterController instanceof SplashScreenController){
+        if (mRouterController instanceof TutorialController || mRouterController instanceof SplashScreenController) {
             finish();
             return;
         }
@@ -282,9 +282,9 @@ public class MainActivity extends BaseActivity implements MainMvpView {
 
     @Override
     public Router getCurrentRouter() {
-        try{
+        try {
             return mRouter;
-        }catch (NullPointerException e){
+        } catch (NullPointerException e) {
             return getSaleItemsRouter();
         }
     }
@@ -352,10 +352,10 @@ public class MainActivity extends BaseActivity implements MainMvpView {
         if (mAuthHandler != null)
             mAuthHandler.error();
 
-        if(message != null && !message.isEmpty()) {
+        if (message != null && !message.isEmpty()) {
             if (message.contains("UnknownHostException") || message.contains("SocketTimeoutException")) {
                 CustomAlertDialog.showCustomAlertDialog(this, CustomAlertDialog.CustomDialogIconState.NEGATIVE, getString(R.string.no_internet_connection));
-            }else{
+            } else {
                 CustomAlertDialog.showCustomAlertDialog(this, CustomAlertDialog.CustomDialogIconState.NEGATIVE, message);
             }
         }
@@ -467,7 +467,7 @@ public class MainActivity extends BaseActivity implements MainMvpView {
 
         if (!mIsAddPaymentControllerFromCart) {
             Controller currentAccountsController = GateKeeper.getCurrentControllerOnRouter(getAccountsRouter());
-            if(currentAccountsController instanceof AddPaymentController) {
+            if (currentAccountsController instanceof AddPaymentController) {
                 ((AddPaymentController) currentAccountsController).showAddPaymentResult(true, "");
             } else {
                 setPaymentMethodSelected(lastPaymentMethod);
@@ -505,9 +505,9 @@ public class MainActivity extends BaseActivity implements MainMvpView {
 
         new BundleBuilder(new Bundle())
                 .putString(KEY_ADDRESS, responseValue.getD().getValue().getAddressString())
-                .putDouble(KEY_PRICE,  responseValue.getD().getValue().getOrderInfoResult().getTotal())
+                .putDouble(KEY_PRICE, responseValue.getD().getValue().getOrderInfoResult().getTotal())
                 .putDouble(KEY_SHIPPING_FEE, responseValue.getD().getValue().getOrderInfoResult().getShipping())
-                .putString(KEY_INVOICE, responseValue.getD().getValue().getInvoiceNo() == null ? String.valueOf(responseValue.getD().getValue().getTransactionInvoiceNo()): responseValue.getD().getValue().getInvoiceNo())
+                .putString(KEY_INVOICE, responseValue.getD().getValue().getInvoiceNo() == null ? String.valueOf(responseValue.getD().getValue().getTransactionInvoiceNo()) : responseValue.getD().getValue().getInvoiceNo())
                 .putString(KEY_ESTIMATED_DELIVERY, responseValue.getD().getValue().getOrderInfoResult().getEstimatedDeliveryText())
                 .build();
 
@@ -522,14 +522,14 @@ public class MainActivity extends BaseActivity implements MainMvpView {
 
             Bundle bundle = new Bundle();
             bundle.putString(KEY_ADDRESS, responseValue.getD().getValue().getAddressString());
-            bundle.putDouble(KEY_PRICE,  responseValue.getD().getValue().getOrderInfoResult().getTotal());
+            bundle.putDouble(KEY_PRICE, responseValue.getD().getValue().getOrderInfoResult().getTotal());
             bundle.putDouble(KEY_SHIPPING_FEE, responseValue.getD().getValue().getOrderInfoResult().getShipping());
-            bundle.putString(KEY_INVOICE, responseValue.getD().getValue().getInvoiceNo() == null ? String.valueOf(responseValue.getD().getValue().getTransactionInvoiceNo()): responseValue.getD().getValue().getInvoiceNo());
+            bundle.putString(KEY_INVOICE, responseValue.getD().getValue().getInvoiceNo() == null ? String.valueOf(responseValue.getD().getValue().getTransactionInvoiceNo()) : responseValue.getD().getValue().getInvoiceNo());
             bundle.putString(KEY_ESTIMATED_DELIVERY, responseValue.getD().getValue().getOrderInfoResult().getEstimatedDeliveryText());
 
             GateKeeper.push(mRouter, GateKeeper.Destination.PAYMENT_SUCCESS, bundle, new VerticalChangeHandler(false), new VerticalChangeHandler());
 
-            if (getMainController().getHomeController()!=null)
+            if (getMainController().getHomeController() != null)
                 getMainController().getHomeController().showCheckoutController();
 
         } else {
@@ -717,7 +717,7 @@ public class MainActivity extends BaseActivity implements MainMvpView {
     }
 
     /**
-     *  Runtime Broadcast receiver inner class to capture internet connectivity events
+     * Runtime Broadcast receiver inner class to capture internet connectivity events
      */
     public BroadcastReceiver broadcastReceiver = new BroadcastReceiver() {
         @Override
@@ -727,9 +727,9 @@ public class MainActivity extends BaseActivity implements MainMvpView {
     };
 
     public void updateSnackbar(boolean isOnline) {
-        if(!isOnline && !mSnackbar.isShown()) {
+        if (!isOnline && !mSnackbar.isShown()) {
             showSnackBar(getString(R.string.no_internet_connection), true);
-        }else if(isOnline && mSnackbar.isShown()){
+        } else if (isOnline && mSnackbar.isShown()) {
             dismissSnackBar();
         }
     }
@@ -762,7 +762,7 @@ public class MainActivity extends BaseActivity implements MainMvpView {
 
     }
 
-    public void setAddPaymentControllerIsFromCart(boolean val){
+    public void setAddPaymentControllerIsFromCart(boolean val) {
         mIsAddPaymentControllerFromCart = val;
     }
 
@@ -788,5 +788,11 @@ public class MainActivity extends BaseActivity implements MainMvpView {
     @Override
     public boolean isViewAttached() {
         return mIsViewAttached;
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        mRouter.onActivityResult(requestCode, resultCode, data);
+        super.onActivityResult(requestCode, resultCode, data);
     }
 }
