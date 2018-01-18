@@ -446,9 +446,9 @@ public class HomeController extends BaseController implements HomeMvpView {
 
     private void proceedToController(int id) {
         if (id == 2) {
-            showContactController();
+            showPaymentScheduleController();
         } else if (id == 3) {
-            showInviteController();
+            showDashboardController();
         } else if (id == 4) {
             showCheckoutController();
         }

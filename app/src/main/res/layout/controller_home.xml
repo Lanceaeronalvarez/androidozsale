@@ -27,7 +27,7 @@
             app:layout_behavior="@string/appbar_scrolling_view_behavior"/>
 
         <com.bluelinelabs.conductor.ChangeHandlerFrameLayout
-            android:id="@+id/controller_contacts_frame"
+            android:id="@+id/controller_ourpay_frame"
             android:visibility="gone"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
@@ -35,7 +35,7 @@
             app:layout_behavior="@string/appbar_scrolling_view_behavior"/>
 
         <com.bluelinelabs.conductor.ChangeHandlerFrameLayout
-            android:id="@+id/controller_invites_frame"
+            android:id="@+id/controller_paymentschedule_frame"
             android:visibility="gone"
             android:layout_width="match_parent"
             android:layout_height="match_parent"

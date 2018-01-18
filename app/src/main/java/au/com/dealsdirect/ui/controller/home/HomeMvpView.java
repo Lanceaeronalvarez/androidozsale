@@ -15,9 +15,9 @@ public interface HomeMvpView extends MvpView {
 
     void showAccountController();
 
-    void showContactController();
+    void showPaymentScheduleController();
 
-    void showInviteController();
+    void showDashboardController();
 
     void showCheckoutController();
 
