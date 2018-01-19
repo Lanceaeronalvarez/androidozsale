@@ -62,6 +62,7 @@ public class RegisterPresenter<V extends RegisterMvpView> extends Authentication
                         if (registerUserResponse.isSuccess()) {
                             getDataManager().acknowledgeAuth(registerUserResponse.getTicket());
                             getMvpView().showLoginSuccessful(registerUserResponse.getTicket());
+                            AppEventHelper.completedRegistration(AppEventHelper.API_REGISTER);
                         } else {
                             getMvpView().showLoginError(registerUserResponse.getMessage());
                         }
@@ -86,10 +87,5 @@ public class RegisterPresenter<V extends RegisterMvpView> extends Authentication
                     }
                 }));
 
-    }
-
-    @Override
-    public void facebookRegisterAnalytics(BaseActivity activity) {
-        AppEventHelper.completedRegistration(activity, AppConstants.AUTH_FLAG.REGISTER.name());
     }
 }

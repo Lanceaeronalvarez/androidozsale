@@ -73,6 +73,7 @@ import au.com.dealsdirect.ui.controller.shops.ShopsController;
 import au.com.dealsdirect.ui.controller.splash.SplashScreenController;
 import au.com.dealsdirect.ui.custom.CustomAlertDialog;
 import au.com.dealsdirect.utils.AppConstants;
+import au.com.dealsdirect.utils.AppEventHelper;
 import au.com.dealsdirect.utils.DialogUtils;
 import au.com.dealsdirect.utils.IntrospectionUtils;
 import au.com.dealsdirect.utils.module.GateKeeper;
@@ -388,11 +389,6 @@ public class MainActivity extends BaseActivity implements MainMvpView {
                 PaymentInfo.getOurpay().setCanUse(false);
             }
 
-            mPresenter.facebookCompletedPurchase(this, PaymentInfo.getPaymentType(),
-                    responseValue.getD().getValue().getOrderInfoResult().getItems().size(),
-                    Double.valueOf(responseValue.getD().getValue().getOrderInfoResult().getTotal()),
-                    getString(R.string.default_country_id));
-
             mCheckoutRouter.pushController(RouterTransaction.with(new PaymentSuccessController(responseValue))
                     .pushChangeHandler(new HorizontalChangeHandler())
                     .popChangeHandler(new HorizontalChangeHandler()));
@@ -452,6 +448,7 @@ public class MainActivity extends BaseActivity implements MainMvpView {
 
         if ((currentController instanceof AddPaymentController) && ((AddPaymentController) currentController).isCalledFromAccounts()) {
             ((AddPaymentController) currentController).showAddPaymentResult(true, lastPaymentMethod.getPaymentType());
+            AppEventHelper.addedPaymentInfo(lastPaymentMethod.getPaymentType());
         } else {
             setPaymentMethodSelected(lastPaymentMethod);
             currentRouter.handleBack();

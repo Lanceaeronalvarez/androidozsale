@@ -23,10 +23,4 @@ public class AddPaymentPresenter<V extends AddPaymentMvpView> extends BasePresen
     public boolean isDebug() {
         return getDataManager().isDebugMode();
     }
-
-    @Override
-    public void facebookAddedPaymentInfo(BaseActivity activity, String paymentMethodType) {
-        AppEventHelper.addedPaymentInfo(activity, paymentMethodType);
-    }
-
 }

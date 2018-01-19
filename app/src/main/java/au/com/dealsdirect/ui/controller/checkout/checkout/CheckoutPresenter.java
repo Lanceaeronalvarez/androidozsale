@@ -20,6 +20,7 @@ import au.com.dealsdirect.service.ourpay.OurpayUtils;
 import au.com.dealsdirect.ui.base.BaseActivity;
 import au.com.dealsdirect.ui.base.BasePresenter;
 import au.com.dealsdirect.ui.custom.ProductQuantityLayout;
+import au.com.dealsdirect.ui.main.PaymentInfo;
 import au.com.dealsdirect.utils.AppEventHelper;
 import au.com.dealsdirect.utils.rx.SchedulerProvider;
 import io.reactivex.annotations.NonNull;
@@ -292,8 +293,11 @@ public class CheckoutPresenter<V extends CheckoutMvpView> extends BasePresenter<
     }
 
     @Override
-    public void facebookInitiatedCheckout(BaseActivity activity, String paymentType, int numItems, double price, String countryId) {
-        AppEventHelper.initiatedCheckout(activity, paymentType, numItems, price, countryId);
+    public void facebookInitiatedCheckout(String paymentType,
+                                         int numItems,
+                                         double price,
+                                         String countryId) {
+        AppEventHelper.initiatedCheckout(paymentType, numItems, price, countryId);
     }
 
     private void updateCart(GetCurrentOrder.ResponseValue response) {

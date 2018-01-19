@@ -337,9 +337,6 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
         String name = saleDetail.getName() == null ? "" : saleDetail.getName();
         String branName = saleDetail.getBrandName() == null ? "" : saleDetail.getBrandName();
 
-        mPresenter.facebookViewedContent((BaseActivity) getActivity(), saleDetail.getSkuId(), name, saleDetail.getPrice().getValue(),
-                getActivity().getResources().getString(R.string.default_country_id));
-
         mProductName.setText(name.trim());
         mProductBrand.setText(branName.trim());
         mProductPrice.setText(PriceUtils.getPriceStringValue(saleDetail.getPrice().getValue()));
@@ -483,10 +480,6 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
             CartUtil.addValueToCart(1);
             mActivity.getMainController().getHomeController().updateBasketItemCount();
 
-            mPresenter.facebookAddedToCart((BaseActivity) getActivity(), mSkuId
-                    ,mProductName.getText().toString(), Double.valueOf(mSalePrice.substring(1)),
-                    getActivity().getResources().getString(R.string.default_country_id));
-            
             CustomAlertDialog.showCustomAlertDialog(
                     mActivity,
                     CustomAlertDialog.CustomDialogIconState.POSITIVE,
@@ -524,7 +517,10 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
     @OnClick(R.id.product_details_add_to_basket)
     void addToBasket() {
 
-        AddToCartRequest request = new AddToCartRequest(mSkuId);
+        AddToCartRequest request = new AddToCartRequest();
+        request.setSkuId(mSkuId);
+        request.setItemName(mSaleName);
+        request.setPrice(Double.valueOf(mSalePrice.substring(1)));
 
         if (hasSizes) {
             if (!didSelectSize) {

@@ -30,6 +30,7 @@ import javax.inject.Inject;
 import au.com.dealsdirect.data.DataManager;
 import au.com.dealsdirect.data.network.ApiCallback;
 import au.com.dealsdirect.data.network.model.login.LoginFacebook;
+import au.com.dealsdirect.utils.AppEventHelper;
 import au.com.dealsdirect.utils.rx.SchedulerProvider;
 import io.reactivex.Observable;
 import io.reactivex.disposables.CompositeDisposable;
@@ -295,8 +296,8 @@ public class AuthenticationBasePresenter<V extends AuthenticationMvpView> implem
         loginManager.registerCallback(callbackManager, new FacebookCallback<LoginResult>() {
             @Override
             public void onSuccess(LoginResult loginResult) {
-
                 fetchUserInfo(loginResult.getAccessToken());
+                AppEventHelper.completedRegistration(AppEventHelper.API_REGISTER_FACEBOOK);
             }
 
             @Override

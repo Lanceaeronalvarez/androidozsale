@@ -218,7 +218,8 @@ public class AppApiHelper implements ApiHelper {
         return Rx2AndroidNetworking.post(ApiEndPoint.ADD_TO_CART)
                 .addHeaders(mApiHeader.get())
                 .addJSONObjectBody(JsonUtils.convertToJsonObject(requestValues))
-                .build().getStringObservable();
+                .build()
+                .getStringObservable();
     }
 
     @Override

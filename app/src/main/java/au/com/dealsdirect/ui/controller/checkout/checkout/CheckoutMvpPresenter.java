@@ -28,10 +28,8 @@ public interface CheckoutMvpPresenter<V extends MvpView> extends MvpPresenter<V>
 
     void generateOurpay(Value value);
 
-    void facebookInitiatedCheckout(BaseActivity activity,
-                                   String paymentType,
-                                   int numItems,
-                                   double price,
-                                   String countryId);
-
+    void facebookInitiatedCheckout(String paymentType,
+                                  int numItems,
+                                  double price,
+                                  String countryId);
 }

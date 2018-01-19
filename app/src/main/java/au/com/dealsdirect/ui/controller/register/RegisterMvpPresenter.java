@@ -12,6 +12,4 @@ public interface RegisterMvpPresenter<V extends RegisterMvpView> extends Authent
     void registerUser(String firstName, String lastName, String email, String password,
                       boolean hasReadTermsAndConditions);
 
-    void facebookRegisterAnalytics(BaseActivity activity);
-
 }

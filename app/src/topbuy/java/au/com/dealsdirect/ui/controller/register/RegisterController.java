@@ -167,7 +167,6 @@ public class RegisterController extends SwipeableBaseToolBarController implement
     @Override
     public void showLoginSuccessful(String loginTicket) {
         //Call facebook registration successful analytics
-        mPresenter.facebookRegisterAnalytics(mActivity);
         mActivity.loginSuccessHandler(getRouter(), AppConstants.POP_FLAG.ROOT, AppConstants.AUTH_FLAG.REGISTER);
     }
 

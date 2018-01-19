@@ -5,6 +5,7 @@ package au.com.dealsdirect.utils;
 
 import android.os.Bundle;
 
+import com.facebook.FacebookSdk;
 import com.facebook.appevents.AppEventsConstants;
 import com.facebook.appevents.AppEventsLogger;
 
@@ -15,12 +16,16 @@ import au.com.dealsdirect.ui.base.BaseActivity;
 
 public class AppEventHelper {
 
+    public static final String API_REGISTER = "Registration";
+    public static final String API_REGISTER_FACEBOOK = "LoginFacebook";
+
     /**
      * Registration tracking for facebook
      * To be called upon successful registration
      */
-    public static void completedRegistration(BaseActivity activity, String method) {
-        AppEventsLogger logger = AppEventsLogger.newLogger(activity);
+    public static void completedRegistration(String method) {
+        AppEventsLogger logger = AppEventsLogger.newLogger(FacebookSdk.getApplicationContext());
+
 
         Bundle parameters = new Bundle();
         parameters.putString(AppEventsConstants.EVENT_PARAM_REGISTRATION_METHOD, method);
@@ -33,13 +38,12 @@ public class AppEventHelper {
      * View content tracking for facebook
      * To be called in success block of GetItemDetails
      */
-    public static void viewedContent(BaseActivity activity,
-                                     String itemId,
+    public static void viewedContent(String itemId,
                                      String itemName,
                                      double price,
                                      String countryId) {
 
-        AppEventsLogger logger = AppEventsLogger.newLogger(activity);
+        AppEventsLogger logger = AppEventsLogger.newLogger(FacebookSdk.getApplicationContext());
 
         Bundle parameters = new Bundle();
         parameters.putString(AppEventsConstants.EVENT_PARAM_CONTENT_ID, itemId);
@@ -56,13 +60,12 @@ public class AppEventHelper {
      * Add to cart tracking for facebook
      * To be called in success block of AddItemToCart
      */
-    public static void addedToCart(BaseActivity activity,
-                                   String itemId,
+    public static void addedToCart(String itemId,
                                    String itemName,
                                    double price,
                                    String countryId) {
 
-        AppEventsLogger logger = AppEventsLogger.newLogger(activity);
+        AppEventsLogger logger = AppEventsLogger.newLogger(FacebookSdk.getApplicationContext());
 
         Bundle parameters = new Bundle();
         parameters.putString(AppEventsConstants.EVENT_PARAM_CONTENT_ID, itemId);
@@ -79,8 +82,9 @@ public class AppEventHelper {
      *  Added Payment Info tracking for facebook
      *  On successful payment method creation
      */
-    public static void addedPaymentInfo(BaseActivity activity, String paymentMethodType) {
-        AppEventsLogger logger = AppEventsLogger.newLogger(activity);
+    public static void addedPaymentInfo(String paymentMethodType) {
+
+        AppEventsLogger logger = AppEventsLogger.newLogger(FacebookSdk.getApplicationContext());
 
         Bundle parameters = new Bundle();
         parameters.putString(AppEventsConstants.EVENT_PARAM_DESCRIPTION, paymentMethodType);
@@ -92,13 +96,12 @@ public class AppEventHelper {
      * Initiated checkout tracking for facebook
      * To be called on user click any payment button
      */
-    public static void initiatedCheckout(BaseActivity activity,
-                                         String paymentType,
+    public static void initiatedCheckout(String paymentType,
                                          int numItems,
                                          double price,
                                          String countryId) {
 
-        AppEventsLogger logger = AppEventsLogger.newLogger(activity);
+        AppEventsLogger logger = AppEventsLogger.newLogger(FacebookSdk.getApplicationContext());
 
         Bundle parameters = new Bundle();
         parameters.putString(AppEventsConstants.EVENT_PARAM_DESCRIPTION, paymentType);
@@ -114,13 +117,12 @@ public class AppEventHelper {
      * Completed purchase tracking for facebook
      * Should be called on success of CreatePaymentTransaction
      */
-    public static void completedPurchase(BaseActivity activity,
-                                         String paymentType,
+    public static void completedPurchase(String paymentType,
                                          int numItems,
                                          double price,
                                          String countryId) {
 
-        AppEventsLogger logger = AppEventsLogger.newLogger(activity);
+        AppEventsLogger logger = AppEventsLogger.newLogger(FacebookSdk.getApplicationContext());
 
         Bundle parameters = new Bundle();
         parameters.putString(AppEventsConstants.EVENT_PARAM_DESCRIPTION, paymentType);
@@ -131,5 +133,4 @@ public class AppEventHelper {
                 parameters);
 
     }
-
 }

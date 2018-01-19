@@ -49,6 +49,8 @@ public class SaleItemDetailsPresenter<V extends SaleItemDetailsMvpView> extends 
 
                     getMvpView().hideLoading();
 
+                    AppEventHelper.viewedContent(response.getSkuId(), response.getName(),
+                            response.getPrice().getValue(), getDataManager().getCountryId());
 
                 }, throwable -> {
 
@@ -85,6 +87,9 @@ public class SaleItemDetailsPresenter<V extends SaleItemDetailsMvpView> extends 
                     getMvpView().hideLoading();
 
                     getMvpView().showAddToCartResponse(true);
+
+                    AppEventHelper.addedToCart(requestValues.getSkuId(), requestValues.getItemName()
+                    ,requestValues.getPrice(), getDataManager().getCountryId());
 
 
                 }, throwable -> {
@@ -145,16 +150,6 @@ public class SaleItemDetailsPresenter<V extends SaleItemDetailsMvpView> extends 
         getMvpView().showMyPayDetails(value, ourpay);
 
 
-    }
-
-    @Override
-    public void facebookViewedContent(BaseActivity activity, String itemId, String itemName, double price, String countryId) {
-        AppEventHelper.viewedContent(activity, itemId, itemName, price, countryId);
-    }
-
-    @Override
-    public void facebookAddedToCart(BaseActivity activity, String itemId, String itemName, double price, String countryId) {
-        AppEventHelper.addedToCart(activity, itemId, itemName, price, countryId);
     }
 
     @Override

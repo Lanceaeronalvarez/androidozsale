@@ -369,11 +369,6 @@ public class MainPresenter<V extends MainMvpView> extends BasePresenter<V> imple
     }
 
     @Override
-    public void facebookCompletedPurchase(BaseActivity activity, String paymentType, int numItems, double price, String countryId) {
-        AppEventHelper.completedPurchase(activity, paymentType, numItems, price, countryId);
-    }
-
-    @Override
     public void callApiSettings(Context context) {
         callGetServerSettings();
         callGetPublicAppSettings();
@@ -432,6 +427,10 @@ public class MainPresenter<V extends MainMvpView> extends BasePresenter<V> imple
 
                         if (responseValue.getD().getResult()) {
                             getMvpView().showCreatePaymentTransactionSuccess(paymentType, responseValue);
+                            AppEventHelper.completedPurchase(paymentType,
+                                    responseValue.getD().getValue().getOrderInfoResult().getItems().size(),
+                                    responseValue.getD().getValue().getOrderInfoResult().getTotal(),
+                                    getDataManager().getCountryId());
                         } else {
                             getMvpView().showCreatePaymentTransactionFailure(responseValue.getD().getMessage());
                         }

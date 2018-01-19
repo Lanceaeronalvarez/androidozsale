@@ -224,7 +224,6 @@ public class AddPaymentController extends BaseController implements AddPaymentMv
             CustomAlertDialog.showCustomAlertDialog(
                     mActivity, CustomAlertDialog.CustomDialogIconState.POSITIVE,
                     "Payment method added!");
-            mPresenter.facebookAddedPaymentInfo((BaseActivity) getActivity(), paymentType);
 
         } else {
             CustomAlertDialog.showCustomAlertDialog(
