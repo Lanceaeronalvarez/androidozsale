@@ -1,6 +1,11 @@
 package au.com.dealsdirect.ui.controller.saleitemdetails;
 
+import android.os.Bundle;
+
 import com.androidnetworking.error.ANError;
+import com.facebook.FacebookSdk;
+import com.facebook.appevents.AppEventsConstants;
+import com.facebook.appevents.AppEventsLogger;
 
 import javax.inject.Inject;
 
@@ -11,9 +16,7 @@ import au.com.dealsdirect.service.ourpay.Ourpay;
 import au.com.dealsdirect.service.ourpay.OurpayError;
 import au.com.dealsdirect.service.ourpay.OurpayState;
 import au.com.dealsdirect.service.ourpay.OurpayStateManager;
-import au.com.dealsdirect.ui.base.BaseActivity;
 import au.com.dealsdirect.ui.base.BasePresenter;
-import au.com.dealsdirect.utils.AppEventHelper;
 import au.com.dealsdirect.utils.CartUtil;
 import au.com.dealsdirect.utils.rx.SchedulerProvider;
 import io.reactivex.disposables.CompositeDisposable;
@@ -49,8 +52,8 @@ public class SaleItemDetailsPresenter<V extends SaleItemDetailsMvpView> extends 
 
                     getMvpView().hideLoading();
 
-                    AppEventHelper.viewedContent(response.getSkuId(), response.getName(),
-                            response.getPrice().getValue(), getDataManager().getCountryId());
+                    viewedContent(response.getSkuId(), response.getName(),
+                            response.getPrice().getValue());
 
                 }, throwable -> {
 
@@ -88,8 +91,8 @@ public class SaleItemDetailsPresenter<V extends SaleItemDetailsMvpView> extends 
 
                     getMvpView().showAddToCartResponse(true);
 
-                    AppEventHelper.addedToCart(requestValues.getSkuId(), requestValues.getItemName()
-                    ,requestValues.getPrice(), getDataManager().getCountryId());
+                    addedToCart(requestValues.getSkuId(), requestValues.getItemName(),
+                            requestValues.getPrice());
 
 
                 }, throwable -> {
@@ -178,5 +181,37 @@ public class SaleItemDetailsPresenter<V extends SaleItemDetailsMvpView> extends 
                     }
                 })
         );
+    }
+
+    private void viewedContent(String itemId,
+                                     String itemName,
+                                     double price) {
+
+        AppEventsLogger logger = AppEventsLogger.newLogger(FacebookSdk.getApplicationContext());
+
+        Bundle parameters = new Bundle();
+        parameters.putString(AppEventsConstants.EVENT_PARAM_CONTENT_ID, itemId);
+        parameters.putString(AppEventsConstants.EVENT_PARAM_DESCRIPTION, itemName);
+        parameters.putString(AppEventsConstants.EVENT_PARAM_CONTENT_TYPE, "phone");
+
+        logger.logEvent(AppEventsConstants.EVENT_NAME_VIEWED_CONTENT,
+                price,
+                parameters);
+    }
+
+    private void addedToCart(String itemId,
+                                   String itemName,
+                                   double price) {
+
+        AppEventsLogger logger = AppEventsLogger.newLogger(FacebookSdk.getApplicationContext());
+
+        Bundle parameters = new Bundle();
+        parameters.putString(AppEventsConstants.EVENT_PARAM_CONTENT_ID, itemId);
+        parameters.putString(AppEventsConstants.EVENT_PARAM_DESCRIPTION, itemName);
+        parameters.putString(AppEventsConstants.EVENT_PARAM_CONTENT_TYPE, "phone");
+
+        logger.logEvent(AppEventsConstants.EVENT_NAME_ADDED_TO_CART,
+                price,
+                parameters);
     }
 }

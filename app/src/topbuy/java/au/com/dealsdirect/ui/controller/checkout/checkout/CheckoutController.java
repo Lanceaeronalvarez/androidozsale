@@ -640,7 +640,7 @@ public class CheckoutController extends SwipeableBaseToolBarController implement
                 PaymentInfo.setPaymentType(PaymentInfo.TYPE_BRAINTREE);
                 mActivity.callCreatePaymentTransaction(PaymentInfo.getPaymentType(), "", PaymentInfo.getPaymentMethod().getToken());
                 mPresenter.facebookInitiatedCheckout(PaymentInfo.getPaymentType(), mValue.getItemsCount(),
-                        mValue.getSummary().total, getActivity().getResources().getString(R.string.default_country_id));
+                        mValue.getSummary().total);
             }
         }
     }
@@ -663,7 +663,7 @@ public class CheckoutController extends SwipeableBaseToolBarController implement
                 PaymentInfo.setPaymentType(PaymentInfo.TYPE_BRAINTREE);
                 mActivity.callCreatePaymentTransaction(PaymentInfo.getPaymentType(), "", PaymentInfo.getPaymentMethod().getToken());
                 mPresenter.facebookInitiatedCheckout(PaymentInfo.getPaymentType(), mValue.getItemsCount(),
-                        mValue.getSummary().total, getActivity().getResources().getString(R.string.default_country_id));
+                        mValue.getSummary().total);
             }
         }
     }
@@ -679,7 +679,7 @@ public class CheckoutController extends SwipeableBaseToolBarController implement
 
         RxBus.instance().post(IntrospectionUtils.EVENT_PAY);
         mPresenter.facebookInitiatedCheckout(PaymentInfo.getPaymentType(), mValue.getItemsCount(),
-                mValue.getSummary().total, getActivity().getResources().getString(R.string.default_country_id));
+                mValue.getSummary().total);
 
         mActivity.setDraggableViewPager(false);
         GateKeeper.push(getRouter(), GateKeeper.Destination.MASTERPASS, new VerticalChangeHandler(false), new VerticalChangeHandler());
@@ -731,7 +731,7 @@ public class CheckoutController extends SwipeableBaseToolBarController implement
         mActivity.callCreatePaymentTransaction(PaymentInfo.getPaymentType(), "", PaymentInfo.getPaymentMethod().getToken());
 
         mPresenter.facebookInitiatedCheckout(PaymentInfo.getPaymentType(), mValue.getItemsCount(),
-                mValue.getSummary().total, getActivity().getResources().getString(R.string.default_country_id));
+                mValue.getSummary().total);
     }
 
     @Override

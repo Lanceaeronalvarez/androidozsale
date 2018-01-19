@@ -5,6 +5,7 @@ package au.com.dealsdirect.ui.main;
 
 
 import android.content.Context;
+import android.os.Bundle;
 import android.util.Log;
 
 import com.androidnetworking.error.ANError;
@@ -12,6 +13,8 @@ import com.crashlytics.android.Crashlytics;
 import com.crashlytics.android.answers.Answers;
 import com.facebook.FacebookSdk;
 import com.facebook.LoggingBehavior;
+import com.facebook.appevents.AppEventsConstants;
+import com.facebook.appevents.AppEventsLogger;
 import com.google.gson.Gson;
 import com.mysale.genie.utility.config.api.GetAppSettings;
 import com.mysale.genie.utility.config.api.GetAppSettingsSection;
@@ -24,7 +27,9 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
+import java.util.Currency;
 
 import javax.inject.Inject;
 
@@ -41,9 +46,8 @@ import au.com.dealsdirect.data.network.model.login.LoginEmail;
 import au.com.dealsdirect.data.network.model.login.LoginTicket;
 import au.com.dealsdirect.data.network.model.login.Logout;
 import au.com.dealsdirect.service.fcm.GNotification;
-import au.com.dealsdirect.ui.base.BaseActivity;
 import au.com.dealsdirect.ui.base.BasePresenter;
-import au.com.dealsdirect.utils.AppEventHelper;
+import au.com.dealsdirect.utils.CurrencyUtil;
 import au.com.dealsdirect.utils.IntrospectionUtils;
 import au.com.dealsdirect.utils.rx.SchedulerProvider;
 import io.fabric.sdk.android.Fabric;
@@ -427,10 +431,9 @@ public class MainPresenter<V extends MainMvpView> extends BasePresenter<V> imple
 
                         if (responseValue.getD().getResult()) {
                             getMvpView().showCreatePaymentTransactionSuccess(paymentType, responseValue);
-                            AppEventHelper.completedPurchase(paymentType,
+                            completedPurchase(paymentType,
                                     responseValue.getD().getValue().getOrderInfoResult().getItems().size(),
-                                    responseValue.getD().getValue().getOrderInfoResult().getTotal(),
-                                    getDataManager().getCountryId());
+                                    responseValue.getD().getValue().getOrderInfoResult().getTotal());
                         } else {
                             getMvpView().showCreatePaymentTransactionFailure(responseValue.getD().getMessage());
                         }
@@ -482,6 +485,7 @@ public class MainPresenter<V extends MainMvpView> extends BasePresenter<V> imple
 
                                 if ((responseValue.getResult() && responseValue.getIsAuthenticated())) {
                                     getMvpView().showCreatePaymentMethodSuccess(responseValue.getD().getValue().getLastPaymentMethod());
+                                    addedPaymentInfo(responseValue.getD().getValue().getLastPaymentMethod().getPaymentType());
                                 } else {
                                     getMvpView().onError(responseValue.getMessage());
                                 }
@@ -661,5 +665,31 @@ public class MainPresenter<V extends MainMvpView> extends BasePresenter<V> imple
 
     public boolean getIsMyPayEnabled() {
         return getDataManager().getIsMyPayEnabled();
+    }
+
+    private void addedPaymentInfo(String paymentMethodType) {
+
+        AppEventsLogger logger = AppEventsLogger.newLogger(FacebookSdk.getApplicationContext());
+
+        Bundle parameters = new Bundle();
+        parameters.putString(AppEventsConstants.EVENT_PARAM_DESCRIPTION, paymentMethodType);
+
+        logger.logEvent(AppEventsConstants.EVENT_NAME_ADDED_PAYMENT_INFO, parameters);
+    }
+
+    private void completedPurchase(String paymentType,
+                                         int numItems,
+                                         double price) {
+
+        AppEventsLogger logger = AppEventsLogger.newLogger(FacebookSdk.getApplicationContext());
+
+        Bundle parameters = new Bundle();
+        parameters.putString(AppEventsConstants.EVENT_PARAM_DESCRIPTION, paymentType);
+        parameters.putInt(AppEventsConstants.EVENT_PARAM_NUM_ITEMS, numItems);
+
+        logger.logPurchase(BigDecimal.valueOf(price),
+                Currency.getInstance(CurrencyUtil.getCurrency(getDataManager().getCountryId())),
+                parameters);
+
     }
 }

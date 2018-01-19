@@ -556,7 +556,7 @@ public class CheckoutController extends BaseController implements CheckoutMvpVie
                 PaymentInfo.setPaymentType(PaymentInfo.TYPE_BRAINTREE);
                 mActivity.callCreatePaymentTransaction(PaymentInfo.getPaymentType(), "", PaymentInfo.getPaymentMethod().getToken());
                 mPresenter.facebookInitiatedCheckout(PaymentInfo.getPaymentType(), mValue.getItemsCount(),
-                        mValue.getSummary().total, getActivity().getResources().getString(R.string.default_country_id));
+                        mValue.getSummary().total);
             }
         }
     }
@@ -579,7 +579,7 @@ public class CheckoutController extends BaseController implements CheckoutMvpVie
                 PaymentInfo.setPaymentType(PaymentInfo.TYPE_BRAINTREE);
                 mActivity.callCreatePaymentTransaction(PaymentInfo.getPaymentType(), "", PaymentInfo.getPaymentMethod().getToken());
                 mPresenter.facebookInitiatedCheckout(PaymentInfo.getPaymentType(), mValue.getItemsCount(),
-                        mValue.getSummary().total, getActivity().getResources().getString(R.string.default_country_id));
+                        mValue.getSummary().total);
             }
         }
     }
@@ -600,7 +600,7 @@ public class CheckoutController extends BaseController implements CheckoutMvpVie
                 .popChangeHandler(new HorizontalChangeHandler()));
 
         mPresenter.facebookInitiatedCheckout(PaymentInfo.getPaymentType(), mValue.getItemsCount(),
-                mValue.getSummary().total, getActivity().getResources().getString(R.string.default_country_id));
+                mValue.getSummary().total);
     }
 
     private void onOurpayButtonClick() {
@@ -693,7 +693,7 @@ public class CheckoutController extends BaseController implements CheckoutMvpVie
         mActivity.callCreatePaymentTransaction(PaymentInfo.getPaymentType(), "", PaymentInfo.getPaymentMethod().getToken());
 
         mPresenter.facebookInitiatedCheckout(PaymentInfo.getPaymentType(), mValue.getItemsCount(),
-                mValue.getSummary().total, getActivity().getResources().getString(R.string.default_country_id));
+                mValue.getSummary().total);
     }
 
     private void showAddAddressController() {

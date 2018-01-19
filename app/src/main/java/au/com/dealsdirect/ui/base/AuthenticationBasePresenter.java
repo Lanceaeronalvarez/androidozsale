@@ -10,8 +10,11 @@ import com.facebook.AccessToken;
 import com.facebook.CallbackManager;
 import com.facebook.FacebookCallback;
 import com.facebook.FacebookException;
+import com.facebook.FacebookSdk;
 import com.facebook.GraphRequest;
 import com.facebook.GraphResponse;
+import com.facebook.appevents.AppEventsConstants;
+import com.facebook.appevents.AppEventsLogger;
 import com.facebook.login.LoginManager;
 import com.facebook.login.LoginResult;
 
@@ -30,7 +33,7 @@ import javax.inject.Inject;
 import au.com.dealsdirect.data.DataManager;
 import au.com.dealsdirect.data.network.ApiCallback;
 import au.com.dealsdirect.data.network.model.login.LoginFacebook;
-import au.com.dealsdirect.utils.AppEventHelper;
+import au.com.dealsdirect.utils.AppConstants;
 import au.com.dealsdirect.utils.rx.SchedulerProvider;
 import io.reactivex.Observable;
 import io.reactivex.disposables.CompositeDisposable;
@@ -297,7 +300,7 @@ public class AuthenticationBasePresenter<V extends AuthenticationMvpView> implem
             @Override
             public void onSuccess(LoginResult loginResult) {
                 fetchUserInfo(loginResult.getAccessToken());
-                AppEventHelper.completedRegistration(AppEventHelper.API_REGISTER_FACEBOOK);
+                completedRegistration(AppConstants.API_REGISTER_FACEBOOK);
             }
 
             @Override
@@ -440,5 +443,13 @@ public class AuthenticationBasePresenter<V extends AuthenticationMvpView> implem
         }
     }
 
+    private void completedRegistration(String method) {
+        AppEventsLogger logger = AppEventsLogger.newLogger(FacebookSdk.getApplicationContext());
+
+        Bundle parameters = new Bundle();
+        parameters.putString(AppEventsConstants.EVENT_PARAM_REGISTRATION_METHOD, method);
+
+        logger.logEvent(AppEventsConstants.EVENT_NAME_COMPLETED_REGISTRATION, parameters);
+    }
 
 }
