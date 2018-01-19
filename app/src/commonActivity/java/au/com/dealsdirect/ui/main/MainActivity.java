@@ -73,7 +73,6 @@ import au.com.dealsdirect.ui.controller.shops.ShopsController;
 import au.com.dealsdirect.ui.controller.splash.SplashScreenController;
 import au.com.dealsdirect.ui.custom.CustomAlertDialog;
 import au.com.dealsdirect.utils.AppConstants;
-import au.com.dealsdirect.utils.AppEventHelper;
 import au.com.dealsdirect.utils.DialogUtils;
 import au.com.dealsdirect.utils.IntrospectionUtils;
 import au.com.dealsdirect.utils.module.GateKeeper;
@@ -448,7 +447,6 @@ public class MainActivity extends BaseActivity implements MainMvpView {
 
         if ((currentController instanceof AddPaymentController) && ((AddPaymentController) currentController).isCalledFromAccounts()) {
             ((AddPaymentController) currentController).showAddPaymentResult(true, lastPaymentMethod.getPaymentType());
-            AppEventHelper.addedPaymentInfo(lastPaymentMethod.getPaymentType());
         } else {
             setPaymentMethodSelected(lastPaymentMethod);
             currentRouter.handleBack();
