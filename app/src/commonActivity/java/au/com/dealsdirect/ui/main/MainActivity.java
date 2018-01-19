@@ -390,12 +390,6 @@ public class MainActivity extends BaseActivity implements MainMvpView {
             } else if (PaymentInfo.getOurpay() != null) {
                 PaymentInfo.getOurpay().setCanUse(false);
             }
-
-            mPresenter.facebookCompletedPurchase(this, PaymentInfo.getPaymentType(),
-                    responseValue.getD().getValue().getOrderInfoResult().getItems().size(),
-                    Double.valueOf(responseValue.getD().getValue().getOrderInfoResult().getTotal()),
-                    getString(R.string.default_country_id));
-
             mCheckoutRouter.pushController(RouterTransaction.with(new PaymentSuccessController(responseValue))
                     .pushChangeHandler(new HorizontalChangeHandler())
                     .popChangeHandler(new HorizontalChangeHandler()));

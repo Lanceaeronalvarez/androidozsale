@@ -337,8 +337,6 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
         String name = saleDetail.getName() == null ? "" : saleDetail.getName();
         String branName = saleDetail.getBrandName() == null ? "" : saleDetail.getBrandName();
 
-        mPresenter.facebookViewedContent((BaseActivity) getActivity(), saleDetail.getSkuId(), name, saleDetail.getPrice().getValue(),
-                getActivity().getResources().getString(R.string.default_country_id));
 
         mProductName.setText(name.trim());
         mProductBrand.setText(branName.trim());
@@ -483,10 +481,6 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
             CartUtil.addValueToCart(1);
             mActivity.getMainController().getHomeController().updateBasketItemCount();
 
-            mPresenter.facebookAddedToCart((BaseActivity) getActivity(), mSkuId
-                    ,mProductName.getText().toString(), Double.valueOf(mSalePrice.substring(1)),
-                    getActivity().getResources().getString(R.string.default_country_id));
-            
             CustomAlertDialog.showCustomAlertDialog(
                     mActivity,
                     CustomAlertDialog.CustomDialogIconState.POSITIVE,
