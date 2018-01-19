@@ -17,8 +17,6 @@ import au.com.dealsdirect.data.DataManager;
 import au.com.dealsdirect.data.network.model.address.AddAddress;
 import au.com.dealsdirect.data.network.model.address.DecorationInfoList;
 import au.com.dealsdirect.ui.base.BasePresenter;
-import au.com.dealsdirect.ui.controller.categories.CategoriesMvpPresenter;
-import au.com.dealsdirect.ui.controller.categories.CategoriesMvpView;
 import au.com.dealsdirect.utils.rx.SchedulerProvider;
 import io.reactivex.annotations.NonNull;
 import io.reactivex.disposables.CompositeDisposable;

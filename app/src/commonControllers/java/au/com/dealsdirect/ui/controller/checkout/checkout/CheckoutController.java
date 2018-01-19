@@ -24,8 +24,6 @@ import com.bluelinelabs.conductor.changehandler.HorizontalChangeHandler;
 import com.google.gson.Gson;
 import com.mysale.genie.utility.RxBus;
 
-import org.w3c.dom.Text;
-
 import java.util.ArrayList;
 import java.util.List;
 
@@ -56,7 +54,6 @@ import au.com.dealsdirect.ui.controller.vouchers.Add.AddVouchersController;
 import au.com.dealsdirect.ui.custom.CustomAlertDialog;
 import au.com.dealsdirect.ui.main.FetchTokenHandler;
 import au.com.dealsdirect.ui.main.MainActivity;
-import au.com.dealsdirect.ui.main.MainMvpView;
 import au.com.dealsdirect.ui.main.PaymentInfo;
 import au.com.dealsdirect.utils.BundleBuilder;
 import au.com.dealsdirect.utils.BundleKeys;

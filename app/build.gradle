@@ -264,34 +264,60 @@ android {
 
     sourceSets {
         dealsDirectRC {
-            java.srcDirs = ['src/commonControllers/java/', 'src/commonHomeController/java/', 'src/commonActivity/java/', 'src/main/java/']
+            java.srcDirs = ['src/commonControllers/java/',
+                            'src/commonHomeController/java/',
+                            'src/commonCategoriesController/java/',
+                            'src/commonActivity/java/',
+                            'src/main/java/']
         }
 
         dealsDirectTest {
-            java.srcDirs = ['src/commonControllers/java/', 'src/commonHomeController/java/', 'src/commonActivity/java/', 'src/main/java/']
+            java.srcDirs = ['src/commonControllers/java/',
+                            'src/commonHomeController/java/',
+                            'src/commonCategoriesController/java/',
+                            'src/commonActivity/java/',
+                            'src/main/java/']
         }
 
         ooRC {
             res.srcDir 'src/ooTest/res/'
-            java.srcDirs = ['src/commonControllers/java/', 'src/commonHomeController/java/', 'src/commonActivity/java/', 'src/main/java/']
+            java.srcDirs = ['src/commonControllers/java/',
+                            'src/commonHomeController/java/',
+                            'src/commonCategoriesController/java/' ,
+                            'src/commonActivity/java/',
+                            'src/main/java/']
         }
 
         ooTest {
             res.srcDir 'src/ooTest/res/'
-            java.srcDirs = ['src/commonControllers/java/', 'src/commonHomeController/java/', 'src/commonActivity/java/', 'src/main/java/']
+            java.srcDirs = ['src/commonControllers/java/',
+                            'src/commonHomeController/java/',
+                            'src/commonCategoriesController/java/',
+                            'src/commonActivity/java/',
+                            'src/main/java/']
         }
 
         buyinviteRC {
             res.srcDir 'src/buyinviteTest/res/'
-            java.srcDirs = ['src/commonControllers/java/', 'src/commonHomeController/java/', 'src/commonActivity/java/', 'src/main/java/']
+            java.srcDirs = ['src/commonControllers/java/',
+                            'src/commonHomeController/java/',
+                            'src/commonCategoriesController/java/',
+                            'src/commonActivity/java/',
+                            'src/main/java/']
         }
 
         buyinviteTest {
-            java.srcDirs = ['src/commonControllers/java/', 'src/commonHomeController/java/', 'src/commonActivity/java/', 'src/main/java']
+            java.srcDirs = ['src/commonControllers/java/',
+                            'src/commonHomeController/java/',
+                            'src/commonCategoriesController/java/',
+                            'src/commonActivity/java/',
+                            'src/main/java']
         }
 
         ourpayTest {
-            java.srcDirs = ['src/ourpayTest/java/', 'src/commonControllers/java/', 'src/main/java/']
+            java.srcDirs = ['src/ourpayTest/java/',
+                            'src/commonControllers/java/',
+                            'src/main/java/']
         }
 
         topbuyTest {
@@ -305,7 +331,8 @@ android {
         }
 
         main {
-            java.srcDirs = ['src/main/java', 'src/ourpayExclusive/java/']
+            java.srcDirs = ['src/main/java',
+                            'src/ourpayExclusive/java/']
         }
     }
 
