@@ -39,6 +39,8 @@ import io.reactivex.Observable;
 import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.functions.Consumer;
 
+import au.com.dealsdirect.utils.AppEventHelper;
+
 /**
  * Base class that implements the Presenter interface and provides a base implementation for
  * onAttach() and onDetach(). It also handles keeping a reference to the mvpView that
@@ -300,7 +302,7 @@ public class AuthenticationBasePresenter<V extends AuthenticationMvpView> implem
             @Override
             public void onSuccess(LoginResult loginResult) {
                 fetchUserInfo(loginResult.getAccessToken());
-                completedRegistration(AppConstants.API_REGISTER_FACEBOOK);
+                AppEventHelper.completedRegistration(AppConstants.API_REGISTER_FACEBOOK);
             }
 
             @Override
@@ -442,14 +444,4 @@ public class AuthenticationBasePresenter<V extends AuthenticationMvpView> implem
             handleApiError(anError);
         }
     }
-
-    private void completedRegistration(String method) {
-        AppEventsLogger logger = AppEventsLogger.newLogger(FacebookSdk.getApplicationContext());
-
-        Bundle parameters = new Bundle();
-        parameters.putString(AppEventsConstants.EVENT_PARAM_REGISTRATION_METHOD, method);
-
-        logger.logEvent(AppEventsConstants.EVENT_NAME_COMPLETED_REGISTRATION, parameters);
-    }
-
 }
