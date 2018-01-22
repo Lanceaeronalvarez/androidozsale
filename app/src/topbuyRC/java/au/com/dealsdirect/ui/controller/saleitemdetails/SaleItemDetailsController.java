@@ -14,6 +14,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.WindowManager;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.view.animation.LinearInterpolator;
@@ -373,7 +374,6 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
         mSaleItemImagesAdapter.replaceData(qualitySaleImages);
         mSaleItemImagesIndicatorAdapter.replaceData(qualitySaleImages);
 
-        mProductDescriptionText.setLayerType(View.LAYER_TYPE_SOFTWARE, null);
         mProductDescriptionText.startAnimation(anim);
         mProductDescriptionText.loadData(mHtmlHeader + saleDetail.getDescription() + mHtmlFooter,
                 "text/html; charset=UTF-8",
@@ -467,6 +467,11 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
     public void onDetach(View view) {
         mCartViewClickListener.dispose();
         mActivity.setDraggableViewPager(true);
+        mProductDescriptionText.destroy();
+        mProductAboutPricing.destroy();
+        mProductAboutText.destroy();
+        mShippingDescText.destroy();
+        mReturnPolicyText.destroy();
         super.onDetach(view);
     }
 
