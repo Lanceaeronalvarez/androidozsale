@@ -1,8 +1,12 @@
 package au.com.dealsdirect.ui.controller.categories;
 
+import java.util.List;
+
 import javax.inject.Inject;
 
 import au.com.dealsdirect.data.DataManager;
+import au.com.dealsdirect.data.network.AppApiCallback;
+import au.com.dealsdirect.data.network.model.category.GetCategoryTreeResponse;
 import au.com.dealsdirect.ui.base.BasePresenter;
 import au.com.dealsdirect.utils.rx.SchedulerProvider;
 import io.reactivex.disposables.CompositeDisposable;
@@ -20,4 +24,19 @@ public class CategoriesPresenter<V extends CategoriesMvpView> extends BasePresen
         super(dataManager, schedulerProvider, compositeDisposable);
     }
 
+    @Override
+    public void callGetCategoryTree() {
+        doApiCallForResponse(getDataManager().callGetGetCategories(),new AppApiCallback(){
+            @Override
+            public void onSuccess(List<?> response) {
+                super.onSuccess(response);
+                getMvpView().showCategories((List<GetCategoryTreeResponse>) response);
+            }
+
+            @Override
+            public void onFailure(Throwable t) {
+                super.onFailure(t);
+            }
+        });
+    }
 }

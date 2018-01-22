@@ -111,9 +111,6 @@ public class CategoriesController extends BaseController
         super.onAttach(view);
         mPresenter.onAttach(this);
 
-        int color = determineColor();
-        //set fragment background color
-        mRootLayout.setBackgroundColor(color);
 
 //        if (chosenCategoryName.equals(getResources().getString(R.string.category_default))) {
 //            color = getResources().getColor(R.color.shop_banner_divider_default);
@@ -185,8 +182,9 @@ public class CategoriesController extends BaseController
     @Override
     protected void setUp(View view) {
 
-        showCategories(mCategories);
-        initUIValues();
+        if(mCategories == null){
+            mPresenter.callGetCategoryTree();
+        }
 
         setRetainViewMode(RetainViewMode.RETAIN_DETACH);
     }
@@ -206,10 +204,7 @@ public class CategoriesController extends BaseController
         //check if is last option
         boolean isOptionLastContent = isOptionLastContent(categoryKey);
 
-        if (isOptionLastContent) {
-//            mSaleItemsPresenter.categoryClicked(determineColor());
-            categoriesChangeCount++;
-        } else {
+        if (!isOptionLastContent) {
 
             Bundle bundle = new Bundle();
             bundle.putString(BundleKeys.CATEGORIES_ITEM_LIST,mCategoriesString);
@@ -230,10 +225,6 @@ public class CategoriesController extends BaseController
         return false;
     }
 
-    public void initUIValues() {
-
-
-    }
 
     private int determineColor() {
         CategoriesColorHelper categoriesColorHelper = new CategoriesColorHelper();
