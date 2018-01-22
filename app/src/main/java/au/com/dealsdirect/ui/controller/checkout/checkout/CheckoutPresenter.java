@@ -23,6 +23,7 @@ import au.com.dealsdirect.service.ourpay.OurpayStateManager;
 import au.com.dealsdirect.service.ourpay.OurpayUtils;
 import au.com.dealsdirect.ui.base.BasePresenter;
 import au.com.dealsdirect.ui.custom.ProductQuantityLayout;
+import au.com.dealsdirect.utils.AppEventHelper;
 import au.com.dealsdirect.utils.CurrencyUtil;
 import au.com.dealsdirect.utils.rx.SchedulerProvider;
 import io.reactivex.annotations.NonNull;
@@ -296,7 +297,7 @@ public class CheckoutPresenter<V extends CheckoutMvpView> extends BasePresenter<
 
     @Override
     public void facebookInitiatedCheckout(String paymentType, int numItems, double price) {
-        initiatedCheckout(paymentType, numItems, price);
+        AppEventHelper.initiatedCheckout(paymentType, numItems, price, getDataManager().getCountryId());
     }
 
     private void updateCart(GetCurrentOrder.ResponseValue response) {
@@ -336,20 +337,4 @@ public class CheckoutPresenter<V extends CheckoutMvpView> extends BasePresenter<
         }
 
     }
-
-    private void initiatedCheckout(String paymentType,
-                                         int numItems,
-                                         double price) {
-
-        AppEventsLogger logger = AppEventsLogger.newLogger(FacebookSdk.getApplicationContext());
-
-        Bundle parameters = new Bundle();
-        parameters.putString(AppEventsConstants.EVENT_PARAM_DESCRIPTION, paymentType);
-        parameters.putInt(AppEventsConstants.EVENT_PARAM_NUM_ITEMS, numItems);
-
-        logger.logEvent(AppEventsConstants.EVENT_NAME_INITIATED_CHECKOUT,
-                price,
-                parameters);
-    }
-
 }
