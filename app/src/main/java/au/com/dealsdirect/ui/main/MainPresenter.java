@@ -42,6 +42,7 @@ import au.com.dealsdirect.data.network.model.login.LoginTicket;
 import au.com.dealsdirect.data.network.model.login.Logout;
 import au.com.dealsdirect.service.fcm.GNotification;
 import au.com.dealsdirect.ui.base.BasePresenter;
+import au.com.dealsdirect.utils.AppEventHelper;
 import au.com.dealsdirect.utils.IntrospectionUtils;
 import au.com.dealsdirect.utils.rx.SchedulerProvider;
 import io.fabric.sdk.android.Fabric;
@@ -357,6 +358,11 @@ public class MainPresenter<V extends MainMvpView> extends BasePresenter<V> imple
     }
 
     @Override
+    public boolean isDebug() {
+        return getDataManager().isDebugMode();
+    }
+
+    @Override
     public void callGCMNotificationEvent(Context context) {
         gNotification.callNotificationEvent(context);
     }
@@ -420,6 +426,10 @@ public class MainPresenter<V extends MainMvpView> extends BasePresenter<V> imple
 
                         if (responseValue.getD().getResult()) {
                             getMvpView().showCreatePaymentTransactionSuccess(paymentType, responseValue);
+                            AppEventHelper.completedPurchase(paymentType,
+                                    responseValue.getD().getValue().getOrderInfoResult().getItems().size(),
+                                    responseValue.getD().getValue().getOrderInfoResult().getTotal(),
+                                    getDataManager().getCountryId());
                         } else {
                             getMvpView().showCreatePaymentTransactionFailure(responseValue.getD().getMessage());
                         }
@@ -471,6 +481,7 @@ public class MainPresenter<V extends MainMvpView> extends BasePresenter<V> imple
 
                                 if ((responseValue.getResult() && responseValue.getIsAuthenticated())) {
                                     getMvpView().showCreatePaymentMethodSuccess(responseValue.getD().getValue().getLastPaymentMethod());
+                                    AppEventHelper.addedPaymentInfo(responseValue.getD().getValue().getLastPaymentMethod().getPaymentType());
                                 } else {
                                     getMvpView().onError(responseValue.getMessage());
                                 }
@@ -501,42 +512,42 @@ public class MainPresenter<V extends MainMvpView> extends BasePresenter<V> imple
         String loginTicket = getDataManager().getLoginTicket();
         if (!loginTicket.isEmpty()) {
             getCompositeDisposable().add(getDataManager()
-                            .callLoginTicket(new LoginTicket.RequestValue(loginTicket, getDataManager().getCountryId()))
-                            .subscribeOn(getSchedulerProvider().io())
-                            .observeOn(getSchedulerProvider().ui())
-                            .subscribe(new Consumer<LoginEmail.ResponseValue>() {
-                                @Override
-                                public void accept(@NonNull LoginEmail.ResponseValue responseValue) throws Exception {
-                                    if (!isViewAttached()) {
-                                        return;
-                                    }
+                    .callLoginTicket(new LoginTicket.RequestValue(loginTicket, getDataManager().getCountryId()))
+                    .subscribeOn(getSchedulerProvider().io())
+                    .observeOn(getSchedulerProvider().ui())
+                    .subscribe(new Consumer<LoginEmail.ResponseValue>() {
+                        @Override
+                        public void accept(@NonNull LoginEmail.ResponseValue responseValue) throws Exception {
+                            if (!isViewAttached()) {
+                                return;
+                            }
 
-                                    if (responseValue.isSuccess()) {
-                                        getDataManager().acknowledgeAuth(responseValue.getTicket());
-                                        // Call required post login api methods
-                                        getMvpView().loginSuccessMethods();
-                                    } else {
-                                        //On login ticket fail, call logout and go back to shop
-                                        callLogout(null);
-                                    }
-                                }
-                            }, new Consumer<Throwable>() {
-                                @Override
-                                public void accept(@NonNull Throwable throwable) throws Exception {
-                                    if (!isViewAttached()) {
-                                        return;
-                                    }
+                            if (responseValue.isSuccess()) {
+                                getDataManager().acknowledgeAuth(responseValue.getTicket());
+                                // Call required post login api methods
+                                getMvpView().loginSuccessMethods();
+                            } else {
+                                //On login ticket fail, call logout and go back to shop
+                                callLogout(null);
+                            }
+                        }
+                    }, new Consumer<Throwable>() {
+                        @Override
+                        public void accept(@NonNull Throwable throwable) throws Exception {
+                            if (!isViewAttached()) {
+                                return;
+                            }
 
-                                    getMvpView().hideLoading();
-                                    getMvpView().onError(throwable.getMessage());
+                            getMvpView().hideLoading();
+                            getMvpView().onError(throwable.getMessage());
 
-                                    // handle load accounts error here
-                                    if (throwable instanceof ANError) {
-                                        ANError anError = (ANError) throwable;
-                                        handleApiError(anError);
-                                    }
-                                }
-                            })
+                            // handle load accounts error here
+                            if (throwable instanceof ANError) {
+                                ANError anError = (ANError) throwable;
+                                handleApiError(anError);
+                            }
+                        }
+                    })
             );
         }
     }

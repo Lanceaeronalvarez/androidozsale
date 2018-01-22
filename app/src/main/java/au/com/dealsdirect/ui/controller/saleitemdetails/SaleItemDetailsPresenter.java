@@ -47,6 +47,8 @@ public class SaleItemDetailsPresenter<V extends SaleItemDetailsMvpView> extends 
 
                     getMvpView().hideLoading();
 
+                    AppEventHelper.viewedContent(response.getSkuId(), response.getName(),
+                            response.getPrice().getValue(), getDataManager().getCountryId());
 
                 }, throwable -> {
 
@@ -83,6 +85,9 @@ public class SaleItemDetailsPresenter<V extends SaleItemDetailsMvpView> extends 
                     getMvpView().hideLoading();
 
                     getMvpView().showAddToCartResponse(true);
+
+                    AppEventHelper.addedToCart(requestValues.getSkuId(), requestValues.getItemName(),
+                            requestValues.getPrice(), getDataManager().getCountryId());
 
 
                 }, throwable -> {

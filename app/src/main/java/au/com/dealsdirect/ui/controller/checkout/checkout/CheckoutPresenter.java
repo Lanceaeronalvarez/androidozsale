@@ -1,6 +1,11 @@
 package au.com.dealsdirect.ui.controller.checkout.checkout;
 
+import android.os.Bundle;
+
 import com.androidnetworking.error.ANError;
+import com.facebook.FacebookSdk;
+import com.facebook.appevents.AppEventsConstants;
+import com.facebook.appevents.AppEventsLogger;
 
 import java.util.ArrayList;
 
@@ -18,6 +23,7 @@ import au.com.dealsdirect.service.ourpay.OurpayStateManager;
 import au.com.dealsdirect.service.ourpay.OurpayUtils;
 import au.com.dealsdirect.ui.base.BasePresenter;
 import au.com.dealsdirect.ui.custom.ProductQuantityLayout;
+import au.com.dealsdirect.utils.AppEventHelper;
 import au.com.dealsdirect.utils.rx.SchedulerProvider;
 import io.reactivex.annotations.NonNull;
 import io.reactivex.disposables.CompositeDisposable;
@@ -325,5 +331,4 @@ public class CheckoutPresenter<V extends CheckoutMvpView> extends BasePresenter<
         }
 
     }
-
 }
