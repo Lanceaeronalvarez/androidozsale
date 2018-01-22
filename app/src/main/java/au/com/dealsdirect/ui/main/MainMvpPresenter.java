@@ -53,4 +53,6 @@ public interface MainMvpPresenter<V extends MainMvpView> extends MvpPresenter<V>
     void initFacebookAnalytics();
 
     void initializeAnalytics(Context activityContext, Context applicationContext);
+
+    boolean isDebug();
 }
