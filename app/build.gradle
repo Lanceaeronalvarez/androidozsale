@@ -239,19 +239,18 @@ android {
             versionName "0.9"
             applicationId "au.com.ourpay.test"
 
-            buildConfigField "String", "API_ROOT", "\"https://genie-ui-dealsdirect-pre.mysaledev.com/\""
-            buildConfigField "String", "API_LEGACY", "\"https://api.mysaledev.com/public/v3.17/\""
+            buildConfigField "String", "API_ROOT", "\"https://www.dealsdirect.com.au/\""
+            buildConfigField "String", "API_LEGACY", "\"https://www.dealsdirect.com.au/papi/public/v3.20/\""
             buildConfigField "String", "ACCOUNT_ID", "\"A56B0D62-AEF6-4653-848E-2ECDDB6E9B8C\""
 
-            // Undefined values for Ourpay
             resValue "string", "app_name", "Ourpay Test"
-            def facebookAppId = "1658400667713836"
+            def facebookAppId = "1650094968544406"
             resValue "string", "facebook_app_id", facebookAppId
-            resValue "string", "facebook_app_secret", "38e0530d1a0339d117b5474f0731f2af"
+            resValue "string", "facebook_app_secret", "94da0f48bd2ffea25981e52c56f9260a"
             resValue "string", "fb_login_protocol_scheme", "fb" + facebookAppId
             resValue "string", "fb_page_id", "257280167216"
-            resValue "string", "new_relic_app_token", ""
-            resValue "string", "twitter_user_id", ""
+            resValue "string", "new_relic_app_token", "AAa9d543732ff39dddc60c9cb9ad8c9cf22297904b"
+            resValue "string", "twitter_user_id", "twitter://user?user_id=37405859"
             resValue "string", "default_country_id", "DA"
             resValue "string", "default_language_id", "EN"
 

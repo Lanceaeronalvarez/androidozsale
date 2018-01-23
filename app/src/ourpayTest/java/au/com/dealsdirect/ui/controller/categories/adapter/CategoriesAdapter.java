@@ -64,7 +64,7 @@ public class CategoriesAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
 
 //        GDebug.log("transitioning", "category text transition = "+vh.categoryText.getText().toString());
 
-        vh.categoryText.setOnClickListener(new View.OnClickListener() {
+        vh.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
 

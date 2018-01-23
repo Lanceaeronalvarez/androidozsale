@@ -10,9 +10,11 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.bluelinelabs.conductor.changehandler.HorizontalChangeHandler;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.mysale.genie.animation.AnimationEngine;
@@ -83,6 +85,8 @@ public class CategoriesController extends BaseController
 
     @BindView(R.id.root_categories_layout)
     LinearLayout mRootLayout;
+    @BindView(R.id.btn_left_arrow_categories)
+    ImageView mBackButton;
     @BindView(R.id.current_category_text)
     TextView headerCategoryTextView;
     @BindView(R.id.categories_recyclerview)
@@ -117,8 +121,7 @@ public class CategoriesController extends BaseController
 //        }
 //
 //        mSaleItemsPresenter.categoryClicked(color);
-        headerCategoryTextView.setText(chosenCategoryName);
-        categoriesChangeCount++;
+
     }
 
     @Override
@@ -137,36 +140,17 @@ public class CategoriesController extends BaseController
 
         if(chosenCategoryName.isEmpty()){
             chosenCategoryName = getResources().getString(R.string.category_default);
+            headerCategoryTextView.setText("Categories");
+        } else {
+            headerCategoryTextView.setText(chosenCategoryName);
         }
 
         mActivity.setDraggableViewPager(true);
         mActivity.setCategoriesRouter(getRouter());
         hideKeyboard();
-//        com.mysale.genie.animation.AnimationEngine.Builder.animate(headerUnderlineView)
-//                .scaleX(65)
-//                .setDuration(300)
-//                .build()
-//                .start();
-
         setUp(view);
     }
 
-    @Override
-    public boolean handleBack() {
-
-//        ViewCompat.setTransitionName(headerCategoryTextView, "categoryHeaderTransitionName");
-
-        if (getRouter().getBackstackSize() == 1) {
-//            mSaleItemsPresenter.dismissCategoriesController();
-            getRouter().setPopsLastView(true);
-            getRouter().popCurrentController();
-            return true;
-        }
-
-//        mSaleItemsPresenter.executeCategoryChangeApiCall(prevChosenCategoryKey,prevChosenCategoryName);
-
-        return false;
-    }
 
     @Override
     protected void onDestroyView(@NonNull View view) {
@@ -215,7 +199,7 @@ public class CategoriesController extends BaseController
             bundle.putString(ARG_CATEGORY_CURRENT_KEY, categoryKey);
             bundle.putInt(ARG_CATEGORY_POSITION, position);
 
-            GateKeeper.push(getRouter(), GateKeeper.Destination.CATEGORIES, bundle);
+            GateKeeper.push(getRouter(), GateKeeper.Destination.CATEGORIES, bundle, new HorizontalChangeHandler(), new HorizontalChangeHandler());
         }
 
     }
@@ -282,6 +266,14 @@ public class CategoriesController extends BaseController
         mAdapter = new CategoriesAdapter(fillCategoryContent(), getResources().getString(R.string.category_default), this);
         mRecyclerView.setAdapter(mAdapter);
         mRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
+
+        mBackButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                //need to reset transition name of headerCategoryTextView to allow shared element return transition to work.
+                mActivity.onBackPressed();
+            }
+        });
 
     }
 

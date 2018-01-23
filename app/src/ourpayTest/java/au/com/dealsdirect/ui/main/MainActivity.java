@@ -200,6 +200,8 @@ public class MainActivity extends BaseActivity implements MainMvpView {
                 case 0:
                     if (mCategoriesRouter.getBackstackSize() == 1) { //go back to shops
                         setRootViewpagerItem(1);
+                    } else {
+                        mCategoriesRouter.handleBack();
                     }
                     break;
                 case 1:

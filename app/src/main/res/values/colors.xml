@@ -59,6 +59,8 @@
     <color name="toolbar_skin">#F00065</color>
     <color name="toolbar_active_skin">#F00065</color>
 
+    <color name="back_arrow_color">#A4AAB3</color>
+
     <!--Search Edit Text Colors-->
     <color name="search_edit_text_hint_color">#CCFFFFFF</color>
     <color name="search_edit_text_color">@color/white</color>

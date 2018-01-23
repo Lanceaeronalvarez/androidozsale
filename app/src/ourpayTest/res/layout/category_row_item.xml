@@ -1,35 +1,30 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:orientation="vertical"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content">
+    android:clickable="true"
+    android:layout_height="wrap_content"
+    android:background="@drawable/bg_category_item_states"
+    android:orientation="horizontal"
+    android:paddingLeft="20dp">
 
-    <LinearLayout
-        android:layout_width="match_parent"
+    <TextView
+        android:id="@+id/category_text"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:paddingLeft="20dp"
-        android:orientation="horizontal">
+        android:layout_weight="9"
+        android:paddingBottom="20dp"
+        android:paddingTop="20dp"
+        android:text="electronics &amp; phones"
+        android:textColor="@color/gray_field_text"
+        android:textSize="@dimen/text_size_xxlarge" />
 
-        <TextView
-            android:id="@+id/category_text"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="9"
-            android:text="electronics &amp; phones"
-            android:paddingTop="20dp"
-            android:paddingBottom="20dp"
-            android:textColor="@color/gray_field_text"
-            android:textSize="@dimen/text_size_xxlarge" />
+    <ImageView
+        android:layout_width="0dp"
+        android:layout_height="50dp"
+        android:layout_gravity="center"
+        android:layout_weight="1"
+        android:src="@drawable/ic_chevron_right" />
 
-        <ImageView
-            android:layout_width="0dp"
-            android:layout_weight="1"
-            android:layout_height="50dp"
-            android:layout_gravity="center"
-            android:src="@drawable/ic_chevron_right"/>
-
-
-    </LinearLayout>
 
 </LinearLayout>
