@@ -527,6 +527,8 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
 
         AddToCartRequest request = new AddToCartRequest();
         request.setSkuId(mSkuId);
+        request.setItemName(mSaleName);
+        request.setPrice(Double.valueOf(mSalePrice.substring(1)));
 
         if (hasSizes) {
             if (!didSelectSize) {
