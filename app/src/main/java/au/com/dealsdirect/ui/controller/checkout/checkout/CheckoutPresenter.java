@@ -294,6 +294,11 @@ public class CheckoutPresenter<V extends CheckoutMvpView> extends BasePresenter<
         }
     }
 
+    @Override
+    public void facebookInitiatedCheckout(String paymentType, int numItems, double price) {
+        AppEventHelper.initiatedCheckout(paymentType, numItems, price, getDataManager().getCountryId());
+    }
+
     private void updateCart(GetCurrentOrder.ResponseValue response) {
 
         if (!isViewAttached()) {
