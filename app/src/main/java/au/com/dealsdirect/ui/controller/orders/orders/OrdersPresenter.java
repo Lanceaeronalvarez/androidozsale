@@ -22,7 +22,6 @@ public class OrdersPresenter<V extends OrdersMvpView> extends BasePresenter<V> i
 
     @Override
     public void loadOrders() {
-        getMvpView().showLoading();
         doApiCallForResponse(getDataManager()
                 .callGetPaymentsList(new GetPaymentsList.RequestValues()), new AppApiCallback(){
             @Override
