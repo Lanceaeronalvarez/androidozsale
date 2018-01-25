@@ -10,8 +10,11 @@ import com.facebook.AccessToken;
 import com.facebook.CallbackManager;
 import com.facebook.FacebookCallback;
 import com.facebook.FacebookException;
+import com.facebook.FacebookSdk;
 import com.facebook.GraphRequest;
 import com.facebook.GraphResponse;
+import com.facebook.appevents.AppEventsConstants;
+import com.facebook.appevents.AppEventsLogger;
 import com.facebook.login.LoginManager;
 import com.facebook.login.LoginResult;
 
@@ -30,10 +33,13 @@ import javax.inject.Inject;
 import au.com.dealsdirect.data.DataManager;
 import au.com.dealsdirect.data.network.ApiCallback;
 import au.com.dealsdirect.data.network.model.login.LoginFacebook;
+import au.com.dealsdirect.utils.AppConstants;
 import au.com.dealsdirect.utils.rx.SchedulerProvider;
 import io.reactivex.Observable;
 import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.functions.Consumer;
+
+import au.com.dealsdirect.utils.AppEventHelper;
 
 /**
  * Base class that implements the Presenter interface and provides a base implementation for
@@ -295,8 +301,8 @@ public class AuthenticationBasePresenter<V extends AuthenticationMvpView> implem
         loginManager.registerCallback(callbackManager, new FacebookCallback<LoginResult>() {
             @Override
             public void onSuccess(LoginResult loginResult) {
-
                 fetchUserInfo(loginResult.getAccessToken());
+                AppEventHelper.completedRegistration(AppConstants.API_REGISTER_FACEBOOK);
             }
 
             @Override
@@ -438,6 +444,4 @@ public class AuthenticationBasePresenter<V extends AuthenticationMvpView> implem
             handleApiError(anError);
         }
     }
-
-
 }

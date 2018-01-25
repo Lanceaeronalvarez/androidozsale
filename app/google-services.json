@@ -196,7 +196,7 @@
       "client_info": {
         "mobilesdk_app_id": "1:72197270300:android:ad467c6385b109f9",
         "android_client_info": {
-          "package_name": "au.com.buyinvite.test"
+          "package_name": "au.com.buyinvite.bi.test"
         }
       },
       "oauth_client": [
@@ -227,7 +227,7 @@
       "client_info": {
         "mobilesdk_app_id": "1:72197270300:android:87942a000f497465",
         "android_client_info": {
-          "package_name": "au.com.buyinvite"
+          "package_name": "au.com.buyinvite.bi"
         }
       },
       "oauth_client": [

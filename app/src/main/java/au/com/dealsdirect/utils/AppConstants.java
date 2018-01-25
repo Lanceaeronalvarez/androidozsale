@@ -58,7 +58,8 @@ public final class AppConstants {
     @SuppressLint("DefaultLocale")
     public static final String BANNER_SIZE_TABLET_FEATURE = String.format("_%dx%d", BANNER_TABLET_FEATURED_WIDTH, BANNER_TABLEt_FEATURED_HEIGHT);
 
-
+    public static final String API_REGISTER = "Registration";
+    public static final String API_REGISTER_FACEBOOK = "LoginFacebook";
 
 
     private AppConstants() {

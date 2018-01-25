@@ -525,7 +525,10 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
     @OnClick(R.id.product_details_add_to_basket)
     void addToBasket() {
 
-        AddToCartRequest request = new AddToCartRequest(mSkuId);
+        AddToCartRequest request = new AddToCartRequest();
+        request.setSkuId(mSkuId);
+        request.setItemName(mSaleName);
+        request.setPrice(Double.valueOf(mSalePrice.substring(1)));
 
         if (hasSizes) {
             if (!didSelectSize) {

@@ -664,6 +664,7 @@ public class CheckoutController extends SwipeableBaseToolBarController implement
             } else {
                 PaymentInfo.setPaymentType(PaymentInfo.TYPE_BRAINTREE);
                 mActivity.callCreatePaymentTransaction(PaymentInfo.getPaymentType(), "", PaymentInfo.getPaymentMethod().getToken());
+                mPresenter.facebookInitiatedCheckout(PaymentInfo.getPaymentType(), mItemList.size(), mValue.getSummary().total);
             }
         }
     }
@@ -685,6 +686,7 @@ public class CheckoutController extends SwipeableBaseToolBarController implement
             } else {
                 PaymentInfo.setPaymentType(PaymentInfo.TYPE_BRAINTREE);
                 mActivity.callCreatePaymentTransaction(PaymentInfo.getPaymentType(), "", PaymentInfo.getPaymentMethod().getToken());
+                mPresenter.facebookInitiatedCheckout(PaymentInfo.getPaymentType(), mItemList.size(), mValue.getSummary().total);
             }
         }
     }
@@ -702,6 +704,7 @@ public class CheckoutController extends SwipeableBaseToolBarController implement
 
         mActivity.setDraggableViewPager(false);
         GateKeeper.push(getRouter(), GateKeeper.Destination.MASTERPASS, new VerticalChangeHandler(false), new VerticalChangeHandler());
+        mPresenter.facebookInitiatedCheckout(PaymentInfo.getPaymentType(), mItemList.size(), mValue.getSummary().total);
     }
 
     private void onOurpayButtonClick() {
@@ -748,6 +751,8 @@ public class CheckoutController extends SwipeableBaseToolBarController implement
 
         PaymentInfo.setPaymentType(PaymentInfo.TYPE_MYPAY);
         mActivity.callCreatePaymentTransaction(PaymentInfo.getPaymentType(), "", PaymentInfo.getPaymentMethod().getToken());
+        mPresenter.facebookInitiatedCheckout(PaymentInfo.getPaymentType(), mItemList.size(), mValue.getSummary().total);
+
     }
 
     @Override

@@ -100,7 +100,6 @@ public class AccountController extends BaseController implements AccountMvpView,
         //MOCK MULTI COUNTRY in my accounts temporarily for BA
         if (getActivity().getPackageName().equals("au.com.buyinvite.rc") ||
                 getActivity().getPackageName().equals("au.com.buyinvite.test") ){
-            Log.d("multicountry", "yes");
 
             mPresenter.setMultiCountry(true);
         }
