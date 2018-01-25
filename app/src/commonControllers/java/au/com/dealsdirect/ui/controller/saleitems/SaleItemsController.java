@@ -444,11 +444,6 @@ public class SaleItemsController extends BasePullToRefreshController implements 
     @Override
     public void showSaleItems(GetSaleItemsResponse getSaleItemsResponse, boolean forFacetCorrection) {
 
-        if (!mFromShopSearch) {
-            //allow showing filters only when sale items have loaded.
-            mSaleItemsFilterIcon.setOnClickListener(view12 -> showFilters());
-        }
-
         List<GetSaleItemsResponse.Products> items = getSaleItemsResponse.products;
 
         if (forFacetCorrection) {
@@ -521,11 +516,16 @@ public class SaleItemsController extends BasePullToRefreshController implements 
             mSaleItems = mSaleItemsAdapter.getData();
 
             if (mSaleItems == null || mSaleItems.isEmpty()) {
+
                 mPlaceholder.setVisibility(View.VISIBLE);
                 mSaleItemsRecyclerView.setVisibility(View.GONE);
             } else {
                 mPlaceholder.setVisibility(View.GONE);
                 mSaleItemsRecyclerView.setVisibility(View.VISIBLE);
+
+                //allow showing filters only when sale items have loaded.
+                mSaleItemsFilterIcon.setOnClickListener(view12 -> showFilters());
+
             }
         }
     }
