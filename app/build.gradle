@@ -330,8 +330,7 @@ android {
         }
 
         main {
-            java.srcDirs = ['src/main/java',
-                            'src/ourpayExclusive/java/']
+            java.srcDirs = ['src/main/java']
         }
     }
 
