@@ -118,7 +118,7 @@ public class ViewContactsController extends BasePullToRefreshController implemen
         assert (mActivity) != null;
         mActivity.setDraggableViewPager(false);
 
-        mViewContactsToolarTitle.setText("contact Us");
+        mViewContactsToolarTitle.setText("Contact Us");
         mViewContactsToolbarLeftOption.setVisibility(View.INVISIBLE);
         mViewContactsToolbarRightOption.setVisibility(View.INVISIBLE);
 
