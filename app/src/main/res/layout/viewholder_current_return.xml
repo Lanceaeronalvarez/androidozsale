@@ -6,7 +6,7 @@
     android:id="@+id/view_holder_my_current_returns_row_container"
     android:layout_margin="5dp"
     android:layout_width="match_parent"
-    android:layout_height="@dimen/return_card_height"
+    android:layout_height="wrap_content"
     android:background="@drawable/bg_card_view_states"
     tools:ignore="MissingPrefix">
 
@@ -77,14 +77,14 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_below="@+id/return_header_divider"
+            android:layout_above="@+id/my_current_return_information_text_content"
             android:focusable="true"
             android:clickable="true"
             android:isScrollContainer="false"
             android:nestedScrollingEnabled="false"
             android:orientation="vertical"
-            android:padding="10dp">
-
-        </android.support.v7.widget.RecyclerView>
+            android:paddingLeft="10dp"
+            android:paddingRight="10dp"/>
 
 
         <RelativeLayout
