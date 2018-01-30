@@ -10,8 +10,8 @@
     android:background="@drawable/bg_card_view_states"
     tools:ignore="MissingPrefix">
 
-    <RelativeLayout
-        android:id="@+id/viewholder_current_return_content_container"
+    <LinearLayout
+        android:orientation="vertical"
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
@@ -66,7 +66,6 @@
             android:id="@+id/return_header_divider"
             android:layout_width="match_parent"
             android:layout_height="1dp"
-            android:layout_below="@id/my_order_information_header"
             android:background="@color/gray_border">
 
         </View>
@@ -76,15 +75,12 @@
             android:id="@+id/current_return_items_recyclerview"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_below="@+id/return_header_divider"
-            android:layout_above="@+id/my_current_return_information_text_content"
             android:focusable="true"
             android:clickable="true"
             android:isScrollContainer="false"
             android:nestedScrollingEnabled="false"
             android:orientation="vertical"
-            android:paddingLeft="10dp"
-            android:paddingRight="10dp"/>
+            android:padding="10dp"/>
 
 
         <RelativeLayout
@@ -256,7 +252,7 @@
 
 
         </RelativeLayout>
-    </RelativeLayout>
+    </LinearLayout>
 
 
     <!--</LinearLayout>-->
