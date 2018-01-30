@@ -171,8 +171,6 @@ public class AddContactController extends SwipeableBaseToolBarController impleme
     protected void setUp(View view) {
         Log.d("addContactController", "from = " + mFromFragmentId);
 
-        mActivity.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE | WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN);
-
         getRouter().addChangeListener(new ControllerChangeHandler.ControllerChangeListener() {
             @Override
             public void onChangeStarted(@Nullable Controller to, @Nullable Controller from, boolean isPush, @NonNull ViewGroup container, @NonNull ControllerChangeHandler handler) {
@@ -377,7 +375,6 @@ public class AddContactController extends SwipeableBaseToolBarController impleme
     @Override
     public void onDestroyView(@NonNull View view) {
         ContactPreferenceHelper.clear(mActivity);
-        mActivity.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE | WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN);
         mPresenter.onDetach();
         super.onDestroyView(view);
     }
