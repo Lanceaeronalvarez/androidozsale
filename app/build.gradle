@@ -96,7 +96,7 @@ android {
         }
 
         dealsDirectRC {
-            versionCode 71
+            versionCode 72
             versionName "2.3.1"
             applicationId "au.com.dealsdirect"
 
@@ -120,7 +120,7 @@ android {
         }
 
         dealsDirectTest {
-            versionCode 73
+            versionCode 74
             versionName "2.3.1"
             applicationId "au.com.dealsdirect.test"
 
@@ -189,8 +189,8 @@ android {
         }
 
         topbuyRC {
-            versionCode 80
-            versionName "2.3.0"
+            versionCode 81
+            versionName "2.3.1"
             applicationId "au.com.topbuy"
 
             buildConfigField "String", "API_ROOT", "\"https://www.topbuy.com.au/\""
@@ -212,8 +212,8 @@ android {
         }
 
         topbuyTest {
-            versionCode 82
-            versionName "2.3.0"
+            versionCode 83
+            versionName "2.3.1"
             applicationId "au.com.topbuy.test"
 
             buildConfigField "String", "API_ROOT", "\"https://geniemobileappsclientapi.herokuapp.com/sandbox/\""
