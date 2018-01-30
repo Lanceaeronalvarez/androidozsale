@@ -144,6 +144,7 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
     private KeyboardHeightProvider mKeyboardHeightProvider;
     private int mBottomSheetAdjustedHeight;
     private boolean isBottomSheetAdjustedHeight = false;
+    private int mOrigKeyboardHeight = 0;
     private boolean isKeyboardOpen = false;
     private ControllerChangeHandler.ControllerChangeListener mControllerChangeListener;
 
@@ -324,10 +325,11 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
         if (isSetupFinished) {
             mKeyboardHeightProvider = new KeyboardHeightProvider(activity);
             mKeyboardHeightProvider.setKeyboardHeightObserver(this);
+            mKeyboardHeightProvider.start();
         }
 
-        if(mSearchTagsAdapter.getEditTextViewHolder().getEditText().hasFocus()){
-            activity.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_PAN|WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE);
+        if (mSearchTagsAdapter.getEditTextViewHolder().getEditText().hasFocus()) {
+            activity.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_PAN | WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE);
             //set search tab
             mSearchFilterPresenter.selectTabOfFilterType("");
         }
@@ -817,16 +819,19 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
     public void onKeyboardHeightChanged(int height, int orientation) {
         if (height == 0) {
             isKeyboardOpen = false;
-        } else {
+        } else if (height > 0) {
             isKeyboardOpen = true;
+            mOrigKeyboardHeight = height;
+
             //commented to recalculate everytime
 //            if (mBottomSheetAdjustedHeight != height) {
             View bottomSheetChild = mSearchFilterContainer.getChildAt(0);
             if (bottomSheetChild != null) {
                 ChangeHandlerFrameLayout.LayoutParams params = (ChangeHandlerFrameLayout.LayoutParams) bottomSheetChild.getLayoutParams();
-                params.height = mBottomSheetAdjustedHeight = height + dpToPx(50);
+
+                params.height = mBottomSheetAdjustedHeight = mOrigKeyboardHeight + dpToPx(50);
+
                 bottomSheetChild.setLayoutParams(params);
-                mSearchFilterContainer.postDelayed(() -> mSearchFilterContainer.requestLayout(), 500);
                 isBottomSheetAdjustedHeight = true;
             }
 //            }
