@@ -30,7 +30,6 @@ public class ViewAddressPresenter<V extends ViewAddressMvpView> extends BasePres
 
     @Override
     public void loadAddresses() {
-        getMvpView().showLoading();
         doApiCallForResponse(getDataManager().callGetUserAddresses(
                 new GetAddresses.RequestValues(getDataManager().getLanguageId())), new AppApiCallback() {
             @Override

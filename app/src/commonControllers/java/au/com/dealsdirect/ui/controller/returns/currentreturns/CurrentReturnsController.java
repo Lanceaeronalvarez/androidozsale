@@ -113,6 +113,7 @@ public class CurrentReturnsController extends BasePullToRefreshController
         mCurrentReturnsRightOption.setImageDrawable(getResources().getDrawable(R.drawable.ic_add));
 
         if (mCurrentReturns == null || mCurrentReturns.size() == 0){
+            showLoading();
             mPresenter.loadCurrentReturns();
         }  else {
 
