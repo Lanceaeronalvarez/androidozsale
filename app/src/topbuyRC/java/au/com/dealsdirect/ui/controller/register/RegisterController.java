@@ -160,7 +160,7 @@ public class RegisterController extends SwipeableBaseToolBarController implement
 
     @OnClick(R.id.facebook_login_button)
     void onFacebookLoginClick() {
-        mPresenter.onFacebookLogin(mActivity, mCallbackManager);
+        mPresenter.onFacebookLogin(mActivity, mCallbackManager, 1);
     }
 
 

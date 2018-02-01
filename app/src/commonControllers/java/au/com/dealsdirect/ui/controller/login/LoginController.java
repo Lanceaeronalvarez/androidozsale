@@ -178,7 +178,7 @@ public class LoginController extends BaseController implements LoginMvpView {
 
     @OnClick(R.id.controller_login_fb_layout)
     void onFacebookButtonClick() {
-        mPresenter.onFacebookLogin(mActivity, mCallbackManager);
+        mPresenter.onFacebookLogin(mActivity, mCallbackManager, 0);
 
     }
 

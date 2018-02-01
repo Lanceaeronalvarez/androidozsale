@@ -159,7 +159,7 @@ public class LoginController extends SwipeableBaseToolBarController implements L
 
     @OnClick(R.id.controller_login_fb_layout)
     void onFacebookButtonClick() {
-        mPresenter.onFacebookLogin(mActivity, mCallbackManager);
+        mPresenter.onFacebookLogin(mActivity, mCallbackManager, 0);
     }
 
     @OnClick(R.id.controller_login_forgot_password_text)

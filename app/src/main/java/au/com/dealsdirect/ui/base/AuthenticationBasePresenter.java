@@ -295,14 +295,16 @@ public class AuthenticationBasePresenter<V extends AuthenticationMvpView> implem
 
 
     @Override
-    public void onFacebookLogin(Activity activity, CallbackManager callbackManager) {
+    public void onFacebookLogin(Activity activity, CallbackManager callbackManager, int isRegister) {
         LoginManager loginManager = LoginManager.getInstance();
         loginManager.logInWithReadPermissions(activity, permissions);
         loginManager.registerCallback(callbackManager, new FacebookCallback<LoginResult>() {
             @Override
             public void onSuccess(LoginResult loginResult) {
                 fetchUserInfo(loginResult.getAccessToken());
-                AppEventHelper.completedRegistration(AppConstants.API_REGISTER_FACEBOOK);
+                if(isRegister == 1) {
+                    AppEventHelper.completedRegistration(AppConstants.API_REGISTER_FACEBOOK);
+                }
             }
 
             @Override

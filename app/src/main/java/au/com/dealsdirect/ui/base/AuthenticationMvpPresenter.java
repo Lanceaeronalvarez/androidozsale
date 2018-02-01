@@ -33,7 +33,7 @@ public interface AuthenticationMvpPresenter<V extends AuthenticationMvpView> {
                              String lastName, String facebookUserID,
                              String facebookCookieValue);
 
-    void onFacebookLogin(Activity activity, CallbackManager callbackManager);
+    void onFacebookLogin(Activity activity, CallbackManager callbackManager, int isRegister);
 
 
 }
