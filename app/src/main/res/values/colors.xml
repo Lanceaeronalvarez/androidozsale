@@ -119,6 +119,11 @@
     <color name="item_select_remove">#466E87</color>
     <color name="verify_resend_color">#000080</color>
 
+    <color name="contact_us_one">#C7E4ED</color>
+    <color name="contact_us_two">#EDC7D5</color>
+    <color name="contact_us_three">#CAEDC7</color>
+    <color name="contact_us_four">#D4C7ED</color>
+
     <!--MyAccounts TB Background/panel color -->
     <color name="menu_panel_gray">#4B6171</color>
     <color name="menu_panel_gray_selected">#455B6A</color>
