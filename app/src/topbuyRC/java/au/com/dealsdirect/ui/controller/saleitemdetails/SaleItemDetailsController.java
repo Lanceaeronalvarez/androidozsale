@@ -467,15 +467,19 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
     public void onDetach(View view) {
         mCartViewClickListener.dispose();
         mActivity.setDraggableViewPager(true);
+        super.onDetach(view);
+    }
+
+
+    @Override
+    protected void onDestroyView(@NonNull View view) {
         mProductDescriptionText.destroy();
         mProductAboutPricing.destroy();
         mProductAboutText.destroy();
         mShippingDescText.destroy();
         mReturnPolicyText.destroy();
-        super.onDetach(view);
+        super.onDestroyView(view);
     }
-
-
 
     @Override
     public boolean handleBack() {
