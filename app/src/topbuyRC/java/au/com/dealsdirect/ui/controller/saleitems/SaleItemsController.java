@@ -29,6 +29,7 @@ import com.bluelinelabs.conductor.RouterTransaction;
 import com.bluelinelabs.conductor.changehandler.FadeChangeHandler;
 import com.google.gson.Gson;
 import com.jakewharton.rxbinding2.view.RxView;
+import com.mysale.genie.utility.Prefs;
 import com.mysale.genie.views.custom.CoordinatorLayoutAsBottomSheetBehavior;
 import com.paginate.Paginate;
 
@@ -552,8 +553,8 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
 
         if (!mCategoriesRouter.hasRootController()) {
             Bundle bundle = new BundleBuilder(new Bundle())
-                    .putString(BundleKeys.CATEGORIES_ITEM_LIST, new Gson().toJson(mCategories))
                     .build();
+            Prefs.putString(BundleKeys.CATEGORIES_ITEM_LIST,new Gson().toJson(mCategories));
             Controller controller = ControllerFactory.getInstance(GateKeeper.Destination.CATEGORIES, bundle);
             GateKeeper.setRoot(mCategoriesRouter, GateKeeper.Destination.CATEGORIES, RouterTransaction.with(controller).popChangeHandler(new FadeChangeHandler()).pushChangeHandler(new FadeChangeHandler()));
         } else {
