@@ -79,7 +79,7 @@ ext {
     flowLayoutVersion = '1.0.3'
     recyclerViewPagerVersion = 'v1.1.1'
 
-    braintreeVersion = '2.7.3'
+    braintreeVersion = '2.10.0'
     facebookVersion = '4.28.0'
 
     gcmVersion = '11.8.0'
