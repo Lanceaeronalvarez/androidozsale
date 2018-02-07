@@ -306,6 +306,7 @@ public class CheckoutController extends SwipeableBaseToolBarController implement
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(action -> onPaypalButtonClick()));
 
+        loadCart();
     }
 
     @Override
@@ -319,8 +320,6 @@ public class CheckoutController extends SwipeableBaseToolBarController implement
 
     @Override
     protected void setUp(View view) {
-
-        loadCart();
         mAddNewAddressLayout.setOnClickListener(mChangeClickListener);
         mAddNewPaymentLayout.setOnClickListener(mChangeClickListener);
         mAddNewVoucherLayout.setOnClickListener(mChangeClickListener);

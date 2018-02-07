@@ -88,10 +88,15 @@ public class PaymentSelectController extends SwipeableBaseToolBarController impl
             showPaymentMethodsPlaceholder(false);
         }
         setupSwipingBehavior();
+        setUp(view);
+    }
+
+    @Override
+    protected void onAttach(@NonNull View view) {
         setupDefaultBottomButton("add", view1 -> {
             onAddPaymentMethod();
         });
-        setUp(view);
+        super.onAttach(view);
     }
 
     @Override
