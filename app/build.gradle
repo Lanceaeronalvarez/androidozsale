@@ -420,6 +420,9 @@ dependencies {
     //viewpager indicator
     compile 'me.relex:circleindicator:1.2.2@aar'
 
+    //toolargetool
+    compile "com.gu.android:toolargetool:$rootProject.tooLargeToolVersion"
+
     // dependencies for local unit tests
     testCompile "junit:junit:$rootProject.ext.junitVersion"
     testCompile "org.mockito:mockito-core:$rootProject.mockitoVersion"

@@ -26,6 +26,7 @@ allprojects {
         maven { url "https://jitpack.io" }
         maven { url "https://maven.google.com" }
         maven { url 'https://maven.fabric.io/public' }
+        maven { url 'https://dl.bintray.com/guardian/android'}
         mavenCentral()
         google()
     }
@@ -84,4 +85,7 @@ ext {
 
     gcmVersion = '11.8.0'
     crystalRangeSeekbarVersion = '1.1.1'
+
+    //transactiontoolarge logger
+    tooLargeToolVersion = '0.1.3'
 }
