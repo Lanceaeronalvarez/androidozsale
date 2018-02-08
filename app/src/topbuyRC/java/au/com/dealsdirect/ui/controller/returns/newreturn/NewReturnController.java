@@ -152,9 +152,11 @@ public class NewReturnController extends SwipeableBaseToolBarController implemen
     void onMessageFieldFocusChange(View view, boolean hasFocus) {
         assert mActivity != null;
         if (hasFocus) {
+            KeyboardUtils.setKeyboardAdjustResize(mActivity);
             assert mActivity.getMainController() != null;
             mActivity.getMainController().hideBottomNav();
         } else {
+            KeyboardUtils.setKeyboardAdjustPan(mActivity);
             assert mActivity.getMainController() != null;
             mActivity.getMainController().showBottomNav();
         }

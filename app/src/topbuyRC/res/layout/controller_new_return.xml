@@ -13,8 +13,8 @@
     <android.support.v7.widget.RecyclerView
         android:id="@+id/new_returns_set_detail_recyclerview"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_above="@+id/controller_new_return_bottom_container"
+        android:layout_alignParentTop="true"
+        android:layout_height="wrap_content"
         android:layout_marginLeft="@dimen/activity_horizontal_margin"
         android:layout_marginRight="@dimen/activity_horizontal_margin"
         android:orientation="vertical"
@@ -23,8 +23,8 @@
     <RelativeLayout
         android:id="@+id/controller_new_return_bottom_container"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
+        android:layout_height="match_parent"
+        android:layout_below="@id/new_returns_set_detail_recyclerview"
         android:layout_margin="@dimen/activity_horizontal_margin">
 
         <TextView
