@@ -3,6 +3,7 @@ package au.com.dealsdirect.ui.controller.account;
 import android.content.res.TypedArray;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -13,6 +14,8 @@ import android.view.ViewGroup;
 import android.widget.ImageButton;
 import android.widget.TextView;
 
+import com.bluelinelabs.conductor.Controller;
+import com.bluelinelabs.conductor.ControllerChangeHandler;
 import com.bluelinelabs.conductor.RouterTransaction;
 import com.bluelinelabs.conductor.changehandler.HorizontalChangeHandler;
 
@@ -33,7 +36,9 @@ import au.com.dealsdirect.ui.controller.checkout.paymentselect.PaymentSelectCont
 import au.com.dealsdirect.ui.controller.country.CountryController;
 import au.com.dealsdirect.ui.controller.details.DetailsController;
 import au.com.dealsdirect.ui.controller.language.LanguageController;
+import au.com.dealsdirect.ui.controller.login.LoginController;
 import au.com.dealsdirect.ui.controller.orders.orders.OrdersController;
+import au.com.dealsdirect.ui.controller.register.RegisterController;
 import au.com.dealsdirect.ui.controller.returns.currentreturns.CurrentReturnsController;
 import au.com.dealsdirect.ui.controller.vouchers.View.ViewVouchersController;
 import au.com.dealsdirect.ui.custom.CustomAlertDialog;
@@ -53,7 +58,9 @@ public class AccountController extends BaseController implements AccountMvpView,
     public static final String TAG = "AccountController";
     private static final String KEY_TEXT = "AccountController.KEY_TEXT";
     AccountItemAdapter accountItemAdapter;
-
+    private boolean mChangeInProgress = false;
+    private int mSelectedItemFromLogin;
+    private AccountMvpView mvpView;
 
     @BindView(R.id.partial_toolbar_arrow_title)
     TextView mTitleTextView;
@@ -137,6 +144,25 @@ public class AccountController extends BaseController implements AccountMvpView,
             drawables.add(drawable.getResourceId(i,0));
         }
         mPresenter.loadAccountItems(titles, drawables);
+
+        getRouter().addChangeListener(new ControllerChangeHandler.ControllerChangeListener() {
+            @Override
+            public void onChangeStarted(@Nullable Controller to, @Nullable Controller from, boolean isPush, @NonNull ViewGroup container, @NonNull ControllerChangeHandler handler) {
+                mChangeInProgress = true;
+            }
+
+            @Override
+            public void onChangeCompleted(@Nullable Controller to, @Nullable Controller from, boolean isPush, @NonNull ViewGroup container, @NonNull ControllerChangeHandler handler) {
+                mChangeInProgress = false;
+                if (from instanceof LoginController || from instanceof RegisterController) {
+                    mPresenter.onAttach(mvpView);
+                    if(mPresenter.isAuthorized()) {
+                        mPresenter.loadAccountItems(titles, drawables);
+                        mPresenter.onAccountItemClick(mSelectedItemFromLogin);
+                    }
+                }
+            }
+        });
 
         mTitleTextView.setText(R.string.my_account);
         mArrowButton.setVisibility(View.INVISIBLE);
@@ -234,7 +260,7 @@ public class AccountController extends BaseController implements AccountMvpView,
                 .popChangeHandler(new HorizontalChangeHandler()));
     }
 
-      @Override
+    @Override
     public void showLegalities(String key, int title) {
 
           GateKeeper.push(getRouter(),
@@ -255,7 +281,8 @@ public class AccountController extends BaseController implements AccountMvpView,
 
     @Override
     public void triggerLogin(int option) {
-        AccountMvpView mvpView = this;
+        mvpView = this;
+
 
         mActivity.showLoginController(getRouter(), new AuthHandler() {
             @Override
@@ -317,7 +344,7 @@ public class AccountController extends BaseController implements AccountMvpView,
 
     @Override
     public boolean isChangeInProgress() {
-        return false;
+        return mChangeInProgress;
     }
 
     @OnClick(R.id.partial_toolbar_filter_view)
