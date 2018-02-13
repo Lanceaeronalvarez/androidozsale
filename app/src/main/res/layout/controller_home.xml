@@ -53,7 +53,7 @@
         <com.aurelhubert.ahbottomnavigation.AHBottomNavigation
             android:id="@+id/controller_home_bottom_nav"
             android:layout_width="match_parent"
-            android:layout_height="56dp"
+            android:layout_height="@dimen/bottom_nav_height"
             android:layout_alignParentBottom="true" />
 
         <ImageView

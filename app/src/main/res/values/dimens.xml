@@ -19,7 +19,7 @@
 
     <dimen name="toolbar_height">64dp</dimen>
     <dimen name="filter_bar_height">42dp</dimen>
-    <dimen name="bottom_nav_height">49dp</dimen>
+    <dimen name="bottom_nav_height">56dp</dimen>
 
     <dimen name="cell_height">320dp</dimen>
     <dimen name="cell_image_height">200dp</dimen>
