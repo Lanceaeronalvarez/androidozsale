@@ -96,7 +96,7 @@ android {
         }
 
         dealsDirectRC {
-            versionCode 74
+            versionCode 75
             versionName "2.3.1"
             applicationId "au.com.dealsdirect"
 
@@ -120,7 +120,7 @@ android {
         }
 
         dealsDirectTest {
-            versionCode 76
+            versionCode 78
             versionName "2.3.1"
             applicationId "au.com.dealsdirect.test"
 
@@ -189,7 +189,7 @@ android {
         }
 
         topbuyRC {
-            versionCode 83
+            versionCode 84
             versionName "2.3.1"
             applicationId "au.com.topbuy"
 
@@ -212,7 +212,7 @@ android {
         }
 
         topbuyTest {
-            versionCode 85
+            versionCode 86
             versionName "2.3.1"
             applicationId "au.com.topbuy.test"
 
