@@ -4,17 +4,18 @@
     android:id="@+id/new_return_order_request_set_details_fragment"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="#FFFFFF"
     android:clickable="true"
     android:focusable="true"
     android:focusableInTouchMode="true"
-    android:background="#FFFFFF"
     tools:ignore="MissingPrefix">
 
     <android.support.v7.widget.RecyclerView
         android:id="@+id/new_returns_set_detail_recyclerview"
         android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_above="@+id/controller_new_return_bottom_container"
         android:layout_alignParentTop="true"
-        android:layout_height="wrap_content"
         android:layout_marginLeft="@dimen/activity_horizontal_margin"
         android:layout_marginRight="@dimen/activity_horizontal_margin"
         android:orientation="vertical"
@@ -23,8 +24,8 @@
     <RelativeLayout
         android:id="@+id/controller_new_return_bottom_container"
         android:layout_width="wrap_content"
-        android:layout_height="match_parent"
-        android:layout_below="@id/new_returns_set_detail_recyclerview"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
         android:layout_margin="@dimen/activity_horizontal_margin">
 
         <TextView
@@ -51,12 +52,12 @@
             style="@style/DDButtonStyle"
             fontPath="@string/font_app_medium"
             android:layout_width="match_parent"
-            android:layout_marginBottom="5dp"
-            android:layout_marginTop="5dp"
             android:layout_height="wrap_content"
             android:layout_below="@+id/controller_new_return_field"
+            android:layout_marginBottom="5dp"
+            android:layout_marginTop="5dp"
             android:text="@string/submit"
-            android:textSize="@dimen/text_size_xlarge"/>
+            android:textSize="@dimen/text_size_xlarge" />
 
     </RelativeLayout>
 
