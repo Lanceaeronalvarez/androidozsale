@@ -40,6 +40,7 @@ import au.com.dealsdirect.ui.controller.login.LoginController;
 import au.com.dealsdirect.ui.controller.orders.orders.OrdersController;
 import au.com.dealsdirect.ui.controller.register.RegisterController;
 import au.com.dealsdirect.ui.controller.returns.currentreturns.CurrentReturnsController;
+import au.com.dealsdirect.ui.controller.shops.ShopsController;
 import au.com.dealsdirect.ui.controller.vouchers.View.ViewVouchersController;
 import au.com.dealsdirect.ui.custom.CustomAlertDialog;
 import au.com.dealsdirect.utils.BundleBuilder;
@@ -156,10 +157,6 @@ public class AccountController extends BaseController implements AccountMvpView,
                 mChangeInProgress = false;
                 if (from instanceof LoginController || from instanceof RegisterController) {
                     mPresenter.onAttach(mvpView);
-                    if(mPresenter.isAuthorized()) {
-                        mPresenter.loadAccountItems(titles, drawables);
-                        mPresenter.onAccountItemClick(mSelectedItemFromLogin);
-                    }
                 }
             }
         });
