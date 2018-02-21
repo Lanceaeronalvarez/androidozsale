@@ -293,8 +293,8 @@ public class CheckoutController extends SwipeableBaseToolBarController implement
         mPresenter.onAttach(this);
         mClickListeners = new CompositeDisposable();
 
-        //        disabling masterpass for TB atm 01/16/2018 for 2.3
-//        mMasterpassButton.setOnClickListener(view3 -> onMasterpassButtonClick());
+        //        disabling masterpass for TB atm 01/16/2018 for 2.3Oa
+        mMasterpassButton.setOnClickListener(view3 -> onMasterpassButtonClick());
 
         mClickListeners.add(RxView.clicks(mPayButton)
                 .throttleFirst(1000, TimeUnit.MILLISECONDS)
@@ -444,8 +444,11 @@ public class CheckoutController extends SwipeableBaseToolBarController implement
 
             mPayButton.setVisibility(View.VISIBLE);
             mPaypalButton.setVisibility(View.VISIBLE);
-//            disabling masterpass for TB atm 01/16/2018 for 2.3
-//            mMasterpassButton.setVisibility(View.VISIBLE);
+
+            if(mPresenter.isMasterPassEnabled()) {
+                mMasterpassButton.setVisibility(View.VISIBLE);
+            }
+
             mActivity.setPaymentMethodSelected(null);
             return;
 

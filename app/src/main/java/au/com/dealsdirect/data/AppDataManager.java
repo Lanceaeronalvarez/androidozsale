@@ -660,7 +660,7 @@ public class AppDataManager implements DataManager {
 
     @Override
     public void setIsMasterpassEnabled(boolean val) {
-        mPreferencesHelper.setIsPaypalEnabled(val);
+        mPreferencesHelper.setIsMasterpassEnabled(val);
     }
 
     @Override

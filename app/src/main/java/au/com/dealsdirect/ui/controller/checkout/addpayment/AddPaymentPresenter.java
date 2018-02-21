@@ -27,4 +27,11 @@ public class AddPaymentPresenter<V extends AddPaymentMvpView> extends BasePresen
     public boolean isDebug() {
         return getDataManager().isDebugMode();
     }
+
+    @Override
+    public boolean isMasterPassEnabled() {
+        return getDataManager().isMasterpassEnabled();
+    }
+
+
 }

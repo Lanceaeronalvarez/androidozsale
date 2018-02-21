@@ -429,7 +429,11 @@ public class CheckoutController extends BaseController implements CheckoutMvpVie
 
             mPayButton.setVisibility(View.VISIBLE);
             mPaypalButton.setVisibility(View.VISIBLE);
-            mMasterpassButton.setVisibility(View.VISIBLE);
+
+            if(mPresenter.isMasterPassEnabled()) {
+                mMasterpassButton.setVisibility(View.VISIBLE);
+            }
+
             mActivity.setPaymentMethodSelected(null);
             return;
 

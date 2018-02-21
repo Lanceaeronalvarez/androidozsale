@@ -299,6 +299,11 @@ public class CheckoutPresenter<V extends CheckoutMvpView> extends BasePresenter<
         AppEventHelper.initiatedCheckout(paymentType, numItems, price, getDataManager().getCountryId());
     }
 
+    @Override
+    public boolean isMasterPassEnabled() {
+        return getDataManager().isMasterpassEnabled();
+    }
+
     private void updateCart(GetCurrentOrder.ResponseValue response) {
 
         if (!isViewAttached()) {

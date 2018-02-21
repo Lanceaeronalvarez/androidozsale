@@ -114,6 +114,9 @@ public class AddPaymentController extends SwipeableBaseToolBarController impleme
 
         if (isFromCart) {
             mMasterpassButton.setOnClickListener(action -> onMasterpassButtonClick());
+            if(mPresenter.isMasterPassEnabled()) {
+                mMasterpassButton.setVisibility(View.VISIBLE);
+            }
         } else {
             mMasterpassButton.setEnabled(false);
             mMasterpassButton.setVisibility(View.GONE);

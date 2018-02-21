@@ -130,7 +130,10 @@ public class AddPaymentController extends BaseController implements AddPaymentMv
 
         if (isFromCart) {
             mMasterpassButton.setOnClickListener(action -> onMasterpassButtonClick());
-            mMasterpassButton.setVisibility(View.VISIBLE);
+
+            if(mPresenter.isMasterPassEnabled()) {
+                mMasterpassButton.setVisibility(View.VISIBLE);
+            }
         } else {
             mMasterpassButton.setEnabled(false);
             mMasterpassButton.setVisibility(View.GONE);

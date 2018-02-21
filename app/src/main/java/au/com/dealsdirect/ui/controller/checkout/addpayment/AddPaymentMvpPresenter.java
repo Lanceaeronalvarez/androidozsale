@@ -10,4 +10,5 @@ import au.com.dealsdirect.ui.base.MvpView;
 
 public interface AddPaymentMvpPresenter <V extends MvpView> extends MvpPresenter<V> {
     boolean isDebug();
+    boolean isMasterPassEnabled();
 }

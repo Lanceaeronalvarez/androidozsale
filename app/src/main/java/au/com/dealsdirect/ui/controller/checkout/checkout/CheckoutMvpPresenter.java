@@ -31,4 +31,6 @@ public interface CheckoutMvpPresenter<V extends MvpView> extends MvpPresenter<V>
     void facebookInitiatedCheckout(String paymentType,
                                    int numItems,
                                    double price);
+
+    boolean isMasterPassEnabled();
 }
