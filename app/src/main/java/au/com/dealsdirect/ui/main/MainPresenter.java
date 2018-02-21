@@ -396,6 +396,9 @@ public class MainPresenter<V extends MainMvpView> extends BasePresenter<V> imple
             // Facebook Events
             initFacebookAnalytics();
             FacebookSdk.setIsDebugEnabled(false);
+        } else {
+            initFacebookAnalytics();
+            FacebookSdk.setIsDebugEnabled(true);
         }
     }
 
