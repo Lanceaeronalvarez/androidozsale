@@ -1,11 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.v4.widget.NestedScrollView
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.v4.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    xmlns:tools="http://schemas.android.com/tools"
     android:background="@color/white"
-    android:padding="@dimen/activity_horizontal_margin">
+    android:padding="@dimen/activity_horizontal_margin"
+    tools:ignore="MissingPrefix"
+    android:clickable="true"
+    android:focusable="true"
+    android:focusableInTouchMode="true">
 
 
     <LinearLayout
@@ -18,7 +22,6 @@
             android:id="@+id/controller_add_contact_subject_container"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:clickable="true"
             android:orientation="vertical">
 
 
@@ -54,7 +57,6 @@
             android:id="@+id/controller_add_contact_order_container"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:clickable="true"
             android:orientation="vertical">
 
             <TextView
@@ -120,7 +122,10 @@
             android:id="@+id/controller_add_contact_header_container"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical">
+            android:orientation="vertical"
+            android:clickable="true"
+            android:focusable="true"
+            android:focusableInTouchMode="true">
 
             <!--<LinearLayout-->
             <!--android:id="@+id/controller_add_contact_subject_container"-->
@@ -231,6 +236,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:clickable="true"
+                android:focusable="true"
+                android:focusableInTouchMode="true"
                 android:orientation="vertical">
 
                 <TextView
@@ -250,15 +257,20 @@
 
                     <EditText
                         android:id="@+id/controller_add_contact_message_field"
+                        style="@style/DDEditTextStyle"
+                        fontPath="@string/font_app_medium"
                         android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:background="@drawable/bg_edit_text_rounded"
+                        android:layout_height="140dp"
+                        android:layout_below="@+id/controller_new_return_reason_header"
+                        android:layout_marginBottom="10dp"
+                        android:gravity="top"
                         android:hint="@string/write_us_a_message"
-                        android:maxLines="1"
-                        android:padding="20dp"
+                        android:inputType="textNoSuggestions|textMultiLine"
+                        android:overScrollMode="never"
+                        android:scrollbarStyle="insideInset"
+                        android:scrollbars="vertical"
                         android:textColor="#919191"
-                        android:inputType="text"
-                        android:textSize="@dimen/text_size_large"/>
+                        android:textSize="@dimen/text_size_large" />
 
                 </android.support.design.widget.TextInputLayout>
 
