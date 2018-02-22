@@ -1,64 +1,75 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/new_return_order_request_set_details_fragment"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="#FFFFFF"
-    android:clickable="true"
-    android:focusable="true"
-    android:focusableInTouchMode="true"
     tools:ignore="MissingPrefix">
 
-    <android.support.v7.widget.RecyclerView
-        android:id="@+id/new_returns_set_detail_recyclerview"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_above="@+id/controller_new_return_bottom_container"
-        android:layout_alignParentTop="true"
-        android:layout_marginLeft="@dimen/activity_horizontal_margin"
-        android:layout_marginRight="@dimen/activity_horizontal_margin"
-        android:orientation="vertical"
-        android:overScrollMode="never" />
-
     <RelativeLayout
-        android:id="@+id/controller_new_return_bottom_container"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:layout_margin="@dimen/activity_horizontal_margin">
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
 
-        <TextView
-            android:id="@+id/controller_new_return_reason_header"
+        <RelativeLayout
+            android:id="@+id/new_returns_set_detail_recyclerview_layout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <android.support.v7.widget.RecyclerView
+                android:id="@+id/new_returns_set_detail_recyclerview"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="@dimen/activity_horizontal_margin"
+                android:layout_marginRight="@dimen/activity_horizontal_margin"
+                android:clipToPadding="false"
+                android:orientation="vertical"
+                android:overScrollMode="never"/>
+
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:id="@+id/controller_new_return_bottom_container"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/reason"
-            android:textColor="@color/dark_text" />
+            android:layout_below="@id/new_returns_set_detail_recyclerview_layout"
+            android:layout_margin="@dimen/activity_horizontal_margin"
+            android:layout_marginBottom="100dp">
 
-        <au.com.dealsdirect.ui.custom.ClearFocusEditText
-            android:id="@+id/controller_new_return_field"
-            style="@style/DDEditTextStyle"
-            fontPath="@string/font_app_medium"
-            android:layout_width="match_parent"
-            android:layout_height="140dp"
-            android:layout_below="@+id/controller_new_return_reason_header"
-            android:layout_marginBottom="10dp"
-            android:gravity="top"
-            android:hint="@string/write_us_a_message"
-            android:inputType="textNoSuggestions|textMultiLine" />
+            <TextView
+                android:id="@+id/controller_new_return_reason_header"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/reason"
+                android:textColor="@color/dark_text" />
 
-        <Button
-            android:id="@+id/controller_new_return_create_button"
-            style="@style/DDButtonStyle"
-            fontPath="@string/font_app_medium"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_below="@+id/controller_new_return_field"
-            android:layout_marginBottom="5dp"
-            android:layout_marginTop="5dp"
-            android:text="@string/submit"
-            android:textSize="@dimen/text_size_xlarge" />
+            <EditText
+                android:id="@+id/controller_new_return_field"
+                style="@style/DDEditTextStyle"
+                fontPath="@string/font_app_medium"
+                android:layout_width="match_parent"
+                android:layout_height="140dp"
+                android:layout_below="@+id/controller_new_return_reason_header"
+                android:layout_marginBottom="10dp"
+                android:gravity="top"
+                android:hint="@string/write_us_a_message"
+                android:inputType="textNoSuggestions|textMultiLine" />
+
+            <Button
+                android:id="@+id/controller_new_return_create_button"
+                style="@style/DDButtonStyle"
+                fontPath="@string/font_app_medium"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/controller_new_return_field"
+                android:layout_marginBottom="5dp"
+                android:layout_marginTop="5dp"
+                android:text="@string/submit"
+                android:textSize="@dimen/text_size_xlarge" />
+
+        </RelativeLayout>
 
     </RelativeLayout>
 
-</RelativeLayout>
+</LinearLayout>
