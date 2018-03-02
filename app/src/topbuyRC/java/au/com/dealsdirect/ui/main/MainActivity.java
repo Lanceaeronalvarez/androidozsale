@@ -530,7 +530,7 @@ public class MainActivity extends BaseActivity implements MainMvpView {
             GateKeeper.push(mRouter, GateKeeper.Destination.PAYMENT_SUCCESS, bundle, new VerticalChangeHandler(false), new VerticalChangeHandler());
 
             if (getMainController().getHomeController() != null)
-                getMainController().getHomeController().showCheckoutController();
+                getMainController().getHomeController().showFifthTabController();
 
         } else {
 

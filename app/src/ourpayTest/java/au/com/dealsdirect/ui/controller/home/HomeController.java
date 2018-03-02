@@ -263,7 +263,7 @@ public class HomeController extends BaseController implements HomeMvpView {
 
                 switch (position) {
                     case 0:
-                        showShopController();
+                        showFirstTabController();
                         break;
 
                     case 1:
@@ -275,7 +275,7 @@ public class HomeController extends BaseController implements HomeMvpView {
 
                     case 3:
                         mActivity.setDraggableViewPager(false);
-                        showAccountController();
+                        showSecondTabController();
                         break;
 
                 }
@@ -451,7 +451,7 @@ public class HomeController extends BaseController implements HomeMvpView {
         } else if (id == 2) {
             showDashboardController();
         } else if (id == 4) {
-            showCheckoutController();
+            showFifthTabController();
         }
     }
 
