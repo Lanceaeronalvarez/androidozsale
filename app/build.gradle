@@ -267,6 +267,7 @@ android {
                             'src/commonHomeController/java/',
                             'src/commonCategoriesController/java/',
                             'src/commonActivity/java/',
+                            'src/dealsDirectRC/java/',
                             'src/main/java/']
         }
 
@@ -275,6 +276,7 @@ android {
                             'src/commonHomeController/java/',
                             'src/commonCategoriesController/java/',
                             'src/commonActivity/java/',
+                            'src/dealsDirectRC/java/',
                             'src/main/java/']
         }
 
@@ -284,6 +286,7 @@ android {
                             'src/commonHomeController/java/',
                             'src/commonCategoriesController/java/' ,
                             'src/commonActivity/java/',
+                            'src/ooTest/java/',
                             'src/main/java/']
         }
 
@@ -293,6 +296,7 @@ android {
                             'src/commonHomeController/java/',
                             'src/commonCategoriesController/java/',
                             'src/commonActivity/java/',
+                            'src/ooTest/java/',
                             'src/main/java/']
         }
 
@@ -302,6 +306,7 @@ android {
                             'src/commonHomeController/java/',
                             'src/commonCategoriesController/java/',
                             'src/commonActivity/java/',
+                            'src/buyinviteTest/java/',
                             'src/main/java/']
         }
 
@@ -310,6 +315,7 @@ android {
                             'src/commonHomeController/java/',
                             'src/commonCategoriesController/java/',
                             'src/commonActivity/java/',
+                            'src/buyinviteTest/java/',
                             'src/main/java']
         }
 
