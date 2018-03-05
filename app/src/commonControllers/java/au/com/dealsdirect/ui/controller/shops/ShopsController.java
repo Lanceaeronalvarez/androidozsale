@@ -12,7 +12,6 @@ import android.view.animation.Animation;
 import android.view.animation.TranslateAnimation;
 import android.widget.ImageButton;
 import android.widget.ImageView;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.bluelinelabs.conductor.Router;
@@ -106,15 +105,8 @@ public class ShopsController extends BasePullToRefreshController implements Shop
     private List<GetBannerResponse> sales;
     private Map<String, List<GetCategoryTreeResponse>> mCategoryMap;
 
-    private View child;
-    private RelativeLayout item;
-    private ImageView rightOption;
-
     private int mBannerClickCounter = 0;
     private boolean isRefreshShop = false;
-    private int mPaginateManagerCounter = 0;
-
-    BannerClickListener mBannerClickListener;
 
     @Override
     protected void onAttach(@NonNull View view) {
@@ -209,8 +201,6 @@ public class ShopsController extends BasePullToRefreshController implements Shop
             }
         };
 
-        mBannerClickListener = this;
-        mBannersAdapter = new BannersAdapter(mActivity, mPresenter, new ArrayList(), mBannerClickListener);
 
         if (getResources().getBoolean(R.bool.is_tablet)) {
             mLayoutManager = new GridLayoutManager(mActivity, 2, GridLayoutManager.VERTICAL, false);

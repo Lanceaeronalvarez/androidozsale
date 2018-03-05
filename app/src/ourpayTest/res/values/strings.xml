@@ -156,4 +156,7 @@
     <string name="thank_you_for_using">Thank you for using</string>
     <string name="order_successful">order successful!</string>
     <string name="your_order_will_arrive_within_14_to_28_working_days_after_the_sale_has_finished">Your order will arrive within 14 to 28 working days after the sale has finished.</string>
+
+    <!--APP SPECIFIC SETTINGS-->
+    <bool name="is_ourpay_app">true</bool>
 </resources>
