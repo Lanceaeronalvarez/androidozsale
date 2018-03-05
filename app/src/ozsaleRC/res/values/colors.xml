@@ -1,13 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <color name="colorPrimary">#4D4D4D</color>
-    <color name="colorPrimaryAlpha">#CCFDBB16</color>
     <color name="colorPrimaryDark">#252525</color>
     <color name="colorAccent">@color/transparent</color>
-    <color name="colorBlueDark">#1E303E</color>
-    <color name="colorBlueDarkAlpha">#1A1E303E</color>
-    <color name="colorInactive">#929292</color>
-    <color name="colorInactiveAlpha">#AA6F6E6E</color>
 
     <color name="white">#FFFFFFFF</color>
     <color name="black">#FF000000</color>
@@ -19,8 +14,8 @@
     <color name="bg_membership">#DBA142</color>
 
     <color name="bg_button_ripple">@color/white</color>
-    <color name="bg_button_default">@color/colorPrimary</color>
-    <color name="bg_button_pressed">@color/colorPrimaryDark</color>
+    <color name="bg_button_default">#65D87F</color>
+    <color name="bg_button_pressed">#65D87F</color>
 
     <color name="bg_edit_text_ripple">#F9F9F9</color>
     <color name="bg_edit_text_default">@color/colorPrimary</color>
@@ -79,7 +74,7 @@
     <color name="tab_bar_icon_hovered">@color/colorPrimaryDark</color>
 
     <color name="app_skin">#FAFAF9</color>
-    <color name="toolbar_skin">@color/colorPrimary</color>
+    <color name="toolbar_skin">@color/colorPrimaryDark</color>
     <color name="toolbar_active_skin">@color/colorPrimary</color>
 
     <!-- Button Theme -->
