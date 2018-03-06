@@ -96,7 +96,7 @@ public class SaleItemDetailsImageAdapter extends RecyclerView.Adapter<RecyclerVi
                     .inflate(R.layout.circle_indicator_image_layout, parent, false);
         }
 
-        SaleItemDetailsImageAdapter.ViewHolder vh = new SaleItemDetailsImageAdapter.ViewHolder(view);
+        ViewHolder vh = new ViewHolder(view);
         if (vh.image instanceof ScalableImageView) {
             //pass presenter in the future
             ((ScalableImageView) vh.image).init();
@@ -106,7 +106,7 @@ public class SaleItemDetailsImageAdapter extends RecyclerView.Adapter<RecyclerVi
 
     @Override
     public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
-        SaleItemDetailsImageAdapter.ViewHolder vh = (SaleItemDetailsImageAdapter.ViewHolder) holder;
+        ViewHolder vh = (ViewHolder) holder;
         vh.image.setImageDrawable(mContext.getResources().getDrawable(R.drawable.bg_account_details));
         switch (mViewType) {
             case 1:

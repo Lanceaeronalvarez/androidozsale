@@ -2,11 +2,8 @@ package au.com.dealsdirect.ui.controller.saleitems;
 
 import android.support.v7.widget.RecyclerView;
 
-import java.util.List;
-
 import au.com.dealsdirect.data.network.model.saleitems.GetSaleItemsRequest;
 import au.com.dealsdirect.ui.base.MvpPresenter;
-import au.com.dealsdirect.ui.controller.searchfilter.adapter.SearchChipModel;
 
 /**
  * dp Created by Admin on 6/8/17.

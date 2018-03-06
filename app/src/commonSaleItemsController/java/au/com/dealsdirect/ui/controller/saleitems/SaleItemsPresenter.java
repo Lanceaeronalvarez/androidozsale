@@ -2,8 +2,6 @@ package au.com.dealsdirect.ui.controller.saleitems;
 
 import android.support.v7.widget.RecyclerView;
 
-import com.androidnetworking.error.ANError;
-
 import java.util.List;
 
 import javax.inject.Inject;
@@ -16,7 +14,6 @@ import au.com.dealsdirect.data.network.model.sorting.SortingResponse;
 import au.com.dealsdirect.ui.base.BasePresenter;
 import au.com.dealsdirect.utils.rx.SchedulerProvider;
 import io.reactivex.disposables.CompositeDisposable;
-import io.reactivex.functions.Consumer;
 
 /**
  * dp Created by Admin on 6/8/17.
