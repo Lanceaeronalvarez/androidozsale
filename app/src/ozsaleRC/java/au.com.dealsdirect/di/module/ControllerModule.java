@@ -44,6 +44,21 @@ import au.com.dealsdirect.ui.controller.contact.viewcontacts.ViewContactsPresent
 import au.com.dealsdirect.ui.controller.country.CountryMvpPresenter;
 import au.com.dealsdirect.ui.controller.country.CountryMvpView;
 import au.com.dealsdirect.ui.controller.country.CountryPresenter;
+import au.com.dealsdirect.ui.controller.dashboard.DashboardMvpPresenter;
+import au.com.dealsdirect.ui.controller.dashboard.DashboardMvpView;
+import au.com.dealsdirect.ui.controller.dashboard.DashboardPresenter;
+import au.com.dealsdirect.ui.controller.dashboard.details.PaymentDetailsMvpPresenter;
+import au.com.dealsdirect.ui.controller.dashboard.details.PaymentDetailsMvpView;
+import au.com.dealsdirect.ui.controller.dashboard.details.PaymentDetailsPresenter;
+import au.com.dealsdirect.ui.controller.dashboard.pastpayments.PastPaymentsMvpPresenter;
+import au.com.dealsdirect.ui.controller.dashboard.pastpayments.PastPaymentsMvpView;
+import au.com.dealsdirect.ui.controller.dashboard.pastpayments.PastPaymentsPresenter;
+import au.com.dealsdirect.ui.controller.dashboard.paymentplans.PaymentPlansMvpPresenter;
+import au.com.dealsdirect.ui.controller.dashboard.paymentplans.PaymentPlansMvpView;
+import au.com.dealsdirect.ui.controller.dashboard.paymentplans.PaymentPlansPresenter;
+import au.com.dealsdirect.ui.controller.dashboard.scheduledplans.ScheduledPlansMvpPresenter;
+import au.com.dealsdirect.ui.controller.dashboard.scheduledplans.ScheduledPlansMvpView;
+import au.com.dealsdirect.ui.controller.dashboard.scheduledplans.ScheduledPlansPresenter;
 import au.com.dealsdirect.ui.controller.details.DetailsMvpPresenter;
 import au.com.dealsdirect.ui.controller.details.DetailsMvpView;
 import au.com.dealsdirect.ui.controller.details.DetailsPresenter;
@@ -147,6 +162,11 @@ public class ControllerModule {
 
     @Provides
     CategoriesMvpPresenter<CategoriesMvpView> provideCategoriesPresenter(CategoriesPresenter<CategoriesMvpView> presenter) {
+        return presenter;
+    }
+
+    @Provides
+    ShopsMvpPresenter<ShopsMvpView> provideShopPresenter(ShopsPresenter<ShopsMvpView> presenter) {
         return presenter;
     }
 
@@ -342,4 +362,33 @@ public class ControllerModule {
         return ((MainActivity) mController.getActivity());
     }
 
+    @Provides
+    DashboardMvpPresenter<DashboardMvpView> provideDashboardPresenter(DashboardPresenter<DashboardMvpView> presenter) {
+
+        return presenter;
+    }
+
+    @Provides
+    PastPaymentsMvpPresenter<PastPaymentsMvpView> providePastPaymentsPresenter(PastPaymentsPresenter<PastPaymentsMvpView> presenter) {
+
+        return presenter;
+    }
+
+    @Provides
+    PaymentPlansMvpPresenter<PaymentPlansMvpView> providePaymentPlansPresenter(PaymentPlansPresenter<PaymentPlansMvpView> presenter) {
+
+        return presenter;
+    }
+
+    @Provides
+    ScheduledPlansMvpPresenter<ScheduledPlansMvpView> provideScheduledPlansPresenter(ScheduledPlansPresenter<ScheduledPlansMvpView> presenter) {
+
+        return presenter;
+    }
+
+    @Provides
+    PaymentDetailsMvpPresenter<PaymentDetailsMvpView> providePaymentDetailsPresenter(PaymentDetailsPresenter<PaymentDetailsMvpView> presenter) {
+
+        return presenter;
+    }
 }

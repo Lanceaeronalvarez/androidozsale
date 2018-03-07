@@ -267,11 +267,11 @@ public class HomeController extends BaseController implements HomeMvpView {
                         break;
                     case 3:
                         mActivity.setDraggableViewPager(false);
-                        showThirdTabController();
+                        showFourthTabController();
                         break;
                     case 4:
                         mActivity.setDraggableViewPager(false);
-                        showFourthTabController();
+                        showFifthTabController();
                         break;
                 }
             } else {
