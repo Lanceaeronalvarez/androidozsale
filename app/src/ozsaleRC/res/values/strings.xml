@@ -22,6 +22,7 @@
     <string name="font_lato_thin_italic">fonts/Lato-ThinItalic.ttf</string>
 
     <string name="log_in">Log In</string>
+    <string name="login">Login</string>
     <string name="sign_up">Sign Up</string>
     <string name="not_a_member_yet">Not a member yet?</string>
     <string name="forgot_password">forgot password?</string>
@@ -91,6 +92,7 @@
     <string name="_202_555_0104">202 555 0104</string>
     <string name="fill_out_credit_card_details">fill out credit card details</string>
     <string name="verify_sms_code">Verify SMS Code</string>
+    <string name="email_hint">Email</string>
     <string name="no_verification_code_yet">no verification code yet?</string>
     <string name="resend">resend</string>
     <string name="enter_code_below">enter code below</string>

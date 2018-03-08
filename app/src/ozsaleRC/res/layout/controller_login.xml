@@ -1,0 +1,180 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.v4.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:fillViewport="true"
+    android:orientation="vertical"
+    android:overScrollMode="never"
+    android:background="@color/gray_inactive_field_text"
+    tools:ignore="MissingPrefix">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/white"
+        android:orientation="vertical"
+        android:padding="@dimen/screen_padding">
+
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <ImageView
+                android:id="@+id/controller_login_close_icon"
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:layout_alignParentEnd="true"
+                android:rotation="180"
+                android:src="@drawable/ic_close"
+                android:tint="#959595" />
+
+        </RelativeLayout>
+
+        <TextView
+            fontPath="@string/font_app_heavy"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginBottom="10dp"
+            android:text="@string/login"
+            android:textColor="@color/colorPrimaryDark"
+            android:textSize="@dimen/text_size_xxlarge" />
+
+        <android.support.design.widget.TextInputLayout
+            android:id="@+id/fragment_login_layout_email"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="16dp"
+            android:layout_marginTop="10dp"
+            app:hintEnabled="false">
+
+            <EditText
+                android:id="@+id/email"
+                style="@style/DDEditTextStyle"
+                fontPath="@string/font_app_medium"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="@string/email_hint"
+                android:inputType="textEmailAddress"
+                android:textColorHint="@color/colorPrimaryDark"
+                android:maxLines="1" />
+
+        </android.support.design.widget.TextInputLayout>
+
+        <android.support.design.widget.TextInputLayout
+            android:id="@+id/fragment_login_layout_password"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="20dp"
+            android:layout_marginTop="10dp"
+            app:hintEnabled="false"
+            app:passwordToggleDrawable="@drawable/ic_show_password_toggle"
+            app:passwordToggleEnabled="true">
+
+            <EditText
+                android:id="@+id/password"
+                style="@style/DDEditTextStyle"
+                fontPath="@string/font_app_medium"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textColorHint="@color/colorPrimaryDark"
+                android:hint="@string/password"
+                android:inputType="textPassword" />
+
+        </android.support.design.widget.TextInputLayout>
+
+        <Button
+            android:id="@+id/login_button"
+            style="@style/DDButtonStyle"
+            fontPath="@string/font_app_semibold"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@drawable/bg_invite_clipboard"
+            android:text="@string/log_in"
+            android:textSize="@dimen/text_size_xlarge" />
+
+        <RelativeLayout
+            android:id="@+id/controller_login_fb_layout"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/default_button_height"
+            android:layout_marginTop="10dp"
+            android:background="@drawable/login_default_button"
+            android:clickable="true"
+            android:elevation="2.5dp">
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_centerInParent="true"
+                android:orientation="horizontal">
+
+                <ImageView
+                    android:id="@+id/controller_login_facebook_image_view"
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"
+                    android:layout_gravity="center"
+                    android:layout_marginStart="10dp"
+                    android:scaleType="fitCenter"
+                    android:src="@drawable/facebook"
+                    tools:ignore="ContentDescription" />
+
+                <TextView
+                    android:id="@+id/controller_login_with_facebook_text"
+                    fontPath="@string/font_app_semibold"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:layout_marginStart="10dp"
+                    android:text="@string/sign_in_with_facebook"
+                    android:textColor="@android:color/white"
+                    android:textSize="@dimen/text_size_xlarge" />
+            </LinearLayout>
+        </RelativeLayout>
+
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <TextView
+                fontPath="@string/font_app_heavy"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="30dp"
+                android:layout_marginBottom="10dp"
+                android:text="@string/not_a_member_yet_text"
+                android:textColor="@color/colorPrimaryDark"
+                android:textSize="@dimen/text_size_large" />
+
+
+            <TextView
+                android:id="@+id/fragment_login_signup_text"
+                style="@style/DDButtonJoinNow"
+                fontPath="@string/font_app_semibold"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/join_now"
+                android:gravity="center"
+                android:textColor="@color/colorSecondary"
+                android:textSize="@dimen/text_size_large" />
+
+
+            <TextView
+                android:id="@+id/controller_login_forgot_password_text"
+                fontPath="@string/font_app_medium"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="left"
+                android:layout_marginTop="5dp"
+                android:text="@string/forgot_password"
+                android:textColor="@color/colorSecondary"
+                android:textSize="@dimen/text_size_medium" />
+
+        </LinearLayout>
+
+    </LinearLayout>
+</android.support.v4.widget.NestedScrollView>
