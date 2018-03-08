@@ -1,6 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <style name="DDEditTextStyle">
+
+    <style name="DDEditTextPlainStyle">
+        <item name="android:padding">@dimen/text_padding</item>
+    </style>
+
+    <style name="DDEditTextStyle" parent="DDEditTextPlainStyle">
         <item name="android:textSize">@dimen/text_size_large</item>
         <item name="android:height">@dimen/edit_text_height</item>
         <item name="android:textColor">@color/gray_active_field_text</item>
