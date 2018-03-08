@@ -1,11 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="colorPrimary">#4D4D4D</color>
+    <color name="colorPrimary">@color/white</color>
     <color name="colorPrimaryDark">#252525</color>
-    <color name="colorAccent">@color/transparent</color>
+    <color name="colorAccent">@color/colorPrimaryDark</color>
 
     <color name="white">#FFFFFFFF</color>
     <color name="black">#FF000000</color>
+
+    <color name="colorSecondary">#4D4D4D</color>
 
     <color name="bg_gray">#F8F8F8</color>
 
@@ -18,28 +20,28 @@
     <color name="bg_button_pressed">#65D87F</color>
 
     <color name="bg_edit_text_ripple">#F9F9F9</color>
-    <color name="bg_edit_text_default">@color/colorPrimary</color>
+    <color name="bg_edit_text_default">@color/colorSecondary</color>
 
     <color name="edit_text_label">#6F6E6E</color>
     <color name="edit_text_content">#7E7E7E</color>
 
-    <color name="page_indicator_active">@color/colorPrimary</color>
+    <color name="page_indicator_active">@color/colorSecondary</color>
     <color name="page_indicator_active_dark">@color/colorPrimaryDark</color>
     <color name="page_indicator_inactive">#868E95</color>
 
     <!-- FROM OO -->
     <color name="transparent">#00000000</color>
-    <color name="color_text_option">#F86903</color>
+    <color name="color_text_option">@color/colorPrimaryDark</color>
     <color name="color_item_title">#616161</color>
 
     <color name="dark_text">#99000000</color>
     <color name="dark_icon">#99000000</color>
     <color name="dialog_background">#fafafa</color>
 
-    <color name="filter_text_active">#F86903</color>
+    <color name="filter_text_active">#65D87F</color>
     <color name="filter_text_inactive">#5F5F5F</color>
 
-    <color name="cart_order_price_text_color">#DE5C00</color>
+    <color name="cart_order_price_text_color">@color/dark_text</color>
 
     <color name="progress_loader_stroke_color">#616161</color>
 
@@ -55,10 +57,10 @@
     <color name="gray_field_text">#868686</color>
     <color name="gray_field_label">#87939D</color>
     <color name="dark_gray">#616161</color>
-    <color name="gray_description_text">#9E9E9E</color>
+    <color name="gray_description_text">@color/colorPrimaryDark</color>
     <color name="gray_generic_icon">#9E9E9E</color>
     <color name="gray_sale_price">#919191</color>
-    <color name="gray_hint_text">#CACACA</color>
+    <color name="gray_hint_text">@color/colorSecondary</color>
     <color name="gray_border">#E7E7E7</color>
     <color name="gray_filter_background">#FBFBFB</color>
     <color name="gray_background">#FFFFFF</color>
@@ -74,17 +76,22 @@
     <color name="tab_bar_icon_hovered">@color/colorPrimaryDark</color>
 
     <color name="app_skin">#FAFAF9</color>
-    <color name="toolbar_skin">@color/colorPrimaryDark</color>
+    <color name="toolbar_skin">@color/white</color>
     <color name="toolbar_active_skin">@color/colorPrimary</color>
+
+
+    <!-- FB Button -->
+    <color name="fb_button_normal">#3B5998</color>
+    <color name="fb_button_pressed">#3B5998</color>
 
     <!-- Button Theme -->
     <color name="bg_edit_text_focused">@color/colorPrimaryDark</color>
 
     <!-- Chips Theme -->
     <color name="bg_chips_ripple">#FFFFFF</color>
-    <color name="bg_chips_default">#F8FAFD</color>
-    <color name="bg_chips_default_border">#EDF0F5</color>
-    <color name="bg_chips_checked">@color/colorPrimary</color>
+    <color name="bg_chips_default">@color/white</color>
+    <color name="bg_chips_default_border">@color/gray_inactive_field_text</color>
+    <color name="bg_chips_checked_border">@color/colorPrimaryDark</color>
     <color name="bg_chips_text">#FFFFFF</color>
 
     <!-- Dialog Theme -->
@@ -107,6 +114,6 @@
     <color name="invite_sms">#65D87F</color>
     <color name="invite_sms_pressed">#72E98D</color>
 
-    <color name="item_select_remove">#F29124</color>
+    <color name="item_select_remove">#65D87F</color>
     <color name="verify_resend_color">#90BF0A</color>
 </resources>
