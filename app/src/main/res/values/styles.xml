@@ -70,7 +70,7 @@
     </style>
 
     <style name="MyCustomTabLayout" parent="Widget.Design.TabLayout">
-        <item name="tabIndicatorColor">@color/bluegreen</item>
+        <item name="tabIndicatorColor">@color/colorAccent</item>
         <item name="tabBackground">?android:attr/selectableItemBackground</item>
         <item name="tabSelectedTextColor">?android:textColorPrimary</item>
     </style>

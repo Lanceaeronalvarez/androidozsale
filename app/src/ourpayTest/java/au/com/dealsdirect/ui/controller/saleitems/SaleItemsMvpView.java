@@ -25,5 +25,7 @@ public interface SaleItemsMvpView extends MvpView{
 
     void unbindPaginate();
 
+    void onExecuteCategoryChangeApiCall(String chosenCategoryKey, String chosenCategoryName);
+
     void onPassFiltersData(Bundle bundle);
 }

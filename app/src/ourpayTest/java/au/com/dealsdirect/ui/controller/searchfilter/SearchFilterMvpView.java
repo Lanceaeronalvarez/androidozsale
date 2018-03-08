@@ -1,7 +1,5 @@
 package au.com.dealsdirect.ui.controller.searchfilter;
 
-import android.support.design.widget.TabLayout;
-
 import java.util.Set;
 
 import au.com.dealsdirect.ui.base.MvpView;
@@ -12,12 +10,17 @@ import au.com.dealsdirect.ui.base.MvpView;
 
 public interface SearchFilterMvpView extends MvpView{
 
-    void onSetActiveTabIndicatorIcons(String facetFilterType);
+    void showFacetItem(int position);
 
-    void onSetActiveDefaultTabIcons(String facetFilterType);
+    void updateFacetItemToFilters(Set<Integer> selectPosSet);
 
-    TabLayout.Tab onSetInactiveDefaultTabIcons(String facetFilterType);
+    Set<Integer> getOriginalSelectedSet();
 
-    void onSelectTabOfFilterType(String facetFilterName);
+    void onResetPriceRange();
 
+    void categoryChipRemoved();
+
+    void onShowTransparentOverlay();
+
+    void onHideTransparentOverlay();
 }

@@ -21,23 +21,42 @@ public class SearchFilterPresenter<V extends SearchFilterMvpView> extends BasePr
     }
 
     @Override
-    public void setActiveTabIndicatorIcons(String facetFilterType) {
-        getMvpView().onSetActiveTabIndicatorIcons(facetFilterType);
+    public void onFacetClicked(int position) {
+        getMvpView().showFacetItem(position);
     }
 
     @Override
-    public void setActiveDefaultTabIcons(String facetFilterType) {
-        getMvpView().onSetActiveDefaultTabIcons(facetFilterType);
+    public void onFacetItemClicked(Set<Integer> selectPosSet) {
+        getMvpView().updateFacetItemToFilters(selectPosSet);
     }
 
     @Override
-    public void setInactiveDefaultTabIcons(String facetFilterType){
-        getMvpView().onSetInactiveDefaultTabIcons(facetFilterType);
+    public Set<Integer> getOriginalSelectedSet() {
+        return getMvpView().getOriginalSelectedSet();
     }
 
     @Override
-    public void selectTabOfFilterType(String facetFilterName) {
-        getMvpView().onSelectTabOfFilterType(facetFilterName);
+    public int getSearchMaxPrice(){
+        return getDataManager().getSearchMaxPrice();
     }
 
+    @Override
+    public void resetPriceRange() {
+        getMvpView().onResetPriceRange();
+    }
+
+    @Override
+    public void onCategoryChipRemoved() {
+        getMvpView().categoryChipRemoved();
+    }
+
+    @Override
+    public void showTransparentOverlay() {
+        getMvpView().onShowTransparentOverlay();
+    }
+
+    @Override
+    public void hideTransparentOverlay() {
+        getMvpView().onHideTransparentOverlay();
+    }
 }
