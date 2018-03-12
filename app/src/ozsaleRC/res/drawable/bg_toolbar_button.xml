@@ -6,7 +6,7 @@
 
             <item android:state_enabled="true">
                 <shape android:shape="oval">
-                    <solid android:color="@color/colorPrimaryDark"/>
+                    <solid android:color="@color/toolbar_skin"/>
                     <size android:width="40dp" android:height="40dp"/>
                 </shape>
             </item>
@@ -14,7 +14,7 @@
             <item android:state_enabled="true" android:state_pressed="true">
 
                 <shape android:shape="oval">
-                    <solid android:color="@color/colorPrimaryDark"/>
+                    <solid android:color="@color/toolbar_skin"/>
                     <size android:width="40dp" android:height="40dp"/>
                 </shape>
             </item>
