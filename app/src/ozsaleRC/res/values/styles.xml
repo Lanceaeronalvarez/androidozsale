@@ -1,6 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
+    <style name="parentLayout">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">match_parent</item>
+        <item name="android:background">@color/gray_background</item>
+        <item name="android:orientation">vertical</item>
+    </style>
+
     <style name="DDEditTextPlainStyle">
         <item name="android:padding">@dimen/text_padding</item>
     </style>
