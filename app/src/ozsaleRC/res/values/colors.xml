@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <color name="colorPrimary">@color/white</color>
-    <color name="colorPrimaryDark">#252525</color>
+    <color name="colorPrimaryDark">#000000</color>
     <color name="colorAccent">@color/colorPrimaryDark</color>
 
     <color name="white">#FFFFFFFF</color>
@@ -11,7 +11,7 @@
 
     <color name="bg_gray">#F8F8F8</color>
 
-    <color name="border_gray">#EBEBEB</color>
+    <color name="border_gray">#E4E4E4</color>
 
     <color name="bg_membership">#DBA142</color>
 
@@ -70,19 +70,18 @@
     <color name="gray_address_title_text">#858585</color>
     <color name="gray_address_subtitle_text">#454545</color>
 
-    <color name="tab_bar_background">#e7e7e7</color>
+    <color name="tab_bar_background">#ebebeb</color>
     <color name="tab_bar_icon_inactive">#87939D</color>
     <color name="tab_bar_icon_active">@color/colorPrimaryDark</color>
     <color name="tab_bar_icon_hovered">@color/colorPrimaryDark</color>
 
     <color name="app_skin">#FAFAF9</color>
-    <color name="toolbar_skin">@color/white</color>
-    <color name="toolbar_active_skin">@color/colorPrimary</color>
-
+    <color name="toolbar_skin">#f9f9f9</color>
+    <color name="toolbar_active_skin">#f9f9f9</color>
 
     <!-- FB Button -->
-    <color name="fb_button_normal">#3B5998</color>
-    <color name="fb_button_pressed">#3B5998</color>
+    <color name="fb_button_normal">#009BEC</color>
+    <color name="fb_button_pressed">#009BEC</color>
 
     <!-- Button Theme -->
     <color name="bg_edit_text_focused">@color/colorPrimaryDark</color>
@@ -116,4 +115,8 @@
 
     <color name="item_select_remove">#65D87F</color>
     <color name="verify_resend_color">#90BF0A</color>
+
+    <color name="splash_background_color">@color/white</color>
+    <color name="default_background_color">#ececec</color>
+
 </resources>
