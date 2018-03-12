@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    android:background="@color/white"
+    android:background="@color/default_background_color"
     android:scrollbars="none"
     android:overScrollMode="never"
     android:paddingLeft="@dimen/screen_padding"

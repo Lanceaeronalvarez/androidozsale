@@ -4,7 +4,7 @@
     android:id="@+id/controller_send_invite_root"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
-    android:background="#FFFFFF"
+    android:background="@color/default_background_color"
     android:overScrollMode="never"
     tools:ignore="MissingPrefix">
 
