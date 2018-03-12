@@ -3,24 +3,24 @@
     <string name="error">error</string>
 
     <!-- Font Strings -->
-    <string name="font_lato_black">fonts/Lato-Black.ttf</string>
-    <string name="font_lato_black_italic">fonts/Lato-BlackItalic.ttf</string>
-    <string name="font_lato_bold">fonts/Lato-Bold.ttf</string>
-    <string name="font_lato_bold_italic">fonts/Lato-BoldItalic.ttf</string>
-    <string name="font_lato_hairline">fonts/Lato-Hairline.ttf</string>
-    <string name="font_lato_hairline_italic">fonts/Lato-HairlineItalic.ttf</string>
-    <string name="font_lato_heavy">fonts/Lato-Heavy.ttf</string>
-    <string name="font_lato_heavy_italic">fonts/Lato-HeavyItalic.ttf</string>
-    <string name="font_lato_italic">fonts/Lato-Italic.ttf</string>
-    <string name="font_lato_light">fonts/Lato-Light.ttf</string>
-    <string name="font_lato_light_italic">fonts/Lato-LightItalic.ttf</string>
-    <string name="font_lato_medium">fonts/Lato-Medium.ttf</string>
-    <string name="font_lato_medium_italic">fonts/Lato-MediumItalic.ttf</string>
-    <string name="font_lato_regular">fonts/Lato-Regular.ttf</string>
-    <string name="font_lato_semibold">fonts/Lato-Semibold.ttf</string>
-    <string name="font_lato_semibold_italic">fonts/Lato-SemiboldItalic.ttf</string>
-    <string name="font_lato_thin">fonts/Lato-Thin.ttf</string>
-    <string name="font_lato_thin_italic">fonts/Lato-ThinItalic.ttf</string>
+    <string name="font_app_black">fonts/lato/App-Font-Black.ttf</string>
+    <string name="font_app_black_italic">fonts/lato/App-Font-BlackItalic.ttf</string>
+    <string name="font_app_bold">fonts/opensans/OpenSans-Bold.ttf</string>
+    <string name="font_app_bold_italic">fonts/opensans/OpenSans-BoldItalic.ttf</string>
+    <string name="font_app_hairline">fonts/lato/App-Font-Hairline.ttf</string>
+    <string name="font_app_hairline_italic">fonts/lato/App-Font-HairlineItalic.ttf</string>
+    <string name="font_app_heavy">fonts/opensans/OpenSans-ExtraBold.ttf</string>
+    <string name="font_app_heavy_italic">fonts/opensans/OpenSans-ExtraBoldItalic.ttf</string>
+    <string name="font_app_italic">fonts/opensans/OpenSans-Italic.ttf</string>
+    <string name="font_app_light">fonts/opensans/OpenSans-Light.ttf</string>
+    <string name="font_app_light_italic">fonts/opensans/OpenSans-LightItalic.ttf</string>
+    <string name="font_app_medium">fonts/lato/App-Font-Medium.ttf</string>
+    <string name="font_app_medium_italic">fonts/lato/App-Font-MediumItalic.ttf</string>
+    <string name="font_app_regular">fonts/opensans/OpenSans-Regular.ttf</string>
+    <string name="font_app_semibold">fonts/opensans/OpenSans-Semibold.ttf</string>
+    <string name="font_app_semibold_italic">fonts/opensans/OpenSans-SemiboldItalic.ttf</string>
+    <string name="font_app_thin">fonts/lato/App-Font-Thin.ttf</string>
+    <string name="font_app_thin_italic">fonts/lato/App-Font-ThinItalic.ttf</string>
 
     <string name="log_in">Log In</string>
     <string name="sign_up">Sign Up</string>
