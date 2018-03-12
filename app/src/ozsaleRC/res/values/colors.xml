@@ -7,7 +7,7 @@
     <color name="white">#FFFFFFFF</color>
     <color name="black">#FF000000</color>
 
-    <color name="colorSecondary">#4D4D4D</color>
+    <color name="colorSecondary">#4F4F4F</color>
 
     <color name="bg_gray">#F8F8F8</color>
 
@@ -63,9 +63,9 @@
     <color name="gray_hint_text">@color/colorSecondary</color>
     <color name="gray_border">#E7E7E7</color>
     <color name="gray_filter_background">#FBFBFB</color>
-    <color name="gray_background">#FFFFFF</color>
+    <color name="gray_background">#EDEDED</color>
     <color name="gray_toolbar_border">#F2F2F2</color>
-    <color name="gray_active_field_text">#616161</color>
+    <color name="gray_active_field_text">@color/colorSecondary</color>
     <color name="gray_inactive_field_text">#D0D0D0</color>
     <color name="gray_address_title_text">#858585</color>
     <color name="gray_address_subtitle_text">#454545</color>

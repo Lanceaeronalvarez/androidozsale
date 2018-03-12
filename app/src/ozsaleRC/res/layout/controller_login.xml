@@ -7,20 +7,20 @@
     android:fillViewport="true"
     android:orientation="vertical"
     android:overScrollMode="never"
-    android:background="@color/gray_inactive_field_text"
-    tools:ignore="MissingPrefix">
+    tools:ingore="MissingPrefix">
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@color/white"
+        android:background="@color/gray_background"
         android:orientation="vertical"
         android:padding="@dimen/screen_padding">
 
 
         <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="20dp">
 
             <ImageView
                 android:id="@+id/controller_login_close_icon"
@@ -33,21 +33,10 @@
 
         </RelativeLayout>
 
-        <TextView
-            fontPath="@string/font_app_heavy"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:layout_marginBottom="10dp"
-            android:text="@string/login"
-            android:textColor="@color/colorPrimaryDark"
-            android:textSize="@dimen/text_size_xxlarge" />
-
         <android.support.design.widget.TextInputLayout
             android:id="@+id/fragment_login_layout_email"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="16dp"
             android:layout_marginTop="10dp"
             app:hintEnabled="false">
 
@@ -59,8 +48,8 @@
                 android:layout_height="wrap_content"
                 android:hint="@string/email_hint"
                 android:inputType="textEmailAddress"
-                android:textColorHint="@color/colorPrimaryDark"
-                android:maxLines="1" />
+                android:maxLines="1"
+                android:textColorHint="@color/colorPrimaryDark" />
 
         </android.support.design.widget.TextInputLayout>
 
@@ -69,7 +58,6 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginBottom="20dp"
-            android:layout_marginTop="10dp"
             app:hintEnabled="false"
             app:passwordToggleDrawable="@drawable/ic_show_password_toggle"
             app:passwordToggleEnabled="true">
@@ -80,9 +68,9 @@
                 fontPath="@string/font_app_medium"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:textColorHint="@color/colorPrimaryDark"
                 android:hint="@string/password"
-                android:inputType="textPassword" />
+                android:inputType="textPassword"
+                android:textColorHint="@color/colorPrimaryDark" />
 
         </android.support.design.widget.TextInputLayout>
 
@@ -144,8 +132,8 @@
                 fontPath="@string/font_app_heavy"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="30dp"
                 android:layout_marginBottom="10dp"
+                android:layout_marginTop="30dp"
                 android:text="@string/not_a_member_yet_text"
                 android:textColor="@color/colorPrimaryDark"
                 android:textSize="@dimen/text_size_large" />
@@ -157,8 +145,8 @@
                 fontPath="@string/font_app_semibold"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="@string/join_now"
                 android:gravity="center"
+                android:text="@string/join_now"
                 android:textColor="@color/colorSecondary"
                 android:textSize="@dimen/text_size_large" />
 
