@@ -17,6 +17,7 @@ import android.view.ViewGroup;
 import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -104,7 +105,7 @@ public class SaleItemsController extends BasePullToRefreshController implements 
     LinearLayout mPlaceholder;
 
     @BindView(R.id.partial_toolbar_field_title_left_option)
-    ImageButton mSaleItemsBackIcon;
+    ImageView mSaleItemsBackIcon;
 
     @BindView(R.id.partial_toolbar_field_title_right_option)
     ViewGroup mSearchIcon;
@@ -113,7 +114,7 @@ public class SaleItemsController extends BasePullToRefreshController implements 
     TextView mCancelText;
 
     @BindView(R.id.partial_toolbar_search_btn)
-    ImageButton mSearchBtn;
+    ImageView mSearchBtn;
 
     @BindView(R.id.controller_search_filter_frame)
     ViewGroup mSearchFilterContainer;
@@ -381,7 +382,6 @@ public class SaleItemsController extends BasePullToRefreshController implements 
         hideKeyboard();
 
         mPresenter.loadSortingFacets();
-        mSaleItemsToolbarTitle.setTextAlignment(View.TEXT_ALIGNMENT_TEXT_START);
 
         mActivity.getMainController().setViewpagerDraggable(false);
 
@@ -585,12 +585,14 @@ public class SaleItemsController extends BasePullToRefreshController implements 
     void toggleSearch() {
         if (!mIsSearchClicked) {
             mCancelText.setVisibility(View.VISIBLE);
+            mSearchBtn.setVisibility(View.GONE);
             mSaleItemsToolbarEditTextLayout.setVisibility(View.VISIBLE);
             mSaleItemsBackIcon.setVisibility(View.GONE);
             mSaleItemsToolbarTitle.setVisibility(View.GONE);
             mIsSearchClicked = true;
         } else {
             mCancelText.setVisibility(View.GONE);
+            mSearchBtn.setVisibility(View.VISIBLE);
             mSaleItemsToolbarEditTextLayout.setVisibility(View.GONE);
             mSaleItemsBackIcon.setVisibility(View.VISIBLE);
             mSaleItemsToolbarTitle.setVisibility(View.VISIBLE);
