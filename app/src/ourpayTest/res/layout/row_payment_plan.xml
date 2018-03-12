@@ -10,7 +10,7 @@
 
     <TextView
         android:id="@+id/row_payment_plan_title"
-        fontPath="@string/font_lato_semibold"
+        fontPath="@string/font_app_semibold"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="20dp"
@@ -31,7 +31,7 @@
 
     <TextView
         android:id="@+id/row_payment_plan_value"
-        fontPath="@string/font_lato_semibold"
+        fontPath="@string/font_app_semibold"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentEnd="true"
@@ -52,7 +52,7 @@
 
     <TextView
         android:id="@+id/row_payment_plan_balance"
-        fontPath="@string/font_lato_semibold"
+        fontPath="@string/font_app_semibold"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentEnd="true"
@@ -214,7 +214,7 @@
 
             <TextView
                 android:id="@+id/row_payment_plan_schedule_value1"
-                fontPath="@string/font_lato_bold"
+                fontPath="@string/font_app_bold"
                 android:layout_width="45dp"
                 android:layout_height="wrap_content"
                 android:gravity="center"
@@ -230,7 +230,7 @@
 
             <TextView
                 android:id="@+id/row_payment_plan_schedule_value2"
-                fontPath="@string/font_lato_bold"
+                fontPath="@string/font_app_bold"
                 android:layout_width="45dp"
                 android:layout_height="wrap_content"
                 android:gravity="center"
@@ -246,7 +246,7 @@
 
             <TextView
                 android:id="@+id/row_payment_plan_schedule_value3"
-                fontPath="@string/font_lato_bold"
+                fontPath="@string/font_app_bold"
                 android:layout_width="45dp"
                 android:layout_height="wrap_content"
                 android:gravity="center"
@@ -262,7 +262,7 @@
 
             <TextView
                 android:id="@+id/row_payment_plan_schedule_value4"
-                fontPath="@string/font_lato_bold"
+                fontPath="@string/font_app_bold"
                 android:layout_width="45dp"
                 android:layout_height="wrap_content"
                 android:gravity="center"

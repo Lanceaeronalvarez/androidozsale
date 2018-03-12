@@ -4,6 +4,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
@@ -36,23 +37,16 @@ public class FacetItemsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
     }
 
     private Set<Integer> mSelectedFacets = new HashSet<Integer>();
-    private OnSelectListener mOnSelectListener;
     private String mFilterType = "";
     private int selectedPos = -1;
     private RecyclerView mRecyclerView;
     private List<SearchChipModel> mSearchItemsList;
-    private FacetsAdapter mFacetsAdapter;
 
-    public static interface OnSelectListener {
-        void onSelected(Set<Integer> selectPosSet);
-    }
-
-    public FacetItemsAdapter(List<String> data, SearchFilterMvpPresenter presenter, Set<Integer> selectedFacets, RecyclerView recyclerView, FacetsAdapter facetsAdapter) {
+    public FacetItemsAdapter(List<String> data, SearchFilterMvpPresenter presenter, Set<Integer> selectedFacets, RecyclerView recyclerView) {
         mData = data;
         mPresenter = presenter;
         mSelectedFacets = selectedFacets;
         mRecyclerView = recyclerView;
-        mFacetsAdapter = facetsAdapter;
     }
 
     @Override
@@ -88,7 +82,6 @@ public class FacetItemsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                                 mSelectedFacets.remove(selectedPos);
                                 removeChip();
 
-
                                 vh.toggle();
                                 vh.itemView.setSelected(true);
                                 mSelectedFacets.add(position);
@@ -119,18 +112,13 @@ public class FacetItemsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                         mSelectedFacets.remove(position);
                     }
 
-                    if (mOnSelectListener != null) {
-                        mOnSelectListener.onSelected(new HashSet<Integer>(mSelectedFacets));
-                    }
+                    mPresenter.onFacetItemClicked(new HashSet<Integer>(mSelectedFacets));
+
                 }
             }
         });
 
         applySelection(vh, position);
-    }
-
-    public void setOnSelectListener(OnSelectListener onSelectListener) {
-        mOnSelectListener = onSelectListener;
     }
 
     public void updateSelectedFacets(Set<Integer> selectedFacets) {
@@ -141,9 +129,11 @@ public class FacetItemsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
         if (mSelectedFacets.contains(position)) {
             vh.isSelected = true;
             vh.itemView.setSelected(true);
+            vh.mFacetCheck.setVisibility(View.VISIBLE);
         } else {
             vh.isSelected = false;
             vh.itemView.setSelected(false);
+            vh.mFacetCheck.setVisibility(View.GONE);
         }
     }
 
@@ -200,11 +190,11 @@ public class FacetItemsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
 
     static class FacetItemsViewHolder extends RecyclerView.ViewHolder {
 
-        @BindView(R.id.viewholder_facet_item_container)
-        RelativeLayout mFacetItemContainer;
-
         @BindView(R.id.viewholder_facet_item_title)
         TextView mFacetItemTitle;
+
+        @BindView(R.id.viewholder_subcategory_check)
+        ImageView mFacetCheck;
 
         boolean isSelected = false;
 
@@ -215,6 +205,7 @@ public class FacetItemsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
 
         public void toggle() {
             isSelected = !isSelected;
+            mFacetCheck.setVisibility(isSelected ? View.VISIBLE : View.GONE);
         }
     }
 }

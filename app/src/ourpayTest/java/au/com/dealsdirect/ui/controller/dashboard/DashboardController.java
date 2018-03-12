@@ -146,7 +146,7 @@ public class DashboardController extends BaseController implements DashboardMvpV
         };
         mViewPager.setAdapter(mAdapter);
         mTabLayout.setupWithViewPager(mViewPager, true);
-        TabLayoutUtils.setupWithCustomFont(getActivity(), mTabLayout, mTabTitles, mActivity.getString(R.string.font_lato_light));
+        TabLayoutUtils.setupWithCustomFont(getActivity(), mTabLayout, mTabTitles, mActivity.getString(R.string.font_app_light));
     }
 
     @Override
@@ -232,7 +232,7 @@ public class DashboardController extends BaseController implements DashboardMvpV
             };
             mViewPager.setAdapter(mAdapter);
             mTabLayout.setupWithViewPager(mViewPager, true);
-            TabLayoutUtils.setupWithCustomFont(getActivity(), mTabLayout, mTabTitles, mActivity.getString(R.string.font_lato_light));
+            TabLayoutUtils.setupWithCustomFont(getActivity(), mTabLayout, mTabTitles, mActivity.getString(R.string.font_app_light));
         }
     }
 

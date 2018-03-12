@@ -1,5 +1,6 @@
 package au.com.dealsdirect.ui.controller.saleitems;
 
+import android.support.v4.util.Pair;
 import android.support.v7.widget.RecyclerView;
 
 import java.util.List;
@@ -13,7 +14,9 @@ import au.com.dealsdirect.data.network.model.saleitems.GetSaleItemsResponse;
 import au.com.dealsdirect.data.network.model.sorting.SortingResponse;
 import au.com.dealsdirect.ui.base.BasePresenter;
 import au.com.dealsdirect.utils.rx.SchedulerProvider;
+import io.reactivex.Observable;
 import io.reactivex.disposables.CompositeDisposable;
+import io.reactivex.functions.BiFunction;
 
 /**
  * dp Created by Admin on 6/8/17.
@@ -34,14 +37,29 @@ public class SaleItemsPresenter<V extends SaleItemsMvpView> extends BasePresente
 
     @Override
     public void loadSaleItems(GetSaleItemsRequest getSaleItemsRequest) {
-        doApiCallForResponse(getDataManager().callGetSaleItemsRequest(getSaleItemsRequest), new AppApiCallback(){
+
+
+        Observable dualApiCall = Observable.zip(wrapObservable(getDataManager().callGetSaleItemsRequest(getSaleItemsRequest)),
+                wrapObservable(getDataManager().callSortingFacets()),
+                new BiFunction<GetSaleItemsResponse, List<SortingResponse>, Pair<GetSaleItemsResponse, List<SortingResponse>>>() {
+                    @Override
+                    public Pair<GetSaleItemsResponse, List<SortingResponse>> apply(GetSaleItemsResponse t1, List<SortingResponse> t2) throws Exception {
+                        return new Pair<>(t1, t2);
+                    }
+                });
+
+
+        doApiCallForResponse(dualApiCall, new AppApiCallback() {
             @Override
             public void onSuccess(Object response) {
                 super.onSuccess(response);
+                Pair pair = (Pair) response;
                 if (getSaleItemsRequest.hasFilters()) {
-                    getMvpView().showSaleItems((GetSaleItemsResponse) response, false);
+                    getMvpView().onLoadSortingFacetsFinished((List<SortingResponse>)pair.second);
+                    getMvpView().showSaleItems((GetSaleItemsResponse) pair.first, false);
                 } else {
-                    getMvpView().showSaleItems((GetSaleItemsResponse) response, true);
+                    getMvpView().onLoadSortingFacetsFinished((List<SortingResponse>)pair.second);
+                    getMvpView().showSaleItems((GetSaleItemsResponse) pair.first, true);
                 }
             }
         });
@@ -51,6 +69,10 @@ public class SaleItemsPresenter<V extends SaleItemsMvpView> extends BasePresente
     public void loadProductDetails(RecyclerView.ViewHolder viewHolder, int position, String
             seoIdentifierId, String imageUrl, String skuId, String saleId) {
         getMvpView().showProductDetails(viewHolder, position, seoIdentifierId, imageUrl, skuId, saleId);
+    }
+
+    protected <T> Observable<T> wrapObservable(Observable<T> observable) {
+        return observable.subscribeOn(getSchedulerProvider().io());
     }
 
     @Override

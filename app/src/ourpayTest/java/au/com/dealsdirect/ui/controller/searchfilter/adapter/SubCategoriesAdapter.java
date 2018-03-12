@@ -6,6 +6,8 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
@@ -67,8 +69,9 @@ public class SubCategoriesAdapter extends RecyclerView.Adapter<RecyclerView.View
                             .subCategoryTitle.setText(mData.get(position).getName());
 
                     if (mData.get(position).getKey().equals(mChosenCategoryKey)) {
-                        ((SubCategoriesViewHolder) holder)
-                                .subCategoryTitle.setTextColor(context.getResources().getColor(R.color.category_text_active));
+                        ((SubCategoriesViewHolder) holder).subCategoryCheck.setVisibility(View.VISIBLE);
+                    } else {
+                        ((SubCategoriesViewHolder) holder).subCategoryCheck.setVisibility(View.GONE);
                     }
                 }
 
@@ -83,7 +86,7 @@ public class SubCategoriesAdapter extends RecyclerView.Adapter<RecyclerView.View
                     ((SubCategoriesViewHolder) holder).subCategoryItemsRecyclerView.setVisibility(View.VISIBLE);
 
 
-                    ((SubCategoriesViewHolder) holder).mViewholder_subcategory_container
+                    ((SubCategoriesViewHolder) holder).itemView
                             .setOnClickListener(view -> {
                                 mSubCategoryAdapterClickListener.onSubCategoryClicked(mData.get(position));
                             });
@@ -110,22 +113,18 @@ public class SubCategoriesAdapter extends RecyclerView.Adapter<RecyclerView.View
     }
 
     static class SubCategoriesViewHolder extends RecyclerView.ViewHolder {
-
-        @BindView(R.id.viewholder_subcategory_container)
-        RelativeLayout mViewholder_subcategory_container;
-
         @BindView(R.id.viewholder_subcategory_title)
         TextView subCategoryTitle;
 
         @BindView(R.id.viewholder_subcategory_items_recyclerview)
         RecyclerView subCategoryItemsRecyclerView;
 
+        @BindView(R.id.viewholder_subcategory_check)
+        ImageView subCategoryCheck;
+
         SubCategoriesViewHolder(View itemView) {
             super(itemView);
             ButterKnife.bind(this, itemView);
-            itemView.setOnClickListener((v) -> {
-                //do public sales banner api call
-            });
         }
     }
 

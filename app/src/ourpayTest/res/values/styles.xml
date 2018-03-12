@@ -35,7 +35,7 @@
         <item name="android:textColor">@color/edit_text_content</item>
         <item name="android:padding">10dp</item>
         <item name="android:background">@drawable/bg_button_rounded_hollow</item>
-        <item name="fontPath">@string/font_lato_bold</item>
+        <item name="fontPath">@string/font_app_bold</item>
     </style>
 
     <style name="OPTabLayoutStyle" parent="Widget.Design.TabLayout">
@@ -46,7 +46,7 @@
         <item name="android:textSize">@dimen/text_size_xlarge</item>
         <item name="textAllCaps">false</item>
         <item name="android:textAllCaps">false</item>
-        <item name="fontPath">@string/font_lato_semibold</item>
+        <item name="fontPath">@string/font_app_semibold</item>
     </style>
 
     <style name="DDEditTextStyle">
