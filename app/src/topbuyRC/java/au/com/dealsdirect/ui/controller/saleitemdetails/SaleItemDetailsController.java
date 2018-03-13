@@ -14,7 +14,6 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.WindowManager;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.view.animation.LinearInterpolator;
@@ -449,10 +448,12 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
 
         mAddToCartButton.setEnabled(true);
 
+      /* Should only set button to 'Sold Out' if sold out size is selected
         if (saleDetail.isSoldOut()) {
             mAddToCartButton.setEnabled(false);
             mAddToCartButton.setText("Sold Out");
         }
+      */
 
         if (saleDetail.getOriginalPrice().getValue() <= 0) {
             mProductPreviousPrice.setVisibility(View.GONE);
