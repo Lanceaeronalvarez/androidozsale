@@ -16,8 +16,11 @@
     <color name="bg_membership">#DBA142</color>
 
     <color name="bg_button_ripple">@color/white</color>
-    <color name="bg_button_default">#65D87F</color>
-    <color name="bg_button_pressed">#65D87F</color>
+    <color name="bg_button_default">@color/colorSecondary</color>
+    <color name="bg_button_pressed">@color/colorSecondary</color>
+
+    <color name="bg_button_addcart_default">#65D87F</color>
+    <color name="bg_button_addcart_pressed">#65D87F</color>
 
     <color name="bg_edit_text_ripple">#F9F9F9</color>
     <color name="bg_edit_text_default">@color/colorSecondary</color>
