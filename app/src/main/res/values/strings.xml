@@ -1,23 +1,23 @@
 <resources>
 
-    <string name="font_app_black">fonts/App-Font-Black.ttf</string>
-    <string name="font_app_black_italic">fonts/App-Font-BlackItalic.ttf</string>
-    <string name="font_app_bold">fonts/App-Font-Bold.ttf</string>
-    <string name="font_app_bold_italic">fonts/App-Font-BoldItalic.ttf</string>
-    <string name="font_app_hairline">fonts/App-Font-Hairline.ttf</string>
-    <string name="font_app_hairline_italic">fonts/App-Font-HairlineItalic.ttf</string>
-    <string name="font_app_heavy">fonts/App-Font-Heavy.ttf</string>
-    <string name="font_app_heavy_italic">fonts/App-Font-HeavyItalic.ttf</string>
-    <string name="font_app_italic">fonts/App-Font-Italic.ttf</string>
-    <string name="font_app_light">fonts/App-Font-Light.ttf</string>
-    <string name="font_app_light_italic">fonts/App-Font-LightItalic.ttf</string>
-    <string name="font_app_medium">fonts/App-Font-Medium.ttf</string>
-    <string name="font_app_medium_italic">fonts/App-Font-MediumItalic.ttf</string>
-    <string name="font_app_regular">fonts/App-Font-Regular.ttf</string>
-    <string name="font_app_semibold">fonts/App-Font-Semibold.ttf</string>
-    <string name="font_app_semibold_italic">fonts/App-Font-SemiboldItalic.ttf</string>
-    <string name="font_app_thin">fonts/App-Font-Thin.ttf</string>
-    <string name="font_app_thin_italic">fonts/App-Font-ThinItalic.ttf</string>
+    <string name="font_app_black">fonts/lato/App-Font-Black.ttf</string>
+    <string name="font_app_black_italic">fonts/lato/App-Font-BlackItalic.ttf</string>
+    <string name="font_app_bold">fonts/lato/App-Font-Bold.ttf</string>
+    <string name="font_app_bold_italic">fonts/lato/App-Font-BoldItalic.ttf</string>
+    <string name="font_app_hairline">fonts/lato/App-Font-Hairline.ttf</string>
+    <string name="font_app_hairline_italic">fonts/lato/App-Font-HairlineItalic.ttf</string>
+    <string name="font_app_heavy">fonts/lato/App-Font-Heavy.ttf</string>
+    <string name="font_app_heavy_italic">fonts/lato/App-Font-HeavyItalic.ttf</string>
+    <string name="font_app_italic">fonts/lato/App-Font-Italic.ttf</string>
+    <string name="font_app_light">fonts/lato/App-Font-Light.ttf</string>
+    <string name="font_app_light_italic">fonts/lato/App-Font-LightItalic.ttf</string>
+    <string name="font_app_medium">fonts/lato/App-Font-Medium.ttf</string>
+    <string name="font_app_medium_italic">fonts/lato/App-Font-MediumItalic.ttf</string>
+    <string name="font_app_regular">fonts/lato/App-Font-Regular.ttf</string>
+    <string name="font_app_semibold">fonts/lato/App-Font-Semibold.ttf</string>
+    <string name="font_app_semibold_italic">fonts/lato/App-Font-SemiboldItalic.ttf</string>
+    <string name="font_app_thin">fonts/lato/App-Font-Thin.ttf</string>
+    <string name="font_app_thin_italic">fonts/lato/App-Font-ThinItalic.ttf</string>
 
     <string name="return_policy">Return Policy</string>
 
@@ -377,4 +377,7 @@
         <item>@drawable/bg_account_about_us</item>
         <item>@drawable/bg_account_logout</item>
     </integer-array>
+
+    <!--APP SPECIFIC SETTINGS-->
+    <bool name="is_ourpay_app">false</bool>
 </resources>

@@ -40,7 +40,7 @@
 
                 <TextView
                     android:id="@+id/controller_payment_details_title"
-                    fontPath="@string/font_lato_bold"
+                    fontPath="@string/font_app_bold"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_centerHorizontal="true"
@@ -52,7 +52,7 @@
 
                 <TextView
                     android:id="@+id/controller_payment_details_id"
-                    fontPath="@string/font_lato_regular"
+                    fontPath="@string/font_app_regular"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_below="@id/controller_payment_details_title"

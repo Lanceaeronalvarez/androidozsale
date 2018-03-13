@@ -17,7 +17,6 @@ import java.util.HashMap;
 import java.util.Set;
 
 import au.com.dealsdirect.R;
-import au.com.dealsdirect.ui.controller.searchfilter.SearchFilterController;
 import au.com.dealsdirect.ui.controller.searchfilter.SearchFilterMvpPresenter;
 import au.com.dealsdirect.ui.custom.ChipsEditText;
 import au.com.dealsdirect.utils.BundleKeys;

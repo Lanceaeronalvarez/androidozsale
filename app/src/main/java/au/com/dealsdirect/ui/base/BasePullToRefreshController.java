@@ -46,6 +46,12 @@ public abstract class BasePullToRefreshController extends BaseController impleme
     protected View inflateView(@NonNull LayoutInflater inflater, @NonNull ViewGroup container) {
         View view = inflater.inflate(R.layout.controller_base_ptr, container, false);
 
+        bindPtrViews(view);
+
+        return view;
+    }
+
+    protected void bindPtrViews(View view){
         mToolbarFrameLayout = (FrameLayout) view.findViewById(R.id.controller_base_toolbar_layout);
 
         mContentLayout = (FrameLayout) view.findViewById(R.id.controller_base_content_layout);
@@ -64,7 +70,6 @@ public abstract class BasePullToRefreshController extends BaseController impleme
 
         mPtrLayout.getHeader().setProgressBar(ColorStateList.valueOf(getResources().getColor(R.color.progress_loader_stroke_color)));
 
-        return view;
     }
 
     @Override

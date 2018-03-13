@@ -8,6 +8,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
@@ -49,15 +51,15 @@ public class SubCategoryItemsAdapter extends RecyclerView.Adapter<SubCategoryIte
     }
 
     @Override
-    public SubCategoryItemsAdapter.SubCategoryItemViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+    public SubCategoryItemViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.viewholder_filter_subcategory_item, parent, false);
-        SubCategoryItemsAdapter.SubCategoryItemViewHolder vh
-                = new SubCategoryItemsAdapter.SubCategoryItemViewHolder(view);
+        SubCategoryItemViewHolder vh
+                = new SubCategoryItemViewHolder(view);
         return vh;
     }
 
     @Override
-    public void onBindViewHolder(SubCategoryItemsAdapter.SubCategoryItemViewHolder holder, int position) {
+    public void onBindViewHolder(SubCategoryItemViewHolder holder, int position) {
 //        setAnimation(holder.itemView, position);
 
         Context context = holder.itemView.getContext();
@@ -69,7 +71,7 @@ public class SubCategoryItemsAdapter extends RecyclerView.Adapter<SubCategoryIte
                 holder.titleTextView.setText(mData.get(position).getName());
 
                 if (mData.get(position).getKey().equals(mChosenCategoryKey)) {
-                    holder.titleTextView.setTextColor(context.getResources().getColor(R.color.category_text_active));
+                    holder.subCategoryCheck.setVisibility(View.VISIBLE);
                 }
             }
 
@@ -84,7 +86,7 @@ public class SubCategoryItemsAdapter extends RecyclerView.Adapter<SubCategoryIte
                 holder.recyclerView.setVisibility(View.VISIBLE);
             }
 
-            holder.container.setOnClickListener(view -> {
+            holder.itemView.setOnClickListener(view -> {
                 holder.titleTextView.setEnabled(true);
                 mCategoryAdapterClickListener.onSubCategoryItemClicked(
                         mData.get(position).getId(),
@@ -102,7 +104,7 @@ public class SubCategoryItemsAdapter extends RecyclerView.Adapter<SubCategoryIte
     }
 
     @Override
-    public void onViewDetachedFromWindow(SubCategoryItemsAdapter.SubCategoryItemViewHolder holder) {
+    public void onViewDetachedFromWindow(SubCategoryItemViewHolder holder) {
         super.onViewDetachedFromWindow(holder);
 //        Animation animation = AnimationUtils.loadAnimation(holder.itemView.getContext(), R.anim.slide_to_top);
 //        holder.itemView.startAnimation(animation);
@@ -114,15 +116,14 @@ public class SubCategoryItemsAdapter extends RecyclerView.Adapter<SubCategoryIte
     }
 
     static class SubCategoryItemViewHolder extends RecyclerView.ViewHolder {
-
-        @BindView(R.id.viewholder_subcategory_container)
-        RelativeLayout container;
-
         @BindView(R.id.viewholder_subcategory_title)
         TextView titleTextView;
 
         @BindView(R.id.viewholder_subcategory_items_recyclerview)
         RecyclerView recyclerView;
+
+        @BindView(R.id.viewholder_subcategory_check)
+        ImageView subCategoryCheck;
 
         public SubCategoryItemViewHolder(View itemView) {
             super(itemView);

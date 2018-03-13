@@ -55,6 +55,7 @@ import au.com.dealsdirect.utils.JsonUtils;
 import au.com.dealsdirect.utils.PaginateUtils;
 import butterknife.BindView;
 import butterknife.OnClick;
+
 import static au.com.dealsdirect.utils.BundleKeys.SALEITEMS_CATEGORY_MAP;
 import static au.com.dealsdirect.utils.BundleKeys.SALEITEMS_CHIPS_FILTER;
 import static au.com.dealsdirect.utils.BundleKeys.SALEITEMS_FROM_CATEGORIES;
@@ -686,7 +687,7 @@ public class SaleItemsController extends BasePullToRefreshController implements 
     }
 
     public void activateSearch() {
-        android.os.Handler handler = new android.os.Handler();
+        Handler handler = new Handler();
         handler.postDelayed(() -> {
             if (mSaleItemsToolbarField != null && mSaleItemsToolbarField.requestFocus()) {
                 InputMethodManager inputMethodManager =

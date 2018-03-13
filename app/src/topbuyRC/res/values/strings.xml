@@ -172,4 +172,7 @@
         <item>@drawable/bg_account_tutorial</item>
         <item>@drawable/bg_account_logout</item>
     </string-array>
+
+    <!--APP SPECIFIC SETTINGS-->
+    <bool name="is_ourpay_app">false</bool>
 </resources>

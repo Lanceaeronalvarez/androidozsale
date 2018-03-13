@@ -7,7 +7,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import java.util.ArrayList;
@@ -17,7 +16,6 @@ import au.com.dealsdirect.R;
 import au.com.dealsdirect.data.network.model.banner.GetBannerResponse;
 import au.com.dealsdirect.ui.controller.shops.ShopsMvpPresenter;
 import au.com.dealsdirect.ui.controller.shops.listener.BannerClickListener;
-import au.com.dealsdirect.utils.AppLogger;
 import au.com.dealsdirect.utils.ImageUtils;
 import au.com.dealsdirect.utils.AppConstants;
 import au.com.dealsdirect.utils.ScreenUtils;
@@ -30,7 +28,7 @@ import butterknife.ButterKnife;
 
 public class BannersAdapter extends RecyclerView.Adapter<BannersAdapter.ViewHolder> {
 
-    private int mComputedHeight = 0;
+    private int mComputedHeight = -1;
     private List<GetBannerResponse> mSales;
     private Context mContext;
     private ShopsMvpPresenter mPresenter;
@@ -47,26 +45,28 @@ public class BannersAdapter extends RecyclerView.Adapter<BannersAdapter.ViewHold
         this.mPresenter = presenter;
         this.mBannerClickListener = bannerClickListener;
 
-        // Dynamic Height Computation
-        if (mPresenter.isTablet()) {
+        if(!mContext.getResources().getBoolean(R.bool.is_ourpay_app)) {
+            // Dynamic Height Computation
+            if (mPresenter.isTablet()) {
 
-            int screenWidth = ScreenUtils.getScreenWidth(mContext) / 2;
+                int screenWidth = ScreenUtils.getScreenWidth(mContext) / 2;
 
-            mComputedHeight = ImageUtils.getComputedBannerHeight(AppConstants.BANNER_TABLET_WIDTH,
-                    AppConstants.BANNER_TABLET_HEIGHT, screenWidth);
-        } else {
+                mComputedHeight = ImageUtils.getComputedBannerHeight(AppConstants.BANNER_TABLET_WIDTH,
+                        AppConstants.BANNER_TABLET_HEIGHT, screenWidth);
+            } else {
 
-            int screenWidth = ScreenUtils.getScreenWidth(mContext);
+                int screenWidth = ScreenUtils.getScreenWidth(mContext);
 
-            mComputedHeight = ImageUtils.getComputedBannerHeight(AppConstants.BANNER_MOBILE_WIDTH,
-                    AppConstants.BANNER_MOBILE_HEIGHT, screenWidth);
+                mComputedHeight = ImageUtils.getComputedBannerHeight(AppConstants.BANNER_MOBILE_WIDTH,
+                        AppConstants.BANNER_MOBILE_HEIGHT, screenWidth);
+            }
         }
     }
 
     static class ViewHolder extends RecyclerView.ViewHolder {
 
         @BindView(R.id.viewholder_banner_layout)
-        LinearLayout layout;
+        ViewGroup layout;
 
         @BindView(R.id.viewholder_banner_image)
         ImageView image;
@@ -81,9 +81,11 @@ public class BannersAdapter extends RecyclerView.Adapter<BannersAdapter.ViewHold
             super(view);
             ButterKnife.bind(this, view);
 
-            GridLayoutManager.LayoutParams params = (GridLayoutManager.LayoutParams) layout.getLayoutParams();
-            params.height = height;
-            layout.setLayoutParams(params);
+            if(height > 0) {
+                GridLayoutManager.LayoutParams params = (GridLayoutManager.LayoutParams) layout.getLayoutParams();
+                params.height = height;
+                layout.setLayoutParams(params);
+            }
         }
     }
 

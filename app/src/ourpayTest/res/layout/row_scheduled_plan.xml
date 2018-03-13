@@ -8,7 +8,7 @@
 
     <TextView
         android:id="@+id/row_scheduled_plan_month_header"
-        fontPath="@string/font_lato_light"
+        fontPath="@string/font_app_light"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginBottom="5dp"
@@ -30,7 +30,7 @@
 
         <TextView
             android:id="@+id/row_scheduled_plan_day"
-            fontPath="@string/font_lato_semibold"
+            fontPath="@string/font_app_semibold"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:paddingTop="10dp"
@@ -62,7 +62,7 @@
 
         <TextView
             android:id="@+id/row_scheduled_plan_title"
-            fontPath="@string/font_lato_semibold"
+            fontPath="@string/font_app_semibold"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_toEndOf="@id/row_scheduled_plan_divider"
@@ -108,7 +108,7 @@
 
         <TextView
             android:id="@+id/row_scheduled_plan_value"
-            fontPath="@string/font_lato_semibold"
+            fontPath="@string/font_app_semibold"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentEnd="true"

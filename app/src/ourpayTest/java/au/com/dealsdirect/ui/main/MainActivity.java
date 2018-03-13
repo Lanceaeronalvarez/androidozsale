@@ -362,7 +362,7 @@ public class MainActivity extends BaseActivity implements MainMvpView {
                     .popChangeHandler(new HorizontalChangeHandler()));
 
             if (getMainController().getHomeController()!=null)
-                getMainController().getHomeController().showCheckoutController();
+                getMainController().getHomeController().showFifthTabController();
 
         } else {
 
@@ -802,6 +802,11 @@ public class MainActivity extends BaseActivity implements MainMvpView {
     @Override
     public void showNoNetworkLayout() {
 
+    }
+
+    @Override
+    public boolean isViewAttached() {
+        return mIsViewAttached;
     }
 
 }

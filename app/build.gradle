@@ -69,7 +69,7 @@ android {
             resValue "string", "default_language_id", "EN"
 
             ext.newRelicAppToken = "AAf4ce8e1466bf9d9b7c3dcfdf7c569defebda9edc"
-            resValue "string", "new_relic_app_token",  ext.newRelicAppToken
+            resValue "string", "new_relic_app_token", ext.newRelicAppToken
         }
 
         buyinviteTest {
@@ -92,7 +92,7 @@ android {
             resValue "string", "default_language_id", "EN"
 
             ext.newRelicAppToken = "AAf4ce8e1466bf9d9b7c3dcfdf7c569defebda9edc"
-            resValue "string", "new_relic_app_token",  ext.newRelicAppToken
+            resValue "string", "new_relic_app_token", ext.newRelicAppToken
         }
 
         dealsDirectRC {
@@ -115,7 +115,7 @@ android {
             resValue "string", "default_language_id", "EN"
 
             ext.newRelicAppToken = "AAa9d543732ff39dddc60c9cb9ad8c9cf22297904b"
-            resValue "string", "new_relic_app_token",  ext.newRelicAppToken
+            resValue "string", "new_relic_app_token", ext.newRelicAppToken
 
         }
 
@@ -139,7 +139,7 @@ android {
             resValue "string", "default_language_id", "EN"
 
             ext.newRelicAppToken = "AAa9d543732ff39dddc60c9cb9ad8c9cf22297904b"
-            resValue "string", "new_relic_app_token",  ext.newRelicAppToken
+            resValue "string", "new_relic_app_token", ext.newRelicAppToken
         }
 
         ooRC {
@@ -162,7 +162,7 @@ android {
             resValue "string", "default_language_id", "EN"
 
             ext.newRelicAppToken = "AAb0a85221e0d2eb8f185c2c2a34c566840b593941"
-            resValue "string", "new_relic_app_token",  ext.newRelicAppToken
+            resValue "string", "new_relic_app_token", ext.newRelicAppToken
         }
 
         ooTest {
@@ -185,7 +185,7 @@ android {
             resValue "string", "default_language_id", "EN"
 
             ext.newRelicAppToken = "AAb0a85221e0d2eb8f185c2c2a34c566840b593941"
-            resValue "string", "new_relic_app_token",  ext.newRelicAppToken
+            resValue "string", "new_relic_app_token", ext.newRelicAppToken
         }
 
         topbuyRC {
@@ -208,7 +208,7 @@ android {
             resValue "string", "default_language_id", "EN"
 
             ext.newRelicAppToken = "AA17bba4366f389b0ca3e7c8068935df33ce10bd35"
-            resValue "string", "new_relic_app_token",  ext.newRelicAppToken
+            resValue "string", "new_relic_app_token", ext.newRelicAppToken
         }
 
         topbuyTest {
@@ -231,7 +231,7 @@ android {
             resValue "string", "default_language_id", "EN"
 
             ext.newRelicAppToken = "AA17bba4366f389b0ca3e7c8068935df33ce10bd35"
-            resValue "string", "new_relic_app_token",  ext.newRelicAppToken
+            resValue "string", "new_relic_app_token", ext.newRelicAppToken
         }
 
         ourpayTest {
@@ -255,7 +255,7 @@ android {
             resValue "string", "default_language_id", "EN"
 
             ext.newRelicAppToken = "asjdasldkalsnasdT"
-            resValue "string", "new_relic_app_token",  ext.newRelicAppToken
+            resValue "string", "new_relic_app_token", ext.newRelicAppToken
         }
 
 
@@ -266,6 +266,8 @@ android {
             java.srcDirs = ['src/commonControllers/java/',
                             'src/commonHomeController/java/',
                             'src/commonCategoriesController/java/',
+                            'src/commonSaleItemsController/java/',
+                            'src/commonSearchFilterController/java/',
                             'src/commonActivity/java/',
                             'src/dealsDirectRC/java/',
                             'src/main/java/']
@@ -275,6 +277,8 @@ android {
             java.srcDirs = ['src/commonControllers/java/',
                             'src/commonHomeController/java/',
                             'src/commonCategoriesController/java/',
+                            'src/commonSaleItemsController/java/',
+                            'src/commonSearchFilterController/java/',
                             'src/commonActivity/java/',
                             'src/dealsDirectRC/java/',
                             'src/main/java/']
@@ -284,7 +288,9 @@ android {
             res.srcDir 'src/ooTest/res/'
             java.srcDirs = ['src/commonControllers/java/',
                             'src/commonHomeController/java/',
-                            'src/commonCategoriesController/java/' ,
+                            'src/commonCategoriesController/java/',
+                            'src/commonSaleItemsController/java/',
+                            'src/commonSearchFilterController/java/',
                             'src/commonActivity/java/',
                             'src/ooTest/java/',
                             'src/main/java/']
@@ -295,6 +301,8 @@ android {
             java.srcDirs = ['src/commonControllers/java/',
                             'src/commonHomeController/java/',
                             'src/commonCategoriesController/java/',
+                            'src/commonSaleItemsController/java/',
+                            'src/commonSearchFilterController/java/',
                             'src/commonActivity/java/',
                             'src/ooTest/java/',
                             'src/main/java/']
@@ -305,6 +313,8 @@ android {
             java.srcDirs = ['src/commonControllers/java/',
                             'src/commonHomeController/java/',
                             'src/commonCategoriesController/java/',
+                            'src/commonSaleItemsController/java/',
+                            'src/commonSearchFilterController/java/',
                             'src/commonActivity/java/',
                             'src/buyinviteTest/java/',
                             'src/main/java/']
@@ -314,6 +324,8 @@ android {
             java.srcDirs = ['src/commonControllers/java/',
                             'src/commonHomeController/java/',
                             'src/commonCategoriesController/java/',
+                            'src/commonSaleItemsController/java/',
+                            'src/commonSearchFilterController/java/',
                             'src/commonActivity/java/',
                             'src/buyinviteTest/java/',
                             'src/main/java']

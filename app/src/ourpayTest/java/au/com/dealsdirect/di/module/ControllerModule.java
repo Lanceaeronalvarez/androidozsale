@@ -119,9 +119,6 @@ import au.com.dealsdirect.ui.controller.saleitems.SaleItemsPresenter;
 import au.com.dealsdirect.ui.controller.searchfilter.SearchFilterMvpPresenter;
 import au.com.dealsdirect.ui.controller.searchfilter.SearchFilterMvpView;
 import au.com.dealsdirect.ui.controller.searchfilter.SearchFilterPresenter;
-import au.com.dealsdirect.ui.controller.searchfilter.facetfilter.FacetFilterMvpPresenter;
-import au.com.dealsdirect.ui.controller.searchfilter.facetfilter.FacetFilterMvpView;
-import au.com.dealsdirect.ui.controller.searchfilter.facetfilter.FacetFilterPresenter;
 import au.com.dealsdirect.ui.controller.shops.ShopsMvpPresenter;
 import au.com.dealsdirect.ui.controller.shops.ShopsMvpView;
 import au.com.dealsdirect.ui.controller.shops.ShopsPresenter;
@@ -344,11 +341,6 @@ public class ControllerModule {
 
     @Provides
     OurpaySMSVerificationMvpPresenter<OurpaySMSVerificationMvpView> provideOurpaySMSVerificationPresenter(OurpaySMSVerificationPresenter<OurpaySMSVerificationMvpView> presenter) {
-        return presenter;
-    }
-
-    @Provides
-    FacetFilterMvpPresenter<FacetFilterMvpView> provideFacetFilterPresenter(FacetFilterPresenter<FacetFilterMvpView> presenter) {
         return presenter;
     }
 
