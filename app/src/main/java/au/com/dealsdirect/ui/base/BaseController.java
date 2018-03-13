@@ -2,6 +2,7 @@ package au.com.dealsdirect.ui.base;
 
 import android.app.Activity;
 import android.app.ProgressDialog;
+import android.content.res.Resources;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.StringRes;
@@ -172,4 +173,7 @@ public abstract class BaseController extends RefWatchingController implements Mv
     public boolean isViewAttached() {
         return isAttached();
     }
+
+    public Resources getResource() { return mActivity.getResources(); }
+
 }
