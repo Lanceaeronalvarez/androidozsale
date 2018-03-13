@@ -30,8 +30,7 @@
             android:layout_centerVertical="true"
             android:background="@drawable/bg_toolbar_button"
             android:paddingRight="2dp"
-            android:src="@drawable/ic_pink_chevron" />
-
+            android:src="@drawable/ic_gray_chevron_left"/>
 
         <TextView
             android:id="@+id/partial_toolbar_arrow_title"
