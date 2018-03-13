@@ -11,6 +11,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.CheckBox;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
@@ -108,8 +109,12 @@ public class CheckoutController extends BaseController implements CheckoutMvpVie
     RelativeLayout mNoCartItemsLayout;
     @BindView(R.id.partial_checkout_empty_button)
     Button mShopNowButton;
-    @BindView(R.id.partial_toolbar_title_view)
+    @BindView(R.id.partial_toolbar_left_view)
+    ImageButton mToolbarLeftButton;
+    @BindView(R.id.partial_toolbar_arrow_title)
     TextView mTitleTextView;
+    @BindView(R.id.partial_toolbar_right_view)
+    ImageButton mToolbarRightButton;
     @BindView(R.id.checkout_scrollview)
     NestedScrollView mNestedScrollView;
 
@@ -213,6 +218,10 @@ public class CheckoutController extends BaseController implements CheckoutMvpVie
     @Override
     protected void onViewBound(@NonNull View view) {
         super.onViewBound(view);
+
+        //disable toolbar left and right buttons
+        mToolbarLeftButton.setVisibility(View.GONE);
+        mToolbarRightButton.setVisibility(View.GONE);
 
         if (mActivity != null) {
             mActivity.performResetWithAuthFetch();

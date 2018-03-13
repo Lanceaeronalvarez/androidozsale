@@ -98,7 +98,6 @@ public class MainController extends BaseController implements MainMvpView {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             Window window = getActivity().getWindow();
             window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
-            window.setStatusBarColor(getActivity().getResources().getColor(R.color.colorAccent));
         }
         setupViewPager();
     }

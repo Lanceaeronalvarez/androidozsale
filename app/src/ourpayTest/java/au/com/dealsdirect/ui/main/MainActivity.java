@@ -99,8 +99,8 @@ public class MainActivity extends BaseActivity implements MainMvpView {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        setTheme(R.style.App_Theme_Translucent);
         super.onCreate(savedInstanceState);
-
         setContentView(R.layout.activity_main);
         mIsViewAttached = true;
         getActivityComponent().inject(this);

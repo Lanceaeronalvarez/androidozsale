@@ -8,8 +8,21 @@
         <item name="colorAccent">@color/colorAccent</item>
         <!-- Making the app fullscreen and the status bar background transparent. -->
         <item name="android:windowDrawsSystemBarBackgrounds">true</item>
-        <item name="android:statusBarColor">@color/colorPrimaryDark</item>
+        <item name="android:statusBarColor">@color/semi_transparent</item>
     </style>
+
+    <!--Floating activity theme -->
+    <style name="App_Theme_Translucent" parent="AppTheme">
+        <item name="android:windowNoTitle">true</item>
+        <item name="android:windowBackground">@android:color/transparent</item>
+        <item name="android:colorBackgroundCacheHint">@null</item>
+        <item name="android:windowTranslucentStatus">true</item>
+        <item name="android:windowTranslucentNavigation">false</item>
+        <item name="android:windowContentOverlay">@null</item>
+        <item name="android:windowIsFloating">false</item>
+        <item name="android:windowDrawsSystemBarBackgrounds">true</item>
+    </style>
+
 
     <style name="DDButtonStyle" parent="Base.Widget.AppCompat.Button.Borderless">
         <item name="android:layout_height">@dimen/default_button_height</item>

@@ -35,6 +35,7 @@ import au.com.dealsdirect.ui.controller.dashboard.DashboardController;
 import au.com.dealsdirect.ui.controller.invite.InviteSendController;
 import au.com.dealsdirect.ui.controller.shops.ShopsController;
 import au.com.dealsdirect.ui.main.MainActivity;
+import au.com.dealsdirect.ui.sample.SampleController;
 import au.com.dealsdirect.utils.BundleBuilder;
 import au.com.dealsdirect.utils.CartUtil;
 import butterknife.BindView;
@@ -48,6 +49,7 @@ public class HomeController extends BaseController implements HomeMvpView {
     public static final String TAG = "HomeController";
 
     private static final String KEY_TEXT = "HomeController.KEY_TEXT";
+
 
     @Inject
     HomeMvpPresenter<HomeMvpView> mPresenter;
@@ -69,8 +71,6 @@ public class HomeController extends BaseController implements HomeMvpView {
 
     @BindView(R.id.controller_fifth_frame)
     ViewGroup mCheckoutContainer;
-
-
 
     public AHBottomNavigation getBottomNavigationView() {
         return mBottomNavigationView;
@@ -146,15 +146,14 @@ public class HomeController extends BaseController implements HomeMvpView {
         mPaymentScheduleRouter = getChildRouter(mPaymentScheduleContainer);
 
         if (!mPaymentScheduleRouter.hasRootController()) {
-            mPaymentScheduleRouter.setRoot(RouterTransaction.with(ViewContactsController.newInstance())
+            mPaymentScheduleRouter.setRoot(RouterTransaction.with(SampleController.newInstance("test controller"))
                     .tag(ViewContactsController.TAG));
         }
 
         mOurPayRouter = getChildRouter(mOurpayContainer);
 
         if (!mOurPayRouter.hasRootController()) {
-            mOurPayRouter.setRoot(RouterTransaction.with(InviteSendController.newInstance())
-                    .tag(getActivity().getResources().getString(R.string.invite_friends_tag)));
+            mOurPayRouter.setRoot(RouterTransaction.with(DashboardController.newInstance()));
         }
 
         mAccountsRouter = getChildRouter(mAccountsContainer);
@@ -301,12 +300,11 @@ public class HomeController extends BaseController implements HomeMvpView {
         }
 
         mPaymentScheduleRouter = getChildRouter(mPaymentScheduleContainer);
-        mPaymentScheduleRouter.setRoot(RouterTransaction.with(ViewContactsController.newInstance())
+        mPaymentScheduleRouter.setRoot(RouterTransaction.with(SampleController.newInstance("sample controller"))
                 .tag(ViewContactsController.TAG));
 
         mOurPayRouter = getChildRouter(mOurpayContainer);
-        mOurPayRouter.setRoot(RouterTransaction.with(InviteSendController.newInstance())
-                .tag(getActivity().getResources().getString(R.string.invite_friends_tag)));
+        mOurPayRouter.setRoot(RouterTransaction.with(DashboardController.newInstance()));
 
         mAccountsRouter = getChildRouter(mAccountsContainer);
         mAccountsRouter.setRoot(RouterTransaction.with(AccountController.newInstance()));
@@ -317,17 +315,15 @@ public class HomeController extends BaseController implements HomeMvpView {
                 .tag(getActivity().getResources().getString(R.string.checkout_controller)));
     }
 
-    public void resetInviteRouter() {
-        mOurPayRouter = getChildRouter(mPaymentScheduleContainer);
-        mOurPayRouter.setRoot(RouterTransaction.with(InviteSendController.newInstance())
-                .tag(getActivity().getResources().getString(R.string.invite_friends_tag)));
+    public void resetOurPayRouter() {
+        mOurPayRouter = getChildRouter(mOurpayContainer);
+        mOurPayRouter.setRoot(RouterTransaction.with(DashboardController.newInstance()));
 
     }
 
-    public void resetContactsRouter() {
-        mPaymentScheduleRouter = getChildRouter(mOurpayContainer);
-        mPaymentScheduleRouter.setRoot(RouterTransaction.with(ViewContactsController.newInstance())
-                .tag(getActivity().getResources().getString(R.string.view_contacts_controller)));
+    public void resetPaymentScheduleRouter() {
+        mPaymentScheduleRouter = getChildRouter(mPaymentScheduleContainer);
+        mPaymentScheduleRouter.setRoot(RouterTransaction.with(ViewContactsController.newInstance()));
 
     }
 
@@ -517,8 +513,8 @@ public class HomeController extends BaseController implements HomeMvpView {
     }
 
     public void resetRouters() {
-        resetContactsRouter();
-        resetInviteRouter();
+        resetPaymentScheduleRouter();
+        resetOurPayRouter();
         resetCheckoutRouter();
     }
 

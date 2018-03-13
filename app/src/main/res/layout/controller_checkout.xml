@@ -4,7 +4,7 @@
     android:layout_height="match_parent"
     android:orientation="vertical">
 
-    <include layout="@layout/partial_toolbar_title" />
+    <include layout="@layout/partial_toolbar_arrow" />
 
     <include
         layout="@layout/partial_checkout_empty"

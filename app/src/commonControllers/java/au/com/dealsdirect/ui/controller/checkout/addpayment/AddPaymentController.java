@@ -20,19 +20,16 @@ import com.braintreepayments.cardform.view.CardEditText;
 import com.braintreepayments.cardform.view.CardForm;
 import com.crashlytics.android.answers.Answers;
 import com.crashlytics.android.answers.CustomEvent;
-import com.facebook.appevents.AppEventsConstants;
 import com.mysale.genie.utility.RxBus;
 
 import javax.inject.Inject;
 
 import au.com.dealsdirect.R;
-import au.com.dealsdirect.ui.base.BaseActivity;
 import au.com.dealsdirect.ui.base.BaseController;
 import au.com.dealsdirect.ui.controller.masterpass.MasterpassController;
 import au.com.dealsdirect.ui.custom.CustomAlertDialog;
 import au.com.dealsdirect.ui.main.FetchTokenHandler;
 import au.com.dealsdirect.ui.main.MainActivity;
-import au.com.dealsdirect.ui.main.PaymentInfo;
 import au.com.dealsdirect.utils.BundleBuilder;
 import au.com.dealsdirect.utils.IntrospectionUtils;
 import butterknife.BindView;
@@ -65,7 +62,7 @@ public class AddPaymentController extends BaseController implements AddPaymentMv
 
     @BindView(R.id.partial_toolbar_arrow_title)
     TextView mViewAddressToolarTitle;
-    @BindView(R.id.partial_toolbar_filter_view)
+    @BindView(R.id.partial_toolbar_right_view)
     ImageView mViewAddressRightOption;
 
     private boolean isFromCart = false;
@@ -258,7 +255,7 @@ public class AddPaymentController extends BaseController implements AddPaymentMv
         return !isFromCart;
     }
 
-    @OnClick(R.id.partial_toolbar_arrow_view)
+    @OnClick(R.id.partial_toolbar_left_view)
     void onBackPressed() {
         hideKeyboard();
         getActivity().onBackPressed();

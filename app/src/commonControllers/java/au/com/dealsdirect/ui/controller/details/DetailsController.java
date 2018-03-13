@@ -3,7 +3,6 @@ package au.com.dealsdirect.ui.controller.details;
 import android.app.DatePickerDialog;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -44,7 +43,7 @@ public class DetailsController extends BasePullToRefreshController implements De
     @BindView(R.id.partial_toolbar_arrow_title)
     TextView mTitleTextView;
 
-    @BindView(R.id.partial_toolbar_filter_view)
+    @BindView(R.id.partial_toolbar_right_view)
     ImageView mSaveUserDetailsButton;
 
     @BindView(R.id.controller_details_text_firstname)
@@ -204,7 +203,7 @@ public class DetailsController extends BasePullToRefreshController implements De
                 message);
     }
 
-    @OnClick(R.id.partial_toolbar_filter_view)
+    @OnClick(R.id.partial_toolbar_right_view)
     public void saveUserDetails() {
         hideKeyboard();
 
@@ -232,7 +231,7 @@ public class DetailsController extends BasePullToRefreshController implements De
         }
     }
 
-    @OnClick(R.id.partial_toolbar_arrow_view)
+    @OnClick(R.id.partial_toolbar_left_view)
     public void onBackClick() {
         hideKeyboard();
         mActivity.onBackPressed();

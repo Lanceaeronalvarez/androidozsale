@@ -15,8 +15,6 @@ import android.widget.ImageButton;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
-import com.braintreepayments.api.ThreeDSecure;
-
 import java.util.regex.Pattern;
 
 import javax.inject.Inject;
@@ -27,7 +25,6 @@ import au.com.dealsdirect.data.network.model.ourpayverificationnormalizephone.Ve
 import au.com.dealsdirect.service.ourpay.Ourpay;
 import au.com.dealsdirect.ui.base.BaseController;
 import au.com.dealsdirect.ui.custom.CustomAlertDialog;
-import au.com.dealsdirect.ui.main.MainActivity;
 import au.com.dealsdirect.ui.main.PaymentInfo;
 import au.com.dealsdirect.utils.BundleBuilder;
 import butterknife.BindView;
@@ -51,10 +48,10 @@ public class OurpaySMSVerificationController extends BaseController implements O
     @BindView(R.id.partial_toolbar_arrow_title)
     TextView mOurpaySMSVerificationTitle;
 
-    @BindView(R.id.partial_toolbar_arrow_view)
+    @BindView(R.id.partial_toolbar_left_view)
     ImageButton mOurpaySMSVerificationLeftOption;
 
-    @BindView(R.id.partial_toolbar_filter_view)
+    @BindView(R.id.partial_toolbar_right_view)
     ImageButton mOurpaySMSVerificationRightOption;
 
     @BindView(R.id.ourpay_edittext_extension)
@@ -133,7 +130,7 @@ public class OurpaySMSVerificationController extends BaseController implements O
         super.onError(message);
     }
 
-    @OnClick(R.id.partial_toolbar_arrow_view)
+    @OnClick(R.id.partial_toolbar_left_view)
     void onBackClick() {
         mActivity.onBackPressed();
     }

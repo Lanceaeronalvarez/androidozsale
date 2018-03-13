@@ -6,7 +6,6 @@ import android.support.annotation.NonNull;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -18,10 +17,7 @@ import com.bluelinelabs.conductor.changehandler.HorizontalChangeHandler;
 
 import java.io.Serializable;
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
 import java.util.List;
-import java.util.stream.Collectors;
 
 import javax.inject.Inject;
 
@@ -51,18 +47,17 @@ import butterknife.OnClick;
 public class AccountController extends BaseController implements AccountMvpView, Serializable {
 
     public static final String TAG = "AccountController";
-    private static final String KEY_TEXT = "AccountController.KEY_TEXT";
     AccountItemAdapter accountItemAdapter;
 
 
     @BindView(R.id.partial_toolbar_arrow_title)
     TextView mTitleTextView;
 
-    @BindView(R.id.partial_toolbar_arrow_view)
-    ImageButton mArrowButton;
+    @BindView(R.id.partial_toolbar_left_view)
+    ImageButton mLeftToolbarButton;
 
-    @BindView(R.id.partial_toolbar_filter_view)
-    ImageButton mFilterButton;
+    @BindView(R.id.partial_toolbar_right_view)
+    ImageButton mRightToolbarButton;
 
     @BindView(R.id.account_recycler_view)
     RecyclerView mAccountRecyclerView;
@@ -99,7 +94,7 @@ public class AccountController extends BaseController implements AccountMvpView,
 
         //MOCK MULTI COUNTRY in my accounts temporarily for BA
         if (getActivity().getPackageName().equals("au.com.buyinvite.rc") ||
-                getActivity().getPackageName().equals("au.com.buyinvite.test") ){
+                getActivity().getPackageName().equals("au.com.buyinvite.test")) {
 
             mPresenter.setMultiCountry(true);
         }
@@ -113,8 +108,6 @@ public class AccountController extends BaseController implements AccountMvpView,
         super.onViewBound(view);
         setUp(view);
         hideKeyboard();
-
-
     }
 
 
@@ -128,18 +121,18 @@ public class AccountController extends BaseController implements AccountMvpView,
 
         TypedArray title = mActivity.getResources().obtainTypedArray(R.array.account_title_array);
         titles = new ArrayList<>();
-        for(int i = 0; i < title.length(); i++) {
-            titles.add(title.getResourceId(i,0));
+        for (int i = 0; i < title.length(); i++) {
+            titles.add(title.getResourceId(i, 0));
         }
         TypedArray drawable = mActivity.getResources().obtainTypedArray(R.array.account_drawable_array);
         drawables = new ArrayList<>();
-        for(int i = 0; i < drawable.length(); i++) {
-            drawables.add(drawable.getResourceId(i,0));
+        for (int i = 0; i < drawable.length(); i++) {
+            drawables.add(drawable.getResourceId(i, 0));
         }
         mPresenter.loadAccountItems(titles, drawables);
 
         mTitleTextView.setText(R.string.my_account);
-        mArrowButton.setVisibility(View.INVISIBLE);
+        mLeftToolbarButton.setVisibility(View.INVISIBLE);
 
         initLoginDrawable();
     }
@@ -155,7 +148,7 @@ public class AccountController extends BaseController implements AccountMvpView,
     public void showAccountItems(List<Integer> accountItems, List<Integer> accountImages) {
 
 
-        accountItemAdapter = new AccountItemAdapter(mActivity,accountItems, accountImages, mPresenter);
+        accountItemAdapter = new AccountItemAdapter(mActivity, accountItems, accountImages, mPresenter);
         mAccountRecyclerView.setAdapter(accountItemAdapter);
         mAccountRecyclerView.setLayoutManager(new GridLayoutManager(getActivity(), 3));
         mAccountRecyclerView.setItemAnimator(new DefaultItemAnimator());
@@ -234,17 +227,17 @@ public class AccountController extends BaseController implements AccountMvpView,
                 .popChangeHandler(new HorizontalChangeHandler()));
     }
 
-      @Override
+    @Override
     public void showLegalities(String key, int title) {
 
-          GateKeeper.push(getRouter(),
-                  GateKeeper.Destination.LEGALITIES,
-                  new BundleBuilder(new Bundle())
-                          .putString(BundleKeys.TEMPLATE_KEY, key)
-                          .putString(BundleKeys.TITLE, getResources().getString(title))
-                          .build(),
-                  new HorizontalChangeHandler(false),
-                  new HorizontalChangeHandler());
+        GateKeeper.push(getRouter(),
+                GateKeeper.Destination.LEGALITIES,
+                new BundleBuilder(new Bundle())
+                        .putString(BundleKeys.TEMPLATE_KEY, key)
+                        .putString(BundleKeys.TITLE, getResources().getString(title))
+                        .build(),
+                new HorizontalChangeHandler(false),
+                new HorizontalChangeHandler());
 
 //
 //
@@ -263,8 +256,8 @@ public class AccountController extends BaseController implements AccountMvpView,
                 mPresenter.onAttach(mvpView);
                 mPresenter.onAccountItemClick(option);
                 mActivity.callGCMRegisterSubscriber();
-                mFilterButton.setImageDrawable(getActivity().getResources().getDrawable(R.drawable.ic_account_logout));
-                mActivity.getMainController().getHomeController().resetInviteRouter();
+                mRightToolbarButton.setImageDrawable(getActivity().getResources().getDrawable(R.drawable.ic_account_logout));
+                mActivity.getMainController().getHomeController().resetOurPayRouter();
             }
 
             @Override
@@ -282,7 +275,7 @@ public class AccountController extends BaseController implements AccountMvpView,
                 mPresenter.loadAccountItems(titles, drawables);
                 CartUtil.setValueToCart(0);
                 mActivity.getMainController().getHomeController().removeBasketItemCount();
-                mFilterButton.setImageDrawable(getActivity().getResources().getDrawable(R.drawable.ic_login));
+                mRightToolbarButton.setImageDrawable(getActivity().getResources().getDrawable(R.drawable.ic_login));
 
 //                commented. in iOS when logging out, it stays on my accounts.
 //                ((MainActivity) getActivity()).getMainController().getHomeController().showFirstTabController();
@@ -308,10 +301,10 @@ public class AccountController extends BaseController implements AccountMvpView,
     @Override
     public void initLoginDrawable() {
         if (mPresenter.isAuthorized()) {
-            mFilterButton.setImageDrawable(getActivity().getResources().getDrawable(R.drawable.ic_account_logout));
+            mRightToolbarButton.setImageDrawable(getActivity().getResources().getDrawable(R.drawable.ic_account_logout));
 
         } else {
-            mFilterButton.setImageDrawable(getActivity().getResources().getDrawable(R.drawable.ic_login));
+            mRightToolbarButton.setImageDrawable(getActivity().getResources().getDrawable(R.drawable.ic_login));
         }
     }
 
@@ -320,7 +313,7 @@ public class AccountController extends BaseController implements AccountMvpView,
         return false;
     }
 
-    @OnClick(R.id.partial_toolbar_filter_view)
+    @OnClick(R.id.partial_toolbar_right_view)
     public void promptLogin() {
         if (mPresenter.isAuthorized()) {
             triggerLogout();
@@ -330,7 +323,7 @@ public class AccountController extends BaseController implements AccountMvpView,
                 public void success() {
                     mPresenter.onAttach(AccountController.this);
                     mActivity.callGCMRegisterSubscriber();
-                    mFilterButton.setImageDrawable(getActivity().getResources().getDrawable(R.drawable.ic_account_logout));
+                    mRightToolbarButton.setImageDrawable(getActivity().getResources().getDrawable(R.drawable.ic_account_logout));
                     mActivity.getMainController().getHomeController().initControllers(true);
                 }
 

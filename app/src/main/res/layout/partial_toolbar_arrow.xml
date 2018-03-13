@@ -15,14 +15,12 @@
     app:contentInsetStart="0dp"
     tools:ignore="MissingPrefix">
 
-
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-
         <ImageButton
-            android:id="@+id/partial_toolbar_arrow_view"
+            android:id="@+id/partial_toolbar_left_view"
             android:layout_width="40dp"
             android:layout_height="40dp"
             android:layout_alignParentLeft="true"
@@ -39,18 +37,16 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerInParent="true"
-            android:layout_toRightOf="@+id/partial_toolbar_arrow_view"
-            android:layout_toLeftOf="@+id/partial_toolbar_filter_view"
+            android:layout_toRightOf="@+id/partial_toolbar_left_view"
+            android:layout_toLeftOf="@+id/partial_toolbar_right_view"
             android:gravity="center"
             android:singleLine="true"
             android:textColor="@android:color/white"
             android:textSize="@dimen/text_size_xxlarge"
             tools:text="Title" />
 
-
-
         <ImageButton
-            android:id="@+id/partial_toolbar_filter_view"
+            android:id="@+id/partial_toolbar_right_view"
             android:layout_width="40dp"
             android:layout_height="40dp"
             android:layout_alignParentEnd="true"

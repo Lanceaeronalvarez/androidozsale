@@ -16,7 +16,6 @@ import au.com.dealsdirect.ui.base.BasePullToRefreshController;
 import au.com.dealsdirect.utils.BundleBuilder;
 import butterknife.BindView;
 import butterknife.OnClick;
-import in.srain.cube.views.ptr.PtrFrameLayout;
 
 /*
  * Created by Ayi on 05/06/2017.
@@ -109,7 +108,7 @@ public class SampleController extends BasePullToRefreshController implements Sam
     }
 
     // Sample event for filled Toolbar Layout
-    @OnClick(R.id.partial_toolbar_arrow_view)
+    @OnClick(R.id.partial_toolbar_left_view)
     void onBackClick() {
         getActivity().onBackPressed();
     }
