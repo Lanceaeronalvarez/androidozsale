@@ -6,7 +6,8 @@
     android:layout_height="match_parent"
     android:fillViewport="true"
     android:orientation="vertical"
-    tools:ignore="MissingPrefix">
+    tools:ignore="MissingPrefix"
+    android:background="@color/default_background_color">
 
     <LinearLayout
         android:id="@+id/controller_details_background"

@@ -47,6 +47,7 @@ public class SplashScreenController extends BaseController {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             Window window = getActivity().getWindow();
             window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
+            window.setStatusBarColor(getActivity().getResources().getColor(R.color.splash_background_color));
         }
 
         setUp(view);

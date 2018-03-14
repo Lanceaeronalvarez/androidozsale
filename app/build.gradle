@@ -258,6 +258,30 @@ android {
             resValue "string", "new_relic_app_token", ext.newRelicAppToken
         }
 
+        ozsaleRC {
+            versionCode 1
+            versionName "0.9"
+            applicationId "au.com.ozsale"
+
+            buildConfigField "String", "API_ROOT", "\"https://www.dealsdirect.com.au/\""
+            buildConfigField "String", "API_LEGACY", "\"https://www.dealsdirect.com.au/papi/public/v3.20/\""
+            buildConfigField "String", "ACCOUNT_ID", "\"A56B0D62-AEF6-4653-848E-2ECDDB6E9B8C\""
+
+            resValue "string", "app_name", "Ozsale"
+            def facebookAppId = "1650094968544406"
+            resValue "string", "facebook_app_id", facebookAppId
+            resValue "string", "facebook_app_secret", "94da0f48bd2ffea25981e52c56f9260a"
+            resValue "string", "fb_login_protocol_scheme", "fb" + facebookAppId
+            resValue "string", "fb_page_id", "257280167216"
+            resValue "string", "twitter_user_id", "twitter://user?user_id=37405859"
+            resValue "string", "default_country_id", "DA"
+            resValue "string", "default_language_id", "EN"
+
+            ext.newRelicAppToken = "AAa9d543732ff39dddc60c9cb9ad8c9cf22297904b"
+            resValue "string", "new_relic_app_token",  ext.newRelicAppToken
+
+        }
+
 
     }
 
@@ -345,6 +369,16 @@ android {
         topbuyRC {
             res.srcDir 'src/topbuyRC/res/'
             java.srcDirs = ['src/topbuyRC/java/', 'src/main/java/']
+        }
+
+        ozsaleRC {
+            res.srcDir 'src/ozsaleRC/res/'
+            java.srcDirs = ['src/commonControllers/java/',
+                            'src/commonActivity/java/',
+                            'src/commonHomeController/java/',
+                            'src/commonCategoriesController/java/',
+                            'src/ozsaleRC/java',
+                            'src/main/java/']
         }
 
         main {

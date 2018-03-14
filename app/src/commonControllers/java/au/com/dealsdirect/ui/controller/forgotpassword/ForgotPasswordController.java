@@ -73,7 +73,7 @@ public class ForgotPasswordController extends BaseController implements ForgotPa
         // Setup views here
 
         mForgotPasswordRightOptionView.setVisibility(View.INVISIBLE);
-        mForgotPasswordTitle.setText(getResources().getText(R.string.forgot_password));
+        mForgotPasswordTitle.setText(getResources().getText(R.string.forgot_password_title));
     }
 
     @Override

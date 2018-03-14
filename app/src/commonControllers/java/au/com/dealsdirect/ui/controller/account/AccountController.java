@@ -150,7 +150,7 @@ public class AccountController extends BaseController implements AccountMvpView,
 
         accountItemAdapter = new AccountItemAdapter(mActivity, accountItems, accountImages, mPresenter);
         mAccountRecyclerView.setAdapter(accountItemAdapter);
-        mAccountRecyclerView.setLayoutManager(new GridLayoutManager(getActivity(), 3));
+        mAccountRecyclerView.setLayoutManager(new GridLayoutManager(getActivity(), getResources().getInteger(R.integer.account_column_count)));
         mAccountRecyclerView.setItemAnimator(new DefaultItemAnimator());
         accountItemAdapter.notifyDataSetChanged();
     }

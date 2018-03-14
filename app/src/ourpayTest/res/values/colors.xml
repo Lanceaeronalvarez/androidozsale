@@ -117,4 +117,6 @@
 
     <color name="item_select_remove">#F29124</color>
     <color name="verify_resend_color">#90BF0A</color>
+
+    <color name="splash_background_color">@color/transparent</color>
 </resources>

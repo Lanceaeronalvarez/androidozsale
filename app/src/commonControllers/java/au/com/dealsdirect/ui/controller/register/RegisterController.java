@@ -42,6 +42,9 @@ public class RegisterController extends BaseController implements RegisterMvpVie
     @Inject
     RegisterMvpPresenter<RegisterMvpView> mPresenter;
 
+    @BindView(R.id.partial_toolbar_arrow_title)
+    TextView mToolBarTitle;
+
     @BindView(R.id.controller_register_forename_field)
     TextView mRegisterForenameField;
 
@@ -102,6 +105,9 @@ public class RegisterController extends BaseController implements RegisterMvpVie
     protected void setUp(View view) {
         // Setup views here
         //mPresenter.loadSample(new SampleRequest());
+
+        mToolBarTitle.setText(getResources().getString(R.string.join_now));
+
         mActivity.setDraggableViewPager(false);
 
         mTermsLink.setOnClickListener(action -> {
@@ -131,6 +137,11 @@ public class RegisterController extends BaseController implements RegisterMvpVie
     @OnClick(R.id.controller_register_close_icon)
     void onCloseIconClick() {
         getRouter().popToRoot(new VerticalChangeHandler());
+    }
+
+    @OnClick(R.id.partial_toolbar_arrow_view)
+    void onBackArrowClick() {
+        onBackIconClick();
     }
 
     @OnClick(R.id.controller_register_back_icon)
