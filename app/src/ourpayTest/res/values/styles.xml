@@ -8,7 +8,7 @@
         <item name="colorAccent">@color/colorAccent</item>
         <!-- Making the app fullscreen and the status bar background transparent. -->
         <item name="android:windowDrawsSystemBarBackgrounds">true</item>
-        <item name="android:statusBarColor">@color/semi_transparent</item>
+        <item name="android:statusBarColor">@color/transparent</item>
     </style>
 
     <!--Floating activity theme -->

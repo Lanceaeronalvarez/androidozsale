@@ -26,8 +26,10 @@ import au.com.dealsdirect.data.auth.AuthHandler;
 import au.com.dealsdirect.ui.base.BaseController;
 import au.com.dealsdirect.ui.controller.address.viewaddress.ViewAddressController;
 import au.com.dealsdirect.ui.controller.checkout.paymentselect.PaymentSelectController;
+import au.com.dealsdirect.ui.controller.contact.viewcontacts.ViewContactsController;
 import au.com.dealsdirect.ui.controller.country.CountryController;
 import au.com.dealsdirect.ui.controller.details.DetailsController;
+import au.com.dealsdirect.ui.controller.invite.InviteSendController;
 import au.com.dealsdirect.ui.controller.language.LanguageController;
 import au.com.dealsdirect.ui.controller.orders.orders.OrdersController;
 import au.com.dealsdirect.ui.controller.returns.currentreturns.CurrentReturnsController;
@@ -208,7 +210,11 @@ public class AccountController extends BaseController implements AccountMvpView,
 
     @Override
     public void showContactUs() {
-
+        if (getResources().getBoolean(R.bool.is_ourpay_app)) {
+            getRouter().pushController(RouterTransaction.with(ViewContactsController.newInstance())
+                    .pushChangeHandler(new HorizontalChangeHandler())
+                    .popChangeHandler(new HorizontalChangeHandler()));
+        }
     }
 
     @Override
@@ -218,7 +224,11 @@ public class AccountController extends BaseController implements AccountMvpView,
 
     @Override
     public void showInviteAFriend() {
-
+        if (getResources().getBoolean(R.bool.is_ourpay_app)) {
+            getRouter().pushController(RouterTransaction.with(InviteSendController.newInstance())
+                    .pushChangeHandler(new HorizontalChangeHandler())
+                    .popChangeHandler(new HorizontalChangeHandler()));
+        }
     }
 
     public void showCountry() {
