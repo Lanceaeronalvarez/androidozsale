@@ -17,6 +17,7 @@ import com.bluelinelabs.conductor.Controller;
 import com.bluelinelabs.conductor.ControllerChangeHandler;
 import com.bluelinelabs.conductor.Router;
 import com.bluelinelabs.conductor.RouterTransaction;
+import com.bluelinelabs.conductor.changehandler.HorizontalChangeHandler;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -33,6 +34,7 @@ import au.com.dealsdirect.ui.controller.checkout.paymentsuccess.PaymentSuccessCo
 import au.com.dealsdirect.ui.controller.contact.viewcontacts.ViewContactsController;
 import au.com.dealsdirect.ui.controller.dashboard.DashboardController;
 import au.com.dealsdirect.ui.controller.invite.InviteSendController;
+import au.com.dealsdirect.ui.controller.saleitems.SaleItemsController;
 import au.com.dealsdirect.ui.controller.shops.ShopsController;
 import au.com.dealsdirect.ui.main.MainActivity;
 import au.com.dealsdirect.ui.sample.SampleController;
@@ -341,6 +343,10 @@ public class HomeController extends BaseController implements HomeMvpView {
             if (controller instanceof ShopsController) {
                 ((MainActivity)getActivity()).getMainController().setViewpagerDraggable(true);
             }
+
+            if(controller instanceof SaleItemsController){
+                mActivity.onBackPressed();
+            }
         }
 
         setVisibleContainer(0);
@@ -348,20 +354,21 @@ public class HomeController extends BaseController implements HomeMvpView {
 
     @Override
     public void showSecondTabController() {
-        setVisibleContainer(1);
+        setVisibleContainer(0);
 
-        if (!mActivity.isAuthorized()) {
-            mActivity.showLoginController(mPaymentScheduleRouter, new AuthHandler() {
-                @Override
-                public void success() {
-                    resetRouters();
-                }
+        Bundle saleItemBundle = new BundleBuilder(new Bundle())
+                .putString("SaleItemsController.KEY_TITLE", "")
+                .putString("SaleItemsController.SEARCH_KEY", "")
+                .putBoolean("SaleItemsController.FROM_SHOP_SEARCH", true)
+                .build();
 
-                @Override
-                public void error() {
-
-                }
-            });
+        Controller controller = getCurrentControllerOnRouter(mShopRouter);
+        if(!(controller instanceof SaleItemsController)) {
+            mShopRouter.pushController(RouterTransaction.with(
+                    new SaleItemsController(saleItemBundle))
+                    .tag(mActivity.getString(R.string.sale_items_controller_tag))
+                    .pushChangeHandler(new HorizontalChangeHandler())
+                    .popChangeHandler(new HorizontalChangeHandler()));
         }
     }
 
