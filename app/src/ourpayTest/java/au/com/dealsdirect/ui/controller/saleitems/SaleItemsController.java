@@ -295,15 +295,15 @@ public class SaleItemsController extends BasePullToRefreshController implements 
     protected void onViewBound(@NonNull View view) {
         super.onViewBound(view);
 
-        if (mFromShopSearch) {
-            if (mSaleItemsToolbarTitle.getText().toString().isEmpty() && mSearchQuery.isEmpty() && !isFiltered) {
-//                activateSearch();
-            }
-        } else {
+//        if (mFromShopSearch) {
+//            if (mSaleItemsToolbarTitle.getText().toString().isEmpty() && mSearchQuery.isEmpty() && !isFiltered) {
+////                activateSearch();
+//            }
+//        } else {
             mSaleItemsBackIcon.setOnClickListener(view12 -> {
                 mActivity.onBackPressed();
             });
-        }
+//        }
 
         setUp(view);
     }
