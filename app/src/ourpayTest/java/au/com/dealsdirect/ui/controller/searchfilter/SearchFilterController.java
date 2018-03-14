@@ -170,7 +170,6 @@ public class SearchFilterController extends BaseController
     @Override
     protected void onViewBound(@NonNull View view) {
         super.onViewBound(view);
-        mActivity.getMainController().hideBottomNav();
         setUp(view);
     }
 
@@ -369,10 +368,6 @@ public class SearchFilterController extends BaseController
     @Override
     protected void onDestroyView(@NonNull View view) {
         mPresenter.onDetach();
-
-        if (mActivity != null) {
-            mActivity.getMainController().showBottomNav();
-        }
         super.onDestroyView(view);
     }
 
