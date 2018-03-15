@@ -59,5 +59,7 @@
     <dimen name="text_padding">10dp</dimen>
     <dimen name="border_thickness">2dp</dimen>
     <dimen name="default_viewholder_item_height">43dp</dimen>
+
+    <dimen name="default_padding">10dp</dimen>
 </resources>
 

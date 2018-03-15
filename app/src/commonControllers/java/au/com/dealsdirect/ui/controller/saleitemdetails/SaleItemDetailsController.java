@@ -105,13 +105,13 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
     TextView mProductPrice;
     @BindView(R.id.productPreviousPrice)
     TextView mProductPreviousPrice;
-    @BindView(R.id.sizes)
-    RelativeLayout mSizesContainer;
-    @BindView(R.id.sizeList)
+    @BindView(R.id.product_details_sizes_container)
+    LinearLayout mSizesContainer;
+    @BindView(R.id.product_details_size_list)
     TagFlowLayout mSizesFlowLayout;
-    @BindView(R.id.shipping_desc_container)
+    @BindView(R.id.product_details_shipping_desc_container)
     LinearLayout mShippingContainer;
-    @BindView(R.id.shipping_desc_text)
+    @BindView(R.id.product_details_shipping_desc_webview)
     WebView mShippingDescText;
     @BindView(R.id.product_description_text)
     WebView mProductDescriptionText;
@@ -119,7 +119,7 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
     WebView mProductAboutPricing;
     @BindView(R.id.product_about)
     WebView mProductAboutText;
-    @BindView(R.id.return_policy_text)
+    @BindView(R.id.product_details_return_policy_text)
     WebView mReturnPolicyText;
     @BindView(R.id.product_details_shared_image)
     ImageView mProductSharedImage;
@@ -127,13 +127,13 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
     RelativeLayout mProductCoordinatorLayout;
     @BindView(R.id.bottom_card)
     LinearLayout mProductDetailBottomCard;
-    @BindView(R.id.name_price_category)
+    @BindView(R.id.product_details_name_price_container)
     LinearLayout mProductPriceCategory;
     @BindView(R.id.about_pricing_container)
     LinearLayout mProductPricing;
     @BindView(R.id.product_about_container)
     LinearLayout mProductAboutContainer;
-    @BindView(R.id.return_policy_container)
+    @BindView(R.id.product_details_return_policy_container)
     LinearLayout mReturnPolicyContainer;
     @BindView(R.id.partial_item_details_ourpay_panel_holder)
     LinearLayout mOurpayHolder;
@@ -488,12 +488,13 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
 
     @Override
     public void showMyPayDetails(GetSaleItemDetailsResponse value, Ourpay ourpay) {
-        if (ourpay != null) {
-            OurpayPanel panel = new OurpayPanel(mActivity);
-            mOurpayHolder.setVisibility(View.VISIBLE);
-            mOurpayHolder.removeAllViews();
-            mOurpayHolder.addView(panel.generatePanel(ourpay));
-        }
+//        temporarily comment out
+//        if (ourpay != null) {
+//            OurpayPanel panel = new OurpayPanel(mActivity);
+//            mOurpayHolder.setVisibility(View.VISIBLE);
+//            mOurpayHolder.removeAllViews();
+//            mOurpayHolder.addView(panel.generatePanel(ourpay));
+//        }
     }
 
     @Override

@@ -85,6 +85,10 @@
 
     <color name="back_arrow_color">#5f5f60</color>
 
+    <!--PRODUCT DETAILS COLORS-->
+    <color name="product_details_name_price_container_bg">#abffffff</color>
+
+
     <!-- Button Theme -->
     <color name="bg_edit_text_focused">@color/colorPrimary</color>
 
