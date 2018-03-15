@@ -40,7 +40,7 @@ import butterknife.BindView;
  * Created by Ayi on 05/06/2017.
  */
 
-public class DashboardController extends BaseController implements DashboardMvpView, Serializable {
+public class DashboardController extends BaseController implements DashboardMvpView {
 
     public static final String TAG = "DashboardController";
 
@@ -116,13 +116,13 @@ public class DashboardController extends BaseController implements DashboardMvpV
             @Override
             public void configureRouter(@NonNull Router router, int position) {
                 if (!router.hasRootController()) {
-                    Controller page = PaymentPlansController.newInstance(DashboardController.this, mPaymentPlans);
+                    Controller page = PaymentPlansController.newInstance(mPaymentPlans);
                     switch (position) {
                         case 1:
-                            page = ScheduledPlansController.newInstance(DashboardController.this, mScheduledPlans);
+                            page = ScheduledPlansController.newInstance(mScheduledPlans);
                             break;
                         case 2:
-                            page = PastPaymentsController.newInstance(DashboardController.this, mPastPayments);
+                            page = PastPaymentsController.newInstance(mPastPayments);
                             break;
                     }
                     router.setRoot(RouterTransaction.with(page));
@@ -202,13 +202,13 @@ public class DashboardController extends BaseController implements DashboardMvpV
                 @Override
                 public void configureRouter(@NonNull Router router, int position) {
                     if (!router.hasRootController()) {
-                        Controller page = PaymentPlansController.newInstance(DashboardController.this, mPaymentPlans);
+                        Controller page = PaymentPlansController.newInstance(mPaymentPlans);
                         switch (position) {
                             case 1:
-                                page = ScheduledPlansController.newInstance(DashboardController.this, mScheduledPlans);
+                                page = ScheduledPlansController.newInstance(mScheduledPlans);
                                 break;
                             case 2:
-                                page = PastPaymentsController.newInstance(DashboardController.this, mPastPayments);
+                                page = PastPaymentsController.newInstance(mPastPayments);
                                 break;
                         }
                         router.setRoot(RouterTransaction.with(page));

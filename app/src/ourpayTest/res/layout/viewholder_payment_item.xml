@@ -7,13 +7,13 @@
     android:orientation="vertical">
 
     <TextView
-        android:id="@+id/row_past_payment_month_header"
+        android:id="@+id/vh_payment_month_header"
         fontPath="@string/font_app_light"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_margin="5dp"
         android:textAllCaps="true"
-        android:textColor="#adadad"
+        android:textColor="@color/payment_month_header_color"
         android:textSize="@dimen/text_size_xxlarge"
         tools:ignore="MissingPrefix"
         tools:text="January 2017" />
@@ -24,14 +24,14 @@
         android:background="@drawable/bg_edit_text_rounded">
 
         <LinearLayout
-            android:id="@+id/row_left_summary"
+            android:id="@+id/viewholder_row_left_summary"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:padding="10dp"
             android:orientation="vertical">
 
             <TextView
-                android:id="@+id/row_past_payment_day"
+                android:id="@+id/viewholder_payment_day"
                 fontPath="@string/font_app_semibold"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -42,32 +42,32 @@
                 tools:text="12" />
 
             <TextView
-                android:id="@+id/row_past_payment_month"
+                android:id="@+id/viewholder_payment_month"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_below="@id/row_past_payment_day"
+                android:layout_below="@id/viewholder_payment_day"
                 android:layout_gravity="center"
                 android:paddingBottom="10dp"
-                android:textColor="#adadad"
+                android:textColor="@color/payment_month_header_color"
                 android:textSize="@dimen/text_size_xlarge"
                 tools:text="Jan" />
         </LinearLayout>
 
         <View
-            android:id="@+id/row_past_payment_divider"
+            android:id="@+id/viewholder_payment_divider"
             android:layout_width="@dimen/divider_height"
             android:layout_height="wrap_content"
-            android:layout_toEndOf="@id/row_left_summary"
+            android:layout_toEndOf="@id/viewholder_row_left_summary"
             android:background="@color/border_gray" />
 
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_toEndOf="@id/row_past_payment_divider"
+            android:layout_toEndOf="@id/viewholder_payment_divider"
             android:padding="10dp">
 
             <TextView
-                android:id="@+id/row_past_payment_title"
+                android:id="@+id/viewholder_payment_title"
                 fontPath="@string/font_app_semibold"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -77,38 +77,38 @@
                 tools:text="mysale" />
 
             <TextView
-                android:id="@+id/row_past_payment_id"
+                android:id="@+id/viewholder_payment_id"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_below="@id/row_past_payment_title"
+                android:layout_below="@id/viewholder_payment_title"
                 android:paddingBottom="5dp"
-                android:textColor="#adadad"
+                android:textColor="@color/payment_month_header_color"
                 android:textSize="@dimen/text_size_large"
                 tools:text="95068491" />
 
             <ImageView
-                android:id="@+id/row_past_payment_card_image"
+                android:id="@+id/viewholder_payment_card_image"
                 android:layout_width="20dp"
                 android:layout_height="wrap_content"
-                android:layout_below="@id/row_past_payment_id"
+                android:layout_below="@id/viewholder_payment_id"
                 android:paddingBottom="5dp"
                 android:src="@drawable/ic_credit_card"
                 android:tint="@color/colorPrimaryDark" />
 
             <TextView
-                android:id="@+id/row_past_payment_card_number"
+                android:id="@+id/viewholder_payment_card_number"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_below="@id/row_past_payment_id"
-                android:layout_toEndOf="@id/row_past_payment_card_image"
+                android:layout_below="@id/viewholder_payment_id"
+                android:layout_toEndOf="@id/viewholder_payment_card_image"
                 android:paddingEnd="5dp"
                 android:paddingStart="5dp"
-                android:textColor="#adadad"
+                android:textColor="@color/payment_month_header_color"
                 android:textSize="@dimen/text_size_xlarge"
                 tools:text="95068491" />
 
             <TextView
-                android:id="@+id/row_past_payment_value"
+                android:id="@+id/viewholder_payment_value"
                 fontPath="@string/font_app_semibold"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"

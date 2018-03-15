@@ -25,45 +25,43 @@ import butterknife.ButterKnife;
 public class PaymentPlansAdapter extends RecyclerView.Adapter<PaymentPlansAdapter.ViewHolder> {
 
     Context mContext;
-    DashboardController mController;
     List<PaymentPlan> mData;
     String lastState;
 
-    public PaymentPlansAdapter(DashboardController controller, List<PaymentPlan> data) {
-        this.mController = controller;
+    public PaymentPlansAdapter(List<PaymentPlan> data) {
         this.mData = data;
     }
 
     static class ViewHolder extends RecyclerView.ViewHolder {
 
-        @BindView(R.id.row_payment_plan_title)
+        @BindView(R.id.viewholder_payment_plan_title)
         TextView title;
 
         @BindView(R.id.row_payment_plan_id)
         TextView id;
 
-        @BindView(R.id.row_payment_plan_value)
+        @BindView(R.id.viewholder_payment_plan_value)
         TextView value;
 
-        @BindView(R.id.row_payment_plan_balance)
+        @BindView(R.id.viewholder_payment_plan_balance)
         TextView balance;
 
-        @BindView(R.id.row_payment_plan_schedule_circle1)
+        @BindView(R.id.viewholder_payment_plan_schedule_circle1)
         ImageView circle1;
 
-        @BindView(R.id.row_payment_plan_schedule_circle2)
+        @BindView(R.id.viewholder_payment_plan_schedule_circle2)
         ImageView circle2;
 
-        @BindView(R.id.row_payment_plan_schedule_circle3)
+        @BindView(R.id.viewholder_payment_plan_schedule_circle3)
         ImageView circle3;
 
-        @BindView(R.id.row_payment_plan_schedule_circle4)
+        @BindView(R.id.viewholder_payment_plan_schedule_circle4)
         ImageView circle4;
 
-        @BindView(R.id.row_payment_plan_schedule_date1)
+        @BindView(R.id.viewholder_payment_plan_schedule_date1)
         TextView date1;
 
-        @BindView(R.id.row_payment_plan_schedule_date2)
+        @BindView(R.id.viewholder_payment_plan_schedule_date2)
         TextView date2;
 
         @BindView(R.id.row_payment_plan_schedule_date3)
@@ -75,13 +73,13 @@ public class PaymentPlansAdapter extends RecyclerView.Adapter<PaymentPlansAdapte
         @BindView(R.id.row_payment_plan_schedule_value1)
         TextView value1;
 
-        @BindView(R.id.row_payment_plan_schedule_value2)
+        @BindView(R.id.viewholder_payment_plan_schedule_value2)
         TextView value2;
 
-        @BindView(R.id.row_payment_plan_schedule_value3)
+        @BindView(R.id.viewholder_payment_plan_schedule_value3)
         TextView value3;
 
-        @BindView(R.id.row_payment_plan_schedule_value4)
+        @BindView(R.id.viewholder_payment_plan_schedule_value4)
         TextView value4;
 
         ViewHolder(View view) {
@@ -94,7 +92,7 @@ public class PaymentPlansAdapter extends RecyclerView.Adapter<PaymentPlansAdapte
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         mContext = parent.getContext();
 
-        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.row_payment_plan, parent, false);
+        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.viewholder_payment_plan, parent, false);
         return new ViewHolder(view);
     }
 

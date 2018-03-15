@@ -31,8 +31,8 @@
 
             <ImageButton
                 android:id="@+id/partial_toolbar_field_title_left_option"
-                android:layout_width="40dp"
-                android:layout_height="40dp"
+                android:layout_width="@dimen/toolbar_widget_size"
+                android:layout_height="@dimen/toolbar_widget_size"
                 android:layout_centerVertical="true"
                 android:scaleType="fitCenter"
                 android:background="@drawable/bg_toolbar_button"

@@ -85,6 +85,13 @@
 
     <color name="back_arrow_color">#5f5f60</color>
 
+
+    <!--OURPAY DASHBOARDS-->
+    <color name="payment_month_header_color">#adadad</color>
+
+    <!--EDIT TEXT-->
+    <color name="edittext_hint_color">#CCFFFFFF</color>
+
     <!--PRODUCT DETAILS COLORS-->
     <color name="product_details_name_price_container_bg">#abffffff</color>
 
