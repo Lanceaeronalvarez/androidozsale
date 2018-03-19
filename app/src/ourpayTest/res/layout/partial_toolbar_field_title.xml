@@ -73,7 +73,7 @@
                         android:inputType="text"
                         android:singleLine="true"
                         android:textColor="@android:color/white"
-                        android:textColorHint="#CCFFFFFF"
+                        android:textColorHint="@color/edittext_hint_color"
                         android:textCursorDrawable="@drawable/bg_field_cursor"
                         android:textSize="@dimen/text_size_xxlarge"
                         android:visibility="visible" />
