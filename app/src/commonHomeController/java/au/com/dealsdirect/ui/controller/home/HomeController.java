@@ -184,7 +184,7 @@ public class HomeController extends BaseController implements HomeMvpView {
         navigationAdapter.setupWithBottomNavigation(mBottomNavigationView);
         mBottomNavigationView.setTitleState(AHBottomNavigation.TitleState.ALWAYS_SHOW);
         mBottomNavigationView.setCurrentItem(0);
-        mBottomNavigationView.setDefaultBackgroundColor(getResources().getColor(R.color.white));
+        mBottomNavigationView.setDefaultBackgroundColor(getResources().getColor(R.color.tab_bar_background));
         mBottomNavigationView.setAccentColor(getResources().getColor(R.color.bottom_nav_accent_color));
         mBottomNavigationView.setInactiveColor(getResources().getColor(R.color.gray_title_text));
         setUp(view);
@@ -267,11 +267,11 @@ public class HomeController extends BaseController implements HomeMvpView {
                         break;
                     case 3:
                         mActivity.setDraggableViewPager(false);
-                        showThirdTabController();
+                        showFourthTabController();
                         break;
                     case 4:
                         mActivity.setDraggableViewPager(false);
-                        showFourthTabController();
+                        showFifthTabController();
                         break;
                 }
             } else {
@@ -519,8 +519,8 @@ public class HomeController extends BaseController implements HomeMvpView {
     }
 
     public void resetRouters() {
-        resetContactsRouter();
         resetInviteRouter();
+        resetContactsRouter();
         resetCheckoutRouter();
     }
 

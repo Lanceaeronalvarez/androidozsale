@@ -151,11 +151,6 @@ public class ControllerModule {
     }
 
     @Provides
-    ShopsMvpPresenter<ShopsMvpView> provideShopPresenter(ShopsPresenter<ShopsMvpView> presenter) {
-        return presenter;
-    }
-
-    @Provides
     MainMvpPresenter<MainMvpView> provideMainPresenter(MainPresenter<MainMvpView> presenter) {
         return presenter;
     }

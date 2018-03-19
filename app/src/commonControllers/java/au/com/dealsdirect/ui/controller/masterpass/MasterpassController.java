@@ -43,7 +43,7 @@ public class MasterpassController extends BaseController implements MasterpassMv
     @BindView(R.id.partial_toolbar_arrow_title)
     TextView mTitleTextView;
 
-    @BindView(R.id.partial_toolbar_filter_view)
+    @BindView(R.id.partial_toolbar_right_view)
     ImageView mFilterButton;
 
     @BindView(R.id.controller_masterpass_web)
@@ -180,7 +180,7 @@ public class MasterpassController extends BaseController implements MasterpassMv
                 .popChangeHandler(new HorizontalChangeHandler()));
     }
 
-    @OnClick(R.id.partial_toolbar_arrow_view)
+    @OnClick(R.id.partial_toolbar_left_view)
     public void onClickBack() {
         mActivity.onBackPressed();
     }

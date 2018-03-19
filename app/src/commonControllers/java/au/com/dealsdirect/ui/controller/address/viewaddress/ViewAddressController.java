@@ -31,7 +31,6 @@ import au.com.dealsdirect.ui.base.BasePullToRefreshController;
 import au.com.dealsdirect.ui.controller.address.addnewaddress.AddNewAddressController;
 import au.com.dealsdirect.ui.custom.CustomAlertDialog;
 import au.com.dealsdirect.ui.custom.RecyclerOnTouchListener;
-import au.com.dealsdirect.ui.main.MainActivity;
 import au.com.dealsdirect.utils.BundleBuilder;
 import butterknife.BindView;
 import butterknife.OnClick;
@@ -54,7 +53,7 @@ public class ViewAddressController extends BasePullToRefreshController implement
 
     @BindView(R.id.partial_toolbar_arrow_title)
     TextView mViewAddressToolarTitle;
-    @BindView(R.id.partial_toolbar_filter_view)
+    @BindView(R.id.partial_toolbar_right_view)
     ImageView mViewAddressRightOption;
     @BindView(R.id.address_office_delivery_subtitle)
     TextView mViewAddressSubHeader;
@@ -245,14 +244,14 @@ public class ViewAddressController extends BasePullToRefreshController implement
         super.onDestroyView(view);
     }
 
-    @OnClick(R.id.partial_toolbar_arrow_view)
+    @OnClick(R.id.partial_toolbar_left_view)
     public void onBackClick() {
         if (mActivity != null){
             mActivity.onBackPressed();
         }
     }
 
-    @OnClick(R.id.partial_toolbar_filter_view)
+    @OnClick(R.id.partial_toolbar_right_view)
     public void showAddNewAddress() {
 //        AddNewAddressFragment fragment = AddNewAddressFragment
 //                .newInstance(mActivity, mGetUserAddressesResponse.d.ScheduledPlan.DecorationInfoList, mCalledFromCart);

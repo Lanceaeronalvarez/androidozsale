@@ -32,6 +32,8 @@ BUILD_SECRET = 'e048a220b52f841eef5e6862bc43a56a5a51841da934f1e0b76a5019c630c661
 
 # You can list more emails here
   test_emails = '"
+  gavin@mysale.com
+  jc@mysale.com,
   ayi@smartwave.ph,
   ericapena@apacsale.com,
   jelinepena@gmail.com,
@@ -44,6 +46,7 @@ BUILD_SECRET = 'e048a220b52f841eef5e6862bc43a56a5a51841da934f1e0b76a5019c630c661
 
 # You can list more emails here
   dev_emails = '"
+  carlo@smartwave.ph,
   PaulDeSilva@mysale.com,
   elainedizon@mysale.com,
   diofelpallega@mysale.com,
@@ -178,4 +181,20 @@ lane :fabric_deploy_tb_test do
 
   #Change apk_name and app_name for other flavors
   sh "fastlane dd_build app_name:'topbuy Test' emails:" + dev_emails + " apk_name:" + 'app-topbuyTest-release.apk' + " build_variant:" + 'topbuyTestRelease' + " app_path:" + app_dir + " app_flavor:" + 'topbuyTest'
+end
+
+lane :fabric_deploy_ourpay_test do
+  Dir.chdir("..")
+  app_dir = Dir.pwd
+
+  #Change apk_name and app_name for other flavors
+  sh "fastlane dd_build app_name:'ourpay Test' emails:" + dev_emails + " apk_name:" + 'app-ourpayTest-release.apk' + " build_variant:" + 'ourpayTestRelease' + " app_path:" + app_dir + " app_flavor:" + 'ourpayTest'
+end
+
+lane :fabric_deploy_ozsale_rc do
+  Dir.chdir("..")
+  app_dir = Dir.pwd
+
+  #Change apk_name and app_name for other flavors
+  sh "fastlane dd_build app_name:'ozsale' emails:" + dev_emails + " apk_name:" + 'app-ozSaleRC-release.apk' + " build_variant:" + 'ozsaleRCRelease' + " app_path:" + app_dir + " app_flavor:" + 'ozsaleRC'
 end

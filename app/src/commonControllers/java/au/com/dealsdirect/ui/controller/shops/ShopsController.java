@@ -335,8 +335,8 @@ public class ShopsController extends BasePullToRefreshController implements Shop
         router.pushController(RouterTransaction.with(
                 new SaleItemsController(saleItemBundle))
                 .tag(mActivity.getString(R.string.sale_items_controller_tag))
-                .pushChangeHandler(new SimpleChangeHandler())
-                .popChangeHandler(new FadeChangeHandler()));
+                .pushChangeHandler(new HorizontalChangeHandler())
+                .popChangeHandler(new HorizontalChangeHandler()));
     }
 
     @Override

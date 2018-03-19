@@ -105,16 +105,16 @@ public class SaleItemsController extends BasePullToRefreshController implements 
     LinearLayout mPlaceholder;
 
     @BindView(R.id.partial_toolbar_field_title_left_option)
-    ImageView mSaleItemsBackIcon;
+    ImageButton mSaleItemsBackIcon;
 
-    @BindView(R.id.partial_toolbar_field_title_right_option)
-    ViewGroup mSearchIcon;
+    @BindView(R.id.partial_toolbar_clear_button)
+    ImageButton mClearSearchButton;
 
     @BindView(R.id.partial_toolbar_search_cancel)
     TextView mCancelText;
 
     @BindView(R.id.partial_toolbar_search_btn)
-    ImageView mSearchBtn;
+    ImageButton mSearchBtn;
 
     @BindView(R.id.controller_search_filter_frame)
     ViewGroup mSearchFilterContainer;
@@ -259,8 +259,9 @@ public class SaleItemsController extends BasePullToRefreshController implements 
         mSaleItemClickCounter = 0;
 
         determineToolbarTitle();
-        if (!mSaleItems.isEmpty() && !mFromShopSearch) {
-            mSearchIcon.setOnClickListener(v -> toggleSearch());
+        if (!mSaleItems.isEmpty()) {
+            mSearchBtn.setOnClickListener(v -> toggleSearch());
+            mCancelText.setOnClickListener(v -> toggleSearch());
         }
 
         super.onAttach(view);
@@ -294,15 +295,15 @@ public class SaleItemsController extends BasePullToRefreshController implements 
     protected void onViewBound(@NonNull View view) {
         super.onViewBound(view);
 
-        if (mFromShopSearch) {
-            if (mSaleItemsToolbarTitle.getText().toString().isEmpty() && mSearchQuery.isEmpty() && !isFiltered) {
-//                activateSearch();
-            }
-        } else {
+//        if (mFromShopSearch) {
+//            if (mSaleItemsToolbarTitle.getText().toString().isEmpty() && mSearchQuery.isEmpty() && !isFiltered) {
+////                activateSearch();
+//            }
+//        } else {
             mSaleItemsBackIcon.setOnClickListener(view12 -> {
                 mActivity.onBackPressed();
             });
-        }
+//        }
 
         setUp(view);
     }
@@ -382,6 +383,10 @@ public class SaleItemsController extends BasePullToRefreshController implements 
         hideKeyboard();
 
         mPresenter.loadSortingFacets();
+
+        mClearSearchButton.setOnClickListener(v -> {
+            mSaleItemsToolbarField.setText("");
+        });
 
         mActivity.getMainController().setViewpagerDraggable(false);
 
@@ -465,10 +470,10 @@ public class SaleItemsController extends BasePullToRefreshController implements 
     @Override
     public void showSaleItems(GetSaleItemsResponse getSaleItemsResponse, boolean forFacetCorrection) {
 
-        if (!mFromShopSearch) {
-            //allow showing filters only when sale items have loaded.
-            mSearchIcon.setOnClickListener(view -> toggleSearch());
-        }
+        //allow showing filters only when sale items have loaded.
+        mSearchBtn.setOnClickListener(view -> toggleSearch());
+        mCancelText.setOnClickListener(v -> toggleSearch());
+
 
         List<GetSaleItemsResponse.Products> items = getSaleItemsResponse.products;
 
@@ -711,7 +716,8 @@ public class SaleItemsController extends BasePullToRefreshController implements 
         mSaleItemsToolbarTitle.setVisibility(View.VISIBLE);
 
         mSaleItemsBackIcon.setOnClickListener(view -> onBackClick());
-        mSearchIcon.setOnClickListener(view12 -> toggleSearch());
+        mSearchBtn.setOnClickListener(view12 -> toggleSearch());
+        mCancelText.setOnClickListener(v -> toggleSearch());
 
         determineToolbarTitle();
         hideKeyboard();
@@ -734,7 +740,7 @@ public class SaleItemsController extends BasePullToRefreshController implements 
 //            mSaleItemsToolbarTitle.setText(mActivity.getResources().getString(R.string.i_am_looking_for));
 //        }
 
-        mSearchIcon.setOnClickListener(view -> {
+        mSearchBtn.setOnClickListener(view -> {
 //            deactivateSearch();
         });
 

@@ -28,7 +28,7 @@ public class ForgotPasswordController extends BaseController implements ForgotPa
     @BindView(R.id.partial_toolbar_arrow_title)
     TextView mForgotPasswordTitle;
 
-    @BindView(R.id.partial_toolbar_filter_view)
+    @BindView(R.id.partial_toolbar_right_view)
     ImageButton mForgotPasswordRightOptionView;
 
     @BindView(R.id.controller_forgot_password_email_edittext)
@@ -73,7 +73,7 @@ public class ForgotPasswordController extends BaseController implements ForgotPa
         // Setup views here
 
         mForgotPasswordRightOptionView.setVisibility(View.INVISIBLE);
-        mForgotPasswordTitle.setText(getResources().getText(R.string.forgot_password));
+        mForgotPasswordTitle.setText(getResources().getText(R.string.forgot_password_title));
     }
 
     @Override
@@ -83,7 +83,7 @@ public class ForgotPasswordController extends BaseController implements ForgotPa
         super.onDestroyView(view);
     }
 
-    @OnClick(R.id.partial_toolbar_arrow_view)
+    @OnClick(R.id.partial_toolbar_left_view)
     void onBackClick(){
         hideKeyboard();
         mActivity.onBackPressed();

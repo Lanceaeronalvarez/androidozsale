@@ -43,7 +43,7 @@ public class ReturnOrdersController extends BaseController
     private ReturnOrderClickListener mReturnOrderClickListener;
 
 
-    @BindView(R.id.partial_toolbar_filter_view)
+    @BindView(R.id.partial_toolbar_right_view)
     ImageView mReturnOrdersControllerToolbarRightOption;
 
     @BindView(R.id.partial_toolbar_arrow_title)
@@ -109,7 +109,7 @@ public class ReturnOrdersController extends BaseController
         super.onDestroyView(view);
     }
 
-    @OnClick(R.id.partial_toolbar_arrow_view)
+    @OnClick(R.id.partial_toolbar_left_view)
     void onBackClick(){
         mActivity.onBackPressed();
     }

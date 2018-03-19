@@ -7,7 +7,7 @@
     android:clickable="true"
     android:focusable="true"
     android:focusableInTouchMode="true"
-    android:background="#FFFFFF"
+    android:background="@color/default_background_color"
     tools:ignore="MissingPrefix">
 
     <include

@@ -23,36 +23,34 @@ import butterknife.ButterKnife;
 public class ScheduledPlansAdapter extends RecyclerView.Adapter<ScheduledPlansAdapter.ViewHolder> {
 
     Context mContext;
-    DashboardController mController;
     List<ScheduledPlan> mData;
     String mLastMonth = "";
 
-    public ScheduledPlansAdapter(DashboardController controller, List<ScheduledPlan> data) {
-        this.mController = controller;
+    public ScheduledPlansAdapter(List<ScheduledPlan> data) {
         this.mData = data;
     }
 
     static class ViewHolder extends RecyclerView.ViewHolder {
 
-        @BindView(R.id.row_scheduled_plan_month_header)
+        @BindView(R.id.vh_payment_month_header)
         TextView header;
 
-        @BindView(R.id.row_scheduled_plan_day)
+        @BindView(R.id.viewholder_payment_day)
         TextView day;
 
-        @BindView(R.id.row_scheduled_plan_month)
+        @BindView(R.id.viewholder_payment_month)
         TextView month;
 
-        @BindView(R.id.row_scheduled_plan_title)
+        @BindView(R.id.viewholder_payment_title)
         TextView title;
 
-        @BindView(R.id.row_scheduled_plan_id)
+        @BindView(R.id.viewholder_payment_id)
         TextView id;
 
-        @BindView(R.id.row_scheduled_plan_card_number)
+        @BindView(R.id.viewholder_payment_card_number)
         TextView card;
 
-        @BindView(R.id.row_scheduled_plan_value)
+        @BindView(R.id.viewholder_payment_value)
         TextView value;
 
         ViewHolder(View view) {
@@ -65,7 +63,7 @@ public class ScheduledPlansAdapter extends RecyclerView.Adapter<ScheduledPlansAd
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         mContext = parent.getContext();
 
-        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.row_scheduled_plan, parent, false);
+        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.viewholder_payment_item, parent, false);
         return new ViewHolder(view);
     }
 

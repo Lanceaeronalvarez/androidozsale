@@ -42,13 +42,10 @@ public class ScheduledPlansController extends BaseController implements Schedule
 
     List<ScheduledPlan> mScheduledPlans;
 
-    DashboardController mParentController;
-
-    public static ScheduledPlansController newInstance(DashboardController parentController, ArrayList<ScheduledPlan> scheduledPlans) {
+    public static ScheduledPlansController newInstance(ArrayList<ScheduledPlan> scheduledPlans) {
 
         return new ScheduledPlansController(
                 new BundleBuilder(new Bundle())
-                        .putSerializable(KEY_CONTROLLER, parentController)
                         .putParcelableArrayList(KEY_PLANS, scheduledPlans)
                         .build());
     }
@@ -78,10 +75,9 @@ public class ScheduledPlansController extends BaseController implements Schedule
 
     @Override
     protected void setUp(View view) {
-        mParentController = (DashboardController) getArgs().getSerializable(KEY_CONTROLLER);
         mScheduledPlans = getArgs().getParcelableArrayList(KEY_PLANS);
 
-        mAdapter = new ScheduledPlansAdapter(mParentController, mScheduledPlans);
+        mAdapter = new ScheduledPlansAdapter(mScheduledPlans);
         mRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity(), LinearLayoutManager.VERTICAL, false));
         mRecyclerView.setAdapter(mAdapter);
     }
