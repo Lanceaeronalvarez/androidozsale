@@ -245,9 +245,6 @@ public class HomeController extends BaseController implements HomeMvpView {
                 }
             }
 
-            if (isAttached())
-                mActivity.setIsFromCategories(false);
-
             if (!wasSelected) {
 
                 Controller checkoutController = getCurrentControllerOnRouter(mCheckoutRouter);

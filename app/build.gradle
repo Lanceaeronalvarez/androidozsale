@@ -235,7 +235,7 @@ android {
         }
 
         ourpayTest {
-            versionCode 3
+            versionCode 4
             versionName "0.9"
             applicationId "au.com.ourpay.test"
 
@@ -278,7 +278,7 @@ android {
             resValue "string", "default_language_id", "EN"
 
             ext.newRelicAppToken = "AAa9d543732ff39dddc60c9cb9ad8c9cf22297904b"
-            resValue "string", "new_relic_app_token",  ext.newRelicAppToken
+            resValue "string", "new_relic_app_token", ext.newRelicAppToken
 
         }
 
@@ -292,6 +292,8 @@ android {
                             'src/commonCategoriesController/java/',
                             'src/commonSaleItemsController/java/',
                             'src/commonSearchFilterController/java/',
+                            'src/commonShopsController/java/',
+                            'src/commonMainController/java/',
                             'src/commonActivity/java/',
                             'src/dealsDirectRC/java/',
                             'src/main/java/']
@@ -303,6 +305,8 @@ android {
                             'src/commonCategoriesController/java/',
                             'src/commonSaleItemsController/java/',
                             'src/commonSearchFilterController/java/',
+                            'src/commonShopsController/java/',
+                            'src/commonMainController/java/',
                             'src/commonActivity/java/',
                             'src/dealsDirectRC/java/',
                             'src/main/java/']
@@ -315,6 +319,8 @@ android {
                             'src/commonCategoriesController/java/',
                             'src/commonSaleItemsController/java/',
                             'src/commonSearchFilterController/java/',
+                            'src/commonShopsController/java/',
+                            'src/commonMainController/java/',
                             'src/commonActivity/java/',
                             'src/ooTest/java/',
                             'src/main/java/']
@@ -327,6 +333,8 @@ android {
                             'src/commonCategoriesController/java/',
                             'src/commonSaleItemsController/java/',
                             'src/commonSearchFilterController/java/',
+                            'src/commonShopsController/java/',
+                            'src/commonMainController/java/',
                             'src/commonActivity/java/',
                             'src/ooTest/java/',
                             'src/main/java/']
@@ -339,6 +347,8 @@ android {
                             'src/commonCategoriesController/java/',
                             'src/commonSaleItemsController/java/',
                             'src/commonSearchFilterController/java/',
+                            'src/commonShopsController/java/',
+                            'src/commonMainController/java/',
                             'src/commonActivity/java/',
                             'src/buyinviteTest/java/',
                             'src/main/java/']
@@ -350,6 +360,8 @@ android {
                             'src/commonCategoriesController/java/',
                             'src/commonSaleItemsController/java/',
                             'src/commonSearchFilterController/java/',
+                            'src/commonShopsController/java/',
+                            'src/commonMainController/java/',
                             'src/commonActivity/java/',
                             'src/buyinviteTest/java/',
                             'src/main/java']
@@ -377,6 +389,8 @@ android {
                             'src/commonActivity/java/',
                             'src/commonHomeController/java/',
                             'src/commonCategoriesController/java/',
+                            'src/commonShopsController/java/',
+                            'src/commonMainController/java/',
                             'src/ozsaleRC/java',
                             'src/main/java/']
         }

@@ -2,14 +2,18 @@ package au.com.dealsdirect.ui.controller.shops;
 
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.design.widget.NavigationView;
+import android.support.v4.widget.DrawerLayout;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.AccelerateInterpolator;
 import android.view.animation.Animation;
 import android.view.animation.TranslateAnimation;
+import android.widget.FrameLayout;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -34,6 +38,7 @@ import au.com.dealsdirect.data.network.model.banner.GetBannerRequest;
 import au.com.dealsdirect.data.network.model.banner.GetBannerResponse;
 import au.com.dealsdirect.data.network.model.category.GetCategoryTreeResponse;
 import au.com.dealsdirect.ui.base.BasePullToRefreshController;
+import au.com.dealsdirect.ui.controller.categories.CategoriesController;
 import au.com.dealsdirect.ui.controller.saleitems.SaleItemsController;
 import au.com.dealsdirect.ui.controller.shops.adapter.BannersAdapter;
 import au.com.dealsdirect.ui.controller.shops.listener.BannerClickListener;
@@ -68,7 +73,7 @@ public class ShopsController extends BasePullToRefreshController implements Shop
     @Inject
     ShopsMvpPresenter<ShopsMvpView> mPresenter;
 
-    @BindView(R.id.controller_shop_banner_recycler)
+    @BindView(R.id.shop_banner_recycler_view)
     RecyclerView shopsControllerBannerRecyclerView;
 
     @BindView(R.id.partial_toolbar_search_icon)
@@ -82,6 +87,18 @@ public class ShopsController extends BasePullToRefreshController implements Shop
 
     @BindView(R.id.partial_toolbar_logo_title_view)
     TextView mShopsControllerToolbarTextView;
+
+    @BindView(R.id.shop_drawer_layout)
+    DrawerLayout mDrawerLayout;
+
+    @BindView(R.id.shop_navigation_view)
+    FrameLayout mNavigationView;
+
+    @BindView(R.id.categories_frame)
+    ViewGroup mCategoriesContainer;
+
+
+    private Router mCategoriesRouter;
 
     private BannersAdapter mBannersAdapter;
     private Paginate.Callbacks mPaginateCallbacks;
@@ -107,15 +124,10 @@ public class ShopsController extends BasePullToRefreshController implements Shop
 
     private int mBannerClickCounter = 0;
     private boolean isRefreshShop = false;
+    private boolean mIsDrawerOpened;
 
-    @Override
-    protected void onAttach(@NonNull View view) {
-        mPresenter.onAttach(this);
-        assert (mActivity) != null;
-
-        mBannerClickCounter = 0;
-        mActivity.setShopController(this);
-        super.onAttach(view);
+    public boolean isIsDrawerOpened() {
+        return mIsDrawerOpened;
     }
 
     public static ShopsController newInstance() {
@@ -137,11 +149,8 @@ public class ShopsController extends BasePullToRefreshController implements Shop
 
     @Override
     protected View inflateView(@NonNull LayoutInflater inflater, @NonNull ViewGroup container) {
-        View view = super.inflateView(inflater, container);
-
-        fillToolbar(inflater.inflate(R.layout.partial_toolbar_logo, container, false));
-        fillContent(inflater.inflate(R.layout.controller_shop, container, false));
-
+        View view = inflater.inflate(R.layout.controller_shop, container, false);
+        bindPtrViews(view);
         getControllerComponent().inject(this);
         mPresenter.onAttach(this);
 
@@ -152,6 +161,16 @@ public class ShopsController extends BasePullToRefreshController implements Shop
     protected void onViewBound(@NonNull View view) {
         super.onViewBound(view);
         setUp(view);
+    }
+
+    @Override
+    protected void onAttach(@NonNull View view) {
+        mPresenter.onAttach(this);
+        assert (mActivity) != null;
+
+        mBannerClickCounter = 0;
+        mActivity.setShopController(this);
+        super.onAttach(view);
     }
 
     @Override
@@ -170,6 +189,7 @@ public class ShopsController extends BasePullToRefreshController implements Shop
     protected void setUp(View view) {
 
         assert (mActivity) != null;
+        setupDrawer();
         mActivity.getMainController().showBottomNav();
         mActivity.setDraggableViewPager(true);
         hideKeyboard();
@@ -229,6 +249,29 @@ public class ShopsController extends BasePullToRefreshController implements Shop
 
     }
 
+
+    private void setupDrawer() {
+
+        mCategoriesRouter = getChildRouter(mCategoriesContainer);
+        mCategoriesRouter.setRoot(RouterTransaction.with(CategoriesController.newInstance())
+                .pushChangeHandler(new FadeChangeHandler(100))
+                .popChangeHandler(new FadeChangeHandler(100)));
+
+        mShopsControllerHamburgerView.setOnClickListener(v -> {
+            openDrawer();
+        });
+    }
+
+    public void openDrawer(){
+        mDrawerLayout.openDrawer(Gravity.START);
+        mIsDrawerOpened = true;
+    }
+
+    public void closeDrawer(){
+        mDrawerLayout.closeDrawers();
+        mIsDrawerOpened = false;
+    }
+
     @Override
     public void refresh() {
         loadingInProgress = true;
@@ -237,7 +280,7 @@ public class ShopsController extends BasePullToRefreshController implements Shop
 
     @Override
     public void unBindPaginate() {
-        if(mPaginateManager != null) {
+        if (mPaginateManager != null) {
             mPaginateManager.unbind();
         }
     }
@@ -277,10 +320,10 @@ public class ShopsController extends BasePullToRefreshController implements Shop
                         mActivity.callGCMRegisterSubscriber();
 
                         mActivity.getHomeRouter().pushController(RouterTransaction.with(
-                                        new SaleItemsController(args))
-                                        .tag(mActivity.getString(R.string.sale_items_controller_tag))
-                                        .pushChangeHandler(new HorizontalChangeHandler())
-                                        .popChangeHandler(new HorizontalChangeHandler()));
+                                new SaleItemsController(args))
+                                .tag(mActivity.getString(R.string.sale_items_controller_tag))
+                                .pushChangeHandler(new HorizontalChangeHandler())
+                                .popChangeHandler(new HorizontalChangeHandler()));
                     }
 
                     @Override
@@ -308,12 +351,12 @@ public class ShopsController extends BasePullToRefreshController implements Shop
         }
     }
 
-    @OnClick(R.id.partial_toolbar_hamburger)
-    void onClickHamburger() {
-
-        assert (mActivity) != null;
-        mActivity.setRootViewpagerItem(0);
-    }
+//    @OnClick(R.id.partial_toolbar_hamburger)
+//    void onClickHamburger() {
+//
+//        assert (mActivity) != null;
+//        mActivity.setRootViewpagerItem(0);
+//    }
 
     @OnClick(R.id.partial_toolbar_logo)
     void onClickLogo() {
@@ -347,7 +390,7 @@ public class ShopsController extends BasePullToRefreshController implements Shop
 
         if (page == 0 || isRefreshShop) {
             mBannersAdapter.replace(getBannerResponses);
-            if(mPaginateManager != null){
+            if (mPaginateManager != null) {
                 mPaginateManager.unbind();
             }
             mPaginateManager = PaginateUtils.init(shopsControllerBannerRecyclerView, mPaginateCallbacks);
@@ -447,38 +490,6 @@ public class ShopsController extends BasePullToRefreshController implements Shop
         return mCategoryMap.get("shop");
     }
 
-    public void goToItemsFromCategories(Bundle bundle) {
-        //noinspection ConstantConditions
-        getRouter().pushController(RouterTransaction.with(
-                new SaleItemsController(bundle))
-                .tag(getResources().getString(R.string.sale_items_controller_tag))
-                .pushChangeHandler(new HorizontalChangeHandler())
-                .popChangeHandler(new HorizontalChangeHandler()));
-    }
-
-    public void goToSalesFromCategories(GetCategoryTreeResponse getCategoryTreeResponse) {
-        mPresenter.onAttach(this);
-        if (shopsControllerBannerRecyclerView != null) {
-            shopsControllerBannerRecyclerView.setVisibility(View.GONE);
-        }
-
-        if (getCategoryTreeResponse.getKey() != null) {
-
-            mPresenter.loadShopsBanner(createBannerRequest(getCategoryTreeResponse.getKey(), getCategoryTreeResponse.getId(), 0, 0));
-            if (mShopsControllerToolbarLogo != null) {
-                mShopsControllerToolbarLogo.setVisibility(View.GONE);
-            }
-            mShopsControllerToolbarTextView.setVisibility(View.VISIBLE);
-            mShopsControllerToolbarTextView.setText(getCategoryParentKey(getCategoryTreeResponse.getKey()));
-            mShopsControllerHamburgerView.setImageDrawable(mActivity.getDrawable(R.drawable.ic_pink_chevron));
-            shopsControllerSearchView.setVisibility(View.INVISIBLE);
-            mActivity.setIsFromCategories(true);
-        } else {
-            assert (mActivity) != null;
-            mActivity.setIsFromCategories(false);
-            loadShopBanners();
-        }
-    }
 //
 //    @SuppressWarnings({"deprecation", "ConstantConditions"})
 //    public void showSearchToolbar() {
@@ -546,33 +557,6 @@ public class ShopsController extends BasePullToRefreshController implements Shop
         return saleCategoryKey + " • All";
     }
 
-    public void loadShopBanners() {
-        if(isAttached()) {
-            mShopsControllerToolbarLogo.setVisibility(View.VISIBLE);
-            mShopsControllerToolbarTextView.setVisibility(View.GONE);
-            mShopsControllerHamburgerView.setImageDrawable(mActivity.getDrawable(R.drawable.ic_action_menu));
-            shopsControllerSearchView.setVisibility(View.VISIBLE);
-        }
-        GetCategoryTreeResponse shopCategory = new GetCategoryTreeResponse();
-        mPresenter.loadShopsBanner(createBannerRequest(shopCategory.getKey(), shopCategory.getId(), 0, 0));
-    }
-
-    public void goToSaleItemsFromCategorySearch() {
-
-        Bundle saleItemBundle = new BundleBuilder(new Bundle())
-                .putString("SaleItemsController.KEY_TITLE", "")
-                .putString("SaleItemsController.SEARCH_KEY", "")
-                .putBoolean("SaleItemsController.FROM_CATEGORY_SEARCH", true)
-                .build();
-
-        getRouter().pushController(RouterTransaction.with(
-                new SaleItemsController(saleItemBundle))
-                .tag(getResources().getString(R.string.sale_items_controller_tag))
-                .pushChangeHandler(new SimpleChangeHandler())
-                .popChangeHandler(new FadeChangeHandler()));
-
-    }
-
     @Override
     public void onRefreshStart() {
         super.onRefreshStart();
@@ -583,7 +567,7 @@ public class ShopsController extends BasePullToRefreshController implements Shop
     }
 
     private GetBannerRequest createBannerRequest(String categoryName, String categoryId, int bannerOffset, int bannerLimit) {
-       GetBannerRequest getBannerRequest = new GetBannerRequest();
+        GetBannerRequest getBannerRequest = new GetBannerRequest();
         getBannerRequest.setOffset(String.valueOf(bannerOffset));
         getBannerRequest.setLimit(String.valueOf(bannerLimit));
 
@@ -595,4 +579,5 @@ public class ShopsController extends BasePullToRefreshController implements Shop
 
         return getBannerRequest;
     }
+
 }
