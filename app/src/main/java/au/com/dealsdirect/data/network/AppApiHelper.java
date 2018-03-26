@@ -559,9 +559,14 @@ public class AppApiHelper implements ApiHelper {
 
     @Override
     public Observable<JSONObject> callRegisterSubscriber(HashMap<String, Object> param) {
+        /*
+            3/23/2018 - feature/android-3308-registersubscriber
+            added - doNotCacheResponse() to fresh call register subscriber
+         */
         return Rx2AndroidNetworking.get(ApiEndPoint.GCM_REGISTER_SUBSCRIBER)
                 .addHeaders(mApiHeader.get())
                 .addQueryParameter(param)
+                .doNotCacheResponse()
                 .build()
                 .getJSONObjectObservable();
     }
