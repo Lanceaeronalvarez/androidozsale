@@ -37,12 +37,7 @@ import com.braintreepayments.api.interfaces.BraintreeResponseListener;
 import com.braintreepayments.api.models.CardBuilder;
 import com.braintreepayments.api.models.PaymentMethodNonce;
 import com.braintreepayments.cardform.view.CardForm;
-import com.crashlytics.android.Crashlytics;
-import com.crashlytics.android.answers.Answers;
-import com.facebook.FacebookSdk;
-import com.facebook.LoggingBehavior;
 import com.mysale.genie.utility.RxBus;
-import com.newrelic.agent.android.NewRelic;
 
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
@@ -79,7 +74,6 @@ import au.com.dealsdirect.utils.IntrospectionUtils;
 import au.com.dealsdirect.utils.module.GateKeeper;
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import io.fabric.sdk.android.Fabric;
 
 public class MainActivity extends BaseActivity implements MainMvpView {
 
