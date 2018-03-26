@@ -10,6 +10,7 @@ import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.os.AsyncTask;
 import android.provider.Settings;
+import android.support.v4.app.NotificationManagerCompat;
 
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GoogleApiAvailability;
@@ -104,14 +105,13 @@ public class GNotification {
                 .subscribe(new Consumer<JSONObject>() {
                     @Override
                     public void accept(@NonNull JSONObject jsonObject) throws Exception {
-
-                        AppLogger.d(TAG +  jsonObject.toString(2));
+                        AppLogger.d(TAG + jsonObject.toString(2));
 
                     }
                 }, new Consumer<Throwable>() {
                     @Override
                     public void accept(@NonNull Throwable throwable) throws Exception {
-                        AppLogger.d(TAG +  throwable.toString());
+                        AppLogger.d(TAG + throwable.toString());
                     }
                 }));
 
@@ -130,12 +130,12 @@ public class GNotification {
                 .subscribe(new Consumer<NotificationEvent.ResponseValue>() {
                     @Override
                     public void accept(@NonNull NotificationEvent.ResponseValue responseValue) throws Exception {
-                        AppLogger.d(TAG +  "Notification Event Called");
+                        AppLogger.d(TAG + "Notification Event Called");
                     }
                 }, new Consumer<Throwable>() {
                     @Override
                     public void accept(@NonNull Throwable throwable) throws Exception {
-                        AppLogger.d(TAG +  "Notification Event Error");
+                        AppLogger.d(TAG + "Notification Event Error");
                     }
                 })
         );
@@ -165,7 +165,7 @@ public class GNotification {
         int registeredVersion = mDataManager.getGCMAppVersion();
         int currentVersion = getAppVersion(context);
         if (registeredVersion != currentVersion) {
-            AppLogger.d(TAG +  "App version changed.");
+            AppLogger.d(TAG + "App version changed.");
             return "";
         }
         return registrationId;
@@ -191,15 +191,19 @@ public class GNotification {
 
     public void registerDeviceForNotification(Context context) {
         if (checkPlayServices(context)) {
+
             AppLogger.d(TAG + "checkPlayServices true");
             String regId = getRegistrationId(context.getApplicationContext());
             AppLogger.d(TAG + "regId " + regId);
             if (regId.isEmpty()) {
+
                 new RegisterInBackground().execute(context);
             } else {
-                callRegisterSubscriber(context, regId, false);
+
+                callRegisterSubscriber(context, regId, isNotificationEnabled(context));
             }
         } else {
+
             AppLogger.d(TAG + "No valid Google Play Services APK found.");
         }
     }
@@ -282,5 +286,22 @@ public class GNotification {
 
     public void detach() {
         mCompositeDisposable.dispose();
+    }
+
+    /**
+     * 3/20/18 feature/andr-3308-registersubscriber
+     * method isNotificationEnabled(Context context)
+     *
+     * @return boolean
+     */
+    private boolean isNotificationEnabled(Context context) {
+
+        if (NotificationManagerCompat.from(context).areNotificationsEnabled()) {
+            // If app notifications is enabled through phone settings
+
+            return true;
+        }
+
+        return false;
     }
 }
