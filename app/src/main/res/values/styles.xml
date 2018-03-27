@@ -63,7 +63,8 @@
         <item name="android:textSize">@dimen/text_size_large</item>
         <item name="android:height">@dimen/edit_text_height</item>
         <item name="android:textColor">@color/gray_active_field_text</item>
-        <item name="android:padding">15dp</item>
+        <item name="android:paddingLeft">15dp</item>
+        <item name="android:paddingRight">15dp</item>
         <item name="android:background">@drawable/bg_edit_text_rounded</item>
         <item name="android:textColorHint">@color/gray_inactive_field_text</item>
     </style>
@@ -93,6 +94,44 @@
         <item name="tabIndicatorColor">@color/colorAccent</item>
         <item name="tabBackground">?android:attr/selectableItemBackground</item>
         <item name="tabSelectedTextColor">?android:textColorPrimary</item>
+    </style>
+
+    <!-- Search bar visibility -->
+    <bool name="shop_searchbar_visibility">true</bool>
+
+    <!-- Tool bar visibility -->
+    <bool name="shop_toolbar_visibility">true</bool>
+    <bool name="saleItems_toolbar_visibility">true</bool>
+    <bool name="sample_toolbar_visibility">true</bool>
+    <bool name="contacts_toolbar_visibility">true</bool>
+    <bool name="address_toolbar_visibility">true</bool>
+    <bool name="details_toolbar_visibility">true</bool>
+    <bool name="languages_toolbar_visibility">true</bool>
+    <bool name="countries_toolbar_visibility">true</bool>
+    <bool name="orders_toolbar_visibility">true</bool>
+    <bool name="vouchers_toolbar_visibility">true</bool>
+    <bool name="returns_toolbar_visibility">true</bool>
+    <bool name="payselect_toolbar_visibility">true</bool>
+    <bool name="invite_toolbar_visibility">true</bool>
+    <bool name="legalities_toolbar_visibility">true</bool>
+    <bool name="login_toolbar_visibility">false</bool>
+
+
+    <!-- Tool bar accessory visibility -->
+    <bool name="contacts_toolbar_addmessage_visibility">true</bool>
+
+    <style name="RecyclerViewPagerVouchersStyle" >
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">match_parent</item>
+        <item name="android:paddingLeft">@dimen/voucher_padding</item>
+        <item name="android:paddingRight">@dimen/voucher_padding</item>
+        <item name="android:clipToPadding">false</item>
+        <item name="android:visibility">gone</item>
+    </style>
+
+
+    <style name="DDEditTextStyleNoBorder" parent="DDEditTextStyle">
+        <item name="android:background">@drawable/bg_edit_text_plain</item>
     </style>
 
 </resources>

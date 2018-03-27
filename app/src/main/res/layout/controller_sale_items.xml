@@ -17,7 +17,7 @@
             android:gravity="left"
             android:padding="10dp"
             android:text="@string/popular_products"
-            android:textColor="#446E87"
+            android:textColor="@color/sale_items_highlight"
             android:visibility="gone" />
 
         <android.support.v7.widget.RecyclerView
@@ -25,7 +25,7 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_below="@id/controller_search_popular_subheader"
-            android:background="@color/transparent"
+            android:background="#FFFFFF"
             android:paddingLeft="5dp"
             android:paddingRight="5dp" />
 
@@ -41,7 +41,7 @@
             android:id="@+id/controller_sale_items_placeholder"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:background="#FFFFFF"
+            android:background="@color/white"
             android:gravity="center"
             android:orientation="vertical"
             android:visibility="gone">
@@ -50,25 +50,24 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:fontFamily="@string/font_app_bold"
-                android:text="Sorry, today we can't find anything by your request."
+                android:text="@string/sorry_today_we_can_t_find_anything_by_your_request"
                 android:gravity="center"
-                android:textColor="#3e3e3e"
+                android:textColor="@color/cart_order_price_text_color"
                 android:textSize="@dimen/text_size_large" />
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
-                android:layout_margin="5dp"
+                android:layout_margin="@dimen/dimen_extra_small"
                 android:fontFamily="@string/font_app_bold"
                 android:gravity="center"
-                android:text="Meanwhile, why not search for something else?"
+                android:text="@string/meanwhile_why_not_search_for_something_else"
                 android:textColor="@color/gray_description_text"
                 android:textSize="@dimen/text_size_large" />
 
         </LinearLayout>
 
     </RelativeLayout>
-
 
 </LinearLayout>

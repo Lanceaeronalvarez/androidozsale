@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/my_contact_us_recycler_row_item_layout"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@drawable/bg_account_item"
+    android:clickable="true"
+    android:orientation="vertical">
+
+    <RelativeLayout
+        android:id="@+id/my_contact_us_row_layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="@dimen/screen_padding">
+
+        <TextView
+            android:id="@+id/my_contact_us_row_title_text_view"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Other"
+            android:singleLine="true"
+            android:textColor="@color/dark_text"
+            android:textSize="@dimen/text_size_xxlarge"
+            android:layout_toLeftOf="@id/my_contact_us_row_item_time_stamp_text_view"
+            android:layout_alignParentLeft="true"/>
+
+        <TextView
+            android:id="@+id/my_contact_us_row_description_text_view"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/my_contact_us_row_title_text_view"
+            android:lines="2"
+            android:text="hi my order has not yet arrived "
+            android:textColor="@color/gray_title_text"
+            android:textSize="@dimen/text_size_xlarge" />
+
+        <ImageView
+            android:id="@+id/my_contact_us_row_chevron_button"
+            android:layout_width="@dimen/chevron_size_small"
+            android:layout_height="@dimen/chevron_size_small"
+            android:background="@color/white"
+            android:src="@drawable/ic_gray_chevron"
+            android:layout_alignParentEnd="true"/>
+
+        <TextView
+            android:id="@+id/my_contact_us_row_item_time_stamp_text_view"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="06:57pm"
+            android:textColor="@color/gray_title_text"
+            android:textSize="@dimen/text_size_large"
+            android:layout_toLeftOf="@id/my_contact_us_row_chevron_button"/>
+
+    </RelativeLayout>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/border_extra_thin"
+        android:background="@color/border_gray" />
+
+</LinearLayout>

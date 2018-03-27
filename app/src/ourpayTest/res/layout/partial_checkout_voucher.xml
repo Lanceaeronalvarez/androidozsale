@@ -46,6 +46,19 @@
                     android:layout_gravity="center_vertical"
                     android:visibility="visible">
 
+                    <EditText
+                        android:id="@+id/partial_checkout_voucher_edittext"
+                        style="@style/DDEditTextStyleNoBorder"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:hint="@string/enter_promo_code"
+                        android:maxLines="1"
+                        android:inputType="text"
+                        android:textColor="@color/row_checkout_text_light_color"
+                        android:textColorHint="@color/row_checkout_text_light_color"
+                        android:imeOptions="actionDone"
+                        android:visibility="gone"/>
+
                     <TextView
                         fontPath="@string/font_app_semibold"
                         android:layout_width="match_parent"

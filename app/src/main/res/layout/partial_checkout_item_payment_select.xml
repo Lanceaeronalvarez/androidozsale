@@ -9,41 +9,36 @@
 
     <ImageView
         android:id="@+id/partial_checkout_payment_image"
-        android:layout_width="30dp"
-        android:layout_height="30dp"
-        android:layout_marginLeft="16dp"
-        android:layout_marginTop="18dp"
-        android:paddingBottom="5dp"
-        android:paddingLeft="5dp"
-        android:paddingRight="5dp"
+        android:layout_width="@dimen/dimen_extra_large"
+        android:layout_height="@dimen/dimen_extra_large"
+        android:layout_marginLeft="@dimen/default_padding"
+        android:paddingLeft="@dimen/dimen_extra_small"
+        android:paddingRight="@dimen/dimen_extra_small"
         android:src="@drawable/ic_my_vouchers" />
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="16dp"
-        android:layout_marginLeft="10dp"
-        android:layout_marginTop="16dp"
-        android:orientation="vertical"
-        android:paddingTop="2dp">
+        android:layout_marginLeft="@dimen/dimen_small"
+        android:orientation="vertical">
 
         <TextView
             android:id="@+id/partial_checkout_payment_name"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginRight="16dp"
+            android:layout_marginRight="@dimen/default_padding"
             android:textColor="@color/gray_title_text"
             android:textSize="@dimen/text_size_xxlarge"
-            tools:text="Master Card" />
+            tools:text="@string/row_checkout_name_hint" />
 
         <TextView
             android:id="@+id/partial_checkout_payment_details"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="10dp"
-            android:layout_marginRight="16dp"
+            android:layout_marginBottom="@dimen/dimen_small"
+            android:layout_marginRight="@dimen/default_padding"
             android:textColor="@color/gray_field_text"
-            tools:text="card ending in 02/16" />
+            tools:text="@string/row_checkout_desc_hint" />
 
         <TextView
             android:id="@+id/partial_checkout_payment_remove"

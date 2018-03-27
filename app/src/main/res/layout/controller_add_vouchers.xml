@@ -31,7 +31,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
-                android:padding="@dimen/screen_padding">
+                android:padding="@dimen/default_padding">
 
                 <TextView
                     android:id="@+id/controller_text_voucher_code_title"

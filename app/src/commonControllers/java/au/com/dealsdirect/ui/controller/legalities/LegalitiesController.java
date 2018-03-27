@@ -60,9 +60,9 @@ public class LegalitiesController extends BasePullToRefreshController implements
 
     @Override
     protected View inflateView(@NonNull LayoutInflater inflater, @NonNull ViewGroup container) {
-        View view = super.inflateView(inflater, container);
+        View view = super.inflateView(inflater, container, ToolBarType.ARROW);
 
-        fillToolbar(inflater.inflate(R.layout.partial_toolbar_arrow, container, false));
+        setToolBarVisible(getResource().getBoolean(R.bool.legalities_toolbar_visibility));
         fillContent(inflater.inflate(R.layout.controller_legalities, container, false));
 
         getControllerComponent().inject(this);

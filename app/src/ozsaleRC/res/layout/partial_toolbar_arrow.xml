@@ -2,6 +2,7 @@
 <android.support.v7.widget.Toolbar xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/partial_toolbar_arrow_layout"
     android:layout_width="match_parent"
     android:layout_height="?attr/actionBarSize"
     android:background="@color/toolbar_skin"
@@ -20,16 +21,14 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-
         <ImageButton
-            android:id="@+id/partial_toolbar_arrow_view"
-            android:layout_width="40dp"
-            android:layout_height="40dp"
+            android:id="@+id/partial_toolbar_left_view"
+            android:layout_width="@dimen/partial_toolbar_button_size"
+            android:layout_height="@dimen/partial_toolbar_button_size"
             android:layout_alignParentLeft="true"
             android:layout_alignParentStart="true"
             android:layout_centerVertical="true"
             android:background="@drawable/bg_toolbar_button"
-            android:paddingRight="2dp"
             android:src="@drawable/ic_gray_chevron_left"/>
 
         <TextView
@@ -47,15 +46,16 @@
             tools:text="Title" />
 
 
+
         <ImageButton
-            android:id="@+id/partial_toolbar_filter_view"
-            android:layout_width="40dp"
-            android:layout_height="40dp"
+            android:id="@+id/partial_toolbar_right_view"
+            android:layout_width="@dimen/partial_toolbar_button_size"
+            android:layout_height="@dimen/partial_toolbar_button_size"
             android:layout_alignParentEnd="true"
             android:layout_centerVertical="true"
             android:background="@drawable/bg_toolbar_button"
             android:scaleType="fitCenter"
-            android:padding="10dp"
+            android:padding="@dimen/dimen_small"
             android:src="@drawable/ic_account_logout" />
 
         <View

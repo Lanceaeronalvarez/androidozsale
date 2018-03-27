@@ -247,9 +247,10 @@ public class SaleItemsController extends BasePullToRefreshController implements 
 
     @Override
     protected View inflateView(@NonNull LayoutInflater inflater, @NonNull ViewGroup container) {
-        View view = super.inflateView(inflater, container);
 
-        fillToolbar(inflater.inflate(R.layout.partial_toolbar_field_title, container, false));
+        View view = super.inflateView(inflater, container, ToolBarType.TITLE);
+
+        setToolBarVisible(getResource().getBoolean(R.bool.saleItems_toolbar_visibility));
         fillContent(inflater.inflate(R.layout.controller_sale_items, container, false));
 
         getControllerComponent().inject(this);

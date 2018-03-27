@@ -184,7 +184,7 @@
                                     <!--</LinearLayout>-->
                                     <!--</FrameLayout>-->
                                     <LinearLayout
-                                        android:id="@+id/name_price_category"
+                                        android:id="@+id/product_details_name_price_container"
                                         android:layout_width="match_parent"
                                         android:layout_height="wrap_content"
                                         android:layout_alignBottom="@id/image_container"
@@ -285,7 +285,7 @@
                                     android:visibility="visible">
 
                                     <RelativeLayout
-                                        android:id="@+id/sizes"
+                                        android:id="@+id/product_details_sizes_container"
                                         android:layout_width="match_parent"
                                         android:layout_height="wrap_content"
                                         android:layout_marginTop="10dp"
@@ -327,7 +327,7 @@
                                         </RelativeLayout>
 
                                         <com.zhy.view.flowlayout.TagFlowLayout
-                                            android:id="@+id/sizeList"
+                                            android:id="@+id/product_details_size_list"
                                             android:layout_width="match_parent"
                                             android:layout_height="wrap_content"
                                             android:layout_below="@+id/sizeLabel"
@@ -337,17 +337,22 @@
                                             android:paddingRight="10dp"
                                             app:max_select="1" />
 
-                                        <ImageView
-                                            android:layout_width="match_parent"
-                                            android:layout_height="1px"
-                                            android:layout_alignParentBottom="true"
-                                            android:layout_gravity="center"
-                                            android:background="#23000000" />
-
                                     </RelativeLayout>
 
+                                    <Button
+                                        android:id="@+id/product_details_add_to_basket"
+                                        style="@style/DDButtonAddCart"
+                                        fontPath="@string/font_app_medium"
+                                        android:layout_width="match_parent"
+                                        android:layout_gravity="bottom"
+                                        android:layout_marginBottom="@dimen/dimen_small"
+                                        android:layout_marginLeft="@dimen/dimen_extra_small"
+                                        android:layout_marginRight="@dimen/dimen_extra_small"
+                                        android:enabled="false"
+                                        android:text="@string/add_to_cart" />
+
                                     <LinearLayout
-                                        android:id="@+id/shipping_desc_container"
+                                        android:id="@+id/product_details_shipping_desc_container"
                                         android:layout_width="match_parent"
                                         android:layout_height="match_parent"
                                         android:orientation="vertical"
@@ -363,7 +368,7 @@
                                             android:textSize="@dimen/text_size_large" />
 
                                         <WebView
-                                            android:id="@+id/shipping_desc_text"
+                                            android:id="@+id/product_details_shipping_desc_webview"
                                             android:layout_width="match_parent"
                                             android:layout_height="wrap_content" />
 
@@ -376,7 +381,7 @@
                                     </LinearLayout>
 
                                     <LinearLayout
-                                        android:id="@+id/return_policy_container"
+                                        android:id="@+id/product_details_return_policy_container"
                                         android:layout_width="match_parent"
                                         android:layout_height="match_parent"
                                         android:orientation="vertical"
@@ -392,7 +397,7 @@
                                             android:textSize="@dimen/text_size_large" />
 
                                         <WebView
-                                            android:id="@+id/return_policy_text"
+                                            android:id="@+id/product_details_return_policy_text"
                                             android:layout_width="match_parent"
                                             android:layout_height="wrap_content"
                                             android:layout_marginTop="5dp"
@@ -674,20 +679,9 @@
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/default_button_height"
                 android:background="#a0ffffff"
-                android:layout_gravity="bottom" />
-
-            <Button
-                android:id="@+id/product_details_add_to_basket"
-                style="@style/DDButtonAddCart"
-                fontPath="@string/font_app_medium"
-                android:layout_width="match_parent"
                 android:layout_gravity="bottom"
-                android:layout_marginTop="10dp"
-                android:layout_marginBottom="10dp"
-                android:layout_marginLeft="5dp"
-                android:layout_marginRight="5dp"
-                android:enabled="false"
-                android:text="@string/add_to_cart" />
+                android:visibility="gone"/>
+
 
         </android.support.design.widget.CoordinatorLayout>
 

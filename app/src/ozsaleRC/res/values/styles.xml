@@ -3,12 +3,12 @@
 
     <style name="horizontalBorderView">
         <item name="android:layout_width">match_parent</item>
-        <item name="android:layout_height">@dimen/border_thickness</item>
+        <item name="android:layout_height">@dimen/border_extra_thin</item>
         <item name="android:background">@color/border_gray</item>
     </style>
 
     <style name="verticalBorderView" parent="horizontalBorderView">
-        <item name="android:layout_width">@dimen/border_thickness</item>
+        <item name="android:layout_width">@dimen/border_thin</item>
         <item name="android:layout_height">match_parent</item>
     </style>
 
@@ -31,11 +31,11 @@
         <item name="android:textColorHint">@color/gray_inactive_field_text</item>
     </style>
 
-    <style name="DDEditTextStyleNoBorder" parent="DDEditTextStyle">
-        <item name="android:background">@drawable/bg_edit_text_plain</item>
+    <style name="DDEditTextStyleBorder" parent="DDEditTextStyle" >
+        <item name="android:background">@drawable/bg_edit_text_rounded</item>
     </style>
 
-    <style name="DDEditTextStyleBorder" parent="DDEditTextStyle" >
+    <style name="DDEditTextSearchBar" parent="DDEditTextStyle" >
         <item name="android:background">@drawable/bg_edit_text_rounded</item>
     </style>
 
@@ -46,6 +46,7 @@
         <item name="android:textAllCaps">false</item>
         <item name="android:padding">5dp</item>
         <item name="android:textSize">@dimen/text_size_xxlarge</item>
+        <item name="fontPath">@string/font_app_semibold</item>
     </style>
 
     <style name="DDButtonAddCart" parent="DDButtonStyle">
@@ -55,5 +56,9 @@
     <style name="DDButtonJoinNow" parent="DDButtonStyle">
         <item name="android:background">@drawable/bg_button_join_now</item>
     </style>
+
+    <!-- Toolbar visibility -->
+    <bool name="login_toolbar_visibility">true</bool>
+    <bool name="contacts_toolbar_addmessage_visibility">false</bool>
 
 </resources>

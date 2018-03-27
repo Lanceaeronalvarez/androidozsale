@@ -14,23 +14,32 @@ import butterknife.ButterKnife;
 
 public class ViewVouchersViewHolder extends RecyclerView.ViewHolder {
 
-    @BindView(R.id.row_layout_vouchers)
+    @BindView(R.id.row_view_vouchers_layout)
     View mVouchersLayout;
 
-    @BindView(R.id.row_text_vouchers_item_cost_value)
+    @BindView(R.id.row_view_voucher_cost_text)
     TextView mVouchersItemCostText;
 
-    @BindView(R.id.row_text_vouchers_item_desc)
+    @BindView(R.id.row_view_voucher_desc_text)
     TextView mVouchersItemDescText;
 
-    @BindView(R.id.row_text_vouchers_item_expires_on_value)
+    @BindView(R.id.row_view_voucher_expiry_text)
     TextView mVouchersItemExpiresOnText;
 
-    @BindView(R.id.row_text_label_value)
+    @BindView(R.id.row_view_voucher_value_label)
     TextView mVouchersItemValue;
 
-    @BindView(R.id.row_text_vouchers_item_already_spent)
+    @BindView(R.id.row_view_voucher_already_spent_label)
     TextView mVouchersAlreadySpent;
+
+    @BindView(R.id.row_view_voucher_name_text)
+    TextView mVoucherName;
+
+    @BindView(R.id.row_view_voucher_purchased_text)
+    TextView mPurchasedValue;
+
+    @BindView(R.id.row_view_voucher_activated_text)
+    TextView mActivatedValue;
 
     public ViewVouchersViewHolder(View itemView) {
         super(itemView);

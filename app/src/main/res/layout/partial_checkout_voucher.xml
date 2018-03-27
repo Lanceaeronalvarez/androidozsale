@@ -10,15 +10,16 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        android:paddingLeft="16dp"
-        android:paddingRight="16dp"
-        android:paddingTop="10dp">
+        android:paddingLeft="@dimen/default_padding"
+        android:paddingRight="@dimen/default_padding"
+        android:paddingTop="@dimen/dimen_small">
 
         <TextView
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="4"
             android:text="@string/voucher"
+            android:textAllCaps="true"
             android:textColor="@color/gray_title_text" />
 
         <TextView
@@ -38,27 +39,38 @@
         android:id="@+id/partial_checkout_voucher_new_code"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="20dp"
-        android:layout_marginLeft="16sp"
-        android:layout_marginRight="16sp"
-        android:layout_marginTop="10dp"
-        android:background="@drawable/bg_chips_rounded"
+        android:layout_marginBottom="@dimen/dimen_large"
+        android:layout_marginTop="@dimen/dimen_small"
+        android:background="@drawable/bg_edit_text_plain"
         android:clickable="true"
-        android:padding="15dp">
+        android:padding="@dimen/default_padding">
+
+        <EditText
+            android:id="@+id/partial_checkout_voucher_edittext"
+            style="@style/DDEditTextStyleNoBorder"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:hint="@string/enter_promo_code"
+            android:maxLines="1"
+            android:inputType="text"
+            android:textColor="@color/row_checkout_text_light_color"
+            android:textColorHint="@color/row_checkout_text_light_color"
+            android:imeOptions="actionDone"
+            android:visibility="gone"/>
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/add_new_voucher"
             android:textColor="@color/gray_field_text"
-            android:textSize="@dimen/text_size_xlarge"/>
+            android:textSize="@dimen/text_size_large" />
 
         <ImageView
-            android:layout_width="22dp"
-            android:layout_height="22dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
             android:layout_alignParentEnd="true"
             android:layout_alignParentRight="true"
-            android:src="@drawable/ic_gray_chevron"/>
+            android:src="@drawable/ic_gray_chevron" />
     </RelativeLayout>
 
     <LinearLayout
@@ -66,29 +78,29 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
+        android:background="@color/row_background_color"
         android:visibility="gone">
 
         <LinearLayout
-
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
-            android:padding="16dp">
+            android:padding="@dimen/default_padding">
 
             <ImageView
-                android:layout_width="30dp"
-                android:layout_height="30dp"
-                android:paddingBottom="5dp"
-                android:paddingLeft="5dp"
-                android:paddingRight="5dp"
+                android:layout_width="@dimen/dimen_extra_large"
+                android:layout_height="@dimen/dimen_extra_large"
+                android:paddingBottom="@dimen/dimen_extra_small"
+                android:paddingLeft="@dimen/dimen_extra_small"
+                android:paddingRight="@dimen/dimen_extra_small"
                 android:src="@drawable/ic_my_vouchers"/>
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
-                android:paddingLeft="10dp"
-                android:paddingStart="10dp">
+                android:paddingLeft="@dimen/dimen_small"
+                android:paddingStart="@dimen/dimen_small">
 
                 <TextView
                     android:id="@+id/partial_checkout_voucher_name"
@@ -96,14 +108,14 @@
                     android:layout_height="wrap_content"
                     android:textColor="@color/gray_field_text"
                     android:textSize="@dimen/text_size_xxlarge"
-                    tools:text="$5 voucher"/>
+                    tools:text="@string/row_voucher_name_hint"/>
 
                 <TextView
                     android:id="@+id/partial_checkout_voucher_details"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:textColor="@color/gray_field_text"
-                    tools:text="voucher will expire on 12/25/16"/>
+                    tools:text="@string/row_voucher_hint"/>
 
             </LinearLayout>
 
@@ -111,9 +123,9 @@
 
         <View
             android:layout_width="match_parent"
-            android:layout_height="1dp"
-            android:layout_marginLeft="16dp"
-            android:background="#F2F2F2"/>
+            android:layout_height="@dimen/border_thin"
+            android:layout_marginLeft="@dimen/default_padding"
+            android:background="@color/gray_toolbar_border"/>
     </LinearLayout>
 
 </LinearLayout>

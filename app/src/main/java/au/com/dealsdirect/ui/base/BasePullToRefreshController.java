@@ -13,16 +13,42 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.EditText;
 import android.widget.FrameLayout;
 import android.widget.LinearLayout;
 
 import au.com.dealsdirect.R;
+import butterknife.BindView;
 import in.srain.cube.views.ptr.PtrClassicFrameLayout;
 import in.srain.cube.views.ptr.PtrDefaultHandler;
 import in.srain.cube.views.ptr.PtrFrameLayout;
 import in.srain.cube.views.ptr.PtrHandler;
 
+
+
 public abstract class BasePullToRefreshController extends BaseController implements PullToRefreshMvpView, PtrHandler {
+
+    protected enum ToolBarType {
+
+        LOGO, ARROW, LOGIN, TITLE;
+
+        int getLayout() {
+            switch (this) {
+                case LOGO:
+                    return R.layout.partial_toolbar_logo;
+                case LOGIN:
+                    return R.layout.partial_toolbar_login;
+                case TITLE:
+                    return R.layout.partial_toolbar_field_title;
+                default:
+                    return R.layout.partial_toolbar_arrow;
+            }
+        }
+    }
+
+    private LinearLayout mSearchBarLayout;
+
+    protected EditText mSearchBarEditText;
 
     FrameLayout mToolbarFrameLayout;
 
@@ -31,6 +57,8 @@ public abstract class BasePullToRefreshController extends BaseController impleme
     LinearLayout mNoNetworkLayout;
 
     PtrClassicFrameLayout mPtrLayout;
+
+    private View mToolBarView;
 
     boolean mCanDoRefresh = true;
 
@@ -44,14 +72,36 @@ public abstract class BasePullToRefreshController extends BaseController impleme
     @NonNull
     @Override
     protected View inflateView(@NonNull LayoutInflater inflater, @NonNull ViewGroup container) {
+        return inflateView(inflater, container, ToolBarType.ARROW);
+    }
+
+    protected View inflateView(@NonNull LayoutInflater inflater, @NonNull ViewGroup container, ToolBarType type) {
         View view = inflater.inflate(R.layout.controller_base_ptr, container, false);
-
         bindPtrViews(view);
-
+        fillToolbar(inflater.inflate(type.getLayout(), container, false));
+        setSearchBarVisible(false);
         return view;
     }
 
+    public void setToolBarVisible(boolean isVisible) {
+        setViewVisible(mToolBarView, isVisible);
+    }
+
+    public void setSearchBarVisible(boolean isVisible) {
+        setViewVisible(mSearchBarLayout, isVisible);
+    }
+
+    private void setViewVisible(View view, boolean isVisible) {
+        int state = isVisible ? View.VISIBLE : View.GONE;
+        view.setVisibility(state);
+    }
+
     protected void bindPtrViews(View view){
+
+        mSearchBarLayout = (LinearLayout) view.findViewById(R.id.controller_base_search_layout);
+
+        mSearchBarEditText = (EditText) view.findViewById(R.id.controller_base_search_edittext);
+
         mToolbarFrameLayout = (FrameLayout) view.findViewById(R.id.controller_base_toolbar_layout);
 
         mContentLayout = (FrameLayout) view.findViewById(R.id.controller_base_content_layout);
@@ -83,7 +133,8 @@ public abstract class BasePullToRefreshController extends BaseController impleme
         addOverScrollListener(mContentLayout);
     }
 
-    protected void fillToolbar(View view) {
+    private void fillToolbar(View view) {
+        mToolBarView = view;
         mToolbarFrameLayout.addView(view);
     }
 

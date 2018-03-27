@@ -24,8 +24,22 @@
             android:id="@+id/controller_checkout_container"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:visibility="gone">
+            android:background="@android:color/white"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/controller_checkout_orders_label"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="@dimen/dimen_small"
+                android:layout_weight="4"
+                android:paddingLeft="@dimen/default_padding"
+                android:paddingRight="@dimen/default_padding"
+                android:paddingTop="@dimen/dimen_small"
+                android:textAllCaps="true"
+                android:visibility="gone"
+                android:text="@string/checkout_order_label"
+                android:textColor="@color/gray_title_text" />
 
             <android.support.v7.widget.RecyclerView
                 android:id="@+id/controller_checkout_recyclerview_items"

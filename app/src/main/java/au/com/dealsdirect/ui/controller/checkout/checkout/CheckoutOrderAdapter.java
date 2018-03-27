@@ -33,6 +33,8 @@ public class CheckoutOrderAdapter extends RecyclerView.Adapter<CheckoutOrderAdap
     private Context mContext;
     private ArrayList<Item> mData;
     private CheckoutMvpPresenter<CheckoutMvpView> mPresenter;
+    private int resLayout;
+    private static final int MAX_ITEM_QTY = 5;
 
     public CheckoutOrderAdapter(Context context,ArrayList<Item> data, CheckoutMvpPresenter<CheckoutMvpView> presenter) {
         this.mContext = context;
@@ -69,10 +71,11 @@ public class CheckoutOrderAdapter extends RecyclerView.Adapter<CheckoutOrderAdap
         holder.colorText.setVisibility(View.INVISIBLE);
 
         holder.price.setText(PriceUtils.getPriceStringValue(item.price));
-        holder.quantityLayout.setMax(5);
+        holder.quantityLayout.setMax(MAX_ITEM_QTY);
         holder.quantityLayout.setQuantity(item.qty);
         holder.quantityLayout.setAutoUpdateQuantity(false);
         holder.quantityLayout.setEditTextToNonEditable();
+        holder.subTotal.setText(PriceUtils.getPriceStringValue(item.getSubtotal()));
 
         holder.quantityLayout.setOnQuantityChangeListener(new ProductQuantityLayout.onQuantityChangeListener() {
             @Override
@@ -115,6 +118,8 @@ public class CheckoutOrderAdapter extends RecyclerView.Adapter<CheckoutOrderAdap
         TextView price;
         @BindView(R.id.item_checkout_quantity)
         ProductQuantityLayout quantityLayout;
+        @BindView(R.id.item_subtotal_price)
+        TextView subTotal;
 
         public ViewHolder(View itemView) {
             super(itemView);

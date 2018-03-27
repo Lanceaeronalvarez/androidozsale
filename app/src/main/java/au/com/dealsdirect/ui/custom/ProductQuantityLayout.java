@@ -53,11 +53,11 @@ public class ProductQuantityLayout extends LinearLayout {
     private void init(Context context) {
         inflate(context, R.layout.quantity_widget, this);
 
-        minus = (Button) findViewById(R.id.minus);
-        plus = (Button) findViewById(R.id.plus);
-        quantity = (EditText) findViewById(R.id.quantity_text);
-        mMinusLoader = (ProgressBar) findViewById(R.id.minus_loader);
-        mPlusLoader = (ProgressBar) findViewById(R.id.plus_loader);
+        minus = (Button) findViewById(R.id.quantity_widget_minus);
+        plus = (Button) findViewById(R.id.quantity_widget_plus);
+        quantity = (EditText) findViewById(R.id.quantity_widget_text);
+        mMinusLoader = (ProgressBar) findViewById(R.id.quantity_widget_minus_loader);
+        mPlusLoader = (ProgressBar) findViewById(R.id.quantity_widget_plus_loader);
 
 //
 //        RxTextView.afterTextChangeEvents(quantity).subscribe(action->{

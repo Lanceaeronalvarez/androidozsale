@@ -17,6 +17,7 @@ import android.widget.FrameLayout;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toolbar;
 
 import com.bluelinelabs.conductor.Router;
 import com.bluelinelabs.conductor.RouterTransaction;
@@ -149,12 +150,30 @@ public class ShopsController extends BasePullToRefreshController implements Shop
 
     @Override
     protected View inflateView(@NonNull LayoutInflater inflater, @NonNull ViewGroup container) {
-        View view = inflater.inflate(R.layout.controller_shop, container, false);
-        bindPtrViews(view);
+        View view = super.inflateView(inflater, container, ToolBarType.LOGO);
+
+        setSearchBarVisible(mActivity.getResources().getBoolean(R.bool.shop_searchbar_visibility));
+        fillContent(inflater.inflate(R.layout.controller_shop, container, false));
+
         getControllerComponent().inject(this);
         mPresenter.onAttach(this);
 
+        setSearchBarVisible(getResource().getBoolean(R.bool.shop_searchbar_visibility));
+        mSearchBarEditText.setFocusable(false);
+        mSearchBarEditText.setOnClickListener(view1 -> {
+            showProductList();
+        });
+        mSearchBarEditText.setHint(getResource().getString(R.string.shop_search_hint));
+
         return view;
+    }
+
+    private void showProductList() {
+
+        Bundle args = new Bundle();
+        getRouter().pushController(RouterTransaction.with(new SaleItemsController(args))
+                .pushChangeHandler(new HorizontalChangeHandler())
+                .popChangeHandler(new HorizontalChangeHandler()));
     }
 
     @Override

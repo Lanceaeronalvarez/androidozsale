@@ -27,7 +27,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
-            android:text="welcome to contact us!"
+            android:text="@string/welcome_to_contact_us"
             android:textSize="@dimen/text_size_xxxlarge" />
 
         <TextView
@@ -39,7 +39,7 @@
             android:layout_marginBottom="@dimen/default_button_height"
             android:layout_marginTop="10dp"
             android:paddingBottom="@dimen/default_button_height"
-            android:text="you do not currently have any messages"
+            android:text="@string/you_do_not_currently_have_any_messages"
             android:textColor="#9f9f9f"
             android:textSize="@dimen/text_size_xlarge" />
     </LinearLayout>

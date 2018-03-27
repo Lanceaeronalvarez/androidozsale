@@ -106,6 +106,7 @@
     <string name="or_text">or</string>
     <string name="not_a_member_yet_text">Not a member yet?</string>
     <string name="sign_in_with_facebook">Sign in with Facebook</string>
+    <string name="login_title">Login</string>
 
     <string name="sign_up">Sign Up</string>
     <string name="join_now">Join Now</string>
@@ -156,6 +157,10 @@
     <string name="add_to_cart">add to cart</string>
     <string name="add_to_cart_success">Item has been added to your basket</string>
     <string name="category_title">Categories</string>
+
+    <!--CONTACTS-->
+    <string name="welcome_to_contact_us">welcome to contact us!</string>
+    <string name="you_do_not_currently_have_any_messages">you do not currently have any messages</string>
 
     <!--ORDERS-->
     <string name="shop_now">shop now</string>
@@ -211,6 +216,7 @@
     <string name="address">Address</string>
     <string name="total">Total</string>
     <string name="remove">Remove</string>
+    <bool name="is_item_attribute_gone">false</bool>
 
     <!--VOUCHERS-->
     <string name="my_vouchers">my vouchers</string>
@@ -220,6 +226,7 @@
         $20 voucher to use towards any future purchase. \n\nYou can apply any vouchers
         currently in your account when you checkout your order. \n
     </string>
+    <bool name="is_voucher_background_needed">true</bool>
     <string name="apply">apply</string>
     <string name="my_voucher">my voucher</string>
     <string name="promo_code">promo code</string>
@@ -247,6 +254,7 @@
     <string name="invite_friends_title">Invite your Friends!</string>
 
     <string name="search_filter_hint">Search Filter</string>
+    <string name="shop_search_hint">What would you like to find ?</string>
     <string name="write_a_message_here">write a message here</string>
     <string name="exit_app">Exit app?</string>
     <string name="exit">exit</string>
@@ -351,6 +359,31 @@
     <string name="account_tnc">Terms &amp; Conditions</string>
     <string name="account_tutorial">Tutorial</string>
     <string name="account_logout">Logout</string>
+    <string name="voucher_used">Voucher Used</string>
+    <string name="login_with_facebook">Login with Facebook</string>
+    <string name="purchased_colon">Purchased:</string>
+    <string name="activated_colon">Activated:</string>
+    <string name="expiry_colon">Expiry:</string>
+    <string name="amount_colon">Amount:</string>
+    <string name="follow_us">Follow us</string>
+    <string name="scheduledplan">scheduledPlan</string>
+    <string name="voucher_good_for_use_until">voucher good for use until,</string>
+    <string name="already_spent">Already Spent</string>
+    <string name="invitation_link">Invitation link</string>
+    <string name="row_address_name_hint">Mary Doe</string>
+    <string name="row_address_hint">Pharmacy Warringah, Shop 4123, Broovale, NSW, 2100, Australia, +0123 123 123</string>
+    <string name="row_voucher_hint">voucher will expire on 12/25/16</string>
+    <string name="row_voucher_name_hint">$5 voucher</string>
+    <string name="checkout_order_label">Your Order</string>
+    <string name="row_checkout_name_hint">Master Card</string>
+    <string name="row_checkout_desc_hint">card ending in 02/16</string>
+    <string name="price_colon">Price:</string>
+    <string name="subtotal_colon">Subtotal:</string>
+    <string name="row_checkout_voucher_label">VOUCHER</string>
+    <string name="email">Email</string>
+    <string name="sorry_today_we_can_t_find_anything_by_your_request">Sorry, today we can\'t find anything by your request.</string>
+    <string name="meanwhile_why_not_search_for_something_else">Meanwhile, why not search for something else?</string>
+    <bool name="is_checkout_orders_label_visible">false</bool>
 
     <integer-array name="account_title_array">
         <item>@string/account_details</item>

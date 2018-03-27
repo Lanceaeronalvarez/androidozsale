@@ -20,9 +20,9 @@
                 android:id="@+id/deliveryInfoPlaceholder"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:layout_marginLeft="@dimen/screen_padding"
-                android:layout_marginRight="@dimen/screen_padding"
-                android:layout_marginTop="@dimen/screen_padding"
+                android:layout_marginLeft="@dimen/default_padding"
+                android:layout_marginRight="@dimen/default_padding"
+                android:layout_marginTop="@dimen/default_padding"
                 android:orientation="vertical" />
 
         </RelativeLayout>

@@ -1,0 +1,124 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:paddingBottom="@dimen/dimen_extra_small"
+    android:paddingTop="@dimen/dimen_extra_small"
+    android:orientation="vertical">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="@dimen/dimen_small"
+        android:orientation="horizontal"
+        android:paddingLeft="@dimen/screen_padding"
+        android:paddingRight="@dimen/screen_padding"
+        android:paddingTop="@dimen/dimen_small">
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="4"
+            android:text="@string/your_current_delivery_address"
+            android:textColor="@color/gray_title_text" />
+
+        <TextView
+            android:id="@+id/partial_checkout_address_change"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:gravity="end"
+            android:text="@string/change"
+            android:textColor="@color/gray_item_details"
+            android:textSize="@dimen/text_size_large"
+            android:visibility="gone" />
+
+    </LinearLayout>
+
+    <RelativeLayout
+        android:id="@+id/partial_checkout_address_new_address"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="@dimen/dimen_small"
+        android:background="@drawable/bg_edit_text_plain"
+        android:clickable="true"
+        android:padding="@dimen/screen_padding">
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:src="@drawable/ic_gray_chevron" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentTop="true"
+            android:text="@string/add_new_address"
+            android:textColor="@color/row_checkout_text_light_color"
+            android:textSize="@dimen/text_size_large" />
+    </RelativeLayout>
+
+    <LinearLayout
+        android:id="@+id/partial_checkout_address_container"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/row_background_color"
+        android:orientation="vertical"
+        android:visibility="gone">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:paddingLeft="@dimen/screen_padding"
+            android:paddingRight="@dimen/screen_padding">
+
+            <ImageView
+                android:layout_width="@dimen/dimen_extra_large"
+                android:layout_height="@dimen/dimen_extra_large"
+                android:paddingBottom="@dimen/dimen_extra_small"
+                android:paddingLeft="@dimen/dimen_extra_small"
+                android:paddingRight="@dimen/dimen_extra_small"
+                android:src="@drawable/ic_home_delivery" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:paddingLeft="@dimen/dimen_small"
+                android:paddingStart="@dimen/dimen_small">
+
+                <TextView
+                    android:id="@+id/partial_checkout_address_name"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/row_checkout_text_light_color"
+                    android:textSize="@dimen/text_size_xxlarge"
+                    tools:text="@string/row_address_name_hint" />
+
+                <TextView
+                    android:id="@+id/partial_checkout_address_details"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/row_checkout_text_light_color"
+                    tools:text="@string/row_address_hint" />
+
+            </LinearLayout>
+
+        </LinearLayout>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/border_thin"
+            android:layout_marginLeft="@dimen/screen_padding"
+            android:background="@color/gray_toolbar_border" />
+    </LinearLayout>
+
+</LinearLayout>

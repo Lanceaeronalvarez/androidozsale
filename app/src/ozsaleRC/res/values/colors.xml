@@ -11,7 +11,7 @@
 
     <color name="bg_gray">#F8F8F8</color>
 
-    <color name="border_gray">#E4E4E4</color>
+    <color name="border_gray">@color/guide_gray_2</color>
 
     <color name="bg_membership">#DBA142</color>
 
@@ -44,7 +44,9 @@
     <color name="filter_text_active">#65D87F</color>
     <color name="filter_text_inactive">#5F5F5F</color>
 
-    <color name="cart_order_price_text_color">@color/dark_text</color>
+    <color name="payment_success_order_text_color">@color/colorPrimaryDark</color>
+
+    <color name="cart_order_price_text_color">@color/guide_gray_2</color>
 
     <color name="progress_loader_stroke_color">#616161</color>
 
@@ -103,23 +105,46 @@
     <color name="search_gray_opaque">#7e404040</color>
 
     <color name="ourpay_gray">#FF898989</color>
-    <color name="ourpay_orange">#F29124</color>
+    <color name="ourpay_orange">@color/guide_orange</color>
     <color name="ourpay_orange_dark">#D98221</color>
     <color name="ourpay_border_gray">#FFC7C7C7</color>
 
-    <color name="invite_fb">#009BEC</color>
-    <color name="invite_fb_pressed">#339EF0</color>
-    <color name="invite_twitter">#00B5E9</color>
-    <color name="invite_twitter_pressed">#10C4F8</color>
-    <color name="invite_mail">#EA5757</color>
-    <color name="invite_mail_pressed">#FD6767</color>
-    <color name="invite_sms">#65D87F</color>
-    <color name="invite_sms_pressed">#72E98D</color>
+    <color name="invite_fb">@color/guide_blue_2</color>
+    <color name="invite_fb_pressed">@color/guide_blue_2</color>
+    <color name="invite_twitter">@color/guide_blue_1</color>
+    <color name="invite_twitter_pressed">@color/guide_blue_1</color>
+    <color name="invite_mail">@color/guide_pink</color>
+    <color name="invite_mail_pressed">@color/guide_pink</color>
+    <color name="invite_sms">@color/guide_green</color>
+    <color name="invite_sms_pressed">@color/guide_green</color>
+    <color name="invite_clipboard">#FF8B8B8B</color>
+    <color name="invite_clipboard_pressed">#FF8B8B8B</color>
 
     <color name="item_select_remove">#65D87F</color>
     <color name="verify_resend_color">#90BF0A</color>
 
     <color name="splash_background_color">@color/white</color>
     <color name="default_background_color">#ececec</color>
+    <color name="row_background_color">@color/white</color>
+    <color name="row_checkout_text_light_color">@color/guide_gray_2</color>
+    <color name="row_checkout_text_dark_color">@color/guide_gray_4</color>
+
+    <!-- PRIMARY PALLETTE -->
+    <color name="guide_dark">#000000</color>
+    <color name="guide_blue_3">#007CF4</color>
+    <color name="guide_blue_2">#009BEC</color>
+    <color name="guide_blue_1">#00B5E9</color>
+    <color name="guide_pink">#EA5757</color>
+    <color name="guide_green">#65D87F</color>
+    <color name="guide_orange">#f29124</color>
+    <color name="guide_yellow">#ffd242</color>
+
+    <!-- SECONDARY PALLETTE -->
+    <color name="guide_gray_1">#ededed</color>
+    <color name="guide_gray_2">#7f7f7f</color>
+    <color name="guide_gray_3">#4f4f4f</color>
+    <color name="guide_gray_4">#323232</color>
+
+    <color name="row_view_vouchers_background_color">@color/white</color>
 
 </resources>

@@ -1,5 +1,6 @@
 package au.com.dealsdirect.ui.controller.contact.viewcontacts;
 
+import android.opengl.Visibility;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.LinearLayoutManager;
@@ -7,6 +8,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -62,6 +64,9 @@ public class ViewContactsController extends BasePullToRefreshController implemen
     @BindView(R.id.no_contacts_placeholder)
     RelativeLayout mPlaceholderLayout;
 
+    @BindView(R.id.controller_contacts_newmessage_button)
+    Button mViewContactsAddNewMessage;
+
     @Inject
     ViewContactsMvpPresenter<ViewContactsMvpView> mPresenter;
 
@@ -81,9 +86,9 @@ public class ViewContactsController extends BasePullToRefreshController implemen
     @NonNull
     @Override
     protected View inflateView(@NonNull LayoutInflater inflater, @NonNull ViewGroup container) {
-        View view = super.inflateView(inflater, container);
+        View view = super.inflateView(inflater, container, ToolBarType.ARROW);
 
-        fillToolbar(inflater.inflate(R.layout.partial_toolbar_arrow, container, false));
+        setToolBarVisible(getResource().getBoolean(R.bool.contacts_toolbar_visibility));
         fillContent(inflater.inflate(R.layout.controller_view_contacts, container, false));
 
         getControllerComponent().inject(this);
@@ -117,7 +122,7 @@ public class ViewContactsController extends BasePullToRefreshController implemen
         assert (mActivity) != null;
         mActivity.setDraggableViewPager(false);
 
-        mViewContactsToolarTitle.setText("contact Us");
+        mViewContactsToolarTitle.setText(getResource().getString(R.string.account_contact_us));
         mViewContactsToolbarLeftOption.setVisibility(View.INVISIBLE);
         mViewContactsToolbarRightOption.setVisibility(View.INVISIBLE);
 
@@ -125,6 +130,7 @@ public class ViewContactsController extends BasePullToRefreshController implemen
 
         mViewContactsRecyclerView.setAdapter(mContactAdapter);
         mViewContactsRecyclerView.setLayoutManager(new LinearLayoutManager(mActivity));
+
         hideKeyboard();
     }
 
@@ -153,7 +159,9 @@ public class ViewContactsController extends BasePullToRefreshController implemen
             mViewContactsRecyclerView.setVisibility(View.GONE);
         }
 
-        mViewContactsToolbarRightOption.setVisibility(View.VISIBLE);
+        int visibility = getResource().getBoolean(R.bool.contacts_toolbar_addmessage_visibility) ? View.VISIBLE : View.INVISIBLE;
+        mViewContactsToolbarRightOption.setVisibility(visibility);
+
         if(mPresenter.isTablet()){
             mViewContactsToolbarRightOption.setPadding(5, 5, 5, 5);
         } else {
@@ -168,6 +176,11 @@ public class ViewContactsController extends BasePullToRefreshController implemen
                 .pushChangeHandler(new VerticalChangeHandler())
                 .popChangeHandler(new VerticalChangeHandler()));
 
+    }
+
+    @OnClick(R.id.controller_contacts_newmessage_button)
+    void addNewMessage() {
+        addContact();
     }
 
     public ArrayList<ContactItemByDate> getDifferentDates(List<GetContactsResponse.ContactList> lists) {

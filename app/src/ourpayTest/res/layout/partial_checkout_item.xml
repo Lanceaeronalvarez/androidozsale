@@ -101,6 +101,16 @@
         </LinearLayout>
 
 
+        <TextView
+            android:id="@+id/item_subtotal_price"
+            fontPath="@string/font_app_semibold"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@color/row_checkout_text_dark_color"
+            android:textSize="@dimen/text_size_large"
+            android:visibility="gone"
+            android:text="$19.00" />
+
         <!--Insert Quantity Indicator here-->
 
         <au.com.dealsdirect.ui.custom.ProductQuantityLayout

@@ -283,6 +283,29 @@ android {
         }
 
 
+        ozsaleTest {
+            versionCode 1
+            versionName "0.9"
+            applicationId "au.com.ozsale.test"
+
+            buildConfigField "String", "API_ROOT", "\"https://genie-ui-dealsdirect-pre.mysaledev.com/\""
+            buildConfigField "String", "API_LEGACY", "\"https://api.mysaledev.com/public/v3.20/\""
+            buildConfigField "String", "ACCOUNT_ID", "\"A56B0D62-AEF6-4653-848E-2ECDDB6E9B8C\""
+
+            resValue "string", "app_name", "Ozsale Test"
+            def facebookAppId = "1650094968544406"
+            resValue "string", "facebook_app_id", facebookAppId
+            resValue "string", "facebook_app_secret", "94da0f48bd2ffea25981e52c56f9260a"
+            resValue "string", "fb_login_protocol_scheme", "fb" + facebookAppId
+            resValue "string", "fb_page_id", "257280167216"
+            resValue "string", "twitter_user_id", "twitter://user?user_id=37405859"
+            resValue "string", "default_country_id", "DA"
+            resValue "string", "default_language_id", "EN"
+
+            ext.newRelicAppToken = "AAa9d543732ff39dddc60c9cb9ad8c9cf22297904b"
+            resValue "string", "new_relic_app_token", ext.newRelicAppToken
+
+        }
     }
 
     sourceSets {
@@ -388,6 +411,20 @@ android {
             java.srcDirs = ['src/commonControllers/java/',
                             'src/commonActivity/java/',
                             'src/commonHomeController/java/',
+                            'src/commonSearchFilterController/java',
+                            'src/commonCategoriesController/java/',
+                            'src/commonShopsController/java/',
+                            'src/commonMainController/java/',
+                            'src/ozsaleRC/java',
+                            'src/main/java/']
+        }
+
+        ozsaleTest {
+            res.srcDir 'src/ozsaleRC/res/'
+            java.srcDirs = ['src/commonControllers/java/',
+                            'src/commonActivity/java/',
+                            'src/commonHomeController/java/',
+                            'src/commonSearchFilterController/java',
                             'src/commonCategoriesController/java/',
                             'src/commonShopsController/java/',
                             'src/commonMainController/java/',
@@ -396,7 +433,7 @@ android {
         }
 
         main {
-            java.srcDirs = ['src/main/java']
+            java.srcDirs = ['src/main/java','src/commonShopsController/java/']
         }
     }
 

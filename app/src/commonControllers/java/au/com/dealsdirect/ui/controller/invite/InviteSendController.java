@@ -62,46 +62,46 @@ public class InviteSendController extends BasePullToRefreshController implements
     @BindView(R.id.partial_toolbar_left_view)
     ImageView mArrowImage;
 
-    @BindView(R.id.controller_send_invite_container)
+    @BindView(R.id.controller_invite_buttons_layout)
     LinearLayout mSendInvitationContainer;
 
-    @BindView(R.id.invite_friends_sms_button)
+    @BindView(R.id.controller_invite_sms_button)
     RelativeLayout mMessageSendInvitationLayout;
 
-    @BindView(R.id.invite_friends_email_button)
+    @BindView(R.id.controller_invite_email_button)
     RelativeLayout mMailSendInvitationLayout;
 
-    @BindView(R.id.invite_friend_twitter_button)
+    @BindView(R.id.controller_invite_twitter_button)
     RelativeLayout mTwitterSendInvitationLayout;
 
-    @BindView(R.id.invite_friend_facebook_button)
+    @BindView(R.id.controller_invite_facebook_button)
     RelativeLayout mFacebookSendInvitationLayout;
 
-    @BindView(R.id.invite_friend_twitter_follow_us_button_layout)
+    @BindView(R.id.controller_invite_follow_us_layout)
     RelativeLayout mTwitterFollowUsContainer;
 
-    @BindView(R.id.invite_friend_facebook_like_us_on_facebook_button_layout)
+    @BindView(R.id.controller_invite_like_us_layout)
     RelativeLayout mFacebookLikeUsContainer;
 
-    @BindView(R.id.controller_send_invite_edit_text_personal_invitation)
+    @BindView(R.id.controller_invite_personal_invitation_link_edittext)
     EditText mPersonalInvitationMessageEditText;
 
-    @BindView(R.id.controller_send_invite_edit_text_deals_direct_link)
+    @BindView(R.id.controller_invite_invitation_link_edittext)
     EditText mPersonalInvitationLinkEditText;
 
-    @BindView(R.id.invite_friend_clipboard_button)
+    @BindView(R.id.controller_invite_clipboard_button)
     RelativeLayout mClipboardButton;
 
-    @BindView(R.id.invite_friend_clipboard_text)
+    @BindView(R.id.controller_invite_clipboard_text)
     TextView mClipboardText;
 
     @BindView(R.id.invite_friend_clipboard_image)
     ImageView mClipboardImage;
 
-    @BindView(R.id.controller_invite_image_vouchers)
+    @BindView(R.id.controller_invite_vouchers_imageview)
     ImageView mImageView;
 
-    @BindView(R.id.controller_send_invite_layout_select_order_option)
+    @BindView(R.id.controller_invite_invitation_link_layout)
     RelativeLayout mSendInviteLinkLayout;
 
     GetInviteResponse.Value inviteBody;
@@ -148,9 +148,9 @@ public class InviteSendController extends BasePullToRefreshController implements
 
     @Override
     protected View inflateView(@NonNull LayoutInflater inflater, @NonNull ViewGroup container) {
-        View view = super.inflateView(inflater, container);
+        View view = super.inflateView(inflater, container, ToolBarType.ARROW);
 
-        fillToolbar(inflater.inflate(R.layout.partial_toolbar_arrow, container, false));
+        setToolBarVisible(getResource().getBoolean(R.bool.invite_toolbar_visibility));
         fillContent(inflater.inflate(R.layout.controller_invite_send, container, false));
 
         getControllerComponent().inject(this);

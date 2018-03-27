@@ -109,6 +109,7 @@
     <color name="idle_logo">@color/colorAccent</color>
 
     <color name="invite_clipboard">#FF8B8B8B</color>
+    <color name="invite_clipboard_pressed">#FF8B8B8B</color>
     <color name="invite_fb">#FF2D91DE</color>
     <color name="invite_fb_pressed">#FF2D91DE</color>
     <color name="invite_twitter">#FF00B5E9</color>
@@ -128,6 +129,14 @@
     <color name="splash_background_color">@color/toolbar_skin</color>
     <color name="default_background_color">@color/white</color>
 
+    <color name="controller_login_close_tint_color">#959595</color>
 
     <color name="close_icon_color">#959595</color>
+    <color name="row_background_color">@color/white</color>
+    <color name="checkout_quanitity_color">#6E6E6E</color>
+
+    <color name="row_checkout_text_light_color">#717171</color>
+    <color name="row_checkout_text_dark_color">@color/dark_text</color>
+    <color name="sale_items_highlight">#446E87</color>
+
 </resources>

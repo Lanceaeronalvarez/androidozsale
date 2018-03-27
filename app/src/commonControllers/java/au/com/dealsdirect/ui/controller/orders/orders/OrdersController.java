@@ -49,9 +49,9 @@ public class OrdersController extends BasePullToRefreshController implements Ord
 
     @Override
     protected View inflateView(@NonNull LayoutInflater inflater, @NonNull ViewGroup container) {
-        View view = super.inflateView(inflater, container);
+        View view = super.inflateView(inflater, container, ToolBarType.ARROW);
 
-        fillToolbar(inflater.inflate(R.layout.partial_toolbar_arrow, container, false));
+        setToolBarVisible(getResource().getBoolean(R.bool.orders_toolbar_visibility));
         fillContent(inflater.inflate(R.layout.controller_orders, container, false));
 
         getControllerComponent().inject(this);

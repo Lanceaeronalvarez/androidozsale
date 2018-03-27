@@ -4,6 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="?attr/actionBarSize"
+    android:background="@color/toolbar_skin"
     android:contentInsetEnd="0dp"
     android:contentInsetLeft="0dp"
     android:contentInsetRight="0dp"
@@ -22,13 +23,13 @@
 
         <ImageButton
             android:id="@+id/partial_toolbar_left_view"
-            android:layout_width="@dimen/toolbar_widget_size"
-            android:layout_height="@dimen/toolbar_widget_size"
+            android:layout_width="@dimen/partial_toolbar_button_size"
+            android:layout_height="@dimen/partial_toolbar_button_size"
             android:layout_alignParentLeft="true"
             android:layout_alignParentStart="true"
             android:layout_centerVertical="true"
             android:background="@drawable/bg_toolbar_button"
-            android:paddingRight="2dp"
+            android:paddingRight="@dimen/partial_toolbar_button_padding_right"
             android:src="@drawable/ic_pink_chevron" />
 
 
@@ -50,14 +51,14 @@
 
         <ImageButton
             android:id="@+id/partial_toolbar_right_view"
-            android:layout_width="@dimen/toolbar_widget_size"
-            android:layout_height="@dimen/toolbar_widget_size"
+            android:layout_width="@dimen/partial_toolbar_button_size"
+            android:layout_height="@dimen/partial_toolbar_button_size"
             android:layout_alignParentEnd="true"
             android:layout_centerVertical="true"
             android:background="@drawable/bg_toolbar_button"
             android:scaleType="fitCenter"
-            android:padding="@dimen/default_padding"
-            android:src="@drawable/ic_close" />
+            android:padding="@dimen/partial_toolbar_button_padding"
+            android:src="@drawable/ic_account_logout" />
 
     </RelativeLayout>
 

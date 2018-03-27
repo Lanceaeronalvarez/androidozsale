@@ -211,7 +211,7 @@ public class SaleItemsController extends BasePullToRefreshController implements 
 
         if (args.containsKey(SALEITEMS_TITLE)) {
             mTitle = getArgs().getString(SALEITEMS_TITLE, "");
-            mTitle = mTitle.replaceAll(">>>", " • ");
+            mTitle = mTitle.replaceAll(">>>", " â¢ ");
         }
         if (args.containsKey(SALEITEMS_SALE_ID))
             mSaleId = getArgs().getString(SALEITEMS_SALE_ID, "");
@@ -237,7 +237,7 @@ public class SaleItemsController extends BasePullToRefreshController implements 
         if (args.containsKey(SALEITEMS_CATEGORY_MAP))
             mCategoryKey = args.getString(SALEITEMS_CATEGORY_MAP, "");
         if (!mCategoryKey.isEmpty()) {
-            mCategoryForTitle = mCategoryKey.replaceAll(">>>", " • ");
+            mCategoryForTitle = mCategoryKey.replaceAll(">>>", " â¢ ");
         } else {
             mCategoryForTitle = "";
         }
@@ -300,9 +300,9 @@ public class SaleItemsController extends BasePullToRefreshController implements 
 ////                activateSearch();
 //            }
 //        } else {
-            mSaleItemsBackIcon.setOnClickListener(view12 -> {
-                mActivity.onBackPressed();
-            });
+        mSaleItemsBackIcon.setOnClickListener(view12 -> {
+            mActivity.onBackPressed();
+        });
 //        }
 
         setUp(view);
