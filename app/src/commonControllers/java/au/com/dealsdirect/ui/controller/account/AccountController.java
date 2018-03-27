@@ -267,7 +267,7 @@ public class AccountController extends BaseController implements AccountMvpView,
                 mPresenter.onAccountItemClick(option);
                 mActivity.callGCMRegisterSubscriber();
                 mRightToolbarButton.setImageDrawable(getActivity().getResources().getDrawable(R.drawable.ic_account_logout));
-                mActivity.getMainController().getHomeController().resetOurPayRouter();
+                mActivity.getMainController().getHomeController().resetRouters();
             }
 
             @Override

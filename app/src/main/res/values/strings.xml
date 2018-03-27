@@ -109,6 +109,7 @@
 
     <string name="sign_up">Sign Up</string>
     <string name="join_now">Join Now</string>
+    <string name="register_title">@string/join_now</string>
     <string name="already_a_member">Already a member?</string>
     <string name="log_in">Log In</string>
     <string name="save">save</string>
@@ -302,6 +303,7 @@
     <string name="enter_your_code_below">Enter your code below</string>
     <string name="confirm">Confirm</string>
     <string name="invalid_phone_number">Invalid Phone Number</string>
+    <string name="ourpay_code_hint">xxxxxx</string>
     <string name="invalid_code">Invalid Code</string>
     <string name="sms_verification_title">SMS Verification</string>
     <string name="add_address_before_payment">Please set delivery address before proceeding to payment</string>

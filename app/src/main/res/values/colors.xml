@@ -56,7 +56,7 @@
     <color name="tab_bar_icon_hovered">#F00065</color>
 
     <color name="app_skin">#FAFAF9</color>
-    <color name="toolbar_skin">@color/white</color>
+    <color name="toolbar_skin">@color/colorAccent</color>
     <color name="toolbar_active_skin">#F00065</color>
 
     <color name="back_arrow_color">#A4AAB3</color>
@@ -128,4 +128,6 @@
     <color name="splash_background_color">@color/toolbar_skin</color>
     <color name="default_background_color">@color/white</color>
 
+
+    <color name="close_icon_color">#959595</color>
 </resources>

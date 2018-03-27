@@ -235,7 +235,7 @@ android {
         }
 
         ourpayTest {
-            versionCode 2
+            versionCode 3
             versionName "0.9"
             applicationId "au.com.ourpay.test"
 

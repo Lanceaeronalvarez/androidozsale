@@ -109,6 +109,8 @@ public class DashboardController extends BaseController implements DashboardMvpV
 
     @Override
     protected void setUp(View view) {
+
+        mActivity.getMainController().showBottomNav();
         mPresenter.loadAll();
 
         mTabTitles = new String[]{ mActivity.getString(R.string.payment_plans), mActivity.getString(R.string.scheduled_plans), mActivity.getString(R.string.past_payments)};

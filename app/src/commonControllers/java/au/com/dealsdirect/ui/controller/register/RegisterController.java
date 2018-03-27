@@ -8,6 +8,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.CheckBox;
+import android.widget.ImageButton;
 import android.widget.TextView;
 
 import com.bluelinelabs.conductor.changehandler.HorizontalChangeHandler;
@@ -63,6 +64,7 @@ public class RegisterController extends BaseController implements RegisterMvpVie
     @BindView(R.id.controller_register_terms_link)
     TextView mTermsLink;
 
+
     private static AuthHandler mAuthHandler;
 
     public static RegisterController newInstance() {
@@ -106,7 +108,7 @@ public class RegisterController extends BaseController implements RegisterMvpVie
         // Setup views here
         //mPresenter.loadSample(new SampleRequest());
 
-        mToolBarTitle.setText(getResources().getString(R.string.join_now));
+        mToolBarTitle.setText(getResources().getString(R.string.register_title));
 
         mActivity.setDraggableViewPager(false);
 
@@ -134,18 +136,13 @@ public class RegisterController extends BaseController implements RegisterMvpVie
         super.onDestroyView(view);
     }
 
-    @OnClick(R.id.controller_register_close_icon)
+    @OnClick(R.id.partial_toolbar_right_view)
     void onCloseIconClick() {
         getRouter().popToRoot(new VerticalChangeHandler());
     }
 
-    @OnClick(R.id.partial_toolbar_arrow_view)
+    @OnClick(R.id.partial_toolbar_left_view)
     void onBackArrowClick() {
-        onBackIconClick();
-    }
-
-    @OnClick(R.id.controller_register_back_icon)
-    void onBackIconClick() {
         hideKeyboard();
         mActivity.onBackPressed();
     }
@@ -170,7 +167,7 @@ public class RegisterController extends BaseController implements RegisterMvpVie
     }
 
 
-    @OnClick(R.id.facebook_login_button)
+    @OnClick(R.id.controller_login_fb_layout)
     void onFacebookLoginClick() {
         mPresenter.onFacebookLogin(mActivity, mCallbackManager);
     }

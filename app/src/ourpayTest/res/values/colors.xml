@@ -4,7 +4,7 @@
     <color name="colorPrimaryAlpha">#CCFDBB16</color>
     <color name="colorPrimaryDark">#F37325</color>
     <color name="colorAccent">#FDBB16</color>
-    <color name="colorBlueDark">#1E303E</color>
+    <color name="colorBlueDark">#323232</color>
     <color name="colorBlueDarkAlpha">#1A1E303E</color>
     <color name="colorInactive">#929292</color>
     <color name="colorInactiveAlpha">#AA6F6E6E</color>
@@ -130,4 +130,6 @@
     <color name="verify_resend_color">#90BF0A</color>
 
     <color name="splash_background_color">@color/transparent</color>
+
+    <color name="close_icon_color">@color/white</color>
 </resources>

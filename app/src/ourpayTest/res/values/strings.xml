@@ -24,14 +24,16 @@
 
     <string name="log_in">Log In</string>
     <string name="sign_up">Sign Up</string>
+    <string name="register_title">@string/create_account</string>
     <string name="not_a_member_yet">Not a member yet?</string>
     <string name="forgot_password">forgot password?</string>
+    <string name="checkout_page_toolbar_title">Checkout</string>
     <string name="username">Username</string>
     <string name="marydoe_ourpay">marydoe.ourpay</string>
     <string name="password">Password</string>
     <string name="_9679_9679_9679">● ● ●</string>
     <string name="_9679_9679_9679_9679_9679_9679_9679_9679_9679_9679">● ● ● ● ● ● ● ● ● ●</string>
-    <string name="create_account">create account</string>
+    <string name="create_account">Create Account</string>
     <string name="ic_back">ic_back</string>
     <string name="name">Name</string>
     <string name="date_of_birth">Date of Birth</string>
@@ -45,6 +47,7 @@
     <string name="new_password">New Password</string>
     <string name="confirm_password">Confirm Password</string>
     <string name="cardholder_s_name">Cardholder\'s Name</string>
+    <string name="add_new_voucher">Add New Voucher</string>
     <string name="cvv">CVV</string>
     <string name="expiration_date">Expiration Date</string>
     <string name="dec_2025">Dec 2025</string>
@@ -121,7 +124,7 @@
     <string name="delivery_address">Delivery Address</string>
     <string name="you_currently_do_not_have_any_addresses">You do not currently have any address.</string>
     <string name="welcome_to_my_address">Welcome to My Address!</string>
-    <string name="add_new_delivery_address">Add New Delivery Address</string>
+    <string name="add_new_delivery_address">Add Delivery Address</string>
     <string name="billing_address">Billing Address</string>
     <string name="add_new_billing_address">Add New Billing Address</string>
     <string name="payment_method">Payment Method</string>

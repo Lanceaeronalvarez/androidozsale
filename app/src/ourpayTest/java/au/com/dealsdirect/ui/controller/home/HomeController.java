@@ -4,6 +4,7 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.content.ContextCompat;
+import android.support.v4.util.Pair;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -20,6 +21,7 @@ import com.bluelinelabs.conductor.RouterTransaction;
 import com.bluelinelabs.conductor.changehandler.HorizontalChangeHandler;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 import javax.inject.Inject;
@@ -81,13 +83,15 @@ public class HomeController extends BaseController implements HomeMvpView {
     @BindView(R.id.controller_home_bottom_nav)
     AHBottomNavigation mBottomNavigationView;
 
+    private HashMap<Integer,Pair<Router,ViewGroup>> mRouterContainerMapping;
+
+
+
     private Router mShopRouter;
     private Router mPaymentScheduleRouter;
     private Router mOurPayRouter;
     private Router mAccountsRouter;
     private Router mCheckoutRouter;
-    private List<Router> mRouterList;
-    private List<ViewGroup> mContainersList;
 
     public Router getAccountsRouter() {
         return mAccountsRouter;
@@ -137,7 +141,13 @@ public class HomeController extends BaseController implements HomeMvpView {
 //        mOurPayRouter = Conductor.attachRouter(getActivity(), mPaymentScheduleContainer, null);
 //        mCheckoutRouter = Conductor.attachRouter(getActivity(), mCheckoutContainer, null);
 
+//        Payment Scheduler Router is disabled atm. Search functions is the 2nd option in bottom nav bar
         mShopRouter = getChildRouter(mShopContainer);
+        mPaymentScheduleRouter = getChildRouter(mPaymentScheduleContainer);
+        mOurPayRouter = getChildRouter(mOurpayContainer);
+        mAccountsRouter = getChildRouter(mAccountsContainer);
+        mCheckoutRouter = getChildRouter(mCheckoutContainer);
+
         if (!mShopRouter.hasRootController()) {
             ShopsController shopsController = new ShopsController();
             mActivity.setShopController(shopsController);
@@ -145,27 +155,19 @@ public class HomeController extends BaseController implements HomeMvpView {
                     .tag(ShopsController.TAG));
         }
 
-        mPaymentScheduleRouter = getChildRouter(mPaymentScheduleContainer);
-
         if (!mPaymentScheduleRouter.hasRootController()) {
             mPaymentScheduleRouter.setRoot(RouterTransaction.with(SampleController.newInstance("test controller"))
                     .tag(ViewContactsController.TAG));
         }
 
-        mOurPayRouter = getChildRouter(mOurpayContainer);
-
         if (!mOurPayRouter.hasRootController()) {
             mOurPayRouter.setRoot(RouterTransaction.with(DashboardController.newInstance()));
         }
-
-        mAccountsRouter = getChildRouter(mAccountsContainer);
 
         if (!mAccountsRouter.hasRootController()) {
             mAccountsRouter.setRoot(RouterTransaction.with(AccountController.newInstance()));
             mActivity.setAccountsRouter(mAccountsRouter);
         }
-
-        mCheckoutRouter = getChildRouter(mCheckoutContainer);
 
         if (!mCheckoutRouter.hasRootController()) {
             mCheckoutRouter.setRoot(RouterTransaction.with(new CheckoutController())
@@ -173,20 +175,13 @@ public class HomeController extends BaseController implements HomeMvpView {
             ((MainActivity) getActivity()).setCheckoutRouter(mCheckoutRouter);
         }
 
-        mContainersList = new ArrayList<>();
-        mContainersList.add(mShopContainer);
-        mContainersList.add(mPaymentScheduleContainer);
-        mContainersList.add(mOurpayContainer);
-        mContainersList.add(mAccountsContainer);
-        mContainersList.add(mCheckoutContainer);
+        mRouterContainerMapping = new HashMap<>();
+        mRouterContainerMapping.put(0, new Pair<>(mShopRouter,mShopContainer));
+        mRouterContainerMapping.put(1, new Pair<>(mPaymentScheduleRouter,mPaymentScheduleContainer));
+        mRouterContainerMapping.put(2, new Pair<>(mOurPayRouter,mOurpayContainer));
+        mRouterContainerMapping.put(3, new Pair<>(mAccountsRouter,mAccountsContainer));
+        mRouterContainerMapping.put(4, new Pair<>(mCheckoutRouter,mCheckoutContainer));
         setVisibleContainer(0);
-
-        mRouterList = new ArrayList<>();
-        mRouterList.add(mShopRouter);
-        mRouterList.add(mPaymentScheduleRouter);
-        mRouterList.add(mOurPayRouter);
-        mRouterList.add(mAccountsRouter);
-        mRouterList.add(mCheckoutRouter);
 
         mActivity.setHomeRouter(mShopRouter);
         AHBottomNavigationAdapter navigationAdapter = new AHBottomNavigationAdapter(getActivity(), R.menu.bottom_navigation_menu);
@@ -464,9 +459,9 @@ public class HomeController extends BaseController implements HomeMvpView {
     }
 
     public void setVisibleContainer(int i) {
-        mContainersList.get(currentVisibleIndex).setVisibility(View.GONE);
+        mRouterContainerMapping.get(currentVisibleIndex).second.setVisibility(View.GONE);
         previousVisibleIndex = currentVisibleIndex;
-        mContainersList.get(i).setVisibility(View.VISIBLE);
+        mRouterContainerMapping.get(i).second.setVisibility(View.VISIBLE);
         mBottomNavigationView.setCurrentItem(i, false);
         currentVisibleIndex = i;
     }
@@ -483,8 +478,8 @@ public class HomeController extends BaseController implements HomeMvpView {
     public void resetVisibleContainer() {
 
         if (!(getCurrentRouter() == mAccountsRouter || getCurrentRouter() == mShopRouter)) {
-            mContainersList.get(currentVisibleIndex).setVisibility(View.GONE);
-            mContainersList.get(previousVisibleIndex).setVisibility(View.VISIBLE);
+            mRouterContainerMapping.get(currentVisibleIndex).second.setVisibility(View.GONE);
+            mRouterContainerMapping.get(previousVisibleIndex).second.setVisibility(View.VISIBLE);
             mBottomNavigationView.setCurrentItem(previousVisibleIndex, false);
             currentVisibleIndex = previousVisibleIndex;
 
@@ -499,7 +494,7 @@ public class HomeController extends BaseController implements HomeMvpView {
     }
 
     public Router getCurrentRouter() {
-        return mRouterList.get(currentVisibleIndex);
+        return mRouterContainerMapping.get(currentVisibleIndex).first;
     }
 
     public Controller getCurrentControllerOnRouter(Router router) {

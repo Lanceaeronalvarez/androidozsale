@@ -12,6 +12,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.TextView;
 
 import com.bluelinelabs.conductor.RouterTransaction;
@@ -40,16 +41,18 @@ public class LoginController extends BaseController implements LoginMvpView {
     @Inject
     LoginMvpPresenter<LoginMvpView> mPresenter;
 
-    @BindView(R.id.email)
+    @BindView(R.id.controller_login_email_add)
     EditText mEmailEditText;
-    @BindView(R.id.password)
+    @BindView(R.id.controller_login_password)
     EditText mPasswordEditText;
-    @BindView(R.id.login_button)
+    @BindView(R.id.controller_login_button)
     Button mLoginButton;
     @BindView(R.id.fragment_login_signup_text)
     TextView mSignUpTextView;
     @BindView(R.id.controller_login_forgot_password_text)
     TextView mForgotPasswordTextView;
+    @BindView(R.id.partial_toolbar_left_view)
+    ImageButton mLeftButton;
 
     private boolean isLoginTapped = false;
 
@@ -104,6 +107,7 @@ public class LoginController extends BaseController implements LoginMvpView {
     protected void setUp(View view) {
         mActivity.setDraggableViewPager(false);
 
+        mLeftButton.setVisibility(View.INVISIBLE);
         mLoginButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -124,7 +128,7 @@ public class LoginController extends BaseController implements LoginMvpView {
         super.onDestroyView(view);
     }
 
-    @OnClick(R.id.controller_login_close_icon)
+    @OnClick(R.id.partial_toolbar_right_view)
     void onCloseIconClick() {
         mActivity.onBackPressed();
     }

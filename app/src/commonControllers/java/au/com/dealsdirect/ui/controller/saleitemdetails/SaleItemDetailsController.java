@@ -106,7 +106,7 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
     @BindView(R.id.productPreviousPrice)
     TextView mProductPreviousPrice;
     @BindView(R.id.product_details_sizes_container)
-    LinearLayout mSizesContainer;
+    ViewGroup mSizesContainer;
     @BindView(R.id.product_details_size_list)
     TagFlowLayout mSizesFlowLayout;
     @BindView(R.id.product_details_shipping_desc_container)
@@ -543,8 +543,7 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
             mActivity.showLoginController(getRouter(), new AuthHandler() {
                 @Override
                 public void success() {
-                    mActivity.getMainController().getHomeController().resetOurPayRouter();
-                    mActivity.getMainController().getHomeController().resetPaymentScheduleRouter();
+                    mActivity.getMainController().getHomeController().resetRouters();
                     mActivity.callGCMRegisterSubscriber();
                     mPresenter.addToCart(request);
                     if (mSharedImageLocation != null) {

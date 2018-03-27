@@ -84,7 +84,7 @@
                         android:layout_height="40dp"
                         android:layout_weight="1"
                         android:background="@drawable/bg_toolbar_button"
-                        android:src="@drawable/ic_close" />
+                        android:src="@drawable/ic_close_search" />
                 </LinearLayout>
 
                 <TextView
