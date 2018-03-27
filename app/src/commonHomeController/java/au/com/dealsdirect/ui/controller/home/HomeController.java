@@ -121,12 +121,6 @@ public class HomeController extends BaseController implements HomeMvpView {
         super.onViewBound(view);
         mRoot = view;
 
-//        mShopRouter = Conductor.attachRouter(getActivity(), mShopContainer, null);
-//        mAccountsRouter = Conductor.attachRouter(getActivity(), mAccountsContainer, null);
-//        mContactsRouter = Conductor.attachRouter(getActivity(), mContactsContainer, null);
-//        mInvitesRouter = Conductor.attachRouter(getActivity(), mInvitesContainer, null);
-//        mCheckoutRouter = Conductor.attachRouter(getActivity(), mCheckoutContainer, null);
-
         mShopRouter = getChildRouter(mFirstControllerContainer);
         mAccountsRouter = getChildRouter(mSecondControllerContainer);
         mContactsRouter = getChildRouter(mThirdControllerContainer);
@@ -427,9 +421,24 @@ public class HomeController extends BaseController implements HomeMvpView {
         getBottomNavigationView().setNotification("", 4);
     }
 
+    private void proceedToController(int id) {
+        switch (id){
+            case 2:
+                showThirdTabController();
+                break;
+            case 3:
+                showFourthTabController();
+                break;
+            case 4:
+                showFifthTabController();
+                break;
+        }
+    }
+
     public void hideBottomNav() {
-        if (mBottomNavigationView != null)
+        if (mBottomNavigationView != null) {
             mBottomNavigationView.setVisibility(View.GONE);
+        }
     }
 
     public void showBottomNav() {

@@ -43,15 +43,17 @@ public class AddNewAddressController extends BaseController implements AddNewAdd
     private ArrayList<DecorationInfoList> mDecorationInfoList;
     private HashMap<DecorationInfoList, View> mViewMap = new HashMap<>();
 
-    @BindView(R.id.partial_toolbar_arrow_title)
-    TextView mAddNewAddressToolarTitle;
-    @BindView(R.id.partial_toolbar_right_view)
-    ImageView mAddNewAddressRightOption;
-
+    private boolean mIsFromCart = false;
 
     @Inject
     AddNewAddressMvpPresenter<AddNewAddressMvpView> mPresenter;
-    public boolean mCalledFromCart = false;
+
+    @BindView(R.id.partial_toolbar_arrow_title)
+    TextView mAddNewAddressToolarTitle;
+
+    @BindView(R.id.partial_toolbar_right_view)
+    ImageView mAddNewAddressRightOption;
+
 
     public AddNewAddressController(String decorationInfoList, boolean calledFromCart){
         this(new BundleBuilder(new Bundle())
@@ -63,7 +65,7 @@ public class AddNewAddressController extends BaseController implements AddNewAdd
     public AddNewAddressController(Bundle args) {
         super(args);
         mDecorationInfoList = JsonUtils.convertStringToObject(args.getString(DECORATION_INFO_LIST), new TypeToken<ArrayList<DecorationInfoList>>(){}.getType());
-        mCalledFromCart = args.getBoolean(CALLED_FROM_CART,false);
+        mIsFromCart = args.getBoolean(CALLED_FROM_CART,false);
     }
 
 
@@ -87,7 +89,7 @@ public class AddNewAddressController extends BaseController implements AddNewAdd
         mPresenter.onAttach(this);
 
         if (mDecorationInfoList != null) {
-            LinearLayout deliveryInfoPlaceholder = (LinearLayout) view.findViewById(R.id.deliveryInfoPlaceholder);
+            LinearLayout deliveryInfoPlaceholder = (LinearLayout) view.findViewById(R.id.row_new_address_placeholder);
 
             View dynamicView = null;
             for (DecorationInfoList info : mDecorationInfoList) {
@@ -95,12 +97,12 @@ public class AddNewAddressController extends BaseController implements AddNewAdd
                     dynamicView = inflater.inflate(R.layout.add_new_address_edit_text, container, false);
                     setDynamicViewsProperties(dynamicView, info);
                     deliveryInfoPlaceholder.addView(dynamicView);
-                    mViewMap.put(info, dynamicView.findViewById(R.id.add_address_value));
+                    mViewMap.put(info, dynamicView.findViewById(R.id.row_add_address_value));
                 } else if (info.Type.equalsIgnoreCase("select")) {
                     dynamicView = inflater.inflate(R.layout.add_new_address_spinner, container, false);
                     setDynamicViewsProperties(dynamicView, info);
                     deliveryInfoPlaceholder.addView(dynamicView);
-                    mViewMap.put(info, dynamicView.findViewById(R.id.add_address_spinner));
+                    mViewMap.put(info, dynamicView.findViewById(R.id.row_add_address_spinner));
                 }
             }
         }
@@ -114,8 +116,8 @@ public class AddNewAddressController extends BaseController implements AddNewAdd
         switch (infoList.Type.toLowerCase()) {
             case "text":
             case "numeric":
-                EditText editTextValue = (EditText) dynamicView.findViewById(R.id.add_address_value);
-                TextView textViewLabel = (TextView) dynamicView.findViewById(R.id.add_address_label);
+                EditText editTextValue = (EditText) dynamicView.findViewById(R.id.row_add_address_value);
+                TextView textViewLabel = (TextView) dynamicView.findViewById(R.id.row_add_address_label);
 
                 //Set input type
                 if (infoList.getDataType() !=null && (infoList.getDataType().equalsIgnoreCase("phone") || infoList.getType().equalsIgnoreCase("numeric"))) {
@@ -134,18 +136,18 @@ public class AddNewAddressController extends BaseController implements AddNewAdd
 
                 break;
             case "select":
-                TextView textViewLabel2 = (TextView) dynamicView.findViewById(R.id.add_address_label);
-                textViewLabel2.setText(StringUtils.toTitleCase(infoList.Label));
+                TextView spinnerLabel = (TextView) dynamicView.findViewById(R.id.row_add_address_label);
+                spinnerLabel.setText(StringUtils.toTitleCase(infoList.Label));
 
                 ArrayAdapter<String> signatureOnDeliveryAdapter = new ArrayAdapter<>(mActivity,
                         R.layout.add_new_address_spinner_text, infoList.Options);
 
-                Spinner signatureOnDeliverySpinner = (Spinner) dynamicView.findViewById(R.id.add_address_spinner);
+                Spinner signatureOnDeliverySpinner = (Spinner) dynamicView.findViewById(R.id.row_add_address_spinner);
                 signatureOnDeliverySpinner.setAdapter(signatureOnDeliveryAdapter);
 
                 //Add asterisk to required fields
                 if (infoList.getValidate().equalsIgnoreCase("*")) {
-                    textViewLabel2.setText(textViewLabel2.getText() + "*");
+                    spinnerLabel.setText(spinnerLabel.getText() + "*");
                 }
                 break;
 

@@ -48,7 +48,7 @@ public class ViewAddressController extends BasePullToRefreshController implement
 
     @BindView(R.id.no_addresses_layout)
     RelativeLayout mAddressPlaceHolder;
-    @BindView(R.id.view_addresses_recyclerView)
+    @BindView(R.id.controller_addresses_recyclerview)
     RecyclerView mRecyclerView;
 
     @BindView(R.id.partial_toolbar_arrow_title)
@@ -261,5 +261,10 @@ public class ViewAddressController extends BasePullToRefreshController implement
                 .pushChangeHandler(new HorizontalChangeHandler())
                 .popChangeHandler(new HorizontalChangeHandler()));
 
+    }
+
+    @OnClick(R.id.controller_address_button)
+    public void clickAddNewAddress(){
+        showAddNewAddress();
     }
 }

@@ -78,7 +78,7 @@
     <!-- Button -->
     <dimen name="button_drawable_size">20dp</dimen>
     <dimen name="button_elevation">2.5dp</dimen>
-    
+
     <!-- Partial Toolbar Sizes -->
     <dimen name="partial_toolbar_button_size">40dp</dimen>
     <dimen name="partial_toolbar_button_padding_right">2dp</dimen>
@@ -93,6 +93,7 @@
     <dimen name="sale_item_image_padding_left">8dp</dimen>
     <dimen name="sale_item_image_padding_right">8dp</dimen>
     <dimen name="sale_item_image_height">200dp</dimen>
+
 
 </resources>
 

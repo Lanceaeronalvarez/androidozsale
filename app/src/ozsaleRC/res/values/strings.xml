@@ -167,15 +167,13 @@
 
     <bool name="is_voucher_background_needed">false</bool>
 
-    <string name="your_current_delivery_address">YOUR CURRENT DELIVERY ADDRESS</string>
     <string name="add_new_address">Add New Address</string>
+    <string name="your_current_delivery_address">YOUR CURRENT DELIVERY ADDRESS</string>
     <string name="add_new_voucher">Add New Voucher</string>
     <string name="enter_promo_code">Enter Code</string>
     <string name="voucher">Vouchers</string>
 
     <bool name="is_item_attribute_gone">true</bool>
     <bool name="is_checkout_orders_label_visible">true</bool>
-
-
 
 </resources>

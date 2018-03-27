@@ -38,7 +38,7 @@
                 android:layout_weight="2"
                 android:textColor="@color/row_checkout_text_dark_color"
                 android:textSize="@dimen/text_size_xlarge"
-                tools:text="@string/test_product_name" />
+                tools:text="Philosophy (Runway) Cotton Sleeveless Plain" />
 
         </LinearLayout>
 
