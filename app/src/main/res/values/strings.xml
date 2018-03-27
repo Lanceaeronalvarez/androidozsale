@@ -170,7 +170,6 @@
 
     <!--CHECKOUT-->
     <string name="checkout_page_toolbar_title">My Basket</string>
-    <string name="test_product_name">Philosophy (Runway) Cotton Sleeveless Plain</string>
     <string name="test_category_name">Cache cache</string>
     <string name="please_select_size">Please select size</string>
     <string name="add_new_address_bottom_button">ADD</string>

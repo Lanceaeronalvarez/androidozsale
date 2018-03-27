@@ -3,7 +3,6 @@ package au.com.dealsdirect.ui.controller.details;
 import android.app.DatePickerDialog;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -45,7 +44,7 @@ public class DetailsController extends BasePullToRefreshController implements De
     TextView mTitleTextView;
 
     @BindView(R.id.partial_toolbar_filter_view)
-    ImageView mSaveUserDetailsButton;
+    ImageView mToolbarSaveButton;
 
     @BindView(R.id.controller_details_text_firstname)
     EditText mFirstNameText;
@@ -53,7 +52,7 @@ public class DetailsController extends BasePullToRefreshController implements De
     @BindView(R.id.controller_details_text_lastname)
     EditText mLastNameText;
 
-    @BindView(R.id.controller_details_text_dateOfBirth)
+    @BindView(R.id.controller_details_text_birthday)
     EditText mDateOfBirthText;
 
     @BindView(R.id.controller_details_spinner_gender)
@@ -65,10 +64,10 @@ public class DetailsController extends BasePullToRefreshController implements De
     @BindView(R.id.controller_details_text_password)
     EditText mPasswordText;
 
-    @BindView(R.id.controller_details_text_newPassword)
+    @BindView(R.id.controller_details_text_new_password)
     EditText mNewPasswordText;
 
-    @BindView(R.id.controller_details_text_confirmPassword)
+    @BindView(R.id.controller_details_text_confirm_password)
     EditText mConfirmPasswordText;
 
     @BindView(R.id.controller_details_background)
@@ -123,7 +122,7 @@ public class DetailsController extends BasePullToRefreshController implements De
 
     @Override
     protected void setUp(View view) {
-        mSaveUserDetailsButton.setImageDrawable(
+        mToolbarSaveButton.setImageDrawable(
                 getResources().getDrawable(R.drawable.ic_check));
         mTitleTextView.setText("Personal Details");
 
@@ -236,6 +235,11 @@ public class DetailsController extends BasePullToRefreshController implements De
     public void onBackClick() {
         hideKeyboard();
         mActivity.onBackPressed();
+    }
+
+    @OnClick(R.id.controller_details_button)
+    public void saveChanges() {
+        saveUserDetails();
     }
 
     @Override

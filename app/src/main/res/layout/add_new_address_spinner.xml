@@ -7,13 +7,13 @@
     android:paddingTop="10dp">
 
     <TextView
-        android:id="@+id/add_address_label"
+        android:id="@+id/row_add_address_label"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textColor="@color/gray_active_field_text" />
 
     <android.support.v7.widget.AppCompatSpinner
-        android:id="@+id/add_address_spinner"
+        android:id="@+id/row_add_address_spinner"
         style="@style/DDEditTextStyle"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

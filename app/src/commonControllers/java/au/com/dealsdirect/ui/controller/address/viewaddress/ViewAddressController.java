@@ -31,7 +31,6 @@ import au.com.dealsdirect.ui.base.BasePullToRefreshController;
 import au.com.dealsdirect.ui.controller.address.addnewaddress.AddNewAddressController;
 import au.com.dealsdirect.ui.custom.CustomAlertDialog;
 import au.com.dealsdirect.ui.custom.RecyclerOnTouchListener;
-import au.com.dealsdirect.ui.main.MainActivity;
 import au.com.dealsdirect.utils.BundleBuilder;
 import butterknife.BindView;
 import butterknife.OnClick;
@@ -49,7 +48,7 @@ public class ViewAddressController extends BasePullToRefreshController implement
 
     @BindView(R.id.no_addresses_layout)
     RelativeLayout mAddressPlaceHolder;
-    @BindView(R.id.view_addresses_recyclerView)
+    @BindView(R.id.controller_addresses_recyclerview)
     RecyclerView mRecyclerView;
 
     @BindView(R.id.partial_toolbar_arrow_title)
@@ -262,5 +261,10 @@ public class ViewAddressController extends BasePullToRefreshController implement
                 .pushChangeHandler(new HorizontalChangeHandler())
                 .popChangeHandler(new HorizontalChangeHandler()));
 
+    }
+
+    @OnClick(R.id.controller_address_button)
+    public void clickAddNewAddress(){
+        showAddNewAddress();
     }
 }

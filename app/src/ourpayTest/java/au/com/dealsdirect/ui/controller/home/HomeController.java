@@ -129,12 +129,6 @@ public class HomeController extends BaseController implements HomeMvpView {
     protected void onViewBound(@NonNull View view) {
         super.onViewBound(view);
 
-//        mShopRouter = Conductor.attachRouter(getActivity(), mShopContainer, null);
-//        mAccountsRouter = Conductor.attachRouter(getActivity(), mAccountsContainer, null);
-//        mPaymentScheduleRouter = Conductor.attachRouter(getActivity(), mOurpayContainer, null);
-//        mOurPayRouter = Conductor.attachRouter(getActivity(), mPaymentScheduleContainer, null);
-//        mCheckoutRouter = Conductor.attachRouter(getActivity(), mCheckoutContainer, null);
-
         mShopRouter = getChildRouter(mShopContainer);
         if (!mShopRouter.hasRootController()) {
             ShopsController shopsController = new ShopsController();
@@ -446,18 +440,23 @@ public class HomeController extends BaseController implements HomeMvpView {
     }
 
     private void proceedToController(int id) {
-        if (id == 1) {
-            showPaymentScheduleController();
-        } else if (id == 2) {
-            showDashboardController();
-        } else if (id == 4) {
-            showFifthTabController();
+        switch (id){
+            case 1:
+                showPaymentScheduleController();
+                break;
+            case 2:
+                showDashboardController();
+                break;
+            case 4:
+                showFifthTabController();
+                break;
         }
     }
 
     public void hideBottomNav() {
-        if (mBottomNavigationView != null)
+        if (mBottomNavigationView != null) {
             mBottomNavigationView.setVisibility(View.GONE);
+        }
     }
 
     public void showBottomNav() {
