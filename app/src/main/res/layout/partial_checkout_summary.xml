@@ -5,7 +5,7 @@
               android:id="@+id/partial_checkout_summary_container"
               android:layout_width="match_parent"
               android:layout_height="wrap_content"
-              android:background="#FAFAFA"
+              android:background="@color/row_background_color"
               android:orientation="vertical"
               tools:ignore="MissingPrefix">
 
@@ -13,7 +13,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        android:padding="16sp">
+        android:padding="@dimen/screen_padding">
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -25,8 +25,7 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:text="@string/subtotal"
-                android:textColor="#C4C4C4"
-            />
+                android:textColor="@color/row_checkout_text_light_color" />
 
             <TextView
                 fontPath="@string/font_app_medium"
@@ -36,7 +35,7 @@
                 android:layout_weight="1"
                 android:gravity="end"
                 android:textSize="@dimen/text_size_medium"
-                android:textColor="@color/gray_title_text"
+                android:textColor="@color/row_checkout_text_light_color"
                 android:textStyle="bold"
                 tools:text="$9"/>
 
@@ -46,14 +45,14 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
-            android:paddingTop="5dp">
+            android:paddingTop="@dimen/dimen_extra_small">
 
             <TextView
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:text="@string/shipping_fee"
-                android:textColor="#C4C4C4"
+                android:textColor="@color/row_checkout_text_light_color"
             />
 
             <TextView
@@ -64,7 +63,7 @@
                 android:layout_weight="1"
                 android:gravity="end"
                 android:textSize="@dimen/text_size_medium"
-                android:textColor="@color/gray_title_text"
+                android:textColor="@color/row_checkout_text_light_color"
                 android:textStyle="bold"
                 tools:text="$9"/>
 
@@ -75,15 +74,14 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
-            android:paddingTop="5dp">
+            android:paddingTop="@dimen/dimen_extra_small">
 
             <TextView
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:text="@string/voucher"
-                android:textColor="#C4C4C4"
-            />
+                android:textColor="@color/row_checkout_text_light_color" />
 
             <TextView
                 fontPath="@string/font_app_medium"
@@ -93,7 +91,7 @@
                 android:layout_weight="1"
                 android:gravity="end"
                 android:textSize="@dimen/text_size_medium"
-                android:textColor="@color/gray_title_text"
+                android:textColor="@color/row_checkout_text_light_color"
                 android:textStyle="bold"
                 tools:text="$9"/>
 
@@ -104,15 +102,14 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
-            android:paddingTop="5dp">
+            android:paddingTop="@dimen/dimen_extra_small">
 
             <TextView
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:text="@string/tax"
-                android:textColor="#C4C4C4"
-            />
+                android:textColor="@color/row_checkout_text_light_color" />
 
             <TextView
                 fontPath="@string/font_app_medium"
@@ -122,7 +119,7 @@
                 android:layout_weight="1"
                 android:gravity="end"
                 android:textSize="@dimen/text_size_medium"
-                android:textColor="@color/gray_title_text"
+                android:textColor="@color/row_checkout_text_light_color"
                 android:textStyle="bold"
                 tools:text="$9"/>
 
@@ -132,26 +129,25 @@
 
     <View
         android:layout_width="match_parent"
-        android:layout_height="1dp"
-        android:background="#F2F2F2"/>
+        android:layout_height="@dimen/border_thin"
+        android:background="@color/gray_toolbar_border"/>
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        android:paddingBottom="10dp"
-        android:paddingLeft="16sp"
-        android:paddingRight="16sp"
-        android:paddingTop="10dp">
+        android:paddingBottom="@dimen/dimen_small"
+        android:paddingLeft="@dimen/screen_padding"
+        android:paddingRight="@dimen/screen_padding"
+        android:paddingTop="@dimen/dimen_small">
 
         <TextView
-            android:id="@+id/textView"
             fontPath="@string/font_app_semibold"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:text="@string/total"
-            android:textColor="#676767"
+            android:textColor="@color/row_checkout_text_dark_color"
             android:textSize="@dimen/text_size_xxlarge"/>
 
         <TextView
@@ -161,7 +157,7 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:gravity="end"
-            android:textColor="@color/cart_order_price_text_color"
+            android:textColor="@color/row_checkout_text_dark_color"
             android:textSize="@dimen/text_size_xxxlarge"
             tools:text="$27"/>
 

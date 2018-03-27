@@ -33,10 +33,7 @@ import com.braintreepayments.api.interfaces.BraintreeResponseListener;
 import com.braintreepayments.api.models.CardBuilder;
 import com.braintreepayments.api.models.PaymentMethodNonce;
 import com.braintreepayments.cardform.view.CardForm;
-import com.crashlytics.android.Crashlytics;
-import com.crashlytics.android.answers.Answers;
 import com.mysale.genie.utility.RxBus;
-import com.newrelic.agent.android.NewRelic;
 
 import java.util.List;
 
@@ -70,7 +67,6 @@ import au.com.dealsdirect.utils.IntrospectionUtils;
 import au.com.dealsdirect.utils.module.GateKeeper;
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import io.fabric.sdk.android.Fabric;
 
 public class MainActivity extends BaseActivity implements MainMvpView {
 
@@ -99,13 +95,14 @@ public class MainActivity extends BaseActivity implements MainMvpView {
     private boolean mIsFromCategories = false;
     private boolean mIsViewPagerSet = false;
     private boolean isTemplateTextsStored = false;
+    private boolean mIsViewAttached = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
         setContentView(R.layout.activity_main);
-
+        mIsViewAttached = true;
         getActivityComponent().inject(this);
 
         setUnBinder(ButterKnife.bind(this));
@@ -167,6 +164,7 @@ public class MainActivity extends BaseActivity implements MainMvpView {
     @Override
     protected void onDestroy() {
         mPresenter.onDetach();
+        mIsViewAttached = false;
         super.onDestroy();
     }
 
@@ -202,6 +200,8 @@ public class MainActivity extends BaseActivity implements MainMvpView {
                 case 0:
                     if (mCategoriesRouter.getBackstackSize() == 1) { //go back to shops
                         setRootViewpagerItem(1);
+                    } else {
+                        mCategoriesRouter.handleBack();
                     }
                     break;
                 case 1:
@@ -490,6 +490,11 @@ public class MainActivity extends BaseActivity implements MainMvpView {
         PayPal.authorizeAccount(mBraintreeFragment);
     }
 
+    @Override
+    public void callApiSettings() {
+
+    }
+
     public void onPurchase(CardForm cardForm) {
         CardBuilder cardBuilder = new CardBuilder()
                 .cardNumber(cardForm.getCardNumber())
@@ -771,7 +776,7 @@ public class MainActivity extends BaseActivity implements MainMvpView {
         }
     };
 
-    private void updateSnackbar(boolean isOnline) {
+    public void updateSnackbar(boolean isOnline) {
         if(!isOnline && !mSnackbar.isShown()) {
             showSnackBar(getString(R.string.no_internet_connection), true);
         }else if(isOnline && mSnackbar.isShown()){
@@ -798,4 +803,5 @@ public class MainActivity extends BaseActivity implements MainMvpView {
     public void showNoNetworkLayout() {
 
     }
+
 }

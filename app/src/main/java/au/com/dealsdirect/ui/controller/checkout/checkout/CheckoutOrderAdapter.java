@@ -29,6 +29,7 @@ public class CheckoutOrderAdapter extends ArrayAdapter<Item> {
     private ArrayList<Item> mData;
     private CheckoutMvpPresenter<CheckoutMvpView> mPresenter;
     private int resLayout;
+    private static final int MAX_ITEM_QTY = 5;
 
     public CheckoutOrderAdapter(Context context, int resLayout, ArrayList<Item> data, CheckoutMvpPresenter<CheckoutMvpView> presenter) {
         super(context, resLayout, data);
@@ -47,6 +48,7 @@ public class CheckoutOrderAdapter extends ArrayAdapter<Item> {
         TextView colorText;
         TextView colorValue;
         TextView price;
+        TextView subTotal;
         ProductQuantityLayout quantityLayout;
     }
 
@@ -69,6 +71,7 @@ public class CheckoutOrderAdapter extends ArrayAdapter<Item> {
             view.colorText = (TextView) convertView.findViewById(R.id.item_checkout_color_text);
             view.colorValue = (TextView) convertView.findViewById(R.id.item_checkout_color);
             view.quantityLayout = (ProductQuantityLayout) convertView.findViewById(R.id.item_checkout_quantity);
+            view.subTotal = (TextView) convertView.findViewById(R.id.item_subtotal_price);
 
             convertView.setTag(view);
         } else {
@@ -90,21 +93,28 @@ public class CheckoutOrderAdapter extends ArrayAdapter<Item> {
 //        }
 
         view.name.setText(item.item);
-        if (item.size == null || item.size.length() < 0) {
-            view.sizeText.setVisibility(View.INVISIBLE);
-            view.sizeValue.setVisibility(View.INVISIBLE);
+
+        int visibilityState =  mContext.getResources().getBoolean(R.bool.is_item_attribute_gone) ?
+                View.GONE : View.INVISIBLE;
+
+        if (item.size == null || item.size.isEmpty()) {
+            view.sizeText.setVisibility(visibilityState);
+            view.sizeValue.setVisibility(visibilityState);
         } else {
             view.sizeText.setVisibility(View.VISIBLE);
             view.sizeValue.setVisibility(View.VISIBLE);
             view.sizeValue.setText(item.size);
         }
-        view.colorText.setVisibility(View.INVISIBLE);
+
+        view.colorText.setVisibility(visibilityState);
+        view.colorValue.setVisibility(visibilityState);
 
         view.price.setText(PriceUtils.getPriceStringValue(item.price));
-        view.quantityLayout.setMax(5);
+        view.quantityLayout.setMax(MAX_ITEM_QTY);
         view.quantityLayout.setQuantity(item.qty);
         view.quantityLayout.setAutoUpdateQuantity(false);
         view.quantityLayout.setEditTextToNonEditable();
+        view.subTotal.setText(PriceUtils.getPriceStringValue(item.getSubtotal()));
 
         view.quantityLayout.setOnQuantityChangeListener(new ProductQuantityLayout.onQuantityChangeListener() {
             @Override

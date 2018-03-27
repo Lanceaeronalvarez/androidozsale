@@ -137,9 +137,9 @@ public class ViewAddressController extends BasePullToRefreshController implement
 
     @Override
     protected View inflateView(@NonNull LayoutInflater inflater, @NonNull ViewGroup container) {
-        View view = super.inflateView(inflater, container);
+        View view = super.inflateView(inflater, container, ToolBarType.ARROW);
 
-        fillToolbar(inflater.inflate(R.layout.partial_toolbar_arrow, container, false));
+        setToolBarVisible(getResource().getBoolean(R.bool.address_toolbar_visibility));
         fillContent(inflater.inflate(R.layout.controller_view_address, container, false));
 
         getControllerComponent().inject(this);

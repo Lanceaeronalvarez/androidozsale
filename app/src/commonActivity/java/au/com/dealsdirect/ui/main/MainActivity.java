@@ -37,12 +37,7 @@ import com.braintreepayments.api.interfaces.BraintreeResponseListener;
 import com.braintreepayments.api.models.CardBuilder;
 import com.braintreepayments.api.models.PaymentMethodNonce;
 import com.braintreepayments.cardform.view.CardForm;
-import com.crashlytics.android.Crashlytics;
-import com.crashlytics.android.answers.Answers;
-import com.facebook.FacebookSdk;
-import com.facebook.LoggingBehavior;
 import com.mysale.genie.utility.RxBus;
-import com.newrelic.agent.android.NewRelic;
 
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
@@ -73,12 +68,12 @@ import au.com.dealsdirect.ui.controller.shops.ShopsController;
 import au.com.dealsdirect.ui.controller.splash.SplashScreenController;
 import au.com.dealsdirect.ui.custom.CustomAlertDialog;
 import au.com.dealsdirect.utils.AppConstants;
+import au.com.dealsdirect.utils.AppEventHelper;
 import au.com.dealsdirect.utils.DialogUtils;
 import au.com.dealsdirect.utils.IntrospectionUtils;
 import au.com.dealsdirect.utils.module.GateKeeper;
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import io.fabric.sdk.android.Fabric;
 
 public class MainActivity extends BaseActivity implements MainMvpView {
 
@@ -390,12 +385,18 @@ public class MainActivity extends BaseActivity implements MainMvpView {
             } else if (PaymentInfo.getOurpay() != null) {
                 PaymentInfo.getOurpay().setCanUse(false);
             }
+
+            AppEventHelper.completedPurchase(PaymentInfo.getPaymentType(),
+                    responseValue.getD().getValue().getOrderInfoResult().getItems().size(),
+                    Double.valueOf(responseValue.getD().getValue().getOrderInfoResult().getTotal()),
+                    getString(R.string.default_country_id));
+
             mCheckoutRouter.pushController(RouterTransaction.with(new PaymentSuccessController(responseValue))
                     .pushChangeHandler(new HorizontalChangeHandler())
                     .popChangeHandler(new HorizontalChangeHandler()));
 
             if (getMainController().getHomeController()!=null)
-                getMainController().getHomeController().showCheckoutController();
+                getMainController().getHomeController().showFifthTabController();
 
         } else {
 

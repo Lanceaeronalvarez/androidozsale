@@ -83,6 +83,8 @@
     <color name="toolbar_skin">@color/colorPrimary</color>
     <color name="toolbar_active_skin">@color/colorPrimary</color>
 
+    <color name="back_arrow_color">#5f5f60</color>
+
     <!-- Button Theme -->
     <color name="bg_edit_text_focused">@color/colorPrimary</color>
 

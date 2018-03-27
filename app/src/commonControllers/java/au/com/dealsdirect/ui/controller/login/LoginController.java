@@ -7,11 +7,13 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.TextView;
 
 import com.bluelinelabs.conductor.RouterTransaction;
@@ -40,13 +42,19 @@ public class LoginController extends BaseController implements LoginMvpView {
     @Inject
     LoginMvpPresenter<LoginMvpView> mPresenter;
 
-    @BindView(R.id.email)
+    @BindView(R.id.partial_toolbar_arrow_layout)
+    Toolbar mToolbar;
+    @BindView(R.id.partial_toolbar_arrow_title)
+    TextView mToolbarTitle;
+    @BindView(R.id.partial_toolbar_arrow_view)
+    ImageButton mArrowButton;
+    @BindView(R.id.controller_login_email_edittext)
     EditText mEmailEditText;
-    @BindView(R.id.password)
+    @BindView(R.id.controller_login_password_edittext)
     EditText mPasswordEditText;
     @BindView(R.id.login_button)
     Button mLoginButton;
-    @BindView(R.id.fragment_login_signup_text)
+    @BindView(R.id.controller_login_signup_text)
     TextView mSignUpTextView;
     @BindView(R.id.controller_login_forgot_password_text)
     TextView mForgotPasswordTextView;
@@ -103,6 +111,15 @@ public class LoginController extends BaseController implements LoginMvpView {
     @Override
     protected void setUp(View view) {
         mActivity.setDraggableViewPager(false);
+
+        boolean toolbarVisibility = mActivity.getResources().getBoolean(R.bool.login_toolbar_visibility);
+
+        if(toolbarVisibility) {
+            mToolbar.setVisibility(View.VISIBLE);
+            mToolbarTitle.setText(mActivity.getResources().getString(R.string.login_title));
+        } else {
+            mToolbar.setVisibility(View.GONE);
+        }
 
         mLoginButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -171,7 +188,7 @@ public class LoginController extends BaseController implements LoginMvpView {
         mPresenter.loginViaEmail(email, password);
     }
 
-    @OnClick(R.id.fragment_login_signup_text)
+    @OnClick(R.id.controller_login_signup_text)
     void onSignUpClick() {
         showRegistration();
     }
@@ -185,6 +202,11 @@ public class LoginController extends BaseController implements LoginMvpView {
     @OnClick(R.id.controller_login_forgot_password_text)
     void onForgotPasswordClick() {
         showForgotPassword();
+    }
+
+    @OnClick(R.id.partial_toolbar_arrow_view)
+    public void onBackPress(){
+        mActivity.onBackPressed();
     }
 
     @Override

@@ -50,14 +50,16 @@
     <color name="gray_address_title_text">#858585</color>
     <color name="gray_address_subtitle_text">#454545</color>
 
-    <color name="tab_bar_background">#e7e7e7</color>
+    <color name="tab_bar_background">@color/white</color>
     <color name="tab_bar_icon_inactive">#87939D</color>
     <color name="tab_bar_icon_active">#F00065</color>
     <color name="tab_bar_icon_hovered">#F00065</color>
 
     <color name="app_skin">#FAFAF9</color>
-    <color name="toolbar_skin">#F00065</color>
+    <color name="toolbar_skin">#f00065</color>
     <color name="toolbar_active_skin">#F00065</color>
+
+    <color name="back_arrow_color">#A4AAB3</color>
 
     <!--Search Edit Text Colors-->
     <color name="search_edit_text_hint_color">#CCFFFFFF</color>
@@ -107,6 +109,7 @@
     <color name="idle_logo">@color/colorAccent</color>
 
     <color name="invite_clipboard">#FF8B8B8B</color>
+    <color name="invite_clipboard_pressed">#FF8B8B8B</color>
     <color name="invite_fb">#FF2D91DE</color>
     <color name="invite_fb_pressed">#FF2D91DE</color>
     <color name="invite_twitter">#FF00B5E9</color>
@@ -122,5 +125,17 @@
     <!--MyAccounts TB Background/panel color -->
     <color name="menu_panel_gray">#4B6171</color>
     <color name="menu_panel_gray_selected">#455B6A</color>
+
+    <color name="splash_background_color">@color/toolbar_skin</color>
+    <color name="default_background_color">@color/white</color>
+
+    <color name="controller_login_close_tint_color">#959595</color>
+
+    <color name="row_background_color">@color/white</color>
+    <color name="checkout_quanitity_color">#6E6E6E</color>
+
+    <color name="row_checkout_text_light_color">#717171</color>
+    <color name="row_checkout_text_dark_color">@color/dark_text</color>
+    <color name="sale_items_highlight">#446E87</color>
 
 </resources>

@@ -27,4 +27,10 @@ public interface CheckoutMvpPresenter<V extends MvpView> extends MvpPresenter<V>
     boolean checkIsLoggedIn();
 
     void generateOurpay(Value value);
+
+    void facebookInitiatedCheckout(String paymentType,
+                                   int numItems,
+                                   double price);
+
+    void addAndApplyVoucherByKey(int imageSize, String key);
 }

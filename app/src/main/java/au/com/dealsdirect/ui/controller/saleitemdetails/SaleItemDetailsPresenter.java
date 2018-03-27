@@ -12,6 +12,7 @@ import au.com.dealsdirect.service.ourpay.OurpayError;
 import au.com.dealsdirect.service.ourpay.OurpayState;
 import au.com.dealsdirect.service.ourpay.OurpayStateManager;
 import au.com.dealsdirect.ui.base.BasePresenter;
+import au.com.dealsdirect.utils.AppEventHelper;
 import au.com.dealsdirect.utils.CartUtil;
 import au.com.dealsdirect.utils.rx.SchedulerProvider;
 import io.reactivex.disposables.CompositeDisposable;
@@ -47,6 +48,8 @@ public class SaleItemDetailsPresenter<V extends SaleItemDetailsMvpView> extends 
 
                     getMvpView().hideLoading();
 
+                    AppEventHelper.viewedContent(response.getSkuId(), response.getName(),
+                            response.getPrice().getValue(), getDataManager().getCountryId());
 
                 }, throwable -> {
 
@@ -83,6 +86,9 @@ public class SaleItemDetailsPresenter<V extends SaleItemDetailsMvpView> extends 
                     getMvpView().hideLoading();
 
                     getMvpView().showAddToCartResponse(true);
+
+                    AppEventHelper.addedToCart(requestValues.getSkuId(), requestValues.getItemName(),
+                            requestValues.getPrice(), getDataManager().getCountryId());
 
 
                 }, throwable -> {

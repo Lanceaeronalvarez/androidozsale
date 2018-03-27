@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <dimen name="activity_horizontal_margin">16dp</dimen>
+    <dimen name="activity_vertical_margin">16dp</dimen>
+    <dimen name="screen_padding">16dp</dimen>
+    <dimen name="default_button_height">48dp</dimen>
+    <dimen name="product_details_bottom_padding">64dp</dimen>
+
+    <dimen name="product_details_image_layout_height">420dp</dimen>
+    <bool name="is_tablet">false</bool>
+
+    <dimen name="text_size_small">12sp</dimen>
+    <dimen name="text_size_medium">14sp</dimen>
+    <dimen name="text_size_large">16sp</dimen>
+    <dimen name="text_size_xlarge">18sp</dimen>
+    <dimen name="text_size_xxlarge">20sp</dimen>
+    <dimen name="text_size_xxxlarge">22sp</dimen>
+    <dimen name="text_size_xxxxlarge">24sp</dimen>
+
+    <dimen name="toolbar_height">64dp</dimen>
+    <dimen name="filter_bar_height">42dp</dimen>
+    <dimen name="bottom_nav_height">49dp</dimen>
+
+    <dimen name="cell_height">320dp</dimen>
+    <dimen name="cell_image_height">200dp</dimen>
+    <dimen name="row_account_height">75dp</dimen>
+
+    <dimen name="item_image_height">270dp</dimen>
+    <dimen name="item_list_row_height">40dp</dimen>
+
+    <dimen name="edit_text_height">48dp</dimen>
+    <dimen name="tall_edit_text_height">144dp</dimen>
+
+    <dimen name="placeholder_imageview_margin"> 100dp </dimen>
+    <dimen name="voucher_container_width">240dp</dimen>
+    <dimen name="voucher_container_height">150dp</dimen>
+    <dimen name="voucher_padding">50dp</dimen>
+    <dimen name="voucher_text_padding">10dp</dimen>
+
+    <dimen name="voucher_container_margin">20dp</dimen>
+    <dimen name="voucher_container_padding">20dp</dimen>
+
+    <dimen name="invite_friends_padding">5dp</dimen>
+    <dimen name="invite_friends_image_width">22.5dp</dimen>
+    <dimen name="invite_friends_image_height">20dp</dimen>
+
+    <dimen name="category_image_size">30dp</dimen>
+    <dimen name="category_background_size">70dp</dimen>
+    <dimen name="category_container_width">100dp</dimen>
+
+    <dimen name="return_card_height">450dp</dimen>
+    <dimen name="place_holder_padding">16dp</dimen>
+
+    <dimen name="category_image_padding">15dp</dimen>
+
+    <dimen name="placeholder_icon_size">60dp</dimen>
+    <dimen name="corner_radius">0dp</dimen>
+    <dimen name="button_radius">5dp</dimen>
+    <dimen name="text_padding">10dp</dimen>
+    <dimen name="border_thickness">2dp</dimen>
+    <dimen name="default_viewholder_item_height">43dp</dimen>
+
+    <dimen name="label_space">3dp</dimen>
+
+    <dimen name="chevron_size_small">25dp</dimen>
+    <dimen name="chevron_size_regular">40dp</dimen>
+    <dimen name="chevron_size_large">45dp</dimen>
+
+</resources>

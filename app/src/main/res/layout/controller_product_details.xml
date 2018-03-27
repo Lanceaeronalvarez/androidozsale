@@ -5,7 +5,8 @@
     android:id="@+id/product_details_container"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:ignore="MissingPrefix">
+    tools:ignore="MissingPrefix"
+    android:background="@color/white">
 
     <RelativeLayout
         android:id="@+id/product_details_coordinator"

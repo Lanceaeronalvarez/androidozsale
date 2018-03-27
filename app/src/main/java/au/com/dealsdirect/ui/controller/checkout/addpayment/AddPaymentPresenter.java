@@ -1,5 +1,11 @@
 package au.com.dealsdirect.ui.controller.checkout.addpayment;
 
+import android.os.Bundle;
+
+import com.facebook.FacebookSdk;
+import com.facebook.appevents.AppEventsConstants;
+import com.facebook.appevents.AppEventsLogger;
+
 import javax.inject.Inject;
 
 import au.com.dealsdirect.data.DataManager;

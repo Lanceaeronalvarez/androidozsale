@@ -1,5 +1,7 @@
 package au.com.dealsdirect.ui.controller.checkout.checkout;
 
+import android.content.Context;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.NonNull;
@@ -9,8 +11,10 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.EditorInfo;
 import android.widget.Button;
 import android.widget.CheckBox;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
@@ -24,10 +28,11 @@ import com.bluelinelabs.conductor.changehandler.HorizontalChangeHandler;
 import com.google.gson.Gson;
 import com.mysale.genie.utility.RxBus;
 
-import org.w3c.dom.Text;
-
 import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.LinkedList;
 import java.util.List;
+import java.util.Set;
 
 import javax.inject.Inject;
 
@@ -39,6 +44,7 @@ import au.com.dealsdirect.data.network.model.checkout.getcurrentorder.Summary;
 import au.com.dealsdirect.data.network.model.checkout.getcurrentorder.Value;
 import au.com.dealsdirect.data.network.model.checkout.getcurrentorder.Voucher;
 import au.com.dealsdirect.data.network.model.checkout.getuserpaymentmethods.PaymentMethod;
+import au.com.dealsdirect.data.network.model.vouchers.AddAndApplyVoucherByKeyResponse;
 import au.com.dealsdirect.service.ourpay.Ourpay;
 import au.com.dealsdirect.service.ourpay.OurpayPanel;
 import au.com.dealsdirect.service.ourpay.OurpayStateManager;
@@ -56,7 +62,6 @@ import au.com.dealsdirect.ui.controller.vouchers.Add.AddVouchersController;
 import au.com.dealsdirect.ui.custom.CustomAlertDialog;
 import au.com.dealsdirect.ui.main.FetchTokenHandler;
 import au.com.dealsdirect.ui.main.MainActivity;
-import au.com.dealsdirect.ui.main.MainMvpView;
 import au.com.dealsdirect.ui.main.PaymentInfo;
 import au.com.dealsdirect.utils.BundleBuilder;
 import au.com.dealsdirect.utils.BundleKeys;
@@ -79,14 +84,31 @@ public class CheckoutController extends BaseController implements CheckoutMvpVie
     public static final String CARD_MASTERCARD = "MasterCard";
     public static final String CARD_VISA = "Visa";
 
+    private static final int VOUCHER_IMAGE_SIZE = 100;
+    private static final String VOUCHER_SET = "VOUCHER_SET";
+
     @Inject
     CheckoutMvpPresenter<CheckoutMvpView> mPresenter;
 
-    @BindView(R.id.fragment_checkout_list)
+    @BindView(R.id.controller_checkout_list)
     ListView mListView;
 
-    private View mFooterView;
+    @BindView(R.id.no_cart_items_layout)
+    RelativeLayout mNoCartItemsLayout;
 
+    @BindView(R.id.partial_checkout_empty_button)
+    Button mShopNowButton;
+
+    @BindView(R.id.partial_toolbar_title_view)
+    TextView mTitleTextView;
+
+    @BindView(R.id.checkout_scrollview)
+    NestedScrollView mNestedScrollView;
+
+    @BindView(R.id.controller_checkout_orders_label)
+    TextView mOrdersLabel;
+
+    private View mFooterView;
     private RelativeLayout mAddNewAddressLayout;
     private RelativeLayout mAddNewPaymentLayout;
     private RelativeLayout mAddNewVoucherLayout;
@@ -106,15 +128,9 @@ public class CheckoutController extends BaseController implements CheckoutMvpVie
     private LinearLayout mOurpayHolder;
     private RelativeLayout mButtonOurpay;
     private CheckBox mCheckBoxOurpayTC;
+    private EditText mVouchersEditText;
 
-    @BindView(R.id.no_cart_items_layout)
-    RelativeLayout mNoCartItemsLayout;
-    @BindView(R.id.partial_checkout_empty_button)
-    Button mShopNowButton;
-    @BindView(R.id.partial_toolbar_title_view)
-    TextView mTitleTextView;
-    @BindView(R.id.checkout_scrollview)
-    NestedScrollView mNestedScrollView;
+    public OurpayPanel ourpayPanel;
 
     private ArrayList<Item> mItemList = new ArrayList<>();
     private ArrayList<PaymentMethod> mPaymentList = new ArrayList<>();
@@ -122,13 +138,16 @@ public class CheckoutController extends BaseController implements CheckoutMvpVie
     private ArrayList<DecorationInfoList> mDecorationInfoList = new ArrayList<>();
     private ArrayList<Voucher> mVouchers = new ArrayList<>();
     private CheckoutOrderAdapter mAdapter;
+    private List<String> mVoucherIds = new LinkedList<>();
+    private List<String> mTempVoucherIds = new LinkedList<>();
+    private String mTempVoucherPromoKey;
+    private SharedPreferences mSharedPreference;
 
+    private boolean mIsCartLoading = false;
     private boolean mIsVoucherAdded = false;
-    private String mCartPhone;
-    private Value mValue;
+    private String mAddressPhoneNumber;
 
-    private boolean mCartIsLoading = false;
-    public OurpayPanel ourpayPanel;
+    private Value mValue;
 
     public CheckoutController() {
 
@@ -240,6 +259,8 @@ public class CheckoutController extends BaseController implements CheckoutMvpVie
         mMasterpassButton = (RelativeLayout) mFooterView.findViewById(R.id.partial_checkout_button_masterpass);
         mOurpayHolder = (LinearLayout) mFooterView.findViewById(R.id.partial_checkout_ourpay_panel_holder);
 
+        mVouchersEditText = (EditText) mFooterView.findViewById(R.id.partial_checkout_voucher_edittext);
+
         setUp(view);
     }
 
@@ -283,6 +304,16 @@ public class CheckoutController extends BaseController implements CheckoutMvpVie
         mPaypalButton.setOnClickListener(view2 -> onPaypalButtonClick());
         mMasterpassButton.setOnClickListener(view3 -> onMasterpassButtonClick());
 
+        mVouchersEditText.setOnEditorActionListener((textView, actionId, keyEvent) -> {
+            if(actionId == EditorInfo.IME_ACTION_DONE) {
+                mPresenter.addAndApplyVoucherByKey(VOUCHER_IMAGE_SIZE, mVouchersEditText.getText().toString());
+                return true;
+            }
+            return false;
+        });
+
+        mSharedPreference = mActivity.getSharedPreferences("Voucher_Preference", Context.MODE_PRIVATE);
+
         //Code for returning to checkout, call reload
         getRouter().addChangeListener(new ControllerChangeHandler.ControllerChangeListener() {
             @Override
@@ -322,12 +353,12 @@ public class CheckoutController extends BaseController implements CheckoutMvpVie
 
     @Override
     public boolean isCartLoading() {
-        return mCartIsLoading;
+        return mIsCartLoading;
     }
 
     @Override
     public void setCartIsLoading(boolean val) {
-        this.mCartIsLoading = val;
+        this.mIsCartLoading = val;
     }
 
     @Override
@@ -388,7 +419,12 @@ public class CheckoutController extends BaseController implements CheckoutMvpVie
         } else {
             mNoCartItemsLayout.setVisibility(View.GONE);
             showPaymentButtons();
+            int showOrdersLabel = mActivity.getResources().getBoolean(R.bool.is_checkout_orders_label_visible) ?
+                    View.VISIBLE : View.GONE;
+            mOrdersLabel.setVisibility(showOrdersLabel);
             mListView.setVisibility(View.VISIBLE);
+
+            mOrdersLabel.setVisibility(View.VISIBLE);
             mItemList.clear();
             mItemList.addAll(items);
             mAdapter.notifyDataSetChanged();
@@ -407,7 +443,7 @@ public class CheckoutController extends BaseController implements CheckoutMvpVie
         if (deliveryAddress != null) {
             ((TextView) mAddressLayout.findViewById(R.id.partial_checkout_address_name)).setText(deliveryAddress.name);
             ((TextView) mAddressLayout.findViewById(R.id.partial_checkout_address_details)).setText(formAddressDetails(deliveryAddress));
-            mCartPhone = deliveryAddress.phone;
+            mAddressPhoneNumber = deliveryAddress.phone;
 
             mAddNewAddressLayout.setVisibility(View.GONE);
             mAddressLayout.setVisibility(View.VISIBLE);
@@ -538,6 +574,43 @@ public class CheckoutController extends BaseController implements CheckoutMvpVie
         }
     }
 
+    @Override
+    public void onAddAndAppliedVoucher(AddAndApplyVoucherByKeyResponse response) {
+
+        if(response.getValue() == null) {
+            CustomAlertDialog.showCustomAlertDialog(
+                    mActivity,
+                    CustomAlertDialog.CustomDialogIconState.NEGATIVE,
+                    mActivity.getString(R.string.unable_to_apply_voucher));
+            return;
+        }
+
+        if (response.getValue().getResult()) {
+            CustomAlertDialog.showCustomAlertDialog(
+                    mActivity,
+                    CustomAlertDialog.CustomDialogIconState.POSITIVE,
+                    mActivity.getString(R.string.promo_code_applied));
+
+            mVoucherIds.add(mTempVoucherPromoKey);
+            mTempVoucherIds.add(mTempVoucherPromoKey);
+
+            SharedPreferences.Editor editor = mSharedPreference.edit();
+            Set<String> voucherSet = new HashSet<String>();
+            voucherSet.addAll(mVoucherIds);
+            editor.putStringSet(VOUCHER_SET, voucherSet);
+            editor.apply();
+
+
+            loadCart();
+        } else {
+
+            CustomAlertDialog.showCustomAlertDialog(
+                    mActivity,
+                    CustomAlertDialog.CustomDialogIconState.NEGATIVE,
+                    response.getValue().getMessage());
+        }
+    }
+
     private void onPayButtonClick() {
 
         if (!isAddressValid()) {
@@ -549,12 +622,15 @@ public class CheckoutController extends BaseController implements CheckoutMvpVie
 
         RxBus.instance().post(IntrospectionUtils.EVENT_PAY);
 
+        mPresenter.addAndApplyVoucherByKey(VOUCHER_IMAGE_SIZE, mVouchersEditText.getText().toString());
+        mTempVoucherPromoKey = mVouchersEditText.getText().toString();
         if (mActivity.isBraintreeInitialized()) {
             if (mActivity.getPaymentMethodSelected() == null) {
                 showAddPaymentMethodController();
             } else {
                 PaymentInfo.setPaymentType(PaymentInfo.TYPE_BRAINTREE);
                 mActivity.callCreatePaymentTransaction(PaymentInfo.getPaymentType(), "", PaymentInfo.getPaymentMethod().getToken());
+                mPresenter.facebookInitiatedCheckout(PaymentInfo.getPaymentType(), mItemList.size(), mValue.getSummary().total);
             }
         }
     }
@@ -576,6 +652,7 @@ public class CheckoutController extends BaseController implements CheckoutMvpVie
             } else {
                 PaymentInfo.setPaymentType(PaymentInfo.TYPE_BRAINTREE);
                 mActivity.callCreatePaymentTransaction(PaymentInfo.getPaymentType(), "", PaymentInfo.getPaymentMethod().getToken());
+                mPresenter.facebookInitiatedCheckout(PaymentInfo.getPaymentType(), mItemList.size(), mValue.getSummary().total);
             }
         }
     }
@@ -594,6 +671,8 @@ public class CheckoutController extends BaseController implements CheckoutMvpVie
         getRouter().pushController(RouterTransaction.with(MasterpassController.newInstance())
                 .pushChangeHandler(new HorizontalChangeHandler(false))
                 .popChangeHandler(new HorizontalChangeHandler()));
+
+        mPresenter.facebookInitiatedCheckout(PaymentInfo.getPaymentType(), mItemList.size(), mValue.getSummary().total);
         
     }
 
@@ -624,11 +703,12 @@ public class CheckoutController extends BaseController implements CheckoutMvpVie
 
                     if (PaymentInfo.getOurpay().isPhoneVerificationRequired()) {
 
-                        getRouter().pushController(RouterTransaction.with(OurpaySMSVerificationController.newInstance(mCartPhone))
+                        getRouter().pushController(RouterTransaction.with(OurpaySMSVerificationController.newInstance(mAddressPhoneNumber))
                                 .pushChangeHandler(new HorizontalChangeHandler(false))
                                 .popChangeHandler(new HorizontalChangeHandler()));
                     } else {
                         ourpayPaymentSubmit();
+                        mPresenter.facebookInitiatedCheckout(PaymentInfo.getPaymentType(), mItemList.size(), mValue.getSummary().total);
                     }
                 }
             }

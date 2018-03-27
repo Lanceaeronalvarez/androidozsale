@@ -4,85 +4,88 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
-    android:background="@color/white"
+    android:background="@color/default_background_color"
     tools:ignore="MissingPrefix">
 
     <android.support.v4.widget.NestedScrollView
+        android:id="@+id/controller_view_voucher_layout"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
         <LinearLayout
-            android:id="@+id/controller_vouchers_root_layout"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:visibility="visible">
-
-            <TextView
-                android:id="@+id/controller_text_vouchers_desc"
-                fontPath="@string/font_app_light"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:padding="@dimen/activity_horizontal_margin"
-                android:paddingTop="10dp"
-                android:text="@string/vouchers_view_detail"
-                android:textColor="@color/gray_field_text"
-                android:textSize="@dimen/text_size_xxlarge"
-                android:visibility="gone" />
-
-            <com.lsjwzh.widget.recyclerviewpager.RecyclerViewPager
-                android:id="@+id/controller_recycler_view_unused_vouchers"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:clipToPadding="false"
-                android:paddingLeft="@dimen/voucher_padding"
-                android:paddingRight="@dimen/voucher_padding"
-                android:visibility="gone"
-                app:rvp_singlePageFling="true"
-                app:rvp_triggerOffset="0.1" />
+            android:layout_height="match_parent"
+            android:orientation="vertical">
 
             <LinearLayout
-                android:id="@+id/voucher_recycler_divider"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_below="@id/controller_recycler_view_unused_vouchers"
-                android:orientation="vertical"
-                android:paddingBottom="20dp"
-                android:paddingTop="20dp"
-                android:visibility="gone">
-
-                <View
-                    android:layout_width="match_parent"
-                    android:layout_height="0.5dp"
-                    android:background="#D0D0D0" />
-
+                android:orientation="vertical">
 
                 <TextView
-                    android:id="@+id/controller_text_used_voucher_indicator"
+                    android:id="@+id/controller_view_voucher_desc_text"
                     fontPath="@string/font_app_light"
-                    android:layout_width="wrap_content"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginBottom="10dp"
-                    android:paddingLeft="15dp"
-                    android:paddingRight="15dp"
-                    android:paddingTop="5dp"
-                    android:text="Voucher Used" />
+                    android:padding="@dimen/activity_horizontal_margin"
+                    android:paddingTop="@dimen/dimen_small"
+                    android:text="@string/vouchers_view_detail"
+                    android:textColor="@color/gray_field_text"
+                    android:textSize="@dimen/text_size_xxlarge"
+                    android:visibility="gone" />
+
+                <com.lsjwzh.widget.recyclerviewpager.RecyclerViewPager
+                    android:id="@+id/controller_view_voucher_unused_recyclerviewpager"
+                    style="@style/RecyclerViewPagerVouchersStyle"
+                    app:rvp_singlePageFling="true"
+                    app:rvp_triggerOffset="0.1" />
+
+                <LinearLayout
+                    android:id="@+id/controller_view_voucher_divider"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/controller_view_voucher_unused_recyclerviewpager"
+                    android:orientation="vertical"
+                    android:paddingBottom="@dimen/dimen_large"
+                    android:paddingTop="@dimen/dimen_large"
+                    android:visibility="gone">
+
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="0.5dp"
+                        android:background="@color/gray_inactive_field_text" />
+
+
+                    <TextView
+                        android:id="@+id/controller_view_voucher_used_label"
+                        fontPath="@string/font_app_light"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="@dimen/dimen_small"
+                        android:paddingLeft="@dimen/dimen_medium"
+                        android:paddingRight="@dimen/dimen_medium"
+                        android:paddingTop="@dimen/dimen_extra_small"
+                        android:text="Voucher Used" />
+
+                </LinearLayout>
+
+                <com.lsjwzh.widget.recyclerviewpager.RecyclerViewPager
+                    android:id="@+id/controller_view_voucher_used_recyclerviewpager"
+                    style="@style/RecyclerViewPagerVouchersStyle"
+                    android:layout_below="@+id/controller_view_voucher_divider"
+                    app:rvp_singlePageFling="true"
+                    app:rvp_triggerOffset="0.1" />
 
             </LinearLayout>
 
-            <com.lsjwzh.widget.recyclerviewpager.RecyclerViewPager
-                android:id="@+id/controller_recycler_view_used_vouchers"
+            <android.support.v7.widget.RecyclerView
+                android:id="@+id/controller_view_voucher_unused_recyclerview"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_below="@+id/voucher_recycler_divider"
-                android:clipToPadding="false"
-                android:paddingLeft="@dimen/voucher_padding"
-                android:paddingRight="@dimen/voucher_padding"
                 android:visibility="gone"
-                app:rvp_singlePageFling="true"
-                app:rvp_triggerOffset="0.1" />
-
+                android:background="@color/transparent"/>
         </LinearLayout>
+
     </android.support.v4.widget.NestedScrollView>
 
     <include

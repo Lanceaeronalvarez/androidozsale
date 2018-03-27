@@ -28,7 +28,7 @@
     <dimen name="item_image_height">270dp</dimen>
     <dimen name="item_list_row_height">40dp</dimen>
 
-    <dimen name="edit_text_height">48dp</dimen>
+    <dimen name="edit_text_height">44dp</dimen>
     <dimen name="tall_edit_text_height">144dp</dimen>
 
     <dimen name="placeholder_imageview_margin"> 100dp </dimen>
@@ -43,6 +43,7 @@
     <dimen name="invite_friends_padding">5dp</dimen>
     <dimen name="invite_friends_image_width">22.5dp</dimen>
     <dimen name="invite_friends_image_height">20dp</dimen>
+    <dimen name="invite_friends_vouchers_image_height">250dp</dimen>
 
     <dimen name="category_image_size">30dp</dimen>
     <dimen name="category_background_size">70dp</dimen>
@@ -54,5 +55,40 @@
     <dimen name="category_image_padding">15dp</dimen>
 
     <dimen name="placeholder_icon_size">60dp</dimen>
-    <dimen name="corner_radius">25dp</dimen>
+    <dimen name="corner_radius">5dp</dimen>
+
+
+    <!-- General dimens -->
+    <dimen name="dimen_extra_small">5dp</dimen>
+    <dimen name="dimen_small">10dp</dimen>
+    <dimen name="dimen_medium">15dp</dimen>
+    <dimen name="dimen_large">20dp</dimen>
+    <dimen name="dimen_extra_large">30dp</dimen>
+
+    <!-- Border Width -->
+    <dimen name="border_extra_thin">0.25dp</dimen>
+    <dimen name="border_thin">1dp</dimen>
+    <dimen name="border_medium">2dp</dimen>
+    <dimen name="border_thick">5dp</dimen>
+
+    <!-- Button -->
+    <dimen name="button_drawable_size">20dp</dimen>
+    <dimen name="button_elevation">2.5dp</dimen>
+    
+    <!-- Partial Toolbar Sizes -->
+    <dimen name="partial_toolbar_button_size">40dp</dimen>
+    <dimen name="partial_toolbar_button_padding_right">2dp</dimen>
+    <dimen name="partial_toolbar_button_padding">10dp</dimen>
+    <dimen name="partial_toolbar_logo_size">170dp</dimen>
+    <dimen name="row_checkout_image_width">100dp</dimen>
+    <dimen name="row_checkout_image_height">130dp</dimen>
+    
+    <!-- sale_item -->
+    <dimen name="sale_item_image_padding_top">16dp</dimen>
+    <dimen name="sale_item_image_padding_bottom">16dp</dimen>
+    <dimen name="sale_item_image_padding_left">8dp</dimen>
+    <dimen name="sale_item_image_padding_right">8dp</dimen>
+    <dimen name="sale_item_image_height">200dp</dimen>
+
 </resources>
+

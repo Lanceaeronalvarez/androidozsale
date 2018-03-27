@@ -50,7 +50,7 @@ android {
 
     productFlavors {
         buyinviteRC {
-            versionCode 1
+            versionCode 4
             versionName "0.9"
             applicationId "au.com.buyinvite.bi"
 
@@ -73,7 +73,7 @@ android {
         }
 
         buyinviteTest {
-            versionCode 4
+            versionCode 6
             versionName "0.9"
             applicationId "au.com.buyinvite.bi.test"
 
@@ -96,7 +96,7 @@ android {
         }
 
         dealsDirectRC {
-            versionCode 69
+            versionCode 71
             versionName "2.3.1"
             applicationId "au.com.dealsdirect"
 
@@ -120,7 +120,7 @@ android {
         }
 
         dealsDirectTest {
-            versionCode 71
+            versionCode 73
             versionName "2.3.1"
             applicationId "au.com.dealsdirect.test"
 
@@ -143,7 +143,7 @@ android {
         }
 
         ooRC {
-            versionCode 9
+            versionCode 11
             versionName "0.9"
             applicationId "au.com.oo"
 
@@ -166,7 +166,7 @@ android {
         }
 
         ooTest {
-            versionCode 13
+            versionCode 15
             versionName "0.9"
             applicationId "au.com.oo.test"
 
@@ -189,7 +189,7 @@ android {
         }
 
         topbuyRC {
-            versionCode 79
+            versionCode 80
             versionName "2.3.0"
             applicationId "au.com.topbuy"
 
@@ -212,7 +212,7 @@ android {
         }
 
         topbuyTest {
-            versionCode 81
+            versionCode 82
             versionName "2.3.0"
             applicationId "au.com.topbuy.test"
 
@@ -239,19 +239,18 @@ android {
             versionName "0.9"
             applicationId "au.com.ourpay.test"
 
-            buildConfigField "String", "API_ROOT", "\"https://genie-ui-dealsdirect-pre.mysaledev.com/\""
-            buildConfigField "String", "API_LEGACY", "\"https://api.mysaledev.com/public/v3.17/\""
+            buildConfigField "String", "API_ROOT", "\"https://www.dealsdirect.com.au/\""
+            buildConfigField "String", "API_LEGACY", "\"https://www.dealsdirect.com.au/papi/public/v3.20/\""
             buildConfigField "String", "ACCOUNT_ID", "\"A56B0D62-AEF6-4653-848E-2ECDDB6E9B8C\""
 
-            // Undefined values for Ourpay
             resValue "string", "app_name", "Ourpay Test"
-            def facebookAppId = ""
+            def facebookAppId = "1650094968544406"
             resValue "string", "facebook_app_id", facebookAppId
-            resValue "string", "facebook_app_secret", ""
+            resValue "string", "facebook_app_secret", "94da0f48bd2ffea25981e52c56f9260a"
             resValue "string", "fb_login_protocol_scheme", "fb" + facebookAppId
-            resValue "string", "fb_page_id", ""
-            resValue "string", "new_relic_app_token", ""
-            resValue "string", "twitter_user_id", ""
+            resValue "string", "fb_page_id", "257280167216"
+            resValue "string", "new_relic_app_token", "AAa9d543732ff39dddc60c9cb9ad8c9cf22297904b"
+            resValue "string", "twitter_user_id", "twitter://user?user_id=37405859"
             resValue "string", "default_country_id", "DA"
             resValue "string", "default_language_id", "EN"
 
@@ -259,39 +258,118 @@ android {
             resValue "string", "new_relic_app_token",  ext.newRelicAppToken
         }
 
+        ozsaleRC {
+            versionCode 1
+            versionName "0.9"
+            applicationId "au.com.ozsale"
 
+            buildConfigField "String", "API_ROOT", "\"https://www.dealsdirect.com.au/\""
+            buildConfigField "String", "API_LEGACY", "\"https://www.dealsdirect.com.au/papi/public/v3.20/\""
+            buildConfigField "String", "ACCOUNT_ID", "\"A56B0D62-AEF6-4653-848E-2ECDDB6E9B8C\""
+
+            resValue "string", "app_name", "Ozsale"
+            def facebookAppId = "1650094968544406"
+            resValue "string", "facebook_app_id", facebookAppId
+            resValue "string", "facebook_app_secret", "94da0f48bd2ffea25981e52c56f9260a"
+            resValue "string", "fb_login_protocol_scheme", "fb" + facebookAppId
+            resValue "string", "fb_page_id", "257280167216"
+            resValue "string", "twitter_user_id", "twitter://user?user_id=37405859"
+            resValue "string", "default_country_id", "DA"
+            resValue "string", "default_language_id", "EN"
+
+            ext.newRelicAppToken = "AAa9d543732ff39dddc60c9cb9ad8c9cf22297904b"
+            resValue "string", "new_relic_app_token",  ext.newRelicAppToken
+
+        }
+
+
+        ozsaleTest {
+            versionCode 1
+            versionName "0.9"
+            applicationId "au.com.ozsale.test"
+
+            buildConfigField "String", "API_ROOT", "\"https://genie-ui-dealsdirect-pre.mysaledev.com/\""
+            buildConfigField "String", "API_LEGACY", "\"https://api.mysaledev.com/public/v3.20/\""
+            buildConfigField "String", "ACCOUNT_ID", "\"A56B0D62-AEF6-4653-848E-2ECDDB6E9B8C\""
+
+            resValue "string", "app_name", "Ozsale Test"
+            def facebookAppId = "1650094968544406"
+            resValue "string", "facebook_app_id", facebookAppId
+            resValue "string", "facebook_app_secret", "94da0f48bd2ffea25981e52c56f9260a"
+            resValue "string", "fb_login_protocol_scheme", "fb" + facebookAppId
+            resValue "string", "fb_page_id", "257280167216"
+            resValue "string", "twitter_user_id", "twitter://user?user_id=37405859"
+            resValue "string", "default_country_id", "DA"
+            resValue "string", "default_language_id", "EN"
+
+            ext.newRelicAppToken = "AAa9d543732ff39dddc60c9cb9ad8c9cf22297904b"
+            resValue "string", "new_relic_app_token",  ext.newRelicAppToken
+
+        }
     }
 
     sourceSets {
         dealsDirectRC {
-            java.srcDirs = ['src/commonControllers/java/', 'src/commonActivity/java/', 'src/main/java/']
+            java.srcDirs = ['src/commonControllers/java/',
+                            'src/commonHomeController/java/',
+                            'src/commonCategoriesController/java/',
+                            'src/commonActivity/java/',
+                            'src/dealsDirectRC/java/',
+                            'src/main/java/']
         }
 
         dealsDirectTest {
-            java.srcDirs = ['src/commonControllers/java/', 'src/commonActivity/java/', 'src/main/java/']
+            java.srcDirs = ['src/commonControllers/java/',
+                            'src/commonHomeController/java/',
+                            'src/commonCategoriesController/java/',
+                            'src/commonActivity/java/',
+                            'src/dealsDirectRC/java/',
+                            'src/main/java/']
         }
 
         ooRC {
             res.srcDir 'src/ooTest/res/'
-            java.srcDirs = ['src/commonControllers/java/', 'src/commonActivity/java/', 'src/main/java/']
+            java.srcDirs = ['src/commonControllers/java/',
+                            'src/commonHomeController/java/',
+                            'src/commonCategoriesController/java/' ,
+                            'src/commonActivity/java/',
+                            'src/ooTest/java/',
+                            'src/main/java/']
         }
 
         ooTest {
             res.srcDir 'src/ooTest/res/'
-            java.srcDirs = ['src/commonControllers/java/', 'src/commonActivity/java/', 'src/main/java/']
+            java.srcDirs = ['src/commonControllers/java/',
+                            'src/commonHomeController/java/',
+                            'src/commonCategoriesController/java/',
+                            'src/commonActivity/java/',
+                            'src/ooTest/java/',
+                            'src/main/java/']
         }
 
         buyinviteRC {
             res.srcDir 'src/buyinviteTest/res/'
-            java.srcDirs = ['src/commonControllers/java/', 'src/commonActivity/java/', 'src/main/java/']
+            java.srcDirs = ['src/commonControllers/java/',
+                            'src/commonHomeController/java/',
+                            'src/commonCategoriesController/java/',
+                            'src/commonActivity/java/',
+                            'src/buyinviteTest/java/',
+                            'src/main/java/']
         }
 
         buyinviteTest {
-            java.srcDirs = ['src/commonControllers/java/', 'src/commonActivity/java/', 'src/main/java']
+            java.srcDirs = ['src/commonControllers/java/',
+                            'src/commonHomeController/java/',
+                            'src/commonCategoriesController/java/',
+                            'src/commonActivity/java/',
+                            'src/buyinviteTest/java/',
+                            'src/main/java']
         }
 
         ourpayTest {
-            java.srcDirs = ['src/ourpayTest/java/', 'src/commonControllers/java/', 'src/main/java/']
+            java.srcDirs = ['src/ourpayTest/java/',
+                            'src/commonControllers/java/',
+                            'src/main/java/']
         }
 
         topbuyTest {
@@ -304,8 +382,28 @@ android {
             java.srcDirs = ['src/topbuyRC/java/', 'src/main/java/']
         }
 
+        ozsaleRC {
+            res.srcDir 'src/ozsaleRC/res/'
+            java.srcDirs = ['src/commonControllers/java/',
+                            'src/commonActivity/java/',
+                            'src/commonHomeController/java/',
+                            'src/commonCategoriesController/java/',
+                            'src/ozsaleRC/java',
+                            'src/main/java/']
+        }
+
+        ozsaleTest {
+            res.srcDir 'src/ozsaleRC/res/'
+            java.srcDirs = ['src/commonControllers/java/',
+                            'src/commonActivity/java/',
+                            'src/commonHomeController/java/',
+                            'src/commonCategoriesController/java/',
+                            'src/ozsaleRC/java',
+                            'src/main/java/']
+        }
+
         main {
-            java.srcDirs = ['src/main/java', 'src/uncommonOurpay/java/']
+            java.srcDirs = ['src/main/java']
         }
     }
 

@@ -3,13 +3,34 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/white"
+    android:background="@color/default_background_color"
     android:orientation="vertical">
 
     <FrameLayout
         android:id="@+id/controller_base_toolbar_layout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content" />
+
+    <LinearLayout
+        android:id="@+id/controller_base_search_layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <EditText
+            android:id="@+id/controller_base_search_edittext"
+            style="@style/DDEditTextStyleNoBorder"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:drawableLeft="@drawable/ic_search_gray"
+            android:hint="@string/search_filter_hint" />
+
+        <View
+            android:background="@color/border_gray"
+            android:layout_height="@dimen/border_extra_thin"
+            android:layout_width="match_parent"/>
+
+    </LinearLayout>
 
     <in.srain.cube.views.ptr.PtrClassicFrameLayout
         android:id="@+id/controller_base_ptr_layout"

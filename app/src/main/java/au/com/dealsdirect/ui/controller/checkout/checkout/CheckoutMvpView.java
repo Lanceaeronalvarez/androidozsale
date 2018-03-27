@@ -9,6 +9,7 @@ import au.com.dealsdirect.data.network.model.checkout.getcurrentorder.Summary;
 import au.com.dealsdirect.data.network.model.checkout.getcurrentorder.Value;
 import au.com.dealsdirect.data.network.model.checkout.getcurrentorder.Voucher;
 import au.com.dealsdirect.data.network.model.checkout.getuserpaymentmethods.PaymentMethod;
+import au.com.dealsdirect.data.network.model.vouchers.AddAndApplyVoucherByKeyResponse;
 import au.com.dealsdirect.service.ourpay.Ourpay;
 import au.com.dealsdirect.ui.base.MvpView;
 
@@ -43,5 +44,7 @@ public interface CheckoutMvpView extends MvpView {
     void setCartIsLoading(boolean val);
 
     boolean isViewPagerOnCheckout();
+
+    void onAddAndAppliedVoucher(AddAndApplyVoucherByKeyResponse response);
 
 }

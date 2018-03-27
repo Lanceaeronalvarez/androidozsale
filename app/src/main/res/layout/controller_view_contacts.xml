@@ -2,7 +2,7 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/white"
+    android:background="@color/default_background_color"
     android:orientation="vertical">
 
     <RelativeLayout
@@ -19,6 +19,17 @@
         <include
             layout="@layout/partial_no_contacts_placeholder_layout"
             android:visibility="gone" />
+
+        <Button
+            android:id="@+id/controller_contacts_newmessage_button"
+            style="@style/DDButtonStyle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@drawable/bg_invite_clipboard"
+            android:textSize="@dimen/text_size_xlarge"
+            android:layout_alignParentBottom="true"
+            android:layout_margin="@dimen/screen_padding"
+            android:visibility="gone"/>
 
     </RelativeLayout>
 

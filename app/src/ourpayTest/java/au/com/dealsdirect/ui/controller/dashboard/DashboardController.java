@@ -111,7 +111,7 @@ public class DashboardController extends BaseController implements DashboardMvpV
     protected void setUp(View view) {
         mPresenter.loadAll();
 
-        mTabTitles = new String[]{getString(R.string.payment_plans), getString(R.string.scheduled_plans), getString(R.string.past_payments)};
+        mTabTitles = new String[]{ mActivity.getString(R.string.payment_plans), mActivity.getString(R.string.scheduled_plans), mActivity.getString(R.string.past_payments)};
         mAdapter = new RouterPagerAdapter(this) {
             @Override
             public void configureRouter(@NonNull Router router, int position) {
@@ -146,7 +146,7 @@ public class DashboardController extends BaseController implements DashboardMvpV
         };
         mViewPager.setAdapter(mAdapter);
         mTabLayout.setupWithViewPager(mViewPager, true);
-        TabLayoutUtils.setupWithCustomFont(getActivity(), mTabLayout, mTabTitles, getString(R.string.font_lato_light));
+        TabLayoutUtils.setupWithCustomFont(getActivity(), mTabLayout, mTabTitles, mActivity.getString(R.string.font_lato_light));
     }
 
     @Override
@@ -197,7 +197,7 @@ public class DashboardController extends BaseController implements DashboardMvpV
     @Override
     public void refreshPager() {
         if (mPaymentPlans != null && mScheduledPlans != null && mPastPayments != null) {
-            mTabTitles = new String[]{getString(R.string.payment_plans), getString(R.string.scheduled_plans), getString(R.string.past_payments)};
+            mTabTitles = new String[]{mActivity.getString(R.string.payment_plans), mActivity.getString(R.string.scheduled_plans), mActivity.getString(R.string.past_payments)};
             mAdapter = new RouterPagerAdapter(this) {
                 @Override
                 public void configureRouter(@NonNull Router router, int position) {
@@ -232,7 +232,7 @@ public class DashboardController extends BaseController implements DashboardMvpV
             };
             mViewPager.setAdapter(mAdapter);
             mTabLayout.setupWithViewPager(mViewPager, true);
-            TabLayoutUtils.setupWithCustomFont(getActivity(), mTabLayout, mTabTitles, getString(R.string.font_lato_light));
+            TabLayoutUtils.setupWithCustomFont(getActivity(), mTabLayout, mTabTitles, mActivity.getString(R.string.font_lato_light));
         }
     }
 

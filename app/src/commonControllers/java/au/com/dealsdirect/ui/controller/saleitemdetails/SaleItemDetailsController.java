@@ -381,7 +381,6 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
         mSaleItemImagesAdapter.replaceData(qualitySaleImages);
         mSaleItemImagesIndicatorAdapter.replaceData(qualitySaleImages);
 
-        mProductDescriptionText.setLayerType(View.LAYER_TYPE_SOFTWARE, null);
         mProductDescriptionText.startAnimation(anim);
         mProductDescriptionText.loadData(mHtmlHeader + saleDetail.getDescription() + mHtmlFooter,
                 "text/html; charset=UTF-8",
@@ -518,7 +517,10 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
     @OnClick(R.id.product_details_add_to_basket)
     void addToBasket() {
 
-        AddToCartRequest request = new AddToCartRequest(mSkuId);
+        AddToCartRequest request = new AddToCartRequest();
+        request.setSkuId(mSkuId);
+        request.setItemName(mSaleName);
+        request.setPrice(Double.valueOf(mSalePrice.substring(1)));
 
         if (hasSizes) {
             if (!didSelectSize) {
