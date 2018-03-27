@@ -92,11 +92,10 @@ public class ShopsController extends BasePullToRefreshController implements Shop
     DrawerLayout mDrawerLayout;
 
     @BindView(R.id.shop_navigation_view)
-    FrameLayout mNavigationView;
+    NavigationView mNavigationView;
 
     @BindView(R.id.categories_frame)
-    ViewGroup mCategoriesContainer;
-
+    FrameLayout mCategoriesContainer;
 
     private Router mCategoriesRouter;
 
