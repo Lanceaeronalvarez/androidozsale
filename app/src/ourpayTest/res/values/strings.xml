@@ -92,6 +92,7 @@
     <string name="australia_61">Australia (+61)</string>
     <string name="phone_number">Phone Number</string>
     <string name="send_sms_verification">Send SMS Verification</string>
+    <string name="send_to_email">send to email</string>
     <string name="_202_555_0104">202 555 0104</string>
     <string name="fill_out_credit_card_details">fill out credit card details</string>
     <string name="verify_sms_code">Verify SMS Code</string>
