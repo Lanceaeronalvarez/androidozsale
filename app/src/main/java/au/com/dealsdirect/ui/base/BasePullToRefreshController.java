@@ -210,6 +210,7 @@ public abstract class BasePullToRefreshController extends BaseController impleme
 
     protected void enablePullToRefresh(boolean val){
         mCanDoRefresh = val;
+        mPtrLayout.setIsChildScrollingEnabled(mCanDoRefresh);
     }
 
     private void addOverScrollListener(ViewGroup vg) {
