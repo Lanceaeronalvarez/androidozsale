@@ -14,7 +14,7 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_weight="0.35"
-        android:padding="@dimen/screen_padding"
+        android:padding="@dimen/padding_default"
         android:textSize="@dimen/text_size_large"
         android:textColor="@color/colorPrimaryDark" />
 

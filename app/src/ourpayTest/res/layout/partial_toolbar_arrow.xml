@@ -61,7 +61,7 @@
                 android:layout_alignParentEnd="true"
                 android:layout_centerVertical="true"
                 android:background="@drawable/bg_toolbar_button"
-                android:padding="@dimen/default_padding"
+                android:padding="@dimen/padding_default"
                 android:scaleType="fitCenter"
                 tools:src="@drawable/ic_search" />
 

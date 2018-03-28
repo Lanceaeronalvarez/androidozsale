@@ -414,6 +414,7 @@ android {
                             'src/commonSearchFilterController/java',
                             'src/commonCategoriesController/java/',
                             'src/commonShopsController/java/',
+                            'src/commonSaleItemsController/java/',
                             'src/commonMainController/java/',
                             'src/ozsaleRC/java',
                             'src/main/java/']
@@ -427,13 +428,14 @@ android {
                             'src/commonSearchFilterController/java',
                             'src/commonCategoriesController/java/',
                             'src/commonShopsController/java/',
+                            'src/commonSaleItemsController/java/',
                             'src/commonMainController/java/',
                             'src/ozsaleRC/java',
                             'src/main/java/']
         }
 
         main {
-            java.srcDirs = ['src/main/java','src/commonShopsController/java/']
+            java.srcDirs = ['src/main/java']
         }
     }
 

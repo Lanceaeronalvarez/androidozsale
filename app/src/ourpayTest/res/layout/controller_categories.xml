@@ -12,8 +12,8 @@
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginLeft="@dimen/default_padding"
-        android:layout_marginRight="@dimen/default_padding"
+        android:layout_marginLeft="@dimen/padding_default"
+        android:layout_marginRight="@dimen/padding_default"
         android:background="#00000000">
 
         <ImageView
@@ -47,7 +47,7 @@
         android:id="@+id/categories_recyclerview"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_marginTop="@dimen/default_padding"
+        android:layout_marginTop="@dimen/padding_default"
         android:overScrollMode="never" />
 
 

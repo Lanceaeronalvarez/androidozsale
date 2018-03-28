@@ -149,30 +149,11 @@ public class ShopsController extends BasePullToRefreshController implements Shop
 
     @Override
     protected View inflateView(@NonNull LayoutInflater inflater, @NonNull ViewGroup container) {
-        View view = super.inflateView(inflater, container, ToolBarType.LOGO);
-
-        setSearchBarVisible(mActivity.getResources().getBoolean(R.bool.shop_searchbar_visibility));
-        fillContent(inflater.inflate(R.layout.controller_shop, container, false));
-
+        View view = inflater.inflate(R.layout.controller_shop, container, false);
+        bindPtrViews(view);
         getControllerComponent().inject(this);
         mPresenter.onAttach(this);
-
-        setSearchBarVisible(getResource().getBoolean(R.bool.shop_searchbar_visibility));
-        mSearchBarEditText.setFocusable(false);
-        mSearchBarEditText.setOnClickListener(view1 -> {
-            showProductList();
-        });
-        mSearchBarEditText.setHint(getResource().getString(R.string.shop_search_hint));
-
         return view;
-    }
-
-    private void showProductList() {
-
-        Bundle args = new Bundle();
-        getRouter().pushController(RouterTransaction.with(new SaleItemsController(args))
-                .pushChangeHandler(new HorizontalChangeHandler())
-                .popChangeHandler(new HorizontalChangeHandler()));
     }
 
     @Override
@@ -368,13 +349,6 @@ public class ShopsController extends BasePullToRefreshController implements Shop
             }
         }
     }
-
-//    @OnClick(R.id.partial_toolbar_hamburger)
-//    void onClickHamburger() {
-//
-//        assert (mActivity) != null;
-//        mActivity.setRootViewpagerItem(0);
-//    }
 
     @OnClick(R.id.partial_toolbar_logo)
     void onClickLogo() {

@@ -10,8 +10,8 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        android:paddingLeft="@dimen/default_padding"
-        android:paddingRight="@dimen/default_padding"
+        android:paddingLeft="@dimen/padding_default"
+        android:paddingRight="@dimen/padding_default"
         android:paddingTop="@dimen/dimen_small">
 
         <TextView
@@ -43,7 +43,7 @@
         android:layout_marginTop="@dimen/dimen_small"
         android:background="@drawable/bg_edit_text_plain"
         android:clickable="true"
-        android:padding="@dimen/default_padding">
+        android:padding="@dimen/padding_default">
 
         <EditText
             android:id="@+id/partial_checkout_voucher_edittext"
@@ -85,7 +85,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
-            android:padding="@dimen/default_padding">
+            android:padding="@dimen/padding_default">
 
             <ImageView
                 android:layout_width="@dimen/dimen_extra_large"
@@ -124,7 +124,7 @@
         <View
             android:layout_width="match_parent"
             android:layout_height="@dimen/border_thin"
-            android:layout_marginLeft="@dimen/default_padding"
+            android:layout_marginLeft="@dimen/padding_default"
             android:background="@color/gray_toolbar_border"/>
     </LinearLayout>
 

@@ -98,7 +98,7 @@
                 tools:ignore="MissingPrefix" />
 
             <EditText
-                android:id="@+id/controller_details_text_dateOfBirth"
+                android:id="@+id/controller_details_text_birthday"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginEnd="20dp"
@@ -235,7 +235,7 @@
                 tools:ignore="MissingPrefix" />
 
             <EditText
-                android:id="@+id/controller_details_text_newPassword"
+                android:id="@+id/controller_details_text_new_password"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginEnd="20dp"
@@ -267,7 +267,7 @@
                 tools:ignore="MissingPrefix" />
 
             <EditText
-                android:id="@+id/controller_details_text_confirmPassword"
+                android:id="@+id/controller_details_text_confirm_password"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginEnd="20dp"
@@ -278,6 +278,16 @@
                 android:inputType="textPassword"
                 android:textColor="@color/edit_text_content"
                 android:textSize="@dimen/text_size_large" />
+
+            <!--button in ozsale rc not needed so visibility is gone-->
+            <Button
+                android:id="@+id/controller_details_button"
+                style="@style/DDButtonStyle"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="@dimen/padding_default"
+                android:text="@string/save_changes"
+                android:visibility="gone"/>
 
         </LinearLayout>
 

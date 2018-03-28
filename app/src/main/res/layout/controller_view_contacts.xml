@@ -28,7 +28,7 @@
             android:background="@drawable/bg_invite_clipboard"
             android:textSize="@dimen/text_size_xlarge"
             android:layout_alignParentBottom="true"
-            android:layout_margin="@dimen/default_padding"
+            android:layout_margin="@dimen/padding_default"
             android:visibility="gone"/>
 
     </RelativeLayout>

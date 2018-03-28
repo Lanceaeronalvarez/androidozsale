@@ -30,9 +30,9 @@
                 android:id="@+id/controller_login_input_fields"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="@dimen/default_padding"
-                android:layout_marginLeft="@dimen/default_padding"
-                android:layout_marginRight="@dimen/default_padding"
+                android:layout_marginBottom="@dimen/padding_default"
+                android:layout_marginLeft="@dimen/padding_default"
+                android:layout_marginRight="@dimen/padding_default"
                 android:layout_marginTop="50dp"
                 android:background="@drawable/bg_edit_text_rounded"
                 android:orientation="vertical">
@@ -41,7 +41,7 @@
                     fontPath="@string/font_app_bold"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:padding="@dimen/default_padding"
+                    android:padding="@dimen/padding_default"
                     android:text="@string/email_address"
                     android:textColor="@color/edit_text_label"
                     android:textSize="@dimen/text_size_large"
@@ -69,7 +69,7 @@
                     fontPath="@string/font_app_bold"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:padding="@dimen/default_padding"
+                    android:padding="@dimen/padding_default"
                     android:text="@string/password"
                     android:textColor="@color/edit_text_label"
                     android:textSize="@dimen/text_size_large"
@@ -100,8 +100,8 @@
                 fontPath="@string/font_app_semibold"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_margin="@dimen/default_padding"
-                android:padding="@dimen/default_padding"
+                android:layout_margin="@dimen/padding_default"
+                android:padding="@dimen/padding_default"
                 android:text="@string/log_in"
                 android:textSize="@dimen/text_size_xlarge" />
 
@@ -109,7 +109,7 @@
                 android:id="@+id/controller_login_fb_layout"
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/default_button_height"
-                android:layout_margin="@dimen/default_padding"
+                android:layout_margin="@dimen/padding_default"
                 android:background="@drawable/login_default_button"
                 android:clickable="true"
                 android:elevation="@dimen/cardview_default_elevation">
@@ -135,7 +135,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_gravity="center"
-                        android:layout_marginStart="@dimen/default_padding"
+                        android:layout_marginStart="@dimen/padding_default"
                         android:text="@string/sign_in_with_facebook"
                         android:textColor="@android:color/white"
                         android:textSize="@dimen/text_size_xlarge" />
@@ -148,7 +148,7 @@
                 android:layout_height="match_parent"
                 android:gravity="bottom"
                 android:orientation="vertical"
-                android:paddingBottom="@dimen/default_padding">
+                android:paddingBottom="@dimen/padding_default">
 
                 <LinearLayout
                     android:layout_width="match_parent"

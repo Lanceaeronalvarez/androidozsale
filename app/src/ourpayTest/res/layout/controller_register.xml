@@ -30,7 +30,7 @@
                 android:id="@+id/controller_login_input_fields"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_margin="@dimen/default_padding"
+                android:layout_margin="@dimen/padding_default"
                 android:background="@drawable/bg_edit_text_rounded"
                 android:orientation="vertical">
 
@@ -39,7 +39,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:text="@string/first_name"
-                    android:padding="@dimen/default_padding"
+                    android:padding="@dimen/padding_default"
                     android:textColor="@color/dark_text"
                     android:textSize="@dimen/text_size_medium"/>
 
@@ -68,7 +68,7 @@
                     android:text="@string/last_name"
                     android:textColor="@color/dark_text"
                     android:textSize="@dimen/text_size_medium"
-                    android:padding="@dimen/default_padding"/>
+                    android:padding="@dimen/padding_default"/>
 
                 <android.support.design.widget.TextInputLayout
                     android:id="@+id/controller_register_surname_container"
@@ -96,7 +96,7 @@
                     android:text="@string/email_address"
                     android:textColor="@color/dark_text"
                     android:textSize="@dimen/text_size_medium"
-                    android:padding="@dimen/default_padding"/>
+                    android:padding="@dimen/padding_default"/>
 
                 <android.support.design.widget.TextInputLayout
                     android:id="@+id/controller_register_email_container"
@@ -121,7 +121,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
 
-                    android:padding="@dimen/default_padding"
+                    android:padding="@dimen/padding_default"
                     android:text="@string/password"
                     android:textColor="@color/dark_text"
                     android:textSize="@dimen/text_size_medium"/>
@@ -149,7 +149,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
 
-                    android:padding="@dimen/default_padding"
+                    android:padding="@dimen/padding_default"
                     android:gravity="center_vertical"
                     android:orientation="horizontal">
 
@@ -184,8 +184,8 @@
                 fontPath="@string/font_app_semibold"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_margin="@dimen/default_padding"
-                android:padding="@dimen/default_padding"
+                android:layout_margin="@dimen/padding_default"
+                android:padding="@dimen/padding_default"
                 android:text="@string/join_now"
                 android:textSize="@dimen/text_size_xlarge"/>
 
@@ -193,7 +193,7 @@
                 android:id="@+id/controller_login_fb_layout"
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/default_button_height"
-                android:layout_margin="@dimen/default_padding"
+                android:layout_margin="@dimen/padding_default"
                 android:background="@drawable/login_default_button"
                 android:clickable="true"
                 android:elevation="@dimen/cardview_default_elevation">
@@ -219,7 +219,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_gravity="center"
-                        android:layout_marginStart="@dimen/default_padding"
+                        android:layout_marginStart="@dimen/padding_default"
                         android:text="@string/sign_in_with_facebook"
                         android:textColor="@android:color/white"
                         android:textSize="@dimen/text_size_xlarge" />
@@ -231,7 +231,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:orientation="vertical"
-                android:paddingBottom="@dimen/default_padding"
+                android:paddingBottom="@dimen/padding_default"
                 android:visibility="gone"
                 android:gravity="bottom">
 

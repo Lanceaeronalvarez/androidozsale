@@ -103,7 +103,7 @@
                                                 android:layout_height="wrap_content"
                                                 android:layout_alignStart="@id/product_details_shared_image"
                                                 android:layout_alignTop="@id/product_details_shared_image"
-                                                android:layout_marginStart="@dimen/default_padding"
+                                                android:layout_marginStart="@dimen/padding_default"
                                                 android:layout_marginTop="40dp"
                                                 android:src="@drawable/ic_item_details_back_arrow" />
 
@@ -259,7 +259,7 @@
                                                     fontPath="@string/font_app_bold"
                                                     android:layout_width="wrap_content"
                                                     android:layout_height="wrap_content"
-                                                    android:padding="@dimen/default_padding"
+                                                    android:padding="@dimen/padding_default"
                                                     android:text="@string/choose_your_size"
                                                     android:textColor="@color/color_item_title"
                                                     android:textSize="@dimen/text_size_large" />
@@ -269,7 +269,7 @@
                                                     android:id="@+id/product_details_size_list"
                                                     android:layout_width="match_parent"
                                                     android:layout_height="wrap_content"
-                                                    android:padding="@dimen/default_padding"
+                                                    android:padding="@dimen/padding_default"
                                                     app:max_select="1" />
 
                                                 <View
@@ -290,7 +290,7 @@
                                                     fontPath="@string/font_app_bold"
                                                     android:layout_width="wrap_content"
                                                     android:layout_height="wrap_content"
-                                                    android:padding="@dimen/default_padding"
+                                                    android:padding="@dimen/padding_default"
                                                     android:text="@string/estimated_delivery"
                                                     android:textColor="@color/color_item_title"
                                                     android:textSize="@dimen/text_size_large" />
@@ -298,7 +298,7 @@
                                                 <FrameLayout
                                                     android:layout_width="match_parent"
                                                     android:layout_height="match_parent"
-                                                    android:layout_margin="@dimen/default_padding">
+                                                    android:layout_margin="@dimen/padding_default">
 
                                                     <WebView
                                                         android:id="@+id/product_details_shipping_desc_webview"
@@ -323,7 +323,7 @@
                                                     fontPath="@string/font_app_bold"
                                                     android:layout_width="wrap_content"
                                                     android:layout_height="wrap_content"
-                                                    android:padding="@dimen/default_padding"
+                                                    android:padding="@dimen/padding_default"
                                                     android:text="@string/return_policy"
                                                     android:textColor="@color/color_item_title"
                                                     android:textSize="@dimen/text_size_large" />
@@ -331,7 +331,7 @@
                                                 <FrameLayout
                                                     android:layout_width="match_parent"
                                                     android:layout_height="match_parent"
-                                                    android:layout_margin="@dimen/default_padding">
+                                                    android:layout_margin="@dimen/padding_default">
 
                                                     <WebView
                                                         android:id="@+id/product_details_return_policy_text"
@@ -371,7 +371,7 @@
                                                 <FrameLayout
                                                     android:layout_width="match_parent"
                                                     android:layout_height="match_parent"
-                                                    android:layout_margin="@dimen/default_padding">
+                                                    android:layout_margin="@dimen/padding_default">
 
                                                     <WebView
                                                         android:id="@+id/product_about"
@@ -395,7 +395,7 @@
                                                     fontPath="@string/font_app_bold"
                                                     android:layout_width="wrap_content"
                                                     android:layout_height="wrap_content"
-                                                    android:padding="@dimen/default_padding"
+                                                    android:padding="@dimen/padding_default"
                                                     android:text="@string/pricing"
                                                     android:textColor="@color/color_item_title"
                                                     android:textSize="@dimen/text_size_large" />
@@ -403,7 +403,7 @@
                                                 <FrameLayout
                                                     android:layout_width="match_parent"
                                                     android:layout_height="match_parent"
-                                                    android:layout_margin="@dimen/default_padding">
+                                                    android:layout_margin="@dimen/padding_default">
 
                                                     <WebView
                                                         android:id="@+id/product_about_pricing_text"
@@ -437,7 +437,7 @@
                                                 <FrameLayout
                                                     android:layout_width="match_parent"
                                                     android:layout_height="match_parent"
-                                                    android:layout_margin="@dimen/default_padding">
+                                                    android:layout_margin="@dimen/padding_default">
 
                                                     <WebView
                                                         android:id="@+id/product_description_text"

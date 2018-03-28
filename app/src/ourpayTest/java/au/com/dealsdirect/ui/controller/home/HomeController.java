@@ -436,19 +436,6 @@ public class HomeController extends BaseController implements HomeMvpView {
         getBottomNavigationView().setNotification("", 4);
     }
 
-    private void proceedToController(int id) {
-        switch (id){
-            case 1:
-                showPaymentScheduleController();
-                break;
-            case 2:
-                showDashboardController();
-                break;
-            case 4:
-                showFifthTabController();
-                break;
-        }
-    }
 
     public void hideBottomNav() {
         if (mBottomNavigationView != null) {

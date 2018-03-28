@@ -6,7 +6,7 @@
     android:layout_height="wrap_content"
     app:cardCornerRadius="@dimen/corner_radius"
     app:cardUseCompatPadding="true"
-    app:contentPadding="@dimen/default_padding"
+    app:contentPadding="@dimen/padding_default"
     tools:ignore="MissingPrefix">
 
     <LinearLayout
@@ -24,7 +24,7 @@
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/default_padding">
+            android:layout_marginTop="@dimen/padding_default">
 
             <ImageView
                 android:id="@+id/partial_checkout_voucher_change"
@@ -90,7 +90,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:orientation="vertical"
-                        android:layout_marginLeft="@dimen/default_padding">
+                        android:layout_marginLeft="@dimen/padding_default">
 
                         <TextView
                             fontPath="@string/font_app_semibold"
