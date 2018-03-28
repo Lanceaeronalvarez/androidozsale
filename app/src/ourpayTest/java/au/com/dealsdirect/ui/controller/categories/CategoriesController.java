@@ -140,7 +140,7 @@ public class CategoriesController extends BaseController
 
         if(chosenCategoryName.isEmpty()){
             chosenCategoryName = getResources().getString(R.string.category_default);
-            headerCategoryTextView.setText("Categories");
+            headerCategoryTextView.setText(chosenCategoryName);
             mBackButton.setVisibility(View.INVISIBLE);
         } else {
             headerCategoryTextView.setText(chosenCategoryName);
