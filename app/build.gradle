@@ -120,7 +120,7 @@ android {
         }
 
         dealsDirectTest {
-            versionCode 73
+            versionCode 74
             versionName "2.3.1"
             applicationId "au.com.dealsdirect.test"
 
@@ -212,7 +212,7 @@ android {
         }
 
         topbuyTest {
-            versionCode 82
+            versionCode 84
             versionName "2.3.0"
             applicationId "au.com.topbuy.test"
 
