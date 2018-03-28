@@ -151,7 +151,7 @@ public class MainActivity extends BaseActivity implements MainMvpView {
     protected void setUp() {
 
         // Initialize GCM
-//        mPresenter.initializeNotifications(getApplicationContext());
+        mPresenter.initializeNotifications(getApplicationContext());
 
         // Call API settings
         mPresenter.callGetServerSettings();
