@@ -56,7 +56,7 @@ public class CurrentReturnsController extends BasePullToRefreshController
     @BindView(R.id.partial_toolbar_arrow_title)
     TextView mCurrentReturnsToolarTitle;
 
-    @BindView(R.id.partial_toolbar_filter_view)
+    @BindView(R.id.partial_toolbar_right_view)
     ImageView mCurrentReturnsRightOption;
 
     @BindView(R.id.controller_current_returns_recycler_viewpager)
@@ -221,12 +221,12 @@ public class CurrentReturnsController extends BasePullToRefreshController
 
     }
 
-    @OnClick(R.id.partial_toolbar_arrow_view)
+    @OnClick(R.id.partial_toolbar_left_view)
     public void onBackClick(){
         mActivity.onBackPressed();
     }
 
-    @OnClick(R.id.partial_toolbar_filter_view)
+    @OnClick(R.id.partial_toolbar_right_view)
 
     public void onAddReturnClick(){
         if (mCurrentReturns!=null)

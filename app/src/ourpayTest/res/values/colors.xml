@@ -4,7 +4,7 @@
     <color name="colorPrimaryAlpha">#CCFDBB16</color>
     <color name="colorPrimaryDark">#F37325</color>
     <color name="colorAccent">#FDBB16</color>
-    <color name="colorBlueDark">#1E303E</color>
+    <color name="colorBlueDark">#323232</color>
     <color name="colorBlueDarkAlpha">#1A1E303E</color>
     <color name="colorInactive">#929292</color>
     <color name="colorInactiveAlpha">#AA6F6E6E</color>
@@ -52,7 +52,7 @@
     <color name="bottom_nav_accent_color">@color/colorPrimaryDark</color>
     <color name="bottom_nav_badge_color">@color/colorPrimaryDark</color>
 
-    <color name="category_text_active">@color/colorPrimaryDark</color>
+    <color name="category_text_active">@color/black</color>
     <color name="category_text_inactive">#707070</color>
 
     <color name="gray_category_text">#707070</color>
@@ -84,6 +84,17 @@
     <color name="toolbar_active_skin">@color/colorPrimary</color>
 
     <color name="back_arrow_color">#5f5f60</color>
+
+
+    <!--OURPAY DASHBOARDS-->
+    <color name="payment_month_header_color">#adadad</color>
+
+    <!--EDIT TEXT-->
+    <color name="edittext_hint_color">#CCFFFFFF</color>
+
+    <!--PRODUCT DETAILS COLORS-->
+    <color name="product_details_name_price_container_bg">#abffffff</color>
+
 
     <!-- Button Theme -->
     <color name="bg_edit_text_focused">@color/colorPrimary</color>
@@ -117,4 +128,8 @@
 
     <color name="item_select_remove">#F29124</color>
     <color name="verify_resend_color">#90BF0A</color>
+
+    <color name="splash_background_color">@color/transparent</color>
+
+    <color name="close_icon_color">@color/white</color>
 </resources>

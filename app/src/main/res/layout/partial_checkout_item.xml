@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="horizontal"
-    android:padding="@dimen/screen_padding"
+    android:padding="@dimen/padding_default"
     tools:ignore="MissingPrefix">
 
     <ImageView
@@ -47,7 +47,7 @@
                 tools:text="$19.00" />
 
             <TextView
-                android:id="@id/item_subtotal_price"
+                android:id="@+id/item_subtotal_price"
                 fontPath="@string/font_app_semibold"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"

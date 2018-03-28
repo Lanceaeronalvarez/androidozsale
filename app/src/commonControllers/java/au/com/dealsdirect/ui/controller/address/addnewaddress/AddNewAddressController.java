@@ -51,7 +51,7 @@ public class AddNewAddressController extends BaseController implements AddNewAdd
     @BindView(R.id.partial_toolbar_arrow_title)
     TextView mAddNewAddressToolarTitle;
 
-    @BindView(R.id.partial_toolbar_filter_view)
+    @BindView(R.id.partial_toolbar_right_view)
     ImageView mAddNewAddressRightOption;
 
 
@@ -173,7 +173,7 @@ public class AddNewAddressController extends BaseController implements AddNewAdd
 
     }
 
-    @OnClick(R.id.partial_toolbar_arrow_view)
+    @OnClick(R.id.partial_toolbar_left_view)
     public void onBackClick() {
         hideKeyboard();
         if (mActivity != null){
@@ -181,7 +181,7 @@ public class AddNewAddressController extends BaseController implements AddNewAdd
         }
     }
 
-    @OnClick(R.id.partial_toolbar_filter_view)
+    @OnClick(R.id.partial_toolbar_right_view)
     public void callAddNewAddress(){
         hideKeyboard();
         mPresenter.addNewAddress(mViewMap);

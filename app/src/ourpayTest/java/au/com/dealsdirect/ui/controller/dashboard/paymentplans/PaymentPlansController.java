@@ -28,8 +28,6 @@ public class PaymentPlansController extends BaseController implements PaymentPla
 
     public static final String TAG = "PaymentPlansController";
 
-    private static final String KEY_CONTROLLER = "PaymentPlansController.KEY_CONTROLLER";
-
     private static final String KEY_PLANS = "PaymentPlansController.KEY_PLANS";
 
     @Inject
@@ -44,11 +42,10 @@ public class PaymentPlansController extends BaseController implements PaymentPla
 
     DashboardController mParentController;
 
-    public static PaymentPlansController newInstance(DashboardController parentController, ArrayList<PaymentPlan> paymentPlans) {
+    public static PaymentPlansController newInstance(ArrayList<PaymentPlan> paymentPlans) {
 
         return new PaymentPlansController(
                 new BundleBuilder(new Bundle())
-                        .putSerializable(KEY_CONTROLLER, parentController)
                         .putParcelableArrayList(KEY_PLANS, paymentPlans)
                         .build());
     }
@@ -78,10 +75,9 @@ public class PaymentPlansController extends BaseController implements PaymentPla
 
     @Override
     protected void setUp(View view) {
-        mParentController = (DashboardController) getArgs().getSerializable(KEY_CONTROLLER);
         mPaymentPlans = getArgs().getParcelableArrayList(KEY_PLANS);
 
-        mAdapter = new PaymentPlansAdapter(mParentController, mPaymentPlans);
+        mAdapter = new PaymentPlansAdapter(mPaymentPlans);
         mRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity(), LinearLayoutManager.VERTICAL, false));
         mRecyclerView.setAdapter(mAdapter);
     }

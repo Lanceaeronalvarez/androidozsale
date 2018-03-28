@@ -141,11 +141,12 @@ public class CategoriesController extends BaseController
         if(chosenCategoryName.isEmpty()){
             chosenCategoryName = getResources().getString(R.string.category_default);
             headerCategoryTextView.setText("Categories");
+            mBackButton.setVisibility(View.INVISIBLE);
         } else {
             headerCategoryTextView.setText(chosenCategoryName);
+            mBackButton.setVisibility(View.VISIBLE);
         }
 
-        mActivity.setDraggableViewPager(true);
         mActivity.setCategoriesRouter(getRouter());
         hideKeyboard();
         setUp(view);
@@ -271,7 +272,7 @@ public class CategoriesController extends BaseController
             @Override
             public void onClick(View view) {
                 //need to reset transition name of headerCategoryTextView to allow shared element return transition to work.
-                mActivity.onBackPressed();
+                getRouter().handleBack();
             }
         });
 

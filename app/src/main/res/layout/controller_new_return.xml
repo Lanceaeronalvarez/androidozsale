@@ -54,7 +54,7 @@
         <!--<Button-->
         <!--android:id="@+id/new_return_create_button"-->
         <!--style="@style/DDButtonStyle"-->
-        <!--fontPath="@string/font_lato_semibold"-->
+        <!--fontPath="@string/font_app_semibold"-->
         <!--android:layout_width="match_parent"-->
         <!--android:layout_height="wrap_content"-->
         <!--android:layout_below="@+id/controller_new_return_field"-->

@@ -21,7 +21,7 @@
                 android:id="@+id/row_new_address_placeholder"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:layout_marginTop="@dimen/screen_padding"
+                android:layout_marginTop="@dimen/padding_default"
                 android:orientation="vertical" />
 
         </RelativeLayout>

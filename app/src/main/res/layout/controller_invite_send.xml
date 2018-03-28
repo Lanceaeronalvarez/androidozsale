@@ -39,7 +39,6 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_above="@+id/controller_invite_friend_button_send_invite"
-                    android:layout_below="@id/controller_invite_title_toolbar"
                     android:layout_centerInParent="true"
                     android:layout_marginTop="@dimen/dimen_small"
                     android:gravity="center_vertical|center_horizontal"
@@ -59,7 +58,7 @@
                         fontPath="@string/font_app_regular"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_margin="@dimen/screen_padding"
+                        android:layout_margin="@dimen/padding_default"
                         android:gravity="center"
                         android:lineSpacingExtra="@dimen/dimen_extra_small"
                         android:text="@string/invite_friend_guide"
@@ -76,8 +75,8 @@
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginLeft="@dimen/screen_padding"
-                        android:layout_marginRight="@dimen/screen_padding"
+                        android:layout_marginLeft="@dimen/padding_default"
+                        android:layout_marginRight="@dimen/padding_default"
                         android:orientation="horizontal">
 
                         <RelativeLayout
@@ -169,9 +168,9 @@
                     android:focusable="false"
                     android:focusableInTouchMode="true"
                     android:orientation="vertical"
-                    android:paddingLeft="@dimen/screen_padding"
-                    android:paddingRight="@dimen/screen_padding"
-                    android:paddingTop="@dimen/screen_padding">
+                    android:paddingLeft="@dimen/padding_default"
+                    android:paddingRight="@dimen/padding_default"
+                    android:paddingTop="@dimen/padding_default">
 
                     <TextView
                         fontPath="@string/font_app_medium"
@@ -204,7 +203,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="vertical"
-                    android:padding="@dimen/screen_padding">
+                    android:padding="@dimen/padding_default">
 
                     <TextView
                         fontPath="@string/font_app_medium"
@@ -253,9 +252,9 @@
                         android:id="@+id/controller_invite_buttons_layout"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginBottom="@dimen/screen_padding"
-                        android:layout_marginLeft="@dimen/screen_padding"
-                        android:layout_marginRight="@dimen/screen_padding"
+                        android:layout_marginBottom="@dimen/padding_default"
+                        android:layout_marginLeft="@dimen/padding_default"
+                        android:layout_marginRight="@dimen/padding_default"
                         android:layout_marginTop="@dimen/dimen_small"
                         android:gravity="center"
                         android:orientation="vertical"
@@ -281,6 +280,7 @@
                                 tools:ignore="UselessParent">
 
                                 <ImageView
+                                    android:id="@+id/invite_friend_clipboard_image"
                                     android:layout_width="@dimen/invite_friends_image_width"
                                     android:layout_height="@dimen/invite_friends_image_height"
                                     android:layout_gravity="center_horizontal"

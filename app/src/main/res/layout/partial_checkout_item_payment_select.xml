@@ -11,7 +11,7 @@
         android:id="@+id/partial_checkout_payment_image"
         android:layout_width="@dimen/dimen_extra_large"
         android:layout_height="@dimen/dimen_extra_large"
-        android:layout_marginLeft="@dimen/screen_padding"
+        android:layout_marginLeft="@dimen/padding_default"
         android:paddingLeft="@dimen/dimen_extra_small"
         android:paddingRight="@dimen/dimen_extra_small"
         android:src="@drawable/ic_my_vouchers" />
@@ -26,7 +26,7 @@
             android:id="@+id/partial_checkout_payment_name"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginRight="@dimen/screen_padding"
+            android:layout_marginRight="@dimen/padding_default"
             android:textColor="@color/gray_title_text"
             android:textSize="@dimen/text_size_xxlarge"
             tools:text="@string/row_checkout_name_hint" />
@@ -36,7 +36,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginBottom="@dimen/dimen_small"
-            android:layout_marginRight="@dimen/screen_padding"
+            android:layout_marginRight="@dimen/padding_default"
             android:textColor="@color/gray_field_text"
             tools:text="@string/row_checkout_desc_hint" />
 

@@ -20,12 +20,12 @@
             android:id="@+id/toolbar_title_login"
             layout="@layout/partial_toolbar_arrow" />
 
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:background="@color/white"
-            android:orientation="vertical"
-            android:padding="@dimen/screen_padding">
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/white"
+        android:orientation="vertical"
+        android:padding="@dimen/padding_default">
 
             <RelativeLayout
                 android:layout_width="match_parent"
@@ -99,25 +99,25 @@
                 app:passwordToggleDrawable="@drawable/ic_show_password_toggle"
                 app:passwordToggleEnabled="true">
 
-                <EditText
-                    android:id="@+id/controller_login_password_edittext"
-                    style="@style/DDEditTextStyle"
-                    fontPath="@string/font_app_medium"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:hint="@string/password_hint"
-                    android:inputType="textPassword" />
+            <EditText
+                android:id="@+id/controller_login_password_edittext"
+                style="@style/DDEditTextStyle"
+                fontPath="@string/font_app_medium"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="@string/password_hint"
+                android:inputType="textPassword"/>
 
             </android.support.design.widget.TextInputLayout>
 
-            <Button
-                android:id="@+id/login_button"
-                style="@style/DDButtonStyle"
-                fontPath="@string/font_app_semibold"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="@string/log_in"
-                android:textSize="@dimen/text_size_xlarge" />
+        <Button
+            android:id="@+id/login_button"
+            style="@style/DDButtonStyle"
+            fontPath="@string/font_app_semibold"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/log_in"
+            android:textSize="@dimen/text_size_xlarge"/>
 
             <RelativeLayout
                 android:id="@+id/controller_login_fb_layout"

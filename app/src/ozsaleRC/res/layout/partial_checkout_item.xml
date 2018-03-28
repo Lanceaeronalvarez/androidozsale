@@ -6,7 +6,7 @@
     android:layout_height="match_parent"
     android:background="@color/row_background_color"
     android:orientation="horizontal"
-    android:padding="@dimen/screen_padding"
+    android:padding="@dimen/padding_default"
     tools:ignore="MissingPrefix">
 
     <ImageView

@@ -5,7 +5,7 @@
     android:background="@color/default_background_color"
     android:orientation="vertical">
 
-    <include layout="@layout/partial_toolbar_title" />
+    <include layout="@layout/partial_toolbar_arrow" />
 
     <include
         layout="@layout/partial_checkout_empty"
@@ -32,21 +32,28 @@
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="@dimen/dimen_small"
                 android:layout_weight="4"
-                android:paddingLeft="@dimen/screen_padding"
-                android:paddingRight="@dimen/screen_padding"
+                android:paddingLeft="@dimen/padding_default"
+                android:paddingRight="@dimen/padding_default"
                 android:paddingTop="@dimen/dimen_small"
                 android:textAllCaps="true"
                 android:visibility="gone"
                 android:text="@string/checkout_order_label"
                 android:textColor="@color/gray_title_text" />
 
-            <au.com.dealsdirect.ui.custom.EmbeddableListView
-                android:id="@+id/controller_checkout_list"
+            <android.support.v7.widget.RecyclerView
+                android:id="@+id/controller_checkout_recyclerview_items"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:divider="@color/gray_toolbar_border"
-                android:dividerHeight="@dimen/border_thin"
-                android:visibility="visible" />
+                android:layout_height="wrap_content" />
+
+            <include layout="@layout/partial_checkout_address" />
+
+            <include layout="@layout/partial_checkout_payment" />
+
+            <include layout="@layout/partial_checkout_voucher" />
+
+            <include layout="@layout/partial_checkout_summary" />
+
+            <include layout="@layout/partial_checkout_button" />
 
         </LinearLayout>
 

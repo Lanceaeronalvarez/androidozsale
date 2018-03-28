@@ -12,9 +12,7 @@ import android.widget.TextView;
 import javax.inject.Inject;
 
 import au.com.dealsdirect.R;
-import au.com.dealsdirect.ui.base.BaseController;
 import au.com.dealsdirect.ui.base.BasePullToRefreshController;
-import au.com.dealsdirect.ui.main.MainActivity;
 import au.com.dealsdirect.utils.BundleBuilder;
 import butterknife.BindView;
 import butterknife.OnClick;
@@ -31,7 +29,7 @@ public class LegalitiesController extends BasePullToRefreshController implements
     @BindView(R.id.controller_legalities_base_webview)
     protected WebView mWebView;
 
-    @BindView(R.id.partial_toolbar_filter_view)
+    @BindView(R.id.partial_toolbar_right_view)
     ImageButton mFilterButton;
 
     @BindView(R.id.partial_toolbar_arrow_title)
@@ -110,7 +108,7 @@ public class LegalitiesController extends BasePullToRefreshController implements
         mWebView.setVisibility(View.VISIBLE);
     }
 
-    @OnClick(R.id.partial_toolbar_arrow_view)
+    @OnClick(R.id.partial_toolbar_left_view)
     public void backPress() {
         mActivity.onBackPressed();
     }

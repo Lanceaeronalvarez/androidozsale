@@ -17,7 +17,7 @@
 
         <TextView
             android:id="@+id/row_payment_schedule_day"
-            fontPath="@string/font_lato_semibold"
+            fontPath="@string/font_app_semibold"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:paddingTop="20dp"
@@ -67,7 +67,7 @@
 
         <TextView
             android:id="@+id/row_payment_schedule_value"
-            fontPath="@string/font_lato_semibold"
+            fontPath="@string/font_app_semibold"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentEnd="true"

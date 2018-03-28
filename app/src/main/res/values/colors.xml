@@ -50,13 +50,13 @@
     <color name="gray_address_title_text">#858585</color>
     <color name="gray_address_subtitle_text">#454545</color>
 
-    <color name="tab_bar_background">@color/white</color>
+    <color name="tab_bar_background">#e7e7e7</color>
     <color name="tab_bar_icon_inactive">#87939D</color>
     <color name="tab_bar_icon_active">#F00065</color>
     <color name="tab_bar_icon_hovered">#F00065</color>
 
     <color name="app_skin">#FAFAF9</color>
-    <color name="toolbar_skin">#f00065</color>
+    <color name="toolbar_skin">@color/colorAccent</color>
     <color name="toolbar_active_skin">#F00065</color>
 
     <color name="back_arrow_color">#A4AAB3</color>
@@ -131,6 +131,7 @@
 
     <color name="controller_login_close_tint_color">#959595</color>
 
+    <color name="close_icon_color">#959595</color>
     <color name="row_background_color">@color/white</color>
     <color name="checkout_quanitity_color">#6E6E6E</color>
 

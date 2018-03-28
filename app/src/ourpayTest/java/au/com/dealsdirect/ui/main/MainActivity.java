@@ -99,8 +99,8 @@ public class MainActivity extends BaseActivity implements MainMvpView {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        setTheme(R.style.App_Theme_Translucent);
         super.onCreate(savedInstanceState);
-
         setContentView(R.layout.activity_main);
         mIsViewAttached = true;
         getActivityComponent().inject(this);
@@ -196,68 +196,44 @@ public class MainActivity extends BaseActivity implements MainMvpView {
             Router currentRouter = getCurrentRouter();
             Controller currentController = getCurrentController(getCurrentRouter());
 
-            switch (getMainController().getHomeViewPager().getCurrentItem()) {
-                case 0:
-                    if (mCategoriesRouter.getBackstackSize() == 1) { //go back to shops
-                        setRootViewpagerItem(1);
-                    } else {
-                        mCategoriesRouter.handleBack();
-                    }
-                    break;
-                case 1:
-                    if (mIsFromCategories) {
-                        if (currentController instanceof ShopsController) { //reset shops controller root.
-                            ShopsController shopsController = new ShopsController();
-                            setShopController(shopsController);
-                            currentRouter.setRoot(RouterTransaction.with(shopsController).tag(ShopsController.TAG));
-                            setRootViewpagerItem(0);
-                            setDraggableViewPager(true);
-                        } else if (currentController instanceof SaleItemsController) {
-                            getMainController().setViewpagerDraggable(true);
-                            setRootViewpagerItem(0);
-                            currentRouter.handleBack();
-                        } else {
-                            currentRouter.handleBack();
-                        }
-                        mIsFromCategories = false;
-                    } else {
-                        if (currentController instanceof ShopsController && currentRouter.getBackstack().size() == 1) {
-                            //exit app
-                            DialogUtils.showYesNoDialog(
-                                    this,
-                                    getString(R.string.app_name),
-                                    getString(R.string.exit_app),
-                                    getString(R.string.exit),
-                                    getString(R.string.no),
-                                    (dialogInterface, i) -> finish(),
-                                    (dialogInterface, i) -> {
-                                    });
-                            break;
-                        } else if (currentController instanceof PaymentSuccessController) {
-                            try {
+            if (currentController instanceof ShopsController) {
 
-                                getMainController().getHomeController().getCheckoutRouter().popToRoot();
-                                Controller controller = getMainController().getHomeController().getCurrentControllerOnRouter(mCheckoutRouter);
-                                if (controller instanceof CheckoutController) {
-                                    ((CheckoutController) controller).loadCart();
-                                }
-                            } catch (Exception e) {
-                                Log.d(MainActivity.TAG, e.getMessage());
-                            }
-                        } else if (currentRouter.getBackstackSize() == 1) { //From Bottom Nav
-                            getMainController().showBottomNav();
-                            setShopsAsVisibleContainer();
-                            break;
-                        } else {
-                            //getMainController().showBottomNav();
-                            if (currentController instanceof SaleItemsController){
-                                getMainController().setViewpagerDraggable(true);
-                            }
-                            currentRouter.handleBack();
-                        }
+                if (((ShopsController) currentController).isIsDrawerOpened()) {
+                    ((ShopsController) currentController).closeDrawer();
+                } else {
+                    //exit app
+                    if (currentRouter.getBackstack().size() == 1) {
+                        DialogUtils.showYesNoDialog(
+                                this,
+                                getString(R.string.app_name),
+                                getString(R.string.exit_app),
+                                getString(R.string.exit),
+                                getString(R.string.no),
+                                (dialogInterface, i) -> finish(),
+                                (dialogInterface, i) -> {
+                                });
                     }
-                    break;
+                }
+
+            } else if (currentController instanceof PaymentSuccessController) {
+                try {
+
+                    getMainController().getHomeController().getCheckoutRouter().popToRoot();
+                    Controller controller = getMainController().getHomeController().getCurrentControllerOnRouter(mCheckoutRouter);
+                    if (controller instanceof CheckoutController) {
+                        ((CheckoutController) controller).loadCart();
+                    }
+                } catch (Exception e) {
+                    Log.d(MainActivity.TAG, e.getMessage());
+                }
+            } else if (currentRouter.getBackstackSize() == 1) { //From Bottom Nav
+                getMainController().showBottomNav();
+                setShopsAsVisibleContainer();
+            } else {
+                currentRouter.handleBack();
             }
+
+
         } else {
             finish();
         }
@@ -268,9 +244,9 @@ public class MainActivity extends BaseActivity implements MainMvpView {
         mAuthHandler = handler;
         //pinapasa yung router, para kahit child router man siya ng kung ano mang view, pwedeng siya ang tumawag.
         Controller currentController = getCurrentController(router);
-        if(currentController instanceof SaleItemDetailsController ||
-                currentController instanceof AccountController ){
-            GateKeeper.push(router, GateKeeper.Destination.LOGIN,new VerticalChangeHandler(),new VerticalChangeHandler());
+        if (currentController instanceof SaleItemDetailsController ||
+                currentController instanceof AccountController) {
+            GateKeeper.push(router, GateKeeper.Destination.LOGIN, new VerticalChangeHandler(), new VerticalChangeHandler());
         } else {
             GateKeeper.push(router, GateKeeper.Destination.LOGIN);
         }
@@ -361,8 +337,8 @@ public class MainActivity extends BaseActivity implements MainMvpView {
                     .pushChangeHandler(new HorizontalChangeHandler())
                     .popChangeHandler(new HorizontalChangeHandler()));
 
-            if (getMainController().getHomeController()!=null)
-                getMainController().getHomeController().showCheckoutController();
+            if (getMainController().getHomeController() != null)
+                getMainController().getHomeController().showFifthTabController();
 
         } else {
 
@@ -540,17 +516,6 @@ public class MainActivity extends BaseActivity implements MainMvpView {
 
     public void setRootViewpagerItem(int item) {
 
-        switch (item) {
-            case 0:
-                mMainController.goToCategories();
-                break;
-            case 1:
-                mMainController.goToShops();
-                break;
-            default:
-                mMainController.goToShops();
-                break;
-        }
     }
 
     public void setDraggableViewPager(boolean isDraggable) {
@@ -587,26 +552,6 @@ public class MainActivity extends BaseActivity implements MainMvpView {
 
     public void setAccountsRouter(Router router) {
         mAccountsRouter = router;
-    }
-
-    public void goToSaleItemsFromCategory(Bundle bundle) {
-        mShopController.goToItemsFromCategories(bundle);
-
-        final Handler handler = new Handler();
-        handler.postDelayed(() -> mMainController.goToShops(), 400);
-    }
-
-    public void goToSaleItemsFromSearchCategory() {
-        mIsFromCategories = true;
-        mShopController.goToSaleItemsFromCategorySearch();
-        final Handler handler = new Handler();
-        handler.postDelayed(() -> setRootViewpagerItem(1), 400);
-    }
-
-    public void goToSalesFromCategory(GetCategoryTreeResponse getCategoryTreeResponse) {
-        mIsFromCategories = true;
-        mShopController.goToSalesFromCategories(getCategoryTreeResponse);
-        setRootViewpagerItem(1);
     }
 
 
@@ -681,9 +626,9 @@ public class MainActivity extends BaseActivity implements MainMvpView {
 
     @Override
     public Router getCurrentRouter() {
-        try{
+        try {
             return getMainController().getHomeController().getCurrentRouter();
-        }catch (NullPointerException e){
+        } catch (NullPointerException e) {
             return getHomeRouter();
         }
     }
@@ -723,7 +668,7 @@ public class MainActivity extends BaseActivity implements MainMvpView {
         }
 
         String successMessage = getString(R.string.login_successfully);
-        switch (authFlag){
+        switch (authFlag) {
             case REGISTER:
                 successMessage = getString(R.string.registered_successfully);
                 break;
@@ -757,7 +702,7 @@ public class MainActivity extends BaseActivity implements MainMvpView {
     }
 
     /**
-     *  Method to register runtime broadcast receiver to show snackbar alert for internet connection..
+     * Method to register runtime broadcast receiver to show snackbar alert for internet connection..
      */
     private void registerInternetCheckReceiver() {
         IntentFilter internetFilter = new IntentFilter();
@@ -767,7 +712,7 @@ public class MainActivity extends BaseActivity implements MainMvpView {
     }
 
     /**
-     *  Runtime Broadcast receiver inner class to capture internet connectivity events
+     * Runtime Broadcast receiver inner class to capture internet connectivity events
      */
     public BroadcastReceiver broadcastReceiver = new BroadcastReceiver() {
         @Override
@@ -777,20 +722,20 @@ public class MainActivity extends BaseActivity implements MainMvpView {
     };
 
     public void updateSnackbar(boolean isOnline) {
-        if(!isOnline && !mSnackbar.isShown()) {
+        if (!isOnline && !mSnackbar.isShown()) {
             showSnackBar(getString(R.string.no_internet_connection), true);
-        }else if(isOnline && mSnackbar.isShown()){
+        } else if (isOnline && mSnackbar.isShown()) {
             dismissSnackBar();
         }
     }
 
-    public void attachMainController(){
+    public void attachMainController() {
         mMainController = MainController.newInstance();
         mRouter.setRoot(RouterTransaction.with(mMainController)
                 .tag("Home"));
     }
 
-    public boolean isHomeViewPagerNull(){
+    public boolean isHomeViewPagerNull() {
         return getMainController().getHomeViewPager() == null;
     }
 
@@ -802,6 +747,11 @@ public class MainActivity extends BaseActivity implements MainMvpView {
     @Override
     public void showNoNetworkLayout() {
 
+    }
+
+    @Override
+    public boolean isViewAttached() {
+        return mIsViewAttached;
     }
 
 }

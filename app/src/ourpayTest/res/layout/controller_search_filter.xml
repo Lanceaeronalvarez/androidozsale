@@ -22,6 +22,7 @@
             android:id="@+id/controller_sale_items_opaque_view"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+            android:clickable="true"
             android:layout_weight="1"
             android:background="@color/search_gray_opaque" />
 
@@ -35,12 +36,15 @@
             <View
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
+                android:clickable="false"
                 android:layout_weight="1" />
 
             <FrameLayout
+                android:id="@+id/controller_search_filter_facets_page"
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
                 android:layout_weight="2"
+                android:clickable="true"
                 android:background="@color/white">
 
                 <android.support.v7.widget.RecyclerView
@@ -62,7 +66,7 @@
                     android:id="@+id/seekbar_main_layout"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_gravity="center"
+                    android:layout_gravity="top"
                     android:visibility="gone">
 
                     <TextView

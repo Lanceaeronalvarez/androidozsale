@@ -1,32 +1,4 @@
 <?xml version="1.0" encoding="utf-8"?>
 <rotate xmlns:android="http://schemas.android.com/apk/res/android"
-    android:fromDegrees="180">
-
-    <vector xmlns:android="http://schemas.android.com/apk/res/android"
-        android:viewportWidth="14"
-        android:viewportHeight="19"
-        android:width="28dp"
-        android:height="38dp">
-        <group
-            android:translateX="-331"
-            android:translateY="-324">
-            <group
-                android:translateX="19"
-                android:translateY="293">
-                <group
-                    android:translateX="307"
-                    android:translateY="29">
-                    <group
-                        android:rotation="-90"
-                        android:translateX="-0.299976"
-                        android:translateY="24.29998">
-                        <path
-                            android:pathData="M16.6 8.5999756L12 13.199976 7.4 8.5999756l-1.4 1.4 6 6.0000004 6 -6.0000004z"
-                            android:fillColor="@color/gray_field_text" />
-                    </group>
-                </group>
-            </group>
-        </group>
-    </vector>
-
-</rotate>
+    android:fromDegrees="180"
+    android:drawable="@drawable/ic_gray_chevron"/>

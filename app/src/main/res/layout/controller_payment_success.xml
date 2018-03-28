@@ -8,9 +8,9 @@
     android:background="@color/default_background_color"
     android:scrollbars="none"
     android:overScrollMode="never"
-    android:paddingLeft="@dimen/screen_padding"
-    android:paddingRight="@dimen/screen_padding"
-    android:paddingTop="@dimen/screen_padding">
+    android:paddingLeft="@dimen/padding_default"
+    android:paddingRight="@dimen/padding_default"
+    android:paddingTop="@dimen/padding_default">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -97,7 +97,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
-                android:padding="@dimen/screen_padding">
+                android:padding="@dimen/padding_default">
 
                 <ImageView
                     android:layout_width="20dp"
@@ -137,7 +137,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="horizontal"
-                    android:padding="@dimen/screen_padding">
+                    android:padding="@dimen/padding_default">
 
                     <ImageView
                         android:layout_width="20dp"
@@ -177,7 +177,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="horizontal"
-                    android:padding="@dimen/screen_padding">
+                    android:padding="@dimen/padding_default">
 
                     <ImageView
                         android:layout_width="20dp"

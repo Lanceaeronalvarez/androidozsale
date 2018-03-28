@@ -12,8 +12,8 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        android:paddingLeft="@dimen/screen_padding"
-        android:paddingRight="@dimen/screen_padding"
+        android:paddingLeft="@dimen/padding_default"
+        android:paddingRight="@dimen/padding_default"
         android:paddingTop="@dimen/dimen_small"
         android:layout_marginBottom="@dimen/dimen_small">
 
@@ -44,7 +44,7 @@
         android:layout_height="wrap_content"
         android:background="@drawable/bg_edit_text_plain"
         android:clickable="true"
-        android:padding="@dimen/screen_padding">
+        android:padding="@dimen/padding_default">
 
         <TextView
             android:layout_width="wrap_content"
@@ -64,7 +64,7 @@
     <View
         android:layout_width="match_parent"
         android:layout_height="@dimen/border_thin"
-        android:layout_marginLeft="@dimen/screen_padding"
+        android:layout_marginLeft="@dimen/padding_default"
         android:background="@color/gray_toolbar_border" />
 
     <EditText
@@ -91,8 +91,8 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
-            android:paddingLeft="@dimen/screen_padding"
-            android:paddingRight="@dimen/screen_padding">
+            android:paddingLeft="@dimen/padding_default"
+            android:paddingRight="@dimen/padding_default">
 
             <ImageView
                 android:layout_width="@dimen/dimen_extra_large"
@@ -131,7 +131,7 @@
         <View
             android:layout_width="match_parent"
             android:layout_height="@dimen/border_thin"
-            android:layout_marginLeft="@dimen/screen_padding"
+            android:layout_marginLeft="@dimen/padding_default"
             android:background="@color/gray_toolbar_border" />
     </LinearLayout>
 

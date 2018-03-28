@@ -37,7 +37,7 @@
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_weight="0.35"
-                        android:padding="@dimen/screen_padding"
+                        android:padding="@dimen/padding_default"
                         android:text="@string/first_name"
                         android:textColor="@color/colorPrimaryDark"
                         android:textSize="@dimen/text_size_large" />
@@ -73,7 +73,7 @@
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_weight="0.35"
-                        android:padding="@dimen/screen_padding"
+                        android:padding="@dimen/padding_default"
                         android:text="@string/last_name"
                         android:textColor="@color/colorPrimaryDark"
                         android:textSize="@dimen/text_size_large" />
@@ -109,7 +109,7 @@
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_weight="0.35"
-                        android:padding="@dimen/screen_padding"
+                        android:padding="@dimen/padding_default"
                         android:text="@string/date_of_birth"
                         android:textColor="@color/colorPrimaryDark"
                         android:textSize="@dimen/text_size_large" />
@@ -150,7 +150,7 @@
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_weight="0.35"
-                        android:padding="@dimen/screen_padding"
+                        android:padding="@dimen/padding_default"
                         android:text="@string/gender"
                         android:textColor="@color/colorPrimaryDark"
                         android:textSize="@dimen/text_size_large" />
@@ -177,7 +177,7 @@
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_weight="0.35"
-                        android:padding="@dimen/screen_padding"
+                        android:padding="@dimen/padding_default"
                         android:text="@string/email_address"
                         android:textColor="@color/colorPrimaryDark"
                         android:textSize="@dimen/text_size_large" />
@@ -213,7 +213,7 @@
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_weight="0.35"
-                        android:padding="@dimen/screen_padding"
+                        android:padding="@dimen/padding_default"
                         android:text="@string/password"
                         android:textColor="@color/colorPrimaryDark"
                         android:textSize="@dimen/text_size_large" />
@@ -249,7 +249,7 @@
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_weight="0.35"
-                        android:padding="@dimen/screen_padding"
+                        android:padding="@dimen/padding_default"
                         android:text="@string/new_password"
                         android:textColor="@color/colorPrimaryDark"
                         android:textSize="@dimen/text_size_large" />
@@ -285,7 +285,7 @@
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_weight="0.35"
-                        android:padding="@dimen/screen_padding"
+                        android:padding="@dimen/padding_default"
                         android:text="@string/confirm_password"
                         android:textColor="@color/colorPrimaryDark"
                         android:textSize="@dimen/text_size_large" />
@@ -318,7 +318,7 @@
             style="@style/DDButtonStyle"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_margin="@dimen/screen_padding"
+            android:layout_margin="@dimen/padding_default"
             android:text="@string/save_changes" />
     </LinearLayout>
 

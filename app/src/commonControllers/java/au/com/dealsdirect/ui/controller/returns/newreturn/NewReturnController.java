@@ -48,7 +48,7 @@ public class NewReturnController extends BaseController implements NewReturnMvpV
     @BindView(R.id.partial_toolbar_arrow_title)
     TextView mNewReturnToolbarTitle;
 
-    @BindView(R.id.partial_toolbar_filter_view)
+    @BindView(R.id.partial_toolbar_right_view)
     ImageButton mNewReturnToolbarRightOption;
 
     @BindView(R.id.controller_new_return_field)
@@ -154,7 +154,7 @@ public class NewReturnController extends BaseController implements NewReturnMvpV
         super.onDestroyView(view);
     }
 
-    @OnClick(R.id.partial_toolbar_arrow_view)
+    @OnClick(R.id.partial_toolbar_left_view)
     void onBackClick() {
         hideKeyboard();
         if (mActivity != null) mActivity.onBackPressed();

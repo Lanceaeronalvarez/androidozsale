@@ -44,7 +44,6 @@ import au.com.dealsdirect.ui.controller.salecategories.SaleCategoriesController;
 import au.com.dealsdirect.ui.controller.saleitemdetails.SaleItemDetailsController;
 import au.com.dealsdirect.ui.controller.saleitems.SaleItemsController;
 import au.com.dealsdirect.ui.controller.searchfilter.SearchFilterController;
-import au.com.dealsdirect.ui.controller.searchfilter.facetfilter.FacetFilterController;
 import au.com.dealsdirect.ui.controller.shops.ShopsController;
 import au.com.dealsdirect.ui.controller.splash.SplashScreenController;
 import au.com.dealsdirect.ui.controller.vouchers.Add.AddVouchersController;
@@ -140,8 +139,6 @@ public interface ControllerComponent {
 
     void inject(OurpaySMSVerificationController controller);
 
-    void inject(FacetFilterController controller);
-
     void inject(BaseController controller);
 
     void inject(DashboardController controller);
@@ -155,4 +152,6 @@ public interface ControllerComponent {
     void inject(PaymentDetailsController controller);
 
     void inject(SplashScreenController controller);
+
+
 }

@@ -11,14 +11,12 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
-import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.crystal.crystalrangeseekbar.interfaces.OnRangeSeekbarChangeListener;
 import com.crystal.crystalrangeseekbar.interfaces.OnRangeSeekbarFinalValueListener;
-import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
 import java.util.ArrayList;
@@ -37,18 +35,15 @@ import au.com.dealsdirect.data.network.model.category.GetCategoryTreeResponse;
 import au.com.dealsdirect.data.network.model.saleitems.GetSaleItemsResponse;
 import au.com.dealsdirect.data.network.model.sorting.SortingResponse;
 import au.com.dealsdirect.ui.base.BaseController;
-import au.com.dealsdirect.ui.controller.saleitems.SaleItemsController;
 import au.com.dealsdirect.ui.controller.searchfilter.adapter.FacetItemsAdapter;
 import au.com.dealsdirect.ui.controller.searchfilter.adapter.FacetsAdapter;
 import au.com.dealsdirect.ui.controller.searchfilter.adapter.SearchChipModel;
 import au.com.dealsdirect.ui.controller.searchfilter.adapter.SubCategoriesAdapter;
-import au.com.dealsdirect.ui.controller.searchfilter.adapter.SubCategoryItemsAdapter;
 import au.com.dealsdirect.ui.custom.CustomRangeSeekbar;
 import au.com.dealsdirect.utils.BundleBuilder;
 import au.com.dealsdirect.utils.BundleKeys;
 import au.com.dealsdirect.utils.JsonUtils;
 import butterknife.BindView;
-import butterknife.OnClick;
 
 
 /**
@@ -74,6 +69,8 @@ public class SearchFilterController extends BaseController
 
     @BindView(R.id.controller_search_filter_facets_frame)
     FrameLayout mFacetsFrame;
+    @BindView(R.id.controller_search_filter_facets_page)
+    FrameLayout mFacetsPage;
     @BindView(R.id.controller_sale_items_opaque_view)
     View mOpaqueView;
 
@@ -125,6 +122,7 @@ public class SearchFilterController extends BaseController
     private String mChosenCategory = "";
     private String mTitle = "";
     private int mCurrentTabPosition = -1;
+    private boolean mIsSearchFilterControllerActive;
 
     String mCategoryKey = "";
     String mSaleId = "";
@@ -172,7 +170,6 @@ public class SearchFilterController extends BaseController
     @Override
     protected void onViewBound(@NonNull View view) {
         super.onViewBound(view);
-        mActivity.getMainController().hideBottomNav();
         setUp(view);
     }
 
@@ -194,6 +191,16 @@ public class SearchFilterController extends BaseController
 //            removeSelectedIndicesExceptCategory();
 //            mPreviousChosenCategory = mChosenCategory;
 //        }
+
+        mSubCategoriesAdapter = new SubCategoriesAdapter(mChosenCategory, mCategoryTree, mSubCategoryClickListener, mSubCategoryItemClickListener, mCategoryMap);
+        mFilterCategoriesRecyclerView.setLayoutManager(new LinearLayoutManager(mActivity, LinearLayoutManager.VERTICAL, false));
+        mFilterCategoriesRecyclerView.setAdapter(mSubCategoriesAdapter);
+
+        mFacetItemsAdapter = new FacetItemsAdapter(new ArrayList<>(), mPresenter, new HashSet<Integer>(),mFacetItemsRecyclerView);
+        mFacetItemsRecyclerView.setLayoutManager(new LinearLayoutManager(mActivity, LinearLayoutManager.VERTICAL, false));
+        mFacetItemsRecyclerView.setAdapter(mFacetItemsAdapter);
+
+        mFacetItemsAdapter.setSearchItemsList(mSearchItemsList);
 
         if (mFacets != null) {
             parseFacets(mFacets);
@@ -281,9 +288,10 @@ public class SearchFilterController extends BaseController
     }
 
     private void toggleTabSelection(boolean val){
+        mIsSearchFilterControllerActive = val;
         LinearLayout tabStrip = (LinearLayout) mTabLayout.getChildAt(0);
         tabStrip.getChildAt(mCurrentTabPosition).setSelected(val);
-        mTabLayout.setSelectedTabIndicatorHeight(val ? 5 : 0);
+        mTabLayout.setSelectedTabIndicatorHeight(val ? (int) (5 * getResources().getDisplayMetrics().density) : 0);
     }
 
 
@@ -360,10 +368,6 @@ public class SearchFilterController extends BaseController
     @Override
     protected void onDestroyView(@NonNull View view) {
         mPresenter.onDetach();
-
-        if (mActivity != null) {
-            mActivity.getMainController().showBottomNav();
-        }
         super.onDestroyView(view);
     }
 
@@ -396,7 +400,6 @@ public class SearchFilterController extends BaseController
     public void showFacetItem(int position) {
         mFacetsFrame.setVisibility(View.VISIBLE);
 
-
         if (getFacetFilterType(position) != BundleKeys.PRICE_FACETFILTER_NAME) { //only do this logic if facet clicked != price
 
             if (getFacetFilterType(position) == BundleKeys.CATEGORY_TREE_FACET) {
@@ -413,16 +416,16 @@ public class SearchFilterController extends BaseController
             }
 
             if (mPreviousSelectedFacetIndex != -1) {
-//                mPreviousSelectedFacetIndices.put(getFacetFilterType(mPreviousSelectedFacetIndex), new HashSet<>(mFacetItemsAdapter.getSelectedFacets()));
+                mPreviousSelectedFacetIndices.put(getFacetFilterType(mPreviousSelectedFacetIndex), new HashSet<>(mFacetItemsAdapter.getSelectedFacets()));
             }
 
             if (position != mPreviousSelectedFacetIndex) {
-//                mFacetItemsAdapter.clearSelectedFacets();
+                mFacetItemsAdapter.clearSelectedFacets();
                 origSelectedSet.clear();
             }
 
             if (mPreviousSelectedFacetIndices.get(getFacetFilterType(position)) != null) {
-//                mFacetItemsAdapter.updateSelectedFacets(mPreviousSelectedFacetIndices.get(getFacetFilterType(position)));
+                mFacetItemsAdapter.updateSelectedFacets(mPreviousSelectedFacetIndices.get(getFacetFilterType(position)));
                 origSelectedSet = mPreviousSelectedFacetIndices.get(getFacetFilterType(position));
             }
 
@@ -432,19 +435,11 @@ public class SearchFilterController extends BaseController
             mSeekbarLayout.setVisibility(View.VISIBLE);
         }
 
-//        mFacetItemsAdapter.setFilterType(getFacetFilterType(position));
-//        mFacetItemsAdapter.replaceData(mapFacetItemClicked(position));
+        mFacetItemsAdapter.setFilterType(getFacetFilterType(position));
+        mFacetItemsAdapter.replaceData(mapFacetItemClicked(position));
 
         mPreviousSelectedFacetIndex = position;
     }
-
-    private void trackLastSelectedFacet() {
-        if (mPreviousSelectedFacetIndex != -1) {
-            mPreviousSelectedFacetIndices.put(getFacetFilterType(mPreviousSelectedFacetIndex), new HashSet<>(mFacetItemsAdapter.getSelectedFacets()));
-
-        }
-    }
-
 
     @Override
     public void updateFacetItemToFilters(Set<Integer> selectPosSet) {
@@ -511,6 +506,15 @@ public class SearchFilterController extends BaseController
 
     }
 
+    @Override
+    public boolean handleBack() {
+        if(mIsSearchFilterControllerActive) {
+            closeFacets();
+            return true;
+        }
+
+        return super.handleBack();
+    }
 
     private String getFacetFilterType(int position) {
         return mFacetFilters.get(position).first;

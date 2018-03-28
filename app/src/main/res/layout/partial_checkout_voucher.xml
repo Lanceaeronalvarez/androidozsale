@@ -10,8 +10,8 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        android:paddingLeft="@dimen/screen_padding"
-        android:paddingRight="@dimen/screen_padding"
+        android:paddingLeft="@dimen/padding_default"
+        android:paddingRight="@dimen/padding_default"
         android:paddingTop="@dimen/dimen_small">
 
         <TextView
@@ -30,7 +30,7 @@
             android:gravity="end"
             android:text="@string/change"
             android:textColor="@color/gray_field_text"
-            android:textSize="@dimen/text_size_xlarge"
+            android:textSize="@dimen/text_size_medium"
             android:visibility="gone"/>
 
     </LinearLayout>
@@ -43,7 +43,20 @@
         android:layout_marginTop="@dimen/dimen_small"
         android:background="@drawable/bg_edit_text_plain"
         android:clickable="true"
-        android:padding="@dimen/screen_padding">
+        android:padding="@dimen/padding_default">
+
+        <EditText
+            android:id="@+id/partial_checkout_voucher_edittext"
+            style="@style/DDEditTextStyleNoBorder"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:hint="@string/enter_promo_code"
+            android:maxLines="1"
+            android:inputType="text"
+            android:textColor="@color/row_checkout_text_light_color"
+            android:textColorHint="@color/row_checkout_text_light_color"
+            android:imeOptions="actionDone"
+            android:visibility="gone"/>
 
         <TextView
             android:layout_width="wrap_content"
@@ -72,7 +85,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
-            android:padding="@dimen/screen_padding">
+            android:padding="@dimen/padding_default">
 
             <ImageView
                 android:layout_width="@dimen/dimen_extra_large"
@@ -111,7 +124,7 @@
         <View
             android:layout_width="match_parent"
             android:layout_height="@dimen/border_thin"
-            android:layout_marginLeft="@dimen/screen_padding"
+            android:layout_marginLeft="@dimen/padding_default"
             android:background="@color/gray_toolbar_border"/>
     </LinearLayout>
 

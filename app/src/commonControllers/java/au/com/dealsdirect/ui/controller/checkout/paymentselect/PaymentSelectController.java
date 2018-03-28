@@ -11,7 +11,6 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import com.bluelinelabs.conductor.RouterTransaction;
 import com.bluelinelabs.conductor.changehandler.HorizontalChangeHandler;
 import com.google.gson.reflect.TypeToken;
 
@@ -25,7 +24,6 @@ import au.com.dealsdirect.data.network.model.checkout.getuserpaymentmethods.Paym
 import au.com.dealsdirect.ui.base.BasePullToRefreshController;
 import au.com.dealsdirect.ui.custom.CustomAlertDialog;
 import au.com.dealsdirect.ui.custom.RecyclerOnTouchListener;
-import au.com.dealsdirect.ui.main.MainActivity;
 import au.com.dealsdirect.utils.BundleBuilder;
 import au.com.dealsdirect.utils.BundleKeys;
 import au.com.dealsdirect.utils.JsonUtils;
@@ -52,7 +50,7 @@ public class PaymentSelectController extends BasePullToRefreshController impleme
 
     @BindView(R.id.partial_toolbar_arrow_title)
     TextView mPaymentSelectToolbarTitle;
-    @BindView(R.id.partial_toolbar_filter_view)
+    @BindView(R.id.partial_toolbar_right_view)
     ImageView mPaymentSelectRightOption;
     @BindView(R.id.no_payment_method_placeholder)
     LinearLayout mNoPaymentPlaceholder;
@@ -204,7 +202,7 @@ public class PaymentSelectController extends BasePullToRefreshController impleme
         }
     }
 
-    @OnClick(R.id.partial_toolbar_arrow_view)
+    @OnClick(R.id.partial_toolbar_left_view)
     public void onBackClick() {
         hideKeyboard();
         if (getActivity() != null) {
@@ -213,7 +211,7 @@ public class PaymentSelectController extends BasePullToRefreshController impleme
         }
     }
 
-    @OnClick(R.id.partial_toolbar_filter_view)
+    @OnClick(R.id.partial_toolbar_right_view)
     public void onAddPaymentMethod() {
         GateKeeper.push(getRouter(),
                 GateKeeper.Destination.PAYMENT_ADD,

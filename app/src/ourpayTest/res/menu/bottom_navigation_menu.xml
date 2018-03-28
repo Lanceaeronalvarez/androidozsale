@@ -9,10 +9,10 @@
         android:title="@string/shop"
         app:showAsAction="collapseActionView"/>
     <item
-        android:id="@+id/action_payment"
+        android:id="@+id/action_search"
         android:enabled="true"
-        android:icon="@drawable/ic_tab_payment"
-        android:title="@string/payment_schedule"
+        android:icon="@drawable/ic_search"
+        android:title="@string/search_tag"
         app:showAsAction="collapseActionView"/>
 
     <item

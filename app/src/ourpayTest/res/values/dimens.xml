@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-
+    <dimen name="padding_default">10dp</dimen>
     <dimen name="text_size_small">10sp</dimen>
     <dimen name="text_size_medium">12sp</dimen>
     <dimen name="text_size_large">14sp</dimen>
@@ -11,5 +11,14 @@
     <dimen name="text_size_xxxxxlarge">48sp</dimen>
 
     <dimen name="status_bar_height">24dp</dimen>
+    <dimen name="total_toolbar_height">80dp</dimen>
     <dimen name="divider_height">1dp</dimen>
+
+    <dimen name="progress_graph_circle_size">30dp</dimen>
+    <dimen name="progress_date_textview_size">45dp</dimen>
+
+    <!--PRODUCT DETAILS DIMENS-->
+    <dimen name="product_image_height">450dp</dimen>
+    <dimen name="toolbar_widget_size">40dp</dimen>
+    <dimen name="border_thickness">1dp</dimen>
 </resources>

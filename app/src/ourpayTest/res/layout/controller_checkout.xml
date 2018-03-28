@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/default_background_color"
+    android:orientation="vertical">
+
+    <include layout="@layout/partial_toolbar_arrow" />
+
+    <include
+        layout="@layout/partial_checkout_empty"
+        android:visibility="gone" />
+
+    <android.support.v4.widget.NestedScrollView
+        android:id="@+id/checkout_scrollview"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:fillViewport="true">
+
+        <LinearLayout
+            android:id="@+id/controller_checkout_container"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:visibility="gone"
+            android:layout_marginStart="@dimen/padding_default"
+            android:layout_marginEnd="@dimen/padding_default">
+
+            <TextView
+                android:id="@+id/controller_checkout_orders_label"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="@dimen/dimen_small"
+                android:layout_weight="4"
+                android:paddingTop="@dimen/dimen_small"
+                android:textAllCaps="true"
+                android:visibility="gone"
+                android:text="@string/checkout_order_label"
+                android:textColor="@color/gray_title_text" />
+
+            <android.support.v7.widget.CardView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:cardCornerRadius="@dimen/corner_radius"
+                app:cardUseCompatPadding="true"
+                tools:ignore="MissingPrefix">
+                <android.support.v7.widget.RecyclerView
+                    android:id="@+id/controller_checkout_recyclerview_items"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content" />
+            </android.support.v7.widget.CardView>
+
+            <include layout="@layout/partial_checkout_address" />
+
+            <include layout="@layout/partial_checkout_payment" />
+
+            <include layout="@layout/partial_checkout_voucher" />
+
+            <include layout="@layout/partial_checkout_summary" />
+
+            <include layout="@layout/partial_checkout_button" />
+
+        </LinearLayout>
+
+
+    </android.support.v4.widget.NestedScrollView>
+</LinearLayout>

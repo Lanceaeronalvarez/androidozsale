@@ -7,8 +7,7 @@
     android:background="@color/default_background_color"
     android:fillViewport="true"
     android:orientation="vertical"
-    tools:ignore="MissingPrefix"
-    android:background="@color/default_background_color">
+    tools:ignore="MissingPrefix">
 
     <LinearLayout
         android:id="@+id/controller_details_background"
@@ -25,7 +24,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:orientation="vertical"
-                android:padding="@dimen/screen_padding">
+                android:padding="@dimen/padding_default">
 
                 <TextView
                     fontPath="@string/font_app_medium"
@@ -38,7 +37,7 @@
                     android:id="@+id/controller_details_firstname_wrapper"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginBottom="@dimen/screen_padding"
+                    android:layout_marginBottom="@dimen/padding_default"
                     android:layout_marginTop="@dimen/dimen_small"
                     app:hintEnabled="false">
 
@@ -67,7 +66,7 @@
                     android:id="@+id/controller_details_lastname_wrapper"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginBottom="@dimen/screen_padding"
+                    android:layout_marginBottom="@dimen/padding_default"
                     android:layout_marginTop="@dimen/dimen_small"
                     app:hintEnabled="false">
 
@@ -94,7 +93,7 @@
                     android:id="@+id/controller_details_birthday_wrapper"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginBottom="@dimen/screen_padding"
+                    android:layout_marginBottom="@dimen/padding_default"
                     android:layout_marginTop="@dimen/dimen_small"
                     app:hintEnabled="false">
 
@@ -125,7 +124,7 @@
                     style="@style/DDSpinnerTextStyle"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginBottom="@dimen/screen_padding"
+                    android:layout_marginBottom="@dimen/padding_default"
                     android:layout_marginTop="@dimen/dimen_small"
                     android:gravity="center_vertical">
 
@@ -150,7 +149,7 @@
                     android:id="@+id/emailAddressWrapper"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginBottom="@dimen/screen_padding"
+                    android:layout_marginBottom="@dimen/padding_default"
                     android:layout_marginTop="@dimen/dimen_small"
                     app:hintEnabled="false">
 
@@ -177,7 +176,7 @@
                     android:id="@+id/passwordWrapper"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginBottom="@dimen/screen_padding"
+                    android:layout_marginBottom="@dimen/padding_default"
                     android:layout_marginTop="@dimen/dimen_small"
                     app:hintEnabled="false"
                     app:passwordToggleDrawable="@drawable/ic_show_password_toggle"
@@ -206,7 +205,7 @@
                     android:id="@+id/newPasswordWrapper"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginBottom="@dimen/screen_padding"
+                    android:layout_marginBottom="@dimen/padding_default"
                     android:layout_marginTop="@dimen/dimen_small"
                     app:hintEnabled="false"
                     app:passwordToggleDrawable="@drawable/ic_show_password_toggle"
@@ -262,7 +261,7 @@
             style="@style/DDButtonStyle"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_margin="@dimen/screen_padding"
+            android:layout_margin="@dimen/padding_default"
             android:text="@string/save_changes"
             android:visibility="gone" />
 

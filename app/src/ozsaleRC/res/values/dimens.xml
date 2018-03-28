@@ -58,7 +58,6 @@
     <dimen name="button_radius">5dp</dimen>
     <dimen name="text_padding">10dp</dimen>
     <dimen name="border_thickness">2dp</dimen>
-    <dimen name="default_viewholder_item_height">43dp</dimen>
 
     <dimen name="label_space">3dp</dimen>
 

@@ -185,7 +185,7 @@
                                     <!--</LinearLayout>-->
                                     <!--</FrameLayout>-->
                                     <LinearLayout
-                                        android:id="@+id/name_price_category"
+                                        android:id="@+id/product_details_name_price_container"
                                         android:layout_width="match_parent"
                                         android:layout_height="wrap_content"
                                         android:layout_alignBottom="@id/image_container"
@@ -286,7 +286,7 @@
                                     android:visibility="visible">
 
                                     <RelativeLayout
-                                        android:id="@+id/sizes"
+                                        android:id="@+id/product_details_sizes_container"
                                         android:layout_width="match_parent"
                                         android:layout_height="wrap_content"
                                         android:layout_marginTop="10dp"
@@ -328,7 +328,7 @@
                                         </RelativeLayout>
 
                                         <com.zhy.view.flowlayout.TagFlowLayout
-                                            android:id="@+id/sizeList"
+                                            android:id="@+id/product_details_size_list"
                                             android:layout_width="match_parent"
                                             android:layout_height="wrap_content"
                                             android:layout_below="@+id/sizeLabel"
@@ -348,7 +348,7 @@
                                     </RelativeLayout>
 
                                     <LinearLayout
-                                        android:id="@+id/shipping_desc_container"
+                                        android:id="@+id/product_details_shipping_desc_container"
                                         android:layout_width="match_parent"
                                         android:layout_height="match_parent"
                                         android:orientation="vertical"
@@ -364,7 +364,7 @@
                                             android:textSize="@dimen/text_size_large" />
 
                                         <WebView
-                                            android:id="@+id/shipping_desc_text"
+                                            android:id="@+id/product_details_shipping_desc_webview"
                                             android:layout_width="match_parent"
                                             android:layout_height="wrap_content" />
 
@@ -377,7 +377,7 @@
                                     </LinearLayout>
 
                                     <LinearLayout
-                                        android:id="@+id/return_policy_container"
+                                        android:id="@+id/product_details_return_policy_container"
                                         android:layout_width="match_parent"
                                         android:layout_height="match_parent"
                                         android:orientation="vertical"
@@ -393,7 +393,7 @@
                                             android:textSize="@dimen/text_size_large" />
 
                                         <WebView
-                                            android:id="@+id/return_policy_text"
+                                            android:id="@+id/product_details_return_policy_text"
                                             android:layout_width="match_parent"
                                             android:layout_height="wrap_content"
                                             android:layout_marginTop="5dp"
@@ -417,7 +417,7 @@
                                         <WebView
                                             android:id="@+id/product_description_text"
                                             android:layout_width="match_parent"
-                                            android:layout_height="match_parent" />
+                                            android:layout_height="wrap_content" />
 
                                         <ImageView
                                             android:layout_width="match_parent"
