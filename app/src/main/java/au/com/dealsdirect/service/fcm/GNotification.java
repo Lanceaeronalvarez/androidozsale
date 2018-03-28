@@ -296,12 +296,6 @@ public class GNotification {
      */
     private boolean isNotificationEnabled(Context context) {
 
-        if (NotificationManagerCompat.from(context).areNotificationsEnabled()) {
-            // If app notifications is enabled through phone settings
-
-            return true;
-        }
-
-        return false;
+        return NotificationManagerCompat.from(context).areNotificationsEnabled();
     }
 }
