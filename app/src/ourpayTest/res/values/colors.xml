@@ -74,7 +74,7 @@
     <color name="gray_address_title_text">#858585</color>
     <color name="gray_address_subtitle_text">#454545</color>
 
-    <color name="tab_bar_background">#e7e7e7</color>
+    <color name="tab_bar_background">#f8f8f8</color>
     <color name="tab_bar_icon_inactive">#87939D</color>
     <color name="tab_bar_icon_active">@color/colorPrimaryDark</color>
     <color name="tab_bar_icon_hovered">@color/colorPrimaryDark</color>

@@ -70,8 +70,10 @@ public class SubCategoriesAdapter extends RecyclerView.Adapter<RecyclerView.View
 
                     if (mData.get(position).getKey().equals(mChosenCategoryKey)) {
                         ((SubCategoriesViewHolder) holder).subCategoryCheck.setVisibility(View.VISIBLE);
+                        ((SubCategoriesViewHolder) holder).itemView.setSelected(true);
                     } else {
                         ((SubCategoriesViewHolder) holder).subCategoryCheck.setVisibility(View.GONE);
+                        ((SubCategoriesViewHolder) holder).itemView.setSelected(false);
                     }
                 }
 

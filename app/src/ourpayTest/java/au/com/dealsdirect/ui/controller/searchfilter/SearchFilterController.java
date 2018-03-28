@@ -107,7 +107,6 @@ public class SearchFilterController extends BaseController
     private List<GetCategoryTreeResponse> mPreLoadedCategories = new LinkedList<>();
 
     SubCategoriesAdapter mSubCategoriesAdapter;
-    FacetsAdapter mFacetsAdapter;
     FacetItemsAdapter mFacetItemsAdapter;
     List<SearchChipModel> mSearchItemsList = new ArrayList<>();
 
