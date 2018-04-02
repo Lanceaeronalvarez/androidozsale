@@ -8,6 +8,6 @@
     android:layout_marginTop="5dp"
     android:background="@drawable/bg_chips_rounded"
     android:padding="10dp"
-    android:textColor="@color/gray_field_text"
+    android:textColor="@color/sizes_text_color_selector"
     tools:ignore="MissingPrefix"
     tools:text="test" />
