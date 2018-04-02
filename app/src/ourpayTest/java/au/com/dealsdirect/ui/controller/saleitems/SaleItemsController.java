@@ -306,6 +306,7 @@ public class SaleItemsController extends BasePullToRefreshController implements 
 //        }
 
         setUp(view);
+        setRetainViewMode(RetainViewMode.RETAIN_DETACH);
     }
 
     private void determineToolbarTitle() {

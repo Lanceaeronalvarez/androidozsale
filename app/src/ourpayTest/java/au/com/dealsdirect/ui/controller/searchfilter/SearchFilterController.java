@@ -183,14 +183,6 @@ public class SearchFilterController extends BaseController
 
         mSearchItemsList = new ArrayList<SearchChipModel>();
 
-        //remove other chips if a new category is selected.
-        // also remove selected indices for other filter types
-//        if (!mPreviousChosenCategory.equals(mChosenCategory)) {
-//            removeAllChipsExceptCategoryAndSearchQuery();
-//            removeSelectedIndicesExceptCategory();
-//            mPreviousChosenCategory = mChosenCategory;
-//        }
-
         mSubCategoriesAdapter = new SubCategoriesAdapter(mChosenCategory, mCategoryTree, mSubCategoryClickListener, mSubCategoryItemClickListener, mCategoryMap);
         mFilterCategoriesRecyclerView.setLayoutManager(new LinearLayoutManager(mActivity, LinearLayoutManager.VERTICAL, false));
         mFilterCategoriesRecyclerView.setAdapter(mSubCategoriesAdapter);
@@ -210,6 +202,8 @@ public class SearchFilterController extends BaseController
         }
 
         setupPriceFacet();
+
+        setRetainViewMode(RetainViewMode.RETAIN_DETACH);
 
     }
 
@@ -251,7 +245,10 @@ public class SearchFilterController extends BaseController
                 }
             }
         }
-        setupTabs();
+
+        if(mTabLayout.getTabCount() == 0) {
+            setupTabs();
+        }
     }
 
     private void setupTabs() {

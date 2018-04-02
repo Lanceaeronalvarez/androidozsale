@@ -52,7 +52,7 @@ public abstract class BasePullToRefreshController extends BaseController impleme
 
     FrameLayout mToolbarFrameLayout;
 
-    FrameLayout mContentLayout;
+    protected FrameLayout mContentLayout;
 
     LinearLayout mNoNetworkLayout;
 
@@ -210,10 +210,9 @@ public abstract class BasePullToRefreshController extends BaseController impleme
 
     protected void enablePullToRefresh(boolean val){
         mCanDoRefresh = val;
-        mPtrLayout.setIsChildScrollingEnabled(mCanDoRefresh);
     }
 
-    private void addOverScrollListener(ViewGroup vg) {
+    protected void addOverScrollListener(ViewGroup vg) {
         for (int i = 0; i < vg.getChildCount(); i++) {
             View child = vg.getChildAt(i);
             if (child instanceof ViewGroup) {
