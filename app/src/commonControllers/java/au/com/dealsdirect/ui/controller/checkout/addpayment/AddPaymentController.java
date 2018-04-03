@@ -20,19 +20,16 @@ import com.braintreepayments.cardform.view.CardEditText;
 import com.braintreepayments.cardform.view.CardForm;
 import com.crashlytics.android.answers.Answers;
 import com.crashlytics.android.answers.CustomEvent;
-import com.facebook.appevents.AppEventsConstants;
 import com.mysale.genie.utility.RxBus;
 
 import javax.inject.Inject;
 
 import au.com.dealsdirect.R;
-import au.com.dealsdirect.ui.base.BaseActivity;
 import au.com.dealsdirect.ui.base.BaseController;
 import au.com.dealsdirect.ui.controller.masterpass.MasterpassController;
 import au.com.dealsdirect.ui.custom.CustomAlertDialog;
 import au.com.dealsdirect.ui.main.FetchTokenHandler;
 import au.com.dealsdirect.ui.main.MainActivity;
-import au.com.dealsdirect.ui.main.PaymentInfo;
 import au.com.dealsdirect.utils.BundleBuilder;
 import au.com.dealsdirect.utils.IntrospectionUtils;
 import butterknife.BindView;
@@ -130,6 +127,8 @@ public class AddPaymentController extends BaseController implements AddPaymentMv
 
         if (isFromCart) {
             mMasterpassButton.setOnClickListener(action -> onMasterpassButtonClick());
+            mMasterpassButton.setVisibility(View.VISIBLE);
+
         } else {
             mMasterpassButton.setEnabled(false);
             mMasterpassButton.setVisibility(View.GONE);
