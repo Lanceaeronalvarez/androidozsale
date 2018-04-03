@@ -29,7 +29,7 @@
             android:background="@drawable/bg_toolbar_button"
             android:padding="10dp"
             android:scaleType="fitCenter"
-            android:src="@drawable/ic_pink_chevron" />
+            android:src="@drawable/ic_gray_chevron_left" />
 
         <TextView
             android:id="@+id/partial_toolbar_field_title_textview"
@@ -39,7 +39,7 @@
             android:text=""
             android:layout_toStartOf="@+id/partial_toolbar_field_title_right_option"
             android:layout_toEndOf="@+id/partial_toolbar_field_title_left_option"
-            android:textColor="@android:color/white"
+            android:textColor="@color/black"
             android:gravity="center"
             android:maxLines="1"
             android:textSize="@dimen/text_size_xxlarge"/>
@@ -60,7 +60,7 @@
             android:inputType="text"
             android:singleLine="true"
             android:textColor="@android:color/white"
-            android:textColorHint="@color/tab_bar_search_hint"
+            android:textColorHint="#CCFFFFFF"
             android:textCursorDrawable="@drawable/bg_field_cursor"
             android:textSize="@dimen/text_size_xxlarge" />
 

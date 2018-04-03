@@ -42,6 +42,10 @@ public class LoginController extends BaseController implements LoginMvpView {
     @Inject
     LoginMvpPresenter<LoginMvpView> mPresenter;
 
+    @BindView(R.id.partial_toolbar_layout)
+    Toolbar mToolbar;
+    @BindView(R.id.partial_toolbar_arrow_title)
+    TextView mToolbarTitle;
     @BindView(R.id.controller_login_email_edittext)
     EditText mEmailEditText;
     @BindView(R.id.controller_login_password_edittext)
@@ -107,6 +111,11 @@ public class LoginController extends BaseController implements LoginMvpView {
     @Override
     protected void setUp(View view) {
         mActivity.setDraggableViewPager(false);
+
+        boolean shouldToolbarBeVisible = mActivity.getResources().getBoolean(R.bool.login_toolbar_visibility);
+
+        mToolbar.setVisibility(shouldToolbarBeVisible? View.VISIBLE : View.GONE);
+        mToolbarTitle.setText(mActivity.getResources().getString(R.string.login_title));
 
         mLoginButton.setOnClickListener(new View.OnClickListener() {
             @Override

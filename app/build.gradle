@@ -413,10 +413,8 @@ android {
             java.srcDirs = ['src/commonControllers/java/',
                             'src/commonActivity/java/',
                             'src/commonHomeController/java/',
-                            'src/commonSearchFilterController/java',
                             'src/commonCategoriesController/java/',
                             'src/commonShopsController/java/',
-                            'src/commonSaleItemsController/java/',
                             'src/commonMainController/java/',
                             'src/ozsaleRC/java',
                             'src/main/java/']
@@ -427,10 +425,8 @@ android {
             java.srcDirs = ['src/commonControllers/java/',
                             'src/commonActivity/java/',
                             'src/commonHomeController/java/',
-                            'src/commonSearchFilterController/java',
                             'src/commonCategoriesController/java/',
                             'src/commonShopsController/java/',
-                            'src/commonSaleItemsController/java/',
                             'src/commonMainController/java/',
                             'src/ozsaleRC/java',
                             'src/main/java/']

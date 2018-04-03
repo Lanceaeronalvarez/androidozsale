@@ -382,6 +382,7 @@
     <string name="email">Email</string>
     <string name="sorry_today_we_can_t_find_anything_by_your_request">Sorry, today we can\'t find anything by your request.</string>
     <string name="meanwhile_why_not_search_for_something_else">Meanwhile, why not search for something else?</string>
+    <string name="clear">clear</string>
     <bool name="is_checkout_orders_label_visible">false</bool>
 
     <integer-array name="account_title_array">

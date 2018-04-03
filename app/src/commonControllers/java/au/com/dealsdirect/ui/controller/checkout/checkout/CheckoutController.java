@@ -415,14 +415,15 @@ public class CheckoutController extends BaseController implements CheckoutMvpVie
         } else if (items.isEmpty()) {
             //no items
             showNoCartItemsLayout();
+            mNestedScrollView.setVisibility(View.GONE);
         } else {
             mNoCartItemsLayout.setVisibility(View.GONE);
             mNestedScrollView.setVisibility(View.VISIBLE);
             showPaymentButtons();
             int showOrdersLabel = mActivity.getResources().getBoolean(R.bool.is_checkout_orders_label_visible) ?
                     View.VISIBLE : View.GONE;
-        mOrdersLabel.setVisibility(showOrdersLabel);
- 	    mOrdersLabel.setVisibility(View.VISIBLE);
+            mOrdersLabel.setVisibility(showOrdersLabel);
+            mOrdersLabel.setVisibility(View.VISIBLE);
             mAdapter.replaceData(items);
         }
 

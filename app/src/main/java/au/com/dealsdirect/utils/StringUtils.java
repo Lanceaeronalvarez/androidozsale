@@ -63,4 +63,24 @@ public class StringUtils {
         }
         return initialLetters;
     }
+
+    public static String buildCategoryToolbarTitle(String categoryKey){
+        char c = '>';
+        int charCount = 0;
+        String newString = "";
+        for (int i = 0; i < categoryKey.length(); i++) {
+            String getChar = String.valueOf(categoryKey.charAt(i));
+            if (!getChar.equals(String.valueOf(c))) {
+                newString = newString + categoryKey.charAt(i);
+
+            } else {
+                if (charCount == 2) {
+                    newString = newString + " • ";
+                    charCount = 0;
+                }
+                charCount++;
+            }
+        }
+        return newString;
+    }
 }

@@ -17,6 +17,8 @@
     <color name="filter_text_active">#00A6B4</color>
     <color name="filter_text_inactive">#5F5F5F</color>
 
+    <color name="status_bar">@color/colorAccent</color>
+
     <color name="payment_success_order_text_color">#446E87</color>
 
     <color name="bottom_nav_accent_color">#F00065</color>
@@ -54,6 +56,7 @@
     <color name="tab_bar_icon_inactive">#87939D</color>
     <color name="tab_bar_icon_active">#F00065</color>
     <color name="tab_bar_icon_hovered">#F00065</color>
+    <color name="tab_bar_search_hint">#CCFFFFFF</color>
 
     <color name="app_skin">#FAFAF9</color>
     <color name="toolbar_skin">@color/colorAccent</color>
@@ -138,5 +141,7 @@
     <color name="row_checkout_text_light_color">#717171</color>
     <color name="row_checkout_text_dark_color">@color/dark_text</color>
     <color name="sale_items_highlight">#446E87</color>
+    <color name="search_filter_range_bar_color">#d6d6d6</color>
+    <color name="search_filter_highlight_text">#7c7c7c</color>
 
 </resources>

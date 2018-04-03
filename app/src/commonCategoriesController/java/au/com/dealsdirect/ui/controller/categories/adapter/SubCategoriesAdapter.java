@@ -136,9 +136,7 @@ public class SubCategoriesAdapter extends RecyclerView.Adapter<RecyclerView.View
 
     @Override
     public int getItemCount() {
-        if (mData != null)
-            return mData.size();
-        return 0;
+        return mData != null ? mData.size() : 0;
     }
 
     public void replaceData(List<GetCategoryTreeResponse> getCategoryTreeResponses) {
