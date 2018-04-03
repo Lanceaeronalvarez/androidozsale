@@ -8,7 +8,6 @@ import android.content.Context;
 
 import com.androidnetworking.AndroidNetworking;
 import com.androidnetworking.interceptors.HttpLoggingInterceptor;
-import com.gu.toolargetool.TooLargeTool;
 import com.squareup.leakcanary.LeakCanary;
 import com.squareup.leakcanary.RefWatcher;
 
@@ -40,9 +39,6 @@ public class DDApplication extends Application {
     @Override
     public void onCreate() {
         super.onCreate();
-
-        //toolargetool instantiate
-        TooLargeTool.startLogging(this);
 
         //Remove legacy cache and database
         removeLegacyData();
