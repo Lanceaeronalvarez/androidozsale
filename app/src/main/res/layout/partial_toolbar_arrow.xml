@@ -47,7 +47,7 @@
 
         <ImageButton
             android:id="@+id/partial_toolbar_right_view"
-            android:layout_width="@dimen/partial_toolbar_button_sizetoolbar_button_size"
+            android:layout_width="@dimen/partial_toolbar_button_size"
             android:layout_height="@dimen/partial_toolbar_button_size"
             android:layout_alignParentEnd="true"
             android:layout_centerVertical="true"

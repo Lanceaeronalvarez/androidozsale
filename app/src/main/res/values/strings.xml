@@ -134,6 +134,13 @@
     <string name="registration_success">Registration Successful!</string>
     <string name="logged_in">Logged In</string>
 
+    <!--USER DETAILS STRINGS-->
+    <string name="date_of_birth">Date of Birth</string>
+    <string name="contact_number">Contact Number</string>
+    <string name="new_password">New Password</string>
+    <string name="confirm_password">Confirm Password</string>
+    <string name="save_changes">Save Changes</string>
+
     <!--ADDRESS STRINGS-->
     <string name="signature_on_delivery_note">*Your order will be left unattended. Please specify your preference
         or Turn Back if you need signature on Delivery or you disagree with Terms &amp; Conditions

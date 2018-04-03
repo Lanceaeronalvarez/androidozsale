@@ -25,12 +25,12 @@
 
     <style name="horizontalBorderView">
         <item name="android:layout_width">match_parent</item>
-        <item name="android:layout_height">@dimen/border_thickness</item>
+        <item name="android:layout_height">@dimen/border_thin</item>
         <item name="android:background">@color/border_gray</item>
     </style>
 
     <style name="verticalBorderView" parent="horizontalBorderView">
-        <item name="android:layout_width">@dimen/border_thickness</item>
+        <item name="android:layout_width">@dimen/border_thin</item>
         <item name="android:layout_height">match_parent</item>
     </style>
 
