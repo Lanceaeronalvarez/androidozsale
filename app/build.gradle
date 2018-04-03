@@ -190,7 +190,7 @@ android {
 
         topbuyRC {
             versionCode 86
-            versionName "2.3.0"
+            versionName "2.3.1"
             applicationId "au.com.topbuy"
 
             buildConfigField "String", "API_ROOT", "\"https://www.topbuy.com.au/\""
@@ -212,8 +212,8 @@ android {
         }
 
         topbuyTest {
-            versionCode 88
-            versionName "2.3.0"
+            versionCode 90
+            versionName "2.3.1"
             applicationId "au.com.topbuy.test"
 
             buildConfigField "String", "API_ROOT", "\"https://genie-ui-topbuy-pre.mysaledev.com/\""
