@@ -30,7 +30,6 @@ import au.com.dealsdirect.ui.controller.returns.currentreturns.CurrentReturnsCon
 import au.com.dealsdirect.ui.controller.returns.returnorders.ReturnOrdersController;
 import au.com.dealsdirect.ui.controller.saleitems.SaleItemsController;
 import au.com.dealsdirect.ui.controller.searchfilter.SearchFilterController;
-import au.com.dealsdirect.ui.controller.searchfilter.facetfilter.FacetFilterController;
 import au.com.dealsdirect.ui.controller.splash.SplashScreenController;
 import au.com.dealsdirect.ui.controller.tutorial.TutorialController;
 import au.com.dealsdirect.ui.controller.vouchers.Add.AddVouchersController;
@@ -90,8 +89,6 @@ public class ControllerFactory {
                 return new AddNewAddressController(new Bundle());
             case CONTACT_US:
                 return ViewContactsController.newInstance();
-            case FACET_FILTER:
-                return FacetFilterController.newInstance();
             case SPLASH:
                 return SplashScreenController.newInstance();
             case SALEITEM_DETAILS:
@@ -178,8 +175,6 @@ public class ControllerFactory {
                 return new SearchFilterController(bundle);
             case LANGUAGE:
                 return LanguageController.newInstance();
-            case FACET_FILTER:
-                return new FacetFilterController(bundle);
             case TUTORIAL:
                 return TutorialController.newInstance();
             default:
@@ -247,10 +242,6 @@ public class ControllerFactory {
         if (controller instanceof LegalitiesController) {
             return GateKeeper.Destination.LEGALITIES;
 	    }
-
-        if (controller instanceof FacetFilterController) {
-            return GateKeeper.Destination.FACET_FILTER;
-        }
 
         return GateKeeper.Destination.EMPTY;
     }

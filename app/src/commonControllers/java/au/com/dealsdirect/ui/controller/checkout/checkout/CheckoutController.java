@@ -418,6 +418,7 @@ public class CheckoutController extends BaseController implements CheckoutMvpVie
         } else if (items.isEmpty()) {
             //no items
             showNoCartItemsLayout();
+            mNestedScrollView.setVisibility(View.GONE);
         } else {
             mNoCartItemsLayout.setVisibility(View.GONE);
             mCheckoutContainer.setVisibility(View.VISIBLE);
@@ -425,7 +426,12 @@ public class CheckoutController extends BaseController implements CheckoutMvpVie
             int showOrdersLabel = mActivity.getResources().getBoolean(R.bool.is_checkout_orders_label_visible) ?
                     View.VISIBLE : View.GONE;
             mOrdersLabel.setVisibility(showOrdersLabel);
-            mAdapter.replaceData(items);
+            mListView.setVisibility(View.VISIBLE);
+
+            mOrdersLabel.setVisibility(View.VISIBLE);
+            mItemList.clear();
+            mItemList.addAll(items);
+            mAdapter.notifyDataSetChanged();
         }
 
     }
@@ -670,8 +676,8 @@ public class CheckoutController extends BaseController implements CheckoutMvpVie
                 .pushChangeHandler(new HorizontalChangeHandler(false))
                 .popChangeHandler(new HorizontalChangeHandler()));
 
-        mPresenter.facebookInitiatedCheckout(PaymentInfo.getPaymentType(), mAdapter.getItemCount(), mValue.getSummary().total);
-
+        mPresenter.facebookInitiatedCheckout(PaymentInfo.getPaymentType(), mItemList.size(), mValue.getSummary().total);
+        
     }
 
     private void onOurpayButtonClick() {

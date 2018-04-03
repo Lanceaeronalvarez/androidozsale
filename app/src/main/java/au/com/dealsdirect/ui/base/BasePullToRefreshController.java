@@ -18,7 +18,6 @@ import android.widget.FrameLayout;
 import android.widget.LinearLayout;
 
 import au.com.dealsdirect.R;
-import butterknife.BindView;
 import in.srain.cube.views.ptr.PtrClassicFrameLayout;
 import in.srain.cube.views.ptr.PtrDefaultHandler;
 import in.srain.cube.views.ptr.PtrFrameLayout;
@@ -39,7 +38,7 @@ public abstract class BasePullToRefreshController extends BaseController impleme
                 case LOGIN:
                     return R.layout.partial_toolbar_login;
                 case TITLE:
-                    return R.layout.partial_toolbar_field_title;
+                    return R.layout.partial_toolbar_title;
                 default:
                     return R.layout.partial_toolbar_arrow;
             }

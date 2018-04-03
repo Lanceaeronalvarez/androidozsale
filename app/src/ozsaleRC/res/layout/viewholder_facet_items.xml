@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@color/white"
+    android:orientation="vertical"
+    android:paddingTop="@dimen/dimen_small"
+    tools:ignore="MissingPrefix">
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/row_facet_item_height"
+        android:layout_marginEnd="@dimen/dimen_small"
+        android:layout_marginStart="@dimen/dimen_extra_small"
+        android:background="@color/white">
+
+        <TextView
+            android:id="@+id/viewholder_facet_item_title"
+            fontPath="@string/font_app_regular"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="start|center_vertical"
+            android:textColor="@color/facet_item_text_selector"
+            android:textSize="@dimen/text_size_xlarge"
+            android:textStyle="bold"
+            tools:text="Category" />
+
+        <ImageView
+            android:id="@+id/viewholder_subcategory_check"
+            android:layout_width="@dimen/row_facet_check_icon_width"
+            android:layout_height="@dimen/row_facet_check_icon_height"
+            android:layout_gravity="end|center_vertical"
+            android:src="@drawable/ic_check"
+            android:visibility="visible" />
+
+    </FrameLayout>
+</LinearLayout>

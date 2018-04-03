@@ -93,6 +93,17 @@
     <dimen name="sale_item_image_padding_left">8dp</dimen>
     <dimen name="sale_item_image_padding_right">8dp</dimen>
     <dimen name="sale_item_image_height">200dp</dimen>
+    <dimen name="row_facet_check_icon_width">30dp</dimen>
+    <dimen name="row_facet_check_icon_height">30dp</dimen>
+    <dimen name="row_facet_item_height">40dp</dimen>
+    <dimen name="viewholder_filter_subcategory_indent">25dp</dimen>
+    <dimen name="search_filter_tab_layout_height">50dp</dimen>
+    <dimen name="search_filter_imageview_width">25dp</dimen>
+    <dimen name="search_filter_imageview_height">25dp</dimen>
+    <dimen name="search_filter_triangle_image_view_width">25dp</dimen>
+    <dimen name="search_filter_triangle_image_height">25dp</dimen>
+    <dimen name="search_filter_range_margin_end">26dp</dimen>
+    <dimen name="viewholder_subcategory_height">40dp</dimen>
 
 
 </resources>

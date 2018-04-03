@@ -165,12 +165,12 @@ public class ShopsController extends BasePullToRefreshController implements Shop
 
     @Override
     protected void onAttach(@NonNull View view) {
-        super.onAttach(view);
-
         mPresenter.onAttach(this);
+        assert (mActivity) != null;
+
         mBannerClickCounter = 0;
         mActivity.setShopController(this);
-//        enablePullToRefresh(true);
+        super.onAttach(view);
     }
 
     @Override

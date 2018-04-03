@@ -63,37 +63,42 @@ public class SearchFilterController extends BaseController
     @Inject
     SearchFilterMvpPresenter<SearchFilterMvpView> mPresenter;
 
-
     @BindView(R.id.controller_search_filter_tabs)
     TabLayout mTabLayout;
 
     @BindView(R.id.controller_search_filter_facets_frame)
     FrameLayout mFacetsFrame;
+
     @BindView(R.id.controller_search_filter_facets_page)
     FrameLayout mFacetsPage;
+
     @BindView(R.id.controller_sale_items_opaque_view)
     View mOpaqueView;
 
-
     @BindView(R.id.filters_facet_items_recyclerview)
     RecyclerView mFacetItemsRecyclerView;
+
     @BindView(R.id.filters_categories_recyclerview)
     RecyclerView mFilterCategoriesRecyclerView;
-
 
     //Seekbar bindings
     @BindView(R.id.price_facet_range_seekbar)
     CustomRangeSeekbar mSeekbar;
+
     @BindView(R.id.seekbar_main_layout)
     RelativeLayout mSeekbarLayout;
+
     @BindView(R.id.clearText)
     TextView mClearText;
+
     @BindView(R.id.movingMaxPriceLayout)
     LinearLayout mMaxPriceMovingLayout;
+
     @BindView(R.id.movingMinPriceLayout)
     LinearLayout mMinPriceMovingLayout;
     @BindView(R.id.movingMaxPrice)
     TextView mMaxPrice;
+
     @BindView(R.id.movingMinPrice)
     TextView mMinPrice;
 
@@ -107,6 +112,7 @@ public class SearchFilterController extends BaseController
     private List<GetCategoryTreeResponse> mPreLoadedCategories = new LinkedList<>();
 
     SubCategoriesAdapter mSubCategoriesAdapter;
+    FacetsAdapter mFacetsAdapter;
     FacetItemsAdapter mFacetItemsAdapter;
     List<SearchChipModel> mSearchItemsList = new ArrayList<>();
 
@@ -135,8 +141,7 @@ public class SearchFilterController extends BaseController
     private ArrayList<SearchChipModel> mPreviousSearchChips = new ArrayList<>();
 
     List<Pair<String, String>> mFacetFilters = new ArrayList(Arrays.asList
-            (new Pair<String, String>(BundleKeys.SORT_FACETFILTER_NAME, "Sort"),
-                    new Pair<String, String>(BundleKeys.CATEGORY_TREE_FACET, "Category")));
+            (new Pair<String, String>(BundleKeys.SORT_FACETFILTER_NAME, "Sort")));
 
     public static SearchFilterController newInstance() {
         return new SearchFilterController(new BundleBuilder(new Bundle()).build());
@@ -183,15 +188,13 @@ public class SearchFilterController extends BaseController
 
         mSearchItemsList = new ArrayList<SearchChipModel>();
 
-        mSubCategoriesAdapter = new SubCategoriesAdapter(mChosenCategory, mCategoryTree, mSubCategoryClickListener, mSubCategoryItemClickListener, mCategoryMap);
-        mFilterCategoriesRecyclerView.setLayoutManager(new LinearLayoutManager(mActivity, LinearLayoutManager.VERTICAL, false));
-        mFilterCategoriesRecyclerView.setAdapter(mSubCategoriesAdapter);
-
-        mFacetItemsAdapter = new FacetItemsAdapter(new ArrayList<>(), mPresenter, new HashSet<Integer>(),mFacetItemsRecyclerView);
-        mFacetItemsRecyclerView.setLayoutManager(new LinearLayoutManager(mActivity, LinearLayoutManager.VERTICAL, false));
-        mFacetItemsRecyclerView.setAdapter(mFacetItemsAdapter);
-
-        mFacetItemsAdapter.setSearchItemsList(mSearchItemsList);
+        //remove other chips if a new category is selected.
+        // also remove selected indices for other filter types
+//        if (!mPreviousChosenCategory.equals(mChosenCategory)) {
+//            removeAllChipsExceptCategoryAndSearchQuery();
+//            removeSelectedIndicesExceptCategory();
+//            mPreviousChosenCategory = mChosenCategory;
+//        }
 
         mSubCategoriesAdapter = new SubCategoriesAdapter(mChosenCategory, mCategoryTree, mSubCategoryClickListener, mSubCategoryItemClickListener, mCategoryMap);
         mFilterCategoriesRecyclerView.setLayoutManager(new LinearLayoutManager(mActivity, LinearLayoutManager.VERTICAL, false));
@@ -214,7 +217,6 @@ public class SearchFilterController extends BaseController
         setupPriceFacet();
 
         setRetainViewMode(RetainViewMode.RETAIN_DETACH);
-
     }
 
     private void parseFacets(List<GetSaleItemsResponse.Facets> facets) {
@@ -255,7 +257,6 @@ public class SearchFilterController extends BaseController
                 }
             }
         }
-
         if(mTabLayout.getTabCount() == 0) {
             setupTabs();
         }
@@ -265,6 +266,11 @@ public class SearchFilterController extends BaseController
         for (Pair<String, String> pair : mFacetFilters) {
             mTabLayout.addTab(mTabLayout.newTab().setText(pair.second), false);
         }
+
+        //Remove selected state by default setup
+        mTabLayout.getTabAt(0).select();
+        mCurrentTabPosition = 0;
+        toggleTabSelection(false);
 
         mTabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
             @Override
@@ -297,7 +303,6 @@ public class SearchFilterController extends BaseController
         mIsSearchFilterControllerActive = val;
         LinearLayout tabStrip = (LinearLayout) mTabLayout.getChildAt(0);
         tabStrip.getChildAt(mCurrentTabPosition).setSelected(val);
-        mTabLayout.setSelectedTabIndicatorHeight(val ? (int) (5 * getResources().getDisplayMetrics().density) : 0);
     }
 
 
@@ -324,6 +329,7 @@ public class SearchFilterController extends BaseController
                 onResetPriceRange();
             }
         });
+
         mSeekbar.setMinPriceMovingLayout(mMinPriceMovingLayout);
         mSeekbar.setMaxPriceMovingLayout(mMaxPriceMovingLayout);
         mSeekbar.setOnRangeSeekbarChangeListener(new OnRangeSeekbarChangeListener() {
@@ -337,6 +343,7 @@ public class SearchFilterController extends BaseController
 
             }
         });
+
         mSeekbar.setOnRangeSeekbarFinalValueListener(new OnRangeSeekbarFinalValueListener() {
             @Override
             public void finalValue(Number minValue, Number maxValue) {
@@ -390,7 +397,6 @@ public class SearchFilterController extends BaseController
                 mPreviousSearchChips.remove(chip);
             }
         }
-
     }
 
     private void removeSelectedIndicesExceptCategory() {
@@ -398,7 +404,6 @@ public class SearchFilterController extends BaseController
             if (!entry.getKey().equals(BundleKeys.CATEGORY_TREE_FACET)) {
                 entry.setValue(new HashSet<>());
             }
-
         }
     }
 
