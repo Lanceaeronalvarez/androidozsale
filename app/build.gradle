@@ -55,7 +55,7 @@ android {
             applicationId "au.com.buyinvite.bi"
 
             buildConfigField "String", "API_ROOT", "\"https://www.dealsdirect.com.au/\""
-            buildConfigField "String", "API_LEGACY", "\"https://www.dealsdirect.com.au/papi/public/v3.20/\""
+            buildConfigField "String", "API_LEGACY", "\"https://www.dealsdirect.com.au/papi/public/v3.22/\""
             buildConfigField "String", "ACCOUNT_ID", "\"A56B0D62-AEF6-4653-848E-2ECDDB6E9B8C\""
 
             resValue "string", "app_name", "buyinvite"
@@ -78,7 +78,7 @@ android {
             applicationId "au.com.buyinvite.bi.test"
 
             buildConfigField "String", "API_ROOT", "\"https://genie-ui-dealsdirect-pre.mysaledev.com/\""
-            buildConfigField "String", "API_LEGACY", "\"https://api.mysaledev.com/public/v3.20/\""
+            buildConfigField "String", "API_LEGACY", "\"https://api.mysaledev.com/public/v3.22/\""
             buildConfigField "String", "ACCOUNT_ID", "\"A56B0D62-AEF6-4653-848E-2ECDDB6E9B8C\""
 
             resValue "string", "app_name", "buyinvite Test"
@@ -96,12 +96,12 @@ android {
         }
 
         dealsDirectRC {
-            versionCode 71
+            versionCode 75
             versionName "2.3.1"
             applicationId "au.com.dealsdirect"
 
             buildConfigField "String", "API_ROOT", "\"https://www.dealsdirect.com.au/\""
-            buildConfigField "String", "API_LEGACY", "\"https://www.dealsdirect.com.au/papi/public/v3.20/\""
+            buildConfigField "String", "API_LEGACY", "\"https://www.dealsdirect.com.au/papi/public/v3.22/\""
             buildConfigField "String", "ACCOUNT_ID", "\"A56B0D62-AEF6-4653-848E-2ECDDB6E9B8C\""
 
             resValue "string", "app_name", "DealsDirect"
@@ -120,12 +120,12 @@ android {
         }
 
         dealsDirectTest {
-            versionCode 76
+            versionCode 80
             versionName "2.3.2"
             applicationId "au.com.dealsdirect.test"
 
             buildConfigField "String", "API_ROOT", "\"https://genie-ui-dealsdirect-pre.mysaledev.com/\""
-            buildConfigField "String", "API_LEGACY", "\"https://api.mysaledev.com/public/v3.20/\""
+            buildConfigField "String", "API_LEGACY", "\"https://api.mysaledev.com/public/v3.22/\""
             buildConfigField "String", "ACCOUNT_ID", "\"A56B0D62-AEF6-4653-848E-2ECDDB6E9B8C\""
 
             resValue "string", "app_name", "DealsDirect Test"
@@ -148,7 +148,7 @@ android {
             applicationId "au.com.oo"
 
             buildConfigField "String", "API_ROOT", "\"https://www.oo.com.au/\""
-            buildConfigField "String", "API_LEGACY", "\"https://www.oo.com.au/papi/public/v3.20/\""
+            buildConfigField "String", "API_LEGACY", "\"https://www.oo.com.au/papi/public/v3.22/\""
             buildConfigField "String", "ACCOUNT_ID", "\"25D201EB-9A1C-4045-90B6-E6A9F122C7CB\""
 
             resValue "string", "app_name", "OO"
@@ -171,7 +171,7 @@ android {
             applicationId "au.com.oo.test"
 
             buildConfigField "String", "API_ROOT", "\"https://genie-ui-oo-pre.mysaledev.com/\""
-            buildConfigField "String", "API_LEGACY", "\"https://api.mysaledev.com/public/v3.20/\""
+            buildConfigField "String", "API_LEGACY", "\"https://api.mysaledev.com/public/v3.22/\""
             buildConfigField "String", "ACCOUNT_ID", "\"25D201EB-9A1C-4045-90B6-E6A9F122C7CB\""
 
             resValue "string", "app_name", "OO Test"
@@ -189,12 +189,12 @@ android {
         }
 
         topbuyRC {
-            versionCode 80
+            versionCode 84
             versionName "2.3.1"
             applicationId "au.com.topbuy"
 
             buildConfigField "String", "API_ROOT", "\"https://www.topbuy.com.au/\""
-            buildConfigField "String", "API_LEGACY", "\"https://www.topbuy.com.au/papi/public/v3.20/\""
+            buildConfigField "String", "API_LEGACY", "\"https://www.topbuy.com.au/papi/public/v3.22/\""
             buildConfigField "String", "ACCOUNT_ID", "\"909E0AC5-908A-4A73-8E5C-5312DEEBD24C\""
 
             resValue "string", "app_name", "TopBuy"
@@ -212,12 +212,12 @@ android {
         }
 
         topbuyTest {
-            versionCode 86
+            versionCode 90
             versionName "2.3.1"
             applicationId "au.com.topbuy.test"
 
-            buildConfigField "String", "API_ROOT", "\"https://geniemobileappsclientapi.herokuapp.com/sandbox/\""
-            buildConfigField "String", "API_LEGACY", "\"https://geniemobileappsclientapi.herokuapp.com/sandbox/public/v3.20/\""
+            buildConfigField "String", "API_ROOT", "\"https://genie-ui-topbuy-pre.mysaledev.com/\""
+            buildConfigField "String", "API_LEGACY", "\"https://geniemobileappsclientapi.herokuapp.com/sandbox/public/v3.22/\""
             buildConfigField "String", "ACCOUNT_ID", "\"909E0AC5-908A-4A73-8E5C-5312DEEBD24C\""
 
             resValue "string", "app_name", "TopBuy Test"
@@ -240,7 +240,7 @@ android {
             applicationId "au.com.ourpay.test"
 
             buildConfigField "String", "API_ROOT", "\"https://genie-ui-dealsdirect-pre.mysaledev.com/\""
-            buildConfigField "String", "API_LEGACY", "\"https://api.mysaledev.com/public/v3.17/\""
+            buildConfigField "String", "API_LEGACY", "\"https://api.mysaledev.com/public/v3.22/\""
             buildConfigField "String", "ACCOUNT_ID", "\"A56B0D62-AEF6-4653-848E-2ECDDB6E9B8C\""
 
             // Undefined values for Ourpay
