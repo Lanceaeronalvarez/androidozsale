@@ -79,6 +79,8 @@ import static au.com.dealsdirect.utils.BundleKeys.KEY_SHIPPING_FEE;
 
 public class MainActivity extends BaseActivity implements MainMvpView {
 
+    private static final int CHECKOUT_BACKSTACK_THRESHOLD = 2;
+
     @Inject
     MainMvpPresenter<MainMvpView> mPresenter;
 
@@ -475,7 +477,17 @@ public class MainActivity extends BaseActivity implements MainMvpView {
             }
         } else {
             setPaymentMethodSelected(lastPaymentMethod);
-            getCheckoutRouter().popToRoot();
+            // If Checkout -> Payment Select -> Add Payment, backStack size would be greater
+            // than threshold
+            boolean isFromPaymentSelect = getCheckoutRouter().getBackstackSize() >
+                    CHECKOUT_BACKSTACK_THRESHOLD;
+            // If there are only 2 controllers in the backStack and popToRoot is called,
+            // the "to" value will be null and checkout won't autorefresh
+            if (isFromPaymentSelect) {
+                getCheckoutRouter().popToRoot();
+            } else {
+                getCheckoutRouter().handleBack();
+            }
         }
     }
 
