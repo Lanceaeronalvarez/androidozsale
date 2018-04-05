@@ -74,7 +74,7 @@ public class ShopsController extends BasePullToRefreshController implements Shop
     @Inject
     ShopsMvpPresenter<ShopsMvpView> mPresenter;
 
-    @BindView(R.id.shop_banner_recycler_view)
+    @BindView(R.id.controller_shop_banner_recycler)
     RecyclerView shopsControllerBannerRecyclerView;
 
     @BindView(R.id.partial_toolbar_search_icon)

@@ -74,6 +74,8 @@ import static au.com.dealsdirect.utils.BundleKeys.SALEITEMS_TITLE;
 public class SaleItemsController extends BasePullToRefreshController implements SaleItemsMvpView {
 
     public static final String TAG = SaleItemsController.class.getSimpleName();
+    private static final String CATEGORY_KEY_SEPARATOR = ">>>";
+    private static final String CATEGORY_KEY_SEPARATOR_REPLACEMENT = " • ";
 
     private String mSaleId = "";
     private String mTitle = "";
@@ -211,7 +213,7 @@ public class SaleItemsController extends BasePullToRefreshController implements 
 
         if (args.containsKey(SALEITEMS_TITLE)) {
             mTitle = getArgs().getString(SALEITEMS_TITLE, "");
-            mTitle = mTitle.replaceAll(">>>", " â¢ ");
+            mTitle = mTitle.replaceAll(CATEGORY_KEY_SEPARATOR, CATEGORY_KEY_SEPARATOR_REPLACEMENT);
         }
         if (args.containsKey(SALEITEMS_SALE_ID))
             mSaleId = getArgs().getString(SALEITEMS_SALE_ID, "");
@@ -237,7 +239,7 @@ public class SaleItemsController extends BasePullToRefreshController implements 
         if (args.containsKey(SALEITEMS_CATEGORY_MAP))
             mCategoryKey = args.getString(SALEITEMS_CATEGORY_MAP, "");
         if (!mCategoryKey.isEmpty()) {
-            mCategoryForTitle = mCategoryKey.replaceAll(">>>", " â¢ ");
+            mCategoryForTitle = mCategoryKey.replaceAll(CATEGORY_KEY_SEPARATOR, CATEGORY_KEY_SEPARATOR_REPLACEMENT);
         } else {
             mCategoryForTitle = "";
         }
@@ -295,15 +297,11 @@ public class SaleItemsController extends BasePullToRefreshController implements 
     protected void onViewBound(@NonNull View view) {
         super.onViewBound(view);
 
-//        if (mFromShopSearch) {
-//            if (mSaleItemsToolbarTitle.getText().toString().isEmpty() && mSearchQuery.isEmpty() && !isFiltered) {
-////                activateSearch();
-//            }
-//        } else {
+
         mSaleItemsBackIcon.setOnClickListener(view12 -> {
             mActivity.onBackPressed();
         });
-//        }
+
 
         setUp(view);
     }
@@ -473,7 +471,6 @@ public class SaleItemsController extends BasePullToRefreshController implements 
         //allow showing filters only when sale items have loaded.
         mSearchBtn.setOnClickListener(view -> toggleSearch());
         mCancelText.setOnClickListener(v -> toggleSearch());
-
 
         List<GetSaleItemsResponse.Products> items = getSaleItemsResponse.products;
 

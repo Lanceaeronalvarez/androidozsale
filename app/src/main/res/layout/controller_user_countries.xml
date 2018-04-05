@@ -4,7 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    android:background="@color/default_background_color"
+    android:background="@color/background_default"
     tool:ignore="MissingPrefix">
 
     <LinearLayout
@@ -20,8 +20,8 @@
             android:layout_marginLeft="13dp"
             android:layout_marginTop="18dp"
             android:text="Select Country"
-            android:textColor="@color/gray_active_field_text"
-            android:textSize="@dimen/text_size_large" />
+            android:textColor="@color/text_extra_dark"
+            android:textSize="@dimen/text_size_body" />
 
         <android.support.v7.widget.RecyclerView
             android:id="@+id/controller_recycler_details"

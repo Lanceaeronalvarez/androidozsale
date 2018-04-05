@@ -21,7 +21,7 @@
             android:layout_marginBottom="@dimen/activity_horizontal_margin"
             android:text="@string/confirm_your_phone_number"
             android:textColor="@color/dark_gray"
-            android:textSize="@dimen/text_size_large"/>
+            android:textSize="@dimen/text_size_body"/>
 
         <TextView
             android:layout_width="match_parent"
@@ -88,8 +88,8 @@
                 android:layout_gravity="right"
                 android:paddingTop="@dimen/padding_default"
                 android:text="@string/invalid_phone_number"
-                android:textColor="@color/red"
-                android:textSize="@dimen/text_size_medium"
+                android:textColor="@color/ourpay_red"
+                android:textSize="@dimen/text_size_caption1"
                 android:visibility="gone" />
 
             <TextView
@@ -101,7 +101,7 @@
                 android:paddingTop="@dimen/padding_default"
                 android:text="@string/resend_code"
                 android:textColor="@color/verify_resend_color"
-                android:textSize="@dimen/text_size_medium" />
+                android:textSize="@dimen/text_size_caption1" />
 
         </RelativeLayout>
 
@@ -115,7 +115,7 @@
             android:layout_height="wrap_content"
             android:text="@string/enter_your_code_below"
             android:textColor="@color/dark_gray"
-            android:textSize="@dimen/text_size_large"
+            android:textSize="@dimen/text_size_body"
             android:textStyle="bold" />
 
 
@@ -140,8 +140,8 @@
             android:layout_gravity="left"
             android:paddingTop="@dimen/padding_default"
             android:text="@string/invalid_code"
-            android:textColor="@color/red"
-            android:textSize="@dimen/text_size_medium"
+            android:textColor="@color/ourpay_red"
+            android:textSize="@dimen/text_size_caption1"
             android:visibility="gone" />
 
 

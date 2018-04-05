@@ -2,24 +2,24 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:padding="20dp">
+                android:padding="@dimen/margin_large">
 
     <TextView
         android:id="@+id/textView_message"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:gravity="center"
-        android:text="Thank you for using"
-        android:textColor="#FF6F7070"
-        android:textSize="@dimen/text_size_xlarge"
+        android:text="@string/thank_you_for_using"
+        android:textColor="@color/ourpay_panel_dark_gray"
+        android:textSize="@dimen/text_size_headline3"
         />
 
     <ImageView
-        android:layout_width="180dp"
-        android:layout_height="50dp"
+        android:layout_width="@dimen/ourpay_thank_you_logo_width"
+        android:layout_height="@dimen/ourpay_thank_you_logo_height"
         android:layout_below="@+id/textView_message"
         android:layout_centerHorizontal="true"
-        android:layout_marginTop="5dp"
+        android:layout_marginTop="@dimen/margin_extra_small"
         android:src="@drawable/ourpay_logo"/>
 
 </RelativeLayout>

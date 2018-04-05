@@ -36,7 +36,7 @@
             android:layout_height="wrap_content"
             android:layout_marginEnd="16dp"
             android:textColor="@color/address_text_selector"
-            android:textSize="@dimen/text_size_xxlarge"
+            android:textSize="@dimen/text_size_headline2"
             tools:text="Master Card" />
 
         <TextView
@@ -44,8 +44,8 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginBottom="10dp"
-            android:layout_marginEnd="@dimen/text_size_xlarge"
-            android:textColor="@color/gray_field_text"
+            android:layout_marginEnd="@dimen/text_size_headline3"
+            android:textColor="@color/text_medium"
             tools:text="card ending in 02/16" />
 
         <TextView
@@ -53,8 +53,8 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/remove"
-            android:textColor="@color/item_select_remove"
-            android:textSize="@dimen/text_size_xlarge"
+            android:textColor="@color/text_highlight"
+            android:textSize="@dimen/text_size_headline3"
             android:visibility="gone" />
 
     </LinearLayout>

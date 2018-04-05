@@ -18,8 +18,8 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        android:paddingLeft="@dimen/dimen_small"
-        android:paddingStart="@dimen/dimen_small">
+        android:paddingLeft="@dimen/margin_small"
+        android:paddingStart="@dimen/margin_small">
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -32,7 +32,7 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="2"
                 android:textColor="@color/row_checkout_text_light_color"
-                android:textSize="@dimen/text_size_large"
+                android:textSize="@dimen/text_size_body"
                 tools:text="Philosophy (Runway) Cotton Sleeveless Plain" />
 
             <TextView
@@ -42,8 +42,8 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:gravity="end"
-                android:textColor="@color/row_checkout_text_dark_color"
-                android:textSize="@dimen/text_size_xxlarge"
+                android:textColor="@color/cart_text_order_price"
+                android:textSize="@dimen/text_size_headline2"
                 tools:text="$19.00" />
 
             <TextView
@@ -54,7 +54,7 @@
                 android:layout_below="@id/item_checkout_price"
                 android:layout_alignLeft="@id/item_checkout_price"
                 android:textColor="@color/row_checkout_text_dark_color"
-                android:textSize="@dimen/text_size_large"
+                android:textSize="@dimen/text_size_body"
                 android:visibility="gone"
                 tools:text="$19.00" />
 
@@ -64,7 +64,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
-            android:paddingTop="@dimen/dimen_small">
+            android:paddingTop="@dimen/margin_small">
 
             <TextView
                 android:id="@+id/item_checkout_color_text"
@@ -104,7 +104,7 @@
             android:id="@+id/item_checkout_quantity"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/dimen_extra_small" />
+            android:layout_marginTop="@dimen/margin_extra_small" />
 
     </LinearLayout>
 

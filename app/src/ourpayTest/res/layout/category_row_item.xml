@@ -19,7 +19,7 @@
         android:layout_gravity="center_vertical"
         tools:text="electronics &amp; phones"
         android:textColor="@color/category_text_selector"
-        android:textSize="@dimen/text_size_xxlarge" />
+        android:textSize="@dimen/text_size_headline2" />
 
     <ImageView
         android:layout_width="0dp"

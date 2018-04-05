@@ -5,10 +5,10 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:background="@drawable/ourpay_layout_border"
-    android:paddingBottom="15dp"
-    android:paddingLeft="10dp"
-    android:paddingRight="10dp"
-    android:paddingTop="15dp">
+    android:paddingBottom="@dimen/margin_medium"
+    android:paddingLeft="@dimen/margin_small"
+    android:paddingRight="@dimen/margin_small"
+    android:paddingTop="@dimen/margin_medium">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -25,8 +25,8 @@
             android:layout_height="match_parent"
             android:layout_weight="1"
             android:gravity="start|center_vertical"
-            android:textColor="#FF6F7070"
-            android:textSize="@dimen/text_size_large"
+            android:textColor="@color/ourpay_panel_dark_gray"
+            android:textSize="@dimen/text_size_body"
             tools:text="21 June" />
 
         <RelativeLayout
@@ -40,16 +40,16 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_centerHorizontal="true"
-                android:layout_marginEnd="2dp"
-                android:layout_marginLeft="5dp"
-                android:layout_marginRight="2dp"
-                android:layout_marginStart="2dp"
-                android:layout_marginTop="7dp">
+                android:layout_marginEnd="@dimen/margin_end_ourpay_panel_image"
+                android:layout_marginLeft="@dimen/margin_extra_small"
+                android:layout_marginRight="@dimen/margin_right_ourpay_panel_image"
+                android:layout_marginStart="@dimen/margin_start_ourpay_panel_image"
+                android:layout_marginTop="@dimen/margin_top_ourpay_panel_image">
 
                 <ImageView
                     android:id="@+id/ourpay_bg_bar"
                     android:layout_width="match_parent"
-                    android:layout_height="6dp"
+                    android:layout_height="@dimen/ourpay_panel_bar_height"
                     android:layout_alignParentLeft="true"
                     android:layout_alignParentStart="true"
                     android:adjustViewBounds="true"
@@ -86,8 +86,8 @@
 
             <ImageView
                 android:id="@+id/checkImage"
-                android:layout_width="20dp"
-                android:layout_height="20dp"
+                android:layout_width="@dimen/ourpay_panel_check_width"
+                android:layout_height="@dimen/ourpay_panel_check_height"
                 android:layout_toLeftOf="@+id/dollarValue"
                 android:layout_toStartOf="@+id/dollarValue"
                 android:contentDescription="checkImage"
@@ -102,11 +102,11 @@
                 android:layout_alignParentRight="true"
                 android:gravity="end"
                 android:paddingEnd="0dp"
-                android:paddingLeft="10dp"
+                android:paddingLeft="@dimen/margin_small"
                 android:paddingRight="0dp"
-                android:paddingStart="10dp"
-                android:textColor="#FF6F7070"
-                android:textSize="@dimen/text_size_large"
+                android:paddingStart="@dimen/margin_small"
+                android:textColor="@color/ourpay_panel_dark_gray"
+                android:textSize="@dimen/text_size_body"
                 tools:ignore="MissingPrefix"
                 tools:text="$25.00" />
 

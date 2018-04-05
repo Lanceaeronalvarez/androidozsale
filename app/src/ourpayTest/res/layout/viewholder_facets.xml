@@ -16,7 +16,7 @@
         android:layout_gravity="center"
         android:gravity="center"
         android:textColor="@color/gray_field_text"
-        android:textSize="@dimen/text_size_xxlarge" />
+        android:textSize="@dimen/text_size_headline2" />
 
     <TextView
         android:id="@+id/row_indicator_active_text"
@@ -28,6 +28,6 @@
         android:layout_marginTop="-10dp"
         android:text="•"
         android:textColor="@color/colorAccent"
-        android:textSize="@dimen/text_size_xxxlarge" />
+        android:textSize="@dimen/text_size_headline1" />
 
 </LinearLayout>

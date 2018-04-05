@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    android:background="@color/default_background_color"
+    android:background="@color/background_default"
     android:scrollbars="none"
     android:overScrollMode="never"
     android:paddingLeft="@dimen/padding_default"
@@ -24,7 +24,7 @@
         android:layout_marginTop="30dp"
         android:gravity="center"
         android:text="@string/your_payment_has_been_successful"
-        android:textSize="@dimen/text_size_xxxxlarge" />
+        android:textSize="@dimen/text_size_title" />
 
         <TextView
             android:id="@+id/fragment_payment_success_estimated_delivery"
@@ -34,8 +34,8 @@
             android:paddingLeft="10dp"
             android:paddingRight="10dp"
             android:paddingTop="10dp"
-            android:textColor="@color/gray_field_text"
-            android:textSize="@dimen/text_size_large"/>
+            android:textColor="@color/text_medium"
+            android:textSize="@dimen/text_size_body"/>
 
 
         <LinearLayout
@@ -50,8 +50,8 @@
                 android:layout_height="wrap_content"
                 android:gravity="center"
                 android:layout_marginTop="10dp"
-                android:textSize="@dimen/text_size_xlarge"
-                android:textColor="@color/gray_field_text"
+                android:textSize="@dimen/text_size_headline3"
+                android:textColor="@color/text_medium"
                 android:text="@string/your_order_number_is"/>
 
 
@@ -60,7 +60,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_margin="10dp"
-                android:textColor="@color/payment_success_order_text_color"
+                android:textColor="@color/payment_success_text_order_name"
                 android:gravity="center"
                 android:textSize="45sp"
                 android:textStyle="bold"
@@ -70,7 +70,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:gravity="center"
-                android:textSize="@dimen/text_size_large"
+                android:textSize="@dimen/text_size_body"
                 android:layout_marginTop="20dp"
                 android:text="@string/thank_you_for_shopping"/>
         </LinearLayout>
@@ -115,13 +115,13 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:text="@string/address"
-                        android:textColor="@color/gray_field_text" />
+                        android:textColor="@color/text_medium" />
 
                     <TextView
                         android:id="@+id/fragment_payment_success_address"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:textSize="@dimen/text_size_xxlarge"
+                        android:textSize="@dimen/text_size_headline2"
                         android:textStyle="bold"
                         tools:text="Express Delivery"/>
 
@@ -131,7 +131,7 @@
 
                 <View android:layout_width="match_parent"
                       android:layout_height="1dp"
-                      android:background="@color/border_gray"/>
+                      android:background="@color/border_regular"/>
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -155,13 +155,13 @@
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:text="@string/total_payment"
-                            android:textColor="@color/gray_field_text"/>
+                            android:textColor="@color/text_medium"/>
 
                         <TextView
                             android:id="@+id/fragment_payment_success_price"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:textSize="@dimen/text_size_xxlarge"
+                            android:textSize="@dimen/text_size_headline2"
                             android:textStyle="bold"
                             tools:text="$100"/>
 
@@ -171,7 +171,7 @@
 
                 <View android:layout_width="match_parent"
                       android:layout_height="1dp"
-                      android:background="@color/border_gray"/>
+                      android:background="@color/border_regular"/>
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -195,13 +195,13 @@
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:text="@string/order_number"
-                            android:textColor="@color/gray_field_text" />
+                            android:textColor="@color/text_medium" />
 
                         <TextView
                             android:id="@+id/fragment_payment_success_address_orderno"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:textSize="@dimen/text_size_xxlarge"
+                            android:textSize="@dimen/text_size_headline2"
                             android:textStyle="bold"
 
                             tools:text="123312312312"/>
@@ -222,7 +222,7 @@
         android:layout_alignParentBottom="true"
         android:padding="0dp"
         android:text="@string/continue_shopping"
-        android:textSize="@dimen/text_size_xxlarge" />
+        android:textSize="@dimen/text_size_headline2" />
 
     <LinearLayout
         android:id="@+id/ourpay_panel_holder"

@@ -46,7 +46,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="5dp"
                 android:textColor="@color/dark_gray"
-                android:textSize="@dimen/text_size_small"
+                android:textSize="@dimen/text_size_caption2"
                 tools:text="voucher good for use until " />
 
             <TextView
@@ -56,7 +56,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="2dp"
                 android:textColor="@color/dark_gray"
-                android:textSize="@dimen/text_size_small"
+                android:textSize="@dimen/text_size_caption2"
                 tools:text="January 15" />
 
         </LinearLayout>

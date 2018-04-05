@@ -51,7 +51,7 @@
                 android:id="@+id/partial_checkout_button_pay"
                 style="@style/DDButtonStyle"
                 android:layout_width="match_parent"
-                android:layout_height="@dimen/default_button_height"
+                android:layout_height="@dimen/button_height_regular"
                 android:layout_marginBottom="10dp"
                 android:gravity="center"
                 android:text="@string/pay"
@@ -61,7 +61,7 @@
             <RelativeLayout
                 android:id="@+id/partial_checkout_button_paypal"
                 android:layout_width="match_parent"
-                android:layout_height="@dimen/default_button_height"
+                android:layout_height="@dimen/button_height_regular"
                 android:layout_marginBottom="10dp"
                 android:background="@drawable/bg_paypal_button"
                 android:clickable="true"
@@ -81,7 +81,7 @@
                         android:layout_gravity="center"
                         android:text="@string/pay_with"
                         android:textColor="#254181"
-                        android:textSize="@dimen/text_size_xxxlarge" />
+                        android:textSize="@dimen/text_size_headline1" />
 
                     <ImageView
                         android:layout_width="wrap_content"
@@ -98,7 +98,7 @@
             <RelativeLayout
                 android:id="@+id/partial_checkout_button_masterpass"
                 android:layout_width="match_parent"
-                android:layout_height="@dimen/default_button_height"
+                android:layout_height="@dimen/button_height_regular"
                 android:layout_marginBottom="16dp"
                 android:background="@drawable/bg_masterpass_button"
                 android:clickable="true"

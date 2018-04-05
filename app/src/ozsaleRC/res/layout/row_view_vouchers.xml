@@ -12,7 +12,7 @@
         android:layout_height="wrap_content"
         android:layout_alignParentStart="true"
         android:layout_alignParentTop="true"
-        android:background="@color/row_background_color"
+        android:background="@color/bg_row_view_vouchers"
         android:clickable="true"
         android:gravity="center_vertical"
         android:orientation="vertical"
@@ -25,8 +25,8 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_alignParentTop="true"
-            android:textColor="@color/black"
-            android:textSize="@dimen/text_size_xxlarge"
+            android:textColor="@color/text_extra_dark"
+            android:textSize="@dimen/text_size_headline2"
             android:visibility="visible" />
 
         <TextView
@@ -38,8 +38,8 @@
             android:layout_below="@id/row_view_voucher_name_text"
             android:layout_marginRight="@dimen/label_space"
             android:text="@string/amount_colon"
-            android:textColor="@color/black"
-            android:textSize="@dimen/text_size_large"
+            android:textColor="@color/text_extra_dark"
+            android:textSize="@dimen/text_size_body"
             android:textStyle="bold" />
 
         <TextView
@@ -50,8 +50,8 @@
             android:layout_alignTop="@id/voucher_amount_label"
             android:layout_toRightOf="@+id/voucher_amount_label"
             android:fontFamily="@string/font_app_light"
-            android:textColor="@color/black"
-            android:textSize="@dimen/text_size_large" />
+            android:textColor="@color/text_dark"
+            android:textSize="@dimen/text_size_body" />
 
 
         <TextView
@@ -62,8 +62,8 @@
             android:layout_below="@id/voucher_amount_label"
             android:layout_marginRight="@dimen/label_space"
             android:text="@string/expiry_colon"
-            android:textColor="@color/black"
-            android:textSize="@dimen/text_size_large"
+            android:textColor="@color/text_extra_dark"
+            android:textSize="@dimen/text_size_body"
             android:textStyle="bold" />
 
 
@@ -75,8 +75,8 @@
             android:layout_alignTop="@id/voucher_expiry_label"
             android:layout_toRightOf="@id/voucher_expiry_label"
             android:fontFamily="@string/font_app_light"
-            android:textColor="@color/black"
-            android:textSize="@dimen/text_size_large" />
+            android:textColor="@color/text_dark"
+            android:textSize="@dimen/text_size_body" />
 
         <TextView
             android:id="@+id/row_view_voucher_desc_text"
@@ -85,8 +85,8 @@
             android:layout_height="wrap_content"
             android:layout_alignTop="@id/voucher_expiry_label"
             android:layout_toRightOf="@id/voucher_expiry_label"
-            android:textColor="@color/black"
-            android:textSize="@dimen/text_size_large"
+            android:textColor="@color/text_dark"
+            android:textSize="@dimen/text_size_body"
             android:text="@string/voucher_good_for_use_until" />
 
         <TextView
@@ -98,8 +98,8 @@
             android:layout_alignTop="@id/voucher_amount_label"
             android:layout_marginRight="@dimen/label_space"
             android:text="@string/activated_colon"
-            android:textColor="@color/black"
-            android:textSize="@dimen/text_size_large"
+            android:textColor="@color/text_extra_dark"
+            android:textSize="@dimen/text_size_body"
             android:textStyle="bold" />
 
         <TextView
@@ -110,8 +110,8 @@
             android:layout_alignTop="@id/voucher_amount_label"
             android:layout_toRightOf="@id/voucher_activated_label"
             android:fontFamily="@string/font_app_light"
-            android:textColor="@color/black"
-            android:textSize="@dimen/text_size_large" />
+            android:textColor="@color/text_dark"
+            android:textSize="@dimen/text_size_body" />
 
         <TextView
             android:id="@+id/voucher_purchased_label"
@@ -123,8 +123,8 @@
             android:layout_marginRight="@dimen/label_space"
             android:layout_toLeftOf="@id/row_view_voucher_purchased_text"
             android:text="@string/purchased_colon"
-            android:textColor="@color/black"
-            android:textSize="@dimen/text_size_large"
+            android:textColor="@color/text_extra_dark"
+            android:textSize="@dimen/text_size_body"
             android:textStyle="bold" />
 
         <TextView
@@ -134,8 +134,8 @@
             android:layout_height="wrap_content"
             android:layout_alignParentRight="true"
             android:layout_alignTop="@id/voucher_purchased_label"
-            android:textColor="@color/black"
-            android:textSize="@dimen/text_size_large" />
+            android:textColor="@color/text_dark"
+            android:textSize="@dimen/text_size_body" />
 
 
         <TextView
@@ -146,8 +146,8 @@
             android:fontFamily="@string/font_app_light"
             android:maxLines="2"
             android:text="@string/already_spent"
-            android:textColor="@color/black"
-            android:textSize="@dimen/text_size_xxxlarge"
+            android:textColor="@color/text_dark"
+            android:textSize="@dimen/text_size_headline1"
             android:textStyle="bold"
             android:visibility="gone" />
 
@@ -158,15 +158,15 @@
             android:layout_alignParentTop="true"
             android:fontFamily="@string/font_app_light"
             android:text="@string/scheduledplan"
-            android:textColor="@color/black"
-            android:textSize="@dimen/text_size_xxlarge" />
+            android:textColor="@color/text_dark"
+            android:textSize="@dimen/text_size_headline2" />
 
     </RelativeLayout>
 
     <View
         android:layout_width="match_parent"
-        android:layout_height="@dimen/border_thin"
+        android:layout_height="@dimen/border_regular"
         android:layout_below="@id/row_view_vouchers_layout"
-        android:background="@color/gray_background" />
+        android:background="@color/background_default" />
 
 </RelativeLayout>

@@ -44,7 +44,7 @@
                 android:paddingTop="8dp"
                 android:text="@string/sold_out"
                 android:textColor="@color/white"
-                android:textSize="@dimen/text_size_large"
+                android:textSize="@dimen/text_size_body"
                 android:visibility="gone" />
 
         </FrameLayout>
@@ -63,7 +63,7 @@
             android:singleLine="true"
             android:text=""
             android:textColor="@color/color_item_title"
-            android:textSize="@dimen/text_size_large"
+            android:textSize="@dimen/text_size_body"
             android:textStyle="bold"
             tools:text="Brand Sample" />
 
@@ -79,7 +79,7 @@
             android:paddingLeft="5dp"
             android:paddingRight="5dp"
             android:textColor="#616161"
-            android:textSize="@dimen/text_size_medium"
+            android:textSize="@dimen/text_size_caption1"
             tools:text="Item Name Sample" />
 
         <LinearLayout
@@ -100,7 +100,7 @@
                 android:singleLine="true"
                 android:text=""
                 android:textColor="@color/color_text_option"
-                android:textSize="@dimen/text_size_xxxlarge"
+                android:textSize="@dimen/text_size_headline1"
                 android:textStyle="bold"
                 tools:text="$100.00" />
 
@@ -112,7 +112,7 @@
                 android:singleLine="true"
                 android:text=""
                 android:textColor="@color/gray_description_text"
-                android:textSize="@dimen/text_size_medium"
+                android:textSize="@dimen/text_size_caption1"
                 tools:text="$120.00" />
 
         </LinearLayout>

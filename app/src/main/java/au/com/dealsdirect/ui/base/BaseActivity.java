@@ -12,7 +12,6 @@ import android.support.annotation.Nullable;
 import android.support.annotation.StringRes;
 import android.support.design.widget.Snackbar;
 import android.support.v4.content.ContextCompat;
-import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
@@ -152,7 +151,7 @@ public abstract class BaseActivity extends AppCompatActivity implements MvpView 
         mSnackbar = Snackbar.make(findViewById(android.R.id.content),
                 message, indefinite ? Snackbar.LENGTH_INDEFINITE : Snackbar.LENGTH_SHORT);
         View sbView = mSnackbar.getView();
-        sbView.setBackgroundColor(ContextCompat.getColor(this, R.color.snack_bar_color));
+        sbView.setBackgroundColor(ContextCompat.getColor(this, R.color.icon_snack_bar));
         sbView.getLayoutParams().width = ViewGroup.LayoutParams.MATCH_PARENT;
         TextView textView = (TextView) sbView
                 .findViewById(android.support.design.R.id.snackbar_text);

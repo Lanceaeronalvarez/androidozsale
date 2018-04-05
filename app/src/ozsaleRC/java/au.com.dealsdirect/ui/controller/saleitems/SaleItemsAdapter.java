@@ -28,7 +28,7 @@ import butterknife.ButterKnife;
 public class SaleItemsAdapter extends RecyclerView.Adapter<SaleItemsAdapter.ViewHolder> {
     private static final int SALE_ITEM_IMAGE_WIDTH = 225;
     private static final int SALE_ITEM_IMAGE_HEIGHT = 360;
-    private static final int SCREEN_DENSITY_MULTIPLIER = 15;
+    private static final int SCREEN_PADDING_MULTIPLIER = 15;
 
     private List<GetSaleItemsResponse.Products> mData;
     private Context mContext;
@@ -84,7 +84,7 @@ public class SaleItemsAdapter extends RecyclerView.Adapter<SaleItemsAdapter.View
         // Dynamic Height Computation
         int columns = mPresenter.isTablet() ? mContext.getResources().getInteger(R.integer.sale_items_tablet_column_count)
                 : mContext.getResources().getInteger(R.integer.sale_items_phone_column_count);
-        int screenWidth = (int) (ScreenUtils.getScreenWidth(mContext) / columns - (SCREEN_DENSITY_MULTIPLIER * ScreenUtils.getScreenDensity(mContext)));
+        int screenWidth = (int) (ScreenUtils.getScreenWidth(mContext) / columns - (SCREEN_PADDING_MULTIPLIER * ScreenUtils.getScreenDensity(mContext)));
         mComputedHeight = ImageUtils.getComputedBannerHeight(SALE_ITEM_IMAGE_WIDTH, SALE_ITEM_IMAGE_HEIGHT, screenWidth);
     }
 

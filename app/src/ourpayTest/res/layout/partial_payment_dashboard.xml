@@ -35,7 +35,7 @@
                 android:layout_height="wrap_content"
                 android:layout_centerHorizontal="true"
                 android:textColor="@color/colorPrimary"
-                android:textSize="@dimen/text_size_xxxxxlarge"
+                android:textSize="@dimen/text_size_title"
                 tools:text="18" />
 
             <TextView
@@ -67,7 +67,7 @@
                 android:layout_height="wrap_content"
                 android:layout_centerHorizontal="true"
                 android:textColor="@color/colorPrimary"
-                android:textSize="@dimen/text_size_xxxxxlarge"
+                android:textSize="@dimen/text_size_title"
                 tools:text="$200" />
 
             <TextView
@@ -99,7 +99,7 @@
                 android:layout_height="wrap_content"
                 android:layout_centerHorizontal="true"
                 android:textColor="@color/colorPrimary"
-                android:textSize="@dimen/text_size_xxxxxlarge"
+                android:textSize="@dimen/text_size_title"
                 tools:text="$300" />
 
             <TextView
@@ -132,7 +132,7 @@
                 android:layout_height="wrap_content"
                 android:layout_centerInParent="true"
                 android:textColor="@color/colorPrimary"
-                android:textSize="@dimen/text_size_xxxxxlarge"
+                android:textSize="@dimen/text_size_title"
                 tools:text="12" />
 
             <TextView

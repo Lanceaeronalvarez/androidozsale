@@ -7,7 +7,7 @@
     android:clickable="true"
     android:focusable="true"
     android:focusableInTouchMode="true"
-    android:background="@color/default_background_color"
+    android:background="@color/background_default"
     tools:ignore="MissingPrefix">
 
     <include
@@ -37,7 +37,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/reason"
-            android:textColor="@color/dark_text" />
+            android:textColor="@color/text_extra_dark" />
 
         <au.com.dealsdirect.ui.custom.ClearFocusEditText
             android:id="@+id/controller_new_return_field"

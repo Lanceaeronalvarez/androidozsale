@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:animateLayoutChanges="true"
-    android:background="@color/default_background_color"
+    android:background="@color/background_default"
     android:orientation="vertical"
     tools:ignore="missingPrefix">
 
@@ -39,7 +39,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:text="Enter Promocode"
-                    android:textColor="@color/gray_active_field_text" />
+                    android:textColor="@color/text_extra_dark" />
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -63,7 +63,7 @@
                             style="@style/DDEditTextStyle"
                             fontPath="@string/font_app_heavy"
                             android:layout_width="match_parent"
-                            android:layout_height="@dimen/default_button_height"
+                            android:layout_height="@dimen/button_height_regular"
                             android:layout_marginRight="5dp"
                             android:hint="enter promo code"
                             android:maxLines="1"
@@ -77,7 +77,7 @@
                         android:id="@+id/controller_button_add_voucher"
                         style="@style/DDButtonStyle"
                         android:layout_width="0dp"
-                        android:layout_height="@dimen/default_button_height"
+                        android:layout_height="@dimen/button_height_regular"
                         android:layout_weight="1"
                         android:padding="0dp"
                         android:text="apply" />
@@ -106,7 +106,7 @@
                     <TextView
                         fontPath="@string/font_app_light"
                         android:layout_width="wrap_content"
-                        android:layout_height="@dimen/default_button_height"
+                        android:layout_height="@dimen/button_height_regular"
                         android:text="@string/my_voucher"
                         android:textColor="#6c6c6c"
                         android:textSize="30sp" />

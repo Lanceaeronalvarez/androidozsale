@@ -9,17 +9,17 @@
 
     <ImageView
         android:id="@+id/partial_checkout_payment_image"
-        android:layout_width="@dimen/dimen_extra_large"
-        android:layout_height="@dimen/dimen_extra_large"
+        android:layout_width="@dimen/row_checkout_drawable_width"
+        android:layout_height="@dimen/row_checkout_drawable_height"
         android:layout_marginLeft="@dimen/padding_default"
-        android:paddingLeft="@dimen/dimen_extra_small"
-        android:paddingRight="@dimen/dimen_extra_small"
+        android:paddingLeft="@dimen/margin_extra_small"
+        android:paddingRight="@dimen/margin_extra_small"
         android:src="@drawable/ic_my_vouchers" />
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginLeft="@dimen/dimen_small"
+        android:layout_marginLeft="@dimen/margin_small"
         android:orientation="vertical">
 
         <TextView
@@ -28,14 +28,14 @@
             android:layout_height="wrap_content"
             android:layout_marginRight="@dimen/padding_default"
             android:textColor="@color/row_checkout_text_light_color"
-            android:textSize="@dimen/text_size_xxlarge"
+            android:textSize="@dimen/text_size_headline2"
             tools:text="@string/row_checkout_name_hint" />
 
         <TextView
             android:id="@+id/partial_checkout_payment_details"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="@dimen/dimen_small"
+            android:layout_marginBottom="@dimen/margin_small"
             android:layout_marginRight="@dimen/padding_default"
             android:textColor="@color/row_checkout_text_light_color"
             tools:text="@string/row_checkout_desc_hint" />
@@ -45,8 +45,8 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/remove"
-            android:textColor="@color/gray_item_details"
-            android:textSize="@dimen/text_size_xxlarge"
+            android:textColor="@color/text_medium"
+            android:textSize="@dimen/text_size_headline2"
             android:visibility="gone" />
 
         <View

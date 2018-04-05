@@ -751,7 +751,6 @@ public class MainActivity extends BaseActivity implements MainMvpView {
 
     @Override
     public boolean isViewAttached() {
-        return mIsViewAttached;
+        return false;
     }
-
 }

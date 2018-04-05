@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    app:cardCornerRadius="@dimen/corner_radius"
+    app:cardCornerRadius="@dimen/edit_text_corner_radius"
     app:cardUseCompatPadding="true"
     app:contentPadding="@dimen/padding_default"
     tools:ignore="MissingPrefix">
@@ -68,7 +68,7 @@
                         android:gravity="center_vertical"
                         android:text="@string/add_new_voucher"
                         android:textColor="@color/gray_active_field_text"
-                        android:textSize="@dimen/text_size_xxlarge" />
+                        android:textSize="@dimen/text_size_headline2" />
 
                 </RelativeLayout>
 
@@ -98,7 +98,7 @@
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:textColor="@color/gray_title_text"
-                            android:textSize="@dimen/text_size_xxlarge"
+                            android:textSize="@dimen/text_size_headline2"
                             tools:text="$5 voucher" />
 
                         <TextView
@@ -106,7 +106,7 @@
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:textColor="@color/gray_field_text"
-                            android:textSize="@dimen/text_size_large"
+                            android:textSize="@dimen/text_size_body"
                             tools:text="voucher will expire on 12/25/16" />
 
 

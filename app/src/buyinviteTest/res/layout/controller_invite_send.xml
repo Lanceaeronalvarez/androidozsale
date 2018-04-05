@@ -32,7 +32,7 @@
                     android:gravity="center"
                     android:text="@string/invite_friends_title"
                     android:textColor="@color/gray_address_subtitle_text"
-                    android:textSize="@dimen/text_size_xlarge" />
+                    android:textSize="@dimen/text_size_headline3" />
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -63,7 +63,7 @@
                         android:lineSpacingExtra="5dp"
                         android:text="@string/invite_friend_guide"
                         android:textAlignment="center"
-                        android:textSize="@dimen/text_size_medium" />
+                        android:textSize="@dimen/text_size_caption1" />
 
                 </LinearLayout>
 
@@ -117,7 +117,7 @@
                                     android:paddingRight="@dimen/invite_friends_padding"
                                     android:text="Follow us"
                                     android:textColor="@color/white"
-                                    android:textSize="@dimen/text_size_large" />
+                                    android:textSize="@dimen/text_size_body" />
 
                             </LinearLayout>
                         </RelativeLayout>
@@ -158,7 +158,7 @@
                                     android:singleLine="true"
                                     android:text="Like us"
                                     android:textColor="@color/white"
-                                    android:textSize="@dimen/text_size_large" />
+                                    android:textSize="@dimen/text_size_body" />
 
                             </LinearLayout>
                         </RelativeLayout>
@@ -197,7 +197,7 @@
                         android:maxLines="4"
                         android:minLines="4"
                         android:textColor="@color/gray_active_field_text"
-                        android:textSize="@dimen/text_size_xlarge" />
+                        android:textSize="@dimen/text_size_headline3" />
 
 
                 </LinearLayout>
@@ -244,7 +244,7 @@
                             android:singleLine="true"
                             android:textColor="@color/gray_inactive_field_text"
                             android:textColorHint="@color/gray_inactive_field_text"
-                            android:textSize="@dimen/text_size_xlarge"/>
+                            android:textSize="@dimen/text_size_headline3"/>
                     </RelativeLayout>
                 </LinearLayout>
 
@@ -303,7 +303,7 @@
                                     android:paddingRight="@dimen/invite_friends_padding"
                                     android:text="Copy link to clipboard"
                                     android:textColor="@color/white"
-                                    android:textSize="@dimen/text_size_large" />
+                                    android:textSize="@dimen/text_size_body" />
 
                             </LinearLayout>
                         </RelativeLayout>
@@ -319,7 +319,7 @@
                             android:paddingRight="@dimen/invite_friends_padding"
                             android:text="or"
                             android:textColor="@color/gray_active_field_text"
-                            android:textSize="@dimen/text_size_large" />
+                            android:textSize="@dimen/text_size_body" />
 
                         <RelativeLayout
                             android:id="@+id/invite_friend_facebook_button"
@@ -358,7 +358,7 @@
                                     android:paddingRight="@dimen/invite_friends_padding"
                                     android:text="Invite your friends on Facebook"
                                     android:textColor="@color/white"
-                                    android:textSize="@dimen/text_size_large" />
+                                    android:textSize="@dimen/text_size_body" />
 
                             </LinearLayout>
                         </RelativeLayout>
@@ -400,7 +400,7 @@
                                     android:paddingRight="@dimen/invite_friends_padding"
                                     android:text="Invite your friends on Twitter"
                                     android:textColor="@color/white"
-                                    android:textSize="@dimen/text_size_large" />
+                                    android:textSize="@dimen/text_size_body" />
 
                             </LinearLayout>
                         </RelativeLayout>
@@ -442,7 +442,7 @@
                                     android:paddingRight="@dimen/invite_friends_padding"
                                     android:text="Invite your friends on Email"
                                     android:textColor="@color/white"
-                                    android:textSize="@dimen/text_size_large" />
+                                    android:textSize="@dimen/text_size_body" />
 
                             </LinearLayout>
                         </RelativeLayout>
@@ -484,7 +484,7 @@
                                     android:paddingRight="@dimen/invite_friends_padding"
                                     android:text="Invite your friends on SMS"
                                     android:textColor="@color/white"
-                                    android:textSize="@dimen/text_size_large" />
+                                    android:textSize="@dimen/text_size_body" />
 
                             </LinearLayout>
 

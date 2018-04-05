@@ -7,8 +7,8 @@
     android:layout_height="match_parent"
     android:layout_margin="10dp"
     android:background="@drawable/bg_edit_text_rounded"
-    android:paddingLeft="@dimen/place_holder_padding"
-    android:paddingRight="@dimen/place_holder_padding"
+    android:paddingLeft="@dimen/placeholder_padding"
+    android:paddingRight="@dimen/placeholder_padding"
     android:visibility="visible"
     tools:ignore="MissingPrefix">
 
@@ -20,8 +20,8 @@
         android:orientation="vertical">
 
         <ImageView
-            android:layout_width="@dimen/placeholder_icon_size"
-            android:layout_height="@dimen/placeholder_icon_size"
+            android:layout_width="@dimen/placeholder_icon_width"
+            android:layout_height="@dimen/placeholder_icon_height"
             android:layout_gravity="center"
             android:src="@drawable/ic_address_placeholder" />
 
@@ -31,7 +31,7 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:text="@string/welcome_to_my_address"
-            android:textSize="@dimen/text_size_xxxlarge" />
+            android:textSize="@dimen/text_size_headline1" />
 
         <TextView
             fontPath="@string/font_app_light"
@@ -41,7 +41,7 @@
             android:layout_marginTop="10dp"
             android:text="@string/you_currently_do_not_have_any_addresses"
             android:textColor="#9f9f9f"
-            android:textSize="@dimen/text_size_xlarge" />
+            android:textSize="@dimen/text_size_headline3" />
 
     </LinearLayout>
 

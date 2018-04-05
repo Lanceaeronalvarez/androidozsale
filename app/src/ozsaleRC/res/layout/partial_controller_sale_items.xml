@@ -1,12 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:background="@color/white">
+    android:layout_height="match_parent">
 
     <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:paddingTop="@dimen/margin_small"
+        android:background="@color/white">
 
         <TextView
             android:id="@+id/controller_search_popular_subheader"
@@ -14,7 +15,7 @@
             android:layout_height="wrap_content"
             android:fontFamily="@string/font_app_bold"
             android:gravity="left"
-            android:padding="@dimen/dimen_small"
+            android:padding="@dimen/margin_small"
             android:text="@string/popular_products"
             android:textColor="@color/colorSecondary"
             android:visibility="gone" />
@@ -24,9 +25,9 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_below="@id/controller_search_popular_subheader"
-            android:background="@color/white"
-            android:paddingLeft="@dimen/dimen_extra_small"
-            android:paddingRight="@dimen/dimen_extra_small" />
+            android:background="@color/transparent"
+            android:paddingLeft="@dimen/margin_extra_small"
+            android:paddingRight="@dimen/margin_extra_small" />
     </RelativeLayout>
 
     <LinearLayout
@@ -44,8 +45,8 @@
             android:fontFamily="@string/font_app_bold"
             android:gravity="center"
             android:text="@string/sorry_today_we_can_t_find_anything_by_your_request"
-            android:textColor="@color/gray_description_text"
-            android:textSize="@dimen/text_size_large" />
+            android:textColor="@color/text_dark"
+            android:textSize="@dimen/text_size_body" />
 
         <TextView
             android:layout_width="wrap_content"
@@ -55,8 +56,8 @@
             android:fontFamily="@string/font_app_bold"
             android:gravity="center"
             android:text="@string/meanwhile_why_not_search_for_something_else"
-            android:textColor="@color/gray_description_text"
-            android:textSize="@dimen/text_size_large" />
+            android:textColor="@color/text_dark"
+            android:textSize="@dimen/text_size_body" />
 
     </LinearLayout>
 

@@ -26,7 +26,7 @@
             android:layout_height="wrap_content"
             android:text=""
             android:textColor="#565656"
-            android:textSize="@dimen/text_size_xlarge"
+            android:textSize="@dimen/text_size_headline3"
             tools:ignore="HardcodedText" />
 
         <TextView
@@ -36,7 +36,7 @@
             android:layout_below="@+id/my_order_product_name"
             android:text="  "
             android:textColor="#9b9b9b"
-            android:textSize="@dimen/text_size_large"
+            android:textSize="@dimen/text_size_body"
             tools:ignore="HardcodedText" />
 
 
@@ -51,7 +51,7 @@
                 android:layout_height="wrap_content"
                 android:text="Size:"
                 android:textColor="#9b9b9b"
-                android:textSize="@dimen/text_size_xlarge"
+                android:textSize="@dimen/text_size_headline3"
                 tools:ignore="HardcodedText" />
 
             <TextView
@@ -61,7 +61,7 @@
                 android:layout_marginLeft="5dp"
                 android:text=""
                 android:textColor="#747474"
-                android:textSize="@dimen/text_size_xlarge"
+                android:textSize="@dimen/text_size_headline3"
                 tools:ignore="HardcodedText" />
 
         </LinearLayout>
@@ -78,7 +78,7 @@
                 android:layout_height="wrap_content"
                 android:text="Price:"
                 android:textColor="#9b9b9b"
-                android:textSize="@dimen/text_size_xlarge"
+                android:textSize="@dimen/text_size_headline3"
                 tools:ignore="HardcodedText" />
 
             <TextView
@@ -88,7 +88,7 @@
                 android:layout_marginLeft="5dp"
                 android:text=""
                 android:textColor="#747474"
-                android:textSize="@dimen/text_size_xlarge"
+                android:textSize="@dimen/text_size_headline3"
                 tools:ignore="HardcodedText" />
 
         </LinearLayout>
@@ -104,7 +104,7 @@
                 android:layout_height="wrap_content"
                 android:text="Subtotal:"
                 android:textColor="#9b9b9b"
-                android:textSize="@dimen/text_size_xlarge"
+                android:textSize="@dimen/text_size_headline3"
                 tools:ignore="HardcodedText" />
 
             <TextView
@@ -114,7 +114,7 @@
                 android:layout_marginLeft="5dp"
                 android:text=""
                 android:textColor="#747474"
-                android:textSize="@dimen/text_size_xlarge"
+                android:textSize="@dimen/text_size_headline3"
                 tools:ignore="HardcodedText" />
         </LinearLayout>
 

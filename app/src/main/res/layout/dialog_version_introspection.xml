@@ -18,8 +18,8 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:paddingTop="5dp"
-            android:textColor="@color/dark_text"
-            android:textSize="@dimen/text_size_xlarge"
+            android:textColor="@color/text_extra_dark"
+            android:textSize="@dimen/text_size_headline3"
             tools:text="Title"/>
 
         <TextView
@@ -28,8 +28,8 @@
             android:layout_height="wrap_content"
             android:paddingBottom="5dp"
             android:paddingTop="5dp"
-            android:textColor="@color/dark_text"
-            android:textSize="@dimen/text_size_large"
+            android:textColor="@color/text_extra_dark"
+            android:textSize="@dimen/text_size_body"
             tools:text="Message"/>
 
         <WebView

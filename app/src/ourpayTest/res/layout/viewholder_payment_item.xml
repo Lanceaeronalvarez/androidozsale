@@ -14,7 +14,7 @@
         android:layout_margin="5dp"
         android:textAllCaps="true"
         android:textColor="@color/payment_month_header_color"
-        android:textSize="@dimen/text_size_xxlarge"
+        android:textSize="@dimen/text_size_headline2"
         tools:ignore="MissingPrefix"
         tools:text="January 2017" />
 
@@ -37,7 +37,7 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
                 android:textColor="@color/edit_text_label"
-                android:textSize="@dimen/text_size_xxxxlarge"
+                android:textSize="@dimen/text_size_subtitle"
                 tools:ignore="MissingPrefix"
                 tools:text="12" />
 
@@ -49,7 +49,7 @@
                 android:layout_gravity="center"
                 android:paddingBottom="10dp"
                 android:textColor="@color/payment_month_header_color"
-                android:textSize="@dimen/text_size_xlarge"
+                android:textSize="@dimen/text_size_headline3"
                 tools:text="Jan" />
         </LinearLayout>
 
@@ -72,7 +72,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textColor="@color/edit_text_label"
-                android:textSize="@dimen/text_size_xxxlarge"
+                android:textSize="@dimen/text_size_headline1"
                 tools:ignore="MissingPrefix"
                 tools:text="mysale" />
 
@@ -83,7 +83,7 @@
                 android:layout_below="@id/viewholder_payment_title"
                 android:paddingBottom="5dp"
                 android:textColor="@color/payment_month_header_color"
-                android:textSize="@dimen/text_size_large"
+                android:textSize="@dimen/text_size_body"
                 tools:text="95068491" />
 
             <ImageView
@@ -104,7 +104,7 @@
                 android:paddingEnd="5dp"
                 android:paddingStart="5dp"
                 android:textColor="@color/payment_month_header_color"
-                android:textSize="@dimen/text_size_xlarge"
+                android:textSize="@dimen/text_size_headline3"
                 tools:text="95068491" />
 
             <TextView
@@ -114,7 +114,7 @@
                 android:layout_height="wrap_content"
                 android:layout_alignParentEnd="true"
                 android:textColor="@color/edit_text_label"
-                android:textSize="@dimen/text_size_xxxlarge"
+                android:textSize="@dimen/text_size_headline1"
                 tools:ignore="MissingPrefix"
                 tools:text="$100" />
         </RelativeLayout>

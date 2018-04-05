@@ -6,16 +6,16 @@
 
             <item android:state_enabled="true">
                 <shape android:shape="rectangle">
-                    <corners android:radius="@dimen/corner_radius"/>
-                    <solid android:color="@color/invite_clipboard"/>
+                    <corners android:radius="@dimen/edit_text_corner_radius"/>
+                    <solid android:color="@color/clipboard_default"/>
                 </shape>
             </item>
 
             <item android:state_enabled="true" android:state_pressed="true">
 
                 <shape android:shape="rectangle">
-                    <corners android:radius="@dimen/corner_radius"/>
-                    <solid android:color="@color/invite_clipboard"/>
+                    <corners android:radius="@dimen/edit_text_corner_radius"/>
+                    <solid android:color="@color/clipboard_default"/>
                 </shape>
             </item>
 

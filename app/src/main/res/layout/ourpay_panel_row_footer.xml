@@ -6,10 +6,10 @@
     android:layout_height="wrap_content"
     android:background="@drawable/ourpay_layout_footer_border"
     android:orientation="vertical"
-    android:paddingBottom="15dp"
-    android:paddingLeft="10dp"
-    android:paddingRight="10dp"
-    android:paddingTop="15dp">
+    android:paddingBottom="@dimen/margin_medium"
+    android:paddingLeft="@dimen/margin_small"
+    android:paddingRight="@dimen/margin_small"
+    android:paddingTop="@dimen/margin_medium">
 
     <RelativeLayout
         android:id="@+id/balance_status_content"
@@ -20,9 +20,10 @@
             android:id="@+id/textView_amount_label"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="TOTAL"
-            android:textColor="#FFFFFF"
-            android:textSize="@dimen/text_size_large" />
+            android:text="@string/total"
+            android:textAllCaps="true"
+            android:textColor="@color/white"
+            android:textSize="@dimen/text_size_body" />
 
         <TextView
             android:id="@+id/textView_amount_total"
@@ -31,8 +32,8 @@
             android:layout_height="wrap_content"
             android:layout_alignParentEnd="true"
             android:layout_alignParentRight="true"
-            android:textColor="#FF6F7070"
-            android:textSize="@dimen/text_size_large"
+            android:textColor="@color/ourpay_panel_dark_gray"
+            android:textSize="@dimen/text_size_body"
             tools:ignore="MissingPrefix"
             tools:text="$25.00" />
 

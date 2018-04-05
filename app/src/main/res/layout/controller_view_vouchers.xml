@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
-    android:background="@color/default_background_color"
+    android:background="@color/background_default"
     tools:ignore="MissingPrefix">
 
     <android.support.v4.widget.NestedScrollView
@@ -28,10 +28,10 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:padding="@dimen/activity_horizontal_margin"
-                    android:paddingTop="@dimen/dimen_small"
+                    android:paddingTop="@dimen/margin_small"
                     android:text="@string/vouchers_view_detail"
-                    android:textColor="@color/gray_field_text"
-                    android:textSize="@dimen/text_size_xxlarge"
+                    android:textColor="@color/text_medium"
+                    android:textSize="@dimen/text_size_headline2"
                     android:visibility="gone" />
 
                 <com.lsjwzh.widget.recyclerviewpager.RecyclerViewPager
@@ -46,14 +46,14 @@
                     android:layout_height="wrap_content"
                     android:layout_below="@id/controller_view_voucher_unused_recyclerviewpager"
                     android:orientation="vertical"
-                    android:paddingBottom="@dimen/dimen_large"
-                    android:paddingTop="@dimen/dimen_large"
+                    android:paddingBottom="@dimen/margin_large"
+                    android:paddingTop="@dimen/margin_large"
                     android:visibility="gone">
 
                     <View
                         android:layout_width="match_parent"
-                        android:layout_height="0.5dp"
-                        android:background="@color/gray_inactive_field_text" />
+                        android:layout_height="@dimen/border_thin"
+                        android:background="@color/border_regular" />
 
 
                     <TextView
@@ -61,10 +61,10 @@
                         fontPath="@string/font_app_light"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginBottom="@dimen/dimen_small"
-                        android:paddingLeft="@dimen/dimen_medium"
-                        android:paddingRight="@dimen/dimen_medium"
-                        android:paddingTop="@dimen/dimen_extra_small"
+                        android:layout_marginBottom="@dimen/margin_small"
+                        android:paddingLeft="@dimen/margin_medium"
+                        android:paddingRight="@dimen/margin_medium"
+                        android:paddingTop="@dimen/margin_extra_small"
                         android:text="Voucher Used" />
 
                 </LinearLayout>

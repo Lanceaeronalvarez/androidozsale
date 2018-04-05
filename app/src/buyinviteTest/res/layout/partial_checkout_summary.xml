@@ -149,7 +149,7 @@
             android:layout_weight="1"
             android:text="@string/total"
             android:textColor="@color/dark_gray"
-            android:textSize="@dimen/text_size_xlarge"/>
+            android:textSize="@dimen/text_size_headline3"/>
 
         <TextView
             android:id="@+id/partial_checkout_summary_total"
@@ -159,7 +159,7 @@
             android:layout_weight="1"
             android:gravity="end"
             android:textColor="@color/cart_order_price_text_color"
-            android:textSize="@dimen/text_size_xxlarge"
+            android:textSize="@dimen/text_size_headline2"
             tools:text="$27"/>
 
     </LinearLayout>

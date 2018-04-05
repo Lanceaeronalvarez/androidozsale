@@ -22,7 +22,7 @@
             fontPath="@string/font_app_semibold"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textSize="@dimen/text_size_xlarge"
+            android:textSize="@dimen/text_size_headline3"
             android:textStyle="bold"
             android:textColor="@color/facet_item_text_selector"
             android:text="Category"/>
@@ -32,7 +32,7 @@
     <View
         android:layout_width="match_parent"
         android:layout_height="0.9dp"
-        android:background="@color/gray_border"
+        android:background="@color/border_regular"
         android:layout_marginTop="15dp"
         android:layout_marginLeft="5dp"/>
 </LinearLayout>

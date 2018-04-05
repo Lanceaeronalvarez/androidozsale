@@ -143,6 +143,11 @@ public class RegisterController extends BaseController implements RegisterMvpVie
 
     @OnClick(R.id.partial_toolbar_left_view)
     void onBackArrowClick() {
+        onBackIconClick();
+    }
+
+    @OnClick(R.id.controller_register_back_icon)
+    void onBackIconClick() {
         hideKeyboard();
         mActivity.onBackPressed();
     }

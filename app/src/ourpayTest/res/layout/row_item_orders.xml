@@ -86,7 +86,7 @@
                     android:layout_height="wrap_content"
                     android:layout_weight="4"
                     android:textColor="#707070"
-                    android:textSize="@dimen/text_size_xlarge"
+                    android:textSize="@dimen/text_size_headline3"
                     android:textStyle="bold"
                     tools:ignore="HardcodedText" />
 
@@ -100,7 +100,7 @@
                     android:gravity="end"
                     android:maxLines="1"
                     android:textColor="@color/cart_order_price_text_color"
-                    android:textSize="@dimen/text_size_xxxlarge"
+                    android:textSize="@dimen/text_size_headline1"
                     tools:ignore="HardcodedText" />
 
             </LinearLayout>

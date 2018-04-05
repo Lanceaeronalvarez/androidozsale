@@ -42,7 +42,7 @@
             android:textColor="@android:color/white"
             android:gravity="center"
             android:maxLines="1"
-            android:textSize="@dimen/text_size_xxlarge"/>
+            android:textSize="@dimen/text_size_headline2"/>
 
         <au.com.dealsdirect.ui.custom.SearchEditText
             android:id="@+id/partial_toolbar_field_title_edittext"
@@ -60,9 +60,10 @@
             android:inputType="text"
             android:singleLine="true"
             android:textColor="@android:color/white"
+            android:textSize="@dimen/text_size_headline2"
             android:textColorHint="@color/tab_bar_search_hint"
             android:textCursorDrawable="@drawable/bg_field_cursor"
-            android:textSize="@dimen/text_size_xxlarge" />
+            tools:text="Title"/>
 
         <ImageButton
             android:id="@+id/partial_toolbar_field_title_right_option"

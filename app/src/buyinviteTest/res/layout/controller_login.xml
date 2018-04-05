@@ -34,7 +34,7 @@
             android:layout_height="wrap_content"
             android:text="@string/email_address"
             android:textColor="@color/dark_text"
-            android:textSize="@dimen/text_size_medium"/>
+            android:textSize="@dimen/text_size_caption1"/>
 
         <android.support.design.widget.TextInputLayout
             android:id="@+id/fragment_login_layout_email"
@@ -63,7 +63,7 @@
             android:layout_marginTop="5dp"
             android:text="@string/password"
             android:textColor="@color/dark_text"
-            android:textSize="@dimen/text_size_medium"/>
+            android:textSize="@dimen/text_size_caption1"/>
 
         <android.support.design.widget.TextInputLayout
             android:id="@+id/fragment_login_layout_password"
@@ -93,7 +93,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="@string/log_in"
-            android:textSize="@dimen/text_size_xlarge"/>
+            android:textSize="@dimen/text_size_headline3"/>
 
         <RelativeLayout
             android:id="@+id/controller_login_fb_layout"
@@ -132,7 +132,7 @@
                     android:text="@string/sign_in_with_facebook"
                     android:layout_marginLeft="10dp"
                     android:textColor="@android:color/white"
-                    android:textSize="@dimen/text_size_xlarge"/>
+                    android:textSize="@dimen/text_size_headline3"/>
             </RelativeLayout>
         </RelativeLayout>
 
@@ -156,7 +156,7 @@
                     android:layout_height="wrap_content"
                     android:text="@string/not_a_member_yet_text"
                     android:textColor="@color/dark_text"
-                    android:textSize="@dimen/text_size_medium"/>
+                    android:textSize="@dimen/text_size_caption1"/>
 
                 <TextView
                     android:id="@+id/fragment_login_signup_text"
@@ -168,7 +168,7 @@
                     android:text="@string/sign_up"
                     android:textAllCaps="true"
                     android:textColor="@color/bg_button_default"
-                    android:textSize="@dimen/text_size_medium"/>
+                    android:textSize="@dimen/text_size_caption1"/>
 
                 <TextView
                     fontPath="@string/font_app_medium"
@@ -178,7 +178,7 @@
                     android:paddingStart="5dp"
                     android:text="@string/now"
                     android:textColor="@color/dark_text"
-                    android:textSize="@dimen/text_size_medium"/>
+                    android:textSize="@dimen/text_size_caption1"/>
 
             </LinearLayout>
 
@@ -192,7 +192,7 @@
                 android:layout_marginTop="20dp"
                 android:text="@string/forgot_password"
                 android:textColor="@color/dark_text"
-                android:textSize="@dimen/text_size_medium"/>
+                android:textSize="@dimen/text_size_caption1"/>
 
         </LinearLayout>
 

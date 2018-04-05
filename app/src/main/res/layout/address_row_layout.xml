@@ -34,7 +34,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textColor="@color/address_text_selector"
-            android:textSize="@dimen/text_size_xxlarge"
+            android:textSize="@dimen/text_size_headline2"
             tools:text="Address 1" />
 
         <TextView
@@ -44,8 +44,8 @@
             android:layout_height="wrap_content"
             android:layout_alignStart="@+id/view_my_addresses_row_layout"
             android:layout_centerVertical="true"
-            android:textColor="@color/gray_address_subtitle_text"
-            android:textSize="@dimen/text_size_large"
+            android:textColor="@color/address_text_subtitle"
+            android:textSize="@dimen/text_size_body"
             tools:text="some address"/>
 
         <!-- remove text and express delivery layout below, uncomment to implement-->
@@ -96,14 +96,14 @@
         android:layout_marginTop="10dp"
         android:clickable="true"
         android:text="@string/remove"
-        android:textColor="@color/item_select_remove"
-        android:textSize="@dimen/text_size_xlarge" />
+        android:textColor="@color/text_highlight"
+        android:textSize="@dimen/text_size_headline3" />
 
     <View
         android:layout_width="match_parent"
         android:layout_height="0.5dp"
         android:layout_below="@+id/remove_address_text"
         android:layout_marginTop="10dp"
-        android:background="@color/border_gray" />
+        android:background="@color/border_regular" />
 
 </RelativeLayout>

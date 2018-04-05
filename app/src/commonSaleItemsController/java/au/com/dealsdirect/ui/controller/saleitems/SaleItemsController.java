@@ -55,7 +55,6 @@ import au.com.dealsdirect.utils.JsonUtils;
 import au.com.dealsdirect.utils.PaginateUtils;
 import butterknife.BindView;
 import butterknife.OnClick;
-
 import static au.com.dealsdirect.utils.BundleKeys.SALEITEMS_CATEGORY_MAP;
 import static au.com.dealsdirect.utils.BundleKeys.SALEITEMS_CHIPS_FILTER;
 import static au.com.dealsdirect.utils.BundleKeys.SALEITEMS_FROM_CATEGORIES;
@@ -71,6 +70,8 @@ import static au.com.dealsdirect.utils.BundleKeys.SALEITEMS_TITLE;
 public class SaleItemsController extends BasePullToRefreshController implements SaleItemsMvpView {
 
     public static final String TAG = SaleItemsController.class.getSimpleName();
+    private static final String CATEGORY_KEY_SEPARATOR = ">>>";
+    private static final String CATEGORY_KEY_SEPARATOR_REPLACEMENT = " • ";
 
     private String mSaleId = "";
     private String mTitle = "";
@@ -190,7 +191,7 @@ public class SaleItemsController extends BasePullToRefreshController implements 
 
         if (args.containsKey(SALEITEMS_TITLE)) {
             mTitle = getArgs().getString(SALEITEMS_TITLE, "");
-            mTitle = mTitle.replaceAll(">>>", " • ");
+            mTitle = mTitle.replaceAll(CATEGORY_KEY_SEPARATOR, CATEGORY_KEY_SEPARATOR_REPLACEMENT);
         }
         if (args.containsKey(SALEITEMS_SALE_ID))
             mSaleId = getArgs().getString(SALEITEMS_SALE_ID, "");
@@ -216,7 +217,7 @@ public class SaleItemsController extends BasePullToRefreshController implements 
         if (args.containsKey(SALEITEMS_CATEGORY_MAP))
             mCategoryKey = args.getString(SALEITEMS_CATEGORY_MAP, "");
         if (!mCategoryKey.isEmpty()) {
-            mCategoryForTitle = mCategoryKey.replaceAll(">>>", " • ");
+            mCategoryForTitle = mCategoryKey.replaceAll(CATEGORY_KEY_SEPARATOR, CATEGORY_KEY_SEPARATOR_REPLACEMENT);
         } else {
             mCategoryForTitle = "";
         }
@@ -394,10 +395,10 @@ public class SaleItemsController extends BasePullToRefreshController implements 
         mSaleItemsAdapter = new SaleItemsAdapter(mActivity, mSaleItems, mPresenter, mSaleId);
         if (mPresenter.isTablet()) {
             mSaleItemsRecyclerView.setLayoutManager(new GridLayoutManager(mActivity,
-                    getResources().getInteger(R.integer.sale_items_tablet_column_count));
+                    getResources().getInteger(R.integer.sale_items_tablet_column_count)));
         } else {
             mSaleItemsRecyclerView.setLayoutManager(new GridLayoutManager(mActivity,
-                    getResources().getInteger(R.integer.sale_phone_tablet_column_count));
+                    getResources().getInteger(R.integer.sale_items_phone_column_count)));
         }
 
         mSaleItemsRecyclerView.setAdapter(mSaleItemsAdapter);
@@ -690,7 +691,7 @@ public class SaleItemsController extends BasePullToRefreshController implements 
     }
 
     public void activateSearch() {
-        Handler handler = new Handler();
+        android.os.Handler handler = new android.os.Handler();
         handler.postDelayed(() -> {
             if (mSaleItemsToolbarField != null && mSaleItemsToolbarField.requestFocus()) {
                 InputMethodManager inputMethodManager =

@@ -186,7 +186,7 @@ public class OurpayPanel {
     private View getButton() {
         View view = mBaseActivity.getLayoutInflater().inflate(R.layout.ourpay_button, null, false);
         RelativeLayout.LayoutParams layoutParams = new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,
-                (int) mBaseActivity.getResources().getDimension(R.dimen.default_button_height));
+                (int) mBaseActivity.getResources().getDimension(R.dimen.button_height_regular));
         view.setLayoutParams(layoutParams);
 
         return view;
