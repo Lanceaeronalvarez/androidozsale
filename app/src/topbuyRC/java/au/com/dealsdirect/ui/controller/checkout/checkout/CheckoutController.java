@@ -49,6 +49,9 @@ import au.com.dealsdirect.ui.controller.address.viewaddress.ViewAddressControlle
 import au.com.dealsdirect.ui.controller.saleitemdetails.SaleItemDetailsController;
 import au.com.dealsdirect.ui.controller.saleitemdetails.SaleItemDetailsMvpPresenter;
 import au.com.dealsdirect.ui.controller.saleitemdetails.SaleItemDetailsMvpView;
+import au.com.dealsdirect.ui.controller.saleitems.SaleItemsController;
+import au.com.dealsdirect.ui.controller.saleitems.SaleItemsMvpPresenter;
+import au.com.dealsdirect.ui.controller.saleitems.SaleItemsMvpView;
 import au.com.dealsdirect.ui.controller.vouchers.Add.AddVouchersController;
 import au.com.dealsdirect.ui.custom.CustomAlertDialog;
 import au.com.dealsdirect.ui.main.FetchTokenHandler;
@@ -76,6 +79,8 @@ public class CheckoutController extends SwipeableBaseToolBarController implement
 
     @Inject
     CheckoutMvpPresenter<CheckoutMvpView> mPresenter;
+    @Inject
+    SaleItemsMvpPresenter<SaleItemsMvpView> mSaleItemsPresenter;
     @Inject
     SaleItemDetailsMvpPresenter<SaleItemDetailsMvpView> mSaleItemDetailsPresenter;
 
@@ -554,8 +559,11 @@ public class CheckoutController extends SwipeableBaseToolBarController implement
     public void updateCheckoutBadge() {
         Controller topController = GateKeeper.getCurrentControllerOnRouter(mActivity.getSaleItemsRouter());
         if (topController instanceof SaleItemDetailsController) {
-            mSaleItemDetailsPresenter.onAttach((SaleItemDetailsController)topController);
+            mSaleItemDetailsPresenter.onAttach((SaleItemDetailsController) topController);
             mSaleItemDetailsPresenter.callGetBasketItemsQuantity();
+        } else if (topController instanceof SaleItemsController) {
+            mSaleItemsPresenter.onAttach((SaleItemsController) topController);
+            mSaleItemsPresenter.callGetBasketItemsQuantity();
         }
     }
 
