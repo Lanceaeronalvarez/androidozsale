@@ -50,6 +50,7 @@
 # Braintree
 -dontwarn com.devicecollector.**
 -dontwarn com.braintreepayments.**
+-dontwarn com.paypal.android.sdk.onetouch.core.metadata.**
 
 # support design
 -dontwarn android.support.design.**
