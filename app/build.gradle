@@ -189,7 +189,7 @@ android {
         }
 
         topbuyRC {
-            versionCode 86
+            versionCode 87
             versionName "2.3.1"
             applicationId "au.com.topbuy"
 
@@ -212,7 +212,7 @@ android {
         }
 
         topbuyTest {
-            versionCode 91
+            versionCode 92
             versionName "2.3.1"
             applicationId "au.com.topbuy.test"
 
