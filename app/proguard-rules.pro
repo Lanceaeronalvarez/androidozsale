@@ -58,7 +58,8 @@
 -dontwarn android.support.v7.**
 
 #OkHttp3
--dontwarn okhttp3.**
+-dontwarn com.squareup.okhttp3.**
+-dontwarn com.squareup.okhttp.**
 -dontwarn okio.**
 -dontwarn javax.annotation.**
 
