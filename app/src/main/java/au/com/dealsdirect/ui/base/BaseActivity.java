@@ -12,7 +12,6 @@ import android.support.annotation.Nullable;
 import android.support.annotation.StringRes;
 import android.support.design.widget.Snackbar;
 import android.support.v4.content.ContextCompat;
-import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
@@ -135,7 +134,14 @@ public abstract class BaseActivity extends AppCompatActivity implements MvpView 
                 showSnackBar(getString(R.string.error), false);
             }
             else {
-                CustomAlertDialog.showCustomAlertDialog(this, CustomAlertDialog.CustomDialogIconState.NEGATIVE, message);
+
+                /*
+                    4/6/18 - feature/andr-3308-registersubscriber
+                    Disallow showing of No internet Connection on Socket Timeout Exception
+                 */
+                if (!message.contains("SocketTimeoutException"))
+                    CustomAlertDialog.showCustomAlertDialog(this, CustomAlertDialog.CustomDialogIconState.NEGATIVE, message);
+
             }
         }
     }
