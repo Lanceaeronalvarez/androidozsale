@@ -120,7 +120,7 @@ public abstract class BaseActivity extends AppCompatActivity implements MvpView 
         Handler handler = new Handler();
         Log.i("SnackbarError", message + "");
         if(message != null && !message.isEmpty()){
-            if(message.contains("UnknownHostException") || message.contains("SocketTimeoutException")){
+            if(message.contains("UnknownHostException")){
 //                if (canShowTimeoutDialog) {
 //                    canShowTimeoutDialog = false;
 //                    CustomAlertDialog.showCustomAlertDialog(this, CustomAlertDialog.CustomDialogIconState.NEGATIVE, getString(R.string.no_network_connection));
@@ -129,7 +129,8 @@ public abstract class BaseActivity extends AppCompatActivity implements MvpView 
 //                    }, timeoutDialogDelay);
 //                }
                 showSnackBar(getString(R.string.no_internet_connection), true);
-            } else if (message.contains("Exception") || message.contains("null") || message.contains("virtual method")){
+            } else if ((!message.contains("SocketTimeoutException") && (message.contains("Exception") ||
+                    message.contains("null") || message.contains("virtual method")))) {
 //                CustomAlertDialog.showCustomAlertDialog(this, CustomAlertDialog.CustomDialogIconState.NEGATIVE, getString(R.string.error));
                 showSnackBar(getString(R.string.error), false);
             }
