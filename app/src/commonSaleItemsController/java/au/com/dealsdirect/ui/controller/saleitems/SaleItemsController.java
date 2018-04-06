@@ -394,10 +394,10 @@ public class SaleItemsController extends BasePullToRefreshController implements 
         mSaleItemsAdapter = new SaleItemsAdapter(mActivity, mSaleItems, mPresenter, mSaleId);
         if (mPresenter.isTablet()) {
             mSaleItemsRecyclerView.setLayoutManager(new GridLayoutManager(mActivity,
-                    getResources().getInteger(R.integer.sale_items_tablet_column_count));
+                    getResources().getInteger(R.integer.sale_items_tablet_column_count)));
         } else {
             mSaleItemsRecyclerView.setLayoutManager(new GridLayoutManager(mActivity,
-                    getResources().getInteger(R.integer.sale_phone_tablet_column_count));
+                    getResources().getInteger(R.integer.sale_items_phone_column_count)));
         }
 
         mSaleItemsRecyclerView.setAdapter(mSaleItemsAdapter);

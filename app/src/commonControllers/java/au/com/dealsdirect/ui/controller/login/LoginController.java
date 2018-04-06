@@ -42,7 +42,7 @@ public class LoginController extends BaseController implements LoginMvpView {
     @Inject
     LoginMvpPresenter<LoginMvpView> mPresenter;
 
-    @BindView(R.id.partial_toolbar_layout)
+    @BindView(R.id.toolbar_title_login)
     Toolbar mToolbar;
     @BindView(R.id.partial_toolbar_arrow_title)
     TextView mToolbarTitle;
