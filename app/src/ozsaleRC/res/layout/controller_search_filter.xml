@@ -17,6 +17,7 @@
         app:tabIndicatorColor="@color/colorSecondary"
         app:tabIndicatorHeight="0dp"
         app:tabMode="scrollable"
+        app:tabTextColor="@color/text_dark"
         app:tabSelectedTextColor="@color/white" />
 
     <FrameLayout

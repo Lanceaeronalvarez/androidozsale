@@ -88,9 +88,9 @@
 
     <!-- Facets Theme -->
     <color name="bg_facets_selected">@color/colorSecondary</color>
+    <color name="bg_facets_default">#DFDFDF</color>
     <color name="bg_facets_border_checked">@color/colorSecondary</color>
     <color name="bg_facets_border_default">@color/colorSecondary</color>
-
 
     <!-- Icon -->
     <color name="icon_snack_bar">@color/colorAccent</color>

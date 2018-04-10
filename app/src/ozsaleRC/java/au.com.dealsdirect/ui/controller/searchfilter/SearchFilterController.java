@@ -292,6 +292,24 @@ public class SearchFilterController extends BaseController
                 toggleTabSelection(true);
             }
         });
+
+        Runnable tabConfig = () -> {
+            Log.d("TabWidth", "TabLayout: " + mTabLayout.getWidth() + " ScreenWidth: " +
+                    mActivity.getResources().getDisplayMetrics().widthPixels);
+            if (mTabLayout.getWidth() <= mActivity.getResources().getDisplayMetrics().widthPixels) {
+                mTabLayout.setTabMode(TabLayout.MODE_FIXED);
+                ViewGroup.LayoutParams mParams = mTabLayout.getLayoutParams();
+                mParams.width = ViewGroup.LayoutParams.MATCH_PARENT;
+                mTabLayout.setLayoutParams(mParams);
+
+            } else {
+                mTabLayout.setTabMode(TabLayout.MODE_SCROLLABLE);
+            }
+        };
+
+        mTabLayout.post(tabConfig);
+
+
     }
 
     private void closeFacets() {
