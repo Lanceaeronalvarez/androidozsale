@@ -5,6 +5,9 @@
     <color name="colorAccent">@color/colorPrimaryDark</color>
 
     <color name="colorSecondary">#4F4F4F</color>
+
+    <color name="recyclerview_overscroll">@color/colorSecondary</color>
+
     <color name="status_bar">@color/colorSecondary</color>
 
     <!--Search Edit Text-->
