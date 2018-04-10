@@ -453,7 +453,7 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
             });
         }
 
-
+        mAddToCartButton.setVisibility(View.VISIBLE);
         mAddToCartButton.setEnabled(true);
 
         if (saleDetail.isSoldOut()) {
