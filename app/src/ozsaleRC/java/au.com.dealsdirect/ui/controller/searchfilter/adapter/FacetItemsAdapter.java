@@ -111,10 +111,8 @@ public class FacetItemsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                         vh.itemView.setSelected(false);
                         mSelectedFacets.remove(position);
                     }
-
-                    mPresenter.onFacetItemClicked(new HashSet<Integer>(mSelectedFacets));
-
                 }
+                mPresenter.onFacetItemClicked(new HashSet<Integer>(mSelectedFacets));
             }
         });
 

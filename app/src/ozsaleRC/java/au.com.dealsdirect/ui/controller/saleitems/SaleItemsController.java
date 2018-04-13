@@ -696,7 +696,7 @@ public class SaleItemsController extends BasePullToRefreshController implements 
 
     }
 
-    private GetSaleItemsRequest createSaleItemsRequest(String categoryKey, String saleId, int pageNumber, List<SearchChipModel> chipsList, String query) {
+    public GetSaleItemsRequest createSaleItemsRequest(String categoryKey, String saleId, int pageNumber, List<SearchChipModel> chipsList, String query) {
         List<String> saleIds = new LinkedList<>();
         HashMap<String, List<String>> facetFilters = new HashMap<>();
 
@@ -791,6 +791,10 @@ public class SaleItemsController extends BasePullToRefreshController implements 
         }
 
         return "";
+    }
+
+    public void setChipFilters(List<SearchChipModel> chipFilters) {
+        mChipFilters = chipFilters;
     }
 
 }
