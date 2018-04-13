@@ -6,7 +6,6 @@ import android.support.annotation.NonNull;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -149,8 +148,6 @@ public class AccountController extends BaseController implements AccountMvpView,
 
     @Override
     public void showAccountItems(List<Integer> accountItems, List<Integer> accountImages) {
-
-
         accountItemAdapter = new AccountItemAdapter(mActivity, accountItems, accountImages, mPresenter);
         mAccountRecyclerView.setAdapter(accountItemAdapter);
         mAccountRecyclerView.setLayoutManager(new GridLayoutManager(getActivity(), getResource().getInteger(R.integer.account_column_count)));
@@ -211,7 +208,7 @@ public class AccountController extends BaseController implements AccountMvpView,
 
     @Override
     public void showContactUs() {
-        if (getResources().getBoolean(R.bool.is_ourpay_app)) {
+        if (getResources().getBoolean(R.bool.is_account_contact_visible)) {
             getRouter().pushController(RouterTransaction.with(ViewContactsController.newInstance())
                     .pushChangeHandler(new HorizontalChangeHandler())
                     .popChangeHandler(new HorizontalChangeHandler()));
@@ -225,7 +222,7 @@ public class AccountController extends BaseController implements AccountMvpView,
 
     @Override
     public void showInviteAFriend() {
-        if (getResources().getBoolean(R.bool.is_ourpay_app)) {
+        if (getResources().getBoolean(R.bool.is_account_invite_visible)) {
             getRouter().pushController(RouterTransaction.with(InviteSendController.newInstance())
                     .pushChangeHandler(new HorizontalChangeHandler())
                     .popChangeHandler(new HorizontalChangeHandler()));
@@ -249,12 +246,6 @@ public class AccountController extends BaseController implements AccountMvpView,
                         .build(),
                 new HorizontalChangeHandler(false),
                 new HorizontalChangeHandler());
-
-//
-//
-//          getRouter().pushController(RouterTransaction.with(new LegalitiesController(key, title))
-//                .pushChangeHandler(new HorizontalChangeHandler())
-//                .popChangeHandler(new HorizontalChangeHandler()));
     }
 
     @Override
@@ -287,9 +278,6 @@ public class AccountController extends BaseController implements AccountMvpView,
                 CartUtil.setValueToCart(0);
                 mActivity.getMainController().getHomeController().removeBasketItemCount();
                 mRightToolbarButton.setImageDrawable(getActivity().getResources().getDrawable(R.drawable.ic_login));
-
-//                commented. in iOS when logging out, it stays on my accounts.
-//                ((MainActivity) getActivity()).getMainController().getHomeController().showFirstTabController();
 
                 //reset routers with unique user info
                 mActivity.getMainController().getHomeController().resetRouters();
