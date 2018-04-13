@@ -94,7 +94,7 @@
             android:lines="1"
             android:singleLine="true"
             android:text=""
-            android:textColor="@color/colorAccent"
+            android:textColor="@color/text_dark"
             android:textSize="@dimen/text_size_headline2"
             android:textStyle="bold"
             tools:text="$100.00" />
@@ -107,7 +107,7 @@
             android:layout_alignParentRight="true"
             android:lines="1"
             android:singleLine="true"
-            android:textColor="@color/text_dark"
+            android:textColor="@color/text_medium"
             android:textSize="@dimen/text_size_caption1"
             tools:text="$120.00" />
 

@@ -87,10 +87,10 @@
     <color name="bg_chips_text">#FFFFFF</color>
 
     <!-- Facets Theme -->
-    <color name="bg_facets_selected">@color/colorSecondary</color>
-    <color name="bg_facets_default">#DFDFDF</color>
-    <color name="bg_facets_border_checked">@color/colorSecondary</color>
-    <color name="bg_facets_border_default">@color/colorSecondary</color>
+    <color name="bg_facets_selected">#7f7f7f</color>
+    <color name="bg_facets_default">@color/white</color>
+    <color name="bg_facets_border_checked">#7f7f7f</color>
+    <color name="bg_facets_border_default">#7f7f7f</color>
 
     <!-- Icon -->
     <color name="icon_snack_bar">@color/colorAccent</color>
