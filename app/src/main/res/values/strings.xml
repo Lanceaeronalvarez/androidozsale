@@ -533,4 +533,5 @@
     <string name="total_colon">Total:</string>
     <string name="item_colon">Items:</string>
     <string name="status_colon">Status:</string>
+    <string name="browse">Browse</string>
 </resources>
