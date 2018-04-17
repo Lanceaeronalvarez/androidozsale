@@ -27,7 +27,7 @@
                 android:layout_height="wrap_content"
                 android:text="@string/date"
                 android:textColor="@color/edit_text_label"
-                android:textSize="@dimen/text_size_large"
+                android:textSize="@dimen/text_size_body"
                 tools:ignore="MissingPrefix" />
 
             <TextView
@@ -37,7 +37,7 @@
                 android:background="@android:color/transparent"
                 android:text="@string/_02_01_17_2_45pm"
                 android:textColor="@color/edit_text_content"
-                android:textSize="@dimen/text_size_large" />
+                android:textSize="@dimen/text_size_body" />
 
         </LinearLayout>
 
@@ -61,7 +61,7 @@
                 android:layout_height="wrap_content"
                 android:text="@string/balance"
                 android:textColor="@color/edit_text_label"
-                android:textSize="@dimen/text_size_large"
+                android:textSize="@dimen/text_size_body"
                 tools:ignore="MissingPrefix" />
 
             <TextView
@@ -71,7 +71,7 @@
                 android:background="@android:color/transparent"
                 android:text="@string/_50"
                 android:textColor="@color/edit_text_content"
-                android:textSize="@dimen/text_size_large" />
+                android:textSize="@dimen/text_size_body" />
 
         </LinearLayout>
 

@@ -17,7 +17,7 @@
         android:layout_weight="0.35"
         android:padding="@dimen/padding_default"
         android:textColor="@color/colorPrimaryDark"
-        android:textSize="@dimen/text_size_large" />
+        android:textSize="@dimen/text_size_headline3" />
 
     <EditText
         android:id="@+id/row_add_address_value"

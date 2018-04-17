@@ -45,7 +45,7 @@
             android:gravity="center"
             android:text="Sorry, today we can't find anything by your request."
             android:textColor="#3e3e3e"
-            android:textSize="@dimen/text_size_large" />
+            android:textSize="@dimen/text_size_body" />
 
         <TextView
             android:layout_width="wrap_content"
@@ -56,7 +56,7 @@
             android:gravity="center"
             android:text="Meanwhile, why not search for something else?"
             android:textColor="@color/gray_description_text"
-            android:textSize="@dimen/text_size_large" />
+            android:textSize="@dimen/text_size_body" />
 
     </LinearLayout>
 

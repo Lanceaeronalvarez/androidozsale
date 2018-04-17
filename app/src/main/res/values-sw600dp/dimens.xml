@@ -2,15 +2,6 @@
 <resources>
     <bool name="is_tablet">true</bool>
 
-    <!--commented. not needed anymore-->
-    <!--<dimen name="text_size_small">15sp</dimen>-->
-    <!--<dimen name="text_size_medium">20sp</dimen>-->
-    <!--<dimen name="text_size_large">22sp</dimen>-->
-    <!--<dimen name="text_size_xlarge">24sp</dimen>-->
-    <!--<dimen name="text_size_xxlarge">26sp</dimen>-->
-    <!--<dimen name="text_size_xxxlarge">28sp</dimen>-->
-    <!--<dimen name="text_size_xxxxlarge">30sp</dimen>-->
-
     <!-- Default screen margins, per the Android Design guidelines. -->
     <dimen name="activity_horizontal_margin">16dp</dimen>
     <dimen name="activity_vertical_margin">16dp</dimen>
@@ -62,7 +53,7 @@
     <dimen name="cartview_y_adjustment">40dp</dimen>
 
     <dimen name="category_image_size">60dp</dimen>
-    <dimen name="category_background_size">100dp</dimen>
+    <dimen name="category_background_height">100dp</dimen>
     <dimen name="category_container_width">150dp</dimen>
 
     <dimen name="return_card_height">500dp</dimen>

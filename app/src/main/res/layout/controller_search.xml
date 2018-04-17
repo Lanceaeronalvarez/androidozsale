@@ -44,7 +44,7 @@
                 android:layout_height="wrap_content"
                 android:text="Sorry, today we can't find anything by your request."
                 android:fontFamily="@string/font_app_bold"
-                android:textSize="@dimen/text_size_large"
+                android:textSize="@dimen/text_size_body"
                 android:textColor="#3e3e3e"/>
 
             <TextView
@@ -55,8 +55,8 @@
                 android:layout_margin="5dp"
                 android:text="Meanwhile, why not search for something else?"
                 android:fontFamily="@string/font_app_bold"
-                android:textSize="@dimen/text_size_large"
-                android:textColor="@color/gray_description_text"/>
+                android:textSize="@dimen/text_size_body"
+                android:textColor="@color/text_description"/>
 
         </LinearLayout>
 

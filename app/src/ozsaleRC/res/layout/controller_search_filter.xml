@@ -10,8 +10,10 @@
         android:id="@+id/controller_search_filter_tabs"
         android:layout_width="match_parent"
         android:layout_height="@dimen/search_filter_tab_layout_height"
+        android:background="@color/white"
         app:tabBackground="@drawable/bg_facet_tab"
         app:tabGravity="fill"
+        app:tabMaxWidth="0dp"
         app:tabIndicatorColor="@color/colorSecondary"
         app:tabIndicatorHeight="0dp"
         app:tabMode="scrollable"
@@ -56,7 +58,7 @@
                     android:id="@+id/filters_categories_recyclerview"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginLeft="@dimen/dimen_small"
+                    android:layout_marginLeft="@dimen/margin_small"
                     android:overScrollMode="never"
                     android:visibility="gone" />
 
@@ -64,7 +66,7 @@
                     android:id="@+id/filters_facet_items_recyclerview"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginLeft="@dimen/dimen_small"
+                    android:layout_marginLeft="@dimen/margin_small"
                     android:overScrollMode="never" />
 
                 <RelativeLayout
@@ -83,14 +85,14 @@
                         android:layout_marginTop="@dimen/activity_vertical_margin"
                         android:text="@string/clear"
                         android:textColor="@color/colorAccent"
-                        android:textSize="@dimen/text_size_medium" />
+                        android:textSize="@dimen/text_size_caption1" />
 
                     <RelativeLayout
                         android:id="@+id/bubblePriceLayout"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_below="@id/clearText"
-                        android:layout_marginStart="@dimen/dimen_small"
+                        android:layout_marginStart="@dimen/margin_small"
                         android:layout_marginTop="@dimen/activity_horizontal_margin"
                         android:clipChildren="false"
                         android:clipToPadding="false">
@@ -109,12 +111,12 @@
                                 android:layout_alignParentLeft="true"
                                 android:layout_gravity="center"
                                 android:background="@drawable/rectangle_bg"
-                                android:paddingBottom="@dimen/dimen_small"
-                                android:paddingLeft="@dimen/dimen_small"
-                                android:paddingRight="@dimen/dimen_small"
-                                android:paddingTop="@dimen/dimen_small"
+                                android:paddingBottom="@dimen/margin_small"
+                                android:paddingLeft="@dimen/margin_small"
+                                android:paddingRight="@dimen/margin_small"
+                                android:paddingTop="@dimen/margin_small"
                                 android:textColor="#ffffff"
-                                android:textSize="@dimen/text_size_medium"
+                                android:textSize="@dimen/text_size_caption1"
                                 tools:text="$0" />
 
                             <ImageView
@@ -132,7 +134,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_alignParentEnd="true"
-                            android:layout_marginEnd="@dimen/dimen_small"
+                            android:layout_marginEnd="@dimen/margin_small"
                             android:orientation="vertical">
 
                             <TextView
@@ -142,12 +144,12 @@
                                 android:layout_gravity="center"
                                 android:background="@drawable/rectangle_bg"
                                 android:gravity="end"
-                                android:paddingBottom="@dimen/dimen_small"
-                                android:paddingLeft="@dimen/dimen_extra_small"
-                                android:paddingRight="@dimen/dimen_extra_small"
-                                android:paddingTop="@dimen/dimen_small"
+                                android:paddingBottom="@dimen/margin_small"
+                                android:paddingLeft="@dimen/margin_extra_small"
+                                android:paddingRight="@dimen/margin_extra_small"
+                                android:paddingTop="@dimen/margin_small"
                                 android:textColor="@color/white"
-                                android:textSize="@dimen/text_size_medium"
+                                android:textSize="@dimen/text_size_caption1"
                                 tools:text="$100" />
 
                             <ImageView

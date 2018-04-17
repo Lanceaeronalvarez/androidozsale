@@ -6,13 +6,13 @@
     android:layout_height="match_parent"
     android:gravity="center"
     android:orientation="vertical"
-    android:paddingLeft="@dimen/place_holder_padding"
-    android:paddingRight="@dimen/place_holder_padding"
+    android:paddingLeft="@dimen/placeholder_padding"
+    android:paddingRight="@dimen/placeholder_padding"
     tools:ignore="MissingPrefix">
 
     <ImageView
-        android:layout_width="@dimen/placeholder_icon_size"
-        android:layout_height="@dimen/placeholder_icon_size"
+        android:layout_width="@dimen/placeholder_icon_width"
+        android:layout_height="@dimen/placeholder_icon_height"
         android:layout_gravity="center"
         android:src="@drawable/ic_return_placeholder" />
 
@@ -23,7 +23,7 @@
         android:layout_gravity="center"
         android:gravity="center"
         android:text="no orders for return"
-        android:textSize="@dimen/text_size_xxxlarge" />
+        android:textSize="@dimen/text_size_headline1" />
 
     <TextView
         fontPath="@string/font_app_light"
@@ -32,9 +32,9 @@
         android:layout_gravity="center"
         android:layout_marginTop="10dp"
         android:gravity="center"
-        android:layout_marginBottom="@dimen/default_button_height"
-        android:paddingBottom="@dimen/default_button_height"
+        android:layout_marginBottom="@dimen/button_height_regular"
+        android:paddingBottom="@dimen/button_height_regular"
         android:text="you have not added any orders for return."
         android:textColor="#9f9f9f"
-        android:textSize="@dimen/text_size_xlarge" />
+        android:textSize="@dimen/text_size_headline3" />
 </LinearLayout>

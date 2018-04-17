@@ -82,7 +82,7 @@
                     android:layout_weight="4"
                     android:text=""
                     android:textColor="#878787"
-                    android:textSize="@dimen/text_size_xlarge"
+                    android:textSize="@dimen/text_size_headline3"
                     tools:ignore="HardcodedText"/>
 
                 <TextView
@@ -94,8 +94,8 @@
                     android:gravity="end"
                     android:maxLines="1"
                     android:text=""
-                    android:textColor="@color/gray_field_text"
-                    android:textSize="@dimen/text_size_xxxlarge"
+                    android:textColor="@color/text_medium"
+                    android:textSize="@dimen/text_size_headline1"
                     tools:ignore="HardcodedText"/>
 
             </LinearLayout>
@@ -229,7 +229,7 @@
                         android:layout_height="wrap_content"
                         android:layout_gravity="center_horizontal"
                         android:text="Order Date"
-                        android:textColor="@color/gray_field_text"
+                        android:textColor="@color/text_medium"
                         android:textSize="12sp"
                         tools:ignore="HardcodedText"/>
 

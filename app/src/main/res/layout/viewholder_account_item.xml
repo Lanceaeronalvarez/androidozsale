@@ -25,7 +25,7 @@
         android:lines="2"
         android:text="Mens"
         android:textColor="@color/category_text_selector"
-        android:textSize="@dimen/text_size_large"
+        android:textSize="@dimen/text_size_body"
         tools:ignore="MissingPrefix" />
 
 </LinearLayout>

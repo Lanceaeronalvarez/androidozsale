@@ -18,8 +18,8 @@
         android:inputType="text"
         android:padding="10dp"
         android:maxLines="1"
-        android:textColor="@color/search_edit_text_color"
-        android:textColorHint="@color/search_edit_text_hint_color"
+        android:textColor="@color/text_light"
+        android:textColorHint="@color/text_extra_light"
         android:textCursorDrawable="@drawable/bg_field_cursor"
-        android:textSize="@dimen/text_size_xlarge" />
+        android:textSize="@dimen/text_size_headline3" />
 </FrameLayout>

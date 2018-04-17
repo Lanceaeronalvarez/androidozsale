@@ -82,7 +82,7 @@
                 android:fontFamily="@string/font_app_bold"
                 android:textColor="@color/dark_gray"
                 android:layout_marginLeft="10dp"
-                android:textSize="@dimen/text_size_large"/>
+                android:textSize="@dimen/text_size_body"/>
 
             <ImageView
                 android:layout_width="22dp"
@@ -98,7 +98,7 @@
                 android:layout_marginBottom="10dp"
                 android:gravity="end"
                 android:textColor="@color/gray_field_text"
-                android:textSize="@dimen/text_size_xlarge"
+                android:textSize="@dimen/text_size_headline3"
                 android:visibility="invisible"/>
 
             <include

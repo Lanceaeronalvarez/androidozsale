@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/default_background_color"
+    android:background="@color/background_default"
     android:fillViewport="true"
     android:orientation="vertical"
     tools:ignore="MissingPrefix">
@@ -28,7 +28,7 @@
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="@dimen/dimen_large"
+                    android:layout_marginTop="@dimen/margin_large"
                     android:background="@color/white"
                     android:orientation="horizontal">
 
@@ -40,7 +40,7 @@
                         android:padding="@dimen/padding_default"
                         android:text="@string/first_name"
                         android:textColor="@color/colorPrimaryDark"
-                        android:textSize="@dimen/text_size_large" />
+                        android:textSize="@dimen/text_size_body" />
 
                     <android.support.design.widget.TextInputLayout
                         android:layout_width="0dp"
@@ -56,7 +56,7 @@
                             android:layout_height="wrap_content"
                             android:inputType="textPersonName"
                             android:maxLines="1"
-                            android:textSize="@dimen/text_size_large" />
+                            android:textSize="@dimen/text_size_body" />
 
                     </android.support.design.widget.TextInputLayout>
                 </LinearLayout>
@@ -76,7 +76,7 @@
                         android:padding="@dimen/padding_default"
                         android:text="@string/last_name"
                         android:textColor="@color/colorPrimaryDark"
-                        android:textSize="@dimen/text_size_large" />
+                        android:textSize="@dimen/text_size_body" />
 
                     <android.support.design.widget.TextInputLayout
                         android:layout_width="0dp"
@@ -92,7 +92,7 @@
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:inputType="textPersonName"
-                            android:textSize="@dimen/text_size_large" />
+                            android:textSize="@dimen/text_size_body" />
 
                     </android.support.design.widget.TextInputLayout>
                 </LinearLayout>
@@ -112,7 +112,7 @@
                         android:padding="@dimen/padding_default"
                         android:text="@string/date_of_birth"
                         android:textColor="@color/colorPrimaryDark"
-                        android:textSize="@dimen/text_size_large" />
+                        android:textSize="@dimen/text_size_body" />
 
                     <android.support.design.widget.TextInputLayout
                         android:id="@+id/controller_details_firstname_wrapper"
@@ -132,7 +132,7 @@
                             android:focusable="false"
                             android:focusableInTouchMode="false"
                             android:inputType="date"
-                            android:textSize="@dimen/text_size_large" />
+                            android:textSize="@dimen/text_size_body" />
 
                     </android.support.design.widget.TextInputLayout>
 
@@ -153,7 +153,7 @@
                         android:padding="@dimen/padding_default"
                         android:text="@string/gender"
                         android:textColor="@color/colorPrimaryDark"
-                        android:textSize="@dimen/text_size_large" />
+                        android:textSize="@dimen/text_size_body" />
 
                     <Spinner
                         android:id="@+id/controller_details_spinner_gender"
@@ -180,7 +180,7 @@
                         android:padding="@dimen/padding_default"
                         android:text="@string/email_address"
                         android:textColor="@color/colorPrimaryDark"
-                        android:textSize="@dimen/text_size_large" />
+                        android:textSize="@dimen/text_size_body" />
 
                     <android.support.design.widget.TextInputLayout
                         android:layout_width="0dp"
@@ -196,7 +196,7 @@
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:inputType="textEmailAddress"
-                            android:textSize="@dimen/text_size_large" />
+                            android:textSize="@dimen/text_size_body" />
 
                     </android.support.design.widget.TextInputLayout>
                 </LinearLayout>
@@ -216,7 +216,7 @@
                         android:padding="@dimen/padding_default"
                         android:text="@string/password"
                         android:textColor="@color/colorPrimaryDark"
-                        android:textSize="@dimen/text_size_large" />
+                        android:textSize="@dimen/text_size_body" />
 
                     <android.support.design.widget.TextInputLayout
                         android:layout_width="0dp"
@@ -231,7 +231,7 @@
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:inputType="textPassword"
-                            android:textSize="@dimen/text_size_large" />
+                            android:textSize="@dimen/text_size_body" />
 
                     </android.support.design.widget.TextInputLayout>
                 </LinearLayout>
@@ -252,7 +252,7 @@
                         android:padding="@dimen/padding_default"
                         android:text="@string/new_password"
                         android:textColor="@color/colorPrimaryDark"
-                        android:textSize="@dimen/text_size_large" />
+                        android:textSize="@dimen/text_size_body" />
 
                     <android.support.design.widget.TextInputLayout
                         android:layout_width="0dp"
@@ -268,7 +268,7 @@
                             android:layout_width="match_parent"
                             android:layout_height="match_parent"
                             android:inputType="textPassword"
-                            android:textSize="@dimen/text_size_large" />
+                            android:textSize="@dimen/text_size_body" />
 
                     </android.support.design.widget.TextInputLayout>
                 </LinearLayout>
@@ -288,7 +288,7 @@
                         android:padding="@dimen/padding_default"
                         android:text="@string/confirm_password"
                         android:textColor="@color/colorPrimaryDark"
-                        android:textSize="@dimen/text_size_large" />
+                        android:textSize="@dimen/text_size_body" />
 
                     <android.support.design.widget.TextInputLayout
                         android:layout_width="0dp"
@@ -304,7 +304,7 @@
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:inputType="textPassword"
-                            android:textSize="@dimen/text_size_large" />
+                            android:textSize="@dimen/text_size_body" />
 
                     </android.support.design.widget.TextInputLayout>
                 </LinearLayout>

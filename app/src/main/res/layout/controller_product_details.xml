@@ -215,16 +215,16 @@
                                                     android:layout_gravity="start"
                                                     android:ellipsize="end"
                                                     android:text=""
-                                                    android:textColor="@color/color_item_title"
-                                                    android:textSize="@dimen/text_size_xxxlarge" />
+                                                    android:textColor="@color/text_highlight"
+                                                    android:textSize="@dimen/text_size_headline1" />
 
                                                 <TextView
                                                     android:id="@+id/productName"
                                                     android:layout_width="wrap_content"
                                                     android:layout_height="wrap_content"
                                                     android:text=""
-                                                    android:textColor="@color/gray_title_text"
-                                                    android:textSize="@dimen/text_size_medium" />
+                                                    android:textColor="@color/text_light"
+                                                    android:textSize="@dimen/text_size_caption1" />
 
                                             </LinearLayout>
 
@@ -241,9 +241,9 @@
                                                     android:layout_gravity="end"
                                                     android:maxLines="1"
                                                     android:text=""
-                                                    android:textColor="@color/color_text_option"
+                                                    android:textColor="@color/product_details_text_product_price"
                                                     fontPath="@string/font_app_bold"
-                                                    android:textSize="@dimen/text_size_xxxxlarge" />
+                                                    android:textSize="@dimen/text_size_title" />
 
                                                 <TextView
                                                     android:id="@+id/productPreviousPrice"
@@ -253,8 +253,8 @@
                                                     android:layout_gravity="end"
                                                     android:maxLines="1"
                                                     android:text=""
-                                                    android:textColor="@color/gray_sale_price"
-                                                    android:textSize="@dimen/text_size_large" />
+                                                    android:textColor="@color/product_details_text_product_sale_price"
+                                                    android:textSize="@dimen/text_size_body" />
 
                                             </LinearLayout>
                                         </LinearLayout>
@@ -304,8 +304,8 @@
                                                 android:paddingLeft="10dp"
                                                 android:paddingRight="10dp"
                                                 android:text="@string/choose_your_size"
-                                                android:textColor="@color/color_item_title"
-                                                android:textSize="@dimen/text_size_large" />
+                                                android:textColor="@color/text_highlight"
+                                                android:textSize="@dimen/text_size_body" />
 
                                             <ImageView
                                                 android:id="@+id/question_mark"
@@ -322,7 +322,7 @@
                                                 android:layout_toLeftOf="@id/question_mark"
                                                 android:paddingRight="5dp"
                                                 android:text="size guide"
-                                                android:textSize="@dimen/text_size_medium"
+                                                android:textSize="@dimen/text_size_caption1"
                                                 android:visibility="invisible" />
 
                                         </RelativeLayout>
@@ -360,8 +360,8 @@
                                             android:layout_height="wrap_content"
                                             android:text="@string/estimated_delivery"
                                             android:layout_margin="5dp"
-                                            android:textColor="@color/color_item_title"
-                                            android:textSize="@dimen/text_size_large" />
+                                            android:textColor="@color/text_highlight"
+                                            android:textSize="@dimen/text_size_body" />
 
                                         <WebView
                                             android:id="@+id/product_details_shipping_desc_webview"
@@ -389,15 +389,15 @@
                                             android:layout_height="wrap_content"
                                             android:text="@string/return_policy"
                                             android:layout_margin="5dp"
-                                            android:textColor="@color/color_item_title"
-                                            android:textSize="@dimen/text_size_large" />
+                                            android:textColor="@color/text_highlight"
+                                            android:textSize="@dimen/text_size_body" />
 
                                         <WebView
                                             android:id="@+id/product_details_return_policy_text"
                                             android:layout_width="match_parent"
                                             android:layout_height="wrap_content"
                                             android:layout_marginTop="5dp"
-                                            android:textSize="@dimen/text_size_medium"/>
+                                            android:textSize="@dimen/text_size_caption1"/>
 
                                         <ImageView
                                             android:layout_width="match_parent"
@@ -442,8 +442,8 @@
                                             android:layout_width="wrap_content"
                                             android:layout_height="wrap_content"
                                             android:text="available for"
-                                            android:textColor="@color/gray_field_text"
-                                            android:textSize="@dimen/text_size_medium" />
+                                            android:textColor="@color/text_medium"
+                                            android:textSize="@dimen/text_size_caption1" />
 
                                         <LinearLayout
                                             android:layout_width="wrap_content"
@@ -467,8 +467,8 @@
                                                     android:layout_gravity="center"
                                                     android:layout_marginLeft="5dp"
                                                     android:text="home or office delivery"
-                                                    android:textColor="@color/gray_field_text"
-                                                    android:textSize="@dimen/text_size_medium" />
+                                                    android:textColor="@color/text_medium"
+                                                    android:textSize="@dimen/text_size_caption1" />
 
                                             </LinearLayout>
 
@@ -488,8 +488,8 @@
                                                     android:layout_gravity="center"
                                                     android:layout_marginLeft="5dp"
                                                     android:text="pick up point"
-                                                    android:textColor="@color/gray_field_text"
-                                                    android:textSize="@dimen/text_size_medium" />
+                                                    android:textColor="@color/text_medium"
+                                                    android:textSize="@dimen/text_size_caption1" />
 
                                             </LinearLayout>
                                         </LinearLayout>
@@ -535,8 +535,8 @@
                                             android:layout_height="wrap_content"
                                             android:layout_margin="5dp"
                                             android:text="@string/pricing"
-                                            android:textColor="@color/color_item_title"
-                                            android:textSize="@dimen/text_size_large" />
+                                            android:textColor="@color/text_highlight"
+                                            android:textSize="@dimen/text_size_body" />
 
                                         <WebView
                                             android:id="@+id/product_about_pricing_text"
@@ -568,7 +568,7 @@
                                             android:layout_width="wrap_content"
                                             android:layout_height="wrap_content"
                                             android:text="related items"
-                                            android:textSize="@dimen/text_size_small" />
+                                            android:textSize="@dimen/text_size_caption2" />
 
                                         <android.support.v7.widget.RecyclerView
                                             android:id="@+id/relatedItemsRecyclerView"
@@ -598,7 +598,7 @@
                                             android:layout_width="wrap_content"
                                             android:layout_height="wrap_content"
                                             android:text="customers also bought"
-                                            android:textSize="@dimen/text_size_small" />
+                                            android:textSize="@dimen/text_size_caption2" />
 
                                         <android.support.v7.widget.RecyclerView
                                             android:id="@+id/customersAlsoBoughtRecyclerView"
@@ -628,7 +628,7 @@
                                             android:layout_width="wrap_content"
                                             android:layout_height="wrap_content"
                                             android:text="reviews"
-                                            android:textSize="@dimen/text_size_medium" />
+                                            android:textSize="@dimen/text_size_caption1" />
 
                                         <android.support.design.widget.FloatingActionButton
                                             android:id="@+id/edit_review_fab"
@@ -655,7 +655,7 @@
                                             android:layout_height="wrap_content"
                                             android:layout_below="@id/reviewsRecyclerView"
                                             android:text="see more"
-                                            android:textSize="@dimen/text_size_medium" />
+                                            android:textSize="@dimen/text_size_caption1" />
                                     </RelativeLayout>
 
                                 </LinearLayout>
@@ -673,7 +673,7 @@
             <ImageView
                 android:id="@+id/product_details_button_overlay"
                 android:layout_width="match_parent"
-                android:layout_height="@dimen/default_button_height"
+                android:layout_height="@dimen/button_height_regular"
                 android:background="#a0ffffff"
                 android:layout_gravity="bottom" />
 
@@ -682,6 +682,7 @@
                 style="@style/DDButtonStyle"
                 fontPath="@string/font_app_medium"
                 android:layout_width="match_parent"
+                android:layout_height="@dimen/button_height_regular"
                 android:layout_gravity="bottom"
                 android:layout_marginTop="10dp"
                 android:layout_marginBottom="10dp"

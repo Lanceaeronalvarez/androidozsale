@@ -10,8 +10,8 @@
         android:id="@+id/viewholder_subcategory_container"
         android:layout_width="match_parent"
         android:layout_height="@dimen/viewholder_subcategory_height"
-        android:layout_marginEnd="@dimen/dimen_small"
-        android:layout_marginStart="@dimen/dimen_extra_small"
+        android:layout_marginEnd="@dimen/margin_small"
+        android:layout_marginStart="@dimen/margin_extra_small"
         android:background="@color/white">
 
         <TextView
@@ -20,8 +20,8 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="left|center_vertical"
-            android:textColor="@color/gray_title_text"
-            android:textSize="@dimen/text_size_xlarge"
+            android:textColor="@color/text_dark"
+            android:textSize="@dimen/text_size_headline3"
             android:textStyle="bold"
             tools:ignore="MissingPrefix"
             tools:text="Category" />

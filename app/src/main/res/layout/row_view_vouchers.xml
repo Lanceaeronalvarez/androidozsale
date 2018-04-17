@@ -14,7 +14,7 @@
         android:layout_centerVertical="true"
         android:layout_marginLeft="@dimen/padding_default"
         android:layout_marginRight="@dimen/padding_default"
-        android:background="@color/row_background_color"
+        android:background="@color/bg_row_view_vouchers"
         android:clickable="true"
         android:gravity="center_vertical"
         android:orientation="vertical"
@@ -35,7 +35,7 @@
             android:layout_height="wrap_content"
             android:fontFamily="@string/font_app_light"
             android:textColor="@color/white"
-            android:textSize="@dimen/text_size_xxxxlarge"
+            android:textSize="@dimen/text_size_title"
             android:textStyle="bold" />
 
         <TextView
@@ -46,7 +46,7 @@
             android:maxLines="2"
             android:text="@string/already_spent"
             android:textColor="@color/white"
-            android:textSize="@dimen/text_size_xxxlarge"
+            android:textSize="@dimen/text_size_headline1"
             android:textStyle="bold"
             android:visibility="gone" />
 
@@ -56,16 +56,16 @@
             android:layout_height="wrap_content"
             android:fontFamily="@string/font_app_light"
             android:textColor="@color/white"
-            android:textSize="@dimen/text_size_xxlarge" />
+            android:textSize="@dimen/text_size_headline2" />
 
         <TextView
             android:id="@+id/row_view_voucher_desc_text"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/dimen_extra_small"
+            android:layout_marginTop="@dimen/margin_extra_small"
             android:fontFamily="@string/font_app_light"
             android:textColor="@color/white"
-            android:textSize="@dimen/text_size_small"
+            android:textSize="@dimen/text_size_caption2"
             android:text="@string/voucher_good_for_use_until" />
 
         <TextView
@@ -74,7 +74,7 @@
             android:layout_height="wrap_content"
             android:fontFamily="@string/font_app_light"
             android:textColor="@color/white"
-            android:textSize="@dimen/text_size_small" />
+            android:textSize="@dimen/text_size_caption2" />
 
         <TextView
             android:id="@+id/row_view_voucher_purchased_text"

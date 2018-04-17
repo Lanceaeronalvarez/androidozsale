@@ -55,7 +55,7 @@
                 android:layout_width="25dp"
                 android:layout_height="25dp"
                 android:text="2"
-                android:textColor="@color/dark_gray"
+                android:textColor="@color/text_medium"
                 android:gravity="center"
                 android:background="@drawable/bg_orders_graph_empty_state"
                 tools:ignore="ContentDescription"/>
@@ -73,7 +73,7 @@
                 android:layout_width="25dp"
                 android:layout_height="25dp"
                 android:text="3"
-                android:textColor="@color/dark_gray"
+                android:textColor="@color/text_medium"
                 android:gravity="center"
                 android:background="@drawable/bg_orders_graph_empty_state"
                 tools:ignore="ContentDescription"/>
@@ -91,7 +91,7 @@
                 android:layout_width="25dp"
                 android:layout_height="25dp"
                 android:text="4"
-                android:textColor="@color/dark_gray"
+                android:textColor="@color/text_medium"
                 android:gravity="center"
                 android:background="@drawable/bg_orders_graph_empty_state"
                 tools:ignore="ContentDescription"/>
@@ -124,7 +124,7 @@
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_horizontal"
                     android:text="Order Date"
-                    android:textSize="@dimen/text_size_medium"
+                    android:textSize="@dimen/text_size_caption1"
                     android:textColor="#464646"
                     tools:ignore="HardcodedText"/>
 
@@ -133,7 +133,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_horizontal"
-                    android:textSize="@dimen/text_size_small"
+                    android:textSize="@dimen/text_size_caption2"
                     android:text=""
                     android:textColor="#b1b1b1"
                     tools:ignore="HardcodedText"/>
@@ -157,7 +157,7 @@
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_horizontal"
                     android:text="Stock Arrived"
-                    android:textSize="@dimen/text_size_medium"
+                    android:textSize="@dimen/text_size_caption1"
                     android:textColor="#b1b1b1"
                     tools:ignore="HardcodedText"/>
 
@@ -167,7 +167,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_horizontal"
-                    android:textSize="@dimen/text_size_small"
+                    android:textSize="@dimen/text_size_caption2"
                     android:text=""
                     android:textColor="#b1b1b1"
                     tools:ignore="HardcodedText"/>
@@ -189,7 +189,7 @@
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_horizontal"
                     android:text="Order Packed"
-                    android:textSize="@dimen/text_size_medium"
+                    android:textSize="@dimen/text_size_caption1"
                     android:textColor="#b1b1b1"
                     tools:ignore="HardcodedText"/>
 
@@ -198,7 +198,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_horizontal"
-                    android:textSize="@dimen/text_size_small"
+                    android:textSize="@dimen/text_size_caption2"
                     android:text=""
                     android:textColor="#b1b1b1"
                     tools:ignore="HardcodedText"/>
@@ -219,7 +219,7 @@
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_horizontal"
                     android:text="Dispatched"
-                    android:textSize="@dimen/text_size_small"
+                    android:textSize="@dimen/text_size_caption2"
                     android:textColor="#b1b1b1"
                     tools:ignore="HardcodedText"/>
 
@@ -229,7 +229,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_horizontal"
-                    android:textSize="@dimen/text_size_medium"
+                    android:textSize="@dimen/text_size_caption1"
                     android:text=""
                     android:textColor="#b1b1b1"
                     tools:ignore="HardcodedText"/>
@@ -292,16 +292,16 @@
                 android:id="@+id/delivery_address_label"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:textSize="@dimen/text_size_xlarge"
+                android:textSize="@dimen/text_size_headline3"
                 android:text="Delivery Address:"/>
 
             <TextView
                 android:id="@+id/delivery_text_view"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:textSize="@dimen/text_size_large"
+                android:textSize="@dimen/text_size_body"
                 android:layout_marginLeft="5dp"
-                android:textColor="@color/gray_title_text"
+                android:textColor="@color/text_light"
                 android:layout_toRightOf="@id/delivery_address_label"
                 android:gravity="right" />
 
@@ -325,16 +325,16 @@
                 android:id="@+id/status_label"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:textSize="@dimen/text_size_xlarge"
+                android:textSize="@dimen/text_size_headline3"
                 android:text="Status:"/>
 
             <TextView
                 android:id="@+id/status_text_view"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:textSize="@dimen/text_size_large"
+                android:textSize="@dimen/text_size_body"
                 android:layout_marginLeft="5dp"
-                android:textColor="@color/gray_field_text"
+                android:textColor="@color/text_medium"
                 android:layout_toRightOf="@id/status_label"
                 android:gravity="right"
                 android:text=""/>
@@ -358,16 +358,16 @@
                 android:id="@+id/order_date_label"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:textSize="@dimen/text_size_xlarge"
+                android:textSize="@dimen/text_size_headline3"
                 android:text="Order Date:"/>
 
             <TextView
                 android:id="@+id/order_date_text_view"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:textSize="@dimen/text_size_large"
+                android:textSize="@dimen/text_size_body"
                 android:layout_marginLeft="5dp"
-                android:textColor="@color/gray_field_text"
+                android:textColor="@color/text_medium"
                 android:layout_toRightOf="@id/order_date_label"
                 android:gravity="right"
                 android:text=""/>
@@ -391,15 +391,15 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Estimated Delivery:"
-                android:textSize="@dimen/text_size_xlarge"/>
+                android:textSize="@dimen/text_size_headline3"/>
 
             <TextView
                 android:id="@+id/estimated_delivery_date_text_view"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:textSize="@dimen/text_size_large"
+                android:textSize="@dimen/text_size_body"
                 android:layout_marginLeft="5dp"
-                android:textColor="@color/gray_field_text"
+                android:textColor="@color/text_medium"
                 android:layout_toRightOf="@id/estimated_delivery_label"
                 android:gravity="right"
                 android:text=""/>
@@ -423,7 +423,7 @@
                 android:id="@+id/credit_card_payment_label"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:textSize="@dimen/text_size_xlarge"
+                android:textSize="@dimen/text_size_headline3"
                 android:paddingTop="10dp"
                 android:text="Credit Card Payment:"/>
 
@@ -431,10 +431,10 @@
                 android:id="@+id/credit_card_payment_value"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:textSize="@dimen/text_size_xlarge"
+                android:textSize="@dimen/text_size_headline3"
                 android:layout_marginLeft="5dp"
                 android:paddingTop="10dp"
-                android:textColor="@color/gray_field_text"
+                android:textColor="@color/text_medium"
                 android:layout_toRightOf="@id/credit_card_payment_label"
                 android:gravity="right"
                 android:text=""/>
@@ -444,7 +444,7 @@
                 android:id="@+id/delivery_amount_label"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:textSize="@dimen/text_size_xlarge"
+                android:textSize="@dimen/text_size_headline3"
                 android:layout_below="@id/credit_card_payment_label"
                 android:paddingTop="10dp"
                 android:text="Delivery Payment:"/>
@@ -453,10 +453,10 @@
                 android:id="@+id/delivery_amount_value"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:textColor="@color/gray_field_text"
+                android:textColor="@color/text_medium"
                 android:layout_below="@id/credit_card_payment_value"
                 android:layout_toRightOf="@id/delivery_amount_label"
-                android:textSize="@dimen/text_size_xlarge"
+                android:textSize="@dimen/text_size_headline3"
                 android:paddingTop="10dp"
                 android:gravity="right"
                 android:layout_marginLeft="5dp"
@@ -468,7 +468,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_below="@+id/delivery_amount_label"
-                android:textSize="@dimen/text_size_xlarge"
+                android:textSize="@dimen/text_size_headline3"
                 android:paddingTop="10dp"
                 android:text="Discount:"/>
 
@@ -477,9 +477,9 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_toRightOf="@id/discount_label"
-                android:textColor="@color/gray_field_text"
+                android:textColor="@color/text_medium"
                 android:layout_below="@+id/delivery_amount_value"
-                android:textSize="@dimen/text_size_xlarge"
+                android:textSize="@dimen/text_size_headline3"
                 android:layout_marginLeft="5dp"
                 android:paddingTop="10dp"
                 android:gravity="right"
@@ -491,7 +491,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_below="@+id/discount_label"
-                android:textSize="@dimen/text_size_xlarge"
+                android:textSize="@dimen/text_size_headline3"
                 android:paddingTop="10dp"
                 android:text="Total Item Payment:"/>
 
@@ -500,9 +500,9 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_toRightOf="@id/total_item_payment_label"
-                android:textColor="@color/gray_field_text"
+                android:textColor="@color/text_medium"
                 android:layout_below="@+id/discount_value"
-                android:textSize="@dimen/text_size_xlarge"
+                android:textSize="@dimen/text_size_headline3"
                 android:paddingTop="10dp"
                 android:gravity="right"
                 android:layout_marginLeft="5dp"
@@ -527,18 +527,18 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Total:"
-                android:textSize="@dimen/text_size_xlarge"/>
+                android:textSize="@dimen/text_size_headline3"/>
 
             <TextView
                 fontPath="@string/font_app_bold"
                 android:id="@+id/grand_total_value"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:textColor="@color/gray_field_text"
+                android:textColor="@color/text_medium"
                 android:layout_toRightOf="@id/total_label"
                 android:gravity="right"
                 android:text=""
-                android:textSize="@dimen/text_size_xxlarge"/>
+                android:textSize="@dimen/text_size_headline2"/>
         </RelativeLayout>
 
         <View

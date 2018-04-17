@@ -2,6 +2,7 @@
 <android.support.v7.widget.Toolbar xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/partial_toolbar_layout"
     android:layout_width="match_parent"
     android:layout_height="@dimen/total_toolbar_height"
     android:contentInsetEnd="0dp"
@@ -21,7 +22,7 @@
         <View
             android:id="@+id/dummy_status_bar"
             android:layout_width="match_parent"
-            android:layout_height="@dimen/status_bar_height"/>
+            android:layout_height="@dimen/status_bar_height" />
 
         <RelativeLayout
             android:layout_width="match_parent"
@@ -35,7 +36,7 @@
                 android:layout_alignParentStart="true"
                 android:layout_centerVertical="true"
                 android:background="@drawable/bg_toolbar_button"
-                android:src="@drawable/ic_back"/>
+                android:src="@drawable/ic_back" />
 
             <TextView
                 android:id="@+id/partial_toolbar_arrow_title"
@@ -43,13 +44,13 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_centerInParent="true"
-                android:layout_toStartOf="@+id/partial_toolbar_right_view"
                 android:layout_toEndOf="@+id/partial_toolbar_left_view"
+                android:layout_toStartOf="@+id/partial_toolbar_right_view"
                 android:gravity="center"
                 android:singleLine="true"
+                android:text="@string/log_in"
                 android:textColor="@android:color/white"
-                android:textSize="@dimen/text_size_xxlarge"
-                android:text="@string/log_in" />
+                android:textSize="@dimen/text_size_headline2" />
 
             <ImageButton
                 android:id="@+id/partial_toolbar_right_view"
@@ -58,8 +59,8 @@
                 android:layout_alignParentEnd="true"
                 android:layout_centerVertical="true"
                 android:background="@drawable/bg_toolbar_button"
-                android:src="@drawable/ic_close"
-                android:scaleType="fitCenter"/>
+                android:scaleType="fitCenter"
+                android:src="@drawable/ic_close" />
 
         </RelativeLayout>
     </RelativeLayout>

@@ -23,7 +23,7 @@
         android:text="@string/no_internet_connection_ntap_to_retry"
         android:textAlignment="center"
         android:textColor="#b3b3b3"
-        android:textSize="@dimen/text_size_xxxlarge"
+        android:textSize="@dimen/text_size_headline1"
         tools:ignore="MissingPrefix" />
 
 </LinearLayout>

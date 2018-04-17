@@ -5,13 +5,13 @@
         <selector>
             <item android:state_selected="true">
                 <shape android:shape="rectangle">
-                    <stroke android:color="@color/border_gray" android:width="@dimen/border_extra_thin"/>
-                    <solid android:color="@color/border_gray"/>
+                    <stroke android:color="@color/bg_facets_border_checked" android:width="@dimen/border_thin"/>
+                    <solid android:color="@color/bg_facets_selected"/>
                 </shape>
             </item>
             <item android:state_selected="false">
                 <shape android:shape="rectangle">
-                    <stroke android:color="@color/colorSecondary" android:width="@dimen/border_extra_thin"/>
+                    <stroke android:color="@color/bg_facets_border_default" android:width="@dimen/border_thin"/>
                     <solid android:color="@color/transparent"/>
                 </shape>
             </item>

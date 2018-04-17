@@ -2,7 +2,7 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/default_background_color"
+    android:background="@color/background_default"
     android:orientation="vertical">
 
     <RelativeLayout
@@ -27,7 +27,7 @@
             android:layout_height="wrap_content"
             android:background="@drawable/bg_invite_clipboard"
             android:text="@string/create_message"
-            android:textSize="@dimen/text_size_xlarge"
+            android:textSize="@dimen/text_size_body"
             android:layout_alignParentBottom="true"
             android:layout_margin="@dimen/padding_default"/>
 

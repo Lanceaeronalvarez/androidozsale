@@ -5,24 +5,24 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="vertical"
-    android:paddingBottom="@dimen/dimen_extra_small"
-    android:paddingTop="@dimen/dimen_extra_small">
+    android:paddingBottom="@dimen/margin_extra_small"
+    android:paddingTop="@dimen/margin_extra_small">
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="@dimen/dimen_small"
+        android:layout_marginBottom="@dimen/margin_small"
         android:orientation="horizontal"
         android:paddingLeft="@dimen/padding_default"
         android:paddingRight="@dimen/padding_default"
-        android:paddingTop="@dimen/dimen_small">
+        android:paddingTop="@dimen/margin_small">
 
         <TextView
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="4"
             android:text="@string/payment_method"
-            android:textColor="@color/gray_title_text" />
+            android:textColor="@color/text_dark" />
 
         <TextView
             android:id="@+id/partial_checkout_payment_change"
@@ -31,8 +31,8 @@
             android:layout_weight="1"
             android:gravity="end"
             android:text="@string/change"
-            android:textColor="@color/gray_item_details"
-            android:textSize="@dimen/text_size_medium"
+            android:textColor="@color/text_medium"
+            android:textSize="@dimen/text_size_body"
             android:visibility="gone" />
 
     </LinearLayout>
@@ -41,7 +41,7 @@
         android:id="@+id/partial_checkout_payment_new_payment"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="@dimen/dimen_small"
+        android:layout_marginBottom="@dimen/margin_small"
         android:background="@drawable/bg_edit_text_plain"
         android:clickable="true"
         android:padding="@dimen/padding_default">
@@ -51,7 +51,7 @@
             android:layout_height="wrap_content"
             android:text="@string/add_new_payment_method"
             android:textColor="@color/row_checkout_text_light_color"
-            android:textSize="@dimen/text_size_large" />
+            android:textSize="@dimen/text_size_body" />
 
         <ImageView
             android:layout_width="wrap_content"
@@ -76,7 +76,7 @@
             android:layout_width="match_parent"
             android:layout_height="@dimen/border_thin"
             android:layout_marginLeft="@dimen/padding_default"
-            android:background="@color/gray_toolbar_border" />
+            android:background="@color/border_regular" />
     </LinearLayout>
 
 </LinearLayout>

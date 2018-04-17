@@ -5,14 +5,14 @@
     android:layout_height="wrap_content"
     android:background="@color/white"
     android:orientation="vertical"
-    android:paddingTop="@dimen/dimen_small"
+    android:paddingTop="@dimen/margin_small"
     tools:ignore="MissingPrefix">
 
     <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="@dimen/row_facet_item_height"
-        android:layout_marginEnd="@dimen/dimen_small"
-        android:layout_marginStart="@dimen/dimen_extra_small"
+        android:layout_marginEnd="@dimen/margin_small"
+        android:layout_marginStart="@dimen/margin_extra_small"
         android:background="@color/white">
 
         <TextView
@@ -22,7 +22,7 @@
             android:layout_height="wrap_content"
             android:layout_gravity="start|center_vertical"
             android:textColor="@color/facet_item_text_selector"
-            android:textSize="@dimen/text_size_xlarge"
+            android:textSize="@dimen/text_size_headline3"
             android:textStyle="bold"
             tools:text="Category" />
 

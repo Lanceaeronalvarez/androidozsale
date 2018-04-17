@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/default_background_color"
+    android:background="@color/background_default"
     android:fillViewport="true"
     android:orientation="vertical"
     android:overScrollMode="never"
@@ -26,19 +26,19 @@
             <ImageView
                 android:id="@+id/controller_login_close_icon"
                 android:layout_width="wrap_content"
-                android:layout_height="@dimen/dimen_extra_small"
+                android:layout_height="@dimen/login_drawable_close_height"
                 android:layout_alignParentEnd="true"
-                android:layout_marginEnd="@dimen/dimen_extra_small"
+                android:layout_marginEnd="@dimen/margin_extra_small"
                 android:rotation="180"
                 android:src="@drawable/ic_close"
-                android:tint="@color/controller_login_close_tint_color" />
+                android:tint="@color/login_close_tint" />
 
         </RelativeLayout>
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/dimen_extra_large"
+            android:layout_marginTop="@dimen/margin_extra_large"
             android:background="@color/white"
             android:orientation="horizontal">
 
@@ -48,7 +48,7 @@
                 android:padding="@dimen/padding_default"
                 android:text="@string/email"
                 android:textColor="@color/colorPrimaryDark"
-                android:textSize="@dimen/text_size_large"
+                android:textSize="@dimen/text_size_body"
                 android:layout_weight="0.35"/>
 
             <android.support.design.widget.TextInputLayout
@@ -74,7 +74,7 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="@dimen/dimen_extra_large"
+            android:layout_marginBottom="@dimen/margin_extra_large"
             android:background="@color/white"
             android:orientation="horizontal">
 
@@ -84,7 +84,7 @@
                 android:padding="@dimen/padding_default"
                 android:text="@string/password"
                 android:textColor="@color/colorPrimaryDark"
-                android:textSize="@dimen/text_size_large"
+                android:textSize="@dimen/text_size_body"
                 android:layout_weight="0.35"/>
 
             <android.support.design.widget.TextInputLayout
@@ -123,13 +123,13 @@
                 android:layout_height="wrap_content"
                 android:background="@drawable/bg_invite_clipboard"
                 android:text="@string/log_in"
-                android:textSize="@dimen/text_size_xlarge" />
+                android:textSize="@dimen/text_size_headline2" />
 
             <RelativeLayout
                 android:id="@+id/controller_login_fb_layout"
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/default_button_height"
-                android:layout_marginTop="@dimen/dimen_small"
+                android:layout_marginTop="@dimen/margin_small"
                 android:background="@drawable/login_default_button"
                 android:clickable="true"
                 android:elevation="2.5dp">
@@ -142,10 +142,10 @@
 
                     <ImageView
                         android:id="@+id/controller_login_facebook_image_view"
-                        android:layout_width="@dimen/button_drawable_size"
-                        android:layout_height="@dimen/button_drawable_size"
+                        android:layout_width="@dimen/button_drawable_width"
+                        android:layout_height="@dimen/button_drawable_height"
                         android:layout_gravity="center"
-                        android:layout_marginStart="@dimen/dimen_small"
+                        android:layout_marginStart="@dimen/margin_small"
                         android:scaleType="fitCenter"
                         android:src="@drawable/facebook"
                         tools:ignore="ContentDescription" />
@@ -156,10 +156,10 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_gravity="center"
-                        android:layout_marginStart="@dimen/dimen_small"
+                        android:layout_marginStart="@dimen/margin_small"
                         android:text="@string/sign_in_with_facebook"
                         android:textColor="@android:color/white"
-                        android:textSize="@dimen/text_size_xlarge" />
+                        android:textSize="@dimen/text_size_headline2" />
                 </LinearLayout>
             </RelativeLayout>
 
@@ -173,11 +173,11 @@
                     fontPath="@string/font_app_bold"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginBottom="@dimen/dimen_small"
-                    android:layout_marginTop="@dimen/dimen_extra_large"
+                    android:layout_marginBottom="@dimen/margin_small"
+                    android:layout_marginTop="@dimen/margin_extra_large"
                     android:text="@string/not_a_member_yet_text"
                     android:textColor="@color/colorPrimaryDark"
-                    android:textSize="@dimen/text_size_xxxlarge" />
+                    android:textSize="@dimen/text_size_headline1" />
 
 
                 <TextView
@@ -185,11 +185,11 @@
                     style="@style/DDButtonJoinNow"
                     fontPath="@string/font_app_semibold"
                     android:layout_width="match_parent"
-                    android:layout_height="@dimen/default_button_height"
+                    android:layout_height="@dimen/button_height_regular"
                     android:gravity="center"
                     android:text="@string/join_now"
                     android:textColor="@color/colorSecondary"
-                    android:textSize="@dimen/text_size_xlarge"
+                    android:textSize="@dimen/text_size_headline3"
                     android:textStyle="bold" />
 
 
@@ -199,10 +199,10 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="left"
-                    android:layout_marginTop="@dimen/dimen_small"
+                    android:layout_marginTop="@dimen/margin_small"
                     android:text="@string/forgot_password"
                     android:textColor="@color/colorSecondary"
-                    android:textSize="@dimen/text_size_large" />
+                    android:textSize="@dimen/text_size_body" />
 
             </LinearLayout>
 

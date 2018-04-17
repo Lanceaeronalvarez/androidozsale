@@ -20,6 +20,15 @@
             android:orientation="vertical">
 
             <ImageView
+                android:id="@+id/controller_register_back_icon"
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:rotation="180"
+                android:src="@drawable/ic_gray_chevron"
+                android:tint="#959595"
+                android:visibility="gone"/>
+
+            <ImageView
                 android:id="@+id/controller_splash_app_logo"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -41,7 +50,7 @@
                     android:text="@string/first_name"
                     android:padding="@dimen/padding_default"
                     android:textColor="@color/dark_text"
-                    android:textSize="@dimen/text_size_medium"/>
+                    android:textSize="@dimen/text_size_caption1"/>
 
                 <android.support.design.widget.TextInputLayout
                     android:id="@+id/controller_register_forename_container"
@@ -67,7 +76,7 @@
                     android:layout_height="wrap_content"
                     android:text="@string/last_name"
                     android:textColor="@color/dark_text"
-                    android:textSize="@dimen/text_size_medium"
+                    android:textSize="@dimen/text_size_caption1"
                     android:padding="@dimen/padding_default"/>
 
                 <android.support.design.widget.TextInputLayout
@@ -95,7 +104,7 @@
                     android:layout_height="wrap_content"
                     android:text="@string/email_address"
                     android:textColor="@color/dark_text"
-                    android:textSize="@dimen/text_size_medium"
+                    android:textSize="@dimen/text_size_caption1"
                     android:padding="@dimen/padding_default"/>
 
                 <android.support.design.widget.TextInputLayout
@@ -124,7 +133,7 @@
                     android:padding="@dimen/padding_default"
                     android:text="@string/password"
                     android:textColor="@color/dark_text"
-                    android:textSize="@dimen/text_size_medium"/>
+                    android:textSize="@dimen/text_size_caption1"/>
 
                 <android.support.design.widget.TextInputLayout
                     android:id="@+id/controller_register_password_container"
@@ -158,7 +167,7 @@
                         fontPath="@string/font_app_medium"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:textSize="@dimen/text_size_medium"
+                        android:textSize="@dimen/text_size_caption1"
                         android:checked="false"
                         android:textColor="@color/filter_text_inactive"
                         android:layout_marginLeft="-5dp"
@@ -169,7 +178,7 @@
                         fontPath="@string/font_app_medium"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:textSize="@dimen/text_size_medium"
+                        android:textSize="@dimen/text_size_caption1"
                         android:textColor="@color/tab_bar_icon_active"
                         android:text="Terms and Conditions" />
                 </LinearLayout>
@@ -187,7 +196,7 @@
                 android:layout_margin="@dimen/padding_default"
                 android:padding="@dimen/padding_default"
                 android:text="@string/join_now"
-                android:textSize="@dimen/text_size_xlarge"/>
+                android:textSize="@dimen/text_size_headline3"/>
 
             <RelativeLayout
                 android:id="@+id/controller_login_fb_layout"
@@ -222,7 +231,7 @@
                         android:layout_marginStart="@dimen/padding_default"
                         android:text="@string/sign_in_with_facebook"
                         android:textColor="@android:color/white"
-                        android:textSize="@dimen/text_size_xlarge" />
+                        android:textSize="@dimen/text_size_headline3" />
                 </LinearLayout>
             </RelativeLayout>
 
@@ -249,7 +258,7 @@
                         android:layout_height="wrap_content"
                         android:text="@string/already_a_member"
                         android:textColor="@color/white"
-                        android:textSize="@dimen/text_size_large" />
+                        android:textSize="@dimen/text_size_body" />
 
                     <TextView
                         android:id="@+id/controller_register_login_text"
@@ -261,7 +270,7 @@
                         android:text="@string/log_in"
                         android:textAllCaps="true"
                         android:textColor="@color/bg_button_default"
-                        android:textSize="@dimen/text_size_xxlarge" />
+                        android:textSize="@dimen/text_size_headline2" />
 
                     <TextView
                         fontPath="@string/font_app_light"
@@ -271,7 +280,7 @@
                         android:paddingStart="5dp"
                         android:text="@string/here"
                         android:textColor="@color/white"
-                        android:textSize="@dimen/text_size_large" />
+                        android:textSize="@dimen/text_size_body" />
 
                 </LinearLayout>
 
@@ -285,7 +294,7 @@
                     android:layout_marginTop="20dp"
                     android:text="@string/forgot_password"
                     android:textColor="@color/white"
-                    android:textSize="@dimen/text_size_large" />
+                    android:textSize="@dimen/text_size_body" />
 
             </LinearLayout>
         </LinearLayout>

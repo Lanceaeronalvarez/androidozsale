@@ -49,7 +49,7 @@
             android:textColor="@android:color/white"
             android:textColorHint="#CCFFFFFF"
             android:textCursorDrawable="@drawable/bg_field_cursor"
-            android:textSize="@dimen/text_size_xxlarge" />
+            android:textSize="@dimen/text_size_headline2" />
 
         <ImageButton
             android:id="@+id/partial_toolbar_search_right_option"

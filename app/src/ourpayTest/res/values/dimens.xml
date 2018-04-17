@@ -1,14 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <dimen name="padding_default">10dp</dimen>
-    <dimen name="text_size_small">10sp</dimen>
-    <dimen name="text_size_medium">12sp</dimen>
-    <dimen name="text_size_large">14sp</dimen>
-    <dimen name="text_size_xlarge">16sp</dimen>
-    <dimen name="text_size_xxlarge">18sp</dimen>
-    <dimen name="text_size_xxxlarge">21sp</dimen>
-    <dimen name="text_size_xxxxlarge">32sp</dimen>
-    <dimen name="text_size_xxxxxlarge">48sp</dimen>
+    <dimen name="text_size_caption2">10sp</dimen>
+    <dimen name="text_size_caption1">12sp</dimen>
+    <dimen name="text_size_body">14sp</dimen>
+    <dimen name="text_size_headline3">16sp</dimen>
+    <dimen name="text_size_headline2">18sp</dimen>
+    <dimen name="text_size_headline1">21sp</dimen>
+    <dimen name="text_size_subtitle">32sp</dimen>
+    <dimen name="text_size_title">48sp</dimen>
 
     <dimen name="status_bar_height">24dp</dimen>
     <dimen name="total_toolbar_height">80dp</dimen>

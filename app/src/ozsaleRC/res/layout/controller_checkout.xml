@@ -2,7 +2,7 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/default_background_color"
+    android:background="@color/background_default"
     android:orientation="vertical">
 
     <include layout="@layout/partial_toolbar_arrow" />
@@ -24,22 +24,22 @@
             android:layout_height="wrap_content"
             android:background="@android:color/transparent"
             android:orientation="vertical"
-            android:layout_marginTop="@dimen/dimen_extra_small"
-            android:layout_marginBottom="@dimen/dimen_extra_small">
+            android:layout_marginTop="@dimen/margin_extra_small"
+            android:layout_marginBottom="@dimen/margin_extra_small">
 
             <TextView
                 android:id="@+id/controller_checkout_orders_label"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="@dimen/dimen_small"
+                android:layout_marginBottom="@dimen/margin_small"
                 android:layout_weight="4"
                 android:paddingLeft="@dimen/padding_default"
                 android:paddingRight="@dimen/padding_default"
-                android:paddingTop="@dimen/dimen_small"
+                android:paddingTop="@dimen/margin_small"
                 android:textAllCaps="true"
                 android:visibility="gone"
                 android:text="@string/checkout_order_label"
-                android:textColor="@color/gray_title_text" />
+                android:textColor="@color/text_medium" />
 
             <android.support.v7.widget.RecyclerView
                 android:id="@+id/controller_checkout_recyclerview_items"

@@ -3,7 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/default_background_color"
+    android:background="@color/background_default"
     android:orientation="vertical"
     tools:ignore="MissingPrefix">
 
@@ -21,8 +21,8 @@
             android:layout_marginRight="@dimen/activity_horizontal_margin"
             android:layout_marginTop="@dimen/activity_vertical_margin"
             android:text="home/office delivery"
-            android:textColor="@color/gray_title_text"
-            android:textSize="@dimen/text_size_xlarge"
+            android:textColor="@color/text_dark"
+            android:textSize="@dimen/text_size_headline3"
             android:visibility="gone" />
 
         <android.support.v7.widget.RecyclerView

@@ -21,8 +21,8 @@
             android:layout_height="wrap_content"
             android:text="Other"
             android:singleLine="true"
-            android:textColor="@color/dark_text"
-            android:textSize="@dimen/text_size_xxlarge"
+            android:textColor="@color/text_extra_dark"
+            android:textSize="@dimen/text_size_headline2"
             android:layout_toLeftOf="@id/my_contact_us_row_item_time_stamp_text_view"
             android:layout_alignParentLeft="true"/>
 
@@ -33,13 +33,13 @@
             android:layout_below="@+id/my_contact_us_row_title_text_view"
             android:lines="2"
             android:text="hi my order has not yet arrived "
-            android:textColor="@color/gray_title_text"
-            android:textSize="@dimen/text_size_xlarge" />
+            android:textColor="@color/text_dark"
+            android:textSize="@dimen/text_size_headline3" />
 
         <ImageView
             android:id="@+id/my_contact_us_row_chevron_button"
-            android:layout_width="@dimen/chevron_size_small"
-            android:layout_height="@dimen/chevron_size_small"
+            android:layout_width="@dimen/contact_chevron_width"
+            android:layout_height="@dimen/contact_chevron_height"
             android:background="@color/white"
             android:src="@drawable/ic_gray_chevron"
             android:layout_alignParentEnd="true"/>
@@ -49,15 +49,15 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="06:57pm"
-            android:textColor="@color/gray_title_text"
-            android:textSize="@dimen/text_size_large"
+            android:textColor="@color/text_dark"
+            android:textSize="@dimen/text_size_body"
             android:layout_toLeftOf="@id/my_contact_us_row_chevron_button"/>
 
     </RelativeLayout>
 
     <View
         android:layout_width="match_parent"
-        android:layout_height="@dimen/border_extra_thin"
-        android:background="@color/border_gray" />
+        android:layout_height="@dimen/border_thin"
+        android:background="@color/border_regular" />
 
 </LinearLayout>

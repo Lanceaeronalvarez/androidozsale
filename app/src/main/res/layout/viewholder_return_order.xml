@@ -1,35 +1,35 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-              xmlns:tools="http://schemas.android.com/tools"
-              android:id="@+id/new_returns_order_row_container"
-              android:orientation="vertical"
-              android:layout_width="match_parent"
-              android:layout_height="wrap_content"
-              android:background="@drawable/bg_card_view_states">
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/new_returns_order_row_container"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@drawable/bg_card_view_states"
+    android:orientation="vertical">
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_marginTop="40dp"
-        android:layout_marginBottom="40dp"
-        android:paddingStart="20dp"
-        android:paddingLeft="20dp"
-        android:paddingEnd="20dp"
-        android:paddingRight="20dp"
-        android:orientation="horizontal">
+        android:layout_marginBottom="@dimen/margin_huge"
+        android:layout_marginTop="@dimen/margin_huge"
+        android:orientation="horizontal"
+        android:paddingEnd="@dimen/margin_large"
+        android:paddingLeft="@dimen/margin_large"
+        android:paddingRight="@dimen/margin_large"
+        android:paddingStart="@dimen/margin_large">
 
         <ImageView
-            android:visibility="gone"
             android:id="@+id/new_return_order_item_image_view"
-            android:layout_width="83dp"
-            android:layout_height="135dp"
-            tools:ignore="ContentDescription"/>
+            android:layout_width="@dimen/viewholder_return_order_image_width"
+            android:layout_height="@dimen/viewholder_return_order_image_height"
+            android:visibility="gone"
+            tools:ignore="ContentDescription" />
 
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="10dp"
-            android:layout_marginStart="10dp"
+            android:layout_marginLeft="@dimen/margin_small"
+            android:layout_marginStart="@dimen/margin_small"
             android:layout_marginTop="0dp">
 
 
@@ -37,82 +37,82 @@
                 android:id="@+id/new_returns_order_item_request_detail"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="2dp" >
+                android:layout_marginTop="@dimen/margin_tiny">
 
                 <TextView
-                    android:fontFamily="@string/font_app_medium"
                     android:id="@+id/new_returns_order_item_requst_identifier"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:textColor="#696969"
-                    android:text="request #:"
-                    android:textSize="@dimen/text_size_xlarge"
-                    tools:ignore="HardcodedText"/>
+                    android:fontFamily="@string/font_app_medium"
+                    android:text="@string/request_no"
+                    android:textColor="@color/text_medium"
+                    android:textSize="@dimen/text_size_headline3"
+                    tools:ignore="HardcodedText" />
 
                 <TextView
-                    android:fontFamily="@string/font_app_medium"
                     android:id="@+id/new_returns_order_item_request_value"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:textColor="@color/colorAccent"
-                    android:text="2014512"
-                    android:layout_marginLeft="2dp"
-                    android:textSize="@dimen/text_size_xlarge"
-                    android:layout_toRightOf="@+id/new_returns_order_item_requst_identifier"
-                    android:layout_toEndOf="@+id/new_returns_order_item_requst_identifier"
                     android:layout_alignTop="@+id/new_returns_order_item_requst_identifier"
-                    tools:ignore="HardcodedText"/>
+                    android:layout_marginLeft="@dimen/margin_tiny"
+                    android:layout_toEndOf="@+id/new_returns_order_item_requst_identifier"
+                    android:layout_toRightOf="@+id/new_returns_order_item_requst_identifier"
+                    android:fontFamily="@string/font_app_medium"
+                    android:textColor="@color/colorAccent"
+                    android:textSize="@dimen/text_size_headline3"
+                    tools:ignore="HardcodedText"
+                    tools:text="2014512" />
 
             </RelativeLayout>
 
             <RelativeLayout
                 android:id="@+id/my_current_return_information_text_content"
-                android:layout_below="@+id/new_returns_order_item_request_detail"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content">
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/new_returns_order_item_request_detail">
 
                 <TextView
-                    android:fontFamily="@string/font_app_medium"
                     android:id="@+id/new_current_orders_item_name"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:textColor="#a7a7a7"
-                    android:text="Philosophy Cotton Sleeveless Plain"
-                    android:textSize="@dimen/text_size_xlarge"
-                    tools:ignore="HardcodedText"/>
+                    android:fontFamily="@string/font_app_medium"
+                    android:textColor="@color/text_medium"
+                    android:textSize="@dimen/text_size_headline3"
+                    tools:ignore="HardcodedText"
+                    tools:text="Philosophy Cotton Sleeveless Plain" />
 
                 <RelativeLayout
+                    android:id="@+id/new_returns_order_item_count_detail"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="25dp"
-                    android:id="@+id/new_returns_order_item_count_detail"
-                    android:layout_below="@+id/new_current_orders_item_name">
+                    android:layout_below="@+id/new_current_orders_item_name"
+                    android:layout_marginTop="@dimen/margin_extra_large">
 
 
                     <TextView
-                        android:fontFamily="@string/font_app_medium"
                         android:id="@+id/new_returns_order_item_count_identifier"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:textColor="#b7b7b7"
-                        android:text="Items:"
-                        android:textSize="@dimen/text_size_large"
-                        tools:ignore="HardcodedText"/>
+                        android:fontFamily="@string/font_app_medium"
+                        android:text="@string/item_colon"
+                        android:textColor="@color/text_medium"
+                        android:textSize="@dimen/text_size_body"
+                        tools:ignore="HardcodedText" />
 
 
                     <TextView
-                        android:fontFamily="@string/font_app_medium"
                         android:id="@+id/new_returns_order_item_count_value"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:textColor="#acacac"
-                        android:text="1"
-                        android:layout_marginLeft="2dp"
-                        android:textSize="@dimen/text_size_large"
-                        android:layout_toRightOf="@+id/new_returns_order_item_count_identifier"
-                        android:layout_toEndOf="@+id/new_returns_order_item_count_identifier"
                         android:layout_alignTop="@+id/new_returns_order_item_count_identifier"
-                        tools:ignore="HardcodedText"/>
+                        android:layout_marginLeft="@dimen/margin_tiny"
+                        android:layout_toEndOf="@+id/new_returns_order_item_count_identifier"
+                        android:layout_toRightOf="@+id/new_returns_order_item_count_identifier"
+                        android:fontFamily="@string/font_app_medium"
+                        android:textColor="@color/text_light"
+                        android:textSize="@dimen/text_size_body"
+                        tools:ignore="HardcodedText"
+                        tools:text="1" />
 
                 </RelativeLayout>
 
@@ -120,49 +120,32 @@
                     android:id="@+id/new_returns_order_item_total_cost_detail"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="2dp"
-                    android:layout_below="@+id/new_returns_order_item_count_detail">
+                    android:layout_below="@+id/new_returns_order_item_count_detail"
+                    android:layout_marginTop="@dimen/margin_tiny">
 
                     <TextView
-                        android:fontFamily="@string/font_app_medium"
                         android:id="@+id/new_returns_order_item_total_cost_identifier"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:textColor="#b7b7b7"
-                        android:text="Total:"
-                        android:textSize="@dimen/text_size_large"
-                        tools:ignore="HardcodedText"/>
-
-
-                    <!--<com.mysale.genie.views.custom.GenieTextView-->
-                    <!--app:font="@string/fontname_lato_bold"-->
-                    <!--android:id="@+id/new_returns_order_item_total_cost_sign"-->
-                    <!--android:layout_width="wrap_content"-->
-                    <!--android:layout_height="wrap_content"-->
-                    <!--android:layout_marginLeft="10dp"-->
-                    <!--android:textColor="#aeaeae"-->
-                    <!--android:layout_toRightOf="@+id/new_returns_order_item_total_cost_identifier"-->
-                    <!--android:layout_toEndOf="@+id/new_returns_order_item_total_cost_identifier"-->
-                    <!--android:layout_alignTop="@+id/new_returns_order_item_total_cost_identifier"-->
-                    <!--android:text="$"-->
-                    <!--android:textSize="@dimen/text_size_normal"-->
-                    <!--tools:ignore="HardcodedText"/>-->
-
-
+                        android:fontFamily="@string/font_app_medium"
+                        android:text="@string/total_colon"
+                        android:textColor="@color/text_medium"
+                        android:textSize="@dimen/text_size_body"
+                        tools:ignore="HardcodedText" />
 
                     <TextView
-                        android:fontFamily="@string/font_app_medium"
                         android:id="@+id/new_returns_order_item_total_cost_value"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:textColor="#aeaeae"
-                        android:layout_toRightOf="@+id/new_returns_order_item_total_cost_identifier"
-                        android:layout_toEndOf="@+id/new_returns_order_item_total_cost_identifier"
                         android:layout_alignTop="@+id/new_returns_order_item_total_cost_identifier"
-                        android:text="12.00"
-                        android:layout_marginLeft="2dp"
-                        android:textSize="@dimen/text_size_large"
-                        tools:ignore="HardcodedText"/>
+                        android:layout_marginLeft="@dimen/margin_tiny"
+                        android:layout_toEndOf="@+id/new_returns_order_item_total_cost_identifier"
+                        android:layout_toRightOf="@+id/new_returns_order_item_total_cost_identifier"
+                        android:fontFamily="@string/font_app_medium"
+                        android:textColor="@color/text_light"
+                        android:textSize="@dimen/text_size_body"
+                        tools:ignore="HardcodedText"
+                        tools:text="12.00" />
 
                 </RelativeLayout>
 
@@ -171,33 +154,33 @@
                     android:id="@+id/new_returns_order_item_status_info"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="2dp"
-                    android:layout_below="@+id/new_returns_order_item_total_cost_detail">
+                    android:layout_below="@+id/new_returns_order_item_total_cost_detail"
+                    android:layout_marginTop="@dimen/margin_tiny">
 
                     <TextView
-                        android:fontFamily="@string/font_app_medium"
                         android:id="@+id/new_returns_order_item_status_indentifier"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:textColor="#b7b7b7"
-                        android:text="Status:"
-                        android:textSize="@dimen/text_size_large"
-                        tools:ignore="HardcodedText"/>
+                        android:fontFamily="@string/font_app_medium"
+                        android:text="@string/status_colon"
+                        android:textColor="@color/text_medium"
+                        android:textSize="@dimen/text_size_body"
+                        tools:ignore="HardcodedText" />
 
 
                     <TextView
-                        android:fontFamily="@string/font_app_medium"
                         android:id="@+id/new_returns_order_item_status_value"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:textColor="#9c9c9c"
-                        android:text="Dispatched"
-                        android:layout_marginLeft="2dp"
-                        android:textSize="@dimen/text_size_large"
-                        android:layout_toRightOf="@+id/new_returns_order_item_status_indentifier"
-                        android:layout_toEndOf="@+id/new_returns_order_item_status_indentifier"
                         android:layout_alignTop="@+id/new_returns_order_item_status_indentifier"
-                        tools:ignore="HardcodedText"/>
+                        android:layout_marginLeft="@dimen/margin_tiny"
+                        android:layout_toEndOf="@+id/new_returns_order_item_status_indentifier"
+                        android:layout_toRightOf="@+id/new_returns_order_item_status_indentifier"
+                        android:fontFamily="@string/font_app_medium"
+                        android:textColor="@color/text_light"
+                        android:textSize="@dimen/text_size_body"
+                        tools:ignore="HardcodedText"
+                        tools:text="Dispatched" />
 
                 </RelativeLayout>
 

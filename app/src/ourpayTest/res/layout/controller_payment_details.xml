@@ -46,7 +46,7 @@
                     android:layout_centerHorizontal="true"
                     android:layout_centerInParent="true"
                     android:textColor="@color/colorAccent"
-                    android:textSize="@dimen/text_size_xxxxlarge"
+                    android:textSize="@dimen/text_size_subtitle"
                     tools:ignore="MissingPrefix"
                     tools:text="ozsale" />
 
@@ -58,7 +58,7 @@
                     android:layout_below="@id/controller_payment_details_title"
                     android:layout_centerInParent="true"
                     android:textColor="@color/white"
-                    android:textSize="@dimen/text_size_xxxlarge"
+                    android:textSize="@dimen/text_size_headline1"
                     tools:ignore="MissingPrefix"
                     tools:text="95068491" />
 

@@ -5,10 +5,10 @@
     android:id="@+id/textView_template"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:padding="10dp"
-    android:textColor="#FF898989"
-    android:textSize="@dimen/text_size_large"
-    android:lineSpacingExtra="5dp"
+    android:padding="@dimen/margin_small"
+    android:textColor="@color/ourpay_gray"
+    android:textSize="@dimen/text_size_body"
+    android:lineSpacingExtra="@dimen/margin_extra_small"
     tools:text="4 interest free payment over 6 weeks.">
 
 </au.com.dealsdirect.utils.TextViewWithImages>

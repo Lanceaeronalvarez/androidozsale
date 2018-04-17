@@ -50,7 +50,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="@string/signature_on_delivery_note"
-                    android:textSize="@dimen/text_size_xlarge" />
+                    android:textSize="@dimen/text_size_headline3" />
 
                 <TextView
                     android:id="@+id/dialog_alert_clickable_text"
@@ -60,7 +60,7 @@
                     android:clickable="true"
                     android:text="View Basket"
                     android:textColor="@color/tab_bar_icon_active"
-                    android:textSize="@dimen/text_size_xlarge" />
+                    android:textSize="@dimen/text_size_headline3" />
 
             </LinearLayout>
 

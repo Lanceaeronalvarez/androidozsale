@@ -27,7 +27,7 @@
                     android:layout_height="wrap_content"
                     android:layout_above="@+id/controller_invite_friend_button_send_invite"
                     android:layout_centerInParent="true"
-                    android:layout_marginTop="@dimen/dimen_small"
+                    android:layout_marginTop="@dimen/margin_small"
                     android:background="@color/white"
                     android:gravity="center_vertical|center_horizontal"
                     android:orientation="vertical"
@@ -37,10 +37,10 @@
                         android:id="@+id/controller_invite_vouchers_imageview"
                         android:layout_width="wrap_content"
                         android:layout_height="@dimen/invite_friends_vouchers_image_height"
-                        android:layout_marginBottom="@dimen/dimen_small"
+                        android:layout_marginBottom="@dimen/margin_small"
                         android:layout_marginLeft="@dimen/activity_horizontal_margin"
                         android:layout_marginRight="@dimen/activity_horizontal_margin"
-                        android:layout_marginTop="@dimen/dimen_extra_small"
+                        android:layout_marginTop="@dimen/margin_extra_small"
                         android:focusable="true" />
 
 
@@ -48,11 +48,11 @@
                         fontPath="@string/font_app_bold"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginTop="@dimen/dimen_small"
+                        android:layout_marginTop="@dimen/margin_small"
                         android:gravity="center"
                         android:text="@string/invite_friends_title"
                         android:textColor="@color/colorSecondary"
-                        android:textSize="@dimen/text_size_xxxlarge" />
+                        android:textSize="@dimen/text_size_headline1" />
 
                     <TextView
                         fontPath="@string/font_app_regular"
@@ -60,10 +60,10 @@
                         android:layout_height="wrap_content"
                         android:layout_margin="@dimen/padding_default"
                         android:gravity="center"
-                        android:lineSpacingExtra="@dimen/dimen_extra_small"
+                        android:lineSpacingExtra="@dimen/margin_extra_small"
                         android:text="@string/invite_friend_guide"
                         android:textAlignment="center"
-                        android:textSize="@dimen/text_size_medium" />
+                        android:textSize="@dimen/text_size_caption1" />
 
                     <LinearLayout
                         android:layout_width="match_parent"
@@ -82,11 +82,11 @@
                                 style="@style/DDEditTextStyle"
                                 android:layout_width="0dp"
                                 android:layout_height="wrap_content"
-                                android:layout_marginRight="@dimen/dimen_extra_small"
+                                android:layout_marginRight="@dimen/margin_extra_small"
                                 android:layout_weight="1"
                                 android:background="@drawable/bg_invite_twitter"
                                 android:clickable="true"
-                                android:padding="@dimen/dimen_medium">
+                                android:padding="@dimen/margin_medium">
 
                                 <LinearLayout
                                     android:layout_width="wrap_content"
@@ -97,8 +97,8 @@
                                     tools:ignore="UselessParent">
 
                                     <ImageView
-                                        android:layout_width="@dimen/invite_friends_image_width"
-                                        android:layout_height="@dimen/invite_friends_image_height"
+                                        android:layout_width="@dimen/button_drawable_width"
+                                        android:layout_height="@dimen/button_drawable_height"
                                         android:layout_weight="0.50"
                                         android:scaleType="fitXY"
                                         android:src="@drawable/ic_twitter"
@@ -114,7 +114,7 @@
                                         android:paddingRight="@dimen/invite_friends_padding"
                                         android:text="Follow us"
                                         android:textColor="@color/white"
-                                        android:textSize="@dimen/text_size_large" />
+                                        android:textSize="@dimen/text_size_body" />
 
                                 </LinearLayout>
                             </RelativeLayout>
@@ -124,11 +124,11 @@
                                 style="@style/DDEditTextStyle"
                                 android:layout_width="0dp"
                                 android:layout_height="wrap_content"
-                                android:layout_marginLeft="@dimen/dimen_extra_small"
+                                android:layout_marginLeft="@dimen/margin_extra_small"
                                 android:layout_weight="1"
                                 android:background="@drawable/bg_invite_facebook"
                                 android:clickable="true"
-                                android:padding="@dimen/dimen_medium">
+                                android:padding="@dimen/margin_medium">
 
                                 <LinearLayout
                                     android:layout_width="wrap_content"
@@ -139,8 +139,8 @@
 
                                     <ImageView
                                         android:id="@+id/facebook_icon_image_view"
-                                        android:layout_width="@dimen/invite_friends_image_width"
-                                        android:layout_height="@dimen/invite_friends_image_height"
+                                        android:layout_width="@dimen/button_drawable_width"
+                                        android:layout_height="@dimen/button_drawable_height"
                                         android:scaleType="fitXY"
                                         android:src="@drawable/ic_fb"
                                         tools:ignore="ContentDescription" />
@@ -155,7 +155,7 @@
                                         android:singleLine="true"
                                         android:text="Like us"
                                         android:textColor="@color/white"
-                                        android:textSize="@dimen/text_size_large" />
+                                        android:textSize="@dimen/text_size_body" />
 
                                 </LinearLayout>
                             </RelativeLayout>
@@ -172,7 +172,7 @@
                     android:text="@string/send_personal_invite_text"
                     android:textColor="@color/colorSecondary"
                     android:textIsSelectable="false"
-                    android:textSize="@dimen/text_size_large" />
+                    android:textSize="@dimen/text_size_body" />
 
                 <RelativeLayout
                     android:layout_width="match_parent"
@@ -190,8 +190,8 @@
                         android:inputType="textMultiLine"
                         android:maxLines="4"
                         android:minLines="4"
-                        android:textColor="@color/gray_active_field_text"
-                        android:textSize="@dimen/text_size_xlarge" />
+                        android:textColor="@color/text_extra_dark"
+                        android:textSize="@dimen/text_size_headline3" />
                 </RelativeLayout>
 
 
@@ -202,7 +202,7 @@
                     android:text="@string/invitation_link"
                     android:layout_margin="@dimen/padding_default"
                     android:textColor="@color/colorSecondary"
-                    android:textSize="@dimen/text_size_large" />
+                    android:textSize="@dimen/text_size_body" />
 
 
                 <RelativeLayout
@@ -225,9 +225,9 @@
                         android:maxLines="4"
                         android:minLines="4"
                         android:text="@string/sold_out"
-                        android:textColor="@color/gray_inactive_field_text"
-                        android:textColorHint="@color/gray_inactive_field_text"
-                        android:textSize="@dimen/text_size_xlarge" />
+                        android:textColor="@color/text_extra_light"
+                        android:textColorHint="@color/text_extra_light"
+                        android:textSize="@dimen/text_size_headline3" />
                 </RelativeLayout>
 
                 <LinearLayout
@@ -242,7 +242,7 @@
                         android:layout_marginBottom="@dimen/padding_default"
                         android:layout_marginLeft="@dimen/padding_default"
                         android:layout_marginRight="@dimen/padding_default"
-                        android:layout_marginTop="@dimen/dimen_small"
+                        android:layout_marginTop="@dimen/margin_small"
                         android:gravity="center"
                         android:orientation="vertical"
                         android:visibility="visible">
@@ -252,11 +252,11 @@
                             style="@style/DDEditTextStyleNoBorder"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:layout_marginTop="@dimen/dimen_extra_small"
+                            android:layout_marginTop="@dimen/margin_extra_small"
                             android:layout_weight="1"
                             android:background="@drawable/bg_invite_clipboard"
                             android:clickable="true"
-                            android:padding="@dimen/dimen_medium">
+                            android:padding="@dimen/margin_medium">
 
                             <LinearLayout
                                 android:layout_width="wrap_content"
@@ -268,8 +268,8 @@
 
                                 <ImageView
                                     android:id="@+id/invite_friend_clipboard_image"
-                                    android:layout_width="@dimen/invite_friends_image_width"
-                                    android:layout_height="@dimen/invite_friends_image_height"
+                                    android:layout_width="@dimen/button_drawable_width"
+                                    android:layout_height="@dimen/button_drawable_height"
                                     android:layout_gravity="center_horizontal"
                                     android:layout_weight="0.50"
                                     android:src="@drawable/ic_clipboard"
@@ -285,7 +285,7 @@
                                     android:paddingRight="@dimen/invite_friends_padding"
                                     android:text="Copy link to clipboard"
                                     android:textColor="@color/white"
-                                    android:textSize="@dimen/text_size_large" />
+                                    android:textSize="@dimen/text_size_body" />
 
                             </LinearLayout>
                         </RelativeLayout>
@@ -295,24 +295,24 @@
                             android:layout_width="wrap_content"
                             android:layout_height="match_parent"
                             android:layout_marginLeft="@dimen/invite_friends_padding"
-                            android:layout_marginTop="@dimen/dimen_extra_small"
+                            android:layout_marginTop="@dimen/margin_extra_small"
                             android:gravity="center"
                             android:paddingLeft="@dimen/invite_friends_padding"
                             android:paddingRight="@dimen/invite_friends_padding"
                             android:text="or"
-                            android:textColor="@color/gray_active_field_text"
-                            android:textSize="@dimen/text_size_large" />
+                            android:textColor="@color/text_extra_dark"
+                            android:textSize="@dimen/text_size_body" />
 
                         <RelativeLayout
                             android:id="@+id/controller_invite_facebook_button"
                             style="@style/DDEditTextStyle"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:layout_marginTop="@dimen/dimen_small"
+                            android:layout_marginTop="@dimen/margin_small"
                             android:layout_weight="1"
                             android:background="@drawable/bg_invite_facebook"
                             android:clickable="true"
-                            android:padding="@dimen/dimen_medium">
+                            android:padding="@dimen/margin_medium">
 
                             <LinearLayout
                                 android:layout_width="match_parent"
@@ -322,8 +322,8 @@
                                 tools:ignore="UselessParent">
 
                                 <ImageView
-                                    android:layout_width="@dimen/invite_friends_image_width"
-                                    android:layout_height="@dimen/dimen_large"
+                                    android:layout_width="@dimen/button_drawable_width"
+                                    android:layout_height="@dimen/button_drawable_height"
                                     android:layout_gravity="center_vertical"
                                     android:layout_weight="0.5"
                                     android:scaleType="fitEnd"
@@ -340,7 +340,7 @@
                                     android:paddingRight="@dimen/invite_friends_padding"
                                     android:text="Invite your friends on Facebook"
                                     android:textColor="@color/white"
-                                    android:textSize="@dimen/text_size_large" />
+                                    android:textSize="@dimen/text_size_body" />
 
                             </LinearLayout>
                         </RelativeLayout>
@@ -350,11 +350,11 @@
                             style="@style/DDEditTextStyle"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:layout_marginTop="@dimen/dimen_small"
+                            android:layout_marginTop="@dimen/margin_small"
                             android:layout_weight="1"
                             android:background="@drawable/bg_invite_twitter"
                             android:clickable="true"
-                            android:padding="@dimen/dimen_medium">
+                            android:padding="@dimen/margin_medium">
 
                             <LinearLayout
                                 android:layout_width="match_parent"
@@ -365,7 +365,7 @@
 
                                 <ImageView
                                     android:layout_width="@dimen/invite_friends_image_width"
-                                    android:layout_height="@dimen/dimen_medium"
+                                    android:layout_height="@dimen/invite_friends_image_height"
                                     android:layout_gravity="center_vertical"
                                     android:layout_weight="0.5"
                                     android:scaleType="fitEnd"
@@ -382,7 +382,7 @@
                                     android:paddingRight="@dimen/invite_friends_padding"
                                     android:text="Invite your friends on Twitter"
                                     android:textColor="@color/white"
-                                    android:textSize="@dimen/text_size_large" />
+                                    android:textSize="@dimen/text_size_body" />
 
                             </LinearLayout>
                         </RelativeLayout>
@@ -393,11 +393,11 @@
                             style="@style/DDEditTextStyle"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:layout_marginTop="@dimen/dimen_small"
+                            android:layout_marginTop="@dimen/margin_small"
                             android:layout_weight="1"
                             android:background="@drawable/bg_invite_mail"
                             android:clickable="true"
-                            android:padding="@dimen/dimen_medium">
+                            android:padding="@dimen/margin_medium">
 
                             <LinearLayout
                                 android:layout_width="match_parent"
@@ -407,8 +407,8 @@
                                 tools:ignore="UselessParent">
 
                                 <ImageView
-                                    android:layout_width="@dimen/invite_friends_image_width"
-                                    android:layout_height="@dimen/invite_friends_image_height"
+                                    android:layout_width="@dimen/button_drawable_width"
+                                    android:layout_height="@dimen/button_drawable_height"
                                     android:layout_gravity="center_vertical"
                                     android:layout_weight="0.5"
                                     android:scaleType="fitEnd"
@@ -424,7 +424,7 @@
                                     android:paddingRight="@dimen/invite_friends_padding"
                                     android:text="Invite your friends on Email"
                                     android:textColor="@color/white"
-                                    android:textSize="@dimen/text_size_large" />
+                                    android:textSize="@dimen/text_size_body" />
 
                             </LinearLayout>
                         </RelativeLayout>
@@ -434,11 +434,11 @@
                             style="@style/DDEditTextStyle"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:layout_marginTop="@dimen/dimen_small"
+                            android:layout_marginTop="@dimen/margin_small"
                             android:layout_weight="1"
                             android:background="@drawable/bg_invite_sms"
                             android:clickable="true"
-                            android:padding="@dimen/dimen_medium">
+                            android:padding="@dimen/margin_medium">
 
                             <LinearLayout
                                 android:layout_width="match_parent"
@@ -448,8 +448,8 @@
                                 tools:ignore="UselessParent">
 
                                 <ImageView
-                                    android:layout_width="@dimen/invite_friends_image_width"
-                                    android:layout_height="@dimen/invite_friends_image_width"
+                                    android:layout_width="@dimen/button_drawable_width"
+                                    android:layout_height="@dimen/button_drawable_height"
                                     android:layout_gravity="center_vertical"
                                     android:layout_weight="0.5"
                                     android:scaleType="fitEnd"
@@ -466,7 +466,7 @@
                                     android:paddingRight="@dimen/invite_friends_padding"
                                     android:text="Invite your friends on SMS"
                                     android:textColor="@color/white"
-                                    android:textSize="@dimen/text_size_large" />
+                                    android:textSize="@dimen/text_size_body" />
 
                             </LinearLayout>
 

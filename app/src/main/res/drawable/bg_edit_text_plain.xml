@@ -6,7 +6,7 @@
 
             <item android:state_enabled="true">
                 <shape android:shape="rectangle">
-                    <corners android:radius="@dimen/corner_radius"/>
+                    <corners android:radius="@dimen/edit_text_corner_radius"/>
                     <solid android:color="@color/white"/>
                 </shape>
             </item>

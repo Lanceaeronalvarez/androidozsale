@@ -51,7 +51,7 @@
                 android:gravity="center"
                 android:singleLine="true"
                 android:textColor="@android:color/white"
-                android:textSize="@dimen/text_size_xxlarge"
+                android:textSize="@dimen/text_size_headline2"
                 tools:text="Title" />
 
             <ImageButton

@@ -34,7 +34,7 @@
             android:text="@string/category_title"
             android:textColor="@color/colorBlueDark"
             android:maxLines="1"
-            android:textSize="@dimen/text_size_xxxlarge"
+            android:textSize="@dimen/text_size_headline1"
             android:transitionName="categoryHeaderTransitionName" />
 
         <!--DUMMY VIEW TO KEEP ALIGNMENT OF TEXT IN MIDDLE REGARDLESS OF LENGTH-->

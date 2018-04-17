@@ -54,7 +54,7 @@
                         android:layout_gravity="center"
                         android:text="@string/pay_with"
                         android:textColor="#254181"
-                        android:textSize="@dimen/text_size_xxxlarge" />
+                        android:textSize="@dimen/text_size_headline1" />
 
                     <ImageView
                         android:layout_width="wrap_content"

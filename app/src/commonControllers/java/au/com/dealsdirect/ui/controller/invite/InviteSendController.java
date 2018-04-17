@@ -191,8 +191,8 @@ public class InviteSendController extends BasePullToRefreshController implements
 
 
         Glide.with(mActivity)
-                .load(R.drawable.invite_friend_vouchers_medium)
-                .placeholder(R.drawable.invite_friend_vouchers_medium)
+                .load(R.drawable.invite_friend_vouchers_image)
+                .placeholder(R.drawable.invite_friend_vouchers_image)
                 .into(mImageView);
 
         String twitterLink = mPresenter.getFollowUsTwitterLink();
@@ -430,11 +430,11 @@ public class InviteSendController extends BasePullToRefreshController implements
         });
 
         mPersonalInvitationLinkEditText.setOnFocusChangeListener((view1, b) -> {
-            mPersonalInvitationLinkEditText.setTextColor(getResources().getColor(R.color.gray_active_field_text));
+            mPersonalInvitationLinkEditText.setTextColor(getResources().getColor(R.color.text_extra_dark));
         });
 
         mPersonalInvitationMessageEditText.setOnFocusChangeListener((view1, b) -> {
-            mPersonalInvitationLinkEditText.setTextColor(getResources().getColor(R.color.gray_inactive_field_text));
+            mPersonalInvitationLinkEditText.setTextColor(getResources().getColor(R.color.text_extra_light));
         });
 
         mPresenter.start();

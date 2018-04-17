@@ -34,8 +34,8 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:gravity="end"
-                android:textSize="@dimen/text_size_medium"
-                android:textColor="@color/row_checkout_text_light_color"
+                android:textSize="@dimen/text_size_caption1"
+                android:textColor="@color/text_light"
                 android:textStyle="bold"
                 tools:text="$9"/>
 
@@ -45,7 +45,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
-            android:paddingTop="@dimen/dimen_extra_small">
+            android:paddingTop="@dimen/margin_extra_small">
 
             <TextView
                 android:layout_width="0dp"
@@ -62,8 +62,8 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:gravity="end"
-                android:textSize="@dimen/text_size_medium"
-                android:textColor="@color/row_checkout_text_light_color"
+                android:textSize="@dimen/text_size_caption1"
+                android:textColor="@color/text_light"
                 android:textStyle="bold"
                 tools:text="$9"/>
 
@@ -74,7 +74,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
-            android:paddingTop="@dimen/dimen_extra_small">
+            android:paddingTop="5dp">
 
             <TextView
                 android:layout_width="0dp"
@@ -90,8 +90,8 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:gravity="end"
-                android:textSize="@dimen/text_size_medium"
-                android:textColor="@color/row_checkout_text_light_color"
+                android:textSize="@dimen/text_size_caption1"
+                android:textColor="@color/text_light"
                 android:textStyle="bold"
                 tools:text="$9"/>
 
@@ -102,7 +102,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
-            android:paddingTop="@dimen/dimen_extra_small">
+            android:paddingTop="@dimen/margin_extra_small">
 
             <TextView
                 android:layout_width="0dp"
@@ -118,8 +118,8 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:gravity="end"
-                android:textSize="@dimen/text_size_medium"
-                android:textColor="@color/row_checkout_text_light_color"
+                android:textSize="@dimen/text_size_caption1"
+                android:textColor="@color/text_light"
                 android:textStyle="bold"
                 tools:text="$9"/>
 
@@ -130,16 +130,16 @@
     <View
         android:layout_width="match_parent"
         android:layout_height="@dimen/border_thin"
-        android:background="@color/gray_toolbar_border"/>
+        android:background="@color/border_regular"/>
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        android:paddingBottom="@dimen/dimen_small"
+        android:paddingBottom="@dimen/margin_small"
         android:paddingLeft="@dimen/padding_default"
         android:paddingRight="@dimen/padding_default"
-        android:paddingTop="@dimen/dimen_small">
+        android:paddingTop="@dimen/margin_small">
 
         <TextView
             fontPath="@string/font_app_semibold"
@@ -148,7 +148,7 @@
             android:layout_weight="1"
             android:text="@string/total"
             android:textColor="@color/row_checkout_text_dark_color"
-            android:textSize="@dimen/text_size_xxlarge"/>
+            android:textSize="@dimen/text_size_headline2"/>
 
         <TextView
             android:id="@+id/partial_checkout_summary_total"
@@ -157,8 +157,8 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:gravity="end"
-            android:textColor="@color/row_checkout_text_dark_color"
-            android:textSize="@dimen/text_size_xxxlarge"
+            android:textColor="@color/cart_text_order_price"
+            android:textSize="@dimen/text_size_headline1"
             tools:text="$27"/>
 
     </LinearLayout>
