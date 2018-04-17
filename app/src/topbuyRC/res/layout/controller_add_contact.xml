@@ -27,7 +27,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="select subject"
-                android:textColor="@color/gray_field_text"
+                android:textColor="@color/text_medium"
                 android:textSize="@dimen/text_size_large"/>
 
             <android.support.design.widget.TextInputLayout
@@ -63,7 +63,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/activity_horizontal_margin"
                 android:text="select order"
-                android:textColor="@color/gray_field_text"
+                android:textColor="@color/text_medium"
                 android:textSize="@dimen/text_size_large"/>
 
             <android.support.design.widget.TextInputLayout
@@ -91,7 +91,7 @@
         <!--android:layout_width="match_parent"-->
         <!--android:layout_height="wrap_content"-->
         <!--android:text="select order"-->
-        <!--android:textColor="@color/gray_field_text"-->
+        <!--android:textColor="@color/text_medium"-->
         <!--android:layout_marginTop="@dimen/activity_horizontal_margin"-->
         <!--android:textSize="@dimen/text_size_medium" />-->
 
@@ -238,7 +238,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginTop="@dimen/activity_horizontal_margin"
                     android:text="reason"
-                    android:textColor="@color/gray_field_text"
+                    android:textColor="@color/text_medium"
                     android:textSize="@dimen/text_size_large"/>
 
                 <android.support.design.widget.TextInputLayout

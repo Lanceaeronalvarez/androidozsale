@@ -105,7 +105,7 @@
                             android:id="@+id/partial_checkout_voucher_details"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:textColor="@color/gray_field_text"
+                            android:textColor="@color/text_medium"
                             android:textSize="@dimen/text_size_body"
                             tools:text="voucher will expire on 12/25/16" />
 

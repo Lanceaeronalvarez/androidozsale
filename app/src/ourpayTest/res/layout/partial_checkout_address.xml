@@ -72,7 +72,7 @@
                         fontPath="@string/font_app_semibold"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:textColor="@color/gray_field_text"
+                        android:textColor="@color/text_medium"
                         android:textSize="@dimen/text_size_headline2"
                         tools:text="Mary Doe" />
 
@@ -80,7 +80,7 @@
                         android:id="@+id/partial_checkout_address_details"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:textColor="@color/gray_field_text"
+                        android:textColor="@color/text_medium"
                         android:textSize="@dimen/text_size_body"
                         tools:text="Pharmacy Warringah, Shop 4123, Broovale, NSW, 2100, Australia, +0123 123 123" />
 
