@@ -426,7 +426,6 @@ public class CheckoutController extends BaseController implements CheckoutMvpVie
             int showOrdersLabel = mActivity.getResources().getBoolean(R.bool.is_checkout_orders_label_visible) ?
                     View.VISIBLE : View.GONE;
             mOrdersLabel.setVisibility(showOrdersLabel);
-            mOrdersLabel.setVisibility(View.VISIBLE);
             mAdapter.replaceData(items);
         }
 

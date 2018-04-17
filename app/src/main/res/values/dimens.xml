@@ -46,6 +46,7 @@
     <dimen name="button_corner_radius">@dimen/corner_radius_default</dimen>
     <dimen name="button_drawable_width">20dp</dimen>
     <dimen name="button_drawable_height">20dp</dimen>
+    <dimen name="button_text_padding">10dp</dimen>
     <dimen name="button_elevation">2.5dp</dimen>
 
     <dimen name="item_image_height">270dp</dimen>
