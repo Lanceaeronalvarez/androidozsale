@@ -20,7 +20,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textColor="@color/category_text_selector"
-            android:textSize="@dimen/text_size_xlarge"
+            android:textSize="@dimen/text_size_headline1"
             android:layout_gravity="left|center_vertical"
             android:textStyle="bold"
             tools:ignore="MissingPrefix"

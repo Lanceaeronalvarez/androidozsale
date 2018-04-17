@@ -36,7 +36,7 @@
                 <!--android:gravity="center_vertical"-->
                 <!--android:text="Loading payments"-->
                 <!--android:textColor="@color/colorAccent"-->
-                <!--android:textSize="@dimen/text_size_large" />-->
+                <!--android:textSize="@dimen/text_size_headline2" />-->
 
         <!--</LinearLayout>-->
 

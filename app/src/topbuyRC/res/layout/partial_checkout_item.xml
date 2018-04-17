@@ -32,7 +32,7 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="2"
                 android:textColor="#717171"
-                android:textSize="@dimen/text_size_large"
+                android:textSize="@dimen/text_size_headline2"
                 tools:text="@string/test_product_name" />
 
             <TextView
@@ -43,7 +43,7 @@
                 android:layout_weight="1"
                 android:gravity="end"
                 android:textColor="#454545"
-                android:textSize="@dimen/text_size_xlarge"
+                android:textSize="@dimen/text_size_headline1"
                 android:textStyle="bold"
                 tools:text="$19.00" />
         </LinearLayout>

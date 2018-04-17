@@ -59,7 +59,7 @@
         <!--android:layout_height="wrap_content"-->
         <!--android:layout_below="@+id/controller_new_return_field"-->
         <!--android:text="@string/sumbit"-->
-        <!--android:textSize="@dimen/text_size_xlarge"/>-->
+        <!--android:textSize="@dimen/text_size_headline1"/>-->
 
     </RelativeLayout>
 

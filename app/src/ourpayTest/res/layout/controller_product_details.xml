@@ -243,7 +243,7 @@
                                                     android:padding="@dimen/padding_default"
                                                     android:text="@string/choose_your_size"
                                                     android:textColor="@color/color_item_title"
-                                                    android:textSize="@dimen/text_size_large" />
+                                                    android:textSize="@dimen/text_size_headline2" />
 
 
                                     <com.zhy.view.flowlayout.TagFlowLayout
@@ -274,7 +274,7 @@
                                                     android:padding="@dimen/padding_default"
                                                     android:text="@string/estimated_delivery"
                                                     android:textColor="@color/color_item_title"
-                                                    android:textSize="@dimen/text_size_large" />
+                                                    android:textSize="@dimen/text_size_headline2" />
 
                                     <FrameLayout
                                         android:layout_width="match_parent"
@@ -307,7 +307,7 @@
                                                     android:padding="@dimen/padding_default"
                                                     android:text="@string/return_policy"
                                                     android:textColor="@color/color_item_title"
-                                                    android:textSize="@dimen/text_size_large" />
+                                                    android:textSize="@dimen/text_size_headline2" />
 
                                     <FrameLayout
                                         android:layout_width="match_parent"
@@ -318,7 +318,7 @@
                                                         android:id="@+id/product_details_return_policy_text"
                                                         android:layout_width="match_parent"
                                                         android:layout_height="wrap_content"
-                                                        android:textSize="@dimen/text_size_medium" />
+                                                        android:textSize="@dimen/text_size_headline3" />
                                                 </FrameLayout>
 
                                 </LinearLayout>
@@ -377,7 +377,7 @@
                                                     android:padding="@dimen/padding_default"
                                                     android:text="@string/pricing"
                                                     android:textColor="@color/color_item_title"
-                                                    android:textSize="@dimen/text_size_large" />
+                                                    android:textSize="@dimen/text_size_headline2" />
 
                                     <FrameLayout
                                         android:layout_width="match_parent"

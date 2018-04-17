@@ -31,7 +31,7 @@
             android:gravity="end"
             android:text="@string/change"
             android:textColor="@drawable/teal_text_selector"
-            android:textSize="@dimen/text_size_medium"
+            android:textSize="@dimen/text_size_headline3"
             android:visibility="gone" />
 
     </LinearLayout>
@@ -64,7 +64,7 @@
             android:layout_alignParentTop="true"
             android:text="@string/add_new_address"
             android:textColor="@color/text_medium"
-            android:textSize="@dimen/text_size_medium" />
+            android:textSize="@dimen/text_size_headline3" />
     </RelativeLayout>
 
     <LinearLayout
@@ -100,7 +100,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:textColor="@color/text_medium"
-                    android:textSize="@dimen/text_size_xlarge"
+                    android:textSize="@dimen/text_size_headline1"
                     tools:text="Mary Doe" />
 
                 <TextView

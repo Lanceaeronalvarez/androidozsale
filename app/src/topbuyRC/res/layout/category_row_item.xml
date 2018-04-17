@@ -18,7 +18,7 @@
             android:paddingTop="20dp"
             android:paddingBottom="20dp"
             android:textColor="#f7f7f7"
-            android:textSize="@dimen/text_size_xxlarge" />
+            android:textSize="@dimen/text_size_subtitle" />
 
         <View
             android:layout_below="@+id/category_text"

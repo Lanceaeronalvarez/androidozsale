@@ -533,7 +533,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Total:"
-                android:textSize="@dimen/text_size_xlarge"/>
+                android:textSize="@dimen/text_size_headline1"/>
 
             <TextView
                 fontPath="@string/font_app_bold"
@@ -544,7 +544,7 @@
                 android:layout_toRightOf="@id/total_label"
                 android:gravity="right"
                 android:text=""
-                android:textSize="@dimen/text_size_xxlarge"/>
+                android:textSize="@dimen/text_size_subtitle"/>
         </RelativeLayout>
 
         <View
