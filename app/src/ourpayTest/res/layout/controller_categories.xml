@@ -32,7 +32,7 @@
             android:layout_centerVertical="true"
             android:gravity="center"
             android:text="@string/category_title"
-            android:textColor="@color/colorBlueDark"
+            android:textColor="@color/text_medium"
             android:maxLines="1"
             android:textSize="@dimen/text_size_headline1"
             android:transitionName="categoryHeaderTransitionName" />

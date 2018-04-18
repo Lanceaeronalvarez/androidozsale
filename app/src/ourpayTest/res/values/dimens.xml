@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <dimen name="padding_default">10dp</dimen>
+    <dimen name="padding_default_half">5dp</dimen>
     <dimen name="text_size_caption2">10sp</dimen>
     <dimen name="text_size_caption1">12sp</dimen>
     <dimen name="text_size_body">14sp</dimen>

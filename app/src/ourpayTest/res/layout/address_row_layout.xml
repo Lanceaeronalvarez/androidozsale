@@ -20,7 +20,7 @@
             android:id="@+id/view_my_address_row_item_name"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textColor="@color/colorBlueDark"
+            android:textColor="@color/text_medium"
             android:textSize="@dimen/text_size_headline3"
             tools:text="Address 1" />
 

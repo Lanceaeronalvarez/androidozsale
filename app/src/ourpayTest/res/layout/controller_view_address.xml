@@ -29,7 +29,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/delivery_address"
-                android:textColor="@color/colorBlueDark"
+                android:textColor="@color/text_medium"
                 android:textSize="@dimen/text_size_body" />
 
 

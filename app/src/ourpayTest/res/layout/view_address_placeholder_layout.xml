@@ -29,17 +29,17 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:text="@string/welcome_to_my_address"
-            android:textColor="@color/colorBlueDark"
+            android:textColor="@color/text_medium"
             android:textSize="@dimen/text_size_headline1" />
 
         <TextView
-            fontPath="@string/font_app_semibold"
+            fontPath="@string/font_app_light"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:layout_marginTop="10dp"
             android:text="@string/you_currently_do_not_have_any_addresses"
-            android:textColor="@color/dark_gray"
+            android:textColor="@color/text_medium"
             android:textSize="@dimen/text_size_headline3" />
 
     </LinearLayout>
