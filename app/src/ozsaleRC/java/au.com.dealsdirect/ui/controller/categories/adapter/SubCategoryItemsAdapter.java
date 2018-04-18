@@ -52,8 +52,7 @@ public class SubCategoryItemsAdapter extends RecyclerView.Adapter<RecyclerView.V
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.viewholder_subcategory_item, parent, false);
-        SubCategoryItemViewHolder vh
-                = new SubCategoryItemViewHolder(view);
+        SubCategoryItemViewHolder vh = new SubCategoryItemViewHolder(view);
         return vh;
     }
 
@@ -96,18 +95,9 @@ public class SubCategoryItemsAdapter extends RecyclerView.Adapter<RecyclerView.V
 
     @Override
     public int getItemCount() {
-        if(mData!=null)
-            return mData.size();
-        return 0;
+        return mData!=null ? mData.size(): 0;
     }
-
-    @Override
-    public void onViewDetachedFromWindow(RecyclerView.ViewHolder holder) {
-        super.onViewDetachedFromWindow(holder);
-//        Animation animation = AnimationUtils.loadAnimation(holder.itemView.getContext(), R.anim.slide_to_top);
-//        holder.itemView.startAnimation(animation);
-    }
-
+    
     public void replaceData(List<GetCategoryTreeResponse> getCategoryTreeResponses) {
         mData = new ArrayList<>(getCategoryTreeResponses);
         notifyDataSetChanged();

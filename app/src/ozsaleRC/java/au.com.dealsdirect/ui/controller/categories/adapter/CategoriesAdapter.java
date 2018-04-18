@@ -27,12 +27,22 @@ import butterknife.ButterKnife;
 
 public class CategoriesAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
+    private static final String CATEGORY_SHOP = "Shop";
+    private static final String CATEGORY_HOME = "Home";
+    private static final String CATEGORY_WOMEN = "Women";
+    private static final String CATEGORY_MEN = "Men";
+    private static final String CATEGORY_KIDS_TOYS = "Kids & Toys";
+    private static final String CATEGORY_BEAUTY = "Beauty";
+    private static final String CATEGORY_SPORTS = "Sports";
+    private static final String CATEGORY_TECH = "Tech";
+
     private List<GetCategoryTreeResponse> mData = new ArrayList<>();
     private CategoriesMvpPresenter mPresenter;
     private CategoryClickListener mCategoryAdapterClickListener;
     private int mLastPosition = -1;
     private int mLastSelectedCategory = 0;
     private ImageView mLastSelectedViewHolderImageView = null;
+    private ArrayList<String> mCategoryNames;
 
     public CategoriesAdapter(
             List<GetCategoryTreeResponse> data,
@@ -103,9 +113,7 @@ public class CategoriesAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
 
                 }
 
-                mCategoryAdapterClickListener.onCategoryClicked(
-                        position,
-                        mData.get(position));
+                mCategoryAdapterClickListener.onCategoryClicked(position, mData.get(position));
             });
 
         }
@@ -124,9 +132,7 @@ public class CategoriesAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
 
     @Override
     public int getItemCount() {
-        if(mData!=null)
-            return mData.size();
-        return 0;
+        return mData!=null ? mData.size() : 0;
     }
 
     public void replaceData(List<GetCategoryTreeResponse> getCategoryTreeResponses) {
@@ -176,28 +182,28 @@ public class CategoriesAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
         holder.categoryIndicator.setVisibility(View.GONE);
         Context context = holder.itemView.getContext();
         switch (category){
-            case "Shop":
+            case CATEGORY_SHOP:
                 holder.categoryImageIndicator.setImageDrawable(context.getDrawable(R.drawable.ic_shop));
                 break;
-            case "Home":
+            case CATEGORY_HOME:
                 holder.categoryImageIndicator.setImageDrawable(context.getDrawable(R.drawable.ic_category_home));
                 break;
-            case "Women":
+            case CATEGORY_WOMEN:
                 holder.categoryImageIndicator.setImageDrawable(context.getDrawable(R.drawable.ic_women));
                 break;
-            case "Kids & Toys":
+            case CATEGORY_KIDS_TOYS:
                 holder.categoryImageIndicator.setImageDrawable(context.getDrawable(R.drawable.ic_kids));
                 break;
-            case "Men":
+            case CATEGORY_MEN:
                 holder.categoryImageIndicator.setImageDrawable(context.getDrawable(R.drawable.ic_mens));
                 break;
-            case "Beauty":
+            case CATEGORY_BEAUTY:
                 holder.categoryImageIndicator.setImageDrawable(context.getDrawable(R.drawable.ic_beauty));
                 break;
-            case "Sports":
+            case CATEGORY_SPORTS:
                 holder.categoryImageIndicator.setImageDrawable(context.getDrawable(R.drawable.ic_sports));
                 break;
-            case "Tech":
+            case CATEGORY_TECH:
                 holder.categoryImageIndicator.setImageDrawable(context.getDrawable(R.drawable.ic_tech));
                 break;
             default:

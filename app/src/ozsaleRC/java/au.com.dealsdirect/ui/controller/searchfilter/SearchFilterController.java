@@ -52,6 +52,11 @@ import au.com.dealsdirect.utils.BundleKeys;
 import au.com.dealsdirect.utils.JsonUtils;
 import butterknife.BindView;
 
+import static au.com.dealsdirect.utils.BundleKeys.BRANDS_FACET_FILTER_TYPE;
+import static au.com.dealsdirect.utils.BundleKeys.COLOR_FACET_FILTER_TYPE;
+import static au.com.dealsdirect.utils.BundleKeys.PRICE_FACET_FILTER_TYPE;
+import static au.com.dealsdirect.utils.BundleKeys.SIZE_FACET_FILTER_TYPE;
+
 
 /**
  * Created by smartwave on 20/07/2017.
@@ -61,11 +66,6 @@ public class SearchFilterController extends BaseController
         implements SearchFilterMvpView, SubCategoryClickListener, SubCategoryItemClickListener {
 
     public static final String TAG = SearchFilterController.class.getSimpleName();
-
-
-    private String mSaleItemsTitle = "";
-    private static String mPreviousChosenCategory = "";
-    private String mJoinedQueryChipsString = "";
 
     @Inject
     SaleItemsMvpPresenter<SaleItemsMvpView> mSaleItemsPresenter;
@@ -109,12 +109,14 @@ public class SearchFilterController extends BaseController
 
     @BindView(R.id.movingMinPriceLayout)
     LinearLayout mMinPriceMovingLayout;
+
     @BindView(R.id.movingMaxPrice)
     TextView mMaxPrice;
 
     @BindView(R.id.movingMinPrice)
     TextView mMinPrice;
 
+    private String mSaleItemsTitle = "";
     SubCategoryClickListener mSubCategoryClickListener;
     SubCategoryItemClickListener mSubCategoryItemClickListener;
 
@@ -244,24 +246,24 @@ public class SearchFilterController extends BaseController
                             GetSaleItemsResponse.Values facetValue = facets.get(i).getFacetValues().get(j);
                             mBrandList.add(facetValue.getValue());
                         }
-                        mFacetFilters.add(new Pair<String, String>(BundleKeys.BRANDS_FACETFILTER_NAME, "Brands"));
+                        mFacetFilters.add(new Pair<String, String>(BundleKeys.BRANDS_FACETFILTER_NAME, BRANDS_FACET_FILTER_TYPE));
                         break;
                     case BundleKeys.PRICE_FACETFILTER_NAME:
-                        mFacetFilters.add(new Pair<String, String>(BundleKeys.PRICE_FACETFILTER_NAME, "Price"));
+                        mFacetFilters.add(new Pair<String, String>(BundleKeys.PRICE_FACETFILTER_NAME, PRICE_FACET_FILTER_TYPE));
                         break;
                     case BundleKeys.SIZES_FACETFILTER_NAME:
                         for (int j = 0; j < facets.get(i).getFacetValues().size(); j++) {
                             GetSaleItemsResponse.Values facetValue = facets.get(i).getFacetValues().get(j);
                             mSizeList.add(facetValue.getValue());
                         }
-                        mFacetFilters.add(new Pair<String, String>(BundleKeys.SIZES_FACETFILTER_NAME, "Sizes"));
+                        mFacetFilters.add(new Pair<String, String>(BundleKeys.SIZES_FACETFILTER_NAME, SIZE_FACET_FILTER_TYPE));
                         break;
                     case BundleKeys.COLORS_FACETFILTER_NAME:
                         for (int j = 0; j < facets.get(i).getFacetValues().size(); j++) {
                             GetSaleItemsResponse.Values facetValue = facets.get(i).getFacetValues().get(j);
                             mColorList.add(facetValue.getValue());
                         }
-                        mFacetFilters.add(new Pair<String, String>(BundleKeys.COLORS_FACETFILTER_NAME, "Colors"));
+                        mFacetFilters.add(new Pair<String, String>(BundleKeys.COLORS_FACETFILTER_NAME, COLOR_FACET_FILTER_TYPE));
                         break;
 
                     default:
@@ -316,9 +318,6 @@ public class SearchFilterController extends BaseController
                 ViewGroup.LayoutParams mParams = mTabLayout.getLayoutParams();
                 mParams.width = ViewGroup.LayoutParams.MATCH_PARENT;
                 mTabLayout.setLayoutParams(mParams);
-
-            } else {
-                mTabLayout.setTabMode(TabLayout.MODE_SCROLLABLE);
             }
         };
 

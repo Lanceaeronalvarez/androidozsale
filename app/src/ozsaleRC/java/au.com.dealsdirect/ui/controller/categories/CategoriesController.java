@@ -45,6 +45,9 @@ import butterknife.OnClick;
 public class CategoriesController extends BaseController
         implements CategoriesMvpView, CategoryClickListener, SubCategoryItemClickListener {
 
+    public static final String TAG = "CategoriesController";
+    private static final String CATEGORY_SHOP = "shop";
+
     @Inject
     CategoriesMvpPresenter<CategoriesMvpView> mPresenter;
 
@@ -66,7 +69,6 @@ public class CategoriesController extends BaseController
     @BindView(R.id.no_network_layout)
     LinearLayout mNoNetworkLayout;
 
-    public static final String TAG = "CategoriesController";
     public boolean mIsResetSubCategories = false;
 
 
@@ -147,11 +149,9 @@ public class CategoriesController extends BaseController
             mRecyclerView.setAdapter(mAdapter);
 
             if (mCategories.get(0).getChildren() != null) {
-                mSubCategoryAdapter = new SubCategoriesAdapter(
-                        new ArrayList<>(), mPresenter, mSubCategoryItemClickListener, mCategoryMap);
+                mSubCategoryAdapter = new SubCategoriesAdapter(mActivity, new ArrayList<>(), mPresenter, mSubCategoryItemClickListener, mCategoryMap);
             } else {
-                mSubCategoryAdapter = new SubCategoriesAdapter(
-                        mCategories.get(0).getChildren(), mPresenter, mSubCategoryItemClickListener, mCategoryMap);
+                mSubCategoryAdapter = new SubCategoriesAdapter(mActivity, mCategories.get(0).getChildren(), mPresenter, mSubCategoryItemClickListener, mCategoryMap);
             }
             mSubCategoryRecyclerView.setLayoutManager(new LinearLayoutManager(mActivity, LinearLayoutManager.VERTICAL, false));
             mSubCategoryRecyclerView.setAdapter(mSubCategoryAdapter);
@@ -171,12 +171,10 @@ public class CategoriesController extends BaseController
         if (categoryName.equals(mActivity.getResources().getString(R.string.shop_category))) {
 
             ArrayList<GetCategoryTreeResponse> emptyChildren = new ArrayList<>();
-            mSubCategoryAdapter = new SubCategoriesAdapter(emptyChildren, mPresenter, mSubCategoryItemClickListener, mCategoryMap);
+            mSubCategoryAdapter = new SubCategoriesAdapter(mActivity, emptyChildren, mPresenter, mSubCategoryItemClickListener, mCategoryMap);
             mSubCategoryRecyclerView.setLayoutManager(new LinearLayoutManager(mActivity, LinearLayoutManager.VERTICAL, false));
             mSubCategoryRecyclerView.setAdapter(mSubCategoryAdapter);
 
-            mIsResetSubCategories = true;
-            GetCategoryTreeResponse shopCategory = new GetCategoryTreeResponse();
             mSubCategoryAdapter.isResetSubCategories(mIsResetSubCategories);
             mSubCategoryAdapter.notifyDataSetChanged();
             mAdapter.notifyDataSetChanged();
@@ -186,22 +184,20 @@ public class CategoriesController extends BaseController
         } else {
             mSubCategoryAdapter.isResetSubCategories(mIsResetSubCategories);
             if (mCategories != null && mCategories.get(position).getChildren() != null) {
-                mSubCategoryAdapter = new SubCategoriesAdapter(
-                        (mCategories.get(position).getChildren()), mPresenter, mSubCategoryItemClickListener, mCategoryMap);
+                mSubCategoryAdapter = new SubCategoriesAdapter(mActivity, (mCategories.get(position).getChildren()), mPresenter, mSubCategoryItemClickListener, mCategoryMap);
                 mSubCategoryRecyclerView.setLayoutManager(new LinearLayoutManager(mActivity, LinearLayoutManager.VERTICAL, false));
                 mSubCategoryRecyclerView.setAdapter(mSubCategoryAdapter);
                 mSubCategoryAdapter.notifyDataSetChanged();
 
             } else {
                 ArrayList<GetCategoryTreeResponse> emptyChildren = new ArrayList<>();
-                mSubCategoryAdapter = new SubCategoriesAdapter(emptyChildren, mPresenter, mSubCategoryItemClickListener, mCategoryMap);
+                mSubCategoryAdapter = new SubCategoriesAdapter(mActivity, emptyChildren, mPresenter, mSubCategoryItemClickListener, mCategoryMap);
                 mSubCategoryRecyclerView.setLayoutManager(new LinearLayoutManager(mActivity, LinearLayoutManager.VERTICAL, false));
                 mSubCategoryRecyclerView.setAdapter(mSubCategoryAdapter);
 
             }
-            mIsResetSubCategories = true;
-
         }
+        mIsResetSubCategories = true;
     }
 
     @Override
@@ -222,7 +218,7 @@ public class CategoriesController extends BaseController
                 .tag(getResources().getString(R.string.sale_items_controller_tag))
                 .pushChangeHandler(new HorizontalChangeHandler())
                 .popChangeHandler(new HorizontalChangeHandler()));
-
+        setRetainViewMode(RetainViewMode.RETAIN_DETACH);
 
         mSubCategoryAdapter.animateInsertItems(false);
         mIsResetSubCategories = false;
@@ -282,51 +278,31 @@ public class CategoriesController extends BaseController
     public void showCategories(List<GetCategoryTreeResponse> categories) {
         mCategories = categories;
         createCategoryMap(mCategories);
-    }
-
-    private void createCategoryMap(List<GetCategoryTreeResponse> categories) {
-
-        List<GetCategoryTreeResponse> newList;
-        mCategoryMap.put("shop", categories);
-
-        for (GetCategoryTreeResponse i : categories) {
-
-            newList = updateCategoryChildren(i);
-
-            if (newList != null) {
-
-                int childrenSize = newList.size();
-                if (childrenSize != 1) {
-
-                    addToMap(newList);
-                }
-
-                mCategoryMap.put(i.getKey(), newList);
-            }
-        }
-
         mCategories = fillCategoryContent();
         setupCategories();
     }
 
-    private void addToMap(List<GetCategoryTreeResponse> list) {
-        List<GetCategoryTreeResponse> newList2;
+    private void createCategoryMap(List<GetCategoryTreeResponse> categories) {
+        mCategoryMap.put("shop", categories);
+        addToMap(categories);
+    }
 
-        for (GetCategoryTreeResponse i : list) {
-            newList2 = updateCategoryChildren(i);
+    private void addToMap(List<GetCategoryTreeResponse> categories) {
+        List<GetCategoryTreeResponse> newList;
 
-            int childrenSize = newList2.size();
-            if (childrenSize != 1) {
-                addToMap(newList2);
+        for (GetCategoryTreeResponse category : categories) {
+            for (GetCategoryTreeResponse subcategory : updateCategoryChildren(category)) {
+                newList = updateCategoryChildren(subcategory);
+                //add to map if there are children other than "All" subcategory
+                if(newList.size() > 1){
+                    addToMap(newList);
+                }
+                mCategoryMap.put(subcategory.getKey(), newList);
             }
-
-            mCategoryMap.put(i.getKey(), newList2);
-
         }
     }
 
     private List<GetCategoryTreeResponse> fillCategoryContent() {
-
-        return mCategoryMap.get("shop");
+        return mCategoryMap.get(CATEGORY_SHOP);
     }
 }

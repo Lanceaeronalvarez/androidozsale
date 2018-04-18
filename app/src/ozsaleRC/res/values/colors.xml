@@ -65,7 +65,7 @@
     <color name="address_text_subtitle">@color/text_extra_dark</color>
 
     <color name="filter_text_active">@color/colorAccent</color>
-    <color name="filter_text_inactive">@color/text_extra_light</color>
+    <color name="filter_text_inactive">@color/text_dark</color>
 
     <color name="category_text_active">@color/colorAccent</color>
     <color name="category_text_inactive">@color/text_light</color>

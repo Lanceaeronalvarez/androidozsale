@@ -153,5 +153,6 @@
     <dimen name="voucher_container_height">150dp</dimen>
     <dimen name="voucher_padding">50dp</dimen>
     <dimen name="voucher_text_padding">10dp</dimen>
+    <dimen name="viewholder_subcategory_width">40dp</dimen>
 
 </resources>

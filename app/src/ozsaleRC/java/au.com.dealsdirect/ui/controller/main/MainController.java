@@ -34,7 +34,7 @@ import butterknife.BindView;
 
 public class MainController extends BaseController implements MainMvpView {
 
-    public static final String TAG = "MainController";
+    public static final String TAG = "Home";
 
     private String mChosenSubCategoryItemKey = "";
 
@@ -161,28 +161,6 @@ public class MainController extends BaseController implements MainMvpView {
 
     public String getChosenCategoryItemKey() {
         return mChosenSubCategoryItemKey;
-    }
-
-
-    public String getCategoryParentKey() {
-        char c = '>';
-        int charCount = 0;
-        String newString = "";
-        for (int i = 0; i < mChosenSubCategoryItemKey.length(); i++) {
-            String getChar = String.valueOf(mChosenSubCategoryItemKey.charAt(i));
-            if (!getChar.equals(String.valueOf(c))) {
-                newString = newString + mChosenSubCategoryItemKey.charAt(i);
-
-            } else {
-                charCount++;
-                if (charCount > 3) {
-                    break;
-                }
-                newString = newString + mChosenSubCategoryItemKey.charAt(i);
-
-            }
-        }
-        return newString;
     }
 
     public HomeController getHomeController() {

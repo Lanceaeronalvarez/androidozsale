@@ -62,8 +62,10 @@ import au.com.dealsdirect.ui.controller.shops.ShopsController;
 import au.com.dealsdirect.ui.controller.splash.SplashScreenController;
 import au.com.dealsdirect.ui.custom.CustomAlertDialog;
 import au.com.dealsdirect.utils.AppConstants;
+import au.com.dealsdirect.utils.BraintreeUtils;
 import au.com.dealsdirect.utils.DialogUtils;
 import au.com.dealsdirect.utils.IntrospectionUtils;
+import au.com.dealsdirect.utils.NetworkUtils;
 import au.com.dealsdirect.utils.module.GateKeeper;
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -138,26 +140,6 @@ public class MainActivity extends BaseActivity implements MainMvpView {
             //If not logged in, call GetPublicAppSettings
             mPresenter.callGetPublicAppSettings();
         }
-
-//        //create route origins for main
-//        mMainRouteOrigins = new GateKeeper.RouteBuilder()
-//                .addRouteFrom(GateKeeper.Destination.LOGIN)
-//                .build();
-//
-//        //create route origins for login
-//        mLoginRouteOrigins = new GateKeeper.RouteBuilder()
-//                .addRouteFrom(GateKeeper.Destination.DETAILS)
-//                .build();
-//
-//        //register them
-//        GateKeeper.registerRoute(GateKeeper.Destination.LOGIN, mLoginRouteOrigins);
-//        GateKeeper.registerRoute(GateKeeper.Destination.MAIN, mMainRouteOrigins);
-//
-//        //call to update CURRENT_LOCATION too
-//        //pag di mo pinadaan sa gatekeeper baka makalimutan ng developer to set CURRENT_LOCATION.
-//        GateKeeper.setRoot(mRouter,GateKeeper.Destination.DETAILS,
-//                RouterTransaction.with(ControllerFactory.getInstance(GateKeeper.Destination.DETAILS)));
-
 
     }
 
@@ -261,15 +243,15 @@ public class MainActivity extends BaseActivity implements MainMvpView {
             if (mBraintreeFragment != null) {
                 if (error instanceof AuthenticationException || error instanceof AuthorizationException ||
                         error instanceof UpgradeRequiredException) {
-                    mBraintreeFragment.sendAnalyticsEvent("sdk.exit.developer-error");
+                    mBraintreeFragment.sendAnalyticsEvent(BraintreeUtils.SDK_DEV_ERROR);
                 } else if (error instanceof ConfigurationException) {
-                    mBraintreeFragment.sendAnalyticsEvent("sdk.exit.configuration-exception");
+                    mBraintreeFragment.sendAnalyticsEvent(BraintreeUtils.SDK_CONFIG_ERROR);
                 } else if (error instanceof ServerException || error instanceof UnexpectedException) {
-                    mBraintreeFragment.sendAnalyticsEvent("sdk.exit.server-error");
+                    mBraintreeFragment.sendAnalyticsEvent(BraintreeUtils.SDK_SERVER_ERROR);
                 } else if (error instanceof DownForMaintenanceException) {
-                    mBraintreeFragment.sendAnalyticsEvent("sdk.exit.server-unavailable");
+                    mBraintreeFragment.sendAnalyticsEvent(BraintreeUtils.SDK_SERVER_UNAVAILABLE);
                 } else {
-                    mBraintreeFragment.sendAnalyticsEvent("sdk.exit.sdk-error");
+                    mBraintreeFragment.sendAnalyticsEvent(BraintreeUtils.SDK_ERROR);
                 }
 
                 //Call braintree client reset on error
@@ -331,8 +313,9 @@ public class MainActivity extends BaseActivity implements MainMvpView {
                     .pushChangeHandler(new HorizontalChangeHandler())
                     .popChangeHandler(new HorizontalChangeHandler()));
 
-            if (getMainController().getHomeController() != null)
+            if (getMainController().getHomeController() != null) {
                 getMainController().getHomeController().showFifthTabController();
+            }
 
         } else {
 
@@ -394,7 +377,7 @@ public class MainActivity extends BaseActivity implements MainMvpView {
 
     @Override
     public void showGetPaymentMethodNonceSuccess(String nonce) {
-        showLoadingDialog("Loading", false);
+        showLoadingDialog(getResources().getString(R.string.loading), false);
         PaymentInfo.setThreeDSecureCalled(true);
         ThreeDSecure.performVerification(getBraintreeFragment(), nonce, Double.toString(PaymentInfo.getCartCost()));
     }
@@ -437,10 +420,7 @@ public class MainActivity extends BaseActivity implements MainMvpView {
 
     @Override
     public void storeTemplateTexts(GetTemplateTextsResponse.GetTemplateTextsValue value) {
-        if (value != null) {
-
-            isTemplateTextsStored = true;
-        }
+        isTemplateTextsStored = value != null;
     }
 
     @Override
@@ -689,8 +669,9 @@ public class MainActivity extends BaseActivity implements MainMvpView {
     @Override
     public void loginErrorHandler(String message) {
 
-        if (mAuthHandler != null)
+        if (mAuthHandler != null) {
             mAuthHandler.error();
+        }
 
         CustomAlertDialog.showCustomAlertDialog(this, CustomAlertDialog.CustomDialogIconState.NEGATIVE, message);
     }
@@ -700,8 +681,8 @@ public class MainActivity extends BaseActivity implements MainMvpView {
      */
     private void registerInternetCheckReceiver() {
         IntentFilter internetFilter = new IntentFilter();
-        internetFilter.addAction("android.net.wifi.STATE_CHANGE");
-        internetFilter.addAction("android.net.conn.CONNECTIVITY_CHANGE");
+        internetFilter.addAction(NetworkUtils.NET_WIFI_STATE_CHANGE);
+        internetFilter.addAction(NetworkUtils.NET_CONNECTIVITY_CHANGE);
         registerReceiver(broadcastReceiver, internetFilter);
     }
 
@@ -726,7 +707,7 @@ public class MainActivity extends BaseActivity implements MainMvpView {
     public void attachMainController() {
         mMainController = MainController.newInstance();
         mRouter.setRoot(RouterTransaction.with(mMainController)
-                .tag("Home"));
+                .tag(MainController.TAG));
     }
 
     public boolean isHomeViewPagerNull() {
