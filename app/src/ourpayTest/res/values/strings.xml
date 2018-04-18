@@ -124,8 +124,6 @@
     <string name="_100_rayon_mykonos_embroidered_off_shoulder_top_white_elasticated_top_and_bottom_the_clothing_at_morrisday_is_true_to_standard_austrailian_sizing">•  100% Rayon\n\n•  Mykonos Embroidered Off Shoulder Top (White)\n\n•  Elasticated top and bottom\n\n•  The clothing at Morrisday is true to standard Austrailian sizing</string>
     <string name="checkout_lowercase">checkout</string>
     <string name="delivery_address">Delivery Address</string>
-    <string name="you_currently_do_not_have_any_addresses">You do not currently have any address.</string>
-    <string name="welcome_to_my_address">Welcome to My Address!</string>
     <string name="add_new_delivery_address">Add Delivery Address</string>
     <string name="billing_address">Billing Address</string>
     <string name="add_new_billing_address">Add New Billing Address</string>
@@ -161,6 +159,18 @@
     <string name="thank_you_for_using">Thank you for using</string>
     <string name="order_successful">order successful!</string>
     <string name="your_order_will_arrive_within_14_to_28_working_days_after_the_sale_has_finished">Your order will arrive within 14 to 28 working days after the sale has finished.</string>
+
+
+    <!--Placeholder remarks-->
+    <string name="welcome_remark_subtitle_address">You do not currently have any address.</string>
+    <string name="welcome_remark_title_address">Welcome to My Address!</string>
+    <string name="welcome_remark_title_contact_us">Welcome to Contact Us!</string>
+    <string name="welcome_remark_subtitle_contact_us">you do not currently have any messages</string>
+    <string name="welcome_remark_title_orders">Welcome to My Orders!</string>
+    <string name="welcome_remark_subtitle_orders">you do not currently have any orders.</string>
+    <string name="welcome_remark_title_payments">Welcome to My Payments!</string>
+    <string name="welcome_remark_subtitle_payments">you do not currently have any payment method.</string>
+
 
     <!--APP SPECIFIC SETTINGS-->
     <bool name="is_ourpay_app">true</bool>

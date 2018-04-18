@@ -28,7 +28,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
-            android:text="@string/welcome_to_my_address"
+            android:text="@string/welcome_remark_title_address"
             android:textColor="@color/text_medium"
             android:textSize="@dimen/text_size_headline1" />
 
@@ -38,7 +38,7 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:layout_marginTop="10dp"
-            android:text="@string/you_currently_do_not_have_any_addresses"
+            android:text="@string/welcome_remark_subtitle_address"
             android:textColor="@color/text_medium"
             android:textSize="@dimen/text_size_headline3" />
 

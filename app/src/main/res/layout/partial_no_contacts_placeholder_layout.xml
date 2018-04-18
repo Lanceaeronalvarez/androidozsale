@@ -28,7 +28,7 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:textSize="@dimen/text_size_headline1"
-            android:text="@string/welcome_to_contact_us"/>
+            android:text="@string/welcome_remark_title_contact_us"/>
 
         <TextView
             fontPath="@string/font_app_light"
@@ -39,7 +39,7 @@
             android:layout_marginBottom="@dimen/button_height_regular"
             android:layout_marginTop="10dp"
             android:paddingBottom="@dimen/button_height_regular"
-            android:text="@string/you_do_not_currently_have_any_messages"
+            android:text="@string/welcome_remark_subtitle_contact_us"
             android:textColor="#9f9f9f"
             android:textSize="@dimen/text_size_headline3" />
     </LinearLayout>

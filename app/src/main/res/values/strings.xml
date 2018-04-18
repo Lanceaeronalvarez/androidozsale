@@ -155,9 +155,7 @@
         limited to 90 characters
     </string>
     <string name="delivery_instructions">Delivery instructions</string>
-    <string name="you_currently_do_not_have_any_addresses">you do not currently have any address
-    </string>
-    <string name="welcome_to_my_address">welcome to my address!</string>
+
     <string name="delivery_address_added">delivery address added</string>
     <string name="remove_string">remove</string>
     <string name="add_to_basket">Add to Basket</string>
@@ -166,13 +164,9 @@
     <string name="category_title">Categories</string>
 
     <!--CONTACTS-->
-    <string name="welcome_to_contact_us">welcome to contact us!</string>
-    <string name="you_do_not_currently_have_any_messages">you do not currently have any messages</string>
 
     <!--ORDERS-->
     <string name="shop_now">shop now</string>
-    <string name="you_currently_do_no_have_any_orders">you do not currently have any orders.</string>
-    <string name="welcome_to_my_orders">welcome to my orders!</string>
     <string name="no_network_connection">No Network Connection</string>
     <string name="i_am_looking_for">I am looking for...</string>
 
@@ -349,7 +343,19 @@
     <string name="my_returns">my returns</string>
     <string name="my_orders">my orders</string>
     <string name="reply">reply</string>
-    
+
+
+    <!--Placeholder remarks-->
+    <string name="welcome_remark_title_address">welcome to my address!</string>
+    <string name="welcome_remark_subtitle_address">you do not currently have any address</string>
+    <string name="welcome_remark_title_contact_us">welcome to contact us!</string>
+    <string name="welcome_remark_subtitle_contact_us">you do not currently have any messages</string>
+    <string name="welcome_remark_title_orders">welcome to my orders!</string>
+    <string name="welcome_remark_subtitle_orders">you do not currently have any orders.</string>
+    <string name="welcome_remark_title_payments">welcome to my payments!</string>
+    <string name="welcome_remark_subtitle_payments">you do not currently have any payment method.</string>
+
+
     <!--MY ACCOUNT ITEMS-->
     <string name="account_orders">My Orders</string>
     <string name="account_payments">My Payments</string>
