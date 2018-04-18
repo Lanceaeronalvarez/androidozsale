@@ -72,13 +72,13 @@ public class ViewAddressRecyclerViewAdapter extends RecyclerView.Adapter<ViewAdd
         holder.addressText.setText(String.valueOf(newAddress));
 
         if (isCalledFromCart) {
-            holder.removeAddressText.setVisibility(View.GONE);
+            holder.removeAddress.setVisibility(View.GONE);
 
             holder.itemView.setSelected(mDeliveryAddress != null && mDeliveryAddress.equalsAddressItem(addressList.get(position)));
             holder.addressNumber.setSelected(mDeliveryAddress != null && mDeliveryAddress.equalsAddressItem(addressList.get(position)));
         } else {
 
-            holder.removeAddressText.setOnClickListener(view -> {
+            holder.removeAddress.setOnClickListener(view -> {
 
                 Timber.d("remove address", "remove address clicked");
                 DeleteUserAddress.RequestValues deleteAddressRequest = new DeleteUserAddress
@@ -126,8 +126,8 @@ public class ViewAddressRecyclerViewAdapter extends RecyclerView.Adapter<ViewAdd
         TextView addressNumber;
         @BindView(R.id.view_my_address_row_item_text)
         TextView addressText;
-        @BindView(R.id.remove_address_text)
-        TextView removeAddressText;
+        @BindView(R.id.remove_address)
+        View removeAddress;
 
         public MyAddressModuleViewHolder(View itemView) {
             super(itemView);

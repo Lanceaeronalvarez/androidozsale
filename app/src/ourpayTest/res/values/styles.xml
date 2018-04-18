@@ -76,5 +76,6 @@
     </style>
 
     <bool name="shop_searchbar_visibility">false</bool>
+    <bool name="login_toolbar_visibility">true</bool>
 
 </resources>
