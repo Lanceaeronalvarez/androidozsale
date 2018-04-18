@@ -12,6 +12,9 @@ import au.com.dealsdirect.ui.controller.address.addnewaddress.AddNewAddressPrese
 import au.com.dealsdirect.ui.controller.address.viewaddress.ViewAddressMvpPresenter;
 import au.com.dealsdirect.ui.controller.address.viewaddress.ViewAddressMvpView;
 import au.com.dealsdirect.ui.controller.address.viewaddress.ViewAddressPresenter;
+import au.com.dealsdirect.ui.controller.bannerfilter.BannerFiltersMvpPresenter;
+import au.com.dealsdirect.ui.controller.bannerfilter.BannerFiltersMvpView;
+import au.com.dealsdirect.ui.controller.bannerfilter.BannerFiltersPresenter;
 import au.com.dealsdirect.ui.controller.categories.CategoriesMvpPresenter;
 import au.com.dealsdirect.ui.controller.categories.CategoriesMvpView;
 import au.com.dealsdirect.ui.controller.categories.CategoriesPresenter;
@@ -382,6 +385,11 @@ public class ControllerModule {
     @Provides
     PaymentDetailsMvpPresenter<PaymentDetailsMvpView> providePaymentDetailsPresenter(PaymentDetailsPresenter<PaymentDetailsMvpView> presenter) {
 
+        return presenter;
+    }
+
+    @Provides
+    BannerFiltersMvpPresenter<BannerFiltersMvpView> provideBannerFiltersPresenter(BannerFiltersPresenter<BannerFiltersMvpView> presenter) {
         return presenter;
     }
 }
