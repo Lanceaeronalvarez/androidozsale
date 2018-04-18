@@ -11,7 +11,7 @@
 
     <android.support.v7.widget.CardView
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="match_parent"
         app:cardCornerRadius="@dimen/edit_text_corner_radius"
         app:cardUseCompatPadding="true"
         tools:ignore="MissingPrefix">
@@ -21,15 +21,15 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:padding="@dimen/padding_default"
-            android:visibility="visible">
+            android:visibility="gone">
 
             <TextView
                 android:id="@+id/address_office_delivery_subtitle"
-                fontPath="@string/font_app_semibold"
+                fontPath="@string/font_app_bold"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/delivery_address"
-                android:textColor="@color/text_dark"
+                android:textColor="@color/colorBlueDark"
                 android:textSize="@dimen/text_size_body" />
 
 
@@ -51,11 +51,11 @@
                 android:text="@string/add_new_address"
                 android:visibility="gone" />
 
-            <include
-                layout="@layout/view_address_placeholder_layout"
-                android:visibility="gone" />
-
         </RelativeLayout>
+
+        <include
+            layout="@layout/view_address_placeholder_layout"
+            android:visibility="gone" />
     </android.support.v7.widget.CardView>
 
 </LinearLayout>

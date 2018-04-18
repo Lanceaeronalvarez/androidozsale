@@ -48,6 +48,7 @@
     <string name="confirm_password">Confirm Password</string>
     <string name="cardholder_s_name">Cardholder\'s Name</string>
     <string name="add_new_voucher">Add New Voucher</string>
+    <string name="add_new_address">Add New Address</string>
     <string name="cvv">CVV</string>
     <string name="expiration_date">Expiration Date</string>
     <string name="dec_2025">Dec 2025</string>

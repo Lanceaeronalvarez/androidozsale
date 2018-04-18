@@ -5,11 +5,9 @@
     android:id="@+id/no_addresses_layout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:layout_margin="10dp"
-    android:background="@drawable/bg_edit_text_rounded"
+    android:layout_margin="@dimen/placeholder_padding"
     android:paddingLeft="@dimen/placeholder_padding"
     android:paddingRight="@dimen/placeholder_padding"
-    android:visibility="visible"
     tools:ignore="MissingPrefix">
 
     <LinearLayout
@@ -26,21 +24,22 @@
             android:src="@drawable/ic_address_placeholder" />
 
         <TextView
-            fontPath="@string/font_app_medium"
+            fontPath="@string/font_app_bold"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:text="@string/welcome_to_my_address"
+            android:textColor="@color/colorBlueDark"
             android:textSize="@dimen/text_size_headline1" />
 
         <TextView
-            fontPath="@string/font_app_light"
+            fontPath="@string/font_app_semibold"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:layout_marginTop="10dp"
             android:text="@string/you_currently_do_not_have_any_addresses"
-            android:textColor="#9f9f9f"
+            android:textColor="@color/dark_gray"
             android:textSize="@dimen/text_size_headline3" />
 
     </LinearLayout>

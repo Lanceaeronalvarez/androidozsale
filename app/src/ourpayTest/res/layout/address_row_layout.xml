@@ -6,7 +6,7 @@
     android:clickable="true"
     android:focusable="true"
     android:focusableInTouchMode="true"
-    android:padding="@dimen/padding_default"
+    android:layout_marginBottom="@dimen/padding_default"
     tools:ignore="MissingPrefix">
 
     <LinearLayout
@@ -20,7 +20,7 @@
             android:id="@+id/view_my_address_row_item_name"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textColor="@color/address_text_selector"
+            android:textColor="@color/colorBlueDark"
             android:textSize="@dimen/text_size_headline3"
             tools:text="Address 1" />
 
@@ -28,7 +28,7 @@
             android:id="@+id/view_my_address_row_item_text"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textColor="@color/gray_address_subtitle_text"
+            android:textColor="@color/text_dark"
             android:textSize="@dimen/text_size_body"
             tools:text="some address" />
 

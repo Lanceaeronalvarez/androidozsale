@@ -30,8 +30,7 @@
             android:layout_height="match_parent"
             android:layout_above="@+id/controller_address_button"
             android:layout_below="@+id/address_office_delivery_subtitle"
-            android:overScrollMode="never"
-            android:visibility="gone" />
+            android:overScrollMode="never" />
 
 
         <Button
@@ -44,11 +43,10 @@
             android:text="@string/add_new_address"
             android:visibility="visible"/>
 
-        <include
-            layout="@layout/view_address_placeholder_layout"
-            android:visibility="gone" />
-
-
     </RelativeLayout>
+
+    <include
+        layout="@layout/view_address_placeholder_layout"
+        android:visibility="gone" />
 
 </LinearLayout>
