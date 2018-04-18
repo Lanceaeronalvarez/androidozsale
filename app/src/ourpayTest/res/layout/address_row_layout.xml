@@ -75,9 +75,9 @@
         android:id="@+id/remove_address"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true"
         android:layout_alignTop="@id/view_my_addresses_row_layout"
-        android:src="@drawable/ic_remove_address"
+        android:src="@drawable/ic_remove"
         android:clickable="true" />
 
     <!--<View-->

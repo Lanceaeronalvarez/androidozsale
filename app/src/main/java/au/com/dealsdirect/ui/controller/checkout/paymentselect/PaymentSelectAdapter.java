@@ -51,7 +51,6 @@ public class PaymentSelectAdapter extends RecyclerView.Adapter<RecyclerView.View
 
         vh.name.setText(item.getPaymentType());
         vh.details.setText(item.getDescription());
-        vh.divider.setVisibility(View.VISIBLE);
 
         vh.remove.setVisibility(isFromCart ? View.GONE : View.VISIBLE);
 
@@ -81,7 +80,7 @@ public class PaymentSelectAdapter extends RecyclerView.Adapter<RecyclerView.View
         TextView details;
         ImageView image;
         View divider;
-        TextView remove;
+        View remove;
 
         public PaymentSelectViewHolder(View itemView) {
             super(itemView);
@@ -89,7 +88,7 @@ public class PaymentSelectAdapter extends RecyclerView.Adapter<RecyclerView.View
             details = (TextView) itemView.findViewById(R.id.partial_checkout_payment_details);
             image = (ImageView) itemView.findViewById(R.id.partial_checkout_payment_image);
             divider = itemView.findViewById(R.id.item_payment_select_divider);
-            remove = (TextView) itemView.findViewById(R.id.partial_checkout_payment_remove);
+            remove = itemView.findViewById(R.id.partial_checkout_payment_remove);
         }
     }
 
