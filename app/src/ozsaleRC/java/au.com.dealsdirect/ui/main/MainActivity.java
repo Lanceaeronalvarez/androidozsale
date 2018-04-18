@@ -5,7 +5,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.Bundle;
-import android.os.Handler;
 import android.util.Log;
 import android.view.ViewGroup;
 
@@ -178,38 +177,61 @@ public class MainActivity extends BaseActivity implements MainMvpView {
             Router currentRouter = getCurrentRouter();
             Controller currentController = getCurrentController(getCurrentRouter());
 
-            if (currentController instanceof ShopsController) {
-                //exit app
-                if (currentRouter.getBackstack().size() == 1) {
-                    DialogUtils.showYesNoDialog(
-                            this,
-                            getString(R.string.app_name),
-                            getString(R.string.exit_app),
-                            getString(R.string.exit),
-                            getString(R.string.no),
-                            (dialogInterface, i) -> finish(),
-                            (dialogInterface, i) -> {
-                            });
-                }
-            } else if (currentController instanceof PaymentSuccessController) {
-                try {
-
-                    getMainController().getHomeController().getCheckoutRouter().popToRoot();
-                    Controller controller = getMainController().getHomeController().getCurrentControllerOnRouter(mCheckoutRouter);
-                    if (controller instanceof CheckoutController) {
-                        ((CheckoutController) controller).loadCart();
+            switch (getMainController().getHomeViewPager().getCurrentItem()) {
+                case 0:
+                    if (mCategoriesRouter.getBackstackSize() == 1) { //go back to shops
+                        setRootViewpagerItem(1);
                     }
-                } catch (Exception e) {
-                    Log.d(MainActivity.TAG, e.getMessage());
-                }
-            } else if (currentRouter.getBackstackSize() == 1) { //From Bottom Nav
-                getMainController().showBottomNav();
-                setShopsAsVisibleContainer();
-            } else {
-                currentRouter.handleBack();
+                    break;
+                case 1:
+                    if (mIsFromCategories && getMainController().getHomeController().getSelectedBottomNavTab() != 1) {
+                        if (currentController instanceof ShopsController) { //reset shops controller root.
+                            ShopsController shopsController = new ShopsController();
+                            setShopController(shopsController);
+                            currentRouter.setRoot(RouterTransaction.with(shopsController).tag(ShopsController.TAG));
+                            setRootViewpagerItem(0);
+                            setDraggableViewPager(true);
+                        } else if (currentController instanceof SaleItemsController) {
+                            getMainController().setViewpagerDraggable(true);
+                            setRootViewpagerItem(0);
+                            currentRouter.handleBack();
+                        } else {
+                            currentRouter.handleBack();
+                        }
+                        mIsFromCategories = false;
+                    } else {
+                        if (currentController instanceof ShopsController) {
+                            //exit app
+                            if (currentRouter.getBackstack().size() == 1) {
+                                DialogUtils.showYesNoDialog(
+                                        this,
+                                        getString(R.string.app_name),
+                                        getString(R.string.exit_app),
+                                        getString(R.string.exit),
+                                        getString(R.string.no),
+                                        (dialogInterface, i) -> finish(),
+                                        (dialogInterface, i) -> {
+                                        });
+                            }
+                        } else if (currentController instanceof PaymentSuccessController) {
+                            try {
+
+                                getMainController().getHomeController().getCheckoutRouter().popToRoot();
+                                Controller controller = getMainController().getHomeController().getCurrentControllerOnRouter(mCheckoutRouter);
+                                if (controller instanceof CheckoutController) {
+                                    ((CheckoutController) controller).loadCart();
+                                }
+                            } catch (Exception e) {
+                                Log.d(MainActivity.TAG, e.getMessage());
+                            }
+                        } else if (currentRouter.getBackstackSize() == 1) { //From Bottom Nav
+                            getMainController().showBottomNav();
+                            setShopsAsVisibleContainer();
+                        } else {
+                            currentRouter.handleBack();
+                        }
+                    }
             }
-
-
         } else {
             finish();
         }
@@ -489,7 +511,17 @@ public class MainActivity extends BaseActivity implements MainMvpView {
     }
 
     public void setRootViewpagerItem(int item) {
-
+        switch (item) {
+            case 0:
+                mMainController.goToBannerFilters();
+                break;
+            case 1:
+                mMainController.goToShops();
+                break;
+            default:
+                mMainController.goToShops();
+                break;
+        }
     }
 
     public void setDraggableViewPager(boolean isDraggable) {
@@ -731,5 +763,11 @@ public class MainActivity extends BaseActivity implements MainMvpView {
 
     public int getSelectedBottomNavTab(){
         return getMainController().getHomeController().getSelectedBottomNavTab();
+    }
+
+    public void goToSalesFromCategory(GetCategoryTreeResponse getCategoryTreeResponse) {
+        mIsFromCategories = true;
+        mShopController.goToSalesFromCategories(getCategoryTreeResponse);
+        setRootViewpagerItem(1);
     }
 }

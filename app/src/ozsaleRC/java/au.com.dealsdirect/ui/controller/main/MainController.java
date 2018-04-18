@@ -23,6 +23,7 @@ import javax.inject.Inject;
 import au.com.dealsdirect.R;
 import au.com.dealsdirect.data.network.model.category.GetCategoryTreeResponse;
 import au.com.dealsdirect.ui.base.BaseController;
+import au.com.dealsdirect.ui.controller.bannerfilter.BannerFiltersController;
 import au.com.dealsdirect.ui.controller.categories.CategoriesController;
 import au.com.dealsdirect.ui.controller.home.HomeController;
 import au.com.dealsdirect.utils.BundleBuilder;
@@ -45,6 +46,7 @@ public class MainController extends BaseController implements MainMvpView {
     MainCustomViewPager mHomeViewPager;
 
     private HomeController mHomeController;
+    private BannerFiltersController mBannerFiltersController;
 
     private View mLastSelectedSubCategoryItem;
     private Map<String, List<GetCategoryTreeResponse>> mCategoryMap = new HashMap<>();
@@ -92,6 +94,7 @@ public class MainController extends BaseController implements MainMvpView {
     protected void setUp(View view) {
 
         mHomeController = HomeController.newInstance();
+        mBannerFiltersController = BannerFiltersController.newInstance();
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             Window window = getActivity().getWindow();
@@ -105,16 +108,26 @@ public class MainController extends BaseController implements MainMvpView {
         RouterPagerAdapter mViewPagerAdapter = new RouterPagerAdapter(this) {
             @Override
             public void configureRouter(@NonNull Router router, int position) {
-                if (!router.hasRootController()) {
-                    router.setRoot(RouterTransaction.with(mHomeController)
-                            .pushChangeHandler(new FadeChangeHandler(100))
-                            .popChangeHandler(new FadeChangeHandler(100)));
+
+                switch (position) {
+                    case 0:
+                        if (!router.hasRootController()) {
+                            router.setRoot(RouterTransaction.with(mBannerFiltersController)
+                                    .pushChangeHandler(new FadeChangeHandler(100))
+                                    .popChangeHandler(new FadeChangeHandler(100)));
+                        }
+                    case 1:
+                    if (!router.hasRootController()) {
+                        router.setRoot(RouterTransaction.with(mHomeController)
+                                .pushChangeHandler(new FadeChangeHandler(100))
+                                .popChangeHandler(new FadeChangeHandler(100)));
+                    }
                 }
             }
 
             @Override
             public int getCount() {
-                return 1;
+                return 2;
             }
 
             @Override
@@ -133,7 +146,6 @@ public class MainController extends BaseController implements MainMvpView {
     }
 
     public void setViewpagerDraggable(boolean isDraggable) {
-
         if (mHomeViewPager != null) {
             mHomeViewPager.setSwipeable(isDraggable);
         }
@@ -169,6 +181,14 @@ public class MainController extends BaseController implements MainMvpView {
 
     public MainCustomViewPager getHomeViewPager() {
         return mHomeViewPager;
+    }
+
+    public void goToBannerFilters() {
+        mHomeViewPager.setCurrentItem(0);
+    }
+
+    public void goToShops() {
+        mHomeViewPager.setCurrentItem(1);
     }
 
 }

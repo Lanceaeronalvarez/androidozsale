@@ -98,7 +98,6 @@ public class CategoriesController extends BaseController
     protected void onAttach(@NonNull View view) {
         super.onAttach(view);
         mPresenter.onAttach(this);
-
     }
 
     @Override

@@ -40,7 +40,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_centerInParent="true"
-                android:textColor="@android:color/white"
+                android:textColor="@color/text_dark"
                 android:textSize="@dimen/text_size_headline2"
                 tools:text="Title"
                 android:visibility="gone"

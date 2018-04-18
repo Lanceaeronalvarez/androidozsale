@@ -122,6 +122,7 @@ public class ShopsController extends BasePullToRefreshController implements Shop
         mPresenter.onAttach(this);
         assert (mActivity) != null;
 
+        mActivity.getMainController().setViewpagerDraggable(true);
         mBannerClickCounter = 0;
         mActivity.setShopController(this);
         super.onAttach(view);
@@ -337,7 +338,6 @@ public class ShopsController extends BasePullToRefreshController implements Shop
 
     @OnClick(R.id.partial_toolbar_hamburger)
     void onClickHamburger() {
-
         assert (mActivity) != null;
         mActivity.setRootViewpagerItem(0);
     }
