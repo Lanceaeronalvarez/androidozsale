@@ -6,6 +6,6 @@
         android:width="1dp"
         android:height="@dimen/border_regular" />
 
-    <solid android:color="@color/border_gray" />
+    <solid android:color="@color/border_regular" />
 
 </shape>

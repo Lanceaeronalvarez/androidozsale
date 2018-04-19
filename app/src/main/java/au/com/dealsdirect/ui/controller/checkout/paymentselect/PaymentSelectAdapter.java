@@ -76,9 +76,9 @@ public class PaymentSelectAdapter extends RecyclerView.Adapter<RecyclerView.View
     }
 
     public static class PaymentSelectViewHolder extends RecyclerView.ViewHolder {
-        TextView name;
-        TextView details;
-        ImageView image;
+        TextView nameText;
+        TextView detailsText;
+        ImageView cardImage;
         View divider;
         View remove;
 

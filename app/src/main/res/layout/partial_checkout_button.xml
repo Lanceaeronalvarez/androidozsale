@@ -16,29 +16,6 @@
         android:layout_alignParentTop="true"
         android:layout_alignParentStart="true">
 
-        <!--Removed bt loading on payment buttons-->
-        <!--<LinearLayout-->
-            <!--android:id="@+id/partial_checkout_bt_loading"-->
-            <!--android:layout_width="wrap_content"-->
-            <!--android:layout_height="wrap_content"-->
-            <!--android:layout_gravity="center"-->
-            <!--android:orientation="horizontal"-->
-            <!--android:paddingBottom="16dp">-->
-
-            <!--<ProgressBar-->
-                <!--android:layout_width="51dp"-->
-                <!--android:layout_height="50dp"-->
-                <!--android:padding="10dp" />-->
-
-            <!--<TextView-->
-                <!--android:layout_width="wrap_content"-->
-                <!--android:layout_height="match_parent"-->
-                <!--android:gravity="center_vertical"-->
-                <!--android:text="Loading payments"-->
-                <!--android:textColor="@color/colorAccent"-->
-                <!--android:textSize="@dimen/text_size_headline2" />-->
-
-        <!--</LinearLayout>-->
 
         <LinearLayout
             android:id="@+id/partial_checkout_button_holder"
