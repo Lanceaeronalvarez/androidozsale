@@ -11,6 +11,8 @@ import com.mysale.genie.utility.Prefs;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 
+import au.com.dealsdirect.data.network.model.category.GetCategoryTreeResponse;
+
 
 /*
  * Created by Ayi on 02/06/2017.
@@ -82,5 +84,10 @@ public class StringUtils {
             }
         }
         return newString;
+    }
+
+    public static String getCategoryInitials(GetCategoryTreeResponse response) {
+        String initials = response.getName().charAt(0) + "" + response.getName().charAt(1);
+        return initials.toUpperCase();
     }
 }
