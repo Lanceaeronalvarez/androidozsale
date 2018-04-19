@@ -58,7 +58,7 @@ public class HomeController extends BaseController implements HomeMvpView {
 
     @Inject
     HomeMvpPresenter<HomeMvpView> mPresenter;
-
+  
     @Inject
     MainActivity mActivity;
 

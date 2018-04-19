@@ -46,6 +46,7 @@ public class MainController extends BaseController implements MainMvpView {
     MainCustomViewPager mHomeViewPager;
 
     private HomeController mHomeController;
+
     private BannerFiltersController mBannerFiltersController;
 
     private View mLastSelectedSubCategoryItem;
@@ -94,6 +95,7 @@ public class MainController extends BaseController implements MainMvpView {
     protected void setUp(View view) {
 
         mHomeController = HomeController.newInstance();
+
         mBannerFiltersController = BannerFiltersController.newInstance();
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
@@ -108,7 +110,6 @@ public class MainController extends BaseController implements MainMvpView {
         RouterPagerAdapter mViewPagerAdapter = new RouterPagerAdapter(this) {
             @Override
             public void configureRouter(@NonNull Router router, int position) {
-
                 switch (position) {
                     case 0:
                         if (!router.hasRootController()) {
@@ -190,5 +191,4 @@ public class MainController extends BaseController implements MainMvpView {
     public void goToShops() {
         mHomeViewPager.setCurrentItem(1);
     }
-
 }
