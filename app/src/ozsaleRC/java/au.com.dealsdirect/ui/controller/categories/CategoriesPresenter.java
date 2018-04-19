@@ -32,6 +32,12 @@ public class CategoriesPresenter<V extends CategoriesMvpView> extends BasePresen
 
     @Override
     public void callGetCategoryTree() {
+        if (!getMvpView().isNetworkConnected()) {
+            getMvpView().showNoNetworkLayout();
+        } else {
+            getMvpView().hideNoNetworklayout();
+        }
+
         doApiCallForResponse(getDataManager()
                 .callGetGetCategories(), new AppApiCallback() {
             @Override

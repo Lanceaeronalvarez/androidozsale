@@ -663,7 +663,7 @@ public class MainActivity extends BaseActivity implements MainMvpView {
     public void splashShownCallback() {
         mMainController = MainController.newInstance();
         mRouter.setRoot(RouterTransaction.with(mMainController)
-                .tag("Home"));
+                .tag(MainController.TAG));
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             Window window = getWindow();
@@ -685,10 +685,9 @@ public class MainActivity extends BaseActivity implements MainMvpView {
 
     private void setPaymentSuccessOurpay(CreatePaymentTransaction.ResponseValue responseValue) {
         Ourpay paymentSuccessOurpay = new Ourpay();
+        List<MyPayDetails.PlannedTransaction> transactions = responseValue.getD().getValue().getPlannedTransactions();
 
-        try {
-            List<MyPayDetails.PlannedTransaction> transactions = responseValue.getD().getValue().getPlannedTransactions();
-
+        if(responseValue != null && transactions != null ) {
             paymentSuccessOurpay.setCanUse(true);
             paymentSuccessOurpay.setPlannedTransactions(transactions);
 
@@ -701,13 +700,12 @@ public class MainActivity extends BaseActivity implements MainMvpView {
 
             paymentSuccessOurpay.setAmount(remainingAmount);
             PaymentInfo.setOurpay(paymentSuccessOurpay);
-        } catch (Exception e) {
+        } else {
 
             paymentSuccessOurpay.setCanUse(false);
             paymentSuccessOurpay.setPlannedTransactions(null);
             paymentSuccessOurpay.setState(paymentSuccessOurpay.getState() | OurpayState.ERROR);
         }
-
     }
 
     public String getMyTemplateTexts(String detailKey) {
@@ -820,17 +818,11 @@ public class MainActivity extends BaseActivity implements MainMvpView {
     };
 
     public void updateSnackbar(boolean isOnline) {
-        if(!isOnline && !mSnackbar.isShown()) {
+        if (!isOnline && !mSnackbar.isShown()) {
             showSnackBar(getString(R.string.no_internet_connection), true);
-        }else if(isOnline && mSnackbar.isShown()){
+        } else if (isOnline && mSnackbar.isShown()) {
             dismissSnackBar();
         }
-    }
-
-    public void attachMainController(){
-        mMainController = MainController.newInstance();
-        mRouter.setRoot(RouterTransaction.with(mMainController)
-                .tag("Home"));
     }
 
     public boolean isHomeViewPagerNull(){
