@@ -139,7 +139,7 @@ public class MainController extends BaseController implements MainMvpView {
 
 
         mHomeViewPager.setAdapter(mViewPagerAdapter);
-        mHomeViewPager.setCurrentItem(0);
+        mHomeViewPager.setCurrentItem(1);
         mHomeViewPager.setMyScroller();
 
         mActivity.isViewPagerSet(true);

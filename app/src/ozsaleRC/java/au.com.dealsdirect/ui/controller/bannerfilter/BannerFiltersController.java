@@ -8,6 +8,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageButton;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import java.util.ArrayList;
@@ -35,21 +36,22 @@ public class BannerFiltersController extends BaseController implements BannerFil
     BannerFiltersMvpPresenter<BannerFiltersMvpView> mPresenter;
 
     @BindView(R.id.partial_toolbar_field_title_left_option)
-    public ImageButton mLeftImageButton;
-
-    @BindView(R.id.partial_toolbar_field_title_textview)
-    public TextView mTitleText;
-
-    BannerFiltersAdapter bannerFiltersAdapter;
+    ImageButton mLeftImageButton;
 
     @BindView(R.id.recylerview_banner_filters)
     RecyclerView mBannerFiltersRecyclerView;
 
+    @BindView(R.id.partial_toolbar_field_title_textview)
+    TextView mTitleText;
+
+    @BindView(R.id.no_network_layout)
+    LinearLayout mNoNetworkLayout;
+
+    BannerFiltersAdapter bannerFiltersAdapter;
+
     public static BannerFiltersController newInstance() {
 
-        return new BannerFiltersController(
-                new BundleBuilder(new Bundle())
-                        .build());
+        return new BannerFiltersController(new BundleBuilder(new Bundle()).build());
     }
 
     public BannerFiltersController(Bundle args) {
@@ -67,11 +69,12 @@ public class BannerFiltersController extends BaseController implements BannerFil
     @Override
     protected void setUp(View view) {
         bannerFiltersAdapter = new BannerFiltersAdapter(mActivity, this, new ArrayList<>());
-        mBannerFiltersRecyclerView.setLayoutManager(new LinearLayoutManager(mActivity,
-                LinearLayoutManager.VERTICAL,false));
+        mBannerFiltersRecyclerView.setLayoutManager(new LinearLayoutManager(mActivity, LinearLayoutManager.VERTICAL, false));
         mBannerFiltersRecyclerView.setAdapter(bannerFiltersAdapter);
+
         mLeftImageButton.setVisibility(View.GONE);
         mTitleText.setText(getResources().getString(R.string.category_title));
+
         mPresenter.callGetCategoryTree();
     }
 
@@ -82,24 +85,30 @@ public class BannerFiltersController extends BaseController implements BannerFil
     }
 
     @Override
-    public void showCategories(List<GetCategoryTreeResponse> categories) {
-        bannerFiltersAdapter.replaceData(categories);
-    }
-
-    @Override
-    public void hideNoNetworklayout() {
-
-    }
-
-    @Override
     public void onDetach(View view) {
         super.onDetach(view);
         mPresenter.onDetach();
     }
 
     @Override
+    public void showCategories(List<GetCategoryTreeResponse> categories) {
+        bannerFiltersAdapter.replaceData(categories);
+    }
+    @Override
+    public void showNoNetworkLayout(){
+        mBannerFiltersRecyclerView.setVisibility(View.GONE);
+        mNoNetworkLayout.setVisibility(View.VISIBLE);
+    }
+
+    @Override
+    public void hideNoNetworklayout(){
+        mBannerFiltersRecyclerView.setVisibility(View.VISIBLE);
+        mNoNetworkLayout.setVisibility(View.GONE);
+    }
+
+    @Override
     public void onBannerClicked(int position, GetCategoryTreeResponse getCategoryTreeResponse) {
-        if (mActivity.getHomeRouter().getControllerWithTag(ShopsController.TAG)!=null){
+        if (mActivity.getHomeRouter().getControllerWithTag(ShopsController.TAG) != null) {
             mActivity.getHomeRouter().popToTag(ShopsController.TAG);
         }
 

@@ -4,9 +4,13 @@ import com.androidnetworking.error.ANError;
 
 import org.codehaus.mojo.animal_sniffer.IgnoreJRERequirement;
 
+import java.util.List;
+
 import javax.inject.Inject;
 
 import au.com.dealsdirect.data.DataManager;
+import au.com.dealsdirect.data.network.AppApiCallback;
+import au.com.dealsdirect.data.network.model.category.GetCategoryTreeResponse;
 import au.com.dealsdirect.ui.base.BasePresenter;
 import au.com.dealsdirect.utils.rx.SchedulerProvider;
 import io.reactivex.disposables.CompositeDisposable;
@@ -31,39 +35,15 @@ public class BannerFiltersPresenter<V extends BannerFiltersMvpView> extends Base
             getMvpView().hideNoNetworklayout();
         }
 
-        getCompositeDisposable().add(getDataManager()
-                .callGetGetCategories()
-                .subscribeOn(getSchedulerProvider().io())
-                .observeOn(getSchedulerProvider().ui())
-                .subscribe(response -> {
-
-                    if (!isViewAttached()) {
-                        return;
-                    }
-
-                    if (response != null) {
-
-                        getMvpView().showCategories(response);
-                    }
-
-                    getMvpView().hideLoading();
-
-                    getMvpView().hideNoNetworklayout();
-
-                }, throwable -> {
-
-                    if (!isViewAttached()) {
-                        return;
-                    }
-
-                    getMvpView().hideLoading();
-                    getMvpView().onError(throwable.getMessage());
-
-                    // handle load accounts error here
-                    if (throwable instanceof ANError) {
-                        ANError anError = (ANError) throwable;
-                        handleApiError(anError);
-                    }
-                }));
+        doApiCallForResponse(getDataManager()
+            .callGetGetCategories(), new AppApiCallback() {
+        @Override
+        public void onSuccess(List<?> response) {
+            super.onSuccess(response);
+            if (response != null) {
+                getMvpView().showCategories((List<GetCategoryTreeResponse>) response);
+            }
+            }
+        });
     }
 }

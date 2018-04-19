@@ -37,8 +37,7 @@ public class BannerFiltersAdapter extends RecyclerView.Adapter<BannerFiltersAdap
 
     @Override
     public BannerFiltersViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(parent.getContext())
-                .inflate(R.layout.viewholder_account_item, parent, false);
+        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.viewholder_account_item, parent, false);
         return new BannerFiltersViewHolder(view);
     }
 
