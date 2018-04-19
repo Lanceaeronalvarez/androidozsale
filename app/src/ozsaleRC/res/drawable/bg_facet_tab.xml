@@ -12,7 +12,7 @@
             <item android:state_selected="false">
                 <shape android:shape="rectangle">
                     <stroke android:color="@color/bg_facets_border_default" android:width="@dimen/border_thin"/>
-                    <solid android:color="@color/transparent"/>
+                    <solid android:color="@color/bg_facets_default"/>
                 </shape>
             </item>
         </selector>

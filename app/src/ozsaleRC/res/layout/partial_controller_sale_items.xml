@@ -6,7 +6,7 @@
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:paddingTop="@dimen/margin_small"
+        android:layout_marginTop="@dimen/search_filter_tab_layout_height"
         android:background="@color/white">
 
         <TextView

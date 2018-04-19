@@ -76,5 +76,7 @@
     </style>
 
     <bool name="shop_searchbar_visibility">false</bool>
+    <bool name="is_account_invite_visible">true</bool>
+    <bool name="is_account_contact_visible">true</bool>
 
 </resources>

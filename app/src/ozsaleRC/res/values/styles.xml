@@ -61,8 +61,26 @@
         <item name="android:background">@drawable/bg_button_join_now</item>
     </style>
 
+    <style name="FacetFilterTabLayout" parent="Widget.Design.TabLayout">
+        <item name="tabBackground">@drawable/bg_facet_tab</item>
+        <item name="tabGravity">fill</item>
+        <item name="tabMaxWidth">0dp</item>
+        <item name="tabIndicatorColor">@color/colorSecondary</item>
+        <item name="tabIndicatorHeight">0dp</item>
+        <item name="tabMode">scrollable</item>
+        <item name="tabTextColor">@color/text_dark</item>
+        <item name="tabSelectedTextColor">@color/white</item>
+        <item name="tabTextAppearance">@style/FacetFilterTab</item>
+    </style>
+
+    <style name="FacetFilterTab" parent="TextAppearance.Design.Tab">
+        <item name="textAllCaps">false</item>
+    </style>
+
     <!-- Toolbar visibility -->
     <bool name="login_toolbar_visibility">true</bool>
     <bool name="contacts_toolbar_addmessage_visibility">false</bool>
+    <bool name="is_account_invite_visible">true</bool>
+    <bool name="is_account_contact_visible">false</bool>
 
 </resources>

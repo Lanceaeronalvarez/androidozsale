@@ -259,7 +259,7 @@ android {
         }
 
         ozsaleRC {
-            versionCode 1
+            versionCode 4
             versionName "0.9"
             applicationId "au.com.ozsale"
 
@@ -408,25 +408,17 @@ android {
 
         ozsaleRC {
             res.srcDir 'src/ozsaleRC/res/'
-            java.srcDirs = ['src/commonControllers/java/',
-                            'src/commonActivity/java/',
-                            'src/commonHomeController/java/',
-                            'src/commonCategoriesController/java/',
+            java.srcDirs = ['src/ozsaleRC/java',
+                            'src/commonControllers/java/',
                             'src/commonShopsController/java/',
-                            'src/commonMainController/java/',
-                            'src/ozsaleRC/java',
                             'src/main/java/']
         }
 
         ozsaleTest {
             res.srcDir 'src/ozsaleRC/res/'
-            java.srcDirs = ['src/commonControllers/java/',
-                            'src/commonActivity/java/',
-                            'src/commonHomeController/java/',
-                            'src/commonCategoriesController/java/',
+            java.srcDirs = ['src/ozsaleRC/java',
+                            'src/commonControllers/java/',
                             'src/commonShopsController/java/',
-                            'src/commonMainController/java/',
-                            'src/ozsaleRC/java',
                             'src/main/java/']
         }
 

@@ -119,7 +119,7 @@
     <string name="pricing">Pricing</string>
     <string name="about_atom">About Atom</string>
     <string name="a_full_range_of_compression_wear_where_technology_is_at_the_heart_of_atom_pro_compression_born_out_of_the_desire_to_find_a_effective_great_looking_comfortable_range_that_enables_you_to_perform_at_your_best_for_extended_periods_of_time">A full range of compression wear. Where technology is at the heart of ATOM Pro Compression. Born out of the desire to find a effective, great looking, comfortable range that enables you to perform at your best for extended periods of time.</string>
-    <string name="_100_rayon_mykonos_embroidered_off_shoulder_top_white_elasticated_top_and_bottom_the_clothing_at_morrisday_is_true_to_standard_austrailian_sizing">¥  100% Rayon\n\n¥  Mykonos Embroidered Off Shoulder Top (White)\n\n¥  Elasticated top and bottom\n\n¥  The clothing at Morrisday is true to standard Austrailian sizing</string>
+    <string name="_100_rayon_mykonos_embroidered_off_shoulder_top_white_elasticated_top_and_bottom_the_clothing_at_morrisday_is_true_to_standard_austrailian_sizing">ï¿½  100% Rayon\n\nï¿½  Mykonos Embroidered Off Shoulder Top (White)\n\nï¿½  Elasticated top and bottom\n\nï¿½  The clothing at Morrisday is true to standard Austrailian sizing</string>
     <string name="checkout_lowercase">checkout</string>
     <string name="delivery_address">Delivery Address</string>
     <string name="you_currently_do_not_have_any_addresses">You do not currently have any address.</string>
@@ -175,5 +175,38 @@
 
     <bool name="is_item_attribute_gone">true</bool>
     <bool name="is_checkout_orders_label_visible">true</bool>
+
+    <string name="category_default">Categories</string>
+
+    <integer-array name="account_title_array">
+        <item>@string/account_details</item>
+        <item>@string/account_addresses</item>
+        <item>@string/account_orders</item>
+        <item>@string/account_payments</item>
+        <item>@string/account_vouchers</item>
+        <item>@string/account_returns</item>
+        <item>@string/account_language</item>
+        <item>@string/account_country</item>
+        <item>@string/account_invite_friend</item>
+        <item>@string/account_tnc</item>
+        <item>@string/account_privacy</item>
+        <item>@string/account_about_us</item>
+    </integer-array>
+
+    <integer-array name="account_drawable_array">
+        <item>@drawable/bg_account_details</item>
+        <item>@drawable/bg_account_address</item>
+        <item>@drawable/bg_account_orders</item>
+        <item>@drawable/bg_account_payments</item>
+        <item>@drawable/bg_account_vouchers</item>
+        <item>@drawable/bg_account_returns</item>
+        <item>@drawable/bg_account_languages</item>
+        <item>@drawable/bg_account_country</item>
+        <item>@drawable/bg_account_invite_friend</item>
+        <item>@drawable/bg_account_terms_and_conditions</item>
+        <item>@drawable/bg_account_privacy_policy</item>
+        <item>@drawable/bg_account_about_us</item>
+        <item>@drawable/bg_account_logout</item>
+    </integer-array>
 
 </resources>
