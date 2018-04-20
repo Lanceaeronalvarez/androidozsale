@@ -47,16 +47,16 @@ public class PaymentSelectAdapter extends RecyclerView.Adapter<RecyclerView.View
 
         PaymentMethod item = mData.get(position);
 
-        ImageUtils.loadImage(mActivity, item.getImageUrl(), vh.image);
+        ImageUtils.loadImage(mActivity, item.getImageUrl(), vh.cardImage);
 
-        vh.name.setText(item.getPaymentType());
-        vh.details.setText(item.getDescription());
+        vh.nameText.setText(item.getPaymentType());
+        vh.detailsText.setText(item.getDescription());
 
         vh.remove.setVisibility(isFromCart ? View.GONE : View.VISIBLE);
 
         if (isFromCart) {
             vh.itemView.setSelected(isFromCart && mActivity.getPaymentMethodSelected() != null && mActivity.getPaymentMethodSelected().equals(item));
-            vh.name.setSelected(isFromCart && mActivity.getPaymentMethodSelected() != null && mActivity.getPaymentMethodSelected().equals(item));
+            vh.nameText.setSelected(isFromCart && mActivity.getPaymentMethodSelected() != null && mActivity.getPaymentMethodSelected().equals(item));
         } else {
             ((PaymentSelectViewHolder) holder).remove.setOnClickListener(view -> {
                 mActivity.showLoading();
@@ -84,9 +84,9 @@ public class PaymentSelectAdapter extends RecyclerView.Adapter<RecyclerView.View
 
         public PaymentSelectViewHolder(View itemView) {
             super(itemView);
-            name = (TextView) itemView.findViewById(R.id.partial_checkout_payment_name);
-            details = (TextView) itemView.findViewById(R.id.partial_checkout_payment_details);
-            image = (ImageView) itemView.findViewById(R.id.partial_checkout_payment_image);
+            nameText = (TextView) itemView.findViewById(R.id.partial_checkout_payment_name);
+            detailsText = (TextView) itemView.findViewById(R.id.partial_checkout_payment_details);
+            cardImage = (ImageView) itemView.findViewById(R.id.partial_checkout_payment_image);
             divider = itemView.findViewById(R.id.item_payment_select_divider);
             remove = itemView.findViewById(R.id.partial_checkout_payment_remove);
         }
