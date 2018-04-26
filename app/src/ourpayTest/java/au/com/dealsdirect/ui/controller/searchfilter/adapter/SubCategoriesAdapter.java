@@ -65,8 +65,7 @@ public class SubCategoriesAdapter extends RecyclerView.Adapter<SubCategoriesAdap
             if (!mData.get(position).getName().equals("empty")) {
                 if (!mData.get(position).getName().isEmpty()) {
 
-                    holder
-                            .subCategoryTitle.setText(mData.get(position).getName());
+                    holder.subCategoryTitle.setText(mData.get(position).getName());
 
                     if (mData.get(position).getKey().equals(mChosenCategoryKey)) {
                         holder.subCategoryCheck.setVisibility(View.VISIBLE);

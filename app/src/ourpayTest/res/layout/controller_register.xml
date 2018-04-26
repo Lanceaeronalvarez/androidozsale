@@ -164,12 +164,11 @@
 
                     <CheckBox
                         android:id="@+id/controller_register_terms_conditions_check"
-                        fontPath="@string/font_app_medium"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:textSize="@dimen/text_size_caption1"
                         android:checked="false"
-                        android:textColor="@color/filter_text_inactive"
+                        android:textColor="@color/text_dark"
                         android:layout_marginLeft="-5dp"
                         android:text="I agree to the "  />
 
@@ -179,7 +178,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:textSize="@dimen/text_size_caption1"
-                        android:textColor="@color/tab_bar_icon_active"
+                        android:textColor="@color/ourpay_orange"
                         android:text="Terms and Conditions" />
                 </LinearLayout>
 

@@ -42,9 +42,6 @@
     <color name="dark_icon">#99000000</color>
     <color name="dialog_background">#fafafa</color>
 
-    <color name="filter_text_active">#F86903</color>
-    <color name="filter_text_inactive">#5F5F5F</color>
-
     <color name="cart_order_price_text_color">#DE5C00</color>
 
     <color name="progress_loader_stroke_color">#616161</color>

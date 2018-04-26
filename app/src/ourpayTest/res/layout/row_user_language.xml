@@ -3,7 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:orientation="vertical"
+    android:orientation="horizontal"
     tools:ignore="MissingPrefix">
 
     <TextView
@@ -12,9 +12,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textColor="@color/text_medium"
+        tools:text="English"
         android:textSize="@dimen/text_size_headline2" />
-
-    <View
-        style="@style/horizontalBorderView" />
 
 </LinearLayout>
