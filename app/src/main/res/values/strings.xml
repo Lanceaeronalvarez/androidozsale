@@ -399,6 +399,7 @@
     <string name="meanwhile_why_not_search_for_something_else">Meanwhile, why not search for something else?</string>
     <string name="clear">clear</string>
     <bool name="is_checkout_orders_label_visible">false</bool>
+    <string name="loading">loading</string>
 
     <integer-array name="account_title_array">
         <item>@string/account_details</item>
@@ -542,4 +543,5 @@
     <string name="total_colon">Total:</string>
     <string name="item_colon">Items:</string>
     <string name="status_colon">Status:</string>
+    <string name="browse">Browse</string>
 </resources>

@@ -4,17 +4,10 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
-import android.content.pm.PackageInfo;
-import android.content.pm.PackageManager;
-import android.content.pm.Signature;
-import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
-import android.util.Base64;
 import android.util.Log;
 import android.view.ViewGroup;
-import android.view.Window;
-import android.view.WindowManager;
 
 import com.bluelinelabs.conductor.Conductor;
 import com.bluelinelabs.conductor.Controller;
@@ -42,8 +35,6 @@ import com.braintreepayments.api.models.PaymentMethodNonce;
 import com.braintreepayments.cardform.view.CardForm;
 import com.mysale.genie.utility.RxBus;
 
-import java.security.MessageDigest;
-import java.security.NoSuchAlgorithmException;
 import java.util.List;
 
 import javax.inject.Inject;
@@ -71,9 +62,10 @@ import au.com.dealsdirect.ui.controller.shops.ShopsController;
 import au.com.dealsdirect.ui.controller.splash.SplashScreenController;
 import au.com.dealsdirect.ui.custom.CustomAlertDialog;
 import au.com.dealsdirect.utils.AppConstants;
-import au.com.dealsdirect.utils.AppEventHelper;
+import au.com.dealsdirect.utils.BraintreeUtils;
 import au.com.dealsdirect.utils.DialogUtils;
 import au.com.dealsdirect.utils.IntrospectionUtils;
+import au.com.dealsdirect.utils.NetworkUtils;
 import au.com.dealsdirect.utils.module.GateKeeper;
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -109,11 +101,10 @@ public class MainActivity extends BaseActivity implements MainMvpView {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        setTheme(R.style.AppTheme);
         super.onCreate(savedInstanceState);
-
         setContentView(R.layout.activity_main);
         mIsViewAttached = true;
-
         getActivityComponent().inject(this);
 
         setUnBinder(ButterKnife.bind(this));
@@ -123,24 +114,6 @@ public class MainActivity extends BaseActivity implements MainMvpView {
 
         // Init All analytics sdk
         mPresenter.initializeAnalytics(this, this.getApplication());
-
-        try {
-            PackageInfo info = getPackageManager().getPackageInfo(
-                    "au.com.oo.rc",
-                    PackageManager.GET_SIGNATURES);
-            for (Signature signature : info.signatures) {
-                MessageDigest md = MessageDigest.getInstance("SHA");
-                md.update(signature.toByteArray());
-                Log.d("KeyHash:", Base64.encodeToString(md.digest(), Base64.DEFAULT));
-            }
-        } catch (PackageManager.NameNotFoundException e) {
-            Log.d("KeyHash:", e.getMessage());
-
-
-        } catch (NoSuchAlgorithmException e) {
-            Log.d("KeyHash:", e.getMessage());
-
-        }
 
         mMainController = MainController.newInstance();
         mRouter = Conductor.attachRouter(this, mContainer, savedInstanceState);
@@ -154,7 +127,7 @@ public class MainActivity extends BaseActivity implements MainMvpView {
     protected void setUp() {
 
         // Initialize GCM
-        mPresenter.initializeNotifications(getApplicationContext());
+//        mPresenter.initializeNotifications(getApplicationContext());
 
         // Call API settings
         mPresenter.callGetServerSettings();
@@ -167,26 +140,6 @@ public class MainActivity extends BaseActivity implements MainMvpView {
             //If not logged in, call GetPublicAppSettings
             mPresenter.callGetPublicAppSettings();
         }
-
-//        //create route origins for main
-//        mMainRouteOrigins = new GateKeeper.RouteBuilder()
-//                .addRouteFrom(GateKeeper.Destination.LOGIN)
-//                .build();
-//
-//        //create route origins for login
-//        mLoginRouteOrigins = new GateKeeper.RouteBuilder()
-//                .addRouteFrom(GateKeeper.Destination.DETAILS)
-//                .build();
-//
-//        //register them
-//        GateKeeper.registerRoute(GateKeeper.Destination.LOGIN, mLoginRouteOrigins);
-//        GateKeeper.registerRoute(GateKeeper.Destination.MAIN, mMainRouteOrigins);
-//
-//        //call to update CURRENT_LOCATION too
-//        //pag di mo pinadaan sa gatekeeper baka makalimutan ng developer to set CURRENT_LOCATION.
-//        GateKeeper.setRoot(mRouter,GateKeeper.Destination.DETAILS,
-//                RouterTransaction.with(ControllerFactory.getInstance(GateKeeper.Destination.DETAILS)));
-
 
     }
 
@@ -225,66 +178,38 @@ public class MainActivity extends BaseActivity implements MainMvpView {
             Router currentRouter = getCurrentRouter();
             Controller currentController = getCurrentController(getCurrentRouter());
 
-            switch (getMainController().getHomeViewPager().getCurrentItem()) {
-                case 0:
-                    if (mCategoriesRouter.getBackstackSize() == 1) { //go back to shops
-                        setRootViewpagerItem(1);
-                    }
-                    break;
-                case 1:
-                    if (mIsFromCategories) {
-                        if (currentController instanceof ShopsController) { //reset shops controller root.
-                            ShopsController shopsController = new ShopsController();
-                            setShopController(shopsController);
-                            currentRouter.setRoot(RouterTransaction.with(shopsController).tag(ShopsController.TAG));
-                            setRootViewpagerItem(0);
-                            setDraggableViewPager(true);
-                        } else if (currentController instanceof SaleItemsController) {
-                            getMainController().setViewpagerDraggable(true);
-                            setRootViewpagerItem(0);
-                            currentRouter.handleBack();
-                        } else {
-                            currentRouter.handleBack();
-                        }
-                        mIsFromCategories = false;
-                    } else {
-                        if (currentController instanceof ShopsController && currentRouter.getBackstack().size() == 1) {
-                            //exit app
-                            DialogUtils.showYesNoDialog(
-                                    this,
-                                    getString(R.string.app_name),
-                                    getString(R.string.exit_app),
-                                    getString(R.string.exit),
-                                    getString(R.string.no),
-                                    (dialogInterface, i) -> finish(),
-                                    (dialogInterface, i) -> {
-                                    });
-                            break;
-                        } else if (currentController instanceof PaymentSuccessController) {
-                            try {
+            if (currentController instanceof ShopsController) {
+                //exit app
+                if (currentRouter.getBackstack().size() == 1) {
+                    DialogUtils.showYesNoDialog(
+                            this,
+                            getString(R.string.app_name),
+                            getString(R.string.exit_app),
+                            getString(R.string.exit),
+                            getString(R.string.no),
+                            (dialogInterface, i) -> finish(),
+                            (dialogInterface, i) -> {
+                            });
+                }
+            } else if (currentController instanceof PaymentSuccessController) {
+                try {
 
-                                getMainController().getHomeController().getCheckoutRouter().popToRoot();
-                                Controller controller = getMainController().getHomeController().getCurrentControllerOnRouter(mCheckoutRouter);
-                                if (controller instanceof CheckoutController) {
-                                    ((CheckoutController) controller).loadCart();
-                                }
-                            } catch (Exception e) {
-                                Log.d(MainActivity.TAG, e.getMessage());
-                            }
-                        } else if (currentRouter.getBackstackSize() == 1) { //From Bottom Nav
-                            getMainController().showBottomNav();
-                            setShopsAsVisibleContainer();
-                            break;
-                        } else {
-                            //getMainController().showBottomNav();
-                            if (currentController instanceof SaleItemsController){
-                                getMainController().setViewpagerDraggable(true);
-                            }
-                            currentRouter.handleBack();
-                        }
+                    getMainController().getHomeController().getCheckoutRouter().popToRoot();
+                    Controller controller = getMainController().getHomeController().getCurrentControllerOnRouter(mCheckoutRouter);
+                    if (controller instanceof CheckoutController) {
+                        ((CheckoutController) controller).loadCart();
                     }
-                    break;
+                } catch (Exception e) {
+                    Log.d(MainActivity.TAG, e.getMessage());
+                }
+            } else if (currentRouter.getBackstackSize() == 1) { //From Bottom Nav
+                getMainController().showBottomNav();
+                setShopsAsVisibleContainer();
+            } else {
+                currentRouter.handleBack();
             }
+
+
         } else {
             finish();
         }
@@ -295,9 +220,9 @@ public class MainActivity extends BaseActivity implements MainMvpView {
         mAuthHandler = handler;
         //pinapasa yung router, para kahit child router man siya ng kung ano mang view, pwedeng siya ang tumawag.
         Controller currentController = getCurrentController(router);
-        if(currentController instanceof SaleItemDetailsController ||
-                currentController instanceof AccountController ){
-            GateKeeper.push(router, GateKeeper.Destination.LOGIN,new VerticalChangeHandler(),new VerticalChangeHandler());
+        if (currentController instanceof SaleItemDetailsController ||
+                currentController instanceof AccountController) {
+            GateKeeper.push(router, GateKeeper.Destination.LOGIN, new VerticalChangeHandler(), new VerticalChangeHandler());
         } else {
             GateKeeper.push(router, GateKeeper.Destination.LOGIN);
         }
@@ -318,24 +243,19 @@ public class MainActivity extends BaseActivity implements MainMvpView {
             if (mBraintreeFragment != null) {
                 if (error instanceof AuthenticationException || error instanceof AuthorizationException ||
                         error instanceof UpgradeRequiredException) {
-                    mBraintreeFragment.sendAnalyticsEvent("sdk.exit.developer-error");
+                    mBraintreeFragment.sendAnalyticsEvent(BraintreeUtils.SDK_DEV_ERROR);
                 } else if (error instanceof ConfigurationException) {
-                    mBraintreeFragment.sendAnalyticsEvent("sdk.exit.configuration-exception");
+                    mBraintreeFragment.sendAnalyticsEvent(BraintreeUtils.SDK_CONFIG_ERROR);
                 } else if (error instanceof ServerException || error instanceof UnexpectedException) {
-                    mBraintreeFragment.sendAnalyticsEvent("sdk.exit.server-error");
+                    mBraintreeFragment.sendAnalyticsEvent(BraintreeUtils.SDK_SERVER_ERROR);
                 } else if (error instanceof DownForMaintenanceException) {
-                    mBraintreeFragment.sendAnalyticsEvent("sdk.exit.server-unavailable");
+                    mBraintreeFragment.sendAnalyticsEvent(BraintreeUtils.SDK_SERVER_UNAVAILABLE);
                 } else {
-                    mBraintreeFragment.sendAnalyticsEvent("sdk.exit.sdk-error");
+                    mBraintreeFragment.sendAnalyticsEvent(BraintreeUtils.SDK_ERROR);
                 }
 
                 //Call braintree client reset on error
                 performResetWithAuthFetch();
-            } else {
-                hideLoading();
-                CustomAlertDialog.showCustomAlertDialog(MainActivity.this,
-                        CustomAlertDialog.CustomDialogIconState.NEGATIVE,
-                        error.getLocalizedMessage());
             }
         }
     }
@@ -360,20 +280,20 @@ public class MainActivity extends BaseActivity implements MainMvpView {
     public void callCreatePaymentTransaction(String type, String nonce, String token) {
 
         //3DS Check
-            if (PaymentInfo.isThreeDSecureRequired() && !PaymentInfo.isThreeDSecureCalled()) {
-                mPresenter.callGetPaymentMethodNonce(token);
+        if (PaymentInfo.isThreeDSecureRequired() && !PaymentInfo.isThreeDSecureCalled()) {
+            mPresenter.callGetPaymentMethodNonce(token);
 
-                return;
-            }
+            return;
+        }
 
-            BraintreeResponseListener<String> handler = deviceData -> mPresenter.createPaymentTransaction(
-                    deviceData, type, nonce, token);
+        BraintreeResponseListener<String> handler = deviceData -> mPresenter.createPaymentTransaction(
+                deviceData, type, nonce, token);
 
-            //Kount Check
-            if (!mPresenter.getKountMerchantId().isEmpty()) {
-                DataCollector.collectDeviceData(mBraintreeFragment, mPresenter.getKountMerchantId(), handler);
-            } else {
-                DataCollector.collectDeviceData(mBraintreeFragment, handler);
+        //Kount Check
+        if (!mPresenter.getKountMerchantId().isEmpty()) {
+            DataCollector.collectDeviceData(mBraintreeFragment, mPresenter.getKountMerchantId(), handler);
+        } else {
+            DataCollector.collectDeviceData(mBraintreeFragment, handler);
         }
     }
 
@@ -389,17 +309,13 @@ public class MainActivity extends BaseActivity implements MainMvpView {
                 PaymentInfo.getOurpay().setCanUse(false);
             }
 
-            AppEventHelper.completedPurchase(PaymentInfo.getPaymentType(),
-                    responseValue.getD().getValue().getOrderInfoResult().getItems().size(),
-                    Double.valueOf(responseValue.getD().getValue().getOrderInfoResult().getTotal()),
-                    getString(R.string.default_country_id));
-
             mCheckoutRouter.pushController(RouterTransaction.with(new PaymentSuccessController(responseValue))
                     .pushChangeHandler(new HorizontalChangeHandler())
                     .popChangeHandler(new HorizontalChangeHandler()));
 
-            if (getMainController().getHomeController()!=null)
+            if (getMainController().getHomeController() != null) {
                 getMainController().getHomeController().showFifthTabController();
+            }
 
         } else {
 
@@ -452,7 +368,7 @@ public class MainActivity extends BaseActivity implements MainMvpView {
         Controller currentController = homeController.getCurrentControllerOnRouter(currentRouter);
 
         if ((currentController instanceof AddPaymentController) && ((AddPaymentController) currentController).isCalledFromAccounts()) {
-            ((AddPaymentController) currentController).showAddPaymentResult(true, lastPaymentMethod.getPaymentType());
+            ((AddPaymentController) currentController).showAddPaymentResult(true, "");
         } else {
             setPaymentMethodSelected(lastPaymentMethod);
             currentRouter.handleBack();
@@ -461,7 +377,7 @@ public class MainActivity extends BaseActivity implements MainMvpView {
 
     @Override
     public void showGetPaymentMethodNonceSuccess(String nonce) {
-        showLoadingDialog("Loading", false);
+        showLoadingDialog(getResources().getString(R.string.loading), false);
         PaymentInfo.setThreeDSecureCalled(true);
         ThreeDSecure.performVerification(getBraintreeFragment(), nonce, Double.toString(PaymentInfo.getCartCost()));
     }
@@ -504,10 +420,7 @@ public class MainActivity extends BaseActivity implements MainMvpView {
 
     @Override
     public void storeTemplateTexts(GetTemplateTextsResponse.GetTemplateTextsValue value) {
-        if (value != null) {
-
-            isTemplateTextsStored = true;
-        }
+        isTemplateTextsStored = value != null;
     }
 
     @Override
@@ -529,7 +442,7 @@ public class MainActivity extends BaseActivity implements MainMvpView {
 
     @Override
     public void callApiSettings() {
-        mPresenter.callApiSettings(this);
+
     }
 
     public void onPurchase(CardForm cardForm) {
@@ -577,17 +490,6 @@ public class MainActivity extends BaseActivity implements MainMvpView {
 
     public void setRootViewpagerItem(int item) {
 
-        switch (item) {
-            case 0:
-                mMainController.goToCategories();
-                break;
-            case 1:
-                mMainController.goToShops();
-                break;
-            default:
-                mMainController.goToShops();
-                break;
-        }
     }
 
     public void setDraggableViewPager(boolean isDraggable) {
@@ -626,26 +528,6 @@ public class MainActivity extends BaseActivity implements MainMvpView {
         mAccountsRouter = router;
     }
 
-    public void goToSaleItemsFromCategory(Bundle bundle) {
-        mShopController.goToItemsFromCategories(bundle);
-
-        final Handler handler = new Handler();
-        handler.postDelayed(() -> mMainController.goToShops(), 400);
-    }
-
-    public void goToSaleItemsFromSearchCategory() {
-        mIsFromCategories = true;
-        mShopController.goToSaleItemsFromCategorySearch();
-        final Handler handler = new Handler();
-        handler.postDelayed(() -> setRootViewpagerItem(1), 400);
-    }
-
-    public void goToSalesFromCategory(GetCategoryTreeResponse getCategoryTreeResponse) {
-        mIsFromCategories = true;
-        mShopController.goToSalesFromCategories(getCategoryTreeResponse);
-        setRootViewpagerItem(1);
-    }
-
 
     public void setShopController(ShopsController shopsController) {
         mShopController = shopsController;
@@ -663,13 +545,7 @@ public class MainActivity extends BaseActivity implements MainMvpView {
     public void splashShownCallback() {
         mMainController = MainController.newInstance();
         mRouter.setRoot(RouterTransaction.with(mMainController)
-                .tag(MainController.TAG));
-
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            Window window = getWindow();
-            window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
-            window.setStatusBarColor(getResources().getColor(R.color.status_bar));
-        }
+                .tag("Home"));
 
     }
 
@@ -685,9 +561,10 @@ public class MainActivity extends BaseActivity implements MainMvpView {
 
     private void setPaymentSuccessOurpay(CreatePaymentTransaction.ResponseValue responseValue) {
         Ourpay paymentSuccessOurpay = new Ourpay();
-        List<MyPayDetails.PlannedTransaction> transactions = responseValue.getD().getValue().getPlannedTransactions();
 
-        if(responseValue != null && transactions != null ) {
+        try {
+            List<MyPayDetails.PlannedTransaction> transactions = responseValue.getD().getValue().getPlannedTransactions();
+
             paymentSuccessOurpay.setCanUse(true);
             paymentSuccessOurpay.setPlannedTransactions(transactions);
 
@@ -700,12 +577,13 @@ public class MainActivity extends BaseActivity implements MainMvpView {
 
             paymentSuccessOurpay.setAmount(remainingAmount);
             PaymentInfo.setOurpay(paymentSuccessOurpay);
-        } else {
+        } catch (Exception e) {
 
             paymentSuccessOurpay.setCanUse(false);
             paymentSuccessOurpay.setPlannedTransactions(null);
             paymentSuccessOurpay.setState(paymentSuccessOurpay.getState() | OurpayState.ERROR);
         }
+
     }
 
     public String getMyTemplateTexts(String detailKey) {
@@ -722,9 +600,9 @@ public class MainActivity extends BaseActivity implements MainMvpView {
 
     @Override
     public Router getCurrentRouter() {
-        try{
+        try {
             return getMainController().getHomeController().getCurrentRouter();
-        }catch (NullPointerException e){
+        } catch (NullPointerException e) {
             return getHomeRouter();
         }
     }
@@ -764,7 +642,7 @@ public class MainActivity extends BaseActivity implements MainMvpView {
         }
 
         String successMessage = getString(R.string.login_successfully);
-        switch (authFlag){
+        switch (authFlag) {
             case REGISTER:
                 successMessage = getString(R.string.registered_successfully);
                 break;
@@ -791,24 +669,25 @@ public class MainActivity extends BaseActivity implements MainMvpView {
     @Override
     public void loginErrorHandler(String message) {
 
-        if (mAuthHandler != null)
+        if (mAuthHandler != null) {
             mAuthHandler.error();
+        }
 
-        CustomAlertDialog.showCustomAlertDialog(MainActivity.this, CustomAlertDialog.CustomDialogIconState.NEGATIVE, message);
+        CustomAlertDialog.showCustomAlertDialog(this, CustomAlertDialog.CustomDialogIconState.NEGATIVE, message);
     }
 
     /**
-     *  Method to register runtime broadcast receiver to show snackbar alert for internet connection..
+     * Method to register runtime broadcast receiver to show snackbar alert for internet connection..
      */
     private void registerInternetCheckReceiver() {
         IntentFilter internetFilter = new IntentFilter();
-        internetFilter.addAction("android.net.wifi.STATE_CHANGE");
-        internetFilter.addAction("android.net.conn.CONNECTIVITY_CHANGE");
+        internetFilter.addAction(NetworkUtils.NET_WIFI_STATE_CHANGE);
+        internetFilter.addAction(NetworkUtils.NET_CONNECTIVITY_CHANGE);
         registerReceiver(broadcastReceiver, internetFilter);
     }
 
     /**
-     *  Runtime Broadcast receiver inner class to capture internet connectivity events
+     * Runtime Broadcast receiver inner class to capture internet connectivity events
      */
     public BroadcastReceiver broadcastReceiver = new BroadcastReceiver() {
         @Override
@@ -825,7 +704,13 @@ public class MainActivity extends BaseActivity implements MainMvpView {
         }
     }
 
-    public boolean isHomeViewPagerNull(){
+    public void attachMainController() {
+        mMainController = MainController.newInstance();
+        mRouter.setRoot(RouterTransaction.with(mMainController)
+                .tag(MainController.TAG));
+    }
+
+    public boolean isHomeViewPagerNull() {
         return getMainController().getHomeViewPager() == null;
     }
 
@@ -841,7 +726,10 @@ public class MainActivity extends BaseActivity implements MainMvpView {
 
     @Override
     public boolean isViewAttached() {
-        return mIsViewAttached;
+        return false;
     }
 
+    public int getSelectedBottomNavTab(){
+        return getMainController().getHomeController().getSelectedBottomNavTab();
+    }
 }

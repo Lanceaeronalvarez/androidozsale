@@ -5,6 +5,9 @@
     <color name="colorAccent">@color/colorPrimaryDark</color>
 
     <color name="colorSecondary">#4F4F4F</color>
+
+    <color name="recyclerview_overscroll">@color/colorSecondary</color>
+
     <color name="status_bar">@color/colorSecondary</color>
 
     <!--Search Edit Text-->
@@ -62,7 +65,7 @@
     <color name="address_text_subtitle">@color/text_extra_dark</color>
 
     <color name="filter_text_active">@color/colorAccent</color>
-    <color name="filter_text_inactive">@color/text_extra_light</color>
+    <color name="filter_text_inactive">@color/text_dark</color>
 
     <color name="category_text_active">@color/colorAccent</color>
     <color name="category_text_inactive">@color/text_light</color>
@@ -84,10 +87,10 @@
     <color name="bg_chips_text">#FFFFFF</color>
 
     <!-- Facets Theme -->
-    <color name="bg_facets_selected">@color/colorSecondary</color>
-    <color name="bg_facets_border_checked">@color/colorSecondary</color>
-    <color name="bg_facets_border_default">@color/colorSecondary</color>
-
+    <color name="bg_facets_selected">#7f7f7f</color>
+    <color name="bg_facets_default">@color/white</color>
+    <color name="bg_facets_border_checked">#7f7f7f</color>
+    <color name="bg_facets_border_default">#7f7f7f</color>
 
     <!-- Icon -->
     <color name="icon_snack_bar">@color/colorAccent</color>

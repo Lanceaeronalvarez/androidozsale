@@ -15,6 +15,9 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.bluelinelabs.conductor.Controller;
+import com.bluelinelabs.conductor.Router;
+import com.bluelinelabs.conductor.RouterTransaction;
 import com.crystal.crystalrangeseekbar.interfaces.OnRangeSeekbarChangeListener;
 import com.crystal.crystalrangeseekbar.interfaces.OnRangeSeekbarFinalValueListener;
 import com.google.gson.reflect.TypeToken;
@@ -35,15 +38,24 @@ import au.com.dealsdirect.data.network.model.category.GetCategoryTreeResponse;
 import au.com.dealsdirect.data.network.model.saleitems.GetSaleItemsResponse;
 import au.com.dealsdirect.data.network.model.sorting.SortingResponse;
 import au.com.dealsdirect.ui.base.BaseController;
+import au.com.dealsdirect.ui.controller.saleitems.SaleItemsController;
+import au.com.dealsdirect.ui.controller.saleitems.SaleItemsMvpPresenter;
+import au.com.dealsdirect.ui.controller.saleitems.SaleItemsMvpView;
 import au.com.dealsdirect.ui.controller.searchfilter.adapter.FacetItemsAdapter;
 import au.com.dealsdirect.ui.controller.searchfilter.adapter.FacetsAdapter;
 import au.com.dealsdirect.ui.controller.searchfilter.adapter.SearchChipModel;
 import au.com.dealsdirect.ui.controller.searchfilter.adapter.SubCategoriesAdapter;
 import au.com.dealsdirect.ui.custom.CustomRangeSeekbar;
+import au.com.dealsdirect.ui.main.MainActivity;
 import au.com.dealsdirect.utils.BundleBuilder;
 import au.com.dealsdirect.utils.BundleKeys;
 import au.com.dealsdirect.utils.JsonUtils;
 import butterknife.BindView;
+
+import static au.com.dealsdirect.utils.BundleKeys.BRANDS_FACET_FILTER_TYPE;
+import static au.com.dealsdirect.utils.BundleKeys.COLOR_FACET_FILTER_TYPE;
+import static au.com.dealsdirect.utils.BundleKeys.PRICE_FACET_FILTER_TYPE;
+import static au.com.dealsdirect.utils.BundleKeys.SIZE_FACET_FILTER_TYPE;
 
 
 /**
@@ -55,13 +67,14 @@ public class SearchFilterController extends BaseController
 
     public static final String TAG = SearchFilterController.class.getSimpleName();
 
-
-    private String mSaleItemsTitle = "";
-    private static String mPreviousChosenCategory = "";
-    private String mJoinedQueryChipsString = "";
+    @Inject
+    SaleItemsMvpPresenter<SaleItemsMvpView> mSaleItemsPresenter;
 
     @Inject
     SearchFilterMvpPresenter<SearchFilterMvpView> mPresenter;
+
+    @Inject
+    protected MainActivity mActivity;
 
     @BindView(R.id.controller_search_filter_tabs)
     TabLayout mTabLayout;
@@ -96,12 +109,14 @@ public class SearchFilterController extends BaseController
 
     @BindView(R.id.movingMinPriceLayout)
     LinearLayout mMinPriceMovingLayout;
+
     @BindView(R.id.movingMaxPrice)
     TextView mMaxPrice;
 
     @BindView(R.id.movingMinPrice)
     TextView mMinPrice;
 
+    private String mSaleItemsTitle = "";
     SubCategoryClickListener mSubCategoryClickListener;
     SubCategoryItemClickListener mSubCategoryItemClickListener;
 
@@ -115,6 +130,7 @@ public class SearchFilterController extends BaseController
     FacetsAdapter mFacetsAdapter;
     FacetItemsAdapter mFacetItemsAdapter;
     List<SearchChipModel> mSearchItemsList = new ArrayList<>();
+    SaleItemsController mSaleItemsController;
 
     ArrayList<String> mBrandList = new ArrayList<>();
     ArrayList<String> mSizeList = new ArrayList<>();
@@ -140,8 +156,7 @@ public class SearchFilterController extends BaseController
     private HashMap<String, Set<Integer>> mPreviousSelectedFacetIndices = new HashMap<>();
     private ArrayList<SearchChipModel> mPreviousSearchChips = new ArrayList<>();
 
-    List<Pair<String, String>> mFacetFilters = new ArrayList(Arrays.asList
-            (new Pair<String, String>(BundleKeys.SORT_FACETFILTER_NAME, "Sort")));
+    List<Pair<String, String>> mFacetFilters = new ArrayList();
 
     public static SearchFilterController newInstance() {
         return new SearchFilterController(new BundleBuilder(new Bundle()).build());
@@ -167,6 +182,14 @@ public class SearchFilterController extends BaseController
     protected View inflateView(@NonNull LayoutInflater inflater, @NonNull ViewGroup container) {
         View view = inflater.inflate(R.layout.controller_search_filter, container, false);
         getControllerComponent().inject(this);
+
+        Router router = mActivity.getSelectedBottomNavTab() == 0 ? mActivity.getHomeRouter()
+                : mActivity.getCategoriesRouter();
+
+        mSaleItemsController = (SaleItemsController) router.getControllerWithTag(getResources()
+                .getString(R.string.sale_items_controller_tag));
+
+        mSaleItemsPresenter.onAttach(mSaleItemsController);
         mPresenter.onAttach(this);
         return view;
     }
@@ -187,14 +210,6 @@ public class SearchFilterController extends BaseController
         mOpaqueView.setOnClickListener(v -> closeFacets());
 
         mSearchItemsList = new ArrayList<SearchChipModel>();
-
-        //remove other chips if a new category is selected.
-        // also remove selected indices for other filter types
-//        if (!mPreviousChosenCategory.equals(mChosenCategory)) {
-//            removeAllChipsExceptCategoryAndSearchQuery();
-//            removeSelectedIndicesExceptCategory();
-//            mPreviousChosenCategory = mChosenCategory;
-//        }
 
         mSubCategoriesAdapter = new SubCategoriesAdapter(mChosenCategory, mCategoryTree, mSubCategoryClickListener, mSubCategoryItemClickListener, mCategoryMap);
         mFilterCategoriesRecyclerView.setLayoutManager(new LinearLayoutManager(mActivity, LinearLayoutManager.VERTICAL, false));
@@ -231,27 +246,26 @@ public class SearchFilterController extends BaseController
                             GetSaleItemsResponse.Values facetValue = facets.get(i).getFacetValues().get(j);
                             mBrandList.add(facetValue.getValue());
                         }
-                        mFacetFilters.add(new Pair<String, String>(BundleKeys.BRANDS_FACETFILTER_NAME, "Brands"));
+                        mFacetFilters.add(new Pair<String, String>(BundleKeys.BRANDS_FACETFILTER_NAME, BRANDS_FACET_FILTER_TYPE));
+                        break;
+                    case BundleKeys.PRICE_FACETFILTER_NAME:
+                        mFacetFilters.add(new Pair<String, String>(BundleKeys.PRICE_FACETFILTER_NAME, PRICE_FACET_FILTER_TYPE));
                         break;
                     case BundleKeys.SIZES_FACETFILTER_NAME:
                         for (int j = 0; j < facets.get(i).getFacetValues().size(); j++) {
                             GetSaleItemsResponse.Values facetValue = facets.get(i).getFacetValues().get(j);
                             mSizeList.add(facetValue.getValue());
                         }
-                        mFacetFilters.add(new Pair<String, String>(BundleKeys.SIZES_FACETFILTER_NAME, "Sizes"));
+                        mFacetFilters.add(new Pair<String, String>(BundleKeys.SIZES_FACETFILTER_NAME, SIZE_FACET_FILTER_TYPE));
                         break;
                     case BundleKeys.COLORS_FACETFILTER_NAME:
                         for (int j = 0; j < facets.get(i).getFacetValues().size(); j++) {
                             GetSaleItemsResponse.Values facetValue = facets.get(i).getFacetValues().get(j);
                             mColorList.add(facetValue.getValue());
                         }
-
-                        mFacetFilters.add(new Pair<String, String>(BundleKeys.COLORS_FACETFILTER_NAME, "Colors"));
+                        mFacetFilters.add(new Pair<String, String>(BundleKeys.COLORS_FACETFILTER_NAME, COLOR_FACET_FILTER_TYPE));
                         break;
-                    case BundleKeys.PRICE_FACETFILTER_NAME:
-                        mFacetFilters.add(new Pair<String, String>(BundleKeys.PRICE_FACETFILTER_NAME, "Price"));
 
-                        break;
                     default:
                         break;
                 }
@@ -263,9 +277,12 @@ public class SearchFilterController extends BaseController
     }
 
     private void setupTabs() {
+        mFacetFilters.add(0, new Pair<String, String>(BundleKeys.CATEGORY_TREE_FACET, "Categories"));
+        mFacetFilters.add(mFacetFilters.size(), new Pair<String, String>(BundleKeys.SORT_FACETFILTER_NAME, "Sort"));
         for (Pair<String, String> pair : mFacetFilters) {
             mTabLayout.addTab(mTabLayout.newTab().setText(pair.second), false);
         }
+        //Category, Brand, Price, Color and Sort
 
         //Remove selected state by default setup
         mTabLayout.getTabAt(0).select();
@@ -292,6 +309,21 @@ public class SearchFilterController extends BaseController
                 toggleTabSelection(true);
             }
         });
+
+        Runnable tabConfig = () -> {
+            Log.d("TabWidth", "TabLayout: " + mTabLayout.getWidth() + " ScreenWidth: " +
+                    mActivity.getResources().getDisplayMetrics().widthPixels);
+            if (mTabLayout.getWidth() < mActivity.getResources().getDisplayMetrics().widthPixels) {
+                mTabLayout.setTabMode(TabLayout.MODE_FIXED);
+                ViewGroup.LayoutParams mParams = mTabLayout.getLayoutParams();
+                mParams.width = ViewGroup.LayoutParams.MATCH_PARENT;
+                mTabLayout.setLayoutParams(mParams);
+            }
+        };
+
+        mTabLayout.post(tabConfig);
+
+
     }
 
     private void closeFacets() {
@@ -340,7 +372,6 @@ public class SearchFilterController extends BaseController
                 if (maxValue.intValue() == origMaxValue) {
                     mMaxPrice.setText("$" + maxValue.intValue() + "+");
                 }
-
             }
         });
 
@@ -365,6 +396,10 @@ public class SearchFilterController extends BaseController
                 }
 
                 isSeekbarReset = false;
+
+                mSaleItemsController.setChipFilters(mSearchItemsList);
+                mSaleItemsPresenter.loadSaleItems(mSaleItemsController.createSaleItemsRequest(mCategoryKey, mSaleId, 0, mSearchItemsList, null));
+
             }
         });
 
@@ -479,7 +514,8 @@ public class SearchFilterController extends BaseController
                 mSearchItemsList.remove(chipToRemove);
             }
         }
-
+        mSaleItemsController.setChipFilters(mSearchItemsList);
+        mSaleItemsPresenter.loadSaleItems(mSaleItemsController.createSaleItemsRequest(mCategoryKey, mSaleId, 0, mSearchItemsList, null));
     }
 
     @Override
@@ -609,6 +645,8 @@ public class SearchFilterController extends BaseController
         }
 
         mSubCategoriesAdapter.setActiveCategoryKey(mChosenCategory);
+        mSaleItemsController.setChipFilters(mSearchItemsList);
+        mSaleItemsPresenter.loadSaleItems(mSaleItemsController.createSaleItemsRequest(mCategoryKey, mSaleId, 0, mSearchItemsList, null));
 
     }
 
@@ -621,6 +659,5 @@ public class SearchFilterController extends BaseController
 
         return null;
     }
-
 
 }

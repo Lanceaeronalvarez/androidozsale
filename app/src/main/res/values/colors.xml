@@ -10,6 +10,8 @@
     <color name="color_item_title">#466E87</color>
     <color name="white">#FFFFFF</color>
 
+    <color name="recyclerview_overscroll">@color/colorPrimary</color>
+
     <color name="dialog_background">#fafafa</color>
   
     <!-- EditText Theme -->

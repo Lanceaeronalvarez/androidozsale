@@ -168,6 +168,7 @@ public class ShopsController extends BasePullToRefreshController implements Shop
 
         Bundle args = new Bundle();
         getRouter().pushController(RouterTransaction.with(new SaleItemsController(args))
+                .tag(getResources().getString(R.string.sale_items_controller_tag))
                 .pushChangeHandler(new HorizontalChangeHandler())
                 .popChangeHandler(new HorizontalChangeHandler()));
     }

@@ -7,17 +7,11 @@
     android:orientation="vertical">
 
     <android.support.design.widget.TabLayout
+        style="@style/FacetFilterTabLayout"
         android:id="@+id/controller_search_filter_tabs"
-        android:layout_width="match_parent"
+        android:layout_width="wrap_content"
         android:layout_height="@dimen/search_filter_tab_layout_height"
-        android:background="@color/white"
-        app:tabBackground="@drawable/bg_facet_tab"
-        app:tabGravity="fill"
-        app:tabMaxWidth="0dp"
-        app:tabIndicatorColor="@color/colorSecondary"
-        app:tabIndicatorHeight="0dp"
-        app:tabMode="scrollable"
-        app:tabSelectedTextColor="@color/white" />
+        android:background="@color/white" />
 
     <FrameLayout
         android:id="@+id/controller_search_filter_facets_frame"
