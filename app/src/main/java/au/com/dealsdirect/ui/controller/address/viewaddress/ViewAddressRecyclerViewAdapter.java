@@ -68,17 +68,17 @@ public class ViewAddressRecyclerViewAdapter extends RecyclerView.Adapter<ViewAdd
         String addressName = addressList.get(position).getAddressName();
         String addressId = addressList.get(position).getAddressId();
 
-        holder.addressNumber.setText(addressName);
-        holder.addressText.setText(String.valueOf(newAddress));
+        holder.addressNumberTextView.setText(addressName);
+        holder.addressTextView.setText(String.valueOf(newAddress));
 
         if (isCalledFromCart) {
-            holder.removeAddress.setVisibility(View.GONE);
+            holder.removeAddressView.setVisibility(View.GONE);
 
             holder.itemView.setSelected(mDeliveryAddress != null && mDeliveryAddress.equalsAddressItem(addressList.get(position)));
-            holder.addressNumber.setSelected(mDeliveryAddress != null && mDeliveryAddress.equalsAddressItem(addressList.get(position)));
+            holder.addressNumberTextView.setSelected(mDeliveryAddress != null && mDeliveryAddress.equalsAddressItem(addressList.get(position)));
         } else {
 
-            holder.removeAddress.setOnClickListener(view -> {
+            holder.removeAddressView.setOnClickListener(view -> {
 
                 Timber.d("remove address", "remove address clicked");
                 DeleteUserAddress.RequestValues deleteAddressRequest = new DeleteUserAddress
@@ -123,11 +123,11 @@ public class ViewAddressRecyclerViewAdapter extends RecyclerView.Adapter<ViewAdd
     static class MyAddressModuleViewHolder extends RecyclerView.ViewHolder {
 
         @BindView(R.id.view_my_address_row_item_name)
-        TextView addressNumber;
+        TextView addressNumberTextView;
         @BindView(R.id.view_my_address_row_item_text)
-        TextView addressText;
-        @BindView(R.id.remove_address)
-        View removeAddress;
+        TextView addressTextView;
+        @BindView(R.id.remove_address_view)
+        View removeAddressView;
 
         public MyAddressModuleViewHolder(View itemView) {
             super(itemView);

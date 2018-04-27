@@ -58,5 +58,9 @@ public class ViewContactsPresenter<V extends ViewContactsMvpView> extends BasePr
                 getMvpView().showContactItems(((GetContactsResponse) response).getD());
             }
         });
+
+//      For sample items testing purposes
+//        GetContactsResponse test = new Gson().fromJson(testResponse, GetContactsResponse.class);
+//        getMvpView().showContactItems(test.getD());
     }
 }
