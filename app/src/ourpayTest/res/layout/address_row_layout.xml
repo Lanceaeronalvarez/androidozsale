@@ -72,7 +72,7 @@
     </LinearLayout>
 
     <ImageView
-        android:id="@+id/remove_address"
+        android:id="@+id/remove_address_view"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentEnd="true"
