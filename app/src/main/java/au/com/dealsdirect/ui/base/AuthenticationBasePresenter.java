@@ -46,7 +46,7 @@ import au.com.dealsdirect.utils.AppEventHelper;
  * onAttach() and onDetach(). It also handles keeping a reference to the mvpView that
  * can be accessed from the children classes by calling getMvpView().
  */
-public class AuthenticationBasePresenter<V extends AuthenticationMvpView> implements AuthenticationMvpPresenter<V> {
+public class AuthenticationBasePresenter<V extends AuthenticationMvpView> extends BasePresenter<V> implements AuthenticationMvpPresenter<V> {
 
     private static final String TAG = "BasePresenter";
 
@@ -65,9 +65,8 @@ public class AuthenticationBasePresenter<V extends AuthenticationMvpView> implem
     private V mMvpView;
 
     @Inject
-    public AuthenticationBasePresenter(DataManager dataManager,
-                                       SchedulerProvider schedulerProvider,
-                                       CompositeDisposable compositeDisposable) {
+    public AuthenticationBasePresenter(DataManager dataManager, SchedulerProvider schedulerProvider, CompositeDisposable compositeDisposable) {
+        super(dataManager, schedulerProvider, compositeDisposable);
         this.mDataManager = dataManager;
         this.mSchedulerProvider = schedulerProvider;
         this.mCompositeDisposable = compositeDisposable;
@@ -90,10 +89,6 @@ public class AuthenticationBasePresenter<V extends AuthenticationMvpView> implem
 
     public V getMvpView() {
         return mMvpView;
-    }
-
-    public void checkViewAttached() {
-        if (!isViewAttached()) throw new MvpViewNotAttachedException();
     }
 
     public DataManager getDataManager() {
@@ -160,94 +155,91 @@ public class AuthenticationBasePresenter<V extends AuthenticationMvpView> implem
         return getDataManager().isTablet();
     }
 
-    @Override
-    public void setUserAsLoggedOut() {
-        //getDataManager().setAccessToken(null);
-    }
 
-    @Override
-    public void doApiCallForObjectResponse(Observable observable, final ApiCallback callback) {
-        getMvpView().showLoading();
 
-        getCompositeDisposable().add(observable
-                .subscribeOn(getSchedulerProvider().io())
-                .observeOn(getSchedulerProvider().ui())
-                .subscribe(new Consumer<Object>() {
-                    @Override
-                    public void accept(Object response) throws Exception {
-
-                        if (!isViewAttached()) {
-                            return;
-                        }
-
-                        getMvpView().hideLoading();
-
-                        callback.onSuccess(response);
-
-                    }
-                }, new Consumer<Throwable>() {
-                    @Override
-                    public void accept(Throwable throwable) throws Exception {
-
-                        if (!isViewAttached()) {
-                            return;
-                        }
-
-                        getMvpView().hideLoading();
-                        getMvpView().onError(throwable.getMessage());
-
-                        callback.onFailure(throwable);
-
-                        // handle load accounts error here
-                        if (throwable instanceof ANError) {
-                            ANError anError = (ANError) throwable;
-                            handleApiError(anError);
-                        }
-                    }
-                }));
-    }
-
-    @Override
-    public void doApiCallForListResponse(Observable observable, final ApiCallback callback) {
-        getMvpView().showLoading();
-
-        getCompositeDisposable().add(observable
-                .subscribeOn(getSchedulerProvider().io())
-                .observeOn(getSchedulerProvider().ui())
-                .subscribe(new Consumer<List<Object>>() {
-                    @Override
-                    public void accept(List<Object> response) throws Exception {
-
-                        if (!isViewAttached()) {
-                            return;
-                        }
-
-                        getMvpView().hideLoading();
-
-                        callback.onSuccess(response);
-
-                    }
-                }, new Consumer<Throwable>() {
-                    @Override
-                    public void accept(Throwable throwable) throws Exception {
-
-                        if (!isViewAttached()) {
-                            return;
-                        }
-
-                        getMvpView().hideLoading();
-                        getMvpView().onError(throwable.getMessage());
-
-                        callback.onFailure(throwable);
-
-                        // handle load accounts error here
-                        if (throwable instanceof ANError) {
-                            ANError anError = (ANError) throwable;
-                            handleApiError(anError);
-                        }
-                    }
-                }));
-    }
+//    @Override
+//    public void doApiCallForObjectResponse(Observable observable, final ApiCallback callback) {
+//        getMvpView().showLoading();
+//
+//        getCompositeDisposable().add(observable
+//                .subscribeOn(getSchedulerProvider().io())
+//                .observeOn(getSchedulerProvider().ui())
+//                .subscribe(new Consumer<Object>() {
+//                    @Override
+//                    public void accept(Object response) throws Exception {
+//
+//                        if (!isViewAttached()) {
+//                            return;
+//                        }
+//
+//                        getMvpView().hideLoading();
+//
+//                        callback.onSuccess(response);
+//
+//                    }
+//                }, new Consumer<Throwable>() {
+//                    @Override
+//                    public void accept(Throwable throwable) throws Exception {
+//
+//                        if (!isViewAttached()) {
+//                            return;
+//                        }
+//
+//                        getMvpView().hideLoading();
+//                        getMvpView().onError(throwable.getMessage());
+//
+//                        callback.onFailure(throwable);
+//
+//                        // handle load accounts error here
+//                        if (throwable instanceof ANError) {
+//                            ANError anError = (ANError) throwable;
+//                            handleApiError(anError);
+//                        }
+//                    }
+//                }));
+//    }
+//
+//    @Override
+//    public void doApiCallForListResponse(Observable observable, final ApiCallback callback) {
+//        getMvpView().showLoading();
+//
+//        getCompositeDisposable().add(observable
+//                .subscribeOn(getSchedulerProvider().io())
+//                .observeOn(getSchedulerProvider().ui())
+//                .subscribe(new Consumer<List<Object>>() {
+//                    @Override
+//                    public void accept(List<Object> response) throws Exception {
+//
+//                        if (!isViewAttached()) {
+//                            return;
+//                        }
+//
+//                        getMvpView().hideLoading();
+//
+//                        callback.onSuccess(response);
+//
+//                    }
+//                }, new Consumer<Throwable>() {
+//                    @Override
+//                    public void accept(Throwable throwable) throws Exception {
+//
+//                        if (!isViewAttached()) {
+//                            return;
+//                        }
+//
+//                        getMvpView().hideLoading();
+//                        getMvpView().onError(throwable.getMessage());
+//
+//                        callback.onFailure(throwable);
+//
+//                        // handle load accounts error here
+//                        if (throwable instanceof ANError) {
+//                            ANError anError = (ANError) throwable;
+//                            handleApiError(anError);
+//                        }
+//                    }
+//                }));
+//    }
 
     public static class MvpViewNotAttachedException extends RuntimeException {
         public MvpViewNotAttachedException() {

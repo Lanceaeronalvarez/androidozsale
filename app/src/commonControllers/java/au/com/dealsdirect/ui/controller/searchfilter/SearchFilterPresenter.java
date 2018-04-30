@@ -1,11 +1,13 @@
 package au.com.dealsdirect.ui.controller.searchfilter;
 
+import java.util.List;
 import java.util.Set;
 
 import javax.inject.Inject;
 
 import au.com.dealsdirect.data.DataManager;
 import au.com.dealsdirect.ui.base.BasePresenter;
+import au.com.dealsdirect.ui.controller.searchfilter.adapter.SearchChipModel;
 import au.com.dealsdirect.utils.rx.SchedulerProvider;
 import io.reactivex.disposables.CompositeDisposable;
 
@@ -28,6 +30,11 @@ public class SearchFilterPresenter<V extends SearchFilterMvpView> extends BasePr
     @Override
     public void onFacetItemClicked(Set<Integer> selectPosSet) {
         getMvpView().updateFacetItemToFilters(selectPosSet);
+    }
+
+    @Override
+    public void onUpdateActiveFacets(List<SearchChipModel> activeChips) {
+        getMvpView().updateActiveFacets(activeChips);
     }
 
     @Override

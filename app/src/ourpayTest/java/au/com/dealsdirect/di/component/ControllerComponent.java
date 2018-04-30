@@ -19,14 +19,10 @@ import au.com.dealsdirect.ui.controller.contact.addcontact.selectsubject.Contact
 import au.com.dealsdirect.ui.controller.contact.viewcontacthistory.ViewContactHistoryController;
 import au.com.dealsdirect.ui.controller.contact.viewcontacts.ViewContactsController;
 import au.com.dealsdirect.ui.controller.country.CountryController;
-import au.com.dealsdirect.ui.controller.dashboard.DashboardController;
-import au.com.dealsdirect.ui.controller.dashboard.details.PaymentDetailsController;
-import au.com.dealsdirect.ui.controller.dashboard.pastpayments.PastPaymentsController;
-import au.com.dealsdirect.ui.controller.dashboard.paymentplans.PaymentPlansController;
-import au.com.dealsdirect.ui.controller.dashboard.scheduledplans.ScheduledPlansController;
 import au.com.dealsdirect.ui.controller.details.DetailsController;
 import au.com.dealsdirect.ui.controller.forgotpassword.ForgotPasswordController;
 import au.com.dealsdirect.ui.controller.home.HomeController;
+import au.com.dealsdirect.ui.controller.login.PasswordVerificationController;
 import au.com.dealsdirect.ui.controller.main.MainController;
 import au.com.dealsdirect.ui.controller.invite.InviteSendController;
 import au.com.dealsdirect.ui.controller.language.LanguageController;
@@ -155,4 +151,6 @@ public interface ControllerComponent {
     void inject(PaymentDetailsController controller);
 
     void inject(SplashScreenController controller);
+
+    void inject(PasswordVerificationController controller);
 }

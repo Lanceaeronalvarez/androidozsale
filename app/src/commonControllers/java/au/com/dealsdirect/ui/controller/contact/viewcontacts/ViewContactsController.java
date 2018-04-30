@@ -50,10 +50,10 @@ public class ViewContactsController extends BasePullToRefreshController implemen
     @BindView(R.id.partial_toolbar_arrow_title)
     TextView mViewContactsToolarTitle;
 
-    @BindView(R.id.partial_toolbar_filter_view)
+    @BindView(R.id.partial_toolbar_right_view)
     ImageView mViewContactsToolbarRightOption;
 
-    @BindView(R.id.partial_toolbar_arrow_view)
+    @BindView(R.id.partial_toolbar_left_view)
     ImageView mViewContactsToolbarLeftOption;
 
     @BindView(R.id.contacts_recycler_view)
@@ -162,7 +162,7 @@ public class ViewContactsController extends BasePullToRefreshController implemen
         mViewContactsToolbarRightOption.setImageResource(R.drawable.ic_add);
     }
 
-    @OnClick(R.id.partial_toolbar_filter_view)
+    @OnClick(R.id.partial_toolbar_right_view)
     void addContact() {
         getRouter().pushController(RouterTransaction.with(AddContactController.newInstance())
                 .pushChangeHandler(new VerticalChangeHandler())

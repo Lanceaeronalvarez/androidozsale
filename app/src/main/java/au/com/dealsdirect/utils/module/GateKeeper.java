@@ -35,6 +35,7 @@ public class GateKeeper {
         CATEGORIES,
         ACCOUNT,
         FORGOT_PASSWORD,
+        PASSWORD_VERIFICATION,
         VIEW_VOUCHERS,
         ADD_VOUCHERS,
         INVITE,

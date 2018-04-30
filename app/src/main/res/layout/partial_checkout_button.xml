@@ -95,6 +95,14 @@
 
             </RelativeLayout>
 
+            <com.visa.checkout.widget.VisaCheckoutButton
+                android:id="@+id/button_visacheckout"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/default_button_height"
+                android:layout_marginBottom="10dp"
+                app:animation="true"
+                android:enabled="false"/>
+
             <RelativeLayout
                 android:id="@+id/partial_checkout_button_masterpass"
                 android:layout_width="match_parent"

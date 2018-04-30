@@ -15,6 +15,9 @@ import com.bluelinelabs.conductor.Router;
 import com.bluelinelabs.conductor.RouterTransaction;
 import com.bluelinelabs.conductor.support.RouterPagerAdapter;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+
 import javax.inject.Inject;
 
 import au.com.dealsdirect.R;
@@ -40,6 +43,11 @@ public class MainController extends BaseController implements MainMvpView {
     @Inject
     MainMvpPresenter<MainMvpView> mPresenter;
 
+    HashMap<Integer,Router> mRouterList;
+    Router mSaleItemsRouter;
+    Router mAccountsRouter;
+    Router mCheckoutRouter;
+
     @BindView(R.id.home_viewpager)
     MainCustomViewPager mHomeViewPager;
 
@@ -49,6 +57,8 @@ public class MainController extends BaseController implements MainMvpView {
     Controller mSaleItemsController;
     Controller mCheckoutController;
     Controller mAccountsController;
+
+    private int mCurrentVisibleIndex = -1;
 
     public static MainController newInstance() {
 
@@ -103,6 +113,8 @@ public class MainController extends BaseController implements MainMvpView {
 
     private void setupViewPager() {
 
+        mRouterList = new HashMap<>();
+
         RouterPagerAdapter mViewPagerAdapter = new RouterPagerAdapter(this) {
             @Override
             public void configureRouter(@NonNull Router router, int position) {
@@ -110,12 +122,18 @@ public class MainController extends BaseController implements MainMvpView {
                     switch (position) {
                         case 0:
                             GateKeeper.setRoot(router, GateKeeper.Destination.ACCOUNT,RouterTransaction.with(mAccountsController));
+                            mAccountsRouter = router;
+                            mRouterList.put(0,mAccountsRouter);
                             break;
                         case 1:
                             GateKeeper.setRoot(router, GateKeeper.Destination.SALEITEMS,RouterTransaction.with(mSaleItemsController));
+                            mSaleItemsRouter = router;
+                            mRouterList.put(1,mSaleItemsRouter);
                             break;
                         case 2:
                             GateKeeper.setRoot(router, GateKeeper.Destination.CHECKOUT,RouterTransaction.with(mCheckoutController));
+                            mCheckoutRouter = router;
+                            mRouterList.put(2,mCheckoutRouter);
                             break;
                         default:
                             router.setRoot(RouterTransaction.with(mSaleItemsController));
@@ -138,6 +156,7 @@ public class MainController extends BaseController implements MainMvpView {
 
         mHomeViewPager.setAdapter(mViewPagerAdapter);
         mHomeViewPager.setCurrentItem(1);
+        mCurrentVisibleIndex = 1;
         mHomeViewPager.setMyScroller();
         mHomeViewPager.setOffscreenPageLimit(2);
 
@@ -210,6 +229,10 @@ public class MainController extends BaseController implements MainMvpView {
         return null;
     }
 
+    public Router getCurrentRouter(){
+        return mRouterList.get(mCurrentVisibleIndex);
+    }
+
     private void setPageChangeListener(){
         mHomeViewPager.setOnPageChangeListener(new ViewPager.OnPageChangeListener() {
             @Override
@@ -219,8 +242,9 @@ public class MainController extends BaseController implements MainMvpView {
 
             @Override
             public void onPageSelected(int position) {
+                mCurrentVisibleIndex = position;
                 if (position==2){
-                    if(mActivity.getCurrentRouter() != null) {
+                    if(mActivity.getCheckoutRouter() != null) {
                         Controller controller = GateKeeper.getCurrentControllerOnRouter(mActivity.getCheckoutRouter());
                         if (controller instanceof CheckoutController) {
                             ((CheckoutController) controller).loadCart();

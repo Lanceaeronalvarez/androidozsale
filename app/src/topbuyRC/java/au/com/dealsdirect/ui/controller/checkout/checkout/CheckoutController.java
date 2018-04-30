@@ -1,10 +1,14 @@
 package au.com.dealsdirect.ui.controller.checkout.checkout;
 
+import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.widget.NestedScrollView;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -21,9 +25,12 @@ import com.bluelinelabs.conductor.Controller;
 import com.bluelinelabs.conductor.ControllerChangeHandler;
 import com.bluelinelabs.conductor.changehandler.HorizontalChangeHandler;
 import com.bluelinelabs.conductor.changehandler.VerticalChangeHandler;
+import com.braintreepayments.api.models.BraintreeRequestCodes;
 import com.google.gson.Gson;
 import com.jakewharton.rxbinding2.view.RxView;
 import com.mysale.genie.utility.RxBus;
+import com.visa.checkout.VisaCheckoutSdk;
+import com.visa.checkout.VisaPaymentSummary;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -43,7 +50,7 @@ import au.com.dealsdirect.service.ourpay.Ourpay;
 import au.com.dealsdirect.service.ourpay.OurpayPanel;
 import au.com.dealsdirect.service.ourpay.OurpayStateManager;
 import au.com.dealsdirect.service.ourpay.OurpayTemplateText;
-import au.com.dealsdirect.ui.base.SwipeableBaseToolBarController;
+import au.com.dealsdirect.ui.base.SwipeableVisaCheckoutController;
 import au.com.dealsdirect.ui.controller.address.addnewaddress.AddNewAddressController;
 import au.com.dealsdirect.ui.controller.address.viewaddress.ViewAddressController;
 import au.com.dealsdirect.ui.controller.saleitemdetails.SaleItemDetailsController;
@@ -56,6 +63,7 @@ import au.com.dealsdirect.ui.controller.vouchers.Add.AddVouchersController;
 import au.com.dealsdirect.ui.custom.CustomAlertDialog;
 import au.com.dealsdirect.ui.main.FetchTokenHandler;
 import au.com.dealsdirect.ui.main.PaymentInfo;
+import au.com.dealsdirect.utils.AppLogger;
 import au.com.dealsdirect.utils.BundleBuilder;
 import au.com.dealsdirect.utils.BundleKeys;
 import au.com.dealsdirect.utils.ImageUtils;
@@ -75,7 +83,7 @@ import static au.com.dealsdirect.utils.BundleKeys.PAYMENT_METHODS;
  * Created by smartwave on 02/11/2017.
  */
 
-public class CheckoutController extends SwipeableBaseToolBarController implements CheckoutMvpView, FetchTokenHandler {
+public class CheckoutController extends SwipeableVisaCheckoutController implements CheckoutMvpView, FetchTokenHandler {
 
     @Inject
     CheckoutMvpPresenter<CheckoutMvpView> mPresenter;
@@ -84,40 +92,56 @@ public class CheckoutController extends SwipeableBaseToolBarController implement
     @Inject
     SaleItemDetailsMvpPresenter<SaleItemDetailsMvpView> mSaleItemDetailsPresenter;
 
-    ListView mListView;
 
+    @BindView(R.id.controller_checkout_recyclerview_items)
+    RecyclerView mRecyclerView;
+
+    @BindView(R.id.controller_checkout_container)
+    ViewGroup mCheckoutContainer;
+
+    @BindView(R.id.partial_checkout_address_new_address)
+    RelativeLayout mAddNewAddressLayout;
+    @BindView(R.id.partial_checkout_payment_new_payment)
+    RelativeLayout mAddNewPaymentLayout;
+    @BindView(R.id.partial_checkout_voucher_new_code)
+    RelativeLayout mAddNewVoucherLayout;
+    @BindView(R.id.partial_checkout_address_container)
+    LinearLayout mAddressLayout;
+    @BindView(R.id.partial_checkout_payment_container)
+    LinearLayout mPaymentLayout;
+    @BindView(R.id.partial_checkout_voucher_container)
+    LinearLayout mVoucherLayout;
+    @BindView(R.id.partial_checkout_summary_container)
+    LinearLayout mSummaryLayout;
+    @BindView(R.id.partial_checkout_address_change)
+    View mAddressChangeText;
+    @BindView(R.id.partial_checkout_payment_change)
+    View mPaymentChangeText;
+    @BindView(R.id.partial_checkout_voucher_change)
+    View mVoucherChangeText;
+    @BindView(R.id.partial_checkout_button_holder)
+    View mButtonHolder;
+    @BindView(R.id.partial_checkout_button_pay)
+    Button mPayButton;
+    @BindView(R.id.partial_checkout_button_paypal)
+    RelativeLayout mPaypalButton;
+    @BindView(R.id.partial_checkout_button_masterpass)
+    RelativeLayout mMasterpassButton;
+    @BindView(R.id.partial_checkout_ourpay_panel_holder)
+    LinearLayout mOurpayHolder;
     @BindView(R.id.no_cart_items_layout)
     RelativeLayout mNoCartItemsLayout;
 
-    private View mFooterView;
 
     private ArrayList<PaymentMethod> mPaymentList = new ArrayList<>();
     private DeliveryAddress mDeliveryAddress = null;
     private ArrayList<DecorationInfoList> mDecorationInfoList = new ArrayList<>();
-
-    private RelativeLayout mAddNewAddressLayout;
-    private RelativeLayout mAddNewPaymentLayout;
-    private RelativeLayout mAddNewVoucherLayout;
-    private LinearLayout mAddressLayout;
-    private LinearLayout mPaymentLayout;
-    private LinearLayout mVoucherLayout;
-    private LinearLayout mSummaryLayout;
-
-    private TextView mAddressChangeText;
-    private TextView mPaymentChangeText;
-    private TextView mVoucherChangeText;
-    private RelativeLayout mPartialCheckoutButtonLayout;
-    private View mButtonHolder;
-    private Button mPayButton;
 
     private ArrayList<Voucher> mVouchers;
 
     @BindView(R.id.checkout_scrollview)
     NestedScrollView mNestedScrollView;
 
-    private RelativeLayout mPaypalButton;
-    private RelativeLayout mMasterpassButton;
-    private LinearLayout mOurpayHolder;
     private RelativeLayout mButtonOurpay;
     private CheckBox mCheckBoxOurpayTC;
 
@@ -204,6 +228,16 @@ public class CheckoutController extends SwipeableBaseToolBarController implement
     };
 
 
+    public static CheckoutController newInstance() {
+        return new CheckoutController(
+                new BundleBuilder(new Bundle())
+                        .build());
+    }
+
+    public CheckoutController(Bundle args){
+        super(args);
+    }
+
     @Override
     protected View inflateView(@NonNull LayoutInflater inflater, @NonNull ViewGroup container) {
         View view = super.inflateView(inflater, container);
@@ -212,16 +246,9 @@ public class CheckoutController extends SwipeableBaseToolBarController implement
 
         getControllerComponent().inject(this);
         mPresenter.onAttach(this);
+        mVcoPresenter.onAttach(this);
 
-        mListView = (ListView) rootView.findViewById(R.id.fragment_checkout_list);
-        mAdapter = new CheckoutOrderAdapter(mActivity, R.layout.partial_checkout_item, mItemList, mPresenter);
-        mListView.setAdapter(mAdapter);
-
-        mFooterView = inflater.inflate(R.layout.partial_checkout_footer, container, false);
-        mListView.addFooterView(mFooterView, null, false);
-
-        mPartialCheckoutButtonLayout = (RelativeLayout) inflater.inflate(R.layout.partial_checkout_button, null, false);
-
+        registerForActivityResult(BraintreeRequestCodes.VISA_CHECKOUT);
         return view;
     }
 
@@ -231,36 +258,11 @@ public class CheckoutController extends SwipeableBaseToolBarController implement
 
         disableSwipingBehavior();
         mToolbarTitle.setText("my cart");
-
-        mButtonHolder = mFooterView.findViewById(R.id.partial_checkout_button_holder);
         mActivity.setCheckoutRouter(getRouter());
-
-        mAddNewVoucherLayout = (RelativeLayout) mFooterView.findViewById(R.id.partial_checkout_voucher_new_code);
-        mAddNewPaymentLayout = (RelativeLayout) mFooterView.findViewById(R.id.partial_checkout_payment_new_payment);
 
         if (mActivity != null) {
             mActivity.performResetWithAuthFetch();
         }
-
-        mAddNewAddressLayout = (RelativeLayout) mFooterView.findViewById(R.id.partial_checkout_address_new_address);
-        mAddNewPaymentLayout = (RelativeLayout) mFooterView.findViewById(R.id.partial_checkout_payment_new_payment);
-        mAddNewVoucherLayout = (RelativeLayout) mFooterView.findViewById(R.id.partial_checkout_voucher_new_code);
-
-        mAddressLayout = (LinearLayout) mFooterView.findViewById(R.id.partial_checkout_address_container);
-        mPaymentLayout = (LinearLayout) mFooterView.findViewById(R.id.partial_checkout_payment_container);
-        mVoucherLayout = (LinearLayout) mFooterView.findViewById(R.id.partial_checkout_voucher_container);
-        mSummaryLayout = (LinearLayout) mFooterView.findViewById(R.id.partial_checkout_summary_container);
-
-        mAddressChangeText = (TextView) mFooterView.findViewById(R.id.partial_checkout_address_change);
-        mPaymentChangeText = (TextView) mFooterView.findViewById(R.id.partial_checkout_payment_change);
-        mVoucherChangeText = (TextView) mFooterView.findViewById(R.id.partial_checkout_voucher_change);
-
-        mButtonHolder = mPartialCheckoutButtonLayout.findViewById(R.id.partial_checkout_button_holder);
-        mPayButton = (Button) mPartialCheckoutButtonLayout.findViewById(R.id.partial_checkout_button_pay);
-        mPaypalButton = (RelativeLayout) mPartialCheckoutButtonLayout.findViewById(R.id.partial_checkout_button_paypal);
-        mMasterpassButton = (RelativeLayout) mPartialCheckoutButtonLayout.findViewById(R.id.partial_checkout_button_masterpass);
-        mOurpayHolder = (LinearLayout) mPartialCheckoutButtonLayout.findViewById(R.id.partial_checkout_ourpay_panel_holder);
-
 
         mAddNewVoucherLayout.setOnClickListener(view12 -> {
             mActivity.setDraggableViewPager(false);
@@ -290,6 +292,7 @@ public class CheckoutController extends SwipeableBaseToolBarController implement
 
 
         setUp(view);
+        super.onViewBound(view);
     }
 
     @Override
@@ -298,8 +301,8 @@ public class CheckoutController extends SwipeableBaseToolBarController implement
         mPresenter.onAttach(this);
         mClickListeners = new CompositeDisposable();
 
-        //        disabling masterpass for TB atm 01/16/2018 for 2.3Oa
-        mMasterpassButton.setOnClickListener(view3 -> onMasterpassButtonClick());
+        //        disabling masterpass for TB atm 01/16/2018 for 2.3
+//        mMasterpassButton.setOnClickListener(view3 -> onMasterpassButtonClick());
 
         mClickListeners.add(RxView.clicks(mPayButton)
                 .throttleFirst(1000, TimeUnit.MILLISECONDS)
@@ -311,7 +314,6 @@ public class CheckoutController extends SwipeableBaseToolBarController implement
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(action -> onPaypalButtonClick()));
 
-        loadCart();
     }
 
     @Override
@@ -325,6 +327,13 @@ public class CheckoutController extends SwipeableBaseToolBarController implement
 
     @Override
     protected void setUp(View view) {
+
+        loadCart();
+
+        mAdapter = new CheckoutOrderAdapter(mActivity, mItemList, mPresenter);
+        mRecyclerView.setAdapter(mAdapter);
+        mRecyclerView.setLayoutManager(new LinearLayoutManager(mActivity, LinearLayoutManager.VERTICAL,false));
+
         mAddNewAddressLayout.setOnClickListener(mChangeClickListener);
         mAddNewPaymentLayout.setOnClickListener(mChangeClickListener);
         mAddNewVoucherLayout.setOnClickListener(mChangeClickListener);
@@ -354,8 +363,50 @@ public class CheckoutController extends SwipeableBaseToolBarController implement
             }
         });
 
-        mListView.setVisibility(View.GONE);
+        if (mVcoPresenter.isVisaCheckoutEnabled()) {
+            mVcoPresenter.setupVisaCheckout();
+        }
+    }
 
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        if (requestCode == BraintreeRequestCodes.VISA_CHECKOUT) {
+            showLoading();
+            AppLogger.d("VC_onActivityResult", "Result got back from Visa Checkout SDK");
+            String msg = "";
+
+            switch (resultCode) {
+                case Activity.RESULT_CANCELED:
+                    msg = "User Canceled, Result Code : " + resultCode;
+                    break;
+                case VisaCheckoutSdk.ResultCode.RESULT_SDK_NOT_INITIALIZED:
+                    msg = "Sdk not initialized  failed, Result Code : " + resultCode;
+                    break;
+                case VisaCheckoutSdk.ResultCode.RESULT_INITIALIZED_FAILED:
+                    msg = "VisaPaymentInfo validation failed, Result Code : " + resultCode;
+                    break;
+                case Activity.RESULT_OK:
+                    if (data != null) {
+                        VisaPaymentSummary visaPaymentSummary = data.getParcelableExtra(VisaCheckoutSdk.INTENT_PAYMENT_SUMMARY);
+                        if (visaPaymentSummary != null) {
+                            // Successful VCO
+                            mActivity.callCreatePaymentTransactionVco(visaPaymentSummary);
+                        }
+                        break;
+                    }
+                default:
+                    msg = "Purchase failed!";
+                    break;
+            }
+
+            if (!msg.isEmpty()) {
+                hideLoading();
+                AppLogger.d("VC_onActivityResult", msg);
+                onError(msg);
+            }
+        }
     }
 
     @Override
@@ -405,7 +456,7 @@ public class CheckoutController extends SwipeableBaseToolBarController implement
             hideBottomButton();
             mNoCartItemsLayout.setVisibility(View.GONE);
             showPaymentButtons();
-            mListView.setVisibility(View.VISIBLE);
+            mCheckoutContainer.setVisibility(View.VISIBLE);
             mItemList.clear();
             mItemList.addAll(items);
             mAdapter.notifyDataSetChanged();
@@ -438,31 +489,40 @@ public class CheckoutController extends SwipeableBaseToolBarController implement
     @Override
     public void showPaymentDetails(PaymentMethod paymentMethod) {
 
-        Log.d("checkoutpayment", "paymentMethod entered");
+        //update payment method selected
+        if(paymentMethod == null){
+            mActivity.setPaymentMethodSelected(null);
+        } else if(mActivity.getPaymentMethodSelected() == null){
+            mActivity.setPaymentMethodSelected(paymentMethod);
+        }
 
+        paymentMethod = mActivity.getPaymentMethodSelected();
+
+//        Payment buttons
         if (paymentMethod == null) {
-            Log.d("checkoutpayment", "paymentMethod null");
-
-            mAddNewPaymentLayout.setVisibility(View.VISIBLE);
-            mPaymentLayout.setVisibility(View.GONE);
-            mPaymentChangeText.setVisibility(View.GONE);
-
             mPayButton.setVisibility(View.VISIBLE);
             mPaypalButton.setVisibility(View.VISIBLE);
+            mVisaCheckoutButton.setVisibility(View.VISIBLE);
 
             if(mPresenter.isMasterPassEnabled()) {
                 mMasterpassButton.setVisibility(View.VISIBLE);
             }
 
-            mActivity.setPaymentMethodSelected(null);
-            return;
+            mAddNewPaymentLayout.setVisibility(View.VISIBLE);
+            mPaymentLayout.setVisibility(View.GONE);
+            mPaymentChangeText.setVisibility(View.GONE);
 
-        } else if (mActivity.getPaymentMethodSelected() == null) {
-            mActivity.setPaymentMethodSelected(paymentMethod);
-        }
+        } else {
 
-        paymentMethod = mActivity.getPaymentMethodSelected();
-        if (paymentMethod != null) {
+            if (paymentMethod.getPaymentType().equalsIgnoreCase(CARD_PAYPAL)) {
+                mPaypalButton.setVisibility(View.VISIBLE);
+                mPayButton.setVisibility(View.GONE);
+                mVisaCheckoutButton.setVisibility(View.GONE);
+            } else {
+                mPayButton.setVisibility(View.VISIBLE);
+                mPaypalButton.setVisibility(View.GONE);
+                mVisaCheckoutButton.setVisibility(View.GONE);
+            }
 
             ((TextView) mPaymentLayout.findViewById(R.id.partial_checkout_payment_name)).setText(paymentMethod.getPaymentType());
             ((TextView) mPaymentLayout.findViewById(R.id.partial_checkout_payment_details)).setText(paymentMethod.getDescription());
@@ -474,24 +534,7 @@ public class CheckoutController extends SwipeableBaseToolBarController implement
             mAddNewPaymentLayout.setVisibility(View.GONE);
             mPaymentLayout.setVisibility(View.VISIBLE);
             mPaymentChangeText.setVisibility(View.VISIBLE);
-//            disabling masterpass for TB atm 01/16/2018 for 2.3
-//            mMasterpassButton.setVisibility(View.GONE);
-        }
-
-        //Payment buttons
-        if (paymentMethod == null) {
-
-            mPayButton.setVisibility(View.VISIBLE);
-            mPaypalButton.setVisibility(View.VISIBLE);
-        } else {
-
-            if (paymentMethod.getPaymentType().equalsIgnoreCase(CARD_PAYPAL)) {
-                mPayButton.setVisibility(View.GONE);
-                mPaypalButton.setVisibility(View.VISIBLE);
-            } else {
-                mPayButton.setVisibility(View.VISIBLE);
-                mPaypalButton.setVisibility(View.GONE);
-            }
+            mMasterpassButton.setVisibility(View.GONE);
         }
     }
 
@@ -559,7 +602,7 @@ public class CheckoutController extends SwipeableBaseToolBarController implement
     public void updateCheckoutBadge() {
         Controller topController = GateKeeper.getCurrentControllerOnRouter(mActivity.getSaleItemsRouter());
         if (topController instanceof SaleItemDetailsController) {
-            mSaleItemDetailsPresenter.onAttach((SaleItemDetailsController) topController);
+            mSaleItemDetailsPresenter.onAttach((SaleItemDetailsController)topController);
             mSaleItemDetailsPresenter.callGetBasketItemsQuantity();
         } else if (topController instanceof SaleItemsController) {
             mSaleItemsPresenter.onAttach((SaleItemsController) topController);
@@ -596,7 +639,7 @@ public class CheckoutController extends SwipeableBaseToolBarController implement
     private void showNoCartItemsLayout() {
         hidePaymentButtons();
         mNoCartItemsLayout.setVisibility(View.VISIBLE);
-        mListView.setVisibility(View.GONE);
+        mCheckoutContainer.setVisibility(View.GONE);
         mPresenter.resetIsCartAlreadyLoaded();
         setupDefaultBottomButton("shop now", view -> {
             mActivity.getMainController().getHomeViewPager().setCurrentItem(1);
@@ -609,7 +652,6 @@ public class CheckoutController extends SwipeableBaseToolBarController implement
 
     private void showPaymentButtons() {
         mButtonHolder.setVisibility(View.VISIBLE);
-        setupCustomBottomLayout(mPartialCheckoutButtonLayout);
     }
 
     private boolean isAddressValid() {
@@ -777,6 +819,18 @@ public class CheckoutController extends SwipeableBaseToolBarController implement
         hidePaymentButtons();
     }
 
+    @Override
+    public void onVisaCheckoutButtonClicked() {
+        if (!isAddressValid()) {
+
+            //push add new address fragment.
+            showAddAddressController();
+            return;
+        }
+
+        mVcoPresenter.payWithVisaCheckout(mValue.getSummary().total);
+        mPresenter.facebookInitiatedCheckout(PaymentInfo.getPaymentType(), mItemList.size(), mValue.getSummary().total);
+    }
 
     private String formAddressDetails(DeliveryAddress deliveryAddress) {
 

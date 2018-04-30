@@ -38,7 +38,7 @@ public class OrderDetailsController extends BaseController implements OrderDetai
 
     @BindView(R.id.partial_toolbar_arrow_title)
     TextView mOrderDetailsToolarTitle;
-    @BindView(R.id.partial_toolbar_filter_view)
+    @BindView(R.id.partial_toolbar_right_view)
     ImageView mOrderDetailsRightOption;
 
     @BindView(R.id.order_details_recyclerview)
@@ -116,7 +116,7 @@ public class OrderDetailsController extends BaseController implements OrderDetai
         }
     }
 
-    @OnClick(R.id.partial_toolbar_arrow_view)
+    @OnClick(R.id.partial_toolbar_left_view)
     public void onBackClick() {
         mActivity.onBackPressed();
     }

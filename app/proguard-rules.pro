@@ -90,6 +90,7 @@
 # If you do not use Rx:
 -dontwarn rx.**
 
+
 # rxjava
 -keep class rx.schedulers.Schedulers {
     public static <methods>;

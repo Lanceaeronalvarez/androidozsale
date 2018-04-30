@@ -200,6 +200,14 @@
             android:text="@string/join_now"
             android:textSize="@dimen/text_size_xlarge"/>
 
+        <com.visa.checkout.widget.VisaCheckoutButton
+            android:id="@+id/button_visacheckout"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/default_button_height"
+            android:layout_marginTop="10dp"
+            app:animation="true"
+            android:enabled="false"/>
+
         <RelativeLayout
             android:id="@+id/facebook_login_button"
             android:layout_width="match_parent"

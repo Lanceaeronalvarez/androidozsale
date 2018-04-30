@@ -7,7 +7,6 @@ import android.support.annotation.Nullable;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -21,10 +20,7 @@ import com.bluelinelabs.conductor.changehandler.HorizontalChangeHandler;
 
 import java.io.Serializable;
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
 import java.util.List;
-import java.util.stream.Collectors;
 
 import javax.inject.Inject;
 
@@ -66,10 +62,10 @@ public class AccountController extends BaseController implements AccountMvpView,
     @BindView(R.id.partial_toolbar_arrow_title)
     TextView mTitleTextView;
 
-    @BindView(R.id.partial_toolbar_arrow_view)
+    @BindView(R.id.partial_toolbar_left_view)
     ImageButton mArrowButton;
 
-    @BindView(R.id.partial_toolbar_filter_view)
+    @BindView(R.id.partial_toolbar_right_view)
     ImageButton mFilterButton;
 
     @BindView(R.id.account_recycler_view)
@@ -344,7 +340,7 @@ public class AccountController extends BaseController implements AccountMvpView,
         return mChangeInProgress;
     }
 
-    @OnClick(R.id.partial_toolbar_filter_view)
+    @OnClick(R.id.partial_toolbar_right_view)
     public void promptLogin() {
         if (mPresenter.isAuthorized()) {
             triggerLogout();

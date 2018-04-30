@@ -3,6 +3,7 @@ package au.com.dealsdirect.ui.controller.checkout.checkout;
 import android.app.Activity;
 import android.content.Context;
 import android.support.annotation.NonNull;
+import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -11,102 +12,69 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import au.com.dealsdirect.R;
 import au.com.dealsdirect.data.network.model.checkout.getcurrentorder.Item;
+import au.com.dealsdirect.ui.controller.shops.adapter.BannersAdapter;
 import au.com.dealsdirect.ui.custom.ProductQuantityLayout;
 import au.com.dealsdirect.utils.ImageUtils;
 import au.com.dealsdirect.utils.LegacyStringImageUtils;
 import au.com.dealsdirect.utils.PriceUtils;
+import butterknife.BindView;
+import butterknife.ButterKnife;
 
 /**
  * Created by smartwave on 28/06/2017.
  */
 
-public class CheckoutOrderAdapter extends ArrayAdapter<Item> {
+public class CheckoutOrderAdapter extends RecyclerView.Adapter<CheckoutOrderAdapter.ViewHolder> {
 
     private Context mContext;
     private ArrayList<Item> mData;
     private CheckoutMvpPresenter<CheckoutMvpView> mPresenter;
-    private int resLayout;
 
-    public CheckoutOrderAdapter(Context context, int resLayout, ArrayList<Item> data, CheckoutMvpPresenter<CheckoutMvpView> presenter) {
-        super(context, resLayout, data);
-
+    public CheckoutOrderAdapter(Context context,ArrayList<Item> data, CheckoutMvpPresenter<CheckoutMvpView> presenter) {
         this.mContext = context;
-        this.resLayout = resLayout;
         this.mData = data;
         this.mPresenter = presenter;
     }
 
-    private class ViewHolder {
-        ImageView image;
-        TextView name;
-        TextView sizeText;
-        TextView sizeValue;
-        TextView colorText;
-        TextView colorValue;
-        TextView price;
-        ProductQuantityLayout quantityLayout;
+    @Override
+    public CheckoutOrderAdapter.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.partial_checkout_item, parent, false);
+        return new CheckoutOrderAdapter.ViewHolder(view);
     }
 
-    @NonNull
     @Override
-    public View getView(int position, View convertView, ViewGroup parent) {
-        ViewHolder view;
+    public void onBindViewHolder(CheckoutOrderAdapter.ViewHolder holder, int position) {
         Item item = mData.get(position);
 
-        LayoutInflater inflater = (LayoutInflater) mContext.getSystemService(Activity.LAYOUT_INFLATER_SERVICE);
-        if (convertView == null) {
-            convertView = inflater.inflate(resLayout, null);
-            view = new ViewHolder();
-
-            view.image = (ImageView) convertView.findViewById(R.id.item_checkout_image);
-            view.name = (TextView) convertView.findViewById(R.id.item_checkout_name);
-            view.sizeText = (TextView) convertView.findViewById(R.id.item_checkout_size_text);
-            view.sizeValue = (TextView) convertView.findViewById(R.id.item_checkout_size_value);
-            view.price = (TextView) convertView.findViewById(R.id.item_checkout_price);
-            view.colorText = (TextView) convertView.findViewById(R.id.item_checkout_color_text);
-            view.colorValue = (TextView) convertView.findViewById(R.id.item_checkout_color);
-            view.quantityLayout = (ProductQuantityLayout) convertView.findViewById(R.id.item_checkout_quantity);
-
-            convertView.setTag(view);
-        } else {
-            view = (ViewHolder) convertView.getTag();
-        }
-
-        if (item == null) return convertView;
-
-//   (1) fix when item.fileName is null
+        //   (1) fix when item.fileName is null
         if (item.fileName != null) {
             if (!item.fileName.isEmpty()) {
-                ImageUtils.loadImageDontAnimate(mContext, LegacyStringImageUtils.generateImageUrl(item.brandID, item.imageID, item.fileName), view.image);
+                ImageUtils.loadImageDontAnimate(mContext, LegacyStringImageUtils.generateImageUrl(item.brandID, item.imageID, item.fileName), holder.image);
             }
         }
 
-//   commented since item.fileName can be null when isEmpty is called. Replaced with (1)
-//        if(item.fileName!=null && !item.fileName.isEmpty()) {
-//            Glide.with(mContext).load(GImageUrlUtil.generateImageUrl(item.brandID, item.imageID, item.fileName)).into(view.image);
-//        }
-
-        view.name.setText(item.item);
+        holder.name.setText(item.item);
         if (item.size == null || item.size.length() < 0) {
-            view.sizeText.setVisibility(View.INVISIBLE);
-            view.sizeValue.setVisibility(View.INVISIBLE);
+            holder.sizeText.setVisibility(View.INVISIBLE);
+            holder.sizeValue.setVisibility(View.INVISIBLE);
         } else {
-            view.sizeText.setVisibility(View.VISIBLE);
-            view.sizeValue.setVisibility(View.VISIBLE);
-            view.sizeValue.setText(item.size);
+            holder.sizeText.setVisibility(View.VISIBLE);
+            holder.sizeValue.setVisibility(View.VISIBLE);
+            holder.sizeValue.setText(item.size);
         }
-        view.colorText.setVisibility(View.INVISIBLE);
+        holder.colorText.setVisibility(View.INVISIBLE);
 
-        view.price.setText(PriceUtils.getPriceStringValue(item.price));
-        view.quantityLayout.setMax(5);
-        view.quantityLayout.setQuantity(item.qty);
-        view.quantityLayout.setAutoUpdateQuantity(false);
-        view.quantityLayout.setEditTextToNonEditable();
+        holder.price.setText(PriceUtils.getPriceStringValue(item.price));
+        holder.quantityLayout.setMax(5);
+        holder.quantityLayout.setQuantity(item.qty);
+        holder.quantityLayout.setAutoUpdateQuantity(false);
+        holder.quantityLayout.setEditTextToNonEditable();
 
-        view.quantityLayout.setOnQuantityChangeListener(new ProductQuantityLayout.onQuantityChangeListener() {
+        holder.quantityLayout.setOnQuantityChangeListener(new ProductQuantityLayout.onQuantityChangeListener() {
             @Override
             public void onQuantityIncrease(ProductQuantityLayout view, int value) {
                 mPresenter.fetchAdjustItemQuantity("IncreaseOrderItem", item.id, view);
@@ -117,9 +85,40 @@ public class CheckoutOrderAdapter extends ArrayAdapter<Item> {
                 mPresenter.fetchAdjustItemQuantity("DecreaseOrderItem", item.id, view);
             }
         });
+    }
 
-        return convertView;
+    public void replaceData(List<Item> items){
+        mData = new ArrayList<>(items);
+        notifyDataSetChanged();
+    }
 
+    @Override
+    public int getItemCount() {
+        return mData.size();
+    }
 
+    public class ViewHolder extends RecyclerView.ViewHolder {
+
+        @BindView(R.id.item_checkout_image)
+        ImageView image;
+        @BindView(R.id.item_checkout_name)
+        TextView name;
+        @BindView(R.id.item_checkout_size_text)
+        TextView sizeText;
+        @BindView(R.id.item_checkout_size_value)
+        TextView sizeValue;
+        @BindView(R.id.item_checkout_color_text)
+        TextView colorText;
+        @BindView(R.id.item_checkout_color)
+        TextView colorValue;
+        @BindView(R.id.item_checkout_price)
+        TextView price;
+        @BindView(R.id.item_checkout_quantity)
+        ProductQuantityLayout quantityLayout;
+
+        public ViewHolder(View itemView) {
+            super(itemView);
+            ButterKnife.bind(this, itemView);
+        }
     }
 }

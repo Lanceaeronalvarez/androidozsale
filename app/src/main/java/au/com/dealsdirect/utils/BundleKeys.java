@@ -63,6 +63,7 @@ public class BundleKeys {
     public static final String PAYMENT_METHODS = "payment_methods";
     public static final String IS_FROM_CART = "is_from_cart";
     public static final String CART_TOTAL_COST = "cart_total_cost";
+    public static final String ITEM_LIST_SIZE = "item_list_size";
 
     //payment success
     public static final String KEY_ADDRESS = "Address";
@@ -109,6 +110,11 @@ public class BundleKeys {
     public static final String KEY_STATUS = "ReturnDetailsController.STATUS";
     public static final String KEY_RAN = "ReturnDetailsController.RAN";
     public static final String KEY_RETURN_ID = "ReturnDetailsController.RETURN_ID";
+
+    //Password Verification
+    public static final String KEY_ACCOUNT_EMAIL = "PasswordVerification.ACCOUNT_EMAIL";
+    public static final String KEY_ACCOUNT_EXISTS = "PasswordVerification.ACCOUNT_EXISTS";
+    public static final String KEY_LOGIN_VISA_REQUEST_DATA = "PasswordVerification.LOGIN_VISA_REQUEST_DATA";
 
 
 }

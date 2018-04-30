@@ -14,6 +14,7 @@ import android.support.design.widget.Snackbar;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
@@ -128,19 +129,22 @@ public abstract class BaseActivity extends AppCompatActivity implements MvpView 
 //                    }, timeoutDialogDelay);
 //                }
                 showSnackBar(getString(R.string.no_internet_connection), true);
-            } else if ((!message.contains("SocketTimeoutException") && (message.contains("Exception") ||
-                    message.contains("null") || message.contains("virtual method")))) {
+            } else if (message.contains("SocketTimeoutException") ||
+                    message.contains("SSLHandshakeException")) {
+                // Do not notify for these errors
+                return;
+            } else if (message.contains("Exception") || message.contains("null") ||
+                    message.contains("virtual method")) {
 //                CustomAlertDialog.showCustomAlertDialog(this, CustomAlertDialog.CustomDialogIconState.NEGATIVE, getString(R.string.error));
                 showSnackBar(getString(R.string.error), false);
-            }
-            else {
+            } else {
 
                 /*
                     4/6/18 - feature/andr-3308-registersubscriber
                     Disallow showing of No internet Connection on Socket Timeout Exception
                  */
-                if (!message.contains("SocketTimeoutException"))
-                    CustomAlertDialog.showCustomAlertDialog(this, CustomAlertDialog.CustomDialogIconState.NEGATIVE, message);
+                CustomAlertDialog.showCustomAlertDialog(this,
+                        CustomAlertDialog.CustomDialogIconState.NEGATIVE, message);
 
             }
         }
@@ -164,7 +168,15 @@ public abstract class BaseActivity extends AppCompatActivity implements MvpView 
         sbView.getLayoutParams().height = Math.round(getResources().getDimension(R.dimen.bottom_nav_height));
         TextView textView = (TextView) sbView
                 .findViewById(android.support.design.R.id.snackbar_text);
-        textView.setTextAlignment(View.TEXT_ALIGNMENT_CENTER);
+
+//        support v23 changed behavior for this. ref: https://stackoverflow.com/questions/32668217/android-snackbar-textalignment-in-center
+//        changed last 04/18/18
+//        Jp/Ayi
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            textView.setTextAlignment(View.TEXT_ALIGNMENT_CENTER);
+        } else {
+            textView.setGravity(Gravity.CENTER_HORIZONTAL);
+        }
         textView.setTextColor(ContextCompat.getColor(this, R.color.white));
         if(isCurrentControllerNotSplash()) {
             mSnackbar.show();

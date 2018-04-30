@@ -6,6 +6,7 @@ import android.util.Log;
 import com.mysale.genie.utility.config.api.GetAppSettings;
 import com.mysale.genie.utility.config.api.GetAppSettingsSection;
 import com.mysale.genie.utility.config.api.GetServerSettings;
+import com.mysale.genie.utility.config.model.getpublicpaymenttoken.GetPublicPaymentToken;
 
 import org.json.JSONObject;
 
@@ -37,6 +38,7 @@ import au.com.dealsdirect.data.network.model.checkout.ClearOrder;
 import au.com.dealsdirect.data.network.model.checkout.ClearVouchers;
 import au.com.dealsdirect.data.network.model.checkout.CreatePaymentMethod;
 import au.com.dealsdirect.data.network.model.checkout.CreatePaymentTransaction;
+import au.com.dealsdirect.data.network.model.checkout.CreatePaymentTransactionVco;
 import au.com.dealsdirect.data.network.model.checkout.GetCurrentOrder;
 import au.com.dealsdirect.data.network.model.checkout.GetPaymentToken;
 import au.com.dealsdirect.data.network.model.checkout.GetUserPaymentMethods;
@@ -68,6 +70,7 @@ import au.com.dealsdirect.data.network.model.legalities.GetTemplateTextsResponse
 import au.com.dealsdirect.data.network.model.login.LoginEmail;
 import au.com.dealsdirect.data.network.model.login.LoginFacebook;
 import au.com.dealsdirect.data.network.model.login.LoginTicket;
+import au.com.dealsdirect.data.network.model.login.LoginVisa;
 import au.com.dealsdirect.data.network.model.login.Logout;
 import au.com.dealsdirect.data.network.model.masterpass.MasterPassPaymentRequest;
 import au.com.dealsdirect.data.network.model.masterpass.MasterPassPostTransactionRequest;
@@ -201,6 +204,11 @@ public class AppDataManager implements DataManager {
     }
 
     @Override
+    public Observable<GetPublicPaymentToken.ResponseValue> callGetPublicPaymentToken(String countryId, String languageId) {
+        return mApiHelper.callGetPublicPaymentToken(countryId,languageId);
+    }
+
+    @Override
     public Observable<GetAppSettings.ResponseValue> callGetAppSettings(String countryId) {
         return mApiHelper.callGetAppSettings(countryId);
     }
@@ -238,6 +246,11 @@ public class AppDataManager implements DataManager {
     @Override
     public Observable<Logout.ResponseValue> callLogout(Logout.RequestValue requestValue) {
         return mApiHelper.callLogout(requestValue);
+    }
+
+    @Override
+    public Observable<LoginVisa.ResponseValue> callLoginVisaCheckout(LoginVisa.RequestValue requestValue) {
+        return mApiHelper.callLoginVisaCheckout(requestValue);
     }
 
     @Override
@@ -366,6 +379,11 @@ public class AppDataManager implements DataManager {
     @Override
     public Observable<CreatePaymentTransaction.ResponseValue> callCreatePaymentTransaction(CreatePaymentTransaction.RequestValue requestValue) {
         return mApiHelper.callCreatePaymentTransaction(requestValue);
+    }
+
+    @Override
+    public Observable<CreatePaymentTransaction.ResponseValue> callCreatePaymentTransactionVco(CreatePaymentTransactionVco.RequestValue requestValue) {
+        return mApiHelper.callCreatePaymentTransactionVco(requestValue);
     }
 
     @Override
@@ -774,6 +792,46 @@ public class AppDataManager implements DataManager {
     }
 
     @Override
+    public void setIsVisaCheckoutEnabled(boolean isVisaCheckoutEnabled) {
+        mPreferencesHelper.setIsVisaCheckoutEnabled(isVisaCheckoutEnabled);
+    }
+
+    @Override
+    public boolean getIsVisaCheckoutEnabled() {
+        return mPreferencesHelper.getIsVisaCheckoutEnabled();
+    }
+
+    @Override
+    public void setVisaCheckoutApiKey(String visaCheckoutApiKey) {
+        mPreferencesHelper.setVisaCheckoutApiKey(visaCheckoutApiKey);
+    }
+
+    @Override
+    public String getVisaCheckoutApiKey() {
+        return mPreferencesHelper.getVisaCheckoutApiKey();
+    }
+
+    @Override
+    public void setVisaCheckoutApiUrl(String visaCheckoutApiUrl) {
+        mPreferencesHelper.setVisaCheckoutApiUrl(visaCheckoutApiUrl);
+    }
+
+    @Override
+    public String getVisaCheckoutApiUrl() {
+        return mPreferencesHelper.getVisaCheckoutApiUrl();
+    }
+
+    @Override
+    public void setVisaCheckoutProviderType(int visaCheckoutProviderType) {
+        mPreferencesHelper.setVisaCheckoutProviderType(visaCheckoutProviderType);
+    }
+
+    @Override
+    public int getVisaCheckoutProviderType() {
+        return mPreferencesHelper.getVisaCheckoutProviderType();
+    }
+
+    @Override
     public void setMyPayTemplateTexts(GetTemplateTextsResponse.GetTemplateTextsValue value) {
         Log.d("Checkout", "set my pay template texts");
         mPreferencesHelper.setMyPayTemplateTexts(value);
@@ -813,6 +871,26 @@ public class AppDataManager implements DataManager {
     @Override
     public boolean getIsMultiCountry() {
         return mPreferencesHelper.getIsMultiCountry();
+    }
+
+    @Override
+    public void setPublicPaymentToken(String publicPaymentToken) {
+        mPreferencesHelper.setPublicPaymentToken(publicPaymentToken);
+    }
+
+    @Override
+    public String getPublicPaymentToken() {
+        return mPreferencesHelper.getPublicPaymentToken();
+    }
+
+    @Override
+    public void setPublicPaymentType(String publicPaymentType) {
+        mPreferencesHelper.setPublicPaymentType(publicPaymentType);
+    }
+
+    @Override
+    public String getPublicPaymentType() {
+        return mPreferencesHelper.getPublicPaymentType();
     }
 
     @Override
