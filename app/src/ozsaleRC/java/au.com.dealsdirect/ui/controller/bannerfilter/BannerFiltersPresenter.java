@@ -1,15 +1,14 @@
-package au.com.dealsdirect.ui.controller.categories;
-
-import android.util.Log;
+package au.com.dealsdirect.ui.controller.bannerfilter;
 
 import com.androidnetworking.error.ANError;
+
+import org.codehaus.mojo.animal_sniffer.IgnoreJRERequirement;
 
 import java.util.List;
 
 import javax.inject.Inject;
 
 import au.com.dealsdirect.data.DataManager;
-import au.com.dealsdirect.data.network.ApiCallback;
 import au.com.dealsdirect.data.network.AppApiCallback;
 import au.com.dealsdirect.data.network.model.category.GetCategoryTreeResponse;
 import au.com.dealsdirect.ui.base.BasePresenter;
@@ -17,18 +16,16 @@ import au.com.dealsdirect.utils.rx.SchedulerProvider;
 import io.reactivex.disposables.CompositeDisposable;
 
 /**
- * dp Created by Admin on 6/6/17.
+ * Created by pauldesilva on 4/13/18.
  */
 
-public class CategoriesPresenter<V extends CategoriesMvpView> extends BasePresenter<V> implements
-        CategoriesMvpPresenter<V> {
+public class BannerFiltersPresenter<V extends BannerFiltersMvpView> extends BasePresenter<V> implements
+        BannerFiltersMvpPresenter<V> {
 
     @Inject
-    public CategoriesPresenter(DataManager dataManager, SchedulerProvider schedulerProvider,
-            CompositeDisposable compositeDisposable) {
+    public BannerFiltersPresenter(DataManager dataManager, SchedulerProvider schedulerProvider, CompositeDisposable compositeDisposable) {
         super(dataManager, schedulerProvider, compositeDisposable);
     }
-
 
     @Override
     public void callGetCategoryTree() {
@@ -39,11 +36,11 @@ public class CategoriesPresenter<V extends CategoriesMvpView> extends BasePresen
         }
 
         doApiCallForResponse(getDataManager()
-                .callGetGetCategories(), new AppApiCallback() {
-            @Override
-            public void onSuccess(List<?> response) {
-                super.onSuccess(response);
-                getMvpView().showCategories((List<GetCategoryTreeResponse>) response);
+            .callGetGetCategories(), new AppApiCallback() {
+        @Override
+        public void onSuccess(List<?> response) {
+            super.onSuccess(response);
+            getMvpView().showCategories((List<GetCategoryTreeResponse>) response);
             }
         });
     }

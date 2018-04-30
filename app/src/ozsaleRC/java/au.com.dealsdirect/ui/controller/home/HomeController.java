@@ -58,6 +58,9 @@ public class HomeController extends BaseController implements HomeMvpView {
 
     @Inject
     HomeMvpPresenter<HomeMvpView> mPresenter;
+  
+    @Inject
+    MainActivity mActivity;
 
     @BindView(R.id.product_details_add_to_cart)
     ImageView mImageAddToCartAnimation;
@@ -222,8 +225,6 @@ public class HomeController extends BaseController implements HomeMvpView {
         });
 
         mBottomNavigationView.setOnTabSelectedListener((position, wasSelected) -> {
-
-
             if (mCheckoutRouter!=null){
                 Controller controller = getCurrentControllerOnRouter(mCheckoutRouter);
                 if (controller instanceof CheckoutController) {
@@ -266,7 +267,7 @@ public class HomeController extends BaseController implements HomeMvpView {
             } else {
                 if (position == TAB_SHOP_INDEX) {
                     mShopRouter.popToRoot();
-                } else if (position == TAB_CHECKOUT_INDEX) {
+                } else if (position == TAB_ACCOUNT_INDEX) {
                     mAccountsRouter.popToRoot();
                 }
             }
@@ -328,12 +329,14 @@ public class HomeController extends BaseController implements HomeMvpView {
 
     @Override
     public void showSecondTabController() {
+        mActivity.getMainController().setViewpagerDraggable(false);
         setVisibleContainer(TAB_CATEGORIES_INDEX);
     }
 
     @Override
     public void showThirdTabController() {
         setVisibleContainer(TAB_ACCOUNT_INDEX);
+        mActivity.getMainController().setViewpagerDraggable(false);
 
         if (!mActivity.isAuthorized()) {
             mActivity.showLoginController(mContactRouter, new AuthHandler() {
@@ -354,6 +357,7 @@ public class HomeController extends BaseController implements HomeMvpView {
     @Override
     public void showFourthTabController() {
         setVisibleContainer(TAB_CONTACT_INDEX);
+        mActivity.getMainController().setViewpagerDraggable(false);
         int size = mAccountsRouter.getBackstack().size();
         if (mAccountsRouter.getBackstack().get(size - 1).controller() instanceof AccountMvpView)
             ((AccountMvpView) mAccountsRouter.getBackstack().get(size - 1).controller()).initLoginDrawable();
@@ -362,6 +366,7 @@ public class HomeController extends BaseController implements HomeMvpView {
     @Override
     public void showFifthTabController() {
         setVisibleContainer(TAB_CHECKOUT_INDEX);
+        mActivity.getMainController().setViewpagerDraggable(false);
 
         if (!mActivity.isAuthorized()) {
             mActivity.showLoginController(mCheckoutRouter, new AuthHandler() {

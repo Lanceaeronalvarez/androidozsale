@@ -259,7 +259,7 @@ android {
         }
 
         ozsaleRC {
-            versionCode 4
+            versionCode 5
             versionName "0.9"
             applicationId "au.com.ozsale"
 
