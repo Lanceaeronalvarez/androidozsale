@@ -23,7 +23,8 @@ public class ProductQuantityLayout extends LinearLayout {
     private ProgressBar mMinusLoader;
     private ProgressBar mPlusLoader;
     private EditText quantity;
-    private static int max;
+    private static int max = 0;
+    private static int min = 0;
     private boolean auto_update = true;
 
 
@@ -42,12 +43,20 @@ public class ProductQuantityLayout extends LinearLayout {
         init(context);
     }
 
+    public static int getMin() {
+        return min;
+    }
+
     public int getMax() {
         return max;
     }
 
     public void setMax(int max) {
         ProductQuantityLayout.max = max;
+    }
+
+    public void setMin(int min) {
+        ProductQuantityLayout.min = min;
     }
 
     private void init(Context context) {
@@ -70,7 +79,8 @@ public class ProductQuantityLayout extends LinearLayout {
 
             String val = quantity.getText().toString();
             int quantityValue = Integer.parseInt(val);
-            if (auto_update && quantityValue > 0) {
+            if (auto_update && quantityValue > min) {
+
                 quantityValue--;
                 quantity.setText(String.valueOf(quantityValue));
             }

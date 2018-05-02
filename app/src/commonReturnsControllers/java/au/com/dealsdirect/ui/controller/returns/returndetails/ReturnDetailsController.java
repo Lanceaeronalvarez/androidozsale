@@ -1,4 +1,4 @@
-package au.com.dealsdirect.ui.controller.returns.returndetails;
+package au.com.dealsdirect.ui.returns.returndetails;
 
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -17,6 +17,8 @@ import au.com.dealsdirect.R;
 import au.com.dealsdirect.data.network.model.returns.returndetails.GetReturnDetailsResponseBody;
 import au.com.dealsdirect.data.network.model.returns.returndetails.Item;
 import au.com.dealsdirect.ui.base.BaseController;
+import au.com.dealsdirect.ui.controller.returns.returndetails.ReturnDetailsMvpPresenter;
+import au.com.dealsdirect.ui.controller.returns.returndetails.ReturnDetailsMvpView;
 import au.com.dealsdirect.ui.controller.returns.returndetails.adapter.ReturnDetailsAdapter;
 import au.com.dealsdirect.utils.BundleBuilder;
 import butterknife.BindView;
