@@ -155,7 +155,6 @@ public class SearchFilterController extends BaseController
         mBrandList = JsonUtils.convertStringToObject(args.getString(BundleKeys.KEY_BRAND_LIST, ""), new TypeToken<ArrayList<String>>() {
         }.getType());
         mSaleItemsTitle = args.getString(BundleKeys.KEY_SALE_ITEMS_TITLE);
-//        restoreStateSelection(args);
     }
 
     @Override

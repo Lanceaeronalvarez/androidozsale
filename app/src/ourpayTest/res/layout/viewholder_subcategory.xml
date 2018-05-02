@@ -9,20 +9,16 @@
     <FrameLayout
         android:id="@+id/viewholder_subcategory_container"
         android:layout_width="match_parent"
-        android:layout_height="40dp"
-        android:layout_marginEnd="@dimen/padding_default"
-        android:layout_marginStart="@dimen/padding_default"
-        android:background="#FFFFFF">
+        android:layout_height="40dp">
 
         <TextView
             android:id="@+id/viewholder_subcategory_title"
-            fontPath="@string/font_app_heavy"
+            fontPath="@string/font_app_bold"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textColor="@color/category_text_selector"
             android:textSize="@dimen/text_size_headline3"
             android:layout_gravity="left|center_vertical"
-            android:textStyle="bold"
             tools:ignore="MissingPrefix"
             tools:text="Category" />
 
@@ -41,7 +37,6 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginStart="25dp"
-        android:padding="@dimen/padding_default"
         android:overScrollMode="never" />
 
 </LinearLayout>

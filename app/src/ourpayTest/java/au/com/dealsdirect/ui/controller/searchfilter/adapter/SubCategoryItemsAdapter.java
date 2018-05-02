@@ -53,17 +53,12 @@ public class SubCategoryItemsAdapter extends RecyclerView.Adapter<SubCategoryIte
     @Override
     public SubCategoryItemViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.viewholder_filter_subcategory_item, parent, false);
-        SubCategoryItemViewHolder vh
-                = new SubCategoryItemViewHolder(view);
+        SubCategoryItemViewHolder vh = new SubCategoryItemViewHolder(view);
         return vh;
     }
 
     @Override
     public void onBindViewHolder(SubCategoryItemViewHolder holder, int position) {
-//        setAnimation(holder.itemView, position);
-
-        Context context = holder.itemView.getContext();
-
         if (!mData.isEmpty()) {
 
             if (!mData.get(position).getName().isEmpty()) {
@@ -107,13 +102,6 @@ public class SubCategoryItemsAdapter extends RecyclerView.Adapter<SubCategoryIte
         return 0;
     }
 
-    @Override
-    public void onViewDetachedFromWindow(SubCategoryItemViewHolder holder) {
-        super.onViewDetachedFromWindow(holder);
-//        Animation animation = AnimationUtils.loadAnimation(holder.itemView.getContext(), R.anim.slide_to_top);
-//        holder.itemView.startAnimation(animation);
-    }
-
     public void replaceData(List<GetCategoryTreeResponse> getCategoryTreeResponses) {
         mData = new ArrayList<>(getCategoryTreeResponses);
         notifyDataSetChanged();
@@ -135,14 +123,6 @@ public class SubCategoryItemsAdapter extends RecyclerView.Adapter<SubCategoryIte
         }
     }
 
-
-    private void setAnimation(View viewToAnimate, int position) {
-        if (position > lastPosition) {
-            Animation animation = AnimationUtils.loadAnimation(viewToAnimate.getContext(), R.anim.slide_to_bottom);
-            viewToAnimate.startAnimation(animation);
-            lastPosition = position;
-        }
-    }
 
     private List<GetCategoryTreeResponse> getSubCategoryItems(String categoryKey) {
         return mCategoryMap.get(categoryKey);
