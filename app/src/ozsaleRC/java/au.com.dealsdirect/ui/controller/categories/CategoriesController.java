@@ -276,14 +276,8 @@ public class CategoriesController extends BaseController
     @Override
     public void showCategories(List<GetCategoryTreeResponse> categories) {
         mCategories = categories;
-        createCategoryMap(mCategories);
-        mCategories = fillCategoryContent();
-        setupCategories();
-    }
-
-    private void createCategoryMap(List<GetCategoryTreeResponse> categories) {
-        mCategoryMap.put("shop", categories);
         addToMap(categories);
+        setupCategories();
     }
 
     private void addToMap(List<GetCategoryTreeResponse> categories) {
@@ -299,9 +293,5 @@ public class CategoriesController extends BaseController
                 mCategoryMap.put(subcategory.getKey(), newList);
             }
         }
-    }
-
-    private List<GetCategoryTreeResponse> fillCategoryContent() {
-        return mCategoryMap.get(CATEGORY_SHOP);
     }
 }

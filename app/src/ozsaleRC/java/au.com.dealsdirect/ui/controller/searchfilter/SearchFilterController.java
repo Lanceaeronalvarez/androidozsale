@@ -15,15 +15,12 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import com.bluelinelabs.conductor.Controller;
 import com.bluelinelabs.conductor.Router;
-import com.bluelinelabs.conductor.RouterTransaction;
-import com.crystal.crystalrangeseekbar.interfaces.OnRangeSeekbarChangeListener;
 import com.crystal.crystalrangeseekbar.interfaces.OnRangeSeekbarFinalValueListener;
 import com.google.gson.reflect.TypeToken;
 
 import java.util.ArrayList;
-import java.util.Arrays;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedList;
@@ -45,6 +42,7 @@ import au.com.dealsdirect.ui.controller.searchfilter.adapter.FacetItemsAdapter;
 import au.com.dealsdirect.ui.controller.searchfilter.adapter.FacetsAdapter;
 import au.com.dealsdirect.ui.controller.searchfilter.adapter.SearchChipModel;
 import au.com.dealsdirect.ui.controller.searchfilter.adapter.SubCategoriesAdapter;
+import au.com.dealsdirect.ui.controller.searchfilter.adapter.SubCategoryItemsAdapter;
 import au.com.dealsdirect.ui.custom.CustomRangeSeekbar;
 import au.com.dealsdirect.ui.main.MainActivity;
 import au.com.dealsdirect.utils.BundleBuilder;
@@ -117,20 +115,20 @@ public class SearchFilterController extends BaseController
     TextView mMinPrice;
 
     private String mSaleItemsTitle = "";
-    SubCategoryClickListener mSubCategoryClickListener;
-    SubCategoryItemClickListener mSubCategoryItemClickListener;
 
     List<GetSaleItemsResponse.Facets> mFacets;
     List<GetCategoryTreeResponse> mCategoryTree;
     List<SortingResponse> mSortingFacets = new ArrayList<>();
-    private Map<String, List<GetCategoryTreeResponse>> mCategoryMap = new HashMap<>();
-    private List<GetCategoryTreeResponse> mPreLoadedCategories = new LinkedList<>();
+    private Map<String, GetCategoryTreeResponse> mCategoryMap = new HashMap<>();
+    private boolean hasFacetChanged;
 
     SubCategoriesAdapter mSubCategoriesAdapter;
     FacetsAdapter mFacetsAdapter;
     FacetItemsAdapter mFacetItemsAdapter;
     List<SearchChipModel> mSearchItemsList = new ArrayList<>();
+    List<GetCategoryTreeResponse> categoryListFromFacets = new ArrayList<>();
     SaleItemsController mSaleItemsController;
+    GetCategoryTreeResponse mCategory;
 
     ArrayList<String> mBrandList = new ArrayList<>();
     ArrayList<String> mSizeList = new ArrayList<>();
@@ -140,13 +138,12 @@ public class SearchFilterController extends BaseController
     private int origMinValue = -1;
     private int origMaxValue = -1;
     private boolean isSeekbarReset = false;
-    private String mChosenCategory = "";
     private String mTitle = "";
     private int mCurrentTabPosition = -1;
     private boolean mIsSearchFilterControllerActive;
 
-    String mCategoryKey = "";
     String mSaleId = "";
+    List<String> mCategoryKeys = new ArrayList<>();
 
 
     private Set<Integer> origSelectedSet = new HashSet<Integer>();
@@ -157,6 +154,7 @@ public class SearchFilterController extends BaseController
     private ArrayList<SearchChipModel> mPreviousSearchChips = new ArrayList<>();
 
     List<Pair<String, String>> mFacetFilters = new ArrayList();
+
 
     public static SearchFilterController newInstance() {
         return new SearchFilterController(new BundleBuilder(new Bundle()).build());
@@ -169,13 +167,18 @@ public class SearchFilterController extends BaseController
         mSortingFacets = JsonUtils.convertStringToObject(args.getString(BundleKeys.KEY_SORTING_STRING, ""), new TypeToken<ArrayList<SortingResponse>>() {
         }.getType());
         mSaleId = args.getString(BundleKeys.SALEITEMS_SALE_ID, "");
-        mCategoryKey = args.getString(BundleKeys.SALEITEMS_CATEGORY_MAP, "");
         mCategoryTree = JsonUtils.convertStringToObject(args.getString(BundleKeys.KEY_CATEGORY_STRING, ""), new TypeToken<ArrayList<GetCategoryTreeResponse>>() {
         }.getType());
         mBrandList = JsonUtils.convertStringToObject(args.getString(BundleKeys.KEY_BRAND_LIST, ""), new TypeToken<ArrayList<String>>() {
         }.getType());
         mSaleItemsTitle = args.getString(BundleKeys.KEY_SALE_ITEMS_TITLE);
-//        restoreStateSelection(args);
+        String previousChipsString = args.getString(BundleKeys.SALEITEMS_CHIPS_FILTER, "");
+        if (!previousChipsString.isEmpty()) {
+            mPreviousSearchChips = JsonUtils.convertStringToObject(previousChipsString, new TypeToken<ArrayList<SearchChipModel>>() {
+            }.getType());
+        } else {
+            mPreviousSearchChips = new ArrayList<>();
+        }
     }
 
     @Override
@@ -203,38 +206,41 @@ public class SearchFilterController extends BaseController
     @Override
     protected void setUp(View view) {
 
-        mSubCategoryClickListener = this;
-        mSubCategoryItemClickListener = this;
-
         createCategoryMap(mCategoryTree);
-        mOpaqueView.setOnClickListener(v -> closeFacets());
-
-        mSearchItemsList = new ArrayList<SearchChipModel>();
-
-        mSubCategoriesAdapter = new SubCategoriesAdapter(mChosenCategory, mCategoryTree, mSubCategoryClickListener, mSubCategoryItemClickListener, mCategoryMap);
-        mFilterCategoriesRecyclerView.setLayoutManager(new LinearLayoutManager(mActivity, LinearLayoutManager.VERTICAL, false));
-        mFilterCategoriesRecyclerView.setAdapter(mSubCategoriesAdapter);
-
-        mFacetItemsAdapter = new FacetItemsAdapter(new ArrayList<>(), mPresenter, new HashSet<Integer>(),mFacetItemsRecyclerView);
-        mFacetItemsRecyclerView.setLayoutManager(new LinearLayoutManager(mActivity, LinearLayoutManager.VERTICAL, false));
-        mFacetItemsRecyclerView.setAdapter(mFacetItemsAdapter);
-
-        mFacetItemsAdapter.setSearchItemsList(mSearchItemsList);
+        createCategoryList(mCategoryTree);
 
         if (mFacets != null) {
             parseFacets(mFacets);
+            hasFacetChanged = false;
         }
 
         if (mSortingFacets != null) {
             parseSortingFacets(mSortingFacets);
         }
 
-        setupPriceFacet();
+        if (mTabLayout.getTabCount() == 0) {
+            setupTabs();
+        }
 
-        setRetainViewMode(RetainViewMode.RETAIN_DETACH);
+        setupPriceFacet();
+        updateValidChips();
+
+//      SETUP FACET ITEMS (sub of facets)
+        mFacetItemsAdapter = new FacetItemsAdapter(new ArrayList<>(), mPresenter, new HashSet<Integer>(), mFacetItemsRecyclerView);
+        mFacetItemsRecyclerView.setLayoutManager(new LinearLayoutManager(mActivity, LinearLayoutManager.VERTICAL, false));
+        mFacetItemsRecyclerView.setAdapter(mFacetItemsAdapter);
+        mFacetItemsAdapter.setSearchItemsList(mSearchItemsList);
+
+//      SETUP CATEGORIES
+        mSubCategoriesAdapter = new SubCategoriesAdapter(mCategoryTree, this, this, mCategoryMap);
+        mFilterCategoriesRecyclerView.setLayoutManager(new LinearLayoutManager(mActivity, LinearLayoutManager.VERTICAL, false));
+        mFilterCategoriesRecyclerView.setAdapter(mSubCategoriesAdapter);
+
+        mOpaqueView.setOnClickListener(v -> closeFacets());
     }
 
-    private void parseFacets(List<GetSaleItemsResponse.Facets> facets) {
+    public void parseFacets(List<GetSaleItemsResponse.Facets> facets) {
+        mFacets = facets;
         if (facets.size() != 0) {
             mBrandList = new ArrayList<>();
             mSizeList = new ArrayList<>();
@@ -271,7 +277,7 @@ public class SearchFilterController extends BaseController
                 }
             }
         }
-        if(mTabLayout.getTabCount() == 0) {
+        if (mTabLayout.getTabCount() == 0) {
             setupTabs();
         }
     }
@@ -282,7 +288,6 @@ public class SearchFilterController extends BaseController
         for (Pair<String, String> pair : mFacetFilters) {
             mTabLayout.addTab(mTabLayout.newTab().setText(pair.second), false);
         }
-        //Category, Brand, Price, Color and Sort
 
         //Remove selected state by default setup
         mTabLayout.getTabAt(0).select();
@@ -310,9 +315,8 @@ public class SearchFilterController extends BaseController
             }
         });
 
+        //change tab mode depending on the screen width
         Runnable tabConfig = () -> {
-            Log.d("TabWidth", "TabLayout: " + mTabLayout.getWidth() + " ScreenWidth: " +
-                    mActivity.getResources().getDisplayMetrics().widthPixels);
             if (mTabLayout.getWidth() < mActivity.getResources().getDisplayMetrics().widthPixels) {
                 mTabLayout.setTabMode(TabLayout.MODE_FIXED);
                 ViewGroup.LayoutParams mParams = mTabLayout.getLayoutParams();
@@ -320,10 +324,7 @@ public class SearchFilterController extends BaseController
                 mTabLayout.setLayoutParams(mParams);
             }
         };
-
         mTabLayout.post(tabConfig);
-
-
     }
 
     private void closeFacets() {
@@ -331,7 +332,7 @@ public class SearchFilterController extends BaseController
         toggleTabSelection(false);
     }
 
-    private void toggleTabSelection(boolean val){
+    private void toggleTabSelection(boolean val) {
         mIsSearchFilterControllerActive = val;
         LinearLayout tabStrip = (LinearLayout) mTabLayout.getChildAt(0);
         tabStrip.getChildAt(mCurrentTabPosition).setSelected(val);
@@ -357,21 +358,17 @@ public class SearchFilterController extends BaseController
                         break;
                     }
                 }
-
                 onResetPriceRange();
             }
         });
 
         mSeekbar.setMinPriceMovingLayout(mMinPriceMovingLayout);
         mSeekbar.setMaxPriceMovingLayout(mMaxPriceMovingLayout);
-        mSeekbar.setOnRangeSeekbarChangeListener(new OnRangeSeekbarChangeListener() {
-            @Override
-            public void valueChanged(Number minValue, Number maxValue) {
-                mMinPrice.setText("$" + minValue.intValue());
-                mMaxPrice.setText("$" + maxValue.intValue());
-                if (maxValue.intValue() == origMaxValue) {
-                    mMaxPrice.setText("$" + maxValue.intValue() + "+");
-                }
+        mSeekbar.setOnRangeSeekbarChangeListener((minValue, maxValue) -> {
+            mMinPrice.setText("$" + minValue.intValue());
+            mMaxPrice.setText("$" + maxValue.intValue());
+            if (maxValue.intValue() == origMaxValue) {
+                mMaxPrice.setText("$" + maxValue.intValue() + "+");
             }
         });
 
@@ -398,7 +395,7 @@ public class SearchFilterController extends BaseController
                 isSeekbarReset = false;
 
                 mSaleItemsController.setChipFilters(mSearchItemsList);
-                mSaleItemsPresenter.loadSaleItems(mSaleItemsController.createSaleItemsRequest(mCategoryKey, mSaleId, 0, mSearchItemsList, null));
+                mSaleItemsPresenter.loadSaleItems(mSaleItemsController.createSaleItemsRequest(mCategoryKeys, mSaleId, 0, mSearchItemsList, null));
 
             }
         });
@@ -425,19 +422,20 @@ public class SearchFilterController extends BaseController
         }
     }
 
-    private void removeAllChipsExceptCategoryAndSearchQuery() {
+    private void updateValidChips() {
         List<SearchChipModel> listToIterate = new ArrayList<>(mPreviousSearchChips);
         for (SearchChipModel chip : listToIterate) {
-            if (!(chip.getFilterType().equals(BundleKeys.CATEGORY_TREE_FACET) || chip.getFilterType().equals(BundleKeys.SEARCH_QUERY_NAME))) {
+
+            if (chip.getFilterType().equals(BundleKeys.BRANDS_FACETFILTER_NAME) && !mBrandList.contains(chip.getChipTitle())) {
                 mPreviousSearchChips.remove(chip);
             }
-        }
-    }
 
-    private void removeSelectedIndicesExceptCategory() {
-        for (Map.Entry entry : mPreviousSelectedFacetIndices.entrySet()) {
-            if (!entry.getKey().equals(BundleKeys.CATEGORY_TREE_FACET)) {
-                entry.setValue(new HashSet<>());
+            if (chip.getFilterType().equals(BundleKeys.SIZES_FACETFILTER_NAME) && !mSizeList.contains(chip.getChipTitle())) {
+                mPreviousSearchChips.remove(chip);
+            }
+
+            if (chip.getFilterType().equals(BundleKeys.COLORS_FACETFILTER_NAME) && !mColorList.contains(chip.getChipTitle())) {
+                mPreviousSearchChips.remove(chip);
             }
         }
     }
@@ -514,8 +512,10 @@ public class SearchFilterController extends BaseController
                 mSearchItemsList.remove(chipToRemove);
             }
         }
+        hasFacetChanged = mSearchItemsList.size() > 0;
+
         mSaleItemsController.setChipFilters(mSearchItemsList);
-        mSaleItemsPresenter.loadSaleItems(mSaleItemsController.createSaleItemsRequest(mCategoryKey, mSaleId, 0, mSearchItemsList, null));
+        mSaleItemsPresenter.loadSaleItems(mSaleItemsController.createSaleItemsRequest(mCategoryKeys, mSaleId, 0, mSearchItemsList, null));
     }
 
     @Override
@@ -538,9 +538,12 @@ public class SearchFilterController extends BaseController
     }
 
     @Override
-    public void categoryChipRemoved() {
-        Log.d("removechip", "oncategorychipremoved");
-        mChosenCategory = "";
+    public void updateActiveFacets(List<SearchChipModel> activeChips) {
+        if (mFacetsAdapter != null) {
+//            mFacetsAdapter.updateSelectedSearchChips(activeChips);
+            mFacetsAdapter.notifyDataSetChanged();
+            mFacetItemsAdapter.notifyDataSetChanged();
+        }
     }
 
     @Override
@@ -555,7 +558,7 @@ public class SearchFilterController extends BaseController
 
     @Override
     public boolean handleBack() {
-        if(mIsSearchFilterControllerActive) {
+        if (mIsSearchFilterControllerActive) {
             closeFacets();
             return true;
         }
@@ -589,65 +592,128 @@ public class SearchFilterController extends BaseController
 
     private void createCategoryMap(List<GetCategoryTreeResponse> categories) {
 
-        mCategoryMap.put("shop", categories);
-
         updateCategories(categories);
 
-        mPreLoadedCategories = fillCategoryContent();
     }
 
     private void updateCategories(List<GetCategoryTreeResponse> getCategoryTreeResponses) {
         for (GetCategoryTreeResponse category : getCategoryTreeResponses) {
-            mCategoryMap.put(category.getKey(), category.getChildren());
+            mCategoryMap.put(category.getKey(), category);
             updateCategories(category.getChildren());
         }
     }
 
     private List<GetCategoryTreeResponse> fillCategoryContent() {
 
-        return mCategoryMap.get("shop");
+        return mCategoryMap.get("shop").getChildren();
     }
 
     @Override
-    public void onSubCategoryItemClicked(String categoryID, String categoryName, String categoryKey) {
-        updateSubCategoryOnSearchTagAdapter(categoryName, categoryKey);
+    public void onSubCategoryClicked(List<GetCategoryTreeResponse> response, String key) {
+        mCategoryTree = response;
+        for (GetCategoryTreeResponse child : mCategoryTree) {
+            if (child.getKey().equalsIgnoreCase(key) && child.getSelected()) {
+                mCategoryKeys.add(child.getKey());
+            } else {
+                mCategoryKeys.remove(child.getKey());
+            }
+            if (child.getChildren().size() > 0) {
+                mCategoryMap.put(child.getKey(), setSelectedChildren(child));
+            }
+        }
+
+        mSaleItemsPresenter.loadSaleItems(mSaleItemsController.createSaleItemsRequest(mCategoryKeys, mSaleId, 0, mSearchItemsList, null));
     }
 
     @Override
-    public void onSubCategoryClicked(GetCategoryTreeResponse getCategoryTreeResponse) {
-        updateSubCategoryOnSearchTagAdapter(
-                getCategoryTreeResponse.getName(),
-                getCategoryTreeResponse.getKey());
+    public void onSubCategoryItemClicked(SubCategoryItemsAdapter adapter, GetCategoryTreeResponse response) {
+        response.setSelected(!response.getSelected());
+
+        if (response.getSelected() && !mCategoryKeys.contains(response.getKey())) {
+            mCategoryKeys.add(response.getKey());
+        } else {
+            mCategoryKeys.remove(response.getKey());
+        }
+
+        if (response.getChildren().size() > 0) {
+            mCategoryMap.put(response.getKey(), setSelectedChildren(response));
+        }
+
+        String parentKey = getParentKey(response);
+        GetCategoryTreeResponse parentNode = mCategoryMap.get(parentKey);
+        List<GetCategoryTreeResponse> parentList = mCategoryMap.get(parentKey).getChildren();
+        parentList.set(adapter.getPosition(), response);
+        parentNode.setChildren(new ArrayList<>(parentList));
+
+        mCategoryMap.put(response.getKey(), response);
+        mCategoryMap.put(parentKey, parentNode);
+
+        categoryTreeParentCheck(response);
+
+        mSaleItemsPresenter.loadSaleItems(mSaleItemsController.createSaleItemsRequest(mCategoryKeys, mSaleId, 0, mSearchItemsList, null));
     }
 
-    public void removeChipOnCategories() {
-
-        for (SearchChipModel chip : mSearchItemsList) {
-            if (chip.getFilterType().equals(BundleKeys.CATEGORY_TREE_FACET)) {
-                mSearchItemsList.remove(chip);
-                break;
+    private void categoryTreeParentCheck(GetCategoryTreeResponse response) {
+        String parentKey = getParentKey(response);
+        GetCategoryTreeResponse parentCategory = mCategoryMap.get(parentKey);
+        if (parentCategory != null && parentCategory.getChildren() != null) {
+            parentCategory.setSelected(checkChildrenSelectedCount(parentCategory.getChildren()));
+            mCategoryMap.put(parentKey, mCategoryMap.get(parentKey));
+        }
+        if (!parentCategory.getSelected() && mCategoryKeys.contains(parentKey)) {
+            mCategoryKeys.remove(parentKey);
+            for (GetCategoryTreeResponse category : parentCategory.getChildren()) {
+                mCategoryKeys.add(category.getKey());
             }
         }
     }
 
-    public void updateSubCategoryOnSearchTagAdapter(String categoryName, String categoryKey) {
-        SearchChipModel categoryChip = new SearchChipModel(BundleKeys.CATEGORY_TREE_FACET, categoryName, 0);
-        if (!mChosenCategory.isEmpty() && mChosenCategory.equals(categoryKey)) {
-            removeChipOnCategories();
-            mChosenCategory = "";
-
-        } else {
-
-            removeChipOnCategories();
-
-            mSearchItemsList.add(categoryChip);
-            mChosenCategory = categoryKey;
+    private boolean checkChildrenSelectedCount(List<GetCategoryTreeResponse> list) {
+        int count = 0;
+        for (GetCategoryTreeResponse child : list) {
+            if (child.getSelected()) {
+                count++;
+            }
         }
+        return count == list.size();
+    }
 
-        mSubCategoriesAdapter.setActiveCategoryKey(mChosenCategory);
-        mSaleItemsController.setChipFilters(mSearchItemsList);
-        mSaleItemsPresenter.loadSaleItems(mSaleItemsController.createSaleItemsRequest(mCategoryKey, mSaleId, 0, mSearchItemsList, null));
+    private GetCategoryTreeResponse setSelectedChildren(GetCategoryTreeResponse response) {
 
+        for (GetCategoryTreeResponse object : response.getChildren()) {
+            //no need to include children in categorykeys if parent is selected
+            if (object.getSelected() != response.getSelected()) {
+                mCategoryKeys.remove(object.getKey());
+            }
+            object.setSelected(response.getSelected());
+            mCategoryMap.put(object.getKey(), object);
+
+            if (object.getChildren().size() > 0) {
+                mCategoryMap.put(response.getKey(), setSelectedChildren(response));
+            }
+        }
+        return response;
+    }
+
+    public void updateSubCategoryFilters(List<GetCategoryTreeResponse> categoryTree) {
+        categoryListFromFacets.clear();
+        for (int i = 0; i < categoryTree.size(); i++) {
+            categoryTree.get(i).setChildren(updateCategoryListFromResponse(new ArrayList<>(categoryTree.get(i).getChildren())));
+            categoryTree.set(i, categoryTree.get(i));
+            categoryListFromFacets.add(categoryTree.get(i));
+        }
+        mSubCategoriesAdapter.replaceData(categoryListFromFacets);
+    }
+
+    private ArrayList<GetCategoryTreeResponse> updateCategoryListFromResponse(ArrayList<GetCategoryTreeResponse> category) {
+        for (int i = 0; i < category.size(); i++) {
+            category.get(i).setSelected(mCategoryMap.get(category.get(i).getKey()).getSelected());
+            if(category.get(i).getChildren().size() > 0) {
+                category.get(i).setChildren(updateCategoryListFromResponse(new ArrayList<>(category.get(i).getChildren())));
+            }
+            category.set(i, category.get(i));
+        }
+        return category;
     }
 
     private SearchChipModel findPriceChip() {
@@ -656,8 +722,19 @@ public class SearchFilterController extends BaseController
                 return chip;
             }
         }
-
         return null;
     }
 
+    private void createCategoryList(List<GetCategoryTreeResponse> list) {
+        for (GetCategoryTreeResponse category : list) {
+            mCategoryMap.put(category.getKey(), category);
+            if (category.getChildren().size() > 0) {
+                createCategoryList(category.getChildren());
+            }
+        }
+    }
+
+    private String getParentKey(GetCategoryTreeResponse category) {
+        return category.getKey().replace(">>>" + category.getName(), "");
+    }
 }

@@ -1,5 +1,7 @@
 package au.com.dealsdirect.ui.controller.searchfilter;
 
+import java.util.List;
+
 import au.com.dealsdirect.data.network.model.category.GetCategoryTreeResponse;
 
 /**
@@ -7,5 +9,5 @@ import au.com.dealsdirect.data.network.model.category.GetCategoryTreeResponse;
  */
 
 public interface SubCategoryClickListener {
-    void onSubCategoryClicked(GetCategoryTreeResponse getCategoryTreeResponse);
+    void onSubCategoryClicked(List<GetCategoryTreeResponse> response, String key);
 }

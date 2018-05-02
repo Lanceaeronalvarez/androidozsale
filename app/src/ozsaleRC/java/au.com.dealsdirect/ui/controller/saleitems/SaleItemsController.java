@@ -406,7 +406,7 @@ public class SaleItemsController extends BasePullToRefreshController implements 
 
             mPresenter.loadSaleItems(createSaleItemsRequest(mCategoryKey, mSaleId, mSaleItemsPageNumber, null, ""));
         } else if (!mSaleItems.isEmpty()) {
-            if (mSaleItems.size() >= PaginateUtils.LOADING_TRIGGER_THRESHOLD) {
+            if (mSaleItems.size() >= getResources().getInteger(R.integer.sale_items_threshold)) {
                 mPaginateManager = PaginateUtils.init(mSaleItemsRecyclerView, mPaginateCallbacks);
             }
         }
@@ -451,8 +451,6 @@ public class SaleItemsController extends BasePullToRefreshController implements 
 
         enablePullToRefresh(!mIsFromCategory);
 
-        mCategoryTreeResponse = getSaleItemsResponse.getCategories();
-
         mIsLoadingProgress = false;
 
         if (items.size() == 0 && mSaleItemsPageNumber != 0) {
@@ -476,7 +474,7 @@ public class SaleItemsController extends BasePullToRefreshController implements 
 
                 mPaginateManager = PaginateUtils.init(mSaleItemsRecyclerView, mPaginateCallbacks);
                 mSaleItemsRecyclerView.scrollToPosition(0);
-                if (items.size() <= PaginateUtils.LOADING_TRIGGER_THRESHOLD) {
+                if (items.size() <= getResources().getInteger(R.integer.sale_items_threshold)) {
                     mHasLoadedAllItems = false;
                     mPaginateManager.setHasMoreDataToLoad(false);
                 }
@@ -503,6 +501,9 @@ public class SaleItemsController extends BasePullToRefreshController implements 
         }
 
         mIsCategoryChanged = false;
+
+        mSearchFilterController.parseFacets(getSaleItemsResponse.facets);
+        mSearchFilterController.updateSubCategoryFilters(mCategoryTreeResponse);
     }
 
     void onBackClick() {
@@ -696,16 +697,31 @@ public class SaleItemsController extends BasePullToRefreshController implements 
 
     }
 
+    public GetSaleItemsRequest createSaleItemsRequest(List<String> categoryKeys, String saleId, int pageNumber, List<SearchChipModel> chipsList, String query) {
+        String concatCategoryKey = "";
+        for (String key : categoryKeys) {
+            concatCategoryKey += "\"" + key + "\"" + ',';
+        }
+        mCategoryKey = concatCategoryKey;
+        return createSaleItemsRequest(concatCategoryKey, saleId, pageNumber, chipsList, query);
+    }
+
+
     public GetSaleItemsRequest createSaleItemsRequest(String categoryKey, String saleId, int pageNumber, List<SearchChipModel> chipsList, String query) {
         List<String> saleIds = new LinkedList<>();
         HashMap<String, List<String>> facetFilters = new HashMap<>();
 
         GetSaleItemsRequest getSaleItemsRequest = new GetSaleItemsRequest();
 
-        if (!categoryKey.isEmpty())
-            getSaleItemsRequest.setCategoryKey("[\"" + categoryKey + "\"]");
-        else
+        if (!categoryKey.isEmpty()) {
+            if (categoryKey.contains("\"")) {
+                getSaleItemsRequest.setCategoryKey("[" + categoryKey + "]");
+            } else {
+                getSaleItemsRequest.setCategoryKey("[\"" + categoryKey + "\"]");
+            }
+        } else {
             getSaleItemsRequest.setCategoryKey("[]");
+        }
 
 
         getSaleItemsRequest.setSorting("");

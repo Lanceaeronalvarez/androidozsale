@@ -77,6 +77,8 @@
         <item name="textAllCaps">false</item>
     </style>
 
+    <integer name="sale_items_threshold">9</integer>
+
     <!-- Toolbar visibility -->
     <bool name="login_toolbar_visibility">true</bool>
     <bool name="contacts_toolbar_addmessage_visibility">false</bool>

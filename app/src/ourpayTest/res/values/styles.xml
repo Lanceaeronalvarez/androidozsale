@@ -75,6 +75,8 @@
         <item name="android:textColorHint">@color/gray_field_label</item>
     </style>
 
+    <integer name="sale_items_threshold">4</integer>
+
     <bool name="shop_searchbar_visibility">false</bool>
     <bool name="is_account_invite_visible">true</bool>
     <bool name="is_account_contact_visible">true</bool>

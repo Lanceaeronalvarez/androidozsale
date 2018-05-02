@@ -21,13 +21,11 @@ public class PaginateUtils {
 
     public static final int DEFAULT_COUNT = 48;
 
-    public static final int LOADING_TRIGGER_THRESHOLD = 4;
-
     private static final boolean ADD_LOADING_LIST_ITEM = true;
 
     public static Paginate init(RecyclerView recyclerView, Paginate.Callbacks callbacks) {
         return Paginate.with(recyclerView, callbacks)
-                .setLoadingTriggerThreshold(PaginateUtils.LOADING_TRIGGER_THRESHOLD)
+                .setLoadingTriggerThreshold(recyclerView.getContext().getResources().getInteger(R.integer.sale_items_threshold))
                 .addLoadingListItem(PaginateUtils.ADD_LOADING_LIST_ITEM)
                 .setLoadingListItemCreator(new DDLoadingListItemCreator())
                 .build();
