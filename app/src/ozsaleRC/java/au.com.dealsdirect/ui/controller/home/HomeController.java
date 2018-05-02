@@ -225,8 +225,6 @@ public class HomeController extends BaseController implements HomeMvpView {
         });
 
         mBottomNavigationView.setOnTabSelectedListener((position, wasSelected) -> {
-
-
             if (mCheckoutRouter!=null){
                 Controller controller = getCurrentControllerOnRouter(mCheckoutRouter);
                 if (controller instanceof CheckoutController) {
@@ -269,7 +267,7 @@ public class HomeController extends BaseController implements HomeMvpView {
             } else {
                 if (position == TAB_SHOP_INDEX) {
                     mShopRouter.popToRoot();
-                } else if (position == TAB_CHECKOUT_INDEX) {
+                } else if (position == TAB_ACCOUNT_INDEX) {
                     mAccountsRouter.popToRoot();
                 }
             }

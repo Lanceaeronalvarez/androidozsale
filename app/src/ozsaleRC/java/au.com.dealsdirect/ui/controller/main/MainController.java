@@ -9,22 +9,17 @@ import android.view.ViewGroup;
 import android.view.Window;
 import android.view.WindowManager;
 
+import com.bluelinelabs.conductor.Controller;
 import com.bluelinelabs.conductor.Router;
 import com.bluelinelabs.conductor.RouterTransaction;
 import com.bluelinelabs.conductor.changehandler.FadeChangeHandler;
 import com.bluelinelabs.conductor.support.RouterPagerAdapter;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
 import javax.inject.Inject;
 
 import au.com.dealsdirect.R;
-import au.com.dealsdirect.data.network.model.category.GetCategoryTreeResponse;
 import au.com.dealsdirect.ui.base.BaseController;
 import au.com.dealsdirect.ui.controller.bannerfilter.BannerFiltersController;
-import au.com.dealsdirect.ui.controller.categories.CategoriesController;
 import au.com.dealsdirect.ui.controller.home.HomeController;
 import au.com.dealsdirect.utils.BundleBuilder;
 import butterknife.BindView;
@@ -37,7 +32,11 @@ public class MainController extends BaseController implements MainMvpView {
 
     public static final String TAG = "Home";
 
-    private String mChosenSubCategoryItemKey = "";
+    public static final int BANNER_FILTER_INDEX = 0;
+
+    public static final int SHOP_INDEX = 1;
+
+    private static final int VIEWPAGER_SIZE = 2;
 
     @Inject
     MainMvpPresenter<MainMvpView> mPresenter;
@@ -50,7 +49,9 @@ public class MainController extends BaseController implements MainMvpView {
     private BannerFiltersController mBannerFiltersController;
 
     private View mLastSelectedSubCategoryItem;
-    private Map<String, List<GetCategoryTreeResponse>> mCategoryMap = new HashMap<>();
+
+    private String mChosenSubCategoryItemKey = "";
+
 
     public static MainController newInstance() {
 
@@ -110,25 +111,18 @@ public class MainController extends BaseController implements MainMvpView {
         RouterPagerAdapter mViewPagerAdapter = new RouterPagerAdapter(this) {
             @Override
             public void configureRouter(@NonNull Router router, int position) {
-                switch (position) {
-                    case 0:
-                        if (!router.hasRootController()) {
-                            router.setRoot(RouterTransaction.with(mBannerFiltersController)
-                                    .pushChangeHandler(new FadeChangeHandler(100))
-                                    .popChangeHandler(new FadeChangeHandler(100)));
-                        }
-                    case 1:
-                    if (!router.hasRootController()) {
-                        router.setRoot(RouterTransaction.with(mHomeController)
-                                .pushChangeHandler(new FadeChangeHandler(100))
-                                .popChangeHandler(new FadeChangeHandler(100)));
-                    }
+                Controller controller = position == BANNER_FILTER_INDEX ? mBannerFiltersController : mHomeController;
+
+                if (!router.hasRootController()) {
+                    router.setRoot(RouterTransaction.with(controller)
+                            .pushChangeHandler(new FadeChangeHandler(100))
+                            .popChangeHandler(new FadeChangeHandler(100)));
                 }
             }
 
             @Override
             public int getCount() {
-                return 2;
+                return VIEWPAGER_SIZE;
             }
 
             @Override
@@ -139,10 +133,8 @@ public class MainController extends BaseController implements MainMvpView {
 
 
         mHomeViewPager.setAdapter(mViewPagerAdapter);
-        mHomeViewPager.setCurrentItem(1);
+        mHomeViewPager.setCurrentItem(SHOP_INDEX);
         mHomeViewPager.setMyScroller();
-
-        mActivity.isViewPagerSet(true);
 
     }
 
@@ -184,11 +176,8 @@ public class MainController extends BaseController implements MainMvpView {
         return mHomeViewPager;
     }
 
-    public void goToBannerFilters() {
-        mHomeViewPager.setCurrentItem(0);
+    public void goToPage(int position) {
+        mHomeViewPager.setCurrentItem(position);
     }
 
-    public void goToShops() {
-        mHomeViewPager.setCurrentItem(1);
-    }
 }

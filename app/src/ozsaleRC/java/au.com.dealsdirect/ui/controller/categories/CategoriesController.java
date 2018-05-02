@@ -221,9 +221,6 @@ public class CategoriesController extends BaseController
 
         mSubCategoryAdapter.animateInsertItems(false);
         mIsResetSubCategories = false;
-
-        mActivity.setIsFromCategories(true);
-
     }
 
 

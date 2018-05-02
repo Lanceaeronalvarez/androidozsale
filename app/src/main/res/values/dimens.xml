@@ -145,8 +145,13 @@
 
     <!-- Return -->
     <dimen name="return_card_height">450dp</dimen>
-    <dimen name="viewholder_return_order_image_height">135dp</dimen>
-    <dimen name="viewholder_return_order_image_width">83dp</dimen>
+    <dimen name="viewholder_return_order_image_height">100dp</dimen>
+    <dimen name="viewholder_return_order_image_width">70dp</dimen>
+    <dimen name="return_details_image_width">50dp</dimen>
+    <dimen name="return_details_image_height">100dp</dimen>
+    <dimen name="viewholder_return_order_checkbox_height">100dp</dimen>
+    <dimen name="new_return_edit_text_height">80dp</dimen>
+
 
     <!-- Voucher -->
     <dimen name="voucher_container_width">240dp</dimen>

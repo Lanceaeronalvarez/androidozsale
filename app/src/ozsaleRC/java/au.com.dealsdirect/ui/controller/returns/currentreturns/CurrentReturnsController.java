@@ -2,18 +2,22 @@ package au.com.dealsdirect.ui.controller.returns.currentreturns;
 
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.bluelinelabs.conductor.Controller;
+import com.bluelinelabs.conductor.ControllerChangeHandler;
 import com.bluelinelabs.conductor.RouterTransaction;
+import com.bluelinelabs.conductor.changehandler.FadeChangeHandler;
 import com.bluelinelabs.conductor.changehandler.HorizontalChangeHandler;
-import com.bluelinelabs.conductor.changehandler.VerticalChangeHandler;
-import com.lsjwzh.widget.recyclerviewpager.RecyclerViewPager;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -41,13 +45,13 @@ import butterknife.OnClick;
  */
 
 public class CurrentReturnsController extends BasePullToRefreshController
-        implements CurrentReturnsMvpView, CurrentReturnClickListener{
+        implements CurrentReturnsMvpView, CurrentReturnClickListener {
 
     public static final String TAG = "CurrentReturnsController";
     private static final String KEY_TEXT = "CurrentReturnsController.KEY_TEXT";
 
     private CurrentReturnClickListener mCurrentReturnsListener;
-    private HashMap<Integer,GetReturnDetailsResponseBody> returnItemsMap = new HashMap<>();
+    private HashMap<Integer, GetReturnDetailsResponseBody> returnItemsMap = new HashMap<>();
     private List<GetReturnDetailsResponseBody> returnDetailsResponseBodyList = new ArrayList<>();
     private List<CurrentReturns> mCurrentReturns;
     private int itemIterator = 0;
@@ -59,12 +63,14 @@ public class CurrentReturnsController extends BasePullToRefreshController
     @BindView(R.id.partial_toolbar_right_view)
     ImageView mCurrentReturnsRightOption;
 
-    @BindView(R.id.controller_current_returns_recycler_viewpager)
-    RecyclerViewPager mCurrentReturnsRecyclerView;
+    @BindView(R.id.controller_current_returns_recycler_view)
+    RecyclerView mCurrentReturnsRecyclerView;
 
     @BindView(R.id.no_returns_placeholder)
-    LinearLayout mPlaceholderLayout;
+    RelativeLayout mPlaceholderLayout;
 
+    @BindView(R.id.controller_current_returns_request_button)
+    Button mCurrentReturnsRequestButton;
 
     @Inject
     CurrentReturnsMvpPresenter<CurrentReturnsMvpView> mPresenter;
@@ -103,18 +109,28 @@ public class CurrentReturnsController extends BasePullToRefreshController
     public void onViewBound(@NonNull View view) {
         super.onViewBound(view);
         setUp(view);
+
+    }
+
+    @Override
+    protected void setUp(View view) {
+
+        mCurrentReturnsRecyclerView.setLayoutManager(new LinearLayoutManager(mActivity, LinearLayoutManager
+                .VERTICAL, false));
+
         mCurrentReturnsListener = this;
         mCurrentReturnsToolarTitle.setText("My Returns");
-        if(mPresenter.isTablet()){
+        if (mPresenter.isTablet()) {
             mCurrentReturnsRightOption.setPadding(5, 5, 5, 5);
         } else {
             mCurrentReturnsRightOption.setPadding(20, 20, 20, 20);
         }
         mCurrentReturnsRightOption.setImageDrawable(getResources().getDrawable(R.drawable.ic_add));
+        mCurrentReturnsRightOption.setVisibility(View.GONE);
 
-        if (mCurrentReturns == null || mCurrentReturns.size() == 0){
+        if (mCurrentReturns == null || mCurrentReturns.size() == 0) {
             mPresenter.loadCurrentReturns();
-        }  else {
+        } else {
 
             mCurrentReturnsAdapter = new CurrentReturnAdapter(
                     mCurrentReturns,
@@ -125,21 +141,15 @@ public class CurrentReturnsController extends BasePullToRefreshController
             mCurrentReturnsRecyclerView.setAdapter(mCurrentReturnsAdapter);
             mCurrentReturnsRecyclerView.setVisibility(View.VISIBLE);
 //            getCurrentReturnItems(mCurrentReturns);
-
         }
-    }
 
-    @Override
-    protected void setUp(View view) {
-
-        mCurrentReturnsRecyclerView.setLayoutManager(new LinearLayoutManager(mActivity,LinearLayoutManager
-                .HORIZONTAL,false));
-
+        getRouter().addChangeListener(newControllerChangeHandler);
     }
 
     @Override
     public void onDestroyView(View view) {
         mPresenter.onDetach();
+        getRouter().removeChangeListener(newControllerChangeHandler);
         super.onDestroyView(view);
     }
 
@@ -149,9 +159,14 @@ public class CurrentReturnsController extends BasePullToRefreshController
         List<CurrentReturns> currentReturns =
                 currentReturnResponseBody.getCurrentReturnResponse().getCurrentReturns();
 
-        if(currentReturns!=null && currentReturns.size() != 0) {
+        if (currentReturns != null && currentReturns.size() != 0) {
+
+            mCurrentReturnsRequestButton.setVisibility(View.GONE);
+            mCurrentReturnsRightOption.setVisibility(View.VISIBLE);
+
             mPlaceholderLayout.setVisibility(View.GONE);
             mCurrentReturnsRecyclerView.setVisibility(View.VISIBLE);
+            mCurrentReturnsRightOption.setVisibility(View.VISIBLE);
 
             mCurrentReturns = currentReturns;
 
@@ -165,35 +180,41 @@ public class CurrentReturnsController extends BasePullToRefreshController
             getCurrentReturnItems(mCurrentReturns);
 
 
-        }else{
+        } else {
 
             mPlaceholderLayout.setVisibility(View.VISIBLE);
             mCurrentReturnsRecyclerView.setVisibility(View.GONE);
+            mCurrentReturnsRequestButton.setVisibility(View.VISIBLE);
+            mCurrentReturnsRightOption.setVisibility(View.GONE);
         }
     }
 
     @Override
     public void showCurrentReturnDetails(GetReturnDetailsResponseBody getReturnDetailsResponseBody) {
 
-        returnItemsMap.put(itemIterator,getReturnDetailsResponseBody);
-            if (returnItemsMap.size() == mCurrentReturns.size()){
-                returnDetailsResponseBodyList.clear();
+        returnItemsMap.put(itemIterator, getReturnDetailsResponseBody);
+        if (returnItemsMap.size() == mCurrentReturns.size()) {
+            returnDetailsResponseBodyList.clear();
 
-                for (int i = 0; i < returnItemsMap.size(); i++){
+            for (int i = 0; i < returnItemsMap.size(); i++) {
+                if (!returnItemsMap.isEmpty())
                     returnDetailsResponseBodyList.add(returnItemsMap.get(i));
-                }
-                mCurrentReturnsAdapter.updateReturnDetailsResponseBody(returnDetailsResponseBodyList);
+            }
+            mCurrentReturnsAdapter.updateReturnDetailsResponseBody(returnDetailsResponseBodyList);
 
-            }else{
+        } else {
+            if (!returnItemsMap.isEmpty())
                 returnDetailsResponseBodyList.add(returnItemsMap.get(itemIterator));
 
-                itemIterator = itemIterator + 1;
+            itemIterator = itemIterator + 1;
+            if (!mCurrentReturns.isEmpty())
                 mPresenter.loadReturnDetails(createReturnDetailsRequest(mCurrentReturns.get(itemIterator).getID()));
-            }
+        }
     }
 
-    public void getCurrentReturnItems(List<CurrentReturns> currentReturns){
-        mPresenter.loadReturnDetails(createReturnDetailsRequest(currentReturns.get(itemIterator).getID()));
+    public void getCurrentReturnItems(List<CurrentReturns> currentReturns) {
+        if (!mCurrentReturns.isEmpty())
+            mPresenter.loadReturnDetails(createReturnDetailsRequest(currentReturns.get(itemIterator).getID()));
 
     }
 
@@ -216,20 +237,28 @@ public class CurrentReturnsController extends BasePullToRefreshController
                         isRequestApproved,
                         productRequestStatus,
                         productRAN))
-                .pushChangeHandler(new VerticalChangeHandler())
-                .popChangeHandler(new VerticalChangeHandler()));
+                .pushChangeHandler(new FadeChangeHandler())
+                .popChangeHandler(new FadeChangeHandler()));
 
     }
 
     @OnClick(R.id.partial_toolbar_left_view)
-    public void onBackClick(){
+    public void onBackClick() {
         mActivity.onBackPressed();
     }
 
-    @OnClick(R.id.partial_toolbar_right_view)
+    @OnClick(R.id.controller_current_returns_request_button)
+    public void onRequestReturnClick() {
+        requestNewReturn();
+    }
 
-    public void onAddReturnClick(){
-        if (mCurrentReturns!=null)
+    @OnClick(R.id.partial_toolbar_right_view)
+    public void onToolbarRequestReturnClick() {
+        requestNewReturn();
+    }
+
+    private void requestNewReturn() {
+        if (mCurrentReturns != null)
             mCurrentReturns.clear();
 
         getRouter().pushController(RouterTransaction.with(
@@ -240,5 +269,32 @@ public class CurrentReturnsController extends BasePullToRefreshController
 
     public GetReturnDetailRequest createReturnDetailsRequest(String itemID) {
         return new GetReturnDetailRequest(itemID);
+    }
+
+    ControllerChangeHandler.ControllerChangeListener newControllerChangeHandler = new ControllerChangeHandler.ControllerChangeListener() {
+
+        @Override
+        public void onChangeStarted(@Nullable Controller to,
+                                    @Nullable Controller from, boolean isPush,
+                                    @NonNull ViewGroup container,
+                                    @NonNull ControllerChangeHandler handler) {
+
+        }
+
+        @Override
+        public void onChangeCompleted(@Nullable Controller to,
+                                      @Nullable Controller from, boolean isPush,
+                                      @NonNull ViewGroup container,
+                                      @NonNull ControllerChangeHandler handler) {
+
+            updateToolbar();
+        }
+    };
+
+    private void updateToolbar(){
+        if (mCurrentReturns == null || mCurrentReturns.size() == 0)
+            mCurrentReturnsRightOption.setVisibility(View.GONE);
+        else
+            mCurrentReturnsRightOption.setVisibility(View.VISIBLE);
     }
 }
