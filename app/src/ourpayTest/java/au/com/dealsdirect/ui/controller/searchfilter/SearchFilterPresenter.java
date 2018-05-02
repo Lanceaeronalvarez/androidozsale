@@ -1,11 +1,13 @@
 package au.com.dealsdirect.ui.controller.searchfilter;
 
+import java.util.List;
 import java.util.Set;
 
 import javax.inject.Inject;
 
 import au.com.dealsdirect.data.DataManager;
 import au.com.dealsdirect.ui.base.BasePresenter;
+import au.com.dealsdirect.ui.controller.searchfilter.adapter.SearchChipModel;
 import au.com.dealsdirect.utils.rx.SchedulerProvider;
 import io.reactivex.disposables.CompositeDisposable;
 
@@ -21,18 +23,8 @@ public class SearchFilterPresenter<V extends SearchFilterMvpView> extends BasePr
     }
 
     @Override
-    public void onFacetClicked(int position) {
-        getMvpView().showFacetItem(position);
-    }
-
-    @Override
-    public void onFacetItemClicked(Set<Integer> selectPosSet) {
-        getMvpView().updateFacetItemToFilters(selectPosSet);
-    }
-
-    @Override
-    public Set<Integer> getOriginalSelectedSet() {
-        return getMvpView().getOriginalSelectedSet();
+    public void onFacetItemClicked(List<SearchChipModel> selectedChips) {
+        getMvpView().updateFacetItemToFilters(selectedChips);
     }
 
     @Override
@@ -45,18 +37,4 @@ public class SearchFilterPresenter<V extends SearchFilterMvpView> extends BasePr
         getMvpView().onResetPriceRange();
     }
 
-    @Override
-    public void onCategoryChipRemoved() {
-        getMvpView().categoryChipRemoved();
-    }
-
-    @Override
-    public void showTransparentOverlay() {
-        getMvpView().onShowTransparentOverlay();
-    }
-
-    @Override
-    public void hideTransparentOverlay() {
-        getMvpView().onHideTransparentOverlay();
-    }
 }

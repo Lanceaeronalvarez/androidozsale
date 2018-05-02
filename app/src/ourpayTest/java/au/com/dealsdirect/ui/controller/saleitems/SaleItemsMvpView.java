@@ -5,9 +5,11 @@ import android.support.v7.widget.RecyclerView;
 
 import java.util.List;
 
+import au.com.dealsdirect.data.network.model.saleitems.GetSaleItemsRequest;
 import au.com.dealsdirect.data.network.model.saleitems.GetSaleItemsResponse;
 import au.com.dealsdirect.data.network.model.sorting.SortingResponse;
 import au.com.dealsdirect.ui.base.MvpView;
+import au.com.dealsdirect.ui.controller.searchfilter.adapter.SearchChipModel;
 
 /**
  * dp Created by Admin on 6/8/17.
@@ -23,9 +25,6 @@ public interface SaleItemsMvpView extends MvpView{
 
     void showProductDetails(RecyclerView.ViewHolder viewHolder, int position, String seoIdentifierId, String imageUrl, String skuId, String saleId);
 
-    void unbindPaginate();
+    GetSaleItemsRequest createSaleItemsRequest(String categoryKey, String saleId, int pageNumber, List<SearchChipModel> chipsList, String query);
 
-    void onExecuteCategoryChangeApiCall(String chosenCategoryKey, String chosenCategoryName);
-
-    void onPassFiltersData(Bundle bundle);
 }

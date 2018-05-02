@@ -15,6 +15,8 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.bluelinelabs.conductor.Controller;
+import com.bluelinelabs.conductor.Router;
 import com.crystal.crystalrangeseekbar.interfaces.OnRangeSeekbarChangeListener;
 import com.crystal.crystalrangeseekbar.interfaces.OnRangeSeekbarFinalValueListener;
 import com.google.gson.reflect.TypeToken;
@@ -35,8 +37,9 @@ import au.com.dealsdirect.data.network.model.category.GetCategoryTreeResponse;
 import au.com.dealsdirect.data.network.model.saleitems.GetSaleItemsResponse;
 import au.com.dealsdirect.data.network.model.sorting.SortingResponse;
 import au.com.dealsdirect.ui.base.BaseController;
+import au.com.dealsdirect.ui.controller.saleitems.SaleItemsMvpPresenter;
+import au.com.dealsdirect.ui.controller.saleitems.SaleItemsMvpView;
 import au.com.dealsdirect.ui.controller.searchfilter.adapter.FacetItemsAdapter;
-import au.com.dealsdirect.ui.controller.searchfilter.adapter.FacetsAdapter;
 import au.com.dealsdirect.ui.controller.searchfilter.adapter.SearchChipModel;
 import au.com.dealsdirect.ui.controller.searchfilter.adapter.SubCategoriesAdapter;
 import au.com.dealsdirect.ui.custom.CustomRangeSeekbar;
@@ -59,10 +62,14 @@ public class SearchFilterController extends BaseController
     private String mSaleItemsTitle = "";
     private static String mPreviousChosenCategory = "";
     private String mJoinedQueryChipsString = "";
+    private Set<Integer> origSelectedSet = new HashSet<Integer>();
 
     @Inject
     SearchFilterMvpPresenter<SearchFilterMvpView> mPresenter;
+    @Inject
+    SaleItemsMvpPresenter<SaleItemsMvpView> mSaleItemsPresenter;
 
+    SaleItemsMvpView mSaleItemsView;
 
     @BindView(R.id.controller_search_filter_tabs)
     TabLayout mTabLayout;
@@ -104,7 +111,6 @@ public class SearchFilterController extends BaseController
     List<GetCategoryTreeResponse> mCategoryTree;
     List<SortingResponse> mSortingFacets = new ArrayList<>();
     private Map<String, List<GetCategoryTreeResponse>> mCategoryMap = new HashMap<>();
-    private List<GetCategoryTreeResponse> mPreLoadedCategories = new LinkedList<>();
 
     SubCategoriesAdapter mSubCategoriesAdapter;
     FacetItemsAdapter mFacetItemsAdapter;
@@ -126,12 +132,6 @@ public class SearchFilterController extends BaseController
     String mCategoryKey = "";
     String mSaleId = "";
 
-
-    private Set<Integer> origSelectedSet = new HashSet<Integer>();
-
-    private int mPreviousSelectedFacetIndex = -1;
-
-    private HashMap<String, Set<Integer>> mPreviousSelectedFacetIndices = new HashMap<>();
     private ArrayList<SearchChipModel> mPreviousSearchChips = new ArrayList<>();
 
     List<Pair<String, String>> mFacetFilters = new ArrayList(Arrays.asList
@@ -162,6 +162,10 @@ public class SearchFilterController extends BaseController
         View view = inflater.inflate(R.layout.controller_search_filter, container, false);
         getControllerComponent().inject(this);
         mPresenter.onAttach(this);
+        Router homeRouter = mActivity.getHomeRouter();
+        Controller mSaleItemsController = homeRouter.getControllerWithTag(getResources().getString(R.string.sale_items_controller_tag));
+        mSaleItemsView = (SaleItemsMvpView) mSaleItemsController;
+        mSaleItemsPresenter.onAttach(mSaleItemsView);
         return view;
     }
 
@@ -174,34 +178,6 @@ public class SearchFilterController extends BaseController
     @Override
     protected void setUp(View view) {
 
-        mSubCategoryClickListener = this;
-        mSubCategoryItemClickListener = this;
-
-        createCategoryMap(mCategoryTree);
-        mOpaqueView.setOnClickListener(v -> closeFacets());
-
-        mSearchItemsList = new ArrayList<SearchChipModel>();
-
-        mSubCategoriesAdapter = new SubCategoriesAdapter(mChosenCategory, mCategoryTree, mSubCategoryClickListener, mSubCategoryItemClickListener, mCategoryMap);
-        mFilterCategoriesRecyclerView.setLayoutManager(new LinearLayoutManager(mActivity, LinearLayoutManager.VERTICAL, false));
-        mFilterCategoriesRecyclerView.setAdapter(mSubCategoriesAdapter);
-
-        mFacetItemsAdapter = new FacetItemsAdapter(new ArrayList<>(), mPresenter, new HashSet<Integer>(),mFacetItemsRecyclerView);
-        mFacetItemsRecyclerView.setLayoutManager(new LinearLayoutManager(mActivity, LinearLayoutManager.VERTICAL, false));
-        mFacetItemsRecyclerView.setAdapter(mFacetItemsAdapter);
-
-        mFacetItemsAdapter.setSearchItemsList(mSearchItemsList);
-
-        mSubCategoriesAdapter = new SubCategoriesAdapter(mChosenCategory, mCategoryTree, mSubCategoryClickListener, mSubCategoryItemClickListener, mCategoryMap);
-        mFilterCategoriesRecyclerView.setLayoutManager(new LinearLayoutManager(mActivity, LinearLayoutManager.VERTICAL, false));
-        mFilterCategoriesRecyclerView.setAdapter(mSubCategoriesAdapter);
-
-        mFacetItemsAdapter = new FacetItemsAdapter(new ArrayList<>(), mPresenter, new HashSet<Integer>(),mFacetItemsRecyclerView);
-        mFacetItemsRecyclerView.setLayoutManager(new LinearLayoutManager(mActivity, LinearLayoutManager.VERTICAL, false));
-        mFacetItemsRecyclerView.setAdapter(mFacetItemsAdapter);
-
-        mFacetItemsAdapter.setSearchItemsList(mSearchItemsList);
-
         if (mFacets != null) {
             parseFacets(mFacets);
         }
@@ -211,6 +187,23 @@ public class SearchFilterController extends BaseController
         }
 
         setupPriceFacet();
+
+        createCategoryMap(mCategoryTree);
+
+        mOpaqueView.setOnClickListener(v -> closeFacets());
+
+        mSearchItemsList = new ArrayList<SearchChipModel>();
+
+        mSubCategoriesAdapter = new SubCategoriesAdapter(mChosenCategory, mCategoryTree, mSubCategoryClickListener, mSubCategoryItemClickListener, mCategoryMap);
+        mFilterCategoriesRecyclerView.setLayoutManager(new LinearLayoutManager(mActivity, LinearLayoutManager.VERTICAL, false));
+        mFilterCategoriesRecyclerView.setAdapter(mSubCategoriesAdapter);
+
+        mFacetItemsAdapter = new FacetItemsAdapter(new ArrayList<>(), mPresenter, new HashSet<Integer>(),mFacetItemsRecyclerView);
+        mFacetItemsAdapter.setSearchItemsList(mSearchItemsList);
+        mFacetItemsRecyclerView.setLayoutManager(new LinearLayoutManager(mActivity, LinearLayoutManager.VERTICAL, false));
+        mFacetItemsRecyclerView.setAdapter(mFacetItemsAdapter);
+
+
 
         setRetainViewMode(RetainViewMode.RETAIN_DETACH);
 
@@ -392,18 +385,11 @@ public class SearchFilterController extends BaseController
 
     }
 
-    private void removeSelectedIndicesExceptCategory() {
-        for (Map.Entry entry : mPreviousSelectedFacetIndices.entrySet()) {
-            if (!entry.getKey().equals(BundleKeys.CATEGORY_TREE_FACET)) {
-                entry.setValue(new HashSet<>());
-            }
-
-        }
-    }
 
     @Override
     public void showFacetItem(int position) {
         mFacetsFrame.setVisibility(View.VISIBLE);
+
 
         if (getFacetFilterType(position) != BundleKeys.PRICE_FACETFILTER_NAME) { //only do this logic if facet clicked != price
 
@@ -420,20 +406,6 @@ public class SearchFilterController extends BaseController
                 mFilterCategoriesRecyclerView.setVisibility(View.GONE);
             }
 
-            if (mPreviousSelectedFacetIndex != -1) {
-                mPreviousSelectedFacetIndices.put(getFacetFilterType(mPreviousSelectedFacetIndex), new HashSet<>(mFacetItemsAdapter.getSelectedFacets()));
-            }
-
-            if (position != mPreviousSelectedFacetIndex) {
-                mFacetItemsAdapter.clearSelectedFacets();
-                origSelectedSet.clear();
-            }
-
-            if (mPreviousSelectedFacetIndices.get(getFacetFilterType(position)) != null) {
-                mFacetItemsAdapter.updateSelectedFacets(mPreviousSelectedFacetIndices.get(getFacetFilterType(position)));
-                origSelectedSet = mPreviousSelectedFacetIndices.get(getFacetFilterType(position));
-            }
-
         } else { //price is clicked
             mFilterCategoriesRecyclerView.setVisibility(View.GONE);
             mFacetItemsRecyclerView.setVisibility(View.GONE);
@@ -443,42 +415,11 @@ public class SearchFilterController extends BaseController
         mFacetItemsAdapter.setFilterType(getFacetFilterType(position));
         mFacetItemsAdapter.replaceData(mapFacetItemClicked(position));
 
-        mPreviousSelectedFacetIndex = position;
     }
 
     @Override
-    public void updateFacetItemToFilters(Set<Integer> selectPosSet) {
-        Log.d("selectPosSet", selectPosSet.toString());
-
-        Set<Integer> oldSet = origSelectedSet;
-        Set<Integer> newSet = new HashSet<Integer>(selectPosSet);
-        origSelectedSet = new HashSet<Integer>(selectPosSet);
-        newSet.removeAll(oldSet);
-        oldSet.removeAll(origSelectedSet);
-
-        if (!newSet.isEmpty()) {
-            List<Integer> temp = new ArrayList(newSet);
-            SearchChipModel newChip = new SearchChipModel(mFacetItemsAdapter.getFilterType(), mFacetItemsAdapter.getData().get(temp.get(0)), temp.get(0));
-            mSearchItemsList.add(newChip);
-        } else if (!oldSet.isEmpty()) {
-            List<Integer> temp = new ArrayList(oldSet);
-            SearchChipModel chipToRemove = null;
-            for (SearchChipModel chip : mSearchItemsList) {
-                if (chip.getChipTitle().equals(mFacetItemsAdapter.getData().get(temp.get(0)))) {
-                    chipToRemove = chip;
-                }
-            }
-
-            if (chipToRemove != null) {
-                mSearchItemsList.remove(chipToRemove);
-            }
-        }
-
-    }
-
-    @Override
-    public Set<Integer> getOriginalSelectedSet() {
-        return origSelectedSet;
+    public void updateFacetItemToFilters(List<SearchChipModel> selectedChips) {
+        mSaleItemsPresenter.loadSaleItems(mSaleItemsView.createSaleItemsRequest(mCategoryKey,mSaleId,0,selectedChips,""));
     }
 
     @Override
@@ -496,19 +437,10 @@ public class SearchFilterController extends BaseController
     }
 
     @Override
-    public void categoryChipRemoved() {
-        Log.d("removechip", "oncategorychipremoved");
-        mChosenCategory = "";
-    }
-
-    @Override
-    public void onShowTransparentOverlay() {
-
-    }
-
-    @Override
-    public void onHideTransparentOverlay() {
-
+    public void replaceFacets(List<GetSaleItemsResponse.Facets> newFacets) {
+        mFacets = newFacets;
+        parseFacets(mFacets);
+        mFacetItemsAdapter.replaceData(mapFacetItemClicked(mCurrentTabPosition));
     }
 
     @Override
@@ -551,7 +483,6 @@ public class SearchFilterController extends BaseController
 
         updateCategories(categories);
 
-        mPreLoadedCategories = fillCategoryContent();
     }
 
     private void updateCategories(List<GetCategoryTreeResponse> getCategoryTreeResponses) {

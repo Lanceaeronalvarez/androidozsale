@@ -549,10 +549,11 @@ public class SaleItemsController extends BasePullToRefreshController implements 
 
 
         if (isCategoryChanged || initialLoad) {
-//            mSearchFilterController.replaceFacets(mFacets);
             setupSearchFilters();
             initialLoad = false;
         }
+
+        mSearchFilterController.replaceFacets(mFacets);
 
         isCategoryChanged = false;
     }
@@ -601,14 +602,6 @@ public class SaleItemsController extends BasePullToRefreshController implements 
             mSaleItemsToolbarTitle.setVisibility(View.VISIBLE);
             mIsSearchClicked = false;
         }
-    }
-
-    @Override
-    public void onExecuteCategoryChangeApiCall(String chosenCategoryKey, String chosenCategoryName) {
-        mChosenCategoryKey = chosenCategoryKey;
-        mChosenCategory = chosenCategoryName;
-        mPresenter.loadSaleItems(createSaleItemsRequest(chosenCategoryKey, "", 0, mChipFilters, ""));
-        isCategoryChanged = true;
     }
 
     @Override
@@ -662,12 +655,6 @@ public class SaleItemsController extends BasePullToRefreshController implements 
 
     }
 
-    @Override
-    public void unbindPaginate() {
-        if (mPaginateManager != null) {
-            mPaginateManager.unbind();
-        }
-    }
 
     @OnClick(R.id.partial_toolbar_field_title_textview)
     void onViewSearch() {
@@ -792,17 +779,8 @@ public class SaleItemsController extends BasePullToRefreshController implements 
         return stringBuilder.toString().trim();
     }
 
-    private void buildSearchQueryChips(List<SearchChipModel> chipFilters) {
-        if (!mSearchQuery.isEmpty()) {
-            String[] splitted = mSearchQuery.split("\\s+");
-            for (String str : splitted) {
-                chipFilters.add(new SearchChipModel(BundleKeys.SEARCH_QUERY_NAME, str, -1));
-            }
-        }
-
-    }
-
-    private GetSaleItemsRequest createSaleItemsRequest(String categoryKey, String saleId, int pageNumber, List<SearchChipModel> chipsList, String query) {
+    @Override
+    public GetSaleItemsRequest createSaleItemsRequest(String categoryKey, String saleId, int pageNumber, List<SearchChipModel> chipsList, String query) {
         List<String> saleIds = new LinkedList<>();
         HashMap<String, List<String>> facetFilters = new HashMap<>();
 
@@ -887,6 +865,16 @@ public class SaleItemsController extends BasePullToRefreshController implements 
         page = pageNumber;
 
         return getSaleItemsRequest;
+    }
+
+    private void buildSearchQueryChips(List<SearchChipModel> chipFilters) {
+        if (!mSearchQuery.isEmpty()) {
+            String[] splitted = mSearchQuery.split("\\s+");
+            for (String str : splitted) {
+                chipFilters.add(new SearchChipModel(BundleKeys.SEARCH_QUERY_NAME, str, -1));
+            }
+        }
+
     }
 
     private String mapSortingTitleToKey(String title) {

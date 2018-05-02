@@ -151,9 +151,9 @@ public class SearchTagsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                 @Override
                 public void onFocusChange(View v, boolean hasFocus) {
                     if(hasFocus){
-                        mPresenter.showTransparentOverlay();
+//                        mPresenter.showTransparentOverlay();
                     } else {
-                        mPresenter.hideTransparentOverlay();
+//                        mPresenter.hideTransparentOverlay();
                     }
                 }
             });
@@ -165,7 +165,7 @@ public class SearchTagsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                     if (actionId == EditorInfo.IME_ACTION_SEARCH) {
                         add(new SearchChipModel(BundleKeys.SEARCH_QUERY_NAME, vh.et.getText().toString(), -1));
                         vh.et.setText("");
-                        mPresenter.hideTransparentOverlay();
+//                        mPresenter.hideTransparentOverlay();
                     }
 
                     return false;
@@ -199,7 +199,7 @@ public class SearchTagsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                         mFacetsAdapter.notifyDataSetChanged();
                     }
 
-                    mPresenter.getOriginalSelectedSet().remove(chipToBeRemoved.getIndex());
+//                    mPresenter.getOriginalSelectedSet().remove(chipToBeRemoved.getIndex());
 //                    mLayoutManager.scrollToPosition(dataSize - 1);
 //                    mShopPresenter.updateShopFilters();
                     mFacetItemsAdapter.notifyItemChanged(chipToBeRemoved.getIndex());
@@ -209,7 +209,7 @@ public class SearchTagsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                     }
 
                     if (chipToBeRemoved.getFilterType().equals(BundleKeys.CATEGORY_TREE_FACET)) {
-                        mPresenter.onCategoryChipRemoved();
+//                        mPresenter.onCategoryChipRemoved();
                     }
                 }
             });

@@ -71,7 +71,6 @@ public class FacetItemsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                         if (selectedPos == -1) {
                             vh.toggle();
                             vh.itemView.setSelected(true);
-                            mSelectedFacets.add(position);
                             addChip(position);
                             selectedPos = position;
                         } else {
@@ -79,12 +78,10 @@ public class FacetItemsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                                 FacetItemsViewHolder oldVH = (FacetItemsViewHolder) mRecyclerView.findViewHolderForLayoutPosition(selectedPos);
                                 oldVH.toggle();
                                 oldVH.itemView.setSelected(false);
-                                mSelectedFacets.remove(selectedPos);
-                                removeChip();
+                                removeChip(position);
 
                                 vh.toggle();
                                 vh.itemView.setSelected(true);
-                                mSelectedFacets.add(position);
                                 addChip(position);
                                 selectedPos = position;
                             }
@@ -94,8 +91,7 @@ public class FacetItemsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                         if (selectedPos == position) {
                             vh.toggle();
                             vh.itemView.setSelected(false);
-                            mSelectedFacets.remove(position);
-                            removeChip();
+                            removeChip(position);
                             selectedPos = -1;
                         }
                     }
@@ -106,27 +102,18 @@ public class FacetItemsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                         vh.toggle();
                         vh.itemView.setSelected(true);
                         mSelectedFacets.add(position);
+                        addChip(position);
                     } else {
                         vh.toggle();
                         vh.itemView.setSelected(false);
-                        mSelectedFacets.remove(position);
+                        removeChip(position);
                     }
-
-                    mPresenter.onFacetItemClicked(new HashSet<Integer>(mSelectedFacets));
 
                 }
             }
         });
 
-        applySelection(vh, position);
-    }
-
-    public void updateSelectedFacets(Set<Integer> selectedFacets) {
-        mSelectedFacets = new HashSet<Integer>(selectedFacets);
-    }
-
-    public void applySelection(FacetItemsViewHolder vh, int position) {
-        if (mSelectedFacets.contains(position)) {
+        if (isFacetItemActive(position)) {
             vh.isSelected = true;
             vh.itemView.setSelected(true);
             vh.mFacetCheck.setVisibility(View.VISIBLE);
@@ -137,32 +124,47 @@ public class FacetItemsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
         }
     }
 
+
     public void setSearchItemsList(List<SearchChipModel> list) {
         mSearchItemsList = list;
+    }
+
+    private boolean isFacetItemActive(int position) {
+        for (SearchChipModel chip : mSearchItemsList) {
+            if (chip.getChipTitle().equals(mData.get(position))) {
+                return true;
+            }
+        }
+        return false;
     }
 
     private void addChip(int position) {
         SearchChipModel newChip = new SearchChipModel(mFilterType, mData.get(position), position);
         mSearchItemsList.add(newChip);
+        mPresenter.onFacetItemClicked(mSearchItemsList);
     }
 
-    private void removeChip() {
+    private void removeChip(int position) {
         SearchChipModel chipToRemove = null;
+        String chipTitle = getData().get(position);
         for (SearchChipModel chip : mSearchItemsList) {
-            if (chip.getFilterType().equals(BundleKeys.SORT_FACETFILTER_NAME)) {
+
+//            special logic for sort chips
+            if (getFilterType() == BundleKeys.SORT_FACETFILTER_NAME && chip.getFilterType().equals(BundleKeys.SORT_FACETFILTER_NAME)) {
                 chipToRemove = chip;
+                break;
+            }
+
+//            regular logic for others
+            if (chip.getChipTitle().equals(chipTitle)) {
+                chipToRemove = chip;
+                break;
             }
         }
-        if (chipToRemove != null) {
-            mSearchItemsList.remove(chipToRemove);
-        }
 
+        mSearchItemsList.remove(chipToRemove);
+        mPresenter.onFacetItemClicked(mSearchItemsList);
     }
-
-    public void clearSelectedFacets() {
-        mSelectedFacets.clear();
-    }
-
 
     public void replaceData(List<String> data) {
         mData = new ArrayList<>(data);
@@ -171,12 +173,6 @@ public class FacetItemsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
 
     public void setFilterType(String type) {
         mFilterType = type;
-        if (mFilterType == BundleKeys.SORT_FACETFILTER_NAME) { //update selectedPos when coming back from saleitemslist
-            List<Integer> tempList = new ArrayList<>(mSelectedFacets);
-            if (!tempList.isEmpty()) {
-                selectedPos = tempList.get(0);
-            }
-        }
     }
 
     public String getFilterType() {
