@@ -96,8 +96,8 @@ android {
         }
 
         dealsDirectRC {
-            versionCode 78
-            versionName "2.3.1"
+            versionCode 81
+            versionName "2.3.2"
             applicationId "au.com.dealsdirect"
 
             buildConfigField "String", "API_ROOT", "\"https://www.dealsdirect.com.au/\""
@@ -121,7 +121,7 @@ android {
 
         dealsDirectTest {
             versionCode 82
-            versionName "2.3.1"
+            versionName "2.3.2"
             applicationId "au.com.dealsdirect.test"
 
             buildConfigField "String", "API_ROOT", "\"https://genie-ui-dealsdirect-pre.mysaledev.com/\""
