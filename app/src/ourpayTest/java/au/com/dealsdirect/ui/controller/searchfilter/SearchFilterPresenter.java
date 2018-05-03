@@ -37,4 +37,9 @@ public class SearchFilterPresenter<V extends SearchFilterMvpView> extends BasePr
         getMvpView().onResetPriceRange();
     }
 
+    @Override
+    public void selectCategory(String categoryName, String categoryKey) {
+        getMvpView().onCategoryClicked(categoryName,categoryKey);
+    }
+
 }

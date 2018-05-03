@@ -18,6 +18,8 @@ import java.util.Map;
 
 import au.com.dealsdirect.R;
 import au.com.dealsdirect.data.network.model.category.GetCategoryTreeResponse;
+import au.com.dealsdirect.ui.controller.saleitems.SaleItemsMvpPresenter;
+import au.com.dealsdirect.ui.controller.searchfilter.SearchFilterMvpPresenter;
 import au.com.dealsdirect.ui.controller.searchfilter.SubCategoryClickListener;
 import au.com.dealsdirect.ui.controller.searchfilter.SubCategoryItemClickListener;
 import butterknife.BindView;
@@ -30,8 +32,7 @@ import butterknife.ButterKnife;
 public class SubCategoriesAdapter extends RecyclerView.Adapter<SubCategoriesAdapter.SubCategoriesViewHolder> {
 
     private List<GetCategoryTreeResponse> mData = new ArrayList<>();
-    private SubCategoryClickListener mSubCategoryAdapterClickListener;
-    private SubCategoryItemClickListener mSubCategoryItemClickListener;
+    private SearchFilterMvpPresenter mSearchFilterPresenter;
     private SubCategoryItemsAdapter mSubCategoryItemsAdapter;
     private Map<String, List<GetCategoryTreeResponse>> mCategoryMap = new HashMap<>();
     private String mChosenCategoryKey;
@@ -39,15 +40,12 @@ public class SubCategoriesAdapter extends RecyclerView.Adapter<SubCategoriesAdap
     public SubCategoriesAdapter(
             String chosenCategorykey,
             List<GetCategoryTreeResponse> data,
-            SubCategoryClickListener subCategoryClickListener,
-            SubCategoryItemClickListener subCategoryItemClickListener,
-            Map<String, List<GetCategoryTreeResponse>> categoryMap) {
+            SearchFilterMvpPresenter searchFilterMvpPresenter) {
 
         mChosenCategoryKey = chosenCategorykey;
         mData = data;
-        mSubCategoryAdapterClickListener = subCategoryClickListener;
-        mSubCategoryItemClickListener = subCategoryItemClickListener;
-        mCategoryMap = categoryMap;
+        createCategoryMap(mData);
+        mSearchFilterPresenter = searchFilterMvpPresenter;
     }
 
     @Override
@@ -78,7 +76,7 @@ public class SubCategoriesAdapter extends RecyclerView.Adapter<SubCategoriesAdap
 
                 List<GetCategoryTreeResponse> subCategoryItems = getSubCategoryItems(mData.get(position).getKey());
 
-                mSubCategoryItemsAdapter = new SubCategoryItemsAdapter(mChosenCategoryKey, subCategoryItems, mSubCategoryItemClickListener, mCategoryMap);
+                mSubCategoryItemsAdapter = new SubCategoryItemsAdapter(mChosenCategoryKey, subCategoryItems, mSearchFilterPresenter, mCategoryMap);
                 holder.subCategoryItemsRecyclerView.setLayoutManager(new LinearLayoutManager(holder.itemView.getContext(), LinearLayoutManager.VERTICAL, false));
                 holder.subCategoryItemsRecyclerView.setAdapter(mSubCategoryItemsAdapter);
 
@@ -89,7 +87,7 @@ public class SubCategoriesAdapter extends RecyclerView.Adapter<SubCategoriesAdap
 
                     holder.itemView
                             .setOnClickListener(view -> {
-                                mSubCategoryAdapterClickListener.onSubCategoryClicked(mData.get(position));
+                                mSearchFilterPresenter.selectCategory(mData.get(position).getName(),mData.get(position).getKey());
                             });
                 }
             }
@@ -110,6 +108,7 @@ public class SubCategoriesAdapter extends RecyclerView.Adapter<SubCategoriesAdap
 
     public void replaceData(List<GetCategoryTreeResponse> getCategoryTreeResponses) {
         mData = new ArrayList<>(getCategoryTreeResponses);
+        createCategoryMap(mData);
         notifyDataSetChanged();
     }
 
@@ -133,6 +132,17 @@ public class SubCategoriesAdapter extends RecyclerView.Adapter<SubCategoriesAdap
         return mCategoryMap.get(categoryKey);
     }
 
+    private void createCategoryMap(List<GetCategoryTreeResponse> categories) {
+        mCategoryMap.put("shop", categories);
+        updateCategories(categories);
+    }
+
+    private void updateCategories(List<GetCategoryTreeResponse> getCategoryTreeResponses) {
+        for (GetCategoryTreeResponse category : getCategoryTreeResponses) {
+            mCategoryMap.put(category.getKey(), category.getChildren());
+            updateCategories(category.getChildren());
+        }
+    }
 
     public void setActiveCategoryKey(String categoryKey) {
         mChosenCategoryKey = categoryKey;

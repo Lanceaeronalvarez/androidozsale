@@ -20,6 +20,8 @@ import java.util.Map;
 
 import au.com.dealsdirect.R;
 import au.com.dealsdirect.data.network.model.category.GetCategoryTreeResponse;
+import au.com.dealsdirect.ui.controller.saleitems.SaleItemsMvpPresenter;
+import au.com.dealsdirect.ui.controller.searchfilter.SearchFilterMvpPresenter;
 import au.com.dealsdirect.ui.controller.searchfilter.SubCategoryItemClickListener;
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -32,8 +34,8 @@ public class SubCategoryItemsAdapter extends RecyclerView.Adapter<SubCategoryIte
 
 
     private List<GetCategoryTreeResponse> mData = new ArrayList<>();
-    private SubCategoryItemClickListener mCategoryAdapterClickListener;
     private SubCategoryItemsAdapter mSubCategoryItemsAdapter;
+    private SearchFilterMvpPresenter mSearchFilterPresenter;
     private int lastPosition = -1;
     private Map<String, List<GetCategoryTreeResponse>> mCategoryMap = new HashMap<>();
     private String mChosenCategoryKey;
@@ -41,12 +43,12 @@ public class SubCategoryItemsAdapter extends RecyclerView.Adapter<SubCategoryIte
     public SubCategoryItemsAdapter(
             String chosenCategoryKey,
             List<GetCategoryTreeResponse> data,
-            SubCategoryItemClickListener subCategoryItemClickListener,
+            SearchFilterMvpPresenter searchFilterMvpPresenter,
             Map<String, List<GetCategoryTreeResponse>> categoryMap) {
 
         mChosenCategoryKey = chosenCategoryKey;
         mData = data;
-        mCategoryAdapterClickListener = subCategoryItemClickListener;
+        mSearchFilterPresenter = searchFilterMvpPresenter;
         mCategoryMap = categoryMap;
     }
 
@@ -77,7 +79,7 @@ public class SubCategoryItemsAdapter extends RecyclerView.Adapter<SubCategoryIte
             List<GetCategoryTreeResponse> subCategoryItems = getSubCategoryItems(mData.get(position).getKey());
 
             if (subCategoryItems != null && !subCategoryItems.isEmpty()) {
-                mSubCategoryItemsAdapter = new SubCategoryItemsAdapter(mChosenCategoryKey, subCategoryItems, mCategoryAdapterClickListener, mCategoryMap);
+                mSubCategoryItemsAdapter = new SubCategoryItemsAdapter(mChosenCategoryKey, subCategoryItems, mSearchFilterPresenter, mCategoryMap);
                 holder.recyclerView.setLayoutManager(new LinearLayoutManager(holder.itemView.getContext(), LinearLayoutManager.VERTICAL, false));
                 holder.recyclerView.setAdapter(mSubCategoryItemsAdapter);
 
@@ -87,8 +89,7 @@ public class SubCategoryItemsAdapter extends RecyclerView.Adapter<SubCategoryIte
 
             holder.itemView.setOnClickListener(view -> {
                 holder.titleTextView.setEnabled(true);
-                mCategoryAdapterClickListener.onSubCategoryItemClicked(
-                        mData.get(position).getId(),
+                mSearchFilterPresenter.selectCategory(
                         mData.get(position).getName(),
                         mData.get(position).getKey());
             });

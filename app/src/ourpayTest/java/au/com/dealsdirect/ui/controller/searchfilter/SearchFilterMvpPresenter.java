@@ -18,4 +18,6 @@ public interface SearchFilterMvpPresenter<V extends SearchFilterMvpView> extends
 
     void resetPriceRange();
 
+    void selectCategory(String categoryName, String categoryKey);
+
 }

@@ -16,4 +16,6 @@ public interface SaleItemsMvpPresenter<V extends SaleItemsMvpView> extends MvpPr
     void loadProductDetails(RecyclerView.ViewHolder viewHolder, int position, String seoIdentifierId, String imageUrl, String skuId, String saleId);
 
     void loadSortingFacets();
+
+    void onCategoryChanged(boolean val);
 }
