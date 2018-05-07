@@ -76,13 +76,12 @@ public class SubCategoriesAdapter extends RecyclerView.Adapter<SubCategoriesAdap
                 if (subCategoryItems != null && !subCategoryItems.isEmpty()) {
                     holder.itemView.setActivated(false);
                     holder.subCategoryItemsRecyclerView.setVisibility(View.VISIBLE);
-
-                    holder.itemView.setOnClickListener(view -> {
-                        selectedPosition = position;
-                        mData.get(position).setSelected(!mData.get(position).getSelected());
-                        mSubCategoryClickListener.onSubCategoryClicked(mData, mData.get(position).getKey());
-                    });
                 }
+                holder.itemView.setOnClickListener(view -> {
+                    selectedPosition = position;
+                    mData.get(position).setSelected(!mData.get(position).getSelected());
+                    mSubCategoryClickListener.onSubCategoryClicked(mData, mData.get(position).getKey());
+                });
             }
         }
     }
