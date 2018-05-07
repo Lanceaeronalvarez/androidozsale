@@ -431,14 +431,14 @@ public class SaleItemsController extends BasePullToRefreshController implements 
             mSearchQuery = buildSearchQueryText(mRemovedChipTitles);
 
 
-//        04/23/2018 - Change to whatever api has returned.
-//        forFacetCorrection api calls not needed
+//        04/23/2018 - Change to whatever api has returned if categories are not empty
+//        else, use facet correction api call(default api call without filters)
 
             //this api call serves to get the correct facets for SearchFiltersController to display
             // we need to remove any chip filters to return the base facets
             // giving any filters(ff=) will change the facet return;
 
-//            mPresenter.loadSaleItems(createSaleItemsRequest(mCategoryKey, mSaleId, page, null));
+            mPresenter.loadSaleItems(createSaleItemsRequest(mCategoryKey, mSaleId, page, null));
         } else if (!mSaleItems.isEmpty()) {
             if (mSaleItems.size() >= PaginateUtils.LOADING_TRIGGER_THRESHOLD) {
                 mPaginateManager = PaginateUtils.init(mSaleItemsRecyclerView, mPaginateCallbacks);
@@ -461,8 +461,8 @@ public class SaleItemsController extends BasePullToRefreshController implements 
     @Override
     public void showSaleItems(GetSaleItemsResponse getSaleItemsResponse, boolean forFacetCorrection) {
 
-//        04/23/2018 - Change to whatever api has returned.
-//        forFacetCorrection api calls not needed
+//        04/23/2018 - Change to whatever api has returned if categories are not empty
+//        else, use facet correction api call(default api call without filters)
 
         List<GetSaleItemsResponse.Products> items = getSaleItemsResponse.products;
 
@@ -494,9 +494,12 @@ public class SaleItemsController extends BasePullToRefreshController implements 
                 enablePullToRefresh(false); //disable ptr when coming from categories
             }
 
-//04/23/2018 - Change to whatever api has returned.
-            mFacets = getSaleItemsResponse.facets;
-            mCategoryTreeResponse = getSaleItemsResponse.categories;
+//        04/23/2018 - Change to whatever api has returned if categories are not empty
+//        else, use facet correction api call(default api call without filters)
+            if (!getSaleItemsResponse.getCategories().isEmpty()) {
+                mFacets = getSaleItemsResponse.facets;
+                mCategoryTreeResponse = getSaleItemsResponse.categories;
+            }
 
             loadingInProgress = false;
 
@@ -536,18 +539,13 @@ public class SaleItemsController extends BasePullToRefreshController implements 
             if (mSaleItems == null || mSaleItems.isEmpty()) {
                 mPlaceholder.setVisibility(View.VISIBLE);
                 mSaleItemsRecyclerView.setVisibility(View.GONE);
-
-                //disable showing filters only when no sale items have loaded and search is not active.
-                if(!mIsSearchActive) {
-                    mSaleItemsFilterIcon.setOnClickListener(null);
-                }
             } else {
                 mPlaceholder.setVisibility(View.GONE);
                 mSaleItemsRecyclerView.setVisibility(View.VISIBLE);
-                //allow showing filters only when sale items have loaded and search is not active.
-                if(!mIsSearchActive) {
-                    mSaleItemsFilterIcon.setOnClickListener(v -> showFilters());
-                }
+            }
+
+            if (!mIsSearchActive) {
+                mSaleItemsFilterIcon.setOnClickListener(v -> showFilters());
             }
         }
     }
