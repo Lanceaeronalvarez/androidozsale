@@ -75,7 +75,7 @@ public class SubCategoryItemsAdapter extends RecyclerView.Adapter<SubCategoryIte
                 holder.titleTextView.setEnabled(true);
                 this.position = position;
                 children.get(position).setParentKey(mData.getParentKey());
-                mSubCategoryItemClickListener.onSubCategoryItemClicked(this, children.get(position));
+                mSubCategoryItemClickListener.onSubCategoryItemClicked(children.get(position));
             });
         }
     }

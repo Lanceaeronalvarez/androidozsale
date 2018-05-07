@@ -10,5 +10,5 @@ import au.com.dealsdirect.ui.controller.searchfilter.adapter.SubCategoryItemsAda
  */
 
 public interface SubCategoryItemClickListener {
-    void onSubCategoryItemClicked(SubCategoryItemsAdapter adapter,GetCategoryTreeResponse getCategoryTreeResponse);
+    void onSubCategoryItemClicked(GetCategoryTreeResponse getCategoryTreeResponse);
 }

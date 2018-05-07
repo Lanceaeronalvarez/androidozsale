@@ -622,7 +622,7 @@ public class SearchFilterController extends BaseController
     }
 
     @Override
-    public void onSubCategoryItemClicked(SubCategoryItemsAdapter adapter, GetCategoryTreeResponse response) {
+    public void onSubCategoryItemClicked(GetCategoryTreeResponse response) {
         //Change state of category in CategoryMap
         response.setSelected(!response.getSelected());
         mCategoryMap.put(response.getKey(), response);
