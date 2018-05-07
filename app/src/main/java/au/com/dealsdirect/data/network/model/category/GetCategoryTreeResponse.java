@@ -19,7 +19,6 @@ public class GetCategoryTreeResponse implements Parcelable {
     int count;
     boolean isSelected;
     List<GetCategoryTreeResponse> children;
-    String parentKey;
 
     public GetCategoryTreeResponse() {
 
@@ -34,7 +33,6 @@ public class GetCategoryTreeResponse implements Parcelable {
         count = in.readInt();
         isSelected = in.readByte() != 0;
         children = in.createTypedArrayList(GetCategoryTreeResponse.CREATOR);
-        parentKey = in.readString();
     }
 
     public static final Creator<GetCategoryTreeResponse> CREATOR = new Creator<GetCategoryTreeResponse>() {
@@ -94,14 +92,6 @@ public class GetCategoryTreeResponse implements Parcelable {
         return 0;
     }
 
-    public String getParentKey() {
-        return parentKey;
-    }
-
-    public void setParentKey(String parentKey) {
-        this.parentKey = parentKey;
-    }
-
     @Override
     public void writeToParcel(Parcel parcel, int i) {
         parcel.writeString(payload);
@@ -112,7 +102,6 @@ public class GetCategoryTreeResponse implements Parcelable {
         parcel.writeInt(count);
         parcel.writeByte((byte) (isSelected ? 1 : 0));
         parcel.writeTypedList(children);
-        parcel.writeString(parentKey);
     }
 
     public String getPayload() {
