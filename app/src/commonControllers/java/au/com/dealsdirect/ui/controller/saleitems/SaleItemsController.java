@@ -52,6 +52,7 @@ import au.com.dealsdirect.ui.custom.transitions.SharedArcFadePushChangeHandler;
 import au.com.dealsdirect.utils.BundleBuilder;
 import au.com.dealsdirect.utils.BundleKeys;
 import au.com.dealsdirect.utils.JsonUtils;
+import au.com.dealsdirect.utils.KeyboardUtils;
 import au.com.dealsdirect.utils.PaginateUtils;
 import butterknife.BindView;
 import butterknife.OnClick;
@@ -124,6 +125,7 @@ public class SaleItemsController extends BasePullToRefreshController implements 
     private boolean mIsSearch = false;
     private boolean mFromShopSearch = false;
     private boolean mFromCategorySearch = false;
+    private boolean mIsSearchActive = false;
 
     private List<SearchChipModel> mChipFilters = new ArrayList<>();
 
@@ -238,10 +240,13 @@ public class SaleItemsController extends BasePullToRefreshController implements 
         mSaleItemClickCounter = 0;
 
         determineToolbarTitle();
-        if (mSaleItems.isEmpty() && mFromShopSearch) {
-            mSaleItemsFilterIcon.setOnClickListener(null);
-        } else {
-            mSaleItemsFilterIcon.setOnClickListener(v -> showFilters());
+
+        if (!mFromShopSearch) {
+            if (mSaleItems.isEmpty()) {
+                mSaleItemsFilterIcon.setOnClickListener(null);
+            } else {
+                mSaleItemsFilterIcon.setOnClickListener(v -> showFilters());
+            }
         }
 
         super.onAttach(view);
@@ -353,6 +358,12 @@ public class SaleItemsController extends BasePullToRefreshController implements 
             }
         }
         return newString;
+    }
+
+    @Override
+    public void onDetach(View view) {
+        super.onDetach(view);
+        hideKeyboard();
     }
 
     @Override
@@ -525,13 +536,19 @@ public class SaleItemsController extends BasePullToRefreshController implements 
             if (mSaleItems == null || mSaleItems.isEmpty()) {
                 mPlaceholder.setVisibility(View.VISIBLE);
                 mSaleItemsRecyclerView.setVisibility(View.GONE);
+
+                //disable showing filters only when no sale items have loaded and search is not active.
+                if(!mIsSearchActive) {
+                    mSaleItemsFilterIcon.setOnClickListener(null);
+                }
             } else {
                 mPlaceholder.setVisibility(View.GONE);
                 mSaleItemsRecyclerView.setVisibility(View.VISIBLE);
+                //allow showing filters only when sale items have loaded and search is not active.
+                if(!mIsSearchActive) {
+                    mSaleItemsFilterIcon.setOnClickListener(v -> showFilters());
+                }
             }
-
-            //allow showing filters only when sale items have loaded.
-            mSaleItemsFilterIcon.setOnClickListener(v -> showFilters());
         }
     }
 
@@ -688,18 +705,15 @@ public class SaleItemsController extends BasePullToRefreshController implements 
 
         determineToolbarTitle();
         hideKeyboard();
+
+        mIsSearchActive = false;
     }
 
     public void activateSearch() {
         android.os.Handler handler = new android.os.Handler();
         handler.postDelayed(() -> {
             if (mSaleItemsToolbarField != null && mSaleItemsToolbarField.requestFocus()) {
-                InputMethodManager inputMethodManager =
-                        (InputMethodManager) mActivity.getSystemService(Context.INPUT_METHOD_SERVICE);
-
-                inputMethodManager.toggleSoftInputFromWindow(
-                        mSaleItemsToolbarField.getApplicationWindowToken(),
-                        InputMethodManager.SHOW_FORCED, 0);
+                KeyboardUtils.toggleSoftInput(mActivity);
             }
         }, 200);
 
@@ -740,6 +754,7 @@ public class SaleItemsController extends BasePullToRefreshController implements 
             return false;
         });
 
+        mIsSearchActive = true;
     }
 
     private List<SearchChipModel> removeSearchQueryChips(List<SearchChipModel> chipFilters) {
