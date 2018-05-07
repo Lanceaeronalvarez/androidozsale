@@ -183,9 +183,6 @@ public class CategoriesAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
         holder.categoryIndicator.setVisibility(View.GONE);
         Context context = holder.itemView.getContext();
         switch (category){
-            case CATEGORY_SHOP:
-                holder.categoryImageIndicator.setImageDrawable(context.getDrawable(R.drawable.ic_shop));
-                break;
             case CATEGORY_HOME:
                 holder.categoryImageIndicator.setImageDrawable(context.getDrawable(R.drawable.ic_category_home));
                 break;
