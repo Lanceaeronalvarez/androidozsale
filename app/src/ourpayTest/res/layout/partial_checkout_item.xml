@@ -10,14 +10,14 @@
 
     <android.support.v7.widget.CardView
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_height="150dp"
         app:cardCornerRadius="@dimen/edit_text_corner_radius"
         app:cardUseCompatPadding="true">
 
         <ImageView
             android:id="@+id/item_checkout_image"
             android:layout_width="100dp"
-            android:layout_height="150dp"
+            android:layout_height="match_parent"
             android:scaleType="fitXY"
             tools:ignore="ContentDescription" />
     </android.support.v7.widget.CardView>
@@ -26,7 +26,8 @@
         android:layout_width="match_parent"
         android:layout_height="150dp"
         android:paddingEnd="@dimen/padding_default"
-        android:paddingStart="@dimen/padding_default">
+        android:paddingStart="@dimen/padding_default"
+        android:padding="3dp">
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -40,24 +41,26 @@
                 android:orientation="horizontal">
 
                 <TextView
+                    fontPath="@string/font_app_bold"
                     android:id="@+id/item_checkout_name"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="3"
-                    android:textColor="#717171"
+                    android:textColor="@color/text_medium"
                     android:ellipsize="end"
-                    android:textSize="@dimen/text_size_headline3"
+                    android:maxLines="2"
+                    android:textSize="@dimen/text_size_body"
                     tools:text="@string/test_product_name" />
 
                 <TextView
                     android:id="@+id/item_checkout_price"
-                    fontPath="@string/font_app_semibold"
+                    fontPath="@string/font_app_bold"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="2"
                     android:gravity="end"
-                    android:textColor="@color/cart_order_price_text_color"
-                    android:textSize="@dimen/text_size_headline3"
+                    android:textColor="@color/text_medium"
+                    android:textSize="@dimen/text_size_body"
                     tools:text="$19.00" />
             </LinearLayout>
 
@@ -89,12 +92,17 @@
                     android:id="@+id/item_checkout_size_text"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:textColor="@color/text_medium"
+                    android:textSize="@dimen/text_size_caption2"
                     android:text="@string/size" />
 
                 <TextView
+                    fontPath="@string/font_app_bold"
                     android:id="@+id/item_checkout_size_value"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:textColor="@color/text_medium"
+                    android:textSize="@dimen/text_size_caption1"
                     tools:text="AU 14" />
             </LinearLayout>
 
