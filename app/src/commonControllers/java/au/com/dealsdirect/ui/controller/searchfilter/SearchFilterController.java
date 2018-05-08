@@ -253,13 +253,15 @@ public class SearchFilterController extends BaseController
             mFacetsAdapter.add(new Pair<String, String>(BundleKeys.SIZES_FACETFILTER_NAME, "Sizes"));
         }
 
+        if (mHasPriceFacet) {
+            mFacetsAdapter.add(new Pair<String, String>(BundleKeys.PRICE_FACETFILTER_NAME, "Price"));
+        }
+
         if (!mColorList.isEmpty()) {
             mFacetsAdapter.add(new Pair<String, String>(BundleKeys.COLORS_FACETFILTER_NAME, "Color"));
         }
 
-        if (mHasPriceFacet) {
-            mFacetsAdapter.add(new Pair<String, String>(BundleKeys.PRICE_FACETFILTER_NAME, "Price"));
-        }
+
 
 //        SETUP FACET ITEMS (sub of facets)
         mFacetItemsAdapter = new FacetItemsAdapter(new ArrayList<>(), mPresenter, mFacetItemsRecyclerView);
