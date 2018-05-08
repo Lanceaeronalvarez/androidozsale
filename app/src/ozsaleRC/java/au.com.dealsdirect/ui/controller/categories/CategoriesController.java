@@ -281,7 +281,9 @@ public class CategoriesController extends BaseController
                 break;
             }
         }
-        mCategories.remove(shopCategory);
+        if (mCategories.contains(shopCategory)) {
+            mCategories.remove(shopCategory);
+        }
 
         addToMap(categories);
         setupCategories();

@@ -93,7 +93,7 @@ public class GetCategoryTreeResponse implements Parcelable {
     }
 
     @Override
-    public void writeToParcel(Parcel parcel, int i) {
+    public void writeToParcel(Parcel parcel, int flags) {
         parcel.writeString(payload);
         parcel.writeString(nodeType);
         parcel.writeString(id);
@@ -128,7 +128,7 @@ public class GetCategoryTreeResponse implements Parcelable {
         this.isSelected = isSelected;
     }
 
-    public boolean getSelected() {
+    public boolean isSelected() {
         return isSelected;
     }
 }

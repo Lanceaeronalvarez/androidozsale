@@ -15,6 +15,7 @@ import java.util.Map;
 
 import au.com.dealsdirect.R;
 import au.com.dealsdirect.data.network.model.category.GetCategoryTreeResponse;
+import au.com.dealsdirect.ui.controller.searchfilter.SearchFilterController;
 import au.com.dealsdirect.ui.controller.searchfilter.SubCategoryClickListener;
 import au.com.dealsdirect.ui.controller.searchfilter.SubCategoryItemClickListener;
 import butterknife.BindView;
@@ -35,13 +36,12 @@ public class SubCategoriesAdapter extends RecyclerView.Adapter<SubCategoriesAdap
 
     public SubCategoriesAdapter(
             List<GetCategoryTreeResponse> data,
-            SubCategoryClickListener subCategoryClickListener,
-            SubCategoryItemClickListener subCategoryItemClickListener,
+            SearchFilterController controller,
             Map<String, GetCategoryTreeResponse> categoryMap) {
 
         mData = data;
-        mSubCategoryClickListener = subCategoryClickListener;
-        mSubCategoryItemClickListener = subCategoryItemClickListener;
+        mSubCategoryClickListener = controller;
+        mSubCategoryItemClickListener = controller;
         mCategoryMap = categoryMap;
     }
 
@@ -57,14 +57,8 @@ public class SubCategoriesAdapter extends RecyclerView.Adapter<SubCategoriesAdap
         if (!mData.isEmpty()) {
             if (!mData.get(position).getName().equals("empty")) {
                 if (!mData.get(position).getName().isEmpty()) {
-
                     holder.subCategoryTitle.setText(mData.get(position).getName());
-
-                    if (mData.get(position).getSelected()) {
-                        holder.subCategoryCheck.setVisibility(View.VISIBLE);
-                    } else {
-                        holder.subCategoryCheck.setVisibility(View.GONE);
-                    }
+                    holder.subCategoryCheck.setVisibility(mData.get(position).isSelected() ? View.VISIBLE : View.GONE);
                 }
 
                 List<GetCategoryTreeResponse> subCategoryItems = getSubCategoryItems(mData.get(position).getKey()).getChildren();
@@ -79,7 +73,7 @@ public class SubCategoriesAdapter extends RecyclerView.Adapter<SubCategoriesAdap
                 }
                 holder.itemView.setOnClickListener(view -> {
                     selectedPosition = position;
-                    mData.get(position).setSelected(!mData.get(position).getSelected());
+                    mData.get(position).setSelected(!mData.get(position).isSelected());
                     mSubCategoryClickListener.onSubCategoryClicked(mData, mData.get(position).getKey());
                 });
             }

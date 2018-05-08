@@ -56,7 +56,7 @@ public class SubCategoryItemsAdapter extends RecyclerView.Adapter<SubCategoryIte
 
             if (!children.get(position).getName().isEmpty()) {
                 holder.titleTextView.setText(children.get(position).getName());
-                holder.subCategoryCheck.setVisibility(children.get(position).getSelected() ? View.VISIBLE : View.GONE);
+                holder.subCategoryCheck.setVisibility(children.get(position).isSelected() ? View.VISIBLE : View.GONE);
             }
 
             List<GetCategoryTreeResponse> subCategoryItems = getSubCategoryItems(children.get(position).getKey()).getChildren();

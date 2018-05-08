@@ -65,14 +65,13 @@ public class FacetItemsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
             @Override
             public void onClick(View v) {
                 if (!vh.isSelected) {
-                    vh.toggle();
                     vh.itemView.setSelected(true);
                     addChip(position);
                 } else {
-                    vh.toggle();
                     vh.itemView.setSelected(false);
                     removeChip(position);
                 }
+                vh.toggle();
                 mPresenter.onFacetItemClicked(new HashSet<Integer>(mSelectedFacets));
 
             }
@@ -101,15 +100,9 @@ public class FacetItemsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
         SearchChipModel chipToRemove = null;
         String chipTitle = getData().get(position);
         for (SearchChipModel chip : mSearchItemsList) {
-
-//            special logic for sort chips
-            if (getFilterType() == BundleKeys.SORT_FACETFILTER_NAME && chip.getFilterType().equals(BundleKeys.SORT_FACETFILTER_NAME)) {
-                chipToRemove = chip;
-                break;
-            }
-
-//            regular logic for others
-            if (chip.getChipTitle().equals(chipTitle)) {
+            //special logic for sort chips
+            if ((getFilterType() == BundleKeys.SORT_FACETFILTER_NAME && chip.getFilterType().equals(BundleKeys.SORT_FACETFILTER_NAME))
+                    || chip.getChipTitle().equals(chipTitle)) {
                 chipToRemove = chip;
                 break;
             }
@@ -126,32 +119,10 @@ public class FacetItemsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
         }
         return false;
     }
-//    public SearchChipModel findSortChip(){
-//        for(SearchChipModel chipModel : mSearchItemsList) {
-//            switch (chipModel) {
-//                case
-//            }
-//            return chipModel;
-//        }
-//    }
 
     public void clearSelectedFacets() {
         mSelectedFacets.clear();
     }
-
-    private void removeSortChip() {
-        SearchChipModel chipToRemove = null;
-        for (SearchChipModel chip : mSearchItemsList) {
-            if (chip.getFilterType().equals(BundleKeys.SORT_FACETFILTER_NAME)) {
-                chipToRemove = chip;
-            }
-        }
-        if (chipToRemove != null) {
-            mSearchItemsList.remove(chipToRemove);
-        }
-
-    }
-
 
     public void replaceData(List<String> data) {
         mData = new ArrayList<>(data);
