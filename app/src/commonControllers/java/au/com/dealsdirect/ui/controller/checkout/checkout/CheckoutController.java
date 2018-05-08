@@ -501,8 +501,6 @@ public class CheckoutController extends VisaCheckoutController implements Checko
 
     @Override
     public void showPaymentDetails(PaymentMethod paymentMethod) {
-//        disabling masterpass for TB atm 01/16/2018 for 2.3
-
         //update payment method selected
         if(paymentMethod == null){
             mActivity.setPaymentMethodSelected(null);
@@ -517,7 +515,9 @@ public class CheckoutController extends VisaCheckoutController implements Checko
             mPayButton.setVisibility(View.VISIBLE);
             mPaypalButton.setVisibility(View.VISIBLE);
             mVisaCheckoutButton.setVisibility(View.VISIBLE);
-//            mMasterpassButton.setVisibility(View.VISIBLE);
+            if(mPresenter.isMasterPassEnabled()) {
+                mMasterpassButton.setVisibility(View.VISIBLE);
+            }
             return;
         } else {
 
@@ -525,10 +525,12 @@ public class CheckoutController extends VisaCheckoutController implements Checko
                 mPaypalButton.setVisibility(View.VISIBLE);
                 mPayButton.setVisibility(View.GONE);
                 mVisaCheckoutButton.setVisibility(View.GONE);
+                mMasterpassButton.setVisibility(View.GONE);
             } else {
                 mPayButton.setVisibility(View.VISIBLE);
                 mPaypalButton.setVisibility(View.GONE);
                 mVisaCheckoutButton.setVisibility(View.GONE);
+                mMasterpassButton.setVisibility(View.GONE);
             }
 
             ((TextView) mPaymentLayout.findViewById(R.id.partial_checkout_payment_name)).setText(paymentMethod.getPaymentType());
@@ -541,7 +543,6 @@ public class CheckoutController extends VisaCheckoutController implements Checko
             mAddNewPaymentLayout.setVisibility(View.GONE);
             mPaymentLayout.setVisibility(View.VISIBLE);
             mPaymentChangeText.setVisibility(View.VISIBLE);
-            mMasterpassButton.setVisibility(View.GONE);
         }
     }
 
