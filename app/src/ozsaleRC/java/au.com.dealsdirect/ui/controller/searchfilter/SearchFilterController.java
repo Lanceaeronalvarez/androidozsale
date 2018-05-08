@@ -49,6 +49,7 @@ import au.com.dealsdirect.utils.ViewUtils;
 import butterknife.BindView;
 
 import static au.com.dealsdirect.utils.BundleKeys.BRANDS_FACET_FILTER_TYPE;
+import static au.com.dealsdirect.utils.BundleKeys.CATEGORY_SHOP;
 import static au.com.dealsdirect.utils.BundleKeys.COLOR_FACET_FILTER_TYPE;
 import static au.com.dealsdirect.utils.BundleKeys.PRICE_FACET_FILTER_TYPE;
 import static au.com.dealsdirect.utils.BundleKeys.SIZE_FACET_FILTER_TYPE;
@@ -592,7 +593,7 @@ public class SearchFilterController extends BaseController
 
     private List<GetCategoryTreeResponse> fillCategoryContent() {
 
-        return mCategoryMap.get("shop").getChildren();
+        return mCategoryMap.get(CATEGORY_SHOP).getChildren();
     }
 
     @Override

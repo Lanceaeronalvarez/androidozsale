@@ -38,6 +38,8 @@ import au.com.dealsdirect.utils.BundleKeys;
 import butterknife.BindView;
 import butterknife.OnClick;
 
+import static au.com.dealsdirect.utils.BundleKeys.CATEGORY_SHOP;
+
 /**
  * dp Created by Admin on 6/6/17.
  */
@@ -46,7 +48,6 @@ public class CategoriesController extends BaseController
         implements CategoriesMvpView, CategoryClickListener, SubCategoryItemClickListener {
 
     public static final String TAG = "CategoriesController";
-    private static final String CATEGORY_SHOP = "shop";
 
     @Inject
     CategoriesMvpPresenter<CategoriesMvpView> mPresenter;
