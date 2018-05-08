@@ -24,7 +24,7 @@ public class GetSaleItemsResponse implements Serializable {
     public int total;
     public String query;
     public ArrayList<Products> products = new ArrayList<>();
-    public ArrayList<Facets> facets = new ArrayList<>();
+    private ArrayList<Facets> facets = new ArrayList<>();
     public List<GetCategoryTreeResponse> children;
 
     public List<GetCategoryTreeResponse> getCategories() {
@@ -332,6 +332,14 @@ public class GetSaleItemsResponse implements Serializable {
         public void setSeoIdentifier(String seoIdentifier) {
             this.seoIdentifier = seoIdentifier;
         }
+    }
+
+    public ArrayList<Facets> getFacets() {
+        return facets;
+    }
+
+    public void setFacets(ArrayList<Facets> facets) {
+        this.facets = facets;
     }
 
 }

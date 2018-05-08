@@ -406,8 +406,8 @@ public class SaleItemsController extends BasePullToRefreshController implements 
 
             mPresenter.loadSaleItems(createSaleItemsRequest(mCategoryKey, mSaleId, mSaleItemsPageNumber, null, ""));
         } else if (!mSaleItems.isEmpty()) {
-            if (mSaleItems.size() >= getResources().getInteger(R.integer.sale_items_threshold)) {
-                mPaginateManager = PaginateUtils.init(mSaleItemsRecyclerView, mPaginateCallbacks);
+            if (mSaleItems.size() >= getInteger(R.integer.sale_items_threshold)) {
+                mPaginateManager = PaginateUtils.init(mSaleItemsRecyclerView, mPaginateCallbacks, mActivity);
             }
         }
 
@@ -429,7 +429,7 @@ public class SaleItemsController extends BasePullToRefreshController implements 
 
         List<GetSaleItemsResponse.Products> items = getSaleItemsResponse.products;
 
-        mFacets = getSaleItemsResponse.facets;
+        mFacets = getSaleItemsResponse.getFacets();
         mCategoryTreeResponse = getSaleItemsResponse.getCategories();
 
         if ((mSearchQuery.isEmpty() && mFromShopSearch && mChipFilters.isEmpty()) || mFromCategorySearch) {
@@ -472,7 +472,7 @@ public class SaleItemsController extends BasePullToRefreshController implements 
                 }
                 mSaleItemsAdapter.replaceData(items);
 
-                mPaginateManager = PaginateUtils.init(mSaleItemsRecyclerView, mPaginateCallbacks);
+                mPaginateManager = PaginateUtils.init(mSaleItemsRecyclerView, mPaginateCallbacks, mActivity);
                 mSaleItemsRecyclerView.scrollToPosition(0);
                 if (items.size() <= getResources().getInteger(R.integer.sale_items_threshold)) {
                     mHasLoadedAllItems = false;
@@ -502,7 +502,7 @@ public class SaleItemsController extends BasePullToRefreshController implements 
 
         mIsCategoryChanged = false;
 
-        mSearchFilterController.parseFacets(getSaleItemsResponse.facets);
+        mSearchFilterController.parseFacets(getSaleItemsResponse.getFacets());
         mSearchFilterController.updateSubCategoryFilters(mCategoryTreeResponse);
     }
 
@@ -698,14 +698,9 @@ public class SaleItemsController extends BasePullToRefreshController implements 
     }
 
     public GetSaleItemsRequest createSaleItemsRequest(List<String> categoryKeys, String saleId, int pageNumber, List<SearchChipModel> chipsList, String query) {
-        String concatCategoryKey = "";
-        for (String key : categoryKeys) {
-            concatCategoryKey += "\"" + key + "\"" + ',';
-        }
-        mCategoryKey = concatCategoryKey;
-        return createSaleItemsRequest(concatCategoryKey, saleId, pageNumber, chipsList, query);
+        mCategoryKey = StringUtils.generateConcatenatedCategories(categoryKeys);
+        return createSaleItemsRequest(mCategoryKey, saleId, pageNumber, chipsList, query);
     }
-
 
     public GetSaleItemsRequest createSaleItemsRequest(String categoryKey, String saleId, int pageNumber, List<SearchChipModel> chipsList, String query) {
         List<String> saleIds = new LinkedList<>();
@@ -713,16 +708,7 @@ public class SaleItemsController extends BasePullToRefreshController implements 
 
         GetSaleItemsRequest getSaleItemsRequest = new GetSaleItemsRequest();
 
-        if (!categoryKey.isEmpty()) {
-            if (categoryKey.contains("\"")) {
-                getSaleItemsRequest.setCategoryKey("[" + categoryKey + "]");
-            } else {
-                getSaleItemsRequest.setCategoryKey("[\"" + categoryKey + "\"]");
-            }
-        } else {
-            getSaleItemsRequest.setCategoryKey("[]");
-        }
-
+        getSaleItemsRequest = StringUtils.updateSaleItemRequest(categoryKey, getSaleItemsRequest);
 
         getSaleItemsRequest.setSorting("");
         getSaleItemsRequest.setPageNumber(String.valueOf(pageNumber));
