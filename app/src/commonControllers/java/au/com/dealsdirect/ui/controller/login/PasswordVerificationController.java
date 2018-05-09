@@ -31,6 +31,7 @@ import au.com.dealsdirect.utils.AppLogger;
 import au.com.dealsdirect.utils.BundleBuilder;
 import au.com.dealsdirect.utils.BundleKeys;
 import butterknife.BindView;
+import butterknife.OnClick;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.Disposable;
 
@@ -135,5 +136,9 @@ public class PasswordVerificationController extends VisaCheckoutController imple
         mActivity.loginSuccessHandler(getRouter(), AppConstants.POP_FLAG.ROOT, AppConstants.AUTH_FLAG.LOGIN);
     }
 
+    @OnClick(R.id.partial_toolbar_left_view)
+    void backPressed(){
+        mActivity.onBackPressed();
+    }
 }
 
