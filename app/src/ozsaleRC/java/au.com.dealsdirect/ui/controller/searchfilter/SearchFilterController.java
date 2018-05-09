@@ -158,23 +158,19 @@ public class SearchFilterController extends BaseController
     public SearchFilterController(Bundle args) {
         super(args);
         mFacets = JsonUtils.convertStringToObject(args.getString(BundleKeys.KEY_FACET_STRING, ""),
-                new TypeToken<ArrayList<GetSaleItemsResponse.Facets>>() {
-                }.getType());
+                new TypeToken<ArrayList<GetSaleItemsResponse.Facets>>() {}.getType());
         mSortingFacets = JsonUtils.convertStringToObject(args.getString(BundleKeys.KEY_SORTING_STRING, ""),
-                new TypeToken<ArrayList<SortingResponse>>() {
-                }.getType());
+                new TypeToken<ArrayList<SortingResponse>>() {}.getType());
         mSaleId = args.getString(BundleKeys.SALEITEMS_SALE_ID, "");
         mCategoryTree = JsonUtils.convertStringToObject(args.getString(BundleKeys.KEY_CATEGORY_STRING, ""),
-                new TypeToken<ArrayList<GetCategoryTreeResponse>>() {
-                }.getType());
+                new TypeToken<ArrayList<GetCategoryTreeResponse>>() {}.getType());
         mBrandList = JsonUtils.convertStringToObject(args.getString(BundleKeys.KEY_BRAND_LIST, ""),
-                new TypeToken<ArrayList<String>>() {
-                }.getType());
+                new TypeToken<ArrayList<String>>() {}.getType());
+
         String previousChipsString = args.getString(BundleKeys.SALEITEMS_CHIPS_FILTER, "");
         if (!previousChipsString.isEmpty()) {
             mPreviousSearchChips = JsonUtils.convertStringToObject(previousChipsString,
-                    new TypeToken<ArrayList<SearchChipModel>>() {
-                    }.getType());
+                    new TypeToken<ArrayList<SearchChipModel>>() {}.getType());
         } else {
             mPreviousSearchChips = new ArrayList<>();
         }

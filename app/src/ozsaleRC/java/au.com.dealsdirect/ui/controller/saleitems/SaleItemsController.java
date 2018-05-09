@@ -547,8 +547,6 @@ public class SaleItemsController extends BasePullToRefreshController implements 
                 mSaleItemClickCounter = 0;
             }, 2000);
 
-            List<String> names = new ArrayList<>();
-            names.add(getResource().getString(R.string.transition_sale_image_indexed, position));
             mSaleItemsRecyclerView.smoothScrollToPosition(position);
 
             Bundle bundle = new Bundle();
