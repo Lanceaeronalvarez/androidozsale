@@ -18,31 +18,6 @@ import io.reactivex.disposables.CompositeDisposable;
 public class ViewContactsPresenter<V extends ViewContactsMvpView> extends BasePresenter<V> implements
         ViewContactsMvpPresenter<V> {
 
-    String testResponse = "{\n" +
-            "\t\"d\": {\n" +
-            "\t\t\"IsAuthenticated\": true,\n" +
-            "\t\t\"List\": [{\n" +
-            "\t\t\t\"ContactNo\": 3563132,\n" +
-            "\t\t\t\"Subject\": \"Where is My Order?\",\n" +
-            "\t\t\t\"Comments\": 1,\n" +
-            "\t\t\t\"InvoiceNo\": 23883359,\n" +
-            "\t\t\t\"SaleName\": \"Fendi Frames \\u0026 Sunglasses\",\n" +
-            "\t\t\t\"LastComment\": \"test message sending\",\n" +
-            "\t\t\t\"LastAnswer\": \"\\/Date(1483429195450)\\/\"\n" +
-            "\t\t}, {\n" +
-            "\t\t\t\"ContactNo\": 3563130,\n" +
-            "\t\t\t\"Subject\": \"Returns Enquiry\",\n" +
-            "\t\t\t\"Comments\": 1,\n" +
-            "\t\t\t\"InvoiceNo\": 0,\n" +
-            "\t\t\t\"SaleName\": null,\n" +
-            "\t\t\t\"LastComment\": \"test\",\n" +
-            "\t\t\t\"LastAnswer\": \"\\/Date(1483420400463)\\/\"\n" +
-            "\t\t}],\n" +
-            "\t\t\"Result\": true,\n" +
-            "\t\t\"Message\": \"\"\n" +
-            "\t}\n" +
-            "}";
-
     @Inject
     public ViewContactsPresenter(DataManager dataManager, SchedulerProvider schedulerProvider,
                                  CompositeDisposable compositeDisposable) {
@@ -58,9 +33,5 @@ public class ViewContactsPresenter<V extends ViewContactsMvpView> extends BasePr
                 getMvpView().showContactItems(((GetContactsResponse) response).getD());
             }
         });
-
-//      For sample items testing purposes
-//        GetContactsResponse test = new Gson().fromJson(testResponse, GetContactsResponse.class);
-//        getMvpView().showContactItems(test.getD());
     }
 }
