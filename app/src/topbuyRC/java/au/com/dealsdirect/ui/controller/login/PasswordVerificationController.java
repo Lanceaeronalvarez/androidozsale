@@ -103,7 +103,13 @@ public class PasswordVerificationController extends SwipeableVisaCheckoutControl
     @Override
     protected void setUp(View view) {
         mToolbarTitle.setText("password verification");
-        mAccountEmailGuide.setText(mAccountEmailGuide.getText() + " " + mAccountEmail);
+
+        if(!mAccountExists) {
+            mAccountEmailGuide.setText(getResources().getString(R.string.new_vco_user_guide) + " " + mAccountEmail);
+        } else {
+            mAccountEmailGuide.setText(getResources().getString(R.string.password_verification_guide) + " " + mAccountEmail);
+        }
+        
         Spannable text = new SpannableString("If you don't remember your password we can ");
 
         mFooterTextView.setText(text);
