@@ -34,7 +34,7 @@ public class PaginateUtils {
                 .build();
     }
 
-    public static Paginate init(RecyclerView recyclerView, Paginate.Callbacks callbacks, Context context) {
+    public static Paginate init(Context context, RecyclerView recyclerView, Paginate.Callbacks callbacks) {
         return Paginate.with(recyclerView, callbacks)
                 .setLoadingTriggerThreshold(context.getResources().getInteger(R.integer.sale_items_threshold))
                 .addLoadingListItem(PaginateUtils.ADD_LOADING_LIST_ITEM)

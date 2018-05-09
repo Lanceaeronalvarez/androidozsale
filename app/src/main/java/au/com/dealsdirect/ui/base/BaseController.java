@@ -181,35 +181,35 @@ public abstract class BaseController extends RefWatchingController implements Mv
     public Resources getResource() { return mActivity.getResources(); }
 
     public int getColor(@ColorRes int resId) {
-        if (mActivity == null) {
+        if (mActivity == null || mActivity.getResources() == null) {
             return 0;
         }
         return mActivity.getResources().getColor(resId);
     }
 
     public float getDimension(@DimenRes int resId) {
-        if (mActivity == null) {
+        if (mActivity == null || mActivity.getResources() == null) {
             return 0;
         }
         return mActivity.getResources().getDimension(resId);
     }
 
     public String getString(@StringRes int resId) {
-        if (mActivity == null) {
+        if (mActivity == null || mActivity.getResources() == null) {
             return null;
         }
         return mActivity.getString(resId);
     }
 
     public Drawable getDrawable(@DrawableRes int resId) {
-        if (mActivity == null) {
+        if (mActivity == null || mActivity.getResources() == null) {
             return null;
         }
-        return getActivity().getDrawable(resId);
+        return mActivity.getDrawable(resId);
     }
 
     public int getInteger(int resId) {
-        if (mActivity == null) {
+        if (mActivity == null || mActivity.getResources() == null) {
             return 0;
         }
         return mActivity.getResources().getInteger(resId);

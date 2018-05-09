@@ -64,6 +64,7 @@ public class SearchFilterController extends BaseController
         implements SearchFilterMvpView, SubCategoryClickListener, SubCategoryItemClickListener {
 
     public static final String TAG = SearchFilterController.class.getSimpleName();
+    private static final int DEFAULT_PRICE_THRESHOLD = 200;
 
     @Inject
     SaleItemsMvpPresenter<SaleItemsMvpView> mSaleItemsPresenter;
@@ -336,7 +337,7 @@ public class SearchFilterController extends BaseController
         mOrigMinValue = mSeekbar.getSelectedMinValue().intValue();
 
         if (mOrigMaxValue == mOrigMinValue) {
-            mOrigMaxValue = 200;
+            mOrigMaxValue = DEFAULT_PRICE_THRESHOLD;
         }
 
         mSeekbar.setMaxValue(mOrigMaxValue);
