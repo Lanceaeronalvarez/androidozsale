@@ -168,12 +168,8 @@ public class SearchFilterController extends BaseController
                 new TypeToken<ArrayList<String>>() {}.getType());
 
         String previousChipsString = args.getString(BundleKeys.SALEITEMS_CHIPS_FILTER, "");
-        if (!previousChipsString.isEmpty()) {
-            mPreviousSearchChips = JsonUtils.convertStringToObject(previousChipsString,
-                    new TypeToken<ArrayList<SearchChipModel>>() {}.getType());
-        } else {
-            mPreviousSearchChips = new ArrayList<>();
-        }
+        mPreviousSearchChips =  previousChipsString.isEmpty() ? new ArrayList<>() :
+                JsonUtils.convertStringToObject(previousChipsString, new TypeToken<ArrayList<SearchChipModel>>() {}.getType());
     }
 
     @Override
