@@ -2,7 +2,6 @@ package au.com.dealsdirect.ui.controller.categories.adapter;
 
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -18,6 +17,7 @@ import au.com.dealsdirect.R;
 import au.com.dealsdirect.data.network.model.category.GetCategoryTreeResponse;
 import au.com.dealsdirect.ui.controller.categories.CategoriesMvpPresenter;
 import au.com.dealsdirect.ui.controller.categories.listener.CategoryClickListener;
+import au.com.dealsdirect.utils.AppLogger;
 import au.com.dealsdirect.utils.StringUtils;
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -26,9 +26,8 @@ import butterknife.ButterKnife;
  * jp Created by smartwave on 08/06/2017.
  */
 
-public class CategoriesAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
+public class CategoriesAdapter extends RecyclerView.Adapter<CategoriesAdapter.CategoriesViewHolder> {
 
-    private static final String CATEGORY_SHOP = "Shop";
     private static final String CATEGORY_HOME = "Home";
     private static final String CATEGORY_WOMEN = "Women";
     private static final String CATEGORY_MEN = "Men";
@@ -41,84 +40,50 @@ public class CategoriesAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
     private CategoriesMvpPresenter mPresenter;
     private CategoryClickListener mCategoryAdapterClickListener;
     private int mLastPosition = -1;
-    private int mLastSelectedCategory = 0;
-    private ImageView mLastSelectedViewHolderImageView = null;
-    private ArrayList<String> mCategoryNames;
+    private Context mContext;
+    private int mSelectedIndex;
 
-    public CategoriesAdapter(
-            List<GetCategoryTreeResponse> data,
-            CategoriesMvpPresenter presenter,
-            CategoryClickListener categoryClickListener) {
+    public CategoriesAdapter(Context context,
+                             List<GetCategoryTreeResponse> data,
+                             CategoriesMvpPresenter presenter,
+                             CategoryClickListener categoryClickListener) {
 
+        mContext = context;
         mData = data;
         mPresenter = presenter;
         mCategoryAdapterClickListener = categoryClickListener;
     }
 
     @Override
-    public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+    public CategoriesViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.viewholder_sales_category, parent, false);
         CategoriesViewHolder vh = new CategoriesViewHolder(view, mPresenter);
         return vh;
     }
 
     @Override
-    public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
+    public void onBindViewHolder(CategoriesViewHolder holder, int position) {
         setAnimation(holder.itemView, position);
 
-        if (!mData.isEmpty()) {
-            if (!mData.get(position).getName().isEmpty()) {
-                Log.d("category",mData.get(position).getName());
-                setCategoryImage(((CategoriesViewHolder)holder), mData.get(position).getName(), position);
-
-            }
-
-            if (position==1){
-                mCategoryAdapterClickListener.onCategoryClicked(position,mData.get(position));
-                mLastSelectedViewHolderImageView = ((CategoriesViewHolder) holder).categoryTitleBackground;
-                mLastSelectedViewHolderImageView.setBackgroundDrawable(
-                        holder.itemView.getContext().getResources()
-                                .getDrawable(R.drawable.bg_category_item_active));
-            }
-
-            ((CategoriesViewHolder) holder).categoryText.setText(mData.get(position).getName());
-            ((CategoriesViewHolder) holder).itemView.setOnClickListener(view -> {
-
-                if (mLastSelectedViewHolderImageView == null) {
-
-                    if (position!=0){
-                        mLastSelectedViewHolderImageView = ((CategoriesViewHolder) holder).categoryTitleBackground;
-                        mLastSelectedViewHolderImageView.setBackgroundDrawable(
-                                holder.itemView.getContext().getResources()
-                                        .getDrawable(R.drawable.bg_category_item_active));
-                    }
-                } else {
-
-                    if (position!=0){
-                        mLastSelectedViewHolderImageView.setBackgroundDrawable(
-                                holder.itemView.getContext().getResources()
-                                        .getDrawable(R.drawable.bg_category_item_inactive));
-
-                        mLastSelectedViewHolderImageView = ((CategoriesViewHolder) holder).categoryTitleBackground;
-
-                        mLastSelectedViewHolderImageView.setBackgroundDrawable(
-                                holder.itemView.getContext().getResources()
-                                        .getDrawable(R.drawable.bg_category_item_active));
-                    }else{
-
-                        mLastSelectedViewHolderImageView.setBackgroundDrawable(
-                                holder.itemView.getContext().getResources()
-                                        .getDrawable(R.drawable.bg_category_item_inactive));
-
-                    }
-
-                }
-
-                mCategoryAdapterClickListener.onCategoryClicked(position, mData.get(position));
-            });
-
+        if (!mData.isEmpty() && !mData.get(position).getName().isEmpty()) {
+            AppLogger.d("category", mData.get(position).getName());
+            setCategoryImage(holder, mData.get(position).getName(), position);
         }
+
+        int backgroundColor = mSelectedIndex == position ? R.color.colorAccent : R.color.white;
+        int textColor = mSelectedIndex == position ? R.color.white : R.color.colorAccent;
+
+        holder.itemView.setBackgroundColor(mContext.getResources().getColor(backgroundColor));
+        holder.categoryText.setTextColor(mContext.getResources().getColor(textColor));
+        holder.categoryText.setText(mData.get(position).getName());
+
+        holder.itemView.setOnClickListener(view -> {
+            mSelectedIndex = position;
+            mCategoryAdapterClickListener.onCategoryClicked(position, mData.get(position));
+        });
+
     }
+
 
     @Override
     public int getItemViewType(int position) {
@@ -133,7 +98,7 @@ public class CategoriesAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
 
     @Override
     public int getItemCount() {
-        return mData!=null ? mData.size() : 0;
+        return mData != null ? mData.size() : 0;
     }
 
     public void replaceData(List<GetCategoryTreeResponse> getCategoryTreeResponses) {
@@ -178,36 +143,42 @@ public class CategoriesAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
         return mData.get(position);
     }
 
-    public void setCategoryImage(CategoriesViewHolder holder,String category, int position){
+    public void setCategoryImage(CategoriesViewHolder holder, String category, int position) {
         holder.categoryImageIndicator.setVisibility(View.VISIBLE);
         holder.categoryIndicator.setVisibility(View.GONE);
         Context context = holder.itemView.getContext();
-        switch (category){
+        int categoryDrawable = 0;
+
+        switch (category) {
             case CATEGORY_HOME:
-                holder.categoryImageIndicator.setImageDrawable(context.getDrawable(R.drawable.ic_category_home));
+                categoryDrawable = mSelectedIndex == position ? R.drawable.ic_home_active : R.drawable.ic_home;
                 break;
             case CATEGORY_WOMEN:
-                holder.categoryImageIndicator.setImageDrawable(context.getDrawable(R.drawable.ic_women));
+                categoryDrawable = mSelectedIndex == position ? R.drawable.ic_women_active : R.drawable.ic_women;
                 break;
             case CATEGORY_KIDS_TOYS:
-                holder.categoryImageIndicator.setImageDrawable(context.getDrawable(R.drawable.ic_kids));
+                categoryDrawable = mSelectedIndex == position ? R.drawable.ic_kids_active : R.drawable.ic_kids;
                 break;
             case CATEGORY_MEN:
-                holder.categoryImageIndicator.setImageDrawable(context.getDrawable(R.drawable.ic_mens));
+                categoryDrawable = mSelectedIndex == position ? R.drawable.ic_men_active : R.drawable.ic_men;
                 break;
             case CATEGORY_BEAUTY:
-                holder.categoryImageIndicator.setImageDrawable(context.getDrawable(R.drawable.ic_beauty));
+                categoryDrawable = mSelectedIndex == position ? R.drawable.ic_beauty_active : R.drawable.ic_beauty;
                 break;
             case CATEGORY_SPORTS:
-                holder.categoryImageIndicator.setImageDrawable(context.getDrawable(R.drawable.ic_sports));
+                categoryDrawable = mSelectedIndex == position ? R.drawable.ic_sports_active : R.drawable.ic_sports;
                 break;
             case CATEGORY_TECH:
-                holder.categoryImageIndicator.setImageDrawable(context.getDrawable(R.drawable.ic_tech));
+                categoryDrawable = mSelectedIndex == position ? R.drawable.ic_tech_active : R.drawable.ic_tech;
                 break;
-            default:
-                holder.categoryImageIndicator.setVisibility(View.GONE);
-                holder.categoryIndicator.setVisibility(View.VISIBLE);
-                holder.categoryIndicator.setText(StringUtils.getCategoryInitials(mData.get(position)));
+        }
+
+        if(categoryDrawable != 0) {
+            holder.categoryImageIndicator.setImageDrawable(context.getDrawable(categoryDrawable));
+        } else {
+            holder.categoryImageIndicator.setVisibility(View.GONE);
+            holder.categoryIndicator.setVisibility(View.VISIBLE);
+            holder.categoryIndicator.setText(StringUtils.getCategoryInitials(mData.get(position)));
         }
     }
 }

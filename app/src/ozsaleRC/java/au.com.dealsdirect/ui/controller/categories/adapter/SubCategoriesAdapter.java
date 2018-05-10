@@ -63,6 +63,7 @@ public class SubCategoriesAdapter extends RecyclerView.Adapter<SubCategoriesAdap
     public void onBindViewHolder(SubCategoriesViewHolder holder, int position) {
         if (!mData.isEmpty() && !mData.get(position).getName().equals("empty")) {
             holder.subCategoryTitle.setText(mData.get(position).getName());
+            holder.subCategoryBorder.setVisibility(View.VISIBLE);
 
             MainController mainController = ((MainActivity) mContext).getMainController();
             List<GetCategoryTreeResponse> subCategoryItems = getSubCategoryItems(mData.get(position).getKey());
@@ -87,6 +88,7 @@ public class SubCategoriesAdapter extends RecyclerView.Adapter<SubCategoriesAdap
                     boolean isItemViewActivated = holder.itemView.isActivated();
 
                     holder.itemView.setActivated(isItemViewActivated ? false : true);
+                    holder.subCategoryItemsBorder.setVisibility(isItemViewActivated? View.GONE : View.VISIBLE);
                     holder.subCategoryItemsRecyclerView.setVisibility(isItemViewActivated? View.GONE: View.VISIBLE);
 
                     if(!isItemViewActivated) {
@@ -125,6 +127,12 @@ public class SubCategoriesAdapter extends RecyclerView.Adapter<SubCategoriesAdap
 
         @BindView(R.id.viewholder_subcategory_items_recyclerview)
         RecyclerView subCategoryItemsRecyclerView;
+
+        @BindView(R.id.viewholder_subcategory_border)
+        View subCategoryBorder;
+
+        @BindView(R.id.viewholder_subcategoryitems_border)
+        View subCategoryItemsBorder;
 
         SubCategoriesViewHolder(View itemView) {
             super(itemView);

@@ -67,6 +67,9 @@ public class CategoriesController extends BaseController
     @BindView(R.id.partial_toolbar_left_view)
     ImageButton mToolbarLeftButton;
 
+    @BindView(R.id.partial_toolbar_right_view)
+    ImageButton mToolbarRightButton;
+
     @BindView(R.id.no_network_layout)
     LinearLayout mNoNetworkLayout;
 
@@ -136,6 +139,7 @@ public class CategoriesController extends BaseController
 
         //noinspection ConstantConditions,deprecation
         mToolbarLeftButton.setVisibility(View.INVISIBLE);
+        mToolbarRightButton.setVisibility(View.INVISIBLE);
         mToolbarTitle.setText(mActivity.getResources().getString(R.string.browse));
         mSubCategoryItemClickListener = this;
 
@@ -143,7 +147,7 @@ public class CategoriesController extends BaseController
 
     private void setupCategories() {
         if (mCategories != null) {
-            mAdapter = new CategoriesAdapter(mCategories, mPresenter, this);
+            mAdapter = new CategoriesAdapter(mActivity, mCategories, mPresenter, this);
             mRecyclerView.setLayoutManager(new LinearLayoutManager(mActivity, LinearLayoutManager.VERTICAL, false));
             mRecyclerView.setMotionEventSplittingEnabled(false);
             mRecyclerView.setAdapter(mAdapter);
@@ -177,7 +181,6 @@ public class CategoriesController extends BaseController
 
             mSubCategoryAdapter.isResetSubCategories(mIsResetSubCategories);
             mSubCategoryAdapter.notifyDataSetChanged();
-            mAdapter.notifyDataSetChanged();
 
             assert (mActivity) != null;
 
@@ -197,6 +200,7 @@ public class CategoriesController extends BaseController
 
             }
         }
+        mAdapter.notifyDataSetChanged();
         mIsResetSubCategories = true;
     }
 
