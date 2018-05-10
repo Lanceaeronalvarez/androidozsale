@@ -176,7 +176,6 @@ public class MainActivity extends BaseActivity implements MainMvpView {
     public void onBackPressed() {
         Router currentRouter = getCurrentRouter();
         Controller currentController = getCurrentController(getCurrentRouter());
-
         switch (getMainController().getHomeViewPager().getCurrentItem()) {
             case BANNER_FILTER_INDEX:
                 setRootViewpagerItem(SHOP_INDEX);

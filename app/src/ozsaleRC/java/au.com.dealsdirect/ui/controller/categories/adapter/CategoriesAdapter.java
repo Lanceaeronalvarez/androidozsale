@@ -18,6 +18,7 @@ import au.com.dealsdirect.R;
 import au.com.dealsdirect.data.network.model.category.GetCategoryTreeResponse;
 import au.com.dealsdirect.ui.controller.categories.CategoriesMvpPresenter;
 import au.com.dealsdirect.ui.controller.categories.listener.CategoryClickListener;
+import au.com.dealsdirect.utils.StringUtils;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
@@ -182,9 +183,6 @@ public class CategoriesAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
         holder.categoryIndicator.setVisibility(View.GONE);
         Context context = holder.itemView.getContext();
         switch (category){
-            case CATEGORY_SHOP:
-                holder.categoryImageIndicator.setImageDrawable(context.getDrawable(R.drawable.ic_shop));
-                break;
             case CATEGORY_HOME:
                 holder.categoryImageIndicator.setImageDrawable(context.getDrawable(R.drawable.ic_category_home));
                 break;
@@ -209,8 +207,7 @@ public class CategoriesAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
             default:
                 holder.categoryImageIndicator.setVisibility(View.GONE);
                 holder.categoryIndicator.setVisibility(View.VISIBLE);
-                String categoryTitle = mData.get(position).getName().charAt(0)+""+mData.get(position).getName().charAt(1);
-                holder.categoryIndicator.setText(String.valueOf(categoryTitle.toUpperCase()));
+                holder.categoryIndicator.setText(StringUtils.getCategoryInitials(mData.get(position)));
         }
     }
 }

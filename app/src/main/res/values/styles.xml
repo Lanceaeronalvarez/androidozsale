@@ -133,6 +133,9 @@
     <style name="DDEditTextStyleNoBorder" parent="DDEditTextStyle">
         <item name="android:background">@drawable/bg_edit_text_plain</item>
     </style>
+
+    <integer name="sale_items_threshold">4</integer>
+
     <bool name="is_account_invite_visible">false</bool>
     <bool name="is_account_contact_visible">false</bool>
 

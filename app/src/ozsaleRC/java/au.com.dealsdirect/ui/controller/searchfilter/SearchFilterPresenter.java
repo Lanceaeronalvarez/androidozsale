@@ -1,11 +1,13 @@
 package au.com.dealsdirect.ui.controller.searchfilter;
 
+import java.util.ArrayList;
 import java.util.Set;
 
 import javax.inject.Inject;
 
 import au.com.dealsdirect.data.DataManager;
 import au.com.dealsdirect.ui.base.BasePresenter;
+import au.com.dealsdirect.ui.controller.searchfilter.adapter.SearchChipModel;
 import au.com.dealsdirect.utils.rx.SchedulerProvider;
 import io.reactivex.disposables.CompositeDisposable;
 
@@ -46,11 +48,6 @@ public class SearchFilterPresenter<V extends SearchFilterMvpView> extends BasePr
     }
 
     @Override
-    public void onCategoryChipRemoved() {
-        getMvpView().categoryChipRemoved();
-    }
-
-    @Override
     public void showTransparentOverlay() {
         getMvpView().onShowTransparentOverlay();
     }
@@ -58,5 +55,10 @@ public class SearchFilterPresenter<V extends SearchFilterMvpView> extends BasePr
     @Override
     public void hideTransparentOverlay() {
         getMvpView().onHideTransparentOverlay();
+    }
+
+    @Override
+    public void onUpdateActiveFacets(ArrayList<SearchChipModel> chips) {
+        getMvpView().updateActiveFacets(chips);
     }
 }

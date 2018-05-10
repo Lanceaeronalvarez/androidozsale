@@ -110,5 +110,9 @@ public class BundleKeys {
     public static final String KEY_RAN = "ReturnDetailsController.RAN";
     public static final String KEY_RETURN_ID = "ReturnDetailsController.RETURN_ID";
 
+    //Categories
+    public static final String CATEGORY_SHOP = "shop";
+
+
 
 }

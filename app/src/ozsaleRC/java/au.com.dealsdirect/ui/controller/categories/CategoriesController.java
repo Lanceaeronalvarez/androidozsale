@@ -38,6 +38,8 @@ import au.com.dealsdirect.utils.BundleKeys;
 import butterknife.BindView;
 import butterknife.OnClick;
 
+import static au.com.dealsdirect.utils.BundleKeys.CATEGORY_SHOP;
+
 /**
  * dp Created by Admin on 6/6/17.
  */
@@ -46,7 +48,6 @@ public class CategoriesController extends BaseController
         implements CategoriesMvpView, CategoryClickListener, SubCategoryItemClickListener {
 
     public static final String TAG = "CategoriesController";
-    private static final String CATEGORY_SHOP = "shop";
 
     @Inject
     CategoriesMvpPresenter<CategoriesMvpView> mPresenter;
@@ -119,7 +120,7 @@ public class CategoriesController extends BaseController
         mActivity.setCategoriesController(this);
         hideKeyboard();
         mPresenter.callGetCategoryTree();
-        mNoNetworkLayout.setOnClickListener((v)->mPresenter.callGetCategoryTree());
+        mNoNetworkLayout.setOnClickListener((v) -> mPresenter.callGetCategoryTree());
         setUp(view);
     }
 
@@ -134,13 +135,13 @@ public class CategoriesController extends BaseController
     protected void setUp(View view) {
 
         //noinspection ConstantConditions,deprecation
-        mToolbarLeftButton.setVisibility(View.GONE);
+        mToolbarLeftButton.setVisibility(View.INVISIBLE);
         mToolbarTitle.setText(mActivity.getResources().getString(R.string.browse));
         mSubCategoryItemClickListener = this;
 
     }
 
-    private void setupCategories(){
+    private void setupCategories() {
         if (mCategories != null) {
             mAdapter = new CategoriesAdapter(mCategories, mPresenter, this);
             mRecyclerView.setLayoutManager(new LinearLayoutManager(mActivity, LinearLayoutManager.VERTICAL, false));
@@ -209,7 +210,7 @@ public class CategoriesController extends BaseController
                 .putString(BundleKeys.SALEITEMS_TITLE, categoryKey)
                 .putString(BundleKeys.SALEITEMS_CATEGORY_MAP, categoryKey)
                 .putBoolean(BundleKeys.SALEITEMS_FROM_CATEGORY_SEARCH, false)
-                .putBoolean(BundleKeys.SALEITEMS_FROM_CATEGORIES,true)
+                .putBoolean(BundleKeys.SALEITEMS_FROM_CATEGORIES, true)
                 .build();
 
         mActivity.getCategoriesRouter().pushController(RouterTransaction.with(
@@ -258,13 +259,13 @@ public class CategoriesController extends BaseController
     }
 
     @Override
-    public void showNoNetworkLayout(){
+    public void showNoNetworkLayout() {
         mContentLayout.setVisibility(View.GONE);
         mNoNetworkLayout.setVisibility(View.VISIBLE);
     }
 
     @Override
-    public void hideNoNetworklayout(){
+    public void hideNoNetworklayout() {
         mContentLayout.setVisibility(View.VISIBLE);
         mNoNetworkLayout.setVisibility(View.GONE);
     }
@@ -273,14 +274,20 @@ public class CategoriesController extends BaseController
     @Override
     public void showCategories(List<GetCategoryTreeResponse> categories) {
         mCategories = categories;
-        createCategoryMap(mCategories);
-        mCategories = fillCategoryContent();
-        setupCategories();
-    }
+        //remove SHOP from categories
+        GetCategoryTreeResponse shopCategory = new GetCategoryTreeResponse();
+        for (GetCategoryTreeResponse response : categories) {
+            if (response.getName().equalsIgnoreCase(CATEGORY_SHOP)) {
+                shopCategory = response;
+                break;
+            }
+        }
+        if (mCategories.contains(shopCategory)) {
+            mCategories.remove(shopCategory);
+        }
 
-    private void createCategoryMap(List<GetCategoryTreeResponse> categories) {
-        mCategoryMap.put("shop", categories);
         addToMap(categories);
+        setupCategories();
     }
 
     private void addToMap(List<GetCategoryTreeResponse> categories) {
@@ -290,15 +297,11 @@ public class CategoriesController extends BaseController
             for (GetCategoryTreeResponse subcategory : updateCategoryChildren(category)) {
                 newList = updateCategoryChildren(subcategory);
                 //add to map if there are children other than "All" subcategory
-                if(newList.size() > 1){
+                if (newList.size() > 1) {
                     addToMap(newList);
                 }
                 mCategoryMap.put(subcategory.getKey(), newList);
             }
         }
-    }
-
-    private List<GetCategoryTreeResponse> fillCategoryContent() {
-        return mCategoryMap.get(CATEGORY_SHOP);
     }
 }

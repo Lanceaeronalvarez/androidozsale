@@ -3,6 +3,10 @@ package au.com.dealsdirect.utils;
 import android.content.Context;
 import android.content.res.Resources;
 import android.graphics.drawable.Drawable;
+import android.support.design.widget.TabLayout;
+import android.view.ViewGroup;
+
+import au.com.dealsdirect.ui.main.MainActivity;
 
 
 public final class ViewUtils {
@@ -26,6 +30,15 @@ public final class ViewUtils {
             drawable.mutate();
 //            drawable.setColorFilter(ContextCompat
 //                    .getColor(context, R.color.dark_gray), PorterDuff.Mode.SRC_ATOP);
+        }
+    }
+
+    public static void setDynamicTabLayout(TabLayout mTabLayout, MainActivity mActivity) {
+        if (mTabLayout.getWidth() < mActivity.getResources().getDisplayMetrics().widthPixels) {
+            mTabLayout.setTabMode(TabLayout.MODE_FIXED);
+            ViewGroup.LayoutParams mParams = mTabLayout.getLayoutParams();
+            mParams.width = ViewGroup.LayoutParams.MATCH_PARENT;
+            mTabLayout.setLayoutParams(mParams);
         }
     }
 }
