@@ -56,40 +56,30 @@ public class SubCategoriesAdapter extends RecyclerView.Adapter<SubCategoriesAdap
 
     @Override
     public void onBindViewHolder(SubCategoriesViewHolder holder, int position) {
+        if (!mData.get(position).getName().isEmpty()) {
+            holder.subCategoryTitle.setText(mData.get(position).getName());
 
-        Context context = holder.itemView.getContext();
+            if (mData.get(position).getKey().equals(mChosenCategoryKey)) {
+                holder.subCategoryCheck.setVisibility(View.VISIBLE);
+                holder.itemView.setSelected(true);
+            } else {
+                holder.subCategoryCheck.setVisibility(View.GONE);
+                holder.itemView.setSelected(false);
+            }
 
-        if (!mData.isEmpty()) {
-            if (!mData.get(position).getName().equals("empty")) {
-                if (!mData.get(position).getName().isEmpty()) {
+            List<GetCategoryTreeResponse> subCategoryItems = getSubCategoryItems(mData.get(position).getKey());
 
-                    holder.subCategoryTitle.setText(mData.get(position).getName());
+            mSubCategoryItemsAdapter = new SubCategoryItemsAdapter(mChosenCategoryKey, subCategoryItems, mSearchFilterPresenter, mCategoryMap);
+            holder.subCategoryItemsRecyclerView.setLayoutManager(new LinearLayoutManager(holder.itemView.getContext(), LinearLayoutManager.VERTICAL, false));
+            holder.subCategoryItemsRecyclerView.setAdapter(mSubCategoryItemsAdapter);
 
-                    if (mData.get(position).getKey().equals(mChosenCategoryKey)) {
-                        holder.subCategoryCheck.setVisibility(View.VISIBLE);
-                        holder.itemView.setSelected(true);
-                    } else {
-                        holder.subCategoryCheck.setVisibility(View.GONE);
-                        holder.itemView.setSelected(false);
-                    }
-                }
+            if (subCategoryItems != null && !subCategoryItems.isEmpty()) {
+                holder.itemView.setActivated(false);
+                holder.subCategoryItemsRecyclerView.setVisibility(View.VISIBLE);
 
-                List<GetCategoryTreeResponse> subCategoryItems = getSubCategoryItems(mData.get(position).getKey());
-
-                mSubCategoryItemsAdapter = new SubCategoryItemsAdapter(mChosenCategoryKey, subCategoryItems, mSearchFilterPresenter, mCategoryMap);
-                holder.subCategoryItemsRecyclerView.setLayoutManager(new LinearLayoutManager(holder.itemView.getContext(), LinearLayoutManager.VERTICAL, false));
-                holder.subCategoryItemsRecyclerView.setAdapter(mSubCategoryItemsAdapter);
-
-                if (subCategoryItems != null && !subCategoryItems.isEmpty()) {
-                    holder.itemView.setActivated(false);
-                    holder.subCategoryItemsRecyclerView.setVisibility(View.VISIBLE);
-
-
-                    holder.itemView
-                            .setOnClickListener(view -> {
-                                mSearchFilterPresenter.selectCategory(mData.get(position).getName(),mData.get(position).getKey());
-                            });
-                }
+                holder.itemView.setOnClickListener(view -> {
+                    mSearchFilterPresenter.selectCategory(mData.get(position).getName(), mData.get(position).getKey());
+                });
             }
         }
     }

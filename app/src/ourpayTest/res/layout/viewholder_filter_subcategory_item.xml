@@ -9,7 +9,7 @@
     <FrameLayout
         android:id="@+id/viewholder_subcategory_container"
         android:layout_width="match_parent"
-        android:layout_height="40dp">
+        android:layout_height="@dimen/viewholder_subcategory_height">
 
         <TextView
             android:id="@+id/viewholder_subcategory_title"
@@ -24,8 +24,8 @@
 
         <ImageView
             android:id="@+id/viewholder_subcategory_check"
-            android:layout_width="40dp"
-            android:layout_height="40dp"
+            android:layout_width="@dimen/row_facet_check_icon_width"
+            android:layout_height="@dimen/row_facet_check_icon_height"
             android:layout_gravity="right|center_vertical"
             android:visibility="visible"
             android:src="@drawable/ic_check"/>

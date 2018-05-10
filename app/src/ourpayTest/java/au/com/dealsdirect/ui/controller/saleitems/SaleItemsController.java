@@ -883,8 +883,8 @@ public class SaleItemsController extends BasePullToRefreshController implements 
     }
 
     @Override
-    public void setIsCategoryChanged(boolean val) {
-        mIsCategoryChanged = val;
+    public void setIsCategoryChanged(boolean isCategoryChanged) {
+        mIsCategoryChanged = isCategoryChanged;
     }
 
     @Override

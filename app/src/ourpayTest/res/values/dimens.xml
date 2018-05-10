@@ -22,4 +22,7 @@
     <dimen name="product_image_height">450dp</dimen>
     <dimen name="toolbar_widget_size">40dp</dimen>
     <dimen name="border_thickness">1dp</dimen>
+
+    <dimen name="row_facet_check_icon_width">40dp</dimen>
+    <dimen name="row_facet_check_icon_height">40dp</dimen>
 </resources>
