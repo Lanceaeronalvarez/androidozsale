@@ -293,7 +293,7 @@ public class SaleItemsController extends BasePullToRefreshController implements 
         //always set edittext string to empty initially
         mSaleItemsToolbarField.setText("");
 
-        String lookingForText = getResources().getString(R.string.i_am_looking_for);
+        String lookingForText = getString(R.string.i_am_looking_for);
         String categoryToolbarString = StringUtils.buildCategoryToolbarTitle(mCategoryKey);
 
         //determining hint logic
@@ -320,7 +320,7 @@ public class SaleItemsController extends BasePullToRefreshController implements 
         } else if (!mTitle.isEmpty()) {
             mSaleItemsToolbarTitle.setText(mTitle);
         } else {
-            mSaleItemsToolbarTitle.setText(getResources().getString(R.string.i_am_looking_for));
+            mSaleItemsToolbarTitle.setText(getString(R.string.i_am_looking_for));
         }
 
         //show popular products if saleitemstoolbar title is "looking for"
@@ -372,10 +372,10 @@ public class SaleItemsController extends BasePullToRefreshController implements 
         mSaleItemsAdapter = new SaleItemsAdapter(mActivity, mSaleItems, mPresenter, mSaleId);
         if (mPresenter.isTablet()) {
             mSaleItemsRecyclerView.setLayoutManager(new GridLayoutManager(mActivity,
-                    getResources().getInteger(R.integer.sale_items_tablet_column_count)));
+                    getInteger(R.integer.sale_items_tablet_column_count)));
         } else {
             mSaleItemsRecyclerView.setLayoutManager(new GridLayoutManager(mActivity,
-                    getResources().getInteger(R.integer.sale_items_phone_column_count)));
+                    getInteger(R.integer.sale_items_phone_column_count)));
         }
 
 
@@ -406,8 +406,8 @@ public class SaleItemsController extends BasePullToRefreshController implements 
 
             mPresenter.loadSaleItems(createSaleItemsRequest(mCategoryKey, mSaleId, mSaleItemsPageNumber, null, ""));
         } else if (!mSaleItems.isEmpty()) {
-            if (mSaleItems.size() >= PaginateUtils.LOADING_TRIGGER_THRESHOLD) {
-                mPaginateManager = PaginateUtils.init(mSaleItemsRecyclerView, mPaginateCallbacks);
+            if (mSaleItems.size() >= getInteger(R.integer.sale_items_threshold)) {
+                mPaginateManager = PaginateUtils.init(mActivity, mSaleItemsRecyclerView, mPaginateCallbacks);
             }
         }
 
@@ -429,7 +429,7 @@ public class SaleItemsController extends BasePullToRefreshController implements 
 
         List<GetSaleItemsResponse.Products> items = getSaleItemsResponse.products;
 
-        mFacets = getSaleItemsResponse.facets;
+        mFacets = getSaleItemsResponse.getFacets();
         mCategoryTreeResponse = getSaleItemsResponse.getCategories();
 
         if ((mSearchQuery.isEmpty() && mFromShopSearch && mChipFilters.isEmpty()) || mFromCategorySearch) {
@@ -441,7 +441,7 @@ public class SaleItemsController extends BasePullToRefreshController implements 
         } else {
             if (mChipFilters.isEmpty() &&
                     mSaleItemsToolbarTitle.getText().toString().isEmpty() &&
-                    mSaleItemsToolbarField.getHint().toString().equals(getResources().getString(R.string.i_am_looking_For))) {
+                    mSaleItemsToolbarField.getHint().toString().equals(getString(R.string.i_am_looking_For))) {
                 mPopularProductsHeader.setVisibility(View.VISIBLE);
             } else {
                 mPopularProductsHeader.setVisibility(View.GONE);
@@ -450,8 +450,6 @@ public class SaleItemsController extends BasePullToRefreshController implements 
         }
 
         enablePullToRefresh(!mIsFromCategory);
-
-        mCategoryTreeResponse = getSaleItemsResponse.getCategories();
 
         mIsLoadingProgress = false;
 
@@ -474,9 +472,9 @@ public class SaleItemsController extends BasePullToRefreshController implements 
                 }
                 mSaleItemsAdapter.replaceData(items);
 
-                mPaginateManager = PaginateUtils.init(mSaleItemsRecyclerView, mPaginateCallbacks);
+                mPaginateManager = PaginateUtils.init(mActivity, mSaleItemsRecyclerView, mPaginateCallbacks);
                 mSaleItemsRecyclerView.scrollToPosition(0);
-                if (items.size() <= PaginateUtils.LOADING_TRIGGER_THRESHOLD) {
+                if (items.size() <= getInteger(R.integer.sale_items_threshold)) {
                     mHasLoadedAllItems = false;
                     mPaginateManager.setHasMoreDataToLoad(false);
                 }
@@ -503,6 +501,9 @@ public class SaleItemsController extends BasePullToRefreshController implements 
         }
 
         mIsCategoryChanged = false;
+
+        mSearchFilterController.parseFacets(getSaleItemsResponse.getFacets());
+        mSearchFilterController.updateSubCategoryFilters(mCategoryTreeResponse);
     }
 
     void onBackClick() {
@@ -546,8 +547,6 @@ public class SaleItemsController extends BasePullToRefreshController implements 
                 mSaleItemClickCounter = 0;
             }, 2000);
 
-            List<String> names = new ArrayList<>();
-            names.add(getResources().getString(R.string.transition_sale_image_indexed, position));
             mSaleItemsRecyclerView.smoothScrollToPosition(position);
 
             Bundle bundle = new Bundle();
@@ -632,11 +631,7 @@ public class SaleItemsController extends BasePullToRefreshController implements 
             }
         }, 200);
 
-//        if (mCategoryKey.isEmpty() && mTitle.isEmpty() && mSearchQuery.isEmpty()) {
-//            mSaleItemsToolbarTitle.setText(mActivity.getResources().getString(R.string.i_am_looking_for));
-//        }
 
-//        mSaleItemsOpaqueCover.setVisibility(View.VISIBLE);
         mSaleItemsToolbarField.setVisibility(View.VISIBLE);
 
         mSaleItemsToolbarField.setActivated(true);
@@ -696,17 +691,18 @@ public class SaleItemsController extends BasePullToRefreshController implements 
 
     }
 
+    public GetSaleItemsRequest createSaleItemsRequest(List<String> categoryKeys, String saleId, int pageNumber, List<SearchChipModel> chipsList, String query) {
+        mCategoryKey = StringUtils.generateConcatenatedCategories(categoryKeys);
+        return createSaleItemsRequest(mCategoryKey, saleId, pageNumber, chipsList, query);
+    }
+
     public GetSaleItemsRequest createSaleItemsRequest(String categoryKey, String saleId, int pageNumber, List<SearchChipModel> chipsList, String query) {
         List<String> saleIds = new LinkedList<>();
         HashMap<String, List<String>> facetFilters = new HashMap<>();
 
         GetSaleItemsRequest getSaleItemsRequest = new GetSaleItemsRequest();
 
-        if (!categoryKey.isEmpty())
-            getSaleItemsRequest.setCategoryKey("[\"" + categoryKey + "\"]");
-        else
-            getSaleItemsRequest.setCategoryKey("[]");
-
+        getSaleItemsRequest = StringUtils.updateSaleItemRequest(categoryKey, getSaleItemsRequest);
 
         getSaleItemsRequest.setSorting("");
         getSaleItemsRequest.setPageNumber(String.valueOf(pageNumber));

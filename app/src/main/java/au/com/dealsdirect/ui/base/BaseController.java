@@ -3,7 +3,11 @@ package au.com.dealsdirect.ui.base;
 import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.res.Resources;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
+import android.support.annotation.ColorRes;
+import android.support.annotation.DimenRes;
+import android.support.annotation.DrawableRes;
 import android.support.annotation.NonNull;
 import android.support.annotation.StringRes;
 import android.view.LayoutInflater;
@@ -176,4 +180,38 @@ public abstract class BaseController extends RefWatchingController implements Mv
 
     public Resources getResource() { return mActivity.getResources(); }
 
+    public int getColor(@ColorRes int resId) {
+        if (mActivity == null || mActivity.getResources() == null) {
+            return 0;
+        }
+        return mActivity.getResources().getColor(resId);
+    }
+
+    public float getDimension(@DimenRes int resId) {
+        if (mActivity == null || mActivity.getResources() == null) {
+            return 0;
+        }
+        return mActivity.getResources().getDimension(resId);
+    }
+
+    public String getString(@StringRes int resId) {
+        if (mActivity == null || mActivity.getResources() == null) {
+            return null;
+        }
+        return mActivity.getString(resId);
+    }
+
+    public Drawable getDrawable(@DrawableRes int resId) {
+        if (mActivity == null || mActivity.getResources() == null) {
+            return null;
+        }
+        return mActivity.getDrawable(resId);
+    }
+
+    public int getInteger(int resId) {
+        if (mActivity == null || mActivity.getResources() == null) {
+            return 0;
+        }
+        return mActivity.getResources().getInteger(resId);
+    }
 }

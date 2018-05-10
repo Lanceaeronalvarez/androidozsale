@@ -194,10 +194,6 @@ public class SearchTagsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                     getData().remove(chipToBeRemoved);
                     notifyItemRemoved(dataSize - 1);
 
-                    if(chipToBeRemoved.getFilterType() == BundleKeys.CATEGORY_TREE_FACET){
-                        mSubCategoriesAdapter.setActiveCategoryKey("");
-                    }
-
                     if (mFacetsAdapter != null) {
                         mFacetsAdapter.notifyDataSetChanged();
                     }
@@ -209,10 +205,6 @@ public class SearchTagsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
 
                     if (chipToBeRemoved.getFilterType().equals(BundleKeys.PRICE_FACETFILTER_NAME)) {
                         mPresenter.resetPriceRange();
-                    }
-
-                    if (chipToBeRemoved.getFilterType().equals(BundleKeys.CATEGORY_TREE_FACET)) {
-                        mPresenter.onCategoryChipRemoved();
                     }
                 }
             });

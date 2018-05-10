@@ -1,5 +1,6 @@
 package au.com.dealsdirect.ui.controller.returns.newreturn;
 
+import android.annotation.SuppressLint;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.LinearLayoutManager;
@@ -7,12 +8,14 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.TextView;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Map;
 
 import javax.inject.Inject;
 
@@ -57,11 +60,18 @@ public class NewReturnController extends BaseController implements NewReturnMvpV
     @BindView(R.id.new_returns_set_detail_recyclerview)
     RecyclerView mNewReturnOrderRecyclerView;
 
+    @BindView(R.id.new_return_create_button)
+    Button mNewReturnOrderRequestButton;
+
+    @SuppressLint("UseSparseArrays")
+    private HashMap<Integer, java.util.List> updateList = new HashMap<>();
+
+    private HashMap<String, NewReturnOrderViewHolder> newReturnOrderViewMap = new HashMap<>();
+    private NewReturnOrdersAdapter mAdapter = null;
+    private NewReturnOrderDetailResponse mNewReturnsOrderDetail;
+
     @Inject
     NewReturnMvpPresenter<NewReturnMvpView> mPresenter;
-
-    NewReturnOrderDetailResponse mNewReturnsOrderDetail;
-    private HashMap<Integer, java.util.List> updateList = new HashMap<>();
 
     public static NewReturnController newInstance(List returnItem) {
 
@@ -97,58 +107,19 @@ public class NewReturnController extends BaseController implements NewReturnMvpV
     protected void setUp(View view) {
 
         mNewReturnToolbarTitle.setText(R.string.create_return);
-        mNewReturnToolbarRightOption.setVisibility(View.VISIBLE);
+        mNewReturnToolbarRightOption.setVisibility(View.GONE);
         mNewReturnToolbarRightOption.setImageDrawable(getResources().getDrawable(R.drawable.ic_check));
-
 
         mPresenter.getReturnOrderDetail(mReturnItem.getInvoiceNo());
         onClickListener = view1 -> {
+            validateRequestReturnForm();
 
-            int itemCount = mNewReturnOrderRecyclerView.getLayoutManager()
-                    .getItemCount();
-
-            for (int i = 0; i < itemCount; i++) {
-
-                long viewID = mNewReturnOrderRecyclerView
-                        .getAdapter().getItemId(i);
-                NewReturnOrderViewHolder viewte = (NewReturnOrderViewHolder)
-                        mNewReturnOrderRecyclerView
-                                .findViewHolderForItemId(viewID);
-
-            }
-
-            CreateReturnRequest createReturnRequest = new CreateReturnRequest();
-            createReturnRequest.invoiceNo = mReturnItem.getInvoiceNo().toString();
-            createReturnRequest.reason = mNewReturnCreateReasonField.getText().toString();
-            createReturnRequest.items = getUpdateRequestList();
-
-            if (createReturnRequest.items.size() == 0) {
-                CustomAlertDialog.showCustomAlertDialog(
-                        mActivity,
-                        CustomAlertDialog.CustomDialogIconState.NEGATIVE,
-                        mActivity.getResources().getString(R.string.please_add_count_to_an_item)
-                );
-
-            } else if (createReturnRequest.reason.isEmpty()) {
-
-                CustomAlertDialog.showCustomAlertDialog(
-                        mActivity,
-                        CustomAlertDialog.CustomDialogIconState.NEGATIVE,
-                        getResources().getString(R.string.please_fill_up_field)
-                );
-
-
-            } else {
-
-                mPresenter.addNewReturnOrderRequest(createReturnRequest);
-            }
         };
 
-        mNewReturnToolbarRightOption.setOnClickListener(onClickListener);
     }
 
     @Override
-    public void onDestroyView(View view) {
+    public void onDestroyView(@NonNull View view) {
         mPresenter.onDetach();
         hideKeyboard();
         super.onDestroyView(view);
@@ -174,27 +145,6 @@ public class NewReturnController extends BaseController implements NewReturnMvpV
         }
     }
 
-    private java.util.List getUpdateRequestList() {
-
-        java.util.List newRequestList = new ArrayList<>();
-        if (updateList.size() != 0) {
-
-            for (int key : updateList.keySet()) {
-
-                java.util.List<Object> tempList = updateList.get(key);
-
-
-                if (Integer.valueOf(tempList.get(1).toString()) != 0) {
-                    newRequestList.add(tempList);
-                }
-            }
-
-            return newRequestList;
-        }
-
-        return newRequestList;
-    }
-
     @Override
     public void finishCreateReturnRequest(CreateReturnRequestResponseBody createReturnRequest) {
 
@@ -207,7 +157,6 @@ public class NewReturnController extends BaseController implements NewReturnMvpV
 
         getRouter().popToTag("CurrentReturnController");
         hideKeyboard();
-
     }
 
     @Override
@@ -218,10 +167,10 @@ public class NewReturnController extends BaseController implements NewReturnMvpV
         final NewReturnOrdersAdapter adapter
                 = new NewReturnOrdersAdapter
                 (newReturnsOrderDetail.getList(), mActivity, this);
+        mAdapter = adapter;
 
         mNewReturnOrderRecyclerView.setAdapter(adapter);
         mNewReturnOrderRecyclerView.setLayoutManager(new LinearLayoutManager(mActivity));
-
     }
 
     @Override
@@ -230,16 +179,76 @@ public class NewReturnController extends BaseController implements NewReturnMvpV
         String itemId = holder.newReturnItemIdTextView.getText().toString();
 
         if (productQuantityValue != 0) {
-
             java.util.List<Object> newList = new ArrayList<>();
             newList.add(itemId);
             newList.add(productQuantityValue);
-
-
             updateList.put(position, newList);
+
         } else {
             updateList.remove(position);
 
         }
     }
+
+    private void performRequestReturn() {
+
+        java.util.List<Object> requestItems = new ArrayList<>();
+
+        for (Map.Entry<String, NewReturnOrderViewHolder> stringNewReturnOrderViewHolderEntry : newReturnOrderViewMap.entrySet()) {
+
+            @SuppressWarnings("rawtypes")
+            Map.Entry pairs = stringNewReturnOrderViewHolderEntry;
+            java.util.List<Object> newList = new ArrayList<>();
+            NewReturnOrderViewHolder view = (NewReturnOrderViewHolder) pairs.getValue();
+            mNewReturnsOrderDetail.getList().get(Integer.parseInt(pairs.getKey().toString()));
+
+            if (view.newReturnItemCheckBox.isChecked()) {
+                newList.add(mNewReturnsOrderDetail.getList().get(Integer.parseInt(pairs.getKey().toString())).getID());
+                newList.add(Integer.parseInt(view.productQuantityLayout.getQuantity()));
+                requestItems.add(newList);
+            }
+        }
+
+        mNewReturnOrderRequestButton.setEnabled(false);
+        CreateReturnRequest createReturnRequest = new CreateReturnRequest();
+        createReturnRequest.invoiceNo = mReturnItem.getInvoiceNo().toString();
+        createReturnRequest.reason = mNewReturnCreateReasonField.getText().toString();
+        createReturnRequest.items = requestItems;
+        mPresenter.addNewReturnOrderRequest(createReturnRequest);
+    }
+
+    private void validateRequestReturnForm() {
+        boolean validReason = false;
+        boolean validOrder = false;
+        String reason = mNewReturnCreateReasonField.getText().toString();
+
+        if (reason != null && !reason.trim().equals("")) {
+            validReason = true;
+        }
+
+        newReturnOrderViewMap = mAdapter.getReturnMapView();
+
+        for (Map.Entry<String, NewReturnOrderViewHolder> stringNewReturnOrderViewHolderEntry : newReturnOrderViewMap.entrySet()) {
+            @SuppressWarnings("rawtypes")
+            Map.Entry pairs = stringNewReturnOrderViewHolderEntry;
+            NewReturnOrderViewHolder viewHolder = (NewReturnOrderViewHolder) pairs.getValue();
+
+            if (viewHolder.newReturnItemCheckBox.isChecked()) {
+                validOrder = true;
+                break;
+            }
+        }
+
+        if (validReason && validOrder) {
+            performRequestReturn();
+        } else {
+            CustomAlertDialog.showCustomAlertDialog(mActivity, CustomAlertDialog.CustomDialogIconState.NEGATIVE, "Please populate all fields.");
+        }
+    }
+
+    @OnClick(R.id.new_return_create_button)
+    void OnRequestReturn() {
+        validateRequestReturnForm();
+    }
+
 }

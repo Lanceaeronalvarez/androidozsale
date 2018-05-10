@@ -1,6 +1,7 @@
 package au.com.dealsdirect.utils;
 
 import android.content.Context;
+import android.support.annotation.NonNull;
 import android.text.Spannable;
 import android.text.SpannableString;
 import android.text.style.ForegroundColorSpan;
@@ -10,8 +11,10 @@ import com.mysale.genie.utility.Prefs;
 
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
+import java.util.List;
 
 import au.com.dealsdirect.data.network.model.category.GetCategoryTreeResponse;
+import au.com.dealsdirect.data.network.model.saleitems.GetSaleItemsRequest;
 
 
 /*
@@ -66,7 +69,7 @@ public class StringUtils {
         return initialLetters;
     }
 
-    public static String buildCategoryToolbarTitle(String categoryKey){
+    public static String buildCategoryToolbarTitle(String categoryKey) {
         char c = '>';
         int charCount = 0;
         String newString = "";
@@ -89,5 +92,30 @@ public class StringUtils {
     public static String getCategoryInitials(GetCategoryTreeResponse response) {
         String initials = response.getName().charAt(0) + "" + response.getName().charAt(1);
         return initials.toUpperCase();
+    }
+
+    public static String generateConcatenatedCategories(List<String> categoryKeys) {
+        String concatCategoryKey = "";
+        for (String key : categoryKeys) {
+            concatCategoryKey += "\"" + key + "\"" + ',';
+        }
+        return concatCategoryKey;
+    }
+
+    public static GetSaleItemsRequest updateSaleItemRequest(String categoryKey, GetSaleItemsRequest getSaleItemsRequest) {
+        if (!categoryKey.isEmpty()) {
+            if (categoryKey.contains("\"")) {
+                getSaleItemsRequest.setCategoryKey("[" + categoryKey + "]");
+            } else {
+                getSaleItemsRequest.setCategoryKey("[\"" + categoryKey + "\"]");
+            }
+        } else {
+            getSaleItemsRequest.setCategoryKey("[]");
+        }
+        return getSaleItemsRequest;
+    }
+
+    public static String getParentKey(GetCategoryTreeResponse category) {
+        return category.getKey().replace(">>>" + category.getName(), "");
     }
 }

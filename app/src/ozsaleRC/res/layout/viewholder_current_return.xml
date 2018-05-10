@@ -1,0 +1,211 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/view_holder_my_current_returns_row_container"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@drawable/bg_card_view_states"
+    android:orientation="vertical"
+    android:padding="@dimen/padding_default"
+    tools:ignore="MissingPrefix">
+
+    <RelativeLayout
+        android:id="@+id/my_order_information_header"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentStart="true">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <RelativeLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:weightSum="100">
+
+                <TextView
+                    android:id="@+id/my_current_returns_product_name"
+                    fontPath="@string/font_app_bold"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentLeft="true"
+                    android:layout_toLeftOf="@+id/current_return_request_number_text_value"
+                    android:maxLines="2"
+                    android:text="Philosophy Cotton Sleeveless Plain"
+                    android:textColor="@color/colorAccent"
+                    android:textSize="@dimen/text_size_caption1"
+                    tools:ignore="HardcodedText"/>
+
+
+                <TextView
+                    android:id="@+id/current_return_request_number_text_value"
+                    fontPath="@string/font_app_regular"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentRight="true"
+                    android:layout_marginStart="@dimen/margin_extra_small"
+                    android:layout_weight="30"
+                    android:text="204400890"
+                    android:textColor="@color/colorAccent"
+                    android:textSize="@dimen/text_size_caption1"
+                    tools:ignore="HardcodedText"/>
+
+            </RelativeLayout>
+
+
+            <LinearLayout
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:paddingTop="@dimen/margin_small">
+
+            </LinearLayout>
+
+        </LinearLayout>
+
+        <!--<TextView-->
+        <!--android:id="@+id/current_return_request_number_text_identifier"-->
+        <!--fontPath="@string/font_app_bold"-->
+        <!--android:layout_width="wrap_content"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:text="Request #:"-->
+        <!--android:textColor="#6c6b6b"-->
+        <!--android:textSize="@dimen/text_size_large"-->
+        <!--tools:ignore="HardcodedText"/>-->
+
+
+    </RelativeLayout>
+
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:paddingTop="@dimen/padding_default">
+
+        <!-- REQUEST AND APPROVED -->
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="2"
+            android:orientation="horizontal">
+
+            <!-- REQUESTED AND APPROVED LABEL -->
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Requested:"
+                    android:textColor="@color/text_light"
+                    android:textSize="@dimen/text_size_caption1"/>
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Approved:"
+                    android:textColor="@color/text_light"
+                    android:textSize="@dimen/text_size_caption1"/>
+            </LinearLayout>
+
+            <!-- REQUESTED AND APPROVED VALUE -->
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:paddingLeft="@dimen/margin_extra_small">
+
+                <TextView
+                    android:id="@+id/my_order_product_delivery_from_date_value"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="March 1, 2013"
+                    android:textColor="@color/text_light"/>
+
+                <TextView
+                    android:id="@+id/my_current_returns_product_is_approved_value"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="March 8, 2013"
+                    android:textColor="@color/text_light"/>
+
+            </LinearLayout>
+        </LinearLayout>
+
+
+        <!-- RAN AND STATUS -->
+
+        <RelativeLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="2">
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:orientation="horizontal">
+
+                <!-- RAN AND STATUS LABEL -->
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:paddingLeft="@dimen/padding_default">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="RAN:"
+                        android:textColor="@color/text_light"
+                        android:textSize="@dimen/text_size_caption1"/>
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Status:"
+                        android:textColor="@color/text_light"
+                        android:textSize="@dimen/text_size_caption1"/>
+
+                </LinearLayout>
+
+                <!-- RAN AND STATUS VALUE -->
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:paddingLeft="@dimen/margin_extra_small">
+
+                    <TextView
+                        android:id="@+id/my_current_return_item_RAN_value"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="ran_value"
+                        android:textColor="@color/text_light"
+                        android:textSize="@dimen/text_size_caption1"/>
+
+                    <TextView
+                        android:id="@+id/my_current_return_item_status_value"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="stat_value"
+                        android:textColor="@color/text_light"
+                        android:textSize="@dimen/text_size_caption1"/>
+                </LinearLayout>
+            </LinearLayout>
+
+        </RelativeLayout>
+    </LinearLayout>
+
+    <!--</LinearLayout>-->
+
+</LinearLayout>
+

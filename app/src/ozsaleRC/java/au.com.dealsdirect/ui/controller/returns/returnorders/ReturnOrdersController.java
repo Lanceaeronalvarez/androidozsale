@@ -95,10 +95,9 @@ public class ReturnOrdersController extends BaseController
     protected void setUp(View view) {
         // Setup views here
 
-        mReturnOrdersControllerToolbarTitle.setText("New Return");
+        mReturnOrdersControllerToolbarTitle.setText("Select Order");
         mReturnOrdersControllerToolbarRightOption.setVisibility(View.INVISIBLE);
         mReturnOrderClickListener = this;
-
         mPresenter.loadOrders();
 
     }
@@ -110,31 +109,32 @@ public class ReturnOrdersController extends BaseController
     }
 
     @OnClick(R.id.partial_toolbar_left_view)
-    void onBackClick(){
+    void onBackClick() {
         mActivity.onBackPressed();
     }
 
     @Override
     public void showOrders(List<au.com.dealsdirect.data.network.model.returns.returnorders.List> newReturnsOrders) {
-        if(newReturnsOrders==null){
+
+        if (newReturnsOrders == null) {
+
             mPlaceholderLayout.setVisibility(View.VISIBLE);
             mReturnOrdersListContainer.setVisibility(View.GONE);
-//            newReturnsSubTitle.setVisibility(View.GONE);
-//            newReturnsSelectOrderRecyclerView.setVisibility(View.GONE);
-//            mPlaceholderLayout.setVisibility(View.VISIBLE);
-//            ((TextView) mPlaceholderLayout.findViewById(R.id.welcome)).setText(R.string.my_return_orders);
+
             return;
-        }else if (newReturnsOrders.isEmpty()){
+        } else if (newReturnsOrders.isEmpty()) {
+
             mPlaceholderLayout.setVisibility(View.VISIBLE);
             mReturnOrdersListContainer.setVisibility(View.GONE);
         } else {
+
             mPlaceholderLayout.setVisibility(View.GONE);
             mReturnOrdersListContainer.setVisibility(View.VISIBLE);
         }
 
         final ReturnOrdersAdapter adapter
                 = new ReturnOrdersAdapter
-                (newReturnsOrders,mActivity, mReturnOrderClickListener);
+                (newReturnsOrders, mActivity, mReturnOrderClickListener);
 
         mReturnOrdersRecyclerView
                 .addItemDecoration(
@@ -143,7 +143,6 @@ public class ReturnOrdersController extends BaseController
 
         mReturnOrdersRecyclerView.setAdapter(adapter);
         mReturnOrdersRecyclerView.setLayoutManager(new LinearLayoutManager(mActivity));
-        //  newReturnsSelectOrderRecyclerView.setItemAnimator(new DefaultItemAnimator());
     }
 
     @Override

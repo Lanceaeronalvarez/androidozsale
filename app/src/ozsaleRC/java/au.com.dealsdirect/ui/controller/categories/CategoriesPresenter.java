@@ -43,9 +43,7 @@ public class CategoriesPresenter<V extends CategoriesMvpView> extends BasePresen
             @Override
             public void onSuccess(List<?> response) {
                 super.onSuccess(response);
-                if (response != null) {
-                    getMvpView().showCategories((List<GetCategoryTreeResponse>) response);
-                }
+                getMvpView().showCategories((List<GetCategoryTreeResponse>) response);
             }
         });
     }

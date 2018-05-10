@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/new_return_order_request_set_details_fragment"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:clickable="true"
+    android:focusable="true"
+    android:focusableInTouchMode="true"
+    android:background="@color/background_default"
+    tools:ignore="MissingPrefix">
+
+    <include
+        android:id="@+id/controller_new_return_toolbar"
+        layout="@layout/partial_toolbar_arrow" />
+
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/new_returns_set_detail_recyclerview"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_above="@+id/controller_new_return_bottom_container"
+        android:layout_below="@+id/controller_new_return_toolbar"
+        android:orientation="vertical"
+        android:overScrollMode="never" />
+
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/border_regular"
+        android:background="@color/bt_black_12"
+        android:layout_above="@+id/controller_new_return_bottom_container"/>
+
+    <RelativeLayout
+        android:id="@+id/controller_new_return_bottom_container"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:background="@color/white"
+        android:padding="@dimen/activity_horizontal_margin">
+
+        <TextView
+            android:id="@+id/controller_new_return_reason_header"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Reason:"
+            android:textColor="@color/text_dark" />
+
+        <au.com.dealsdirect.ui.custom.ClearFocusEditText
+            android:id="@+id/controller_new_return_field"
+            style="@style/DDEditTextStyle"
+            android:background="#ffffff"
+            fontPath="@string/font_app_medium"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/new_return_edit_text_height"
+            android:layout_below="@+id/controller_new_return_reason_header"
+            android:layout_marginBottom="@dimen/margin_small"
+            android:gravity="top"
+            android:hint="@string/write_us_a_message"
+            android:inputType="textNoSuggestions|textMultiLine" />
+
+        <Button
+            android:id="@+id/new_return_create_button"
+            style="@style/DDButtonStyle"
+            fontPath="@string/font_app_semibold"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/controller_new_return_field"
+            android:text="Request Return"
+            android:textSize="@dimen/text_size_headline3"/>
+
+    </RelativeLayout>
+
+</RelativeLayout>

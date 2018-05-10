@@ -155,7 +155,9 @@
         limited to 90 characters
     </string>
     <string name="delivery_instructions">Delivery instructions</string>
-
+    <string name="you_currently_do_not_have_any_addresses">you do not currently have any address
+    </string>
+    <string name="welcome_to_my_address">welcome to my address!</string>
     <string name="delivery_address_added">delivery address added</string>
     <string name="remove_string">remove</string>
     <string name="add_to_basket">Add to Basket</string>
@@ -164,9 +166,13 @@
     <string name="category_title">Categories</string>
 
     <!--CONTACTS-->
+    <string name="welcome_to_contact_us">welcome to contact us!</string>
+    <string name="you_do_not_currently_have_any_messages">you do not currently have any messages</string>
 
     <!--ORDERS-->
     <string name="shop_now">shop now</string>
+    <string name="you_currently_do_no_have_any_orders">you do not currently have any orders.</string>
+    <string name="welcome_to_my_orders">welcome to my orders!</string>
     <string name="no_network_connection">No Network Connection</string>
     <string name="i_am_looking_for">I am looking for...</string>
 
@@ -397,6 +403,7 @@
     <string name="email">Email</string>
     <string name="sorry_today_we_can_t_find_anything_by_your_request">Sorry, today we can\'t find anything by your request.</string>
     <string name="meanwhile_why_not_search_for_something_else">Meanwhile, why not search for something else?</string>
+    <string name="request_new_return">Request New Return</string>
     <string name="clear">clear</string>
     <bool name="is_checkout_orders_label_visible">false</bool>
     <string name="loading">loading</string>
@@ -545,4 +552,5 @@
     <string name="status_colon">Status:</string>
     <string name="browse">Browse</string>
     <string name="test_product_name">Lavish Alice</string>
+    <string name="my_basket">My Basket</string>
 </resources>
