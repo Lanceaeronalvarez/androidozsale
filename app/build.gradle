@@ -96,7 +96,7 @@ android {
         }
 
         dealsDirectRC {
-            versionCode 81
+            versionCode 86
             versionName "2.3.2"
             applicationId "au.com.dealsdirect"
 
@@ -120,7 +120,7 @@ android {
         }
 
         dealsDirectTest {
-            versionCode 82
+            versionCode 87
             versionName "2.3.2"
             applicationId "au.com.dealsdirect.test"
 
