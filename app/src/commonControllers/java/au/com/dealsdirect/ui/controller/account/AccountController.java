@@ -32,7 +32,7 @@ import au.com.dealsdirect.ui.controller.details.DetailsController;
 import au.com.dealsdirect.ui.controller.invite.InviteSendController;
 import au.com.dealsdirect.ui.controller.language.LanguageController;
 import au.com.dealsdirect.ui.controller.orders.orders.OrdersController;
-import au.com.dealsdirect.ui.returns.currentreturns.CurrentReturnsController;
+import au.com.dealsdirect.ui.controller.returns.currentreturns.CurrentReturnsController;
 import au.com.dealsdirect.ui.controller.vouchers.View.ViewVouchersController;
 import au.com.dealsdirect.ui.custom.CustomAlertDialog;
 import au.com.dealsdirect.utils.BundleBuilder;

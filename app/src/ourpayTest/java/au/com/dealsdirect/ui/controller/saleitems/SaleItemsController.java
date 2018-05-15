@@ -473,7 +473,7 @@ public class SaleItemsController extends BasePullToRefreshController implements 
 
         List<GetSaleItemsResponse.Products> items = getSaleItemsResponse.products;
 
-        mFacets = getSaleItemsResponse.facets;
+        mFacets = getSaleItemsResponse.getFacets();
 
         mCategoryTreeResponse = getSaleItemsResponse.getCategories();
 
@@ -528,7 +528,7 @@ public class SaleItemsController extends BasePullToRefreshController implements 
 //                }
 
 
-                if (items.size() <= PaginateUtils.LOADING_TRIGGER_THRESHOLD) {
+                if (items.size() <= getResources().getInteger(R.integer.sale_items_threshold)) {
                     hasLoadedAllItems = true;
                     mPaginateManager.setHasMoreDataToLoad(false);
                     page = 0;
@@ -615,7 +615,7 @@ public class SaleItemsController extends BasePullToRefreshController implements 
 
     @Override
     public void refresh() {
-        if (mSaleItems.size() < PaginateUtils.LOADING_TRIGGER_THRESHOLD) {
+        if (mSaleItems.size() < getResources().getInteger(R.integer.sale_items_threshold)) {
             hasLoadedAllItems = true;
             page = 0;
         } else {
