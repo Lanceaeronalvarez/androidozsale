@@ -64,9 +64,10 @@ public class CategoriesAdapter extends RecyclerView.Adapter<CategoriesAdapter.Ca
     public void onBindViewHolder(CategoriesViewHolder holder, int position) {
         setAnimation(holder.itemView, position);
 
-        if (!mData.isEmpty() && !mData.get(position).getName().isEmpty()) {
-            setCategoryImage(holder, mData.get(position).getName(), position);
-        }
+//        Sets Category Image might be used in the future
+//        if (!mData.isEmpty() && !mData.get(position).getName().isEmpty()) {
+//            setCategoryImage(holder, mData.get(position).getName(), position);
+//        }
 
         int backgroundColor = mSelectedIndex == position ? R.color.colorAccent : R.color.white;
         int textColor = mSelectedIndex == position ? R.color.white : R.color.colorAccent;
