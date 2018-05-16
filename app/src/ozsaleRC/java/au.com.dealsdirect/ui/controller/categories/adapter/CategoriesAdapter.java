@@ -17,7 +17,6 @@ import au.com.dealsdirect.R;
 import au.com.dealsdirect.data.network.model.category.GetCategoryTreeResponse;
 import au.com.dealsdirect.ui.controller.categories.CategoriesMvpPresenter;
 import au.com.dealsdirect.ui.controller.categories.listener.CategoryClickListener;
-import au.com.dealsdirect.utils.AppLogger;
 import au.com.dealsdirect.utils.StringUtils;
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -66,7 +65,6 @@ public class CategoriesAdapter extends RecyclerView.Adapter<CategoriesAdapter.Ca
         setAnimation(holder.itemView, position);
 
         if (!mData.isEmpty() && !mData.get(position).getName().isEmpty()) {
-            AppLogger.d("category", mData.get(position).getName());
             setCategoryImage(holder, mData.get(position).getName(), position);
         }
 
