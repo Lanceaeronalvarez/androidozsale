@@ -5,7 +5,7 @@
     android:layout_height="wrap_content"
     android:layout_marginBottom="15dp"
     android:layout_marginTop="15dp"
-    android:orientation="vertical"
+    android:orientation="horizontal"
     tools:ignore="MissingPrefix">
 
     <TextView
@@ -15,5 +15,13 @@
         android:layout_height="wrap_content"
         android:textColor="@color/category_text_selector"
         android:textSize="@dimen/text_size_headline3"
+        android:layout_weight="1"
         tools:text="Boots" />
+
+    <ImageView
+        android:id="@+id/viewholder_subcategory_item_check"
+        android:layout_width="@dimen/row_facet_check_icon_width"
+        android:layout_height="@dimen/row_facet_check_icon_height"
+        android:src="@drawable/ic_check"
+        android:visibility="invisible" />
 </LinearLayout>

@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content"
+    android:layout_width="@dimen/category_width"
+    android:layout_height="@dimen/category_height"
     android:orientation="vertical"
     android:padding="@dimen/margin_small"
     tools:ignore="MissingPrefix"
@@ -18,7 +18,8 @@
         <RelativeLayout
             android:layout_width="@dimen/category_background_width"
             android:layout_height="@dimen/category_background_height"
-            android:layout_gravity="center">
+            android:layout_gravity="center"
+            android:visibility="gone">
 
             <ImageView
                 android:id="@+id/row_category_image"
