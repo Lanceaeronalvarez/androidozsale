@@ -76,7 +76,7 @@ public class SubCategoryItemsAdapter extends RecyclerView.Adapter<SubCategoryIte
                 }
             }
 
-            List<GetCategoryTreeResponse> subCategoryItems = getSubCategoryItems(mData.get(position).getKey());
+            List<GetCategoryTreeResponse> subCategoryItems = mCategoryMap.get(mData.get(position).getKey());
 
             if (subCategoryItems != null && !subCategoryItems.isEmpty()) {
                 mSubCategoryItemsAdapter = new SubCategoryItemsAdapter(mChosenCategoryKey, subCategoryItems, mSearchFilterPresenter, mCategoryMap);
@@ -89,9 +89,7 @@ public class SubCategoryItemsAdapter extends RecyclerView.Adapter<SubCategoryIte
 
             holder.itemView.setOnClickListener(view -> {
                 holder.titleTextView.setEnabled(true);
-                mSearchFilterPresenter.selectCategory(
-                        mData.get(position).getName(),
-                        mData.get(position).getKey());
+                mSearchFilterPresenter.selectCategory(mData.get(position));
             });
         }
     }
@@ -122,11 +120,6 @@ public class SubCategoryItemsAdapter extends RecyclerView.Adapter<SubCategoryIte
             super(itemView);
             ButterKnife.bind(this, itemView);
         }
-    }
-
-
-    private List<GetCategoryTreeResponse> getSubCategoryItems(String categoryKey) {
-        return mCategoryMap.get(categoryKey);
     }
 
     public void addItem(GetCategoryTreeResponse getCategoryTreeResponse) {

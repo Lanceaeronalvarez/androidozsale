@@ -3,6 +3,7 @@ package au.com.dealsdirect.ui.controller.searchfilter;
 import java.util.List;
 import java.util.Set;
 
+import au.com.dealsdirect.data.network.model.category.GetCategoryTreeResponse;
 import au.com.dealsdirect.ui.base.MvpPresenter;
 import au.com.dealsdirect.ui.controller.searchfilter.adapter.SearchChipModel;
 
@@ -18,6 +19,6 @@ public interface SearchFilterMvpPresenter<V extends SearchFilterMvpView> extends
 
     void resetPriceRange();
 
-    void selectCategory(String categoryName, String categoryKey);
+    void selectCategory(GetCategoryTreeResponse category);
 
 }

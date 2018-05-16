@@ -54,6 +54,7 @@ import au.com.dealsdirect.utils.BundleBuilder;
 import au.com.dealsdirect.utils.BundleKeys;
 import au.com.dealsdirect.utils.JsonUtils;
 import au.com.dealsdirect.utils.PaginateUtils;
+import au.com.dealsdirect.utils.StringUtils;
 import au.com.dealsdirect.utils.module.ControllerFactory;
 import au.com.dealsdirect.utils.module.GateKeeper;
 import butterknife.BindView;
@@ -478,7 +479,7 @@ public class SaleItemsController extends BasePullToRefreshController implements 
         mCategoryTreeResponse = getSaleItemsResponse.getCategories();
 
 //        LOGIC TO SAVE PREV CATEGORY TO PREVENT LOCKOUT
-        if(mCategoryTreeResponse == null || mCategoryTreeResponse.isEmpty()){
+        if (mCategoryTreeResponse == null || mCategoryTreeResponse.isEmpty()) {
             mCategoryTreeResponse = mPrevCategoryTreeResponse;
         } else {
             mPrevCategoryTreeResponse = mCategoryTreeResponse;
@@ -559,7 +560,7 @@ public class SaleItemsController extends BasePullToRefreshController implements 
             initialLoad = false;
         }
 
-        if(mIsCategoryChanged) {
+        if (mIsCategoryChanged) {
             mSearchFilterController.replaceFacets(mFacets);
             mSearchFilterController.replaceCategoryTree(mCategoryTreeResponse);
             mIsCategoryChanged = false;
@@ -795,17 +796,19 @@ public class SaleItemsController extends BasePullToRefreshController implements 
     }
 
     @Override
+    public GetSaleItemsRequest createSaleItemsRequest(List<String> categoryKeys, String saleId, int pageNumber, List<SearchChipModel> chipsList, String query) {
+        mCategoryKey = StringUtils.generateConcatenatedCategories(categoryKeys);
+        return createSaleItemsRequest(mCategoryKey, saleId, pageNumber, chipsList, query);
+    }
+
+    @Override
     public GetSaleItemsRequest createSaleItemsRequest(String categoryKey, String saleId, int pageNumber, List<SearchChipModel> chipsList, String query) {
         List<String> saleIds = new LinkedList<>();
         HashMap<String, List<String>> facetFilters = new HashMap<>();
 
         GetSaleItemsRequest getSaleItemsRequest = new GetSaleItemsRequest();
 
-        if (!categoryKey.isEmpty())
-            getSaleItemsRequest.setCategoryKey("[\"" + categoryKey + "\"]");
-        else
-            getSaleItemsRequest.setCategoryKey("[]");
-
+        getSaleItemsRequest = StringUtils.updateSaleItemRequest(categoryKey, getSaleItemsRequest);
 
         getSaleItemsRequest.setSorting("");
         getSaleItemsRequest.setPageNumber(String.valueOf(pageNumber));
@@ -813,14 +816,8 @@ public class SaleItemsController extends BasePullToRefreshController implements 
 
         getSaleItemsRequest.setPageSize("50");
 
-        if (saleId != null) {
-
-            if (!saleId.isEmpty())
-                saleIds.add(saleId);
-        }
-
-
-        if (!saleIds.isEmpty()) {
+        if (saleId != null && !saleId.isEmpty()) {
+            saleIds.add(saleId);
             facetFilters.put("saleId", saleIds);
         }
 

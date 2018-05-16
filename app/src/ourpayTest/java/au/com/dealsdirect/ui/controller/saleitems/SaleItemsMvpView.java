@@ -27,6 +27,8 @@ public interface SaleItemsMvpView extends MvpView{
 
     GetSaleItemsRequest createSaleItemsRequest(String categoryKey, String saleId, int pageNumber, List<SearchChipModel> chipsList, String query);
 
+    GetSaleItemsRequest createSaleItemsRequest(List<String> categoryKeys, String saleId, int pageNumber, List<SearchChipModel> chipsList, String query);
+
     void setIsCategoryChanged(boolean val);
 
     boolean isCategoryChanged();

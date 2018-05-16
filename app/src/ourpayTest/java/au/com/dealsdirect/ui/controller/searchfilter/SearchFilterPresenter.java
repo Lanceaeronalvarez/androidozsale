@@ -6,6 +6,7 @@ import java.util.Set;
 import javax.inject.Inject;
 
 import au.com.dealsdirect.data.DataManager;
+import au.com.dealsdirect.data.network.model.category.GetCategoryTreeResponse;
 import au.com.dealsdirect.ui.base.BasePresenter;
 import au.com.dealsdirect.ui.controller.searchfilter.adapter.SearchChipModel;
 import au.com.dealsdirect.utils.rx.SchedulerProvider;
@@ -38,8 +39,8 @@ public class SearchFilterPresenter<V extends SearchFilterMvpView> extends BasePr
     }
 
     @Override
-    public void selectCategory(String categoryName, String categoryKey) {
-        getMvpView().onCategoryClicked(categoryName,categoryKey);
+    public void selectCategory(GetCategoryTreeResponse category) {
+        getMvpView().onCategoryClicked(category);
     }
 
 }

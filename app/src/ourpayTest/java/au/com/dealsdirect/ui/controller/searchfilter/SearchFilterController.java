@@ -181,6 +181,8 @@ public class SearchFilterController extends BaseController
     @Override
     protected void setUp(View view) {
 
+        createCategoryMap(mCategoryTree);
+
         if (mFacets != null) {
             parseFacets(mFacets);
         }
@@ -195,7 +197,7 @@ public class SearchFilterController extends BaseController
 
         mSearchItemsList = new ArrayList<SearchChipModel>();
 
-        mSubCategoriesAdapter = new SubCategoriesAdapter(mChosenCategory, mCategoryTree, mPresenter);
+        mSubCategoriesAdapter = new SubCategoriesAdapter(mChosenCategory, mCategoryTree, mPresenter,mCategoryMap);
         mFilterCategoriesRecyclerView.setLayoutManager(new LinearLayoutManager(mActivity, LinearLayoutManager.VERTICAL, false));
         mFilterCategoriesRecyclerView.setAdapter(mSubCategoriesAdapter);
 
@@ -503,21 +505,27 @@ public class SearchFilterController extends BaseController
     }
 
     @Override
-    public void onCategoryClicked(String categoryName, String categoryKey) {
-        SearchChipModel categoryChip = new SearchChipModel(BundleKeys.CATEGORY_TREE_FACET, categoryName, 0);
-        if (!mChosenCategory.isEmpty() && mChosenCategory.equals(categoryKey)) {
-            removeChipOnCategories();
-            mChosenCategory = "";
+    public void onCategoryClicked(GetCategoryTreeResponse category) {
 
-        } else {
+        if(!category.isSelected()){
 
-            removeChipOnCategories();
-
-            mSearchItemsList.add(categoryChip);
-            mChosenCategory = categoryKey;
         }
 
-        mSubCategoriesAdapter.setActiveCategoryKey(mChosenCategory);
+//        removeChipOnCategories();
+//        SearchChipModel categoryChip = new SearchChipModel(BundleKeys.CATEGORY_TREE_FACET, categoryName, 0);
+//        if (!mChosenCategory.isEmpty() && mChosenCategory.equals(categoryKey)) {
+//            removeChipOnCategories();
+//            mChosenCategory = "";
+//
+//        } else {
+//
+//
+//
+//            mSearchItemsList.add(categoryChip);
+//            mChosenCategory = categoryKey;
+//        }
+//
+//        mSubCategoriesAdapter.setActiveCategoryKey(mChosenCategory);
 
         mSaleItemsPresenter.onCategoryChanged(true);
         mSaleItemsPresenter.loadSaleItems(mSaleItemsView.createSaleItemsRequest(mChosenCategory,mSaleId,0,mSearchItemsList,""));
@@ -534,5 +542,14 @@ public class SearchFilterController extends BaseController
         return null;
     }
 
+    private List<GetCategoryTreeResponse> getSubCategoryItems(String categoryKey) {
+        return mCategoryMap.get(categoryKey);
+    }
 
+    private void createCategoryMap(List<GetCategoryTreeResponse> getCategoryTreeResponses) {
+        for (GetCategoryTreeResponse category : getCategoryTreeResponses) {
+            mCategoryMap.put(category.getKey(), category.getChildren());
+            createCategoryMap(category.getChildren());
+        }
+    }
 }

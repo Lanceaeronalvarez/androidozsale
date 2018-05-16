@@ -32,18 +32,19 @@ public class SubCategoriesAdapter extends RecyclerView.Adapter<SubCategoriesAdap
 
     private List<GetCategoryTreeResponse> mData = new ArrayList<>();
     private SearchFilterMvpPresenter mSearchFilterPresenter;
-    private SubCategoryItemsAdapter mSubCategoryItemsAdapter;
+    private SubCategoriesAdapter mSubCategoryItemsAdapter;
     private Map<String, List<GetCategoryTreeResponse>> mCategoryMap = new HashMap<>();
     private String mChosenCategoryKey;
 
     public SubCategoriesAdapter(
             String chosenCategorykey,
             List<GetCategoryTreeResponse> data,
-            SearchFilterMvpPresenter searchFilterMvpPresenter) {
+            SearchFilterMvpPresenter searchFilterMvpPresenter,
+            Map<String, List<GetCategoryTreeResponse>> categoryMap) {
 
         mChosenCategoryKey = chosenCategorykey;
         mData = data;
-        createCategoryMap(mData);
+        mCategoryMap = categoryMap;
         mSearchFilterPresenter = searchFilterMvpPresenter;
     }
 
@@ -58,7 +59,8 @@ public class SubCategoriesAdapter extends RecyclerView.Adapter<SubCategoriesAdap
         if (!mData.get(position).getName().isEmpty()) {
             holder.subCategoryTitle.setText(mData.get(position).getName());
 
-            if (mData.get(position).getKey().equals(mChosenCategoryKey)) {
+//            holder.subCategoryCheck.setVisibility( ? View.VISIBLE : View.GONE);
+            if (mData.get(position).isSelected()) {
                 holder.subCategoryCheck.setVisibility(View.VISIBLE);
                 holder.itemView.setSelected(true);
             } else {
@@ -66,20 +68,22 @@ public class SubCategoriesAdapter extends RecyclerView.Adapter<SubCategoriesAdap
                 holder.itemView.setSelected(false);
             }
 
-            List<GetCategoryTreeResponse> subCategoryItems = getSubCategoryItems(mData.get(position).getKey());
-
-            mSubCategoryItemsAdapter = new SubCategoryItemsAdapter(mChosenCategoryKey, subCategoryItems, mSearchFilterPresenter, mCategoryMap);
-            holder.subCategoryItemsRecyclerView.setLayoutManager(new LinearLayoutManager(holder.itemView.getContext(), LinearLayoutManager.VERTICAL, false));
-            holder.subCategoryItemsRecyclerView.setAdapter(mSubCategoryItemsAdapter);
+            List<GetCategoryTreeResponse> subCategoryItems = mCategoryMap.get(mData.get(position).getKey());
 
             if (subCategoryItems != null && !subCategoryItems.isEmpty()) {
+                mSubCategoryItemsAdapter = new SubCategoriesAdapter(mChosenCategoryKey, subCategoryItems, mSearchFilterPresenter, mCategoryMap);
+                holder.subCategoryItemsRecyclerView.setLayoutManager(new LinearLayoutManager(holder.itemView.getContext(), LinearLayoutManager.VERTICAL, false));
+                holder.subCategoryItemsRecyclerView.setAdapter(mSubCategoryItemsAdapter);
+
                 holder.itemView.setActivated(false);
                 holder.subCategoryItemsRecyclerView.setVisibility(View.VISIBLE);
-
-                holder.itemView.setOnClickListener(view -> {
-                    mSearchFilterPresenter.selectCategory(mData.get(position).getName(), mData.get(position).getKey());
-                });
             }
+
+            holder.itemView.setOnClickListener(view -> {
+                mData.get(position).setSelected(!mData.get(position).isSelected());
+                mSearchFilterPresenter.selectCategory(mData.get(position));
+            });
+
         }
     }
 
@@ -97,7 +101,6 @@ public class SubCategoriesAdapter extends RecyclerView.Adapter<SubCategoriesAdap
 
     public void replaceData(List<GetCategoryTreeResponse> getCategoryTreeResponses) {
         mData = new ArrayList<>(getCategoryTreeResponses);
-        createCategoryMap(mData);
         notifyDataSetChanged();
     }
 
@@ -114,22 +117,6 @@ public class SubCategoriesAdapter extends RecyclerView.Adapter<SubCategoriesAdap
         SubCategoriesViewHolder(View itemView) {
             super(itemView);
             ButterKnife.bind(this, itemView);
-        }
-    }
-
-    private List<GetCategoryTreeResponse> getSubCategoryItems(String categoryKey) {
-        return mCategoryMap.get(categoryKey);
-    }
-
-    private void createCategoryMap(List<GetCategoryTreeResponse> categories) {
-        mCategoryMap.put("shop", categories);
-        updateCategories(categories);
-    }
-
-    private void updateCategories(List<GetCategoryTreeResponse> getCategoryTreeResponses) {
-        for (GetCategoryTreeResponse category : getCategoryTreeResponses) {
-            mCategoryMap.put(category.getKey(), category.getChildren());
-            updateCategories(category.getChildren());
         }
     }
 
