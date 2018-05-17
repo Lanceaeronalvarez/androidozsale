@@ -9,8 +9,10 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import au.com.dealsdirect.R;
+import au.com.dealsdirect.data.network.model.address.ApplyAddressResponse;
 import au.com.dealsdirect.data.network.model.orders.GetOrderPaymentDetails;
 import au.com.dealsdirect.data.network.model.orders.GetPaymentsList;
 import au.com.dealsdirect.utils.ImageUtils;
@@ -23,7 +25,7 @@ import butterknife.ButterKnife;
  * Created by smartwave on 22/06/2017.
  */
 
-public class OrderDetailsItemsRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
+public class OrderDetailsItemsRecyclerViewAdapter extends RecyclerView.Adapter<OrderDetailsItemsRecyclerViewAdapter.OrderDetailsItemViewHolder> {
 
     public ArrayList<GetPaymentsList.ResponseValue.Order> mOrderList = new ArrayList<>();
     GetOrderPaymentDetails.ResponseValue.Value mOrderDetail;
@@ -46,57 +48,47 @@ public class OrderDetailsItemsRecyclerViewAdapter extends RecyclerView.Adapter<R
     @Override
     public OrderDetailsItemViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.row_item_order_details, parent, false);
-        OrderDetailsItemViewHolder holder = new OrderDetailsItemViewHolder(v);
-
-        return holder;
+        return new OrderDetailsItemViewHolder(v);
     }
 
     @Override
-    public void onBindViewHolder(RecyclerView.ViewHolder vh, final int position) {
+    public void onBindViewHolder(OrderDetailsItemViewHolder holder, final int position) {
 
-        GetPaymentsList.ResponseValue.Order item = mOrderList.get(mItemPosition);
-        OrderDetailsItemViewHolder holder = (OrderDetailsItemViewHolder) vh;
+        GetPaymentsList.ResponseValue.Order order = mOrderList.get(mItemPosition);
+        List<GetOrderPaymentDetails.ResponseValue.Item> orderDetailsItems = mOrderDetail.getOrders().get(mItemPosition).getItems();
 
-        String orderName = item.getDescription();
+        String orderName = order.getDescription();
         int orderItemCount = 0;
         String productSize = "";
 
         if (mOrderDetail != null) {
 
-            String brandId = mOrderDetail.getOrders().get(mItemPosition).getItems().get(position).getBrandID();
-            String imageId = mOrderDetail.getOrders().get(mItemPosition).getItems().get(position).getImageID();
-            String fileName = mOrderDetail.getOrders().get(mItemPosition).getItems().get(position).getFileName();
-            orderItemCount = mOrderDetail.getOrders().get(mItemPosition).getItems().get(position).getQty();
-            productSize = mOrderDetail.getOrders().get(mItemPosition).getItems().get(position).getSize();
+            String brandId = orderDetailsItems.get(position).getBrandID();
+            String imageId = orderDetailsItems.get(position).getImageID();
+            String fileName = orderDetailsItems.get(position).getFileName();
+            orderItemCount = orderDetailsItems.get(position).getQty();
+            productSize = orderDetailsItems.get(position).getSize();
 
-            holder.productPriceTextView.setText(PriceUtils.getPriceStringValue(mOrderDetail.getOrders()
-                    .get(mItemPosition).getItems().get(position).getPrice()));
+            holder.productPriceTextView.setText(PriceUtils.getPriceStringValue(orderDetailsItems.get(position).getPrice()));
 
             if (productSize != null) {
                 holder.productSizeTextView.setText(productSize);
             }
 
-            ImageUtils.loadImage(mContext,
-                    LegacyStringImageUtils.generateImageUrl(brandId, imageId, fileName),
+            ImageUtils.loadImage(mContext, LegacyStringImageUtils.generateImageUrl(brandId, imageId, fileName),
                     holder.productImageView);
 
         }
 
         holder.productNameTextView.setText(orderName);
-        String itemText = " item";
-        if (orderItemCount > 1) {
-            itemText = " items";
-        }
+        String itemText = orderItemCount > 1 ? " item" : " items";
         holder.productQuantityTextView.setText(orderItemCount + itemText);
     }
 
     @Override
     public int getItemCount() {
-        if (mOrderDetail.getOrders().get(mItemPosition).getItems() == null) {
-            return 0;
-        }
-
-        return mOrderDetail.getOrders().get(mItemPosition).getItems().size();
+        return mOrderDetail.getOrders().get(mItemPosition).getItems() == null ? 0 :
+                mOrderDetail.getOrders().get(mItemPosition).getItems().size();
     }
 
     @Override

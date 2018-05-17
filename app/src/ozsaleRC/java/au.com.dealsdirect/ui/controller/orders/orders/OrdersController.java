@@ -110,8 +110,8 @@ public class OrdersController extends BasePullToRefreshController implements Ord
     @Override
     public void showOrderDetails(int position) {
         String paymentRefNo = String.valueOf(mOrders.get(position).getPaymentReferenceNo());
-        String jsonData = new Gson().toJson(mOrders.get(position));
-        getRouter().pushController(RouterTransaction.with(new OrderDetailsController(jsonData, paymentRefNo, position))
+        String paymentItemString = new Gson().toJson(mOrders.get(position));
+        getRouter().pushController(RouterTransaction.with(new OrderDetailsController(paymentItemString, paymentRefNo, position))
                 .pushChangeHandler(new HorizontalChangeHandler())
                 .popChangeHandler(new HorizontalChangeHandler()));
     }

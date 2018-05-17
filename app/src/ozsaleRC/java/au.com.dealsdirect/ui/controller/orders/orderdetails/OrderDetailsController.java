@@ -23,21 +23,21 @@ import butterknife.BindView;
 import butterknife.OnClick;
 
 /**
- *  Created by smartwave on 22/06/2017.
+ * Created by smartwave on 22/06/2017.
  */
 
 public class OrderDetailsController extends BaseController implements OrderDetailsMvpView {
 
-    private static final String PAYMENT_ITEM="PAYMENT_ITEM";
-    private static final String PAYMENT_REF_NO="PAYMENT_REF_NO";
-    private static final String SELECTED_ITEM="SELECTED_ITEM";
+    private static final String PAYMENT_ITEM = "PAYMENT_ITEM";
+    private static final String PAYMENT_REF_NO = "PAYMENT_REF_NO";
+    private static final String SELECTED_ITEM = "SELECTED_ITEM";
 
     @Inject
     OrderDetailsMvpPresenter<OrderDetailsMvpView> mPresenter;
 
-
     @BindView(R.id.partial_toolbar_arrow_title)
     TextView mOrderDetailsToolarTitle;
+
     @BindView(R.id.partial_toolbar_right_view)
     ImageView mOrderDetailsRightOption;
 
@@ -45,26 +45,22 @@ public class OrderDetailsController extends BaseController implements OrderDetai
     RecyclerView mRecyclerView;
 
     GetPaymentsList.ResponseValue.PaymentItem mOrderItem;
-    GetOrderPaymentDetails.ResponseValue.Value mOrderDetails;
 
-    int mSelectedPosition;
     String mPaymentReferenceNo;
 
-    public OrderDetailsController(String paymentItemString, String paymentRefNo, int position){
+    public OrderDetailsController(String paymentItemString, String paymentRefNo, int position) {
         this(new BundleBuilder(new Bundle())
-                .putString(PAYMENT_ITEM,paymentItemString)
-                .putString(PAYMENT_REF_NO,paymentRefNo)
-                .putInt(SELECTED_ITEM,position)
+                .putString(PAYMENT_ITEM, paymentItemString)
+                .putString(PAYMENT_REF_NO, paymentRefNo)
+                .putInt(SELECTED_ITEM, position)
                 .build());
     }
 
 
-
     public OrderDetailsController(Bundle args) {
         super(args);
-        mOrderItem = new Gson().fromJson(args.getString(PAYMENT_ITEM,""),GetPaymentsList.ResponseValue.PaymentItem.class);
-        mSelectedPosition = args.getInt(SELECTED_ITEM,0);
-        mPaymentReferenceNo = args.getString(PAYMENT_REF_NO,"");
+        mOrderItem = new Gson().fromJson(args.getString(PAYMENT_ITEM, ""), GetPaymentsList.ResponseValue.PaymentItem.class);
+        mPaymentReferenceNo = args.getString(PAYMENT_REF_NO, "");
     }
 
     @Override
@@ -87,8 +83,7 @@ public class OrderDetailsController extends BaseController implements OrderDetai
         mOrderDetailsToolarTitle.setText(mActivity.getString(R.string.account_orders));
         mOrderDetailsRightOption.setImageDrawable(null);
 
-        GetOrderPaymentDetails.RequestValues requestValues =
-                new GetOrderPaymentDetails.RequestValues(mPaymentReferenceNo);
+        GetOrderPaymentDetails.RequestValues requestValues = new GetOrderPaymentDetails.RequestValues(mPaymentReferenceNo);
         mPresenter.loadOrderDetails(requestValues);
     }
 
@@ -101,13 +96,11 @@ public class OrderDetailsController extends BaseController implements OrderDetai
 
     @Override
     public void showOrderDetails(GetOrderPaymentDetails.ResponseValue response) {
-        if (response != null) {
-            mOrderDetails = response.getD().getValue();
-        }
+        GetOrderPaymentDetails.ResponseValue.Value orderDetails = response.getD().getValue();
 
         if (mOrderItem != null) {
             mRecyclerView.setAdapter(new OrderDetailsRecyclerViewAdapter(
-                    mOrderDetails,
+                    orderDetails,
                     mOrderItem.getPaymentReferenceNo(),
                     mOrderItem.getOrders(),
                     mOrderItem.getTotal(),

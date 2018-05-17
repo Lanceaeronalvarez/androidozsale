@@ -540,7 +540,5 @@
     <string name="grand_total_colon">Grand Total:</string>
     <string name="order_sharp_colon">Order #:</string>
     <string name="order_date">Order Date</string>
-    <string name="stock_arrived">Stock Arrived</string>
-    <string name="order_packed">Order Packed</string>
     <string name="track_here">track here</string>
 </resources>
