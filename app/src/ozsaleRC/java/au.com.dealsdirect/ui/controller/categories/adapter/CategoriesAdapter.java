@@ -41,7 +41,6 @@ public class CategoriesAdapter extends RecyclerView.Adapter<CategoriesAdapter.Ca
     private int mLastPosition = -1;
     private Context mContext;
     private int mSelectedIndex;
-    private boolean mIsItemSelected;
 
     public CategoriesAdapter(Context context,
                              List<GetCategoryTreeResponse> data,
@@ -65,15 +64,15 @@ public class CategoriesAdapter extends RecyclerView.Adapter<CategoriesAdapter.Ca
     public void onBindViewHolder(CategoriesViewHolder holder, int position) {
         setAnimation(holder.itemView, position);
 
-        mIsItemSelected = mSelectedIndex == position;
+        boolean mIsItemSelected = mSelectedIndex == position;
 
 //        Sets Category Image might be used in the future
 //        if (!mData.isEmpty() && !mData.get(position).getName().isEmpty()) {
 //            setCategoryImage(holder, mData.get(position), mIsItemSelected);
 //        }
 
-        int backgroundColor = mSelectedIndex == position ? R.color.colorAccent : R.color.white;
-        int textColor = mSelectedIndex == position ? R.color.white : R.color.colorAccent;
+        int backgroundColor = mIsItemSelected ? R.color.colorAccent : R.color.white;
+        int textColor = mIsItemSelected ? R.color.white : R.color.colorAccent;
 
         holder.itemView.setBackgroundColor(mContext.getResources().getColor(backgroundColor));
         holder.categoryText.setTextColor(mContext.getResources().getColor(textColor));
