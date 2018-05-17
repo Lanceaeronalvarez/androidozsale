@@ -66,7 +66,7 @@ public class CategoriesAdapter extends RecyclerView.Adapter<CategoriesAdapter.Ca
 
 //        Sets Category Image might be used in the future
 //        if (!mData.isEmpty() && !mData.get(position).getName().isEmpty()) {
-//            setCategoryImage(holder, mData.get(position).getName(), position);
+//            setCategoryImage(holder, mData.get(position), mSelectedIndex == position);
 //        }
 
         int backgroundColor = mSelectedIndex == position ? R.color.colorAccent : R.color.white;
@@ -142,33 +142,33 @@ public class CategoriesAdapter extends RecyclerView.Adapter<CategoriesAdapter.Ca
         return mData.get(position);
     }
 
-    public void setCategoryImage(CategoriesViewHolder holder, String category, int position) {
+    public void setCategoryImage(CategoriesViewHolder holder, GetCategoryTreeResponse item, boolean isItemSelected) {
         holder.categoryImageIndicator.setVisibility(View.VISIBLE);
         holder.categoryIndicator.setVisibility(View.GONE);
         Context context = holder.itemView.getContext();
         int categoryDrawable = 0;
 
-        switch (category) {
+        switch (item.getName()) {
             case CATEGORY_HOME:
-                categoryDrawable = mSelectedIndex == position ? R.drawable.ic_home_active : R.drawable.ic_home;
+                categoryDrawable = isItemSelected ? R.drawable.ic_home_active : R.drawable.ic_home;
                 break;
             case CATEGORY_WOMEN:
-                categoryDrawable = mSelectedIndex == position ? R.drawable.ic_women_active : R.drawable.ic_women;
+                categoryDrawable = isItemSelected ? R.drawable.ic_women_active : R.drawable.ic_women;
                 break;
             case CATEGORY_KIDS_TOYS:
-                categoryDrawable = mSelectedIndex == position ? R.drawable.ic_kids_active : R.drawable.ic_kids;
+                categoryDrawable = isItemSelected ? R.drawable.ic_kids_active : R.drawable.ic_kids;
                 break;
             case CATEGORY_MEN:
-                categoryDrawable = mSelectedIndex == position ? R.drawable.ic_men_active : R.drawable.ic_men;
+                categoryDrawable = isItemSelected ? R.drawable.ic_men_active : R.drawable.ic_men;
                 break;
             case CATEGORY_BEAUTY:
-                categoryDrawable = mSelectedIndex == position ? R.drawable.ic_beauty_active : R.drawable.ic_beauty;
+                categoryDrawable = isItemSelected ? R.drawable.ic_beauty_active : R.drawable.ic_beauty;
                 break;
             case CATEGORY_SPORTS:
-                categoryDrawable = mSelectedIndex == position ? R.drawable.ic_sports_active : R.drawable.ic_sports;
+                categoryDrawable = isItemSelected ? R.drawable.ic_sports_active : R.drawable.ic_sports;
                 break;
             case CATEGORY_TECH:
-                categoryDrawable = mSelectedIndex == position ? R.drawable.ic_tech_active : R.drawable.ic_tech;
+                categoryDrawable = isItemSelected ? R.drawable.ic_tech_active : R.drawable.ic_tech;
                 break;
         }
 
@@ -177,7 +177,7 @@ public class CategoriesAdapter extends RecyclerView.Adapter<CategoriesAdapter.Ca
         } else {
             holder.categoryImageIndicator.setVisibility(View.GONE);
             holder.categoryIndicator.setVisibility(View.VISIBLE);
-            holder.categoryIndicator.setText(StringUtils.getCategoryInitials(mData.get(position)));
+            holder.categoryIndicator.setText(StringUtils.getCategoryInitials(item));
         }
     }
 }

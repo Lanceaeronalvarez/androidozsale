@@ -37,7 +37,6 @@ public class SubCategoriesAdapter extends RecyclerView.Adapter<SubCategoriesAdap
     private SubCategoryItemsAdapter mSubCategoryItemsAdapter;
     private Map<String, List<GetCategoryTreeResponse>> mCategoryMap = new HashMap<>();
     private boolean mAnimateInsert = true;
-    private boolean mIsResetSubCategories = false;
     private Context mContext;
 
     public SubCategoriesAdapter(Context context,
@@ -89,7 +88,7 @@ public class SubCategoriesAdapter extends RecyclerView.Adapter<SubCategoriesAdap
                 holder.subcategoryContainer.setOnClickListener(view -> {
                     boolean isItemViewActivated = holder.itemView.isActivated();
 
-                    holder.itemView.setActivated(isItemViewActivated ? false : true);
+                    holder.itemView.setActivated(!isItemViewActivated);
                     holder.subCategoryItemsBorder.setVisibility(isItemViewActivated ? View.GONE : View.VISIBLE);
                     holder.subCategoryItemsRecyclerView.setVisibility(isItemViewActivated ? View.GONE : View.VISIBLE);
                     holder.subCategoryCheckImageView.setVisibility(isItemViewActivated ? View.GONE : View.VISIBLE);
@@ -152,10 +151,6 @@ public class SubCategoriesAdapter extends RecyclerView.Adapter<SubCategoriesAdap
 
     public void animateInsertItems(boolean animateInsert) {
         mAnimateInsert = animateInsert;
-    }
-
-    public void isResetSubCategories(boolean isResetSubCategories) {
-        mIsResetSubCategories = isResetSubCategories;
     }
 
 }
