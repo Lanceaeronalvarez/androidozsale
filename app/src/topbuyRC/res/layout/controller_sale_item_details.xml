@@ -212,7 +212,7 @@
                                     android:paddingRight="16dp"
                                     android:paddingTop="10dp"
                                     android:text="sizes"
-                                    android:textColor="@color/gray_field_text"
+                                    android:textColor="@color/text_medium"
                                     android:textSize="@dimen/text_size_normal" />
 
                             </RelativeLayout>
@@ -271,7 +271,7 @@
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:text="about"
-                                android:textColor="@color/gray_field_text"
+                                android:textColor="@color/text_medium"
                                 android:textSize="@dimen/text_size_normal" />
 
                             <!--<TextView-->
@@ -311,7 +311,7 @@
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:text="@string/return_policy"
-                                android:textColor="@color/gray_field_text"
+                                android:textColor="@color/text_medium"
                                 android:textSize="@dimen/text_size_normal" />
 
                             <WebView
@@ -341,7 +341,7 @@
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:text="@string/estimated_delivery"
-                                android:textColor="@color/gray_field_text"
+                                android:textColor="@color/text_medium"
                                 android:textSize="@dimen/text_size_normal" />
 
                             <WebView
@@ -371,7 +371,7 @@
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:text="pricing"
-                                android:textColor="@color/gray_field_text"
+                                android:textColor="@color/text_medium"
                                 android:textSize="@dimen/text_size_normal" />
 
 

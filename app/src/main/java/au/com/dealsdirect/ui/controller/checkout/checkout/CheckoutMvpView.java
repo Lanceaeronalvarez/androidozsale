@@ -43,8 +43,6 @@ public interface CheckoutMvpView extends MvpView {
 
     void setCartIsLoading(boolean val);
 
-    boolean isViewPagerOnCheckout();
-
     void onAddAndAppliedVoucher(AddAndApplyVoucherByKeyResponse response);
 
 }

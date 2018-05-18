@@ -41,7 +41,7 @@
             android:layout_marginBottom="@dimen/default_button_height"
             android:paddingBottom="@dimen/default_button_height"
             android:layout_gravity="center"
-            android:textSize="@dimen/text_size_xlarge"/>
+            android:textSize="@dimen/text_size_headline1"/>
 
     </LinearLayout>
 

@@ -44,13 +44,13 @@ public class LanguageAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
     @Override
     public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
         if(mSelectedLanguage.equals(mLanguages.get(position).getID()) || mSelectedLanguage == mLanguages.get(position).getID()) {
-            ((LanguagesViewHolder) holder).mLanguageText.setTextColor(context.getResources().getColor(R.color.filter_text_active));
+            ((LanguagesViewHolder) holder).mLanguageText.setTextColor(context.getResources().getColor(R.color.colorAccent));
         }
         ((LanguagesViewHolder) holder).mLanguageText.setText(mLanguages.get(position).getName());
 
         ((LanguagesViewHolder) holder).itemView.setOnClickListener(v ->{
             mPresenter.onLanguageItemClick(mLanguages.get(position));
-            ((LanguagesViewHolder) holder).mLanguageText.setTextColor(context.getResources().getColor(R.color.filter_text_active));
+            ((LanguagesViewHolder) holder).mLanguageText.setTextColor(context.getResources().getColor(R.color.colorAccent));
         });
     }
 

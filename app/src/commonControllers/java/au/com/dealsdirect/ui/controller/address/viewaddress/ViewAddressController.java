@@ -48,6 +48,8 @@ public class ViewAddressController extends BasePullToRefreshController implement
 
     @BindView(R.id.no_addresses_layout)
     RelativeLayout mAddressPlaceHolder;
+    @BindView(R.id.view_addresses_layout)
+    ViewGroup mViewAddessesLayout;
     @BindView(R.id.controller_addresses_recyclerview)
     RecyclerView mRecyclerView;
 
@@ -160,8 +162,7 @@ public class ViewAddressController extends BasePullToRefreshController implement
 
             //If status 0, not valid Address
             if (mAddressList != null) {
-                mViewAddressSubHeader.setVisibility(View.VISIBLE);
-                mRecyclerView.setVisibility(View.VISIBLE);
+                mViewAddessesLayout.setVisibility(View.VISIBLE);
                 mAddressPlaceHolder.setVisibility(View.GONE);
                 for (AddressesItem addressesItem : responseValue.getD().getValue().getAddressesList()) {
                     if (addressesItem.Status != 0 && !mAddressList.contains(addressesItem)) {
@@ -170,8 +171,7 @@ public class ViewAddressController extends BasePullToRefreshController implement
                 }
                 if (mAddressList.size() == 0) {
                     Timber.d("ViewAddressController", "mAddressList size is zero");
-                    mViewAddressSubHeader.setVisibility(View.GONE);
-                    mRecyclerView.setVisibility(View.GONE);
+                    mViewAddessesLayout.setVisibility(View.GONE);
                     mAddressPlaceHolder.setVisibility(View.VISIBLE);
                 }
                 mDecorationInfoList = responseValue.getD().getValue().getDecorationInfoList();
@@ -191,8 +191,7 @@ public class ViewAddressController extends BasePullToRefreshController implement
 
             } else {
                 Timber.d("ViewAddressController", "mAddressList is null)");
-                mViewAddressSubHeader.setVisibility(View.GONE);
-                mRecyclerView.setVisibility(View.GONE);
+                mViewAddessesLayout.setVisibility(View.GONE);
                 mAddressPlaceHolder.setVisibility(View.VISIBLE);
             }
         } else {
@@ -219,7 +218,7 @@ public class ViewAddressController extends BasePullToRefreshController implement
         mRecyclerViewAdapter.notifyItemChanged(recyclerTempItemPosition);
 
         if (mRecyclerViewAdapter.addressList.size() == 0) {
-            mRecyclerView.setVisibility(View.GONE);
+            mViewAddessesLayout.setVisibility(View.GONE);
             mAddressPlaceHolder.setVisibility(View.VISIBLE);
         }
     }

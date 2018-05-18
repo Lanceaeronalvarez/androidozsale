@@ -1,5 +1,7 @@
 package au.com.dealsdirect.ui.controller.contact.viewcontacts;
 
+import com.google.gson.Gson;
+
 import javax.inject.Inject;
 
 import au.com.dealsdirect.data.DataManager;

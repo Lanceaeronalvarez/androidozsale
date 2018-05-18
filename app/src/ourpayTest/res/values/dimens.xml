@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <dimen name="padding_default">10dp</dimen>
+    <dimen name="padding_default_half">5dp</dimen>
     <dimen name="text_size_caption2">10sp</dimen>
     <dimen name="text_size_caption1">12sp</dimen>
     <dimen name="text_size_body">14sp</dimen>
@@ -21,4 +22,7 @@
     <dimen name="product_image_height">450dp</dimen>
     <dimen name="toolbar_widget_size">40dp</dimen>
     <dimen name="border_thickness">1dp</dimen>
+
+    <dimen name="row_facet_check_icon_width">40dp</dimen>
+    <dimen name="row_facet_check_icon_height">40dp</dimen>
 </resources>

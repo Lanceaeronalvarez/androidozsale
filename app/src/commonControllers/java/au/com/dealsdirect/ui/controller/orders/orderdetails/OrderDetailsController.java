@@ -101,11 +101,9 @@ public class OrderDetailsController extends BaseController implements OrderDetai
 
     @Override
     public void showOrderDetails(GetOrderPaymentDetails.ResponseValue response) {
-        if (response != null) {
+        if (response != null && mOrderItem != null) {
             mOrderDetails = response.getD().getValue();
-        }
 
-        if (mOrderItem != null) {
             mRecyclerView.setAdapter(new OrderDetailsRecyclerViewAdapter(
                     mOrderDetails,
                     mOrderItem.getPaymentReferenceNo(),
@@ -113,6 +111,7 @@ public class OrderDetailsController extends BaseController implements OrderDetai
                     mOrderItem.getTotal(),
                     mActivity));
             mRecyclerView.setLayoutManager(new LinearLayoutManager(mActivity, LinearLayoutManager.VERTICAL, false));
+
         }
     }
 

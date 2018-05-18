@@ -1,8 +1,11 @@
 package au.com.dealsdirect.ui.controller.searchfilter;
 
+import java.util.List;
 import java.util.Set;
 
+import au.com.dealsdirect.data.network.model.category.GetCategoryTreeResponse;
 import au.com.dealsdirect.ui.base.MvpPresenter;
+import au.com.dealsdirect.ui.controller.searchfilter.adapter.SearchChipModel;
 
 /**
  * Created by smartwave on 20/07/2017.
@@ -10,19 +13,12 @@ import au.com.dealsdirect.ui.base.MvpPresenter;
 
 public interface SearchFilterMvpPresenter<V extends SearchFilterMvpView> extends MvpPresenter<V> {
 
-    void onFacetClicked(int position);
-
-    void onFacetItemClicked(Set<Integer> selectPosSet);
-
-    Set<Integer> getOriginalSelectedSet();
+    void onFacetItemClicked(List<SearchChipModel> selectedChips);
 
     int getSearchMaxPrice();
 
     void resetPriceRange();
 
-    void onCategoryChipRemoved();
+    void selectCategory(GetCategoryTreeResponse category);
 
-    void showTransparentOverlay();
-
-    void hideTransparentOverlay();
 }

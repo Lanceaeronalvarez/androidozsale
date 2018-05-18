@@ -22,6 +22,7 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.bluelinelabs.conductor.Controller;
 import com.bluelinelabs.conductor.Router;
 import com.bluelinelabs.conductor.RouterTransaction;
 import com.bluelinelabs.conductor.changehandler.FadeChangeHandler;
@@ -33,6 +34,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Set;
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -46,6 +48,7 @@ import au.com.dealsdirect.data.network.model.sorting.SortingResponse;
 import au.com.dealsdirect.ui.base.BasePullToRefreshController;
 import au.com.dealsdirect.ui.controller.saleitemdetails.SaleItemDetailsController;
 import au.com.dealsdirect.ui.controller.searchfilter.SearchFilterController;
+import au.com.dealsdirect.ui.controller.searchfilter.SearchFilterMvpView;
 import au.com.dealsdirect.ui.controller.searchfilter.adapter.SearchChipModel;
 import au.com.dealsdirect.ui.custom.SearchEditText;
 import au.com.dealsdirect.ui.custom.transitions.SharedArcFadePopChangeHandler;
@@ -54,6 +57,7 @@ import au.com.dealsdirect.utils.BundleBuilder;
 import au.com.dealsdirect.utils.BundleKeys;
 import au.com.dealsdirect.utils.JsonUtils;
 import au.com.dealsdirect.utils.PaginateUtils;
+import au.com.dealsdirect.utils.StringUtils;
 import au.com.dealsdirect.utils.module.ControllerFactory;
 import au.com.dealsdirect.utils.module.GateKeeper;
 import butterknife.BindView;
@@ -86,10 +90,12 @@ public class SaleItemsController extends BasePullToRefreshController implements 
     private List<GetSaleItemsResponse.Products> mSaleItems = new LinkedList<>();
     private List<GetSaleItemsResponse.Facets> mFacets = new ArrayList<>();
     private List<GetCategoryTreeResponse> mCategoryTreeResponse = new LinkedList<>();
+    private List<GetCategoryTreeResponse> mPrevCategoryTreeResponse = new LinkedList<>();
     private List<SortingResponse> mSortingResponse = new ArrayList<>();
     private String mSortingListJsonString = "";
     private boolean mIsFilterClicked = false;
     private boolean mIsSearchClicked = false;
+    private boolean mIsCategoryChanged = false;
 
     @BindView(R.id.controller_sale_items_grid_view)
     RecyclerView mSaleItemsRecyclerView;
@@ -132,21 +138,20 @@ public class SaleItemsController extends BasePullToRefreshController implements 
     private Paginate.Callbacks mPaginateCallbacks;
 
     private Router mSearchFilterRouter;
-    private SearchFilterController mSearchFilterController;
+    private Controller mSearchFilterController;
+    private SearchFilterMvpView mSearchFilterMvpView;
 
     private int page = 0;
     private boolean loadingInProgress = false;
     private boolean hasLoadedAllItems = false;
     private boolean mIsFromCategory = false;
     private int mSaleItemClickCounter = 0;
-    private boolean isFiltered = false;
     private boolean mIsSearch = false;
     private boolean mFromShopSearch = false;
     private boolean mFromCategorySearch = false;
 
     private String mChosenCategory;
     private String mChosenCategoryKey;
-    private boolean isCategoryChanged;
     private boolean initialLoad;
 
     private List<SearchChipModel> mChipFilters = new ArrayList<>();
@@ -185,7 +190,7 @@ public class SaleItemsController extends BasePullToRefreshController implements 
                                 mActivity.runOnUiThread(() -> showLoading());
                                 mChipFilters = removeSearchQueryChips(mChipFilters);
                                 buildSearchQueryChips(mChipFilters);
-                                mPresenter.loadSaleItems(createSaleItemsRequest(mCategoryKey, mSaleId, 0, mChipFilters, ""));
+                                mPresenter.loadSaleItems(createSaleItemsRequest(mSearchFilterMvpView.getCategoryKeys(), mSaleId, 0, mChipFilters, ""));
                             }
                         }
                     }, DELAY);
@@ -251,7 +256,6 @@ public class SaleItemsController extends BasePullToRefreshController implements 
         if (args.containsKey(BundleKeys.KEY_SELECTED_FACETS))
             mPreviousSelectedFacetIndicesJsonString = args.getString(BundleKeys.KEY_SELECTED_FACETS, "");
 
-        isFiltered = true;
         page = 0;
     }
 
@@ -284,7 +288,7 @@ public class SaleItemsController extends BasePullToRefreshController implements 
     public void onRefreshStart() {
         super.onRefreshStart();
         page = 0;
-        mPresenter.loadSaleItems(createSaleItemsRequest(mCategoryKey, mSaleId, page, mChipFilters, ""));
+        mPresenter.loadSaleItems(createSaleItemsRequest(mSearchFilterMvpView.getCategoryKeys(), mSaleId, page, mChipFilters, ""));
     }
 
     @Override
@@ -304,6 +308,7 @@ public class SaleItemsController extends BasePullToRefreshController implements 
 
 
         setUp(view);
+        setRetainViewMode(RetainViewMode.RETAIN_DETACH);
     }
 
     private void determineToolbarTitle() {
@@ -380,8 +385,6 @@ public class SaleItemsController extends BasePullToRefreshController implements 
     protected void setUp(View view) {
         hideKeyboard();
 
-        mPresenter.loadSortingFacets();
-
         mClearSearchButton.setOnClickListener(v -> {
             mSaleItemsToolbarField.setText("");
         });
@@ -392,7 +395,6 @@ public class SaleItemsController extends BasePullToRefreshController implements 
             @Override
             public void onLoadMore() {
                 // Load next page of data (e.g. network or database)
-                page++;
                 refresh();
 
             }
@@ -422,35 +424,11 @@ public class SaleItemsController extends BasePullToRefreshController implements 
 
         mSaleItemsRecyclerView.setAdapter(mSaleItemsAdapter);
 
-        if (isFiltered || mSaleItems.isEmpty()) {
-            showLoading();
-            initialLoad = true;
-            mPresenter.loadSaleItems(createSaleItemsRequest(mCategoryKey, mSaleId, page, mChipFilters, ""));
 
-            /* show popular products after filter with empty chips */
-            if (mCategoryKey.isEmpty() && (mSaleId == null || mSaleId.isEmpty()) && mChipFilters.isEmpty()) {
-                mPopularProductsHeader.setVisibility(View.VISIBLE);
-            }
+        mPaginateManager = PaginateUtils.init(mSaleItemsRecyclerView, mPaginateCallbacks);
 
-            /* set if still in search */
-            if (mCategoryKey.isEmpty() && (mSaleId == null || mSaleId.isEmpty())) {
-                mIsSearch = true;
-                mFromShopSearch = true;
-            }
-
-            mChipFilters = removeSearchQueryChips(mChipFilters);
-            mSearchQuery = buildSearchQueryText(mRemovedChipTitles);
-
-            //this api call serves to get the correct facets for SearchFiltersController to display
-            // we need to remove any chip filters to return the base facets
-            // giving any filters(ff=) will change the facet return;
-
-            mPresenter.loadSaleItems(createSaleItemsRequest(mCategoryKey, mSaleId, page, null, ""));
-        } else if (!mSaleItems.isEmpty()) {
-            if (mSaleItems.size() >= PaginateUtils.LOADING_TRIGGER_THRESHOLD) {
-                mPaginateManager = PaginateUtils.init(mSaleItemsRecyclerView, mPaginateCallbacks);
-            }
-        }
+        initialLoad = true;
+        mPresenter.loadSaleItems(createSaleItemsRequest("", mSaleId, page, mChipFilters, ""));
 
         mSaleItemsToolbarField.setOnKeyboardListener((keyboardEditText, showing) -> {
             if (!showing) {
@@ -468,92 +446,112 @@ public class SaleItemsController extends BasePullToRefreshController implements 
     @Override
     public void showSaleItems(GetSaleItemsResponse getSaleItemsResponse, boolean forFacetCorrection) {
 
-        //allow showing filters only when sale items have loaded.
-        mSearchBtn.setOnClickListener(view -> toggleSearch());
-        mCancelText.setOnClickListener(v -> toggleSearch());
-
-        List<GetSaleItemsResponse.Products> items = getSaleItemsResponse.products;
-
-        mFacets = getSaleItemsResponse.facets;
         mCategoryTreeResponse = getSaleItemsResponse.getCategories();
 
-        if ((mSearchQuery.isEmpty() && mFromShopSearch && mChipFilters.isEmpty()) || mFromCategorySearch) {
-            if (mSaleItemsToolbarField.getText().toString().isEmpty()) {
-                mPopularProductsHeader.setVisibility(View.VISIBLE);
-            } else {
-                mPopularProductsHeader.setVisibility(View.GONE);
-            }
-        } else {
-            if (mChipFilters.isEmpty() &&
-                    mSaleItemsToolbarTitle.getText().toString().isEmpty() &&
-                    mSaleItemsToolbarField.getHint().toString().equals(getResources().getString(R.string.i_am_looking_For))) {
-                mPopularProductsHeader.setVisibility(View.VISIBLE);
-            } else {
-                mPopularProductsHeader.setVisibility(View.GONE);
-
-            }
-        }
-
-        enablePullToRefresh(true); //default true
-
-        if (mIsFromCategory) {
-            enablePullToRefresh(false); //disable ptr when coming from categories
-        }
-
-
-        mCategoryTreeResponse = getSaleItemsResponse.getCategories();
-
-        loadingInProgress = false;
-
-        if (items.size() == 0 && page != 0) {
-            hasLoadedAllItems = true;
-            mPaginateManager.setHasMoreDataToLoad(false);
-            enablePullToRefresh(false);
-            page = 0;
+        if (forFacetCorrection) {
+            mFacets = getSaleItemsResponse.getFacets();
         } else {
 
-            if (!mChipFilters.isEmpty() || mFromCategorySearch || mFromShopSearch || !mSearchQuery.isEmpty()) {
+            mFacets = getSaleItemsResponse.getFacets();
+
+            //allow showing filters only when sale items have loaded.
+            mSearchBtn.setOnClickListener(view -> toggleSearch());
+            mCancelText.setOnClickListener(v -> toggleSearch());
+
+            List<GetSaleItemsResponse.Products> items = getSaleItemsResponse.products;
+
+
+//        LOGIC TO SAVE PREV CATEGORY TO PREVENT LOCKOUT
+            if (mCategoryTreeResponse == null || mCategoryTreeResponse.isEmpty()) {
+                mCategoryTreeResponse = mPrevCategoryTreeResponse;
+            } else {
+                mPrevCategoryTreeResponse = mCategoryTreeResponse;
+            }
+
+
+            if ((mSearchQuery.isEmpty() && mFromShopSearch && mChipFilters.isEmpty()) || mFromCategorySearch) {
+                if (mSaleItemsToolbarField.getText().toString().isEmpty()) {
+                    mPopularProductsHeader.setVisibility(View.VISIBLE);
+                } else {
+                    mPopularProductsHeader.setVisibility(View.GONE);
+                }
+            } else {
+                if (mChipFilters.isEmpty() &&
+                        mSaleItemsToolbarTitle.getText().toString().isEmpty() &&
+                        mSaleItemsToolbarField.getHint().toString().equals(getResources().getString(R.string.i_am_looking_For))) {
+                    mPopularProductsHeader.setVisibility(View.VISIBLE);
+                } else {
+                    mPopularProductsHeader.setVisibility(View.GONE);
+
+                }
+            }
+
+            enablePullToRefresh(true); //default true
+
+//        if (mIsFromCategory) {
+//            enablePullToRefresh(false); //disable ptr when coming from categories
+//        }
+
+            loadingInProgress = false;
+
+            if (items.size() == 0 && page != 0) {
+                hasLoadedAllItems = true;
+                mPaginateManager.setHasMoreDataToLoad(false);
                 enablePullToRefresh(false);
-                isFiltered = false;
-            }
-
-
-            if (page == 0 || mIsSearch) {
-                if (mPaginateManager != null) {
-                    mPaginateManager.unbind();
-                }
-                mSaleItemsAdapter.replaceData(items);
-
-                mPaginateManager = PaginateUtils.init(mSaleItemsRecyclerView, mPaginateCallbacks);
-                mSaleItemsRecyclerView.scrollToPosition(0);
-                if (items.size() <= PaginateUtils.LOADING_TRIGGER_THRESHOLD) {
-                    hasLoadedAllItems = false;
-                    mPaginateManager.setHasMoreDataToLoad(false);
-                }
-                mIsSearch = false;
+                page = 0;
             } else {
-                mSaleItemsAdapter.addData(items);
+
+                if (!mChipFilters.isEmpty() || mFromCategorySearch || mFromShopSearch || !mSearchQuery.isEmpty()) {
+                    enablePullToRefresh(false);
+                }
+
+
+                if (page == 0 || mIsSearch) {
+//                if (mPaginateManager != null) {
+//                    mPaginateManager.unbind();
+//                }
+
+
+                    if (items.size() <= getResources().getInteger(R.integer.sale_items_threshold)) {
+                        hasLoadedAllItems = true;
+                        mPaginateManager.setHasMoreDataToLoad(false);
+                        page = 0;
+                    }
+                    mSaleItemsAdapter.replaceData(items);
+                    mSaleItemsRecyclerView.scrollToPosition(0);
+
+                    mIsSearch = false;
+                } else {
+                    mSaleItemsAdapter.addData(items);
+                }
+            }
+
+            mSaleItems = mSaleItemsAdapter.getData();
+
+            if (mSaleItems == null || mSaleItems.isEmpty()) {
+                mPlaceholder.setVisibility(View.VISIBLE);
+                mSaleItemsRecyclerView.setVisibility(View.GONE);
+
+            } else {
+                mPlaceholder.setVisibility(View.GONE);
+                mSaleItemsRecyclerView.setVisibility(View.VISIBLE);
+            }
+
+
+            if (initialLoad) {
+                setupSearchFilters();
+                initialLoad = false;
             }
         }
 
-        mSaleItems = mSaleItemsAdapter.getData();
 
-        if (mSaleItems == null || mSaleItems.isEmpty()) {
-            mPlaceholder.setVisibility(View.VISIBLE);
-            mSaleItemsRecyclerView.setVisibility(View.GONE);
-        } else {
-            mPlaceholder.setVisibility(View.GONE);
-            mSaleItemsRecyclerView.setVisibility(View.VISIBLE);
+        mSearchFilterMvpView.replaceCategoryTree(mCategoryTreeResponse);
+
+        if (mIsCategoryChanged) {
+            mSearchFilterMvpView.replaceFacets(mFacets);
+            mIsCategoryChanged = false;
         }
 
-
-        if (isCategoryChanged || initialLoad) {
-//            mSearchFilterController.replaceFacets(mFacets);
-            setupSearchFilters();
-            initialLoad = false;
-        }
-
-        isCategoryChanged = false;
     }
 
 
@@ -603,20 +601,18 @@ public class SaleItemsController extends BasePullToRefreshController implements 
     }
 
     @Override
-    public void onExecuteCategoryChangeApiCall(String chosenCategoryKey, String chosenCategoryName) {
-        mChosenCategoryKey = chosenCategoryKey;
-        mChosenCategory = chosenCategoryName;
-        mPresenter.loadSaleItems(createSaleItemsRequest(chosenCategoryKey, "", 0, mChipFilters, ""));
-        isCategoryChanged = true;
-    }
-
-    @Override
     public void refresh() {
-        Log.d("chipsBuilt", "refreshcalled");
-        loadingInProgress = true;
-        mChipFilters = removeSearchQueryChips(mChipFilters);
-        buildSearchQueryChips(mChipFilters);
-        mPresenter.loadSaleItems(createSaleItemsRequest(mCategoryKey, mSaleId, page, mChipFilters, ""));
+        if (mSaleItems.size() < getResources().getInteger(R.integer.sale_items_threshold)) {
+            hasLoadedAllItems = true;
+            page = 0;
+        } else {
+            Log.d("chipsBuilt", "refreshcalled");
+            loadingInProgress = true;
+            mChipFilters = removeSearchQueryChips(mChipFilters);
+            buildSearchQueryChips(mChipFilters);
+            page++;
+            mPresenter.loadSaleItems(createSaleItemsRequest(mSearchFilterMvpView.getCategoryKeys(), mSaleId, page, mChipFilters, ""));
+        }
     }
 
     @Override
@@ -661,12 +657,6 @@ public class SaleItemsController extends BasePullToRefreshController implements 
 
     }
 
-    @Override
-    public void unbindPaginate() {
-        if (mPaginateManager != null) {
-            mPaginateManager.unbind();
-        }
-    }
 
     @OnClick(R.id.partial_toolbar_field_title_textview)
     void onViewSearch() {
@@ -698,7 +688,8 @@ public class SaleItemsController extends BasePullToRefreshController implements 
                     .putString(BundleKeys.KEY_SALE_ITEMS_TITLE, mSearchQuery)
                     .build();
 
-            mSearchFilterController = (SearchFilterController) ControllerFactory.getInstance(GateKeeper.Destination.SEARCH_FILTER, bundle);
+            mSearchFilterController = ControllerFactory.getInstance(GateKeeper.Destination.SEARCH_FILTER, bundle);
+            mSearchFilterMvpView = (SearchFilterMvpView) mSearchFilterController;
             GateKeeper.setRoot(mSearchFilterRouter, GateKeeper.Destination.SEARCH_FILTER, RouterTransaction.with(mSearchFilterController));
         }
     }
@@ -757,9 +748,9 @@ public class SaleItemsController extends BasePullToRefreshController implements 
                 mChipFilters = removeSearchQueryChips(mChipFilters);
                 buildSearchQueryChips(mChipFilters);
                 mSaleItemsToolbarTitle.setText(mSearchQuery);
-                showLoading();
+//                showLoading();
 
-                mPresenter.loadSaleItems(createSaleItemsRequest(mCategoryKey, mSaleId, 0, mChipFilters, ""));
+                mPresenter.loadSaleItems(createSaleItemsRequest(mSearchFilterMvpView.getCategoryKeys(), mSaleId, 0, mChipFilters, ""));
 //                deactivateSearch();
             }
 
@@ -791,27 +782,19 @@ public class SaleItemsController extends BasePullToRefreshController implements 
         return stringBuilder.toString().trim();
     }
 
-    private void buildSearchQueryChips(List<SearchChipModel> chipFilters) {
-        if (!mSearchQuery.isEmpty()) {
-            String[] splitted = mSearchQuery.split("\\s+");
-            for (String str : splitted) {
-                chipFilters.add(new SearchChipModel(BundleKeys.SEARCH_QUERY_NAME, str, -1));
-            }
-        }
-
+    @Override
+    public GetSaleItemsRequest createSaleItemsRequest(Set<String> categoryKeys, String saleId, int pageNumber, List<SearchChipModel> chipsList, String query) {
+        return createSaleItemsRequest(StringUtils.generateConcatenatedCategories(categoryKeys), saleId, pageNumber, chipsList, query);
     }
 
-    private GetSaleItemsRequest createSaleItemsRequest(String categoryKey, String saleId, int pageNumber, List<SearchChipModel> chipsList, String query) {
+    @Override
+    public GetSaleItemsRequest createSaleItemsRequest(String categoryKey, String saleId, int pageNumber, List<SearchChipModel> chipsList, String query) {
         List<String> saleIds = new LinkedList<>();
         HashMap<String, List<String>> facetFilters = new HashMap<>();
 
         GetSaleItemsRequest getSaleItemsRequest = new GetSaleItemsRequest();
 
-        if (!categoryKey.isEmpty())
-            getSaleItemsRequest.setCategoryKey("[\"" + categoryKey + "\"]");
-        else
-            getSaleItemsRequest.setCategoryKey("[]");
-
+        getSaleItemsRequest = StringUtils.updateSaleItemRequest(categoryKey, getSaleItemsRequest);
 
         getSaleItemsRequest.setSorting("");
         getSaleItemsRequest.setPageNumber(String.valueOf(pageNumber));
@@ -819,14 +802,8 @@ public class SaleItemsController extends BasePullToRefreshController implements 
 
         getSaleItemsRequest.setPageSize("50");
 
-        if (saleId != null) {
-
-            if (!saleId.isEmpty())
-                saleIds.add(saleId);
-        }
-
-
-        if (!saleIds.isEmpty()) {
+        if (saleId != null && !saleId.isEmpty()) {
+            saleIds.add(saleId);
             facetFilters.put("saleId", saleIds);
         }
 
@@ -886,6 +863,21 @@ public class SaleItemsController extends BasePullToRefreshController implements 
         page = pageNumber;
 
         return getSaleItemsRequest;
+    }
+
+    @Override
+    public void setIsCategoryChanged(boolean isCategoryChanged) {
+        mIsCategoryChanged = isCategoryChanged;
+    }
+
+    private void buildSearchQueryChips(List<SearchChipModel> chipFilters) {
+        if (!mSearchQuery.isEmpty()) {
+            String[] splitted = mSearchQuery.split("\\s+");
+            for (String str : splitted) {
+                chipFilters.add(new SearchChipModel(BundleKeys.SEARCH_QUERY_NAME, str, -1));
+            }
+        }
+
     }
 
     private String mapSortingTitleToKey(String title) {

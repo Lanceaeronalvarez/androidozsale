@@ -35,16 +35,20 @@
     <dimen name="margin_extra_large">30dp</dimen>
     <dimen name="margin_huge">40dp</dimen>
 
+    <!--General Radius-->
+    <dimen name="corner_radius_default">5dp</dimen>
+
     <!-- EditText -->
     <dimen name="edit_text_height">44dp</dimen>
-    <dimen name="edit_text_corner_radius">5dp</dimen>
+    <dimen name="edit_text_corner_radius">@dimen/corner_radius_default</dimen>
     <dimen name="edit_text_padding">15dp</dimen>
 
     <!-- Button -->
     <dimen name="button_height_regular">48dp</dimen>
-    <dimen name="button_corner_radius">5dp</dimen>
+    <dimen name="button_corner_radius">@dimen/corner_radius_default</dimen>
     <dimen name="button_drawable_width">20dp</dimen>
     <dimen name="button_drawable_height">20dp</dimen>
+    <dimen name="button_text_padding">10dp</dimen>
     <dimen name="button_elevation">2.5dp</dimen>
 
     <dimen name="item_image_height">270dp</dimen>

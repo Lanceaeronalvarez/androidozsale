@@ -2,7 +2,6 @@
 <android.support.v7.widget.Toolbar xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/partial_toolbar_layout"
     android:layout_width="match_parent"
     android:layout_height="?attr/actionBarSize"
     android:background="@color/toolbar_skin"
@@ -48,8 +47,8 @@
 
         <ImageButton
             android:id="@+id/partial_toolbar_right_view"
-            android:layout_width="@dimen/partial_toolbar_button_width"
-            android:layout_height="@dimen/partial_toolbar_button_width"
+            android:layout_width="@dimen/partial_toolbar_button_sizetoolbar_button_size"
+            android:layout_height="@dimen/partial_toolbar_button_size"
             android:layout_alignParentEnd="true"
             android:layout_centerVertical="true"
             android:background="@drawable/bg_toolbar_button"

@@ -14,20 +14,23 @@
         android:orientation="vertical"
         android:padding="@dimen/padding_default">
 
-        <TextView
-            fontPath="@string/font_app_semibold"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="@dimen/activity_horizontal_margin"
-            android:text="@string/confirm_your_phone_number"
-            android:textColor="@color/dark_gray"
-            android:textSize="@dimen/text_size_body"/>
+
 
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="@string/an_sms_with_your_code_has_been_sent_to_this_number"
-            android:textColor="@color/ourpay_gray" />
+            android:textColor="@color/ourpay_gray"
+            android:textSize="@dimen/text_size_headline2"/>
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/phone_number"
+            android:layout_marginTop="@dimen/padding_default"
+            android:textColor="@color/dark_gray"
+            android:textSize="@dimen/text_size_body"
+            android:textStyle="bold" />
 
 
         <RelativeLayout
@@ -93,6 +96,7 @@
                 android:visibility="gone" />
 
             <TextView
+                fontPath="@string/font_app_semibold"
                 android:id="@+id/ourpay_text_resend_code"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -100,8 +104,8 @@
                 android:layout_alignParentRight="true"
                 android:paddingTop="@dimen/padding_default"
                 android:text="@string/resend_code"
-                android:textColor="@color/verify_resend_color"
-                android:textSize="@dimen/text_size_caption1" />
+                android:textColor="@color/dark_gray"
+                android:textSize="@dimen/text_size_body" />
 
         </RelativeLayout>
 

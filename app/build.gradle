@@ -399,6 +399,7 @@ android {
         ourpayTest {
             java.srcDirs = ['src/ourpayTest/java/',
                             'src/commonControllers/java/',
+                            'src/commonReturnsControllers/java/',
                             'src/main/java/']
         }
 

@@ -31,7 +31,7 @@
             android:gravity="end"
             android:text="@string/change"
             android:textColor="@drawable/teal_text_selector"
-            android:textSize="@dimen/text_size_medium"
+            android:textSize="@dimen/text_size_headline3"
             android:visibility="gone" />
 
     </LinearLayout>
@@ -52,8 +52,8 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/add_new_payment_method"
-            android:textColor="@color/gray_field_text"
-            android:textSize="@dimen/text_size_medium" />
+            android:textColor="@color/text_medium"
+            android:textSize="@dimen/text_size_headline3" />
 
         <ImageView
             android:layout_width="22dp"

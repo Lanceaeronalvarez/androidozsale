@@ -1,4 +1,4 @@
-package au.com.dealsdirect.ui.returns.returndetails;
+package au.com.dealsdirect.ui.controller.returns.returndetails;
 
 import android.os.Bundle;
 import android.support.annotation.NonNull;

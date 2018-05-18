@@ -32,7 +32,7 @@
     <color name="gray_category_text">#707070</color>
     <color name="gray_item_details">#466E87</color>
     <color name="gray_title_text">#959595</color>
-    <color name="gray_field_text">#868686</color>
+    <color name="text_medium">#868686</color>
     <color name="gray_field_label">#87939D</color>
     <color name="dark_gray">#616161</color>
     <color name="gray_description_text">#9E9E9E</color>

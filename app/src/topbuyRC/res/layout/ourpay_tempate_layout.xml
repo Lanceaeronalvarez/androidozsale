@@ -7,7 +7,7 @@
     android:layout_height="match_parent"
     android:padding="10dp"
     android:textColor="#FF898989"
-    android:textSize="@dimen/text_size_medium"
+    android:textSize="@dimen/text_size_headline3"
     android:lineSpacingExtra="5dp"
     tools:text="4 interest free payment over 6 weeks.">
 

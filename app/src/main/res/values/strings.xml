@@ -134,6 +134,13 @@
     <string name="registration_success">Registration Successful!</string>
     <string name="logged_in">Logged In</string>
 
+    <!--USER DETAILS STRINGS-->
+    <string name="date_of_birth">Date of Birth</string>
+    <string name="contact_number">Contact Number</string>
+    <string name="new_password">New Password</string>
+    <string name="confirm_password">Confirm Password</string>
+    <string name="save_changes">Save Changes</string>
+
     <!--ADDRESS STRINGS-->
     <string name="signature_on_delivery_note">*Your order will be left unattended. Please specify your preference
         or Turn Back if you need signature on Delivery or you disagree with Terms &amp; Conditions
@@ -342,7 +349,20 @@
     <string name="my_returns">my returns</string>
     <string name="my_orders">my orders</string>
     <string name="reply">reply</string>
-    
+    <string name="select_language">Select Language</string>
+
+
+    <!--Placeholder remarks-->
+    <string name="welcome_remark_title_address">welcome to my address!</string>
+    <string name="welcome_remark_subtitle_address">you do not currently have any address</string>
+    <string name="welcome_remark_title_contact_us">welcome to contact us!</string>
+    <string name="welcome_remark_subtitle_contact_us">you do not currently have any messages</string>
+    <string name="welcome_remark_title_orders">welcome to my orders!</string>
+    <string name="welcome_remark_subtitle_orders">you do not currently have any orders.</string>
+    <string name="welcome_remark_title_payments">welcome to my payments!</string>
+    <string name="welcome_remark_subtitle_payments">you do not currently have any payment method.</string>
+
+
     <!--MY ACCOUNT ITEMS-->
     <string name="account_orders">My Orders</string>
     <string name="account_payments">My Payments</string>
@@ -425,15 +445,11 @@
     <string name="create_message">Create New Message</string>
     <string name="ic_back">ic_back</string>
     <string name="name">Name</string>
-    <string name="date_of_birth">Date of Birth</string>
     <string name="mary_doe">Mary Doe</string>
-    <string name="contact_number">Contact Number</string>
     <string name="_1_202_555_0104">+1 202 555 0104</string>
     <string name="marydoe_gmail_com">marydoe@gmail.com</string>
     <string name="credit_card_number">Credit Card Number</string>
     <string name="_1234_5678_9012_3456">1234 5678 9012 3456</string>
-    <string name="new_password">New Password</string>
-    <string name="confirm_password">Confirm Password</string>
     <string name="cardholder_s_name">Cardholder\'s Name</string>
     <string name="cvv">CVV</string>
     <string name="dec_2025">Dec 2025</string>
@@ -471,7 +487,6 @@
     <string name="ic_edit">ic_edit</string>
     <string name="controller_edit_account_header">controller_edit_account_header</string>
     <string name="edit_account">edit account</string>
-    <string name="save_changes">Save Changes</string>
     <string name="mobile_verification">mobile verification</string>
     <string name="country_code">Country Code</string>
     <string name="australia_61">Australia (+61)</string>
@@ -536,5 +551,6 @@
     <string name="item_colon">Items:</string>
     <string name="status_colon">Status:</string>
     <string name="browse">Browse</string>
+    <string name="test_product_name">Lavish Alice</string>
     <string name="my_basket">My Basket</string>
 </resources>

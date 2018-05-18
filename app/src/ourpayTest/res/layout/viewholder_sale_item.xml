@@ -26,7 +26,7 @@
                 android:id="@+id/vh_sale_item_image"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:layout_marginTop="-10dp"
+                android:layout_marginTop="-20dp"
                 android:scaleType="fitCenter"
                 android:src="@drawable/ic_deals"
                 tools:ignore="ContentDescription" />
@@ -57,19 +57,17 @@
             android:layout_below="@+id/vh_sale_item_frame"
             android:layout_marginTop="5dp"
             android:gravity="center"
-            android:lines="1"
+            android:maxLines="1"
             android:paddingLeft="5dp"
             android:paddingRight="5dp"
             android:singleLine="true"
             android:text=""
             android:textColor="@color/color_item_title"
             android:textSize="@dimen/text_size_body"
-            android:textStyle="bold"
             tools:text="Brand Sample" />
 
         <TextView
             android:id="@+id/vh_sale_item_name"
-            fontPath="@string/font_app_medium"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_below="@+id/vh_sale_item_brand"
@@ -86,7 +84,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_below="@+id/vh_sale_item_name"
-            android:layout_marginBottom="19dp"
+            android:layout_marginBottom="@dimen/padding_default"
             android:gravity="center"
             android:orientation="horizontal">
 

@@ -5,25 +5,23 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:background="#FFFFFF"
     android:orientation="vertical"
-    android:paddingTop="15dp"
+    android:padding="@dimen/padding_default"
     tools:ignore="MissingPrefix">
 
     <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="40dp"
-        android:background="#FFFFFF"
-        android:layout_marginStart="5dp"
-        android:layout_marginEnd="10dp">
+        android:background="#FFFFFF">
 
         <TextView
+            fontPath="@string/font_app_light"
             android:id="@+id/viewholder_facet_item_title"
-            fontPath="@string/font_app_semibold"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textSize="@dimen/text_size_headline3"
             android:textStyle="bold"
             android:layout_gravity="start|center_vertical"
-            android:textColor="@color/facet_item_text_selector"
+            android:textColor="@color/category_text_selector"
             tools:text="Category"/>
 
         <ImageView

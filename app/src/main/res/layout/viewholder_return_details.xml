@@ -59,7 +59,7 @@
                         android:layout_height="wrap_content"
                         android:text="Items:"
                         android:textColor="#b7b7b7"
-                        android:textSize="@dimen/text_size_xlarge"
+                        android:textSize="@dimen/text_size_headline3"
                         tools:ignore="HardcodedText" />
 
 
@@ -73,7 +73,7 @@
                         android:layout_toRightOf="@+id/viewholder_returns_details_item_count_identifier"
 
                         tools:text="1"
-                        android:textColor="@color/gray_field_text"
+                        android:textColor="@color/text_medium"
                         android:textSize="@dimen/text_size_headline3"
                         tools:ignore="HardcodedText" />
 

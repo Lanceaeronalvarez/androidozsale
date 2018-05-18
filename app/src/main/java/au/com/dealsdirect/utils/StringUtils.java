@@ -12,6 +12,7 @@ import com.mysale.genie.utility.Prefs;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.util.List;
+import java.util.Set;
 
 import au.com.dealsdirect.data.network.model.category.GetCategoryTreeResponse;
 import au.com.dealsdirect.data.network.model.saleitems.GetSaleItemsRequest;
@@ -94,7 +95,7 @@ public class StringUtils {
         return initials.toUpperCase();
     }
 
-    public static String generateConcatenatedCategories(List<String> categoryKeys) {
+    public static String generateConcatenatedCategories(Set<String> categoryKeys) {
         String concatCategoryKey = "";
         for (String key : categoryKeys) {
             concatCategoryKey += "\"" + key + "\"" + ',';
@@ -118,4 +119,5 @@ public class StringUtils {
     public static String getParentKey(GetCategoryTreeResponse category) {
         return category.getKey().replace(">>>" + category.getName(), "");
     }
+
 }

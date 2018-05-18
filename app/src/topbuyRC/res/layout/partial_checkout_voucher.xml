@@ -30,8 +30,8 @@
             android:layout_weight="1"
             android:gravity="end"
             android:text="@string/change"
-            android:textColor="@color/gray_field_text"
-            android:textSize="@dimen/text_size_large"
+            android:textColor="@color/text_medium"
+            android:textSize="@dimen/text_size_headline2"
             android:visibility="gone"/>
 
     </LinearLayout>
@@ -53,8 +53,8 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/add_new_voucher"
-            android:textColor="@color/gray_field_text"
-            android:textSize="@dimen/text_size_large"/>
+            android:textColor="@color/text_medium"
+            android:textSize="@dimen/text_size_headline2"/>
 
         <ImageView
             android:layout_width="22dp"
@@ -97,15 +97,15 @@
                     android:id="@+id/partial_checkout_voucher_name"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:textColor="@color/gray_field_text"
-                    android:textSize="@dimen/text_size_xxlarge"
+                    android:textColor="@color/text_medium"
+                    android:textSize="@dimen/text_size_subtitle"
                     tools:text="$5 voucher"/>
 
                 <TextView
                     android:id="@+id/partial_checkout_voucher_details"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:textColor="@color/gray_field_text"
+                    android:textColor="@color/text_medium"
                     tools:text="voucher will expire on 12/25/16"/>
 
             </LinearLayout>

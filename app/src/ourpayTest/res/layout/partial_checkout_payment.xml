@@ -15,11 +15,11 @@
         android:orientation="vertical">
 
         <TextView
-            fontPath="@string/font_app_semibold"
+            fontPath="@string/font_app_bold"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/payment_method"
-            android:textColor="@color/colorBlueDark" />
+            android:textColor="@color/text_medium" />
 
         <RelativeLayout
             android:layout_width="match_parent"
@@ -92,7 +92,7 @@
                             android:id="@+id/partial_checkout_payment_details"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:textColor="@color/gray_field_text"
+                            android:textColor="@color/text_medium"
                             android:textSize="@dimen/text_size_body"
                             tools:text="card ending in 02/16" />
 

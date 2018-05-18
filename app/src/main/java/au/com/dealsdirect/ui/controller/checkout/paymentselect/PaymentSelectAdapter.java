@@ -47,19 +47,18 @@ public class PaymentSelectAdapter extends RecyclerView.Adapter<RecyclerView.View
 
         PaymentMethod item = mData.get(position);
 
-        ImageUtils.loadImage(mActivity, item.getImageUrl(), vh.image);
+        ImageUtils.loadImage(mActivity, item.getImageUrl(), vh.cardImageView);
 
-        vh.name.setText(item.getPaymentType());
-        vh.details.setText(item.getDescription());
-        vh.divider.setVisibility(View.VISIBLE);
+        vh.nameTextView.setText(item.getPaymentType());
+        vh.detailsText.setText(item.getDescription());
 
-        vh.remove.setVisibility(isFromCart ? View.GONE : View.VISIBLE);
+        vh.removeView.setVisibility(isFromCart ? View.GONE : View.VISIBLE);
 
         if (isFromCart) {
             vh.itemView.setSelected(isFromCart && mActivity.getPaymentMethodSelected() != null && mActivity.getPaymentMethodSelected().equals(item));
-            vh.name.setSelected(isFromCart && mActivity.getPaymentMethodSelected() != null && mActivity.getPaymentMethodSelected().equals(item));
+            vh.nameTextView.setSelected(isFromCart && mActivity.getPaymentMethodSelected() != null && mActivity.getPaymentMethodSelected().equals(item));
         } else {
-            ((PaymentSelectViewHolder) holder).remove.setOnClickListener(view -> {
+            vh.removeView.setOnClickListener(view -> {
                 mActivity.showLoading();
                 mPresenter.removeUserPaymentMethod(mData.get(position));
             });
@@ -77,19 +76,19 @@ public class PaymentSelectAdapter extends RecyclerView.Adapter<RecyclerView.View
     }
 
     public static class PaymentSelectViewHolder extends RecyclerView.ViewHolder {
-        TextView name;
-        TextView details;
-        ImageView image;
-        View divider;
-        TextView remove;
+        TextView nameTextView;
+        TextView detailsText;
+        ImageView cardImageView;
+        View dividerView;
+        View removeView;
 
         public PaymentSelectViewHolder(View itemView) {
             super(itemView);
-            name = (TextView) itemView.findViewById(R.id.partial_checkout_payment_name);
-            details = (TextView) itemView.findViewById(R.id.partial_checkout_payment_details);
-            image = (ImageView) itemView.findViewById(R.id.partial_checkout_payment_image);
-            divider = itemView.findViewById(R.id.item_payment_select_divider);
-            remove = (TextView) itemView.findViewById(R.id.partial_checkout_payment_remove);
+            nameTextView = (TextView) itemView.findViewById(R.id.partial_checkout_payment_name);
+            detailsText = (TextView) itemView.findViewById(R.id.partial_checkout_payment_details);
+            cardImageView = (ImageView) itemView.findViewById(R.id.partial_checkout_payment_image);
+            dividerView = itemView.findViewById(R.id.item_payment_select_divider);
+            removeView = itemView.findViewById(R.id.partial_checkout_payment_remove);
         }
     }
 
