@@ -508,34 +508,35 @@ public class SearchFilterController extends BaseController
         //initially clear all keys
 //        mCategoryKeys.clear();
 
-//        checkParentSelection(category);
+        checkParentSelection(category);
 
-//        List<GetCategoryTreeResponse> children = mCategoryMap.get(category.getKey()).getChildren();
+        List<GetCategoryTreeResponse> children = mCategoryMap.get(category.getKey()).getChildren();
 
-        mCategoryKeys.clear();
+//        mCategoryKeys.clear();
 
         if (category.isSelected()) {
             mCategoryKeys.add(category.getKey()); //add to category keys
-//            if(!children.isEmpty()) { //if i have children{}
-//                setChildrenSelection(category.getKey(),true);
-//            }
-
-        }else{
-            //get parent node and children
-            String parentKey = StringUtils.getParentKey(category);
-            GetCategoryTreeResponse parentNode = mCategoryMap.get(parentKey);
-
-            if(!parentKey.equals(category.getKey())){ //we reached end node up.
-                parentNode.setSelected(true);
-                mCategoryKeys.add(parentNode.getKey());
+            if(!children.isEmpty()) { //if i have children{}
+                setChildrenSelection(category.getKey(),true);
             }
+
         }
-//        else {
-//            mCategoryKeys.remove(category.getKey()); //remove to category keys
-//            if(!children.isEmpty()) { //if i have children{}
-//                setChildrenSelection(category.getKey(),false);
+//        else{
+//            //get parent node and children
+//            String parentKey = StringUtils.getParentKey(category);
+//            GetCategoryTreeResponse parentNode = mCategoryMap.get(parentKey);
+//
+//            if(!parentKey.equals(category.getKey())){ //we reached end node up.
+//                parentNode.setSelected(true);
+//                mCategoryKeys.add(parentNode.getKey());
 //            }
 //        }
+        else {
+            mCategoryKeys.remove(category.getKey()); //remove to category keys
+            if(!children.isEmpty()) { //if i have children{}
+                setChildrenSelection(category.getKey(),false);
+            }
+        }
 
         printCategoryKeys();
         mSaleItemsPresenter.onCategoryChanged(true);
