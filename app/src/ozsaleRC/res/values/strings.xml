@@ -1,26 +1,6 @@
 <resources>
     <string name="error">error</string>
 
-    <!-- Font Strings -->
-    <string name="font_lato_black">fonts/Lato-Black.ttf</string>
-    <string name="font_lato_black_italic">fonts/Lato-BlackItalic.ttf</string>
-    <string name="font_lato_bold">fonts/Lato-Bold.ttf</string>
-    <string name="font_lato_bold_italic">fonts/Lato-BoldItalic.ttf</string>
-    <string name="font_lato_hairline">fonts/Lato-Hairline.ttf</string>
-    <string name="font_lato_hairline_italic">fonts/Lato-HairlineItalic.ttf</string>
-    <string name="font_lato_heavy">fonts/Lato-Heavy.ttf</string>
-    <string name="font_lato_heavy_italic">fonts/Lato-HeavyItalic.ttf</string>
-    <string name="font_lato_italic">fonts/Lato-Italic.ttf</string>
-    <string name="font_lato_light">fonts/Lato-Light.ttf</string>
-    <string name="font_lato_light_italic">fonts/Lato-LightItalic.ttf</string>
-    <string name="font_lato_medium">fonts/Lato-Medium.ttf</string>
-    <string name="font_lato_medium_italic">fonts/Lato-MediumItalic.ttf</string>
-    <string name="font_lato_regular">fonts/Lato-Regular.ttf</string>
-    <string name="font_lato_semibold">fonts/Lato-Semibold.ttf</string>
-    <string name="font_lato_semibold_italic">fonts/Lato-SemiboldItalic.ttf</string>
-    <string name="font_lato_thin">fonts/Lato-Thin.ttf</string>
-    <string name="font_lato_thin_italic">fonts/Lato-ThinItalic.ttf</string>
-
     <string name="log_in">Log In</string>
     <string name="login">Login</string>
     <string name="login_title">Login</string>

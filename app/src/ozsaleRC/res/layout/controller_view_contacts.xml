@@ -13,6 +13,7 @@
             android:id="@+id/contacts_recycler_view"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/padding_default"
             android:overScrollMode="never"
             android:visibility="gone"/>
 
@@ -21,7 +22,7 @@
             android:visibility="gone" />
 
         <Button
-            android:id="@+id/controller_contacts_newmessage_button"
+            android:id="@+id/controller_contacts_new_message_button"
             style="@style/DDButtonStyle"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"

@@ -1,6 +1,5 @@
 package au.com.dealsdirect.ui.controller.contact.viewcontacts;
 
-import android.opengl.Visibility;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.LinearLayoutManager;
@@ -34,6 +33,7 @@ import au.com.dealsdirect.ui.controller.contact.viewcontacts.contacts.ContactsAd
 import au.com.dealsdirect.ui.controller.contact.viewcontacts.contacts.ContactsClickListener;
 import au.com.dealsdirect.utils.BundleBuilder;
 import au.com.dealsdirect.utils.DateUtils;
+import au.com.dealsdirect.utils.module.GateKeeper;
 import butterknife.BindView;
 import butterknife.OnClick;
 
@@ -64,7 +64,7 @@ public class ViewContactsController extends BasePullToRefreshController implemen
     @BindView(R.id.no_contacts_placeholder)
     RelativeLayout mPlaceholderLayout;
 
-    @BindView(R.id.controller_contacts_newmessage_button)
+    @BindView(R.id.controller_contacts_new_message_button)
     Button mViewContactsAddNewMessage;
 
     @Inject
@@ -172,13 +172,10 @@ public class ViewContactsController extends BasePullToRefreshController implemen
 
     @OnClick(R.id.partial_toolbar_right_view)
     void addContact() {
-        getRouter().pushController(RouterTransaction.with(AddContactController.newInstance())
-                .pushChangeHandler(new VerticalChangeHandler())
-                .popChangeHandler(new VerticalChangeHandler()));
-
+        GateKeeper.push(getRouter(), GateKeeper.Destination.ADD_CONTACT,new VerticalChangeHandler(),new VerticalChangeHandler());
     }
 
-    @OnClick(R.id.controller_contacts_newmessage_button)
+    @OnClick(R.id.controller_contacts_new_message_button)
     void addNewMessage() {
         addContact();
     }
