@@ -28,7 +28,6 @@ import au.com.dealsdirect.data.network.model.contactreply.ReplyContactRequest;
 import au.com.dealsdirect.data.network.model.createcontact.CreateContactRequest;
 import au.com.dealsdirect.data.network.model.createcontact.CreateContactResponse;
 import au.com.dealsdirect.ui.base.BaseController;
-import au.com.dealsdirect.ui.base.BaseToolBarController;
 import au.com.dealsdirect.ui.controller.contact.addcontact.selectorder.ContactSelectOrderController;
 import au.com.dealsdirect.ui.controller.contact.addcontact.selectsubject.ContactSelectSubjectController;
 import au.com.dealsdirect.ui.custom.CustomAlertDialog;

@@ -27,7 +27,7 @@ import au.com.dealsdirect.R;
 import au.com.dealsdirect.data.network.model.contactitem.ContactItemByDate;
 import au.com.dealsdirect.data.network.model.contactitem.GetContactsResponse;
 import au.com.dealsdirect.ui.base.BasePullToRefreshController;
-import au.com.dealsdirect.ui.controller.contact.addcontact.AddContactController;
+import au.com.dealsdirect.ui.controller.contact.addcontact.selectsubject.ContactSelectSubjectController;
 import au.com.dealsdirect.ui.controller.contact.viewcontacthistory.ViewContactHistoryController;
 import au.com.dealsdirect.ui.controller.contact.viewcontacts.contacts.ContactsAdapter;
 import au.com.dealsdirect.ui.controller.contact.viewcontacts.contacts.ContactsClickListener;
@@ -173,6 +173,8 @@ public class ViewContactsController extends BasePullToRefreshController implemen
     @OnClick(R.id.partial_toolbar_right_view)
     void addContact() {
         GateKeeper.push(getRouter(), GateKeeper.Destination.ADD_CONTACT,new VerticalChangeHandler(),new VerticalChangeHandler());
+
+        getRouter().pushController(new RouterTransaction(ContactSelectSubjectController.newInstance(m)));
     }
 
     @OnClick(R.id.controller_contacts_new_message_button)

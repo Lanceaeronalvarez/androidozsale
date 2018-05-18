@@ -7,7 +7,6 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
 import android.widget.TextView;
 
 import java.util.List;
@@ -22,7 +21,6 @@ import au.com.dealsdirect.ui.controller.contact.addcontact.selectorder.adapter.C
 import au.com.dealsdirect.ui.controller.contact.addcontact.selectorder.listener.ContactOrderClickListener;
 import au.com.dealsdirect.utils.BundleBuilder;
 import butterknife.BindView;
-import butterknife.OnClick;
 
 /*
  * Created by DP on 05/06/2017.
