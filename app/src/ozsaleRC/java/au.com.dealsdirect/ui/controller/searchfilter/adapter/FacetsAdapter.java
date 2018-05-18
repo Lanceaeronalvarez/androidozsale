@@ -63,7 +63,7 @@ public class FacetsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
             if (mLastSelectedViewHolder == null) {
                 mLastSelectedViewHolder = vh;
                 vh.itemView.setActivated(true);
-                mPresenter.onFacetClicked(position);
+//                mPresenter.onFacetItemClicked(position);
             }
 
             vh.itemView.setOnClickListener(view -> {
@@ -71,7 +71,7 @@ public class FacetsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
                     mLastSelectedViewHolder.itemView.setActivated(false);
                     mLastSelectedViewHolder = vh;
                     mLastSelectedViewHolder.itemView.setActivated(true);
-                    mPresenter.onFacetClicked(position);
+//                    mPresenter.onFacetItemClicked(position);
                 }
             });
 
