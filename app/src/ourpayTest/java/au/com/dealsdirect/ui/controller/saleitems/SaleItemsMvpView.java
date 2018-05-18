@@ -1,9 +1,9 @@
 package au.com.dealsdirect.ui.controller.saleitems;
 
-import android.os.Bundle;
 import android.support.v7.widget.RecyclerView;
 
 import java.util.List;
+import java.util.Set;
 
 import au.com.dealsdirect.data.network.model.saleitems.GetSaleItemsRequest;
 import au.com.dealsdirect.data.network.model.saleitems.GetSaleItemsResponse;
@@ -27,9 +27,8 @@ public interface SaleItemsMvpView extends MvpView{
 
     GetSaleItemsRequest createSaleItemsRequest(String categoryKey, String saleId, int pageNumber, List<SearchChipModel> chipsList, String query);
 
-    GetSaleItemsRequest createSaleItemsRequest(List<String> categoryKeys, String saleId, int pageNumber, List<SearchChipModel> chipsList, String query);
+    GetSaleItemsRequest createSaleItemsRequest(Set<String> categoryKeys, String saleId, int pageNumber, List<SearchChipModel> chipsList, String query);
 
     void setIsCategoryChanged(boolean val);
 
-    boolean isCategoryChanged();
 }

@@ -26,4 +26,6 @@ public interface SearchFilterMvpView extends MvpView{
 
     void onCategoryClicked(GetCategoryTreeResponse category);
 
+    Set<String> getCategoryKeys();
+
 }
