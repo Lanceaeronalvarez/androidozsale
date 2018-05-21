@@ -316,33 +316,6 @@ public class AddContactController extends BaseController implements AddContactMv
         }
     }
 
-    @OnClick(R.id.controller_add_contact_subject_container)
-    void onClickSubjectContainer() {
-
-        mAddContactMessageField.clearFocus();
-        mAddContactSubjectTitle.requestFocus();
-        hideKeyboard();
-
-        if (hasLoadedSubjects) {
-            if (mAddContactSubjectTitle.isSelected()) {
-                getChildRouter(mAddContactSelectorContainer).popCurrentController();
-                mAddContactSubjectTitle.setSelected(false);
-            } else {
-                getChildRouter(mAddContactSelectorContainer).setPopsLastView(true).setRoot(RouterTransaction.with(ContactSelectSubjectController.newInstance(mContactSubjects))
-                        .pushChangeHandler(new ReverseVerticalChangeHandler())
-                        .popChangeHandler(new ReverseVerticalChangeHandler()));
-                mAddContactSubjectTitle.setSelected(true);
-                mAddContactOrderTitle.setSelected(false);
-            }
-        } else {
-
-//            CustomAlertDialog.showCustomAlertDialog(
-//                    mBaseActivity,
-//                    CustomAlertDialog.CustomDialogIconState.NEGATIVE,
-//                    mBaseActivity.getString(R.string.loading_subjects));
-        }
-    }
-
     @OnClick(R.id.controller_add_contact_order_container)
     void onClickOrderContainer() {
 

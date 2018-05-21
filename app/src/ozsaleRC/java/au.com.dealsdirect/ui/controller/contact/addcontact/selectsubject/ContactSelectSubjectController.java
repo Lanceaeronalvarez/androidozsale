@@ -43,13 +43,11 @@ public class ContactSelectSubjectController extends BaseController
     @BindView(R.id.my_contact_select_subject_recycler_view)
     RecyclerView mContactSelectSubjectControllerRecyclerView;
 
-    public static ContactSelectSubjectController newInstance(List<String> contactSubjects) {
-        Log.d("clickable", "clicked subject "+contactSubjects.size());
+    public static ContactSelectSubjectController newInstance() {
 
 //        myContactSubjects = contactSubjects;
         return new ContactSelectSubjectController(
                 new BundleBuilder(new Bundle())
-                        .putStringArrayList(KEY_SUBJECTS, (ArrayList<String>) contactSubjects)
                         .build());
     }
 
@@ -70,9 +68,7 @@ public class ContactSelectSubjectController extends BaseController
         View view = inflater.inflate(R.layout.controller_contact_select_subject, container, false);
 
         getControllerComponent().inject(this);
-
         mPresenter.onAttach(this);
-
         return view;
     }
 
