@@ -3,7 +3,7 @@
     <dimen name="activity_horizontal_margin">16dp</dimen>
     <dimen name="activity_vertical_margin">16dp</dimen>
     <dimen name="padding_default">16dp</dimen>
-    <dimen name="padding_default_half">16dp</dimen>
+    <dimen name="padding_default_half">8dp</dimen>
     <dimen name="default_button_height">48dp</dimen>
     <dimen name="default_viewholder_item_height">43dp</dimen>
     <dimen name="label_space">3dp</dimen>
@@ -84,6 +84,7 @@
     <dimen name="contacts_edittext_height">64dp</dimen>
     <dimen name="contact_chevron_width">25dp</dimen>
     <dimen name="contact_chevron_height">25dp</dimen>
+    <dimen name="contact_subject_items_marginStart">60dp</dimen>
 
     <!-- Categories -->
     <dimen name="category_image_width">30dp</dimen>

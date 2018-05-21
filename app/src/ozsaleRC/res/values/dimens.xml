@@ -8,4 +8,7 @@
     <!-- EditText -->
     <dimen name="edit_text_height">48dp</dimen>
     <dimen name="edit_text_corner_radius">0dp</dimen>
+
+    <!--Contacts-->
+    <dimen name="contact_subject_items_marginStart">0dp</dimen>
 </resources>

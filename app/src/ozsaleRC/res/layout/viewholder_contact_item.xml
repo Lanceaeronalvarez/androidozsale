@@ -26,11 +26,11 @@
                 fontPath="@string/font_app_bold"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_weight="8"
+                android:layout_weight="7"
                 android:singleLine="true"
                 android:ellipsize="end"
                 android:textColor="@color/text_extra_dark"
-                android:textSize="@dimen/text_size_headline3"
+                android:textSize="@dimen/text_size_caption1"
                 tools:text="Other" />
 
             <LinearLayout
@@ -44,14 +44,13 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:textColor="@color/text_dark"
-                    android:textSize="@dimen/text_size_body"
+                    android:textSize="@dimen/text_size_caption1"
                     tools:text="06:57pm" />
 
                 <ImageView
                     android:id="@+id/my_contact_us_row_chevron_button"
                     android:layout_width="@dimen/contact_chevron_width"
                     android:layout_height="@dimen/contact_chevron_height"
-                    android:background="@color/white"
                     android:src="@drawable/ic_gray_chevron" />
             </LinearLayout>
 
@@ -63,9 +62,9 @@
             android:layout_height="wrap_content"
             android:layout_below="@+id/my_contact_us_row_title_text_view"
             android:ellipsize="end"
-            android:maxLines="2"
+            android:maxLines="3"
             android:textColor="@color/text_dark"
-            android:textSize="@dimen/text_size_headline3"
+            android:textSize="@dimen/text_size_caption1"
             tools:text="hi my order has not yet arrived " />
 
 

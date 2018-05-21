@@ -10,13 +10,5 @@ import au.com.dealsdirect.ui.base.MvpView;
  */
 
 public interface AddContactMvpPresenter<V extends MvpView> extends MvpPresenter<V> {
-
-    void loadContactUsSubjects();
-
-    void loadContactUsOrders();
-
     void createNewContact(CreateContactRequest createContactRequest);
-
-    void replyContact(ReplyContactRequest replyContactRequest);
-
 }

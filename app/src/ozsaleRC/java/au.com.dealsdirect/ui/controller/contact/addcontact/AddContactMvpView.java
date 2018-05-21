@@ -13,11 +13,5 @@ import au.com.dealsdirect.ui.base.MvpView;
 
 public interface AddContactMvpView extends MvpView {
 
-    void showContactFirstSubject(List<String> contactSubjectList);
-
-    void showContactFirstOrder(List<ContactOrderList> contactOrderList);
-
     void contactCreatedSwitchView(CreateContactResponse createContactResponse);
-
-    void repliedContactSwitchView(ReplyContact replyContact);
 }
