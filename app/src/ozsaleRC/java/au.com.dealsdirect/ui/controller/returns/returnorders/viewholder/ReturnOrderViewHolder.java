@@ -33,14 +33,5 @@ public class ReturnOrderViewHolder extends RecyclerView.ViewHolder{
         newReturnsOrderItemCountValueTextView = (TextView) itemView.
                 findViewById(R.id.new_returns_order_item_count_value);
 
-        newReturnsOrderTotalCostValueTextView = (TextView) itemView.
-                findViewById(R.id.new_returns_order_item_total_cost_value);
-
-        newReturnsOrderStatusValueTextView = (TextView) itemView.
-                findViewById(R.id.new_returns_order_item_status_value);
-
-        newReturnsOrderRequestNumberTextView = (TextView) itemView.
-                findViewById(R.id.new_returns_order_item_request_value);
-
     }
 }

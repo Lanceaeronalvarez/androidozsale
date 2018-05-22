@@ -126,7 +126,7 @@ public class CurrentReturnsController extends BasePullToRefreshController
             mCurrentReturnsRightOption.setPadding(20, 20, 20, 20);
         }
         mCurrentReturnsRightOption.setImageDrawable(getResources().getDrawable(R.drawable.ic_add));
-        mCurrentReturnsRightOption.setVisibility(View.GONE);
+        mCurrentReturnsRightOption.setVisibility(View.INVISIBLE);
 
         if (mCurrentReturns == null || mCurrentReturns.size() == 0) {
             mPresenter.loadCurrentReturns();
@@ -223,6 +223,7 @@ public class CurrentReturnsController extends BasePullToRefreshController
             int orderNumber,
             CurrentReturnViewHolder holder,
             int position,
+            String productName,
             String productRequestStatus,
             String productRAN,
             String returnRequestDateFormat,
@@ -231,6 +232,7 @@ public class CurrentReturnsController extends BasePullToRefreshController
 
         getRouter().pushController(RouterTransaction.with(
                 ReturnDetailsController.newInstance(
+                        productName,
                         orderNumber,
                         returnId,
                         returnRequestDateFormat,

@@ -95,7 +95,7 @@ public class ReturnOrdersController extends BaseController
     protected void setUp(View view) {
         // Setup views here
 
-        mReturnOrdersControllerToolbarTitle.setText("Select Order");
+        mReturnOrdersControllerToolbarTitle.setText(getString(R.string.request_new_return));
         mReturnOrdersControllerToolbarRightOption.setVisibility(View.INVISIBLE);
         mReturnOrderClickListener = this;
         mPresenter.loadOrders();
@@ -132,14 +132,9 @@ public class ReturnOrdersController extends BaseController
             mReturnOrdersListContainer.setVisibility(View.VISIBLE);
         }
 
-        final ReturnOrdersAdapter adapter
-                = new ReturnOrdersAdapter
-                (newReturnsOrders, mActivity, mReturnOrderClickListener);
+        final ReturnOrdersAdapter adapter = new ReturnOrdersAdapter(newReturnsOrders, mActivity, mReturnOrderClickListener);
 
-        mReturnOrdersRecyclerView
-                .addItemDecoration(
-                        new DividerItemDecoration(mActivity, DividerItemDecoration.VERTICAL)
-                );
+        mReturnOrdersRecyclerView.addItemDecoration(new DividerItemDecoration(mActivity, DividerItemDecoration.VERTICAL));
 
         mReturnOrdersRecyclerView.setAdapter(adapter);
         mReturnOrdersRecyclerView.setLayoutManager(new LinearLayoutManager(mActivity));

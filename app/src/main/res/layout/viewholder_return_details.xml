@@ -87,7 +87,7 @@
                     android:layout_marginTop="2dp">
 
                     <TextView
-                        android:id="@+id/viewholder_returns_details_size_indentifier"
+                        android:id="@+id/viewholder_returns_details_size_identifier"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="Size:"
@@ -100,10 +100,10 @@
                         android:id="@+id/viewholder_returns_details_size_value"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_alignTop="@+id/viewholder_returns_details_size_indentifier"
+                        android:layout_alignTop="@+id/viewholder_returns_details_size_identifier"
                         android:layout_marginLeft="4dp"
-                        android:layout_toEndOf="@+id/viewholder_returns_details_size_indentifier"
-                        android:layout_toRightOf="@+id/viewholder_returns_details_size_indentifier"
+                        android:layout_toEndOf="@+id/viewholder_returns_details_size_identifier"
+                        android:layout_toRightOf="@+id/viewholder_returns_details_size_identifier"
                         android:fontFamily="@string/font_app_regular"
                         tools:text="123"
                         android:textColor="@color/text_medium"

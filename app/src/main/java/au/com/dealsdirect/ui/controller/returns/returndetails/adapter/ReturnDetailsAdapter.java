@@ -44,9 +44,7 @@ public class ReturnDetailsAdapter extends RecyclerView.Adapter<ReturnDetailsView
     @Override public ReturnDetailsViewHolder onCreateViewHolder(ViewGroup parent, int
             viewType) {
 
-        View v = LayoutInflater.from(parent.getContext())
-                .inflate(R.layout.viewholder_return_details, parent,
-                        false);
+        View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.viewholder_return_details, parent, false);
 
         ReturnDetailsViewHolder holder = new ReturnDetailsViewHolder(v);
         return holder;
@@ -65,10 +63,8 @@ public class ReturnDetailsAdapter extends RecyclerView.Adapter<ReturnDetailsView
         int itemReturnCount = mReturnDetailsList.get(position).getCount();
         Log.d("itemiterator", "position = "+position+ "itemssize  = "+itemSize +" , brandid = "+brandId+" , imageid = "+imageId );
 
-//
         String imageUrl = LegacyStringImageUtils.generateImageUrl(brandId,imageId,fileName);
-        ImageUtils.loadImage(holder.myReturnsDetailsProductImageView.getContext(),imageUrl,holder.myReturnsDetailsProductImageView
-        );
+        ImageUtils.loadImage(holder.myReturnsDetailsProductImageView.getContext(),imageUrl,holder.myReturnsDetailsProductImageView);
 
 
         holder.myReturnsDetailsProductNameValueTextView.setText(mReturnDetailsList.get(position).getItem());
@@ -81,9 +77,6 @@ public class ReturnDetailsAdapter extends RecyclerView.Adapter<ReturnDetailsView
         }else{
             holder.myReturnsDetailsProductItemSizeValueTextView.setText(itemSize);
         }
-
-
-        //setAnimation(holder.currentReturnProductItem, position);
 
     }
 

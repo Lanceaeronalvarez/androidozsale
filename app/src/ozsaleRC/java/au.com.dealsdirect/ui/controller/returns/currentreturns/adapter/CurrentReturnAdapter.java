@@ -47,9 +47,7 @@ public class CurrentReturnAdapter extends RecyclerView.Adapter<CurrentReturnView
 
     @Override
     public CurrentReturnViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        View v = LayoutInflater.from(parent.getContext())
-                .inflate(R.layout.viewholder_current_return, parent,
-                        false);
+        View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.viewholder_current_return, parent, false);
         CurrentReturnViewHolder holder = new CurrentReturnViewHolder(v);
         return holder;
     }
@@ -67,8 +65,7 @@ public class CurrentReturnAdapter extends RecyclerView.Adapter<CurrentReturnView
         String productRequestDate = mCurrentReturnList.get(position).getLastSavedDate();
         String returnRequestDateFormat = DateUtils.getTrimmedServerDateString(productRequestDate);
 
-        Object isProductReturnRequestApprovedObject
-                = mCurrentReturnList.get(position).getApprovedDate();
+        Object isProductReturnRequestApprovedObject = mCurrentReturnList.get(position).getApprovedDate();
 
         String productApproveDate = "";
         String returnApproveDateFormat = "";
@@ -91,14 +88,11 @@ public class CurrentReturnAdapter extends RecyclerView.Adapter<CurrentReturnView
         holder.currentReturnsRequestStatusValueTextView.setText(productRequestStatus);
         holder.currentReturnsRequestRANValueTextView.setText(productRAN);
 
-        if (mReturnDetailsResponseBodyList.size()!=0){
-            updateHolderReturnItems(holder, position);
-        }
-
         holder.currentReturnProductItem.setOnClickListener(view -> mListener.onCurrentReturnClickListener(
                 orderNumber,
                 holder,
                 position,
+                productName,
                 productRequestStatus,
                 productRAN,
                 returnRequestDateFormat,
@@ -115,23 +109,6 @@ public class CurrentReturnAdapter extends RecyclerView.Adapter<CurrentReturnView
     @Override
     public int getItemCount() {
         return mCurrentReturnList.size();
-    }
-
-    private void updateHolderReturnItems(CurrentReturnViewHolder holder, int position) {
-
-        if (mReturnDetailsResponseBodyList.size() > position) {
-
-            List<Item> items = mReturnDetailsResponseBodyList.get(position)
-                    .getValue()
-                    .getItems();
-            Double subTotal = mReturnDetailsResponseBodyList.get(position)
-                    .getValue()
-                    .getTotal();
-
-            final ReturnDetailsAdapter adapter =
-                    new ReturnDetailsAdapter(items, subTotal, mContext);
-
-        }
     }
 
     public void updateReturnDetailsResponseBody(List<GetReturnDetailsResponseBody> list){
