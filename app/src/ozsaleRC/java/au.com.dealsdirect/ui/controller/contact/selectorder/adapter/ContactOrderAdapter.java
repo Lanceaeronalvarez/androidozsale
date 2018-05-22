@@ -26,10 +26,7 @@ public class ContactOrderAdapter extends RecyclerView.Adapter<ContactOrderViewHo
     private List<ContactOrderList> mCurrentContactOrderList = Collections.emptyList();
     private ContactSelectOrderMvpPresenter mPresenter;
 
-    public ContactOrderAdapter(
-            List<ContactOrderList> contactOrders,
-            ContactSelectOrderMvpPresenter mvpPresenter) {
-
+    public ContactOrderAdapter(List<ContactOrderList> contactOrders, ContactSelectOrderMvpPresenter mvpPresenter) {
         mCurrentContactOrderList = contactOrders;
         mPresenter = mvpPresenter;
     }
@@ -43,11 +40,7 @@ public class ContactOrderAdapter extends RecyclerView.Adapter<ContactOrderViewHo
 
     @Override
     public void onBindViewHolder(final ContactOrderViewHolder holder, final int position) {
-
-        holder.contactOrderTitleRowTextView.setText(mCurrentContactOrderList.get(position).getDescription() +
-                " (" + mCurrentContactOrderList.get(position).getInvoiceNo() + ")");
-
-
+        holder.contactOrderTitleRowTextView.setText(mCurrentContactOrderList.get(position).getInvoiceNo() + ": " + mCurrentContactOrderList.get(position).getDescription());
         holder.contactOrderRowLayout.setOnClickListener(v -> mPresenter.selectContactOrder(mCurrentContactOrderList.get(position)));
     }
 
@@ -60,7 +53,7 @@ public class ContactOrderAdapter extends RecyclerView.Adapter<ContactOrderViewHo
         return mCurrentContactOrderList.size();
     }
 
-    public void replaceData(List<ContactOrderList> contactOrderLists){
+    public void replaceData(List<ContactOrderList> contactOrderLists) {
         mCurrentContactOrderList = contactOrderLists;
         notifyDataSetChanged();
     }

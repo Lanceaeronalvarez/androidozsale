@@ -39,7 +39,6 @@ public class ContactPreferenceHelper {
     }
 
 
-
     public static String getChosenInvoice(Context context){
         return getPreferences(context).getString(PREF_KEY_INVOICE, "");
     }

@@ -28,9 +28,10 @@
 
             <TextView
                 android:id="@+id/controller_add_contact_subject_title"
-                android:layout_width="wrap_content"
+                android:layout_width="0dp"
                 android:layout_height="match_parent"
                 android:layout_gravity="center_vertical"
+                android:layout_weight="3"
                 android:layout_marginEnd="@dimen/padding_default"
                 android:text="@string/subject"
                 android:textColor="@color/text_medium"
@@ -39,8 +40,9 @@
             <TextView
                 fontPath="@string/font_app_bold"
                 android:id="@+id/controller_add_contact_subject_text"
-                android:layout_width="match_parent"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
+                android:layout_weight="7"
                 android:textColor="@color/text_dark"
                 android:textSize="@dimen/text_size_body"/>
 
@@ -51,7 +53,7 @@
         <LinearLayout
             android:id="@+id/controller_add_contact_order_container"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
             android:orientation="horizontal"
             android:clickable="true"
             android:background="@drawable/bg_account_item"
@@ -59,9 +61,10 @@
 
             <TextView
                 android:id="@+id/controller_add_contact_order_title"
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:layout_gravity="center_vertical"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_weight="3"
                 android:layout_marginEnd="@dimen/padding_default"
                 android:text="@string/sale"
                 android:textColor="@color/text_medium"
@@ -70,11 +73,12 @@
             <TextView
                 fontPath="@string/font_app_bold"
                 android:id="@+id/controller_add_contact_order_text"
-                android:layout_width="match_parent"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
+                android:layout_weight="7"
                 android:textColor="@color/text_dark"
                 android:textSize="@dimen/text_size_body"
-                android:text="@string/select_invoice"/>
+                android:text="@string/select_a_sale"/>
 
         </LinearLayout>
 
@@ -88,21 +92,19 @@
         android:layout_height="@dimen/contacts_edittext_height"
         android:background="@color/background_default"
         android:orientation="horizontal"
-        android:padding="8dp"
+        android:padding="@dimen/padding_default_half"
         android:layout_alignParentBottom="true"
         android:layout_alignParentStart="true">
 
         <EditText
             android:id="@+id/controller_add_contact_message_field"
-            style="@style/Widget.AppCompat.Spinner.Underlined"
+            style="@style/DDEditTextStyle"
             android:layout_width="0dp"
-            android:layout_height="40dp"
             android:layout_gravity="center"
-            android:layout_marginEnd="10dp"
+            android:layout_marginEnd="@dimen/margin_small"
             android:layout_weight="1"
             android:background="@drawable/bg_add_contact_message"
-            android:hint="@string/write_a_message"
-            android:padding="10dp" />
+            android:hint="@string/write_a_message" />
 
         <ImageButton
             android:id="@+id/controller_add_contact_message_send"

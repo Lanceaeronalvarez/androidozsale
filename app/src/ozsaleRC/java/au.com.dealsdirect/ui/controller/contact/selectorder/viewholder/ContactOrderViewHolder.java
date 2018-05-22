@@ -19,10 +19,7 @@ public class ContactOrderViewHolder extends RecyclerView.ViewHolder {
     public ContactOrderViewHolder(View itemView) {
         super(itemView);
 
-        contactOrderRowLayout = (RelativeLayout) itemView
-                .findViewById(R.id.my_contact_select_subject_recycler_row_layout);
-
-        contactOrderTitleRowTextView = (TextView) itemView
-                .findViewById(R.id.contact_subject_row_item_name);
+        contactOrderRowLayout = (RelativeLayout) itemView.findViewById(R.id.contact_select_order_row_layout);
+        contactOrderTitleRowTextView = (TextView) itemView.findViewById(R.id.contact_order_row_item_text);
     }
 }

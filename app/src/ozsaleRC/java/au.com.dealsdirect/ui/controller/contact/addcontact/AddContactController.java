@@ -130,7 +130,7 @@ public class AddContactController extends BaseController implements AddContactMv
         mChosenOptionInvoice = ContactPreferenceHelper.getChosenInvoice(mActivity);
         CreateContactRequest createContactRequest = new CreateContactRequest();
 
-        if (!mChosenOptionInvoice.equals(getString(R.string.select_invoice))) {
+        if (!mChosenOptionInvoice.isEmpty()) {
             createContactRequest.invoiceNo = Integer.valueOf(mChosenOptionInvoice);
         } else {
             createContactRequest.invoiceNo = 0;

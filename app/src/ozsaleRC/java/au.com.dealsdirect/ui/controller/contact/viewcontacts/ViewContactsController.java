@@ -236,7 +236,7 @@ public class ViewContactsController extends BasePullToRefreshController implemen
             saleName = saleNameObject.toString();
         } else {
 
-            saleName = "No Order Number";
+            saleName = "";
         }
 
         if (invoiceNumber != null) {

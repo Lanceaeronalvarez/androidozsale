@@ -24,7 +24,6 @@ import au.com.dealsdirect.ui.controller.contact.viewcontacthistory.contacthistor
 import au.com.dealsdirect.ui.custom.CustomAlertDialog;
 import au.com.dealsdirect.utils.BundleBuilder;
 import au.com.dealsdirect.utils.KeyboardUtils;
-import au.com.dealsdirect.utils.StringUtils;
 import butterknife.BindView;
 import butterknife.OnClick;
 
@@ -35,28 +34,17 @@ import butterknife.OnClick;
 public class ViewContactHistoryController extends BaseController implements ViewContactHistoryMvpView {
 
     public static final String TAG = "ViewContactHistoryController";
-    private static final String KEY_TEXT = "ViewContactHistoryController.KEY_TEXT";
     private static final String KEY_CONTACT_NO = "ContactHistoryNo";
     private static final String KEY_CONTACT_INVOICE_NO = "ContactHistoryInvoiceNo";
     private static final String KEY_CONTACT_TIMESTAMP = "ContactHistoryTimeStamp";
     private static final String KEY_CONTACT_NAME = "ContactHistoryName";
     private static final String KEY_CONTACT_SUBJECT = "ContactSubject";
-    private static final String KEY_CONTACT_ORDER = "ContactOrder";
 
     @BindView(R.id.contact_history_recycler_view)
-    RecyclerView contactHistoryRecyclerView;
-
-    @BindView(R.id.controller_view_contact_history_header_subject)
-    TextView mContactHistorySubject;
+    RecyclerView mContactHistoryRecyclerView;
 
     @BindView(R.id.controller_view_contact_history_header_sale)
     TextView mContactHistorySale;
-
-    @BindView(R.id.contact_history_header_time_stamp)
-    TextView mContactHistoryTimeStamp;
-
-    @BindView(R.id.contact_history_list_time_stamp)
-    TextView mContactHistoryListTimeStamp;
 
     @BindView(R.id.partial_toolbar_right_view)
     ImageView mContactHistoryRightOption;
@@ -108,7 +96,6 @@ public class ViewContactHistoryController extends BaseController implements View
         View view = inflater.inflate(R.layout.controller_view_contact_history, container, false);
 
         getControllerComponent().inject(this);
-
         mPresenter.onAttach(this);
 
         return view;
@@ -127,14 +114,11 @@ public class ViewContactHistoryController extends BaseController implements View
         KeyboardUtils.setKeyboardAdjustResize(mActivity);
         mActivity.getMainController().hideBottomNav();
 
-        mContactHistorySubject.setText(StringUtils.toTitleCase(mContactSubject));
-        mContactHistoryTimeStamp.setText(mTimeStamp);
-        mContactHistoryListTimeStamp.setText(mTimeStamp);
         mContactHistoryRightOption.setVisibility(View.INVISIBLE);
-        mContactHistoryTitle.setText(R.string.contact_history);
+        mContactHistoryTitle.setText(mContactSubject);
 
         if (!mSaleNameObject.isEmpty()) {
-            mContactHistorySale.setText(mSaleNameObject);
+            mContactHistorySale.setText(mInvoiceNumber + ": " + mSaleNameObject);
         } else {
             mContactHistorySale.setText(R.string.no_order_number);
         }
@@ -156,8 +140,8 @@ public class ViewContactHistoryController extends BaseController implements View
         LinearLayoutManager layoutManager = new LinearLayoutManager(mActivity);
         layoutManager.setStackFromEnd(true);
 
-        contactHistoryRecyclerView.setAdapter(adapter);
-        contactHistoryRecyclerView.setLayoutManager(layoutManager);
+        mContactHistoryRecyclerView.setAdapter(adapter);
+        mContactHistoryRecyclerView.setLayoutManager(layoutManager);
     }
 
     @OnClick(R.id.partial_toolbar_left_view)
@@ -167,16 +151,6 @@ public class ViewContactHistoryController extends BaseController implements View
 
     @OnClick(R.id.controller_view_contacts_history_reply_button)
     void onReplyClick() {
-
-//        Bundle bundle = new BundleBuilder(new Bundle())
-//                .putInt("CONTACT_NUMBER", mContactNumber)
-//                .putString("CONTACT_SUBJECT", mContactSubject)
-//                .putInt("CONTACT_INVOICE_NUMBER", mInvoiceNumber)
-//                .build();
-//
-//        getRouter().pushController(RouterTransaction.with(AddContactController.newInstance("CONTACT_HISTORY", bundle))
-//                .pushChangeHandler(new HorizontalChangeHandler())
-//                .popChangeHandler(new HorizontalChangeHandler()));
 
         KeyboardUtils.hideSoftInput(mActivity);
 
@@ -189,11 +163,11 @@ public class ViewContactHistoryController extends BaseController implements View
 
         if (replyContactRequest.comments.isEmpty()) {
 
-            //                CustomAlertDialog.showCustomAlertDialog(
-            //                        mBaseActivity,
-            //                        CustomAlertDialog.CustomDialogIconState.NEGATIVE,
-            //                        mBaseActivity.getString(R.string.please_input_message)
-            //                );
+            CustomAlertDialog.showCustomAlertDialog(
+                    mActivity,
+                    CustomAlertDialog.CustomDialogIconState.NEGATIVE,
+                    mActivity.getString(R.string.create_contact_fill_up)
+            );
 
         } else {
             mPresenter.replyContact(replyContactRequest);
@@ -215,9 +189,9 @@ public class ViewContactHistoryController extends BaseController implements View
         }
     }
 
-    public GetContactHistoryRequest createContactHistoryRequest(int contactNo) {
+    private GetContactHistoryRequest createContactHistoryRequest(int contactNo) {
         GetContactHistoryRequest getContactHistoryRequest = new GetContactHistoryRequest();
         getContactHistoryRequest.contactNo = contactNo;
-        return  getContactHistoryRequest;
+        return getContactHistoryRequest;
     }
 }
