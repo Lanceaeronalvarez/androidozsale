@@ -95,7 +95,7 @@ public class StringUtils {
         return initials.toUpperCase();
     }
 
-    public static String generateConcatenatedCategories(Set<String> categoryKeys) {
+    public static String generateConcatenatedCategories(List<String> categoryKeys) {
         String concatCategoryKey = "";
         for (String key : categoryKeys) {
             concatCategoryKey += "\"" + key + "\"" + ',';

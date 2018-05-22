@@ -75,9 +75,6 @@ public class SearchFilterController extends BaseController
     @Inject
     protected MainActivity mActivity;
 
-    @BindView(R.id.controller_search_filter_tabs)
-    TabLayout mTabLayout;
-
     @BindView(R.id.controller_search_filter_facets_frame)
     FrameLayout mFacetsFrame;
 
@@ -130,12 +127,12 @@ public class SearchFilterController extends BaseController
     ArrayList<String> mSizeList = new ArrayList<>();
     ArrayList<String> mColorList = new ArrayList<>();
     ArrayList<String> mSortingList = new ArrayList<>();
+    private List<Pair<String, String>> mFacetFilters = new ArrayList();
 
     private int mOrigMinValue = -1;
     private int mOrigMaxValue = -1;
     private boolean mHasSeekbarReset = false;
-    private int mCurrentTabPosition = -1;
-    private boolean mIsSearchFilterControllerActive;
+    private boolean mIsSearchFilterControllerActive = false;
 
     String mSaleId = "";
     List<String> mCategoryKeys = new ArrayList<>();
@@ -147,9 +144,6 @@ public class SearchFilterController extends BaseController
 
     private HashMap<String, Set<Integer>> mPreviousSelectedFacetIndices = new HashMap<>();
     private ArrayList<SearchChipModel> mPreviousSearchChips = new ArrayList<>();
-
-    List<Pair<String, String>> mFacetFilters = new ArrayList();
-
 
     public static SearchFilterController newInstance() {
         return new SearchFilterController(new BundleBuilder(new Bundle()).build());
@@ -208,10 +202,6 @@ public class SearchFilterController extends BaseController
             parseSortingFacets(mSortingFacets);
         }
 
-        if (mTabLayout.getTabCount() == 0) {
-            setupTabs();
-        }
-
         setupPriceFacet();
         updateValidChips();
 
@@ -227,14 +217,16 @@ public class SearchFilterController extends BaseController
         mFilterCategoriesRecyclerView.setAdapter(mSubCategoriesAdapter);
 
         mOpaqueView.setOnClickListener(v -> closeFacets());
+        setRetainViewMode(RetainViewMode.RETAIN_DETACH);
     }
 
-    public void parseFacets(List<GetSaleItemsResponse.Facets> facets) {
+    public List<Pair<String, String>> parseFacets(List<GetSaleItemsResponse.Facets> facets) {
         mFacets = facets;
         if (facets.size() != 0) {
             mBrandList = new ArrayList<>();
             mSizeList = new ArrayList<>();
             mColorList = new ArrayList<>();
+            mFacetFilters = new ArrayList<>();
             for (int i = 0; i < facets.size(); i++) {
                 switch (facets.get(i).getFacetName()) {
                     case BundleKeys.BRANDS_FACETFILTER_NAME:
@@ -267,61 +259,14 @@ public class SearchFilterController extends BaseController
                 }
             }
         }
-        if (mTabLayout.getTabCount() == 0) {
-            setupTabs();
-        }
-    }
-
-    private void setupTabs() {
-        mFacetFilters.add(0, new Pair<String, String>(BundleKeys.CATEGORY_TREE_FACET, "Categories"));
-        mFacetFilters.add(mFacetFilters.size(), new Pair<String, String>(BundleKeys.SORT_FACETFILTER_NAME, "Sort"));
-        for (Pair<String, String> pair : mFacetFilters) {
-            mTabLayout.addTab(mTabLayout.newTab().setText(pair.second), false);
-        }
-
-        //Remove selected state by default setup
-        mTabLayout.getTabAt(0).select();
-        mCurrentTabPosition = 0;
-        toggleTabSelection(false);
-
-        mTabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
-            @Override
-            public void onTabSelected(TabLayout.Tab tab) {
-                showFacetItem(tab.getPosition());
-                mCurrentTabPosition = tab.getPosition();
-                toggleTabSelection(true);
-            }
-
-            @Override
-            public void onTabUnselected(TabLayout.Tab tab) {
-
-            }
-
-            @Override
-            public void onTabReselected(TabLayout.Tab tab) {
-                showFacetItem(tab.getPosition());
-                mCurrentTabPosition = tab.getPosition();
-                toggleTabSelection(true);
-            }
-        });
-
-        //change tab mode depending on the screen width
-        Runnable tabConfig = () -> {
-            ViewUtils.setDynamicTabLayout(mTabLayout, mActivity);
-        };
-        mTabLayout.post(tabConfig);
+        return mFacetFilters;
     }
 
     private void closeFacets() {
+        mIsSearchFilterControllerActive = false;
         mFacetsFrame.setVisibility(View.GONE);
-        toggleTabSelection(false);
     }
 
-    private void toggleTabSelection(boolean isTabActive) {
-        mIsSearchFilterControllerActive = isTabActive;
-        LinearLayout tabStrip = (LinearLayout) mTabLayout.getChildAt(0);
-        tabStrip.getChildAt(mCurrentTabPosition).setSelected(isTabActive);
-    }
 
 
     private void setupPriceFacet() {
@@ -746,6 +691,14 @@ public class SearchFilterController extends BaseController
                 createCategoryList(category.getChildren());
             }
         }
+    }
+
+    public void setSearchFilterControllerActive(boolean isTabActive){
+        mIsSearchFilterControllerActive = isTabActive;
+    }
+
+    public void setFacetFilterItems(List<Pair<String,String>> mFacetFilters) {
+        this.mFacetFilters = mFacetFilters;
     }
 
 }
