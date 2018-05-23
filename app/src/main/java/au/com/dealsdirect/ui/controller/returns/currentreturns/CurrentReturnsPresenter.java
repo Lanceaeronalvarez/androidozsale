@@ -12,6 +12,7 @@ import au.com.dealsdirect.data.network.model.returns.currentreturn.CurrentReturn
 import au.com.dealsdirect.data.network.model.returns.returndetails.GetReturnDetailRequest;
 import au.com.dealsdirect.data.network.model.returns.returndetails.GetReturnDetailsResponse;
 import au.com.dealsdirect.ui.base.BasePresenter;
+import au.com.dealsdirect.ui.controller.returns.currentreturns.viewholder.CurrentReturnViewHolder;
 import au.com.dealsdirect.utils.rx.SchedulerProvider;
 import io.reactivex.disposables.CompositeDisposable;
 
@@ -43,5 +44,17 @@ public class CurrentReturnsPresenter<V extends CurrentReturnsMvpView> extends Ba
                 getMvpView().showCurrentReturnDetails(((GetReturnDetailsResponse) response).getGetReturnDetailsResponseBody());
             }
         });
+    }
+
+    @Override
+    public void currentReturnSelected(int orderNumber, int position, String productName, String productRequestStatus, String productRAN, String returnRequestDateFormat, String isRequestApproved, String returnId) {
+        getMvpView().onCurrentReturnClickListener(orderNumber,
+                position,
+                productName,
+                productRequestStatus,
+                productRAN,
+                returnRequestDateFormat,
+                isRequestApproved
+                ,returnId);
     }
 }

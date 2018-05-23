@@ -13,4 +13,6 @@ public interface NewReturnMvpPresenter<V extends NewReturnMvpView> extends MvpPr
 
     void getReturnOrderDetail(int invoiceNo);
 
+    void updateReturnValue(String itemId, int position, int productQuantityValue);
+
 }

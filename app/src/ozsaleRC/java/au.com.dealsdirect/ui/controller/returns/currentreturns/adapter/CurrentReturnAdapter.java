@@ -14,6 +14,7 @@ import au.com.dealsdirect.R;
 import au.com.dealsdirect.data.network.model.returns.currentreturn.CurrentReturns;
 import au.com.dealsdirect.data.network.model.returns.returndetails.GetReturnDetailsResponseBody;
 import au.com.dealsdirect.data.network.model.returns.returndetails.Item;
+import au.com.dealsdirect.ui.controller.returns.currentreturns.CurrentReturnsMvpPresenter;
 import au.com.dealsdirect.ui.controller.returns.currentreturns.listener.CurrentReturnClickListener;
 import au.com.dealsdirect.ui.controller.returns.currentreturns.viewholder.CurrentReturnViewHolder;
 import au.com.dealsdirect.ui.controller.returns.returndetails.adapter.ReturnDetailsAdapter;
@@ -25,23 +26,19 @@ import au.com.dealsdirect.utils.DateUtils;
 
 public class CurrentReturnAdapter extends RecyclerView.Adapter<CurrentReturnViewHolder> {
 
-    private final CurrentReturnClickListener mListener;
+    private CurrentReturnsMvpPresenter mPresenter;
 
     List<CurrentReturns> mCurrentReturnList = Collections.emptyList();
     List<GetReturnDetailsResponseBody> mReturnDetailsResponseBodyList = new LinkedList<>();
 
-    Context mContext;
-
     public CurrentReturnAdapter(
             List<CurrentReturns> currentReturnsList,
             List<GetReturnDetailsResponseBody> returnDetailsResponseBodyList,
-            Context context,
-            CurrentReturnClickListener listener){
+            CurrentReturnsMvpPresenter mvpPresenter){
 
-        this.mCurrentReturnList = currentReturnsList;
-        this.mReturnDetailsResponseBodyList = returnDetailsResponseBodyList;
-        this.mContext = context;
-        this.mListener = listener;
+        mCurrentReturnList = currentReturnsList;
+        mReturnDetailsResponseBodyList = returnDetailsResponseBodyList;
+        mPresenter = mvpPresenter;
     }
 
 
@@ -88,9 +85,8 @@ public class CurrentReturnAdapter extends RecyclerView.Adapter<CurrentReturnView
         holder.currentReturnsRequestStatusValueTextView.setText(productRequestStatus);
         holder.currentReturnsRequestRANValueTextView.setText(productRAN);
 
-        holder.currentReturnProductItem.setOnClickListener(view -> mListener.onCurrentReturnClickListener(
+        holder.currentReturnProductItem.setOnClickListener(view -> mPresenter.currentReturnSelected(
                 orderNumber,
-                holder,
                 position,
                 productName,
                 productRequestStatus,

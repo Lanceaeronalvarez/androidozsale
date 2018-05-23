@@ -73,6 +73,9 @@ public class ReturnDetailsController extends BaseController implements ReturnDet
     @BindView(R.id.partial_toolbar_right_view)
     ImageView mReturnDetailsControllerToolbarRightOption;
 
+    @BindView(R.id.controller_return_details_total_container)
+    ViewGroup mReturnDetailsTotalContainer;
+
     @BindView(R.id.controller_return_details_total_value)
     TextView mReturnDetailsControllerTotalValue;
 
@@ -160,6 +163,8 @@ public class ReturnDetailsController extends BaseController implements ReturnDet
         mReturnDetailsControllerTotalValue.setText(PriceUtils.getPriceStringValue(subTotal));
         mReturnDetailsControllerRecyclerView.setAdapter(adapter);
         mReturnDetailsControllerRecyclerView.setLayoutManager(new LinearLayoutManager(mActivity));
+
+        mReturnDetailsTotalContainer.setVisibility(View.VISIBLE);
     }
 
 
