@@ -60,8 +60,7 @@ import static au.com.dealsdirect.utils.StringUtils.getParentKey;
  * Created by smartwave on 20/07/2017.
  */
 
-public class SearchFilterController extends BaseController
-        implements SearchFilterMvpView, SubCategoryClickListener, SubCategoryItemClickListener {
+public class SearchFilterController extends BaseController implements SearchFilterMvpView, SubCategoryClickListener, SubCategoryItemClickListener {
 
     public static final String TAG = SearchFilterController.class.getSimpleName();
     private static final int DEFAULT_PRICE_THRESHOLD = 200;
@@ -137,7 +136,6 @@ public class SearchFilterController extends BaseController
     String mSaleId = "";
     List<String> mCategoryKeys = new ArrayList<>();
 
-
     private Set<Integer> origSelectedSet = new HashSet<Integer>();
 
     private int mPreviousSelectedFacetIndex = -1;
@@ -151,15 +149,11 @@ public class SearchFilterController extends BaseController
 
     public SearchFilterController(Bundle args) {
         super(args);
-        mFacets = JsonUtils.convertStringToObject(args.getString(BundleKeys.KEY_FACET_STRING, ""),
-                new TypeToken<ArrayList<GetSaleItemsResponse.Facets>>() {}.getType());
-        mSortingFacets = JsonUtils.convertStringToObject(args.getString(BundleKeys.KEY_SORTING_STRING, ""),
-                new TypeToken<ArrayList<SortingResponse>>() {}.getType());
+        mFacets = JsonUtils.convertStringToObject(args.getString(BundleKeys.KEY_FACET_STRING, ""), new TypeToken<ArrayList<GetSaleItemsResponse.Facets>>() {}.getType());
+        mSortingFacets = JsonUtils.convertStringToObject(args.getString(BundleKeys.KEY_SORTING_STRING, ""), new TypeToken<ArrayList<SortingResponse>>() {}.getType());
         mSaleId = args.getString(BundleKeys.SALEITEMS_SALE_ID, "");
-        mCategoryTree = JsonUtils.convertStringToObject(args.getString(BundleKeys.KEY_CATEGORY_STRING, ""),
-                new TypeToken<ArrayList<GetCategoryTreeResponse>>() {}.getType());
-        mBrandList = JsonUtils.convertStringToObject(args.getString(BundleKeys.KEY_BRAND_LIST, ""),
-                new TypeToken<ArrayList<String>>() {}.getType());
+        mCategoryTree = JsonUtils.convertStringToObject(args.getString(BundleKeys.KEY_CATEGORY_STRING, ""), new TypeToken<ArrayList<GetCategoryTreeResponse>>() {}.getType());
+        mBrandList = JsonUtils.convertStringToObject(args.getString(BundleKeys.KEY_BRAND_LIST, ""), new TypeToken<ArrayList<String>>() {}.getType());
 
         String previousChipsString = args.getString(BundleKeys.SALEITEMS_CHIPS_FILTER, "");
         mPreviousSearchChips =  previousChipsString.isEmpty() ? new ArrayList<>() :
@@ -171,8 +165,7 @@ public class SearchFilterController extends BaseController
         View view = inflater.inflate(R.layout.controller_search_filter, container, false);
         getControllerComponent().inject(this);
 
-        Router router = mActivity.getSelectedBottomNavTab() == 0 ? mActivity.getHomeRouter()
-                : mActivity.getCategoriesRouter();
+        Router router = mActivity.getSelectedBottomNavTab() == 0 ? mActivity.getHomeRouter() : mActivity.getCategoriesRouter();
 
         mSaleItemsController = (SaleItemsController) router.getControllerWithTag(getResources()
                 .getString(R.string.sale_items_controller_tag));
@@ -266,8 +259,6 @@ public class SearchFilterController extends BaseController
         mIsSearchFilterControllerActive = false;
         mFacetsFrame.setVisibility(View.GONE);
     }
-
-
 
     private void setupPriceFacet() {
         mOrigMaxValue = mPresenter.getSearchMaxPrice();
@@ -370,6 +361,7 @@ public class SearchFilterController extends BaseController
 
     @Override
     public void showFacetItem(int position) {
+        hideKeyboard();
         mFacetsFrame.setVisibility(View.VISIBLE);
 
         if (getFacetFilterType(position) != BundleKeys.PRICE_FACETFILTER_NAME) { //only do this logic if facet clicked != price

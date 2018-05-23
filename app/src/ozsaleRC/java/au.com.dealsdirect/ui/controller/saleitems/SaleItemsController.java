@@ -2,10 +2,12 @@ package au.com.dealsdirect.ui.controller.saleitems;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.res.ColorStateList;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.NonNull;
+import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.TabLayout;
 import android.support.v4.util.Pair;
 import android.support.v7.widget.GridLayoutManager;
@@ -43,7 +45,6 @@ import au.com.dealsdirect.data.network.model.saleitems.GetSaleItemsRequest;
 import au.com.dealsdirect.data.network.model.saleitems.GetSaleItemsResponse;
 import au.com.dealsdirect.data.network.model.sorting.SortingResponse;
 import au.com.dealsdirect.ui.base.BaseController;
-import au.com.dealsdirect.ui.base.BasePullToRefreshController;
 import au.com.dealsdirect.ui.controller.saleitemdetails.SaleItemDetailsController;
 import au.com.dealsdirect.ui.controller.searchfilter.SearchFilterController;
 import au.com.dealsdirect.ui.controller.searchfilter.adapter.SearchChipModel;
@@ -60,6 +61,10 @@ import au.com.dealsdirect.utils.ViewUtils;
 import au.com.dealsdirect.utils.module.ControllerFactory;
 import au.com.dealsdirect.utils.module.GateKeeper;
 import butterknife.BindView;
+import in.srain.cube.views.ptr.PtrClassicFrameLayout;
+import in.srain.cube.views.ptr.PtrDefaultHandler;
+import in.srain.cube.views.ptr.PtrFrameLayout;
+import in.srain.cube.views.ptr.PtrHandler;
 
 import static au.com.dealsdirect.utils.BundleKeys.SALEITEMS_CATEGORY_MAP;
 import static au.com.dealsdirect.utils.BundleKeys.SALEITEMS_CHIPS_FILTER;
@@ -73,7 +78,7 @@ import static au.com.dealsdirect.utils.BundleKeys.SALEITEMS_TITLE;
  * dp Created by Admin on 6/8/17.
  */
 
-public class SaleItemsController extends BaseController implements SaleItemsMvpView {
+public class SaleItemsController extends BaseController implements SaleItemsMvpView, PtrHandler, AppBarLayout.OnOffsetChangedListener {
 
     public static final String TAG = SaleItemsController.class.getSimpleName();
     private static final long DELAY = 1000; // milliseconds
@@ -111,9 +116,6 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
     @BindView(R.id.partial_toolbar_field_title_left_option)
     ImageButton mSaleItemsBackIcon;
 
-//    @BindView(R.id.controller_sale_items_opaque_view)
-//    RelativeLayout mSaleItemsOpaqueCover;
-
     @BindView(R.id.controller_search_popular_subheader)
     TextView mPopularProductsHeader;
 
@@ -122,6 +124,12 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
 
     @BindView(R.id.controller_search_filter_tabs)
     TabLayout mTabLayout;
+
+    @BindView(R.id.controller_sale_items_ptr)
+    PtrClassicFrameLayout mPtrFrameLayout;
+
+    @BindView(R.id.controller_sale_items_appbar)
+    AppBarLayout mAppBar;
 
     private SaleItemsAdapter mSaleItemsAdapter;
     private Paginate mPaginateManager;
@@ -133,18 +141,17 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
     private int mSaleItemsPageNumber = 0;
     private boolean mIsLoadingProgress = false;
     private boolean mHasLoadedAllItems = false;
-    private boolean mIsFromCategory = false;
     private int mSaleItemClickCounter = 0;
     private boolean mIsFiltered = false;
     private boolean mIsSearch = false;
     private boolean mFromShopSearch = false;
     private boolean mFromCategorySearch = false;
 
-    private String mChosenCategoryKey;
-    private String mChosenCategory;
     private boolean mIsCategoryChanged;
     private boolean hasSearchFilters;
     private boolean mIsSearchFilterControllerActive = false;
+    private int mVerticalOffset;
+    private boolean mIsRecyclerViewScrollIdle;
 
     private List<SearchChipModel> mChipFilters = new ArrayList<>();
 
@@ -221,9 +228,6 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
             mFromShopSearch = getArgs().getBoolean(SALEITEMS_FROM_SHOP_SEARCH, true);
         if (args.containsKey(SALEITEMS_FROM_CATEGORY_SEARCH))
             mFromCategorySearch = getArgs().getBoolean(SALEITEMS_FROM_CATEGORY_SEARCH, true);
-        if (args.containsKey(SALEITEMS_FROM_CATEGORIES)) {
-            mIsFromCategory = getArgs().getBoolean(SALEITEMS_FROM_CATEGORIES, true);
-        }
 
     }
 
@@ -256,6 +260,8 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
     protected void onAttach(@NonNull View view) {
         mPresenter.onAttach(this);
         mSaleItemClickCounter = 0;
+        mPtrFrameLayout.setPtrHandler(this);
+        mAppBar.addOnOffsetChangedListener(this);
 
         determineToolbarTitle();
 
@@ -265,11 +271,6 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
     @Override
     protected View inflateView(@NonNull LayoutInflater inflater, @NonNull ViewGroup container) {
         View view = inflater.inflate(R.layout.controller_sale_items, container, false);
-//        bindPtrViews(view);
-//        CoordinatorLayout.LayoutParams params = (CoordinatorLayout.LayoutParams) mPtrLayout.getHeader().getLayoutParams();
-//        params.setBehavior(new AppBarLayout.ScrollingViewBehavior());
-//        mPtrLayout.getHeader().requestLayout();
-//        fillContent(inflater.inflate(R.layout.partial_controller_sale_items, container, false));
 
         getControllerComponent().inject(this);
         mPresenter.onAttach(this);
@@ -344,6 +345,13 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
     }
 
     @Override
+    public void onDetach(View view) {
+        mPtrFrameLayout.setPtrHandler(null);
+        mAppBar.removeOnOffsetChangedListener(this);
+        super.onDetach(view);
+    }
+
+    @Override
     protected void onDestroyView(@NonNull View view) {
 
         mPresenter.onDetach();
@@ -357,6 +365,13 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
         mPresenter.loadSortingFacets();
 
         mActivity.getMainController().setViewpagerDraggable(false);
+
+
+        mPtrFrameLayout.getHeader().setProgressIcon(getResources().getDrawable(R.drawable.ic_loader_logo));
+
+        mPtrFrameLayout.getHeader().setPullProgressbar(getResources().getDrawable(R.drawable.bg_progress_bar));
+
+        mPtrFrameLayout.getHeader().setProgressBar(ColorStateList.valueOf(getResources().getColor(R.color.progress_loader_stroke)));
 
         mPaginateCallbacks = new Paginate.Callbacks() {
             @Override
@@ -393,6 +408,13 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
 
 
         mSaleItemsRecyclerView.setAdapter(mSaleItemsAdapter);
+        mSaleItemsRecyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
+            @Override
+            public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
+                super.onScrollStateChanged(recyclerView, newState);
+                mIsRecyclerViewScrollIdle = newState == 0 ? true : false;
+            }
+        });
 
         if (mIsFiltered || mSaleItems.isEmpty()) {
             showLoading();
@@ -424,11 +446,6 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
             }
         }
 
-        mSaleItemsToolbarField.setOnKeyboardListener((keyboardEditText, showing) -> {
-            if (!showing) {
-//                deactivateSearch();
-            }
-        });
         setRetainViewMode(RetainViewMode.RETAIN_DETACH);
         activateSearch();
     }
@@ -469,19 +486,16 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
             }
         }
 
-//        enablePullToRefresh(!mIsFromCategory);
 
         mIsLoadingProgress = false;
 
         if (items.size() == 0 && mSaleItemsPageNumber != 0) {
             mHasLoadedAllItems = true;
             mPaginateManager.setHasMoreDataToLoad(false);
-//            enablePullToRefresh(false);
             mSaleItemsPageNumber = 0;
         } else {
 
             if (!mChipFilters.isEmpty() || mFromCategorySearch || mFromShopSearch || !mSearchQuery.isEmpty()) {
-//                enablePullToRefresh(false);
                 mIsFiltered = false;
             }
 
@@ -518,7 +532,12 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
 
         mFacetFilters = mSearchFilterController.parseFacets(getSaleItemsResponse.getFacets());
         mSearchFilterController.updateSubCategoryFilters(mCategoryTreeResponse);
-        setupTabs();
+
+        onRefreshEnd();
+
+        if (mTabLayout.getTabCount() == 0) {
+            setupTabs();
+        }
     }
 
     void onBackClick() {
@@ -536,8 +555,6 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
 
     @Override
     public void onExecuteCategoryChangeApiCall(String chosenCategoryKey, String chosenCategoryName) {
-        mChosenCategoryKey = chosenCategoryKey;
-        mChosenCategory = chosenCategoryName;
         mPresenter.loadSaleItems(createSaleItemsRequest(chosenCategoryKey, "", 0, mChipFilters, ""));
         mIsCategoryChanged = true;
     }
@@ -655,7 +672,7 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
         mSaleItemsToolbarField.addTextChangedListener(mTextWatcher);
         mSaleItemsToolbarField.setOnEditorActionListener((textView, i, keyEvent) -> {
             if (i == EditorInfo.IME_ACTION_SEARCH) {
-//                    hideKeyboard();
+                hideKeyboard();
                 mSearchQuery = textView.getText().toString();
                 mIsSearch = true;
                 mChipFilters = removeSearchQueryChips(mChipFilters);
@@ -663,7 +680,6 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
                 showLoading();
 
                 mPresenter.loadSaleItems(createSaleItemsRequest(mCategoryKey, mSaleId, 0, mChipFilters, ""));
-//                deactivateSearch();
             }
 
             return false;
@@ -857,4 +873,27 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
     }
 
 
+    @Override
+    public boolean checkCanDoRefresh(PtrFrameLayout frame, View content, View header) {
+        return mIsRecyclerViewScrollIdle && mVerticalOffset == 0 && PtrDefaultHandler.checkContentCanBePulledDown(frame, content, header);
+    }
+
+    @Override
+    public void onRefreshBegin(PtrFrameLayout frame) {
+        mPresenter.loadSaleItems(createSaleItemsRequest(mCategoryKey, mSaleId, 0, mChipFilters, ""));
+    }
+
+    @Override
+    public void onRefreshEnd() {
+        super.onRefreshEnd();
+        if (mPtrFrameLayout != null) {
+            mPtrFrameLayout.refreshComplete();
+        }
+    }
+
+    @Override
+    public void onOffsetChanged(AppBarLayout appBarLayout, int verticalOffset) {
+        this.mVerticalOffset = verticalOffset;
+        AppLogger.d("VerticalOffset " + verticalOffset);
+    }
 }
