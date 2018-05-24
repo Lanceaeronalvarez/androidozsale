@@ -170,14 +170,17 @@
         <item>@string/account_addresses</item>
         <item>@string/account_orders</item>
         <item>@string/account_payments</item>
-        <item>@string/account_vouchers</item>
         <item>@string/account_returns</item>
+        <item>@string/account_vouchers</item>
+        <item>@string/account_invite_friend</item>
+        <item>@string/account_options</item>
+    </integer-array>
+
+    <integer-array name="account_options_sub_item_title_array">
         <item>@string/account_language</item>
         <item>@string/account_country</item>
-        <item>@string/account_invite_friend</item>
-        <item>@string/account_tnc</item>
-        <item>@string/account_privacy</item>
-        <item>@string/account_about_us</item>
+        <item>@string/account_notification</item>
+        <item>@string/account_clear_cookies_data</item>
     </integer-array>
 
     <integer-array name="account_drawable_array">
@@ -185,15 +188,14 @@
         <item>@drawable/bg_account_address</item>
         <item>@drawable/bg_account_orders</item>
         <item>@drawable/bg_account_payments</item>
-        <item>@drawable/bg_account_vouchers</item>
         <item>@drawable/bg_account_returns</item>
+        <item>@drawable/bg_account_vouchers</item>
+        <item>@drawable/bg_account_invite_friend</item>
+    </integer-array>
+
+    <integer-array name="account_options_sub_item_drawable_array">
         <item>@drawable/bg_account_languages</item>
         <item>@drawable/bg_account_country</item>
-        <item>@drawable/bg_account_invite_friend</item>
-        <item>@drawable/bg_account_terms_and_conditions</item>
-        <item>@drawable/bg_account_privacy_policy</item>
-        <item>@drawable/bg_account_about_us</item>
-        <item>@drawable/bg_account_logout</item>
     </integer-array>
 
 </resources>

@@ -370,15 +370,20 @@
     <string name="account_addresses">My Addresses</string>
     <string name="account_returns">My Returns</string>
     <string name="account_vouchers">My Vouchers</string>
-    <string name="account_invite_friend">Invite Friends</string>
-    <string name="account_language">Language</string>
+    <string name="account_invite_friend">Invite Your Friends</string>
+    <string name="account_language">My Languages</string>
     <string name="account_contact_us">Contact Us</string>
-    <string name="account_country">Country</string>
+    <string name="account_country">My Country</string>
+    <string name="account_options">My Options</string>
+    <string name="account_notification">My Notification</string>
+    <string name="account_clear_cookies_data">Clear Cookies and Data</string>
     <string name="account_about_us">About Us</string>
     <string name="account_privacy">Privacy Policy</string>
     <string name="account_tnc">Terms &amp; Conditions</string>
     <string name="account_tutorial">Tutorial</string>
     <string name="account_logout">Logout</string>
+
+
     <string name="voucher_used">Voucher Used</string>
     <string name="login_with_facebook">Login with Facebook</string>
     <string name="purchased_colon">Purchased:</string>
