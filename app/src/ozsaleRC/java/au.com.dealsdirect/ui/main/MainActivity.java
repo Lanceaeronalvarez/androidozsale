@@ -32,6 +32,7 @@ import com.braintreepayments.api.models.CardBuilder;
 import com.braintreepayments.api.models.PaymentMethodNonce;
 import com.braintreepayments.cardform.view.CardForm;
 import com.mysale.genie.utility.RxBus;
+import com.visa.checkout.VisaPaymentSummary;
 
 import java.util.List;
 
@@ -319,6 +320,11 @@ public class MainActivity extends BaseActivity implements MainMvpView {
     }
 
     @Override
+    public void callCreatePaymentTransactionVco(VisaPaymentSummary visaPaymentSummary) {
+
+    }
+
+    @Override
     public void showCreatePaymentTransactionSuccess(String paymentType, CreatePaymentTransaction.ResponseValue responseValue) {
 
         if (responseValue.isPaid()) {
@@ -492,6 +498,16 @@ public class MainActivity extends BaseActivity implements MainMvpView {
 
     public boolean isBraintreeInitialized() {
         return mBraintreeFragment != null;
+    }
+
+    @Override
+    public void setVisaCheckoutActionType(int visaCheckoutActionType) {
+
+    }
+
+    @Override
+    public int getVisaCheckoutActionType() {
+        return 0;
     }
 
     @Override

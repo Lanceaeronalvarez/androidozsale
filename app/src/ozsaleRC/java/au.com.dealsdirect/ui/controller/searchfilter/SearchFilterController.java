@@ -22,6 +22,7 @@ import com.google.gson.reflect.TypeToken;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -138,7 +139,7 @@ public class SearchFilterController extends BaseController
     private boolean mIsSearchFilterControllerActive;
 
     String mSaleId = "";
-    List<String> mCategoryKeys = new ArrayList<>();
+    Set<String> mCategoryKeys = new LinkedHashSet<>();
 
 
     private Set<Integer> origSelectedSet = new HashSet<Integer>();

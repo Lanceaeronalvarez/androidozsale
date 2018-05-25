@@ -16,7 +16,9 @@
         android:layout_height="wrap_content"
         android:orientation="vertical">
 
-        <include layout="@layout/partial_toolbar_arrow" />
+        <include
+            android:id="@+id/toolbar_title_login"
+            layout="@layout/partial_toolbar_arrow" />
 
         <RelativeLayout
             android:layout_width="match_parent"

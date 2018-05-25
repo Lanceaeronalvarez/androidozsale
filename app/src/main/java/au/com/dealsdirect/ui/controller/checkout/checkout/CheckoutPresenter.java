@@ -12,13 +12,10 @@ import java.util.ArrayList;
 import javax.inject.Inject;
 
 import au.com.dealsdirect.data.DataManager;
-import au.com.dealsdirect.data.network.AppApiCallback;
 import au.com.dealsdirect.data.network.model.checkout.AdjustOrderItem;
 import au.com.dealsdirect.data.network.model.checkout.GetCurrentOrder;
 import au.com.dealsdirect.data.network.model.checkout.GetUserPaymentMethods;
 import au.com.dealsdirect.data.network.model.checkout.getcurrentorder.Value;
-import au.com.dealsdirect.data.network.model.vouchers.AddAndApplyVoucherByKeyRequest;
-import au.com.dealsdirect.data.network.model.vouchers.AddAndApplyVoucherByKeyResponse;
 import au.com.dealsdirect.service.ourpay.Ourpay;
 import au.com.dealsdirect.service.ourpay.OurpayPhoneVerification;
 import au.com.dealsdirect.service.ourpay.OurpayState;
@@ -303,16 +300,8 @@ public class CheckoutPresenter<V extends CheckoutMvpView> extends BasePresenter<
     }
 
     @Override
-    public void addAndApplyVoucherByKey(int imageSize, String key) {
-        getMvpView().showLoading();
-        AddAndApplyVoucherByKeyRequest request = new AddAndApplyVoucherByKeyRequest(key, imageSize, getDataManager().getLanguageId());
-        doApiCallForResponse(getDataManager().callGetAddAndApplyVoucherByKey(request), new AppApiCallback(){
-            @Override
-            public void onSuccess(Object response) {
-                super.onSuccess(response);
-                getMvpView().onAddAndAppliedVoucher((AddAndApplyVoucherByKeyResponse) response);
-            }
-        });
+    public boolean isMasterPassEnabled() {
+        return getDataManager().isMasterpassEnabled();
     }
 
     private void updateCart(GetCurrentOrder.ResponseValue response) {

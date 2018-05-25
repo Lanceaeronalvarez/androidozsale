@@ -26,6 +26,7 @@ allprojects {
         maven { url "https://jitpack.io" }
         maven { url "https://maven.google.com" }
         maven { url 'https://maven.fabric.io/public' }
+        maven { url 'https://dl.bintray.com/guardian/android'}
         mavenCentral()
         google()
     }
@@ -79,9 +80,12 @@ ext {
     flowLayoutVersion = '1.0.3'
     recyclerViewPagerVersion = 'v1.1.1'
 
-    braintreeVersion = '2.7.3'
+    braintreeVersion = '2.12.0'
     facebookVersion = '4.28.0'
 
     gcmVersion = '11.8.0'
     crystalRangeSeekbarVersion = '1.1.1'
+
+    //transactiontoolarge logger
+    tooLargeToolVersion = '0.1.3'
 }

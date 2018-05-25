@@ -30,6 +30,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Set;
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -691,7 +692,7 @@ public class SaleItemsController extends BasePullToRefreshController implements 
 
     }
 
-    public GetSaleItemsRequest createSaleItemsRequest(List<String> categoryKeys, String saleId, int pageNumber, List<SearchChipModel> chipsList, String query) {
+    public GetSaleItemsRequest createSaleItemsRequest(Set<String> categoryKeys, String saleId, int pageNumber, List<SearchChipModel> chipsList, String query) {
         mCategoryKey = StringUtils.generateConcatenatedCategories(categoryKeys);
         return createSaleItemsRequest(mCategoryKey, saleId, pageNumber, chipsList, query);
     }

@@ -32,5 +32,5 @@ public interface CheckoutMvpPresenter<V extends MvpView> extends MvpPresenter<V>
                                    int numItems,
                                    double price);
 
-    void addAndApplyVoucherByKey(int imageSize, String key);
+    boolean isMasterPassEnabled();
 }

@@ -18,6 +18,7 @@ public class LoginFacebook {
         private String countryID = "";
         private String languageID = "";
         private String facebookUserID;
+        private String password = "";
         private String facebookCookieValue;
 
 

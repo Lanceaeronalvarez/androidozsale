@@ -18,7 +18,9 @@ import com.mysale.genie.utility.config.api.GetAppSettingsSection;
 import com.mysale.genie.utility.config.api.GetServerSettings;
 import com.mysale.genie.utility.config.model.getappsettingssection.Android;
 import com.mysale.genie.utility.config.model.getappsettingssection.Payload;
+import com.mysale.genie.utility.config.model.getpublicpaymenttoken.GetPublicPaymentToken;
 import com.newrelic.agent.android.NewRelic;
+import com.visa.checkout.VisaPaymentSummary;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -34,12 +36,14 @@ import au.com.dealsdirect.data.auth.AuthHandler;
 import au.com.dealsdirect.data.network.AppApiCallback;
 import au.com.dealsdirect.data.network.model.checkout.CreatePaymentMethod;
 import au.com.dealsdirect.data.network.model.checkout.CreatePaymentTransaction;
+import au.com.dealsdirect.data.network.model.checkout.CreatePaymentTransactionVco;
 import au.com.dealsdirect.data.network.model.checkout.GetPaymentToken;
 import au.com.dealsdirect.data.network.model.checkout.getpaymentmethodnonce.GetPaymentMethodNonceRequest;
 import au.com.dealsdirect.data.network.model.legalities.GetTemplateTextsRequest;
 import au.com.dealsdirect.data.network.model.login.LoginEmail;
 import au.com.dealsdirect.data.network.model.login.LoginTicket;
 import au.com.dealsdirect.data.network.model.login.Logout;
+import au.com.dealsdirect.data.network.model.ourpaydashboard.Payment;
 import au.com.dealsdirect.service.fcm.GNotification;
 import au.com.dealsdirect.ui.base.BasePresenter;
 import au.com.dealsdirect.utils.AppEventHelper;
@@ -145,6 +149,28 @@ public class MainPresenter<V extends MainMvpView> extends BasePresenter<V> imple
     }
 
     @Override
+    public void callGetPublicPaymentToken() {
+        getCompositeDisposable().add(getDataManager()
+                .callGetPublicPaymentToken(getDataManager().getCountryId(),getDataManager().getLanguageId())
+                .subscribeOn(getSchedulerProvider().io())
+                .observeOn(getSchedulerProvider().ui())
+                .subscribe(new Consumer<GetPublicPaymentToken.ResponseValue>() {
+                    @Override
+                    public void accept(GetPublicPaymentToken.ResponseValue responseValue) throws Exception {
+                        if (!isViewAttached()) {
+                            return;
+                        }
+
+                        GetPublicPaymentToken.ResponseValue.Value value = responseValue.d.getValue();
+                        if (value != null) {
+                            getDataManager().setPublicPaymentToken(value.getToken());
+                            getDataManager().setPublicPaymentType(value.getPaymentType());
+                        }
+                    }
+                }, mAppSettingsThrowableCallback));
+    }
+
+    @Override
     public void callGetPublicAppSettings() {
         getCompositeDisposable().add(getDataManager()
                 .callGetPublicAppSettings(getDataManager().getCountryId())
@@ -170,6 +196,15 @@ public class MainPresenter<V extends MainMvpView> extends BasePresenter<V> imple
                 getDataManager().setSearchMaxPrice(value.getSearch().getMaxPrice());
                 getDataManager().setAccessAnonymousEnabled(value.getAccess().getAnonymousEnabled());
                 getDataManager().setIsMyPayEnabled(value.getPayments().getMyPay().getEnabled());
+
+                if(value.getPayments().getVisaCheckout() != null){
+                    getDataManager().setIsVisaCheckoutEnabled(value.getPayments().getVisaCheckout().getVisaCheckoutEnabled());
+                    // force true meanwhile
+//                    getDataManager().setIsVisaCheckoutEnabled(true);
+                    getDataManager().setVisaCheckoutApiKey(value.getPayments().getVisaCheckout().getVisaCheckoutApiKey());
+                    getDataManager().setVisaCheckoutApiUrl(value.getPayments().getVisaCheckout().getVisaCheckoutApiUrl());
+                    getDataManager().setVisaCheckoutProviderType(value.getPayments().getVisaCheckout().getVisaCheckoutProviderType());
+                }
             }
 
         }
@@ -371,6 +406,7 @@ public class MainPresenter<V extends MainMvpView> extends BasePresenter<V> imple
     public void callApiSettings(Context context) {
         callGetServerSettings();
         callGetPublicAppSettings();
+        callGetPublicPaymentToken();
         callGetAppSettingsSection(context);
     }
 
@@ -395,6 +431,10 @@ public class MainPresenter<V extends MainMvpView> extends BasePresenter<V> imple
 
             // Facebook Events
             initFacebookAnalytics();
+            FacebookSdk.setIsDebugEnabled(false);
+        } else {
+            initFacebookAnalytics();
+            FacebookSdk.setIsDebugEnabled(true);
         }
     }
 
@@ -417,12 +457,75 @@ public class MainPresenter<V extends MainMvpView> extends BasePresenter<V> imple
                             return;
                         }
 
+                        //        reset 3ds called flag
+                        PaymentInfo.setThreeDSecureCalled(false);
                         getMvpView().hideLoading();
                         getMvpView().performResetWithAuthFetch();
 
                         if (responseValue.getD().getResult()) {
                             getMvpView().showCreatePaymentTransactionSuccess(paymentType, responseValue);
                             AppEventHelper.completedPurchase(paymentType,
+                                    responseValue.getD().getValue().getOrderInfoResult().getItems().size(),
+                                    responseValue.getD().getValue().getOrderInfoResult().getTotal(),
+                                    getDataManager().getCountryId());
+                        } else {
+                            getMvpView().showCreatePaymentTransactionFailure(responseValue.getD().getMessage());
+                        }
+
+                    }
+                }, new Consumer<Throwable>() {
+                    @Override
+                    public void accept(@NonNull Throwable throwable) throws Exception {
+                        if (!isViewAttached()) {
+                            return;
+                        }
+                        //        reset 3ds called flag
+                        PaymentInfo.setThreeDSecureCalled(false);
+                        getMvpView().hideLoading();
+
+                        getMvpView().onError(throwable.getMessage());
+
+                        // handle load accounts error here
+                        if (throwable instanceof ANError) {
+                            ANError anError = (ANError) throwable;
+                            handleApiError(anError);
+                        }
+                    }
+                })
+        );
+
+
+    }
+
+
+    @Override
+    public void createPaymentTransactionVco(VisaPaymentSummary visaPaymentSummary) {
+        getMvpView().showLoading();
+
+        String languageId = getDataManager().getLanguageId();
+        String countryId = getDataManager().getCountryId();
+        CreatePaymentTransactionVco.RequestValue.Request requestValue =
+                new CreatePaymentTransactionVco.RequestValue.Request(PaymentInfo.VISA_CHECKOUT_CYBERSOURCE,
+                        visaPaymentSummary.getCallId(),
+                        visaPaymentSummary.getEncKey(),
+                        visaPaymentSummary.getEncPaymentData());
+        getCompositeDisposable().add(getDataManager()
+                .callCreatePaymentTransactionVco(new CreatePaymentTransactionVco.RequestValue(requestValue, countryId, languageId))
+                .subscribeOn(getSchedulerProvider().io())
+                .observeOn(getSchedulerProvider().ui())
+                .subscribe(new Consumer<CreatePaymentTransaction.ResponseValue>() {
+                    @Override
+                    public void accept(@NonNull CreatePaymentTransaction.ResponseValue responseValue) throws Exception {
+                        if (!isViewAttached()) {
+                            return;
+                        }
+
+                        getMvpView().hideLoading();
+                        getMvpView().performResetWithAuthFetch();
+
+                        if (responseValue.getD().getResult()) {
+                            getMvpView().showCreatePaymentTransactionSuccess(PaymentInfo.VISA_CHECKOUT_CYBERSOURCE, responseValue);
+                            AppEventHelper.completedPurchase(PaymentInfo.VISA_CHECKOUT_CYBERSOURCE,
                                     responseValue.getD().getValue().getOrderInfoResult().getItems().size(),
                                     responseValue.getD().getValue().getOrderInfoResult().getTotal(),
                                     getDataManager().getCountryId());
@@ -453,6 +556,7 @@ public class MainPresenter<V extends MainMvpView> extends BasePresenter<V> imple
 
 
     }
+
 
     @Override
     public void createPaymentMethod(String deviceData, String paymentNonce, String paymentType) {

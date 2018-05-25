@@ -21,7 +21,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="@string/no_internet_connection_ntap_to_retry"
-        android:textAlignment="center"
+        android:gravity="center"
         android:textColor="#b3b3b3"
         android:textSize="@dimen/text_size_headline1"
         tools:ignore="MissingPrefix" />

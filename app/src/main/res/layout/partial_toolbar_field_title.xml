@@ -34,9 +34,8 @@
         <TextView
             android:id="@+id/partial_toolbar_field_title_textview"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_centerInParent="true"
-            android:text=""
+            android:layout_height="match_parent"
+            tools:text="Lavish Alice"
             android:layout_toStartOf="@+id/partial_toolbar_field_title_right_option"
             android:layout_toEndOf="@+id/partial_toolbar_field_title_left_option"
             android:textColor="@android:color/white"

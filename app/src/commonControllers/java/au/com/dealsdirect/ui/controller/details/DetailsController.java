@@ -44,7 +44,7 @@ public class DetailsController extends BasePullToRefreshController implements De
     TextView mTitleTextView;
 
     @BindView(R.id.partial_toolbar_right_view)
-    ImageView mToolbarSaveButton;
+    ImageView mSaveUserDetailsButton;
 
     @BindView(R.id.controller_details_text_firstname)
     EditText mFirstNameText;
@@ -102,7 +102,7 @@ public class DetailsController extends BasePullToRefreshController implements De
 
     @Override
     protected View inflateView(@NonNull LayoutInflater inflater, @NonNull ViewGroup container) {
-        View view = super.inflateView(inflater, container, ToolBarType.ARROW);
+        View view = super.inflateView(inflater, container);
 
         setToolBarVisible(getResource().getBoolean(R.bool.details_toolbar_visibility));
         fillContent(inflater.inflate(R.layout.controller_user_details, container, false));
@@ -122,7 +122,7 @@ public class DetailsController extends BasePullToRefreshController implements De
 
     @Override
     protected void setUp(View view) {
-        mToolbarSaveButton.setImageDrawable(
+        mSaveUserDetailsButton.setImageDrawable(
                 getResources().getDrawable(R.drawable.ic_check));
         mTitleTextView.setText("Personal Details");
 

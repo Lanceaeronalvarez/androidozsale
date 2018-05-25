@@ -19,6 +19,7 @@ import com.bluelinelabs.conductor.ControllerChangeHandler;
 import com.bluelinelabs.conductor.Router;
 import com.bluelinelabs.conductor.RouterTransaction;
 import com.bluelinelabs.conductor.changehandler.HorizontalChangeHandler;
+import com.mysale.genie.utility.config.model.getappsettings.Checkout;
 
 import java.util.HashMap;
 
@@ -160,7 +161,7 @@ public class HomeController extends BaseController implements HomeMvpView {
         }
 
         if (!mCheckoutRouter.hasRootController()) {
-            mCheckoutRouter.setRoot(RouterTransaction.with(new CheckoutController())
+            mCheckoutRouter.setRoot(RouterTransaction.with(CheckoutController.newInstance())
                     .tag(getActivity().getResources().getString(R.string.checkout_controller)));
             ((MainActivity) getActivity()).setCheckoutRouter(mCheckoutRouter);
         }
@@ -294,7 +295,7 @@ public class HomeController extends BaseController implements HomeMvpView {
         mActivity.setAccountsRouter(mAccountsRouter);
 
         mCheckoutRouter = getChildRouter(mCheckoutContainer);
-        mCheckoutRouter.setRoot(RouterTransaction.with(new CheckoutController())
+        mCheckoutRouter.setRoot(RouterTransaction.with(CheckoutController.newInstance())
                 .tag(getActivity().getResources().getString(R.string.checkout_controller)));
     }
 
@@ -306,7 +307,7 @@ public class HomeController extends BaseController implements HomeMvpView {
 
     public void resetCheckoutRouter() {
         mCheckoutRouter = getChildRouter(mCheckoutContainer);
-        mCheckoutRouter.setRoot(RouterTransaction.with(new CheckoutController())
+        mCheckoutRouter.setRoot(RouterTransaction.with(CheckoutController.newInstance())
                 .tag(getActivity().getResources().getString(R.string.checkout_controller)));
     }
 

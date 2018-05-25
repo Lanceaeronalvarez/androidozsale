@@ -19,19 +19,15 @@ import au.com.dealsdirect.ui.controller.contact.addcontact.selectsubject.Contact
 import au.com.dealsdirect.ui.controller.contact.viewcontacthistory.ViewContactHistoryController;
 import au.com.dealsdirect.ui.controller.contact.viewcontacts.ViewContactsController;
 import au.com.dealsdirect.ui.controller.country.CountryController;
-import au.com.dealsdirect.ui.controller.dashboard.DashboardController;
-import au.com.dealsdirect.ui.controller.dashboard.details.PaymentDetailsController;
-import au.com.dealsdirect.ui.controller.dashboard.pastpayments.PastPaymentsController;
-import au.com.dealsdirect.ui.controller.dashboard.paymentplans.PaymentPlansController;
-import au.com.dealsdirect.ui.controller.dashboard.scheduledplans.ScheduledPlansController;
 import au.com.dealsdirect.ui.controller.details.DetailsController;
 import au.com.dealsdirect.ui.controller.forgotpassword.ForgotPasswordController;
 import au.com.dealsdirect.ui.controller.home.HomeController;
+import au.com.dealsdirect.ui.controller.login.PasswordVerificationController;
+import au.com.dealsdirect.ui.controller.main.MainController;
 import au.com.dealsdirect.ui.controller.invite.InviteSendController;
 import au.com.dealsdirect.ui.controller.language.LanguageController;
 import au.com.dealsdirect.ui.controller.legalities.LegalitiesController;
 import au.com.dealsdirect.ui.controller.login.LoginController;
-import au.com.dealsdirect.ui.controller.main.MainController;
 import au.com.dealsdirect.ui.controller.masterpass.MasterpassController;
 import au.com.dealsdirect.ui.controller.orders.orderdetails.OrderDetailsController;
 import au.com.dealsdirect.ui.controller.orders.orders.OrdersController;
@@ -44,6 +40,7 @@ import au.com.dealsdirect.ui.controller.salecategories.SaleCategoriesController;
 import au.com.dealsdirect.ui.controller.saleitemdetails.SaleItemDetailsController;
 import au.com.dealsdirect.ui.controller.saleitems.SaleItemsController;
 import au.com.dealsdirect.ui.controller.searchfilter.SearchFilterController;
+import au.com.dealsdirect.ui.controller.searchfilter.facetfilter.FacetFilterController;
 import au.com.dealsdirect.ui.controller.shops.ShopsController;
 import au.com.dealsdirect.ui.controller.splash.SplashScreenController;
 import au.com.dealsdirect.ui.controller.vouchers.Add.AddVouchersController;
@@ -139,6 +136,8 @@ public interface ControllerComponent {
 
     void inject(OurpaySMSVerificationController controller);
 
+    void inject(FacetFilterController controller);
+
     void inject(BaseController controller);
 
     void inject(DashboardController controller);
@@ -153,5 +152,5 @@ public interface ControllerComponent {
 
     void inject(SplashScreenController controller);
 
-
+    void inject(PasswordVerificationController controller);
 }

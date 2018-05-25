@@ -62,6 +62,7 @@ public class PaymentSelectController extends BasePullToRefreshController impleme
     private ArrayList<PaymentMethod> mPaymentMethods = new ArrayList<>();
     private boolean isFromCart = false;
     private String mCartTotalCost;
+    private int mItemListSize;
 
 
     public PaymentSelectController(String paymentMethodsJsonString, boolean isFromCart, String cartCost) {
@@ -82,6 +83,7 @@ public class PaymentSelectController extends BasePullToRefreshController impleme
         }
         isFromCart = args.getBoolean(IS_FROM_CART);
         mCartTotalCost = args.getString(CART_TOTAL_COST, "");
+        mItemListSize = args.getInt(BundleKeys.ITEM_LIST_SIZE,-1);
     }
 
     @Override

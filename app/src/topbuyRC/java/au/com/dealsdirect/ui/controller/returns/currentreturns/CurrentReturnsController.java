@@ -116,17 +116,20 @@ public class CurrentReturnsController extends SwipeableBaseToolBarController
             mCurrentReturnsRecyclerView.setAdapter(mCurrentReturnsAdapter);
             mCurrentReturnsRecyclerView.setVisibility(View.VISIBLE);
             mPlaceholderLayout.setVisibility(View.GONE);
-
-            setupDefaultBottomButton("add new return", btn -> {
-                GateKeeper.push(getRouter(), GateKeeper.Destination.RETURN_ORDERS, new VerticalChangeHandler(), new VerticalChangeHandler());
-            });
         }
 
         mCurrentReturnsRecyclerView.setLayoutManager(new LinearLayoutManager(mActivity, LinearLayoutManager
                 .HORIZONTAL, false));
+    }
 
-
-
+    @Override
+    protected void onAttach(@NonNull View view) {
+        setupDefaultBottomButton("add new return", btn -> {
+            GateKeeper.push(getRouter(), GateKeeper.Destination.RETURN_ORDERS,
+                    new VerticalChangeHandler(),
+                    new VerticalChangeHandler());
+        });
+        super.onAttach(view);
     }
 
     @Override

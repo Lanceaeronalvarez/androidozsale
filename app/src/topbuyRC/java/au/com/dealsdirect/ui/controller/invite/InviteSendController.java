@@ -8,8 +8,10 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.content.pm.ResolveInfo;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
+import android.provider.Telephony;
 import android.support.annotation.NonNull;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -290,10 +292,26 @@ public class InviteSendController extends SwipeableBaseToolBarController impleme
                 String invitationLink = mPersonalInvitationLinkEditText.getText().toString();
                 String messageWithInvite = message + " " + invitationLink;
 
-                Intent smsIntent = new Intent(Intent.ACTION_VIEW);
-                smsIntent.setType("vnd.android-dir/mms-sms");
-                smsIntent.putExtra("sms_body", messageWithInvite);
-                startActivity(smsIntent);
+                if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+                    String defaultSmsPackageName = Telephony.Sms.getDefaultSmsPackage(mActivity);
+
+                    Intent sendIntent = new Intent(Intent.ACTION_SEND);
+                    sendIntent.setType("text/plain");
+                    sendIntent.putExtra(Intent.EXTRA_TEXT, messageWithInvite);
+                    sendIntent.putExtra("address","");
+                    sendIntent.putExtra("sms_body", messageWithInvite);
+
+                    if (defaultSmsPackageName != null)
+                    {
+                        sendIntent.setPackage(defaultSmsPackageName);
+                    }
+                    startActivity(Intent.createChooser(sendIntent, ""));
+                } else {
+                    Intent smsIntent = new Intent(android.content.Intent.ACTION_VIEW);
+                    smsIntent.setType("vnd.android-dir/mms-sms");
+                    smsIntent.putExtra("sms_body", messageWithInvite);
+                    startActivity(smsIntent);
+                }
             }
         });
 
