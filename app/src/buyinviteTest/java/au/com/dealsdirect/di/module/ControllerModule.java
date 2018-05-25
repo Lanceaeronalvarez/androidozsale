@@ -2,6 +2,9 @@ package au.com.dealsdirect.di.module;
 
 import com.bluelinelabs.conductor.Controller;
 
+import au.com.dealsdirect.ui.base.VisaCheckoutMvpPresenter;
+import au.com.dealsdirect.ui.base.VisaCheckoutMvpView;
+import au.com.dealsdirect.ui.base.VisaCheckoutPresenter;
 import au.com.dealsdirect.ui.controller.account.AccountMvpPresenter;
 import au.com.dealsdirect.ui.controller.account.AccountMvpView;
 import au.com.dealsdirect.ui.controller.account.AccountPresenter;
@@ -339,6 +342,11 @@ public class ControllerModule {
 
     @Provides
     SplashScreenMvpPresenter<SplashScreenMvpView> provideSplashScreenPresenter(SplashScreenPresenter<SplashScreenMvpView> presenter) {
+        return presenter;
+    }
+
+    @Provides
+    VisaCheckoutMvpPresenter<VisaCheckoutMvpView> provideVisaCheckoutPresenter(VisaCheckoutPresenter<VisaCheckoutMvpView> presenter){
         return presenter;
     }
 
