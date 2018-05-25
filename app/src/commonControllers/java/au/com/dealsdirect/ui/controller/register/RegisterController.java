@@ -106,6 +106,7 @@ public class RegisterController extends VisaCheckoutController implements Regist
 
         getControllerComponent().inject(this);
         registerForActivityResult(CallbackManagerImpl.RequestCodeOffset.Login.toRequestCode());
+        registerForActivityResult(BraintreeRequestCodes.VISA_CHECKOUT);
         mCallbackManager = CallbackManager.Factory.create();
         mVcoPresenter.onAttach(this);
         mPresenter.onAttach(this);
