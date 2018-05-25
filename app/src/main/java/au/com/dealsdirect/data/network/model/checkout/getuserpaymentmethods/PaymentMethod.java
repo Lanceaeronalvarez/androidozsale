@@ -21,6 +21,8 @@ public class PaymentMethod implements Serializable {
     @Expose
     private String imageUrl;
 
+    private int id;
+
     public String getPaymentType() {
         return paymentType;
     }
@@ -51,6 +53,14 @@ public class PaymentMethod implements Serializable {
 
     public void setImageUrl(String imageUrl) {
         this.imageUrl = imageUrl;
+    }
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
     }
 
     @Override

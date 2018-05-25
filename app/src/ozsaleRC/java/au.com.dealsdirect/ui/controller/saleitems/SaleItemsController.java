@@ -138,20 +138,20 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
     private Router mSearchFilterRouter;
     private SearchFilterController mSearchFilterController;
 
+    private int mVerticalOffset;
     private int mSaleItemsPageNumber = 0;
-    private boolean mIsLoadingProgress = false;
-    private boolean mHasLoadedAllItems = false;
     private int mSaleItemClickCounter = 0;
+
     private boolean mIsFiltered = false;
     private boolean mIsSearch = false;
     private boolean mFromShopSearch = false;
     private boolean mFromCategorySearch = false;
-
     private boolean mIsCategoryChanged;
     private boolean hasSearchFilters;
     private boolean mIsSearchFilterControllerActive = false;
-    private int mVerticalOffset;
     private boolean mIsRecyclerViewScrollIdle;
+    private boolean mIsLoadingProgress = false;
+    private boolean mHasLoadedAllItems = false;
 
     private List<SearchChipModel> mChipFilters = new ArrayList<>();
 
@@ -298,7 +298,6 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
         setUp(view);
 
         setRetainViewMode(RetainViewMode.RETAIN_DETACH);
-
     }
 
     private void determineToolbarTitle() {
@@ -366,12 +365,7 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
 
         mActivity.getMainController().setViewpagerDraggable(false);
 
-
-        mPtrFrameLayout.getHeader().setProgressIcon(getResources().getDrawable(R.drawable.ic_loader_logo));
-
-        mPtrFrameLayout.getHeader().setPullProgressbar(getResources().getDrawable(R.drawable.bg_progress_bar));
-
-        mPtrFrameLayout.getHeader().setProgressBar(ColorStateList.valueOf(getResources().getColor(R.color.progress_loader_stroke)));
+        setupPtrHeader();
 
         mPaginateCallbacks = new Paginate.Callbacks() {
             @Override
@@ -412,7 +406,7 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
             @Override
             public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
                 super.onScrollStateChanged(recyclerView, newState);
-                mIsRecyclerViewScrollIdle = newState == 0 ? true : false;
+                mIsRecyclerViewScrollIdle = newState == 0;
             }
         });
 
@@ -450,6 +444,14 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
         activateSearch();
     }
 
+    private void setupPtrHeader() {
+        mPtrFrameLayout.getHeader().setProgressIcon(getResources().getDrawable(R.drawable.ic_loader_logo));
+
+        mPtrFrameLayout.getHeader().setPullProgressbar(getResources().getDrawable(R.drawable.bg_progress_bar));
+
+        mPtrFrameLayout.getHeader().setProgressBar(ColorStateList.valueOf(getResources().getColor(R.color.progress_loader_stroke)));
+    }
+
     @Override
     public void onLoadSortingFacetsFinished(List<SortingResponse> responseList) {
         mSortingResponse = responseList;
@@ -470,22 +472,15 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
         }
 
         if ((mSearchQuery.isEmpty() && mFromShopSearch && mChipFilters.isEmpty()) || mFromCategorySearch) {
-            if (mSaleItemsToolbarField.getText().toString().isEmpty()) {
-                mPopularProductsHeader.setVisibility(View.VISIBLE);
-            } else {
-                mPopularProductsHeader.setVisibility(View.GONE);
-            }
+            mPopularProductsHeader.setVisibility(mSaleItemsToolbarField.getText().toString().isEmpty() ? View.VISIBLE : View.GONE);
         } else {
-            if (mChipFilters.isEmpty() &&
-                    mSaleItemsToolbarTitle.getText().toString().isEmpty() &&
+            if (mChipFilters.isEmpty() && mSaleItemsToolbarTitle.getText().toString().isEmpty() &&
                     mSaleItemsToolbarField.getHint().toString().equals(getString(R.string.i_am_looking_For))) {
                 mPopularProductsHeader.setVisibility(View.VISIBLE);
             } else {
                 mPopularProductsHeader.setVisibility(View.GONE);
-
             }
         }
-
 
         mIsLoadingProgress = false;
 
@@ -639,7 +634,6 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
         mSaleItemsToolbarField.removeTextChangedListener(mTextWatcher);
         mSearchQuery = mSaleItemsToolbarField.getText().toString();
 
-//        mSaleItemsOpaqueCover.setVisibility(View.GONE);
         mSaleItemsToolbarField.setActivated(false);
         mSaleItemsToolbarField.setVisibility(View.GONE);
         mSaleItemsToolbarTitle.setVisibility(View.VISIBLE);
@@ -894,6 +888,5 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
     @Override
     public void onOffsetChanged(AppBarLayout appBarLayout, int verticalOffset) {
         this.mVerticalOffset = verticalOffset;
-        AppLogger.d("VerticalOffset " + verticalOffset);
     }
 }

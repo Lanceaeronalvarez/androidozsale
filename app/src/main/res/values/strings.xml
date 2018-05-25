@@ -552,4 +552,8 @@
     <string name="browse">Browse</string>
     <string name="test_product_name">Lavish Alice</string>
     <string name="my_basket">My Basket</string>
+    <string name="add_card">Add Card</string>
+    <string name="delete">Delete</string>
+    <string name="home_office_delivery">home/office delivery</string>
+    <string name="my_payment_method">MY PAYMENT METHOD</string>
 </resources>
