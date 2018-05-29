@@ -278,7 +278,7 @@ android {
             resValue "string", "default_language_id", "EN"
 
             ext.newRelicAppToken = "AAa9d543732ff39dddc60c9cb9ad8c9cf22297904b"
-            resValue "string", "new_relic_app_token",  ext.newRelicAppToken
+            resValue "string", "new_relic_app_token", ext.newRelicAppToken
 
         }
 
@@ -303,7 +303,7 @@ android {
             resValue "string", "default_language_id", "EN"
 
             ext.newRelicAppToken = "AAa9d543732ff39dddc60c9cb9ad8c9cf22297904b"
-            resValue "string", "new_relic_app_token",  ext.newRelicAppToken
+            resValue "string", "new_relic_app_token", ext.newRelicAppToken
 
         }
     }
@@ -315,6 +315,7 @@ android {
                             'src/commonCategoriesController/java/',
                             'src/commonSaleItemsController/java/',
                             'src/commonSearchFilterController/java/',
+                            'src/commonContactControllers/java/',
                             'src/commonReturnsControllers/java/',
                             'src/commonShopsController/java/',
                             'src/commonMainController/java/',
@@ -329,6 +330,7 @@ android {
                             'src/commonCategoriesController/java/',
                             'src/commonSaleItemsController/java/',
                             'src/commonSearchFilterController/java/',
+                            'src/commonContactControllers/java/',
                             'src/commonReturnsControllers/java/',
                             'src/commonShopsController/java/',
                             'src/commonMainController/java/',
@@ -344,6 +346,7 @@ android {
                             'src/commonCategoriesController/java/',
                             'src/commonSaleItemsController/java/',
                             'src/commonSearchFilterController/java/',
+                            'src/commonContactControllers/java/',
                             'src/commonReturnsControllers/java/',
                             'src/commonShopsController/java/',
                             'src/commonMainController/java/',
@@ -359,6 +362,7 @@ android {
                             'src/commonCategoriesController/java/',
                             'src/commonSaleItemsController/java/',
                             'src/commonSearchFilterController/java/',
+                            'src/commonContactControllers/java/',
                             'src/commonReturnsControllers/java/',
                             'src/commonShopsController/java/',
                             'src/commonMainController/java/',
@@ -374,6 +378,7 @@ android {
                             'src/commonCategoriesController/java/',
                             'src/commonSaleItemsController/java/',
                             'src/commonSearchFilterController/java/',
+                            'src/commonContactControllers/java/',
                             'src/commonReturnsControllers/java/',
                             'src/commonShopsController/java/',
                             'src/commonMainController/java/',
@@ -388,6 +393,7 @@ android {
                             'src/commonCategoriesController/java/',
                             'src/commonSaleItemsController/java/',
                             'src/commonSearchFilterController/java/',
+                            'src/commonContactControllers/java/',
                             'src/commonReturnsControllers/java/',
                             'src/commonShopsController/java/',
                             'src/commonMainController/java/',
@@ -399,6 +405,7 @@ android {
         ourpayTest {
             java.srcDirs = ['src/ourpayTest/java/',
                             'src/commonControllers/java/',
+                            'src/commonContactControllers/java/',
                             'src/commonReturnsControllers/java/',
                             'src/main/java/']
         }

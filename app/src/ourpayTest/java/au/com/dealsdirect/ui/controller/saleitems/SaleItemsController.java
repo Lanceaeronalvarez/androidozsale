@@ -424,7 +424,6 @@ public class SaleItemsController extends BasePullToRefreshController implements 
 
         mSaleItemsRecyclerView.setAdapter(mSaleItemsAdapter);
 
-
         mPaginateManager = PaginateUtils.init(mSaleItemsRecyclerView, mPaginateCallbacks);
 
         initialLoad = true;

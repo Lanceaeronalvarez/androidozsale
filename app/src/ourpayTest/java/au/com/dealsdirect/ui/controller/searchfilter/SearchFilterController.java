@@ -202,11 +202,6 @@ public class SearchFilterController extends BaseController
         mFacetItemsRecyclerView.setLayoutManager(new LinearLayoutManager(mActivity, LinearLayoutManager.VERTICAL, false));
         mFacetItemsRecyclerView.setAdapter(mFacetItemsAdapter);
 
-        RxView.clicks(mFacetItemsRecyclerView)
-                .throttleFirst(1000, TimeUnit.MILLISECONDS)
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe();
-
 
         setRetainViewMode(RetainViewMode.RETAIN_DETACH);
 
@@ -248,8 +243,7 @@ public class SearchFilterController extends BaseController
                     default:
                         break;
                 }
-            }
-        }
+            })
 
         if (mTabLayout.getTabCount() == 0) {
             setupTabs();
@@ -454,7 +448,6 @@ public class SearchFilterController extends BaseController
 
     @Override
     public void replaceCategoryTree(List<GetCategoryTreeResponse> categoryTree) {
-
         mSubCategoriesAdapter.replaceData(categoryTree);
     }
 

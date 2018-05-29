@@ -157,7 +157,7 @@ public class BasePresenter<V extends MvpView> implements MvpPresenter<V> {
                         }
 
                         if(getMvpView() instanceof BasePullToRefreshController) {
-                            ((BasePullToRefreshController) getMvpView()).hideNoNetworkLayout();
+                            getMvpView().hideNoNetworkLayout();
                         }
                     }
                 }, new Consumer<Throwable>() {
