@@ -161,7 +161,7 @@ public class ViewContactsController extends BasePullToRefreshController implemen
         int visibility = getResource().getBoolean(R.bool.contacts_toolbar_addmessage_visibility) ? View.VISIBLE : View.INVISIBLE;
         mViewContactsToolbarRightOption.setVisibility(visibility);
 
-        if(mPresenter.isTablet()){
+        if (mPresenter.isTablet()) {
             mViewContactsToolbarRightOption.setPadding(5, 5, 5, 5);
         } else {
             mViewContactsToolbarRightOption.setPadding(20, 20, 20, 20);
@@ -171,7 +171,7 @@ public class ViewContactsController extends BasePullToRefreshController implemen
 
     @OnClick(R.id.partial_toolbar_right_view)
     void addContact() {
-        GateKeeper.push(getRouter(), GateKeeper.Destination.ADD_CONTACT,new VerticalChangeHandler(),new VerticalChangeHandler());
+        GateKeeper.push(getRouter(), GateKeeper.Destination.ADD_CONTACT, new VerticalChangeHandler(), new VerticalChangeHandler());
     }
 
     @OnClick(R.id.controller_contacts_new_message_button)

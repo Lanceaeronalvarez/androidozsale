@@ -13,4 +13,14 @@ public interface CurrentReturnsMvpPresenter<V extends CurrentReturnsMvpView> ext
 
     void loadReturnDetails(GetReturnDetailRequest getReturnDetailRequest);
 
+    void currentReturnSelected(
+            int orderNumber,
+            int position,
+            String productName,
+            String productRequestStatus,
+            String productRAN,
+            String returnRequestDateFormat,
+            String isRequestApproved,
+            String returnId);
+
 }

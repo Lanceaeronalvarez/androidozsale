@@ -81,7 +81,7 @@ public class ContactsAdapter extends RecyclerView.Adapter<ContactsAdapter.ViewCo
 
         public ViewContactsItemViewHolder(View itemView) {
             super(itemView);
-            ButterKnife.bind(itemView);
+            ButterKnife.bind(this, itemView);
         }
     }
 

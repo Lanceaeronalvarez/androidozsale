@@ -48,6 +48,6 @@ public class ContactHistoryViewHolder extends RecyclerView.ViewHolder{
 //        contactHistoryDescriptionTextView = (TextView) itemView
 //                .findViewById(R.id.my_contact_history_row_subject_text_view);
 
-        ButterKnife.bind(itemView);
+        ButterKnife.bind(this, itemView);
     }
 }

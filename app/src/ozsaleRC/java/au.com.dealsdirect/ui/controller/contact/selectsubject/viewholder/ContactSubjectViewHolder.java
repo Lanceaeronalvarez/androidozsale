@@ -23,6 +23,6 @@ public class ContactSubjectViewHolder extends RecyclerView.ViewHolder {
 
     public ContactSubjectViewHolder(View itemView) {
         super(itemView);
-        ButterKnife.bind(itemView);
+        ButterKnife.bind(this, itemView);
     }
 }

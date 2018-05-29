@@ -2,6 +2,7 @@ package au.com.dealsdirect.ui.controller.returns.returndetails.viewholder;
 
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
@@ -16,7 +17,7 @@ import au.com.dealsdirect.R;
 public class ReturnDetailsViewHolder extends RecyclerView.ViewHolder {
 
     public LinearLayout myReturnDetailItem;
-    public RelativeLayout myReturnDetailSizeContainer;
+    public ViewGroup myReturnDetailSizeContainer;
 
     public ImageView myReturnsDetailsProductImageView;
 
@@ -32,7 +33,7 @@ public class ReturnDetailsViewHolder extends RecyclerView.ViewHolder {
         myReturnDetailItem = (LinearLayout) itemView.
                 findViewById(R.id.viewholder_return_detail_row_container);
 
-        myReturnDetailSizeContainer = (RelativeLayout) itemView.
+        myReturnDetailSizeContainer = (ViewGroup) itemView.
                 findViewById(R.id.viewholder_returns_details_size_container);
 
         myReturnsDetailsProductImageView = (ImageView) itemView.
