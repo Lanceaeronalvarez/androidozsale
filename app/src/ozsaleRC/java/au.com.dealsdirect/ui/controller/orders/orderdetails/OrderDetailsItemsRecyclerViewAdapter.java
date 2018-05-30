@@ -57,7 +57,8 @@ public class OrderDetailsItemsRecyclerViewAdapter extends RecyclerView.Adapter<O
         GetPaymentsList.ResponseValue.Order order = mOrderList.get(mItemPosition);
         List<GetOrderPaymentDetails.ResponseValue.Item> orderDetailsItems = mOrderDetail.getOrders().get(mItemPosition).getItems();
 
-        String orderName = order.getDescription();
+        String orderName = orderDetailsItems.get(position).getItem();
+        String orderDescription = order.getDescription();
         int orderItemCount = 0;
         String productSize = "";
 
@@ -81,8 +82,10 @@ public class OrderDetailsItemsRecyclerViewAdapter extends RecyclerView.Adapter<O
         }
 
         holder.productNameTextView.setText(orderName);
-        String itemText = orderItemCount > 1 ? " item" : " items";
-        holder.productQuantityTextView.setText(orderItemCount + itemText);
+        holder.productDescriptionTextView.setText(orderDescription);
+        holder.productQuantityTextView.setText(String.valueOf(orderItemCount));
+        holder.productSubtotalTextView.setText(String.format(mContext.getString(R.string.dollar),
+                String.valueOf(orderDetailsItems.get(position).getSubTotal().getItemsAmount())));
     }
 
     @Override
@@ -107,6 +110,9 @@ public class OrderDetailsItemsRecyclerViewAdapter extends RecyclerView.Adapter<O
         @BindView(R.id.controller_order_details_item_product_name_textview)
         TextView productNameTextView;
 
+        @BindView(R.id.controller_order_details_item_description_textview)
+        TextView productDescriptionTextView;
+
         @BindView(R.id.controller_order_details_item_quantity_textview)
         TextView productQuantityTextView;
 
@@ -115,6 +121,9 @@ public class OrderDetailsItemsRecyclerViewAdapter extends RecyclerView.Adapter<O
 
         @BindView(R.id.controller_order_details_item_size_textview)
         TextView productSizeTextView;
+
+        @BindView(R.id.controller_order_details_item_subtotal_textview)
+        TextView productSubtotalTextView;
 
         @BindView(R.id.controller_order_details_item_imageview)
         ImageView productImageView;

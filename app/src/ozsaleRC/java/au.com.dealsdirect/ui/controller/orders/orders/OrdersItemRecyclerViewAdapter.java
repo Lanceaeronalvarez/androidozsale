@@ -78,17 +78,16 @@ public class OrdersItemRecyclerViewAdapter extends RecyclerView.Adapter<OrdersIt
 
         holder.orderProductNameTextView.setText(orderName);
         String itemText = Integer.parseInt(orderItemCount) > 1 ? " item" : " items";
+
+        holder.estimatedDeliveryText.setText(mOrderList.get(position).getEstimatedDeliveryText());
+        holder.itemInvoiceNumberText.setText(String.valueOf(mOrderList.get(position).getInvoiceNo()));
+
         holder.orderProductQuantityTextView.setText(orderItemCount + itemText);
 
         String approvedDate = DateUtils.getDateForOrderProgress(item.getTracker().getApprovedDate());
         String stockDate = DateUtils.getDateForOrderProgress(item.getTracker().getStockDate());
         String closeDate = DateUtils.getDateForOrderProgress(item.getTracker().getClosedDate());
         String dispatchDate = DateUtils.getDateForOrderProgress(item.getTracker().getDispatchedDate());
-
-        holder.orderDateValueTextView.setText(approvedDate);
-        holder.stockArrivedValueTextView.setText(stockDate);
-        holder.dispatchedDateValueTextView.setText(closeDate);
-        holder.orderPackedValueTextView.setText(dispatchDate);
 
         int currentStep = item.getTracker().getStep();
         int colorActive = holder.itemView.getResources().getColor(R.color.colorAccent);
@@ -104,7 +103,11 @@ public class OrdersItemRecyclerViewAdapter extends RecyclerView.Adapter<OrdersIt
                 break;
 
             case ORDER_DATE_NEGATIVE_STATE:
+                holder.orderFirstNodeStatus.setTextColor(mContext.getResources().getColor(isRefunded ? R.color.ourpay_red : R.color.text_medium));
                 holder.orderDateGraphNodeTextView.setBackgroundResource(isRefunded ? R.drawable.bg_orders_refunded_state : R.drawable.bg_orders_negative_state);
+                if(isRefunded) {
+                    approvedDate += " Refunded";
+                }
                 setupOrderDateNode(holder, orderStatus);
                 break;
 
@@ -118,7 +121,11 @@ public class OrdersItemRecyclerViewAdapter extends RecyclerView.Adapter<OrdersIt
                 break;
 
             case ORDER_STOCK_ARRIVED_NEGATIVE_STATE:
+                holder.orderSecondNodeStatus.setTextColor(mContext.getResources().getColor(isRefunded ? R.color.ourpay_red : R.color.text_medium));
                 holder.stockArrivedGraphNodeTextView.setBackgroundResource(isRefunded ? R.drawable.bg_orders_refunded_state : R.drawable.bg_orders_negative_state);
+                if(isRefunded) {
+                    stockDate += " Refunded";
+                }
                 setupOrderStockArrived(holder, orderStatus, colorActive);
                 break;
 
@@ -132,7 +139,11 @@ public class OrdersItemRecyclerViewAdapter extends RecyclerView.Adapter<OrdersIt
                 break;
 
             case ORDER_PACKED_NEGATIVE_STATE:
+                holder.orderThirdNodeStatus.setTextColor(mContext.getResources().getColor(isRefunded ? R.color.ourpay_red : R.color.text_medium));
                 holder.orderPackedGraphNodeTextView.setBackgroundResource(isRefunded ? R.drawable.bg_orders_refunded_state : R.drawable.bg_orders_negative_state);
+                if(isRefunded) {
+                    dispatchDate += " Refunded";
+                }
                 setupOrderPackedNode(holder, orderStatus, colorActive);
                 break;
 
@@ -142,26 +153,33 @@ public class OrdersItemRecyclerViewAdapter extends RecyclerView.Adapter<OrdersIt
                 break;
 
             case ORDER_DISPATCHED_NEGATIVE_STATE:
+                holder.orderFourthNodeStatus.setTextColor(mContext.getResources().getColor(isRefunded ? R.color.ourpay_red : R.color.text_medium));
                 holder.dispatchedGraphNodeTextView.setBackgroundResource(isRefunded ? R.drawable.bg_orders_refunded_state : R.drawable.bg_orders_negative_state);
+                if(isRefunded) {
+                     closeDate += " Refunded";
+                }
                 setupDispatchNode(holder, orderStatus, colorActive);
                 break;
         }
+
+
+        holder.orderDateValueTextView.setText(approvedDate);
+        holder.stockArrivedValueTextView.setText(stockDate);
+        holder.dispatchedDateValueTextView.setText(closeDate);
+        holder.orderPackedValueTextView.setText(dispatchDate);
     }
 
     private void setupOrderDateNode(OrderItemsViewholder holder, String orderStatus) {
-        holder.orderFirstNodeStatus.setText(orderStatus);
         holder.orderDateGraphNodeTextView.setText("");
     }
 
     private void setupOrderStockArrived(OrderItemsViewholder holder, String orderStatus, int colorActive) {
-        holder.orderSecondNodeStatus.setText(orderStatus);
         holder.stockArrivedGraphNodeTextView.setText("");
 
         holder.orderStockArrivedConnector.setBackgroundColor(colorActive);
     }
 
     private void setupOrderPackedNode(OrderItemsViewholder holder, String orderStatus, int colorActive) {
-        holder.orderThirdNodeStatus.setText(orderStatus);
 
         holder.stockArrivedGraphNodeTextView.setBackgroundResource(R.drawable.bg_orders_graph_active_state);
         holder.stockArrivedGraphNodeTextView.setText("");
@@ -171,7 +189,6 @@ public class OrdersItemRecyclerViewAdapter extends RecyclerView.Adapter<OrdersIt
     }
 
     private void setupDispatchNode(OrderItemsViewholder holder, String orderStatus, int colorActive) {
-        holder.orderFourthNodeStatus.setText(orderStatus);
         holder.dispatchedGraphNodeTextView.setText("");
 
         holder.orderDispatchedConnector.setBackgroundColor(colorActive);
@@ -236,7 +253,7 @@ public class OrdersItemRecyclerViewAdapter extends RecyclerView.Adapter<OrdersIt
         @BindView(R.id.dispatched_date_value)
         TextView dispatchedGraphNodeTextView;
 
-        @BindView(R.id.my_order_product_items_amount)
+        @BindView(R.id.controller_order_amount_text)
         TextView orderItemsAmount;
 
         @BindView(R.id.tracker_first_node)
@@ -263,6 +280,12 @@ public class OrdersItemRecyclerViewAdapter extends RecyclerView.Adapter<OrdersIt
 
         @BindView(R.id.my_order_number_container)
         RelativeLayout orderNumberContainerLayout;
+
+        @BindView(R.id.estimatedDeliveryTextView)
+        TextView estimatedDeliveryText;
+
+        @BindView(R.id.itemInvoiceNumberTextView)
+        TextView itemInvoiceNumberText;
 
         public OrderItemsViewholder(View itemView) {
             super(itemView);

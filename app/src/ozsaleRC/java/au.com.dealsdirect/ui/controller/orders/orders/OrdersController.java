@@ -6,7 +6,9 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
@@ -46,6 +48,9 @@ public class OrdersController extends BasePullToRefreshController implements Ord
 
     @BindView(R.id.no_orders_layout)
     RelativeLayout mPlaceholderLayout;
+
+    @BindView(R.id.contentFrame)
+    FrameLayout mContentLayout;
 
     OrdersRecyclerViewAdapter mAdapter;
     ArrayList<GetPaymentsList.ResponseValue.PaymentItem> mOrders = new ArrayList<>();
@@ -96,13 +101,13 @@ public class OrdersController extends BasePullToRefreshController implements Ord
     public void showOrders(ArrayList<GetPaymentsList.ResponseValue.PaymentItem> orders) {
         if (orders.size() > 0) {
             mOrders = orders;
-            mAdapter = new OrdersRecyclerViewAdapter(orders, mActivity);
+            mAdapter = new OrdersRecyclerViewAdapter(mActivity, orders);
             mRecyclerView.setAdapter(mAdapter);
-            mRecyclerView.setVisibility(View.VISIBLE);
+            mContentLayout.setVisibility(View.VISIBLE);
             mPlaceholderLayout.setVisibility(View.GONE);
 
         } else {
-            mRecyclerView.setVisibility(View.GONE);
+            mContentLayout.setVisibility(View.GONE);
             mPlaceholderLayout.setVisibility(View.VISIBLE);
         }
     }
