@@ -151,7 +151,7 @@
     <string name="select_invoice">Select Invoice</string>
     <string name="new_message">New Message</string>
 
-    <bool name="is_voucher_background_needed">false</bool>
+    <bool name="is_voucher_background_needed">true</bool>
 
     <string name="add_new_address">Add New Address</string>
     <string name="your_current_delivery_address">YOUR CURRENT DELIVERY ADDRESS</string>

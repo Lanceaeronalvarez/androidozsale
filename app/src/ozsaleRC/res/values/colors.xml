@@ -55,7 +55,7 @@
 
     <!-- Text -->
     <color name="text_extra_dark">#000000</color>
-    <color name="text_dark">#676767</color>
+    <color name="text_dark">#616161</color>
     <color name="text_medium">#787878</color>
     <color name="text_light">#919191</color>
     <color name="text_extra_light">#cacaca</color>
