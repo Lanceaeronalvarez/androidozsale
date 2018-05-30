@@ -2,7 +2,6 @@ package au.com.dealsdirect.ui.controller.vouchers.View;
 
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -25,13 +24,13 @@ public class ViewVouchersRecyclerViewAdapter extends RecyclerView.Adapter<ViewVo
 
     private HashMap<Integer,String> voucherColorStateCollection = new HashMap<>();
     private List<GetUserVoucherResponse.Voucher> vouchersList;
-    private Context context;
+    private Context mContext;
     private static final float UNUSED_VOUCHER_OVERLAY = 0.21f;
 
     public ViewVouchersRecyclerViewAdapter(List<GetUserVoucherResponse.Voucher> vouchersList,
-                                           Context context) {
+                                           Context mContext) {
         this.vouchersList = vouchersList;
-        this.context = context;
+        this.mContext = mContext;
 
     }
 
@@ -51,7 +50,7 @@ public class ViewVouchersRecyclerViewAdapter extends RecyclerView.Adapter<ViewVo
         holder.mVoucherName.setText(voucher.getFullname());
 
         boolean hasMatch = m.find();
-        boolean hasSpent = voucher.getDiscountLeft().equalsIgnoreCase(context.getString(R.string.already_spent));
+        boolean hasSpent = voucher.getDiscountLeft().equalsIgnoreCase(mContext.getString(R.string.already_spent));
 
         if(hasMatch) {
             Double doubleValue = Double.parseDouble(m.group(1));
@@ -70,12 +69,7 @@ public class ViewVouchersRecyclerViewAdapter extends RecyclerView.Adapter<ViewVo
             holder.mVouchersItemValue.setVisibility(View.VISIBLE);
             holder.mActivatedValue.setText(String.valueOf(hasMatch));
             holder.mPurchasedValue.setText(String.valueOf(hasSpent));
-
-            if(context.getResources().getBoolean(R.bool.is_voucher_background_needed)) {
-                holder.mVouchersLayout.setBackground(holder.mVouchersLayout.getContext().getDrawable(R.drawable.bg_voucher_item));
-            } else {
-                holder.mVouchersLayout.setBackground(null);
-            }
+            holder.mVouchersLayout.setBackground(mContext.getResources().getDrawable(R.drawable.bg_voucher_item));
 
         } else {
 

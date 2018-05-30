@@ -232,7 +232,6 @@
         $20 voucher to use towards any future purchase. \n\nYou can apply any vouchers
         currently in your account when you checkout your order. \n
     </string>
-    <bool name="is_voucher_background_needed">true</bool>
     <string name="apply">apply</string>
     <string name="my_voucher">my voucher</string>
     <string name="promo_code">promo code</string>
