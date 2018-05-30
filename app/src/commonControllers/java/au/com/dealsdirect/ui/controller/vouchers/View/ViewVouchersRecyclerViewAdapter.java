@@ -28,9 +28,9 @@ public class ViewVouchersRecyclerViewAdapter extends RecyclerView.Adapter<ViewVo
     private static final float UNUSED_VOUCHER_OVERLAY = 0.21f;
 
     public ViewVouchersRecyclerViewAdapter(List<GetUserVoucherResponse.Voucher> vouchersList,
-                                           Context mContext) {
+                                           Context context) {
         this.vouchersList = vouchersList;
-        this.mContext = mContext;
+        this.mContext = context;
 
     }
 
