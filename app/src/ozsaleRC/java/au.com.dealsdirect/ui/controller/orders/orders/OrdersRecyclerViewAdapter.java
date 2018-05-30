@@ -13,7 +13,6 @@ import java.util.ArrayList;
 
 import au.com.dealsdirect.R;
 import au.com.dealsdirect.data.network.model.orders.GetPaymentsList;
-import au.com.dealsdirect.utils.StringUtils;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
@@ -23,14 +22,14 @@ import butterknife.ButterKnife;
 
 public class OrdersRecyclerViewAdapter extends RecyclerView.Adapter<OrdersRecyclerViewAdapter.OrdersViewHolder> {
 
-    public ArrayList<GetPaymentsList.ResponseValue.PaymentItem> orderList = new ArrayList<>();
-    Context context;
+    public ArrayList<GetPaymentsList.ResponseValue.PaymentItem> mOrderList = new ArrayList<>();
+    Context mContext;
 
     public OrdersRecyclerViewAdapter(Context context,
                                      ArrayList<GetPaymentsList.ResponseValue.PaymentItem> orderList) {
 
-        this.orderList = orderList;
-        this.context = context;
+        this.mOrderList = orderList;
+        this.mContext = context;
     }
 
     @Override
@@ -45,17 +44,17 @@ public class OrdersRecyclerViewAdapter extends RecyclerView.Adapter<OrdersRecycl
         Log.d("myorders", " on bind view holder = " + position);
 
         viewHolder.orderItemsRecyclerView.setAdapter(new OrdersItemRecyclerViewAdapter(
-                orderList.get(position).getPaymentReferenceNo(),
-                orderList.get(position).getOrders(),
-                context));
+                mOrderList.get(position).getPaymentReferenceNo(),
+                mOrderList.get(position).getOrders(),
+                mContext));
 
-        GetPaymentsList.ResponseValue.Total total = orderList.get(position).getTotal();
+        GetPaymentsList.ResponseValue.Total total = mOrderList.get(position).getTotal();
 
-        viewHolder.cardPaymentText.setText(String.format(context.getString(R.string.dollar), String.valueOf(total.getCreditCardAmount())));
-        viewHolder.voucherPaymentText.setText(String.format(context.getString(R.string.dollar), String.valueOf(total.getDiscountAmount())));
-        viewHolder.totalPaymentText.setText(String.format(context.getString(R.string.dollar), String.valueOf(total.getTotalAmount())));
+        viewHolder.cardPaymentText.setText(String.format(mContext.getString(R.string.dollar), String.valueOf(total.getCreditCardAmount())));
+        viewHolder.voucherPaymentText.setText(String.format(mContext.getString(R.string.dollar), String.valueOf(total.getDiscountAmount())));
+        viewHolder.totalPaymentText.setText(String.format(mContext.getString(R.string.dollar), String.valueOf(total.getTotalAmount())));
 
-        viewHolder.orderItemsRecyclerView.setLayoutManager(new LinearLayoutManager(context, LinearLayoutManager
+        viewHolder.orderItemsRecyclerView.setLayoutManager(new LinearLayoutManager(mContext, LinearLayoutManager
                 .VERTICAL, false));
 
     }
@@ -67,7 +66,7 @@ public class OrdersRecyclerViewAdapter extends RecyclerView.Adapter<OrdersRecycl
 
     @Override
     public int getItemCount() {
-        return orderList == null ? 0 : orderList.size();
+        return mOrderList.size();
     }
 
     @Override
@@ -77,7 +76,7 @@ public class OrdersRecyclerViewAdapter extends RecyclerView.Adapter<OrdersRecycl
 
 
     public void replace(ArrayList<GetPaymentsList.ResponseValue.PaymentItem> orders) {
-        orderList = orders;
+        mOrderList = orders;
         notifyDataSetChanged();
     }
 

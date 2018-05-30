@@ -80,7 +80,7 @@ public class OrderDetailsController extends BaseController implements OrderDetai
 
     @Override
     protected void setUp(View view) {
-        mOrderDetailsToolarTitle.setText(String.valueOf(getString(R.string.order_sharp_colon) + mOrderItem.getPaymentReferenceNo()));
+        mOrderDetailsToolarTitle.setText(getString(R.string.order_sharp_colon) + mOrderItem.getPaymentReferenceNo());
         mOrderDetailsRightOption.setImageDrawable(null);
 
         GetOrderPaymentDetails.RequestValues requestValues = new GetOrderPaymentDetails.RequestValues(mPaymentReferenceNo);
