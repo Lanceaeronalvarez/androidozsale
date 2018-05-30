@@ -31,13 +31,13 @@ import au.com.dealsdirect.ui.controller.checkout.paymentsuccess.PaymentSuccessMv
 import au.com.dealsdirect.ui.controller.checkout.paymentsuccess.PaymentSuccessPresenter;
 import au.com.dealsdirect.ui.controller.contact.addcontact.AddContactMvpPresenter;
 import au.com.dealsdirect.ui.controller.contact.addcontact.AddContactMvpView;
-import au.com.dealsdirect.ui.controller.contact.addcontact.AddContactpresenter;
-import au.com.dealsdirect.ui.controller.contact.addcontact.selectorder.ContactSelectOrderMvpPresenter;
-import au.com.dealsdirect.ui.controller.contact.addcontact.selectorder.ContactSelectOrderMvpView;
-import au.com.dealsdirect.ui.controller.contact.addcontact.selectorder.ContactSelectOrderPresenter;
-import au.com.dealsdirect.ui.controller.contact.addcontact.selectsubject.ContactSelectSubjectMvpPresenter;
-import au.com.dealsdirect.ui.controller.contact.addcontact.selectsubject.ContactSelectSubjectMvpView;
-import au.com.dealsdirect.ui.controller.contact.addcontact.selectsubject.ContactSelectSubjectPresenter;
+import au.com.dealsdirect.ui.controller.contact.addcontact.AddContactPresenter;
+import au.com.dealsdirect.ui.controller.contact.selectorder.ContactSelectOrderMvpPresenter;
+import au.com.dealsdirect.ui.controller.contact.selectorder.ContactSelectOrderMvpView;
+import au.com.dealsdirect.ui.controller.contact.selectorder.ContactSelectOrderPresenter;
+import au.com.dealsdirect.ui.controller.contact.selectsubject.ContactSelectSubjectMvpPresenter;
+import au.com.dealsdirect.ui.controller.contact.selectsubject.ContactSelectSubjectMvpView;
+import au.com.dealsdirect.ui.controller.contact.selectsubject.ContactSelectSubjectPresenter;
 import au.com.dealsdirect.ui.controller.contact.viewcontacts.ViewContactsMvpPresenter;
 import au.com.dealsdirect.ui.controller.contact.viewcontacts.ViewContactsMvpView;
 import au.com.dealsdirect.ui.controller.contact.viewcontacts.ViewContactsPresenter;
@@ -206,7 +206,7 @@ public class ControllerModule {
     }
 
     @Provides
-    AddContactMvpPresenter<AddContactMvpView> provideAddContactPresenter(AddContactpresenter<AddContactMvpView> presenter) {
+    AddContactMvpPresenter<AddContactMvpView> provideAddContactPresenter(AddContactPresenter<AddContactMvpView> presenter) {
         return presenter;
     }
 

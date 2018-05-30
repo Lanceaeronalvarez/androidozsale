@@ -12,12 +12,10 @@ import au.com.dealsdirect.data.DataManager;
 import au.com.dealsdirect.data.network.model.contactorder.ContactOrders;
 import au.com.dealsdirect.data.network.model.contactreply.ReplyContactRequest;
 import au.com.dealsdirect.data.network.model.contactreply.ReplyContactResponse;
-import au.com.dealsdirect.data.network.model.contactsubject.ContactSubjectResponse;
 import au.com.dealsdirect.data.network.model.contactsubject.ContactSubjects;
 import au.com.dealsdirect.data.network.model.contactsubject.ContactSubjectsRequest;
-import au.com.dealsdirect.ui.controller.contact.addcontact.AddContactMvpPresenter;
 import au.com.dealsdirect.ui.controller.contact.addcontact.AddContactMvpView;
-import au.com.dealsdirect.ui.controller.contact.addcontact.AddContactpresenter;
+import au.com.dealsdirect.ui.controller.contact.addcontact.AddContactPresenter;
 import au.com.dealsdirect.utils.rx.TestSchedulerProvider;
 import io.reactivex.Observable;
 import io.reactivex.disposables.CompositeDisposable;
@@ -65,7 +63,7 @@ public class AddContactPresenterTest {
             "\t}\n" +
             "}";
 
-    AddContactpresenter<AddContactMvpView> addContactPresenter;
+    AddContactPresenter<AddContactMvpView> addContactPresenter;
     TestScheduler testScheduler;
 
     @Before
@@ -73,7 +71,7 @@ public class AddContactPresenterTest {
         CompositeDisposable compositeDisposable = new CompositeDisposable();
         testScheduler = new TestScheduler();
         TestSchedulerProvider testSchedulerProvider = new TestSchedulerProvider(testScheduler);
-        addContactPresenter = new AddContactpresenter<>(addContactDataManager, testSchedulerProvider, compositeDisposable);
+        addContactPresenter = new AddContactPresenter<>(addContactDataManager, testSchedulerProvider, compositeDisposable);
         addContactPresenter.onAttach(addContactView);
     }
 

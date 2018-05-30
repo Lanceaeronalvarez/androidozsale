@@ -15,6 +15,7 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.bluelinelabs.conductor.Controller;
 import com.bluelinelabs.conductor.Router;
 import com.crystal.crystalrangeseekbar.interfaces.OnRangeSeekbarFinalValueListener;
 import com.google.gson.reflect.TypeToken;
@@ -22,6 +23,7 @@ import com.google.gson.reflect.TypeToken;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -45,6 +47,7 @@ import au.com.dealsdirect.ui.main.MainActivity;
 import au.com.dealsdirect.utils.BundleBuilder;
 import au.com.dealsdirect.utils.BundleKeys;
 import au.com.dealsdirect.utils.JsonUtils;
+import au.com.dealsdirect.utils.StringUtils;
 import au.com.dealsdirect.utils.ViewUtils;
 import butterknife.BindView;
 
@@ -60,7 +63,7 @@ import static au.com.dealsdirect.utils.StringUtils.getParentKey;
  * Created by smartwave on 20/07/2017.
  */
 
-public class SearchFilterController extends BaseController implements SearchFilterMvpView, SubCategoryClickListener, SubCategoryItemClickListener {
+public class SearchFilterController extends BaseController implements SearchFilterMvpView {
 
     public static final String TAG = SearchFilterController.class.getSimpleName();
     private static final int DEFAULT_PRICE_THRESHOLD = 200;
@@ -117,10 +120,9 @@ public class SearchFilterController extends BaseController implements SearchFilt
     private Map<String, GetCategoryTreeResponse> mCategoryMap = new HashMap<>();
 
     SubCategoriesAdapter mSubCategoriesAdapter;
-    FacetsAdapter mFacetsAdapter;
     FacetItemsAdapter mFacetItemsAdapter;
     List<SearchChipModel> mSearchItemsList = new ArrayList<>();
-    SaleItemsController mSaleItemsController;
+    SaleItemsMvpView mSaleItemsView;
 
     ArrayList<String> mBrandList = new ArrayList<>();
     ArrayList<String> mSizeList = new ArrayList<>();
@@ -134,7 +136,7 @@ public class SearchFilterController extends BaseController implements SearchFilt
     private boolean mIsSearchFilterControllerActive = false;
 
     String mSaleId = "";
-    List<String> mCategoryKeys = new ArrayList<>();
+    Set<String> mCategoryKeys = new LinkedHashSet<>();
 
     private Set<Integer> origSelectedSet = new HashSet<Integer>();
 
@@ -167,10 +169,9 @@ public class SearchFilterController extends BaseController implements SearchFilt
 
         Router router = mActivity.getSelectedBottomNavTab() == 0 ? mActivity.getHomeRouter() : mActivity.getCategoriesRouter();
 
-        mSaleItemsController = (SaleItemsController) router.getControllerWithTag(getResources()
-                .getString(R.string.sale_items_controller_tag));
-
-        mSaleItemsPresenter.onAttach(mSaleItemsController);
+        Controller mSaleItemsController = router.getControllerWithTag(getResources().getString(R.string.sale_items_controller_tag));
+        mSaleItemsView = (SaleItemsMvpView) mSaleItemsController;
+        mSaleItemsPresenter.onAttach(mSaleItemsView);
         mPresenter.onAttach(this);
         return view;
     }
@@ -185,7 +186,6 @@ public class SearchFilterController extends BaseController implements SearchFilt
     protected void setUp(View view) {
 
         createCategoryMap(mCategoryTree);
-        createCategoryList(mCategoryTree);
 
         if (mFacets != null) {
             parseFacets(mFacets);
@@ -196,23 +196,24 @@ public class SearchFilterController extends BaseController implements SearchFilt
         }
 
         setupPriceFacet();
-        updateValidChips();
 
-//      SETUP FACET ITEMS (sub of facets)
+//      SETUP CATEGORIES
+        mSubCategoriesAdapter = new SubCategoriesAdapter("", mCategoryTree, mPresenter, mCategoryMap);
+        mFilterCategoriesRecyclerView.setLayoutManager(new LinearLayoutManager(mActivity, LinearLayoutManager.VERTICAL, false));
+        mFilterCategoriesRecyclerView.setAdapter(mSubCategoriesAdapter);
+
+        //      SETUP FACET ITEMS (sub of facets)
         mFacetItemsAdapter = new FacetItemsAdapter(new ArrayList<>(), mPresenter, new HashSet<Integer>(), mFacetItemsRecyclerView);
         mFacetItemsRecyclerView.setLayoutManager(new LinearLayoutManager(mActivity, LinearLayoutManager.VERTICAL, false));
         mFacetItemsRecyclerView.setAdapter(mFacetItemsAdapter);
         mFacetItemsAdapter.setSearchItemsList(mSearchItemsList);
 
-//      SETUP CATEGORIES
-        mSubCategoriesAdapter = new SubCategoriesAdapter(mCategoryTree, this, mCategoryMap);
-        mFilterCategoriesRecyclerView.setLayoutManager(new LinearLayoutManager(mActivity, LinearLayoutManager.VERTICAL, false));
-        mFilterCategoriesRecyclerView.setAdapter(mSubCategoriesAdapter);
 
         mOpaqueView.setOnClickListener(v -> closeFacets());
         setRetainViewMode(RetainViewMode.RETAIN_DETACH);
     }
 
+    @Override
     public List<Pair<String, String>> parseFacets(List<GetSaleItemsResponse.Facets> facets) {
         mFacets = facets;
         if (facets.size() != 0) {
@@ -279,6 +280,9 @@ public class SearchFilterController extends BaseController implements SearchFilt
                         break;
                     }
                 }
+
+                mSaleItemsPresenter.loadSaleItems(mSaleItemsView.createSaleItemsRequest(mCategoryKeys, mSaleId, 0, mSearchItemsList, ""));
+
                 onResetPriceRange();
             }
         });
@@ -315,8 +319,7 @@ public class SearchFilterController extends BaseController implements SearchFilt
 
                 mHasSeekbarReset = false;
 
-                mSaleItemsController.setChipFilters(mSearchItemsList);
-                mSaleItemsPresenter.loadSaleItems(mSaleItemsController.createSaleItemsRequest(mCategoryKeys, mSaleId, 0, mSearchItemsList, null));
+                mSaleItemsPresenter.loadSaleItems(mSaleItemsView.createSaleItemsRequest(mCategoryKeys, mSaleId, 0, mSearchItemsList, ""));
 
             }
         });
@@ -364,6 +367,7 @@ public class SearchFilterController extends BaseController implements SearchFilt
         hideKeyboard();
         mFacetsFrame.setVisibility(View.VISIBLE);
 
+
         if (getFacetFilterType(position) != BundleKeys.PRICE_FACETFILTER_NAME) { //only do this logic if facet clicked != price
 
             if (getFacetFilterType(position) == BundleKeys.CATEGORY_TREE_FACET) {
@@ -379,20 +383,6 @@ public class SearchFilterController extends BaseController implements SearchFilt
                 mFilterCategoriesRecyclerView.setVisibility(View.GONE);
             }
 
-            if (mPreviousSelectedFacetIndex != -1) {
-                mPreviousSelectedFacetIndices.put(getFacetFilterType(mPreviousSelectedFacetIndex), new HashSet<>(mFacetItemsAdapter.getSelectedFacets()));
-            }
-
-            if (position != mPreviousSelectedFacetIndex) {
-                mFacetItemsAdapter.clearSelectedFacets();
-                origSelectedSet.clear();
-            }
-
-            if (mPreviousSelectedFacetIndices.get(getFacetFilterType(position)) != null) {
-                mFacetItemsAdapter.updateSelectedFacets(mPreviousSelectedFacetIndices.get(getFacetFilterType(position)));
-                origSelectedSet = mPreviousSelectedFacetIndices.get(getFacetFilterType(position));
-            }
-
         } else { //price is clicked
             mFilterCategoriesRecyclerView.setVisibility(View.GONE);
             mFacetItemsRecyclerView.setVisibility(View.GONE);
@@ -401,45 +391,11 @@ public class SearchFilterController extends BaseController implements SearchFilt
 
         mFacetItemsAdapter.setFilterType(getFacetFilterType(position));
         mFacetItemsAdapter.replaceData(mapFacetItemClicked(position));
-
-        mPreviousSelectedFacetIndex = position;
     }
 
     @Override
-    public void updateFacetItemToFilters(Set<Integer> selectPosSet) {
-        Log.d("selectPosSet", selectPosSet.toString());
-
-        Set<Integer> oldSet = origSelectedSet;
-        Set<Integer> newSet = new HashSet<Integer>(selectPosSet);
-        origSelectedSet = new HashSet<Integer>(selectPosSet);
-        newSet.removeAll(oldSet);
-        oldSet.removeAll(origSelectedSet);
-
-        if (!newSet.isEmpty()) {
-            List<Integer> temp = new ArrayList(newSet);
-            SearchChipModel newChip = new SearchChipModel(mFacetItemsAdapter.getFilterType(), mFacetItemsAdapter.getData().get(temp.get(0)), temp.get(0));
-            mSearchItemsList.add(newChip);
-        } else if (!oldSet.isEmpty()) {
-            List<Integer> temp = new ArrayList(oldSet);
-            SearchChipModel chipToRemove = null;
-            for (SearchChipModel chip : mSearchItemsList) {
-                if (chip.getChipTitle().equals(mFacetItemsAdapter.getData().get(temp.get(0)))) {
-                    chipToRemove = chip;
-                }
-            }
-
-            if (chipToRemove != null) {
-                mSearchItemsList.remove(chipToRemove);
-            }
-        }
-
-        mSaleItemsController.setChipFilters(mSearchItemsList);
-        mSaleItemsPresenter.loadSaleItems(mSaleItemsController.createSaleItemsRequest(mCategoryKeys, mSaleId, 0, mSearchItemsList, null));
-    }
-
-    @Override
-    public Set<Integer> getOriginalSelectedSet() {
-        return origSelectedSet;
+    public void updateFacetItemToFilters(List<SearchChipModel> selectedChips) {
+        mSaleItemsPresenter.loadSaleItems(mSaleItemsView.createSaleItemsRequest(mCategoryKeys, mSaleId, 0, selectedChips, ""));
     }
 
     @Override
@@ -457,21 +413,94 @@ public class SearchFilterController extends BaseController implements SearchFilt
     }
 
     @Override
-    public void updateActiveFacets(List<SearchChipModel> activeChips) {
-        if (mFacetsAdapter != null) {
-            mFacetsAdapter.notifyDataSetChanged();
-            mFacetItemsAdapter.notifyDataSetChanged();
+    public void replaceFacets(List<GetSaleItemsResponse.Facets> newFacets) {
+        mFacets = newFacets;
+        parseFacets(mFacets);
+    }
+
+    @Override
+    public void replaceCategoryTree(List<GetCategoryTreeResponse> categoryTree) {
+        mSubCategoriesAdapter.replaceData(categoryTree);
+    }
+
+    @Override
+    public void onCategoryClicked(GetCategoryTreeResponse category) {
+
+        checkParentSelection(category);
+
+        List<GetCategoryTreeResponse> children = mCategoryMap.get(category.getKey()).getChildren();
+
+        if (category.isSelected()) {
+            mCategoryKeys.add(category.getKey()); //add to category keys
+            if(!children.isEmpty()) { //if i have children{}
+                setChildrenSelection(category.getKey(),true);
+            }
+
+        } else {
+            mCategoryKeys.remove(category.getKey()); //remove to category keys
+            if(!children.isEmpty()) { //if i have children{}
+                setChildrenSelection(category.getKey(),false);
+            }
+        }
+
+        mSaleItemsPresenter.onCategoryChanged(true);
+        mSaleItemsPresenter.loadSaleItems(mSaleItemsView.createSaleItemsRequest(mCategoryKeys, mSaleId, 0, mSearchItemsList, ""));
+    }
+
+    @Override
+    public Set<String> getCategoryKeys() {
+        return mCategoryKeys;
+    }
+
+    private void checkParentSelection(GetCategoryTreeResponse category){
+        boolean childrenAreAllSelected = true;
+
+        //get parent node and children
+        String parentKey = StringUtils.getParentKey(category);
+        GetCategoryTreeResponse parentNode = mCategoryMap.get(parentKey);
+        List<GetCategoryTreeResponse> parentNodeChildren = parentNode.getChildren();
+
+        if(parentKey.equals(category.getKey())){ //we reached end node up. terminate recursion
+            return;
+        }
+
+        for(GetCategoryTreeResponse child : parentNodeChildren){
+            if(!child.isSelected()){
+                childrenAreAllSelected = false;
+            }
+        }
+
+        if(childrenAreAllSelected){ //if all parentNode children(siblings of category) are selected, then parent must be selected.
+            parentNode.setSelected(true);
+            mCategoryKeys.add(parentNode.getKey());
+        } else { // else deselect parent
+            parentNode.setSelected(false);
+            mCategoryKeys.remove(parentNode.getKey());
+        }
+
+        //recursion
+        checkParentSelection(parentNode);
+    }
+
+    private void setChildrenSelection(String key, boolean val) {
+        List<GetCategoryTreeResponse> children = mCategoryMap.get(key).getChildren();
+
+        for (GetCategoryTreeResponse category : children) {
+            category.setSelected(val);
+            if (val) {
+                mCategoryKeys.add(category.getKey());
+            } else {
+                mCategoryKeys.remove(category.getKey());
+            }
+            setChildrenSelection(category.getKey(), val);
         }
     }
 
-    @Override
-    public void onShowTransparentOverlay() {
-
-    }
-
-    @Override
-    public void onHideTransparentOverlay() {
-
+    private void createCategoryMap(List<GetCategoryTreeResponse> getCategoryTreeResponses) {
+        for (GetCategoryTreeResponse category : getCategoryTreeResponses) {
+            mCategoryMap.put(category.getKey(), category);
+            createCategoryMap(category.getChildren());
+        }
     }
 
     @Override
@@ -508,165 +537,6 @@ public class SearchFilterController extends BaseController implements SearchFilt
         }
     }
 
-    private void createCategoryMap(List<GetCategoryTreeResponse> categories) {
-
-        updateCategories(categories);
-
-    }
-
-    private void updateCategories(List<GetCategoryTreeResponse> getCategoryTreeResponses) {
-        for (GetCategoryTreeResponse category : getCategoryTreeResponses) {
-            mCategoryMap.put(category.getKey(), category);
-            updateCategories(category.getChildren());
-        }
-    }
-
-    private List<GetCategoryTreeResponse> fillCategoryContent() {
-
-        return mCategoryMap.get(CATEGORY_SHOP).getChildren();
-    }
-
-    @Override
-    public void onSubCategoryClicked(List<GetCategoryTreeResponse> response, String key) {
-        mCategoryKeys.clear();
-        mCategoryTree = response;
-        for (GetCategoryTreeResponse child : mCategoryTree) {
-            if (child.getKey().equalsIgnoreCase(key) && child.isSelected()) {
-                //add/remove the uppermost category depending if selected
-                if (!mCategoryKeys.contains(child.getKey())) {
-                    mCategoryKeys.add(child.getKey());
-                }
-                //remove children of added parent if it is selected
-                for (GetCategoryTreeResponse category : child.getChildren()) {
-                    if (category.isSelected()) {
-                        mCategoryKeys.remove(category.getKey());
-                    }
-                }
-            } else {
-                mCategoryKeys.remove(child.getKey());
-            }
-            //update child on category map
-            mCategoryMap.put(child.getKey(), setSelectedChildren(child));
-        }
-
-        //api call after updating categorykeys and categorymap
-        mSaleItemsPresenter.loadSaleItems(mSaleItemsController.createSaleItemsRequest(mCategoryKeys, mSaleId, 0, mSearchItemsList, null));
-    }
-
-    @Override
-    public void onSubCategoryItemClicked(GetCategoryTreeResponse response) {
-        //Change state of category in CategoryMap
-        response.setSelected(!response.isSelected());
-        mCategoryMap.put(response.getKey(), response);
-
-        //update parent when child is selected
-        setSelectedParent(response);
-
-        //add if selected and not in the list to avoid duplicate keys
-        if (!response.isSelected()) {
-            mCategoryKeys.remove(response.getKey());
-        } else if (!mCategoryKeys.contains(response.getKey())) {
-            mCategoryKeys.add(response.getKey());
-        }
-
-        //update selected category's children if any
-        if (response.getChildren().size() > 0) {
-            mCategoryMap.put(response.getKey(), setSelectedChildren(response));
-        }
-
-        //api call after updating categorykeys and categorymap
-        mSaleItemsPresenter.loadSaleItems(mSaleItemsController.createSaleItemsRequest(mCategoryKeys, mSaleId, 0, mSearchItemsList, null));
-    }
-
-    private boolean areChildrenSelected(List<GetCategoryTreeResponse> list) {
-        for (GetCategoryTreeResponse child : list) {
-            if (!child.isSelected()) {
-                return false;
-            }
-        }
-        return true;
-    }
-
-    private void setSelectedParent(GetCategoryTreeResponse response) {
-        //Update trickle up to parent
-        String parentKey = getParentKey(response);
-        GetCategoryTreeResponse parentNode = mCategoryMap.get(parentKey);
-        parentNode.setSelected(areChildrenSelected(parentNode.getChildren()));
-        List<GetCategoryTreeResponse> parentList = parentNode.getChildren();
-
-        //Update Parent's Children in CategoryMap
-        if (!response.isSelected()) {
-            parentNode.setSelected(false);
-            mCategoryKeys.remove(parentKey);
-        }
-        mCategoryMap.put(parentNode.getKey(), parentNode);
-
-        //Update Children of ParentNode in CategoryMap and add/remove strings on CategoryKeys
-        for (int i = 0; i < parentNode.getChildren().size(); i++) {
-            if (parentList.get(i).getKey().equalsIgnoreCase(response.getKey())) {
-                parentList.set(i, response);
-            }
-            if (!parentList.get(i).isSelected()) {
-                mCategoryKeys.remove(parentList.get(i).getKey());
-            } else if (!mCategoryKeys.contains(response.getKey())) {
-                mCategoryKeys.add(parentList.get(i).getKey());
-            }
-        }
-        parentNode.setChildren(new ArrayList<>(parentList));
-        mCategoryMap.put(parentKey, parentNode);
-
-        if (!(response.getKey().equals(parentKey))) {
-            setSelectedParent(parentNode);
-        }
-    }
-
-    private GetCategoryTreeResponse setSelectedChildren(GetCategoryTreeResponse parent) {
-        //Update trickle down to children
-        for (GetCategoryTreeResponse child : parent.getChildren()) {
-            child.setSelected(parent.isSelected());
-            if (mCategoryKeys.contains(child.getKey())) {
-                mCategoryKeys.remove(child.getKey());
-                mCategoryMap.put(child.getKey(), child);
-            }
-            if (child.getChildren().size() > 0) {
-                mCategoryMap.put(child.getKey(), setSelectedChildren(child));
-            }
-        }
-        return parent;
-    }
-
-    public void updateSubCategoryFilters(List<GetCategoryTreeResponse> categoryTree) {
-        //Updates SubCategories depending on the Response and Update CategoryMap
-        List<GetCategoryTreeResponse> mCategoryList = new ArrayList<>();
-        for (int i = 0; i < categoryTree.size(); i++) {
-            if (mCategoryMap.get(categoryTree.get(i).getKey()).isSelected()) {
-                categoryTree.get(i).setSelected(true);
-                setSelectedChildren(categoryTree.get(i));
-            }
-            categoryTree.get(i).setChildren(updateCategoryListFromResponse(new ArrayList<>(categoryTree.get(i).getChildren())));
-            categoryTree.set(i, categoryTree.get(i));
-            mCategoryList.add(categoryTree.get(i));
-            mCategoryMap.put(categoryTree.get(i).getKey(), categoryTree.get(i));
-        }
-        mSubCategoriesAdapter.replaceData(mCategoryList);
-    }
-
-    private ArrayList<GetCategoryTreeResponse> updateCategoryListFromResponse(ArrayList<GetCategoryTreeResponse> category) {
-        //will get the states of the categories, since categorylist from api has isSelected to default(false)
-        for (int i = 0; i < category.size(); i++) {
-            //if parent is selected children should be also
-            category.get(i).setSelected(mCategoryMap.get(getParentKey(category.get(i))).isSelected() || mCategoryMap.get(category.get(i).getKey()).isSelected());
-
-            //update category child on CategoryMap
-            if (category.get(i).getChildren().size() > 0) {
-                updateCategoryListFromResponse(new ArrayList<>(category.get(i).getChildren()));
-            }
-            category.set(i, category.get(i));
-            mCategoryMap.put(category.get(i).getKey(), category.get(i));
-        }
-        return category;
-    }
-
     private SearchChipModel findPriceChip() {
         for (SearchChipModel chip : mSearchItemsList) {
             if (chip.getFilterType().equals(BundleKeys.PRICE_FACETFILTER_NAME)) {
@@ -685,10 +555,12 @@ public class SearchFilterController extends BaseController implements SearchFilt
         }
     }
 
+    @Override
     public void setSearchFilterControllerActive(boolean isTabActive){
         mIsSearchFilterControllerActive = isTabActive;
     }
 
+    @Override
     public void setFacetFilterItems(List<Pair<String,String>> mFacetFilters) {
         this.mFacetFilters = mFacetFilters;
     }

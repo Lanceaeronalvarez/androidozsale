@@ -24,7 +24,6 @@ import au.com.dealsdirect.R;
 import au.com.dealsdirect.ui.base.BaseController;
 import au.com.dealsdirect.ui.controller.returns.newreturn.NewReturnController;
 import au.com.dealsdirect.ui.controller.returns.returnorders.adapter.ReturnOrdersAdapter;
-import au.com.dealsdirect.ui.controller.returns.returnorders.listener.ReturnOrderClickListener;
 import au.com.dealsdirect.utils.BundleBuilder;
 import butterknife.BindView;
 import butterknife.OnClick;
@@ -34,14 +33,9 @@ import butterknife.OnClick;
  */
 
 public class ReturnOrdersController extends BaseController
-        implements ReturnOrdersMvpView, ReturnOrderClickListener {
+        implements ReturnOrdersMvpView {
 
     public static final String TAG = "ReturnOrdersController";
-
-    private static final String KEY_TEXT = "ReturnOrdersController.KEY_TEXT";
-
-    private ReturnOrderClickListener mReturnOrderClickListener;
-
 
     @BindView(R.id.partial_toolbar_right_view)
     ImageView mReturnOrdersControllerToolbarRightOption;
@@ -95,9 +89,8 @@ public class ReturnOrdersController extends BaseController
     protected void setUp(View view) {
         // Setup views here
 
-        mReturnOrdersControllerToolbarTitle.setText("Select Order");
+        mReturnOrdersControllerToolbarTitle.setText(getString(R.string.request_new_return));
         mReturnOrdersControllerToolbarRightOption.setVisibility(View.INVISIBLE);
-        mReturnOrderClickListener = this;
         mPresenter.loadOrders();
 
     }
@@ -132,14 +125,9 @@ public class ReturnOrdersController extends BaseController
             mReturnOrdersListContainer.setVisibility(View.VISIBLE);
         }
 
-        final ReturnOrdersAdapter adapter
-                = new ReturnOrdersAdapter
-                (newReturnsOrders, mActivity, mReturnOrderClickListener);
+        final ReturnOrdersAdapter adapter = new ReturnOrdersAdapter(newReturnsOrders, mPresenter);
 
-        mReturnOrdersRecyclerView
-                .addItemDecoration(
-                        new DividerItemDecoration(mActivity, DividerItemDecoration.VERTICAL)
-                );
+        mReturnOrdersRecyclerView.addItemDecoration(new DividerItemDecoration(mActivity, DividerItemDecoration.VERTICAL));
 
         mReturnOrdersRecyclerView.setAdapter(adapter);
         mReturnOrdersRecyclerView.setLayoutManager(new LinearLayoutManager(mActivity));

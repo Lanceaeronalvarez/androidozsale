@@ -20,12 +20,10 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_below="@+id/controller_return_details_toolbar_layout"
-            android:background="@color/white"
             android:layout_marginTop="@dimen/activity_horizontal_margin"
             android:isScrollContainer="true">
 
             <LinearLayout
-                android:id="@+id/controller_return_details_fragment"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_alignParentTop="true"
@@ -53,12 +51,16 @@
                     android:layout_height="wrap_content"
                     android:orientation="vertical"
                     android:overScrollMode="never"
+                    android:background="@color/white"
                     android:paddingRight="@dimen/margin_small"/>
 
                 <RelativeLayout
                     android:id="@+id/controller_return_details_total_container"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/margin_medium"
+                    android:background="@color/white"
+                    android:visibility="gone"
                     android:padding="@dimen/margin_small">
 
 
@@ -77,8 +79,8 @@
                         android:id="@+id/controller_return_details_total_value"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginLeft="@dimen/margin_small"
-                        android:layout_toRightOf="@+id/controller_return_details_total"
+                        android:layout_marginStart="@dimen/margin_small"
+                        android:layout_alignParentEnd="true"
                         android:fontFamily="@string/font_app_medium"
                         android:textColor="@color/colorAccent"
                         android:textSize="@dimen/text_size_headline3"

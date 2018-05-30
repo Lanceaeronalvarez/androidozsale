@@ -45,7 +45,7 @@ import butterknife.OnClick;
  */
 
 public class CurrentReturnsController extends BasePullToRefreshController
-        implements CurrentReturnsMvpView, CurrentReturnClickListener {
+        implements CurrentReturnsMvpView {
 
     public static final String TAG = "CurrentReturnsController";
     private static final String KEY_TEXT = "CurrentReturnsController.KEY_TEXT";
@@ -58,7 +58,7 @@ public class CurrentReturnsController extends BasePullToRefreshController
     private CurrentReturnAdapter mCurrentReturnsAdapter;
 
     @BindView(R.id.partial_toolbar_arrow_title)
-    TextView mCurrentReturnsToolarTitle;
+    TextView mCurrentReturnsToolbarTitle;
 
     @BindView(R.id.partial_toolbar_right_view)
     ImageView mCurrentReturnsRightOption;
@@ -118,15 +118,14 @@ public class CurrentReturnsController extends BasePullToRefreshController
         mCurrentReturnsRecyclerView.setLayoutManager(new LinearLayoutManager(mActivity, LinearLayoutManager
                 .VERTICAL, false));
 
-        mCurrentReturnsListener = this;
-        mCurrentReturnsToolarTitle.setText("My Returns");
+        mCurrentReturnsToolbarTitle.setText("My Returns");
         if (mPresenter.isTablet()) {
             mCurrentReturnsRightOption.setPadding(5, 5, 5, 5);
         } else {
             mCurrentReturnsRightOption.setPadding(20, 20, 20, 20);
         }
         mCurrentReturnsRightOption.setImageDrawable(getResources().getDrawable(R.drawable.ic_add));
-        mCurrentReturnsRightOption.setVisibility(View.GONE);
+        mCurrentReturnsRightOption.setVisibility(View.INVISIBLE);
 
         if (mCurrentReturns == null || mCurrentReturns.size() == 0) {
             mPresenter.loadCurrentReturns();
@@ -135,8 +134,7 @@ public class CurrentReturnsController extends BasePullToRefreshController
             mCurrentReturnsAdapter = new CurrentReturnAdapter(
                     mCurrentReturns,
                     returnDetailsResponseBodyList,
-                    mActivity,
-                    mCurrentReturnsListener);
+                    mPresenter);
 
             mCurrentReturnsRecyclerView.setAdapter(mCurrentReturnsAdapter);
             mCurrentReturnsRecyclerView.setVisibility(View.VISIBLE);
@@ -170,11 +168,7 @@ public class CurrentReturnsController extends BasePullToRefreshController
 
             mCurrentReturns = currentReturns;
 
-            mCurrentReturnsAdapter = new CurrentReturnAdapter(
-                    currentReturns,
-                    returnDetailsResponseBodyList,
-                    mActivity,
-                    mCurrentReturnsListener);
+            mCurrentReturnsAdapter = new CurrentReturnAdapter(currentReturns, returnDetailsResponseBodyList, mPresenter);
 
             mCurrentReturnsRecyclerView.setAdapter(mCurrentReturnsAdapter);
             getCurrentReturnItems(mCurrentReturns);
@@ -221,8 +215,8 @@ public class CurrentReturnsController extends BasePullToRefreshController
     @Override
     public void onCurrentReturnClickListener(
             int orderNumber,
-            CurrentReturnViewHolder holder,
             int position,
+            String productName,
             String productRequestStatus,
             String productRAN,
             String returnRequestDateFormat,
@@ -231,6 +225,7 @@ public class CurrentReturnsController extends BasePullToRefreshController
 
         getRouter().pushController(RouterTransaction.with(
                 ReturnDetailsController.newInstance(
+                        productName,
                         orderNumber,
                         returnId,
                         returnRequestDateFormat,
@@ -293,7 +288,7 @@ public class CurrentReturnsController extends BasePullToRefreshController
 
     private void updateToolbar(){
         if (mCurrentReturns == null || mCurrentReturns.size() == 0)
-            mCurrentReturnsRightOption.setVisibility(View.GONE);
+            mCurrentReturnsRightOption.setVisibility(View.INVISIBLE);
         else
             mCurrentReturnsRightOption.setVisibility(View.VISIBLE);
     }

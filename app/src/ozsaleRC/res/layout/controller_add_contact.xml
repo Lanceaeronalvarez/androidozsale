@@ -1,0 +1,132 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:background="@color/white"
+    android:orientation="vertical"
+    tools:ignore="MissingPrefix">
+
+    <include
+        android:id="@+id/view_contacts_toolbar"
+        layout="@layout/partial_toolbar_arrow" />
+
+    <LinearLayout
+        android:id="@+id/controller_add_contact_header_container"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/view_contacts_toolbar"
+        android:orientation="vertical">
+
+        <LinearLayout
+            android:id="@+id/controller_add_contact_subject_container"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:clickable="true"
+            android:padding="@dimen/padding_default">
+
+            <TextView
+                android:id="@+id/controller_add_contact_subject_title"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_gravity="center_vertical"
+                android:layout_weight="3"
+                android:layout_marginEnd="@dimen/padding_default"
+                android:text="@string/subject"
+                android:textColor="@color/text_medium"
+                android:textSize="@dimen/text_size_body" />
+
+            <TextView
+                fontPath="@string/font_app_bold"
+                android:id="@+id/controller_add_contact_subject_text"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="7"
+                android:textColor="@color/text_dark"
+                android:textSize="@dimen/text_size_body"/>
+
+        </LinearLayout>
+
+        <View style="@style/horizontalBorderView"/>
+
+        <LinearLayout
+            android:id="@+id/controller_add_contact_order_container"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="horizontal"
+            android:clickable="true"
+            android:background="@drawable/bg_account_item"
+            android:padding="@dimen/padding_default">
+
+            <TextView
+                android:id="@+id/controller_add_contact_order_title"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_weight="3"
+                android:layout_marginEnd="@dimen/padding_default"
+                android:text="@string/sale"
+                android:textColor="@color/text_medium"
+                android:textSize="@dimen/text_size_body" />
+
+            <TextView
+                fontPath="@string/font_app_bold"
+                android:id="@+id/controller_add_contact_order_text"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="7"
+                android:textColor="@color/text_dark"
+                android:textSize="@dimen/text_size_body"
+                android:text="@string/select_a_sale"/>
+
+        </LinearLayout>
+
+        <View style="@style/horizontalBorderView" />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/controller_add_contact_message_container"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/contacts_edittext_height"
+        android:background="@color/background_default"
+        android:orientation="horizontal"
+        android:padding="@dimen/padding_default_half"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentStart="true">
+
+        <EditText
+            android:id="@+id/controller_add_contact_message_field"
+            style="@style/DDEditTextStyle"
+            android:layout_width="0dp"
+            android:layout_gravity="center"
+            android:layout_marginEnd="@dimen/margin_small"
+            android:layout_weight="1"
+            android:background="@drawable/bg_add_contact_message"
+            android:hint="@string/write_a_message" />
+
+        <ImageButton
+            android:id="@+id/controller_add_contact_message_send"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:background="@null"
+            android:src="@drawable/ic_contact_us_send" />
+
+    </LinearLayout>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_above="@id/controller_add_contact_message_container"
+        android:background="@color/border_regular" />
+
+    <FrameLayout
+        android:id="@+id/controller_add_contact_selector_container"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_above="@id/controller_add_contact_message_container"
+        android:layout_below="@id/controller_add_contact_header_container" />
+
+</RelativeLayout>

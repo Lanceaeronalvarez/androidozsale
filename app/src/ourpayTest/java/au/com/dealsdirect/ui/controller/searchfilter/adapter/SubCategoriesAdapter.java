@@ -130,9 +130,4 @@ public class SubCategoriesAdapter extends RecyclerView.Adapter<SubCategoriesAdap
             ButterKnife.bind(this, itemView);
         }
     }
-
-    public void setActiveCategoryKey(String categoryKey) {
-        mChosenCategoryKey = categoryKey;
-        notifyDataSetChanged();
-    }
 }

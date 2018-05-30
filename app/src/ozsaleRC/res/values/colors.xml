@@ -113,8 +113,8 @@
     <color name="product_details_indicator_active">@color/colorAccent</color>
 
     <!-- Toolbar -->
-    <color name="toolbar_skin">#ffffff</color>
-    <color name="toolbar_active_skin">#ffffff</color>
+    <color name="toolbar_skin">@color/white</color>
+    <color name="toolbar_active_skin">#f9f9f9</color>
     <color name="toolbar_border">@color/border_light</color>
 
     <!-- Ourpay -->
