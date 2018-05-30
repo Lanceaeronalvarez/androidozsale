@@ -1,5 +1,7 @@
 package au.com.dealsdirect.ui.controller.orders.orderdetails;
 
+import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.LinearLayoutManager;
@@ -104,9 +106,15 @@ public class OrderDetailsController extends BaseController implements OrderDetai
                     mOrderItem.getPaymentReferenceNo(),
                     mOrderItem.getOrders(),
                     mOrderItem.getTotal(),
-                    mActivity));
+                    mActivity,
+                    mPresenter));
             mRecyclerView.setLayoutManager(new LinearLayoutManager(mActivity, LinearLayoutManager.VERTICAL, false));
         }
+    }
+
+    @Override
+    public void showOrderTrackingWeb(String link) {
+        startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(link)));
     }
 
     @OnClick(R.id.partial_toolbar_left_view)

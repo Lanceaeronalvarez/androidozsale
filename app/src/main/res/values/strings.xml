@@ -573,4 +573,5 @@
     <string name="order_items">Order Items</string>
     <string name="order_details">Order Details</string>
     <string name="dollar">$ %1$s</string>
+    <string name="tracking">Tracking</string>
 </resources>

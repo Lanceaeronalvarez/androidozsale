@@ -41,18 +41,22 @@ public class OrderDetailsRecyclerViewAdapter extends RecyclerView.Adapter<OrderD
     private Context mContext;
     private int mPaymentReferenceNo;
 
+    private OrderDetailsMvpPresenter<OrderDetailsMvpView> mPresenter;
+
     public OrderDetailsRecyclerViewAdapter(
             GetOrderPaymentDetails.ResponseValue.Value orderDetails,
             int paymentReferenceNo,
             ArrayList<GetPaymentsList.ResponseValue.Order> orderList,
             GetPaymentsList.ResponseValue.Total total,
-            Context context) {
+            Context context,
+            OrderDetailsMvpPresenter<OrderDetailsMvpView> presenter) {
 
         this.mOrderList = orderList;
         this.mContext = context;
         this.mPaymentReferenceNo = paymentReferenceNo;
         this.mOrderDetails = orderDetails;
         this.mTotal = total;
+        this.mPresenter = presenter;
     }
 
     @Override
@@ -82,6 +86,8 @@ public class OrderDetailsRecyclerViewAdapter extends RecyclerView.Adapter<OrderD
 
         GetPaymentsList.ResponseValue.Order item = mOrderList.get(position);
 
+        holder.trackHereTextView.setVisibility(item.getLink().isEmpty() ? View.GONE : View.VISIBLE);
+
         String approvedTime = DateUtils.getTimeFromDateString(item.getTracker().getApprovedDate());
 
         holder.orderStatusTextView.setText(item.getStatus());
@@ -91,6 +97,8 @@ public class OrderDetailsRecyclerViewAdapter extends RecyclerView.Adapter<OrderD
         holder.orderDateTextView.setText(orderDateValue + " at " + approvedTime);
 
         holder.deliveryTextValue.setText(mOrderDetails.getOrders().get(position).getDeliveryAddress());
+
+        holder.trackHereTextView.setOnClickListener(v -> mPresenter.showTrackingWeb(item.getLink()));
     }
 
     @Override
@@ -121,6 +129,9 @@ public class OrderDetailsRecyclerViewAdapter extends RecyclerView.Adapter<OrderD
 
         @BindView(R.id.status_text_view)
         TextView orderStatusTextView;
+
+        @BindView(R.id.controller_order_track_here_text)
+        TextView trackHereTextView;
 
         public OrdersViewHolder(View itemView) {
             super(itemView);

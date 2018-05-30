@@ -25,8 +25,7 @@ public class OrdersRecyclerViewAdapter extends RecyclerView.Adapter<OrdersRecycl
     public ArrayList<GetPaymentsList.ResponseValue.PaymentItem> mOrderList = new ArrayList<>();
     Context mContext;
 
-    public OrdersRecyclerViewAdapter(Context context,
-                                     ArrayList<GetPaymentsList.ResponseValue.PaymentItem> orderList) {
+    public OrdersRecyclerViewAdapter(Context context, ArrayList<GetPaymentsList.ResponseValue.PaymentItem> orderList) {
 
         this.mOrderList = orderList;
         this.mContext = context;
@@ -93,7 +92,6 @@ public class OrdersRecyclerViewAdapter extends RecyclerView.Adapter<OrdersRecycl
 
         @BindView(R.id.row_order_total_value)
         TextView totalPaymentText;
-
 
         public OrdersViewHolder(View itemView) {
             super(itemView);
