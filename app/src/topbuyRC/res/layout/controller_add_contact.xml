@@ -27,8 +27,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="select subject"
-                android:textColor="@color/gray_field_text"
-                android:textSize="@dimen/text_size_large"/>
+                android:textColor="@color/text_medium"
+                android:textSize="@dimen/text_size_headline2"/>
 
             <android.support.design.widget.TextInputLayout
                 android:layout_width="match_parent"
@@ -45,7 +45,7 @@
                     android:maxLines="1"
                     android:padding="20dp"
                     android:textColor="#919191"
-                    android:textSize="@dimen/text_size_large"/>
+                    android:textSize="@dimen/text_size_headline2"/>
 
             </android.support.design.widget.TextInputLayout>
         </LinearLayout>
@@ -63,8 +63,8 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/activity_horizontal_margin"
                 android:text="select order"
-                android:textColor="@color/gray_field_text"
-                android:textSize="@dimen/text_size_large"/>
+                android:textColor="@color/text_medium"
+                android:textSize="@dimen/text_size_headline2"/>
 
             <android.support.design.widget.TextInputLayout
                 android:layout_width="match_parent"
@@ -81,7 +81,7 @@
                     android:maxLines="1"
                     android:padding="20dp"
                     android:textColor="#919191"
-                    android:textSize="@dimen/text_size_large"/>
+                    android:textSize="@dimen/text_size_headline2"/>
 
             </android.support.design.widget.TextInputLayout>
 
@@ -91,9 +91,9 @@
         <!--android:layout_width="match_parent"-->
         <!--android:layout_height="wrap_content"-->
         <!--android:text="select order"-->
-        <!--android:textColor="@color/gray_field_text"-->
+        <!--android:textColor="@color/text_medium"-->
         <!--android:layout_marginTop="@dimen/activity_horizontal_margin"-->
-        <!--android:textSize="@dimen/text_size_medium" />-->
+        <!--android:textSize="@dimen/text_size_headline3" />-->
 
         <!--<android.support.design.widget.TextInputLayout-->
         <!--android:layout_width="match_parent"-->
@@ -111,7 +111,7 @@
         <!--android:textColor="#919191"-->
         <!--android:hint="@string/write_us_a_message"-->
         <!--android:textColorHint="#c1c1c1"-->
-        <!--android:textSize="@dimen/text_size_medium" />-->
+        <!--android:textSize="@dimen/text_size_headline3" />-->
 
         <!--</android.support.design.widget.TextInputLayout>-->
 
@@ -140,7 +140,7 @@
             <!--android:focusableInTouchMode="true"-->
             <!--android:text="@string/subject"-->
             <!--android:textColor="@color/contact_us_text_selector"-->
-            <!--android:textSize="@dimen/text_size_large" />-->
+            <!--android:textSize="@dimen/text_size_headline2" />-->
 
             <!--<TextView-->
             <!--android:id="@+id/controller_add_contact_subject_text"-->
@@ -168,7 +168,7 @@
             <!--android:focusableInTouchMode="true"-->
             <!--android:text="@string/sale"-->
             <!--android:textColor="@color/contact_us_text_selector"-->
-            <!--android:textSize="@dimen/text_size_large" />-->
+            <!--android:textSize="@dimen/text_size_headline2" />-->
 
             <!--<TextView-->
             <!--android:id="@+id/controller_add_contact_order_text"-->
@@ -238,8 +238,8 @@
                     android:layout_height="wrap_content"
                     android:layout_marginTop="@dimen/activity_horizontal_margin"
                     android:text="reason"
-                    android:textColor="@color/gray_field_text"
-                    android:textSize="@dimen/text_size_large"/>
+                    android:textColor="@color/text_medium"
+                    android:textSize="@dimen/text_size_headline2"/>
 
                 <android.support.design.widget.TextInputLayout
                     android:layout_width="match_parent"
@@ -257,7 +257,7 @@
                         android:maxLines="1"
                         android:padding="20dp"
                         android:textColor="#919191"
-                        android:textSize="@dimen/text_size_large"/>
+                        android:textSize="@dimen/text_size_headline2"/>
 
                 </android.support.design.widget.TextInputLayout>
 

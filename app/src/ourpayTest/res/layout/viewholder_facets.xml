@@ -15,7 +15,7 @@
         android:layout_height="wrap_content"
         android:layout_gravity="center"
         android:gravity="center"
-        android:textColor="@color/gray_field_text"
+        android:textColor="@color/text_medium"
         android:textSize="@dimen/text_size_headline2" />
 
     <TextView

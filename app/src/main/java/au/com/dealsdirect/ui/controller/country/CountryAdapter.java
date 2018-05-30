@@ -19,7 +19,7 @@ import butterknife.ButterKnife;
  * Created by Admin on 12/18/17.
  */
 
-public class CountryAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>{
+public class CountryAdapter extends RecyclerView.Adapter<CountryAdapter.CountriesViewHolder>{
 
     private List<Country> mCountries;
     private String mSelectedCountry;
@@ -33,22 +33,22 @@ public class CountryAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
     }
 
     @Override
-    public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+    public CountriesViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.row_user_language, parent, false);
         CountryAdapter.CountriesViewHolder vh = new CountryAdapter.CountriesViewHolder(view, mPresenter);
         return vh;
     }
 
     @Override
-    public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
+    public void onBindViewHolder(CountriesViewHolder holder, int position) {
         if(mSelectedCountry.equals(mCountries.get(position).getShopCode()) || mSelectedCountry == mCountries.get(position).getShopCode()) {
-            ((CountriesViewHolder) holder).mCountryText.setTextColor(context.getResources().getColor(R.color.filter_text_active));
+            holder.mCountryText.setTextColor(context.getResources().getColor(R.color.colorAccent));
         }
-        ((CountryAdapter.CountriesViewHolder) holder).mCountryText.setText(mCountries.get(position).getCountry());
+        holder.mCountryText.setText(mCountries.get(position).getCountry());
 
-        ((CountryAdapter.CountriesViewHolder) holder).itemView.setOnClickListener(v ->{
+        holder.itemView.setOnClickListener(v ->{
             mPresenter.onCountryItemClick(mCountries.get(position));
-            ((CountryAdapter.CountriesViewHolder) holder).mCountryText.setTextColor(context.getResources().getColor(R.color.filter_text_active));
+            holder.mCountryText.setTextColor(context.getResources().getColor(R.color.filter_text_active));
         });
     }
 

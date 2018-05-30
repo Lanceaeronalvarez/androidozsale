@@ -80,7 +80,7 @@
                     android:layout_height="wrap_content"
                     android:layout_weight="4"
                     android:textColor="#707070"
-                    android:textSize="@dimen/text_size_xlarge"
+                    android:textSize="@dimen/text_size_headline1"
                     android:textStyle="bold"
                     tools:ignore="HardcodedText"/>
 
@@ -247,7 +247,7 @@
                         android:layout_height="wrap_content"
                         android:layout_gravity="center_horizontal"
                         android:text="Order Date"
-                        android:textColor="@color/gray_field_text"
+                        android:textColor="@color/text_medium"
                         android:textSize="12sp"
                         tools:ignore="HardcodedText" />
 

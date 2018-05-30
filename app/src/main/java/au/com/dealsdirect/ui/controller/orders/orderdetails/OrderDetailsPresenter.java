@@ -31,7 +31,7 @@ public class OrderDetailsPresenter<V extends OrderDetailsMvpView> extends BasePr
             public void onSuccess(Object response) {
                 GetOrderPaymentDetails.ResponseValue responseValue = (GetOrderPaymentDetails.ResponseValue) response;
 
-                if (responseValue.getD().getResult()) {
+                if (responseValue.getD().isAuthenticated() && responseValue.getD().getResult()) {
                     getMvpView().showOrderDetails(responseValue);
                 }
             }

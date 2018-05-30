@@ -146,8 +146,8 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:text="@string/total"
-                android:textColor="#676767"
-                android:textSize="@dimen/text_size_headline2" />
+                android:textColor="@color/text_medium"
+                android:textSize="@dimen/text_size_body" />
 
             <TextView
                 android:id="@+id/partial_checkout_summary_total"
@@ -156,8 +156,8 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:gravity="end"
-                android:textColor="@color/cart_order_price_text_color"
-                android:textSize="@dimen/text_size_headline1"
+                android:textColor="@color/text_medium"
+                android:textSize="@dimen/text_size_body"
                 tools:text="$27" />
 
         </LinearLayout>

@@ -2,33 +2,34 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_marginLeft="@dimen/padding_default"
-    android:layout_marginRight="@dimen/padding_default"
+    xmlns:tools="http://schemas.android.com/tools"
     android:orientation="vertical"
-    android:paddingBottom="10dp"
-    android:paddingTop="10dp">
+    android:paddingBottom="@dimen/padding_default"
+    android:paddingTop="@dimen/padding_default"
+    tools:ignore="MissingPrefix">
 
     <TextView
+        fontPath="@string/font_app_bold"
         android:id="@+id/row_add_address_label"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:textColor="@color/gray_active_field_text" />
+        android:textColor="@color/text_medium" />
 
     <android.support.v7.widget.AppCompatSpinner
         android:id="@+id/row_add_address_spinner"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="5dp"
+        android:layout_marginTop="@dimen/padding_default_half"
         android:background="@android:color/transparent"
         android:padding="0dp"
-        android:textColor="@color/edit_text_content"
+        android:textColor="@color/text_medium"
         android:textSize="@dimen/text_size_body" />
 
     <View
         android:layout_width="match_parent"
         android:layout_height="@dimen/divider_height"
-        android:layout_marginBottom="10dp"
-        android:layout_marginTop="5dp"
+        android:layout_marginBottom="@dimen/padding_default"
+        android:layout_marginTop="@dimen/padding_default_half"
         android:background="@color/border_gray" />
 
 </LinearLayout>

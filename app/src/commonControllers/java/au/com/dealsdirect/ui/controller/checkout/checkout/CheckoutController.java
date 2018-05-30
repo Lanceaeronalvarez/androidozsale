@@ -137,6 +137,8 @@ public class CheckoutController extends BaseController implements CheckoutMvpVie
 
     @BindView(R.id.no_cart_items_layout)
     RelativeLayout mNoCartItemsLayout;
+    @BindView(R.id.controller_checkout_container)
+    ViewGroup mCheckoutContainer;
 
     @BindView(R.id.partial_checkout_empty_button)
     Button mShopNowButton;
@@ -165,7 +167,8 @@ public class CheckoutController extends BaseController implements CheckoutMvpVie
     private String mAddressPhoneNumber;
 
     private Value mValue;
-   public OurpayPanel ourpayPanel;
+    public OurpayPanel ourpayPanel;
+
     public CheckoutController() {
 
     }
@@ -289,7 +292,7 @@ public class CheckoutController extends BaseController implements CheckoutMvpVie
 
         mAdapter = new CheckoutOrderAdapter(mActivity, mItemList, mPresenter);
         mRecyclerView.setAdapter(mAdapter);
-        mRecyclerView.setLayoutManager(new LinearLayoutManager(mActivity,LinearLayoutManager.VERTICAL,false));
+        mRecyclerView.setLayoutManager(new LinearLayoutManager(mActivity, LinearLayoutManager.VERTICAL, false));
 
         mAddNewAddressLayout.setOnClickListener(mChangeClickListener);
         mAddNewPaymentLayout.setOnClickListener(mChangeClickListener);
@@ -304,7 +307,7 @@ public class CheckoutController extends BaseController implements CheckoutMvpVie
         mMasterpassButton.setOnClickListener(view3 -> onMasterpassButtonClick());
 
         mVouchersEditText.setOnEditorActionListener((textView, actionId, keyEvent) -> {
-            if(actionId == EditorInfo.IME_ACTION_DONE) {
+            if (actionId == EditorInfo.IME_ACTION_DONE) {
                 mPresenter.addAndApplyVoucherByKey(VOUCHER_IMAGE_SIZE, mVouchersEditText.getText().toString());
                 return true;
             }
@@ -361,11 +364,6 @@ public class CheckoutController extends BaseController implements CheckoutMvpVie
     }
 
     @Override
-    public boolean isViewPagerOnCheckout() {
-        return false;
-    }
-
-    @Override
     public void showMyPayDetails(Value value, Ourpay ourpay) {
 
         if (value != null) {
@@ -415,17 +413,10 @@ public class CheckoutController extends BaseController implements CheckoutMvpVie
         } else if (items.isEmpty()) {
             //no items
             showNoCartItemsLayout();
-            mNestedScrollView.setVisibility(View.GONE);
         } else {
-            mNoCartItemsLayout.setVisibility(View.GONE);
-            mNestedScrollView.setVisibility(View.VISIBLE);
-            showPaymentButtons();
-            int showOrdersLabel = mActivity.getResources().getBoolean(R.bool.is_checkout_orders_label_visible) ?
-                    View.VISIBLE : View.GONE;
-            mOrdersLabel.setVisibility(showOrdersLabel);
             mAdapter.replaceData(items);
+            showCartItems();
         }
-
     }
 
     @Override
@@ -487,11 +478,9 @@ public class CheckoutController extends BaseController implements CheckoutMvpVie
 
         //Payment buttons
         if (paymentMethod == null) {
-
             mPayButton.setVisibility(View.VISIBLE);
             mPaypalButton.setVisibility(View.VISIBLE);
         } else {
-
             if (paymentMethod.getPaymentType().equalsIgnoreCase(CARD_PAYPAL)) {
                 mPayButton.setVisibility(View.GONE);
                 mPaypalButton.setVisibility(View.VISIBLE);
@@ -573,7 +562,7 @@ public class CheckoutController extends BaseController implements CheckoutMvpVie
     @Override
     public void onAddAndAppliedVoucher(AddAndApplyVoucherByKeyResponse response) {
 
-        if(response.getValue() == null) {
+        if (response.getValue() == null) {
             CustomAlertDialog.showCustomAlertDialog(
                     mActivity,
                     CustomAlertDialog.CustomDialogIconState.NEGATIVE,
@@ -626,6 +615,7 @@ public class CheckoutController extends BaseController implements CheckoutMvpVie
             } else {
                 PaymentInfo.setPaymentType(PaymentInfo.TYPE_BRAINTREE);
                 mActivity.callCreatePaymentTransaction(PaymentInfo.getPaymentType(), "", PaymentInfo.getPaymentMethod().getToken());
+                mPresenter.facebookInitiatedCheckout(PaymentInfo.getPaymentType(), mAdapter.getItemCount(), mValue.getSummary().total);
             }
         }
     }
@@ -647,6 +637,7 @@ public class CheckoutController extends BaseController implements CheckoutMvpVie
             } else {
                 PaymentInfo.setPaymentType(PaymentInfo.TYPE_BRAINTREE);
                 mActivity.callCreatePaymentTransaction(PaymentInfo.getPaymentType(), "", PaymentInfo.getPaymentMethod().getToken());
+                mPresenter.facebookInitiatedCheckout(PaymentInfo.getPaymentType(), mAdapter.getItemCount(), mValue.getSummary().total);
             }
         }
     }
@@ -665,7 +656,9 @@ public class CheckoutController extends BaseController implements CheckoutMvpVie
         getRouter().pushController(RouterTransaction.with(MasterpassController.newInstance())
                 .pushChangeHandler(new HorizontalChangeHandler(false))
                 .popChangeHandler(new HorizontalChangeHandler()));
-        
+
+        mPresenter.facebookInitiatedCheckout(PaymentInfo.getPaymentType(), mAdapter.getItemCount(), mValue.getSummary().total);
+
     }
 
     private void onOurpayButtonClick() {
@@ -700,6 +693,7 @@ public class CheckoutController extends BaseController implements CheckoutMvpVie
                                 .popChangeHandler(new HorizontalChangeHandler()));
                     } else {
                         ourpayPaymentSubmit();
+                        mPresenter.facebookInitiatedCheckout(PaymentInfo.getPaymentType(), mAdapter.getItemCount(), mValue.getSummary().total);
                     }
                 }
             }
@@ -728,7 +722,16 @@ public class CheckoutController extends BaseController implements CheckoutMvpVie
     private void showNoCartItemsLayout() {
         hidePaymentButtons();
         mNoCartItemsLayout.setVisibility(View.VISIBLE);
+        mCheckoutContainer.setVisibility(View.GONE);
         mPresenter.resetIsCartAlreadyLoaded();
+    }
+
+    private void showCartItems() {
+        showPaymentButtons();
+        mNoCartItemsLayout.setVisibility(View.GONE);
+        mCheckoutContainer.setVisibility(View.VISIBLE);
+        int showOrdersLabel = getResources().getBoolean(R.bool.is_checkout_orders_label_visible) ? View.VISIBLE : View.GONE;
+        mOrdersLabel.setVisibility(showOrdersLabel);
     }
 
     private void hidePaymentButtons() {

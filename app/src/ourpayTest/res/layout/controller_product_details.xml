@@ -28,125 +28,104 @@
                 app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
                 <LinearLayout
+                    android:id="@+id/main_layout"
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent"
+                    android:layout_height="wrap_content"
+                    android:clipChildren="false"
+                    android:clipToPadding="false"
+                    android:descendantFocusability="blocksDescendants"
                     android:orientation="vertical">
 
-                    <FrameLayout
-                        android:id="@+id/item_card_content"
+                    <RelativeLayout
+                        android:id="@+id/vh_uppercard"
                         android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_gravity="center"
-                        android:clickable="true"
+                        android:layout_height="match_parent"
                         android:clipChildren="false"
-                        android:clipToPadding="false">
+                        android:clipToPadding="false"
+                        android:elevation="10dp">
 
-                        <RelativeLayout
-                            android:id="@+id/container"
+                        <FrameLayout
+                            android:id="@+id/image_container"
                             android:layout_width="match_parent"
-                            android:layout_height="match_parent"
-                            android:background="@android:color/white"
+                            android:layout_height="wrap_content"
                             android:clipChildren="false"
                             android:clipToPadding="false">
 
-                            <LinearLayout
-                                android:id="@+id/main_layout"
-                                android:layout_width="match_parent"
-                                android:layout_height="wrap_content"
+                            <RelativeLayout
+                                android:layout_width="wrap_content"
+                                android:layout_height="@dimen/product_image_height"
                                 android:clipChildren="false"
                                 android:clipToPadding="false"
-                                android:orientation="vertical">
+                                android:transitionName="cardbackground">
 
-                                <RelativeLayout
-                                    android:id="@+id/vh_uppercard"
+                                <ImageView
+                                    android:id="@+id/product_details_shared_image"
                                     android:layout_width="match_parent"
                                     android:layout_height="match_parent"
+                                    android:layout_alignParentTop="true"
+                                    android:layout_gravity="center" />
+
+
+                                <com.lsjwzh.widget.recyclerviewpager.RecyclerViewPager
+                                    android:id="@+id/productImageRecyclerView"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="match_parent"
+                                    android:layout_gravity="center"
                                     android:clipChildren="false"
                                     android:clipToPadding="false"
-                                    android:elevation="10dp">
+                                    app:rvp_singlePageFling="true"
+                                    app:rvp_triggerOffset="0.05" />
 
-                                    <FrameLayout
-                                        android:id="@+id/image_container"
-                                        android:layout_width="match_parent"
-                                        android:layout_height="wrap_content"
-                                        android:clipChildren="false"
-                                        android:clipToPadding="false">
+                                <ImageView
+                                    android:id="@+id/arrow_left"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_alignStart="@id/product_details_shared_image"
+                                    android:layout_alignTop="@id/product_details_shared_image"
+                                    android:layout_marginStart="@dimen/padding_default"
+                                    android:layout_marginTop="40dp"
+                                    android:src="@drawable/ic_item_details_back_arrow" />
 
-                                        <RelativeLayout
-                                            android:layout_width="wrap_content"
-                                            android:layout_height="@dimen/product_image_height"
-                                            android:clipChildren="false"
-                                            android:clipToPadding="false"
-                                            android:transitionName="cardbackground">
+                            </RelativeLayout>
 
-                                            <ImageView
-                                                android:id="@+id/product_details_shared_image"
-                                                android:layout_width="match_parent"
-                                                android:layout_height="match_parent"
-                                                android:layout_alignParentTop="true"
-                                                android:layout_gravity="center" />
+                        </FrameLayout>
 
 
-                                            <com.lsjwzh.widget.recyclerviewpager.RecyclerViewPager
-                                                android:id="@+id/productImageRecyclerView"
-                                                android:layout_width="match_parent"
-                                                android:layout_height="match_parent"
-                                                android:layout_gravity="center"
-                                                android:clipChildren="false"
-                                                android:clipToPadding="false"
-                                                app:rvp_singlePageFling="true"
-                                                app:rvp_triggerOffset="0.05" />
+                        <android.support.v7.widget.RecyclerView
+                            android:id="@+id/otherImagesRecyclerView"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_above="@+id/product_details_name_price_container"
+                            android:layout_centerHorizontal="true"
+                            android:layout_marginBottom="@dimen/activity_vertical_margin"
+                            android:isScrollContainer="true"
+                            android:overScrollMode="never" />
 
-                                            <ImageView
-                                                android:id="@+id/arrow_left"
-                                                android:layout_width="wrap_content"
-                                                android:layout_height="wrap_content"
-                                                android:layout_alignStart="@id/product_details_shared_image"
-                                                android:layout_alignTop="@id/product_details_shared_image"
-                                                android:layout_marginStart="@dimen/padding_default"
-                                                android:layout_marginTop="40dp"
-                                                android:src="@drawable/ic_item_details_back_arrow" />
+                        <LinearLayout
+                            android:id="@+id/product_details_name_price_container"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_alignBottom="@id/image_container"
+                            android:background="@color/product_details_name_price_container_bg"
+                            android:orientation="vertical">
 
-                                        </RelativeLayout>
+                            <LinearLayout
+                                android:id="@+id/controller_product_details_title_description"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_marginLeft="@dimen/padding_default"
+                                android:layout_marginRight="@dimen/padding_default"
+                                android:layout_marginTop="@dimen/activity_vertical_margin">
 
-                                    </FrameLayout>
-
-
-                                    <android.support.v7.widget.RecyclerView
-                                        android:id="@+id/otherImagesRecyclerView"
-                                        android:layout_width="wrap_content"
-                                        android:layout_height="wrap_content"
-                                        android:layout_above="@+id/product_details_name_price_container"
-                                        android:layout_centerHorizontal="true"
-                                        android:layout_marginBottom="@dimen/activity_vertical_margin"
-                                        android:isScrollContainer="true"
-                                        android:overScrollMode="never" />
-
-                                    <LinearLayout
-                                        android:id="@+id/product_details_name_price_container"
-                                        android:layout_width="match_parent"
-                                        android:layout_height="wrap_content"
-                                        android:layout_alignBottom="@id/image_container"
-                                        android:background="@color/product_details_name_price_container_bg"
-                                        android:orientation="vertical">
-
-                                        <LinearLayout
-                                            android:id="@+id/controller_product_details_title_description"
-                                            android:layout_width="match_parent"
-                                            android:layout_height="wrap_content"
-                                            android:layout_marginLeft="10dp"
-                                            android:layout_marginRight="10dp"
-                                            android:layout_marginTop="@dimen/activity_vertical_margin">
-
-                                            <LinearLayout
-                                                android:layout_width="0px"
-                                                android:layout_height="wrap_content"
-                                                android:layout_weight="2"
-                                                android:orientation="vertical">
+                                <LinearLayout
+                                    android:layout_width="0px"
+                                    android:layout_height="wrap_content"
+                                    android:layout_weight="2"
+                                    android:orientation="vertical">
 
                                                 <TextView
                                                     android:id="@+id/productBrand"
-                                                    fontPath="@string/font_app_semibold"
+                                                    fontPath="@string/font_app_light"
                                                     android:layout_width="wrap_content"
                                                     android:layout_height="wrap_content"
                                                     android:layout_gravity="start"
@@ -163,13 +142,13 @@
                                                     android:textColor="@color/gray_title_text"
                                                     android:textSize="@dimen/text_size_caption1" />
 
-                                            </LinearLayout>
+                                </LinearLayout>
 
-                                            <LinearLayout
-                                                android:layout_width="0px"
-                                                android:layout_height="wrap_content"
-                                                android:layout_weight="1"
-                                                android:orientation="vertical">
+                                <LinearLayout
+                                    android:layout_width="0px"
+                                    android:layout_height="wrap_content"
+                                    android:layout_weight="1"
+                                    android:orientation="vertical">
 
                                                 <TextView
                                                     android:id="@+id/productPrice"
@@ -193,67 +172,69 @@
                                                     android:textColor="@color/gray_sale_price"
                                                     android:textSize="@dimen/text_size_body" />
 
-                                            </LinearLayout>
-                                        </LinearLayout>
+                                </LinearLayout>
+                            </LinearLayout>
 
-                                    </LinearLayout>
-                                </RelativeLayout>
+                        </LinearLayout>
+                    </RelativeLayout>
 
-                                <View style="@style/horizontalBorderView" />
+                    <View style="@style/horizontalBorderView"
+                        android:layout_marginTop="@dimen/padding_default"
+                        android:layout_marginBottom="@dimen/padding_default"/>
 
+                    <LinearLayout
+                        android:id="@+id/bottom_card"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical"
+                        android:paddingBottom="@dimen/product_details_bottom_padding"
+                        android:visibility="visible">
+
+                        <!--OURPAY PANEL HOLDER-->
+                        <LinearLayout
+                            android:id="@+id/partial_item_details_ourpay_panel_holder"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_margin="5dp"
+                            android:background="@drawable/bg_edit_text_rounded"
+                            android:orientation="vertical"
+                            android:visibility="visible">
+
+                            <ImageView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_gravity="center"
+                                android:src="@drawable/logo_colored" />
+
+                            <TextView
+                                fontPath="@string/font_app_bold"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_gravity="center"
+                                android:gravity="center"
+                                android:text="PLACE HOLDER"
+                                android:textSize="22sp" />
+                        </LinearLayout>
+
+                        <android.support.v7.widget.CardView
+                            android:id="@+id/product_details_first_card_view"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            app:cardCornerRadius="5dp"
+                            app:cardUseCompatPadding="true"
+                            tools:ignore="MissingPrefix">
+
+                            <LinearLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:orientation="vertical">
+                                <!--SIZES-->
                                 <LinearLayout
-                                    android:id="@+id/bottom_card"
+                                    android:id="@+id/product_details_sizes_container"
                                     android:layout_width="match_parent"
                                     android:layout_height="wrap_content"
                                     android:orientation="vertical"
-                                    android:paddingBottom="@dimen/product_details_bottom_padding"
-                                    android:visibility="visible">
-
-                                    <!--OURPAY PANEL HOLDER-->
-                                    <LinearLayout
-                                        android:id="@+id/partial_item_details_ourpay_panel_holder"
-                                        android:layout_width="match_parent"
-                                        android:layout_height="wrap_content"
-                                        android:layout_margin="5dp"
-                                        android:background="@drawable/bg_edit_text_rounded"
-                                        android:orientation="vertical"
-                                        android:visibility="visible">
-
-                                        <ImageView
-                                            android:layout_width="wrap_content"
-                                            android:layout_height="wrap_content"
-                                            android:layout_gravity="center"
-                                            android:src="@drawable/logo_colored" />
-
-                                        <TextView
-                                            fontPath="@string/font_app_bold"
-                                            android:layout_width="wrap_content"
-                                            android:layout_height="wrap_content"
-                                            android:layout_gravity="center"
-                                            android:gravity="center"
-                                            android:text="PLACE HOLDER"
-                                            android:textSize="22sp" />
-                                    </LinearLayout>
-
-                                    <android.support.v7.widget.CardView
-                                        android:id="@+id/product_details_first_card_view"
-                                        android:layout_width="match_parent"
-                                        android:layout_height="wrap_content"
-                                        app:cardCornerRadius="5dp"
-                                        app:cardUseCompatPadding="true"
-                                        tools:ignore="MissingPrefix">
-
-                                        <LinearLayout
-                                            android:layout_width="match_parent"
-                                            android:layout_height="wrap_content"
-                                            android:orientation="vertical">
-                                            <!--SIZES-->
-                                            <LinearLayout
-                                                android:id="@+id/product_details_sizes_container"
-                                                android:layout_width="match_parent"
-                                                android:layout_height="wrap_content"
-                                                android:orientation="vertical"
-                                                android:visibility="gone">
+                                    android:visibility="gone">
 
                                                 <TextView
                                                     fontPath="@string/font_app_bold"
@@ -262,29 +243,29 @@
                                                     android:padding="@dimen/padding_default"
                                                     android:text="@string/choose_your_size"
                                                     android:textColor="@color/color_item_title"
-                                                    android:textSize="@dimen/text_size_body" />
+                                                    android:textSize="@dimen/text_size_headline2" />
 
 
-                                                <com.zhy.view.flowlayout.TagFlowLayout
-                                                    android:id="@+id/product_details_size_list"
-                                                    android:layout_width="match_parent"
-                                                    android:layout_height="wrap_content"
-                                                    android:padding="@dimen/padding_default"
-                                                    app:max_select="1" />
+                                    <com.zhy.view.flowlayout.TagFlowLayout
+                                        android:id="@+id/product_details_size_list"
+                                        android:layout_width="match_parent"
+                                        android:layout_height="wrap_content"
+                                        android:padding="@dimen/padding_default"
+                                        app:max_select="1" />
 
-                                                <View
-                                                    style="@style/horizontalBorderView"
-                                                    android:padding="0dp" />
+                                    <View
+                                        style="@style/horizontalBorderView"
+                                        android:padding="0dp" />
 
-                                            </LinearLayout>
+                                </LinearLayout>
 
-                                            <!--SHIPPING DESC-->
-                                            <LinearLayout
-                                                android:id="@+id/product_details_shipping_desc_container"
-                                                android:layout_width="match_parent"
-                                                android:layout_height="match_parent"
-                                                android:orientation="vertical"
-                                                android:visibility="gone">
+                                <!--SHIPPING DESC-->
+                                <LinearLayout
+                                    android:id="@+id/product_details_shipping_desc_container"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="match_parent"
+                                    android:orientation="vertical"
+                                    android:visibility="gone">
 
                                                 <TextView
                                                     fontPath="@string/font_app_bold"
@@ -293,31 +274,31 @@
                                                     android:padding="@dimen/padding_default"
                                                     android:text="@string/estimated_delivery"
                                                     android:textColor="@color/color_item_title"
-                                                    android:textSize="@dimen/text_size_body" />
+                                                    android:textSize="@dimen/text_size_headline2" />
 
-                                                <FrameLayout
-                                                    android:layout_width="match_parent"
-                                                    android:layout_height="match_parent"
-                                                    android:layout_margin="@dimen/padding_default">
+                                    <FrameLayout
+                                        android:layout_width="match_parent"
+                                        android:layout_height="match_parent"
+                                        android:layout_margin="@dimen/padding_default">
 
-                                                    <WebView
-                                                        android:id="@+id/product_details_shipping_desc_webview"
-                                                        android:layout_width="match_parent"
-                                                        android:layout_height="wrap_content" />
+                                        <WebView
+                                            android:id="@+id/product_details_shipping_desc_webview"
+                                            android:layout_width="match_parent"
+                                            android:layout_height="wrap_content" />
 
-                                                </FrameLayout>
+                                    </FrameLayout>
 
-                                                <View style="@style/horizontalBorderView" />
+                                    <View style="@style/horizontalBorderView" />
 
-                                            </LinearLayout>
+                                </LinearLayout>
 
-                                            <!--RETURN POLICY-->
-                                            <LinearLayout
-                                                android:id="@+id/product_details_return_policy_container"
-                                                android:layout_width="match_parent"
-                                                android:layout_height="match_parent"
-                                                android:orientation="vertical"
-                                                android:visibility="gone">
+                                <!--RETURN POLICY-->
+                                <LinearLayout
+                                    android:id="@+id/product_details_return_policy_container"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="match_parent"
+                                    android:orientation="vertical"
+                                    android:visibility="gone">
 
                                                 <TextView
                                                     fontPath="@string/font_app_bold"
@@ -326,70 +307,68 @@
                                                     android:padding="@dimen/padding_default"
                                                     android:text="@string/return_policy"
                                                     android:textColor="@color/color_item_title"
-                                                    android:textSize="@dimen/text_size_body" />
+                                                    android:textSize="@dimen/text_size_headline2" />
 
-                                                <FrameLayout
-                                                    android:layout_width="match_parent"
-                                                    android:layout_height="match_parent"
-                                                    android:layout_margin="@dimen/padding_default">
+                                    <FrameLayout
+                                        android:layout_width="match_parent"
+                                        android:layout_height="match_parent"
+                                        android:layout_margin="@dimen/padding_default">
 
                                                     <WebView
                                                         android:id="@+id/product_details_return_policy_text"
                                                         android:layout_width="match_parent"
                                                         android:layout_height="wrap_content"
-                                                        android:textSize="@dimen/text_size_caption1" />
+                                                        android:textSize="@dimen/text_size_headline3" />
                                                 </FrameLayout>
 
-                                                <View style="@style/horizontalBorderView" />
+                                </LinearLayout>
 
-                                            </LinearLayout>
+                            </LinearLayout>
 
-                                        </LinearLayout>
+                        </android.support.v7.widget.CardView>
 
-                                    </android.support.v7.widget.CardView>
+                        <android.support.v7.widget.CardView
+                            android:id="@+id/product_details_second_card_view"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            app:cardCornerRadius="5dp"
+                            app:cardUseCompatPadding="true"
+                            tools:ignore="MissingPrefix">
 
-                                    <android.support.v7.widget.CardView
-                                        android:id="@+id/product_details_second_card_view"
+                            <LinearLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:orientation="vertical">
+                                <!--PRODUCT ABOUT-->
+                                <LinearLayout
+                                    android:id="@+id/product_about_container"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="match_parent"
+                                    android:orientation="vertical"
+                                    android:visibility="gone">
+
+                                    <FrameLayout
                                         android:layout_width="match_parent"
-                                        android:layout_height="wrap_content"
-                                        app:cardCornerRadius="5dp"
-                                        app:cardUseCompatPadding="true"
-                                        tools:ignore="MissingPrefix">
+                                        android:layout_height="match_parent"
+                                        android:layout_margin="@dimen/padding_default">
 
-                                        <LinearLayout
+                                        <WebView
+                                            android:id="@+id/product_about"
                                             android:layout_width="match_parent"
-                                            android:layout_height="wrap_content"
-                                            android:orientation="vertical">
-                                            <!--PRODUCT ABOUT-->
-                                            <LinearLayout
-                                                android:id="@+id/product_about_container"
-                                                android:layout_width="match_parent"
-                                                android:layout_height="match_parent"
-                                                android:orientation="vertical"
-                                                android:visibility="gone">
+                                            android:layout_height="wrap_content" />
+                                    </FrameLayout>
 
-                                                <FrameLayout
-                                                    android:layout_width="match_parent"
-                                                    android:layout_height="match_parent"
-                                                    android:layout_margin="@dimen/padding_default">
+                                    <View style="@style/horizontalBorderView" />
 
-                                                    <WebView
-                                                        android:id="@+id/product_about"
-                                                        android:layout_width="match_parent"
-                                                        android:layout_height="wrap_content" />
-                                                </FrameLayout>
+                                </LinearLayout>
 
-                                                <View style="@style/horizontalBorderView" />
-
-                                            </LinearLayout>
-
-                                            <!--PRODUCT ABOUT PRICING-->
-                                            <LinearLayout
-                                                android:id="@+id/about_pricing_container"
-                                                android:layout_width="match_parent"
-                                                android:layout_height="match_parent"
-                                                android:orientation="vertical"
-                                                android:visibility="gone">
+                                <!--PRODUCT ABOUT PRICING-->
+                                <LinearLayout
+                                    android:id="@+id/about_pricing_container"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="match_parent"
+                                    android:orientation="vertical"
+                                    android:visibility="gone">
 
                                                 <TextView
                                                     fontPath="@string/font_app_bold"
@@ -398,64 +377,59 @@
                                                     android:padding="@dimen/padding_default"
                                                     android:text="@string/pricing"
                                                     android:textColor="@color/color_item_title"
-                                                    android:textSize="@dimen/text_size_body" />
+                                                    android:textSize="@dimen/text_size_headline2" />
 
-                                                <FrameLayout
-                                                    android:layout_width="match_parent"
-                                                    android:layout_height="match_parent"
-                                                    android:layout_margin="@dimen/padding_default">
-
-                                                    <WebView
-                                                        android:id="@+id/product_about_pricing_text"
-                                                        android:layout_width="match_parent"
-                                                        android:layout_height="wrap_content" />
-                                                </FrameLayout>
-                                            </LinearLayout>
-                                        </LinearLayout>
-
-                                    </android.support.v7.widget.CardView>
-
-                                    <android.support.v7.widget.CardView
-                                        android:id="@+id/product_details_third_card_view"
+                                    <FrameLayout
                                         android:layout_width="match_parent"
-                                        android:layout_height="wrap_content"
-                                        app:cardCornerRadius="5dp"
-                                        app:cardUseCompatPadding="true"
-                                        tools:ignore="MissingPrefix">
+                                        android:layout_height="match_parent"
+                                        android:layout_margin="@dimen/padding_default">
 
-                                        <LinearLayout
+                                        <WebView
+                                            android:id="@+id/product_about_pricing_text"
                                             android:layout_width="match_parent"
-                                            android:layout_height="wrap_content"
-                                            android:orientation="vertical">
-                                            <!--PRODUCT DESC-->
-                                            <LinearLayout
-                                                android:id="@+id/product_description_container"
-                                                android:layout_width="match_parent"
-                                                android:layout_height="match_parent"
-                                                android:orientation="vertical">
-
-                                                <FrameLayout
-                                                    android:layout_width="match_parent"
-                                                    android:layout_height="match_parent"
-                                                    android:layout_margin="@dimen/padding_default">
-
-                                                    <WebView
-                                                        android:id="@+id/product_description_text"
-                                                        android:layout_width="match_parent"
-                                                        android:layout_height="wrap_content" />
-                                                </FrameLayout>
-
-                                            </LinearLayout>
-                                        </LinearLayout>
-                                    </android.support.v7.widget.CardView>
-
+                                            android:layout_height="wrap_content" />
+                                    </FrameLayout>
                                 </LinearLayout>
-
                             </LinearLayout>
 
-                        </RelativeLayout>
+                        </android.support.v7.widget.CardView>
 
-                    </FrameLayout>
+                        <android.support.v7.widget.CardView
+                            android:id="@+id/product_details_third_card_view"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            app:cardCornerRadius="5dp"
+                            app:cardUseCompatPadding="true"
+                            tools:ignore="MissingPrefix">
+
+                            <LinearLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:orientation="vertical">
+                                <!--PRODUCT DESC-->
+                                <LinearLayout
+                                    android:id="@+id/product_description_container"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="match_parent"
+                                    android:orientation="vertical">
+
+                                    <FrameLayout
+                                        android:layout_width="match_parent"
+                                        android:layout_height="match_parent"
+                                        android:layout_margin="@dimen/padding_default">
+
+                                        <WebView
+                                            android:id="@+id/product_description_text"
+                                            android:layout_width="match_parent"
+                                            android:layout_height="wrap_content" />
+                                    </FrameLayout>
+
+                                </LinearLayout>
+                            </LinearLayout>
+                        </android.support.v7.widget.CardView>
+
+                    </LinearLayout>
+
 
                 </LinearLayout>
 
@@ -471,13 +445,12 @@
             <Button
                 android:id="@+id/product_details_add_to_basket"
                 style="@style/DDButtonStyle"
-                fontPath="@string/font_app_medium"
                 android:layout_width="match_parent"
                 android:layout_gravity="bottom"
-                android:layout_marginBottom="10dp"
+                android:layout_marginBottom="@dimen/padding_default"
                 android:layout_marginLeft="5dp"
                 android:layout_marginRight="5dp"
-                android:layout_marginTop="10dp"
+                android:layout_marginTop="@dimen/padding_default"
                 android:enabled="false"
                 android:text="@string/add_to_cart" />
 

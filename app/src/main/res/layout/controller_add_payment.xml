@@ -16,16 +16,13 @@
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical">
+            android:orientation="vertical"
+            android:padding="@dimen/padding_default">
 
             <com.braintreepayments.cardform.view.CardForm
                 android:id="@+id/card_form"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="16dp"
-                android:layout_marginLeft="16dp"
-                android:layout_marginRight="16dp"
-                android:layout_marginTop="6dp" />
+                android:layout_height="wrap_content" />
 
             <include
                 layout="@layout/partial_checkout_button"

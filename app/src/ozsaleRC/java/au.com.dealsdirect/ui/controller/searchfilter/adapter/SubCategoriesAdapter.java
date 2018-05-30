@@ -1,5 +1,7 @@
 package au.com.dealsdirect.ui.controller.searchfilter.adapter;
 
+import android.content.Context;
+import android.support.v4.util.Pair;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -15,9 +17,7 @@ import java.util.Map;
 
 import au.com.dealsdirect.R;
 import au.com.dealsdirect.data.network.model.category.GetCategoryTreeResponse;
-import au.com.dealsdirect.ui.controller.searchfilter.SearchFilterController;
-import au.com.dealsdirect.ui.controller.searchfilter.SubCategoryClickListener;
-import au.com.dealsdirect.ui.controller.searchfilter.SubCategoryItemClickListener;
+import au.com.dealsdirect.ui.controller.searchfilter.SearchFilterMvpPresenter;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
@@ -28,21 +28,22 @@ import butterknife.ButterKnife;
 public class SubCategoriesAdapter extends RecyclerView.Adapter<SubCategoriesAdapter.SubCategoriesViewHolder> {
 
     private List<GetCategoryTreeResponse> mData = new ArrayList<>();
-    private SubCategoryClickListener mSubCategoryClickListener;
-    private SubCategoryItemClickListener mSubCategoryItemClickListener;
-    private SubCategoryItemsAdapter mSubCategoryItemsAdapter;
-    private Map<String, GetCategoryTreeResponse> mCategoryMap = new HashMap<>();
-    private int selectedPosition;
+    private SearchFilterMvpPresenter mSearchFilterPresenter;
+    private SubCategoriesAdapter mSubCategoryItemsAdapter;
+    private Map<String, GetCategoryTreeResponse> mCategoryMap;
+    static GetCategoryTreeResponse mPreviousCategory;
+    private String mChosenCategoryKey;
 
     public SubCategoriesAdapter(
+            String chosenCategorykey,
             List<GetCategoryTreeResponse> data,
-            SearchFilterController controller,
+            SearchFilterMvpPresenter searchFilterMvpPresenter,
             Map<String, GetCategoryTreeResponse> categoryMap) {
 
+        mChosenCategoryKey = chosenCategorykey;
         mData = data;
-        mSubCategoryClickListener = controller;
-        mSubCategoryItemClickListener = controller;
         mCategoryMap = categoryMap;
+        mSearchFilterPresenter = searchFilterMvpPresenter;
     }
 
     @Override
@@ -54,29 +55,42 @@ public class SubCategoriesAdapter extends RecyclerView.Adapter<SubCategoriesAdap
     @Override
     public void onBindViewHolder(SubCategoriesViewHolder holder, int position) {
 
-        if (!mData.isEmpty()) {
-            if (!mData.get(position).getName().equals("empty")) {
-                if (!mData.get(position).getName().isEmpty()) {
-                    holder.subCategoryTitle.setText(mData.get(position).getName());
-                    holder.subCategoryCheck.setVisibility(mData.get(position).isSelected() ? View.VISIBLE : View.GONE);
-                }
+        GetCategoryTreeResponse categoryItem = mCategoryMap.get(mData.get(position).getKey());
 
-                List<GetCategoryTreeResponse> subCategoryItems = getSubCategoryItems(mData.get(position).getKey()).getChildren();
+        if (!mData.get(position).getName().isEmpty()) {
+            holder.subCategoryTitle.setText(mData.get(position).getName());
 
-                mSubCategoryItemsAdapter = new SubCategoryItemsAdapter(mData.get(position), mSubCategoryItemClickListener, mCategoryMap);
+//            holder.subCategoryCheck.setVisibility( ? View.VISIBLE : View.GONE);
+            if (categoryItem.isSelected()) {
+                holder.subCategoryCheck.setVisibility(View.VISIBLE);
+                holder.itemView.setSelected(true);
+            } else {
+                holder.subCategoryCheck.setVisibility(View.GONE);
+                holder.itemView.setSelected(false);
+            }
+
+//            List<GetCategoryTreeResponse> subCategoryItems = mData.get(position).getChildren();
+            List<GetCategoryTreeResponse> subCategoryItems = mCategoryMap.get(mData.get(position).getKey()).getChildren();
+
+            if (subCategoryItems != null && !subCategoryItems.isEmpty()) {
+                mSubCategoryItemsAdapter = new SubCategoriesAdapter(mChosenCategoryKey, subCategoryItems, mSearchFilterPresenter, mCategoryMap);
                 holder.subCategoryItemsRecyclerView.setLayoutManager(new LinearLayoutManager(holder.itemView.getContext(), LinearLayoutManager.VERTICAL, false));
                 holder.subCategoryItemsRecyclerView.setAdapter(mSubCategoryItemsAdapter);
 
-                if (subCategoryItems != null && !subCategoryItems.isEmpty()) {
-                    holder.itemView.setActivated(false);
-                    holder.subCategoryItemsRecyclerView.setVisibility(View.VISIBLE);
-                }
-                holder.itemView.setOnClickListener(view -> {
-                    selectedPosition = position;
-                    mData.get(position).setSelected(!mData.get(position).isSelected());
-                    mSubCategoryClickListener.onSubCategoryClicked(mData, mData.get(position).getKey());
-                });
+                holder.itemView.setActivated(false);
+                holder.subCategoryItemsRecyclerView.setVisibility(View.VISIBLE);
             }
+
+            holder.itemView.setOnClickListener(view -> {
+//                if (mPreviousCategory != null && mPreviousCategory != categoryItem) {
+//                    mPreviousCategory.setSelected(false);
+//                }
+                categoryItem.setSelected(!categoryItem.isSelected());
+
+                mSearchFilterPresenter.selectCategory(categoryItem);
+//                mPreviousCategory = categoryItem;
+            });
+
         }
     }
 
@@ -87,7 +101,9 @@ public class SubCategoriesAdapter extends RecyclerView.Adapter<SubCategoriesAdap
 
     @Override
     public int getItemCount() {
-        return mData != null ? mData.size() : 0;
+        if (mData != null)
+            return mData.size();
+        return 0;
     }
 
     public void replaceData(List<GetCategoryTreeResponse> getCategoryTreeResponses) {
@@ -109,9 +125,5 @@ public class SubCategoriesAdapter extends RecyclerView.Adapter<SubCategoriesAdap
             super(itemView);
             ButterKnife.bind(this, itemView);
         }
-    }
-
-    private GetCategoryTreeResponse getSubCategoryItems(String categoryKey) {
-        return mCategoryMap.get(categoryKey);
     }
 }

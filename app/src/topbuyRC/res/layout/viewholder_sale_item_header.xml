@@ -92,16 +92,16 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="30dp"
             android:text="search suggestions:"
-            android:textColor="@color/gray_field_text"
-            android:textSize="@dimen/text_size_large"/>
+            android:textColor="@color/text_medium"
+            android:textSize="@dimen/text_size_headline2"/>
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="10dp"
             android:text="try more general words or search from other categories"
-            android:textColor="@color/gray_field_text"
-            android:textSize="@dimen/text_size_medium"/>
+            android:textColor="@color/text_medium"
+            android:textSize="@dimen/text_size_headline3"/>
 
     </LinearLayout>
 

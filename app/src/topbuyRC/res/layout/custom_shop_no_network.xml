@@ -42,7 +42,7 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_vertical"
                 android:text="@string/tap_to_retry"
-                android:textSize="@dimen/text_size_large" />
+                android:textSize="@dimen/text_size_headline2" />
         </LinearLayout>
 
     </RelativeLayout>

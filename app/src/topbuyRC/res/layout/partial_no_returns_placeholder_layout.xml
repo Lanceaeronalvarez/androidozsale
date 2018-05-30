@@ -40,7 +40,7 @@
             android:paddingBottom="@dimen/default_button_height"
             android:text="@string/you_currently_do_not_have_any_returns"
             android:textColor="#9f9f9f"
-            android:textSize="@dimen/text_size_xlarge" />
+            android:textSize="@dimen/text_size_headline1" />
 
 
     </LinearLayout>

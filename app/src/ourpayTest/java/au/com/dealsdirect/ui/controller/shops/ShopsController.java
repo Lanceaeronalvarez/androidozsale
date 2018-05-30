@@ -151,6 +151,7 @@ public class ShopsController extends BasePullToRefreshController implements Shop
     protected View inflateView(@NonNull LayoutInflater inflater, @NonNull ViewGroup container) {
         View view = inflater.inflate(R.layout.controller_shop, container, false);
         bindPtrViews(view);
+        addOverScrollListener(mContentLayout);
         getControllerComponent().inject(this);
         mPresenter.onAttach(this);
         return view;

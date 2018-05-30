@@ -68,7 +68,7 @@ public class CheckoutOrderAdapter extends RecyclerView.Adapter<CheckoutOrderAdap
             holder.sizeValue.setVisibility(View.VISIBLE);
             holder.sizeValue.setText(item.size);
         }
-        holder.colorText.setVisibility(View.INVISIBLE);
+        holder.colorText.setVisibility(View.GONE);
 
         holder.price.setText(PriceUtils.getPriceStringValue(item.price));
         holder.quantityLayout.setMax(MAX_ITEM_QTY);
