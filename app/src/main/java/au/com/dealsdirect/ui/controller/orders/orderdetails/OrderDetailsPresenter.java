@@ -37,4 +37,9 @@ public class OrderDetailsPresenter<V extends OrderDetailsMvpView> extends BasePr
             }
         });
     }
+
+    @Override
+    public void showTrackingWeb(String link) {
+        getMvpView().showOrderTrackingWeb(link);
+    }
 }

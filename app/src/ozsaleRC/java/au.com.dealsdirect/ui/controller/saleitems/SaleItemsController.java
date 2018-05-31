@@ -233,7 +233,7 @@ public class SaleItemsController extends BasePullToRefreshController implements 
     protected View inflateView(@NonNull LayoutInflater inflater, @NonNull ViewGroup container) {
         View view = inflater.inflate(R.layout.controller_sale_items, container, false);
         bindPtrViews(view);
-//        fillContent(inflater.inflate(R.layout.partial_controller_sale_items, container, false));
+        fillContent(inflater.inflate(R.layout.partial_controller_sale_items, container, false));
 
         getControllerComponent().inject(this);
         mPresenter.onAttach(this);

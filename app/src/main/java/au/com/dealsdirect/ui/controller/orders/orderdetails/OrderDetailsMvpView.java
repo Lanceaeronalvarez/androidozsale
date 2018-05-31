@@ -10,4 +10,6 @@ import au.com.dealsdirect.ui.base.MvpView;
 public interface OrderDetailsMvpView extends MvpView{
 
     void showOrderDetails(GetOrderPaymentDetails.ResponseValue response);
+
+    void showOrderTrackingWeb(String link);
 }
