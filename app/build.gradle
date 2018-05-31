@@ -431,7 +431,6 @@ android {
             res.srcDir 'src/ozsaleRC/res/'
             java.srcDirs = ['src/ozsaleRC/java',
                             'src/commonControllers/java/',
-                            'src/commonShopsController/java/',
                             'src/main/java/']
         }
 

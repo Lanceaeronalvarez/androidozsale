@@ -874,5 +874,6 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
     @Override
     public void onOffsetChanged(AppBarLayout appBarLayout, int verticalOffset) {
         this.mVerticalOffset = verticalOffset;
+        mActivity.getHomeController().animateBottomNav(verticalOffset);
     }
 }
