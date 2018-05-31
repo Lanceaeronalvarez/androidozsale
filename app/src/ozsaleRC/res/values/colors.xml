@@ -56,7 +56,7 @@
 
     <!-- Text -->
     <color name="text_extra_dark">#000000</color>
-    <color name="text_dark">#676767</color>
+    <color name="text_dark">#616161</color>
     <color name="text_medium">#787878</color>
     <color name="text_light">#919191</color>
     <color name="text_extra_light">#cacaca</color>
@@ -125,6 +125,9 @@
     <color name="ourpay_navy">#000080</color>
     <color name="ourpay_red">#FF0000</color>
     <color name="ourpay_verify_resend">#000080</color>
+
+    <!-- Orders -->
+    <color name="bg_order_node">#323232</color>
 
     <!-- ViewHolder -->
     <color name="viewholder_text_remove">@color/text_highlight</color>
