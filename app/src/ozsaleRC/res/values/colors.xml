@@ -125,6 +125,9 @@
     <color name="ourpay_red">#FF0000</color>
     <color name="ourpay_verify_resend">#000080</color>
 
+    <!-- Orders -->
+    <color name="bg_order_node">#323232</color>
+
     <!-- ViewHolder -->
     <color name="viewholder_text_remove">@color/text_highlight</color>
 
