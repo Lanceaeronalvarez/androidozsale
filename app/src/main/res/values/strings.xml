@@ -232,7 +232,6 @@
         $20 voucher to use towards any future purchase. \n\nYou can apply any vouchers
         currently in your account when you checkout your order. \n
     </string>
-    <bool name="is_voucher_background_needed">true</bool>
     <string name="apply">apply</string>
     <string name="my_voucher">my voucher</string>
     <string name="promo_code">promo code</string>
@@ -553,6 +552,8 @@
     <string name="browse">Browse</string>
     <string name="test_product_name">Lavish Alice</string>
     <string name="my_basket">My Basket</string>
+    <string name="voucher_valid_from">voucher valid from</string>
+
     <string name="add_card">Add Card</string>
     <string name="delete">Delete</string>
     <string name="home_office_delivery">home/office delivery</string>
@@ -574,4 +575,5 @@
     <string name="order_details">Order Details</string>
     <string name="dollar">$ %1$s</string>
     <string name="tracking">Tracking</string>
+
 </resources>
