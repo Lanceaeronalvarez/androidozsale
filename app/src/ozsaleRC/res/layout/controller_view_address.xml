@@ -10,7 +10,8 @@
     <RelativeLayout
         android:id="@+id/view_addresses_layout"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:visibility="gone">
 
         <TextView
             android:id="@+id/address_office_delivery_subtitle"
@@ -20,10 +21,9 @@
             android:layout_marginLeft="@dimen/activity_horizontal_margin"
             android:layout_marginRight="@dimen/activity_horizontal_margin"
             android:layout_marginTop="@dimen/activity_vertical_margin"
-            android:text="home/office delivery"
+            android:text="@string/home_office_delivery"
             android:textColor="@color/text_dark"
-            android:textSize="@dimen/text_size_headline3"
-            android:visibility="gone" />
+            android:textSize="@dimen/text_size_headline3"/>
 
         <android.support.v7.widget.RecyclerView
             android:id="@+id/controller_addresses_recyclerview"

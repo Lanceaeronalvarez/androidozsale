@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_marginTop="@dimen/search_filter_tab_layout_height"
         android:background="@color/white">
 
         <TextView
@@ -55,7 +55,6 @@
             android:layout_margin="5dp"
             android:fontFamily="@string/font_app_bold"
             android:gravity="center"
-            android:text="@string/meanwhile_why_not_search_for_something_else"
             android:textColor="@color/text_dark"
             android:textSize="@dimen/text_size_body" />
 

@@ -259,7 +259,7 @@ android {
         }
 
         ozsaleRC {
-            versionCode 10
+            versionCode 14
             versionName "0.9"
             applicationId "au.com.ozsale"
 
@@ -284,7 +284,7 @@ android {
 
 
         ozsaleTest {
-            versionCode 2
+            versionCode 6
             versionName "0.9"
             applicationId "au.com.ozsaleTest"
 
@@ -431,7 +431,6 @@ android {
             res.srcDir 'src/ozsaleRC/res/'
             java.srcDirs = ['src/ozsaleRC/java',
                             'src/commonControllers/java/',
-                            'src/commonShopsController/java/',
                             'src/main/java/']
         }
 
@@ -590,6 +589,8 @@ dependencies {
     compile project(path: ':genie-views')
     compile project(path: ':CardForm')
     compile project(path: ':ptr-lib')
+
+    implementation ('com.h6ah4i.android.widget.advrecyclerview:advrecyclerview:0.11.0@aar')
 
 }
 
