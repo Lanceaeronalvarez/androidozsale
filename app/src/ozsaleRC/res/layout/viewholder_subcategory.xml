@@ -16,10 +16,10 @@
 
         <TextView
             android:id="@+id/viewholder_subcategory_title"
-            fontPath="@string/font_app_heavy"
+            fontPath="@string/font_app_regular"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textColor="@color/subcategory_title"
+            android:textColor="@color/category_text_selector"
             android:textSize="@dimen/text_size_headline3"
             android:layout_gravity="left|center_vertical"
             android:textStyle="bold"
@@ -36,11 +36,27 @@
 
     </FrameLayout>
 
+    <View
+        android:id="@+id/viewholder_subcategory_border"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/border_regular"
+        android:background="@color/border_regular"
+        android:layout_marginLeft="@dimen/margin_tiny"
+        android:visibility="gone"/>
+
     <android.support.v7.widget.RecyclerView
         android:id="@+id/viewholder_subcategory_items_recyclerview"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginStart="@dimen/margin_large"
         android:overScrollMode="never" />
+
+    <View
+        android:id="@+id/viewholder_subcategoryitems_border"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/border_regular"
+        android:background="@color/border_regular"
+        android:layout_marginLeft="@dimen/margin_tiny"
+        android:visibility="gone"/>
 
 </LinearLayout>

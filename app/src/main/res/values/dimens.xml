@@ -90,6 +90,8 @@
     <!-- Categories -->
     <dimen name="category_image_width">30dp</dimen>
     <dimen name="category_image_height">30dp</dimen>
+    <dimen name="category_width">100dp</dimen>
+    <dimen name="category_height">100dp</dimen>
     <dimen name="category_background_width">70dp</dimen>
     <dimen name="category_background_height">70dp</dimen>
     <dimen name="category_container_width">100dp</dimen>
