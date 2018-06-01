@@ -1,59 +1,125 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/controller_sale_items_layout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/white"
-    android:orientation="vertical">
+    android:background="@android:color/white">
 
-    <FrameLayout
-        android:id="@+id/controller_base_toolbar_layout"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content" >
-
-        <include layout="@layout/partial_toolbar_title"/>
-    </FrameLayout>
-
-    <FrameLayout
+    <in.srain.cube.views.ptr.PtrClassicFrameLayout
+        android:id="@+id/controller_sale_items_ptr"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@color/transparent">
+        app:layout_behavior="@string/appbar_scrolling_view_behavior"
+        app:ptr_duration_to_close="200"
+        app:ptr_duration_to_close_header="1000"
+        app:ptr_keep_header_when_refresh="true"
+        app:ptr_pull_to_fresh="false"
+        app:ptr_ratio_of_header_height_to_refresh="1.2"
+        app:ptr_resistance="1.7">
 
-        <in.srain.cube.views.ptr.PtrClassicFrameLayout
-            android:id="@+id/controller_base_ptr_layout"
+        <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_below="@id/controller_search_popular_subheader"
-            android:background="@color/transparent"
-            android:paddingLeft="@dimen/margin_extra_small"
-            android:paddingRight="@dimen/margin_extra_small"
-            app:ptr_duration_to_close="200"
-            app:ptr_duration_to_close_header="1000"
-            app:ptr_keep_header_when_refresh="true"
-            app:ptr_pull_to_fresh="false"
-            app:ptr_ratio_of_header_height_to_refresh="1.2"
-            app:ptr_resistance="1.7">
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
 
-            <FrameLayout
+            <TextView
+                android:id="@+id/controller_search_popular_subheader"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent">
+                android:layout_height="wrap_content"
+                android:fontFamily="@string/font_app_bold"
+                android:gravity="left"
+                android:padding="@dimen/margin_small"
+                android:text="@string/popular_products"
+                android:textColor="@color/colorSecondary"
+                android:visibility="gone" />
 
-                <FrameLayout
-                    android:id="@+id/controller_base_content_layout"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"/>
+            <android.support.v7.widget.RecyclerView
+                android:id="@+id/controller_sale_items_grid_view"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@color/transparent"
+                android:clickable="true"
+                android:focusable="true"
+                android:paddingLeft="@dimen/margin_extra_small"
+                android:paddingRight="@dimen/margin_extra_small" />
 
-                <include layout="@layout/partial_no_network_layout" />
+            <TextView
+                android:id="@+id/controller_sale_items_text_placeholder"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:fontFamily="@string/font_app_bold"
+                android:gravity="center"
+                android:text="@string/sorry_today_we_can_t_find_anything_by_your_request"
+                android:textColor="@color/text_dark"
+                android:textSize="@dimen/text_size_body"
+                android:visibility="gone" />
 
-            </FrameLayout>
 
-        </in.srain.cube.views.ptr.PtrClassicFrameLayout>
+        </LinearLayout>
 
-        <com.bluelinelabs.conductor.ChangeHandlerFrameLayout
-            android:id="@+id/controller_search_filter_frame"
+    </in.srain.cube.views.ptr.PtrClassicFrameLayout>
+
+    <com.bluelinelabs.conductor.ChangeHandlerFrameLayout
+        android:id="@+id/controller_search_filter_frame"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="160dp"
+        android:visibility="visible" />
+
+    <android.support.design.widget.AppBarLayout
+        android:id="@+id/controller_sale_items_appbar"
+        android:layout_width="match_parent"
+        android:layout_height="160dp"
+        android:background="@color/white">
+
+        <android.support.design.widget.CollapsingToolbarLayout
+            android:id="@+id/main.collapsing"
             android:layout_width="match_parent"
-            android:layout_height="match_parent" />
+            android:layout_height="160dp"
+            android:fitsSystemWindows="true"
+            app:contentScrim="?attr/colorPrimary"
+            app:expandedTitleMarginEnd="64dp"
+            app:expandedTitleMarginStart="48dp"
+            app:layout_scrollFlags="scroll|exitUntilCollapsed">
 
-    </FrameLayout>
+            <android.support.design.widget.TabLayout
+                android:id="@+id/controller_search_filter_tabs"
+                style="@style/FacetFilterTabLayout"
+                android:layout_width="wrap_content"
+                android:layout_height="?attr/actionBarSize"
+                android:layout_gravity="bottom"
+                android:background="@color/white"
+                android:minHeight="?attr/actionBarSize" />
 
-</LinearLayout>
+            <au.com.dealsdirect.ui.custom.SearchEditText
+                android:id="@+id/partial_toolbar_field_title_edittext"
+                style="@style/DDEditTextSearchBar"
+                fontPath="@string/font_app_medium"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="@dimen/activity_horizontal_margin"
+                android:layout_marginRight="@dimen/activity_horizontal_margin"
+                android:layout_marginTop="?attr/actionBarSize"
+                android:clickable="true"
+                android:drawableLeft="@drawable/ic_search_gray"
+                android:drawablePadding="@dimen/margin_extra_small"
+                android:hint="@string/search_tag"
+                android:imeOptions="actionSearch"
+                android:inputType="text"
+                android:singleLine="true"
+                android:textColor="@color/text_medium"
+                android:textColorHint="@color/text_medium"
+                android:textCursorDrawable="@drawable/bg_field_cursor"
+                android:textSize="@dimen/text_size_body"
+                android:visibility="visible"
+                app:layout_collapseMode="parallax"
+                app:layout_collapseParallaxMultiplier="0.5"
+                app:layout_scrollFlags="scroll|enterAlways" />
+
+            <include layout="@layout/partial_toolbar_title" />
+        </android.support.design.widget.CollapsingToolbarLayout>
+
+    </android.support.design.widget.AppBarLayout>
+
+</android.support.design.widget.CoordinatorLayout>

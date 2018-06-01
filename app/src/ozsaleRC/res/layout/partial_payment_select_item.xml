@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/controller_payment_select_parent"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@drawable/bg_checkout_options"
+    tools:ignore="MissingPrefix">
+
+
+    <TextView
+        android:id="@+id/controller_address_delete_text"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        fontPath="@string/font_app_regular"
+        android:layout_alignBottom="@+id/controller_address_container"
+        android:layout_alignParentRight="true"
+        android:layout_alignTop="@id/controller_address_container"
+        android:layout_centerVertical="true"
+        android:layout_marginRight="@dimen/margin_medium"
+        android:gravity="center_vertical"
+        android:text="@string/delete"
+        android:visibility="gone"
+        android:textColor="@color/white"
+        android:textSize="@dimen/text_size_body" />
+
+    <FrameLayout
+        android:id="@+id/controller_payment_select_container"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:clickable="true"
+            android:focusable="true"
+            android:focusableInTouchMode="true"
+            android:gravity="center">
+
+            <ImageView
+                android:id="@+id/partial_checkout_payment_image"
+                android:layout_width="@dimen/margin_extra_large"
+                android:layout_height="@dimen/margin_extra_large"
+                android:layout_marginStart="@dimen/margin_medium"
+                android:layout_marginTop="@dimen/margin_large"
+                android:paddingBottom="@dimen/margin_extra_small"
+                android:paddingLeft="@dimen/margin_extra_small"
+                android:paddingRight="@dimen/margin_extra_small"
+                android:layout_alignParentRight="true"
+                android:src="@drawable/ic_my_vouchers" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="@dimen/margin_medium"
+                android:layout_marginStart="@dimen/margin_small"
+                android:layout_marginTop="@dimen/margin_medium"
+                android:layout_toStartOf="@id/partial_checkout_payment_image"
+                android:orientation="vertical"
+                android:paddingTop="@dimen/margin_tiny">
+
+                <TextView
+                    android:id="@+id/partial_checkout_payment_name"
+                    fontPath="@string/font_app_semibold"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="@dimen/margin_medium"
+                    android:textColor="@color/text_dark"
+                    android:textSize="@dimen/text_size_headline2"
+                    tools:text="Master Card" />
+
+                <TextView
+                    android:id="@+id/partial_checkout_payment_details"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textSize="@dimen/text_size_body"
+                    android:layout_marginBottom="@dimen/margin_small"
+                    android:layout_marginEnd="@dimen/text_size_headline3"
+                    android:textColor="@color/text_medium"
+                    tools:text="card ending in 02/16" />
+
+            </LinearLayout>
+
+            <View
+                android:id="@+id/item_payment_select_divider"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/border_regular"
+                android:layout_alignParentBottom="true"
+                android:layout_marginTop="@dimen/margin_small"
+                android:background="#ECECEC" />
+        </RelativeLayout>
+    </FrameLayout>
+</RelativeLayout>

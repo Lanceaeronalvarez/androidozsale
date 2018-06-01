@@ -1,5 +1,7 @@
 package au.com.dealsdirect.ui.controller.searchfilter;
 
+import android.support.v4.util.Pair;
+
 import java.util.List;
 import java.util.Set;
 
@@ -27,5 +29,11 @@ public interface SearchFilterMvpView extends MvpView{
     void onCategoryClicked(GetCategoryTreeResponse category);
 
     Set<String> getCategoryKeys();
+
+    void setSearchFilterControllerActive(boolean isTabActive);
+
+    void setFacetFilterItems(List<Pair<String,String>> mFacetFilters);
+
+    List<Pair<String, String>> parseFacets(List<GetSaleItemsResponse.Facets> facets);
 
 }
