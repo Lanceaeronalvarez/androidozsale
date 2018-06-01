@@ -263,8 +263,8 @@ android {
             versionName "0.9"
             applicationId "au.com.ozsale"
 
-            buildConfigField "String", "API_ROOT", "\"https://www.dealsdirect.com.au/\""
-            buildConfigField "String", "API_LEGACY", "\"https://www.dealsdirect.com.au/papi/public/v3.20/\""
+            buildConfigField "String", "API_ROOT", "\"https://www.ozsale.com.au/\""
+            buildConfigField "String", "API_LEGACY", "\"https://www.ozsale.com.au/papi/public/v3.22/\""
             buildConfigField "String", "ACCOUNT_ID", "\"A56B0D62-AEF6-4653-848E-2ECDDB6E9B8C\""
 
             resValue "string", "app_name", "Ozsale"
@@ -278,18 +278,18 @@ android {
             resValue "string", "default_language_id", "EN"
 
             ext.newRelicAppToken = "AAa9d543732ff39dddc60c9cb9ad8c9cf22297904b"
-            resValue "string", "new_relic_app_token",  ext.newRelicAppToken
+            resValue "string", "new_relic_app_token", ext.newRelicAppToken
 
         }
 
 
         ozsaleTest {
-            versionCode 1
+            versionCode 2
             versionName "0.9"
-            applicationId "au.com.ozsale.test"
+            applicationId "au.com.ozsaleTest"
 
             buildConfigField "String", "API_ROOT", "\"https://genie-ui-dealsdirect-pre.mysaledev.com/\""
-            buildConfigField "String", "API_LEGACY", "\"https://api.mysaledev.com/public/v3.20/\""
+            buildConfigField "String", "API_LEGACY", "\"https://api.mysaledev.com/public/v3.24/\""
             buildConfigField "String", "ACCOUNT_ID", "\"A56B0D62-AEF6-4653-848E-2ECDDB6E9B8C\""
 
             resValue "string", "app_name", "Ozsale Test"
@@ -303,7 +303,7 @@ android {
             resValue "string", "default_language_id", "EN"
 
             ext.newRelicAppToken = "AAa9d543732ff39dddc60c9cb9ad8c9cf22297904b"
-            resValue "string", "new_relic_app_token",  ext.newRelicAppToken
+            resValue "string", "new_relic_app_token", ext.newRelicAppToken
 
         }
     }
@@ -315,8 +315,10 @@ android {
                             'src/commonCategoriesController/java/',
                             'src/commonSaleItemsController/java/',
                             'src/commonSearchFilterController/java/',
+                            'src/commonContactControllers/java/',
                             'src/commonReturnsControllers/java/',
                             'src/commonShopsController/java/',
+                            'src/commonOrdersController/java',
                             'src/commonMainController/java/',
                             'src/commonActivity/java/',
                             'src/dealsDirectRC/java/',
@@ -329,7 +331,9 @@ android {
                             'src/commonCategoriesController/java/',
                             'src/commonSaleItemsController/java/',
                             'src/commonSearchFilterController/java/',
+                            'src/commonContactControllers/java/',
                             'src/commonReturnsControllers/java/',
+                            'src/commonOrdersController/java',
                             'src/commonShopsController/java/',
                             'src/commonMainController/java/',
                             'src/commonActivity/java/',
@@ -344,7 +348,9 @@ android {
                             'src/commonCategoriesController/java/',
                             'src/commonSaleItemsController/java/',
                             'src/commonSearchFilterController/java/',
+                            'src/commonContactControllers/java/',
                             'src/commonReturnsControllers/java/',
+                            'src/commonOrdersController/java',
                             'src/commonShopsController/java/',
                             'src/commonMainController/java/',
                             'src/commonActivity/java/',
@@ -359,7 +365,9 @@ android {
                             'src/commonCategoriesController/java/',
                             'src/commonSaleItemsController/java/',
                             'src/commonSearchFilterController/java/',
+                            'src/commonContactControllers/java/',
                             'src/commonReturnsControllers/java/',
+                            'src/commonOrdersController/java',
                             'src/commonShopsController/java/',
                             'src/commonMainController/java/',
                             'src/commonActivity/java/',
@@ -374,7 +382,9 @@ android {
                             'src/commonCategoriesController/java/',
                             'src/commonSaleItemsController/java/',
                             'src/commonSearchFilterController/java/',
+                            'src/commonContactControllers/java/',
                             'src/commonReturnsControllers/java/',
+                            'src/commonOrdersController/java',
                             'src/commonShopsController/java/',
                             'src/commonMainController/java/',
                             'src/commonActivity/java/',
@@ -388,7 +398,9 @@ android {
                             'src/commonCategoriesController/java/',
                             'src/commonSaleItemsController/java/',
                             'src/commonSearchFilterController/java/',
+                            'src/commonContactControllers/java/',
                             'src/commonReturnsControllers/java/',
+                            'src/commonOrdersController/java',
                             'src/commonShopsController/java/',
                             'src/commonMainController/java/',
                             'src/commonActivity/java/',
@@ -399,6 +411,9 @@ android {
         ourpayTest {
             java.srcDirs = ['src/ourpayTest/java/',
                             'src/commonControllers/java/',
+                            'src/commonOrdersController/java',
+                            'src/commonContactControllers/java/',
+                            'src/commonReturnsControllers/java/',
                             'src/main/java/']
         }
 
@@ -430,6 +445,7 @@ android {
 
         main {
             java.srcDirs = ['src/main/java']
+            resources.srcDirs = ['src/main/resources']
         }
     }
 

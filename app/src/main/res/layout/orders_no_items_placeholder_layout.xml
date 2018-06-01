@@ -27,7 +27,7 @@
             android:id="@+id/welcome"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/welcome_to_my_orders"
+            android:text="@string/welcome_remark_title_orders"
             android:layout_gravity="center"
             android:textSize="@dimen/text_size_headline1"/>
 
@@ -37,7 +37,7 @@
             android:textSize="@dimen/text_size_headline3"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/you_currently_do_no_have_any_orders"
+            android:text="@string/welcome_remark_subtitle_orders"
             android:layout_marginTop="10dp"
             android:layout_gravity="center"/>
 

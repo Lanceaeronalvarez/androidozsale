@@ -27,11 +27,11 @@ public class NewReturnOrdersAdapter extends RecyclerView.Adapter<NewReturnOrderV
     private int lastPosition = -1;
     private final NewReturnOrderUpdateListener mUpateListener;
 
-    List<au.com.dealsdirect.data.network.model.returns.newreturn.List> mCurrentReturnList = Collections.emptyList();
+    List<NewReturnOrderList> mCurrentReturnList = Collections.emptyList();
     Context mContext;
 
     public NewReturnOrdersAdapter(
-            List<au.com.dealsdirect.data.network.model.returns.newreturn.List> orderList,
+            List<NewReturnOrderList> orderList,
             Context context,
             NewReturnOrderUpdateListener updateListener){
 

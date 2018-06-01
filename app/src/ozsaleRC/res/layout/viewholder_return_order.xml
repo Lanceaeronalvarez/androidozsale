@@ -5,179 +5,28 @@
               android:layout_width="match_parent"
               android:layout_height="wrap_content"
               android:background="@drawable/bg_card_view_states"
-              android:orientation="vertical"
-              android:padding="@dimen/padding_default">
-
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="@dimen/activity_horizontal_margin"
-        android:layout_weight="100">
-
-        <TextView
-            android:id="@+id/new_current_orders_item_name"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="70"
-            android:fontFamily="@string/font_app_regular"
-            android:text="Philosophy Cotton Sleeveless Plain"
-            android:textColor="@color/colorAccent"
-            android:textSize="@dimen/text_size_body"
-            tools:ignore="HardcodedText"/>
-
-        <RelativeLayout
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="30">
-
-            <TextView
-                android:id="@+id/new_returns_order_item_request_value"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignParentRight="true"
-                android:layout_marginLeft="2dp"
-                android:fontFamily="@string/font_app_bold"
-                android:text="2014512"
-                android:textColor="@color/colorAccent"
-                android:textSize="@dimen/text_size_body"
-                tools:ignore="HardcodedText"/>
-        </RelativeLayout>
-
-    </LinearLayout>
+              android:orientation="vertical">
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal">
 
-        <!-- ITEMS and TOTAL -->
-        <LinearLayout
+        <TextView
+            android:id="@+id/new_current_orders_item_name"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_weight="2"
-            android:orientation="horizontal">
+            android:layout_weight="9"
+            android:padding="@dimen/padding_default"
+            tools:text="Philosophy Cotton Sleeveless Plain" />
 
-            <!-- ITEMS and TOTAL LABEL -->
-            <LinearLayout
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:orientation="vertical">
-
-                <TextView
-                    android:id="@+id/new_returns_order_item_count_identifier"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:fontFamily="@string/font_app_medium"
-                    android:text="Items:"
-                    android:textColor="@color/text_light"
-                    android:textSize="@dimen/text_size_body"
-                    tools:ignore="HardcodedText"/>
-
-                <TextView
-                    android:id="@+id/new_returns_order_item_total_cost_identifier"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:fontFamily="@string/font_app_medium"
-                    android:text="Total:"
-                    android:textColor="@color/text_light"
-                    android:textSize="@dimen/text_size_body"
-                    tools:ignore="HardcodedText"/>
-
-            </LinearLayout>
-
-            <!-- ITEMS AND TOTAL VALUES -->
-
-            <LinearLayout
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:orientation="vertical"
-                android:paddingLeft="@dimen/margin_extra_small">
-
-
-                <TextView
-                    android:id="@+id/new_returns_order_item_count_value"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginLeft="@dimen/margin_tiny"
-                    android:fontFamily="@string/font_app_regular"
-                    android:text="1"
-                    android:textColor="@color/colorAccent"
-                    android:textSize="@dimen/text_size_body"
-                    tools:ignore="HardcodedText"/>
-
-                <TextView
-                    android:id="@+id/new_returns_order_item_total_cost_value"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginLeft="@dimen/margin_tiny"
-                    android:fontFamily="@string/font_app_regular"
-                    android:text="12.00"
-                    android:textColor="@color/colorAccent"
-                    android:textSize="@dimen/text_size_body"
-                    tools:ignore="HardcodedText"/>
-
-
-            </LinearLayout>
-
-        </LinearLayout>
-
-        <!-- STATUS AND TRACKING -->
-        <RelativeLayout
+        <ImageView
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_weight="2">
+            android:layout_gravity="center"
+            android:layout_weight="1"
+            android:src="@drawable/ic_gray_chevron" />
 
-            <LinearLayout
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal">
-
-                <!-- STATUS AND TRACKING LABEL -->
-
-                <LinearLayout
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:orientation="vertical"
-                    android:paddingLeft="@dimen/margin_extra_small">
-
-                    <TextView
-                        android:id="@+id/new_returns_order_item_status_indentifier"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:fontFamily="@string/font_app_medium"
-                        android:text="Status:"
-                        android:textColor="@color/text_light"
-                        android:textSize="@dimen/text_size_body"
-                        tools:ignore="HardcodedText"/>
-
-                </LinearLayout>
-
-                <!-- STATUS AND TRACKING VALUES -->
-
-                <LinearLayout
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:orientation="vertical"
-                    android:paddingLeft="@dimen/margin_extra_small">
-
-                    <TextView
-                        android:id="@+id/new_returns_order_item_status_value"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_alignTop="@+id/new_returns_order_item_status_indentifier"
-                        android:layout_marginLeft="@dimen/margin_tiny"
-                        android:layout_toEndOf="@+id/new_returns_order_item_status_indentifier"
-                        android:layout_toRightOf="@+id/new_returns_order_item_status_indentifier"
-                        android:fontFamily="@string/font_app_regular"
-                        android:text="Dispatched"
-                        android:textColor="@color/colorAccent"
-                        android:textSize="@dimen/text_size_body"
-                        tools:ignore="HardcodedText"/>
-
-                </LinearLayout>
-            </LinearLayout>
-        </RelativeLayout>
     </LinearLayout>
 
 </LinearLayout>

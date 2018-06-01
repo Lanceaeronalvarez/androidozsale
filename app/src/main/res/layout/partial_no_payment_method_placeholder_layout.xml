@@ -17,11 +17,11 @@
         android:src="@drawable/ic_payments" />
 
     <TextView
-        fontPath="@string/font_app_medium"
+        fontPath="@string/font_app_bold"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
-        android:text="welcome to my payments!"
+        android:text="@string/welcome_remark_title_payments"
         android:textSize="@dimen/text_size_headline1" />
 
     <TextView
@@ -31,9 +31,9 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:gravity="center"
-        android:layout_marginTop="10dp"
+        android:layout_marginTop="@dimen/padding_default"
         android:layout_marginBottom="@dimen/button_height_regular"
         android:paddingBottom="@dimen/button_height_regular"
-        android:text="you do not currently have any payment method." />
+        android:text="@string/welcome_remark_subtitle_payments" />
 
 </LinearLayout>

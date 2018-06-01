@@ -1,4 +1,4 @@
-package au.com.dealsdirect.ui.returns.currentreturns;
+package au.com.dealsdirect.ui.controller.returns.currentreturns;
 
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -27,13 +27,11 @@ import au.com.dealsdirect.data.network.model.returns.currentreturn.CurrentReturn
 import au.com.dealsdirect.data.network.model.returns.returndetails.GetReturnDetailRequest;
 import au.com.dealsdirect.data.network.model.returns.returndetails.GetReturnDetailsResponseBody;
 import au.com.dealsdirect.ui.base.BasePullToRefreshController;
-import au.com.dealsdirect.ui.controller.returns.currentreturns.CurrentReturnsMvpPresenter;
-import au.com.dealsdirect.ui.controller.returns.currentreturns.CurrentReturnsMvpView;
 import au.com.dealsdirect.ui.controller.returns.currentreturns.adapter.CurrentReturnAdapter;
 import au.com.dealsdirect.ui.controller.returns.currentreturns.listener.CurrentReturnClickListener;
 import au.com.dealsdirect.ui.controller.returns.currentreturns.viewholder.CurrentReturnViewHolder;
-import au.com.dealsdirect.ui.returns.returndetails.ReturnDetailsController;
-import au.com.dealsdirect.ui.returns.returnorders.ReturnOrdersController;
+import au.com.dealsdirect.ui.controller.returns.returndetails.ReturnDetailsController;
+import au.com.dealsdirect.ui.controller.returns.returnorders.ReturnOrdersController;
 import au.com.dealsdirect.utils.BundleBuilder;
 import butterknife.BindView;
 import butterknife.OnClick;

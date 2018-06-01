@@ -507,8 +507,8 @@ public class HomeController extends BaseController implements HomeMvpView {
     }
 
     public void resetRouters() {
-        resetCategoriesRouter();
-        resetContactsRouter();
+        resetOurPayRouter();
+        resetPaymentScheduleRouter();
         resetCheckoutRouter();
     }
 

@@ -86,4 +86,9 @@ public class SaleItemsPresenter<V extends SaleItemsMvpView> extends BasePresente
         });
     }
 
+    @Override
+    public void onCategoryChanged(boolean val) {
+        getMvpView().setIsCategoryChanged(val);
+    }
+
 }

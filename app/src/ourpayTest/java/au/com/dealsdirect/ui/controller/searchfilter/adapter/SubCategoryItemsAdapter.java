@@ -20,6 +20,8 @@ import java.util.Map;
 
 import au.com.dealsdirect.R;
 import au.com.dealsdirect.data.network.model.category.GetCategoryTreeResponse;
+import au.com.dealsdirect.ui.controller.saleitems.SaleItemsMvpPresenter;
+import au.com.dealsdirect.ui.controller.searchfilter.SearchFilterMvpPresenter;
 import au.com.dealsdirect.ui.controller.searchfilter.SubCategoryItemClickListener;
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -32,8 +34,8 @@ public class SubCategoryItemsAdapter extends RecyclerView.Adapter<SubCategoryIte
 
 
     private List<GetCategoryTreeResponse> mData = new ArrayList<>();
-    private SubCategoryItemClickListener mCategoryAdapterClickListener;
     private SubCategoryItemsAdapter mSubCategoryItemsAdapter;
+    private SearchFilterMvpPresenter mSearchFilterPresenter;
     private int lastPosition = -1;
     private Map<String, List<GetCategoryTreeResponse>> mCategoryMap = new HashMap<>();
     private String mChosenCategoryKey;
@@ -41,29 +43,24 @@ public class SubCategoryItemsAdapter extends RecyclerView.Adapter<SubCategoryIte
     public SubCategoryItemsAdapter(
             String chosenCategoryKey,
             List<GetCategoryTreeResponse> data,
-            SubCategoryItemClickListener subCategoryItemClickListener,
+            SearchFilterMvpPresenter searchFilterMvpPresenter,
             Map<String, List<GetCategoryTreeResponse>> categoryMap) {
 
         mChosenCategoryKey = chosenCategoryKey;
         mData = data;
-        mCategoryAdapterClickListener = subCategoryItemClickListener;
+        mSearchFilterPresenter = searchFilterMvpPresenter;
         mCategoryMap = categoryMap;
     }
 
     @Override
     public SubCategoryItemViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.viewholder_filter_subcategory_item, parent, false);
-        SubCategoryItemViewHolder vh
-                = new SubCategoryItemViewHolder(view);
+        SubCategoryItemViewHolder vh = new SubCategoryItemViewHolder(view);
         return vh;
     }
 
     @Override
     public void onBindViewHolder(SubCategoryItemViewHolder holder, int position) {
-//        setAnimation(holder.itemView, position);
-
-        Context context = holder.itemView.getContext();
-
         if (!mData.isEmpty()) {
 
             if (!mData.get(position).getName().isEmpty()) {
@@ -72,13 +69,17 @@ public class SubCategoryItemsAdapter extends RecyclerView.Adapter<SubCategoryIte
 
                 if (mData.get(position).getKey().equals(mChosenCategoryKey)) {
                     holder.subCategoryCheck.setVisibility(View.VISIBLE);
+                    holder.itemView.setSelected(true);
+                } else {
+                    holder.subCategoryCheck.setVisibility(View.GONE);
+                    holder.itemView.setSelected(false);
                 }
             }
 
-            List<GetCategoryTreeResponse> subCategoryItems = getSubCategoryItems(mData.get(position).getKey());
+            List<GetCategoryTreeResponse> subCategoryItems = mCategoryMap.get(mData.get(position).getKey());
 
             if (subCategoryItems != null && !subCategoryItems.isEmpty()) {
-                mSubCategoryItemsAdapter = new SubCategoryItemsAdapter(mChosenCategoryKey, subCategoryItems, mCategoryAdapterClickListener, mCategoryMap);
+                mSubCategoryItemsAdapter = new SubCategoryItemsAdapter(mChosenCategoryKey, subCategoryItems, mSearchFilterPresenter, mCategoryMap);
                 holder.recyclerView.setLayoutManager(new LinearLayoutManager(holder.itemView.getContext(), LinearLayoutManager.VERTICAL, false));
                 holder.recyclerView.setAdapter(mSubCategoryItemsAdapter);
 
@@ -88,10 +89,7 @@ public class SubCategoryItemsAdapter extends RecyclerView.Adapter<SubCategoryIte
 
             holder.itemView.setOnClickListener(view -> {
                 holder.titleTextView.setEnabled(true);
-                mCategoryAdapterClickListener.onSubCategoryItemClicked(
-                        mData.get(position).getId(),
-                        mData.get(position).getName(),
-                        mData.get(position).getKey());
+                mSearchFilterPresenter.selectCategory(mData.get(position));
             });
         }
     }
@@ -101,13 +99,6 @@ public class SubCategoryItemsAdapter extends RecyclerView.Adapter<SubCategoryIte
         if (mData != null)
             return mData.size();
         return 0;
-    }
-
-    @Override
-    public void onViewDetachedFromWindow(SubCategoryItemViewHolder holder) {
-        super.onViewDetachedFromWindow(holder);
-//        Animation animation = AnimationUtils.loadAnimation(holder.itemView.getContext(), R.anim.slide_to_top);
-//        holder.itemView.startAnimation(animation);
     }
 
     public void replaceData(List<GetCategoryTreeResponse> getCategoryTreeResponses) {
@@ -129,19 +120,6 @@ public class SubCategoryItemsAdapter extends RecyclerView.Adapter<SubCategoryIte
             super(itemView);
             ButterKnife.bind(this, itemView);
         }
-    }
-
-
-    private void setAnimation(View viewToAnimate, int position) {
-        if (position > lastPosition) {
-            Animation animation = AnimationUtils.loadAnimation(viewToAnimate.getContext(), R.anim.slide_to_bottom);
-            viewToAnimate.startAnimation(animation);
-            lastPosition = position;
-        }
-    }
-
-    private List<GetCategoryTreeResponse> getSubCategoryItems(String categoryKey) {
-        return mCategoryMap.get(categoryKey);
     }
 
     public void addItem(GetCategoryTreeResponse getCategoryTreeResponse) {

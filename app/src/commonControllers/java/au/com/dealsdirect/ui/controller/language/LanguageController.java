@@ -101,7 +101,7 @@ public class LanguageController extends BasePullToRefreshController implements L
 
     @Override
     protected void setUp(View view) {
-        mTitleText.setText("Language");
+        mTitleText.setText(getResources().getString(R.string.account_language));
         mFilterView.setVisibility(View.INVISIBLE);
         mArrowImage.setOnClickListener(v -> {
             onBackPress();

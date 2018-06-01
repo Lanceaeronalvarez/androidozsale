@@ -51,7 +51,7 @@
             android:fontFamily="@string/font_app_light"
             android:text="scheduledPlan"
             android:textColor="@color/white"
-            android:textSize="@dimen/text_size_xxlarge"
+            android:textSize="@dimen/text_size_subtitle"
             android:layout_gravity="right"/>
 
         <TextView

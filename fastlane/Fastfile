@@ -200,3 +200,11 @@ lane :fabric_deploy_ozsale_rc do
   #Change apk_name and app_name for other flavors
   sh "fastlane dd_build app_name:'ozsale' emails:" + dev_emails + " apk_name:" + 'app-ozSaleRC-release.apk' + " build_variant:" + 'ozsaleRCRelease' + " app_path:" + app_dir + " app_flavor:" + 'ozsaleRC' + " app_notes_path:" + app_dir + '/fastlane/OzsaleReleaseNotes'
 end
+
+lane :fabric_deploy_ozsale_test do
+  Dir.chdir("..")
+  app_dir = Dir.pwd
+
+  #Change apk_name and app_name for other flavors
+  sh "fastlane dd_build app_name:'ozsale test' emails:" + dev_emails + " apk_name:" + 'app-ozSaleTest-release.apk' + " build_variant:" + 'ozsaleTestRelease' + " app_path:" + app_dir + " app_flavor:" + 'ozsaleTest' + " app_notes_path:" + app_dir + '/fastlane/OzsaleReleaseNotes'
+end

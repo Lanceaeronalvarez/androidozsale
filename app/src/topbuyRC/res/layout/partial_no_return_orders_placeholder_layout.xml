@@ -27,5 +27,5 @@
         android:paddingBottom="@dimen/default_button_height"
         android:text="you have not added any orders for return."
         android:textColor="#9f9f9f"
-        android:textSize="@dimen/text_size_xlarge" />
+        android:textSize="@dimen/text_size_headline1" />
 </LinearLayout>

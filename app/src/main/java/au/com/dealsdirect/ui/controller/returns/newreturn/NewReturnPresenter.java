@@ -94,4 +94,8 @@ public class NewReturnPresenter<V extends NewReturnMvpView> extends BasePresente
                             }
                         }));
     }
+
+    public void updateReturnValue(String itemId, int position, int productQuantityValue){
+        getMvpView().onReturnValueUpdated(itemId,position,productQuantityValue);
+    }
 }

@@ -3,33 +3,29 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="#FFFFFF"
+    android:background="@color/white"
     android:orientation="vertical">
 
     <FrameLayout
         android:id="@+id/viewholder_subcategory_container"
         android:layout_width="match_parent"
-        android:layout_height="40dp"
-        android:layout_marginEnd="10dp"
-        android:layout_marginStart="5dp"
-        android:background="#FFFFFF">
+        android:layout_height="40dp">
 
         <TextView
             android:id="@+id/viewholder_subcategory_title"
-            fontPath="@string/font_app_heavy"
+            fontPath="@string/font_app_bold"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textColor="@color/gray_title_text"
+            android:textColor="@color/category_text_selector"
             android:textSize="@dimen/text_size_headline3"
             android:layout_gravity="left|center_vertical"
-            android:textStyle="bold"
             tools:ignore="MissingPrefix"
             tools:text="Category" />
 
         <ImageView
             android:id="@+id/viewholder_subcategory_check"
-            android:layout_width="40dp"
-            android:layout_height="40dp"
+            android:layout_width="@dimen/row_facet_check_icon_width"
+            android:layout_height="@dimen/row_facet_check_icon_height"
             android:layout_gravity="right|center_vertical"
             android:visibility="gone"
             android:src="@drawable/ic_check"/>

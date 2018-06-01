@@ -3,7 +3,7 @@
     <dimen name="activity_horizontal_margin">16dp</dimen>
     <dimen name="activity_vertical_margin">16dp</dimen>
     <dimen name="padding_default">16dp</dimen>
-    <dimen name="padding_default_half">16dp</dimen>
+    <dimen name="padding_default_half">8dp</dimen>
     <dimen name="default_button_height">48dp</dimen>
     <dimen name="default_viewholder_item_height">43dp</dimen>
     <dimen name="label_space">3dp</dimen>
@@ -35,16 +35,20 @@
     <dimen name="margin_extra_large">30dp</dimen>
     <dimen name="margin_huge">40dp</dimen>
 
+    <!--General Radius-->
+    <dimen name="corner_radius_default">5dp</dimen>
+
     <!-- EditText -->
     <dimen name="edit_text_height">44dp</dimen>
-    <dimen name="edit_text_corner_radius">5dp</dimen>
+    <dimen name="edit_text_corner_radius">@dimen/corner_radius_default</dimen>
     <dimen name="edit_text_padding">15dp</dimen>
 
     <!-- Button -->
     <dimen name="button_height_regular">48dp</dimen>
-    <dimen name="button_corner_radius">5dp</dimen>
+    <dimen name="button_corner_radius">@dimen/corner_radius_default</dimen>
     <dimen name="button_drawable_width">20dp</dimen>
     <dimen name="button_drawable_height">20dp</dimen>
+    <dimen name="button_text_padding">10dp</dimen>
     <dimen name="button_elevation">2.5dp</dimen>
 
     <dimen name="item_image_height">270dp</dimen>
@@ -80,6 +84,8 @@
     <dimen name="contacts_edittext_height">64dp</dimen>
     <dimen name="contact_chevron_width">25dp</dimen>
     <dimen name="contact_chevron_height">25dp</dimen>
+    <dimen name="contact_subject_items_margin_start">60dp</dimen>
+    <dimen name="contact_order_items_margin_start">60dp</dimen>
 
     <!-- Categories -->
     <dimen name="category_image_width">30dp</dimen>
@@ -118,6 +124,10 @@
     <dimen name="margin_right_ourpay_panel_image">2dp</dimen>
     <dimen name="margin_start_ourpay_panel_image">2dp</dimen>
     <dimen name="margin_top_ourpay_panel_image">7dp</dimen>
+    
+    <!-- Orders -->
+    <dimen name="order_image_width">85dp</dimen>
+    <dimen name="order_image_height">135dp</dimen>
 
     <!-- Product Details -->
     <dimen name="product_details_image_layout_height">420dp</dimen>

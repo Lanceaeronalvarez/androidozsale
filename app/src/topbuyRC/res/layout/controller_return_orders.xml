@@ -31,7 +31,7 @@
             android:paddingEnd="20dp"
             android:paddingRight="20dp"
             android:text="Select Orders"
-            android:textSize="@dimen/text_size_xlarge"
+            android:textSize="@dimen/text_size_headline1"
             android:textColor="#b7b7b7"/>
 
         <android.support.v7.widget.RecyclerView

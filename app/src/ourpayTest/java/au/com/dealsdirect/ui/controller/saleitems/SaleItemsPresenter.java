@@ -66,6 +66,31 @@ public class SaleItemsPresenter<V extends SaleItemsMvpView> extends BasePresente
     }
 
     @Override
+    public void loadSaleItems(GetSaleItemsRequest getSaleItemsRequest1, GetSaleItemsRequest getSaleItemsRequest2) {
+        Observable dualApiCall = Observable.zip(wrapObservable(getDataManager().callGetSaleItemsRequest(getSaleItemsRequest1)),
+                wrapObservable(getDataManager().callGetSaleItemsRequest(getSaleItemsRequest2)),
+                new BiFunction<GetSaleItemsResponse, GetSaleItemsResponse, Pair<GetSaleItemsResponse, GetSaleItemsResponse>>() {
+                    @Override
+                    public Pair<GetSaleItemsResponse, GetSaleItemsResponse> apply(GetSaleItemsResponse t1, GetSaleItemsResponse t2) throws Exception {
+                        return new Pair<>(t1, t2);
+                    }
+                });
+
+
+        doApiCallForResponse(dualApiCall, new AppApiCallback() {
+            @Override
+            public void onSuccess(Object response) {
+                super.onSuccess(response);
+                Pair pair = (Pair) response;
+                    getMvpView().showSaleItems((GetSaleItemsResponse) pair.first, true);
+                    getMvpView().showSaleItems((GetSaleItemsResponse) pair.second, false);
+                }
+            }
+        );
+    }
+
+
+    @Override
     public void loadProductDetails(RecyclerView.ViewHolder viewHolder, int position, String
             seoIdentifierId, String imageUrl, String skuId, String saleId) {
         getMvpView().showProductDetails(viewHolder, position, seoIdentifierId, imageUrl, skuId, saleId);
@@ -84,6 +109,11 @@ public class SaleItemsPresenter<V extends SaleItemsMvpView> extends BasePresente
                 getMvpView().onLoadSortingFacetsFinished((List<SortingResponse>) response);
             }
         });
+    }
+
+    @Override
+    public void onCategoryChanged(boolean val) {
+        getMvpView().setIsCategoryChanged(val);
     }
 
 }
