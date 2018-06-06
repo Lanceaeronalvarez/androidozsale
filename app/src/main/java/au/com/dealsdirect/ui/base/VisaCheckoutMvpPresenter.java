@@ -25,6 +25,5 @@ public interface VisaCheckoutMvpPresenter<V extends VisaCheckoutMvpView> extends
 
     void executeLoginVisa(LoginVisa.RequestValue.Data requestData, String password);
 
-
     boolean isVisaCheckoutEnabled();
 }

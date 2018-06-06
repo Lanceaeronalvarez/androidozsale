@@ -76,7 +76,7 @@
                 android:id="@+id/button_visacheckout"
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/default_button_height"
-                android:layout_marginBottom="10dp"
+                android:layout_marginBottom="@dimen/margin_small"
                 app:animation="true"
                 android:enabled="false"/>
 

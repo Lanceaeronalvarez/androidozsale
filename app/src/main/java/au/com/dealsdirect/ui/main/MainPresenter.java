@@ -151,7 +151,7 @@ public class MainPresenter<V extends MainMvpView> extends BasePresenter<V> imple
     @Override
     public void callGetPublicPaymentToken() {
         getCompositeDisposable().add(getDataManager()
-                .callGetPublicPaymentToken(getDataManager().getCountryId(),getDataManager().getLanguageId())
+                .callGetPublicPaymentToken(getDataManager().getCountryId(), getDataManager().getLanguageId())
                 .subscribeOn(getSchedulerProvider().io())
                 .observeOn(getSchedulerProvider().ui())
                 .subscribe(new Consumer<GetPublicPaymentToken.ResponseValue>() {
@@ -197,7 +197,7 @@ public class MainPresenter<V extends MainMvpView> extends BasePresenter<V> imple
                 getDataManager().setAccessAnonymousEnabled(value.getAccess().getAnonymousEnabled());
                 getDataManager().setIsMyPayEnabled(value.getPayments().getMyPay().getEnabled());
 
-                if(value.getPayments().getVisaCheckout() != null){
+                if (value.getPayments().getVisaCheckout() != null) {
                     getDataManager().setIsVisaCheckoutEnabled(value.getPayments().getVisaCheckout().getVisaCheckoutEnabled());
                     // force true meanwhile
 //                    getDataManager().setIsVisaCheckoutEnabled(true);
@@ -493,8 +493,6 @@ public class MainPresenter<V extends MainMvpView> extends BasePresenter<V> imple
                     }
                 })
         );
-
-
     }
 
 
@@ -553,8 +551,6 @@ public class MainPresenter<V extends MainMvpView> extends BasePresenter<V> imple
                     }
                 })
         );
-
-
     }
 
 
