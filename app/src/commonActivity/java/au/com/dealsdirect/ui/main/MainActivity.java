@@ -7,14 +7,11 @@ import android.content.IntentFilter;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.content.pm.Signature;
-import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.util.Base64;
 import android.util.Log;
 import android.view.ViewGroup;
-import android.view.Window;
-import android.view.WindowManager;
 
 import com.bluelinelabs.conductor.Conductor;
 import com.bluelinelabs.conductor.Controller;
@@ -39,8 +36,11 @@ import com.braintreepayments.api.exceptions.UpgradeRequiredException;
 import com.braintreepayments.api.interfaces.BraintreeResponseListener;
 import com.braintreepayments.api.models.CardBuilder;
 import com.braintreepayments.api.models.PaymentMethodNonce;
+import com.braintreepayments.api.models.VisaCheckoutNonce;
 import com.braintreepayments.cardform.view.CardForm;
 import com.mysale.genie.utility.RxBus;
+import com.newrelic.agent.android.NewRelic;
+import com.visa.checkout.VisaPaymentSummary;
 
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
@@ -69,6 +69,7 @@ import au.com.dealsdirect.ui.controller.saleitemdetails.SaleItemDetailsControlle
 import au.com.dealsdirect.ui.controller.saleitems.SaleItemsController;
 import au.com.dealsdirect.ui.controller.shops.ShopsController;
 import au.com.dealsdirect.ui.controller.splash.SplashScreenController;
+import au.com.dealsdirect.ui.controller.visacheckout.VisaCheckoutController;
 import au.com.dealsdirect.ui.custom.CustomAlertDialog;
 import au.com.dealsdirect.utils.AppConstants;
 import au.com.dealsdirect.utils.AppEventHelper;
@@ -106,6 +107,7 @@ public class MainActivity extends BaseActivity implements MainMvpView {
     private boolean mIsViewPagerSet = false;
     private boolean isTemplateTextsStored = false;
     private boolean mIsViewAttached = false;
+    private int mVisaCheckoutActionType = -1;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -159,6 +161,7 @@ public class MainActivity extends BaseActivity implements MainMvpView {
         // Call API settings
         mPresenter.callGetServerSettings();
         mPresenter.callGetAppSettingsSection(this);
+        mPresenter.callGetPublicPaymentToken();
         if (isAuthorized()) {
             // If login ticket exist, call login ticket api to renew cookies and ticket
             // GetAppSettings and GetPaymentToken will be called on success of this call
@@ -277,7 +280,7 @@ public class MainActivity extends BaseActivity implements MainMvpView {
                             break;
                         } else {
                             //getMainController().showBottomNav();
-                            if (currentController instanceof SaleItemsController){
+                            if (currentController instanceof SaleItemsController) {
                                 getMainController().setViewpagerDraggable(true);
                             }
                             currentRouter.handleBack();
@@ -295,9 +298,9 @@ public class MainActivity extends BaseActivity implements MainMvpView {
         mAuthHandler = handler;
         //pinapasa yung router, para kahit child router man siya ng kung ano mang view, pwedeng siya ang tumawag.
         Controller currentController = getCurrentController(router);
-        if(currentController instanceof SaleItemDetailsController ||
-                currentController instanceof AccountController ){
-            GateKeeper.push(router, GateKeeper.Destination.LOGIN,new VerticalChangeHandler(),new VerticalChangeHandler());
+        if (currentController instanceof SaleItemDetailsController ||
+                currentController instanceof AccountController) {
+            GateKeeper.push(router, GateKeeper.Destination.LOGIN, new VerticalChangeHandler(), new VerticalChangeHandler());
         } else {
             GateKeeper.push(router, GateKeeper.Destination.LOGIN);
         }
@@ -347,11 +350,21 @@ public class MainActivity extends BaseActivity implements MainMvpView {
         Router currentRouter = homeController.getCurrentRouter();
         Controller currentController = homeController.getCurrentControllerOnRouter(currentRouter);
 
-        if (currentController instanceof CheckoutController || PaymentInfo.isThreeDSecureCalled()) {
+        if (currentController instanceof VisaCheckoutController && paymentMethodNonce instanceof VisaCheckoutNonce) {
+            switch (getVisaCheckoutActionType()) {
+                case VisaCheckoutController.VISA_CHECKOUT_LOGIN:
+                    ((VisaCheckoutController) currentController).doAuthenticateLoginWithVisaCheckoutBraintree((VisaCheckoutNonce) paymentMethodNonce);
+                    break;
+                case VisaCheckoutController.VISA_CHECKOUT_PAY:
+                    callCreatePaymentTransaction(PaymentInfo.VISA_CHECKOUT_BRAINTREE,paymentMethodNonce.getNonce(),"");
+                    break;
+            }
+        } else if (currentController instanceof CheckoutController || PaymentInfo.isThreeDSecureCalled()) {
             callCreatePaymentTransaction(PaymentInfo.getPaymentType(), paymentMethodNonce.getNonce(), "");
         } else {
             callCreatePaymentMethod(PaymentInfo.getPaymentType(), paymentMethodNonce.getNonce());
         }
+
 
     }
 
@@ -360,20 +373,32 @@ public class MainActivity extends BaseActivity implements MainMvpView {
     public void callCreatePaymentTransaction(String type, String nonce, String token) {
 
         //3DS Check
-            if (PaymentInfo.isThreeDSecureRequired() && !PaymentInfo.isThreeDSecureCalled()) {
-                mPresenter.callGetPaymentMethodNonce(token);
+        if (PaymentInfo.isThreeDSecureRequired() && !PaymentInfo.isThreeDSecureCalled()) {
+            mPresenter.callGetPaymentMethodNonce(token);
 
-                return;
-            }
+            return;
+        }
 
-            BraintreeResponseListener<String> handler = deviceData -> mPresenter.createPaymentTransaction(
-                    deviceData, type, nonce, token);
+        BraintreeResponseListener<String> handler = deviceData -> mPresenter.createPaymentTransaction(
+                deviceData, type, nonce, token);
 
-            //Kount Check
-            if (!mPresenter.getKountMerchantId().isEmpty()) {
-                DataCollector.collectDeviceData(mBraintreeFragment, mPresenter.getKountMerchantId(), handler);
-            } else {
-                DataCollector.collectDeviceData(mBraintreeFragment, handler);
+        //Kount Check
+        if (!mPresenter.getKountMerchantId().isEmpty()) {
+            DataCollector.collectDeviceData(mBraintreeFragment, mPresenter.getKountMerchantId(), handler);
+        } else {
+            DataCollector.collectDeviceData(mBraintreeFragment, handler);
+        }
+    }
+
+    @Override
+    public void callCreatePaymentTransactionVco(VisaPaymentSummary visaPaymentSummary) {
+        BraintreeResponseListener<String> handler = deviceData -> mPresenter.createPaymentTransactionVco(visaPaymentSummary);
+
+        //Kount Check
+        if (!mPresenter.getKountMerchantId().isEmpty()) {
+            DataCollector.collectDeviceData(mBraintreeFragment, mPresenter.getKountMerchantId(), handler);
+        } else {
+            DataCollector.collectDeviceData(mBraintreeFragment, handler);
         }
     }
 
@@ -561,6 +586,16 @@ public class MainActivity extends BaseActivity implements MainMvpView {
     }
 
     @Override
+    public void setVisaCheckoutActionType(int visaCheckoutActionType) {
+        mVisaCheckoutActionType = visaCheckoutActionType;
+    }
+
+    @Override
+    public int getVisaCheckoutActionType() {
+        return mVisaCheckoutActionType;
+    }
+
+    @Override
     public void callLoginTicket() {
         mPresenter.callLoginTicket();
     }
@@ -685,7 +720,9 @@ public class MainActivity extends BaseActivity implements MainMvpView {
 
     private void setPaymentSuccessOurpay(CreatePaymentTransaction.ResponseValue responseValue) {
         Ourpay paymentSuccessOurpay = new Ourpay();
-        List<MyPayDetails.PlannedTransaction> transactions = responseValue.getD().getValue().getPlannedTransactions();
+
+        try {
+            List<MyPayDetails.PlannedTransaction> transactions = responseValue.getD().getValue().getPlannedTransactions();
 
         if(responseValue != null && transactions != null ) {
             paymentSuccessOurpay.setCanUse(true);
@@ -706,6 +743,7 @@ public class MainActivity extends BaseActivity implements MainMvpView {
             paymentSuccessOurpay.setPlannedTransactions(null);
             paymentSuccessOurpay.setState(paymentSuccessOurpay.getState() | OurpayState.ERROR);
         }
+
     }
 
     public String getMyTemplateTexts(String detailKey) {
@@ -722,9 +760,9 @@ public class MainActivity extends BaseActivity implements MainMvpView {
 
     @Override
     public Router getCurrentRouter() {
-        try{
+        try {
             return getMainController().getHomeController().getCurrentRouter();
-        }catch (NullPointerException e){
+        } catch (NullPointerException e) {
             return getHomeRouter();
         }
     }
@@ -764,7 +802,7 @@ public class MainActivity extends BaseActivity implements MainMvpView {
         }
 
         String successMessage = getString(R.string.login_successfully);
-        switch (authFlag){
+        switch (authFlag) {
             case REGISTER:
                 successMessage = getString(R.string.registered_successfully);
                 break;
@@ -798,7 +836,7 @@ public class MainActivity extends BaseActivity implements MainMvpView {
     }
 
     /**
-     *  Method to register runtime broadcast receiver to show snackbar alert for internet connection..
+     * Method to register runtime broadcast receiver to show snackbar alert for internet connection..
      */
     private void registerInternetCheckReceiver() {
         IntentFilter internetFilter = new IntentFilter();
@@ -808,7 +846,7 @@ public class MainActivity extends BaseActivity implements MainMvpView {
     }
 
     /**
-     *  Runtime Broadcast receiver inner class to capture internet connectivity events
+     * Runtime Broadcast receiver inner class to capture internet connectivity events
      */
     public BroadcastReceiver broadcastReceiver = new BroadcastReceiver() {
         @Override

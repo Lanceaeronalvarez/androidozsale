@@ -97,9 +97,6 @@ public class DetailsController extends SwipeableBaseToolBarController implements
         super.onViewBound(view);
         mToolbarTitle.setText("my details");
         setupSwipingBehavior();
-        setupDefaultBottomButton("save", view1 -> {
-            saveUserDetails();
-        });
         setUp(view);
     }
 
@@ -135,6 +132,14 @@ public class DetailsController extends SwipeableBaseToolBarController implements
         });
         SetUserDetailsRequest setUserDetailsRequest = new SetUserDetailsRequest();
         mPresenter.loadUser(setUserDetailsRequest);
+    }
+
+    @Override
+    protected void onAttach(@NonNull View view) {
+        setupDefaultBottomButton("save", view1 -> {
+            saveUserDetails();
+        });
+        super.onAttach(view);
     }
 
     @Override

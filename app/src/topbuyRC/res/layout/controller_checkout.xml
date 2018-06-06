@@ -2,6 +2,7 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/white"
     android:orientation="vertical">
 
     <include
@@ -16,18 +17,27 @@
         android:overScrollMode="never">
 
         <LinearLayout
+            android:id="@+id/controller_checkout_container"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@android:color/white"
-            android:orientation="vertical">
+            android:orientation="vertical"
+            android:visibility="gone">
 
-            <au.com.dealsdirect.ui.custom.EmbeddableListView
-                android:id="@+id/fragment_checkout_list"
+            <android.support.v7.widget.RecyclerView
+                android:id="@+id/controller_checkout_recyclerview_items"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:divider="#F6F6F6"
-                android:dividerHeight="1dp"
-                android:visibility="visible" />
+                android:layout_height="wrap_content"
+                android:nestedScrollingEnabled="false"/>
+
+            <include layout="@layout/partial_checkout_address" />
+
+            <include layout="@layout/partial_checkout_payment" />
+
+            <include layout="@layout/partial_checkout_voucher" />
+
+            <include layout="@layout/partial_checkout_summary" />
+
+            <include layout="@layout/partial_checkout_button" />
 
         </LinearLayout>
 

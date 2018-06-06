@@ -30,8 +30,10 @@ import com.braintreepayments.api.exceptions.UpgradeRequiredException;
 import com.braintreepayments.api.interfaces.BraintreeResponseListener;
 import com.braintreepayments.api.models.CardBuilder;
 import com.braintreepayments.api.models.PaymentMethodNonce;
+import com.braintreepayments.api.models.VisaCheckoutNonce;
 import com.braintreepayments.cardform.view.CardForm;
 import com.mysale.genie.utility.RxBus;
+import com.visa.checkout.VisaPaymentSummary;
 
 import java.util.List;
 
@@ -59,6 +61,7 @@ import au.com.dealsdirect.ui.controller.saleitemdetails.SaleItemDetailsControlle
 import au.com.dealsdirect.ui.controller.shops.ShopsController;
 import au.com.dealsdirect.ui.controller.shops.ShopsMvpView;
 import au.com.dealsdirect.ui.controller.splash.SplashScreenController;
+import au.com.dealsdirect.ui.controller.visacheckout.VisaCheckoutController;
 import au.com.dealsdirect.ui.custom.CustomAlertDialog;
 import au.com.dealsdirect.utils.AppConstants;
 import au.com.dealsdirect.utils.BraintreeUtils;
@@ -99,6 +102,7 @@ public class MainActivity extends BaseActivity implements MainMvpView {
     private boolean mIsFromBannerFilter = false;
     private boolean isTemplateTextsStored = false;
     private boolean mIsViewAttached = false;
+    private int mVisaCheckoutActionType = -1;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -133,6 +137,7 @@ public class MainActivity extends BaseActivity implements MainMvpView {
         // Call API settings
         mPresenter.callGetServerSettings();
         mPresenter.callGetAppSettingsSection(this);
+        mPresenter.callGetPublicPaymentToken();
         if (isAuthorized()) {
             // If login ticket exist, call login ticket api to renew cookies and ticket
             // GetAppSettings and GetPaymentToken will be called on success of this call
@@ -283,12 +288,20 @@ public class MainActivity extends BaseActivity implements MainMvpView {
 
     @Override
     public void onPaymentMethodNonceCreated(PaymentMethodNonce paymentMethodNonce) {
-
         HomeController homeController = getMainController().getHomeController();
         Router currentRouter = homeController.getCurrentRouter();
         Controller currentController = homeController.getCurrentControllerOnRouter(currentRouter);
 
-        if (currentController instanceof CheckoutController || PaymentInfo.isThreeDSecureCalled()) {
+        if (currentController instanceof VisaCheckoutController && paymentMethodNonce instanceof VisaCheckoutNonce) {
+            switch (getVisaCheckoutActionType()) {
+                case VisaCheckoutController.VISA_CHECKOUT_LOGIN:
+                    ((VisaCheckoutController) currentController).doAuthenticateLoginWithVisaCheckoutBraintree((VisaCheckoutNonce) paymentMethodNonce);
+                    break;
+                case VisaCheckoutController.VISA_CHECKOUT_PAY:
+                    callCreatePaymentTransaction(PaymentInfo.VISA_CHECKOUT_BRAINTREE,paymentMethodNonce.getNonce(),"");
+                    break;
+            }
+        } else if (currentController instanceof CheckoutController || PaymentInfo.isThreeDSecureCalled()) {
             callCreatePaymentTransaction(PaymentInfo.getPaymentType(), paymentMethodNonce.getNonce(), "");
         } else {
             callCreatePaymentMethod(PaymentInfo.getPaymentType(), paymentMethodNonce.getNonce());
@@ -316,6 +329,20 @@ public class MainActivity extends BaseActivity implements MainMvpView {
         } else {
             DataCollector.collectDeviceData(mBraintreeFragment, handler);
         }
+    }
+
+    @Override
+    public void callCreatePaymentTransactionVco(VisaPaymentSummary visaPaymentSummary) {
+
+        BraintreeResponseListener<String> handler = deviceData -> mPresenter.createPaymentTransactionVco(visaPaymentSummary);
+
+        //Kount Check
+        if (!mPresenter.getKountMerchantId().isEmpty()) {
+            DataCollector.collectDeviceData(mBraintreeFragment, mPresenter.getKountMerchantId(), handler);
+        } else {
+            DataCollector.collectDeviceData(mBraintreeFragment, handler);
+        }
+
     }
 
     @Override
@@ -494,6 +521,15 @@ public class MainActivity extends BaseActivity implements MainMvpView {
         return mBraintreeFragment != null;
     }
 
+    @Override
+    public void setVisaCheckoutActionType(int visaCheckoutActionType) {
+        mVisaCheckoutActionType = visaCheckoutActionType;
+    }
+
+    @Override
+    public int getVisaCheckoutActionType() {
+        return mVisaCheckoutActionType;
+    }
     @Override
     public void callLoginTicket() {
         mPresenter.callLoginTicket();
@@ -739,7 +775,7 @@ public class MainActivity extends BaseActivity implements MainMvpView {
 
     @Override
     public boolean isViewAttached() {
-        return false;
+        return mIsViewAttached;
     }
 
     public int getSelectedBottomNavTab() {

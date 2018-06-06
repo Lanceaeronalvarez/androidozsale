@@ -27,6 +27,7 @@ import au.com.dealsdirect.R;
 import au.com.dealsdirect.data.auth.AuthHandler;
 import au.com.dealsdirect.ui.base.BaseController;
 import au.com.dealsdirect.ui.controller.login.LoginController;
+import au.com.dealsdirect.ui.controller.login.PasswordVerificationController;
 import au.com.dealsdirect.ui.controller.register.RegisterController;
 import au.com.dealsdirect.ui.controller.returns.currentreturns.CurrentReturnsController;
 import au.com.dealsdirect.ui.controller.saleitemdetails.SaleItemDetailsMvpView;
@@ -110,13 +111,13 @@ public class AccountController extends BaseController implements AccountMvpView 
 
         TypedArray title = mActivity.getResources().obtainTypedArray(R.array.account_title_array);
         titles = new ArrayList<>();
-        for(int i = 0; i < title.length(); i++) {
-            titles.add(title.getResourceId(i,0));
+        for (int i = 0; i < title.length(); i++) {
+            titles.add(title.getResourceId(i, 0));
         }
         TypedArray drawable = mActivity.getResources().obtainTypedArray(R.array.account_drawable_array);
         drawables = new ArrayList<>();
-        for(int i = 0; i < drawable.length(); i++) {
-            drawables.add(drawable.getResourceId(i,0));
+        for (int i = 0; i < drawable.length(); i++) {
+            drawables.add(drawable.getResourceId(i, 0));
         }
 
         mPresenter.loadAccountItems(titles, drawables);
@@ -125,20 +126,23 @@ public class AccountController extends BaseController implements AccountMvpView 
             @Override
             public void onChangeStarted(@Nullable Controller to, @Nullable Controller from, boolean isPush, @NonNull ViewGroup container, @NonNull ControllerChangeHandler handler) {
                 mChangeInProgress = true;
+
                 mAccountRecyclerView.setClickable(false);
+
             }
 
             @Override
             public void onChangeCompleted(@Nullable Controller to, @Nullable Controller from, boolean isPush, @NonNull ViewGroup container, @NonNull ControllerChangeHandler handler) {
                 mChangeInProgress = false;
                 mAccountRecyclerView.setClickable(true);
-                if (from instanceof LoginController || from instanceof RegisterController) {
+                if (from instanceof LoginController || from instanceof RegisterController || from instanceof PasswordVerificationController) {
                     mPresenter.onAttach(mvpView);
-                    if(mPresenter.isAuthorized()) {
+                    if (mPresenter.isAuthorized()) {
                         mPresenter.loadAccountItems(titles, drawables);
                         mPresenter.onAccountItemClick(mSelectedItemFromLogin);
                     }
                 }
+
             }
         });
     }
@@ -343,14 +347,15 @@ public class AccountController extends BaseController implements AccountMvpView 
 
     }
 
-    private void updateCartCount(){
+    private void updateCartCount() {
         Controller controller = GateKeeper.getCurrentControllerOnRouter(mActivity.getSaleItemsRouter());
-        if(controller instanceof SaleItemsMvpView){
+        if (controller instanceof SaleItemsMvpView) {
             ((SaleItemsMvpView) controller).onCallGetBasketItemsQuantity();
-        } else if(controller instanceof SaleItemDetailsMvpView){
+        } else if (controller instanceof SaleItemDetailsMvpView) {
             ((SaleItemDetailsMvpView) controller).onCallGetBasketItemsQuantity();
         }
     }
+
     @Override
     public void initLoginDrawable() {
 

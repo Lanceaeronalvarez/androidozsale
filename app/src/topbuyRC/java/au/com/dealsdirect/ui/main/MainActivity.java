@@ -29,11 +29,15 @@ import com.braintreepayments.api.exceptions.UpgradeRequiredException;
 import com.braintreepayments.api.interfaces.BraintreeResponseListener;
 import com.braintreepayments.api.models.CardBuilder;
 import com.braintreepayments.api.models.PaymentMethodNonce;
+import com.braintreepayments.api.models.VisaCheckoutNonce;
 import com.braintreepayments.cardform.view.CardForm;
 import com.crashlytics.android.Crashlytics;
 import com.crashlytics.android.answers.Answers;
 import com.mysale.genie.utility.RxBus;
+import com.mysale.genie.utility.config.model.getappsettings.VisaCheckout;
 import com.newrelic.agent.android.NewRelic;
+import com.visa.checkout.VisaCheckoutSdk;
+import com.visa.checkout.VisaPaymentSummary;
 
 import java.util.List;
 
@@ -53,9 +57,11 @@ import au.com.dealsdirect.ui.controller.categories.CategoriesController;
 import au.com.dealsdirect.ui.controller.checkout.addpayment.AddPaymentController;
 import au.com.dealsdirect.ui.controller.checkout.checkout.CheckoutController;
 import au.com.dealsdirect.ui.controller.main.MainController;
+import au.com.dealsdirect.ui.controller.register.RegisterController;
 import au.com.dealsdirect.ui.controller.saleitems.SaleItemsController;
 import au.com.dealsdirect.ui.controller.splash.SplashScreenController;
 import au.com.dealsdirect.ui.controller.tutorial.TutorialController;
+import au.com.dealsdirect.ui.controller.visacheckout.VisaCheckoutController;
 import au.com.dealsdirect.ui.custom.CustomAlertDialog;
 import au.com.dealsdirect.utils.AppConstants;
 import au.com.dealsdirect.utils.BundleBuilder;
@@ -79,6 +85,8 @@ import static au.com.dealsdirect.utils.BundleKeys.KEY_SHIPPING_FEE;
 
 public class MainActivity extends BaseActivity implements MainMvpView {
 
+    private static final int CHECKOUT_BACKSTACK_THRESHOLD = 2;
+
     @Inject
     MainMvpPresenter<MainMvpView> mPresenter;
 
@@ -99,6 +107,7 @@ public class MainActivity extends BaseActivity implements MainMvpView {
     private boolean mIsAddPaymentControllerFromCart = false; //hence its from myAccounts
     private FetchTokenHandler mFetchTokenHandler;
     private boolean mIsViewAttached = false;
+    private int mVisaCheckoutActionType = -1;
 
     AuthHandler mAuthHandler;
 
@@ -150,6 +159,7 @@ public class MainActivity extends BaseActivity implements MainMvpView {
         // Call API settings
         mPresenter.callGetServerSettings();
         mPresenter.callGetAppSettingsSection(this);
+        mPresenter.callGetPublicPaymentToken();
         if (mPresenter.isAuthorized()) {
             // If login ticket exist, call login ticket api to renew cookies and ticket
             // GetAppSettings and GetPaymentToken will be called on success of this call
@@ -283,7 +293,7 @@ public class MainActivity extends BaseActivity implements MainMvpView {
     @Override
     public Router getCurrentRouter() {
         try {
-            return mRouter;
+            return getMainController().getCurrentRouter();
         } catch (NullPointerException e) {
             return getSaleItemsRouter();
         }
@@ -409,7 +419,6 @@ public class MainActivity extends BaseActivity implements MainMvpView {
 
     @Override
     public void performResetWithAuthFetch() {
-
         performBraintreeReset();
         fetchAuthorization(null);
     }
@@ -439,6 +448,16 @@ public class MainActivity extends BaseActivity implements MainMvpView {
     @Override
     public boolean isBraintreeInitialized() {
         return mBraintreeFragment != null;
+    }
+
+    @Override
+    public void setVisaCheckoutActionType(int visaCheckoutActionType) {
+        mVisaCheckoutActionType = visaCheckoutActionType;
+    }
+
+    @Override
+    public int getVisaCheckoutActionType() {
+        return mVisaCheckoutActionType;
     }
 
     @Override
@@ -475,7 +494,17 @@ public class MainActivity extends BaseActivity implements MainMvpView {
             }
         } else {
             setPaymentMethodSelected(lastPaymentMethod);
-            getCheckoutRouter().popToRoot();
+            // If Checkout -> Payment Select -> Add Payment, backStack size would be greater
+            // than threshold
+            boolean isFromPaymentSelect = getCheckoutRouter().getBackstackSize() >
+                    CHECKOUT_BACKSTACK_THRESHOLD;
+            // If there are only 2 controllers in the backStack and popToRoot is called,
+            // the "to" value will be null and checkout won't autorefresh
+            if (isFromPaymentSelect) {
+                getCheckoutRouter().popToRoot();
+            } else {
+                getCheckoutRouter().handleBack();
+            }
         }
     }
 
@@ -498,6 +527,20 @@ public class MainActivity extends BaseActivity implements MainMvpView {
         } else {
             DataCollector.collectDeviceData(mBraintreeFragment, handler);
         }
+    }
+
+    @Override
+    public void callCreatePaymentTransactionVco(VisaPaymentSummary visaPaymentSummary) {
+
+        BraintreeResponseListener<String> handler = deviceData -> mPresenter.createPaymentTransactionVco(visaPaymentSummary);
+
+        //Kount Check
+        if (!mPresenter.getKountMerchantId().isEmpty()) {
+            DataCollector.collectDeviceData(mBraintreeFragment, mPresenter.getKountMerchantId(), handler);
+        } else {
+            DataCollector.collectDeviceData(mBraintreeFragment, handler);
+        }
+
     }
 
     @Override
@@ -527,7 +570,7 @@ public class MainActivity extends BaseActivity implements MainMvpView {
             bundle.putString(KEY_INVOICE, responseValue.getD().getValue().getInvoiceNo() == null ? String.valueOf(responseValue.getD().getValue().getTransactionInvoiceNo()) : responseValue.getD().getValue().getInvoiceNo());
             bundle.putString(KEY_ESTIMATED_DELIVERY, responseValue.getD().getValue().getOrderInfoResult().getEstimatedDeliveryText());
 
-            GateKeeper.push(mRouter, GateKeeper.Destination.PAYMENT_SUCCESS, bundle, new VerticalChangeHandler(false), new VerticalChangeHandler());
+            GateKeeper.push(getCheckoutRouter(), GateKeeper.Destination.PAYMENT_SUCCESS, bundle, new VerticalChangeHandler(), new VerticalChangeHandler());
 
             if (getMainController().getHomeController() != null)
                 getMainController().getHomeController().showFifthTabController();
@@ -588,7 +631,7 @@ public class MainActivity extends BaseActivity implements MainMvpView {
 
     @Override
     public void callApiSettings() {
-
+        mPresenter.callApiSettings(this);
     }
 
     @Override
@@ -621,13 +664,23 @@ public class MainActivity extends BaseActivity implements MainMvpView {
         }
     }
 
+
     @Override
     public void onPaymentMethodNonceCreated(PaymentMethodNonce paymentMethodNonce) {
 
         Router currentRouter = getCurrentRouter();
         Controller currentController = GateKeeper.getCurrentControllerOnRouter(currentRouter);
 
-        if (currentController instanceof CheckoutController || PaymentInfo.isThreeDSecureCalled()) {
+        if (currentController instanceof VisaCheckoutController && paymentMethodNonce instanceof VisaCheckoutNonce) {
+            switch (getVisaCheckoutActionType()) {
+                case VisaCheckoutController.VISA_CHECKOUT_LOGIN:
+                    ((VisaCheckoutController) currentController).doAuthenticateLoginWithVisaCheckoutBraintree((VisaCheckoutNonce) paymentMethodNonce);
+                    break;
+                case VisaCheckoutController.VISA_CHECKOUT_PAY:
+                    callCreatePaymentTransaction(PaymentInfo.VISA_CHECKOUT_BRAINTREE,paymentMethodNonce.getNonce(),"");
+                    break;
+            }
+        } else if (currentController instanceof CheckoutController || PaymentInfo.isThreeDSecureCalled()) {
             callCreatePaymentTransaction(PaymentInfo.getPaymentType(), paymentMethodNonce.getNonce(), "");
         } else {
             callCreatePaymentMethod(PaymentInfo.getPaymentType(), paymentMethodNonce.getNonce());

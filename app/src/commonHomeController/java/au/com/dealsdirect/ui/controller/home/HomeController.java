@@ -37,6 +37,7 @@ import au.com.dealsdirect.ui.controller.shops.ShopsController;
 import au.com.dealsdirect.ui.main.MainActivity;
 import au.com.dealsdirect.utils.BundleBuilder;
 import au.com.dealsdirect.utils.CartUtil;
+import au.com.dealsdirect.utils.module.GateKeeper;
 import butterknife.BindView;
 import butterknife.OnClick;
 
@@ -86,6 +87,8 @@ public class HomeController extends BaseController implements HomeMvpView {
     private Router mContactsRouter;
     private Router mInvitesRouter;
     private Router mCheckoutRouter;
+    private List<Router> mRouterList;
+    private List<ViewGroup> mContainersList;
 
     private int currentVisibleIndex = 1;
     private int previousVisibleIndex = 0;
@@ -169,10 +172,6 @@ public class HomeController extends BaseController implements HomeMvpView {
         mBottomNavigationView.setAccentColor(getResources().getColor(R.color.bottom_nav_accent));
         mBottomNavigationView.setInactiveColor(getResources().getColor(R.color.bottom_nav_inactive));
         setUp(view);
-    }
-
-    private void mapRoutersToContainers(){
-
     }
 
     @Override

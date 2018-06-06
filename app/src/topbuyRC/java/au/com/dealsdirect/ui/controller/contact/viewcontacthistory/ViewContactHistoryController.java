@@ -117,8 +117,6 @@ public class ViewContactHistoryController extends SwipeableBaseToolBarController
 
     @Override
     protected void setUp(View view) {
-
-        KeyboardUtils.setKeyboardAdjustResize(mActivity);
         mActivity.getMainController().hideBottomNav();
 
 //        mContactHistoryTimeStamp.setText(mTimeStamp);
@@ -135,7 +133,6 @@ public class ViewContactHistoryController extends SwipeableBaseToolBarController
 
     @Override
     protected void onDestroyView(@NonNull View view) {
-        KeyboardUtils.setKeyboardAdjustPan(mActivity);
         mPresenter.onDetach();
         super.onDestroyView(view);
     }

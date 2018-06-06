@@ -8,6 +8,7 @@ import com.bluelinelabs.conductor.Controller;
 import com.bluelinelabs.conductor.Router;
 import com.braintreepayments.api.BraintreeFragment;
 import com.braintreepayments.cardform.view.CardForm;
+import com.visa.checkout.VisaPaymentSummary;
 
 import au.com.dealsdirect.data.auth.AuthHandler;
 import au.com.dealsdirect.data.network.model.checkout.CreatePaymentTransaction;
@@ -46,11 +47,15 @@ public interface MainMvpView extends MvpView, BrainTreeListeners {
     BraintreeFragment getBraintreeFragment();
     boolean isBraintreeInitialized();
 
+    void setVisaCheckoutActionType(int visaCheckoutActionType);
+    int getVisaCheckoutActionType();
+
     // Payment methods
     void showGetPaymentMethodNonceSuccess(String nonce);
     void callCreatePaymentMethod(String type, String nonce);
     void showCreatePaymentMethodSuccess(PaymentMethod lastPaymentMethod);
     void callCreatePaymentTransaction(String type, String nonce, String token);
+    void callCreatePaymentTransactionVco(VisaPaymentSummary visaPaymentSummary);
     void showCreatePaymentTransactionSuccess(String paymentType, CreatePaymentTransaction.ResponseValue responseValue);
     void showCreatePaymentTransactionFailure(String errorMessage);
     PaymentMethod getPaymentMethodSelected();

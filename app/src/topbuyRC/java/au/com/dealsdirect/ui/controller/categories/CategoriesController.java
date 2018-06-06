@@ -19,6 +19,7 @@ import com.bluelinelabs.conductor.Router;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.mysale.genie.animation.AnimationEngine;
+import com.mysale.genie.utility.Prefs;
 import com.mysale.genie.views.custom.CoordinatorLayoutAsBottomSheetBehavior;
 
 import java.lang.reflect.Array;
@@ -106,7 +107,7 @@ public class CategoriesController extends BaseController
 
     public CategoriesController(Bundle args) {
         super(args);
-        mCategoriesString = args.getString(BundleKeys.CATEGORIES_ITEM_LIST,"");
+        mCategoriesString = Prefs.getString(BundleKeys.CATEGORIES_ITEM_LIST, "");
         mCategories = new Gson().fromJson(mCategoriesString, new TypeToken<List<GetCategoryTreeResponse>>(){}.getType());
         chosenCategoryKey = args.getString(ARG_CATEGORY_CURRENT_KEY, "");
         chosenCategoryName = args.getString(ARG_CATEGORY_CURRENT_NAME,"");
@@ -227,7 +228,6 @@ public class CategoriesController extends BaseController
         } else {
 
             Bundle bundle = new Bundle();
-            bundle.putString(BundleKeys.CATEGORIES_ITEM_LIST,mCategoriesString);
             bundle.putString(ARG_CATEGORY_PREV_NAME, chosenCategoryName);
             bundle.putString(ARG_CATEGORY_CURRENT_NAME, categoryName);
 
@@ -237,7 +237,6 @@ public class CategoriesController extends BaseController
 
             GateKeeper.push(getRouter(), GateKeeper.Destination.CATEGORIES, bundle);
         }
-
     }
 
     @Override

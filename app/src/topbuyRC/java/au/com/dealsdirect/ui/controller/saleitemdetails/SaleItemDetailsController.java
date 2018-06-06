@@ -373,7 +373,6 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
         mSaleItemImagesAdapter.replaceData(qualitySaleImages);
         mSaleItemImagesIndicatorAdapter.replaceData(qualitySaleImages);
 
-        mProductDescriptionText.setLayerType(View.LAYER_TYPE_SOFTWARE, null);
         mProductDescriptionText.startAnimation(anim);
         mProductDescriptionText.loadData(mHtmlHeader + saleDetail.getDescription() + mHtmlFooter,
                 "text/html; charset=UTF-8",
@@ -449,10 +448,12 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
 
         mAddToCartButton.setEnabled(true);
 
+      /* Should only set button to 'Sold Out' if sold out size is selected
         if (saleDetail.isSoldOut()) {
             mAddToCartButton.setEnabled(false);
             mAddToCartButton.setText("Sold Out");
         }
+      */
 
         if (saleDetail.getOriginalPrice().getValue() <= 0) {
             mProductPreviousPrice.setVisibility(View.GONE);
@@ -471,6 +472,15 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
     }
 
 
+    @Override
+    protected void onDestroyView(@NonNull View view) {
+        mProductDescriptionText.destroy();
+        mProductAboutPricing.destroy();
+        mProductAboutText.destroy();
+        mShippingDescText.destroy();
+        mReturnPolicyText.destroy();
+        super.onDestroyView(view);
+    }
 
     @Override
     public boolean handleBack() {

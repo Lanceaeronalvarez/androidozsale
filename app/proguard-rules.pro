@@ -50,6 +50,7 @@
 # Braintree
 -dontwarn com.devicecollector.**
 -dontwarn com.braintreepayments.**
+-dontwarn com.paypal.android.sdk.onetouch.core.metadata.**
 
 # support design
 -dontwarn android.support.design.**
@@ -58,7 +59,8 @@
 -dontwarn android.support.v7.**
 
 #OkHttp3
--dontwarn okhttp3.**
+-dontwarn com.squareup.okhttp3.**
+-dontwarn com.squareup.okhttp.**
 -dontwarn okio.**
 -dontwarn javax.annotation.**
 
@@ -87,6 +89,7 @@
 -dontwarn org.greenrobot.greendao.database.**
 # If you do not use Rx:
 -dontwarn rx.**
+
 
 # rxjava
 -keep class rx.schedulers.Schedulers {

@@ -31,9 +31,6 @@ public class CurrentReturnViewHolder extends RecyclerView.ViewHolder {
     public CurrentReturnViewHolder(View itemView) {
         super(itemView);
 
-        currentReturnsCardContentContainer = (RelativeLayout) itemView.
-                findViewById(R.id.viewholder_current_return_content_container);
-
         currentReturnProductItem = (CardView) itemView.
                 findViewById(R.id.view_holder_my_current_returns_row_container);
 

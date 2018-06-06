@@ -5,6 +5,7 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
@@ -36,8 +37,11 @@ import au.com.dealsdirect.ui.controller.contact.selectsubject.ContactSelectSubje
 import au.com.dealsdirect.ui.custom.CustomAlertDialog;
 import au.com.dealsdirect.utils.BundleBuilder;
 import au.com.dealsdirect.utils.BundleKeys;
+import au.com.dealsdirect.utils.KeyboardUtils;
 import butterknife.BindView;
 import butterknife.OnClick;
+import butterknife.OnFocusChange;
+import butterknife.OnTouch;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.functions.Consumer;
@@ -171,8 +175,6 @@ public class AddContactController extends SwipeableBaseToolBarController impleme
     protected void setUp(View view) {
         Log.d("addContactController", "from = " + mFromFragmentId);
 
-        mActivity.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE | WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN);
-
         getRouter().addChangeListener(new ControllerChangeHandler.ControllerChangeListener() {
             @Override
             public void onChangeStarted(@Nullable Controller to, @Nullable Controller from, boolean isPush, @NonNull ViewGroup container, @NonNull ControllerChangeHandler handler) {
@@ -296,6 +298,7 @@ public class AddContactController extends SwipeableBaseToolBarController impleme
                 showContactFirstSubjectFromPreference(currentSubject);
             }
         }
+
     }
 
     @Override
@@ -377,18 +380,9 @@ public class AddContactController extends SwipeableBaseToolBarController impleme
     @Override
     public void onDestroyView(@NonNull View view) {
         ContactPreferenceHelper.clear(mActivity);
-        mActivity.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE | WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN);
         mPresenter.onDetach();
         super.onDestroyView(view);
     }
-
-//    @OnFocusChange(R.id.controller_add_contact_message_field)
-//    void onMessageFieldFocusChange(View view, boolean hasFocus) {
-//        if (hasFocus && getRouter().getBackstackSize() > 0) {
-//            getRouter().popCurrentController();
-//        }
-//    }
-
 
     @Override
     public void showContactFirstSubject(List<String> contactSubjectList) {
@@ -447,5 +441,30 @@ public class AddContactController extends SwipeableBaseToolBarController impleme
     private void showContactFirstOrderFromPreference(String order) {
 
         mAddContactOrderText.setText(order);
+    }
+
+    @OnFocusChange(R.id.controller_add_contact_message_field)
+    void onMessageFieldFocusChange(View view, boolean hasFocus) {
+        assert mActivity != null;
+        if (hasFocus) {
+            assert mActivity.getMainController() != null;
+            mActivity.getMainController().hideBottomNav();
+        } else {
+            assert mActivity.getMainController() != null;
+            mActivity.getMainController().showBottomNav();
+            hideKeyboard();
+        }
+    }
+
+    @OnTouch(R.id.controller_add_contact_message_field)
+    public boolean onTouch(View v, MotionEvent event) {
+
+        v.getParent().requestDisallowInterceptTouchEvent(true);
+        switch (event.getAction() & MotionEvent.ACTION_MASK){
+            case MotionEvent.ACTION_UP:
+                v.getParent().requestDisallowInterceptTouchEvent(false);
+                break;
+        }
+        return false;
     }
 }

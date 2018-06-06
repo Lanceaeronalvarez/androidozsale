@@ -3,6 +3,7 @@ package au.com.dealsdirect.utils;
 import android.content.Context;
 import android.content.res.Resources;
 import android.graphics.drawable.Drawable;
+import android.util.DisplayMetrics;
 import android.support.design.widget.TabLayout;
 import android.view.ViewGroup;
 
@@ -17,7 +18,7 @@ public final class ViewUtils {
 
     public static float pxToDp(float px) {
         float densityDpi = Resources.getSystem().getDisplayMetrics().densityDpi;
-        return px / (densityDpi / 160f);
+        return px / (densityDpi / DisplayMetrics.DENSITY_DEFAULT);
     }
 
     public static int dpToPx(float dp) {

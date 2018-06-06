@@ -20,6 +20,8 @@ import com.bluelinelabs.conductor.Controller;
 import com.bluelinelabs.conductor.ControllerChangeHandler;
 import com.bluelinelabs.conductor.Router;
 import com.bluelinelabs.conductor.RouterTransaction;
+import com.bluelinelabs.conductor.changehandler.HorizontalChangeHandler;
+import com.mysale.genie.utility.config.model.getappsettings.Checkout;
 
 import java.util.HashMap;
 
@@ -37,7 +39,6 @@ import au.com.dealsdirect.ui.controller.contact.viewcontacts.ViewContactsControl
 import au.com.dealsdirect.ui.controller.saleitems.SaleItemsController;
 import au.com.dealsdirect.ui.controller.shops.ShopsController;
 import au.com.dealsdirect.ui.main.MainActivity;
-import au.com.dealsdirect.utils.AppLogger;
 import au.com.dealsdirect.utils.BundleBuilder;
 import au.com.dealsdirect.utils.CartUtil;
 import au.com.dealsdirect.utils.module.ControllerFactory;
@@ -60,7 +61,7 @@ public class HomeController extends BaseController implements HomeMvpView {
 
     @Inject
     HomeMvpPresenter<HomeMvpView> mPresenter;
-
+  
     @Inject
     MainActivity mActivity;
 
@@ -85,7 +86,7 @@ public class HomeController extends BaseController implements HomeMvpView {
     @BindView(R.id.controller_home_bottom_nav)
     AHBottomNavigation mBottomNavigationView;
 
-    private HashMap<Integer, Pair<Router, ViewGroup>> mRouterContainerMapping;
+    private HashMap<Integer,Pair<Router,ViewGroup>> mRouterContainerMapping;
 
     private Router mShopRouter;
     private Router mCategoriesRouter;
@@ -162,17 +163,17 @@ public class HomeController extends BaseController implements HomeMvpView {
         }
 
         if (!mCheckoutRouter.hasRootController()) {
-            mCheckoutRouter.setRoot(RouterTransaction.with(new CheckoutController())
+            mCheckoutRouter.setRoot(RouterTransaction.with(CheckoutController.newInstance())
                     .tag(getActivity().getResources().getString(R.string.checkout_controller)));
             ((MainActivity) getActivity()).setCheckoutRouter(mCheckoutRouter);
         }
 
         mRouterContainerMapping = new HashMap<>();
-        mRouterContainerMapping.put(TAB_SHOP_INDEX, new Pair<>(mShopRouter, mShopContainer));
+        mRouterContainerMapping.put(TAB_SHOP_INDEX, new Pair<>(mShopRouter,mShopContainer));
         mRouterContainerMapping.put(TAB_CATEGORIES_INDEX, new Pair<>(mCategoriesRouter, mCategoriesContainer));
-        mRouterContainerMapping.put(TAB_ACCOUNT_INDEX, new Pair<>(mAccountsRouter, mAccountsContainer));
+        mRouterContainerMapping.put(TAB_ACCOUNT_INDEX, new Pair<>(mAccountsRouter,mAccountsContainer));
         mRouterContainerMapping.put(TAB_CONTACT_INDEX, new Pair<>(mContactRouter, mContactContainer));
-        mRouterContainerMapping.put(TAB_CHECKOUT_INDEX, new Pair<>(mCheckoutRouter, mCheckoutContainer));
+        mRouterContainerMapping.put(TAB_CHECKOUT_INDEX, new Pair<>(mCheckoutRouter,mCheckoutContainer));
         setVisibleContainer(TAB_SHOP_INDEX);
 
         mActivity.setHomeRouter(mShopRouter);
@@ -227,7 +228,7 @@ public class HomeController extends BaseController implements HomeMvpView {
         });
 
         mBottomNavigationView.setOnTabSelectedListener((position, wasSelected) -> {
-            if (mCheckoutRouter != null) {
+            if (mCheckoutRouter!=null){
                 Controller controller = getCurrentControllerOnRouter(mCheckoutRouter);
                 if (controller instanceof CheckoutController) {
                     Log.d("ourpay", "home controller remove ourpay");
@@ -296,7 +297,7 @@ public class HomeController extends BaseController implements HomeMvpView {
         mActivity.setAccountsRouter(mAccountsRouter);
 
         mCheckoutRouter = getChildRouter(mCheckoutContainer);
-        mCheckoutRouter.setRoot(RouterTransaction.with(new CheckoutController())
+        mCheckoutRouter.setRoot(RouterTransaction.with(CheckoutController.newInstance())
                 .tag(getActivity().getResources().getString(R.string.checkout_controller)));
     }
 
@@ -308,20 +309,20 @@ public class HomeController extends BaseController implements HomeMvpView {
 
     public void resetCheckoutRouter() {
         mCheckoutRouter = getChildRouter(mCheckoutContainer);
-        mCheckoutRouter.setRoot(RouterTransaction.with(new CheckoutController())
+        mCheckoutRouter.setRoot(RouterTransaction.with(CheckoutController.newInstance())
                 .tag(getActivity().getResources().getString(R.string.checkout_controller)));
     }
 
     @Override
     public void showFirstTabController() {
 
-        if (mShopRouter != null) {
+        if (mShopRouter!=null){
             Controller controller = getCurrentControllerOnRouter(mShopRouter);
             if (controller instanceof ShopsController) {
-                ((MainActivity) getActivity()).getMainController().setViewpagerDraggable(true);
+                ((MainActivity)getActivity()).getMainController().setViewpagerDraggable(true);
             }
 
-            if (controller instanceof SaleItemsController) {
+            if(controller instanceof SaleItemsController){
                 mActivity.onBackPressed();
             }
         }
@@ -439,11 +440,11 @@ public class HomeController extends BaseController implements HomeMvpView {
         currentVisibleIndex = index;
     }
 
-    public void setShopRouterViewPagerDraggable() {
-        if (mShopRouter != null) {
+    public void setShopRouterViewPagerDraggable(){
+        if (mShopRouter!=null){
             Controller controller = getCurrentControllerOnRouter(mShopRouter);
             if (controller instanceof ShopsController) {
-                ((MainActivity) getActivity()).getMainController().setViewpagerDraggable(true);
+                ((MainActivity)getActivity()).getMainController().setViewpagerDraggable(true);
             }
         }
     }
@@ -496,8 +497,8 @@ public class HomeController extends BaseController implements HomeMvpView {
         return currentVisibleIndex;
     }
 
-    public boolean isCheckoutRouterVisible() {
-        Log.d("ourpay", "current item = " + mBottomNavigationView.getCurrentItem());
+    public boolean isCheckoutRouterVisible(){
+        Log.d("ourpay", "current item = "+mBottomNavigationView.getCurrentItem());
         return mBottomNavigationView.getCurrentItem() == TAB_CHECKOUT_INDEX;
     }
 

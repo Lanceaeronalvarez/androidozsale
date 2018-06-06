@@ -12,6 +12,8 @@ import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.bluelinelabs.conductor.Router;
+
 import javax.inject.Inject;
 
 import au.com.dealsdirect.R;
@@ -113,7 +115,7 @@ public class PaymentSuccessController extends SwipeableBaseToolBarController imp
         super.onViewBound(view);
 
         hideToolbarTitle();
-        setupSwipingBehavior();
+        disableSwipingBehavior();
         mPaymentSuccessOrderNumber.setText(mInvoiceString);
         mPaymentOurpaySuccessDetailContainer.setVisibility(View.VISIBLE);
 

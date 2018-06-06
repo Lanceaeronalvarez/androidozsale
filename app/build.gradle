@@ -460,13 +460,26 @@ android {
     testOptions {
         unitTests.returnDefaultValues = true
     }
+
+    dataBinding {
+        enabled = true
+    }
+
+    dexOptions {
+        javaMaxHeapSize "4g"
+    }
 }
 
 
-
+repositories {
+    flatDir { dirs 'libs' }
+}
 
 dependencies {
     compile fileTree(dir: 'libs', include: ['*.jar'])
+
+    implementation 'com.android.databinding:library:1.3.3'
+    implementation 'com.android.databinding:adapters:1.3.3'
 
     // android support libraries
     compile "com.android.support:appcompat-v7:$rootProject.supportLibrary"
@@ -583,6 +596,18 @@ dependencies {
 
     // NR
     compile 'com.newrelic.agent.android:android-agent:5.14.0'
+
+    //VISA CHECKOUT
+    // Visa checkout
+    compile 'com.braintreepayments.api:visa-checkout:1.0.0'
+    compile(name: 'visacheckout-android-sdk-5.5.2', ext: 'aar')
+    compile 'com.squareup.okio:okio:1.13.0'
+    compile 'com.squareup.okhttp3:okhttp:3.9.1'
+    compile group: 'de.greenrobot', name: 'eventbus', version: '2.4.1'
+
+    compile "com.google.android.gms:play-services-ads:$rootProject.gcmVersion"
+    compile "com.google.android.gms:play-services:$rootProject.gcmVersion"
+    compile "com.android.support:multidex:1.0.0"
 
     compile project(path: ':genie-utility')
     compile project(path: ':genie-animation')

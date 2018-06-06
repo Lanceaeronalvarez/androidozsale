@@ -41,7 +41,7 @@ public final class ApiEndPoint {
     private static final String BASE_URL = API_HOST + HANDLER_PREFIX;
     private static final String BASE_URL_ASMX = API_HOST + HANDLER_ASMX_PREFIX;
 
-    /* OURPAY, SMS VERIFICATION */
+    /*SMS VERIFICATION*/
     public static final String SMS_VERIFICATION_NORMALIZE_PHONE = getBaseApiLegacy()+ "NormalizePhone";
     public static final String SMS_VERIFICATION_CODE_SEND = getBaseApiLegacy() + "VerificationCodeSend";
     public static final String SMS_VERIFICATION_CODE_CONFRIM = getBaseApiLegacy() + "VerificationCodeConfirm";
@@ -57,6 +57,7 @@ public final class ApiEndPoint {
     public static final String GET_PUBLIC_APP_SETTINGS = getBaseApiLegacy() + "GetPublicAppSettings";
     public static final String GET_APP_SETTINGS = getBaseApiLegacy() + "GetAppSettings";
     public static final String GET_APP_SETTINGS_SECTION = getBaseApiLegacy() + "GetAppSettingsSection";
+    public static final String GET_PUBLIC_PAYMENT_TOKEN = getBaseApiLegacy() + "GetPublicPaymentToken";
 
     public static final String GET_USER_LANGUAGES = getBaseApiLegacy() + "GetUserLanguages";
     public static final String SET_USER_LANGUAGES = getBaseApiLegacy() + "SetUserLanguage";
@@ -180,6 +181,9 @@ public final class ApiEndPoint {
     public static String GET_SCHEDULED_PLANS = getBaseApiLegacy() + "GetScheduledPayments";
     public static String GET_PAST_PAYMENTS = getBaseApiLegacy() + "GetPastPayments";
     public static String GET_DELIVERY_SERVICE = getBaseApiLegacy() + "GetDeliveryServicePackageByCustomer";
+
+    /*VISA CHECKOUT*/
+    public static String VISA_CHECKOUT_LOGIN = getBaseApiLegacy() + "LoginVisa";
 
     private ApiEndPoint() {
          // This class is not publicly instantiable

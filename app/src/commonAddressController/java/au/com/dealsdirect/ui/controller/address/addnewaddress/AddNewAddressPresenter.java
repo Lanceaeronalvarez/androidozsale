@@ -49,11 +49,11 @@ public class AddNewAddressPresenter <V extends AddNewAddressMvpView> extends Bas
                 if (pair.getValue() instanceof EditText) {
                     EditText et = (EditText) pair.getValue();
                     jsonAddress.addProperty(info.getName(), et.getText().toString());
-                    Timber.d("ADDRESS", "Key: " + info.getName() + " ScheduledPlan: " + et.getText().toString());
+                    Timber.d("ADDRESS", "Key: " + info.getName() + " Value: " + et.getText().toString());
                 } else if (pair.getValue() instanceof AppCompatSpinner) {
                     AppCompatSpinner spinner = (AppCompatSpinner) pair.getValue();
                     jsonAddress.addProperty(info.getName(), spinner.getSelectedItem().toString());
-                    Timber.d("ADDRESS", "Key: " + info.getName() + " ScheduledPlan: " + spinner.getSelectedItem().toString());
+                    Timber.d("ADDRESS", "Key: " + info.getName() + " Value: " + spinner.getSelectedItem().toString());
                 }
 
                 //Validate

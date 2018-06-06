@@ -214,6 +214,7 @@ public class CategoriesController extends BaseController
 
             Bundle saleItemBundle = new BundleBuilder(new Bundle())
                     .putString(BundleKeys.SALEITEMS_TITLE, categoryKey)
+                    .putString(BundleKeys.SALEITEMS_CATEGORY_MAP, categoryKey)
                     .putBoolean(BundleKeys.SALEITEMS_FROM_CATEGORY_SEARCH, false)
                     .putBoolean(BundleKeys.SALEITEMS_FROM_CATEGORIES,true)
                     .build();
