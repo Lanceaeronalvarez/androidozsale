@@ -19,6 +19,7 @@
     <color name="bg_edit_text_ripple">#FFFFFF</color>
     <color name="bg_edit_text_default">@color/colorSecondary</color>
     <color name="bg_edit_text_focused">@color/colorAccent</color>
+    <color name="bg_search_edit_text">#f1f1f2</color>
 
     <color name="search_gray_opaque">#7e404040</color>
 
@@ -55,7 +56,7 @@
 
     <!-- Text -->
     <color name="text_extra_dark">#000000</color>
-    <color name="text_dark">#676767</color>
+    <color name="text_dark">#616161</color>
     <color name="text_medium">#787878</color>
     <color name="text_light">#919191</color>
     <color name="text_extra_light">#cacaca</color>
@@ -87,10 +88,10 @@
     <color name="bg_chips_text">#FFFFFF</color>
 
     <!-- Facets Theme -->
-    <color name="bg_facets_selected">#7f7f7f</color>
+    <color name="bg_facets_selected">#353535</color>
     <color name="bg_facets_default">@color/white</color>
-    <color name="bg_facets_border_checked">#7f7f7f</color>
-    <color name="bg_facets_border_default">#7f7f7f</color>
+    <color name="bg_facets_border_checked">#353535</color>
+    <color name="bg_facets_border_default">#f1f1f1</color>
 
     <!-- Icon -->
     <color name="icon_snack_bar">@color/colorAccent</color>
@@ -112,7 +113,7 @@
     <color name="product_details_indicator_active">@color/colorAccent</color>
 
     <!-- Toolbar -->
-    <color name="toolbar_skin">#f9f9f9</color>
+    <color name="toolbar_skin">@color/white</color>
     <color name="toolbar_active_skin">#f9f9f9</color>
     <color name="toolbar_border">@color/border_light</color>
 
@@ -124,6 +125,9 @@
     <color name="ourpay_navy">#000080</color>
     <color name="ourpay_red">#FF0000</color>
     <color name="ourpay_verify_resend">#000080</color>
+
+    <!-- Orders -->
+    <color name="bg_order_node">#323232</color>
 
     <!-- ViewHolder -->
     <color name="viewholder_text_remove">@color/text_highlight</color>

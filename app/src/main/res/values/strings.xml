@@ -234,7 +234,6 @@
         $20 voucher to use towards any future purchase. \n\nYou can apply any vouchers
         currently in your account when you checkout your order. \n
     </string>
-    <bool name="is_voucher_background_needed">true</bool>
     <string name="apply">apply</string>
     <string name="my_voucher">my voucher</string>
     <string name="promo_code">promo code</string>
@@ -403,8 +402,7 @@
     <string name="subtotal_colon">Subtotal:</string>
     <string name="row_checkout_voucher_label">VOUCHER</string>
     <string name="email">Email</string>
-    <string name="sorry_today_we_can_t_find_anything_by_your_request">Sorry, today we can\'t find anything by your request.</string>
-    <string name="meanwhile_why_not_search_for_something_else">Meanwhile, why not search for something else?</string>
+    <string name="sorry_today_we_can_t_find_anything_by_your_request">Sorry, today we can\'t find anything by your request. \n Meanwhile, why not search for something else?</string>
     <string name="request_new_return">Request New Return</string>
     <string name="clear">clear</string>
     <bool name="is_checkout_orders_label_visible">false</bool>
@@ -555,4 +553,26 @@
     <string name="browse">Browse</string>
     <string name="test_product_name">Lavish Alice</string>
     <string name="my_basket">My Basket</string>
+    <string name="voucher_valid_from">voucher valid from</string>
+    <string name="add_card">Add Card</string>
+    <string name="delete">Delete</string>
+    <string name="home_office_delivery">home/office delivery</string>
+    <string name="my_payment_method">MY PAYMENT METHOD</string>
+    <string name="grand_total_colon">Grand Total:</string>
+    <string name="order_sharp_colon">Order #:</string>
+    <string name="order_date">Order Date</string>
+    <string name="track_here">track here</string>
+    <string name="track_here_capitalize">Track Here</string>
+    <string name="credit_card_payment">Credit Card Payment:</string>
+    <string name="voucher_payment">Voucher Payment:</string>
+    <string name="dash"> - </string>
+    <string name="delivery_payment">Delivery Payment:</string>
+    <string name="discount">Discount:</string>
+    <string name="total_item_payment">Total Item Payment:</string>
+    <string name="approved_date">Approved Date:</string>
+    <string name="quantity">Quantity:</string>
+    <string name="order_items">Order Items</string>
+    <string name="order_details">Order Details</string>
+    <string name="dollar">$ %1$s</string>
+    <string name="tracking">Tracking</string>
 </resources>

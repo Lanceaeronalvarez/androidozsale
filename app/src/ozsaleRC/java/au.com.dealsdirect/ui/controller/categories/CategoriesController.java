@@ -67,11 +67,11 @@ public class CategoriesController extends BaseController
     @BindView(R.id.partial_toolbar_left_view)
     ImageButton mToolbarLeftButton;
 
+    @BindView(R.id.partial_toolbar_right_view)
+    ImageButton mToolbarRightButton;
+
     @BindView(R.id.no_network_layout)
     LinearLayout mNoNetworkLayout;
-
-    public boolean mIsResetSubCategories = false;
-
 
     private GetCategoryTreeResponse mChosenSubCategoryTreeResponse = new GetCategoryTreeResponse();
     private SubCategoriesAdapter mSubCategoryAdapter;
@@ -136,6 +136,7 @@ public class CategoriesController extends BaseController
 
         //noinspection ConstantConditions,deprecation
         mToolbarLeftButton.setVisibility(View.INVISIBLE);
+        mToolbarRightButton.setVisibility(View.INVISIBLE);
         mToolbarTitle.setText(mActivity.getResources().getString(R.string.browse));
         mSubCategoryItemClickListener = this;
 
@@ -143,20 +144,19 @@ public class CategoriesController extends BaseController
 
     private void setupCategories() {
         if (mCategories != null) {
-            mAdapter = new CategoriesAdapter(mCategories, mPresenter, this);
+            mAdapter = new CategoriesAdapter(mActivity, mCategories, mPresenter, this);
             mRecyclerView.setLayoutManager(new LinearLayoutManager(mActivity, LinearLayoutManager.VERTICAL, false));
             mRecyclerView.setMotionEventSplittingEnabled(false);
             mRecyclerView.setAdapter(mAdapter);
 
-            if (mCategories.get(0).getChildren() != null) {
-                mSubCategoryAdapter = new SubCategoriesAdapter(mActivity, new ArrayList<>(), mPresenter, mSubCategoryItemClickListener, mCategoryMap);
-            } else {
-                mSubCategoryAdapter = new SubCategoriesAdapter(mActivity, mCategories.get(0).getChildren(), mPresenter, mSubCategoryItemClickListener, mCategoryMap);
-            }
+            mSubCategoryAdapter = new SubCategoriesAdapter(mActivity, mCategories.get(0).getChildren() != null ?
+                    mCategories.get(0).getChildren() : new ArrayList<>(), mPresenter,
+                    mSubCategoryItemClickListener, mCategoryMap);
+
             mSubCategoryRecyclerView.setLayoutManager(new LinearLayoutManager(mActivity, LinearLayoutManager.VERTICAL, false));
             mSubCategoryRecyclerView.setAdapter(mSubCategoryAdapter);
             mSubCategoryRecyclerView.setMotionEventSplittingEnabled(false);
-
+            mSubCategoryAdapter.notifyDataSetChanged();
         }
     }
 
@@ -165,39 +165,21 @@ public class CategoriesController extends BaseController
     public void onCategoryClicked(int position, GetCategoryTreeResponse getCategoryTreeResponse) {
         mChosenSubCategoryTreeResponse = getCategoryTreeResponse;
 
-        String categoryName = getCategoryTreeResponse.getName();
-
         //noinspection ConstantConditions
-        if (categoryName.equals(mActivity.getResources().getString(R.string.shop_category))) {
+        if (mCategories != null && mCategories.get(position).getChildren() != null) {
+            mSubCategoryAdapter = new SubCategoriesAdapter(mActivity, (mCategories.get(position).getChildren()), mPresenter, mSubCategoryItemClickListener, mCategoryMap);
+            mSubCategoryRecyclerView.setLayoutManager(new LinearLayoutManager(mActivity, LinearLayoutManager.VERTICAL, false));
+            mSubCategoryRecyclerView.setAdapter(mSubCategoryAdapter);
+            mSubCategoryAdapter.notifyDataSetChanged();
 
+        } else {
             ArrayList<GetCategoryTreeResponse> emptyChildren = new ArrayList<>();
             mSubCategoryAdapter = new SubCategoriesAdapter(mActivity, emptyChildren, mPresenter, mSubCategoryItemClickListener, mCategoryMap);
             mSubCategoryRecyclerView.setLayoutManager(new LinearLayoutManager(mActivity, LinearLayoutManager.VERTICAL, false));
             mSubCategoryRecyclerView.setAdapter(mSubCategoryAdapter);
-
-            mSubCategoryAdapter.isResetSubCategories(mIsResetSubCategories);
-            mSubCategoryAdapter.notifyDataSetChanged();
-            mAdapter.notifyDataSetChanged();
-
-            assert (mActivity) != null;
-
-        } else {
-            mSubCategoryAdapter.isResetSubCategories(mIsResetSubCategories);
-            if (mCategories != null && mCategories.get(position).getChildren() != null) {
-                mSubCategoryAdapter = new SubCategoriesAdapter(mActivity, (mCategories.get(position).getChildren()), mPresenter, mSubCategoryItemClickListener, mCategoryMap);
-                mSubCategoryRecyclerView.setLayoutManager(new LinearLayoutManager(mActivity, LinearLayoutManager.VERTICAL, false));
-                mSubCategoryRecyclerView.setAdapter(mSubCategoryAdapter);
-                mSubCategoryAdapter.notifyDataSetChanged();
-
-            } else {
-                ArrayList<GetCategoryTreeResponse> emptyChildren = new ArrayList<>();
-                mSubCategoryAdapter = new SubCategoriesAdapter(mActivity, emptyChildren, mPresenter, mSubCategoryItemClickListener, mCategoryMap);
-                mSubCategoryRecyclerView.setLayoutManager(new LinearLayoutManager(mActivity, LinearLayoutManager.VERTICAL, false));
-                mSubCategoryRecyclerView.setAdapter(mSubCategoryAdapter);
-
-            }
         }
-        mIsResetSubCategories = true;
+
+        mAdapter.notifyDataSetChanged();
     }
 
     @Override
@@ -221,7 +203,6 @@ public class CategoriesController extends BaseController
         setRetainViewMode(RetainViewMode.RETAIN_DETACH);
 
         mSubCategoryAdapter.animateInsertItems(false);
-        mIsResetSubCategories = false;
     }
 
 

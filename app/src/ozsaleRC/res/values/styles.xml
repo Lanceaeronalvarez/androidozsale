@@ -25,7 +25,7 @@
 
     <style name="DDEditTextStyle" parent="DDEditTextPlainStyle">
         <item name="android:textSize">@dimen/text_size_body</item>
-        <item name="android:height">@dimen/edit_text_height</item>
+        <item name="android:layout_height">@dimen/edit_text_height</item>
         <item name="android:textColor">@color/text_extra_dark</item>
         <item name="android:padding">15dp</item>
         <item name="android:textColorHint">@color/text_extra_light</item>
@@ -40,7 +40,11 @@
     </style>
 
     <style name="DDEditTextSearchBar" parent="DDEditTextStyle" >
-        <item name="android:background">@drawable/bg_edit_text_rounded</item>
+        <item name="android:background">@drawable/bg_edit_text_search</item>
+        <item name="android:textSize">@dimen/text_size_body</item>
+        <item name="android:height">@dimen/edit_text_height</item>
+        <item name="android:textColor">@color/colorSecondary</item>
+        <item name="android:padding">10dp</item>
     </style>
 
     <style name="DDButtonStyle">
@@ -65,10 +69,11 @@
         <item name="tabBackground">@drawable/bg_facet_tab</item>
         <item name="tabGravity">fill</item>
         <item name="tabMaxWidth">0dp</item>
-        <item name="tabIndicatorColor">@color/colorSecondary</item>
+        <item name="tabMinWidth">100dp</item>
+        <item name="tabIndicatorColor">@color/colorAccent</item>
         <item name="tabIndicatorHeight">0dp</item>
         <item name="tabMode">scrollable</item>
-        <item name="tabTextColor">@color/text_dark</item>
+        <item name="tabTextColor">@color/text_medium</item>
         <item name="tabSelectedTextColor">@color/white</item>
         <item name="tabTextAppearance">@style/FacetFilterTab</item>
     </style>

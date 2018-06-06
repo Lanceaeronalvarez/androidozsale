@@ -1,5 +1,7 @@
 package au.com.dealsdirect.ui.controller.home;
 
+import android.animation.Animator;
+import android.animation.AnimatorListenerAdapter;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -504,4 +506,14 @@ public class HomeController extends BaseController implements HomeMvpView {
         return mBottomNavigationView;
     }
 
+    public void animateBottomNav(int verticalAdjustmentPixels) {
+
+        if (Math.abs(verticalAdjustmentPixels) == 0) {
+            mActivity.getHomeController().getBottomNavigationView().restoreBottomNavigation(true);
+            mActivity.getHomeController().showBottomNav();
+        } else {
+            mActivity.getHomeController().getBottomNavigationView().hideBottomNavigation(true);
+            mActivity.getHomeController().hideBottomNav();
+        }
+    }
 }

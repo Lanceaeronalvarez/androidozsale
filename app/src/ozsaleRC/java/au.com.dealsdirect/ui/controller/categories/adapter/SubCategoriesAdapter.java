@@ -7,6 +7,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import java.util.ArrayList;
@@ -32,19 +33,17 @@ public class SubCategoriesAdapter extends RecyclerView.Adapter<SubCategoriesAdap
 
     private List<GetCategoryTreeResponse> mData = new ArrayList<>();
     private CategoriesMvpPresenter mPresenter;
-    private SubCategoryClickListener mSubCategoryAdapterClickListener;
     private SubCategoryItemClickListener mSubCategoryItemClickListener;
     private SubCategoryItemsAdapter mSubCategoryItemsAdapter;
     private Map<String, List<GetCategoryTreeResponse>> mCategoryMap = new HashMap<>();
     private boolean mAnimateInsert = true;
-    private boolean mIsResetSubCategories = false;
     private Context mContext;
 
     public SubCategoriesAdapter(Context context,
-            List<GetCategoryTreeResponse> data,
-            CategoriesMvpPresenter presenter,
-            SubCategoryItemClickListener subCategoryItemClickListener,
-            Map<String, List<GetCategoryTreeResponse>> categoryMap) {
+                                List<GetCategoryTreeResponse> data,
+                                CategoriesMvpPresenter presenter,
+                                SubCategoryItemClickListener subCategoryItemClickListener,
+                                Map<String, List<GetCategoryTreeResponse>> categoryMap) {
 
         mContext = context;
         mData = data;
@@ -63,12 +62,14 @@ public class SubCategoriesAdapter extends RecyclerView.Adapter<SubCategoriesAdap
     public void onBindViewHolder(SubCategoriesViewHolder holder, int position) {
         if (!mData.isEmpty() && !mData.get(position).getName().equals("empty")) {
             holder.subCategoryTitle.setText(mData.get(position).getName());
+            holder.subCategoryBorder.setVisibility(View.VISIBLE);
 
             MainController mainController = ((MainActivity) mContext).getMainController();
             List<GetCategoryTreeResponse> subCategoryItems = getSubCategoryItems(mData.get(position).getKey());
 
             if (subCategoryItems.size() == 1 && subCategoryItems.get(0).getName().equalsIgnoreCase("All")) {
                 holder.subCategoryItemsRecyclerView.setVisibility(View.GONE);
+                holder.subCategoryCheckImageView.setVisibility(View.GONE);
 
                 holder.subCategoryTitle.setOnClickListener(v -> {
                     mSubCategoryItemClickListener.onSubCategoryItemClicked(subCategoryItems.get(0).getKey(), subCategoryItems.get(0).getName(), subCategoryItems.get(0).getKey());
@@ -82,15 +83,18 @@ public class SubCategoriesAdapter extends RecyclerView.Adapter<SubCategoriesAdap
 
             } else if (!subCategoryItems.isEmpty()) {
                 holder.subCategoryItemsRecyclerView.setVisibility(View.GONE);
+                holder.subCategoryCheckImageView.setVisibility(View.GONE);
 
                 holder.subcategoryContainer.setOnClickListener(view -> {
                     boolean isItemViewActivated = holder.itemView.isActivated();
 
-                    holder.itemView.setActivated(isItemViewActivated ? false : true);
-                    holder.subCategoryItemsRecyclerView.setVisibility(isItemViewActivated? View.GONE: View.VISIBLE);
+                    holder.itemView.setActivated(!isItemViewActivated);
+                    holder.subCategoryItemsBorder.setVisibility(isItemViewActivated ? View.GONE : View.VISIBLE);
+                    holder.subCategoryItemsRecyclerView.setVisibility(isItemViewActivated ? View.GONE : View.VISIBLE);
+                    holder.subCategoryCheckImageView.setVisibility(isItemViewActivated ? View.GONE : View.VISIBLE);
 
-                    if(!isItemViewActivated) {
-                        mSubCategoryItemsAdapter = new SubCategoryItemsAdapter(subCategoryItems, mPresenter, mSubCategoryItemClickListener, mAnimateInsert, mIsResetSubCategories);
+                    if (!isItemViewActivated) {
+                        mSubCategoryItemsAdapter = new SubCategoryItemsAdapter(subCategoryItems, mSubCategoryItemClickListener, mAnimateInsert);
                         holder.subCategoryItemsRecyclerView.setLayoutManager(new LinearLayoutManager(holder.itemView.getContext(), LinearLayoutManager.VERTICAL, false));
                         holder.subCategoryItemsRecyclerView.setMotionEventSplittingEnabled(false);
                         holder.subCategoryItemsRecyclerView.setAdapter(mSubCategoryItemsAdapter);
@@ -126,6 +130,15 @@ public class SubCategoriesAdapter extends RecyclerView.Adapter<SubCategoriesAdap
         @BindView(R.id.viewholder_subcategory_items_recyclerview)
         RecyclerView subCategoryItemsRecyclerView;
 
+        @BindView(R.id.viewholder_subcategory_border)
+        View subCategoryBorder;
+
+        @BindView(R.id.viewholder_subcategoryitems_border)
+        View subCategoryItemsBorder;
+
+        @BindView(R.id.viewholder_subcategory_check)
+        ImageView subCategoryCheckImageView;
+
         SubCategoriesViewHolder(View itemView) {
             super(itemView);
             ButterKnife.bind(this, itemView);
@@ -138,10 +151,6 @@ public class SubCategoriesAdapter extends RecyclerView.Adapter<SubCategoriesAdap
 
     public void animateInsertItems(boolean animateInsert) {
         mAnimateInsert = animateInsert;
-    }
-
-    public void isResetSubCategories(boolean isResetSubCategories) {
-        mIsResetSubCategories = isResetSubCategories;
     }
 
 }

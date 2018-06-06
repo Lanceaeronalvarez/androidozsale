@@ -55,7 +55,7 @@ android {
             applicationId "au.com.buyinvite.bi"
 
             buildConfigField "String", "API_ROOT", "\"https://www.dealsdirect.com.au/\""
-            buildConfigField "String", "API_LEGACY", "\"https://www.dealsdirect.com.au/papi/public/v3.22/\""
+            buildConfigField "String", "API_LEGACY", "\"https://www.dealsdirect.com.au/papi/public/v3.20/\""
             buildConfigField "String", "ACCOUNT_ID", "\"A56B0D62-AEF6-4653-848E-2ECDDB6E9B8C\""
 
             resValue "string", "app_name", "buyinvite"
@@ -69,7 +69,7 @@ android {
             resValue "string", "default_language_id", "EN"
 
             ext.newRelicAppToken = "AAf4ce8e1466bf9d9b7c3dcfdf7c569defebda9edc"
-            resValue "string", "new_relic_app_token",  ext.newRelicAppToken
+            resValue "string", "new_relic_app_token", ext.newRelicAppToken
         }
 
         buyinviteTest {
@@ -78,7 +78,7 @@ android {
             applicationId "au.com.buyinvite.bi.test"
 
             buildConfigField "String", "API_ROOT", "\"https://genie-ui-dealsdirect-pre.mysaledev.com/\""
-            buildConfigField "String", "API_LEGACY", "\"https://api.mysaledev.com/public/v3.22/\""
+            buildConfigField "String", "API_LEGACY", "\"https://api.mysaledev.com/public/v3.20/\""
             buildConfigField "String", "ACCOUNT_ID", "\"A56B0D62-AEF6-4653-848E-2ECDDB6E9B8C\""
 
             resValue "string", "app_name", "buyinvite Test"
@@ -92,16 +92,16 @@ android {
             resValue "string", "default_language_id", "EN"
 
             ext.newRelicAppToken = "AAf4ce8e1466bf9d9b7c3dcfdf7c569defebda9edc"
-            resValue "string", "new_relic_app_token",  ext.newRelicAppToken
+            resValue "string", "new_relic_app_token", ext.newRelicAppToken
         }
 
         dealsDirectRC {
-            versionCode 86
-            versionName "2.3.2"
+            versionCode 71
+            versionName "2.3.1"
             applicationId "au.com.dealsdirect"
 
             buildConfigField "String", "API_ROOT", "\"https://www.dealsdirect.com.au/\""
-            buildConfigField "String", "API_LEGACY", "\"https://www.dealsdirect.com.au/papi/public/v3.22/\""
+            buildConfigField "String", "API_LEGACY", "\"https://www.dealsdirect.com.au/papi/public/v3.20/\""
             buildConfigField "String", "ACCOUNT_ID", "\"A56B0D62-AEF6-4653-848E-2ECDDB6E9B8C\""
 
             resValue "string", "app_name", "DealsDirect"
@@ -115,17 +115,17 @@ android {
             resValue "string", "default_language_id", "EN"
 
             ext.newRelicAppToken = "AAa9d543732ff39dddc60c9cb9ad8c9cf22297904b"
-            resValue "string", "new_relic_app_token",  ext.newRelicAppToken
+            resValue "string", "new_relic_app_token", ext.newRelicAppToken
 
         }
 
         dealsDirectTest {
-            versionCode 87
-            versionName "2.3.2"
+            versionCode 73
+            versionName "2.3.1"
             applicationId "au.com.dealsdirect.test"
 
             buildConfigField "String", "API_ROOT", "\"https://genie-ui-dealsdirect-pre.mysaledev.com/\""
-            buildConfigField "String", "API_LEGACY", "\"https://api.mysaledev.com/public/v3.22/\""
+            buildConfigField "String", "API_LEGACY", "\"https://api.mysaledev.com/public/v3.20/\""
             buildConfigField "String", "ACCOUNT_ID", "\"A56B0D62-AEF6-4653-848E-2ECDDB6E9B8C\""
 
             resValue "string", "app_name", "DealsDirect Test"
@@ -139,7 +139,7 @@ android {
             resValue "string", "default_language_id", "EN"
 
             ext.newRelicAppToken = "AAa9d543732ff39dddc60c9cb9ad8c9cf22297904b"
-            resValue "string", "new_relic_app_token",  ext.newRelicAppToken
+            resValue "string", "new_relic_app_token", ext.newRelicAppToken
         }
 
         ooRC {
@@ -148,7 +148,7 @@ android {
             applicationId "au.com.oo"
 
             buildConfigField "String", "API_ROOT", "\"https://www.oo.com.au/\""
-            buildConfigField "String", "API_LEGACY", "\"https://www.oo.com.au/papi/public/v3.22/\""
+            buildConfigField "String", "API_LEGACY", "\"https://www.oo.com.au/papi/public/v3.20/\""
             buildConfigField "String", "ACCOUNT_ID", "\"25D201EB-9A1C-4045-90B6-E6A9F122C7CB\""
 
             resValue "string", "app_name", "OO"
@@ -162,7 +162,7 @@ android {
             resValue "string", "default_language_id", "EN"
 
             ext.newRelicAppToken = "AAb0a85221e0d2eb8f185c2c2a34c566840b593941"
-            resValue "string", "new_relic_app_token",  ext.newRelicAppToken
+            resValue "string", "new_relic_app_token", ext.newRelicAppToken
         }
 
         ooTest {
@@ -171,7 +171,7 @@ android {
             applicationId "au.com.oo.test"
 
             buildConfigField "String", "API_ROOT", "\"https://genie-ui-oo-pre.mysaledev.com/\""
-            buildConfigField "String", "API_LEGACY", "\"https://api.mysaledev.com/public/v3.22/\""
+            buildConfigField "String", "API_LEGACY", "\"https://api.mysaledev.com/public/v3.20/\""
             buildConfigField "String", "ACCOUNT_ID", "\"25D201EB-9A1C-4045-90B6-E6A9F122C7CB\""
 
             resValue "string", "app_name", "OO Test"
@@ -185,16 +185,16 @@ android {
             resValue "string", "default_language_id", "EN"
 
             ext.newRelicAppToken = "AAb0a85221e0d2eb8f185c2c2a34c566840b593941"
-            resValue "string", "new_relic_app_token",  ext.newRelicAppToken
+            resValue "string", "new_relic_app_token", ext.newRelicAppToken
         }
 
         topbuyRC {
-            versionCode 99
-            versionName "2.3.2"
+            versionCode 80
+            versionName "2.3.0"
             applicationId "au.com.topbuy"
 
             buildConfigField "String", "API_ROOT", "\"https://www.topbuy.com.au/\""
-            buildConfigField "String", "API_LEGACY", "\"https://www.topbuy.com.au/papi/public/v3.22/\""
+            buildConfigField "String", "API_LEGACY", "\"https://www.topbuy.com.au/papi/public/v3.20/\""
             buildConfigField "String", "ACCOUNT_ID", "\"909E0AC5-908A-4A73-8E5C-5312DEEBD24C\""
 
             resValue "string", "app_name", "TopBuy"
@@ -208,16 +208,16 @@ android {
             resValue "string", "default_language_id", "EN"
 
             ext.newRelicAppToken = "AA17bba4366f389b0ca3e7c8068935df33ce10bd35"
-            resValue "string", "new_relic_app_token",  ext.newRelicAppToken
+            resValue "string", "new_relic_app_token", ext.newRelicAppToken
         }
 
         topbuyTest {
-            versionCode 103
-            versionName "2.3.2"
+            versionCode 82
+            versionName "2.3.0"
             applicationId "au.com.topbuy.test"
 
-            buildConfigField "String", "API_ROOT", "\"https://genie-ui-topbuy-pre.mysaledev.com/\""
-            buildConfigField "String", "API_LEGACY", "\"https://geniemobileappsclientapi.herokuapp.com/sandbox/public/v3.22/\""
+            buildConfigField "String", "API_ROOT", "\"https://geniemobileappsclientapi.herokuapp.com/sandbox/\""
+            buildConfigField "String", "API_LEGACY", "\"https://geniemobileappsclientapi.herokuapp.com/sandbox/public/v3.20/\""
             buildConfigField "String", "ACCOUNT_ID", "\"909E0AC5-908A-4A73-8E5C-5312DEEBD24C\""
 
             resValue "string", "app_name", "TopBuy Test"
@@ -231,7 +231,7 @@ android {
             resValue "string", "default_language_id", "EN"
 
             ext.newRelicAppToken = "AA17bba4366f389b0ca3e7c8068935df33ce10bd35"
-            resValue "string", "new_relic_app_token",  ext.newRelicAppToken
+            resValue "string", "new_relic_app_token", ext.newRelicAppToken
         }
 
         ourpayTest {
@@ -268,13 +268,13 @@ android {
             buildConfigField "String", "ACCOUNT_ID", "\"A56B0D62-AEF6-4653-848E-2ECDDB6E9B8C\""
 
             resValue "string", "app_name", "Ozsale"
-            def facebookAppId = "421544284547550"
+            def facebookAppId = "1650094968544406"
             resValue "string", "facebook_app_id", facebookAppId
-            resValue "string", "facebook_app_secret", "f08401cb63ac18241e51e2184d8cd80a"
+            resValue "string", "facebook_app_secret", "94da0f48bd2ffea25981e52c56f9260a"
             resValue "string", "fb_login_protocol_scheme", "fb" + facebookAppId
-            resValue "string", "fb_page_id", "160420993982663"
-            resValue "string", "twitter_user_id", "twitter://user?user_id=25256714"
-            resValue "string", "default_country_id", "AS"
+            resValue "string", "fb_page_id", "257280167216"
+            resValue "string", "twitter_user_id", "twitter://user?user_id=37405859"
+            resValue "string", "default_country_id", "DA"
             resValue "string", "default_language_id", "EN"
 
             ext.newRelicAppToken = "AAa9d543732ff39dddc60c9cb9ad8c9cf22297904b"
@@ -282,13 +282,14 @@ android {
 
         }
 
+
         ozsaleTest {
-            versionCode 1
+            versionCode 6
             versionName "0.9"
-            applicationId "au.com.ozsale.test"
+            applicationId "au.com.ozsaleTest"
 
             buildConfigField "String", "API_ROOT", "\"https://genie-ui-dealsdirect-pre.mysaledev.com/\""
-            buildConfigField "String", "API_LEGACY", "\"https://api.mysaledev.com/public/v3.22/\""
+            buildConfigField "String", "API_LEGACY", "\"https://api.mysaledev.com/public/v3.24/\""
             buildConfigField "String", "ACCOUNT_ID", "\"A56B0D62-AEF6-4653-848E-2ECDDB6E9B8C\""
 
             resValue "string", "app_name", "Ozsale Test"
@@ -302,7 +303,7 @@ android {
             resValue "string", "default_language_id", "EN"
 
             ext.newRelicAppToken = "AAa9d543732ff39dddc60c9cb9ad8c9cf22297904b"
-            resValue "string", "new_relic_app_token",  ext.newRelicAppToken
+            resValue "string", "new_relic_app_token", ext.newRelicAppToken
 
         }
     }
@@ -314,8 +315,10 @@ android {
                             'src/commonCategoriesController/java/',
                             'src/commonSaleItemsController/java/',
                             'src/commonSearchFilterController/java/',
+                            'src/commonContactControllers/java/',
                             'src/commonReturnsControllers/java/',
                             'src/commonShopsController/java/',
+                            'src/commonOrdersController/java',
                             'src/commonMainController/java/',
                             'src/commonActivity/java/',
                             'src/dealsDirectRC/java/',
@@ -328,7 +331,9 @@ android {
                             'src/commonCategoriesController/java/',
                             'src/commonSaleItemsController/java/',
                             'src/commonSearchFilterController/java/',
+                            'src/commonContactControllers/java/',
                             'src/commonReturnsControllers/java/',
+                            'src/commonOrdersController/java',
                             'src/commonShopsController/java/',
                             'src/commonMainController/java/',
                             'src/commonActivity/java/',
@@ -343,7 +348,9 @@ android {
                             'src/commonCategoriesController/java/',
                             'src/commonSaleItemsController/java/',
                             'src/commonSearchFilterController/java/',
+                            'src/commonContactControllers/java/',
                             'src/commonReturnsControllers/java/',
+                            'src/commonOrdersController/java',
                             'src/commonShopsController/java/',
                             'src/commonMainController/java/',
                             'src/commonActivity/java/',
@@ -358,7 +365,9 @@ android {
                             'src/commonCategoriesController/java/',
                             'src/commonSaleItemsController/java/',
                             'src/commonSearchFilterController/java/',
+                            'src/commonContactControllers/java/',
                             'src/commonReturnsControllers/java/',
+                            'src/commonOrdersController/java',
                             'src/commonShopsController/java/',
                             'src/commonMainController/java/',
                             'src/commonActivity/java/',
@@ -373,7 +382,9 @@ android {
                             'src/commonCategoriesController/java/',
                             'src/commonSaleItemsController/java/',
                             'src/commonSearchFilterController/java/',
+                            'src/commonContactControllers/java/',
                             'src/commonReturnsControllers/java/',
+                            'src/commonOrdersController/java',
                             'src/commonShopsController/java/',
                             'src/commonMainController/java/',
                             'src/commonActivity/java/',
@@ -387,7 +398,9 @@ android {
                             'src/commonCategoriesController/java/',
                             'src/commonSaleItemsController/java/',
                             'src/commonSearchFilterController/java/',
+                            'src/commonContactControllers/java/',
                             'src/commonReturnsControllers/java/',
+                            'src/commonOrdersController/java',
                             'src/commonShopsController/java/',
                             'src/commonMainController/java/',
                             'src/commonActivity/java/',
@@ -398,6 +411,8 @@ android {
         ourpayTest {
             java.srcDirs = ['src/ourpayTest/java/',
                             'src/commonControllers/java/',
+                            'src/commonOrdersController/java',
+                            'src/commonContactControllers/java/',
                             'src/commonReturnsControllers/java/',
                             'src/main/java/']
         }
@@ -416,7 +431,6 @@ android {
             res.srcDir 'src/ozsaleRC/res/'
             java.srcDirs = ['src/ozsaleRC/java',
                             'src/commonControllers/java/',
-                            'src/commonShopsController/java/',
                             'src/main/java/']
         }
 
@@ -430,6 +444,7 @@ android {
 
         main {
             java.srcDirs = ['src/main/java']
+            resources.srcDirs = ['src/main/resources']
         }
     }
 
@@ -599,6 +614,8 @@ dependencies {
     compile project(path: ':genie-views')
     compile project(path: ':CardForm')
     compile project(path: ':ptr-lib')
+
+    implementation ('com.h6ah4i.android.widget.advrecyclerview:advrecyclerview:0.11.0@aar')
 
 }
 

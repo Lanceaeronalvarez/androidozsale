@@ -16,8 +16,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:fillViewport="true"
-        android:overScrollMode="never"
-        android:visibility="gone">
+        android:overScrollMode="never">
 
         <LinearLayout
             android:id="@+id/controller_checkout_container"

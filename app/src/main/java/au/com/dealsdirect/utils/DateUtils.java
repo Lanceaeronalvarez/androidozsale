@@ -190,7 +190,7 @@ public class DateUtils {
     public static String getDateForContactMessages(String dateString) {
         if (null != dateString
                 && !dateString.equalsIgnoreCase("null")
-                && dateString.length() > 0) {
+                && !dateString.isEmpty()) {
             Date date = dateFromServerDateString(dateString);
 
             return (String) DateFormat.format("MMM dd", date);//(String) date.toString().subSequence(4, date.toString().indexOf("GMT"));
