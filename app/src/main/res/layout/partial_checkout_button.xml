@@ -26,7 +26,7 @@
 
             <Button
                 android:id="@+id/partial_checkout_button_pay"
-                style="@style/DDButtonStyle"
+                style="@style/DDButtonPayCart"
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/button_height_regular"
                 android:layout_marginBottom="10dp"

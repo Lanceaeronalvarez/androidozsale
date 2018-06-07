@@ -3,71 +3,40 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    android:background="@color/white"
+    android:padding="@dimen/padding_default"
     tools:ignore="MissingPrefix">
 
     <FrameLayout
         android:id="@+id/controller_address_container"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:background="@drawable/bg_account_item">
 
-        <RelativeLayout
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@drawable/bg_checkout_options"
-            android:clickable="true"
-            android:focusable="true"
-            android:focusableInTouchMode="true"
-            android:paddingEnd="@dimen/activity_horizontal_margin"
-            android:paddingStart="@dimen/activity_horizontal_margin">
+            android:orientation="vertical">
 
-            <ImageView
-                android:id="@+id/home_logo"
-                android:layout_width="@dimen/margin_large"
-                android:layout_height="@dimen/margin_large"
-                android:layout_alignParentStart="true"
-                android:layout_marginTop="@dimen/margin_medium"
-                android:src="@drawable/ic_home_delivery" />
-
-            <LinearLayout
-                android:id="@+id/view_my_addresses_row_layout"
+            <TextView
+                android:id="@+id/view_my_address_row_item_name"
+                fontPath="@string/font_app_bold"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="@dimen/margin_large"
-                android:layout_marginTop="@dimen/margin_small"
-                android:layout_toEndOf="@id/home_logo"
-                android:orientation="vertical">
+                android:textColor="@color/row_checkout_text_light_color"
+                android:textSize="@dimen/text_size_body"
+                tools:text="@string/row_address_name_hint" />
 
-                <TextView
-                    android:id="@+id/view_my_address_row_item_name"
-                    fontPath="@string/font_app_semibold"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:textColor="@color/text_dark"
-                    android:textSize="@dimen/text_size_headline2"
-                    tools:text="Address 1" />
-
-                <TextView
-                    android:id="@+id/view_my_address_row_item_text"
-                    fontPath="@string/font_app_light"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_alignStart="@+id/view_my_addresses_row_layout"
-                    android:layout_centerVertical="true"
-                    android:textColor="@color/text_medium"
-                    android:textSize="@dimen/text_size_body"
-                    tools:text="some address" />
-
-            </LinearLayout>
-
-
-            <View
+            <TextView
+                android:id="@+id/view_my_address_row_item_text"
                 android:layout_width="match_parent"
-                android:layout_height="@dimen/border_regular"
-                android:layout_marginTop="@dimen/margin_small"
-                android:layout_below="@+id/view_my_addresses_row_layout"
-                android:background="@color/border_regular" />
+                android:layout_height="wrap_content"
+                android:textColor="@color/row_checkout_text_light_color"
+                android:maxLines="2"
+                android:ellipsize="end"
+                tools:text="@string/row_address_hint" />
 
-        </RelativeLayout>
+        </LinearLayout>
 
     </FrameLayout>
 
@@ -75,17 +44,15 @@
         android:id="@+id/controller_address_delete_text"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        fontPath="@string/font_app_regular"
         android:layout_alignBottom="@+id/controller_address_container"
-        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true"
         android:layout_alignTop="@id/controller_address_container"
         android:layout_centerVertical="true"
-        android:layout_marginRight="@dimen/margin_medium"
+        android:layout_marginEnd="@dimen/margin_medium"
         android:gravity="center_vertical"
         android:text="@string/delete"
         android:visibility="gone"
         android:textColor="@color/white"
         android:textSize="@dimen/text_size_body" />
-
 
 </RelativeLayout>

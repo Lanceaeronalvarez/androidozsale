@@ -57,6 +57,10 @@
         <item name="fontPath">@string/font_app_semibold</item>
     </style>
 
+    <style name="DDButtonPayCart" parent="DDButtonStyle">
+        <item name="android:background">@drawable/bg_button_rounded</item>
+    </style>
+
     <style name="DDButtonAddCart" parent="DDButtonStyle">
         <item name="android:background">@drawable/bg_button_rounded</item>
     </style>

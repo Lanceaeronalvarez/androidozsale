@@ -78,7 +78,8 @@ public class PaymentSelectController extends BasePullToRefreshController impleme
     public PaymentSelectController(Bundle args) {
         super(args);
 
-        mPaymentMethods = JsonUtils.convertStringToObject(args.getString(PAYMENT_METHODS), new TypeToken<ArrayList<PaymentMethod>>() {}.getType());
+        mPaymentMethods = JsonUtils.convertStringToObject(args.getString(PAYMENT_METHODS), new TypeToken<ArrayList<PaymentMethod>>() {
+        }.getType());
 
         if (mPaymentMethods == null) {
             mPaymentMethods = new ArrayList<>();

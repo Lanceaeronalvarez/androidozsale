@@ -17,21 +17,32 @@
             android:id="@+id/controller_payment_description_text"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="@dimen/margin_large"
-            android:layout_marginLeft="@dimen/activity_horizontal_margin"
-            android:layout_marginRight="@dimen/activity_horizontal_margin"
-            android:layout_marginTop="@dimen/activity_vertical_margin"
-            android:text="@string/my_payment_method"
-            android:textColor="@color/text_dark"
-            android:textSize="@dimen/text_size_headline3" />
+            android:layout_marginLeft="@dimen/padding_default"
+            android:layout_marginRight="@dimen/padding_default"
+            android:layout_marginTop="@dimen/padding_default"
+            android:layout_marginBottom="@dimen/padding_default_half"
+            android:text="@string/my_payment_methods"
+            android:textColor="@color/text_medium"
+            android:textSize="@dimen/text_size_caption2" />
 
 
-        <android.support.v7.widget.RecyclerView
-            android:id="@+id/payment_select_recyclerview"
+        <FrameLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_below="@+id/controller_payment_description_text"
-            android:background="@color/transparent" />
+            android:layout_height="wrap_content"
+            android:layout_above="@+id/controller_payment_button"
+            android:layout_below="@+id/controller_payment_description_text">
+
+            <android.support.v7.widget.RecyclerView
+                android:id="@+id/payment_select_recyclerview"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@color/transparent" />
+
+            <include
+                layout="@layout/partial_no_payment_method_placeholder_layout"
+                android:visibility="gone" />
+
+        </FrameLayout>
 
         <Button
             android:id="@+id/controller_payment_button"
@@ -44,7 +55,4 @@
     </RelativeLayout>
 
 
-    <include
-        layout="@layout/partial_no_payment_method_placeholder_layout"
-        android:visibility="gone" />
 </RelativeLayout>

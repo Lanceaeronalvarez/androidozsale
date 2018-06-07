@@ -62,9 +62,6 @@ public class PaymentSelectController extends BasePullToRefreshController impleme
     @BindView(R.id.no_payment_method_placeholder)
     LinearLayout mNoPaymentPlaceholder;
 
-    @BindView(R.id.controller_payment_content_layout)
-    RelativeLayout mContentLayout;
-
     private PaymentSelectAdapter mAdapter;
 
     private ArrayList<PaymentMethod> mPaymentMethods = new ArrayList<>();
@@ -162,10 +159,10 @@ public class PaymentSelectController extends BasePullToRefreshController impleme
     private void showPaymentMethodsPlaceholder(boolean val) {
         if (val) {
             mNoPaymentPlaceholder.setVisibility(View.VISIBLE);
-            mContentLayout.setVisibility(View.GONE);
+            mRecyclerView.setVisibility(View.GONE);
         } else {
             mNoPaymentPlaceholder.setVisibility(View.GONE);
-            mContentLayout.setVisibility(View.VISIBLE);
+            mRecyclerView.setVisibility(View.VISIBLE);
         }
     }
 
@@ -197,7 +194,7 @@ public class PaymentSelectController extends BasePullToRefreshController impleme
             mPresenter.fetchUserPaymentMethods();
         }
 
-        mPaymentSelectToolbarTitle.setText("Add Payment Method");
+        mPaymentSelectToolbarTitle.setText(getString(R.string.my_payments));
         mPaymentSelectRightOption.setVisibility(View.VISIBLE);
         mAdapter = new PaymentSelectAdapter(mActivity, mPaymentMethods, mPresenter, isFromCart);
         RecyclerViewSwipeManager recyclerViewSwipeManager = new RecyclerViewSwipeManager();

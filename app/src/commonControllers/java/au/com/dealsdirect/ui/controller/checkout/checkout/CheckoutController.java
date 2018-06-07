@@ -34,7 +34,10 @@ import com.visa.checkout.VisaCheckoutSdk;
 import com.visa.checkout.VisaPaymentSummary;
 
 import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.LinkedList;
 import java.util.List;
+import java.util.Set;
 import java.util.concurrent.TimeUnit;
 
 import javax.inject.Inject;
@@ -99,26 +102,37 @@ public class CheckoutController extends VisaCheckoutController implements Checko
     @BindView(R.id.controller_checkout_recyclerview_items)
     RecyclerView mRecyclerView;
 
+
+    @BindView(R.id.partial_checkout_address_container_layout)
+    ViewGroup mAddressContainerLayout;
+    @BindView(R.id.partial_checkout_payment_container_layout)
+    ViewGroup mPaymentContainerLayout;
+    @BindView(R.id.partial_checkout_voucher_container_layout)
+    ViewGroup mVoucherContainerLayout;
+
     @BindView(R.id.partial_checkout_address_new_address)
-    RelativeLayout mAddNewAddressLayout;
+    ViewGroup mAddNewAddressLayout;
     @BindView(R.id.partial_checkout_payment_new_payment)
-    RelativeLayout mAddNewPaymentLayout;
+    ViewGroup mAddNewPaymentLayout;
     @BindView(R.id.partial_checkout_voucher_new_code)
-    RelativeLayout mAddNewVoucherLayout;
+    ViewGroup mAddNewVoucherLayout;
+
     @BindView(R.id.partial_checkout_address_container)
-    LinearLayout mAddressLayout;
+    ViewGroup mAddressLayout;
     @BindView(R.id.partial_checkout_payment_container)
-    LinearLayout mPaymentLayout;
+    ViewGroup mPaymentLayout;
     @BindView(R.id.partial_checkout_voucher_container)
-    LinearLayout mVoucherLayout;
+    ViewGroup mVoucherLayout;
     @BindView(R.id.partial_checkout_summary_container)
-    LinearLayout mSummaryLayout;
+    ViewGroup mSummaryLayout;
+
     @BindView(R.id.partial_checkout_address_change)
-    View mAddressChangeText;
+    View mAddressChangeView;
     @BindView(R.id.partial_checkout_payment_change)
-    View mPaymentChangeText;
+    View mPaymentChangeView;
     @BindView(R.id.partial_checkout_voucher_change)
-    View mVoucherChangeText;
+    View mVoucherChangeView;
+
     @BindView(R.id.partial_checkout_button_holder)
     View mButtonHolder;
     @BindView(R.id.partial_checkout_button_pay)
@@ -162,6 +176,8 @@ public class CheckoutController extends VisaCheckoutController implements Checko
     TextView mDeliveryOptionPriceTextView;
     @BindView(R.id.delivery_option_ourpay_select_description_text_view)
     TextView mDeliveryOptionOurpaySelectDescriptionTextView;
+    @BindView(R.id.delivery_option_ourpay_select_before_purchase_description_text_view)
+    TextView mDeliveryOptionOurpaySelectBeforePurchaseDescriptionTextView;
 
     private List<DeliveryOption> mDeliveryOptions;
     private DeliveryOption mSelectedDeliveryOption;
@@ -179,14 +195,14 @@ public class CheckoutController extends VisaCheckoutController implements Checko
     private boolean mIsCartLoading = false;
     private boolean mIsVoucherAdded = false;
     private boolean mIsPaymentMethodChanged = false;
+    private String mAddressPhoneNumber;
 
-    private String mCartPhone;
     private Value mValue;
 
-    private boolean mCartIsLoading = false;
     public OurpayPanel ourpayPanel;
 
     private CompositeDisposable mClickListeners;
+    private CompositeDisposable mChangeClickListeners;
 
     public static CheckoutController newInstance() {
         return new CheckoutController(
@@ -198,65 +214,55 @@ public class CheckoutController extends VisaCheckoutController implements Checko
         super(args);
     }
 
-    private View.OnClickListener mChangeClickListener = new View.OnClickListener() {
-        @Override
-        public void onClick(View view) {
-
-            view.setOnClickListener(null);
-            new Handler().postDelayed(() -> view.setOnClickListener(mChangeClickListener), 2000);
-
-            if (view.getId() == mAddNewAddressLayout.getId()) {
-                //push controller to add new address
-                showAddAddressController();
-
-
-            } else if (view.getId() == mAddressChangeText.getId()) {
-                //push controller to view my address
-                getRouter().pushController(RouterTransaction.with(new ViewAddressController(true, mDeliveryAddress))
-                        .pushChangeHandler(new HorizontalChangeHandler(false))
-                        .popChangeHandler(new HorizontalChangeHandler()));
-
-            } else if (view.getId() == mPaymentChangeText.getId()
-                    || view.getId() == mAddNewPaymentLayout.getId()) {
-
-                if (mPaymentList.size() > 1) {
-//                  //push to payment select
-                    showPaymentSelectController();
-                } else {
-                    //push controller to add payment
-                    if (!isAddressValid()) {
-                        //push add new address fragment
-                        CustomAlertDialog.showCustomAlertDialog(mActivity, CustomAlertDialog.CustomDialogIconState.NEGATIVE, mActivity.getString(R.string.add_address_before_payment));
-                        showAddAddressController();
-                    } else {
-                        showAddPaymentMethodController();
-                    }
-                }
-
-            } else if (view.getId() == mVoucherChangeText.getId()
-                    || view.getId() == mAddNewVoucherLayout.getId()) {
-
-                TextView discountTextView = (TextView) mSummaryLayout.findViewById(R.id.partial_checkout_summary_voucher);
-                boolean isNoDiscount = true;
-                if (discountTextView != null) {
-                    if (!discountTextView.getText().toString().equals("$0")) {
-                        isNoDiscount = false;
-                    }
-                }
-
-                Bundle bundle = new BundleBuilder(new Bundle())
-                        .putString(BundleKeys.VOUCHERS, new Gson().toJson(mVouchers))
-                        .putBoolean(BundleKeys.IS_VOUCHER_ADDED, mIsVoucherAdded)
-                        .putBoolean(BundleKeys.IS_CART_NO_DISCOUNT, isNoDiscount)
-                        .build();
-
-                getRouter().pushController(RouterTransaction.with(new AddVouchersController(bundle))
-                        .pushChangeHandler(new HorizontalChangeHandler(false))
-                        .popChangeHandler(new HorizontalChangeHandler()));
-            }
-
+    private void changeAddress() {
+        if (mDeliveryAddress == null) {
+            showAddAddressController();
+        } else {
+            getRouter().pushController(RouterTransaction.with(new ViewAddressController(true, mDeliveryAddress))
+                    .pushChangeHandler(new HorizontalChangeHandler(false))
+                    .popChangeHandler(new HorizontalChangeHandler()));
         }
-    };
+    }
+
+    private void changePayment() {
+        if (mPaymentList.size() > 1) {
+//                  //push to payment select
+            getRouter().pushController(RouterTransaction.with(new PaymentSelectController(new Gson().toJson(mPaymentList), true, Double.toString(mValue.getSummary().total)))
+                    .pushChangeHandler(new HorizontalChangeHandler(false))
+                    .popChangeHandler(new HorizontalChangeHandler()));
+        } else {
+            //push controller to add payment
+            if (!isAddressValid()) {
+                //push add new address fragment
+                CustomAlertDialog.showCustomAlertDialog(mActivity, CustomAlertDialog.CustomDialogIconState.NEGATIVE, mActivity.getString(R.string.add_address_before_payment));
+                showAddAddressController();
+            } else {
+                showAddPaymentMethodController();
+            }
+        }
+    }
+
+
+    private void changeVoucher() {
+        TextView discountTextView = (TextView) mSummaryLayout.findViewById(R.id.partial_checkout_summary_voucher);
+        boolean isNoDiscount = true;
+        if (discountTextView != null) {
+            if (!discountTextView.getText().toString().equals("$0")) {
+                isNoDiscount = false;
+            }
+        }
+
+        Bundle bundle = new BundleBuilder(new Bundle())
+                .putString(BundleKeys.VOUCHERS, new Gson().toJson(mVouchers))
+                .putBoolean(BundleKeys.IS_VOUCHER_ADDED, mIsVoucherAdded)
+                .putBoolean(BundleKeys.IS_CART_NO_DISCOUNT, isNoDiscount)
+                .build();
+
+        getRouter().pushController(RouterTransaction.with(new AddVouchersController(bundle))
+                .pushChangeHandler(new HorizontalChangeHandler(false))
+                .popChangeHandler(new HorizontalChangeHandler()));
+
+    }
 
     @Override
     protected void onAttach(@NonNull View view) {
@@ -264,7 +270,6 @@ public class CheckoutController extends VisaCheckoutController implements Checko
         mPresenter.onAttach(this);
 
         mClickListeners = new CompositeDisposable();
-
         mClickListeners.add(RxView.clicks(mPayButton)
                 .throttleFirst(1000, TimeUnit.MILLISECONDS)
                 .observeOn(AndroidSchedulers.mainThread())
@@ -277,6 +282,35 @@ public class CheckoutController extends VisaCheckoutController implements Checko
                 .throttleFirst(1000, TimeUnit.MILLISECONDS)
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(action -> onMasterpassButtonClick()));
+
+        mChangeClickListeners = new CompositeDisposable();
+        mChangeClickListeners.add(RxView.clicks(mAddressContainerLayout)
+                .throttleFirst(1000, TimeUnit.MILLISECONDS)
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(action -> changeAddress()));
+        mChangeClickListeners.add(RxView.clicks(mAddressChangeView)
+                .throttleFirst(1000, TimeUnit.MILLISECONDS)
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(action -> changeAddress()));
+
+        mChangeClickListeners.add(RxView.clicks(mPaymentContainerLayout)
+                .throttleFirst(1000, TimeUnit.MILLISECONDS)
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(action -> changePayment()));
+        mChangeClickListeners.add(RxView.clicks(mPaymentChangeView)
+                .throttleFirst(1000, TimeUnit.MILLISECONDS)
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(action -> changePayment()));
+
+        mChangeClickListeners.add(RxView.clicks(mVoucherContainerLayout)
+                .throttleFirst(1000, TimeUnit.MILLISECONDS)
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(action -> changeVoucher()));
+        mChangeClickListeners.add(RxView.clicks(mVoucherChangeView)
+                .throttleFirst(1000, TimeUnit.MILLISECONDS)
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(action -> changeVoucher()));
+
     }
 
     @Override
@@ -315,6 +349,17 @@ public class CheckoutController extends VisaCheckoutController implements Checko
             mClickListeners.dispose();
         }
         mClickListeners = null;
+
+        if (mChangeClickListeners != null) {
+            mChangeClickListeners.dispose();
+        }
+        mChangeClickListeners = null;
+    }
+
+    @Override
+    protected void onDestroyView(@NonNull View view) {
+        mPresenter.onDetach();
+        super.onDestroyView(view);
     }
 
 
@@ -331,14 +376,6 @@ public class CheckoutController extends VisaCheckoutController implements Checko
         mAdapter = new CheckoutOrderAdapter(mActivity, mItemList, mPresenter);
         mRecyclerView.setAdapter(mAdapter);
         mRecyclerView.setLayoutManager(new LinearLayoutManager(mActivity, LinearLayoutManager.VERTICAL, false));
-
-        mAddNewAddressLayout.setOnClickListener(mChangeClickListener);
-        mAddNewPaymentLayout.setOnClickListener(mChangeClickListener);
-        mAddNewVoucherLayout.setOnClickListener(mChangeClickListener);
-
-        mAddressChangeText.setOnClickListener(mChangeClickListener);
-        mPaymentChangeText.setOnClickListener(mChangeClickListener);
-        mVoucherChangeText.setOnClickListener(mChangeClickListener);
 
         mPayButton.setOnClickListener(view1 -> onPayButtonClick());
         mPaypalButton.setOnClickListener(view2 -> onPaypalButtonClick());
@@ -441,6 +478,7 @@ public class CheckoutController extends VisaCheckoutController implements Checko
     public void showMyPayDetails(Value value, Ourpay ourpay) {
 
         if (value != null) {
+
             PaymentMethod paymentMethod = mActivity.getPaymentMethodSelected();
             boolean isMyPayEnabled = mActivity.getIsMyPayEnabled();
 
@@ -513,15 +551,15 @@ public class CheckoutController extends VisaCheckoutController implements Checko
         if (deliveryAddress != null) {
             ((TextView) mAddressLayout.findViewById(R.id.partial_checkout_address_name)).setText(deliveryAddress.name);
             ((TextView) mAddressLayout.findViewById(R.id.partial_checkout_address_details)).setText(formAddressDetails(deliveryAddress));
-            mCartPhone = deliveryAddress.phone;
+            mAddressPhoneNumber = deliveryAddress.phone;
 
             mAddNewAddressLayout.setVisibility(View.GONE);
             mAddressLayout.setVisibility(View.VISIBLE);
-            mAddressChangeText.setVisibility(View.VISIBLE);
+            mAddressChangeView.setVisibility(View.VISIBLE);
         } else {
             mAddNewAddressLayout.setVisibility(View.VISIBLE);
             mAddressLayout.setVisibility(View.GONE);
-            mAddressChangeText.setVisibility(View.GONE);
+            mAddressChangeView.setVisibility(View.GONE);
         }
     }
 
@@ -549,35 +587,42 @@ public class CheckoutController extends VisaCheckoutController implements Checko
 
             displayPaymentDetails();
 
-            mDeliveryOptionRootLayout.setOnClickListener(v -> showDeliveryOptionsController());
-
-            String ourpaySelectDescription = mActivity.getMyTemplateTexts(OurpayTemplateText.KEY_DELIVERYOPTION_OPS_DESCRIPTION);
-            String ourpaySelectBeforePurchaseDesc = mActivity.getMyTemplateTexts(OurpayTemplateText.KEY_OURPAY_OPS_INFO_REMAINING_BEFORE_PURCHASE_FREE_DELIVERY);
-            String freeText = mActivity.getMyTemplateTexts(OurpayTemplateText.KEY_DELIVERYOPTION_OPS_FREE);
-
-            if (OurpayTemplateText.DeliveryOptions.STANDARD.equalsName(deliveryOptionName) ||
-                    OurpayTemplateText.DeliveryOptions.EXPRESS.equalsName(deliveryOptionName)) {
-                mDeliveryOptionTypeText.setVisibility(View.VISIBLE);
-                mDeliveryOptionTypeOurPay.setVisibility(View.GONE);
-                mDeliveryOptionTypeText.setText(deliveryOptionName);
-                mDeliveryOptionPriceTextView.setText(PriceUtils.getPriceStringValue(deliveryOptionPrice));
-            } else if (OurpayTemplateText.DeliveryOptions.OURPAYSELECT.equalsName(deliveryOptionName)) {
-
-                if (mDeliveryServicePackageDetail != null) {
-                    String remainingFreeQty = mDeliveryServicePackageDetail.getRemainingCount().toString();
-                    ourpaySelectBeforePurchaseDesc = ourpaySelectBeforePurchaseDesc.replace(OurpayTemplateText.KEY_DELIVERYOPTION_FREE_DELIVERY_QTY, remainingFreeQty);
-
-                    mDeliveryOptionTypeText.setVisibility(View.GONE);
-                    mDeliveryOptionTypeOurPay.setVisibility(View.VISIBLE);
-                    mDeliveryOptionOurpaySelectDescriptionTextView.setText(ourpaySelectDescription + " " + ourpaySelectBeforePurchaseDesc);
-
-                    String finalPriceText = mDeliveryServicePackageDetail.getPurchased() ? freeText : PriceUtils.getPriceStringValue(mDeliveryServicePackageDetail.getAmount());
-                    mDeliveryOptionPriceTextView.setText(finalPriceText);
-                }
-            }
+            displayDeliveryOptionsUI(deliveryOptionName, deliveryOptionPrice);
 
         } else {
             displayPaymentDetails();
+        }
+    }
+
+    private void displayDeliveryOptionsUI(String deliveryOptionName, Double deliveryOptionPrice) {
+        mDeliveryOptionRootLayout.setOnClickListener(v -> showDeliveryOptionsController());
+
+        String ourpaySelectDescription = mActivity.getMyTemplateTexts(OurpayTemplateText.KEY_DELIVERYOPTION_OPS_DESCRIPTION);
+        String ourpaySelectBeforePurchaseDesc = mActivity.getMyTemplateTexts(OurpayTemplateText.KEY_OURPAY_OPS_INFO_REMAINING_BEFORE_PURCHASE_FREE_DELIVERY);
+        String freeText = mActivity.getMyTemplateTexts(OurpayTemplateText.KEY_DELIVERYOPTION_OPS_FREE);
+
+        if (OurpayTemplateText.DeliveryOptions.STANDARD.equalsName(deliveryOptionName) ||
+                OurpayTemplateText.DeliveryOptions.EXPRESS.equalsName(deliveryOptionName)) {
+            mDeliveryOptionTypeText.setVisibility(View.VISIBLE);
+            mDeliveryOptionTypeOurPay.setVisibility(View.GONE);
+            mDeliveryOptionOurpaySelectBeforePurchaseDescriptionTextView.setVisibility(View.GONE);
+            mDeliveryOptionTypeText.setText(deliveryOptionName);
+            mDeliveryOptionPriceTextView.setText(PriceUtils.getPriceStringValue(deliveryOptionPrice));
+        } else if (OurpayTemplateText.DeliveryOptions.OURPAYSELECT.equalsName(deliveryOptionName)) {
+
+            if (mDeliveryServicePackageDetail != null) {
+                String remainingFreeQty = mDeliveryServicePackageDetail.getRemainingCount().toString();
+                ourpaySelectBeforePurchaseDesc = ourpaySelectBeforePurchaseDesc.replace(OurpayTemplateText.KEY_DELIVERYOPTION_FREE_DELIVERY_QTY, remainingFreeQty);
+
+                mDeliveryOptionTypeText.setVisibility(View.GONE);
+                mDeliveryOptionTypeOurPay.setVisibility(View.VISIBLE);
+                mDeliveryOptionOurpaySelectBeforePurchaseDescriptionTextView.setVisibility(View.VISIBLE);
+                mDeliveryOptionOurpaySelectDescriptionTextView.setText(ourpaySelectDescription);
+                mDeliveryOptionOurpaySelectBeforePurchaseDescriptionTextView.setText(ourpaySelectBeforePurchaseDesc);
+
+                String finalPriceText = mDeliveryServicePackageDetail.getPurchased() ? freeText : PriceUtils.getPriceStringValue(mDeliveryServicePackageDetail.getAmount());
+                mDeliveryOptionPriceTextView.setText(finalPriceText);
+            }
         }
     }
 
@@ -614,7 +659,7 @@ public class CheckoutController extends VisaCheckoutController implements Checko
         if (paymentMethod == null) {
             mAddNewPaymentLayout.setVisibility(View.VISIBLE);
             mPaymentLayout.setVisibility(View.GONE);
-            mPaymentChangeText.setVisibility(View.GONE);
+            mPaymentChangeView.setVisibility(View.GONE);
 
             showPaymentButtons();
             mActivity.setPaymentMethodSelected(null);
@@ -654,15 +699,19 @@ public class CheckoutController extends VisaCheckoutController implements Checko
 
             mAddNewPaymentLayout.setVisibility(View.GONE);
             mPaymentLayout.setVisibility(View.VISIBLE);
-            mPaymentChangeText.setVisibility(View.VISIBLE);
+            mPaymentChangeView.setVisibility(View.VISIBLE);
 
-
-        } else {
             //Payment buttons
-            showPaymentButtons();
-            mAddNewPaymentLayout.setVisibility(View.VISIBLE);
-            mPaymentLayout.setVisibility(View.GONE);
-            mPaymentChangeText.setVisibility(View.GONE);
+            if (paymentMethod == null) {
+                mPayButton.setVisibility(View.VISIBLE);
+                mPaypalButton.setVisibility(View.VISIBLE);
+            } else {
+                //Payment buttons
+                showPaymentButtons();
+                mAddNewPaymentLayout.setVisibility(View.VISIBLE);
+                mPaymentLayout.setVisibility(View.GONE);
+                mPaymentChangeView.setVisibility(View.GONE);
+            }
         }
     }
 
@@ -670,7 +719,7 @@ public class CheckoutController extends VisaCheckoutController implements Checko
     public void showVoucherDetails(List<Voucher> vouchers) {
         mAddNewVoucherLayout.setVisibility(View.VISIBLE);
         mVoucherLayout.setVisibility(View.GONE);
-        mVoucherChangeText.setVisibility(View.GONE);
+        mVoucherChangeView.setVisibility(View.GONE);
         if (vouchers != null) {
             mVouchers = new ArrayList<>(vouchers);
         }
@@ -851,7 +900,7 @@ public class CheckoutController extends VisaCheckoutController implements Checko
 
                     if (PaymentInfo.getOurpay().isPhoneVerificationRequired()) {
 
-                        getRouter().pushController(RouterTransaction.with(OurpaySMSVerificationController.newInstance(mCartPhone))
+                        getRouter().pushController(RouterTransaction.with(OurpaySMSVerificationController.newInstance(mAddressPhoneNumber))
                                 .pushChangeHandler(new HorizontalChangeHandler(false))
                                 .popChangeHandler(new HorizontalChangeHandler()));
                     } else {
@@ -925,7 +974,6 @@ public class CheckoutController extends VisaCheckoutController implements Checko
     }
 
     private void ourpayPaymentSubmit() {
-
         PaymentInfo.setPaymentType(PaymentInfo.TYPE_MYPAY);
         mActivity.callCreatePaymentTransaction(PaymentInfo.getPaymentType(), "", PaymentInfo.getPaymentMethod().getToken());
     }
@@ -1031,3 +1079,4 @@ public class CheckoutController extends VisaCheckoutController implements Checko
 
     }
 }
+

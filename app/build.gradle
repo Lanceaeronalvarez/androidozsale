@@ -263,6 +263,7 @@ android {
             versionName "0.9"
             applicationId "au.com.ozsale"
 
+            buildConfigField "String", "API_ROOT", "\" https://www.ozsale.com.au/\""
             buildConfigField "String", "API_ROOT", "\"https://www.ozsale.com.au/\""
             buildConfigField "String", "API_LEGACY", "\"https://www.ozsale.com.au/papi/public/v3.22/\""
             buildConfigField "String", "ACCOUNT_ID", "\"A56B0D62-AEF6-4653-848E-2ECDDB6E9B8C\""

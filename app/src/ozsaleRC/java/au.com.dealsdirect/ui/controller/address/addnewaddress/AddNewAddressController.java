@@ -9,6 +9,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -54,8 +55,11 @@ public class AddNewAddressController extends BaseController implements AddNewAdd
     @BindView(R.id.partial_toolbar_right_view)
     ImageView mAddNewAddressRightOption;
 
+    @BindView(R.id.controller_address_save_button)
+    Button mSaveAddressButton;
 
-    public AddNewAddressController(String decorationInfoList, boolean calledFromCart){
+
+    public AddNewAddressController(String decorationInfoList, boolean calledFromCart) {
         this(new BundleBuilder(new Bundle())
                 .putString(DECORATION_INFO_LIST, decorationInfoList)
                 .putBoolean(CALLED_FROM_CART, calledFromCart)
@@ -64,8 +68,9 @@ public class AddNewAddressController extends BaseController implements AddNewAdd
 
     public AddNewAddressController(Bundle args) {
         super(args);
-        mDecorationInfoList = JsonUtils.convertStringToObject(args.getString(DECORATION_INFO_LIST), new TypeToken<ArrayList<DecorationInfoList>>(){}.getType());
-        mIsFromCart = args.getBoolean(CALLED_FROM_CART,false);
+        mDecorationInfoList = JsonUtils.convertStringToObject(args.getString(DECORATION_INFO_LIST), new TypeToken<ArrayList<DecorationInfoList>>() {
+        }.getType());
+        mIsFromCart = args.getBoolean(CALLED_FROM_CART, false);
     }
 
 
@@ -80,6 +85,7 @@ public class AddNewAddressController extends BaseController implements AddNewAdd
 
         mAddNewAddressToolarTitle.setText(getResources().getString(R.string.add_new_address));
         mAddNewAddressRightOption.setImageDrawable(getApplicationContext().getDrawable(R.drawable.ic_check_white_24dp));
+        mSaveAddressButton.setOnClickListener(v -> callAddNewAddress());
     }
 
     @Override
@@ -120,7 +126,7 @@ public class AddNewAddressController extends BaseController implements AddNewAdd
                 TextView textViewLabel = (TextView) dynamicView.findViewById(R.id.row_add_address_label);
 
                 //Set input type
-                if (infoList.getDataType() !=null && (infoList.getDataType().equalsIgnoreCase("phone") || infoList.getType().equalsIgnoreCase("numeric"))) {
+                if (infoList.getDataType() != null && (infoList.getDataType().equalsIgnoreCase("phone") || infoList.getType().equalsIgnoreCase("numeric"))) {
                     editTextValue.setInputType(InputType.TYPE_CLASS_PHONE);
                 } else {
                     editTextValue.setInputType(InputType.TYPE_CLASS_TEXT);
@@ -176,13 +182,13 @@ public class AddNewAddressController extends BaseController implements AddNewAdd
     @OnClick(R.id.partial_toolbar_left_view)
     public void onBackClick() {
         hideKeyboard();
-        if (mActivity != null){
+        if (mActivity != null) {
             mActivity.onBackPressed();
         }
     }
 
     @OnClick(R.id.partial_toolbar_right_view)
-    public void callAddNewAddress(){
+    public void callAddNewAddress() {
         hideKeyboard();
         mPresenter.addNewAddress(mViewMap);
     }

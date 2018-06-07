@@ -101,7 +101,7 @@ public class ViewAddressController extends BasePullToRefreshController implement
     protected void setUp(View view) {
         mPresenter.loadAddresses();
 
-        mViewAddressToolarTitle.setText("My Addresses");
+        mViewAddressToolarTitle.setText(getString(R.string.my_addresses_toolbar_title));
         mAddressList = new ArrayList<>();
         RecyclerViewSwipeManager swipeManager = new RecyclerViewSwipeManager();
         mRecyclerViewAdapter = new ViewAddressRecyclerViewAdapter(mCalledFromCart, this, mAddressList, mActivity, mDeliveryAddress, mPresenter);
@@ -156,7 +156,7 @@ public class ViewAddressController extends BasePullToRefreshController implement
 
             //If status 0, not valid Address
             if (mAddressList != null) {
-                mViewAddessesLayout.setVisibility(View.VISIBLE);
+                mRecyclerView.setVisibility(View.VISIBLE);
                 mAddressPlaceHolder.setVisibility(View.GONE);
                 for (int i = 0; i < responseValue.getD().getValue().getAddressesList().size(); i++) {
                     AddressesItem addressesItem = responseValue.getD().getValue().getAddressesList().get(i);
@@ -167,7 +167,7 @@ public class ViewAddressController extends BasePullToRefreshController implement
                 }
                 if (mAddressList.size() == 0) {
                     Timber.d("ViewAddressController", "mAddressList size is zero");
-                    mViewAddessesLayout.setVisibility(View.GONE);
+                    mRecyclerView.setVisibility(View.GONE);
                     mAddressPlaceHolder.setVisibility(View.VISIBLE);
                 }
                 mDecorationInfoList = responseValue.getD().getValue().getDecorationInfoList();

@@ -40,7 +40,7 @@
             android:layout_toLeftOf="@+id/partial_toolbar_right_view"
             android:gravity="center"
             android:singleLine="true"
-            android:textColor="@color/text_dark"
+            android:textColor="@color/colorAccent"
             android:textSize="@dimen/text_size_headline2"
             tools:text="Title" />
 

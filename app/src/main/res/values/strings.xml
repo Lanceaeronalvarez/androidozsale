@@ -187,7 +187,7 @@
     <string name="add_new_address_bottom_button">ADD</string>
     <string name="color">Color:&#160;</string>
     <string name="size">Size:&#160;</string>
-    <string name="your_current_delivery_address">your current delivery address</string>
+    <string name="my_current_delivery_address">my current delivery address</string>
     <string name="add_new_address">add new address</string>
     <string name="change">change</string>
     <string name="payment_method">payment method</string>
@@ -401,8 +401,8 @@
     <string name="checkout_order_label">Your Order</string>
     <string name="row_checkout_name_hint">Master Card</string>
     <string name="row_checkout_desc_hint">card ending in 02/16</string>
-    <string name="price_colon">Price:</string>
-    <string name="subtotal_colon">Subtotal:</string>
+    <string name="price_colon">Price:&#160;</string>
+    <string name="subtotal_colon">Subtotal:&#160;</string>
     <string name="row_checkout_voucher_label">VOUCHER</string>
     <string name="email">Email</string>
     <string name="sorry_today_we_can_t_find_anything_by_your_request">Sorry, today we can\'t find anything by your request. \n Meanwhile, why not search for something else?</string>
@@ -564,7 +564,6 @@
     <string name="add_card">Add Card</string>
     <string name="delete">Delete</string>
     <string name="home_office_delivery">home/office delivery</string>
-    <string name="my_payment_method">MY PAYMENT METHOD</string>
     <string name="grand_total_colon">Grand Total:</string>
     <string name="order_sharp_colon">Order #:</string>
     <string name="order_date">Order Date</string>

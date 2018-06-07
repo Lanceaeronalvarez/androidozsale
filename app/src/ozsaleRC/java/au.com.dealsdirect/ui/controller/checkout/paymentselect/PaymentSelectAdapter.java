@@ -155,9 +155,6 @@ public class PaymentSelectAdapter extends RecyclerView.Adapter<PaymentSelectAdap
         @BindView(R.id.partial_checkout_payment_image)
         ImageView cardImageView;
 
-        @BindView(R.id.item_payment_select_divider)
-        View dividerView;
-
         @BindView(R.id.controller_payment_select_container)
         FrameLayout container;
 
