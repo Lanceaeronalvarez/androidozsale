@@ -40,9 +40,11 @@ import au.com.dealsdirect.data.network.model.checkout.CreatePaymentMethod;
 import au.com.dealsdirect.data.network.model.checkout.CreatePaymentTransaction;
 import au.com.dealsdirect.data.network.model.checkout.CreatePaymentTransactionVco;
 import au.com.dealsdirect.data.network.model.checkout.GetCurrentOrder;
+import au.com.dealsdirect.data.network.model.checkout.GetDeliveryServicePackageDetails;
 import au.com.dealsdirect.data.network.model.checkout.GetPaymentToken;
 import au.com.dealsdirect.data.network.model.checkout.GetUserPaymentMethods;
 import au.com.dealsdirect.data.network.model.checkout.RemoveUserPaymentMethod;
+import au.com.dealsdirect.data.network.model.checkout.SetDeliveryOption;
 import au.com.dealsdirect.data.network.model.checkout.getpaymentmethodnonce.GetPaymentMethodNonceRequest;
 import au.com.dealsdirect.data.network.model.contacthistory.GetContactHistoryRequest;
 import au.com.dealsdirect.data.network.model.contacthistory.GetContactHistoryResponse;
@@ -389,6 +391,16 @@ public class AppDataManager implements DataManager {
     @Override
     public Observable<RemoveUserPaymentMethod.ResponseValue> callRemoveUserPaymentMethod(RemoveUserPaymentMethod.RequestValue requestValue) {
         return mApiHelper.callRemoveUserPaymentMethod(requestValue);
+    }
+
+    @Override
+    public Observable<GetDeliveryServicePackageDetails.ResponseValue> callGetDeliveryServicePackageDetails(GetDeliveryServicePackageDetails.RequestValue requestValue) {
+        return mApiHelper.callGetDeliveryServicePackageDetails(requestValue);
+    }
+
+    @Override
+    public Observable<GetCurrentOrder.ResponseValue> callSetDeliveryOption(SetDeliveryOption setDeliveryOption) {
+        return mApiHelper.callSetDeliveryOption(setDeliveryOption);
     }
 
     @Override
@@ -836,6 +848,11 @@ public class AppDataManager implements DataManager {
         Log.d("Checkout", "set my pay template texts");
         mPreferencesHelper.setMyPayTemplateTexts(value);
 
+    }
+
+    @Override
+    public void setDeliveryOptionsTemplateTexts(GetTemplateTextsResponse.GetTemplateTextsValue value) {
+        mPreferencesHelper.setDeliveryOptionsTemplateTexts(value);
     }
 
     @Override

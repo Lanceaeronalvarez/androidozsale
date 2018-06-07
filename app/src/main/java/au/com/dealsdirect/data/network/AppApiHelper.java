@@ -33,9 +33,12 @@ import au.com.dealsdirect.data.network.model.checkout.CreatePaymentMethod;
 import au.com.dealsdirect.data.network.model.checkout.CreatePaymentTransaction;
 import au.com.dealsdirect.data.network.model.checkout.CreatePaymentTransactionVco;
 import au.com.dealsdirect.data.network.model.checkout.GetCurrentOrder;
+import au.com.dealsdirect.data.network.model.checkout.GetDeliveryServicePackageDetails;
 import au.com.dealsdirect.data.network.model.checkout.GetPaymentToken;
 import au.com.dealsdirect.data.network.model.checkout.GetUserPaymentMethods;
 import au.com.dealsdirect.data.network.model.checkout.RemoveUserPaymentMethod;
+import au.com.dealsdirect.data.network.model.checkout.SetDeliveryOption;
+import au.com.dealsdirect.data.network.model.checkout.getcurrentorder.DeliveryServicePackageDetail;
 import au.com.dealsdirect.data.network.model.checkout.getpaymentmethodnonce.GetPaymentMethodNonceRequest;
 import au.com.dealsdirect.data.network.model.contacthistory.GetContactHistoryRequest;
 import au.com.dealsdirect.data.network.model.contacthistory.GetContactHistoryResponse;
@@ -484,6 +487,24 @@ public class AppApiHelper implements ApiHelper {
                 .addJSONObjectBody(JsonUtils.convertToJsonObject(requestValues))
                 .build()
                 .getObjectObservable(RemoveUserPaymentMethod.ResponseValue.class);
+    }
+
+    @Override
+    public Observable<GetDeliveryServicePackageDetails.ResponseValue> callGetDeliveryServicePackageDetails(GetDeliveryServicePackageDetails.RequestValue requestValue) {
+        return Rx2AndroidNetworking.post(ApiEndPoint.GET_DELIVERY_SERVICE_PACKAGE_DETAILS)
+                .addHeaders(mApiHeader.get())
+                .addJSONObjectBody(JsonUtils.convertToJsonObject(requestValue))
+                .build()
+                .getObjectObservable(GetDeliveryServicePackageDetails.ResponseValue.class);
+    }
+
+    @Override
+    public Observable<GetCurrentOrder.ResponseValue> callSetDeliveryOption(SetDeliveryOption setDeliveryOption) {
+        return Rx2AndroidNetworking.post(ApiEndPoint.SET_DELIVERY_OPTION)
+                .addHeaders(mApiHeader.get())
+                .addJSONObjectBody(JsonUtils.convertToJsonObject(setDeliveryOption))
+                .build()
+                .getObjectObservable(GetCurrentOrder.ResponseValue.class);
     }
 
     @Override

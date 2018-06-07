@@ -113,6 +113,8 @@
     <!-- Ourpay -->
     <dimen name="ourpay_logo_width">130dp</dimen>
     <dimen name="ourpay_logo_height">30dp</dimen>
+    <dimen name="ourpay_logo_width_half">80dp</dimen>
+    <dimen name="ourpay_logo_height_half">20dp</dimen>
     <dimen name="ourpay_info_logo_width">25dp</dimen>
     <dimen name="ourpay_info_logo_height">25dp</dimen>
     <dimen name="ourpay_panel_bar_height">6dp</dimen>
@@ -171,5 +173,9 @@
     <dimen name="voucher_padding">50dp</dimen>
     <dimen name="voucher_text_padding">10dp</dimen>
     <dimen name="viewholder_subcategory_width">40dp</dimen>
+
+    <!--Delivery Options-->
+    <dimen name="ourpay_select_logo_width">160dp</dimen>
+    <dimen name="ourpay_select_logo_height">20dp</dimen>
 
 </resources>

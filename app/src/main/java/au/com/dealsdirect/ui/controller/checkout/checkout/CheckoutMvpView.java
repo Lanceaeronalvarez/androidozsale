@@ -4,6 +4,8 @@ import java.util.List;
 
 import au.com.dealsdirect.data.network.model.address.DecorationInfoList;
 import au.com.dealsdirect.data.network.model.checkout.getcurrentorder.DeliveryAddress;
+import au.com.dealsdirect.data.network.model.checkout.getcurrentorder.DeliveryOption;
+import au.com.dealsdirect.data.network.model.checkout.getcurrentorder.DeliveryServicePackageDetail;
 import au.com.dealsdirect.data.network.model.checkout.getcurrentorder.Item;
 import au.com.dealsdirect.data.network.model.checkout.getcurrentorder.Summary;
 import au.com.dealsdirect.data.network.model.checkout.getcurrentorder.Value;
@@ -25,6 +27,8 @@ public interface CheckoutMvpView extends MvpView {
 
     void showAddressDetails(DeliveryAddress deliveryAddress, List<DecorationInfoList> decorationInfoList);
 
+    void showDeliveryOptions(List<DeliveryOption> deliveryOptions, DeliveryServicePackageDetail deliveryServicePackageDetail);
+
     void showPaymentDetails(PaymentMethod paymentMethod);
 
     void showVoucherDetails(List<Voucher> vouchers);
@@ -42,5 +46,11 @@ public interface CheckoutMvpView extends MvpView {
     boolean isCartLoading();
 
     void setCartIsLoading(boolean val);
+
+    CheckoutMvpPresenter getPresenter();
+
+    boolean isOurPaySelectDeliveryMethod();
+
+    boolean setIsPaymentMethodChanged(boolean isPaymentMethodChanged);
 
 }

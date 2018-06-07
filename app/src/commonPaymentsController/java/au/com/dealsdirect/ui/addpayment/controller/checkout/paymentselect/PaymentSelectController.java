@@ -13,6 +13,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.bluelinelabs.conductor.changehandler.HorizontalChangeHandler;
+import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
 import java.util.ArrayList;
@@ -21,8 +22,10 @@ import java.util.List;
 import javax.inject.Inject;
 
 import au.com.dealsdirect.R;
+import au.com.dealsdirect.data.network.model.checkout.getcurrentorder.Value;
 import au.com.dealsdirect.data.network.model.checkout.getuserpaymentmethods.PaymentMethod;
 import au.com.dealsdirect.ui.base.BasePullToRefreshController;
+import au.com.dealsdirect.ui.controller.checkout.checkout.CheckoutMvpView;
 import au.com.dealsdirect.ui.custom.CustomAlertDialog;
 import au.com.dealsdirect.ui.custom.RecyclerOnTouchListener;
 import au.com.dealsdirect.ui.custom.SimpleDividerItemDecoration;
@@ -57,20 +60,19 @@ public class PaymentSelectController extends BasePullToRefreshController impleme
     @BindView(R.id.no_payment_method_placeholder)
     LinearLayout mNoPaymentPlaceholder;
 
+    CheckoutMvpView mCheckoutMvpView;
+
     private PaymentSelectAdapter mAdapter;
 
     private ArrayList<PaymentMethod> mPaymentMethods = new ArrayList<>();
     private boolean isFromCart = false;
+    private boolean mIsOurpaySelectDeliveryMethod = false;
     private String mCartTotalCost;
-    private int mItemListSize;
+    private Value mValue;
 
 
-    public PaymentSelectController(String paymentMethodsJsonString, boolean isFromCart, String cartCost) {
-        this(new BundleBuilder(new Bundle())
-                .putString(PAYMENT_METHODS, paymentMethodsJsonString)
-                .putBoolean(IS_FROM_CART, isFromCart)
-                .putString(CART_TOTAL_COST, cartCost)
-                .build());
+    public static PaymentSelectController newInstance() {
+        return new PaymentSelectController(new BundleBuilder(new Bundle()).build());
     }
 
     public PaymentSelectController(Bundle args) {
@@ -81,9 +83,10 @@ public class PaymentSelectController extends BasePullToRefreshController impleme
         if (mPaymentMethods == null) {
             mPaymentMethods = new ArrayList<>();
         }
-        isFromCart = args.getBoolean(IS_FROM_CART);
-        mCartTotalCost = args.getString(CART_TOTAL_COST, "");
-        mItemListSize = args.getInt(BundleKeys.ITEM_LIST_SIZE,-1);
+        isFromCart = args.getBoolean(BundleKeys.IS_FROM_CART, false);
+        mIsOurpaySelectDeliveryMethod = args.getBoolean(BundleKeys.IS_OURPAY_SELECT_DELIVERY_METHOD, false);
+        mCartTotalCost = args.getString(BundleKeys.CART_TOTAL_COST, "");
+        mValue = new Gson().fromJson(args.getString(BundleKeys.CURRENT_ORDER_VALUE, ""), Value.class);
     }
 
     @Override
@@ -95,6 +98,7 @@ public class PaymentSelectController extends BasePullToRefreshController impleme
 
         getControllerComponent().inject(this);
         mPresenter.onAttach(this);
+        mCheckoutMvpView = (CheckoutMvpView) getRouter().getControllerWithTag(getString(R.string.checkout_controller));
         return view;
     }
 
@@ -137,11 +141,11 @@ public class PaymentSelectController extends BasePullToRefreshController impleme
             GateKeeper.push(getRouter(),
                     GateKeeper.Destination.PAYMENT_ADD,
                     new BundleBuilder(new Bundle())
-                            .putBoolean(BundleKeys.IS_FROM_CART,isFromCart)
+                            .putBoolean(BundleKeys.IS_FROM_CART, isFromCart)
                             .putString(BundleKeys.CART_TOTAL_COST, mCartTotalCost)
                             .build()
-                    ,new HorizontalChangeHandler()
-                    ,new HorizontalChangeHandler());
+                    , new HorizontalChangeHandler()
+                    , new HorizontalChangeHandler());
         } else if (paymentMethods.size() == 0) {
             showPaymentMethodsPlaceholder(true);
         }
@@ -196,11 +200,12 @@ public class PaymentSelectController extends BasePullToRefreshController impleme
         mAdapter = new PaymentSelectAdapter(mActivity, mPaymentMethods, mPresenter, isFromCart);
         mRecyclerView.setLayoutManager(new LinearLayoutManager(mActivity));
         mRecyclerView.setAdapter(mAdapter);
-        mRecyclerView.addItemDecoration(new SimpleDividerItemDecoration(mActivity,SimpleDividerItemDecoration.VERTICAL_LIST));
+        mRecyclerView.addItemDecoration(new SimpleDividerItemDecoration(mActivity, SimpleDividerItemDecoration.VERTICAL_LIST));
 
         if (isFromCart) {
             mRecyclerView.addOnItemTouchListener(new RecyclerOnTouchListener(mActivity, (v, position) -> {
                 mActivity.setPaymentMethodSelected(mPaymentMethods.get(position));
+                mCheckoutMvpView.setIsPaymentMethodChanged(true);
                 mAdapter.notifyDataSetChanged();
                 mActivity.onBackPressed();
             }));
@@ -221,10 +226,12 @@ public class PaymentSelectController extends BasePullToRefreshController impleme
         GateKeeper.push(getRouter(),
                 GateKeeper.Destination.PAYMENT_ADD,
                 new BundleBuilder(new Bundle())
-                        .putBoolean(BundleKeys.IS_FROM_CART,isFromCart)
-                        .putString(BundleKeys.CART_TOTAL_COST, mCartTotalCost)
+                        .putBoolean(BundleKeys.IS_FROM_CART, true)
+                        .putBoolean(BundleKeys.IS_OURPAY_SELECT_DELIVERY_METHOD, mIsOurpaySelectDeliveryMethod)
+                        .putString(BundleKeys.CART_TOTAL_COST, Double.toString(mValue.getSummary().total))
+                        .putString(BundleKeys.CURRENT_ORDER_VALUE, new Gson().toJson(mValue, Value.class))
                         .build()
-                ,new HorizontalChangeHandler()
-                ,new HorizontalChangeHandler());
+                , new HorizontalChangeHandler()
+                , new HorizontalChangeHandler());
     }
 }

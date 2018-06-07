@@ -274,7 +274,7 @@ android {
             resValue "string", "fb_login_protocol_scheme", "fb" + facebookAppId
             resValue "string", "fb_page_id", "257280167216"
             resValue "string", "twitter_user_id", "twitter://user?user_id=37405859"
-            resValue "string", "default_country_id", "DA"
+            resValue "string", "default_country_id", "AS"
             resValue "string", "default_language_id", "EN"
 
             ext.newRelicAppToken = "AAa9d543732ff39dddc60c9cb9ad8c9cf22297904b"
@@ -289,7 +289,7 @@ android {
             applicationId "au.com.ozsaleTest"
 
             buildConfigField "String", "API_ROOT", "\"https://genie-ui-dealsdirect-pre.mysaledev.com/\""
-            buildConfigField "String", "API_LEGACY", "\"https://api.mysaledev.com/public/v3.24/\""
+            buildConfigField "String", "API_LEGACY", "\"https://api.mysaledev.com/public/v3.22/\""
             buildConfigField "String", "ACCOUNT_ID", "\"A56B0D62-AEF6-4653-848E-2ECDDB6E9B8C\""
 
             resValue "string", "app_name", "Ozsale Test"
@@ -299,7 +299,7 @@ android {
             resValue "string", "fb_login_protocol_scheme", "fb" + facebookAppId
             resValue "string", "fb_page_id", "257280167216"
             resValue "string", "twitter_user_id", "twitter://user?user_id=37405859"
-            resValue "string", "default_country_id", "DA"
+            resValue "string", "default_country_id", "AS"
             resValue "string", "default_language_id", "EN"
 
             ext.newRelicAppToken = "AAa9d543732ff39dddc60c9cb9ad8c9cf22297904b"
@@ -438,7 +438,6 @@ android {
             res.srcDir 'src/ozsaleRC/res/'
             java.srcDirs = ['src/ozsaleRC/java',
                             'src/commonControllers/java/',
-                            'src/commonShopsController/java/',
                             'src/main/java/']
         }
 

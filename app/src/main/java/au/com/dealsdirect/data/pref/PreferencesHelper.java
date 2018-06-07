@@ -119,6 +119,8 @@ public interface PreferencesHelper {
 
     void setMyPayTemplateTexts(GetTemplateTextsResponse.GetTemplateTextsValue value);
 
+    void setDeliveryOptionsTemplateTexts(GetTemplateTextsResponse.GetTemplateTextsValue value);
+
     void setEventUserId(String userId);
 
     String getEventUserId();

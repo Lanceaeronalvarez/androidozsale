@@ -137,6 +137,8 @@ public final class ApiEndPoint {
     public static final String CLEAR_ORDER = getBaseApiLegacy() + "ClearOrder";
     public static final String CREATE_PAYMENT_TRANSACTION = getBaseApiLegacy() + "CreatePaymentTransaction";
     public static final String REMOVE_USER_PAYMENT_METHOD = getBaseApiLegacy() + "RemoveUserPaymentMethod";
+    public static final String GET_DELIVERY_SERVICE_PACKAGE_DETAILS = getBaseApiLegacy() + "GetDeliveryServicePackageDetails";
+    public static final String SET_DELIVERY_OPTION = getBaseApiLegacy() + "SetDeliveryOption";
 
     /* Legalities Endpoint*/
     public static final String GET_LEGALITIES_TEXT = getBaseApiLegacy() + "GetTemplateText";

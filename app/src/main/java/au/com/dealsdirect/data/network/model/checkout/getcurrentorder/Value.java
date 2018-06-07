@@ -3,6 +3,7 @@ package au.com.dealsdirect.data.network.model.checkout.getcurrentorder;
  * Created by CodeineBot on 1/6/17.
  */
 
+import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
 import java.util.List;
@@ -27,6 +28,9 @@ public class Value {
     public DeliveryAddress deliveryAddress;
     @SerializedName("DecorationInfoList")
     public List<DecorationInfoList> decorationInfoList = null;
+    @SerializedName("DeliveryOptions")
+    @Expose
+    private List<DeliveryOption> deliveryOptions = null;
     @SerializedName("LastPaymentMethod")
     public String lastPaymentMethod;
     @SerializedName("MyPayDetails")
@@ -38,7 +42,12 @@ public class Value {
     @SerializedName("PickupPointsEnabled")
     public Boolean pickupPointsEnabled;
     @SerializedName("NotificationMessage")
-    public Object notificationMessage;
+    private Object notificationMessage;
+    @SerializedName("DeliveryServicePackageDetail")
+    @Expose
+    private DeliveryServicePackageDetail deliveryServicePackageDetail;
+    @SerializedName("IsEmpty")
+    public boolean isEmpty = false;
 
     public boolean isEmpty() {
         return isEmpty;
@@ -100,6 +109,15 @@ public class Value {
         return saleID;
     }
 
-    @SerializedName("IsEmpty")
-    public boolean isEmpty = false;
+    public List<DeliveryOption> getDeliveryOptions() {
+        return deliveryOptions;
+    }
+
+    public void setDeliveryOptions(List<DeliveryOption> deliveryOptions) {
+        this.deliveryOptions = deliveryOptions;
+    }
+
+    public DeliveryServicePackageDetail getDeliveryServicePackageDetail() {
+        return deliveryServicePackageDetail;
+    }
 }

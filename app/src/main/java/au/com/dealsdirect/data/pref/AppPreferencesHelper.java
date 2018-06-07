@@ -78,6 +78,20 @@ public class AppPreferencesHelper implements PreferencesHelper {
     private static final String VCO_APIKEY = "VCO_APIKEY";
     private static final String VCO_APIURL = "VCO_APIURL";
     private static final String VCO_PROVIDERTYPE = "VCO_PROVIDERTYPE";
+
+//    DELIVERY OPTIONS/OURPAY SELECT
+    public static final String KEY_DELIVERYOPTION_OPS_FREE = "_Free";
+    private static final String KEY_DELIVERYOPTION_OPS_TITLE = "_DeliveryOption_OURPAYSELECT_Title";
+    private static final String KEY_DELIVERYOPTION_OPS_DESCRIPTION = "_DeliveryOption_OURPAYSELECT_Description";
+    private static final String KEY_DELIVERYOPTION_EXPRESS_TITLE = "_DeliveryOption_EXPRESS_Title";
+    private static final String KEY_DELIVERYOPTION_EXPRESS_DESCRIPTION = "_DeliveryOption_EXPRESS_Description";
+    private static final String KEY_DELIVERYOPTION_STANDARD_TITLE = "_DeliveryOption_STANDARD_Title";
+    private static final String KEY_OURPAY_OPS_DESCRIPTION_REMAINING = "_Ops_description_remaining";
+    private static final String KEY_OURPAY_OPS_INFO_REMAINING_BEFORE_PURCHASE = "_Ops_info_remaining_before_purchase";
+    private static final String KEY_OURPAY_OPS_INFO_REMAINING_BEFORE_PURCHASE_FREE_DELIVERY = "_Ops_info_remaining_before_purchase_free_delivery";
+    private static final String KEY_OURPAY_OPS_TNC_HEADER = "_OurPaySelectTermsAndConditionsHeader";
+    private static final String KEY_OURPAY_OPS_TNC_BODY = "_OurPaySelectTermsAndConditionsBody";
+
     private static final String SEARCH_MAX_PRICE = "app_search_max_price";
     private static final String ACCESS_ANONYMOUS_ENABLED = "app_anonymous_enabled";
     private static final String FB_SECRET = "fb_secret";
@@ -434,6 +448,24 @@ public class AppPreferencesHelper implements PreferencesHelper {
         Prefs.putString(MYPAY_TC, value.getOurPayTC_text());
         Prefs.putString(MYPAY_TC_VALIDATION_FAILED, value.getOurPayTCValidationFailed());
         Prefs.putString(MYPAY_PAYMENT_SCHEDULE, value.getPaymentSchedule());
+    }
+
+    @Override
+    public void setDeliveryOptionsTemplateTexts(GetTemplateTextsResponse.GetTemplateTextsValue value) {
+        Prefs.putString(KEY_DELIVERYOPTION_OPS_FREE, value.getDeliveryOptionOPSFree());
+        Prefs.putString(KEY_DELIVERYOPTION_OPS_TITLE, value.getDeliveryOptionOPSTitle());
+        Prefs.putString(KEY_DELIVERYOPTION_OPS_DESCRIPTION, value.getDeliveryOptionOPSDescription());
+
+        Prefs.putString(KEY_DELIVERYOPTION_EXPRESS_TITLE, value.getDeliveryOptionExpressTitle());
+        Prefs.putString(KEY_DELIVERYOPTION_EXPRESS_DESCRIPTION, value.getDeliveryOptionExpressDescription());
+        Prefs.putString(KEY_DELIVERYOPTION_STANDARD_TITLE, value.getDeliveryOptionStandardTitle());
+
+        Prefs.putString(KEY_OURPAY_OPS_DESCRIPTION_REMAINING, value.getDeliveryOptionOPSDescriptionRemaining());
+        Prefs.putString(KEY_OURPAY_OPS_INFO_REMAINING_BEFORE_PURCHASE, value.getDeliveryOptionOPSInfoBeforePurchase());
+        Prefs.putString(KEY_OURPAY_OPS_INFO_REMAINING_BEFORE_PURCHASE_FREE_DELIVERY, value.getDeliveryOptionOPSInfoBeforeFreeDelivery());
+
+        Prefs.putString(KEY_OURPAY_OPS_TNC_HEADER, value.getDeliveryOptionOPSTncHeader());
+        Prefs.putString(KEY_OURPAY_OPS_TNC_BODY, value.getDeliveryOptionOPSTncBody());
     }
 
     @Override

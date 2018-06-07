@@ -69,6 +69,22 @@ public class MainPresenter<V extends MainMvpView> extends BasePresenter<V> imple
     public static final String KEY_OURPAY_TC_VALIDATION_FAILED = "_OurPayTCValidationFailed";
     public static final String KEY_PAYMENT_SCHEDULE = "_PaymentSchedule";
 
+    //    DELIVERY OPTIONS/OURPAY SELECT
+    public static final String KEY_DELIVERYOPTION_OPS_FREE = "_Free";
+    public static final String KEY_DELIVERYOPTION_OPS_TITLE = "_DeliveryOption_OURPAYSELECT_Title";
+    public static final String KEY_DELIVERYOPTION_OPS_DESCRIPTION = "_DeliveryOption_OURPAYSELECT_Description";
+
+    public static final String KEY_DELIVERYOPTION_EXPRESS_TITLE = "_DeliveryOption_EXPRESS_Title";
+    public static final String KEY_DELIVERYOPTION_EXPRESS_DESCRIPTION = "_DeliveryOption_EXPRESS_Description";
+    public static final String KEY_DELIVERYOPTION_STANDARD_TITLE = "_DeliveryOption_STANDARD_Title";
+
+    public static final String KEY_OURPAY_OPS_DESCRIPTION_REMAINING= "_Ops_description_remaining";
+    public static final String KEY_OURPAY_OPS_INFO_REMAINING_BEFORE_PURCHASE = "_Ops_info_remaining_before_purchase";
+    public static final String KEY_OURPAY_OPS_INFO_REMAINING_BEFORE_PURCHASE_FREE_DELIVERY = "_Ops_info_remaining_before_purchase_free_delivery";
+
+    public static final String KEY_OURPAY_OPS_TNC_HEADER = "_OurPaySelectTermsAndConditionsHeader";
+    public static final String KEY_OURPAY_OPS_TNC_BODY = "_OurPaySelectTermsAndConditionsBody";
+
     private static String[] templateTextsKeys = {
             KEY_CHECKOUT_MYPAY_PAY_EXCEED_LIMIT, //0
             KEY_CHECKOUT_MYPAY_PAY_INVALID_PAYMENT_METHOD, //1
@@ -79,7 +95,19 @@ public class MainPresenter<V extends MainMvpView> extends BasePresenter<V> imple
             KEY_OURPAY_THANK_YOU_TEXT, //6
             KEY_OURPAY_TC_TEXT, //7
             KEY_OURPAY_TC_VALIDATION_FAILED, //8
-            KEY_PAYMENT_SCHEDULE //9
+            KEY_PAYMENT_SCHEDULE, //9
+            KEY_DELIVERYOPTION_OPS_FREE,
+            KEY_DELIVERYOPTION_OPS_TITLE,
+            KEY_DELIVERYOPTION_OPS_DESCRIPTION,
+            KEY_DELIVERYOPTION_EXPRESS_TITLE,
+            KEY_DELIVERYOPTION_EXPRESS_DESCRIPTION,
+            KEY_DELIVERYOPTION_STANDARD_TITLE,
+            KEY_OURPAY_OPS_DESCRIPTION_REMAINING,
+            KEY_OURPAY_OPS_INFO_REMAINING_BEFORE_PURCHASE,
+            KEY_OURPAY_OPS_INFO_REMAINING_BEFORE_PURCHASE_FREE_DELIVERY,
+            KEY_OURPAY_OPS_INFO_REMAINING_BEFORE_PURCHASE_FREE_DELIVERY,
+            KEY_OURPAY_OPS_TNC_HEADER,
+            KEY_OURPAY_OPS_TNC_BODY
     };
 
     @Inject
@@ -712,6 +740,7 @@ public class MainPresenter<V extends MainMvpView> extends BasePresenter<V> imple
                 .observeOn(getSchedulerProvider().ui())
                 .subscribe(getTemplateTextsResponse -> {
                     getDataManager().setMyPayTemplateTexts(getTemplateTextsResponse.getResponse().getValue());
+                    getDataManager().setDeliveryOptionsTemplateTexts(getTemplateTextsResponse.getResponse().getValue());
                     getMvpView().storeTemplateTexts(getTemplateTextsResponse.getResponse().getValue());
 
                 }, throwable -> {

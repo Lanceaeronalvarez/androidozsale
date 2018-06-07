@@ -14,6 +14,27 @@ import au.com.dealsdirect.utils.PriceUtils;
 
 public class OurpayTemplateText {
 
+    public enum DeliveryOptions{
+        STANDARD ("STANDARD"),
+        EXPRESS ("EXPRESS"),
+        OURPAYSELECT ("OURPAYSELECT");
+
+        private final String name;
+
+        private DeliveryOptions(String s) {
+            name = s;
+        }
+
+        public boolean equalsName(String otherName) {
+            // (otherName == null) check is not needed because name.equals(null) returns false
+            return name.equals(otherName);
+        }
+
+        public String toString() {
+            return this.name;
+        }
+    }
+
     public static final String KEY_CODE_LOGO = "{0}";
     public static final String KEY_CODE_MIN = "{1}";
     public static final String KEY_CODE_MAX = "{2}";
@@ -33,18 +54,24 @@ public class OurpayTemplateText {
     public static final String KEY_PAYMENT_SCHEDULE = "_PaymentSchedule";
 
 
-    private static String[] templateTextsKeys = {
-            KEY_CHECKOUT_MYPAY_PAY_EXCEED_LIMIT, //0
-            KEY_CHECKOUT_MYPAY_PAY_INVALID_PAYMENT_METHOD, //1
-            KEY_CHECKOUT_MYPAY_PAY_OUT_OF_RANGE_MOBILE_APP, //2
-            KEY_CHECKOUT_MYPAY_PAY_OUT_UP_TO_MOBILE_APP, //3
-            KEY_CHECKOUT_MYPAY_PAY_UNTRUSTED, //4
-            KEY_MYPAY_DETAILS_MOBILE_APP, //5
-            KEY_OURPAY_THANK_YOU_TEXT, //6
-            KEY_OURPAY_TC_TEXT, //7
-            KEY_OURPAY_TC_VALIDATION_FAILED, //8
-            KEY_PAYMENT_SCHEDULE //9
-    };
+//    DELIVERY OPTIONS/OURPAY SELECT
+    public static final String KEY_DELIVERYOPTION_FREE_DELIVERY_QTY = "[[FreeDeliveryQty]]";
+    public static final String KEY_DELIVERYOPTION_OPS_FREE = "_Free";
+    public static final String KEY_DELIVERYOPTION_OPS_TITLE = "_DeliveryOption_OURPAYSELECT_Title";
+    public static final String KEY_DELIVERYOPTION_OPS_DESCRIPTION = "_DeliveryOption_OURPAYSELECT_Description";
+
+    public static final String KEY_DELIVERYOPTION_EXPRESS_TITLE = "_DeliveryOption_EXPRESS_Title";
+    public static final String KEY_DELIVERYOPTION_EXPRESS_DESCRIPTION = "_DeliveryOption_EXPRESS_Description";
+    public static final String KEY_DELIVERYOPTION_STANDARD_TITLE = "_DeliveryOption_STANDARD_Title";
+
+    public static final String KEY_OURPAY_OPS_DESCRIPTION_REMAINING= "_Ops_description_remaining";
+    public static final String KEY_OURPAY_OPS_INFO_REMAINING_BEFORE_PURCHASE = "_Ops_info_remaining_before_purchase";
+    public static final String KEY_OURPAY_OPS_INFO_REMAINING_BEFORE_PURCHASE_FREE_DELIVERY = "_Ops_info_remaining_before_purchase_free_delivery";
+
+    public static final String KEY_OURPAY_OPS_TNC_HEADER = "_OurPaySelectTermsAndConditionsHeader";
+    public static final String KEY_OURPAY_OPS_TNC_BODY = "_OurPaySelectTermsAndConditionsBody";
+    public static final String KEY_OPS_TNC_FULL_TEXT = "OurPayTermsAndConditions_Text";
+
 
     public static String getTemplateText(Activity activity, Ourpay ourpay){
         try {

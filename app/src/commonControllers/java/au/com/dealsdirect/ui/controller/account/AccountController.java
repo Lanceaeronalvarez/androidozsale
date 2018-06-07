@@ -193,7 +193,11 @@ public class AccountController extends BaseController implements AccountMvpView,
 
     @Override
     public void showMyPaymentsController() {
-        getRouter().pushController(RouterTransaction.with(new PaymentSelectController("", false, ""))
+        Bundle bundle= new Bundle();
+        bundle.putString(BundleKeys.PAYMENT_METHODS,"");
+        bundle.putBoolean(BundleKeys.IS_FROM_CART,false);
+        bundle.putString(BundleKeys.CART_TOTAL_COST,"");
+        getRouter().pushController(RouterTransaction.with(new PaymentSelectController(bundle))
                 .pushChangeHandler(new HorizontalChangeHandler())
                 .popChangeHandler(new HorizontalChangeHandler()));
     }
@@ -242,7 +246,7 @@ public class AccountController extends BaseController implements AccountMvpView,
                 GateKeeper.Destination.LEGALITIES,
                 new BundleBuilder(new Bundle())
                         .putString(BundleKeys.TEMPLATE_KEY, key)
-                        .putString(BundleKeys.TITLE, getResources().getString(title))
+                        .putString(BundleKeys.LEGALITIES_TITLE, getResources().getString(title))
                         .build(),
                 new HorizontalChangeHandler(false),
                 new HorizontalChangeHandler());

@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@color/white"
+    android:orientation="vertical"
+    android:padding="@dimen/padding_default_half">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <CheckBox
+            android:id="@+id/delivery_option_check_box"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:button="@drawable/bg_checkbox_selector"
+            android:layout_gravity="center_horizontal"
+            android:clickable="false"
+            android:focusable="false"
+            android:layout_weight="1" />
+
+        <RelativeLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="9">
+
+            <TextView
+                android:id="@+id/delivery_option_title_text_view"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_toStartOf="@+id/delivery_option_price_text_view"
+                tools:text="Standard" />
+
+            <TextView
+                android:id="@+id/delivery_option_price_text_view"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentEnd="true"
+                android:textAlignment="textEnd"
+                tools:text="$9.95" />
+
+            <TextView
+                android:id="@+id/delivery_option_express_desc_text_view"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/delivery_option_title_text_view"
+                android:textSize="@dimen/text_size_caption2"
+                android:maxLines="2"
+                android:visibility="visible"
+                tools:text="Express Delivery Desc"/>
+        </RelativeLayout>
+    </LinearLayout>
+
+</LinearLayout>

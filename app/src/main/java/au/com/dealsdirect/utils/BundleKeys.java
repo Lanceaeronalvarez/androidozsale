@@ -63,7 +63,8 @@ public class BundleKeys {
     public static final String PAYMENT_METHODS = "payment_methods";
     public static final String IS_FROM_CART = "is_from_cart";
     public static final String CART_TOTAL_COST = "cart_total_cost";
-    public static final String ITEM_LIST_SIZE = "item_list_size";
+    public static final String IS_OURPAY_SELECT_DELIVERY_METHOD = "is_ourpay_select_delivery_method";
+    public static final String CURRENT_ORDER_VALUE = "current_order_value";
 
     //payment success
     public static final String KEY_ADDRESS = "Address";
@@ -80,7 +81,7 @@ public class BundleKeys {
 
     //legalities
     public static final String TEMPLATE_KEY = "TEMPLATE_KEY";
-    public static final String TITLE = "TITLE";
+    public static final String LEGALITIES_TITLE = "LEGALITIES_TITLE";
 
     //Tutorial
     public static final String FROM_MY_ACCOUNTS = "FROM_MY_ACCOUNTS";
@@ -118,6 +119,12 @@ public class BundleKeys {
     public static final String KEY_ACCOUNT_EMAIL = "PasswordVerification.ACCOUNT_EMAIL";
     public static final String KEY_ACCOUNT_EXISTS = "PasswordVerification.ACCOUNT_EXISTS";
     public static final String KEY_LOGIN_VISA_REQUEST_DATA = "PasswordVerification.LOGIN_VISA_REQUEST_DATA";
+    
+    //DeliveryOptions
+    public static final String DELIVERY_OPTIONS_LIST = "DeliveryOptionsController.LIST";
+    public static final String DELIVERY_OPTIONS_DELIVERY_SERVICE_PACKAGE_DETAIL = "DeliveryOptionsController.DELIVERY_SERVICE_PACKAGE_DETAIL";
+    public static final String DELIVERY_OPTIONS_DELIVERY_ADDRESS_ID = "DeliveryOptionsController.DELIVERY_ADDRESS_ID";
+
 
 
 }

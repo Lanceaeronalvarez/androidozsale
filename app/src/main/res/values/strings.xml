@@ -1,5 +1,7 @@
 <resources>
 
+    <bool name="is_ozsale_app">false</bool>
+
     <string name="font_app_black">fonts/lato/App-Font-Black.ttf</string>
     <string name="font_app_black_italic">fonts/lato/App-Font-BlackItalic.ttf</string>
     <string name="font_app_bold">fonts/lato/App-Font-Bold.ttf</string>
@@ -223,6 +225,7 @@
     <string name="order_numbersign">Order #:</string>
     <string name="address">Address</string>
     <string name="total">Total</string>
+    <string name="pay_today">Pay Today</string>
     <string name="remove">Remove</string>
     <bool name="is_item_attribute_gone">false</bool>
 
@@ -518,6 +521,10 @@
     <string name="_100_rayon_mykonos_embroidered_off_shoulder_top_white_elasticated_top_and_bottom_the_clothing_at_morrisday_is_true_to_standard_austrailian_sizing">�  100% Rayon\n\n�  Mykonos Embroidered Off Shoulder Top (White)\n\n�  Elasticated top and bottom\n\n�  The clothing at Morrisday is true to standard Austrailian sizing</string>
     <string name="checkout_lowercase">checkout</string>
     <string name="delivery_address">Delivery Address</string>
+    <string name="delivery_method">Delivery Method</string>
+    <string name="by_choosing_ourpay_select">By choosing OurPay Select,</string>
+    <string name="deliver_options_title">Delivery Options</string>
+    <string name="choose_delivery_method">Choose Delivery Method</string>
     <string name="add_new_delivery_address">Add New Delivery Address</string>
     <string name="billing_address">Billing Address</string>
     <string name="add_new_billing_address">Add New Billing Address</string>

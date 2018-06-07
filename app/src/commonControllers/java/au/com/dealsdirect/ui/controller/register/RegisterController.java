@@ -135,7 +135,7 @@ public class RegisterController extends VisaCheckoutController implements Regist
                     GateKeeper.Destination.LEGALITIES,
                     new BundleBuilder(new Bundle())
                             .putString(BundleKeys.TEMPLATE_KEY, "TermsAndConditions_Text")
-                            .putString(BundleKeys.TITLE, "Terms and Conditions")
+                            .putString(BundleKeys.LEGALITIES_TITLE, "Terms and Conditions")
                             .build(),
                     new HorizontalChangeHandler(false),
                     new HorizontalChangeHandler());

@@ -2,12 +2,17 @@ package au.com.dealsdirect.ui.controller.checkout.addpayment;
 
 import android.app.Activity;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.annotation.NonNull;
+import android.support.v4.widget.NestedScrollView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.CheckBox;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
@@ -20,28 +25,41 @@ import com.braintreepayments.cardform.view.CardEditText;
 import com.braintreepayments.cardform.view.CardForm;
 import com.crashlytics.android.answers.Answers;
 import com.crashlytics.android.answers.CustomEvent;
+import com.google.gson.Gson;
 import com.mysale.genie.utility.RxBus;
 
 import javax.inject.Inject;
 
 import au.com.dealsdirect.R;
+import au.com.dealsdirect.data.network.model.checkout.getcurrentorder.Value;
+import au.com.dealsdirect.data.network.model.checkout.getuserpaymentmethods.PaymentMethod;
+import au.com.dealsdirect.service.ourpay.Ourpay;
+import au.com.dealsdirect.service.ourpay.OurpayPanel;
+import au.com.dealsdirect.service.ourpay.OurpayStateManager;
+import au.com.dealsdirect.service.ourpay.OurpayTemplateText;
+import au.com.dealsdirect.ui.base.BaseActivity;
 import au.com.dealsdirect.ui.base.BaseController;
+import au.com.dealsdirect.ui.controller.checkout.checkout.CheckoutMvpView;
+import au.com.dealsdirect.ui.controller.checkout.ourpay.OurpaySMSVerificationController;
 import au.com.dealsdirect.ui.controller.masterpass.MasterpassController;
 import au.com.dealsdirect.ui.custom.CustomAlertDialog;
 import au.com.dealsdirect.ui.main.FetchTokenHandler;
 import au.com.dealsdirect.ui.main.MainActivity;
+import au.com.dealsdirect.ui.main.PaymentInfo;
 import au.com.dealsdirect.utils.BundleBuilder;
+import au.com.dealsdirect.utils.BundleKeys;
 import au.com.dealsdirect.utils.IntrospectionUtils;
 import butterknife.BindView;
 import butterknife.OnClick;
+
+import static au.com.dealsdirect.service.ourpay.OurpayTemplateText.KEY_OURPAY_TC_VALIDATION_FAILED;
 
 /*
  * Created by smartwave on 29/06/2017.
  */
 
 public class AddPaymentController extends BaseController implements AddPaymentMvpView, OnCardFormSubmitListener, CardEditText.OnCardTypeChangedListener, OnCardFormScanListener {
-    private final static String IS_FROM_CART = "is_from_cart";
-    private final static String CART_TOTAL_COST = "cart_total_cost";
+
     @Inject
     AddPaymentMvpPresenter<AddPaymentMvpView> mPresenter;
 
@@ -58,6 +76,10 @@ public class AddPaymentController extends BaseController implements AddPaymentMv
     RelativeLayout mButtonPaypal;
     @BindView(R.id.partial_checkout_button_masterpass)
     RelativeLayout mMasterpassButton;
+    @BindView(R.id.partial_checkout_ourpay_panel_holder)
+    LinearLayout mOurpayHolder;
+    @BindView(R.id.add_payment_scrollview)
+    NestedScrollView mNestedScrollView;
 
 
     @BindView(R.id.partial_toolbar_arrow_title)
@@ -65,20 +87,28 @@ public class AddPaymentController extends BaseController implements AddPaymentMv
     @BindView(R.id.partial_toolbar_right_view)
     ImageView mViewAddressRightOption;
 
+    CheckoutMvpView mCheckoutMvpView;
+
     private boolean isFromCart = false;
     private boolean isPayPalSubmitClicked = false;
+    private boolean mIsOurpaySelectDeliveryMethod = false;
     private String mCartTotalCost;
+    private Value mValue;
 
-    public AddPaymentController(boolean isFromCart, String cartCost) {
-        this(new BundleBuilder(new Bundle())
-                .putString(CART_TOTAL_COST, cartCost)
-                .putBoolean(IS_FROM_CART, isFromCart).build());
+    public OurpayPanel ourpayPanel;
+    private RelativeLayout mButtonOurpay;
+    private CheckBox mCheckBoxOurpayTC;
+
+    public static AddPaymentController newInstance() {
+        return new AddPaymentController(new BundleBuilder(new Bundle()).build());
     }
 
     public AddPaymentController(Bundle args) {
         super(args);
-        isFromCart = args.getBoolean(IS_FROM_CART, false);
-        mCartTotalCost = args.getString(CART_TOTAL_COST, "");
+        isFromCart = args.getBoolean(BundleKeys.IS_FROM_CART, false);
+        mIsOurpaySelectDeliveryMethod = args.getBoolean(BundleKeys.IS_OURPAY_SELECT_DELIVERY_METHOD, false);
+        mCartTotalCost = args.getString(BundleKeys.CART_TOTAL_COST, "");
+        mValue = new Gson().fromJson(args.getString(BundleKeys.CURRENT_ORDER_VALUE, ""), Value.class);
     }
 
     @Override
@@ -86,12 +116,16 @@ public class AddPaymentController extends BaseController implements AddPaymentMv
         View view = inflater.inflate(R.layout.controller_add_payment, container, false);
         getControllerComponent().inject(this);
         mPresenter.onAttach(this);
+        mCheckoutMvpView = (CheckoutMvpView) getRouter().getControllerWithTag(getString(R.string.checkout_controller));
         return view;
     }
 
     @Override
     protected void onViewBound(@NonNull View view) {
         super.onViewBound(view);
+        if (mIsOurpaySelectDeliveryMethod) {
+            mPresenter.generateOurpay(mValue);
+        }
         setUp(view);
     }
 
@@ -119,14 +153,19 @@ public class AddPaymentController extends BaseController implements AddPaymentMv
 
         mButtonPay.setOnClickListener(action -> {
             onCardFormSubmit();
+            mCheckoutMvpView.setIsPaymentMethodChanged(true);
         });
 
         mButtonPaypal.setOnClickListener(action -> {
             onPaypalSubmit();
+            mCheckoutMvpView.setIsPaymentMethodChanged(true);
         });
 
         if (isFromCart) {
-            mMasterpassButton.setOnClickListener(action -> onMasterpassButtonClick());
+            mMasterpassButton.setOnClickListener(action -> {
+                onMasterpassButtonClick();
+                mCheckoutMvpView.setIsPaymentMethodChanged(true);
+            });
         } else {
             mMasterpassButton.setEnabled(false);
             mMasterpassButton.setVisibility(View.GONE);
@@ -178,13 +217,21 @@ public class AddPaymentController extends BaseController implements AddPaymentMv
     }
 
     private void hidePaymentButtons() {
-        if (mButtonHolder!=null)
+        if (mButtonHolder != null)
             mButtonHolder.setVisibility(View.GONE);
     }
 
     private void showPaymentButtons() {
-        if (mButtonHolder!=null)
+        if (mButtonHolder != null) {
             mButtonHolder.setVisibility(View.VISIBLE);
+            checkVisiblePaymentButtons();
+        }
+    }
+
+    private void checkVisiblePaymentButtons() {
+        mButtonPay.setVisibility(mIsOurpaySelectDeliveryMethod ? View.GONE : View.VISIBLE);
+        mButtonPaypal.setVisibility(mIsOurpaySelectDeliveryMethod ? View.GONE : View.VISIBLE);
+        mMasterpassButton.setVisibility(mIsOurpaySelectDeliveryMethod ? View.GONE : View.VISIBLE);
     }
 
     @Override
@@ -242,6 +289,41 @@ public class AddPaymentController extends BaseController implements AddPaymentMv
     }
 
     @Override
+    public void showMyPayDetails(Value value, Ourpay ourpay) {
+        if (value != null) {
+
+            PaymentMethod paymentMethod = mActivity.getPaymentMethodSelected();
+            boolean isMyPayEnabled = mActivity.getIsMyPayEnabled();
+
+            if (ourpay != null && isMyPayEnabled) {
+                OurpayStateManager.setOurpayAccordingToPaymentMethod(ourpay, paymentMethod);
+
+                ourpayPanel = new OurpayPanel((BaseActivity) mActivity, getRouter());
+                mOurpayHolder.removeAllViews();
+                if (mOurpayHolder.getChildCount() == 0) { //add view if there is no childview yet
+                    mOurpayHolder.addView(ourpayPanel.generatePanel(PaymentInfo.getOurpay(), isRowVisible -> {
+                        if (isRowVisible) {
+                            new Handler().postDelayed(() -> mNestedScrollView.fullScroll(View.FOCUS_DOWN), 400);
+                        }
+                    }));
+                }
+
+                mButtonOurpay = (RelativeLayout) mOurpayHolder.findViewById(R.id.rl_button_ourpay);
+                mButtonOurpay.setOnClickListener(view -> onCardFormSubmit());
+
+                if (ourpay.getTermsAndConditionsCheckboxState() != 0) {
+                    mCheckBoxOurpayTC = (CheckBox) mOurpayHolder.findViewById(R.id.ourpay_checkbox_tc);
+                }
+
+
+
+            } else {
+                Log.d(AddPaymentController.class.getName(), "mypay disabled");
+            }
+        }
+    }
+
+    @Override
     public void onMasterpassButtonClick() {
 
         RxBus.instance().post(IntrospectionUtils.EVENT_PAY);
@@ -264,7 +346,7 @@ public class AddPaymentController extends BaseController implements AddPaymentMv
     @OnClick(R.id.bt_camera)
     void launchCamera() {
 
-        if(!mPresenter.isDebug()) {
+        if (!mPresenter.isDebug()) {
             Answers.getInstance().logCustom(new CustomEvent("Credit Cart Scanning")
                     .putCustomAttribute("Type", "Start"));
         }
@@ -277,9 +359,10 @@ public class AddPaymentController extends BaseController implements AddPaymentMv
         //This callback is called when successful CC scanning
 
         mCardForm.getCardEditText().setEnabled(false);
-        if(!mPresenter.isDebug()) {
+        if (!mPresenter.isDebug()) {
             Answers.getInstance().logCustom(new CustomEvent("Credit Cart Scanning")
                     .putCustomAttribute("Type", "Success"));
         }
     }
+
 }

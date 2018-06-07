@@ -222,7 +222,7 @@ public class MainActivity extends BaseActivity implements MainMvpView {
                 getMainController().showBottomNav();
                 setShopsAsVisibleContainer();
             }
-        } else if (currentController instanceof PaymentSuccessMvpView) {
+        } else if (currentController instanceof PaymentSuccessMvpView || currentController instanceof AddPaymentController) {
             //backpress for payment success
             getMainController().getHomeController().getCheckoutRouter().popToRoot();
             Controller controller = getMainController().getHomeController().getCurrentControllerOnRouter(mCheckoutRouter);
@@ -419,7 +419,7 @@ public class MainActivity extends BaseActivity implements MainMvpView {
             ((AddPaymentController) currentController).showAddPaymentResult(true, "");
         } else {
             setPaymentMethodSelected(lastPaymentMethod);
-            currentRouter.handleBack();
+            onBackPressed();
         }
     }
 

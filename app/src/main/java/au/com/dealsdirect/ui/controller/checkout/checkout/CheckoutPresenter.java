@@ -6,15 +6,18 @@ import com.androidnetworking.error.ANError;
 import com.facebook.FacebookSdk;
 import com.facebook.appevents.AppEventsConstants;
 import com.facebook.appevents.AppEventsLogger;
+import com.google.gson.Gson;
 
 import java.util.ArrayList;
 
 import javax.inject.Inject;
 
 import au.com.dealsdirect.data.DataManager;
+import au.com.dealsdirect.data.network.AppApiCallback;
 import au.com.dealsdirect.data.network.model.checkout.AdjustOrderItem;
 import au.com.dealsdirect.data.network.model.checkout.GetCurrentOrder;
 import au.com.dealsdirect.data.network.model.checkout.GetUserPaymentMethods;
+import au.com.dealsdirect.data.network.model.checkout.SetDeliveryOption;
 import au.com.dealsdirect.data.network.model.checkout.getcurrentorder.Value;
 import au.com.dealsdirect.service.ourpay.Ourpay;
 import au.com.dealsdirect.service.ourpay.OurpayPhoneVerification;
@@ -24,6 +27,7 @@ import au.com.dealsdirect.service.ourpay.OurpayUtils;
 import au.com.dealsdirect.ui.base.BasePresenter;
 import au.com.dealsdirect.ui.custom.ProductQuantityLayout;
 import au.com.dealsdirect.utils.AppEventHelper;
+import au.com.dealsdirect.utils.AppLogger;
 import au.com.dealsdirect.utils.rx.SchedulerProvider;
 import io.reactivex.annotations.NonNull;
 import io.reactivex.disposables.CompositeDisposable;
@@ -39,6 +43,38 @@ public class CheckoutPresenter<V extends CheckoutMvpView> extends BasePresenter<
     private boolean mFetchCartFinished = false;
     private boolean mFetchUserPaymentMethodsFinished = false;
     private Ourpay ourpay;
+
+    //dont remove. mock user payment methods for ourpayselect
+    private String mMockUserPaymentMethods = "{\n" +
+            "  \"d\": {\n" +
+            "    \"IsAuthenticated\": true,\n" +
+            "    \"Value\": {\n" +
+            "      \"PaymentMethods\": [\n" +
+            "        {\n" +
+            "          \"PaymentType\": \"MasterCard\",\n" +
+            "          \"Description\": \"512345******2346\",\n" +
+            "          \"Token\": \"kp7c946\",\n" +
+            "          \"ImageUrl\": \"https://assets.braintreegateway.com/payment_method_logo/mastercard.png?environment=production\"\n" +
+            "        },\n" +
+            "        {\n" +
+            "          \"PaymentType\": \"Paypal\",\n" +
+            "          \"Description\": \"444433******1111\",\n" +
+            "\t\t\t\t  \"Token\": \"3d88dwr\",\n" +
+            "\t\t\t\t  \"ImageUrl\": \"https://assets.braintreegateway.com/payment_method_logo/paypal.png?environment=production\"\n" +
+            "        },\n" +
+            "        {\n" +
+            "          \"PaymentType\": \"Masterpass\",\n" +
+            "          \"Description\": \"400000******0002\",\n" +
+            "\t\t\t\t  \"Token\": \"3d88dwr\",\n" +
+            "\t\t\t\t  \"ImageUrl\": \"https://assets.braintreegateway.com/payment_method_logo/mastercard.png?environment=production\"\n" +
+            "        }\n" +
+            "      ],\n" +
+            "      \"LastPaidToken\": \"kp7c946\"\n" +
+            "    },\n" +
+            "    \"Result\": true,\n" +
+            "    \"Message\": \"\"\n" +
+            "  }\n" +
+            "}";
 
     @Inject
     public CheckoutPresenter(DataManager dataManager, SchedulerProvider schedulerProvider,
@@ -125,6 +161,7 @@ public class CheckoutPresenter<V extends CheckoutMvpView> extends BasePresenter<
 
     @Override
     public void fetchUserPaymentMethods() {
+        getMvpView().showLoading();
         getCompositeDisposable().add(getDataManager()
                 .callGetUserPaymentMethods(new GetUserPaymentMethods.RequestValue())
                 .subscribeOn(getSchedulerProvider().io())
@@ -136,8 +173,6 @@ public class CheckoutPresenter<V extends CheckoutMvpView> extends BasePresenter<
                             return;
                         }
 
-                        getMvpView().hideLoading();
-
                         if (!responseValue.getD().isAuthenticated()) {
                             getMvpView().triggerLoginTicket();
                         }
@@ -145,6 +180,7 @@ public class CheckoutPresenter<V extends CheckoutMvpView> extends BasePresenter<
                         if (responseValue.getD().getResult()) {
                             getMvpView().setPaymentList(responseValue.getUserPaymentMethods());
                             getMvpView().showPaymentDetails(responseValue.getD().getValue().getLastPaymentMethod());
+                            getMvpView().hideLoading();
                             mFetchUserPaymentMethodsFinished = true;
 
                         } else {
@@ -304,7 +340,8 @@ public class CheckoutPresenter<V extends CheckoutMvpView> extends BasePresenter<
         return getDataManager().isMasterpassEnabled();
     }
 
-    private void updateCart(GetCurrentOrder.ResponseValue response) {
+    @Override
+    public void updateCart(GetCurrentOrder.ResponseValue response) {
 
         if (!isViewAttached()) {
             return;
@@ -323,11 +360,13 @@ public class CheckoutPresenter<V extends CheckoutMvpView> extends BasePresenter<
             if(!response.getD().getValue().isEmpty()) {
                 Value value = response.getD().getValue();
 
-                getMvpView().storeCartDetails(value);
-
                 getMvpView().showCartDetails(response.getD().getValue().getItems());
 
                 getMvpView().showAddressDetails(response.getD().getValue().getDeliveryAddress(), response.getD().getValue().getDecorationInfoList());
+
+                getMvpView().showDeliveryOptions(response.getD().getValue().getDeliveryOptions(),response.getD().getValue().getDeliveryServicePackageDetail());
+
+                getMvpView().storeCartDetails(value);
 
                 getMvpView().showVoucherDetails(response.getD().getValue().getVouchers());
 
@@ -340,5 +379,25 @@ public class CheckoutPresenter<V extends CheckoutMvpView> extends BasePresenter<
             getMvpView().onError(response.getD().getMessage());
         }
 
+    }
+
+    @Override
+    public void setDeliveryOption(SetDeliveryOption.OptionParameters setDeliveryOptionParameters) {
+        SetDeliveryOption setDeliveryOption = new SetDeliveryOption();
+        setDeliveryOption.setCountryId(getDataManager().getCountryId());
+        setDeliveryOption.setLanguageId(getDataManager().getLanguageId());
+        setDeliveryOption.setOptionParameters(setDeliveryOptionParameters);
+        setDeliveryOption.setImageSize(0);
+
+        doApiCallForResponse(getDataManager().callSetDeliveryOption(setDeliveryOption), new AppApiCallback() {
+            @Override
+            public void onSuccess(Object response) {
+                super.onSuccess(response);
+                GetCurrentOrder.ResponseValue responseValue = (GetCurrentOrder.ResponseValue) response;
+                if (responseValue.getD().isAuthenticated() && responseValue.getD().getResult()) {
+                    updateCart(responseValue);
+                }
+            }
+        });
     }
 }
