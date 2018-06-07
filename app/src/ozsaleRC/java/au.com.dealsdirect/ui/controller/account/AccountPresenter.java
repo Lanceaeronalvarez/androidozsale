@@ -1,8 +1,8 @@
 package au.com.dealsdirect.ui.controller.account;
 
 import android.content.Context;
+import android.util.Log;
 
-import java.io.Serializable;
 import java.util.List;
 
 import javax.inject.Inject;
@@ -35,22 +35,7 @@ public class AccountPresenter<V extends AccountMvpView> extends BasePresenter<V>
             return;
         }
 
-        if (getDataManager().isAuthorized()) {
-            if (option.equals(context.getString(R.string.account_details))) {
-                getMvpView().showMyDetailsController();
-            } else if (option.equals(context.getString(R.string.account_addresses))) {
-                getMvpView().showMyAddressesController();
-            } else if (option.equals(context.getString(R.string.account_orders))) {
-                getMvpView().showMyOrders();
-            } else if (option.equals(context.getString(R.string.account_vouchers))) {
-                getMvpView().showMyVouchers();
-            } else if (option.equals(context.getString(R.string.account_returns))) {
-                getMvpView().showMyReturns();
-            } else if (option.equals(context.getString(R.string.account_payments))) {
-                getMvpView().showMyPaymentsController();
-            }
-
-        } else {
+        if (!isNeedAuthorization(context, option)) {
 
             if (option.equals(context.getString(R.string.account_language))) {
                 getMvpView().showLanguage();
@@ -64,13 +49,33 @@ public class AccountPresenter<V extends AccountMvpView> extends BasePresenter<V>
                 getMvpView().showContactUs();
             } else if (option.equals(context.getString(R.string.account_country))) {
                 getMvpView().showCountry();
-            } else if (option.equals(context.getString(R.string.account_invite_friend))) {
-                getMvpView().showInviteAFriend();
             } else if (option.equals(context.getString(R.string.account_tutorial))) {
                 getMvpView().showTutorial();
             } else if (option.equals(context.getString(R.string.account_logout))) {
                 getMvpView().triggerLogout();
+            }
+        } else {
+            Log.d("accounts", "option else ");
+
+            if (getDataManager().isAuthorized()) {
+                if (option.equals(context.getString(R.string.account_details))) {
+                    getMvpView().showMyDetailsController();
+                } else if (option.equals(context.getString(R.string.account_addresses))) {
+                    getMvpView().showMyAddressesController();
+                } else if (option.equals(context.getString(R.string.account_orders))) {
+                    getMvpView().showMyOrders();
+                } else if (option.equals(context.getString(R.string.account_vouchers))) {
+                    getMvpView().showMyVouchers();
+                } else if (option.equals(context.getString(R.string.account_returns))) {
+                    getMvpView().showMyReturns();
+                } else if (option.equals(context.getString(R.string.account_payments))) {
+                    getMvpView().showMyPaymentsController();
+                } else if (option.equals(context.getString(R.string.account_invite_friend))) {
+                    getMvpView().showInviteAFriend();
+                }
             } else {
+                Log.d("accounts", "trigger login ");
+
                 getMvpView().triggerLogin(option);
             }
         }
@@ -101,5 +106,15 @@ public class AccountPresenter<V extends AccountMvpView> extends BasePresenter<V>
         getMvpView().showAccountItems(accountItems);
     }
 
+    private boolean isNeedAuthorization(Context context, String option) {
+        Log.d("accounts", "option = "+option);
+        return option.equals(context.getString(R.string.account_details)) ||
+                option.equals(context.getString(R.string.account_addresses)) ||
+                option.equals(context.getString(R.string.account_orders)) ||
+                option.equals(context.getString(R.string.account_vouchers)) ||
+                option.equals(context.getString(R.string.account_returns)) ||
+                option.equals(context.getString(R.string.account_payments)) ||
+                option.equals(context.getString(R.string.account_invite_friend));
+    }
 
 }

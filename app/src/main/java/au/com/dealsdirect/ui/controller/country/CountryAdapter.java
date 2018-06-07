@@ -5,6 +5,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import java.util.ArrayList;
@@ -43,10 +44,13 @@ public class CountryAdapter extends RecyclerView.Adapter<CountryAdapter.Countrie
     public void onBindViewHolder(CountriesViewHolder holder, int position) {
         if(mSelectedCountry.equals(mCountries.get(position).getShopCode()) || mSelectedCountry == mCountries.get(position).getShopCode()) {
             holder.mCountryText.setTextColor(context.getResources().getColor(R.color.colorAccent));
+            if (((CountriesViewHolder) holder).mCountryCheckIcon!=null) ((CountriesViewHolder) holder).mCountryCheckIcon.setVisibility(View.VISIBLE);
+
         }
         holder.mCountryText.setText(mCountries.get(position).getCountry());
 
         holder.itemView.setOnClickListener(v ->{
+            notifyDataSetChanged();
             mPresenter.onCountryItemClick(mCountries.get(position));
             holder.mCountryText.setTextColor(context.getResources().getColor(R.color.filter_text_active));
         });
@@ -78,6 +82,9 @@ public class CountryAdapter extends RecyclerView.Adapter<CountryAdapter.Countrie
     static class CountriesViewHolder extends RecyclerView.ViewHolder {
         @BindView(R.id.row_text_language)
         TextView mCountryText;
+
+        @BindView(R.id.row_check_icon)
+        ImageView mCountryCheckIcon;
 
         CountryMvpPresenter mPresenter;
 
