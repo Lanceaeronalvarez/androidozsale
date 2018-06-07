@@ -523,7 +523,7 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
         mSearchFilterMvpView.replaceCategoryTree(mCategoryTreeResponse);
 
         if (mIsCategoryChanged) { //replace facets only when category has changed.
-            mSearchFilterMvpView.replaceFacets(mFacets);
+            setupSearchFilters();
             mIsCategoryChanged = false;
         }
 
