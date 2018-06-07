@@ -64,11 +64,13 @@ import au.com.dealsdirect.utils.ViewUtils;
 import au.com.dealsdirect.utils.module.ControllerFactory;
 import au.com.dealsdirect.utils.module.GateKeeper;
 import butterknife.BindView;
+import butterknife.OnClick;
 import in.srain.cube.views.ptr.PtrClassicFrameLayout;
 import in.srain.cube.views.ptr.PtrDefaultHandler;
 import in.srain.cube.views.ptr.PtrFrameLayout;
 import in.srain.cube.views.ptr.PtrHandler;
 
+import static android.widget.AbsListView.OnScrollListener.SCROLL_STATE_IDLE;
 import static au.com.dealsdirect.utils.BundleKeys.SALEITEMS_CATEGORY_MAP;
 import static au.com.dealsdirect.utils.BundleKeys.SALEITEMS_CHIPS_FILTER;
 import static au.com.dealsdirect.utils.BundleKeys.SALEITEMS_FROM_CATEGORIES;
@@ -338,8 +340,6 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
 
     @Override
     protected void setUp(View view) {
-        hideKeyboard();
-
         mActivity.getMainController().setViewpagerDraggable(false);
 
         setupPtrHeader();
@@ -380,10 +380,29 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
 
         mSaleItemsRecyclerView.setAdapter(mSaleItemsAdapter);
         mSaleItemsRecyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
+
+            @Override
+            public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
+                super.onScrolled(recyclerView, dx, dy);
+                int bottomNavVisibility = mActivity.getHomeController().getBottomNavigationView().getVisibility();
+                if(dy > 0) {
+                    //hides bottom Nav
+                    mActivity.getHomeController().animateBottomNav(0);
+                } else{
+                    //show bottom Nav
+                    if(bottomNavVisibility == View.GONE) {
+                        mActivity.getHomeController().animateBottomNav(dy);
+                    }
+                }
+            }
+
             @Override
             public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
                 super.onScrollStateChanged(recyclerView, newState);
                 mIsRecyclerViewScrollIdle = newState == 0;
+                if(newState != SCROLL_STATE_IDLE) {
+                    hideKeyboard();
+                }
             }
         });
 
@@ -423,7 +442,7 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
         mPresenter.loadSaleItems(createSaleItemsRequest("", mSaleId, mSaleItemsPageNumber, mChipFilters, ""));
 
         setRetainViewMode(RetainViewMode.RETAIN_DETACH);
-        activateSearch();
+        hideKeyboard();
     }
 
     private void setupPtrHeader() {
@@ -526,6 +545,7 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
             setupSearchFilters();
             mIsCategoryChanged = false;
         }
+        onRefreshEnd();
 
     }
 
@@ -628,43 +648,6 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
 
         determineToolbarTitle();
         hideKeyboard();
-    }
-
-    public void activateSearch() {
-        Handler handler = new Handler();
-        handler.postDelayed(() -> {
-            if (mSaleItemsToolbarField != null && mSaleItemsToolbarField.requestFocus()) {
-                InputMethodManager inputMethodManager =
-                        (InputMethodManager) mActivity.getSystemService(Context.INPUT_METHOD_SERVICE);
-
-                inputMethodManager.toggleSoftInputFromWindow(
-                        mSaleItemsToolbarField.getApplicationWindowToken(),
-                        InputMethodManager.SHOW_FORCED, 0);
-            }
-        }, 200);
-
-
-        mSaleItemsToolbarField.setVisibility(View.VISIBLE);
-
-        mSaleItemsToolbarField.setActivated(true);
-        mSaleItemsToolbarField.setSelection(mSaleItemsToolbarField.getText().length());
-
-        mSaleItemsToolbarField.addTextChangedListener(mTextWatcher);
-        mSaleItemsToolbarField.setOnEditorActionListener((textView, i, keyEvent) -> {
-            if (i == EditorInfo.IME_ACTION_SEARCH) {
-                hideKeyboard();
-                mSearchQuery = textView.getText().toString();
-                mIsSearch = true;
-                mChipFilters = removeSearchQueryChips(mChipFilters);
-                buildSearchQueryChips(mChipFilters);
-                showLoading();
-                mPresenter.loadSaleItems(createSaleItemsRequest(mSearchFilterMvpView.getCategoryKeys(), mSaleId, 0, mChipFilters, ""));
-//                deactivateSearch();
-            }
-
-            return false;
-        });
-
     }
 
     private List<SearchChipModel> removeSearchQueryChips(List<SearchChipModel> chipFilters) {
@@ -865,8 +848,8 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
 
     @Override
     public void onRefreshEnd() {
-        super.onRefreshEnd();
         if (mPtrFrameLayout != null) {
+            mPtrFrameLayout.setLastUpdateTimeRelateObject(this);
             mPtrFrameLayout.refreshComplete();
         }
     }
@@ -874,6 +857,25 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
     @Override
     public void onOffsetChanged(AppBarLayout appBarLayout, int verticalOffset) {
         this.mVerticalOffset = verticalOffset;
-        mActivity.getHomeController().animateBottomNav(verticalOffset);
+    }
+
+    @OnClick(R.id.partial_toolbar_field_title_edittext)
+    public void activateSearch() {
+        mSaleItemsToolbarField.setSelection(mSaleItemsToolbarField.getText().length());
+
+        mSaleItemsToolbarField.addTextChangedListener(mTextWatcher);
+        mSaleItemsToolbarField.setOnEditorActionListener((textView, actionId, keyEvent) -> {
+            if (actionId == EditorInfo.IME_ACTION_SEARCH) {
+                hideKeyboard();
+                mSearchQuery = textView.getText().toString();
+                mIsSearch = true;
+                mChipFilters = removeSearchQueryChips(mChipFilters);
+                buildSearchQueryChips(mChipFilters);
+                showLoading();
+                mPresenter.loadSaleItems(createSaleItemsRequest(mSearchFilterMvpView.getCategoryKeys(), mSaleId, 0, mChipFilters, ""));
+            }
+
+            return false;
+        });
     }
 }

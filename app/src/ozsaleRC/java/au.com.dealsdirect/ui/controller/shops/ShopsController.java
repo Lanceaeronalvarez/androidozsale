@@ -2,6 +2,7 @@ package au.com.dealsdirect.ui.controller.shops;
 
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
+import android.content.res.ColorStateList;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.AppBarLayout;
@@ -262,6 +263,21 @@ public class ShopsController extends BaseController implements ShopsMvpView, Ban
         shopsControllerBannerRecyclerView.setAdapter(mBannersAdapter);
         shopsControllerBannerRecyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
             @Override
+            public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
+                super.onScrolled(recyclerView, dx, dy);
+                int bottomNavVisibility = mActivity.getHomeController().getBottomNavigationView().getVisibility();
+                if (dy > 0) {
+                    //hides bottom Nav
+                    mActivity.getHomeController().animateBottomNav(0);
+                } else {
+                    //show bottom Nav
+                    if (bottomNavVisibility == View.GONE) {
+                        mActivity.getHomeController().animateBottomNav(dy);
+                    }
+                }
+            }
+
+            @Override
             public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
                 super.onScrollStateChanged(recyclerView, newState);
                 mIsRecyclerViewScrollIdle = newState == 0;
@@ -281,7 +297,17 @@ public class ShopsController extends BaseController implements ShopsMvpView, Ban
         if (mPreLoadedCategories.size() == 0) {
             mPresenter.loadCategoryTree();
         }
+        setupPtrHeader();
         setRetainViewMode(RetainViewMode.RETAIN_DETACH);
+
+    }
+
+    private void setupPtrHeader() {
+        mShopPtrLayout.getHeader().setProgressIcon(getResources().getDrawable(R.drawable.ic_loader_logo));
+
+        mShopPtrLayout.getHeader().setPullProgressbar(getResources().getDrawable(R.drawable.bg_progress_bar));
+
+        mShopPtrLayout.getHeader().setProgressBar(ColorStateList.valueOf(getResources().getColor(R.color.progress_loader_stroke)));
 
     }
 
@@ -417,6 +443,7 @@ public class ShopsController extends BaseController implements ShopsMvpView, Ban
         }
 
         sales = mBannersAdapter.getData();
+        onRefreshEnd();
     }
 
     @Override
@@ -663,8 +690,8 @@ public class ShopsController extends BaseController implements ShopsMvpView, Ban
 
     @Override
     public void onRefreshEnd() {
-        super.onRefreshEnd();
         if (mShopPtrLayout != null) {
+            mShopPtrLayout.setLastUpdateTimeRelateObject(this);
             mShopPtrLayout.refreshComplete();
         }
     }
@@ -672,6 +699,5 @@ public class ShopsController extends BaseController implements ShopsMvpView, Ban
     @Override
     public void onOffsetChanged(AppBarLayout appBarLayout, int verticalOffset) {
         this.mVerticalOffset = verticalOffset;
-        mActivity.getHomeController().animateBottomNav(Math.abs(verticalOffset));
     }
 }

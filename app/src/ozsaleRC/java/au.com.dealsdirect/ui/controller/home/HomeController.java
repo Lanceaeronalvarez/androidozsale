@@ -508,7 +508,7 @@ public class HomeController extends BaseController implements HomeMvpView {
 
     public void animateBottomNav(int verticalAdjustmentPixels) {
 
-        if (Math.abs(verticalAdjustmentPixels) == 0) {
+        if (Math.abs(verticalAdjustmentPixels) > 0) {
             mActivity.getHomeController().getBottomNavigationView().restoreBottomNavigation(true);
             mActivity.getHomeController().showBottomNav();
         } else {
