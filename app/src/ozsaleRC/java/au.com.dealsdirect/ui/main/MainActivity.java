@@ -181,6 +181,9 @@ public class MainActivity extends BaseActivity implements MainMvpView {
     public void onBackPressed() {
         Router currentRouter = getCurrentRouter();
         Controller currentController = getCurrentController(getCurrentRouter());
+        if (getMainController() == null || getMainController().getHomeViewPager() == null) {
+            return;
+        }
         switch (getMainController().getHomeViewPager().getCurrentItem()) {
             case BANNER_FILTER_INDEX:
                 setRootViewpagerItem(SHOP_INDEX);
@@ -298,7 +301,7 @@ public class MainActivity extends BaseActivity implements MainMvpView {
                     ((VisaCheckoutController) currentController).doAuthenticateLoginWithVisaCheckoutBraintree((VisaCheckoutNonce) paymentMethodNonce);
                     break;
                 case VisaCheckoutController.VISA_CHECKOUT_PAY:
-                    callCreatePaymentTransaction(PaymentInfo.VISA_CHECKOUT_BRAINTREE,paymentMethodNonce.getNonce(),"");
+                    callCreatePaymentTransaction(PaymentInfo.VISA_CHECKOUT_BRAINTREE, paymentMethodNonce.getNonce(), "");
                     break;
             }
         } else if (currentController instanceof CheckoutController || PaymentInfo.isThreeDSecureCalled()) {
@@ -530,6 +533,7 @@ public class MainActivity extends BaseActivity implements MainMvpView {
     public int getVisaCheckoutActionType() {
         return mVisaCheckoutActionType;
     }
+
     @Override
     public void callLoginTicket() {
         mPresenter.callLoginTicket();
@@ -787,7 +791,7 @@ public class MainActivity extends BaseActivity implements MainMvpView {
         setRootViewpagerItem(SHOP_INDEX);
     }
 
-    public HomeController getHomeController(){
-        return  getMainController().getHomeController();
+    public HomeController getHomeController() {
+        return getMainController().getHomeController();
     }
 }

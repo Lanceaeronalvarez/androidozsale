@@ -28,9 +28,11 @@
 
     <color name="bg_dialog">@color/background_default</color>
     <color name="bg_tab_bar">@color/toolbar_skin</color>
-    <color name="bg_splash">@color/white</color>
+    <color name="bg_splash">#353535</color>
     <color name="bg_row_view_vouchers">@color/background_default</color>
     <color name="bg_dialog_default">@color/background_default</color>
+
+    <color name="splash_background_color">@color/bg_splash</color>
 
     <!-- Buttons -->
     <color name="bg_button_ripple">@color/white</color>
