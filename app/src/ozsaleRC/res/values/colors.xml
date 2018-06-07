@@ -83,7 +83,8 @@
     <!-- Chips Theme -->
     <color name="bg_chips_ripple">#FFFFFF</color>
     <color name="bg_chips_default">@color/white</color>
-    <color name="bg_chips_border_default">@color/text_extra_light</color>
+    <color name="bg_chips_selected">@color/colorAccent</color>
+    <color name="bg_chips_border_default">@color/border_regular</color>
     <color name="bg_chips_border_checked">@color/colorAccent</color>
     <color name="bg_chips_text">#FFFFFF</color>
 

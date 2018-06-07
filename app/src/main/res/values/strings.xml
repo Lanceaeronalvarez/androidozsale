@@ -165,7 +165,7 @@
     <string name="delivery_address_added">delivery address added</string>
     <string name="remove_string">remove</string>
     <string name="add_to_basket">Add to Basket</string>
-    <string name="add_to_cart">add to cart</string>
+    <string name="add_to_cart">Add to Cart</string>
     <string name="add_to_cart_success">Item has been added to your basket</string>
     <string name="category_title">Categories</string>
 
@@ -582,4 +582,7 @@
     <string name="order_details">Order Details</string>
     <string name="dollar">$ %1$s</string>
     <string name="tracking">Tracking</string>
+    <string name="price_elsewhere">Price elsewhere:</string>
+    <bool name="is_ozsale">true</bool>
+
 </resources>

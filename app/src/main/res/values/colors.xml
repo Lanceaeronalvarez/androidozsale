@@ -117,8 +117,9 @@
 
     <color name="progress_loader_stroke">@color/colorAccent</color>
 
-    <color name="product_details_back_arrow">@color/icon_default</color>
     <color name="login_close_tint">@color/icon_default</color>
+    <color name="product_details_back_arrow">@color/icon_default</color>
+    <color name="product_details_transparent">#67ffffff</color>
     <color name="product_details_indicator_active">@color/colorAccent</color>
 
     <!-- Toolbar -->

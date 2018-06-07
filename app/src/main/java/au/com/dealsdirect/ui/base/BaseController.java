@@ -214,4 +214,11 @@ public abstract class BaseController extends RefWatchingController implements Mv
         }
         return mActivity.getResources().getInteger(resId);
     }
+
+    public boolean getBoolean(int resId) {
+        if (mActivity == null || mActivity.getResources() == null) {
+            return false;
+        }
+        return mActivity.getResources().getBoolean(resId);
+    }
 }
