@@ -28,6 +28,7 @@ import au.com.dealsdirect.ui.controller.invite.InviteSendController;
 import au.com.dealsdirect.ui.controller.language.LanguageController;
 import au.com.dealsdirect.ui.controller.legalities.LegalitiesController;
 import au.com.dealsdirect.ui.controller.login.LoginController;
+import au.com.dealsdirect.ui.controller.login.PasswordVerificationController;
 import au.com.dealsdirect.ui.controller.main.MainController;
 import au.com.dealsdirect.ui.controller.masterpass.MasterpassController;
 import au.com.dealsdirect.ui.controller.orders.orderdetails.OrderDetailsController;
@@ -143,5 +144,7 @@ public interface ControllerComponent {
     void inject(BannerFiltersController controller);
 
     void inject(DeliveryOptionsController controller);
+
+    void inject(PasswordVerificationController controller);
 
 }

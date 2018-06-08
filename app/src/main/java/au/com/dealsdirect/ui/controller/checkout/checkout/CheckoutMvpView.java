@@ -53,10 +53,5 @@ public interface CheckoutMvpView extends MvpView {
 
     boolean setIsPaymentMethodChanged(boolean isPaymentMethodChanged);
 
-    CheckoutMvpPresenter getPresenter();
-
-    boolean isOurPaySelectDeliveryMethod();
-
-    boolean setIsPaymentMethodChanged(boolean isPaymentMethodChanged);
 
 }

@@ -107,7 +107,6 @@ public class AddPaymentPresenter<V extends AddPaymentMvpView> extends BasePresen
     @Override
     public void facebookInitiatedCheckout(String paymentType, int numItems, double price) {
         AppEventHelper.initiatedCheckout(paymentType, numItems, price, getDataManager().getCountryId());
-
     }
 
     @Override

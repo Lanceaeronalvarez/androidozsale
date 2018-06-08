@@ -148,4 +148,6 @@ public interface ControllerComponent {
     void inject(SplashScreenController controller);
 
     void inject(DeliveryOptionsController controller);
+
+    void inject(PasswordVerificationController controller);
 }

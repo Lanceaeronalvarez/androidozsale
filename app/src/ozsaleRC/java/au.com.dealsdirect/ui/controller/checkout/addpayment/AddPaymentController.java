@@ -1,11 +1,12 @@
 package au.com.dealsdirect.ui.controller.checkout.addpayment;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.v4.widget.NestedScrollView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -18,6 +19,7 @@ import android.widget.TextView;
 
 import com.bluelinelabs.conductor.RouterTransaction;
 import com.bluelinelabs.conductor.changehandler.HorizontalChangeHandler;
+import com.braintreepayments.api.models.BraintreeRequestCodes;
 import com.braintreepayments.cardform.OnCardFormScanListener;
 import com.braintreepayments.cardform.OnCardFormSubmitListener;
 import com.braintreepayments.cardform.utils.CardType;
@@ -27,6 +29,9 @@ import com.crashlytics.android.answers.Answers;
 import com.crashlytics.android.answers.CustomEvent;
 import com.google.gson.Gson;
 import com.mysale.genie.utility.RxBus;
+import com.mysale.genie.utility.config.model.getappsettings.VisaCheckout;
+import com.visa.checkout.VisaCheckoutSdk;
+import com.visa.checkout.VisaPaymentSummary;
 
 import javax.inject.Inject;
 
@@ -39,13 +44,17 @@ import au.com.dealsdirect.service.ourpay.OurpayStateManager;
 import au.com.dealsdirect.service.ourpay.OurpayTemplateText;
 import au.com.dealsdirect.ui.base.BaseActivity;
 import au.com.dealsdirect.ui.base.BaseController;
+import au.com.dealsdirect.ui.base.VisaCheckoutMvpPresenter;
+import au.com.dealsdirect.ui.base.VisaCheckoutMvpView;
 import au.com.dealsdirect.ui.controller.checkout.checkout.CheckoutMvpView;
 import au.com.dealsdirect.ui.controller.checkout.ourpay.OurpaySMSVerificationController;
 import au.com.dealsdirect.ui.controller.masterpass.MasterpassController;
+import au.com.dealsdirect.ui.controller.visacheckout.VisaCheckoutController;
 import au.com.dealsdirect.ui.custom.CustomAlertDialog;
 import au.com.dealsdirect.ui.main.FetchTokenHandler;
 import au.com.dealsdirect.ui.main.MainActivity;
 import au.com.dealsdirect.ui.main.PaymentInfo;
+import au.com.dealsdirect.utils.AppLogger;
 import au.com.dealsdirect.utils.BundleBuilder;
 import au.com.dealsdirect.utils.BundleKeys;
 import au.com.dealsdirect.utils.IntrospectionUtils;
@@ -58,11 +67,12 @@ import static au.com.dealsdirect.service.ourpay.OurpayTemplateText.KEY_OURPAY_TC
  * Created by smartwave on 29/06/2017.
  */
 
-public class AddPaymentController extends BaseController implements AddPaymentMvpView, OnCardFormSubmitListener, CardEditText.OnCardTypeChangedListener, OnCardFormScanListener {
+public class AddPaymentController extends VisaCheckoutController implements AddPaymentMvpView, OnCardFormSubmitListener, CardEditText.OnCardTypeChangedListener, OnCardFormScanListener {
 
     @Inject
     AddPaymentMvpPresenter<AddPaymentMvpView> mPresenter;
-
+    @Inject
+    VisaCheckoutMvpPresenter<VisaCheckoutMvpView> mVcoPresenter;
 
     @BindView(R.id.card_form)
     CardForm mCardForm;
@@ -116,6 +126,9 @@ public class AddPaymentController extends BaseController implements AddPaymentMv
         View view = inflater.inflate(R.layout.controller_add_payment, container, false);
         getControllerComponent().inject(this);
         mPresenter.onAttach(this);
+        mVcoPresenter.onAttach(this);
+
+        registerForActivityResult(BraintreeRequestCodes.VISA_CHECKOUT);
         mCheckoutMvpView = (CheckoutMvpView) getRouter().getControllerWithTag(getString(R.string.checkout_controller));
         return view;
     }
@@ -162,6 +175,15 @@ public class AddPaymentController extends BaseController implements AddPaymentMv
         });
 
         if (isFromCart) {
+
+            if (mVcoPresenter.isVisaCheckoutEnabled()) {
+                mVcoPresenter.setupVisaCheckout();
+            }
+
+            if(mPresenter.isMasterPassEnabled()) {
+                mMasterpassButton.setVisibility(View.VISIBLE);
+            }
+
             mMasterpassButton.setOnClickListener(action -> {
                 onMasterpassButtonClick();
                 mCheckoutMvpView.setIsPaymentMethodChanged(true);
@@ -169,6 +191,7 @@ public class AddPaymentController extends BaseController implements AddPaymentMv
         } else {
             mMasterpassButton.setEnabled(false);
             mMasterpassButton.setVisibility(View.GONE);
+            mVisaCheckoutButton.setVisibility(View.GONE);
         }
 
         if (((MainActivity) getActivity()).isBraintreeInitialized()) {
@@ -232,6 +255,7 @@ public class AddPaymentController extends BaseController implements AddPaymentMv
         mButtonPay.setVisibility(mIsOurpaySelectDeliveryMethod ? View.GONE : View.VISIBLE);
         mButtonPaypal.setVisibility(mIsOurpaySelectDeliveryMethod ? View.GONE : View.VISIBLE);
         mMasterpassButton.setVisibility(mIsOurpaySelectDeliveryMethod ? View.GONE : View.VISIBLE);
+        mVisaCheckoutButton.setVisibility(mIsOurpaySelectDeliveryMethod ? View.GONE : View.VISIBLE);
     }
 
     @Override
@@ -313,12 +337,10 @@ public class AddPaymentController extends BaseController implements AddPaymentMv
 
                 if (ourpay.getTermsAndConditionsCheckboxState() != 0) {
                     mCheckBoxOurpayTC = (CheckBox) mOurpayHolder.findViewById(R.id.ourpay_checkbox_tc);
+                    mCheckBoxOurpayTC.setClickable(false);
                 }
 
-
-
-            } else {
-                Log.d(AddPaymentController.class.getName(), "mypay disabled");
+                ourpayPanel.getCartAmountHeader().setVisibility(mIsOurpaySelectDeliveryMethod ? View.GONE : View.VISIBLE);
             }
         }
     }
@@ -365,4 +387,43 @@ public class AddPaymentController extends BaseController implements AddPaymentMv
         }
     }
 
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        if (requestCode == BraintreeRequestCodes.VISA_CHECKOUT) {
+            showLoading();
+            AppLogger.d("VC_onActivityResult", "Result got back from Visa Checkout SDK");
+            String msg = "";
+
+            if (resultCode == Activity.RESULT_OK && data != null) {
+                VisaPaymentSummary visaPaymentSummary = data.getParcelableExtra(VisaCheckoutSdk.INTENT_PAYMENT_SUMMARY);
+                if (visaPaymentSummary != null) {
+                    // Successful VCO
+                    showLoading();
+                    mActivity.callCreatePaymentTransactionVco(visaPaymentSummary);
+                    mPresenter.facebookInitiatedCheckout(PaymentInfo.getPaymentType(), mValue.getItemsCount(), Double.valueOf(mCartTotalCost));
+                }
+            } else if (resultCode == Activity.RESULT_CANCELED) {
+                msg = "User Canceled, Result Code : " + resultCode;
+            } else if (resultCode == VisaCheckoutSdk.ResultCode.RESULT_SDK_NOT_INITIALIZED) {
+                msg = "Sdk not initialized  failed, Result Code : " + resultCode;
+            } else if (resultCode == VisaCheckoutSdk.ResultCode.RESULT_INITIALIZED_FAILED) {
+                msg = "VisaPaymentInfo validation failed, Result Code : " + resultCode;
+            } else {
+                msg = "Purchase failed!";
+            }
+
+            if (!msg.isEmpty()) {
+                hideLoading();
+                AppLogger.d("VC_onActivityResult", msg);
+                onError(msg);
+            }
+        }
+    }
+
+    @Override
+    public void onVisaCheckoutButtonClicked() {
+        mVcoPresenter.payWithVisaCheckout(Double.valueOf(mCartTotalCost));
+    }
 }

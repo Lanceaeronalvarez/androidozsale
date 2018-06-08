@@ -93,6 +93,7 @@ import static au.com.dealsdirect.service.ourpay.OurpayTemplateText.KEY_OURPAY_TC
 public class CheckoutController extends VisaCheckoutController implements CheckoutMvpView, FetchTokenHandler {
     public static final String CARD_PAYPAL = "Paypal";
     public static final String CARD_MASTERPASS = "Masterpass";
+    public static final String CARD_VISA_CHECKOUT = "VisaCheckoutBraintree";
     public static final String CARD_MASTERCARD = "MasterCard";
     public static final String CARD_VISA = "Visa";
 
@@ -227,9 +228,7 @@ public class CheckoutController extends VisaCheckoutController implements Checko
     private void changePayment() {
         if (mPaymentList.size() > 1) {
 //                  //push to payment select
-            getRouter().pushController(RouterTransaction.with(new PaymentSelectController(new Gson().toJson(mPaymentList), true, Double.toString(mValue.getSummary().total)))
-                    .pushChangeHandler(new HorizontalChangeHandler(false))
-                    .popChangeHandler(new HorizontalChangeHandler()));
+            showPaymentSelectController();
         } else {
             //push controller to add payment
             if (!isAddressValid()) {
@@ -633,7 +632,8 @@ public class CheckoutController extends VisaCheckoutController implements Checko
         if (isOurPaySelectDeliveryMethod() && mIsPaymentMethodChanged) {
             PaymentMethod paymentMethod = mActivity.getPaymentMethodSelected();
             if (paymentMethod != null) {
-                if (paymentMethod.getPaymentType().equalsIgnoreCase(CARD_PAYPAL) || paymentMethod.getPaymentType().equalsIgnoreCase(CARD_MASTERPASS)) {
+                if (paymentMethod.getPaymentType().equalsIgnoreCase(CARD_PAYPAL) || paymentMethod.getPaymentType().equalsIgnoreCase(CARD_MASTERPASS)
+                        || paymentMethod.getPaymentType().equalsIgnoreCase(CARD_VISA_CHECKOUT)) {
                     mPresenter.setDeliveryOption(createStandardDeliveryOptionRequest());
                 }
             }
@@ -675,6 +675,7 @@ public class CheckoutController extends VisaCheckoutController implements Checko
         if (paymentMethod != null) {
 
             if (paymentMethod.getPaymentType().equalsIgnoreCase(CARD_PAYPAL)) {
+                mVisaCheckoutButton.setVisibility(View.GONE);
                 mPayButton.setVisibility(View.GONE);
                 mPaypalButton.setVisibility(View.VISIBLE);
 
@@ -959,6 +960,7 @@ public class CheckoutController extends VisaCheckoutController implements Checko
         mPayButton.setVisibility(isOurPaySelectDeliveryMethod() ? View.GONE : View.VISIBLE);
         mPaypalButton.setVisibility(isOurPaySelectDeliveryMethod() ? View.GONE : View.VISIBLE);
         mMasterpassButton.setVisibility(isOurPaySelectDeliveryMethod() ? View.GONE : View.VISIBLE);
+        mVisaCheckoutButton.setVisibility(isOurPaySelectDeliveryMethod() ? View.GONE : View.VISIBLE);
     }
 
     @Override
@@ -1047,7 +1049,8 @@ public class CheckoutController extends VisaCheckoutController implements Checko
         PaymentMethod firstPaymentMethod = null;
         for (int i = 0; i < mPaymentList.size(); i++) {
             PaymentMethod paymentMethod = mPaymentList.get(i);
-            if (!paymentMethod.getPaymentType().equals(CARD_PAYPAL) && !paymentMethod.getPaymentType().equals(CARD_MASTERPASS)) {
+            if (!paymentMethod.getPaymentType().equalsIgnoreCase(CARD_PAYPAL) && !paymentMethod.getPaymentType().equalsIgnoreCase(CARD_MASTERPASS)
+                    && !paymentMethod.getPaymentType().equalsIgnoreCase(CARD_VISA_CHECKOUT)) {
                 firstPaymentMethod = paymentMethod;
             }
         }

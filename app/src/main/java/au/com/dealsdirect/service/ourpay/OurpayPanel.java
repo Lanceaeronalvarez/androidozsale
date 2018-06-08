@@ -180,7 +180,6 @@ public class OurpayPanel {
 
         TextView textViewAmount = (TextView) mCartAmountHeader.findViewById(R.id.textView_amount);
         if (amount.length() > 0) {
-
             textViewAmount.setText(amount);
         } else {
             textViewAmount.setVisibility(View.GONE);

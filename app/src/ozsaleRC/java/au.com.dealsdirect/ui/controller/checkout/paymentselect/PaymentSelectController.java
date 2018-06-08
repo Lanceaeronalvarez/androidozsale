@@ -5,19 +5,16 @@ import android.support.annotation.NonNull;
 import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.SimpleItemAnimator;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.bluelinelabs.conductor.changehandler.HorizontalChangeHandler;
+import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
-import com.h6ah4i.android.widget.advrecyclerview.swipeable.RecyclerViewSwipeManager;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -25,8 +22,10 @@ import java.util.List;
 import javax.inject.Inject;
 
 import au.com.dealsdirect.R;
+import au.com.dealsdirect.data.network.model.checkout.getcurrentorder.Value;
 import au.com.dealsdirect.data.network.model.checkout.getuserpaymentmethods.PaymentMethod;
 import au.com.dealsdirect.ui.base.BasePullToRefreshController;
+import au.com.dealsdirect.ui.controller.checkout.checkout.CheckoutMvpView;
 import au.com.dealsdirect.ui.custom.CustomAlertDialog;
 import au.com.dealsdirect.ui.custom.RecyclerOnTouchListener;
 import au.com.dealsdirect.ui.custom.SimpleDividerItemDecoration;
@@ -43,9 +42,6 @@ import butterknife.OnClick;
 
 public class PaymentSelectController extends BasePullToRefreshController implements PaymentSelectMvpView {
 
-    private final static String PAYMENT_METHODS = "payment_methods";
-    private final static String IS_FROM_CART = "is_from_cart";
-    private final static String CART_TOTAL_COST = "cart_total_cost";
 
     @Inject
     PaymentSelectMvpPresenter<PaymentSelectMvpView> mPresenter;
@@ -53,39 +49,42 @@ public class PaymentSelectController extends BasePullToRefreshController impleme
     @BindView(R.id.payment_select_recyclerview)
     RecyclerView mRecyclerView;
 
+
     @BindView(R.id.partial_toolbar_arrow_title)
     TextView mPaymentSelectToolbarTitle;
-
     @BindView(R.id.partial_toolbar_right_view)
     ImageView mPaymentSelectRightOption;
-
     @BindView(R.id.no_payment_method_placeholder)
     LinearLayout mNoPaymentPlaceholder;
+
+    private CheckoutMvpView mCheckoutMvpView;
 
     private PaymentSelectAdapter mAdapter;
 
     private ArrayList<PaymentMethod> mPaymentMethods = new ArrayList<>();
     private boolean isFromCart = false;
+    private boolean mIsOurpaySelectDeliveryMethod = false;
     private String mCartTotalCost;
+    private Value mValue;
 
-    public PaymentSelectController(String paymentMethodsJsonString, boolean isFromCart, String cartCost) {
-        this(new BundleBuilder(new Bundle())
-                .putString(PAYMENT_METHODS, paymentMethodsJsonString)
-                .putBoolean(IS_FROM_CART, isFromCart)
-                .putString(CART_TOTAL_COST, cartCost)
-                .build());
+
+    public static PaymentSelectController newInstance() {
+        return new PaymentSelectController(new BundleBuilder(new Bundle()).build());
     }
 
     public PaymentSelectController(Bundle args) {
         super(args);
 
-        mPaymentMethods = JsonUtils.convertStringToObject(args.getString(PAYMENT_METHODS), new TypeToken<ArrayList<PaymentMethod>>() {}.getType());
+        mPaymentMethods = JsonUtils.convertStringToObject(args.getString(BundleKeys.PAYMENT_METHODS), new TypeToken<ArrayList<PaymentMethod>>() {
+        }.getType());
 
         if (mPaymentMethods == null) {
             mPaymentMethods = new ArrayList<>();
         }
-        isFromCart = args.getBoolean(IS_FROM_CART);
-        mCartTotalCost = args.getString(CART_TOTAL_COST, "");
+        isFromCart = args.getBoolean(BundleKeys.IS_FROM_CART, false);
+        mIsOurpaySelectDeliveryMethod = args.getBoolean(BundleKeys.IS_OURPAY_SELECT_DELIVERY_METHOD, false);
+        mCartTotalCost = args.getString(BundleKeys.CART_TOTAL_COST, "");
+        mValue = new Gson().fromJson(args.getString(BundleKeys.CURRENT_ORDER_VALUE, ""), Value.class);
     }
 
     @Override
@@ -97,8 +96,7 @@ public class PaymentSelectController extends BasePullToRefreshController impleme
 
         getControllerComponent().inject(this);
         mPresenter.onAttach(this);
-
-        mActivity.setDraggableViewPager(false);
+        mCheckoutMvpView = (CheckoutMvpView) getRouter().getControllerWithTag(getString(R.string.checkout_controller));
         return view;
     }
 
@@ -131,14 +129,9 @@ public class PaymentSelectController extends BasePullToRefreshController impleme
         int backstackSize = getRouter().getBackstackSize();
         String checkoutTag = getRouter().getBackstack().get(backstackSize - 1).tag();
 
-        for(int i = 0; i < paymentMethods.size(); i++) {
-            paymentMethods.get(i).setId(i);
-        }
-
         if (paymentMethods != null && paymentMethods.size() > 0) {
             mPaymentMethods = new ArrayList<>(paymentMethods);
-            mAdapter.
-                    replaceData(mPaymentMethods);
+            mAdapter.replaceData(mPaymentMethods);
             showPaymentMethodsPlaceholder(false);
         } else if (checkoutTag == getActivity().getString(R.string.checkout_controller)
                 && (paymentMethods == null
@@ -146,11 +139,11 @@ public class PaymentSelectController extends BasePullToRefreshController impleme
             GateKeeper.push(getRouter(),
                     GateKeeper.Destination.PAYMENT_ADD,
                     new BundleBuilder(new Bundle())
-                            .putBoolean(BundleKeys.IS_FROM_CART,isFromCart)
+                            .putBoolean(BundleKeys.IS_FROM_CART, isFromCart)
                             .putString(BundleKeys.CART_TOTAL_COST, mCartTotalCost)
                             .build()
-                    ,new HorizontalChangeHandler()
-                    ,new HorizontalChangeHandler());
+                    , new HorizontalChangeHandler()
+                    , new HorizontalChangeHandler());
         } else if (paymentMethods.size() == 0) {
             showPaymentMethodsPlaceholder(true);
         }
@@ -194,21 +187,23 @@ public class PaymentSelectController extends BasePullToRefreshController impleme
             mPresenter.fetchUserPaymentMethods();
         }
 
-        mPaymentSelectToolbarTitle.setText(getString(R.string.my_payments));
-        mPaymentSelectRightOption.setVisibility(View.VISIBLE);
-        mAdapter = new PaymentSelectAdapter(mActivity, mPaymentMethods, mPresenter, isFromCart);
-        RecyclerViewSwipeManager recyclerViewSwipeManager = new RecyclerViewSwipeManager();
-        RecyclerView.Adapter wrappedAdapter = recyclerViewSwipeManager.createWrappedAdapter(mAdapter);
-        mRecyclerView.setLayoutManager(new LinearLayoutManager(mActivity));
-        mRecyclerView.setAdapter(wrappedAdapter);
+        mPaymentSelectToolbarTitle.setText("Add Payment Method");
+        if (mPresenter.isTablet()) {
+            mPaymentSelectRightOption.setPadding(5, 5, 5, 5);
+        } else {
+            mPaymentSelectRightOption.setPadding(20, 20, 20, 20);
+        }
+        mPaymentSelectRightOption.setImageDrawable(getApplicationContext().getDrawable(R.drawable.ic_add));
 
-        ((SimpleItemAnimator) mRecyclerView.getItemAnimator()).setSupportsChangeAnimations(false);
-        recyclerViewSwipeManager.attachRecyclerView(mRecyclerView);
-        mRecyclerView.addItemDecoration(new SimpleDividerItemDecoration(mActivity,SimpleDividerItemDecoration.VERTICAL_LIST));
+        mAdapter = new PaymentSelectAdapter(mActivity, mPaymentMethods, mPresenter, isFromCart);
+        mRecyclerView.setLayoutManager(new LinearLayoutManager(mActivity));
+        mRecyclerView.setAdapter(mAdapter);
+        mRecyclerView.addItemDecoration(new SimpleDividerItemDecoration(mActivity, SimpleDividerItemDecoration.VERTICAL_LIST));
 
         if (isFromCart) {
             mRecyclerView.addOnItemTouchListener(new RecyclerOnTouchListener(mActivity, (v, position) -> {
                 mActivity.setPaymentMethodSelected(mPaymentMethods.get(position));
+                mCheckoutMvpView.setIsPaymentMethodChanged(true);
                 mAdapter.notifyDataSetChanged();
                 mActivity.onBackPressed();
             }));
@@ -224,15 +219,17 @@ public class PaymentSelectController extends BasePullToRefreshController impleme
         }
     }
 
-    @OnClick(R.id.controller_payment_button)
+    @OnClick(R.id.partial_toolbar_right_view)
     public void onAddPaymentMethod() {
         GateKeeper.push(getRouter(),
                 GateKeeper.Destination.PAYMENT_ADD,
                 new BundleBuilder(new Bundle())
-                        .putBoolean(BundleKeys.IS_FROM_CART,isFromCart)
-                        .putString(BundleKeys.CART_TOTAL_COST, mCartTotalCost)
+                        .putBoolean(BundleKeys.IS_FROM_CART, true)
+                        .putBoolean(BundleKeys.IS_OURPAY_SELECT_DELIVERY_METHOD, mIsOurpaySelectDeliveryMethod)
+                        .putString(BundleKeys.CART_TOTAL_COST, Double.toString(mValue.getSummary().total))
+                        .putString(BundleKeys.CURRENT_ORDER_VALUE, new Gson().toJson(mValue, Value.class))
                         .build()
-                ,new HorizontalChangeHandler()
-                ,new HorizontalChangeHandler());
+                , new HorizontalChangeHandler()
+                , new HorizontalChangeHandler());
     }
 }
