@@ -238,6 +238,7 @@
         currently in your account when you checkout your order. \n
     </string>
     <string name="apply">apply</string>
+    <string name="apply_promo_code">Apply Promo Code</string>
     <string name="my_voucher">my voucher</string>
     <string name="promo_code">promo code</string>
     <string name="enter_voucher_code">enter voucher code</string>
@@ -404,6 +405,7 @@
     <string name="price_colon">Price:&#160;</string>
     <string name="subtotal_colon">Subtotal:&#160;</string>
     <string name="row_checkout_voucher_label">VOUCHER</string>
+    <string name="select_voucher">SELECT VOUCHER</string>
     <string name="email">Email</string>
     <string name="sorry_today_we_can_t_find_anything_by_your_request">Sorry, today we can\'t find anything by your request. \n Meanwhile, why not search for something else?</string>
     <string name="request_new_return">Request New Return</string>

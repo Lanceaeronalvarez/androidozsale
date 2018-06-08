@@ -46,7 +46,6 @@ import au.com.dealsdirect.ui.controller.shops.listener.BannerClickListener;
 import au.com.dealsdirect.ui.custom.SearchEditText;
 import au.com.dealsdirect.ui.custom.transitions.SimpleChangeHandler;
 import au.com.dealsdirect.ui.main.MainMvpView;
-import au.com.dealsdirect.utils.AppLogger;
 import au.com.dealsdirect.utils.BundleBuilder;
 import au.com.dealsdirect.utils.DialogUtils;
 import au.com.dealsdirect.utils.PaginateUtils;
@@ -262,28 +261,28 @@ public class ShopsController extends BaseController implements ShopsMvpView, Ban
         mBannersAdapter = new BannersAdapter(mActivity, mPresenter, sales, this);
         shopsControllerBannerRecyclerView.setLayoutManager(mLayoutManager);
         shopsControllerBannerRecyclerView.setAdapter(mBannersAdapter);
-        shopsControllerBannerRecyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
-            @Override
-            public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
-                super.onScrolled(recyclerView, dx, dy);
-                int bottomNavVisibility = mActivity.getHomeController().getBottomNavigationView().getVisibility();
-                if (dy > 0) {
-                    //hides bottom Nav
-                    mActivity.getHomeController().animateBottomNav(0);
-                } else {
-                    //show bottom Nav
-                    if (bottomNavVisibility == View.GONE) {
-                        mActivity.getHomeController().animateBottomNav(dy);
-                    }
-                }
-            }
-
-            @Override
-            public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
-                super.onScrollStateChanged(recyclerView, newState);
-                mIsRecyclerViewScrollIdle = newState == 0;
-            }
-        });
+//        shopsControllerBannerRecyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
+//            @Override
+//            public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
+//                super.onScrolled(recyclerView, dx, dy);
+//                int bottomNavVisibility = mActivity.getHomeController().getBottomNavigationView().getVisibility();
+//                if (dy > 0) {
+//                    //hides bottom Nav
+//                    mActivity.getHomeController().animateBottomNav(0);
+//                } else {
+//                    //show bottom Nav
+//                    if (bottomNavVisibility == View.GONE) {
+//                        mActivity.getHomeController().animateBottomNav(dy);
+//                    }
+//                }
+//            }
+//
+//            @Override
+//            public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
+//                super.onScrollStateChanged(recyclerView, newState);
+//                mIsRecyclerViewScrollIdle = newState == 0;
+//            }
+//        });
 
         if (sales.isEmpty()) {
             shopsControllerBannerRecyclerView.setVisibility(View.GONE);
@@ -691,6 +690,7 @@ public class ShopsController extends BaseController implements ShopsMvpView, Ban
 
     @Override
     public void onRefreshEnd() {
+        super.onRefreshEnd();
         if (mShopPtrLayout != null) {
             mShopPtrLayout.setLastUpdateTimeRelateObject(this);
             mShopPtrLayout.refreshComplete();
@@ -700,5 +700,6 @@ public class ShopsController extends BaseController implements ShopsMvpView, Ban
     @Override
     public void onOffsetChanged(AppBarLayout appBarLayout, int verticalOffset) {
         this.mVerticalOffset = verticalOffset;
+        mActivity.getHomeController().animateBottomNav(Math.abs(verticalOffset));
     }
 }

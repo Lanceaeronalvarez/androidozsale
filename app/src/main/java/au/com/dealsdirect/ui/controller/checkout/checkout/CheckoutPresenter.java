@@ -44,38 +44,6 @@ public class CheckoutPresenter<V extends CheckoutMvpView> extends BasePresenter<
     private boolean mFetchUserPaymentMethodsFinished = false;
     private Ourpay ourpay;
 
-    //dont remove. mock user payment methods for ourpayselect
-    private String mMockUserPaymentMethods = "{\n" +
-            "  \"d\": {\n" +
-            "    \"IsAuthenticated\": true,\n" +
-            "    \"Value\": {\n" +
-            "      \"PaymentMethods\": [\n" +
-            "        {\n" +
-            "          \"PaymentType\": \"MasterCard\",\n" +
-            "          \"Description\": \"512345******2346\",\n" +
-            "          \"Token\": \"kp7c946\",\n" +
-            "          \"ImageUrl\": \"https://assets.braintreegateway.com/payment_method_logo/mastercard.png?environment=production\"\n" +
-            "        },\n" +
-            "        {\n" +
-            "          \"PaymentType\": \"Paypal\",\n" +
-            "          \"Description\": \"444433******1111\",\n" +
-            "\t\t\t\t  \"Token\": \"3d88dwr\",\n" +
-            "\t\t\t\t  \"ImageUrl\": \"https://assets.braintreegateway.com/payment_method_logo/paypal.png?environment=production\"\n" +
-            "        },\n" +
-            "        {\n" +
-            "          \"PaymentType\": \"Masterpass\",\n" +
-            "          \"Description\": \"400000******0002\",\n" +
-            "\t\t\t\t  \"Token\": \"3d88dwr\",\n" +
-            "\t\t\t\t  \"ImageUrl\": \"https://assets.braintreegateway.com/payment_method_logo/mastercard.png?environment=production\"\n" +
-            "        }\n" +
-            "      ],\n" +
-            "      \"LastPaidToken\": \"kp7c946\"\n" +
-            "    },\n" +
-            "    \"Result\": true,\n" +
-            "    \"Message\": \"\"\n" +
-            "  }\n" +
-            "}";
-
     @Inject
     public CheckoutPresenter(DataManager dataManager, SchedulerProvider schedulerProvider,
                              CompositeDisposable compositeDisposable) {

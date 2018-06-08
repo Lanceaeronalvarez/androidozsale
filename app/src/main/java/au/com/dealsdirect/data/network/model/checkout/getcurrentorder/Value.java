@@ -42,7 +42,7 @@ public class Value {
     @SerializedName("PickupPointsEnabled")
     public Boolean pickupPointsEnabled;
     @SerializedName("NotificationMessage")
-    private Object notificationMessage;
+    private String notificationMessage;
     @SerializedName("DeliveryServicePackageDetail")
     @Expose
     private DeliveryServicePackageDetail deliveryServicePackageDetail;
@@ -53,7 +53,7 @@ public class Value {
         return isEmpty;
     }
 
-    public Object getNotificationMessage() {
+    public String getNotificationMessage() {
         return notificationMessage;
     }
 

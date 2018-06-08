@@ -1,93 +1,91 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
+<LinearLayout
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/partial_checkout_voucher_container_layout"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:orientation="vertical"
-    android:layout_marginTop="@dimen/margin_small"
     android:layout_marginBottom="@dimen/margin_small"
+    android:layout_marginTop="@dimen/margin_small"
+    android:orientation="vertical"
     tools:ignore="MissingPrefix">
 
     <LinearLayout
-        android:id="@+id/partial_checkout_voucher_new_code"
+        android:id="@+id/partial_checkout_voucher_container_layout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@drawable/bg_account_item"
         android:clickable="true"
-        android:padding="@dimen/padding_default">
+        android:orientation="vertical">
 
-        <RelativeLayout
-            android:layout_width="0dp"
+        <LinearLayout
+            android:id="@+id/partial_checkout_voucher_new_code"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_weight="9">
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/voucher"
-                android:textColor="@color/row_checkout_text_light_color"
-                android:textSize="@dimen/text_size_body" />
+            android:background="@drawable/bg_account_item"
+            android:padding="@dimen/padding_default">
 
             <LinearLayout
-                android:id="@+id/partial_checkout_voucher_container"
-                android:layout_width="wrap_content"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_alignParentEnd="true"
-                android:background="@drawable/bg_account_item"
-                android:orientation="vertical"
-                android:visibility="gone">
+                android:layout_weight="9">
 
                 <TextView
-                    android:id="@+id/partial_checkout_voucher_name"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/voucher_label"
+                    android:textColor="@color/row_checkout_text_light_color"
+                    android:textSize="@dimen/text_size_body" />
+
+
+                <TextView
+                    android:id="@+id/partial_checkout_voucher_value_text_view"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:textColor="@color/row_checkout_text_light_color"
                     android:textSize="@dimen/text_size_body"
-                    tools:text="@string/row_voucher_name_hint" />
-
-                <TextView
-                    android:id="@+id/partial_checkout_voucher_details"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:textColor="@color/text_dark"
+                    android:gravity="end"
                     android:visibility="gone"
-                    tools:text="@string/row_voucher_hint" />
+                    tools:text="@string/row_voucher_name_hint" />
 
 
             </LinearLayout>
-        </RelativeLayout>
 
-        <ImageView
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:src="@drawable/ic_gray_chevron" />
+            <ImageView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:src="@drawable/ic_gray_chevron" />
+        </LinearLayout>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/border_thin"
+            android:layout_marginStart="@dimen/padding_default"
+            android:background="@color/border_regular" />
+
+
     </LinearLayout>
 
-    <View
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="@dimen/border_thin"
-        android:layout_marginStart="@dimen/padding_default"
-        android:background="@color/border_regular" />
-
-    <EditText
-        android:id="@+id/partial_checkout_voucher_edittext"
-        style="@style/DDEditTextStyleNoBorder"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:hint="@string/enter_promo_code"
-        android:imeOptions="actionDone"
-        android:inputType="text"
-        android:maxLines="1"
-        android:textColor="@color/row_checkout_text_light_color"
-        android:textColorHint="@color/row_checkout_text_light_color" />
-
-    <!--dummy view-->
-    <View
-        android:id="@+id/partial_checkout_voucher_change"
-        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:visibility="gone"/>
+        android:background="@color/white"
+        android:orientation="horizontal"
+        android:padding="@dimen/padding_default">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/promo_code"
+            android:textColor="@color/row_checkout_text_light_color"
+            android:textSize="@dimen/text_size_body" />
+
+        <TextView
+            android:id="@+id/partial_checkout_voucher_promo_code_text_view"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="end"
+            android:textColor="@color/colorAccent"
+            tools:text="H27AEJALS" />
+    </LinearLayout>
 </LinearLayout>

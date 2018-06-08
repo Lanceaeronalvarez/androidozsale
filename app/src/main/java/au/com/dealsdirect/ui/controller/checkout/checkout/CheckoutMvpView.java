@@ -53,5 +53,6 @@ public interface CheckoutMvpView extends MvpView {
 
     boolean setIsPaymentMethodChanged(boolean isPaymentMethodChanged);
 
+    void showPromoCodeApplied(String promoCode, boolean isPromoCodeApplied);
 
 }

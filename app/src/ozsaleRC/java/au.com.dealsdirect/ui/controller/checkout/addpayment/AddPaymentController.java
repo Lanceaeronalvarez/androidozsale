@@ -103,11 +103,11 @@ public class AddPaymentController extends VisaCheckoutController implements AddP
     private boolean isPayPalSubmitClicked = false;
     private boolean mIsOurpaySelectDeliveryMethod = false;
     private String mCartTotalCost;
-    private Value mValue;
+    private Value mCurrentOrderValue;
 
     public OurpayPanel ourpayPanel;
     private RelativeLayout mButtonOurpay;
-    private CheckBox mCheckBoxOurpayTC;
+    private CheckBox mOurpayTncCheckBox;
 
     public static AddPaymentController newInstance() {
         return new AddPaymentController(new BundleBuilder(new Bundle()).build());
@@ -118,7 +118,7 @@ public class AddPaymentController extends VisaCheckoutController implements AddP
         isFromCart = args.getBoolean(BundleKeys.IS_FROM_CART, false);
         mIsOurpaySelectDeliveryMethod = args.getBoolean(BundleKeys.IS_OURPAY_SELECT_DELIVERY_METHOD, false);
         mCartTotalCost = args.getString(BundleKeys.CART_TOTAL_COST, "");
-        mValue = new Gson().fromJson(args.getString(BundleKeys.CURRENT_ORDER_VALUE, ""), Value.class);
+        mCurrentOrderValue = new Gson().fromJson(args.getString(BundleKeys.CURRENT_ORDER_VALUE, ""), Value.class);
     }
 
     @Override
@@ -128,7 +128,6 @@ public class AddPaymentController extends VisaCheckoutController implements AddP
         mPresenter.onAttach(this);
         mVcoPresenter.onAttach(this);
 
-        registerForActivityResult(BraintreeRequestCodes.VISA_CHECKOUT);
         mCheckoutMvpView = (CheckoutMvpView) getRouter().getControllerWithTag(getString(R.string.checkout_controller));
         return view;
     }
@@ -137,7 +136,7 @@ public class AddPaymentController extends VisaCheckoutController implements AddP
     protected void onViewBound(@NonNull View view) {
         super.onViewBound(view);
         if (mIsOurpaySelectDeliveryMethod) {
-            mPresenter.generateOurpay(mValue);
+            mPresenter.generateOurpay(mCurrentOrderValue);
         }
         setUp(view);
     }
@@ -240,8 +239,9 @@ public class AddPaymentController extends VisaCheckoutController implements AddP
     }
 
     private void hidePaymentButtons() {
-        if (mButtonHolder != null)
+        if (mButtonHolder != null) {
             mButtonHolder.setVisibility(View.GONE);
+        }
     }
 
     private void showPaymentButtons() {
@@ -336,8 +336,8 @@ public class AddPaymentController extends VisaCheckoutController implements AddP
                 mButtonOurpay.setOnClickListener(view -> onCardFormSubmit());
 
                 if (ourpay.getTermsAndConditionsCheckboxState() != 0) {
-                    mCheckBoxOurpayTC = (CheckBox) mOurpayHolder.findViewById(R.id.ourpay_checkbox_tc);
-                    mCheckBoxOurpayTC.setClickable(false);
+                    mOurpayTncCheckBox = (CheckBox) mOurpayHolder.findViewById(R.id.ourpay_checkbox_tc);
+                    mOurpayTncCheckBox.setClickable(false);
                 }
 
                 ourpayPanel.getCartAmountHeader().setVisibility(mIsOurpaySelectDeliveryMethod ? View.GONE : View.VISIBLE);
@@ -402,7 +402,7 @@ public class AddPaymentController extends VisaCheckoutController implements AddP
                     // Successful VCO
                     showLoading();
                     mActivity.callCreatePaymentTransactionVco(visaPaymentSummary);
-                    mPresenter.facebookInitiatedCheckout(PaymentInfo.getPaymentType(), mValue.getItemsCount(), Double.valueOf(mCartTotalCost));
+                    mPresenter.facebookInitiatedCheckout(PaymentInfo.getPaymentType(), mCurrentOrderValue.getItemsCount(), Double.valueOf(mCartTotalCost));
                 }
             } else if (resultCode == Activity.RESULT_CANCELED) {
                 msg = "User Canceled, Result Code : " + resultCode;

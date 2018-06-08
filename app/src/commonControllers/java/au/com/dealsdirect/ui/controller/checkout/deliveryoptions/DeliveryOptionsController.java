@@ -41,7 +41,6 @@ public class DeliveryOptionsController extends BaseController implements Deliver
 
     @Inject
     DeliveryOptionsMvpPresenter<DeliveryOptionsMvpView> mPresenter;
-    CheckoutMvpView mCheckoutMvpView;
 
     @BindView(R.id.delivery_options_recycler_view)
     RecyclerView mRecyclerView;
@@ -54,6 +53,7 @@ public class DeliveryOptionsController extends BaseController implements Deliver
     private List<DeliveryOption> mDeliveryOptions;
     private DeliveryServicePackageDetail mDeliveryServicePackageDetail;
     private String mDeliveryAddressId;
+    private CheckoutMvpView mCheckoutMvpView;
 
     public static DeliveryOptionsController newInstance() {
         return new DeliveryOptionsController(
@@ -116,7 +116,7 @@ public class DeliveryOptionsController extends BaseController implements Deliver
         GateKeeper.push(getRouter(),GateKeeper.Destination.LEGALITIES,
                 new BundleBuilder(new Bundle())
                         .putString(BundleKeys.TEMPLATE_KEY, OurpayTemplateText.KEY_OPS_TNC_FULL_TEXT)
-                        .putString(BundleKeys.LEGALITIES_TITLE, mActivity.getString(R.string.my_basket))
+                        .putString(BundleKeys.LEGALITIES_TITLE, getString(R.string.my_basket))
                         .build(),
                 new VerticalChangeHandler(false),
                 new VerticalChangeHandler());

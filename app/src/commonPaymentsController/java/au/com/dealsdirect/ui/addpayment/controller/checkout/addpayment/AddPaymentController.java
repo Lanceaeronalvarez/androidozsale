@@ -123,7 +123,6 @@ public class AddPaymentController extends VisaCheckoutController implements AddP
         mPresenter.onAttach(this);
         mVcoPresenter.onAttach(this);
 
-        registerForActivityResult(BraintreeRequestCodes.VISA_CHECKOUT);
         mCheckoutMvpView = (CheckoutMvpView) getRouter().getControllerWithTag(getString(R.string.checkout_controller));
         return view;
     }
@@ -205,9 +204,6 @@ public class AddPaymentController extends VisaCheckoutController implements AddP
                 }
             });
         }
-
-
-
     }
 
     @Override

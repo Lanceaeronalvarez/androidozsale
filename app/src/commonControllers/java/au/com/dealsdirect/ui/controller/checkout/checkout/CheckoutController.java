@@ -118,12 +118,15 @@ public class CheckoutController extends VisaCheckoutController implements Checko
     @BindView(R.id.partial_checkout_voucher_new_code)
     ViewGroup mAddNewVoucherLayout;
 
+    @BindView(R.id.partial_checkout_voucher_value_text_view)
+    TextView mVoucherValueTextView;
+    @BindView(R.id.partial_checkout_voucher_promo_code_text_view)
+    TextView mVoucherPromoCodeTextView;
+
     @BindView(R.id.partial_checkout_address_container)
     ViewGroup mAddressLayout;
     @BindView(R.id.partial_checkout_payment_container)
     ViewGroup mPaymentLayout;
-    @BindView(R.id.partial_checkout_voucher_container)
-    ViewGroup mVoucherLayout;
     @BindView(R.id.partial_checkout_summary_container)
     ViewGroup mSummaryLayout;
 
@@ -131,8 +134,6 @@ public class CheckoutController extends VisaCheckoutController implements Checko
     View mAddressChangeView;
     @BindView(R.id.partial_checkout_payment_change)
     View mPaymentChangeView;
-    @BindView(R.id.partial_checkout_voucher_change)
-    View mVoucherChangeView;
 
     @BindView(R.id.partial_checkout_button_holder)
     View mButtonHolder;
@@ -302,10 +303,6 @@ public class CheckoutController extends VisaCheckoutController implements Checko
                 .subscribe(action -> changePayment()));
 
         mChangeClickListeners.add(RxView.clicks(mVoucherContainerLayout)
-                .throttleFirst(1000, TimeUnit.MILLISECONDS)
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(action -> changeVoucher()));
-        mChangeClickListeners.add(RxView.clicks(mVoucherChangeView)
                 .throttleFirst(1000, TimeUnit.MILLISECONDS)
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(action -> changeVoucher()));
@@ -702,25 +699,19 @@ public class CheckoutController extends VisaCheckoutController implements Checko
             mPaymentLayout.setVisibility(View.VISIBLE);
             mPaymentChangeView.setVisibility(View.VISIBLE);
 
+
+        } else {
             //Payment buttons
-            if (paymentMethod == null) {
-                mPayButton.setVisibility(View.VISIBLE);
-                mPaypalButton.setVisibility(View.VISIBLE);
-            } else {
-                //Payment buttons
-                showPaymentButtons();
-                mAddNewPaymentLayout.setVisibility(View.VISIBLE);
-                mPaymentLayout.setVisibility(View.GONE);
-                mPaymentChangeView.setVisibility(View.GONE);
-            }
+            showPaymentButtons();
+            mAddNewPaymentLayout.setVisibility(View.VISIBLE);
+            mPaymentLayout.setVisibility(View.GONE);
+            mPaymentChangeView.setVisibility(View.GONE);
         }
     }
 
     @Override
     public void showVoucherDetails(List<Voucher> vouchers) {
         mAddNewVoucherLayout.setVisibility(View.VISIBLE);
-        mVoucherLayout.setVisibility(View.GONE);
-        mVoucherChangeView.setVisibility(View.GONE);
         if (vouchers != null) {
             mVouchers = new ArrayList<>(vouchers);
         }
@@ -744,8 +735,11 @@ public class CheckoutController extends VisaCheckoutController implements Checko
                 ((TextView) mSummaryLayout.findViewById(R.id.partial_checkout_summary_voucher)).setText(PriceUtils.getPriceStringValue(summary.discount));
                 mIsVoucherAdded = true;
                 mSummaryLayout.findViewById(R.id.partial_checkout_summary_voucher_container).setVisibility(View.VISIBLE);
+                mVoucherValueTextView.setVisibility(View.VISIBLE);
+                mVoucherValueTextView.setText(PriceUtils.getPriceStringValue(summary.discount) + " " + getString(R.string.voucher));
             } else {
                 mIsVoucherAdded = false;
+                mVoucherValueTextView.setVisibility(View.GONE);
                 mSummaryLayout.findViewById(R.id.partial_checkout_summary_voucher_container).setVisibility(View.GONE);
             }
             ((TextView) mSummaryLayout.findViewById(R.id.partial_checkout_summary_total)).setText(PriceUtils.getPriceStringValue(summary.total));
@@ -809,6 +803,12 @@ public class CheckoutController extends VisaCheckoutController implements Checko
     @Override
     public boolean setIsPaymentMethodChanged(boolean isPaymentMethodChanged) {
         return mIsPaymentMethodChanged = isPaymentMethodChanged;
+    }
+
+    @Override
+    public void showPromoCodeApplied(String promoCode, boolean isPromoCodeApplied) {
+        mVoucherPromoCodeTextView.setText(promoCode);
+        mVoucherPromoCodeTextView.setVisibility(isPromoCodeApplied ? View.VISIBLE : View.GONE);
     }
 
     private void onPayButtonClick() {

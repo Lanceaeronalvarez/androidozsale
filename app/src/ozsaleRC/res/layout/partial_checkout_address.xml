@@ -52,7 +52,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
-            android:visibility="visible">
+            android:visibility="gone">
 
             <LinearLayout
                 android:layout_width="0dp"
@@ -65,7 +65,7 @@
                     fontPath="@string/font_app_bold"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:textColor="@color/row_checkout_text_light_color"
+                    android:textColor="@color/colorAccent"
                     android:textSize="@dimen/text_size_body"
                     tools:text="@string/row_address_name_hint" />
 
