@@ -259,7 +259,7 @@ android {
         }
 
         ozsaleRC {
-            versionCode 14
+            versionCode 16
             versionName "0.9"
             applicationId "au.com.ozsale"
 
@@ -268,12 +268,12 @@ android {
             buildConfigField "String", "ACCOUNT_ID", "\"A56B0D62-AEF6-4653-848E-2ECDDB6E9B8C\""
 
             resValue "string", "app_name", "Ozsale"
-            def facebookAppId = "1650094968544406"
+            def facebookAppId = "421544284547550"
             resValue "string", "facebook_app_id", facebookAppId
-            resValue "string", "facebook_app_secret", "94da0f48bd2ffea25981e52c56f9260a"
+            resValue "string", "facebook_app_secret", "f08401cb63ac18241e51e2184d8cd80a"
             resValue "string", "fb_login_protocol_scheme", "fb" + facebookAppId
-            resValue "string", "fb_page_id", "257280167216"
-            resValue "string", "twitter_user_id", "twitter://user?user_id=37405859"
+            resValue "string", "fb_page_id", "160420993982663"
+            resValue "string", "twitter_user_id", "twitter://user?user_id=25256714"
             resValue "string", "default_country_id", "AS"
             resValue "string", "default_language_id", "EN"
 
@@ -282,9 +282,8 @@ android {
 
         }
 
-
         ozsaleTest {
-            versionCode 6
+            versionCode 8
             versionName "0.9"
             applicationId "au.com.ozsale.test"
 
@@ -293,12 +292,12 @@ android {
             buildConfigField "String", "ACCOUNT_ID", "\"A56B0D62-AEF6-4653-848E-2ECDDB6E9B8C\""
 
             resValue "string", "app_name", "Ozsale Test"
-            def facebookAppId = "1650094968544406"
+            def facebookAppId = "437865102935987"
             resValue "string", "facebook_app_id", facebookAppId
-            resValue "string", "facebook_app_secret", "94da0f48bd2ffea25981e52c56f9260a"
+            resValue "string", "facebook_app_secret", "5c6326d03e5d2ba866ecada5b206b6d6"
             resValue "string", "fb_login_protocol_scheme", "fb" + facebookAppId
-            resValue "string", "fb_page_id", "257280167216"
-            resValue "string", "twitter_user_id", "twitter://user?user_id=37405859"
+            resValue "string", "fb_page_id", "160420993982663"
+            resValue "string", "twitter_user_id", "twitter://user?user_id=25256714"
             resValue "string", "default_country_id", "AS"
             resValue "string", "default_language_id", "EN"
 
