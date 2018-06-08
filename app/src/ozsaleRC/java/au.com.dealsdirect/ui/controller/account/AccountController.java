@@ -5,7 +5,9 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.GridLayoutManager;
+import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.SimpleItemAnimator;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,16 +16,24 @@ import android.widget.TextView;
 
 import com.bluelinelabs.conductor.RouterTransaction;
 import com.bluelinelabs.conductor.changehandler.HorizontalChangeHandler;
+import com.h6ah4i.android.widget.advrecyclerview.animator.GeneralItemAnimator;
+import com.h6ah4i.android.widget.advrecyclerview.animator.RefactoredDefaultItemAnimator;
+import com.h6ah4i.android.widget.advrecyclerview.expandable.RecyclerViewExpandableItemManager;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import javax.inject.Inject;
 
 import au.com.dealsdirect.R;
 import au.com.dealsdirect.data.auth.AuthHandler;
+import au.com.dealsdirect.data.network.model.ourpaydashboard.Payment;
 import au.com.dealsdirect.ui.base.BaseController;
+import au.com.dealsdirect.ui.controller.account.adapter.AccountItemAdapter;
+import au.com.dealsdirect.ui.controller.account.model.AccountItem;
+import au.com.dealsdirect.ui.controller.account.model.AccountSubItem;
 import au.com.dealsdirect.ui.controller.address.viewaddress.ViewAddressController;
 import au.com.dealsdirect.ui.controller.checkout.paymentselect.PaymentSelectController;
 import au.com.dealsdirect.ui.controller.contact.viewcontacts.ViewContactsController;
@@ -67,8 +77,10 @@ public class AccountController extends BaseController implements AccountMvpView,
     @Inject
     AccountMvpPresenter<AccountMvpView> mPresenter;
 
-    private ArrayList<Integer> titles;
-    private ArrayList<Integer> drawables;
+    private RecyclerViewExpandableItemManager mRecyclerViewExpandableItemManager;
+    private RecyclerView.LayoutManager mLayoutManager;
+
+    private ArrayList<AccountItem> mAccountItems;
 
     public static AccountController newInstance() {
 
@@ -96,7 +108,7 @@ public class AccountController extends BaseController implements AccountMvpView,
 
         //MOCK MULTI COUNTRY in my accounts temporarily for BA
         if (getActivity().getPackageName().equals("au.com.buyinvite.rc") ||
-                getActivity().getPackageName().equals("au.com.buyinvite.test") ){
+                getActivity().getPackageName().equals("au.com.buyinvite.test")) {
 
             mPresenter.setMultiCountry(true);
         }
@@ -120,23 +132,60 @@ public class AccountController extends BaseController implements AccountMvpView,
         mActivity.getMainController().showBottomNav();
         mActivity.setDraggableViewPager(false);
 
+        createAccountItems();
 
-        TypedArray title = mActivity.getResources().obtainTypedArray(R.array.account_title_array);
-        titles = new ArrayList<>();
-        for (int i = 0; i < title.length(); i++) {
-            titles.add(title.getResourceId(i, 0));
-        }
-        TypedArray drawable = mActivity.getResources().obtainTypedArray(R.array.account_drawable_array);
-        drawables = new ArrayList<>();
-        for (int i = 0; i < drawable.length(); i++) {
-            drawables.add(drawable.getResourceId(i, 0));
-        }
-        mPresenter.loadAccountItems(titles, drawables);
+        mPresenter.loadAccountItems(mAccountItems);
 
         mTitleTextView.setText(R.string.my_account);
         mLeftToolbarButton.setVisibility(View.INVISIBLE);
 
         initLoginDrawable();
+    }
+
+    private void createAccountItems() {
+        TypedArray titles = mActivity.getResources().obtainTypedArray(R.array.account_title_array);
+        mAccountItems = new ArrayList<>();
+        AccountItem newAccountItem;
+        for (int i = 0; i < titles.length(); i++) {
+            String title = getString(titles.getResourceId(i, 0));
+
+            //skip if multi country not enabled
+            if (!mPresenter.isMultiCountry() && title.equals(getString(R.string.account_country))) {
+                continue;
+            }
+
+            //skip if multi language not enabled
+            if (!mPresenter.isMultiLanguage() && title.equals(getString(R.string.account_language))) {
+                continue;
+            }
+
+            if (title.equals(getString(R.string.account_options))) {
+                newAccountItem = new AccountItem(i, title, createSubAccountItems(R.array.account_options_sub_item_title_array));
+            } else {
+                newAccountItem = new AccountItem(i, title, Collections.emptyList());
+            }
+            mAccountItems.add(newAccountItem);
+        }
+
+
+//        TypedArray drawable = mActivity.getResources().obtainTypedArray(R.array.account_drawable_array);
+//        drawables = new ArrayList<>();
+//        for (int i = 0; i < drawable.length(); i++) {
+//            drawables.add(drawable.getResourceId(i, 0));
+//        }
+    }
+
+    private List<AccountSubItem> createSubAccountItems(int resourceArrayId) {
+        List<AccountSubItem> accountSubItems = new ArrayList<>();
+
+        TypedArray subItemTitles = getResources().obtainTypedArray(resourceArrayId);
+
+        for (int i = 0; i < subItemTitles.length(); i++) {
+            String title = getString(subItemTitles.getResourceId(i, 0));
+            accountSubItems.add(new AccountSubItem(i, title));
+        }
+
+        return accountSubItems;
     }
 
     @Override
@@ -147,12 +196,21 @@ public class AccountController extends BaseController implements AccountMvpView,
 
 
     @Override
-    public void showAccountItems(List<Integer> accountItems, List<Integer> accountImages) {
-        accountItemAdapter = new AccountItemAdapter(mActivity, accountItems, accountImages, mPresenter);
-        mAccountRecyclerView.setAdapter(accountItemAdapter);
-        mAccountRecyclerView.setLayoutManager(new GridLayoutManager(getActivity(), getResource().getInteger(R.integer.account_column_count)));
-        mAccountRecyclerView.setItemAnimator(new DefaultItemAnimator());
-        accountItemAdapter.notifyDataSetChanged();
+    public void showAccountItems(List<AccountItem> accountItems) {
+        mRecyclerViewExpandableItemManager = new RecyclerViewExpandableItemManager(null);
+        mLayoutManager = new LinearLayoutManager(mActivity);
+
+//        final GeneralItemAnimator animator = new RefactoredDefaultItemAnimator();
+//        animator.setSupportsChangeAnimations(false);
+
+        accountItemAdapter = new AccountItemAdapter(mActivity, accountItems, mPresenter);
+        mAccountRecyclerView.setAdapter(mRecyclerViewExpandableItemManager.createWrappedAdapter(accountItemAdapter));
+        mAccountRecyclerView.setLayoutManager(mLayoutManager);
+        // NOTE: need to disable change animations to ripple effect work properly
+        ((SimpleItemAnimator) mAccountRecyclerView.getItemAnimator()).setSupportsChangeAnimations(false);
+
+
+        mRecyclerViewExpandableItemManager.attachRecyclerView(mAccountRecyclerView);
     }
 
     @Override
@@ -193,13 +251,7 @@ public class AccountController extends BaseController implements AccountMvpView,
 
     @Override
     public void showMyPaymentsController() {
-        Bundle bundle= new Bundle();
-        bundle.putString(BundleKeys.PAYMENT_METHODS,"");
-        bundle.putBoolean(BundleKeys.IS_FROM_CART,false);
-        bundle.putString(BundleKeys.CART_TOTAL_COST,"");
-        getRouter().pushController(RouterTransaction.with(new PaymentSelectController(bundle))
-                .pushChangeHandler(new HorizontalChangeHandler())
-                .popChangeHandler(new HorizontalChangeHandler()));
+        GateKeeper.push(getRouter(), GateKeeper.Destination.PAYMENT_SELECT,new HorizontalChangeHandler() ,new HorizontalChangeHandler());
     }
 
     @Override
@@ -240,27 +292,27 @@ public class AccountController extends BaseController implements AccountMvpView,
     }
 
     @Override
-    public void showLegalities(String key, int title) {
+    public void showLegalities(String key, String title) {
 
         GateKeeper.push(getRouter(),
                 GateKeeper.Destination.LEGALITIES,
                 new BundleBuilder(new Bundle())
                         .putString(BundleKeys.TEMPLATE_KEY, key)
-                        .putString(BundleKeys.LEGALITIES_TITLE, getResources().getString(title))
+                        .putString(BundleKeys.LEGALITIES_TITLE, title)
                         .build(),
                 new HorizontalChangeHandler(false),
                 new HorizontalChangeHandler());
     }
 
     @Override
-    public void triggerLogin(int option) {
+    public void triggerLogin(String option) {
         AccountMvpView mvpView = this;
 
         mActivity.showLoginController(getRouter(), new AuthHandler() {
             @Override
             public void success() {
                 mPresenter.onAttach(mvpView);
-                mPresenter.onAccountItemClick(option);
+                mPresenter.onAccountItemClick(mActivity,option);
                 mActivity.callGCMRegisterSubscriber();
                 mRightToolbarButton.setImageDrawable(getActivity().getResources().getDrawable(R.drawable.ic_account_logout));
                 mActivity.getMainController().getHomeController().resetRouters();
@@ -278,7 +330,7 @@ public class AccountController extends BaseController implements AccountMvpView,
         mActivity.callLogout(new AuthHandler() {
             @Override
             public void success() {
-                mPresenter.loadAccountItems(titles, drawables);
+                mPresenter.loadAccountItems(mAccountItems);
                 CartUtil.setValueToCart(0);
                 mActivity.getMainController().getHomeController().removeBasketItemCount();
                 mRightToolbarButton.setImageDrawable(getActivity().getResources().getDrawable(R.drawable.ic_login));

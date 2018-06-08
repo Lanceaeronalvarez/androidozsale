@@ -1,4 +1,4 @@
-package au.com.dealsdirect.ui.controller.account;
+package au.com.dealsdirect.ui.controller.account.adapter;
 
 import android.support.v7.widget.RecyclerView;
 import android.view.View;

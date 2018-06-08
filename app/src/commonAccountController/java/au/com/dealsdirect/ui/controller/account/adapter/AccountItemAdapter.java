@@ -1,4 +1,4 @@
-package au.com.dealsdirect.ui.controller.account;
+package au.com.dealsdirect.ui.controller.account.adapter;
 
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;
@@ -6,16 +6,11 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.jakewharton.rxbinding2.view.RxView;
-import com.jakewharton.rxbinding2.widget.RxTextView;
-
 import java.util.Collections;
 import java.util.List;
-import java.util.concurrent.TimeUnit;
 
 import au.com.dealsdirect.R;
-import io.reactivex.android.schedulers.AndroidSchedulers;
-import io.reactivex.disposables.Disposable;
+import au.com.dealsdirect.ui.controller.account.AccountMvpPresenter;
 
 /**
  * dp Created by Admin on 6/20/17.

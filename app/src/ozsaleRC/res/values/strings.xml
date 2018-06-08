@@ -143,6 +143,8 @@
     <string name="thank_you_for_using">Thank you for using</string>
     <string name="order_successful">order successful!</string>
     <string name="your_order_will_arrive_within_14_to_28_working_days_after_the_sale_has_finished">Your order will arrive within 14 to 28 working days after the sale has finished.</string>
+    <string name="sign_in_with_facebook">Login with Facebook</string>
+    <string name="thank_you_for_shopping">Thank you for shopping with Ozsale</string>
 
     <!--CONTACTS-->
     <string name="welcome_to_contact_us">Welcome to My Contacts!</string>
@@ -188,19 +190,23 @@
         currently in your account when you checkout your order. \n
     </string>
 
+
     <integer-array name="account_title_array">
         <item>@string/account_details</item>
         <item>@string/account_addresses</item>
         <item>@string/account_orders</item>
         <item>@string/account_payments</item>
-        <item>@string/account_vouchers</item>
         <item>@string/account_returns</item>
+        <item>@string/account_vouchers</item>
+        <item>@string/account_invite_friend</item>
+        <item>@string/account_options</item>
+    </integer-array>
+
+    <integer-array name="account_options_sub_item_title_array">
         <item>@string/account_language</item>
         <item>@string/account_country</item>
-        <item>@string/account_invite_friend</item>
-        <item>@string/account_tnc</item>
-        <item>@string/account_privacy</item>
-        <item>@string/account_about_us</item>
+        <item>@string/account_notification</item>
+        <item>@string/account_clear_cookies_data</item>
     </integer-array>
 
     <integer-array name="account_drawable_array">
@@ -208,15 +214,13 @@
         <item>@drawable/bg_account_address</item>
         <item>@drawable/bg_account_orders</item>
         <item>@drawable/bg_account_payments</item>
-        <item>@drawable/bg_account_vouchers</item>
         <item>@drawable/bg_account_returns</item>
-        <item>@drawable/bg_account_languages</item>
-        <item>@drawable/bg_account_country</item>
+        <item>@drawable/bg_account_vouchers</item>
         <item>@drawable/bg_account_invite_friend</item>
-        <item>@drawable/bg_account_terms_and_conditions</item>
-        <item>@drawable/bg_account_privacy_policy</item>
-        <item>@drawable/bg_account_about_us</item>
-        <item>@drawable/bg_account_logout</item>
     </integer-array>
 
+    <integer-array name="account_options_sub_item_drawable_array">
+        <item>@drawable/bg_account_languages</item>
+        <item>@drawable/bg_account_country</item>
+    </integer-array>
 </resources>

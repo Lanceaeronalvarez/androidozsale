@@ -102,9 +102,9 @@ public class ControllerFactory {
             case ADD_CONTACT:
                 return AddContactController.newInstance();
             case PAYMENT_SELECT:
-                break;
+                return PaymentSelectController.newInstance();
             case PAYMENT_ADD:
-                break;
+                return AddPaymentController.newInstance();
             case PAYMENT_SUCCESS:
                 break;
             case MASTERPASS:

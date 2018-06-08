@@ -171,7 +171,7 @@ public class ViewContactsController extends BasePullToRefreshController implemen
 
     @OnClick(R.id.partial_toolbar_right_view)
     void addContact() {
-        GateKeeper.push(getRouter(), GateKeeper.Destination.ADD_CONTACT, new VerticalChangeHandler(), new VerticalChangeHandler());
+        GateKeeper.push(getRouter(), GateKeeper.Destination.ADD_CONTACT,new VerticalChangeHandler(),new VerticalChangeHandler());
     }
 
     @OnClick(R.id.controller_contacts_new_message_button)
