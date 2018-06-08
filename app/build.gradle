@@ -286,7 +286,7 @@ android {
         ozsaleTest {
             versionCode 6
             versionName "0.9"
-            applicationId "au.com.ozsaleTest"
+            applicationId "au.com.ozsale.test"
 
             buildConfigField "String", "API_ROOT", "\"https://genie-ui-dealsdirect-pre.mysaledev.com/\""
             buildConfigField "String", "API_LEGACY", "\"https://api.mysaledev.com/public/v3.22/\""

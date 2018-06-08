@@ -15,6 +15,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginBottom="20dp"
+        android:nestedScrollingEnabled="false"
         android:overScrollMode="never"
         android:paddingLeft="@dimen/margin_medium"
         android:paddingRight="@dimen/margin_medium" />

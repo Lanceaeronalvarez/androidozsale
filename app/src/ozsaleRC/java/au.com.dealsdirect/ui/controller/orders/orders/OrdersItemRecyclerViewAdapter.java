@@ -249,9 +249,9 @@ public class OrdersItemRecyclerViewAdapter extends RecyclerView.Adapter<OrdersIt
         TextView orderPackedValueTextView;
 
         @BindView(R.id.dispatched_graph_node)
-        TextView dispatchedDateValueTextView;
-        @BindView(R.id.dispatched_date_value)
         TextView dispatchedGraphNodeTextView;
+        @BindView(R.id.dispatched_date_value)
+        TextView dispatchedDateValueTextView;
 
         @BindView(R.id.controller_order_amount_text)
         TextView orderItemsAmount;

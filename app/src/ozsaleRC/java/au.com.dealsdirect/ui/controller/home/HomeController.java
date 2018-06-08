@@ -508,13 +508,13 @@ public class HomeController extends BaseController implements HomeMvpView {
 
     public void animateBottomNav(int verticalAdjustmentPixels) {
 
-//        if (Math.abs(verticalAdjustmentPixels) > 0) {
-//            mActivity.getHomeController().showBottomNav();
-//            mActivity.getHomeController().getBottomNavigationView().restoreBottomNavigation(true);
-//
-//        } else {
-//            mActivity.getHomeController().hideBottomNav();
-//            mActivity.getHomeController().getBottomNavigationView().hideBottomNavigation(true);
-//        }
+        if (Math.abs(verticalAdjustmentPixels) > 0) {
+            mActivity.getHomeController().showBottomNav();
+            mActivity.getHomeController().getBottomNavigationView().restoreBottomNavigation(true);
+
+        } else {
+            mActivity.getHomeController().hideBottomNav();
+            mActivity.getHomeController().getBottomNavigationView().hideBottomNavigation(true);
+        }
     }
 }

@@ -351,7 +351,7 @@
       "client_info": {
         "mobilesdk_app_id": "1:72197270300:android:87942a000f497465",
         "android_client_info": {
-          "package_name": "au.com.ozsaleTest"
+          "package_name": "au.com.ozsale.test"
         }
       },
       "oauth_client": [
