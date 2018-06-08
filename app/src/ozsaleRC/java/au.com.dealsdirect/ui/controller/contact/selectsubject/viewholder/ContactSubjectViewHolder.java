@@ -6,6 +6,8 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import au.com.dealsdirect.R;
+import butterknife.BindView;
+import butterknife.ButterKnife;
 
 /**
  * dp Created by Admin on 7/5/17.
@@ -13,16 +15,14 @@ import au.com.dealsdirect.R;
 
 public class ContactSubjectViewHolder extends RecyclerView.ViewHolder {
 
+    @BindView(R.id.my_contact_select_subject_recycler_row_layout)
     public RelativeLayout contactSubjectRowLayout;
+
+    @BindView(R.id.contact_subject_row_item_name)
     public TextView contactSubjectTitleRowTextView;
 
     public ContactSubjectViewHolder(View itemView) {
         super(itemView);
-
-        contactSubjectRowLayout = (RelativeLayout) itemView
-                .findViewById(R.id.my_contact_select_subject_recycler_row_layout);
-
-        contactSubjectTitleRowTextView = (TextView) itemView
-                .findViewById(R.id.contact_subject_row_item_name);
+        ButterKnife.bind(this, itemView);
     }
 }

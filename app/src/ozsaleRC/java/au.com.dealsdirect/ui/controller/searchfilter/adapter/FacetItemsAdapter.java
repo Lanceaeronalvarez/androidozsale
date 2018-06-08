@@ -112,15 +112,9 @@ public class FacetItemsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
             }
         });
 
-        if (isFacetItemActive(position)) {
-            vh.isSelected = true;
-            vh.itemView.setSelected(true);
-            vh.mFacetCheck.setVisibility(View.VISIBLE);
-        } else {
-            vh.isSelected = false;
-            vh.itemView.setSelected(false);
-            vh.mFacetCheck.setVisibility(View.GONE);
-        }
+        vh.isSelected = isFacetItemActive(position);
+        vh.itemView.setSelected(vh.isSelected);
+        vh.mFacetCheck.setVisibility(vh.isSelected ? View.VISIBLE : View.GONE);
     }
 
 

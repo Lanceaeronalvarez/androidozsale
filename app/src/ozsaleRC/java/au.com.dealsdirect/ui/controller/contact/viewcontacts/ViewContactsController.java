@@ -40,13 +40,12 @@ import butterknife.OnClick;
  * dp Created by Admin on 6/6/17.
  */
 
-public class ViewContactsController extends BasePullToRefreshController implements ViewContactsMvpView, ContactsClickListener {
+public class ViewContactsController extends BasePullToRefreshController implements ViewContactsMvpView {
 
     public static final String TAG = "ContactController";
     private static final String KEY_TEXT = "ContactController.KEY_TEXT";
 
     private ContactsAdapter mContactAdapter;
-    private ContactsClickListener mContactClickListener;
 
     @BindView(R.id.partial_toolbar_arrow_title)
     TextView mViewContactsToolarTitle;
@@ -106,10 +105,8 @@ public class ViewContactsController extends BasePullToRefreshController implemen
     public void onViewBound(@NonNull View view) {
         super.onViewBound(view);
 
-        assert (mActivity) != null;
         mActivity.getMainController().showBottomNav();
 
-        mContactClickListener = this;
         setUp(view);
         mPresenter.loadContacts();
 
@@ -125,7 +122,7 @@ public class ViewContactsController extends BasePullToRefreshController implemen
         mViewContactsToolbarLeftOption.setVisibility(View.INVISIBLE);
         mViewContactsToolbarRightOption.setVisibility(View.INVISIBLE);
 
-        mContactAdapter = new ContactsAdapter(new ArrayList<>(), mActivity, mContactClickListener);
+        mContactAdapter = new ContactsAdapter(new ArrayList<>(), mPresenter);
 
         mViewContactsRecyclerView.setAdapter(mContactAdapter);
         mViewContactsRecyclerView.setLayoutManager(new LinearLayoutManager(mActivity));
@@ -161,7 +158,7 @@ public class ViewContactsController extends BasePullToRefreshController implemen
         int visibility = getResource().getBoolean(R.bool.contacts_toolbar_addmessage_visibility) ? View.VISIBLE : View.INVISIBLE;
         mViewContactsToolbarRightOption.setVisibility(visibility);
 
-        if(mPresenter.isTablet()){
+        if (mPresenter.isTablet()) {
             mViewContactsToolbarRightOption.setPadding(5, 5, 5, 5);
         } else {
             mViewContactsToolbarRightOption.setPadding(20, 20, 20, 20);
@@ -196,19 +193,14 @@ public class ViewContactsController extends BasePullToRefreshController implemen
         for (int x = 0; x < dateSet.size(); x++) {
 
             ContactItemByDate contactItemByDate = new ContactItemByDate();
-            List<GetContactsResponse.ContactList> tempLists
-                    = new LinkedList<>();
+            List<GetContactsResponse.ContactList> tempLists = new LinkedList<>();
 
             for (int y = 0; y < lists.size(); y++) {
-
-                String listDateHeaderFormat
-                        = DateUtils.getTrimmedServerDateString(lists.get(y).getLastAnswer());
+                String listDateHeaderFormat = DateUtils.getTrimmedServerDateString(lists.get(y).getLastAnswer());
 
                 if (dateSet.get(x).equals(listDateHeaderFormat)) {
-
                     tempLists.add(lists.get(y));
                 }
-
             }
             contactItemByDate.setContactItemList(tempLists);
             contactItemByDate.setDateHeaderFormat(dateSet.get(x));
@@ -224,40 +216,19 @@ public class ViewContactsController extends BasePullToRefreshController implemen
 
         Object saleNameObject = contactList.getSaleName();
         Object invoiceNumber = contactList.getInvoiceNo();
-        Object timeStamp = contactList.getLastAnswer();
+        String timeStamp = contactList.getLastAnswer();
 
         String saleName;
         int invoiceNo;
         String timeStampString;
         String contactSubject = contactList.getSubject();
 
-        if (saleNameObject != null) {
 
-            saleName = saleNameObject.toString();
-        } else {
+        saleName = saleNameObject != null ? saleNameObject.toString() : "";
+        invoiceNo = invoiceNumber != null ? (int) invoiceNumber : 0;
+        timeStampString = DateUtils.getDateForContactMessages(timeStamp);
 
-            saleName = "";
-        }
-
-        if (invoiceNumber != null) {
-
-            invoiceNo = (int) invoiceNumber;
-        } else {
-
-            invoiceNo = 0;
-        }
-
-        if (timeStamp != null) {
-
-            timeStampString = DateUtils.getDateForContactMessages(timeStamp.toString());
-
-        } else {
-
-            timeStampString = "";
-        }
-
-        Router router = getRouter();
-        router.pushController(RouterTransaction.with(ViewContactHistoryController.newInstance(
+        getRouter().pushController(RouterTransaction.with(ViewContactHistoryController.newInstance(
                 contactSubject,
                 saleName,
                 invoiceNo,

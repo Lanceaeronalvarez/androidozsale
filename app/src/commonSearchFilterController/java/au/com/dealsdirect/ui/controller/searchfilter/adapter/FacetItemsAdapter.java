@@ -31,25 +31,13 @@ public class FacetItemsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
     private List<String> mData = new ArrayList<>();
     private SearchFilterMvpPresenter mPresenter;
 
-    public Set<Integer> getSelectedFacets() {
-        return mSelectedFacets;
-    }
-
-    private Set<Integer> mSelectedFacets = new HashSet<Integer>();
-    private OnSelectListener mOnSelectListener;
     private String mFilterType = "";
-    private int selectedPos = -1;
     private RecyclerView mRecyclerView;
     private SearchTagsAdapter mSearchTagsAdapter;
 
-    public static interface OnSelectListener {
-        void onSelected(Set<Integer> selectPosSet);
-    }
-
-    public FacetItemsAdapter(List<String> data, SearchFilterMvpPresenter presenter, Set<Integer> selectedFacets, RecyclerView recyclerView) {
+    public FacetItemsAdapter(List<String> data, SearchFilterMvpPresenter presenter, RecyclerView recyclerView) {
         mData = data;
         mPresenter = presenter;
-        mSelectedFacets = selectedFacets;
         mRecyclerView = recyclerView;
     }
 
@@ -71,78 +59,60 @@ public class FacetItemsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
 
                 //single selection, allows unselection logic for sort type of facet.
                 if (mFilterType == BundleKeys.SORT_FACETFILTER_NAME) {
+                    SearchChipModel sortChip = mSearchTagsAdapter.findSortChip();
                     if (!vh.isSelected) {
-                        if (selectedPos == -1) {
+                        if (sortChip == null) {
                             vh.toggle();
                             vh.itemView.setSelected(true);
-                            mSelectedFacets.add(position);
                             addChip(position);
-                            selectedPos = position;
                         } else {
-                            if (selectedPos != position) {
-                                FacetItemsViewHolder oldVH = (FacetItemsViewHolder) mRecyclerView.findViewHolderForLayoutPosition(selectedPos);
-                                oldVH.toggle();
-                                oldVH.itemView.setSelected(false);
-                                mSelectedFacets.remove(selectedPos);
-                                removeChip();
+                            FacetItemsViewHolder oldVH = (FacetItemsViewHolder) mRecyclerView.findViewHolderForLayoutPosition(sortChip.getIndex());
+                            oldVH.toggle();
+                            oldVH.itemView.setSelected(false);
+                            removeChip(sortChip.getIndex());
 
 
-                                vh.toggle();
-                                vh.itemView.setSelected(true);
-                                mSelectedFacets.add(position);
-                                addChip(position);
-                                selectedPos = position;
-                            }
-                        }
-
-                    } else {
-                        if (selectedPos == position) {
                             vh.toggle();
-                            vh.itemView.setSelected(false);
-                            mSelectedFacets.remove(position);
-                            removeChip();
-                            selectedPos = -1;
-                        }
-                    }
+                            vh.itemView.setSelected(true);
+                            addChip(position);
 
+                        }
+                    } else {
+                        vh.toggle();
+                        vh.itemView.setSelected(false);
+                        removeChip(position);
+                    }
                 } else { //regular logic for other facets(multi-selection/unselection)
 
                     if (!vh.isSelected) {
                         vh.toggle();
                         vh.itemView.setSelected(true);
-                        mSelectedFacets.add(position);
+                        addChip(position);
                     } else {
                         vh.toggle();
                         vh.itemView.setSelected(false);
-                        mSelectedFacets.remove(position);
-                    }
-
-                    if (mOnSelectListener != null) {
-                        mOnSelectListener.onSelected(new HashSet<Integer>(mSelectedFacets));
+                        removeChip(position);
                     }
                 }
             }
         });
 
-        applySelection(vh, position);
-    }
-
-    public void setOnSelectListener(OnSelectListener onSelectListener) {
-        mOnSelectListener = onSelectListener;
-    }
-
-    public void updateSelectedFacets(Set<Integer> selectedFacets) {
-        mSelectedFacets = new HashSet<Integer>(selectedFacets);
-    }
-
-    public void applySelection(FacetItemsViewHolder vh, int position) {
-        if (mSelectedFacets.contains(position)) {
+        if (isFacetItemActive(position)) {
             vh.isSelected = true;
             vh.itemView.setSelected(true);
         } else {
             vh.isSelected = false;
             vh.itemView.setSelected(false);
         }
+    }
+
+    private boolean isFacetItemActive(int position) {
+        for (SearchChipModel chip : mSearchTagsAdapter.getData()) {
+            if (chip.getChipTitle().equals(mData.get(position))) {
+                return true;
+            }
+        }
+        return false;
     }
 
     public void setSearchTagsAdapter(SearchTagsAdapter adapter) {
@@ -154,7 +124,7 @@ public class FacetItemsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
         mSearchTagsAdapter.add(newChip);
     }
 
-    private void removeChip() {
+    private void removeSortChip() {
         SearchChipModel chipToRemove = null;
         for (SearchChipModel chip : mSearchTagsAdapter.getData()) {
             if (chip.getFilterType().equals(BundleKeys.SORT_FACETFILTER_NAME)) {
@@ -167,10 +137,26 @@ public class FacetItemsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
 
     }
 
-    public void clearSelectedFacets() {
-        mSelectedFacets.clear();
-    }
+    private void removeChip(int position) {
+        SearchChipModel chipToRemove = null;
+        String chipTitle = getData().get(position);
+        for (SearchChipModel chip : mSearchTagsAdapter.getData()) {
 
+//            special logic for sort chips
+            if (getFilterType() == BundleKeys.SORT_FACETFILTER_NAME && chip.getFilterType().equals(BundleKeys.SORT_FACETFILTER_NAME)) {
+                chipToRemove = chip;
+                break;
+            }
+
+//            regular logic for others
+            if (chip.getChipTitle().equals(chipTitle)) {
+                chipToRemove = chip;
+                break;
+            }
+        }
+
+        mSearchTagsAdapter.remove(chipToRemove);
+    }
 
     public void replaceData(List<String> data) {
         mData = new ArrayList<>(data);
@@ -179,12 +165,6 @@ public class FacetItemsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
 
     public void setFilterType(String type) {
         mFilterType = type;
-        if (mFilterType == BundleKeys.SORT_FACETFILTER_NAME) { //update selectedPos when coming back from saleitemslist
-            List<Integer> tempList = new ArrayList<>(mSelectedFacets);
-            if (!tempList.isEmpty()) {
-                selectedPos = tempList.get(0);
-            }
-        }
     }
 
     public String getFilterType() {

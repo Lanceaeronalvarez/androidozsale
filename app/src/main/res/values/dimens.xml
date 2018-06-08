@@ -23,7 +23,7 @@
     <dimen name="toolbar_height">64dp</dimen>
     <dimen name="toolbar_widget_size">40dp</dimen>
     <dimen name="filter_bar_height">42dp</dimen>
-    <dimen name="bottom_nav_height">49dp</dimen>
+    <dimen name="bottom_nav_height">56dp</dimen>
 
 
     <!-- General Margin -->
@@ -90,6 +90,8 @@
     <!-- Categories -->
     <dimen name="category_image_width">30dp</dimen>
     <dimen name="category_image_height">30dp</dimen>
+    <dimen name="category_width">100dp</dimen>
+    <dimen name="category_height">100dp</dimen>
     <dimen name="category_background_width">70dp</dimen>
     <dimen name="category_background_height">70dp</dimen>
     <dimen name="category_container_width">100dp</dimen>
@@ -111,6 +113,8 @@
     <!-- Ourpay -->
     <dimen name="ourpay_logo_width">130dp</dimen>
     <dimen name="ourpay_logo_height">30dp</dimen>
+    <dimen name="ourpay_logo_width_half">80dp</dimen>
+    <dimen name="ourpay_logo_height_half">20dp</dimen>
     <dimen name="ourpay_info_logo_width">25dp</dimen>
     <dimen name="ourpay_info_logo_height">25dp</dimen>
     <dimen name="ourpay_panel_bar_height">6dp</dimen>
@@ -122,6 +126,10 @@
     <dimen name="margin_right_ourpay_panel_image">2dp</dimen>
     <dimen name="margin_start_ourpay_panel_image">2dp</dimen>
     <dimen name="margin_top_ourpay_panel_image">7dp</dimen>
+    
+    <!-- Orders -->
+    <dimen name="order_image_width">85dp</dimen>
+    <dimen name="order_image_height">135dp</dimen>
 
     <!-- Product Details -->
     <dimen name="product_details_image_layout_height">420dp</dimen>
@@ -165,5 +173,9 @@
     <dimen name="voucher_padding">50dp</dimen>
     <dimen name="voucher_text_padding">10dp</dimen>
     <dimen name="viewholder_subcategory_width">40dp</dimen>
+
+    <!--Delivery Options-->
+    <dimen name="ourpay_select_logo_width">160dp</dimen>
+    <dimen name="ourpay_select_logo_height">20dp</dimen>
 
 </resources>

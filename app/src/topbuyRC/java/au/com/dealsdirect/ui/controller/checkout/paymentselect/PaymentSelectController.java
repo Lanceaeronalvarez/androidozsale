@@ -29,6 +29,8 @@ import au.com.dealsdirect.utils.JsonUtils;
 import au.com.dealsdirect.utils.module.GateKeeper;
 import butterknife.BindView;
 
+import static au.com.dealsdirect.utils.BundleKeys.ITEM_LIST_SIZE;
+
 /*
  * Created by smartwave on 30/06/2017.
  */
@@ -48,6 +50,7 @@ public class PaymentSelectController extends SwipeableBaseToolBarController impl
     private ArrayList<PaymentMethod> mPaymentMethods = new ArrayList<>();
     private boolean isFromCart = false;
     private String mCartTotalCost;
+    private int mItemListSize;
 
     public PaymentSelectController(Bundle args) {
         super(args);
@@ -60,6 +63,7 @@ public class PaymentSelectController extends SwipeableBaseToolBarController impl
         }
         isFromCart = args.getBoolean(BundleKeys.IS_FROM_CART, false);
         mCartTotalCost = args.getString(BundleKeys.CART_TOTAL_COST, "");
+        mItemListSize = args.getInt(BundleKeys.ITEM_LIST_SIZE,-1);
     }
 
     @Override
@@ -88,10 +92,15 @@ public class PaymentSelectController extends SwipeableBaseToolBarController impl
             showPaymentMethodsPlaceholder(false);
         }
         setupSwipingBehavior();
+        setUp(view);
+    }
+
+    @Override
+    protected void onAttach(@NonNull View view) {
         setupDefaultBottomButton("add", view1 -> {
             onAddPaymentMethod();
         });
-        setUp(view);
+        super.onAttach(view);
     }
 
     @Override
@@ -185,7 +194,8 @@ public class PaymentSelectController extends SwipeableBaseToolBarController impl
                 GateKeeper.Destination.PAYMENT_ADD,
                 new BundleBuilder(new Bundle())
                 .putBoolean(BundleKeys.IS_FROM_CART,isFromCart)
-                .putString(BundleKeys.CART_TOTAL_COST, mCartTotalCost)
+                .putDouble(BundleKeys.CART_TOTAL_COST, mCartTotalCost.isEmpty()? 0 : Double.parseDouble(mCartTotalCost))
+                .putInt(ITEM_LIST_SIZE,mItemListSize)
                 .build()
                 ,new VerticalChangeHandler()
                 ,new VerticalChangeHandler());

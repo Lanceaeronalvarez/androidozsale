@@ -47,9 +47,6 @@ public class ContactOrderAdapter extends RecyclerView.Adapter<ContactOrderViewHo
 
     @Override
     public int getItemCount() {
-        if (mCurrentContactOrderList == null) {
-            return 0;
-        }
         return mCurrentContactOrderList.size();
     }
 

@@ -75,6 +75,15 @@ public class OrdersController extends SwipeableBaseToolBarController implements 
 
     }
 
+    @Override
+    protected void onAttach(@NonNull View view) {
+        setupDefaultBottomButton(mActivity.getString(R.string.shop_now), (v) -> {
+            mActivity.onBackPressed();
+            mActivity.setDraggableViewPager(true);
+            mActivity.getMainController().getHomeViewPager().setCurrentItem(1);
+        });
+        super.onAttach(view);
+    }
 
     @Override
     public void showOrders(ArrayList<GetPaymentsList.ResponseValue.PaymentItem> orders) {
@@ -91,12 +100,6 @@ public class OrdersController extends SwipeableBaseToolBarController implements 
             mPlaceholderLayout.setVisibility(View.VISIBLE);
             showBottomLayout();
         }
-        
-        setupDefaultBottomButton(mActivity.getString(R.string.shop_now), (v) -> {
-            mActivity.onBackPressed();
-            mActivity.setDraggableViewPager(true);
-            mActivity.getMainController().getHomeViewPager().setCurrentItem(1);
-        });
     }
 
     @Override

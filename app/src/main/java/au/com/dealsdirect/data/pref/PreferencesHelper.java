@@ -101,7 +101,25 @@ public interface PreferencesHelper {
 
     boolean getIsMyPayEnabled();
 
+    void setIsVisaCheckoutEnabled(boolean isVisaCheckoutEnabled);
+
+    boolean getIsVisaCheckoutEnabled();
+
+    void setVisaCheckoutApiKey(String visaCheckoutApiKey);
+
+    String getVisaCheckoutApiKey();
+
+    void setVisaCheckoutApiUrl(String visaCheckoutApiUrl);
+
+    String getVisaCheckoutApiUrl();
+
+    void setVisaCheckoutProviderType(int visaCheckoutProviderType);
+
+    int getVisaCheckoutProviderType();
+
     void setMyPayTemplateTexts(GetTemplateTextsResponse.GetTemplateTextsValue value);
+
+    void setDeliveryOptionsTemplateTexts(GetTemplateTextsResponse.GetTemplateTextsValue value);
 
     void setEventUserId(String userId);
 
@@ -122,4 +140,12 @@ public interface PreferencesHelper {
     void setIsMultiCountry(boolean isMultiCountry);
 
     boolean getIsMultiCountry();
+
+    void setPublicPaymentToken(String publicPaymentToken);
+
+    String getPublicPaymentToken();
+
+    void setPublicPaymentType(String publicPaymentType);
+
+    String getPublicPaymentType();
 }

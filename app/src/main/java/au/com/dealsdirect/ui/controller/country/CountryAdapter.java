@@ -20,7 +20,7 @@ import butterknife.ButterKnife;
  * Created by Admin on 12/18/17.
  */
 
-public class CountryAdapter extends RecyclerView.Adapter<CountryAdapter.CountriesViewHolder>{
+public class CountryAdapter extends RecyclerView.Adapter<CountryAdapter.CountriesViewHolder> {
 
     private List<Country> mCountries;
     private String mSelectedCountry;
@@ -42,14 +42,17 @@ public class CountryAdapter extends RecyclerView.Adapter<CountryAdapter.Countrie
 
     @Override
     public void onBindViewHolder(CountriesViewHolder holder, int position) {
-        if(mSelectedCountry.equals(mCountries.get(position).getShopCode()) || mSelectedCountry == mCountries.get(position).getShopCode()) {
+        if (mSelectedCountry.equals(mCountries.get(position).getShopCode()) || mSelectedCountry.equals(mCountries.get(position).getShopCode())) {
             holder.mCountryText.setTextColor(context.getResources().getColor(R.color.colorAccent));
-            if (((CountriesViewHolder) holder).mCountryCheckIcon!=null) ((CountriesViewHolder) holder).mCountryCheckIcon.setVisibility(View.VISIBLE);
+
+            if (holder.mCountryCheckIcon != null) {
+                holder.mCountryCheckIcon.setVisibility(View.VISIBLE);
+            }
 
         }
         holder.mCountryText.setText(mCountries.get(position).getCountry());
 
-        holder.itemView.setOnClickListener(v ->{
+        holder.itemView.setOnClickListener(v -> {
             notifyDataSetChanged();
             mPresenter.onCountryItemClick(mCountries.get(position));
             holder.mCountryText.setTextColor(context.getResources().getColor(R.color.filter_text_active));
@@ -68,13 +71,13 @@ public class CountryAdapter extends RecyclerView.Adapter<CountryAdapter.Countrie
 
     @Override
     public int getItemCount() {
-        if (mCountries!=null)
+        if (mCountries != null)
             return mCountries.size();
         return 0;
     }
 
 
-    public void replaceData(List<Country> countries, String selectedCountry){
+    public void replaceData(List<Country> countries, String selectedCountry) {
         mCountries = countries;
         mSelectedCountry = selectedCountry;
     }

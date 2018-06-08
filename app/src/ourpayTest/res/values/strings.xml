@@ -178,6 +178,7 @@
 
     <!--APP SPECIFIC SETTINGS-->
     <bool name="is_ourpay_app">true</bool>
+    <bool name="is_ozsale_app">false</bool>
 
     <integer-array name="account_title_array">
         <item>@string/account_orders</item>

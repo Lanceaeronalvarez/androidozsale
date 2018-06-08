@@ -26,8 +26,8 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="@android:color/white"
-            android:visibility="gone"
-            android:orientation="vertical">
+            android:orientation="vertical"
+            android:visibility="gone">
 
             <TextView
                 android:id="@+id/controller_checkout_orders_label"
@@ -38,10 +38,10 @@
                 android:paddingLeft="@dimen/padding_default"
                 android:paddingRight="@dimen/padding_default"
                 android:paddingTop="@dimen/margin_small"
-                android:textAllCaps="true"
-                android:visibility="gone"
                 android:text="@string/checkout_order_label"
-                android:textColor="@color/text_dark" />
+                android:textAllCaps="true"
+                android:textColor="@color/text_dark"
+                android:visibility="gone" />
 
             <android.support.v7.widget.RecyclerView
                 android:id="@+id/controller_checkout_recyclerview_items"
@@ -49,6 +49,8 @@
                 android:layout_height="wrap_content" />
 
             <include layout="@layout/partial_checkout_address" />
+
+            <include layout="@layout/partial_checkout_delivery_options" />
 
             <include layout="@layout/partial_checkout_payment" />
 

@@ -2,6 +2,9 @@ package au.com.dealsdirect.di.module;
 
 import com.bluelinelabs.conductor.Controller;
 
+import au.com.dealsdirect.ui.base.VisaCheckoutMvpPresenter;
+import au.com.dealsdirect.ui.base.VisaCheckoutMvpView;
+import au.com.dealsdirect.ui.base.VisaCheckoutPresenter;
 import au.com.dealsdirect.ui.controller.account.AccountMvpPresenter;
 import au.com.dealsdirect.ui.controller.account.AccountMvpView;
 import au.com.dealsdirect.ui.controller.account.AccountPresenter;
@@ -20,6 +23,9 @@ import au.com.dealsdirect.ui.controller.checkout.addpayment.AddPaymentPresenter;
 import au.com.dealsdirect.ui.controller.checkout.checkout.CheckoutMvpPresenter;
 import au.com.dealsdirect.ui.controller.checkout.checkout.CheckoutMvpView;
 import au.com.dealsdirect.ui.controller.checkout.checkout.CheckoutPresenter;
+import au.com.dealsdirect.ui.controller.checkout.deliveryoptions.DeliveryOptionsMvpPresenter;
+import au.com.dealsdirect.ui.controller.checkout.deliveryoptions.DeliveryOptionsMvpView;
+import au.com.dealsdirect.ui.controller.checkout.deliveryoptions.DeliveryOptionsPresenter;
 import au.com.dealsdirect.ui.controller.checkout.ourpay.OurpaySMSVerificationMvpPresenter;
 import au.com.dealsdirect.ui.controller.checkout.ourpay.OurpaySMSVerificationMvpView;
 import au.com.dealsdirect.ui.controller.checkout.ourpay.OurpaySMSVerificationPresenter;
@@ -339,6 +345,16 @@ public class ControllerModule {
 
     @Provides
     SplashScreenMvpPresenter<SplashScreenMvpView> provideSplashScreenPresenter(SplashScreenPresenter<SplashScreenMvpView> presenter) {
+        return presenter;
+    }
+
+    @Provides
+    DeliveryOptionsMvpPresenter<DeliveryOptionsMvpView> provideDeliveryOptionsPresenter(DeliveryOptionsPresenter<DeliveryOptionsMvpView> presenter) {
+        return presenter;
+    }
+
+    @Provides
+    VisaCheckoutMvpPresenter<VisaCheckoutMvpView> provideVisaCheckoutPresenter(VisaCheckoutPresenter<VisaCheckoutMvpView> presenter){
         return presenter;
     }
 

@@ -1,6 +1,5 @@
 package au.com.dealsdirect.ui.controller.returns.newreturn.adapter;
 
-import android.annotation.SuppressLint;
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -13,6 +12,7 @@ import java.util.HashMap;
 import java.util.List;
 
 import au.com.dealsdirect.R;
+import au.com.dealsdirect.data.network.model.returns.newreturn.NewReturnOrderList;
 import au.com.dealsdirect.ui.controller.returns.newreturn.NewReturnMvpPresenter;
 import au.com.dealsdirect.ui.controller.returns.newreturn.viewholder.NewReturnOrderViewHolder;
 import au.com.dealsdirect.utils.ImageUtils;
@@ -29,11 +29,11 @@ public class NewReturnOrdersAdapter extends RecyclerView.Adapter<NewReturnOrderV
     Boolean[] mDataChecked;
 
     public HashMap<String, NewReturnOrderViewHolder> returnViewMap = new HashMap<>();
-    List<au.com.dealsdirect.data.network.model.returns.newreturn.List> mCurrentReturnList = Collections.emptyList();
+    List<NewReturnOrderList> mCurrentReturnList = Collections.emptyList();
     Context mContext;
 
     public NewReturnOrdersAdapter(
-            List<au.com.dealsdirect.data.network.model.returns.newreturn.List> orderList,
+            List<NewReturnOrderList> orderList,
             Context context,
             NewReturnMvpPresenter mvpPresenter) {
 
@@ -105,7 +105,7 @@ public class NewReturnOrdersAdapter extends RecyclerView.Adapter<NewReturnOrderV
         return mCurrentReturnList.size();
     }
 
-    public List<au.com.dealsdirect.data.network.model.returns.newreturn.List> getReturnList(){
+    public List<NewReturnOrderList> getReturnList(){
         return mCurrentReturnList;
     }
 }

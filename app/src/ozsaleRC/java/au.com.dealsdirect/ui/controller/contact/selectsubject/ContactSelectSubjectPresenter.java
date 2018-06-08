@@ -13,6 +13,8 @@ import java.util.List;
 import javax.inject.Inject;
 
 import au.com.dealsdirect.data.DataManager;
+import au.com.dealsdirect.data.network.AppApiCallback;
+import au.com.dealsdirect.data.network.model.contactsubject.ContactSubjects;
 import au.com.dealsdirect.data.network.model.contactsubject.ContactSubjectsRequest;
 import au.com.dealsdirect.ui.base.BasePresenter;
 import au.com.dealsdirect.utils.rx.SchedulerProvider;
@@ -30,41 +32,16 @@ public class ContactSelectSubjectPresenter<V extends ContactSelectSubjectMvpView
     public void loadContactUsSubjects() {
         getMvpView().showLoading();
 
-        ContactSubjectsRequest contactSubjectsRequest
-                = new ContactSubjectsRequest(getDataManager().getCountryId(),getDataManager().getLanguageId());
-        getCompositeDisposable()
-                .add(getDataManager()
-                        .callGetContactSubjects(contactSubjectsRequest)
-                        .subscribeOn(getSchedulerProvider().io())
-                        .observeOn(getSchedulerProvider().ui())
-                        .subscribe(response -> {
+        ContactSubjectsRequest contactSubjectsRequest = new ContactSubjectsRequest(getDataManager().getCountryId(),getDataManager().getLanguageId());
 
-                            if (!isViewAttached()) {
-                                return;
-                            }
-
-                            getMvpView().hideLoading();
-
-                            List<String> myContactSubject = response.getContactSubjectResponse().getList();
-                            Log.d("clickable", "size = "+myContactSubject.size());
-                            getMvpView().showContactSubjects(myContactSubject);
-
-
-                        }, throwable -> {
-
-                            if (!isViewAttached()) {
-                                return;
-                            }
-
-                            getMvpView().hideLoading();
-                            getMvpView().onError(throwable.getMessage());
-
-                            // handle load accounts error here
-                            if (throwable instanceof ANError) {
-                                ANError anError = (ANError) throwable;
-                                handleApiError(anError);
-                            }
-                        }));
+        doApiCallForResponse(getDataManager().callGetContactSubjects(contactSubjectsRequest), new AppApiCallback(){
+            @Override
+            public void onSuccess(Object response) {
+                super.onSuccess(response);
+                ContactSubjects subjects = (ContactSubjects) response;
+                getMvpView().showContactSubjects(subjects.getContactSubjectResponse().getList());
+            }
+        });
     }
 
     @Override

@@ -11,4 +11,6 @@ public interface ViewContactsMvpView extends MvpView {
 
     void showContactItems(GetContactsResponse.Response myContacts);
 
+    void onContactClicked(GetContactsResponse.ContactList contactList);
+
 }

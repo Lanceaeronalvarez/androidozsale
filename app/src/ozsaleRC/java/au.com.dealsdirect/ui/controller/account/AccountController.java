@@ -29,6 +29,7 @@ import javax.inject.Inject;
 
 import au.com.dealsdirect.R;
 import au.com.dealsdirect.data.auth.AuthHandler;
+import au.com.dealsdirect.data.network.model.ourpaydashboard.Payment;
 import au.com.dealsdirect.ui.base.BaseController;
 import au.com.dealsdirect.ui.controller.account.adapter.AccountItemAdapter;
 import au.com.dealsdirect.ui.controller.account.model.AccountItem;
@@ -250,9 +251,7 @@ public class AccountController extends BaseController implements AccountMvpView,
 
     @Override
     public void showMyPaymentsController() {
-        getRouter().pushController(RouterTransaction.with(new PaymentSelectController("", false, ""))
-                .pushChangeHandler(new HorizontalChangeHandler())
-                .popChangeHandler(new HorizontalChangeHandler()));
+        GateKeeper.push(getRouter(), GateKeeper.Destination.PAYMENT_SELECT,new HorizontalChangeHandler() ,new HorizontalChangeHandler());
     }
 
     @Override
@@ -299,7 +298,7 @@ public class AccountController extends BaseController implements AccountMvpView,
                 GateKeeper.Destination.LEGALITIES,
                 new BundleBuilder(new Bundle())
                         .putString(BundleKeys.TEMPLATE_KEY, key)
-                        .putString(BundleKeys.TITLE, title)
+                        .putString(BundleKeys.LEGALITIES_TITLE, title)
                         .build(),
                 new HorizontalChangeHandler(false),
                 new HorizontalChangeHandler());

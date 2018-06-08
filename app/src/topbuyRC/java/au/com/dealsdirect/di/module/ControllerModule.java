@@ -2,6 +2,10 @@ package au.com.dealsdirect.di.module;
 
 import com.bluelinelabs.conductor.Controller;
 
+import au.com.dealsdirect.data.DataManager;
+import au.com.dealsdirect.ui.base.VisaCheckoutMvpPresenter;
+import au.com.dealsdirect.ui.base.VisaCheckoutMvpView;
+import au.com.dealsdirect.ui.base.VisaCheckoutPresenter;
 import au.com.dealsdirect.ui.controller.account.AccountMvpPresenter;
 import au.com.dealsdirect.ui.controller.account.AccountMvpView;
 import au.com.dealsdirect.ui.controller.account.AccountPresenter;
@@ -20,6 +24,9 @@ import au.com.dealsdirect.ui.controller.checkout.addpayment.AddPaymentPresenter;
 import au.com.dealsdirect.ui.controller.checkout.checkout.CheckoutMvpPresenter;
 import au.com.dealsdirect.ui.controller.checkout.checkout.CheckoutMvpView;
 import au.com.dealsdirect.ui.controller.checkout.checkout.CheckoutPresenter;
+import au.com.dealsdirect.ui.controller.checkout.deliveryoptions.DeliveryOptionsMvpPresenter;
+import au.com.dealsdirect.ui.controller.checkout.deliveryoptions.DeliveryOptionsMvpView;
+import au.com.dealsdirect.ui.controller.checkout.deliveryoptions.DeliveryOptionsPresenter;
 import au.com.dealsdirect.ui.controller.checkout.ourpay.OurpaySMSVerificationMvpPresenter;
 import au.com.dealsdirect.ui.controller.checkout.ourpay.OurpaySMSVerificationMvpView;
 import au.com.dealsdirect.ui.controller.checkout.ourpay.OurpaySMSVerificationPresenter;
@@ -65,6 +72,9 @@ import au.com.dealsdirect.ui.controller.legalities.LegalitiesPresenter;
 import au.com.dealsdirect.ui.controller.login.LoginMvpPresenter;
 import au.com.dealsdirect.ui.controller.login.LoginMvpView;
 import au.com.dealsdirect.ui.controller.login.LoginPresenter;
+import au.com.dealsdirect.ui.controller.login.PasswordVerificationMvpPresenter;
+import au.com.dealsdirect.ui.controller.login.PasswordVerificationMvpView;
+import au.com.dealsdirect.ui.controller.login.PasswordVerificationPresenter;
 import au.com.dealsdirect.ui.controller.main.MainMvpPresenter;
 import au.com.dealsdirect.ui.controller.main.MainMvpView;
 import au.com.dealsdirect.ui.controller.main.MainPresenter;
@@ -77,6 +87,7 @@ import au.com.dealsdirect.ui.controller.orders.orderdetails.OrderDetailsPresente
 import au.com.dealsdirect.ui.controller.orders.orders.OrdersMvpPresenter;
 import au.com.dealsdirect.ui.controller.orders.orders.OrdersMvpView;
 import au.com.dealsdirect.ui.controller.orders.orders.OrdersPresenter;
+import au.com.dealsdirect.ui.controller.register.RegisterController;
 import au.com.dealsdirect.ui.controller.register.RegisterMvpPresenter;
 import au.com.dealsdirect.ui.controller.register.RegisterMvpView;
 import au.com.dealsdirect.ui.controller.register.RegisterPresenter;
@@ -123,8 +134,10 @@ import au.com.dealsdirect.ui.main.MainActivity;
 import au.com.dealsdirect.ui.sample.SampleMvpPresenter;
 import au.com.dealsdirect.ui.sample.SampleMvpView;
 import au.com.dealsdirect.ui.sample.SamplePresenter;
+import au.com.dealsdirect.utils.rx.SchedulerProvider;
 import dagger.Module;
 import dagger.Provides;
+import io.reactivex.disposables.CompositeDisposable;
 
 /*
  * Created by Ayi on 05/06/2017.
@@ -147,6 +160,11 @@ public class ControllerModule {
 
     @Provides
     CategoriesMvpPresenter<CategoriesMvpView> provideCategoriesPresenter(CategoriesPresenter<CategoriesMvpView> presenter) {
+        return presenter;
+    }
+
+    @Provides
+    ShopsMvpPresenter<ShopsMvpView> provideShopPresenter(ShopsPresenter<ShopsMvpView> presenter) {
         return presenter;
     }
 
@@ -338,8 +356,22 @@ public class ControllerModule {
     }
 
     @Provides
+    DeliveryOptionsMvpPresenter<DeliveryOptionsMvpView> provideDeliveryOptionsPresenter(DeliveryOptionsPresenter<DeliveryOptionsMvpView> presenter) {
+        return presenter;
+    }
+
+    @Provides
     MainActivity provideActivity() {
         return ((MainActivity) mController.getActivity());
     }
+    
+    @Provides
+    VisaCheckoutMvpPresenter<VisaCheckoutMvpView> provideVisaCheckoutPresenter(VisaCheckoutPresenter<VisaCheckoutMvpView> presenter){
+        return presenter;
+    }
 
+    @Provides
+    PasswordVerificationMvpPresenter<PasswordVerificationMvpView> providePasswordVerificationPresenter(PasswordVerificationPresenter<PasswordVerificationMvpView> presenter) {
+        return presenter;
+    }
 }

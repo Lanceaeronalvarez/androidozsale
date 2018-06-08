@@ -63,8 +63,7 @@ import static au.com.dealsdirect.utils.StringUtils.getParentKey;
  * Created by smartwave on 20/07/2017.
  */
 
-public class SearchFilterController extends BaseController
-        implements SearchFilterMvpView {
+public class SearchFilterController extends BaseController implements SearchFilterMvpView {
 
     public static final String TAG = SearchFilterController.class.getSimpleName();
     private static final int DEFAULT_PRICE_THRESHOLD = 200;
@@ -77,9 +76,6 @@ public class SearchFilterController extends BaseController
 
     @Inject
     protected MainActivity mActivity;
-
-    @BindView(R.id.controller_search_filter_tabs)
-    TabLayout mTabLayout;
 
     @BindView(R.id.controller_search_filter_facets_frame)
     FrameLayout mFacetsFrame;
@@ -132,16 +128,15 @@ public class SearchFilterController extends BaseController
     ArrayList<String> mSizeList = new ArrayList<>();
     ArrayList<String> mColorList = new ArrayList<>();
     ArrayList<String> mSortingList = new ArrayList<>();
+    private List<Pair<String, String>> mFacetFilters = new ArrayList();
 
     private int mOrigMinValue = -1;
     private int mOrigMaxValue = -1;
     private boolean mHasSeekbarReset = false;
-    private int mCurrentTabPosition = -1;
-    private boolean mIsSearchFilterControllerActive;
+    private boolean mIsSearchFilterControllerActive = false;
 
     String mSaleId = "";
     Set<String> mCategoryKeys = new LinkedHashSet<>();
-
 
     private Set<Integer> origSelectedSet = new HashSet<Integer>();
 
@@ -150,24 +145,17 @@ public class SearchFilterController extends BaseController
     private HashMap<String, Set<Integer>> mPreviousSelectedFacetIndices = new HashMap<>();
     private ArrayList<SearchChipModel> mPreviousSearchChips = new ArrayList<>();
 
-    List<Pair<String, String>> mFacetFilters = new ArrayList();
-
-
     public static SearchFilterController newInstance() {
         return new SearchFilterController(new BundleBuilder(new Bundle()).build());
     }
 
     public SearchFilterController(Bundle args) {
         super(args);
-        mFacets = JsonUtils.convertStringToObject(args.getString(BundleKeys.KEY_FACET_STRING, ""),
-                new TypeToken<ArrayList<GetSaleItemsResponse.Facets>>() {}.getType());
-        mSortingFacets = JsonUtils.convertStringToObject(args.getString(BundleKeys.KEY_SORTING_STRING, ""),
-                new TypeToken<ArrayList<SortingResponse>>() {}.getType());
+        mFacets = JsonUtils.convertStringToObject(args.getString(BundleKeys.KEY_FACET_STRING, ""), new TypeToken<ArrayList<GetSaleItemsResponse.Facets>>() {}.getType());
+        mSortingFacets = JsonUtils.convertStringToObject(args.getString(BundleKeys.KEY_SORTING_STRING, ""), new TypeToken<ArrayList<SortingResponse>>() {}.getType());
         mSaleId = args.getString(BundleKeys.SALEITEMS_SALE_ID, "");
-        mCategoryTree = JsonUtils.convertStringToObject(args.getString(BundleKeys.KEY_CATEGORY_STRING, ""),
-                new TypeToken<ArrayList<GetCategoryTreeResponse>>() {}.getType());
-        mBrandList = JsonUtils.convertStringToObject(args.getString(BundleKeys.KEY_BRAND_LIST, ""),
-                new TypeToken<ArrayList<String>>() {}.getType());
+        mCategoryTree = JsonUtils.convertStringToObject(args.getString(BundleKeys.KEY_CATEGORY_STRING, ""), new TypeToken<ArrayList<GetCategoryTreeResponse>>() {}.getType());
+        mBrandList = JsonUtils.convertStringToObject(args.getString(BundleKeys.KEY_BRAND_LIST, ""), new TypeToken<ArrayList<String>>() {}.getType());
 
         String previousChipsString = args.getString(BundleKeys.SALEITEMS_CHIPS_FILTER, "");
         mPreviousSearchChips =  previousChipsString.isEmpty() ? new ArrayList<>() :
@@ -179,8 +167,7 @@ public class SearchFilterController extends BaseController
         View view = inflater.inflate(R.layout.controller_search_filter, container, false);
         getControllerComponent().inject(this);
 
-        Router router = mActivity.getSelectedBottomNavTab() == 0 ? mActivity.getHomeRouter()
-                : mActivity.getCategoriesRouter();
+        Router router = mActivity.getSelectedBottomNavTab() == 0 ? mActivity.getHomeRouter() : mActivity.getCategoriesRouter();
 
         Controller mSaleItemsController = router.getControllerWithTag(getResources().getString(R.string.sale_items_controller_tag));
         mSaleItemsView = (SaleItemsMvpView) mSaleItemsController;
@@ -223,13 +210,17 @@ public class SearchFilterController extends BaseController
 
 
         mOpaqueView.setOnClickListener(v -> closeFacets());
+        setRetainViewMode(RetainViewMode.RETAIN_DETACH);
     }
 
-    public void parseFacets(List<GetSaleItemsResponse.Facets> facets) {
+    @Override
+    public List<Pair<String, String>> parseFacets(List<GetSaleItemsResponse.Facets> facets) {
+        mFacets = facets;
         if (facets.size() != 0) {
             mBrandList = new ArrayList<>();
             mSizeList = new ArrayList<>();
             mColorList = new ArrayList<>();
+            mFacetFilters = new ArrayList<>();
             for (int i = 0; i < facets.size(); i++) {
                 switch (facets.get(i).getFacetName()) {
                     case BundleKeys.BRANDS_FACETFILTER_NAME:
@@ -262,62 +253,13 @@ public class SearchFilterController extends BaseController
                 }
             }
         }
-        if (mTabLayout.getTabCount() == 0) {
-            setupTabs();
-        }
-    }
-
-    private void setupTabs() {
-        mFacetFilters.add(0, new Pair<String, String>(BundleKeys.CATEGORY_TREE_FACET, "Categories"));
-        mFacetFilters.add(mFacetFilters.size(), new Pair<String, String>(BundleKeys.SORT_FACETFILTER_NAME, "Sort"));
-        for (Pair<String, String> pair : mFacetFilters) {
-            mTabLayout.addTab(mTabLayout.newTab().setText(pair.second), false);
-        }
-
-        //Remove selected state by default setup
-        mTabLayout.getTabAt(0).select();
-        mCurrentTabPosition = 0;
-        toggleTabSelection(false);
-
-        mTabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
-            @Override
-            public void onTabSelected(TabLayout.Tab tab) {
-                showFacetItem(tab.getPosition());
-                mCurrentTabPosition = tab.getPosition();
-                toggleTabSelection(true);
-            }
-
-            @Override
-            public void onTabUnselected(TabLayout.Tab tab) {
-
-            }
-
-            @Override
-            public void onTabReselected(TabLayout.Tab tab) {
-                showFacetItem(tab.getPosition());
-                mCurrentTabPosition = tab.getPosition();
-                toggleTabSelection(true);
-            }
-        });
-
-        //change tab mode depending on the screen width
-        Runnable tabConfig = () -> {
-            ViewUtils.setDynamicTabLayout(mTabLayout, mActivity);
-        };
-        mTabLayout.post(tabConfig);
+        return mFacetFilters;
     }
 
     private void closeFacets() {
+        mIsSearchFilterControllerActive = false;
         mFacetsFrame.setVisibility(View.GONE);
-        toggleTabSelection(false);
     }
-
-    private void toggleTabSelection(boolean isTabActive) {
-        mIsSearchFilterControllerActive = isTabActive;
-        LinearLayout tabStrip = (LinearLayout) mTabLayout.getChildAt(0);
-        tabStrip.getChildAt(mCurrentTabPosition).setSelected(isTabActive);
-    }
-
 
     private void setupPriceFacet() {
         mOrigMaxValue = mPresenter.getSearchMaxPrice();
@@ -422,6 +364,7 @@ public class SearchFilterController extends BaseController
 
     @Override
     public void showFacetItem(int position) {
+        hideKeyboard();
         mFacetsFrame.setVisibility(View.VISIBLE);
 
 
@@ -473,9 +416,6 @@ public class SearchFilterController extends BaseController
     public void replaceFacets(List<GetSaleItemsResponse.Facets> newFacets) {
         mFacets = newFacets;
         parseFacets(mFacets);
-        if(mCurrentTabPosition!=-1) {
-            mFacetItemsAdapter.replaceData(mapFacetItemClicked(mCurrentTabPosition));
-        }
     }
 
     @Override
@@ -605,4 +545,24 @@ public class SearchFilterController extends BaseController
         }
         return null;
     }
+
+    private void createCategoryList(List<GetCategoryTreeResponse> list) {
+        for (GetCategoryTreeResponse category : list) {
+            mCategoryMap.put(category.getKey(), category);
+            if (category.getChildren().size() > 0) {
+                createCategoryList(category.getChildren());
+            }
+        }
+    }
+
+    @Override
+    public void setSearchFilterControllerActive(boolean isTabActive){
+        mIsSearchFilterControllerActive = isTabActive;
+    }
+
+    @Override
+    public void setFacetFilterItems(List<Pair<String,String>> mFacetFilters) {
+        this.mFacetFilters = mFacetFilters;
+    }
+
 }

@@ -54,7 +54,7 @@ public class CurrentReturnsPresenter<V extends CurrentReturnsMvpView> extends Ba
                 productRequestStatus,
                 productRAN,
                 returnRequestDateFormat,
-                isRequestApproved
-                ,returnId);
+                isRequestApproved,
+                returnId);
     }
 }

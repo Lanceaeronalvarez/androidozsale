@@ -1,5 +1,6 @@
 package au.com.dealsdirect.ui.controller.contact.viewcontacts;
 
+import au.com.dealsdirect.data.network.model.contactitem.GetContactsResponse;
 import au.com.dealsdirect.ui.base.MvpPresenter;
 import au.com.dealsdirect.ui.base.MvpView;
 
@@ -10,4 +11,6 @@ import au.com.dealsdirect.ui.base.MvpView;
 public interface ViewContactsMvpPresenter<V extends MvpView> extends MvpPresenter<V> {
 
     void loadContacts();
+
+    void selectContact(GetContactsResponse.ContactList contactList);
 }

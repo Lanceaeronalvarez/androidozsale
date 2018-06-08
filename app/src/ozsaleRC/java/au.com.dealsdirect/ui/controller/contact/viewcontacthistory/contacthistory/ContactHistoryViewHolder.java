@@ -8,6 +8,8 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import au.com.dealsdirect.R;
+import butterknife.BindView;
+import butterknife.ButterKnife;
 
 /**
  * dp Created by Admin on 6/22/17.
@@ -18,11 +20,17 @@ public class ContactHistoryViewHolder extends RecyclerView.ViewHolder{
     LinearLayout contactHistoryItem;
     ImageView contactHistoryItemUserImageView;
     TextView contactHistoryItemUserNameTextView;
-    ViewGroup contactHistoryItemContainer;
-    ViewGroup contactHistoryDateTimeContainer;
-    TextView contactHistoryItemDateStampTextView;
-    TextView contactHistoryItemTimeStampTextView;
     TextView contactHistoryDescriptionTextView;
+
+    @BindView(R.id.contact_history_item_container)
+    ViewGroup contactHistoryItemContainer;
+    @BindView(R.id.contact_history_date_time_container)
+    ViewGroup contactHistoryDateTimeContainer;
+    @BindView(R.id.contact_history_date_stamp_text_view)
+    TextView contactHistoryItemDateStampTextView;
+    @BindView(R.id.contact_history_time_stamp_text_view)
+    TextView contactHistoryItemTimeStampTextView;
+    @BindView(R.id.contact_history_message_text_view)
     TextView contactHistoryMessageTextView;
 
     public ContactHistoryViewHolder(View itemView) {
@@ -37,19 +45,9 @@ public class ContactHistoryViewHolder extends RecyclerView.ViewHolder{
 //        contactHistoryItemUserNameTextView = (TextView) itemView
 //                .findViewById(R.id.my_contact_history_username_row_text_view);
 
-        contactHistoryItemContainer = (ViewGroup) itemView.findViewById(R.id.contact_history_item_container);
-
-        contactHistoryDateTimeContainer = (ViewGroup) itemView.findViewById(R.id.contact_history_date_time_container);
-
-        contactHistoryItemDateStampTextView = (TextView) itemView.findViewById(R.id.contact_history_date_stamp_text_view);
-
-        contactHistoryItemTimeStampTextView = (TextView) itemView.findViewById(R.id.contact_history_time_stamp_text_view);
-
 //        contactHistoryDescriptionTextView = (TextView) itemView
 //                .findViewById(R.id.my_contact_history_row_subject_text_view);
 
-        contactHistoryMessageTextView = (TextView) itemView
-                .findViewById(R.id.contact_history_message_text_view);
-
+        ButterKnife.bind(this, itemView);
     }
 }

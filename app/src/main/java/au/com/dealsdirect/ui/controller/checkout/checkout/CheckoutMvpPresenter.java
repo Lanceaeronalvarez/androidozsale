@@ -1,5 +1,7 @@
 package au.com.dealsdirect.ui.controller.checkout.checkout;
 
+import au.com.dealsdirect.data.network.model.checkout.GetCurrentOrder;
+import au.com.dealsdirect.data.network.model.checkout.SetDeliveryOption;
 import au.com.dealsdirect.data.network.model.checkout.getcurrentorder.Value;
 import au.com.dealsdirect.ui.base.BaseActivity;
 import au.com.dealsdirect.ui.base.MvpPresenter;
@@ -32,5 +34,9 @@ public interface CheckoutMvpPresenter<V extends MvpView> extends MvpPresenter<V>
                                    int numItems,
                                    double price);
 
-    void addAndApplyVoucherByKey(int imageSize, String key);
+    void updateCart(GetCurrentOrder.ResponseValue responseValue);
+
+    void setDeliveryOption(SetDeliveryOption.OptionParameters setDeliveryOptionParameters);
+    
+    boolean isMasterPassEnabled();
 }

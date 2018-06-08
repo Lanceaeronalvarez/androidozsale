@@ -13,19 +13,20 @@ import java.util.List;
 
 import au.com.dealsdirect.R;
 import au.com.dealsdirect.data.network.model.contactitem.GetContactsResponse;
+import au.com.dealsdirect.ui.controller.contact.viewcontacts.ViewContactsMvpPresenter;
 import au.com.dealsdirect.utils.DateUtils;
 import au.com.dealsdirect.utils.StringUtils;
+import butterknife.BindView;
+import butterknife.ButterKnife;
 
 /**
  * dp Created by Admin on 6/20/17.
  */
 
-public class ContactsAdapter
-        extends RecyclerView.Adapter<ContactsAdapter.ViewContactsItemViewHolder> {
+public class ContactsAdapter extends RecyclerView.Adapter<ContactsAdapter.ViewContactsItemViewHolder> {
 
     List<GetContactsResponse.ContactList> mCurrentContactsList = Collections.emptyList();
-    private ContactsClickListener mContactClickListener;
-    Context mContext;
+    private ViewContactsMvpPresenter mPresenter;
 
     public void replace(List<GetContactsResponse.ContactList> items) {
         mCurrentContactsList = items;
@@ -33,21 +34,16 @@ public class ContactsAdapter
     }
 
     public ContactsAdapter(
-            List<GetContactsResponse.ContactList> contactitemsList,
-            Context context,
-            ContactsClickListener contactsClickListener) {
+            List<GetContactsResponse.ContactList> contactLists,
+            ViewContactsMvpPresenter mvpPresenter) {
 
-
-        this.mCurrentContactsList = contactitemsList;
-        this.mContactClickListener = contactsClickListener;
-        this.mContext = context;
-
+        mCurrentContactsList = contactLists;
+        mPresenter = mvpPresenter;
     }
 
     @Override
     public ViewContactsItemViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.viewholder_contact_item, parent, false);
-
         return new ViewContactsItemViewHolder(v);
     }
 
@@ -55,72 +51,37 @@ public class ContactsAdapter
     @Override
     public void onBindViewHolder(ViewContactsItemViewHolder holder, int position) {
 
-        Object itemSubject = mCurrentContactsList.get(position).getSubject();
-        Object itemLastAnswer = mCurrentContactsList.get(position).getLastAnswer();
-        Object itemLastComment = mCurrentContactsList.get(position).getLastComment();
+        String itemSubject = mCurrentContactsList.get(position).getSubject();
+        String itemLastAnswer = mCurrentContactsList.get(position).getLastAnswer();
+        String itemLastComment = mCurrentContactsList.get(position).getLastComment();
         String dateOfContactItem = mCurrentContactsList.get(position).getLastComment();
         String dateHeaderFormatOfItem = DateUtils.getDayOfWeekFromDateString(itemLastAnswer.toString());
 
-
-        if (itemSubject != null) {
-            holder.contactUsTitleTextView.setText(StringUtils.toTitleCase(itemSubject.toString()));
-        } else {
-            holder.contactUsTitleTextView.setText("");
-        }
-
-        if (itemLastComment != null) {
-            holder.contactUsDescriptionTextView.setText(itemLastComment.toString());
-        } else {
-            holder.contactUsDescriptionTextView.setText("");
-        }
-
-        if (itemLastAnswer != null) {
-            String itemLastAnswerTimeFormat = DateUtils.getDateForContactMessages(itemLastAnswer.toString());
-
-            holder.contactUsTimeStampTextView.setText(itemLastAnswerTimeFormat);
-
-        } else {
-            holder.contactUsTimeStampTextView.setText("");
-        }
-
-        holder.contactItem.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                mContactClickListener.onContactClicked(mCurrentContactsList.get(position));
-            }
-        });
+        holder.contactUsTitleTextView.setText(StringUtils.toTitleCase(itemSubject));
+        holder.contactUsDescriptionTextView.setText(itemLastComment);
+        holder.contactUsTimeStampTextView.setText(DateUtils.getDateForContactMessages(itemLastAnswer));
+        holder.contactItem.setOnClickListener(v -> mPresenter.selectContact(mCurrentContactsList.get(position)));
     }
 
     @Override
     public int getItemCount() {
-        if (mCurrentContactsList == null) {
-            return 0;
-        }
         return mCurrentContactsList.size();
     }
 
     static class ViewContactsItemViewHolder extends RecyclerView.ViewHolder {
 
+        @BindView(R.id.my_contact_us_recycler_row_item_layout)
         LinearLayout contactItem;
+        @BindView(R.id.my_contact_us_row_title_text_view)
         TextView contactUsTitleTextView;
+        @BindView(R.id.my_contact_us_row_item_time_stamp_text_view)
         TextView contactUsTimeStampTextView;
+        @BindView(R.id.my_contact_us_row_description_text_view)
         TextView contactUsDescriptionTextView;
 
         public ViewContactsItemViewHolder(View itemView) {
             super(itemView);
-
-            contactItem = (LinearLayout) itemView
-                    .findViewById(R.id.my_contact_us_recycler_row_item_layout);
-
-
-            contactUsTitleTextView = (TextView) itemView
-                    .findViewById(R.id.my_contact_us_row_title_text_view);
-
-            contactUsTimeStampTextView = (TextView) itemView
-                    .findViewById(R.id.my_contact_us_row_item_time_stamp_text_view);
-
-            contactUsDescriptionTextView = (TextView) itemView
-                    .findViewById(R.id.my_contact_us_row_description_text_view);
+            ButterKnife.bind(this, itemView);
         }
     }
 

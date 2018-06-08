@@ -5,6 +5,7 @@ package au.com.dealsdirect.data.network.model.address;
  */
 
 public class AddressesItem {
+    public int addressNumericId;
     public String ID;
     public String CustomerID;
     public String Nickname;
@@ -96,5 +97,12 @@ public class AddressesItem {
             return false;
         return AdditionalData != null ? AdditionalData.equals(that.AdditionalData) : that.AdditionalData == null;
 
+    }
+    public int getAddressNumericId() {
+        return addressNumericId;
+    }
+
+    public void setAddressNumericId(int addressNumericId) {
+        this.addressNumericId = addressNumericId;
     }
 }

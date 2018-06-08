@@ -24,7 +24,6 @@ import au.com.dealsdirect.data.network.model.contactitem.GetContactsResponse;
 import au.com.dealsdirect.ui.base.SwipeableBaseToolBarController;
 import au.com.dealsdirect.ui.controller.contact.viewcontacts.contacts.ContactsAdapter;
 import au.com.dealsdirect.ui.controller.contact.viewcontacts.contacts.ContactsClickListener;
-import au.com.dealsdirect.ui.controller.contact.viewcontacts.viewcontactdate.ViewContactDateAdapter;
 import au.com.dealsdirect.utils.BundleBuilder;
 import au.com.dealsdirect.utils.DateUtils;
 import au.com.dealsdirect.utils.module.GateKeeper;
@@ -96,9 +95,6 @@ public class ViewContactsController extends SwipeableBaseToolBarController imple
 
         mToolbarTitle.setText("contact us");
         setupSwipingBehavior();
-        setupDefaultBottomButton(mActivity.getString(R.string.write_us_a_message), view1 -> {
-            GateKeeper.push(getRouter(), GateKeeper.Destination.ADD_CONTACT, new VerticalChangeHandler(), new VerticalChangeHandler());
-        });
 
         assert (mActivity) != null;
         mActivity.getMainController().showBottomNav();
@@ -121,6 +117,16 @@ public class ViewContactsController extends SwipeableBaseToolBarController imple
         mViewContactsRecyclerView.setAdapter(mContactDateAdapter);
         mViewContactsRecyclerView.setLayoutManager(new LinearLayoutManager(mActivity));
         hideKeyboard();
+    }
+
+    @Override
+    protected void onAttach(@NonNull View view) {
+        setupDefaultBottomButton(mActivity.getString(R.string.write_us_a_message), view1 -> {
+            GateKeeper.push(getRouter(), GateKeeper.Destination.ADD_CONTACT,
+                    new VerticalChangeHandler(),
+                    new VerticalChangeHandler());
+        });
+        super.onAttach(view);
     }
 
     @Override

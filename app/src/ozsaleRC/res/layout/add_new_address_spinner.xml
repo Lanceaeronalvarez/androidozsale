@@ -16,7 +16,7 @@
         android:layout_weight="0.35"
         android:padding="@dimen/padding_default"
         android:textSize="@dimen/text_size_headline3"
-        android:textColor="@color/colorPrimaryDark" />
+        android:textColor="@color/text_medium" />
 
     <android.support.v7.widget.AppCompatSpinner
         android:id="@+id/row_add_address_spinner"

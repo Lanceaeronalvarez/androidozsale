@@ -9,6 +9,8 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import au.com.dealsdirect.R;
+import butterknife.BindView;
+import butterknife.ButterKnife;
 
 /**
  * dp Created by Admin on 6/30/17.
@@ -16,44 +18,25 @@ import au.com.dealsdirect.R;
 
 public class ReturnDetailsViewHolder extends RecyclerView.ViewHolder {
 
+    @BindView(R.id.viewholder_return_detail_row_container)
     public LinearLayout myReturnDetailItem;
+    @BindView(R.id.viewholder_returns_details_size_container)
     public ViewGroup myReturnDetailSizeContainer;
-
+    @BindView(R.id.viewholder_return_detail_image_view)
     public ImageView myReturnsDetailsProductImageView;
-
+    @BindView(R.id.viewholder_return_details_item_name)
     public TextView myReturnsDetailsProductNameValueTextView;
+    @BindView(R.id.viewholder_returns_details_item_count_value)
     public TextView myReturnsDetailsProductItemCountValueTextView;
+    @BindView(R.id.viewholder_returns_details_size_value)
     public TextView myReturnsDetailsProductItemSizeValueTextView;
+    @BindView(R.id.viewholder_returns_order_item_total_cost_value)
     public TextView myReturnsDetailsPriceValueTextView;
+    @BindView(R.id.viewholder_returns_details_subtotal_value)
     public TextView myReturnsDetailsSubTotalValueTextView;
 
     public ReturnDetailsViewHolder(View itemView) {
         super(itemView);
-
-        myReturnDetailItem = (LinearLayout) itemView.
-                findViewById(R.id.viewholder_return_detail_row_container);
-
-        myReturnDetailSizeContainer = (ViewGroup) itemView.
-                findViewById(R.id.viewholder_returns_details_size_container);
-
-        myReturnsDetailsProductImageView = (ImageView) itemView.
-                findViewById(R.id.viewholder_return_detail_image_view);
-
-        myReturnsDetailsProductNameValueTextView = (TextView) itemView.
-                findViewById(R.id.viewholder_return_details_item_name);
-
-        myReturnsDetailsProductItemSizeValueTextView = (TextView) itemView.
-                findViewById(R.id.viewholder_returns_details_size_value);
-
-        myReturnsDetailsProductItemCountValueTextView = (TextView) itemView.
-                findViewById(R.id.viewholder_returns_details_item_count_value);
-
-        myReturnsDetailsPriceValueTextView = (TextView) itemView.
-                findViewById(R.id.viewholder_returns_order_item_total_cost_value);
-
-        myReturnsDetailsSubTotalValueTextView = (TextView) itemView.
-                findViewById(R.id.viewholder_returns_details_subtotal_value);
-
-
+        ButterKnife.bind(this, itemView);
     }
 }

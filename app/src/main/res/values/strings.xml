@@ -1,5 +1,7 @@
 <resources>
 
+    <bool name="is_ozsale_app">false</bool>
+
     <string name="font_app_black">fonts/lato/App-Font-Black.ttf</string>
     <string name="font_app_black_italic">fonts/lato/App-Font-BlackItalic.ttf</string>
     <string name="font_app_bold">fonts/lato/App-Font-Bold.ttf</string>
@@ -117,6 +119,8 @@
     <string name="forgot_password_guide">To reset your account password, enter the email address and
         we will send you the instruction
     </string>
+    <string name="password_verification_guide">Your email already exists on our site. Please enter your password for account </string>
+    <string name="new_vco_user_guide">Welcome! Please create a password for your dealsdirect.com.au account </string>
     <string name="send">send</string>
     <string name="gender">Gender</string>
     <string name="email_address">Email Address</string>
@@ -161,7 +165,7 @@
     <string name="delivery_address_added">delivery address added</string>
     <string name="remove_string">remove</string>
     <string name="add_to_basket">Add to Basket</string>
-    <string name="add_to_cart">add to cart</string>
+    <string name="add_to_cart">Add to Cart</string>
     <string name="add_to_cart_success">Item has been added to your basket</string>
     <string name="category_title">Categories</string>
 
@@ -183,7 +187,7 @@
     <string name="add_new_address_bottom_button">ADD</string>
     <string name="color">Color:&#160;</string>
     <string name="size">Size:&#160;</string>
-    <string name="your_current_delivery_address">your current delivery address</string>
+    <string name="my_current_delivery_address">my current delivery address</string>
     <string name="add_new_address">add new address</string>
     <string name="change">change</string>
     <string name="payment_method">payment method</string>
@@ -221,6 +225,7 @@
     <string name="order_numbersign">Order #:</string>
     <string name="address">Address</string>
     <string name="total">Total</string>
+    <string name="pay_today">Pay Today</string>
     <string name="remove">Remove</string>
     <bool name="is_item_attribute_gone">false</bool>
 
@@ -232,8 +237,8 @@
         $20 voucher to use towards any future purchase. \n\nYou can apply any vouchers
         currently in your account when you checkout your order. \n
     </string>
-    <bool name="is_voucher_background_needed">true</bool>
     <string name="apply">apply</string>
+    <string name="apply_promo_code">Apply Promo Code</string>
     <string name="my_voucher">my voucher</string>
     <string name="promo_code">promo code</string>
     <string name="enter_voucher_code">enter voucher code</string>
@@ -402,12 +407,12 @@
     <string name="checkout_order_label">Your Order</string>
     <string name="row_checkout_name_hint">Master Card</string>
     <string name="row_checkout_desc_hint">card ending in 02/16</string>
-    <string name="price_colon">Price:</string>
-    <string name="subtotal_colon">Subtotal:</string>
+    <string name="price_colon">Price:&#160;</string>
+    <string name="subtotal_colon">Subtotal:&#160;</string>
     <string name="row_checkout_voucher_label">VOUCHER</string>
+    <string name="select_voucher">SELECT VOUCHER</string>
     <string name="email">Email</string>
-    <string name="sorry_today_we_can_t_find_anything_by_your_request">Sorry, today we can\'t find anything by your request.</string>
-    <string name="meanwhile_why_not_search_for_something_else">Meanwhile, why not search for something else?</string>
+    <string name="sorry_today_we_can_t_find_anything_by_your_request">Sorry, today we can\'t find anything by your request. \n Meanwhile, why not search for something else?</string>
     <string name="request_new_return">Request New Return</string>
     <string name="clear">clear</string>
     <bool name="is_checkout_orders_label_visible">false</bool>
@@ -523,6 +528,10 @@
     <string name="_100_rayon_mykonos_embroidered_off_shoulder_top_white_elasticated_top_and_bottom_the_clothing_at_morrisday_is_true_to_standard_austrailian_sizing">�  100% Rayon\n\n�  Mykonos Embroidered Off Shoulder Top (White)\n\n�  Elasticated top and bottom\n\n�  The clothing at Morrisday is true to standard Austrailian sizing</string>
     <string name="checkout_lowercase">checkout</string>
     <string name="delivery_address">Delivery Address</string>
+    <string name="delivery_method">Delivery Method</string>
+    <string name="by_choosing_ourpay_select">By choosing OurPay Select,</string>
+    <string name="deliver_options_title">Delivery Options</string>
+    <string name="choose_delivery_method">Choose Delivery Method</string>
     <string name="add_new_delivery_address">Add New Delivery Address</string>
     <string name="billing_address">Billing Address</string>
     <string name="add_new_billing_address">Add New Billing Address</string>
@@ -558,4 +567,28 @@
     <string name="browse">Browse</string>
     <string name="test_product_name">Lavish Alice</string>
     <string name="my_basket">My Basket</string>
+    <string name="voucher_valid_from">voucher valid from</string>
+    <string name="add_card">Add Card</string>
+    <string name="delete">Delete</string>
+    <string name="home_office_delivery">home/office delivery</string>
+    <string name="grand_total_colon">Grand Total:</string>
+    <string name="order_sharp_colon">Order #:</string>
+    <string name="order_date">Order Date</string>
+    <string name="track_here">track here</string>
+    <string name="track_here_capitalize">Track Here</string>
+    <string name="credit_card_payment">Credit Card Payment:</string>
+    <string name="voucher_payment">Voucher Payment:</string>
+    <string name="dash"> - </string>
+    <string name="delivery_payment">Delivery Payment:</string>
+    <string name="discount">Discount:</string>
+    <string name="total_item_payment">Total Item Payment:</string>
+    <string name="approved_date">Approved Date:</string>
+    <string name="quantity">Quantity:</string>
+    <string name="order_items">Order Items</string>
+    <string name="order_details">Order Details</string>
+    <string name="dollar">$ %1$s</string>
+    <string name="tracking">Tracking</string>
+    <string name="price_elsewhere">Price elsewhere:</string>
+    <bool name="is_ozsale">true</bool>
+
 </resources>

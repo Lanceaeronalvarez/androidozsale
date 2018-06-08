@@ -1,10 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-              xmlns:app="http://schemas.android.com/apk/res-auto"
-              xmlns:tools="http://schemas.android.com/tools"
-              android:layout_width="match_parent"
-              android:layout_height="wrap_content"
-              android:orientation="vertical">
+    android:id="@+id/partial_checkout_payment_container_layout"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -54,27 +55,27 @@
         <ImageView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_centerVertical="true"
             android:layout_alignParentEnd="true"
             android:layout_alignParentRight="true"
-            android:src="@drawable/ic_gray_chevron"/>
+            android:layout_centerVertical="true"
+            android:src="@drawable/ic_gray_chevron" />
     </RelativeLayout>
 
     <LinearLayout
         android:id="@+id/partial_checkout_payment_container"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical"
         android:background="@color/row_background_color"
+        android:orientation="vertical"
         android:visibility="gone">
 
-        <include layout="@layout/partial_checkout_item_payment_select"/>
+        <include layout="@layout/partial_checkout_item_payment_select" />
 
         <View
             android:layout_width="match_parent"
             android:layout_height="@dimen/border_thin"
             android:layout_marginLeft="@dimen/padding_default"
-            android:background="@color/toolbar_border"/>
+            android:background="@color/toolbar_border" />
     </LinearLayout>
 
 </LinearLayout>

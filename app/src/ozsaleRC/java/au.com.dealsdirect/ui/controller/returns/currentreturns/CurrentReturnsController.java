@@ -288,7 +288,7 @@ public class CurrentReturnsController extends BasePullToRefreshController
 
     private void updateToolbar(){
         if (mCurrentReturns == null || mCurrentReturns.size() == 0)
-            mCurrentReturnsRightOption.setVisibility(View.GONE);
+            mCurrentReturnsRightOption.setVisibility(View.INVISIBLE);
         else
             mCurrentReturnsRightOption.setVisibility(View.VISIBLE);
     }

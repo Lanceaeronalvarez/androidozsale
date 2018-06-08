@@ -1,9 +1,11 @@
 package au.com.dealsdirect.data.network;
 
 
+import com.mysale.genie.utility.LegacyBaseResponseValue;
 import com.mysale.genie.utility.config.api.GetAppSettings;
 import com.mysale.genie.utility.config.api.GetAppSettingsSection;
 import com.mysale.genie.utility.config.api.GetServerSettings;
+import com.mysale.genie.utility.config.model.getpublicpaymenttoken.GetPublicPaymentToken;
 
 import org.json.JSONObject;
 
@@ -27,10 +29,14 @@ import au.com.dealsdirect.data.network.model.checkout.ClearOrder;
 import au.com.dealsdirect.data.network.model.checkout.ClearVouchers;
 import au.com.dealsdirect.data.network.model.checkout.CreatePaymentMethod;
 import au.com.dealsdirect.data.network.model.checkout.CreatePaymentTransaction;
+import au.com.dealsdirect.data.network.model.checkout.CreatePaymentTransactionVco;
 import au.com.dealsdirect.data.network.model.checkout.GetCurrentOrder;
+import au.com.dealsdirect.data.network.model.checkout.GetDeliveryServicePackageDetails;
 import au.com.dealsdirect.data.network.model.checkout.GetPaymentToken;
 import au.com.dealsdirect.data.network.model.checkout.GetUserPaymentMethods;
 import au.com.dealsdirect.data.network.model.checkout.RemoveUserPaymentMethod;
+import au.com.dealsdirect.data.network.model.checkout.SetDeliveryOption;
+import au.com.dealsdirect.data.network.model.checkout.getcurrentorder.DeliveryServicePackageDetail;
 import au.com.dealsdirect.data.network.model.checkout.getpaymentmethodnonce.GetPaymentMethodNonceRequest;
 import au.com.dealsdirect.data.network.model.contacthistory.GetContactHistoryRequest;
 import au.com.dealsdirect.data.network.model.contacthistory.GetContactHistoryResponse;
@@ -58,6 +64,7 @@ import au.com.dealsdirect.data.network.model.legalities.GetTemplateTextsResponse
 import au.com.dealsdirect.data.network.model.login.LoginEmail;
 import au.com.dealsdirect.data.network.model.login.LoginFacebook;
 import au.com.dealsdirect.data.network.model.login.LoginTicket;
+import au.com.dealsdirect.data.network.model.login.LoginVisa;
 import au.com.dealsdirect.data.network.model.login.Logout;
 import au.com.dealsdirect.data.network.model.masterpass.MasterPassPaymentRequest;
 import au.com.dealsdirect.data.network.model.masterpass.MasterPassPostTransactionRequest;
@@ -138,6 +145,8 @@ public interface ApiHelper {
 
     Observable<GetAppSettings.ResponseValue> callGetPublicAppSettings(String countryId);
 
+    Observable<GetPublicPaymentToken.ResponseValue> callGetPublicPaymentToken(String countryId, String languageId);
+
     Observable<GetAppSettings.ResponseValue> callGetAppSettings(String countryId);
 
     Observable<GetAppSettingsSection.ResponseValue> callGetAppSettingsSection(String countryId);
@@ -155,6 +164,8 @@ public interface ApiHelper {
     Observable<LoginEmail.ResponseValue> callLoginTicket(LoginTicket.RequestValue requestValue);
 
     Observable<Logout.ResponseValue> callLogout(Logout.RequestValue requestValue);
+
+    Observable<LoginVisa.ResponseValue> callLoginVisaCheckout(LoginVisa.RequestValue requestValue);
 
     // REGISTER API CALLS
 
@@ -216,8 +227,14 @@ public interface ApiHelper {
     Observable<ClearOrder.ResponseValue> callClearOrder(ClearOrder.RequestValue model);
     
     Observable<CreatePaymentTransaction.ResponseValue> callCreatePaymentTransaction(CreatePaymentTransaction.RequestValue model);
+
+    Observable<CreatePaymentTransaction.ResponseValue> callCreatePaymentTransactionVco(CreatePaymentTransactionVco.RequestValue model);
     
     Observable<RemoveUserPaymentMethod.ResponseValue> callRemoveUserPaymentMethod(RemoveUserPaymentMethod.RequestValue model);
+
+    Observable<GetDeliveryServicePackageDetails.ResponseValue> callGetDeliveryServicePackageDetails(GetDeliveryServicePackageDetails.RequestValue requestValue);
+
+    Observable<GetCurrentOrder.ResponseValue> callSetDeliveryOption(SetDeliveryOption setDeliveryOption);
 
     Observable<BasketQuantityResponse> callGetBasketItemsQuantity();
 

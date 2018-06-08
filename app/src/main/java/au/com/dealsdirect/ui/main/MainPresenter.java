@@ -18,7 +18,9 @@ import com.mysale.genie.utility.config.api.GetAppSettingsSection;
 import com.mysale.genie.utility.config.api.GetServerSettings;
 import com.mysale.genie.utility.config.model.getappsettingssection.Android;
 import com.mysale.genie.utility.config.model.getappsettingssection.Payload;
+import com.mysale.genie.utility.config.model.getpublicpaymenttoken.GetPublicPaymentToken;
 import com.newrelic.agent.android.NewRelic;
+import com.visa.checkout.VisaPaymentSummary;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -34,12 +36,14 @@ import au.com.dealsdirect.data.auth.AuthHandler;
 import au.com.dealsdirect.data.network.AppApiCallback;
 import au.com.dealsdirect.data.network.model.checkout.CreatePaymentMethod;
 import au.com.dealsdirect.data.network.model.checkout.CreatePaymentTransaction;
+import au.com.dealsdirect.data.network.model.checkout.CreatePaymentTransactionVco;
 import au.com.dealsdirect.data.network.model.checkout.GetPaymentToken;
 import au.com.dealsdirect.data.network.model.checkout.getpaymentmethodnonce.GetPaymentMethodNonceRequest;
 import au.com.dealsdirect.data.network.model.legalities.GetTemplateTextsRequest;
 import au.com.dealsdirect.data.network.model.login.LoginEmail;
 import au.com.dealsdirect.data.network.model.login.LoginTicket;
 import au.com.dealsdirect.data.network.model.login.Logout;
+import au.com.dealsdirect.data.network.model.ourpaydashboard.Payment;
 import au.com.dealsdirect.service.fcm.GNotification;
 import au.com.dealsdirect.ui.base.BasePresenter;
 import au.com.dealsdirect.utils.AppEventHelper;
@@ -65,6 +69,22 @@ public class MainPresenter<V extends MainMvpView> extends BasePresenter<V> imple
     public static final String KEY_OURPAY_TC_VALIDATION_FAILED = "_OurPayTCValidationFailed";
     public static final String KEY_PAYMENT_SCHEDULE = "_PaymentSchedule";
 
+    //    DELIVERY OPTIONS/OURPAY SELECT
+    public static final String KEY_DELIVERYOPTION_OPS_FREE = "_Free";
+    public static final String KEY_DELIVERYOPTION_OPS_TITLE = "_DeliveryOption_OURPAYSELECT_Title";
+    public static final String KEY_DELIVERYOPTION_OPS_DESCRIPTION = "_DeliveryOption_OURPAYSELECT_Description";
+
+    public static final String KEY_DELIVERYOPTION_EXPRESS_TITLE = "_DeliveryOption_EXPRESS_Title";
+    public static final String KEY_DELIVERYOPTION_EXPRESS_DESCRIPTION = "_DeliveryOption_EXPRESS_Description";
+    public static final String KEY_DELIVERYOPTION_STANDARD_TITLE = "_DeliveryOption_STANDARD_Title";
+
+    public static final String KEY_OURPAY_OPS_DESCRIPTION_REMAINING= "_Ops_description_remaining";
+    public static final String KEY_OURPAY_OPS_INFO_REMAINING_BEFORE_PURCHASE = "_Ops_info_remaining_before_purchase";
+    public static final String KEY_OURPAY_OPS_INFO_REMAINING_BEFORE_PURCHASE_FREE_DELIVERY = "_Ops_info_remaining_before_purchase_free_delivery";
+
+    public static final String KEY_OURPAY_OPS_TNC_HEADER = "_OurPaySelectTermsAndConditionsHeader";
+    public static final String KEY_OURPAY_OPS_TNC_BODY = "_OurPaySelectTermsAndConditionsBody";
+
     private static String[] templateTextsKeys = {
             KEY_CHECKOUT_MYPAY_PAY_EXCEED_LIMIT, //0
             KEY_CHECKOUT_MYPAY_PAY_INVALID_PAYMENT_METHOD, //1
@@ -75,7 +95,19 @@ public class MainPresenter<V extends MainMvpView> extends BasePresenter<V> imple
             KEY_OURPAY_THANK_YOU_TEXT, //6
             KEY_OURPAY_TC_TEXT, //7
             KEY_OURPAY_TC_VALIDATION_FAILED, //8
-            KEY_PAYMENT_SCHEDULE //9
+            KEY_PAYMENT_SCHEDULE, //9
+            KEY_DELIVERYOPTION_OPS_FREE,
+            KEY_DELIVERYOPTION_OPS_TITLE,
+            KEY_DELIVERYOPTION_OPS_DESCRIPTION,
+            KEY_DELIVERYOPTION_EXPRESS_TITLE,
+            KEY_DELIVERYOPTION_EXPRESS_DESCRIPTION,
+            KEY_DELIVERYOPTION_STANDARD_TITLE,
+            KEY_OURPAY_OPS_DESCRIPTION_REMAINING,
+            KEY_OURPAY_OPS_INFO_REMAINING_BEFORE_PURCHASE,
+            KEY_OURPAY_OPS_INFO_REMAINING_BEFORE_PURCHASE_FREE_DELIVERY,
+            KEY_OURPAY_OPS_INFO_REMAINING_BEFORE_PURCHASE_FREE_DELIVERY,
+            KEY_OURPAY_OPS_TNC_HEADER,
+            KEY_OURPAY_OPS_TNC_BODY
     };
 
     @Inject
@@ -145,6 +177,28 @@ public class MainPresenter<V extends MainMvpView> extends BasePresenter<V> imple
     }
 
     @Override
+    public void callGetPublicPaymentToken() {
+        getCompositeDisposable().add(getDataManager()
+                .callGetPublicPaymentToken(getDataManager().getCountryId(), getDataManager().getLanguageId())
+                .subscribeOn(getSchedulerProvider().io())
+                .observeOn(getSchedulerProvider().ui())
+                .subscribe(new Consumer<GetPublicPaymentToken.ResponseValue>() {
+                    @Override
+                    public void accept(GetPublicPaymentToken.ResponseValue responseValue) throws Exception {
+                        if (!isViewAttached()) {
+                            return;
+                        }
+
+                        GetPublicPaymentToken.ResponseValue.Value value = responseValue.d.getValue();
+                        if (value != null) {
+                            getDataManager().setPublicPaymentToken(value.getToken());
+                            getDataManager().setPublicPaymentType(value.getPaymentType());
+                        }
+                    }
+                }, mAppSettingsThrowableCallback));
+    }
+
+    @Override
     public void callGetPublicAppSettings() {
         getCompositeDisposable().add(getDataManager()
                 .callGetPublicAppSettings(getDataManager().getCountryId())
@@ -170,6 +224,15 @@ public class MainPresenter<V extends MainMvpView> extends BasePresenter<V> imple
                 getDataManager().setSearchMaxPrice(value.getSearch().getMaxPrice());
                 getDataManager().setAccessAnonymousEnabled(value.getAccess().getAnonymousEnabled());
                 getDataManager().setIsMyPayEnabled(value.getPayments().getMyPay().getEnabled());
+
+                if (value.getPayments().getVisaCheckout() != null) {
+                    getDataManager().setIsVisaCheckoutEnabled(value.getPayments().getVisaCheckout().getVisaCheckoutEnabled());
+                    // force true meanwhile
+//                    getDataManager().setIsVisaCheckoutEnabled(true);
+                    getDataManager().setVisaCheckoutApiKey(value.getPayments().getVisaCheckout().getVisaCheckoutApiKey());
+                    getDataManager().setVisaCheckoutApiUrl(value.getPayments().getVisaCheckout().getVisaCheckoutApiUrl());
+                    getDataManager().setVisaCheckoutProviderType(value.getPayments().getVisaCheckout().getVisaCheckoutProviderType());
+                }
             }
 
         }
@@ -371,6 +434,7 @@ public class MainPresenter<V extends MainMvpView> extends BasePresenter<V> imple
     public void callApiSettings(Context context) {
         callGetServerSettings();
         callGetPublicAppSettings();
+        callGetPublicPaymentToken();
         callGetAppSettingsSection(context);
     }
 
@@ -395,6 +459,10 @@ public class MainPresenter<V extends MainMvpView> extends BasePresenter<V> imple
 
             // Facebook Events
             initFacebookAnalytics();
+            FacebookSdk.setIsDebugEnabled(false);
+        } else {
+            initFacebookAnalytics();
+            FacebookSdk.setIsDebugEnabled(true);
         }
     }
 
@@ -417,12 +485,73 @@ public class MainPresenter<V extends MainMvpView> extends BasePresenter<V> imple
                             return;
                         }
 
+                        //        reset 3ds called flag
+                        PaymentInfo.setThreeDSecureCalled(false);
                         getMvpView().hideLoading();
                         getMvpView().performResetWithAuthFetch();
 
                         if (responseValue.getD().getResult()) {
                             getMvpView().showCreatePaymentTransactionSuccess(paymentType, responseValue);
                             AppEventHelper.completedPurchase(paymentType,
+                                    responseValue.getD().getValue().getOrderInfoResult().getItems().size(),
+                                    responseValue.getD().getValue().getOrderInfoResult().getTotal(),
+                                    getDataManager().getCountryId());
+                        } else {
+                            getMvpView().showCreatePaymentTransactionFailure(responseValue.getD().getMessage());
+                        }
+
+                    }
+                }, new Consumer<Throwable>() {
+                    @Override
+                    public void accept(@NonNull Throwable throwable) throws Exception {
+                        if (!isViewAttached()) {
+                            return;
+                        }
+                        //        reset 3ds called flag
+                        PaymentInfo.setThreeDSecureCalled(false);
+                        getMvpView().hideLoading();
+
+                        getMvpView().onError(throwable.getMessage());
+
+                        // handle load accounts error here
+                        if (throwable instanceof ANError) {
+                            ANError anError = (ANError) throwable;
+                            handleApiError(anError);
+                        }
+                    }
+                })
+        );
+    }
+
+
+    @Override
+    public void createPaymentTransactionVco(VisaPaymentSummary visaPaymentSummary) {
+        getMvpView().showLoading();
+
+        String languageId = getDataManager().getLanguageId();
+        String countryId = getDataManager().getCountryId();
+        CreatePaymentTransactionVco.RequestValue.Request requestValue =
+                new CreatePaymentTransactionVco.RequestValue.Request(PaymentInfo.VISA_CHECKOUT_CYBERSOURCE,
+                        visaPaymentSummary.getCallId(),
+                        visaPaymentSummary.getEncKey(),
+                        visaPaymentSummary.getEncPaymentData());
+        getCompositeDisposable().add(getDataManager()
+                .callCreatePaymentTransactionVco(new CreatePaymentTransactionVco.RequestValue(requestValue, countryId, languageId))
+                .subscribeOn(getSchedulerProvider().io())
+                .observeOn(getSchedulerProvider().ui())
+                .subscribe(new Consumer<CreatePaymentTransaction.ResponseValue>() {
+                    @Override
+                    public void accept(@NonNull CreatePaymentTransaction.ResponseValue responseValue) throws Exception {
+                        if (!isViewAttached()) {
+                            return;
+                        }
+
+                        getMvpView().hideLoading();
+                        getMvpView().performResetWithAuthFetch();
+
+                        if (responseValue.getD().getResult()) {
+                            getMvpView().showCreatePaymentTransactionSuccess(PaymentInfo.VISA_CHECKOUT_CYBERSOURCE, responseValue);
+                            AppEventHelper.completedPurchase(PaymentInfo.VISA_CHECKOUT_CYBERSOURCE,
                                     responseValue.getD().getValue().getOrderInfoResult().getItems().size(),
                                     responseValue.getD().getValue().getOrderInfoResult().getTotal(),
                                     getDataManager().getCountryId());
@@ -450,9 +579,8 @@ public class MainPresenter<V extends MainMvpView> extends BasePresenter<V> imple
                     }
                 })
         );
-
-
     }
+
 
     @Override
     public void createPaymentMethod(String deviceData, String paymentNonce, String paymentType) {
@@ -612,6 +740,7 @@ public class MainPresenter<V extends MainMvpView> extends BasePresenter<V> imple
                 .observeOn(getSchedulerProvider().ui())
                 .subscribe(getTemplateTextsResponse -> {
                     getDataManager().setMyPayTemplateTexts(getTemplateTextsResponse.getResponse().getValue());
+                    getDataManager().setDeliveryOptionsTemplateTexts(getTemplateTextsResponse.getResponse().getValue());
                     getMvpView().storeTemplateTexts(getTemplateTextsResponse.getResponse().getValue());
 
                 }, throwable -> {

@@ -106,9 +106,6 @@ public class ContactHistoryAdapter extends RecyclerView.Adapter<ContactHistoryVi
 
     @Override
     public int getItemCount() {
-        if (mCurrentContactsHistoryList == null) {
-            return 0;
-        }
         return mCurrentContactsHistoryList.size();
     }
 

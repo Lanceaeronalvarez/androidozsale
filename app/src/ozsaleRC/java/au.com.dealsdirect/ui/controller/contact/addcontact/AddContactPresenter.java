@@ -9,6 +9,7 @@ import java.util.List;
 import javax.inject.Inject;
 
 import au.com.dealsdirect.data.DataManager;
+import au.com.dealsdirect.data.network.AppApiCallback;
 import au.com.dealsdirect.data.network.model.contactorder.ContactOrderList;
 import au.com.dealsdirect.data.network.model.contactreply.ReplyContactRequest;
 import au.com.dealsdirect.data.network.model.contactreply.ReplyContactResponse;
@@ -35,38 +36,14 @@ public class AddContactPresenter<V extends AddContactMvpView> extends BasePresen
     public void createNewContact(CreateContactRequest createContactRequest) {
         getMvpView().showLoading();
 
-        getCompositeDisposable()
-                .add(getDataManager()
-                        .callCreateContact(createContactRequest)
-                        .subscribeOn(getSchedulerProvider().io())
-                        .observeOn(getSchedulerProvider().ui())
-                        .subscribe(response -> {
-
-                            if (!isViewAttached()) {
-                                return;
-                            }
-
-                            getMvpView().hideLoading();
-
-                            CreateContactResponse myContactSubject = response;
-                            getMvpView().contactCreatedSwitchView(myContactSubject);
-
-
-                        }, throwable -> {
-
-                            if (!isViewAttached()) {
-                                return;
-                            }
-
-                            getMvpView().hideLoading();
-                            getMvpView().onError(throwable.getMessage());
-
-                            // handle load accounts error here
-                            if (throwable instanceof ANError) {
-                                ANError anError = (ANError) throwable;
-                                handleApiError(anError);
-                            }
-                        }));
+        doApiCallForResponse(getDataManager().callCreateContact(createContactRequest), new AppApiCallback() {
+            @Override
+            public void onSuccess(Object response) {
+                super.onSuccess(response);
+                CreateContactResponse myContactSubject = (CreateContactResponse) response;
+                getMvpView().contactCreatedSwitchView(myContactSubject);
+            }
+        });
     }
 
 }

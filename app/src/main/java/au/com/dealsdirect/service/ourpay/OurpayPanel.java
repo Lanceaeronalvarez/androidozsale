@@ -39,6 +39,12 @@ public class OurpayPanel {
     Router mRouter;
     OurpayGraph mOurpayGraph = new OurpayGraph();
 
+    public View getCartAmountHeader() {
+        return mCartAmountHeader;
+    }
+
+    View mCartAmountHeader;
+
 
     public OurpayPanel(BaseActivity activity) {
         this.mBaseActivity = activity;
@@ -170,17 +176,16 @@ public class OurpayPanel {
     }
 
     private View getCartAmountHeader(String amount) {
-        View view = mBaseActivity.getLayoutInflater().inflate(R.layout.ourpay_cart_amount_layout, null, false);
+        mCartAmountHeader = mBaseActivity.getLayoutInflater().inflate(R.layout.ourpay_cart_amount_layout, null, false);
 
-        TextView textViewAmount = (TextView) view.findViewById(R.id.textView_amount);
+        TextView textViewAmount = (TextView) mCartAmountHeader.findViewById(R.id.textView_amount);
         if (amount.length() > 0) {
-
             textViewAmount.setText(amount);
         } else {
             textViewAmount.setVisibility(View.GONE);
         }
 
-        return view;
+        return mCartAmountHeader;
     }
 
     private View getButton() {
@@ -203,15 +208,11 @@ public class OurpayPanel {
 
             if (mRouter.getBackstackSize()==1){
 
-                String ourpayTermsAndConditionKey = "OurPayTermsAndConditions_Text";
-                Bundle bundle = new Bundle();
-                bundle.putString("templateKey", ourpayTermsAndConditionKey);
-
                 ((MainActivity)mBaseActivity).setDraggableViewPager(false);
                 GateKeeper.push(mRouter,GateKeeper.Destination.LEGALITIES,
                         new BundleBuilder(new Bundle())
-                                .putString(BundleKeys.TEMPLATE_KEY, ourpayTermsAndConditionKey)
-                                .putString(BundleKeys.TITLE, "My Basket")
+                                .putString(BundleKeys.TEMPLATE_KEY, OurpayTemplateText.KEY_OPS_TNC_FULL_TEXT)
+                                .putString(BundleKeys.LEGALITIES_TITLE, mBaseActivity.getString(R.string.my_basket))
                                 .build(),
                         new VerticalChangeHandler(false),
                         new VerticalChangeHandler());

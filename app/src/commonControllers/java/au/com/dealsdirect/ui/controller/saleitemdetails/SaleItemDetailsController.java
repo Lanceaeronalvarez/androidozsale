@@ -7,10 +7,12 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.NonNull;
+import android.support.design.widget.AppBarLayout;
 import android.support.v4.util.Pair;
 import android.support.v4.widget.NestedScrollView;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -20,7 +22,6 @@ import android.view.animation.LinearInterpolator;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.widget.Button;
-import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
@@ -44,11 +45,11 @@ import au.com.dealsdirect.data.auth.AuthHandler;
 import au.com.dealsdirect.data.network.model.saleitemdetails.AddToCartRequest;
 import au.com.dealsdirect.data.network.model.saleitemdetails.GetSaleItemDetailsResponse;
 import au.com.dealsdirect.service.ourpay.Ourpay;
-import au.com.dealsdirect.service.ourpay.OurpayPanel;
 import au.com.dealsdirect.ui.base.BaseController;
 import au.com.dealsdirect.ui.controller.saleitemdetails.listener.LoadImagesListener;
 import au.com.dealsdirect.ui.custom.ArcTranslateAnimation;
 import au.com.dealsdirect.ui.custom.CustomAlertDialog;
+import au.com.dealsdirect.utils.AppLogger;
 import au.com.dealsdirect.utils.BundleBuilder;
 import au.com.dealsdirect.utils.CartUtil;
 import au.com.dealsdirect.utils.ImageUtils;
@@ -62,7 +63,7 @@ import butterknife.OnClick;
  * Created by smartwave on 08/06/2017.
  */
 
-public class SaleItemDetailsController extends BaseController implements SaleItemDetailsMvpView, LoadImagesListener {
+public class SaleItemDetailsController extends BaseController implements SaleItemDetailsMvpView, LoadImagesListener, AppBarLayout.OnOffsetChangedListener {
 
     private final String KEY_POSITION = "KEY_POSITION";
     private final String KEY_SKU_ID = "KEY_SKU_ID";
@@ -143,9 +144,22 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
     Button mAddToCartButton;
     @BindView(R.id.product_details_button_overlay)
     ImageView mAddToCartOverlay;
+    @BindView(R.id.productPreviousPriceLabel)
+    TextView mProductPreviousPriceLabel;
 
-    @BindView(R.id.image_container)
-    FrameLayout mImageContainerViewGroup;
+    //Collapsing Toolbar UI
+    @BindView(R.id.controler_product_details_app_bar_layout)
+    AppBarLayout mAppBarLayout;
+    @BindView(R.id.controller_sale_details_toolbar)
+    RelativeLayout mProductDetailsToolbar;
+    @BindView(R.id.controller_product_details_title_description)
+    LinearLayout mProductDetailsTitleLayout;
+    @BindView(R.id.toolbar_item_brand)
+    TextView mToolbarItemBrandTextView;
+    @BindView(R.id.toolbar_item_name)
+    TextView mToolbarItemNameTextView;
+    @BindView(R.id.toolbar_item_price)
+    TextView mToolbarItemPriceTextView;
 
     ImageView mImageViewToAnimate;
 
@@ -230,12 +244,23 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
     protected void onAttach(@NonNull View view) {
         super.onAttach(view);
         mPresenter.onAttach(this);
+        if (getBoolean(R.bool.is_ozsale)) {
+            mAppBarLayout.addOnOffsetChangedListener(this);
+        }
     }
 
     @Override
     protected void onViewBound(@NonNull View view) {
         super.onViewBound(view);
         setUp(view);
+    }
+
+    @Override
+    public void onDetach(View view) {
+        super.onDetach(view);
+        if (getBoolean(R.bool.is_ozsale)) {
+            mAppBarLayout.removeOnOffsetChangedListener(this);
+        }
     }
 
     @Override
@@ -334,11 +359,15 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
         String returnPolicy = saleDetail.getReturnPolicy();
         String productAbout = saleDetail.getAttributes() == null ? "" : saleDetail.getAttributes().getBrandDescription() == null ? "" : saleDetail.getAttributes().getBrandDescription();
         String name = saleDetail.getName() == null ? "" : saleDetail.getName();
-        String branName = saleDetail.getBrandName() == null ? "" : saleDetail.getBrandName();
+        String brandName = saleDetail.getBrandName() == null ? "" : saleDetail.getBrandName();
+
+        mToolbarItemBrandTextView.setText(brandName);
+        mToolbarItemNameTextView.setText(name.trim());
+        mToolbarItemPriceTextView.setText(PriceUtils.getPriceStringValue(saleDetail.getPrice().getValue()));
 
 
         mProductName.setText(name.trim());
-        mProductBrand.setText(branName.trim());
+        mProductBrand.setText(brandName.trim());
         mProductPrice.setText(PriceUtils.getPriceStringValue(saleDetail.getPrice().getValue()));
         mProductPreviousPrice.setText(PriceUtils.getRpStringValue(saleDetail.getOriginalPrice().getValue()));
 
@@ -456,26 +485,31 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
         mAddToCartButton.setVisibility(View.VISIBLE);
         mAddToCartButton.setEnabled(true);
 
+
+    /* Should only set button to 'Sold Out' if sold out size is selected
         if (saleDetail.isSoldOut()) {
             mAddToCartButton.setEnabled(false);
             mAddToCartButton.setText("Sold Out");
         }
+    */
 
         if (saleDetail.getOriginalPrice().getValue() <= 0) {
             mProductPreviousPrice.setVisibility(View.GONE);
+            mProductPreviousPriceLabel.setVisibility(View.GONE);
         } else {
             mProductPreviousPrice.setVisibility(View.VISIBLE);
+            mProductPreviousPriceLabel.setVisibility(View.VISIBLE);
         }
 
         mPresenter.generateOurpay(saleDetail);
     }
 
     @Override
-    public void showAddToCartResponse(boolean val) {
+    public void showAddToCartResponse(boolean showAddToCart) {
         RxBus.instance().post(IntrospectionUtils.EVENT_ADD_TO_CART);
 
         //notify bottom navigation view(checkout) with success.
-            if (val) {
+        if (showAddToCart) {
             CartUtil.addValueToCart(1);
             mActivity.getMainController().getHomeController().updateBasketItemCount();
 
@@ -662,10 +696,26 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
 
     }
 
+    @OnClick(R.id.toolbar_left_view)
+    void backPress() {
+        dismissArrowDown();
+    }
+
     @OnClick(R.id.arrow_left)
     void dismissArrowDown() {
         mActivity.onBackPressed();
     }
 
 
+    @Override
+    public void onOffsetChanged(AppBarLayout appBarLayout, int verticalOffset) {
+        TypedValue tv = new TypedValue();
+        mActivity.getTheme().resolveAttribute(android.R.attr.actionBarSize, tv, true);
+        int actionBarHeight = getResources().getDimensionPixelSize(tv.resourceId);
+        AppLogger.d("Vertical Offset: " + verticalOffset + " actionBarHeight " + (mProductDetailsTitleLayout.getHeight() - actionBarHeight) + " total scroll: " + mAppBarLayout.getTotalScrollRange());
+        boolean showToolbar = Math.abs(verticalOffset) > mAppBarLayout.getTotalScrollRange() - (mProductDetailsTitleLayout.getHeight() - actionBarHeight);
+        mProductDetailsToolbar.setVisibility(showToolbar ? View.VISIBLE : View.GONE);
+        mProductDetailsTitleLayout.setVisibility(!showToolbar ? View.VISIBLE : View.GONE);
+        mProductPriceCategory.setBackgroundColor(getColor(!showToolbar ? R.color.product_details_transparent : R.color.toolbar_active_skin));
+    }
 }

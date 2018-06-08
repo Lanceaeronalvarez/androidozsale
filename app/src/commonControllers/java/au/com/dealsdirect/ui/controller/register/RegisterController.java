@@ -1,5 +1,6 @@
 package au.com.dealsdirect.ui.controller.register;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -7,32 +8,52 @@ import android.support.annotation.Nullable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.CheckBox;
-import android.widget.ImageButton;
 import android.widget.TextView;
 
 import com.bluelinelabs.conductor.changehandler.HorizontalChangeHandler;
 import com.bluelinelabs.conductor.changehandler.VerticalChangeHandler;
+import com.braintreepayments.api.VisaCheckout;
+import com.braintreepayments.api.interfaces.BraintreeResponseListener;
+import com.braintreepayments.api.models.BraintreeRequestCodes;
+import com.braintreepayments.api.models.VisaCheckoutNonce;
 import com.facebook.CallbackManager;
 import com.facebook.internal.CallbackManagerImpl;
+import com.google.gson.Gson;
+import com.jakewharton.rxbinding2.view.RxView;
+import com.visa.checkout.Profile;
+import com.visa.checkout.PurchaseInfo;
+import com.visa.checkout.VisaCheckoutSdk;
+import com.visa.checkout.VisaCheckoutSdkInitListener;
+import com.visa.checkout.VisaPaymentSummary;
+import com.visa.checkout.widget.VisaCheckoutButton;
+
+import java.util.concurrent.TimeUnit;
 
 import javax.inject.Inject;
 
 import au.com.dealsdirect.R;
-import au.com.dealsdirect.data.auth.AuthHandler;
+import au.com.dealsdirect.data.network.model.login.LoginVisa;
 import au.com.dealsdirect.ui.base.BaseController;
+import au.com.dealsdirect.ui.base.VisaCheckoutMvpPresenter;
+import au.com.dealsdirect.ui.base.VisaCheckoutMvpView;
+import au.com.dealsdirect.ui.controller.visacheckout.VisaCheckoutController;
 import au.com.dealsdirect.utils.AppConstants;
+import au.com.dealsdirect.utils.AppLogger;
 import au.com.dealsdirect.utils.BundleBuilder;
 import au.com.dealsdirect.utils.BundleKeys;
 import au.com.dealsdirect.utils.module.GateKeeper;
 import butterknife.BindView;
 import butterknife.OnClick;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.disposables.CompositeDisposable;
 
 /*
  * Created by Ayi on 05/06/2017.
  */
 
-public class RegisterController extends BaseController implements RegisterMvpView {
+public class RegisterController extends VisaCheckoutController implements RegisterMvpView {
 
     public static final String TAG = "RegisterController";
 
@@ -42,6 +63,9 @@ public class RegisterController extends BaseController implements RegisterMvpVie
 
     @Inject
     RegisterMvpPresenter<RegisterMvpView> mPresenter;
+
+    @Inject
+    VisaCheckoutMvpPresenter<VisaCheckoutMvpView> mVcoPresenter;
 
     @BindView(R.id.partial_toolbar_arrow_title)
     TextView mToolBarTitle;
@@ -64,9 +88,6 @@ public class RegisterController extends BaseController implements RegisterMvpVie
     @BindView(R.id.controller_register_terms_link)
     TextView mTermsLink;
 
-
-    private static AuthHandler mAuthHandler;
-
     public static RegisterController newInstance() {
 
         return new RegisterController(
@@ -78,11 +99,6 @@ public class RegisterController extends BaseController implements RegisterMvpVie
         super(args);
     }
 
-    @Override
-    protected void onAttach(@NonNull View view) {
-        super.onAttach(view);
-    }
-
     @NonNull
     @Override
     protected View inflateView(@NonNull LayoutInflater inflater, @NonNull ViewGroup container) {
@@ -90,7 +106,9 @@ public class RegisterController extends BaseController implements RegisterMvpVie
 
         getControllerComponent().inject(this);
         registerForActivityResult(CallbackManagerImpl.RequestCodeOffset.Login.toRequestCode());
+        registerForActivityResult(BraintreeRequestCodes.VISA_CHECKOUT);
         mCallbackManager = CallbackManager.Factory.create();
+        mVcoPresenter.onAttach(this);
         mPresenter.onAttach(this);
 
         return view;
@@ -99,7 +117,6 @@ public class RegisterController extends BaseController implements RegisterMvpVie
     @Override
     public void onViewBound(@NonNull View view) {
         super.onViewBound(view);
-
         setUp(view);
     }
 
@@ -118,21 +135,53 @@ public class RegisterController extends BaseController implements RegisterMvpVie
                     GateKeeper.Destination.LEGALITIES,
                     new BundleBuilder(new Bundle())
                             .putString(BundleKeys.TEMPLATE_KEY, "TermsAndConditions_Text")
-                            .putString(BundleKeys.TITLE, "Terms and Conditions")
+                            .putString(BundleKeys.LEGALITIES_TITLE, "Terms and Conditions")
                             .build(),
                     new HorizontalChangeHandler(false),
                     new HorizontalChangeHandler());
         });
+
+        if (mVcoPresenter.isVisaCheckoutEnabled()) {
+            mVcoPresenter.setupVisaCheckout();
+        }
     }
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+
+        if (requestCode == BraintreeRequestCodes.VISA_CHECKOUT) {
+            AppLogger.d("VC_onActivityResult", "Result got back from Visa Checkout SDK");
+            String msg = "";
+
+            if (resultCode == Activity.RESULT_OK && data != null) {
+                VisaPaymentSummary visaPaymentSummary = data.getParcelableExtra(VisaCheckoutSdk.INTENT_PAYMENT_SUMMARY);
+                if (visaPaymentSummary != null) {
+                    // Successful VCO
+                    showLoading();
+                    mVcoPresenter.authenticateLoginWithVisaCheckoutNative(visaPaymentSummary);
+                }
+            } else if (resultCode == Activity.RESULT_CANCELED) {
+                msg = "User Canceled, Result Code : " + resultCode;
+            } else if (resultCode == VisaCheckoutSdk.ResultCode.RESULT_SDK_NOT_INITIALIZED) {
+                msg = "Sdk not initialized  failed, Result Code : " + resultCode;
+            } else if (resultCode == VisaCheckoutSdk.ResultCode.RESULT_INITIALIZED_FAILED) {
+                msg = "VisaPaymentInfo validation failed, Result Code : " + resultCode;
+            } else {
+                msg = "Purchase failed!";
+            }
+
+            if(!msg.isEmpty()) {
+                AppLogger.d("VC_onActivityResult", msg);
+                onError(msg);
+            }
+        }
+
         mCallbackManager.onActivityResult(requestCode, resultCode, data);
     }
 
     @Override
     public void onDestroyView(View view) {
-        mPresenter.onDetach();
+//        mPresenter.onDetach();
         super.onDestroyView(view);
     }
 
@@ -174,7 +223,7 @@ public class RegisterController extends BaseController implements RegisterMvpVie
 
     @OnClick(R.id.controller_login_fb_layout)
     void onFacebookLoginClick() {
-        mPresenter.onFacebookLogin(mActivity, mCallbackManager);
+        mPresenter.onFacebookLogin(mActivity, mCallbackManager, 1);
     }
 
 
@@ -188,4 +237,26 @@ public class RegisterController extends BaseController implements RegisterMvpVie
         mActivity.loginErrorHandler(message);
 
     }
+
+    @Override
+    public void showPasswordVerification(LoginVisa.RequestValue.Data requestData, boolean isAccountExists, String accountEmail) {
+        BundleBuilder bundleBuilder = new BundleBuilder(new Bundle());
+        bundleBuilder.putBoolean(BundleKeys.KEY_ACCOUNT_EXISTS, isAccountExists);
+        bundleBuilder.putString(BundleKeys.KEY_ACCOUNT_EMAIL, accountEmail);
+        bundleBuilder.putString(BundleKeys.KEY_LOGIN_VISA_REQUEST_DATA, new Gson().toJson(requestData));
+
+        GateKeeper.push(getRouter(), GateKeeper.Destination.PASSWORD_VERIFICATION, bundleBuilder.build(), new HorizontalChangeHandler(), new HorizontalChangeHandler());
+    }
+
+
+    @Override
+    public void showLoginVisaSuccess(String loginTicket) {
+        showLoginSuccessful(loginTicket);
+    }
+
+    @Override
+    public void onVisaCheckoutButtonClicked() {
+        mVcoPresenter.loginWithVisaCheckout();
+    }
+
 }

@@ -7,9 +7,12 @@
 
     <!-- EditText -->
     <dimen name="edit_text_height">48dp</dimen>
-    <dimen name="edit_text_corner_radius">0dp</dimen>
+    <dimen name="edit_text_corner_radius">3dp</dimen>
 
     <!--Contacts-->
     <dimen name="contact_subject_items_margin_start">0dp</dimen>
     <dimen name="contact_order_items_margin_start">0dp</dimen>
+
+    <!--Ourpay Select Checkbox size-->
+    <dimen name="ourpay_select_checkbox_size">20dp</dimen>
 </resources>

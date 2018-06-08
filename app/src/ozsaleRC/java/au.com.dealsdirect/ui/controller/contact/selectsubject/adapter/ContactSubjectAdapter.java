@@ -47,9 +47,6 @@ public class ContactSubjectAdapter extends RecyclerView.Adapter<ContactSubjectVi
 
     @Override
     public int getItemCount() {
-        if (mCurrentContactSubjectList == null) {
-            return 0;
-        }
         return mCurrentContactSubjectList.size();
     }
 

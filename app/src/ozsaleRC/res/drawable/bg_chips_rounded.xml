@@ -1,13 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
-<ripple xmlns:android="http://schemas.android.com/apk/res/android"
-        android:color="@color/bg_chips_ripple">
+<selector xmlns:android="http://schemas.android.com/apk/res/android">
     <item>
         <selector>
 
             <item android:state_checked="true" android:state_enabled="true">
                 <shape android:shape="rectangle">
                     <corners android:radius="@dimen/edit_text_corner_radius"/>
-                    <solid android:color="@color/bg_chips_default"/>
+                    <solid android:color="@color/bg_chips_selected"/>
                     <stroke android:width="@dimen/border_regular" android:color="@color/bg_chips_border_checked"/>
                 </shape>
             </item>
@@ -22,4 +21,4 @@
 
         </selector>
     </item>
-</ripple>
+</selector>

@@ -26,7 +26,7 @@
 
             <Button
                 android:id="@+id/partial_checkout_button_pay"
-                style="@style/DDButtonStyle"
+                style="@style/DDButtonPayCart"
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/button_height_regular"
                 android:layout_marginBottom="10dp"
@@ -71,6 +71,14 @@
                 </LinearLayout>
 
             </RelativeLayout>
+
+            <com.visa.checkout.widget.VisaCheckoutButton
+                android:id="@+id/button_visacheckout"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/default_button_height"
+                android:layout_marginBottom="@dimen/margin_small"
+                app:animation="true"
+                android:enabled="false"/>
 
             <RelativeLayout
                 android:id="@+id/partial_checkout_button_masterpass"

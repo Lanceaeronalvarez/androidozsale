@@ -21,7 +21,7 @@ import butterknife.ButterKnife;
  * Created by Paul on 6/22/17.
  */
 
-public class LanguageAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
+public class LanguageAdapter extends RecyclerView.Adapter<LanguageAdapter.LanguagesViewHolder> {
 
     private List<Language> mLanguages;
     private String mSelectedLanguage;
@@ -35,36 +35,38 @@ public class LanguageAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
     }
 
     @Override
-    public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+    public LanguageAdapter.LanguagesViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.row_user_language, parent, false);
         LanguagesViewHolder vh = new LanguagesViewHolder(view, mPresenter);
         return vh;
     }
 
     @Override
-    public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
-        if(mSelectedLanguage.equals(mLanguages.get(position).getID()) || mSelectedLanguage == mLanguages.get(position).getID()) {
-            ((LanguagesViewHolder) holder).mLanguageText.setTextColor(context.getResources().getColor(R.color.colorAccent));
-            if (((LanguagesViewHolder) holder).mLanguageCheckIcon!=null) ((LanguagesViewHolder) holder).mLanguageCheckIcon.setVisibility(View.VISIBLE);
+    public void onBindViewHolder(LanguageAdapter.LanguagesViewHolder holder, int position) {
+        if (mSelectedLanguage.equals(mLanguages.get(position).getID()) || mSelectedLanguage.equals(mLanguages.get(position).getID())) {
+            holder.mLanguageTextView.setTextColor(context.getResources().getColor(R.color.colorAccent));
+            if (holder.mLanguageCheckIcon != null) {
+                holder.mLanguageCheckIcon.setVisibility(View.VISIBLE);
+            }
         }
 
-        ((LanguagesViewHolder) holder).mLanguageText.setText(mLanguages.get(position).getName());
+        holder.mLanguageTextView.setText(mLanguages.get(position).getName());
 
-        ((LanguagesViewHolder) holder).itemView.setOnClickListener(v ->{
+        holder.itemView.setOnClickListener(v -> {
             notifyDataSetChanged();
             mPresenter.onLanguageItemClick(mLanguages.get(position));
-            ((LanguagesViewHolder) holder).mLanguageText.setTextColor(context.getResources().getColor(R.color.colorAccent));
+            holder.mLanguageTextView.setTextColor(context.getResources().getColor(R.color.colorAccent));
         });
     }
 
     @Override
     public int getItemCount() {
-        if (mLanguages!=null)
+        if (mLanguages != null)
             return mLanguages.size();
         return 0;
     }
 
-    public void replaceData(List<Language> languages, String selectedLanguage){
+    public void replaceData(List<Language> languages, String selectedLanguage) {
         mLanguages = languages;
         mSelectedLanguage = selectedLanguage;
     }
@@ -75,7 +77,7 @@ public class LanguageAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
         ImageView mLanguageCheckIcon;
 
         @BindView(R.id.row_text_language)
-        TextView mLanguageText;
+        TextView mLanguageTextView;
 
         LanguageMvpPresenter mPresenter;
 

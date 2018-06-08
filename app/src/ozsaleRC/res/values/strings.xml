@@ -1,4 +1,5 @@
 <resources>
+    <bool name="is_ozsale_app">true</bool>
     <string name="error">error</string>
 
     <string name="log_in">Log In</string>
@@ -102,6 +103,9 @@
     <string name="_100_rayon_mykonos_embroidered_off_shoulder_top_white_elasticated_top_and_bottom_the_clothing_at_morrisday_is_true_to_standard_austrailian_sizing">�  100% Rayon\n\n�  Mykonos Embroidered Off Shoulder Top (White)\n\n�  Elasticated top and bottom\n\n�  The clothing at Morrisday is true to standard Austrailian sizing</string>
     <string name="checkout_lowercase">checkout</string>
     <string name="delivery_address">Delivery Address</string>
+    <string name="delivery_method">DELIVERY METHOD</string>
+    <string name="deliver_options_title">Delivery Options</string>
+    <string name="choose_delivery_method">CHOOSE DELIVERY METHOD</string>
     <string name="you_currently_do_not_have_any_addresses">You do not currently have any address.</string>
     <string name="welcome_to_my_address">Welcome to My Address!</string>
     <string name="add_new_delivery_address">Add New Delivery Address</string>
@@ -152,18 +156,40 @@
     <string name="select_invoice">Select Invoice</string>
     <string name="new_message">New Message</string>
 
-    <bool name="is_voucher_background_needed">false</bool>
-
     <string name="add_new_address">Add New Address</string>
-    <string name="your_current_delivery_address">YOUR CURRENT DELIVERY ADDRESS</string>
+    <string name="my_addresses">MY ADDRESSES</string>
+    <string name="my_addresses_toolbar_title">My Addresses</string>
+    <string name="my_current_delivery_address">MY CURRENT DELIVERY ADDRESS</string>
+    <string name="enter_address_details">ENTER ADDRESS DETAILS</string>
     <string name="add_new_voucher">Add New Voucher</string>
+    <string name="add_voucher">Add Voucher</string>
     <string name="enter_promo_code">Enter Code</string>
-    <string name="voucher">Vouchers</string>
+    <string name="enter_promo_code_caps">ENTER CODE</string>
+    <string name="apply">Apply</string>
+    <string name="apply_vouchers">Apply Vouchers</string>
+    <string name="promo_code">Promo Code</string>
+    <string name="voucher">voucher</string>
+    <string name="voucher_label">Voucher</string>
+    <string name="clear">Clear Vouchers</string>
+
+    <string name="my_payment_methods">MY PAYMENT METHODS</string>
+    <string name="my_payments">My Payments</string>
 
     <bool name="is_item_attribute_gone">true</bool>
     <bool name="is_checkout_orders_label_visible">true</bool>
+    <bool name="is_ozsale">true</bool>
 
     <string name="category_default">Categories</string>
+    <string name="invite_friend_guide">Invite your friends to join Ozsale. Once your friends have
+        joined through your invitation and made their first purchase you will instantly receive a
+        $20 Ozsale voucher to use towards any future purchase.
+    </string>
+    <string name="vouchers_view_detail">Invite your friends to join Ozsale. Once your friends have
+        joined through your invitation and made their first purchase you will instantly receive a
+        $20 voucher to use towards any future purchase. \n\nYou can apply any vouchers
+        currently in your account when you checkout your order. \n
+    </string>
+
 
     <integer-array name="account_title_array">
         <item>@string/account_details</item>
@@ -197,5 +223,4 @@
         <item>@drawable/bg_account_languages</item>
         <item>@drawable/bg_account_country</item>
     </integer-array>
-
 </resources>

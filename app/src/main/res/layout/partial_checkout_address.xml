@@ -1,10 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-              xmlns:app="http://schemas.android.com/apk/res-auto"
-              xmlns:tools="http://schemas.android.com/tools"
-              android:layout_width="match_parent"
-              android:layout_height="wrap_content"
-              android:orientation="vertical">
+    android:id="@+id/partial_checkout_address_container_layout"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -18,9 +19,8 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="4"
-            android:text="@string/your_current_delivery_address"
-            android:textColor="@color/text_light"
-            />
+            android:text="@string/my_current_delivery_address"
+            android:textColor="@color/text_light" />
 
         <TextView
             android:id="@+id/partial_checkout_address_change"
@@ -48,10 +48,10 @@
         <ImageView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_centerVertical="true"
             android:layout_alignParentEnd="true"
             android:layout_alignParentRight="true"
-            android:src="@drawable/ic_gray_chevron"/>
+            android:layout_centerVertical="true"
+            android:src="@drawable/ic_gray_chevron" />
 
         <TextView
             android:layout_width="wrap_content"
@@ -61,8 +61,7 @@
             android:layout_alignParentTop="true"
             android:text="@string/add_new_address"
             android:textColor="@color/text_medium"
-            android:textSize="@dimen/text_size_body"
-            />
+            android:textSize="@dimen/text_size_body" />
     </RelativeLayout>
 
     <LinearLayout
@@ -84,7 +83,7 @@
                 android:paddingBottom="@dimen/margin_extra_small"
                 android:paddingLeft="@dimen/margin_extra_small"
                 android:paddingRight="@dimen/margin_extra_small"
-                android:src="@drawable/ic_home_delivery"/>
+                android:src="@drawable/ic_home_delivery" />
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -99,14 +98,14 @@
                     android:layout_height="wrap_content"
                     android:textColor="@color/text_medium"
                     android:textSize="@dimen/text_size_headline2"
-                    tools:text="Mary Doe"/>
+                    tools:text="Mary Doe" />
 
                 <TextView
                     android:id="@+id/partial_checkout_address_details"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:textColor="@color/text_medium"
-                    tools:text="Pharmacy Warringah, Shop 4123, Broovale, NSW, 2100, Australia, +0123 123 123"/>
+                    tools:text="Pharmacy Warringah, Shop 4123, Broovale, NSW, 2100, Australia, +0123 123 123" />
 
             </LinearLayout>
 
@@ -116,7 +115,7 @@
             android:layout_width="match_parent"
             android:layout_height="@dimen/border_thin"
             android:layout_marginLeft="@dimen/padding_default"
-            android:background="@color/toolbar_border"/>
+            android:background="@color/toolbar_border" />
     </LinearLayout>
 
 </LinearLayout>

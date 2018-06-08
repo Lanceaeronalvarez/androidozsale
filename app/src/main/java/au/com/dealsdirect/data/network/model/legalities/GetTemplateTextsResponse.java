@@ -67,6 +67,40 @@ public class GetTemplateTextsResponse {
         @Expose
         private String paymentSchedule;
 
+        @SerializedName("_Free")
+        @Expose
+        private String deliveryOptionOPSFree;
+        @SerializedName("_DeliveryOption_OURPAYSELECT_Title")
+        @Expose
+        private String deliveryOptionOPSTitle;
+        @SerializedName("_DeliveryOption_OURPAYSELECT_Description")
+        @Expose
+        private String deliveryOptionOPSDescription;
+        @SerializedName("_DeliveryOption_EXPRESS_Title")
+        @Expose
+        private String deliveryOptionExpressTitle;
+        @SerializedName("_DeliveryOption_EXPRESS_Description")
+        @Expose
+        private String deliveryOptionExpressDescription;
+        @SerializedName("_DeliveryOption_STANDARD_Title")
+        @Expose
+        private String deliveryOptionStandardTitle;
+        @SerializedName("_Ops_description_remaining")
+        @Expose
+        private String deliveryOptionOPSDescriptionRemaining;
+        @SerializedName("_Ops_info_remaining_before_purchase")
+        @Expose
+        private String deliveryOptionOPSInfoBeforePurchase;
+        @SerializedName("_Ops_info_remaining_before_purchase_free_delivery")
+        @Expose
+        private String deliveryOptionOPSInfoBeforeFreeDelivery;
+        @SerializedName("_OurPaySelectTermsAndConditionsHeader")
+        @Expose
+        private String deliveryOptionOPSTncHeader;
+        @SerializedName("_OurPaySelectTermsAndConditionsBody")
+        @Expose
+        private String deliveryOptionOPSTncBody;
+
         public String getCheckoutMyPayPayExceedLimit() {
             return checkoutMyPayPayExceedLimit;
         }
@@ -145,6 +179,50 @@ public class GetTemplateTextsResponse {
 
         public void setPaymentSchedule(String paymentSchedule) {
             this.paymentSchedule = paymentSchedule;
+        }
+
+        public String getDeliveryOptionOPSFree() {
+            return deliveryOptionOPSFree;
+        }
+
+        public String getDeliveryOptionOPSTitle() {
+            return deliveryOptionOPSTitle;
+        }
+
+        public String getDeliveryOptionOPSDescription() {
+            return deliveryOptionOPSDescription;
+        }
+
+        public String getDeliveryOptionExpressTitle() {
+            return deliveryOptionExpressTitle;
+        }
+
+        public String getDeliveryOptionExpressDescription() {
+            return deliveryOptionExpressDescription;
+        }
+
+        public String getDeliveryOptionStandardTitle() {
+            return deliveryOptionStandardTitle;
+        }
+
+        public String getDeliveryOptionOPSDescriptionRemaining() {
+            return deliveryOptionOPSDescriptionRemaining;
+        }
+
+        public String getDeliveryOptionOPSInfoBeforePurchase() {
+            return deliveryOptionOPSInfoBeforePurchase;
+        }
+
+        public String getDeliveryOptionOPSInfoBeforeFreeDelivery() {
+            return deliveryOptionOPSInfoBeforeFreeDelivery;
+        }
+
+        public String getDeliveryOptionOPSTncHeader() {
+            return deliveryOptionOPSTncHeader;
+        }
+
+        public String getDeliveryOptionOPSTncBody() {
+            return deliveryOptionOPSTncBody;
         }
     }
 }

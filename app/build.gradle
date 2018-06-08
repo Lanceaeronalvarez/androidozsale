@@ -259,12 +259,12 @@ android {
         }
 
         ozsaleRC {
-            versionCode 8
+            versionCode 14
             versionName "0.9"
             applicationId "au.com.ozsale"
 
-            buildConfigField "String", "API_ROOT", "\"https://www.dealsdirect.com.au/\""
-            buildConfigField "String", "API_LEGACY", "\"https://www.dealsdirect.com.au/papi/public/v3.20/\""
+            buildConfigField "String", "API_ROOT", "\"https://www.ozsale.com.au/\""
+            buildConfigField "String", "API_LEGACY", "\"https://www.ozsale.com.au/papi/public/v3.22/\""
             buildConfigField "String", "ACCOUNT_ID", "\"A56B0D62-AEF6-4653-848E-2ECDDB6E9B8C\""
 
             resValue "string", "app_name", "Ozsale"
@@ -274,7 +274,7 @@ android {
             resValue "string", "fb_login_protocol_scheme", "fb" + facebookAppId
             resValue "string", "fb_page_id", "257280167216"
             resValue "string", "twitter_user_id", "twitter://user?user_id=37405859"
-            resValue "string", "default_country_id", "DA"
+            resValue "string", "default_country_id", "AS"
             resValue "string", "default_language_id", "EN"
 
             ext.newRelicAppToken = "AAa9d543732ff39dddc60c9cb9ad8c9cf22297904b"
@@ -284,12 +284,12 @@ android {
 
 
         ozsaleTest {
-            versionCode 1
+            versionCode 6
             versionName "0.9"
-            applicationId "au.com.ozsale.test"
+            applicationId "au.com.ozsaleTest"
 
             buildConfigField "String", "API_ROOT", "\"https://genie-ui-dealsdirect-pre.mysaledev.com/\""
-            buildConfigField "String", "API_LEGACY", "\"https://api.mysaledev.com/public/v3.20/\""
+            buildConfigField "String", "API_LEGACY", "\"https://api.mysaledev.com/public/v3.22/\""
             buildConfigField "String", "ACCOUNT_ID", "\"A56B0D62-AEF6-4653-848E-2ECDDB6E9B8C\""
 
             resValue "string", "app_name", "Ozsale Test"
@@ -299,7 +299,7 @@ android {
             resValue "string", "fb_login_protocol_scheme", "fb" + facebookAppId
             resValue "string", "fb_page_id", "257280167216"
             resValue "string", "twitter_user_id", "twitter://user?user_id=37405859"
-            resValue "string", "default_country_id", "DA"
+            resValue "string", "default_country_id", "AS"
             resValue "string", "default_language_id", "EN"
 
             ext.newRelicAppToken = "AAa9d543732ff39dddc60c9cb9ad8c9cf22297904b"
@@ -311,7 +311,6 @@ android {
     sourceSets {
         dealsDirectRC {
             java.srcDirs = ['src/commonControllers/java/',
-                            'src/commonAccountController/java',
                             'src/commonHomeController/java/',
                             'src/commonCategoriesController/java/',
                             'src/commonSaleItemsController/java/',
@@ -319,6 +318,7 @@ android {
                             'src/commonContactControllers/java/',
                             'src/commonReturnsControllers/java/',
                             'src/commonShopsController/java/',
+                            'src/commonOrdersController/java',
                             'src/commonMainController/java/',
                             'src/commonActivity/java/',
                             'src/dealsDirectRC/java/',
@@ -327,13 +327,13 @@ android {
 
         dealsDirectTest {
             java.srcDirs = ['src/commonControllers/java/',
-                            'src/commonAccountController/java',
                             'src/commonHomeController/java/',
                             'src/commonCategoriesController/java/',
                             'src/commonSaleItemsController/java/',
                             'src/commonSearchFilterController/java/',
                             'src/commonContactControllers/java/',
                             'src/commonReturnsControllers/java/',
+                            'src/commonOrdersController/java',
                             'src/commonShopsController/java/',
                             'src/commonMainController/java/',
                             'src/commonActivity/java/',
@@ -344,13 +344,13 @@ android {
         ooRC {
             res.srcDir 'src/ooTest/res/'
             java.srcDirs = ['src/commonControllers/java/',
-                            'src/commonAccountController/java',
                             'src/commonHomeController/java/',
                             'src/commonCategoriesController/java/',
                             'src/commonSaleItemsController/java/',
                             'src/commonSearchFilterController/java/',
                             'src/commonContactControllers/java/',
                             'src/commonReturnsControllers/java/',
+                            'src/commonOrdersController/java',
                             'src/commonShopsController/java/',
                             'src/commonMainController/java/',
                             'src/commonActivity/java/',
@@ -361,13 +361,13 @@ android {
         ooTest {
             res.srcDir 'src/ooTest/res/'
             java.srcDirs = ['src/commonControllers/java/',
-                            'src/commonAccountController/java',
                             'src/commonHomeController/java/',
                             'src/commonCategoriesController/java/',
                             'src/commonSaleItemsController/java/',
                             'src/commonSearchFilterController/java/',
                             'src/commonContactControllers/java/',
                             'src/commonReturnsControllers/java/',
+                            'src/commonOrdersController/java',
                             'src/commonShopsController/java/',
                             'src/commonMainController/java/',
                             'src/commonActivity/java/',
@@ -378,13 +378,13 @@ android {
         buyinviteRC {
             res.srcDir 'src/buyinviteTest/res/'
             java.srcDirs = ['src/commonControllers/java/',
-                            'src/commonAccountController/java',
                             'src/commonHomeController/java/',
                             'src/commonCategoriesController/java/',
                             'src/commonSaleItemsController/java/',
                             'src/commonSearchFilterController/java/',
                             'src/commonContactControllers/java/',
                             'src/commonReturnsControllers/java/',
+                            'src/commonOrdersController/java',
                             'src/commonShopsController/java/',
                             'src/commonMainController/java/',
                             'src/commonActivity/java/',
@@ -394,13 +394,13 @@ android {
 
         buyinviteTest {
             java.srcDirs = ['src/commonControllers/java/',
-                            'src/commonAccountController/java',
                             'src/commonHomeController/java/',
                             'src/commonCategoriesController/java/',
                             'src/commonSaleItemsController/java/',
                             'src/commonSearchFilterController/java/',
                             'src/commonContactControllers/java/',
                             'src/commonReturnsControllers/java/',
+                            'src/commonOrdersController/java',
                             'src/commonShopsController/java/',
                             'src/commonMainController/java/',
                             'src/commonActivity/java/',
@@ -411,7 +411,7 @@ android {
         ourpayTest {
             java.srcDirs = ['src/ourpayTest/java/',
                             'src/commonControllers/java/',
-                            'src/commonAccountController/java',
+                            'src/commonOrdersController/java',
                             'src/commonContactControllers/java/',
                             'src/commonReturnsControllers/java/',
                             'src/main/java/']
@@ -419,21 +419,18 @@ android {
 
         topbuyTest {
             res.srcDir 'src/topbuyRC/res/'
-            java.srcDirs = ['src/topbuyRC/java/',
-                            'src/main/java/']
+            java.srcDirs = ['src/topbuyRC/java/', 'src/main/java/']
         }
 
         topbuyRC {
             res.srcDir 'src/topbuyRC/res/'
-            java.srcDirs = ['src/topbuyRC/java/',
-                            'src/main/java/']
+            java.srcDirs = ['src/topbuyRC/java/', 'src/main/java/']
         }
 
         ozsaleRC {
             res.srcDir 'src/ozsaleRC/res/'
             java.srcDirs = ['src/ozsaleRC/java',
                             'src/commonControllers/java/',
-                            'src/commonShopsController/java/',
                             'src/main/java/']
         }
 
@@ -441,12 +438,12 @@ android {
             res.srcDir 'src/ozsaleRC/res/'
             java.srcDirs = ['src/ozsaleRC/java',
                             'src/commonControllers/java/',
-                            'src/commonShopsController/java/',
                             'src/main/java/']
         }
 
         main {
             java.srcDirs = ['src/main/java']
+            resources.srcDirs = ['src/main/resources']
         }
     }
 
@@ -462,13 +459,26 @@ android {
     testOptions {
         unitTests.returnDefaultValues = true
     }
+
+    dataBinding {
+        enabled = true
+    }
+
+    dexOptions {
+        javaMaxHeapSize "4g"
+    }
 }
 
 
-
+repositories {
+    flatDir { dirs 'libs' }
+}
 
 dependencies {
     compile fileTree(dir: 'libs', include: ['*.jar'])
+
+    implementation 'com.android.databinding:library:1.3.3'
+    implementation 'com.android.databinding:adapters:1.3.3'
 
     // android support libraries
     compile "com.android.support:appcompat-v7:$rootProject.supportLibrary"
@@ -587,6 +597,18 @@ dependencies {
 
     // NR
     compile 'com.newrelic.agent.android:android-agent:5.14.0'
+
+    //VISA CHECKOUT
+    // Visa checkout
+    compile 'com.braintreepayments.api:visa-checkout:1.0.0'
+    compile(name: 'visacheckout-android-sdk-5.5.2', ext: 'aar')
+    compile 'com.squareup.okio:okio:1.13.0'
+    compile 'com.squareup.okhttp3:okhttp:3.9.1'
+    compile group: 'de.greenrobot', name: 'eventbus', version: '2.4.1'
+
+    compile "com.google.android.gms:play-services-ads:$rootProject.gcmVersion"
+    compile "com.google.android.gms:play-services:$rootProject.gcmVersion"
+    compile "com.android.support:multidex:1.0.0"
 
     compile project(path: ':genie-utility')
     compile project(path: ':genie-animation')

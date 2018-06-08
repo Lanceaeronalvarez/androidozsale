@@ -7,7 +7,9 @@ import com.androidnetworking.error.ANError;
 import javax.inject.Inject;
 
 import au.com.dealsdirect.data.DataManager;
+import au.com.dealsdirect.data.network.AppApiCallback;
 import au.com.dealsdirect.data.network.model.contacthistory.GetContactHistoryRequest;
+import au.com.dealsdirect.data.network.model.contacthistory.GetContactHistoryResponse;
 import au.com.dealsdirect.data.network.model.contactreply.ReplyContactRequest;
 import au.com.dealsdirect.data.network.model.contactreply.ReplyContactResponse;
 import au.com.dealsdirect.ui.base.BasePresenter;
@@ -30,75 +32,31 @@ public class ViewContactHistoryPresenter<V extends ViewContactHistoryMvpView>
     public void loadContactHistory(GetContactHistoryRequest contactHistoryRequest) {
         getMvpView().showLoading();
 
-        getCompositeDisposable()
-                .add(getDataManager()
-                        .callGetContactHistory(contactHistoryRequest)
-                        .subscribeOn(getSchedulerProvider().io())
-                        .observeOn(getSchedulerProvider().ui())
-                        .subscribe(response -> {
+        doApiCallForResponse(getDataManager().callGetContactHistory(contactHistoryRequest), new AppApiCallback(){
+            @Override
+            public void onSuccess(Object response) {
+                super.onSuccess(response);
 
-                            if (!isViewAttached()) {
-                                Log.d("viewcontactshistory", "list is not attached");
-
-                                return;
-                            }
-                            getMvpView().hideLoading();
-                            if (response.getList() != null && !response.getList().isEmpty()) {
-                                getMvpView().showContactHistory(response.getList());
-                            }
-
-                        }, throwable -> {
-                            if (!isViewAttached()) {
-                                return;
-                            }
-
-                            getMvpView().hideLoading();
-                            getMvpView().onError(throwable.getMessage());
-                            // handle load accounts error here
-                            if (throwable instanceof ANError) {
-                                ANError anError = (ANError) throwable;
-                                handleApiError(anError);
-                            }
-                        }));
+                GetContactHistoryResponse.ResponseValue responseValue = (GetContactHistoryResponse.ResponseValue) response;
+                if (responseValue.getList() != null && !responseValue.getList().isEmpty()) {
+                    getMvpView().showContactHistory(responseValue.getList());
+                }
+            }
+        });
     }
 
     @Override
     public void replyContact(ReplyContactRequest replyContactRequest) {
         getMvpView().showLoading();
 
-        getCompositeDisposable()
-                .add(getDataManager()
-                        .callReplyContact(replyContactRequest)
-                        .subscribeOn(getSchedulerProvider().io())
-                        .observeOn(getSchedulerProvider().ui())
-                        .subscribe(response -> {
+        doApiCallForResponse(getDataManager().callReplyContact(replyContactRequest), new AppApiCallback(){
+            @Override
+            public void onSuccess(Object response) {
+                super.onSuccess(response);
+                ReplyContactResponse replyReponse = (ReplyContactResponse) response;
+                getMvpView().repliedContactSwitchView(replyReponse.getReplyContact());
+            }
+        });
 
-                            if (!isViewAttached()) {
-                                return;
-                            }
-
-                            getMvpView().hideLoading();
-
-                            ReplyContactResponse replyReponse = response;
-                            //   mViewMyContactContactUs.onLoadEnd();
-                            getMvpView().repliedContactSwitchView(replyReponse.getReplyContact());
-//                            getMvpView().showContactFirstOrder(myContactOrder);
-
-
-                        }, throwable -> {
-
-                            if (!isViewAttached()) {
-                                return;
-                            }
-
-                            getMvpView().hideLoading();
-                            getMvpView().onError(throwable.getMessage());
-
-                            // handle load accounts error here
-                            if (throwable instanceof ANError) {
-                                ANError anError = (ANError) throwable;
-                                handleApiError(anError);
-                            }
-                        }));
     }
 }

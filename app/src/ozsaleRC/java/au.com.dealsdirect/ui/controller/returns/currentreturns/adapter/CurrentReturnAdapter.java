@@ -31,11 +31,7 @@ public class CurrentReturnAdapter extends RecyclerView.Adapter<CurrentReturnView
     List<CurrentReturns> mCurrentReturnList = Collections.emptyList();
     List<GetReturnDetailsResponseBody> mReturnDetailsResponseBodyList = new LinkedList<>();
 
-    public CurrentReturnAdapter(
-            List<CurrentReturns> currentReturnsList,
-            List<GetReturnDetailsResponseBody> returnDetailsResponseBodyList,
-            CurrentReturnsMvpPresenter mvpPresenter){
-
+    public CurrentReturnAdapter(List<CurrentReturns> currentReturnsList, List<GetReturnDetailsResponseBody> returnDetailsResponseBodyList, CurrentReturnsMvpPresenter mvpPresenter) {
         mCurrentReturnList = currentReturnsList;
         mReturnDetailsResponseBodyList = returnDetailsResponseBodyList;
         mPresenter = mvpPresenter;
@@ -67,7 +63,7 @@ public class CurrentReturnAdapter extends RecyclerView.Adapter<CurrentReturnView
         String productApproveDate = "";
         String returnApproveDateFormat = "";
 
-        if (isProductReturnRequestApprovedObject != null){
+        if (isProductReturnRequestApprovedObject != null) {
             productApproveDate = isProductReturnRequestApprovedObject.toString();
             returnApproveDateFormat = DateUtils.getTrimmedServerDateString(productApproveDate);
 
@@ -76,7 +72,7 @@ public class CurrentReturnAdapter extends RecyclerView.Adapter<CurrentReturnView
         String productRequestStatus = mCurrentReturnList.get(position).getReturnStatus();
         String productRAN = mCurrentReturnList.get(position).getRan();
 
-        holder.currentReturnsRequestNumberValueTextView.setText(productRequestNumber+"");
+        holder.currentReturnsRequestNumberValueTextView.setText(productRequestNumber + "");
         holder.currentReturnsRequestProductNameValueTextView.setText(productName);
         holder.currentReturnsRequestDateValueTextView.setText(returnRequestDateFormat);
 
@@ -107,7 +103,7 @@ public class CurrentReturnAdapter extends RecyclerView.Adapter<CurrentReturnView
         return mCurrentReturnList.size();
     }
 
-    public void updateReturnDetailsResponseBody(List<GetReturnDetailsResponseBody> list){
+    public void updateReturnDetailsResponseBody(List<GetReturnDetailsResponseBody> list) {
         mReturnDetailsResponseBodyList = list;
         notifyDataSetChanged();
     }
