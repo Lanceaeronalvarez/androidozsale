@@ -40,6 +40,7 @@ public class ViewVouchersPresenter<V extends ViewVouchersMvpView> extends BasePr
     @Override
     public void loadMyVouchers() {
         if (getDataManager().isAuthorized()) {
+            getMvpView().showLoading();
             GetUserVouchersRequest getUserVouchersRequest =
                     new GetUserVouchersRequest(getDataManager().getLanguageId());
 

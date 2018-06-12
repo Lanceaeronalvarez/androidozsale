@@ -31,7 +31,7 @@ public class CountryController extends BasePullToRefreshController implements Co
     @Inject
     CountryMvpPresenter<CountryMvpView> mPresenter;
 
-    @BindView(R.id.partial_toolbar_arrow_title)
+    @BindView(R.id.partial_toolbar_title)
     TextView mTitleText;
 
     @BindView(R.id.partial_toolbar_right_view)

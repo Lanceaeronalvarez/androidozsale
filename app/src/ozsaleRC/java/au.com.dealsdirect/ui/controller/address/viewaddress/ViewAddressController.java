@@ -2,15 +2,12 @@ package au.com.dealsdirect.ui.controller.address.viewaddress;
 
 import android.os.Bundle;
 import android.support.annotation.NonNull;
-import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.SimpleItemAnimator;
-import android.util.Pair;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
@@ -56,7 +53,9 @@ public class ViewAddressController extends BasePullToRefreshController implement
     @BindView(R.id.controller_addresses_recyclerview)
     RecyclerView mRecyclerView;
 
-    @BindView(R.id.partial_toolbar_arrow_title)
+    @BindView(R.id.partial_toolbar_left_view)
+    View mToolbarLeftView;
+    @BindView(R.id.partial_toolbar_title)
     TextView mViewAddressToolarTitle;
     @BindView(R.id.address_office_delivery_subtitle)
     TextView mViewAddressSubHeader;
@@ -101,6 +100,8 @@ public class ViewAddressController extends BasePullToRefreshController implement
     protected void setUp(View view) {
         mPresenter.loadAddresses();
 
+
+        mToolbarLeftView.setVisibility(mActivity.isTablet() ? View.GONE : View.VISIBLE);
         mViewAddressToolarTitle.setText(getString(R.string.my_addresses_toolbar_title));
         mAddressList = new ArrayList<>();
         RecyclerViewSwipeManager swipeManager = new RecyclerViewSwipeManager();

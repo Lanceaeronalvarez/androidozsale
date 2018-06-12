@@ -8,34 +8,22 @@ import android.support.annotation.Nullable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.TextView;
 
 import com.bluelinelabs.conductor.changehandler.HorizontalChangeHandler;
 import com.bluelinelabs.conductor.changehandler.VerticalChangeHandler;
-import com.braintreepayments.api.VisaCheckout;
-import com.braintreepayments.api.interfaces.BraintreeResponseListener;
 import com.braintreepayments.api.models.BraintreeRequestCodes;
-import com.braintreepayments.api.models.VisaCheckoutNonce;
 import com.facebook.CallbackManager;
 import com.facebook.internal.CallbackManagerImpl;
 import com.google.gson.Gson;
-import com.jakewharton.rxbinding2.view.RxView;
-import com.visa.checkout.Profile;
-import com.visa.checkout.PurchaseInfo;
 import com.visa.checkout.VisaCheckoutSdk;
-import com.visa.checkout.VisaCheckoutSdkInitListener;
 import com.visa.checkout.VisaPaymentSummary;
-import com.visa.checkout.widget.VisaCheckoutButton;
-
-import java.util.concurrent.TimeUnit;
 
 import javax.inject.Inject;
 
 import au.com.dealsdirect.R;
 import au.com.dealsdirect.data.network.model.login.LoginVisa;
-import au.com.dealsdirect.ui.base.BaseController;
 import au.com.dealsdirect.ui.base.VisaCheckoutMvpPresenter;
 import au.com.dealsdirect.ui.base.VisaCheckoutMvpView;
 import au.com.dealsdirect.ui.controller.visacheckout.VisaCheckoutController;
@@ -46,8 +34,6 @@ import au.com.dealsdirect.utils.BundleKeys;
 import au.com.dealsdirect.utils.module.GateKeeper;
 import butterknife.BindView;
 import butterknife.OnClick;
-import io.reactivex.android.schedulers.AndroidSchedulers;
-import io.reactivex.disposables.CompositeDisposable;
 
 /*
  * Created by Ayi on 05/06/2017.
@@ -67,7 +53,7 @@ public class RegisterController extends VisaCheckoutController implements Regist
     @Inject
     VisaCheckoutMvpPresenter<VisaCheckoutMvpView> mVcoPresenter;
 
-    @BindView(R.id.partial_toolbar_arrow_title)
+    @BindView(R.id.partial_toolbar_title)
     TextView mToolBarTitle;
 
     @BindView(R.id.controller_register_forename_field)

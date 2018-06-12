@@ -51,8 +51,6 @@ public class AccountPresenter<V extends AccountMvpView> extends BasePresenter<V>
                 }
             }
         }
-
-        getMvpView().updateAdapter(position);
     }
 
     private void showAuthenticationRequiredScreens(Context context, String option) {

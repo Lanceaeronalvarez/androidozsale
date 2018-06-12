@@ -40,7 +40,7 @@ public class ReturnOrdersController extends BaseController
     @BindView(R.id.partial_toolbar_right_view)
     ImageView mReturnOrdersControllerToolbarRightOption;
 
-    @BindView(R.id.partial_toolbar_arrow_title)
+    @BindView(R.id.partial_toolbar_title)
     TextView mReturnOrdersControllerToolbarTitle;
 
     @BindView(R.id.controller_returns_select_orders_recyclerview)

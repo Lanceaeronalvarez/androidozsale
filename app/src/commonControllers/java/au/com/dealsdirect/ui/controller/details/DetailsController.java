@@ -40,7 +40,10 @@ public class DetailsController extends BasePullToRefreshController implements De
     @Inject
     DetailsMvpPresenter<DetailsMvpView> mPresenter;
 
-    @BindView(R.id.partial_toolbar_arrow_title)
+    @BindView(R.id.partial_toolbar_left_view)
+    View mToolbarLeftView;
+
+    @BindView(R.id.partial_toolbar_title)
     TextView mTitleTextView;
 
     @BindView(R.id.partial_toolbar_right_view)
@@ -122,12 +125,10 @@ public class DetailsController extends BasePullToRefreshController implements De
 
     @Override
     protected void setUp(View view) {
-        mSaveUserDetailsButton.setImageDrawable(
-                getResources().getDrawable(R.drawable.ic_check));
-        mTitleTextView.setText("Personal Details");
-
-//        ((ElasticHorizontalDragDismissFrameLayout)view).addListener(mDragDismissCallback);
-
+        mSaveUserDetailsButton.setImageDrawable(getResources().getDrawable(R.drawable.ic_check));
+        mSaveUserDetailsButton.setVisibility(getBoolean(R.bool.is_ozsale_app) ? View.GONE : View.VISIBLE);
+        mTitleTextView.setText(getString(R.string.account_details));
+        mToolbarLeftView.setVisibility(mActivity.isTablet() ? View.GONE : View.VISIBLE);
 
         List<String> list = new ArrayList<String>(Arrays.asList(getResources().getStringArray(R.array.genders)));
         CustomSpinnerAdapter customSpinnerAdapter = new CustomSpinnerAdapter(mActivity,

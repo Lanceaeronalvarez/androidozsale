@@ -44,7 +44,7 @@ public class LoginController extends BaseController implements LoginMvpView {
 
     @BindView(R.id.toolbar_title_login)
     Toolbar mToolbar;
-    @BindView(R.id.partial_toolbar_arrow_title)
+    @BindView(R.id.partial_toolbar_title)
     TextView mToolbarTitle;
     @BindView(R.id.controller_login_email_edittext)
     EditText mEmailEditText;

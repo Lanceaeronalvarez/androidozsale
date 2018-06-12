@@ -67,7 +67,7 @@ public class ReturnDetailsController extends BaseController implements ReturnDet
     @BindView(R.id.controller_return_details_recyclerview)
     RecyclerView mReturnDetailsControllerRecyclerView;
 
-    @BindView(R.id.partial_toolbar_arrow_title)
+    @BindView(R.id.partial_toolbar_title)
     TextView mReturnDetailsControllerToolbarTitle;
 
     @BindView(R.id.partial_toolbar_right_view)

@@ -25,7 +25,7 @@ import butterknife.OnClick;
 
 public class ForgotPasswordController extends BaseController implements ForgotPasswordMvpView {
 
-    @BindView(R.id.partial_toolbar_arrow_title)
+    @BindView(R.id.partial_toolbar_title)
     TextView mForgotPasswordTitle;
 
     @BindView(R.id.partial_toolbar_right_view)

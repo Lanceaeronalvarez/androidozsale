@@ -49,7 +49,7 @@ public class ViewContactHistoryController extends BaseController implements View
     @BindView(R.id.partial_toolbar_right_view)
     ImageView mContactHistoryRightOption;
 
-    @BindView(R.id.partial_toolbar_arrow_title)
+    @BindView(R.id.partial_toolbar_title)
     TextView mContactHistoryTitle;
 
     @BindView(R.id.controller_view_contacts_history_message_field)

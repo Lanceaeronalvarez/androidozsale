@@ -282,6 +282,11 @@ public class HomeController extends BaseController implements HomeMvpView {
                 .tag(getActivity().getResources().getString(R.string.checkout_controller)));
     }
 
+    public void resetAccountRouter(){
+        mAccountsRouter = getChildRouter(mAccountsContainer);
+        mAccountsRouter.setRoot(RouterTransaction.with(AccountController.newInstance()));
+    }
+
     @Override
     public void showFirstTabController() {
 
@@ -313,6 +318,20 @@ public class HomeController extends BaseController implements HomeMvpView {
         int size = mAccountsRouter.getBackstack().size();
         if (mAccountsRouter.getBackstack().get(size - 1).controller() instanceof AccountMvpView)
             ((AccountMvpView) mAccountsRouter.getBackstack().get(size - 1).controller()).initLoginDrawable();
+
+//        if (mActivity.isTablet() && !mActivity.isAuthorized()) {
+//            mActivity.showLoginController(mAccountsRouter, new AuthHandler() {
+//                @Override
+//                public void success() {
+//                    resetRouters();
+//                }
+//
+//                @Override
+//                public void error() {
+//
+//                }
+//            });
+//        }
     }
 
     @Override

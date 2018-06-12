@@ -2,17 +2,14 @@ package au.com.dealsdirect.ui.controller.checkout.paymentselect;
 
 import android.os.Bundle;
 import android.support.annotation.NonNull;
-import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.SimpleItemAnimator;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.bluelinelabs.conductor.changehandler.HorizontalChangeHandler;
@@ -54,10 +51,10 @@ public class PaymentSelectController extends BasePullToRefreshController impleme
     RecyclerView mRecyclerView;
 
 
-    @BindView(R.id.partial_toolbar_arrow_title)
+    @BindView(R.id.partial_toolbar_left_view)
+    View mToolbarLeftView;
+    @BindView(R.id.partial_toolbar_title)
     TextView mPaymentSelectToolbarTitle;
-    @BindView(R.id.partial_toolbar_right_view)
-    ImageView mPaymentSelectRightOption;
     @BindView(R.id.no_payment_method_placeholder)
     LinearLayout mNoPaymentPlaceholder;
 
@@ -93,7 +90,7 @@ public class PaymentSelectController extends BasePullToRefreshController impleme
 
     @Override
     protected View inflateView(@NonNull LayoutInflater inflater, @NonNull ViewGroup container) {
-        View view = super.inflateView(inflater, container, ToolBarType.ARROW);
+        View view = super.inflateView(inflater, container);
 
         setToolBarVisible(getResource().getBoolean(R.bool.payselect_toolbar_visibility));
         fillContent(inflater.inflate(R.layout.controller_payment_select, container, false));
@@ -195,8 +192,8 @@ public class PaymentSelectController extends BasePullToRefreshController impleme
             mPresenter.fetchUserPaymentMethods();
         }
 
+        mToolbarLeftView.setVisibility(mActivity.isTablet() ? View.GONE : View.VISIBLE);
         mPaymentSelectToolbarTitle.setText(getString(R.string.my_payments));
-        mPaymentSelectRightOption.setVisibility(View.VISIBLE);
         mAdapter = new PaymentSelectAdapter(mActivity, mPaymentMethods, mPresenter, isFromCart);
         RecyclerViewSwipeManager recyclerViewSwipeManager = new RecyclerViewSwipeManager();
         RecyclerView.Adapter wrappedAdapter = recyclerViewSwipeManager.createWrappedAdapter(mAdapter);

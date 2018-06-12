@@ -30,7 +30,7 @@
             android:src="@drawable/ic_gray_chevron_left"/>
 
         <TextView
-            android:id="@+id/partial_toolbar_arrow_title"
+            android:id="@+id/partial_toolbar_title"
             fontPath="@string/font_app_semibold"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -51,6 +51,7 @@
             android:layout_alignParentEnd="true"
             android:layout_centerVertical="true"
             android:background="@drawable/bg_toolbar_button"
+            android:visibility="invisible"
             android:scaleType="fitCenter"
             android:padding="@dimen/margin_small"
             android:src="@drawable/ic_account_logout" />

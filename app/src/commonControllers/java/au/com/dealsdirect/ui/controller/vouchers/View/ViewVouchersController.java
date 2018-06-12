@@ -38,7 +38,7 @@ public class ViewVouchersController extends BasePullToRefreshController implemen
     @Inject
     ViewVouchersMvpPresenter<ViewVouchersMvpView> mPresenter;
 
-    @BindView(R.id.partial_toolbar_arrow_title)
+    @BindView(R.id.partial_toolbar_title)
     TextView mTitleText;
 
     @BindView(R.id.partial_toolbar_right_view)
@@ -111,9 +111,9 @@ public class ViewVouchersController extends BasePullToRefreshController implemen
 
     @Override
     protected void setUp(View view) {
-        showLoading();
-        mTitleText.setText("My Vouchers");
+        mTitleText.setText(getString(R.string.account_vouchers));
         mFilterView.setVisibility(View.INVISIBLE);
+        mArrowImage.setVisibility(mActivity.isTablet() ? View.GONE : View.VISIBLE);
         mArrowImage.setOnClickListener(action -> {
             mActivity.onBackPressed();
         });
@@ -144,7 +144,6 @@ public class ViewVouchersController extends BasePullToRefreshController implemen
         unusedVoucherHelper.attachToRecyclerView(mUnusedVouchersRecyclerViewPager);
         usedVoucherHelper.attachToRecyclerView(mUsedVouchersRecyclerViewPager);
 
-        showLoading();
         mPresenter.loadMyVouchers();
     }
 

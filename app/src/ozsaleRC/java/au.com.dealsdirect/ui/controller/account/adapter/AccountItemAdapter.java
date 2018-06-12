@@ -89,21 +89,25 @@ public class AccountItemAdapter extends AbstractExpandableItemAdapter<AccountIte
             holder.mAccountArrowRight.setVisibility(View.VISIBLE);
         }
 
-        if(mIsTablet){
-            holder.itemView.setSelected(false);
+        if (mIsTablet) {
+            if (mPreviousPos == groupPosition) {
+                holder.itemView.setSelected(true);
+            } else {
+                holder.itemView.setSelected(false);
+            }
         }
 
         if (mSelectFirstItem && groupPosition == 0) {
             mPreviousPos = groupPosition;
             holder.itemView.setSelected(true);
-            mPresenter.onAccountItemClick(mContext, title, groupPosition);
+            mPresenter.onAccountItemClick(mContext,title,groupPosition);
             mSelectFirstItem = false; //reset
         }
 
         holder.mAccountItemName.setText(title);
         holder.itemView.setOnClickListener(view -> {
-            if(mIsTablet) {
-                if(mPreviousPos!=groupPosition) {
+            if (mIsTablet) {
+                if (mPreviousPos != groupPosition) {
                     notifyItemChanged(mPreviousPos);
                 }
                 holder.itemView.setSelected(true);

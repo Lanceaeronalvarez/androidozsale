@@ -53,5 +53,4 @@ public interface AccountMvpView extends MvpView {
 
     int getBackstackSize();
 
-    void updateAdapter(int position);
 }

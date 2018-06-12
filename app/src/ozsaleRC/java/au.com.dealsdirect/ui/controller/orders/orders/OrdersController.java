@@ -39,7 +39,10 @@ public class OrdersController extends BasePullToRefreshController implements Ord
     @Inject
     OrdersMvpPresenter<OrdersMvpView> mPresenter;
 
-    @BindView(R.id.partial_toolbar_arrow_title)
+    @BindView(R.id.partial_toolbar_left_view)
+    View mToolbarLeftView;
+
+    @BindView(R.id.partial_toolbar_title)
     TextView mOrdersToolarTitle;
 
     @BindView(R.id.partial_toolbar_right_view)
@@ -94,7 +97,7 @@ public class OrdersController extends BasePullToRefreshController implements Ord
 
     @Override
     protected void setUp(View view) {
-
+        mToolbarLeftView.setVisibility(mActivity.isTablet() ? View.GONE : View.VISIBLE);
         mOrdersToolarTitle.setText(mActivity.getResources().getString(R.string.account_orders));
         mOrdersRightOption.setImageDrawable(null);
 

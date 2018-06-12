@@ -34,10 +34,7 @@ import com.visa.checkout.VisaCheckoutSdk;
 import com.visa.checkout.VisaPaymentSummary;
 
 import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.LinkedList;
 import java.util.List;
-import java.util.Set;
 import java.util.concurrent.TimeUnit;
 
 import javax.inject.Inject;
@@ -160,7 +157,7 @@ public class CheckoutController extends VisaCheckoutController implements Checko
     Button mShopNowButton;
     @BindView(R.id.partial_toolbar_left_view)
     ImageButton mToolbarLeftButton;
-    @BindView(R.id.partial_toolbar_arrow_title)
+    @BindView(R.id.partial_toolbar_title)
     TextView mTitleTextView;
     @BindView(R.id.partial_toolbar_right_view)
     ImageButton mToolbarRightButton;

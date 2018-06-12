@@ -60,7 +60,7 @@ public class AccountController extends BaseController implements AccountMvpView,
     AccountItemAdapter mAccountItemAdapter;
 
 
-    @BindView(R.id.partial_toolbar_arrow_title)
+    @BindView(R.id.partial_toolbar_title)
     TextView mTitleTextView;
 
     @BindView(R.id.partial_toolbar_left_view)
@@ -81,6 +81,8 @@ public class AccountController extends BaseController implements AccountMvpView,
     private RecyclerViewExpandableItemManager mRecyclerViewExpandableItemManager;
     private RecyclerView.LayoutManager mLayoutManager;
     private Router mAccountDetailRouter;
+    private String mDefaultChosenAccountOption = "";
+    private int mDefaultChosenAccountOptionPos = 0;
 
     private ArrayList<AccountItem> mAccountItems;
 
@@ -128,6 +130,7 @@ public class AccountController extends BaseController implements AccountMvpView,
     @Override
     protected void setUp(View view) {
         // Setup views here
+        mDefaultChosenAccountOption = getString(R.string.account_details);
 
         if (mActivity.isTablet()) {
             mAccountDetailRouter = getChildRouter(mAccountDetailContainer);
@@ -228,7 +231,6 @@ public class AccountController extends BaseController implements AccountMvpView,
         } else {
             mAccountDetailRouter.setRoot(RouterTransaction.with(DetailsController.newInstance()).pushChangeHandler(new FadeChangeHandler())
                     .popChangeHandler(new FadeChangeHandler()));
-//            mAccountItemAdapter.notifyDataSetChanged();
         }
     }
 
@@ -371,6 +373,9 @@ public class AccountController extends BaseController implements AccountMvpView,
 
                 //reset routers with unique user info
                 mActivity.getMainController().getHomeController().resetRouters();
+                if(mActivity.isTablet()){
+                    mActivity.setShopsAsVisibleContainer();
+                }
                 CustomAlertDialog.showCustomAlertDialog(getActivity(),
                         CustomAlertDialog.CustomDialogIconState.POSITIVE,
                         getActivity().getString(R.string.logout_successful));
@@ -395,6 +400,8 @@ public class AccountController extends BaseController implements AccountMvpView,
         } else {
             mRightToolbarButton.setImageDrawable(getActivity().getResources().getDrawable(R.drawable.ic_login));
         }
+
+        mRightToolbarButton.setVisibility(View.VISIBLE);
     }
 
     @Override
@@ -438,10 +445,6 @@ public class AccountController extends BaseController implements AccountMvpView,
         return getDisplayRouter().getBackstackSize();
     }
 
-    @Override
-    public void updateAdapter(int position) {
-//        mAccountItemAdapter.notifyItemChanged(position);
-    }
 }
 
          
