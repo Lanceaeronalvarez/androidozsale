@@ -44,7 +44,6 @@
             tools:text="Title" />
 
 
-
         <ImageButton
             android:id="@+id/partial_toolbar_right_view"
             android:layout_width="@dimen/partial_toolbar_button_width"
@@ -58,5 +57,6 @@
 
     </RelativeLayout>
 
+    <View style="@style/horizontalBorderView"/>
 
 </android.support.v7.widget.Toolbar>

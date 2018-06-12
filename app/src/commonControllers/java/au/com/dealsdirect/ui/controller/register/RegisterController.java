@@ -170,7 +170,7 @@ public class RegisterController extends VisaCheckoutController implements Regist
                 msg = "Purchase failed!";
             }
 
-            if(!msg.isEmpty()) {
+            if (!msg.isEmpty()) {
                 AppLogger.d("VC_onActivityResult", msg);
                 onError(msg);
             }
@@ -200,6 +200,7 @@ public class RegisterController extends VisaCheckoutController implements Regist
         hideKeyboard();
         mActivity.onBackPressed();
     }
+
 
     @OnClick(R.id.controller_register_sign_up_button)
     void onSignUpClick() {

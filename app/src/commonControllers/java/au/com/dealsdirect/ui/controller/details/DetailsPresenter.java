@@ -28,13 +28,16 @@ public class DetailsPresenter<V extends DetailsMvpView> extends BasePresenter<V>
 
     @Override
     public void loadUser(SetUserDetailsRequest setUserDetailsRequest) {
-        doApiCallForResponse(getDataManager().getLoadUserDetailsApiCall(setUserDetailsRequest), new AppApiCallback() {
-            @Override
-            public void onSuccess(Object response) {
-                super.onSuccess(response);
-                getMvpView().loadDetails((GetUserDetailsResponse) response);
-            }
-        });
+        if(getDataManager().isAuthorized()) {
+            getMvpView().showLoading();
+            doApiCallForResponse(getDataManager().getLoadUserDetailsApiCall(setUserDetailsRequest), new AppApiCallback() {
+                @Override
+                public void onSuccess(Object response) {
+                    super.onSuccess(response);
+                    getMvpView().loadDetails((GetUserDetailsResponse) response);
+                }
+            });
+        }
     }
 
     @Override

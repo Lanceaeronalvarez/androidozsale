@@ -59,13 +59,21 @@ public class LoginHostController extends BaseController implements LoginHostMvpV
     }
 
     @OnClick(R.id.dialog_background)
-    public void dismissDialog() {
-        handleBack();
+    void dismissDialog() {
+        mActivity.loginErrorHandler("");
+        mActivity.getHomeController().resetVisibleContainer();
+        getRouter().popController(this);
     }
 
     @Override
     public boolean handleBack() {
-        mActivity.loginErrorHandler("");
-        return super.handleBack();
+        if(mAuthenticationRouter.getBackstackSize() == 1){
+            getRouter().popController(this);
+            mActivity.loginErrorHandler("");
+            mActivity.getHomeController().resetVisibleContainer();
+            return true;
+        } else {
+            return super.handleBack();
+        }
     }
 }

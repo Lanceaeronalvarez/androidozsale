@@ -158,6 +158,7 @@ public class DetailsController extends BasePullToRefreshController implements De
         });
         SetUserDetailsRequest setUserDetailsRequest = new SetUserDetailsRequest();
         mPresenter.loadUser(setUserDetailsRequest);
+
     }
 
     @Override
@@ -174,15 +175,15 @@ public class DetailsController extends BasePullToRefreshController implements De
         mLastNameText.setText(value.getSurname());
         mEmailAddressText.setText(value.getEmail());
 
-        if (value.getDateOfBirth()!=null){
-            String day =  value.getDateOfBirth().getDay().toString();
+        if (value.getDateOfBirth() != null) {
+            String day = value.getDateOfBirth().getDay().toString();
             String year = value.getDateOfBirth().getYear().toString();
-            String month = DateUtils.months[value.getDateOfBirth().getMonth()-1];
-            mDateOfBirthText.setText(month+" "+day+", "+year);
+            String month = DateUtils.months[value.getDateOfBirth().getMonth() - 1];
+            mDateOfBirthText.setText(month + " " + day + ", " + year);
         }
 
         int genderItem = 0;
-        if (!value.getGender()){
+        if (!value.getGender()) {
             genderItem = 1;
         }
 
@@ -223,11 +224,11 @@ public class DetailsController extends BasePullToRefreshController implements De
         String newpassword = mNewPasswordText.getText().toString();
         String confirmpassword = mConfirmPasswordText.getText().toString();
 
-        if (newpassword.equals(confirmpassword)){
+        if (newpassword.equals(confirmpassword)) {
             mPresenter.sendUserDetails(createUserDetailRequest(email, firstname, lastname, dateofbirth,
-                    gender, email, password, newpassword, confirmpassword ));
-        }else{
-            CustomAlertDialog.showCustomAlertDialog(mActivity, CustomAlertDialog.CustomDialogIconState.POSITIVE,mActivity.getString(R.string.password_does_not_match));
+                    gender, email, password, newpassword, confirmpassword));
+        } else {
+            CustomAlertDialog.showCustomAlertDialog(mActivity, CustomAlertDialog.CustomDialogIconState.POSITIVE, mActivity.getString(R.string.password_does_not_match));
         }
     }
 

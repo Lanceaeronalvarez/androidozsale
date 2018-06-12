@@ -96,19 +96,10 @@ public class HomeController extends BaseController implements HomeMvpView {
     private Router mContactRouter;
     private Router mAccountsRouter;
     private Router mCheckoutRouter;
-
     private Router mLoginHostRouter;
 
-    public Router getAccountsRouter() {
-        return mAccountsRouter;
-    }
-
-    private int mPreviousTab = R.id.action_shop;
-    private int mCurrentTab = R.id.action_shop;
-    private int currentVisibleIndex = 1;
+    private int currentVisibleIndex = 0;
     private int previousVisibleIndex = 0;
-
-    private boolean isLoginVisible = false;
 
     public static HomeController newInstance() {
 
@@ -231,11 +222,9 @@ public class HomeController extends BaseController implements HomeMvpView {
                         showThirdTabController();
                         break;
                     case TAB_CONTACT_INDEX:
-                        mActivity.setDraggableViewPager(false);
                         showFourthTabController();
                         break;
                     case TAB_CHECKOUT_INDEX:
-                        mActivity.setDraggableViewPager(false);
                         showFifthTabController();
                         break;
                     default:
@@ -273,6 +262,8 @@ public class HomeController extends BaseController implements HomeMvpView {
 
         mAccountsRouter.setRoot(RouterTransaction.with(AccountController.newInstance()));
 
+        mLoginHostRouter = getChildRouter(mLoginHostContainer);
+        mLoginHostRouter.setPopsLastView(true);
 
         mCheckoutRouter = getChildRouter(mCheckoutContainer);
         mCheckoutRouter.setRoot(RouterTransaction.with(CheckoutController.newInstance())
@@ -326,13 +317,13 @@ public class HomeController extends BaseController implements HomeMvpView {
 
     @Override
     public void showFourthTabController() {
-        setVisibleContainer(TAB_CONTACT_INDEX);
         mActivity.getMainController().setViewpagerDraggable(false);
         if (!mActivity.isAuthorized()) {
             mActivity.showLoginController(mContactRouter, new AuthHandler() {
                 @Override
                 public void success() {
                     resetRouters();
+                    setVisibleContainer(TAB_CONTACT_INDEX);
                 }
 
                 @Override
@@ -340,19 +331,20 @@ public class HomeController extends BaseController implements HomeMvpView {
 
                 }
             });
+        } else {
+            setVisibleContainer(TAB_CONTACT_INDEX);
         }
     }
 
     @Override
     public void showFifthTabController() {
-        setVisibleContainer(TAB_CHECKOUT_INDEX);
         mActivity.getMainController().setViewpagerDraggable(false);
-
         if (!mActivity.isAuthorized()) {
             mActivity.showLoginController(mCheckoutRouter, new AuthHandler() {
                 @Override
                 public void success() {
                     resetRouters();
+                    setVisibleContainer(TAB_CHECKOUT_INDEX);
                 }
 
                 @Override
@@ -361,6 +353,7 @@ public class HomeController extends BaseController implements HomeMvpView {
                 }
             });
         } else { //should load cart everytime checkout is clicked on bottom nav
+            setVisibleContainer(TAB_CHECKOUT_INDEX);
             Controller controller = getCurrentControllerOnRouter(mCheckoutRouter);
             if (controller instanceof CheckoutController) {
                 ((CheckoutController) controller).loadCart();
@@ -445,7 +438,11 @@ public class HomeController extends BaseController implements HomeMvpView {
     }
 
     public Router getCurrentRouter() {
-        return mRouterContainerMapping.get(currentVisibleIndex).first;
+        if (mActivity.isTablet() && isLoginVisible()) {
+            return mLoginHostRouter;
+        } else {
+            return mRouterContainerMapping.get(currentVisibleIndex).first;
+        }
     }
 
     public Controller getCurrentControllerOnRouter(Router router) {
@@ -495,9 +492,11 @@ public class HomeController extends BaseController implements HomeMvpView {
         }
     }
 
-    public void initLoginHostController() {
-        mLoginHostContainer.setVisibility(View.VISIBLE);
-        mLoginHostRouter = getChildRouter(mLoginHostContainer);
-        mLoginHostRouter.setPopsLastView(true);
+    public boolean isLoginVisible() {
+        return mLoginHostRouter != null && mLoginHostRouter.getBackstackSize() >= 1;
+    }
+
+    public Router getLoginHostRouter() {
+        return mLoginHostRouter;
     }
 }

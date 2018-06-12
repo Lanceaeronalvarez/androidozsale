@@ -342,7 +342,7 @@ public class AccountController extends BaseController implements AccountMvpView,
     public void triggerLogin(String option, int position) {
         AccountMvpView mvpView = this;
 
-        mActivity.showLoginController(mActivity.getLoginHostRouter(), new AuthHandler() {
+        mActivity.showLoginController(getDisplayRouter(), new AuthHandler() {
             @Override
             public void success() {
                 mPresenter.onAttach(mvpView);

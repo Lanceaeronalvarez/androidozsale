@@ -22,15 +22,17 @@ public class OrdersPresenter<V extends OrdersMvpView> extends BasePresenter<V> i
 
     @Override
     public void loadOrders() {
-        doApiCallForResponse(getDataManager()
-                .callGetPaymentsList(new GetPaymentsList.RequestValues()), new AppApiCallback(){
-            @Override
-            public void onSuccess(Object response) {
-                super.onSuccess(response);
-                if(((GetPaymentsList.ResponseValue) response).getD().getResult()){
-                    getMvpView().showOrders(((GetPaymentsList.ResponseValue) response).getD().getList());
+        if (getDataManager().isAuthorized()) {
+            doApiCallForResponse(getDataManager()
+                    .callGetPaymentsList(new GetPaymentsList.RequestValues()), new AppApiCallback() {
+                @Override
+                public void onSuccess(Object response) {
+                    super.onSuccess(response);
+                    if (((GetPaymentsList.ResponseValue) response).getD().getResult()) {
+                        getMvpView().showOrders(((GetPaymentsList.ResponseValue) response).getD().getList());
+                    }
                 }
-            }
-        });
+            });
+        }
     }
 }

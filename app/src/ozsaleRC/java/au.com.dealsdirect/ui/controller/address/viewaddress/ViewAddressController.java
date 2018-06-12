@@ -240,7 +240,7 @@ public class ViewAddressController extends BasePullToRefreshController implement
 
     @OnClick(R.id.partial_toolbar_left_view)
     public void onBackClick() {
-        if (mActivity != null){
+        if (mActivity != null) {
             mActivity.onBackPressed();
         }
     }
@@ -257,7 +257,7 @@ public class ViewAddressController extends BasePullToRefreshController implement
     }
 
     @OnClick(R.id.controller_address_button)
-    public void clickAddNewAddress(){
+    public void clickAddNewAddress() {
         showAddNewAddress();
     }
 }

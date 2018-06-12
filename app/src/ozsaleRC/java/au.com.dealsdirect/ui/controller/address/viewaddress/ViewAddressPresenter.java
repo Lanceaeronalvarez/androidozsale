@@ -30,19 +30,21 @@ public class ViewAddressPresenter<V extends ViewAddressMvpView> extends BasePres
 
     @Override
     public void loadAddresses() {
-        getMvpView().showLoading();
-        doApiCallForResponse(getDataManager().callGetUserAddresses(
-                new GetAddresses.RequestValues(getDataManager().getLanguageId())), new AppApiCallback() {
-            @Override
-            public void onSuccess(Object response) {
-                super.onSuccess(response);
-                if (((GetAddresses.ResponseValue) response).getD().getResult()) {
-                    getMvpView().showAddresses(((GetAddresses.ResponseValue) response));
-                } else {
-                    getMvpView().onError(((GetAddresses.ResponseValue) response).getD().getMessage());
+        if(getDataManager().isAuthorized()) {
+            getMvpView().showLoading();
+            doApiCallForResponse(getDataManager().callGetUserAddresses(
+                    new GetAddresses.RequestValues(getDataManager().getLanguageId())), new AppApiCallback() {
+                @Override
+                public void onSuccess(Object response) {
+                    super.onSuccess(response);
+                    if (((GetAddresses.ResponseValue) response).getD().getResult()) {
+                        getMvpView().showAddresses(((GetAddresses.ResponseValue) response));
+                    } else {
+                        getMvpView().onError(((GetAddresses.ResponseValue) response).getD().getMessage());
+                    }
                 }
-            }
-        });
+            });
+        }
     }
 
     @Override

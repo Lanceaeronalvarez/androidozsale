@@ -88,6 +88,7 @@ public class MainActivity extends BaseActivity implements MainMvpView {
     @BindView(R.id.activity_main_frame)
     ViewGroup mContainer;
 
+
     private BraintreeFragment mBraintreeFragment;
     private FetchTokenHandler mFetchTokenHandler;
 
@@ -99,7 +100,6 @@ public class MainActivity extends BaseActivity implements MainMvpView {
     private Router mCategoriesRouter;
     private Router mAccountsRouter;
     private Router mCheckoutRouter;
-    private Router mLoginHostRouter;
 
     private AuthHandler mAuthHandler;
 
@@ -188,23 +188,25 @@ public class MainActivity extends BaseActivity implements MainMvpView {
 
     @Override
     public void onBackPressed() {
-        Router currentRouter = getCurrentRouter();
-        Controller currentController = getCurrentController(getCurrentRouter());
-        if (getMainController() == null || getMainController().getHomeViewPager() == null) {
-            return;
-        }
-        switch (getMainController().getHomeViewPager().getCurrentItem()) {
-            case BANNER_FILTER_INDEX:
-                setRootViewpagerItem(SHOP_INDEX);
-                resetShopController(currentRouter);
-                break;
-            case SHOP_INDEX:
-                if (mIsFromBannerFilter) {
-                    shopsRouterFromCategoryBackPress(currentRouter, currentController);
-                } else {
-                    customRouterBackPress(currentRouter, currentController);
-                }
-                break;
+        if(isTablet() && getHomeController().isLoginVisible()) {
+            getHomeController().getLoginHostRouter().handleBack();
+        } else {
+            Router currentRouter = getCurrentRouter();
+            Controller currentController = getCurrentController(getCurrentRouter());
+
+            switch (getMainController().getHomeViewPager().getCurrentItem()) {
+                case BANNER_FILTER_INDEX:
+                    setRootViewpagerItem(SHOP_INDEX);
+                    resetShopController(currentRouter);
+                    break;
+                case SHOP_INDEX:
+                    if (mIsFromBannerFilter) {
+                        shopsRouterFromCategoryBackPress(currentRouter, currentController);
+                    } else {
+                        customRouterBackPress(currentRouter, currentController);
+                    }
+                    break;
+            }
         }
     }
 
@@ -267,8 +269,7 @@ public class MainActivity extends BaseActivity implements MainMvpView {
                 GateKeeper.push(router, GateKeeper.Destination.LOGIN);
             }
         } else {
-            getHomeController().initLoginHostController();
-            GateKeeper.setRoot(router, GateKeeper.Destination.LOGIN_HOST, RouterTransaction.with(LoginHostController.newInstance()).
+            GateKeeper.setRoot(getHomeController().getLoginHostRouter(), GateKeeper.Destination.LOGIN_HOST, RouterTransaction.with(LoginHostController.newInstance()).
                     pushChangeHandler(new FadeChangeHandler()).popChangeHandler(new FadeChangeHandler()));
         }
     }
@@ -614,14 +615,6 @@ public class MainActivity extends BaseActivity implements MainMvpView {
         return mAccountsRouter;
     }
 
-    public void setLoginHostRouter(Router router) {
-        mLoginHostRouter = router;
-    }
-
-    public Router getLoginHostRouter() {
-        return mLoginHostRouter;
-    }
-
     public void setShopController(ShopsController shopsController) {
         mShopController = shopsController;
     }
@@ -828,4 +821,5 @@ public class MainActivity extends BaseActivity implements MainMvpView {
     public HomeController getHomeController() {
         return getMainController().getHomeController();
     }
+
 }
