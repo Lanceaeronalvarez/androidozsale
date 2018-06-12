@@ -294,6 +294,7 @@
     <string name="error_creating_message">Error creating message</string>
     <string name="invite_friends_tag">InviteFriendsController</string>
     <string name="checkout_controller">CheckoutController</string>
+    <string name="accounts_host_controller_tag">AccountsHostController</string>
     <string name="view_contacts_controller">ViewContactsController</string>
 
     <string-array name="genders">

@@ -29,55 +29,68 @@ public class AccountPresenter<V extends AccountMvpView> extends BasePresenter<V>
     }
 
     @Override
-    public void onAccountItemClick(Context context, String option) {
+    public void onAccountItemClick(Context context, String option, int position) {
 
         if (getMvpView().isChangeInProgress()) {
             return;
         }
 
+
         if (!isNeedAuthorization(context, option)) {
-
-            if (option.equals(context.getString(R.string.account_language))) {
-                getMvpView().showLanguage();
-            } else if (option.equals(context.getString(R.string.account_about_us))) {
-                getMvpView().showLegalities("aboutus", option);
-            } else if (option.equals(context.getString(R.string.account_privacy))) {
-                getMvpView().showLegalities("PrivacyPolicy_Text", option);
-            } else if (option.equals(context.getString(R.string.account_tnc))) {
-                getMvpView().showLegalities("TermsAndConditions_Text", option);
-            } else if (option.equals(context.getString(R.string.account_contact_us))) {
-                getMvpView().showContactUs();
-            } else if (option.equals(context.getString(R.string.account_country))) {
-                getMvpView().showCountry();
-            } else if (option.equals(context.getString(R.string.account_tutorial))) {
-                getMvpView().showTutorial();
-            } else if (option.equals(context.getString(R.string.account_logout))) {
-                getMvpView().triggerLogout();
-            }
+            showNoAuthenticationRequiredScreens(context, option);
         } else {
-            Log.d("accounts", "option else ");
-
-            if (getDataManager().isAuthorized()) {
-                if (option.equals(context.getString(R.string.account_details))) {
-                    getMvpView().showMyDetailsController();
-                } else if (option.equals(context.getString(R.string.account_addresses))) {
-                    getMvpView().showMyAddressesController();
-                } else if (option.equals(context.getString(R.string.account_orders))) {
-                    getMvpView().showMyOrders();
-                } else if (option.equals(context.getString(R.string.account_vouchers))) {
-                    getMvpView().showMyVouchers();
-                } else if (option.equals(context.getString(R.string.account_returns))) {
-                    getMvpView().showMyReturns();
-                } else if (option.equals(context.getString(R.string.account_payments))) {
-                    getMvpView().showMyPaymentsController();
-                } else if (option.equals(context.getString(R.string.account_invite_friend))) {
-                    getMvpView().showInviteAFriend();
-                }
+            if (getMvpView().isTablet()) {
+                showAuthenticationRequiredScreens(context, option);
+//                if (!getDataManager().isAuthorized()) {
+//                    getMvpView().triggerLogin(option, position);
+//                }
             } else {
-                Log.d("accounts", "trigger login ");
-
-                getMvpView().triggerLogin(option);
+                if (getDataManager().isAuthorized()) {
+                    showAuthenticationRequiredScreens(context, option);
+                } else {
+                    getMvpView().triggerLogin(option, position);
+                }
             }
+        }
+
+        getMvpView().updateAdapter(position);
+    }
+
+    private void showAuthenticationRequiredScreens(Context context, String option) {
+        if (option.equals(context.getString(R.string.account_details))) {
+            getMvpView().showMyDetailsController();
+        } else if (option.equals(context.getString(R.string.account_addresses))) {
+            getMvpView().showMyAddressesController();
+        } else if (option.equals(context.getString(R.string.account_orders))) {
+            getMvpView().showMyOrders();
+        } else if (option.equals(context.getString(R.string.account_vouchers))) {
+            getMvpView().showMyVouchers();
+        } else if (option.equals(context.getString(R.string.account_returns))) {
+            getMvpView().showMyReturns();
+        } else if (option.equals(context.getString(R.string.account_payments))) {
+            getMvpView().showMyPaymentsController();
+        } else if (option.equals(context.getString(R.string.account_invite_friend))) {
+            getMvpView().showInviteAFriend();
+        }
+    }
+
+    private void showNoAuthenticationRequiredScreens(Context context, String option) {
+        if (option.equals(context.getString(R.string.account_language))) {
+            getMvpView().showLanguage();
+        } else if (option.equals(context.getString(R.string.account_about_us))) {
+            getMvpView().showLegalities("aboutus", option);
+        } else if (option.equals(context.getString(R.string.account_privacy))) {
+            getMvpView().showLegalities("PrivacyPolicy_Text", option);
+        } else if (option.equals(context.getString(R.string.account_tnc))) {
+            getMvpView().showLegalities("TermsAndConditions_Text", option);
+        } else if (option.equals(context.getString(R.string.account_contact_us))) {
+            getMvpView().showContactUs();
+        } else if (option.equals(context.getString(R.string.account_country))) {
+            getMvpView().showCountry();
+        } else if (option.equals(context.getString(R.string.account_tutorial))) {
+            getMvpView().showTutorial();
+        } else if (option.equals(context.getString(R.string.account_logout))) {
+            getMvpView().triggerLogout();
         }
     }
 
@@ -107,7 +120,7 @@ public class AccountPresenter<V extends AccountMvpView> extends BasePresenter<V>
     }
 
     private boolean isNeedAuthorization(Context context, String option) {
-        Log.d("accounts", "option = "+option);
+        Log.d("accounts", "option = " + option);
         return option.equals(context.getString(R.string.account_details)) ||
                 option.equals(context.getString(R.string.account_addresses)) ||
                 option.equals(context.getString(R.string.account_orders)) ||

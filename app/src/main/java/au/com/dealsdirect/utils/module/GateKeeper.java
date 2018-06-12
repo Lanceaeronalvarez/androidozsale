@@ -26,6 +26,7 @@ public class GateKeeper {
         FACET_FILTER,
         SPLASH,
         LOGIN,
+        LOGIN_HOST,
         DETAILS,
         MAIN,
         REGISTER,
@@ -56,6 +57,7 @@ public class GateKeeper {
         SMS_VERIFICATION,
         LEGALITIES,
         LANGUAGE,
+        COUNTRY,
         TUTORIAL
         //add more destinations
     }

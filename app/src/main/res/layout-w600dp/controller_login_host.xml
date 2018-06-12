@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout
+    android:id="@+id/dialog_window"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <View
+        android:id="@+id/dialog_background"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/search_gray_opaque"
+        />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <View
+            android:layout_height="wrap_content"
+            android:layout_width="0dp"
+            android:layout_weight="1.5"/>
+e
+        <com.bluelinelabs.conductor.ChangeHandlerFrameLayout
+            android:id="@+id/login_frame_container"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:clickable="true"
+            android:layout_weight="6"
+            android:layout_marginTop="100dp"
+            android:layout_marginBottom="100dp" />
+
+        <View
+            android:layout_height="wrap_content"
+            android:layout_width="0dp"
+            android:layout_weight="1.5"/>
+    </LinearLayout>
+</FrameLayout>

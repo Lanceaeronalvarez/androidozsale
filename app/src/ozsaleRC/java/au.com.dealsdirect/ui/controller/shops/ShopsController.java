@@ -158,10 +158,6 @@ public class ShopsController extends BaseController implements ShopsMvpView, Ban
                         .build());
     }
 
-    public ShopsController() {
-
-    }
-
     public ShopsController(Bundle args) {
         super(args);
         mCategoryID = getArgs().getString(KEY_CATEGORY_ID);
@@ -350,10 +346,7 @@ public class ShopsController extends BaseController implements ShopsMvpView, Ban
             List<String> names = new ArrayList<>();
             names.add(bannerId + position);
             if (!mPresenter.isAccessAnonymousEnabled() && !mPresenter.isAuthorized()) {
-
-                // Invoke login if no auth or not an open app
-                assert (mActivity) != null;
-                ((MainMvpView) mActivity).showLoginController(getRouter(), new AuthHandler() {
+                 mActivity.showLoginController(getRouter(), new AuthHandler() {
                     @Override
                     public void success() {
                         mActivity.callGCMRegisterSubscriber();
@@ -375,7 +368,6 @@ public class ShopsController extends BaseController implements ShopsMvpView, Ban
 // Check if sale is available
                 //TODO: Need computation for date and time when sale response is cached
                 if (isAvailable) {
-                    assert (mActivity) != null;
                     mActivity
                             .getHomeRouter()
                             .pushController(RouterTransaction.with(

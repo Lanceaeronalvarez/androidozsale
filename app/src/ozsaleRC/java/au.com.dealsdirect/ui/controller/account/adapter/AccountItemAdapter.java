@@ -23,17 +23,23 @@ public class AccountItemAdapter extends AbstractExpandableItemAdapter<AccountIte
 
     private List<AccountItem> mAccountItems;
     private AccountMvpPresenter mPresenter;
+    private int mPreviousPos = 0;
     private Context mContext;
+    private boolean mSelectFirstItem = false;
+    private boolean mIsTablet = false;
 
 
-    public AccountItemAdapter(
-            Context context,
-            List<AccountItem> accountItems,
-            AccountMvpPresenter presenter) {
-        this.mContext = context;
-        this.mAccountItems = accountItems;
-        this.mPresenter = presenter;
+    public AccountItemAdapter(Context context, List<AccountItem> accountItems, AccountMvpPresenter presenter) {
+        mContext = context;
+        mAccountItems = accountItems;
+        mPresenter = presenter;
         setHasStableIds(true);
+    }
+
+    public AccountItemAdapter(Context context, List<AccountItem> accountItems, AccountMvpPresenter presenter, boolean isSelectFirstItem) {
+        this(context, accountItems, presenter);
+        mSelectFirstItem = isSelectFirstItem;
+        mIsTablet = isSelectFirstItem;
     }
 
     public List<AccountItem> getData() {
@@ -83,8 +89,29 @@ public class AccountItemAdapter extends AbstractExpandableItemAdapter<AccountIte
             holder.mAccountArrowRight.setVisibility(View.VISIBLE);
         }
 
+        if(mIsTablet){
+            holder.itemView.setSelected(false);
+        }
+
+        if (mSelectFirstItem && groupPosition == 0) {
+            mPreviousPos = groupPosition;
+            holder.itemView.setSelected(true);
+            mPresenter.onAccountItemClick(mContext, title, groupPosition);
+            mSelectFirstItem = false; //reset
+        }
+
         holder.mAccountItemName.setText(title);
-        holder.itemView.setOnClickListener(view -> mPresenter.onAccountItemClick(mContext, title));
+        holder.itemView.setOnClickListener(view -> {
+            if(mIsTablet) {
+                if(mPreviousPos!=groupPosition) {
+                    notifyItemChanged(mPreviousPos);
+                }
+                holder.itemView.setSelected(true);
+                notifyItemChanged(groupPosition);
+                mPreviousPos = groupPosition;
+            }
+            mPresenter.onAccountItemClick(mContext, title, groupPosition);
+        });
 
     }
 
@@ -102,7 +129,7 @@ public class AccountItemAdapter extends AbstractExpandableItemAdapter<AccountIte
         }
 
         holder.mAccountSubItemName.setText(title);
-        holder.itemView.setOnClickListener(view -> mPresenter.onAccountItemClick(mContext, title));
+        holder.itemView.setOnClickListener(view -> mPresenter.onAccountItemClick(mContext, title, childPosition));
 
     }
 

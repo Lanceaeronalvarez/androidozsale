@@ -9,6 +9,8 @@ import au.com.dealsdirect.ui.base.VisaCheckoutPresenter;
 import au.com.dealsdirect.ui.controller.account.AccountMvpPresenter;
 import au.com.dealsdirect.ui.controller.account.AccountMvpView;
 import au.com.dealsdirect.ui.controller.account.AccountPresenter;
+import au.com.dealsdirect.ui.controller.account.AccountsHostMvpPresenter;
+import au.com.dealsdirect.ui.controller.account.AccountsHostMvpView;
 import au.com.dealsdirect.ui.controller.address.addnewaddress.AddNewAddressMvpPresenter;
 import au.com.dealsdirect.ui.controller.address.addnewaddress.AddNewAddressMvpView;
 import au.com.dealsdirect.ui.controller.address.addnewaddress.AddNewAddressPresenter;
@@ -249,12 +251,12 @@ public class ControllerModule {
 
     @Provides
     CountryMvpPresenter<CountryMvpView> provideCountryPresenter(CountryPresenter<CountryMvpView> presenter) {
-        return  presenter;
+        return presenter;
     }
 
 
     @Provides
-    OrdersMvpPresenter<OrdersMvpView> provideOrdersPresenter(OrdersPresenter<OrdersMvpView> presenter){
+    OrdersMvpPresenter<OrdersMvpView> provideOrdersPresenter(OrdersPresenter<OrdersMvpView> presenter) {
         return presenter;
     }
 
@@ -405,7 +407,12 @@ public class ControllerModule {
     }
 
     @Provides
-    VisaCheckoutMvpPresenter<VisaCheckoutMvpView> provideVisaCheckoutPresenter(VisaCheckoutPresenter<VisaCheckoutMvpView> presenter){
+    VisaCheckoutMvpPresenter<VisaCheckoutMvpView> provideVisaCheckoutPresenter(VisaCheckoutPresenter<VisaCheckoutMvpView> presenter) {
+        return presenter;
+    }
+
+    @Provides
+    AccountsHostMvpPresenter<AccountsHostMvpView> provideAccountsHostPresenter(AccountsHostMvpPresenter<AccountsHostMvpView> presenter) {
         return presenter;
     }
 }

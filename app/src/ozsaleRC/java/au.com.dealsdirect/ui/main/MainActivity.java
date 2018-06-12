@@ -5,12 +5,14 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.Bundle;
+import android.view.View;
 import android.view.ViewGroup;
 
 import com.bluelinelabs.conductor.Conductor;
 import com.bluelinelabs.conductor.Controller;
 import com.bluelinelabs.conductor.Router;
 import com.bluelinelabs.conductor.RouterTransaction;
+import com.bluelinelabs.conductor.changehandler.FadeChangeHandler;
 import com.bluelinelabs.conductor.changehandler.HorizontalChangeHandler;
 import com.bluelinelabs.conductor.changehandler.VerticalChangeHandler;
 import com.braintreepayments.api.BraintreeFragment;
@@ -56,6 +58,7 @@ import au.com.dealsdirect.ui.controller.checkout.checkout.CheckoutController;
 import au.com.dealsdirect.ui.controller.checkout.paymentsuccess.PaymentSuccessController;
 import au.com.dealsdirect.ui.controller.checkout.paymentsuccess.PaymentSuccessMvpView;
 import au.com.dealsdirect.ui.controller.home.HomeController;
+import au.com.dealsdirect.ui.controller.login.LoginHostController;
 import au.com.dealsdirect.ui.controller.main.MainController;
 import au.com.dealsdirect.ui.controller.saleitemdetails.SaleItemDetailsController;
 import au.com.dealsdirect.ui.controller.shops.ShopsController;
@@ -96,12 +99,14 @@ public class MainActivity extends BaseActivity implements MainMvpView {
     private Router mCategoriesRouter;
     private Router mAccountsRouter;
     private Router mCheckoutRouter;
+    private Router mLoginHostRouter;
 
     private AuthHandler mAuthHandler;
 
     private boolean mIsFromBannerFilter = false;
     private boolean isTemplateTextsStored = false;
     private boolean mIsViewAttached = false;
+    private boolean mIsTablet = false;
     private int mVisaCheckoutActionType = -1;
 
     @Override
@@ -111,6 +116,10 @@ public class MainActivity extends BaseActivity implements MainMvpView {
         setContentView(R.layout.activity_main);
         mIsViewAttached = true;
         getActivityComponent().inject(this);
+
+        if (getResources().getBoolean(R.bool.is_tablet)) {
+            mIsTablet = true;
+        }
 
         setUnBinder(ButterKnife.bind(this));
 
@@ -201,7 +210,7 @@ public class MainActivity extends BaseActivity implements MainMvpView {
 
     private void resetShopController(Router currentRouter) {
         if (mIsFromBannerFilter) {
-            ShopsController shopsController = new ShopsController();
+            ShopsController shopsController = ShopsController.newInstance();
             setShopController(shopsController);
             currentRouter.setRoot(RouterTransaction.with(shopsController).tag(ShopsController.TAG));
             mIsFromBannerFilter = false;
@@ -249,11 +258,18 @@ public class MainActivity extends BaseActivity implements MainMvpView {
         mAuthHandler = handler;
         //any router can show login controller
         Controller currentController = getCurrentController(router);
-        if (currentController instanceof SaleItemDetailsController ||
-                currentController instanceof AccountController) {
-            GateKeeper.push(router, GateKeeper.Destination.LOGIN, new VerticalChangeHandler(), new VerticalChangeHandler());
+
+        if (!isTablet()) {
+            if (currentController instanceof SaleItemDetailsController ||
+                    currentController instanceof AccountController) {
+                GateKeeper.push(router, GateKeeper.Destination.LOGIN, new VerticalChangeHandler(), new VerticalChangeHandler());
+            } else {
+                GateKeeper.push(router, GateKeeper.Destination.LOGIN);
+            }
         } else {
-            GateKeeper.push(router, GateKeeper.Destination.LOGIN);
+            getHomeController().initLoginHostController();
+            GateKeeper.setRoot(router, GateKeeper.Destination.LOGIN_HOST, RouterTransaction.with(LoginHostController.newInstance()).
+                    pushChangeHandler(new FadeChangeHandler()).popChangeHandler(new FadeChangeHandler()));
         }
     }
 
@@ -496,6 +512,11 @@ public class MainActivity extends BaseActivity implements MainMvpView {
 
     }
 
+    @Override
+    public boolean isTablet() {
+        return mIsTablet;
+    }
+
     public void onPurchase(CardForm cardForm) {
         CardBuilder cardBuilder = new CardBuilder()
                 .cardNumber(cardForm.getCardNumber())
@@ -589,6 +610,17 @@ public class MainActivity extends BaseActivity implements MainMvpView {
         mAccountsRouter = router;
     }
 
+    public Router getAccountsRouter() {
+        return mAccountsRouter;
+    }
+
+    public void setLoginHostRouter(Router router) {
+        mLoginHostRouter = router;
+    }
+
+    public Router getLoginHostRouter() {
+        return mLoginHostRouter;
+    }
 
     public void setShopController(ShopsController shopsController) {
         mShopController = shopsController;
@@ -730,7 +762,9 @@ public class MainActivity extends BaseActivity implements MainMvpView {
             mAuthHandler.error();
         }
 
-        CustomAlertDialog.showCustomAlertDialog(this, CustomAlertDialog.CustomDialogIconState.NEGATIVE, message);
+        if (!message.isEmpty()) {
+            CustomAlertDialog.showCustomAlertDialog(this, CustomAlertDialog.CustomDialogIconState.NEGATIVE, message);
+        }
     }
 
     /**
