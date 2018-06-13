@@ -4,6 +4,7 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.content.res.Configuration;
 import android.os.Bundle;
 import android.view.ViewGroup;
 
@@ -126,6 +127,19 @@ public class MainActivity extends BaseActivity implements MainMvpView {
                 .popChangeHandler(new VerticalChangeHandler()));
 
         setUp();
+    }
+
+    /**
+     * bug/gen-7818-landscape - detect screen orientaiton change
+     *
+     * @param newConfig - new screen adjustment
+     */
+    @Override
+    public void onConfigurationChanged(Configuration newConfig) {
+        super.onConfigurationChanged(newConfig);
+
+        if (mShopController != null)
+            mShopController.onOrientationChange();
     }
 
     @Override
