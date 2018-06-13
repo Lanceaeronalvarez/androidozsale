@@ -177,5 +177,10 @@
     <!--Delivery Options-->
     <dimen name="ourpay_select_logo_width">160dp</dimen>
     <dimen name="ourpay_select_logo_height">20dp</dimen>
+    <dimen name="product_details_image_indicator">130dp</dimen>
+    <dimen name="product_detail_question_image_width">15dp</dimen>
+    <dimen name="product_detail_question_image_height">15dp</dimen>
+    <dimen name="product_details_review_fab_width">40dp</dimen>
+    <dimen name="product_details_review_fab_height">40dp</dimen>
 
 </resources>

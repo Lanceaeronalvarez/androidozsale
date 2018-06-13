@@ -49,7 +49,6 @@ import au.com.dealsdirect.ui.base.BaseController;
 import au.com.dealsdirect.ui.controller.saleitemdetails.listener.LoadImagesListener;
 import au.com.dealsdirect.ui.custom.ArcTranslateAnimation;
 import au.com.dealsdirect.ui.custom.CustomAlertDialog;
-import au.com.dealsdirect.utils.AppLogger;
 import au.com.dealsdirect.utils.BundleBuilder;
 import au.com.dealsdirect.utils.CartUtil;
 import au.com.dealsdirect.utils.ImageUtils;
@@ -149,7 +148,7 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
 
     //Collapsing Toolbar UI
     @BindView(R.id.controler_product_details_app_bar_layout)
-    AppBarLayout mAppBarLayout;
+    ViewGroup mAppBarLayout;
     @BindView(R.id.controller_sale_details_toolbar)
     RelativeLayout mProductDetailsToolbar;
     @BindView(R.id.controller_product_details_title_description)
@@ -244,8 +243,8 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
     protected void onAttach(@NonNull View view) {
         super.onAttach(view);
         mPresenter.onAttach(this);
-        if (getBoolean(R.bool.is_ozsale)) {
-            mAppBarLayout.addOnOffsetChangedListener(this);
+        if (getBoolean(R.bool.is_ozsale) && !getBoolean(R.bool.is_tablet)) {
+            ((AppBarLayout)mAppBarLayout).addOnOffsetChangedListener(this);
         }
     }
 
@@ -258,8 +257,8 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
     @Override
     public void onDetach(View view) {
         super.onDetach(view);
-        if (getBoolean(R.bool.is_ozsale)) {
-            mAppBarLayout.removeOnOffsetChangedListener(this);
+        if (getBoolean(R.bool.is_ozsale) && !getBoolean(R.bool.is_tablet)) {
+            ((AppBarLayout)mAppBarLayout).removeOnOffsetChangedListener(this);
         }
     }
 
@@ -712,8 +711,7 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
         TypedValue tv = new TypedValue();
         mActivity.getTheme().resolveAttribute(android.R.attr.actionBarSize, tv, true);
         int actionBarHeight = getResources().getDimensionPixelSize(tv.resourceId);
-        AppLogger.d("Vertical Offset: " + verticalOffset + " actionBarHeight " + (mProductDetailsTitleLayout.getHeight() - actionBarHeight) + " total scroll: " + mAppBarLayout.getTotalScrollRange());
-        boolean showToolbar = Math.abs(verticalOffset) > mAppBarLayout.getTotalScrollRange() - (mProductDetailsTitleLayout.getHeight() - actionBarHeight);
+        boolean showToolbar = Math.abs(verticalOffset) > ((AppBarLayout)mAppBarLayout).getTotalScrollRange() - (mProductDetailsTitleLayout.getHeight() - actionBarHeight);
         mProductDetailsToolbar.setVisibility(showToolbar ? View.VISIBLE : View.GONE);
         mProductDetailsTitleLayout.setVisibility(!showToolbar ? View.VISIBLE : View.GONE);
         mProductPriceCategory.setBackgroundColor(getColor(!showToolbar ? R.color.product_details_transparent : R.color.toolbar_active_skin));

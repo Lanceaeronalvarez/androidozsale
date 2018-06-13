@@ -589,6 +589,13 @@
     <string name="dollar">$ %1$s</string>
     <string name="tracking">Tracking</string>
     <string name="price_elsewhere">Price elsewhere:</string>
+    <string name="available_for">available for</string>
+    <string name="home_or_office_delivery">home or office delivery</string>
+    <string name="pick_up_point">pick up point</string>
+    <string name="related_items">related items</string>
+    <string name="customers_also_bought">customers also bought</string>
+    <string name="reviews">reviews</string>
+    <string name="see_more">see more</string>
     <bool name="is_ozsale">true</bool>
 
 </resources>
