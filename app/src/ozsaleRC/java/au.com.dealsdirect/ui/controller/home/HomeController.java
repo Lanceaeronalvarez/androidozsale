@@ -256,11 +256,9 @@ public class HomeController extends BaseController implements HomeMvpView {
                         showThirdTabController();
                         break;
                     case TAB_CONTACT_INDEX:
-                        mActivity.setDraggableViewPager(false);
                         showFourthTabController();
                         break;
                     case TAB_CHECKOUT_INDEX:
-                        mActivity.setDraggableViewPager(false);
                         showFifthTabController();
                         break;
                     default:
@@ -340,6 +338,18 @@ public class HomeController extends BaseController implements HomeMvpView {
     public void showThirdTabController() {
         setVisibleContainer(TAB_ACCOUNT_INDEX);
         mActivity.getMainController().setViewpagerDraggable(false);
+        int size = mAccountsRouter.getBackstack().size();
+
+        if (mAccountsRouter.getBackstack().get(size - 1).controller() instanceof AccountMvpView) {
+            ((AccountMvpView) mAccountsRouter.getBackstack().get(size - 1).controller()).initLoginDrawable();
+        }
+    }
+
+
+    @Override
+    public void showFourthTabController() {
+        setVisibleContainer(TAB_CONTACT_INDEX);
+        mActivity.getMainController().setViewpagerDraggable(false);
 
         if (!mActivity.isAuthorized()) {
             mActivity.showLoginController(mContactRouter, new AuthHandler() {
@@ -354,16 +364,7 @@ public class HomeController extends BaseController implements HomeMvpView {
                 }
             });
         }
-    }
 
-
-    @Override
-    public void showFourthTabController() {
-        setVisibleContainer(TAB_CONTACT_INDEX);
-        mActivity.getMainController().setViewpagerDraggable(false);
-        int size = mAccountsRouter.getBackstack().size();
-        if (mAccountsRouter.getBackstack().get(size - 1).controller() instanceof AccountMvpView)
-            ((AccountMvpView) mAccountsRouter.getBackstack().get(size - 1).controller()).initLoginDrawable();
     }
 
     @Override
@@ -507,14 +508,12 @@ public class HomeController extends BaseController implements HomeMvpView {
     }
 
     public void animateBottomNav(int verticalAdjustmentPixels) {
-
         if (Math.abs(verticalAdjustmentPixels) > 0) {
-            mActivity.getHomeController().showBottomNav();
-            mActivity.getHomeController().getBottomNavigationView().restoreBottomNavigation(true);
-
+            showBottomNav();
+            mBottomNavigationView.restoreBottomNavigation(true);
         } else {
-            mActivity.getHomeController().hideBottomNav();
-            mActivity.getHomeController().getBottomNavigationView().hideBottomNavigation(true);
+            mBottomNavigationView.hideBottomNavigation(true);
+            hideBottomNav();
         }
     }
 }

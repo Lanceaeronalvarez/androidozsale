@@ -112,7 +112,6 @@ public class ViewContactHistoryController extends BaseController implements View
     protected void setUp(View view) {
 
         KeyboardUtils.setKeyboardAdjustResize(mActivity);
-        mActivity.getMainController().hideBottomNav();
 
         mContactHistoryRightOption.setVisibility(View.INVISIBLE);
         mContactHistoryTitle.setText(mContactSubject);
