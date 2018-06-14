@@ -15,6 +15,8 @@ import au.com.dealsdirect.ui.controller.checkout.ourpay.OurpaySMSVerificationCon
 import au.com.dealsdirect.ui.controller.checkout.paymentselect.PaymentSelectController;
 import au.com.dealsdirect.ui.controller.checkout.paymentsuccess.PaymentSuccessController;
 import au.com.dealsdirect.ui.controller.contact.addcontact.AddContactController;
+import au.com.dealsdirect.ui.controller.contact.selectorder.ContactSelectOrderController;
+import au.com.dealsdirect.ui.controller.contact.selectsubject.ContactSelectSubjectController;
 import au.com.dealsdirect.ui.controller.contact.viewcontacthistory.ViewContactHistoryController;
 import au.com.dealsdirect.ui.controller.contact.viewcontacts.ViewContactsController;
 import au.com.dealsdirect.ui.controller.country.CountryController;
@@ -179,6 +181,10 @@ public class ControllerFactory {
                 return new ViewContactHistoryController(bundle);
             case ADD_CONTACT:
                 return new AddContactController(bundle);
+            case CONTACT_SELECT_SUBJECT:
+                return new ContactSelectSubjectController(bundle);
+            case CONTACT_SELECT_ORDER:
+                return new ContactSelectOrderController(bundle);
             case SMS_VERIFICATION:
                 return new OurpaySMSVerificationController(bundle);
             case LEGALITIES:

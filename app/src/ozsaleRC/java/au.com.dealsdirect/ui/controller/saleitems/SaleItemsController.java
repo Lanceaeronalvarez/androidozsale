@@ -19,6 +19,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputMethodManager;
+import android.widget.FrameLayout;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -283,9 +284,6 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
 
     private void determineToolbarTitle() {
 
-        //always set edittext string to empty initially
-        mSaleItemsToolbarField.setText("");
-
         String lookingForText = getString(R.string.i_am_looking_for);
         String categoryToolbarString = StringUtils.buildCategoryToolbarTitle(mCategoryKey);
 
@@ -305,7 +303,6 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
         //category precedes above all
         if (!mSearchQuery.isEmpty()) {
             mSaleItemsToolbarTitle.setText(mSearchQuery);
-            mSaleItemsToolbarField.setText(mSearchQuery);
         } else if (!editTextString.isEmpty()) {
             mSaleItemsToolbarTitle.setText(editTextString);
         } else if (!mCategoryForTitle.isEmpty()) {
@@ -788,6 +785,8 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
     }
 
     private void setupTabs() {
+        FrameLayout.LayoutParams layoutParams = (FrameLayout.LayoutParams) mTabLayout.getLayoutParams();
+        layoutParams.setMargins(layoutParams.leftMargin, layoutParams.topMargin + (int) getDimension(R.dimen.edit_text_height), layoutParams.rightMargin, layoutParams.bottomMargin);
         mTabLayout.removeAllTabs();
         mFacetFilters.add(0, new Pair<String, String>(BundleKeys.CATEGORY_TREE_FACET, "Categories"));
         mFacetFilters.add(mFacetFilters.size(), new Pair<String, String>(BundleKeys.SORT_FACETFILTER_NAME, "Sort"));
