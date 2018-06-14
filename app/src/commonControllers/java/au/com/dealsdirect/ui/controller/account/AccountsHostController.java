@@ -49,7 +49,6 @@ public class AccountsHostController extends BaseController implements AccountsHo
     protected View inflateView(@NonNull LayoutInflater inflater, @NonNull ViewGroup container) {
         View view = inflater.inflate(R.layout.controller_accounts_host,container,false);
         getControllerComponent().inject(this);
-//        mPresenter.onAttach(this);
         return view;
     }
 
