@@ -33,7 +33,6 @@ import au.com.dealsdirect.data.network.model.returns.returndetails.GetReturnDeta
 import au.com.dealsdirect.ui.base.BasePullToRefreshController;
 import au.com.dealsdirect.ui.controller.returns.currentreturns.adapter.CurrentReturnAdapter;
 import au.com.dealsdirect.ui.controller.returns.currentreturns.listener.CurrentReturnClickListener;
-import au.com.dealsdirect.ui.controller.returns.currentreturns.viewholder.CurrentReturnViewHolder;
 import au.com.dealsdirect.ui.controller.returns.returndetails.ReturnDetailsController;
 import au.com.dealsdirect.ui.controller.returns.returnorders.ReturnOrdersController;
 import au.com.dealsdirect.utils.BundleBuilder;
@@ -57,7 +56,10 @@ public class CurrentReturnsController extends BasePullToRefreshController
     private int itemIterator = 0;
     private CurrentReturnAdapter mCurrentReturnsAdapter;
 
-    @BindView(R.id.partial_toolbar_arrow_title)
+    @BindView(R.id.partial_toolbar_left_view)
+    View mToolbarLeftView;
+
+    @BindView(R.id.partial_toolbar_title)
     TextView mCurrentReturnsToolbarTitle;
 
     @BindView(R.id.partial_toolbar_right_view)
@@ -115,10 +117,10 @@ public class CurrentReturnsController extends BasePullToRefreshController
     @Override
     protected void setUp(View view) {
 
-        mCurrentReturnsRecyclerView.setLayoutManager(new LinearLayoutManager(mActivity, LinearLayoutManager
-                .VERTICAL, false));
+        mCurrentReturnsRecyclerView.setLayoutManager(new LinearLayoutManager(mActivity, LinearLayoutManager.VERTICAL, false));
 
-        mCurrentReturnsToolbarTitle.setText("My Returns");
+        mToolbarLeftView.setVisibility(mActivity.isTablet() ? View.GONE : View.VISIBLE);
+        mCurrentReturnsToolbarTitle.setText(getString(R.string.account_returns));
         if (mPresenter.isTablet()) {
             mCurrentReturnsRightOption.setPadding(5, 5, 5, 5);
         } else {

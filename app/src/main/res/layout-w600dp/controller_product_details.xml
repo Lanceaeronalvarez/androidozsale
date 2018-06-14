@@ -219,10 +219,6 @@
 
                         </RelativeLayout>
 
-                        <View
-                            android:layout_width="match_parent"
-                            android:layout_height="@dimen/border_regular"
-                            android:background="@color/border_regular" />
 
                         <LinearLayout
                             android:id="@+id/controller_product_details_title_description"
@@ -335,12 +331,6 @@
                     </LinearLayout>
                 </RelativeLayout>
             </LinearLayout>
-
-            <View
-                android:layout_width="@dimen/border_thick"
-                android:layout_height="match_parent"
-                android:background="@color/background_default" />
-
 
             <android.support.v4.widget.NestedScrollView
                 android:id="@+id/controller_sale_item_detail_scrollview"
@@ -469,12 +459,6 @@
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content" />
 
-                            <ImageView
-                                android:layout_width="match_parent"
-                                android:layout_height="@dimen/border_regular"
-                                android:layout_gravity="center"
-                                android:background="@color/border_regular" />
-
                         </LinearLayout>
 
                         <LinearLayout
@@ -504,11 +488,7 @@
                                 android:layout_marginTop="@dimen/margin_extra_small"
                                 android:textSize="@dimen/text_size_caption1" />
 
-                            <ImageView
-                                android:layout_width="match_parent"
-                                android:layout_height="@dimen/border_regular"
-                                android:layout_gravity="center"
-                                android:background="@color/border_regular" />
+                            
 
                         </LinearLayout>
 
@@ -525,13 +505,9 @@
                             <WebView
                                 android:id="@+id/product_description_text"
                                 android:layout_width="match_parent"
-                                android:layout_height="match_parent" />
+                                android:layout_height="wrap_content" />
 
-                            <ImageView
-                                android:layout_width="match_parent"
-                                android:layout_height="@dimen/border_regular"
-                                android:layout_gravity="center"
-                                android:background="@color/border_regular" />
+                            
 
                         </LinearLayout>
 
@@ -560,12 +536,6 @@
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
                                 android:layout_marginTop="@dimen/margin_extra_small" />
-
-                            <ImageView
-                                android:layout_width="match_parent"
-                                android:layout_height="@dimen/border_regular"
-                                android:layout_gravity="center"
-                                android:background="@color/border_regular" />
 
                         </LinearLayout>
 

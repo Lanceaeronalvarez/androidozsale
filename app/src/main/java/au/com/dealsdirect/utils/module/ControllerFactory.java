@@ -17,12 +17,14 @@ import au.com.dealsdirect.ui.controller.checkout.paymentsuccess.PaymentSuccessCo
 import au.com.dealsdirect.ui.controller.contact.addcontact.AddContactController;
 import au.com.dealsdirect.ui.controller.contact.viewcontacthistory.ViewContactHistoryController;
 import au.com.dealsdirect.ui.controller.contact.viewcontacts.ViewContactsController;
+import au.com.dealsdirect.ui.controller.country.CountryController;
 import au.com.dealsdirect.ui.controller.details.DetailsController;
 import au.com.dealsdirect.ui.controller.forgotpassword.ForgotPasswordController;
 import au.com.dealsdirect.ui.controller.invite.InviteSendController;
 import au.com.dealsdirect.ui.controller.language.LanguageController;
 import au.com.dealsdirect.ui.controller.legalities.LegalitiesController;
 import au.com.dealsdirect.ui.controller.login.LoginController;
+import au.com.dealsdirect.ui.controller.login.LoginHostController;
 import au.com.dealsdirect.ui.controller.login.PasswordVerificationController;
 import au.com.dealsdirect.ui.controller.main.MainController;
 import au.com.dealsdirect.ui.controller.masterpass.MasterpassController;
@@ -63,6 +65,8 @@ public class ControllerFactory {
                 return DetailsController.newInstance();
             case LOGIN:
                 return LoginController.newInstance();
+            case LOGIN_HOST:
+                return LoginHostController.newInstance();
             case CATEGORIES:
                 return CategoriesController.newInstance();
             case CHECKOUT:
@@ -82,7 +86,7 @@ public class ControllerFactory {
             case INVITE:
                 return InviteSendController.newInstance();
             case ORDERS:
-                return new OrdersController();
+                return OrdersController.newInstance();
             case CURRENT_RETURNS:
                 return CurrentReturnsController.newInstance();
             case RETURN_ORDERS:
@@ -117,6 +121,8 @@ public class ControllerFactory {
                 break;
             case LANGUAGE:
                 return LanguageController.newInstance();
+            case COUNTRY:
+                return CountryController.newInstance();
             case TUTORIAL:
                 return TutorialController.newInstance();
             default:
@@ -158,7 +164,7 @@ public class ControllerFactory {
             case MASTERPASS:
                 return new MasterpassController(bundle);
             case ORDERS:
-                return new OrdersController();
+                return new OrdersController(bundle);
             case CURRENT_RETURNS:
                 return CurrentReturnsController.newInstance();
             case RETURN_ORDERS:
@@ -181,6 +187,8 @@ public class ControllerFactory {
                 return new SearchFilterController(bundle);
             case LANGUAGE:
                 return LanguageController.newInstance();
+            case COUNTRY:
+                return CountryController.newInstance();
             case TUTORIAL:
                 return TutorialController.newInstance();
             default:

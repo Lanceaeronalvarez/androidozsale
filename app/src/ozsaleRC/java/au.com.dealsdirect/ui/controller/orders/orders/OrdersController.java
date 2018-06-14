@@ -1,5 +1,6 @@
 package au.com.dealsdirect.ui.controller.orders.orders;
 
+import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -26,6 +27,7 @@ import au.com.dealsdirect.ui.base.BasePullToRefreshController;
 import au.com.dealsdirect.ui.controller.orders.orderdetails.OrderDetailsController;
 import au.com.dealsdirect.ui.custom.RecyclerOnTouchListener;
 import au.com.dealsdirect.ui.custom.SimpleDividerItemDecoration;
+import au.com.dealsdirect.utils.BundleBuilder;
 import butterknife.BindView;
 import butterknife.OnClick;
 
@@ -37,7 +39,10 @@ public class OrdersController extends BasePullToRefreshController implements Ord
     @Inject
     OrdersMvpPresenter<OrdersMvpView> mPresenter;
 
-    @BindView(R.id.partial_toolbar_arrow_title)
+    @BindView(R.id.partial_toolbar_left_view)
+    View mToolbarLeftView;
+
+    @BindView(R.id.partial_toolbar_title)
     TextView mOrdersToolarTitle;
 
     @BindView(R.id.partial_toolbar_right_view)
@@ -51,6 +56,17 @@ public class OrdersController extends BasePullToRefreshController implements Ord
 
     @BindView(R.id.contentFrame)
     FrameLayout mContentLayout;
+
+    public static OrdersController newInstance() {
+
+        return new OrdersController(
+                new BundleBuilder(new Bundle())
+                        .build());
+    }
+
+    public OrdersController(Bundle args) {
+        super(args);
+    }
 
     OrdersRecyclerViewAdapter mAdapter;
     ArrayList<GetPaymentsList.ResponseValue.PaymentItem> mOrders = new ArrayList<>();
@@ -81,7 +97,7 @@ public class OrdersController extends BasePullToRefreshController implements Ord
 
     @Override
     protected void setUp(View view) {
-
+        mToolbarLeftView.setVisibility(mActivity.isTablet() ? View.GONE : View.VISIBLE);
         mOrdersToolarTitle.setText(mActivity.getResources().getString(R.string.account_orders));
         mOrdersRightOption.setImageDrawable(null);
 

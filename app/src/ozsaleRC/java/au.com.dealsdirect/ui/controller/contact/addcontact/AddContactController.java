@@ -2,7 +2,6 @@ package au.com.dealsdirect.ui.controller.contact.addcontact;
 
 import android.os.Bundle;
 import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,31 +11,23 @@ import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.bluelinelabs.conductor.Controller;
-import com.bluelinelabs.conductor.ControllerChangeHandler;
 import com.bluelinelabs.conductor.RouterTransaction;
 import com.bluelinelabs.conductor.changehandler.HorizontalChangeHandler;
-
-import java.util.List;
 
 import javax.inject.Inject;
 
 import au.com.dealsdirect.R;
-import au.com.dealsdirect.data.network.model.contactorder.ContactOrderList;
-import au.com.dealsdirect.data.network.model.contactreply.ReplyContact;
 import au.com.dealsdirect.data.network.model.createcontact.CreateContactRequest;
 import au.com.dealsdirect.data.network.model.createcontact.CreateContactResponse;
 import au.com.dealsdirect.ui.base.BaseController;
 import au.com.dealsdirect.ui.controller.contact.ContactPreferenceHelper;
 import au.com.dealsdirect.ui.controller.contact.selectorder.ContactSelectOrderController;
 import au.com.dealsdirect.ui.custom.CustomAlertDialog;
-import au.com.dealsdirect.ui.custom.transitions.ReverseVerticalChangeHandler;
 import au.com.dealsdirect.utils.BundleBuilder;
 import au.com.dealsdirect.utils.BundleKeys;
 import au.com.dealsdirect.utils.KeyboardUtils;
 import butterknife.BindView;
 import butterknife.OnClick;
-import butterknife.OnFocusChange;
 
 /**
  * dp Created by Admin on 6/20/17.
@@ -49,7 +40,7 @@ public class AddContactController extends BaseController implements AddContactMv
     @BindView(R.id.partial_toolbar_right_view)
     ImageView mAddContactToolbarRightOption;
 
-    @BindView(R.id.partial_toolbar_arrow_title)
+    @BindView(R.id.partial_toolbar_title)
     TextView mAddContactToolbarTitle;
 
     @BindView(R.id.controller_add_contact_subject_title)
@@ -111,7 +102,6 @@ public class AddContactController extends BaseController implements AddContactMv
     @Override
     protected void setUp(View view) {
         KeyboardUtils.setKeyboardAdjustPan(mActivity);
-        mActivity.getMainController().hideBottomNav();
 
         mAddContactToolbarRightOption.setVisibility(View.INVISIBLE);
         mAddContactToolbarTitle.setText(R.string.new_message);

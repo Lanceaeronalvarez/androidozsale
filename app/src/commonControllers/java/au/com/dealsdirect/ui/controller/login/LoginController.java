@@ -44,7 +44,7 @@ public class LoginController extends BaseController implements LoginMvpView {
 
     @BindView(R.id.toolbar_title_login)
     Toolbar mToolbar;
-    @BindView(R.id.partial_toolbar_arrow_title)
+    @BindView(R.id.partial_toolbar_title)
     TextView mToolbarTitle;
     @BindView(R.id.controller_login_email_edittext)
     EditText mEmailEditText;
@@ -60,6 +60,7 @@ public class LoginController extends BaseController implements LoginMvpView {
     ImageButton mLeftButton;
 
     private boolean isLoginTapped = false;
+    private LoginHostMvpView mLoginHostView;
 
     private CallbackManager mCallbackManager = CallbackManager.Factory.create();
 
@@ -82,9 +83,20 @@ public class LoginController extends BaseController implements LoginMvpView {
 
     @Override
     protected void onAttach(@NonNull View view) {
-        assert (mActivity) != null;
-        mActivity.getMainController().hideBottomNav();
+        if (!mPresenter.isTablet()) {
+            mActivity.getMainController().hideBottomNav();
+        }
+
         super.onAttach(view);
+    }
+
+    @Override
+    public void onDetach(View view) {
+        if (!mPresenter.isTablet()) {
+            mActivity.getMainController().showBottomNav();
+        }
+
+        super.onDetach(view);
     }
 
     @NonNull
@@ -114,7 +126,7 @@ public class LoginController extends BaseController implements LoginMvpView {
 
         boolean shouldToolbarBeVisible = mActivity.getResources().getBoolean(R.bool.login_toolbar_visibility);
 
-        mToolbar.setVisibility(shouldToolbarBeVisible? View.VISIBLE : View.GONE);
+        mToolbar.setVisibility(shouldToolbarBeVisible ? View.VISIBLE : View.GONE);
         mToolbarTitle.setText(mActivity.getResources().getString(R.string.login_title));
 
         mLoginButton.setOnClickListener(new View.OnClickListener() {
@@ -149,11 +161,13 @@ public class LoginController extends BaseController implements LoginMvpView {
 
     @Override
     public boolean handleBack() {
-        if(!mActivity.isAuthorized()) {
+        if (!mActivity.isAuthorized() && mActivity.isTablet()) {
             mActivity.getMainController().getHomeController().resetVisibleContainer();
         }
         hideKeyboard();
+
         return super.handleBack();
+
     }
 
     @Override
@@ -201,7 +215,7 @@ public class LoginController extends BaseController implements LoginMvpView {
     }
 
     @OnClick(R.id.partial_toolbar_left_view)
-    public void onBackPress(){
+    public void onBackPress() {
         mActivity.onBackPressed();
     }
 

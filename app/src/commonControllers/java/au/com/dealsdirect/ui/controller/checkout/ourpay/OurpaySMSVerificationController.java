@@ -45,7 +45,7 @@ public class OurpaySMSVerificationController extends BaseController implements O
     private boolean mIsPhoneValid = false;
     private boolean mIsCodeValid = false;
 
-    @BindView(R.id.partial_toolbar_arrow_title)
+    @BindView(R.id.partial_toolbar_title)
     TextView mOurpaySMSVerificationTitle;
 
     @BindView(R.id.partial_toolbar_left_view)

@@ -58,5 +58,7 @@
 
     <dimen name="return_card_height">500dp</dimen>
     <dimen name="category_image_padding">25dp</dimen>
+    <dimen name="login_host_padding_top">100dp</dimen>
+    <dimen name="login_host_padding_bottom">100dp</dimen>
 
 </resources>

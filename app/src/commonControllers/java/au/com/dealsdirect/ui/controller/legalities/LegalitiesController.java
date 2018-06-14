@@ -33,7 +33,7 @@ public class LegalitiesController extends BasePullToRefreshController implements
     @BindView(R.id.partial_toolbar_right_view)
     ImageButton mFilterButton;
 
-    @BindView(R.id.partial_toolbar_arrow_title)
+    @BindView(R.id.partial_toolbar_title)
     TextView mTitleText;
 
     private String key;

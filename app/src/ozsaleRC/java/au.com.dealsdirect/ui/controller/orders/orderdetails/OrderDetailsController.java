@@ -37,7 +37,7 @@ public class OrderDetailsController extends BaseController implements OrderDetai
     @Inject
     OrderDetailsMvpPresenter<OrderDetailsMvpView> mPresenter;
 
-    @BindView(R.id.partial_toolbar_arrow_title)
+    @BindView(R.id.partial_toolbar_title)
     TextView mOrderDetailsToolarTitle;
 
     @BindView(R.id.partial_toolbar_right_view)

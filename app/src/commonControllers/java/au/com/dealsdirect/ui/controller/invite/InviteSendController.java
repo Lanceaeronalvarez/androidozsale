@@ -55,7 +55,7 @@ public class InviteSendController extends BasePullToRefreshController implements
     @BindView(R.id.controller_send_invite_root)
     View mRoot;
 
-    @BindView(R.id.partial_toolbar_arrow_title)
+    @BindView(R.id.partial_toolbar_title)
     TextView mTitleText;
 
     @BindView(R.id.partial_toolbar_right_view)

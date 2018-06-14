@@ -249,12 +249,12 @@ public class ControllerModule {
 
     @Provides
     CountryMvpPresenter<CountryMvpView> provideCountryPresenter(CountryPresenter<CountryMvpView> presenter) {
-        return  presenter;
+        return presenter;
     }
 
 
     @Provides
-    OrdersMvpPresenter<OrdersMvpView> provideOrdersPresenter(OrdersPresenter<OrdersMvpView> presenter){
+    OrdersMvpPresenter<OrdersMvpView> provideOrdersPresenter(OrdersPresenter<OrdersMvpView> presenter) {
         return presenter;
     }
 
@@ -405,7 +405,7 @@ public class ControllerModule {
     }
 
     @Provides
-    VisaCheckoutMvpPresenter<VisaCheckoutMvpView> provideVisaCheckoutPresenter(VisaCheckoutPresenter<VisaCheckoutMvpView> presenter){
+    VisaCheckoutMvpPresenter<VisaCheckoutMvpView> provideVisaCheckoutPresenter(VisaCheckoutPresenter<VisaCheckoutMvpView> presenter) {
         return presenter;
     }
 }

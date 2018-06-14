@@ -30,14 +30,12 @@ import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.jakewharton.rxbinding2.view.RxView;
 import com.mysale.genie.utility.RxBus;
+import com.mysale.genie.utility.config.model.getappsettings.Checkout;
 import com.visa.checkout.VisaCheckoutSdk;
 import com.visa.checkout.VisaPaymentSummary;
 
 import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.LinkedList;
 import java.util.List;
-import java.util.Set;
 import java.util.concurrent.TimeUnit;
 
 import javax.inject.Inject;
@@ -80,6 +78,7 @@ import au.com.dealsdirect.utils.IntrospectionUtils;
 import au.com.dealsdirect.utils.PriceUtils;
 import butterknife.BindView;
 import butterknife.OnClick;
+import butterknife.Optional;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.CompositeDisposable;
 
@@ -100,7 +99,7 @@ public class CheckoutController extends VisaCheckoutController implements Checko
     @Inject
     CheckoutMvpPresenter<CheckoutMvpView> mPresenter;
 
-    @BindView(R.id.controller_checkout_recyclerview_items)
+    @Nullable @BindView(R.id.controller_checkout_recyclerview_items)
     RecyclerView mRecyclerView;
 
 
@@ -145,22 +144,19 @@ public class CheckoutController extends VisaCheckoutController implements Checko
     RelativeLayout mMasterpassButton;
     @BindView(R.id.partial_checkout_ourpay_panel_holder)
     LinearLayout mOurpayHolder;
+    @Nullable
     @BindView(R.id.controller_checkout_orders_label)
     TextView mOrdersLabel;
 
-    private RelativeLayout mButtonOurpay;
-    private CheckBox mCheckBoxOurpayTC;
-
+    @Nullable
     @BindView(R.id.no_cart_items_layout)
     RelativeLayout mNoCartItemsLayout;
     @BindView(R.id.controller_checkout_container)
     ViewGroup mCheckoutContainer;
 
-    @BindView(R.id.partial_checkout_empty_button)
-    Button mShopNowButton;
     @BindView(R.id.partial_toolbar_left_view)
     ImageButton mToolbarLeftButton;
-    @BindView(R.id.partial_toolbar_arrow_title)
+    @BindView(R.id.partial_toolbar_title)
     TextView mTitleTextView;
     @BindView(R.id.partial_toolbar_right_view)
     ImageButton mToolbarRightButton;
@@ -181,18 +177,20 @@ public class CheckoutController extends VisaCheckoutController implements Checko
     @BindView(R.id.delivery_option_ourpay_select_before_purchase_description_text_view)
     TextView mDeliveryOptionOurpaySelectBeforePurchaseDescriptionTextView;
 
+
+    private RelativeLayout mButtonOurpay;
+    private CheckBox mCheckBoxOurpayTC;
+
     private List<DeliveryOption> mDeliveryOptions;
     private DeliveryOption mSelectedDeliveryOption;
     private DeliveryServicePackageDetail mDeliveryServicePackageDetail;
 
-    private ArrayList<Item> mItemList = new ArrayList<>();
+    private List<Item> mItemList = new ArrayList<>();
     private ArrayList<PaymentMethod> mPaymentList = new ArrayList<>();
     private DeliveryAddress mDeliveryAddress = null;
     private ArrayList<DecorationInfoList> mDecorationInfoList = new ArrayList<>();
     private ArrayList<Voucher> mVouchers = new ArrayList<>();
     private CheckoutOrderAdapter mAdapter;
-
-    private String mTempVoucherPromoKey;
 
     private boolean mIsCartLoading = false;
     private boolean mIsVoucherAdded = false;
@@ -202,6 +200,8 @@ public class CheckoutController extends VisaCheckoutController implements Checko
     private Value mValue;
 
     public OurpayPanel ourpayPanel;
+
+    private CheckoutMvpView mCheckoutHostView;
 
     private CompositeDisposable mClickListeners;
     private CompositeDisposable mChangeClickListeners;
@@ -317,6 +317,8 @@ public class CheckoutController extends VisaCheckoutController implements Checko
         mPresenter.onAttach(this);
         mVcoPresenter.onAttach(this);
         registerForActivityResult(BraintreeRequestCodes.VISA_CHECKOUT);
+
+        mCheckoutHostView = (CheckoutMvpView) mActivity.getCheckoutRouter().getControllerWithTag(getString(R.string.checkout_host_controller));
         return view;
     }
 
@@ -334,6 +336,7 @@ public class CheckoutController extends VisaCheckoutController implements Checko
         }
 
         setUp(view);
+
     }
 
 
@@ -361,17 +364,18 @@ public class CheckoutController extends VisaCheckoutController implements Checko
 
     @Override
     protected void setUp(View view) {
-
         if (mActivity != null) {
             mActivity.getMainController().showBottomNav();
             mActivity.getMainController().setViewpagerDraggable(false);
         }
 
-        mTitleTextView.setText(R.string.checkout_page_toolbar_title);
+        mTitleTextView.setText(!mActivity.isTablet() ? R.string.checkout_page_toolbar_title : R.string.checkout_page_tablet_toolbar_title);
 
-        mAdapter = new CheckoutOrderAdapter(mActivity, mItemList, mPresenter);
-        mRecyclerView.setAdapter(mAdapter);
-        mRecyclerView.setLayoutManager(new LinearLayoutManager(mActivity, LinearLayoutManager.VERTICAL, false));
+        if(!mActivity.isTablet()) {
+            mAdapter = new CheckoutOrderAdapter(mActivity, mItemList, mPresenter);
+            mRecyclerView.setAdapter(mAdapter);
+            mRecyclerView.setLayoutManager(new LinearLayoutManager(mActivity, LinearLayoutManager.VERTICAL, false));
+        }
 
         mPayButton.setOnClickListener(view1 -> onPayButtonClick());
         mPaypalButton.setOnClickListener(view2 -> onPaypalButtonClick());
@@ -423,7 +427,7 @@ public class CheckoutController extends VisaCheckoutController implements Checko
                             // Successful VCO
                             showLoading();
                             mActivity.callCreatePaymentTransactionVco(visaPaymentSummary);
-                            mPresenter.facebookInitiatedCheckout(PaymentInfo.getPaymentType(), mAdapter.getItemCount(), mValue.getSummary().total);
+                            mPresenter.facebookInitiatedCheckout(PaymentInfo.getPaymentType(), mItemList.size(), mValue.getSummary().total);
                         }
                         break;
                     }
@@ -440,6 +444,7 @@ public class CheckoutController extends VisaCheckoutController implements Checko
         }
     }
 
+    @Override
     public void loadCart() {
 
         if (mPresenter.checkIsLoggedIn()) {
@@ -524,13 +529,26 @@ public class CheckoutController extends VisaCheckoutController implements Checko
 
     @Override
     public void showCartDetails(List<Item> items) {
+
+        if(mCheckoutHostView != null){
+            mCheckoutHostView.showCartDetails(items);
+        }
+
         if (items == null) { //do nothing (ie. when increasing order quantity, returns a soldout/out of stock message)
             return;
-        } else if (items.isEmpty()) {
+        }
+
+        mItemList = items;
+
+        if (items.isEmpty()) {
             //no items
             showNoCartItemsLayout();
         } else {
-            mAdapter.replaceData(items);
+
+            if(mAdapter != null) {
+                mAdapter.replaceData(items);
+            }
+
             showCartItems();
         }
 
@@ -828,7 +846,7 @@ public class CheckoutController extends VisaCheckoutController implements Checko
             } else {
                 PaymentInfo.setPaymentType(PaymentInfo.TYPE_BRAINTREE);
                 mActivity.callCreatePaymentTransaction(PaymentInfo.getPaymentType(), "", PaymentInfo.getPaymentMethod().getToken());
-                mPresenter.facebookInitiatedCheckout(PaymentInfo.getPaymentType(), mAdapter.getItemCount(), mValue.getSummary().total);
+                mPresenter.facebookInitiatedCheckout(PaymentInfo.getPaymentType(), mItemList.size(), mValue.getSummary().total);
             }
         }
     }
@@ -850,7 +868,7 @@ public class CheckoutController extends VisaCheckoutController implements Checko
             } else {
                 PaymentInfo.setPaymentType(PaymentInfo.TYPE_BRAINTREE);
                 mActivity.callCreatePaymentTransaction(PaymentInfo.getPaymentType(), "", PaymentInfo.getPaymentMethod().getToken());
-                mPresenter.facebookInitiatedCheckout(PaymentInfo.getPaymentType(), mAdapter.getItemCount(), mValue.getSummary().total);
+                mPresenter.facebookInitiatedCheckout(PaymentInfo.getPaymentType(), mItemList.size(), mValue.getSummary().total);
             }
         }
     }
@@ -870,7 +888,7 @@ public class CheckoutController extends VisaCheckoutController implements Checko
                 .pushChangeHandler(new HorizontalChangeHandler(false))
                 .popChangeHandler(new HorizontalChangeHandler()));
 
-        mPresenter.facebookInitiatedCheckout(PaymentInfo.getPaymentType(), mAdapter.getItemCount(), mValue.getSummary().total);
+        mPresenter.facebookInitiatedCheckout(PaymentInfo.getPaymentType(), mItemList.size(), mValue.getSummary().total);
 
     }
 
@@ -906,7 +924,7 @@ public class CheckoutController extends VisaCheckoutController implements Checko
                                 .popChangeHandler(new HorizontalChangeHandler()));
                     } else {
                         ourpayPaymentSubmit();
-                        mPresenter.facebookInitiatedCheckout(PaymentInfo.getPaymentType(), mAdapter.getItemCount(), mValue.getSummary().total);
+                        mPresenter.facebookInitiatedCheckout(PaymentInfo.getPaymentType(), mItemList.size(), mValue.getSummary().total);
                     }
                 }
             }
@@ -917,7 +935,7 @@ public class CheckoutController extends VisaCheckoutController implements Checko
         return mDeliveryAddress != null;
     }
 
-    @OnClick(R.id.partial_checkout_empty_button)
+    @Optional @OnClick(R.id.partial_checkout_empty_button)
     void shopNow() {
 
         mActivity.setShopsAsVisibleContainer();
@@ -934,17 +952,24 @@ public class CheckoutController extends VisaCheckoutController implements Checko
 
     private void showNoCartItemsLayout() {
         hidePaymentButtons();
-        mNoCartItemsLayout.setVisibility(View.VISIBLE);
+        if (mNoCartItemsLayout != null) {
+            mNoCartItemsLayout.setVisibility(View.VISIBLE);
+        }
         mCheckoutContainer.setVisibility(View.GONE);
         mPresenter.resetIsCartAlreadyLoaded();
     }
 
     private void showCartItems() {
         showPaymentButtons();
-        mNoCartItemsLayout.setVisibility(View.GONE);
+        if (mNoCartItemsLayout != null) {
+            mNoCartItemsLayout.setVisibility(View.GONE);
+        }
         mCheckoutContainer.setVisibility(View.VISIBLE);
         int showOrdersLabel = getResources().getBoolean(R.bool.is_checkout_orders_label_visible) ? View.VISIBLE : View.GONE;
-        mOrdersLabel.setVisibility(showOrdersLabel);
+
+        if (mOrdersLabel != null) {
+            mOrdersLabel.setVisibility(showOrdersLabel);
+        }
     }
 
     private void hidePaymentButtons() {
@@ -1024,6 +1049,7 @@ public class CheckoutController extends VisaCheckoutController implements Checko
 
         }
     }
+
 
     public void setIsGraphVisible(boolean isVisible) {
         if (ourpayPanel != null) {

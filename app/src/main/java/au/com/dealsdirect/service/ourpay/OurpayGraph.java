@@ -12,7 +12,6 @@ import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Path;
 import android.graphics.Rect;
-import android.media.Image;
 import android.os.Build;
 import android.util.DisplayMetrics;
 import android.view.Display;
@@ -193,9 +192,10 @@ public class OurpayGraph {
         final int deviceWidth = (int) (dimension[0] - (25 * dm.density));
         //final int deviceHeight = dimension[1];
 
-        final boolean tabletSize = context.getResources().getBoolean(R.bool.is_tablet);
+        final boolean isTablet = context.getResources().getBoolean(R.bool.is_tablet);
+        final String appName = context.getResources().getString(R.string.app_name);
 
-        if (tabletSize) {
+        if (isTablet) {
             circleTempSize = (int) (27 * dm.density);
             circleTempTextSize = (int) (15 - dm.density);
         } else {
@@ -245,8 +245,12 @@ public class OurpayGraph {
                 @Override
                 public void onGlobalLayout() {
 
+                    if (isTablet) {
+                        circlesLayoutWidth = (deviceWidth / 2) - ((deviceWidth / 2) / 3);
+                    } else {
+                        circlesLayoutWidth = deviceWidth - (deviceWidth / 3);
+                    }
 
-                    circlesLayoutWidth = deviceWidth - (deviceWidth / 3);
                     ImageView foregroundBar = (ImageView) yourView.findViewById(R.id.ourpay_fg_bar);
                     ImageView backgroundBar = (ImageView) yourView.findViewById(R.id.ourpay_bg_bar);
 
@@ -256,7 +260,7 @@ public class OurpayGraph {
 
                     }
 
-                    if (tabletSize) {
+                    if (isTablet) {
                         TextView tempDate = (TextView) yourView.findViewById(R.id.dateTextView);
                         tempDate.getLayoutParams().height = circleSize;
                         if (deviceWidth <= 900) {
@@ -2148,7 +2152,7 @@ public class OurpayGraph {
             }
         }
 
-        if(progressBitmaps!=null){
+        if (progressBitmaps != null) {
             for (int y = 0; y < progressBitmaps.length; y++) {
                 if (bitmapState[y] != null) {
                     bitmapState[y].recycle();

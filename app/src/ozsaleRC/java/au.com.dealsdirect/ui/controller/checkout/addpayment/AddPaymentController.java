@@ -29,7 +29,6 @@ import com.crashlytics.android.answers.Answers;
 import com.crashlytics.android.answers.CustomEvent;
 import com.google.gson.Gson;
 import com.mysale.genie.utility.RxBus;
-import com.mysale.genie.utility.config.model.getappsettings.VisaCheckout;
 import com.visa.checkout.VisaCheckoutSdk;
 import com.visa.checkout.VisaPaymentSummary;
 
@@ -41,13 +40,10 @@ import au.com.dealsdirect.data.network.model.checkout.getuserpaymentmethods.Paym
 import au.com.dealsdirect.service.ourpay.Ourpay;
 import au.com.dealsdirect.service.ourpay.OurpayPanel;
 import au.com.dealsdirect.service.ourpay.OurpayStateManager;
-import au.com.dealsdirect.service.ourpay.OurpayTemplateText;
 import au.com.dealsdirect.ui.base.BaseActivity;
-import au.com.dealsdirect.ui.base.BaseController;
 import au.com.dealsdirect.ui.base.VisaCheckoutMvpPresenter;
 import au.com.dealsdirect.ui.base.VisaCheckoutMvpView;
 import au.com.dealsdirect.ui.controller.checkout.checkout.CheckoutMvpView;
-import au.com.dealsdirect.ui.controller.checkout.ourpay.OurpaySMSVerificationController;
 import au.com.dealsdirect.ui.controller.masterpass.MasterpassController;
 import au.com.dealsdirect.ui.controller.visacheckout.VisaCheckoutController;
 import au.com.dealsdirect.ui.custom.CustomAlertDialog;
@@ -60,8 +56,6 @@ import au.com.dealsdirect.utils.BundleKeys;
 import au.com.dealsdirect.utils.IntrospectionUtils;
 import butterknife.BindView;
 import butterknife.OnClick;
-
-import static au.com.dealsdirect.service.ourpay.OurpayTemplateText.KEY_OURPAY_TC_VALIDATION_FAILED;
 
 /*
  * Created by smartwave on 29/06/2017.
@@ -92,7 +86,7 @@ public class AddPaymentController extends VisaCheckoutController implements AddP
     NestedScrollView mNestedScrollView;
 
 
-    @BindView(R.id.partial_toolbar_arrow_title)
+    @BindView(R.id.partial_toolbar_title)
     TextView mViewAddressToolarTitle;
     @BindView(R.id.partial_toolbar_right_view)
     ImageView mViewAddressRightOption;

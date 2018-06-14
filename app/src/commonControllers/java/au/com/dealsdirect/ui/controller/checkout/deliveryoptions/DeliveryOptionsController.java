@@ -44,7 +44,7 @@ public class DeliveryOptionsController extends BaseController implements Deliver
 
     @BindView(R.id.delivery_options_recycler_view)
     RecyclerView mRecyclerView;
-    @BindView(R.id.partial_toolbar_arrow_title)
+    @BindView(R.id.partial_toolbar_title)
     TextView mToolbarTitleTextView;
     @BindView(R.id.partial_toolbar_right_view)
     ImageButton mToolbarRightButton;

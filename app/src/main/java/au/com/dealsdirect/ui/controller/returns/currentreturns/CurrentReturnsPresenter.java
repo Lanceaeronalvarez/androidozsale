@@ -33,6 +33,7 @@ public class CurrentReturnsPresenter<V extends CurrentReturnsMvpView> extends Ba
                 getMvpView().showCurrentReturns((CurrentReturnResponseBody) response);
             }
         });
+
     }
 
     @Override

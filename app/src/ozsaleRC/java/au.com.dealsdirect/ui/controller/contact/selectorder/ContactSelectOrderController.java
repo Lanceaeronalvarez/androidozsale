@@ -19,7 +19,6 @@ import au.com.dealsdirect.data.network.model.contactorder.ContactOrderList;
 import au.com.dealsdirect.ui.base.BaseController;
 import au.com.dealsdirect.ui.controller.contact.ContactPreferenceHelper;
 import au.com.dealsdirect.ui.controller.contact.selectorder.adapter.ContactOrderAdapter;
-import au.com.dealsdirect.ui.controller.contact.selectorder.listener.ContactOrderClickListener;
 import au.com.dealsdirect.utils.BundleBuilder;
 import butterknife.BindView;
 import butterknife.OnClick;
@@ -38,7 +37,7 @@ public class ContactSelectOrderController extends BaseController
     @Inject
     ContactSelectOrderMvpPresenter<ContactSelectOrderMvpView> mPresenter;
 
-    @BindView(R.id.partial_toolbar_arrow_title)
+    @BindView(R.id.partial_toolbar_title)
     TextView mContactOrdersToolarTitle;
 
     @BindView(R.id.partial_toolbar_right_view)

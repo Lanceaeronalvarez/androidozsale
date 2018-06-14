@@ -206,12 +206,17 @@ public class PaymentSuccessController extends BaseController implements PaymentS
         }
     }
 
+    @Override
+    public boolean handleBack() {
+        onContinueShoppingClick();
+        return true;
+    }
 
     @OnClick(R.id.partial_continue_shopping_button)
     void onContinueShoppingClick() {
         PaymentInfo.resetPaymentInfo();
 
-        getRouter().popToTag("CheckoutController");
+        mActivity.getCheckoutRouter().popToRoot();
         ((MainActivity) getActivity()).setShopsAsVisibleContainer();
     }
 

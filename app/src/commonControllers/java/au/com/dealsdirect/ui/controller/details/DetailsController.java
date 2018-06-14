@@ -40,7 +40,10 @@ public class DetailsController extends BasePullToRefreshController implements De
     @Inject
     DetailsMvpPresenter<DetailsMvpView> mPresenter;
 
-    @BindView(R.id.partial_toolbar_arrow_title)
+    @BindView(R.id.partial_toolbar_left_view)
+    View mToolbarLeftView;
+
+    @BindView(R.id.partial_toolbar_title)
     TextView mTitleTextView;
 
     @BindView(R.id.partial_toolbar_right_view)
@@ -122,12 +125,10 @@ public class DetailsController extends BasePullToRefreshController implements De
 
     @Override
     protected void setUp(View view) {
-        mSaveUserDetailsButton.setImageDrawable(
-                getResources().getDrawable(R.drawable.ic_check));
-        mTitleTextView.setText("Personal Details");
-
-//        ((ElasticHorizontalDragDismissFrameLayout)view).addListener(mDragDismissCallback);
-
+        mSaveUserDetailsButton.setImageDrawable(getResources().getDrawable(R.drawable.ic_check));
+        mSaveUserDetailsButton.setVisibility(getBoolean(R.bool.is_ozsale_app) ? View.INVISIBLE : View.VISIBLE);
+        mTitleTextView.setText(getString(R.string.account_details));
+        mToolbarLeftView.setVisibility(mActivity.isTablet() ? View.GONE : View.VISIBLE);
 
         List<String> list = new ArrayList<String>(Arrays.asList(getResources().getStringArray(R.array.genders)));
         CustomSpinnerAdapter customSpinnerAdapter = new CustomSpinnerAdapter(mActivity,
@@ -158,6 +159,7 @@ public class DetailsController extends BasePullToRefreshController implements De
         });
         SetUserDetailsRequest setUserDetailsRequest = new SetUserDetailsRequest();
         mPresenter.loadUser(setUserDetailsRequest);
+
     }
 
     @Override
@@ -174,15 +176,15 @@ public class DetailsController extends BasePullToRefreshController implements De
         mLastNameText.setText(value.getSurname());
         mEmailAddressText.setText(value.getEmail());
 
-        if (value.getDateOfBirth()!=null){
-            String day =  value.getDateOfBirth().getDay().toString();
+        if (value.getDateOfBirth() != null) {
+            String day = value.getDateOfBirth().getDay().toString();
             String year = value.getDateOfBirth().getYear().toString();
-            String month = DateUtils.months[value.getDateOfBirth().getMonth()-1];
-            mDateOfBirthText.setText(month+" "+day+", "+year);
+            String month = DateUtils.months[value.getDateOfBirth().getMonth() - 1];
+            mDateOfBirthText.setText(month + " " + day + ", " + year);
         }
 
         int genderItem = 0;
-        if (!value.getGender()){
+        if (!value.getGender()) {
             genderItem = 1;
         }
 
@@ -223,11 +225,11 @@ public class DetailsController extends BasePullToRefreshController implements De
         String newpassword = mNewPasswordText.getText().toString();
         String confirmpassword = mConfirmPasswordText.getText().toString();
 
-        if (newpassword.equals(confirmpassword)){
+        if (newpassword.equals(confirmpassword)) {
             mPresenter.sendUserDetails(createUserDetailRequest(email, firstname, lastname, dateofbirth,
-                    gender, email, password, newpassword, confirmpassword ));
-        }else{
-            CustomAlertDialog.showCustomAlertDialog(mActivity, CustomAlertDialog.CustomDialogIconState.POSITIVE,mActivity.getString(R.string.password_does_not_match));
+                    gender, email, password, newpassword, confirmpassword));
+        } else {
+            CustomAlertDialog.showCustomAlertDialog(mActivity, CustomAlertDialog.CustomDialogIconState.POSITIVE, mActivity.getString(R.string.password_does_not_match));
         }
     }
 

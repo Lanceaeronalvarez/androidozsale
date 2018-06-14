@@ -13,6 +13,7 @@
     <string name="marydoe_ourpay">marydoe.ourpay</string>
     <string name="password">Password</string>
 
+    <string name="enter_personal_details">ENTER PERSONAL DETAILS</string>
     <string name="create_account">create account</string>
     <string name="create_message">Create New Message</string>
     <string name="ic_back">ic_back</string>

@@ -12,8 +12,6 @@ import android.widget.TextView;
 
 import com.google.gson.Gson;
 import com.jakewharton.rxbinding2.view.RxView;
-import com.visa.checkout.Profile;
-import com.visa.checkout.PurchaseInfo;
 
 import java.util.concurrent.TimeUnit;
 
@@ -21,7 +19,6 @@ import javax.inject.Inject;
 
 import au.com.dealsdirect.R;
 import au.com.dealsdirect.data.network.model.login.LoginVisa;
-import au.com.dealsdirect.ui.base.BaseController;
 import au.com.dealsdirect.ui.base.VisaCheckoutMvpPresenter;
 import au.com.dealsdirect.ui.base.VisaCheckoutMvpView;
 import au.com.dealsdirect.ui.controller.visacheckout.VisaCheckoutController;
@@ -59,7 +56,7 @@ public class PasswordVerificationController extends VisaCheckoutController imple
 
     @BindView(R.id.partial_toolbar_right_view)
     ImageButton mFilterButton;
-    @BindView(R.id.partial_toolbar_arrow_title)
+    @BindView(R.id.partial_toolbar_title)
     TextView mTitleTextView;
     @BindView(R.id.controller_password_verification_edittext)
     EditText mPassword;

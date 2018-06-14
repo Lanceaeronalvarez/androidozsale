@@ -24,18 +24,21 @@ public class PaymentSelectPresenter<V extends PaymentSelectMvpView> extends Base
 
     @Override
     public void fetchUserPaymentMethods() {
-        doApiCallForResponse(getDataManager().callGetUserPaymentMethods(
-                new GetUserPaymentMethods.RequestValue()), new AppApiCallback() {
-            @Override
-            public void onSuccess(Object response) {
-                super.onSuccess(response);
-                if (((GetUserPaymentMethods.ResponseValue) response).getD().getResult()) {
-                    getMvpView().showPaymentList(((GetUserPaymentMethods.ResponseValue) response).getUserPaymentMethods());
-                } else {
-                    getMvpView().onError(((GetUserPaymentMethods.ResponseValue) response).getD().getMessage());
+        if(getDataManager().isAuthorized()) {
+            getMvpView().showLoading();
+            doApiCallForResponse(getDataManager().callGetUserPaymentMethods(
+                    new GetUserPaymentMethods.RequestValue()), new AppApiCallback() {
+                @Override
+                public void onSuccess(Object response) {
+                    super.onSuccess(response);
+                    if (((GetUserPaymentMethods.ResponseValue) response).getD().getResult()) {
+                        getMvpView().showPaymentList(((GetUserPaymentMethods.ResponseValue) response).getUserPaymentMethods());
+                    } else {
+                        getMvpView().onError(((GetUserPaymentMethods.ResponseValue) response).getD().getMessage());
+                    }
                 }
-            }
-        });
+            });
+        }
     }
 
     @Override
