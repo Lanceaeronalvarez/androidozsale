@@ -34,6 +34,8 @@ import au.com.dealsdirect.ui.controller.account.AccountController;
 import au.com.dealsdirect.ui.controller.account.AccountMvpView;
 import au.com.dealsdirect.ui.controller.categories.CategoriesController;
 import au.com.dealsdirect.ui.controller.checkout.checkout.CheckoutController;
+import au.com.dealsdirect.ui.controller.checkout.checkout.CheckoutMvpView;
+import au.com.dealsdirect.ui.controller.checkout.checkouthost.CheckoutHostController;
 import au.com.dealsdirect.ui.controller.checkout.paymentsuccess.PaymentSuccessController;
 import au.com.dealsdirect.ui.controller.contact.viewcontacts.ViewContactsController;
 import au.com.dealsdirect.ui.controller.saleitems.SaleItemsController;
@@ -96,7 +98,7 @@ public class HomeController extends BaseController implements HomeMvpView {
     private Router mContactRouter;
     private Router mAccountsRouter;
     private Router mCheckoutRouter;
-    private Router mLoginHostRouter;
+    private Router mPopUpHostRouter;
 
     private int currentVisibleIndex = 0;
     private int previousVisibleIndex = 0;
@@ -262,12 +264,13 @@ public class HomeController extends BaseController implements HomeMvpView {
 
         mAccountsRouter.setRoot(RouterTransaction.with(AccountController.newInstance()));
 
-        mLoginHostRouter = getChildRouter(mLoginHostContainer);
-        mLoginHostRouter.setPopsLastView(true);
+        if (mActivity.isTablet()) {
+            mPopUpHostRouter = getChildRouter(mLoginHostContainer);
+            mPopUpHostRouter.setPopsLastView(true);
+        }
 
-        mCheckoutRouter = getChildRouter(mCheckoutContainer);
-        mCheckoutRouter.setRoot(RouterTransaction.with(CheckoutController.newInstance())
-                .tag(getActivity().getResources().getString(R.string.checkout_controller)));
+        resetCheckoutRouter();
+
     }
 
     public void resetContactsRouter() {
@@ -278,11 +281,19 @@ public class HomeController extends BaseController implements HomeMvpView {
 
     public void resetCheckoutRouter() {
         mCheckoutRouter = getChildRouter(mCheckoutContainer);
-        mCheckoutRouter.setRoot(RouterTransaction.with(CheckoutController.newInstance())
-                .tag(getActivity().getResources().getString(R.string.checkout_controller)));
+        mActivity.setCheckoutRouter(mCheckoutRouter);
+
+        if (!mActivity.isTablet()) {
+            mCheckoutRouter.setRoot(RouterTransaction.with(CheckoutController.newInstance())
+                    .tag(getActivity().getResources().getString(R.string.checkout_controller)));
+        } else {
+            mCheckoutRouter.setRoot(RouterTransaction.with(CheckoutHostController.newInstance())
+                    .tag(getActivity().getResources().getString(R.string.checkout_host_controller)));
+        }
+
     }
 
-    public void resetAccountRouter(){
+    public void resetAccountRouter() {
         mAccountsRouter = getChildRouter(mAccountsContainer);
         mAccountsRouter.setRoot(RouterTransaction.with(AccountController.newInstance()));
     }
@@ -314,31 +325,19 @@ public class HomeController extends BaseController implements HomeMvpView {
     public void showThirdTabController() {
         setVisibleContainer(TAB_ACCOUNT_INDEX);
         mActivity.getMainController().setViewpagerDraggable(false);
-
         int size = mAccountsRouter.getBackstack().size();
-        if (mAccountsRouter.getBackstack().get(size - 1).controller() instanceof AccountMvpView)
-            ((AccountMvpView) mAccountsRouter.getBackstack().get(size - 1).controller()).initLoginDrawable();
 
-//        if (mActivity.isTablet() && !mActivity.isAuthorized()) {
-//            mActivity.showLoginController(mAccountsRouter, new AuthHandler() {
-//                @Override
-//                public void success() {
-//                    resetRouters();
-//                }
-//
-//                @Override
-//                public void error() {
-//
-//                }
-//            });
-//        }
+        if (mAccountsRouter.getBackstack().get(size - 1).controller() instanceof AccountMvpView) {
+            ((AccountMvpView) mAccountsRouter.getBackstack().get(size - 1).controller()).initLoginDrawable();
+        }
     }
 
     @Override
     public void showFourthTabController() {
         mActivity.getMainController().setViewpagerDraggable(false);
+
         if (!mActivity.isAuthorized()) {
-            mActivity.showLoginController(mContactRouter, new AuthHandler() {
+            mActivity.showLoginController(getCurrentRouter(), new AuthHandler() {
                 @Override
                 public void success() {
                     resetRouters();
@@ -359,7 +358,7 @@ public class HomeController extends BaseController implements HomeMvpView {
     public void showFifthTabController() {
         mActivity.getMainController().setViewpagerDraggable(false);
         if (!mActivity.isAuthorized()) {
-            mActivity.showLoginController(mCheckoutRouter, new AuthHandler() {
+            mActivity.showLoginController(getCurrentRouter(), new AuthHandler() {
                 @Override
                 public void success() {
                     resetRouters();
@@ -374,9 +373,8 @@ public class HomeController extends BaseController implements HomeMvpView {
         } else { //should load cart everytime checkout is clicked on bottom nav
             setVisibleContainer(TAB_CHECKOUT_INDEX);
             Controller controller = getCurrentControllerOnRouter(mCheckoutRouter);
-            if (controller instanceof CheckoutController) {
-                ((CheckoutController) controller).loadCart();
-                ((CheckoutController) controller).setIsGraphVisible(true);
+            if (controller instanceof CheckoutMvpView) {
+                ((CheckoutMvpView) controller).loadCart();
             }
         }
     }
@@ -440,13 +438,15 @@ public class HomeController extends BaseController implements HomeMvpView {
 
     public void resetVisibleContainer() {
 
-        if (!(getCurrentRouter() == mAccountsRouter || getCurrentRouter() == mShopRouter)) {
-            mRouterContainerMapping.get(currentVisibleIndex).second.setVisibility(View.GONE);
-            mRouterContainerMapping.get(previousVisibleIndex).second.setVisibility(View.VISIBLE);
-            mBottomNavigationView.setCurrentItem(previousVisibleIndex, false);
-            currentVisibleIndex = previousVisibleIndex;
+        mRouterContainerMapping.get(currentVisibleIndex).second.setVisibility(View.GONE);
+        if (currentVisibleIndex == previousVisibleIndex) {
+            previousVisibleIndex = 0;
+        }
+        mRouterContainerMapping.get(previousVisibleIndex).second.setVisibility(View.VISIBLE);
+        mBottomNavigationView.setCurrentItem(previousVisibleIndex, false);
+        currentVisibleIndex = previousVisibleIndex;
 
-        } else if (getCurrentRouter() == mShopRouter) {
+        if (getCurrentRouter() == mShopRouter) {
             showBottomNav();
         }
     }
@@ -457,8 +457,8 @@ public class HomeController extends BaseController implements HomeMvpView {
     }
 
     public Router getCurrentRouter() {
-        if (mActivity.isTablet() && isLoginVisible()) {
-            return mLoginHostRouter;
+        if (mActivity.isTablet() && isPopUpControllerVisible()) {
+            return mPopUpHostRouter;
         } else {
             return mRouterContainerMapping.get(currentVisibleIndex).first;
         }
@@ -500,22 +500,20 @@ public class HomeController extends BaseController implements HomeMvpView {
     }
 
     public void animateBottomNav(int verticalAdjustmentPixels) {
-
         if (Math.abs(verticalAdjustmentPixels) > 0) {
-            mActivity.getHomeController().showBottomNav();
-            mActivity.getHomeController().getBottomNavigationView().restoreBottomNavigation(true);
-
+            showBottomNav();
+            mBottomNavigationView.restoreBottomNavigation(true);
         } else {
-            mActivity.getHomeController().hideBottomNav();
-            mActivity.getHomeController().getBottomNavigationView().hideBottomNavigation(true);
+            mBottomNavigationView.hideBottomNavigation(true);
+            hideBottomNav();
         }
     }
 
-    public boolean isLoginVisible() {
-        return mLoginHostRouter != null && mLoginHostRouter.getBackstackSize() >= 1;
+    public boolean isPopUpControllerVisible() {
+        return mPopUpHostRouter != null && mPopUpHostRouter.getBackstackSize() >= 1;
     }
 
-    public Router getLoginHostRouter() {
-        return mLoginHostRouter;
+    public Router getPopUpHostRouter() {
+        return mPopUpHostRouter;
     }
 }

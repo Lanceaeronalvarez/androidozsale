@@ -25,16 +25,15 @@ public class CurrentReturnsPresenter<V extends CurrentReturnsMvpView> extends Ba
 
     @Override
     public void loadCurrentReturns() {
-        if (getDataManager().isAuthorized()) {
-            getMvpView().showLoading();
-            doApiCallForResponse(getDataManager().callGetCurrentReturns(), new AppApiCallback() {
-                @Override
-                public void onSuccess(Object response) {
-                    super.onSuccess(response);
-                    getMvpView().showCurrentReturns((CurrentReturnResponseBody) response);
-                }
-            });
-        }
+        getMvpView().showLoading();
+        doApiCallForResponse(getDataManager().callGetCurrentReturns(), new AppApiCallback() {
+            @Override
+            public void onSuccess(Object response) {
+                super.onSuccess(response);
+                getMvpView().showCurrentReturns((CurrentReturnResponseBody) response);
+            }
+        });
+
     }
 
     @Override

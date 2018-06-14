@@ -31,12 +31,12 @@ import butterknife.ButterKnife;
 public class CheckoutOrderAdapter extends RecyclerView.Adapter<CheckoutOrderAdapter.ViewHolder> {
 
     private Context mContext;
-    private ArrayList<Item> mData;
+    private List<Item> mData;
     private CheckoutMvpPresenter<CheckoutMvpView> mPresenter;
     private int resLayout;
     private static final int MAX_ITEM_QTY = 5;
 
-    public CheckoutOrderAdapter(Context context,ArrayList<Item> data, CheckoutMvpPresenter<CheckoutMvpView> presenter) {
+    public CheckoutOrderAdapter(Context context, List<Item> data, CheckoutMvpPresenter<CheckoutMvpView> presenter) {
         this.mContext = context;
         this.mData = data;
         this.mPresenter = presenter;
@@ -54,7 +54,7 @@ public class CheckoutOrderAdapter extends RecyclerView.Adapter<CheckoutOrderAdap
 
         //   (1) fix when item.fileName is null
         if (item.fileName != null) {
-            if (!item.fileName.isEmpty()) {
+            if (!item.fileName.isEmpty() && holder.image.getDrawable() == null) {
                 ImageUtils.loadImageDontAnimate(mContext, LegacyStringImageUtils.generateImageUrl(item.brandID, item.imageID, item.fileName), holder.image);
             }
         }
@@ -90,14 +90,14 @@ public class CheckoutOrderAdapter extends RecyclerView.Adapter<CheckoutOrderAdap
         });
     }
 
-    public void replaceData(List<Item> items){
+    public void replaceData(List<Item> items) {
         mData = new ArrayList<>(items);
         notifyDataSetChanged();
     }
 
     @Override
     public int getItemCount() {
-        return mData.size();
+        return mData != null ? mData.size() : 0;
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder {

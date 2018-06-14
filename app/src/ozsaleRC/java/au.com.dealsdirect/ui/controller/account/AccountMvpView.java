@@ -47,8 +47,6 @@ public interface AccountMvpView extends MvpView {
 
     boolean isChangeInProgress();
 
-    boolean isTablet();
-
     Router getDisplayRouter();
 
     int getBackstackSize();

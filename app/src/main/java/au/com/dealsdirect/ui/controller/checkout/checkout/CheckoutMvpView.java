@@ -21,6 +21,8 @@ import au.com.dealsdirect.ui.base.MvpView;
 
 public interface CheckoutMvpView extends MvpView {
 
+    void loadCart();
+
     void showMyPayDetails(Value value, Ourpay ourpay);
 
     void showCartDetails(List<Item> items);

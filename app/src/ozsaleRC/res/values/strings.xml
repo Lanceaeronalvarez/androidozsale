@@ -13,6 +13,7 @@
     <string name="marydoe_ourpay">marydoe.ourpay</string>
     <string name="password">Password</string>
 
+    <string name="enter_personal_details">ENTER PERSONAL DETAILS</string>
     <string name="create_account">create account</string>
     <string name="create_message">Create New Message</string>
     <string name="ic_back">ic_back</string>
@@ -143,7 +144,7 @@
     <string name="thank_you_for_using">Thank you for using</string>
     <string name="order_successful">order successful!</string>
     <string name="your_order_will_arrive_within_14_to_28_working_days_after_the_sale_has_finished">Your order will arrive within 14 to 28 working days after the sale has finished.</string>
-    <string name="sign_in_with_facebook">Login with Facebook</string>
+    <string name="sign_in_with_facebook">Sign in with Facebook</string>
     <string name="thank_you_for_shopping">Thank you for shopping with Ozsale</string>
 
     <!--CONTACTS-->

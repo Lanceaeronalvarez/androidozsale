@@ -57,9 +57,6 @@ public class ViewAddressController extends BasePullToRefreshController implement
     View mToolbarLeftView;
     @BindView(R.id.partial_toolbar_title)
     TextView mViewAddressToolarTitle;
-    @BindView(R.id.address_office_delivery_subtitle)
-    TextView mViewAddressSubHeader;
-
     private List<AddressesItem> mAddressList;
     boolean mCalledFromCart;
     private int recyclerTempItemPosition;
@@ -101,7 +98,7 @@ public class ViewAddressController extends BasePullToRefreshController implement
         mPresenter.loadAddresses();
 
 
-        mToolbarLeftView.setVisibility(mActivity.isTablet() ? View.GONE : View.VISIBLE);
+        mToolbarLeftView.setVisibility(mActivity.isTablet() && !mCalledFromCart ? View.GONE : View.VISIBLE);
         mViewAddressToolarTitle.setText(getString(R.string.my_addresses_toolbar_title));
         mAddressList = new ArrayList<>();
         RecyclerViewSwipeManager swipeManager = new RecyclerViewSwipeManager();

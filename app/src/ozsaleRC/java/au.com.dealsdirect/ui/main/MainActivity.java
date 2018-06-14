@@ -4,8 +4,8 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.content.res.Configuration;
 import android.os.Bundle;
-import android.view.View;
 import android.view.ViewGroup;
 
 import com.bluelinelabs.conductor.Conductor;
@@ -137,6 +137,19 @@ public class MainActivity extends BaseActivity implements MainMvpView {
         setUp();
     }
 
+    /**
+     * bug/gen-7818-landscape - detect screen orientaiton change
+     *
+     * @param newConfig - new screen adjustment
+     */
+    @Override
+    public void onConfigurationChanged(Configuration newConfig) {
+        super.onConfigurationChanged(newConfig);
+
+        if (mShopController != null)
+            mShopController.onOrientationChange();
+    }
+
     @Override
     protected void setUp() {
 
@@ -188,8 +201,8 @@ public class MainActivity extends BaseActivity implements MainMvpView {
 
     @Override
     public void onBackPressed() {
-        if(isTablet() && getHomeController().isLoginVisible()) {
-            getHomeController().getLoginHostRouter().handleBack();
+        if (isTablet() && getHomeController().isPopUpControllerVisible()) {
+            getHomeController().getPopUpHostRouter().handleBack();
         } else {
             Router currentRouter = getCurrentRouter();
             Controller currentController = getCurrentController(getCurrentRouter());
@@ -232,18 +245,24 @@ public class MainActivity extends BaseActivity implements MainMvpView {
                         (dialogInterface, i) -> finish(),
                         (dialogInterface, i) -> {
                         });
-            } else {
+            } else if (!isMasterDetailRouter(currentRouter)) {
                 getMainController().showBottomNav();
                 setShopsAsVisibleContainer();
+            } else if (currentController instanceof PaymentSuccessMvpView) {
+                //backpress for payment success
+                getMainController().getHomeController().getCheckoutRouter().popToRoot();
+                Controller controller = getMainController().getHomeController().getCurrentControllerOnRouter(mCheckoutRouter);
+                ((CheckoutController) controller).loadCart();
+            } else {
+                currentRouter.handleBack();
             }
-        } else if (currentController instanceof PaymentSuccessMvpView || currentController instanceof AddPaymentController) {
-            //backpress for payment success
-            getMainController().getHomeController().getCheckoutRouter().popToRoot();
-            Controller controller = getMainController().getHomeController().getCurrentControllerOnRouter(mCheckoutRouter);
-            ((CheckoutController) controller).loadCart();
         } else {
             currentRouter.handleBack();
         }
+    }
+
+    private boolean isMasterDetailRouter(Router router) {
+        return isTablet() && (router == mAccountsRouter || router == mCheckoutRouter);
     }
 
     private void shopsRouterFromCategoryBackPress(Router currentRouter, Controller currentController) {
@@ -269,7 +288,7 @@ public class MainActivity extends BaseActivity implements MainMvpView {
                 GateKeeper.push(router, GateKeeper.Destination.LOGIN);
             }
         } else {
-            GateKeeper.setRoot(getHomeController().getLoginHostRouter(), GateKeeper.Destination.LOGIN_HOST, RouterTransaction.with(LoginHostController.newInstance()).
+            GateKeeper.setRoot(getHomeController().getPopUpHostRouter(), GateKeeper.Destination.LOGIN_HOST, RouterTransaction.with(LoginHostController.newInstance()).
                     pushChangeHandler(new FadeChangeHandler()).popChangeHandler(new FadeChangeHandler()));
         }
     }

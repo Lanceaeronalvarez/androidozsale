@@ -102,7 +102,6 @@ public class AddContactController extends BaseController implements AddContactMv
     @Override
     protected void setUp(View view) {
         KeyboardUtils.setKeyboardAdjustPan(mActivity);
-        mActivity.getMainController().hideBottomNav();
 
         mAddContactToolbarRightOption.setVisibility(View.INVISIBLE);
         mAddContactToolbarTitle.setText(R.string.new_message);

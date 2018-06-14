@@ -114,18 +114,6 @@ public class PaymentSelectController extends BasePullToRefreshController impleme
     }
 
     @Override
-    protected void onAttach(@NonNull View view) {
-        super.onAttach(view);
-        mPresenter.fetchUserPaymentMethods();
-    }
-
-    @Override
-    public void onDetach(View view) {
-        mPresenter.onDetach();
-        super.onDetach(view);
-    }
-
-    @Override
     public void showPaymentList(List<PaymentMethod> paymentMethods) {
         int backstackSize = getRouter().getBackstackSize();
         String checkoutTag = getRouter().getBackstack().get(backstackSize - 1).tag();
@@ -192,7 +180,7 @@ public class PaymentSelectController extends BasePullToRefreshController impleme
             mPresenter.fetchUserPaymentMethods();
         }
 
-        mToolbarLeftView.setVisibility(mActivity.isTablet() ? View.GONE : View.VISIBLE);
+        mToolbarLeftView.setVisibility(mActivity.isTablet() && !isFromCart ? View.GONE : View.VISIBLE);
         mPaymentSelectToolbarTitle.setText(getString(R.string.my_payments));
         mAdapter = new PaymentSelectAdapter(mActivity, mPaymentMethods, mPresenter, isFromCart);
         RecyclerViewSwipeManager recyclerViewSwipeManager = new RecyclerViewSwipeManager();
@@ -225,14 +213,18 @@ public class PaymentSelectController extends BasePullToRefreshController impleme
 
     @OnClick(R.id.controller_payment_button)
     public void onAddPaymentMethod() {
+        BundleBuilder bundleBuilder = new BundleBuilder(new Bundle());
+        bundleBuilder.putBoolean(BundleKeys.IS_FROM_CART, isFromCart)
+                .putBoolean(BundleKeys.IS_OURPAY_SELECT_DELIVERY_METHOD, mIsOurpaySelectDeliveryMethod);
+
+        if (isFromCart) {
+            bundleBuilder.putString(BundleKeys.CART_TOTAL_COST, Double.toString(mValue.getSummary().total));
+            bundleBuilder.putString(BundleKeys.CURRENT_ORDER_VALUE, new Gson().toJson(mValue, Value.class));
+        }
+
         GateKeeper.push(getRouter(),
                 GateKeeper.Destination.PAYMENT_ADD,
-                new BundleBuilder(new Bundle())
-                        .putBoolean(BundleKeys.IS_FROM_CART, isFromCart)
-                        .putBoolean(BundleKeys.IS_OURPAY_SELECT_DELIVERY_METHOD, mIsOurpaySelectDeliveryMethod)
-                        .putString(BundleKeys.CART_TOTAL_COST, Double.toString(mValue.getSummary().total))
-                        .putString(BundleKeys.CURRENT_ORDER_VALUE, new Gson().toJson(mValue, Value.class))
-                        .build()
+                bundleBuilder.build()
                 , new HorizontalChangeHandler()
                 , new HorizontalChangeHandler());
     }

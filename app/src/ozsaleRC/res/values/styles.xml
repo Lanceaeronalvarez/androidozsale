@@ -10,6 +10,7 @@
     <style name="verticalBorderView" parent="horizontalBorderView">
         <item name="android:layout_width">@dimen/border_thin</item>
         <item name="android:layout_height">match_parent</item>
+        <item name="android:background">@color/border_regular</item>
     </style>
 
     <style name="parentLayout">

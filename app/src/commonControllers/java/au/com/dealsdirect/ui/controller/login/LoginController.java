@@ -83,12 +83,20 @@ public class LoginController extends BaseController implements LoginMvpView {
 
     @Override
     protected void onAttach(@NonNull View view) {
-        assert (mActivity) != null;
-
-        if (!getBoolean(R.bool.is_tablet)) {
+        if (!mPresenter.isTablet()) {
             mActivity.getMainController().hideBottomNav();
         }
+
         super.onAttach(view);
+    }
+
+    @Override
+    public void onDetach(View view) {
+        if (!mPresenter.isTablet()) {
+            mActivity.getMainController().showBottomNav();
+        }
+
+        super.onDetach(view);
     }
 
     @NonNull
@@ -153,7 +161,7 @@ public class LoginController extends BaseController implements LoginMvpView {
 
     @Override
     public boolean handleBack() {
-        if (!mActivity.isAuthorized()) {
+        if (!mActivity.isAuthorized() && mActivity.isTablet()) {
             mActivity.getMainController().getHomeController().resetVisibleContainer();
         }
         hideKeyboard();

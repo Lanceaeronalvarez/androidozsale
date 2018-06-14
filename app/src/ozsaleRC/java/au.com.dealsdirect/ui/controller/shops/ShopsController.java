@@ -1,7 +1,5 @@
 package au.com.dealsdirect.ui.controller.shops;
 
-import android.animation.Animator;
-import android.animation.AnimatorListenerAdapter;
 import android.content.res.ColorStateList;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -39,7 +37,6 @@ import au.com.dealsdirect.data.network.model.banner.GetBannerRequest;
 import au.com.dealsdirect.data.network.model.banner.GetBannerResponse;
 import au.com.dealsdirect.data.network.model.category.GetCategoryTreeResponse;
 import au.com.dealsdirect.ui.base.BaseController;
-import au.com.dealsdirect.ui.base.BasePullToRefreshController;
 import au.com.dealsdirect.ui.controller.saleitems.SaleItemsController;
 import au.com.dealsdirect.ui.controller.shops.adapter.BannersAdapter;
 import au.com.dealsdirect.ui.controller.shops.listener.BannerClickListener;
@@ -114,7 +111,6 @@ public class ShopsController extends BaseController implements ShopsMvpView, Ban
     private int newBannerCount = 10;
     private int bannerOffset = 0;
     private int bannerLimit = bannerOffset + newBannerCount;
-
 
     private String mCategoryID;
     private String mCategoryName;
@@ -692,5 +688,19 @@ public class ShopsController extends BaseController implements ShopsMvpView, Ban
     @Override
     public void onOffsetChanged(AppBarLayout appBarLayout, int verticalOffset) {
         this.mVerticalOffset = verticalOffset;
+    }
+
+    /*
+     * bug/gen-7818-landscape - update layoutmanager on orientation change
+     */
+    public void onOrientationChange() {
+
+        if (mBannersAdapter != null && shopsControllerBannerRecyclerView != null && mLayoutManager != null) {
+            int currentScrollPosition = mLayoutManager.findFirstVisibleItemPosition();
+            mBannersAdapter = new BannersAdapter(mActivity, mPresenter, sales, this);
+            shopsControllerBannerRecyclerView.setAdapter(mBannersAdapter);
+            mLayoutManager.scrollToPosition(currentScrollPosition);
+        }
+
     }
 }

@@ -28,8 +28,8 @@ e
             android:layout_height="match_parent"
             android:clickable="true"
             android:layout_weight="6"
-            android:layout_marginTop="100dp"
-            android:layout_marginBottom="100dp" />
+            android:layout_marginTop="@dimen/login_host_padding_top"
+            android:layout_marginBottom="@dimen/login_host_padding_bottom" />
 
         <View
             android:layout_height="wrap_content"

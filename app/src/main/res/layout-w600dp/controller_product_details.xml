@@ -13,42 +13,47 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-        <android.support.design.widget.CoordinatorLayout
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_gravity="center"
             android:clickable="true"
             android:clipChildren="false"
-            android:clipToPadding="false">
+            android:clipToPadding="false"
+            android:orientation="horizontal">
 
-            <android.support.design.widget.AppBarLayout
+            <LinearLayout
                 android:id="@+id/controler_product_details_app_bar_layout"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content">
+                android:layout_height="match_parent"
+                android:layout_weight="0.55"
+                android:background="@color/white">
 
-                <android.support.design.widget.CollapsingToolbarLayout
+                <RelativeLayout
                     android:id="@+id/vh_uppercard"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center"
+                    android:layout_height="match_parent"
                     android:clickable="true"
                     android:clipChildren="false"
                     android:clipToPadding="false"
                     android:minHeight="?attr/actionBarSize"
-                    app:layout_scrollFlags="scroll|exitUntilCollapsed">
+                    app:layout_scrollFlags="scroll|exitUntilCollapsed"
+                    android:orientation="vertical">
 
                     <FrameLayout
                         android:id="@+id/image_container"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
+                        android:layout_alignParentStart="true"
+                        android:layout_alignParentTop="true"
                         android:clipChildren="false"
                         android:clipToPadding="false"
-                        android:paddingBottom="50dp"
+                        android:paddingBottom="@dimen/margin_huge"
                         app:layout_collapseMode="parallax">
 
                         <RelativeLayout
                             android:layout_width="wrap_content"
-                            android:layout_height="370dp"
+                            android:layout_height="match_parent"
                             android:clipChildren="false"
                             android:clipToPadding="false"
                             android:transitionName="cardbackground"
@@ -81,16 +86,6 @@
                                 app:rvp_singlePageFling="true"
                                 app:rvp_triggerOffset="0.05" />
 
-                            <android.support.v7.widget.RecyclerView
-                                android:id="@+id/otherImagesRecyclerView"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:layout_alignParentBottom="true"
-                                android:layout_alignParentLeft="true"
-                                android:isScrollContainer="true"
-                                android:overScrollMode="never"
-                                android:paddingBottom="70dp" />
-
                             <ImageView
                                 android:id="@+id/arrow_left"
                                 android:layout_width="wrap_content"
@@ -119,6 +114,17 @@
                                 android:paddingLeft="@dimen/margin_large"
                                 android:src="@drawable/ic_share" />
 
+
+                            <android.support.v7.widget.RecyclerView
+                                android:id="@+id/otherImagesRecyclerView"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_alignParentBottom="true"
+                                android:layout_alignParentLeft="true"
+                                android:isScrollContainer="true"
+                                android:overScrollMode="never"
+                                android:paddingBottom="@dimen/product_details_image_indicator" />
+
                         </RelativeLayout>
 
                     </FrameLayout>
@@ -127,7 +133,7 @@
                         android:id="@+id/product_details_name_price_container"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_gravity="bottom"
+                        android:layout_alignParentBottom="true"
                         android:background="#67ffffff"
                         android:orientation="vertical"
                         app:layout_collapseMode="pin">
@@ -137,7 +143,7 @@
                             android:layout_width="match_parent"
                             android:layout_height="?attr/actionBarSize"
                             android:orientation="horizontal"
-                            android:visibility="visible">
+                            android:visibility="gone">
 
                             <ImageView
                                 android:id="@+id/toolbar_left_view"
@@ -236,7 +242,6 @@
                                     android:layout_height="wrap_content"
                                     android:layout_gravity="start"
                                     android:ellipsize="end"
-                                    android:text=""
                                     android:textColor="@color/text_extra_dark"
                                     android:textSize="@dimen/text_size_headline1" />
 
@@ -244,7 +249,6 @@
                                     android:id="@+id/productName"
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
-                                    android:text=""
                                     android:textColor="@color/text_light"
                                     android:textSize="@dimen/text_size_caption1" />
 
@@ -259,9 +263,8 @@
                                     fontPath="@string/font_app_thin"
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
-                                    android:layout_alignParentBottom="true"
+                                    android:layout_alignBottom="@+id/productPrice"
                                     android:layout_alignParentLeft="true"
-                                    android:layout_gravity="end"
                                     android:layout_marginRight="@dimen/margin_medium"
                                     android:gravity="center"
                                     android:maxLines="1"
@@ -287,7 +290,7 @@
                                     fontPath="@string/font_app_thin"
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
-                                    android:layout_alignParentBottom="true"
+                                    android:layout_alignBottom="@+id/productPrice"
                                     android:layout_gravity="end"
                                     android:layout_marginRight="@dimen/margin_medium"
                                     android:layout_toLeftOf="@+id/productPreviousPrice"
@@ -301,7 +304,7 @@
                                     fontPath="@string/font_app_light"
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
-                                    android:layout_alignParentBottom="true"
+                                    android:layout_alignBottom="@id/productPreviousPriceLabel"
                                     android:layout_alignParentRight="true"
                                     android:layout_gravity="end"
                                     android:maxLines="1"
@@ -311,10 +314,23 @@
 
                             </RelativeLayout>
                         </LinearLayout>
-                    </LinearLayout>
-                </android.support.design.widget.CollapsingToolbarLayout>
-            </android.support.design.widget.AppBarLayout>
 
+                            <Button
+                                android:id="@+id/product_details_add_to_basket"
+                                style="@style/DDButtonAddCart"
+                                fontPath="@string/font_app_medium"
+                                android:layout_marginBottom="@dimen/margin_extra_small"
+                                android:layout_marginTop="@dimen/margin_extra_small"
+                                android:layout_width="match_parent"
+                                android:layout_gravity="bottom"
+                                android:layout_marginLeft="@dimen/margin_extra_small"
+                                android:layout_marginRight="@dimen/margin_extra_small"
+                                android:enabled="false"
+                                android:text="@string/add_to_cart"
+                                android:visibility="visible" />
+                    </LinearLayout>
+                </RelativeLayout>
+            </LinearLayout>
 
             <android.support.v4.widget.NestedScrollView
                 android:id="@+id/controller_sale_item_detail_scrollview"
@@ -323,7 +339,8 @@
                 android:clipChildren="false"
                 android:clipToPadding="false"
                 android:fillViewport="true"
-                app:layout_behavior="@string/appbar_scrolling_view_behavior">
+                app:layout_behavior="@string/appbar_scrolling_view_behavior"
+                android:layout_weight="0.45">
 
                 <LinearLayout
                     android:id="@+id/main_layout"
@@ -339,7 +356,7 @@
                         android:layout_height="@dimen/border_regular"
                         android:layout_alignParentTop="true"
                         android:layout_gravity="center"
-                        android:background="#23000000" />
+                        android:background="@color/border_regular" />
 
                     <LinearLayout
                         android:id="@+id/partial_item_details_ourpay_panel_holder"
@@ -347,14 +364,16 @@
                         android:layout_height="wrap_content"
                         android:layout_margin="@dimen/margin_small"
                         android:orientation="vertical"
-                        android:visibility="visible" />
+                        android:visibility="gone"
+                        android:background="@color/white"
+                        android:paddingLeft="@dimen/activity_horizontal_margin"
+                        android:paddingRight="@dimen/activity_horizontal_margin"/>
 
                     <LinearLayout
                         android:id="@+id/bottom_card"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:orientation="vertical"
-                        android:paddingBottom="@dimen/product_details_bottom_padding"
                         android:visibility="visible">
 
                         <RelativeLayout
@@ -362,7 +381,9 @@
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:background="@color/white"
-                            android:visibility="gone">
+                            android:visibility="gone"
+                            android:paddingLeft="@dimen/activity_horizontal_margin"
+                            android:paddingRight="@dimen/activity_horizontal_margin">
 
                             <RelativeLayout
                                 android:id="@+id/sizeLabel"
@@ -381,8 +402,8 @@
 
                                 <ImageView
                                     android:id="@+id/question_mark"
-                                    android:layout_width="15dp"
-                                    android:layout_height="15dp"
+                                    android:layout_width="@dimen/product_detail_question_image_width"
+                                    android:layout_height="@dimen/product_detail_question_image_height"
                                     android:layout_alignParentRight="true"
                                     android:visibility="invisible" />
 
@@ -393,7 +414,7 @@
                                     android:layout_centerVertical="true"
                                     android:layout_toLeftOf="@id/question_mark"
                                     android:paddingRight="@dimen/margin_extra_small"
-                                    android:text="size guide"
+                                    android:text="@string/size_guide"
                                     android:textSize="@dimen/text_size_caption1"
                                     android:visibility="invisible" />
 
@@ -412,25 +433,6 @@
 
                         </RelativeLayout>
 
-                        <LinearLayout
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:background="@color/white"
-                            android:paddingBottom="@dimen/margin_extra_small"
-                            android:paddingTop="@dimen/margin_extra_small">
-
-                            <Button
-                                android:id="@+id/product_details_add_to_basket"
-                                style="@style/DDButtonAddCart"
-                                fontPath="@string/font_app_medium"
-                                android:layout_width="match_parent"
-                                android:layout_gravity="bottom"
-                                android:layout_marginLeft="@dimen/margin_extra_small"
-                                android:layout_marginRight="@dimen/margin_extra_small"
-                                android:enabled="false"
-                                android:text="@string/add_to_cart"
-                                android:visibility="visible" />
-                        </LinearLayout>
 
                         <LinearLayout
                             android:id="@+id/product_details_shipping_desc_container"
@@ -439,7 +441,9 @@
                             android:layout_marginTop="@dimen/margin_small"
                             android:background="@color/white"
                             android:orientation="vertical"
-                            android:visibility="visible">
+                            android:visibility="visible"
+                            android:paddingLeft="@dimen/activity_horizontal_margin"
+                            android:paddingRight="@dimen/activity_horizontal_margin">
 
                             <TextView
                                 fontPath="@string/font_app_bold"
@@ -455,7 +459,6 @@
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content" />
 
-
                         </LinearLayout>
 
                         <LinearLayout
@@ -465,7 +468,9 @@
                             android:layout_marginTop="@dimen/margin_small"
                             android:background="@color/white"
                             android:orientation="vertical"
-                            android:visibility="gone">
+                            android:visibility="gone"
+                            android:paddingLeft="@dimen/activity_horizontal_margin"
+                            android:paddingRight="@dimen/activity_horizontal_margin">
 
                             <TextView
                                 fontPath="@string/font_app_bold"
@@ -483,6 +488,8 @@
                                 android:layout_marginTop="@dimen/margin_extra_small"
                                 android:textSize="@dimen/text_size_caption1" />
 
+                            
+
                         </LinearLayout>
 
                         <LinearLayout
@@ -491,81 +498,16 @@
                             android:layout_height="match_parent"
                             android:layout_marginTop="@dimen/margin_small"
                             android:background="@color/white"
-                            android:orientation="vertical">
+                            android:orientation="vertical"
+                            android:paddingLeft="@dimen/activity_horizontal_margin"
+                            android:paddingRight="@dimen/activity_horizontal_margin">
 
                             <WebView
                                 android:id="@+id/product_description_text"
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content" />
 
-                        </LinearLayout>
-
-                        <!--pickup points container-->
-                        <LinearLayout
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:layout_margin="@dimen/activity_horizontal_margin"
-                            android:layout_marginTop="@dimen/margin_small"
-                            android:background="@color/white"
-                            android:orientation="vertical"
-                            android:visibility="gone">
-
-                            <TextView
-                                fontPath="@string/font_app_bold"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:text="available for"
-                                android:textColor="@color/text_medium"
-                                android:textSize="@dimen/text_size_caption1" />
-
-                            <LinearLayout
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:layout_marginTop="@dimen/margin_small"
-                                android:orientation="horizontal">
-
-                                <LinearLayout
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="wrap_content"
-                                    android:orientation="horizontal">
-
-                                    <ImageView
-                                        android:layout_width="30dp"
-                                        android:layout_height="30dp" />
-
-                                    <TextView
-                                        fontPath="@string/font_app_bold"
-                                        android:layout_width="wrap_content"
-                                        android:layout_height="wrap_content"
-                                        android:layout_gravity="center"
-                                        android:layout_marginLeft="@dimen/margin_extra_small"
-                                        android:text="home or office delivery"
-                                        android:textColor="@color/text_medium"
-                                        android:textSize="@dimen/text_size_caption1" />
-
-                                </LinearLayout>
-
-                                <LinearLayout
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="wrap_content"
-                                    android:layout_marginLeft="@dimen/activity_horizontal_margin">
-
-                                    <ImageView
-                                        android:layout_width="30dp"
-                                        android:layout_height="30dp" />
-
-                                    <TextView
-                                        fontPath="@string/font_app_bold"
-                                        android:layout_width="wrap_content"
-                                        android:layout_height="wrap_content"
-                                        android:layout_gravity="center"
-                                        android:layout_marginLeft="@dimen/margin_extra_small"
-                                        android:text="pick up point"
-                                        android:textColor="@color/text_medium"
-                                        android:textSize="@dimen/text_size_caption1" />
-
-                                </LinearLayout>
-                            </LinearLayout>
+                            
 
                         </LinearLayout>
 
@@ -576,7 +518,9 @@
                             android:layout_marginTop="@dimen/margin_small"
                             android:background="@color/white"
                             android:orientation="vertical"
-                            android:visibility="gone">
+                            android:visibility="gone"
+                            android:paddingLeft="@dimen/activity_horizontal_margin"
+                            android:paddingRight="@dimen/activity_horizontal_margin">
 
                             <TextView
                                 fontPath="@string/font_app_bold"
@@ -602,7 +546,9 @@
                             android:layout_marginTop="@dimen/margin_small"
                             android:background="@color/white"
                             android:orientation="vertical"
-                            android:visibility="gone">
+                            android:visibility="gone"
+                            android:paddingLeft="@dimen/activity_horizontal_margin"
+                            android:paddingRight="@dimen/activity_horizontal_margin">
 
                             <TextView
                                 fontPath="@string/font_app_bold"
@@ -619,13 +565,6 @@
                                 android:layout_height="wrap_content"
                                 android:layout_marginTop="@dimen/margin_extra_small" />
 
-                            <!--<com.example.customviewlib.GenieTextView-->
-                            <!--android:id="@+id/productAboutPricing"-->
-                            <!--android:layout_marginTop="@dimen/margin_small"-->
-                            <!--android:layout_width="match_parent"-->
-                            <!--android:layout_height="wrap_content"-->
-                            <!--fontPath="@string/font_lato"-->
-                            <!--android:textSize="@dimen/text_size_small" />-->
                         </LinearLayout>
 
                         <LinearLayout
@@ -635,20 +574,22 @@
                             android:layout_margin="@dimen/margin_small"
                             android:background="@color/white"
                             android:orientation="vertical"
-                            android:visibility="gone">
+                            android:visibility="gone"
+                            android:paddingLeft="@dimen/activity_horizontal_margin"
+                            android:paddingRight="@dimen/activity_horizontal_margin">
 
                             <TextView
                                 fontPath="@string/font_app_bold"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:text="related items"
+                                android:text="@string/related_items"
                                 android:textSize="@dimen/text_size_caption2" />
 
                             <android.support.v7.widget.RecyclerView
                                 android:id="@+id/relatedItemsRecyclerView"
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
-                                android:layout_marginTop="15dp"
+                                android:layout_marginTop="@dimen/margin_medium"
                                 android:paddingRight="@dimen/margin_small" />
                         </LinearLayout>
 
@@ -656,7 +597,7 @@
                             android:layout_width="match_parent"
                             android:layout_height="@dimen/border_regular"
                             android:layout_gravity="center"
-                            android:background="#23000000"
+                            android:background="@color/border_regular"
                             android:visibility="gone" />
 
                         <LinearLayout
@@ -666,20 +607,22 @@
                             android:layout_margin="@dimen/margin_small"
                             android:background="@color/white"
                             android:orientation="vertical"
-                            android:visibility="gone">
+                            android:visibility="gone"
+                            android:paddingLeft="@dimen/activity_horizontal_margin"
+                            android:paddingRight="@dimen/activity_horizontal_margin">
 
                             <TextView
                                 fontPath="@string/font_app_bold"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:text="customers also bought"
+                                android:text="@string/customers_also_bought"
                                 android:textSize="@dimen/text_size_caption2" />
 
                             <android.support.v7.widget.RecyclerView
                                 android:id="@+id/customersAlsoBoughtRecyclerView"
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
-                                android:layout_marginTop="15dp"
+                                android:layout_marginTop="@dimen/margin_medium"
                                 android:paddingRight="@dimen/margin_small" />
                         </LinearLayout>
 
@@ -687,7 +630,7 @@
                             android:layout_width="match_parent"
                             android:layout_height="@dimen/border_regular"
                             android:layout_gravity="center"
-                            android:background="#23000000"
+                            android:background="@color/border_regular"
                             android:visibility="gone" />
 
                         <RelativeLayout
@@ -696,19 +639,21 @@
                             android:layout_height="wrap_content"
                             android:layout_margin="@dimen/margin_small"
                             android:background="@color/white"
-                            android:visibility="gone">
+                            android:visibility="gone"
+                            android:paddingLeft="@dimen/activity_horizontal_margin"
+                            android:paddingRight="@dimen/activity_horizontal_margin">
 
                             <TextView
                                 fontPath="@string/font_app_bold"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:text="reviews"
+                                android:text="@string/reviews"
                                 android:textSize="@dimen/text_size_caption1" />
 
                             <android.support.design.widget.FloatingActionButton
                                 android:id="@+id/edit_review_fab"
-                                android:layout_width="40dp"
-                                android:layout_height="40dp"
+                                android:layout_width="@dimen/product_details_review_fab_width"
+                                android:layout_height="@dimen/product_details_review_fab_height"
                                 android:layout_alignParentRight="true"
                                 android:layout_marginRight="@dimen/margin_extra_small"
                                 android:layout_marginTop="@dimen/margin_extra_small"
@@ -729,7 +674,7 @@
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:layout_below="@id/reviewsRecyclerView"
-                                android:text="see more"
+                                android:text="@string/see_more"
                                 android:textSize="@dimen/text_size_caption1" />
                         </RelativeLayout>
 
@@ -748,7 +693,7 @@
                 android:background="@color/product_details_button_overlay"
                 android:visibility="gone" />
 
-        </android.support.design.widget.CoordinatorLayout>
+        </LinearLayout>
 
     </RelativeLayout>
 

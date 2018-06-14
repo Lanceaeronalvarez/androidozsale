@@ -229,7 +229,7 @@ public class AccountController extends BaseController implements AccountMvpView,
         if (!mActivity.isTablet()) {
             GateKeeper.push(getDisplayRouter(), GateKeeper.Destination.DETAILS, new HorizontalChangeHandler(), new HorizontalChangeHandler());
         } else {
-            mAccountDetailRouter.setRoot(RouterTransaction.with(DetailsController.newInstance()).pushChangeHandler(new FadeChangeHandler())
+            GateKeeper.setRoot(getDisplayRouter(), GateKeeper.Destination.DETAILS, RouterTransaction.with(DetailsController.newInstance()).pushChangeHandler(new FadeChangeHandler())
                     .popChangeHandler(new FadeChangeHandler()));
         }
     }
@@ -407,16 +407,6 @@ public class AccountController extends BaseController implements AccountMvpView,
     @Override
     public boolean isChangeInProgress() {
         return false;
-    }
-
-    @Override
-    public boolean isTablet() {
-        return mActivity.isTablet();
-    }
-
-    @Override
-    public Router getDisplayRouter() {
-        return mActivity.isTablet() ? mAccountDetailRouter : getDisplayRouter();
     }
 
     @OnClick(R.id.partial_toolbar_right_view)
