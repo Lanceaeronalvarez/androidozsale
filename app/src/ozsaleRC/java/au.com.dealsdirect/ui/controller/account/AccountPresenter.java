@@ -31,14 +31,14 @@ public class AccountPresenter<V extends AccountMvpView> extends BasePresenter<V>
     @Override
     public void onAccountItemClick(Context context, String option, int position) {
 
-        if (getMvpView().isChangeInProgress()) {
+        if (!isViewAttached() || getMvpView().isChangeInProgress()) {
             return;
         }
 
         if (!isNeedAuthorization(context, option)) {
             showNoAuthenticationRequiredScreens(context, option);
         } else {
-            if (getMvpView().isTablet()) {
+            if (isTablet()) {
                 showAuthenticationRequiredScreens(context, option);
                 if (!getDataManager().isAuthorized()) {
                     getMvpView().triggerLogin(option, position);

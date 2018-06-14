@@ -12,6 +12,7 @@ import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.bluelinelabs.conductor.Router;
 import com.bluelinelabs.conductor.RouterTransaction;
 import com.bluelinelabs.conductor.changehandler.HorizontalChangeHandler;
 
@@ -30,6 +31,7 @@ import au.com.dealsdirect.ui.controller.contact.viewcontacthistory.ViewContactHi
 import au.com.dealsdirect.ui.controller.contact.viewcontacts.contacts.ContactsAdapter;
 import au.com.dealsdirect.utils.BundleBuilder;
 import au.com.dealsdirect.utils.DateUtils;
+import au.com.dealsdirect.utils.module.GateKeeper;
 import butterknife.BindView;
 import butterknife.OnClick;
 
@@ -62,10 +64,13 @@ public class ViewContactsController extends BasePullToRefreshController implemen
     @BindView(R.id.controller_contacts_new_message_button)
     Button mViewContactsAddNewMessage;
 
+    @BindView(R.id.contact_detail_container)
+    ViewGroup mContactDetailContainer;
+
     @Inject
     ViewContactsMvpPresenter<ViewContactsMvpView> mPresenter;
 
-    static String mFromFragmentId;
+    private Router mContactDetailRouter;
 
     public static ViewContactsController newInstance() {
 
@@ -115,6 +120,10 @@ public class ViewContactsController extends BasePullToRefreshController implemen
         assert (mActivity) != null;
         mActivity.setDraggableViewPager(false);
 
+        if(mPresenter.isTablet()) {
+            mContactDetailRouter = getChildRouter(mContactDetailContainer);
+        }
+
         mViewContactsToolarTitle.setText(getResource().getString(R.string.account_contact_us));
         mViewContactsToolbarLeftOption.setVisibility(View.INVISIBLE);
         mViewContactsToolbarRightOption.setVisibility(View.INVISIBLE);
@@ -131,6 +140,16 @@ public class ViewContactsController extends BasePullToRefreshController implemen
     public void onDetach(View view) {
         hideLoading();
         super.onDetach(view);
+    }
+
+    @Override
+    public boolean handleBack() {
+        if(mContactDetailRouter != null && mContactDetailRouter.getBackstackSize() == 1){
+            mActivity.getHomeController().resetVisibleContainer();
+            return true;
+        }
+
+        return super.handleBack();
     }
 
     @Override
@@ -165,8 +184,13 @@ public class ViewContactsController extends BasePullToRefreshController implemen
 
     @OnClick(R.id.partial_toolbar_right_view)
     void addContact() {
-        getRouter().pushController(RouterTransaction.with(ContactSelectSubjectController.newInstance())
-                .pushChangeHandler(new HorizontalChangeHandler()).popChangeHandler(new HorizontalChangeHandler()));
+        RouterTransaction routerTransaction = RouterTransaction.with(ContactSelectSubjectController.newInstance())
+                .pushChangeHandler(new HorizontalChangeHandler()).popChangeHandler(new HorizontalChangeHandler());
+        if(mPresenter.isTablet()) {
+            GateKeeper.setRoot(mContactDetailRouter, GateKeeper.Destination.CONTACT_SELECT_SUBJECT, routerTransaction);
+        } else {
+            GateKeeper.push(getRouter(), GateKeeper.Destination.CONTACT_SELECT_SUBJECT, new HorizontalChangeHandler(), new HorizontalChangeHandler());
+        }
     }
 
     @OnClick(R.id.controller_contacts_new_message_button)
@@ -225,14 +249,20 @@ public class ViewContactsController extends BasePullToRefreshController implemen
         invoiceNo = invoiceNumber != null ? (int) invoiceNumber : 0;
         timeStampString = DateUtils.getDateForContactMessages(timeStamp);
 
-        getRouter().pushController(RouterTransaction.with(ViewContactHistoryController.newInstance(
+        RouterTransaction routerTransaction = RouterTransaction.with(ViewContactHistoryController.newInstance(
                 contactSubject,
                 saleName,
                 invoiceNo,
                 timeStampString,
                 contactList.getContactNo()))
                 .pushChangeHandler(new HorizontalChangeHandler())
-                .popChangeHandler(new HorizontalChangeHandler()));
+                .popChangeHandler(new HorizontalChangeHandler());
+
+        if(mPresenter.isTablet()) {
+            GateKeeper.setRoot(mContactDetailRouter, GateKeeper.Destination.CONTACT_HISTORY, routerTransaction);
+        } else {
+            GateKeeper.push(getRouter(), GateKeeper.Destination.CONTACT_HISTORY, new HorizontalChangeHandler(), new HorizontalChangeHandler());
+        }
     }
 
 }

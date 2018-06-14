@@ -3,11 +3,12 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/background_default"
-    android:orientation="vertical">
+    android:orientation="horizontal">
 
     <RelativeLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:layout_weight="0.4">
 
         <android.support.v7.widget.RecyclerView
             android:id="@+id/contacts_recycler_view"
@@ -32,13 +33,17 @@
             android:text="@string/create_message"
             android:textSize="@dimen/text_size_body" />
 
-        <com.bluelinelabs.conductor.ChangeHandlerFrameLayout
-            android:id="@+id/contact_detail_container"
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_weight="0.6"
-            android:visibility="gone" />
-
     </RelativeLayout>
+
+    <View
+        android:layout_width="@dimen/border_thick"
+        android:layout_height="match_parent"
+        android:background="@color/border_regular" />
+
+    <com.bluelinelabs.conductor.ChangeHandlerFrameLayout
+        android:id="@+id/contact_detail_container"
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:layout_weight="0.6" />
 
 </LinearLayout>

@@ -53,6 +53,8 @@ public class GateKeeper {
         CONTACT_US,
         ADD_CONTACT,
         CONTACT_HISTORY,
+        CONTACT_SELECT_SUBJECT,
+        CONTACT_SELECT_ORDER,
         SEARCH_FILTER,
         SMS_VERIFICATION,
         LEGALITIES,

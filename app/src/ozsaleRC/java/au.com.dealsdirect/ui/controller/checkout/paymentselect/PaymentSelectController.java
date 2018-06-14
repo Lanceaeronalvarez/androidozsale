@@ -180,7 +180,7 @@ public class PaymentSelectController extends BasePullToRefreshController impleme
             mPresenter.fetchUserPaymentMethods();
         }
 
-        mToolbarLeftView.setVisibility(mActivity.isTablet() && !isFromCart ? View.GONE : View.VISIBLE);
+        mToolbarLeftView.setVisibility(mPresenter.isTablet() && !isFromCart ? View.GONE : View.VISIBLE);
         mPaymentSelectToolbarTitle.setText(getString(R.string.my_payments));
         mAdapter = new PaymentSelectAdapter(mActivity, mPaymentMethods, mPresenter, isFromCart);
         RecyclerViewSwipeManager recyclerViewSwipeManager = new RecyclerViewSwipeManager();

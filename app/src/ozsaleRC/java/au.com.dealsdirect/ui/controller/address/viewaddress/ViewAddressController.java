@@ -98,7 +98,7 @@ public class ViewAddressController extends BasePullToRefreshController implement
         mPresenter.loadAddresses();
 
 
-        mToolbarLeftView.setVisibility(mActivity.isTablet() && !mCalledFromCart ? View.GONE : View.VISIBLE);
+        mToolbarLeftView.setVisibility(mPresenter.isTablet()&& !mCalledFromCart ? View.GONE : View.VISIBLE);
         mViewAddressToolarTitle.setText(getString(R.string.my_addresses_toolbar_title));
         mAddressList = new ArrayList<>();
         RecyclerViewSwipeManager swipeManager = new RecyclerViewSwipeManager();

@@ -126,9 +126,9 @@ public class DetailsController extends BasePullToRefreshController implements De
     @Override
     protected void setUp(View view) {
         mSaveUserDetailsButton.setImageDrawable(getResources().getDrawable(R.drawable.ic_check));
-        mSaveUserDetailsButton.setVisibility(getBoolean(R.bool.is_ozsale_app) ? View.INVISIBLE : View.VISIBLE);
+        mSaveUserDetailsButton.setVisibility(getBoolean(R.bool.is_ozsale_app) ? View.GONE : View.VISIBLE);
         mTitleTextView.setText(getString(R.string.account_details));
-        mToolbarLeftView.setVisibility(mActivity.isTablet() ? View.GONE : View.VISIBLE);
+        mToolbarLeftView.setVisibility(mPresenter.isTablet() ? View.GONE : View.VISIBLE);
 
         List<String> list = new ArrayList<String>(Arrays.asList(getResources().getStringArray(R.array.genders)));
         CustomSpinnerAdapter customSpinnerAdapter = new CustomSpinnerAdapter(mActivity,

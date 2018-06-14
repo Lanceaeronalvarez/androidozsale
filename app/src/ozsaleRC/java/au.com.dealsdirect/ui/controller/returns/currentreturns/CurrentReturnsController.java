@@ -119,7 +119,7 @@ public class CurrentReturnsController extends BasePullToRefreshController
 
         mCurrentReturnsRecyclerView.setLayoutManager(new LinearLayoutManager(mActivity, LinearLayoutManager.VERTICAL, false));
 
-        mToolbarLeftView.setVisibility(mActivity.isTablet() ? View.GONE : View.VISIBLE);
+        mToolbarLeftView.setVisibility(mPresenter.isTablet() ? View.GONE : View.VISIBLE);
         mCurrentReturnsToolbarTitle.setText(getString(R.string.account_returns));
         if (mPresenter.isTablet()) {
             mCurrentReturnsRightOption.setPadding(5, 5, 5, 5);

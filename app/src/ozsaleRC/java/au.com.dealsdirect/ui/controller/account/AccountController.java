@@ -132,7 +132,7 @@ public class AccountController extends BaseController implements AccountMvpView,
         // Setup views here
         mDefaultChosenAccountOption = getString(R.string.account_details);
 
-        if (mActivity.isTablet()) {
+        if (mPresenter.isTablet()) {
             mAccountDetailRouter = getChildRouter(mAccountDetailContainer);
         }
 
@@ -226,7 +226,7 @@ public class AccountController extends BaseController implements AccountMvpView,
 
     @Override
     public void showMyDetailsController() {
-        if (!mActivity.isTablet()) {
+        if (!mPresenter.isTablet()) {
             GateKeeper.push(getDisplayRouter(), GateKeeper.Destination.DETAILS, new HorizontalChangeHandler(), new HorizontalChangeHandler());
         } else {
             GateKeeper.setRoot(getDisplayRouter(), GateKeeper.Destination.DETAILS, RouterTransaction.with(DetailsController.newInstance()).pushChangeHandler(new FadeChangeHandler())
@@ -236,7 +236,7 @@ public class AccountController extends BaseController implements AccountMvpView,
 
     @Override
     public void showMyAddressesController() {
-        if (!mActivity.isTablet()) {
+        if (!mPresenter.isTablet()) {
             GateKeeper.push(getDisplayRouter(), GateKeeper.Destination.VIEW_ADDRESSES, new HorizontalChangeHandler(), new HorizontalChangeHandler());
         } else {
             GateKeeper.setRoot(getDisplayRouter(), GateKeeper.Destination.VIEW_ADDRESSES, RouterTransaction.with(new ViewAddressController(false, null)));
@@ -245,7 +245,7 @@ public class AccountController extends BaseController implements AccountMvpView,
 
     @Override
     public void showMyOrders() {
-        if (!mActivity.isTablet()) {
+        if (!mPresenter.isTablet()) {
             GateKeeper.push(getDisplayRouter(), GateKeeper.Destination.ORDERS, new HorizontalChangeHandler(), new HorizontalChangeHandler());
         } else {
             GateKeeper.setRoot(getDisplayRouter(), GateKeeper.Destination.ORDERS, RouterTransaction.with(OrdersController.newInstance()));
@@ -254,7 +254,7 @@ public class AccountController extends BaseController implements AccountMvpView,
 
     @Override
     public void showMyVouchers() {
-        if (!mActivity.isTablet()) {
+        if (!mPresenter.isTablet()) {
             GateKeeper.push(getDisplayRouter(), GateKeeper.Destination.VIEW_VOUCHERS, new HorizontalChangeHandler(), new HorizontalChangeHandler());
         } else {
             GateKeeper.setRoot(getDisplayRouter(), GateKeeper.Destination.VIEW_VOUCHERS, RouterTransaction.with(ViewVouchersController.newInstance()));
@@ -263,7 +263,7 @@ public class AccountController extends BaseController implements AccountMvpView,
 
     @Override
     public void showMyReturns() {
-        if (!mActivity.isTablet()) {
+        if (!mPresenter.isTablet()) {
             GateKeeper.push(getDisplayRouter(), GateKeeper.Destination.CURRENT_RETURNS, new HorizontalChangeHandler(), new HorizontalChangeHandler());
         } else {
             GateKeeper.setRoot(getDisplayRouter(), GateKeeper.Destination.CURRENT_RETURNS, RouterTransaction.with(CurrentReturnsController.newInstance()));
@@ -272,7 +272,7 @@ public class AccountController extends BaseController implements AccountMvpView,
 
     @Override
     public void showMyPaymentsController() {
-        if (!mActivity.isTablet()) {
+        if (!mPresenter.isTablet()) {
             GateKeeper.push(getDisplayRouter(), GateKeeper.Destination.PAYMENT_SELECT, new HorizontalChangeHandler(), new HorizontalChangeHandler());
         } else {
             GateKeeper.setRoot(getDisplayRouter(), GateKeeper.Destination.PAYMENT_SELECT, RouterTransaction.with(PaymentSelectController.newInstance()));
@@ -281,7 +281,7 @@ public class AccountController extends BaseController implements AccountMvpView,
 
     @Override
     public void showLanguage() {
-        if (!mActivity.isTablet()) {
+        if (!mPresenter.isTablet()) {
             GateKeeper.push(getDisplayRouter(), GateKeeper.Destination.LANGUAGE, new HorizontalChangeHandler(), new HorizontalChangeHandler());
         } else {
             GateKeeper.setRoot(getDisplayRouter(), GateKeeper.Destination.LANGUAGE, RouterTransaction.with(LanguageController.newInstance()));
@@ -291,7 +291,7 @@ public class AccountController extends BaseController implements AccountMvpView,
     @Override
     public void showContactUs() {
         if (getResources().getBoolean(R.bool.is_account_contact_visible)) {
-            if (!mActivity.isTablet()) {
+            if (!mPresenter.isTablet()) {
                 GateKeeper.push(getDisplayRouter(), GateKeeper.Destination.CONTACT_US, new HorizontalChangeHandler(), new HorizontalChangeHandler());
             } else {
                 GateKeeper.setRoot(getDisplayRouter(), GateKeeper.Destination.CONTACT_US, RouterTransaction.with(LanguageController.newInstance()));
@@ -307,7 +307,7 @@ public class AccountController extends BaseController implements AccountMvpView,
     @Override
     public void showInviteAFriend() {
         if (getResources().getBoolean(R.bool.is_account_invite_visible)) {
-            if (!mActivity.isTablet()) {
+            if (!mPresenter.isTablet()) {
                 GateKeeper.push(getDisplayRouter(), GateKeeper.Destination.INVITE, new HorizontalChangeHandler(), new HorizontalChangeHandler());
             } else {
                 GateKeeper.setRoot(getDisplayRouter(), GateKeeper.Destination.INVITE, RouterTransaction.with(InviteSendController.newInstance()));
@@ -316,7 +316,7 @@ public class AccountController extends BaseController implements AccountMvpView,
     }
 
     public void showCountry() {
-        if (!mActivity.isTablet()) {
+        if (!mPresenter.isTablet()) {
             GateKeeper.push(getDisplayRouter(), GateKeeper.Destination.COUNTRY, new HorizontalChangeHandler(), new HorizontalChangeHandler());
         } else {
             GateKeeper.setRoot(getDisplayRouter(), GateKeeper.Destination.COUNTRY, RouterTransaction.with(CountryController.newInstance()));
@@ -329,7 +329,7 @@ public class AccountController extends BaseController implements AccountMvpView,
                 .putString(BundleKeys.TEMPLATE_KEY, key)
                 .putString(BundleKeys.LEGALITIES_TITLE, title)
                 .build();
-        if (!mActivity.isTablet()) {
+        if (!mPresenter.isTablet()) {
             GateKeeper.push(getDisplayRouter(),
                     GateKeeper.Destination.LEGALITIES,
                     bundle,
@@ -348,10 +348,14 @@ public class AccountController extends BaseController implements AccountMvpView,
             @Override
             public void success() {
                 mPresenter.onAttach(mvpView);
-                mPresenter.onAccountItemClick(mActivity, option, position);
                 mActivity.callGCMRegisterSubscriber();
-                mRightToolbarButton.setImageDrawable(getActivity().getResources().getDrawable(R.drawable.ic_account_logout));
+                if(mRightToolbarButton != null) {
+                    mRightToolbarButton.setImageDrawable(getActivity().getResources().getDrawable(R.drawable.ic_account_logout));
+                }
                 mActivity.getMainController().getHomeController().resetRouters();
+                if(mPresenter.isTablet()){
+                    mActivity.getMainController().getHomeController().resetAccountRouter();
+                }
             }
 
             @Override
@@ -373,7 +377,7 @@ public class AccountController extends BaseController implements AccountMvpView,
 
                 //reset routers with unique user info
                 mActivity.getMainController().getHomeController().resetRouters();
-                if(mActivity.isTablet()){
+                if(mPresenter.isTablet()){
                     mActivity.setShopsAsVisibleContainer();
                 }
                 CustomAlertDialog.showCustomAlertDialog(getActivity(),
@@ -410,13 +414,8 @@ public class AccountController extends BaseController implements AccountMvpView,
     }
 
     @Override
-    public boolean isTablet() {
-        return mActivity.isTablet();
-    }
-
-    @Override
     public Router getDisplayRouter() {
-        return mActivity.isTablet() ? mAccountDetailRouter : getRouter();
+        return mPresenter.isTablet() ? mAccountDetailRouter : getRouter();
     }
 
     @Override
