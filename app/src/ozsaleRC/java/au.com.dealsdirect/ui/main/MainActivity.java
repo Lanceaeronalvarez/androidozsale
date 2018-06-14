@@ -201,7 +201,7 @@ public class MainActivity extends BaseActivity implements MainMvpView {
 
     @Override
     public void onBackPressed() {
-        if (isTablet() && getHomeController().isPopUpControllerVisible()) {
+        if (mPresenter.isTablet() && getHomeController().isPopUpControllerVisible()) {
             getHomeController().getPopUpHostRouter().handleBack();
         } else {
             Router currentRouter = getCurrentRouter();
@@ -262,7 +262,7 @@ public class MainActivity extends BaseActivity implements MainMvpView {
     }
 
     private boolean isMasterDetailRouter(Router router) {
-        return isTablet() && (router == mAccountsRouter || router == mCheckoutRouter);
+        return mPresenter.isTablet() && (router == mAccountsRouter || router == mCheckoutRouter);
     }
 
     private void shopsRouterFromCategoryBackPress(Router currentRouter, Controller currentController) {
@@ -280,7 +280,7 @@ public class MainActivity extends BaseActivity implements MainMvpView {
         //any router can show login controller
         Controller currentController = getCurrentController(router);
 
-        if (!isTablet()) {
+        if (!mPresenter.isTablet()) {
             if (currentController instanceof SaleItemDetailsController ||
                     currentController instanceof AccountController) {
                 GateKeeper.push(router, GateKeeper.Destination.LOGIN, new VerticalChangeHandler(), new VerticalChangeHandler());
@@ -530,11 +530,6 @@ public class MainActivity extends BaseActivity implements MainMvpView {
     @Override
     public void callApiSettings() {
 
-    }
-
-    @Override
-    public boolean isTablet() {
-        return mIsTablet;
     }
 
     public void onPurchase(CardForm cardForm) {

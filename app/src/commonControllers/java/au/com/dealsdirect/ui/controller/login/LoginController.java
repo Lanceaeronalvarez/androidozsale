@@ -161,7 +161,7 @@ public class LoginController extends BaseController implements LoginMvpView {
 
     @Override
     public boolean handleBack() {
-        if (!mActivity.isAuthorized() && mActivity.isTablet()) {
+        if (!mActivity.isAuthorized() && mPresenter.isTablet()) {
             mActivity.getMainController().getHomeController().resetVisibleContainer();
         }
         hideKeyboard();

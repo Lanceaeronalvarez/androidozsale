@@ -369,9 +369,9 @@ public class CheckoutController extends VisaCheckoutController implements Checko
             mActivity.getMainController().setViewpagerDraggable(false);
         }
 
-        mTitleTextView.setText(!mActivity.isTablet() ? R.string.checkout_page_toolbar_title : R.string.checkout_page_tablet_toolbar_title);
+        mTitleTextView.setText(!mPresenter.isTablet() ? R.string.checkout_page_toolbar_title : R.string.checkout_page_tablet_toolbar_title);
 
-        if(!mActivity.isTablet()) {
+        if(!mPresenter.isTablet()) {
             mAdapter = new CheckoutOrderAdapter(mActivity, mItemList, mPresenter);
             mRecyclerView.setAdapter(mAdapter);
             mRecyclerView.setLayoutManager(new LinearLayoutManager(mActivity, LinearLayoutManager.VERTICAL, false));

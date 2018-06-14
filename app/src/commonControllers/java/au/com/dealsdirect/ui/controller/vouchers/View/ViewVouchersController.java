@@ -113,7 +113,7 @@ public class ViewVouchersController extends BasePullToRefreshController implemen
     protected void setUp(View view) {
         mTitleText.setText(getString(R.string.account_vouchers));
         mFilterView.setVisibility(View.INVISIBLE);
-        mArrowImage.setVisibility(mActivity.isTablet() ? View.GONE : View.VISIBLE);
+        mArrowImage.setVisibility(mPresenter.isTablet() ? View.GONE : View.VISIBLE);
         mArrowImage.setOnClickListener(action -> {
             mActivity.onBackPressed();
         });

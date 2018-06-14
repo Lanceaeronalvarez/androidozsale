@@ -97,7 +97,7 @@ public class OrdersController extends BasePullToRefreshController implements Ord
 
     @Override
     protected void setUp(View view) {
-        mToolbarLeftView.setVisibility(mActivity.isTablet() ? View.GONE : View.VISIBLE);
+        mToolbarLeftView.setVisibility(mPresenter.isTablet() ? View.GONE : View.VISIBLE);
         mOrdersToolarTitle.setText(mActivity.getResources().getString(R.string.account_orders));
         mOrdersRightOption.setImageDrawable(null);
 

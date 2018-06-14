@@ -264,7 +264,7 @@ public class HomeController extends BaseController implements HomeMvpView {
 
         mAccountsRouter.setRoot(RouterTransaction.with(AccountController.newInstance()));
 
-        if (mActivity.isTablet()) {
+        if (mPresenter.isTablet()) {
             mPopUpHostRouter = getChildRouter(mLoginHostContainer);
             mPopUpHostRouter.setPopsLastView(true);
         }
@@ -283,7 +283,7 @@ public class HomeController extends BaseController implements HomeMvpView {
         mCheckoutRouter = getChildRouter(mCheckoutContainer);
         mActivity.setCheckoutRouter(mCheckoutRouter);
 
-        if (!mActivity.isTablet()) {
+        if (!mPresenter.isTablet()) {
             mCheckoutRouter.setRoot(RouterTransaction.with(CheckoutController.newInstance())
                     .tag(getActivity().getResources().getString(R.string.checkout_controller)));
         } else {
@@ -457,7 +457,7 @@ public class HomeController extends BaseController implements HomeMvpView {
     }
 
     public Router getCurrentRouter() {
-        if (mActivity.isTablet() && isPopUpControllerVisible()) {
+        if (mPresenter.isTablet() && isPopUpControllerVisible()) {
             return mPopUpHostRouter;
         } else {
             return mRouterContainerMapping.get(currentVisibleIndex).first;
