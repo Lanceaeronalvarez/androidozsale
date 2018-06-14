@@ -348,10 +348,14 @@ public class AccountController extends BaseController implements AccountMvpView,
             @Override
             public void success() {
                 mPresenter.onAttach(mvpView);
-                mPresenter.onAccountItemClick(mActivity, option, position);
                 mActivity.callGCMRegisterSubscriber();
-                mRightToolbarButton.setImageDrawable(getActivity().getResources().getDrawable(R.drawable.ic_account_logout));
+                if(mRightToolbarButton != null) {
+                    mRightToolbarButton.setImageDrawable(getActivity().getResources().getDrawable(R.drawable.ic_account_logout));
+                }
                 mActivity.getMainController().getHomeController().resetRouters();
+                if(mPresenter.isTablet()){
+                    mActivity.getMainController().getHomeController().resetAccountRouter();
+                }
             }
 
             @Override

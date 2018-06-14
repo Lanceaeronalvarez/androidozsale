@@ -31,7 +31,7 @@ public class AccountPresenter<V extends AccountMvpView> extends BasePresenter<V>
     @Override
     public void onAccountItemClick(Context context, String option, int position) {
 
-        if (getMvpView().isChangeInProgress()) {
+        if (!isViewAttached() || getMvpView().isChangeInProgress()) {
             return;
         }
 

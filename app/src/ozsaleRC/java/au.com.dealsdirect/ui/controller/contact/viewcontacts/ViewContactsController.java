@@ -12,6 +12,7 @@ import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.bluelinelabs.conductor.Router;
 import com.bluelinelabs.conductor.RouterTransaction;
 import com.bluelinelabs.conductor.changehandler.HorizontalChangeHandler;
 
@@ -69,7 +70,6 @@ public class ViewContactsController extends BasePullToRefreshController implemen
     @Inject
     ViewContactsMvpPresenter<ViewContactsMvpView> mPresenter;
 
-    static String mFromFragmentId;
     private Router mContactDetailRouter;
 
     public static ViewContactsController newInstance() {

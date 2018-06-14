@@ -98,6 +98,7 @@ public class MainActivity extends BaseActivity implements MainMvpView {
 
     private Router mHomeRouter;
     private Router mCategoriesRouter;
+    private Router mContactsRouter;
     private Router mAccountsRouter;
     private Router mCheckoutRouter;
 
@@ -262,7 +263,7 @@ public class MainActivity extends BaseActivity implements MainMvpView {
     }
 
     private boolean isMasterDetailRouter(Router router) {
-        return mPresenter.isTablet() && (router == mAccountsRouter || router == mCheckoutRouter);
+        return mPresenter.isTablet() && (router == mAccountsRouter || router == mCheckoutRouter || router == mContactsRouter);
     }
 
     private void shopsRouterFromCategoryBackPress(Router currentRouter, Controller currentController) {
@@ -619,6 +620,10 @@ public class MainActivity extends BaseActivity implements MainMvpView {
 
     public void setCategoriesRouter(Router router) {
         mCategoriesRouter = router;
+    }
+
+    public void setContactRouter(Router router) {
+        mContactsRouter = router;
     }
 
     public void setAccountsRouter(Router router) {

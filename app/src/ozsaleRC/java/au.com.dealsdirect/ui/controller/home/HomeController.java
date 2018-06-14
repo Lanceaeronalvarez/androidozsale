@@ -257,7 +257,9 @@ public class HomeController extends BaseController implements HomeMvpView {
         mCategoriesRouter.setRoot(RouterTransaction.with(ControllerFactory.getInstance(GateKeeper.Destination.CATEGORIES)));
 
         mContactRouter = getChildRouter(mContactContainer);
+        mActivity.setContactRouter(mContactRouter);
         mContactRouter.setRoot(RouterTransaction.with(ViewContactsController.newInstance()));
+
 
         mAccountsRouter = getChildRouter(mAccountsContainer);
         mActivity.setAccountsRouter(mAccountsRouter);

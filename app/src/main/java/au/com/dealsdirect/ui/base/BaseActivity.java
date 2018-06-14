@@ -140,6 +140,7 @@ public abstract class BaseActivity extends AppCompatActivity implements MvpView 
             } else {
 
                 /*
+
                     4/6/18 - feature/andr-3308-registersubscriber
                     Disallow showing of No internet Connection on Socket Timeout Exception
                  */

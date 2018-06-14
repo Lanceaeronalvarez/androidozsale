@@ -64,6 +64,4 @@ public interface MainMvpView extends MvpView, BrainTreeListeners {
     void startPaypalPayment();
     void callApiSettings();
 
-    boolean isTablet();
-
 }

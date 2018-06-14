@@ -404,7 +404,6 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
         });
 
         if (mIsFiltered || mSaleItems.isEmpty()) {
-            showLoading();
             hasSearchFilters = false;
             mPresenter.loadSaleItems(createSaleItemsRequest(mCategoryKey, mSaleId, mSaleItemsPageNumber, mChipFilters, ""));
 
