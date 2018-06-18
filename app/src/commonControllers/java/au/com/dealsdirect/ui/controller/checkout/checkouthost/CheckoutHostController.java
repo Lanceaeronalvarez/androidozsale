@@ -109,7 +109,7 @@ public class CheckoutHostController extends BaseController implements CheckoutMv
 
         mCheckoutDetailView = mCheckoutController = CheckoutController.newInstance();
         mCheckoutDetailRouter = getChildRouter(mCheckoutDetailContainer);
-        mCheckoutDetailRouter.setRoot(RouterTransaction.with(mCheckoutController));
+        mCheckoutDetailRouter.setRoot(RouterTransaction.with(mCheckoutController).tag(getString(R.string.checkout_controller)));
 
         mAdapter = new CheckoutOrderAdapter(mActivity, mItemList, mPresenter);
         mRecyclerView.setAdapter(mAdapter);
