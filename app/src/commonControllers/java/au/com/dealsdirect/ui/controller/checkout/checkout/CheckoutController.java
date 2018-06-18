@@ -316,7 +316,6 @@ public class CheckoutController extends VisaCheckoutController implements Checko
         getControllerComponent().inject(this);
         mPresenter.onAttach(this);
         mVcoPresenter.onAttach(this);
-        registerForActivityResult(BraintreeRequestCodes.VISA_CHECKOUT);
 
         mCheckoutHostView = (CheckoutMvpView) mActivity.getCheckoutRouter().getControllerWithTag(getString(R.string.checkout_host_controller));
         return view;
@@ -354,13 +353,6 @@ public class CheckoutController extends VisaCheckoutController implements Checko
         }
         mChangeClickListeners = null;
     }
-
-    @Override
-    protected void onDestroyView(@NonNull View view) {
-        mPresenter.onDetach();
-        super.onDestroyView(view);
-    }
-
 
     @Override
     protected void setUp(View view) {

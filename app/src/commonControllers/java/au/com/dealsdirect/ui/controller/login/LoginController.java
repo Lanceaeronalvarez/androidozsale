@@ -60,6 +60,7 @@ public class LoginController extends BaseController implements LoginMvpView {
     ImageButton mLeftButton;
 
     private boolean isLoginTapped = false;
+    private boolean mWillShowRegistration = false;
     private LoginHostMvpView mLoginHostView;
 
     private CallbackManager mCallbackManager = CallbackManager.Factory.create();
@@ -92,7 +93,7 @@ public class LoginController extends BaseController implements LoginMvpView {
 
     @Override
     public void onDetach(View view) {
-        if (!mPresenter.isTablet()) {
+        if (!mPresenter.isTablet() && !mWillShowRegistration) {
             mActivity.getMainController().showBottomNav();
         }
 
@@ -180,6 +181,7 @@ public class LoginController extends BaseController implements LoginMvpView {
 
     @Override
     public void showRegistration() {
+        mWillShowRegistration = true;
         getRouter().pushController(RouterTransaction.with(RegisterController.newInstance())
                 .pushChangeHandler(new HorizontalChangeHandler())
                 .popChangeHandler(new HorizontalChangeHandler()));

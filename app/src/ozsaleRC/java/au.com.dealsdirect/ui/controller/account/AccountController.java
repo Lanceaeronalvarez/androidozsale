@@ -355,6 +355,8 @@ public class AccountController extends BaseController implements AccountMvpView,
                 mActivity.getMainController().getHomeController().resetRouters();
                 if(mPresenter.isTablet()){
                     mActivity.getMainController().getHomeController().resetAccountRouter();
+                } else {
+                    mPresenter.onAccountItemClick(mActivity,option,position);
                 }
             }
 
