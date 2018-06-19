@@ -144,6 +144,7 @@ public class ViewVouchersController extends BasePullToRefreshController implemen
         unusedVoucherHelper.attachToRecyclerView(mUnusedVouchersRecyclerViewPager);
         usedVoucherHelper.attachToRecyclerView(mUsedVouchersRecyclerViewPager);
 
+        showLoading();
         mPresenter.loadMyVouchers();
     }
 

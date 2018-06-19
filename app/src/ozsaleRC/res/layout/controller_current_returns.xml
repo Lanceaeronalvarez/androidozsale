@@ -31,12 +31,11 @@
             style="@style/DDButtonStyle"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@drawable/bg_invite_clipboard"
-            android:textSize="@dimen/text_size_headline1"
             android:layout_alignParentBottom="true"
             android:text="@string/request_new_return"
             android:layout_margin="@dimen/padding_default"
             android:visibility="gone"/>
+
     </RelativeLayout>
 
 </LinearLayout>

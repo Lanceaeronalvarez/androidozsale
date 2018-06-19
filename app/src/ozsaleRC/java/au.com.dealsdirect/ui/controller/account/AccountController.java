@@ -264,7 +264,12 @@ public class AccountController extends BaseController implements AccountMvpView,
     @Override
     public void showMyReturns() {
         if (!mPresenter.isTablet()) {
-            GateKeeper.push(getDisplayRouter(), GateKeeper.Destination.CURRENT_RETURNS, new HorizontalChangeHandler(), new HorizontalChangeHandler());
+            //needed to tag this transaction
+            //for future improvement, allow setting tag in gatekeeper.
+            getRouter().pushController(RouterTransaction.with(CurrentReturnsController.newInstance())
+                .tag(getString(R.string.current_returns_controller))
+                .pushChangeHandler(new HorizontalChangeHandler())
+                .popChangeHandler(new HorizontalChangeHandler()));
         } else {
             GateKeeper.setRoot(getDisplayRouter(), GateKeeper.Destination.CURRENT_RETURNS, RouterTransaction.with(CurrentReturnsController.newInstance()));
         }

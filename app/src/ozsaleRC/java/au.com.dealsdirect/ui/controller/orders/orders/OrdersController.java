@@ -104,6 +104,7 @@ public class OrdersController extends BasePullToRefreshController implements Ord
         mRecyclerView.setLayoutManager(new LinearLayoutManager(mActivity, LinearLayoutManager.VERTICAL, false));
         mRecyclerView.addOnItemTouchListener(new RecyclerOnTouchListener(mActivity, (v, position) -> showOrderDetails(position)));
         mRecyclerView.addItemDecoration(new SimpleDividerItemDecoration(mActivity, LinearLayout.VERTICAL));
+        showLoading();
         mPresenter.loadOrders();
     }
 
