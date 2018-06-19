@@ -159,36 +159,19 @@ public class AddPaymentController extends VisaCheckoutController implements AddP
 
         mButtonPay.setOnClickListener(action -> {
             onCardFormSubmit();
-            mCheckoutMvpView.setIsPaymentMethodChanged(true);
+            if(isFromCart) {
+                mCheckoutMvpView.setIsPaymentMethodChanged(true);
+            }
         });
 
         mButtonPaypal.setOnClickListener(action -> {
             onPaypalSubmit();
-            mCheckoutMvpView.setIsPaymentMethodChanged(true);
+            if(isFromCart) {
+                mCheckoutMvpView.setIsPaymentMethodChanged(true);
+            }
         });
 
-        if (isFromCart) {
-
-            if (mVcoPresenter.isVisaCheckoutEnabled()) {
-                mVcoPresenter.setupVisaCheckout();
-            }
-
-            if(mPresenter.isMasterPassEnabled()) {
-                mMasterpassButton.setVisibility(View.VISIBLE);
-            }
-
-            mMasterpassButton.setOnClickListener(action -> {
-                onMasterpassButtonClick();
-                mCheckoutMvpView.setIsPaymentMethodChanged(true);
-            });
-        } else {
-            mMasterpassButton.setEnabled(false);
-            mMasterpassButton.setVisibility(View.GONE);
-            mVisaCheckoutButton.setVisibility(View.GONE);
-        }
-
         if (((MainActivity) getActivity()).isBraintreeInitialized()) {
-
             showPaymentButtons();
         } else {
             ((MainActivity) getActivity()).fetchAuthorization(new FetchTokenHandler() {
@@ -203,6 +186,23 @@ public class AddPaymentController extends VisaCheckoutController implements AddP
                 }
             });
         }
+
+        if (isFromCart) {
+
+            if (mVcoPresenter.isVisaCheckoutEnabled()) {
+                mVcoPresenter.setupVisaCheckout();
+            }
+
+            mMasterpassButton.setOnClickListener(action -> {
+                onMasterpassButtonClick();
+                mCheckoutMvpView.setIsPaymentMethodChanged(true);
+            });
+        } else {
+            mMasterpassButton.setVisibility(View.GONE);
+            mVisaCheckoutButton.setVisibility(View.GONE);
+        }
+
+
     }
 
     @Override
@@ -248,8 +248,8 @@ public class AddPaymentController extends VisaCheckoutController implements AddP
     private void checkVisiblePaymentButtons() {
         mButtonPay.setVisibility(mIsOurpaySelectDeliveryMethod ? View.GONE : View.VISIBLE);
         mButtonPaypal.setVisibility(mIsOurpaySelectDeliveryMethod ? View.GONE : View.VISIBLE);
-        mMasterpassButton.setVisibility(mIsOurpaySelectDeliveryMethod ? View.GONE : View.VISIBLE);
-        mVisaCheckoutButton.setVisibility(mIsOurpaySelectDeliveryMethod ? View.GONE : View.VISIBLE);
+        mMasterpassButton.setVisibility(!isFromCart || !mPresenter.isMasterPassEnabled() || mIsOurpaySelectDeliveryMethod ? View.GONE : View.VISIBLE);
+        mVisaCheckoutButton.setVisibility(!isFromCart || mIsOurpaySelectDeliveryMethod ? View.GONE : View.VISIBLE);
     }
 
     @Override
