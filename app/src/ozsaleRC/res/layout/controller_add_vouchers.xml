@@ -6,6 +6,7 @@
     android:layout_height="match_parent"
     android:animateLayoutChanges="true"
     android:background="@color/background_default"
+    android:clickable="true"
     tools:ignore="missingPrefix">
 
     <include

@@ -95,6 +95,7 @@ public class ViewAddressController extends BasePullToRefreshController implement
 
     @Override
     protected void setUp(View view) {
+        showLoading();
         mPresenter.loadAddresses();
 
 

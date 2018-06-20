@@ -5,6 +5,7 @@
     android:layout_height="match_parent"
     android:background="@color/background_default"
     android:orientation="vertical"
+    android:clickable="true"
     tools:ignore="MissingPrefix">
 
     <include layout="@layout/partial_toolbar_arrow"/>

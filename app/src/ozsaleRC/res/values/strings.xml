@@ -9,6 +9,7 @@
     <string name="not_a_member_yet">Not a member?</string>
     <string name="forgot_password">Forgot Password?</string>
     <string name="forgot_password_title">Forgot Password</string>
+    <string name="register_title">Registration</string>
     <string name="username">Username</string>
     <string name="marydoe_ourpay">marydoe.ourpay</string>
     <string name="password">Password</string>
@@ -105,6 +106,7 @@
     <string name="checkout_lowercase">checkout</string>
     <string name="delivery_address">Delivery Address</string>
     <string name="delivery_method">DELIVERY METHOD</string>
+    <string name="delivery_label">Delivery</string>
     <string name="deliver_options_title">Delivery Options</string>
     <string name="choose_delivery_method">CHOOSE DELIVERY METHOD</string>
     <string name="you_currently_do_not_have_any_addresses">You do not currently have any address.</string>

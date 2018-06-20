@@ -177,6 +177,7 @@ public class PaymentSelectController extends BasePullToRefreshController impleme
     protected void setUp(View view) {
 
         if (!isFromCart) {
+            showLoading();
             mPresenter.fetchUserPaymentMethods();
         }
 

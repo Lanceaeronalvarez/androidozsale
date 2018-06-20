@@ -130,6 +130,7 @@ public class CurrentReturnsController extends BasePullToRefreshController
         mCurrentReturnsRightOption.setVisibility(View.INVISIBLE);
 
         if (mCurrentReturns == null || mCurrentReturns.size() == 0) {
+            showLoading();
             mPresenter.loadCurrentReturns();
         } else {
 

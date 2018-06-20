@@ -9,8 +9,13 @@ import com.androidnetworking.error.ANError;
 import javax.inject.Inject;
 
 import au.com.dealsdirect.data.DataManager;
+import au.com.dealsdirect.data.network.AppApiCallback;
 import au.com.dealsdirect.data.network.model.returns.createreturn.CreateReturnRequest;
+import au.com.dealsdirect.data.network.model.returns.createreturn.CreateReturnRequestResponse;
+import au.com.dealsdirect.data.network.model.returns.createreturn.CreateReturnRequestResponseBody;
 import au.com.dealsdirect.data.network.model.returns.newreturn.NewReturnOrderDetailRequest;
+import au.com.dealsdirect.data.network.model.returns.newreturn.NewReturnOrderDetailResponse;
+import au.com.dealsdirect.data.network.model.returns.newreturn.NewReturnOrderDetailResponseBody;
 import au.com.dealsdirect.ui.base.BasePresenter;
 import au.com.dealsdirect.utils.rx.SchedulerProvider;
 import io.reactivex.disposables.CompositeDisposable;
@@ -24,40 +29,23 @@ public class NewReturnPresenter<V extends NewReturnMvpView> extends BasePresente
 
 
     @Override
-    public boolean addNewReturnOrderRequest(CreateReturnRequest createReturnRequest) {
+    public void addNewReturnOrderRequest(CreateReturnRequest createReturnRequest) {
+        getMvpView().showLoading();
+        doApiCallForResponse(getDataManager().callCreateReturnRequest(createReturnRequest), new AppApiCallback(){
+            @Override
+            public void onSuccess(Object response) {
+                super.onSuccess(response);
+                CreateReturnRequestResponseBody getNewReturnCreateResponse = (CreateReturnRequestResponseBody) response;
+                getMvpView().finishCreateReturnRequest(getNewReturnCreateResponse.getCreateReturnRequestResponse());
+            }
 
-        getCompositeDisposable()
-                .add(getDataManager()
-                        .callCreateReturnRequest(createReturnRequest)
-                        .subscribeOn(getSchedulerProvider().io())
-                        .observeOn(getSchedulerProvider().ui())
-                        .subscribe(getNewReturnCreateResponse -> {
+            @Override
+            public void onFailure(Throwable t) {
+                super.onFailure(t);
+                getMvpView().finishCreateReturnRequest(null);
+            }
+        });
 
-                            if (!isViewAttached()) {
-                                return;
-                            }
-                            getMvpView().hideLoading();
-                            getMvpView().finishCreateReturnRequest(getNewReturnCreateResponse);
-
-                        }, throwable -> {
-
-                            if (!isViewAttached()) {
-                                return;
-                            }
-
-                            getMvpView().hideLoading();
-                            getMvpView().onError(throwable.getMessage());
-
-                            // handle load accounts error here
-                            if (throwable instanceof ANError) {
-                                ANError anError = (ANError) throwable;
-                                handleApiError(anError);
-                            }
-                        }));
-
-
-
-        return false;
     }
 
     @Override
@@ -65,34 +53,15 @@ public class NewReturnPresenter<V extends NewReturnMvpView> extends BasePresente
         NewReturnOrderDetailRequest newReturnOrderDetailRequest = new NewReturnOrderDetailRequest();
         newReturnOrderDetailRequest.invoiceNo = invoiceNo;
 
-        getCompositeDisposable()
-                .add(getDataManager()
-                        .callGetNewReturnOrderDetail(newReturnOrderDetailRequest)
-                        .subscribeOn(getSchedulerProvider().io())
-                        .observeOn(getSchedulerProvider().ui())
-                        .subscribe(getNewReturnOrderDetail -> {
-
-                            if (!isViewAttached()) {
-                                return;
-                            }
-                            getMvpView().hideLoading();
-                            getMvpView().loadReturnOrderDetail(getNewReturnOrderDetail.getNewReturnOrderDetailResponse());
-
-                        }, throwable -> {
-
-                            if (!isViewAttached()) {
-                                return;
-                            }
-
-                            getMvpView().hideLoading();
-                            getMvpView().onError(throwable.getMessage());
-
-                            // handle load accounts error here
-                            if (throwable instanceof ANError) {
-                                ANError anError = (ANError) throwable;
-                                handleApiError(anError);
-                            }
-                        }));
+        doApiCallForResponse(getDataManager()
+                .callGetNewReturnOrderDetail(newReturnOrderDetailRequest), new AppApiCallback(){
+            @Override
+            public void onSuccess(Object response) {
+                super.onSuccess(response);
+                NewReturnOrderDetailResponseBody getNewReturnOrderDetail = (NewReturnOrderDetailResponseBody) response;
+                getMvpView().loadReturnOrderDetail(getNewReturnOrderDetail.getNewReturnOrderDetailResponse());
+            }
+        });
     }
 
     public void updateReturnValue(String itemId, int position, int productQuantityValue){

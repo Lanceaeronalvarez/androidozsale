@@ -31,6 +31,8 @@ import au.com.dealsdirect.ui.controller.forgotpassword.ForgotPasswordController;
 import au.com.dealsdirect.ui.controller.register.RegisterController;
 import au.com.dealsdirect.utils.AppConstants;
 import au.com.dealsdirect.utils.BundleBuilder;
+import au.com.dealsdirect.utils.BundleKeys;
+import au.com.dealsdirect.utils.module.GateKeeper;
 import butterknife.BindView;
 import butterknife.OnClick;
 
@@ -59,8 +61,21 @@ public class LoginController extends BaseController implements LoginMvpView {
     @BindView(R.id.partial_toolbar_left_view)
     ImageButton mLeftButton;
 
+    @Nullable
+    @BindView(R.id.controller_login_legalities_container)
+    ViewGroup mLegalitiesContainer;
+    @Nullable
+    @BindView(R.id.controller_login_about_us_textview)
+    TextView mAboutUsTextView;
+    @Nullable
+    @BindView(R.id.controller_login_tnc_textview)
+    TextView mTncTextView;
+    @Nullable
+    @BindView(R.id.controller_login_privacy_textview)
+    TextView mPrivacyTextView;
+
     private boolean isLoginTapped = false;
-    private LoginHostMvpView mLoginHostView;
+    private boolean mWillShowRegistration = false;
 
     private CallbackManager mCallbackManager = CallbackManager.Factory.create();
 
@@ -92,7 +107,7 @@ public class LoginController extends BaseController implements LoginMvpView {
 
     @Override
     public void onDetach(View view) {
-        if (!mPresenter.isTablet()) {
+        if (!mPresenter.isTablet() && !mWillShowRegistration) {
             mActivity.getMainController().showBottomNav();
         }
 
@@ -140,6 +155,12 @@ public class LoginController extends BaseController implements LoginMvpView {
                 isLoginTapped = true;
             }
         });
+
+        if(mLegalitiesContainer != null) {
+            mAboutUsTextView.setOnClickListener(v -> onLegalitiesClicked(BundleKeys.TEMPLATE_KEY_ABOUT_US, getString(R.string.account_about_us)));
+            mTncTextView.setOnClickListener(v -> onLegalitiesClicked(BundleKeys.TEMPLATE_KEY_TNC, getString(R.string.account_tnc)));
+            mPrivacyTextView.setOnClickListener(v -> onLegalitiesClicked(BundleKeys.TEMPLATE_KEY_PRIVACY, getString(R.string.account_privacy)));
+        }
     }
 
 
@@ -180,6 +201,7 @@ public class LoginController extends BaseController implements LoginMvpView {
 
     @Override
     public void showRegistration() {
+        mWillShowRegistration = true;
         getRouter().pushController(RouterTransaction.with(RegisterController.newInstance())
                 .pushChangeHandler(new HorizontalChangeHandler())
                 .popChangeHandler(new HorizontalChangeHandler()));
@@ -222,5 +244,18 @@ public class LoginController extends BaseController implements LoginMvpView {
     @Override
     public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         mCallbackManager.onActivityResult(requestCode, resultCode, data);
+    }
+
+    private void onLegalitiesClicked(String key, String title) {
+        Bundle bundle = new BundleBuilder(new Bundle())
+                .putString(BundleKeys.TEMPLATE_KEY, key)
+                .putString(BundleKeys.LEGALITIES_TITLE, title)
+                .build();
+
+        GateKeeper.push(getRouter(),
+                GateKeeper.Destination.LEGALITIES,
+                bundle,
+                new HorizontalChangeHandler(false),
+                new HorizontalChangeHandler());
     }
 }

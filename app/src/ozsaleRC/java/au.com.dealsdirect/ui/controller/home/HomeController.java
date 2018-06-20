@@ -200,7 +200,6 @@ public class HomeController extends BaseController implements HomeMvpView {
                 Controller controller = getCurrentControllerOnRouter(mCheckoutRouter);
                 if (controller instanceof CheckoutController) {
                     Log.d("ourpay", "home controller remove ourpay");
-                    ((CheckoutController) controller).setIsGraphVisible(false);
                     ((CheckoutController) controller).removeOurpayView();
                     ((CheckoutController) controller).clearOurpayGraphBitmapsAndListeners();
                 }

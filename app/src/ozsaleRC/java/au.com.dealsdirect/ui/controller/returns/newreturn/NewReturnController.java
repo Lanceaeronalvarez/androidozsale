@@ -19,6 +19,7 @@ import javax.inject.Inject;
 
 import au.com.dealsdirect.R;
 import au.com.dealsdirect.data.network.model.returns.createreturn.CreateReturnRequest;
+import au.com.dealsdirect.data.network.model.returns.createreturn.CreateReturnRequestResponse;
 import au.com.dealsdirect.data.network.model.returns.createreturn.CreateReturnRequestResponseBody;
 import au.com.dealsdirect.data.network.model.returns.newreturn.NewReturnOrderDetailResponse;
 import au.com.dealsdirect.data.network.model.returns.returnorders.List;
@@ -108,6 +109,7 @@ public class NewReturnController extends BaseController implements NewReturnMvpV
         mNewReturnToolbarRightOption.setVisibility(View.INVISIBLE);
         mNewReturnToolbarRightOption.setImageDrawable(getResources().getDrawable(R.drawable.ic_check));
 
+        showLoading();
         mPresenter.getReturnOrderDetail(mReturnItem.getInvoiceNo());
     }
 
@@ -139,17 +141,20 @@ public class NewReturnController extends BaseController implements NewReturnMvpV
     }
 
     @Override
-    public void finishCreateReturnRequest(CreateReturnRequestResponseBody createReturnRequest) {
+    public void finishCreateReturnRequest(CreateReturnRequestResponse createReturnResponse) {
 
-        if (createReturnRequest.getCreateReturnRequestResponse().getResult()) {
+        if (createReturnResponse != null && createReturnResponse.getResult()) {
             CustomAlertDialog.showCustomAlertDialog(
                     mActivity,
                     CustomAlertDialog.CustomDialogIconState.POSITIVE,
                     getResources().getString(R.string.return_request_submitted));
+            getRouter().popToTag(getString(R.string.current_returns_controller));
+        } else {
+            CustomAlertDialog.showCustomAlertDialog(
+                    mActivity,
+                    CustomAlertDialog.CustomDialogIconState.NEGATIVE,
+                    getResources().getString(R.string.error_creating_return));
         }
-
-        getRouter().popToTag("CurrentReturnController");
-        hideKeyboard();
     }
 
     @Override
@@ -181,6 +186,7 @@ public class NewReturnController extends BaseController implements NewReturnMvpV
         createReturnRequest.reason = mNewReturnCreateReasonField.getText().toString();
         createReturnRequest.items = mRequestItems;
         mPresenter.addNewReturnOrderRequest(createReturnRequest);
+        hideKeyboard();
     }
 
     private void validateRequestReturnForm() {

@@ -74,6 +74,19 @@ public class RegisterController extends VisaCheckoutController implements Regist
     @BindView(R.id.controller_register_terms_link)
     TextView mTermsLink;
 
+    @Nullable
+    @BindView(R.id.controller_login_legalities_container)
+    ViewGroup mLegalitiesContainer;
+    @Nullable
+    @BindView(R.id.controller_login_about_us_textview)
+    TextView mAboutUsTextView;
+    @Nullable
+    @BindView(R.id.controller_login_tnc_textview)
+    TextView mTncTextView;
+    @Nullable
+    @BindView(R.id.controller_login_privacy_textview)
+    TextView mPrivacyTextView;
+
     public static RegisterController newInstance() {
 
         return new RegisterController(
@@ -115,20 +128,16 @@ public class RegisterController extends VisaCheckoutController implements Regist
 
         mActivity.setDraggableViewPager(false);
 
-        mTermsLink.setOnClickListener(action -> {
-
-            GateKeeper.push(getRouter(),
-                    GateKeeper.Destination.LEGALITIES,
-                    new BundleBuilder(new Bundle())
-                            .putString(BundleKeys.TEMPLATE_KEY, "TermsAndConditions_Text")
-                            .putString(BundleKeys.LEGALITIES_TITLE, "Terms and Conditions")
-                            .build(),
-                    new HorizontalChangeHandler(false),
-                    new HorizontalChangeHandler());
-        });
+        mTermsLink.setOnClickListener(v -> onLegalitiesClicked(BundleKeys.TEMPLATE_KEY_TNC, getString(R.string.account_tnc)));
 
         if (mVcoPresenter.isVisaCheckoutEnabled()) {
             mVcoPresenter.setupVisaCheckout();
+        }
+
+        if(mLegalitiesContainer != null) {
+            mAboutUsTextView.setOnClickListener(v -> onLegalitiesClicked(BundleKeys.TEMPLATE_KEY_ABOUT_US, getString(R.string.account_about_us)));
+            mTncTextView.setOnClickListener(v -> onLegalitiesClicked(BundleKeys.TEMPLATE_KEY_TNC, getString(R.string.account_tnc)));
+            mPrivacyTextView.setOnClickListener(v -> onLegalitiesClicked(BundleKeys.TEMPLATE_KEY_PRIVACY, getString(R.string.account_privacy)));
         }
     }
 
@@ -246,4 +255,16 @@ public class RegisterController extends VisaCheckoutController implements Regist
         mVcoPresenter.loginWithVisaCheckout();
     }
 
+    private void onLegalitiesClicked(String key, String title) {
+        Bundle bundle = new BundleBuilder(new Bundle())
+                .putString(BundleKeys.TEMPLATE_KEY, key)
+                .putString(BundleKeys.LEGALITIES_TITLE, title)
+                .build();
+
+        GateKeeper.push(getRouter(),
+                GateKeeper.Destination.LEGALITIES,
+                bundle,
+                new HorizontalChangeHandler(false),
+                new HorizontalChangeHandler());
+    }
 }

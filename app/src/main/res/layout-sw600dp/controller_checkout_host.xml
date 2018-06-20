@@ -24,6 +24,7 @@
                 android:id="@+id/controller_checkout_container"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:paddingTop="@dimen/margin_medium"
                 android:background="@color/background_default"
                 android:descendantFocusability="blocksDescendants"
                 android:orientation="vertical"
@@ -34,8 +35,7 @@
                     fontPath="@string/font_app_light"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginBottom="@dimen/margin_small"
-                    android:layout_marginTop="@dimen/margin_small"
+                    android:layout_marginBottom="@dimen/margin_extra_small"
                     android:paddingLeft="@dimen/padding_default"
                     android:paddingRight="@dimen/padding_default"
                     android:text="@string/checkout_order_label"
@@ -52,7 +52,8 @@
 
             <include
                 layout="@layout/partial_checkout_empty"
-                android:visibility="gone" />
+                android:visibility="visible" />
+
         </FrameLayout>
     </LinearLayout>
 

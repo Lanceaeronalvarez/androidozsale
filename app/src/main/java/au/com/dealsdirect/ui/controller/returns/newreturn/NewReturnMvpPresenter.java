@@ -9,7 +9,7 @@ import au.com.dealsdirect.ui.base.MvpPresenter;
 
 public interface NewReturnMvpPresenter<V extends NewReturnMvpView> extends MvpPresenter<V> {
 
-    boolean addNewReturnOrderRequest(CreateReturnRequest createReturnRequest);
+    void addNewReturnOrderRequest(CreateReturnRequest createReturnRequest);
 
     void getReturnOrderDetail(int invoiceNo);
 

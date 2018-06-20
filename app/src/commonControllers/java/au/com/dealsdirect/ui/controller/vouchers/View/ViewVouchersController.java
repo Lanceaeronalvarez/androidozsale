@@ -144,6 +144,7 @@ public class ViewVouchersController extends BasePullToRefreshController implemen
         unusedVoucherHelper.attachToRecyclerView(mUnusedVouchersRecyclerViewPager);
         usedVoucherHelper.attachToRecyclerView(mUsedVouchersRecyclerViewPager);
 
+        showLoading();
         mPresenter.loadMyVouchers();
     }
 
@@ -158,6 +159,7 @@ public class ViewVouchersController extends BasePullToRefreshController implemen
         hideLoading();
         if (pair.first != null && pair.first.size() != 0) {
             mRootLayout.setVisibility(View.VISIBLE);
+            mNoVouchersLayout.setVisibility(View.GONE);
             mUnusedVouchersRecyclerViewPager.getLayoutManager().scrollToPosition(0);
 
             List<GetUserVoucherResponse.Voucher> usedVouchers = new ArrayList<>();
