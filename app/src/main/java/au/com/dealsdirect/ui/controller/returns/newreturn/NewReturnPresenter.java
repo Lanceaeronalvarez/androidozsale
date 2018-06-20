@@ -31,7 +31,7 @@ public class NewReturnPresenter<V extends NewReturnMvpView> extends BasePresente
     @Override
     public void addNewReturnOrderRequest(CreateReturnRequest createReturnRequest) {
         getMvpView().showLoading();
-        doApiCallForResponse(getDataManager().callCreateReturnRequest(createReturnRequest), new AppApiCallback(){
+        doApiCallForResponse(getDataManager().callCreateReturnRequest(createReturnRequest), new AppApiCallback() {
             @Override
             public void onSuccess(Object response) {
                 super.onSuccess(response);
@@ -54,7 +54,7 @@ public class NewReturnPresenter<V extends NewReturnMvpView> extends BasePresente
         newReturnOrderDetailRequest.invoiceNo = invoiceNo;
 
         doApiCallForResponse(getDataManager()
-                .callGetNewReturnOrderDetail(newReturnOrderDetailRequest), new AppApiCallback(){
+                .callGetNewReturnOrderDetail(newReturnOrderDetailRequest), new AppApiCallback() {
             @Override
             public void onSuccess(Object response) {
                 super.onSuccess(response);
@@ -64,7 +64,7 @@ public class NewReturnPresenter<V extends NewReturnMvpView> extends BasePresente
         });
     }
 
-    public void updateReturnValue(String itemId, int position, int productQuantityValue){
-        getMvpView().onReturnValueUpdated(itemId,position,productQuantityValue);
+    public void updateReturnValue(String itemId, int position, int productQuantityValue, boolean isChecked) {
+        getMvpView().onReturnValueUpdated(itemId, position, productQuantityValue, isChecked);
     }
 }

@@ -64,9 +64,7 @@ public class NewReturnController extends BaseController implements NewReturnMvpV
     @SuppressLint("UseSparseArrays")
     private HashMap<Integer, java.util.List> updateList = new HashMap<>();
 
-    private HashMap<String, NewReturnOrderViewHolder> newReturnOrderViewMap = new HashMap<>();
     private NewReturnOrdersAdapter mAdapter = null;
-    private NewReturnOrderDetailResponse mNewReturnsOrderDetail;
     private ArrayList<Object> mRequestItems = new ArrayList<>();
 
     @Inject
@@ -88,11 +86,8 @@ public class NewReturnController extends BaseController implements NewReturnMvpV
     @Override
     protected View inflateView(@NonNull LayoutInflater inflater, @NonNull ViewGroup container) {
         View view = inflater.inflate(R.layout.controller_new_return, container, false);
-
         getControllerComponent().inject(this);
-
         mPresenter.onAttach(this);
-
         return view;
     }
 
@@ -160,8 +155,6 @@ public class NewReturnController extends BaseController implements NewReturnMvpV
     @Override
     public void loadReturnOrderDetail(NewReturnOrderDetailResponse newReturnsOrderDetail) {
 
-        mNewReturnsOrderDetail = newReturnsOrderDetail;
-
         mAdapter = new NewReturnOrdersAdapter(newReturnsOrderDetail.getList(), mActivity, mPresenter);
 
         mNewReturnOrderRecyclerView.setAdapter(mAdapter);
@@ -169,8 +162,8 @@ public class NewReturnController extends BaseController implements NewReturnMvpV
     }
 
     @Override
-    public void onReturnValueUpdated(String itemId, int position, int productQuantityValue) {
-        if (productQuantityValue != 0) {
+    public void onReturnValueUpdated(String itemId, int position, int productQuantityValue, boolean isChecked) {
+        if (isChecked && productQuantityValue != 0) {
             java.util.List<Object> newList = new ArrayList<>();
             newList.add(itemId);
             newList.add(productQuantityValue);
@@ -180,36 +173,60 @@ public class NewReturnController extends BaseController implements NewReturnMvpV
         }
     }
 
-    private void performRequestReturn() {
+    private void validateRequestReturnForm() {
+
         CreateReturnRequest createReturnRequest = new CreateReturnRequest();
         createReturnRequest.invoiceNo = mReturnItem.getInvoiceNo().toString();
         createReturnRequest.reason = mNewReturnCreateReasonField.getText().toString();
-        createReturnRequest.items = mRequestItems;
-        mPresenter.addNewReturnOrderRequest(createReturnRequest);
-        hideKeyboard();
+        createReturnRequest.items = getUpdateRequestList();
+
+        if (createReturnRequest.items.size() == 0) {
+            CustomAlertDialog.showCustomAlertDialog(mActivity, CustomAlertDialog.CustomDialogIconState.NEGATIVE, mActivity.getResources().getString(R.string.please_add_count_to_an_item));
+        } else if (createReturnRequest.reason.isEmpty()) {
+            CustomAlertDialog.showCustomAlertDialog(mActivity, CustomAlertDialog.CustomDialogIconState.NEGATIVE, getResources().getString(R.string.please_fill_up_field));
+        } else {
+            mPresenter.addNewReturnOrderRequest(createReturnRequest);
+            hideKeyboard();
+        }
+//        boolean validReason = false;
+//        String reason = mNewReturnCreateReasonField.getText().toString();
+//
+//        if (!reason.isEmpty()) {
+//            validReason = true;
+//        }
+//
+//        mRequestItems.clear();
+//        for (int i = 0; i < mAdapter.getCheckedReturns().length; i++) {
+//            boolean isChecked = mAdapter.getCheckedReturns()[i];
+//            if(isChecked) {
+//                mRequestItems.add(mAdapter.getReturnList().get(i).getID());
+//            }
+//        }
+//
+//        if (validReason && !mRequestItems.isEmpty()) {
+//            performRequestReturn();
+//        } else {
+//            CustomAlertDialog.showCustomAlertDialog(mActivity, CustomAlertDialog.CustomDialogIconState.NEGATIVE, "Please populate all fields.");
+//        }
     }
 
-    private void validateRequestReturnForm() {
-        boolean validReason = false;
-        String reason = mNewReturnCreateReasonField.getText().toString();
+    private java.util.List getUpdateRequestList() {
 
-        if (!reason.isEmpty()) {
-            validReason = true;
-        }
+        java.util.List newRequestList = new ArrayList<>();
+        if (updateList.size() != 0) {
 
-        mRequestItems.clear();
-        for (int i = 0; i < mAdapter.getCheckedReturns().length; i++) {
-            boolean isChecked = mAdapter.getCheckedReturns()[i];
-            if(isChecked) {
-                mRequestItems.add(mAdapter.getReturnList().get(i).getID());
+            for (int key : updateList.keySet()) {
+
+                java.util.List<Object> tempList = updateList.get(key);
+                if (Integer.valueOf(tempList.get(1).toString()) != 0) {
+                    newRequestList.add(tempList);
+                }
             }
+
+            return newRequestList;
         }
 
-        if (validReason && !mRequestItems.isEmpty()) {
-            performRequestReturn();
-        } else {
-            CustomAlertDialog.showCustomAlertDialog(mActivity, CustomAlertDialog.CustomDialogIconState.NEGATIVE, "Please populate all fields.");
-        }
+        return newRequestList;
     }
 
     @OnClick(R.id.new_return_create_button)
