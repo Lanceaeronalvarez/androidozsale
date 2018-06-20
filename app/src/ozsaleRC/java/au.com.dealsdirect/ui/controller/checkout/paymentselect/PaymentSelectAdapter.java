@@ -25,19 +25,19 @@ import java.util.ArrayList;
 
 import au.com.dealsdirect.R;
 import au.com.dealsdirect.data.network.model.checkout.getuserpaymentmethods.PaymentMethod;
+import au.com.dealsdirect.data.network.model.ourpaydashboard.Payment;
 import au.com.dealsdirect.ui.main.MainActivity;
 import au.com.dealsdirect.utils.ImageUtils;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
 public class PaymentSelectAdapter extends RecyclerView.Adapter<PaymentSelectAdapter.PaymentSelectViewHolder>
-        implements SwipeableItemAdapter<PaymentSelectAdapter.PaymentSelectViewHolder>{
+        implements SwipeableItemAdapter<PaymentSelectAdapter.PaymentSelectViewHolder> {
 
     private MainActivity mActivity;
     private ArrayList<PaymentMethod> mData;
     private PaymentSelectMvpPresenter<PaymentSelectMvpView> mPresenter;
     private boolean isFromCart = false;
-
 
     public PaymentSelectAdapter(MainActivity activity, ArrayList<PaymentMethod> data,
                                 PaymentSelectMvpPresenter<PaymentSelectMvpView> presenter,
@@ -69,10 +69,9 @@ public class PaymentSelectAdapter extends RecyclerView.Adapter<PaymentSelectAdap
         holder.itemView.setBackground(mActivity.getResources().getDrawable(R.drawable.bg_swipe_item_neutral));
         holder.container.setBackgroundColor(mActivity.getResources().getColor(R.color.transparent));
 
-        if (isFromCart) {
-            holder.itemView.setSelected(isFromCart && mActivity.getPaymentMethodSelected() != null && mActivity.getPaymentMethodSelected().equals(item));
-            holder.nameTextView.setSelected(isFromCart && mActivity.getPaymentMethodSelected() != null && mActivity.getPaymentMethodSelected().equals(item));
-        }
+        boolean isSelected = mActivity.getPaymentMethodSelected() != null && mActivity.getPaymentMethodSelected().equals(item);
+        holder.itemView.setSelected(isFromCart && isSelected);
+        holder.nameTextView.setSelected(isFromCart && isSelected);
     }
 
     @Override
@@ -121,17 +120,15 @@ public class PaymentSelectAdapter extends RecyclerView.Adapter<PaymentSelectAdap
                 @Override
                 protected void onSlideAnimationEnd() {
                     super.onSlideAnimationEnd();
-                    holder.mDeleteText.setVisibility(View.GONE);
-                    holder.container.setBackgroundColor(mActivity.getResources().getColor(R.color.transparent));
-                    holder.parent.setBackground(mActivity.getResources().getDrawable(R.drawable.bg_swipe_item_neutral, null));
+                    mData.remove(mData.get(position));
+                    notifyItemRemoved(position);
+                    notifyItemChanged(position);
                 }
 
                 @Override
                 protected void onPerformAction() {
                     super.onPerformAction();
                     mPresenter.removeUserPaymentMethod(mData.get(position));
-                    notifyItemRemoved(position);
-                    notifyDataSetChanged();
                 }
 
                 // Optionally, you can override these three methods

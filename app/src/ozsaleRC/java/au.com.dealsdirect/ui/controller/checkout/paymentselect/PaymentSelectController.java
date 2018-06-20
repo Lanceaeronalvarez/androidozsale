@@ -57,6 +57,8 @@ public class PaymentSelectController extends BasePullToRefreshController impleme
     TextView mPaymentSelectToolbarTitle;
     @BindView(R.id.no_payment_method_placeholder)
     LinearLayout mNoPaymentPlaceholder;
+    @BindView(R.id.controller_payment_description_text)
+    TextView mPaymentSubtitleText;
 
     private CheckoutMvpView mCheckoutMvpView;
 
@@ -118,17 +120,20 @@ public class PaymentSelectController extends BasePullToRefreshController impleme
         int backstackSize = getRouter().getBackstackSize();
         String checkoutTag = getRouter().getBackstack().get(backstackSize - 1).tag();
 
-        for(int i = 0; i < paymentMethods.size(); i++) {
+        for (int i = 0; i < paymentMethods.size(); i++) {
             paymentMethods.get(i).setId(i);
         }
 
-        if (paymentMethods != null && paymentMethods.size() > 0) {
+        boolean hasPaymentMethod = paymentMethods.size() > 0;
+        mPaymentSubtitleText.setVisibility(hasPaymentMethod ? View.VISIBLE : View.GONE);
+
+        if (paymentMethods != null && hasPaymentMethod) {
             mPaymentMethods = new ArrayList<>(paymentMethods);
             mAdapter.replaceData(mPaymentMethods);
             showPaymentMethodsPlaceholder(false);
         } else if (checkoutTag == getActivity().getString(R.string.checkout_controller)
                 && (paymentMethods == null
-                || paymentMethods.size() == 0)) {
+                || !hasPaymentMethod)) {
             GateKeeper.push(getRouter(),
                     GateKeeper.Destination.PAYMENT_ADD,
                     new BundleBuilder(new Bundle())
@@ -137,19 +142,14 @@ public class PaymentSelectController extends BasePullToRefreshController impleme
                             .build()
                     , new HorizontalChangeHandler()
                     , new HorizontalChangeHandler());
-        } else if (paymentMethods.size() == 0) {
+        } else if (!hasPaymentMethod) {
             showPaymentMethodsPlaceholder(true);
         }
     }
 
-    private void showPaymentMethodsPlaceholder(boolean val) {
-        if (val) {
-            mNoPaymentPlaceholder.setVisibility(View.VISIBLE);
-            mRecyclerView.setVisibility(View.GONE);
-        } else {
-            mNoPaymentPlaceholder.setVisibility(View.GONE);
-            mRecyclerView.setVisibility(View.VISIBLE);
-        }
+    private void showPaymentMethodsPlaceholder(boolean isPlaceholderVisible) {
+        mNoPaymentPlaceholder.setVisibility(isPlaceholderVisible ? View.VISIBLE : View.GONE);
+        mRecyclerView.setVisibility(isPlaceholderVisible ? View.GONE : View.VISIBLE);
     }
 
     @Override
@@ -161,16 +161,20 @@ public class PaymentSelectController extends BasePullToRefreshController impleme
             CustomAlertDialog.showCustomAlertDialog(mActivity, CustomAlertDialog.CustomDialogIconState.POSITIVE, mActivity.getString(R.string.remove_payment_method));
 
             mPaymentMethods.remove(paymentMethod);
-            mAdapter.notifyDataSetChanged();
 
-            if (mAdapter.getItemCount() == 0) {
-                showPaymentMethodsPlaceholder(true);
-            }
+            boolean hasPaymentMethod = mAdapter.getItemCount() > 0;
+            mPaymentSubtitleText.setVisibility(hasPaymentMethod ? View.VISIBLE : View.GONE);
+            showPaymentMethodsPlaceholder(!hasPaymentMethod);
 
         } else {
             CustomAlertDialog.showCustomAlertDialog(mActivity, CustomAlertDialog.CustomDialogIconState.NEGATIVE, message);
-
+            removePaymentFailed();
         }
+    }
+
+    @Override
+    public void removePaymentFailed() {
+        mAdapter.replaceData(mPaymentMethods);
     }
 
     @Override
@@ -191,7 +195,7 @@ public class PaymentSelectController extends BasePullToRefreshController impleme
 
         ((SimpleItemAnimator) mRecyclerView.getItemAnimator()).setSupportsChangeAnimations(false);
         recyclerViewSwipeManager.attachRecyclerView(mRecyclerView);
-        mRecyclerView.addItemDecoration(new SimpleDividerItemDecoration(mActivity,SimpleDividerItemDecoration.VERTICAL_LIST));
+        mRecyclerView.addItemDecoration(new SimpleDividerItemDecoration(mActivity, SimpleDividerItemDecoration.VERTICAL_LIST));
 
         if (isFromCart) {
             mRecyclerView.addOnItemTouchListener(new RecyclerOnTouchListener(mActivity, (v, position) -> {

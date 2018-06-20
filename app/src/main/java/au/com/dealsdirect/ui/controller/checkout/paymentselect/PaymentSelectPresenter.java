@@ -52,6 +52,12 @@ public class PaymentSelectPresenter<V extends PaymentSelectMvpView> extends Base
                                 ((RemoveUserPaymentMethod.ResponseValue) response).isAuthenticated(),
                         ((RemoveUserPaymentMethod.ResponseValue) response).getMessage());
             }
+
+            @Override
+            public void onFailure(Throwable t) {
+                super.onFailure(t);
+                getMvpView().removePaymentFailed();
+            }
         });
     }
 }

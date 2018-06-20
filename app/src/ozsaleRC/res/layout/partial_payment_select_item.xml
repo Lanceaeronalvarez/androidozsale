@@ -74,6 +74,5 @@
     </FrameLayout>
 
     <View style="@style/horizontalBorderView"
-        android:layout_marginTop="@dimen/margin_extra_small"
         android:layout_below="@id/controller_payment_select_container"/>
 </RelativeLayout>
