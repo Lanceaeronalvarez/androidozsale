@@ -171,10 +171,10 @@ public class AddPaymentController extends VisaCheckoutController implements AddP
             }
         });
 
-        if (((MainActivity) getActivity()).isBraintreeInitialized()) {
+        if (mActivity.isBraintreeInitialized()) {
             showPaymentButtons();
         } else {
-            ((MainActivity) getActivity()).fetchAuthorization(new FetchTokenHandler() {
+            mActivity.fetchAuthorization(new FetchTokenHandler() {
                 @Override
                 public void onSuccess() {
                     showPaymentButtons();

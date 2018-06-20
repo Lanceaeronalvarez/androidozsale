@@ -72,7 +72,8 @@ public class AccountController extends BaseController implements AccountMvpView,
     @BindView(R.id.account_recycler_view)
     RecyclerView mAccountRecyclerView;
 
-    @Nullable @BindView(R.id.account_detail_container)
+    @Nullable
+    @BindView(R.id.account_detail_container)
     ViewGroup mAccountDetailContainer;
 
     @Inject
@@ -267,9 +268,9 @@ public class AccountController extends BaseController implements AccountMvpView,
             //needed to tag this transaction
             //for future improvement, allow setting tag in gatekeeper.
             getRouter().pushController(RouterTransaction.with(CurrentReturnsController.newInstance())
-                .tag(getString(R.string.current_returns_controller))
-                .pushChangeHandler(new HorizontalChangeHandler())
-                .popChangeHandler(new HorizontalChangeHandler()));
+                    .tag(getString(R.string.current_returns_controller))
+                    .pushChangeHandler(new HorizontalChangeHandler())
+                    .popChangeHandler(new HorizontalChangeHandler()));
         } else {
             GateKeeper.setRoot(getDisplayRouter(), GateKeeper.Destination.CURRENT_RETURNS, RouterTransaction.with(CurrentReturnsController.newInstance()));
         }
@@ -354,14 +355,14 @@ public class AccountController extends BaseController implements AccountMvpView,
             public void success() {
                 mPresenter.onAttach(mvpView);
                 mActivity.callGCMRegisterSubscriber();
-                if(mRightToolbarButton != null) {
+                if (mRightToolbarButton != null) {
                     mRightToolbarButton.setImageDrawable(getActivity().getResources().getDrawable(R.drawable.ic_account_logout));
                 }
                 mActivity.getMainController().getHomeController().resetRouters();
-                if(mPresenter.isTablet()){
+                if (mPresenter.isTablet()) {
                     mActivity.getMainController().getHomeController().resetAccountRouter();
                 } else {
-                    mPresenter.onAccountItemClick(mActivity,option,position);
+                    mPresenter.onAccountItemClick(mActivity, option, position);
                 }
             }
 
@@ -384,7 +385,7 @@ public class AccountController extends BaseController implements AccountMvpView,
 
                 //reset routers with unique user info
                 mActivity.getMainController().getHomeController().resetRouters();
-                if(mPresenter.isTablet()){
+                if (mPresenter.isTablet()) {
                     mActivity.setShopsAsVisibleContainer();
                 }
                 CustomAlertDialog.showCustomAlertDialog(getActivity(),
@@ -427,7 +428,7 @@ public class AccountController extends BaseController implements AccountMvpView,
 
     @Override
     public boolean handleBack() {
-        if(mAccountDetailRouter != null && mAccountDetailRouter.getBackstackSize() == 1){
+        if (mAccountDetailRouter != null && mAccountDetailRouter.getBackstackSize() == 1) {
             mActivity.getHomeController().resetVisibleContainer();
             return true;
         }
