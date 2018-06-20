@@ -1,20 +1,28 @@
 package au.com.dealsdirect.data.network.model.saleitemdetails;
 
 import com.google.gson.annotations.Expose;
-import com.newrelic.com.google.gson.annotations.SerializedName;
+import com.google.gson.annotations.SerializedName;
+
+import org.json.JSONObject;
+
+import java.util.HashMap;
 
 /**
  * Created by smartwave on 11/07/2017.
  */
 
 public class AddToCartRequest {
+
+    @SerializedName("personalizationData")
     @Expose
-    @SerializedName("skudId")
+    private HashMap<String, String> personalizationData;
+    @SerializedName("skuId")
+    @Expose
     private String skuId;
 
-    private String itemName;
+    private transient String itemName;
 
-    private double price;
+    private transient double price;
 
     public String getSkuId() {
         return skuId;
@@ -38,5 +46,13 @@ public class AddToCartRequest {
 
     public void setPrice(double price) {
         this.price = price;
+    }
+
+    public HashMap<String, String> getPersonalizationData() {
+        return personalizationData;
+    }
+
+    public void setPersonalizationData(HashMap<String, String> personalizationData) {
+        this.personalizationData = personalizationData;
     }
 }

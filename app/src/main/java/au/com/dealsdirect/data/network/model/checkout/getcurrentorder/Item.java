@@ -5,6 +5,10 @@ package au.com.dealsdirect.data.network.model.checkout.getcurrentorder;
 
 import com.google.gson.annotations.SerializedName;
 
+import java.util.List;
+
+import au.com.dealsdirect.data.network.model.saleitemdetails.Personalisation;
+
 public class Item {
 
     public String getId() {
@@ -51,6 +55,10 @@ public class Item {
         return saleID;
     }
 
+    public List<Personalisation.CustomizableItemDetails> getCustomizableItemDetailsList() {
+        return customizableItemDetailsList;
+    }
+
     @SerializedName("ID")
     public String id;
     @SerializedName("ItemID")
@@ -73,4 +81,6 @@ public class Item {
     public String fileName;
     @SerializedName("SaleID")
     public String saleID;
+    @SerializedName("CustomizableItemDetails")
+    private List<Personalisation.CustomizableItemDetails> customizableItemDetailsList;
 }

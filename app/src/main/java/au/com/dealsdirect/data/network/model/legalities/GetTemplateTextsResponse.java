@@ -100,6 +100,9 @@ public class GetTemplateTextsResponse {
         @SerializedName("_OurPaySelectTermsAndConditionsBody")
         @Expose
         private String deliveryOptionOPSTncBody;
+        @SerializedName("_PleaseFillPersonalization")
+        @Expose
+        private String personalisationValidation;
 
         public String getCheckoutMyPayPayExceedLimit() {
             return checkoutMyPayPayExceedLimit;
@@ -223,6 +226,10 @@ public class GetTemplateTextsResponse {
 
         public String getDeliveryOptionOPSTncBody() {
             return deliveryOptionOPSTncBody;
+        }
+
+        public String getPersonalisationValidation() {
+            return personalisationValidation;
         }
     }
 }

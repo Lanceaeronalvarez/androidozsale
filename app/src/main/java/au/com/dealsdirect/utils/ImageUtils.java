@@ -43,7 +43,7 @@ public class ImageUtils {
                 .into(imageView);
     }
 
-    public static void loadImageDontAnimate(Context context, String url, ImageView imageView){
+    public static void loadImageDontAnimate(Context context, String url, ImageView imageView) {
         Glide.with(context)
                 .load(url)
                 .asBitmap()
@@ -152,6 +152,8 @@ public class ImageUtils {
     }
 
     private static String appendBannerSizeUrl(String url, String bannerSize) {
+
+        if (url.equals("")) return url;
 
         String removedExtension = url.substring(0, url.lastIndexOf('.'));
 

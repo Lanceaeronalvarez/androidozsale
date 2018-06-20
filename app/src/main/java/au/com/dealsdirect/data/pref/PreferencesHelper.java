@@ -117,6 +117,10 @@ public interface PreferencesHelper {
 
     int getVisaCheckoutProviderType();
 
+    void setPersonalisationTemplateTexts(GetTemplateTextsResponse.GetTemplateTextsValue value);
+
+    String getPersonalisationTemplateTexts();
+
     void setMyPayTemplateTexts(GetTemplateTextsResponse.GetTemplateTextsValue value);
 
     void setDeliveryOptionsTemplateTexts(GetTemplateTextsResponse.GetTemplateTextsValue value);

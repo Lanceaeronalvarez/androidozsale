@@ -17,6 +17,7 @@ import java.util.List;
 import au.com.dealsdirect.R;
 import au.com.dealsdirect.data.network.model.checkout.getcurrentorder.Item;
 import au.com.dealsdirect.ui.controller.shops.adapter.BannersAdapter;
+import au.com.dealsdirect.ui.custom.PersonalisationLayout;
 import au.com.dealsdirect.ui.custom.ProductQuantityLayout;
 import au.com.dealsdirect.utils.ImageUtils;
 import au.com.dealsdirect.utils.LegacyStringImageUtils;
@@ -70,6 +71,8 @@ public class CheckoutOrderAdapter extends RecyclerView.Adapter<CheckoutOrderAdap
         }
         holder.colorText.setVisibility(View.GONE);
 
+        holder.personalisationLayout.inflateForCheckout(mContext, item.getCustomizableItemDetailsList());
+
         holder.price.setText(PriceUtils.getPriceStringValue(item.price));
         holder.quantityLayout.setMax(MAX_ITEM_QTY);
         holder.quantityLayout.setQuantity(item.qty);
@@ -120,6 +123,8 @@ public class CheckoutOrderAdapter extends RecyclerView.Adapter<CheckoutOrderAdap
         ProductQuantityLayout quantityLayout;
         @BindView(R.id.item_subtotal_price)
         TextView subTotal;
+        @BindView(R.id.item_checkout_personalisation_layout)
+        PersonalisationLayout personalisationLayout;
 
         public ViewHolder(View itemView) {
             super(itemView);

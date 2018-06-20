@@ -42,7 +42,8 @@ captures/
 .DS_Store
 
 # Fastlane autogen
-report.xml
+fastlane/report.xml
+fastlane/README.md
 
 # New Relic autogen
 newrelic.properties

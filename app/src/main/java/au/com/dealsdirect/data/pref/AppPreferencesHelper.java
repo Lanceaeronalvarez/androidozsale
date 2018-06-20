@@ -100,6 +100,9 @@ public class AppPreferencesHelper implements PreferencesHelper {
     private static final String EVENT_USER_ID = "event_user_id";
     private static final String COOKIES = "network_cookies";
 
+    /* PERSONALISATION */
+    private static final String PERSONALISATION_VALIDATION = "PERSONALISATION_VALIDATION";
+
 
     private Context mContext;
 
@@ -433,6 +436,16 @@ public class AppPreferencesHelper implements PreferencesHelper {
     @Override
     public int getVisaCheckoutProviderType() {
         return Prefs.getInt(VCO_PROVIDERTYPE, -1);
+    }
+
+    @Override
+    public void setPersonalisationTemplateTexts(GetTemplateTextsResponse.GetTemplateTextsValue value) {
+        Prefs.putString(PERSONALISATION_VALIDATION, value.getPersonalisationValidation());
+    }
+
+    @Override
+    public String getPersonalisationTemplateTexts() {
+        return Prefs.getString(PERSONALISATION_VALIDATION, "");
     }
 
     @Override

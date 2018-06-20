@@ -5,6 +5,7 @@
     android:layout_height="@dimen/default_viewholder_item_height"
     android:paddingLeft="15dp"
     android:orientation="vertical"
+    android:background="@color/white"
     android:clickable="true">
 
     <ImageView

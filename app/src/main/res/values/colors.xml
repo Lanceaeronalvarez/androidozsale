@@ -161,6 +161,7 @@
     <!--MyAccounts TB Background/panel color -->
     <color name="menu_panel_gray">#4B6171</color>
     <color name="menu_panel_gray_selected">#455B6A</color>
+    <color name="personalisation_error_color">#FF3B30</color>
 
     <color name="splash_background_color">@color/toolbar_skin</color>
 

@@ -844,6 +844,16 @@ public class AppDataManager implements DataManager {
     }
 
     @Override
+    public void setPersonalisationTemplateTexts(GetTemplateTextsResponse.GetTemplateTextsValue value) {
+        mPreferencesHelper.setPersonalisationTemplateTexts(value);
+    }
+
+    @Override
+    public String getPersonalisationTemplateTexts() {
+        return mPreferencesHelper.getPersonalisationTemplateTexts();
+    }
+
+    @Override
     public void setMyPayTemplateTexts(GetTemplateTextsResponse.GetTemplateTextsValue value) {
         Log.d("Checkout", "set my pay template texts");
         mPreferencesHelper.setMyPayTemplateTexts(value);

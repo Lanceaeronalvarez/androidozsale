@@ -5,12 +5,20 @@
     
     
       
-      <testcase classname="fastlane.lanes" name="0: Verifying required fastlane version" time="0.003088">
+<<<<<<< HEAD
+      <testcase classname="fastlane.lanes" name="0: Verifying fastlane version" time="0.004615">
+=======
+      <testcase classname="fastlane.lanes" name="0: Verifying fastlane version" time="0.009769">
+>>>>>>> ea476bc... build.gradle - update version codes for DD and TB
         
       </testcase>
     
       
-      <testcase classname="fastlane.lanes" name="1: default_platform" time="0.003812">
+<<<<<<< HEAD
+      <testcase classname="fastlane.lanes" name="1: default_platform" time="0.004812">
+=======
+      <testcase classname="fastlane.lanes" name="1: default_platform" time="0.004414">
+>>>>>>> ea476bc... build.gradle - update version codes for DD and TB
         
       </testcase>
     
@@ -25,7 +33,11 @@
   michael@smartwave.ph,
   EricaPena@mysale.com,
   jc@apacsale.com
-&quot; apk_name:app-topbuyTest-release.apk build_variant:topbuyTestRelease app_path:/Users/pauldesilva/Documents/AndroidDealsDirect app_flavor:topbuyTest" time="351.836184">
+<<<<<<< HEAD
+&quot; apk_name:app-topbuyTest-release.apk build_variant:topbuyTestRelease app_path:/Users/Ayi/Drive/Projects/Android/AndroidDealsDirect app_flavor:topbuyTest" time="412.633442">
+=======
+&quot; apk_name:app-topbuyRC-release.apk build_variant:topbuyRCRelease app_path:/Users/Ayi/Drive/Projects/Android/AndroidDealsDirect app_flavor:topbuyRC" time="596.327762">
+>>>>>>> ea476bc... build.gradle - update version codes for DD and TB
         
       </testcase>
     

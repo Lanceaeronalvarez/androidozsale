@@ -62,7 +62,6 @@ public class ArcTranslateAnimation extends Animation {
     protected void applyTransformation(float interpolatedTime, Transformation t) {
         float dx = calcBezier(interpolatedTime, start.x, middle.x, end.x);
         float dy = calcBezier(interpolatedTime, start.y, middle.y, end.y);
-        Log.d("dx,dy", dx+","+dy);
 
         t.getMatrix().setScale(1 - interpolatedTime,1 - interpolatedTime);
         t.getMatrix().postRotate(interpolatedTime * 45, 100, 100);

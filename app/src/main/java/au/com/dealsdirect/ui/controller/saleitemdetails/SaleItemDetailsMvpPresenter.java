@@ -23,4 +23,5 @@ public interface SaleItemDetailsMvpPresenter<V extends MvpView> extends MvpPrese
 
     void callGetBasketItemsQuantity();
 
+    String getPersonalisationErrorText();
 }
