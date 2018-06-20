@@ -32,14 +32,12 @@ public final class ApiEndPoint {
 
     private static final String COCOSA_SERVICE = "CocosaService.asmx/";
     /* API Constants */
-    private static final String API_HOST = "https://www.dealsdirect.com.au/";
-
     private static final String API_VERSION = "api/v1/";
 
     private static final String HANDLER_PREFIX = "handler.ashx/";
     private static final String HANDLER_ASMX_PREFIX = "handler.ashx/";
-    private static final String BASE_URL = API_HOST + HANDLER_PREFIX;
-    private static final String BASE_URL_ASMX = API_HOST + HANDLER_ASMX_PREFIX;
+    private static final String BASE_URL = getBaseApiGenie() + HANDLER_PREFIX;
+    private static final String BASE_URL_ASMX = getBaseApiGenie() + HANDLER_ASMX_PREFIX;
 
     /*SMS VERIFICATION*/
     public static final String SMS_VERIFICATION_NORMALIZE_PHONE = getBaseApiLegacy()+ "NormalizePhone";
