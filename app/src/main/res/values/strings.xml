@@ -389,6 +389,10 @@
     <string name="account_tnc">Terms &amp; Conditions</string>
     <string name="account_tutorial">Tutorial</string>
     <string name="account_logout">Logout</string>
+    <string name="personalise">Personalise</string>
+    <string name="please_fill_up_personalisation_details">Please fill up personalisation details</string>
+    <string name="max_characters">Max characters:&#160;</string>
+    <string name="this_is_a_required_field">This is a required field</string>
 
 
     <string name="voucher_used">Voucher Used</string>

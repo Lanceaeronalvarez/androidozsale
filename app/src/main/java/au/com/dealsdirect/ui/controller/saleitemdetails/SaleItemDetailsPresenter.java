@@ -178,4 +178,9 @@ public class SaleItemDetailsPresenter<V extends SaleItemDetailsMvpView> extends 
                 })
         );
     }
+
+    @Override
+    public String getPersonalisationErrorText() {
+        return getDataManager().getPersonalisationTemplateTexts();
+    }
 }

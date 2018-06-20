@@ -78,6 +78,12 @@
                 tools:text="AU 14" />
         </LinearLayout>
 
+        <au.com.dealsdirect.ui.custom.PersonalisationLayout
+            android:id="@+id/item_checkout_personalisation_layout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:visibility="gone" />
+
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -120,7 +126,6 @@
                 tools:text="$19.00" />
 
         </LinearLayout>
-
 
         <au.com.dealsdirect.ui.custom.ProductQuantityLayout
             android:id="@+id/item_checkout_quantity"

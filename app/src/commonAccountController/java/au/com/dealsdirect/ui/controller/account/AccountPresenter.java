@@ -30,7 +30,7 @@ public class AccountPresenter<V extends AccountMvpView> extends BasePresenter<V>
     @Override
     public void onAccountItemClick(int option) {
 
-        if (getMvpView().isChangeInProgress()) {
+        if (!isViewAttached() || getMvpView().isChangeInProgress()) {
             return;
         }
 
@@ -114,12 +114,12 @@ public class AccountPresenter<V extends AccountMvpView> extends BasePresenter<V>
         List<Integer> mAccountImages = drawable;
 
 
-        if(!getDataManager().getIsMultiCountry() && mAccountItems.indexOf(R.string.account_country) != -1){
+        if (!getDataManager().getIsMultiCountry() && mAccountItems.indexOf(R.string.account_country) != -1) {
             mAccountItems.remove(mAccountItems.indexOf(R.string.account_country));
             mAccountImages.remove(mAccountImages.indexOf(R.drawable.bg_account_country));
         }
 
-        if(!getDataManager().getIsMultiLanguage() && mAccountItems.indexOf(R.string.account_language) != -1){
+        if (!getDataManager().getIsMultiLanguage() && mAccountItems.indexOf(R.string.account_language) != -1) {
             mAccountItems.remove(mAccountItems.indexOf(R.string.account_language));
             mAccountImages.remove(mAccountImages.indexOf(R.drawable.bg_account_languages));
         }

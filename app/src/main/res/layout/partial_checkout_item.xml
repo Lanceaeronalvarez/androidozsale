@@ -98,6 +98,12 @@
                 tools:text="AU 14" />
         </LinearLayout>
 
+        <au.com.dealsdirect.ui.custom.PersonalisationLayout
+            android:id="@+id/item_checkout_personalisation_layout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:visibility="gone" />
+
         <!--Insert Quantity Indicator here-->
 
         <au.com.dealsdirect.ui.custom.ProductQuantityLayout

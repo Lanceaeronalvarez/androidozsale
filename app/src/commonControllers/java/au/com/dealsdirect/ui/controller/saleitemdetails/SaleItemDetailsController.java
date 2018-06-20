@@ -28,6 +28,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.aurelhubert.ahbottomnavigation.AHBottomNavigation;
+import com.google.gson.Gson;
 import com.lsjwzh.widget.recyclerviewpager.RecyclerViewPager;
 import com.mysale.genie.utility.RxBus;
 import com.zhy.view.flowlayout.FlowLayout;
@@ -44,15 +45,18 @@ import au.com.dealsdirect.R;
 import au.com.dealsdirect.data.auth.AuthHandler;
 import au.com.dealsdirect.data.network.model.saleitemdetails.AddToCartRequest;
 import au.com.dealsdirect.data.network.model.saleitemdetails.GetSaleItemDetailsResponse;
+import au.com.dealsdirect.data.network.model.saleitemdetails.Personalisation;
 import au.com.dealsdirect.service.ourpay.Ourpay;
 import au.com.dealsdirect.ui.base.BaseController;
 import au.com.dealsdirect.ui.controller.saleitemdetails.listener.LoadImagesListener;
 import au.com.dealsdirect.ui.custom.ArcTranslateAnimation;
 import au.com.dealsdirect.ui.custom.CustomAlertDialog;
+import au.com.dealsdirect.ui.custom.PersonalisationLayout;
 import au.com.dealsdirect.utils.BundleBuilder;
 import au.com.dealsdirect.utils.CartUtil;
 import au.com.dealsdirect.utils.ImageUtils;
 import au.com.dealsdirect.utils.IntrospectionUtils;
+import au.com.dealsdirect.utils.KeyboardUtils;
 import au.com.dealsdirect.utils.PriceUtils;
 import au.com.dealsdirect.widget.ElasticDragDismissFrameLayout;
 import butterknife.BindView;
@@ -109,6 +113,8 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
     ViewGroup mSizesContainer;
     @BindView(R.id.product_details_size_list)
     TagFlowLayout mSizesFlowLayout;
+    @BindView(R.id.product_details_personalisation_layout)
+    PersonalisationLayout mPersonalisationLayout;
     @BindView(R.id.product_details_shipping_desc_container)
     LinearLayout mShippingContainer;
     @BindView(R.id.product_details_shipping_desc_webview)
@@ -341,6 +347,7 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
 
     @Override
     protected void onDestroyView(@NonNull View view) {
+        KeyboardUtils.hideSoftInput(mActivity);
         mPresenter.onDetach();
         super.onDestroyView(view);
     }
@@ -352,6 +359,7 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
         Animation anim = AnimationUtils.loadAnimation(mActivity, R.anim.slide_to_bottom);
         anim.setDuration(200);
 
+        String personalisation = saleDetail.getPersonalisation();
         String deliveryInformation = saleDetail.getDeliveryInformation();
         String shippingInformation = saleDetail.getShippingInformation();
         String shippingPricing = saleDetail.getPricing();
@@ -369,6 +377,11 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
         mProductBrand.setText(brandName.trim());
         mProductPrice.setText(PriceUtils.getPriceStringValue(saleDetail.getPrice().getValue()));
         mProductPreviousPrice.setText(PriceUtils.getRpStringValue(saleDetail.getOriginalPrice().getValue()));
+
+        if (personalisation != null) {
+            mPersonalisationLayout.inflateForProductDetails(mActivity, new Gson().fromJson(
+                    personalisation, Personalisation.class));
+        }
 
         if (shippingInformation != null) {
 
@@ -554,18 +567,24 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
         request.setSkuId(mSkuId);
         request.setItemName(mSaleName);
         request.setPrice(Double.valueOf(mSalePrice.substring(1)));
+        request.setPersonalizationData(mPersonalisationLayout.getDataForAddToCart());
 
-        if (hasSizes) {
-            if (!didSelectSize) {
-                CustomAlertDialog.showCustomAlertDialog(
-                        mActivity,
-                        CustomAlertDialog.CustomDialogIconState.NEGATIVE,
-                        mActivity.getString(R.string.please_select_size));
+        boolean isSizeValid = !(hasSizes && !didSelectSize);
 
-                mProductDetailScrollView.scrollTo(0, mProductDetailBottomCard.getTop());
-            } else {
-                verifyAddToCart(request);
-            }
+        boolean isPersonalisationValid = mPersonalisationLayout.verifyRequiredFields();
+
+        String personalisationError = !mPresenter.getPersonalisationErrorText().equals("") ?
+                mPresenter.getPersonalisationErrorText() :
+                mActivity.getString(R.string.please_fill_up_personalisation_details);
+
+        if (!isSizeValid || !isPersonalisationValid) {
+            CustomAlertDialog.showCustomAlertDialog(
+                    mActivity,
+                    CustomAlertDialog.CustomDialogIconState.NEGATIVE,
+                    !isSizeValid ? mActivity.getString(R.string.please_select_size) :
+                            personalisationError);
+
+            mProductDetailScrollView.scrollTo(0, mProductDetailBottomCard.getTop());
         } else {
             verifyAddToCart(request);
         }

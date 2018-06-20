@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<TextView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/personalisation_section_header_text"
+    fontPath="@string/font_app_bold"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:padding="5dp"
+    android:text="@string/personalise"
+    android:textColor="@color/color_item_title"
+    android:textSize="@dimen/text_size_body"
+    tools:ignore="MissingPrefix" />

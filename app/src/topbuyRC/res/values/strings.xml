@@ -137,6 +137,7 @@
     <string name="account_tnc">terms &amp; conditions</string>
     <string name="account_tutorial">tutorial</string>
     <string name="account_logout">logout</string>
+    <string name="personalise">personalise</string>
 
     <string-array name="account_title_array">
         <item>@string/account_orders</item>

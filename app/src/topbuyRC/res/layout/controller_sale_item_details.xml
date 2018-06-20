@@ -237,6 +237,12 @@
 
                         </RelativeLayout>
 
+                        <au.com.dealsdirect.ui.custom.PersonalisationLayout
+                            android:id="@+id/product_details_personalisation_layout"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:visibility="gone" />
+
                         <LinearLayout
                             android:id="@+id/product_description_container"
                             android:layout_width="match_parent"

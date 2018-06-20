@@ -68,6 +68,7 @@ public class MainPresenter<V extends MainMvpView> extends BasePresenter<V> imple
     public static final String KEY_OURPAY_TC_TEXT = "_OurPayTC_text"; // Using web's template text for hyper link
     public static final String KEY_OURPAY_TC_VALIDATION_FAILED = "_OurPayTCValidationFailed";
     public static final String KEY_PAYMENT_SCHEDULE = "_PaymentSchedule";
+    public static final String KEY_PERSONALISATION_VALIDATION = "_PleaseFillPersonalization";
 
     //    DELIVERY OPTIONS/OURPAY SELECT
     public static final String KEY_DELIVERYOPTION_OPS_FREE = "_Free";
@@ -107,7 +108,8 @@ public class MainPresenter<V extends MainMvpView> extends BasePresenter<V> imple
             KEY_OURPAY_OPS_INFO_REMAINING_BEFORE_PURCHASE_FREE_DELIVERY,
             KEY_OURPAY_OPS_INFO_REMAINING_BEFORE_PURCHASE_FREE_DELIVERY,
             KEY_OURPAY_OPS_TNC_HEADER,
-            KEY_OURPAY_OPS_TNC_BODY
+            KEY_OURPAY_OPS_TNC_BODY,
+            KEY_PERSONALISATION_VALIDATION //10
     };
 
     @Inject
@@ -741,6 +743,7 @@ public class MainPresenter<V extends MainMvpView> extends BasePresenter<V> imple
                 .subscribe(getTemplateTextsResponse -> {
                     getDataManager().setMyPayTemplateTexts(getTemplateTextsResponse.getResponse().getValue());
                     getDataManager().setDeliveryOptionsTemplateTexts(getTemplateTextsResponse.getResponse().getValue());
+                    getDataManager().setPersonalisationTemplateTexts(getTemplateTextsResponse.getResponse().getValue());
                     getMvpView().storeTemplateTexts(getTemplateTextsResponse.getResponse().getValue());
 
                 }, throwable -> {

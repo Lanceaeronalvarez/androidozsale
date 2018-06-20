@@ -11,6 +11,9 @@ import au.com.dealsdirect.data.network.model.checkout.getcurrentorder.PaymentCon
 
 public class GetSaleItemDetailsResponse {
 
+    @SerializedName("personalizationSchema")
+    @Expose
+    private String personalisation;
     @SerializedName("skuVariants")
     @Expose
     private List<GetSaleItemDetailsResponse> skuVariants = null;
@@ -88,6 +91,14 @@ public class GetSaleItemDetailsResponse {
     @SerializedName("MyPayDetails")
     @Expose
     private String myPayDetails;
+
+    public String getPersonalisation() {
+        return personalisation;
+    }
+
+    public void setPersonalisation(String personalisation) {
+        this.personalisation = personalisation;
+    }
 
     public List<GetSaleItemDetailsResponse> getSkuVariants() {
         return skuVariants;
