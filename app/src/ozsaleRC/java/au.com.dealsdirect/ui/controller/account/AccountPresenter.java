@@ -11,6 +11,7 @@ import au.com.dealsdirect.R;
 import au.com.dealsdirect.data.DataManager;
 import au.com.dealsdirect.ui.base.BasePresenter;
 import au.com.dealsdirect.ui.controller.account.model.AccountItem;
+import au.com.dealsdirect.utils.BundleKeys;
 import au.com.dealsdirect.utils.rx.SchedulerProvider;
 import io.reactivex.disposables.CompositeDisposable;
 
@@ -75,11 +76,11 @@ public class AccountPresenter<V extends AccountMvpView> extends BasePresenter<V>
         if (option.equals(context.getString(R.string.account_language))) {
             getMvpView().showLanguage();
         } else if (option.equals(context.getString(R.string.account_about_us))) {
-            getMvpView().showLegalities("aboutus", option);
+            getMvpView().showLegalities(BundleKeys.TEMPLATE_KEY_ABOUT_US, option);
         } else if (option.equals(context.getString(R.string.account_privacy))) {
-            getMvpView().showLegalities("PrivacyPolicy_Text", option);
+            getMvpView().showLegalities(BundleKeys.TEMPLATE_KEY_PRIVACY, option);
         } else if (option.equals(context.getString(R.string.account_tnc))) {
-            getMvpView().showLegalities("TermsAndConditions_Text", option);
+            getMvpView().showLegalities(BundleKeys.TEMPLATE_KEY_TNC, option);
         } else if (option.equals(context.getString(R.string.account_contact_us))) {
             getMvpView().showContactUs();
         } else if (option.equals(context.getString(R.string.account_country))) {

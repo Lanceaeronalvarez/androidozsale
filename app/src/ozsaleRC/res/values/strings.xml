@@ -9,6 +9,7 @@
     <string name="not_a_member_yet">Not a member?</string>
     <string name="forgot_password">Forgot Password?</string>
     <string name="forgot_password_title">Forgot Password</string>
+    <string name="register_title">Registration</string>
     <string name="username">Username</string>
     <string name="marydoe_ourpay">marydoe.ourpay</string>
     <string name="password">Password</string>
