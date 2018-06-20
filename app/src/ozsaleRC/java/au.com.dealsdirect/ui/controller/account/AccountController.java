@@ -59,7 +59,6 @@ public class AccountController extends BaseController implements AccountMvpView,
     public static final String TAG = "AccountController";
     AccountItemAdapter mAccountItemAdapter;
 
-
     @BindView(R.id.partial_toolbar_title)
     TextView mTitleTextView;
 
@@ -67,7 +66,7 @@ public class AccountController extends BaseController implements AccountMvpView,
     ImageButton mLeftToolbarButton;
 
     @BindView(R.id.partial_toolbar_right_view)
-    ImageButton mRightToolbarButton;
+    TextView mRightToolbarButton;
 
     @BindView(R.id.account_recycler_view)
     RecyclerView mAccountRecyclerView;
@@ -167,7 +166,12 @@ public class AccountController extends BaseController implements AccountMvpView,
             }
 
             if (title.equals(getString(R.string.account_options))) {
-                newAccountItem = new AccountItem(i, title, createSubAccountItems(R.array.account_options_sub_item_title_array));
+                List optionsArray = createSubAccountItems(R.array.account_options_sub_item_title_array);
+                /* gen-8003_ozsale-check_country_option - check if multicountry, remove option otherwise */
+                if (!mPresenter.isMultiCountry())
+                    optionsArray.remove(1);
+
+                newAccountItem = new AccountItem(i, title, optionsArray);
             } else {
                 newAccountItem = new AccountItem(i, title, Collections.emptyList());
             }
@@ -350,7 +354,7 @@ public class AccountController extends BaseController implements AccountMvpView,
                 mPresenter.onAttach(mvpView);
                 mActivity.callGCMRegisterSubscriber();
                 if(mRightToolbarButton != null) {
-                    mRightToolbarButton.setImageDrawable(getActivity().getResources().getDrawable(R.drawable.ic_account_logout));
+                    mRightToolbarButton.setText(getActivity().getResources().getString(R.string.log_out));
                 }
                 mActivity.getMainController().getHomeController().resetRouters();
                 if(mPresenter.isTablet()){
@@ -373,7 +377,7 @@ public class AccountController extends BaseController implements AccountMvpView,
                 mPresenter.loadAccountItems(mAccountItems);
                 CartUtil.setValueToCart(0);
                 mActivity.getMainController().getHomeController().removeBasketItemCount();
-                mRightToolbarButton.setImageDrawable(getActivity().getResources().getDrawable(R.drawable.ic_login));
+                mRightToolbarButton.setText(getActivity().getResources().getString(R.string.log_in));
 
                 //reset routers with unique user info
                 mActivity.getMainController().getHomeController().resetRouters();
@@ -399,10 +403,10 @@ public class AccountController extends BaseController implements AccountMvpView,
     @Override
     public void initLoginDrawable() {
         if (mPresenter.isAuthorized()) {
-            mRightToolbarButton.setImageDrawable(getActivity().getResources().getDrawable(R.drawable.ic_account_logout));
+            mRightToolbarButton.setText(getActivity().getResources().getString(R.string.log_out));
 
         } else {
-            mRightToolbarButton.setImageDrawable(getActivity().getResources().getDrawable(R.drawable.ic_login));
+            mRightToolbarButton.setText(getActivity().getResources().getString(R.string.log_in));
         }
 
         mRightToolbarButton.setVisibility(View.VISIBLE);
@@ -438,7 +442,7 @@ public class AccountController extends BaseController implements AccountMvpView,
                 public void success() {
                     mPresenter.onAttach(AccountController.this);
                     mActivity.callGCMRegisterSubscriber();
-                    mRightToolbarButton.setImageDrawable(getActivity().getResources().getDrawable(R.drawable.ic_account_logout));
+                    mRightToolbarButton.setText(getActivity().getResources().getString(R.string.log_out));
                     mActivity.getMainController().getHomeController().initControllers(true);
                 }
 

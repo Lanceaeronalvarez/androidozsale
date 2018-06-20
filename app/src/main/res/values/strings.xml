@@ -383,7 +383,7 @@
     <string name="account_country">My Country</string>
     <string name="account_options">My Options</string>
     <string name="account_notification">My Notification</string>
-    <string name="account_clear_cookies_data">Clear Cookies and Data</string>
+    <string name="account_clear_cookies_data">Clear Cookies</string>
     <string name="account_about_us">About Us</string>
     <string name="account_privacy">Privacy Policy</string>
     <string name="account_tnc">Terms &amp; Conditions</string>
@@ -598,6 +598,7 @@
     <string name="customers_also_bought">customers also bought</string>
     <string name="reviews">reviews</string>
     <string name="see_more">see more</string>
+    <string name="log_out">Log Out</string>
     <bool name="is_ozsale">true</bool>
 
 </resources>
