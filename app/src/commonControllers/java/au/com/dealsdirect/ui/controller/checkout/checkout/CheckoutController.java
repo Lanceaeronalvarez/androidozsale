@@ -586,7 +586,7 @@ public class CheckoutController extends VisaCheckoutController implements Checko
             for (DeliveryOption option : deliveryOptions) {
                 if (option.getSelected()) {
                     mSelectedDeliveryOption = option;
-                    setIsOurPaySelectedDeliveryOption(mSelectedDeliveryOption);
+                    setIsOurPaySelectedDeliveryOption();
                     deliveryOptionName = option.getDeliveryOptions().get(0); //get name
                     deliveryOptionPrice = option.getPrice();
                     break;
@@ -1102,9 +1102,9 @@ public class CheckoutController extends VisaCheckoutController implements Checko
 
     }
 
-    private void setIsOurPaySelectedDeliveryOption(DeliveryOption selectedDeliveryOption) {
+    private void setIsOurPaySelectedDeliveryOption() {
         mIsOurPaySelectDeliveryOption = false;
-        if (OurpayTemplateText.DeliveryOptions.OURPAYSELECT.equalsName(selectedDeliveryOption.getDeliveryOptions().get(0))) {
+        if (OurpayTemplateText.DeliveryOptions.OURPAYSELECT.equalsName(mSelectedDeliveryOption.getDeliveryOptions().get(0))) {
             mIsOurPaySelectDeliveryOption = true;
         }
     }
