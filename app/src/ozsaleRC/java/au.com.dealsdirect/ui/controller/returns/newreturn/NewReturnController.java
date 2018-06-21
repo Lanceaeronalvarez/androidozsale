@@ -181,7 +181,7 @@ public class NewReturnController extends BaseController implements NewReturnMvpV
         createReturnRequest.items = getUpdateRequestList();
 
         if (createReturnRequest.items.size() == 0) {
-            CustomAlertDialog.showCustomAlertDialog(mActivity, CustomAlertDialog.CustomDialogIconState.NEGATIVE, mActivity.getResources().getString(R.string.please_add_count_to_an_item));
+            CustomAlertDialog.showCustomAlertDialog(mActivity, CustomAlertDialog.CustomDialogIconState.NEGATIVE, mActivity.getResources().getString(R.string.please_select_item));
         } else if (createReturnRequest.reason.isEmpty()) {
             CustomAlertDialog.showCustomAlertDialog(mActivity, CustomAlertDialog.CustomDialogIconState.NEGATIVE, getResources().getString(R.string.please_fill_up_field));
         } else {

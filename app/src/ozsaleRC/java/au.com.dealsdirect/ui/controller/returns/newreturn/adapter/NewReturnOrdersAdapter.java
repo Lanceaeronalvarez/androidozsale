@@ -62,7 +62,7 @@ public class NewReturnOrdersAdapter extends RecyclerView.Adapter<NewReturnOrderV
         String productPrice = PriceUtils.getPriceStringValue(mCurrentReturnList.get(position).getPrice());
         String productSubTotal = PriceUtils.getPriceStringValue(mCurrentReturnList.get(position).getSubtotal());
 
-        holder.newReturnItemQuantityText.setText(productItemCount);
+        holder.newReturnItemQuantityText.setText(String.valueOf(productItemCount));
         holder.newReturnItemPriceTextView.setText(productPrice);
         holder.newReturnItemSubTotalTextView.setText(productSubTotal);
         holder.newReturnItemNameTextView.setText(productName);
