@@ -55,10 +55,11 @@ import au.com.dealsdirect.ui.controller.account.AccountController;
 import au.com.dealsdirect.ui.controller.categories.CategoriesController;
 import au.com.dealsdirect.ui.controller.checkout.addpayment.AddPaymentController;
 import au.com.dealsdirect.ui.controller.checkout.checkout.CheckoutController;
+import au.com.dealsdirect.ui.controller.checkout.checkout.CheckoutMvpView;
 import au.com.dealsdirect.ui.controller.checkout.paymentsuccess.PaymentSuccessController;
 import au.com.dealsdirect.ui.controller.checkout.paymentsuccess.PaymentSuccessMvpView;
 import au.com.dealsdirect.ui.controller.home.HomeController;
-import au.com.dealsdirect.ui.controller.login.LoginHostController;
+import au.com.dealsdirect.ui.controller.login.PopUpHostController;
 import au.com.dealsdirect.ui.controller.main.MainController;
 import au.com.dealsdirect.ui.controller.saleitemdetails.SaleItemDetailsController;
 import au.com.dealsdirect.ui.controller.shops.ShopsController;
@@ -68,6 +69,8 @@ import au.com.dealsdirect.ui.controller.visacheckout.VisaCheckoutController;
 import au.com.dealsdirect.ui.custom.CustomAlertDialog;
 import au.com.dealsdirect.utils.AppConstants;
 import au.com.dealsdirect.utils.BraintreeUtils;
+import au.com.dealsdirect.utils.BundleBuilder;
+import au.com.dealsdirect.utils.BundleKeys;
 import au.com.dealsdirect.utils.DialogUtils;
 import au.com.dealsdirect.utils.IntrospectionUtils;
 import au.com.dealsdirect.utils.NetworkUtils;
@@ -291,7 +294,10 @@ public class MainActivity extends BaseActivity implements MainMvpView {
                 GateKeeper.push(router, GateKeeper.Destination.LOGIN);
             }
         } else {
-            GateKeeper.setRoot(getHomeController().getPopUpHostRouter(), GateKeeper.Destination.LOGIN_HOST, RouterTransaction.with(LoginHostController.newInstance()).
+            Bundle bundle = new BundleBuilder(new Bundle())
+                    .putSerializable(BundleKeys.KEY_POP_UP_HOST_DESTINATION, GateKeeper.Destination.LOGIN)
+                    .build();
+            GateKeeper.setRoot(getHomeController().getPopUpHostRouter(), GateKeeper.Destination.POP_UP_HOST, RouterTransaction.with(new PopUpHostController(bundle)).
                     pushChangeHandler(new FadeChangeHandler()).popChangeHandler(new FadeChangeHandler()));
         }
     }
@@ -399,24 +405,34 @@ public class MainActivity extends BaseActivity implements MainMvpView {
                 PaymentInfo.getOurpay().setCanUse(false);
             }
 
-            mCheckoutRouter.pushController(RouterTransaction.with(new PaymentSuccessController(responseValue))
-                    .pushChangeHandler(new HorizontalChangeHandler())
-                    .popChangeHandler(new HorizontalChangeHandler()));
-
-            if (getMainController().getHomeController() != null) {
+            if(!mPresenter.isTablet()) {
+                mCheckoutRouter.pushController(RouterTransaction.with(new PaymentSuccessController(responseValue))
+                        .pushChangeHandler(new HorizontalChangeHandler())
+                        .popChangeHandler(new HorizontalChangeHandler()));
                 getMainController().getHomeController().showFifthTabController();
+
+            } else {
+                Bundle bundle = new BundleBuilder(new Bundle())
+                        .putSerializable(BundleKeys.KEY_POP_UP_HOST_DESTINATION, GateKeeper.Destination.PAYMENT_SUCCESS)
+                        .putString(BundleKeys.KEY_ADDRESS, responseValue.getD().getValue().getAddressString())
+                        .putDouble(BundleKeys.KEY_PRICE,  responseValue.getD().getValue().getOrderInfoResult().getTotal())
+                        .putDouble(BundleKeys.KEY_SHIPPING_FEE, responseValue.getD().getValue().getOrderInfoResult().getShipping())
+                        .putString(BundleKeys.KEY_INVOICE, responseValue.getD().getValue().getInvoiceNo() == null ? String.valueOf(responseValue.getD().getValue().getTransactionInvoiceNo()): responseValue.getD().getValue().getInvoiceNo())
+                        .putString(BundleKeys.KEY_ESTIMATED_DELIVERY, responseValue.getD().getValue().getOrderInfoResult().getEstimatedDeliveryText())
+                        .build();
+
+                GateKeeper.setRoot(getHomeController().getPopUpHostRouter(), GateKeeper.Destination.POP_UP_HOST, RouterTransaction.with(new PopUpHostController(bundle)).
+                        pushChangeHandler(new FadeChangeHandler()).popChangeHandler(new FadeChangeHandler()));
             }
 
         } else {
-
             Router currentRouter = getMainController().getHomeController().getCurrentRouter();
             Controller currentController = getMainController().getHomeController().getCurrentControllerOnRouter(currentRouter);
 
             CustomAlertDialog.showCustomAlertDialog(this, CustomAlertDialog.CustomDialogIconState.NEGATIVE, responseValue.getD().getMessage());
 
-            if (currentController instanceof CheckoutController) {
-                CheckoutController checkoutController = (CheckoutController) currentController;
-                checkoutController.loadCart();
+            if (currentController instanceof CheckoutMvpView) {
+                ((CheckoutMvpView) currentController).loadCart();
             }
         }
     }

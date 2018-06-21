@@ -94,9 +94,9 @@ public class PaymentSuccessController extends BaseController implements PaymentS
 
         this(new BundleBuilder(new Bundle())
                 .putString(KEY_ADDRESS, responseValue.getD().getValue().getAddressString())
-                .putDouble(KEY_PRICE,  responseValue.getD().getValue().getOrderInfoResult().getTotal())
+                .putDouble(KEY_PRICE, responseValue.getD().getValue().getOrderInfoResult().getTotal())
                 .putDouble(KEY_SHIPPING_FEE, responseValue.getD().getValue().getOrderInfoResult().getShipping())
-                .putString(KEY_INVOICE, responseValue.getD().getValue().getInvoiceNo() == null ? String.valueOf(responseValue.getD().getValue().getTransactionInvoiceNo()): responseValue.getD().getValue().getInvoiceNo())
+                .putString(KEY_INVOICE, responseValue.getD().getValue().getInvoiceNo() == null ? String.valueOf(responseValue.getD().getValue().getTransactionInvoiceNo()) : responseValue.getD().getValue().getInvoiceNo())
                 .putString(KEY_ESTIMATED_DELIVERY, responseValue.getD().getValue().getOrderInfoResult().getEstimatedDeliveryText())
                 .build());
     }
@@ -121,8 +121,8 @@ public class PaymentSuccessController extends BaseController implements PaymentS
             mPaymentSuccessTableContainer.setVisibility(View.GONE);
             getTotalPayment(PaymentInfo.getOurpay());
             mPresenter.generateOurpay();
-        }else{
-            double totalPayment = mShippingFee+mPrice;
+        } else {
+            double totalPayment = mShippingFee + mPrice;
             mPaymentSuccessTableContainer.setVisibility(View.GONE);
             mPriceTextView.setText(PriceUtils.getPriceStringValue(totalPayment));
         }
@@ -217,14 +217,14 @@ public class PaymentSuccessController extends BaseController implements PaymentS
         PaymentInfo.resetPaymentInfo();
 
         mActivity.getCheckoutRouter().popToRoot();
-        ((MainActivity) getActivity()).setShopsAsVisibleContainer();
+        mActivity.setShopsAsVisibleContainer();
     }
 
-    public void getTotalPayment(Ourpay ourpay){
+    public void getTotalPayment(Ourpay ourpay) {
         double totalPayment = 0;
-        for (int i = 0; i < ourpay.getPlannedTransactions().size(); i++){
-            if(ourpay.getPlannedTransactions().get(i).getState()==KEY_PLANNED_TRANSACTION_STATE_PAID){
-                totalPayment =+ ourpay.getPlannedTransactions().get(i).getAmount();
+        for (int i = 0; i < ourpay.getPlannedTransactions().size(); i++) {
+            if (ourpay.getPlannedTransactions().get(i).getState() == KEY_PLANNED_TRANSACTION_STATE_PAID) {
+                totalPayment = +ourpay.getPlannedTransactions().get(i).getAmount();
             }
         }
 

@@ -6,5 +6,5 @@ import au.com.dealsdirect.ui.base.MvpView;
  * Created by smartwave on 11/06/2018.
  */
 
-public interface LoginHostMvpView extends MvpView {
+public interface PopUpHostMvpView extends MvpView {
 }

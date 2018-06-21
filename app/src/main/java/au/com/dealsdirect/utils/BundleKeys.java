@@ -128,6 +128,7 @@ public class BundleKeys {
     public static final String DELIVERY_OPTIONS_DELIVERY_SERVICE_PACKAGE_DETAIL = "DeliveryOptionsController.DELIVERY_SERVICE_PACKAGE_DETAIL";
     public static final String DELIVERY_OPTIONS_DELIVERY_ADDRESS_ID = "DeliveryOptionsController.DELIVERY_ADDRESS_ID";
 
-
+    //PopUp Root Destination Key
+    public static final String KEY_POP_UP_HOST_DESTINATION = "PopUpHostController.Destination";
 
 }

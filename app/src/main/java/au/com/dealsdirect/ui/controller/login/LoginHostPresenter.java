@@ -11,7 +11,7 @@ import io.reactivex.disposables.CompositeDisposable;
  * Created by smartwave on 11/06/2018.
  */
 
-public class LoginHostPresenter<V extends LoginHostMvpView> extends BasePresenter<V> implements LoginHostMvpPresenter<V> {
+public class LoginHostPresenter<V extends PopUpHostMvpView> extends BasePresenter<V> implements LoginHostMvpPresenter<V> {
     @Inject
     public LoginHostPresenter(DataManager dataManager, SchedulerProvider schedulerProvider, CompositeDisposable compositeDisposable) {
         super(dataManager, schedulerProvider, compositeDisposable);

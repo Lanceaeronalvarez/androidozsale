@@ -23,7 +23,7 @@
             android:layout_weight="1.5"/>
 e
         <com.bluelinelabs.conductor.ChangeHandlerFrameLayout
-            android:id="@+id/login_frame_container"
+            android:id="@+id/child_frame_container"
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:clickable="true"
