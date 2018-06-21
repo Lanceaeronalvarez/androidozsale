@@ -37,7 +37,7 @@ public abstract class BaseController extends RefWatchingController implements Mv
     }
 
     private ProgressDialog mProgressDialog;
-    
+
     @NonNull
     @Override
     protected View onCreateView(@NonNull LayoutInflater inflater, @NonNull ViewGroup container) {
@@ -119,6 +119,7 @@ public abstract class BaseController extends RefWatchingController implements Mv
         }
         mProgressDialog = null;
     }
+
     @Override
     public void onError(String message) {
         if (mActivity != null) {
@@ -143,6 +144,8 @@ public abstract class BaseController extends RefWatchingController implements Mv
 
     @Override
     public void onDetach(View view) {
+        /* gen-8065_ozsale-reskin_bugfixing - dismiss keyboard when changing screen fix */
+        hideKeyboard();
         super.onDetach(view);
     }
 
@@ -178,7 +181,9 @@ public abstract class BaseController extends RefWatchingController implements Mv
         return isAttached();
     }
 
-    public Resources getResource() { return mActivity.getResources(); }
+    public Resources getResource() {
+        return mActivity.getResources();
+    }
 
     public int getColor(@ColorRes int resId) {
         if (mActivity == null || mActivity.getResources() == null) {
