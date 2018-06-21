@@ -117,6 +117,7 @@
                                 android:elevation="@dimen/button_elevation"
                                 android:paddingBottom="@dimen/margin_large"
                                 android:paddingLeft="@dimen/margin_large"
+                                android:visibility="gone"
                                 android:src="@drawable/ic_share" />
 
                         </RelativeLayout>
@@ -209,6 +210,7 @@
                                 android:elevation="@dimen/button_elevation"
                                 android:paddingBottom="@dimen/margin_large"
                                 android:paddingLeft="@dimen/margin_large"
+                                android:visibility="invisible"
                                 android:src="@drawable/ic_share" />
 
                         </RelativeLayout>
