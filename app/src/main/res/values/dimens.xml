@@ -66,7 +66,7 @@
     <dimen name="partial_toolbar_button_padding">10dp</dimen>
     <dimen name="partial_toolbar_logo_width">170dp</dimen>
     <dimen name="tall_edit_text_height">144dp</dimen>
-    <dimen name="sale_details_appbar_height">160dp</dimen>
+    <dimen name="sale_details_appbar_height">112dp</dimen>
 
     <!-- Placeholder -->
     <dimen name="placeholder_padding">@dimen/padding_default</dimen>

@@ -25,7 +25,7 @@
 
     <dimen name="edit_text_height">48dp</dimen>
     <dimen name="tall_edit_text_height">144dp</dimen>
-    <dimen name="sale_details_appbar_height">180dp</dimen>
+    <dimen name="sale_details_appbar_height">120dp</dimen>
 
     <dimen name="placeholder_imageview_margin"> 100dp </dimen>
     <dimen name="voucher_container_width">420dp</dimen>
