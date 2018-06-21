@@ -193,6 +193,8 @@
         currently in your account when you checkout your order. \n
     </string>
 
+    <string name="my_basket">Checkout</string>
+    <string name="browse">Category</string>
 
     <integer-array name="account_title_array">
         <item>@string/account_details</item>
