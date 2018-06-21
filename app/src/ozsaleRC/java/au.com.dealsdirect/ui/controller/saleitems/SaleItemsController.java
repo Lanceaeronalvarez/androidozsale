@@ -267,6 +267,16 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
     @Override
     protected void onActivityResumed(@NonNull Activity activity) {
         super.onActivityResumed(activity);
+
+        /* bug/gen-8605_ozsale-reskin_bugfixing - four item row on mobile landscape */
+        if (mSaleItemsRecyclerView != null) {
+            GridLayoutManager gridLayoutManager = (GridLayoutManager) mSaleItemsRecyclerView.getLayoutManager();
+            int currentScrollPosition = gridLayoutManager.findFirstVisibleItemPosition();
+            mSaleItemsRecyclerView.setAdapter(mSaleItemsAdapter);
+            gridLayoutManager.scrollToPosition(currentScrollPosition);
+            gridLayoutManager.setSpanCount(getInteger(R.integer.sale_items_phone_column_count));
+        }
+
         mActivity.setDraggableViewPager(false);
     }
 

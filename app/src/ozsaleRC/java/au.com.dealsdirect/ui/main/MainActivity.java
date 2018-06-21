@@ -150,6 +150,8 @@ public class MainActivity extends BaseActivity implements MainMvpView {
     public void onConfigurationChanged(Configuration newConfig) {
         super.onConfigurationChanged(newConfig);
 
+        /* bug/gen-8605_ozsale-reskin_bugfixing - four item row on mobile landscape to call onActivityResume */
+        onResume();
         if (mShopController != null)
             mShopController.onOrientationChange();
     }
