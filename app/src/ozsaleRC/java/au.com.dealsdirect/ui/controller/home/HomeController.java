@@ -1,7 +1,5 @@
 package au.com.dealsdirect.ui.controller.home;
 
-import android.animation.Animator;
-import android.animation.AnimatorListenerAdapter;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -20,8 +18,6 @@ import com.bluelinelabs.conductor.Controller;
 import com.bluelinelabs.conductor.ControllerChangeHandler;
 import com.bluelinelabs.conductor.Router;
 import com.bluelinelabs.conductor.RouterTransaction;
-import com.bluelinelabs.conductor.changehandler.HorizontalChangeHandler;
-import com.mysale.genie.utility.config.model.getappsettings.Checkout;
 
 import java.util.HashMap;
 
@@ -305,7 +301,8 @@ public class HomeController extends BaseController implements HomeMvpView {
         if (mShopRouter != null) {
             Controller controller = getCurrentControllerOnRouter(mShopRouter);
             if (controller instanceof ShopsController) {
-                ((MainActivity) getActivity()).getMainController().setViewpagerDraggable(true);
+                /* bug/gen-8065_ozsale-reskin_bugfixing - Disallow draggable viewpager */
+                ((MainActivity) getActivity()).getMainController().setViewpagerDraggable(false);
             }
 
             if (controller instanceof SaleItemsController) {

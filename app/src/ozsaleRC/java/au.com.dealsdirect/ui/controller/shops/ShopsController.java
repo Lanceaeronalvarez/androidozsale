@@ -140,7 +140,9 @@ public class ShopsController extends BaseController implements ShopsMvpView, Ban
         mPresenter.onAttach(this);
         assert (mActivity) != null;
 
-        mActivity.getMainController().setViewpagerDraggable(true);
+        /* bug/gen-8065_ozsale-reskin_bugfixing - Disallow draggable viewpager */
+        mActivity.getMainController().setViewpagerDraggable(false);
+
         mBannerClickCounter = 0;
         mActivity.setShopController(this);
         mShopPtrLayout.setPtrHandler(this);
@@ -174,7 +176,7 @@ public class ShopsController extends BaseController implements ShopsMvpView, Ban
     private void showProductList() {
 
         Bundle args = new Bundle();
-        args.putBoolean(SALEITEMS_FROM_SHOP_SEARCH,true);
+        args.putBoolean(SALEITEMS_FROM_SHOP_SEARCH, true);
         getRouter().pushController(RouterTransaction.with(new SaleItemsController(args))
                 .tag(getResources().getString(R.string.sale_items_controller_tag))
                 .pushChangeHandler(new HorizontalChangeHandler())
@@ -343,7 +345,7 @@ public class ShopsController extends BaseController implements ShopsMvpView, Ban
             List<String> names = new ArrayList<>();
             names.add(bannerId + position);
             if (!mPresenter.isAccessAnonymousEnabled() && !mPresenter.isAuthorized()) {
-                 mActivity.showLoginController(getRouter(), new AuthHandler() {
+                mActivity.showLoginController(getRouter(), new AuthHandler() {
                     @Override
                     public void success() {
                         mActivity.callGCMRegisterSubscriber();
@@ -541,7 +543,6 @@ public class ShopsController extends BaseController implements ShopsMvpView, Ban
             }
             mShopsControllerToolbarTextView.setVisibility(View.VISIBLE);
             mShopsControllerToolbarTextView.setText(getCategoryParentKey(getCategoryTreeResponse.getKey()));
-            mShopsControllerHamburgerView.setImageDrawable(mActivity.getDrawable(R.drawable.ic_pink_chevron));
             shopsControllerSearchView.setVisibility(View.INVISIBLE);
             mActivity.setIsFromCategories(true);
         } else {
@@ -621,7 +622,6 @@ public class ShopsController extends BaseController implements ShopsMvpView, Ban
         if (isAttached()) {
             mShopsControllerToolbarLogo.setVisibility(View.VISIBLE);
             mShopsControllerToolbarTextView.setVisibility(View.GONE);
-            mShopsControllerHamburgerView.setImageDrawable(mActivity.getDrawable(R.drawable.ic_action_menu));
             shopsControllerSearchView.setVisibility(View.VISIBLE);
         }
         GetCategoryTreeResponse shopCategory = new GetCategoryTreeResponse();

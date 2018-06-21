@@ -658,7 +658,6 @@ public class MainActivity extends BaseActivity implements MainMvpView {
 
     public void setShopsAsVisibleContainer() {
         getMainController().getHomeController().setVisibleContainer(0);
-        getMainController().getHomeController().setShopRouterViewPagerDraggable();
 
     }
 
