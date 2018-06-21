@@ -60,6 +60,7 @@ public class GateKeeper {
         LEGALITIES,
         LANGUAGE,
         COUNTRY,
+        NOTIFICATION,
         TUTORIAL
         //add more destinations
     }

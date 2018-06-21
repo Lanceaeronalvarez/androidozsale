@@ -85,6 +85,8 @@ public class AccountPresenter<V extends AccountMvpView> extends BasePresenter<V>
             getMvpView().showContactUs();
         } else if (option.equals(context.getString(R.string.account_country))) {
             getMvpView().showCountry();
+        } else if (option.equals(context.getString(R.string.account_notification))) {
+            getMvpView().showNotification();
         } else if (option.equals(context.getString(R.string.account_tutorial))) {
             getMvpView().showTutorial();
         } else if (option.equals(context.getString(R.string.account_logout))) {

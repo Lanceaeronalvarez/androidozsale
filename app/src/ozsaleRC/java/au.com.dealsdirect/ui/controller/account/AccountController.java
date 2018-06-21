@@ -168,17 +168,12 @@ public class AccountController extends BaseController implements AccountMvpView,
 
             if (title.equals(getString(R.string.account_options))) {
                 List optionsArray = createSubAccountItems(R.array.account_options_sub_item_title_array);
-                /* gen-8003_ozsale-check_country_option - check if multicountry, remove option otherwise */
-                if (!mPresenter.isMultiCountry())
-                    optionsArray.remove(1);
-
                 newAccountItem = new AccountItem(i, title, optionsArray);
             } else {
                 newAccountItem = new AccountItem(i, title, Collections.emptyList());
             }
             mAccountItems.add(newAccountItem);
         }
-
 
 //        TypedArray drawable = mActivity.getResources().obtainTypedArray(R.array.account_drawable_array);
 //        drawables = new ArrayList<>();
@@ -325,11 +320,21 @@ public class AccountController extends BaseController implements AccountMvpView,
         }
     }
 
+    @Override
     public void showCountry() {
         if (!mPresenter.isTablet()) {
             GateKeeper.push(getDisplayRouter(), GateKeeper.Destination.COUNTRY, new HorizontalChangeHandler(), new HorizontalChangeHandler());
         } else {
             GateKeeper.setRoot(getDisplayRouter(), GateKeeper.Destination.COUNTRY, RouterTransaction.with(CountryController.newInstance()));
+        }
+    }
+
+    @Override
+    public void showNotification() {
+        if (!mPresenter.isTablet()) {
+            GateKeeper.push(getDisplayRouter(), GateKeeper.Destination.NOTIFICATION, new HorizontalChangeHandler(), new HorizontalChangeHandler());
+        } else {
+            GateKeeper.setRoot(getDisplayRouter(), GateKeeper.Destination.NOTIFICATION, RouterTransaction.with(CountryController.newInstance()));
         }
     }
 

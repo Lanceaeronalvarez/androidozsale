@@ -96,6 +96,9 @@ import au.com.dealsdirect.ui.controller.main.MainPresenter;
 import au.com.dealsdirect.ui.controller.masterpass.MasterpassMvpPresenter;
 import au.com.dealsdirect.ui.controller.masterpass.MasterpassMvpView;
 import au.com.dealsdirect.ui.controller.masterpass.MasterpassPresenter;
+import au.com.dealsdirect.ui.controller.notification.NotificationMvpPresenter;
+import au.com.dealsdirect.ui.controller.notification.NotificationMvpView;
+import au.com.dealsdirect.ui.controller.notification.NotificationPresenter;
 import au.com.dealsdirect.ui.controller.orders.orderdetails.OrderDetailsMvpPresenter;
 import au.com.dealsdirect.ui.controller.orders.orderdetails.OrderDetailsMvpView;
 import au.com.dealsdirect.ui.controller.orders.orderdetails.OrderDetailsPresenter;
@@ -406,6 +409,11 @@ public class ControllerModule {
 
     @Provides
     VisaCheckoutMvpPresenter<VisaCheckoutMvpView> provideVisaCheckoutPresenter(VisaCheckoutPresenter<VisaCheckoutMvpView> presenter) {
+        return presenter;
+    }
+
+    @Provides
+    NotificationMvpPresenter<NotificationMvpView> provideNotificationPresenter(NotificationPresenter<NotificationMvpView> presenter) {
         return presenter;
     }
 }

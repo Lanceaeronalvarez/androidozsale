@@ -30,6 +30,7 @@ import au.com.dealsdirect.ui.controller.login.LoginHostController;
 import au.com.dealsdirect.ui.controller.login.PasswordVerificationController;
 import au.com.dealsdirect.ui.controller.main.MainController;
 import au.com.dealsdirect.ui.controller.masterpass.MasterpassController;
+import au.com.dealsdirect.ui.controller.notification.NotificationController;
 import au.com.dealsdirect.ui.controller.orders.orders.OrdersController;
 import au.com.dealsdirect.ui.controller.register.RegisterController;
 import au.com.dealsdirect.ui.controller.returns.currentreturns.CurrentReturnsController;
@@ -125,6 +126,8 @@ public class ControllerFactory {
                 return LanguageController.newInstance();
             case COUNTRY:
                 return CountryController.newInstance();
+            case NOTIFICATION:
+                return NotificationController.newInstance();
             case TUTORIAL:
                 return TutorialController.newInstance();
             default:
@@ -195,6 +198,8 @@ public class ControllerFactory {
                 return LanguageController.newInstance();
             case COUNTRY:
                 return CountryController.newInstance();
+            case NOTIFICATION:
+                return NotificationController.newInstance();
             case TUTORIAL:
                 return TutorialController.newInstance();
             default:

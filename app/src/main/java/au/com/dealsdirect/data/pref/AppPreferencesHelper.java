@@ -79,7 +79,7 @@ public class AppPreferencesHelper implements PreferencesHelper {
     private static final String VCO_APIURL = "VCO_APIURL";
     private static final String VCO_PROVIDERTYPE = "VCO_PROVIDERTYPE";
 
-//    DELIVERY OPTIONS/OURPAY SELECT
+    //    DELIVERY OPTIONS/OURPAY SELECT
     public static final String KEY_DELIVERYOPTION_OPS_FREE = "_Free";
     private static final String KEY_DELIVERYOPTION_OPS_TITLE = "_DeliveryOption_OURPAYSELECT_Title";
     private static final String KEY_DELIVERYOPTION_OPS_DESCRIPTION = "_DeliveryOption_OURPAYSELECT_Description";
@@ -102,6 +102,9 @@ public class AppPreferencesHelper implements PreferencesHelper {
 
     /* PERSONALISATION */
     private static final String PERSONALISATION_VALIDATION = "PERSONALISATION_VALIDATION";
+
+    /* NOTIFICATIONS */
+    private static final String KEY_NOTIFICATIONS_ENABLED = "KEY_NOTIFICATIONS_ENABLED";
 
 
     private Context mContext;
@@ -537,7 +540,17 @@ public class AppPreferencesHelper implements PreferencesHelper {
 
     @Override
     public String getPublicPaymentType() {
-        return Prefs.getString(PUBLIC_PAYMENT_TYPE,"");
+        return Prefs.getString(PUBLIC_PAYMENT_TYPE, "");
+    }
+
+    @Override
+    public void setIsNotificationsEnabled(boolean isNotificationsEnabled) {
+        Prefs.putBoolean(KEY_NOTIFICATIONS_ENABLED, isNotificationsEnabled);
+    }
+
+    @Override
+    public boolean getIsNotificationsEnabled() {
+        return Prefs.getBoolean(KEY_NOTIFICATIONS_ENABLED, true);
     }
 
     public void setEventUserId(String userId) {
