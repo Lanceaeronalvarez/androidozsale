@@ -49,7 +49,6 @@ import au.com.dealsdirect.data.network.model.saleitems.GetSaleItemsResponse;
 import au.com.dealsdirect.data.network.model.sorting.SortingResponse;
 import au.com.dealsdirect.ui.base.BaseController;
 import au.com.dealsdirect.ui.controller.saleitemdetails.SaleItemDetailsController;
-import au.com.dealsdirect.ui.controller.searchfilter.SearchFilterController;
 import au.com.dealsdirect.ui.controller.searchfilter.SearchFilterMvpView;
 import au.com.dealsdirect.ui.controller.searchfilter.adapter.SearchChipModel;
 import au.com.dealsdirect.ui.custom.SearchEditText;
@@ -74,7 +73,6 @@ import in.srain.cube.views.ptr.PtrHandler;
 import static android.widget.AbsListView.OnScrollListener.SCROLL_STATE_IDLE;
 import static au.com.dealsdirect.utils.BundleKeys.SALEITEMS_CATEGORY_MAP;
 import static au.com.dealsdirect.utils.BundleKeys.SALEITEMS_CHIPS_FILTER;
-import static au.com.dealsdirect.utils.BundleKeys.SALEITEMS_FROM_CATEGORIES;
 import static au.com.dealsdirect.utils.BundleKeys.SALEITEMS_FROM_CATEGORY_SEARCH;
 import static au.com.dealsdirect.utils.BundleKeys.SALEITEMS_FROM_SHOP_SEARCH;
 import static au.com.dealsdirect.utils.BundleKeys.SALEITEMS_SALE_ID;
@@ -382,12 +380,12 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
             public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
                 super.onScrolled(recyclerView, dx, dy);
                 int bottomNavVisibility = mActivity.getHomeController().getBottomNavigationView().getVisibility();
-                if(dy > 0) {
+                if (dy > 0) {
                     //hides bottom Nav
                     mActivity.getHomeController().animateBottomNav(0);
-                } else{
+                } else {
                     //show bottom Nav
-                    if(bottomNavVisibility == View.GONE) {
+                    if (bottomNavVisibility == View.GONE) {
                         mActivity.getHomeController().animateBottomNav(dy);
                     }
                 }
@@ -397,7 +395,7 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
             public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
                 super.onScrollStateChanged(recyclerView, newState);
                 mIsRecyclerViewScrollIdle = newState == 0;
-                if(newState != SCROLL_STATE_IDLE) {
+                if (newState != SCROLL_STATE_IDLE) {
                     hideKeyboard();
                 }
             }
@@ -439,6 +437,17 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
 
         setRetainViewMode(RetainViewMode.RETAIN_DETACH);
         hideKeyboard();
+
+        /* gen-8065_ozsale-reskin_bugfixing - request focus on search field on search clicked fix */
+        if (mFromShopSearch) {
+            mSaleItemsToolbarField.requestFocus();
+            mSaleItemsToolbarField.postDelayed(() -> {
+                InputMethodManager inputMethodManager = (InputMethodManager) mActivity.getSystemService(Context.INPUT_METHOD_SERVICE);
+                if (inputMethodManager != null) {
+                    inputMethodManager.showSoftInput(mSaleItemsToolbarField, InputMethodManager.SHOW_IMPLICIT);
+                }
+            }, 1000);
+        }
     }
 
     private void setupPtrHeader() {
@@ -568,7 +577,8 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
             buildSearchQueryChips(mChipFilters);
             mSaleItemsPageNumber++;
             mPresenter.loadSaleItems(createSaleItemsRequest(mSearchFilterMvpView.getCategoryKeys(), mSaleId, mSaleItemsPageNumber, mChipFilters, ""));
-        }}
+        }
+    }
 
     @Override
     public void showProductDetails(RecyclerView.ViewHolder viewHolder, int position, String seoIdentifierId, String imageUrl, String skuId, String saleId) {
