@@ -12,6 +12,4 @@ public interface DetailsMvpPresenter<V extends MvpView>  extends MvpPresenter<V>
     void loadUser(SetUserDetailsRequest setUserDetailsRequest);
 
     void sendUserDetails(SetUserDetailsRequest userDetailsRequest);
-
-    void saveUser(SetUserDetailsRequest userDetails);
 }

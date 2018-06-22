@@ -58,6 +58,7 @@ import au.com.dealsdirect.ui.base.BaseActivity;
 import au.com.dealsdirect.ui.controller.address.addnewaddress.AddNewAddressController;
 import au.com.dealsdirect.ui.controller.address.viewaddress.ViewAddressController;
 import au.com.dealsdirect.ui.controller.checkout.addpayment.AddPaymentController;
+import au.com.dealsdirect.ui.controller.checkout.checkouthost.CheckoutHostMvpView;
 import au.com.dealsdirect.ui.controller.checkout.deliveryoptions.DeliveryOptionsController;
 import au.com.dealsdirect.ui.controller.checkout.ourpay.OurpaySMSVerificationController;
 import au.com.dealsdirect.ui.controller.checkout.paymentselect.PaymentSelectController;
@@ -202,7 +203,7 @@ public class CheckoutController extends VisaCheckoutController implements Checko
 
     private OurpayPanel ourpayPanel;
 
-    private CheckoutMvpView mCheckoutHostView;
+    private CheckoutHostMvpView mCheckoutHostView;
 
     private CompositeDisposable mClickListeners;
     private CompositeDisposable mChangeClickListeners;
@@ -318,7 +319,7 @@ public class CheckoutController extends VisaCheckoutController implements Checko
         mPresenter.onAttach(this);
         mVcoPresenter.onAttach(this);
 
-        mCheckoutHostView = (CheckoutMvpView) mActivity.getCheckoutRouter().getControllerWithTag(getString(R.string.checkout_host_controller));
+        mCheckoutHostView = (CheckoutHostMvpView) mActivity.getCheckoutRouter().getControllerWithTag(getString(R.string.checkout_host_controller));
         return view;
     }
 
@@ -523,10 +524,13 @@ public class CheckoutController extends VisaCheckoutController implements Checko
     @Override
     public void showCartDetails(List<Item> items) {
 
-        if (mCheckoutHostView != null) {
-            mCheckoutHostView.showCartDetails(items);
-        }
+        showCartDetailsOnHost(items);
 
+        showCartDetailsOnChild(items);
+    }
+
+    @Override
+    public void showCartDetailsOnChild(List<Item> items) {
         if (items == null) { //do nothing (ie. when increasing order quantity, returns a soldout/out of stock message)
             return;
         }
@@ -544,7 +548,13 @@ public class CheckoutController extends VisaCheckoutController implements Checko
 
             showCartItems();
         }
+    }
 
+    @Override
+    public void showCartDetailsOnHost(List<Item> items) {
+        if (mCheckoutHostView != null) {
+            mCheckoutHostView.showCartDetails(items);
+        }
     }
 
     @Override
@@ -677,6 +687,8 @@ public class CheckoutController extends VisaCheckoutController implements Checko
         } else if (mActivity.getPaymentMethodSelected() == null) {
             mActivity.setPaymentMethodSelected(paymentMethod);
         }
+
+//        displayPaymentDetails();
     }
 
     private void displayPaymentDetails() {

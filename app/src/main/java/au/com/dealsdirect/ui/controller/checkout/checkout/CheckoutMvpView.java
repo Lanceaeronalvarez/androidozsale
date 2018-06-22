@@ -27,6 +27,10 @@ public interface CheckoutMvpView extends MvpView {
 
     void showCartDetails(List<Item> items);
 
+    void showCartDetailsOnChild(List<Item> items);
+
+    void showCartDetailsOnHost(List<Item> items);
+
     void showAddressDetails(DeliveryAddress deliveryAddress, List<DecorationInfoList> decorationInfoList);
 
     void showDeliveryOptions(List<DeliveryOption> deliveryOptions, DeliveryServicePackageDetail deliveryServicePackageDetail);

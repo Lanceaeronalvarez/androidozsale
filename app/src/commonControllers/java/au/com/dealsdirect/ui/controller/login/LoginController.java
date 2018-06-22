@@ -156,7 +156,7 @@ public class LoginController extends BaseController implements LoginMvpView {
             }
         });
 
-        if(mLegalitiesContainer != null) {
+        if (mLegalitiesContainer != null) {
             mAboutUsTextView.setOnClickListener(v -> onLegalitiesClicked(BundleKeys.TEMPLATE_KEY_ABOUT_US, getString(R.string.account_about_us)));
             mTncTextView.setOnClickListener(v -> onLegalitiesClicked(BundleKeys.TEMPLATE_KEY_TNC, getString(R.string.account_tnc)));
             mPrivacyTextView.setOnClickListener(v -> onLegalitiesClicked(BundleKeys.TEMPLATE_KEY_PRIVACY, getString(R.string.account_privacy)));
@@ -182,12 +182,12 @@ public class LoginController extends BaseController implements LoginMvpView {
 
     @Override
     public boolean handleBack() {
-        if(mPresenter.isTablet()){
-            if(!mActivity.isAuthorized()){
+        if (mPresenter.isTablet()) {
+            if (!mActivity.isAuthorized()) {
                 mActivity.getMainController().getHomeController().resetVisibleContainer();
-            } else {
-                mActivity.getHomeController().resetAccountRouter();
             }
+            mActivity.getHomeController().resetAccountRouter();
+
             return true;
         }
 

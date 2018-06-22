@@ -36,6 +36,8 @@ public class DetailsPresenter<V extends DetailsMvpView> extends BasePresenter<V>
                     getMvpView().loadDetails((GetUserDetailsResponse) response);
                 }
             });
+        } else {
+            getMvpView().hideLoading();
         }
     }
 
@@ -43,7 +45,7 @@ public class DetailsPresenter<V extends DetailsMvpView> extends BasePresenter<V>
     public void sendUserDetails(SetUserDetailsRequest userDetailsRequest) {
 
         userDetailsRequest.setLanguageID(getDataManager().getLanguageId());
-
+        getMvpView().showLoading();
         doApiCallForResponse(getDataManager().getSaveUserDetailsApiCall(userDetailsRequest), new AppApiCallback() {
             @Override
             public void onSuccess(Object response) {
@@ -56,10 +58,5 @@ public class DetailsPresenter<V extends DetailsMvpView> extends BasePresenter<V>
                 }
             }
         });
-    }
-
-    @Override
-    public void saveUser(SetUserDetailsRequest request) {
-        request.setLanguageID(getDataManager().getLanguageId());
     }
 }

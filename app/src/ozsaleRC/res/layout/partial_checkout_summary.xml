@@ -1,14 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-              xmlns:app="http://schemas.android.com/apk/res-auto"
-              xmlns:tools="http://schemas.android.com/tools"
-              android:id="@+id/partial_checkout_summary_container"
-              android:layout_width="match_parent"
-              android:layout_height="wrap_content"
-              android:background="@color/row_background_color"
-	      android:layout_marginTop="@dimen/padding_default"
-              android:orientation="vertical"
-              tools:ignore="MissingPrefix">
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/partial_checkout_summary_container"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginTop="@dimen/padding_default"
+    android:background="@color/row_background_color"
+    android:orientation="vertical"
+    tools:ignore="MissingPrefix">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -34,9 +34,9 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:gravity="end"
-                android:textSize="@dimen/text_size_body"
                 android:textColor="@color/row_checkout_text_dark_color"
-                tools:text="$9"/>
+                android:textSize="@dimen/text_size_body"
+                tools:text="$9" />
 
         </LinearLayout>
 
@@ -51,8 +51,7 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:text="@string/delivery_label"
-                android:textColor="@color/row_checkout_text_dark_color"
-            />
+                android:textColor="@color/row_checkout_text_dark_color" />
 
             <TextView
                 android:id="@+id/partial_checkout_summary_shipping_fee"
@@ -60,9 +59,9 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:gravity="end"
-                android:textSize="@dimen/text_size_body"
                 android:textColor="@color/row_checkout_text_dark_color"
-                tools:text="$9"/>
+                android:textSize="@dimen/text_size_body"
+                tools:text="$9" />
 
         </LinearLayout>
 
@@ -86,9 +85,9 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:gravity="end"
-                android:textSize="@dimen/text_size_body"
                 android:textColor="@color/row_checkout_text_dark_color"
-                tools:text="$9"/>
+                android:textSize="@dimen/text_size_body"
+                tools:text="$9" />
 
         </LinearLayout>
 
@@ -112,9 +111,9 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:gravity="end"
-                android:textSize="@dimen/text_size_body"
                 android:textColor="@color/row_checkout_text_dark_color"
-                tools:text="$9"/>
+                android:textSize="@dimen/text_size_body"
+                tools:text="$9" />
 
         </LinearLayout>
 
@@ -129,7 +128,7 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:text="@string/total"
-                android:textColor="@color/text_extra_dark"/>
+                android:textColor="@color/text_extra_dark" />
 
             <TextView
                 android:id="@+id/partial_checkout_summary_total"
@@ -139,7 +138,7 @@
                 android:gravity="end"
                 android:textColor="@color/text_extra_dark"
                 android:textSize="@dimen/text_size_body"
-                tools:text="$27"/>
+                tools:text="$27" />
 
         </LinearLayout>
 
@@ -164,10 +163,10 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:gravity="end"
-                android:textSize="@dimen/text_size_body"
                 android:textColor="@color/row_checkout_text_dark_color"
+                android:textSize="@dimen/text_size_body"
                 android:textStyle="bold"
-                tools:text="$9"/>
+                tools:text="$9" />
 
         </LinearLayout>
 
@@ -184,7 +183,7 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:text="@string/pay_today"
-                android:textColor="@color/text_extra_dark"/>
+                android:textColor="@color/text_extra_dark" />
 
             <TextView
                 android:id="@+id/partial_checkout_summary_pay_today_price"
@@ -194,7 +193,7 @@
                 android:gravity="end"
                 android:textColor="@color/text_extra_dark"
                 android:textSize="@dimen/text_size_body"
-                tools:text="$27"/>
+                tools:text="$27" />
 
         </LinearLayout>
 

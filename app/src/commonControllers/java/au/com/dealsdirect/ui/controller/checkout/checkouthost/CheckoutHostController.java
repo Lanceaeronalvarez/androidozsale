@@ -43,7 +43,7 @@ import butterknife.BindView;
  * Created by smartwave on 13/06/2018.
  */
 
-public class CheckoutHostController extends BaseController implements CheckoutMvpView {
+public class CheckoutHostController extends BaseController implements CheckoutHostMvpView {
 
     @Inject
     CheckoutMvpPresenter<CheckoutMvpView> mPresenter;
@@ -74,6 +74,7 @@ public class CheckoutHostController extends BaseController implements CheckoutMv
     private CheckoutMvpView mCheckoutDetailView;
     private CheckoutOrderAdapter mAdapter;
     private List<Item> mItemList = new ArrayList<>();
+    private boolean mIsCheckoutHostUpdated;
 
 
     public static CheckoutHostController newInstance() {
@@ -140,9 +141,24 @@ public class CheckoutHostController extends BaseController implements CheckoutMv
 
     @Override
     public void showCartDetails(List<Item> items) {
+
+        showCartDetailsOnChild(items);
+
+        showCartDetailsOnHost(items);
+    }
+
+    @Override
+    public void showCartDetailsOnChild(List<Item> items) {
+        if(mCheckoutDetailView != null){
+            mCheckoutDetailView.showCartDetailsOnChild(items);
+        }
+    }
+
+    @Override
+    public void showCartDetailsOnHost(List<Item> items) {
         mItemList = items;
 
-        if (items.isEmpty()) {
+        if (items == null || items.isEmpty()) {
             //no items
             showNoCartItemsLayout();
         } else {
@@ -154,7 +170,6 @@ public class CheckoutHostController extends BaseController implements CheckoutMv
 
             mOrdersLabel.setVisibility(showOrdersLabel);
         }
-
     }
 
     @Override
