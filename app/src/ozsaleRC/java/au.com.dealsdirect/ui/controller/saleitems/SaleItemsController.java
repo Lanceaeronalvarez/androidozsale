@@ -283,7 +283,7 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
 
     private void determineToolbarTitle() {
 
-        String lookingForText = getString(R.string.i_am_looking_for);
+        String lookingForText = getString(R.string.search_tag);
         String categoryToolbarString = StringUtils.buildCategoryToolbarTitle(mCategoryKey);
 
         //determining hint logic

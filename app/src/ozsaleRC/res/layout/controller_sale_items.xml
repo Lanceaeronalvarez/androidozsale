@@ -123,7 +123,7 @@
                     android:visibility="visible"
                     app:layout_collapseMode="parallax"
                     app:layout_collapseParallaxMultiplier="0.5"
-                    app:layout_scrollFlags="scroll|enterAlways" />
+                    app:layout_scrollFlags="scroll|enterAlways"/>
 
             </android.support.design.widget.CollapsingToolbarLayout>
 
