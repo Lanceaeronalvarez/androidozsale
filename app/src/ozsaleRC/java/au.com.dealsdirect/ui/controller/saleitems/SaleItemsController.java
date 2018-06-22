@@ -404,39 +404,10 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
             }
         });
 
-        if (mIsFiltered || mSaleItems.isEmpty()) {
-            hasSearchFilters = false;
-            mPresenter.loadSaleItems(createSaleItemsRequest(mCategoryKey, mSaleId, mSaleItemsPageNumber, mChipFilters, ""));
-
-            /* show popular products after filter with empty chips */
-            if (mCategoryKey.isEmpty() && (mSaleId == null || mSaleId.isEmpty()) && mChipFilters.isEmpty()) {
-                mPopularProductsHeader.setVisibility(View.VISIBLE);
-            }
-
-            /* set if still in search */
-            if (mCategoryKey.isEmpty() && (mSaleId == null || mSaleId.isEmpty())) {
-                mIsSearch = true;
-                mFromShopSearch = true;
-            }
-
-            mChipFilters = removeSearchQueryChips(mChipFilters);
-            mSearchQuery = buildSearchQueryText(mRemovedChipTitles);
-
-            //this api call serves to get the correct facets for SearchFiltersController to display
-            // we need to remove any chip filters to return the base facets
-            // giving any filters(ff=) will change the facet return;
-
-            mPresenter.loadSaleItems(createSaleItemsRequest(mCategoryKey, mSaleId, mSaleItemsPageNumber, null, ""));
-        } else if (!mSaleItems.isEmpty()) {
-            if (mSaleItems.size() >= getInteger(R.integer.sale_items_threshold)) {
-                mPaginateManager = PaginateUtils.init(mActivity, mSaleItemsRecyclerView, mPaginateCallbacks);
-            }
-        }
-
         mPaginateManager = PaginateUtils.init(mSaleItemsRecyclerView, mPaginateCallbacks);
 
         mInitialLoad = true;
-        mPresenter.loadSaleItems(createSaleItemsRequest("", mSaleId, mSaleItemsPageNumber, mChipFilters, ""));
+        mPresenter.loadSaleItems(createSaleItemsRequest(mCategoryKey, mSaleId, mSaleItemsPageNumber, mChipFilters, ""));
 
         setRetainViewMode(RetainViewMode.RETAIN_DETACH);
         hideKeyboard();
