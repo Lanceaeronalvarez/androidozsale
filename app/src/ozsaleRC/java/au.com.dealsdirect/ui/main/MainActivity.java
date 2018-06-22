@@ -62,6 +62,7 @@ import au.com.dealsdirect.ui.controller.home.HomeController;
 import au.com.dealsdirect.ui.controller.login.PopUpHostController;
 import au.com.dealsdirect.ui.controller.main.MainController;
 import au.com.dealsdirect.ui.controller.saleitemdetails.SaleItemDetailsController;
+import au.com.dealsdirect.ui.controller.saleitems.SaleItemsController;
 import au.com.dealsdirect.ui.controller.shops.ShopsController;
 import au.com.dealsdirect.ui.controller.shops.ShopsMvpView;
 import au.com.dealsdirect.ui.controller.splash.SplashScreenController;
@@ -98,6 +99,7 @@ public class MainActivity extends BaseActivity implements MainMvpView {
     private MainController mMainController;
     private ShopsController mShopController;
     private CategoriesController mCategoriesController;
+    private SaleItemsController mSaleItemsController;
 
     private Router mHomeRouter;
     private Router mCategoriesRouter;
@@ -151,7 +153,9 @@ public class MainActivity extends BaseActivity implements MainMvpView {
         super.onConfigurationChanged(newConfig);
 
         /* bug/gen-8605_ozsale-reskin_bugfixing - four item row on mobile landscape to call onActivityResume */
-        onResume();
+        if (mSaleItemsController!=null)
+            mSaleItemsController.onOrientationChanged();
+
         if (mShopController != null)
             mShopController.onOrientationChange();
     }
@@ -860,4 +864,11 @@ public class MainActivity extends BaseActivity implements MainMvpView {
         return getMainController().getHomeController();
     }
 
+    public SaleItemsController getSaleItemsController() {
+        return mSaleItemsController;
+    }
+
+    public void setSaleItemsController(SaleItemsController mSaleItemsController) {
+        this.mSaleItemsController = mSaleItemsController;
+    }
 }

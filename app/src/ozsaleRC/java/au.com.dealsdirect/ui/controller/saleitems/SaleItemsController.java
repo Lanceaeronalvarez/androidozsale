@@ -268,15 +268,6 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
     protected void onActivityResumed(@NonNull Activity activity) {
         super.onActivityResumed(activity);
 
-        /* bug/gen-8605_ozsale-reskin_bugfixing - four item row on mobile landscape */
-        if (mSaleItemsRecyclerView != null) {
-            GridLayoutManager gridLayoutManager = (GridLayoutManager) mSaleItemsRecyclerView.getLayoutManager();
-            int currentScrollPosition = gridLayoutManager.findFirstVisibleItemPosition();
-            mSaleItemsRecyclerView.setAdapter(mSaleItemsAdapter);
-            gridLayoutManager.scrollToPosition(currentScrollPosition);
-            gridLayoutManager.setSpanCount(getInteger(R.integer.sale_items_phone_column_count));
-        }
-
         mActivity.setDraggableViewPager(false);
     }
 
@@ -345,8 +336,10 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
 
     @Override
     protected void setUp(View view) {
-        mActivity.getMainController().setViewpagerDraggable(false);
 
+
+        mActivity.setSaleItemsController(this);
+        mActivity.getMainController().setViewpagerDraggable(false);
         setupPtrHeader();
 
         mPaginateCallbacks = new Paginate.Callbacks() {
@@ -895,5 +888,16 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
 
             return false;
         });
+    }
+
+    /* bug/gen-8605_ozsale-reskin_bugfixing - four item row on mobile landscape */
+    public void onOrientationChanged() {
+        if (mSaleItemsRecyclerView != null) {
+            GridLayoutManager gridLayoutManager = (GridLayoutManager) mSaleItemsRecyclerView.getLayoutManager();
+            int currentScrollPosition = gridLayoutManager.findFirstVisibleItemPosition();
+            mSaleItemsRecyclerView.setAdapter(mSaleItemsAdapter);
+            gridLayoutManager.scrollToPosition(currentScrollPosition);
+            gridLayoutManager.setSpanCount(getInteger(R.integer.sale_items_phone_column_count));
+        }
     }
 }
