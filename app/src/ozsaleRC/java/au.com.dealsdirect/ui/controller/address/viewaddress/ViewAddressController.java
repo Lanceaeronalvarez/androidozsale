@@ -164,23 +164,30 @@ public class ViewAddressController extends BasePullToRefreshController implement
                     }
                 }
 
-                boolean hasAddress = mAddressList.size() > 0;
-
-                mAddressSubtitle.setVisibility(hasAddress ? View.VISIBLE : View.GONE);
-                mRecyclerView.setVisibility(hasAddress ? View.VISIBLE : View.GONE);
-                mAddressPlaceHolder.setVisibility(hasAddress ? View.GONE : View.VISIBLE);
                 mDecorationInfoList = responseValue.getD().getValue().getDecorationInfoList();
                 mRecyclerViewAdapter.replaceData(mAddressList);
                 mAddressesLoaded = true;
 
             } else {
                 Timber.d("ViewAddressController", "mAddressList is null)");
-                mViewAddessesLayout.setVisibility(View.GONE);
+                mRecyclerView.setVisibility(View.GONE);
                 mAddressPlaceHolder.setVisibility(View.VISIBLE);
             }
         } else {
             Timber.d("ViewAddressController", "response.d.ScheduledPlan is null) error");
         }
+        toggleLayoutVisibility();
+    }
+
+    private void toggleLayoutVisibility() {
+        if(mAddressList == null) {
+            return;
+        }
+            boolean hasAddress = mAddressList.size() > 0;
+
+        mAddressSubtitle.setVisibility(hasAddress ? View.VISIBLE : View.GONE);
+        mRecyclerView.setVisibility(hasAddress ? View.VISIBLE : View.GONE);
+        mAddressPlaceHolder.setVisibility(hasAddress ? View.GONE : View.VISIBLE);
     }
 
     @Override
@@ -190,6 +197,8 @@ public class ViewAddressController extends BasePullToRefreshController implement
                     CustomAlertDialog.CustomDialogIconState.POSITIVE,
                     "Removed address");
             mAddressList.remove(deliveryId);
+
+            toggleLayoutVisibility();
         } else {
             CustomAlertDialog.showCustomAlertDialog(mActivity, CustomAlertDialog.CustomDialogIconState.NEGATIVE, responseValue.d.getMessage());
             deleteAddressFailed();
