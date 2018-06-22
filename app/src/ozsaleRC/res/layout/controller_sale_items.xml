@@ -73,7 +73,7 @@
             android:id="@+id/controller_search_filter_frame"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="160dp"
+            android:layout_marginTop="@dimen/sale_details_appbar_height"
             android:visibility="visible" />
 
         <android.support.design.widget.AppBarLayout
