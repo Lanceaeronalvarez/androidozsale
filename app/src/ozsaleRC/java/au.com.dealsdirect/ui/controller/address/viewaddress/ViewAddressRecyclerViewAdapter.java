@@ -25,7 +25,6 @@ import au.com.dealsdirect.data.network.model.address.DeleteUserAddress;
 import au.com.dealsdirect.data.network.model.checkout.getcurrentorder.DeliveryAddress;
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import timber.log.Timber;
 
 /**
  * Created by smartwave on 21/06/2017.
@@ -33,33 +32,31 @@ import timber.log.Timber;
 
 
 public class ViewAddressRecyclerViewAdapter extends RecyclerView.Adapter<ViewAddressRecyclerViewAdapter.MyAddressModuleViewHolder>
-    implements SwipeableItemAdapter<ViewAddressRecyclerViewAdapter.MyAddressModuleViewHolder>{
+        implements SwipeableItemAdapter<ViewAddressRecyclerViewAdapter.MyAddressModuleViewHolder> {
 
-    public List<AddressesItem> addressList = Collections.emptyList();
-    Context context;
-    Boolean isCalledFromCart;
-    ViewAddressMvpView mView;
-    DeliveryAddress mDeliveryAddress;
-    ViewAddressMvpPresenter mPresenter;
+    private List<AddressesItem> addressList = Collections.emptyList();
+    private Context mContext;
+    private Boolean isCalledFromCart;
+    private DeliveryAddress mDeliveryAddress;
+    private ViewAddressMvpPresenter mPresenter;
+    private int position;
 
     public ViewAddressRecyclerViewAdapter(
             Boolean calledFromCart,
-            ViewAddressMvpView view,
             List<AddressesItem> addressList,
             Context context,
             DeliveryAddress deliveryAddress,
             ViewAddressMvpPresenter presenter) {
 
         this.isCalledFromCart = calledFromCart;
-        this.mView = view;
         this.addressList = addressList;
-        this.context = context;
+        this.mContext = context;
         this.mDeliveryAddress = deliveryAddress;
         this.mPresenter = presenter;
         setHasStableIds(true);
     }
 
-    public void updateDeliveryAddress(AddressesItem addressesItem){
+    public void updateDeliveryAddress(AddressesItem addressesItem) {
         mDeliveryAddress.resetDataFromAddressItem(addressesItem);
         notifyDataSetChanged();
     }
@@ -73,43 +70,21 @@ public class ViewAddressRecyclerViewAdapter extends RecyclerView.Adapter<ViewAdd
 
     @Override
     public void onBindViewHolder(MyAddressModuleViewHolder holder, int position) {
+        this.position = position;
 
-        String newAddress = addressList.get(position).getFullAddress();
-        String addressName = addressList.get(position).getAddressName();
-        String addressId = addressList.get(position).getAddressId();
+        boolean isAddressSelected = mDeliveryAddress != null && mDeliveryAddress.equalsAddressItem(addressList.get(position));
 
-        holder.addressNumberTextView.setText(addressName);
-        holder.addressTextView.setText(String.valueOf(newAddress));
+        holder.addressNumberTextView.setText(addressList.get(position).getAddressName());
+        holder.addressTextView.setText(String.valueOf(addressList.get(position).getFullAddress()));
 
-        if (isCalledFromCart) {
-
-            holder.itemView.setSelected(mDeliveryAddress != null && mDeliveryAddress.equalsAddressItem(addressList.get(position)));
-            holder.addressNumberTextView.setSelected(mDeliveryAddress != null && mDeliveryAddress.equalsAddressItem(addressList.get(position)));
-        }
-
-
+        holder.itemView.setSelected(isCalledFromCart && isAddressSelected);
+        holder.addressNumberTextView.setSelected(isCalledFromCart && isAddressSelected);
     }
 
     @Override
     public int getItemCount() {
-       return addressList == null ?  0 :  addressList.size();
+        return addressList == null ? 0 : addressList.size();
 
-    }
-
-    @Override
-    public void onAttachedToRecyclerView(RecyclerView recyclerView) {
-        super.onAttachedToRecyclerView(recyclerView);
-    }
-
-    public void insert(int position, AddressesItem data) {
-        addressList.add(position, data);
-        notifyItemInserted(position);
-    }
-
-    public void remove(Address data) {
-        int position = addressList.indexOf(data);
-        addressList.remove(position);
-        notifyItemRemoved(position);
     }
 
     public void replaceData(List<AddressesItem> items) {
@@ -136,12 +111,12 @@ public class ViewAddressRecyclerViewAdapter extends RecyclerView.Adapter<ViewAdd
     public void onSetSwipeBackground(ViewAddressRecyclerViewAdapter.MyAddressModuleViewHolder holder, int position, int type) {
         if (type == SwipeableItemConstants.DRAWABLE_SWIPE_LEFT_BACKGROUND) {
             holder.mDeleteText.setVisibility(View.VISIBLE);
-            holder.mContainerView.setBackgroundColor(context.getResources().getColor(R.color.white));
-            holder.itemView.setBackground(context.getResources().getDrawable(R.drawable.bg_swipe_item_right, null));
+            holder.mContainerView.setBackgroundColor(mContext.getResources().getColor(R.color.white));
+            holder.itemView.setBackground(mContext.getResources().getDrawable(R.drawable.bg_swipe_item_right, null));
         } else {
             holder.mDeleteText.setVisibility(View.GONE);
-            holder.mContainerView.setBackgroundColor(context.getResources().getColor(R.color.transparent));
-            holder.itemView.setBackground(context.getResources().getDrawable(R.drawable.bg_swipe_item_neutral, null));
+            holder.mContainerView.setBackgroundColor(mContext.getResources().getColor(R.color.transparent));
+            holder.itemView.setBackground(mContext.getResources().getDrawable(R.drawable.bg_swipe_item_neutral, null));
         }
     }
 
@@ -152,17 +127,15 @@ public class ViewAddressRecyclerViewAdapter extends RecyclerView.Adapter<ViewAdd
                 @Override
                 protected void onSlideAnimationEnd() {
                     super.onSlideAnimationEnd();
-                    holder.mDeleteText.setVisibility(View.GONE);
-                    holder.mContainerView.setBackgroundColor(context.getResources().getColor(R.color.transparent));
-                    holder.itemView.setBackground(context.getResources().getDrawable(R.drawable.bg_swipe_item_neutral, null));
+                    notifyItemRemoved(position);
+                    addressList.remove(position);
+                    notifyItemChanged(position);
                 }
 
                 @Override
                 protected void onPerformAction() {
                     super.onPerformAction();
-                    mPresenter.deleteUserDeliveryAddress(addressList.get(position).getAddressId());
-                    notifyItemRemoved(position);
-                    notifyDataSetChanged();
+                    mPresenter.deleteUserDeliveryAddress(addressList.get(position));
                 }
 
                 // Optionally, you can override these three methods
@@ -196,9 +169,5 @@ public class ViewAddressRecyclerViewAdapter extends RecyclerView.Adapter<ViewAdd
         public View getSwipeableContainerView() {
             return mContainerView;
         }
-    }
-
-    public void removeItemAtPosition(int position) {
-        addressList.remove(position);
     }
 }

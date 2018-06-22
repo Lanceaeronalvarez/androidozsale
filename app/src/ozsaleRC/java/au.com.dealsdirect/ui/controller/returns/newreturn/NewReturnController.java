@@ -102,7 +102,7 @@ public class NewReturnController extends BaseController implements NewReturnMvpV
 
         mNewReturnToolbarTitle.setText(R.string.request_new_return);
         mNewReturnToolbarRightOption.setVisibility(View.INVISIBLE);
-        mNewReturnToolbarRightOption.setImageDrawable(getResources().getDrawable(R.drawable.ic_check));
+        mNewReturnToolbarRightOption.setImageDrawable(getDrawable(R.drawable.ic_check));
 
         showLoading();
         mPresenter.getReturnOrderDetail(mReturnItem.getInvoiceNo());
@@ -142,13 +142,12 @@ public class NewReturnController extends BaseController implements NewReturnMvpV
             CustomAlertDialog.showCustomAlertDialog(
                     mActivity,
                     CustomAlertDialog.CustomDialogIconState.POSITIVE,
-                    getResources().getString(R.string.return_request_submitted));
+                    getString(R.string.return_request_submitted));
             getRouter().popToTag(getString(R.string.current_returns_controller));
         } else {
             CustomAlertDialog.showCustomAlertDialog(
                     mActivity,
-                    CustomAlertDialog.CustomDialogIconState.NEGATIVE,
-                    getResources().getString(R.string.error_creating_return));
+                    CustomAlertDialog.CustomDialogIconState.NEGATIVE, getString(R.string.error_creating_return));
         }
     }
 

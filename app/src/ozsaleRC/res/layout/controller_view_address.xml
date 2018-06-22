@@ -23,11 +23,12 @@
             android:layout_marginBottom="@dimen/padding_default_half"
             android:text="@string/my_addresses"
             android:textColor="@color/text_medium"
-            android:textSize="@dimen/text_size_caption2" />
+            android:textSize="@dimen/text_size_caption2"
+            android:visibility="gone"/>
 
         <FrameLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
             android:layout_above="@+id/controller_address_button"
             android:layout_below="@+id/address_office_delivery_subtitle">
 

@@ -76,6 +76,9 @@
     <dimen name="invite_friends_image_width">22.5dp</dimen>
     <dimen name="invite_friends_image_height">20dp</dimen>
 
+    <!-- Shop -->
+    <dimen name="controller_shop_app_bar_height">112dp</dimen>
+
     <!-- Checkout -->
     <dimen name="row_checkout_image_width">100dp</dimen>
     <dimen name="row_checkout_image_height">130dp</dimen>

@@ -213,6 +213,10 @@ public class MainActivity extends BaseActivity implements MainMvpView {
     public void onBackPressed() {
         /* gen-8065_ozsale-reskin_bugfixing - dismiss keyboard when changing screen fix  */
         hideKeyboard();
+        if (getHomeController() == null || getHomeController().getBottomNavigationView() == null) {
+            return;
+        }
+
         if (mPresenter.isTablet() && getHomeController().isPopUpControllerVisible()) {
             getHomeController().getPopUpHostRouter().handleBack();
         } else {

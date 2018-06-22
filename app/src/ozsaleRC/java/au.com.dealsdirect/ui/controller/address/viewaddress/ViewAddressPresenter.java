@@ -6,6 +6,7 @@ import javax.inject.Inject;
 
 import au.com.dealsdirect.data.DataManager;
 import au.com.dealsdirect.data.network.AppApiCallback;
+import au.com.dealsdirect.data.network.model.address.AddressesItem;
 import au.com.dealsdirect.data.network.model.address.ApplyAddress;
 import au.com.dealsdirect.data.network.model.address.ApplyAddressRequest;
 import au.com.dealsdirect.data.network.model.address.ApplyAddressResponse;
@@ -68,9 +69,9 @@ public class ViewAddressPresenter<V extends ViewAddressMvpView> extends BasePres
     }
 
     @Override
-    public void deleteUserDeliveryAddress(String deliveryAddressId) {
+    public void deleteUserDeliveryAddress(AddressesItem deliveryAddress) {
         doApiCallForResponse(getDataManager().callDeleteUserDeliveryAddress(
-                new DeleteUserAddress.RequestValues(deliveryAddressId)), new AppApiCallback() {
+                new DeleteUserAddress.RequestValues(deliveryAddress.getAddressId())), new AppApiCallback() {
             @Override
             public void onSuccess(Object response) {
                 super.onSuccess(response);
@@ -79,11 +80,14 @@ public class ViewAddressPresenter<V extends ViewAddressMvpView> extends BasePres
                     Timber.d("remove address", " result = " + ((DeleteUserAddress.ResponseValue) response).d.getResult()
                             + " , " + ((DeleteUserAddress.ResponseValue) response).d.getMessage());
 
-                    if (((DeleteUserAddress.ResponseValue) response).d.getResult()) {
-                        Timber.d("remove address", "DeleteUserDeliveryAddress " + "success");
-                        getMvpView().onUserDeliveryAddressDeleted(((DeleteUserAddress.ResponseValue) response));
-                    }
+                    getMvpView().onUserDeliveryAddressDeleted(((DeleteUserAddress.ResponseValue) response), deliveryAddress);
                 }
+            }
+
+            @Override
+            public void onFailure(Throwable t) {
+                super.onFailure(t);
+                getMvpView().deleteAddressFailed();
             }
         });
     }

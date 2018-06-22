@@ -14,4 +14,6 @@ public interface PaymentSelectMvpView extends MvpView {
     void showPaymentList(List<PaymentMethod> paymentMethods);
 
     void showRemovePaymentMethodResult(PaymentMethod paymentMethod, boolean result, String message);
+
+    void removePaymentFailed();
 }

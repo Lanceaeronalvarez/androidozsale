@@ -52,6 +52,8 @@ public class ViewAddressController extends BasePullToRefreshController implement
     ViewGroup mViewAddessesLayout;
     @BindView(R.id.controller_addresses_recyclerview)
     RecyclerView mRecyclerView;
+    @BindView(R.id.address_office_delivery_subtitle)
+    TextView mAddressSubtitle;
 
     @BindView(R.id.partial_toolbar_left_view)
     View mToolbarLeftView;
@@ -59,7 +61,6 @@ public class ViewAddressController extends BasePullToRefreshController implement
     TextView mViewAddressToolarTitle;
     private List<AddressesItem> mAddressList;
     boolean mCalledFromCart;
-    private int recyclerTempItemPosition;
     private ViewAddressRecyclerViewAdapter mRecyclerViewAdapter;
     private List<DecorationInfoList> mDecorationInfoList;
     private boolean mAddressesLoaded = false;
@@ -99,11 +100,11 @@ public class ViewAddressController extends BasePullToRefreshController implement
         mPresenter.loadAddresses();
 
 
-        mToolbarLeftView.setVisibility(mPresenter.isTablet()&& !mCalledFromCart ? View.GONE : View.VISIBLE);
+        mToolbarLeftView.setVisibility(mPresenter.isTablet() && !mCalledFromCart ? View.GONE : View.VISIBLE);
         mViewAddressToolarTitle.setText(getString(R.string.my_addresses_toolbar_title));
         mAddressList = new ArrayList<>();
         RecyclerViewSwipeManager swipeManager = new RecyclerViewSwipeManager();
-        mRecyclerViewAdapter = new ViewAddressRecyclerViewAdapter(mCalledFromCart, this, mAddressList, mActivity, mDeliveryAddress, mPresenter);
+        mRecyclerViewAdapter = new ViewAddressRecyclerViewAdapter(mCalledFromCart, mAddressList, mActivity, mDeliveryAddress, mPresenter);
         RecyclerView.Adapter wrappedAdapter = swipeManager.createWrappedAdapter(mRecyclerViewAdapter);
 
         mRecyclerView.setAdapter(wrappedAdapter);
@@ -116,10 +117,8 @@ public class ViewAddressController extends BasePullToRefreshController implement
         if (mCalledFromCart) {
             mRecyclerView.addOnItemTouchListener(new RecyclerOnTouchListener(mActivity, (v, position) -> {
                 if (mAddressesLoaded) {
-                    //showAddNewAddressFragment();
                     AddressesItem item = mAddressList.get(position);
 
-//                                        getBaseActivity().showProgressDialog("Setting address. Please wait.");
                     mPresenter.applyDeliveryAddress(item.ID);
 
                     mRecyclerViewAdapter.updateDeliveryAddress(item);
@@ -164,24 +163,15 @@ public class ViewAddressController extends BasePullToRefreshController implement
                         addressesItem.setAddressNumericId(i);
                     }
                 }
-                if (mAddressList.size() == 0) {
-                    Timber.d("ViewAddressController", "mAddressList size is zero");
-                    mRecyclerView.setVisibility(View.GONE);
-                    mAddressPlaceHolder.setVisibility(View.VISIBLE);
-                }
+
+                boolean hasAddress = mAddressList.size() > 0;
+
+                mAddressSubtitle.setVisibility(hasAddress ? View.VISIBLE : View.GONE);
+                mRecyclerView.setVisibility(hasAddress ? View.VISIBLE : View.GONE);
+                mAddressPlaceHolder.setVisibility(hasAddress ? View.GONE : View.VISIBLE);
                 mDecorationInfoList = responseValue.getD().getValue().getDecorationInfoList();
                 mRecyclerViewAdapter.replaceData(mAddressList);
                 mAddressesLoaded = true;
-
-//                setupDefaultBottomButton(getString(R.string.add_delivery_address),
-//                        new View.OnClickListener() {
-//                            @Override
-//                            public void onClick(View v) {
-//                                if (mAddressesLoaded) {
-//                                    showAddNewAddressFragment();
-//                                }
-//                            }
-//                        });
 
             } else {
                 Timber.d("ViewAddressController", "mAddressList is null)");
@@ -194,34 +184,16 @@ public class ViewAddressController extends BasePullToRefreshController implement
     }
 
     @Override
-    public void onUserDeliveryAddressDeleted(DeleteUserAddress.ResponseValue responseValue) {
-        //        GDebug.log("remove address", "FROM VIEW MY ADDRESS - on user Delivery address deleted = "+
-//                responseValue
-//                        .getDeleteAddressResponseValue().getDeleteUserDeliveryAddressResponseValue().getMessage()+" ," +
-//                " "+responseValue
-//                .getDeleteAddressResponseValue()
-//                .getDeleteUserDeliveryAddressResponseValue().getType());
-//
-        CustomAlertDialog.showCustomAlertDialog(mActivity,
-                CustomAlertDialog.CustomDialogIconState.POSITIVE,
-                "Removed address");
-
-
-        mRecyclerViewAdapter.notifyItemRemoved(recyclerTempItemPosition);
-        mRecyclerViewAdapter.removeItemAtPosition(recyclerTempItemPosition);
-        mRecyclerViewAdapter.notifyItemChanged(recyclerTempItemPosition);
-
-        if (mRecyclerViewAdapter.addressList.size() == 0) {
-            mViewAddessesLayout.setVisibility(View.GONE);
-            mAddressPlaceHolder.setVisibility(View.VISIBLE);
+    public void onUserDeliveryAddressDeleted(DeleteUserAddress.ResponseValue responseValue, AddressesItem deliveryId) {
+        if (responseValue.d.getResult()) {
+            CustomAlertDialog.showCustomAlertDialog(mActivity,
+                    CustomAlertDialog.CustomDialogIconState.POSITIVE,
+                    "Removed address");
+            mAddressList.remove(deliveryId);
+        } else {
+            CustomAlertDialog.showCustomAlertDialog(mActivity, CustomAlertDialog.CustomDialogIconState.NEGATIVE, responseValue.d.getMessage());
+            deleteAddressFailed();
         }
-    }
-
-    @Override
-    public void onDeleteItemClicked(DeleteUserAddress.RequestValues deleteUserAddressRequest, int position) {
-        recyclerTempItemPosition = position;
-
-        mPresenter.deleteUserDeliveryAddress(deleteUserAddressRequest.getAddressID());
     }
 
     @Override
@@ -229,6 +201,11 @@ public class ViewAddressController extends BasePullToRefreshController implement
         if (mCalledFromCart) {
             mActivity.onBackPressed();
         }
+    }
+
+    @Override
+    public void deleteAddressFailed() {
+        mRecyclerViewAdapter.replaceData(mAddressList);
     }
 
     @Override
@@ -245,9 +222,6 @@ public class ViewAddressController extends BasePullToRefreshController implement
     }
 
     public void showAddNewAddress() {
-//        AddNewAddressFragment fragment = AddNewAddressFragment
-//                .newInstance(mActivity, mGetUserAddressesResponse.d.ScheduledPlan.DecorationInfoList, mCalledFromCart);
-//        push router to addnewaddress
         Gson gson = new Gson();
         getRouter().pushController(RouterTransaction.with(new AddNewAddressController(gson.toJson(mDecorationInfoList), false))
                 .pushChangeHandler(new HorizontalChangeHandler())
