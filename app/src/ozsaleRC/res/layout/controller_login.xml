@@ -3,7 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
+    android:layout_height="match_parent"
     android:orientation="vertical"
     tools:ignore="MissingPrefix">
 
@@ -230,8 +230,9 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
-                android:paddingTop="@dimen/margin_extra_small"
-                android:paddingBottom="@dimen/margin_extra_small"
+                android:paddingTop="@dimen/padding_default"
+                android:paddingBottom="@dimen/padding_default"
+                android:background="@color/white"
                 android:gravity="center">
 
                 <TextView
@@ -242,7 +243,7 @@
                     android:textColor="@color/facet_item_text_selector"
                     android:text="@string/account_about_us"
                     android:gravity="center"
-                    android:textSize="@dimen/text_size_caption1" />
+                    android:textSize="@dimen/text_size_body" />
 
                 <TextView
                     android:id="@+id/controller_login_tnc_textview"
@@ -252,7 +253,7 @@
                     android:textColor="@color/facet_item_text_selector"
                     android:text="@string/account_tnc"
                     android:gravity="center"
-                    android:textSize="@dimen/text_size_caption1" />
+                    android:textSize="@dimen/text_size_body" />
 
                 <TextView
                     android:id="@+id/controller_login_privacy_textview"
@@ -262,7 +263,8 @@
                     android:textColor="@color/facet_item_text_selector"
                     android:text="@string/account_privacy"
                     android:gravity="center"
-                    android:textSize="@dimen/text_size_caption1" />
+                    android:textSize="@dimen/text_size_body" />
+
             </LinearLayout>
         </LinearLayout>
 

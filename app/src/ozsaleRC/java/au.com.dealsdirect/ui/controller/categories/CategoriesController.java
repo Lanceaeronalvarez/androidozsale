@@ -146,7 +146,7 @@ public class CategoriesController extends BaseController
             mRecyclerView.setMotionEventSplittingEnabled(false);
             mRecyclerView.setAdapter(mAdapter);
 
-            mSubCategoryAdapter = new SubCategoriesAdapter(mActivity, mCategories.get(0).getChildren() != null ?
+            mSubCategoryAdapter = new SubCategoriesAdapter(mActivity, !mCategories.isEmpty() && mCategories.get(0).getChildren() != null ?
                     mCategories.get(0).getChildren() : new ArrayList<>(), mPresenter,
                     mSubCategoryItemClickListener, mCategoryMap);
 
