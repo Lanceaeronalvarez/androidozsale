@@ -729,8 +729,7 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
     public void onOffsetChanged(AppBarLayout appBarLayout, int verticalOffset) {
         TypedValue tv = new TypedValue();
         mActivity.getTheme().resolveAttribute(android.R.attr.actionBarSize, tv, true);
-        int actionBarHeight = getResources().getDimensionPixelSize(tv.resourceId);
-        boolean showToolbar = Math.abs(verticalOffset) > ((AppBarLayout)mAppBarLayout).getTotalScrollRange() - (mProductDetailsTitleLayout.getHeight() - actionBarHeight);
+        boolean showToolbar = Math.abs(verticalOffset) >= ((AppBarLayout)mAppBarLayout).getTotalScrollRange();
         mProductDetailsToolbar.setVisibility(showToolbar ? View.VISIBLE : View.GONE);
         mProductDetailsTitleLayout.setVisibility(!showToolbar ? View.VISIBLE : View.GONE);
         mProductPriceCategory.setBackgroundColor(getColor(!showToolbar ? R.color.product_details_transparent : R.color.toolbar_active_skin));

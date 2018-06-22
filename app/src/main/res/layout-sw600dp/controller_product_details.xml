@@ -112,6 +112,7 @@
                                 android:elevation="@dimen/button_elevation"
                                 android:paddingBottom="@dimen/margin_large"
                                 android:paddingLeft="@dimen/margin_large"
+                                android:visibility="invisible"
                                 android:src="@drawable/ic_share" />
 
 
@@ -408,13 +409,15 @@
                                     android:visibility="invisible" />
 
                                 <TextView
-                                    fontPath="@string/font_app_black"
+                                    fontPath="@string/font_app_semibold"
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
                                     android:layout_centerVertical="true"
+                                    android:layout_marginStart="@dimen/product_details_subtitle_indent"
                                     android:layout_toLeftOf="@id/question_mark"
-                                    android:paddingRight="@dimen/margin_extra_small"
+                                    android:padding="@dimen/margin_extra_small"
                                     android:text="@string/size_guide"
+                                    android:textAllCaps="true"
                                     android:textSize="@dimen/text_size_caption1"
                                     android:visibility="invisible" />
 
@@ -438,7 +441,7 @@
                             android:id="@+id/product_details_shipping_desc_container"
                             android:layout_width="match_parent"
                             android:layout_height="match_parent"
-                            android:layout_marginTop="@dimen/margin_small"
+                            android:layout_marginTop="@dimen/margin_extra_small"
                             android:background="@color/white"
                             android:orientation="vertical"
                             android:visibility="visible"
@@ -446,10 +449,12 @@
                             android:paddingRight="@dimen/activity_horizontal_margin">
 
                             <TextView
-                                fontPath="@string/font_app_bold"
+                                fontPath="@string/font_app_semibold"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:layout_margin="@dimen/margin_extra_small"
+                                android:layout_marginStart="@dimen/product_details_subtitle_indent"
+                                android:padding="@dimen/margin_extra_small"
+                                android:textAllCaps="true"
                                 android:text="@string/estimated_delivery"
                                 android:textColor="@color/text_medium"
                                 android:textSize="@dimen/text_size_body" />
@@ -457,7 +462,9 @@
                             <WebView
                                 android:id="@+id/product_details_shipping_desc_webview"
                                 android:layout_width="match_parent"
-                                android:layout_height="wrap_content" />
+                                android:layout_height="wrap_content"
+                                android:layout_marginTop="@dimen/margin_tiny"/>
+                            />
 
                         </LinearLayout>
 
@@ -473,10 +480,12 @@
                             android:paddingRight="@dimen/activity_horizontal_margin">
 
                             <TextView
-                                fontPath="@string/font_app_bold"
+                                fontPath="@string/font_app_semibold"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:layout_margin="@dimen/margin_extra_small"
+                                android:layout_marginStart="@dimen/product_details_subtitle_indent"
+                                android:padding="@dimen/margin_extra_small"
+                                android:textAllCaps="true"
                                 android:text="@string/return_policy"
                                 android:textColor="@color/text_medium"
                                 android:textSize="@dimen/text_size_body" />
@@ -485,10 +494,8 @@
                                 android:id="@+id/product_details_return_policy_text"
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
-                                android:layout_marginTop="@dimen/margin_extra_small"
+                                android:layout_marginTop="@dimen/margin_tiny"
                                 android:textSize="@dimen/text_size_caption1" />
-
-                            
 
                         </LinearLayout>
 
@@ -506,9 +513,6 @@
                                 android:id="@+id/product_description_text"
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content" />
-
-                            
-
                         </LinearLayout>
 
                         <LinearLayout
@@ -523,10 +527,12 @@
                             android:paddingRight="@dimen/activity_horizontal_margin">
 
                             <TextView
-                                fontPath="@string/font_app_bold"
+                                fontPath="@string/font_app_semibold"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:layout_margin="@dimen/margin_extra_small"
+                                android:layout_marginStart="@dimen/product_details_subtitle_indent"
+                                android:padding="@dimen/margin_extra_small"
+                                android:textAllCaps="true"
                                 android:text="@string/about"
                                 android:textColor="@color/text_medium"
                                 android:textSize="@dimen/text_size_body" />
@@ -535,7 +541,7 @@
                                 android:id="@+id/product_about"
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
-                                android:layout_marginTop="@dimen/margin_extra_small" />
+                                android:layout_marginTop="@dimen/margin_tiny" />
 
                         </LinearLayout>
 
@@ -551,10 +557,12 @@
                             android:paddingRight="@dimen/activity_horizontal_margin">
 
                             <TextView
-                                fontPath="@string/font_app_bold"
+                                fontPath="@string/font_app_semibold"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:layout_margin="@dimen/margin_extra_small"
+                                android:layout_marginStart="@dimen/product_details_subtitle_indent"
+                                android:padding="@dimen/margin_extra_small"
+                                android:textAllCaps="true"
                                 android:text="@string/pricing"
                                 android:textColor="@color/text_medium"
                                 android:textSize="@dimen/text_size_body" />
