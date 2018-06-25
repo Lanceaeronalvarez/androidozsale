@@ -6,14 +6,34 @@ package au.com.dealsdirect.data.network.model.checkout.getcurrentorder;
 import com.google.gson.annotations.SerializedName;
 
 public class Summary {
+    public Double getSubtotal() {
+        return subtotal;
+    }
+
+    public Double getDelivery() {
+        return delivery;
+    }
+
+    public Double getDiscount() {
+        return discount;
+    }
+
+    public Double getTotal() {
+        return total;
+    }
+
+    public Double getTax() {
+        return tax;
+    }
+
     @SerializedName("Subtotal")
-    public Double subtotal;
+    private Double subtotal;
     @SerializedName("Delivery")
-    public Double delivery;
+    private Double delivery;
     @SerializedName("Discount")
-    public Double discount;
+    private Double discount;
     @SerializedName("Total")
-    public Double total;
+    private Double total;
     @SerializedName("Tax")
-    public Double tax;
+    private Double tax;
 }
