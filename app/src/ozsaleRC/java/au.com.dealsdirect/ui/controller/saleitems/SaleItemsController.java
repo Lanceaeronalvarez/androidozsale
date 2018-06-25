@@ -868,7 +868,10 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
             int currentScrollPosition = gridLayoutManager.findFirstVisibleItemPosition();
             mSaleItemsRecyclerView.setAdapter(mSaleItemsAdapter);
             gridLayoutManager.scrollToPosition(currentScrollPosition);
+
             gridLayoutManager.setSpanCount(getInteger(R.integer.sale_items_phone_column_count));
+            if (mPresenter != null && mPresenter.isTablet())
+                gridLayoutManager.setSpanCount(getInteger(R.integer.sale_items_tablet_column_count));
         }
     }
 }
