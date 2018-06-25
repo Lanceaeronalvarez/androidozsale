@@ -38,6 +38,8 @@ import au.com.dealsdirect.ui.controller.checkout.checkout.CheckoutMvpView;
 import au.com.dealsdirect.ui.controller.checkout.checkout.CheckoutOrderAdapter;
 import au.com.dealsdirect.utils.BundleBuilder;
 import butterknife.BindView;
+import butterknife.OnClick;
+import butterknife.Optional;
 
 /**
  * Created by smartwave on 13/06/2018.
@@ -250,5 +252,11 @@ public class CheckoutHostController extends BaseController implements CheckoutHo
     private void showNoCartItemsLayout() {
         mNoCartItemsLayout.setVisibility(View.VISIBLE);
         mCheckoutContainer.setVisibility(View.GONE);
+    }
+
+    @Optional
+    @OnClick(R.id.partial_checkout_empty_button)
+    void shopNow() {
+        mActivity.setShopsAsVisibleContainer();
     }
 }
