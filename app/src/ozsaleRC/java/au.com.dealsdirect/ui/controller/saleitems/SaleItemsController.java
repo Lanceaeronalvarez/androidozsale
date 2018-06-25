@@ -288,14 +288,9 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
 
         //determining hint logic
         //category precedes above all
-        if (!mCategoryKey.isEmpty()) {
-            mSaleItemsToolbarField.setHint(categoryToolbarString);
-        } else if (!mTitle.isEmpty()) {
-            mSaleItemsToolbarField.setHint(mTitle);
-        } else {
-            mSaleItemsToolbarField.setHint(lookingForText);
-        }
 
+        // bug/gen-8065_ozsale-reskin_bugfixing - always set searchbar hint to 'search'
+        mSaleItemsToolbarField.setHint(lookingForText);
 
         String editTextString = mSaleItemsToolbarField.getText().toString();
         //determining toolbartitle logic
