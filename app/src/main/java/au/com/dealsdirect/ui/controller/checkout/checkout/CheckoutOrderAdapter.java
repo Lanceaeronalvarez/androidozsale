@@ -55,7 +55,7 @@ public class CheckoutOrderAdapter extends RecyclerView.Adapter<CheckoutOrderAdap
 
         //   (1) fix when item.fileName is null
         if (item.fileName != null) {
-            if (!item.fileName.isEmpty() && holder.image.getDrawable() == null) {
+            if (!item.fileName.isEmpty()) {
                 ImageUtils.loadImageDontAnimate(mContext, LegacyStringImageUtils.generateImageUrl(item.brandID, item.imageID, item.fileName), holder.image);
             }
         }
