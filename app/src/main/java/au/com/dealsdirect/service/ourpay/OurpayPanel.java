@@ -28,7 +28,7 @@ import au.com.dealsdirect.utils.PriceUtils;
 import au.com.dealsdirect.utils.module.GateKeeper;
 
 /**
- *dp  Created on 8/4/17.
+ * dp  Created on 8/4/17.
  */
 
 public class OurpayPanel {
@@ -62,18 +62,18 @@ public class OurpayPanel {
         mHolderInBorder = (LinearLayout) view.findViewById(R.id.linearlayout_placeholder_boredered);
     }
 
-    public View generatePanel(Ourpay ourpay){
+    public View generatePanel(Ourpay ourpay) {
         return generatePanel(ourpay, null);
     }
 
-    public View generatePanel(Ourpay ourpay, OurpayCallback callback){
-        if (0 != (ourpay.getState() & OurpayState.PRECART)){
+    public View generatePanel(Ourpay ourpay, OurpayCallback callback) {
+        if (0 != (ourpay.getState() & OurpayState.PRECART)) {
 
-            if (0 != (ourpay.getState() & OurpayState.ERROR)){
+            if (0 != (ourpay.getState() & OurpayState.ERROR)) {
                 mHolderInBorder.addView(getTemplateText(ourpay.getDetails()));
                 mHolderInBorder.setBackground(mBaseActivity.getDrawable(R.drawable.ourpay_layout_border));
 
-            }else{
+            } else {
 
                 View header = getPanelHeader(ourpay);
                 final View panelRows = getPanelRows(ourpay.getPlannedTransactions());
@@ -92,11 +92,12 @@ public class OurpayPanel {
                 header.setOnClickListener(view -> {
                     panelRows.setVisibility(panelRows.getVisibility() == View.GONE ? View.VISIBLE : View.GONE);
                     templateView.setVisibility(templateView.getVisibility() == View.GONE ? View.VISIBLE : View.GONE);
-                    if(callback != null) callback.onHeaderClick(panelRows.getVisibility() == View.VISIBLE);
+                    if (callback != null)
+                        callback.onHeaderClick(panelRows.getVisibility() == View.VISIBLE);
                 });
 
             }
-        }else if (0 != (ourpay.getState() & OurpayState.ONCART)) {
+        } else if (0 != (ourpay.getState() & OurpayState.ONCART)) {
 
             if (0 != (ourpay.getState() & OurpayState.ERROR)) {
 
@@ -126,7 +127,8 @@ public class OurpayPanel {
                 header.setOnClickListener(view -> {
                     panelRows.setVisibility(panelRows.getVisibility() == View.GONE ? View.VISIBLE : View.GONE);
                     panelTotalRow.setVisibility(panelTotalRow.getVisibility() == View.GONE ? View.VISIBLE : View.GONE);
-                    if(callback != null) callback.onHeaderClick(panelRows.getVisibility() == View.VISIBLE);
+                    if (callback != null)
+                        callback.onHeaderClick(panelRows.getVisibility() == View.VISIBLE);
                 });
             }
         } else if (0 != (ourpay.getState() & OurpayState.POSTCART)) {
@@ -150,7 +152,7 @@ public class OurpayPanel {
         TextView textView = (TextView) view.findViewById(R.id.textView_template);
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
             textView.setText(Html.fromHtml(message, Html.FROM_HTML_MODE_COMPACT));
-        }else{
+        } else {
             textView.setText(Html.fromHtml(message));
         }
 
@@ -205,19 +207,14 @@ public class OurpayPanel {
 
         textViewTC.setText(Html.fromHtml(OurpayTemplateText.getText(mBaseActivity, ourpay.getTermsAndConditionsText())));
         textViewTC.setOnClickListener(view1 -> {
-
-            if (mRouter.getBackstackSize()==1){
-
-                ((MainActivity)mBaseActivity).setDraggableViewPager(false);
-                GateKeeper.push(mRouter,GateKeeper.Destination.LEGALITIES,
-                        new BundleBuilder(new Bundle())
-                                .putString(BundleKeys.TEMPLATE_KEY, OurpayTemplateText.KEY_OPS_TNC_FULL_TEXT)
-                                .putString(BundleKeys.LEGALITIES_TITLE, mBaseActivity.getString(R.string.my_basket))
-                                .build(),
-                        new VerticalChangeHandler(false),
-                        new VerticalChangeHandler());
-
-            }
+            ((MainActivity) mBaseActivity).setDraggableViewPager(false);
+            GateKeeper.push(mRouter, GateKeeper.Destination.LEGALITIES,
+                    new BundleBuilder(new Bundle())
+                            .putString(BundleKeys.TEMPLATE_KEY, OurpayTemplateText.KEY_OPS_TNC_FULL_TEXT)
+                            .putString(BundleKeys.LEGALITIES_TITLE, mBaseActivity.getString(R.string.my_basket))
+                            .build(),
+                    new VerticalChangeHandler(false),
+                    new VerticalChangeHandler());
 
         });
 
@@ -254,7 +251,7 @@ public class OurpayPanel {
         return footer;
     }
 
-    private View getSuccessHeaderRow(){
+    private View getSuccessHeaderRow() {
 
         View header = mBaseActivity.getLayoutInflater().inflate(R.layout.ourpay_post_cart_panel_header, null, false);
         return header;
@@ -266,11 +263,11 @@ public class OurpayPanel {
         return view;
     }
 
-    public void clearOurpayGraphBitmapsAndListeners(){
+    public void clearOurpayGraphBitmapsAndListeners() {
         mOurpayGraph.clearOurpayGraphBitmapsAndListeners();
     }
 
-    public void setIsGraphVisible(boolean isVisible){
+    public void setIsGraphVisible(boolean isVisible) {
         mOurpayGraph.setIsGraphVisible(isVisible);
     }
 }
