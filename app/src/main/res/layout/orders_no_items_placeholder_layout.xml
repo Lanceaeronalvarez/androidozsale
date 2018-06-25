@@ -23,12 +23,12 @@
             android:src="@drawable/ic_orders_placeholder"/>
 
         <TextView
-            fontPath="@string/font_app_medium"
             android:id="@+id/welcome"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/welcome_remark_title_orders"
             android:layout_gravity="center"
+            android:textColor="@color/colorAccent"
             android:textSize="@dimen/text_size_headline1"/>
 
         <TextView

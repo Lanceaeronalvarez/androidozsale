@@ -24,12 +24,11 @@
             android:src="@drawable/ic_contact_us_placeholder" />
 
         <TextView
-            fontPath="@string/font_app_bold"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:textSize="@dimen/text_size_headline1"
-            android:textColor="@color/text_medium"
+            android:textColor="@color/colorAccent"
             android:text="@string/welcome_remark_title_contact_us"/>
 
         <TextView

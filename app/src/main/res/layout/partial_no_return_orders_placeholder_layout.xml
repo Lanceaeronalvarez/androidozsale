@@ -18,12 +18,12 @@
         android:src="@drawable/ic_return_placeholder" />
 
     <TextView
-        fontPath="@string/font_app_medium"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
         android:gravity="center"
         android:text="@string/no_orders_for_return"
+        android:textColor="@color/colorAccent"
         android:textSize="@dimen/text_size_headline1" />
 
     <TextView
