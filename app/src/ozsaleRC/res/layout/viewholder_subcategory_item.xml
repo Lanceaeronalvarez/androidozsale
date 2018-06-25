@@ -20,8 +20,9 @@
 
     <ImageView
         android:id="@+id/viewholder_subcategory_item_check"
-        android:layout_width="@dimen/row_facet_check_icon_width"
-        android:layout_height="@dimen/row_facet_check_icon_height"
+        android:layout_width="@dimen/viewholder_subcategory_width"
+        android:layout_height="@dimen/viewholder_subcategory_width"
+        android:padding="@dimen/padding_small"
         android:src="@drawable/ic_check"
         android:visibility="invisible" />
 </LinearLayout>

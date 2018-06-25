@@ -30,6 +30,7 @@
             android:id="@+id/viewholder_subcategory_check"
             android:layout_width="@dimen/viewholder_subcategory_width"
             android:layout_height="@dimen/viewholder_subcategory_height"
+            android:padding="@dimen/padding_small"
             android:layout_gravity="right|center_vertical"
             android:visibility="gone"
             android:src="@drawable/ic_check"/>
