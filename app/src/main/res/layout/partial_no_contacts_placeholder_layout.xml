@@ -20,7 +20,7 @@
             android:layout_width="@dimen/placeholder_icon_width"
             android:layout_height="@dimen/placeholder_icon_height"
             android:layout_gravity="center"
-            android:visibility="@integer/placeholder_icon_visibility"
+            android:visibility="@integer/no_items_placeholder_icon_visibility"
             android:src="@drawable/ic_contact_us_placeholder" />
 
         <TextView
