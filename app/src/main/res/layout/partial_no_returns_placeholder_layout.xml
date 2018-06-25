@@ -14,6 +14,7 @@
         android:layout_width="@dimen/placeholder_icon_width"
         android:layout_height="@dimen/placeholder_icon_height"
         android:layout_gravity="center"
+        android:visibility="@integer/placeholder_icon_visibility"
         android:src="@drawable/ic_return_placeholder" />
 
     <TextView
@@ -21,7 +22,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
-        android:text="welcome to my returns!"
+        android:text="@string/welcome_to_my_returns"
         android:textSize="@dimen/text_size_headline1" />
 
     <TextView

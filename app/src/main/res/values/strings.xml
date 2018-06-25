@@ -607,6 +607,11 @@
     <string name="reviews">reviews</string>
     <string name="see_more">see more</string>
     <string name="log_out">Log Out</string>
+    <string name="welcome_to_my_vouchers">welcome to my vouchers!</string>
+    <string name="you_do_not_currently_have_any_vouchers">you do not currently have any vouchers</string>
+    <string name="you_have_not_added_any_orders_for_return">you have not added any orders for return.</string>
+    <string name="no_orders_for_return">no orders for return</string>
+    <string name="welcome_to_my_returns">welcome to my returns!</string>
     <bool name="is_ozsale">true</bool>
 
 </resources>

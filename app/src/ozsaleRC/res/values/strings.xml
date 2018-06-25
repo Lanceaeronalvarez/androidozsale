@@ -233,4 +233,25 @@
         <item>@drawable/bg_account_languages</item>
         <item>@drawable/bg_account_country</item>
     </integer-array>
+
+    <!--Placeholder remarks-->
+    <string name="welcome_remark_subtitle_address">You do not currently have any address.</string>
+    <string name="welcome_remark_title_address">Welcome to My Addresses!</string>
+    <string name="welcome_to_my_vouchers">Welcome to My Vouchers!</string>
+    <string name="you_do_not_currently_have_any_vouchers">You do not currently have any vouchers.</string>
+    <string name="welcome_remark_title_contact_us">Welcome to Contact Us!</string>
+    <string name="welcome_remark_subtitle_contact_us">You do not currently have any messages.</string>
+    <string name="welcome_remark_title_orders">Welcome to My Orders!</string>
+    <string name="welcome_remark_subtitle_orders">You do not currently have any orders.</string>
+    <string name="welcome_remark_title_payments">Welcome to My Payments!</string>
+    <string name="your_cart_is_currently_empty">Welcome to Checkout!</string>
+    <string name="welcome_remark_subtitle_payments">You do not currently have any payment methods.</string>
+    <string name="you_have_not_added_any_items_in_your_shopping_cart">You do not currently have any items added.</string>
+    <string name="you_have_not_added_any_orders_for_return">You have not added any orders for return.</string>
+    <string name="no_orders_for_return">No orders for return</string>
+    <string name="welcome_to_my_returns">Welcome to My Returns!</string>
+    <string name="you_currently_do_not_have_any_returns">You do not currently have any returns.</string>
+
+
+
 </resources>

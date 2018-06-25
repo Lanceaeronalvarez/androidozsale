@@ -3,4 +3,5 @@
     <integer name="account_column_count">1</integer>
     <integer name="sale_items_phone_column_count">3</integer>
     <integer name="sale_items_tablet_column_count">4</integer>
+    <integer name="placeholder_icon_visibility">8</integer>
 </resources>
