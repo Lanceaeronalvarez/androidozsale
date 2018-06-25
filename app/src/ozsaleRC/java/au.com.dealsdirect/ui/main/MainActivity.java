@@ -153,7 +153,7 @@ public class MainActivity extends BaseActivity implements MainMvpView {
         super.onConfigurationChanged(newConfig);
 
         /* bug/gen-8605_ozsale-reskin_bugfixing - four item row on mobile landscape to call onActivityResume */
-        if (mSaleItemsController!=null)
+        if (mSaleItemsController != null)
             mSaleItemsController.onOrientationChanged();
 
         if (mShopController != null)
@@ -415,7 +415,7 @@ public class MainActivity extends BaseActivity implements MainMvpView {
                 PaymentInfo.getOurpay().setCanUse(false);
             }
 
-            if(!mPresenter.isTablet()) {
+            if (!mPresenter.isTablet()) {
                 mCheckoutRouter.pushController(RouterTransaction.with(new PaymentSuccessController(responseValue))
                         .pushChangeHandler(new HorizontalChangeHandler())
                         .popChangeHandler(new HorizontalChangeHandler()));
@@ -425,9 +425,9 @@ public class MainActivity extends BaseActivity implements MainMvpView {
                 Bundle bundle = new BundleBuilder(new Bundle())
                         .putSerializable(BundleKeys.KEY_POP_UP_HOST_DESTINATION, GateKeeper.Destination.PAYMENT_SUCCESS)
                         .putString(BundleKeys.KEY_ADDRESS, responseValue.getD().getValue().getAddressString())
-                        .putDouble(BundleKeys.KEY_PRICE,  responseValue.getD().getValue().getOrderInfoResult().getTotal())
+                        .putDouble(BundleKeys.KEY_PRICE, responseValue.getD().getValue().getOrderInfoResult().getTotal())
                         .putDouble(BundleKeys.KEY_SHIPPING_FEE, responseValue.getD().getValue().getOrderInfoResult().getShipping())
-                        .putString(BundleKeys.KEY_INVOICE, responseValue.getD().getValue().getInvoiceNo() == null ? String.valueOf(responseValue.getD().getValue().getTransactionInvoiceNo()): responseValue.getD().getValue().getInvoiceNo())
+                        .putString(BundleKeys.KEY_INVOICE, responseValue.getD().getValue().getInvoiceNo() == null ? String.valueOf(responseValue.getD().getValue().getTransactionInvoiceNo()) : responseValue.getD().getValue().getInvoiceNo())
                         .putString(BundleKeys.KEY_ESTIMATED_DELIVERY, responseValue.getD().getValue().getOrderInfoResult().getEstimatedDeliveryText())
                         .build();
 
@@ -756,6 +756,9 @@ public class MainActivity extends BaseActivity implements MainMvpView {
                 break;
             case ROOT:
                 router.popToRoot();
+                if (!mIsTablet) {
+                    getHomeController().getPopUpHostRouter().handleBack();
+                }
                 break;
             default:
                 break;

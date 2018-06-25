@@ -8,6 +8,7 @@ import android.support.annotation.Nullable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.TextView;
 
@@ -74,6 +75,9 @@ public class RegisterController extends VisaCheckoutController implements Regist
     @BindView(R.id.controller_register_terms_link)
     TextView mTermsLink;
 
+    @BindView(R.id.controller_register_sign_up_button)
+    Button mSignUpButton;
+
     @Nullable
     @BindView(R.id.controller_login_legalities_container)
     ViewGroup mLegalitiesContainer;
@@ -129,7 +133,7 @@ public class RegisterController extends VisaCheckoutController implements Regist
         mActivity.setDraggableViewPager(false);
 
         mTermsLink.setOnClickListener(v -> onLegalitiesClicked(BundleKeys.TEMPLATE_KEY_TNC, getString(R.string.account_tnc)));
-
+        mSignUpButton.setOnClickListener(v -> onSignUpClicked());
         if (mVcoPresenter.isVisaCheckoutEnabled()) {
             mVcoPresenter.setupVisaCheckout();
         }
@@ -196,21 +200,6 @@ public class RegisterController extends VisaCheckoutController implements Regist
         mActivity.onBackPressed();
     }
 
-
-    @OnClick(R.id.controller_register_sign_up_button)
-    void onSignUpClick() {
-        if (mTermsCheck.isChecked()) {
-            mPresenter.registerUser(
-                    mRegisterForenameField.getText().toString(),
-                    mRegisterSurnameField.getText().toString(),
-                    mRegisterEmailField.getText().toString(),
-                    mRegisterPasswordField.getText().toString(),
-                    mTermsCheck.isChecked());
-        } else {
-            onError(R.string.please_accept_terms_and_conditions);
-        }
-    }
-
     @OnClick(R.id.controller_register_login_text)
     void onLoginClick() {
         mActivity.onBackPressed();
@@ -226,12 +215,13 @@ public class RegisterController extends VisaCheckoutController implements Regist
     @Override
     public void showLoginSuccessful(String loginTicket) {
         mActivity.loginSuccessHandler(getRouter(), AppConstants.POP_FLAG.ROOT, AppConstants.AUTH_FLAG.REGISTER);
+        mSignUpButton.setEnabled(true);
     }
 
     @Override
     public void showLoginError(String message) {
         mActivity.loginErrorHandler(message);
-
+        mSignUpButton.setEnabled(true);
     }
 
     @Override
@@ -266,5 +256,19 @@ public class RegisterController extends VisaCheckoutController implements Regist
                 bundle,
                 new HorizontalChangeHandler(false),
                 new HorizontalChangeHandler());
+    }
+
+    private void onSignUpClicked(){
+        if (mTermsCheck.isChecked()) {
+            mPresenter.registerUser(
+                    mRegisterForenameField.getText().toString(),
+                    mRegisterSurnameField.getText().toString(),
+                    mRegisterEmailField.getText().toString(),
+                    mRegisterPasswordField.getText().toString(),
+                    mTermsCheck.isChecked());
+            mSignUpButton.setEnabled(false);
+        } else {
+            onError(R.string.please_accept_terms_and_conditions);
+        }
     }
 }
