@@ -21,16 +21,17 @@
             android:layout_height="@dimen/placeholder_icon_height"
             android:layout_gravity="center"
             android:scaleType="fitXY"
+            android:visibility="@integer/no_items_placeholder_icon_visibility"
             android:src="@drawable/ic_basket_placeholder" />
 
         <TextView
-            fontPath="@string/font_app_medium"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:paddingLeft="@dimen/placeholder_padding"
             android:paddingRight="@dimen/placeholder_padding"
             android:text="@string/your_cart_is_currently_empty"
+            android:textColor="@color/colorAccent"
             android:textSize="@dimen/text_size_headline1" />
 
         <TextView
@@ -44,7 +45,7 @@
             android:layout_marginRight="@dimen/activity_horizontal_margin"
             android:paddingBottom="@dimen/button_height_regular"
             android:text="@string/you_have_not_added_any_items_in_your_shopping_cart"
-            android:textColor="#9f9f9f"
+            android:textColor="@color/text_medium"
             android:textSize="@dimen/text_size_headline3" />
 
     </LinearLayout>

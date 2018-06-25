@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!--No items placeholder icons visibility VISIBILE,INVISIBLE,GONE(0,1,2 respectively)-->
+    <integer name="no_items_placeholder_icon_visibility">2</integer>
+</resources>
