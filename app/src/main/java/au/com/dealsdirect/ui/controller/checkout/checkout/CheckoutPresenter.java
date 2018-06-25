@@ -242,8 +242,9 @@ public class CheckoutPresenter<V extends CheckoutMvpView> extends BasePresenter<
 
         try {
 
-            if (value!=null)
-                ourpay.setUserAmount(value.getSummary().total);
+            if (value!=null) {
+                ourpay.setUserAmount(value.getSummary().getTotal());
+            }
 
             /* default */
             ourpay.setCanUse(value.getMyPayDetails().enabled);

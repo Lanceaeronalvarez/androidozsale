@@ -43,7 +43,7 @@ public class AddPaymentPresenter<V extends AddPaymentMvpView> extends BasePresen
         try {
 
             if (value!=null) {
-                ourpay.setUserAmount(value.getSummary().total);
+                ourpay.setUserAmount(value.getSummary().getTotal());
             }
 
             /* default */
