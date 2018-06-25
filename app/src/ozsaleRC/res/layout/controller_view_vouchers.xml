@@ -48,7 +48,6 @@
                     android:id="@+id/controller_view_voucher_divider"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_below="@id/controller_view_voucher_unused_recyclerviewpager"
                     android:orientation="vertical"
                     android:paddingBottom="@dimen/margin_large"
                     android:paddingTop="@dimen/margin_large">
@@ -74,18 +73,12 @@
                 <com.lsjwzh.widget.recyclerviewpager.RecyclerViewPager
                     android:id="@+id/controller_view_voucher_used_recyclerviewpager"
                     style="@style/RecyclerViewPagerVouchersStyle"
-                    android:layout_below="@+id/controller_view_voucher_divider"
+                    android:overScrollMode="never"
                     app:rvp_singlePageFling="true"
                     app:rvp_triggerOffset="0.1" />
 
             </LinearLayout>
 
-            <android.support.v7.widget.RecyclerView
-                android:id="@+id/controller_view_voucher_unused_recyclerview"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:background="@color/transparent"
-                android:visibility="gone" />
         </LinearLayout>
     </android.support.v4.widget.NestedScrollView>
 

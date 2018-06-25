@@ -3,7 +3,6 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
-    android:layout_margin="@dimen/activity_horizontal_margin"
     tools:ignore="MissingPrefix">
 
     <LinearLayout
@@ -11,10 +10,11 @@
         android:layout_width="@dimen/voucher_container_width"
         android:layout_height="@dimen/voucher_container_height"
         android:clickable="true"
-        android:gravity="center_vertical"
+        android:layout_centerInParent="true"
+        android:layout_marginLeft="@dimen/padding_default"
+        android:layout_marginRight="@dimen/padding_default"
         android:background="@drawable/bg_voucher_item"
-        android:orientation="horizontal"
-        android:weightSum="2">
+        android:orientation="horizontal">
 
         <View
             android:layout_width="0dp"
@@ -26,8 +26,7 @@
             android:layout_height="match_parent"
             android:layout_weight="1"
             android:gravity="center_vertical"
-            android:orientation="vertical"
-            android:padding="@dimen/voucher_text_padding">
+            android:orientation="vertical">
 
             <TextView
                 android:id="@+id/row_add_vouchers_text_item_cost_value"
@@ -36,7 +35,6 @@
                 android:layout_height="wrap_content"
                 android:textColor="@color/colorAccent"
                 android:textSize="@dimen/text_size_title"
-                android:textStyle="bold"
                 tools:text="$10" />
 
             <TextView
@@ -51,7 +49,6 @@
 
             <TextView
                 android:id="@+id/row_add_vouchers_text_item_expires_on_value"
-                fontPath="@string/font_app_medium"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="2dp"
