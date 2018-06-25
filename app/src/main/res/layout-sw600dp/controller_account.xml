@@ -26,6 +26,9 @@
             android:overScrollMode="never" />
     </LinearLayout>
 
+    <View style="@style/verticalBorderView"
+        android:layout_width="@dimen/border_thick"/>
+
     <com.bluelinelabs.conductor.ChangeHandlerFrameLayout
         android:id="@+id/account_detail_container"
         android:layout_width="0dp"
