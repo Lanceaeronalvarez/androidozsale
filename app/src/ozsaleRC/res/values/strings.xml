@@ -199,8 +199,6 @@
     <string name="shop">Shop</string>
     <string name="continue_shopping">Continue Shopping</string>
     <string name="shop_now">Shop Now</string>
-    <string name="your_cart_is_currently_empty">Welcome to Checkout!</string>
-    <string name="you_have_not_added_any_items_in_your_shopping_cart">You do not currently have any items added</string>
 
     <integer-array name="account_title_array">
         <item>@string/account_details</item>
