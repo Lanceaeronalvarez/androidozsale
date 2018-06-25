@@ -15,4 +15,5 @@
 
     <!--Ourpay Select Checkbox size-->
     <dimen name="ourpay_select_checkbox_size">20dp</dimen>
+
 </resources>

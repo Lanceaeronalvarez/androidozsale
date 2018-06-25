@@ -34,7 +34,7 @@
     <string name="expiration_date">Expiration Date</string>
     <string name="dec_2025">Dec 2025</string>
     <string name="discover_the_products_you_love">discover the products you love</string>
-    <string name="shop">Shop</string>
+
     <string name="payment_schedule">Payment Schedule</string>
     <string name="ourpay">Ourpay</string>
     <string name="account">Account</string>
@@ -138,7 +138,6 @@
     <string name="regent_u_7_1824_aubrey_st_surfers_paradise_qld_4170_0_123_224_32_34">Regent U 7, 1824 Aubrey St Surfers Paradise, QLD, 4170, +0 (123) 224-32-34</string>
     <string name="valid_thru_dec_2025">valid thru Dec 2025</string>
     <string name="_3456">**** **** **** 3456</string>
-    <string name="continue_shopping">Continue Shopping</string>
     <string name="total_payment">Total Payment</string>
     <string name="_350_00">$350.00</string>
     <string name="order_number">Order Number</string>
@@ -195,6 +194,13 @@
 
     <string name="my_basket">Checkout</string>
     <string name="browse">Category</string>
+
+    <!--Checkout strings-->
+    <string name="shop">Shop</string>
+    <string name="continue_shopping">Continue Shopping</string>
+    <string name="shop_now">Shop Now</string>
+    <string name="your_cart_is_currently_empty">Welcome to Checkout!</string>
+    <string name="you_have_not_added_any_items_in_your_shopping_cart">You do not currently have any items added</string>
 
     <integer-array name="account_title_array">
         <item>@string/account_details</item>
