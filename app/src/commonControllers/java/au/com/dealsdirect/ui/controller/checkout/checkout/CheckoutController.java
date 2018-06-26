@@ -799,11 +799,11 @@ public class CheckoutController extends VisaCheckoutController implements Checko
             if (isOurPaySelectDeliveryMethod() && !mDeliveryServicePackageDetail.getPurchased()) {
                 mSummaryOurpaySelectContainer.setVisibility(View.VISIBLE);
                 mSummaryPayTodayContainer.setVisibility(View.VISIBLE);
-                mSummaryShippingFeeTextView.setVisibility(View.GONE);
+                mSummaryShippingFeeContainer.setVisibility(View.GONE);
             } else {
                 mSummaryOurpaySelectContainer.setVisibility(View.GONE);
                 mSummaryPayTodayContainer.setVisibility(View.GONE);
-                mSummaryShippingFeeTextView.setVisibility(View.VISIBLE);
+                mSummaryShippingFeeContainer.setVisibility(View.VISIBLE);
             }
         }
 
