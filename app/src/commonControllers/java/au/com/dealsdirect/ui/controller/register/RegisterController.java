@@ -215,7 +215,6 @@ public class RegisterController extends VisaCheckoutController implements Regist
     @Override
     public void showLoginSuccessful(String loginTicket) {
         mActivity.loginSuccessHandler(getRouter(), AppConstants.POP_FLAG.ROOT, AppConstants.AUTH_FLAG.REGISTER);
-        mSignUpButton.setEnabled(true);
     }
 
     @Override
