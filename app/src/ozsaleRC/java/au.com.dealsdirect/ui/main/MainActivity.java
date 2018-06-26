@@ -112,7 +112,6 @@ public class MainActivity extends BaseActivity implements MainMvpView {
     private boolean mIsFromBannerFilter = false;
     private boolean isTemplateTextsStored = false;
     private boolean mIsViewAttached = false;
-    private boolean mIsTablet = false;
     private int mVisaCheckoutActionType = -1;
 
     @Override
@@ -122,10 +121,6 @@ public class MainActivity extends BaseActivity implements MainMvpView {
         setContentView(R.layout.activity_main);
         mIsViewAttached = true;
         getActivityComponent().inject(this);
-
-        if (getResources().getBoolean(R.bool.is_tablet)) {
-            mIsTablet = true;
-        }
 
         setUnBinder(ButterKnife.bind(this));
 
@@ -756,7 +751,7 @@ public class MainActivity extends BaseActivity implements MainMvpView {
                 break;
             case ROOT:
                 router.popToRoot();
-                if (!mIsTablet) {
+                if (mPresenter.isTablet()) {
                     getHomeController().getPopUpHostRouter().handleBack();
                 }
                 break;
