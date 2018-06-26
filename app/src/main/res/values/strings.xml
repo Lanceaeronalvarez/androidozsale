@@ -612,6 +612,8 @@
     <string name="you_have_not_added_any_orders_for_return">you have not added any orders for return.</string>
     <string name="no_orders_for_return">no orders for return</string>
     <string name="welcome_to_my_returns">welcome to my returns!</string>
-    <bool name="is_ozsale">true</bool>
+
+    <!--Country Id Mapping-->
+    <string name="country_id_AS">AS</string>
 
 </resources>

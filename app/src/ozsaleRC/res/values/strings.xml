@@ -72,7 +72,10 @@
     <string name="mobile_verification">mobile verification</string>
     <string name="country_code">Country Code</string>
     <string name="australia_61">Australia (+61)</string>
-    <string name="phone_number">Phone Number</string>
+    <string name="mobile_number">Mobile Number</string>
+    <string name="ourpay_code_hint">Code</string>
+    <string name="enter_your_code_below">ENTER YOUR CODE BELOW</string>
+    <string name="invalid_phone_number">Invalid Number</string>
     <string name="send_sms_verification">Send SMS Verification</string>
     <string name="_202_555_0104">202 555 0104</string>
     <string name="fill_out_credit_card_details">fill out credit card details</string>
@@ -179,7 +182,6 @@
 
     <bool name="is_item_attribute_gone">true</bool>
     <bool name="is_checkout_orders_label_visible">true</bool>
-    <bool name="is_ozsale">true</bool>
 
     <string name="category_default">Categories</string>
     <string name="invite_friend_guide">Invite your friends to join Ozsale. Once your friends have
@@ -249,7 +251,5 @@
     <string name="no_orders_for_return">No orders for return</string>
     <string name="welcome_to_my_returns">Welcome to My Returns!</string>
     <string name="you_currently_do_not_have_any_returns">You do not currently have any returns.</string>
-
-
 
 </resources>

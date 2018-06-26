@@ -128,7 +128,7 @@ public class PersonalisationLayout extends LinearLayout {
 
             rowLabel.setTag(currentKey.concat(LABEL_TEXT_TAG));
 
-            boolean isOzsale = mBaseActivity.getResources().getBoolean(R.bool.is_ozsale);
+            boolean isOzsale = mBaseActivity.getResources().getBoolean(R.bool.is_ozsale_app);
 
             // Set edit text hint
             rowEditText.setHint(!isOzsale ? property.getWatermark() : mBaseActivity.getResources()
@@ -183,7 +183,7 @@ public class PersonalisationLayout extends LinearLayout {
         // Else check required fields if they have input
         for (String currentKey : mPersonalisation.getRequired()) {
 
-            boolean isOzsale = mBaseActivity.getResources().getBoolean(R.bool.is_ozsale);
+            boolean isOzsale = mBaseActivity.getResources().getBoolean(R.bool.is_ozsale_app);
 
             TextView rowLabel = (TextView) findViewWithTag(currentKey.concat(LABEL_TEXT_TAG));
 

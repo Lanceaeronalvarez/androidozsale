@@ -249,7 +249,7 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
     protected void onAttach(@NonNull View view) {
         super.onAttach(view);
         mPresenter.onAttach(this);
-        if (getBoolean(R.bool.is_ozsale) && !getBoolean(R.bool.is_tablet)) {
+        if (getBoolean(R.bool.is_ozsale_app) && !getBoolean(R.bool.is_tablet)) {
             ((AppBarLayout)mAppBarLayout).addOnOffsetChangedListener(this);
         }
     }
@@ -263,7 +263,7 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
     @Override
     public void onDetach(View view) {
         super.onDetach(view);
-        if (getBoolean(R.bool.is_ozsale) && !getBoolean(R.bool.is_tablet)) {
+        if (getBoolean(R.bool.is_ozsale_app) && !getBoolean(R.bool.is_tablet)) {
             ((AppBarLayout)mAppBarLayout).removeOnOffsetChangedListener(this);
         }
     }
