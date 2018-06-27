@@ -113,6 +113,7 @@
     <dimen name="invite_friends_padding">5dp</dimen>
     <dimen name="invite_friends_vouchers_image_height">250dp</dimen>
 
+
     <!-- Login -->
     <dimen name="login_drawable_close_height">5dp</dimen>
 
@@ -185,6 +186,8 @@
     <dimen name="voucher_padding">50dp</dimen>
     <dimen name="voucher_text_padding">10dp</dimen>
     <dimen name="viewholder_subcategory_width">40dp</dimen>
+    <dimen name="text_size_voucher_title">34sp</dimen>
+
 
     <!--Delivery Options-->
     <dimen name="ourpay_select_logo_width">160dp</dimen>

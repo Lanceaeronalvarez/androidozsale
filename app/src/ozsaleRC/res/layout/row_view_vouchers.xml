@@ -37,9 +37,9 @@
             android:id="@+id/row_view_voucher_cost_text"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:fontFamily="@string/font_app_bold"
-            android:textColor="@color/text_dark"
-            android:textSize="@dimen/text_size_title"
+            android:fontFamily="@string/fontname_lato_bold"
+            android:textColor="@color/bt_black"
+            android:textSize="@dimen/text_size_voucher_title"
             android:gravity="right"
             android:textStyle="bold"
             tools:text="$1000"/>
