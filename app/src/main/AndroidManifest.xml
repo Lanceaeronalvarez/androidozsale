@@ -42,7 +42,8 @@
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
-            <intent-filter>
+            <intent-filter
+                android:label="@string/app_name">
                 <action android:name="android.intent.action.VIEW" />
 
                 <category android:name="android.intent.category.DEFAULT" />
@@ -56,10 +57,14 @@
 
                 <!-- note that the leading "/" is required for pathPrefix -->
                 <!-- Accepts URIs that begin with "dealsdirect://ta” -->
+
+                <!-- Ozsale -->
+                <!-- Accepts URIs that begin with "https://www.ozsale.com.au” -->
                 <data
-                    android:host="*"
-                    android:pathPrefix="/"
-                    android:scheme="dealsdirect" />
+                    android:host="www.ozsale.com.au"
+                    android:pathPrefix=""
+                    android:scheme="https"
+                    tools:ignore="AppLinkUrlError"/>
 
                 <!-- IOS deep linking compliance -->
                 <!-- Sample:  au.com.dealsdirect.redirection://ta/action/7RyOu0kKFUuYPo38kWGTiw -->

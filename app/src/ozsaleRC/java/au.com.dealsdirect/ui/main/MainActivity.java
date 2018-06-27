@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.res.Configuration;
 import android.os.Bundle;
+import android.os.Handler;
 import android.view.ViewGroup;
 
 import com.bluelinelabs.conductor.Conductor;
@@ -61,6 +62,7 @@ import au.com.dealsdirect.ui.controller.home.HomeController;
 import au.com.dealsdirect.ui.controller.login.LoginHostController;
 import au.com.dealsdirect.ui.controller.main.MainController;
 import au.com.dealsdirect.ui.controller.saleitemdetails.SaleItemDetailsController;
+import au.com.dealsdirect.ui.controller.saleitems.SaleItemsController;
 import au.com.dealsdirect.ui.controller.shops.ShopsController;
 import au.com.dealsdirect.ui.controller.shops.ShopsMvpView;
 import au.com.dealsdirect.ui.controller.splash.SplashScreenController;
@@ -68,6 +70,7 @@ import au.com.dealsdirect.ui.controller.visacheckout.VisaCheckoutController;
 import au.com.dealsdirect.ui.custom.CustomAlertDialog;
 import au.com.dealsdirect.utils.AppConstants;
 import au.com.dealsdirect.utils.BraintreeUtils;
+import au.com.dealsdirect.utils.BundleBuilder;
 import au.com.dealsdirect.utils.DialogUtils;
 import au.com.dealsdirect.utils.IntrospectionUtils;
 import au.com.dealsdirect.utils.NetworkUtils;
@@ -77,6 +80,12 @@ import butterknife.ButterKnife;
 
 import static au.com.dealsdirect.ui.controller.main.MainController.BANNER_FILTER_INDEX;
 import static au.com.dealsdirect.ui.controller.main.MainController.SHOP_INDEX;
+import static au.com.dealsdirect.utils.BundleKeys.SALEITEMDETAILS_KEY_IS_DEEP_LINKED_WITH_SALE;
+import static au.com.dealsdirect.utils.BundleKeys.SALEITEMDETAILS_KEY_SEO_IDENTIFIER_ID;
+import static au.com.dealsdirect.utils.BundleKeys.SALEITEMDETAILS_KEY_SKU_ID;
+import static au.com.dealsdirect.utils.BundleKeys.SALEITEMS_BANNER_ID;
+import static au.com.dealsdirect.utils.BundleKeys.SALEITEMS_SALE_ID;
+import static au.com.dealsdirect.utils.BundleKeys.SALEITEMS_TITLE;
 
 public class MainActivity extends BaseActivity implements MainMvpView {
 
@@ -110,6 +119,10 @@ public class MainActivity extends BaseActivity implements MainMvpView {
     private boolean mIsTablet = false;
     private int mVisaCheckoutActionType = -1;
 
+    /* bug/gen-8065-reskin_bugfixing */
+    private int mDeepLinkLoadDelay = 1000;
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         setTheme(R.style.AppTheme);
@@ -132,9 +145,9 @@ public class MainActivity extends BaseActivity implements MainMvpView {
 
         mMainController = MainController.newInstance();
         mRouter = Conductor.attachRouter(this, mContainer, savedInstanceState);
-        mRouter.setRoot(RouterTransaction.with(SplashScreenController.newInstance())
-                .popChangeHandler(new VerticalChangeHandler()));
+        showSplashScreen();
 
+        onNewIntent(getIntent());
         setUp();
     }
 
@@ -191,6 +204,19 @@ public class MainActivity extends BaseActivity implements MainMvpView {
     protected void onPause() {
         super.onPause();
         unregisterReceiver(broadcastReceiver);
+    }
+
+    @Override
+    protected void onNewIntent(Intent intent) {
+
+        String url = "";
+        if (intent.getData() != null) url = intent.getData().toString();
+
+        //  mDeepLinkProgressDialog = new ProgressUtil().showLoadingDialog(this);
+        /* call for getDeepLink data */
+
+        if (intent.getData() != null && !url.isEmpty())
+            mPresenter.getDeepLinkData(url);
     }
 
 
@@ -699,6 +725,10 @@ public class MainActivity extends BaseActivity implements MainMvpView {
         mCategoriesController = categoriesController;
     }
 
+    public CategoriesController getCategoriesController() {
+        return mCategoriesController;
+    }
+
     public boolean getIsMyPayEnabled() {
         return mPresenter.getIsMyPayEnabled();
     }
@@ -845,4 +875,120 @@ public class MainActivity extends BaseActivity implements MainMvpView {
         return getMainController().getHomeController();
     }
 
+
+    @Override
+    public void deepLinkSaleItems(String bannerTitle, String saleId, String bannerId) {
+
+        Bundle args = new BundleBuilder(new Bundle())
+                .putString(SALEITEMS_TITLE, bannerTitle)
+                .putString(SALEITEMS_SALE_ID, saleId)
+                .putString(SALEITEMS_BANNER_ID, bannerId)
+                .build();
+
+        Handler handler = new Handler();
+        handler.postDelayed(() -> {
+
+            if (!mPresenter.isAuthorized()) {
+
+                // Invoke login if no auth or not an open app
+                if (mHomeRouter != null)
+                    mHomeRouter.pushController(RouterTransaction.with(
+                            new SaleItemsController(args))
+                            .tag(this.getString(R.string.sale_items_controller_tag))
+                            .pushChangeHandler(new HorizontalChangeHandler())
+                            .popChangeHandler(new HorizontalChangeHandler()));
+            } else {
+
+                // Check if sale is available
+                mHomeRouter.pushController(RouterTransaction.with(
+                        new SaleItemsController(args))
+                        .tag(this.getString(R.string.sale_items_controller_tag))
+                        .pushChangeHandler(new HorizontalChangeHandler())
+                        .popChangeHandler(new HorizontalChangeHandler()));
+            }
+        }, mDeepLinkLoadDelay);
+
+    }
+
+    @Override
+    public void deepLinkSales(String categoryName, String categoryId) {
+
+        Handler handler = new Handler();
+        handler.postDelayed(() -> {
+            if (mHomeRouter != null) {
+                mShopController.goToSales(categoryName, categoryId);
+
+            }
+        }, mDeepLinkLoadDelay);
+
+        deepLinkSuceeded();
+    }
+
+    @Override
+    public void deepLinkSaleItemDetailsWithoutSale(String seoIdentifierId, String skuId) {
+
+        Handler handler = new Handler();
+        handler.postDelayed(() -> {
+            Bundle bundle = new Bundle();
+            bundle.putString(SALEITEMDETAILS_KEY_SEO_IDENTIFIER_ID, seoIdentifierId);
+            bundle.putString(SALEITEMDETAILS_KEY_SKU_ID, skuId);
+            bundle.putBoolean(SALEITEMDETAILS_KEY_IS_DEEP_LINKED_WITH_SALE, false);
+
+            mMainController.setViewpagerDraggable(false);
+            mMainController.getHomeController().deepLinkSaleItemDetails(seoIdentifierId, skuId, false);
+            deepLinkSuceeded();
+        }, mDeepLinkLoadDelay);
+
+    }
+
+    @Override
+    public void deepLinkSaleItemDetailsWithSale(String saleName, String encodedSaleId, String seoIdentifier, String skuId) {
+
+        Handler handler = new Handler();
+        handler.postDelayed(() -> {
+            mMainController.getHomeController().deepLinkSaleItems(saleName, encodedSaleId, "");
+            deepLinkSuceeded();
+            mMainController.getHomeController().deepLinkSaleItemDetails(seoIdentifier, skuId, true);
+        }, mDeepLinkLoadDelay);
+
+    }
+
+    @Override
+    public void deepLinkCategoryLink(String categoryName, String categoryIdentifier) {
+        Handler handler = new Handler();
+        handler.postDelayed(() -> {
+            if (mShopController != null) {
+                mShopController.goToCategoryLink(categoryName, categoryIdentifier);
+            }
+        }, mDeepLinkLoadDelay);
+
+        deepLinkSuceeded();
+    }
+
+    @Override
+    public void deeLinkMessageThread() {
+
+    }
+
+    @Override
+    public void deepLinkDefault() {
+        deepLinkSuceeded();
+    }
+
+    private void deepLinkSuceeded() {
+        /* deep link succeeded */
+    }
+
+    private void showSplashScreen() {
+        String url = "";
+        if (getIntent().getData() != null)
+            url = getIntent().getData().toString();
+
+        if (getIntent().getData() != null && !url.isEmpty()) {
+            splashShownCallback();
+        } else {
+            mRouter.setRoot(RouterTransaction.with(SplashScreenController.newInstance())
+                    .popChangeHandler(new VerticalChangeHandler()));
+        }
+    }
 }

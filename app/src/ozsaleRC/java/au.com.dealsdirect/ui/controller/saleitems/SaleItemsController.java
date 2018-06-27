@@ -1,7 +1,6 @@
 package au.com.dealsdirect.ui.controller.saleitems;
 
 import android.app.Activity;
-import android.content.Context;
 import android.content.res.ColorStateList;
 import android.os.Build;
 import android.os.Bundle;
@@ -14,11 +13,11 @@ import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.EditorInfo;
-import android.view.inputmethod.InputMethodManager;
 import android.widget.FrameLayout;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
@@ -49,7 +48,6 @@ import au.com.dealsdirect.data.network.model.saleitems.GetSaleItemsResponse;
 import au.com.dealsdirect.data.network.model.sorting.SortingResponse;
 import au.com.dealsdirect.ui.base.BaseController;
 import au.com.dealsdirect.ui.controller.saleitemdetails.SaleItemDetailsController;
-import au.com.dealsdirect.ui.controller.searchfilter.SearchFilterController;
 import au.com.dealsdirect.ui.controller.searchfilter.SearchFilterMvpView;
 import au.com.dealsdirect.ui.controller.searchfilter.adapter.SearchChipModel;
 import au.com.dealsdirect.ui.custom.SearchEditText;
@@ -74,7 +72,7 @@ import in.srain.cube.views.ptr.PtrHandler;
 import static android.widget.AbsListView.OnScrollListener.SCROLL_STATE_IDLE;
 import static au.com.dealsdirect.utils.BundleKeys.SALEITEMS_CATEGORY_MAP;
 import static au.com.dealsdirect.utils.BundleKeys.SALEITEMS_CHIPS_FILTER;
-import static au.com.dealsdirect.utils.BundleKeys.SALEITEMS_FROM_CATEGORIES;
+import static au.com.dealsdirect.utils.BundleKeys.SALEITEMS_FROM_CATEGORY_DEEPLINK;
 import static au.com.dealsdirect.utils.BundleKeys.SALEITEMS_FROM_CATEGORY_SEARCH;
 import static au.com.dealsdirect.utils.BundleKeys.SALEITEMS_FROM_SHOP_SEARCH;
 import static au.com.dealsdirect.utils.BundleKeys.SALEITEMS_SALE_ID;
@@ -158,6 +156,7 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
     private boolean mIsLoadingProgress = false;
     private boolean mHasLoadedAllItems = false;
     private boolean mIsCategoryChanged = false;
+    private boolean mFromCategoryDeeplink = false;
     private boolean mInitialLoad = false;
 
     private List<SearchChipModel> mChipFilters = new ArrayList<>();
@@ -235,7 +234,9 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
             mFromShopSearch = getArgs().getBoolean(SALEITEMS_FROM_SHOP_SEARCH, true);
         if (args.containsKey(SALEITEMS_FROM_CATEGORY_SEARCH))
             mFromCategorySearch = getArgs().getBoolean(SALEITEMS_FROM_CATEGORY_SEARCH, true);
-
+        if (args.containsKey(SALEITEMS_FROM_CATEGORY_DEEPLINK)) {
+            mFromCategoryDeeplink = getArgs().getBoolean(SALEITEMS_FROM_CATEGORY_DEEPLINK, false);
+        }
     }
 
     @Override
@@ -405,6 +406,7 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
 
         if (mIsFiltered || mSaleItems.isEmpty()) {
             hasSearchFilters = false;
+
             mPresenter.loadSaleItems(createSaleItemsRequest(mCategoryKey, mSaleId, mSaleItemsPageNumber, mChipFilters, ""));
 
             /* show popular products after filter with empty chips */
@@ -435,7 +437,10 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
         mPaginateManager = PaginateUtils.init(mSaleItemsRecyclerView, mPaginateCallbacks);
 
         mInitialLoad = true;
-        mPresenter.loadSaleItems(createSaleItemsRequest("", mSaleId, mSaleItemsPageNumber, mChipFilters, ""));
+
+        /* bug/gen-8065_ozsale-reskin_bugfixing - dont load empty category on category link */
+        if (!mFromCategoryDeeplink)
+            mPresenter.loadSaleItems(createSaleItemsRequest("", mSaleId, mSaleItemsPageNumber, mChipFilters, ""));
 
         setRetainViewMode(RetainViewMode.RETAIN_DETACH);
         hideKeyboard();
@@ -567,6 +572,7 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
             mChipFilters = removeSearchQueryChips(mChipFilters);
             buildSearchQueryChips(mChipFilters);
             mSaleItemsPageNumber++;
+
             mPresenter.loadSaleItems(createSaleItemsRequest(mSearchFilterMvpView.getCategoryKeys(), mSaleId, mSaleItemsPageNumber, mChipFilters, ""));
         }}
 
@@ -593,6 +599,7 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
             bundle.putString("KEY_SALE_PRICE", ((SaleItemsAdapter.ViewHolder) viewHolder).price.getText().toString());
             bundle.putString("KEY_SALE_OLD_PRICE", ((SaleItemsAdapter.ViewHolder) viewHolder).oldPrice.getText().toString());
 
+            Log.d("shopscontroller", "saleitems controller = "+position+", imageurl = "+imageUrl+ " , seoIdentifierID = "+seoIdentifierId+ " , skuid = "+skuId+" , saleid = "+saleId);
             if (Build.VERSION.SDK_INT < Build.VERSION_CODES.M) {
                 getRouter().pushController(RouterTransaction.with(SaleItemDetailsController.newInstance(bundle))
                         .pushChangeHandler(new FadeChangeHandler())
@@ -841,6 +848,7 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
 
     @Override
     public void onRefreshBegin(PtrFrameLayout frame) {
+
         mPresenter.loadSaleItems(createSaleItemsRequest(mCategoryKey, mSaleId, 0, mChipFilters, ""));
     }
 

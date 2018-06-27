@@ -5,6 +5,7 @@ import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -45,6 +46,8 @@ public class CategoriesController extends BaseController
         implements CategoriesMvpView, CategoryClickListener, SubCategoryItemClickListener {
 
     public static final String TAG = "CategoriesController";
+
+    public Map<String, String> mCategoryKeyMap = new HashMap<>();
 
     @Inject
     CategoriesMvpPresenter<CategoriesMvpView> mPresenter;
@@ -182,7 +185,6 @@ public class CategoriesController extends BaseController
     @Override
     public void onSubCategoryItemClicked(String categoryID, String categoryName, String categoryKey) {
 
-
         mActivity.getMainController().setChosenCategoryItemKey(categoryKey);
 
         Bundle saleItemBundle = new BundleBuilder(new Bundle())
@@ -279,7 +281,17 @@ public class CategoriesController extends BaseController
                     addToMap(newList);
                 }
                 mCategoryMap.put(subcategory.getKey(), newList);
+                mCategoryKeyMap.put(subcategory.getId(), subcategory.getKey());
             }
         }
     }
+
+
+    public String getCategoryKey(String categoryId) {
+        Log.d("deeplinkers", "get category key = "+categoryId+ " , "+ mCategoryKeyMap.get(categoryId));
+        Log.d("deeplinkers", "get category key = "+categoryId+ " , "+ mCategoryKeyMap.get("SG9tZT4_PkJlZCAmIEJhdGg_Pj5TaGVldHM="));
+
+        return mCategoryKeyMap.get(categoryId);
+    }
+
 }

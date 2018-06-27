@@ -19,6 +19,9 @@ public final class ApiEndPoint {
     private static final String EVENTS = "api/shop/eventing/v1/events";
     private static final String USERS = "api/shop/eventing/v1/users/current";
 
+    /* Deep Link Data */
+    public static final String DEEP_LINK = BuildConfig.API_ROOT + "api/shop/settings/v1/deeplinkdata";
+
 
     public static final String GET_CATEGORY_TREE = getBaseApiGenie() + CATEGORY_TREE;
     public static final String GET_SORTING = getBaseApiGenie() + SORTING;
