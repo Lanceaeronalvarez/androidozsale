@@ -6,8 +6,7 @@ import com.google.gson.annotations.SerializedName;
 
 import java.util.List;
 
-import au.com.dealsdirect.data.network.model.checkout.getcurrentorder.MyPayDetails;
-import au.com.dealsdirect.data.network.model.checkout.getcurrentorder.PaymentConditions;
+import au.com.dealsdirect.data.network.model.ourpaydata.OurpayDataResponse;
 
 public class GetSaleItemDetailsResponse {
 
@@ -72,32 +71,8 @@ public class GetSaleItemDetailsResponse {
     @Expose
     private String seoIdentifier;
 
-    @SerializedName("BillingAgreement")
-    @Expose
-    private MyPayDetails.BillingAgreement billingAgreement;
-
-    @SerializedName("PaymentPlan")
-    @Expose
-    private PaymentPlan paymentPlan;
-
-    @SerializedName("PaymentConditions")
-    @Expose
-    private PaymentConditions paymentConditions;
-
-    @SerializedName("MyPayAmount")
-    @Expose
-    private int myPayAmount;
-
-    @SerializedName("MyPayDetails")
-    @Expose
-    private String myPayDetails;
-
     public String getPersonalisation() {
         return personalisation;
-    }
-
-    public void setPersonalisation(String personalisation) {
-        this.personalisation = personalisation;
     }
 
     public List<GetSaleItemDetailsResponse> getSkuVariants() {
@@ -242,47 +217,6 @@ public class GetSaleItemDetailsResponse {
 
     public void setSeoIdentifier(String seoIdentifier) {
         this.seoIdentifier = seoIdentifier;
-    }
-
-    public MyPayDetails.BillingAgreement getBillingAgreement() {
-        return billingAgreement;
-    }
-
-    public void setBillingAgreement(MyPayDetails.BillingAgreement billingAgreement) {
-        this.billingAgreement = billingAgreement;
-    }
-
-    public PaymentConditions getPaymentConditions() {
-        return paymentConditions;
-    }
-
-    public void setPaymentConditions(PaymentConditions paymentConditions) {
-        this.paymentConditions = paymentConditions;
-    }
-
-    public int getMyPayAmount() {
-        return myPayAmount;
-    }
-
-    public void setMyPayAmount(int myPayAmount) {
-        this.myPayAmount = myPayAmount;
-    }
-
-    public String getMyPayDetails() {
-        return myPayDetails;
-    }
-
-    public void setMyPayDetails(String myPayDetails) {
-        this.myPayDetails = myPayDetails;
-    }
-
-
-    public PaymentPlan getPaymentPlan() {
-        return paymentPlan;
-    }
-
-    public void setPaymentPlan(PaymentPlan paymentPlan) {
-        this.paymentPlan = paymentPlan;
     }
 
     public boolean isSoldOut() {

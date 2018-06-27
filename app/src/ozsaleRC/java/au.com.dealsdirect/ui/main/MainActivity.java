@@ -45,9 +45,9 @@ import au.com.dealsdirect.R;
 import au.com.dealsdirect.data.auth.AuthHandler;
 import au.com.dealsdirect.data.network.model.category.GetCategoryTreeResponse;
 import au.com.dealsdirect.data.network.model.checkout.CreatePaymentTransaction;
-import au.com.dealsdirect.data.network.model.checkout.getcurrentorder.MyPayDetails;
 import au.com.dealsdirect.data.network.model.checkout.getuserpaymentmethods.PaymentMethod;
 import au.com.dealsdirect.data.network.model.legalities.GetTemplateTextsResponse;
+import au.com.dealsdirect.data.network.model.checkout.getcurrentorder.GetCurrentOrderOurpay;
 import au.com.dealsdirect.service.ourpay.Ourpay;
 import au.com.dealsdirect.service.ourpay.OurpayState;
 import au.com.dealsdirect.ui.base.BaseActivity;
@@ -668,7 +668,7 @@ public class MainActivity extends BaseActivity implements MainMvpView {
         Ourpay paymentSuccessOurpay = new Ourpay();
 
         try {
-            List<MyPayDetails.PlannedTransaction> transactions = responseValue.getD().getValue().getPlannedTransactions();
+            List<GetCurrentOrderOurpay.PlannedTransaction> transactions = responseValue.getD().getValue().getPlannedTransactions();
 
             paymentSuccessOurpay.setCanUse(true);
             paymentSuccessOurpay.setPlannedTransactions(transactions);
@@ -680,7 +680,7 @@ public class MainActivity extends BaseActivity implements MainMvpView {
                 }
             }
 
-            paymentSuccessOurpay.setAmount(remainingAmount);
+            paymentSuccessOurpay.setInitialAmount(remainingAmount);
             PaymentInfo.setOurpay(paymentSuccessOurpay);
         } catch (Exception e) {
 

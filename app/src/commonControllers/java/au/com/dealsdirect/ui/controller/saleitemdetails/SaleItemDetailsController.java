@@ -47,6 +47,7 @@ import au.com.dealsdirect.data.network.model.saleitemdetails.AddToCartRequest;
 import au.com.dealsdirect.data.network.model.saleitemdetails.GetSaleItemDetailsResponse;
 import au.com.dealsdirect.data.network.model.saleitemdetails.Personalisation;
 import au.com.dealsdirect.service.ourpay.Ourpay;
+import au.com.dealsdirect.service.ourpay.OurpayPanel;
 import au.com.dealsdirect.ui.base.BaseController;
 import au.com.dealsdirect.ui.controller.saleitemdetails.listener.LoadImagesListener;
 import au.com.dealsdirect.ui.custom.ArcTranslateAnimation;
@@ -513,7 +514,7 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
             mProductPreviousPriceLabel.setVisibility(View.VISIBLE);
         }
 
-        mPresenter.generateOurpay(saleDetail);
+        mPresenter.loadOurpayData(saleDetail);
     }
 
     @Override
@@ -534,13 +535,12 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
 
     @Override
     public void showMyPayDetails(GetSaleItemDetailsResponse value, Ourpay ourpay) {
-//        temporarily comment out
-//        if (ourpay != null) {
-//            OurpayPanel panel = new OurpayPanel(mActivity);
-//            mOurpayHolder.setVisibility(View.VISIBLE);
-//            mOurpayHolder.removeAllViews();
-//            mOurpayHolder.addView(panel.generatePanel(ourpay));
-//        }
+        if (ourpay != null) {
+            OurpayPanel panel = new OurpayPanel(mActivity);
+            mOurpayHolder.setVisibility(View.VISIBLE);
+            mOurpayHolder.removeAllViews();
+            mOurpayHolder.addView(panel.generatePanel(ourpay));
+        }
     }
 
     @Override

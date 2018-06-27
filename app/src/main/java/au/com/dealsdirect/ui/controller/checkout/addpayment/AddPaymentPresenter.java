@@ -1,15 +1,10 @@
 package au.com.dealsdirect.ui.controller.checkout.addpayment;
 
-import android.os.Bundle;
-
-import com.facebook.FacebookSdk;
-import com.facebook.appevents.AppEventsConstants;
-import com.facebook.appevents.AppEventsLogger;
-
 import javax.inject.Inject;
 
 import au.com.dealsdirect.data.DataManager;
 import au.com.dealsdirect.data.network.model.checkout.getcurrentorder.Value;
+import au.com.dealsdirect.data.network.model.checkout.getcurrentorder.GetCurrentOrderOurpay;
 import au.com.dealsdirect.service.ourpay.Ourpay;
 import au.com.dealsdirect.service.ourpay.OurpayPhoneVerification;
 import au.com.dealsdirect.service.ourpay.OurpayState;
@@ -42,42 +37,43 @@ public class AddPaymentPresenter<V extends AddPaymentMvpView> extends BasePresen
 
         try {
 
-            if (value!=null) {
-                ourpay.setUserAmount(value.getSummary().total);
-            }
+            if (value!=null)
+                ourpay.setTotalAmount(value.getSummary().total);
+
+            GetCurrentOrderOurpay getCurrentOrderOurpay = value.getOurpay();
 
             /* default */
-            ourpay.setCanUse(value.getMyPayDetails().enabled);
-            ourpay.setErrorCode(value.getMyPayDetails().reasonCode);
-            ourpay.setTermsAndConditionsCheckboxState(value.getMyPayDetails().getTermsAndConditions());
-            ourpay.setMinAmount(value.getMyPayDetails().getPaymentConditions().minAmountThreshold);
-            ourpay.setMaxAmount(value.getMyPayDetails().getPaymentConditions().maxAmountThreshold);
+            ourpay.setCanUse(getCurrentOrderOurpay.getSettings().getIsOurPayEnabled());
+            ourpay.setErrorCode(getCurrentOrderOurpay.getReasonCode());
+            ourpay.setTermsAndConditionsCheckboxState(getCurrentOrderOurpay.getSettings().getTermsAndConditions());
+            ourpay.setMinAmount(getCurrentOrderOurpay.getPayment().getPaymentConditions().getMinAmountThreshold());
+            ourpay.setMaxAmount(getCurrentOrderOurpay.getPayment().getPaymentConditions().getMaxAmountThreshold());
 
-            if (value.getMyPayDetails().getPaymentSchemeDescription() != null) {
-                ourpay.setDetails(value.getMyPayDetails().getPaymentSchemeDescription());
+            if (getCurrentOrderOurpay.getSummary().getDescription() != null) {
+                ourpay.setDetails(getCurrentOrderOurpay.getSummary().getDescription());
             }
 
             /* specifics */
             try {
-                ourpay.setAmount(value.myPayDetails.getAmount());
+                ourpay.setInitialAmount(getCurrentOrderOurpay.getSummary().getFirstTransactionAmount());
             } catch (Exception e) {
-                ourpay.setAmount(0);
+                ourpay.setInitialAmount(0);
             }
 
             try {
-                ourpay.setBillingPeriod(OurpayUtils.convertDaysToWeeks(value.getMyPayDetails().getBillingPeriod().getDays()));
+                ourpay.setBillingPeriod(OurpayUtils.convertDaysToWeeks(getCurrentOrderOurpay.getPayment().getBillingPeriod()));
             } catch (Exception e) {
                 ourpay.setBillingPeriod(0);
             }
 
             try {
-                ourpay.setTransactionCount(value.myPayDetails.getTransactionCount());
+                ourpay.setTransactionCount(getCurrentOrderOurpay.getPayment().getTransactionCount());
             } catch (Exception e) {
                 ourpay.setTransactionCount(0);
             }
 
             try {
-                ourpay.setPlannedTransactions(value.getMyPayDetails().getBillingAgreement().getPlannedTransactions());
+                ourpay.setPlannedTransactions(getCurrentOrderOurpay.getPayment().getBillingAgreement().getPlannedTransactions());
             } catch (Exception e) {
                 ourpay.setPlannedTransactions(null);
                 ourpay.setState(ourpay.getState() | OurpayState.ERROR);

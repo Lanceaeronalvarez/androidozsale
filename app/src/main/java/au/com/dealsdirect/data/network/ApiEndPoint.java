@@ -13,6 +13,7 @@ public final class ApiEndPoint {
     private static final String SALES = "api/sale/sale/v1/accounts/" + BuildConfig.ACCOUNT_ID + "/banners/";
     private static final String PRODUCTS = "api/shop/shop/v1/accounts/" + BuildConfig.ACCOUNT_ID + "/products";
     private static final String PRODUCT_DETAILS = "api/shop/product/v1/accounts/" + BuildConfig.ACCOUNT_ID + "/products/{seo_identifier}";
+    private static final String OURPAY_DATA = "api/shop/product/v1/accounts/" + BuildConfig.ACCOUNT_ID + "/ourpaydata";
     private static final String ADDTOCART = "api/shop/product/v1/accounts/" + BuildConfig.ACCOUNT_ID + "/basket/items";
     private static final String BASKET_QUANTITY = "api/shop/product/v1/accounts/" + BuildConfig.ACCOUNT_ID + "/basket/items/quantity";
     private static final String EVENTS = "api/shop/eventing/v1/events";
@@ -24,6 +25,7 @@ public final class ApiEndPoint {
     public static final String GET_SALES = getBaseApiGenie() + SALES;
     public static final String GET_PRODUCTS = getBaseApiGenie() + PRODUCTS;
     public static final String GET_PRODUCT_DETAILS = getBaseApiGenie() + PRODUCT_DETAILS;
+    public static final String GET_OURPAY_DATA = getBaseApiGenie() + OURPAY_DATA;
     public static final String GET_BASKET_QUANTITY = getBaseApiGenie() + BASKET_QUANTITY;
     public static final String SEARCH_EVENT = getBaseApiGenie() + EVENTS;
     public static final String GET_EVENT_USER = getBaseApiGenie() + USERS;

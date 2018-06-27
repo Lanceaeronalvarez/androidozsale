@@ -82,6 +82,8 @@ import au.com.dealsdirect.data.network.model.ourpaydashboard.deliveryservice.Get
 import au.com.dealsdirect.data.network.model.ourpaydashboard.pastpayments.GetPastPaymentsResponse;
 import au.com.dealsdirect.data.network.model.ourpaydashboard.paymentplans.GetPaymentPlansResponse;
 import au.com.dealsdirect.data.network.model.ourpaydashboard.scheduledplans.GetScheduledPlansResponse;
+import au.com.dealsdirect.data.network.model.ourpaydata.OurpayDataRequest;
+import au.com.dealsdirect.data.network.model.ourpaydata.OurpayDataResponse;
 import au.com.dealsdirect.data.network.model.ourpayverificationcodeconfirm.VerificationCodeConfirmRequest;
 import au.com.dealsdirect.data.network.model.ourpayverificationcodeconfirm.VerificationCodeConfirmResponseBody;
 import au.com.dealsdirect.data.network.model.ourpayverificationnormalizephone.VerificationNormalizePhoneRequest;
@@ -176,6 +178,11 @@ public class AppDataManager implements DataManager {
     public Observable<GetSaleItemDetailsResponse> callGetSaleItemDetails(String seoIdentifierId) {
         return mApiHelper.callGetSaleItemDetails(seoIdentifierId);
 
+    }
+
+    @Override
+    public Observable<OurpayDataResponse> callGetOurpayData(OurpayDataRequest request) {
+        return mApiHelper.callGetOurpayData(request);
     }
 
     @Override
