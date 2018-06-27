@@ -261,7 +261,14 @@ public class ViewContactsController extends BasePullToRefreshController implemen
         if(mPresenter.isTablet()) {
             GateKeeper.setRoot(mContactDetailRouter, GateKeeper.Destination.CONTACT_HISTORY, routerTransaction);
         } else {
-            GateKeeper.push(getRouter(), GateKeeper.Destination.CONTACT_HISTORY, new HorizontalChangeHandler(), new HorizontalChangeHandler());
+            getRouter().pushController(RouterTransaction.with(ViewContactHistoryController.newInstance(
+                    contactSubject,
+                    saleName,
+                    invoiceNo,
+                    timeStampString,
+                    contactList.getContactNo()))
+                    .pushChangeHandler(new HorizontalChangeHandler())
+                    .popChangeHandler(new HorizontalChangeHandler()));
         }
     }
 

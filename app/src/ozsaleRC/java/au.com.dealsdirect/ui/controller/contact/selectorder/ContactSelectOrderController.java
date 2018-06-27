@@ -27,8 +27,7 @@ import butterknife.OnClick;
  * Created by DP on 05/06/2017.
  */
 
-public class ContactSelectOrderController extends BaseController
-        implements ContactSelectOrderMvpView {
+public class ContactSelectOrderController extends BaseController implements ContactSelectOrderMvpView {
 
     public static final String TAG = "ContactSelectOrderController";
 
@@ -48,6 +47,9 @@ public class ContactSelectOrderController extends BaseController
 
     @BindView(R.id.controller_contact_select_order_placeholder)
     TextView mContactSelectOrderPlaceholder;
+
+    @BindView(R.id.controller_select_sale_subtitle)
+    TextView mSelectSaleSubtitle;
 
     private ContactOrderAdapter mAdapter;
 
@@ -108,10 +110,12 @@ public class ContactSelectOrderController extends BaseController
     public void showContactOrders(List<ContactOrderList> contactOrderList) {
         mContactOrders = contactOrderList;
         if (mContactOrders.isEmpty()) {
+            mSelectSaleSubtitle.setVisibility(View.GONE);
             mContactOrdersRecyclerView.setVisibility(View.GONE);
             mContactSelectOrderPlaceholder.setVisibility(View.VISIBLE);
             mContactSelectOrderPlaceholder.setOnClickListener(v -> mActivity.onBackPressed());
         } else {
+            mSelectSaleSubtitle.setVisibility(View.VISIBLE);
             mContactSelectOrderPlaceholder.setVisibility(View.GONE);
             mContactOrdersRecyclerView.setVisibility(View.VISIBLE);
             mAdapter.replaceData(mContactOrders);
@@ -119,7 +123,7 @@ public class ContactSelectOrderController extends BaseController
     }
 
     @OnClick(R.id.partial_toolbar_left_view)
-    void onBackClick(){
+    void onBackClick() {
         mActivity.onBackPressed();
     }
 }
