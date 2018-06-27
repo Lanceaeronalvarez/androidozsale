@@ -176,7 +176,13 @@ public class SearchFilterController extends BaseController implements SearchFilt
     @Override
     protected void setUp(View view) {
 
-        createCategoryMap(mCategoryTree);
+        //create a category map from the categorytreeresponse in saleitems, else
+        // use saleitemscontroller's category map if it is not empty else
+        if(mSaleItemsView.getCategoryMap().isEmpty()) {
+            createCategoryMap(mCategoryTree);
+        } else {
+            mCategoryMap = mSaleItemsView.getCategoryMap();
+        }
 
         if (mFacets != null) {
             parseFacets(mFacets);

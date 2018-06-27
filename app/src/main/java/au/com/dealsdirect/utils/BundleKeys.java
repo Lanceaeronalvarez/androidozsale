@@ -22,6 +22,7 @@ public class BundleKeys {
     public static final String SALEITEMS_FROM_CATEGORIES = "SaleItemsController.IS_FROM_CATEGORY";
     public static final String SALEITEMS_FROM_SHOP_SEARCH = "SaleItemsController.FROM_SHOP_SEARCH";
     public static final String SALEITEMS_FROM_CATEGORY_SEARCH = "SaleItemsController.FROM_CATEGORY_SEARCH";
+    public static final String SALEITEMS_KEY_CATEGORIES = "SaleItemsController.KEY_CATEGORIES";
 
     //sale item details
     public static final String SALEITEMDETAILS_KEY_POSITION = "SALEITEMDETAILS_KEY_POSITION";

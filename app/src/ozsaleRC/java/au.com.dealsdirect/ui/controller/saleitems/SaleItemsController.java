@@ -38,6 +38,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 import java.util.Timer;
 import java.util.TimerTask;
@@ -80,6 +81,7 @@ import static au.com.dealsdirect.utils.BundleKeys.SALEITEMS_CATEGORY_MAP;
 import static au.com.dealsdirect.utils.BundleKeys.SALEITEMS_CHIPS_FILTER;
 import static au.com.dealsdirect.utils.BundleKeys.SALEITEMS_FROM_CATEGORY_SEARCH;
 import static au.com.dealsdirect.utils.BundleKeys.SALEITEMS_FROM_SHOP_SEARCH;
+import static au.com.dealsdirect.utils.BundleKeys.SALEITEMS_KEY_CATEGORIES;
 import static au.com.dealsdirect.utils.BundleKeys.SALEITEMS_SALE_ID;
 import static au.com.dealsdirect.utils.BundleKeys.SALEITEMS_TITLE;
 
@@ -100,9 +102,11 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
     private String mCategoryForTitle = "";
     private String mSearchQuery = "";
 
+    private Map<String, GetCategoryTreeResponse> mCategoryMap = new HashMap<>();
     private List<GetSaleItemsResponse.Products> mSaleItems = new LinkedList<>();
     private List<GetSaleItemsResponse.Facets> mFacets = new ArrayList<>();
     private List<GetCategoryTreeResponse> mCategoryTreeResponse = new LinkedList<>();
+    private List<GetCategoryTreeResponse> mInitialCategoryTree = new LinkedList<>();
     private List<SortingResponse> mSortingResponse = new ArrayList<>();
     private String mSortingListJsonString = "";
     private boolean mIsFilterClicked = false;
@@ -227,17 +231,27 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
             mTitle = getArgs().getString(SALEITEMS_TITLE, "");
             mTitle = mTitle.replaceAll(CATEGORY_KEY_SEPARATOR, CATEGORY_KEY_SEPARATOR_REPLACEMENT);
         }
-        if (args.containsKey(SALEITEMS_SALE_ID))
+        if (args.containsKey(SALEITEMS_SALE_ID)) {
             mSaleId = getArgs().getString(SALEITEMS_SALE_ID, "");
-        if (args.containsKey(SALEITEMS_CATEGORY_MAP))
+        }
+        if (args.containsKey(SALEITEMS_CATEGORY_MAP)) {
             mCategoryKey = getArgs().getString(SALEITEMS_CATEGORY_MAP, "");
-        if (args.containsKey(SALEITEMS_CHIPS_FILTER))
+        }
+        if (args.containsKey(SALEITEMS_CHIPS_FILTER)) {
             mChipFilters = JsonUtils.convertStringToObject(getArgs().getString(SALEITEMS_CHIPS_FILTER, ""), new TypeToken<ArrayList<SearchChipModel>>() {
             }.getType());
-        if (args.containsKey(SALEITEMS_FROM_SHOP_SEARCH))
+        }
+        if (args.containsKey(SALEITEMS_FROM_SHOP_SEARCH)) {
             mFromShopSearch = getArgs().getBoolean(SALEITEMS_FROM_SHOP_SEARCH, true);
-        if (args.containsKey(SALEITEMS_FROM_CATEGORY_SEARCH))
+        }
+        if (args.containsKey(SALEITEMS_FROM_CATEGORY_SEARCH)) {
             mFromCategorySearch = getArgs().getBoolean(SALEITEMS_FROM_CATEGORY_SEARCH, true);
+        }
+        //initial category tree from categoriescontroller
+        if (args.containsKey(SALEITEMS_KEY_CATEGORIES)) {
+            mInitialCategoryTree = JsonUtils.convertStringToObject(args.getString(BundleKeys.SALEITEMS_KEY_CATEGORIES, ""), new TypeToken<ArrayList<GetCategoryTreeResponse>>() {
+            }.getType());
+        }
 
     }
 
@@ -328,6 +342,14 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
         mActivity.getMainController().setViewpagerDraggable(false);
         setupPtrHeader();
 
+        //use initialcategory tree map if it came from categories.
+        if (!mInitialCategoryTree.isEmpty()) {
+            createCategoryMap(mInitialCategoryTree);
+            if (mCategoryMap.get(mCategoryKey) != null) {
+                mCategoryMap.get(mCategoryKey).setSelected(true);
+            }
+        }
+
         mPaginateCallbacks = new Paginate.Callbacks() {
             @Override
             public void onLoadMore() {
@@ -415,6 +437,7 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
     public void showSaleItems(GetSaleItemsResponse getSaleItemsResponse, boolean forFacetCorrection) {
 
         mCategoryTreeResponse = getSaleItemsResponse.getCategories();
+
         mPtrFrameLayout.setPullToRefresh(true);
 
         if (forFacetCorrection) {
@@ -798,5 +821,16 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
         AppBarLayout.LayoutParams layoutParams = (AppBarLayout.LayoutParams) mCollapsingToolbar.getLayoutParams();
         layoutParams.setScrollFlags(val ? SCROLL_FLAG_SCROLL | SCROLL_FLAG_ENTER_ALWAYS : 0);
         mCollapsingToolbar.setLayoutParams(layoutParams);
+    }
+
+    private void createCategoryMap(List<GetCategoryTreeResponse> getCategoryTreeResponses) {
+        for (GetCategoryTreeResponse category : getCategoryTreeResponses) {
+            mCategoryMap.put(category.getKey(), category);
+            createCategoryMap(category.getChildren());
+        }
+    }
+
+    public Map<String, GetCategoryTreeResponse> getCategoryMap() {
+        return mCategoryMap;
     }
 }

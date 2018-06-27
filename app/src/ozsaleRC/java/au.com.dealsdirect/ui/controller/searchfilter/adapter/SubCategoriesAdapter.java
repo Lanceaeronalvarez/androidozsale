@@ -66,8 +66,8 @@ public class SubCategoriesAdapter extends RecyclerView.Adapter<SubCategoriesAdap
                 holder.itemView.setSelected(false);
             }
 
-//            List<GetCategoryTreeResponse> subCategoryItems = mData.get(position).getChildren();
-            List<GetCategoryTreeResponse> subCategoryItems = mCategoryMap.get(mData.get(position).getKey()).getChildren();
+            List<GetCategoryTreeResponse> subCategoryItems = mData.get(position).getChildren();
+//            List<GetCategoryTreeResponse> subCategoryItems = mCategoryMap.get(mData.get(position).getKey()).getChildren();
 
             if (subCategoryItems != null && !subCategoryItems.isEmpty()) {
                 mSubCategoryItemsAdapter = new SubCategoriesAdapter(mChosenCategoryKey, subCategoryItems, mSearchFilterPresenter, mCategoryMap);
