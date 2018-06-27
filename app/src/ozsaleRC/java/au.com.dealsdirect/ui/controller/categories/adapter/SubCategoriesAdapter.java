@@ -22,6 +22,7 @@ import au.com.dealsdirect.ui.controller.categories.listener.SubCategoryClickList
 import au.com.dealsdirect.ui.controller.categories.listener.SubCategoryItemClickListener;
 import au.com.dealsdirect.ui.controller.main.MainController;
 import au.com.dealsdirect.ui.main.MainActivity;
+import au.com.dealsdirect.utils.AppLogger;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
@@ -71,7 +72,7 @@ public class SubCategoriesAdapter extends RecyclerView.Adapter<SubCategoriesAdap
                 holder.subCategoryItemsRecyclerView.setVisibility(View.GONE);
                 holder.subCategoryCheckImageView.setVisibility(View.GONE);
 
-                holder.subCategoryTitle.setOnClickListener(v -> {
+                holder.subcategoryContainer.setOnClickListener(v -> {
                     mSubCategoryItemClickListener.onSubCategoryItemClicked(subCategoryItems.get(0).getKey(), subCategoryItems.get(0).getName(), subCategoryItems.get(0).getKey());
 
                     if (mainController.getSelectedSubCategoryItem() != null) {
@@ -91,7 +92,9 @@ public class SubCategoriesAdapter extends RecyclerView.Adapter<SubCategoriesAdap
                     holder.itemView.setActivated(!isItemViewActivated);
                     holder.subCategoryItemsBorder.setVisibility(isItemViewActivated ? View.GONE : View.VISIBLE);
                     holder.subCategoryItemsRecyclerView.setVisibility(isItemViewActivated ? View.GONE : View.VISIBLE);
-                    holder.subCategoryCheckImageView.setVisibility(isItemViewActivated ? View.GONE : View.VISIBLE);
+                    holder.subCategoryCheckImageView.setVisibility(!(mData.get(position).getChildren().size() > 0) && isItemViewActivated ? View.VISIBLE : View.GONE);
+                    boolean bool = !(mData.get(position).getChildren().size() > 0) && isItemViewActivated;
+                    AppLogger.d("boolean: " + bool + " haschildren " + !(mData.get(position).getChildren().size() > 0)  + " isItemActivated: " +  isItemViewActivated);
 
                     if (!isItemViewActivated) {
                         mSubCategoryItemsAdapter = new SubCategoryItemsAdapter(subCategoryItems, mSubCategoryItemClickListener, mAnimateInsert);
