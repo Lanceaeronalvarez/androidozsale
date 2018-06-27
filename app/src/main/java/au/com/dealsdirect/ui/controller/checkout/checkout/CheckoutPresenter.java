@@ -1,12 +1,6 @@
 package au.com.dealsdirect.ui.controller.checkout.checkout;
 
-import android.os.Bundle;
-
 import com.androidnetworking.error.ANError;
-import com.facebook.FacebookSdk;
-import com.facebook.appevents.AppEventsConstants;
-import com.facebook.appevents.AppEventsLogger;
-import com.google.gson.Gson;
 
 import java.util.ArrayList;
 
@@ -19,6 +13,7 @@ import au.com.dealsdirect.data.network.model.checkout.GetCurrentOrder;
 import au.com.dealsdirect.data.network.model.checkout.GetUserPaymentMethods;
 import au.com.dealsdirect.data.network.model.checkout.SetDeliveryOption;
 import au.com.dealsdirect.data.network.model.checkout.getcurrentorder.Value;
+import au.com.dealsdirect.data.network.model.checkout.getcurrentorder.GetCurrentOrderOurpay;
 import au.com.dealsdirect.service.ourpay.Ourpay;
 import au.com.dealsdirect.service.ourpay.OurpayPhoneVerification;
 import au.com.dealsdirect.service.ourpay.OurpayState;
@@ -27,7 +22,6 @@ import au.com.dealsdirect.service.ourpay.OurpayUtils;
 import au.com.dealsdirect.ui.base.BasePresenter;
 import au.com.dealsdirect.ui.custom.ProductQuantityLayout;
 import au.com.dealsdirect.utils.AppEventHelper;
-import au.com.dealsdirect.utils.AppLogger;
 import au.com.dealsdirect.utils.rx.SchedulerProvider;
 import io.reactivex.annotations.NonNull;
 import io.reactivex.disposables.CompositeDisposable;
@@ -109,7 +103,7 @@ public class CheckoutPresenter<V extends CheckoutMvpView> extends BasePresenter<
                             return;
                         }
 
-                        if(!isCartAlreadyLoadedOnce()){
+                        if (!isCartAlreadyLoadedOnce()) {
                             getMvpView().showNoNetworkLayout();
                         }
 
@@ -242,42 +236,43 @@ public class CheckoutPresenter<V extends CheckoutMvpView> extends BasePresenter<
 
         try {
 
-            if (value!=null) {
-                ourpay.setUserAmount(value.getSummary().getTotal());
-            }
+            if (value != null)
+                ourpay.setTotalAmount(value.getSummary().getTotal());
+
+            GetCurrentOrderOurpay getCurrentOrderOurpay = value.getOurpay();
 
             /* default */
-            ourpay.setCanUse(value.getMyPayDetails().enabled);
-            ourpay.setErrorCode(value.getMyPayDetails().reasonCode);
-            ourpay.setTermsAndConditionsCheckboxState(value.getMyPayDetails().getTermsAndConditions());
-            ourpay.setMinAmount(value.getMyPayDetails().getPaymentConditions().minAmountThreshold);
-            ourpay.setMaxAmount(value.getMyPayDetails().getPaymentConditions().maxAmountThreshold);
+            ourpay.setCanUse(getCurrentOrderOurpay.getSettings().getIsOurPayEnabled());
+            ourpay.setErrorCode(getCurrentOrderOurpay.getReasonCode());
+            ourpay.setTermsAndConditionsCheckboxState(getCurrentOrderOurpay.getSettings().getTermsAndConditions());
+            ourpay.setMinAmount(getCurrentOrderOurpay.getPayment().getPaymentConditions().getMinAmountThreshold());
+            ourpay.setMaxAmount(getCurrentOrderOurpay.getPayment().getPaymentConditions().getMaxAmountThreshold());
 
-            if (value.getMyPayDetails().getPaymentSchemeDescription() != null) {
-                ourpay.setDetails(value.getMyPayDetails().getPaymentSchemeDescription());
+            if (getCurrentOrderOurpay.getSummary().getDescription() != null) {
+                ourpay.setDetails(getCurrentOrderOurpay.getSummary().getDescription());
             }
 
             /* specifics */
             try {
-                ourpay.setAmount(value.myPayDetails.getAmount());
+                ourpay.setInitialAmount(getCurrentOrderOurpay.getSummary().getFirstTransactionAmount());
             } catch (Exception e) {
-                ourpay.setAmount(0);
+                ourpay.setInitialAmount(0);
             }
 
             try {
-                ourpay.setBillingPeriod(OurpayUtils.convertDaysToWeeks(value.getMyPayDetails().getBillingPeriod().getDays()));
+                ourpay.setBillingPeriod(OurpayUtils.convertDaysToWeeks(getCurrentOrderOurpay.getPayment().getBillingPeriod()));
             } catch (Exception e) {
                 ourpay.setBillingPeriod(0);
             }
 
             try {
-                ourpay.setTransactionCount(value.myPayDetails.getTransactionCount());
+                ourpay.setTransactionCount(getCurrentOrderOurpay.getPayment().getTransactionCount());
             } catch (Exception e) {
                 ourpay.setTransactionCount(0);
             }
 
             try {
-                ourpay.setPlannedTransactions(value.getMyPayDetails().getBillingAgreement().getPlannedTransactions());
+                ourpay.setPlannedTransactions(getCurrentOrderOurpay.getPayment().getBillingAgreement().getPlannedTransactions());
             } catch (Exception e) {
                 ourpay.setPlannedTransactions(null);
                 ourpay.setState(ourpay.getState() | OurpayState.ERROR);
@@ -326,14 +321,14 @@ public class CheckoutPresenter<V extends CheckoutMvpView> extends BasePresenter<
 
         if (response.getD().getResult()) {
 
-            if(!response.getD().getValue().isEmpty()) {
+            if (!response.getD().getValue().isEmpty()) {
                 Value value = response.getD().getValue();
 
                 getMvpView().showCartDetails(response.getD().getValue().getItems());
 
                 getMvpView().showAddressDetails(response.getD().getValue().getDeliveryAddress(), response.getD().getValue().getDecorationInfoList());
 
-                getMvpView().showDeliveryOptions(response.getD().getValue().getDeliveryOptions(),response.getD().getValue().getDeliveryServicePackageDetail());
+                getMvpView().showDeliveryOptions(response.getD().getValue().getDeliveryOptions(), response.getD().getValue().getDeliveryServicePackageDetail());
 
                 getMvpView().storeCartDetails(value);
 

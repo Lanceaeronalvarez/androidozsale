@@ -4,8 +4,8 @@ import com.braintreepayments.api.models.PaymentMethodNonce;
 
 import java.util.List;
 
-import au.com.dealsdirect.data.network.model.checkout.getcurrentorder.MyPayDetails;
 import au.com.dealsdirect.data.network.model.checkout.getcurrentorder.PhoneVerification;
+import au.com.dealsdirect.data.network.model.checkout.getcurrentorder.GetCurrentOrderOurpay;
 
 
 /*
@@ -15,15 +15,15 @@ import au.com.dealsdirect.data.network.model.checkout.getcurrentorder.PhoneVerif
 public class Ourpay {
 
     private boolean canUse = false;
-    private double amount = 0;
-    private double userAmount = 0;
+    private double initialAmount = 0;
+    private double totalAmount = 0;
     private String details = "";
     private double minAmount;
     private double maxAmount;
     private String errorCode;
     private int transactionCount = 0;
     private int billingPeriod = 0;
-    private List<MyPayDetails.PlannedTransaction> plannedTransactions;
+    private List<GetCurrentOrderOurpay.PlannedTransaction> plannedTransactions;
     private int termsAndConditionsCheckboxState = 0;
     private int state = 0;
     private PaymentMethodNonce paymentMethodNonce;
@@ -36,8 +36,8 @@ public class Ourpay {
 
     public Ourpay(Ourpay ourpay) {
         this.canUse = ourpay.canUse;
-        this.amount = ourpay.amount;
-        this.userAmount = ourpay.userAmount;
+        this.initialAmount = ourpay.initialAmount;
+        this.totalAmount = ourpay.totalAmount;
         this.details = ourpay.details;
         this.minAmount = ourpay.minAmount;
         this.maxAmount = ourpay.maxAmount;
@@ -56,12 +56,12 @@ public class Ourpay {
         return canUse;
     }
 
-    public double getAmount() {
-        return amount;
+    public double getInitialAmount() {
+        return initialAmount;
     }
 
-    public double getUserAmount() {
-        return userAmount;
+    public double getTotalAmount() {
+        return totalAmount;
     }
 
     public String getDetails() {
@@ -88,7 +88,7 @@ public class Ourpay {
         return billingPeriod;
     }
 
-    public List<MyPayDetails.PlannedTransaction> getPlannedTransactions() {
+    public List<GetCurrentOrderOurpay.PlannedTransaction> getPlannedTransactions() {
         return plannedTransactions;
     }
 
@@ -100,12 +100,12 @@ public class Ourpay {
         this.canUse = canUse;
     }
 
-    public void setAmount(double amount) {
-        this.amount = amount;
+    public void setInitialAmount(double initialAmount) {
+        this.initialAmount = initialAmount;
     }
 
-    public void setUserAmount(double userAmount) {
-        this.userAmount = userAmount;
+    public void setTotalAmount(double totalAmount) {
+        this.totalAmount = totalAmount;
     }
 
     public void setDetails(String details) {
@@ -132,7 +132,7 @@ public class Ourpay {
         this.billingPeriod = billingPeriod;
     }
 
-    public void setPlannedTransactions(List<MyPayDetails.PlannedTransaction> plannedTransactions) {
+    public void setPlannedTransactions(List<GetCurrentOrderOurpay.PlannedTransaction> plannedTransactions) {
         this.plannedTransactions = plannedTransactions;
     }
 

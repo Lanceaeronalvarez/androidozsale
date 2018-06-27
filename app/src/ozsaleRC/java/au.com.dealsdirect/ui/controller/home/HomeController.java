@@ -1,5 +1,6 @@
 package au.com.dealsdirect.ui.controller.home;
 
+import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -18,6 +19,8 @@ import com.bluelinelabs.conductor.Controller;
 import com.bluelinelabs.conductor.ControllerChangeHandler;
 import com.bluelinelabs.conductor.Router;
 import com.bluelinelabs.conductor.RouterTransaction;
+import com.bluelinelabs.conductor.changehandler.FadeChangeHandler;
+import com.bluelinelabs.conductor.changehandler.HorizontalChangeHandler;
 
 import java.util.HashMap;
 
@@ -34,14 +37,26 @@ import au.com.dealsdirect.ui.controller.checkout.checkout.CheckoutMvpView;
 import au.com.dealsdirect.ui.controller.checkout.checkouthost.CheckoutHostController;
 import au.com.dealsdirect.ui.controller.checkout.paymentsuccess.PaymentSuccessController;
 import au.com.dealsdirect.ui.controller.contact.viewcontacts.ViewContactsController;
+import au.com.dealsdirect.ui.controller.saleitemdetails.SaleItemDetailsController;
 import au.com.dealsdirect.ui.controller.saleitems.SaleItemsController;
 import au.com.dealsdirect.ui.controller.shops.ShopsController;
+import au.com.dealsdirect.ui.custom.transitions.SharedArcFadePopChangeHandler;
+import au.com.dealsdirect.ui.custom.transitions.SharedArcFadePushChangeHandler;
 import au.com.dealsdirect.ui.main.MainActivity;
 import au.com.dealsdirect.utils.BundleBuilder;
 import au.com.dealsdirect.utils.CartUtil;
 import au.com.dealsdirect.utils.module.ControllerFactory;
 import au.com.dealsdirect.utils.module.GateKeeper;
 import butterknife.BindView;
+
+import static au.com.dealsdirect.utils.BundleKeys.SALEITEMDETAILS_KEY_IS_DEEP_LINKED_WITH_SALE;
+import static au.com.dealsdirect.utils.BundleKeys.SALEITEMDETAILS_KEY_SEO_IDENTIFIER_ID;
+import static au.com.dealsdirect.utils.BundleKeys.SALEITEMDETAILS_KEY_SKU_ID;
+import static au.com.dealsdirect.utils.BundleKeys.SALEITEMS_BANNER_ID;
+import static au.com.dealsdirect.utils.BundleKeys.SALEITEMS_CATEGORY_ID;
+import static au.com.dealsdirect.utils.BundleKeys.SALEITEMS_CATEGORY_NAME;
+import static au.com.dealsdirect.utils.BundleKeys.SALEITEMS_SALE_ID;
+import static au.com.dealsdirect.utils.BundleKeys.SALEITEMS_TITLE;
 
 /**
  * dp Created by Admin on 6/6/17.
@@ -301,8 +316,6 @@ public class HomeController extends BaseController implements HomeMvpView {
         if (mShopRouter != null) {
             Controller controller = getCurrentControllerOnRouter(mShopRouter);
             if (controller instanceof ShopsController) {
-
-                /* bug/gen-8065_ozsale-reskin_bugfixing - allow draggable viewpager */
                 ((MainActivity) getActivity()).getMainController().setViewpagerDraggable(true);
             }
 
@@ -514,5 +527,86 @@ public class HomeController extends BaseController implements HomeMvpView {
 
     public Router getPopUpHostRouter() {
         return mPopUpHostRouter;
+    }
+
+
+    public void deepLinkSaleItemDetails(String seoIdentifierId, String skuId, boolean isWithSale) {
+
+        Bundle bundle = new Bundle();
+        bundle.putString(SALEITEMDETAILS_KEY_SEO_IDENTIFIER_ID, seoIdentifierId);
+        bundle.putString(SALEITEMDETAILS_KEY_SKU_ID, skuId);
+        bundle.putBoolean(SALEITEMDETAILS_KEY_IS_DEEP_LINKED_WITH_SALE, isWithSale);
+
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.M) {
+            if (mShopRouter != null)
+                mShopRouter.pushController(RouterTransaction.with(SaleItemDetailsController.newInstance(bundle))
+                        .pushChangeHandler(new FadeChangeHandler(false))
+                        .popChangeHandler(new FadeChangeHandler()));
+
+        } else {
+            if (mShopRouter != null)
+                mShopRouter.pushController(RouterTransaction.with(SaleItemDetailsController.newInstance(bundle))
+                        .pushChangeHandler(new SharedArcFadePushChangeHandler())
+                        .popChangeHandler(new SharedArcFadePopChangeHandler()));
+
+        }
+    }
+
+
+    public void deepLinkSaleItems(String bannerTitle, String saleId, String bannerId) {
+
+        Bundle args = new BundleBuilder(new Bundle())
+                .putString(SALEITEMS_TITLE, bannerTitle)
+                .putString(SALEITEMS_SALE_ID, saleId)
+                .putString(SALEITEMS_BANNER_ID, bannerId)
+                .build();
+
+        if (!mPresenter.isAuthorized()) {
+
+            // Invoke login if no auth or not an open app
+            if (mShopRouter != null)
+                mShopRouter.pushController(RouterTransaction.with(
+                        new SaleItemsController(args))
+                        .tag(mActivity.getString(R.string.sale_items_controller_tag))
+                        .pushChangeHandler(new HorizontalChangeHandler())
+                        .popChangeHandler(new HorizontalChangeHandler()));
+        } else {
+
+            // Check if sale is available
+            mShopRouter.pushController(RouterTransaction.with(
+                    new SaleItemsController(args))
+                    .tag(mActivity.getString(R.string.sale_items_controller_tag))
+                    .pushChangeHandler(new HorizontalChangeHandler())
+                    .popChangeHandler(new HorizontalChangeHandler()));
+        }
+
+    }
+
+
+    public void deepLinkSaleCategory(String categoryName, String categoryIdentifier) {
+
+        Bundle args = new BundleBuilder(new Bundle())
+                .putString(SALEITEMS_CATEGORY_ID, categoryIdentifier)
+                .putString(SALEITEMS_CATEGORY_NAME, categoryName)
+                .build();
+
+        if (!mPresenter.isAuthorized()) {
+
+            // Invoke login if no auth or not an open app
+            if (mShopRouter != null)
+                mShopRouter.pushController(RouterTransaction.with(
+                        new SaleItemsController(args))
+                        .tag(mActivity.getString(R.string.sale_items_controller_tag))
+                        .pushChangeHandler(new HorizontalChangeHandler())
+                        .popChangeHandler(new HorizontalChangeHandler()));
+        } else {
+
+            // Check if sale is available
+            mShopRouter.pushController(RouterTransaction.with(
+                    new SaleItemsController(args))
+                    .tag(mActivity.getString(R.string.sale_items_controller_tag))
+                    .pushChangeHandler(new HorizontalChangeHandler())
+                    .popChangeHandler(new HorizontalChangeHandler()));
+        }
     }
 }

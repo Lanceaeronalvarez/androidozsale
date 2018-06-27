@@ -56,6 +56,8 @@ import au.com.dealsdirect.data.network.model.contactsubject.ContactSubjects;
 import au.com.dealsdirect.data.network.model.contactsubject.ContactSubjectsRequest;
 import au.com.dealsdirect.data.network.model.createcontact.CreateContactRequest;
 import au.com.dealsdirect.data.network.model.createcontact.CreateContactResponse;
+import au.com.dealsdirect.data.network.model.deeplinkdata.DeepLinkDataRequest;
+import au.com.dealsdirect.data.network.model.deeplinkdata.DeepLinkDataResponse;
 import au.com.dealsdirect.data.network.model.events.SearchEventRequest;
 import au.com.dealsdirect.data.network.model.fcm.NotificationEvent;
 import au.com.dealsdirect.data.network.model.fcm.RegisterDevice;
@@ -82,6 +84,8 @@ import au.com.dealsdirect.data.network.model.ourpaydashboard.deliveryservice.Get
 import au.com.dealsdirect.data.network.model.ourpaydashboard.pastpayments.GetPastPaymentsResponse;
 import au.com.dealsdirect.data.network.model.ourpaydashboard.paymentplans.GetPaymentPlansResponse;
 import au.com.dealsdirect.data.network.model.ourpaydashboard.scheduledplans.GetScheduledPlansResponse;
+import au.com.dealsdirect.data.network.model.ourpaydata.OurpayDataRequest;
+import au.com.dealsdirect.data.network.model.ourpaydata.OurpayDataResponse;
 import au.com.dealsdirect.data.network.model.ourpayverificationcodeconfirm.VerificationCodeConfirmRequest;
 import au.com.dealsdirect.data.network.model.ourpayverificationcodeconfirm.VerificationCodeConfirmResponseBody;
 import au.com.dealsdirect.data.network.model.ourpayverificationnormalizephone.VerificationNormalizePhoneRequest;
@@ -176,6 +180,11 @@ public class AppDataManager implements DataManager {
     public Observable<GetSaleItemDetailsResponse> callGetSaleItemDetails(String seoIdentifierId) {
         return mApiHelper.callGetSaleItemDetails(seoIdentifierId);
 
+    }
+
+    @Override
+    public Observable<OurpayDataResponse> callGetOurpayData(OurpayDataRequest request) {
+        return mApiHelper.callGetOurpayData(request);
     }
 
     @Override
@@ -530,6 +539,11 @@ public class AppDataManager implements DataManager {
     @Override
     public Observable<GetDeliveryServiceResponse> callGetDeliveryService() {
         return mApiHelper.callGetDeliveryService();
+    }
+
+    @Override
+    public Observable<DeepLinkDataResponse> callGetDeepLinkData(DeepLinkDataRequest request) {
+        return mApiHelper.callGetDeepLinkData(request);
     }
 
     @Override

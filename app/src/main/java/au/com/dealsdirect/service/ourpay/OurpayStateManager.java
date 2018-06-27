@@ -1,7 +1,5 @@
 package au.com.dealsdirect.service.ourpay;
 
-import android.util.Log;
-
 import au.com.dealsdirect.data.network.model.checkout.getuserpaymentmethods.PaymentMethod;
 
 /**
@@ -64,8 +62,8 @@ public class OurpayStateManager {
     }
 
     public static boolean isPriceOutOfRange(Ourpay ourpay) {
-        return  !(ourpay.getUserAmount() >= ourpay.getMinAmount()
-                && ourpay.getUserAmount() <= ourpay.getMaxAmount());
+        return  !(ourpay.getTotalAmount() >= ourpay.getMinAmount()
+                && ourpay.getTotalAmount() <= ourpay.getMaxAmount());
 
     }
 

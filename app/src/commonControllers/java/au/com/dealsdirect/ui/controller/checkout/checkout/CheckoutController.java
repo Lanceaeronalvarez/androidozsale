@@ -528,8 +528,8 @@ public class CheckoutController extends VisaCheckoutController implements Checko
                     }
 
                     if (isOurPaySelectDeliveryMethod()) { // show ourpay select related summary
-                        mSummaryOurpaySelectPriceTextView.setText(PriceUtils.getPriceStringValue(mDeliveryServicePackageDetail.getAmount()));
-                        mSummaryPayTodayTextView.setText(PriceUtils.getPriceStringValue(ourpay.getAmount()));
+                        ((TextView) mSummaryLayout.findViewById(R.id.partial_checkout_summary_ourpay_select_price)).setText(PriceUtils.getPriceStringValue(mDeliveryServicePackageDetail.getAmount()));
+                        ((TextView) mSummaryLayout.findViewById(R.id.partial_checkout_summary_pay_today_price)).setText(PriceUtils.getPriceStringValue(ourpay.getInitialAmount()));
                         ourpayPanel.getCartAmountHeader().setVisibility(View.GONE);
                     } else {
                         ourpayPanel.getCartAmountHeader().setVisibility(View.VISIBLE);
@@ -714,7 +714,6 @@ public class CheckoutController extends VisaCheckoutController implements Checko
             mActivity.setPaymentMethodSelected(paymentMethod);
         }
 
-//        displayPaymentDetails();
     }
 
     private void displayPaymentDetails() {

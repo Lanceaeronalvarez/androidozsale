@@ -517,7 +517,7 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
         mProductPreviousPrice.setVisibility(isOldPriceInfoVisible ? View.GONE : View.VISIBLE);
         mProductPreviousPriceLabel.setVisibility(isOldPriceInfoVisible ? View.GONE : View.VISIBLE);
 
-        mPresenter.generateOurpay(saleDetail);
+        mPresenter.loadOurpayData(saleDetail);
     }
 
     private void toggleProductInfoWebView(String shippingPricing) {
@@ -556,7 +556,6 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
 
     @Override
     public void showMyPayDetails(GetSaleItemDetailsResponse value, Ourpay ourpay) {
-//        temporarily comment out
         if (ourpay != null) {
             OurpayPanel panel = new OurpayPanel(mActivity);
             mOurpayHolder.setVisibility(View.VISIBLE);

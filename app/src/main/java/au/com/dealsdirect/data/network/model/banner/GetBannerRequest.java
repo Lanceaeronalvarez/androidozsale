@@ -22,6 +22,10 @@ public class GetBannerRequest {
     private String category;
 
     @Expose
+    @SerializedName("saleCategoryID")
+    private String saleCategoryId;
+
+    @Expose
     @SerializedName("categoryId")
     private String categoryId;
 
@@ -55,5 +59,13 @@ public class GetBannerRequest {
 
     public void setCategoryId(String categoryId) {
         this.categoryId = categoryId;
+    }
+
+    public String getSaleCategoryId() {
+        return saleCategoryId;
+    }
+
+    public void setSaleCategoryId(String saleCategoryId) {
+        this.saleCategoryId = saleCategoryId;
     }
 }

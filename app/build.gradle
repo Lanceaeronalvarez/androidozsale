@@ -264,7 +264,7 @@ android {
             applicationId "au.com.ozsale"
 
             buildConfigField "String", "API_ROOT", "\"https://www.ozsale.com.au/\""
-            buildConfigField "String", "API_LEGACY", "\"https://www.ozsale.com.au/papi/public/v3.22/\""
+            buildConfigField "String", "API_LEGACY", "\"https://www.ozsale.com.au/papi/public/v3.24/\""
             buildConfigField "String", "ACCOUNT_ID", "\"A816D792-E940-44F0-B752-06DE1ED5C2B9\""
 
             resValue "string", "app_name", "Ozsale"
@@ -289,7 +289,7 @@ android {
 
             buildConfigField "String", "API_ROOT", "\"https://genie-ui-dealsdirect-pre.mysaledev.com/\""
             buildConfigField "String", "API_LEGACY", "\"https://api.mysaledev.com/Public/V3.22/\""
-            buildConfigField "String", "ACCOUNT_ID", "\"A816D792-E940-44F0-B752-06DE1ED5C2B9\""
+            buildConfigField "String", "ACCOUNT_ID", "\"A56B0D62-AEF6-4653-848E-2ECDDB6E9B8C\""
 
             resValue "string", "app_name", "Ozsale Test"
             def facebookAppId = "437865102935987"

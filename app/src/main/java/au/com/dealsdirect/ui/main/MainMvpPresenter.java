@@ -10,7 +10,6 @@ import com.visa.checkout.VisaPaymentSummary;
 
 import au.com.dealsdirect.data.auth.AuthHandler;
 import au.com.dealsdirect.di.PerActivity;
-import au.com.dealsdirect.ui.base.BaseActivity;
 import au.com.dealsdirect.ui.base.MvpPresenter;
 
 @PerActivity
@@ -59,6 +58,8 @@ public interface MainMvpPresenter<V extends MainMvpView> extends MvpPresenter<V>
     void initFacebookAnalytics();
 
     void initializeAnalytics(Context activityContext, Context applicationContext);
+
+    void getDeepLinkData(String url);
 
     boolean isDebug();
 }

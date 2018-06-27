@@ -16,6 +16,7 @@ import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -77,13 +78,7 @@ import in.srain.cube.views.ptr.PtrHandler;
 import static android.support.design.widget.AppBarLayout.LayoutParams.SCROLL_FLAG_ENTER_ALWAYS;
 import static android.support.design.widget.AppBarLayout.LayoutParams.SCROLL_FLAG_SCROLL;
 import static android.widget.AbsListView.OnScrollListener.SCROLL_STATE_IDLE;
-import static au.com.dealsdirect.utils.BundleKeys.SALEITEMS_CATEGORY_MAP;
-import static au.com.dealsdirect.utils.BundleKeys.SALEITEMS_CHIPS_FILTER;
-import static au.com.dealsdirect.utils.BundleKeys.SALEITEMS_FROM_CATEGORY_SEARCH;
-import static au.com.dealsdirect.utils.BundleKeys.SALEITEMS_FROM_SHOP_SEARCH;
-import static au.com.dealsdirect.utils.BundleKeys.SALEITEMS_KEY_CATEGORIES;
-import static au.com.dealsdirect.utils.BundleKeys.SALEITEMS_SALE_ID;
-import static au.com.dealsdirect.utils.BundleKeys.SALEITEMS_TITLE;
+
 
 /**
  * dp Created by Admin on 6/8/17.
@@ -167,6 +162,7 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
     private boolean mIsLoadingProgress = false;
     private boolean mHasLoadedAllItems = false;
     private boolean mIsCategoryChanged = false;
+    private boolean mFromCategoryDeeplink = false;
     private boolean mInitialLoad = false;
 
     private List<SearchChipModel> mChipFilters = new ArrayList<>();
@@ -227,28 +223,31 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
     public SaleItemsController(Bundle args) {
         super(args);
 
-        if (args.containsKey(SALEITEMS_TITLE)) {
-            mTitle = getArgs().getString(SALEITEMS_TITLE, "");
+        if (args.containsKey(BundleKeys.SALEITEMS_TITLE)) {
+            mTitle = getArgs().getString(BundleKeys.SALEITEMS_TITLE, "");
             mTitle = mTitle.replaceAll(CATEGORY_KEY_SEPARATOR, CATEGORY_KEY_SEPARATOR_REPLACEMENT);
         }
-        if (args.containsKey(SALEITEMS_SALE_ID)) {
-            mSaleId = getArgs().getString(SALEITEMS_SALE_ID, "");
+        if (args.containsKey(BundleKeys.SALEITEMS_SALE_ID)) {
+            mSaleId = getArgs().getString(BundleKeys.SALEITEMS_SALE_ID, "");
         }
-        if (args.containsKey(SALEITEMS_CATEGORY_MAP)) {
-            mCategoryKey = getArgs().getString(SALEITEMS_CATEGORY_MAP, "");
+        if (args.containsKey(BundleKeys.SALEITEMS_CATEGORY_MAP)) {
+            mCategoryKey = getArgs().getString(BundleKeys.SALEITEMS_CATEGORY_MAP, "");
         }
-        if (args.containsKey(SALEITEMS_CHIPS_FILTER)) {
-            mChipFilters = JsonUtils.convertStringToObject(getArgs().getString(SALEITEMS_CHIPS_FILTER, ""), new TypeToken<ArrayList<SearchChipModel>>() {
+        if (args.containsKey(BundleKeys.SALEITEMS_CHIPS_FILTER)) {
+            mChipFilters = JsonUtils.convertStringToObject(getArgs().getString(BundleKeys.SALEITEMS_CHIPS_FILTER, ""), new TypeToken<ArrayList<SearchChipModel>>() {
             }.getType());
         }
-        if (args.containsKey(SALEITEMS_FROM_SHOP_SEARCH)) {
-            mFromShopSearch = getArgs().getBoolean(SALEITEMS_FROM_SHOP_SEARCH, true);
+        if (args.containsKey(BundleKeys.SALEITEMS_FROM_SHOP_SEARCH)) {
+            mFromShopSearch = getArgs().getBoolean(BundleKeys.SALEITEMS_FROM_SHOP_SEARCH, true);
         }
-        if (args.containsKey(SALEITEMS_FROM_CATEGORY_SEARCH)) {
-            mFromCategorySearch = getArgs().getBoolean(SALEITEMS_FROM_CATEGORY_SEARCH, true);
+        if (args.containsKey(BundleKeys.SALEITEMS_FROM_CATEGORY_SEARCH)) {
+            mFromCategorySearch = getArgs().getBoolean(BundleKeys.SALEITEMS_FROM_CATEGORY_SEARCH, true);
+        }
+	if (args.containsKey(BundleKeys.SALEITEMS_FROM_CATEGORY_DEEPLINK)) {
+            mFromCategoryDeeplink = getArgs().getBoolean(BundleKeys.SALEITEMS_FROM_CATEGORY_DEEPLINK, false);
         }
         //initial category tree from categoriescontroller
-        if (args.containsKey(SALEITEMS_KEY_CATEGORIES)) {
+        if (args.containsKey(BundleKeys.SALEITEMS_KEY_CATEGORIES)) {
             mInitialCategoryTree = JsonUtils.convertStringToObject(args.getString(BundleKeys.SALEITEMS_KEY_CATEGORIES, ""), new TypeToken<ArrayList<GetCategoryTreeResponse>>() {
             }.getType());
         }
@@ -528,8 +527,7 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
             mIsLoadingProgress = true;
             mSaleItemsPageNumber++;
             mPresenter.loadSaleItems(createSaleItemsRequest(mSearchFilterMvpView.getCategoryKeys(), mSaleItemsPageNumber, mChipFilters));
-        }
-    }
+        }}
 
     @Override
     public void showProductDetails(RecyclerView.ViewHolder viewHolder, int position, String seoIdentifierId, String imageUrl, String skuId, String saleId) {

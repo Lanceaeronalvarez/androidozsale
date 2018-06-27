@@ -29,7 +29,7 @@ import java.io.ByteArrayOutputStream;
 import java.util.List;
 
 import au.com.dealsdirect.R;
-import au.com.dealsdirect.data.network.model.checkout.getcurrentorder.MyPayDetails;
+import au.com.dealsdirect.data.network.model.checkout.getcurrentorder.GetCurrentOrderOurpay;
 import au.com.dealsdirect.utils.PriceUtils;
 
 import static android.view.ViewTreeObserver.OnGlobalLayoutListener;
@@ -172,7 +172,7 @@ public class OurpayGraph {
      */
 
     public View generateGraph(final Context context,
-                              final List<MyPayDetails.PlannedTransaction> ourpayTransactions) {
+                              final List<GetCurrentOrderOurpay.PlannedTransaction> ourpayTransactions) {
         final LinearLayout layPayViewId;
         int circleTempSize;
         int circleTempTextSize;

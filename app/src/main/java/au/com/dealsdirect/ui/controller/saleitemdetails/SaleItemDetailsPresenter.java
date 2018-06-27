@@ -5,6 +5,9 @@ import com.androidnetworking.error.ANError;
 import javax.inject.Inject;
 
 import au.com.dealsdirect.data.DataManager;
+import au.com.dealsdirect.data.network.AppApiCallback;
+import au.com.dealsdirect.data.network.model.ourpaydata.OurpayDataRequest;
+import au.com.dealsdirect.data.network.model.ourpaydata.OurpayDataResponse;
 import au.com.dealsdirect.data.network.model.saleitemdetails.AddToCartRequest;
 import au.com.dealsdirect.data.network.model.saleitemdetails.GetSaleItemDetailsResponse;
 import au.com.dealsdirect.service.ourpay.Ourpay;
@@ -14,6 +17,7 @@ import au.com.dealsdirect.service.ourpay.OurpayStateManager;
 import au.com.dealsdirect.ui.base.BasePresenter;
 import au.com.dealsdirect.utils.AppEventHelper;
 import au.com.dealsdirect.utils.CartUtil;
+import au.com.dealsdirect.utils.CurrencyUtil;
 import au.com.dealsdirect.utils.rx.SchedulerProvider;
 import io.reactivex.disposables.CompositeDisposable;
 
@@ -70,6 +74,20 @@ public class SaleItemDetailsPresenter<V extends SaleItemDetailsMvpView> extends 
     }
 
     @Override
+    public void loadOurpayData(final GetSaleItemDetailsResponse value) {
+        doApiCallForResponse(getDataManager().callGetOurpayData(OurpayDataRequest.init(
+                CurrencyUtil.getCurrency(getDataManager().getCountryId()), value.getPrice().getValue())),
+                new AppApiCallback(){
+            @Override
+            public void onSuccess(Object response) {
+                super.onSuccess(response);
+
+                generateOurpay(value, (OurpayDataResponse) response);
+            }
+        });
+    }
+
+    @Override
     public void addToCart(AddToCartRequest requestValues) {
         getMvpView().showLoading();
 
@@ -115,34 +133,38 @@ public class SaleItemDetailsPresenter<V extends SaleItemDetailsMvpView> extends 
     }
 
     @Override
-    public void generateOurpay(GetSaleItemDetailsResponse value) {
+    public void generateOurpay(GetSaleItemDetailsResponse value, OurpayDataResponse ourpayDataResponse) {
         Ourpay ourpay = new Ourpay();
 
         try {
             ourpay.setState(OurpayState.PRECART);
 
-            ourpay.setUserAmount(value.getPrice().getValue());
+            ourpay.setTotalAmount(value.getPrice().getValue());
             ourpay.setCanUse(true);
-            ourpay.setBillingPeriod(value.getPaymentPlan().getBillingPeriod());
-            ourpay.setTransactionCount(value.getPaymentPlan().getTransactionCount());
+            ourpay.setBillingPeriod(ourpayDataResponse.getPayment().getBillingPeriod());
+            ourpay.setTransactionCount(ourpayDataResponse.getPayment().getTransactionCount());
 
-            ourpay.setMinAmount(value.getPaymentConditions().minAmountThreshold);
-            ourpay.setMaxAmount(value.getPaymentConditions().maxAmountThreshold);
+            ourpay.setMinAmount(ourpayDataResponse.getPayment().getPaymentConditions().getMinAmountThreshold());
+            ourpay.setMaxAmount(ourpayDataResponse.getPayment().getPaymentConditions().getMaxAmountThreshold());
 
-            ourpay.setAmount(value.getMyPayAmount());
+            ourpay.setInitialAmount(ourpayDataResponse.getSummary().getFirstTransactionAmount());
 
-            ourpay.setPlannedTransactions(value.getBillingAgreement().getPlannedTransactions());
+            ourpay.setPlannedTransactions(ourpayDataResponse.getPayment().getBillingAgreement().getPlannedTransactions());
 
-            if (OurpayStateManager.isPriceOutOfRange(ourpay)){
+            if (ourpayDataResponse.getSummary().getDescription() != null) {
+                ourpay.setDetails(ourpayDataResponse.getSummary().getDescription());
+            }
+
+            if (OurpayStateManager.isPriceOutOfRange(ourpay)) {
                 ourpay.setState(ourpay.getState() | OurpayState.ERROR);
                 ourpay.setCanUse(false);
                 ourpay.setErrorCode(OurpayError.AMOUNT_OUT_OF_RANGE);
-            }else{
-                if (ourpay.getPlannedTransactions() == null){
+            } else {
+                if (ourpay.getPlannedTransactions() == null) {
                     ourpay.setState(OurpayState.DISABLED);
                 }
             }
-        }catch (Exception ex){
+        } catch (Exception ex) {
             ourpay.setState(OurpayState.DISABLED);
         }
 

@@ -33,8 +33,6 @@ public class Value {
     private List<DeliveryOption> deliveryOptions = null;
     @SerializedName("LastPaymentMethod")
     public String lastPaymentMethod;
-    @SerializedName("MyPayDetails")
-    public MyPayDetails myPayDetails;
     @SerializedName("ThreeDSecureRequired")
     public Boolean threeDSecureRequired;
     @SerializedName("PhoneVerification")
@@ -48,6 +46,9 @@ public class Value {
     private DeliveryServicePackageDetail deliveryServicePackageDetail;
     @SerializedName("IsEmpty")
     public boolean isEmpty = false;
+    @SerializedName("OurPay")
+    @Expose
+    private GetCurrentOrderOurpay ourpay;
 
     public boolean isEmpty() {
         return isEmpty;
@@ -67,10 +68,6 @@ public class Value {
 
     public Boolean getThreeDSecureRequired() {
         return threeDSecureRequired;
-    }
-
-    public MyPayDetails getMyPayDetails() {
-        return myPayDetails;
     }
 
     public String getLastPaymentMethod() {
@@ -119,5 +116,9 @@ public class Value {
 
     public DeliveryServicePackageDetail getDeliveryServicePackageDetail() {
         return deliveryServicePackageDetail;
+    }
+
+    public GetCurrentOrderOurpay getOurpay() {
+        return ourpay;
     }
 }

@@ -22,18 +22,23 @@ public class BundleKeys {
     public static final String SALEITEMS_FROM_CATEGORIES = "SaleItemsController.IS_FROM_CATEGORY";
     public static final String SALEITEMS_FROM_SHOP_SEARCH = "SaleItemsController.FROM_SHOP_SEARCH";
     public static final String SALEITEMS_FROM_CATEGORY_SEARCH = "SaleItemsController.FROM_CATEGORY_SEARCH";
+    public static final String SALEITEMS_CATEGORY_ID = "SaleItemsController.SALEITEMS_CATEGORY_ID";
+    public static final String SALEITEMS_CATEGORY_NAME = "SaleItemsController.SALEITEMS_CATEGORY_NAME";
+    public static final String SALEITEMS_FROM_CATEGORY_DEEPLINK = "SaleItemsController.FROM_CATEGORY_LINK";
+
     public static final String SALEITEMS_KEY_CATEGORIES = "SaleItemsController.KEY_CATEGORIES";
 
     //sale item details
-    public static final String SALEITEMDETAILS_KEY_POSITION = "SALEITEMDETAILS_KEY_POSITION";
-    public static final String SALEITEMDETAILS_KEY_SKU_ID = "SALEITEMDETAILS_KEY_SKU_ID";
-    public static final String SALEITEMDETAILS_KEY_SALE_ID = "SALEITEMDETAILS_KEY_SALE_ID";
-    public static final String SALEITEMDETAILS_KEY_ITEM_IMAGE_ID = "SALEITEMDETAILS_KEY_IMAGE_ID";
-    public static final String SALEITEMDETAILS_KEY_SEO_IDENTIFIER_ID = "SALEITEMDETAILS_KEY_SEO_IDENTIFIER";
-    public static final String SALEITEMDETAILS_KEY_ITEM_NAME = "SALEITEMDETAILS_KEY_SALE_NAME";
-    public static final String SALEITEMDETAILS_KEY_ITEM_PRICE = "SALEITEMDETAILS_KEY_SALE_PRICE";
-    public static final String SALEITEMDETAILS_KEY_ITEM_OLD_PRICE = "SALEITEMDETAILS_KEY_SALE_OLD_PRICE";
-    
+    public static final String SALEITEMDETAILS_KEY_POSITION = "KEY_POSITION";
+    public static final String SALEITEMDETAILS_KEY_SKU_ID = "KEY_SKU_ID";
+    public static final String SALEITEMDETAILS_KEY_SALE_ID = "KEY_SALE_ID";
+    public static final String SALEITEMDETAILS_KEY_ITEM_IMAGE_ID = "KEY_IMAGE_ID";
+    public static final String SALEITEMDETAILS_KEY_SEO_IDENTIFIER_ID = "KEY_SEO_IDENTIFIER";
+    public static final String SALEITEMDETAILS_KEY_ITEM_NAME = "KEY_SALE_NAME";
+    public static final String SALEITEMDETAILS_KEY_ITEM_PRICE = "KEY_SALE_PRICE";
+    public static final String SALEITEMDETAILS_KEY_ITEM_OLD_PRICE = "KEY_SALE_OLD_PRICE";
+    public static final String SALEITEMDETAILS_KEY_IS_DEEP_LINKED_WITH_SALE = "KEY_IS_DEEP_LINKED_WITH_SALE";
+ 
     //search filters
     public static final String FACET_FILTER_TYPE = "FACET_FILTER_TYPE";
     public static final String BRANDS_FACET_FILTER_TYPE = "brands";
