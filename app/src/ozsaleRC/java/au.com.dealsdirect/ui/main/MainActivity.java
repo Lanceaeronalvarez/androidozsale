@@ -369,7 +369,6 @@ public class MainActivity extends BaseActivity implements MainMvpView {
         //3DS Check
         if (PaymentInfo.isThreeDSecureRequired() && !PaymentInfo.isThreeDSecureCalled()) {
             mPresenter.callGetPaymentMethodNonce(token);
-
             return;
         }
 

@@ -929,8 +929,6 @@ public class CheckoutController extends VisaCheckoutController implements Checko
     private void onOurpayButtonClick() {
         RxBus.instance().post(IntrospectionUtils.EVENT_PAY);
 
-        assert (mActivity) != null;
-
         if (mActivity.isBraintreeInitialized()) {
 
             if (!isAddressValid()) {
