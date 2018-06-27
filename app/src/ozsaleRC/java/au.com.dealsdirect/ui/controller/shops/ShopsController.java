@@ -140,8 +140,8 @@ public class ShopsController extends BaseController implements ShopsMvpView, Ban
         mPresenter.onAttach(this);
         assert (mActivity) != null;
 
-        /* bug/gen-8065_ozsale-reskin_bugfixing - Disallow draggable viewpager */
-        mActivity.getMainController().setViewpagerDraggable(false);
+        /* bug/gen-8065_ozsale-reskin_bugfixing - allow draggable viewpager */
+        mActivity.getMainController().setViewpagerDraggable(true);
 
         mBannerClickCounter = 0;
         mActivity.setShopController(this);
@@ -543,6 +543,7 @@ public class ShopsController extends BaseController implements ShopsMvpView, Ban
                 mShopsControllerToolbarLogo.setVisibility(View.GONE);
             }
             mShopsControllerToolbarTextView.setVisibility(View.VISIBLE);
+            mShopsControllerHamburgerView.setImageDrawable(mActivity.getDrawable(R.drawable.ic_pink_chevron));
             mShopsControllerToolbarTextView.setText(getCategoryParentKey(getCategoryTreeResponse.getKey()));
             shopsControllerSearchView.setVisibility(View.INVISIBLE);
             mActivity.setIsFromCategories(true);
@@ -622,6 +623,7 @@ public class ShopsController extends BaseController implements ShopsMvpView, Ban
     public void loadShopBanners() {
         if (isAttached()) {
             mShopsControllerToolbarLogo.setVisibility(View.VISIBLE);
+            mShopsControllerHamburgerView.setImageDrawable(mActivity.getDrawable(R.drawable.ic_action_menu));
             mShopsControllerToolbarTextView.setVisibility(View.GONE);
             shopsControllerSearchView.setVisibility(View.VISIBLE);
         }

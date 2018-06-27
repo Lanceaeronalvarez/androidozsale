@@ -301,8 +301,9 @@ public class HomeController extends BaseController implements HomeMvpView {
         if (mShopRouter != null) {
             Controller controller = getCurrentControllerOnRouter(mShopRouter);
             if (controller instanceof ShopsController) {
-                /* bug/gen-8065_ozsale-reskin_bugfixing - Disallow draggable viewpager */
-                ((MainActivity) getActivity()).getMainController().setViewpagerDraggable(false);
+
+                /* bug/gen-8065_ozsale-reskin_bugfixing - allow draggable viewpager */
+                ((MainActivity) getActivity()).getMainController().setViewpagerDraggable(true);
             }
 
             if (controller instanceof SaleItemsController) {

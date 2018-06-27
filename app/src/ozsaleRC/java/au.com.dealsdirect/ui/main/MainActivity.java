@@ -657,6 +657,7 @@ public class MainActivity extends BaseActivity implements MainMvpView {
     }
 
     public void setShopController(ShopsController shopsController) {
+        getMainController().getHomeController().setShopRouterViewPagerDraggable();
         mShopController = shopsController;
     }
 
