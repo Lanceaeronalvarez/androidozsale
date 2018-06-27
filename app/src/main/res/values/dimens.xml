@@ -59,6 +59,7 @@
     <dimen name="border_thin">0.25dp</dimen>
     <dimen name="border_regular">1dp</dimen>
     <dimen name="border_thick">2dp</dimen>
+    <dimen name="border_heavy">5dp</dimen>
 
     <!-- Toolbar  -->
     <dimen name="partial_toolbar_button_width">40dp</dimen>

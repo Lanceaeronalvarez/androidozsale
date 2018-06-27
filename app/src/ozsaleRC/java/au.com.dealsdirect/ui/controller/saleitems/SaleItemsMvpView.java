@@ -25,10 +25,11 @@ public interface SaleItemsMvpView extends MvpView{
 
     void showProductDetails(RecyclerView.ViewHolder viewHolder, int position, String seoIdentifierId, String imageUrl, String skuId, String saleId);
 
-    GetSaleItemsRequest createSaleItemsRequest(String categoryKey, String saleId, int pageNumber, List<SearchChipModel> chipsList, String query);
+    GetSaleItemsRequest createSaleItemsRequest(String categoryKey, int pageNumber, List<SearchChipModel> chipsList);
 
-    GetSaleItemsRequest createSaleItemsRequest(Set<String> categoryKeys, String saleId, int pageNumber, List<SearchChipModel> chipsList, String query);
+    GetSaleItemsRequest createSaleItemsRequest(Set<String> categoryKeys, int pageNumber, List<SearchChipModel> chipsList);
 
     void setIsCategoryChanged(boolean val);
 
+    void enableSaleItemsScroll(boolean  val);
 }

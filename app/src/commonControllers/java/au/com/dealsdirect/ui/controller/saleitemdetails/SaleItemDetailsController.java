@@ -22,6 +22,7 @@ import android.view.animation.LinearInterpolator;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
@@ -47,6 +48,7 @@ import au.com.dealsdirect.data.network.model.saleitemdetails.AddToCartRequest;
 import au.com.dealsdirect.data.network.model.saleitemdetails.GetSaleItemDetailsResponse;
 import au.com.dealsdirect.data.network.model.saleitemdetails.Personalisation;
 import au.com.dealsdirect.service.ourpay.Ourpay;
+import au.com.dealsdirect.service.ourpay.OurpayPanel;
 import au.com.dealsdirect.ui.base.BaseController;
 import au.com.dealsdirect.ui.controller.saleitemdetails.listener.LoadImagesListener;
 import au.com.dealsdirect.ui.custom.ArcTranslateAnimation;
@@ -165,6 +167,12 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
     TextView mToolbarItemNameTextView;
     @BindView(R.id.toolbar_item_price)
     TextView mToolbarItemPriceTextView;
+    @BindView(R.id.controller_details_price_info)
+    ImageButton mPriceInfoButton;
+    @BindView(R.id.controller_details_old_price_info)
+    ImageButton mOldPriceInfoButton;
+    @BindView(R.id.product_about_old_pricing_text)
+    WebView mOldProductPricing;
 
     ImageView mImageViewToAnimate;
 
@@ -363,6 +371,7 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
         String deliveryInformation = saleDetail.getDeliveryInformation();
         String shippingInformation = saleDetail.getShippingInformation();
         String shippingPricing = saleDetail.getPricing();
+        String rrpPricing = saleDetail.getRrpText();
         String returnPolicy = saleDetail.getReturnPolicy();
         String productAbout = saleDetail.getAttributes() == null ? "" : saleDetail.getAttributes().getBrandDescription() == null ? "" : saleDetail.getAttributes().getBrandDescription();
         String name = saleDetail.getName() == null ? "" : saleDetail.getName();
@@ -395,10 +404,9 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
                 mShippingDescText.loadData(mHtmlHeader + deliveryInformation + "<br/><br/>" + shippingInformation + mHtmlFooter, "text/html; charset=UTF-8", null);
             }
 
-            mProductPricing.setVisibility(View.VISIBLE);
-            mProductAboutPricing.setLayerType(View.LAYER_TYPE_SOFTWARE, null);
-            mProductAboutPricing.startAnimation(anim);
-            mProductAboutPricing.loadData(mHtmlHeader + shippingPricing + mHtmlFooter, "text/html; charset=UTF-8", null);
+            mPriceInfoButton.setOnClickListener(view -> toggleProductInfoWebView(shippingPricing));
+
+            mOldPriceInfoButton.setOnClickListener(view -> toggleOldProductInfoWebView(rrpPricing));
 
         }
 
@@ -504,16 +512,30 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
             mAddToCartButton.setText("Sold Out");
         }
     */
-
-        if (saleDetail.getOriginalPrice().getValue() <= 0) {
-            mProductPreviousPrice.setVisibility(View.GONE);
-            mProductPreviousPriceLabel.setVisibility(View.GONE);
-        } else {
-            mProductPreviousPrice.setVisibility(View.VISIBLE);
-            mProductPreviousPriceLabel.setVisibility(View.VISIBLE);
-        }
+        boolean isOldPriceInfoVisible = saleDetail.getOriginalPrice().getValue() <= 0;
+        mOldPriceInfoButton.setVisibility(isOldPriceInfoVisible ? View.GONE : View.VISIBLE);
+        mProductPreviousPrice.setVisibility(isOldPriceInfoVisible ? View.GONE : View.VISIBLE);
+        mProductPreviousPriceLabel.setVisibility(isOldPriceInfoVisible ? View.GONE : View.VISIBLE);
 
         mPresenter.generateOurpay(saleDetail);
+    }
+
+    private void toggleProductInfoWebView(String shippingPricing) {
+        boolean isVisible = mProductPricing.getVisibility() == View.GONE || mOldProductPricing.getVisibility() == View.VISIBLE;
+        mProductPricing.setVisibility(isVisible ? View.VISIBLE : View.GONE);
+        mProductAboutPricing.setLayerType(View.LAYER_TYPE_SOFTWARE, null);
+        mProductAboutPricing.loadData(mHtmlHeader + shippingPricing + mHtmlFooter, "text/html; charset=UTF-8", null);
+        mProductAboutPricing.setVisibility(View.VISIBLE);
+        mOldProductPricing.setVisibility(View.GONE);
+    }
+
+    private void toggleOldProductInfoWebView(String shippingPricing) {
+        boolean isVisible = mProductPricing.getVisibility() == View.GONE || mProductAboutPricing.getVisibility() == View.VISIBLE;
+        mProductPricing.setVisibility(isVisible ? View.VISIBLE : View.GONE);
+        mOldProductPricing.setLayerType(View.LAYER_TYPE_SOFTWARE, null);
+        mOldProductPricing.loadData(mHtmlHeader + shippingPricing + mHtmlFooter, "text/html; charset=UTF-8", null);
+        mOldProductPricing.setVisibility(View.VISIBLE);
+        mProductAboutPricing.setVisibility(View.GONE);
     }
 
     @Override
@@ -535,12 +557,12 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
     @Override
     public void showMyPayDetails(GetSaleItemDetailsResponse value, Ourpay ourpay) {
 //        temporarily comment out
-//        if (ourpay != null) {
-//            OurpayPanel panel = new OurpayPanel(mActivity);
-//            mOurpayHolder.setVisibility(View.VISIBLE);
-//            mOurpayHolder.removeAllViews();
-//            mOurpayHolder.addView(panel.generatePanel(ourpay));
-//        }
+        if (ourpay != null) {
+            OurpayPanel panel = new OurpayPanel(mActivity);
+            mOurpayHolder.setVisibility(View.VISIBLE);
+            mOurpayHolder.removeAllViews();
+            mOurpayHolder.addView(panel.generatePanel(ourpay));
+        }
     }
 
     @Override

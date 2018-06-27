@@ -336,6 +336,7 @@ public class ShopsController extends BaseController implements ShopsMvpView, Ban
                 .putString(SALEITEMS_HEADER_IMAGE, imageUrl)
                 .putInt(SALEITEMS_FROM_POSITION, position)
                 .putString(SALEITEMS_CATEGORY_MAP, null)
+                .putBoolean(SALEITEMS_FROM_SHOP_SEARCH, false)
                 .build();
 
         if (mBannerClickCounter != 1) {

@@ -92,6 +92,10 @@ public class GetSaleItemDetailsResponse {
     @Expose
     private String myPayDetails;
 
+    @SerializedName("rrpText")
+    @Expose
+    private String rrpText;
+
     public String getPersonalisation() {
         return personalisation;
     }
@@ -291,5 +295,13 @@ public class GetSaleItemDetailsResponse {
 
     public void setSoldOut(boolean soldOut) {
         isSoldOut = soldOut;
+    }
+
+    public String getRrpText() {
+        return rrpText;
+    }
+
+    public void setRrpText(String rrpText) {
+        this.rrpText = rrpText;
     }
 }

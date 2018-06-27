@@ -7,7 +7,9 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.design.widget.AppBarLayout;
+import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.design.widget.TabLayout;
 import android.support.v4.util.Pair;
 import android.support.v7.widget.GridLayoutManager;
@@ -65,11 +67,14 @@ import au.com.dealsdirect.utils.module.ControllerFactory;
 import au.com.dealsdirect.utils.module.GateKeeper;
 import butterknife.BindView;
 import butterknife.OnClick;
+import butterknife.OnTouch;
 import in.srain.cube.views.ptr.PtrClassicFrameLayout;
 import in.srain.cube.views.ptr.PtrDefaultHandler;
 import in.srain.cube.views.ptr.PtrFrameLayout;
 import in.srain.cube.views.ptr.PtrHandler;
 
+import static android.support.design.widget.AppBarLayout.LayoutParams.SCROLL_FLAG_ENTER_ALWAYS;
+import static android.support.design.widget.AppBarLayout.LayoutParams.SCROLL_FLAG_SCROLL;
 import static android.widget.AbsListView.OnScrollListener.SCROLL_STATE_IDLE;
 import static au.com.dealsdirect.utils.BundleKeys.SALEITEMS_CATEGORY_MAP;
 import static au.com.dealsdirect.utils.BundleKeys.SALEITEMS_CHIPS_FILTER;
@@ -115,13 +120,10 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
     TextView mSaleItemsToolbarTitle;
 
     @BindView(R.id.controller_sale_items_text_placeholder)
-    TextView mPlaceholder;
+    LinearLayout mPlaceholder;
 
     @BindView(R.id.partial_toolbar_field_title_left_option)
     ImageButton mSaleItemsBackIcon;
-
-    @BindView(R.id.controller_search_popular_subheader)
-    TextView mPopularProductsHeader;
 
     @BindView(R.id.controller_search_filter_frame)
     ViewGroup mSearchFilterContainer;
@@ -132,8 +134,13 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
     @BindView(R.id.controller_sale_items_ptr)
     PtrClassicFrameLayout mPtrFrameLayout;
 
+    @Nullable
     @BindView(R.id.controller_sale_items_appbar)
     AppBarLayout mAppBar;
+
+    @Nullable
+    @BindView(R.id.controller_sale_collapsing_toolbar)
+    CollapsingToolbarLayout mCollapsingToolbar;
 
     private SaleItemsAdapter mSaleItemsAdapter;
     private Paginate mPaginateManager;
@@ -190,9 +197,7 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
                         public void run() {
                             if (before != 0 || count != 0) {
                                 mActivity.runOnUiThread(() -> showLoading());
-                                mChipFilters = removeSearchQueryChips(mChipFilters);
-                                buildSearchQueryChips(mChipFilters);
-                                mPresenter.loadSaleItems(createSaleItemsRequest(mSearchFilterMvpView.getCategoryKeys(), mSaleId, 0, mChipFilters, ""));
+                                mPresenter.loadSaleItems(createSaleItemsRequest(mSearchFilterMvpView.getCategoryKeys(), 0, mChipFilters));
                             }
                         }
                     }, DELAY);
@@ -258,13 +263,6 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
     }
 
     @Override
-    public void onRefreshStart() {
-        super.onRefreshStart();
-        mSaleItemsPageNumber = 0;
-        mPresenter.loadSaleItems(createSaleItemsRequest(mSearchFilterMvpView.getCategoryKeys(), mSaleId, mSaleItemsPageNumber, mChipFilters, ""));
-    }
-
-    @Override
     protected void onActivityResumed(@NonNull Activity activity) {
         super.onActivityResumed(activity);
 
@@ -306,13 +304,6 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
         } else {
             mSaleItemsToolbarTitle.setText(getString(R.string.i_am_looking_for));
         }
-
-        //show popular products if saleitemstoolbar title is "looking for"
-
-        if (mSaleItemsToolbarTitle.getText().equals(lookingForText) && mChipFilters.isEmpty()) {
-            mPopularProductsHeader.setVisibility(View.VISIBLE);
-        }
-
     }
 
     @Override
@@ -373,22 +364,6 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
 
         mSaleItemsRecyclerView.setAdapter(mSaleItemsAdapter);
         mSaleItemsRecyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
-
-            @Override
-            public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
-                super.onScrolled(recyclerView, dx, dy);
-                int bottomNavVisibility = mActivity.getHomeController().getBottomNavigationView().getVisibility();
-                if (dy > 0) {
-                    //hides bottom Nav
-                    mActivity.getHomeController().animateBottomNav(0);
-                } else {
-                    //show bottom Nav
-                    if (bottomNavVisibility == View.GONE) {
-                        mActivity.getHomeController().animateBottomNav(dy);
-                    }
-                }
-            }
-
             @Override
             public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
                 super.onScrollStateChanged(recyclerView, newState);
@@ -402,7 +377,7 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
         mPaginateManager = PaginateUtils.init(mSaleItemsRecyclerView, mPaginateCallbacks);
 
         mInitialLoad = true;
-        mPresenter.loadSaleItems(createSaleItemsRequest(mCategoryKey, mSaleId, mSaleItemsPageNumber, mChipFilters, ""));
+        mPresenter.loadSaleItems(createSaleItemsRequest(mCategoryKey, mSaleItemsPageNumber, mChipFilters));
 
         setRetainViewMode(RetainViewMode.RETAIN_DETACH);
         hideKeyboard();
@@ -426,6 +401,8 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
 
         mPtrFrameLayout.getHeader().setProgressBar(ColorStateList.valueOf(getResources().getColor(R.color.progress_loader_stroke)));
 
+        mPtrFrameLayout.setPullToRefresh(false);
+
     }
 
     @Override
@@ -438,6 +415,7 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
     public void showSaleItems(GetSaleItemsResponse getSaleItemsResponse, boolean forFacetCorrection) {
 
         mCategoryTreeResponse = getSaleItemsResponse.getCategories();
+        mPtrFrameLayout.setPullToRefresh(true);
 
         if (forFacetCorrection) {
             mFacets = getSaleItemsResponse.getFacets();
@@ -446,23 +424,6 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
             mFacets = getSaleItemsResponse.getFacets();
 
             List<GetSaleItemsResponse.Products> items = getSaleItemsResponse.products;
-
-            if ((mSearchQuery.isEmpty() && mFromShopSearch && mChipFilters.isEmpty()) || mFromCategorySearch) {
-                if (mSaleItemsToolbarField.getText().toString().isEmpty()) {
-                    mPopularProductsHeader.setVisibility(View.VISIBLE);
-                } else {
-                    mPopularProductsHeader.setVisibility(View.GONE);
-                }
-            } else {
-                if (mChipFilters.isEmpty() &&
-                        mSaleItemsToolbarTitle.getText().toString().isEmpty() &&
-                        mSaleItemsToolbarField.getHint().toString().equals(getResources().getString(R.string.i_am_looking_For))) {
-                    mPopularProductsHeader.setVisibility(View.VISIBLE);
-                } else {
-                    mPopularProductsHeader.setVisibility(View.GONE);
-
-                }
-            }
 
             mPtrFrameLayout.setPullToRefresh(true); //default true
 
@@ -542,10 +503,8 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
             mSaleItemsPageNumber = 0;
         } else {
             mIsLoadingProgress = true;
-            mChipFilters = removeSearchQueryChips(mChipFilters);
-            buildSearchQueryChips(mChipFilters);
             mSaleItemsPageNumber++;
-            mPresenter.loadSaleItems(createSaleItemsRequest(mSearchFilterMvpView.getCategoryKeys(), mSaleId, mSaleItemsPageNumber, mChipFilters, ""));
+            mPresenter.loadSaleItems(createSaleItemsRequest(mSearchFilterMvpView.getCategoryKeys(), mSaleItemsPageNumber, mChipFilters));
         }
     }
 
@@ -625,18 +584,6 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
         hideKeyboard();
     }
 
-    private List<SearchChipModel> removeSearchQueryChips(List<SearchChipModel> chipFilters) {
-        List<SearchChipModel> chipList = new ArrayList<>(chipFilters);
-        mRemovedChipTitles = new ArrayList<>();
-        for (SearchChipModel chip : chipFilters) {
-            if (chip.getFilterType().equals(BundleKeys.SEARCH_QUERY_NAME)) {
-                chipList.remove(chip);
-                mRemovedChipTitles.add(chip.getChipTitle());
-            }
-        }
-        return chipList;
-    }
-
     private String buildSearchQueryText(List<String> chipTitles) {
         StringBuilder stringBuilder = new StringBuilder();
         for (String string : chipTitles) {
@@ -647,24 +594,15 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
         return stringBuilder.toString().trim();
     }
 
-    private void buildSearchQueryChips(List<SearchChipModel> chipFilters) {
-        if (!mSearchQuery.isEmpty()) {
-            String[] splitted = mSearchQuery.split("\\s+");
-            for (String str : splitted) {
-                chipFilters.add(new SearchChipModel(BundleKeys.SEARCH_QUERY_NAME, str, -1));
-            }
-        }
-
-    }
-
     @Override
-    public GetSaleItemsRequest createSaleItemsRequest(Set<String> categoryKeys, String saleId, int pageNumber, List<SearchChipModel> chipsList, String query) {
+    public GetSaleItemsRequest createSaleItemsRequest(Set<String> categoryKeys, int pageNumber, List<SearchChipModel> chipsList) {
         mCategoryKey = StringUtils.generateConcatenatedCategories(categoryKeys);
-        return createSaleItemsRequest(mCategoryKey, saleId, pageNumber, chipsList, query);
+        mChipFilters = chipsList;
+        return createSaleItemsRequest(mCategoryKey, pageNumber, chipsList);
     }
 
     @Override
-    public GetSaleItemsRequest createSaleItemsRequest(String categoryKey, String saleId, int pageNumber, List<SearchChipModel> chipsList, String query) {
+    public GetSaleItemsRequest createSaleItemsRequest(String categoryKey, int pageNumber, List<SearchChipModel> chipsList) {
         List<String> saleIds = new LinkedList<>();
         HashMap<String, List<String>> facetFilters = new HashMap<>();
 
@@ -674,18 +612,11 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
 
         getSaleItemsRequest.setSorting("");
         getSaleItemsRequest.setPageNumber(String.valueOf(pageNumber));
-        getSaleItemsRequest.setQuery(query);
-
+        getSaleItemsRequest.setQuery(mSearchQuery);
         getSaleItemsRequest.setPageSize("50");
 
-        if (saleId != null) {
-
-            if (!saleId.isEmpty())
-                saleIds.add(saleId);
-        }
-
-
-        if (!saleIds.isEmpty()) {
+        if (!(mSaleId == "")) {
+            saleIds.add(mSaleId);
             facetFilters.put("saleId", saleIds);
         }
 
@@ -693,7 +624,6 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
             getSaleItemsRequest.setHasFilters(false);
         } else {
             if (chipsList.size() != 0) {
-                ArrayList<String> searchQueryFilters = new ArrayList<>();
                 ArrayList<String> brandNameFacetFilters = new ArrayList<>();
                 ArrayList<String> colorFacetFilters = new ArrayList<>();
                 ArrayList<String> sizesFacetFilters = new ArrayList<>();
@@ -709,8 +639,6 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
                         sizesFacetFilters.add(chip.getChipTitle());
                     } else if (facetName.equals(BundleKeys.PRICE_FACETFILTER_NAME)) {
                         priceFacetFilters.add(chip.getChipTitle());
-                    } else if (facetName.equals(BundleKeys.SEARCH_QUERY_NAME)) {
-                        searchQueryFilters.add(chip.getChipTitle());
                     } else if (facetName.equals(BundleKeys.SORT_FACETFILTER_NAME)) {
                         getSaleItemsRequest.setSorting(mapSortingTitleToKey(chip.getChipTitle()));
                     }
@@ -721,18 +649,6 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
                 facetFilters.put(BundleKeys.SIZES_FACETFILTER_NAME, sizesFacetFilters);
                 facetFilters.put(BundleKeys.PRICE_FACETFILTER_NAME, priceFacetFilters);
 
-
-                if (searchQueryFilters.size() != 0) {
-                    StringBuilder result = new StringBuilder();
-                    for (int i = 0; i < searchQueryFilters.size(); i++) {
-                        if (i > 0) {
-                            result.append(" ");
-                        }
-                        result.append(searchQueryFilters.get(i));
-                    }
-
-                    getSaleItemsRequest.setQuery(result.toString());
-                }
             }
 
             getSaleItemsRequest.setHasFilters(true);
@@ -784,6 +700,7 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
                 mSearchFilterMvpView.showFacetItem(tab.getPosition());
                 mCurrentTabPosition = tab.getPosition();
                 toggleTabSelection(true);
+                hideKeyboard();
             }
 
             @Override
@@ -796,6 +713,7 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
                 mSearchFilterMvpView.showFacetItem(tab.getPosition());
                 mCurrentTabPosition = tab.getPosition();
                 toggleTabSelection(true);
+                hideKeyboard();
             }
         });
 
@@ -820,7 +738,7 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
 
     @Override
     public void onRefreshBegin(PtrFrameLayout frame) {
-        mPresenter.loadSaleItems(createSaleItemsRequest(mCategoryKey, mSaleId, 0, mChipFilters, ""));
+        mPresenter.loadSaleItems(createSaleItemsRequest(mCategoryKey, 0, mChipFilters));
     }
 
     @Override
@@ -836,9 +754,16 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
         this.mVerticalOffset = verticalOffset;
     }
 
+    @OnTouch(R.id.partial_toolbar_field_title_edittext)
+    public boolean touchSearch() {
+        activateSearch();
+        return false;
+    }
+
     @OnClick(R.id.partial_toolbar_field_title_edittext)
     public void activateSearch() {
         mSaleItemsToolbarField.setSelection(mSaleItemsToolbarField.getText().length());
+        mSearchFilterMvpView.closeFacets();
 
         mSaleItemsToolbarField.addTextChangedListener(mTextWatcher);
         mSaleItemsToolbarField.setOnEditorActionListener((textView, actionId, keyEvent) -> {
@@ -846,12 +771,9 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
                 hideKeyboard();
                 mSearchQuery = textView.getText().toString();
                 mIsSearch = true;
-                mChipFilters = removeSearchQueryChips(mChipFilters);
-                buildSearchQueryChips(mChipFilters);
                 showLoading();
-                mPresenter.loadSaleItems(createSaleItemsRequest(mSearchFilterMvpView.getCategoryKeys(), mSaleId, 0, mChipFilters, ""));
+                mPresenter.loadSaleItems(createSaleItemsRequest(mSearchFilterMvpView.getCategoryKeys(), 0, mChipFilters));
             }
-
             return false;
         });
     }
@@ -865,8 +787,16 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
             gridLayoutManager.scrollToPosition(currentScrollPosition);
 
             gridLayoutManager.setSpanCount(getInteger(R.integer.sale_items_phone_column_count));
-            if (mPresenter != null && mPresenter.isTablet())
+            if (mPresenter != null && mPresenter.isTablet()) {
                 gridLayoutManager.setSpanCount(getInteger(R.integer.sale_items_tablet_column_count));
+            }
         }
+    }
+
+    @Override
+    public void enableSaleItemsScroll(boolean val) {
+        AppBarLayout.LayoutParams layoutParams = (AppBarLayout.LayoutParams) mCollapsingToolbar.getLayoutParams();
+        layoutParams.setScrollFlags(val ? SCROLL_FLAG_SCROLL | SCROLL_FLAG_ENTER_ALWAYS : 0);
+        mCollapsingToolbar.setLayoutParams(layoutParams);
     }
 }
