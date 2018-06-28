@@ -44,8 +44,6 @@
                 android:fitsSystemWindows="true"
                 android:paddingBottom="@dimen/margin_small"
                 app:contentScrim="?attr/colorPrimary"
-                app:expandedTitleMarginEnd="64dp"
-                app:expandedTitleMarginStart="48dp"
                 app:layout_scrollFlags="scroll|enterAlways">
 
                 <au.com.dealsdirect.ui.custom.SearchEditText

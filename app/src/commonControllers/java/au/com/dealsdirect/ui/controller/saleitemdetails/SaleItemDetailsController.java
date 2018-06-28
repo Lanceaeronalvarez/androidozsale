@@ -138,7 +138,7 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
     @BindView(R.id.product_details_name_price_container)
     LinearLayout mProductPriceCategory;
     @BindView(R.id.about_pricing_container)
-    LinearLayout mProductPricing;
+    LinearLayout mProductPricingContainer;
     @BindView(R.id.product_about_container)
     LinearLayout mProductAboutContainer;
     @BindView(R.id.product_details_return_policy_container)
@@ -404,9 +404,9 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
                 mShippingDescText.loadData(mHtmlHeader + deliveryInformation + "<br/><br/>" + shippingInformation + mHtmlFooter, "text/html; charset=UTF-8", null);
             }
 
-            mPriceInfoButton.setOnClickListener(view -> toggleProductInfoWebView(shippingPricing));
+            mPriceInfoButton.setOnClickListener(view -> toggleProductInfoWebView(shippingPricing, true));
 
-            mOldPriceInfoButton.setOnClickListener(view -> toggleOldProductInfoWebView(rrpPricing));
+            mOldPriceInfoButton.setOnClickListener(view -> toggleProductInfoWebView(rrpPricing, false));
 
         }
 
@@ -520,22 +520,19 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
         mPresenter.loadOurpayData(saleDetail);
     }
 
-    private void toggleProductInfoWebView(String shippingPricing) {
-        boolean isVisible = mProductPricing.getVisibility() == View.GONE || mOldProductPricing.getVisibility() == View.VISIBLE;
-        mProductPricing.setVisibility(isVisible ? View.VISIBLE : View.GONE);
-        mProductAboutPricing.setLayerType(View.LAYER_TYPE_SOFTWARE, null);
-        mProductAboutPricing.loadData(mHtmlHeader + shippingPricing + mHtmlFooter, "text/html; charset=UTF-8", null);
-        mProductAboutPricing.setVisibility(View.VISIBLE);
-        mOldProductPricing.setVisibility(View.GONE);
-    }
-
-    private void toggleOldProductInfoWebView(String shippingPricing) {
-        boolean isVisible = mProductPricing.getVisibility() == View.GONE || mProductAboutPricing.getVisibility() == View.VISIBLE;
-        mProductPricing.setVisibility(isVisible ? View.VISIBLE : View.GONE);
-        mOldProductPricing.setLayerType(View.LAYER_TYPE_SOFTWARE, null);
-        mOldProductPricing.loadData(mHtmlHeader + shippingPricing + mHtmlFooter, "text/html; charset=UTF-8", null);
-        mOldProductPricing.setVisibility(View.VISIBLE);
-        mProductAboutPricing.setVisibility(View.GONE);
+    private void toggleProductInfoWebView(String shippingPricing, boolean isNewPricing) {
+        boolean isPricingContainerVisible = mProductPricingContainer.getVisibility() == View.VISIBLE;
+        if(isNewPricing) {
+            mProductAboutPricing.loadData(mHtmlHeader + shippingPricing + mHtmlFooter, "text/html; charset=UTF-8", null);
+            mProductAboutPricing.setLayerType(View.LAYER_TYPE_SOFTWARE, null);
+            mProductPricingContainer.setVisibility(isPricingContainerVisible && mProductAboutPricing.getVisibility() == View.VISIBLE ? View.GONE : View.VISIBLE);
+        } else {
+            mOldProductPricing.loadData(mHtmlHeader + shippingPricing + mHtmlFooter, "text/html; charset=UTF-8", null);
+            mOldProductPricing.setLayerType(View.LAYER_TYPE_SOFTWARE, null);
+            mProductPricingContainer.setVisibility(isPricingContainerVisible && mOldProductPricing.getVisibility() == View.VISIBLE ? View.GONE : View.VISIBLE);
+        }
+        mProductAboutPricing.setVisibility(isNewPricing ? View.VISIBLE: View.GONE);
+        mOldProductPricing.setVisibility(!isNewPricing? View.VISIBLE : View.GONE);
     }
 
     @Override

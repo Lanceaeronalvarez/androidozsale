@@ -197,7 +197,7 @@ public class PaymentSuccessController extends BaseController implements PaymentS
         double totalPayment = 0;
         for (int i = 0; i < ourpay.getPlannedTransactions().size(); i++) {
             if (ourpay.getPlannedTransactions().get(i).getState() == KEY_PLANNED_TRANSACTION_STATE_PAID) {
-                totalPayment = +ourpay.getPlannedTransactions().get(i).getAmount();
+                totalPayment = ourpay.getPlannedTransactions().get(i).getAmount();
             }
         }
 

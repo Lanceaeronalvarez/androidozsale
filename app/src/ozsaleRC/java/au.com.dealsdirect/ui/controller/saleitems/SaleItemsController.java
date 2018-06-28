@@ -249,7 +249,7 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
         if (args.containsKey(BundleKeys.SALEITEMS_FROM_CATEGORY_SEARCH)) {
             mFromCategorySearch = getArgs().getBoolean(BundleKeys.SALEITEMS_FROM_CATEGORY_SEARCH, true);
         }
-	if (args.containsKey(BundleKeys.SALEITEMS_FROM_CATEGORY_DEEPLINK)) {
+        if (args.containsKey(BundleKeys.SALEITEMS_FROM_CATEGORY_DEEPLINK)) {
             mFromCategoryDeeplink = getArgs().getBoolean(BundleKeys.SALEITEMS_FROM_CATEGORY_DEEPLINK, false);
         }
         //initial category tree from categoriescontroller
@@ -345,6 +345,7 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
 
         mActivity.setSaleItemsController(this);
         mActivity.getMainController().setViewpagerDraggable(false);
+        mActivity.getHomeController().showBottomNav();
         setupPtrHeader();
 
         //use initialcategory tree map if it came from categories.
@@ -404,11 +405,10 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
         mPaginateManager = PaginateUtils.init(mSaleItemsRecyclerView, mPaginateCallbacks);
 
         mInitialLoad = true;
-        mPresenter.loadSaleItems(createSaleItemsRequest(mCategoryKey, mSaleItemsPageNumber, mChipFilters));
 
         /* bug/gen-8065_ozsale-reskin_bugfixing - dont load empty category on category link */
         if (!mFromCategoryDeeplink) {
-            mPresenter.loadSaleItems(createSaleItemsRequest("", mSaleItemsPageNumber, mChipFilters));
+            mPresenter.loadSaleItems(createSaleItemsRequest(mCategoryKey, mSaleItemsPageNumber, mChipFilters));
         }
 
         setRetainViewMode(RetainViewMode.RETAIN_DETACH);
@@ -538,7 +538,8 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
             mIsLoadingProgress = true;
             mSaleItemsPageNumber++;
             mPresenter.loadSaleItems(createSaleItemsRequest(mSearchFilterMvpView.getCategoryKeys(), mSaleItemsPageNumber, mChipFilters));
-        }}
+        }
+    }
 
     @Override
     public void showProductDetails(RecyclerView.ViewHolder viewHolder, int position, String seoIdentifierId, String imageUrl, String skuId, String saleId) {

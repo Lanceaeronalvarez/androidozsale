@@ -61,7 +61,7 @@
                 <!-- Ozsale -->
                 <!-- Accepts URIs that begin with "https://www.ozsale.com.au” -->
                 <data
-                    android:host="www.ozsale.com.au"
+                    android:host="@string/app_uri_hostname"
                     android:pathPrefix=""
                     android:scheme="https"
                     tools:ignore="AppLinkUrlError"/>
