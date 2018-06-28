@@ -38,12 +38,10 @@
             fontPath="@string/font_app_light"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="@dimen/button_height_regular"
             android:layout_marginTop="10dp"
             android:gravity="center"
             android:layout_marginLeft="@dimen/activity_horizontal_margin"
             android:layout_marginRight="@dimen/activity_horizontal_margin"
-            android:paddingBottom="@dimen/button_height_regular"
             android:text="@string/you_have_not_added_any_items_in_your_shopping_cart"
             android:textColor="@color/text_medium"
             android:textSize="@dimen/text_size_headline3" />

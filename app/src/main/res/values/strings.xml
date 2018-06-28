@@ -617,5 +617,6 @@
 
     <!--Country Id Mapping-->
     <string name="country_id_AS">AS</string>
+    <string name="toggle_notifications">Toggle Notifications</string>
 
 </resources>
