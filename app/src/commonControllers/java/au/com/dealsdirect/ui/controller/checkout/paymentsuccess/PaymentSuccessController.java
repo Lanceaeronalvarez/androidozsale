@@ -113,8 +113,8 @@ public class PaymentSuccessController extends BaseController implements PaymentS
 
         //Remove test postfix
         mPackageName = mPackageName.replace(".test", "");
-        mAppUri = "market://details?id=" + mPackageName;
-        mAppPlayStoreUri = "http://play.google.com/store/apps/details?id=" + mPackageName;
+        mAppUri = getString(R.string.app_uri_header) + mPackageName;
+        mAppPlayStoreUri = getString(R.string.app_playstore_uri_header) + mPackageName;
 
         mPresenter.incrementPayCount();
     }
