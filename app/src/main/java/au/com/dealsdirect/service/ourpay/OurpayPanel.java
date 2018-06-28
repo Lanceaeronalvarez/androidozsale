@@ -140,14 +140,20 @@ public class OurpayPanel {
             }
         } else if (0 != (ourpay.getState() & OurpayState.POSTCART)) {
 
-            TextView tv = (TextView) getTemplateText(
-                    OurpayTemplateText.getTemplateText(mBaseActivity, ourpay));
-            tv.setGravity(Gravity.CENTER_HORIZONTAL);
-            mPanelHolder.addView(tv, 0);
+            String templateText = OurpayTemplateText.getTemplateText(mBaseActivity, ourpay);
+            if(!templateText.isEmpty()) {
+                TextView tv = (TextView) getTemplateText(templateText);
+                tv.setGravity(Gravity.CENTER_HORIZONTAL);
+                mPanelHolder.addView(tv, 0);
+            }
             mHolderInBorder.addView(getSuccessHeaderRow());
             mHolderInBorder.addView(getPanelRows(ourpay.getPlannedTransactions()));
             mHolderInBorder.addView(getPanelRemainingRow(PriceUtils.getPriceStringValue(ourpay.getInitialAmount())));
-            mPanelHolder.addView(getThankYouFooter());
+
+            if(!mBaseActivity.getResources().getBoolean(R.bool.is_ozsale_app)) {
+                mPanelHolder.addView(getThankYouFooter());
+            }
+
         }
 
         return mPanelHolder;
