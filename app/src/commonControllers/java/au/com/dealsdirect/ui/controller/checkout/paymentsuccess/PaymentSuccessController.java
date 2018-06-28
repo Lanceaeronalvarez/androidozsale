@@ -179,20 +179,25 @@ public class PaymentSuccessController extends BaseController implements PaymentS
 
     @Override
     public boolean handleBack() {
-        onContinueShoppingClick();
-        return true;
+        PaymentInfo.resetPaymentInfo();
+
+        if (mPresenter.isTablet() && getBoolean(R.bool.is_ozsale_app)) {
+            mActivity.getHomeController().resetCheckoutRouter();
+        } else {
+            mActivity.getCheckoutRouter().popToRoot();
+        }
+        mActivity.setShopsAsVisibleContainer();
+
+        return super.handleBack();
     }
 
     @OnClick(R.id.partial_continue_shopping_button)
     void onContinueShoppingClick() {
-        PaymentInfo.resetPaymentInfo();
-
-        mActivity.getCheckoutRouter().popToRoot();
-        mActivity.setShopsAsVisibleContainer();
+        mActivity.onBackPressed();
     }
 
-//    Unused function, price table container is hidden.
-//    *May be used in the future
+    //    Unused function, price table container is hidden.
+    //    *May be used in the future
     private void getTotalPayment(Ourpay ourpay) {
         double totalPayment = 0;
         for (int i = 0; i < ourpay.getPlannedTransactions().size(); i++) {
