@@ -7,6 +7,8 @@ import android.widget.TextView;
 
 import com.h6ah4i.android.widget.advrecyclerview.utils.AbstractExpandableItemViewHolder;
 
+import javax.annotation.Nullable;
+
 import au.com.dealsdirect.R;
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -20,7 +22,7 @@ public class AccountItemViewHolder extends AbstractExpandableItemViewHolder {
     @BindView(R.id.row_account_text)
     TextView mAccountItemName;
 
-    @BindView(R.id.row_account_image)
+    @Nullable @BindView(R.id.row_account_image)
     ImageView mAccountItemImage;
 
     @BindView(R.id.row_account_arrow_right)
