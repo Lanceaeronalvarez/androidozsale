@@ -20,7 +20,7 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="8"
-            android:text="@string/notifications_label"
+            android:text="@string/notifications"
             android:textColor="@color/text_medium"
             android:textSize="@dimen/text_size_body" />
 

@@ -187,26 +187,6 @@ public class NewReturnController extends BaseController implements NewReturnMvpV
             mPresenter.addNewReturnOrderRequest(createReturnRequest);
             hideKeyboard();
         }
-//        boolean validReason = false;
-//        String reason = mNewReturnCreateReasonField.getText().toString();
-//
-//        if (!reason.isEmpty()) {
-//            validReason = true;
-//        }
-//
-//        mRequestItems.clear();
-//        for (int i = 0; i < mAdapter.getCheckedReturns().length; i++) {
-//            boolean isChecked = mAdapter.getCheckedReturns()[i];
-//            if(isChecked) {
-//                mRequestItems.add(mAdapter.getReturnList().get(i).getID());
-//            }
-//        }
-//
-//        if (validReason && !mRequestItems.isEmpty()) {
-//            performRequestReturn();
-//        } else {
-//            CustomAlertDialog.showCustomAlertDialog(mActivity, CustomAlertDialog.CustomDialogIconState.NEGATIVE, "Please populate all fields.");
-//        }
     }
 
     private java.util.List getUpdateRequestList() {

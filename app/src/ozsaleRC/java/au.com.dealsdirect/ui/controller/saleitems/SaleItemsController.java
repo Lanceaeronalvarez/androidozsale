@@ -411,7 +411,7 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
                 if (inputMethodManager != null) {
                     inputMethodManager.showSoftInput(mSaleItemsToolbarField, InputMethodManager.SHOW_IMPLICIT);
                 }
-            }, 1000);
+            }, DELAY);
         }
     }
 

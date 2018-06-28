@@ -18,8 +18,8 @@ public class NotificationPresenter<V extends NotificationMvpView> extends BasePr
     }
 
     @Override
-    public void setIsNotificationsEnabled(boolean val) {
-        getDataManager().setIsNotificationsEnabled(val);
+    public void setIsNotificationsEnabled(boolean isNotificationsEnabled) {
+        getDataManager().setIsNotificationsEnabled(isNotificationsEnabled);
     }
 
     @Override

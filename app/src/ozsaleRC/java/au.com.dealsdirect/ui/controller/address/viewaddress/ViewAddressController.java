@@ -180,10 +180,7 @@ public class ViewAddressController extends BasePullToRefreshController implement
     }
 
     private void toggleLayoutVisibility() {
-        if(mAddressList == null) {
-            return;
-        }
-            boolean hasAddress = mAddressList.size() > 0;
+        boolean hasAddress = mAddressList != null && mAddressList.size() > 0;
 
         mAddressSubtitle.setVisibility(hasAddress ? View.VISIBLE : View.GONE);
         mRecyclerView.setVisibility(hasAddress ? View.VISIBLE : View.GONE);
