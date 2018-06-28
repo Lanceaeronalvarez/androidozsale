@@ -214,7 +214,6 @@
     </integer-array>
 
     <integer-array name="account_options_sub_item_title_array">
-        <item>@string/account_language</item>
         <item>@string/account_notification</item>
         <item>@string/account_clear_cookies_data</item>
     </integer-array>
