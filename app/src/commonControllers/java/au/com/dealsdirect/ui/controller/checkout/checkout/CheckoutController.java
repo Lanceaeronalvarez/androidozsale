@@ -773,6 +773,7 @@ public class CheckoutController extends VisaCheckoutController implements Checko
     public void showSummaryDetails(Summary summary) {
         if (summary != null) {
             mSummarySubtotalTextView.setText(PriceUtils.getPriceStringValue(summary.getSubtotal()));
+            mSummaryShippingFeeContainer.setVisibility(summary.getDelivery() == 0 ? View.GONE : View.VISIBLE);
             mSummaryShippingFeeTextView.setText(PriceUtils.getPriceStringValue(summary.getDelivery()));
             mSummaryVoucherTextView.setText(PriceUtils.getPriceStringValue(summary.getDiscount()));
             mDiscountValue = summary.getDiscount();
@@ -805,7 +806,6 @@ public class CheckoutController extends VisaCheckoutController implements Checko
             } else {
                 mSummaryOurpaySelectContainer.setVisibility(View.GONE);
                 mSummaryPayTodayContainer.setVisibility(View.GONE);
-                mSummaryShippingFeeContainer.setVisibility(View.VISIBLE);
             }
         }
 

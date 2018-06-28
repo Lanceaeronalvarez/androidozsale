@@ -141,7 +141,7 @@ public class OurpayPanel {
         } else if (0 != (ourpay.getState() & OurpayState.POSTCART)) {
 
             String templateText = OurpayTemplateText.getTemplateText(mBaseActivity, ourpay);
-            if(!templateText.isEmpty()) {
+            if (!templateText.isEmpty()) {
                 TextView tv = (TextView) getTemplateText(templateText);
                 tv.setGravity(Gravity.CENTER_HORIZONTAL);
                 mPanelHolder.addView(tv, 0);
@@ -150,7 +150,7 @@ public class OurpayPanel {
             mHolderInBorder.addView(getPanelRows(ourpay.getPlannedTransactions()));
             mHolderInBorder.addView(getPanelRemainingRow(PriceUtils.getPriceStringValue(ourpay.getInitialAmount())));
 
-            if(!mBaseActivity.getResources().getBoolean(R.bool.is_ozsale_app)) {
+            if (!mBaseActivity.getResources().getBoolean(R.bool.is_ozsale_app)) {
                 mPanelHolder.addView(getThankYouFooter());
             }
 
@@ -220,19 +220,14 @@ public class OurpayPanel {
 
         textViewTC.setText(Html.fromHtml(OurpayTemplateText.getText(mBaseActivity, ourpay.getTermsAndConditionsText())));
         textViewTC.setOnClickListener(view1 -> {
-
-            if (mRouter.getBackstackSize() == 1) {
-
-                ((MainActivity) mBaseActivity).setDraggableViewPager(false);
-                GateKeeper.push(mRouter, GateKeeper.Destination.LEGALITIES,
-                        new BundleBuilder(new Bundle())
-                                .putString(BundleKeys.TEMPLATE_KEY, OurpayTemplateText.KEY_OPS_TNC_FULL_TEXT)
-                                .putString(BundleKeys.LEGALITIES_TITLE, mBaseActivity.getString(R.string.my_basket))
-                                .build(),
-                        new VerticalChangeHandler(false),
-                        new VerticalChangeHandler());
-
-            }
+            ((MainActivity) mBaseActivity).setDraggableViewPager(false);
+            GateKeeper.push(mRouter, GateKeeper.Destination.LEGALITIES,
+                    new BundleBuilder(new Bundle())
+                            .putString(BundleKeys.TEMPLATE_KEY, OurpayTemplateText.KEY_OPS_TNC_FULL_TEXT)
+                            .putString(BundleKeys.LEGALITIES_TITLE, mBaseActivity.getString(R.string.my_basket))
+                            .build(),
+                    new VerticalChangeHandler(false),
+                    new VerticalChangeHandler());
 
         });
 
