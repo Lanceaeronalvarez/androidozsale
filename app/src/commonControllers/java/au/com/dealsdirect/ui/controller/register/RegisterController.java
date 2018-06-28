@@ -257,15 +257,26 @@ public class RegisterController extends VisaCheckoutController implements Regist
                 new HorizontalChangeHandler());
     }
 
+    private boolean isFormEmpty(){
+        return mRegisterForenameField.getText().toString().isEmpty() &&
+                mRegisterSurnameField.getText().toString().isEmpty() &&
+                mRegisterEmailField.getText().toString().isEmpty() &&
+                mRegisterPasswordField.getText().toString().isEmpty();
+    }
+
     private void onSignUpClicked(){
         if (mTermsCheck.isChecked()) {
-            mPresenter.registerUser(
-                    mRegisterForenameField.getText().toString(),
-                    mRegisterSurnameField.getText().toString(),
-                    mRegisterEmailField.getText().toString(),
-                    mRegisterPasswordField.getText().toString(),
-                    mTermsCheck.isChecked());
-            mSignUpButton.setEnabled(false);
+            if(isFormEmpty()){
+                onError(R.string.please_fill_out_the_form);
+            } else {
+                mPresenter.registerUser(
+                        mRegisterForenameField.getText().toString(),
+                        mRegisterSurnameField.getText().toString(),
+                        mRegisterEmailField.getText().toString(),
+                        mRegisterPasswordField.getText().toString(),
+                        mTermsCheck.isChecked());
+                mSignUpButton.setEnabled(false);
+            }
         } else {
             onError(R.string.please_accept_terms_and_conditions);
         }
