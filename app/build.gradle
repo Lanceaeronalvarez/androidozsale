@@ -259,7 +259,7 @@ android {
         }
 
         ozsaleRC {
-            versionCode 19
+            versionCode 21
             versionName "0.9"
             applicationId "au.com.ozsale"
 
@@ -283,13 +283,13 @@ android {
         }
 
         ozsaleTest {
-            versionCode 12
+            versionCode 14
             versionName "0.9"
             applicationId "au.com.ozsale.test"
 
             buildConfigField "String", "API_ROOT", "\"https://genie-ui-dealsdirect-pre.mysaledev.com/\""
             buildConfigField "String", "API_LEGACY", "\"https://api.mysaledev.com/Public/V3.24/\""
-            buildConfigField "String", "ACCOUNT_ID", "\"A56B0D62-AEF6-4653-848E-2ECDDB6E9B8C\""
+            buildConfigField "String", "ACCOUNT_ID", "\"A816D792-E940-44F0-B752-06DE1ED5C2B9\""
 
             resValue "string", "app_name", "Ozsale Test"
             def facebookAppId = "437865102935987"
