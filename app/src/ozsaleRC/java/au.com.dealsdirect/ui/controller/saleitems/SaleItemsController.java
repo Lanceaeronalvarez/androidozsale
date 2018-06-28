@@ -78,7 +78,13 @@ import in.srain.cube.views.ptr.PtrHandler;
 import static android.support.design.widget.AppBarLayout.LayoutParams.SCROLL_FLAG_ENTER_ALWAYS;
 import static android.support.design.widget.AppBarLayout.LayoutParams.SCROLL_FLAG_SCROLL;
 import static android.widget.AbsListView.OnScrollListener.SCROLL_STATE_IDLE;
-
+import static au.com.dealsdirect.utils.BundleKeys.SALEITEMS_CATEGORY_MAP;
+import static au.com.dealsdirect.utils.BundleKeys.SALEITEMS_CHIPS_FILTER;
+import static au.com.dealsdirect.utils.BundleKeys.SALEITEMS_FROM_CATEGORIES;
+import static au.com.dealsdirect.utils.BundleKeys.SALEITEMS_FROM_CATEGORY_SEARCH;
+import static au.com.dealsdirect.utils.BundleKeys.SALEITEMS_FROM_SHOP_SEARCH;
+import static au.com.dealsdirect.utils.BundleKeys.SALEITEMS_SALE_ID;
+import static au.com.dealsdirect.utils.BundleKeys.SALEITEMS_TITLE;
 
 /**
  * dp Created by Admin on 6/8/17.
@@ -399,6 +405,11 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
 
         mInitialLoad = true;
         mPresenter.loadSaleItems(createSaleItemsRequest(mCategoryKey, mSaleItemsPageNumber, mChipFilters));
+
+        /* bug/gen-8065_ozsale-reskin_bugfixing - dont load empty category on category link */
+        if (!mFromCategoryDeeplink) {
+            mPresenter.loadSaleItems(createSaleItemsRequest("", mSaleItemsPageNumber, mChipFilters));
+        }
 
         setRetainViewMode(RetainViewMode.RETAIN_DETACH);
         hideKeyboard();

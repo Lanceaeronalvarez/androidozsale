@@ -159,11 +159,13 @@ public class MainActivity extends BaseActivity implements MainMvpView {
         super.onConfigurationChanged(newConfig);
 
         /* bug/gen-8605_ozsale-reskin_bugfixing - four item row on mobile landscape to call onActivityResume */
-        if (mSaleItemsController != null)
+        if (mSaleItemsController != null) {
             mSaleItemsController.onOrientationChanged();
+	}
 
-        if (mShopController != null)
+        if (mShopController != null){
             mShopController.onOrientationChange();
+	}
     }
 
     @Override
@@ -703,6 +705,7 @@ public class MainActivity extends BaseActivity implements MainMvpView {
 
     public void setShopsAsVisibleContainer() {
         getMainController().getHomeController().setVisibleContainer(0);
+        getMainController().getHomeController().setShopRouterViewPagerDraggable();
 
     }
 

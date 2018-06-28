@@ -43,7 +43,7 @@ import au.com.dealsdirect.ui.controller.shops.adapter.BannersAdapter;
 import au.com.dealsdirect.ui.controller.shops.listener.BannerClickListener;
 import au.com.dealsdirect.ui.custom.SearchEditText;
 import au.com.dealsdirect.ui.custom.transitions.SimpleChangeHandler;
-import au.com.dealsdirect.ui.main.MainMvpView;
+import au.com.dealsdirect.ui.main.MainActivity;
 import au.com.dealsdirect.utils.BundleBuilder;
 import au.com.dealsdirect.utils.DialogUtils;
 import au.com.dealsdirect.utils.PaginateUtils;
