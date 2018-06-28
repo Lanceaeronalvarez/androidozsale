@@ -24,6 +24,7 @@ import android.widget.TextView;
 import com.bluelinelabs.conductor.Controller;
 import com.bluelinelabs.conductor.ControllerChangeHandler;
 import com.bluelinelabs.conductor.RouterTransaction;
+import com.bluelinelabs.conductor.changehandler.FadeChangeHandler;
 import com.bluelinelabs.conductor.changehandler.HorizontalChangeHandler;
 import com.braintreepayments.api.models.BraintreeRequestCodes;
 import com.google.gson.Gson;
@@ -63,6 +64,7 @@ import au.com.dealsdirect.ui.controller.checkout.deliveryoptions.DeliveryOptions
 import au.com.dealsdirect.ui.controller.checkout.ourpay.OurpaySMSVerificationController;
 import au.com.dealsdirect.ui.controller.checkout.paymentselect.PaymentSelectController;
 import au.com.dealsdirect.ui.controller.home.HomeController;
+import au.com.dealsdirect.ui.controller.login.PopUpHostController;
 import au.com.dealsdirect.ui.controller.masterpass.MasterpassController;
 import au.com.dealsdirect.ui.controller.visacheckout.VisaCheckoutController;
 import au.com.dealsdirect.ui.controller.vouchers.Add.AddVouchersController;
@@ -76,6 +78,7 @@ import au.com.dealsdirect.utils.BundleKeys;
 import au.com.dealsdirect.utils.ImageUtils;
 import au.com.dealsdirect.utils.IntrospectionUtils;
 import au.com.dealsdirect.utils.PriceUtils;
+import au.com.dealsdirect.utils.module.GateKeeper;
 import butterknife.BindView;
 import butterknife.OnClick;
 import butterknife.Optional;
@@ -949,10 +952,19 @@ public class CheckoutController extends VisaCheckoutController implements Checko
                     }
 
                     if (PaymentInfo.getOurpay().isPhoneVerificationRequired()) {
+                        Bundle bundle = new BundleBuilder(new Bundle())
+                                .putSerializable(BundleKeys.KEY_POP_UP_HOST_DESTINATION, GateKeeper.Destination.SMS_VERIFICATION)
+                                .putString(BundleKeys.PHONE_KEY, mAddressPhoneNumber)
+                                .build();
 
-                        getRouter().pushController(RouterTransaction.with(OurpaySMSVerificationController.newInstance(mAddressPhoneNumber))
-                                .pushChangeHandler(new HorizontalChangeHandler(false))
-                                .popChangeHandler(new HorizontalChangeHandler()));
+                        if (mPresenter.isTablet() && getBoolean(R.bool.is_ozsale_app)) {
+                            GateKeeper.setRoot(mActivity.getHomeController().getPopUpHostRouter(), GateKeeper.Destination.POP_UP_HOST, RouterTransaction.with(new PopUpHostController(bundle)).
+                                    pushChangeHandler(new FadeChangeHandler()).popChangeHandler(new FadeChangeHandler()));
+                        } else {
+                            GateKeeper.push(getRouter(), GateKeeper.Destination.SMS_VERIFICATION, bundle,
+                                    new HorizontalChangeHandler(false),
+                                    new HorizontalChangeHandler());
+                        }
                     } else {
                         ourpayPaymentSubmit();
                         mPresenter.facebookInitiatedCheckout(PaymentInfo.getPaymentType(), mItemList.size(), mValue.getSummary().getTotal());

@@ -12,6 +12,7 @@ import com.bluelinelabs.conductor.RouterTransaction;
 
 import au.com.dealsdirect.R;
 import au.com.dealsdirect.ui.base.BaseController;
+import au.com.dealsdirect.ui.controller.checkout.ourpay.OurpaySMSVerificationController;
 import au.com.dealsdirect.ui.controller.checkout.paymentsuccess.PaymentSuccessController;
 import au.com.dealsdirect.utils.BundleBuilder;
 import au.com.dealsdirect.utils.BundleKeys;
@@ -65,6 +66,9 @@ public class PopUpHostController extends BaseController implements PopUpHostMvpV
                 break;
             case PAYMENT_SUCCESS:
                 GateKeeper.setRoot(mPopUpHostChildRouter, GateKeeper.Destination.PAYMENT_SUCCESS, RouterTransaction.with(new PaymentSuccessController(getArgs())));
+                break;
+            case SMS_VERIFICATION:
+                GateKeeper.setRoot(mPopUpHostChildRouter, GateKeeper.Destination.SMS_VERIFICATION, RouterTransaction.with(new OurpaySMSVerificationController(getArgs())));
                 break;
             default:
                 break;

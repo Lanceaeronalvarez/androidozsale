@@ -86,15 +86,14 @@ public class OurpaySMSVerificationController extends BaseController implements O
     @Inject
     OurpaySMSVerificationMvpPresenter<OurpaySMSVerificationMvpView> mPresenter;
 
-    public static OurpaySMSVerificationController newInstance(String phone) {
+    public static OurpaySMSVerificationController newInstance() {
         return new OurpaySMSVerificationController(new BundleBuilder(new Bundle())
-                .putString(BundleKeys.PHONE_KEY, phone)
                 .build());
     }
 
     public OurpaySMSVerificationController(Bundle args) {
         super(args);
-        mPhoneFromCart = getArgs().getString(BundleKeys.PHONE_KEY);
+        mPhoneFromCart = getArgs().getString(BundleKeys.PHONE_KEY,"");
     }
 
 
