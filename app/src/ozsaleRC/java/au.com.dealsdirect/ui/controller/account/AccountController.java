@@ -13,6 +13,8 @@ import android.view.ViewGroup;
 import android.widget.ImageButton;
 import android.widget.TextView;
 
+import com.bluelinelabs.conductor.Controller;
+import com.bluelinelabs.conductor.ControllerChangeHandler;
 import com.bluelinelabs.conductor.Router;
 import com.bluelinelabs.conductor.RouterTransaction;
 import com.bluelinelabs.conductor.changehandler.FadeChangeHandler;
@@ -84,6 +86,8 @@ public class AccountController extends BaseController implements AccountMvpView,
     private Router mAccountDetailRouter;
     private String mDefaultChosenAccountOption = "";
     private int mDefaultChosenAccountOptionPos = 0;
+    private boolean mIsChangeInProgress = false;
+    private ControllerChangeHandler.ControllerChangeListener mControllerChangeListener;
 
     private ArrayList<AccountItem> mAccountItems;
 
@@ -148,6 +152,20 @@ public class AccountController extends BaseController implements AccountMvpView,
         mLeftToolbarButton.setVisibility(View.INVISIBLE);
 
         initLoginDrawable();
+
+        mControllerChangeListener = new ControllerChangeHandler.ControllerChangeListener() {
+            @Override
+            public void onChangeStarted(@Nullable Controller to, @Nullable Controller from, boolean isPush, @NonNull ViewGroup container, @NonNull ControllerChangeHandler handler) {
+                mIsChangeInProgress = true;
+            }
+
+            @Override
+            public void onChangeCompleted(@Nullable Controller to, @Nullable Controller from, boolean isPush, @NonNull ViewGroup container, @NonNull ControllerChangeHandler handler) {
+                mIsChangeInProgress = false;
+            }
+        };
+
+        getDisplayRouter().addChangeListener(mControllerChangeListener);
     }
 
     private void createAccountItems() {
@@ -199,6 +217,7 @@ public class AccountController extends BaseController implements AccountMvpView,
     @Override
     public void onDetach(View view) {
         mPresenter.onDetach();
+        getDisplayRouter().removeChangeListener(mControllerChangeListener);
         super.onDetach(view);
     }
 
@@ -430,7 +449,7 @@ public class AccountController extends BaseController implements AccountMvpView,
 
     @Override
     public boolean isChangeInProgress() {
-        return false;
+        return mIsChangeInProgress;
     }
 
     @Override
