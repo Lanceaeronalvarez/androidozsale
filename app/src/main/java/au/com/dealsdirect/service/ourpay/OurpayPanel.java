@@ -21,6 +21,7 @@ import java.util.List;
 import au.com.dealsdirect.R;
 import au.com.dealsdirect.data.network.model.checkout.getcurrentorder.GetCurrentOrderOurpay;
 import au.com.dealsdirect.ui.base.BaseActivity;
+import au.com.dealsdirect.ui.custom.toggleswitch.CustomToggleSwitch;
 import au.com.dealsdirect.ui.main.MainActivity;
 import au.com.dealsdirect.utils.BundleBuilder;
 import au.com.dealsdirect.utils.BundleKeys;
@@ -209,7 +210,7 @@ public class OurpayPanel {
     private View getTermsAndConditions(Ourpay ourpay) {
         View view = mBaseActivity.getLayoutInflater().inflate(R.layout.ourpay_terms_and_conditions, null, false);
 
-        CheckBox cb = (CheckBox) view.findViewById(R.id.ourpay_checkbox_tc);
+        CustomToggleSwitch toggleSwitch = (CustomToggleSwitch) view.findViewById(R.id.ourpay_toggle_switch_tc);
         TextView textViewTC = (TextView) view.findViewById(R.id.ourpay_text_tc);
 
         textViewTC.setText(Html.fromHtml(OurpayTemplateText.getText(mBaseActivity, ourpay.getTermsAndConditionsText())));
@@ -230,12 +231,8 @@ public class OurpayPanel {
 
         });
 
-
-        if (ourpay.getTermsAndConditionsCheckboxState() == 1) {
-            cb.setChecked(false);
-        } else if (ourpay.getTermsAndConditionsCheckboxState() == 2) {
-            cb.setChecked(true);
-        }
+        // TODO: Check ourpay.getTermsAndConditionsCheckboxState() for default state for toggleSwitch
+        // This behavior is TBD so for now we will copy legacy which has no default state
 
         return view;
     }

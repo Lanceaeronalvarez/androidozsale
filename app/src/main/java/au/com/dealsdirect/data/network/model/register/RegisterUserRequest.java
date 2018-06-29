@@ -1,5 +1,7 @@
 package au.com.dealsdirect.data.network.model.register;
 
+import java.util.HashMap;
+
 /**
  * dp Created by Admin on 6/27/17.
  */
@@ -16,13 +18,13 @@ public class RegisterUserRequest {
     String referredBy;
     String invitedBy;
     String voucherID;
-    boolean tcWasRead;
+    HashMap<String, Boolean> parameters;
 
     public RegisterUserRequest(
             String languageID, String countryID, int clientType,
             String foreName, String surName, String email, String password,
             String referredBy, String invitedBy, String voucherID,
-            boolean tcWasRead) {
+            boolean tcAccepted, boolean emailsAccepted) {
 
         this.languageID = languageID;
         this.countryID = countryID;
@@ -34,7 +36,9 @@ public class RegisterUserRequest {
         this.referredBy = referredBy;
         this.invitedBy = invitedBy;
         this.voucherID = voucherID;
-        this.tcWasRead = tcWasRead;
+        this.parameters = new HashMap<>();
+        this.parameters.put("tcAccepted", tcAccepted);
+        this.parameters.put("emailsAccepted", emailsAccepted);
     }
 
 
@@ -116,13 +120,5 @@ public class RegisterUserRequest {
 
     public void setVoucherID(String voucherID) {
         this.voucherID = voucherID;
-    }
-
-    public boolean isTcWasRead() {
-        return tcWasRead;
-    }
-
-    public void setTcWasRead(boolean tcWasRead) {
-        this.tcWasRead = tcWasRead;
     }
 }

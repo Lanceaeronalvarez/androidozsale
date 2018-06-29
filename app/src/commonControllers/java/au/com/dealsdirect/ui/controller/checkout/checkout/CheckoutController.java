@@ -66,6 +66,7 @@ import au.com.dealsdirect.ui.controller.masterpass.MasterpassController;
 import au.com.dealsdirect.ui.controller.visacheckout.VisaCheckoutController;
 import au.com.dealsdirect.ui.controller.vouchers.Add.AddVouchersController;
 import au.com.dealsdirect.ui.custom.CustomAlertDialog;
+import au.com.dealsdirect.ui.custom.toggleswitch.CustomToggleSwitch;
 import au.com.dealsdirect.ui.main.FetchTokenHandler;
 import au.com.dealsdirect.ui.main.MainActivity;
 import au.com.dealsdirect.ui.main.PaymentInfo;
@@ -179,7 +180,7 @@ public class CheckoutController extends VisaCheckoutController implements Checko
 
 
     private RelativeLayout mButtonOurpay;
-    private CheckBox mCheckBoxOurpayTC;
+    private CustomToggleSwitch mCheckBoxOurpayTC;
 
     private List<DeliveryOption> mDeliveryOptions;
     private DeliveryOption mSelectedDeliveryOption;
@@ -497,7 +498,7 @@ public class CheckoutController extends VisaCheckoutController implements Checko
                     mButtonOurpay.setOnClickListener(view -> onOurpayButtonClick());
 
                     if (ourpay.getTermsAndConditionsCheckboxState() != 0) {
-                        mCheckBoxOurpayTC = (CheckBox) mOurpayHolder.findViewById(R.id.ourpay_checkbox_tc);
+                        mCheckBoxOurpayTC = (CustomToggleSwitch) mOurpayHolder.findViewById(R.id.ourpay_toggle_switch_tc);
                     }
 
                     if (isOurPaySelectDeliveryMethod()) { // show ourpay select related summary
@@ -906,7 +907,7 @@ public class CheckoutController extends VisaCheckoutController implements Checko
 
                 if (!mActivity.getPaymentMethodSelected().getPaymentType().equalsIgnoreCase(CARD_PAYPAL) && PaymentInfo.getOurpay().isCanUse()) {
 
-                    if (mCheckBoxOurpayTC != null && !mCheckBoxOurpayTC.isChecked()) {
+                    if (mCheckBoxOurpayTC != null && mCheckBoxOurpayTC.getCheckedTogglePosition() != 0) {
                         CustomAlertDialog.showCustomAlertDialog(mActivity, CustomAlertDialog.CustomDialogIconState.NEGATIVE, OurpayTemplateText.getText(mActivity, KEY_OURPAY_TC_VALIDATION_FAILED));
                         return;
                     }

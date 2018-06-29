@@ -87,6 +87,11 @@ public interface MainMvpView extends MvpView, BrainTreeListeners {
 
     void callApiSettings();
 
+    // GDPR
+
+    void showStrictConsentUI();
+
+    void onClickAgreeStrictConsentUI();
 
     // Deeplinking
 

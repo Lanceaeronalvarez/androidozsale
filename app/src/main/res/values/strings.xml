@@ -336,6 +336,7 @@
     <string name="stock_arrived">Stock Arrived</string>
     <string name="refunded">refunded</string>
     <string name="please_accept_terms_and_conditions">Please accept Terms and Conditions</string>
+    <string name="please_select_an_option_for_promotional_emails">Please select an option for promotional emails</string>
     <string name="please_input_promo_code">Please input a promo code.</string>
     <string name="reason">reason</string>
     <string name="login_incorrect">Login incorrect</string>

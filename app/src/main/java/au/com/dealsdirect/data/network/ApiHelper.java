@@ -2,6 +2,7 @@ package au.com.dealsdirect.data.network;
 
 
 import com.mysale.genie.utility.config.api.GetAppSettings;
+import com.mysale.genie.utility.config.api.GetAppSettingsConsent;
 import com.mysale.genie.utility.config.api.GetAppSettingsSection;
 import com.mysale.genie.utility.config.api.GetServerSettings;
 import com.mysale.genie.utility.config.model.getpublicpaymenttoken.GetPublicPaymentToken;
@@ -36,6 +37,8 @@ import au.com.dealsdirect.data.network.model.checkout.GetUserPaymentMethods;
 import au.com.dealsdirect.data.network.model.checkout.RemoveUserPaymentMethod;
 import au.com.dealsdirect.data.network.model.checkout.SetDeliveryOption;
 import au.com.dealsdirect.data.network.model.checkout.getpaymentmethodnonce.GetPaymentMethodNonceRequest;
+import au.com.dealsdirect.data.network.model.consentdata.GetConsentDataResponse;
+import au.com.dealsdirect.data.network.model.consentdata.SaveConsentDataResponse;
 import au.com.dealsdirect.data.network.model.contacthistory.GetContactHistoryRequest;
 import au.com.dealsdirect.data.network.model.contacthistory.GetContactHistoryResponse;
 import au.com.dealsdirect.data.network.model.contactitem.GetContactsResponse;
@@ -153,6 +156,14 @@ public interface ApiHelper {
     Observable<GetAppSettings.ResponseValue> callGetAppSettings(String countryId);
 
     Observable<GetAppSettingsSection.ResponseValue> callGetAppSettingsSection(String countryId);
+
+    Observable<GetAppSettingsConsent.ResponseValue> callGetAppSettingsConsent(String countryId);
+
+    Observable<GetConsentDataResponse> callGetConsentData(String countryId);
+
+    Observable<SaveConsentDataResponse> callSaveConsentData(String countryId);
+
+    Observable<GetAppSettingsConsent.ResponseValue> callGetPublicAppSettingsConsent(String countryId);
 
     Observable<GetContactsResponse> callGetContacts(String languageId);
 

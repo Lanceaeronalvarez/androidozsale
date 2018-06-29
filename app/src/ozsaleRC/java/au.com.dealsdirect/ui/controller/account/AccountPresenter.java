@@ -12,6 +12,7 @@ import au.com.dealsdirect.data.DataManager;
 import au.com.dealsdirect.ui.base.BasePresenter;
 import au.com.dealsdirect.ui.controller.account.model.AccountItem;
 import au.com.dealsdirect.utils.BundleKeys;
+import au.com.dealsdirect.utils.CookieUtils;
 import au.com.dealsdirect.utils.rx.SchedulerProvider;
 import io.reactivex.disposables.CompositeDisposable;
 
@@ -75,6 +76,8 @@ public class AccountPresenter<V extends AccountMvpView> extends BasePresenter<V>
     private void showNoAuthenticationRequiredScreens(Context context, String option) {
         if (option.equals(context.getString(R.string.account_language))) {
             getMvpView().showLanguage();
+        } else if (option.equals(context.getString(R.string.account_clear_cookies_data))) {
+            CookieUtils.getInstance().clear();
         } else if (option.equals(context.getString(R.string.account_about_us))) {
             getMvpView().showLegalities(BundleKeys.TEMPLATE_KEY_ABOUT_US, option);
         } else if (option.equals(context.getString(R.string.account_privacy))) {

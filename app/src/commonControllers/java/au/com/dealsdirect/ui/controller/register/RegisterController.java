@@ -5,6 +5,9 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.text.Html;
+import android.text.Spannable;
+import android.text.Spanned;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -24,9 +27,13 @@ import javax.inject.Inject;
 
 import au.com.dealsdirect.R;
 import au.com.dealsdirect.data.network.model.login.LoginVisa;
+import au.com.dealsdirect.data.pref.AppPreferencesHelper;
+import au.com.dealsdirect.data.pref.PreferencesHelper;
 import au.com.dealsdirect.ui.base.VisaCheckoutMvpPresenter;
 import au.com.dealsdirect.ui.base.VisaCheckoutMvpView;
 import au.com.dealsdirect.ui.controller.visacheckout.VisaCheckoutController;
+import au.com.dealsdirect.ui.custom.toggleswitch.CustomToggleSwitch;
+import au.com.dealsdirect.ui.main.MainPresenter;
 import au.com.dealsdirect.utils.AppConstants;
 import au.com.dealsdirect.utils.AppLogger;
 import au.com.dealsdirect.utils.BundleBuilder;
@@ -34,6 +41,7 @@ import au.com.dealsdirect.utils.BundleKeys;
 import au.com.dealsdirect.utils.module.GateKeeper;
 import butterknife.BindView;
 import butterknife.OnClick;
+import butterknife.Optional;
 
 /*
  * Created by Ayi on 05/06/2017.
@@ -73,6 +81,22 @@ public class RegisterController extends VisaCheckoutController implements Regist
 
     @BindView(R.id.controller_register_terms_link)
     TextView mTermsLink;
+
+    @Nullable
+    @BindView(R.id.controller_register_tnc_toggle)
+    CustomToggleSwitch mTermsToggle;
+
+    @Nullable
+    @BindView(R.id.controller_register_tnc_text)
+    TextView mTermsText;
+
+    @Nullable
+    @BindView(R.id.controller_register_emails_toggle)
+    CustomToggleSwitch mEmailsToggle;
+
+    @Nullable
+    @BindView(R.id.controller_register_emails_text)
+    TextView mEmailsText;
 
     @Nullable
     @BindView(R.id.controller_login_legalities_container)
@@ -128,16 +152,39 @@ public class RegisterController extends VisaCheckoutController implements Regist
 
         mActivity.setDraggableViewPager(false);
 
-        mTermsLink.setOnClickListener(v -> onLegalitiesClicked(BundleKeys.TEMPLATE_KEY_TNC, getString(R.string.account_tnc)));
+        if (mTermsLink != null) {
+            mTermsLink.setOnClickListener(v -> onLegalitiesClicked(BundleKeys.TEMPLATE_KEY_TNC, getString(R.string.account_tnc)));
+        }
 
         if (mVcoPresenter.isVisaCheckoutEnabled()) {
             mVcoPresenter.setupVisaCheckout();
         }
 
-        if(mLegalitiesContainer != null) {
+        if (mLegalitiesContainer != null) {
             mAboutUsTextView.setOnClickListener(v -> onLegalitiesClicked(BundleKeys.TEMPLATE_KEY_ABOUT_US, getString(R.string.account_about_us)));
             mTncTextView.setOnClickListener(v -> onLegalitiesClicked(BundleKeys.TEMPLATE_KEY_TNC, getString(R.string.account_tnc)));
             mPrivacyTextView.setOnClickListener(v -> onLegalitiesClicked(BundleKeys.TEMPLATE_KEY_PRIVACY, getString(R.string.account_privacy)));
+        }
+
+        /* GDPR split type registration */
+        if (mTermsText != null) {
+            mTermsText.setText(Html.fromHtml(mPresenter.getGdprTemplateTexts(
+                    AppPreferencesHelper.CONSENT_WITH_REGISTRATION_TERMS_TEXT)));
+            mTermsText.setOnClickListener(v -> onLegalitiesClicked(BundleKeys.TEMPLATE_KEY_TNC,
+                    getString(R.string.account_tnc)));
+        }
+
+        if (mEmailsText != null) {
+            mEmailsText.setText(Html.fromHtml(mPresenter.getGdprTemplateTexts(
+                    AppPreferencesHelper.CONSENT_WITH_REGISTRATION_EMAILS_TEXT)));
+        }
+
+        if (mTermsToggle != null && mPresenter.getGdprIsChecked(AppPreferencesHelper.CONSENT_TNC_CHECKED)) {
+            mTermsToggle.setCheckedTogglePosition(0);
+        }
+
+        if (mEmailsToggle != null && mPresenter.getGdprIsChecked(AppPreferencesHelper.CONSENT_EMAILS_CHECKED)) {
+            mEmailsToggle.setCheckedTogglePosition(0);
         }
     }
 
@@ -199,15 +246,34 @@ public class RegisterController extends VisaCheckoutController implements Regist
 
     @OnClick(R.id.controller_register_sign_up_button)
     void onSignUpClick() {
-        if (mTermsCheck.isChecked()) {
+        if ((mTermsCheck != null && !mTermsCheck.isChecked()) ||
+                (mTermsToggle != null && mTermsToggle.getCheckedTogglePosition() != 0)) {
+
+            String templateTextError = mPresenter.getGdprTemplateTexts(
+                    AppPreferencesHelper.CONSENT_WITH_REGISTRATION_TERMS_WARNING);
+
+            if (templateTextError == null || templateTextError.equals("")) {
+                onError(R.string.please_accept_terms_and_conditions);
+            } else {
+                onError(templateTextError);
+            }
+
+        } else if (mEmailsToggle != null && mEmailsToggle.getCheckedTogglePosition() == -1) {
+            onError(R.string.please_select_an_option_for_promotional_emails);
+        } else {
+
+            boolean tncAccepted = (mTermsCheck != null && mTermsCheck.isChecked()) ||
+                    (mTermsToggle != null && mTermsToggle.getCheckedTogglePosition() == 0);
+
+            boolean emailsAccepted = mEmailsToggle != null && mEmailsToggle.getCheckedTogglePosition() == 0;
+
             mPresenter.registerUser(
                     mRegisterForenameField.getText().toString(),
                     mRegisterSurnameField.getText().toString(),
                     mRegisterEmailField.getText().toString(),
                     mRegisterPasswordField.getText().toString(),
-                    mTermsCheck.isChecked());
-        } else {
-            onError(R.string.please_accept_terms_and_conditions);
+                    tncAccepted,
+                    emailsAccepted);
         }
     }
 
@@ -219,7 +285,23 @@ public class RegisterController extends VisaCheckoutController implements Regist
 
     @OnClick(R.id.controller_login_fb_layout)
     void onFacebookLoginClick() {
-        mPresenter.onFacebookLogin(mActivity, mCallbackManager, 1);
+        if ((mTermsCheck != null && !mTermsCheck.isChecked()) ||
+                (mTermsToggle != null && mTermsToggle.getCheckedTogglePosition() != 0)) {
+
+            String templateTextError = mPresenter.getGdprTemplateTexts(
+                    AppPreferencesHelper.CONSENT_WITH_REGISTRATION_TERMS_WARNING);
+
+            if (templateTextError == null || templateTextError.equals("")) {
+                onError(R.string.please_accept_terms_and_conditions);
+            } else {
+                onError(templateTextError);
+            }
+
+        } else if (mEmailsToggle != null && mEmailsToggle.getCheckedTogglePosition() == -1) {
+            onError(R.string.please_select_an_option_for_promotional_emails);
+        } else {
+            mPresenter.onFacebookLogin(mActivity, mCallbackManager, 1);
+        }
     }
 
 

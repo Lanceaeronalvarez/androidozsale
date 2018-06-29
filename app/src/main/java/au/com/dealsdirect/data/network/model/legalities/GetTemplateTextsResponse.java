@@ -104,6 +104,28 @@ public class GetTemplateTextsResponse {
         @Expose
         private String personalisationValidation;
 
+        @SerializedName("_consentContinueText")
+        @Expose
+        private String consentContinueText;
+        @SerializedName("_consentWithTCText")
+        @Expose
+        private String consentWithTCText;
+        @SerializedName("_consentWithEmailsText")
+        @Expose
+        private String consentWithEmailsText;
+        @SerializedName("_consentWithRegistrationTermsWarning")
+        @Expose
+        private String consentWithRegistrationTermsWarning;
+        @SerializedName("ConsentShortTextPTNameV1")
+        @Expose
+        private String consentShortTextPTNameV1;
+        @SerializedName("ConsentFullTextPTNameV1")
+        @Expose
+        private String consentFullTextPTNameV1;
+        @SerializedName("TermsAndConditions_Text")
+        @Expose
+        private String termsAndConditionsText;
+
         public String getCheckoutMyPayPayExceedLimit() {
             return checkoutMyPayPayExceedLimit;
         }
@@ -230,6 +252,34 @@ public class GetTemplateTextsResponse {
 
         public String getPersonalisationValidation() {
             return personalisationValidation;
+        }
+
+        public String getConsentContinueText() {
+            return consentContinueText;
+        }
+
+        public String getConsentWithTCText() {
+            return consentWithTCText;
+        }
+
+        public String getConsentWithEmailsText() {
+            return consentWithEmailsText;
+        }
+
+        public String getConsentWithRegistrationTermsWarning() {
+            return consentWithRegistrationTermsWarning;
+        }
+
+        public String getConsentShortTextPTNameV1() {
+            return consentShortTextPTNameV1;
+        }
+
+        public String getConsentFullTextPTNameV1() {
+            return consentFullTextPTNameV1;
+        }
+
+        public String getTermsAndConditionsText() {
+            return termsAndConditionsText;
         }
     }
 }
