@@ -23,6 +23,18 @@ public interface MainMvpPresenter<V extends MainMvpView> extends MvpPresenter<V>
 
     void callGetAppSettingsSection(Context context);
 
+    void callGetAppSettingsConsent(Context context);
+
+    void callGetPublicAppSettingsConsent(Context context);
+
+    void checkConsentCookie();
+
+    void callGetConsentData();
+
+    void callSaveConsentData();
+
+    void showStrictConsentUI();
+
     void callGetPublicPaymentToken();
 
     void fetchBTAuthorization();

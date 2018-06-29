@@ -25,6 +25,7 @@ import au.com.dealsdirect.ui.base.BaseActivity;
 import au.com.dealsdirect.ui.base.VisaCheckoutMvpPresenter;
 import au.com.dealsdirect.ui.base.VisaCheckoutMvpView;
 import au.com.dealsdirect.ui.controller.checkout.checkout.CheckoutMvpView;
+import au.com.dealsdirect.ui.controller.main.MainPresenter;
 import au.com.dealsdirect.utils.AppConstants;
 import au.com.dealsdirect.utils.AppEventHelper;
 import au.com.dealsdirect.utils.AppLogger;
@@ -41,7 +42,7 @@ public class RegisterPresenter<V extends RegisterMvpView> extends Authentication
 
     @Override
     public void registerUser(String firstName, String lastName, String email, String password,
-                             boolean hasReadTermsAndCondition) {
+                             boolean tncAccepted, boolean emailsAccepted) {
 
         getMvpView().showLoading();
         RegisterUserRequest registerUserRequest
@@ -56,7 +57,8 @@ public class RegisterPresenter<V extends RegisterMvpView> extends Authentication
                 "android",
                 "",
                 "00000000-0000-0000-0000-000000000000",
-                hasReadTermsAndCondition);
+                tncAccepted,
+                emailsAccepted);
 
         doApiCallForResponse(getDataManager().callRegister(registerUserRequest), new AppApiCallback(){
 
@@ -82,6 +84,16 @@ public class RegisterPresenter<V extends RegisterMvpView> extends Authentication
             }
         });
 
+    }
+
+    @Override
+    public String getGdprTemplateTexts(String key) {
+        return getDataManager().getConsentTemplateTexts(key);
+    }
+
+    @Override
+    public boolean getGdprIsChecked(String key) {
+        return getDataManager().getAppSettingsConsentIsChecked(key);
     }
 
 

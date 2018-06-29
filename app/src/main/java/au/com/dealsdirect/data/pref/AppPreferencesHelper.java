@@ -6,7 +6,12 @@ import android.content.pm.PackageManager;
 import android.os.Build;
 import android.util.Log;
 
+import com.google.gson.Gson;
 import com.mysale.genie.utility.Prefs;
+import com.mysale.genie.utility.config.api.GetAppSettingsConsent;
+
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.util.HashSet;
 
@@ -106,6 +111,20 @@ public class AppPreferencesHelper implements PreferencesHelper {
     /* NOTIFICATIONS */
     private static final String KEY_NOTIFICATIONS_ENABLED = "KEY_NOTIFICATIONS_ENABLED";
 
+    /* GDPR */
+    public static final String CONSENT_CONTINUE_TEXT = "_consentContinueText";
+    public static final String CONSENT_WITH_REGISTRATION_TERMS_TEXT = "_consentWithTCText";
+    public static final String CONSENT_WITH_REGISTRATION_EMAILS_TEXT = "_consentWithEmailsText";
+    public static final String CONSENT_WITH_REGISTRATION_TERMS_WARNING = "_consentWithRegistrationTermsWarning";
+    public static final String CONSENT_SHORT_TEMPLATE_TEXT = "ConsentShortTextPTNameV1";
+    public static final String CONSENT_FULL_TEMPLATE_TEXT = "ConsentFullTextPTNameV1";
+    public static final String CONSENT_TERMS_AND_CONDITION = "TermsAndConditions_Text";
+
+    public static final String CONSENT_SHORT_TEXT = "ShortTextPTName";
+    public static final String CONSENT_FULL_TEXT = "FullTextPTName";
+    public static final String CONSENT_MODE = "Mode";
+    public static final String CONSENT_TNC_CHECKED = "RegAgreementTermsAndConditionCheckboxTicked";
+    public static final String CONSENT_EMAILS_CHECKED = "RegAgreementReceiveEmailsCheckboxTicked";
 
     private Context mContext;
 
@@ -449,6 +468,46 @@ public class AppPreferencesHelper implements PreferencesHelper {
     @Override
     public String getPersonalisationTemplateTexts() {
         return Prefs.getString(PERSONALISATION_VALIDATION, "");
+    }
+
+    @Override
+    public void setConsentTemplateTexts(GetTemplateTextsResponse.GetTemplateTextsValue value) {
+        Prefs.putString(CONSENT_CONTINUE_TEXT, value.getConsentContinueText());
+        Prefs.putString(CONSENT_FULL_TEMPLATE_TEXT, value.getConsentFullTextPTNameV1());
+        Prefs.putString(CONSENT_SHORT_TEMPLATE_TEXT, value.getConsentShortTextPTNameV1());
+        Prefs.putString(CONSENT_TERMS_AND_CONDITION, value.getTermsAndConditionsText());
+        Prefs.putString(CONSENT_WITH_REGISTRATION_TERMS_TEXT, value.getConsentWithTCText());
+        Prefs.putString(CONSENT_WITH_REGISTRATION_EMAILS_TEXT, value.getConsentWithEmailsText());
+        Prefs.putString(CONSENT_WITH_REGISTRATION_TERMS_WARNING, value.getConsentWithRegistrationTermsWarning());
+    }
+
+    @Override
+    public String getConsentTemplateTexts(String key) {
+        return Prefs.getString(key, "");
+    }
+
+    @Override
+    public void setAppSettingsConsent(GetAppSettingsConsent.ResponseValue value) {
+        Prefs.putString(CONSENT_SHORT_TEXT, value.getShortTextPTName());
+        Prefs.putString(CONSENT_FULL_TEXT, value.getFullTextPTName());
+        Prefs.putInt(CONSENT_MODE, value.getMode());
+        Prefs.putBoolean(CONSENT_TNC_CHECKED, value.isRegAgreementTermsAndConditionCheckboxTicked());
+        Prefs.putBoolean(CONSENT_EMAILS_CHECKED, value.isRegAgreementReceiveEmailsCheckboxTicked());
+    }
+
+    @Override
+    public String getAppSettingsConsentText(String key) {
+        return Prefs.getString(key, "");
+    }
+
+    @Override
+    public int getAppSettingsConsentMode() {
+        return Prefs.getInt(CONSENT_MODE, -1);
+    }
+
+    @Override
+    public boolean getAppSettingsConsentIsChecked(String key) {
+        return Prefs.getBoolean(key, false);
     }
 
     @Override

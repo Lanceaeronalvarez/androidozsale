@@ -1,6 +1,7 @@
 package au.com.dealsdirect.data.network;
 
 import com.mysale.genie.utility.config.api.GetAppSettings;
+import com.mysale.genie.utility.config.api.GetAppSettingsConsent;
 import com.mysale.genie.utility.config.api.GetAppSettingsSection;
 import com.mysale.genie.utility.config.api.GetServerSettings;
 import com.mysale.genie.utility.config.model.getpublicpaymenttoken.GetPublicPaymentToken;
@@ -39,6 +40,9 @@ import au.com.dealsdirect.data.network.model.checkout.GetUserPaymentMethods;
 import au.com.dealsdirect.data.network.model.checkout.RemoveUserPaymentMethod;
 import au.com.dealsdirect.data.network.model.checkout.SetDeliveryOption;
 import au.com.dealsdirect.data.network.model.checkout.getpaymentmethodnonce.GetPaymentMethodNonceRequest;
+import au.com.dealsdirect.data.network.model.consentdata.ConsentDataRequest;
+import au.com.dealsdirect.data.network.model.consentdata.GetConsentDataResponse;
+import au.com.dealsdirect.data.network.model.consentdata.SaveConsentDataResponse;
 import au.com.dealsdirect.data.network.model.contacthistory.GetContactHistoryRequest;
 import au.com.dealsdirect.data.network.model.contacthistory.GetContactHistoryResponse;
 import au.com.dealsdirect.data.network.model.contactitem.GetContactsResponse;
@@ -283,6 +287,42 @@ public class AppApiHelper implements ApiHelper {
                 .addJSONObjectBody(JsonUtils.convertToJsonObject(new GetAppSettingsSection.RequestValue(countryId)))
                 .build()
                 .getObjectObservable(GetAppSettingsSection.ResponseValue.class);
+    }
+
+    @Override
+    public Observable<GetAppSettingsConsent.ResponseValue> callGetAppSettingsConsent(String countryId) {
+        return Rx2AndroidNetworking.post(ApiEndPoint.GET_APP_SETTINGS_SECTION)
+                .addHeaders(mApiHeader.get())
+                .addJSONObjectBody(JsonUtils.convertToJsonObject(new GetAppSettingsConsent.RequestValue(countryId)))
+                .build()
+                .getObjectObservable(GetAppSettingsConsent.ResponseValue.class);
+    }
+
+    @Override
+    public Observable<GetConsentDataResponse> callGetConsentData(String countryId) {
+        return Rx2AndroidNetworking.post(ApiEndPoint.GET_CONSENT_DATA)
+                .addHeaders(mApiHeader.get())
+                .addJSONObjectBody(JsonUtils.convertToJsonObject(new ConsentDataRequest(countryId)))
+                .build()
+                .getObjectObservable(GetConsentDataResponse.class);
+    }
+
+    @Override
+    public Observable<SaveConsentDataResponse> callSaveConsentData(String countryId) {
+        return Rx2AndroidNetworking.post(ApiEndPoint.SAVE_CONSENT_DATA)
+                .addHeaders(mApiHeader.get())
+                .addJSONObjectBody(JsonUtils.convertToJsonObject(new ConsentDataRequest(countryId)))
+                .build()
+                .getObjectObservable(SaveConsentDataResponse.class);
+    }
+
+    @Override
+    public Observable<GetAppSettingsConsent.ResponseValue> callGetPublicAppSettingsConsent(String countryId) {
+        return Rx2AndroidNetworking.post(ApiEndPoint.GET_PUBLIC_APP_SETTINGS_SECTION)
+                .addHeaders(mApiHeader.get())
+                .addJSONObjectBody(JsonUtils.convertToJsonObject(new GetAppSettingsConsent.RequestValue(countryId)))
+                .build()
+                .getObjectObservable(GetAppSettingsConsent.ResponseValue.class);
     }
 
     @Override

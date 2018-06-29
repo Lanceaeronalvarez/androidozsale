@@ -1,6 +1,8 @@
 package au.com.dealsdirect.data.pref;
 
 
+import com.mysale.genie.utility.config.api.GetAppSettingsConsent;
+
 import au.com.dealsdirect.data.network.model.legalities.GetTemplateTextsResponse;
 import java.util.HashSet;
 
@@ -120,6 +122,18 @@ public interface PreferencesHelper {
     void setPersonalisationTemplateTexts(GetTemplateTextsResponse.GetTemplateTextsValue value);
 
     String getPersonalisationTemplateTexts();
+
+    void setConsentTemplateTexts(GetTemplateTextsResponse.GetTemplateTextsValue value);
+
+    String getConsentTemplateTexts(String key);
+
+    void setAppSettingsConsent(GetAppSettingsConsent.ResponseValue value);
+
+    String getAppSettingsConsentText(String key);
+
+    int getAppSettingsConsentMode();
+
+    boolean getAppSettingsConsentIsChecked(String key);
 
     void setMyPayTemplateTexts(GetTemplateTextsResponse.GetTemplateTextsValue value);
 

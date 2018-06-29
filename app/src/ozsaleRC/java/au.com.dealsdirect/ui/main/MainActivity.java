@@ -59,6 +59,7 @@ import au.com.dealsdirect.ui.controller.checkout.checkout.CheckoutController;
 import au.com.dealsdirect.ui.controller.checkout.checkout.CheckoutMvpView;
 import au.com.dealsdirect.ui.controller.checkout.paymentsuccess.PaymentSuccessController;
 import au.com.dealsdirect.ui.controller.checkout.paymentsuccess.PaymentSuccessMvpView;
+import au.com.dealsdirect.ui.controller.gdpr.StrictConsentController;
 import au.com.dealsdirect.ui.controller.home.HomeController;
 import au.com.dealsdirect.ui.controller.login.PopUpHostController;
 import au.com.dealsdirect.ui.controller.main.MainController;
@@ -116,6 +117,7 @@ public class MainActivity extends BaseActivity implements MainMvpView {
 
     private AuthHandler mAuthHandler;
 
+    private boolean mIsShowingStrictConsentUI = false;
     private boolean mIsFromBannerFilter = false;
     private boolean isTemplateTextsStored = false;
     private boolean mIsViewAttached = false;
@@ -182,9 +184,11 @@ public class MainActivity extends BaseActivity implements MainMvpView {
             // If login ticket exist, call login ticket api to renew cookies and ticket
             // GetAppSettings and GetPaymentToken will be called on success of this call
             mPresenter.callLoginTicket();
+            mPresenter.callGetAppSettingsConsent(this);
         } else {
             //If not logged in, call GetPublicAppSettings
             mPresenter.callGetPublicAppSettings();
+            mPresenter.callGetPublicAppSettingsConsent(this);
         }
 
     }
@@ -234,6 +238,12 @@ public class MainActivity extends BaseActivity implements MainMvpView {
     public void onBackPressed() {
         /* gen-8065_ozsale-reskin_bugfixing - dismiss keyboard when changing screen fix  */
         hideKeyboard();
+        if (mIsShowingStrictConsentUI && mRouter.getControllerWithTag(StrictConsentController.TAG)
+                instanceof StrictConsentController) {
+            mRouter.getControllerWithTag(StrictConsentController.TAG).handleBack();
+            return;
+        }
+
         if (getHomeController() == null || getHomeController().getBottomNavigationView() == null) {
             return;
         }
@@ -581,6 +591,24 @@ public class MainActivity extends BaseActivity implements MainMvpView {
 
     }
 
+    @Override
+    public void showStrictConsentUI() {
+        if (!mIsShowingStrictConsentUI) {
+            mIsShowingStrictConsentUI = true;
+            mRouter.setRoot(RouterTransaction.with(StrictConsentController.newInstance())
+                    .tag(StrictConsentController.TAG));
+        }
+    }
+
+    @Override
+    public void onClickAgreeStrictConsentUI() {
+        mIsShowingStrictConsentUI = false;
+
+        mPresenter.callSaveConsentData();
+
+        splashShownCallback();
+    }
+
     public void onPurchase(CardForm cardForm) {
         CardBuilder cardBuilder = new CardBuilder()
                 .cardNumber(cardForm.getCardNumber())
@@ -697,10 +725,10 @@ public class MainActivity extends BaseActivity implements MainMvpView {
     }
 
     public void splashShownCallback() {
-        mMainController = MainController.newInstance();
-        mRouter.setRoot(RouterTransaction.with(mMainController)
-                .tag("Home"));
-
+        if (!mIsShowingStrictConsentUI) {
+            mMainController = MainController.newInstance();
+            mRouter.setRoot(RouterTransaction.with(mMainController).tag("Home"));
+        }
     }
 
     public void setShopsAsVisibleContainer() {

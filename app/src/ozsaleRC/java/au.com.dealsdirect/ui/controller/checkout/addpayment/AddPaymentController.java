@@ -47,6 +47,7 @@ import au.com.dealsdirect.ui.controller.checkout.checkout.CheckoutMvpView;
 import au.com.dealsdirect.ui.controller.masterpass.MasterpassController;
 import au.com.dealsdirect.ui.controller.visacheckout.VisaCheckoutController;
 import au.com.dealsdirect.ui.custom.CustomAlertDialog;
+import au.com.dealsdirect.ui.custom.toggleswitch.CustomToggleSwitch;
 import au.com.dealsdirect.ui.main.FetchTokenHandler;
 import au.com.dealsdirect.ui.main.MainActivity;
 import au.com.dealsdirect.ui.main.PaymentInfo;
@@ -101,7 +102,7 @@ public class AddPaymentController extends VisaCheckoutController implements AddP
 
     public OurpayPanel ourpayPanel;
     private RelativeLayout mButtonOurpay;
-    private CheckBox mOurpayTncCheckBox;
+    private CustomToggleSwitch mOurpayTncCheckBox;
 
     public static AddPaymentController newInstance() {
         return new AddPaymentController(new BundleBuilder(new Bundle()).build());
@@ -330,7 +331,7 @@ public class AddPaymentController extends VisaCheckoutController implements AddP
                 mButtonOurpay.setOnClickListener(view -> onCardFormSubmit());
 
                 if (ourpay.getTermsAndConditionsCheckboxState() != 0) {
-                    mOurpayTncCheckBox = (CheckBox) mOurpayHolder.findViewById(R.id.ourpay_checkbox_tc);
+                    mOurpayTncCheckBox = (CustomToggleSwitch) mOurpayHolder.findViewById(R.id.ourpay_toggle_switch_tc);
                     mOurpayTncCheckBox.setClickable(false);
                 }
 

@@ -60,6 +60,9 @@ public final class ApiEndPoint {
     public static final String GET_PUBLIC_APP_SETTINGS = getBaseApiLegacy() + "GetPublicAppSettings";
     public static final String GET_APP_SETTINGS = getBaseApiLegacy() + "GetAppSettings";
     public static final String GET_APP_SETTINGS_SECTION = getBaseApiLegacy() + "GetAppSettingsSection";
+    public static final String GET_PUBLIC_APP_SETTINGS_SECTION = getBaseApiLegacy() + "GetPublicAppSettingsSection";
+    public static final String GET_CONSENT_DATA = getBaseApiLegacy() + "GetConsentData";
+    public static final String SAVE_CONSENT_DATA = getBaseApiLegacy() + "SaveConsentData";
     public static final String GET_PUBLIC_PAYMENT_TOKEN = getBaseApiLegacy() + "GetPublicPaymentToken";
 
     public static final String GET_USER_LANGUAGES = getBaseApiLegacy() + "GetUserLanguages";

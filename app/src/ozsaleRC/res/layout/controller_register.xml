@@ -207,7 +207,8 @@
                         android:layout_height="wrap_content"
                         android:layout_marginBottom="@dimen/margin_large"
                         android:gravity="center_vertical"
-                        android:orientation="horizontal">
+                        android:orientation="horizontal"
+                        android:visibility="gone">
 
                         <CheckBox
                             android:id="@+id/controller_register_terms_conditions_check"
@@ -229,6 +230,54 @@
                             android:textColor="@color/tab_bar_icon_active"
                             android:textSize="@dimen/text_size_caption1" />
                     </LinearLayout>
+
+                    <RelativeLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_vertical"
+                        android:layout_marginBottom="@dimen/margin_large">
+
+                        <au.com.dealsdirect.ui.custom.toggleswitch.CustomToggleSwitch
+                            android:id="@+id/controller_register_tnc_toggle"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginBottom="@dimen/padding_small"
+                            app:textToggleLeft="Yes"
+                            app:textToggleRight="No"/>
+
+                        <TextView
+                            android:id="@+id/controller_register_tnc_text"
+                            android:layout_toRightOf="@+id/controller_register_tnc_toggle"
+                            android:layout_width="wrap_content"
+                            android:layout_height="match_parent"
+                            android:layout_marginLeft="@dimen/padding_small"
+                            android:layout_alignBottom="@+id/controller_register_tnc_toggle"
+                            android:layout_alignTop="@+id/controller_register_tnc_toggle"
+                            android:gravity="center_vertical"
+                            android:textSize="@dimen/text_size_caption1"
+                            tools:text="I agree to the Terms and Conditions"/>
+
+                        <au.com.dealsdirect.ui.custom.toggleswitch.CustomToggleSwitch
+                            android:id="@+id/controller_register_emails_toggle"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_below="@id/controller_register_tnc_toggle"
+                            app:textToggleLeft="Yes"
+                            app:textToggleRight="No"/>
+
+                        <TextView
+                            android:id="@+id/controller_register_emails_text"
+                            android:layout_toRightOf="@+id/controller_register_emails_toggle"
+                            android:layout_width="wrap_content"
+                            android:layout_height="match_parent"
+                            android:layout_marginLeft="@dimen/padding_small"
+                            android:layout_alignBottom="@+id/controller_register_emails_toggle"
+                            android:layout_alignTop="@+id/controller_register_emails_toggle"
+                            android:gravity="center_vertical"
+                            android:textSize="@dimen/text_size_caption1"
+                            tools:text="I agree to receive promotional emails"/>
+
+                    </RelativeLayout>
 
                     <Button
                         android:id="@+id/controller_register_sign_up_button"

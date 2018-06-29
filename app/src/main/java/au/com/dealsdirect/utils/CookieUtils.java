@@ -2,7 +2,6 @@ package au.com.dealsdirect.utils;
 
 import android.content.Context;
 
-import com.franmontiel.persistentcookiejar.PersistentCookieJar;
 import com.franmontiel.persistentcookiejar.cache.SetCookieCache;
 import com.franmontiel.persistentcookiejar.persistence.SharedPrefsCookiePersistor;
 

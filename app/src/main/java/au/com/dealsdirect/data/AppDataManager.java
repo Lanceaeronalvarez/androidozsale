@@ -4,6 +4,7 @@ import android.content.Context;
 import android.util.Log;
 
 import com.mysale.genie.utility.config.api.GetAppSettings;
+import com.mysale.genie.utility.config.api.GetAppSettingsConsent;
 import com.mysale.genie.utility.config.api.GetAppSettingsSection;
 import com.mysale.genie.utility.config.api.GetServerSettings;
 import com.mysale.genie.utility.config.model.getpublicpaymenttoken.GetPublicPaymentToken;
@@ -46,6 +47,8 @@ import au.com.dealsdirect.data.network.model.checkout.GetUserPaymentMethods;
 import au.com.dealsdirect.data.network.model.checkout.RemoveUserPaymentMethod;
 import au.com.dealsdirect.data.network.model.checkout.SetDeliveryOption;
 import au.com.dealsdirect.data.network.model.checkout.getpaymentmethodnonce.GetPaymentMethodNonceRequest;
+import au.com.dealsdirect.data.network.model.consentdata.GetConsentDataResponse;
+import au.com.dealsdirect.data.network.model.consentdata.SaveConsentDataResponse;
 import au.com.dealsdirect.data.network.model.contacthistory.GetContactHistoryRequest;
 import au.com.dealsdirect.data.network.model.contacthistory.GetContactHistoryResponse;
 import au.com.dealsdirect.data.network.model.contactitem.GetContactsResponse;
@@ -227,6 +230,26 @@ public class AppDataManager implements DataManager {
     @Override
     public Observable<GetAppSettingsSection.ResponseValue> callGetAppSettingsSection(String countryId) {
         return mApiHelper.callGetAppSettingsSection(countryId);
+    }
+
+    @Override
+    public Observable<GetAppSettingsConsent.ResponseValue> callGetAppSettingsConsent(String countryId) {
+        return mApiHelper.callGetAppSettingsConsent(countryId);
+    }
+
+    @Override
+    public Observable<GetConsentDataResponse> callGetConsentData(String countryId) {
+        return mApiHelper.callGetConsentData(countryId);
+    }
+
+    @Override
+    public Observable<SaveConsentDataResponse> callSaveConsentData(String countryId) {
+        return mApiHelper.callSaveConsentData(countryId);
+    }
+
+    @Override
+    public Observable<GetAppSettingsConsent.ResponseValue> callGetPublicAppSettingsConsent(String countryId) {
+        return mApiHelper.callGetPublicAppSettingsConsent(countryId);
     }
 
     @Override
@@ -865,6 +888,36 @@ public class AppDataManager implements DataManager {
     @Override
     public String getPersonalisationTemplateTexts() {
         return mPreferencesHelper.getPersonalisationTemplateTexts();
+    }
+
+    @Override
+    public void setConsentTemplateTexts(GetTemplateTextsResponse.GetTemplateTextsValue value) {
+        mPreferencesHelper.setConsentTemplateTexts(value);
+    }
+
+    @Override
+    public String getConsentTemplateTexts(String key) {
+        return mPreferencesHelper.getConsentTemplateTexts(key);
+    }
+
+    @Override
+    public void setAppSettingsConsent(GetAppSettingsConsent.ResponseValue value) {
+        mPreferencesHelper.setAppSettingsConsent(value);
+    }
+
+    @Override
+    public String getAppSettingsConsentText(String key) {
+        return mPreferencesHelper.getAppSettingsConsentText(key);
+    }
+
+    @Override
+    public int getAppSettingsConsentMode() {
+        return mPreferencesHelper.getAppSettingsConsentMode();
+    }
+
+    @Override
+    public boolean getAppSettingsConsentIsChecked(String key) {
+        return mPreferencesHelper.getAppSettingsConsentIsChecked(key);
     }
 
     @Override

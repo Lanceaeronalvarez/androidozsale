@@ -14,6 +14,7 @@ import com.facebook.FacebookSdk;
 import com.facebook.LoggingBehavior;
 import com.google.gson.Gson;
 import com.mysale.genie.utility.config.api.GetAppSettings;
+import com.mysale.genie.utility.config.api.GetAppSettingsConsent;
 import com.mysale.genie.utility.config.api.GetAppSettingsSection;
 import com.mysale.genie.utility.config.api.GetServerSettings;
 import com.mysale.genie.utility.config.model.getappsettingssection.Android;
@@ -27,18 +28,21 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 
 import javax.inject.Inject;
 
 import au.com.dealsdirect.R;
 import au.com.dealsdirect.data.DataManager;
 import au.com.dealsdirect.data.auth.AuthHandler;
+import au.com.dealsdirect.data.network.ApiCallback;
 import au.com.dealsdirect.data.network.AppApiCallback;
 import au.com.dealsdirect.data.network.model.checkout.CreatePaymentMethod;
 import au.com.dealsdirect.data.network.model.checkout.CreatePaymentTransaction;
 import au.com.dealsdirect.data.network.model.checkout.CreatePaymentTransactionVco;
 import au.com.dealsdirect.data.network.model.checkout.GetPaymentToken;
 import au.com.dealsdirect.data.network.model.checkout.getpaymentmethodnonce.GetPaymentMethodNonceRequest;
+import au.com.dealsdirect.data.network.model.consentdata.GetConsentDataResponse;
 import au.com.dealsdirect.data.network.model.deeplinkdata.DeepLinkDataRequest;
 import au.com.dealsdirect.data.network.model.deeplinkdata.DeepLinkDataResponse;
 import au.com.dealsdirect.data.network.model.legalities.GetTemplateTextsRequest;
@@ -48,13 +52,18 @@ import au.com.dealsdirect.data.network.model.login.Logout;
 import au.com.dealsdirect.service.fcm.GNotification;
 import au.com.dealsdirect.ui.base.BasePresenter;
 import au.com.dealsdirect.utils.AppEventHelper;
+import au.com.dealsdirect.utils.CookieUtils;
 import au.com.dealsdirect.utils.DeepLinkUrlType;
+import au.com.dealsdirect.data.pref.AppPreferencesHelper;
+import au.com.dealsdirect.utils.GdprUtils;
 import au.com.dealsdirect.utils.IntrospectionUtils;
 import au.com.dealsdirect.utils.rx.SchedulerProvider;
 import io.fabric.sdk.android.Fabric;
+import io.reactivex.Observable;
 import io.reactivex.annotations.NonNull;
 import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.functions.Consumer;
+import okhttp3.Cookie;
 
 public class MainPresenter<V extends MainMvpView> extends BasePresenter<V> implements MainMvpPresenter<V> {
 
@@ -88,6 +97,15 @@ public class MainPresenter<V extends MainMvpView> extends BasePresenter<V> imple
     public static final String KEY_OURPAY_OPS_TNC_HEADER = "_OurPaySelectTermsAndConditionsHeader";
     public static final String KEY_OURPAY_OPS_TNC_BODY = "_OurPaySelectTermsAndConditionsBody";
 
+    /* June 22, 2018 - GDPR Template Text Keys */
+    public static final String KEY_CONSENT_CONTINUE_TEXT = "_consentContinueText";
+    public static final String KEY_CONSENT_WITH_REGISTRATION_TERMS_TEXT = "_consentWithTCText";
+    public static final String KEY_CONSENT_WITH_REGISTRATION_EMAILS_TEXT = "_consentWithEmailsText";
+    public static final String KEY_CONSENT_WITH_REGISTRATION_TERMS_WARNING = "_consentWithRegistrationTermsWarning";
+    public static final String KEY_CONSENT_SHORT_TEXT = "ConsentShortTextPTNameV1";
+    public static final String KEY_CONSENT_FULL_TEXT = "ConsentFullTextPTNameV1";
+    public static final String KEY_CONSENT_TERMS_AND_CONDITION = "TermsAndConditions_Text";
+
     private static String[] templateTextsKeys = {
             KEY_CHECKOUT_MYPAY_PAY_EXCEED_LIMIT, //0
             KEY_CHECKOUT_MYPAY_PAY_INVALID_PAYMENT_METHOD, //1
@@ -111,7 +129,14 @@ public class MainPresenter<V extends MainMvpView> extends BasePresenter<V> imple
             KEY_OURPAY_OPS_INFO_REMAINING_BEFORE_PURCHASE_FREE_DELIVERY,
             KEY_OURPAY_OPS_TNC_HEADER,
             KEY_OURPAY_OPS_TNC_BODY,
-            KEY_PERSONALISATION_VALIDATION //10
+            KEY_PERSONALISATION_VALIDATION, //10
+            KEY_CONSENT_CONTINUE_TEXT,
+            KEY_CONSENT_WITH_REGISTRATION_TERMS_TEXT,
+            KEY_CONSENT_WITH_REGISTRATION_EMAILS_TEXT,
+            KEY_CONSENT_WITH_REGISTRATION_TERMS_WARNING,
+            KEY_CONSENT_SHORT_TEXT,
+            KEY_CONSENT_FULL_TEXT,
+            KEY_CONSENT_TERMS_AND_CONDITION
     };
 
     @Inject
@@ -121,6 +146,13 @@ public class MainPresenter<V extends MainMvpView> extends BasePresenter<V> imple
 
         super(dataManager, schedulerProvider, compositeDisposable);
         gNotification = new GNotification(getDataManager(), getSchedulerProvider(), getCompositeDisposable());
+    }
+
+    @Override
+    public void doApiCallForResponse(Observable observable, ApiCallback callback) {
+        super.doApiCallForResponse(observable, callback);
+
+        checkConsentCookie();
     }
 
     @Override
@@ -345,6 +377,120 @@ public class MainPresenter<V extends MainMvpView> extends BasePresenter<V> imple
     }
 
     @Override
+    public void callGetAppSettingsConsent(Context context) {
+        doApiCallForResponse(getDataManager().callGetAppSettingsConsent(
+                getDataManager().getCountryId()), new AppApiCallback() {
+            @Override
+            public void onSuccess(Object response) {
+                super.onSuccess(response);
+
+                GetAppSettingsConsent.ResponseValue mapper = (GetAppSettingsConsent.ResponseValue) response;
+
+                getDataManager().setAppSettingsConsent(mapper);
+
+                checkConsentCookie();
+            }
+        });
+    }
+
+    @Override
+    public void callGetPublicAppSettingsConsent(Context context) {
+        doApiCallForResponse(getDataManager().callGetPublicAppSettingsConsent(
+                getDataManager().getCountryId()), new AppApiCallback() {
+            @Override
+            public void onSuccess(Object response) {
+                super.onSuccess(response);
+
+                GetAppSettingsConsent.ResponseValue mapper = (GetAppSettingsConsent.ResponseValue) response;
+
+                getDataManager().setAppSettingsConsent(mapper);
+
+                checkConsentCookie();
+            }
+        });
+    }
+
+    @Override
+    public void checkConsentCookie() {
+
+        int consentMode = getDataManager().getAppSettingsConsentMode();
+
+        if (consentMode != GdprUtils.SOFT_MODE && consentMode != GdprUtils.STRICT_MODE) return;
+
+        boolean hasConsentCookie = false;
+        String csCookieValue = "";
+        String k0 = "";
+        String k1 = "";
+        String k2 = "";
+
+        int prevMode = -1;
+
+        for (Iterator<Cookie> it = CookieUtils.getInstance().getCookieIterator(); it.hasNext(); ) {
+
+            Cookie cookie = it.next();
+
+            hasConsentCookie = cookie.name().contains("cs") &&
+                    cookie.value().equals(Integer.toString(consentMode));
+
+            if (hasConsentCookie) {
+                csCookieValue = cookie.value();
+
+                String[] parts = csCookieValue.split("&");
+                for (String part : parts) {
+                    int chartAt = part.indexOf("=");
+                    String finalValue = part.substring(chartAt);
+                    if (finalValue.contains("k0")) {
+                        k0 = finalValue;
+                    } else if (finalValue.contains("k1")) {
+                        k1 = finalValue;
+                    } else if (finalValue.contains("k2")) {
+                        k2 = finalValue;
+                    }
+                }
+
+                break;
+            }
+        }
+
+        String cookiePageTemplateName = k1;
+        String settingPageTemplateName = getDataManager().getAppSettingsConsentText(
+                AppPreferencesHelper.CONSENT_FULL_TEXT);
+
+        if (!hasConsentCookie || !cookiePageTemplateName.equals(settingPageTemplateName)) {
+            callGetConsentData();
+        }
+    }
+
+    @Override
+    public void callGetConsentData() {
+        doApiCallForResponse(getDataManager().callGetConsentData(getDataManager().getCountryId()),
+                new AppApiCallback() {
+                    @Override
+                    public void onSuccess(Object response) {
+                        super.onSuccess(response);
+
+                        GetConsentDataResponse mapper = (GetConsentDataResponse) response;
+
+                        if (mapper.getShowConsentRequired()) {
+                            showStrictConsentUI();
+                        }
+                    }
+                });
+    }
+
+    @Override
+    public void callSaveConsentData() {
+        doApiCallForResponse(getDataManager().callSaveConsentData(getDataManager().getCountryId()),
+                new AppApiCallback() {
+                });
+    }
+
+    @Override
+    public void showStrictConsentUI() {
+        getMvpView().showStrictConsentUI();
+    }
+
+    @Override
     public void fetchBTAuthorization() {
         if (!getDataManager().isAuthorized()) return;
 
@@ -440,6 +586,7 @@ public class MainPresenter<V extends MainMvpView> extends BasePresenter<V> imple
         callGetPublicAppSettings();
         callGetPublicPaymentToken();
         callGetAppSettingsSection(context);
+        callGetAppSettingsConsent(context);
     }
 
     @Override
@@ -746,6 +893,7 @@ public class MainPresenter<V extends MainMvpView> extends BasePresenter<V> imple
                     getDataManager().setMyPayTemplateTexts(getTemplateTextsResponse.getResponse().getValue());
                     getDataManager().setDeliveryOptionsTemplateTexts(getTemplateTextsResponse.getResponse().getValue());
                     getDataManager().setPersonalisationTemplateTexts(getTemplateTextsResponse.getResponse().getValue());
+                    getDataManager().setConsentTemplateTexts(getTemplateTextsResponse.getResponse().getValue());
                     getMvpView().storeTemplateTexts(getTemplateTextsResponse.getResponse().getValue());
 
                 }, throwable -> {
