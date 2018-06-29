@@ -59,7 +59,7 @@ public class LoginController extends BaseController implements LoginMvpView {
     @BindView(R.id.controller_login_forgot_password_text)
     TextView mForgotPasswordTextView;
     @BindView(R.id.partial_toolbar_left_view)
-    ImageButton mLeftButton;
+    TextView mLeftButton;
 
     @Nullable
     @BindView(R.id.controller_login_legalities_container)
