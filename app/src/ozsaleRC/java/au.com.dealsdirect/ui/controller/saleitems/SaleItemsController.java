@@ -16,7 +16,6 @@ import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.Editable;
 import android.text.TextWatcher;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -78,13 +77,6 @@ import in.srain.cube.views.ptr.PtrHandler;
 import static android.support.design.widget.AppBarLayout.LayoutParams.SCROLL_FLAG_ENTER_ALWAYS;
 import static android.support.design.widget.AppBarLayout.LayoutParams.SCROLL_FLAG_SCROLL;
 import static android.widget.AbsListView.OnScrollListener.SCROLL_STATE_IDLE;
-import static au.com.dealsdirect.utils.BundleKeys.SALEITEMS_CATEGORY_MAP;
-import static au.com.dealsdirect.utils.BundleKeys.SALEITEMS_CHIPS_FILTER;
-import static au.com.dealsdirect.utils.BundleKeys.SALEITEMS_FROM_CATEGORIES;
-import static au.com.dealsdirect.utils.BundleKeys.SALEITEMS_FROM_CATEGORY_SEARCH;
-import static au.com.dealsdirect.utils.BundleKeys.SALEITEMS_FROM_SHOP_SEARCH;
-import static au.com.dealsdirect.utils.BundleKeys.SALEITEMS_SALE_ID;
-import static au.com.dealsdirect.utils.BundleKeys.SALEITEMS_TITLE;
 
 /**
  * dp Created by Admin on 6/8/17.
