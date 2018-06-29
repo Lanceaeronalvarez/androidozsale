@@ -20,15 +20,11 @@ public class AccountSubItemViewHolder extends AbstractExpandableItemViewHolder {
     @BindView(R.id.row_account_text)
     TextView mAccountSubItemName;
 
-    @BindView(R.id.row_account_image)
-    ImageView mAccountSubItemImage;
-
     @BindView(R.id.row_account_arrow_right)
     ImageView mAccountArrowRight;
 
     AccountSubItemViewHolder(View itemView) {
         super(itemView);
-
         ButterKnife.bind(this, itemView);
     }
 }

@@ -22,9 +22,6 @@ public class AccountItemViewHolder extends AbstractExpandableItemViewHolder {
     @BindView(R.id.row_account_text)
     TextView mAccountItemName;
 
-    @Nullable @BindView(R.id.row_account_image)
-    ImageView mAccountItemImage;
-
     @BindView(R.id.row_account_arrow_right)
     ImageView mAccountArrowRight;
 

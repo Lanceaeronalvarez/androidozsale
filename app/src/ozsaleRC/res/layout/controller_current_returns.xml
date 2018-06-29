@@ -29,7 +29,6 @@
             android:layout_height="wrap_content"
             android:clipToPadding="false"
             android:overScrollMode="never"
-            android:paddingTop="@dimen/margin_small"
             android:visibility="gone"
             app:rvp_flingFactor="0.15"
             app:rvp_singlePageFling="true"

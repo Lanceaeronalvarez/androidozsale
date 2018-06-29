@@ -192,5 +192,7 @@
     <!--Delivery Options-->
     <dimen name="ourpay_select_logo_width">160dp</dimen>
     <dimen name="ourpay_select_logo_height">20dp</dimen>
+    <!--Ourpay Select Checkbox size-->
+    <dimen name="ourpay_select_checkbox_size">20dp</dimen>
 
 </resources>
