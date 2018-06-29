@@ -316,7 +316,7 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
         mPresenter.loadSaleItemDetails(mSeoIdentifierId);
 
         mOtherImagesRv.setLayoutManager(new LinearLayoutManager(mActivity, LinearLayoutManager.HORIZONTAL, false));
-        mSaleItemImagesIndicatorAdapter = new SaleItemDetailsImageAdapter(null,null, loadImagesListener,
+        mSaleItemImagesIndicatorAdapter = new SaleItemDetailsImageAdapter(null, null, loadImagesListener,
                 new ArrayList<>(), mSaleId, 2, null);
         mOtherImagesRv.setAdapter(mSaleItemImagesIndicatorAdapter);
         mOtherImagesRv.setVisibility(View.INVISIBLE);
@@ -324,15 +324,14 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
         mProductImagesRvLayoutManager = new LinearLayoutManager(mActivity, LinearLayoutManager.HORIZONTAL, false);
         mProductImagesRv.setLayoutManager(mProductImagesRvLayoutManager);
         mSaleItemImagesAdapter = new SaleItemDetailsImageAdapter(
-                mAppBarLayout,
-                mPresenter.isTablet() ?
-                        new ArrayList<View>() {{}} :
-                        new ArrayList<View>() {{
-                            add(mLeftView);
-                            add(mOtherImagesRv);
-                            add(mProductPriceCategory);
-//                            add(mProductDetailScrollView);
-                        }},
+                mPresenter.isTablet() ? null : mAppBarLayout,
+                mPresenter.isTablet() ? new ArrayList<>() :
+                new ArrayList<View>() {{
+                    add(mLeftView);
+                    add(mOtherImagesRv);
+                    add(mProductPriceCategory);
+                    add(mProductDetailScrollView);
+                }},
                 loadImagesListener, new ArrayList<>(), mSaleId, 1, mProductSharedImage.getDrawable());
         mProductImagesRv.setAdapter(mSaleItemImagesAdapter);
         mProductImagesRv.setEnabled(false);
