@@ -38,6 +38,7 @@ public class PaymentSelectAdapter extends RecyclerView.Adapter<PaymentSelectAdap
     private ArrayList<PaymentMethod> mData;
     private PaymentSelectMvpPresenter<PaymentSelectMvpView> mPresenter;
     private boolean isFromCart = false;
+    private boolean isItemViewSelected;
 
     public PaymentSelectAdapter(MainActivity activity, ArrayList<PaymentMethod> data,
                                 PaymentSelectMvpPresenter<PaymentSelectMvpView> presenter,
@@ -69,9 +70,9 @@ public class PaymentSelectAdapter extends RecyclerView.Adapter<PaymentSelectAdap
         holder.itemView.setBackground(mActivity.getResources().getDrawable(R.drawable.bg_swipe_item_neutral));
         holder.container.setBackgroundColor(mActivity.getResources().getColor(R.color.transparent));
 
-        boolean isSelected = mActivity.getPaymentMethodSelected() != null && mActivity.getPaymentMethodSelected().equals(item);
-        holder.itemView.setSelected(isFromCart && isSelected);
-        holder.nameTextView.setSelected(isFromCart && isSelected);
+        isItemViewSelected = mActivity.getPaymentMethodSelected() != null && mActivity.getPaymentMethodSelected().equals(item);
+        holder.itemView.setSelected(isFromCart && isItemViewSelected);
+        holder.nameTextView.setSelected(isFromCart && isItemViewSelected);
     }
 
     @Override
@@ -103,12 +104,12 @@ public class PaymentSelectAdapter extends RecyclerView.Adapter<PaymentSelectAdap
     public void onSetSwipeBackground(PaymentSelectViewHolder holder, int position, int type) {
         if (type == SwipeableItemConstants.DRAWABLE_SWIPE_LEFT_BACKGROUND) {
             holder.mDeleteText.setVisibility(View.VISIBLE);
-            holder.container.setBackgroundColor(mActivity.getResources().getColor(R.color.white));
+            holder.container.setBackgroundColor(mActivity.getResources().getColor(isFromCart && holder.itemView.isSelected() ? R.color.item_view_selected_color :R.color.white));
             holder.parent.setBackground(mActivity.getResources().getDrawable(R.drawable.bg_swipe_item_right, null));
         } else {
             holder.mDeleteText.setVisibility(View.GONE);
             holder.container.setBackgroundColor(mActivity.getResources().getColor(R.color.transparent));
-            holder.parent.setBackground(mActivity.getResources().getDrawable(R.drawable.bg_swipe_item_neutral, null));
+            holder.parent.setBackground(mActivity.getResources().getDrawable(isItemViewSelected ? R.drawable.bg_checkout_options : R.drawable.bg_swipe_item_neutral, null));
         }
     }
 

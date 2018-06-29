@@ -185,7 +185,7 @@ public class CheckoutController extends VisaCheckoutController implements Checko
     ViewGroup mCheckoutContainer;
 
     @BindView(R.id.partial_toolbar_left_view)
-    ImageButton mToolbarLeftButton;
+    TextView mToolbarLeftButton;
     @BindView(R.id.partial_toolbar_title)
     TextView mTitleTextView;
     @BindView(R.id.partial_toolbar_right_view)

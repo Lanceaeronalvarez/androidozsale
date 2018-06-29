@@ -66,7 +66,7 @@ public class CategoriesController extends BaseController
     TextView mToolbarTitle;
 
     @BindView(R.id.partial_toolbar_left_view)
-    ImageButton mToolbarLeftButton;
+    TextView mToolbarLeftButton;
 
     @BindView(R.id.partial_toolbar_right_view)
     ImageButton mToolbarRightButton;

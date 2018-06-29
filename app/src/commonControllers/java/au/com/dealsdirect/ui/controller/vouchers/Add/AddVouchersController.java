@@ -111,7 +111,7 @@ public class AddVouchersController extends BaseController implements AddVouchers
     ImageView mFilterView;
 
     @BindView(R.id.partial_toolbar_left_view)
-    ImageView mArrowImage;
+    TextView mArrowImage;
 
     @BindView(R.id.controller_button_add_voucher)
     Button mAddVoucherButton;

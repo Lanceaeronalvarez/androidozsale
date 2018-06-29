@@ -120,7 +120,7 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
     LinearLayout mPlaceholder;
 
     @BindView(R.id.partial_toolbar_field_title_left_option)
-    ImageButton mSaleItemsBackIcon;
+    View mSaleItemsBackIcon;
 
     @BindView(R.id.controller_search_filter_frame)
     ViewGroup mSearchFilterContainer;
@@ -337,7 +337,7 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
 
         mActivity.setSaleItemsController(this);
         mActivity.getMainController().setViewpagerDraggable(false);
-        mActivity.getHomeController().showBottomNav();
+        mActivity.getHomeController().animateBottomNav(1);
         setupPtrHeader();
 
         //use initialcategory tree map if it came from categories.

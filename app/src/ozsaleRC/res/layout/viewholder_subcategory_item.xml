@@ -3,8 +3,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_marginBottom="@dimen/margin_medium"
-    android:layout_marginTop="@dimen/margin_medium"
+    android:layout_marginBottom="@dimen/margin_small"
+    android:layout_marginTop="@dimen/margin_small"
     android:orientation="horizontal"
     tools:ignore="MissingPrefix">
 
@@ -21,8 +21,7 @@
     <ImageView
         android:id="@+id/viewholder_subcategory_item_check"
         android:layout_width="@dimen/viewholder_subcategory_width"
-        android:layout_height="@dimen/viewholder_subcategory_width"
-        android:padding="@dimen/padding_small"
+        android:layout_height="@dimen/viewholder_subcategory_height"
         android:src="@drawable/ic_check"
         android:visibility="invisible" />
 </LinearLayout>

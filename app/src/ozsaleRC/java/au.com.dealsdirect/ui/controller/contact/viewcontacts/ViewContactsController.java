@@ -53,7 +53,7 @@ public class ViewContactsController extends BasePullToRefreshController implemen
     ImageView mViewContactsToolbarRightOption;
 
     @BindView(R.id.partial_toolbar_left_view)
-    ImageView mViewContactsToolbarLeftOption;
+    View mViewContactsToolbarLeftOption;
 
     @BindView(R.id.contacts_recycler_view)
     RecyclerView mViewContactsRecyclerView;

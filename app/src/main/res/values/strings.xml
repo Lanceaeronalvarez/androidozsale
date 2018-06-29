@@ -615,6 +615,7 @@
     <string name="welcome_to_my_returns">welcome to my returns!</string>
     <string name="app_uri_header">market://details?id="</string>
     <string name="app_playstore_uri_header">market://details?id="</string>
+    <string name="back">Back</string>
 
     <!--Country Id Mapping-->
     <string name="country_id_AS">AS</string>

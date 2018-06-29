@@ -33,7 +33,7 @@ public class BannerFiltersController extends BaseController implements BannerFil
     BannerFiltersMvpPresenter<BannerFiltersMvpView> mPresenter;
 
     @BindView(R.id.partial_toolbar_field_title_left_option)
-    ImageButton mLeftImageButton;
+    View mLeftImageButton;
 
     @BindView(R.id.recylerview_banner_filters)
     RecyclerView mBannerFiltersRecyclerView;

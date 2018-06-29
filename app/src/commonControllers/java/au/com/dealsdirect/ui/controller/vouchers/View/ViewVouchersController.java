@@ -45,7 +45,7 @@ public class ViewVouchersController extends BasePullToRefreshController implemen
     ImageView mFilterView;
 
     @BindView(R.id.partial_toolbar_left_view)
-    ImageView mArrowImage;
+    TextView mArrowImage;
 
     @BindView(R.id.controller_view_voucher_desc_text)
     TextView mVouchersDescText;

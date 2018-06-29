@@ -37,15 +37,32 @@
             android:textColor="@color/text_extra_dark"
             android:textSize="@dimen/text_size_headline2" />
 
-        <ImageButton
+        <TextView
             android:id="@+id/partial_toolbar_field_title_left_option"
-            android:layout_width="40dp"
-            android:layout_height="40dp"
+            fontPath="@string/font_app_regular"
+            android:layout_width="@dimen/partial_toolbar_button_width"
+            android:layout_height="@dimen/partial_toolbar_button_height"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true"
             android:layout_centerVertical="true"
             android:background="@drawable/bg_toolbar_button"
-            android:padding="@dimen/margin_small"
-            android:scaleType="fitCenter"
-            android:src="@drawable/ic_gray_chevron_left" />
+            android:gravity="center"
+            android:paddingRight="@dimen/margin_extra_small"
+            android:src="@drawable/ic_pink_chevron"
+            android:text="@string/back"
+            android:textColor="@color/text_medium"
+            android:textSize="@dimen/text_size_caption1" />
+
+        <ImageButton
+            android:layout_width="@dimen/partial_toolbar_button_width"
+            android:layout_height="@dimen/partial_toolbar_button_height"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true"
+            android:layout_centerVertical="true"
+            android:background="@drawable/bg_toolbar_button"
+            android:paddingRight="@dimen/margin_extra_small"
+            android:src="@drawable/ic_pink_chevron"
+            android:visibility="gone" />
 
         <ImageButton
             android:id="@+id/partial_toolbar_field_title_right_option"
