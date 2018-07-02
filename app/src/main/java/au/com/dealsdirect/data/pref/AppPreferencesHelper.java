@@ -108,6 +108,9 @@ public class AppPreferencesHelper implements PreferencesHelper {
     /* PERSONALISATION */
     private static final String PERSONALISATION_VALIDATION = "PERSONALISATION_VALIDATION";
 
+    /* NOTIFICATIONS */
+    private static final String KEY_NOTIFICATIONS_ENABLED = "KEY_NOTIFICATIONS_ENABLED";
+
     /* GDPR */
     public static final String CONSENT_CONTINUE_TEXT = "_consentContinueText";
     public static final String CONSENT_WITH_REGISTRATION_TERMS_TEXT = "_consentWithTCText";
@@ -597,6 +600,16 @@ public class AppPreferencesHelper implements PreferencesHelper {
     @Override
     public String getPublicPaymentType() {
         return Prefs.getString(PUBLIC_PAYMENT_TYPE, "");
+    }
+
+    @Override
+    public void setIsNotificationsEnabled(boolean isNotificationsEnabled) {
+        Prefs.putBoolean(KEY_NOTIFICATIONS_ENABLED, isNotificationsEnabled);
+    }
+
+    @Override
+    public boolean getIsNotificationsEnabled() {
+        return Prefs.getBoolean(KEY_NOTIFICATIONS_ENABLED, true);
     }
 
     public void setEventUserId(String userId) {

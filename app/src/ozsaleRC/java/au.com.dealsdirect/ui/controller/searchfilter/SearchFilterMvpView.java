@@ -36,4 +36,6 @@ public interface SearchFilterMvpView extends MvpView{
 
     List<Pair<String, String>> parseFacets(List<GetSaleItemsResponse.Facets> facets);
 
+    void closeFacets();
+
 }

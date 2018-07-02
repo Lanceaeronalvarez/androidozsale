@@ -14,5 +14,5 @@ public interface NewReturnMvpView extends MvpView {
 
     void loadReturnOrderDetail(NewReturnOrderDetailResponse newReturnsOrderDetail);
 
-    void onReturnValueUpdated(String itemId, int position, int productQuantityValue);
+    void onReturnValueUpdated(String itemId, int position, int productQuantityValue, boolean isChecked);
 }

@@ -166,4 +166,8 @@ public interface PreferencesHelper {
     void setPublicPaymentType(String publicPaymentType);
 
     String getPublicPaymentType();
+
+    void setIsNotificationsEnabled(boolean isNotificationsEnabled);
+
+    boolean getIsNotificationsEnabled();
 }

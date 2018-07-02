@@ -11,6 +11,7 @@ import android.text.Spanned;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.TextView;
 
@@ -81,6 +82,9 @@ public class RegisterController extends VisaCheckoutController implements Regist
 
     @BindView(R.id.controller_register_terms_link)
     TextView mTermsLink;
+
+    @BindView(R.id.controller_register_sign_up_button)
+    Button mSignUpButton;
 
     @Nullable
     @BindView(R.id.controller_register_tnc_toggle)
@@ -155,6 +159,7 @@ public class RegisterController extends VisaCheckoutController implements Regist
         if (mTermsLink != null) {
             mTermsLink.setOnClickListener(v -> onLegalitiesClicked(BundleKeys.TEMPLATE_KEY_TNC, getString(R.string.account_tnc)));
         }
+        mSignUpButton.setOnClickListener(v -> onSignUpClicked());
 
         if (mVcoPresenter.isVisaCheckoutEnabled()) {
             mVcoPresenter.setupVisaCheckout();
@@ -243,40 +248,6 @@ public class RegisterController extends VisaCheckoutController implements Regist
         mActivity.onBackPressed();
     }
 
-
-    @OnClick(R.id.controller_register_sign_up_button)
-    void onSignUpClick() {
-        if ((mTermsCheck != null && !mTermsCheck.isChecked()) ||
-                (mTermsToggle != null && mTermsToggle.getCheckedTogglePosition() != 0)) {
-
-            String templateTextError = mPresenter.getGdprTemplateTexts(
-                    AppPreferencesHelper.CONSENT_WITH_REGISTRATION_TERMS_WARNING);
-
-            if (templateTextError == null || templateTextError.equals("")) {
-                onError(R.string.please_accept_terms_and_conditions);
-            } else {
-                onError(templateTextError);
-            }
-
-        } else if (mEmailsToggle != null && mEmailsToggle.getCheckedTogglePosition() == -1) {
-            onError(R.string.please_select_an_option_for_promotional_emails);
-        } else {
-
-            boolean tncAccepted = (mTermsCheck != null && mTermsCheck.isChecked()) ||
-                    (mTermsToggle != null && mTermsToggle.getCheckedTogglePosition() == 0);
-
-            boolean emailsAccepted = mEmailsToggle != null && mEmailsToggle.getCheckedTogglePosition() == 0;
-
-            mPresenter.registerUser(
-                    mRegisterForenameField.getText().toString(),
-                    mRegisterSurnameField.getText().toString(),
-                    mRegisterEmailField.getText().toString(),
-                    mRegisterPasswordField.getText().toString(),
-                    tncAccepted,
-                    emailsAccepted);
-        }
-    }
-
     @OnClick(R.id.controller_register_login_text)
     void onLoginClick() {
         mActivity.onBackPressed();
@@ -313,7 +284,7 @@ public class RegisterController extends VisaCheckoutController implements Regist
     @Override
     public void showLoginError(String message) {
         mActivity.loginErrorHandler(message);
-
+        mSignUpButton.setEnabled(true);
     }
 
     @Override
@@ -348,5 +319,46 @@ public class RegisterController extends VisaCheckoutController implements Regist
                 bundle,
                 new HorizontalChangeHandler(false),
                 new HorizontalChangeHandler());
+    }
+
+    private boolean isFormEmpty() {
+        return mRegisterForenameField.getText().toString().isEmpty() &&
+                mRegisterSurnameField.getText().toString().isEmpty() &&
+                mRegisterEmailField.getText().toString().isEmpty() &&
+                mRegisterPasswordField.getText().toString().isEmpty();
+    }
+
+    private void onSignUpClicked() {
+        if ((mTermsCheck != null && !mTermsCheck.isChecked()) ||
+                (mTermsToggle != null && mTermsToggle.getCheckedTogglePosition() != 0)) {
+
+            String templateTextError = mPresenter.getGdprTemplateTexts(
+                    AppPreferencesHelper.CONSENT_WITH_REGISTRATION_TERMS_WARNING);
+
+            if (templateTextError == null || templateTextError.equals("")) {
+                onError(R.string.please_accept_terms_and_conditions);
+            } else {
+                onError(templateTextError);
+            }
+
+        } else if (mEmailsToggle != null && mEmailsToggle.getCheckedTogglePosition() == -1) {
+            onError(R.string.please_select_an_option_for_promotional_emails);
+        } else if (isFormEmpty()) {
+            onError(R.string.please_fill_out_the_form);
+        } else {
+
+            boolean tncAccepted = (mTermsCheck != null && mTermsCheck.isChecked()) ||
+                    (mTermsToggle != null && mTermsToggle.getCheckedTogglePosition() == 0);
+
+            boolean emailsAccepted = mEmailsToggle != null && mEmailsToggle.getCheckedTogglePosition() == 0;
+
+            mPresenter.registerUser(
+                    mRegisterForenameField.getText().toString(),
+                    mRegisterSurnameField.getText().toString(),
+                    mRegisterEmailField.getText().toString(),
+                    mRegisterPasswordField.getText().toString(),
+                    tncAccepted,
+                    emailsAccepted);
+        }
     }
 }

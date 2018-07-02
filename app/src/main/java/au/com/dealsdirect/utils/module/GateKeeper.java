@@ -26,7 +26,7 @@ public class GateKeeper {
         FACET_FILTER,
         SPLASH,
         LOGIN,
-        LOGIN_HOST,
+        POP_UP_HOST,
         DETAILS,
         MAIN,
         REGISTER,
@@ -60,6 +60,7 @@ public class GateKeeper {
         LEGALITIES,
         LANGUAGE,
         COUNTRY,
+        NOTIFICATION,
         TUTORIAL
         //add more destinations
     }

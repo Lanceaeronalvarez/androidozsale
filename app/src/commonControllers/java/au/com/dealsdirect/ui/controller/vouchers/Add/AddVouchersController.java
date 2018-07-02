@@ -111,7 +111,7 @@ public class AddVouchersController extends BaseController implements AddVouchers
     ImageView mFilterView;
 
     @BindView(R.id.partial_toolbar_left_view)
-    ImageView mArrowImage;
+    TextView mArrowImage;
 
     @BindView(R.id.controller_button_add_voucher)
     Button mAddVoucherButton;
@@ -220,13 +220,6 @@ public class AddVouchersController extends BaseController implements AddVouchers
             }
         });
 
-        mAdapter = new AddVouchersRecyclerViewAdapter(mVouchers, this, mActivity);
-        mRecyclerView.setAdapter(mAdapter);
-        mRecyclerView.setLayoutManager(new LinearLayoutManager(mActivity, LinearLayoutManager.HORIZONTAL, false));
-
-        SnapHelper helper = new PagerSnapHelper();
-        helper.attachToRecyclerView(mRecyclerView);
-
         if (mVouchers.isEmpty()) {
             mVoucherListContainerLayout.setVisibility(View.GONE);
             mRecyclerView.setVisibility(View.GONE);
@@ -234,6 +227,10 @@ public class AddVouchersController extends BaseController implements AddVouchers
             mVoucherListContainerLayout.setVisibility(View.VISIBLE);
             mRecyclerView.setVisibility(View.VISIBLE);
         }
+
+        mAdapter = new AddVouchersRecyclerViewAdapter(mVouchers, this, mActivity);
+        mRecyclerView.setAdapter(mAdapter);
+        mRecyclerView.setLayoutManager(new LinearLayoutManager(mActivity, LinearLayoutManager.HORIZONTAL, false));
 
         mAddVoucherButton.setOnClickListener(action -> {
             if (!mPromoCodeText.getText().toString().isEmpty()) {

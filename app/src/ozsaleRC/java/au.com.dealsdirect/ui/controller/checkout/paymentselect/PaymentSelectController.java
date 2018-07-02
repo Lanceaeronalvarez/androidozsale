@@ -223,7 +223,7 @@ public class PaymentSelectController extends BasePullToRefreshController impleme
                 .putBoolean(BundleKeys.IS_OURPAY_SELECT_DELIVERY_METHOD, mIsOurpaySelectDeliveryMethod);
 
         if (isFromCart) {
-            bundleBuilder.putString(BundleKeys.CART_TOTAL_COST, Double.toString(mValue.getSummary().total));
+            bundleBuilder.putString(BundleKeys.CART_TOTAL_COST, Double.toString(mValue.getSummary().getTotal()));
             bundleBuilder.putString(BundleKeys.CURRENT_ORDER_VALUE, new Gson().toJson(mValue, Value.class));
         }
 

@@ -80,7 +80,6 @@ public class AccountItemAdapter extends AbstractExpandableItemAdapter<AccountIte
 
     @Override
     public void onBindGroupViewHolder(AccountItemViewHolder holder, int groupPosition, int viewType) {
-//        holder.mAccountItemImage.setImageResource(mAccountImages.get(groupPosition));
         String title = mAccountItems.get(groupPosition).getTitle();
 
         if (title.equals(mContext.getString(R.string.account_options))) {
@@ -121,10 +120,7 @@ public class AccountItemAdapter extends AbstractExpandableItemAdapter<AccountIte
 
     @Override
     public void onBindChildViewHolder(AccountSubItemViewHolder holder, int groupPosition, int childPosition, int viewType) {
-
-//        holder.mAccountSubItemImage.setImageResource(mAccountImages.get(position));
         String title = mAccountItems.get(groupPosition).getSubItems().get(childPosition).getTitle();
-
 
         if (title.equals(mContext.getString(R.string.account_clear_cookies_data))) {
             holder.mAccountArrowRight.setVisibility(View.INVISIBLE);

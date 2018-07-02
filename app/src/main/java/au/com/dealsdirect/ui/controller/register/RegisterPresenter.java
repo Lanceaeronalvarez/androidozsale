@@ -44,6 +44,7 @@ public class RegisterPresenter<V extends RegisterMvpView> extends Authentication
     public void registerUser(String firstName, String lastName, String email, String password,
                              boolean tncAccepted, boolean emailsAccepted) {
 
+        getMvpView().showLoading();
         RegisterUserRequest registerUserRequest
                 = new RegisterUserRequest(
                 getDataManager().getLanguageId(),
@@ -59,44 +60,29 @@ public class RegisterPresenter<V extends RegisterMvpView> extends Authentication
                 tncAccepted,
                 emailsAccepted);
 
-        getCompositeDisposable().add(getDataManager()
-                .callRegister(registerUserRequest)
-                .subscribeOn(getSchedulerProvider().io())
-                .observeOn(getSchedulerProvider().ui())
-                .subscribe(new io.reactivex.functions.Consumer<RegisterUserResponse>() {
-                    @Override
-                    public void accept(RegisterUserResponse registerUserResponse) {
-                        if (!isViewAttached()) {
-                            return;
-                        }
+        doApiCallForResponse(getDataManager().callRegister(registerUserRequest), new AppApiCallback(){
 
-                        if (registerUserResponse.isSuccess()) {
-                            getDataManager().acknowledgeAuth(registerUserResponse.getTicket());
-                            getMvpView().showLoginSuccessful(registerUserResponse.getTicket());
-                            AppEventHelper.completedRegistration(AppConstants.API_REGISTER);
-                        } else {
-                            getMvpView().showLoginError(registerUserResponse.getMessage());
-                        }
-                    }
+            @Override
+            public void onSuccess(Object response) {
+                super.onSuccess(response);
+                RegisterUserResponse registerUserResponse = (RegisterUserResponse) response;
 
-                }, new io.reactivex.functions.Consumer<Throwable>() {
-                    @Override
-                    public void accept(@NonNull Throwable throwable) {
-                        if (!isViewAttached()) {
-                            return;
-                        }
+                if (registerUserResponse.isSuccess()) {
+                    getDataManager().acknowledgeAuth(registerUserResponse.getTicket());
+                    getMvpView().showLoginSuccessful(registerUserResponse.getTicket());
+                    AppEventHelper.completedRegistration(AppConstants.API_REGISTER);
+                } else {
+                    getMvpView().showLoginError(registerUserResponse.getMessage());
+                }
 
-                        getMvpView().hideLoading();
-                        getMvpView().onError(throwable.getMessage());
-                        getMvpView().showLoginError(throwable.getMessage());
+            }
 
-                        // handle load accounts error here
-                        if (throwable instanceof ANError) {
-                            ANError anError = (ANError) throwable;
-                            handleApiError(anError);
-                        }
-                    }
-                }));
+            @Override
+            public void onFailure(Throwable t) {
+                super.onFailure(t);
+                getMvpView().showLoginError(t.getMessage());
+            }
+        });
 
     }
 

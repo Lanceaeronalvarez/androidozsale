@@ -244,10 +244,22 @@ public class HomeController extends BaseController implements HomeMvpView {
 
                 }
             } else {
-                if (position == TAB_SHOP_INDEX) {
-                    mShopRouter.popToRoot();
-                } else if (position == TAB_ACCOUNT_INDEX) {
-                    mAccountsRouter.popToRoot();
+                switch (position) {
+                    case TAB_SHOP_INDEX:
+                        mShopRouter.popToRoot();
+                        break;
+                    case TAB_ACCOUNT_INDEX:
+                        mAccountsRouter.popToRoot();
+                        break;
+                    case TAB_CATEGORIES_INDEX:
+                        mCategoriesRouter.popToRoot();
+                        break;
+                    case TAB_CONTACT_INDEX:
+                        mContactRouter.popToRoot();
+                        break;
+                    case TAB_CHECKOUT_INDEX:
+                        mCheckoutRouter.popToRoot();
+                        break;
                 }
             }
             return true;

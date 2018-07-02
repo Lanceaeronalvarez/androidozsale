@@ -41,7 +41,8 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:background="@color/white"
-                    android:orientation="horizontal">
+                    android:orientation="horizontal"
+                    android:gravity="center">
 
                     <TextView
                         fontPath="@string/font_app_semibold"
@@ -77,7 +78,8 @@
                     android:layout_height="wrap_content"
                     android:layout_marginTop="@dimen/border_thin"
                     android:background="@color/white"
-                    android:orientation="horizontal">
+                    android:orientation="horizontal"
+                    android:gravity="center">
 
                     <TextView
                         fontPath="@string/font_app_semibold"
@@ -112,7 +114,8 @@
                     android:layout_height="wrap_content"
                     android:layout_marginTop="@dimen/border_thin"
                     android:background="@color/white"
-                    android:orientation="horizontal">
+                    android:orientation="horizontal"
+                    android:gravity="center">
 
                     <TextView
                         fontPath="@string/font_app_semibold"
@@ -152,7 +155,8 @@
                     android:layout_height="wrap_content"
                     android:layout_marginTop="@dimen/border_thin"
                     android:background="@color/white"
-                    android:orientation="horizontal">
+                    android:orientation="horizontal"
+                    android:gravity="center">
 
                     <TextView
                         fontPath="@string/font_app_semibold"
@@ -179,7 +183,8 @@
                     android:layout_height="wrap_content"
                     android:layout_marginTop="@dimen/border_thin"
                     android:background="@color/white"
-                    android:orientation="horizontal">
+                    android:orientation="horizontal"
+                    android:gravity="center">
 
                     <TextView
                         fontPath="@string/font_app_semibold"
@@ -214,7 +219,8 @@
                     android:layout_height="wrap_content"
                     android:layout_marginTop="@dimen/border_thin"
                     android:background="@color/white"
-                    android:orientation="horizontal">
+                    android:orientation="horizontal"
+                    android:gravity="center">
 
                     <TextView
                         fontPath="@string/font_app_semibold"
@@ -249,7 +255,8 @@
                     android:layout_height="wrap_content"
                     android:layout_marginTop="@dimen/border_thin"
                     android:background="@color/white"
-                    android:orientation="horizontal">
+                    android:orientation="horizontal"
+                    android:gravity="center">
 
                     <TextView
                         fontPath="@string/font_app_semibold"
@@ -284,7 +291,8 @@
                     android:layout_height="wrap_content"
                     android:layout_marginTop="@dimen/border_thin"
                     android:background="@color/white"
-                    android:orientation="horizontal">
+                    android:orientation="horizontal"
+                    android:gravity="center">
 
                     <TextView
                         fontPath="@string/font_app_semibold"

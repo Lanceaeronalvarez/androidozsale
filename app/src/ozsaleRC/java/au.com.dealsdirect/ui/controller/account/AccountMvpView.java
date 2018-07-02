@@ -37,6 +37,8 @@ public interface AccountMvpView extends MvpView {
 
     void showCountry();
 
+    void showNotification();
+
     void showLegalities(String key, String option);
 
     void triggerLogin(String option,int position);

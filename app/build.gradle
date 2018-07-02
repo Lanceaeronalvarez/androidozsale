@@ -67,6 +67,7 @@ android {
             resValue "string", "twitter_user_id", "twitter://user?user_id=36309423"
             resValue "string", "default_country_id", "BA"
             resValue "string", "default_language_id", "EN"
+            resValue "string", "app_uri_hostname", "www.buyinvite.com.au"
 
             ext.newRelicAppToken = "AAf4ce8e1466bf9d9b7c3dcfdf7c569defebda9edc"
             resValue "string", "new_relic_app_token", ext.newRelicAppToken
@@ -90,6 +91,7 @@ android {
             resValue "string", "twitter_user_id", "twitter://user?user_id=36309423"
             resValue "string", "default_country_id", "BA"
             resValue "string", "default_language_id", "EN"
+            resValue "string", "app_uri_hostname", "www.buyinvite.com.au"
 
             ext.newRelicAppToken = "AAf4ce8e1466bf9d9b7c3dcfdf7c569defebda9edc"
             resValue "string", "new_relic_app_token", ext.newRelicAppToken
@@ -113,6 +115,7 @@ android {
             resValue "string", "twitter_user_id", "twitter://user?user_id=37405859"
             resValue "string", "default_country_id", "DA"
             resValue "string", "default_language_id", "EN"
+            resValue "string", "app_uri_hostname", "www.dealsdirect.com.au"
 
             ext.newRelicAppToken = "AAa9d543732ff39dddc60c9cb9ad8c9cf22297904b"
             resValue "string", "new_relic_app_token", ext.newRelicAppToken
@@ -137,6 +140,7 @@ android {
             resValue "string", "twitter_user_id", "twitter://user?user_id=37405859"
             resValue "string", "default_country_id", "DA"
             resValue "string", "default_language_id", "EN"
+            resValue "string", "app_uri_hostname", "www.dealsdirect.com.au"
 
             ext.newRelicAppToken = "AAa9d543732ff39dddc60c9cb9ad8c9cf22297904b"
             resValue "string", "new_relic_app_token", ext.newRelicAppToken
@@ -160,6 +164,7 @@ android {
             resValue "string", "twitter_user_id", "twitter://user?user_id=14730691"
             resValue "string", "default_country_id", "OA"
             resValue "string", "default_language_id", "EN"
+            resValue "string", "app_uri_hostname", "www.dealsdirect.com.au"
 
             ext.newRelicAppToken = "AAb0a85221e0d2eb8f185c2c2a34c566840b593941"
             resValue "string", "new_relic_app_token", ext.newRelicAppToken
@@ -206,6 +211,7 @@ android {
             resValue "string", "twitter_user_id", "twitter://user?user_id=20105193"
             resValue "string", "default_country_id", "TA"
             resValue "string", "default_language_id", "EN"
+            resValue "string", "app_uri_hostname", "www.topbuy.com.au"
 
             ext.newRelicAppToken = "AA17bba4366f389b0ca3e7c8068935df33ce10bd35"
             resValue "string", "new_relic_app_token", ext.newRelicAppToken
@@ -229,6 +235,7 @@ android {
             resValue "string", "twitter_user_id", "twitter://user?user_id=20105193"
             resValue "string", "default_country_id", "TA"
             resValue "string", "default_language_id", "EN"
+            resValue "string", "app_uri_hostname", "www.dealsdirect.com.au"
 
             ext.newRelicAppToken = "AA17bba4366f389b0ca3e7c8068935df33ce10bd35"
             resValue "string", "new_relic_app_token", ext.newRelicAppToken
@@ -253,19 +260,20 @@ android {
             resValue "string", "twitter_user_id", "twitter://user?user_id=37405859"
             resValue "string", "default_country_id", "DA"
             resValue "string", "default_language_id", "EN"
+            resValue "string", "app_uri_hostname", "www.dealsdirect.com.au"
 
             ext.newRelicAppToken = "asjdasldkalsnasdT"
             resValue "string", "new_relic_app_token", ext.newRelicAppToken
         }
 
         ozsaleRC {
-            versionCode 18
+            versionCode 21
             versionName "0.9"
             applicationId "au.com.ozsale"
 
             buildConfigField "String", "API_ROOT", "\"https://www.ozsale.com.au/\""
             buildConfigField "String", "API_LEGACY", "\"https://www.ozsale.com.au/papi/public/v3.24/\""
-            buildConfigField "String", "ACCOUNT_ID", "\"A56B0D62-AEF6-4653-848E-2ECDDB6E9B8C\""
+            buildConfigField "String", "ACCOUNT_ID", "\"A816D792-E940-44F0-B752-06DE1ED5C2B9\""
 
             resValue "string", "app_name", "Ozsale"
             def facebookAppId = "421544284547550"
@@ -276,6 +284,7 @@ android {
             resValue "string", "twitter_user_id", "twitter://user?user_id=25256714"
             resValue "string", "default_country_id", "AS"
             resValue "string", "default_language_id", "EN"
+            resValue "string", "app_uri_hostname", "www.ozsale.com.au"
 
             ext.newRelicAppToken = "AAa9d543732ff39dddc60c9cb9ad8c9cf22297904b"
             resValue "string", "new_relic_app_token", ext.newRelicAppToken
@@ -283,13 +292,13 @@ android {
         }
 
         ozsaleTest {
-            versionCode 10
+            versionCode 14
             versionName "0.9"
             applicationId "au.com.ozsale.test"
 
             buildConfigField "String", "API_ROOT", "\"https://genie-ui-dealsdirect-pre.mysaledev.com/\""
             buildConfigField "String", "API_LEGACY", "\"https://api.mysaledev.com/Public/V3.24/\""
-            buildConfigField "String", "ACCOUNT_ID", "\"A56B0D62-AEF6-4653-848E-2ECDDB6E9B8C\""
+            buildConfigField "String", "ACCOUNT_ID", "\"A816D792-E940-44F0-B752-06DE1ED5C2B9\""
 
             resValue "string", "app_name", "Ozsale Test"
             def facebookAppId = "437865102935987"
@@ -300,6 +309,7 @@ android {
             resValue "string", "twitter_user_id", "twitter://user?user_id=25256714"
             resValue "string", "default_country_id", "AS"
             resValue "string", "default_language_id", "EN"
+            resValue "string", "app_uri_hostname", "www.ozsale.com.au"
 
             ext.newRelicAppToken = "AAa9d543732ff39dddc60c9cb9ad8c9cf22297904b"
             resValue "string", "new_relic_app_token", ext.newRelicAppToken
@@ -312,6 +322,7 @@ android {
             java.srcDirs = ['src/commonControllers/java/',
                             'src/commonHomeController/java/',
                             'src/commonCategoriesController/java/',
+                            'src/commonSaleItemDetailsController/java/',
                             'src/commonSaleItemsController/java/',
                             'src/commonSearchFilterController/java/',
                             'src/commonContactControllers/java/',
@@ -328,6 +339,7 @@ android {
             java.srcDirs = ['src/commonControllers/java/',
                             'src/commonHomeController/java/',
                             'src/commonCategoriesController/java/',
+                            'src/commonSaleItemDetailsController/java/',
                             'src/commonSaleItemsController/java/',
                             'src/commonSearchFilterController/java/',
                             'src/commonContactControllers/java/',
@@ -345,6 +357,7 @@ android {
             java.srcDirs = ['src/commonControllers/java/',
                             'src/commonHomeController/java/',
                             'src/commonCategoriesController/java/',
+                            'src/commonSaleItemDetailsController/java/',
                             'src/commonSaleItemsController/java/',
                             'src/commonSearchFilterController/java/',
                             'src/commonContactControllers/java/',
@@ -362,6 +375,7 @@ android {
             java.srcDirs = ['src/commonControllers/java/',
                             'src/commonHomeController/java/',
                             'src/commonCategoriesController/java/',
+                            'src/commonSaleItemDetailsController/java/',
                             'src/commonSaleItemsController/java/',
                             'src/commonSearchFilterController/java/',
                             'src/commonContactControllers/java/',
@@ -379,6 +393,7 @@ android {
             java.srcDirs = ['src/commonControllers/java/',
                             'src/commonHomeController/java/',
                             'src/commonCategoriesController/java/',
+                            'src/commonSaleItemDetailsController/java/',
                             'src/commonSaleItemsController/java/',
                             'src/commonSearchFilterController/java/',
                             'src/commonContactControllers/java/',
@@ -395,6 +410,7 @@ android {
             java.srcDirs = ['src/commonControllers/java/',
                             'src/commonHomeController/java/',
                             'src/commonCategoriesController/java/',
+                            'src/commonSaleItemDetailsController/java/',
                             'src/commonSaleItemsController/java/',
                             'src/commonSearchFilterController/java/',
                             'src/commonContactControllers/java/',
@@ -410,6 +426,7 @@ android {
         ourpayTest {
             java.srcDirs = ['src/ourpayTest/java/',
                             'src/commonControllers/java/',
+                            'src/commonSaleItemDetailsController/java/',
                             'src/commonOrdersController/java',
                             'src/commonContactControllers/java/',
                             'src/commonReturnsControllers/java/',

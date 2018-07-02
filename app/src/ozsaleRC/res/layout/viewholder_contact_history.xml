@@ -10,17 +10,17 @@
         android:id="@+id/contact_history_item_container"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:background="@drawable/bg_contact_history_item"
-        android:padding="@dimen/activity_horizontal_margin"
         android:layout_gravity="end"
-        android:orientation="vertical">
+        android:background="@drawable/bg_contact_history_item"
+        android:orientation="vertical"
+        android:layout_marginBottom="@dimen/margin_extra_small"
+        android:padding="@dimen/margin_medium">
 
         <LinearLayout
             android:id="@+id/contact_history_date_time_container"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:layout_gravity="end">
+            android:orientation="vertical">
 
             <TextView
                 android:id="@+id/contact_history_date_stamp_text_view"
@@ -28,6 +28,7 @@
                 android:layout_height="wrap_content"
                 android:textColor="@color/contact_history_text_selector"
                 android:textSize="@dimen/text_size_caption2"
+                android:visibility="gone"
                 tools:text="May 22,2018" />
 
             <TextView
@@ -36,6 +37,7 @@
                 android:layout_height="wrap_content"
                 android:textColor="@color/contact_history_text_selector"
                 android:textSize="@dimen/text_size_caption2"
+                android:visibility="gone"
                 tools:text="6:39pm" />
         </LinearLayout>
 
@@ -44,8 +46,6 @@
             android:id="@+id/contact_history_message_text_view"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_gravity="end"
-            android:layout_marginTop="@dimen/margin_large"
             android:text="hi my order is missing"
             android:textColor="@color/contact_history_text_selector" />
 

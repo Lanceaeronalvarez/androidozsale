@@ -28,7 +28,7 @@
                 android:layout_height="@dimen/viewholder_return_order_checkbox_height" />
 
             <ImageView
-                android:id="@+id/new_return_set_detail_item_image"
+                android:id="@+id/new_return_detail_item_image"
                 android:layout_width="@dimen/viewholder_return_order_image_width"
                 android:layout_height="@dimen/viewholder_return_order_image_height"
                 android:padding="@dimen/margin_extra_small"
@@ -58,17 +58,15 @@
                     android:layout_marginTop="@dimen/margin_tiny">
 
 
-                    <RelativeLayout
+                    <LinearLayout
                         android:id="@+id/new_returns_order_item_total_cost_detail"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="@dimen/margin_tiny">
 
                         <TextView
-                            android:id="@+id/new_returns_order_item_count_identifier"
-                            android:layout_width="match_parent"
+                            android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:layout_toStartOf="@+id/new_returns_order_item_count_value"
                             android:text="Quantity:"
                             android:textSize="@dimen/text_size_caption2" />
 
@@ -76,59 +74,60 @@
                             android:id="@+id/new_returns_order_item_count_value"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:layout_alignParentEnd="true"
-                            android:text="0"
+                            tools:text="0"
                             android:textColor="@color/colorAccent"
-                            android:textSize="@dimen/text_size_caption2"
-                            tools:ignore="HardcodedText" />
+                            android:layout_marginStart="@dimen/margin_extra_small"
+                            android:textSize="@dimen/text_size_caption2" />
 
-                    </RelativeLayout>
+                    </LinearLayout>
 
-                    <RelativeLayout
+                    <LinearLayout
                         android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:orientation="horizontal">
+                        android:layout_height="wrap_content">
 
                         <TextView
-                            android:layout_width="match_parent"
+                            android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:layout_toStartOf="@+id/new_return_request_item_total_cost"
                             android:text="Price: "
                             android:textSize="@dimen/text_size_caption2"/>
 
                         <TextView
-                            android:id="@+id/new_return_request_item_total_cost"
+                            android:id="@+id/new_return_item_price"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:layout_alignParentEnd="true"
                             android:textColor="@color/colorAccent"
+                            android:layout_marginLeft="@dimen/margin_extra_small"
                             android:textSize="@dimen/text_size_caption2"
                             tools:text="$89.00" />
 
-                    </RelativeLayout>
+                    </LinearLayout>
 
-                    <RelativeLayout
+                    <LinearLayout
                         android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:orientation="horizontal">
+                        android:layout_height="wrap_content">
 
                         <TextView
-                            android:layout_width="match_parent"
+                            android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:layout_toStartOf="@+id/new_returns_order_size_return_subtotal"
                             android:text="Subtotal: "
                             android:textSize="@dimen/text_size_caption2"/>
 
                         <TextView
-                            android:id="@+id/new_returns_order_size_return_subtotal"
+                            android:id="@+id/new_returns_order_subtotal"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:layout_alignParentEnd="true"
-                            android:text="$12.00"
                             android:textColor="@color/colorAccent"
                             android:textSize="@dimen/text_size_caption2"
+                            android:layout_marginLeft="@dimen/margin_extra_small"
+                            tools:text="$12.00"
                             tools:ignore="HardcodedText" />
-                    </RelativeLayout>
+                    </LinearLayout>
+
+                    <au.com.dealsdirect.ui.custom.ProductQuantityLayout
+                        android:id="@+id/new_return_order_quantity"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="@dimen/margin_extra_small" />
 
                 </LinearLayout>
 

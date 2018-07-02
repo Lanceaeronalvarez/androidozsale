@@ -38,12 +38,14 @@ import au.com.dealsdirect.ui.controller.checkout.checkout.CheckoutMvpView;
 import au.com.dealsdirect.ui.controller.checkout.checkout.CheckoutOrderAdapter;
 import au.com.dealsdirect.utils.BundleBuilder;
 import butterknife.BindView;
+import butterknife.OnClick;
+import butterknife.Optional;
 
 /**
  * Created by smartwave on 13/06/2018.
  */
 
-public class CheckoutHostController extends BaseController implements CheckoutMvpView {
+public class CheckoutHostController extends BaseController implements CheckoutHostMvpView {
 
     @Inject
     CheckoutMvpPresenter<CheckoutMvpView> mPresenter;
@@ -56,7 +58,7 @@ public class CheckoutHostController extends BaseController implements CheckoutMv
     ViewGroup mCheckoutContainer;
 
     @BindView(R.id.partial_toolbar_left_view)
-    ImageButton mToolbarLeftButton;
+    TextView mToolbarLeftButton;
     @BindView(R.id.partial_toolbar_title)
     TextView mTitleTextView;
     @BindView(R.id.partial_toolbar_right_view)
@@ -74,6 +76,7 @@ public class CheckoutHostController extends BaseController implements CheckoutMv
     private CheckoutMvpView mCheckoutDetailView;
     private CheckoutOrderAdapter mAdapter;
     private List<Item> mItemList = new ArrayList<>();
+    private boolean mIsCheckoutHostUpdated;
 
 
     public static CheckoutHostController newInstance() {
@@ -140,9 +143,24 @@ public class CheckoutHostController extends BaseController implements CheckoutMv
 
     @Override
     public void showCartDetails(List<Item> items) {
+
+        showCartDetailsOnChild(items);
+
+        showCartDetailsOnHost(items);
+    }
+
+    @Override
+    public void showCartDetailsOnChild(List<Item> items) {
+        if(mCheckoutDetailView != null){
+            mCheckoutDetailView.showCartDetailsOnChild(items);
+        }
+    }
+
+    @Override
+    public void showCartDetailsOnHost(List<Item> items) {
         mItemList = items;
 
-        if (items.isEmpty()) {
+        if (items == null || items.isEmpty()) {
             //no items
             showNoCartItemsLayout();
         } else {
@@ -154,7 +172,6 @@ public class CheckoutHostController extends BaseController implements CheckoutMv
 
             mOrdersLabel.setVisibility(showOrdersLabel);
         }
-
     }
 
     @Override
@@ -235,5 +252,11 @@ public class CheckoutHostController extends BaseController implements CheckoutMv
     private void showNoCartItemsLayout() {
         mNoCartItemsLayout.setVisibility(View.VISIBLE);
         mCheckoutContainer.setVisibility(View.GONE);
+    }
+
+    @Optional
+    @OnClick(R.id.partial_checkout_empty_button)
+    void shopNow() {
+        mActivity.setShopsAsVisibleContainer();
     }
 }

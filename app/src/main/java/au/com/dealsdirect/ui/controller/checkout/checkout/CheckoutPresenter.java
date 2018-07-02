@@ -237,7 +237,7 @@ public class CheckoutPresenter<V extends CheckoutMvpView> extends BasePresenter<
         try {
 
             if (value != null)
-                ourpay.setTotalAmount(value.getSummary().total);
+                ourpay.setTotalAmount(value.getSummary().getTotal());
 
             GetCurrentOrderOurpay getCurrentOrderOurpay = value.getOurpay();
 

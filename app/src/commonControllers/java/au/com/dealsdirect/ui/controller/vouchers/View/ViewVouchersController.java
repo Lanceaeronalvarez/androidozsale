@@ -45,7 +45,7 @@ public class ViewVouchersController extends BasePullToRefreshController implemen
     ImageView mFilterView;
 
     @BindView(R.id.partial_toolbar_left_view)
-    ImageView mArrowImage;
+    TextView mArrowImage;
 
     @BindView(R.id.controller_view_voucher_desc_text)
     TextView mVouchersDescText;
@@ -68,9 +68,6 @@ public class ViewVouchersController extends BasePullToRefreshController implemen
     @BindView(R.id.no_vouchers_placeholder)
     LinearLayout mNoVouchersLayout;
 
-    @BindView(R.id.controller_view_voucher_unused_recyclerview)
-    RecyclerView mUnusedVouchersRecyclerView;
-
     private ViewVouchersRecyclerViewAdapter mUnusedVouchersAdapter;
 
     private ViewVouchersRecyclerViewAdapter mUsedVouchersAdapter;
@@ -82,7 +79,7 @@ public class ViewVouchersController extends BasePullToRefreshController implemen
     public static ViewVouchersController newInstance() {
         return new ViewVouchersController(
                 new BundleBuilder(new Bundle())
-                    .build());
+                        .build());
     }
 
     @Override
@@ -122,27 +119,13 @@ public class ViewVouchersController extends BasePullToRefreshController implemen
         mUsedVouchersAdapter = new ViewVouchersRecyclerViewAdapter
                 (new ArrayList<>(), mActivity);
 
-        LinearLayoutManager unusedVouchersLayoutManager
-                = new LinearLayoutManager(getApplicationContext(), LinearLayoutManager.HORIZONTAL, false);
+        LinearLayoutManager unusedVouchersLayoutManager = new LinearLayoutManager(getApplicationContext(), LinearLayoutManager.HORIZONTAL, false);
+        LinearLayoutManager usedVouchersLayoutManager = new LinearLayoutManager(getApplicationContext(), LinearLayoutManager.HORIZONTAL, false);
 
-        LinearLayoutManager usedVouchersLayoutManager
-                = new LinearLayoutManager(getApplicationContext(), LinearLayoutManager.HORIZONTAL, false);
-
-            mUnusedVouchersRecyclerViewPager.setAdapter(mUnusedVouchersAdapter);
-            mUnusedVouchersRecyclerViewPager.setLayoutManager(unusedVouchersLayoutManager);
-            mUsedVouchersRecyclerViewPager.setAdapter(mUsedVouchersAdapter);
-            mUsedVouchersRecyclerViewPager.setLayoutManager(usedVouchersLayoutManager);
-
-            mUnusedVouchersRecyclerView.setAdapter(mUnusedVouchersAdapter);
-            mUnusedVouchersRecyclerView.setLayoutManager(new LinearLayoutManager(mActivity,
-                    LinearLayoutManager.VERTICAL, false));
-
-
-        SnapHelper unusedVoucherHelper = new PagerSnapHelper();
-        SnapHelper usedVoucherHelper = new PagerSnapHelper();
-
-        unusedVoucherHelper.attachToRecyclerView(mUnusedVouchersRecyclerViewPager);
-        usedVoucherHelper.attachToRecyclerView(mUsedVouchersRecyclerViewPager);
+        mUnusedVouchersRecyclerViewPager.setAdapter(mUnusedVouchersAdapter);
+        mUnusedVouchersRecyclerViewPager.setLayoutManager(unusedVouchersLayoutManager);
+        mUsedVouchersRecyclerViewPager.setAdapter(mUsedVouchersAdapter);
+        mUsedVouchersRecyclerViewPager.setLayoutManager(usedVouchersLayoutManager);
 
         showLoading();
         mPresenter.loadMyVouchers();

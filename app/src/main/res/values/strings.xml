@@ -181,8 +181,7 @@
     <string name="i_am_looking_for">I am looking for...</string>
 
     <!--CHECKOUT-->
-    <string name="checkout_page_toolbar_title">My Basket</string>
-    <string name="checkout_page_tablet_toolbar_title">Checkout</string>
+    <string name="checkout_page_toolbar_title">Checkout</string>
     <string name="test_category_name">Cache cache</string>
     <string name="please_select_size">Please select size</string>
     <string name="add_new_address_bottom_button">ADD</string>
@@ -210,7 +209,7 @@
     <string name="your_order_will_arrive_within_14_28_working_days_after_the_sale_has_finished">Your
         order will arrive within 14-28 working days after the sale has finished.</string>
 
-    <string name="continue_shopping">Continue shopping</string>
+    <string name="continue_shopping">continue shopping</string>
     <string name="your_cart_is_currently_empty">welcome to my basket!</string>
     <string name="you_have_not_added_any_items_in_your_shopping_cart">you do not currently have any items
     </string>
@@ -336,6 +335,7 @@
     <string name="stock_arrived">Stock Arrived</string>
     <string name="refunded">refunded</string>
     <string name="please_accept_terms_and_conditions">Please accept Terms and Conditions</string>
+    <string name="please_fill_out_the_form">Please fill out the form.</string>
     <string name="please_select_an_option_for_promotional_emails">Please select an option for promotional emails</string>
     <string name="please_input_promo_code">Please input a promo code.</string>
     <string name="reason">reason</string>
@@ -349,6 +349,7 @@
     <string name="your_order_number_is">Your order number is</string>
     <string name="thank_you_for_shopping">Thank you for shopping with Deals Direct</string>
     <string name="please_add_count_to_an_item">Please add count to an item to request return</string>
+    <string name="please_select_item">Please select an item</string>
     <string name="return_request_submitted">Return request submitted</string>
     <string name="create_return">Create Return</string>
     <string name="please_fill_up_field">Please fill up the field below</string>
@@ -360,6 +361,7 @@
     <string name="my_orders">my orders</string>
     <string name="reply">reply</string>
     <string name="select_language">Select Language</string>
+    <string name="notifications">Notifications</string>
 
 
     <!--Placeholder remarks-->
@@ -421,7 +423,8 @@
     <string name="row_checkout_voucher_label">VOUCHER</string>
     <string name="select_voucher">SELECT VOUCHER</string>
     <string name="email">Email</string>
-    <string name="sorry_today_we_can_t_find_anything_by_your_request">Sorry, today we can\'t find anything by your request. \n Meanwhile, why not search for something else?</string>
+    <string name="sorry_today_we_can_t_find_anything_by_your_request">Sorry, today we can\'t find anything by your request. </string>
+    <string name="meanwhile_why_not_search_for_something_else">Meanwhile, why not search for something else?</string>
     <string name="request_new_return">Request New Return</string>
     <string name="clear">clear</string>
     <bool name="is_checkout_orders_label_visible">false</bool>
@@ -606,6 +609,17 @@
     <string name="reviews">reviews</string>
     <string name="see_more">see more</string>
     <string name="log_out">Log Out</string>
-    <bool name="is_ozsale">true</bool>
+    <string name="welcome_to_my_vouchers">welcome to my vouchers!</string>
+    <string name="you_do_not_currently_have_any_vouchers">you do not currently have any vouchers</string>
+    <string name="you_have_not_added_any_orders_for_return">you have not added any orders for return.</string>
+    <string name="no_orders_for_return">no orders for return</string>
+    <string name="welcome_to_my_returns">welcome to my returns!</string>
+    <string name="app_uri_header">market://details?id="</string>
+    <string name="app_playstore_uri_header">market://details?id="</string>
+    <string name="back">Back</string>
+
+    <!--Country Id Mapping-->
+    <string name="country_id_AS">AS</string>
+    <string name="toggle_notifications">Toggle Notifications</string>
 
 </resources>

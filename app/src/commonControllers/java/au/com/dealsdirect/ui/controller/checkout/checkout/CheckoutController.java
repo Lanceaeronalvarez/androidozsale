@@ -24,6 +24,7 @@ import android.widget.TextView;
 import com.bluelinelabs.conductor.Controller;
 import com.bluelinelabs.conductor.ControllerChangeHandler;
 import com.bluelinelabs.conductor.RouterTransaction;
+import com.bluelinelabs.conductor.changehandler.FadeChangeHandler;
 import com.bluelinelabs.conductor.changehandler.HorizontalChangeHandler;
 import com.braintreepayments.api.models.BraintreeRequestCodes;
 import com.google.gson.Gson;
@@ -58,10 +59,12 @@ import au.com.dealsdirect.ui.base.BaseActivity;
 import au.com.dealsdirect.ui.controller.address.addnewaddress.AddNewAddressController;
 import au.com.dealsdirect.ui.controller.address.viewaddress.ViewAddressController;
 import au.com.dealsdirect.ui.controller.checkout.addpayment.AddPaymentController;
+import au.com.dealsdirect.ui.controller.checkout.checkouthost.CheckoutHostMvpView;
 import au.com.dealsdirect.ui.controller.checkout.deliveryoptions.DeliveryOptionsController;
 import au.com.dealsdirect.ui.controller.checkout.ourpay.OurpaySMSVerificationController;
 import au.com.dealsdirect.ui.controller.checkout.paymentselect.PaymentSelectController;
 import au.com.dealsdirect.ui.controller.home.HomeController;
+import au.com.dealsdirect.ui.controller.login.PopUpHostController;
 import au.com.dealsdirect.ui.controller.masterpass.MasterpassController;
 import au.com.dealsdirect.ui.controller.visacheckout.VisaCheckoutController;
 import au.com.dealsdirect.ui.controller.vouchers.Add.AddVouchersController;
@@ -76,6 +79,7 @@ import au.com.dealsdirect.utils.BundleKeys;
 import au.com.dealsdirect.utils.ImageUtils;
 import au.com.dealsdirect.utils.IntrospectionUtils;
 import au.com.dealsdirect.utils.PriceUtils;
+import au.com.dealsdirect.utils.module.GateKeeper;
 import butterknife.BindView;
 import butterknife.OnClick;
 import butterknife.Optional;
@@ -118,6 +122,29 @@ public class CheckoutController extends VisaCheckoutController implements Checko
     @BindView(R.id.partial_checkout_voucher_new_code)
     ViewGroup mAddNewVoucherLayout;
 
+    @BindView(R.id.partial_checkout_summary_subtotal)
+    TextView mSummarySubtotalTextView;
+    @BindView(R.id.partial_checkout_summary_voucher)
+    TextView mSummaryVoucherTextView;
+    @BindView(R.id.partial_checkout_summary_shipping_fee)
+    TextView mSummaryShippingFeeTextView;
+    @BindView(R.id.partial_checkout_summary_shipping_fee_container)
+    ViewGroup mSummaryShippingFeeContainer;
+    @BindView(R.id.partial_checkout_summary_tax)
+    TextView mSummaryTaxTextView;
+    @BindView(R.id.partial_checkout_summary_tax_container)
+    ViewGroup mSummaryTaxContainer;
+    @BindView(R.id.partial_checkout_summary_pay_today_price)
+    TextView mSummaryPayTodayTextView;
+    @BindView(R.id.partial_checkout_summary_pay_today_container)
+    ViewGroup mSummaryPayTodayContainer;
+    @BindView(R.id.partial_checkout_summary_ourpay_select_price)
+    TextView mSummaryOurpaySelectPriceTextView;
+    @BindView(R.id.partial_checkout_summary_ourpay_select_container)
+    ViewGroup mSummaryOurpaySelectContainer;
+
+    @BindView(R.id.partial_checkout_summary_voucher_container)
+    ViewGroup mVoucherValueContainer;
     @BindView(R.id.partial_checkout_voucher_value_text_view)
     TextView mVoucherValueTextView;
     @BindView(R.id.partial_checkout_voucher_promo_code_text_view)
@@ -129,6 +156,9 @@ public class CheckoutController extends VisaCheckoutController implements Checko
     ViewGroup mPaymentLayout;
     @BindView(R.id.partial_checkout_summary_container)
     ViewGroup mSummaryLayout;
+
+    @BindView(R.id.partial_checkout_summary_total)
+    TextView mSummaryTotalTextView;
 
     @BindView(R.id.partial_checkout_address_change)
     View mAddressChangeView;
@@ -156,7 +186,7 @@ public class CheckoutController extends VisaCheckoutController implements Checko
     ViewGroup mCheckoutContainer;
 
     @BindView(R.id.partial_toolbar_left_view)
-    ImageButton mToolbarLeftButton;
+    TextView mToolbarLeftButton;
     @BindView(R.id.partial_toolbar_title)
     TextView mTitleTextView;
     @BindView(R.id.partial_toolbar_right_view)
@@ -198,12 +228,13 @@ public class CheckoutController extends VisaCheckoutController implements Checko
     private boolean mIsVoucherAdded = false;
     private boolean mIsPaymentMethodChanged = false;
     private String mAddressPhoneNumber;
+    private Double mDiscountValue;
 
     private Value mValue;
 
     private OurpayPanel ourpayPanel;
 
-    private CheckoutMvpView mCheckoutHostView;
+    private CheckoutHostMvpView mCheckoutHostView;
 
     private CompositeDisposable mClickListeners;
     private CompositeDisposable mChangeClickListeners;
@@ -229,7 +260,7 @@ public class CheckoutController extends VisaCheckoutController implements Checko
     }
 
     private void changePayment() {
-        if (mPaymentList.size() > 1) {
+        if (!mPaymentList.isEmpty()) {
 //                  //push to payment select
             showPaymentSelectController();
         } else {
@@ -246,13 +277,12 @@ public class CheckoutController extends VisaCheckoutController implements Checko
 
 
     private void changeVoucher() {
-        TextView discountTextView = (TextView) mSummaryLayout.findViewById(R.id.partial_checkout_summary_voucher);
+
         boolean isNoDiscount = true;
-        if (discountTextView != null) {
-            if (!discountTextView.getText().toString().equals("$0")) {
-                isNoDiscount = false;
-            }
+        if (mDiscountValue != 0) {
+            isNoDiscount = false;
         }
+
 
         Bundle bundle = new BundleBuilder(new Bundle())
                 .putString(BundleKeys.VOUCHERS, new Gson().toJson(mVouchers))
@@ -319,7 +349,7 @@ public class CheckoutController extends VisaCheckoutController implements Checko
         mPresenter.onAttach(this);
         mVcoPresenter.onAttach(this);
 
-        mCheckoutHostView = (CheckoutMvpView) mActivity.getCheckoutRouter().getControllerWithTag(getString(R.string.checkout_host_controller));
+        mCheckoutHostView = (CheckoutHostMvpView) mActivity.getCheckoutRouter().getControllerWithTag(getString(R.string.checkout_host_controller));
         return view;
     }
 
@@ -363,7 +393,7 @@ public class CheckoutController extends VisaCheckoutController implements Checko
             mActivity.getMainController().setViewpagerDraggable(false);
         }
 
-        mTitleTextView.setText(!mPresenter.isTablet() ? R.string.checkout_page_toolbar_title : R.string.checkout_page_tablet_toolbar_title);
+        mTitleTextView.setText(R.string.checkout_page_toolbar_title);
 
         if (!mPresenter.isTablet()) {
             mAdapter = new CheckoutOrderAdapter(mActivity, mItemList, mPresenter);
@@ -421,7 +451,7 @@ public class CheckoutController extends VisaCheckoutController implements Checko
                             // Successful VCO
                             showLoading();
                             mActivity.callCreatePaymentTransactionVco(visaPaymentSummary);
-                            mPresenter.facebookInitiatedCheckout(PaymentInfo.getPaymentType(), mItemList.size(), mValue.getSummary().total);
+                            mPresenter.facebookInitiatedCheckout(PaymentInfo.getPaymentType(), mItemList.size(), mValue.getSummary().getTotal());
                         }
                         break;
                     }
@@ -524,10 +554,13 @@ public class CheckoutController extends VisaCheckoutController implements Checko
     @Override
     public void showCartDetails(List<Item> items) {
 
-        if (mCheckoutHostView != null) {
-            mCheckoutHostView.showCartDetails(items);
-        }
+        showCartDetailsOnHost(items);
 
+        showCartDetailsOnChild(items);
+    }
+
+    @Override
+    public void showCartDetailsOnChild(List<Item> items) {
         if (items == null) { //do nothing (ie. when increasing order quantity, returns a soldout/out of stock message)
             return;
         }
@@ -545,7 +578,13 @@ public class CheckoutController extends VisaCheckoutController implements Checko
 
             showCartItems();
         }
+    }
 
+    @Override
+    public void showCartDetailsOnHost(List<Item> items) {
+        if (mCheckoutHostView != null) {
+            mCheckoutHostView.showCartDetails(items);
+        }
     }
 
     @Override
@@ -678,6 +717,7 @@ public class CheckoutController extends VisaCheckoutController implements Checko
         } else if (mActivity.getPaymentMethodSelected() == null) {
             mActivity.setPaymentMethodSelected(paymentMethod);
         }
+
     }
 
     private void displayPaymentDetails() {
@@ -733,40 +773,42 @@ public class CheckoutController extends VisaCheckoutController implements Checko
     @Override
     public void showSummaryDetails(Summary summary) {
         if (summary != null) {
-            ((TextView) mSummaryLayout.findViewById(R.id.partial_checkout_summary_subtotal)).setText(PriceUtils.getPriceStringValue(summary.subtotal));
-            ((TextView) mSummaryLayout.findViewById(R.id.partial_checkout_summary_shipping_fee)).setText(PriceUtils.getPriceStringValue(summary.delivery));
-            ((TextView) mSummaryLayout.findViewById(R.id.partial_checkout_summary_voucher)).setText(PriceUtils.getPriceStringValue(summary.discount));
+            mSummarySubtotalTextView.setText(PriceUtils.getPriceStringValue(summary.getSubtotal()));
+            mSummaryShippingFeeContainer.setVisibility(summary.getDelivery() == 0 ? View.GONE : View.VISIBLE);
+            mSummaryShippingFeeTextView.setText(PriceUtils.getPriceStringValue(summary.getDelivery()));
+            mSummaryVoucherTextView.setText(PriceUtils.getPriceStringValue(summary.getDiscount()));
+            mDiscountValue = summary.getDiscount();
 
-            if (summary.tax > 0) {
-                ((TextView) mSummaryLayout.findViewById(R.id.partial_checkout_summary_tax)).setText(PriceUtils.getPriceStringValue(summary.tax));
-                mSummaryLayout.findViewById(R.id.partial_checkout_summary_tax_container).setVisibility(View.VISIBLE);
-            } else
-                mSummaryLayout.findViewById(R.id.partial_checkout_summary_tax_container).setVisibility(View.GONE);
+            if (summary.getTax() > 0) {
+                mSummaryTaxTextView.setText(PriceUtils.getPriceStringValue(summary.getTax()));
+                mSummaryTaxContainer.setVisibility(View.VISIBLE);
+            } else {
+                mSummaryTaxContainer.setVisibility(View.GONE);
+            }
 
-
-            if (summary.discount > 0) {
-                ((TextView) mSummaryLayout.findViewById(R.id.partial_checkout_summary_voucher)).setText(PriceUtils.getPriceStringValue(summary.discount));
+            if (summary.getDiscount() > 0) {
                 mIsVoucherAdded = true;
-                mSummaryLayout.findViewById(R.id.partial_checkout_summary_voucher_container).setVisibility(View.VISIBLE);
+                mVoucherValueContainer.setVisibility(View.VISIBLE);
                 mVoucherValueTextView.setVisibility(View.VISIBLE);
-                mVoucherValueTextView.setText(PriceUtils.getPriceStringValue(summary.discount) + " " + getString(R.string.voucher));
+                mVoucherValueTextView.setText(PriceUtils.getPriceStringValue(summary.getDiscount()) + " " + getString(R.string.voucher));
             } else {
                 mIsVoucherAdded = false;
                 mVoucherValueTextView.setVisibility(View.GONE);
-                mSummaryLayout.findViewById(R.id.partial_checkout_summary_voucher_container).setVisibility(View.GONE);
+                mVoucherValueContainer.setVisibility(View.GONE);
             }
-            ((TextView) mSummaryLayout.findViewById(R.id.partial_checkout_summary_total)).setText(PriceUtils.getPriceStringValue(summary.total));
+
+            mSummaryTotalTextView.setText(PriceUtils.getPriceStringValue(summary.getTotal()));
 
             // show ourpay select related summary, should been purchased yet if visible.
             if (isOurPaySelectDeliveryMethod() && !mDeliveryServicePackageDetail.getPurchased()) {
-                mSummaryLayout.findViewById(R.id.partial_checkout_summary_ourpay_select_container).setVisibility(View.VISIBLE);
-                mSummaryLayout.findViewById(R.id.partial_checkout_summary_pay_today_container).setVisibility(View.VISIBLE);
+                mSummaryOurpaySelectContainer.setVisibility(View.VISIBLE);
+                mSummaryPayTodayContainer.setVisibility(View.VISIBLE);
+                mSummaryShippingFeeContainer.setVisibility(View.GONE);
             } else {
-                mSummaryLayout.findViewById(R.id.partial_checkout_summary_ourpay_select_container).setVisibility(View.GONE);
-                mSummaryLayout.findViewById(R.id.partial_checkout_summary_pay_today_container).setVisibility(View.GONE);
+                mSummaryOurpaySelectContainer.setVisibility(View.GONE);
+                mSummaryPayTodayContainer.setVisibility(View.GONE);
             }
         }
-
 
     }
 
@@ -781,7 +823,7 @@ public class CheckoutController extends VisaCheckoutController implements Checko
         //Set 3DS value
         if (value != null) {
             PaymentInfo.setThreeDSecureRequired(value.threeDSecureRequired);
-            PaymentInfo.setCartCost(value.getSummary().total);
+            PaymentInfo.setCartCost(value.getSummary().getTotal());
         }
 
         mValue = value;
@@ -841,7 +883,7 @@ public class CheckoutController extends VisaCheckoutController implements Checko
             } else {
                 PaymentInfo.setPaymentType(PaymentInfo.TYPE_BRAINTREE);
                 mActivity.callCreatePaymentTransaction(PaymentInfo.getPaymentType(), "", PaymentInfo.getPaymentMethod().getToken());
-                mPresenter.facebookInitiatedCheckout(PaymentInfo.getPaymentType(), mItemList.size(), mValue.getSummary().total);
+                mPresenter.facebookInitiatedCheckout(PaymentInfo.getPaymentType(), mItemList.size(), mValue.getSummary().getTotal());
             }
         }
     }
@@ -863,7 +905,7 @@ public class CheckoutController extends VisaCheckoutController implements Checko
             } else {
                 PaymentInfo.setPaymentType(PaymentInfo.TYPE_BRAINTREE);
                 mActivity.callCreatePaymentTransaction(PaymentInfo.getPaymentType(), "", PaymentInfo.getPaymentMethod().getToken());
-                mPresenter.facebookInitiatedCheckout(PaymentInfo.getPaymentType(), mItemList.size(), mValue.getSummary().total);
+                mPresenter.facebookInitiatedCheckout(PaymentInfo.getPaymentType(), mItemList.size(), mValue.getSummary().getTotal());
             }
         }
     }
@@ -883,14 +925,12 @@ public class CheckoutController extends VisaCheckoutController implements Checko
                 .pushChangeHandler(new HorizontalChangeHandler(false))
                 .popChangeHandler(new HorizontalChangeHandler()));
 
-        mPresenter.facebookInitiatedCheckout(PaymentInfo.getPaymentType(), mItemList.size(), mValue.getSummary().total);
+        mPresenter.facebookInitiatedCheckout(PaymentInfo.getPaymentType(), mItemList.size(), mValue.getSummary().getTotal());
 
     }
 
     private void onOurpayButtonClick() {
         RxBus.instance().post(IntrospectionUtils.EVENT_PAY);
-
-        assert (mActivity) != null;
 
         if (mActivity.isBraintreeInitialized()) {
 
@@ -913,13 +953,22 @@ public class CheckoutController extends VisaCheckoutController implements Checko
                     }
 
                     if (PaymentInfo.getOurpay().isPhoneVerificationRequired()) {
+                        Bundle bundle = new BundleBuilder(new Bundle())
+                                .putSerializable(BundleKeys.KEY_POP_UP_HOST_DESTINATION, GateKeeper.Destination.SMS_VERIFICATION)
+                                .putString(BundleKeys.PHONE_KEY, mAddressPhoneNumber)
+                                .build();
 
-                        getRouter().pushController(RouterTransaction.with(OurpaySMSVerificationController.newInstance(mAddressPhoneNumber))
-                                .pushChangeHandler(new HorizontalChangeHandler(false))
-                                .popChangeHandler(new HorizontalChangeHandler()));
+                        if (mPresenter.isTablet() && getBoolean(R.bool.is_ozsale_app)) {
+                            GateKeeper.setRoot(mActivity.getHomeController().getPopUpHostRouter(), GateKeeper.Destination.POP_UP_HOST, RouterTransaction.with(new PopUpHostController(bundle)).
+                                    pushChangeHandler(new FadeChangeHandler()).popChangeHandler(new FadeChangeHandler()));
+                        } else {
+                            GateKeeper.push(getRouter(), GateKeeper.Destination.SMS_VERIFICATION, bundle,
+                                    new HorizontalChangeHandler(false),
+                                    new HorizontalChangeHandler());
+                        }
                     } else {
                         ourpayPaymentSubmit();
-                        mPresenter.facebookInitiatedCheckout(PaymentInfo.getPaymentType(), mItemList.size(), mValue.getSummary().total);
+                        mPresenter.facebookInitiatedCheckout(PaymentInfo.getPaymentType(), mItemList.size(), mValue.getSummary().getTotal());
                     }
                 }
             }
@@ -981,7 +1030,7 @@ public class CheckoutController extends VisaCheckoutController implements Checko
         mPayButton.setVisibility(isOurPaySelectDeliveryMethod() ? View.GONE : View.VISIBLE);
         mPaypalButton.setVisibility(isOurPaySelectDeliveryMethod() ? View.GONE : View.VISIBLE);
         mMasterpassButton.setVisibility(isOurPaySelectDeliveryMethod() ? View.GONE : View.VISIBLE);
-        mVisaCheckoutButton.setVisibility(isOurPaySelectDeliveryMethod() ? View.GONE : View.VISIBLE);
+        mVisaCheckoutButton.setVisibility(isOurPaySelectDeliveryMethod() || mActivity.getPaymentMethodSelected() != null ? View.GONE : View.VISIBLE);
     }
 
     @Override
@@ -1014,7 +1063,7 @@ public class CheckoutController extends VisaCheckoutController implements Checko
         bundle.putString(BundleKeys.PAYMENT_METHODS, new Gson().toJson(mPaymentList));
         bundle.putBoolean(BundleKeys.IS_FROM_CART, true);
         bundle.putBoolean(BundleKeys.IS_OURPAY_SELECT_DELIVERY_METHOD, isOurPaySelectDeliveryMethod());
-        bundle.putString(BundleKeys.CART_TOTAL_COST, Double.toString(mValue.getSummary().total));
+        bundle.putString(BundleKeys.CART_TOTAL_COST, Double.toString(mValue.getSummary().getTotal()));
         bundle.putString(BundleKeys.CURRENT_ORDER_VALUE, new Gson().toJson(mValue, Value.class));
 
         getRouter().pushController(RouterTransaction.with(new PaymentSelectController(bundle))
@@ -1028,7 +1077,7 @@ public class CheckoutController extends VisaCheckoutController implements Checko
         Bundle bundle = new Bundle();
         bundle.putBoolean(BundleKeys.IS_FROM_CART, true);
         bundle.putBoolean(BundleKeys.IS_OURPAY_SELECT_DELIVERY_METHOD, isOurPaySelectDeliveryMethod());
-        bundle.putString(BundleKeys.CART_TOTAL_COST, Double.toString(mValue.getSummary().total));
+        bundle.putString(BundleKeys.CART_TOTAL_COST, Double.toString(mValue.getSummary().getTotal()));
         bundle.putString(BundleKeys.CURRENT_ORDER_VALUE, new Gson().toJson(mValue, Value.class));
         getRouter().pushController(RouterTransaction.with(new AddPaymentController(bundle))
                 .pushChangeHandler(new HorizontalChangeHandler(false))
@@ -1062,7 +1111,7 @@ public class CheckoutController extends VisaCheckoutController implements Checko
             return;
         }
 
-        mVcoPresenter.payWithVisaCheckout(mValue.getSummary().total);
+        mVcoPresenter.payWithVisaCheckout(mValue.getSummary().getTotal());
     }
 
 

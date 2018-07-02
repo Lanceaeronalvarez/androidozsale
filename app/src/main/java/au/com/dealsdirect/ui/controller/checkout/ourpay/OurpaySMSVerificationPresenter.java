@@ -132,4 +132,9 @@ public class OurpaySMSVerificationPresenter<V extends OurpaySMSVerificationMvpVi
                     }
                 }));
     }
+
+    @Override
+    public String getCountryId() {
+        return getDataManager().getCountryId();
+    }
 }

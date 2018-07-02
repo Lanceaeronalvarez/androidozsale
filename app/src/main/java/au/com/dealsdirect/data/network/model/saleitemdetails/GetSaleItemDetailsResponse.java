@@ -70,6 +70,10 @@ public class GetSaleItemDetailsResponse {
     @SerializedName("seoIdentifier")
     @Expose
     private String seoIdentifier;
+    @SerializedName("rrpText")
+    @Expose
+    private String rrpText;
+
 
     public String getPersonalisation() {
         return personalisation;
@@ -225,5 +229,9 @@ public class GetSaleItemDetailsResponse {
 
     public void setSoldOut(boolean soldOut) {
         isSoldOut = soldOut;
+    }
+
+    public String getRrpText() {
+        return rrpText;
     }
 }

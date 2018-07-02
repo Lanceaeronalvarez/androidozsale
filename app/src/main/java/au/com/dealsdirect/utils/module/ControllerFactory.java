@@ -3,7 +3,6 @@ package au.com.dealsdirect.utils.module;
 import android.os.Bundle;
 
 import com.bluelinelabs.conductor.Controller;
-import com.mysale.genie.utility.config.model.getappsettings.Checkout;
 
 import au.com.dealsdirect.ui.controller.account.AccountController;
 import au.com.dealsdirect.ui.controller.address.addnewaddress.AddNewAddressController;
@@ -26,10 +25,11 @@ import au.com.dealsdirect.ui.controller.invite.InviteSendController;
 import au.com.dealsdirect.ui.controller.language.LanguageController;
 import au.com.dealsdirect.ui.controller.legalities.LegalitiesController;
 import au.com.dealsdirect.ui.controller.login.LoginController;
-import au.com.dealsdirect.ui.controller.login.LoginHostController;
+import au.com.dealsdirect.ui.controller.login.PopUpHostController;
 import au.com.dealsdirect.ui.controller.login.PasswordVerificationController;
 import au.com.dealsdirect.ui.controller.main.MainController;
 import au.com.dealsdirect.ui.controller.masterpass.MasterpassController;
+import au.com.dealsdirect.ui.controller.notification.NotificationController;
 import au.com.dealsdirect.ui.controller.orders.orders.OrdersController;
 import au.com.dealsdirect.ui.controller.register.RegisterController;
 import au.com.dealsdirect.ui.controller.returns.currentreturns.CurrentReturnsController;
@@ -67,8 +67,8 @@ public class ControllerFactory {
                 return DetailsController.newInstance();
             case LOGIN:
                 return LoginController.newInstance();
-            case LOGIN_HOST:
-                return LoginHostController.newInstance();
+            case POP_UP_HOST:
+                return PopUpHostController.newInstance();
             case CATEGORIES:
                 return CategoriesController.newInstance();
             case CHECKOUT:
@@ -127,6 +127,8 @@ public class ControllerFactory {
                 return LanguageController.newInstance();
             case COUNTRY:
                 return CountryController.newInstance();
+            case NOTIFICATION:
+                return NotificationController.newInstance();
             case TUTORIAL:
                 return TutorialController.newInstance();
             default:
@@ -143,6 +145,8 @@ public class ControllerFactory {
                 return new DetailsController(bundle);
             case LOGIN:
                 return new LoginController(bundle);
+            case POP_UP_HOST:
+                return new PopUpHostController(bundle);
             case CATEGORIES:
                 return new CategoriesController(bundle);
             case CHECKOUT:
@@ -197,6 +201,8 @@ public class ControllerFactory {
                 return LanguageController.newInstance();
             case COUNTRY:
                 return CountryController.newInstance();
+            case NOTIFICATION:
+                return NotificationController.newInstance();
             case TUTORIAL:
                 return TutorialController.newInstance();
             default:

@@ -2,11 +2,9 @@ package au.com.dealsdirect.ui.controller.searchfilter;
 
 import android.os.Bundle;
 import android.support.annotation.NonNull;
-import android.support.design.widget.TabLayout;
 import android.support.v4.util.Pair;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -35,11 +33,9 @@ import au.com.dealsdirect.data.network.model.category.GetCategoryTreeResponse;
 import au.com.dealsdirect.data.network.model.saleitems.GetSaleItemsResponse;
 import au.com.dealsdirect.data.network.model.sorting.SortingResponse;
 import au.com.dealsdirect.ui.base.BaseController;
-import au.com.dealsdirect.ui.controller.saleitems.SaleItemsController;
 import au.com.dealsdirect.ui.controller.saleitems.SaleItemsMvpPresenter;
 import au.com.dealsdirect.ui.controller.saleitems.SaleItemsMvpView;
 import au.com.dealsdirect.ui.controller.searchfilter.adapter.FacetItemsAdapter;
-import au.com.dealsdirect.ui.controller.searchfilter.adapter.FacetsAdapter;
 import au.com.dealsdirect.ui.controller.searchfilter.adapter.SearchChipModel;
 import au.com.dealsdirect.ui.controller.searchfilter.adapter.SubCategoriesAdapter;
 import au.com.dealsdirect.ui.custom.CustomRangeSeekbar;
@@ -48,15 +44,12 @@ import au.com.dealsdirect.utils.BundleBuilder;
 import au.com.dealsdirect.utils.BundleKeys;
 import au.com.dealsdirect.utils.JsonUtils;
 import au.com.dealsdirect.utils.StringUtils;
-import au.com.dealsdirect.utils.ViewUtils;
 import butterknife.BindView;
 
 import static au.com.dealsdirect.utils.BundleKeys.BRANDS_FACET_FILTER_TYPE;
-import static au.com.dealsdirect.utils.BundleKeys.CATEGORY_SHOP;
 import static au.com.dealsdirect.utils.BundleKeys.COLOR_FACET_FILTER_TYPE;
 import static au.com.dealsdirect.utils.BundleKeys.PRICE_FACET_FILTER_TYPE;
 import static au.com.dealsdirect.utils.BundleKeys.SIZE_FACET_FILTER_TYPE;
-import static au.com.dealsdirect.utils.StringUtils.getParentKey;
 
 
 /**
@@ -135,7 +128,6 @@ public class SearchFilterController extends BaseController implements SearchFilt
     private boolean mHasSeekbarReset = false;
     private boolean mIsSearchFilterControllerActive = false;
 
-    String mSaleId = "";
     Set<String> mCategoryKeys = new LinkedHashSet<>();
 
     private Set<Integer> origSelectedSet = new HashSet<Integer>();
@@ -153,7 +145,6 @@ public class SearchFilterController extends BaseController implements SearchFilt
         super(args);
         mFacets = JsonUtils.convertStringToObject(args.getString(BundleKeys.KEY_FACET_STRING, ""), new TypeToken<ArrayList<GetSaleItemsResponse.Facets>>() {}.getType());
         mSortingFacets = JsonUtils.convertStringToObject(args.getString(BundleKeys.KEY_SORTING_STRING, ""), new TypeToken<ArrayList<SortingResponse>>() {}.getType());
-        mSaleId = args.getString(BundleKeys.SALEITEMS_SALE_ID, "");
         mCategoryTree = JsonUtils.convertStringToObject(args.getString(BundleKeys.KEY_CATEGORY_STRING, ""), new TypeToken<ArrayList<GetCategoryTreeResponse>>() {}.getType());
         mBrandList = JsonUtils.convertStringToObject(args.getString(BundleKeys.KEY_BRAND_LIST, ""), new TypeToken<ArrayList<String>>() {}.getType());
 
@@ -185,7 +176,13 @@ public class SearchFilterController extends BaseController implements SearchFilt
     @Override
     protected void setUp(View view) {
 
-        createCategoryMap(mCategoryTree);
+        //create a category map from the categorytreeresponse in saleitems, else
+        // use saleitemscontroller's category map if it is not empty else
+        if(mSaleItemsView.getCategoryMap().isEmpty()) {
+            createCategoryMap(mCategoryTree);
+        } else {
+            mCategoryMap = mSaleItemsView.getCategoryMap();
+        }
 
         if (mFacets != null) {
             parseFacets(mFacets);
@@ -256,9 +253,10 @@ public class SearchFilterController extends BaseController implements SearchFilt
         return mFacetFilters;
     }
 
-    private void closeFacets() {
+    public void closeFacets() {
         mIsSearchFilterControllerActive = false;
         mFacetsFrame.setVisibility(View.GONE);
+        mSaleItemsView.enableSaleItemsScroll(true);
     }
 
     private void setupPriceFacet() {
@@ -281,7 +279,7 @@ public class SearchFilterController extends BaseController implements SearchFilt
                     }
                 }
 
-                mSaleItemsPresenter.loadSaleItems(mSaleItemsView.createSaleItemsRequest(mCategoryKeys, mSaleId, 0, mSearchItemsList, ""));
+                mSaleItemsPresenter.loadSaleItems(mSaleItemsView.createSaleItemsRequest(mCategoryKeys, 0, mSearchItemsList));
 
                 onResetPriceRange();
             }
@@ -319,7 +317,7 @@ public class SearchFilterController extends BaseController implements SearchFilt
 
                 mHasSeekbarReset = false;
 
-                mSaleItemsPresenter.loadSaleItems(mSaleItemsView.createSaleItemsRequest(mCategoryKeys, mSaleId, 0, mSearchItemsList, ""));
+                mSaleItemsPresenter.loadSaleItems(mSaleItemsView.createSaleItemsRequest(mCategoryKeys, 0, mSearchItemsList));
 
             }
         });
@@ -366,7 +364,7 @@ public class SearchFilterController extends BaseController implements SearchFilt
     public void showFacetItem(int position) {
         hideKeyboard();
         mFacetsFrame.setVisibility(View.VISIBLE);
-
+        mSaleItemsView.enableSaleItemsScroll(false);
 
         if (getFacetFilterType(position) != BundleKeys.PRICE_FACETFILTER_NAME) { //only do this logic if facet clicked != price
 
@@ -395,7 +393,7 @@ public class SearchFilterController extends BaseController implements SearchFilt
 
     @Override
     public void updateFacetItemToFilters(List<SearchChipModel> selectedChips) {
-        mSaleItemsPresenter.loadSaleItems(mSaleItemsView.createSaleItemsRequest(mCategoryKeys, mSaleId, 0, selectedChips, ""));
+        mSaleItemsPresenter.loadSaleItems(mSaleItemsView.createSaleItemsRequest(mCategoryKeys, 0, selectedChips));
     }
 
     @Override
@@ -444,7 +442,7 @@ public class SearchFilterController extends BaseController implements SearchFilt
         }
 
         mSaleItemsPresenter.onCategoryChanged(true);
-        mSaleItemsPresenter.loadSaleItems(mSaleItemsView.createSaleItemsRequest(mCategoryKeys, mSaleId, 0, mSearchItemsList, ""));
+        mSaleItemsPresenter.loadSaleItems(mSaleItemsView.createSaleItemsRequest(mCategoryKeys, 0, mSearchItemsList));
     }
 
     @Override

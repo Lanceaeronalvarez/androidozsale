@@ -113,7 +113,7 @@ public class SaleItemsController extends BasePullToRefreshController implements 
     LinearLayout mPlaceholder;
 
     @BindView(R.id.partial_toolbar_field_title_left_option)
-    ImageButton mSaleItemsBackIcon;
+    View mSaleItemsBackIcon;
 
     @BindView(R.id.partial_toolbar_clear_button)
     ImageButton mClearSearchButton;

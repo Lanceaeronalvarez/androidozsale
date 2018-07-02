@@ -191,19 +191,15 @@ public class GNotification {
 
     public void registerDeviceForNotification(Context context) {
         if (checkPlayServices(context)) {
-
             AppLogger.d(TAG + "checkPlayServices true");
             String regId = getRegistrationId(context.getApplicationContext());
             AppLogger.d(TAG + "regId " + regId);
             if (regId.isEmpty()) {
-
                 new RegisterInBackground().execute(context);
             } else {
-
                 callRegisterSubscriber(context, regId, isNotificationEnabled(context));
             }
         } else {
-
             AppLogger.d(TAG + "No valid Google Play Services APK found.");
         }
     }
@@ -295,7 +291,6 @@ public class GNotification {
      * @return boolean
      */
     private boolean isNotificationEnabled(Context context) {
-
-        return NotificationManagerCompat.from(context).areNotificationsEnabled();
+        return mDataManager.getIsNotificationsEnabled() && NotificationManagerCompat.from(context).areNotificationsEnabled();
     }
 }

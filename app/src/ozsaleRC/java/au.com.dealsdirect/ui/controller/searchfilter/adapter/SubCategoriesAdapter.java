@@ -1,7 +1,5 @@
 package au.com.dealsdirect.ui.controller.searchfilter.adapter;
 
-import android.content.Context;
-import android.support.v4.util.Pair;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -11,7 +9,6 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -61,7 +58,7 @@ public class SubCategoriesAdapter extends RecyclerView.Adapter<SubCategoriesAdap
             holder.subCategoryTitle.setText(mData.get(position).getName());
 
 //            holder.subCategoryCheck.setVisibility( ? View.VISIBLE : View.GONE);
-            if (categoryItem.isSelected()) {
+            if (categoryItem != null && categoryItem.isSelected()) {
                 holder.subCategoryCheck.setVisibility(View.VISIBLE);
                 holder.itemView.setSelected(true);
             } else {
@@ -69,8 +66,8 @@ public class SubCategoriesAdapter extends RecyclerView.Adapter<SubCategoriesAdap
                 holder.itemView.setSelected(false);
             }
 
-//            List<GetCategoryTreeResponse> subCategoryItems = mData.get(position).getChildren();
-            List<GetCategoryTreeResponse> subCategoryItems = mCategoryMap.get(mData.get(position).getKey()).getChildren();
+            List<GetCategoryTreeResponse> subCategoryItems = mData.get(position).getChildren();
+//            List<GetCategoryTreeResponse> subCategoryItems = mCategoryMap.get(mData.get(position).getKey()).getChildren();
 
             if (subCategoryItems != null && !subCategoryItems.isEmpty()) {
                 mSubCategoryItemsAdapter = new SubCategoriesAdapter(mChosenCategoryKey, subCategoryItems, mSearchFilterPresenter, mCategoryMap);

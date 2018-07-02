@@ -13,4 +13,6 @@ public interface OurpaySMSVerificationMvpPresenter<V extends OurpaySMSVerificati
     void callVerificationCodeSend(String code, String phone, String countryCode);
 
     void callVerificationCodeConfirm(String phone, String countryCode, String code);
+
+    String getCountryId();
 }

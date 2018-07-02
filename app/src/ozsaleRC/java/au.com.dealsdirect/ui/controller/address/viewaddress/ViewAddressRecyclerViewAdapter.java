@@ -40,6 +40,7 @@ public class ViewAddressRecyclerViewAdapter extends RecyclerView.Adapter<ViewAdd
     private DeliveryAddress mDeliveryAddress;
     private ViewAddressMvpPresenter mPresenter;
     private int position;
+    private boolean isItemViewSelected;
 
     public ViewAddressRecyclerViewAdapter(
             Boolean calledFromCart,
@@ -72,13 +73,13 @@ public class ViewAddressRecyclerViewAdapter extends RecyclerView.Adapter<ViewAdd
     public void onBindViewHolder(MyAddressModuleViewHolder holder, int position) {
         this.position = position;
 
-        boolean isAddressSelected = mDeliveryAddress != null && mDeliveryAddress.equalsAddressItem(addressList.get(position));
+        isItemViewSelected = mDeliveryAddress != null && mDeliveryAddress.equalsAddressItem(addressList.get(position));
 
         holder.addressNumberTextView.setText(addressList.get(position).getAddressName());
         holder.addressTextView.setText(String.valueOf(addressList.get(position).getFullAddress()));
 
-        holder.itemView.setSelected(isCalledFromCart && isAddressSelected);
-        holder.addressNumberTextView.setSelected(isCalledFromCart && isAddressSelected);
+        holder.itemView.setSelected(isCalledFromCart && isItemViewSelected);
+        holder.addressNumberTextView.setSelected(isCalledFromCart && isItemViewSelected);
     }
 
     @Override
@@ -111,12 +112,12 @@ public class ViewAddressRecyclerViewAdapter extends RecyclerView.Adapter<ViewAdd
     public void onSetSwipeBackground(ViewAddressRecyclerViewAdapter.MyAddressModuleViewHolder holder, int position, int type) {
         if (type == SwipeableItemConstants.DRAWABLE_SWIPE_LEFT_BACKGROUND) {
             holder.mDeleteText.setVisibility(View.VISIBLE);
-            holder.mContainerView.setBackgroundColor(mContext.getResources().getColor(R.color.white));
+            holder.mContainerView.setBackgroundColor(mContext.getResources().getColor(isCalledFromCart && holder.itemView.isSelected() ? R.color.item_view_selected_color : R.color.white));
             holder.itemView.setBackground(mContext.getResources().getDrawable(R.drawable.bg_swipe_item_right, null));
         } else {
             holder.mDeleteText.setVisibility(View.GONE);
             holder.mContainerView.setBackgroundColor(mContext.getResources().getColor(R.color.transparent));
-            holder.itemView.setBackground(mContext.getResources().getDrawable(R.drawable.bg_swipe_item_neutral, null));
+            holder.itemView.setBackground(mContext.getResources().getDrawable(isItemViewSelected ? R.drawable.bg_checkout_options : R.drawable.bg_swipe_item_neutral, null));
         }
     }
 

@@ -15,6 +15,7 @@ import android.widget.TextView;
 
 import com.bluelinelabs.conductor.RouterTransaction;
 import com.bluelinelabs.conductor.changehandler.HorizontalChangeHandler;
+import com.google.gson.Gson;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -65,7 +66,7 @@ public class CategoriesController extends BaseController
     TextView mToolbarTitle;
 
     @BindView(R.id.partial_toolbar_left_view)
-    ImageButton mToolbarLeftButton;
+    TextView mToolbarLeftButton;
 
     @BindView(R.id.partial_toolbar_right_view)
     ImageButton mToolbarRightButton;
@@ -149,7 +150,7 @@ public class CategoriesController extends BaseController
             mRecyclerView.setMotionEventSplittingEnabled(false);
             mRecyclerView.setAdapter(mAdapter);
 
-            mSubCategoryAdapter = new SubCategoriesAdapter(mActivity, mCategories.get(0).getChildren() != null ?
+            mSubCategoryAdapter = new SubCategoriesAdapter(mActivity, !mCategories.isEmpty() && mCategories.get(0).getChildren() != null ?
                     mCategories.get(0).getChildren() : new ArrayList<>(), mPresenter,
                     mSubCategoryItemClickListener, mCategoryMap);
 
@@ -190,6 +191,7 @@ public class CategoriesController extends BaseController
         Bundle saleItemBundle = new BundleBuilder(new Bundle())
                 .putString(BundleKeys.SALEITEMS_TITLE, categoryKey)
                 .putString(BundleKeys.SALEITEMS_CATEGORY_MAP, categoryKey)
+                .putString(BundleKeys.SALEITEMS_KEY_CATEGORIES, new Gson().toJson(mCategories))
                 .putBoolean(BundleKeys.SALEITEMS_FROM_CATEGORY_SEARCH, false)
                 .putBoolean(BundleKeys.SALEITEMS_FROM_CATEGORIES, true)
                 .build();

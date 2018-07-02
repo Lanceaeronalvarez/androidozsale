@@ -56,11 +56,12 @@ import au.com.dealsdirect.ui.controller.account.AccountController;
 import au.com.dealsdirect.ui.controller.categories.CategoriesController;
 import au.com.dealsdirect.ui.controller.checkout.addpayment.AddPaymentController;
 import au.com.dealsdirect.ui.controller.checkout.checkout.CheckoutController;
+import au.com.dealsdirect.ui.controller.checkout.checkout.CheckoutMvpView;
 import au.com.dealsdirect.ui.controller.checkout.paymentsuccess.PaymentSuccessController;
 import au.com.dealsdirect.ui.controller.checkout.paymentsuccess.PaymentSuccessMvpView;
 import au.com.dealsdirect.ui.controller.gdpr.StrictConsentController;
 import au.com.dealsdirect.ui.controller.home.HomeController;
-import au.com.dealsdirect.ui.controller.login.LoginHostController;
+import au.com.dealsdirect.ui.controller.login.PopUpHostController;
 import au.com.dealsdirect.ui.controller.main.MainController;
 import au.com.dealsdirect.ui.controller.saleitemdetails.SaleItemDetailsController;
 import au.com.dealsdirect.ui.controller.saleitems.SaleItemsController;
@@ -72,6 +73,7 @@ import au.com.dealsdirect.ui.custom.CustomAlertDialog;
 import au.com.dealsdirect.utils.AppConstants;
 import au.com.dealsdirect.utils.BraintreeUtils;
 import au.com.dealsdirect.utils.BundleBuilder;
+import au.com.dealsdirect.utils.BundleKeys;
 import au.com.dealsdirect.utils.DialogUtils;
 import au.com.dealsdirect.utils.IntrospectionUtils;
 import au.com.dealsdirect.utils.NetworkUtils;
@@ -105,6 +107,7 @@ public class MainActivity extends BaseActivity implements MainMvpView {
     private MainController mMainController;
     private ShopsController mShopController;
     private CategoriesController mCategoriesController;
+    private SaleItemsController mSaleItemsController;
 
     private Router mHomeRouter;
     private Router mCategoriesRouter;
@@ -118,7 +121,6 @@ public class MainActivity extends BaseActivity implements MainMvpView {
     private boolean mIsFromBannerFilter = false;
     private boolean isTemplateTextsStored = false;
     private boolean mIsViewAttached = false;
-    private boolean mIsTablet = false;
     private int mVisaCheckoutActionType = -1;
 
     /* bug/gen-8065-reskin_bugfixing */
@@ -132,10 +134,6 @@ public class MainActivity extends BaseActivity implements MainMvpView {
         setContentView(R.layout.activity_main);
         mIsViewAttached = true;
         getActivityComponent().inject(this);
-
-        if (getResources().getBoolean(R.bool.is_tablet)) {
-            mIsTablet = true;
-        }
 
         setUnBinder(ButterKnife.bind(this));
 
@@ -162,8 +160,14 @@ public class MainActivity extends BaseActivity implements MainMvpView {
     public void onConfigurationChanged(Configuration newConfig) {
         super.onConfigurationChanged(newConfig);
 
-        if (mShopController != null)
+        /* bug/gen-8605_ozsale-reskin_bugfixing - four item row on mobile landscape to call onActivityResume */
+        if (mSaleItemsController != null) {
+            mSaleItemsController.onOrientationChanged();
+	}
+
+        if (mShopController != null){
             mShopController.onOrientationChange();
+	}
     }
 
     @Override
@@ -232,6 +236,8 @@ public class MainActivity extends BaseActivity implements MainMvpView {
 
     @Override
     public void onBackPressed() {
+        /* gen-8065_ozsale-reskin_bugfixing - dismiss keyboard when changing screen fix  */
+        hideKeyboard();
         if (mIsShowingStrictConsentUI && mRouter.getControllerWithTag(StrictConsentController.TAG)
                 instanceof StrictConsentController) {
             mRouter.getControllerWithTag(StrictConsentController.TAG).handleBack();
@@ -329,7 +335,10 @@ public class MainActivity extends BaseActivity implements MainMvpView {
                 GateKeeper.push(router, GateKeeper.Destination.LOGIN);
             }
         } else {
-            GateKeeper.setRoot(getHomeController().getPopUpHostRouter(), GateKeeper.Destination.LOGIN_HOST, RouterTransaction.with(LoginHostController.newInstance()).
+            Bundle bundle = new BundleBuilder(new Bundle())
+                    .putSerializable(BundleKeys.KEY_POP_UP_HOST_DESTINATION, GateKeeper.Destination.LOGIN)
+                    .build();
+            GateKeeper.setRoot(getHomeController().getPopUpHostRouter(), GateKeeper.Destination.POP_UP_HOST, RouterTransaction.with(new PopUpHostController(bundle)).
                     pushChangeHandler(new FadeChangeHandler()).popChangeHandler(new FadeChangeHandler()));
         }
     }
@@ -396,7 +405,6 @@ public class MainActivity extends BaseActivity implements MainMvpView {
         //3DS Check
         if (PaymentInfo.isThreeDSecureRequired() && !PaymentInfo.isThreeDSecureCalled()) {
             mPresenter.callGetPaymentMethodNonce(token);
-
             return;
         }
 
@@ -437,24 +445,34 @@ public class MainActivity extends BaseActivity implements MainMvpView {
                 PaymentInfo.getOurpay().setCanUse(false);
             }
 
-            mCheckoutRouter.pushController(RouterTransaction.with(new PaymentSuccessController(responseValue))
-                    .pushChangeHandler(new HorizontalChangeHandler())
-                    .popChangeHandler(new HorizontalChangeHandler()));
-
-            if (getMainController().getHomeController() != null) {
+            if (!mPresenter.isTablet()) {
+                mCheckoutRouter.pushController(RouterTransaction.with(new PaymentSuccessController(responseValue))
+                        .pushChangeHandler(new HorizontalChangeHandler())
+                        .popChangeHandler(new HorizontalChangeHandler()));
                 getMainController().getHomeController().showFifthTabController();
+
+            } else {
+                Bundle bundle = new BundleBuilder(new Bundle())
+                        .putSerializable(BundleKeys.KEY_POP_UP_HOST_DESTINATION, GateKeeper.Destination.PAYMENT_SUCCESS)
+                        .putString(BundleKeys.KEY_ADDRESS, responseValue.getD().getValue().getAddressString())
+                        .putDouble(BundleKeys.KEY_PRICE, responseValue.getD().getValue().getOrderInfoResult().getTotal())
+                        .putDouble(BundleKeys.KEY_SHIPPING_FEE, responseValue.getD().getValue().getOrderInfoResult().getShipping())
+                        .putString(BundleKeys.KEY_INVOICE, responseValue.getD().getValue().getInvoiceNo() == null ? String.valueOf(responseValue.getD().getValue().getTransactionInvoiceNo()) : responseValue.getD().getValue().getInvoiceNo())
+                        .putString(BundleKeys.KEY_ESTIMATED_DELIVERY, responseValue.getD().getValue().getOrderInfoResult().getEstimatedDeliveryText())
+                        .build();
+
+                GateKeeper.setRoot(getHomeController().getPopUpHostRouter(), GateKeeper.Destination.POP_UP_HOST, RouterTransaction.with(new PopUpHostController(bundle)).
+                        pushChangeHandler(new FadeChangeHandler()).popChangeHandler(new FadeChangeHandler()));
             }
 
         } else {
-
             Router currentRouter = getMainController().getHomeController().getCurrentRouter();
             Controller currentController = getMainController().getHomeController().getCurrentControllerOnRouter(currentRouter);
 
             CustomAlertDialog.showCustomAlertDialog(this, CustomAlertDialog.CustomDialogIconState.NEGATIVE, responseValue.getD().getMessage());
 
-            if (currentController instanceof CheckoutController) {
-                CheckoutController checkoutController = (CheckoutController) currentController;
-                checkoutController.loadCart();
+            if (currentController instanceof CheckoutMvpView) {
+                ((CheckoutMvpView) currentController).loadCart();
             }
         }
     }
@@ -693,6 +711,7 @@ public class MainActivity extends BaseActivity implements MainMvpView {
     }
 
     public void setShopController(ShopsController shopsController) {
+        getMainController().getHomeController().setShopRouterViewPagerDraggable();
         mShopController = shopsController;
     }
 
@@ -791,6 +810,9 @@ public class MainActivity extends BaseActivity implements MainMvpView {
                 break;
             case ROOT:
                 router.popToRoot();
+                if (mPresenter.isTablet()) {
+                    getHomeController().getPopUpHostRouter().handleBack();
+                }
                 break;
             default:
                 break;
@@ -1018,5 +1040,9 @@ public class MainActivity extends BaseActivity implements MainMvpView {
             mRouter.setRoot(RouterTransaction.with(SplashScreenController.newInstance())
                     .popChangeHandler(new VerticalChangeHandler()));
         }
+    }
+
+    public void setSaleItemsController(SaleItemsController mSaleItemsController) {
+        this.mSaleItemsController = mSaleItemsController;
     }
 }

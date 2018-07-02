@@ -13,7 +13,24 @@
 
         <include
             android:id="@+id/account_header"
-            layout="@layout/partial_toolbar_arrow" />
+            layout="@layout/partial_toolbar_text_option" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/bg_dialog">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="@dimen/padding_default_half"
+                android:layout_marginLeft="@dimen/padding_default"
+                android:layout_marginRight="@dimen/padding_default"
+                android:layout_marginTop="@dimen/padding_default"
+                android:text="@string/my_account"
+                android:textAllCaps="true"
+                android:textSize="@dimen/text_size_caption2" />
+        </LinearLayout>
 
         <android.support.v7.widget.RecyclerView
             android:id="@+id/account_recycler_view"
@@ -25,6 +42,9 @@
             android:focusableInTouchMode="true"
             android:overScrollMode="never" />
     </LinearLayout>
+
+    <View style="@style/verticalBorderView"
+        android:layout_width="@dimen/border_thick"/>
 
     <com.bluelinelabs.conductor.ChangeHandlerFrameLayout
         android:id="@+id/account_detail_container"

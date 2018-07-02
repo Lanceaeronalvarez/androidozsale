@@ -30,7 +30,11 @@ import android.support.v4.app.NotificationCompat;
 
 import com.google.android.gms.gcm.GoogleCloudMessaging;
 
+import javax.inject.Inject;
+
+import au.com.dealsdirect.DDApplication;
 import au.com.dealsdirect.R;
+import au.com.dealsdirect.data.DataManager;
 import au.com.dealsdirect.ui.main.MainActivity;
 import au.com.dealsdirect.utils.AppLogger;
 
@@ -44,13 +48,22 @@ import au.com.dealsdirect.utils.AppLogger;
  */
 public class GcmIntentService extends IntentService {
 
+    DataManager mDataManager;
+
     public GcmIntentService() {
         super("GcmIntentService");
     }
+
     public static final String TAG = "GCM";
 
     @Override
     protected void onHandleIntent(Intent intent) {
+
+        mDataManager = ((DDApplication) getApplication()).getComponent().getDataManager();
+
+        if (!mDataManager.getIsNotificationsEnabled()) {
+            return;
+        }
 
         Bundle extras = intent.getExtras();
         GoogleCloudMessaging gcm = GoogleCloudMessaging.getInstance(this);
@@ -69,7 +82,7 @@ public class GcmIntentService extends IntentService {
             } else if (GoogleCloudMessaging.MESSAGE_TYPE_DELETED.equals(messageType)) {
                 sendNotification("Deleted messages on server: " + extras.toString());
 
-            // If it's a regular GCM message, do some work.
+                // If it's a regular GCM message, do some work.
             } else if (GoogleCloudMessaging.MESSAGE_TYPE_MESSAGE.equals(messageType)) {
                 // This loop represents the service doing some work.
                 for (int i = 0; i < 5; i++) {
@@ -105,7 +118,7 @@ public class GcmIntentService extends IntentService {
         Uri notificationSoundURI = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
         String appName = getResources().getString(R.string.app_name);
 
-        Uri uriSound= RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
+        Uri uriSound = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
         NotificationCompat.Builder notificationBuilder = new NotificationCompat.Builder(this)
                 .setSmallIcon(R.drawable.ic_loader_logo)
                 .setLargeIcon(BitmapFactory.decodeResource(getResources(), R.mipmap.ic_launcher))

@@ -20,10 +20,11 @@
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="@dimen/margin_small"
-                android:layout_marginLeft="@dimen/activity_horizontal_margin"
-                android:layout_marginTop="@dimen/margin_small"
+                android:layout_marginBottom="@dimen/padding_default_half"
+                android:layout_marginStart="@dimen/padding_default"
+                android:layout_marginTop="@dimen/padding_default"
                 android:text="@string/my_orders"
+                android:textSize="@dimen/text_size_caption2"
                 android:textAllCaps="true" />
 
             <android.support.v7.widget.RecyclerView

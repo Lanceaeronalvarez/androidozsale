@@ -57,7 +57,7 @@ public class AccountController extends BaseController implements AccountMvpView,
     TextView mTitleTextView;
 
     @BindView(R.id.partial_toolbar_left_view)
-    ImageButton mLeftToolbarButton;
+    View mLeftToolbarButton;
 
     @BindView(R.id.partial_toolbar_right_view)
     ImageButton mRightToolbarButton;

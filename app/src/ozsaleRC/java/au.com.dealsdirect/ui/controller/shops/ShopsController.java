@@ -58,6 +58,7 @@ import static au.com.dealsdirect.utils.BundleKeys.SALEITEMS_BANNER_ID;
 import static au.com.dealsdirect.utils.BundleKeys.SALEITEMS_CATEGORY_MAP;
 import static au.com.dealsdirect.utils.BundleKeys.SALEITEMS_FROM_CATEGORY_DEEPLINK;
 import static au.com.dealsdirect.utils.BundleKeys.SALEITEMS_FROM_POSITION;
+import static au.com.dealsdirect.utils.BundleKeys.SALEITEMS_FROM_SHOP_SEARCH;
 import static au.com.dealsdirect.utils.BundleKeys.SALEITEMS_HEADER_IMAGE;
 import static au.com.dealsdirect.utils.BundleKeys.SALEITEMS_SALE_ID;
 import static au.com.dealsdirect.utils.BundleKeys.SALEITEMS_TITLE;
@@ -144,7 +145,9 @@ public class ShopsController extends BaseController implements ShopsMvpView, Ban
         mPresenter.onAttach(this);
         assert (mActivity) != null;
 
+        /* bug/gen-8065_ozsale-reskin_bugfixing - allow draggable viewpager */
         mActivity.getMainController().setViewpagerDraggable(true);
+
         mBannerClickCounter = 0;
         mActivity.setShopController(this);
         mShopPtrLayout.setPtrHandler(this);
@@ -178,6 +181,7 @@ public class ShopsController extends BaseController implements ShopsMvpView, Ban
     private void showProductList() {
 
         Bundle args = new Bundle();
+        args.putBoolean(SALEITEMS_FROM_SHOP_SEARCH, true);
         getRouter().pushController(RouterTransaction.with(new SaleItemsController(args))
                 .tag(getResources().getString(R.string.sale_items_controller_tag))
                 .pushChangeHandler(new HorizontalChangeHandler())
@@ -311,11 +315,11 @@ public class ShopsController extends BaseController implements ShopsMvpView, Ban
     public void refresh() {
         loadingInProgress = true;
 
-        if (mIsDeeplink)
+        if (mIsDeeplink) {
             mPresenter.loadShopsBanner(createDeepLinkBannerRequest(mCategoryName, mCategoryID, 0, 0));
-        else
+        } else {
             mPresenter.loadShopsBanner(createBannerRequest(mCategoryName, mCategoryID, bannerOffset, bannerLimit));
-
+	}
     }
 
     @Override
@@ -341,6 +345,7 @@ public class ShopsController extends BaseController implements ShopsMvpView, Ban
                 .putString(SALEITEMS_HEADER_IMAGE, imageUrl)
                 .putInt(SALEITEMS_FROM_POSITION, position)
                 .putString(SALEITEMS_CATEGORY_MAP, null)
+                .putBoolean(SALEITEMS_FROM_SHOP_SEARCH, false)
                 .build();
 
         if (mBannerClickCounter != 1) {
@@ -547,8 +552,8 @@ public class ShopsController extends BaseController implements ShopsMvpView, Ban
                 mShopsControllerToolbarLogo.setVisibility(View.GONE);
             }
             mShopsControllerToolbarTextView.setVisibility(View.VISIBLE);
-            mShopsControllerToolbarTextView.setText(getCategoryParentKey(getCategoryTreeResponse.getKey()));
             mShopsControllerHamburgerView.setImageDrawable(mActivity.getDrawable(R.drawable.ic_pink_chevron));
+            mShopsControllerToolbarTextView.setText(getCategoryParentKey(getCategoryTreeResponse.getKey()));
             shopsControllerSearchView.setVisibility(View.INVISIBLE);
             mActivity.setIsFromCategories(true);
         } else {
@@ -627,8 +632,8 @@ public class ShopsController extends BaseController implements ShopsMvpView, Ban
     public void loadShopBanners() {
         if (isAttached()) {
             mShopsControllerToolbarLogo.setVisibility(View.VISIBLE);
-            mShopsControllerToolbarTextView.setVisibility(View.GONE);
             mShopsControllerHamburgerView.setImageDrawable(mActivity.getDrawable(R.drawable.ic_action_menu));
+            mShopsControllerToolbarTextView.setVisibility(View.GONE);
             shopsControllerSearchView.setVisibility(View.VISIBLE);
         }
         GetCategoryTreeResponse shopCategory = new GetCategoryTreeResponse();
@@ -767,7 +772,7 @@ public class ShopsController extends BaseController implements ShopsMvpView, Ban
 
         if (categoryKey != null) {
 
-            CategoriesController categoriesController = ((MainActivity) getActivity()).getCategoriesController();
+            CategoriesController categoriesController = mActivity.getCategoriesController();
             String categoryMapKey = categoriesController.getCategoryKey(categoryId);
 
             mCategoryKey = categoryMapKey;

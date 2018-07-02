@@ -14,19 +14,20 @@
         android:layout_width="@dimen/placeholder_icon_width"
         android:layout_height="@dimen/placeholder_icon_height"
         android:layout_gravity="center"
+        android:visibility="@integer/no_items_placeholder_icon_visibility"
         android:src="@drawable/ic_payments" />
 
     <TextView
-        fontPath="@string/font_app_bold"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
         android:text="@string/welcome_remark_title_payments"
+        android:textColor="@color/colorAccent"
         android:textSize="@dimen/text_size_headline1" />
 
     <TextView
         fontPath="@string/font_app_light"
-        android:textColor="#9f9f9f"
+        android:textColor="@color/text_medium"
         android:textSize="@dimen/text_size_headline3"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

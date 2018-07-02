@@ -62,7 +62,7 @@ public class InviteSendController extends BasePullToRefreshController implements
     ImageView mFilterView;
 
     @BindView(R.id.partial_toolbar_left_view)
-    ImageView mArrowImage;
+    TextView mArrowImage;
 
     @BindView(R.id.controller_invite_buttons_layout)
     LinearLayout mSendInvitationContainer;

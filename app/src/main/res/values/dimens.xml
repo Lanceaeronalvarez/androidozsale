@@ -59,6 +59,7 @@
     <dimen name="border_thin">0.25dp</dimen>
     <dimen name="border_regular">1dp</dimen>
     <dimen name="border_thick">2dp</dimen>
+    <dimen name="border_heavy">5dp</dimen>
 
     <!-- Toolbar  -->
     <dimen name="partial_toolbar_button_width">40dp</dimen>
@@ -66,7 +67,7 @@
     <dimen name="partial_toolbar_button_padding">10dp</dimen>
     <dimen name="partial_toolbar_logo_width">170dp</dimen>
     <dimen name="tall_edit_text_height">144dp</dimen>
-    <dimen name="sale_details_appbar_height">160dp</dimen>
+    <dimen name="sale_details_appbar_height">112dp</dimen>
 
     <!-- Placeholder -->
     <dimen name="placeholder_padding">@dimen/padding_default</dimen>
@@ -101,7 +102,8 @@
     <dimen name="category_background_height">70dp</dimen>
     <dimen name="category_container_width">100dp</dimen>
     <dimen name="category_image_padding">15dp</dimen>
-    <dimen name="viewholder_subcategory_height">40dp</dimen>
+    <dimen name="viewholder_subcategory_width">30dp</dimen>
+    <dimen name="viewholder_subcategory_height">30dp</dimen>
 
     <!-- Facet Filters -->
     <dimen name="row_facet_check_icon_width">30dp</dimen>
@@ -111,6 +113,7 @@
     <!-- Invite -->
     <dimen name="invite_friends_padding">5dp</dimen>
     <dimen name="invite_friends_vouchers_image_height">250dp</dimen>
+
 
     <!-- Login -->
     <dimen name="login_drawable_close_height">5dp</dimen>
@@ -144,6 +147,7 @@
     <dimen name="product_detail_question_image_height">15dp</dimen>
     <dimen name="product_details_review_fab_width">40dp</dimen>
     <dimen name="product_details_review_fab_height">40dp</dimen>
+    <dimen name="product_details_subtitle_indent">3dp</dimen>
 
     <!-- Quantity Widget -->
     <dimen name="quantity_widget_loader_width">30dp</dimen>
@@ -182,10 +186,13 @@
     <dimen name="voucher_container_height">150dp</dimen>
     <dimen name="voucher_padding">50dp</dimen>
     <dimen name="voucher_text_padding">10dp</dimen>
-    <dimen name="viewholder_subcategory_width">40dp</dimen>
+    <dimen name="text_size_voucher_title">34sp</dimen>
+
 
     <!--Delivery Options-->
     <dimen name="ourpay_select_logo_width">160dp</dimen>
     <dimen name="ourpay_select_logo_height">20dp</dimen>
+    <!--Ourpay Select Checkbox size-->
+    <dimen name="ourpay_select_checkbox_size">20dp</dimen>
 
 </resources>

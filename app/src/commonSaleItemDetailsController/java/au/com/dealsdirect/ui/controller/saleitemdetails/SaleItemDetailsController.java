@@ -22,6 +22,7 @@ import android.view.animation.LinearInterpolator;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
@@ -137,7 +138,7 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
     @BindView(R.id.product_details_name_price_container)
     LinearLayout mProductPriceCategory;
     @BindView(R.id.about_pricing_container)
-    LinearLayout mProductPricing;
+    LinearLayout mProductPricingContainer;
     @BindView(R.id.product_about_container)
     LinearLayout mProductAboutContainer;
     @BindView(R.id.product_details_return_policy_container)
@@ -166,6 +167,12 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
     TextView mToolbarItemNameTextView;
     @BindView(R.id.toolbar_item_price)
     TextView mToolbarItemPriceTextView;
+    @BindView(R.id.controller_details_price_info)
+    ImageButton mPriceInfoButton;
+    @BindView(R.id.controller_details_old_price_info)
+    ImageButton mOldPriceInfoButton;
+    @BindView(R.id.product_about_old_pricing_text)
+    WebView mOldProductPricing;
 
     ImageView mImageViewToAnimate;
 
@@ -250,7 +257,7 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
     protected void onAttach(@NonNull View view) {
         super.onAttach(view);
         mPresenter.onAttach(this);
-        if (getBoolean(R.bool.is_ozsale) && !getBoolean(R.bool.is_tablet)) {
+        if (getBoolean(R.bool.is_ozsale_app) && !getBoolean(R.bool.is_tablet)) {
             ((AppBarLayout)mAppBarLayout).addOnOffsetChangedListener(this);
         }
     }
@@ -264,7 +271,7 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
     @Override
     public void onDetach(View view) {
         super.onDetach(view);
-        if (getBoolean(R.bool.is_ozsale) && !getBoolean(R.bool.is_tablet)) {
+        if (getBoolean(R.bool.is_ozsale_app) && !getBoolean(R.bool.is_tablet)) {
             ((AppBarLayout)mAppBarLayout).removeOnOffsetChangedListener(this);
         }
     }
@@ -364,6 +371,7 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
         String deliveryInformation = saleDetail.getDeliveryInformation();
         String shippingInformation = saleDetail.getShippingInformation();
         String shippingPricing = saleDetail.getPricing();
+        String rrpPricing = saleDetail.getRrpText();
         String returnPolicy = saleDetail.getReturnPolicy();
         String productAbout = saleDetail.getAttributes() == null ? "" : saleDetail.getAttributes().getBrandDescription() == null ? "" : saleDetail.getAttributes().getBrandDescription();
         String name = saleDetail.getName() == null ? "" : saleDetail.getName();
@@ -396,10 +404,9 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
                 mShippingDescText.loadData(mHtmlHeader + deliveryInformation + "<br/><br/>" + shippingInformation + mHtmlFooter, "text/html; charset=UTF-8", null);
             }
 
-            mProductPricing.setVisibility(View.VISIBLE);
-            mProductAboutPricing.setLayerType(View.LAYER_TYPE_SOFTWARE, null);
-            mProductAboutPricing.startAnimation(anim);
-            mProductAboutPricing.loadData(mHtmlHeader + shippingPricing + mHtmlFooter, "text/html; charset=UTF-8", null);
+            mPriceInfoButton.setOnClickListener(view -> toggleProductInfoWebView(shippingPricing, true));
+
+            mOldPriceInfoButton.setOnClickListener(view -> toggleProductInfoWebView(rrpPricing, false));
 
         }
 
@@ -505,16 +512,27 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
             mAddToCartButton.setText("Sold Out");
         }
     */
-
-        if (saleDetail.getOriginalPrice().getValue() <= 0) {
-            mProductPreviousPrice.setVisibility(View.GONE);
-            mProductPreviousPriceLabel.setVisibility(View.GONE);
-        } else {
-            mProductPreviousPrice.setVisibility(View.VISIBLE);
-            mProductPreviousPriceLabel.setVisibility(View.VISIBLE);
-        }
+        boolean isOldPriceInfoVisible = saleDetail.getOriginalPrice().getValue() <= 0;
+        mOldPriceInfoButton.setVisibility(isOldPriceInfoVisible ? View.GONE : View.VISIBLE);
+        mProductPreviousPrice.setVisibility(isOldPriceInfoVisible ? View.GONE : View.VISIBLE);
+        mProductPreviousPriceLabel.setVisibility(isOldPriceInfoVisible ? View.GONE : View.VISIBLE);
 
         mPresenter.loadOurpayData(saleDetail);
+    }
+
+    private void toggleProductInfoWebView(String shippingPricing, boolean isNewPricing) {
+        boolean isPricingContainerVisible = mProductPricingContainer.getVisibility() == View.VISIBLE;
+        if(isNewPricing) {
+            mProductAboutPricing.loadData(mHtmlHeader + shippingPricing + mHtmlFooter, "text/html; charset=UTF-8", null);
+            mProductAboutPricing.setLayerType(View.LAYER_TYPE_SOFTWARE, null);
+            mProductPricingContainer.setVisibility(isPricingContainerVisible && mProductAboutPricing.getVisibility() == View.VISIBLE ? View.GONE : View.VISIBLE);
+        } else {
+            mOldProductPricing.loadData(mHtmlHeader + shippingPricing + mHtmlFooter, "text/html; charset=UTF-8", null);
+            mOldProductPricing.setLayerType(View.LAYER_TYPE_SOFTWARE, null);
+            mProductPricingContainer.setVisibility(isPricingContainerVisible && mOldProductPricing.getVisibility() == View.VISIBLE ? View.GONE : View.VISIBLE);
+        }
+        mProductAboutPricing.setVisibility(isNewPricing ? View.VISIBLE: View.GONE);
+        mOldProductPricing.setVisibility(!isNewPricing? View.VISIBLE : View.GONE);
     }
 
     @Override
@@ -729,8 +747,7 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
     public void onOffsetChanged(AppBarLayout appBarLayout, int verticalOffset) {
         TypedValue tv = new TypedValue();
         mActivity.getTheme().resolveAttribute(android.R.attr.actionBarSize, tv, true);
-        int actionBarHeight = getResources().getDimensionPixelSize(tv.resourceId);
-        boolean showToolbar = Math.abs(verticalOffset) > ((AppBarLayout)mAppBarLayout).getTotalScrollRange() - (mProductDetailsTitleLayout.getHeight() - actionBarHeight);
+        boolean showToolbar = Math.abs(verticalOffset) >= ((AppBarLayout)mAppBarLayout).getTotalScrollRange();
         mProductDetailsToolbar.setVisibility(showToolbar ? View.VISIBLE : View.GONE);
         mProductDetailsTitleLayout.setVisibility(!showToolbar ? View.VISIBLE : View.GONE);
         mProductPriceCategory.setBackgroundColor(getColor(!showToolbar ? R.color.product_details_transparent : R.color.toolbar_active_skin));

@@ -59,7 +59,7 @@ public class LoginController extends BaseController implements LoginMvpView {
     @BindView(R.id.controller_login_forgot_password_text)
     TextView mForgotPasswordTextView;
     @BindView(R.id.partial_toolbar_left_view)
-    ImageButton mLeftButton;
+    TextView mLeftButton;
 
     @Nullable
     @BindView(R.id.controller_login_legalities_container)
@@ -156,7 +156,7 @@ public class LoginController extends BaseController implements LoginMvpView {
             }
         });
 
-        if(mLegalitiesContainer != null) {
+        if (mLegalitiesContainer != null) {
             mAboutUsTextView.setOnClickListener(v -> onLegalitiesClicked(BundleKeys.TEMPLATE_KEY_ABOUT_US, getString(R.string.account_about_us)));
             mTncTextView.setOnClickListener(v -> onLegalitiesClicked(BundleKeys.TEMPLATE_KEY_TNC, getString(R.string.account_tnc)));
             mPrivacyTextView.setOnClickListener(v -> onLegalitiesClicked(BundleKeys.TEMPLATE_KEY_PRIVACY, getString(R.string.account_privacy)));
@@ -182,9 +182,15 @@ public class LoginController extends BaseController implements LoginMvpView {
 
     @Override
     public boolean handleBack() {
-        if (!mActivity.isAuthorized() && mPresenter.isTablet()) {
-            mActivity.getMainController().getHomeController().resetVisibleContainer();
+        if (mPresenter.isTablet()) {
+            if (!mActivity.isAuthorized()) {
+                mActivity.getMainController().getHomeController().resetVisibleContainer();
+            }
+            mActivity.getHomeController().resetAccountRouter();
+
+            return true;
         }
+
         hideKeyboard();
 
         return super.handleBack();

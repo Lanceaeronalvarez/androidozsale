@@ -26,6 +26,7 @@ public class BundleKeys {
     public static final String SALEITEMS_CATEGORY_NAME = "SaleItemsController.SALEITEMS_CATEGORY_NAME";
     public static final String SALEITEMS_FROM_CATEGORY_DEEPLINK = "SaleItemsController.FROM_CATEGORY_LINK";
 
+    public static final String SALEITEMS_KEY_CATEGORIES = "SaleItemsController.KEY_CATEGORIES";
 
     //sale item details
     public static final String SALEITEMDETAILS_KEY_POSITION = "KEY_POSITION";
@@ -132,5 +133,8 @@ public class BundleKeys {
     public static final String DELIVERY_OPTIONS_LIST = "DeliveryOptionsController.LIST";
     public static final String DELIVERY_OPTIONS_DELIVERY_SERVICE_PACKAGE_DETAIL = "DeliveryOptionsController.DELIVERY_SERVICE_PACKAGE_DETAIL";
     public static final String DELIVERY_OPTIONS_DELIVERY_ADDRESS_ID = "DeliveryOptionsController.DELIVERY_ADDRESS_ID";
+
+    //PopUp Root Destination Key
+    public static final String KEY_POP_UP_HOST_DESTINATION = "PopUpHostController.Destination";
 
 }

@@ -988,6 +988,16 @@ public class AppDataManager implements DataManager {
     }
 
     @Override
+    public void setIsNotificationsEnabled(boolean isNotificationsEnabled) {
+        mPreferencesHelper.setIsNotificationsEnabled(isNotificationsEnabled);
+    }
+
+    @Override
+    public boolean getIsNotificationsEnabled() {
+        return mPreferencesHelper.getIsNotificationsEnabled();
+    }
+
+    @Override
     public void setEventUserId(String userId) {
         mPreferencesHelper.setEventUserId(userId);
     }

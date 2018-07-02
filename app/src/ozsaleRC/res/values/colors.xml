@@ -31,7 +31,7 @@
     <color name="bg_splash">#353535</color>
     <color name="bg_row_view_vouchers">@color/background_default</color>
     <color name="bg_dialog_default">@color/background_default</color>
-
+    <color name="item_view_selected_color">#E4E4E4</color>
     <color name="splash_background_color">@color/bg_splash</color>
 
     <!-- Buttons -->

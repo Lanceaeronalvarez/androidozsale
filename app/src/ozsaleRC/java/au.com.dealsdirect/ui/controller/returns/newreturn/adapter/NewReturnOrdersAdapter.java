@@ -5,6 +5,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.CompoundButton;
 
 import java.util.Arrays;
 import java.util.Collections;
@@ -15,6 +16,7 @@ import au.com.dealsdirect.R;
 import au.com.dealsdirect.data.network.model.returns.newreturn.NewReturnOrderList;
 import au.com.dealsdirect.ui.controller.returns.newreturn.NewReturnMvpPresenter;
 import au.com.dealsdirect.ui.controller.returns.newreturn.viewholder.NewReturnOrderViewHolder;
+import au.com.dealsdirect.ui.custom.ProductQuantityLayout;
 import au.com.dealsdirect.utils.ImageUtils;
 import au.com.dealsdirect.utils.LegacyStringImageUtils;
 import au.com.dealsdirect.utils.PriceUtils;
@@ -54,23 +56,52 @@ public class NewReturnOrdersAdapter extends RecyclerView.Adapter<NewReturnOrderV
     @Override
     public void onBindViewHolder(NewReturnOrderViewHolder holder, int position) {
 
-        if (position == mCurrentReturnList.size() - 1) {
-            holder.newReturnItemViewDivider.setVisibility(View.GONE);
-        }
-
+        String productId = mCurrentReturnList.get(position).getID();
         String productName = mCurrentReturnList.get(position).getItem();
         int productItemCount = mCurrentReturnList.get(position).getCount();
         String productPrice = PriceUtils.getPriceStringValue(mCurrentReturnList.get(position).getPrice());
         String productSubTotal = PriceUtils.getPriceStringValue(mCurrentReturnList.get(position).getSubtotal());
 
-        holder.newReturnItemCheckBox.setChecked(mDataChecked[position]);
-        holder.newReturnItemCheckBox.setOnClickListener(v -> checkBoxToggleState(position));
-
-
+        holder.newReturnItemQuantityText.setText(String.valueOf(productItemCount));
         holder.newReturnItemPriceTextView.setText(productPrice);
         holder.newReturnItemSubTotalTextView.setText(productSubTotal);
         holder.newReturnItemNameTextView.setText(productName);
-        holder.newReturnItemCountTextView.setText(String.valueOf(productItemCount));
+
+        holder.productQuantityLayout.setMax(productItemCount);
+        holder.productQuantityLayout.setQuantity(1);
+        holder.productQuantityLayout.setEditTextToNonEditable();
+
+        holder.newReturnItemCheckBox.setChecked(mDataChecked[position]);
+        holder.newReturnItemCheckBox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                mDataChecked[position] = isChecked;
+                int quantityVal = Integer.valueOf(holder.productQuantityLayout.getQuantity());
+                if(isChecked && quantityVal == 0){
+                    holder.productQuantityLayout.setQuantity(1);
+                }
+                mPresenter.updateReturnValue(productId, position, Integer.valueOf(holder.productQuantityLayout.getQuantity()), isChecked);
+            }
+        });
+
+        holder.productQuantityLayout.setOnQuantityChangeListener(new ProductQuantityLayout.onQuantityChangeListener() {
+            @Override
+            public void onQuantityIncrease(ProductQuantityLayout view, int value) {
+                mPresenter.updateReturnValue(productId, position, value, mDataChecked[position]);
+                holder.productQuantityLayout.resetLoaders();
+            }
+
+            @Override
+            public void onQuantityDecrease(ProductQuantityLayout view, int value) {
+                if(mDataChecked[position] && value == 0){
+                    mDataChecked[position] = false;
+                    notifyItemChanged(position);
+                } else {
+                    mPresenter.updateReturnValue(productId, position, value, mDataChecked[position]);
+                }
+                holder.productQuantityLayout.resetLoaders();
+            }
+        });
 
         String imageBrandId = mCurrentReturnList.get(position).getBrandID();
         String imageId = mCurrentReturnList.get(position).getImageID();
@@ -79,33 +110,14 @@ public class NewReturnOrdersAdapter extends RecyclerView.Adapter<NewReturnOrderV
         String imageUrl = LegacyStringImageUtils.generateImageUrl(imageBrandId, imageId, imageFileName);
 
         ImageUtils.loadImageImmediate(mContext, imageUrl, holder.newReturnItemImageView, null);
-
-    }
-
-    @Override
-    public long getItemId(int position) {
-        return super.getItemId(position);
-    }
-
-    public void checkBoxToggleState(int position) {
-        if (mDataChecked[position]) {
-            mDataChecked[position] = false;
-        } else {
-            mDataChecked[position] = true;
-        }
-        notifyDataSetChanged();
-    }
-
-    public Boolean[] getCheckedReturns() {
-        return mDataChecked;
     }
 
     @Override
     public int getItemCount() {
-        return mCurrentReturnList.size();
+        return mCurrentReturnList != null ? mCurrentReturnList.size() : 0;
     }
 
-    public List<NewReturnOrderList> getReturnList(){
+    public List<NewReturnOrderList> getData() {
         return mCurrentReturnList;
     }
 }

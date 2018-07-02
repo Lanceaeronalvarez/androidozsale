@@ -6,5 +6,5 @@ import au.com.dealsdirect.ui.base.MvpPresenter;
  * Created by smartwave on 11/06/2018.
  */
 
-public interface LoginHostMvpPresenter<V extends LoginHostMvpView> extends MvpPresenter<V> {
+public interface LoginHostMvpPresenter<V extends PopUpHostMvpView> extends MvpPresenter<V> {
 }

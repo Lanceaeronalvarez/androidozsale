@@ -1,6 +1,7 @@
 <resources>
     <bool name="is_ozsale_app">true</bool>
     <string name="error">error</string>
+    <string name="dummy_text">dummy text</string>
 
     <string name="log_in">Log In</string>
     <string name="login">Login</string>
@@ -34,7 +35,7 @@
     <string name="expiration_date">Expiration Date</string>
     <string name="dec_2025">Dec 2025</string>
     <string name="discover_the_products_you_love">discover the products you love</string>
-    <string name="shop">Shop</string>
+
     <string name="payment_schedule">Payment Schedule</string>
     <string name="ourpay">Ourpay</string>
     <string name="account">Account</string>
@@ -72,7 +73,10 @@
     <string name="mobile_verification">mobile verification</string>
     <string name="country_code">Country Code</string>
     <string name="australia_61">Australia (+61)</string>
-    <string name="phone_number">Phone Number</string>
+    <string name="mobile_number">Mobile Number</string>
+    <string name="ourpay_code_hint">Code</string>
+    <string name="enter_your_code_below">ENTER YOUR CODE BELOW</string>
+    <string name="invalid_phone_number">Invalid Number</string>
     <string name="send_sms_verification">Send SMS Verification</string>
     <string name="_202_555_0104">202 555 0104</string>
     <string name="fill_out_credit_card_details">fill out credit card details</string>
@@ -88,7 +92,7 @@
     <string name="products">products</string>
     <string name="sales">sales</string>
     <string name="ic_search">ic_search</string>
-    <string name="i_am_looking_for">I am looking for...</string>
+    <string name="i_am_looking_for">Search</string>
     <string name="cancel">Cancel</string>
     <string name="ic_down">ic_down</string>
     <string name="pay_less">Pay less&#160;</string>
@@ -107,7 +111,7 @@
     <string name="delivery_address">Delivery Address</string>
     <string name="delivery_method">DELIVERY METHOD</string>
     <string name="delivery_label">Delivery</string>
-    <string name="deliver_options_title">Delivery Options</string>
+    <string name="deliver_options_title">Add Delivery Method</string>
     <string name="choose_delivery_method">CHOOSE DELIVERY METHOD</string>
     <string name="you_currently_do_not_have_any_addresses">You do not currently have any address.</string>
     <string name="welcome_to_my_address">Welcome to My Address!</string>
@@ -138,7 +142,6 @@
     <string name="regent_u_7_1824_aubrey_st_surfers_paradise_qld_4170_0_123_224_32_34">Regent U 7, 1824 Aubrey St Surfers Paradise, QLD, 4170, +0 (123) 224-32-34</string>
     <string name="valid_thru_dec_2025">valid thru Dec 2025</string>
     <string name="_3456">**** **** **** 3456</string>
-    <string name="continue_shopping">Continue Shopping</string>
     <string name="total_payment">Total Payment</string>
     <string name="_350_00">$350.00</string>
     <string name="order_number">Order Number</string>
@@ -180,7 +183,6 @@
 
     <bool name="is_item_attribute_gone">true</bool>
     <bool name="is_checkout_orders_label_visible">true</bool>
-    <bool name="is_ozsale">true</bool>
 
     <string name="category_default">Categories</string>
     <string name="invite_friend_guide">Invite your friends to join Ozsale. Once your friends have
@@ -193,6 +195,13 @@
         currently in your account when you checkout your order. \n
     </string>
 
+    <string name="my_basket">Checkout</string>
+    <string name="browse">Category</string>
+
+    <!--Checkout strings-->
+    <string name="shop">Shop</string>
+    <string name="continue_shopping">Continue Shopping</string>
+    <string name="shop_now">Shop Now</string>
 
     <integer-array name="account_title_array">
         <item>@string/account_details</item>
@@ -206,8 +215,6 @@
     </integer-array>
 
     <integer-array name="account_options_sub_item_title_array">
-        <item>@string/account_language</item>
-        <item>@string/account_country</item>
         <item>@string/account_notification</item>
         <item>@string/account_clear_cookies_data</item>
     </integer-array>
@@ -226,4 +233,23 @@
         <item>@drawable/bg_account_languages</item>
         <item>@drawable/bg_account_country</item>
     </integer-array>
+
+    <!--Placeholder remarks-->
+    <string name="welcome_remark_subtitle_address">You do not currently have any address.</string>
+    <string name="welcome_remark_title_address">Welcome to My Addresses!</string>
+    <string name="welcome_to_my_vouchers">Welcome to My Vouchers!</string>
+    <string name="you_do_not_currently_have_any_vouchers">You do not currently have any vouchers.</string>
+    <string name="welcome_remark_title_contact_us">Welcome to Contact Us!</string>
+    <string name="welcome_remark_subtitle_contact_us">You do not currently have any messages.</string>
+    <string name="welcome_remark_title_orders">Welcome to My Orders!</string>
+    <string name="welcome_remark_subtitle_orders">You do not currently have any orders.</string>
+    <string name="welcome_remark_title_payments">Welcome to My Payments!</string>
+    <string name="your_cart_is_currently_empty">Welcome to Checkout!</string>
+    <string name="welcome_remark_subtitle_payments">You do not currently have any payment methods.</string>
+    <string name="you_have_not_added_any_items_in_your_shopping_cart">You do not currently have any items added.</string>
+    <string name="you_have_not_added_any_orders_for_return">You have not added any orders for return.</string>
+    <string name="no_orders_for_return">No orders for return</string>
+    <string name="welcome_to_my_returns">Welcome to My Returns!</string>
+    <string name="you_currently_do_not_have_any_returns">You do not currently have any returns.</string>
+
 </resources>

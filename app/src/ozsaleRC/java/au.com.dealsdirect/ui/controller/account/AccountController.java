@@ -13,6 +13,8 @@ import android.view.ViewGroup;
 import android.widget.ImageButton;
 import android.widget.TextView;
 
+import com.bluelinelabs.conductor.Controller;
+import com.bluelinelabs.conductor.ControllerChangeHandler;
 import com.bluelinelabs.conductor.Router;
 import com.bluelinelabs.conductor.RouterTransaction;
 import com.bluelinelabs.conductor.changehandler.FadeChangeHandler;
@@ -39,6 +41,7 @@ import au.com.dealsdirect.ui.controller.details.DetailsController;
 import au.com.dealsdirect.ui.controller.invite.InviteSendController;
 import au.com.dealsdirect.ui.controller.language.LanguageController;
 import au.com.dealsdirect.ui.controller.legalities.LegalitiesController;
+import au.com.dealsdirect.ui.controller.notification.NotificationController;
 import au.com.dealsdirect.ui.controller.orders.orders.OrdersController;
 import au.com.dealsdirect.ui.controller.returns.currentreturns.CurrentReturnsController;
 import au.com.dealsdirect.ui.controller.vouchers.View.ViewVouchersController;
@@ -83,6 +86,8 @@ public class AccountController extends BaseController implements AccountMvpView,
     private Router mAccountDetailRouter;
     private String mDefaultChosenAccountOption = "";
     private int mDefaultChosenAccountOptionPos = 0;
+    private boolean mIsChangeInProgress = false;
+    private ControllerChangeHandler.ControllerChangeListener mControllerChangeListener;
 
     private ArrayList<AccountItem> mAccountItems;
 
@@ -147,6 +152,20 @@ public class AccountController extends BaseController implements AccountMvpView,
         mLeftToolbarButton.setVisibility(View.INVISIBLE);
 
         initLoginDrawable();
+
+        mControllerChangeListener = new ControllerChangeHandler.ControllerChangeListener() {
+            @Override
+            public void onChangeStarted(@Nullable Controller to, @Nullable Controller from, boolean isPush, @NonNull ViewGroup container, @NonNull ControllerChangeHandler handler) {
+                mIsChangeInProgress = true;
+            }
+
+            @Override
+            public void onChangeCompleted(@Nullable Controller to, @Nullable Controller from, boolean isPush, @NonNull ViewGroup container, @NonNull ControllerChangeHandler handler) {
+                mIsChangeInProgress = false;
+            }
+        };
+
+        getDisplayRouter().addChangeListener(mControllerChangeListener);
     }
 
     private void createAccountItems() {
@@ -168,17 +187,12 @@ public class AccountController extends BaseController implements AccountMvpView,
 
             if (title.equals(getString(R.string.account_options))) {
                 List optionsArray = createSubAccountItems(R.array.account_options_sub_item_title_array);
-                /* gen-8003_ozsale-check_country_option - check if multicountry, remove option otherwise */
-                if (!mPresenter.isMultiCountry())
-                    optionsArray.remove(1);
-
                 newAccountItem = new AccountItem(i, title, optionsArray);
             } else {
                 newAccountItem = new AccountItem(i, title, Collections.emptyList());
             }
             mAccountItems.add(newAccountItem);
         }
-
 
 //        TypedArray drawable = mActivity.getResources().obtainTypedArray(R.array.account_drawable_array);
 //        drawables = new ArrayList<>();
@@ -203,6 +217,7 @@ public class AccountController extends BaseController implements AccountMvpView,
     @Override
     public void onDetach(View view) {
         mPresenter.onDetach();
+        getDisplayRouter().removeChangeListener(mControllerChangeListener);
         super.onDetach(view);
     }
 
@@ -325,11 +340,21 @@ public class AccountController extends BaseController implements AccountMvpView,
         }
     }
 
+    @Override
     public void showCountry() {
         if (!mPresenter.isTablet()) {
             GateKeeper.push(getDisplayRouter(), GateKeeper.Destination.COUNTRY, new HorizontalChangeHandler(), new HorizontalChangeHandler());
         } else {
             GateKeeper.setRoot(getDisplayRouter(), GateKeeper.Destination.COUNTRY, RouterTransaction.with(CountryController.newInstance()));
+        }
+    }
+
+    @Override
+    public void showNotification() {
+        if (!mPresenter.isTablet()) {
+            GateKeeper.push(getDisplayRouter(), GateKeeper.Destination.NOTIFICATION, new HorizontalChangeHandler(), new HorizontalChangeHandler());
+        } else {
+            GateKeeper.setRoot(getDisplayRouter(), GateKeeper.Destination.NOTIFICATION, RouterTransaction.with(NotificationController.newInstance()));
         }
     }
 
@@ -424,7 +449,7 @@ public class AccountController extends BaseController implements AccountMvpView,
 
     @Override
     public boolean isChangeInProgress() {
-        return false;
+        return mIsChangeInProgress;
     }
 
     @Override

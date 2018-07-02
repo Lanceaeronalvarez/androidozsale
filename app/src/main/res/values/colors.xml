@@ -179,6 +179,7 @@
     <color name="ourpay_panel_header_price">#eb5424</color>
     <color name="ourpay_panel_dark_gray">#FF6F7070</color>
     <color name="product_details_button_overlay">#a0ffffff</color>
+    <color name="item_view_selected_color">@color/background_default</color>
 
     <color name="toggle_switch_positive">#60E67B</color>
     <color name="toggle_switch_negative">#de1b1b</color>
