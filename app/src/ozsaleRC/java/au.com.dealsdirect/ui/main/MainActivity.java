@@ -32,6 +32,7 @@ import com.braintreepayments.api.exceptions.UnexpectedException;
 import com.braintreepayments.api.exceptions.UpgradeRequiredException;
 import com.braintreepayments.api.interfaces.BraintreeResponseListener;
 import com.braintreepayments.api.models.CardBuilder;
+import com.braintreepayments.api.models.PayPalRequest;
 import com.braintreepayments.api.models.PaymentMethodNonce;
 import com.braintreepayments.api.models.VisaCheckoutNonce;
 import com.braintreepayments.cardform.view.CardForm;
@@ -163,11 +164,11 @@ public class MainActivity extends BaseActivity implements MainMvpView {
         /* bug/gen-8605_ozsale-reskin_bugfixing - four item row on mobile landscape to call onActivityResume */
         if (mSaleItemsController != null) {
             mSaleItemsController.onOrientationChanged();
-	}
+        }
 
-        if (mShopController != null){
+        if (mShopController != null) {
             mShopController.onOrientationChange();
-	}
+        }
     }
 
     @Override
@@ -583,7 +584,15 @@ public class MainActivity extends BaseActivity implements MainMvpView {
     }
 
     public void startPaypalPayment() {
-        PayPal.authorizeAccount(mBraintreeFragment);
+//        PayPal.authorizeAccount(mBraintreeFragment);
+        PayPalRequest request = new PayPalRequest();
+        PayPal.requestBillingAgreement(getBraintreeFragment(), request);
+    }
+
+    public void startPaypalCreditPayment(String totalCost) {
+        PayPalRequest request = new PayPalRequest(totalCost)
+                .offerCredit(true); // Offer PayPal Credit
+        PayPal.requestOneTimePayment(getBraintreeFragment(), request);
     }
 
     @Override

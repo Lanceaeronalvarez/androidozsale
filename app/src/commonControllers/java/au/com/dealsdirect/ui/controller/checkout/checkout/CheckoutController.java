@@ -171,6 +171,8 @@ public class CheckoutController extends VisaCheckoutController implements Checko
     Button mPayButton;
     @BindView(R.id.partial_checkout_button_paypal)
     RelativeLayout mPaypalButton;
+    @BindView(R.id.partial_checkout_button_paypal_credit)
+    RelativeLayout mPaypalCreditButton;
     @BindView(R.id.partial_checkout_button_masterpass)
     RelativeLayout mMasterpassButton;
     @BindView(R.id.partial_checkout_ourpay_panel_holder)
@@ -310,6 +312,12 @@ public class CheckoutController extends VisaCheckoutController implements Checko
                 .throttleFirst(1000, TimeUnit.MILLISECONDS)
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(action -> onPaypalButtonClick()));
+
+        mClickListeners.add(RxView.clicks(mPaypalCreditButton)
+                .throttleFirst(1000, TimeUnit.MILLISECONDS)
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(action -> onPaypalCreditButtonClick()));
+
         mClickListeners.add(RxView.clicks(mMasterpassButton)
                 .throttleFirst(1000, TimeUnit.MILLISECONDS)
                 .observeOn(AndroidSchedulers.mainThread())
@@ -403,6 +411,7 @@ public class CheckoutController extends VisaCheckoutController implements Checko
 
         mPayButton.setOnClickListener(view1 -> onPayButtonClick());
         mPaypalButton.setOnClickListener(view2 -> onPaypalButtonClick());
+        mPaypalCreditButton.setOnClickListener(view2 -> onPaypalCreditButtonClick());
         mMasterpassButton.setOnClickListener(view3 -> onMasterpassButtonClick());
 
         //Code for returning to checkout, call reload
@@ -728,6 +737,7 @@ public class CheckoutController extends VisaCheckoutController implements Checko
                 mVisaCheckoutButton.setVisibility(View.GONE);
                 mPayButton.setVisibility(View.GONE);
                 mPaypalButton.setVisibility(View.VISIBLE);
+                mPaypalCreditButton.setVisibility(View.GONE);
 
                 if (mSelectedDeliveryOption != null && OurpayTemplateText.DeliveryOptions.OURPAYSELECT.equalsName(mSelectedDeliveryOption.getDeliveryOptions().get(0))) {
                     //set valid payment method for OPS
@@ -737,6 +747,7 @@ public class CheckoutController extends VisaCheckoutController implements Checko
             } else {
                 showPaymentButtons();
                 mPaypalButton.setVisibility(View.GONE);
+                mPaypalCreditButton.setVisibility(View.GONE);
             }
 
             mMasterpassButton.setVisibility(View.GONE);
@@ -910,6 +921,26 @@ public class CheckoutController extends VisaCheckoutController implements Checko
         }
     }
 
+    private void onPaypalCreditButtonClick() {
+        if (!isAddressValid()) {
+            showAddAddressController();
+            return;
+        }
+
+        RxBus.instance().post(IntrospectionUtils.EVENT_PAY);
+
+        if (mActivity.isBraintreeInitialized()) {
+            if (mActivity.getPaymentMethodSelected() == null) {
+                mActivity.startPaypalCreditPayment(String.valueOf(mValue.getSummary().getTotal()));
+            } else {
+                PaymentInfo.setPaymentType(PaymentInfo.TYPE_BRAINTREE);
+                mActivity.callCreatePaymentTransaction(PaymentInfo.getPaymentType(), "", PaymentInfo.getPaymentMethod().getToken());
+                mPresenter.facebookInitiatedCheckout(PaymentInfo.getPaymentType(), mItemList.size(), mValue.getSummary().getTotal());
+            }
+        }
+
+    }
+
     private void onMasterpassButtonClick() {
 
         if (!isAddressValid()) {
@@ -1031,6 +1062,8 @@ public class CheckoutController extends VisaCheckoutController implements Checko
         mPaypalButton.setVisibility(isOurPaySelectDeliveryMethod() ? View.GONE : View.VISIBLE);
         mMasterpassButton.setVisibility(isOurPaySelectDeliveryMethod() ? View.GONE : View.VISIBLE);
         mVisaCheckoutButton.setVisibility(isOurPaySelectDeliveryMethod() || mActivity.getPaymentMethodSelected() != null ? View.GONE : View.VISIBLE);
+//        mPaypalCreditButton.setVisibility(mPresenter.isPaypalCreditEnabled() ? View.VISIBLE : View.GONE);
+        mPaypalCreditButton.setVisibility(View.VISIBLE);
     }
 
     @Override
