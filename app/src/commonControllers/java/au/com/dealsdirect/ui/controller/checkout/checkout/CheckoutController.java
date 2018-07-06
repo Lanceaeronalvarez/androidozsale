@@ -1062,8 +1062,7 @@ public class CheckoutController extends VisaCheckoutController implements Checko
         mPaypalButton.setVisibility(isOurPaySelectDeliveryMethod() ? View.GONE : View.VISIBLE);
         mMasterpassButton.setVisibility(isOurPaySelectDeliveryMethod() ? View.GONE : View.VISIBLE);
         mVisaCheckoutButton.setVisibility(isOurPaySelectDeliveryMethod() || mActivity.getPaymentMethodSelected() != null ? View.GONE : View.VISIBLE);
-//        mPaypalCreditButton.setVisibility(mPresenter.isPaypalCreditEnabled() ? View.VISIBLE : View.GONE);
-        mPaypalCreditButton.setVisibility(View.VISIBLE);
+        mPaypalCreditButton.setVisibility(mPresenter.isPaypalCreditEnabled() ? View.VISIBLE : View.GONE);
     }
 
     @Override
