@@ -20,4 +20,6 @@ public interface AddPaymentMvpPresenter <V extends MvpView> extends MvpPresenter
                                    double price);
 
     boolean isMasterPassEnabled();
+
+    boolean isPaypalCreditEnabled();
 }

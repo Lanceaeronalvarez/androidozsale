@@ -109,4 +109,9 @@ public class AddPaymentPresenter<V extends AddPaymentMvpView> extends BasePresen
     public boolean isMasterPassEnabled() {
         return getDataManager().isMasterpassEnabled();
     }
+
+    @Override
+    public boolean isPaypalCreditEnabled() {
+        return getDataManager().isPaypalCreditEnabled();
+    }
 }
