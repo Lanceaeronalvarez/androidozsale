@@ -219,6 +219,7 @@ public class AppDataManager implements DataManager {
 
     @Override
     public Observable<GetPublicPaymentToken.ResponseValue> callGetPublicPaymentToken(String countryId, String languageId) {
+
         return mApiHelper.callGetPublicPaymentToken(countryId, languageId);
     }
 

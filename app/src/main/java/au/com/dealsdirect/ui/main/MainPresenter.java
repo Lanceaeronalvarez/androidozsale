@@ -67,6 +67,8 @@ import okhttp3.Cookie;
 
 public class MainPresenter<V extends MainMvpView> extends BasePresenter<V> implements MainMvpPresenter<V> {
 
+    GNotification gNotification;
+
     public static final String KEY_CHECKOUT_MYPAY_PAY_EXCEED_LIMIT = "_checkoutMyPayPayExceedLimit";
     public static final String KEY_CHECKOUT_MYPAY_PAY_INVALID_PAYMENT_METHOD = "_checkoutMyPayPayInvalidPaymentMethod";
     public static final String KEY_CHECKOUT_MYPAY_PAY_OUT_OF_RANGE_MOBILE_APP = "_checkoutMyPayPayOutOfRangeMobileApp";
@@ -78,18 +80,23 @@ public class MainPresenter<V extends MainMvpView> extends BasePresenter<V> imple
     public static final String KEY_OURPAY_TC_VALIDATION_FAILED = "_OurPayTCValidationFailed";
     public static final String KEY_PAYMENT_SCHEDULE = "_PaymentSchedule";
     public static final String KEY_PERSONALISATION_VALIDATION = "_PleaseFillPersonalization";
+
     //    DELIVERY OPTIONS/OURPAY SELECT
     public static final String KEY_DELIVERYOPTION_OPS_FREE = "_Free";
     public static final String KEY_DELIVERYOPTION_OPS_TITLE = "_DeliveryOption_OURPAYSELECT_Title";
     public static final String KEY_DELIVERYOPTION_OPS_DESCRIPTION = "_DeliveryOption_OURPAYSELECT_Description";
+
     public static final String KEY_DELIVERYOPTION_EXPRESS_TITLE = "_DeliveryOption_EXPRESS_Title";
     public static final String KEY_DELIVERYOPTION_EXPRESS_DESCRIPTION = "_DeliveryOption_EXPRESS_Description";
     public static final String KEY_DELIVERYOPTION_STANDARD_TITLE = "_DeliveryOption_STANDARD_Title";
+
     public static final String KEY_OURPAY_OPS_DESCRIPTION_REMAINING = "_Ops_description_remaining";
     public static final String KEY_OURPAY_OPS_INFO_REMAINING_BEFORE_PURCHASE = "_Ops_info_remaining_before_purchase";
     public static final String KEY_OURPAY_OPS_INFO_REMAINING_BEFORE_PURCHASE_FREE_DELIVERY = "_Ops_info_remaining_before_purchase_free_delivery";
+
     public static final String KEY_OURPAY_OPS_TNC_HEADER = "_OurPaySelectTermsAndConditionsHeader";
     public static final String KEY_OURPAY_OPS_TNC_BODY = "_OurPaySelectTermsAndConditionsBody";
+
     /* June 22, 2018 - GDPR Template Text Keys */
     public static final String KEY_CONSENT_CONTINUE_TEXT = "_consentContinueText";
     public static final String KEY_CONSENT_WITH_REGISTRATION_TERMS_TEXT = "_consentWithTCText";
@@ -98,6 +105,7 @@ public class MainPresenter<V extends MainMvpView> extends BasePresenter<V> imple
     public static final String KEY_CONSENT_SHORT_TEXT = "ConsentShortTextPTNameV1";
     public static final String KEY_CONSENT_FULL_TEXT = "ConsentFullTextPTNameV1";
     public static final String KEY_CONSENT_TERMS_AND_CONDITION = "TermsAndConditions_Text";
+
     private static String[] templateTextsKeys = {
             KEY_CHECKOUT_MYPAY_PAY_EXCEED_LIMIT, //0
             KEY_CHECKOUT_MYPAY_PAY_INVALID_PAYMENT_METHOD, //1
@@ -130,38 +138,8 @@ public class MainPresenter<V extends MainMvpView> extends BasePresenter<V> imple
             KEY_CONSENT_FULL_TEXT,
             KEY_CONSENT_TERMS_AND_CONDITION
     };
-    GNotification gNotification;
-    private Consumer<GetAppSettings.ResponseValue> mAppSettingsAcceptCallback = new Consumer<GetAppSettings.ResponseValue>() {
-        @Override
-        public void accept(@NonNull GetAppSettings.ResponseValue responseValue) throws Exception {
-            if (!isViewAttached()) {
-                return;
-            }
 
-            com.mysale.genie.utility.config.model.getappsettings.Value value = responseValue.d.getValue();
-            if (value != null) {
-                getDataManager().setIsPaypalEnabled(value.getPayments().getPayPal().getEnabled());
-                getDataManager().setIsMasterpassEnabled(value.getPayments().getMasterPass().getEnabled());
-                getDataManager().setIsAmexEnabled(value.getPayments().getAmExpress().getEnabled());
-                getDataManager().setIsKountEnabled(value.getPayments().getKount().getEnabled());
-                getDataManager().setKountMerchantId(value.getPayments().getKount().getMerchantID());
-                getDataManager().setSearchMaxPrice(value.getSearch().getMaxPrice());
-                getDataManager().setAccessAnonymousEnabled(value.getAccess().getAnonymousEnabled());
-                getDataManager().setIsMyPayEnabled(value.getPayments().getMyPay().getEnabled());
-                getDataManager().setIsPaypalCreditEnabled(value.getPayments().getBrainTree().isPaypalCreditEnabled());
 
-                if (value.getPayments().getVisaCheckout() != null) {
-                    getDataManager().setIsVisaCheckoutEnabled(value.getPayments().getVisaCheckout().getVisaCheckoutEnabled());
-                    // force true meanwhile
-//                    getDataManager().setIsVisaCheckoutEnabled(true);
-                    getDataManager().setVisaCheckoutApiKey(value.getPayments().getVisaCheckout().getVisaCheckoutApiKey());
-                    getDataManager().setVisaCheckoutApiUrl(value.getPayments().getVisaCheckout().getVisaCheckoutApiUrl());
-                    getDataManager().setVisaCheckoutProviderType(value.getPayments().getVisaCheckout().getVisaCheckoutProviderType());
-                }
-            }
-
-        }
-    };
     private Consumer<Throwable> mAppSettingsThrowableCallback = new Consumer<Throwable>() {
         @Override
         public void accept(@NonNull Throwable throwable) throws Exception {
@@ -187,19 +165,6 @@ public class MainPresenter<V extends MainMvpView> extends BasePresenter<V> imple
 
         super(dataManager, schedulerProvider, compositeDisposable);
         gNotification = new GNotification(getDataManager(), getSchedulerProvider(), getCompositeDisposable());
-    }
-
-    private static JSONArray constructArrayToJsonArray(String[] templateTextsKeys) {
-
-        JSONArray jsonArray = new JSONArray();
-        for (int i = 0; i < templateTextsKeys.length; i++) {
-            try {
-                jsonArray.put(i, templateTextsKeys[i]);
-            } catch (JSONException e) {
-                e.printStackTrace();
-            }
-        }
-        return jsonArray;
     }
 
     @Override
@@ -296,6 +261,39 @@ public class MainPresenter<V extends MainMvpView> extends BasePresenter<V> imple
                 .observeOn(getSchedulerProvider().ui())
                 .subscribe(mAppSettingsAcceptCallback, mAppSettingsThrowableCallback));
     }
+
+    private Consumer<GetAppSettings.ResponseValue> mAppSettingsAcceptCallback = new Consumer<GetAppSettings.ResponseValue>() {
+        @Override
+        public void accept(@NonNull GetAppSettings.ResponseValue responseValue) throws Exception {
+            if (!isViewAttached()) {
+                return;
+            }
+
+            com.mysale.genie.utility.config.model.getappsettings.Value value = responseValue.d.getValue();
+            if (value != null) {
+                getDataManager().setIsPaypalEnabled(value.getPayments().getPayPal().getEnabled());
+                getDataManager().setIsMasterpassEnabled(value.getPayments().getMasterPass().getEnabled());
+                getDataManager().setIsAmexEnabled(value.getPayments().getAmExpress().getEnabled());
+                getDataManager().setIsKountEnabled(value.getPayments().getKount().getEnabled());
+                getDataManager().setKountMerchantId(value.getPayments().getKount().getMerchantID());
+                getDataManager().setSearchMaxPrice(value.getSearch().getMaxPrice());
+                getDataManager().setAccessAnonymousEnabled(value.getAccess().getAnonymousEnabled());
+                getDataManager().setIsMyPayEnabled(value.getPayments().getMyPay().getEnabled());
+                getDataManager().setIsPaypalCreditEnabled(value.getPayments().getBrainTree().isPaypalCreditEnabled());
+
+                if (value.getPayments().getVisaCheckout() != null) {
+                    getDataManager().setIsVisaCheckoutEnabled(value.getPayments().getVisaCheckout().getVisaCheckoutEnabled());
+                    // force true meanwhile
+//                    getDataManager().setIsVisaCheckoutEnabled(true);
+                    getDataManager().setVisaCheckoutApiKey(value.getPayments().getVisaCheckout().getVisaCheckoutApiKey());
+                    getDataManager().setVisaCheckoutApiUrl(value.getPayments().getVisaCheckout().getVisaCheckoutApiUrl());
+                    getDataManager().setVisaCheckoutProviderType(value.getPayments().getVisaCheckout().getVisaCheckoutProviderType());
+                }
+            }
+
+        }
+    };
+
 
     @Override
     public void callGetAppSettingsSection(Context context) {
@@ -678,6 +676,7 @@ public class MainPresenter<V extends MainMvpView> extends BasePresenter<V> imple
         );
     }
 
+
     @Override
     public void createPaymentTransactionVco(VisaPaymentSummary visaPaymentSummary) {
         getMvpView().showLoading();
@@ -734,6 +733,7 @@ public class MainPresenter<V extends MainMvpView> extends BasePresenter<V> imple
                 })
         );
     }
+
 
     @Override
     public void createPaymentMethod(String deviceData, String paymentNonce, String paymentType) {
@@ -880,6 +880,7 @@ public class MainPresenter<V extends MainMvpView> extends BasePresenter<V> imple
         );
     }
 
+
     @Override
     public void callGetTemplateTexts() {
         GetTemplateTextsRequest getTemplateTextRequest = new GetTemplateTextsRequest();
@@ -922,6 +923,20 @@ public class MainPresenter<V extends MainMvpView> extends BasePresenter<V> imple
     @Override
     public boolean isAuthorized() {
         return getDataManager().isAuthorized();
+    }
+
+
+    private static JSONArray constructArrayToJsonArray(String[] templateTextsKeys) {
+
+        JSONArray jsonArray = new JSONArray();
+        for (int i = 0; i < templateTextsKeys.length; i++) {
+            try {
+                jsonArray.put(i, templateTextsKeys[i]);
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+        }
+        return jsonArray;
     }
 
     public boolean getIsMyPayEnabled() {
