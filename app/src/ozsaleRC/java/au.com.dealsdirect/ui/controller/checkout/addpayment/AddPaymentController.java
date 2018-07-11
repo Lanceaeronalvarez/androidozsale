@@ -176,9 +176,9 @@ public class AddPaymentController extends VisaCheckoutController implements AddP
 
         mButtonPaypalCredit.setOnClickListener(action ->{
             onPaypalCreditSubmit();
-//            if(isFromCart) {
-//                mCheckoutMvpView.setIsPaymentMethodChanged(true);
-//            }
+            if(isFromCart) {
+                mCheckoutMvpView.setIsPaymentMethodChanged(true);
+            }
         });
 
         if (mActivity.isBraintreeInitialized()) {
