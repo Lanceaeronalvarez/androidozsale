@@ -140,24 +140,6 @@ public class MainPresenter<V extends MainMvpView> extends BasePresenter<V> imple
     };
 
 
-    private Consumer<Throwable> mAppSettingsThrowableCallback = new Consumer<Throwable>() {
-        @Override
-        public void accept(@NonNull Throwable throwable) throws Exception {
-            if (!isViewAttached()) {
-                return;
-            }
-
-            getMvpView().hideLoading();
-            getMvpView().onError(throwable.getMessage());
-
-            // handle load accounts error here
-            if (throwable instanceof ANError) {
-                ANError anError = (ANError) throwable;
-                handleApiError(anError);
-            }
-        }
-    };
-
     @Inject
     public MainPresenter(DataManager dataManager,
                          SchedulerProvider schedulerProvider,
@@ -291,6 +273,24 @@ public class MainPresenter<V extends MainMvpView> extends BasePresenter<V> imple
                 }
             }
 
+        }
+    };
+
+    private Consumer<Throwable> mAppSettingsThrowableCallback = new Consumer<Throwable>() {
+        @Override
+        public void accept(@NonNull Throwable throwable) throws Exception {
+            if (!isViewAttached()) {
+                return;
+            }
+
+            getMvpView().hideLoading();
+            getMvpView().onError(throwable.getMessage());
+
+            // handle load accounts error here
+            if (throwable instanceof ANError) {
+                ANError anError = (ANError) throwable;
+                handleApiError(anError);
+            }
         }
     };
 

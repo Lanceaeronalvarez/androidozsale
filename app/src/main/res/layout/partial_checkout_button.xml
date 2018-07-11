@@ -76,7 +76,7 @@
                 android:id="@+id/partial_checkout_button_paypal_credit"
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/button_height_regular"
-                android:layout_marginBottom="10dp"
+                android:layout_marginBottom="@dimen/margin_small"
                 android:background="@drawable/bg_paypal_credit_button"
                 android:clickable="true"
                 android:visibility="gone"
@@ -92,7 +92,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_gravity="center"
-                        android:layout_marginStart="10dp"
+                        android:layout_marginStart="@dimen/margin_small"
                         android:src="@drawable/ic_paypal_credit"
                         tools:ignore="ContentDescription" />
 
