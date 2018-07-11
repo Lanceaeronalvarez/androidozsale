@@ -219,7 +219,8 @@ public class AppDataManager implements DataManager {
 
     @Override
     public Observable<GetPublicPaymentToken.ResponseValue> callGetPublicPaymentToken(String countryId, String languageId) {
-        return mApiHelper.callGetPublicPaymentToken(countryId,languageId);
+
+        return mApiHelper.callGetPublicPaymentToken(countryId, languageId);
     }
 
     @Override
@@ -995,6 +996,16 @@ public class AppDataManager implements DataManager {
     @Override
     public boolean getIsNotificationsEnabled() {
         return mPreferencesHelper.getIsNotificationsEnabled();
+    }
+
+    @Override
+    public void setIsPaypalCreditEnabled(boolean isPaypalCreditEnabled) {
+        mPreferencesHelper.setIsPaypalCreditEnabled(isPaypalCreditEnabled);
+    }
+
+    @Override
+    public boolean isPaypalCreditEnabled() {
+        return mPreferencesHelper.isPaypalCreditEnabled();
     }
 
     @Override

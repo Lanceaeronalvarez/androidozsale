@@ -59,6 +59,7 @@ public class AppPreferencesHelper implements PreferencesHelper {
     private static final String PAYMENT_KOUNT_ENABLED = "app_kount_enabled";
     private static final String PAYMENT_KOUNT_MERCHANT_ID = "app_kount_merchant_id";
     private static final String PAYMENT_MYPAY_ENABLED = "app_mypay_enabled";
+    private static final String PAYMENT_PAYPAL_CREDIT_ENABLED = "app_paypal_credit_enabled";
 
 
     private static final String PUBLIC_PAYMENT_TOKEN = "PUBLIC_PAYMENT_TOKEN";
@@ -610,6 +611,16 @@ public class AppPreferencesHelper implements PreferencesHelper {
     @Override
     public boolean getIsNotificationsEnabled() {
         return Prefs.getBoolean(KEY_NOTIFICATIONS_ENABLED, true);
+    }
+
+    @Override
+    public void setIsPaypalCreditEnabled(boolean isPaypalCreditEnabled) {
+        Prefs.putBoolean(PAYMENT_PAYPAL_CREDIT_ENABLED, isPaypalCreditEnabled);
+    }
+
+    @Override
+    public boolean isPaypalCreditEnabled() {
+        return Prefs.getBoolean(PAYMENT_PAYPAL_CREDIT_ENABLED, false);
     }
 
     public void setEventUserId(String userId) {

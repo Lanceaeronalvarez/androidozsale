@@ -187,4 +187,8 @@
     <color name="toggle_switch_gray_light">@color/white</color>
     <color name="toggle_switch_gray">#808080</color>
 
+    <color name="bg_paypal_credit_button">#003087</color>
+    <color name="bg_ripple_paypal">#ffe392</color>
+    <color name="bg_ripple_paypal_item">#FED151</color>
+
 </resources>

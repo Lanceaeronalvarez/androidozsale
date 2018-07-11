@@ -37,6 +37,8 @@ public interface CheckoutMvpPresenter<V extends MvpView> extends MvpPresenter<V>
     void updateCart(GetCurrentOrder.ResponseValue responseValue);
 
     void setDeliveryOption(SetDeliveryOption.OptionParameters setDeliveryOptionParameters);
-    
+
     boolean isMasterPassEnabled();
+
+    boolean isPaypalCreditEnabled();
 }

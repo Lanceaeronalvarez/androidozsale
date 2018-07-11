@@ -305,6 +305,11 @@ public class CheckoutPresenter<V extends CheckoutMvpView> extends BasePresenter<
     }
 
     @Override
+    public boolean isPaypalCreditEnabled() {
+        return getDataManager().isPaypalCreditEnabled();
+    }
+
+    @Override
     public void updateCart(GetCurrentOrder.ResponseValue response) {
 
         if (!isViewAttached()) {

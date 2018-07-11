@@ -79,6 +79,8 @@ public class AddPaymentController extends VisaCheckoutController implements AddP
     TextView mTextPaypal;
     @BindView(R.id.partial_checkout_button_paypal)
     RelativeLayout mButtonPaypal;
+    @BindView(R.id.partial_checkout_button_paypal_credit)
+    RelativeLayout mButtonPaypalCredit;
     @BindView(R.id.partial_checkout_button_masterpass)
     RelativeLayout mMasterpassButton;
     @BindView(R.id.partial_checkout_ourpay_panel_holder)
@@ -172,6 +174,13 @@ public class AddPaymentController extends VisaCheckoutController implements AddP
             }
         });
 
+        mButtonPaypalCredit.setOnClickListener(action ->{
+            onPaypalCreditSubmit();
+            if(isFromCart) {
+                mCheckoutMvpView.setIsPaymentMethodChanged(true);
+            }
+        });
+
         if (mActivity.isBraintreeInitialized()) {
             showPaymentButtons();
         } else {
@@ -251,6 +260,7 @@ public class AddPaymentController extends VisaCheckoutController implements AddP
         mButtonPaypal.setVisibility(mIsOurpaySelectDeliveryMethod ? View.GONE : View.VISIBLE);
         mMasterpassButton.setVisibility(!isFromCart || !mPresenter.isMasterPassEnabled() || mIsOurpaySelectDeliveryMethod ? View.GONE : View.VISIBLE);
         mVisaCheckoutButton.setVisibility(!isFromCart || mIsOurpaySelectDeliveryMethod ? View.GONE : View.VISIBLE);
+        mButtonPaypalCredit.setVisibility(mPresenter.isPaypalCreditEnabled() ? View.VISIBLE : View.GONE);
     }
 
     @Override
@@ -281,6 +291,11 @@ public class AddPaymentController extends VisaCheckoutController implements AddP
         isPayPalSubmitClicked = true;
         showLoading();
         mActivity.startPaypalPayment();
+    }
+
+    private void onPaypalCreditSubmit(){
+        showLoading();
+        mActivity.startPaypalCreditPayment(mCartTotalCost);
     }
 
 

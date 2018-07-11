@@ -4,6 +4,7 @@ package au.com.dealsdirect.data.pref;
 import com.mysale.genie.utility.config.api.GetAppSettingsConsent;
 
 import au.com.dealsdirect.data.network.model.legalities.GetTemplateTextsResponse;
+
 import java.util.HashSet;
 
 public interface PreferencesHelper {
@@ -170,4 +171,8 @@ public interface PreferencesHelper {
     void setIsNotificationsEnabled(boolean isNotificationsEnabled);
 
     boolean getIsNotificationsEnabled();
+
+    void setIsPaypalCreditEnabled(boolean isPaypalCreditEnabled);
+
+    boolean isPaypalCreditEnabled();
 }

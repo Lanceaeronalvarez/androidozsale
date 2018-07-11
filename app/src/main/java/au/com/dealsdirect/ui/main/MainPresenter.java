@@ -139,6 +139,7 @@ public class MainPresenter<V extends MainMvpView> extends BasePresenter<V> imple
             KEY_CONSENT_TERMS_AND_CONDITION
     };
 
+
     @Inject
     public MainPresenter(DataManager dataManager,
                          SchedulerProvider schedulerProvider,
@@ -260,6 +261,7 @@ public class MainPresenter<V extends MainMvpView> extends BasePresenter<V> imple
                 getDataManager().setSearchMaxPrice(value.getSearch().getMaxPrice());
                 getDataManager().setAccessAnonymousEnabled(value.getAccess().getAnonymousEnabled());
                 getDataManager().setIsMyPayEnabled(value.getPayments().getMyPay().getEnabled());
+                getDataManager().setIsPaypalCreditEnabled(value.getPayments().getBrainTree().isPaypalCreditEnabled());
 
                 if (value.getPayments().getVisaCheckout() != null) {
                     getDataManager().setIsVisaCheckoutEnabled(value.getPayments().getVisaCheckout().getVisaCheckoutEnabled());
