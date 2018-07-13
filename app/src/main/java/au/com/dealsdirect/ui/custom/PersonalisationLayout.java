@@ -258,7 +258,7 @@ public class PersonalisationLayout extends LinearLayout {
 
             EditText rowEditText = (EditText) findViewWithTag(currentKey);
 
-            String inputText = rowEditText.getText().toString().trim();
+            String inputText = rowEditText != null ? rowEditText.getText().toString().trim() : "";
 
             personalizationData.put(currentKey, inputText);
         }

@@ -1,5 +1,7 @@
 package au.com.dealsdirect.ui.controller.checkout.checkout;
 
+import com.bluelinelabs.conductor.Router;
+
 import java.util.List;
 
 import au.com.dealsdirect.data.network.model.address.DecorationInfoList;
@@ -60,5 +62,7 @@ public interface CheckoutMvpView extends MvpView {
     boolean setIsPaymentMethodChanged(boolean isPaymentMethodChanged);
 
     void showPromoCodeApplied(String promoCode, boolean isPromoCodeApplied);
+
+    Router getDisplayRouter();
 
 }

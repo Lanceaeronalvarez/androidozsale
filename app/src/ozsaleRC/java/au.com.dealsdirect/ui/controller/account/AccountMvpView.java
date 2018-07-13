@@ -45,6 +45,8 @@ public interface AccountMvpView extends MvpView {
 
     void triggerLogout();
 
+    void triggerLogout(boolean showDialog);
+
     void initLoginDrawable();
 
     boolean isChangeInProgress();

@@ -33,6 +33,7 @@ public class GateKeeper {
         SALEITEMS,
         SALEITEM_DETAILS,
         CHECKOUT,
+        CHECKOUT_HOST,
         CATEGORIES,
         ACCOUNT,
         FORGOT_PASSWORD,

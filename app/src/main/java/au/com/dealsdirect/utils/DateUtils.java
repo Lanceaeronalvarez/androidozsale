@@ -247,6 +247,19 @@ public class DateUtils {
         }
     }
 
+    public static String getTrimmedServerDateStringOrders(String dateString) {
+        if (null != dateString
+                && !dateString.equalsIgnoreCase("null")
+                && dateString.length() > 0) {
+            Date date = dateFromServerDateString(dateString);
+            android.text.format.DateFormat.format(AppConstants.MP2_DATE_FORMAT, date);
+
+            return (String) DateFormat.format(AppConstants.MP2_DATE_FORMAT, date);//(String) date.toString().subSequence(4, date.toString().indexOf("GMT"));
+        } else {
+            return "";
+        }
+    }
+
     public static String getDateStringFromCalendar(Calendar calendar) {
         return months[calendar.get(Calendar.MONTH)] + " "
                 + calendar.get(Calendar.DAY_OF_MONTH) + ", "

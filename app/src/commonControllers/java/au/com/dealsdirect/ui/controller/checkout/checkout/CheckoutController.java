@@ -23,6 +23,7 @@ import android.widget.TextView;
 
 import com.bluelinelabs.conductor.Controller;
 import com.bluelinelabs.conductor.ControllerChangeHandler;
+import com.bluelinelabs.conductor.Router;
 import com.bluelinelabs.conductor.RouterTransaction;
 import com.bluelinelabs.conductor.changehandler.FadeChangeHandler;
 import com.bluelinelabs.conductor.changehandler.HorizontalChangeHandler;
@@ -875,6 +876,11 @@ public class CheckoutController extends VisaCheckoutController implements Checko
     public void showPromoCodeApplied(String promoCode, boolean isPromoCodeApplied) {
         mVoucherPromoCodeTextView.setText(promoCode);
         mVoucherPromoCodeTextView.setVisibility(isPromoCodeApplied ? View.VISIBLE : View.GONE);
+    }
+
+    @Override
+    public Router getDisplayRouter() {
+        return getRouter();
     }
 
     private void onPayButtonClick() {

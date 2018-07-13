@@ -32,6 +32,8 @@ public final class AppConstants {
 
     public static final String API_DATE_FORMAT = "yyyy-MM-dd'T'HH:mm:ss";
 
+    public static final String MP2_DATE_FORMAT = "dd/MM/yy";
+
     public static final String MP_DATE_FORMAT = "dd/MM/yyyy";
 
     public static final String DD_DATE_FORMAT = "MMMM dd, yyyy";

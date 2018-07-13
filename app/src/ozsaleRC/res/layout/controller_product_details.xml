@@ -93,18 +93,20 @@
                                 android:overScrollMode="never"
                                 android:paddingBottom="70dp" />
 
-                            <ImageView
+                            <TextView
                                 android:id="@+id/arrow_left"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:layout_alignLeft="@id/product_details_shared_image"
+                                fontPath="@string/font_app_regular"
+                                android:layout_width="@dimen/partial_toolbar_button_width"
+                                android:layout_height="@dimen/partial_toolbar_button_height"
+                                android:layout_alignParentStart="true"
                                 android:layout_alignTop="@id/product_details_shared_image"
-                                android:layout_marginLeft="@dimen/margin_small"
-                                android:layout_marginTop="@dimen/activity_vertical_margin"
+                                android:layout_marginStart="@dimen/activity_horizontal_margin"
                                 android:elevation="@dimen/button_elevation"
-                                android:paddingBottom="@dimen/margin_large"
-                                android:paddingRight="@dimen/margin_large"
-                                android:src="@drawable/ic_item_details_back_arrow" />
+                                android:gravity="center"
+                                android:src="@drawable/ic_pink_chevron"
+                                android:text="@string/back"
+                                android:textColor="@color/text_medium"
+                                android:textSize="@dimen/text_size_caption1" />
 
 
                             <ImageView
@@ -142,64 +144,66 @@
                             android:orientation="horizontal"
                             android:visibility="visible">
 
-                            <ImageView
-                                android:id="@+id/toolbar_left_view"
-                                android:layout_width="wrap_content"
-                                android:layout_height="match_parent"
-                                android:layout_alignParentLeft="true"
-                                android:layout_marginLeft="@dimen/margin_small"
-                                android:elevation="@dimen/button_elevation"
-                                android:paddingBottom="@dimen/margin_large"
-                                android:paddingRight="@dimen/margin_large"
-                                android:paddingTop="@dimen/activity_vertical_margin"
-                                android:src="@drawable/ic_item_details_back_arrow" />
-
                             <TextView
-                                android:id="@+id/toolbar_item_brand"
-                                fontPath="@string/font_app_semibold"
-                                android:layout_width="match_parent"
-                                android:layout_height="wrap_content"
-                                android:layout_alignTop="@id/toolbar_left_view"
+                                android:id="@+id/toolbar_left_view"
+                                fontPath="@string/font_app_regular"
+                                android:layout_width="@dimen/partial_toolbar_button_width"
+                                android:layout_height="@dimen/partial_toolbar_button_height"
+                                android:layout_alignParentLeft="true"
+                                android:layout_alignParentStart="true"
                                 android:layout_centerVertical="true"
-                                android:layout_toLeftOf="@id/toolbar_right_view"
-                                android:layout_toRightOf="@+id/toolbar_left_view"
+                                android:layout_marginLeft="@dimen/activity_horizontal_margin"
                                 android:gravity="center"
-                                android:padding="@dimen/margin_tiny"
-                                android:singleLine="true"
-                                android:textColor="@color/text_extra_dark"
-                                android:textSize="@dimen/text_size_headline3"
-                                tools:text="Havren and Nougat London" />
+                                android:paddingRight="@dimen/margin_extra_small"
+                                android:src="@drawable/ic_pink_chevron"
+                                android:text="@string/back"
+                                android:textColor="@color/text_medium"
+                                android:textSize="@dimen/text_size_caption1" />
 
                             <LinearLayout
                                 android:layout_width="match_parent"
-                                android:layout_height="wrap_content"
-                                android:layout_below="@id/toolbar_item_brand"
+                                android:layout_height="match_parent"
+                                android:layout_alignParentTop="true"
+                                android:layout_marginBottom="@dimen/margin_small"
                                 android:layout_toLeftOf="@id/toolbar_right_view"
-                                android:layout_toRightOf="@id/toolbar_left_view"
-                                android:gravity="center">
+                                android:layout_toRightOf="@+id/toolbar_left_view"
+                                android:orientation="vertical">
+
+                                <TextView
+                                    android:id="@+id/toolbar_item_brand"
+                                    fontPath="@string/font_app_semibold"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:layout_centerVertical="true"
+                                    android:gravity="center_horizontal"
+                                    android:paddingLeft="@dimen/margin_tiny"
+                                    android:paddingRight="@dimen/margin_tiny"
+                                    android:paddingTop="@dimen/margin_tiny"
+                                    android:singleLine="true"
+                                    android:textColor="@color/text_extra_dark"
+                                    android:textSize="@dimen/text_size_headline3"
+                                    tools:text="Havren and Nougat London" />
 
                                 <TextView
                                     android:id="@+id/toolbar_item_name"
                                     fontPath="@string/font_app_regular"
-                                    android:layout_width="wrap_content"
+                                    android:layout_width="match_parent"
                                     android:layout_height="wrap_content"
-                                    android:layout_marginRight="@dimen/margin_small"
-                                    android:padding="@dimen/margin_tiny"
+                                    android:layout_alignEnd="@dimen/margin_extra_small"
+                                    android:ellipsize="middle"
+                                    android:gravity="center_horizontal"
+                                    android:paddingBottom="@dimen/margin_tiny"
+                                    android:paddingLeft="@dimen/margin_tiny"
+                                    android:paddingRight="@dimen/margin_tiny"
+                                    android:paddingTop="@dimen/margin_tiny"
                                     android:singleLine="true"
                                     android:textColor="@color/text_dark"
                                     android:textSize="@dimen/text_size_caption2"
                                     tools:text="Cassie Wrap Dress Wine" />
 
-                                <TextView
-                                    android:id="@+id/toolbar_item_price"
-                                    fontPath="@string/font_app_regular"
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="wrap_content"
-                                    android:padding="@dimen/margin_tiny"
-                                    android:textColor="@color/text_dark"
-                                    android:textSize="@dimen/text_size_caption2"
-                                    tools:text="$ 5.00" />
+
                             </LinearLayout>
+
 
                             <ImageView
                                 android:id="@+id/toolbar_right_view"
@@ -257,72 +261,79 @@
                             <LinearLayout
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
-                                android:gravity="bottom"
                                 android:orientation="horizontal">
-
-                                <TextView
-                                    android:id="@+id/priceLabel"
-                                    fontPath="@string/font_app_thin"
-                                    android:layout_width="wrap_content"
+                                <LinearLayout
+                                    android:layout_width="0dp"
                                     android:layout_height="wrap_content"
-                                    android:layout_alignBottom="@+id/productPrice"
-                                    android:layout_alignParentLeft="true"
-                                    android:layout_gravity="bottom"
-                                    android:layout_marginRight="@dimen/margin_medium"
-                                    android:singleLine="true"
-                                    android:text="@string/app_name"
-                                    android:textColor="@color/text_light"
-                                    android:textSize="@dimen/text_size_caption1" />
+                                    android:layout_weight="0.5"
+                                    android:orientation="horizontal">
+                                    <TextView
+                                        android:id="@+id/priceLabel"
+                                        fontPath="@string/font_app_thin"
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="wrap_content"
+                                        android:layout_gravity="center"
+                                        android:maxLines="1"
+                                        android:text="@string/app_name"
+                                        android:textColor="@color/text_light"
+                                        android:textSize="@dimen/text_size_caption2" />
 
-                                <TextView
-                                    android:id="@+id/productPrice"
-                                    fontPath="@string/font_app_bold"
-                                    android:layout_width="wrap_content"
+                                    <TextView
+                                        android:id="@+id/productPrice"
+                                        fontPath="@string/font_app_bold"
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="wrap_content"
+                                        android:layout_marginStart="@dimen/margin_small"
+                                        android:layout_gravity="center"
+                                        android:maxLines="1"
+                                        android:textColor="@color/product_details_text_product_price"
+                                        android:textSize="@dimen/text_size_headline3"
+                                        tools:text="$15.00" />
+
+                                    <ImageButton
+                                        android:id="@+id/controller_details_price_info"
+                                        android:layout_width="@dimen/button_drawable_width"
+                                        android:layout_height="@dimen/button_drawable_height"
+                                        android:layout_marginStart="@dimen/margin_small"
+                                        android:layout_gravity="center"
+                                        android:background="@drawable/ourpay_info" />
+                                </LinearLayout>
+
+                                <LinearLayout
+                                    android:layout_width="0dp"
                                     android:layout_height="wrap_content"
-                                    android:layout_gravity="end"
-                                    android:singleLine="true"
-                                    android:textColor="@color/product_details_text_product_price"
-                                    android:textSize="@dimen/text_size_headline2"
-                                    tools:text="$150.00" />
+                                    android:layout_weight="0.5"
+                                    android:orientation="horizontal">
+                                    <TextView
+                                        android:id="@+id/productPreviousPriceLabel"
+                                        fontPath="@string/font_app_thin"
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="wrap_content"
+                                        android:layout_gravity="center"
+                                        android:layout_marginRight="@dimen/margin_medium"
+                                        android:maxLines="1"
+                                        android:text="@string/price_elsewhere"
+                                        android:textColor="@color/text_light"
+                                        android:textSize="@dimen/text_size_caption2" />
 
-                                <ImageButton
-                                    android:id="@+id/controller_details_price_info"
-                                    android:layout_width="@dimen/button_drawable_width"
-                                    android:layout_height="@dimen/button_drawable_height"
-                                    android:layout_gravity="bottom"
-                                    android:layout_marginLeft="@dimen/margin_extra_small"
-                                    android:background="@drawable/ourpay_info" />
+                                    <TextView
+                                        android:id="@+id/productPreviousPrice"
+                                        fontPath="@string/font_app_light"
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="wrap_content"
+                                        android:layout_gravity="center"
+                                        android:maxLines="1"
+                                        android:textColor="@color/text_light"
+                                        android:textSize="@dimen/text_size_body"
+                                        tools:text="$20.00" />
 
-                                <TextView
-                                    android:id="@+id/productPreviousPriceLabel"
-                                    fontPath="@string/font_app_thin"
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="wrap_content"
-                                    android:layout_gravity="bottom"
-                                    android:layout_marginLeft="@dimen/margin_medium"
-                                    android:layout_marginRight="@dimen/margin_medium"
-                                    android:singleLine="true"
-                                    android:text="@string/price_elsewhere"
-                                    android:textColor="@color/text_light"
-                                    android:textSize="@dimen/text_size_caption1" />
-
-                                <TextView
-                                    android:id="@+id/productPreviousPrice"
-                                    fontPath="@string/font_app_light"
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="wrap_content"
-                                    android:layout_gravity="bottom"
-                                    android:singleLine="true"
-                                    android:textColor="@color/text_light"
-                                    android:textSize="@dimen/text_size_body"
-                                    tools:text="$20.00" />
-
-                                <ImageButton
-                                    android:id="@+id/controller_details_old_price_info"
-                                    android:layout_width="@dimen/button_drawable_width"
-                                    android:layout_height="@dimen/button_drawable_height"
-                                    android:layout_marginLeft="@dimen/margin_extra_small"
-                                    android:background="@drawable/ourpay_info" />
+                                    <ImageButton
+                                        android:id="@+id/controller_details_old_price_info"
+                                        android:layout_width="@dimen/button_drawable_width"
+                                        android:layout_height="@dimen/button_drawable_height"
+                                        android:layout_marginStart="@dimen/margin_extra_small"
+                                        android:background="@drawable/ourpay_info" />
+                                </LinearLayout>
 
                             </LinearLayout>
                         </LinearLayout>
@@ -361,7 +372,6 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:orientation="vertical"
-                        android:paddingBottom="@dimen/product_details_bottom_padding"
                         android:visibility="visible">
 
                         <LinearLayout
@@ -408,11 +418,11 @@
                             android:layout_height="wrap_content"
                             android:background="@color/white"
                             android:orientation="vertical"
-                            android:visibility="gone"
-                            android:paddingTop="@dimen/margin_extra_small"
                             android:paddingBottom="@dimen/margin_extra_small"
                             android:paddingLeft="@dimen/activity_horizontal_margin"
-                            android:paddingRight="@dimen/activity_horizontal_margin"/>
+                            android:paddingRight="@dimen/activity_horizontal_margin"
+                            android:paddingTop="@dimen/margin_extra_small"
+                            android:visibility="gone" />
 
                         <RelativeLayout
                             android:id="@+id/product_details_sizes_container"
@@ -476,33 +486,26 @@
                             android:layout_height="wrap_content"
                             android:visibility="gone" />
 
-                        <LinearLayout
+                        <Button
+                            android:id="@+id/product_details_add_to_basket"
+                            style="@style/DDButtonAddCart"
+                            fontPath="@string/font_app_medium"
                             android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:paddingBottom="@dimen/margin_medium"
-                            android:paddingTop="@dimen/margin_medium">
-
-                            <Button
-                                android:id="@+id/product_details_add_to_basket"
-                                style="@style/DDButtonAddCart"
-                                fontPath="@string/font_app_medium"
-                                android:layout_width="match_parent"
-                                android:layout_gravity="bottom"
-                                android:layout_marginLeft="@dimen/margin_extra_small"
-                                android:layout_marginRight="@dimen/margin_extra_small"
-                                android:enabled="false"
-                                android:text="@string/add_to_cart"
-                                android:visibility="visible" />
-                        </LinearLayout>
+                            android:layout_gravity="bottom"
+                            android:layout_marginLeft="@dimen/margin_extra_small"
+                            android:layout_marginRight="@dimen/margin_extra_small"
+                            android:layout_marginTop="@dimen/margin_medium"
+                            android:layout_marginBottom="@dimen/margin_medium"
+                            android:enabled="true"
+                            android:text="@string/add_to_cart"/>
 
                         <LinearLayout
                             android:id="@+id/product_details_shipping_desc_container"
                             android:layout_width="match_parent"
                             android:layout_height="match_parent"
-                            android:layout_marginTop="@dimen/margin_extra_small"
                             android:background="@color/white"
                             android:orientation="vertical"
-                            android:visibility="visible">
+                            android:visibility="gone">
 
                             <TextView
                                 fontPath="@string/font_app_semibold"

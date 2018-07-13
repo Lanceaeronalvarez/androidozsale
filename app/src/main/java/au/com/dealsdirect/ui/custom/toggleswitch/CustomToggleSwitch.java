@@ -27,11 +27,6 @@ public class CustomToggleSwitch extends BaseToggleSwitch {
         setCheckedTogglePosition(position);
     }
 
-    @Override
-    public void setOnToggleSwitchChangeListener(OnToggleSwitchChangeListener onToggleSwitchChangeListener) {
-        super.setOnToggleSwitchChangeListener(onToggleSwitchChangeListener);
-    }
-
     public void setCheckedTogglePosition(int position) {
         setCheckedTogglePosition(position, true);
     }

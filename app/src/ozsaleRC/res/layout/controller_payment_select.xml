@@ -7,13 +7,18 @@
     android:background="@color/background_default"
     tools:ignore="MissingPrefix">
 
+    <include android:id="@+id/controller_payment_select_tooolbar"
+        layout="@layout/partial_toolbar_arrow" />
+
     <RelativeLayout
         android:id="@+id/controller_payment_content_layout"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:layout_below="@+id/controller_payment_select_tooolbar"
         android:visibility="visible">
 
         <TextView
+            fontPath="@string/font_app_light"
             android:id="@+id/controller_payment_description_text"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"

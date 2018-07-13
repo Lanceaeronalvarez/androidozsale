@@ -9,7 +9,7 @@
 
     <include
         android:id="@+id/toolbar_title_login"
-        layout="@layout/partial_toolbar_arrow" />
+        layout="@layout/partial_toolbar_login_close" />
 
     <RelativeLayout
         android:layout_width="match_parent"
@@ -58,7 +58,8 @@
                     android:layout_height="wrap_content"
                     android:layout_marginTop="@dimen/margin_extra_large"
                     android:background="@color/white"
-                    android:orientation="horizontal">
+                    android:orientation="horizontal"
+                    android:gravity="center">
 
                     <TextView
                         android:layout_width="0dp"
@@ -79,7 +80,6 @@
                         <EditText
                             android:id="@+id/controller_register_forename_field"
                             style="@style/DDEditTextStyleNoBorder"
-                            fontPath="@string/font_app_medium"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:inputType="textPersonName"
@@ -93,7 +93,8 @@
                     android:layout_height="wrap_content"
                     android:layout_marginTop="@dimen/border_thin"
                     android:background="@color/white"
-                    android:orientation="horizontal">
+                    android:orientation="horizontal"
+                    android:gravity="center">
 
                     <TextView
                         android:layout_width="0dp"
@@ -114,7 +115,6 @@
                         <EditText
                             android:id="@+id/controller_register_surname_field"
                             style="@style/DDEditTextStyleNoBorder"
-                            fontPath="@string/font_app_medium"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:inputType="textPersonName"
@@ -128,7 +128,8 @@
                     android:layout_height="wrap_content"
                     android:layout_marginTop="@dimen/border_thin"
                     android:background="@color/white"
-                    android:orientation="horizontal">
+                    android:orientation="horizontal"
+                    android:gravity="center">
 
                     <TextView
                         android:layout_width="0dp"
@@ -149,7 +150,6 @@
                         <EditText
                             android:id="@+id/controller_register_email_field"
                             style="@style/DDEditTextStyleNoBorder"
-                            fontPath="@string/font_app_medium"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:inputType="textEmailAddress"
@@ -158,13 +158,13 @@
                     </android.support.design.widget.TextInputLayout>
                 </LinearLayout>
 
-
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="@dimen/border_thin"
                     android:background="@color/white"
-                    android:orientation="horizontal">
+                    android:orientation="horizontal"
+                    android:gravity="center">
 
                     <TextView
                         android:layout_width="0dp"
@@ -187,7 +187,6 @@
                         <EditText
                             android:id="@+id/controller_register_password_field"
                             style="@style/DDEditTextStyleNoBorder"
-                            fontPath="@string/font_app_medium"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:inputType="textPassword" />
@@ -198,7 +197,7 @@
 
                 <LinearLayout
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent"
+                    android:layout_height="wrap_content"
                     android:layout_margin="@dimen/padding_default"
                     android:orientation="vertical">
 
@@ -212,7 +211,6 @@
 
                         <CheckBox
                             android:id="@+id/controller_register_terms_conditions_check"
-                            fontPath="@string/font_app_medium"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_marginLeft="-5dp"
@@ -223,7 +221,6 @@
 
                         <TextView
                             android:id="@+id/controller_register_terms_link"
-                            fontPath="@string/font_app_medium"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="Terms and Conditions"
@@ -285,16 +282,8 @@
                         fontPath="@string/font_app_semibold"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:text="@string/join_now"
+                        android:text="@string/see_todays_sale"
                         android:textSize="@dimen/text_size_headline3" />
-
-                    <com.visa.checkout.widget.VisaCheckoutButton
-                        android:id="@+id/button_visacheckout"
-                        android:layout_width="match_parent"
-                        android:layout_height="@dimen/default_button_height"
-                        android:layout_marginTop="@dimen/margin_small"
-                        app:animation="true"
-                        android:enabled="false"/>
 
                     <RelativeLayout
                         android:id="@+id/controller_login_fb_layout"
@@ -333,21 +322,30 @@
                         </LinearLayout>
                     </RelativeLayout>
 
+                    <com.visa.checkout.widget.VisaCheckoutButton
+                        android:id="@+id/button_visa_checkout"
+                        android:layout_width="match_parent"
+                        android:layout_height="@dimen/default_button_height"
+                        android:layout_marginTop="@dimen/margin_small"
+                        android:layout_gravity="center"
+                        app:animation="true"
+                        android:enabled="false"/>
+
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="@dimen/margin_small"
                         android:gravity="center"
                         android:orientation="horizontal"
-                        android:padding="@dimen/margin_small">
+                        android:padding="@dimen/margin_tiny">
 
                         <TextView
-                            fontPath="@string/font_app_medium"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="@string/already_a_member"
+                            android:text="@string/save_80_off"
                             android:textColor="@color/text_extra_dark"
-                            android:textSize="@dimen/text_size_caption1" />
+                            android:textStyle="bold"
+                            android:textSize="@dimen/text_size_body" />
 
                         <TextView
                             android:id="@+id/controller_register_login_text"
@@ -360,19 +358,29 @@
                             android:text="@string/log_in"
                             android:textAllCaps="true"
                             android:textColor="@color/bg_button_default"
-                            android:textSize="@dimen/text_size_caption1" />
+                            android:textSize="@dimen/text_size_caption1"
+                            android:visibility="gone"/>
 
                         <TextView
-                            fontPath="@string/font_app_medium"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:paddingEnd="0dp"
                             android:paddingStart="@dimen/margin_extra_small"
                             android:text="@string/here"
                             android:textColor="@color/text_extra_dark"
-                            android:textSize="@dimen/text_size_caption1" />
+                            android:textSize="@dimen/text_size_caption1"
+                            android:visibility="gone"/>
 
                     </LinearLayout>
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/designer_fashion_more"
+                        android:textColor="@color/text_extra_dark"
+                        android:textSize="@dimen/text_size_caption2"
+                        android:layout_gravity="center"
+                        android:paddingBottom="@dimen/margin_small"/>
 
                 </LinearLayout>
             </LinearLayout>
@@ -391,8 +399,9 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
-                android:paddingTop="@dimen/margin_extra_small"
-                android:paddingBottom="@dimen/margin_extra_small"
+                android:paddingTop="@dimen/padding_default_half"
+                android:paddingBottom="@dimen/padding_default_half"
+                android:background="@color/white"
                 android:gravity="center">
 
                 <TextView
@@ -403,7 +412,7 @@
                     android:textColor="@color/facet_item_text_selector"
                     android:text="@string/account_about_us"
                     android:gravity="center"
-                    android:textSize="@dimen/text_size_caption1" />
+                    android:textSize="@dimen/text_size_body" />
 
                 <TextView
                     android:id="@+id/controller_login_tnc_textview"
@@ -413,7 +422,7 @@
                     android:textColor="@color/facet_item_text_selector"
                     android:text="@string/account_tnc"
                     android:gravity="center"
-                    android:textSize="@dimen/text_size_caption1" />
+                    android:textSize="@dimen/text_size_body" />
 
                 <TextView
                     android:id="@+id/controller_login_privacy_textview"
@@ -423,7 +432,8 @@
                     android:textColor="@color/facet_item_text_selector"
                     android:text="@string/account_privacy"
                     android:gravity="center"
-                    android:textSize="@dimen/text_size_caption1" />
+                    android:textSize="@dimen/text_size_body" />
+
             </LinearLayout>
         </LinearLayout>
     </RelativeLayout>

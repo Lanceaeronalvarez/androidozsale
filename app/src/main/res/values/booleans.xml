@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <bool name="is_item_attribute_gone">false</bool>
+    <bool name="is_checkout_orders_label_visible">false</bool>
+
+    <!--APP SPECIFIC SETTINGS-->
+    <bool name="is_ourpay_app">false</bool>
+    <bool name="is_ozsale_app">false</bool>
+</resources>

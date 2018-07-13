@@ -65,7 +65,8 @@ public class ViewVouchersRecyclerViewAdapter extends RecyclerView.Adapter<ViewVo
             holder.mVouchersItemCostText.setText(voucherCostWithCurrency);
             holder.mVouchersItemCostText.setVisibility(View.VISIBLE);
             holder.mVouchersAlreadySpent.setVisibility(View.GONE);
-            holder.mVouchersItemDescText.setText(mUseBefore);
+            holder.mVouchersItemExpiresOnText.setText(mUseBefore);
+            holder.mVouchersItemDescText.setText(voucher.getFullname());
             holder.mVouchersItemValue.setVisibility(View.VISIBLE);
             holder.mActivatedValue.setText(String.valueOf(hasMatch));
             holder.mPurchasedValue.setText(String.valueOf(hasSpent));

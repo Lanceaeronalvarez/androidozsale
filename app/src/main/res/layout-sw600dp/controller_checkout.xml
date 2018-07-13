@@ -20,8 +20,6 @@
             android:id="@+id/controller_checkout_container"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="@dimen/margin_extra_small"
-            android:layout_marginTop="@dimen/margin_extra_small"
             android:descendantFocusability="blocksDescendants"
             android:background="@android:color/transparent"
             android:orientation="vertical"

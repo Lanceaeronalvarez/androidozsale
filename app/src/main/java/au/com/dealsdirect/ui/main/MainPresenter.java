@@ -42,7 +42,7 @@ import au.com.dealsdirect.data.network.model.checkout.CreatePaymentTransaction;
 import au.com.dealsdirect.data.network.model.checkout.CreatePaymentTransactionVco;
 import au.com.dealsdirect.data.network.model.checkout.GetPaymentToken;
 import au.com.dealsdirect.data.network.model.checkout.getpaymentmethodnonce.GetPaymentMethodNonceRequest;
-import au.com.dealsdirect.data.network.model.consentdata.GetConsentDataResponse;
+import au.com.dealsdirect.data.network.model.gdpr.consentdata.GetConsentDataResponse;
 import au.com.dealsdirect.data.network.model.deeplinkdata.DeepLinkDataRequest;
 import au.com.dealsdirect.data.network.model.deeplinkdata.DeepLinkDataResponse;
 import au.com.dealsdirect.data.network.model.legalities.GetTemplateTextsRequest;

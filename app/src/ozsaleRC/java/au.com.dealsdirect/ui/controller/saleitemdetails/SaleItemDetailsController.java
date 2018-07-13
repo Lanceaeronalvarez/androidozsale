@@ -12,6 +12,7 @@ import android.support.v4.util.Pair;
 import android.support.v4.widget.NestedScrollView;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -63,6 +64,8 @@ import au.com.dealsdirect.utils.PriceUtils;
 import au.com.dealsdirect.widget.ElasticDragDismissFrameLayout;
 import butterknife.BindView;
 import butterknife.OnClick;
+
+import static com.mysale.genie.utility.GenericEvent.Events.SALE_ITEM_DETAILS_VERTICAL_OFFSET;
 
 /*
  * Created by smartwave on 08/06/2017.
@@ -167,8 +170,6 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
     TextView mToolbarItemBrandTextView;
     @BindView(R.id.toolbar_item_name)
     TextView mToolbarItemNameTextView;
-    @BindView(R.id.toolbar_item_price)
-    TextView mToolbarItemPriceTextView;
     @BindView(R.id.controller_details_price_info)
     ImageButton mPriceInfoButton;
     @BindView(R.id.controller_details_old_price_info)
@@ -196,8 +197,8 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
 
     private boolean hasSizes = false;
     private boolean didSelectSize = false;
-    private boolean isSizeSoldOut = false;
     private int mFromPosition = -1;
+    private int mToolbarVerticalOffset;
 
     boolean checkOutLocated = false;
 
@@ -316,23 +317,22 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
         mPresenter.loadSaleItemDetails(mSeoIdentifierId);
 
         mOtherImagesRv.setLayoutManager(new LinearLayoutManager(mActivity, LinearLayoutManager.HORIZONTAL, false));
-        mSaleItemImagesIndicatorAdapter = new SaleItemDetailsImageAdapter(null, null, loadImagesListener,
-                new ArrayList<>(), mSaleId, 2, null);
+        mSaleItemImagesIndicatorAdapter = new SaleItemDetailsImageAdapter(mPresenter.isTablet(),
+                null, null, loadImagesListener, new ArrayList<>(), 2, null, this);
         mOtherImagesRv.setAdapter(mSaleItemImagesIndicatorAdapter);
         mOtherImagesRv.setVisibility(View.INVISIBLE);
 
         mProductImagesRvLayoutManager = new LinearLayoutManager(mActivity, LinearLayoutManager.HORIZONTAL, false);
         mProductImagesRv.setLayoutManager(mProductImagesRvLayoutManager);
-        mSaleItemImagesAdapter = new SaleItemDetailsImageAdapter(
+        mSaleItemImagesAdapter = new SaleItemDetailsImageAdapter(mPresenter.isTablet(),
                 mPresenter.isTablet() ? null : mAppBarLayout,
-                mPresenter.isTablet() ? new ArrayList<>() :
                 new ArrayList<View>() {{
                     add(mLeftView);
                     add(mOtherImagesRv);
                     add(mProductPriceCategory);
                     add(mProductDetailScrollView);
                 }},
-                loadImagesListener, new ArrayList<>(), mSaleId, 1, mProductSharedImage.getDrawable());
+                loadImagesListener, new ArrayList<>(), 1, mProductSharedImage.getDrawable(), this);
         mProductImagesRv.setAdapter(mSaleItemImagesAdapter);
         mProductImagesRv.setEnabled(false);
         mProductImagesRv.setOverScrollMode(View.OVER_SCROLL_NEVER);
@@ -384,9 +384,10 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
         String brandName = saleDetail.getBrandName() == null ? "" : saleDetail.getBrandName();
 
         mToolbarItemBrandTextView.setText(brandName);
-        mToolbarItemNameTextView.setText(name.trim());
-        mToolbarItemPriceTextView.setText(PriceUtils.getPriceStringValue(saleDetail.getPrice().getValue()));
+        mToolbarItemNameTextView.setText(name.trim() + " • " + PriceUtils.getPriceStringValue(saleDetail.getPrice().getValue()));
 
+        mAddToCartButton.setEnabled(!saleDetail.isSoldOut());
+        mAddToCartButton.setText(!saleDetail.isSoldOut() ? R.string.add_to_cart : R.string.sold_out);
 
         mProductName.setText(name.trim());
         mProductBrand.setText(brandName.trim());
@@ -496,7 +497,7 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
 
                     mSkuId = mProductSizes.get(selectedIndex).second;
 
-                    isSizeSoldOut = saleDetail.getSkuVariants().get(selectedIndex).isSoldOut();
+                    boolean isSizeSoldOut = saleDetail.getSkuVariants().get(selectedIndex).isSoldOut();
 
                     mAddToCartButton.setEnabled(!isSizeSoldOut);
                     mAddToCartButton.setText(!isSizeSoldOut ? R.string.add_to_cart : R.string.sold_out);
@@ -508,16 +509,6 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
             });
         }
 
-        mAddToCartButton.setVisibility(View.VISIBLE);
-        mAddToCartButton.setEnabled(true);
-
-
-    /* Should only set button to 'Sold Out' if sold out size is selected
-        if (saleDetail.isSoldOut()) {
-            mAddToCartButton.setEnabled(false);
-            mAddToCartButton.setText("Sold Out");
-        }
-    */
         boolean isOldPriceInfoVisible = saleDetail.getOriginalPrice().getValue() <= 0;
         mOldPriceInfoButton.setVisibility(isOldPriceInfoVisible ? View.GONE : View.VISIBLE);
         mProductPreviousPrice.setVisibility(isOldPriceInfoVisible ? View.GONE : View.VISIBLE);
@@ -549,12 +540,12 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
         if (showAddToCart) {
             CartUtil.addValueToCart(1);
             mActivity.getMainController().getHomeController().updateBasketItemCount();
-
-            CustomAlertDialog.showCustomAlertDialog(
-                    mActivity,
-                    CustomAlertDialog.CustomDialogIconState.POSITIVE,
-                    mActivity.getString(R.string.add_to_cart_success));
         }
+
+        CustomAlertDialog.showCustomAlertDialog(
+                mActivity,
+                showAddToCart ? CustomAlertDialog.CustomDialogIconState.POSITIVE : CustomAlertDialog.CustomDialogIconState.NEGATIVE,
+                mActivity.getString(showAddToCart ? R.string.add_to_cart_success : R.string.add_to_cart_failed));
     }
 
     @Override
@@ -570,6 +561,11 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
     @Override
     public void onCallGetBasketItemsQuantity() {
 
+    }
+
+    @Override
+    public int getVerticalOffset() {
+        return mToolbarVerticalOffset;
     }
 
     @Override
@@ -751,6 +747,8 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
 
     @Override
     public void onOffsetChanged(AppBarLayout appBarLayout, int verticalOffset) {
+        mToolbarVerticalOffset = verticalOffset;
+        RxBus.instance().post(new Pair<>(SALE_ITEM_DETAILS_VERTICAL_OFFSET,mToolbarVerticalOffset));
         TypedValue tv = new TypedValue();
         mActivity.getTheme().resolveAttribute(android.R.attr.actionBarSize, tv, true);
         boolean showToolbar = Math.abs(verticalOffset) >= ((AppBarLayout) mAppBarLayout).getTotalScrollRange();

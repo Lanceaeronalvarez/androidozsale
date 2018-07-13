@@ -1,5 +1,6 @@
 package au.com.dealsdirect.ui.controller.details;
 
+import au.com.dealsdirect.data.network.model.gdpr.savereceivesales.SaveReceiveSalesResponse;
 import au.com.dealsdirect.data.network.model.userdetails.GetUserDetailsResponse;
 import au.com.dealsdirect.ui.base.MvpView;
 
@@ -13,6 +14,8 @@ public interface DetailsMvpView extends MvpView {
     void saveUserDetailsSuccess();
 
     void saveUserDetailsFailed(String message);
+
+    void onSaveReceiveSales(SaveReceiveSalesResponse saveReceiveSalesResponse);
 
     boolean isActive();
 }

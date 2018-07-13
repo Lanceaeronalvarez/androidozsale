@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -7,13 +7,18 @@
     android:orientation="vertical"
     tools:ignore="MissingPrefix">
 
+    <include android:id="@+id/controller_view_address_toolbar"
+        layout="@layout/partial_toolbar_arrow"/>
+
     <RelativeLayout
         android:id="@+id/view_addresses_layout"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:visibility="visible">
+        android:visibility="visible"
+        android:layout_below="@id/controller_view_address_toolbar">
 
         <TextView
+            fontPath="@string/font_app_light"
             android:id="@+id/address_office_delivery_subtitle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -24,7 +29,7 @@
             android:text="@string/my_addresses"
             android:textColor="@color/text_medium"
             android:textSize="@dimen/text_size_caption2"
-            android:visibility="gone"/>
+            android:visibility="visible"/>
 
         <FrameLayout
             android:layout_width="match_parent"
@@ -57,4 +62,4 @@
 
     </RelativeLayout>
 
-</FrameLayout>
+</RelativeLayout>

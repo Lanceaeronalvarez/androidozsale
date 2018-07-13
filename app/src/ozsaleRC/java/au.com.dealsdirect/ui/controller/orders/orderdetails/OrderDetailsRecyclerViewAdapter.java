@@ -30,13 +30,10 @@ import timber.log.Timber;
 
 public class OrderDetailsRecyclerViewAdapter extends RecyclerView.Adapter<OrderDetailsRecyclerViewAdapter.OrdersViewHolder> {
 
-
-    private View mView;
     private GetOrderPaymentDetails.ResponseValue.Value mOrderDetails;
 
     private ArrayList<GetPaymentsList.ResponseValue.Order> mOrderList = new ArrayList<>();
     private GetPaymentsList.ResponseValue.Total mTotal;
-    private RecyclerView mItemsRecyclerView;
 
     private Context mContext;
     private int mPaymentReferenceNo;
@@ -63,24 +60,19 @@ public class OrderDetailsRecyclerViewAdapter extends RecyclerView.Adapter<OrderD
     public OrdersViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.row_order_order_details, parent, false);
         OrdersViewHolder holder = new OrdersViewHolder(v);
-        mView = v;
-
         return holder;
     }
 
     @Override
     public void onBindViewHolder(OrdersViewHolder holder, final int position) {
 
-        mItemsRecyclerView = (RecyclerView)
-                mView.findViewById(R.id.order_items_recyclerview);
-
-        mItemsRecyclerView.setAdapter(new OrderDetailsItemsRecyclerViewAdapter(
+        holder.mItemsRecyclerView.setAdapter(new OrderDetailsItemsRecyclerViewAdapter(
                 mContext,
                 position,
                 mOrderDetails,
                 mOrderList));
 
-        mItemsRecyclerView.setLayoutManager(new LinearLayoutManager(mContext, LinearLayoutManager
+        holder.mItemsRecyclerView.setLayoutManager(new LinearLayoutManager(mContext, LinearLayoutManager
                 .VERTICAL, false));
 
 
@@ -92,9 +84,9 @@ public class OrderDetailsRecyclerViewAdapter extends RecyclerView.Adapter<OrderD
 
         holder.orderStatusTextView.setText(item.getStatus());
 
-        String orderDateValue = DateUtils.getTrimmedServerDateString(item.getTracker().getApprovedDate());
+        String orderDateValue = DateUtils.getTrimmedServerDateStringOrders(item.getTracker().getApprovedDate());
 
-        holder.orderDateTextView.setText(orderDateValue + " at " + approvedTime);
+        holder.orderDateTextView.setText(orderDateValue + " " + approvedTime);
 
         holder.deliveryTextValue.setText(mOrderDetails.getOrders().get(position).getDeliveryAddress());
 

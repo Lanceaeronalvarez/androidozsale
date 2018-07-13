@@ -21,6 +21,8 @@ public class PaymentMethod implements Serializable {
     @Expose
     private String imageUrl;
 
+    private boolean isPinned;
+
     private int id;
 
     public String getPaymentType() {
@@ -61,6 +63,14 @@ public class PaymentMethod implements Serializable {
 
     public void setId(int id) {
         this.id = id;
+    }
+
+    public boolean isPinned() {
+        return isPinned;
+    }
+
+    public void setPinned(boolean pinned) {
+        isPinned = pinned;
     }
 
     @Override

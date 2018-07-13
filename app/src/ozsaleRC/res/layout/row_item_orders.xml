@@ -22,8 +22,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="@dimen/margin_small"
-                android:layout_marginLeft="@dimen/margin_extra_small"
-                android:layout_marginRight="@dimen/margin_extra_small"
+                android:layout_marginLeft="@dimen/margin_small"
+                android:layout_marginRight="@dimen/margin_small"
                 android:layout_marginTop="@dimen/margin_small">
 
                 <TextView
@@ -139,125 +139,74 @@
 
         </RelativeLayout>
 
-        <RelativeLayout
+        <LinearLayout
             android:id="@+id/my_order_information_graph_content"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_below="@+id/my_order_information_text_content"
             android:layout_marginLeft="@dimen/margin_small"
             android:layout_marginRight="@dimen/margin_small"
-            android:layout_marginTop="@dimen/margin_large">
+            android:layout_marginTop="@dimen/margin_large"
+            android:orientation="vertical">
 
             <LinearLayout
                 android:id="@+id/my_order_graph_container"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="@dimen/margin_medium"
-                android:layout_marginLeft="@dimen/margin_large"
-                android:layout_marginRight="@dimen/margin_medium"
                 android:layout_marginTop="@dimen/margin_large"
+                android:layout_marginStart="@dimen/negative_margin_small"
+                android:layout_marginEnd="@dimen/negative_margin_small"
                 android:orientation="horizontal"
                 tools:ignore="UselessParent">
 
-                <TextView
-                    android:id="@+id/order_date_graph_node"
-                    fontPath="@string/font_app_semibold"
-                    android:layout_width="@dimen/margin_large"
-                    android:layout_height="@dimen/margin_large"
-                    android:background="@drawable/bg_orders_graph_active_state"
-                    android:gravity="center"
-                    android:textColor="@color/text_medium"
-                    tools:ignore="ContentDescription" />
-
-                <View
-                    android:id="@+id/connector_to_stock_arrived"
-                    android:layout_width="0dp"
-                    android:layout_height="@dimen/border_thick"
-                    android:layout_gravity="center_vertical"
-                    android:layout_weight=".33"
-                    android:background="@color/border_regular" />
-
-
-                <TextView
-                    android:id="@+id/stock_arrived_graph_node"
-                    fontPath="@string/font_app_semibold"
-                    android:layout_width="@dimen/margin_large"
-                    android:layout_height="@dimen/margin_large"
-                    android:background="@drawable/bg_orders_graph_empty_state"
-                    android:gravity="center"
-                    android:textColor="@color/text_medium"
-                    tools:ignore="ContentDescription" />
-
-                <View
-                    android:id="@+id/connector_to_order_packed"
-                    android:layout_width="0dp"
-                    android:layout_height="@dimen/border_thick"
-                    android:layout_gravity="center_vertical"
-                    android:layout_weight=".33"
-                    android:background="@color/border_regular" />
-
-                <TextView
-                    android:id="@+id/order_packed_graph_node"
-                    fontPath="@string/font_app_semibold"
-                    android:layout_width="@dimen/margin_large"
-                    android:layout_height="@dimen/margin_large"
-                    android:background="@drawable/bg_orders_graph_empty_state"
-                    android:gravity="center"
-                    android:textColor="@color/text_medium"
-                    tools:ignore="ContentDescription" />
-
-                <View
-                    android:id="@+id/connector_to_dispatched"
-                    android:layout_width="0dp"
-                    android:layout_height="@dimen/border_thick"
-                    android:layout_gravity="center_vertical"
-                    android:layout_weight=".33"
-                    android:background="@color/border_regular" />
-
-                <TextView
-                    android:id="@+id/dispatched_graph_node"
-                    fontPath="@string/font_app_semibold"
-                    android:layout_width="@dimen/margin_large"
-                    android:layout_height="@dimen/margin_large"
-                    android:background="@drawable/bg_orders_graph_empty_state"
-                    android:gravity="center"
-                    android:textColor="@color/text_medium"
-                    tools:ignore="ContentDescription" />
-
-            </LinearLayout>
-
-            <LinearLayout
-                android:id="@+id/my_order_graph_progress_states"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_below="@+id/my_order_graph_container"
-                android:layout_marginLeft="@dimen/margin_small"
-                android:layout_marginRight="@dimen/margin_small"
-                android:layout_marginTop="@dimen/margin_small"
-                android:orientation="horizontal">
-
                 <LinearLayout
-                    android:layout_width="wrap_content"
+                    android:layout_width="0dp"
+                    android:layout_weight="0.25"
                     android:layout_height="wrap_content"
-                    android:orientation="vertical"
-                    android:paddingRight="@dimen/margin_extra_small">
+                    android:orientation="vertical">
+
+                    <RelativeLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="@dimen/margin_medium">
+
+                        <View
+                            android:id="@+id/order_date_graph_node"
+                            android:layout_width="@dimen/margin_large"
+                            android:layout_height="@dimen/margin_large"
+                            android:layout_centerInParent="true"
+                            android:background="@drawable/bg_orders_graph_active_state"
+                            android:textColor="@color/text_medium"
+                            tools:ignore="ContentDescription" />
+
+                        <View
+                            android:id="@+id/connector_to_stock_arrived"
+                            android:layout_width="match_parent"
+                            android:layout_height="@dimen/border_thick"
+                            android:layout_toEndOf="@id/order_date_graph_node"
+                            android:layout_centerVertical="true"
+                            android:background="@color/border_regular" />
+
+                    </RelativeLayout>
 
                     <TextView
                         android:id="@+id/tracker_first_node"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_gravity="center_horizontal"
+                        android:maxLines="1"
                         android:text="@string/order_date"
                         android:textColor="@color/text_medium"
                         android:textSize="@dimen/text_size_caption2"
                         tools:ignore="HardcodedText" />
 
                     <TextView
-
                         android:id="@+id/order_date_value"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_gravity="center_horizontal"
+                        android:gravity="center"
+                        android:maxLines="2"
                         android:textColor="@color/text_extra_light"
                         android:textSize="@dimen/text_size_caption2"
                         tools:ignore="HardcodedText"
@@ -265,92 +214,168 @@
 
                 </LinearLayout>
 
-                <View
-                    android:layout_width="0dp"
-                    android:layout_height="0dp"
-                    android:layout_weight=".33" />
-
                 <LinearLayout
-                    android:layout_width="wrap_content"
+                    android:layout_width="0dp"
+                    android:layout_weight="0.25"
                     android:layout_height="wrap_content"
-                    android:orientation="vertical"
-                    android:paddingLeft="@dimen/margin_extra_small"
-                    android:paddingRight="@dimen/margin_extra_small">
+                    android:orientation="vertical">
+
+                    <RelativeLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="@dimen/margin_medium">
+
+                        <View
+                            android:id="@+id/stock_arrived_graph_node"
+                            android:layout_width="@dimen/margin_large"
+                            android:layout_height="@dimen/margin_large"
+                            android:layout_centerInParent="true"
+                            android:background="@drawable/bg_orders_graph_empty_state"
+                            android:textColor="@color/text_medium"
+                            tools:ignore="ContentDescription" />
+
+                        <View
+                            android:id="@+id/connector_to_order_packed"
+                            android:layout_width="match_parent"
+                            android:layout_height="@dimen/border_thick"
+                            android:layout_toEndOf="@id/stock_arrived_graph_node"
+                            android:layout_centerVertical="true"
+                            android:background="@color/border_regular" />
+
+                        <View
+                            android:id="@+id/connector_to_stock_arrived_2"
+                            android:layout_width="match_parent"
+                            android:layout_height="@dimen/border_thick"
+                            android:layout_toStartOf="@id/stock_arrived_graph_node"
+                            android:layout_centerVertical="true"
+                            android:background="@color/border_regular" />
+
+                    </RelativeLayout>
 
                     <TextView
-
                         android:id="@+id/tracker_second_node"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_gravity="center_horizontal"
+                        android:maxLines="1"
                         android:text="@string/stock_arrived"
                         android:textColor="@color/text_medium"
                         android:textSize="@dimen/text_size_caption2"
                         tools:ignore="HardcodedText" />
 
                     <TextView
-
                         android:id="@+id/stock_arrived_value"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_gravity="center_horizontal"
+                        android:gravity="center"
+                        android:maxLines="2"
                         android:textColor="@color/text_extra_light"
                         android:textSize="@dimen/text_size_caption2"
                         tools:ignore="HardcodedText"
                         tools:text="05 Sep" />
+
                 </LinearLayout>
 
-                <View
-                    android:layout_width="0dp"
-                    android:layout_height="0dp"
-                    android:layout_weight=".25" />
-
                 <LinearLayout
-                    android:layout_width="wrap_content"
+                    android:layout_width="0dp"
+                    android:layout_weight="0.25"
                     android:layout_height="wrap_content"
-                    android:orientation="vertical"
-                    android:paddingLeft="@dimen/margin_extra_small"
-                    android:paddingRight="@dimen/margin_extra_small">
+                    android:orientation="vertical">
+
+                    <RelativeLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="@dimen/margin_medium">
+
+                        <View
+                            android:id="@+id/order_packed_graph_node"
+                            android:layout_width="@dimen/margin_large"
+                            android:layout_height="@dimen/margin_large"
+                            android:layout_centerInParent="true"
+                            android:background="@drawable/bg_orders_graph_empty_state"
+                            android:textColor="@color/text_medium"
+                            tools:ignore="ContentDescription" />
+
+                        <View
+                            android:id="@+id/connector_to_dispatched"
+                            android:layout_width="match_parent"
+                            android:layout_height="@dimen/border_thick"
+                            android:layout_toEndOf="@id/order_packed_graph_node"
+                            android:layout_centerVertical="true"
+                            android:background="@color/border_regular" />
+
+                        <View
+                            android:id="@+id/connector_to_order_packed_2"
+                            android:layout_width="match_parent"
+                            android:layout_height="@dimen/border_thick"
+                            android:layout_toStartOf="@id/order_packed_graph_node"
+                            android:layout_centerVertical="true"
+                            android:background="@color/border_regular" />
+
+                    </RelativeLayout>
 
                     <TextView
-
                         android:id="@+id/tracker_third_node"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_gravity="center_horizontal"
+                        android:maxLines="1"
                         android:text="@string/order_packed"
                         android:textColor="@color/text_medium"
                         android:textSize="@dimen/text_size_caption2"
                         tools:ignore="HardcodedText" />
 
                     <TextView
-
                         android:id="@+id/order_packed_value"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_gravity="center_horizontal"
+                        android:gravity="center"
+                        android:maxLines="2"
                         android:textColor="@color/text_extra_light"
                         android:textSize="@dimen/text_size_caption2"
                         tools:ignore="HardcodedText"
                         tools:text="05 Sep" />
+
                 </LinearLayout>
 
-                <View
-                    android:layout_width="0dp"
-                    android:layout_height="0dp"
-                    android:layout_weight=".33" />
-
                 <LinearLayout
-                    android:layout_width="wrap_content"
+                    android:layout_width="0dp"
+                    android:layout_weight="0.25"
                     android:layout_height="wrap_content"
-                    android:orientation="vertical"
-                    android:paddingLeft="@dimen/margin_extra_small">
+                    android:orientation="vertical">
+
+                    <RelativeLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="@dimen/margin_medium">
+
+                        <View
+                            android:id="@+id/dispatched_graph_node"
+                            android:layout_width="@dimen/margin_large"
+                            android:layout_height="@dimen/margin_large"
+                            android:layout_centerInParent="true"
+                            android:background="@drawable/bg_orders_graph_empty_state"
+                            android:textColor="@color/text_medium"
+                            tools:ignore="ContentDescription" />
+
+                        <View
+                            android:id="@+id/connector_to_dispatched_2"
+                            android:layout_width="match_parent"
+                            android:layout_height="@dimen/border_thick"
+                            android:layout_toStartOf="@id/dispatched_graph_node"
+                            android:layout_centerVertical="true"
+                            android:background="@color/border_regular" />
+
+                    </RelativeLayout>
 
                     <TextView
                         android:id="@+id/tracker_fourth_node"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_gravity="center_horizontal"
+                        android:maxLines="1"
                         android:text="@string/dispatched"
                         android:textColor="@color/text_medium"
                         android:textSize="@dimen/text_size_caption2"
@@ -361,6 +386,8 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_gravity="center_horizontal"
+                        android:gravity="center"
+                        android:maxLines="2"
                         android:textColor="@color/text_extra_light"
                         android:textSize="@dimen/text_size_caption2"
                         tools:ignore="HardcodedText"
@@ -368,13 +395,13 @@
 
                 </LinearLayout>
 
+
             </LinearLayout>
 
             <LinearLayout
                 android:id="@+id/row_item_order_track_her_container"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_below="@id/my_order_graph_progress_states"
                 android:layout_marginTop="@dimen/margin_large"
                 android:visibility="gone"
                 android:orientation="vertical">
@@ -407,10 +434,9 @@
             <View
                 android:layout_width="wrap_content"
                 android:layout_height="@dimen/border_thin"
-                android:layout_below="@id/my_order_graph_progress_states"
                 android:layout_marginTop="@dimen/margin_large"
                 android:background="@color/border_light" />
-        </RelativeLayout>
+        </LinearLayout>
 
     </RelativeLayout>
 

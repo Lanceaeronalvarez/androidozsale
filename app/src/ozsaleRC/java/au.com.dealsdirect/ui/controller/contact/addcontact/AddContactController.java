@@ -22,10 +22,12 @@ import au.com.dealsdirect.data.network.model.createcontact.CreateContactResponse
 import au.com.dealsdirect.ui.base.BaseController;
 import au.com.dealsdirect.ui.controller.contact.ContactPreferenceHelper;
 import au.com.dealsdirect.ui.controller.contact.selectorder.ContactSelectOrderController;
+import au.com.dealsdirect.ui.controller.contact.viewcontacts.ViewContactsMvpView;
 import au.com.dealsdirect.ui.custom.CustomAlertDialog;
 import au.com.dealsdirect.utils.BundleBuilder;
 import au.com.dealsdirect.utils.BundleKeys;
 import au.com.dealsdirect.utils.KeyboardUtils;
+import au.com.dealsdirect.utils.module.GateKeeper;
 import butterknife.BindView;
 import butterknife.OnClick;
 
@@ -71,6 +73,8 @@ public class AddContactController extends BaseController implements AddContactMv
 
     private String mChosenSubject = "";
 
+    private ViewContactsMvpView mViewContactsMvpView;
+
     public static AddContactController newInstance() {
         return new AddContactController(
                 new BundleBuilder(new Bundle()).build());
@@ -90,6 +94,7 @@ public class AddContactController extends BaseController implements AddContactMv
         View view = inflater.inflate(R.layout.controller_add_contact, container, false);
         getControllerComponent().inject(this);
         mPresenter.onAttach(this);
+        mViewContactsMvpView = (ViewContactsMvpView) GateKeeper.getCurrentControllerOnRouter(mActivity.getContactRouter());
         return view;
     }
 
@@ -166,7 +171,12 @@ public class AddContactController extends BaseController implements AddContactMv
     @Override
     public void contactCreatedSwitchView(CreateContactResponse createContactResponse) {
         if (createContactResponse.getCreateContact().getResult()) {
-            getRouter().popToRoot();
+            if(mPresenter.isTablet() && getBoolean(R.bool.master_detail_enabled)){
+                mViewContactsMvpView.getPresenter().loadContacts();
+                mViewContactsMvpView.getDisplayRouter().popToRoot();
+            } else {
+                getRouter().popToRoot();
+            }
         } else {
             CustomAlertDialog.showCustomAlertDialog(
                     mActivity, CustomAlertDialog.CustomDialogIconState.NEGATIVE,

@@ -249,6 +249,11 @@ public class CheckoutHostController extends BaseController implements CheckoutHo
         mCheckoutDetailView.showPromoCodeApplied(promoCode, isPromoCodeApplied);
     }
 
+    @Override
+    public Router getDisplayRouter() {
+        return mCheckoutDetailRouter;
+    }
+
     private void showNoCartItemsLayout() {
         mNoCartItemsLayout.setVisibility(View.VISIBLE);
         mCheckoutContainer.setVisibility(View.GONE);

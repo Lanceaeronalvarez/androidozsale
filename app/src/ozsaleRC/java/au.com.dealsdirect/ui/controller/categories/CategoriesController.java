@@ -116,7 +116,7 @@ public class CategoriesController extends BaseController
         super.onViewBound(view);
 
         assert (mActivity) != null;
-        mActivity.setDraggableViewPager(true);
+        mActivity.setDraggableViewPager(false);
         mActivity.setCategoriesRouter(getRouter());
         mActivity.setCategoriesController(this);
         hideKeyboard();
@@ -252,6 +252,15 @@ public class CategoriesController extends BaseController
         mNoNetworkLayout.setVisibility(View.GONE);
     }
 
+    @Override
+    public boolean handleBack() {
+        if(getRouter().getBackstackSize() == 1){
+            mActivity.getHomeController().resetVisibleContainer();
+            return true;
+        }
+
+        return super.handleBack();
+    }
 
     @Override
     public void showCategories(List<GetCategoryTreeResponse> categories) {

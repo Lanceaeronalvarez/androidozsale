@@ -1,6 +1,5 @@
 <resources>
 
-    <bool name="is_ozsale_app">false</bool>
 
     <string name="font_app_black">fonts/lato/App-Font-Black.ttf</string>
     <string name="font_app_black_italic">fonts/lato/App-Font-BlackItalic.ttf</string>
@@ -167,6 +166,7 @@
     <string name="add_to_basket">Add to Basket</string>
     <string name="add_to_cart">Add to Cart</string>
     <string name="add_to_cart_success">Item has been added to your basket</string>
+    <string name="add_to_cart_failed">Item has not been added to your basket</string>
     <string name="category_title">Categories</string>
 
     <!--CONTACTS-->
@@ -227,7 +227,7 @@
     <string name="total">Total</string>
     <string name="pay_today">Pay Today</string>
     <string name="remove">Remove</string>
-    <bool name="is_item_attribute_gone">false</bool>
+
 
     <!--VOUCHERS-->
     <string name="my_vouchers">my vouchers</string>
@@ -427,7 +427,7 @@
     <string name="meanwhile_why_not_search_for_something_else">Meanwhile, why not search for something else?</string>
     <string name="request_new_return">Request New Return</string>
     <string name="clear">clear</string>
-    <bool name="is_checkout_orders_label_visible">false</bool>
+
     <string name="loading">loading</string>
 
     <integer-array name="account_title_array">
@@ -459,8 +459,7 @@
         <item>@drawable/bg_account_logout</item>
     </integer-array>
 
-    <!--APP SPECIFIC SETTINGS-->
-    <bool name="is_ourpay_app">false</bool>
+
 
 
     <string name="create_account">create account</string>
@@ -621,5 +620,6 @@
     <!--Country Id Mapping-->
     <string name="country_id_AS">AS</string>
     <string name="toggle_notifications">Toggle Notifications</string>
+    <string name="value">value</string>
 
 </resources>

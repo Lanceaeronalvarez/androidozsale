@@ -127,6 +127,7 @@ public class SearchFilterController extends BaseController implements SearchFilt
     private int mOrigMaxValue = -1;
     private boolean mHasSeekbarReset = false;
     private boolean mIsSearchFilterControllerActive = false;
+    private String mCategoryKey;
 
     Set<String> mCategoryKeys = new LinkedHashSet<>();
 
@@ -147,6 +148,10 @@ public class SearchFilterController extends BaseController implements SearchFilt
         mSortingFacets = JsonUtils.convertStringToObject(args.getString(BundleKeys.KEY_SORTING_STRING, ""), new TypeToken<ArrayList<SortingResponse>>() {}.getType());
         mCategoryTree = JsonUtils.convertStringToObject(args.getString(BundleKeys.KEY_CATEGORY_STRING, ""), new TypeToken<ArrayList<GetCategoryTreeResponse>>() {}.getType());
         mBrandList = JsonUtils.convertStringToObject(args.getString(BundleKeys.KEY_BRAND_LIST, ""), new TypeToken<ArrayList<String>>() {}.getType());
+        mCategoryKey = args.getString(BundleKeys.SALEITEMS_CATEGORY_MAP, "");
+        if(mCategoryKey != null && !mCategoryKey.isEmpty()) {
+            mCategoryKeys.add(mCategoryKey);
+        }
 
         String previousChipsString = args.getString(BundleKeys.SALEITEMS_CHIPS_FILTER, "");
         mPreviousSearchChips =  previousChipsString.isEmpty() ? new ArrayList<>() :
@@ -195,7 +200,8 @@ public class SearchFilterController extends BaseController implements SearchFilt
         setupPriceFacet();
 
 //      SETUP CATEGORIES
-        mSubCategoriesAdapter = new SubCategoriesAdapter("", mCategoryTree, mPresenter, mCategoryMap);
+        mSubCategoriesAdapter = new SubCategoriesAdapter(mActivity,"", mCategoryTree, mPresenter, mCategoryMap,10);
+
         mFilterCategoriesRecyclerView.setLayoutManager(new LinearLayoutManager(mActivity, LinearLayoutManager.VERTICAL, false));
         mFilterCategoriesRecyclerView.setAdapter(mSubCategoriesAdapter);
 
@@ -442,6 +448,9 @@ public class SearchFilterController extends BaseController implements SearchFilt
         }
 
         mSaleItemsPresenter.onCategoryChanged(true);
+        if (mSaleItemsView.isFromCategories() && mCategoryKeys.size() == 0) {
+            mCategoryKeys.add(mCategoryKey);
+        }
         mSaleItemsPresenter.loadSaleItems(mSaleItemsView.createSaleItemsRequest(mCategoryKeys, 0, mSearchItemsList));
     }
 
@@ -480,17 +489,17 @@ public class SearchFilterController extends BaseController implements SearchFilt
         checkParentSelection(parentNode);
     }
 
-    private void setChildrenSelection(String key, boolean val) {
+    private void setChildrenSelection(String key, boolean isSelected) {
         List<GetCategoryTreeResponse> children = mCategoryMap.get(key).getChildren();
 
         for (GetCategoryTreeResponse category : children) {
-            category.setSelected(val);
-            if (val) {
+            category.setSelected(isSelected);
+            if (isSelected) {
                 mCategoryKeys.add(category.getKey());
             } else {
                 mCategoryKeys.remove(category.getKey());
             }
-            setChildrenSelection(category.getKey(), val);
+            setChildrenSelection(category.getKey(), isSelected);
         }
     }
 

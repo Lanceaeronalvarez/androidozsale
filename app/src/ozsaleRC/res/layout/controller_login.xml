@@ -9,7 +9,7 @@
 
     <include
         android:id="@+id/toolbar_title_login"
-        layout="@layout/partial_toolbar_arrow" />
+        layout="@layout/partial_toolbar_login_close" />
 
     <RelativeLayout
         android:layout_width="match_parent"
@@ -51,6 +51,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginTop="@dimen/margin_extra_large"
                     android:background="@color/white"
+                    android:gravity="center"
                     android:orientation="horizontal">
 
                     <TextView
@@ -86,7 +87,8 @@
                     android:layout_height="wrap_content"
                     android:layout_marginBottom="@dimen/margin_extra_large"
                     android:background="@color/white"
-                    android:orientation="horizontal">
+                    android:orientation="horizontal"
+                    android:gravity="center">
 
                     <TextView
                         android:layout_width="0dp"
@@ -230,8 +232,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
-                android:paddingTop="@dimen/padding_default"
-                android:paddingBottom="@dimen/padding_default"
+                android:paddingTop="@dimen/padding_default_half"
+                android:paddingBottom="@dimen/padding_default_half"
                 android:background="@color/white"
                 android:gravity="center">
 

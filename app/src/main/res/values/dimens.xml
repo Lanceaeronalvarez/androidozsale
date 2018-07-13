@@ -36,6 +36,8 @@
     <dimen name="margin_extra_large">30dp</dimen>
     <dimen name="margin_huge">40dp</dimen>
 
+    <dimen name="negative_margin_small">-10dp</dimen>
+
     <!--General Radius-->
     <dimen name="corner_radius_default">5dp</dimen>
 
@@ -102,8 +104,8 @@
     <dimen name="category_background_height">70dp</dimen>
     <dimen name="category_container_width">100dp</dimen>
     <dimen name="category_image_padding">15dp</dimen>
-    <dimen name="viewholder_subcategory_width">30dp</dimen>
-    <dimen name="viewholder_subcategory_height">30dp</dimen>
+    <dimen name="viewholder_subcategory_width">25dp</dimen>
+    <dimen name="viewholder_subcategory_height">25dp</dimen>
 
     <!-- Facet Filters -->
     <dimen name="row_facet_check_icon_width">30dp</dimen>
@@ -185,6 +187,7 @@
     <dimen name="voucher_container_width">240dp</dimen>
     <dimen name="voucher_container_height">150dp</dimen>
     <dimen name="voucher_padding">50dp</dimen>
+    <dimen name="view_vouchers_padding">50dp</dimen>
     <dimen name="voucher_text_padding">10dp</dimen>
     <dimen name="text_size_voucher_title">34sp</dimen>
 

@@ -7,13 +7,14 @@ import com.androidnetworking.error.ANError;
 import com.facebook.CallbackManager;
 
 import au.com.dealsdirect.data.network.ApiCallback;
+import au.com.dealsdirect.ui.controller.gdpr.GdprMvpPresenter;
 import io.reactivex.Observable;
 
 /**
  * Every presenter in the app must either implement this interface or extend BasePresenter
  * indicating the MvpView type that wants to be attached with.
  */
-public interface AuthenticationMvpPresenter<V extends MvpView> extends MvpPresenter<V>{
+public interface AuthenticationMvpPresenter<V extends MvpView> extends GdprMvpPresenter<V> {
 
 //    void setUserAsLoggedOut();
 //

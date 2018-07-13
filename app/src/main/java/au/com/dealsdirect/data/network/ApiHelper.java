@@ -37,8 +37,8 @@ import au.com.dealsdirect.data.network.model.checkout.GetUserPaymentMethods;
 import au.com.dealsdirect.data.network.model.checkout.RemoveUserPaymentMethod;
 import au.com.dealsdirect.data.network.model.checkout.SetDeliveryOption;
 import au.com.dealsdirect.data.network.model.checkout.getpaymentmethodnonce.GetPaymentMethodNonceRequest;
-import au.com.dealsdirect.data.network.model.consentdata.GetConsentDataResponse;
-import au.com.dealsdirect.data.network.model.consentdata.SaveConsentDataResponse;
+import au.com.dealsdirect.data.network.model.gdpr.consentdata.GetConsentDataResponse;
+import au.com.dealsdirect.data.network.model.gdpr.consentdata.SaveConsentDataResponse;
 import au.com.dealsdirect.data.network.model.contacthistory.GetContactHistoryRequest;
 import au.com.dealsdirect.data.network.model.contacthistory.GetContactHistoryResponse;
 import au.com.dealsdirect.data.network.model.contactitem.GetContactsResponse;
@@ -56,6 +56,8 @@ import au.com.dealsdirect.data.network.model.fcm.NotificationEvent;
 import au.com.dealsdirect.data.network.model.fcm.RegisterDevice;
 import au.com.dealsdirect.data.network.model.forgotpassword.ForgotPasswordRequest;
 import au.com.dealsdirect.data.network.model.forgotpassword.ForgotPasswordResponseBody;
+import au.com.dealsdirect.data.network.model.gdpr.savereceivesales.SaveReceiveSalesRequest;
+import au.com.dealsdirect.data.network.model.gdpr.savereceivesales.SaveReceiveSalesResponse;
 import au.com.dealsdirect.data.network.model.invite.GetInviteRequest;
 import au.com.dealsdirect.data.network.model.invite.GetInviteResponse;
 import au.com.dealsdirect.data.network.model.invite.SetInviteRequest;
@@ -162,6 +164,8 @@ public interface ApiHelper {
     Observable<GetConsentDataResponse> callGetConsentData(String countryId);
 
     Observable<SaveConsentDataResponse> callSaveConsentData(String countryId);
+
+    Observable<SaveReceiveSalesResponse> callSaveReceiveSales(SaveReceiveSalesRequest saveReceiveSalesRequest);
 
     Observable<GetAppSettingsConsent.ResponseValue> callGetPublicAppSettingsConsent(String countryId);
 

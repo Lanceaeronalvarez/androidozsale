@@ -49,6 +49,7 @@ import au.com.dealsdirect.ui.custom.CustomAlertDialog;
 import au.com.dealsdirect.utils.BundleBuilder;
 import au.com.dealsdirect.utils.BundleKeys;
 import au.com.dealsdirect.utils.CartUtil;
+import au.com.dealsdirect.utils.CookieUtils;
 import au.com.dealsdirect.utils.module.GateKeeper;
 import butterknife.BindView;
 import butterknife.OnClick;
@@ -384,11 +385,11 @@ public class AccountController extends BaseController implements AccountMvpView,
             public void success() {
                 mPresenter.onAttach(mvpView);
                 mActivity.callGCMRegisterSubscriber();
-              
-                if(mRightToolbarButton != null) {
+
+                if (mRightToolbarButton != null) {
                     mRightToolbarButton.setText(getActivity().getResources().getString(R.string.log_out));
                 }
-              
+
                 mActivity.getMainController().getHomeController().resetRouters();
                 if (mPresenter.isTablet()) {
                     mActivity.getMainController().getHomeController().resetAccountRouter();
@@ -406,6 +407,11 @@ public class AccountController extends BaseController implements AccountMvpView,
 
     @Override
     public void triggerLogout() {
+        triggerLogout(true);
+    }
+
+    @Override
+    public void triggerLogout(boolean showDialog) {
         mActivity.callLogout(new AuthHandler() {
             @Override
             public void success() {
@@ -413,23 +419,28 @@ public class AccountController extends BaseController implements AccountMvpView,
                 CartUtil.setValueToCart(0);
                 mActivity.getMainController().getHomeController().removeBasketItemCount();
                 mRightToolbarButton.setText(getActivity().getResources().getString(R.string.log_in));
+                CookieUtils.getInstance().clear();
 
                 //reset routers with unique user info
                 mActivity.getMainController().getHomeController().resetRouters();
                 if (mPresenter.isTablet()) {
                     mActivity.setShopsAsVisibleContainer();
                 }
-                CustomAlertDialog.showCustomAlertDialog(getActivity(),
-                        CustomAlertDialog.CustomDialogIconState.POSITIVE,
-                        getActivity().getString(R.string.logout_successful));
+
+                if (showDialog) {
+                    CustomAlertDialog.showCustomAlertDialog(getActivity(),
+                            CustomAlertDialog.CustomDialogIconState.POSITIVE,
+                            getActivity().getString(R.string.logout_successful));
+                }
             }
 
             @Override
             public void error() {
-
-                CustomAlertDialog.showCustomAlertDialog(getActivity(),
-                        CustomAlertDialog.CustomDialogIconState.NEGATIVE,
-                        getActivity().getString(R.string.logout_failed));
+                if (showDialog) {
+                    CustomAlertDialog.showCustomAlertDialog(getActivity(),
+                            CustomAlertDialog.CustomDialogIconState.NEGATIVE,
+                            getActivity().getString(R.string.logout_failed));
+                }
             }
         });
 

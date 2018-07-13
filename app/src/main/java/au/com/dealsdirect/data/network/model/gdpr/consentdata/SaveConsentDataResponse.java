@@ -1,4 +1,4 @@
-package au.com.dealsdirect.data.network.model.consentdata;
+package au.com.dealsdirect.data.network.model.gdpr.consentdata;
 /*
  * Created by CodeineBot on 1/6/17.
  */

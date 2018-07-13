@@ -95,8 +95,9 @@ public class BannersAdapter extends RecyclerView.Adapter<BannersAdapter.ViewHold
     }
 
     public void addAll(List<GetBannerResponse> bannerResponses) {
+        int previousCount = mSales.size();
         mSales.addAll(bannerResponses);
-        notifyDataSetChanged();
+        notifyItemRangeInserted(previousCount,mSales.size()-previousCount);
     }
 
     @Override

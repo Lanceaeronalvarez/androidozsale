@@ -17,4 +17,6 @@ public interface SaleItemDetailsMvpView extends MvpView {
     void showMyPayDetails(GetSaleItemDetailsResponse value, Ourpay ourpay);
 
     void onCallGetBasketItemsQuantity();
+
+    int getVerticalOffset();
 }

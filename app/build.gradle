@@ -267,7 +267,7 @@ android {
         }
 
         ozsaleRC {
-            versionCode 21
+            versionCode 24
             versionName "0.9"
             applicationId "au.com.ozsale"
 
@@ -292,7 +292,7 @@ android {
         }
 
         ozsaleTest {
-            versionCode 14
+            versionCode 17
             versionName "0.9"
             applicationId "au.com.ozsale.test"
 

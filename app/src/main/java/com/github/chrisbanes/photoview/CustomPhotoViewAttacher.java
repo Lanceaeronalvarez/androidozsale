@@ -913,5 +913,9 @@ public class CustomPhotoViewAttacher implements View.OnTouchListener,
             }
         }
     }
+
+    public boolean isScaling(){
+        return mScaleDragDetector.isScaling();
+    }
 }
 

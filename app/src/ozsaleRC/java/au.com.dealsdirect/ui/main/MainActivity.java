@@ -253,7 +253,7 @@ public class MainActivity extends BaseActivity implements MainMvpView {
             getHomeController().getPopUpHostRouter().handleBack();
         } else {
             Router currentRouter = getCurrentRouter();
-            Controller currentController = getCurrentController(getCurrentRouter());
+            Controller currentController = getCurrentController(currentRouter);
 
             switch (getMainController().getHomeViewPager().getCurrentItem()) {
                 case BANNER_FILTER_INDEX:
@@ -293,14 +293,13 @@ public class MainActivity extends BaseActivity implements MainMvpView {
                         (dialogInterface, i) -> finish(),
                         (dialogInterface, i) -> {
                         });
-            } else if (!isMasterDetailRouter(currentRouter)) {
-                getMainController().showBottomNav();
-                setShopsAsVisibleContainer();
+            } else if (!isMasterDetail(currentRouter)) {
+                getHomeController().resetVisibleContainer();
             } else if (currentController instanceof PaymentSuccessMvpView) {
                 //backpress for payment success
                 getMainController().getHomeController().getCheckoutRouter().popToRoot();
                 Controller controller = getMainController().getHomeController().getCurrentControllerOnRouter(mCheckoutRouter);
-                ((CheckoutController) controller).loadCart();
+                ((CheckoutMvpView) controller).loadCart();
             } else {
                 currentRouter.handleBack();
             }
@@ -309,8 +308,9 @@ public class MainActivity extends BaseActivity implements MainMvpView {
         }
     }
 
-    private boolean isMasterDetailRouter(Router router) {
-        return mPresenter.isTablet() && (router == mAccountsRouter || router == mCheckoutRouter || router == mContactsRouter);
+    private boolean isMasterDetail(Router router) {
+        return mPresenter.isTablet() && getResources().getBoolean(R.bool.master_detail_enabled) &&
+                (router == mContactsRouter || router == mCheckoutRouter || router == mAccountsRouter);
     }
 
     private void shopsRouterFromCategoryBackPress(Router currentRouter, Controller currentController) {
@@ -711,6 +711,9 @@ public class MainActivity extends BaseActivity implements MainMvpView {
         mContactsRouter = router;
     }
 
+    public Router getContactRouter() {
+        return mContactsRouter;
+    }
     public void setAccountsRouter(Router router) {
         mAccountsRouter = router;
     }

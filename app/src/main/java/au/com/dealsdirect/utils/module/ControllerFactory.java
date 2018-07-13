@@ -10,6 +10,7 @@ import au.com.dealsdirect.ui.controller.address.viewaddress.ViewAddressControlle
 import au.com.dealsdirect.ui.controller.categories.CategoriesController;
 import au.com.dealsdirect.ui.controller.checkout.addpayment.AddPaymentController;
 import au.com.dealsdirect.ui.controller.checkout.checkout.CheckoutController;
+import au.com.dealsdirect.ui.controller.checkout.checkouthost.CheckoutHostController;
 import au.com.dealsdirect.ui.controller.checkout.ourpay.OurpaySMSVerificationController;
 import au.com.dealsdirect.ui.controller.checkout.paymentselect.PaymentSelectController;
 import au.com.dealsdirect.ui.controller.checkout.paymentsuccess.PaymentSuccessController;
@@ -73,6 +74,8 @@ public class ControllerFactory {
                 return CategoriesController.newInstance();
             case CHECKOUT:
                 return CheckoutController.newInstance();
+            case CHECKOUT_HOST:
+                return CheckoutHostController.newInstance();
             case SALEITEMS:
                 return SaleItemsController.newInstance();
             case ACCOUNT:
@@ -151,6 +154,8 @@ public class ControllerFactory {
                 return new CategoriesController(bundle);
             case CHECKOUT:
                 return new CheckoutController(bundle);
+            case CHECKOUT_HOST:
+                return new CheckoutHostController(bundle);
             case SALEITEMS:
                 return new SaleItemsController(bundle);
             case ACCOUNT:

@@ -68,6 +68,7 @@ public class SaleItemsPresenter<V extends SaleItemsMvpView> extends BasePresente
     @Override
     public void loadProductDetails(RecyclerView.ViewHolder viewHolder, int position, String
             seoIdentifierId, String imageUrl, String skuId, String saleId) {
+        getMvpView().hideKeyboard();
         getMvpView().showProductDetails(viewHolder, position, seoIdentifierId, imageUrl, skuId, saleId);
     }
 

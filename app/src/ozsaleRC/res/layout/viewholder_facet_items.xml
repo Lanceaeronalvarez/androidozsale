@@ -35,4 +35,13 @@
             android:visibility="visible" />
 
     </FrameLayout>
+
+    <View
+        android:id="@+id/viewholder_subcategoryitems_border"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/border_thick"
+        android:layout_marginLeft="@dimen/margin_tiny"
+        android:background="@color/border_regular"
+        android:visibility="visible" />
+
 </LinearLayout>

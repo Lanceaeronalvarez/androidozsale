@@ -3,6 +3,8 @@ package au.com.dealsdirect.ui.controller.details;
 import android.app.DatePickerDialog;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
+import android.text.Html;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -21,10 +23,14 @@ import java.util.List;
 import javax.inject.Inject;
 
 import au.com.dealsdirect.R;
+import au.com.dealsdirect.data.network.model.gdpr.savereceivesales.SaveReceiveSalesResponse;
 import au.com.dealsdirect.data.network.model.userdetails.GetUserDetailsResponse;
 import au.com.dealsdirect.data.network.model.userdetails.SetUserDetailsRequest;
+import au.com.dealsdirect.data.pref.AppPreferencesHelper;
 import au.com.dealsdirect.ui.base.BasePullToRefreshController;
 import au.com.dealsdirect.ui.custom.CustomAlertDialog;
+import au.com.dealsdirect.ui.custom.toggleswitch.BaseToggleSwitch;
+import au.com.dealsdirect.ui.custom.toggleswitch.CustomToggleSwitch;
 import au.com.dealsdirect.ui.custom.transitions.CustomSpinnerAdapter;
 import au.com.dealsdirect.utils.BundleBuilder;
 import au.com.dealsdirect.utils.DateUtils;
@@ -76,8 +82,17 @@ public class DetailsController extends BasePullToRefreshController implements De
     @BindView(R.id.controller_details_background)
     LinearLayout background;
 
+    @Nullable
+    @BindView(R.id.register_emails_toggle)
+    CustomToggleSwitch mEmailsToggle;
+
+    @Nullable
+    @BindView(R.id.register_emails_text)
+    TextView mPromotionEmailsText;
+
     private Calendar mCalendar;
     private DatePickerDialog.OnDateSetListener onDateSetListener;
+    private BaseToggleSwitch.OnToggleSwitchChangeListener mOnToggleSwitchListener;
 //    private ElasticHorizontalDragDismissFrameLayout.ElasticHorizontalDragDismissCallback mDragDismissCallback
 //            = new ElasticHorizontalDragDismissFrameLayout.ElasticHorizontalDragDismissCallback() {
 //        @Override
@@ -125,8 +140,23 @@ public class DetailsController extends BasePullToRefreshController implements De
 
     @Override
     protected void setUp(View view) {
+
+        if (mPromotionEmailsText != null) {
+            mPromotionEmailsText.setText(Html.fromHtml(mPresenter.getGdprTemplateTexts(
+                    AppPreferencesHelper.CONSENT_WITH_REGISTRATION_EMAILS_TEXT)));
+        }
+
+        if (mEmailsToggle != null && mPresenter.getGdprIsChecked(AppPreferencesHelper.CONSENT_EMAILS_CHECKED)) {
+            mOnToggleSwitchListener = new BaseToggleSwitch.OnToggleSwitchChangeListener() {
+                @Override
+                public void onToggleSwitchChangeListener(int position, boolean isChecked) {
+                    mPresenter.saveReceiveSales(position == 0);
+                }
+            };
+        }
+
         mSaveUserDetailsButton.setImageDrawable(getResources().getDrawable(R.drawable.ic_check));
-        mSaveUserDetailsButton.setVisibility(getBoolean(R.bool.is_ozsale_app) ? View.GONE : View.VISIBLE);
+        mSaveUserDetailsButton.setVisibility(getBoolean(R.bool.is_ozsale_app) ? View.INVISIBLE : View.VISIBLE);
         mTitleTextView.setText(getString(R.string.account_details));
         mToolbarLeftView.setVisibility(mPresenter.isTablet() ? View.GONE : View.VISIBLE);
 
@@ -177,6 +207,14 @@ public class DetailsController extends BasePullToRefreshController implements De
         mLastNameText.setText(value.getSurname());
         mEmailAddressText.setText(value.getEmail());
 
+        if (mEmailsToggle != null && mPresenter.getGdprIsChecked(AppPreferencesHelper.CONSENT_EMAILS_CHECKED)) {
+//            POSITION 0 == YES
+            mEmailsToggle.removeOnToggleSwitchListener();
+            mEmailsToggle.setCheckedTogglePosition(value.getReceiveInvitations() ? 0 : 1);
+            mEmailsToggle.setOnToggleSwitchChangeListener(mOnToggleSwitchListener);
+        }
+
+
         if (value.getDateOfBirth() != null) {
             String day = value.getDateOfBirth().getDay().toString();
             String year = value.getDateOfBirth().getYear().toString();
@@ -204,6 +242,11 @@ public class DetailsController extends BasePullToRefreshController implements De
         CustomAlertDialog.showCustomAlertDialog(mActivity,
                 CustomAlertDialog.CustomDialogIconState.NEGATIVE,
                 message);
+    }
+
+    @Override
+    public void onSaveReceiveSales(SaveReceiveSalesResponse saveReceiveSalesResponse) {
+        //TODO for future implementation
     }
 
     @OnClick(R.id.partial_toolbar_right_view)

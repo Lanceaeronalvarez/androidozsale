@@ -284,6 +284,10 @@ public abstract class BaseToggleSwitch extends LinearLayout implements View.OnCl
         this.mOnToggleSwitchChangeListener = onToggleSwitchChangeListener;
     }
 
+    public void removeOnToggleSwitchListener() {
+        this.mOnToggleSwitchChangeListener = null;
+    }
+
     public void notifyOnToggleChange(int position) {
 
         switch (position) {
@@ -315,8 +319,7 @@ public abstract class BaseToggleSwitch extends LinearLayout implements View.OnCl
     private float dp2px(Context context, float dp) {
         Resources resources = context.getResources();
         DisplayMetrics metrics = resources.getDisplayMetrics();
-        float px = dp * (metrics.densityDpi / 160f);
-        return px;
+        return dp * (metrics.densityDpi / 160f);
     }
 
     private boolean isFirst(CustomToggleSwitchButton toggleSwitchButton) {

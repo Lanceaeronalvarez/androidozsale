@@ -143,10 +143,10 @@ public class Personalisation {
 
         @SerializedName("Key")
         @Expose
-        private String key;
+        private String key = "";
         @SerializedName("Value")
         @Expose
-        private String value;
+        private String value = "";
 
         public String getKey() {
             return key;

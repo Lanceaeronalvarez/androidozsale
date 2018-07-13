@@ -77,7 +77,11 @@ public class AccountPresenter<V extends AccountMvpView> extends BasePresenter<V>
         if (option.equals(context.getString(R.string.account_language))) {
             getMvpView().showLanguage();
         } else if (option.equals(context.getString(R.string.account_clear_cookies_data))) {
-            CookieUtils.getInstance().clear();
+            if (getDataManager().isAuthorized()) {
+                getMvpView().triggerLogout(false);
+            } else {
+                CookieUtils.getInstance().clear();
+            }
         } else if (option.equals(context.getString(R.string.account_about_us))) {
             getMvpView().showLegalities(BundleKeys.TEMPLATE_KEY_ABOUT_US, option);
         } else if (option.equals(context.getString(R.string.account_privacy))) {

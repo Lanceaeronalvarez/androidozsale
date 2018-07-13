@@ -1,13 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-                xmlns:tools="http://schemas.android.com/tools"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:background="@color/background_default">
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/background_default"
+    tools:ignore="MissingPrefix">
 
     <include
         android:id="@+id/controller_return_details_toolbar_layout"
-        layout="@layout/partial_toolbar_arrow"/>
+        layout="@layout/partial_toolbar_arrow" />
 
 
     <ScrollView
@@ -15,81 +16,82 @@
         android:layout_height="match_parent"
         android:layout_below="@+id/controller_return_details_toolbar_layout">
 
-        <RelativeLayout
-            android:id="@+id/controller_return_details_container"
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_below="@+id/controller_return_details_toolbar_layout"
-            android:layout_marginTop="@dimen/activity_horizontal_margin"
-            android:isScrollContainer="true">
+            android:orientation="vertical">
 
-            <LinearLayout
+            <TextView
+                fontPath="@string/font_app_light"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_alignParentTop="true"
-                android:layout_centerHorizontal="true"
+                android:layout_marginBottom="@dimen/padding_default_half"
+                android:layout_marginLeft="@dimen/padding_default"
+                android:layout_marginRight="@dimen/padding_default"
+                android:layout_marginTop="@dimen/padding_default"
+                android:text="@string/my_returns"
+                android:textAllCaps="true"
+                android:textColor="@color/text_medium"
+                android:textSize="@dimen/text_size_caption2" />
+
+            <TextView
+                android:id="@+id/controller_return_details_order_number"
+                fontPath="@string/font_app_semibold"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:padding="@dimen/margin_small"
+                android:paddingTop="@dimen/margin_large"
+                android:text="@string/order_numbersign"
+                android:textColor="@color/colorAccent"
+                android:textSize="@dimen/text_size_headline2"
+                android:visibility="gone"
+                tools:ignore="MissingPrefix" />
+
+
+            <android.support.v7.widget.RecyclerView
+                android:id="@+id/controller_return_details_recyclerview"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@color/white"
                 android:orientation="vertical"
-                android:padding="@dimen/margin_small">
+                android:overScrollMode="never" />
+
+            <RelativeLayout
+                android:id="@+id/controller_return_details_total_container"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/margin_medium"
+                android:background="@color/white"
+                android:padding="@dimen/margin_small"
+                android:visibility="gone">
+
 
                 <TextView
-                    android:id="@+id/controller_return_details_order_number"
-                    fontPath="@string/font_app_semibold"
+                    android:id="@+id/controller_return_details_total"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:padding="@dimen/margin_small"
-                    android:paddingTop="@dimen/margin_large"
-                    android:text="@string/order_numbersign"
+                    android:fontFamily="@string/font_app_medium"
+                    android:text="Total inc GST:"
+                    android:textColor="@color/text_dark"
+                    android:textSize="@dimen/text_size_headline3"
+                    tools:ignore="HardcodedText" />
+
+
+                <TextView
+                    android:id="@+id/controller_return_details_total_value"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentEnd="true"
+                    android:layout_marginStart="@dimen/margin_small"
+                    android:fontFamily="@string/font_app_medium"
                     android:textColor="@color/colorAccent"
-                    android:textSize="@dimen/text_size_headline2"
-                    android:visibility="gone"
-                    tools:ignore="MissingPrefix"/>
+                    android:textSize="@dimen/text_size_headline3"
+                    tools:ignore="HardcodedText" />
 
+            </RelativeLayout>
 
-                <android.support.v7.widget.RecyclerView
-                    android:id="@+id/controller_return_details_recyclerview"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="vertical"
-                    android:overScrollMode="never"
-                    android:background="@color/white"
-                    android:paddingRight="@dimen/margin_small"/>
+        </LinearLayout>
 
-                <RelativeLayout
-                    android:id="@+id/controller_return_details_total_container"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="@dimen/margin_medium"
-                    android:background="@color/white"
-                    android:visibility="gone"
-                    android:padding="@dimen/margin_small">
-
-
-                    <TextView
-                        android:id="@+id/controller_return_details_total"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:fontFamily="@string/font_app_medium"
-                        android:text="Total inc GST:"
-                        android:textColor="@color/text_dark"
-                        android:textSize="@dimen/text_size_headline3"
-                        tools:ignore="HardcodedText"/>
-
-
-                    <TextView
-                        android:id="@+id/controller_return_details_total_value"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginStart="@dimen/margin_small"
-                        android:layout_alignParentEnd="true"
-                        android:fontFamily="@string/font_app_medium"
-                        android:textColor="@color/colorAccent"
-                        android:textSize="@dimen/text_size_headline3"
-                        tools:ignore="HardcodedText"/>
-
-                </RelativeLayout>
-
-            </LinearLayout>
-        </RelativeLayout>
     </ScrollView>
 
     <RelativeLayout
@@ -104,7 +106,7 @@
             android:layout_height="@dimen/border_regular"
             android:layout_marginBottom="@dimen/margin_large"
             android:background="@color/text_light"
-            android:visibility="gone"/>
+            android:visibility="gone" />
 
         <RelativeLayout
             android:id="@+id/controller_return_details_bottom_info"
@@ -128,7 +130,7 @@
                     android:text="Request Date:"
                     android:textColor="@color/text_extra_dark"
                     android:textSize="@dimen/text_size_headline2"
-                    tools:ignore="HardcodedText"/>
+                    tools:ignore="HardcodedText" />
 
 
                 <TextView
@@ -142,7 +144,7 @@
                     android:text="12/08/16"
                     android:textColor="#1b1b1b"
                     android:textSize="@dimen/text_size_headline2"
-                    tools:ignore="HardcodedText"/>
+                    tools:ignore="HardcodedText" />
 
             </RelativeLayout>
 
@@ -172,7 +174,7 @@
                     android:text="Approved:"
                     android:textColor="@color/text_dark"
                     android:textSize="@dimen/text_size_headline2"
-                    tools:ignore="HardcodedText"/>
+                    tools:ignore="HardcodedText" />
 
 
                 <TextView
@@ -186,7 +188,7 @@
                     android:text="---"
                     android:textColor="@color/text_extra_dark"
                     android:textSize="@dimen/text_size_headline2"
-                    tools:ignore="HardcodedText"/>
+                    tools:ignore="HardcodedText" />
 
             </RelativeLayout>
 
@@ -215,7 +217,7 @@
                     android:text="Status:"
                     android:textColor="@color/text_dark"
                     android:textSize="@dimen/text_size_headline2"
-                    tools:ignore="HardcodedText"/>
+                    tools:ignore="HardcodedText" />
 
 
                 <TextView
@@ -229,7 +231,7 @@
                     android:text="---"
                     android:textColor="@color/colorPrimaryDark"
                     android:textSize="@dimen/text_size_headline2"
-                    tools:ignore="HardcodedText"/>
+                    tools:ignore="HardcodedText" />
 
             </RelativeLayout>
 
@@ -260,7 +262,7 @@
                     android:text="RAN:"
                     android:textColor="@color/text_dark"
                     android:textSize="@dimen/text_size_headline2"
-                    tools:ignore="HardcodedText"/>
+                    tools:ignore="HardcodedText" />
 
 
                 <TextView
@@ -274,7 +276,7 @@
                     android:text="Pending"
                     android:textColor="@color/colorPrimaryDark"
                     android:textSize="@dimen/text_size_headline2"
-                    tools:ignore="HardcodedText"/>
+                    tools:ignore="HardcodedText" />
 
             </RelativeLayout>
 

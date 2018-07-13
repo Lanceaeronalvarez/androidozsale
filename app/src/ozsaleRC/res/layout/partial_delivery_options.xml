@@ -16,7 +16,8 @@
         android:text="@string/delivery_method"
         android:paddingStart="@dimen/padding_default"
         android:paddingEnd="@dimen/padding_default"
-        android:layout_marginBottom="@dimen/margin_extra_small"/>
+        android:textSize="@dimen/text_size_caption2"
+        android:layout_marginBottom="@dimen/padding_default_half"/>
 
     <RelativeLayout
         android:layout_width="match_parent"

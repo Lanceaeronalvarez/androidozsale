@@ -43,13 +43,13 @@ public class ViewContactHistoryController extends BaseController implements View
     @BindView(R.id.contact_history_recycler_view)
     RecyclerView mContactHistoryRecyclerView;
 
-    @BindView(R.id.controller_view_contact_history_header_sale)
-    TextView mContactHistorySale;
+    @BindView(R.id.partial_toolbar_details_subtitle_textview)
+    TextView mContactHistorySaleSubTitle;
 
-    @BindView(R.id.partial_toolbar_right_view)
+    @BindView(R.id.partial_toolbar_field_title_right_option)
     ImageView mContactHistoryRightOption;
 
-    @BindView(R.id.partial_toolbar_title)
+    @BindView(R.id.partial_toolbar_details_upper_title_textview)
     TextView mContactHistoryTitle;
 
     @BindView(R.id.controller_view_contacts_history_message_field)
@@ -117,9 +117,9 @@ public class ViewContactHistoryController extends BaseController implements View
         mContactHistoryTitle.setText(mContactSubject);
 
         if (!mSaleNameObject.isEmpty()) {
-            mContactHistorySale.setText(mInvoiceNumber + ": " + mSaleNameObject);
+            mContactHistorySaleSubTitle.setText(mInvoiceNumber + ": " + mSaleNameObject);
         } else {
-            mContactHistorySale.setText(R.string.no_order_number);
+            mContactHistorySaleSubTitle.setText(R.string.no_order_number);
         }
     }
 
@@ -137,13 +137,13 @@ public class ViewContactHistoryController extends BaseController implements View
         ContactHistoryAdapter adapter = new ContactHistoryAdapter(myContactItems, mActivity);
 
         LinearLayoutManager layoutManager = new LinearLayoutManager(mActivity);
-        layoutManager.setStackFromEnd(true);
+        layoutManager.setStackFromEnd(!mPresenter.isTablet());
 
         mContactHistoryRecyclerView.setAdapter(adapter);
         mContactHistoryRecyclerView.setLayoutManager(layoutManager);
     }
 
-    @OnClick(R.id.partial_toolbar_left_view)
+    @OnClick(R.id.partial_toolbar_field_title_left_option)
     void onBackClick() {
         mActivity.onBackPressed();
     }

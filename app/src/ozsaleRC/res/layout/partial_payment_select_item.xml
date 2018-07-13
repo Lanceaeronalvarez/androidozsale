@@ -7,27 +7,36 @@
     android:background="@drawable/bg_checkout_options"
     tools:ignore="MissingPrefix">
 
-    <TextView
-        android:id="@+id/controller_address_delete_text"
-        android:layout_width="wrap_content"
+    <LinearLayout
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        fontPath="@string/font_app_regular"
-        android:layout_alignBottom="@+id/controller_address_container"
-        android:layout_alignParentRight="true"
-        android:layout_alignTop="@id/controller_address_container"
-        android:layout_centerVertical="true"
-        android:layout_marginRight="@dimen/margin_medium"
-        android:gravity="center_vertical"
-        android:text="@string/delete"
-        android:visibility="gone"
-        android:textColor="@color/white"
-        android:textSize="@dimen/text_size_body" />
+        android:layout_alignBottom="@+id/controller_payment_select_container"
+        android:layout_alignTop="@+id/controller_payment_select_container"
+        android:orientation="horizontal">
+
+        <View
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="0.8" />
+
+        <TextView
+            android:id="@+id/controller_address_delete_text"
+            fontPath="@string/font_app_regular"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="0.2"
+            android:gravity="center"
+            android:text="@string/delete"
+            android:textColor="@color/white"
+            android:textSize="@dimen/text_size_body"
+            android:visibility="gone" />
+    </LinearLayout>
 
     <FrameLayout
         android:id="@+id/controller_payment_select_container"
-        android:padding="@dimen/padding_default"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:padding="@dimen/padding_default">
 
         <RelativeLayout
             android:layout_width="match_parent"
@@ -60,12 +69,12 @@
                     tools:text="Master Card" />
 
                 <TextView
-                    fontPath="@string/font_app_light"
                     android:id="@+id/partial_checkout_payment_details"
+                    fontPath="@string/font_app_light"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:textSize="@dimen/text_size_body"
                     android:textColor="@color/text_medium"
+                    android:textSize="@dimen/text_size_body"
                     tools:text="card ending in 02/16" />
 
             </LinearLayout>
@@ -73,6 +82,7 @@
         </RelativeLayout>
     </FrameLayout>
 
-    <View style="@style/horizontalBorderView"
-        android:layout_below="@id/controller_payment_select_container"/>
+    <View
+        style="@style/horizontalBorderView"
+        android:layout_below="@id/controller_payment_select_container" />
 </RelativeLayout>

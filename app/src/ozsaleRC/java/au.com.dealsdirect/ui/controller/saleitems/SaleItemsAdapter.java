@@ -143,8 +143,9 @@ public class SaleItemsAdapter extends RecyclerView.Adapter<SaleItemsAdapter.View
     }
 
     public void addData(List<GetSaleItemsResponse.Products> saleItems) {
+        int previousCount = mData.size();
         mData.addAll(saleItems);
-        notifyDataSetChanged();
+        notifyItemRangeInserted(previousCount, mData.size() - previousCount);
     }
 
     @Override

@@ -115,6 +115,10 @@ public class RegisterController extends VisaCheckoutController implements Regist
     @BindView(R.id.controller_login_privacy_textview)
     TextView mPrivacyTextView;
 
+    @Nullable
+    @BindView(R.id.partial_toolbar_left_view)
+    TextView mLeftButton;
+
     public static RegisterController newInstance() {
 
         return new RegisterController(
@@ -153,6 +157,13 @@ public class RegisterController extends VisaCheckoutController implements Regist
         //mPresenter.loadSample(new SampleRequest());
 
         mToolBarTitle.setText(getResources().getString(R.string.register_title));
+
+        if (getResources().getBoolean(R.bool.is_ozsale_app)){
+            if (mLeftButton != null) {
+                mLeftButton.setVisibility(View.VISIBLE);
+                mLeftButton.setText(getResources().getString(R.string.log_in));
+            }
+        }
 
         mActivity.setDraggableViewPager(false);
 

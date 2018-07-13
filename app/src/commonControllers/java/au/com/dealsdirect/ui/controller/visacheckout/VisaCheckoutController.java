@@ -2,6 +2,7 @@ package au.com.dealsdirect.ui.controller.visacheckout;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -18,8 +19,6 @@ import com.visa.checkout.VisaCheckoutSdk;
 import com.visa.checkout.VisaCheckoutSdkInitListener;
 import com.visa.checkout.widget.VisaCheckoutButton;
 
-import java.math.BigInteger;
-
 import javax.inject.Inject;
 
 import au.com.dealsdirect.R;
@@ -31,7 +30,6 @@ import au.com.dealsdirect.ui.base.BaseActivity;
 import au.com.dealsdirect.ui.base.BaseController;
 import au.com.dealsdirect.ui.base.VisaCheckoutMvpPresenter;
 import au.com.dealsdirect.ui.base.VisaCheckoutMvpView;
-import au.com.dealsdirect.ui.main.MainActivity;
 import au.com.dealsdirect.utils.AppLogger;
 import au.com.dealsdirect.utils.ViewUtils;
 
@@ -40,7 +38,7 @@ import au.com.dealsdirect.utils.ViewUtils;
  * Created by smartwave on 05/04/2018.
  */
 
-public abstract class VisaCheckoutController extends BaseController implements VisaCheckoutMvpView{
+public abstract class VisaCheckoutController extends BaseController implements VisaCheckoutMvpView {
 
     protected VisaCheckoutController(Bundle args) {
         super(args);
@@ -55,7 +53,7 @@ public abstract class VisaCheckoutController extends BaseController implements V
 
     private ViewGroup mVisaCheckoutBtnParent;
 
-    private  ViewTreeObserver.OnGlobalLayoutListener mVisaCheckoutOnGlobalLayoutListener;
+    private ViewTreeObserver.OnGlobalLayoutListener mVisaCheckoutOnGlobalLayoutListener;
 
     @NonNull
     @Override
@@ -72,8 +70,8 @@ public abstract class VisaCheckoutController extends BaseController implements V
     protected void onViewBound(@NonNull View view) {
         super.onViewBound(view);
         registerForActivityResult(BraintreeRequestCodes.VISA_CHECKOUT);
-        mVisaCheckoutButton = (VisaCheckoutButton) view.findViewById(R.id.button_visacheckout);
-        if(mVisaCheckoutButton!=null) {
+        mVisaCheckoutButton = (VisaCheckoutButton) view.findViewById(R.id.button_visa_checkout);
+        if (mVisaCheckoutButton != null) {
             mVisaCheckoutBtnParent = ((ViewGroup) mVisaCheckoutButton.getParent());
             mVisaCheckoutButton.setCheckoutListener(new VisaCheckoutButton.CheckoutWithVisaListener() {
                 @Override
@@ -90,12 +88,22 @@ public abstract class VisaCheckoutController extends BaseController implements V
 
 //      Reattach presenter, global layout listeners
         mVcoPresenter.onAttach(this);
-        if(mVisaCheckoutButton!=null) {
+
+//        Commented 07/10/2018 - still experiencing weird issues in tablet. abandoned resizing it for the moment for tablet.
+//        This logic is only done on phones.
+        if (mVisaCheckoutButton != null && !mVcoPresenter.isTablet()) {
             mVisaCheckoutOnGlobalLayoutListener = new ViewTreeObserver.OnGlobalLayoutListener() {
                 @Override
                 public void onGlobalLayout() {
-                    mVisaCheckoutButton.setButtonWidth((int) ViewUtils.pxToDp(((ViewGroup) mVisaCheckoutButton.getParent()).getWidth()));
-                    mVisaCheckoutButton.requestLayout();
+                    int width = (int) ViewUtils.pxToDp(((ViewGroup) mVisaCheckoutButton.getParent()).getWidth());
+                    if (width != 0) {
+                        mVisaCheckoutButton.setButtonWidth(width);
+                        mVisaCheckoutButton.invalidate();
+                        mVisaCheckoutButton.postDelayed(()->{
+                            mVisaCheckoutButton.requestLayout();
+                            mVisaCheckoutBtnParent.getViewTreeObserver().removeOnGlobalLayoutListener(this);
+                        },1000);
+                    }
                 }
             };
 
@@ -106,13 +114,9 @@ public abstract class VisaCheckoutController extends BaseController implements V
     @Override
     public void onDetach(View view) {
         super.onDetach(view);
-//      remove global layout listeners
-        if(mVisaCheckoutButton!=null) {
-            mVisaCheckoutBtnParent.getViewTreeObserver().removeOnGlobalLayoutListener(mVisaCheckoutOnGlobalLayoutListener);
-        }
     }
 
-    private void initSdk(Profile profile){
+    private void initSdk(Profile profile) {
         // Initialize SDK
         VisaCheckoutSdk.init(mActivity, profile, new VisaCheckoutSdkInitListener() {
             @Override
@@ -121,7 +125,7 @@ public abstract class VisaCheckoutController extends BaseController implements V
                 AppLogger.d("VC_Init", "Code:" + code + "  Message:" + message);
 
                 if (mVisaCheckoutButton != null) {
-                    switch (code){
+                    switch (code) {
                         case VisaCheckoutSdk.Status.SUCCESS:
                         case VisaCheckoutSdk.Status.SDK_PAUSED:
                         case VisaCheckoutSdk.Status.SDK_RESUMED:
@@ -167,7 +171,7 @@ public abstract class VisaCheckoutController extends BaseController implements V
 
     @Override
     public void onStartVisaCheckoutAuthorize(PurchaseInfo.PurchaseInfoBuilder purchaseInfoBuilder) {
-        VisaCheckout.authorize(mActivity.getBraintreeFragment(),purchaseInfoBuilder);
+        VisaCheckout.authorize(mActivity.getBraintreeFragment(), purchaseInfoBuilder);
     }
 
     @Override

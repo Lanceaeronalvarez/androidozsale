@@ -2,13 +2,18 @@ package au.com.dealsdirect.ui.controller.saleitemdetails;
 
 import com.androidnetworking.error.ANError;
 
+import java.util.List;
+
 import javax.inject.Inject;
 
 import au.com.dealsdirect.data.DataManager;
+import au.com.dealsdirect.data.network.ApiCallback;
 import au.com.dealsdirect.data.network.AppApiCallback;
+import au.com.dealsdirect.data.network.model.checkout.BasketQuantityResponse;
 import au.com.dealsdirect.data.network.model.ourpaydata.OurpayDataRequest;
 import au.com.dealsdirect.data.network.model.ourpaydata.OurpayDataResponse;
 import au.com.dealsdirect.data.network.model.saleitemdetails.AddToCartRequest;
+import au.com.dealsdirect.data.network.model.saleitemdetails.AddToCartResponse;
 import au.com.dealsdirect.data.network.model.saleitemdetails.GetSaleItemDetailsResponse;
 import au.com.dealsdirect.service.ourpay.Ourpay;
 import au.com.dealsdirect.service.ourpay.OurpayError;
@@ -37,93 +42,84 @@ public class SaleItemDetailsPresenter<V extends SaleItemDetailsMvpView> extends 
     public void loadSaleItemDetails(String seoIdentifierId) {
         getMvpView().hideLoading();
 
-        getCompositeDisposable().add(getDataManager()
-                .callGetSaleItemDetails(seoIdentifierId)
-                .subscribeOn(getSchedulerProvider().io())
-                .observeOn(getSchedulerProvider().ui())
-                .subscribe(response -> {
+        doApiCallForResponse(getDataManager().callGetSaleItemDetails(seoIdentifierId), new AppApiCallback() {
+            @Override
+            public void onSuccess(Object response) {
+                super.onSuccess(response);
+                GetSaleItemDetailsResponse getSaleItemDetailsResponse = (GetSaleItemDetailsResponse) response;
 
-                    if (!isViewAttached()) {
-                        return;
-                    }
+                if (response != null) {
+                    getMvpView().showSaleDetails(getSaleItemDetailsResponse);
+                }
 
-                    if (response != null)
-                        getMvpView().showSaleDetails(response);
+                getMvpView().hideLoading();
 
-                    getMvpView().hideLoading();
+                AppEventHelper.viewedContent(getSaleItemDetailsResponse.getSkuId(), getSaleItemDetailsResponse.getName(),
+                        getSaleItemDetailsResponse.getPrice().getValue(), getDataManager().getCountryId());
+            }
 
-                    AppEventHelper.viewedContent(response.getSkuId(), response.getName(),
-                            response.getPrice().getValue(), getDataManager().getCountryId());
+            @Override
+            public void onFailure(Throwable throwable) {
+                super.onFailure(throwable);
 
-                }, throwable -> {
+                getMvpView().hideLoading();
 
-                    if (!isViewAttached()) {
-                        return;
-                    }
-
-                    getMvpView().hideLoading();
-//                    getMvpView().onError(throwable.getMessage());
-
-                    // handle load accounts error here
-                    if (throwable instanceof ANError) {
-                        ANError anError = (ANError) throwable;
-                        handleApiError(anError);
-                    }
-                }));
-
+                // handle load accounts error here
+                if (throwable instanceof ANError) {
+                    ANError anError = (ANError) throwable;
+                    handleApiError(anError);
+                }
+            }
+        });
     }
 
     @Override
     public void loadOurpayData(final GetSaleItemDetailsResponse value) {
         doApiCallForResponse(getDataManager().callGetOurpayData(OurpayDataRequest.init(
                 CurrencyUtil.getCurrency(getDataManager().getCountryId()), value.getPrice().getValue())),
-                new AppApiCallback(){
-            @Override
-            public void onSuccess(Object response) {
-                super.onSuccess(response);
+                new AppApiCallback() {
+                    @Override
+                    public void onSuccess(Object response) {
+                        super.onSuccess(response);
 
-                generateOurpay(value, (OurpayDataResponse) response);
-            }
-        });
+                        generateOurpay(value, (OurpayDataResponse) response);
+                    }
+                });
     }
 
     @Override
     public void addToCart(AddToCartRequest requestValues) {
         getMvpView().showLoading();
 
-        getCompositeDisposable().add(getDataManager()
-                .callAddItemToCart(requestValues)
-                .subscribeOn(getSchedulerProvider().io())
-                .observeOn(getSchedulerProvider().ui())
-                .subscribe(response -> {
+        doApiCallForResponse(getDataManager()
+                .callAddItemToCart(requestValues), new AppApiCallback() {
+            @Override
+            public void onSuccess(Object response) {
+                super.onSuccess(response);
 
-                    if (!isViewAttached()) {
-                        return;
-                    }
+                getMvpView().showAddToCartResponse(((AddToCartResponse) response).getResult());
 
-                    getMvpView().hideLoading();
+                AppEventHelper.addedToCart(requestValues.getSkuId(), requestValues.getItemName(),
+                        requestValues.getPrice(), getDataManager().getCountryId());
+            }
 
-                    getMvpView().showAddToCartResponse(true);
+            @Override
+            public void onFailure(Throwable throwable) {
+                super.onFailure(throwable);
 
-                    AppEventHelper.addedToCart(requestValues.getSkuId(), requestValues.getItemName(),
-                            requestValues.getPrice(), getDataManager().getCountryId());
+                getMvpView().hideLoading();
+                getMvpView().onError(throwable.getMessage());
+                getMvpView().showAddToCartResponse(false);
 
 
-                }, throwable -> {
+                // handle load accounts error here
+                if (throwable instanceof ANError) {
+                    ANError anError = (ANError) throwable;
+                    handleApiError(anError);
+                }
 
-                    if (!isViewAttached()) {
-                        return;
-                    }
-
-                    getMvpView().hideLoading();
-                    getMvpView().onError(throwable.getMessage());
-
-                    // handle load accounts error here
-                    if (throwable instanceof ANError) {
-                        ANError anError = (ANError) throwable;
-                        handleApiError(anError);
-                    }
-                }));
+            }
+        });
 
     }
 
@@ -175,30 +171,29 @@ public class SaleItemDetailsPresenter<V extends SaleItemDetailsMvpView> extends 
 
     @Override
     public void callGetBasketItemsQuantity() {
-        getCompositeDisposable().add(getDataManager()
-                .callGetBasketItemsQuantity()
-                .subscribeOn(getSchedulerProvider().io())
-                .observeOn(getSchedulerProvider().ui())
-                .subscribe(basketQuantityResponse -> {
-                    if (!isViewAttached()) {
-                        return;
-                    }
-                    CartUtil.setValueToCart(basketQuantityResponse.getItemQuantity());
-                    getMvpView().onCallGetBasketItemsQuantity();
-                }, throwable -> {
-                    if (!isViewAttached()) {
-                        return;
-                    }
 
-                    getMvpView().onError(throwable.getMessage());
+        doApiCallForResponse(getDataManager().callGetBasketItemsQuantity(), new AppApiCallback() {
+            @Override
+            public void onSuccess(Object o) {
+                super.onSuccess(o);
 
-                    // handle load accounts error here
-                    if (throwable instanceof ANError) {
-                        ANError anError = (ANError) throwable;
-                        handleApiError(anError);
-                    }
-                })
-        );
+                CartUtil.setValueToCart(((BasketQuantityResponse) o).getItemQuantity());
+                getMvpView().onCallGetBasketItemsQuantity();
+            }
+
+            @Override
+            public void onFailure(Throwable throwable) {
+                super.onFailure(throwable);
+
+                getMvpView().onError(throwable.getMessage());
+
+                // handle load accounts error here
+                if (throwable instanceof ANError) {
+                    ANError anError = (ANError) throwable;
+                    handleApiError(anError);
+                }
+            }
+        });
     }
 
     @Override

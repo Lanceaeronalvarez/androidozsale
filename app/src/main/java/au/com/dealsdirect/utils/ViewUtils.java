@@ -18,7 +18,7 @@ public final class ViewUtils {
 
     public static float pxToDp(float px) {
         float densityDpi = Resources.getSystem().getDisplayMetrics().densityDpi;
-        return px / (densityDpi / DisplayMetrics.DENSITY_DEFAULT);
+        return Math.round(px / (densityDpi / DisplayMetrics.DENSITY_DEFAULT));
     }
 
     public static int dpToPx(float dp) {

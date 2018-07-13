@@ -22,7 +22,6 @@ import android.view.ViewGroup;
 import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.FrameLayout;
-import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
@@ -113,8 +112,14 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
     @BindView(R.id.partial_toolbar_field_title_edittext)
     SearchEditText mSaleItemsToolbarField;
 
-    @BindView(R.id.partial_toolbar_field_title_textview)
+    @BindView(R.id.partial_toolbar_details_upper_title_textview)
+    TextView mSaleItemsCategoryToolbarTitle;
+
+    @BindView(R.id.partial_toolbar_details_center_title_textview)
     TextView mSaleItemsToolbarTitle;
+
+    @BindView(R.id.partial_toolbar_details_subtitle_textview)
+    TextView mSaleItemsToolbarSubTitleText;
 
     @BindView(R.id.controller_sale_items_text_placeholder)
     LinearLayout mPlaceholder;
@@ -162,6 +167,7 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
     private boolean mIsCategoryChanged = false;
     private boolean mFromCategoryDeeplink = false;
     private boolean mInitialLoad = false;
+    private boolean mIsFromCategories = false;
 
     private List<SearchChipModel> mChipFilters = new ArrayList<>();
 
@@ -249,6 +255,9 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
             mInitialCategoryTree = JsonUtils.convertStringToObject(args.getString(BundleKeys.SALEITEMS_KEY_CATEGORIES, ""), new TypeToken<ArrayList<GetCategoryTreeResponse>>() {
             }.getType());
         }
+        if (args.containsKey(BundleKeys.SALEITEMS_FROM_CATEGORIES)) {
+            mIsFromCategories = getArgs().getBoolean(BundleKeys.SALEITEMS_FROM_CATEGORIES, false);
+        }
 
     }
 
@@ -304,7 +313,18 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
         String editTextString = mSaleItemsToolbarField.getText().toString();
         //determining toolbartitle logic
         //category precedes above all
-        if (!mSearchQuery.isEmpty()) {
+
+
+        String[] titles = mTitle.split(CATEGORY_KEY_SEPARATOR_REPLACEMENT, 2);
+        boolean showSubTitle = titles.length > 1;
+        mSaleItemsCategoryToolbarTitle.setVisibility(showSubTitle ? View.VISIBLE : View.GONE);
+        mSaleItemsToolbarSubTitleText.setVisibility(showSubTitle ? View.VISIBLE : View.GONE);
+        mSaleItemsToolbarTitle.setVisibility(!showSubTitle ? View.VISIBLE : View.GONE);
+
+        if(showSubTitle) {
+            mSaleItemsCategoryToolbarTitle.setText(titles[0]);
+            mSaleItemsToolbarSubTitleText.setText(titles[1]);
+        } else if (!mSearchQuery.isEmpty()) {
             mSaleItemsToolbarTitle.setText(mSearchQuery);
         } else if (!editTextString.isEmpty()) {
             mSaleItemsToolbarTitle.setText(editTextString);
@@ -315,9 +335,9 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
         } else {
             mSaleItemsToolbarTitle.setText(getString(R.string.i_am_looking_for));
         }
-    }
 
-    @Override
+        }
+        @Override
     public void onDetach(View view) {
         mPtrFrameLayout.setPtrHandler(null);
         mAppBar.removeOnOffsetChangedListener(this);
@@ -394,9 +414,11 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
             }
         });
 
+        mInitialLoad = true;
+
         mPaginateManager = PaginateUtils.init(mSaleItemsRecyclerView, mPaginateCallbacks);
 
-        mInitialLoad = true;
+
 
         /* bug/gen-8065_ozsale-reskin_bugfixing - dont load empty category on category link */
         if (!mFromCategoryDeeplink) {
@@ -523,13 +545,15 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
     }
 
     public void refresh() {
-        if (mSaleItems.size() < getResources().getInteger(R.integer.sale_items_threshold)) {
-            mHasLoadedAllItems = true;
-            mSaleItemsPageNumber = 0;
-        } else {
-            mIsLoadingProgress = true;
-            mSaleItemsPageNumber++;
-            mPresenter.loadSaleItems(createSaleItemsRequest(mSearchFilterMvpView.getCategoryKeys(), mSaleItemsPageNumber, mChipFilters));
+        if(!mInitialLoad) {
+            if (mSaleItems.size() < getResources().getInteger(R.integer.sale_items_threshold)) {
+                mHasLoadedAllItems = true;
+                mSaleItemsPageNumber = 0;
+            } else {
+                mIsLoadingProgress = true;
+                mSaleItemsPageNumber++;
+                mPresenter.loadSaleItems(createSaleItemsRequest(mSearchFilterMvpView.getCategoryKeys(), mSaleItemsPageNumber, mChipFilters));
+            }
         }
     }
 
@@ -788,7 +812,9 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
     @OnClick(R.id.partial_toolbar_field_title_edittext)
     public void activateSearch() {
         mSaleItemsToolbarField.setSelection(mSaleItemsToolbarField.getText().length());
-        mSearchFilterMvpView.closeFacets();
+        if(mSearchFilterMvpView != null) {
+            mSearchFilterMvpView.closeFacets();
+        }
 
         mSaleItemsToolbarField.addTextChangedListener(mTextWatcher);
         mSaleItemsToolbarField.setOnEditorActionListener((textView, actionId, keyEvent) -> {
@@ -834,5 +860,10 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
 
     public Map<String, GetCategoryTreeResponse> getCategoryMap() {
         return mCategoryMap;
+    }
+
+    @Override
+    public boolean isFromCategories() {
+        return mIsFromCategories;
     }
 }

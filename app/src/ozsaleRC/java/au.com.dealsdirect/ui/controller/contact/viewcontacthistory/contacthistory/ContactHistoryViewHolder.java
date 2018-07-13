@@ -17,19 +17,13 @@ import butterknife.ButterKnife;
 
 public class ContactHistoryViewHolder extends RecyclerView.ViewHolder{
 
-    LinearLayout contactHistoryItem;
-    ImageView contactHistoryItemUserImageView;
-    TextView contactHistoryItemUserNameTextView;
-    TextView contactHistoryDescriptionTextView;
+//    LinearLayout contactHistoryItem;
+//    ImageView contactHistoryItemUserImageView;
+//    TextView contactHistoryItemUserNameTextView;
+//    TextView contactHistoryDescriptionTextView;
 
     @BindView(R.id.contact_history_item_container)
     ViewGroup contactHistoryItemContainer;
-    @BindView(R.id.contact_history_date_time_container)
-    ViewGroup contactHistoryDateTimeContainer;
-    @BindView(R.id.contact_history_date_stamp_text_view)
-    TextView contactHistoryItemDateStampTextView;
-    @BindView(R.id.contact_history_time_stamp_text_view)
-    TextView contactHistoryItemTimeStampTextView;
     @BindView(R.id.contact_history_message_text_view)
     TextView contactHistoryMessageTextView;
 

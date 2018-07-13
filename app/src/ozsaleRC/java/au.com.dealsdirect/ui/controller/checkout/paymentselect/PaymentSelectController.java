@@ -2,6 +2,8 @@ package au.com.dealsdirect.ui.controller.checkout.paymentselect;
 
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
+import android.support.v7.util.DiffUtil;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.SimpleItemAnimator;
@@ -25,6 +27,7 @@ import javax.inject.Inject;
 import au.com.dealsdirect.R;
 import au.com.dealsdirect.data.network.model.checkout.getcurrentorder.Value;
 import au.com.dealsdirect.data.network.model.checkout.getuserpaymentmethods.PaymentMethod;
+import au.com.dealsdirect.ui.base.BaseController;
 import au.com.dealsdirect.ui.base.BasePullToRefreshController;
 import au.com.dealsdirect.ui.controller.checkout.checkout.CheckoutMvpView;
 import au.com.dealsdirect.ui.custom.CustomAlertDialog;
@@ -41,8 +44,7 @@ import butterknife.OnClick;
  * Created by smartwave on 30/06/2017.
  */
 
-public class PaymentSelectController extends BasePullToRefreshController implements PaymentSelectMvpView {
-
+public class PaymentSelectController extends BaseController implements PaymentSelectMvpView {
 
     @Inject
     PaymentSelectMvpPresenter<PaymentSelectMvpView> mPresenter;
@@ -84,6 +86,7 @@ public class PaymentSelectController extends BasePullToRefreshController impleme
         if (mPaymentMethods == null) {
             mPaymentMethods = new ArrayList<>();
         }
+
         isFromCart = args.getBoolean(BundleKeys.IS_FROM_CART, false);
         mIsOurpaySelectDeliveryMethod = args.getBoolean(BundleKeys.IS_OURPAY_SELECT_DELIVERY_METHOD, false);
         mCartTotalCost = args.getString(BundleKeys.CART_TOTAL_COST, "");
@@ -92,10 +95,7 @@ public class PaymentSelectController extends BasePullToRefreshController impleme
 
     @Override
     protected View inflateView(@NonNull LayoutInflater inflater, @NonNull ViewGroup container) {
-        View view = super.inflateView(inflater, container);
-
-        setToolBarVisible(getResource().getBoolean(R.bool.payselect_toolbar_visibility));
-        fillContent(inflater.inflate(R.layout.controller_payment_select, container, false));
+        View view = inflater.inflate(R.layout.controller_payment_select, container, false);
 
         getControllerComponent().inject(this);
         mPresenter.onAttach(this);
@@ -131,9 +131,7 @@ public class PaymentSelectController extends BasePullToRefreshController impleme
             mPaymentMethods = new ArrayList<>(paymentMethods);
             mAdapter.replaceData(mPaymentMethods);
             showPaymentMethodsPlaceholder(false);
-        } else if (checkoutTag == getActivity().getString(R.string.checkout_controller)
-                && (paymentMethods == null
-                || !hasPaymentMethod)) {
+        } else if (checkoutTag == getActivity().getString(R.string.checkout_controller) && (paymentMethods == null || !hasPaymentMethod)) {
             GateKeeper.push(getRouter(),
                     GateKeeper.Destination.PAYMENT_ADD,
                     new BundleBuilder(new Bundle())
@@ -180,30 +178,31 @@ public class PaymentSelectController extends BasePullToRefreshController impleme
     @Override
     protected void setUp(View view) {
 
-        if (!isFromCart) {
-            showLoading();
-            mPresenter.fetchUserPaymentMethods();
-        }
-
         mToolbarLeftView.setVisibility(mPresenter.isTablet() && !isFromCart ? View.GONE : View.VISIBLE);
         mPaymentSelectToolbarTitle.setText(getString(R.string.my_payments));
+
         mAdapter = new PaymentSelectAdapter(mActivity, mPaymentMethods, mPresenter, isFromCart);
         RecyclerViewSwipeManager recyclerViewSwipeManager = new RecyclerViewSwipeManager();
         RecyclerView.Adapter wrappedAdapter = recyclerViewSwipeManager.createWrappedAdapter(mAdapter);
         mRecyclerView.setLayoutManager(new LinearLayoutManager(mActivity));
         mRecyclerView.setAdapter(wrappedAdapter);
-
-        ((SimpleItemAnimator) mRecyclerView.getItemAnimator()).setSupportsChangeAnimations(false);
         recyclerViewSwipeManager.attachRecyclerView(mRecyclerView);
+
         mRecyclerView.addItemDecoration(new SimpleDividerItemDecoration(mActivity, SimpleDividerItemDecoration.VERTICAL_LIST));
 
-        if (isFromCart) {
-            mRecyclerView.addOnItemTouchListener(new RecyclerOnTouchListener(mActivity, (v, position) -> {
-                mActivity.setPaymentMethodSelected(mPaymentMethods.get(position));
-                mCheckoutMvpView.setIsPaymentMethodChanged(true);
-                mAdapter.notifyDataSetChanged();
-                mActivity.onBackPressed();
-            }));
+
+        if (!isFromCart) {
+            showLoading();
+            mPresenter.fetchUserPaymentMethods();
+        } else {
+            if(!mPaymentMethods.isEmpty()) {
+                showPaymentList(mPaymentMethods);
+                mRecyclerView.addOnItemTouchListener(new RecyclerOnTouchListener(mActivity, (v, position) -> {
+                    mActivity.setPaymentMethodSelected(mPaymentMethods.get(position));
+                    mAdapter.notifyDataSetChanged();
+                    mActivity.onBackPressed();
+                }));
+            }
         }
     }
 
@@ -212,7 +211,6 @@ public class PaymentSelectController extends BasePullToRefreshController impleme
         hideKeyboard();
         if (getActivity() != null) {
             getActivity().onBackPressed();
-
         }
     }
 

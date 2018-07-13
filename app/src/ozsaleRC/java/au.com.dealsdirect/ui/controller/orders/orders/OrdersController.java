@@ -7,6 +7,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -57,6 +58,9 @@ public class OrdersController extends BasePullToRefreshController implements Ord
     @BindView(R.id.contentFrame)
     FrameLayout mContentLayout;
 
+    @BindView(R.id.controller_orders_shop_now_button)
+    Button mShopNowButton;
+
     public static OrdersController newInstance() {
 
         return new OrdersController(
@@ -106,6 +110,11 @@ public class OrdersController extends BasePullToRefreshController implements Ord
         mRecyclerView.addItemDecoration(new SimpleDividerItemDecoration(mActivity, LinearLayout.VERTICAL));
         showLoading();
         mPresenter.loadOrders();
+
+        mShopNowButton.setOnClickListener(view1 -> {
+            mActivity.getHomeController().getCurrentRouter().popToRoot();
+            mActivity.getHomeController().showFirstTabController();
+        });
     }
 
     @Override
@@ -116,17 +125,18 @@ public class OrdersController extends BasePullToRefreshController implements Ord
 
     @Override
     public void showOrders(ArrayList<GetPaymentsList.ResponseValue.PaymentItem> orders) {
-        if (orders.size() > 0) {
+
+        boolean hasOrders = orders.size() > 0;
+
+        if (hasOrders) {
             mOrders = orders;
             mAdapter = new OrdersRecyclerViewAdapter(mActivity, orders);
             mRecyclerView.setAdapter(mAdapter);
-            mContentLayout.setVisibility(View.VISIBLE);
-            mPlaceholderLayout.setVisibility(View.GONE);
-
-        } else {
-            mContentLayout.setVisibility(View.GONE);
-            mPlaceholderLayout.setVisibility(View.VISIBLE);
         }
+
+        mContentLayout.setVisibility(hasOrders ? View.VISIBLE : View.GONE);
+        mPlaceholderLayout.setVisibility(hasOrders ? View.GONE : View.VISIBLE);
+        mShopNowButton.setVisibility(hasOrders ? View.GONE : View.VISIBLE);
     }
 
     @Override

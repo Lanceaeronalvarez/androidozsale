@@ -3,7 +3,9 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/background_default">
+    xmlns:tools="http://schemas.android.com/tools"
+    android:background="@color/background_default"
+    tools:ignore="MissingPrefix">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -11,6 +13,7 @@
         android:orientation="vertical">
 
         <TextView
+            fontPath="@string/font_app_light"
             android:id="@+id/address_office_delivery_subtitle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"

@@ -6,6 +6,8 @@ import javax.inject.Inject;
 
 import au.com.dealsdirect.data.DataManager;
 import au.com.dealsdirect.data.network.AppApiCallback;
+import au.com.dealsdirect.data.network.model.gdpr.savereceivesales.SaveReceiveSalesRequest;
+import au.com.dealsdirect.data.network.model.gdpr.savereceivesales.SaveReceiveSalesResponse;
 import au.com.dealsdirect.data.network.model.userdetails.GetUserDetailsResponse;
 import au.com.dealsdirect.data.network.model.userdetails.SetUserDetailsRequest;
 import au.com.dealsdirect.data.network.model.userdetails.SetUserDetailsResponse;
@@ -28,7 +30,7 @@ public class DetailsPresenter<V extends DetailsMvpView> extends BasePresenter<V>
 
     @Override
     public void loadUser(SetUserDetailsRequest setUserDetailsRequest) {
-        if(getDataManager().isAuthorized()) {
+        if (getDataManager().isAuthorized()) {
             doApiCallForResponse(getDataManager().getLoadUserDetailsApiCall(setUserDetailsRequest), new AppApiCallback() {
                 @Override
                 public void onSuccess(Object response) {
@@ -45,7 +47,6 @@ public class DetailsPresenter<V extends DetailsMvpView> extends BasePresenter<V>
     public void sendUserDetails(SetUserDetailsRequest userDetailsRequest) {
 
         userDetailsRequest.setLanguageID(getDataManager().getLanguageId());
-        getMvpView().showLoading();
         doApiCallForResponse(getDataManager().getSaveUserDetailsApiCall(userDetailsRequest), new AppApiCallback() {
             @Override
             public void onSuccess(Object response) {
@@ -59,4 +60,30 @@ public class DetailsPresenter<V extends DetailsMvpView> extends BasePresenter<V>
             }
         });
     }
+
+    @Override
+    public void saveReceiveSales(boolean receiveInvitations) {
+        SaveReceiveSalesRequest request = new SaveReceiveSalesRequest(getDataManager().getCountryId(), getDataManager().getLanguageId(), receiveInvitations);
+        getMvpView().showLoading();
+        doApiCallForResponse(getDataManager().callSaveReceiveSales(request), new AppApiCallback() {
+                @Override
+                public void onSuccess(Object response) {
+                    super.onSuccess(response);
+                    getMvpView().onSaveReceiveSales((SaveReceiveSalesResponse) response);
+                }
+            }
+        );
+    }
+
+    @Override
+    public String getGdprTemplateTexts(String key) {
+        return getDataManager().getConsentTemplateTexts(key);
+    }
+
+    @Override
+    public boolean getGdprIsChecked(String key) {
+        return getDataManager().getAppSettingsConsentIsChecked(key);
+    }
+
+
 }

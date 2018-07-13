@@ -4,18 +4,18 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="vertical"
-    android:layout_marginTop="@dimen/margin_small"
-    android:layout_marginBottom="@dimen/margin_small"
     tools:ignore="MissingPrefix">
 
     <TextView
         fontPath="@string/font_app_light"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="@dimen/margin_extra_small"
-        android:paddingEnd="@dimen/padding_default"
-        android:paddingStart="@dimen/padding_default"
+        android:layout_marginLeft="@dimen/padding_default"
+        android:layout_marginRight="@dimen/padding_default"
+        android:layout_marginTop="@dimen/padding_default"
+        android:layout_marginBottom="@dimen/padding_default_half"
         android:text="@string/my_current_delivery_address"
+        android:textSize="@dimen/text_size_caption2"
         android:textColor="@color/text_medium" />
 
     <FrameLayout

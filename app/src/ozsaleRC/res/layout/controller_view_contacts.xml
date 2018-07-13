@@ -3,41 +3,56 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/background_default"
-    android:orientation="vertical">
+    android:orientation="vertical"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:ignore="MissingPrefix">
+
+    <include layout="@layout/partial_toolbar_arrow" />
 
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-        <android.support.v7.widget.RecyclerView
-            android:id="@+id/contacts_recycler_view"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/padding_default"
-            android:overScrollMode="never"
-            android:visibility="gone" />
-
         <include
             layout="@layout/partial_no_contacts_placeholder_layout"
             android:visibility="gone" />
+
+        <LinearLayout
+            android:id="@+id/contacts_recycler_view_container"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical">
+
+            <TextView
+                fontPath="@string/font_app_light"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="@dimen/padding_default"
+                android:layout_marginRight="@dimen/padding_default"
+                android:layout_marginTop="@dimen/padding_default"
+                android:layout_marginBottom="@dimen/padding_default_half"
+                android:text="@string/my_messages"
+                android:textColor="@color/text_medium"
+                android:textSize="@dimen/text_size_caption2" />
+
+            <android.support.v7.widget.RecyclerView
+                android:id="@+id/contacts_recycler_view"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@color/white"
+                android:paddingBottom="@dimen/default_button_height"
+                android:overScrollMode="never" />
+
+
+        </LinearLayout>
 
         <Button
             android:id="@+id/controller_contacts_new_message_button"
             style="@style/DDButtonStyle"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
             android:layout_alignParentBottom="true"
             android:layout_margin="@dimen/padding_default"
-            android:background="@drawable/bg_invite_clipboard"
-            android:text="@string/create_message"
-            android:textSize="@dimen/text_size_body" />
-
-        <com.bluelinelabs.conductor.ChangeHandlerFrameLayout
-            android:id="@+id/contact_detail_container"
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_weight="0.6"
-            android:visibility="gone" />
+            android:text="@string/create_message" />
 
     </RelativeLayout>
 

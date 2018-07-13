@@ -31,6 +31,7 @@ public class AddressesItem {
     public boolean ReadOnly;
     public int Status;
     public boolean IsChanged;
+    private boolean isPinned;
 
     public String getFullAddress(){
         String addressDesc = AddressLines + ", ";
@@ -104,5 +105,13 @@ public class AddressesItem {
 
     public void setAddressNumericId(int addressNumericId) {
         this.addressNumericId = addressNumericId;
+    }
+
+    public boolean isPinned() {
+        return isPinned;
+    }
+
+    public void setPinned(boolean pinned) {
+        isPinned = pinned;
     }
 }

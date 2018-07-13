@@ -25,15 +25,18 @@ import javax.inject.Inject;
 import au.com.dealsdirect.R;
 import au.com.dealsdirect.data.network.model.vouchers.GetUserVoucherResponse;
 import au.com.dealsdirect.data.network.model.vouchers.GetVouchersResponse;
+import au.com.dealsdirect.ui.base.BaseController;
 import au.com.dealsdirect.ui.base.BasePullToRefreshController;
 import au.com.dealsdirect.utils.BundleBuilder;
 import butterknife.BindView;
+import in.srain.cube.views.ptr.PtrDefaultHandler;
+import in.srain.cube.views.ptr.PtrFrameLayout;
 
 /**
  * Created by Paul on 6/23/17.
  */
 
-public class ViewVouchersController extends BasePullToRefreshController implements ViewVouchersMvpView {
+public class ViewVouchersController extends BaseController implements ViewVouchersMvpView {
 
     @Inject
     ViewVouchersMvpPresenter<ViewVouchersMvpView> mPresenter;
@@ -84,10 +87,7 @@ public class ViewVouchersController extends BasePullToRefreshController implemen
 
     @Override
     protected View inflateView(@NonNull LayoutInflater inflater, @NonNull ViewGroup container) {
-        View view = super.inflateView(inflater, container, ToolBarType.ARROW);
-
-        setToolBarVisible(getResource().getBoolean(R.bool.vouchers_toolbar_visibility));
-        fillContent(inflater.inflate(R.layout.controller_view_vouchers, container, false));
+        View view = inflater.inflate(R.layout.controller_view_vouchers, container, false);
 
         getControllerComponent().inject(this);
         mPresenter.onAttach(this);

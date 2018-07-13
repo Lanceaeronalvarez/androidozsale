@@ -2,6 +2,7 @@ package au.com.dealsdirect.ui.controller.saleitemdetails;
 
 import android.content.Context;
 import android.graphics.drawable.Drawable;
+import android.support.v4.util.Pair;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -11,6 +12,8 @@ import android.widget.ImageView;
 import com.bumptech.glide.request.RequestListener;
 import com.bumptech.glide.request.target.Target;
 import com.github.chrisbanes.photoview.ScalableImageView;
+import com.mysale.genie.utility.GenericEvent;
+import com.mysale.genie.utility.RxBus;
 
 import java.util.ArrayList;
 import java.util.LinkedList;
@@ -18,9 +21,11 @@ import java.util.List;
 
 import au.com.dealsdirect.R;
 import au.com.dealsdirect.ui.controller.saleitemdetails.listener.LoadImagesListener;
+import au.com.dealsdirect.ui.controller.saleitems.SaleItemsMvpView;
 import au.com.dealsdirect.utils.ImageUtils;
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import io.reactivex.disposables.CompositeDisposable;
 
 /**
  * dp Created by Admin on 6/25/17.c
@@ -28,15 +33,16 @@ import butterknife.ButterKnife;
 
 public class SaleItemDetailsImageAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
-    View mContainerToToggle;
-    List<View> mViewsToToggle = new ArrayList<>();
-    List<String> mData = new LinkedList<>();
-    Context mContext;
-    String mSaleId;
-    LoadImagesListener mLoadImagesListener;
-    int mViewType;
-    Drawable mPlaceholder;
-    RequestListener mRequestListener = new RequestListener() {
+    private boolean mIsTablet;
+    private View mContainerToToggle;
+    private List<View> mViewsToToggle = new ArrayList<>();
+    private List<String> mData = new LinkedList<>();
+    private Context mContext;
+    private LoadImagesListener mLoadImagesListener;
+    private int mViewType;
+    private Drawable mPlaceholder;
+    private CompositeDisposable mEventBusSubscriptions = new CompositeDisposable();
+    private RequestListener mRequestListener = new RequestListener() {
         @Override
         public boolean onException(Exception e, Object model, Target target, boolean isFirstResource) {
             return false;
@@ -48,6 +54,7 @@ public class SaleItemDetailsImageAdapter extends RecyclerView.Adapter<RecyclerVi
             return false;
         }
     };
+    private SaleItemDetailsMvpView mSaleItemDetailsView;
 
     public void replaceData(List<String> data) {
         mData = data;
@@ -65,21 +72,22 @@ public class SaleItemDetailsImageAdapter extends RecyclerView.Adapter<RecyclerVi
         }
     }
 
-    public SaleItemDetailsImageAdapter(View container,
+    public SaleItemDetailsImageAdapter(boolean isTablet,
+                                       View container,
                                        ArrayList<View> views,
                                        LoadImagesListener loadImagesListener,
                                        List<String> data,
-                                       String saleId,
                                        int viewType,
-                                       Drawable placeholder) {
+                                       Drawable placeholder, SaleItemDetailsMvpView saleItemDetailsMvpView) {
 
+        this.mIsTablet = isTablet;
         this.mContainerToToggle = container;
         this.mViewsToToggle = views != null ? views : new ArrayList<>();
         this.mLoadImagesListener = loadImagesListener;
         this.mData = data;
-        this.mSaleId = saleId;
         this.mViewType = viewType;
         this.mPlaceholder = placeholder;
+        this.mSaleItemDetailsView = saleItemDetailsMvpView;
     }
 
 
@@ -120,28 +128,36 @@ public class SaleItemDetailsImageAdapter extends RecyclerView.Adapter<RecyclerVi
                     }
 
                     ScalableImageView scalableImageView = (ScalableImageView) vh.image;
+                    scalableImageView.setZoomable(mSaleItemDetailsView.getVerticalOffset() == 0);
+                    mEventBusSubscriptions.add(RxBus.instance().subscribe(action -> {
+                        if (action instanceof Pair && ((Pair) action).first == GenericEvent.Events.SALE_ITEM_DETAILS_VERTICAL_OFFSET &&
+                                !scalableImageView.getAttacher().isScaling()) {
+                            scalableImageView.setZoomable((int) ((Pair) action).second == 0);
+                        }
+                    }));
                     scalableImageView.setOnScaleChangeListener((scaleFactor, focusX, focusY) -> {
-                        if (scalableImageView.getScale() <= 1.05f) {
-                            for (View v : mViewsToToggle) v.setVisibility(View.VISIBLE);
 
-                            if (mContainerToToggle != null) {
+                        boolean resetZoom = scalableImageView.getScale() <= 1.05f;
+                        if (resetZoom) {
+                            for (View v : mViewsToToggle) {
+                                v.setVisibility(View.VISIBLE);
+                            }
+
+                            if (mContainerToToggle != null && !mIsTablet) {
                                 mContainerToToggle.getLayoutParams().height = ViewGroup.LayoutParams.WRAP_CONTENT;
                             }
 
                         } else {
-                            for (View v : mViewsToToggle) v.setVisibility(View.GONE);
+                            for (View v : mViewsToToggle) {
+                                v.setVisibility(!mIsTablet ? View.GONE : View.INVISIBLE);
+                            }
 
-                            if (mContainerToToggle != null) {
+                            if (mContainerToToggle != null && !mIsTablet) {
                                 mContainerToToggle.getLayoutParams().height = ViewGroup.LayoutParams.MATCH_PARENT;
                             }
                         }
-                    });
 
-//                    if (position == 0) {
-//                        vh.image.setTransitionName(mData.getID());
-//                    } else {
-//                        vh.image.setTransitionName(mData.getID() + position);
-//                    }
+                    });
                 }
                 break;
             case 2:
@@ -156,6 +172,12 @@ public class SaleItemDetailsImageAdapter extends RecyclerView.Adapter<RecyclerVi
         }
 
 
+    }
+
+    @Override
+    public void onDetachedFromRecyclerView(RecyclerView recyclerView) {
+        super.onDetachedFromRecyclerView(recyclerView);
+        mEventBusSubscriptions.dispose();
     }
 
     @Override

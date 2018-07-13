@@ -2,6 +2,7 @@ package au.com.dealsdirect.ui.controller.contact.viewcontacts;
 
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -25,6 +26,7 @@ import javax.inject.Inject;
 import au.com.dealsdirect.R;
 import au.com.dealsdirect.data.network.model.contactitem.ContactItemByDate;
 import au.com.dealsdirect.data.network.model.contactitem.GetContactsResponse;
+import au.com.dealsdirect.ui.base.BaseController;
 import au.com.dealsdirect.ui.base.BasePullToRefreshController;
 import au.com.dealsdirect.ui.controller.contact.selectsubject.ContactSelectSubjectController;
 import au.com.dealsdirect.ui.controller.contact.viewcontacthistory.ViewContactHistoryController;
@@ -39,7 +41,7 @@ import butterknife.OnClick;
  * dp Created by Admin on 6/6/17.
  */
 
-public class ViewContactsController extends BasePullToRefreshController implements ViewContactsMvpView {
+public class ViewContactsController extends BaseController implements ViewContactsMvpView {
 
     public static final String TAG = "ContactController";
     private static final String KEY_TEXT = "ContactController.KEY_TEXT";
@@ -55,6 +57,9 @@ public class ViewContactsController extends BasePullToRefreshController implemen
     @BindView(R.id.partial_toolbar_left_view)
     View mViewContactsToolbarLeftOption;
 
+    @BindView(R.id.contacts_recycler_view_container)
+    ViewGroup mViewContactsRecyclerViewContainer;
+
     @BindView(R.id.contacts_recycler_view)
     RecyclerView mViewContactsRecyclerView;
 
@@ -64,6 +69,7 @@ public class ViewContactsController extends BasePullToRefreshController implemen
     @BindView(R.id.controller_contacts_new_message_button)
     Button mViewContactsAddNewMessage;
 
+    @Nullable
     @BindView(R.id.contact_detail_container)
     ViewGroup mContactDetailContainer;
 
@@ -86,10 +92,7 @@ public class ViewContactsController extends BasePullToRefreshController implemen
     @NonNull
     @Override
     protected View inflateView(@NonNull LayoutInflater inflater, @NonNull ViewGroup container) {
-        View view = super.inflateView(inflater, container, ToolBarType.ARROW);
-
-        setToolBarVisible(getResource().getBoolean(R.bool.contacts_toolbar_visibility));
-        fillContent(inflater.inflate(R.layout.controller_view_contacts, container, false));
+        View view = inflater.inflate(R.layout.controller_view_contacts, container, false);
 
         getControllerComponent().inject(this);
         mPresenter.onAttach(this);
@@ -99,7 +102,6 @@ public class ViewContactsController extends BasePullToRefreshController implemen
     @Override
     public void onRefreshStart() {
         super.onRefreshStart();
-        mViewContactsRecyclerView.setVisibility(View.GONE);
         mPresenter.loadContacts();
     }
 
@@ -120,7 +122,7 @@ public class ViewContactsController extends BasePullToRefreshController implemen
         assert (mActivity) != null;
         mActivity.setDraggableViewPager(false);
 
-        if(mPresenter.isTablet()) {
+        if (mPresenter.isTablet()) {
             mContactDetailRouter = getChildRouter(mContactDetailContainer);
         }
 
@@ -144,7 +146,7 @@ public class ViewContactsController extends BasePullToRefreshController implemen
 
     @Override
     public boolean handleBack() {
-        if(mContactDetailRouter != null && mContactDetailRouter.getBackstackSize() == 1){
+        if(mContactDetailRouter != null && mContactDetailRouter.getBackstackSize() <= 1){
             mActivity.getHomeController().resetVisibleContainer();
             return true;
         }
@@ -164,11 +166,11 @@ public class ViewContactsController extends BasePullToRefreshController implemen
         List<GetContactsResponse.ContactList> items = myContacts.getList();
         if (items != null && items.size() != 0) {
             mContactAdapter.replace(myContacts.getList());
-            mViewContactsRecyclerView.setVisibility(View.VISIBLE);
+            mViewContactsRecyclerViewContainer.setVisibility(View.VISIBLE);
             mPlaceholderLayout.setVisibility(View.GONE);
         } else {
             mPlaceholderLayout.setVisibility(View.VISIBLE);
-            mViewContactsRecyclerView.setVisibility(View.GONE);
+            mViewContactsRecyclerViewContainer.setVisibility(View.GONE);
         }
 
         int visibility = getResource().getBoolean(R.bool.contacts_toolbar_addmessage_visibility) ? View.VISIBLE : View.INVISIBLE;
@@ -186,10 +188,10 @@ public class ViewContactsController extends BasePullToRefreshController implemen
     void addContact() {
         RouterTransaction routerTransaction = RouterTransaction.with(ContactSelectSubjectController.newInstance())
                 .pushChangeHandler(new HorizontalChangeHandler()).popChangeHandler(new HorizontalChangeHandler());
-        if(mPresenter.isTablet()) {
-            GateKeeper.setRoot(mContactDetailRouter, GateKeeper.Destination.CONTACT_SELECT_SUBJECT, routerTransaction);
+        if (mPresenter.isTablet()) {
+            GateKeeper.setRoot(getDisplayRouter(), GateKeeper.Destination.CONTACT_SELECT_SUBJECT, routerTransaction);
         } else {
-            GateKeeper.push(getRouter(), GateKeeper.Destination.CONTACT_SELECT_SUBJECT, new HorizontalChangeHandler(), new HorizontalChangeHandler());
+            GateKeeper.push(getDisplayRouter(), GateKeeper.Destination.CONTACT_SELECT_SUBJECT, new HorizontalChangeHandler(), new HorizontalChangeHandler());
         }
     }
 
@@ -258,10 +260,10 @@ public class ViewContactsController extends BasePullToRefreshController implemen
                 .pushChangeHandler(new HorizontalChangeHandler())
                 .popChangeHandler(new HorizontalChangeHandler());
 
-        if(mPresenter.isTablet()) {
-            GateKeeper.setRoot(mContactDetailRouter, GateKeeper.Destination.CONTACT_HISTORY, routerTransaction);
+        if (mPresenter.isTablet()) {
+            GateKeeper.setRoot(getDisplayRouter(), GateKeeper.Destination.CONTACT_HISTORY, routerTransaction);
         } else {
-            getRouter().pushController(RouterTransaction.with(ViewContactHistoryController.newInstance(
+            getDisplayRouter().pushController(RouterTransaction.with(ViewContactHistoryController.newInstance(
                     contactSubject,
                     saleName,
                     invoiceNo,
@@ -270,6 +272,16 @@ public class ViewContactsController extends BasePullToRefreshController implemen
                     .pushChangeHandler(new HorizontalChangeHandler())
                     .popChangeHandler(new HorizontalChangeHandler()));
         }
+    }
+
+    @Override
+    public ViewContactsMvpPresenter getPresenter() {
+        return mPresenter;
+    }
+
+    @Override
+    public Router getDisplayRouter() {
+        return mPresenter.isTablet() ? mContactDetailRouter : getRouter();
     }
 
 }

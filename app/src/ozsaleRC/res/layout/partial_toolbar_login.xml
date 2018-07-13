@@ -30,6 +30,7 @@
             android:layout_centerVertical="true"
             android:background="@drawable/bg_toolbar_button"
             android:gravity="center"
+            android:layout_marginLeft="@dimen/activity_horizontal_margin"
             android:paddingRight="@dimen/margin_extra_small"
             android:src="@drawable/ic_pink_chevron"
             android:text="@string/back"

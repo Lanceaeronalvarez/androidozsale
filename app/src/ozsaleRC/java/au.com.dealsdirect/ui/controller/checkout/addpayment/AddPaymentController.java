@@ -11,7 +11,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.CheckBox;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
@@ -41,15 +40,12 @@ import au.com.dealsdirect.service.ourpay.Ourpay;
 import au.com.dealsdirect.service.ourpay.OurpayPanel;
 import au.com.dealsdirect.service.ourpay.OurpayStateManager;
 import au.com.dealsdirect.ui.base.BaseActivity;
-import au.com.dealsdirect.ui.base.VisaCheckoutMvpPresenter;
-import au.com.dealsdirect.ui.base.VisaCheckoutMvpView;
 import au.com.dealsdirect.ui.controller.checkout.checkout.CheckoutMvpView;
 import au.com.dealsdirect.ui.controller.masterpass.MasterpassController;
 import au.com.dealsdirect.ui.controller.visacheckout.VisaCheckoutController;
 import au.com.dealsdirect.ui.custom.CustomAlertDialog;
 import au.com.dealsdirect.ui.custom.toggleswitch.CustomToggleSwitch;
 import au.com.dealsdirect.ui.main.FetchTokenHandler;
-import au.com.dealsdirect.ui.main.MainActivity;
 import au.com.dealsdirect.ui.main.PaymentInfo;
 import au.com.dealsdirect.utils.AppLogger;
 import au.com.dealsdirect.utils.BundleBuilder;
@@ -66,21 +62,19 @@ public class AddPaymentController extends VisaCheckoutController implements AddP
 
     @Inject
     AddPaymentMvpPresenter<AddPaymentMvpView> mPresenter;
-    @Inject
-    VisaCheckoutMvpPresenter<VisaCheckoutMvpView> mVcoPresenter;
 
     @BindView(R.id.card_form)
     CardForm mCardForm;
     @BindView(R.id.partial_checkout_button_holder)
     View mButtonHolder;
     @BindView(R.id.partial_checkout_button_pay)
-    Button mButtonPay;
+    Button mPayButton;
     @BindView(R.id.partial_checkout_button_paypal_text)
     TextView mTextPaypal;
     @BindView(R.id.partial_checkout_button_paypal)
-    RelativeLayout mButtonPaypal;
+    RelativeLayout mPaypalButton;
     @BindView(R.id.partial_checkout_button_paypal_credit)
-    RelativeLayout mButtonPaypalCredit;
+    RelativeLayout mPaypalCreditButton;
     @BindView(R.id.partial_checkout_button_masterpass)
     RelativeLayout mMasterpassButton;
     @BindView(R.id.partial_checkout_ourpay_panel_holder)
@@ -143,6 +137,33 @@ public class AddPaymentController extends VisaCheckoutController implements AddP
         mViewAddressToolarTitle.setText("Add New Payment");
         mViewAddressRightOption.setVisibility(View.INVISIBLE);
 
+        if (mActivity.isBraintreeInitialized()) {
+            showPaymentButtons();
+        } else {
+            mActivity.fetchAuthorization(new FetchTokenHandler() {
+                @Override
+                public void onSuccess() {
+                    showPaymentButtons();
+                }
+
+                @Override
+                public void onFailure() {
+                    hidePaymentButtons();
+                }
+            });
+        }
+
+        if (isFromCart) {
+            if (mVcoPresenter.isVisaCheckoutEnabled()) {
+                mVcoPresenter.setupVisaCheckout();
+            }
+
+            mMasterpassButton.setOnClickListener(action -> {
+                onMasterpassButtonClick();
+                mCheckoutMvpView.setIsPaymentMethodChanged(true);
+            });
+        }
+
         mCardForm.cardRequired(true)
                 .expirationRequired(true)
                 .cvvRequired(true)
@@ -155,26 +176,26 @@ public class AddPaymentController extends VisaCheckoutController implements AddP
         mCardForm.setToolbarColor(getResources().getColor(R.color.toolbar_active_skin));
         mCardForm.setCameraBackground(null);
         mCardForm.setEditTextDrawable(getResources().getDrawable(R.drawable.bg_edit_text_rounded), R.drawable.bg_edit_text_rounded);
-        mButtonPay.setVisibility(View.VISIBLE);
-        mButtonPaypal.setVisibility(View.VISIBLE);
+        mPayButton.setVisibility(View.VISIBLE);
+        mPaypalButton.setVisibility(View.VISIBLE);
         mTextPaypal.setVisibility(View.VISIBLE);
 
 
-        mButtonPay.setOnClickListener(action -> {
+        mPayButton.setOnClickListener(action -> {
             onCardFormSubmit();
             if(isFromCart) {
                 mCheckoutMvpView.setIsPaymentMethodChanged(true);
             }
         });
 
-        mButtonPaypal.setOnClickListener(action -> {
+        mPaypalButton.setOnClickListener(action -> {
             onPaypalSubmit();
             if(isFromCart) {
                 mCheckoutMvpView.setIsPaymentMethodChanged(true);
             }
         });
 
-        mButtonPaypalCredit.setOnClickListener(action ->{
+        mPaypalCreditButton.setOnClickListener(action ->{
             onPaypalCreditSubmit();
             if(isFromCart) {
                 mCheckoutMvpView.setIsPaymentMethodChanged(true);
@@ -256,11 +277,11 @@ public class AddPaymentController extends VisaCheckoutController implements AddP
     }
 
     private void checkVisiblePaymentButtons() {
-        mButtonPay.setVisibility(mIsOurpaySelectDeliveryMethod ? View.GONE : View.VISIBLE);
-        mButtonPaypal.setVisibility(mIsOurpaySelectDeliveryMethod ? View.GONE : View.VISIBLE);
+        mPayButton.setVisibility(mIsOurpaySelectDeliveryMethod ? View.GONE : View.VISIBLE);
+        mPaypalButton.setVisibility(mIsOurpaySelectDeliveryMethod ? View.GONE : View.VISIBLE);
         mMasterpassButton.setVisibility(!isFromCart || !mPresenter.isMasterPassEnabled() || mIsOurpaySelectDeliveryMethod ? View.GONE : View.VISIBLE);
         mVisaCheckoutButton.setVisibility(!isFromCart || mIsOurpaySelectDeliveryMethod ? View.GONE : View.VISIBLE);
-        mButtonPaypalCredit.setVisibility(mPresenter.isPaypalCreditEnabled() ? View.VISIBLE : View.GONE);
+        mPaypalCreditButton.setVisibility(mPresenter.isPaypalCreditEnabled() ? View.VISIBLE : View.GONE);
     }
 
     @Override

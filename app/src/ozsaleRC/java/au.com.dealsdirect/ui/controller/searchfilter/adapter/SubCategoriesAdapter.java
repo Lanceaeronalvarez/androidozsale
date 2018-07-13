@@ -1,11 +1,14 @@
 package au.com.dealsdirect.ui.controller.searchfilter.adapter;
 
+import android.content.Context;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import java.util.ArrayList;
@@ -28,24 +31,30 @@ public class SubCategoriesAdapter extends RecyclerView.Adapter<SubCategoriesAdap
     private SearchFilterMvpPresenter mSearchFilterPresenter;
     private SubCategoriesAdapter mSubCategoryItemsAdapter;
     private Map<String, GetCategoryTreeResponse> mCategoryMap;
+    private int mMarginRight;
     static GetCategoryTreeResponse mPreviousCategory;
     private String mChosenCategoryKey;
+    private Context mContext;
 
     public SubCategoriesAdapter(
+            Context context,
             String chosenCategorykey,
             List<GetCategoryTreeResponse> data,
             SearchFilterMvpPresenter searchFilterMvpPresenter,
-            Map<String, GetCategoryTreeResponse> categoryMap) {
+            Map<String, GetCategoryTreeResponse> categoryMap,
+            int marginRight) {
 
+        mContext = context;
         mChosenCategoryKey = chosenCategorykey;
         mData = data;
         mCategoryMap = categoryMap;
         mSearchFilterPresenter = searchFilterMvpPresenter;
+        mMarginRight = marginRight;
     }
 
     @Override
     public SubCategoriesViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.viewholder_subcategory, parent, false);
+        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.viewholder_filter_subcategory, parent, false);
         return new SubCategoriesViewHolder(view);
     }
 
@@ -56,6 +65,9 @@ public class SubCategoriesAdapter extends RecyclerView.Adapter<SubCategoriesAdap
 
         if (!mData.get(position).getName().isEmpty()) {
             holder.subCategoryTitle.setText(mData.get(position).getName());
+            FrameLayout.LayoutParams lp = (FrameLayout.LayoutParams) holder.subCategoryTitle.getLayoutParams();
+            lp.setMargins(mMarginRight,0,0,0);
+            holder.subCategoryTitle.setLayoutParams(lp);
 
 //            holder.subCategoryCheck.setVisibility( ? View.VISIBLE : View.GONE);
             if (categoryItem != null && categoryItem.isSelected()) {
@@ -70,7 +82,8 @@ public class SubCategoriesAdapter extends RecyclerView.Adapter<SubCategoriesAdap
 //            List<GetCategoryTreeResponse> subCategoryItems = mCategoryMap.get(mData.get(position).getKey()).getChildren();
 
             if (subCategoryItems != null && !subCategoryItems.isEmpty()) {
-                mSubCategoryItemsAdapter = new SubCategoriesAdapter(mChosenCategoryKey, subCategoryItems, mSearchFilterPresenter, mCategoryMap);
+                int marginRight = mMarginRight + (int) mContext.getResources().getDimension(R.dimen.margin_large);
+                mSubCategoryItemsAdapter = new SubCategoriesAdapter(mContext, mChosenCategoryKey, subCategoryItems, mSearchFilterPresenter, mCategoryMap, marginRight);
                 holder.subCategoryItemsRecyclerView.setLayoutManager(new LinearLayoutManager(holder.itemView.getContext(), LinearLayoutManager.VERTICAL, false));
                 holder.subCategoryItemsRecyclerView.setAdapter(mSubCategoryItemsAdapter);
 

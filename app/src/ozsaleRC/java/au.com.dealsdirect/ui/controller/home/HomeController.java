@@ -37,6 +37,7 @@ import au.com.dealsdirect.ui.controller.checkout.checkout.CheckoutMvpView;
 import au.com.dealsdirect.ui.controller.checkout.checkouthost.CheckoutHostController;
 import au.com.dealsdirect.ui.controller.checkout.paymentsuccess.PaymentSuccessController;
 import au.com.dealsdirect.ui.controller.contact.viewcontacts.ViewContactsController;
+import au.com.dealsdirect.ui.controller.contact.viewcontacts.ViewContactsMvpView;
 import au.com.dealsdirect.ui.controller.saleitemdetails.SaleItemDetailsController;
 import au.com.dealsdirect.ui.controller.saleitems.SaleItemsController;
 import au.com.dealsdirect.ui.controller.shops.ShopsController;
@@ -110,6 +111,10 @@ public class HomeController extends BaseController implements HomeMvpView {
     private Router mAccountsRouter;
     private Router mCheckoutRouter;
     private Router mPopUpHostRouter;
+
+    private AccountMvpView mAccountMvpView;
+    private CheckoutMvpView mCheckoutMvpView;
+    private ViewContactsMvpView mViewContactsMvpView;
 
     private int currentVisibleIndex = 0;
     private int previousVisibleIndex = 0;
@@ -249,7 +254,7 @@ public class HomeController extends BaseController implements HomeMvpView {
                         mShopRouter.popToRoot();
                         break;
                     case TAB_ACCOUNT_INDEX:
-                        mAccountsRouter.popToRoot();
+                        mAccountMvpView.getDisplayRouter().popToRoot();
                         break;
                     case TAB_CATEGORIES_INDEX:
                         mCategoriesRouter.popToRoot();
@@ -258,7 +263,7 @@ public class HomeController extends BaseController implements HomeMvpView {
                         mContactRouter.popToRoot();
                         break;
                     case TAB_CHECKOUT_INDEX:
-                        mCheckoutRouter.popToRoot();
+                        mCheckoutMvpView.getDisplayRouter().popToRoot();
                         break;
                 }
             }
@@ -278,15 +283,9 @@ public class HomeController extends BaseController implements HomeMvpView {
         mCategoriesRouter = getChildRouter(mCategoriesContainer);
         mCategoriesRouter.setRoot(RouterTransaction.with(ControllerFactory.getInstance(GateKeeper.Destination.CATEGORIES)));
 
-        mContactRouter = getChildRouter(mContactContainer);
-        mActivity.setContactRouter(mContactRouter);
-        mContactRouter.setRoot(RouterTransaction.with(ViewContactsController.newInstance()));
+        resetContactsRouter();
 
-
-        mAccountsRouter = getChildRouter(mAccountsContainer);
-        mActivity.setAccountsRouter(mAccountsRouter);
-
-        mAccountsRouter.setRoot(RouterTransaction.with(AccountController.newInstance()));
+        resetAccountRouter();
 
         if (mPresenter.isTablet()) {
             mPopUpHostRouter = getChildRouter(mLoginHostContainer);
@@ -299,19 +298,26 @@ public class HomeController extends BaseController implements HomeMvpView {
 
     public void resetContactsRouter() {
         mContactRouter = getChildRouter(mContactContainer);
-        mContactRouter.setRoot(RouterTransaction.with(ControllerFactory.getInstance(GateKeeper.Destination.CONTACT_US)));
-
+        mActivity.setContactRouter(mContactRouter);
+        Controller contactsController = ControllerFactory.getInstance(GateKeeper.Destination.CONTACT_US);
+        mViewContactsMvpView = (ViewContactsMvpView) contactsController;
+        mContactRouter.setRoot(RouterTransaction.with(contactsController));
     }
 
     public void resetCheckoutRouter() {
         mCheckoutRouter = getChildRouter(mCheckoutContainer);
         mActivity.setCheckoutRouter(mCheckoutRouter);
 
+
         if (!mPresenter.isTablet()) {
-            mCheckoutRouter.setRoot(RouterTransaction.with(CheckoutController.newInstance())
+            Controller checkoutController = ControllerFactory.getInstance(GateKeeper.Destination.CHECKOUT);
+            mCheckoutMvpView = (CheckoutMvpView) checkoutController;
+            mCheckoutRouter.setRoot(RouterTransaction.with(checkoutController)
                     .tag(getActivity().getResources().getString(R.string.checkout_controller)));
         } else {
-            mCheckoutRouter.setRoot(RouterTransaction.with(CheckoutHostController.newInstance())
+            Controller checkoutHostController = ControllerFactory.getInstance(GateKeeper.Destination.CHECKOUT_HOST);
+            mCheckoutMvpView = (CheckoutMvpView) checkoutHostController;
+            mCheckoutRouter.setRoot(RouterTransaction.with(checkoutHostController)
                     .tag(getActivity().getResources().getString(R.string.checkout_host_controller)));
         }
 
@@ -319,7 +325,12 @@ public class HomeController extends BaseController implements HomeMvpView {
 
     public void resetAccountRouter() {
         mAccountsRouter = getChildRouter(mAccountsContainer);
-        mAccountsRouter.setRoot(RouterTransaction.with(AccountController.newInstance()));
+        mActivity.setAccountsRouter(mAccountsRouter);
+
+        Controller accountController = ControllerFactory.getInstance(GateKeeper.Destination.ACCOUNT);
+        mAccountMvpView = (AccountMvpView) accountController;
+        mAccountsRouter.setRoot(RouterTransaction.with(accountController));
+
     }
 
     @Override
@@ -374,6 +385,7 @@ public class HomeController extends BaseController implements HomeMvpView {
                 }
             });
         } else {
+            mViewContactsMvpView.getPresenter().loadContacts();
             setVisibleContainer(TAB_CONTACT_INDEX);
         }
     }
@@ -455,7 +467,7 @@ public class HomeController extends BaseController implements HomeMvpView {
         if (mShopRouter != null) {
             Controller controller = getCurrentControllerOnRouter(mShopRouter);
             if (controller instanceof ShopsController) {
-                ((MainActivity) getActivity()).getMainController().setViewpagerDraggable(true);
+                mActivity.getMainController().setViewpagerDraggable(true);
             }
         }
     }

@@ -65,6 +65,21 @@ fastlane fabric_deploy_tb_rc
 fastlane fabric_deploy_tb_test
 ```
 
+### fabric_deploy_ourpay_test
+```
+fastlane fabric_deploy_ourpay_test
+```
+
+### fabric_deploy_ozsale_rc
+```
+fastlane fabric_deploy_ozsale_rc
+```
+
+### fabric_deploy_ozsale_test
+```
+fastlane fabric_deploy_ozsale_test
+```
+
 
 ----
 

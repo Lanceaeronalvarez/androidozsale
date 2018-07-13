@@ -27,6 +27,7 @@ import au.com.dealsdirect.data.network.model.address.DecorationInfoList;
 import au.com.dealsdirect.data.network.model.address.DeleteUserAddress;
 import au.com.dealsdirect.data.network.model.address.GetAddresses;
 import au.com.dealsdirect.data.network.model.checkout.getcurrentorder.DeliveryAddress;
+import au.com.dealsdirect.ui.base.BaseController;
 import au.com.dealsdirect.ui.base.BasePullToRefreshController;
 import au.com.dealsdirect.ui.controller.address.addnewaddress.AddNewAddressController;
 import au.com.dealsdirect.ui.custom.CustomAlertDialog;
@@ -40,7 +41,7 @@ import timber.log.Timber;
  * Created by smartwave on 21/06/2017.
  */
 
-public class ViewAddressController extends BasePullToRefreshController implements ViewAddressMvpView {
+public class ViewAddressController extends BaseController implements ViewAddressMvpView {
 
     private static final String CALLED_FROM_CART = "CalledFromCart";
 
@@ -130,10 +131,7 @@ public class ViewAddressController extends BasePullToRefreshController implement
 
     @Override
     protected View inflateView(@NonNull LayoutInflater inflater, @NonNull ViewGroup container) {
-        View view = super.inflateView(inflater, container, ToolBarType.ARROW);
-
-        setToolBarVisible(getResource().getBoolean(R.bool.address_toolbar_visibility));
-        fillContent(inflater.inflate(R.layout.controller_view_address, container, false));
+        View view = inflater.inflate(R.layout.controller_view_address, container, false);
 
         getControllerComponent().inject(this);
         mPresenter.onAttach(this);

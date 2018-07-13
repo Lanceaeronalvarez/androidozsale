@@ -36,4 +36,6 @@ public interface SaleItemsMvpView extends MvpView{
     void enableSaleItemsScroll(boolean  val);
 
     Map<String, GetCategoryTreeResponse> getCategoryMap();
+
+    boolean isFromCategories();
 }
