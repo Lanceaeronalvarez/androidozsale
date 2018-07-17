@@ -43,9 +43,9 @@ public class ShopsPresenter<V extends ShopsMvpView> extends BasePresenter<V> imp
 
         doApiCallForResponse(getDataManager().callGetBanners(request, getOnlyFromNetwork), new AppApiCallback(){
             @Override
-            public void onSuccess(List<?> response) {
+            public void onSuccess(Object response) {
                 super.onSuccess(response);
-                getMvpView().showShopBanners((List<GetBannerResponse>) response);
+                getMvpView().showShopBanners((GetBannerResponse) response);
             }
 
             @Override

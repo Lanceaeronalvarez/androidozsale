@@ -11,7 +11,7 @@ import au.com.dealsdirect.ui.base.MvpView;
 
 public interface ShopsMvpView extends MvpView {
 
-    void showShopBanners(List<GetBannerResponse> getBannerResponses);
+    void showShopBanners(GetBannerResponse getBannerResponses);
 
     void storeCategories(List<GetCategoryTreeResponse> categories);
 

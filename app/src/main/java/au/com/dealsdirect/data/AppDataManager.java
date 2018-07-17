@@ -167,7 +167,7 @@ public class AppDataManager implements DataManager {
     }
 
     @Override
-    public Observable<List<GetBannerResponse>> callGetBanners(GetBannerRequest getBannerRequest, boolean getOnlyFromNetwork) {
+    public Observable<GetBannerResponse> callGetBanners(GetBannerRequest getBannerRequest, boolean getOnlyFromNetwork) {
         return mApiHelper.callGetBanners(getBannerRequest, getOnlyFromNetwork);
     }
 

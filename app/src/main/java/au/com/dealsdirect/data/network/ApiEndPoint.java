@@ -10,7 +10,7 @@ public final class ApiEndPoint {
 
     private static final String CATEGORY_TREE = "api/shop/shop/v1/accounts/" + BuildConfig.ACCOUNT_ID + "/categorytree/";
     private static final String SORTING = "api/shop/shop/v1/accounts/" + BuildConfig.ACCOUNT_ID + "/sorting/";
-    private static final String SALES = "api/sale/sale/v1/accounts/" + BuildConfig.ACCOUNT_ID + "/banners/";
+    private static final String SALES = "api/sale/sale/v3/accounts/" + BuildConfig.ACCOUNT_ID + "/banners/grouped/";
     private static final String PRODUCTS = "api/shop/shop/v1/accounts/" + BuildConfig.ACCOUNT_ID + "/products";
     private static final String PRODUCT_DETAILS = "api/shop/product/v1/accounts/" + BuildConfig.ACCOUNT_ID + "/products/{seo_identifier}";
     private static final String OURPAY_DATA = "api/shop/product/v1/accounts/" + BuildConfig.ACCOUNT_ID + "/ourpaydata";

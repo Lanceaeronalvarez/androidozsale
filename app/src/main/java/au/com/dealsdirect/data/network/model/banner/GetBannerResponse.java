@@ -8,126 +8,228 @@ import java.util.List;
 
 public class GetBannerResponse {
 
-    @SerializedName("id")
+    @SerializedName("groups")
     @Expose
-    private String id;
-    @SerializedName("categories")
-    @Expose
-    private List<String> categories = null;
-    @SerializedName("accountID")
-    @Expose
-    private String accountID;
-    @SerializedName("isAvailable")
-    @Expose
-    private Boolean isAvailable;
-    @SerializedName("bannerText")
-    @Expose
-    private String bannerText;
-    @SerializedName("description")
-    @Expose
-    private String description;
-    @SerializedName("image")
-    @Expose
-    private String image;
-    @SerializedName("destinationID")
-    @Expose
-    private String destinationID;
-    @SerializedName("startDate")
-    @Expose
-    private String startDate;
-    @SerializedName("endDate")
-    @Expose
-    private String endDate;
-    @SerializedName("attributes")
-    @Expose
-    private Attributes attributes;
+    private List<Group> groups = null;
 
-    public String getId() {
-        return id;
+    public List<Group> getGroups() {
+        return groups;
     }
 
-    public void setId(String id) {
-        this.id = id;
+    public void setGroups(List<Group> groups) {
+        this.groups = groups;
     }
 
-    public List<String> getCategories() {
-        return categories;
+    public class Attributes {
+
+        @SerializedName("saleExternalId")
+        @Expose
+        private String saleExternalId;
+
+        public String getSaleExternalId() {
+            return saleExternalId;
+        }
+
+        public void setSaleExternalId(String saleExternalId) {
+            this.saleExternalId = saleExternalId;
+        }
+
     }
 
-    public void setCategories(List<String> categories) {
-        this.categories = categories;
+    public class Banner {
+
+        private Group group;
+        @SerializedName("id")
+        @Expose
+        private String id;
+        @SerializedName("accountId")
+        @Expose
+        private String accountId;
+        @SerializedName("isAvailable")
+        @Expose
+        private Boolean isAvailable;
+        @SerializedName("bannerText")
+        @Expose
+        private String bannerText;
+        @SerializedName("description")
+        @Expose
+        private String description;
+        @SerializedName("startDate")
+        @Expose
+        private String startDate;
+        @SerializedName("endDate")
+        @Expose
+        private String endDate;
+        @SerializedName("destinationId")
+        @Expose
+        private String destinationId;
+        @SerializedName("image")
+        @Expose
+        private String image;
+        @SerializedName("hasImage")
+        @Expose
+        private Boolean hasImage;
+        @SerializedName("attributes")
+        @Expose
+        private Attributes attributes;
+        @SerializedName("categories")
+        @Expose
+        private List<String> categories = null;
+        @SerializedName("bannerType")
+        @Expose
+        private String bannerType;
+
+        public String getId() {
+            return id;
+        }
+
+        public void setId(String id) {
+            this.id = id;
+        }
+
+        public String getAccountId() {
+            return accountId;
+        }
+
+        public void setAccountId(String accountId) {
+            this.accountId = accountId;
+        }
+
+        public Boolean getIsAvailable() {
+            return isAvailable;
+        }
+
+        public void setAvailable(Boolean available) {
+            isAvailable = available;
+        }
+
+        public String getBannerText() {
+            return bannerText;
+        }
+
+        public void setBannerText(String bannerText) {
+            this.bannerText = bannerText;
+        }
+
+        public String getDescription() {
+            return description;
+        }
+
+        public void setDescription(String description) {
+            this.description = description;
+        }
+
+        public String getStartDate() {
+            return startDate;
+        }
+
+        public void setStartDate(String startDate) {
+            this.startDate = startDate;
+        }
+
+        public String getEndDate() {
+            return endDate;
+        }
+
+        public void setEndDate(String endDate) {
+            this.endDate = endDate;
+        }
+
+        public String getDestinationId() {
+            return destinationId;
+        }
+
+        public void setDestinationId(String destinationId) {
+            this.destinationId = destinationId;
+        }
+
+        public String getImage() {
+            return image;
+        }
+
+        public void setImage(String image) {
+            this.image = image;
+        }
+
+        public Boolean getHasImage() {
+            return hasImage;
+        }
+
+        public void setHasImage(Boolean hasImage) {
+            this.hasImage = hasImage;
+        }
+
+        public Attributes getAttributes() {
+            return attributes;
+        }
+
+        public void setAttributes(Attributes attributes) {
+            this.attributes = attributes;
+        }
+
+        public List<String> getCategories() {
+            return categories;
+        }
+
+        public void setCategories(List<String> categories) {
+            this.categories = categories;
+        }
+
+        public String getBannerType() {
+            return bannerType;
+        }
+
+        public void setBannerType(String bannerType) {
+            this.bannerType = bannerType;
+        }
+
+        public Group getGroup() {
+            return group;
+        }
+
+        public void setGroup(Group group) {
+            this.group = group;
+        }
     }
 
-    public String getAccountID() {
-        return accountID;
-    }
+    public class Group {
 
-    public void setAccountID(String accountID) {
-        this.accountID = accountID;
-    }
+        @SerializedName("type")
+        @Expose
+        private String type;
+        @SerializedName("isClickable")
+        @Expose
+        private Boolean isClickable;
+        @SerializedName("banners")
+        @Expose
+        private List<Banner> banners = null;
 
-    public Boolean getIsAvailable() {
-        return isAvailable;
-    }
+        public String getType() {
+            return type;
+        }
 
-    public void setIsAvailable(Boolean isAvailable) {
-        this.isAvailable = isAvailable;
-    }
+        public void setType(String type) {
+            this.type = type;
+        }
 
-    public String getBannerText() {
-        return bannerText;
-    }
+        public Boolean getIsClickable() {
+            return isClickable;
+        }
 
-    public void setBannerText(String bannerText) {
-        this.bannerText = bannerText;
-    }
+        public void setIsClickable(Boolean isClickable) {
+            this.isClickable = isClickable;
+        }
 
-    public String getDescription() {
-        return description;
-    }
+        public List<Banner> getBanners() {
+            for (Banner banner : banners) {
+                banner.setGroup(this);
+            }
+            return banners;
+        }
 
-    public void setDescription(String description) {
-        this.description = description;
-    }
+        public void setBanners(List<Banner> banners) {
+            this.banners = banners;
+        }
 
-    public String getImage() {
-        return image;
     }
-
-    public void setImage(String image) {
-        this.image = image;
-    }
-
-    public String getDestinationID() {
-        return destinationID;
-    }
-
-    public void setDestinationID(String destinationID) {
-        this.destinationID = destinationID;
-    }
-
-    public String getStartDate() {
-        return startDate;
-    }
-
-    public void setStartDate(String startDate) {
-        this.startDate = startDate;
-    }
-
-    public String getEndDate() {
-        return endDate;
-    }
-
-    public void setEndDate(String endDate) {
-        this.endDate = endDate;
-    }
-
-    public Attributes getAttributes() {
-        return attributes;
-    }
-
-    public void setAttributes(Attributes attributes) {
-        this.attributes = attributes;
-    }
-
 }

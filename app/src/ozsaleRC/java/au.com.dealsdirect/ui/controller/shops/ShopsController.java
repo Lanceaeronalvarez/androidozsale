@@ -22,6 +22,7 @@ import com.bluelinelabs.conductor.RouterTransaction;
 import com.bluelinelabs.conductor.changehandler.FadeChangeHandler;
 import com.bluelinelabs.conductor.changehandler.HorizontalChangeHandler;
 import com.paginate.Paginate;
+import com.timehop.stickyheadersrecyclerview.StickyRecyclerHeadersDecoration;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -111,6 +112,7 @@ public class ShopsController extends BaseController implements ShopsMvpView, Ban
     private boolean loadingInProgress = false;
     private boolean hasLoadedAllItems = false;
 
+    private String bannerGroupType = "";
     private int newBannerCount = 10;
     private int bannerOffset = 0;
     private int bannerLimit = bannerOffset + newBannerCount;
@@ -124,7 +126,7 @@ public class ShopsController extends BaseController implements ShopsMvpView, Ban
     private GridLayoutManager mLayoutManager;
 
     private List<GetCategoryTreeResponse> mPreLoadedCategories;
-    private List<GetBannerResponse> sales;
+    private List<GetBannerResponse.Group> sales;
     private Map<String, List<GetCategoryTreeResponse>> mCategoryMap;
 
     private View child;
@@ -139,6 +141,8 @@ public class ShopsController extends BaseController implements ShopsMvpView, Ban
 
     private int mVerticalOffset;
     private boolean mIsRecyclerViewScrollIdle;
+
+    private static final boolean ENABLE_BANNER_HEADERS = false;
 
     @Override
     protected void onAttach(@NonNull View view) {
@@ -262,6 +266,9 @@ public class ShopsController extends BaseController implements ShopsMvpView, Ban
         mBannersAdapter = new BannersAdapter(mActivity, mPresenter, sales, this);
         shopsControllerBannerRecyclerView.setLayoutManager(mLayoutManager);
         shopsControllerBannerRecyclerView.setAdapter(mBannersAdapter);
+        if (ENABLE_BANNER_HEADERS) {
+            shopsControllerBannerRecyclerView.addItemDecoration(new StickyRecyclerHeadersDecoration(mBannersAdapter));
+        }
         shopsControllerBannerRecyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
             @Override
             public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
@@ -319,7 +326,7 @@ public class ShopsController extends BaseController implements ShopsMvpView, Ban
             mPresenter.loadShopsBanner(createDeepLinkBannerRequest(mCategoryName, mCategoryID, 0, 0));
         } else {
             mPresenter.loadShopsBanner(createBannerRequest(mCategoryName, mCategoryID, bannerOffset, bannerLimit));
-	}
+        }
     }
 
     @Override
@@ -422,13 +429,13 @@ public class ShopsController extends BaseController implements ShopsMvpView, Ban
     }
 
     @Override
-    public void showShopBanners(List<GetBannerResponse> getBannerResponses) {
+    public void showShopBanners(GetBannerResponse getBannerResponses) {
         shopsControllerBannerRecyclerView.setVisibility(View.VISIBLE);
 
         loadingInProgress = false;
 
         if (page == 0 || isRefreshShop) {
-            mBannersAdapter.replace(getBannerResponses);
+            mBannersAdapter.replace(getBannerResponses.getGroups());
             if (mPaginateManager != null) {
                 mPaginateManager.unbind();
             }
@@ -436,9 +443,9 @@ public class ShopsController extends BaseController implements ShopsMvpView, Ban
             isRefreshShop = false;
         } else {
 
-            mBannersAdapter.addAll(getBannerResponses);
+            mBannersAdapter.addAll(getBannerResponses.getGroups());
 
-            if (getBannerResponses.isEmpty()) {
+            if (getBannerResponses.getGroups().isEmpty()) {
                 hasLoadedAllItems = true;
             }
         }
@@ -672,8 +679,18 @@ public class ShopsController extends BaseController implements ShopsMvpView, Ban
     }
 
     private GetBannerRequest createBannerRequest(String categoryName, String categoryId, int bannerOffset, int bannerLimit) {
+
+        int lastVisiblePos = mLayoutManager.findLastVisibleItemPosition();
+        GetBannerResponse.Banner lastVisibleBanner = mBannersAdapter.getItem(lastVisiblePos);
+        String newGroupType = lastVisibleBanner != null ? lastVisibleBanner.getGroup().getType() : "";
+        if (!newGroupType.equals("") && !newGroupType.equals(bannerGroupType)) bannerOffset = 10;
+        bannerGroupType = newGroupType;
+
         GetBannerRequest getBannerRequest = new GetBannerRequest();
-        getBannerRequest.setOffset(String.valueOf(bannerOffset));
+        if (!bannerGroupType.equals("")) {
+            getBannerRequest.setOffset(String.valueOf(bannerOffset));
+            getBannerRequest.setLastGroupType(bannerGroupType);
+        }
         getBannerRequest.setLimit(String.valueOf(bannerLimit));
 
         if (categoryName != null && !categoryName.isEmpty())
@@ -687,8 +704,16 @@ public class ShopsController extends BaseController implements ShopsMvpView, Ban
     }
 
     private GetBannerRequest createDeepLinkBannerRequest(String categoryName, String saleCategoryId, int bannerOffset, int bannerLimit) {
+
+        int lastVisiblePos = mLayoutManager.findLastVisibleItemPosition();
+        GetBannerResponse.Banner lastVisibleBanner = mBannersAdapter.getItem(lastVisiblePos);
+        bannerGroupType = lastVisibleBanner != null ? lastVisibleBanner.getGroup().getType() : "";
+
         GetBannerRequest getBannerRequest = new GetBannerRequest();
-        getBannerRequest.setOffset(String.valueOf(bannerOffset));
+        if (!bannerGroupType.equals("")) {
+            getBannerRequest.setOffset(String.valueOf(bannerOffset));
+            getBannerRequest.setLastGroupType(bannerGroupType);
+        }
         getBannerRequest.setLimit(String.valueOf(bannerLimit));
 
         if (categoryName != null && !categoryName.isEmpty())

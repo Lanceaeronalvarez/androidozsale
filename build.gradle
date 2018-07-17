@@ -85,6 +85,7 @@ ext {
 
     gcmVersion = '11.8.0'
     crystalRangeSeekbarVersion = '1.1.1'
+    stickyHeadersVersion = '0.4.3@aar'
 
     //transactiontoolarge logger
     tooLargeToolVersion = '0.1.3'

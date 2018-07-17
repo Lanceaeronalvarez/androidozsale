@@ -589,6 +589,9 @@ dependencies {
     //viewpager indicator
     compile 'me.relex:circleindicator:1.2.2@aar'
 
+    // sticky headers
+    compile "com.timehop.stickyheadersrecyclerview:library:$rootProject.stickyHeadersVersion"
+
     // dependencies for local unit tests
     testCompile "junit:junit:$rootProject.ext.junitVersion"
     testCompile "org.mockito:mockito-core:$rootProject.mockitoVersion"

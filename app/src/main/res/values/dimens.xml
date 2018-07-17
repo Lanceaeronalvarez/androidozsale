@@ -8,6 +8,7 @@
     <dimen name="default_button_height">48dp</dimen>
     <dimen name="default_viewholder_item_height">43dp</dimen>
     <dimen name="label_space">3dp</dimen>
+    <dimen name="status_bar_height">24dp</dimen>
 
     <bool name="is_tablet">false</bool>
 
@@ -136,7 +137,7 @@
     <dimen name="margin_right_ourpay_panel_image">2dp</dimen>
     <dimen name="margin_start_ourpay_panel_image">2dp</dimen>
     <dimen name="margin_top_ourpay_panel_image">7dp</dimen>
-    
+
     <!-- Orders -->
     <dimen name="order_image_width">85dp</dimen>
     <dimen name="order_image_height">135dp</dimen>

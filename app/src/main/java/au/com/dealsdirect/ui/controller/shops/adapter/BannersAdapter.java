@@ -9,6 +9,8 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.timehop.stickyheadersrecyclerview.StickyRecyclerHeadersAdapter;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -26,10 +28,11 @@ import butterknife.ButterKnife;
  * dp Created by Admin on 6/7/17.
  */
 
-public class BannersAdapter extends RecyclerView.Adapter<BannersAdapter.ViewHolder> {
+public class BannersAdapter extends RecyclerView.Adapter<BannersAdapter.ViewHolder> implements StickyRecyclerHeadersAdapter {
 
     private int mComputedHeight = -1;
-    private List<GetBannerResponse> mSales;
+    private List<GetBannerResponse.Group> mGroups;
+    private List<GetBannerResponse.Banner> mSales;
     private Context mContext;
     private ShopsMvpPresenter mPresenter;
     private BannerClickListener mBannerClickListener;
@@ -37,15 +40,19 @@ public class BannersAdapter extends RecyclerView.Adapter<BannersAdapter.ViewHold
     public BannersAdapter(
             Context context,
             ShopsMvpPresenter presenter,
-            List<GetBannerResponse> sales,
+            List<GetBannerResponse.Group> sales,
             BannerClickListener bannerClickListener) {
 
-        this.mSales = sales;
+        this.mGroups = sales;
+        this.mSales = new ArrayList<>();
+        for (GetBannerResponse.Group group : sales) {
+            mSales.addAll(group.getBanners());
+        }
         this.mContext = context;
         this.mPresenter = presenter;
         this.mBannerClickListener = bannerClickListener;
 
-        if(!mContext.getResources().getBoolean(R.bool.is_ourpay_app)) {
+        if (!mContext.getResources().getBoolean(R.bool.is_ourpay_app)) {
             // Dynamic Height Computation
             if (mPresenter.isTablet()) {
 
@@ -81,7 +88,7 @@ public class BannersAdapter extends RecyclerView.Adapter<BannersAdapter.ViewHold
             super(view);
             ButterKnife.bind(this, view);
 
-            if(height > 0) {
+            if (height > 0) {
                 GridLayoutManager.LayoutParams params = (GridLayoutManager.LayoutParams) layout.getLayoutParams();
                 params.height = height;
                 layout.setLayoutParams(params);
@@ -89,15 +96,28 @@ public class BannersAdapter extends RecyclerView.Adapter<BannersAdapter.ViewHold
         }
     }
 
-    public void replace(List<GetBannerResponse> bannerResponses) {
-        mSales = new ArrayList<>(bannerResponses);
-        notifyDataSetChanged();
+    static class HeaderViewHolder extends RecyclerView.ViewHolder {
+
+        @BindView(R.id.viewholder_banner_header_text)
+        TextView headerText;
+
+        HeaderViewHolder(View view) {
+            super(view);
+            ButterKnife.bind(this, view);
+        }
     }
 
-    public void addAll(List<GetBannerResponse> bannerResponses) {
+    public void replace(List<GetBannerResponse.Group> bannerResponses) {
+        mSales = new ArrayList<>();
+        addAll(bannerResponses);
+    }
+
+    public void addAll(List<GetBannerResponse.Group> bannerResponses) {
         int previousCount = mSales.size();
-        mSales.addAll(bannerResponses);
-        notifyItemRangeInserted(previousCount,mSales.size()-previousCount);
+        for (GetBannerResponse.Group group : bannerResponses) {
+            mSales.addAll(group.getBanners());
+        }
+        notifyItemRangeInserted(previousCount, mSales.size() - previousCount);
     }
 
     @Override
@@ -109,13 +129,12 @@ public class BannersAdapter extends RecyclerView.Adapter<BannersAdapter.ViewHold
     @Override
     public void onBindViewHolder(ViewHolder holder, int position) {
 
-        GetBannerResponse item = mSales.get(position);
+        GetBannerResponse.Banner item = mSales.get(position);
         holder.name.setText(item.getDescription());
         String imgUrl;
 
         if (mPresenter.isTablet()) {
             imgUrl = ImageUtils.getBannerTabletSize(item.getImage());
-            //AppLogger.d("IMG " + ImageUtils.getBannerTabletSize(item.getImage()));
         } else {
             imgUrl = ImageUtils.getBannerMobileSize(item.getImage());
         }
@@ -127,7 +146,7 @@ public class BannersAdapter extends RecyclerView.Adapter<BannersAdapter.ViewHold
 
         holder.layout.setOnClickListener(view ->
                 mBannerClickListener.onBannerClicked(
-                        item.getDestinationID(),
+                        item.getDestinationId(),
                         item.getDescription(),
                         item.getId(),
                         position,
@@ -136,12 +155,34 @@ public class BannersAdapter extends RecyclerView.Adapter<BannersAdapter.ViewHold
     }
 
     @Override
+    public long getHeaderId(int position) {
+        return mSales.get(position).getGroup().getType().charAt(0);
+    }
+
+    @Override
+    public HeaderViewHolder onCreateHeaderViewHolder(ViewGroup parent) {
+        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.viewholder_banner_header, parent, false);
+        return new HeaderViewHolder(view);
+    }
+
+    @Override
+    public void onBindHeaderViewHolder(RecyclerView.ViewHolder viewHolder, int position) {
+        HeaderViewHolder holder = (HeaderViewHolder) viewHolder;
+
+        holder.headerText.setText(mSales.get(position).getGroup().getType());
+    }
+
+    @Override
     public int getItemCount() {
         return mSales.size();
     }
 
 
-    public List<GetBannerResponse> getData() {
-        return mSales;
+    public GetBannerResponse.Banner getItem(int position) {
+        return position > 0 && mSales.size() > position ? mSales.get(position) : null;
+    }
+
+    public List<GetBannerResponse.Group> getData() {
+        return mGroups;
     }
 }
